@@ -1,4 +1,4 @@
-import getWeb3 from './utils/getWeb3'
+import web3Service from './utils/web3-service'
 
 class ContractService {
 

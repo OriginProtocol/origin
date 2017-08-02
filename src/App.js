@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
-import getWeb3 from './utils/getWeb3'
-import ListingForm from './listing-form.js'
 
-import './css/oswald.css'
-import './css/open-sans.css'
-import './css/pure-min.css'
+import ListingForm from './listing-form'
+import web3Service from './utils/web3-service'
+
 import './App.css'
+import './css/open-sans.css'
+import './css/oswald.css'
+import './css/pure-min.css'
 
 let selectedSchema = {
   type: "object",
