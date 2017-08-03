@@ -20,9 +20,8 @@ class ListingForm extends Component {
     return (
       <div className="pure-g">
         <div className="pure-u-1-1">
-          <h1>Listing</h1>
           <Form schema={this.props.schema}
-            onChange={log("changed")}
+            onChange={this.props.onChange}
             onSubmit={(formListing) => this.submitListing(formListing)}
             onError={log("errors")}/>
         </div>
