@@ -32,6 +32,6 @@ class IpfsService {
   }
 }
 
-let ipfsService = new IpfsService()
+let ipfsService = new IpfsService();
 
-export default ipfsService
+export default ipfsService;

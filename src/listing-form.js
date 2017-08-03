@@ -24,11 +24,11 @@ class ListingForm extends Component {
           <Form schema={this.props.schema}
             onChange={log("changed")}
             onSubmit={(formListing) => this.submitListing(formListing)}
-            onError={log("errors")} />
+            onError={log("errors")}/>
         </div>
       </div>
     );
   }
 }
 
-export default ListingForm
+export default ListingForm;

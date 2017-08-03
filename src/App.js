@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 
 import ListingForm from './listing-form'
-import web3Service from './utils/web3-service'
 
 import './App.css'
 import './css/open-sans.css'
@@ -63,4 +62,4 @@ class App extends Component {
   }
 }
 
-export default App
+export default App;
