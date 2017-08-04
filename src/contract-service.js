@@ -18,7 +18,7 @@ class ContractService {
 
   getListingForAddress(address) {
     this.listingContract.deployed().then((instance) => {
-      return instance.listingFromAddress(address);
+      return instance.listingForAddress(address);
     }).then((result) => {
       console.log(result);
     });
@@ -32,13 +32,10 @@ class ContractService {
   }
 
   submitListing(ipfsListing) {
-    // Temporary stub hash    
-    let sampleIpfsHash = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG";
-
     this.listingContract.setProvider(web3Service.web3.currentProvider);
     web3Service.web3.eth.getAccounts((error, accounts) => {
       this.listingContract.deployed().then((instance) => {
-        return instance.create(sampleIpfsHash, {from: accounts[0]});
+        return instance.create(ipfsListing, {from: accounts[0]});
       }).then((result) => {
         console.log(result);
         // Temporary check to see if value is stored

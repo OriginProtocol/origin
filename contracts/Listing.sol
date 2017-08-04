@@ -2,7 +2,7 @@ pragma solidity ^0.4.2;
 
 contract Listing {
   // Addresses represent listing owners and map to an array of listings.
-  mapping (address => bytes) public listings;
+  mapping (address => string) public listings;
 
   // 0rigin owner
   address public origin;
@@ -18,17 +18,18 @@ contract Listing {
   }
 
   // Create a new listing
-  function create(bytes ipfsHash) {
+  function create(string ipfsHash) {
     // Check for IPFS hash length
-    require(ipfsHash.length == 46);
+    
+    require(bytes(ipfsHash).length == 46);
 
     // May want to de-dupe later by checking for existing hash
     listings[msg.sender] = ipfsHash;
     UpdateListings(msg.sender);
   }
   
-  // Need to return a string, not bytes
-  function listingFromAddress(address _account) public constant returns (bytes) {
+  // Change this to return multiple listings later
+  function listingForAddress(address _account) public constant returns (string) {
     return listings[_account];
   }
 }

@@ -16,10 +16,7 @@ class IpfsService {
 
     // Stub promise
     const promise = new Promise((resolve, reject) => {
-      const ipfsListing = {
-        'foo': 'bar',
-        'blah': 'blah'
-      };
+      const ipfsListing = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG";
 
       if (ipfsListing) {
         resolve(ipfsListing);
