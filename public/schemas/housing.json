@@ -1,0 +1,50 @@
+{
+  "type": "object",
+  "required": ["name","category","description","price"],
+  "properties": {
+    "name": {
+      "type": "string", 
+      "title": "Housing posting title",
+       "minLength": "3"
+    },
+    "category": {
+      "type": "string", 
+      "title": "Category", 
+      "enum": [
+        "Apts Wanted",
+        "Apts/Housing for Rent",
+        "Housing Swap",
+        "Office & Commercial",
+        "Parking & Storage",
+        "Real Estate",
+        "Real Estate Wanted",
+        "Room/Share Wanted",
+        "Rooms & Shares",
+        "Sublet/Temp Wanted",
+        "Sublets & Temporary",
+        "Vacation Rentals"
+      ]
+    },
+    "description": {
+      "type": "string", 
+      "title": "Description", 
+      "minLength": "10"
+    },
+    "location": {
+      "type": "string", 
+      "title": "Location"
+    },
+    "pictures": {
+      "type": "array",
+      "title": "Pictures",
+      "items": {
+        "type": "string",
+        "format": "data-url"
+      }
+    },
+    "price": {
+      "type": "number", 
+      "title": "Price in 0rigin token"
+    }
+  }
+}

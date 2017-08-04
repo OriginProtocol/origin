@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 
+import SchemaForm from './schema-form'
 import ListingForm from './listing-form'
 
 const log = (type) => console.log.bind(console, type);
@@ -9,33 +10,44 @@ import './css/open-sans.css'
 import './css/oswald.css'
 import './css/pure-min.css'
 
-let selectedSchema = {
-  "type": "object",
-  "required": ["selectedSchema"],
-  "properties": {
-    "selectedSchema": {
-      "type": "string", 
-      "title": "Selected schema", 
-      "enum": [
-        "for-sale",
-        "housing",
-        "transportation",
-        "labor"
-      ],
-      "enumNames": [
-        "For Sale",
-        "Housing",
-        "Transportation",
-        "Labor"
-      ],
-      "default": "For Sale"
-    }
-  }
-};
-
-import selectedForm from '../schemas/for-sale.json'
+import listOfSchemas from '../public/schemas/list.json'
+let defaultSchemaType = 'for-sale'
+import defaultSchema from '../public/schemas/for-sale.json'
 
 class App extends Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      selectedSchemaType: defaultSchemaType,
+      selectedSchema: defaultSchema
+    }
+
+    this.handler = this.handler.bind(this)
+  }
+
+  handler(schemaType) {
+    let selectedSchema = fetch('http://localhost:3000/schemas/'+schemaType+'.json')
+    .then((response) => response.json())
+    .then((responseJson) => {
+      this.setState({
+        selectedSchemaType: schemaType,
+        selectedSchema: responseJson
+      })
+    })
+  }
+
+  displaySchema(schemaType) {
+    let selectedSchema = fetch('http://localhost:3000/schemas/'+schemaType+'.json')
+    .then((response) => response.json())
+    .then((responseJson) => {
+      this.setState({
+        selectedSchemaType: schemaType,
+        selectedSchema: responseJson
+      })
+    })
+  }
 
   render() {
     return (
@@ -50,12 +62,12 @@ class App extends Component {
                 <div className="pure-u-1-1">
 
                 <h1>1. Choose a schema for your listing</h1>
-                 <p>0rigin uses <a href='http://json-schema.org'>JSON schema</a> definitions to describe the required fields and validation rules for each type of listing. Developers can easily extend these schemas or create their own for specific verticals.</p>
-                  <ListingForm schema={selectedSchema} onChange={log(this.props)} />
+                <p>0rigin uses <a href='http://json-schema.org'>JSON schema</a> definitions to describe the required fields and validation rules for each type of listing. Developers can easily extend these schemas or create their own for specific verticals.</p>
+                <SchemaForm schema={listOfSchemas} handler={this.handler} />
 
                 <h1>2. Then fill it out</h1>
 
-                  <ListingForm schema={selectedForm}/>
+                <ListingForm schema={this.state.selectedSchema} />
 
                 <h1>3. Connect your identity (optional)</h1>
                 <p>While it's okay if you want to stay anonymous, you can improve the trust-worthiness of your listing by cryptographically verifying your identity using <a href='http://www.keybase.io'>KeyBase</a>.  KeyBase allows you to connect your website or services like Facebook, Twitter, Github and Hacker News to provide publicly auditable proofs of your identity alongside your listing.</p>

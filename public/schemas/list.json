@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "required": ["selectedSchema"],
+  "properties": {
+    "selectedSchema": {
+      "type": "string", 
+      "title": "Selected schema", 
+      "enum": [
+        "for-sale",
+        "housing",
+        "transportation",
+        "labor"
+      ],
+      "enumNames": [
+        "For Sale",
+        "Housing",
+        "Transportation",
+        "Labor"
+      ],
+      "default": "for-sale"
+    }
+  }
+}
