@@ -12,21 +12,8 @@ const log = (type) => console.log.bind(console, type);
 class SchemaForm extends Component {
 
   updateForm(formListing, handler) {
-
-    console.log(formListing)
-
     let selectedSchema = formListing.formData.selectedSchema
-    console.log(selectedSchema)
     handler(selectedSchema)
-    console.log('Fuck')
-    console.log(selectedSchema)
-    formListing.formData.selectedSchema = selectedSchema
-    console.log(formListing.formData.selectedSchema)
-    return formListing.formData.selectedSchema
-    // let defaultForm = fetch('/schemas/'+selectedSchema)   
-    //   // we got it!
-    //   console.log(result)
-    // });
     // ipfsService.submitListing(formListing)
     //   .then((ipfsListing) => {contractService.submitListing(ipfsListing)});
   }

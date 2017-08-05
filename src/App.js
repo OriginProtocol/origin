@@ -11,23 +11,24 @@ import './css/oswald.css'
 import './css/pure-min.css'
 
 import listOfSchemas from '../public/schemas/list.json'
-let defaultSchemaType = 'for-sale'
-import defaultSchema from '../public/schemas/for-sale.json'
 
 class App extends Component {
 
   constructor(props) {
     super(props)
 
+    let defaultSchemaType = 'for-sale'
+    let defaultSchema = this.handleSchemaChange(defaultSchemaType)
+
     this.state = {
       selectedSchemaType: defaultSchemaType,
       selectedSchema: defaultSchema
     }
 
-    this.handler = this.handler.bind(this)
+    this.handleSchemaChange = this.handleSchemaChange.bind(this)
   }
 
-  handler(schemaType) {
+  handleSchemaChange(schemaType) {
     let selectedSchema = fetch('http://localhost:3000/schemas/'+schemaType+'.json')
     .then((response) => response.json())
     .then((responseJson) => {
@@ -36,17 +37,7 @@ class App extends Component {
         selectedSchema: responseJson
       })
     })
-  }
-
-  displaySchema(schemaType) {
-    let selectedSchema = fetch('http://localhost:3000/schemas/'+schemaType+'.json')
-    .then((response) => response.json())
-    .then((responseJson) => {
-      this.setState({
-        selectedSchemaType: schemaType,
-        selectedSchema: responseJson
-      })
-    })
+    return selectedSchema
   }
 
   render() {
@@ -63,7 +54,7 @@ class App extends Component {
 
                 <h1>1. Choose a schema for your listing</h1>
                 <p>0rigin uses <a href='http://json-schema.org'>JSON schema</a> definitions to describe the required fields and validation rules for each type of listing. Developers can easily extend these schemas or create their own for specific verticals.</p>
-                <SchemaForm schema={listOfSchemas} handler={this.handler} />
+                <SchemaForm schema={listOfSchemas} handler={this.handleSchemaChange} />
 
                 <h1>2. Then fill it out</h1>
 
