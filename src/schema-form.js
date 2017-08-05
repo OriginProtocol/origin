@@ -10,21 +10,25 @@ import ipfsService from './ipfs-service';
 const log = (type) => console.log.bind(console, type);
 
 class SchemaForm extends Component {
+  constructor(props) {
+    super(props);
+    this.handleSchemaSelection = this.handleSchemaSelection.bind(this);
+  }
 
-  updateForm(formListing, handler) {
-    let selectedSchema = formListing.formData.selectedSchema
-    handler(selectedSchema)
-    // ipfsService.submitListing(formListing)
-    //   .then((ipfsListing) => {contractService.submitListing(ipfsListing)});
+  handleSchemaSelection(formSchema, onSchemaSelection) {
+    let selectedSchema = formSchema.formData.selectedSchema;
+    onSchemaSelection(selectedSchema);
   }
 
   render() {
     return (
       <div className="pure-g">
         <div className="pure-u-1-1">
-          <Form schema={this.props.schema}
-            onChange={(formListing) => {
-              this.updateForm(formListing, this.props.handler)}}
+          <Form 
+            schema={this.props.schemaList}
+            onChange={(formSchema) => {
+              this.handleSchemaSelection(formSchema, this.props.onSchemaSelection)
+            }}
             onError={log("errors")}/>
         </div>
       </div>

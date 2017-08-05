@@ -13,7 +13,7 @@ class ListingForm extends Component {
 
   submitListing(formListing) {
     ipfsService.submitListing(formListing)
-      .then((ipfsListing) => {contractService.submitListing(ipfsListing)});
+    .then((ipfsListing) => {contractService.submitListing(ipfsListing)});
   }
 
   render() {
