@@ -59,8 +59,7 @@
     },
     "description": {
       "type": "string", 
-      "title": "Description", 
-      "minLength": "10"
+      "title": "Description"
     },
     "location": {
       "type": "string", 
