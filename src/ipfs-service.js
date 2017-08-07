@@ -23,10 +23,6 @@ class IpfsService {
   }
 
   submitListing(formListing) {
-
-    console.log("Submit data to IPFS and return an ipfs object here");
-    console.log(formListing.formData)
-
     // Stub promise
     const promise = new Promise((resolve, reject) => {
 
@@ -37,17 +33,14 @@ class IpfsService {
 
       this.ipfs.files.add([file], (err, res) => {
         const file = res[0]
-        console.log(file.hash)
-        console.log("http://gateway.0rigin.org/ipfs/"+file.hash)
+        let ipfsListing = file.hash
+
+        if (ipfsListing) {
+          resolve(ipfsListing);
+        } else {
+          reject('Some failure thing');
+        }
       })
-
-      let ipfsListing = file.hash
-
-      if (ipfsListing) {
-        resolve(ipfsListing);
-      } else {
-        reject('Some failure thing');
-      }
     });
 
     return promise;
