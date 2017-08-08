@@ -1,0 +1,14 @@
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: 'Open Sans', 'Arial Narrow', sans-serif;
+}
+
+code {
+  display: block;
+  margin: 20px 0 15px 0;
+  padding: 10px;
+  background: #eee;
+}
