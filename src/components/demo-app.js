@@ -17,7 +17,7 @@ const DEMO_SCHEMA_LIST = [
   {type: 'housing', name: 'Housing', 'img': 'funny-cat.jpg'},
   {type: 'transportation', name: 'Transportation', 'img': 'funny-cat.jpg'},
   {type: 'tickets', name: 'Tickets', 'img': 'funny-cat.jpg'},
-  {type: 'labor', name: 'Labor', 'img': 'funny-cat.jpg'},
+  {type: 'services', name: 'Services', 'img': 'funny-cat.jpg'},
   {type: 'announcements', name: 'Announcements', 'img': 'funny-cat.jpg'},
 ]
 

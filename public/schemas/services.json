@@ -1,6 +1,6 @@
 {
   "$schema":"http://json-schema.org/draft-04/schema#",
-  "description": "Distributed Airbnb",
+  "description": "Distributed Elance/99 Designs/Postmates/Fiver/Handy/Thumbtack",
   "type": "object",
   "required": ["name","category","description","price"],
   "properties": {
@@ -13,20 +13,25 @@
       "type": "string", 
       "title": "Category", 
       "enum": [
-        "Apts Wanted",
-        "Apts/Housing for Rent",
-        "Housing Swap",
-        "Office & Commercial",
-        "Parking & Storage",
-        "Real Estate",
-        "Real Estate Wanted",
-        "Room/Share Wanted",
-        "Rooms & Shares",
-        "Sublet/Temp Wanted",
-        "Sublets & Temporary",
-        "Vacation Rentals"
+        "Business Services",
+        "Counseling",
+        "Delivery Service",
+        "Dog Walking",
+        "Electrical ",
+        "Graphic Design",
+        "Handyman",
+        "Home Cleaning",
+        "Legal",
+        "Moving Help",
+        "Painting",
+        "Photography",
+        "Plumbing",
+        "Repair & Technical Support",
+        "Software Developement",
+        "Web Design",
+        "Writing, Translation & Transcription"
       ],
-      "default":"Vacation Rentals"
+      "default":"Home Cleaning"
     },
     "description": {
       "type": "string", 

@@ -1,0 +1,47 @@
+{
+  "$schema":"http://json-schema.org/draft-04/schema#",
+  "description":"Distributed Nextdoor",
+  "type": "object",
+  "required": ["name","category","description"],
+  "properties": {
+    "name": {
+      "type": "string", 
+      "title": "Title",
+       "minLength": "3"
+    },
+    "category": {
+      "type": "string", 
+      "title": "Category", 
+      "enum": [
+        "Activities",
+        "Artists",
+        "Childcare",
+        "Classes",
+        "General",
+        "Groups",
+        "Local News",
+        "Lost & Found",
+        "Musicians",
+        "Personals",
+        "Pets",
+        "Politics",
+        "Resumes",
+        "Volunteers"
+      ],
+      "default": "Local News"
+    },
+    "description": {
+      "type": "string", 
+      "title": "Description", 
+      "minLength": "10"
+    },
+    "pictures": {
+      "type": "array",
+      "title": "Pictures",
+      "items": {
+        "type": "string",
+        "format": "data-url"
+      }
+    }
+  }
+}

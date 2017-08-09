@@ -1,10 +1,12 @@
 {
+  "$schema":"http://json-schema.org/draft-04/schema#",
+  "description":"Distributed Craigslist/Ebay/Amazon",
   "type": "object",
   "required": ["name","category","description","price"],
   "properties": {
     "name": {
       "type": "string", 
-      "title": "Item for sale",
+      "title": "Title",
        "minLength": "3"
     },
     "category": {
@@ -55,7 +57,8 @@
         "Trailers",
         "Video Gaming",
         "Wanted"
-      ]
+      ],
+      "default": "Cars & Trucks"
     },
     "description": {
       "type": "string", 
