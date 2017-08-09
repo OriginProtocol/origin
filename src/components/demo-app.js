@@ -13,12 +13,12 @@ import '../css/oswald.css'
 import '../css/pure-min.css'
 
 const DEMO_SCHEMA_LIST = [
-  {type: 'for-sale', name: 'For Sale', 'img': 'funny-cat.jpg'},
-  {type: 'housing', name: 'Housing', 'img': 'funny-cat.jpg'},
-  {type: 'transportation', name: 'Transportation', 'img': 'funny-cat.jpg'},
-  {type: 'tickets', name: 'Tickets', 'img': 'funny-cat.jpg'},
-  {type: 'labor', name: 'Labor', 'img': 'funny-cat.jpg'},
-  {type: 'announcements', name: 'Announcements', 'img': 'funny-cat.jpg'},
+  {type: 'for-sale', name: 'For Sale', 'img': 'for-sale.jpg'},
+  {type: 'housing', name: 'Housing', 'img': 'housing.jpg'},
+  {type: 'transportation', name: 'Transportation', 'img': 'transportation.jpg'},
+  {type: 'tickets', name: 'Tickets', 'img': 'tickets.jpg'},
+  {type: 'labor', name: 'Labor', 'img': 'labor.jpg'},
+  {type: 'announcement', name: 'Announcement', 'img': 'announcement.jpg'},
 ]
 
 class DemoApp extends Component {

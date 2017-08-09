@@ -21,7 +21,7 @@ class IpfsService {
 
     IpfsService.instance = this
   }
-
+  
   submitListing(formListing) {
     return new Promise((resolve, reject) => {
       const file = {

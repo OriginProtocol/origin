@@ -17,11 +17,15 @@ class DemoStep3 extends Component {
         <h4>Your listing is now on the IPFS network</h4>
         <p>
           We've uploaded your listing to our IPFS gateway. This gateway is currently 
-          connected to XXX peers that can serve your listing.
+          connected to hundreds of peers that can serve your listing.
         </p>
-        <a href={"http://gateway.0rigin.org/ipfs/" + this.props.ipfsHash} target="_blank">
-          See your listing on IPFS
-        </a>
+        <div className="btn-wrapper">
+          <a href={"http://gateway.0rigin.org/ipfs/" + this.props.ipfsHash} target="_blank">
+             <button className="btn btn-info">
+              See your listing on IPFS
+            </button>
+          </a>
+        </div>
         <h4>Add your listing to the blockchain</h4>
         <p>
           Next, we will submit your IPFS content address to the Ethereum blockchain. 
@@ -31,11 +35,13 @@ class DemoStep3 extends Component {
           blockchain are all separate steps to illustrate how everything works. 
           In practice, this would all happen as a single step.
         </p>
-        <button className="btn btn-primary" onClick={() => {
-          this.handleSubmitToBlockchain(this.props.ipfsHash, this.props.onStep3Completion)
-        }}>
-          Submit listing to Ethereum
-        </button>
+        <div className="btn-wrapper">
+          <button className="btn btn-primary" onClick={() => {
+            this.handleSubmitToBlockchain(this.props.ipfsHash, this.props.onStep3Completion)
+          }}>
+            Submit listing to Ethereum
+          </button>
+        </div>
       </section>
     );
   }
