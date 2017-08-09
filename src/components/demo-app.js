@@ -15,7 +15,7 @@ import '../css/pure-min.css'
 const DEMO_SCHEMA_LIST = [
   {type: 'for-sale', name: 'For Sale', 'img': 'funny-cat.jpg'},
   {type: 'housing', name: 'Housing', 'img': 'funny-cat.jpg'},
-  {type: 'transportation', name: 'Transportation', 'img': 'funny-cat.jpg'}
+  {type: 'transportation', name: 'Transportation', 'img': 'funny-cat.jpg'},
 ]
 
 class DemoApp extends Component {

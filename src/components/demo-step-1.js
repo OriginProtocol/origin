@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
 
-import forSaleSchema from '../../public/schemas/for-sale.json'
 import ListingForm from './listing-form'
-import SchemaForm from './schema-form'
-import schemaList from '../../public/schemas/list.json'
 
 // Make this a relative URL
-class SchemaOption extends React.Component {
+class Schema extends React.Component {
   render() {
     return (
       <div className="schema-option">
@@ -24,27 +21,25 @@ class SchemaOption extends React.Component {
 }
 
 class SchemaOptions extends React.Component {
-  renderSchema(i) {
+  renderSchema(schema) {
     return (
-      <SchemaOption 
-        schema={this.props.schemaList[i]} 
-        onSelection={() => this.props.onSchemaSelection(this.props.schemaList[i].type)}
+      <Schema
+        schema={schema}
+        onSelection={() => this.props.onSchemaSelection(schema.type)}
       />
-    );
+    )
   }
 
   render() {
     return (
       <div className="row">
-        <div className="col-md-4">
-          {this.renderSchema(0)}
-        </div>
-        <div className="col-md-4">
-          {this.renderSchema(1)}
-        </div>
-        <div className="col-md-4">
-          {this.renderSchema(2)}
-        </div>
+        {this.props.schemaList.map((schema) => {
+          return (
+            <div className="col-md-4">
+              {this.renderSchema(schema)}
+            </div>
+          )
+        })}
       </div>
     );
   }

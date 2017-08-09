@@ -61,6 +61,7 @@ fieldset {
   margin: 0px;
 }
 
-.schema-option:hover {
+.schema-option img:hover {
   cursor: pointer;
+  opacity: 0.85;
 }
