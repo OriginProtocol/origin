@@ -35,7 +35,7 @@ class SchemaOptions extends React.Component {
       <div className="row">
         {this.props.schemaList.map((schema) => {
           return (
-            <div className="col-md-4">
+            <div className="col-md-4" key={schema.type}>
               {this.renderSchema(schema)}
             </div>
           )

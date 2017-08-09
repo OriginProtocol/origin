@@ -32,7 +32,7 @@ class DemoStep2 extends Component {
           Enter the much-heralded IPFS (Interplanetary File System). We post your
           data to hundreds of distributed nodes on the IPFS network. This ensures 
           that your listing is always available, and more importantly, is not subject 
-          to the whims and arbitrary policies of a centralized business.
+          to the whims and arbitrary policies of a centralized business or government.
         </p>
         <button className="btn btn-primary" onClick={() => {
           this.handleSubmitToIpfs(this.props.listingJson, this.props.onStep2Completion)
