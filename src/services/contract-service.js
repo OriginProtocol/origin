@@ -15,21 +15,23 @@ class ContractService {
     this.listingContract = this.contract(ListingContract)
   }
 
-  // Re-write as promise
   getListingForAddress(address) {
-    this.listingContract.deployed().then((instance) => {
-      return instance.listingForAddress(address)
-    }).then((result) => {
-      console.log(result)
-    });
+    return new Promise((resolve, reject) => {
+      this.listingContract.deployed().then((instance) => {
+        return instance.listingForAddress(address)
+      }).then((result) => {
+        resolve(result)
+      }).catch((error) => {
+        reject('Error getting listing for Ethereum address: ' + error)
+      })
+    })
   }
 
-  // Re-wire as promise
   getListingForUser() {
     this.listingContract.setProvider(web3Service.web3.currentProvider)
     web3Service.web3.eth.getAccounts((error, accounts) => {
-      this.getListingForAddress(accounts[0])
-    });
+      return this.getListingForAddress(accounts[0])
+    })
   }
 
   submitListing(ipfsListing) {

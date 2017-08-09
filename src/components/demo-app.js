@@ -6,12 +6,17 @@ import DemoStep3 from './demo-step-3'
 import DemoStep4 from './demo-step-4'
 import NavigationBar from './navigation-bar'
 
-const log = (type) => console.log.bind(console, type)
-
 import '../css/demo-app.css'
+import '../css/lato-web.css'
 import '../css/open-sans.css'
 import '../css/oswald.css'
 import '../css/pure-min.css'
+
+const DEMO_SCHEMA_LIST = [
+  {type: 'for-sale', name: 'For Sale', 'img': 'funny-cat.jpg'},
+  {type: 'housing', name: 'Housing', 'img': 'funny-cat.jpg'},
+  {type: 'transportation', name: 'Transportation', 'img': 'funny-cat.jpg'}
+]
 
 class DemoApp extends Component {
   constructor(props) {
@@ -54,25 +59,25 @@ class DemoApp extends Component {
     return (
       <div className="demo-app">
         <NavigationBar />
-        <main className="container demo-container">
+        <main className="container">
           <div className="row">
             <div className="col-md-offset-2 col-md-8">
-              {this.state.step == 1 &&
-                <DemoStep1 onStep1Completion={this.handleStep1Completion}/>
+              {this.state.step === 1 &&
+                <DemoStep1 schemaList={DEMO_SCHEMA_LIST} onStep1Completion={this.handleStep1Completion}/>
               }
-              {this.state.step == 2 &&
+              {this.state.step === 2 &&
                 <DemoStep2 
                   listingJson={this.state.listingJson} 
                   onStep2Completion={this.handleStep2Completion}
                 />
               }
-              {this.state.step == 3 &&
+              {this.state.step === 3 &&
                 <DemoStep3 
                   ipfsHash={this.state.ipfsHash} 
                   onStep3Completion={this.handleStep3Completion}
                 />
               }
-              {this.state.step == 4 &&
+              {this.state.step === 4 &&
                 <DemoStep4 
                   ethereumTransaction={this.state.ethereumTransaction} 
                 />

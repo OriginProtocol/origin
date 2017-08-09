@@ -1,9 +1,40 @@
-body {
-  font-family: 'Open Sans', sans-serif;
+html {
+  height: 100%;
+  font-size: 16px;
 }
 
-h1, h2, h3 {
-  font-family: 'Open Sans', 'Arial Narrow', sans-serif;
+body {
+  height: 100%;
+  font-family: 'LatoWebLight', 'Open Sans', 'Arial Narrow', sans-serif;
+  font-size: 1.0rem;
+}
+
+h1, h2 {
+  font-family: 'LatoWeb', 'Open Sans', 'Arial Narrow', sans-serif;  
+}
+
+h3, h4, h5, h6 {
+  font-family: 'LatoWebLight', 'Open Sans', 'Arial Narrow', sans-serif;
+}
+
+h3 {
+  margin-bottom: 40px;
+}
+
+h4 {
+  margin-bottom: 20px;
+}
+
+p {
+  margin-bottom: 20px;
+}
+
+.img-wrapper {
+  width: 100%;
+}
+
+.img-wrapper img {
+  width: 100%;
 }
 
 code {
@@ -11,4 +42,25 @@ code {
   margin: 20px 0 15px 0;
   padding: 10px;
   background: #eee;
+}
+
+.navbar {
+  border-bottom: 1px solid #ebebeb !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .15), 0 1px 5px rgba(0, 0, 0, .1);
+  background-color: #fff;
+  padding: 10px;
+}
+
+.rjsf {
+  margin: 40px auto;
+}
+
+fieldset {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin: 0px;
+}
+
+.schema-option:hover {
+  cursor: pointer;
 }

@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { render } from 'react-dom';
+import React, { Component } from 'react'
+import { render } from 'react-dom'
 
-import ipfsService from '../services/ipfs-service';
+import ipfsService from '../services/ipfs-service'
 
 class DemoStep2 extends Component {
   handleSubmitToIpfs(data, onSubmitToIpfs) {

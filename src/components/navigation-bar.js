@@ -4,7 +4,7 @@ import { render } from 'react-dom';
 class NavigationBar extends Component {
   render() {
     return (
-      <nav className="navbar navbar-default">
+      <nav className="navbar">
         <div className="container">
           <div className="navbar-header">
             <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-links" aria-expanded="false">
@@ -20,8 +20,6 @@ class NavigationBar extends Component {
 
           <div className="collapse navbar-collapse" id="nav-links">
             <ul className="nav navbar-nav navbar-right">
-              <li><a href="/about"><div>About</div></a></li>
-              <li><a href="/faqs"><div>FAQs</div></a></li>
             </ul>
           </div>
         </div>
