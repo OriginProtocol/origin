@@ -65,3 +65,7 @@ fieldset {
   cursor: pointer;
   opacity: 0.85;
 }
+
+pre {
+  margin: 20px auto;
+}

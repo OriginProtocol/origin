@@ -76,7 +76,7 @@ class DemoStep1 extends Component {
     return (
       <section className="step">
         <h3>Create your first decentralized listing on 0rigin</h3>
-        <h4>1. Choose a schema for your product or service</h4>
+        <h4>Choose a schema for your product or service</h4>
         <p>
           Your product or service will use a schema to describe its 
           attributes like name, description, and price. 0rigin already 
@@ -96,7 +96,7 @@ class DemoStep1 extends Component {
         <hr>
         </hr>
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-md-12">
             {this.state.schemaFetched &&
               <ListingForm 
                 schema={this.state.selectedSchema} 

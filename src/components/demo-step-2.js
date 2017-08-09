@@ -13,25 +13,35 @@ class DemoStep2 extends Component {
 
   render() {
     return (
-      <div className="step">
-        <h2 className="step-title">Step 2</h2>
-        <p className="step-content">
-          Now we are ready to submit to ipfs.
+      <section className="step">
+        <h4>Post your listing to the decentralized web</h4>
+        <p>
+          When creating your listing, we store your data as JSON.
+        </p>
+        <pre>{JSON.stringify(this.props.listingJson, null, 2)}</pre>
+        <p>
+          In traditional commerce, this JSON would be sent to 
+          a centralized business like Craigslist, Airbnb, or eBay. The data 
+          would then be stored in their databases.
         </p>
         <p>
-          Why we chose IPFS blahblahblah.
+          Because we want to build decentralized, trustless commerce, we need to 
+          store your data in a distributed data store that isn't owned by anyone.
         </p>
         <p>
-          Do we re-render the JSON? Kind of a bitch.
+          Enter the much-heralded IPFS (Interplanetary File System). We post your
+          data to hundreds of distributed nodes on the IPFS network. This ensures 
+          that your listing is always available, and more importantly, is not subject 
+          to the whims and arbitrary policies of a centralized business.
         </p>
         <button className="btn btn-primary" onClick={() => {
           this.handleSubmitToIpfs(this.props.listingJson, this.props.onStep2Completion)
         }}>
           Submit to ipfs
         </button>
-      </div>
+      </section>
     );
   }
 }
 
-export default DemoStep2;
+export default DemoStep2
