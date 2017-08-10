@@ -17,8 +17,8 @@ const DEMO_SCHEMA_LIST = [
   {type: 'housing', name: 'Housing', 'img': 'housing.jpg'},
   {type: 'transportation', name: 'Transportation', 'img': 'transportation.jpg'},
   {type: 'tickets', name: 'Tickets', 'img': 'tickets.jpg'},
-  {type: 'labor', name: 'Labor', 'img': 'labor.jpg'},
-  {type: 'announcement', name: 'Announcement', 'img': 'announcement.jpg'},
+  {type: 'services', name: 'Services', 'img': 'services.jpg'},
+  {type: 'announcements', name: 'Announcements', 'img': 'announcements.jpg'},
 ]
 
 class DemoApp extends Component {

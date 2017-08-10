@@ -1,6 +1,6 @@
 {
   "$schema":"http://json-schema.org/draft-04/schema#",
-  "description": "Distributed Airbnb",
+  "description": "Distributed Getaround",
   "type": "object",
   "required": ["name","category","description","price"],
   "properties": {
@@ -13,20 +13,14 @@
       "type": "string", 
       "title": "Category", 
       "enum": [
-        "Apts Wanted",
-        "Apts/Housing for Rent",
-        "Housing Swap",
-        "Office & Commercial",
-        "Parking & Storage",
-        "Real Estate",
-        "Real Estate Wanted",
-        "Room/Share Wanted",
-        "Rooms & Shares",
-        "Sublet/Temp Wanted",
-        "Sublets & Temporary",
-        "Vacation Rentals"
+        "Airplane Charter",
+        "Bike Rentals",
+        "Boat Rentals",
+        "Car Rentals",
+        "Taxi service",
+        "Yacht charters"
       ],
-      "default":"Vacation Rentals"
+      "default":"Car Rentals"
     },
     "description": {
       "type": "string", 

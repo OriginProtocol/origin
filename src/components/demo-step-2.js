@@ -32,7 +32,7 @@ class DemoStep2 extends Component {
           Enter the much-heralded IPFS (Interplanetary File System). We post your
           data to hundreds of distributed nodes on the IPFS network. This ensures 
           that your listing is always available, and more importantly, is not subject 
-          to the whims and arbitrary policies of a centralized business or government.
+          to the whims and arbitrary policies of any centralized business or government.
         </p>
         <div className="btn-wrapper">
           <button className="btn btn-primary" onClick={() => {
