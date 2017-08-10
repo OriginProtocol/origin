@@ -100,9 +100,9 @@ class DemoStep1 extends Component {
         <div className="row">
           <div className="col-md-12">
             {this.state.schemaFetched &&
-              <h3> 
+              <h4> 
                 {this.state.selectedSchemaType.name}
-              </h3>
+              </h4>
             }
             {this.state.schemaFetched &&
               <ListingForm 

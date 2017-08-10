@@ -21,10 +21,12 @@ h3, h4, h5, h6 {
 
 h3 {
   margin-bottom: 40px;
+  font-size: 1.7rem;
 }
 
 h4 {
   margin-bottom: 20px;
+  font-size: 1.4rem;
 }
 
 p {
@@ -117,6 +119,7 @@ pre {
 }
 
 .schema-option h4 {
+  font-size: 1.2rem;
   text-align: center;
   margin: 10px auto;
 }
