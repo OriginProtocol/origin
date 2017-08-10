@@ -16,7 +16,10 @@ class DemoStep2 extends Component {
       <section className="step">
         <h4>Post your listing to the decentralized web</h4>
         <p>
-          When creating your listing, we store your data as JSON.
+          When creating your listing, we store your data as JSON.  
+        </p>
+        <p>
+          Cryptographically sign your listing using <a href='http://www.keybase.io'>KeyBase</a> to verify your identity on services like Facebook and Twitter with publicly auditable proofs.
         </p>
         <pre>{JSON.stringify(this.props.listingJson, null, 2)}</pre>
         <p>
