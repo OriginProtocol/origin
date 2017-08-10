@@ -25,21 +25,23 @@ class SchemaOptions extends React.Component {
     return (
       <Schema
         schema={schema}
-        onSelection={() => this.props.onSchemaSelection(schema.type)}
+        onSelection={() => this.props.onSchemaSelection(schema)}
       />
     )
   }
 
   render() {
     return (
-      <div className="row">
-        {this.props.schemaList.map((schema) => {
-          return (
-            <div className="col-md-4">
-              {this.renderSchema(schema)}
-            </div>
-          )
-        })}
+      <div className="schema-options">
+        <div className="row">
+          {this.props.schemaList.map((schema) => {
+            return (
+              <div className="col-md-4" key={schema.type}>
+                {this.renderSchema(schema)}
+              </div>
+            )
+          })}
+        </div>
       </div>
     );
   }
@@ -50,18 +52,18 @@ class DemoStep1 extends Component {
     super(props)
 
     this.state = {
-      selectedSchemaType: this.props.schemaList[0].type,
+      selectedSchemaType: this.props.schemaList[0],
       selectedSchema: null,
       schemaFetched: false
     }
 
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
-    this.handleSchemaSelection(this.props.schemaList[0].type)
+    this.handleSchemaSelection(this.props.schemaList[0])
   }
 
   handleSchemaSelection(schemaType) {
     // Need to change this to a non local URL
-    fetch('http://localhost:3000/schemas/' + schemaType + '.json')
+    fetch('http://localhost:3000/schemas/' + schemaType.type + '.json')
     .then((response) => response.json())
     .then((schemaJson) => {
       this.setState({
@@ -97,6 +99,11 @@ class DemoStep1 extends Component {
         </hr>
         <div className="row">
           <div className="col-md-12">
+            {this.state.schemaFetched &&
+              <h3> 
+                {this.state.selectedSchemaType.name}
+              </h3>
+            }
             {this.state.schemaFetched &&
               <ListingForm 
                 schema={this.state.selectedSchema} 

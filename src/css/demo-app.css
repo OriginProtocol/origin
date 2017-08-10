@@ -1,3 +1,5 @@
+/* Common */
+
 html {
   height: 100%;
   font-size: 16px;
@@ -29,36 +31,84 @@ p {
   margin-bottom: 20px;
 }
 
-.img-wrapper {
-  width: 100%;
+.btn {
+  height: 46px;
+  border-radius: 4px;
+  padding: 6px 20px;
+  font-size: 1.0rem;
+  margin: 0px  
+}
+
+.btn-wrapper {
+  margin: 40px auto;
 }
 
 .img-wrapper img {
   width: 100%;
 }
 
-code {
-  display: block;
-  margin: 20px 0 15px 0;
-  padding: 10px;
-  background: #eee;
+.img-wrapper {
+  width: 100%;
 }
 
 .navbar {
   border-bottom: 1px solid #ebebeb !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .15), 0 1px 5px rgba(0, 0, 0, .1);
-  background-color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .15), 0 1px 10px rgba(0, 0, 0, .2);
+  background-color: #2986E3;
   padding: 10px;
+  border-radius: 0px;
 }
+
+.navbar .navbar-brand {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.4rem;
+}
+
+pre {
+  margin: 40px auto;
+}
+
+/* React JSON Schema Form */
 
 .rjsf {
   margin: 40px auto;
 }
 
-fieldset {
+.rjsf fieldset {
   border: 1px solid #ddd;
   border-radius: 4px;
   margin: 0px;
+}
+
+/* Demo App */
+
+.btn-primary,
+.rjsf .btn-info {
+  background-color: #2986E3 !important;
+  color: #ffffff;
+  background-image: none;
+  border-color: #2A8BEB;
+}
+
+.btn-primary:hover,
+.rjsf .btn-info:hover {
+  background-color: #2E97FF !important;
+  border-color: #2E97FF;
+}
+
+.schema-options {
+  margin: 50px auto 20px auto;
+}
+
+.schema-option {
+  margin-bottom: 30px;
+}
+
+.schema-option img {
+  height: 160px;
+  width: 100%;
+  object-fit: cover;
 }
 
 .schema-option img:hover {
@@ -66,6 +116,7 @@ fieldset {
   opacity: 0.85;
 }
 
-pre {
-  margin: 20px auto;
+.schema-option h4 {
+  text-align: center;
+  margin: 10px auto;
 }

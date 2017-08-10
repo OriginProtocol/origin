@@ -17,7 +17,8 @@ class ListingForm extends Component {
         onSubmit={(formListing) => {
           this.handleSubmitListing(formListing, this.props.onSubmitListing)
         }}
-        onError={log("errors")} />
+        onError={log("errors")}
+      />
     );
   }
 }
