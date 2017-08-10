@@ -7,15 +7,20 @@ import Form from 'react-jsonschema-form'
 const log = (type) => console.log.bind(console, type)
 
 class ListingForm extends Component {
-  handleSubmitListing(formListing, onSubmitListing) {
-    onSubmitListing(formListing.formData)
+  handleSubmitListing(formListing, selectedSchemaType, onSubmitListing) {
+    const jsonBlob = {
+      'schema':'http://localhost:3000/schemas/' + selectedSchemaType.type + '.json', 
+      'data':formListing.formData, 
+      'signature':'QmbviCEZgU1ArYtEHW9JRntdLQd1RcJ4hLuNJ3PCxkk12A'
+    }
+    onSubmitListing(jsonBlob)
   }
 
   render() {
     return (
       <Form schema={this.props.schema}
         onSubmit={(formListing) => {
-          this.handleSubmitListing(formListing, this.props.onSubmitListing)
+          this.handleSubmitListing(formListing, this.props.selectedSchemaType, this.props.onSubmitListing)
         }}
         onError={log("errors")}
       />

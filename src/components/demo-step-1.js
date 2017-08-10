@@ -107,6 +107,7 @@ class DemoStep1 extends Component {
             {this.state.schemaFetched &&
               <ListingForm 
                 schema={this.state.selectedSchema} 
+                selectedSchemaType={this.state.selectedSchemaType}
                 onSubmitListing={this.props.onStep1Completion}/>
             }
           </div>
