@@ -443,15 +443,23 @@ a:focus {
 		z-index: 1000;
 		position: absolute;
 	}
-	.codrops-header {
-		align-items: center;
-		flex-direction: column;
-	}
 	.deco--title {
 		display: none;
 	}
-	.demos {
-		text-align: center;
+	.demo {
+		margin:0;
+		padding:10px;
+	}
+	.content__link {
+		top:3em;
+		position:relative;
+	}
+	.content--layout {
+		grid-template-columns: 150px 150px 150px 150px; 
+		grid-template-rows: 10px 100px 100px;
+		grid-template-areas:	"title title title title"
+								"author ... desc desc"
+								"author ... link link";
 	}
 }
 
