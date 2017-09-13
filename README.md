@@ -55,7 +55,9 @@ If you're new to the space, it may be helpful to first familiarize yourself with
 
 6. `npm run start`
 
-7. `testrpc in another terminal tab`
+7. In another terminal tab:
+
+    `testrpc`
 
 8. In Metamask, configure RPC to be private network (localhost 8545) and import the private key for one of your test wallets (should show roughly 100 Eth) - *DO NOT GET YOUR MAIN NET WALLET MIXED UP*
 This needs to be done every single time a new testrpc instance is run.
