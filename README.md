@@ -41,9 +41,9 @@ If you're new to the space, it may be helpful to first familiarize yourself with
 
 1. Download Ethereum test-rpc and truffle:
 
-    npm i -g ethereumjs-testrpc
+    `npm i -g ethereumjs-testrpc`
 
-    npm install -g truffle
+    `npm install -g truffle`
 
 2. `git clone https://github.com/0riginOrg/0rigin`
 
