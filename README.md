@@ -39,25 +39,25 @@ If you're new to the space, it may be helpful to first familiarize yourself with
 
 ## Install and run the demo app
 
-1. Download Ethereum test-rpc and truffle
+1. Download Ethereum test-rpc and truffle:
 
-  npm i -g ethereumjs-testrpc
+    npm i -g ethereumjs-testrpc
 
-  npm install -g truffle
+    npm install -g truffle
 
-2. git clone https://github.com/0riginOrg/0rigin
+2. `git clone https://github.com/0riginOrg/0rigin`
 
-3. truffle compile
+3. `truffle compile`
 
-4. truffle migrate
+4. `truffle migrate`
 
-5. npm install
+5. `npm install`
 
-6. npm run start
+6. `npm run start`
 
-7. testrpc in another terminal tab
+7. `testrpc in another terminal tab`
 
-8. In Metamask, configure RPC to be private network (localhost 8545) and import the private key for one of your test wallets (should show roughly 100 Eth) - DO NOT GET YOUR MAIN NET WALLET MIXED UP
+8. In Metamask, configure RPC to be private network (localhost 8545) and import the private key for one of your test wallets (should show roughly 100 Eth) - *DO NOT GET YOUR MAIN NET WALLET MIXED UP*
 This needs to be done every single time a new testrpc instance is run.
 * After awhile, your Metamask will be cluttered with invalid addresses. [Here is how you clear it](https://ethereum.stackexchange.com/questions/21422/how-to-remove-unused-test-accounts-from-metamask/21468)
 * While we dev, I would actually not recommend having real Eth in a Main Net wallet so we can dump it whenever
