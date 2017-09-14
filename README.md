@@ -40,12 +40,12 @@ If you're new to the space, it may be helpful to first familiarize yourself with
 ## Install and run the demo app
 
 1. Download Ethereum test-rpc and truffle:
-
     `npm i -g ethereumjs-testrpc`
-
     `npm install -g truffle`
 
-2. `git clone https://github.com/0riginOrg/0rigin`
+2. Clone 0rigin:
+    `git clone https://github.com/0riginOrg/0rigin`
+    `cd 0rigin`
 
 3. `truffle compile`
 
