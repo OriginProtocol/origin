@@ -41,29 +41,29 @@ If you're new to the space, it may be helpful to first familiarize yourself with
 
 1. Download Ethereum [test-rpc](https://github.com/ethereumjs/testrpc) and [truffle](http://truffleframework.com/):
 ```
-    npm i -g ethereumjs-testrpc
-    npm install -g truffle
+npm i -g ethereumjs-testrpc
+npm install -g truffle
 ```
 2. Clone 0rigin:
 ```
-    git clone https://github.com/0riginOrg/0rigin
-    cd 0rigin
+git clone https://github.com/0riginOrg/0rigin
+cd 0rigin
 ```
 3. Compile contracts:
 ```
-    truffle compile
-    truffle migrate
+truffle compile
+truffle migrate
 ````
 4. Start 0rigin node application. 
 ```
-    npm install
-    npm run start
+npm install
+npm run start
 ````
 5. A browser will open to http://localhost:3000
 ![0rigin-homepage](https://user-images.githubusercontent.com/673455/30517963-0603f3d8-9b2d-11e7-9ef4-327b747695eb.png)
 6. In another terminal tab:
 ```
-    testrpc
+testrpc
 ```
   This will output credentials for several test wallets with 100 Eth.
   
