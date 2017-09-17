@@ -39,7 +39,7 @@ If you're new to the space, it may be helpful to first familiarize yourself with
 
 ## Install and run the demo app
 
-1. Download Ethereum test-rpc and truffle:
+1. Download Ethereum [test-rpc](https://github.com/ethereumjs/testrpc) and [truffle](http://truffleframework.com/):
 ```
     npm i -g ethereumjs-testrpc
     npm install -g truffle
@@ -49,22 +49,25 @@ If you're new to the space, it may be helpful to first familiarize yourself with
     git clone https://github.com/0riginOrg/0rigin
     cd 0rigin
 ```
-3. `truffle compile`
-
-4. `truffle migrate`
-
-5. `npm install`
-
-6. `npm run start`
-
-7. In another terminal tab:
+3. Compile contracts:
+```
+    truffle compile
+    truffle migrate
+````
+4. Start 0rigin node application. 
+```
+    npm install
+    npm run start
+````
+5. A browser will open to http://localhost:3000
+6. In another terminal tab:
 ```
     testrpc
 ```
-8. In [Metamask](https://metamask.io/), configure RPC to be private network (localhost 8545) and import the private key for one of your test wallets (should show roughly 100 Eth) - *DO NOT GET YOUR MAIN NET WALLET MIXED UP*
-This needs to be done every single time a new testrpc instance is run.
-* After awhile, your Metamask will be cluttered with invalid addresses. [Here is how you clear it](https://ethereum.stackexchange.com/questions/21422/how-to-remove-unused-test-accounts-from-metamask/21468)
-* While we dev, I would actually not recommend having real Eth in a Main Net wallet so we can dump it whenever
+7. In [Metamask](https://metamask.io/), configure RPC to be private network (localhost 8545) and import the private key for one of your test wallets (should show roughly 100 Eth) - **DO NOT GET YOUR MAIN NET WALLET MIXED UP**. 
+  * This needs to be done every single time a new testrpc instance is run.
+  * After awhile, your Metamask will be cluttered with invalid addresses. [Here is how you clear it](https://ethereum.stackexchange.com/questions/21422/how-to-remove-unused-test-accounts-from-metamask/21468)
+  * While we dev, I would actually not recommend having real Eth in a Main Net wallet so we can dump it whenever
 
 ## Get involved
 
