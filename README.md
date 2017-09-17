@@ -60,6 +60,7 @@ If you're new to the space, it may be helpful to first familiarize yourself with
     npm run start
 ````
 5. A browser will open to http://localhost:3000
+![0rigin-homepage](https://user-images.githubusercontent.com/673455/30517963-0603f3d8-9b2d-11e7-9ef4-327b747695eb.png)
 6. In another terminal tab:
 ```
     testrpc
