@@ -10,7 +10,7 @@ class IpfsService {
     }
 
     this.ipfs = ipfsAPI(DEFAULT_GATEWAY, '5001', {protocol: 'http'})
-    this.ipfs.swarm.peers(function(error, response) { 
+    this.ipfs.swarm.peers(function(error, response) {
       if (error) {
         console.log("Can't connect to the IPFS Gateway.")
         console.error(error)
@@ -21,7 +21,7 @@ class IpfsService {
 
     IpfsService.instance = this
   }
-  
+
   submitListing(formListing) {
     return new Promise((resolve, reject) => {
       const file = {
@@ -30,6 +30,12 @@ class IpfsService {
       }
 
       this.ipfs.files.add([file], (error, response) => {
+        if (error) {
+          console.log("Can't connect to the IPFS Gateway.")
+          console.error(error)
+          reject('Can\'t connect to the IPFS Gateway. Failure to submit listing to Ipfs')
+          return
+        }
         const file = response[0]
         const ipfsListing = file.hash
 
