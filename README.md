@@ -39,6 +39,8 @@ If you're new to the space, it may be helpful to first familiarize yourself with
 
 ## Install and run the demo app
 
+Think of this app as a proof of concept and our playground for trying out ideas. While we may eventually reuse pieces of this in production, this is by no means what we envision as the final product. We thought it would be helpful to demonstrate how the various technologies work together from end to end.
+
 1. Download Ethereum [test-rpc](https://github.com/ethereumjs/testrpc) and [truffle](http://truffleframework.com/):
 ```
 npm i -g ethereumjs-testrpc
