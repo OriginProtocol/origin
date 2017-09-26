@@ -332,7 +332,7 @@ a:focus {
 }
 
 /* Header */
-.codrops-header {
+.origin-header {
 	position: relative;
 	display: flex;
 	flex-direction: row;
@@ -344,7 +344,7 @@ a:focus {
 	justify-self: start;
 }
 
-.codrops-header__title {
+.origin-header__title {
 	font-size: 1em;
 	padding: 0.75em 0;
 	margin: 0;
@@ -394,7 +394,7 @@ a:focus {
 }
 
 /* Top Navigation Style */
-.codrops-links {
+.origin-links {
 	position: relative;
     display: flex;
     justify-content: space-between;
@@ -404,7 +404,7 @@ a:focus {
     white-space: nowrap;
 }
 
-.codrops-icon {
+.origin-icon {
 	position: relative;
 	display: inline-block;
 	padding: 0.75em 0.75em 1em;
