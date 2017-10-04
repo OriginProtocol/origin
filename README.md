@@ -68,9 +68,11 @@ testrpc
   This will output credentials for several test wallets with 100 Eth.
   
 7. In [Metamask](https://metamask.io/), configure RPC to be private network (localhost 8545) and import the private key for one of your test wallets from previous step. **DO NOT GET YOUR MAIN NET WALLET MIXED UP**.
-  * This needs to be done every single time a new testrpc instance is run.
+  * This needs to be done every single time a new `testrp` instance is run.
   * After awhile, your Metamask will be cluttered with invalid addresses. [Here is how you clear it](https://ethereum.stackexchange.com/questions/21422/how-to-remove-unused-test-accounts-from-metamask/21468)
-  * While we dev, I would actually not recommend having real Eth in a Main Net wallet so we can dump it whenever
+  * While we dev, I would actually not recommend having real ETH in a Main Net wallet so we can dump it whenever
+
+8. Try it out! Create a listing and post it to IPFS and Ethereum. 
 
 ## Get involved
 
