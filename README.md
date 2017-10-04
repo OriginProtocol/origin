@@ -39,40 +39,45 @@ If you're new to the space, it may be helpful to first familiarize yourself with
 
 ## Install and run the demo app
 
-1. Download Ethereum [test-rpc](https://github.com/ethereumjs/testrpc) and [truffle](http://truffleframework.com/):
+Think of this app as a proof of concept and our playground for trying out ideas. While we may eventually reuse pieces of this in production, this is by no means what we envision as the final product. We thought it would be helpful to demonstrate how the various technologies work together from end to end.
+
+1. Install [Metamask Chrome Browser Extension](https://metamask.io/).
+
+2. Download Ethereum [test-rpc](https://github.com/ethereumjs/testrpc) and [truffle](http://truffleframework.com/):
 ```
 npm i -g ethereumjs-testrpc
 npm install -g truffle
 ```
-2. Clone 0rigin:
+3. Clone 0rigin:
 ```
 git clone https://github.com/0riginOrg/0rigin
 cd 0rigin
 ```
-3. Compile contracts:
+4. Compile contracts:
 ```
 truffle compile
 truffle migrate
 ````
-4. Start 0rigin node application. 
+5. Start testrpc:
+```
+testrpc
+```
+  This will output credentials for several test wallets with 100 ETH. You'll need to use one of the private keys in a later step.
+
+6. In a new terminal tab, start the 0rigin node application. 
 ```
 npm install
 npm run start
 ````
-5. A browser will open to http://localhost:3000
+6. A browser will open to http://localhost:3000
 ![0rigin-homepage](https://user-images.githubusercontent.com/673455/30517963-0603f3d8-9b2d-11e7-9ef4-327b747695eb.png)
-6. In another terminal tab:
-```
-testrpc
-```
-  This will output credentials for several test wallets with 100 Eth.
   
-7. In [Metamask](https://metamask.io/), configure RPC to be private network (localhost 8545) and import the private key for one of your test wallets from previous step. **DO NOT GET YOUR MAIN NET WALLET MIXED UP**.
-  * This needs to be done every single time a new `testrp` instance is run.
+7. In Metamask, configure RPC to be private network (localhost 8545) and import the private key for one of your test wallets from previous step. **DO NOT GET YOUR MAIN NET WALLET MIXED UP**.
+  * This needs to be done every single time a new testrpc instance is run.
   * After awhile, your Metamask will be cluttered with invalid addresses. [Here is how you clear it](https://ethereum.stackexchange.com/questions/21422/how-to-remove-unused-test-accounts-from-metamask/21468)
-  * While we dev, I would actually not recommend having real ETH in a Main Net wallet so we can dump it whenever
+  * While we dev, I would actually not recommend having real Eth in a Main Net wallet so we can dump it whenever
 
-8. Try it out! Create a listing and post it to IPFS and Ethereum. 
+8. Try it! Create a listing and post it to IPFS and Ethereum.
 
 ## Get involved
 
