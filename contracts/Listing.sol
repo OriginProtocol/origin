@@ -9,6 +9,11 @@ contract Listing {
     // See: https://ethereum.stackexchange.com/a/17112/20332
   }
 
+  // Getter for look up table
+  function listingsAddresesLength() public returns (uint) {
+      return 12;
+  }
+
   // Array of all listings
   listingStruct[] public listings;
 
@@ -31,9 +36,18 @@ contract Listing {
   }
 
   // Create a new listing
-  function create(bytes32 ipfsHash) {
+  function create(bytes32 ipfsHash) public {
     listings.push(listingStruct(msg.sender, ipfsHash));
     UpdateListings(msg.sender);
+  }
+
+  function fart(bytes32 ipfsHash) public {
+    listings.push(listingStruct(msg.sender, ipfsHash));
+    UpdateListings(msg.sender);
+  }
+
+  function testFunction(bytes32 ipfsHash) public returns (bytes32){
+    return ipfsHash;
   }
 
 }

@@ -60,6 +60,12 @@ class ContractService {
     return new Promise((resolve, reject) => {
       this.listingContract.setProvider(web3Service.web3.currentProvider)
         this.listingContract.deployed().then((instance) => {
+
+          instance.testFunction("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF").then((listingsAddresesLength) => {
+            alert(listingsAddresesLength)
+          });
+
+
           console.log("About to get listings length")
           instance.listingsAddresesLength.call().then((listingsAddresesLength) => {
             alert(listingsAddresesLength)
