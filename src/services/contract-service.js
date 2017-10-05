@@ -1,5 +1,6 @@
 import ListingContract from '../../build/contracts/Listing.json'
 import web3Service from './web3-service'
+import bs58 from 'bs58'
 
 class ContractService {
   static instance
@@ -13,6 +14,12 @@ class ContractService {
 
     this.contract = require('truffle-contract')
     this.listingContract = this.contract(ListingContract)
+  }
+
+  // Strip leading 2 bytes from 34 byte IPFS hash
+  getBytes32FromIpfsHash(ipfsListing) {
+    // Strip IPFS defaults: function:0x12=sha2, size:0x20=256 bits
+    return ("0x"+bs58.decode(ipfsListing).slice(2).toString('hex'));
   }
 
   getListingForAddress(address) {
@@ -39,7 +46,7 @@ class ContractService {
       this.listingContract.setProvider(web3Service.web3.currentProvider)
       web3Service.web3.eth.getAccounts((error, accounts) => {
         this.listingContract.deployed().then((instance) => {
-          return instance.create(ipfsListing, {from: accounts[0]})
+          return instance.create(this.getBytes32FromIpfsHash(ipfsListing), {from: accounts[0]})
         }).then((result) => {
           resolve(result)
         }).catch((error) => {

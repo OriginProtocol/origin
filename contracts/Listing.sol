@@ -1,14 +1,20 @@
 pragma solidity ^0.4.2;
 
 contract Listing {
-  // Addresses represent listing owners and map to an array of listings.
-  mapping (address => string) public listings;
-  // Look up table for keys
-  address[] public listingsAddreses;
 
-  // Getter for look up table
-  function listingsAddresesLength() public returns (uint) {
-      return listingsAddreses.length;
+  struct listingStruct {
+    address lister;
+    bytes32 ipfsHash;
+    // Assume IPFS defaults: function:0x12=sha2, size:0x20=256 bits
+    // See: https://ethereum.stackexchange.com/a/17112/20332
+  }
+
+  // Array of all listings
+  listingStruct[] public listings;
+
+  // Return number of listings
+  function listingsLength() public returns (uint) {
+      return listings.length;
   }
 
   // 0rigin owner
@@ -25,23 +31,9 @@ contract Listing {
   }
 
   // Create a new listing
-  function create(string ipfsHash) {
-    // Check for IPFS hash length
-
-    require(bytes(ipfsHash).length == 46);
-
-    // Update look up table if its first listing for this sender
-    if (bytes(listings[msg.sender]).length == 0) {
-      listingsAddreses.push(msg.sender);
-    }
-    // May want to de-dupe later by checking for existing hash
-    listings[msg.sender] = ipfsHash;
-
+  function create(bytes32 ipfsHash) {
+    listings.push(listingStruct(msg.sender, ipfsHash));
     UpdateListings(msg.sender);
   }
 
-  // Change this to return multiple listings later
-  function listingForAddress(address _account) public constant returns (string) {
-    return listings[_account];
-  }
 }
