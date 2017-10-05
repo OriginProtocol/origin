@@ -1,4 +1,5 @@
-const DEFAULT_GATEWAY = 'gateway.0rigin.org'
+// const DEFAULT_GATEWAY = 'gateway.0rigin.org'
+const DEFAULT_GATEWAY = '127.0.0.1'
 const ipfsAPI = require('ipfs-api')
 
 class IpfsService {

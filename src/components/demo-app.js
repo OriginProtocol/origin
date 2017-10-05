@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 
+import DemoStep0 from './demo-step-0'
 import DemoStep1 from './demo-step-1'
 import DemoStep2 from './demo-step-2'
 import DemoStep3 from './demo-step-3'
@@ -26,7 +27,7 @@ class DemoApp extends Component {
     super(props)
 
     this.state = {
-      step: 1,
+      step: 0,
       listingJson: null,
       ipfsHash: null,
       ethereumTransaction: null
@@ -65,24 +66,27 @@ class DemoApp extends Component {
         <main className="container">
           <div className="row">
             <div className="col-md-offset-2 col-md-8">
+              {this.state.step === 0 &&
+                <DemoStep0/>
+              }
               {this.state.step === 1 &&
                 <DemoStep1 schemaList={DEMO_SCHEMA_LIST} onStep1Completion={this.handleStep1Completion}/>
               }
               {this.state.step === 2 &&
-                <DemoStep2 
-                  listingJson={this.state.listingJson} 
+                <DemoStep2
+                  listingJson={this.state.listingJson}
                   onStep2Completion={this.handleStep2Completion}
                 />
               }
               {this.state.step === 3 &&
-                <DemoStep3 
-                  ipfsHash={this.state.ipfsHash} 
+                <DemoStep3
+                  ipfsHash={this.state.ipfsHash}
                   onStep3Completion={this.handleStep3Completion}
                 />
               }
               {this.state.step === 4 &&
-                <DemoStep4 
-                  ethereumTransaction={this.state.ethereumTransaction} 
+                <DemoStep4
+                  ethereumTransaction={this.state.ethereumTransaction}
                 />
               }
             </div>

@@ -48,6 +48,20 @@ class ContractService {
       })
     })
   }
+
+  getAllListings() {
+    return new Promise((resolve, reject) => {
+      this.listingContract.setProvider(web3Service.web3.currentProvider)
+        this.listingContract.deployed().then((instance) => {
+          console.log("About to get listings length")
+          instance.listingsAddresesLength.call().then((listingsAddresesLength) => {
+            alert(listingsAddresesLength)
+          });
+
+        })
+    })
+  }
+
 }
 
 const contractService = new ContractService()
