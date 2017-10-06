@@ -22,6 +22,14 @@ class ContractService {
     return "0x"+bs58.decode(ipfsListing).slice(2).toString('hex')
   }
 
+  getIpfsHashFromBytes32(bytes32Hex) {
+    // Add our default ipfs values for first 2 bytes:  function:0x12=sha2, size:0x20=256 bits
+    const testHashHex = "12" + "20" + bytes32Hex.slice(2)
+    const testHashBytes = Buffer.from(testHashHex, 'hex');
+    const testHashStr = bs58.encode(testHashBytes)
+    return testHashStr
+  }
+
   getListingForAddress(address) {
     return new Promise((resolve, reject) => {
       this.listingContract.deployed().then((instance) => {
@@ -65,10 +73,12 @@ class ContractService {
           instance.listingsLength.call().then((listingsLength) => {
             console.log("listingsLength: " + listingsLength)
 
-            for (var i = 0; i < listingsLength; i++) {
-              console.log("Get listing detail for listing:" + i)
-              instance.getListing.call(i).then((results)  => {
-                console.log("Listing " + i + ":")
+            let allResults = []
+            let that = this
+
+            function asyncFunction (index, cb) {
+              instance.getListing.call(index).then((results)  => {
+                results[2] = that.getIpfsHashFromBytes32(results[2])
                 let index = results[0]
                 let listerAddress = results[1]
                 let ipfsHash = results[2]
@@ -81,8 +91,48 @@ class ContractService {
                   "price:" + price.toNumber(),
                   "unitsAvailable:" + unitsAvailable.toNumber()
                 )
+
+                allResults[index] = results
+                cb()
               });
             }
+
+            let requests = []
+            for (var i = 0; i < listingsLength; i++) {
+              requests[i] = new Promise((resolve) => {
+                  asyncFunction(i, resolve)
+                });
+            }
+
+            Promise.all(requests).then(() => {
+              console.log('done')
+              console.log(allResults)
+              resolve(allResults)
+            });
+
+
+
+
+            // for (var i = 0; i < listingsLength; i++) {
+            //   console.log("Get listing detail for listing:" + i)
+            //   instance.getListing.call(i).then((results)  => {
+            //     console.log("Listing " + i + ":")
+            //     let index = results[0]
+            //     let listerAddress = results[1]
+            //     let ipfsHash = results[2]
+            //     let price = results[3]
+            //     let unitsAvailable = results[4]
+            //     console.log(
+            //       "Index:" + index.toNumber(),
+            //       "listerAddress:" + listerAddress,
+            //       "ipfsHash:" + ipfsHash,
+            //       "price:" + price.toNumber(),
+            //       "unitsAvailable:" + unitsAvailable.toNumber()
+            //     )
+            //   });
+            // }
+
+
 
           });
         })
