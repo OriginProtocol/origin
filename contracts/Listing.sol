@@ -11,11 +11,6 @@ contract Listing {
     uint unitsAvaliable;
   }
 
-  // Getter for look up table
-  function listingsAddresesLength() public constant returns (uint) {
-      return 12;
-  }
-
   // Array of all listings
   listingStruct[] public listings;
 
@@ -25,8 +20,8 @@ contract Listing {
   }
 
   // Return listing info
-  function getListing(uint index) public constant returns (address, bytes32, uint, uint) {
-    return (listings[index].lister, listings[index].ipfsHash, listings[index].price, listings[index].unitsAvaliable);
+  function getListing(uint index) public constant returns (uint, address, bytes32, uint, uint) {
+    return (index, listings[index].lister, listings[index].ipfsHash, listings[index].price, listings[index].unitsAvaliable);
   }
 
   // 0rigin owner
@@ -43,9 +38,10 @@ contract Listing {
   }
 
   // Create a new listing
-  function create(bytes32 ipfsHash, uint price, uint unitsAvaliable) public {
+  function create(bytes32 ipfsHash, uint price, uint unitsAvaliable) public returns (uint) {
     listings.push(listingStruct(msg.sender, ipfsHash, price, unitsAvaliable));
     UpdateListings(msg.sender);
+    return listings.length;
   }
 
 }

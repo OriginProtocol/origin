@@ -18,12 +18,7 @@ class ContractService {
 
   // Strip leading 2 bytes from 34 byte IPFS hash
   getBytes32FromIpfsHash(ipfsListing) {
-    // Strip IPFS defaults: function:0x12=sha2, size:0x20=256 bits
-    console.log ("Address in hex:" + "0x"+bs58.decode(ipfsListing).slice(2).toString('hex'))
-    console.log ("Testing:" + "0x3230313630353238")
-
-    // return web3Service.web3.fromAscii("20160528") // works
-    // return "0x3230313630353238" // works
+    // Assume IPFS defaults: function:0x12=sha2, size:0x20=256 bits
     return "0x"+bs58.decode(ipfsListing).slice(2).toString('hex')
   }
 
@@ -66,27 +61,30 @@ class ContractService {
       this.listingContract.setProvider(web3Service.web3.currentProvider)
         this.listingContract.deployed().then((instance) => {
 
-          // instance.testFunction.call(web3Service.web3.fromAscii("20160528")).then((val) => {
-          //   alert(web3Service.web3.toAscii(val))
-          // });
-
           console.log("About to get listings length")
           instance.listingsLength.call().then((listingsLength) => {
             console.log("listingsLength: " + listingsLength)
 
-            for (var i=0; i<listingsLength; i++) {
+            for (var i = 0; i < listingsLength; i++) {
               console.log("Get listing detail for listing:" + i)
-              instance.getListing.call(i).then((listerAddress, ipfsHash, price, unitsAvailable)  => {
+              instance.getListing.call(i).then((results)  => {
                 console.log("Listing " + i + ":")
-                console.log(listerAddress, ipfsHash, price, unitsAvailable)
+                let index = results[0]
+                let listerAddress = results[1]
+                let ipfsHash = results[2]
+                let price = results[3]
+                let unitsAvailable = results[4]
+                console.log(
+                  "Index:" + index.toNumber(),
+                  "listerAddress:" + listerAddress,
+                  "ipfsHash:" + ipfsHash,
+                  "price:" + price.toNumber(),
+                  "unitsAvailable:" + unitsAvailable.toNumber()
+                )
               });
-
             }
 
-
           });
-
-
         })
     })
   }
