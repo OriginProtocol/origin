@@ -48,6 +48,23 @@ class IpfsService {
       })
     });
   }
+
+  getListing(ipfsHashStr) {
+    return new Promise((resolve, reject) => {
+
+      const multihashStr = 'QmQ2r6iMNpky5f1m4cnm3Yqw8VSvjuKpTcK1X7dBR1LkJF'
+
+      this.ipfs.files.get(multihashStr, function (err, stream) {
+        stream.on('data', (file) => {
+          // write the file's path and contents to standard out
+          console.log(file.path)
+          console.log(file.content)
+          file.content.pipe(process.stdout)
+        })
+      })
+
+    });
+  }
 }
 
 const ipfsService = new IpfsService()

@@ -27,7 +27,7 @@ class DemoApp extends Component {
     super(props)
 
     this.state = {
-      step: 1,
+      step: 0,
       listingJson: null,
       ipfsHash: null,
       ethereumTransaction: null
