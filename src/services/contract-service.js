@@ -19,8 +19,12 @@ class ContractService {
   // Strip leading 2 bytes from 34 byte IPFS hash
   getBytes32FromIpfsHash(ipfsListing) {
     // Strip IPFS defaults: function:0x12=sha2, size:0x20=256 bits
-    // return ("0x"+bs58.decode(ipfsListing).slice(2).toString('hex'));
-    return web3Service.web3.fromAscii("20160528")
+    console.log ("Address in hex:" + "0x"+bs58.decode(ipfsListing).slice(2).toString('hex'));
+    console.log ("Testing:" + "0x3230313630353238");
+
+    // return web3Service.web3.fromAscii("20160528") // works
+
+    return "0x3230313630353238" // works
   }
 
   getListingForAddress(address) {
@@ -47,7 +51,7 @@ class ContractService {
       this.listingContract.setProvider(web3Service.web3.currentProvider)
       web3Service.web3.eth.getAccounts((error, accounts) => {
         this.listingContract.deployed().then((instance) => {
-          return instance.create(this.getBytes32FromIpfsHash(ipfsListing), {from: accounts[0]})
+          return instance.create(this.getBytes32FromIpfsHash(ipfsListing), 1.0, 1.0, {from: accounts[0]})
         }).then((result) => {
           resolve(result)
         }).catch((error) => {
@@ -62,15 +66,27 @@ class ContractService {
       this.listingContract.setProvider(web3Service.web3.currentProvider)
         this.listingContract.deployed().then((instance) => {
 
-          instance.testFunction.call(web3Service.web3.fromAscii("20160528")).then((val) => {
-            alert(web3Service.web3.toAscii(val))
+          // instance.testFunction.call(web3Service.web3.fromAscii("20160528")).then((val) => {
+          //   alert(web3Service.web3.toAscii(val))
+          // });
+    console.log(web3Service.web3.fromAscii("20160528"))
+
+          console.log("About to get listings length")
+          instance.listingsLength.call().then((listingsLength) => {
+            console.log("listingsLength: " + listingsLength)
+
+            for (var i=0; i<listingsLength; i++) {
+              console.log("Get listing detail for listing:" + i)
+              instance.getListing.call(i).then((listerAddress, ipfsHash, price, unitsAvailable)  => {
+                console.log("Listing " + i + ":");
+                console.log(listerAddress, ipfsHash, price, unitsAvailable)
+              });
+
+            }
+
+
           });
 
-
-          // console.log("About to get listings length")
-          // instance.listingsAddresesLength.call().then((listingsAddresesLength) => {
-          //   alert(listingsAddresesLength)
-          // });
 
         })
     })

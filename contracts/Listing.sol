@@ -7,12 +7,12 @@ contract Listing {
     // Assume IPFS defaults for hash: function:0x12=sha2, size:0x20=256 bits
     // See: https://ethereum.stackexchange.com/a/17112/20332
     bytes32 ipfsHash;
-    // uint price;
-    // uint unitsAvaliable;
+    uint price;
+    uint unitsAvaliable;
   }
 
   // Getter for look up table
-  function listingsAddresesLength() public returns (uint) {
+  function listingsAddresesLength() public constant returns (uint) {
       return 12;
   }
 
@@ -20,8 +20,13 @@ contract Listing {
   listingStruct[] public listings;
 
   // Return number of listings
-  function listingsLength() public returns (uint) {
+  function listingsLength() public constant returns (uint) {
       return listings.length;
+  }
+
+  // Return listing info
+  function getListing(uint index) public constant returns (address, bytes32, uint, uint) {
+    return (listings[index].lister, listings[index].ipfsHash, listings[index].price, listings[index].unitsAvaliable);
   }
 
   // 0rigin owner
@@ -38,8 +43,8 @@ contract Listing {
   }
 
   // Create a new listing
-  function create(bytes32 ipfsHash) public {
-    listings.push(listingStruct(msg.sender, ipfsHash));
+  function create(bytes32 ipfsHash, uint price, uint unitsAvaliable) public {
+    listings.push(listingStruct(msg.sender, ipfsHash, price, unitsAvaliable));
     UpdateListings(msg.sender);
   }
 
