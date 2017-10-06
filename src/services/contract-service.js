@@ -19,7 +19,8 @@ class ContractService {
   // Strip leading 2 bytes from 34 byte IPFS hash
   getBytes32FromIpfsHash(ipfsListing) {
     // Strip IPFS defaults: function:0x12=sha2, size:0x20=256 bits
-    return ("0x"+bs58.decode(ipfsListing).slice(2).toString('hex'));
+    // return ("0x"+bs58.decode(ipfsListing).slice(2).toString('hex'));
+    return web3Service.web3.fromAscii("20160528")
   }
 
   getListingForAddress(address) {
@@ -61,15 +62,15 @@ class ContractService {
       this.listingContract.setProvider(web3Service.web3.currentProvider)
         this.listingContract.deployed().then((instance) => {
 
-          instance.testFunction("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF").then((listingsAddresesLength) => {
-            alert(listingsAddresesLength)
+          instance.testFunction.call(web3Service.web3.fromAscii("20160528")).then((val) => {
+            alert(web3Service.web3.toAscii(val))
           });
 
 
-          console.log("About to get listings length")
-          instance.listingsAddresesLength.call().then((listingsAddresesLength) => {
-            alert(listingsAddresesLength)
-          });
+          // console.log("About to get listings length")
+          // instance.listingsAddresesLength.call().then((listingsAddresesLength) => {
+          //   alert(listingsAddresesLength)
+          // });
 
         })
     })

@@ -4,9 +4,11 @@ contract Listing {
 
   struct listingStruct {
     address lister;
-    bytes32 ipfsHash;
-    // Assume IPFS defaults: function:0x12=sha2, size:0x20=256 bits
+    // Assume IPFS defaults for hash: function:0x12=sha2, size:0x20=256 bits
     // See: https://ethereum.stackexchange.com/a/17112/20332
+    bytes32 ipfsHash;
+    // uint price;
+    // uint unitsAvaliable;
   }
 
   // Getter for look up table
@@ -39,15 +41,6 @@ contract Listing {
   function create(bytes32 ipfsHash) public {
     listings.push(listingStruct(msg.sender, ipfsHash));
     UpdateListings(msg.sender);
-  }
-
-  function fart(bytes32 ipfsHash) public {
-    listings.push(listingStruct(msg.sender, ipfsHash));
-    UpdateListings(msg.sender);
-  }
-
-  function testFunction(bytes32 ipfsHash) public returns (bytes32){
-    return ipfsHash;
   }
 
 }
