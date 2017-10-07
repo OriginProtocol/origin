@@ -62,8 +62,16 @@ class DemoStep0 extends Component {
         </div>
 
          <div>
+            <img
+              src='ajax-loader.gif'
+              style={{
+                display: this.state.listingsResults.length == 0 ?
+                'block' :
+                'none'
+              }}
+            />
             {this.state.listingsResults.map(result => (
-              <div className="result">
+              <div className="result" key="{result.id}">
                 <h3>{result.data.name}</h3>
                 <img
                   height="200"

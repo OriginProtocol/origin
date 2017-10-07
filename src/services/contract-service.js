@@ -23,7 +23,9 @@ class ContractService {
   }
 
   getIpfsHashFromBytes32(bytes32Hex) {
-    // Add our default ipfs values for first 2 bytes:  function:0x12=sha2, size:0x20=256 bits
+    // Add our default ipfs values for first 2 bytes:
+    // function:0x12=sha2, size:0x20=256 bits
+    // and cut off leading "0x"
     const testHashHex = "12" + "20" + bytes32Hex.slice(2)
     const testHashBytes = Buffer.from(testHashHex, 'hex');
     const testHashStr = bs58.encode(testHashBytes)
