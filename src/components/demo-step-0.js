@@ -11,8 +11,7 @@ class DemoStep0 extends Component {
     super(props)
 
     this.state = {
-      listingsResults: [],
-      listingsReturned: 'hello'
+      listingsResults: []
     }
 
     let that = this
@@ -28,14 +27,8 @@ class DemoStep0 extends Component {
           const currentResultIndex = allResults[resultIndex][0].toNumber()
           ipfsService.getListing(hashStr)
           .then((listingJson) => {
-            // console.log(allResults + 'ha')
-            console.log("Yay! Got listing:" + listingJson)
-            // let resultIndex = allResults[resultIndex[0]]
-            // console.log('hi - ' + allResults[resultIndex[0]])
-            console.log('int'+resultIndex[0])
             let i = allResults[resultIndex[0]]
-            console.log(i)
-            // that.state.listingsResults.push(listingJson)
+            // Append our new result to state. For now we don't care about ordering.
             that.setState({ listingsResults: that.state.listingsResults.concat(JSON.parse(listingJson)) })
             console.log(that.state.listingsResults.length)
           })

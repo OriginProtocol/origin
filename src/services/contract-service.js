@@ -110,30 +110,6 @@ class ContractService {
               resolve(allResults)
             });
 
-
-
-
-            // for (var i = 0; i < listingsLength; i++) {
-            //   console.log("Get listing detail for listing:" + i)
-            //   instance.getListing.call(i).then((results)  => {
-            //     console.log("Listing " + i + ":")
-            //     let index = results[0]
-            //     let listerAddress = results[1]
-            //     let ipfsHash = results[2]
-            //     let price = results[3]
-            //     let unitsAvailable = results[4]
-            //     console.log(
-            //       "Index:" + index.toNumber(),
-            //       "listerAddress:" + listerAddress,
-            //       "ipfsHash:" + ipfsHash,
-            //       "price:" + price.toNumber(),
-            //       "unitsAvailable:" + unitsAvailable.toNumber()
-            //     )
-            //   });
-            // }
-
-
-
           });
         })
     })

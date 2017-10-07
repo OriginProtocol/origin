@@ -8,7 +8,7 @@ contract Listing {
     // See: https://ethereum.stackexchange.com/a/17112/20332
     bytes32 ipfsHash;
     uint price;
-    uint unitsAvaliable;
+    uint unitsAvailable;
   }
 
   // Array of all listings
@@ -21,7 +21,7 @@ contract Listing {
 
   // Return listing info
   function getListing(uint index) public constant returns (uint, address, bytes32, uint, uint) {
-    return (index, listings[index].lister, listings[index].ipfsHash, listings[index].price, listings[index].unitsAvaliable);
+    return (index, listings[index].lister, listings[index].ipfsHash, listings[index].price, listings[index].unitsAvailable);
   }
 
   // 0rigin owner
@@ -38,8 +38,8 @@ contract Listing {
   }
 
   // Create a new listing
-  function create(bytes32 ipfsHash, uint price, uint unitsAvaliable) public returns (uint) {
-    listings.push(listingStruct(msg.sender, ipfsHash, price, unitsAvaliable));
+  function create(bytes32 ipfsHash, uint price, uint unitsAvailable) public returns (uint) {
+    listings.push(listingStruct(msg.sender, ipfsHash, price, unitsAvailable));
     UpdateListings(msg.sender);
     return listings.length;
   }
