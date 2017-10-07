@@ -33,9 +33,19 @@ class DemoApp extends Component {
       ethereumTransaction: null
     }
 
+    this.handleCreateListing = this.handleCreateListing.bind(this)
     this.handleStep1Completion = this.handleStep1Completion.bind(this)
     this.handleStep2Completion = this.handleStep2Completion.bind(this)
     this.handleStep3Completion = this.handleStep3Completion.bind(this)
+  }
+
+  handleCreateListing() {
+    this.setState({
+      step: 1,
+      listingJson: null,
+      ipfsHash: null,
+      ethereumTransaction: null
+    })
   }
 
   handleStep1Completion(listingJson) {
@@ -67,10 +77,15 @@ class DemoApp extends Component {
           <div className="row">
             <div className="col-md-offset-2 col-md-8">
               {this.state.step === 0 &&
-                <DemoStep0/>
+                <DemoStep0
+                  onCreateListing={this.handleCreateListing}
+                />
               }
               {this.state.step === 1 &&
-                <DemoStep1 schemaList={DEMO_SCHEMA_LIST} onStep1Completion={this.handleStep1Completion}/>
+                <DemoStep1
+                  schemaList={DEMO_SCHEMA_LIST}
+                  onStep1Completion={this.handleStep1Completion}
+                />
               }
               {this.state.step === 2 &&
                 <DemoStep2
