@@ -55,16 +55,17 @@ class DemoStep0 extends Component {
     return (
       <section className="step">
         <h3>Browse 0rigin Listings</h3>
-        <p>
-          Look for things like housing, auto, and services.
-        </p>
 
          <div>
             {this.state.listingsResults.map(result => (
-              <div className="result"><br/>{result.data.description}<br/>{result.data.price}<br/>
-
-              <img src={(result.data.pictures && result.data.pictures.length>0) ? result.data.pictures[0] : 'http://www.lackuna.com/wp-content/themes/fearless/images/missing-image-640x360.png'}/>
-              <hr/></div>
+              <div className="result">
+                <h3>{result.data.name}</h3>
+                <img height="200" src={(result.data.pictures && result.data.pictures.length>0) ? result.data.pictures[0] : 'http://www.lackuna.com/wp-content/themes/fearless/images/missing-image-640x360.png'}/><br/>
+                Category:{result.data.category}<br/>
+                Description:{result.data.description}<br/>
+                Price:{result.data.price}<br/>
+                <hr/>
+              </div>
             ))}
           </div>
 
