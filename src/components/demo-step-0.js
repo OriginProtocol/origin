@@ -61,7 +61,10 @@ class DemoStep0 extends Component {
 
          <div>
             {this.state.listingsResults.map(result => (
-              <div className="result"><br/>{result.data.description}<br/>{result.data.price}<hr/></div>
+              <div className="result"><br/>{result.data.description}<br/>{result.data.price}<br/>
+
+              <img src={(result.data.pictures && result.data.pictures.length>0) ? result.data.pictures[0] : 'http://www.lackuna.com/wp-content/themes/fearless/images/missing-image-640x360.png'}/>
+              <hr/></div>
             ))}
           </div>
 
