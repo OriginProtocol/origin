@@ -13,7 +13,7 @@ class IpfsService {
     this.ipfs = ipfsAPI(DEFAULT_GATEWAY, '5001', {protocol: 'http'})
     this.ipfs.swarm.peers(function(error, response) {
       if (error) {
-        console.log("Can't connect to the IPFS Gateway.")
+        console.error("Can't connect to the IPFS Gateway.")
         console.error(error)
       } else {
         console.log("IPFS - connected to " + response.length + " peers")
@@ -32,10 +32,9 @@ class IpfsService {
 
       this.ipfs.files.add([file], (error, response) => {
         if (error) {
-          console.log("Can't connect to the IPFS Gateway.")
+          console.error("Can't connect to the IPFS Gateway.")
           console.error(error)
           reject('Can\'t connect to the IPFS Gateway. Failure to submit listing to Ipfs')
-          return
         }
         const file = response[0]
         const ipfsListing = file.hash
@@ -54,13 +53,12 @@ class IpfsService {
 
       this.ipfs.files.cat(ipfsHashStr, function (err, stream) {
         if (err) {
-          console.log(err)
+          console.error(err)
           reject("Got ipfs cat err:" + err)
         }
 
         var res = ''
         stream.on('data', function (chunk) {
-          console.log(chunk)
           res += chunk.toString()
         })
         stream.on('error', function (err) {

@@ -71,31 +71,17 @@ class ContractService {
       this.listingContract.setProvider(web3Service.web3.currentProvider)
         this.listingContract.deployed().then((instance) => {
 
-          console.log("About to get listings length")
           instance.listingsLength.call().then((listingsLength) => {
-            console.log("listingsLength: " + listingsLength)
 
             let allResults = []
             let that = this
 
-            function asyncFunction (index, cb) {
+            function asyncFunction (index, callback) {
               instance.getListing.call(index).then((results)  => {
+                // IPFS hash (as bytes32) is in results[2]
                 results[2] = that.getIpfsHashFromBytes32(results[2])
-                let index = results[0]
-                let listerAddress = results[1]
-                let ipfsHash = results[2]
-                let price = results[3]
-                let unitsAvailable = results[4]
-                console.log(
-                  "Index:" + index.toNumber(),
-                  "listerAddress:" + listerAddress,
-                  "ipfsHash:" + ipfsHash,
-                  "price:" + price.toNumber(),
-                  "unitsAvailable:" + unitsAvailable.toNumber()
-                )
-
                 allResults[index] = results
-                cb()
+                callback()
               });
             }
 
@@ -107,8 +93,6 @@ class ContractService {
             }
 
             Promise.all(requests).then(() => {
-              console.log('done')
-              console.log(allResults)
               resolve(allResults)
             });
 

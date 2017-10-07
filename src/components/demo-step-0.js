@@ -11,7 +11,8 @@ class DemoStep0 extends Component {
     super(props)
 
     this.state = {
-      listingsResults: []
+      listingsResults: [],
+      contractListingsCount: -1
     }
 
     let that = this
@@ -20,10 +21,9 @@ class DemoStep0 extends Component {
     setTimeout(function() {
       // TODO: Remove hacky 2s delay and correctly determine when contractService
       // is ready
-
       contractService.getAllListings().then((allResults) => {
-        console.log("step 0 all results:" + allResults)
         var resultIndex;
+        that.setState({contractListingsCount: allResults.length});
         for (resultIndex in allResults) {
           const hashStr = allResults[resultIndex][2]
           const currentResultIndex = allResults[resultIndex][0].toNumber()
@@ -34,7 +34,6 @@ class DemoStep0 extends Component {
             that.setState({
               listingsResults: that.state.listingsResults.concat(JSON.parse(listingJson))
             })
-            console.log(that.state.listingsResults.length)
           })
           .catch((error) => {
             alert(error)
@@ -65,13 +64,15 @@ class DemoStep0 extends Component {
             <img
               src='ajax-loader.gif'
               style={{
-                display: this.state.listingsResults.length == 0 ?
-                'block' :
-                'none'
+                display: ((this.state.listingsResults.length == 0 && this.state.listingsResults.contractListingsCount != 0) ||
+                  this.state.listingsResults.contractListingsCount < 0) ?
+                'block' : 'none'
               }}
             />
+            {(this.state.contractListingsCount == 0) ? "No listings" : ""}
             {this.state.listingsResults.map(result => (
               <div className="result" key="{result.id}">
+                <hr/>
                 <h3>{result.data.name}</h3>
                 <img
                   height="200"
@@ -85,7 +86,6 @@ class DemoStep0 extends Component {
                 Category:{result.data.category}<br/>
                 Description:{result.data.description}<br/>
                 Price:{result.data.price}<br/>
-                <hr/>
               </div>
             ))}
           </div>
