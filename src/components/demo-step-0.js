@@ -23,13 +23,14 @@ class DemoStep0 extends Component {
       // is ready
       contractService.getAllListings().then((allResults) => {
         var resultIndex;
-        that.setState({contractListingsCount: allResults.length});
+        console.log("Got this many results:" + allResults.length)
+        console.log(allResults)
+        that.setState({contractListingsCount: allResults.length})
         for (resultIndex in allResults) {
           const hashStr = allResults[resultIndex][2]
-          const currentResultIndex = allResults[resultIndex][0].toNumber()
           ipfsService.getListing(hashStr)
           .then((listingJson) => {
-            let i = allResults[resultIndex[0]]
+            console.log(JSON.parse(listingJson))
             // Append our new result to state. For now we don't care about ordering.
             that.setState({
               listingsResults: that.state.listingsResults.concat(JSON.parse(listingJson))
@@ -71,7 +72,7 @@ class DemoStep0 extends Component {
             />
             {(this.state.contractListingsCount == 0) ? "No listings" : ""}
             {this.state.listingsResults.map(result => (
-              <div className="result" key="{result.id}">
+              <div className="result">
                 <hr/>
                 <h3>{result.data.name}</h3>
                 <img

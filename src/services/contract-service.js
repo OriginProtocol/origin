@@ -79,23 +79,26 @@ class ContractService {
           // Get total number of listings
           instance.listingsLength.call().then((listingsLength) => {
             let that = this
-            let allResults = []
-            let requests = []
+            let listings = []
+            let getListingPromises = []
             // TODO: Paging over listings to get only subsets
             for (var i = 0; i < listingsLength; i++) {
-              requests[i] = new Promise((resolve) => {
-                instance.getListing.call(i).then((results)  => {
+              getListingPromises[i] = new Promise((resolve) => {
+                instance.getListing.call(i).then((listing)  => {
+                  console.log("New listing. Index:" + listing[0].toNumber())
+                  console.log(listing)
+                  // Listing is returned as array of properties.
                   // IPFS hash (as bytes32 hex string) is in results[2]
                   // Convert it to regular IPFS base-58 encoded hash
-                  results[2] = that.getIpfsHashFromBytes32(results[2])
-                  allResults[i] = results
+                  listing[2] = that.getIpfsHashFromBytes32(listing[2])
+                  listings[listing[0].toNumber()] = listing
                   resolve()
                 });
               });
             }
-            // Resolve outer promise when we're all done getting details
-            Promise.all(requests).then(() => {
-              resolve(allResults)
+            // Resolve outer promise when we're all done getting all listings
+            Promise.all(getListingPromises).then(() => {
+              resolve(listings)
             });
           });
         })
