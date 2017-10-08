@@ -29,11 +29,14 @@ class DemoStep3 extends Component {
           connected to hundreds of peers that can serve your listing.
         </p>
         <div className="btn-wrapper">
-          <a href={"http://" + ipfsService.ipfsDomain + ":" + ipfsService.ipfsGatewayPort + "/ipfs/" + this.props.ipfsHash} target="_blank">
-             <button className="btn btn-info">
-              See your listing on IPFS
-            </button>
-          </a>
+          <button className="btn btn-info" onClick={() => {
+            window.open(
+              "http://" + ipfsService.ipfsDomain + ":" + ipfsService.ipfsGatewayPort + "/ipfs/" + this.props.ipfsHash,
+              "_blank"
+            )
+          }}>
+            See your listing on IPFS
+          </button>
         </div>
         <h4>Add your listing to the blockchain</h4>
         <p>
