@@ -66,7 +66,7 @@ class ContractService {
         }).then((result) => {
           resolve(result)
         }).catch((error) => {
-          reject('Error submitting to the Ethereum blockchain: ' + error)
+          reject(error)
         })
       })
     })

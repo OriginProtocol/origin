@@ -8,6 +8,14 @@ class DemoStep3 extends Component {
     contractService.submitListing(data)
     .then((transactionReceipt) => {
       onSubmitToBlockchain(transactionReceipt.tx)
+    })
+    .catch((error) => {
+      console.error(error)
+      if (error=='Error: invalid address') {
+        alert(error + "\nAre you logged in to MetaMask?")
+      } else {
+        alert(error)
+      }
     });
   }
 
