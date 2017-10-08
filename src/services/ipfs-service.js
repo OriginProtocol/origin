@@ -1,5 +1,3 @@
-// const DEFAULT_GATEWAY = 'gateway.0rigin.org'
-const DEFAULT_GATEWAY = '127.0.0.1'
 const ipfsAPI = require('ipfs-api')
 
 class IpfsService {
@@ -10,10 +8,17 @@ class IpfsService {
       return IpfsService.instance
     }
 
-    this.ipfs = ipfsAPI(DEFAULT_GATEWAY, '5001', {protocol: 'http'})
+    // TODO: Allow override of these by config file
+    // this.ipfsDomain = 'gateway.0rigin.org' // Production
+    this.ipfsDomain = '127.0.0.1' // Local IPFS daemon
+    this.ipfsApiPort = '5001'
+    this.ipfsGatewayPort = '8080'
+
+    console.log("this.ipfsDomain:" + this.ipfsDomain)
+    this.ipfs = ipfsAPI(this.ipfsDomain, this.ipfsApiPort, {protocol: 'http'})
     this.ipfs.swarm.peers(function(error, response) {
       if (error) {
-        console.error("Can't connect to the IPFS Gateway.")
+        console.error("Can't connect to the IPFS API.")
         console.error(error)
       } else {
         console.log("IPFS - connected to " + response.length + " peers")
@@ -32,9 +37,9 @@ class IpfsService {
 
       this.ipfs.files.add([file], (error, response) => {
         if (error) {
-          console.error("Can't connect to the IPFS Gateway.")
+          console.error("Can't connect to IPFS.")
           console.error(error)
-          reject('Can\'t connect to the IPFS Gateway. Failure to submit listing to Ipfs')
+          reject('Can\'t connect to IPFS. Failure to submit listing to IPFS')
         }
         const file = response[0]
         const ipfsListing = file.hash
@@ -42,7 +47,7 @@ class IpfsService {
         if (ipfsListing) {
           resolve(ipfsListing)
         } else {
-          reject('Failure to submit listing to Ipfs')
+          reject('Failure to submit listing to IPFS')
         }
       })
     });

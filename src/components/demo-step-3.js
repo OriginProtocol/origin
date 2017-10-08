@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { render } from 'react-dom'
 
 import contractService from '../services/contract-service'
+import ipfsService from '../services/ipfs-service'
 
 class DemoStep3 extends Component {
   handleSubmitToBlockchain(data, onSubmitToBlockchain) {
@@ -28,7 +29,7 @@ class DemoStep3 extends Component {
           connected to hundreds of peers that can serve your listing.
         </p>
         <div className="btn-wrapper">
-          <a href={"http://gateway.0rigin.org/ipfs/" + this.props.ipfsHash} target="_blank">
+          <a href={"http://" + ipfsService.ipfsDomain + ":" + ipfsService.ipfsGatewayPort + "/ipfs/" + this.props.ipfsHash} target="_blank">
              <button className="btn btn-info">
               See your listing on IPFS
             </button>
