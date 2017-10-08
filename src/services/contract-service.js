@@ -45,7 +45,8 @@ class ContractService {
       }).then((result) => {
         resolve(result)
       }).catch((error) => {
-        reject('Error getting listing for Ethereum address: ' + error)
+        console.error('Error getting listing for Ethereum address: ' + error)
+        reject(error)
       })
     })
   }
@@ -66,6 +67,7 @@ class ContractService {
         }).then((result) => {
           resolve(result)
         }).catch((error) => {
+          console.error("Error submitting to the Ethereum blockchain: " + error)
           reject(error)
         })
       })
@@ -85,13 +87,19 @@ class ContractService {
             for (var i = 0; i < listingsLength; i++) {
               getListingPromises[i] = new Promise((resolve) => {
                 instance.getListing.call(i).then((listing)  => {
-                  console.log("New listing. Index:" + listing[0].toNumber())
-                  console.log(listing)
                   // Listing is returned as array of properties.
                   // IPFS hash (as bytes32 hex string) is in results[2]
                   // Convert it to regular IPFS base-58 encoded hash
-                  listing[2] = that.getIpfsHashFromBytes32(listing[2])
-                  listings[listing[0].toNumber()] = listing
+                  var listingObject = {
+                    index: listing[0].toNumber(),
+                    lister: listing[1],
+                    ipfsHash: that.getIpfsHashFromBytes32(listing[2]),
+                    price: listing[3].toNumber(),
+                    unitsAvailable: listing[4].toNumber()
+                  }
+                  console.log("New listing. Index:" + listing[0].toNumber())
+                  console.log(listingObject)
+                  listings[listingObject.index] = listingObject
                   resolve()
                 });
               });
