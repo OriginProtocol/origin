@@ -76,32 +76,27 @@ class ContractService {
     return new Promise((resolve, reject) => {
       this.listingContract.setProvider(web3Service.web3.currentProvider)
         this.listingContract.deployed().then((instance) => {
-
+          // Get total number of listings
           instance.listingsLength.call().then((listingsLength) => {
-
-            let allResults = []
             let that = this
-
-            function asyncFunction (index, callback) {
-              instance.getListing.call(index).then((results)  => {
-                // IPFS hash (as bytes32) is in results[2]
-                results[2] = that.getIpfsHashFromBytes32(results[2])
-                allResults[index] = results
-                callback()
-              });
-            }
-
+            let allResults = []
             let requests = []
+            // TODO: Paging over listings to get only subsets
             for (var i = 0; i < listingsLength; i++) {
               requests[i] = new Promise((resolve) => {
-                  asyncFunction(i, resolve)
+                instance.getListing.call(i).then((results)  => {
+                  // IPFS hash (as bytes32 hex string) is in results[2]
+                  // Convert it to regular IPFS base-58 encoded hash
+                  results[2] = that.getIpfsHashFromBytes32(results[2])
+                  allResults[i] = results
+                  resolve()
                 });
+              });
             }
-
+            // Resolve outer promise when we're all done getting details
             Promise.all(requests).then(() => {
               resolve(allResults)
             });
-
           });
         })
     })
