@@ -51,25 +51,43 @@ npm install -g truffle
 git clone https://github.com/0riginOrg/0rigin
 cd 0rigin
 ```
-3. Compile contracts:
+3. In another terminal tab:
+```
+testrpc
+```
+This will output credentials for several test wallets with 100 Eth. You'll load one of these private keys into Metamask for testing.
+
+4. Compile contracts:
 ```
 truffle compile
 truffle migrate
 ````
-4. Start 0rigin node application. 
+5. [Download and install](https://ipfs.io/docs/install/) the IPFS daemon. On Mac OS X and Linux:
+```
+tar xvfz go-ipfs.tar.gz
+mv go-ipfs/ipfs /usr/local/bin/ipfs
+````
+or [Homebrew](https://brew.sh/) users:
+```
+brew install ipfs
+````
+6. Update your local IPFS config:
+
+```
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["*"]'
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "GET", "POST"]'
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials '["true"]'
+````
+
+7. Start 0rigin node application. 
 ```
 npm install
 npm run start
 ````
-5. A browser will open to http://localhost:3000
+8. A browser will open to http://localhost:3000
 ![0rigin-homepage](https://user-images.githubusercontent.com/673455/30517963-0603f3d8-9b2d-11e7-9ef4-327b747695eb.png)
-6. In another terminal tab:
-```
-testrpc
-```
-  This will output credentials for several test wallets with 100 Eth.
   
-7. In [Metamask](https://metamask.io/), configure RPC to be private network (localhost 8545) and import the private key for one of your test wallets from previous step. **DO NOT GET YOUR MAIN NET WALLET MIXED UP**.
+9. In [Metamask](https://metamask.io/), configure RPC to be private network (localhost 8545) and import the private key for one of your test wallets from previous step. **DO NOT GET YOUR MAIN NET WALLET MIXED UP**.
   * This needs to be done every single time a new testrpc instance is run.
   * After awhile, your Metamask will be cluttered with invalid addresses. [Here is how you clear it](https://ethereum.stackexchange.com/questions/21422/how-to-remove-unused-test-accounts-from-metamask/21468)
   * While we dev, I would actually not recommend having real Eth in a Main Net wallet so we can dump it whenever
