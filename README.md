@@ -53,16 +53,17 @@ npm install -g truffle
 git clone https://github.com/0riginOrg/0rigin
 cd 0rigin
 ```
-4. Compile contracts:
+4. Start testrpc:
+```
+testrpc --mnemonic="0rigin Demo" --accounts=3
+```
+This will begin a new Ethereum blockchain, and output credentials for 3 test wallets with 100 ETH. The `mnemonic` causes the same accounts to be generated each time.
+
+4. In a new terminal tab, compile the smart contracts and migrate them onto the blockchain:
 ```
 truffle compile
 truffle migrate
 ````
-5. Start testrpc:
-```
-testrpc --mnemonic="0rigin Demo" --accounts=3
-```
-  This will output credentials for 3 test wallets with 100 ETH. The `mnemonic` causes the same accounts to be generated each time.
 
 6. In a new terminal tab, start the 0rigin node application.
 ```
