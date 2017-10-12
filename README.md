@@ -21,7 +21,7 @@ To learn more about this project, please visit [the 0rigin website](http://www.0
 
 This repo will be the home for all the various components of the 0rigin platform.  Including:
 
-* Common base schemas that will be used frequently & can be inherited (email addresses, international addresses, phone numbers, etc.) 
+* Common base schemas that will be used frequently & can be inherited (email addresses, international addresses, phone numbers, etc.)
 * Vertical-specific schemas like home-sharing, car-sharing, services, etc.
 * An 0rigin dApp for publishing new listings, or searching or booking existing listings
 * Our Ethereum smart contracts
@@ -31,7 +31,7 @@ This repo will be the home for all the various components of the 0rigin platform
 
 ## Getting up to speed
 
-If you're new to the space, it may be helpful to first familiarize yourself with some of the core technologies that we're using to build 0rigin. 
+If you're new to the space, it may be helpful to first familiarize yourself with some of the core technologies that we're using to build 0rigin.
 
  * [JSON Schema](http://json-schema.org/)
  * [IPFS](https://ipfs.io/)
@@ -41,38 +41,40 @@ If you're new to the space, it may be helpful to first familiarize yourself with
 
 Think of this app as a proof of concept and our playground for trying out ideas. While we may eventually reuse pieces of this in production, this is by no means what we envision as the final product. We thought it would be helpful to demonstrate how the various technologies work together from end to end.
 
-1. Download Ethereum [test-rpc](https://github.com/ethereumjs/testrpc) and [truffle](http://truffleframework.com/):
+1. Install [Metamask Chrome Browser Extension](https://metamask.io/).
+
+2. Download Ethereum [test-rpc](https://github.com/ethereumjs/testrpc) and [truffle](http://truffleframework.com/):
 ```
 npm i -g ethereumjs-testrpc
 npm install -g truffle
 ```
-2. Clone 0rigin:
+3. Clone 0rigin:
 ```
 git clone https://github.com/0riginOrg/0rigin
 cd 0rigin
 ```
-3. Compile contracts:
+4. Compile contracts:
 ```
 truffle compile
 truffle migrate
 ````
-4. Start 0rigin node application. 
+5. Start testrpc:
+```
+testrpc --mnemonic="0rigin Demo" --accounts=3
+```
+  This will output credentials for 3 test wallets with 100 ETH. The `mnemonic` causes the same accounts to be generated each time.
+
+6. In a new terminal tab, start the 0rigin node application.
 ```
 npm install
 npm run start
 ````
-5. A browser will open to http://localhost:3000
+6. A browser will open to http://localhost:3000
 ![0rigin-homepage](https://user-images.githubusercontent.com/673455/30517963-0603f3d8-9b2d-11e7-9ef4-327b747695eb.png)
-6. In another terminal tab:
-```
-testrpc
-```
-  This will output credentials for several test wallets with 100 Eth.
-  
-7. In [Metamask](https://metamask.io/), configure RPC to be private network (localhost 8545) and import the private key for one of your test wallets from previous step. **DO NOT GET YOUR MAIN NET WALLET MIXED UP**.
-  * This needs to be done every single time a new testrpc instance is run.
-  * After awhile, your Metamask will be cluttered with invalid addresses. [Here is how you clear it](https://ethereum.stackexchange.com/questions/21422/how-to-remove-unused-test-accounts-from-metamask/21468)
-  * While we dev, I would actually not recommend having real Eth in a Main Net wallet so we can dump it whenever
+
+7. In Metamask, configure RPC to be private network (localhost 8545) and import the first generated private key, which should be `393fab0f5147601e6637fcc40ac45667e8038a3e20b852d1e1a2b43333a129a2`. **DO NOT GET YOUR MAIN NET WALLET MIXED UP WITH DEVELOPMENT**.
+
+8. Try it! Create a listing and post it to IPFS and Ethereum.
 
 ## Get involved
 
