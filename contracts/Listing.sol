@@ -1,20 +1,35 @@
 pragma solidity ^0.4.2;
 
+/// @title Listing
+/// @dev Used to keep marketplace of listings for buyers and sellers
+/// @author Matt Liu <matt@0rigin.org>, Josh Fraser <josh@0rigin.org>, Stan James <stan@wanderingstan.com>
+
 contract Listing {
 
-  // 0rigin owner
-  address public origin;
-
-  // Defines origin admin address - may be removed for public deployment
-  function Listing() {
-    origin = msg.sender;
-  }
+  /*
+   * Events
+   */
 
   // Event denoting that a given address has updated its array of listings
   // Currently, this means creating or deleting listings
   // In the future, we will have separate events for specific actions
   event UpdateListings(address from);
 
+
+  /*
+   * Storage
+   */
+
+  // 0rigin owner
+  address public origin;
+
+  // Array of all listings
+  listingStruct[] public listings;
+
+
+  /*
+   * Structs
+   */
 
   struct listingStruct {
     address lister;
@@ -26,33 +41,57 @@ contract Listing {
     uint unitsAvailable;
   }
 
-  // Array of all listings
-  listingStruct[] public listings;
 
+  /*
+   * Public functions
+   */
 
-  // Return number of listings
-  function listingsLength() public constant returns (uint) {
+  // Defines origin admin address - may be removed for public deployment
+  function Listing()
+  {
+    origin = msg.sender;
+  }
+
+  /// @dev listingsLength(): Return number of listings
+  function listingsLength()
+    public
+    constant
+    returns (uint)
+  {
       return listings.length;
   }
 
-
-  // Return listing info
-  function getListing(uint index) public constant returns (uint, address, bytes32, uint, uint) {
+  /// @dev getListing(): Return listing info for given listing
+  /// @param _index the index of the listing we want info about
+  function getListing(uint _index)
+    public
+    constant
+    returns (uint, address, bytes32, uint, uint)
+  {
     // TODO (Stan): Determine if less gas to do one array lookup into var, and
     // return var struct parts
     return (
-      index,
-      listings[index].lister,
-      listings[index].ipfsHash,
-      listings[index].price,
-      listings[index].unitsAvailable
+      _index,
+      listings[_index].lister,
+      listings[_index].ipfsHash,
+      listings[_index].price,
+      listings[_index].unitsAvailable
     );
   }
 
-
-  // Create a new listing
-  function create(bytes32 ipfsHash, uint price, uint unitsAvailable) public returns (uint) {
-    listings.push(listingStruct(msg.sender, ipfsHash, price, unitsAvailable));
+  /// @dev create(): Create a new listing
+  /// @param _ipfsHash Hash of data on ipfsHash
+  /// @param _price Price of unit. Currently ETH, will change to 0T
+  /// @param _unitsAvailable Number of units availabe for sale at start
+  function create(
+    bytes32 _ipfsHash,
+    uint _price,
+    uint _unitsAvailable
+  )
+    public
+    returns (uint)
+  {
+    listings.push(listingStruct(msg.sender, _ipfsHash, _price, _unitsAvailable));
     UpdateListings(msg.sender);
     return listings.length;
   }
