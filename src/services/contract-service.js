@@ -63,6 +63,8 @@ class ContractService {
       this.listingContract.setProvider(web3Service.web3.currentProvider)
       web3Service.web3.eth.getAccounts((error, accounts) => {
         this.listingContract.deployed().then((instance) => {
+          // TODO (Stan): Replace default price and quantities of 1.0 with
+          // actual values enterd by user in form.
           return instance.create(this.getBytes32FromIpfsHash(ipfsListing), 1.0, 1.0, {from: accounts[0]})
         }).then((result) => {
           resolve(result)
@@ -84,13 +86,13 @@ class ContractService {
             let listings = []
             let getListingPromises = []
             // TODO: Paging over listings to get only subsets
-            for (var i = 0; i < listingsLength; i++) {
+            for (let i = 0; i < listingsLength; i++) {
               getListingPromises[i] = new Promise((resolve) => {
                 instance.getListing.call(i).then((listing)  => {
                   // Listing is returned as array of properties.
                   // IPFS hash (as bytes32 hex string) is in results[2]
                   // Convert it to regular IPFS base-58 encoded hash
-                  var listingObject = {
+                  const listingObject = {
                     index: listing[0].toNumber(),
                     lister: listing[1],
                     ipfsHash: that.getIpfsHashFromBytes32(listing[2]),

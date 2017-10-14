@@ -62,7 +62,7 @@ class IpfsService {
           reject("Got ipfs cat err:" + err)
         }
 
-        var res = ''
+        let res = ''
         stream.on('data', function (chunk) {
           res += chunk.toString()
         })

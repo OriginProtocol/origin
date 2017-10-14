@@ -19,33 +19,32 @@ class DemoStep0 extends Component {
 
     // Test getting listings from chain
     setTimeout(function() {
-      // TODO: Remove hacky 2s delay and correctly determine when contractService
-      // is ready
+      // TODO (Stan): Remove hacky 2s delay and correctly determine when
+      // contractService is ready
       contractService.getAllListings().then((allContractResults) => {
-        var resultIndex;
+        let resultIndex;
         console.log("Got this many results:" + allContractResults.length)
         console.log(allContractResults)
         that.setState({contractListingsCount: allContractResults.length})
-        for (resultIndex in allContractResults) {
-          (function (contractResult) {
-            const hashStr = contractResult.ipfsHash
-            ipfsService.getListing(hashStr)
-            .then((listingJson) => {
-              const listingData = {
-                'contract': contractResult,
-                'ipfs': JSON.parse(listingJson).data
-              }
-              console.log(listingData)
-              // Append our new result to state. For now we don't care about ordering.
-              that.setState({
-                listingsResults: that.state.listingsResults.concat(listingData)
-              })
+        allContractResults.forEach(function(contractResult) {
+          const hashStr = contractResult.ipfsHash
+          ipfsService.getListing(hashStr)
+          .then((listingJson) => {
+            const listingData = {
+              'contract': contractResult,
+              'ipfs': JSON.parse(listingJson).data
+            }
+            console.log(listingData)
+            // Append our new result to state. For now we don't care about
+            // ordering.
+            that.setState({
+              listingsResults: that.state.listingsResults.concat(listingData)
             })
-            .catch((error) => {
-              alert(error)
-            });
-          })(allContractResults[resultIndex])
-        }
+          })
+          .catch((error) => {
+            alert(error)
+          });
+        })
 
       }).catch((error) => {
         alert('Error:  ' + error)
@@ -81,11 +80,10 @@ class DemoStep0 extends Component {
                 <hr/>
                 <h3>{listing.ipfs.name}</h3>
                 <img
-                  height="200"
                   src={
                     (listing.ipfs.pictures && listing.ipfs.pictures.length>0) ?
                     listing.ipfs.pictures[0] :
-                    'http://www.lackuna.com/wp-content/themes/fearless/images/missing-image-640x360.png'
+                    'missing-image-placeholder.png'
                   }
                 />
                 <br/>
