@@ -12,7 +12,7 @@ body {
 }
 
 h1, h2 {
-  font-family: 'LatoWeb', 'Open Sans', 'Arial Narrow', sans-serif;  
+  font-family: 'LatoWeb', 'Open Sans', 'Arial Narrow', sans-serif;
 }
 
 h3, h4, h5, h6 {
@@ -38,7 +38,7 @@ p {
   border-radius: 4px;
   padding: 6px 20px;
   font-size: 1.0rem;
-  margin: 0px  
+  margin: 0px
 }
 
 .btn-wrapper {
@@ -122,4 +122,8 @@ pre {
   font-size: 1.2rem;
   text-align: center;
   margin: 10px auto;
+}
+
+.listing img {
+  height: 200px;
 }

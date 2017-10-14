@@ -49,6 +49,7 @@
     "whatwg-fetch": "1.0.0"
   },
   "dependencies": {
+    "bs58": "^4.0.1",
     "dotenv": "^2.0.0",
     "ethereumjs-testrpc": "^4.0.1",
     "fetch": "^1.1.0",
