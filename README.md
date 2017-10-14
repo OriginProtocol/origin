@@ -65,17 +65,35 @@ truffle compile
 truffle migrate
 ````
 
-6. In a new terminal tab, start the 0rigin node application.
+5. [Download and install](https://ipfs.io/docs/install/) the IPFS daemon. On Mac OS X and Linux:
+```
+tar xvfz go-ipfs.tar.gz
+mv go-ipfs/ipfs /usr/local/bin/ipfs
+````
+or [Homebrew](https://brew.sh/) users:
+```
+brew install ipfs
+````
+
+6. Update your local IPFS config:
+```
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["*"]'
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "GET", "POST"]'
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials '["true"]'
+````
+
+7. Start 0rigin node application. 
 ```
 npm install
 npm run start
 ````
-6. A browser will open to http://localhost:3000
+
+8. A browser will open to http://localhost:3000
 ![0rigin-homepage](https://user-images.githubusercontent.com/673455/30517963-0603f3d8-9b2d-11e7-9ef4-327b747695eb.png)
 
-7. In Metamask, configure RPC to be private network (localhost 8545) and import the first generated private key, which should be `393fab0f5147601e6637fcc40ac45667e8038a3e20b852d1e1a2b43333a129a2` if you used '0rigin Demo' as your mnemonic. **DO NOT GET YOUR MAIN NET WALLET MIXED UP WITH DEVELOPMENT**.
+9. In Metamask, configure RPC to be private network (localhost 8545) and import the first generated private key, which should be `393fab0f5147601e6637fcc40ac45667e8038a3e20b852d1e1a2b43333a129a2` if you used '0rigin Demo' as your mnemonic. **DO NOT GET YOUR MAIN NET WALLET MIXED UP WITH DEVELOPMENT**.
 
-8. Try it! Create a listing and post it to IPFS and Ethereum.
+10. Try it! Create a listing and post it to IPFS and Ethereum.
 
 ## Get involved
 
