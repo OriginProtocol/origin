@@ -82,7 +82,7 @@ ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "GET", 
 ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials '["true"]'
 ````
 
-7. Start 0rigin node application. 
+7. Start 0rigin node application.
 ```
 npm install
 npm run start
