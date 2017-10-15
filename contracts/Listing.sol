@@ -114,6 +114,7 @@ contract Listing {
   {
     listings.push(listingStruct(msg.sender, _ipfsHash, _price, _unitsAvailable));
     UpdateListings(msg.sender);
+    NewListing(_index);
     return listings.length;
   }
 
@@ -135,7 +136,6 @@ contract Listing {
     // TODO: In future there will likely be some sort of escrow
     listings[_index].lister.transfer(this.balance);
 
-    NewListing(_index);
     ListingPurchased(_index, _unitsToBuy, this.balance);
   }
 
