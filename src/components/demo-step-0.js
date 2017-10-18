@@ -65,7 +65,7 @@ class DemoStep0 extends Component {
           </button>
         </div>
 
-         <div>
+         <div class='row'>
             <img
               src='ajax-loader.gif'
               style={{
@@ -76,9 +76,7 @@ class DemoStep0 extends Component {
             />
             {(this.state.contractListingsCount == 0) ? "No listings" : ""}
             {this.state.listingsResults.map(listing => (
-              <div className="listing" key={listing.contract.ipfsHash}>
-                <hr/>
-                <h3>{listing.ipfs.name}</h3>
+              <div className="col-xs-12 col-md-6 listing" key={listing.contract.ipfsHash}>
                 <img
                   src={
                     (listing.ipfs.pictures && listing.ipfs.pictures.length>0) ?
@@ -86,13 +84,12 @@ class DemoStep0 extends Component {
                     'missing-image-placeholder.png'
                   }
                 />
-                <br/>
-                Category:{listing.ipfs.category}<br/>
-                Description:{listing.ipfs.description}<br/>
-                Price:{listing.ipfs.price}<br/>
-                Contract Price:{listing.contract.price}<br/>
-                Units Available:{listing.contract.unitsAvailable}<br/>
-                IPFS Hash:{listing.contract.ipfsHash}<br/>
+                <h2>{listing.ipfs.name}</h2>
+                {listing.ipfs.description}<br/>
+                <b>{listing.ipfs.price} 0rigin token</b><br/>
+                <small>
+                <a href={'http://ipfs.io/ipfs/'+listing.contract.ipfsHash}>IPFS</a>
+                </small>
               </div>
             ))}
           </div>
