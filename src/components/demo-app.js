@@ -111,6 +111,7 @@ class DemoApp extends Component {
               {this.state.step === 3 &&
                 <DemoStep3
                   ipfsHash={this.state.ipfsHash}
+                  listingJson={this.state.listingJson}
                   onStep3Completion={this.handleStep3Completion}
                 />
               }

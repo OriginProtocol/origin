@@ -5,8 +5,8 @@ import contractService from '../services/contract-service'
 import ipfsService from '../services/ipfs-service'
 
 class DemoStep3 extends Component {
-  handleSubmitToBlockchain(data, onSubmitToBlockchain) {
-    contractService.submitListing(data)
+  handleSubmitToBlockchain(data, price, units, onSubmitToBlockchain) {
+    contractService.submitListing(data, price, units)
     .then((transactionReceipt) => {
       onSubmitToBlockchain(transactionReceipt.tx)
     })
@@ -49,8 +49,12 @@ class DemoStep3 extends Component {
         </p>
         <div className="btn-wrapper">
           <button className="btn btn-primary" onClick={() => {
-            console.log(this.props)
-            this.handleSubmitToBlockchain(this.props.ipfsHash, this.props.onStep3Completion)
+            this.handleSubmitToBlockchain(
+              this.props.ipfsHash,
+              this.props.listingJson.data.price,
+              1, // TODO: Allow users to set units in form
+              this.props.onStep3Completion
+            )
           }}>
             Submit listing to Ethereum
           </button>
