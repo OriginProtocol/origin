@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
 import DemoStep0 from './demo-step-0'
+import DemoBuy from './demo-buy'
 import DemoStep1 from './demo-step-1'
 import DemoStep2 from './demo-step-2'
 import DemoStep3 from './demo-step-3'
@@ -34,6 +35,7 @@ class DemoApp extends Component {
     }
 
     this.handleCreateListing = this.handleCreateListing.bind(this)
+    this.handleBuyListing = this.handleBuyListing.bind(this)
     this.handleStep1Completion = this.handleStep1Completion.bind(this)
     this.handleStep2Completion = this.handleStep2Completion.bind(this)
     this.handleStep3Completion = this.handleStep3Completion.bind(this)
@@ -45,6 +47,13 @@ class DemoApp extends Component {
       listingJson: null,
       ipfsHash: null,
       ethereumTransaction: null
+    })
+  }
+
+  handleBuyListing(listing) {
+    this.setState({
+      step: "BUY",
+      listing: listing
     })
   }
 
@@ -79,6 +88,12 @@ class DemoApp extends Component {
               {this.state.step === 0 &&
                 <DemoStep0
                   onCreateListing={this.handleCreateListing}
+                  onBuyListing={this.handleBuyListing}
+                />
+              }
+              {this.state.step === "BUY" &&
+                <DemoBuy
+                  listing={this.state.listing}
                 />
               }
               {this.state.step === 1 &&

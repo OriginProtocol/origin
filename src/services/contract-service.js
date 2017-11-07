@@ -115,6 +115,34 @@ class ContractService {
     })
   }
 
+  buyListing(listingIndex, unitsToBuy, amountToGive) {
+    console.log("request to buy index #" + listingIndex + ", of this many untes " + unitsToBuy + " units. Total eth to send:" + amountToGive)
+    return new Promise((resolve, reject) => {
+
+      this.listingContract.setProvider(web3Service.web3.currentProvider)
+      web3Service.web3.eth.getAccounts((error, accounts) => {
+        this.listingContract.deployed().then((instance) => {
+
+          // Buy it for real
+          instance.buyListing(
+            listingIndex,
+            unitsToBuy,
+            {from: accounts[0], value:amountToGive, gas: 4476768} // TODO (SRJ): is gas needed?
+          )
+          .then(() => {
+            alert("Purchase transaction sent.")
+            resolve()
+          })
+          .catch((error) => {
+            console.error(error)
+            reject(error)
+          })
+
+
+        }) // deployed
+      }) // getAccounts
+    }) // Promise
+  }
 }
 
 const contractService = new ContractService()

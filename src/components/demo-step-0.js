@@ -22,7 +22,6 @@ class DemoStep0 extends Component {
       // TODO (Stan): Remove hacky 2s delay and correctly determine when
       // contractService is ready
       contractService.getAllListings().then((allContractResults) => {
-        let resultIndex;
         console.log("Got this many results:" + allContractResults.length)
         console.log(allContractResults)
         that.setState({contractListingsCount: allContractResults.length})
@@ -43,13 +42,15 @@ class DemoStep0 extends Component {
           })
           .catch((error) => {
             alert(error)
-          });
+            that.setState({contractListingsCount: 0})
+          })
         })
 
       }).catch((error) => {
         alert('Error:  ' + error)
-      });
-    }, 2000);
+        that.setState({contractListingsCount: 0})
+      })
+    }, 2000)
   }
 
   render() {
@@ -65,37 +66,61 @@ class DemoStep0 extends Component {
           </button>
         </div>
 
-         <div class='row'>
-            <img
-              src='ajax-loader.gif'
+         <div>
+
+            <div
               style={{
-                display: ((this.state.listingsResults.length == 0 && this.state.listingsResults.contractListingsCount != 0) ||
-                  this.state.listingsResults.contractListingsCount < 0) ?
+                display: ((this.state.contractListingsCount === -1) ?
+                'block' : 'none')
+              }}
+            >
+              <img src='ajax-loader.gif' role='presentation'/>
+              <p>Loading from blockchain</p>
+            </div>
+
+            <div
+              style={{
+                display: ((this.state.listingsResults.length === 0) &&
+                  (this.state.listingsResults.contractListingsCount > 0)) ?
                 'block' : 'none'
               }}
-            />
-            {(this.state.contractListingsCount == 0) ? "No listings" : ""}
+            >
+              <img src='ajax-loader.gif' role='presentation'/>
+              <p>Loading from IPFS</p>
+            </div>
+            {(this.state.contractListingsCount === 0) ? "No listings" : ""}
+
             {this.state.listingsResults.map(listing => (
-              <div className="col-xs-12 col-md-6 listing" key={listing.contract.ipfsHash}>
+              <div className="listing" key={listing.contract.ipfsHash}>
+                <hr/>
+                <h3>{listing.ipfs.name}</h3>
                 <img
+                  role='presentation'
                   src={
                     (listing.ipfs.pictures && listing.ipfs.pictures.length>0) ?
                     listing.ipfs.pictures[0] :
                     'missing-image-placeholder.png'
                   }
                 />
-                <h2>{listing.ipfs.name}</h2>
-                {listing.ipfs.description}<br/>
-                <b>{listing.ipfs.price} 0rigin token</b><br/>
-                <small>
-                <a href={'http://ipfs.io/ipfs/'+listing.contract.ipfsHash}>IPFS</a>
-                </small>
+                <br/>
+                Category:{listing.ipfs.category}<br/>
+                Description:{listing.ipfs.description}<br/>
+                Price:{listing.ipfs.price}<br/>
+                Contract Price:{listing.contract.price}<br/>
+                Units Available:{listing.contract.unitsAvailable}<br/>
+                IPFS Hash:{listing.contract.ipfsHash}<br/>
+                <button className="btn btn-info" onClick={() => {
+                  this.props.onBuyListing(listing)
+                }}>
+                  Buy It
+                </button>
+
               </div>
             ))}
           </div>
 
       </section>
-    );
+    )
   }
 }
 

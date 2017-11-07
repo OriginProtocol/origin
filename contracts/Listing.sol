@@ -58,7 +58,7 @@ contract Listing {
   }
 
   modifier hasValueToPurchase(uint _index, uint _unitsToBuy) {
-    require (this.balance >= (listings[_index].price * _unitsToBuy));
+    require (msg.value >= (listings[_index].price * _unitsToBuy));
     _;
   }
 
@@ -114,7 +114,7 @@ contract Listing {
   {
     listings.push(listingStruct(msg.sender, _ipfsHash, _price, _unitsAvailable));
     UpdateListings(msg.sender);
-    NewListing(_index);
+    NewListing(listings.length-1);
     return listings.length;
   }
 
@@ -134,9 +134,9 @@ contract Listing {
 
     // Send funds to lister
     // TODO: In future there will likely be some sort of escrow
-    listings[_index].lister.transfer(this.balance);
+    listings[_index].lister.transfer(msg.value);
 
-    ListingPurchased(_index, _unitsToBuy, this.balance);
+    ListingPurchased(_index, _unitsToBuy, msg.value);
   }
 
 }
