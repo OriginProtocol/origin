@@ -58,14 +58,15 @@ class ContractService {
     })
   }
 
-  submitListing(ipfsListing) {
+  submitListing(ipfsListing, price, units) {
     return new Promise((resolve, reject) => {
       this.listingContract.setProvider(web3Service.web3.currentProvider)
       web3Service.web3.eth.getAccounts((error, accounts) => {
         this.listingContract.deployed().then((instance) => {
           // TODO (Stan): Replace default price and quantities of 1.0 with
           // actual values enterd by user in form.
-          return instance.create(this.getBytes32FromIpfsHash(ipfsListing), 1.0, 1.0, {from: accounts[0]})
+          let priceInWei = web3Service.web3.toWei(price, 'ether')
+          return instance.create(this.getBytes32FromIpfsHash(ipfsListing), priceInWei, units, {from: accounts[0]})
         }).then((result) => {
           resolve(result)
         }).catch((error) => {
@@ -96,7 +97,7 @@ class ContractService {
                     index: listing[0].toNumber(),
                     lister: listing[1],
                     ipfsHash: that.getIpfsHashFromBytes32(listing[2]),
-                    price: listing[3].toNumber(),
+                    price: web3Service.web3.fromWei(listing[3], 'ether').toNumber(),
                     unitsAvailable: listing[4].toNumber()
                   }
                   console.log("New listing. Index:" + listing[0].toNumber())
@@ -115,6 +116,34 @@ class ContractService {
     })
   }
 
+  buyListing(listingIndex, unitsToBuy, amountToGive) {
+    console.log("request to buy index #" + listingIndex + ", of this many untes " + unitsToBuy + " units. Total eth to send:" + amountToGive)
+    return new Promise((resolve, reject) => {
+
+      this.listingContract.setProvider(web3Service.web3.currentProvider)
+      web3Service.web3.eth.getAccounts((error, accounts) => {
+        this.listingContract.deployed().then((instance) => {
+
+          // Buy it for real
+          instance.buyListing(
+            listingIndex,
+            unitsToBuy,
+            {from: accounts[0], value:amountToGive, gas: 4476768} // TODO (SRJ): is gas needed?
+          )
+          .then(() => {
+            alert("Purchase transaction sent.")
+            resolve()
+          })
+          .catch((error) => {
+            console.error(error)
+            reject(error)
+          })
+
+
+        }) // deployed
+      }) // getAccounts
+    }) // Promise
+  }
 }
 
 const contractService = new ContractService()
