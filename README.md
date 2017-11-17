@@ -59,13 +59,13 @@ testrpc --mnemonic="0rigin Demo" --accounts=3
 ```
 This will begin a new Ethereum blockchain, and output credentials for 3 test wallets with 100 ETH. The `mnemonic` causes the same accounts to be generated each time.
 
-4. In a new terminal tab, compile the smart contracts and migrate them onto the blockchain:
+5. In a new terminal tab, compile the smart contracts and migrate them onto the blockchain:
 ```
 truffle compile
 truffle migrate
 ````
 
-5. [Download and install](https://ipfs.io/docs/install/) the IPFS daemon. On Mac OS X and Linux:
+6. [Download and install](https://ipfs.io/docs/install/) the IPFS daemon. On Mac OS X and Linux:
 ```
 tar xvfz go-ipfs.tar.gz
 mv go-ipfs/ipfs /usr/local/bin/ipfs
@@ -75,30 +75,30 @@ or [Homebrew](https://brew.sh/) users:
 brew install ipfs
 ````
 
-6. Update your local IPFS config:
+7. Update your local IPFS config:
 ```
 ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["*"]'
 ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "GET", "POST"]'
 ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials '["true"]'
 ````
 
-7. Run the IPFS daemon:
+8. Run the IPFS daemon:
 ```
 ipfs daemon
 ```
 
-8. In Metamask, configure RPC to be private network (localhost 8545) and import the first generated private key, which should be `393fab0f5147601e6637fcc40ac45667e8038a3e20b852d1e1a2b43333a129a2` if you used '0rigin Demo' as your mnemonic. **DO NOT GET YOUR MAIN NET WALLET MIXED UP WITH DEVELOPMENT**.
+9. In Metamask, configure RPC to be private network (localhost 8545) and import the first generated private key, which should be `393fab0f5147601e6637fcc40ac45667e8038a3e20b852d1e1a2b43333a129a2` if you used '0rigin Demo' as your mnemonic. **DO NOT GET YOUR MAIN NET WALLET MIXED UP WITH DEVELOPMENT**.
 
-9. Start 0rigin node application.
+10. Start 0rigin node application.
 ```
 npm install
 npm run start
 ````
 
-10. A browser will open to http://localhost:3000
+11. A browser will open to http://localhost:3000
 ![0rigin-homepage](https://user-images.githubusercontent.com/673455/30517963-0603f3d8-9b2d-11e7-9ef4-327b747695eb.png)
 
-11. Try it! Create a listing and post it to IPFS and Ethereum.
+12. Try it! Create a listing and post it to IPFS and Ethereum.
 
 ## Get involved
 
