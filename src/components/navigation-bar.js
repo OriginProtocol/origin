@@ -14,7 +14,7 @@ class NavigationBar extends Component {
               <span className="icon-bar"></span>
             </button>
             <a className="navbar-brand" href="/">
-              0rigin
+              Origin
             </a>
           </div>
 

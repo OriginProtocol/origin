@@ -77,36 +77,36 @@ class DemoStep1 extends Component {
   render() {
     return (
       <section className="step">
-        <h3>Create your first decentralized listing on 0rigin</h3>
+        <h3>Create your first decentralized listing on Origin</h3>
         <h4>Choose a schema for your product or service</h4>
         <p>
-          Your product or service will use a schema to describe its 
-          attributes like name, description, and price. 0rigin already 
-          has multiple schemas that map to well-known 
+          Your product or service will use a schema to describe its
+          attributes like name, description, and price. Origin already
+          has multiple schemas that map to well-known
           categories of listings like housing, auto, and services.
         </p>
         <p>
           These are <a href="http://json-schema.org" target="_blank">
-          JSON schema</a> definitions that describe the required fields 
-          and validation rules for each type of listing. If your listing 
-          type is unsupported, you can easily extend our schemas or 
+          JSON schema</a> definitions that describe the required fields
+          and validation rules for each type of listing. If your listing
+          type is unsupported, you can easily extend our schemas or
           create your own.
         </p>
         <SchemaOptions
-          schemaList={this.props.schemaList} 
+          schemaList={this.props.schemaList}
           onSchemaSelection={this.handleSchemaSelection} />
         <hr>
         </hr>
         <div className="row">
           <div className="col-md-12">
             {this.state.schemaFetched &&
-              <h4> 
+              <h4>
                 {this.state.selectedSchemaType.name}
               </h4>
             }
             {this.state.schemaFetched &&
-              <ListingForm 
-                schema={this.state.selectedSchema} 
+              <ListingForm
+                schema={this.state.selectedSchema}
                 selectedSchemaType={this.state.selectedSchemaType}
                 onSubmitListing={this.props.onStep1Completion}/>
             }

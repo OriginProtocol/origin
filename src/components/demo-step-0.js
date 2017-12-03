@@ -56,7 +56,7 @@ class DemoStep0 extends Component {
   render() {
     return (
       <section className="step">
-        <h3>Browse 0rigin Listings</h3>
+        <h3>Browse Origin Listings</h3>
 
         <div className="btn-wrapper">
           <button className="btn btn-primary" onClick={() => {

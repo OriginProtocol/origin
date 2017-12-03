@@ -15,7 +15,7 @@ We are specifically building a large-scale commerce network that:
 
 To accomplish these ambitious goals, the Origin platform is being launched with incentives from the outset to encourage other technologists, businesses, and consumers to build, contribute, and extend the ecosystem with us. We imagine a broad collection of vertical use cases (e.g short-term vacation rentals, freelance software engineering, tutoring for hire) that are built on top of Origin standards and shared data. Together, we will create the Internet economy of tomorrow.
 
-To learn more about this project, please visit [the Origin website](https://www.originprotocol.org) and download our whitepaper.
+To learn more about this project, please visit [the Origin website](http://www.originprotocol.com) and download our whitepaper.
 
 ## In this repo
 
@@ -55,7 +55,7 @@ cd origin-demo-dapp
 ```
 4. Start testrpc:
 ```
-testrpc --mnemonic="0rigin Demo" --accounts=3
+testrpc --mnemonic="Origin Demo" --accounts=3
 ```
 This will begin a new Ethereum blockchain, and output credentials for 3 test wallets with 100 ETH. The `mnemonic` causes the same accounts to be generated each time.
 
@@ -87,7 +87,7 @@ ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials '["true"]'
 ipfs daemon
 ```
 
-9. In Metamask, configure RPC to be private network (localhost 8545) and import the first generated private key, which should be `393fab0f5147601e6637fcc40ac45667e8038a3e20b852d1e1a2b43333a129a2` if you used '0rigin Demo' as your mnemonic. **DO NOT GET YOUR MAIN NET WALLET MIXED UP WITH DEVELOPMENT**.
+9. In Metamask, configure RPC to be private network (localhost 8545) and import the first generated private key, which should be `44b899892eff7acc5a4abd4686f0c9cd56f9d60b2b5375bb5b4adaf850c9a167` if you used `Origin Demo` as your mnemonic in step 4. **DO NOT GET YOUR MAIN NET WALLET MIXED UP WITH DEVELOPMENT**.
 
 10. Start Origin node application.
 ```
@@ -102,4 +102,4 @@ npm run start
 
 ## Get involved
 
-We'd love to have you join us on this project.  We're still in the super early stages, but join our [slack channel](http://slack.0rigin.org) or [email us](mailto:founders@0rigin.org) to get started.
+We'd love to have you join us on this project.  We're still in the super early stages, but join our [slack channel](http://slack.originprotocol.com) or [email us](mailto:founders@originprotocol.com) to get started.

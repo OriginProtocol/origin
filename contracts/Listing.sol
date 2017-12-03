@@ -2,7 +2,7 @@ pragma solidity ^0.4.11;
 
 /// @title Listing
 /// @dev Used to keep marketplace of listings for buyers and sellers
-/// @author Matt Liu <matt@0rigin.org>, Josh Fraser <josh@0rigin.org>, Stan James <stan@wanderingstan.com>
+/// @author Matt Liu <matt@originprotocol.com>, Josh Fraser <josh@originprotocol.com>, Stan James <stan@originprotocol.com>
 
 contract Listing {
 
@@ -21,7 +21,7 @@ contract Listing {
    * Storage
    */
 
-  // 0rigin owner
+  // Origin owner
   address public origin;
 
   // Array of all listings
