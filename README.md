@@ -50,8 +50,8 @@ npm install -g truffle
 ```
 3. Clone Origin:
 ```
-git clone https://github.com/OriginProtocol/demo-dapp.git
-cd demo-dapp
+git clone https://github.com/OriginProtocol/demo-dapp origin-demo-dapp
+cd origin-demo-dapp
 ```
 4. Start testrpc:
 ```
