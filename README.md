@@ -87,7 +87,7 @@ ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials '["true"]'
 ipfs daemon
 ```
 
-9. In Metamask, configure RPC to be private network (localhost 8545) and import the first generated private key, which should be 44b899892eff7acc5a4abd4686f0c9cd56f9d60b2b5375bb5b4adaf850c9a167 if you used '0rigin Demo' as your mnemonic. **DO NOT GET YOUR MAIN NET WALLET MIXED UP WITH DEVELOPMENT**.
+9. In Metamask, configure RPC to be private network (localhost 8545) and import the first generated private key, which should be `44b899892eff7acc5a4abd4686f0c9cd56f9d60b2b5375bb5b4adaf850c9a167` if you used 'Origin Demo' as your mnemonic. **DO NOT GET YOUR MAIN NET WALLET MIXED UP WITH DEVELOPMENT**.
 
 10. Start Origin node application.
 ```
