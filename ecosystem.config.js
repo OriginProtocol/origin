@@ -12,7 +12,7 @@ module.exports = {
       // for SSL.
       env_production : {
         IPFS_API_PORT: "5002",
-	IPFS_DOMAIN: "demo.originprotocol.com",      
+        IPFS_DOMAIN: "demo.originprotocol.com",      
         NODE_ENV: 'production'
       }
     }
