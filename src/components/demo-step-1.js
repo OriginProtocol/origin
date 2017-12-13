@@ -9,7 +9,7 @@ class Schema extends React.Component {
     return (
       <div className="schema-option">
         <div className="img-wrapper">
-          <img src={'http://localhost:3000/' + this.props.schema.img}
+          <img src={'/' + this.props.schema.img}
             onClick={() => this.props.onSelection()}/>
         </div>
         <h4 onClick={() => this.props.onSelection()}>
@@ -63,7 +63,7 @@ class DemoStep1 extends Component {
 
   handleSchemaSelection(schemaType) {
     // Need to change this to a non local URL
-    fetch('http://localhost:3000/schemas/' + schemaType.type + '.json')
+    fetch('/schemas/' + schemaType.type + '.json')
     .then((response) => response.json())
     .then((schemaJson) => {
       this.setState({
