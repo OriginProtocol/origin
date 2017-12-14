@@ -8,12 +8,8 @@ class IpfsService {
       return IpfsService.instance
     }
 
-    // TODO: Allow override of these by config file
-    this.ipfsGatewayPort = '8080'
-    this.ipfsDomain = 'gateway.originprotocol.com'
-    this.ipfsApiPort = '5002'
-    // this.ipfsDomain = '127.0.0.1' // Local IPFS daemon for dev
-    // this.ipfsApiPort = '5001' // Local IPFS daemon for dev
+    this.ipfsDomain = process.env.IPFS_DOMAIN || '127.0.0.1' // Local IPFS daemon
+    this.ipfsApiPort = process.env.IPFS_API_PORT || '5001'
 
     console.log("this.ipfsDomain:" + this.ipfsDomain)
     this.ipfs = ipfsAPI(this.ipfsDomain, this.ipfsApiPort, {protocol: 'https'})
