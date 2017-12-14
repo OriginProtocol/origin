@@ -9,8 +9,8 @@ class IpfsService {
     }
 
     // TODO: Allow override of these by config file
-    // this.ipfsDomain = 'gateway.originprotocol.com' // Production
-    this.ipfsDomain = '127.0.0.1' // Local IPFS daemon
+    this.ipfsDomain = 'gateway.originprotocol.com'
+    // this.ipfsDomain = '127.0.0.1' // Local IPFS daemon for dev
     this.ipfsApiPort = '5001'
     this.ipfsGatewayPort = '8080'
 
