@@ -21,8 +21,8 @@ class DemoBuy extends Component {
     const totalPrice = (unitsToBuy * this.props.listing.contract.price);
     contractService.buyListing(this.props.listing.contract.index, unitsToBuy, totalPrice)
     .then((transactionReceipt) => {
-      console.log("Purchased!")
-      //onSubmitToBlockchain(transactionReceipt.tx)
+      console.log("Purchase request sent.")
+      // TODO (Stan) : Give confirmation once transaction is confirmed on chain.
     })
     .catch((error) => {
       console.log(error)
@@ -50,11 +50,11 @@ class DemoBuy extends Component {
               }
             />
             <br/>
-            Category:{this.props.listing.ipfs.category}<br/>
-            Description:{this.props.listing.ipfs.description}<br/>
-            Price:{this.props.listing.ipfs.price}<br/>
-            Contract Price:{this.props.listing.contract.price}<br/>
-            Units Available:{this.props.listing.contract.unitsAvailable}<br/>
+            Category: {this.props.listing.ipfs.category}<br/>
+            Description: {this.props.listing.ipfs.description}<br/>
+            Price: {this.props.listing.ipfs.price}<br/>
+            Contract Price: {this.props.listing.contract.price}<br/>
+            Units Available: {this.props.listing.contract.unitsAvailable}<br/>
 
         <div className="btn-wrapper">
           <button className="btn btn-primary" onClick={() => {
