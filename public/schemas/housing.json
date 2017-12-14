@@ -5,13 +5,13 @@
   "required": ["name","category","description","price"],
   "properties": {
     "name": {
-      "type": "string", 
+      "type": "string",
       "title": "Title",
        "minLength": "3"
     },
     "category": {
-      "type": "string", 
-      "title": "Category", 
+      "type": "string",
+      "title": "Category",
       "enum": [
         "Apts Wanted",
         "Apts/Housing for Rent",
@@ -29,12 +29,12 @@
       "default":"Vacation Rentals"
     },
     "description": {
-      "type": "string", 
-      "title": "Description", 
+      "type": "string",
+      "title": "Description",
       "minLength": "10"
     },
     "location": {
-      "type": "string", 
+      "type": "string",
       "title": "Location"
     },
     "pictures": {
@@ -46,8 +46,8 @@
       }
     },
     "price": {
-      "type": "number", 
-      "title": "Price in 0rigin token"
+      "type": "number",
+      "title": "Price in ETH"
     }
   }
 }
