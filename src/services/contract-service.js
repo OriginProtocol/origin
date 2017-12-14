@@ -58,13 +58,17 @@ class ContractService {
     })
   }
 
-  submitListing(ipfsListing, price, units) {
+  submitListing(ipfsListing, ethPrice, units) {
     return new Promise((resolve, reject) => {
       this.listingContract.setProvider(web3Service.web3.currentProvider)
       web3Service.web3.eth.getAccounts((error, accounts) => {
         this.listingContract.deployed().then((instance) => {
-          let priceInWei = web3Service.web3.toWei(price, 'ether')
-          return instance.create(this.getBytes32FromIpfsHash(ipfsListing), priceInWei, units, {from: accounts[0]})
+          let weiToGive = web3Service.web3.toWei(ethPrice, 'ether')
+          return instance.create(
+            this.getBytes32FromIpfsHash(ipfsListing),
+            weiToGive,
+            units,
+            {from: accounts[0]})
         }).then((result) => {
           resolve(result)
         }).catch((error) => {
@@ -114,19 +118,20 @@ class ContractService {
     })
   }
 
-  buyListing(listingIndex, unitsToBuy, amountToGive) {
-    console.log("request to buy index #" + listingIndex + ", of this many untes " + unitsToBuy + " units. Total eth to send:" + amountToGive)
+  buyListing(listingIndex, unitsToBuy, ethToGive) {
+    console.log("request to buy index #" + listingIndex + ", of this many untes " + unitsToBuy + " units. Total eth to send:" + ethToGive)
     return new Promise((resolve, reject) => {
 
       this.listingContract.setProvider(web3Service.web3.currentProvider)
       web3Service.web3.eth.getAccounts((error, accounts) => {
         this.listingContract.deployed().then((instance) => {
+          let weiToGive = web3Service.web3.toWei(ethToGive, 'ether')
 
           // Buy it for real
           instance.buyListing(
             listingIndex,
             unitsToBuy,
-            {from: accounts[0], value:amountToGive, gas: 4476768} // TODO (SRJ): is gas needed?
+            {from: accounts[0], value:weiToGive, gas: 4476768} // TODO (SRJ): is gas needed?
           )
           .then(() => {
             alert("Purchase transaction sent.")
@@ -136,7 +141,6 @@ class ContractService {
             console.error(error)
             reject(error)
           })
-
 
         }) // deployed
       }) // getAccounts
