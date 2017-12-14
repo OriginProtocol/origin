@@ -15,7 +15,7 @@ We are specifically building a large-scale commerce network that:
 
 To accomplish these ambitious goals, the Origin platform is being launched with incentives from the outset to encourage other technologists, businesses, and consumers to build, contribute, and extend the ecosystem with us. We imagine a broad collection of vertical use cases (e.g short-term vacation rentals, freelance software engineering, tutoring for hire) that are built on top of Origin standards and shared data. Together, we will create the Internet economy of tomorrow.
 
-To learn more about this project, please visit [the Origin website](http://www.originprotocol.com) and download our whitepaper.
+To learn more about this project, please visit [the Origin website](https://www.originprotocol.com) and download our whitepaper.
 
 ## In this repo
 
