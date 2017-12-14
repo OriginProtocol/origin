@@ -63,8 +63,6 @@ class ContractService {
       this.listingContract.setProvider(web3Service.web3.currentProvider)
       web3Service.web3.eth.getAccounts((error, accounts) => {
         this.listingContract.deployed().then((instance) => {
-          // TODO (Stan): Replace default price and quantities of 1.0 with
-          // actual values enterd by user in form.
           let priceInWei = web3Service.web3.toWei(price, 'ether')
           return instance.create(this.getBytes32FromIpfsHash(ipfsListing), priceInWei, units, {from: accounts[0]})
         }).then((result) => {
