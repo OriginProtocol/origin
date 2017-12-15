@@ -108,7 +108,11 @@ class DemoStep0 extends Component {
                 Price: {listing.ipfs.price}<br/>
                 Contract Price: {listing.contract.price}<br/>
                 Units Available: {listing.contract.unitsAvailable}<br/>
-                IPFS Hash: {listing.contract.ipfsHash}<br/>
+                IPFS Hash:
+                <a href={ipfsService.gatewayUrlForHash(listing.contract.ipfsHash)}
+                  target='_blank'>
+                  {listing.contract.ipfsHash}
+                </a><br/>
                 <button className="btn btn-info" onClick={() => {
                   this.props.onBuyListing(listing)
                 }}>

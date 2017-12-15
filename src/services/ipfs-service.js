@@ -78,6 +78,12 @@ class IpfsService {
 
     });
   }
+
+  gatewayUrlForHash(ipfsHashStr) {
+    return (`${this.ipfsProtocol}://${this.ipfsDomain}:` +
+      `${this.ipfsGatewayPort}/ipfs/${ipfsHashStr}`)
+  }
+
 }
 
 const ipfsService = new IpfsService()
