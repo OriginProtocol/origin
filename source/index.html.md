@@ -8,7 +8,7 @@ language_tabs: # must be one of https://git.io/vQNgJ
   - json
 
 toc_footers:
-  - <a href='http://www.originprotocol.com'>Where it all begins</a>
+  - <a href='http://www.originprotocol.com'>Where it all begins!</a>
 
 includes:
   - errors
