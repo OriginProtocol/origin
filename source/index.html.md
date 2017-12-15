@@ -8,8 +8,7 @@ language_tabs: # must be one of https://git.io/vQNgJ
   - json
 
 toc_footers:
-  - <a href='http://www.originprotocol.com'>Return to the Origin homepage</a>
-  - <a href='https://github.com/lord/slate'>Documentation Powered by Slate</a>
+  - <a href='http://www.originprotocol.com'>Where it all begins</a>
 
 includes:
   - errors
