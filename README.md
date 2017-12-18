@@ -39,53 +39,32 @@ If you're new to the space, it may be helpful to first familiarize yourself with
 
 Think of this app as a proof of concept and our playground for trying out ideas. While we may eventually reuse pieces of this in production, this is by no means what we envision as the final product. We thought it would be helpful to demonstrate how the various technologies work together from end to end.
 
-1. Install [Metamask Chrome Browser Extension](https://metamask.io/).
 
-2. Download Ethereum [test-rpc](https://github.com/ethereumjs/testrpc) and [truffle](http://truffleframework.com/):
+1. Download [truffle](http://truffleframework.com/):
 ```
-npm i -g ethereumjs-testrpc
 npm install -g truffle
 ```
-3. Clone Origin:
+2. Clone Origin:
 ```
-git clone https://github.com/OriginProtocol/demo-dapp origin-demo-dapp
-cd origin-demo-dapp
+git clone https://github.com/OriginProtocol/demo-dapp origin-demo-dapp && cd origin-demo-dapp
 ```
-4. Start testrpc:
+3. Start truffle:
 ```
-testrpc --mnemonic="Origin Demo" --accounts=3
+truffle develop
 ```
-This will begin a new Ethereum blockchain, and output credentials for 3 test wallets with 100 ETH. The `mnemonic` causes the same accounts to be generated each time.
+This will begin a new Ethereum blockchain. It will output 10 accounts that it put 100 ETH into, and the mnemonic to generate them.
 
-5. In a new terminal tab, compile the smart contracts and migrate them onto the blockchain:
-```
-truffle compile
-truffle migrate
-````
+4. In the truffle console, type `migrate`. This will compile our contracts and add them to the blockchain.
 
-6. [Download and install](https://ipfs.io/docs/install/) the IPFS daemon. On Mac OS X and Linux:
-```
-tar xvfz go-ipfs.tar.gz
-mv go-ipfs/ipfs /usr/local/bin/ipfs
-````
-or [Homebrew](https://brew.sh/) users:
-```
-brew install ipfs
-````
+5. Install [Metamask Chrome Browser Extension](https://metamask.io/).
 
-7. Update your local IPFS config:
-```
-ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["*"]'
-ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "GET", "POST"]'
-ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials '["true"]'
-````
+6. Click the Metamask icon in the toolbar, and then click `Restore from seed phrase`
 
-8. Run the IPFS daemon:
-```
-ipfs daemon
-```
+7. Enter the seed phrase (Mnemonic) of `candy maple cake sugar pudding cream honey rich smooth crumble sweet treat`. This is the default seed phrase for truffle development.
 
-9. In Metamask, configure RPC to be private network (localhost 8545) and import the first generated private key, which should be `44b899892eff7acc5a4abd4686f0c9cd56f9d60b2b5375bb5b4adaf850c9a167` if you used `Origin Demo` as your mnemonic in step 4. **DO NOT GET YOUR MAIN NET WALLET MIXED UP WITH DEVELOPMENT**.
+8. From the arrow dropdown near the fox, select "Custom RPC" and enter `http://localhost:9545/`. (This is where truffle's RPC lives.)
+
+9. You should see your account now has 100 Ether. This is your test account on our local network. Other generated accounts will also have this amount.
 
 10. Start Origin node application.
 ```
