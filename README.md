@@ -23,7 +23,7 @@ This demo is currently running on the Rinkeby testnet. You can try it for yourse
 
 [demo.originprotocol.com](http://demo.originprotocol.com)
 
-To use the demo, you will need to first install the [Metamask Chrome Browser Extension](https://metamask.io/). If you want to create a listing or make a purchase, you will need to have fake Rinkeby ETH. You can get some for free using the [Rinkeby Authenticated Faucet](https://faucet.rinkeby.io).  **Be careful not to mix up your test wallet with you real one.**
+To use the demo, you will need to first install the [Metamask Chrome Browser Extension](https://metamask.io/). If you want to create a listing or make a purchase, you will need to have fake Rinkeby ETH. You can get some for free using the [Rinkeby Authenticated Faucet](https://faucet.rinkeby.io).  **Be careful not to mix up your test wallet with your real one on the Main Network.**
 
 This demo uses our IPFS gateway which is run as a community service and is available at gateway.originprotocol.com.
 
@@ -52,7 +52,7 @@ git clone https://github.com/OriginProtocol/demo-dapp origin-demo-dapp && cd ori
 ```
 truffle develop
 ```
-This will begin a new Ethereum blockchain. It will output 10 accounts that it put 100 ETH into, and the mnemonic to generate them.
+This will begin a new Ethereum blockchain. It will output 10 accounts that it has put 100 ETH into, and the mnemonic to generate them.
 
 4. In the truffle console, type `migrate`. This will compile our contracts and add them to the blockchain.
 
@@ -68,7 +68,7 @@ This is the default seed phrase for truffle development.
 
 8. Click where it says "Ethereum Main Network", select "Custom RPC" and enter `http://localhost:9545/`. This takes us off of the real ETH blockchain and onto our local blockchain. Click the back arrow to return to your account.
 
-**Be sure that you are off of the Ethereum Main Network and not using your real wallet address.**
+**Be careful not to mix up your test wallet with you real one on the Main Network.**
 
 9. You should see your first test account now has 100 ETH. (Address of `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`) Additional generated accounts will also have this amount.
 
@@ -76,7 +76,7 @@ This is the default seed phrase for truffle development.
 ```
 npm install
 npm run start
-````
+```
 
 11. A browser will open to http://localhost:3000
 ![Origin-homepage](https://user-images.githubusercontent.com/673455/30517963-0603f3d8-9b2d-11e7-9ef4-327b747695eb.png)
