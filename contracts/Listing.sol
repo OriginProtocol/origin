@@ -21,8 +21,8 @@ contract Listing {
    * Storage
    */
 
-  // Origin owner
-  address public origin;
+  // Contract owner
+  address public owner_address;
 
   // Array of all listings
   listingStruct[] public listings;
@@ -46,7 +46,6 @@ contract Listing {
   /*
    * Modifiers
    */
-
   modifier isValidListingIndex(uint _index) {
     require (_index < listings.length);
     _;
@@ -62,15 +61,46 @@ contract Listing {
     _;
   }
 
+  modifier isOwner() {
+    require (msg.sender == owner_address);
+    _;
+  }
+
 
   /*
    * Public functions
    */
 
-  // Defines origin admin address - may be removed for public deployment
   function Listing()
   {
-    origin = msg.sender;
+    // Defines origin admin address - may be removed for public deployment
+    owner_address = msg.sender;
+
+    // Sample Listings - May be removed for public deployment
+    testingAddSampleListings();
+  }
+
+  function testingStringToBytes32(string memory source)
+    public
+    constant
+    returns (bytes32 result)
+  {
+      bytes memory tempEmptyStringTest = bytes(source);
+      if (tempEmptyStringTest.length == 0) {
+          return 0x0;
+      }
+      assembly {
+          result := mload(add(source, 32))
+      }
+  }
+
+  function testingAddSampleListings()
+    isOwner
+  {
+    // Red shoe
+    create(testingStringToBytes32('QmfF4JBA4fEYDkZqjRHnDxWGGoXg5D1T4WqfDrN4GXP33p'), 0.01 ether, 1);
+    // Lambo
+    create(testingStringToBytes32('QmYsNo3fYTXQRHREYeoGUGLuYETnjx3HxQFMeiZuE7zPSf'), 2.50 ether, 1);
   }
 
   /// @dev listingsLength(): Return number of listings
