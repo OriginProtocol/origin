@@ -69,6 +69,7 @@ contract Listing {
 
   // Defines origin admin address - may be removed for public deployment
   function Listing()
+    public
   {
     origin = msg.sender;
   }
