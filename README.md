@@ -17,17 +17,15 @@ To accomplish these ambitious goals, the Origin platform is being launched with 
 
 To learn more about this project, please visit [the Origin website](https://www.originprotocol.com) and download our whitepaper.
 
-## In this repo
+## Try it on the Rinkeby testnet
 
-This repo will be the home for all the various components of the Origin platform.  Including:
+This demo is currently running on the Rinkeby testnet. You can try it for yourself at:
 
-* Common base schemas that will be used frequently & can be inherited (email addresses, international addresses, phone numbers, etc.)
-* Vertical-specific schemas like home-sharing, car-sharing, services, etc.
-* An Origin dApp for publishing new listings, or searching or booking existing listings
-* Our Ethereum smart contracts
-* Backend service that fetches listings and makes them searchable
-* The originprotocol.com landing page
-* Other tools like validators, notification apps, etc.
+[demo.originprotocol.com](http://demo.originprotocol.com)
+
+To use the demo, you will need to first install the [Metamask Chrome Browser Extension](https://metamask.io/). If you want to create a listing or make a purchase, you will need to have fake Rinkeby ETH. You can get some for free using the [Rinkeby Authenticated Faucet](https://faucet.rinkeby.io).  **Be careful not to mix up your test wallet with you real one.**
+
+This demo uses our IPFS gateway which is run as a community service and is available at gateway.originprotocol.com.
 
 ## Getting up to speed
 
