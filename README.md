@@ -23,7 +23,7 @@ This demo is currently running on the Rinkeby testnet. You can try it for yourse
 
 [demo.originprotocol.com](http://demo.originprotocol.com)
 
-To use the demo, you will need to first install the [Metamask Chrome Browser Extension](https://metamask.io/). If you want to create a listing or make a purchase, you will need to have fake Rinkeby ETH. You can get some for free using the [Rinkeby Authenticated Faucet](https://faucet.rinkeby.io).  **Be careful not to mix up your test wallet with you real one.**
+To use the demo, you will need to first install the [Metamask Chrome Browser Extension](https://metamask.io/). If you want to create a listing or make a purchase, you will need to have fake Rinkeby ETH. You can get some for free using the [Rinkeby Authenticated Faucet](https://faucet.rinkeby.io).  **Be careful not to mix up your test wallet with your real one.**
 
 This demo uses our IPFS gateway which is run as a community service and is available at gateway.originprotocol.com.
 
