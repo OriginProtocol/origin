@@ -72,7 +72,7 @@ This is the default seed phrase for truffle development.
 
 9. You should see your first test account now has 100 ETH. (Address of `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`) Additional generated accounts will also have this amount.
 
-10. Start Origin node application.
+10. In a new terminal tab, install and start the Origin node application.
 ```
 npm install
 npm run start
