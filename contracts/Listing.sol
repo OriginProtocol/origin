@@ -80,27 +80,22 @@ contract Listing {
     testingAddSampleListings();
   }
 
-  function testingStringToBytes32(string memory source)
-    public
-    constant
-    returns (bytes32 result)
-  {
-      bytes memory tempEmptyStringTest = bytes(source);
-      if (tempEmptyStringTest.length == 0) {
-          return 0x0;
-      }
-      assembly {
-          result := mload(add(source, 32))
-      }
-  }
-
   function testingAddSampleListings()
     isOwner
   {
-    // Red shoe
-    create(testingStringToBytes32('QmfF4JBA4fEYDkZqjRHnDxWGGoXg5D1T4WqfDrN4GXP33p'), 0.01 ether, 1);
-    // Lambo
-    create(testingStringToBytes32('QmYsNo3fYTXQRHREYeoGUGLuYETnjx3HxQFMeiZuE7zPSf'), 2.50 ether, 1);
+    // We get stripped hex value from IPFS hash using getBytes32FromIpfsHash()
+    // in contract-service.js
+
+    // Red shoe - Hash: QmfF4JBA4fEYDkZqjRHnDxWGGoXg5D1T4WqfDrN4GXP33p
+    create(
+      0xfb27dcfe2c7febe98d755e2f9df0ff73fb8abecaa778f540d0cbf28b059306db,
+      0.01 ether, 1
+    );
+    // Lambo - Hash: QmYsNo3fYTXQRHREYeoGUGLuYETnjx3HxQFMeiZuE7zPSf
+    create(
+      0x9c73e11ffa575504295be4ece1d4ea49df33261f8eb6a4a7e313e4bb74abf150,
+      2.50 ether, 1
+    );
   }
 
   /// @dev listingsLength(): Return number of listings
