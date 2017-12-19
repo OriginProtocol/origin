@@ -4,6 +4,7 @@
 var REACT_APP = /^REACT_APP_/i;
 
 function getClientEnvironment(publicUrl) {
+  debugger;
   var processEnv = Object
     .keys(process.env)
     .filter(key => REACT_APP.test(key))
@@ -21,8 +22,10 @@ function getClientEnvironment(publicUrl) {
       // This should only be used as an escape hatch. Normally you would put
       // images into the `src` and `import` them in code to get their paths.
       'PUBLIC_URL': JSON.stringify(publicUrl),
-      'IPFS_API_PORT': JSON.stringify(process.env.IPFS_API_PORT || "5001"),
-      'IPFS_DOMAIN': JSON.stringify(process.env.IPFS_DOMAIN || "127.0.0.1")
+      // To use a local IPFS daemon, set IPFS_DOMAIN env var to 127.0.01
+      // and IPFS_API_PORT env var to 5001
+      'IPFS_API_PORT': JSON.stringify(process.env.IPFS_API_PORT || "5002"),
+      'IPFS_DOMAIN': JSON.stringify(process.env.IPFS_DOMAIN || "gateway.originprotocol.com")
     });
   return {'process.env': processEnv};
 }

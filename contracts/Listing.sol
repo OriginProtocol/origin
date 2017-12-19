@@ -21,8 +21,8 @@ contract Listing {
    * Storage
    */
 
-  // Origin owner
-  address public origin;
+  // Contract owner
+  address public owner_address;
 
   // Array of all listings
   listingStruct[] public listings;
@@ -46,7 +46,6 @@ contract Listing {
   /*
    * Modifiers
    */
-
   modifier isValidListingIndex(uint _index) {
     require (_index < listings.length);
     _;
@@ -62,16 +61,42 @@ contract Listing {
     _;
   }
 
+  modifier isOwner() {
+    require (msg.sender == owner_address);
+    _;
+  }
+
 
   /*
    * Public functions
    */
 
-  // Defines origin admin address - may be removed for public deployment
   function Listing()
     public
   {
-    origin = msg.sender;
+    // Defines origin admin address - may be removed for public deployment
+    owner_address = msg.sender;
+
+    // Sample Listings - May be removed for public deployment
+    testingAddSampleListings();
+  }
+
+  function testingAddSampleListings()
+    isOwner
+  {
+    // We get stripped hex value from IPFS hash using getBytes32FromIpfsHash()
+    // in contract-service.js
+
+    // Red shoe - Hash: QmfF4JBA4fEYDkZqjRHnDxWGGoXg5D1T4WqfDrN4GXP33p
+    create(
+      0xfb27dcfe2c7febe98d755e2f9df0ff73fb8abecaa778f540d0cbf28b059306db,
+      0.01 ether, 1
+    );
+    // Lambo - Hash: QmYsNo3fYTXQRHREYeoGUGLuYETnjx3HxQFMeiZuE7zPSf
+    create(
+      0x9c73e11ffa575504295be4ece1d4ea49df33261f8eb6a4a7e313e4bb74abf150,
+      2.50 ether, 1
+    );
   }
 
   /// @dev listingsLength(): Return number of listings

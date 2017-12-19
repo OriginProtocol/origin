@@ -31,7 +31,7 @@ class DemoStep3 extends Component {
         <div className="btn-wrapper">
           <button className="btn btn-info" onClick={() => {
             window.open(
-              "http://" + ipfsService.ipfsDomain + ":" + ipfsService.ipfsGatewayPort + "/ipfs/" + this.props.ipfsHash,
+              ipfsService.gatewayUrlForHash(this.props.ipfsHash),
               "_blank"
             )
           }}>

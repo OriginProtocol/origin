@@ -8,14 +8,15 @@ class IpfsService {
       return IpfsService.instance
     }
 
-    // TODO: Allow override of these by config file
-    // this.ipfsDomain = 'gateway.originprotocol.com' // Production
-    this.ipfsDomain = process.env.IPFS_DOMAIN || '127.0.0.1' // Local IPFS daemon
-    this.ipfsApiPort = process.env.IPFS_API_PORT || '5001'
-    this.ipfsGatewayPort = '8080'
+    // If connecting to a local IPFS daemon, set envionment variables
+    // IPFS_DOMAIN = 127.0.0.1 and IPFS_API_PORT = 5001
+    this.ipfsDomain = process.env.IPFS_DOMAIN || 'gateway.originprotocol.com'
+    this.ipfsApiPort = process.env.IPFS_API_PORT || '5002'
+    this.ipfsGatewayPort = process.env.IPFS_GATEWAY_PORT || ''
+    this.ipfsProtocol = 'https'
 
     console.log("this.ipfsDomain:" + this.ipfsDomain)
-    this.ipfs = ipfsAPI(this.ipfsDomain, this.ipfsApiPort, {protocol: 'http'})
+    this.ipfs = ipfsAPI(this.ipfsDomain, this.ipfsApiPort, {protocol: this.ipfsProtocol})
     this.ipfs.swarm.peers(function(error, response) {
       if (error) {
         console.error("Can't connect to the IPFS API.")
@@ -77,6 +78,12 @@ class IpfsService {
 
     });
   }
+
+  gatewayUrlForHash(ipfsHashStr) {
+    return (`${this.ipfsProtocol}://${this.ipfsDomain}:` +
+      `${this.ipfsGatewayPort}/ipfs/${ipfsHashStr}`)
+  }
+
 }
 
 const ipfsService = new IpfsService()
