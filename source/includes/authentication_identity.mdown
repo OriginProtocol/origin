@@ -1,0 +1,39 @@
+# Authentication & Identity
+
+## Identity verification
+
+Users identities are tied to Ethereum addresses and your private keys are used as the sole method of authentication on the Origin platform.
+
+Users can always prove ownership of a wallet without sending funds, simply by signing a message using their private keys.
+
+Users can assume multiple identities by creating multiple wallets. In this manner, users can choose how much of their  off-line identities they wish to reveal to other users while participating on the Origin network.
+
+Origin allows users to identify themselves using [publicly auditable proofs](#publicly-auditable-proofs) and attestations from [trusted third-parties](#trusted-third-parties).
+
+<aside class="notice">
+Make sure to safely store your private keys. We can't help if you lose them.
+</aside>
+
+## Publicly-Auditable Proofs 
+
+A user can choose to identify themselves on other platforms using
+publicly auditable proofs. A user can post their public key on
+Facebook or Twitter and then cryptographically sign their listing using their
+private key. Users can then include links in their listings to the Facebook post,
+tweet or website that displays their public key. In this manner, anyone can
+independently verify the poster’s identity, or at least confirm that they control
+those accounts or domain. Origin.js simplifies this process for users by
+making it easy to generate these proofs and verify the proofs of other users.
+As people share their identity proofs on Facebook and Twitter, it will help 
+create network effects as friends learn about Origin and decide to participate.
+
+## Trusted Third-Parties
+
+Users can also collect verifications from trusted third-parties like
+[Civic](https://www.civic.com/), [uPort](https://www.uport.me/) or the Origin Foundation.
+These third-party providers can provide identity verification 
+that interfaces with the offline world. For example, a third-party identity provider 
+may help confirm a physical address by sending a postcard with a special code to that address and then having the user enter that code on a website. Similar methods can be used to confirm control of a phone number or
+email address. Trusted third-parties can also verify government IDs like drivers
+licenses and passports which are required for certain types of listings like car
+rentals.
