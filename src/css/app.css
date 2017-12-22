@@ -59,3 +59,47 @@ a:hover {
   float: right;
   clear: right;
 }
+
+/* Listings */
+
+.listing {
+  display: inline-block;
+  width: 360px;
+  height: 340px;
+  margin: 10px;
+}
+
+.listing .photo {
+  display: block;
+  width: 360px;
+  height: 240px;
+  background-color: #c2cbd3;
+}
+
+.listing img {
+  max-width: 360px;
+  max-height: 240px;
+}
+
+.listing .category {
+  font-family: Lato;
+  font-size: 14px;
+  text-align: left;
+  color: #455d75;
+  text-transform: uppercase;
+}
+
+.listing .title {
+  font-family: Poppins;
+  font-size: 24px;
+  text-align: left;
+  color: #455d75;
+}
+
+.listing .price {
+  font-family: Lato;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.39;
+  color: #111d28;
+}

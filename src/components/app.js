@@ -2,6 +2,10 @@ import React from 'react'
 import { Web3Provider } from 'react-web3';
 import PropTypes from 'prop-types';
 
+// Components
+import Listings from './Listings.js'
+
+
 // CSS
 import '../css/app.css'
 import '../css/lato-web.css'
@@ -16,7 +20,9 @@ import {
 const NavBar = (props, context) => {
   return (
     <div className="navbar">
-      <Link to="/"><img src="/origin-logo.png" /></Link>
+      <Link to="/">
+        <img src="/images/origin-logo.png" alt="Origin Logo"/>
+      </Link>
       <div className="nabbar-create">
         <Link to="/create">Create a Listing</Link>
       </div>
@@ -31,11 +37,7 @@ const Home = (props, context) => {
   return (
     <div>
       <NavBar />
-      <h2>Home</h2>
       <Listings />
-      <pre>
-      {web3Context.selectedAccount}
-      </pre>
     </div>
   )
 }
