@@ -1,6 +1,6 @@
 {
-  "name": "react-box",
-  "version": "0.1.0",
+  "name": "origin-demo-dapp",
+  "version": "0.2.0",
   "private": true,
   "devDependencies": {
     "autoprefixer": "6.5.1",
