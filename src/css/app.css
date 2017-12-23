@@ -56,7 +56,7 @@ a:hover {
   margin: 0px;
 }
 
-.nabbar-create {
+.navbar-create {
   font-family: Lato;
   font-weight: bold;
   font-size: 14px;
@@ -65,6 +65,14 @@ a:hover {
   color: #c2cbd3;
 }
 
+.navbar-create a:link, .navbar-create a:visited {
+  color: #c2cbd3;
+  text-decoration: none;
+}
+.navbar-create a:hover, .navbar-create a:active {
+  color: #ffffff;
+  text-decoration: none;
+}
 /* Listings */
 
 .listing-card {
