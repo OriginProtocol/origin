@@ -24,7 +24,7 @@ const NavBar = (props, context) => {
       <Link to="/">
         <img src="/images/origin-logo.png" alt="Origin Logo"/>
       </Link>
-      <div className="nabbar-create">
+      <div className="navbar-create">
         <Link to="/create">Create a Listing</Link>
       </div>
     </div>
