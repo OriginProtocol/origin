@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { render } from 'react-dom'
 
 import ListingForm from './listing-form'
 
@@ -10,7 +9,9 @@ class Schema extends React.Component {
       <div className="schema-option">
         <div className="img-wrapper">
           <img src={'/' + this.props.schema.img}
-            onClick={() => this.props.onSelection()}/>
+            onClick={() => this.props.onSelection()}
+            alt={this.props.schema.name}
+            />
         </div>
         <h4 onClick={() => this.props.onSelection()}>
           {this.props.schema.name}
