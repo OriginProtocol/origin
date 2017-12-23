@@ -17,15 +17,6 @@ import '../css/lato-web.css'
 import '../css/poppins.css'
 import '../css/app.css'
 
-const DEMO_SCHEMA_LIST = [
-  {type: 'for-sale', name: 'For Sale', 'img': 'for-sale.jpg'},
-  {type: 'housing', name: 'Housing', 'img': 'housing.jpg'},
-  {type: 'transportation', name: 'Transportation', 'img': 'transportation.jpg'},
-  {type: 'tickets', name: 'Tickets', 'img': 'tickets.jpg'},
-  {type: 'services', name: 'Services', 'img': 'services.jpg'},
-  {type: 'announcements', name: 'Announcements', 'img': 'announcements.jpg'},
-]
-
 
 const NavBar = (props) => {
   return (
@@ -50,6 +41,7 @@ const HomePage = () => {
   )
 }
 
+
 const ListingDetailPage = () => (
   <div>
     <NavBar />
@@ -61,13 +53,13 @@ const ListingDetailPage = () => (
 const CreateListingPage = () => (
   <div>
     <NavBar />
-    <ListingCreate schemaList={DEMO_SCHEMA_LIST} />
+    <ListingCreate />
   </div>
 )
 
 
 // Handle changing of Metamask account
-const onChangeAccount = (nextAddress) => (console.log(nextAddress))
+// const onChangeAccount = (nextAddress) => (console.log(nextAddress))
 
 // TODO: (Stan) Handle missing Metamask
 // const web3UnavailableScreen = () => (<div>You need web3!</div>)}
@@ -77,7 +69,7 @@ const onChangeAccount = (nextAddress) => (console.log(nextAddress))
 
 // Top level component
 const App = () => (
-  <Web3Provider onChangeAccount={onChangeAccount}>
+  <Web3Provider>
     <Router>
       <div>
         <Route exact path="/" component={HomePage}/>

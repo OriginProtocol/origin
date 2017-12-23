@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
-import {
-  Link
-} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 const ListingCard = () => (
   <Link to="/listing/42">

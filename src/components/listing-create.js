@@ -49,17 +49,27 @@ class SchemaOptions extends React.Component {
 }
 
 class ListingCreate extends Component {
+
   constructor(props) {
     super(props)
 
+    this.schemaList = [
+      {type: 'for-sale', name: 'For Sale', 'img': 'for-sale.jpg'},
+      {type: 'housing', name: 'Housing', 'img': 'housing.jpg'},
+      {type: 'transportation', name: 'Transportation', 'img': 'transportation.jpg'},
+      {type: 'tickets', name: 'Tickets', 'img': 'tickets.jpg'},
+      {type: 'services', name: 'Services', 'img': 'services.jpg'},
+      {type: 'announcements', name: 'Announcements', 'img': 'announcements.jpg'},
+    ]
+
     this.state = {
-      selectedSchemaType: this.props.schemaList[0],
+      selectedSchemaType: this.schemaList[0],
       selectedSchema: null,
       schemaFetched: false
     }
 
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
-    this.handleSchemaSelection(this.props.schemaList[0])
+    this.handleSchemaSelection(this.schemaList[0])
   }
 
   handleSchemaSelection(schemaType) {
@@ -76,6 +86,8 @@ class ListingCreate extends Component {
   }
 
   render() {
+    console.log("Rendering ListingCreate")
+
     return (
       <section className="step">
         <h3>Create your first decentralized listing on Origin</h3>
@@ -94,7 +106,7 @@ class ListingCreate extends Component {
           create your own.
         </p>
         <SchemaOptions
-          schemaList={this.props.schemaList}
+          schemaList={this.schemaList}
           onSchemaSelection={this.handleSchemaSelection} />
         <hr>
         </hr>
