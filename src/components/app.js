@@ -1,21 +1,22 @@
 import React from 'react'
-import { Web3Provider } from 'react-web3';
-import PropTypes from 'prop-types';
-
-// Components
-import Listings from './Listings.js'
-
-
-// CSS
-import '../css/app.css'
-import '../css/lato-web.css'
-import '../css/poppins.css'
-
 import {
   BrowserRouter as Router,
   Route,
   Link
 } from 'react-router-dom'
+import { Web3Provider } from 'react-web3';
+import PropTypes from 'prop-types';
+
+// Components
+import Listings from './listings-grid.js'
+import ListingDetail from './listing-detail.js'
+
+// CSS
+import '../css/pure-min.css'
+import '../css/lato-web.css'
+import '../css/poppins.css'
+import '../css/app.css'
+
 
 const NavBar = (props, context) => {
   return (
@@ -32,7 +33,7 @@ const NavBar = (props, context) => {
 
 // Home
 
-const Home = (props, context) => {
+const HomePage = (props, context) => {
   const web3Context = context.web3;
   return (
     <div>
@@ -42,17 +43,18 @@ const Home = (props, context) => {
   )
 }
 
-Home.contextTypes = {
+HomePage.contextTypes = {
   web3: PropTypes.object
 };
 
 
-const Listing = () => (
+const ListingDetailPage = () => (
   <div>
     <NavBar />
-    <h2>About</h2>
+    <ListingDetail />
   </div>
 )
+
 
 const Create = () => (
   <div>
@@ -76,8 +78,8 @@ const App = () => (
   <Web3Provider onChangeAccount={onChangeAccount}>
     <Router>
       <div>
-        <Route exact path="/" component={Home}/>
-        <Route path="/listing" component={Listing}/>
+        <Route exact path="/" component={HomePage}/>
+        <Route path="/listing" component={ListingDetailPage}/>
         <Route path="/create" component={Create}/>
       </div>
     </Router>
