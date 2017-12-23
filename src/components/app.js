@@ -5,20 +5,29 @@ import {
   Link
 } from 'react-router-dom'
 import { Web3Provider } from 'react-web3';
-import PropTypes from 'prop-types';
 
 // Components
 import Listings from './listings-grid.js'
 import ListingDetail from './listing-detail.js'
+import ListingCreate from './listing-create.js'
 
 // CSS
-import '../css/pure-min.css'
+import '../css/pure-min.css' // TODO (stan): Is this even used?
 import '../css/lato-web.css'
 import '../css/poppins.css'
 import '../css/app.css'
 
+const DEMO_SCHEMA_LIST = [
+  {type: 'for-sale', name: 'For Sale', 'img': 'for-sale.jpg'},
+  {type: 'housing', name: 'Housing', 'img': 'housing.jpg'},
+  {type: 'transportation', name: 'Transportation', 'img': 'transportation.jpg'},
+  {type: 'tickets', name: 'Tickets', 'img': 'tickets.jpg'},
+  {type: 'services', name: 'Services', 'img': 'services.jpg'},
+  {type: 'announcements', name: 'Announcements', 'img': 'announcements.jpg'},
+]
 
-const NavBar = (props, context) => {
+
+const NavBar = (props) => {
   return (
     <div className="navbar">
       <Link to="/">
@@ -31,10 +40,8 @@ const NavBar = (props, context) => {
   )
 }
 
-// Home
 
-const HomePage = (props, context) => {
-  const web3Context = context.web3;
+const HomePage = () => {
   return (
     <div>
       <NavBar />
@@ -42,11 +49,6 @@ const HomePage = (props, context) => {
     </div>
   )
 }
-
-HomePage.contextTypes = {
-  web3: PropTypes.object
-};
-
 
 const ListingDetailPage = () => (
   <div>
@@ -56,10 +58,10 @@ const ListingDetailPage = () => (
 )
 
 
-const Create = () => (
+const CreateListingPage = () => (
   <div>
     <NavBar />
-    <h2>Create</h2>
+    <ListingCreate schemaList={DEMO_SCHEMA_LIST} />
   </div>
 )
 
@@ -80,15 +82,9 @@ const App = () => (
       <div>
         <Route exact path="/" component={HomePage}/>
         <Route path="/listing" component={ListingDetailPage}/>
-        <Route path="/create" component={Create}/>
+        <Route path="/create" component={CreateListingPage}/>
       </div>
     </Router>
   </Web3Provider>
 )
 export default App
-
-
-// ReactDOM.render(
-//   <DemoApp />,
-//   document.getElementById('root')
-// );
