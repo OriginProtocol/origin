@@ -42,10 +42,11 @@ const HomePage = () => {
 }
 
 
-const ListingDetailPage = () => (
+const ListingDetailPage = (props) => (
   <div>
     <NavBar />
-    <ListingDetail />
+    <ListingDetail
+      listingId={props.match.params.listingId} />
   </div>
 )
 
@@ -56,7 +57,6 @@ const CreateListingPage = () => (
     <ListingCreate />
   </div>
 )
-
 
 // Handle changing of Metamask account
 // const onChangeAccount = (nextAddress) => (console.log(nextAddress))
@@ -73,7 +73,7 @@ const App = () => (
     <Router>
       <div>
         <Route exact path="/" component={HomePage}/>
-        <Route path="/listing" component={ListingDetailPage}/>
+        <Route path="/listing/:listingId" component={ListingDetailPage}/>
         <Route path="/create" component={CreateListingPage}/>
       </div>
     </Router>

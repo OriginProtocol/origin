@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import contractService from '../services/contract-service'
+import ipfsService from '../services/ipfs-service'
+import {
+  BrowserRouter as Router,
+  Route,
+  Link
+} from 'react-router-dom'
+
 
 const ListingDetailPhoto = () => (
   <div className="photo">
@@ -9,21 +16,61 @@ const ListingDetailPhoto = () => (
 
 class ListingsDetail extends Component {
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      category: "Loading...",
+      name: "Loading...",
+      price: "Loading...",
+      ipfsHash: null,
+      lister: null,
+      unitsAvailable: null
+    }
+  }
+
+  componentWillMount() {
+    console.log(`Details for listingId: ${this.props.listingId}`)
+    contractService.getListing(this.props.listingId)
+    .then((listingContractObject) => {
+      this.setState(listingContractObject)
+        ipfsService.getListing(this.state.ipfsHash)
+        .then((listingJson) => {
+          console.log(JSON.parse(listingJson).data)
+          this.setState(JSON.parse(listingJson).data)
+        })
+        .catch((error) => {
+          console.error(`Error fetching IPFS info for listingId: ${this.props.listtingId}`)
+        })
+    })
+    .catch((error) => {
+      console.error(`Error fetching conract info for listingId: ${this.props.listtingId}`)
+    })
+  }
+
   render() {
     return (
       <div className="listing-detail">
         <div className="carousel">
-          <ListingDetailPhoto />
+          <ListingDetailPhoto>
+            <img
+              role='presentation'
+              src={
+                (this.state.pictures && this.state.pictures.length>0) ?
+                this.state.pictures[0] :
+                '/images/missing-image-placeholder.png'
+              }
+            />
+          </ListingDetailPhoto>
           <ListingDetailPhoto />
           <ListingDetailPhoto />
         </div>
         <div className="buy-box">
           <div>
             <span>Price</span>
-            <span className="price">200 ETH</span>
+            <span className="price">{this.state.price} ETH</span>
           </div>
           <div>
-            <Link to="/listing/42/buy">
+            <Link to={`/listing/${this.props.listingId}/buy`}>
               <button className="button">
                 Buy Now
               </button>
@@ -31,11 +78,9 @@ class ListingsDetail extends Component {
             </div>
         </div>
         <div className="info-box">
-          <div className="category">Cars & Trucks</div>
-          <div className="title">Title Here and Can Be long like this</div>
-          <div className="description">
-            Aliquam diam orci, tristique id consectetur et, lobortis eu magna. Donec vel diam nunc. Vivamus molestie purus non tempor pulvinar. Nunc non vestibulum neque, in tincidunt nunc. Pellentesque eleifend congue ante, congue laoreet enim facilisis quis. Fusce vestibulum odio at vulputate consequat.
-          </div>
+          <div className="category">{this.state.category}</div>
+          <div className="title">{this.state.name}</div>
+          <div className="description">{this.state.description}</div>
         </div>
       </div>
     )
