@@ -32,7 +32,7 @@ class ContractService {
     // Add our default ipfs values for first 2 bytes:
     // function:0x12=sha2, size:0x20=256 bits
     // and cut off leading "0x"
-    const hashHex = "12" + "20" + bytes32Hex.slice(2)
+    const hashHex = "1220" + bytes32Hex.slice(2)
     const hashBytes = Buffer.from(hashHex, 'hex');
     const hashStr = bs58.encode(hashBytes)
     return hashStr
@@ -79,42 +79,62 @@ class ContractService {
     })
   }
 
+  getAllListingIds() {
+    return new Promise((resolve, reject) => {
+      this.listingContract.setProvider(web3Service.web3.currentProvider)
+      this.listingContract.deployed().then((instance) => {
+        // Get total number of listings
+        instance.listingsLength.call().then((listingsLength) => {
+
+          function range(start, count) {
+            return Array.apply(0, Array(count))
+              .map(function (element, index) {
+                return index + start;
+            });
+          }
+
+          resolve(range(0, listingsLength-1))
+        })
+      })
+    })
+  }
+
   getAllListings() {
     return new Promise((resolve, reject) => {
       this.listingContract.setProvider(web3Service.web3.currentProvider)
-        this.listingContract.deployed().then((instance) => {
-          // Get total number of listings
-          instance.listingsLength.call().then((listingsLength) => {
-            let that = this
-            let listings = []
-            let getListingPromises = []
-            // TODO: Paging over listings to get only subsets
-            for (let i = 0; i < listingsLength; i++) {
-              getListingPromises[i] = new Promise((resolve) => {
-                instance.getListing.call(i).then((listing)  => {
-                  // Listing is returned as array of properties.
-                  // IPFS hash (as bytes32 hex string) is in results[2]
-                  // Convert it to regular IPFS base-58 encoded hash
-                  const listingObject = {
-                    index: listing[0].toNumber(),
-                    lister: listing[1],
-                    ipfsHash: that.getIpfsHashFromBytes32(listing[2]),
-                    price: web3Service.web3.fromWei(listing[3], 'ether').toNumber(),
-                    unitsAvailable: listing[4].toNumber()
-                  }
-                  console.log("New listing. Index:" + listing[0].toNumber())
-                  console.log(listingObject)
-                  listings[listingObject.index] = listingObject
-                  resolve()
-                });
+      this.listingContract.deployed().then((instance) => {
+        // Get total number of listings
+        instance.listingsLength.call().then((listingsLength) => {
+          let that = this
+          let listings = []
+          let getListingPromises = []
+          // TODO: Paging over listings to get only subsets
+          for (let i = 0; i < listingsLength; i++) {
+            getListingPromises[i] = new Promise((resolve) => {
+              instance.getListing.call(i).then((listing)  => {
+                // Listing is returned as array of properties.
+                // IPFS hash (as bytes32 hex string) is in results[2]
+                // Convert it to regular IPFS base-58 encoded hash
+                const listingObject = {
+                  index: listing[0].toNumber(),
+                  lister: listing[1],
+                  ipfsHash: that.getIpfsHashFromBytes32(listing[2]),
+                  price: web3Service.web3.fromWei(listing[3], 'ether').toNumber(),
+                  unitsAvailable: listing[4].toNumber()
+                }
+                console.log("New listing. Index:" + listing[0].toNumber())
+                console.log(listingObject)
+                listings[listingObject.index] = listingObject
+                resolve()
               });
-            }
-            // Resolve outer promise when we're all done getting all listings
-            Promise.all(getListingPromises).then(() => {
-              resolve(listings)
             });
+          }
+          // Resolve outer promise when we're all done getting all listings
+          Promise.all(getListingPromises).then(() => {
+            resolve(listings)
           });
-        })
+        });
+      })
     })
   }
 

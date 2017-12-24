@@ -1,31 +1,23 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import ListingCard from './listing-card'
 
-const ListingCard = () => (
-  <Link to="/listing/42">
-    <div className="listing-card">
-      <div className="photo"></div>
-      <div className="category">Category</div>
-      <div className="title">Title Here</div>
-      <div className="price">42.0 ETH</div>
-    </div>
-  </Link>
-)
 
 class ListingsGrid extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {listingIds: [0,1,2]}
+  }
+
   render() {
     return (
       <div className="listings-grid">
         <h1>300+ Listings</h1>
         <ul>
-          <ListingCard />
-          <ListingCard />
-          <ListingCard />
-          <ListingCard />
-          <ListingCard />
-          <ListingCard />
-          <ListingCard />
-          <ListingCard />
+          {this.state.listingIds.map(listingId => (
+            <ListingCard listingId={listingId} key={listingId}/>
+          ))}
         </ul>
       </div>
     )
