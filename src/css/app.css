@@ -83,15 +83,18 @@ a:hover {
 }
 
 .listing-card .photo {
+  /* TODO: Move to this better way of full images:
+   * https://stackoverflow.com/a/11763434/59913 */
   display: block;
   width: 360px;
   height: 240px;
   background-color: #c2cbd3;
+
+  overflow: hidden;
 }
 
 .listing-card img {
-  max-width: 360px;
-  max-height: 240px;
+  width: 360px;
 }
 
 .listing-card .category {
