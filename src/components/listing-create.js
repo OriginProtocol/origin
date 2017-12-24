@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import originService from '../services/origin-service'
 
-import ListingForm from './listing-form'
+import ListingSchemaForm from './listing-schema-form'
 
 class Schema extends React.Component {
   render() {
@@ -95,6 +95,7 @@ class ListingCreate extends Component {
     .then((transactionReceipt) => {
       alert("On IPFS and sent to contract")
       // TODO: how do we want to flip to new "page" to wait for result?
+
     })
     .catch((error) => {
       console.error(error)
@@ -122,7 +123,7 @@ class ListingCreate extends Component {
               </h4>
             }
             {this.state.schemaFetched &&
-              <ListingForm
+              <ListingSchemaForm
                 schema={this.state.selectedSchema}
                 selectedSchemaType={this.state.selectedSchemaType}
                 onSubmitListing={this.handleFormSubmit}/>

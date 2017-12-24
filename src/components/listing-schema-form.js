@@ -5,7 +5,7 @@ import Form from 'react-jsonschema-form'
 // Delete this after writing error handling
 const log = (type) => console.log.bind(console, type)
 
-class ListingForm extends Component {
+class ListingSchemaForm extends Component {
   render() {
     return (
       <Form schema={this.props.schema}
@@ -18,4 +18,4 @@ class ListingForm extends Component {
   }
 }
 
-export default ListingForm
+export default ListingSchemaForm
