@@ -84,15 +84,13 @@ class ContractService {
       this.listingContract.deployed().then((instance) => {
         // Get total number of listings
         instance.listingsLength.call().then((listingsLength) => {
-
           function range(start, count) {
             return Array.apply(0, Array(count))
               .map(function (element, index) {
                 return index + start
             });
           }
-
-          resolve(range(0, listingsLength-1))
+          resolve(range(0, Number(listingsLength)))
         })
       })
       .catch((error) => {
