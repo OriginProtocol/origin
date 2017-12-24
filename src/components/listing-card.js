@@ -21,7 +21,6 @@ class ListingCard extends Component {
     contractService.getListing(this.props.listingId)
     .then((listingContractObject) => {
       this.setState(listingContractObject)
-
         ipfsService.getListing(this.state.ipfsHash)
         .then((listingJson) => {
           console.log(JSON.parse(listingJson).data)
@@ -34,8 +33,6 @@ class ListingCard extends Component {
     .catch((error) => {
       console.error(`Error fetching conract info for listingId: ${this.props.listtingId}`)
     })
-
-
   }
 
   render() {
