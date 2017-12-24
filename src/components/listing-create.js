@@ -3,7 +3,6 @@ import originService from '../services/origin-service'
 
 import ListingForm from './listing-form'
 
-// Make this a relative URL
 class Schema extends React.Component {
   render() {
     return (
@@ -68,17 +67,17 @@ class ListingCreate extends Component {
     this.state = {
       selectedSchemaType: this.schemaList[0],
       selectedSchema: null,
-      schemaFetched: false
+      schemaFetched: false,
+
     }
 
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
     this.handleSchemaSelection(this.schemaList[0])
 
-    this.handleFormSumbit = this.handleFormSumbit.bind(this)
+    this.handleFormSubmit = this.handleFormSubmit.bind(this)
   }
 
   handleSchemaSelection(schemaType) {
-    // Need to change this to a non local URL
     fetch('/schemas/' + schemaType.type + '.json')
     .then((response) => response.json())
     .then((schemaJson) => {
@@ -90,15 +89,26 @@ class ListingCreate extends Component {
     })
   }
 
-  handleFormSumbit(formListing, selectedSchemaType) {
+  handleFormSubmit(formListing, selectedSchemaType) {
+
     originService.submitListing(formListing, selectedSchemaType)
+    .then((transactionReceipt) => {
+      alert("On IPFS and sent to contract")
+      // TODO: how do we want to flip to new "page" to wait for result?
+    })
+    .catch((error) => {
+      console.error(error)
+        alert(error)
+        // TODO: Reset form? Do something.
+    });
+
   }
 
   render() {
     console.log("Rendering ListingCreate")
 
     return (
-      <section className="step">
+      <div>
         <SchemaOptions
           schemaList={this.schemaList}
           onSchemaSelection={this.handleSchemaSelection} />
@@ -115,13 +125,13 @@ class ListingCreate extends Component {
               <ListingForm
                 schema={this.state.selectedSchema}
                 selectedSchemaType={this.state.selectedSchemaType}
-                onSubmitListing={this.handleFormSumbit}/>
+                onSubmitListing={this.handleFormSubmit}/>
             }
           </div>
           <div className="col-md-6">
           </div>
         </div>
-      </section>
+      </div>
     );
   }
 }
