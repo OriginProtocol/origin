@@ -18,7 +18,7 @@ class ListingCard extends Component {
     return (
       <Link to="/listing/42">
         <div className="listing-card">
-          <div className="photo">{this.state.photo && <img src="{this.state.photo}" />}</div>
+          <div className="photo">{this.state.photo && <img src="{this.state.photo}" alt="{this.state.title}"/>}</div>
           <div className="category">{this.state.category}</div>
           <div className="title">{this.state.title}</div>
           <div className="price">{this.state.price} ETH</div>

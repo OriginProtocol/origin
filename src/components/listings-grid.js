@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import contractService from '../services/contract-service'
+
 import ListingCard from './listing-card'
 
 
@@ -7,7 +8,19 @@ class ListingsGrid extends Component {
 
   constructor(props) {
     super(props)
-    this.state = {listingIds: [0,1,2]}
+    this.state = {listingIds: []}
+  }
+
+  componentWillMount() {
+
+    contractService.getAllListingIds()
+    .then((ids) => {
+      this.setState({ listingIds: ids })
+    })
+    .catch((error) => {
+      alert(`Error fetching listing ids`)
+    })
+
   }
 
   render() {

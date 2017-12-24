@@ -86,15 +86,20 @@ class ContractService {
         // Get total number of listings
         instance.listingsLength.call().then((listingsLength) => {
 
-          function range(start, count) {
-            return Array.apply(0, Array(count))
-              .map(function (element, index) {
-                return index + start;
-            });
-          }
+          // function range(start, count) {
+          //   return Array.apply(0, Array(count))
+          //     .map(function (element, index) {
+          //       return index + start;
+          //   });
+          // }
 
-          resolve(range(0, listingsLength-1))
+          // resolve(range(0, listingsLength-1))
+          resolve([0,1,2])
         })
+      })
+      .catch((error) => {
+        console.log(`Contract not deployed`)
+        reject(error)
       })
     })
   }
