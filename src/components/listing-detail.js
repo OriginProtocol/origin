@@ -1,11 +1,7 @@
 import React, { Component } from 'react'
 import contractService from '../services/contract-service'
 import ipfsService from '../services/ipfs-service'
-import {
-  BrowserRouter as Router,
-  Route,
-  Link
-} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 
 const ListingDetailPhoto = () => (
@@ -39,11 +35,11 @@ class ListingsDetail extends Component {
           this.setState(JSON.parse(listingJson).data)
         })
         .catch((error) => {
-          console.error(`Error fetching IPFS info for listingId: ${this.props.listtingId}`)
+          console.error(`Error fetching IPFS info for listingId: ${this.props.listingId}`)
         })
     })
     .catch((error) => {
-      console.error(`Error fetching conract info for listingId: ${this.props.listtingId}`)
+      console.error(`Error fetching conract info for listingId: ${this.props.listingId}`)
     })
   }
 

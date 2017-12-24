@@ -27,17 +27,17 @@ class ListingCard extends Component {
           this.setState(JSON.parse(listingJson).data)
         })
         .catch((error) => {
-          console.error(`Error fetching IPFS info for listingId: ${this.props.listtingId}`)
+          console.error(`Error fetching IPFS info for listingId: ${this.props.listingId}`)
         })
     })
     .catch((error) => {
-      console.error(`Error fetching conract info for listingId: ${this.props.listtingId}`)
+      console.error(`Error fetching conract info for listingId: ${this.props.listingId}`)
     })
   }
 
   render() {
     return (
-      <Link to="/listing/42">
+      <Link to={`/listing/${this.props.listingId}`}>
         <div className="listing-card">
           <div className="photo">
             <img

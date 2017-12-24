@@ -102,6 +102,7 @@ class ContractService {
 
   getListing(listingId) {
     return new Promise((resolve, reject) => {
+      this.listingContract.setProvider(window.web3.currentProvider)
       this.listingContract.deployed().then((instance) => {
         instance.getListing.call(listingId)
         .then((listing)  => {
