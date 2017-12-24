@@ -4,12 +4,6 @@ import ipfsService from '../services/ipfs-service'
 import { Link } from 'react-router-dom'
 
 
-const ListingDetailPhoto = () => (
-  <div className="photo">
-
-  </div>
-)
-
 class ListingsDetail extends Component {
 
   constructor(props) {
@@ -20,7 +14,8 @@ class ListingsDetail extends Component {
       price: "Loading...",
       ipfsHash: null,
       lister: null,
-      unitsAvailable: null
+      unitsAvailable: null,
+      pictures: []
     }
   }
 
@@ -44,21 +39,13 @@ class ListingsDetail extends Component {
   }
 
   render() {
+    console.log(this.state)
     return (
       <div className="listing-detail">
         <div className="carousel">
-          <ListingDetailPhoto>
-            <img
-              role='presentation'
-              src={
-                (this.state.pictures && this.state.pictures.length>0) ?
-                this.state.pictures[0] :
-                '/images/missing-image-placeholder.png'
-              }
-            />
-          </ListingDetailPhoto>
-          <ListingDetailPhoto />
-          <ListingDetailPhoto />
+          {this.state.pictures.map(pictureUrl => (
+            <img src={pictureUrl} role='presentation' key={pictureUrl}/>
+          ))}
         </div>
         <div className="buy-box">
           <div>
