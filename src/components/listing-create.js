@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import originService from '../services/origin-service'
 
 import ListingForm from './listing-form'
 
@@ -90,34 +91,7 @@ class ListingCreate extends Component {
   }
 
   handleFormSumbit(formListing, selectedSchemaType) {
-    const jsonBlob = {
-      'schema': `http://localhost:3000/schemas/${selectedSchemaType.type}.json`,
-      'data': formListing.formData,
-      'signed_by': 'https://keybase.io/joshfraser',
-      'signature': `-----BEGIN PGP SIGNATURE-----
-Version: Keybase OpenPGP v2.0.73
-Comment: https://keybase.io/crypto
-
-wsBcBAABCgAGBQJZlhmAAAoJEKTjGE37cmbxy38IALSQxXAE4wVc8d4rP0v8TaBE
-MolxVoyev2MXUz0wdclXS2mmKMSVObiFOqjrCxqBTvzQRYbquuSQUTzO4t/C1WPp
-AEodUf7KSBH7fGnuYVixIRvrvtF2MMGlFm/U1MpY1CtY5G+UYhzdoLWvOGf5b1yw
-BiTAwczR7KqtFOYYdmNuIIqsUvLlV6fQjCihItIgc2521iZYxNUBSBjhINEtCUvV
-L6tE1lR1dMcKOa7JMTqQsbGloiD5t2IsEdzxbzgWlheTjcqoN6id+QzPC1DK9mjX
-b7Qf9nchgZZhJdOBSoSRqf47nxdUx1bqY1DIR+hOyF+p6j2nYVMcDD5Z3uB/tns=
-=A9r6
------END PGP SIGNATURE-----`
-    }
-
-    console.log("Submitting:")
-    console.log(jsonBlob)
-    // // Submit to IPFS
-    // ipfsService.submitListing(listingData)
-    // .then((ipfsHash) => {
-    //   onSubmitToIpfs(ipfsHash)
-    // })
-    // .catch((error) => {
-    //   alert(error)
-    // });
+    originService.submitListing(formListing, selectedSchemaType)
   }
 
   render() {

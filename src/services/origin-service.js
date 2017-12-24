@@ -28,13 +28,19 @@ b7Qf9nchgZZhJdOBSoSRqf47nxdUx1bqY1DIR+hOyF+p6j2nYVMcDD5Z3uB/tns=
     ipfsService.submitListing(jsonBlob)
     .then((ipfsHash) => {
 
-	  	// Submit to eth
-	    contractService.submitListing(data, price, units)
+      console.log(`IPFS file created with hash:${ipfsHash} for data:`)
+      console.log(jsonBlob)
+
+      // TODO: Allow users to set number of units in form
+      let units = 1;
+
+	  	// Submit to contract
+	    contractService.submitListing(ipfsHash, formListing.formData.price, units)
 	    .then((transactionReceipt) => {
 
-	    	console.log("Blob")
-	      console.log(transactionReceipt.tx)
+	    	console.log(`On eth blockchain with transactionReceipt:${transactionReceipt.tx}`)
 
+        // TODO: Progress
 	    })
 	    .catch((error) => {
 	      console.error(error)
