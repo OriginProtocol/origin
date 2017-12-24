@@ -1,5 +1,4 @@
 import ListingContract from '../../build/contracts/Listing.json'
-import web3Service from './web3-service'
 import bs58 from 'bs58'
 
 class ContractService {
@@ -52,18 +51,18 @@ class ContractService {
   }
 
   getListingForUser() {
-    this.listingContract.setProvider(web3Service.web3.currentProvider)
-    web3Service.web3.eth.getAccounts((error, accounts) => {
+    this.listingContract.setProvider(window.web3.currentProvider)
+    window.web3.eth.getAccounts((error, accounts) => {
       return this.getListingForAddress(accounts[0])
     })
   }
 
   submitListing(ipfsListing, ethPrice, units) {
     return new Promise((resolve, reject) => {
-      this.listingContract.setProvider(web3Service.web3.currentProvider)
-      web3Service.web3.eth.getAccounts((error, accounts) => {
+      this.listingContract.setProvider(window.web3.currentProvider)
+      window.web3.eth.getAccounts((error, accounts) => {
         this.listingContract.deployed().then((instance) => {
-          let weiToGive = web3Service.web3.toWei(ethPrice, 'ether')
+          let weiToGive = window.web3.toWei(ethPrice, 'ether')
           return instance.create(
             this.getBytes32FromIpfsHash(ipfsListing),
             weiToGive,
@@ -81,20 +80,19 @@ class ContractService {
 
   getAllListingIds() {
     return new Promise((resolve, reject) => {
-      this.listingContract.setProvider(web3Service.web3.currentProvider)
+      this.listingContract.setProvider(window.web3.currentProvider)
       this.listingContract.deployed().then((instance) => {
         // Get total number of listings
         instance.listingsLength.call().then((listingsLength) => {
 
-          // function range(start, count) {
-          //   return Array.apply(0, Array(count))
-          //     .map(function (element, index) {
-          //       return index + start;
-          //   });
-          // }
+          function range(start, count) {
+            return Array.apply(0, Array(count))
+              .map(function (element, index) {
+                return index + start
+            });
+          }
 
-          // resolve(range(0, listingsLength-1))
-          resolve([0,1,2])
+          resolve(range(0, listingsLength-1))
         })
       })
       .catch((error) => {
@@ -104,9 +102,35 @@ class ContractService {
     })
   }
 
+  getListing(listingId) {
+    return new Promise((resolve, reject) => {
+      this.listingContract.deployed().then((instance) => {
+        instance.getListing.call(listingId)
+        .then((listing)  => {
+          // Listing is returned as array of properties.
+          // IPFS hash (as bytes32 hex string) is in results[2]
+          // Convert it to regular IPFS base-58 encoded hash
+          const listingObject = {
+            index: listing[0].toNumber(),
+            lister: listing[1],
+            ipfsHash: this.getIpfsHashFromBytes32(listing[2]),
+            price: window.web3.fromWei(listing[3], 'ether').toNumber(),
+            unitsAvailable: listing[4].toNumber()
+          }
+          resolve(listingObject)
+        })
+        .catch((error) => {
+          console.log(`Error fetching listingId: ${listingId}`)
+          reject(error)
+        })
+      })
+    })
+  }
+
+
   getAllListings() {
     return new Promise((resolve, reject) => {
-      this.listingContract.setProvider(web3Service.web3.currentProvider)
+      this.listingContract.setProvider(window.web3.currentProvider)
       this.listingContract.deployed().then((instance) => {
         // Get total number of listings
         instance.listingsLength.call().then((listingsLength) => {
@@ -116,7 +140,8 @@ class ContractService {
           // TODO: Paging over listings to get only subsets
           for (let i = 0; i < listingsLength; i++) {
             getListingPromises[i] = new Promise((resolve) => {
-              instance.getListing.call(i).then((listing)  => {
+              instance.getListing.call(i)
+              .then((listing)  => {
                 // Listing is returned as array of properties.
                 // IPFS hash (as bytes32 hex string) is in results[2]
                 // Convert it to regular IPFS base-58 encoded hash
@@ -124,21 +149,21 @@ class ContractService {
                   index: listing[0].toNumber(),
                   lister: listing[1],
                   ipfsHash: that.getIpfsHashFromBytes32(listing[2]),
-                  price: web3Service.web3.fromWei(listing[3], 'ether').toNumber(),
+                  price: window.web3.fromWei(listing[3], 'ether').toNumber(),
                   unitsAvailable: listing[4].toNumber()
                 }
                 console.log("New listing. Index:" + listing[0].toNumber())
                 console.log(listingObject)
                 listings[listingObject.index] = listingObject
                 resolve()
-              });
-            });
+              })
+            })
           }
           // Resolve outer promise when we're all done getting all listings
           Promise.all(getListingPromises).then(() => {
             resolve(listings)
-          });
-        });
+          })
+        })
       })
     })
   }
@@ -147,10 +172,10 @@ class ContractService {
     console.log("request to buy index #" + listingIndex + ", of this many untes " + unitsToBuy + " units. Total eth to send:" + ethToGive)
     return new Promise((resolve, reject) => {
 
-      this.listingContract.setProvider(web3Service.web3.currentProvider)
-      web3Service.web3.eth.getAccounts((error, accounts) => {
+      this.listingContract.setProvider(window.web3.currentProvider)
+      window.web3.eth.getAccounts((error, accounts) => {
         this.listingContract.deployed().then((instance) => {
-          let weiToGive = web3Service.web3.toWei(ethToGive, 'ether')
+          let weiToGive = window.web3.toWei(ethToGive, 'ether')
 
           // Buy it for real
           instance.buyListing(

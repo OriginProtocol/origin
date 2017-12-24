@@ -12,13 +12,14 @@ class ListingsGrid extends Component {
   }
 
   componentWillMount() {
-
+    console.log("Web3:")
+    console.log(window.web3)
     contractService.getAllListingIds()
     .then((ids) => {
       this.setState({ listingIds: ids })
     })
     .catch((error) => {
-      alert(`Error fetching listing ids`)
+      console.error(`Error fetching listing ids`)
     })
 
   }
