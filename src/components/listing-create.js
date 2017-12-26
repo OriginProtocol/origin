@@ -24,7 +24,10 @@ class ListingCreate extends Component {
   }
 
   onListingConfirmed() {
-    // TODO: What next? Return to showing most recent listings?
+    console.log("onListingConfirmed")
+    // TODO: Total hack. Figure out how to do with ReactRouter.
+    // See: https://stackoverflow.com/a/42121109/59913
+    window.document.location = "/"
   }
 
   render() {
@@ -38,7 +41,7 @@ class ListingCreate extends Component {
         { this.state.isListingSubmitted &&
           <ListingWaitConfirmation
             onListingConfirmed={this.onListingConfirmed}
-            transactionReceipt={this.state.transactionReceipt}
+            transactionReceipt="0xee36b0abc59c7a6084b6ad35b4cfd8dbe0ec1e4540b7d56ecbf14e91033f827d"
           />
         }
       </div>
