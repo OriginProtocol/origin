@@ -14,29 +14,32 @@ body {
 
 /* Common */
 
-h1 {
-  font-size: 2.5rem;
-  font-family: 'Poppins', sans-serif;
+h1, h2, h3 {
+  color:#111d28;
   font-weight: 200;
-  margin: 40px auto;
+  font-family: 'Poppins', sans-serif;
+}
+
+h1 {
+  font-size: 40px;
 }
 
 h2 {
-  font-size: 1.75rem;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 200;
-  margin: 20px auto;
+  font-size:24px;
 }
 
 h3 {
-  font-size: 1.75rem;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 200;
+  font-size:16px;
 }
 
 p {
   font-size: 1.125rem;
   margin: 20px auto;
+}
+
+label {
+  color:#455d75;
+  font-size:14px;
 }
 
 a:hover {
@@ -198,6 +201,18 @@ a:hover {
 
 .listing-submitted-notification {
   width: 100%;
+}
+
+.listing-selection {
+  border-radius: 5px;
+  border: solid 1px #c2cbd3;
+  margin-bottom: 10px;
+  padding:10px;
+}
+
+.listing-selection:hover {
+  border: solid 1px #1a82ff;
+  cursor:pointer;
 }
 
 /* footer */

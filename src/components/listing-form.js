@@ -7,15 +7,9 @@ class Schema extends React.Component {
   render() {
     return (
       <div className="schema-option">
-        <div className="img-wrapper">
-          <img src={'/' + this.props.schema.img}
-            onClick={() => this.props.onSelection()}
-            alt={this.props.schema.name}
-            />
-        </div>
-        <h4 onClick={() => this.props.onSelection()}>
+        <h3 className="listing-selection" onClick={() => this.props.onSelection()}>
           {this.props.schema.name}
-        </h4>
+        </h3>
       </div>
     )
   }
@@ -36,13 +30,25 @@ class SchemaOptions extends React.Component {
     return (
       <div className="schema-options">
         <div className="row">
-          {this.props.schemaList.map((schema) => {
-            return (
-              <div className="col-md-4" key={schema.type}>
-                {this.renderSchema(schema)}
-              </div>
-            )
-          })}
+          <div className="col-md-5">
+            <h1>Let's get started creating your listing</h1>
+          </div>
+          <div className="col-md-6"></div>
+          <div className="col-md-5">
+          <label>STEP 1</label>
+          <h2>What type of listing do you want to create?</h2>
+            {this.props.schemaList.map((schema) => {
+              return (
+                <div key={schema.type}>
+                  {this.renderSchema(schema)}
+                </div>
+              )
+            })}
+          </div>
+          <div className="col-md-2"></div>
+          <div className="col-md-5">
+          hello world
+          </div>
         </div>
       </div>
     );
