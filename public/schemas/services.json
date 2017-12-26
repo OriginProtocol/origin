@@ -52,7 +52,7 @@
     },
     "price": {
       "type": "number", 
-      "title": "Price in 0rigin token"
+      "title": "Price in ETH:"
     }
   }
 }

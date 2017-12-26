@@ -21,11 +21,13 @@ import '../css/app.css'
 const NavBar = (props) => {
   return (
     <div className="navbar">
-      <Link to="/">
-        <img src="/images/origin-logo.png" alt="Origin Logo"/>
-      </Link>
-      <div className="navbar-create">
-        <Link to="/create">Create a Listing</Link>
+      <div className="container">
+        <Link to="/">
+          <img src="/images/origin-logo.png" alt="Origin Protocol"/>
+        </Link>
+        <div className="navbar-create">
+          <Link to="/create">Create a Listing</Link>
+        </div>
       </div>
     </div>
   )
@@ -36,7 +38,9 @@ const HomePage = () => {
   return (
     <div>
       <NavBar />
-      <Listings />
+        <div className="container">
+          <Listings />
+        </div>
     </div>
   )
 }
