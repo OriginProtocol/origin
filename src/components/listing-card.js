@@ -50,7 +50,7 @@ class ListingCard extends Component {
           </div>
           <div className="category">{this.state.category}</div>
           <div className="title">{this.state.name}</div>
-          <div className="price">{Number(this.state.price).toFixed(2)} ETH</div>
+          <div className="price">{Number(this.state.price).toFixed(3)} ETH</div>
         </div>
       </Link>
     )

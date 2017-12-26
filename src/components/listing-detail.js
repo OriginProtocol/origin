@@ -25,7 +25,6 @@ class ListingsDetail extends Component {
       this.setState(listingContractObject)
         ipfsService.getListing(this.state.ipfsHash)
         .then((listingJson) => {
-          console.log(JSON.parse(listingJson).data)
           this.setState(JSON.parse(listingJson).data)
         })
         .catch((error) => {
@@ -33,7 +32,7 @@ class ListingsDetail extends Component {
         })
     })
     .catch((error) => {
-      console.error(`Error fetching conract info for listingId: ${this.props.listingId}`)
+      console.error(`Error fetching contract info for listingId: ${this.props.listingId}`)
     })
   }
 
