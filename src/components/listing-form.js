@@ -104,8 +104,6 @@ class ListingForm extends Component {
   }
 
   render() {
-    console.log("Rendering ListingCreate")
-
     return (
       <div className="container">
         <SchemaOptions
