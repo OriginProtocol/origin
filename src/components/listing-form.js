@@ -84,7 +84,8 @@ class ListingForm extends Component {
       this.setState({
         selectedSchemaType: schemaType,
         selectedSchema: schemaJson,
-        schemaFetched: true
+        schemaFetched: true,
+        listingSubmitted: false
       })
     })
   }
@@ -129,6 +130,11 @@ class ListingForm extends Component {
           <div className="col-md-6">
           </div>
         </div>
+        {this.state.listingSubmitted &&
+          <div className="listing-submitted-notification">
+            Creating Listing
+          </div>
+        }
       </div>
     );
   }

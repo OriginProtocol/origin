@@ -16,15 +16,12 @@ class ListingCreate extends Component {
   constructor(props) {
     super(props)
     this.state = {isListingSubmitted: false}
-
     this.onListingSubmitted = this.onListingSubmitted.bind(this)
   }
 
   onListingSubmitted(transactionReceipt, formListing) {
     console.log("onListingSubmitted")
-      this.setState({
-        isListingSubmitted: true,
-      })
+    this.setState({isListingSubmitted: true})
   }
 
   onListingConfirmed() {

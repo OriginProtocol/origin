@@ -20,7 +20,6 @@ class ListingsDetail extends Component {
   }
 
   componentWillMount() {
-    console.log(`Details for listingId: ${this.props.listingId}`)
     contractService.getListing(this.props.listingId)
     .then((listingContractObject) => {
       this.setState(listingContractObject)
@@ -39,7 +38,6 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <div className="listing-detail">
         <div className="carousel">
@@ -50,7 +48,7 @@ class ListingsDetail extends Component {
         <div className="buy-box">
           <div>
             <span>Price</span>
-            <span className="price">{this.state.price} ETH</span>
+            <span className="price">{Number(this.state.price).toFixed(3)} ETH</span>
           </div>
           <div>
             <Link to={`/listing/${this.props.listingId}/buy`}>

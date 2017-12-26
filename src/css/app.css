@@ -194,3 +194,8 @@ a:hover {
   font-weight: 900;
 }
 
+/* Listing Create */
+
+.listing-submitted-notification {
+  width: 100%;
+}

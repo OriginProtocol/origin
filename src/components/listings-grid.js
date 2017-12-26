@@ -27,7 +27,7 @@ class ListingsGrid extends Component {
   render() {
     return (
       <div className="listings-grid">
-        <h1>300+ Listings</h1>
+        <h1>{this.state.listingIds.length} Listings</h1>
         <ul>
           {this.state.listingIds.map(listingId => (
             <ListingCard listingId={listingId} key={listingId}/>

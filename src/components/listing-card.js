@@ -23,7 +23,6 @@ class ListingCard extends Component {
       this.setState(listingContractObject)
         ipfsService.getListing(this.state.ipfsHash)
         .then((listingJson) => {
-          console.log(JSON.parse(listingJson).data)
           this.setState(JSON.parse(listingJson).data)
         })
         .catch((error) => {
@@ -51,7 +50,7 @@ class ListingCard extends Component {
           </div>
           <div className="category">{this.state.category}</div>
           <div className="title">{this.state.name}</div>
-          <div className="price">{this.state.price} ETH</div>
+          <div className="price">{Number(this.state.price).toFixed(2)} ETH</div>
         </div>
       </Link>
     )
