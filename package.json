@@ -58,7 +58,7 @@
     "react-jsonschema-form": "^0.49.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "react-web3": "^0.4.3"
+    "react-web3": "github:wanderingstan/react-web3#state_didchange_fix"
   },
   "scripts": {
     "start": "node scripts/start.js",
