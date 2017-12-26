@@ -199,3 +199,46 @@ a:hover {
 .listing-submitted-notification {
   width: 100%;
 }
+
+/* footer */
+
+.dark-footer {
+  background-color: #2e3f53;
+  padding: 80px 0px;
+  min-height: 522px;
+}
+
+footer .logo-container {
+  margin: 40px auto;
+}
+
+footer .company-mission {
+  max-width: 360px;
+  margin-left: 0px;
+}
+
+footer p {
+  color: #ffffff;
+  font-size: 0.75rem;
+}
+
+footer .footer-header {
+  margin: 40px auto 15px auto;
+  color: #ffffff;
+  font-weight: 400;
+  font-size: 0.875rem;
+}
+
+footer .footer-links {
+  list-style-type: none;
+  padding-left: 0px;
+}
+
+footer .footer-links li {
+  margin: 15px auto;
+  font-size: 0.875rem;
+}
+
+footer .footer-links li a {
+  color: #ffffff;
+}
