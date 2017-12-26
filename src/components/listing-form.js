@@ -107,7 +107,7 @@ class ListingForm extends Component {
     console.log("Rendering ListingCreate")
 
     return (
-      <div>
+      <div className="container">
         <SchemaOptions
           schemaList={this.schemaList}
           onSchemaSelection={this.handleSchemaSelection} />

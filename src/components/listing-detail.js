@@ -44,23 +44,25 @@ class ListingsDetail extends Component {
             <img src={pictureUrl} role='presentation' key={pictureUrl}/>
           ))}
         </div>
-        <div className="buy-box">
-          <div>
-            <span>Price</span>
-            <span className="price">{Number(this.state.price).toFixed(3)} ETH</span>
-          </div>
-          <div>
-            <Link to={`/listing/${this.props.listingId}/buy`}>
-              <button className="button">
-                Buy Now
-              </button>
-              </Link>
+        <div className="container">
+          <div className="buy-box">
+            <div>
+              <span>Price</span>
+              <span className="price">{Number(this.state.price).toFixed(3)} ETH</span>
             </div>
-        </div>
-        <div className="info-box">
-          <div className="category">{this.state.category}</div>
-          <div className="title">{this.state.name}</div>
-          <div className="description">{this.state.description}</div>
+            <div>
+              <Link to={`/listing/${this.props.listingId}/buy`}>
+                <button className="button">
+                  Buy Now
+                </button>
+                </Link>
+              </div>
+          </div>
+          <div className="info-box">
+            <div className="category">{this.state.category}</div>
+            <div className="title">{this.state.name}</div>
+            <div className="description">{this.state.description}</div>
+          </div>
         </div>
       </div>
     )

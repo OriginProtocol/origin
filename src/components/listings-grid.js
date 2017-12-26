@@ -28,11 +28,11 @@ class ListingsGrid extends Component {
     return (
       <div className="listings-grid">
         <h1>{this.state.listingIds.length} Listings</h1>
-        <ul>
+        <div className="container">
           {this.state.listingIds.map(listingId => (
             <ListingCard listingId={listingId} key={listingId}/>
           ))}
-        </ul>
+        </div>
       </div>
     )
   }
