@@ -86,18 +86,20 @@ a:hover {
 }
 
 .listing-card .photo {
-  /* TODO: Move to this better way of full images:
-   * https://stackoverflow.com/a/11763434/59913 */
   display: block;
+  vertical-align: top;
+  white-space: normal;
   width: 360px;
   height: 240px;
   background-color: #c2cbd3;
-
-  overflow: hidden;
+  margin-right: 1px;
 }
 
 .listing-card img {
-  width: 360px;
+    width:100%;
+    height:100%;
+    object-fit: cover;
+    overflow: hidden;
 }
 
 .listing-card .category {
