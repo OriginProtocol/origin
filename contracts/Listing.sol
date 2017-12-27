@@ -106,10 +106,15 @@ contract Listing {
     );
 
     // Casa Wolf - Hash: QmVYeipL2JWFkpWsGqNNXDFUVAmPWEEK8u3Q45CZ1YrZPf
-
     create(
       0x6b14cac30356789cd0c39fec0acc2176c3573abdb799f3b17ccc6972ab4d39ba,
       1.500 ether, 1
+    );
+
+    // Taylor Swift - Hash: QmfXRgtSbrGggApvaFCa88ofeNQP79G18DpWaSW1Wya1u8
+    create(
+      0xff5957ff4035d28dcee79e65aa4124a4de4dcc8cb028faca54c883a5497d8917,
+      0.300 ether, 25
     );
 
     // // Red shoe - Hash: QmfF4JBA4fEYDkZqjRHnDxWGGoXg5D1T4WqfDrN4GXP33p
