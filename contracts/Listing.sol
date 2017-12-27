@@ -82,6 +82,7 @@ contract Listing {
   }
 
   function testingAddSampleListings()
+    public
     isOwner
   {
     // We get stripped hex value from IPFS hash using getBytes32FromIpfsHash()
