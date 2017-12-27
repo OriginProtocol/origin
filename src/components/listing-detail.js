@@ -59,7 +59,7 @@ class ListingsDetail extends Component {
         <div className="carousel">
           {this.state.pictures.map(pictureUrl => (
             <div className="photo">
-              <img src={pictureUrl} role='presentation' key={pictureUrl}/>
+              <img src={pictureUrl} key={pictureUrl} role='presentation' />
             </div>
           ))}
         </div>
@@ -69,8 +69,14 @@ class ListingsDetail extends Component {
               <span>Price</span>
               <span className="price">{Number(this.state.price).toFixed(3)} ETH</span>
             </div>
+            {(this.state.unitsAvailable > 1) &&
+              <div>
+                <span>Units Available</span>
+                <span className="price">{this.state.unitsAvailable}</span>
+              </div>
+            }
             <div>
-              {this.state.unitsAvailable > 0 ?
+              {(this.state.unitsAvailable > 0) ?
                 <Link to={`/listing/${this.props.listingId}/buy`}>
                   <button className="button" onClick={this.handleBuyClicked}>
                     Buy Now
