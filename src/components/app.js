@@ -35,7 +35,6 @@ const NavBar = (props) => {
   )
 }
 
-
 const HomePage = () => {
   return (
     <div>
@@ -48,18 +47,14 @@ const HomePage = () => {
   )
 }
 
-
 const ListingDetailPage = (props) => (
   <div>
-    <NavBar />
-    <div className="container">
-      <ListingDetail
-        listingId={props.match.params.listingId} />
-    </div>
+    <NavBar />  
+    <ListingDetail
+      listingId={props.match.params.listingId} />
     <Footer />
   </div>
 )
-
 
 const CreateListingPage = () => (
   <div>

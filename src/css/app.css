@@ -174,16 +174,12 @@ a:hover {
 }
 
 .listing-detail .buy-box {
-  float: right;
-  width: 360px;
   border-radius: 5px;
   background-color: #2e3f53;
   padding: 40px;
   font-family: Lato;
   font-size: 18px;
   color: #ffffff;
-  margin-left: 50px;
-  margin-bottom: 50px;
 }
 
 .listing-detail .price {
@@ -241,6 +237,7 @@ a:hover {
   background-color: #2e3f53;
   padding: 80px 0px;
   min-height: 522px;
+  margin-top:120px;
 }
 
 footer .logo-container {
