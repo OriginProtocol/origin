@@ -17,6 +17,7 @@ class ListingsDetail extends Component {
       unitsAvailable: null,
       pictures: []
     }
+    this.handleBuyClicked = this.handleBuyClicked.bind(this)
   }
 
   componentWillMount() {
@@ -36,6 +37,21 @@ class ListingsDetail extends Component {
     })
   }
 
+  handleBuyClicked() {
+    const unitsToBuy = 1;
+    const totalPrice = (unitsToBuy * this.state.price);
+    contractService.buyListing(this.props.listingId, unitsToBuy, totalPrice)
+    .then((transactionReceipt) => {
+      console.log("Purchase request sent.")
+      // TODO (Stan) : Give confirmation once transaction is confirmed on chain.
+      alert("Purchase request sent.")
+    })
+    .catch((error) => {
+      console.log(error)
+      alert(error)
+    });
+  }
+
   render() {
     return (
       <div className="listing-detail">
@@ -52,7 +68,7 @@ class ListingsDetail extends Component {
             </div>
             <div>
               <Link to={`/listing/${this.props.listingId}/buy`}>
-                <button className="button">
+                <button className="button" onClick={this.handleBuyClicked}>
                   Buy Now
                 </button>
                 </Link>
