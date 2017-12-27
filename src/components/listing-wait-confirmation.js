@@ -25,7 +25,8 @@ class ListingWaitConfirmation extends Component {
     return (
     <div className="container">
       <h1>Waiting for confirmation</h1>
-      <p>Transaction id: <pre>{this.props.transactionReceipt}</pre></p>
+      <p>Transaction id: {this.props.transactionReceipt}</p>
+      <div><img src="images/ajax-loader.gif" role="presentation"/></div>
     </div>
     )
   }

@@ -41,7 +41,7 @@ class ListingCreate extends Component {
         { this.state.isListingSubmitted &&
           <ListingWaitConfirmation
             onListingConfirmed={this.onListingConfirmed}
-            transactionReceipt="0xee36b0abc59c7a6084b6ad35b4cfd8dbe0ec1e4540b7d56ecbf14e91033f827d"
+            transactionReceipt={this.state.transactionReceipt}
           />
         }
       </div>
