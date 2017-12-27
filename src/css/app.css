@@ -79,25 +79,7 @@ a:hover {
 /* Listings */
 
 .listing-card {
-  display: inline-block;
-  width: 360px;
-  height: 340px;
-  margin: 10px;
-}
-
-.listing-card .photo {
-  /* TODO: Move to this better way of full images:
-   * https://stackoverflow.com/a/11763434/59913 */
-  display: block;
-  width: 360px;
-  height: 240px;
-  background-color: #c2cbd3;
-
-  overflow: hidden;
-}
-
-.listing-card img {
-  width: 360px;
+  margin-bottom: 40px;
 }
 
 .listing-card .category {
@@ -147,10 +129,10 @@ a:hover {
 }
 
 .carousel .photo img {
-    width:100%;
-    height:100%;
-    object-fit: cover;
-    overflow: hidden;
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  overflow: hidden;
 }
 
 .listing-detail {
