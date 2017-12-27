@@ -35,29 +35,28 @@ class ListingCard extends Component {
   }
 
   render() {
+
     return (
-      <Link to={`/listing/${this.props.listingId}`}>
-        <div className="listing-card">
-          <div className="photo">
-            <img
-              role='presentation'
-              src={
-                (this.state.pictures && this.state.pictures.length>0) ?
-                this.state.pictures[0] :
-                '/images/missing-image-placeholder.png'
-              }
-            />
-          </div>
-          <div className="category">{this.state.category}</div>
-          <div className="title">{this.state.name}</div>
-          <div className="price">
+      <div className="col-12 col-md-6 col-lg-4 listing-card">
+        <Link to={`/listing/${this.props.listingId}`}>
+          <img
+            src={
+              (this.state.pictures && this.state.pictures.length>0) ?
+              this.state.pictures[0] :
+              '/images/missing-image-placeholder.png'
+            } 
+            className="img-fluid"
+          />
+        </Link>
+        <div className="category">{this.state.category}</div>
+        <div className="title">{this.state.name}</div>
+        <div className="price">
             {Number(this.state.price).toFixed(3)} ETH
             {this.state.unitsAvailable===0 &&
               <span className="sold-banner">SOLD</span>
             }
-          </div>
         </div>
-      </Link>
+      </div>
     )
   }
 }

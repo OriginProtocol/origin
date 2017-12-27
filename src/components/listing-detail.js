@@ -64,39 +64,47 @@ class ListingsDetail extends Component {
           ))}
         </div>
         <div className="container">
-          <div className="buy-box">
-            <div>
-              <span>Price</span>
-              <span className="price">{Number(this.state.price).toFixed(3)} ETH</span>
-            </div>
-            {(this.state.unitsAvailable > 1) &&
-              <div>
-                <span>Units Available</span>
-                <span className="price">{this.state.unitsAvailable}</span>
+          <div className="row">
+            <div className="col-12 col-md-8 info-box">
+
+              <div className="category">{this.state.category}</div>
+              <div className="title">{this.state.name}</div>
+              <div className="description">{this.state.description}</div>
+              <a href={`http://gateway.originprotocol.com/ipfs/${this.state.ipfsHash}`} target="_blank">View on IPFS <big>&rsaquo;</big></a>
+              <div className="debug">
+                <li>IPFS: {this.state.ipfsHash}</li>
+                <li>Lister: {this.state.lister}</li>
+                <li>Units: {this.state.unitsAvailable}</li>
               </div>
-            }
-            <div>
-              {(this.state.unitsAvailable > 0) ?
-                <Link to={`/listing/${this.props.listingId}/buy`}>
-                  <button className="button" onClick={this.handleBuyClicked}>
-                    Buy Now
-                  </button>
-                </Link>
-                :
-                <div className="sold-banner">SOLD</div>
-              }
+
+            </div>
+            <div className="col-12 col-md-4">
+              <div className="buy-box">
+                <div>
+                  <span>Price</span>
+                  <span className="price">{Number(this.state.price).toFixed(3)} ETH</span>
+                </div>
+                {(this.state.unitsAvailable > 1) &&
+                  <div>
+                    <span>Units Available</span>
+                    <span className="price">{this.state.unitsAvailable}</span>
+                  </div>
+                }
+                <div>
+                  {(this.state.unitsAvailable > 0) ?
+                    <Link to={`/listing/${this.props.listingId}/buy`}>
+                      <button className="button" onClick={this.handleBuyClicked}>
+                        Buy Now
+                      </button>
+                    </Link>
+                    :
+                    <div className="sold-banner">SOLD</div>
+                  }
+                </div>
+              </div>
             </div>
           </div>
-          <div className="info-box">
-            <div className="category">{this.state.category}</div>
-            <div className="title">{this.state.name}</div>
-            <div className="description">{this.state.description}</div>
-            <div className="debug">
-              <li>IPFS: {this.state.ipfsHash}</li>
-              <li>Lister: {this.state.lister}</li>
-              <li>Units: {this.state.unitsAvailable}</li>
-            </div>
-          </div>
+
         </div>
       </div>
     )
