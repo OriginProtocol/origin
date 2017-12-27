@@ -57,7 +57,9 @@ class ListingsDetail extends Component {
       <div className="listing-detail">
         <div className="carousel">
           {this.state.pictures.map(pictureUrl => (
-            <img src={pictureUrl} role='presentation' key={pictureUrl}/>
+            <div className="photo">
+              <img src={pictureUrl} role='presentation' key={pictureUrl}/>
+            </div>
           ))}
         </div>
         <div className="container">
