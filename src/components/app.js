@@ -25,9 +25,11 @@ const NavBar = (props) => {
         <Link to="/">
           <img src="/images/origin-logo.png" alt="Origin Protocol"/>
         </Link>
-        <div className="navbar-create">
-          <Link to="/create">Create a Listing</Link>
-        </div>
+        {!props.hideCreateButton &&
+          <div className="navbar-create">
+            <Link to="/create">Create a Listing</Link>
+          </div>
+        }
       </div>
     </div>
   )
@@ -61,7 +63,7 @@ const ListingDetailPage = (props) => (
 
 const CreateListingPage = () => (
   <div>
-    <NavBar />
+    <NavBar hideCreateButton="true"/>
     <div className="container">
       <ListingCreate />
     </div>
