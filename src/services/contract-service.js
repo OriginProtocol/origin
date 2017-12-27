@@ -175,16 +175,15 @@ class ContractService {
       window.web3.eth.getAccounts((error, accounts) => {
         this.listingContract.deployed().then((instance) => {
           let weiToGive = window.web3.toWei(ethToGive, 'ether')
-
           // Buy it for real
           instance.buyListing(
             listingIndex,
             unitsToBuy,
             {from: accounts[0], value:weiToGive, gas: 4476768} // TODO (SRJ): is gas needed?
           )
-          .then(() => {
-            alert("Purchase transaction sent.")
-            resolve()
+          .then((transactionReceipt) => {
+            // Success
+            resolve(transactionReceipt)
           })
           .catch((error) => {
             console.error(error)
@@ -195,6 +194,31 @@ class ContractService {
       }) // getAccounts
     }) // Promise
   }
+
+  waitTransactionFinished(transactionReceipt, pollIntervalMilliseconds=1000) {
+    return new Promise((resolve, reject) => {
+      let txCheckTimer = setInterval(txCheckTimerCallback, pollIntervalMilliseconds);
+      function txCheckTimerCallback() {
+        window.web3.eth.getTransaction(transactionReceipt, (error, transaction) => {
+          console.log(transaction)
+          if (transaction.blockNumber != null) {
+            // TODO: Wait maximum number of blocks
+            // TODO: Confirm transaction *sucessful* with getTransactionReceipt()
+
+            // // TODO (Stan): Metamask web3 doesn't have this method. Probably could fix by
+            // // by doing the "copy local web3 over metamask's" technique.
+            // window.web3.eth.getTransactionReceipt(this.props.transactionReceipt, (error, transactionReceipt) => {
+            //   console.log(transactionReceipt)
+            // })
+
+            clearInterval(txCheckTimer)
+            resolve(transaction.blockNumber)
+          }
+        })
+      }
+    })
+  }
+
 }
 
 const contractService = new ContractService()

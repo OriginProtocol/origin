@@ -22,7 +22,7 @@ class ListingsDetail extends Component {
     // console.log(`ETH USD: ${cc.price('ETH','USD')}`)
   }
 
-  componentWillMount() {
+  loadListing() {
     contractService.getListing(this.props.listingId)
     .then((listingContractObject) => {
       this.setState(listingContractObject)
@@ -39,14 +39,24 @@ class ListingsDetail extends Component {
     })
   }
 
+  componentWillMount() {
+    this.loadListing()
+  }
+
   handleBuyClicked() {
     const unitsToBuy = 1;
     const totalPrice = (unitsToBuy * this.state.price);
     contractService.buyListing(this.props.listingId, unitsToBuy, totalPrice)
     .then((transactionReceipt) => {
       console.log("Purchase request sent.")
-      // TODO (Stan) : Give confirmation once transaction is confirmed on chain.
-      alert("Purchase request sent.")
+      this.setState({isSubmitted: true})
+      contractService.waitTransactionFinished(transactionReceipt.tx)
+      .then((blockNumber) => {
+        // Re-load listing to show change
+        // TODO: Some sort of succes page with tx reference?
+        this.setState({isSubmitted: false})
+        this.loadListing()
+      })
     })
     .catch((error) => {
       console.log(error)
@@ -69,8 +79,8 @@ class ListingsDetail extends Component {
         }
         <div className="carousel">
           {this.state.pictures.map(pictureUrl => (
-            <div className="photo">
-              <img src={pictureUrl} key={pictureUrl} role='presentation' />
+            <div className="photo" key={pictureUrl}>
+              <img src={pictureUrl} role='presentation' />
             </div>
           ))}
         </div>
