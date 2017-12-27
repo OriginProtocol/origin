@@ -47,7 +47,6 @@ class SchemaOptions extends React.Component {
           </div>
           <div className="col-md-2"></div>
           <div className="col-md-5">
-          hello world
           </div>
         </div>
       </div>

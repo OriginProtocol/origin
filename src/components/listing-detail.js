@@ -62,6 +62,11 @@ class ListingsDetail extends Component {
             <div className="category">{this.state.category}</div>
             <div className="title">{this.state.name}</div>
             <div className="description">{this.state.description}</div>
+            <div className="debug">
+              <li>IPFS: {this.state.ipfsHash}</li>
+              <li>Lister: {this.state.lister}</li>
+              <li>Units: {this.state.unitsAvailable}</li>
+            </div>
           </div>
         </div>
       </div>

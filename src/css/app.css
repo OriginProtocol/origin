@@ -173,6 +173,7 @@ a:hover {
   font-size: 18px;
   text-align: left;
   color: #455d75;
+  margin-bottom: 50px;
 }
 
 .listing-detail .buy-box {
@@ -184,6 +185,8 @@ a:hover {
   font-family: Lato;
   font-size: 18px;
   color: #ffffff;
+  margin-left: 50px;
+  margin-bottom: 50px;
 }
 
 .listing-detail .price {
@@ -200,6 +203,13 @@ a:hover {
   color: #ffffff;
   font-family: Lato;
   font-weight: 900;
+}
+
+.listing-detail .debug {
+    display: none;
+    unicode-bidi: embed;
+    font-family: monospace;
+    white-space: pre;
 }
 
 /* Listing Create */
