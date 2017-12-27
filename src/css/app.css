@@ -146,6 +146,11 @@ a:hover {
   margin-right: 1px;
 }
 
+.listing-detail {
+  /* When description is short, don't want footer overlapping buy-box */
+  min-height: 675px;
+}
+
 .listing-detail .category {
   font-family: Lato;
   font-size: 14px;
@@ -256,4 +261,8 @@ footer .footer-links li {
 
 footer .footer-links li a {
   color: #ffffff;
+}
+
+.container.listing-wait-confirmation {
+  min-height: 675px;
 }
