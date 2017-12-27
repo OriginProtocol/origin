@@ -38,9 +38,10 @@ const HomePage = () => {
   return (
     <div>
       <NavBar />
-        <div className="container">
-          <Listings />
-        </div>
+      <div className="container">
+        <Listings />
+      </div>
+      <Footer />
     </div>
   )
 }
@@ -49,8 +50,11 @@ const HomePage = () => {
 const ListingDetailPage = (props) => (
   <div>
     <NavBar />
-    <ListingDetail
-      listingId={props.match.params.listingId} />
+    <div className="container">
+      <ListingDetail
+        listingId={props.match.params.listingId} />
+    </div>
+    <Footer />
   </div>
 )
 
@@ -58,9 +62,98 @@ const ListingDetailPage = (props) => (
 const CreateListingPage = () => (
   <div>
     <NavBar />
-    <ListingCreate />
+    <div className="container">
+      <ListingCreate />
+    </div>
+    <Footer />
   </div>
 )
+
+const Footer = (props) => {
+  return (
+    <footer className="dark-footer">
+      <div className="container">
+        <div className="row">
+          <div className="col-12 col-md-6">
+            <div className="logo-container">
+              <img src="/images/origin-logo.png" alt="Origin Protocol" class="origin-logo"/>
+            </div>
+            <p className="company-mission">
+              Origin is building the sharing economy of tomorrow. Buyers and sellers will be able to transact without rent-seeking middlemen. We believe in lowering transaction fees, reducing censorship and regulation, and giving early participants in the community a stake in the network.
+            </p>
+            <p>
+              &copy; 2017 Origin, Inc.
+            </p>
+          </div>
+          <div className="col-12 col-md-6">
+            <div className="row">
+              <div className="col-6 col-md-4">
+                <div className="footer-header">
+                  Documentation
+                </div>
+                <ul className="footer-links">
+                  <li>
+                    <Link to="https://www.originprotocol.com/product-brief">Product Brief</Link>
+                  </li>
+                  <li>
+                    <Link to="https://www.originprotocol.com/whitepaper">Whitepaper</Link>
+                  </li>
+                  <li>
+                    <Link to="https://github.com/OriginProtocol">Github</Link>
+                  </li>
+                  <li>
+                    <Link to="http://docs.originprotocol.com/">Docs</Link>
+                  </li>
+                </ul>
+              </div>
+              <div className="col-6 col-md-4">
+                <div className="footer-header">
+                  Community
+                </div>
+                <ul className="footer-links">
+                  <li>
+                    <Link to="http://slack.originprotocol.com">Slack</Link>
+                  </li>
+                  <li>
+                    <Link to="https://t.me/originprotocol">Telegram</Link>
+                  </li>
+                  <li>
+                    <Link to="https://medium.com/originprotocol">Medium</Link>
+                  </li>
+                  <li>
+                    <Link to="https://twitter.com/originprotocol">Twitter</Link>
+                  </li>
+                  <li>
+                    <Link to="https://www.facebook.com/originprotocol">Facebook</Link>
+                  </li>
+                </ul>
+              </div>
+              <div className="col-6 col-md-4">
+                <div className="footer-header">
+                  Organization
+                </div>
+                <ul className="footer-links">
+                  <li>
+                    <Link to="/team">Team</Link>
+                  </li>
+                  <li>
+                    <Link to="https://angel.co/originprotocol/jobs">Jobs (We're hiring!)</Link>
+                  </li>
+                  <li>
+                    <Link to="https://www.google.com/maps/place/845+Market+St+%23450a,+San+Francisco,+CA+94103">845 Market St, #450A, San Francisco, CA 94103</Link>
+                  </li>
+                  <li>
+                    <Link to="mailto:info@originprotocol.com">info@originprotocol.com</Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>          
+      </div>
+    </footer>
+  )
+}
 
 // Handle changing of Metamask account
 // const onChangeAccount = (nextAddress) => (console.log(nextAddress))
