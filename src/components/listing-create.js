@@ -9,7 +9,7 @@ class ListingCreate extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isListingSubmitted: true,
+      isListingSubmitted: false,
       transactionReceipt: null
     }
     this.onListingSubmitted = this.onListingSubmitted.bind(this)
@@ -27,7 +27,7 @@ class ListingCreate extends Component {
     console.log("onListingConfirmed")
     // TODO: Total hack. Figure out how to do with ReactRouter.
     // See: https://stackoverflow.com/a/42121109/59913
-    window.document.location = "/"
+    window.setTimeout(() => {window.document.location = "/"}, 2000);
   }
 
   render() {

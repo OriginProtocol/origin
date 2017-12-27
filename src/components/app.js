@@ -76,7 +76,7 @@ const Footer = (props) => {
         <div className="row">
           <div className="col-12 col-md-6">
             <div className="logo-container">
-              <img src="/images/origin-logo.png" alt="Origin Protocol" class="origin-logo"/>
+              <img src="/images/origin-logo.png" alt="Origin Protocol" className="origin-logo"/>
             </div>
             <p className="company-mission">
               Origin is building the sharing economy of tomorrow. Buyers and sellers will be able to transact without rent-seeking middlemen. We believe in lowering transaction fees, reducing censorship and regulation, and giving early participants in the community a stake in the network.
@@ -149,7 +149,7 @@ const Footer = (props) => {
               </div>
             </div>
           </div>
-        </div>          
+        </div>
       </div>
     </footer>
   )

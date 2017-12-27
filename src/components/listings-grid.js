@@ -29,7 +29,7 @@ class ListingsGrid extends Component {
       <div className="listings-grid">
         <h1>{this.state.listingIds.length} Listings</h1>
         <div className="container">
-          {this.state.listingIds.map(listingId => (
+          {this.state.listingIds.reverse().map(listingId => (
             <ListingCard listingId={listingId} key={listingId}/>
           ))}
         </div>

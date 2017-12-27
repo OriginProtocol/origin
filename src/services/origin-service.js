@@ -32,6 +32,8 @@ class OriginService {
         console.log(`IPFS file created with hash: ${ipfsHash} for data:`)
         console.log(jsonBlob)
 
+        // TODO: Validate that ipfsHash is valid
+
   	  	// Submit to ETH contract
         let units = 1; // TODO: Allow users to set number of units in form
   	    contractService.submitListing(ipfsHash, formListing.formData.price, units)
