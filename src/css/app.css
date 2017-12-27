@@ -106,6 +106,14 @@ a:hover {
   color: #111d28;
 }
 
+.listing-card .sold-banner {
+  margin-left: 10px;
+  padding: 2px 7px 2px 7px;
+  background-color: #c2cbd3;
+  font-weight: bold;
+  color: white;
+}
+
 /* Listing Detail */
 
 .carousel {
@@ -194,11 +202,19 @@ a:hover {
   font-weight: 900;
 }
 
+.listing-detail .buy-box .sold-banner {
+  height: 50px;
+  width: 100%;
+  line-height: 50px;
+  text-align: center;
+  font-weight: bold;
+}
+
 .listing-detail .debug {
-    display: none;
-    unicode-bidi: embed;
-    font-family: monospace;
-    white-space: pre;
+  display: none;
+  unicode-bidi: embed;
+  font-family: monospace;
+  white-space: pre;
 }
 
 /* Listing Create */
