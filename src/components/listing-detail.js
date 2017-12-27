@@ -3,7 +3,6 @@ import contractService from '../services/contract-service'
 import ipfsService from '../services/ipfs-service'
 import { Link } from 'react-router-dom'
 
-
 class ListingsDetail extends Component {
 
   constructor(props) {
@@ -18,6 +17,8 @@ class ListingsDetail extends Component {
       pictures: []
     }
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
+
+    // console.log(`ETH USD: ${cc.price('ETH','USD')}`)
   }
 
   componentWillMount() {
@@ -69,12 +70,16 @@ class ListingsDetail extends Component {
               <span className="price">{Number(this.state.price).toFixed(3)} ETH</span>
             </div>
             <div>
-              <Link to={`/listing/${this.props.listingId}/buy`}>
-                <button className="button" onClick={this.handleBuyClicked}>
-                  Buy Now
-                </button>
+              {this.state.unitsAvailable > 0 ?
+                <Link to={`/listing/${this.props.listingId}/buy`}>
+                  <button className="button" onClick={this.handleBuyClicked}>
+                    Buy Now
+                  </button>
                 </Link>
-              </div>
+                :
+                <div className="sold-banner">SOLD</div>
+              }
+            </div>
           </div>
           <div className="info-box">
             <div className="category">{this.state.category}</div>
