@@ -14,7 +14,8 @@ class ListingsDetail extends Component {
       ipfsHash: null,
       lister: null,
       unitsAvailable: null,
-      pictures: []
+      pictures: [],
+      isSubmitted: false
     }
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
 
@@ -56,6 +57,16 @@ class ListingsDetail extends Component {
   render() {
     return (
       <div className="listing-detail">
+        {this.state.isSubmitted &&
+          <div className="overlay">
+            <div className="h-100 row align-items-center text-center">
+              <div className="col" style={{width:100}}>
+                Processing...
+                <div><img src="/images/ajax-loader.gif" role="presentation"/></div>
+              </div>
+            </div>
+          </div>
+        }
         <div className="carousel">
           {this.state.pictures.map(pictureUrl => (
             <div className="photo">
