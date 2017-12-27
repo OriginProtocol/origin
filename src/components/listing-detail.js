@@ -70,6 +70,7 @@ class ListingsDetail extends Component {
               <div className="category">{this.state.category}</div>
               <div className="title">{this.state.name}</div>
               <div className="description">{this.state.description}</div>
+              <a href={`http://gateway.originprotocol.com/ipfs/${this.state.ipfsHash}`} target="_blank">View on IPFS <big>&rsaquo;</big></a>
               <div className="debug">
                 <li>IPFS: {this.state.ipfsHash}</li>
                 <li>Lister: {this.state.lister}</li>
