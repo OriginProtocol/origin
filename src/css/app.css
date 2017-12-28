@@ -104,6 +104,9 @@ a:hover {
   text-align: left;
   color: #455d75;
   text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .listing-card .title {
@@ -112,6 +115,9 @@ a:hover {
   font-size: 24px;
   text-align: left;
   color: #455d75;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .listing-card .price {
@@ -224,10 +230,10 @@ a:hover {
 .listing-detail .buy-box button {
   height: 50px;
   width: 100%;
+  margin-top: 35px;
   border-radius: 30px;
   background-color: #1a82ff;
   border: solid 1px #1a82ff;
-  margin-top: 35px;
   color: #ffffff;
   font-family: Lato;
   font-weight: 900;
@@ -236,9 +242,12 @@ a:hover {
 .listing-detail .buy-box .sold-banner {
   height: 50px;
   width: 100%;
+  margin-top: 35px;
   line-height: 50px;
   text-align: center;
   font-weight: bold;
+  border-radius: 30px;
+  background-color: rgba(26, 130, 255, 0.3);
 }
 
 .listing-detail .debug {
