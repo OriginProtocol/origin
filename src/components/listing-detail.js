@@ -103,7 +103,7 @@ class ListingsDetail extends Component {
               <div className="buy-box">
                 <div>
                   <span>Price</span>
-                  <span className="price">{Number(this.state.price).toFixed(3)} ETH</span>
+                  <span className="price">{Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits:3})} ETH</span>
                 </div>
                 {(this.state.unitsAvailable > 1) &&
                   <div>

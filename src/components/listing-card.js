@@ -46,13 +46,14 @@ class ListingCard extends Component {
                 this.state.pictures[0] :
                 '/images/missing-image-placeholder.png'
               }
+              role="presentation"
             />
           </div>
         </Link>
         <div className="category">{this.state.category}</div>
         <div className="title">{this.state.name}</div>
         <div className="price">
-            {Number(this.state.price).toFixed(3)} ETH
+            {Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits:3})} ETH
             {this.state.unitsAvailable===0 &&
               <span className="sold-banner">Sold</span>
             }
