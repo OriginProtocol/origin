@@ -54,7 +54,7 @@ class ListingCard extends Component {
         <div className="price">
             {Number(this.state.price).toFixed(3)} ETH
             {this.state.unitsAvailable===0 &&
-              <span className="sold-banner">SOLD</span>
+              <span className="sold-banner">Sold</span>
             }
         </div>
       </div>

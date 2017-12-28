@@ -124,10 +124,12 @@ a:hover {
 
 .listing-card .sold-banner {
   margin-left: 10px;
-  padding: 2px 7px 2px 7px;
-  background-color: #c2cbd3;
-  font-weight: bold;
+  padding: 0px 9px 1px 9px;
+  background-color: #6e3bea;
   color: white;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: normal;
 }
 
 .listing-card .photo {

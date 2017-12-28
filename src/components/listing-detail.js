@@ -119,7 +119,7 @@ class ListingsDetail extends Component {
                       </button>
                     </Link>
                     :
-                    <div className="sold-banner">SOLD</div>
+                    <div className="sold-banner">Sold</div>
                   }
                 </div>
               </div>
