@@ -108,7 +108,7 @@ class ListingsDetail extends Component {
                 {(this.state.unitsAvailable > 1) &&
                   <div>
                     <span>Units Available</span>
-                    <span className="price">{this.state.unitsAvailable}</span>
+                    <span className="price">{this.state.unitsAvailable.toLocaleString()}</span>
                   </div>
                 }
                 <div>
