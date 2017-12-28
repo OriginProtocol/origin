@@ -130,6 +130,23 @@ a:hover {
   color: white;
 }
 
+.listing-card .photo {
+  height: 220px;
+  width: 100%;
+  overflow: hidden;
+  text-align: center;
+  position: relative;
+}
+
+.listing-card .photo img {
+  height: 100%;
+  position: absolute;
+  top: -9999px;
+  bottom: -9999px;
+  left: -9999px;
+  right: -9999px;
+  margin: auto;
+}
 /* Listing Detail */
 
 .carousel {
