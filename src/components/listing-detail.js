@@ -40,7 +40,13 @@ class ListingsDetail extends Component {
   }
 
   componentWillMount() {
-    this.loadListing()
+    if (this.props.listingId) {
+      // Load from IPFS
+      this.loadListing()
+    } else if (this.props.listingJson) {
+      // Listing json passed in directly
+      this.setState(this.props.listingJson)
+    }
   }
 
   handleBuyClicked() {
@@ -114,7 +120,11 @@ class ListingsDetail extends Component {
                 <div>
                   {(this.state.unitsAvailable > 0) ?
                     <Link to={`/listing/${this.props.listingId}/buy`}>
-                      <button className="button" onClick={this.handleBuyClicked}>
+                      <button
+                        className="button"
+                        onClick={this.handleBuyClicked}
+                        disabled={!this.props.listingId}
+                      >
                         Buy Now
                       </button>
                     </Link>

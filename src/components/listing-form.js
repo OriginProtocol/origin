@@ -141,7 +141,13 @@ class ListingForm extends Component {
               <div style={{width:"100%", height:"200px", backgroundColor:"yellow"}}>
                 Preview coming here
               </div>
-              <button onClick={() => this.onSubmitListing(this.state.formListing, this.state.selectedSchemaType)}>
+              <button
+                onClick=
+                {
+                  () => this.onSubmitListing(this.state.formListing,
+                  this.state.selectedSchemaType)
+                }
+              >
                 Done
               </button>
             </div>
