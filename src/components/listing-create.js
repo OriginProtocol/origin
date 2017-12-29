@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import originService from '../services/origin-service'
+import contractService from '../services/contract-service'
 
 import ListingSchemaForm from './listing-schema-form'
 import ListingDetail from './listing-detail'
-import Form from 'react-jsonschema-form'
 
 class ListingCreate extends Component {
 
@@ -63,15 +63,29 @@ class ListingCreate extends Component {
   }
 
   onSubmitListing(formListing, selectedSchemaType) {
+    this.setState({
+      step: this.STEP.PROCESSING
+    })
     originService.submitListing(formListing, selectedSchemaType)
-    .then((transactionReceipt) => {
-      // Success
-      this.props.onListingSubmitted(transactionReceipt, formListing)
+    .then((tx) => {
+      // Submitted to blockchain, now wait for confirmation
+      contractService.waitTransactionFinished(tx)
+      .then((blockNumber) => {
+        this.setState({
+          step: this.STEP.SUCCESS
+        })
+        this.props.onListingSubmitted(tx, formListing)
+      })
+      .catch((error) => {
+        console.error(error)
+        alert(error)
+        // TODO: Reset form? Do something.
+      })
     })
     .catch((error) => {
       console.error(error)
-        alert(error)
-        // TODO: Reset form? Do something.
+      alert(error)
+      // TODO: Reset form? Do something.
     });
   }
 
@@ -157,9 +171,9 @@ class ListingCreate extends Component {
         }
         { this.state.step === this.STEP.PROCESSING &&
           <div className="row">
-            <div className="col-md-5">
-              <label>&nbsp;</label>
-              <h2>Processing</h2>
+            <div className="col-md-5 listing-wait-confirmation">
+              <h1>Processing...</h1>
+              <div><img src="images/ajax-loader.gif" role="presentation"/></div>
             </div>
             <div className="col-md-6">
             </div>
