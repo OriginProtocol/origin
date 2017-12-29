@@ -131,7 +131,10 @@ const Footer = (props) => {
                 </div>
                 <ul className="footer-links">
                   <li>
-                    <Link to="/team">Team</Link>
+                    <Link to="http://www.originprotocol.com/presale">Presale</Link>
+                  </li>
+                  <li>
+                    <Link to="http://www.originprotocol.com/team">Team</Link>
                   </li>
                   <li>
                     <Link to="https://angel.co/originprotocol/jobs">Jobs (We're hiring!)</Link>
