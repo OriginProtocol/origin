@@ -92,6 +92,12 @@ a:hover {
   color: white;
 }
 
+.btn {
+  border-radius: 30px;
+  padding-right: 30px;
+  padding-left: 30px;
+}
+
 /* Listings */
 
 .listing-card {
@@ -255,17 +261,48 @@ a:hover {
   width: 100%;
 }
 
-.listing-selection {
+.schema-selection label:hover {
+  border: solid 1px #1a82ff;
+  cursor:pointer;
+}
+
+.schema-selection label {
   border-radius: 5px;
   border: solid 1px #c2cbd3;
   margin-bottom: 10px;
   padding:10px;
+  width:100%;
 }
 
-.listing-selection:hover {
-  border: solid 1px #1a82ff;
-  cursor:pointer;
+.info-box {
+  background-color: #dfe6ea;
+  border-radius: 5px;
+  padding:30px;
+  margin-bottom: 30px;
 }
+
+.info-box h2 {
+  font-size:18px;
+  font-family: 'Lato';
+  font-weight: normal;
+}
+
+.info-box p {
+  font-size:18px;
+  font-family: 'Lato';
+  font-weight:300;
+}
+
+.info-box div {
+  position: absolute;
+}
+
+.info-box img {
+  position: relative;
+  top:-50px;
+  left:-110px;
+}
+
 
 /* footer */
 

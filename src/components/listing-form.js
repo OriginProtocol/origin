@@ -84,36 +84,39 @@ class ListingForm extends Component {
         { this.state.step === this.STEP.PICK_SCHEMA &&
           <div className="schema-options">
             <div className="row">
-
               <div className="col-md-5">
                 <h1>Let's get started creating your listing</h1>
+              </div>
+            </div>
+            <div className="row flex-sm-row-reverse">
+             <div className="col-md-5 offset-md-2">
+                <div className="info-box">
+                  <h2>Choose a schema for your product or service</h2>
+                  <p>Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services.</p>
+                  <div><img className="d-none d-md-block" src="/images/features-graphic.png" /></div>
+                </div>
+              </div>
+
+              <div className="col-md-5">
+                
                 <label>STEP {Number(this.state.step)}</label>
                 <h2>What Type of listing do you want to create?</h2>
                   {this.schemaList.map(x => (
-                    <div className="radio" key={x.type} >
+                    <div className="schema-selection radio" key={x.type} >
                       <label>
                         <input
                           type="radio"
                           value={x.type}
                           checked={this.state.selectedSchemaType === x.type}
                           onChange={() => this.setState({selectedSchemaType:x.type})}
-                        />
-                          {x.name}
+                        /> {x.name}
                       </label>
                     </div>
                   ))}
-                  <button onClick={() => this.handleSchemaSelection()}>
+                  <button className="float-right btn btn-primary" onClick={() => this.handleSchemaSelection()}>
                     Next
                   </button>
               </div>
-
-              <div className="col-md-6">
-                Graphic here
-                {/* graphic will go here*/}
-              </div>
-
-              <div className="col-md-2"></div>
-              <div className="col-md-5"></div>
 
             </div>
           </div>
