@@ -2,14 +2,21 @@ import React, { Component } from 'react'
 import originService from '../services/origin-service'
 
 import ListingSchemaForm from './listing-schema-form'
+import Form from 'react-jsonschema-form'
 
 class ListingForm extends Component {
 
   constructor(props) {
     super(props)
 
-    // TODO: js enum thing for state
-    this.STEP = {PICK_SCHEMA: 1, DETAILS: 2, PREVIEW: 3, SUBMITTED: 4}
+    // Enum of our states
+    this.STEP = {
+      PICK_SCHEMA: 1,
+      DETAILS: 2,
+      PREVIEW: 3,
+      PROCESSING: 4,
+      SUCCESS: 5
+    }
 
     this.schemaList = [
       {type: 'for-sale', name: 'For Sale', 'img': 'for-sale.jpg'},
@@ -28,7 +35,7 @@ class ListingForm extends Component {
     }
 
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
-    this.handleFormSubmit = this.handleFormSubmit.bind(this)
+    this.onDetailsEntered = this.onDetailsEntered.bind(this)
   }
 
   handleSchemaSelection() {
@@ -50,8 +57,15 @@ class ListingForm extends Component {
   //   })
   }
 
-  handleFormSubmit(formListing, selectedSchemaType) {
-    debugger
+  onDetailsEntered(formListing) {
+    this.setState({
+      formListing: formListing,
+      step: this.STEP.PREVIEW
+    })
+    window.scrollTo(0, 0)
+  }
+
+  onSubmitListing(formListing, selectedSchemaType) {
     originService.submitListing(formListing, selectedSchemaType)
     .then((transactionReceipt) => {
       // Success
@@ -67,22 +81,15 @@ class ListingForm extends Component {
   render() {
     return (
       <div className="container listing-form">
-        <div> Step:{Number(this.state.step)} </div>
         { this.state.step === this.STEP.PICK_SCHEMA &&
           <div className="schema-options">
             <div className="row">
+
               <div className="col-md-5">
                 <h1>Let's get started creating your listing</h1>
-              </div>
-
-              <div className="col-md-6"></div>
-
-              <div className="col-md-5">
-                <label>STEP 1</label>
-                <h2>What type of listing do you want to create?</h2>
-
+                <label>STEP {Number(this.state.step)}</label>
+                <h2>What Type of listing do you want to create?</h2>
                   {this.schemaList.map(x => (
-
                     <div className="radio" key={x.type} >
                       <label>
                         <input
@@ -100,6 +107,11 @@ class ListingForm extends Component {
                   </button>
               </div>
 
+              <div className="col-md-6">
+                Graphic here
+                {/* graphic will go here*/}
+              </div>
+
               <div className="col-md-2"></div>
               <div className="col-md-5"></div>
 
@@ -108,22 +120,53 @@ class ListingForm extends Component {
         }
         { this.state.step === this.STEP.DETAILS &&
           <div className="row">
-            <div className="col-md-12">
-              <h4>
-                {this.state.selectedSchemaType.name}
-              </h4>
+            <div className="col-md-5">
+              <label>STEP {Number(this.state.step)}</label>
+              <h2>Create your listing</h2>
+              {this.state.selectedSchemaType.name}
               <ListingSchemaForm
                 schema={this.state.selectedSchema}
                 selectedSchemaType={this.state.selectedSchemaType}
-                onSubmitListing={this.handleFormSubmit}/>
+                onDetailsEntered={this.onDetailsEntered}/>
             </div>
             <div className="col-md-6">
             </div>
           </div>
         }
-        {this.state.listingSubmitted &&
-          <div className="listing-submitted-notification">
-            Creating Listing
+        { this.state.step === this.STEP.PREVIEW &&
+          <div className="row">
+            <div className="col-md-5">
+              <label>STEP {Number(this.state.step)}</label>
+              <h2>Preview your listing</h2>
+              <div style={{width:"100%", height:"200px", backgroundColor:"yellow"}}>
+                Preview coming here
+              </div>
+              <button onClick={() => this.onSubmitListing(this.state.formListing, this.state.selectedSchemaType)}>
+                Done
+              </button>
+            </div>
+            <div className="col-md-6">
+            </div>
+          </div>
+        }
+        { this.state.step === this.STEP.PROCESSING &&
+          <div className="row">
+            <div className="col-md-5">
+              <label>&nbsp;</label>
+              <h2>Processing</h2>
+            </div>
+            <div className="col-md-6">
+            </div>
+          </div>
+        }
+        {this.state.step === this.STEP.SUCCESS &&
+          <div className="row">
+            <div className="col-md-5">
+              <label>&nbsp;</label>
+              <h2>Success</h2>
+            </div>
+            <div className="col-md-6">
+            </div>
           </div>
         }
       </div>

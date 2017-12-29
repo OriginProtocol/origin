@@ -10,7 +10,7 @@ class ListingSchemaForm extends Component {
     return (
       <Form schema={this.props.schema}
         onSubmit={(formListing) => {
-          this.props.onSubmitListing(formListing, this.props.selectedSchemaType)
+          this.props.onDetailsEntered(formListing)
         }}
         onError={log("errors")}
       />
