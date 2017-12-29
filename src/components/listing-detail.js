@@ -15,8 +15,11 @@ class ListingsDetail extends Component {
       lister: null,
       unitsAvailable: null,
       pictures: [],
-      isSubmitted: false
+      isSubmitted: false,
+      unitsAvailable: 1, // TODO: Remove once this is in schema form
     }
+
+
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
 
     // console.log(`ETH USD: ${cc.price('ETH','USD')}`)
@@ -43,9 +46,18 @@ class ListingsDetail extends Component {
     if (this.props.listingId) {
       // Load from IPFS
       this.loadListing()
-    } else if (this.props.listingJson) {
+    }
+    else if (this.props.listingJson) {
       // Listing json passed in directly
-      this.setState(this.props.listingJson)
+
+      // TODO: HACK!
+      window.setTimeout(() => {this.setState(this.props.listingJson)}, 1000);
+
+
+      // TODO: Use Object() to merge..need to look up
+      // for (var prop in this.props.listingJson) {
+      //   this.state[prop] = this.props.listingJson[prop]
+      // }
     }
   }
 
@@ -71,6 +83,7 @@ class ListingsDetail extends Component {
   }
 
   render() {
+    console.log(this.state.pictures)
     return (
       <div className="listing-detail">
         {this.state.isSubmitted &&
@@ -84,7 +97,7 @@ class ListingsDetail extends Component {
           </div>
         }
         <div className="carousel">
-          {this.state.pictures.map(pictureUrl => (
+          {this.state.pictures && this.state.pictures.map(pictureUrl => (
             <div className="photo" key={pictureUrl}>
               <img src={pictureUrl} role='presentation' />
             </div>

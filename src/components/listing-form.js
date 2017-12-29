@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import originService from '../services/origin-service'
 
 import ListingSchemaForm from './listing-schema-form'
+import ListingDetail from './listing-detail'
 import Form from 'react-jsonschema-form'
 
 class ListingForm extends Component {
@@ -136,22 +137,22 @@ class ListingForm extends Component {
         { this.state.step === this.STEP.PREVIEW &&
           <div className="row">
             <div className="col-md-5">
-              <label>STEP {Number(this.state.step)}</label>
+              <label className="create-step">STEP {Number(this.state.step)}</label>
               <h2>Preview your listing</h2>
-              <div style={{width:"100%", height:"200px", backgroundColor:"yellow"}}>
-                Preview coming here
+              <div className="preview">
+                <ListingDetail listingJson={this.state.formListing.formData} />
               </div>
-              <button
-                onClick=
-                {
-                  () => this.onSubmitListing(this.state.formListing,
-                  this.state.selectedSchemaType)
-                }
-              >
-                Done
-              </button>
-            </div>
-            <div className="col-md-6">
+              <div>
+                <button
+                  onClick=
+                  {
+                    () => this.onSubmitListing(this.state.formListing,
+                    this.state.selectedSchemaType)
+                  }
+                >
+                  Done
+                </button>
+              </div>
             </div>
           </div>
         }
