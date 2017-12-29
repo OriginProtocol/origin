@@ -6,12 +6,18 @@ import ListingWaitConfirmation from './listing-wait-confirmation'
 
 class ListingCreate extends Component {
 
+
   constructor(props) {
     super(props)
+    // TODO: js enum thing for state
+    this.STEP = {PICK_SCHEMA: 1, DETAILS: 2, PREVIEW: 3, SUBMITTED: 4}
+
     this.state = {
-      isListingSubmitted: false,
-      transactionReceipt: null
+      // isListingSubmitted: false,
+      transactionReceipt: null,
+      step: this.STEP.DETAILS,
     }
+
     this.onListingSubmitted = this.onListingSubmitted.bind(this)
   }
 
@@ -33,12 +39,17 @@ class ListingCreate extends Component {
   render() {
     return (
       <div>
-        { !this.state.isListingSubmitted &&
+        { this.state.step === this.STEP.PICK_SCHEMA &&
           <ListingForm
             onListingSubmitted={this.onListingSubmitted}
           />
         }
-        { this.state.isListingSubmitted &&
+        { this.state.step === this.STEP.DETAILS &&
+          <ListingForm
+            onListingSubmitted={this.onListingSubmitted}
+          />
+        }
+        { this.state.step === this.STEP.SUBMITTED &&
           <ListingWaitConfirmation
             onListingConfirmed={this.onListingConfirmed}
             transactionReceipt={this.state.transactionReceipt}
