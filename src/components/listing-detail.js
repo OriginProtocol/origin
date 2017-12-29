@@ -16,9 +16,7 @@ class ListingsDetail extends Component {
       unitsAvailable: null,
       pictures: [],
       isSubmitted: false,
-      unitsAvailable: 1, // TODO: Remove once this is in schema form
     }
-
 
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
 
@@ -131,18 +129,20 @@ class ListingsDetail extends Component {
                   </div>
                 }
                 <div>
-                  {(this.state.unitsAvailable > 0) ?
-                    <Link to={`/listing/${this.props.listingId}/buy`}>
-                      <button
-                        className="button"
-                        onClick={this.handleBuyClicked}
-                        disabled={!this.props.listingId}
-                      >
-                        Buy Now
-                      </button>
-                    </Link>
-                    :
-                    <div className="sold-banner">Sold</div>
+                  {(this.props.listingId) && (
+                    (this.state.unitsAvailable > 0) ?
+                      <Link to={`/listing/${this.props.listingId}/buy`}>
+                        <button
+                          className="button"
+                          onClick={this.handleBuyClicked}
+                          disabled={!this.props.listingId}
+                        >
+                          Buy Now
+                        </button>
+                      </Link>
+                      :
+                      <div className="sold-banner">Sold</div>
+                    )
                   }
                 </div>
               </div>

@@ -39,6 +39,10 @@ class ListingForm extends Component {
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
   }
 
+  prevStep() {
+
+  }
+
   handleSchemaSelection() {
     fetch(`/schemas/${this.state.selectedSchemaType}.json`)
     .then((response) => response.json())
@@ -48,14 +52,7 @@ class ListingForm extends Component {
         schemaFetched: true,
         step: this.STEP.DETAILS
       })
-      window.scrollTo(0, 0)
     })
-  //   this.setState({
-  //     selectedSchema: this.state.selectedSchemaType,
-  //     selectedSchema: "",
-  //     schemaFetched: true,
-  //     step: this.STEP.DETAILS
-  //   })
   }
 
   onDetailsEntered(formListing) {
@@ -63,7 +60,6 @@ class ListingForm extends Component {
       formListing: formListing,
       step: this.STEP.PREVIEW
     })
-    window.scrollTo(0, 0)
   }
 
   onSubmitListing(formListing, selectedSchemaType) {
@@ -80,6 +76,7 @@ class ListingForm extends Component {
   }
 
   render() {
+    window.scrollTo(0, 0)
     return (
       <div className="container listing-form">
         { this.state.step === this.STEP.PICK_SCHEMA &&
@@ -104,7 +101,7 @@ class ListingForm extends Component {
                     </div>
                   ))}
                   <button onClick={() => this.handleSchemaSelection()}>
-                    Next
+                    Continue
                   </button>
               </div>
 
@@ -128,7 +125,11 @@ class ListingForm extends Component {
               <ListingSchemaForm
                 schema={this.state.selectedSchema}
                 selectedSchemaType={this.state.selectedSchemaType}
-                onDetailsEntered={this.onDetailsEntered}/>
+                onDetailsEntered={this.onDetailsEntered}
+              />
+              <button className="hollow" onClick={() => this.setState({step: this.STEP.PICK_SCHEMA})}>
+                Back
+              </button>
             </div>
             <div className="col-md-6">
             </div>
@@ -143,13 +144,11 @@ class ListingForm extends Component {
                 <ListingDetail listingJson={this.state.formListing.formData} />
               </div>
               <div>
+                <button className="hollow" onClick={() => this.setState({step: this.STEP.DETAILS})}>
+                  Back
+                </button>
                 <button
-                  onClick=
-                  {
-                    () => this.onSubmitListing(this.state.formListing,
-                    this.state.selectedSchemaType)
-                  }
-                >
+                  onClick={() => this.onSubmitListing(this.state.formListing, this.state.selectedSchemaType)}>
                   Done
                 </button>
               </div>

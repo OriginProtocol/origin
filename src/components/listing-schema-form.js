@@ -2,9 +2,12 @@ import React, { Component } from 'react'
 
 import Form from 'react-jsonschema-form'
 
-// Delete this after writing error handling
+// TODO: Delete this after writing error handling
 const log = (type) => console.log.bind(console, type)
 
+
+// TODO: Learn how to populate with existing values
+// TODO: Learn how change name of submit button, and add back button
 class ListingSchemaForm extends Component {
   render() {
     return (
