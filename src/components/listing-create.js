@@ -74,7 +74,7 @@ class ListingCreate extends Component {
         this.setState({
           step: this.STEP.SUCCESS
         })
-        this.props.onListingSubmitted(tx, formListing)
+        // TODO: Where do we take them after successful creation?
       })
       .catch((error) => {
         console.error(error)
@@ -110,7 +110,7 @@ class ListingCreate extends Component {
               </div>
 
               <div className="col-md-5">
-                
+
                 <label>STEP {Number(this.state.step)}</label>
                 <h2>What Type of listing do you want to create?</h2>
                   {this.schemaList.map(x => (
@@ -143,6 +143,7 @@ class ListingCreate extends Component {
                 schema={this.state.selectedSchema}
                 selectedSchemaType={this.state.selectedSchemaType}
                 onDetailsEntered={this.onDetailsEntered}
+                formData={this.state.formListing ? this.state.formListing.formData : null}
               />
               <button className="hollow" onClick={() => this.setState({step: this.STEP.PICK_SCHEMA})}>
                 Back

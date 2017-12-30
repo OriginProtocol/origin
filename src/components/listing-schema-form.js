@@ -15,6 +15,7 @@ class ListingSchemaForm extends Component {
         onSubmit={(formListing) => {
           this.props.onDetailsEntered(formListing)
         }}
+        formData={this.props.formData}
         onError={log("errors")}
       />
     );
