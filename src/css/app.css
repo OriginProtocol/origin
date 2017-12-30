@@ -307,7 +307,7 @@ a:hover {
   font-weight:300;
 }
 
-.info-box div {
+.info-box .info-box-image {
   position: absolute;
 }
 

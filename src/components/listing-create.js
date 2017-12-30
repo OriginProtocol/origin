@@ -105,7 +105,7 @@ class ListingCreate extends Component {
                 <div className="info-box">
                   <h2>Choose a schema for your product or service</h2>
                   <p>Your product or service will use a schema to describe its attributes like name, description, and price. Here are a few simplified schemas that map to well-known categories of listings like housing, auto, and services.</p>
-                  <div><img className="d-none d-md-block" src="/images/features-graphic.png" /></div>
+                  <div className="info-box-image"><img className="d-none d-md-block" src="/images/features-graphic.png" /></div>
                 </div>
               </div>
 
@@ -139,7 +139,7 @@ class ListingCreate extends Component {
                <div className="col-md-5 offset-md-2">
                   <div className="info-box">
                     <p><h2>How it works</h2>Origin uses a Mozilla project called <a href="http://json-schema.org/">JSONSchema</a> to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer.<br/><br/>Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.<br/><br/><a href={`/schemas/${this.state.selectedSchemaType}.json`}>View the <code>{this.state.selectedSchema.name}</code> schema</a></p>
-                    <div><img className="d-none d-md-block" src="/images/features-graphic.png" /></div>
+                    <div className="info-box-image"><img className="d-none d-md-block" src="/images/features-graphic.png" /></div>
                   </div>
                 </div>
 
