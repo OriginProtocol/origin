@@ -336,6 +336,7 @@ a:hover {
 
 .listing-form .preview {
   zoom: 0.6;
+  pointer-events: none;
   margin-bottom:30px;
   display: block;
   width: 100%;
