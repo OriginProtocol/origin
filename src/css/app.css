@@ -322,8 +322,8 @@ a:hover {
   margin-top: 80px;
 }
 
-.btn-info {
-  float:right;
+.schema-details button[type=submit] {
+  float: right;
 }
 
 .listing-form .preview {
