@@ -148,10 +148,10 @@ class ListingCreate extends Component {
                   onError={(errors) => console.log(`react-jsonschema-form errors: ${errors.length}`)}
                 >
                   <div>
-                    <button className="hollow" onClick={() => this.setState({step: this.STEP.PICK_SCHEMA})}>
+                    <button className="btn btn-other" onClick={() => this.setState({step: this.STEP.PICK_SCHEMA})}>
                       Back
                     </button>
-                    <button type="submit">Continue</button>
+                    <button type="submit" className="float-right btn btn-primary">Continue</button>
                   </div>
                 </Form>
 
@@ -180,10 +180,10 @@ class ListingCreate extends Component {
                   <ListingDetail listingJson={this.state.formListing.formData} />
                 </div>
                 <div>
-                  <button className="hollow float-left" onClick={() => this.setState({step: this.STEP.DETAILS})}>
+                  <button className="btn btn-other float-left" onClick={() => this.setState({step: this.STEP.DETAILS})}>
                     Back
                   </button>
-                  <button className="float-right"
+                  <button className="btn btn-primary float-right"
                     onClick={() => this.onSubmitListing(this.state.formListing, this.state.selectedSchemaType)}>
                     Done
                   </button>

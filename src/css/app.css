@@ -101,6 +101,7 @@ a:hover {
   border-radius: 30px;
   padding-right: 30px;
   padding-left: 30px;
+  width: 156px;
 }
 .btn:hover {
   background-color:#0169e6;
@@ -110,6 +111,18 @@ a:hover {
   font-size: 14px;
   font-style: italic;
   color:#455d75;
+}
+
+.btn-primary {
+  background-color: #1a82ff;
+  color: #ffffff;
+}
+
+.btn-other {
+  border: solid 1px #c2cbd3;
+  background-color: #ffffff;
+  color: #1a82ff;
+
 }
 
 /* Listings */
@@ -311,19 +324,14 @@ a:hover {
   position: absolute;
 }
 
-.listing-form  .info-box img {
+.listing-form .info-box img {
   position: relative;
   top:-50px;
   left:-110px;
 }
 
-
 .schema-details, .listing-preview {
   margin-top: 80px;
-}
-
-.schema-details button[type=submit] {
-  float: right;
 }
 
 .listing-form .preview {
@@ -337,20 +345,6 @@ a:hover {
   overflow: scroll;
 }
 
-.listing-form button {
-  width: 156px;
-  height: 50px;
-  border-radius: 30px;
-  border: solid 1px #1a82ff;
-
-  background-color: #1a82ff;
-  color: #ffffff;
-}
-
-.listing-form button.hollow {
-  background-color: #ffffff;
-  color: #1a82ff;
-}
 
 /* footer */
 
