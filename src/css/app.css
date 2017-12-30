@@ -274,30 +274,30 @@ a:hover {
   width:100%;
 }
 
-.info-box {
+.listing-form .info-box {
   background-color: #dfe6ea;
   border-radius: 5px;
   padding:30px;
   margin-bottom: 30px;
 }
 
-.info-box h2 {
+.listing-form  .info-box h2 {
   font-size:18px;
   font-family: 'Lato';
   font-weight: normal;
 }
 
-.info-box p {
+.listing-form  .info-box p {
   font-size:18px;
   font-family: 'Lato';
   font-weight:300;
 }
 
-.info-box div {
+.listing-form  .info-box div {
   position: absolute;
 }
 
-.info-box img {
+.listing-form  .info-box img {
   position: relative;
   top:-50px;
   left:-110px;
@@ -308,8 +308,8 @@ a:hover {
   margin-top:42px;
   margin-bottom:65px;
   display: block;
-  width: 750px;
-  height: 510px;
+  width: 100%;
+  height: 650px;
   border-radius: 5px;
   border: solid 1px #c2cbd3;
   overflow: scroll;

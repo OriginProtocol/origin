@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import originService from '../services/origin-service'
 import contractService from '../services/contract-service'
 
-import ListingSchemaForm from './listing-schema-form'
 import ListingDetail from './listing-detail'
+import Form from 'react-jsonschema-form'
 
 class ListingCreate extends Component {
 
@@ -33,6 +33,7 @@ class ListingCreate extends Component {
       selectedSchemaType: this.schemaList[0],
       selectedSchema: null,
       schemaFetched: false,
+      formListing: {formData:null}
     }
 
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
@@ -97,11 +98,12 @@ class ListingCreate extends Component {
               </div>
             </div>
             <div className="row flex-sm-row-reverse">
+
              <div className="col-md-5 offset-md-2">
                 <div className="info-box">
                   <h2>Choose a schema for your product or service</h2>
                   <p>Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services.</p>
-                  <div><img className="d-none d-md-block" src="/images/features-graphic.png" /></div>
+                  <div><img className="d-none d-md-block" src="/images/features-graphic.png" role="presentation" /></div>
                 </div>
               </div>
 
@@ -128,28 +130,46 @@ class ListingCreate extends Component {
           </div>
         }
         { this.state.step === this.STEP.DETAILS &&
-          <div className="row">
+          <div className="row flex-sm-row-reverse">
+
+           <div className="col-md-5 offset-md-2">
+              <div className="info-box">
+                <p>Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.</p>
+                <p>Photos are the primary way others will be drawn to your listing.  Make sure you upload photos that clearly show what you’re offering. Also, uploading multiple photos is a great way to show your product from multiple angles.</p>
+              </div>
+            </div>
+
             <div className="col-md-5">
               <label>STEP {Number(this.state.step)}</label>
               <h2>Create your listing</h2>
-              {this.state.selectedSchemaType.name}
-              <ListingSchemaForm
+              <Form
                 schema={this.state.selectedSchema}
-                selectedSchemaType={this.state.selectedSchemaType}
-                onDetailsEntered={this.onDetailsEntered}
-                formData={this.state.formListing ? this.state.formListing.formData : null}
-              />
-              <button className="hollow" onClick={() => this.setState({step: this.STEP.PICK_SCHEMA})}>
-                Back
-              </button>
+                onSubmit={this.onDetailsEntered}
+                formData={this.state.formListing}
+                onError={(errors) => console.log(`react-jsonschema-form errors: ${errors.length}`)}
+              >
+                <div>
+                  <button className="hollow" onClick={() => this.setState({step: this.STEP.PICK_SCHEMA})}>
+                    Back
+                  </button>
+                  <button type="submit">Continue</button>
+                </div>
+              </Form>
             </div>
             <div className="col-md-6">
             </div>
           </div>
         }
         { this.state.step === this.STEP.PREVIEW &&
-          <div className="row">
-            <div className="col-md-5">
+          <div className="row flex-sm-row-reverse">
+
+           <div className="col-md-5">
+              <div className="info-box">
+                <p>Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left.</p>
+              </div>
+            </div>
+
+            <div className="col-md-7">
               <label className="create-step">STEP {Number(this.state.step)}</label>
               <h2>Preview your listing</h2>
               <div className="preview">
