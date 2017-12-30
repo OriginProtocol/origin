@@ -39,10 +39,6 @@ class ListingCreate extends Component {
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
   }
 
-  prevStep() {
-
-  }
-
   handleSchemaSelection() {
     fetch(`/schemas/${this.state.selectedSchemaType}.json`)
     .then((response) => response.json())
@@ -110,18 +106,17 @@ class ListingCreate extends Component {
               </div>
 
               <div className="col-md-5">
-
                 <label>STEP {Number(this.state.step)}</label>
                 <h2>What Type of listing do you want to create?</h2>
-                  {this.schemaList.map(x => (
-                    <div className="schema-selection radio" key={x.type} >
+                  {this.schemaList.map(schema => (
+                    <div className="schema-selection radio" key={schema.type} >
                       <label>
                         <input
                           type="radio"
-                          value={x.type}
-                          checked={this.state.selectedSchemaType === x.type}
-                          onChange={() => this.setState({selectedSchemaType:x.type})}
-                        /> {x.name}
+                          value={schema.type}
+                          checked={this.state.selectedSchemaType === schema.type}
+                          onChange={() => this.setState({selectedSchemaType:schema.type})}
+                        /> {schema.name}
                       </label>
                     </div>
                   ))}
@@ -129,7 +124,6 @@ class ListingCreate extends Component {
                     Next
                   </button>
               </div>
-
             </div>
           </div>
         }
@@ -183,7 +177,7 @@ class ListingCreate extends Component {
             </div>
           </div>
         }
-        {this.state.step === this.STEP.SUCCESS &&
+        { this.state.step === this.STEP.SUCCESS &&
           <div className="row">
             <div className="col-md-5">
               <label>&nbsp;</label>
