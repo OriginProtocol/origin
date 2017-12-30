@@ -15,8 +15,9 @@ class ListingsDetail extends Component {
       lister: null,
       unitsAvailable: null,
       pictures: [],
-      isSubmitted: false
+      isSubmitted: false,
     }
+
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
 
     // console.log(`ETH USD: ${cc.price('ETH','USD')}`)
@@ -40,7 +41,22 @@ class ListingsDetail extends Component {
   }
 
   componentWillMount() {
-    this.loadListing()
+    if (this.props.listingId) {
+      // Load from IPFS
+      this.loadListing()
+    }
+    else if (this.props.listingJson) {
+      // Listing json passed in directly
+
+      // TODO: HACK!
+      window.setTimeout(() => {this.setState(this.props.listingJson)}, 1000);
+
+
+      // TODO: Use Object() to merge..need to look up
+      // for (var prop in this.props.listingJson) {
+      //   this.state[prop] = this.props.listingJson[prop]
+      // }
+    }
   }
 
   handleBuyClicked() {
@@ -65,6 +81,7 @@ class ListingsDetail extends Component {
   }
 
   render() {
+    console.log(this.state.pictures)
     return (
       <div className="listing-detail">
         {this.state.isSubmitted &&
@@ -78,7 +95,7 @@ class ListingsDetail extends Component {
           </div>
         }
         <div className="carousel">
-          {this.state.pictures.map(pictureUrl => (
+          {this.state.pictures && this.state.pictures.map(pictureUrl => (
             <div className="photo" key={pictureUrl}>
               <img src={pictureUrl} role='presentation' />
             </div>
@@ -112,14 +129,20 @@ class ListingsDetail extends Component {
                   </div>
                 }
                 <div>
-                  {(this.state.unitsAvailable > 0) ?
-                    <Link to={`/listing/${this.props.listingId}/buy`}>
-                      <button className="button" onClick={this.handleBuyClicked}>
-                        Buy Now
-                      </button>
-                    </Link>
-                    :
-                    <div className="sold-banner">Sold</div>
+                  {(this.props.listingId) && (
+                    (this.state.unitsAvailable > 0) ?
+                      <Link to={`/listing/${this.props.listingId}/buy`}>
+                        <button
+                          className="button"
+                          onClick={this.handleBuyClicked}
+                          disabled={!this.props.listingId}
+                        >
+                          Buy Now
+                        </button>
+                      </Link>
+                      :
+                      <div className="sold-banner">Sold</div>
+                    )
                   }
                 </div>
               </div>

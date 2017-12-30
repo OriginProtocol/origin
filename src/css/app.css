@@ -25,7 +25,7 @@ h1 {
 }
 
 h2 {
-  font-size:24px;
+  font-size:28px;
 }
 
 h3 {
@@ -303,6 +303,32 @@ a:hover {
   left:-110px;
 }
 
+.listing-form .preview {
+  zoom: 0.6;
+  margin-top:42px;
+  margin-bottom:65px;
+  display: block;
+  width: 750px;
+  height: 510px;
+  border-radius: 5px;
+  border: solid 1px #c2cbd3;
+  overflow: scroll;
+}
+
+.listing-form button {
+  width: 156px;
+  height: 50px;
+  border-radius: 30px;
+  border: solid 1px #1a82ff;
+
+  background-color: #1a82ff;
+  color: #ffffff;
+}
+
+.listing-form button.hollow {
+  background-color: #ffffff;
+  color: #1a82ff;
+}
 
 /* footer */
 
