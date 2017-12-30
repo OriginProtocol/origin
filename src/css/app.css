@@ -20,6 +20,11 @@ h1, h2, h3 {
   font-family: 'Poppins', sans-serif;
 }
 
+fieldset {
+  border: 0px solid transparent;
+  padding:0px;
+}
+
 h1 {
   font-size: 40px;
 }
@@ -96,6 +101,15 @@ a:hover {
   border-radius: 30px;
   padding-right: 30px;
   padding-left: 30px;
+}
+.btn:hover {
+  background-color:#0169e6;
+}
+
+.field-description {
+  font-size: 14px;
+  font-style: italic;
+  color:#455d75;
 }
 
 /* Listings */
@@ -303,13 +317,19 @@ a:hover {
   left:-110px;
 }
 
+
+.schema-details, .listing-preview {
+  margin-top: 80px;
+}
+
+.btn-info {
+  float:right;
+}
+
 .listing-form .preview {
   zoom: 0.6;
-  margin-top:42px;
-  margin-bottom:65px;
+  margin-bottom:30px;
   display: block;
-  width: 750px;
-  height: 510px;
   border-radius: 5px;
   border: solid 1px #c2cbd3;
   overflow: scroll;

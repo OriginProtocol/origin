@@ -94,8 +94,8 @@ class ListingCreate extends Component {
     return (
       <div className="container listing-form">
         { this.state.step === this.STEP.PICK_SCHEMA &&
-          <div className="schema-options">
-            <div className="row">
+          <div className="pick-schema">
+            <div className="row schema-options">
               <div className="col-md-5">
                 <h1>Let's get started creating your listing</h1>
               </div>
@@ -104,7 +104,7 @@ class ListingCreate extends Component {
              <div className="col-md-5 offset-md-2">
                 <div className="info-box">
                   <h2>Choose a schema for your product or service</h2>
-                  <p>Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services.</p>
+                  <p>Your product or service will use a schema to describe its attributes like name, description, and price. Here are a few simplified schemas that map to well-known categories of listings like housing, auto, and services.</p>
                   <div><img className="d-none d-md-block" src="/images/features-graphic.png" /></div>
                 </div>
               </div>
@@ -134,41 +134,64 @@ class ListingCreate extends Component {
           </div>
         }
         { this.state.step === this.STEP.DETAILS &&
-          <div className="row">
-            <div className="col-md-5">
-              <label>STEP {Number(this.state.step)}</label>
-              <h2>Create your listing</h2>
-              {this.state.selectedSchemaType.name}
-              <ListingSchemaForm
-                schema={this.state.selectedSchema}
-                selectedSchemaType={this.state.selectedSchemaType}
-                onDetailsEntered={this.onDetailsEntered}
-                formData={this.state.formListing ? this.state.formListing.formData : null}
-              />
-              <button className="hollow" onClick={() => this.setState({step: this.STEP.PICK_SCHEMA})}>
-                Back
-              </button>
-            </div>
-            <div className="col-md-6">
+          <div className="schema-details">
+            <div className="row flex-sm-row-reverse">
+               <div className="col-md-5 offset-md-2">
+                  <div className="info-box">
+                    <p><h2>How it works</h2>Origin uses a Mozilla project called <a href="http://json-schema.org/">JSONSchema</a> to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer.<br/><br/>Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.<br/><br/><a href={`/schemas/${this.state.selectedSchemaType}.json`}>View the <code>{this.state.selectedSchema.name}</code> schema</a></p>
+                    <div><img className="d-none d-md-block" src="/images/features-graphic.png" /></div>
+                  </div>
+                </div>
+
+
+              <div className="col-md-5">
+                <label>STEP {Number(this.state.step)}</label>
+                <h2>Create your listing</h2>
+                {this.state.selectedSchemaType.name}
+                <ListingSchemaForm
+                  schema={this.state.selectedSchema}
+                  selectedSchemaType={this.state.selectedSchemaType}
+                  onDetailsEntered={this.onDetailsEntered}
+                  formData={this.state.formListing ? this.state.formListing.formData : null}
+                />
+                <button className="hollow float-left" onClick={() => this.setState({step: this.STEP.PICK_SCHEMA})}>
+                  Back
+                </button>
+              </div>
+              <div className="col-md-6">
+              </div>
             </div>
           </div>
         }
         { this.state.step === this.STEP.PREVIEW &&
-          <div className="row">
-            <div className="col-md-5">
-              <label className="create-step">STEP {Number(this.state.step)}</label>
-              <h2>Preview your listing</h2>
-              <div className="preview">
-                <ListingDetail listingJson={this.state.formListing.formData} />
+  
+          <div className="listing-preview">
+            <div className="row">
+              <div className="col-md-7">
+                <label className="create-step">STEP {Number(this.state.step)}</label>
+                <h2>Preview your listing</h2>
               </div>
-              <div>
-                <button className="hollow" onClick={() => this.setState({step: this.STEP.DETAILS})}>
-                  Back
-                </button>
-                <button
-                  onClick={() => this.onSubmitListing(this.state.formListing, this.state.selectedSchemaType)}>
-                  Done
-                </button>
+            </div>
+            <div className="row flex-sm-row-reverse">
+              <div className="col-md-5">
+                <div className="info-box">
+                  <p><h2>What happens next?</h2>When you hit submit, a JSON object representing your listing will be published to <a href="https://ipfs.io">IPFS</a> and the content hash will be published to a listing smart contract running on the Ethereum network.<br/><br/>Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left.</p>
+                </div>
+              </div>
+
+              <div className="col-md-7">
+                <div className="preview">
+                  <ListingDetail listingJson={this.state.formListing.formData} />
+                </div>
+                <div>
+                  <button className="hollow float-left" onClick={() => this.setState({step: this.STEP.DETAILS})}>
+                    Back
+                  </button>
+                  <button className="float-right"
+                    onClick={() => this.onSubmitListing(this.state.formListing, this.state.selectedSchemaType)}>
+                    Done
+                  </button>
+                </div>
               </div>
             </div>
           </div>
