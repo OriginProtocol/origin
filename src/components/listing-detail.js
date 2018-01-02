@@ -141,7 +141,10 @@ class ListingsDetail extends Component {
                         </button>
                       </Link>
                       :
-                      <div className="sold-banner">Sold</div>
+                      <div className="sold-banner">
+                        <img src="/images/sold-tag.svg" />
+                        Sold
+                      </div>
                     )
                   }
                 </div>
