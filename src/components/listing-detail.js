@@ -94,13 +94,15 @@ class ListingsDetail extends Component {
             </div>
           </div>
         }
-        <div className="carousel">
-          {this.state.pictures && this.state.pictures.map(pictureUrl => (
-            <div className="photo" key={pictureUrl}>
-              <img src={pictureUrl} role='presentation' />
-            </div>
-          ))}
-        </div>
+        {this.state.pictures && this.state.pictures.length &&
+          <div className="carousel">
+            {this.state.pictures && this.state.pictures.map(pictureUrl => (
+              <div className="photo" key={pictureUrl}>
+                <img src={pictureUrl} role='presentation' />
+              </div>
+            ))}
+          </div>
+        }
         <div className="container">
           <div className="row">
             <div className="col-12 col-md-8 detail-info-box">
