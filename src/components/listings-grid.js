@@ -37,11 +37,15 @@ class ListingsGrid extends Component {
   }
 
   render() {
+    // Calc listings to show for given page
+    const showListingsIds = this.state.listingIds.reverse().slice(
+      this.state.listingsPerPage * (this.state.activePage-1),
+      this.state.listingsPerPage * (this.state.activePage))
     return (
       <div className="listings-grid">
         <h1>{this.state.listingIds.length} Listings</h1>
         <div className="row">
-          {this.state.listingIds.reverse().slice((this.state.activePage-1)*this.state.listingsPerPage, (this.state.activePage)*this.state.listingsPerPage).map(listingId => (
+          {showListingsIds.map(listingId => (
             <ListingCard listingId={listingId} key={listingId}/>
           ))}
         </div>

@@ -55,6 +55,7 @@
     "ipfs-api": "^14.3.7",
     "react": "^15.6.2",
     "react-dom": "^15.6.2",
+    "react-js-pagination": "^3.0.0",
     "react-jsonschema-form": "^0.49.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
