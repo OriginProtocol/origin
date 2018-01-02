@@ -103,7 +103,7 @@ class ListingCreate extends Component {
                 <div className="info-box">
                   <h2>Choose a schema for your product or service</h2>
                   <p>Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services.</p>
-                  <div className="info-box-image"><img className="d-none d-md-block" src="/images/features-graphic.png" role="presentation" /></div>
+                  <div className="info-box-image"><img className="d-none d-md-block" src="/images/features-graphic.svg" role="presentation" /></div>
                 </div>
               </div>
 
