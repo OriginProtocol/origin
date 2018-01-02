@@ -17,7 +17,7 @@ class ListingCard extends Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     contractService.getListing(this.props.listingId)
     .then((listingContractObject) => {
       this.setState(listingContractObject)
