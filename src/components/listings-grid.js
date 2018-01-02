@@ -55,6 +55,8 @@ class ListingsGrid extends Component {
           totalItemsCount={this.state.listingIds.length}
           pageRangeDisplayed={5}
           onChange={this.handlePageChange}
+          itemClass="page-item"
+          linkClass="page-link"
         />
       </div>
     )
