@@ -57,6 +57,7 @@ class ListingsGrid extends Component {
           onChange={this.handlePageChange}
           itemClass="page-item"
           linkClass="page-link"
+          hideDisabled="true"
         />
       </div>
     )
