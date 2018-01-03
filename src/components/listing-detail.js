@@ -93,7 +93,7 @@ class ListingsDetail extends Component {
             </div>
           </div>
         }
-        {this.state.pictures && this.state.pictures.length &&
+        {this.state.pictures && (this.state.pictures.length > 0) &&
           <div className="carousel">
             {this.state.pictures && this.state.pictures.map(pictureUrl => (
               <div className="photo" key={pictureUrl}>
