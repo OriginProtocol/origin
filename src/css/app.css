@@ -84,8 +84,7 @@ a:hover {
 
 /* Overlay entire page for modal effect */
 .overlay {
-  opacity: 0.5;
-  background: #000;
+  background-color: rgba(235, 240, 243, 0.6);
   width: 120%;
   height: 120%;
   z-index: 10;

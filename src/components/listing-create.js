@@ -162,8 +162,25 @@ class ListingCreate extends Component {
             </div>
           </div>
         }
-        { this.state.step === this.STEP.PREVIEW &&
+        { (this.state.step > this.STEP.PREVIEW) &&
+
           <div className="listing-preview">
+
+            {this.state.step === this.STEP.PROCESSING &&
+              <Overlay
+                imageUrl="/images/spinner-animation.svg"
+                heading="Uploading your listing"
+                description="Please stand by..."
+              />
+            }
+            {this.state.step === this.STEP.SUCCESS &&
+              <Overlay
+                imageUrl="/images/circular-check-button.svg"
+                heading="Success"
+                description="View your listing here"
+              />
+            }
+
             <div className="row">
               <div className="col-md-7">
                 <label className="create-step">STEP {Number(this.state.step)}</label>
@@ -190,26 +207,6 @@ class ListingCreate extends Component {
                   </button>
                 </div>
               </div>
-            </div>
-          </div>
-        }
-        { this.state.step === this.STEP.PROCESSING &&
-          <div className="row">
-            <div className="col-md-5 listing-wait-confirmation">
-              <h1>Processing...</h1>
-              <div><img src="images/ajax-loader.gif" role="presentation"/></div>
-            </div>
-            <div className="col-md-6">
-            </div>
-          </div>
-        }
-        { this.state.step === this.STEP.SUCCESS &&
-          <div className="row">
-            <div className="col-md-5">
-              <label>&nbsp;</label>
-              <h2>Success</h2>
-            </div>
-            <div className="col-md-6">
             </div>
           </div>
         }
