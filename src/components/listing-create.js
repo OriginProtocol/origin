@@ -167,18 +167,16 @@ class ListingCreate extends Component {
           <div className="listing-preview">
 
             {this.state.step === this.STEP.PROCESSING &&
-              <Overlay
-                imageUrl="/images/spinner-animation.svg"
-                heading="Uploading your listing"
-                description="Please stand by..."
-              />
+              <Overlay imageUrl="/images/spinner-animation.svg">
+                Uploading your listing<br />
+                Please stand by...
+              </Overlay>
             }
             {this.state.step === this.STEP.SUCCESS &&
-              <Overlay
-                imageUrl="/images/circular-check-button.svg"
-                heading="Success"
-                description="View your listing here"
-              />
+              <Overlay imageUrl="/images/circular-check-button.svg">
+                Success<br />
+                View your listing here
+              </Overlay>
             }
 
             <div className="row">

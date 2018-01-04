@@ -9,8 +9,7 @@ const Overlay = (props) => {
 	      <div>
 	        <img src={props.imageUrl} role="presentation"/>
 	      </div>
-	      <div>{props.heading}</div>
-	      <div>{props.description}</div>
+	      {props.children}
 	    </div>
 	  </div>
   )

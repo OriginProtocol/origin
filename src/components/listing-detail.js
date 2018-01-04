@@ -94,25 +94,24 @@ class ListingsDetail extends Component {
     return (
       <div className="listing-detail">
         {this.state.step===this.STEP.METAMASK &&
-          <Overlay
-            imageUrl="/images/spinner-animation.svg"
-            heading="Confirm your purchase in Metamask"
-            description="Press &ldquo;Submit&rdquo; in Metamask window"
-          />
+          <Overlay imageUrl="/images/spinner-animation.svg">
+            Confirm transaction<br />
+            Press &ldquo;Submit&rdquo; in Metamask window
+          </Overlay>
         }
         {this.state.step===this.STEP.PROCESSING &&
-          <Overlay
-            imageUrl="/images/spinner-animation.svg"
-            heading="Processing your purchase"
-            description="Please stand by..."
-          />
+          <Overlay imageUrl="/images/spinner-animation.svg">
+            Processing your purchase<br />
+            Please stand by...
+          </Overlay>
         }
         {this.state.step===this.STEP.PURCHASED &&
-          <Overlay
-            imageUrl="/images/circular-check-button.svg"
-            heading="Purchase was successful."
-            description=""
-          />
+          <Overlay imageUrl="/images/circular-check-button.svg">
+            Purchase was successful.<br />
+            <a href="#" onClick={()=>window.location.reload()}>
+              Reload page
+            </a>
+          </Overlay>
         }
         {this.state.pictures &&
           <div className="carousel">
