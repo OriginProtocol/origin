@@ -1,4 +1,9 @@
 import React, { Component } from 'react'
+import {
+  BrowserRouter as Router,
+  Route,
+  Link
+} from 'react-router-dom'
 import originService from '../services/origin-service'
 import contractService from '../services/contract-service'
 
@@ -179,7 +184,7 @@ class ListingCreate extends Component {
             {this.state.step === this.STEP.SUCCESS &&
               <Overlay imageUrl="/images/circular-check-button.svg">
                 Success<br />
-                View your listing here
+                <Link to="/">See All Listings</Link>
               </Overlay>
             }
 
@@ -192,7 +197,7 @@ class ListingCreate extends Component {
             <div className="row flex-sm-row-reverse">
               <div className="col-md-5">
                 <div className="info-box">
-                  <p><h2>What happens next?</h2>When you hit submit, a JSON object representing your listing will be published to <a href="https://ipfs.io">IPFS</a> and the content hash will be published to a listing smart contract running on the Ethereum network.<br/><br/>Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left.</p>
+                  <div><h2>What happens next?</h2>When you hit submit, a JSON object representing your listing will be published to <a href="https://ipfs.io">IPFS</a> and the content hash will be published to a listing smart contract running on the Ethereum network.<br/><br/>Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left.</div>
                 </div>
               </div>
               <div className="col-md-7">
