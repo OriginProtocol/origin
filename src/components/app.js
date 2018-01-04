@@ -5,6 +5,7 @@ import {
   Link
 } from 'react-router-dom'
 import { Web3Provider } from 'react-web3';
+import PropTypes from 'prop-types';
 
 // Components
 import Listings from './listings-grid.js'
@@ -17,6 +18,31 @@ import '../css/lato-web.css'
 import '../css/poppins.css'
 import '../css/app.css'
 
+function NetworkCheck(props, context) {
+  const web3Context = context.web3;
+  /**
+   * web3Context = {
+   *   accounts: {Array<string>} - All accounts
+   *   selectedAccount: {string} - Default ETH account address (coinbase)
+   *   network: {string} - One of 'MAINNET', 'ROPSTEN', or 'UNKNOWN'
+   *   networkId: {string} - The network ID (e.g. '1' for main net)
+   * }
+   */
+  if ((window.location.hostname === "demo.originprotocol.com") && (web3Context.networkId !== 4)) {
+    return (
+      <div>
+        Error: MetaMask should be on Rinkeby Network
+      </div>
+    );
+  }
+  else return null
+}
+
+NetworkCheck.contextTypes = {
+  web3: PropTypes.object
+};
+
+
 
 const NavBar = (props) => {
   return (
@@ -25,6 +51,7 @@ const NavBar = (props) => {
         <Link to="/">
           <img src="/images/origin-logo.png" alt="Origin Protocol"/>
         </Link>
+        <NetworkCheck />
         {!props.hideCreateButton &&
           <div className="navbar-create">
             <Link to="/create">Create a Listing</Link>
@@ -49,7 +76,7 @@ const HomePage = () => {
 
 const ListingDetailPage = (props) => (
   <div>
-    <NavBar />  
+    <NavBar />
     <ListingDetail
       listingId={props.match.params.listingId} />
     <Footer />

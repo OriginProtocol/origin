@@ -3,6 +3,8 @@ import contractService from '../services/contract-service'
 import ipfsService from '../services/ipfs-service'
 import { Link } from 'react-router-dom'
 
+import Overlay from './overlay'
+
 class ListingsDetail extends Component {
 
   constructor(props) {
@@ -15,7 +17,7 @@ class ListingsDetail extends Component {
       lister: null,
       unitsAvailable: null,
       pictures: [],
-      isSubmitted: false,
+      isSubmitted: true, // TODO: Temp XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     }
 
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
@@ -84,14 +86,11 @@ class ListingsDetail extends Component {
     return (
       <div className="listing-detail">
         {this.state.isSubmitted &&
-          <div className="overlay">
-            <div className="h-100 row align-items-center text-center">
-              <div className="col" style={{width:100}}>
-                Processing...
-                <div><img src="/images/ajax-loader.gif" role="presentation"/></div>
-              </div>
-            </div>
-          </div>
+          <Overlay
+            imageUrl="/images/spinner-animation.svg"
+            heading="Processing your request"
+            description="Please stand by..."
+          />
         }
         {this.state.pictures && (this.state.pictures.length > 0) &&
           <div className="carousel">

@@ -4,6 +4,7 @@ import contractService from '../services/contract-service'
 
 import ListingDetail from './listing-detail'
 import Form from 'react-jsonschema-form'
+import Overlay from './overlay'
 
 class ListingCreate extends Component {
 
