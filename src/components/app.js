@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import Listings from './listings-grid.js'
 import ListingDetail from './listing-detail.js'
 import ListingCreate from './listing-create.js'
+import Overlay from './overlay'
 
 // CSS
 import '../css/pure-min.css' // TODO (stan): Is this even used?
@@ -28,11 +29,13 @@ function NetworkCheck(props, context) {
    *   networkId: {string} - The network ID (e.g. '1' for main net)
    * }
    */
-  if ((window.location.hostname === "demo.originprotocol.com") && (parseInt(web3Context.networkId) != 4)) {
+  if ((window.location.hostname === "demo.originprotocol.com") &&
+    (parseInt(web3Context.networkId) != 4)) {
     return (
-      <div>
-        Error: MetaMask should be on Rinkeby Network. Currently on network {web3Context.networkId}
-      </div>
+      <Overlay imageUrl="/images/flat_cross_icon.svg">
+        MetaMask should be on <strong>Rinkeby</strong> Network.<br />
+        Currently on network {web3Context.networkId}.
+      </Overlay>
     );
   }
   else return null

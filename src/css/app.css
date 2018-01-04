@@ -108,6 +108,7 @@ a:hover {
   position: fixed;
   font-family: 'Lato', 'Helvetica Neue', 'Arial', sans-serif;
   font-size: 18px;
+  font-weight: normal;
   color: white;
   text-align: center;
   line-height: 30px;

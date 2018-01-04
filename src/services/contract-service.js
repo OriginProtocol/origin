@@ -63,6 +63,8 @@ class ContractService {
       window.web3.eth.getAccounts((error, accounts) => {
         this.listingContract.deployed().then((instance) => {
           let weiToGive = window.web3.toWei(ethPrice, 'ether')
+          // Note we cannot get the listingId returned by our contract.
+          // See: https://forum.ethereum.org/discussion/comment/31529/#Comment_31529
           return instance.create(
             this.getBytes32FromIpfsHash(ipfsListing),
             weiToGive,
