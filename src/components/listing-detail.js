@@ -9,6 +9,14 @@ class ListingsDetail extends Component {
 
   constructor(props) {
     super(props)
+
+    this.STEP = {
+      VIEW: 1,
+      METAMASK: 2,
+      PROCESSING: 3,
+      PURCHASED: 4,
+    }
+
     this.state = {
       category: "Loading...",
       name: "Loading...",
@@ -17,7 +25,7 @@ class ListingsDetail extends Component {
       lister: null,
       unitsAvailable: null,
       pictures: [],
-      isSubmitted: false,
+      step: this.STEP.VIEW,
     }
 
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
@@ -51,8 +59,7 @@ class ListingsDetail extends Component {
       // Listing json passed in directly
 
       // TODO: HACK!
-      window.setTimeout(() => {this.setState(this.props.listingJson)}, 1000);
-
+      window.setTimeout(() => {this.setState(this.props.listingJson)}, 1000)
 
       // TODO: Use Object() to merge..need to look up
       // for (var prop in this.props.listingJson) {
@@ -62,34 +69,49 @@ class ListingsDetail extends Component {
   }
 
   handleBuyClicked() {
-    const unitsToBuy = 1;
-    const totalPrice = (unitsToBuy * this.state.price);
+    const unitsToBuy = 1
+    const totalPrice = (unitsToBuy * this.state.price)
+    this.setState({step: this.STEP.METAMASK})
     contractService.buyListing(this.props.listingId, unitsToBuy, totalPrice)
     .then((transactionReceipt) => {
       console.log("Purchase request sent.")
-      this.setState({isSubmitted: true})
+      this.setState({step: this.STEP.PROCESSING})
       contractService.waitTransactionFinished(transactionReceipt.tx)
       .then((blockNumber) => {
         // Re-load listing to show change
         // TODO: Some sort of succes page with tx reference?
-        this.setState({isSubmitted: false})
-        this.loadListing()
+        this.setState({step: this.STEP.PURCHASED})
+        // this.loadListing()
       })
     })
     .catch((error) => {
       console.log(error)
       alert(error)
-    });
+    })
   }
 
   render() {
     return (
       <div className="listing-detail">
-        {this.state.isSubmitted &&
+        {this.state.step===this.STEP.METAMASK &&
           <Overlay
             imageUrl="/images/spinner-animation.svg"
-            heading="Processing your request"
+            heading="Confirm your purchase in Metamask"
+            description="Press &ldquo;Submit&rdquo; in Metamask window"
+          />
+        }
+        {this.state.step===this.STEP.PROCESSING &&
+          <Overlay
+            imageUrl="/images/spinner-animation.svg"
+            heading="Processing your purchase"
             description="Please stand by..."
+          />
+        }
+        {this.state.step===this.STEP.PURCHASED &&
+          <Overlay
+            imageUrl="/images/circular-check-button.svg"
+            heading="Purchase was successful."
+            description=""
           />
         }
         {this.state.pictures &&
@@ -133,15 +155,14 @@ class ListingsDetail extends Component {
                 <div>
                   {(this.props.listingId) && (
                     (this.state.unitsAvailable > 0) ?
-                      <Link to={`/listing/${this.props.listingId}/buy`}>
-                        <button
-                          className="button"
-                          onClick={this.handleBuyClicked}
-                          disabled={!this.props.listingId}
-                        >
-                          Buy Now
-                        </button>
-                      </Link>
+                      <button
+                        className="button"
+                        onClick={this.handleBuyClicked}
+                        disabled={!this.props.listingId}
+                        onMouseDown={e => e.preventDefault()}
+                      >
+                        Buy Now
+                      </button>
                       :
                       <div className="sold-banner">
                         <img src="/images/sold-tag.svg" role="presentation"/>
