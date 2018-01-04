@@ -28,10 +28,10 @@ function NetworkCheck(props, context) {
    *   networkId: {string} - The network ID (e.g. '1' for main net)
    * }
    */
-  if ((window.location.hostname === "demo.originprotocol.com") && (web3Context.networkId !== 4)) {
+  if ((window.location.hostname === "demo.originprotocol.com") && (parseInt(web3Context.networkId) != 4)) {
     return (
       <div>
-        Error: MetaMask should be on Rinkeby Network
+        Error: MetaMask should be on Rinkeby Network. Currently on network {web3Context.networkId}
       </div>
     );
   }
