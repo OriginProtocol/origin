@@ -92,9 +92,9 @@ class ListingsDetail extends Component {
             description="Please stand by..."
           />
         }
-        {this.state.pictures && (this.state.pictures.length > 0) &&
+        {this.state.pictures &&
           <div className="carousel">
-            {this.state.pictures && this.state.pictures.map(pictureUrl => (
+            {this.state.pictures.map(pictureUrl => (
               <div className="photo" key={pictureUrl}>
                 <img src={pictureUrl} role='presentation' />
               </div>
