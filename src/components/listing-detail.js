@@ -17,7 +17,7 @@ class ListingsDetail extends Component {
       lister: null,
       unitsAvailable: null,
       pictures: [],
-      isSubmitted: true, // TODO: Temp XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      isSubmitted: false,
     }
 
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
