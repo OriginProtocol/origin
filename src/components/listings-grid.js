@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import contractService from '../services/contract-service'
-import Pagination from 'react-js-pagination';
+import Pagination from 'react-js-pagination'
 
 import ListingCard from './listing-card'
 
+import hideList from './hide-list'
 
 class ListingsGrid extends Component {
 
@@ -21,7 +22,8 @@ class ListingsGrid extends Component {
   componentWillMount() {
     contractService.getAllListingIds()
     .then((ids) => {
-      this.setState({ listingIds: ids })
+      const showIds = ids.filter((i)=>hideList.indexOf(i) < 0)
+      this.setState({ listingIds: showIds })
       console.log(`Listing Ids:`)
       console.log(this.state.listingIds)
     })
@@ -32,8 +34,8 @@ class ListingsGrid extends Component {
   }
 
   handlePageChange(pageNumber) {
-    console.log(`active page is ${pageNumber}`);
-    this.setState({activePage: pageNumber});
+    console.log(`active page is ${pageNumber}`)
+    this.setState({activePage: pageNumber})
   }
 
   render() {
