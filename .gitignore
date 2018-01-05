@@ -59,6 +59,8 @@ typings/
 
 # Build folders
 build/
+build_webpack/
+
 
 # Mac OS
 .DS_Store

@@ -1,0 +1,424 @@
+html {
+  height: 100%;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  height: 100%;
+  font-size: 1.0rem;
+  font-weight: 300;
+  font-family: 'Lato', 'Helvetica Neue', 'Arial', sans-serif;
+}
+
+/* Common */
+
+h1, h2, h3 {
+  color:#111d28;
+  font-weight: 200;
+  font-family: 'Poppins', sans-serif;
+}
+
+fieldset {
+  border: 0px solid transparent;
+  padding:0px;
+}
+
+h1 {
+  font-size: 40px;
+}
+
+h2 {
+  font-size:28px;
+}
+
+h3 {
+  font-size:16px;
+}
+
+p {
+  font-size: 1.125rem;
+  margin: 20px auto;
+}
+
+label {
+  color:#455d75;
+  font-size:14px;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+/* Basics */
+
+.navbar {
+  height: 60px;
+  background-color: #455d75;
+  padding: 10px;
+  color: #c2cbd3;
+  font-family: Lato, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0px;
+}
+
+.navbar-create {
+  font-family: Lato;
+  font-weight: bold;
+  font-size: 14px;
+  float: right;
+  clear: right;
+  color: #c2cbd3;
+}
+
+.navbar-create a:link, .navbar-create a:visited {
+  color: #c2cbd3;
+  text-decoration: none;
+}
+.navbar-create a:hover, .navbar-create a:active {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Overlay entire page for modal effect */
+.overlay {
+  background-color: rgba(235, 240, 243, 0.6);
+  width: 120%;
+  height: 120%;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  position: fixed;
+}
+
+.overlay-box {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: #2e3f53;
+  width: 360px;
+  height: 260px;
+  border-radius: 10px;
+  z-index: 10;
+  position: fixed;
+  font-family: 'Lato', 'Helvetica Neue', 'Arial', sans-serif;
+  font-size: 18px;
+  font-weight: normal;
+  color: white;
+  text-align: center;
+  line-height: 30px;
+}
+
+.overlay-box img {
+  width: 54px;
+  height: 54px;
+  margin-top: 56px;
+  margin-bottom: 30px;
+}
+
+.btn {
+  border-radius: 30px;
+  padding-right: 30px;
+  padding-left: 30px;
+  width: 156px;
+}
+.btn:hover {
+  background-color:#0169e6;
+}
+
+.field-description {
+  font-size: 14px;
+  font-style: italic;
+  color:#455d75;
+}
+
+.btn-primary {
+  background-color: #1a82ff;
+  color: #ffffff;
+}
+
+.btn-other {
+  border: solid 1px #c2cbd3;
+  background-color: #ffffff;
+  color: #1a82ff;
+
+}
+
+/* Listings */
+
+.listing-card {
+  margin-bottom: 40px;
+}
+
+.listing-card .category {
+  font-family: Lato;
+  font-size: 14px;
+  text-align: left;
+  color: #455d75;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listing-card .title {
+  font-family: Poppins;
+  font-weight: 300;
+  font-size: 24px;
+  text-align: left;
+  color: #455d75;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listing-card .price {
+  font-family: Lato;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.39;
+  color: #111d28;
+}
+
+.listing-card .sold-banner {
+  margin-left: 10px;
+  padding: 0px 9px 1px 9px;
+  background-color: #6e3bea;
+  color: white;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: normal;
+}
+
+.listing-card .photo {
+  height: 220px;
+  width: 100%;
+  overflow: hidden;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+/* Listing Detail */
+
+.carousel {
+  width: 100%;
+  height: 400px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  margin-top: 1px;
+  margin-bottom: 50px;
+}
+
+.carousel .photo {
+  display: inline-block;
+  vertical-align: top;
+  white-space: normal;
+  width: 600px;
+  height: 400px;
+  background-color: #c2cbd3;
+  margin-right: 1px;
+}
+
+.carousel .photo img {
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.listing-detail {
+  /* When description is short, don't want footer overlapping buy-box */
+  min-height: 675px;
+}
+
+.listing-detail .category {
+  font-family: Lato;
+  font-size: 14px;
+  text-align: left;
+  color: #455d75;
+  text-transform: uppercase;
+}
+
+.listing-detail .title {
+  font-family: Poppins;
+  font-weight: 300;
+  font-size: 40px;
+  text-align: left;
+  color: #455d75;
+}
+
+.listing-detail .description {
+  font-family: Poppins;
+  font-weight: 300;
+  font-size: 18px;
+  text-align: left;
+  color: #455d75;
+  margin-bottom: 50px;
+}
+
+.listing-detail .buy-box {
+  border-radius: 5px;
+  background-color: #2e3f53;
+  padding: 40px;
+  font-family: Lato;
+  font-size: 18px;
+  color: #ffffff;
+}
+
+.listing-detail .price {
+  float:right;
+}
+
+.listing-detail .buy-box button {
+  height: 50px;
+  width: 100%;
+  margin-top: 35px;
+  border-radius: 30px;
+  background-color: #1a82ff;
+  border: solid 1px #1a82ff;
+  color: #ffffff;
+  font-family: Lato;
+  font-weight: 900;
+}
+
+.listing-detail .buy-box .sold-banner {
+  height: 50px;
+  width: 100%;
+  margin-top: 35px;
+  line-height: 46px;
+  text-align: center;
+  font-weight: bold;
+  border-top: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+}
+.listing-detail .buy-box .sold-banner img {
+  margin-right: 4px;
+}
+
+.listing-detail .debug {
+  display: none;
+  unicode-bidi: embed;
+  font-family: monospace;
+  white-space: pre;
+}
+
+/* Listing Create */
+
+.listing-submitted-notification {
+  width: 100%;
+}
+
+.schema-selection:hover {
+  border: solid 1px #1a82ff;
+  cursor:pointer;
+}
+
+.schema-selection  {
+  border-radius: 5px;
+  border: solid 1px #c2cbd3;
+  margin-bottom: 10px;
+  padding:10px;
+  width:100%;
+}
+
+.listing-form .info-box {
+  background-color: #dfe6ea;
+  border-radius: 5px;
+  padding:30px;
+  margin-bottom: 30px;
+}
+
+.listing-form  .info-box h2 {
+  font-size:18px;
+  font-family: 'Lato';
+  font-weight: normal;
+}
+
+.listing-form  .info-box p {
+  font-size:18px;
+  font-family: 'Lato';
+  font-weight:300;
+}
+
+.info-box .info-box-image {
+  position: absolute;
+}
+
+.listing-form .info-box img {
+  position: relative;
+  top:-50px;
+  left:-110px;
+}
+
+.schema-details, .listing-preview {
+  margin-top: 80px;
+}
+
+.listing-form .preview {
+  zoom: 0.6;
+  pointer-events: none;
+  margin-bottom:30px;
+  display: block;
+  width: 100%;
+  height: 650px;
+  border-radius: 5px;
+  border: solid 1px #c2cbd3;
+  overflow: scroll;
+}
+
+
+/* footer */
+
+.dark-footer {
+  background-color: #2e3f53;
+  padding: 80px 0px;
+  min-height: 522px;
+  margin-top:120px;
+}
+
+footer .logo-container {
+  margin: 40px auto;
+}
+
+footer .company-mission {
+  max-width: 360px;
+  margin-left: 0px;
+}
+
+footer p {
+  color: #ffffff;
+  font-size: 0.75rem;
+}
+
+footer .footer-header {
+  margin: 40px auto 15px auto;
+  color: #ffffff;
+  font-weight: 400;
+  font-size: 0.875rem;
+}
+
+footer .footer-links {
+  list-style-type: none;
+  padding-left: 0px;
+}
+
+footer .footer-links li {
+  margin: 15px auto;
+  font-size: 0.875rem;
+}
+
+footer .footer-links li a {
+  color: #ffffff;
+}
+
+.container.listing-wait-confirmation {
+  min-height: 675px;
+}
+

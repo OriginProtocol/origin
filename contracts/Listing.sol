@@ -82,21 +82,53 @@ contract Listing {
   }
 
   function testingAddSampleListings()
+    public
     isOwner
   {
     // We get stripped hex value from IPFS hash using getBytes32FromIpfsHash()
     // in contract-service.js
 
-    // Red shoe - Hash: QmfF4JBA4fEYDkZqjRHnDxWGGoXg5D1T4WqfDrN4GXP33p
+    // Zinc house - Hash: QmTfozaMrUBZdYBzPgxuSC15zBRgLCEfQmWFZwmDHYGY1e
     create(
-      0xfb27dcfe2c7febe98d755e2f9df0ff73fb8abecaa778f540d0cbf28b059306db,
-      0.01 ether, 1
+      0x4f32f7a7d40b4d65a917926cbfd8fd521483e7472bcc4d024179735622447dc9,
+      3.999 ether, 1
     );
-    // Lambo - Hash: QmYsNo3fYTXQRHREYeoGUGLuYETnjx3HxQFMeiZuE7zPSf
+
+    // Scout II - Hash: QmZD8wZWEqzKwvEtGWXzCb3MuXvmxLdCxXGHMRocQFnpoy
     create(
-      0x9c73e11ffa575504295be4ece1d4ea49df33261f8eb6a4a7e313e4bb74abf150,
-      2.50 ether, 1
+      0xa183d4eb3552e730c2dd3df91384426eb88879869b890ad12698320d8b88cb48,
+      0.600 ether, 1
     );
+
+    // Mamalahoa Estate - Hash: QmZtQDL4UjQWryQLjsS5JUsbdbn2B27Tmvz2gvLkw7wmmb
+    create(
+      0xab92c0500ba26fa6f5244f8ba54746e15dd455a7c99a67f0e8f8868c8fab4a1a,
+      8.500 ether, 1
+    );
+
+    // Casa Wolf - Hash: QmVYeipL2JWFkpWsGqNNXDFUVAmPWEEK8u3Q45CZ1YrZPf
+    create(
+      0x6b14cac30356789cd0c39fec0acc2176c3573abdb799f3b17ccc6972ab4d39ba,
+      1.500 ether, 1
+    );
+
+    // Taylor Swift - Hash: QmfXRgtSbrGggApvaFCa88ofeNQP79G18DpWaSW1Wya1u8
+    create(
+      0xff5957ff4035d28dcee79e65aa4124a4de4dcc8cb028faca54c883a5497d8917,
+      0.300 ether, 25
+    );
+
+    // // Red shoe - Hash: QmfF4JBA4fEYDkZqjRHnDxWGGoXg5D1T4WqfDrN4GXP33p
+    // create(
+    //   0xfb27dcfe2c7febe98d755e2f9df0ff73fb8abecaa778f540d0cbf28b059306db,
+    //   0.01 ether, 1
+    // );
+
+    // // Lambo - Hash: QmYsNo3fYTXQRHREYeoGUGLuYETnjx3HxQFMeiZuE7zPSf
+    // create(
+    //   0x9c73e11ffa575504295be4ece1d4ea49df33261f8eb6a4a7e313e4bb74abf150,
+    //   2.50 ether, 1
+    // );
   }
 
   /// @dev listingsLength(): Return number of listings

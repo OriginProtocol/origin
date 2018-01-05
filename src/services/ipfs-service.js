@@ -15,14 +15,13 @@ class IpfsService {
     this.ipfsGatewayPort = process.env.IPFS_GATEWAY_PORT || ''
     this.ipfsProtocol = 'https'
 
-    console.log("this.ipfsDomain:" + this.ipfsDomain)
     this.ipfs = ipfsAPI(this.ipfsDomain, this.ipfsApiPort, {protocol: this.ipfsProtocol})
     this.ipfs.swarm.peers(function(error, response) {
       if (error) {
-        console.error("Can't connect to the IPFS API.")
+        console.error("IPFS - Can't connect to the IPFS API.")
         console.error(error)
       } else {
-        console.log("IPFS - connected to " + response.length + " peers")
+        console.log(`IPFS - connected to ${response.length} peers`)
       }
     });
 

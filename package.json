@@ -1,6 +1,6 @@
 {
-  "name": "react-box",
-  "version": "0.1.0",
+  "name": "origin-demo-dapp",
+  "version": "0.2.0",
   "private": true,
   "devDependencies": {
     "autoprefixer": "6.5.1",
@@ -15,7 +15,6 @@
     "cross-spawn": "4.0.2",
     "css-loader": "0.26.0",
     "detect-port": "1.0.1",
-    "dotenv": "2.0.0",
     "eslint": "3.8.1",
     "eslint-config-react-app": "^0.5.0",
     "eslint-loader": "1.6.0",
@@ -51,12 +50,16 @@
   "dependencies": {
     "bs58": "^4.0.1",
     "dotenv": "^2.0.0",
-    "ethereumjs-testrpc": "^4.0.1",
+    "ethereumjs-testrpc": "^4.1.3",
     "fetch": "^1.1.0",
-    "ipfs-api": "^14.1.1",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
-    "react-jsonschema-form": "^0.49.0"
+    "ipfs-api": "^14.3.7",
+    "react": "^15.6.2",
+    "react-dom": "^15.6.2",
+    "react-js-pagination": "^3.0.0",
+    "react-jsonschema-form": "^0.49.0",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "react-web3": "github:wanderingstan/react-web3#state_didchange_fix"
   },
   "scripts": {
     "start": "node scripts/start.js",
