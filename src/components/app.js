@@ -30,7 +30,7 @@ function NetworkCheck(props, context) {
    * }
    */
   if ((window.location.hostname === "demo.originprotocol.com") &&
-    (parseInt(web3Context.networkId) != 4)) {
+    (parseInt(web3Context.networkId, 10) !== 4)) {
     return (
       <Overlay imageUrl="/images/flat_cross_icon.svg">
         MetaMask should be on <strong>Rinkeby</strong> Network.<br />

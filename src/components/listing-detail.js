@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import contractService from '../services/contract-service'
 import ipfsService from '../services/ipfs-service'
-import { Link } from 'react-router-dom'
 
 import Overlay from './overlay'
 
@@ -29,8 +28,6 @@ class ListingsDetail extends Component {
     }
 
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
-
-    // console.log(`ETH USD: ${cc.price('ETH','USD')}`)
   }
 
   loadListing() {

@@ -22,7 +22,7 @@ class ListingsGrid extends Component {
   componentWillMount() {
     contractService.getAllListingIds()
     .then((ids) => {
-      const showIds = ids.filter((i)=>hideList.indexOf(i) < 0)
+      const showIds = ids.filter((i)=>hideList[4].indexOf(i) < 0)
       this.setState({ listingIds: showIds })
       console.log(`Listing Ids:`)
       console.log(this.state.listingIds)
