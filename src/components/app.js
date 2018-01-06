@@ -45,35 +45,40 @@ NetworkCheck.contextTypes = {
   web3: PropTypes.object
 };
 
-
-
 const NavBar = (props) => {
   return (
-    <div className="navbar">
+    <nav className="navbar">
       <div className="container">
         <Link to="/">
-          <img src="/images/origin-logo.png" alt="Origin Protocol"/>
+          <div className="logo-container">
+            <img src="/images/origin-logo.png"
+              srcSet="/images/origin-logo@2x.png 2x,
+                /images/origin-logo@3x.png 3x"
+              className="origin-logo" alt="Origin Protocol"/>
+          </div>
         </Link>
         <NetworkCheck />
         {!props.hideCreateButton &&
           <div className="navbar-create">
-            <Link to="/create">Create a Listing</Link>
+            <Link to="/create">
+              Create Listing
+            </Link>
           </div>
         }
       </div>
-    </div>
+    </nav>
   )
 }
 
 const HomePage = () => {
   return (
-    <div>
+    <main>
       <NavBar />
       <div className="container">
         <Listings />
       </div>
       <Footer />
-    </div>
+    </main>
   )
 }
 
@@ -103,7 +108,10 @@ const Footer = (props) => {
         <div className="row">
           <div className="col-12 col-md-6">
             <div className="logo-container">
-              <img src="/images/origin-logo.png" alt="Origin Protocol" className="origin-logo"/>
+              <img src="/images/origin-logo.png"
+                srcSet="/images/origin-logo@2x.png 2x,
+                  /images/origin-logo@3x.png 3x"
+                className="origin-logo" alt="Origin Protocol"/>
             </div>
             <p className="company-mission">
               Origin is building the sharing economy of tomorrow. Buyers and sellers will be able to transact without rent-seeking middlemen. We believe in lowering transaction fees, reducing censorship and regulation, and giving early participants in the community a stake in the network.

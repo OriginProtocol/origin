@@ -37,7 +37,7 @@
     },
     "pictures": {
       "type": "array",
-      "title": "Pictures",
+      "title": "Upload pictures",
       "items": {
         "type": "string",
         "format": "data-url"

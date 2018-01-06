@@ -119,7 +119,7 @@ class ListingsDetail extends Component {
             ))}
           </div>
         }
-        <div className="container">
+        <div className="container listing-container">
           <div className="row">
             <div className="col-12 col-md-8 detail-info-box">
               <div className="category">{this.state.category}</div>
