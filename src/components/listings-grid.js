@@ -23,7 +23,7 @@ class ListingsGrid extends Component {
       if (window.location.hostname !== "demo.originprotocol.com") {
         resolve([])
       } else {
-        return (
+        resolve (
           fetch('https://raw.githubusercontent.com/OriginProtocol/demo-dapp/hide_list/hidelist.json')
           .then((response) => response.json())
         )
