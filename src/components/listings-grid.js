@@ -18,39 +18,34 @@ class ListingsGrid extends Component {
   }
 
   componentWillMount() {
-
-    const hideListPromise = fetch('https://raw.githubusercontent.com/OriginProtocol/demo-dapp/master/public/schemas/announcements.json')
-      .then((response) => response.json())
+    // Get listings to hide if on demo
+    const hideListPromise = new Promise((resolve, reject) => {
+      if (window.location.hostname !== "demo.originprotocol.com") {
+        resolve([])
+      } else {
+        return (
+          fetch('https://raw.githubusercontent.com/OriginProtocol/demo-dapp/hide_list/hidelist.json')
+          .then((response) => response.json())
+        )
+      }
+    })
+    // Get all listings from contract
     const allListingsPromise = contractService.getAllListingIds()
     .catch((error) => {
       if (error.message.indexOf("(network/artifact mismatch)") > 0) {
         alert("The Origin Contract was not found on this network.\nYou may need to change networks, or deploy the contract.")
       }
     })
-
+    // Wait for both to finish
     Promise.all([hideListPromise, allListingsPromise])
-    .then((hideList, ids) => {
-      console.log("all!")
-      console.log(hideList, ids);
-      // const showIds = ids.filter((i)=>hideList[4].indexOf(i) < 0)
-      // this.setState({ listingIds: showIds })
-      // console.log(`Listing Ids:`)
-      // console.log(this.state.listingIds)
+    .then(([hideList, ids]) => {
+      const showIds = ids ? ids.filter((i)=>hideList.indexOf(i) < 0) : []
+      this.setState({ listingIds: showIds })
     })
     .catch((error) => {
+      console.log(error)
       alert(error.message)
     })
-
-
-    // .then((ids) => {
-    //   const showIds = ids.filter((i)=>hideList[4].indexOf(i) < 0)
-    //   this.setState({ listingIds: showIds })
-    //   console.log(`Listing Ids:`)
-    //   console.log(this.state.listingIds)
-    //   return ids
-    // })
-
-
   }
 
   handlePageChange(pageNumber) {
