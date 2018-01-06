@@ -26,7 +26,7 @@ fieldset {
 }
 
 h1 {
-  font-size: 2.1rem;
+  font-size: 2.0rem;
 }
 
 h2 {
@@ -158,53 +158,52 @@ a:hover {
   margin-bottom: 40px;
 }
 
+.listings-grid h1 {
+  margin-bottom: 40px;
+}
+
 .listing-card {
   margin-bottom: 40px;
 }
 
 .listing-card .category {
-  font-size: 14px;
-  text-align: left;
+  font-size: 0.75rem;
   color: #455d75;
   text-transform: uppercase;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin: 15px 0px 5px 0px;
 }
 
 .listing-card .title {
   font-family: 'Poppins', 'Helvetica Neue', 'Arial', sans-serif;
-  font-size: 24px;
-  text-align: left;
+  font-size: 1.2rem;
   color: #455d75;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin: 5px 0px;
 }
 
 .listing-card .price {
-  font-size: 18px;
   line-height: 1.4;
   color: #111d28;
 }
 
 .listing-card .sold-banner {
   margin-left: 10px;
-  padding: 0px 9px 1px 9px;
+  padding: 1px 8px 2px 8px;
   background-color: #6e3bea;
   color: white;
-  border-radius: 5px;
-  font-size: 18px;
-  font-weight: normal;
+  border-radius: 8px;
+  font-weight: 400;
+  font-size: 0.9rem;
 }
 
 .listing-card .photo {
-  height: 220px;
   width: 100%;
+  height: 240px;
   overflow: hidden;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
+  box-shadow: 0 0 3px rgba(0,0,0,0.3);
+  border-radius: 3px;
 }
 
 /* Listing Detail */
@@ -212,12 +211,11 @@ a:hover {
 .carousel {
   width: 100%;
   height: 400px;
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
-  margin-top: 1px;
-  margin-bottom: 50px;
-  background-color: #111111;
+  border-top: 1px solid #282727;
+  background-color: #282727;
 }
 
 .carousel .photo {
@@ -237,36 +235,30 @@ a:hover {
   overflow: hidden;
 }
 
-.listing-detail {
-  /* When description is short, don't want footer overlapping buy-box */
-  min-height: 675px;
+.listing-container {
+  margin: 80px auto;
 }
 
-.listing-detail .category {
-  font-size: 14px;
-  text-align: left;
+.listing-container .category {
+  font-size: 0.875rem;
   color: #455d75;
   text-transform: uppercase;
+  margin-bottom: 15px;
 }
 
-.listing-detail .title {
+.listing-container .title {
   font-family: 'Poppins', 'Helvetica Neue', 'Arial', sans-serif;
-  font-weight: 300;
-  font-size: 40px;
-  text-align: left;
+  font-size: 1.5rem;
   color: #455d75;
+  margin-bottom: 15px;
 }
 
-.listing-detail .description {
-  font-family: 'Poppins', 'Helvetica Neue', 'Arial', sans-serif;
-  font-weight: 300;
-  font-size: 18px;
-  text-align: left;
+.listing-container .description {
   color: #455d75;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 }
 
-.listing-detail .buy-box {
+.listing-container .buy-box {
   border-radius: 5px;
   background-color: #2e3f53;
   padding: 40px;
@@ -274,11 +266,11 @@ a:hover {
   color: #ffffff;
 }
 
-.listing-detail .price {
+.listing-container .price {
   float:right;
 }
 
-.listing-detail .buy-box button {
+.listing-container .buy-box button {
   height: 50px;
   width: 100%;
   margin-top: 35px;
@@ -286,24 +278,24 @@ a:hover {
   background-color: #1a82ff;
   border: solid 1px #1a82ff;
   color: #ffffff;
-  font-weight: 900;
+  font-weight: 700;
 }
 
-.listing-detail .buy-box .sold-banner {
+.listing-container .buy-box .sold-banner {
   height: 50px;
   width: 100%;
   margin-top: 35px;
   line-height: 46px;
   text-align: center;
-  font-weight: bold;
+  font-weight: 700;
   border-top: 1px solid #ffffff;
   border-bottom: 1px solid #ffffff;
 }
-.listing-detail .buy-box .sold-banner img {
+.listing-container .buy-box .sold-banner img {
   margin-right: 4px;
 }
 
-.listing-detail .debug {
+.listing-container .debug {
   display: none;
   unicode-bidi: embed;
   font-family: monospace;
@@ -414,10 +406,6 @@ label[for=root_pictures]:hover {
   position: relative;
   top: -50px;
   left: -110px;
-}
-
-.listing-preview {
-  margin-top: 80px;
 }
 
 .listing-form .preview {
