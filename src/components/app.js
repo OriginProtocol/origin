@@ -45,35 +45,38 @@ NetworkCheck.contextTypes = {
   web3: PropTypes.object
 };
 
-
-
 const NavBar = (props) => {
   return (
-    <div className="navbar">
+    <nav className="navbar">
       <div className="container">
         <Link to="/">
-          <img src="/images/origin-logo.png" alt="Origin Protocol"/>
+          <div class="logo-container">
+            <img src="images/origin-logo.png"
+              srcset="images/origin-logo@2x.png 2x,
+                images/origin-logo@3x.png 3x"
+              class="origin-logo" alt="Origin Protocol"/>
+          </div>
         </Link>
         <NetworkCheck />
         {!props.hideCreateButton &&
           <div className="navbar-create">
-            <Link to="/create">Create a Listing</Link>
+            <Link to="/create">Create Listing</Link>
           </div>
         }
       </div>
-    </div>
+    </nav>
   )
 }
 
 const HomePage = () => {
   return (
-    <div>
+    <main>
       <NavBar />
       <div className="container">
         <Listings />
       </div>
       <Footer />
-    </div>
+    </main>
   )
 }
 

@@ -42,17 +42,17 @@
       "type": "string", 
       "title": "Location"
     },
+    "price": {
+      "type": "number", 
+      "title": "Price in ETH:"
+    },
     "pictures": {
       "type": "array",
-      "title": "Pictures",
+      "title": "Upload pictures",
       "items": {
         "type": "string",
         "format": "data-url"
       }
-    },
-    "price": {
-      "type": "number", 
-      "title": "Price in ETH:"
     }
   }
 }
