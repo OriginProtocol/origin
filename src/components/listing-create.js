@@ -93,14 +93,8 @@ class ListingCreate extends Component {
     return (
       <div className="container listing-form">
         { this.state.step === this.STEP.PICK_SCHEMA &&
-          <div className="pick-schema">
-            <div className="row schema-options">
-              <div className="col-md-5">
-                <h1>Let's get started creating your listing</h1>
-              </div>
-            </div>
+          <div className="step-container pick-schema">
             <div className="row flex-sm-row-reverse">
-
              <div className="col-md-5 offset-md-2">
                 <div className="info-box">
                   <h2>Choose a schema for your product or service</h2>
@@ -111,7 +105,8 @@ class ListingCreate extends Component {
 
               <div className="col-md-5">
                 <label>STEP {Number(this.state.step)}</label>
-                <h2>What Type of listing do you want to create?</h2>
+                <h2>What type of listing do you want to create?</h2>
+                <div className="schema-options">
                   {this.schemaList.map(schema => (
                     <div className="schema-selection radio" key={schema.type} >
                       <label>
@@ -120,19 +115,22 @@ class ListingCreate extends Component {
                           value={schema.type}
                           checked={this.state.selectedSchemaType === schema.type}
                           onChange={() => this.setState({selectedSchemaType:schema.type})}
-                        /> {schema.name}
+                        /> &nbsp;{schema.name}
                       </label>
                     </div>
                   ))}
+                </div>
+                <div className="btn-container">
                   <button className="float-right btn btn-primary" onClick={() => this.handleSchemaSelection()}>
                     Next
                   </button>
+                </div>
               </div>
             </div>
           </div>
         }
         { this.state.step === this.STEP.DETAILS &&
-          <div className="schema-details">
+          <div className="step-container schema-details">
             <div className="row flex-sm-row-reverse">
                <div className="col-md-5 offset-md-2">
                   <div className="info-box">
@@ -149,7 +147,7 @@ class ListingCreate extends Component {
                   formData={this.state.formListing.formData}
                   onError={(errors) => console.log(`react-jsonschema-form errors: ${errors.length}`)}
                 >
-                  <div>
+                  <div class="btn-container">
                     <button className="btn btn-other" onClick={() => this.setState({step: this.STEP.PICK_SCHEMA})}>
                       Back
                     </button>
@@ -164,9 +162,7 @@ class ListingCreate extends Component {
           </div>
         }
         { (this.state.step >= this.STEP.PREVIEW) &&
-
-          <div className="listing-preview">
-
+          <div className="step-container listing-preview">
             {this.state.step === this.STEP.METAMASK &&
               <Overlay imageUrl="/images/spinner-animation.svg">
                 Confirm transaction<br />
@@ -185,7 +181,6 @@ class ListingCreate extends Component {
                 <Link to="/">See All Listings</Link>
               </Overlay>
             }
-
             <div className="row">
               <div className="col-md-7">
                 <label className="create-step">STEP {Number(this.state.step)}</label>
@@ -202,7 +197,7 @@ class ListingCreate extends Component {
                 <div className="preview">
                   <ListingDetail listingJson={this.state.formListing.formData} />
                 </div>
-                <div>
+                <div className="btn-container">
                   <button className="btn btn-other float-left" onClick={() => this.setState({step: this.STEP.DETAILS})}>
                     Back
                   </button>

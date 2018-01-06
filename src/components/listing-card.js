@@ -42,7 +42,7 @@ class ListingCard extends Component {
           <div className="photo" style={{backgroundImage:`url("${
             (this.state.pictures && this.state.pictures.length>0) ?
                 this.state.pictures[0] :
-                '/images/missing-image-placeholder.png'}")`
+                '/images/default-image.jpg'}")`
           }}>
           </div>
           <div className="category">{this.state.category}</div>
