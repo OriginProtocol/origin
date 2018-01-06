@@ -5,13 +5,14 @@
   "required": ["name","category","description"],
   "properties": {
     "name": {
-      "type": "string", 
+      "type": "string",
       "title": "Title",
-       "minLength": "3"
+      "minLength": "3",
+      "maxLength": "100",
     },
     "category": {
-      "type": "string", 
-      "title": "Category", 
+      "type": "string",
+      "title": "Category",
       "enum": [
         "Activities",
         "Artists",
@@ -31,9 +32,10 @@
       "default": "Local News"
     },
     "description": {
-      "type": "string", 
-      "title": "Description", 
-      "minLength": "10"
+      "type": "string",
+      "title": "Description",
+      "minLength": "10",
+      "maxLength": "1024",
     },
     "pictures": {
       "type": "array",
