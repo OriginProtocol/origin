@@ -178,7 +178,11 @@ a:hover {
   font-size: 1.2rem;
   color: #455d75;
   margin: 5px 0px;
-}
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  }
 
 .listing-card .price {
   line-height: 1.4;
@@ -386,7 +390,7 @@ label[for=root_pictures]:hover {
   border-radius: 5px;
   padding: 30px;
   margin-bottom: 30px;
-  box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.2);  
+  box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.2);
 }
 
 .listing-form  .info-box h2 {

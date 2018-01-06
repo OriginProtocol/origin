@@ -5,13 +5,14 @@
   "required": ["name","category","description","price"],
   "properties": {
     "name": {
-      "type": "string", 
+      "type": "string",
       "title": "Title",
-       "minLength": "3"
+      "minLength": "3",
+      "maxLength": "100"
     },
     "category": {
-      "type": "string", 
-      "title": "Category", 
+      "type": "string",
+      "title": "Category",
       "enum": [
         "Business Services",
         "Counseling",
@@ -34,16 +35,17 @@
       "default":"Home Cleaning"
     },
     "description": {
-      "type": "string", 
-      "title": "Description", 
-      "minLength": "10"
+      "type": "string",
+      "title": "Description",
+      "minLength": "10",
+      "maxLength": "1024"
     },
     "location": {
-      "type": "string", 
+      "type": "string",
       "title": "Location"
     },
     "price": {
-      "type": "number", 
+      "type": "number",
       "title": "Price in ETH:"
     },
     "pictures": {
