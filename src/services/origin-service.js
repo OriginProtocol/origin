@@ -35,12 +35,25 @@ class OriginService {
       .catch((error) => {
         reject(`IPFS Failure: ${error}`)
       });
-
     });
   }
 
-
-
+  getListing(self) {
+    contractService.getListing(self.props.listingId)
+    .then((listingContractObject) => {
+      self.setState(listingContractObject)
+        ipfsService.getListing(self.state.ipfsHash)
+        .then((listingJson) => {
+          self.setState(JSON.parse(listingJson).data)
+        })
+        .catch((error) => {
+          console.error(`Error fetching IPFS info for listingId: ${self.props.listingId}`)
+        })
+    })
+    .catch((error) => {
+      console.error(`Error fetching conract info for listingId: ${self.props.listingId}`)
+    })
+  }
 }
 
 const originService = new OriginService()
