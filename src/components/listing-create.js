@@ -14,6 +14,10 @@ class ListingCreate extends Component {
   constructor(props) {
     super(props)
 
+    // This is non-ideal fix until IPFS can correctly return 443 errors
+    // Server limit is 2MB, withg 100K safety buffer
+    this.MAX_UPLOAD_BYTES = (2e6 - 1e5)
+
     // Enum of our states
     this.STEP = {
       PICK_SCHEMA: 1,
@@ -58,10 +62,38 @@ class ListingCreate extends Component {
   }
 
   onDetailsEntered(formListing) {
-    this.setState({
-      formListing: formListing,
-      step: this.STEP.PREVIEW
-    })
+    function roughSizeOfObject( object ) {
+        var objectList = [];
+        var stack = [ object ];
+        var bytes = 0;
+        while ( stack.length ) {
+            var value = stack.pop();
+            if ( typeof value === 'boolean' ) {
+                bytes += 4;
+            } else if ( typeof value === 'string' ) {
+                bytes += value.length * 2;
+            } else if ( typeof value === 'number' ) {
+                bytes += 8;
+            }
+            else if (typeof value === 'object'
+              && objectList.indexOf( value ) === -1)
+            {
+                objectList.push( value );
+                for( var i in value ) {
+                    stack.push( value[ i ] );
+                }
+            }
+        }
+        return bytes;
+    }
+    if (roughSizeOfObject(formListing.formData) > this.MAX_UPLOAD_BYTES) {
+      alert("Your listing is too large. Consider using fewer or smaller images.\n\nPress 'Upload Images' to change your selection.")
+    } else {
+      this.setState({
+        formListing: formListing,
+        step: this.STEP.PREVIEW
+      })
+    }
   }
 
   onSubmitListing(formListing, selectedSchemaType) {
