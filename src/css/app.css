@@ -262,6 +262,16 @@ a:hover {
   margin-bottom: 30px;
 }
 
+.listing-container .lister-label {
+  font-family: 'Poppins', 'Helvetica Neue', 'Arial', sans-serif;
+  color: #455d75;
+  font-size: 1.5rem;
+}
+
+.listing-container .lister-address {
+  color: #455d75;
+}
+
 .listing-container .buy-box {
   border-radius: 5px;
   background-color: #2e3f53;

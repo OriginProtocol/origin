@@ -125,6 +125,10 @@ class ListingsDetail extends Component {
               <div className="category">{this.state.category}</div>
               <div className="title">{this.state.name}</div>
               <div className="description">{this.state.description}</div>
+              <div className="lister">
+                <label className="lister-label">Creator </label>
+                <h6 className="lister-address">{this.state.lister}</h6>
+              </div>
               <a href={`http://gateway.originprotocol.com/ipfs/${this.state.ipfsHash}`} target="_blank">
                 View on IPFS <big>&rsaquo;</big>
               </a>
