@@ -79,7 +79,7 @@ npm run start
 ```
 
 11. A browser will open to http://localhost:3000
-![Origin-homepage](https://user-images.githubusercontent.com/673455/30517963-0603f3d8-9b2d-11e7-9ef4-327b747695eb.png)
+![Origin-homepage](https://user-images.githubusercontent.com/673455/34650232-ca4df39c-f37a-11e7-9b18-18861f282dff.png)
 
 12. Try it! Create a listing and post it to IPFS and Ethereum.
 
