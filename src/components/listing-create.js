@@ -87,7 +87,7 @@ class ListingCreate extends Component {
         return bytes;
     }
     if (roughSizeOfObject(formListing.formData) > this.MAX_UPLOAD_BYTES) {
-      alert("Your listing is too large. Consider using fewer or smaller images.\n\nPress 'Select photos' to change your selection.")
+      alert("Your listing is too large. Consider using fewer or smaller photos.")
     } else {
       this.setState({
         formListing: formListing,
