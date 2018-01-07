@@ -46,7 +46,7 @@
     },
     "price": {
       "type": "number",
-      "title": "Price in ETH:"
+      "title": "Price in ETH"
     },
     "pictures": {
       "type": "array",
