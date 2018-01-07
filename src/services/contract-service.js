@@ -74,6 +74,10 @@ class ContractService {
           }
           resolve(range(0, Number(listingsLength)))
         })
+        .catch((error) => {
+          console.log(`Can't get number of listings.`)
+          reject(error)
+        })
       })
       .catch((error) => {
         console.log(`Contract not deployed`)
