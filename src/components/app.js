@@ -117,7 +117,7 @@ const Footer = (props) => {
               Origin is building the sharing economy of tomorrow. Buyers and sellers will be able to transact without rent-seeking middlemen. We believe in lowering transaction fees, reducing censorship and regulation, and giving early participants in the community a stake in the network.
             </p>
             <p>
-              &copy; 2017 Origin, Inc.
+              &copy; 2018 Origin, Inc.
             </p>
           </div>
           <div className="col-12 col-md-6">
@@ -131,7 +131,7 @@ const Footer = (props) => {
                     <a href="https://www.originprotocol.com/product-brief">Product Brief</a>
                   </li>
                   <li>
-                    <a href to="https://www.originprotocol.com/whitepaper">Whitepaper</a>
+                    <a href="https://www.originprotocol.com/whitepaper">Whitepaper</a>
                   </li>
                   <li>
                     <a href="https://github.com/OriginProtocol">Github</a>
