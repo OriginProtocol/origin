@@ -55,9 +55,9 @@ class ListingsGrid extends Component {
 
   render() {
     // Calc listings to show for given page
-    const showListingsIds = this.state.listingIds.reverse().slice(
+    const showListingsIds = this.state.listingIds.slice(
       this.state.listingsPerPage * (this.state.activePage-1),
-      this.state.listingsPerPage * (this.state.activePage))
+      this.state.listingsPerPage * (this.state.activePage)).reverse()
     return (
       <div className="listings-grid">
         <h1>{this.state.listingIds.length} Listings</h1>
