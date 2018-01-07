@@ -45,7 +45,7 @@
     },
     "pictures": {
       "type": "array",
-      "title": "Upload pictures",
+      "title": "Select photos",
       "items": {
         "type": "string",
         "format": "data-url"

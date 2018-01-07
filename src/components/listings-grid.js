@@ -33,7 +33,7 @@ class ListingsGrid extends Component {
     const allListingsPromise = contractService.getAllListingIds()
     .catch((error) => {
       if (error.message.indexOf("(network/artifact mismatch)") > 0) {
-        alert("The Origin Contract was not found on this network.\nYou may need to change networks, or deploy the contract.")
+        console.log("The Origin Contract was not found on this network.\nYou may need to change networks, or deploy the contract.")
       }
     })
     // Wait for both to finish
