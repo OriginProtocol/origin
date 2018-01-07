@@ -1,7 +1,7 @@
 # Origin
 The sharing economy without intermediaries.
 
-## Overview
+## Project Overview
 
 Origin is a sharing economy marketplace that enables buyers and sellers of fractional use goods and services (car-sharing, service-based tasks, home-sharing, etc.) to transact on the distributed, open web. Using the Ethereum blockchain and Interplanetary File System (IPFS), the platform and community are decentralized, allowing for the creation and booking of services and goods without traditional intermediaries.
 
@@ -17,7 +17,7 @@ To accomplish these ambitious goals, the Origin platform is being launched with 
 
 To learn more about this project, please visit [the Origin website](https://www.originprotocol.com) and download our whitepaper.
 
-## Try it on the Rinkeby testnet
+## Try Demo Dapp on the Rinkeby testnet
 
 This demo is currently running on the Rinkeby testnet. You can try it for yourself at:
 
@@ -35,7 +35,7 @@ If you're new to the space, it may be helpful to first familiarize yourself with
  * [IPFS](https://ipfs.io/)
  * [Ethereum](https://www.ethereum.org/)
 
-## Install and run the demo app
+## Install and run Demo DApp locally
 
 Think of this app as a proof of concept and our playground for trying out ideas. While we may eventually reuse pieces of this in production, this is by no means what we envision as the final product. We thought it would be helpful to demonstrate how the various technologies work together from end to end.
 
