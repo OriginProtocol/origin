@@ -128,16 +128,16 @@ const Footer = (props) => {
                 </div>
                 <ul className="footer-links">
                   <li>
-                    <Link to="https://www.originprotocol.com/product-brief">Product Brief</Link>
+                    <a href="https://www.originprotocol.com/product-brief">Product Brief</a>
                   </li>
                   <li>
-                    <Link to="https://www.originprotocol.com/whitepaper">Whitepaper</Link>
+                    <a href to="https://www.originprotocol.com/whitepaper">Whitepaper</a>
                   </li>
                   <li>
-                    <Link to="https://github.com/OriginProtocol">Github</Link>
+                    <a href="https://github.com/OriginProtocol">Github</a>
                   </li>
                   <li>
-                    <Link to="http://docs.originprotocol.com/">Docs</Link>
+                    <a href="http://docs.originprotocol.com/">Docs</a>
                   </li>
                 </ul>
               </div>
@@ -147,19 +147,19 @@ const Footer = (props) => {
                 </div>
                 <ul className="footer-links">
                   <li>
-                    <Link to="http://slack.originprotocol.com">Slack</Link>
+                    <a href="http://slack.originprotocol.com">Slack</a>
                   </li>
                   <li>
-                    <Link to="https://t.me/originprotocol">Telegram</Link>
+                    <a href="https://t.me/originprotocol">Telegram</a>
                   </li>
                   <li>
-                    <Link to="https://medium.com/originprotocol">Medium</Link>
+                    <a href="https://medium.com/originprotocol">Medium</a>
                   </li>
                   <li>
-                    <Link to="https://twitter.com/originprotocol">Twitter</Link>
+                    <a href="https://twitter.com/originprotocol">Twitter</a>
                   </li>
                   <li>
-                    <Link to="https://www.facebook.com/originprotocol">Facebook</Link>
+                    <a href="https://www.facebook.com/originprotocol">Facebook</a>
                   </li>
                 </ul>
               </div>
@@ -169,19 +169,19 @@ const Footer = (props) => {
                 </div>
                 <ul className="footer-links">
                   <li>
-                    <Link to="http://www.originprotocol.com/presale">Presale</Link>
+                    <a href="http://www.originprotocol.com/presale">Presale</a>
                   </li>
                   <li>
-                    <Link to="http://www.originprotocol.com/team">Team</Link>
+                    <a href="http://www.originprotocol.com/team">Team</a>
                   </li>
                   <li>
-                    <Link to="https://angel.co/originprotocol/jobs">Jobs (We're hiring!)</Link>
+                    <a href="https://angel.co/originprotocol/jobs">Jobs (We're hiring!)</a>
                   </li>
                   <li>
-                    <Link to="https://www.google.com/maps/place/845+Market+St+%23450a,+San+Francisco,+CA+94103">845 Market St, #450A, San Francisco, CA 94103</Link>
+                    <a href="https://www.google.com/maps/place/845+Market+St+%23450a,+San+Francisco,+CA+94103">845 Market St, #450A, San Francisco, CA 94103</a>
                   </li>
                   <li>
-                    <Link to="mailto:info@originprotocol.com">info@originprotocol.com</Link>
+                    <a href="mailto:info@originprotocol.com">info@originprotocol.com</a>
                   </li>
                 </ul>
               </div>
