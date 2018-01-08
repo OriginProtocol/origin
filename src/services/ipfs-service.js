@@ -21,7 +21,7 @@ class IpfsService {
         console.error("IPFS - Can't connect to the IPFS API.")
         console.error(error)
       }
-    });
+    })
     IpfsService.instance = this
   }
 
@@ -47,7 +47,7 @@ class IpfsService {
           reject('Failure to submit listing to IPFS')
         }
       })
-    });
+    })
   }
 
   getListing(ipfsHashStr) {
@@ -72,7 +72,7 @@ class IpfsService {
 
       })
 
-    });
+    })
   }
 
   gatewayUrlForHash(ipfsHashStr) {
@@ -84,4 +84,4 @@ class IpfsService {
 
 const ipfsService = new IpfsService()
 
-export default ipfsService;
+export default ipfsService

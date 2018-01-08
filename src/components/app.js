@@ -4,8 +4,8 @@ import {
   Route,
   Link
 } from 'react-router-dom'
-import { Web3Provider } from 'react-web3';
-import PropTypes from 'prop-types';
+import { Web3Provider } from 'react-web3'
+import PropTypes from 'prop-types'
 
 // Components
 import Listings from './listings-grid.js'
@@ -20,7 +20,7 @@ import '../css/poppins.css'
 import '../css/app.css'
 
 function NetworkCheck(props, context) {
-  const web3Context = context.web3;
+  const web3Context = context.web3
   /**
    * web3Context = {
    *   accounts: {Array<string>} - All accounts
@@ -39,14 +39,14 @@ function NetworkCheck(props, context) {
           "Main Network" : `network ${web3Context.networkId}`
         }.
       </Overlay>
-    );
+    )
   }
   else return null
 }
 
 NetworkCheck.contextTypes = {
   web3: PropTypes.object
-};
+}
 
 const NavBar = (props) => {
   return (
