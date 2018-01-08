@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
-import {
-  Link
-} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import originService from '../services/origin-service'
 import contractService from '../services/contract-service'
 

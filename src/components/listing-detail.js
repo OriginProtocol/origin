@@ -55,13 +55,8 @@ class ListingsDetail extends Component {
     else if (this.props.listingJson) {
       // Listing json passed in directly
 
-      // TODO: HACK!
+      // TODO: Determine why we need this hack.
       window.setTimeout(() => {this.setState(this.props.listingJson)}, 1000)
-
-      // TODO: Use Object() to merge..need to look up
-      // for (var prop in this.props.listingJson) {
-      //   this.state[prop] = this.props.listingJson[prop]
-      // }
     }
   }
 
@@ -75,10 +70,7 @@ class ListingsDetail extends Component {
       this.setState({step: this.STEP.PROCESSING})
       contractService.waitTransactionFinished(transactionReceipt.tx)
       .then((blockNumber) => {
-        // Re-load listing to show change
-        // TODO: Some sort of succes page with tx reference?
         this.setState({step: this.STEP.PURCHASED})
-        // this.loadListing()
       })
     })
     .catch((error) => {

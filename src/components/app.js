@@ -55,8 +55,7 @@ const NavBar = (props) => {
         <Link to="/">
           <div className="logo-container">
             <img src="/images/origin-logo.png"
-              srcSet="/images/origin-logo@2x.png 2x,
-                /images/origin-logo@3x.png 3x"
+              srcSet="/images/origin-logo@2x.png 2x, /images/origin-logo@3x.png 3x"
               className="origin-logo" alt="Origin Protocol"/>
           </div>
         </Link>
@@ -112,8 +111,7 @@ const Footer = (props) => {
           <div className="col-12 col-md-6">
             <div className="logo-container">
               <img src="/images/origin-logo.png"
-                srcSet="/images/origin-logo@2x.png 2x,
-                  /images/origin-logo@3x.png 3x"
+                srcSet="/images/origin-logo@2x.png 2x, /images/origin-logo@3x.png 3x"
                 className="origin-logo" alt="Origin Protocol"/>
             </div>
             <p className="company-mission">
@@ -178,7 +176,7 @@ const Footer = (props) => {
                     <a href="http://www.originprotocol.com/team">Team</a>
                   </li>
                   <li>
-                    <a href="https://angel.co/originprotocol/jobs">Jobs (We're hiring!)</a>
+                    <a href="https://angel.co/originprotocol/jobs">Jobs (We&rsquo;re hiring!)</a>
                   </li>
                   <li>
                     <a href="https://www.google.com/maps/place/845+Market+St+%23450a,+San+Francisco,+CA+94103">845 Market St, #450A, San Francisco, CA 94103</a>
