@@ -34,13 +34,12 @@ function NetworkCheck(props, context) {
     return (
       <Overlay imageUrl="/images/flat_cross_icon.svg">
         MetaMask should be on <strong>Rinkeby</strong> Network.<br />
-        Currently on {
-          web3Context.networkId == 1 ?
-          "Currently on Main Network" :
+        { web3Context.networkId == 1 ?
+          "Currently on Main Network." :
           web3Context.networkId ?
-          `Currently on network ${web3Context.networkId}` :
+          `Currently on network ${web3Context.networkId}.` :
           ""
-        }.
+        }
       </Overlay>
     )
   }
