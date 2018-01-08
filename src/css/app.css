@@ -131,6 +131,7 @@ a:hover {
 
 .btn:hover {
   background-color:#0169e6;
+  color: white;
 }
 
 .field-description {
