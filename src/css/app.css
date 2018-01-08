@@ -375,13 +375,23 @@ select.form-control:not([size]):not([multiple]){
 }
 
 label[for=root_pictures] {
-  color: #007bff;
-  font-size: 1.1rem;
+  margin-top: 10px;
+  border-radius: 5px;
+  border: solid 1px #c2cbd3;
   margin-bottom: 0px;
+  padding: 10px 10px 10px 35px;
+  width: 100%;
+  color: #455d75;
+  background-image: url(/images/camera.png);
+  background-repeat: no-repeat;
+  background-position: 10px 50%;
+  background-size: 18px 15px;
+  font-weight: normal;
 }
 
 label[for=root_pictures]:hover {
   cursor: pointer;
+  border: solid 1px #1a82ff;
 }
 
 .file-info {
