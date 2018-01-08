@@ -10,7 +10,7 @@ class ListingsGrid extends Component {
     super(props)
     this.state = {
       listingIds: [],
-      listingsPerPage: 10,
+      listingsPerPage: 12,
       activePage: 1
     }
 
