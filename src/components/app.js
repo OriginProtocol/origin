@@ -29,7 +29,7 @@ function NetworkCheck(props, context) {
    *   networkId: {string} - The network ID (e.g. '1' for main net)
    * }
    */
-  if ((window.location.hostname !== "demo.originprotocol.com") &&
+  if ((window.location.hostname === "demo.originprotocol.com") &&
     (parseInt(web3Context.networkId, 10) !== 4)) {
     return (
       <Overlay imageUrl="/images/flat_cross_icon.svg">
