@@ -17,7 +17,9 @@ class ListingCard extends Component {
   }
 
   componentDidMount() {
-    originService.getListing(this)
+    originService.getListing(this.props.listingId).then((result) => {
+      this.setState({ ...result.contract, ...JSON.parse(result.listing).data });
+    })
   }
 
   render() {

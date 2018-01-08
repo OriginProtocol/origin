@@ -38,21 +38,24 @@ class OriginService {
     });
   }
 
-  getListing(self) {
-    contractService.getListing(self.props.listingId)
-    .then((listingContractObject) => {
-      self.setState(listingContractObject)
-        ipfsService.getListing(self.state.ipfsHash)
-        .then((listingJson) => {
-          self.setState(JSON.parse(listingJson).data)
-        })
-        .catch((error) => {
-          console.error(`Error fetching IPFS info for listingId: ${self.props.listingId}`)
-        })
-    })
-    .catch((error) => {
-      console.error(`Error fetching conract info for listingId: ${self.props.listingId}`)
-    })
+  getListing(listingId) {
+    return contractService.getListing(listingId)
+      .then((listingContractObject) => {
+        const { ipfsHash } = listingContractObject
+        return ipfsService.getListing(ipfsHash)
+          .then((listingJson) => {
+            return {
+              contract: listingContractObject,
+              listing: listingJson
+            }
+          })
+          .catch((error) => {
+            console.error(`Error fetching IPFS info for listingId: ${self.props.listingId}`)
+          })
+      })
+      .catch((error) => {
+        console.error(`Error fetching conract info for listingId: ${self.props.listingId}`)
+      })
   }
 }
 
