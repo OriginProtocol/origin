@@ -197,25 +197,49 @@ const Footer = (props) => {
   )
 }
 
-// Handle changing of Metamask account
-// const onChangeAccount = (nextAddress) => (console.log(nextAddress))
+const AccountUnavailableScreen = (props) => {
+  return (
+    <main>
+      <NavBar />
+      <Overlay imageUrl="/images/flat_cross_icon.svg">
+        You are not signed in to MetaMask.<br />
+      </Overlay>
+      <div className="container empty-page">
+      </div>
+      <Footer />
+    </main>
+  )
+}
 
-// TODO: (Stan) Handle missing Metamask
-// const web3UnavailableScreen = () => (<div>You need web3!</div>)}
+const Web3UnavailableScreen = (props) => {
+  return (
+    <main>
+      <NavBar />
+      <Overlay imageUrl="/images/flat_cross_icon.svg">
+        MetaMask not installed. <br />
+        <a target="_blank" href="https://metamask.io/">Download MetaMask</a>
+      </Overlay>
+      <div className="container empty-page">
+      </div>
+      <Footer />
+    </main>
+  )
+}
 
-// TODO: (Stan) Handle locked Metamask
-// const accountUnavailableScreen = () => (<div>Please unlock your wallet!</div>)
 
 // Top level component
 const App = () => (
-  <Web3Provider>
-    <Router>
+  <Router>
+    <Web3Provider
+      web3UnavailableScreen={() => <Web3UnavailableScreen />}
+      accountUnavailableScreen={() => <AccountUnavailableScreen />}
+    >
       <div>
         <Route exact path="/" component={HomePage}/>
         <Route path="/listing/:listingId" component={ListingDetailPage}/>
         <Route path="/create" component={CreateListingPage}/>
       </div>
-    </Router>
-  </Web3Provider>
+    </Web3Provider>
+  </Router>
 )
 export default App

@@ -152,6 +152,12 @@ a:hover {
 
 }
 
+/* Special case when we need to render an empty page,
+   but keep footer from toucher navbar */
+.empty-page {
+  height: 800px;
+}
+
 /* Listings */
 
 .listings-grid {
