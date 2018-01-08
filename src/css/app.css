@@ -190,13 +190,17 @@ a:hover {
 }
 
 .listing-card .sold-banner {
-  margin-left: 10px;
-  padding: 1px 8px 2px 8px;
-  background-color: #6e3bea;
-  color: white;
-  border-radius: 8px;
+  display: inline-block;
+  width: 70px;
+  height: 22px;
+  background-image: url(/images/card-sold-tag.svg);
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: 58px 20px;
   font-weight: 400;
   font-size: 0.9rem;
+  color: white;
+  padding: 0px 8px 5px 20px;
 }
 
 .listing-card .photo {
