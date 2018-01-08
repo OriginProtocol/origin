@@ -80,7 +80,7 @@ class ListingCreate extends Component {
           && objectList.indexOf(value) === -1)
         {
           objectList.push(value);
-          for(var i in value) {
+          for (var i in value) {
             if (value.hasOwnProperty(i)) {
               stack.push(value[i]);
             }

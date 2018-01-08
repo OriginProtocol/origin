@@ -20,11 +20,8 @@ class IpfsService {
       if (error) {
         console.error("IPFS - Can't connect to the IPFS API.")
         console.error(error)
-      } else {
-        console.log(`IPFS - connected to ${response.length} peers`)
       }
     });
-
     IpfsService.instance = this
   }
 
