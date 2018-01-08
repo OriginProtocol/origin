@@ -54,9 +54,7 @@ class ListingsDetail extends Component {
     }
     else if (this.props.listingJson) {
       // Listing json passed in directly
-
-      // TODO: Determine why we need this hack.
-      window.setTimeout(() => {this.setState(this.props.listingJson)}, 1000)
+      this.setState(this.props.listingJson)
     }
   }
 
