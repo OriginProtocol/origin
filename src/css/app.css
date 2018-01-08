@@ -341,6 +341,18 @@ a:hover {
   margin-bottom: 15px;
   padding: 10px;
   width: 100%;
+  color: #455d75;
+  font-weight: normal;
+}
+
+.schema-selection.selected  {
+  border: solid 1px #2e3f53;
+  background-color: #2e3f53;
+  color: #ffffff;
+  background-image: url(/images/checkmark.svg);
+  background-repeat: no-repeat;
+  background-position: 97% 50%;
+  background-size: 18px 18px;
 }
 
 .field-description {

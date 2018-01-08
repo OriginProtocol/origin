@@ -143,15 +143,15 @@ class ListingCreate extends Component {
                 <h2>What type of listing do you want to create?</h2>
                 <div className="schema-options">
                   {this.schemaList.map(schema => (
-                    <div className="schema-selection radio" key={schema.type} >
-                      <label>
-                        <input
-                          type="radio"
-                          value={schema.type}
-                          checked={this.state.selectedSchemaType === schema.type}
-                          onChange={() => this.setState({selectedSchemaType:schema.type})}
-                        /> &nbsp;{schema.name}
-                      </label>
+                    <div
+                      className={
+                        this.state.selectedSchemaType === schema.type ?
+                        'schema-selection selected' : 'schema-selection'
+                      }
+                      key={schema.type}
+                      onClick={() => this.setState({selectedSchemaType:schema.type})}
+                    >
+                      {schema.name}
                     </div>
                   ))}
                 </div>
