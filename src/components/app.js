@@ -20,8 +20,6 @@ import '../css/poppins.css'
 import '../css/app.css'
 
 
-
-
 const HomePage = () => {
   return (
     <main>
@@ -52,7 +50,7 @@ const CreateListingPage = () => (
   </div>
 )
 
-const AccountUnavailableScreen = (props) => {
+const AccountUnavailableScreen = () => {
   return (
     <main>
       <NavBar />
@@ -65,13 +63,16 @@ const AccountUnavailableScreen = (props) => {
   )
 }
 
-const Web3UnavailableScreen = (props) => {
+const Web3UnavailableScreen = () => {
   return (
     <main>
       <NavBar />
       <Overlay imageUrl="/images/flat_cross_icon.svg">
-        MetaMask extension not installed. <br />
-        <a target="_blank" href="https://metamask.io/">Get MetaMask</a>
+        MetaMask extension not installed.<br />
+        <a target="_blank" href="https://metamask.io/">Get MetaMask</a><br />
+        <a target="_blank" href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58">
+          Full Instructions for Demo
+        </a>
       </Overlay>
       <div className="container empty-page" />
       <Footer />

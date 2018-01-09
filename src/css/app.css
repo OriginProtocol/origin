@@ -117,6 +117,14 @@ a:hover {
   margin-bottom: 30px;
 }
 
+.overlay-box a {
+  color: #26D198;
+}
+.overlay-box a:hover {
+  color: #59FFCB;
+}
+
+
 .btn-container {
   margin: 30px auto;
 }
