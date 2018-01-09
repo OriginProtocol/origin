@@ -74,6 +74,7 @@ class ListingsDetail extends Component {
     .catch((error) => {
       console.log(error)
       alert(error)
+      this.setState({step: this.STEP.VIEW})
     })
   }
 

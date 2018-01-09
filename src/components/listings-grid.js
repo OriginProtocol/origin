@@ -40,7 +40,7 @@ class ListingsGrid extends Component {
     Promise.all([hideListPromise, allListingsPromise])
     .then(([hideList, ids]) => {
       const showIds = ids ? ids.filter((i)=>hideList.indexOf(i) < 0) : []
-      this.setState({ listingIds: showIds })
+      this.setState({ listingIds: showIds.reverse() })
     })
     .catch((error) => {
       console.log(error)
@@ -57,7 +57,7 @@ class ListingsGrid extends Component {
     // Calc listings to show for given page
     const showListingsIds = this.state.listingIds.slice(
       this.state.listingsPerPage * (this.state.activePage-1),
-      this.state.listingsPerPage * (this.state.activePage)).reverse()
+      this.state.listingsPerPage * (this.state.activePage))
     return (
       <div className="listings-grid">
         <h1>{this.state.listingIds.length} Listings</h1>
