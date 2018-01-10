@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import contractService from '../services/contract-service'
-import ipfsService from '../services/ipfs-service'
+import originService from '../services/origin-service'
 
 import Overlay from './overlay'
 
@@ -31,19 +31,8 @@ class ListingsDetail extends Component {
   }
 
   loadListing() {
-    contractService.getListing(this.props.listingId)
-    .then((listingContractObject) => {
-      this.setState(listingContractObject)
-        ipfsService.getListing(this.state.ipfsHash)
-        .then((listingJson) => {
-          this.setState(JSON.parse(listingJson).data)
-        })
-        .catch((error) => {
-          console.error(`Error fetching IPFS info for listingId: ${this.props.listingId}`)
-        })
-    })
-    .catch((error) => {
-      console.error(`Error fetching contract info for listingId: ${this.props.listingId}`)
+    originService.getListing(this.props.listingId).then((result) => {
+      this.setState({ ...result.contract, ...JSON.parse(result.listing).data });
     })
   }
 
