@@ -19,15 +19,12 @@ To learn more about this project, please visit [the Origin website](https://www.
 
 ## Try Demo Dapp on the Rinkeby testnet
 
-This demo is currently running on the Rinkeby testnet. You can try it for yourself at:
+This demo is currently running on the Rinkeby testnet.
+- [Overview and step-by-step instructions](https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58) 
+- [Live Demo](http://demo.originprotocol.com)
 
-[demo.originprotocol.com](http://demo.originprotocol.com)
 
-To use the demo, you will need to first install the [Metamask Chrome Browser Extension](https://metamask.io/). If you want to create a listing or make a purchase, you will need to have fake Rinkeby ETH. You can get some for free using the [Rinkeby Authenticated Faucet](https://faucet.rinkeby.io).  **Be careful not to mix up your test wallet with your real one.**
-
-This demo uses our IPFS gateway which is run as a community service and is available at gateway.originprotocol.com.
-
-## Getting up to speed
+## Core Technologies
 
 If you're new to the space, it may be helpful to first familiarize yourself with some of the core technologies that we're using to build Origin.
 
