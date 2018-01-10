@@ -84,7 +84,7 @@ class ListingsDetail extends Component {
         {this.state.step===this.STEP.METAMASK &&
           <Overlay imageUrl="/images/spinner-animation.svg">
             Confirm transaction<br />
-            Press &ldquo;Submit&rdquo; in Metamask window
+            Press &ldquo;Submit&rdquo; in MetaMask window
           </Overlay>
         }
         {this.state.step===this.STEP.PROCESSING &&

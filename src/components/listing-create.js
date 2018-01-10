@@ -168,7 +168,7 @@ class ListingCreate extends Component {
                <div className="col-md-5 offset-md-2">
                   <div className="info-box">
                     <div><h2>How it works</h2>Origin uses a Mozilla project called <a href="http://json-schema.org/" target="_blank">JSONSchema</a> to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer.<br/><br/>Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.<br/><br/><a href={`/schemas/${this.state.selectedSchemaType}.json`} target="_blank">View the <code>{this.state.selectedSchema.name}</code> schema</a></div>
-                    <div className="info-box-image"><img className="d-none d-md-block" src="/images/features-graphic.svg" role="presentation"/></div>
+                    <div className="info-box-image"><img className="d-none d-md-block" src="/images/features-graphic.svg" role="presentation" /></div>
                   </div>
                 </div>
               <div className="col-md-5">
@@ -199,7 +199,7 @@ class ListingCreate extends Component {
             {this.state.step === this.STEP.METAMASK &&
               <Overlay imageUrl="/images/spinner-animation.svg">
                 Confirm transaction<br />
-                Press &ldquo;Submit&rdquo; in Metamask window
+                Press &ldquo;Submit&rdquo; in MetaMask window
               </Overlay>
             }
             {this.state.step === this.STEP.PROCESSING &&
