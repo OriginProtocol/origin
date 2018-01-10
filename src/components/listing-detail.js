@@ -31,16 +31,21 @@ class ListingsDetail extends Component {
   }
 
   loadListing() {
+    console.log(`loadListing():\t${performance.now()}`); // TIMING
     contractService.getListing(this.props.listingId)
     .then((listingContractObject) => {
+      console.log(`after loadListing().contractService.getListing:\t${performance.now()}`); // TIMING
       this.setState(listingContractObject)
-        ipfsService.getListing(this.state.ipfsHash)
-        .then((listingJson) => {
-          this.setState(JSON.parse(listingJson).data)
-        })
-        .catch((error) => {
-          console.error(`Error fetching IPFS info for listingId: ${this.props.listingId}`)
-        })
+      ipfsService.getListing(this.state.ipfsHash)
+      .then((listingJson) => {
+        console.log(`after loadListing().ipfsService.getListing:\t${performance.now()}`); // TIMING
+        const jsonData = JSON.parse(listingJson).data
+        console.log(`after loadListing().ipfsService.getListing.JSON.parse:\t${performance.now()}`); // TIMING
+        this.setState(jsonData)
+      })
+      .catch((error) => {
+        console.error(`Error fetching IPFS info for listingId: ${this.props.listingId}`)
+      })
     })
     .catch((error) => {
       console.error(`Error fetching contract info for listingId: ${this.props.listingId}`)
@@ -48,6 +53,8 @@ class ListingsDetail extends Component {
   }
 
   componentWillMount() {
+    console.log(`componentWillMount:\t${performance.now()}`); // TIMING
+
     if (this.props.listingId) {
       // Load from IPFS
       this.loadListing()
@@ -78,7 +85,13 @@ class ListingsDetail extends Component {
     })
   }
 
+  componentDidMount() {
+    console.log(`componentDidMount:\t${performance.now()}`); // TIMING
+  }
+
+
   render() {
+    console.log(`render():\t${performance.now()}`); // TIMING
     return (
       <div className="listing-detail">
         {this.state.step===this.STEP.METAMASK &&
