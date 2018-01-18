@@ -15,7 +15,8 @@ function NetworkCheck(props, context) {
   }
   const supportedNetworkIds = [3, 4]
   const currentNetworkId = parseInt(web3Context.networkId, 10)
-  const currentNetworkName = networkNames[currentNetworkId] ? networkNames[currentNetworkId] : currentNetworkId
+  const currentNetworkName = (networkNames[currentNetworkId] ?
+    networkNames[currentNetworkId] : currentNetworkId)
   if (currentNetworkId &&
     (window.location.hostname === "demo.originprotocol.com") &&
     (supportedNetworkIds.indexOf(currentNetworkId) < 0)) {
