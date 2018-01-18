@@ -6,25 +6,23 @@ import PropTypes from 'prop-types'
 
 function NetworkCheck(props, context) {
   const web3Context = context.web3
-  /**
-   * web3Context = {
-   *   accounts: {Array<string>} - All accounts
-   *   selectedAccount: {string} - Default ETH account address (coinbase)
-   *   network: {string} - One of 'MAINNET', 'ROPSTEN', or 'UNKNOWN'
-   *   networkId: {string} - The network ID (e.g. '1' for main net)
-   * }
-   */
-  if ((window.location.hostname === "demo.originprotocol.com") &&
-    (parseInt(web3Context.networkId, 10) !== 4)) {
+  const networkNames = {
+    1: "Main",
+    2: "Morden",
+    3: "Ropsten",
+    4: "Rinkeby",
+    42: "Kovan"
+  }
+  const supportedNetworkIds = [3, 4]
+  const currentNetworkId = parseInt(web3Context.networkId, 10)
+  const currentNetworkName = networkNames[currentNetworkId] ? networkNames[currentNetworkId] : currentNetworkId
+  if (currentNetworkId &&
+    (window.location.hostname === "demo.originprotocol.com") &&
+    (supportedNetworkIds.indexOf(currentNetworkId) < 0)) {
     return (
       <Overlay imageUrl="/images/flat_cross_icon.svg">
-        MetaMask should be on <strong>Rinkeby Network</strong><br />
-        { !web3Context.networkId ?
-          "" :
-          web3Context.networkId.toString() === "1" ?
-          "Currently on Main Network." :
-          `Currently on network ${web3Context.networkId}.`
-        }
+        MetaMask should be on <strong>Rinkeby</strong> Network<br />
+        Currently on {currentNetworkName}.
       </Overlay>
     )
   }
