@@ -6,29 +6,33 @@ import ListingCard from './listing-card'
 
 class ListingsGrid extends Component {
 
-  constructor(props) {
+  constructor(props, context) {
     super(props)
     this.state = {
       listingIds: [],
       listingsPerPage: 12,
       activePage: 1
     }
-
-    this.handlePageChange = this.handlePageChange.bind(this)
   }
 
   componentWillMount() {
-    // Get listings to hide if on demo
+    this.handlePageChange = this.handlePageChange.bind(this)
+
+    // Get listings to hide
     const hideListPromise = new Promise((resolve, reject) => {
-      if (window.location.hostname !== "demo.originprotocol.com") {
-        resolve([])
+      window.web3.version.getNetwork((err, netId) => { resolve(netId) })
+    })
+    .then((networkId) => {
+      return fetch(`https://raw.githubusercontent.com/OriginProtocol/demo-dapp/hide_list/hidelist_${networkId}.json`)
+    })
+    .then((response) => {
+      if (response.status == 404) {
+        return [] // Default: Don't hide anything
       } else {
-        resolve (
-          fetch('https://raw.githubusercontent.com/OriginProtocol/demo-dapp/hide_list/hidelist.json')
-          .then((response) => response.json())
-        )
+        return response.json()
       }
     })
+
     // Get all listings from contract
     const allListingsPromise = contractService.getAllListingIds()
     .catch((error) => {
@@ -39,6 +43,7 @@ class ListingsGrid extends Component {
     // Wait for both to finish
     Promise.all([hideListPromise, allListingsPromise])
     .then(([hideList, ids]) => {
+      // Filter hidden listings
       const showIds = ids ? ids.filter((i)=>hideList.indexOf(i) < 0) : []
       this.setState({ listingIds: showIds.reverse() })
     })
@@ -54,6 +59,7 @@ class ListingsGrid extends Component {
   }
 
   render() {
+
     // Calc listings to show for given page
     const showListingsIds = this.state.listingIds.slice(
       this.state.listingsPerPage * (this.state.activePage-1),
