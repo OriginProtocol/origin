@@ -26,7 +26,7 @@ class ListingsGrid extends Component {
       return fetch(`https://raw.githubusercontent.com/OriginProtocol/demo-dapp/hide_list/hidelist_${networkId}.json`)
     })
     .then((response) => {
-      if (response.status == 404) {
+      if (response.status === 404) {
         return [] // Default: Don't hide anything
       } else {
         return response.json()
