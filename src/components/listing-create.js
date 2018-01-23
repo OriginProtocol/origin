@@ -6,6 +6,8 @@ import contractService from '../services/contract-service'
 import ListingDetail from './listing-detail'
 import Form from 'react-jsonschema-form'
 import Overlay from './overlay'
+import _ from 'lodash'
+import Schemas from '../schemas/index'
 
 class ListingCreate extends Component {
 
@@ -48,14 +50,11 @@ class ListingCreate extends Component {
   }
 
   handleSchemaSelection() {
-    fetch(`/schemas/${this.state.selectedSchemaType}.json`)
-    .then((response) => response.json())
-    .then((schemaJson) => {
-      this.setState({
-        selectedSchema: schemaJson,
-        schemaFetched: true,
-        step: this.STEP.DETAILS
-      })
+    Schemas[this.state.selectedSchemaType].definitions = Schemas.definitions
+    this.setState({
+      selectedSchema: Schemas[this.state.selectedSchemaType],
+      schemaFetched: true,
+      step: this.STEP.DETAILS
     })
   }
 

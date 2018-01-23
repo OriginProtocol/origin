@@ -1,8 +1,8 @@
-{
+module.exports = {
   "$schema":"http://json-schema.org/draft-04/schema#",
-  "description":"Distributed Nextdoor",
+  "description": "Distributed Getaround",
   "type": "object",
-  "required": ["name","category","description"],
+  "required": ["name","category","description","price"],
   "properties": {
     "name": {
       "type": "string",
@@ -14,28 +14,27 @@
       "type": "string",
       "title": "Category",
       "enum": [
-        "Activities",
-        "Artists",
-        "Childcare",
-        "Classes",
-        "General",
-        "Groups",
-        "Local News",
-        "Lost & Found",
-        "Musicians",
-        "Personals",
-        "Pets",
-        "Politics",
-        "Resumes",
-        "Volunteers"
+        "Airplane Charter",
+        "Bike Rentals",
+        "Boat Rentals",
+        "Car Rentals",
+        "Taxi service",
+        "Yacht charters"
       ],
-      "default": "Local News"
+      "default":"Car Rentals"
     },
     "description": {
       "type": "string",
       "title": "Description",
       "minLength": "10",
       "maxLength": "1024"
+    },
+    "location": {
+      "type": "string",
+      "title": "Location"
+    },
+    "price": {
+      "$ref": "#/definitions/price"
     },
     "pictures": {
       "type": "array",

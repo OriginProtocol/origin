@@ -1,6 +1,6 @@
-{
+module.exports = {
   "$schema":"http://json-schema.org/draft-04/schema#",
-  "description": "Distributed Ticketmaster/Eventbrite",
+  "description": "Distributed Airbnb",
   "type": "object",
   "required": ["name","category","description","price"],
   "properties": {
@@ -14,26 +14,20 @@
       "type": "string",
       "title": "Category",
       "enum": [
-        "Arts",
-        "Classes & Workshops",
-        "Conference",
-        "Fundraisers",
-        "Music",
-        "Non-profit event",
-        "Other",
-        "Sports",
-        "Theater",
-        "Tradeshow"
-      ]
-    },
-    "datetime": {
-        "type": "string",
-        "format": "date-time",
-        "title": "When"
-    },
-    "location": {
-      "type": "string",
-      "title": "Where"
+        "Apts Wanted",
+        "Apts/Housing for Rent",
+        "Housing Swap",
+        "Office & Commercial",
+        "Parking & Storage",
+        "Real Estate",
+        "Real Estate Wanted",
+        "Room/Share Wanted",
+        "Rooms & Shares",
+        "Sublet/Temp Wanted",
+        "Sublets & Temporary",
+        "Vacation Rentals"
+      ],
+      "default":"Vacation Rentals"
     },
     "description": {
       "type": "string",
@@ -41,9 +35,12 @@
       "minLength": "10",
       "maxLength": "1024"
     },
+    "location": {
+      "type": "string",
+      "title": "Location"
+    },
     "price": {
-      "type": "number",
-      "title": "Price in ETH"
+      "$ref": "#/definitions/price"
     },
     "pictures": {
       "type": "array",

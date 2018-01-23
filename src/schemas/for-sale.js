@@ -1,4 +1,4 @@
-{
+module.exports = {
   "$schema":"http://json-schema.org/draft-04/schema#",
   "description":"Distributed Craigslist/Ebay/Amazon",
   "type": "object",
@@ -72,8 +72,7 @@
       "title": "Location"
     },
     "price": {
-      "type": "number",
-      "title": "Price in ETH"
+      "$ref": "#/definitions/price"
     },
     "pictures": {
       "type": "array",
