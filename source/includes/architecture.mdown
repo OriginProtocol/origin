@@ -58,7 +58,7 @@ to the policies must be handled directly off-chain by the two parties.
 
 ### Ethereum
 
-[Learn more about Ethereum](https://https://www.ethereum.org/)
+[Learn more about Ethereum](https://ethereum.org/)
 
 ### IPFS
 
