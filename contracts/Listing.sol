@@ -3,8 +3,9 @@ pragma solidity ^0.4.11;
 /// @title Listing
 /// @dev Used to keep marketplace of listings for buyers and sellers
 /// @author Matt Liu <matt@originprotocol.com>, Josh Fraser <josh@originprotocol.com>, Stan James <stan@originprotocol.com>
+import "../node_modules/zeppelin-solidity/contracts/lifecycle/Migrations.sol";
 
-contract Listing {
+contract Listing is Migrations{
 
   /*
    * Events
