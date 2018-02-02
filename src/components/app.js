@@ -6,6 +6,7 @@ import {
 import { Web3Provider } from 'react-web3'
 
 // Components
+import ScrollToTop from './scroll-to-top.js';
 import Listings from './listings-grid.js'
 import ListingDetail from './listing-detail.js'
 import ListingCreate from './listing-create.js'
@@ -83,16 +84,18 @@ const Web3UnavailableScreen = () => {
 // Top level component
 const App = () => (
   <Router>
-    <Web3Provider
-      web3UnavailableScreen={() => <Web3UnavailableScreen />}
-      accountUnavailableScreen={() => <AccountUnavailableScreen />}
-    >
-      <div>
-        <Route exact path="/" component={HomePage}/>
-        <Route path="/listing/:listingId" component={ListingDetailPage}/>
-        <Route path="/create" component={CreateListingPage}/>
-      </div>
-    </Web3Provider>
+    <ScrollToTop>
+      <Web3Provider
+        web3UnavailableScreen={() => <Web3UnavailableScreen />}
+        accountUnavailableScreen={() => <AccountUnavailableScreen />}
+      >
+        <div>
+          <Route exact path="/" component={HomePage}/>
+          <Route path="/listing/:listingId" component={ListingDetailPage}/>
+          <Route path="/create" component={CreateListingPage}/>
+        </div>
+      </Web3Provider>
+    </ScrollToTop>
   </Router>
 )
 
