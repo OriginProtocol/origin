@@ -109,7 +109,7 @@ class ContractService {
             ipfsHash: this.getIpfsHashFromBytes32(listing[2]),
             price: window.web3.fromWei(listing[3], 'ether').toNumber(),
             unitsAvailable: listing[4].toNumber(),
-            timeCreated: this.dateFormat(listing[5])
+            timeCreated: listing[5].toNumber()
           }
           resolve(listingObject)
         })

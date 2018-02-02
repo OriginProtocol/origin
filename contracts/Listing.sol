@@ -20,7 +20,7 @@ contract Listing is Migrations{
   event ListingPurchased(uint _index, uint _unitsToBuy, uint _value);
 
   /*
-  * Storage
+   * Storage
    */
 
   // Contract owner
@@ -75,7 +75,7 @@ contract Listing is Migrations{
    */
 
   function Listing()
-  public
+    public
   {
     // Defines origin admin address - may be removed for public deployment
     owner_address = msg.sender;
@@ -85,8 +85,8 @@ contract Listing is Migrations{
   }
 
   function testingAddSampleListings()
-  public
-  isOwner
+    public
+    isOwner
   {
     // We get stripped hex value from IPFS hash using getBytes32FromIpfsHash()
     // in contract-service.js
@@ -136,19 +136,19 @@ contract Listing is Migrations{
 
   /// @dev listingsLength(): Return number of listings
   function listingsLength()
-  public
-  constant
-  returns (uint)
+    public
+    constant
+    returns (uint)
   {
-    return listings.length;
+      return listings.length;
   }
 
   /// @dev getListing(): Return listing info for given listing
   /// @param _index the index of the listing we want info about
   function getListing(uint _index)
-  public
-  constant
-  returns (uint, address, bytes32, uint, uint, uint)
+    public
+    constant
+    returns (uint, address, bytes32, uint, uint, uint)
   {
     // TODO (Stan): Determine if less gas to do one array lookup into var, and
     // return var struct parts
@@ -171,8 +171,8 @@ contract Listing is Migrations{
     uint _price,
     uint _unitsAvailable
   )
-  public
-  returns (uint)
+    public
+    returns (uint)
   {
     listings.push(listingStruct(msg.sender, _ipfsHash, _price, _unitsAvailable, block.timestamp));
     UpdateListings(msg.sender);
@@ -185,11 +185,11 @@ contract Listing is Migrations{
   /// @param _index Index of listing to buy
   /// @param _unitsToBuy Number of units to buy
   function buyListing(uint _index, uint _unitsToBuy)
-  public
-  payable
-  isValidListingIndex(_index)
-  hasUnitsAvailable(_index, _unitsToBuy)
-  hasValueToPurchase(_index, _unitsToBuy)
+    public
+    payable
+    isValidListingIndex(_index)
+    hasUnitsAvailable(_index, _unitsToBuy)
+    hasValueToPurchase(_index, _unitsToBuy)
   {
 
     // Count units as sold
