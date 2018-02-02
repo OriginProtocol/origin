@@ -39,8 +39,8 @@ class ContractService {
 
   //format listing creation date and language
   dateFormat(date) {
-    const newDate = new Date(Date(date.toNumber()))
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+    const newDate = new Date(Date(date.toNumber()));
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     return newDate.toLocaleDateString(`${navigator.language}`, options)
   }
 

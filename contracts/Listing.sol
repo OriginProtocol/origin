@@ -5,6 +5,7 @@ pragma solidity ^0.4.11;
 /// @author Matt Liu <matt@originprotocol.com>, Josh Fraser <josh@originprotocol.com>, Stan James <stan@originprotocol.com>
 import "../node_modules/zeppelin-solidity/contracts/lifecycle/Migrations.sol";
 
+//Migrations inherits from both Migrations and Ownable
 contract Listing is Migrations{
 
   /*
