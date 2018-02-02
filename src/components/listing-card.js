@@ -13,7 +13,7 @@ class ListingCard extends Component {
       price: "Loading...",
       ipfsHash: null,
       lister: null,
-      unitsAvailable: null,
+      unitsAvailable: null
     }
   }
 
