@@ -61,7 +61,8 @@
     "react-jsonschema-form": "^0.49.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "react-web3": "github:wanderingstan/react-web3#state_didchange_fix"
+    "react-web3": "github:wanderingstan/react-web3#state_didchange_fix",
+    "zeppelin-solidity": "^1.6.0"
   },
   "scripts": {
     "start": "node scripts/start.js",
