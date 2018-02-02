@@ -100,7 +100,6 @@ class ContractService {
       this.listingContract.deployed().then((instance) => {
         instance.getListing.call(listingId)
         .then((listing)  => {
-          //debugger
           // Listing is returned as array of properties.
           // IPFS hash (as bytes32 hex string) is in results[2]
           // Convert it to regular IPFS base-58 encoded hash
