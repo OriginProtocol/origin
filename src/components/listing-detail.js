@@ -25,6 +25,7 @@ class ListingsDetail extends Component {
       unitsAvailable: null,
       pictures: [],
       step: this.STEP.VIEW,
+      timeCreated: "Loading..."
     }
 
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
@@ -120,6 +121,7 @@ class ListingsDetail extends Component {
               <div className="category">{this.state.category}</div>
               <div className="title">{this.state.name}</div>
               <div className="description">{this.state.description}</div>
+              <div className="timeCreated">{this.state.timeCreated}</div>
               <a href={ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
                 View on IPFS <big>&rsaquo;</big>
               </a>

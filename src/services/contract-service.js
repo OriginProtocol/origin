@@ -37,6 +37,13 @@ class ContractService {
     return hashStr
   }
 
+  //format listing creation date and language
+  dateFormat(date) {
+    const newDate = new Date(Date(date.toNumber()))
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+    return newDate.toLocaleDateString(`${navigator.language}`, options)
+  }
+
   submitListing(ipfsListing, ethPrice, units) {
     return new Promise((resolve, reject) => {
       this.listingContract.setProvider(window.web3.currentProvider)
@@ -86,12 +93,14 @@ class ContractService {
     })
   }
 
+
   getListing(listingId) {
     return new Promise((resolve, reject) => {
       this.listingContract.setProvider(window.web3.currentProvider)
       this.listingContract.deployed().then((instance) => {
         instance.getListing.call(listingId)
         .then((listing)  => {
+          //debugger
           // Listing is returned as array of properties.
           // IPFS hash (as bytes32 hex string) is in results[2]
           // Convert it to regular IPFS base-58 encoded hash
@@ -100,7 +109,8 @@ class ContractService {
             lister: listing[1],
             ipfsHash: this.getIpfsHashFromBytes32(listing[2]),
             price: window.web3.fromWei(listing[3], 'ether').toNumber(),
-            unitsAvailable: listing[4].toNumber()
+            unitsAvailable: listing[4].toNumber(),
+            timeCreated: this.dateFormat(listing[5])
           }
           resolve(listingObject)
         })
