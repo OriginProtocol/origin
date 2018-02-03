@@ -122,7 +122,6 @@ class ListingCreate extends Component {
   }
 
   render() {
-    window.scrollTo(0, 0)
     return (
       <div className="container listing-form">
         { this.state.step === this.STEP.PICK_SCHEMA &&
