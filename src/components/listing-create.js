@@ -56,6 +56,7 @@ class ListingCreate extends Component {
         schemaFetched: true,
         step: this.STEP.DETAILS
       })
+      window.scrollTo(0, 0)
     })
   }
 
@@ -94,6 +95,7 @@ class ListingCreate extends Component {
         formListing: formListing,
         step: this.STEP.PREVIEW
       })
+      window.scrollTo(0, 0)
     }
   }
 
