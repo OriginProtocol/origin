@@ -16,7 +16,7 @@ contract Listing is Migrations{
   // Currently, this means creating or deleting listings
   // In the future, we will have separate events for specific actions
   event UpdateListings(address _from);
-  event NewListing(uint _index);
+  event NewListing(uint _index, bytes32 _ipfsHash);
   event ListingPurchased(uint _index, uint _unitsToBuy, uint _value);
 
   /*
@@ -176,7 +176,7 @@ contract Listing is Migrations{
   {
     listings.push(listingStruct(msg.sender, _ipfsHash, _price, _unitsAvailable, block.timestamp));
     UpdateListings(msg.sender);
-    NewListing(listings.length-1);
+    NewListing(listings.length-1, _ipfsHash);
     return listings.length;
   }
 
