@@ -1,3 +1,6 @@
+//to run this test run '$ ganache-cli' in another tab and then run '$ truffle test test/listing.js'
+//if you are having issues with async await then update your local node.js version
+
 const Listing = artifacts.require('./Listing.sol');
 
 contract('Listing', ([owner]) => {
