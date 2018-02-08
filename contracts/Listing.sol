@@ -3,8 +3,10 @@ pragma solidity ^0.4.11;
 /// @title Listing
 /// @dev Used to keep marketplace of listings for buyers and sellers
 /// @author Matt Liu <matt@originprotocol.com>, Josh Fraser <josh@originprotocol.com>, Stan James <stan@originprotocol.com>
+import "../node_modules/zeppelin-solidity/contracts/lifecycle/Migrations.sol";
 
-contract Listing {
+//Migrations inherits from both Migrations and Ownable
+contract Listing is Migrations{
 
   /*
    * Events
@@ -14,7 +16,7 @@ contract Listing {
   // Currently, this means creating or deleting listings
   // In the future, we will have separate events for specific actions
   event UpdateListings(address _from);
-  event NewListing(uint _index);
+  event NewListing(uint _index, bytes32 _ipfsHash);
   event ListingPurchased(uint _index, uint _unitsToBuy, uint _value);
 
   /*
@@ -40,6 +42,7 @@ contract Listing {
     bytes32 ipfsHash;
     uint price;
     uint unitsAvailable;
+    uint timestamp;
   }
 
 
@@ -145,7 +148,7 @@ contract Listing {
   function getListing(uint _index)
     public
     constant
-    returns (uint, address, bytes32, uint, uint)
+    returns (uint, address, bytes32, uint, uint, uint)
   {
     // TODO (Stan): Determine if less gas to do one array lookup into var, and
     // return var struct parts
@@ -154,7 +157,8 @@ contract Listing {
       listings[_index].lister,
       listings[_index].ipfsHash,
       listings[_index].price,
-      listings[_index].unitsAvailable
+      listings[_index].unitsAvailable,
+      listings[_index].timestamp
     );
   }
 
@@ -170,9 +174,9 @@ contract Listing {
     public
     returns (uint)
   {
-    listings.push(listingStruct(msg.sender, _ipfsHash, _price, _unitsAvailable));
+    listings.push(listingStruct(msg.sender, _ipfsHash, _price, _unitsAvailable, block.timestamp));
     UpdateListings(msg.sender);
-    NewListing(listings.length-1);
+    NewListing(listings.length-1, _ipfsHash);
     return listings.length;
   }
 
@@ -187,6 +191,7 @@ contract Listing {
     hasUnitsAvailable(_index, _unitsToBuy)
     hasValueToPurchase(_index, _unitsToBuy)
   {
+
     // Count units as sold
     listings[_index].unitsAvailable -= _unitsToBuy;
 

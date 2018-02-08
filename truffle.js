@@ -21,5 +21,6 @@ module.exports = {
       gas: 4612388 // Gas limit used for deploys
     }
   },
-  solc: { optimizer: { enabled: true, runs: 200 } }
+  solc: { optimizer: { enabled: true, runs: 200 } },
+  mocha: { useColors: true }
 };

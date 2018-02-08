@@ -37,6 +37,13 @@ class ContractService {
     return hashStr
   }
 
+  //format listing creation date and language
+  dateFormat(date) {
+    const newDate = new Date(Date(date.toNumber()));
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    return newDate.toLocaleDateString(`${navigator.language}`, options)
+  }
+
   submitListing(ipfsListing, ethPrice, units) {
     return new Promise((resolve, reject) => {
       this.listingContract.setProvider(window.web3.currentProvider)
@@ -86,6 +93,7 @@ class ContractService {
     })
   }
 
+
   getListing(listingId) {
     return new Promise((resolve, reject) => {
       this.listingContract.setProvider(window.web3.currentProvider)
@@ -100,7 +108,8 @@ class ContractService {
             lister: listing[1],
             ipfsHash: this.getIpfsHashFromBytes32(listing[2]),
             price: window.web3.fromWei(listing[3], 'ether').toNumber(),
-            unitsAvailable: listing[4].toNumber()
+            unitsAvailable: listing[4].toNumber(),
+            timeCreated: listing[5].toNumber()
           }
           resolve(listingObject)
         })
