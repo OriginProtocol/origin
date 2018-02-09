@@ -12,6 +12,23 @@ body {
   font-family: 'Lato', 'Helvetica Neue', 'Arial', sans-serif;
 }
 
+/* necessary for every sticky footer ancestor */
+#root, #root > div, #root > div > div {
+  height: 100%;
+}
+
+/* sticky footer parent */
+#root > div > div > div {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* sticky footer sibling */
+main {
+  flex: 1 0 auto;
+}
+
 /* Common */
 
 h1, h2, h3 {

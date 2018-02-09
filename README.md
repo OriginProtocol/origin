@@ -70,7 +70,7 @@ candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
 
 9. Click where it says "Ethereum Main Network", select "Custom RPC" and enter `http://localhost:9545/`. This takes us off of the real ETH blockchain and onto our local blockchain. Click the back arrow to return to your account.
 
- **Be careful not to mix up your test wallet with you real one on the Main Network.**
+ **Be careful not to mix up your test wallet with your real one on the Main Network.**
 
 10. You should see your first test account now has 100 ETH. (Address of `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`) Additional generated accounts will also have this amount.
 

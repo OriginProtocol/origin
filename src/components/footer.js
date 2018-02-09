@@ -67,10 +67,13 @@ const Footer = (props) => {
                 </div>
                 <ul className="footer-links">
                   <li>
+                    <a href="http://www.originprotocol.com/team">Team</a>
+                  </li>
+                  <li>
                     <a href="http://www.originprotocol.com/presale">Presale</a>
                   </li>
                   <li>
-                    <a href="http://www.originprotocol.com/team">Team</a>
+                    <a href="http://www.originprotocol.com/partners">Partners</a>
                   </li>
                   <li>
                     <a href="https://angel.co/originprotocol/jobs">Jobs (We&rsquo;re hiring!)</a>
