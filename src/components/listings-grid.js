@@ -54,7 +54,6 @@ class ListingsGrid extends Component {
   }
 
   handlePageChange(pageNumber) {
-    console.log(`active page is ${pageNumber}`)
     this.props.history.push(`/page/${pageNumber}`)
   }
 
