@@ -91,6 +91,7 @@ const App = () => (
       >
         <div>
           <Route exact path="/" component={HomePage}/>
+          <Route path="/page/:activePage" component={HomePage}/>
           <Route path="/listing/:listingId" component={ListingDetailPage}/>
           <Route path="/create" component={CreateListingPage}/>
         </div>

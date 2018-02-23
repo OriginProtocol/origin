@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import contractService from '../services/contract-service'
 import Pagination from 'react-js-pagination'
+import { withRouter } from 'react-router'
 
 import ListingCard from './listing-card'
 
@@ -10,8 +11,7 @@ class ListingsGrid extends Component {
     super(props)
     this.state = {
       listingIds: [],
-      listingsPerPage: 12,
-      activePage: 1
+      listingsPerPage: 12
     }
   }
 
@@ -55,15 +55,15 @@ class ListingsGrid extends Component {
 
   handlePageChange(pageNumber) {
     console.log(`active page is ${pageNumber}`)
-    this.setState({activePage: pageNumber})
+    this.props.history.push(`/page/${pageNumber}`)
   }
 
   render() {
-
+    const activePage = this.props.match.params.activePage || 1
     // Calc listings to show for given page
     const showListingsIds = this.state.listingIds.slice(
-      this.state.listingsPerPage * (this.state.activePage-1),
-      this.state.listingsPerPage * (this.state.activePage))
+      this.state.listingsPerPage * (activePage-1),
+      this.state.listingsPerPage * (activePage))
     return (
       <div className="listings-grid">
         <h1>{this.state.listingIds.length} Listings</h1>
@@ -73,7 +73,7 @@ class ListingsGrid extends Component {
           ))}
         </div>
         <Pagination
-          activePage={this.state.activePage}
+          activePage={activePage}
           itemsCountPerPage={this.state.listingsPerPage}
           totalItemsCount={this.state.listingIds.length}
           pageRangeDisplayed={5}
@@ -87,4 +87,4 @@ class ListingsGrid extends Component {
   }
 }
 
-export default ListingsGrid
+export default withRouter(ListingsGrid)
