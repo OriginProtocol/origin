@@ -1,5 +1,5 @@
 {
-  "$schema":"http://json-schema.org/draft-04/schema#",
+  "$schema":"http://json-schema.org/draft-06/schema#",
   "description":"Distributed Craigslist/Ebay/Amazon",
   "type": "object",
   "required": ["name","category","description","price"],
@@ -7,8 +7,8 @@
     "name": {
       "type": "string",
       "title": "Title",
-      "minLength": "3",
-      "maxLength": "100"
+      "minLength": 3,
+      "maxLength": 100
     },
     "category": {
       "type": "string",
@@ -64,8 +64,8 @@
     "description": {
       "type": "string",
       "title": "Description",
-      "minLength": "10",
-      "maxLength": "1024"
+      "minLength": 10,
+      "maxLength": 1024
     },
     "location": {
       "type": "string",
