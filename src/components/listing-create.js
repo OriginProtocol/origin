@@ -103,16 +103,11 @@ class ListingCreate extends Component {
     .then((tx) => {
       this.setState({ step: this.STEP.PROCESSING })
       // Submitted to blockchain, now wait for confirmation
-      contractService.waitTransactionFinished(tx)
-      .then((blockNumber) => {
-        this.setState({ step: this.STEP.SUCCESS })
-        // TODO: Where do we take them after successful creation?
-      })
-      .catch((error) => {
-        console.error(error)
-        alert(error)
-        // TODO: Reset form? Do something.
-      })
+      return contractService.waitTransactionFinished(tx)
+    })
+    .then((blockNumber) => {
+      this.setState({ step: this.STEP.SUCCESS })
+      // TODO: Where do we take them after successful creation?
     })
     .catch((error) => {
       console.error(error)
