@@ -81,6 +81,7 @@ class ListingsDetail extends Component {
 
 
   render() {
+    const price = typeof this.state.price === 'string' ? 0 : this.state.price
     return (
       <div className="listing-detail">
         {this.state.step===this.STEP.METAMASK &&
@@ -134,7 +135,7 @@ class ListingsDetail extends Component {
                 <div>
                   <span>Price</span>
                   <span className="price">
-                    {Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
+                    {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
                   </span>
                 </div>
                 {(this.state.unitsAvailable > 1) &&
