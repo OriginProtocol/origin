@@ -1,21 +1,25 @@
-const ContractService = require('./contract-service')
-const IpfsService = require('./ipfs-service')
-const OriginService = require('./origin-service')
+// import contractService from './contract-service'
+// import ipfsService from './ipfs-service'
+// import originService from './origin-service'
 
-module.exports.ContractService = ContractService
-module.exports.IpfsService = IpfsService
-module.exports.OriginService = OriginService
+const contractService = require('./contract-service')
+const ipfsService = require('./ipfs-service')
+const originService = require('./origin-service')
 
-module.exports = { ContractService
-  				 , IpfsService
-  				 , OriginService
-				 }
+// module.exports.ContractService = ContractService
+// module.exports.IpfsService = IpfsService
+// module.exports.OriginService = OriginService
 
-// const ContractService = 5
-// const IpfsService = 4
-// const OriginService = 3
+// module.exports = { ContractService
+//           , IpfsService
+//           , OriginService
+//         }
 
-module.exports = { ContractService
-  				 , IpfsService
-  				 , OriginService
-				 }
+// const contractService = 5
+// const ipfsService = 4
+// const originService = 3
+
+module.exports = { contractService
+                 , ipfsService
+                 , originService
+                 }
