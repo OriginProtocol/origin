@@ -1,0 +1,25 @@
+{
+  "name": "origin",
+  "version": "0.2.0",
+  "description": "Package implementing Origin Protocol for blockchain marketplaces.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OriginProtocol/platform.git"
+  },
+  "keywords": [
+    "origin",
+    "blockchain",
+    "marketplace",
+    "protocol"
+  ],
+  "author": "Stan James <stan@originprotocol.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OriginProtocol/platform/issues"
+  },
+  "homepage": "https://github.com/OriginProtocol/platform#readme"
+}
