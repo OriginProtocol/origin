@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import OriginService from 'origin'
-import ContractService from 'origin'
+import { contractService, ipfsService, originService } from 'origin'
 
 import ListingDetail from './listing-detail'
 import Form from 'react-jsonschema-form'
@@ -99,11 +98,11 @@ class ListingCreate extends Component {
 
   onSubmitListing(formListing, selectedSchemaType) {
     this.setState({ step: this.STEP.METAMASK })
-    OriginService.submitListing(formListing, selectedSchemaType)
+    originService.submitListing(formListing, selectedSchemaType)
     .then((tx) => {
       this.setState({ step: this.STEP.PROCESSING })
       // Submitted to blockchain, now wait for confirmation
-      ContractService.waitTransactionFinished(tx)
+      contractService.waitTransactionFinished(tx)
       .then((blockNumber) => {
         this.setState({ step: this.STEP.SUCCESS })
         // TODO: Where do we take them after successful creation?

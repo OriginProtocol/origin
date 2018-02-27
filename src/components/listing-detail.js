@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
-import ContractService from 'origin'
-import IpfsService from 'origin'
-
+import { contractService, ipfsService } from 'origin'
 import Overlay from './overlay'
 
 class ListingsDetail extends Component {
@@ -31,10 +29,10 @@ class ListingsDetail extends Component {
   }
 
   loadListing() {
-    ContractService.getListing(this.props.listingId)
+    contractService.getListing(this.props.listingId)
     .then((listingContractObject) => {
       this.setState(listingContractObject)
-      IpfsService.getListing(this.state.ipfsHash)
+      ipfsService.getListing(this.state.ipfsHash)
       .then((listingJson) => {
         const jsonData = JSON.parse(listingJson).data
         this.setState(jsonData)
@@ -63,11 +61,11 @@ class ListingsDetail extends Component {
     const unitsToBuy = 1
     const totalPrice = (unitsToBuy * this.state.price)
     this.setState({step: this.STEP.METAMASK})
-    ContractService.buyListing(this.props.listingId, unitsToBuy, totalPrice)
+    contractService.buyListing(this.props.listingId, unitsToBuy, totalPrice)
     .then((transactionReceipt) => {
       console.log("Purchase request sent.")
       this.setState({step: this.STEP.PROCESSING})
-      ContractService.waitTransactionFinished(transactionReceipt.tx)
+      contractService.waitTransactionFinished(transactionReceipt.tx)
       .then((blockNumber) => {
         this.setState({step: this.STEP.PURCHASED})
       })
@@ -120,7 +118,7 @@ class ListingsDetail extends Component {
               <div className="category">{this.state.category}</div>
               <div className="title">{this.state.name}</div>
               <div className="description">{this.state.description}</div>
-              <a href={IpfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
+              <a href={ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
                 View on IPFS <big>&rsaquo;</big>
               </a>
               <div className="debug">
