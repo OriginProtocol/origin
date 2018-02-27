@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import contractService from '../services/contract-service'
+import ContractService from 'origin'
 import Pagination from 'react-js-pagination'
 
 import ListingCard from './listing-card'
@@ -34,7 +34,7 @@ class ListingsGrid extends Component {
     })
 
     // Get all listings from contract
-    const allListingsPromise = contractService.getAllListingIds()
+    const allListingsPromise = ContractService.getAllListingIds()
     .catch((error) => {
       if (error.message.indexOf("(network/artifact mismatch)") > 0) {
         console.log("The Origin Contract was not found on this network.\nYou may need to change networks, or deploy the contract.")

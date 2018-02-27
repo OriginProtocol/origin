@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import contractService from '../services/contract-service'
-import ipfsService from '../services/ipfs-service'
+import ContractService from 'origin'
+import IpfsService from 'origin'
 import { Link } from 'react-router-dom'
 
 class ListingCard extends Component {
@@ -18,10 +18,10 @@ class ListingCard extends Component {
   }
 
   componentDidMount() {
-    contractService.getListing(this.props.listingId)
+    ContractService.getListing(this.props.listingId)
     .then((listingContractObject) => {
       this.setState(listingContractObject)
-        ipfsService.getListing(this.state.ipfsHash)
+        IpfsService.getListing(this.state.ipfsHash)
         .then((listingJson) => {
           this.setState(JSON.parse(listingJson).data)
         })

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import contractService from '../services/contract-service'
-import ipfsService from '../services/ipfs-service'
+import ContractService from 'origin'
+import IpfsService from 'origin'
 
 import Overlay from './overlay'
 
@@ -31,10 +31,10 @@ class ListingsDetail extends Component {
   }
 
   loadListing() {
-    contractService.getListing(this.props.listingId)
+    ContractService.getListing(this.props.listingId)
     .then((listingContractObject) => {
       this.setState(listingContractObject)
-      ipfsService.getListing(this.state.ipfsHash)
+      IpfsService.getListing(this.state.ipfsHash)
       .then((listingJson) => {
         const jsonData = JSON.parse(listingJson).data
         this.setState(jsonData)
@@ -63,11 +63,11 @@ class ListingsDetail extends Component {
     const unitsToBuy = 1
     const totalPrice = (unitsToBuy * this.state.price)
     this.setState({step: this.STEP.METAMASK})
-    contractService.buyListing(this.props.listingId, unitsToBuy, totalPrice)
+    ContractService.buyListing(this.props.listingId, unitsToBuy, totalPrice)
     .then((transactionReceipt) => {
       console.log("Purchase request sent.")
       this.setState({step: this.STEP.PROCESSING})
-      contractService.waitTransactionFinished(transactionReceipt.tx)
+      ContractService.waitTransactionFinished(transactionReceipt.tx)
       .then((blockNumber) => {
         this.setState({step: this.STEP.PURCHASED})
       })
@@ -120,7 +120,7 @@ class ListingsDetail extends Component {
               <div className="category">{this.state.category}</div>
               <div className="title">{this.state.name}</div>
               <div className="description">{this.state.description}</div>
-              <a href={ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
+              <a href={IpfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
                 View on IPFS <big>&rsaquo;</big>
               </a>
               <div className="debug">
