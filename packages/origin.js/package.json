@@ -1,32 +1,47 @@
 {
   "name": "origin",
   "version": "0.2.0",
-  "description": "Package implementing Origin Protocol for blockchain marketplaces.",
-  "main": "src/index.js",
+  "description": "",
+  "main": "./dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha-webpack --webpack-config webpack.config.js --require test/.setup.js test/**/*.test.js",
+    "test:watch": "mocha-webpack --watch --webpack-config webpack.config.js --require test/.setup.js test/**/*.test.js",
+    "build": "webpack --config webpack.config.js",
+    "build:watch": "webpack --config webpack.config.js --watch",
+    "prepare": "npm run build"
   },
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OriginProtocol/platform.git"
+    "url": "https://github.com/OriginProtocol/platform"
   },
-  "keywords": [
-    "origin",
-    "blockchain",
-    "marketplace",
-    "protocol"
-  ],
   "author": "Stan James <stan@originprotocol.com>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/OriginProtocol/platform/issues"
-  },
-  "homepage": "https://github.com/OriginProtocol/platform#readme",
   "dependencies": {
     "bs58": "^4.0.1",
-    "ipfs": "^0.27.7",
-    "ipfs-api": "^18.1.1",
+    "dotenv": "^2.0.0",
+    "ipfs-api": "^14.3.7",
     "map-cache": "^0.2.2",
-    "truffle": "^4.0.7"
+    "truffle-contract": "^1.1.8"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "chai": "^4.1.0",
+    "flow-bin": "^0.51.1",
+    "mocha": "^3.5.0",
+    "mocha-webpack": "^1.0.0-rc.1",
+    "sinon": "^2.4.1",
+    "webpack": "^3.4.1",
+    "webpack-node-externals": "^1.6.0"
   }
 }

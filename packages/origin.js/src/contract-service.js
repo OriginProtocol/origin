@@ -168,6 +168,7 @@ class ContractService {
 
 const contractService = new ContractService()
 
+console.log("In origin package")
+console.log(contractService)
+
 export default contractService
-
-

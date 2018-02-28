@@ -1,5 +1,5 @@
-import contractService from 'contract-service'
-import ipfsService from 'ipfs-service'
+import contractService from './contract-service'
+import ipfsService from './ipfs-service'
 
 class OriginService {
   static instance
