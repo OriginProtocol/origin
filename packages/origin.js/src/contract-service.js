@@ -1,4 +1,4 @@
-import ListingContract from '../../originSmartContracts/build/contracts/Listing.json'
+import ListingsRegistryContract from '../../originSmartContracts/build/contracts/ListingsRegistry.json'
 import bs58 from 'bs58'
 
 class ContractService {
@@ -12,7 +12,7 @@ class ContractService {
     ContractService.instance = this
 
     this.contract = require('truffle-contract')
-    this.listingContract = this.contract(ListingContract)
+    this.listingsRegistryContract = this.contract(ListingsRegistryContract)
   }
 
   // Return bytes32 hex string from base58 encoded ipfs hash,
@@ -39,9 +39,9 @@ class ContractService {
 
   submitListing(ipfsListing, ethPrice, units) {
     return new Promise((resolve, reject) => {
-      this.listingContract.setProvider(window.web3.currentProvider)
+      this.listingsRegistryContract.setProvider(window.web3.currentProvider)
       window.web3.eth.getAccounts((error, accounts) => {
-        this.listingContract.deployed().then((instance) => {
+        this.listingsRegistryContract.deployed().then((instance) => {
           let weiToGive = window.web3.toWei(ethPrice, 'ether')
           // Note we cannot get the listingId returned by our contract.
           // See: https://forum.ethereum.org/discussion/comment/31529/#Comment_31529
@@ -62,8 +62,8 @@ class ContractService {
 
   getAllListingIds() {
     return new Promise((resolve, reject) => {
-      this.listingContract.setProvider(window.web3.currentProvider)
-      this.listingContract.deployed().then((instance) => {
+      this.listingsRegistryContract.setProvider(window.web3.currentProvider)
+      this.listingsRegistryContract.deployed().then((instance) => {
         // Get total number of listings
         instance.listingsLength.call().then((listingsLength) => {
           function range(start, count) {
@@ -88,20 +88,26 @@ class ContractService {
 
   getListing(listingId) {
     return new Promise((resolve, reject) => {
-      this.listingContract.setProvider(window.web3.currentProvider)
-      this.listingContract.deployed().then((instance) => {
+      this.listingsRegistryContract.setProvider(window.web3.currentProvider)
+      this.listingsRegistryContract.deployed().then((instance) => {
         instance.getListing.call(listingId)
         .then((listing)  => {
           // Listing is returned as array of properties.
           // IPFS hash (as bytes32 hex string) is in results[2]
           // Convert it to regular IPFS base-58 encoded hash
+          console.log("Listing:")
+          console.log(listing)
+          console.log(instance)
+
+          // Address of Listing contract is in: listing[0]
           const listingObject = {
-            index: listing[0].toNumber(),
+            index: listingId,
             lister: listing[1],
             ipfsHash: this.getIpfsHashFromBytes32(listing[2]),
             price: window.web3.fromWei(listing[3], 'ether').toNumber(),
             unitsAvailable: listing[4].toNumber()
           }
+          console.log(listingObject)
           resolve(listingObject)
         })
         .catch((error) => {
@@ -115,9 +121,9 @@ class ContractService {
   buyListing(listingIndex, unitsToBuy, ethToGive) {
     console.log('request to buy index #' + listingIndex + ', of this many untes ' + unitsToBuy + ' units. Total eth to send:' + ethToGive)
     return new Promise((resolve, reject) => {
-      this.listingContract.setProvider(window.web3.currentProvider)
+      this.listingsRegistryContract.setProvider(window.web3.currentProvider)
       window.web3.eth.getAccounts((error, accounts) => {
-        this.listingContract.deployed().then((instance) => {
+        this.listingsRegistryContract.deployed().then((instance) => {
           let weiToGive = window.web3.toWei(ethToGive, 'ether')
           // Buy it for real
           instance.buyListing(
@@ -167,8 +173,5 @@ class ContractService {
 }
 
 const contractService = new ContractService()
-
-console.log("In origin package")
-console.log(contractService)
 
 export default contractService

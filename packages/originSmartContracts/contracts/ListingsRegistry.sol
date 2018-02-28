@@ -6,16 +6,12 @@ pragma solidity ^0.4.11;
 
 import "./Listing.sol";
 
-contract ListingRegistry {
+contract ListingsRegistry {
 
   /*
    * Events
    */
 
-  // Event denoting that a given address has updated its array of listings
-  // Currently, this means creating or deleting listings
-  // In the future, we will have separate events for specific actions
-  event UpdateListings(address _from);
   event NewListing(uint _index);
 
   /*
@@ -37,15 +33,6 @@ contract ListingRegistry {
     _;
   }
 
-  modifier hasUnitsAvailable(uint _index, uint _unitsToBuy) {
-    require (_unitsToBuy <= listings[_index].unitsAvailable());
-    _;
-  }
-
-  modifier hasValueToPurchase(uint _index, uint _unitsToBuy) {
-    require (msg.value >= (listings[_index].price() * _unitsToBuy));
-    _;
-  }
 
   modifier isOwner() {
     require (msg.sender == owner_address);
@@ -57,7 +44,7 @@ contract ListingRegistry {
    * Public functions
    */
 
-  function ListingRegistry()
+  function ListingsRegistry()
     public
   {
     // Defines origin admin address - may be removed for public deployment
@@ -103,6 +90,18 @@ contract ListingRegistry {
       0xff5957ff4035d28dcee79e65aa4124a4de4dcc8cb028faca54c883a5497d8917,
       0.300 ether, 25
     );
+
+    // // Red shoe - Hash: QmfF4JBA4fEYDkZqjRHnDxWGGoXg5D1T4WqfDrN4GXP33p
+    // create(
+    //   0xfb27dcfe2c7febe98d755e2f9df0ff73fb8abecaa778f540d0cbf28b059306db,
+    //   0.01 ether, 1
+    // );
+
+    // // Lambo - Hash: QmYsNo3fYTXQRHREYeoGUGLuYETnjx3HxQFMeiZuE7zPSf
+    // create(
+    //   0x9c73e11ffa575504295be4ece1d4ea49df33261f8eb6a4a7e313e4bb74abf150,
+    //   2.50 ether, 1
+    // );
   }
 
   /// @dev listingsLength(): Return number of listings
@@ -119,13 +118,14 @@ contract ListingRegistry {
   function getListing(uint _index)
     public
     constant
-    returns (address, uint, address, bytes32, uint, uint)
+    returns (address, address, bytes32, uint, uint)
   {
+    // TEST: ListingsRegistry.deployed().then(function(instance){ return instance.getListing.call(0) })
+
     // TODO (Stan): Determine if less gas to do one array lookup into var, and
     // return var struct parts
     return (
       listings[_index],
-      _index,
       listings[_index].owner(),
       listings[_index].ipfsHash(),
       listings[_index].price(),
@@ -148,8 +148,7 @@ contract ListingRegistry {
     public
     returns (uint)
   {
-    listings.push(new Listing( _ipfsHash, _price, _unitsAvailable));
-    UpdateListings(msg.sender);
+    listings.push(new Listing( msg.sender, _ipfsHash, _price, _unitsAvailable));
     NewListing(listings.length-1);
     return listings.length;
   }

@@ -1,7 +1,5 @@
 pragma solidity ^0.4.11;
 
-import "./ListingRegistry.sol";
-
 contract Listing {
 
   /*
@@ -10,38 +8,37 @@ contract Listing {
 
   event ListingPurchased(uint _unitsToBuy, uint _value);
 
-  /*
-   * Storage
-   */
+    /*
+    * Storage
+    */
 
-  address public owner;
-  ListingRegistry public listingRegistry;
-  // Assume IPFS defaults for hash: function:0x12=sha2, size:0x20=256 bits
-  // See: https://ethereum.stackexchange.com/a/17112/20332
-  // This assumption may have to change in future, but saves space now
-  bytes32 public ipfsHash;
-  uint public price;
-  uint public unitsAvailable;
+    address public owner;
+    address public listingRegistry; // TODO: Define interface for real ListingRegistry ?
+    // Assume IPFS defaults for hash: function:0x12=sha2, size:0x20=256 bits
+    // See: https://ethereum.stackexchange.com/a/17112/20332
+    // This assumption may have to change in future, but saves space now
+    bytes32 public ipfsHash;
+    uint public price;
+    uint public unitsAvailable;
 
 
-  function Listing (
-    address _owner,
-    bytes32 _ipfsHash,
-    uint _price,
-    uint _unitsAvailable
-  )
-  public
-  {
-    owner = _owner;
-    listingRegistry = ListingRegistry(msg.sender);
-    ipfsHash = _ipfsHash;
-    price = _price;
-    unitsAvailable = _unitsAvailable;
-  }
+    function Listing (
+      address _owner,
+      bytes32 _ipfsHash,
+      uint _price,
+      uint _unitsAvailable
+    )
+    public
+    {
+      owner = _owner;
+      listingRegistry = msg.sender; // ListingRegistry(msg.sender);
+      ipfsHash = _ipfsHash;
+      price = _price;
+      unitsAvailable = _unitsAvailable;
+    }
 
 
   /// @dev buyListing(): Buy a listing
-  /// @param _index Index of listing to buy
   /// @param _unitsToBuy Number of units to buy
   function buyListing(uint _unitsToBuy)
     public
