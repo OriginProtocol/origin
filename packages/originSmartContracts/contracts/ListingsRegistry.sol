@@ -118,14 +118,15 @@ contract ListingsRegistry {
   function getListing(uint _index)
     public
     constant
-    returns (address, address, bytes32, uint, uint)
+    returns (uint, address, bytes32, uint, uint)
   {
-    // TEST: ListingsRegistry.deployed().then(function(instance){ return instance.getListing.call(0) })
+    // Test in truffle deelop:
+    // ListingsRegistry.deployed().then(function(instance){ return instance.getListing.call(0) })
 
     // TODO (Stan): Determine if less gas to do one array lookup into var, and
     // return var struct parts
     return (
-      listings[_index],
+      42,
       listings[_index].owner(),
       listings[_index].ipfsHash(),
       listings[_index].price(),
@@ -148,7 +149,7 @@ contract ListingsRegistry {
     public
     returns (uint)
   {
-    listings.push(new Listing( msg.sender, _ipfsHash, _price, _unitsAvailable));
+    listings.push(new Listing(msg.sender, _ipfsHash, _price, _unitsAvailable));
     NewListing(listings.length-1);
     return listings.length;
   }
