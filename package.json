@@ -49,11 +49,11 @@
     "dotenv": "^2.0.0",
     "fetch": "^1.1.0",
     "map-cache": "^0.2.2",
-    "marked": "^0.3.12",
+    "marked": "^0.3.17",
     "react": "^15.6.2",
     "react-dom": "^15.6.2",
     "react-js-pagination": "^3.0.1",
-    "react-jsonschema-form": "^1.00.0",
+    "react-jsonschema-form": "^1.0.1",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-web3": "github:wanderingstan/react-web3#state_didchange_fix"
