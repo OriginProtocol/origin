@@ -85,6 +85,17 @@ npm run start
 
 13. Try it! Create a listing and post it to IPFS and Ethereum.
 
+### Using Docker
+
+1. Start container:
+```
+docker-compose up -d
+```
+
+2. Set up Metamask using steps 6-10 above.
+
+3. Visit http://localhost:3000 in your browser.
+
 ## Get involved
 
-We'd love to have you join us on this project.  We're still in the super early stages, but join our [slack channel](http://slack.originprotocol.com) or [email us](mailto:founders@originprotocol.com) to get started.
+We'd love to have you join us on this project.  We're still in the super early stages, but join our [Discord channel](https://discord.gg/jyxpUSe) or [email us](mailto:founders@originprotocol.com) to get started.
