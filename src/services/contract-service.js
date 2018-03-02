@@ -41,7 +41,8 @@ class ContractService {
     return new Promise((resolve, reject) => {
       this.listingContract.setProvider(window.web3.currentProvider)
       window.web3.eth.getAccounts((error, accounts) => {
-        this.listingContract.deployed().then((instance) => {
+        this.listingContract.deployed()
+        .then((instance) => {
           let weiToGive = window.web3.toWei(ethPrice, 'ether')
           // Note we cannot get the listingId returned by our contract.
           // See: https://forum.ethereum.org/discussion/comment/31529/#Comment_31529
@@ -50,9 +51,11 @@ class ContractService {
             weiToGive,
             units,
             {from: accounts[0]})
-        }).then((result) => {
+        })
+        .then((result) => {
           resolve(result)
-        }).catch((error) => {
+        })
+        .catch((error) => {
           console.error("Error submitting to the Ethereum blockchain: " + error)
           reject(error)
         })
@@ -63,24 +66,22 @@ class ContractService {
   getAllListingIds() {
     return new Promise((resolve, reject) => {
       this.listingContract.setProvider(window.web3.currentProvider)
-      this.listingContract.deployed().then((instance) => {
+      this.listingContract.deployed()
+      .then((instance) => {
         // Get total number of listings
-        instance.listingsLength.call().then((listingsLength) => {
-          function range(start, count) {
-            return Array.apply(0, Array(count))
-              .map(function (element, index) {
-                return index + start
-            });
-          }
-          resolve(range(0, Number(listingsLength)))
-        })
-        .catch((error) => {
-          console.log(`Can't get number of listings.`)
-          reject(error)
-        })
+        return instance.listingsLength.call()
+      })
+      .then((listingsLength) => {
+        function range(start, count) {
+          return Array.apply(0, Array(count))
+            .map(function (element, index) {
+              return index + start
+          });
+        }
+        resolve(range(0, Number(listingsLength)))
       })
       .catch((error) => {
-        console.log(`Contract not deployed`)
+        console.error(error)
         reject(error)
       })
     })
@@ -89,25 +90,26 @@ class ContractService {
   getListing(listingId) {
     return new Promise((resolve, reject) => {
       this.listingContract.setProvider(window.web3.currentProvider)
-      this.listingContract.deployed().then((instance) => {
-        instance.getListing.call(listingId)
-        .then((listing)  => {
-          // Listing is returned as array of properties.
-          // IPFS hash (as bytes32 hex string) is in results[2]
-          // Convert it to regular IPFS base-58 encoded hash
-          const listingObject = {
-            index: listing[0].toNumber(),
-            lister: listing[1],
-            ipfsHash: this.getIpfsHashFromBytes32(listing[2]),
-            price: window.web3.fromWei(listing[3], 'ether').toNumber(),
-            unitsAvailable: listing[4].toNumber()
-          }
-          resolve(listingObject)
-        })
-        .catch((error) => {
-          console.log(`Error fetching listingId: ${listingId}`)
-          reject(error)
-        })
+      this.listingContract.deployed()
+      .then((instance) => {
+        return instance.getListing.call(listingId)
+      })
+      .then((listing)  => {
+        // Listing is returned as array of properties.
+        // IPFS hash (as bytes32 hex string) is in results[2]
+        // Convert it to regular IPFS base-58 encoded hash
+        const listingObject = {
+          index: listing[0].toNumber(),
+          lister: listing[1],
+          ipfsHash: this.getIpfsHashFromBytes32(listing[2]),
+          price: window.web3.fromWei(listing[3], 'ether').toNumber(),
+          unitsAvailable: listing[4].toNumber()
+        }
+        resolve(listingObject)
+      })
+      .catch((error) => {
+        console.log(`Error fetching listingId: ${listingId}`)
+        reject(error)
       })
     })
   }
@@ -117,22 +119,23 @@ class ContractService {
     return new Promise((resolve, reject) => {
       this.listingContract.setProvider(window.web3.currentProvider)
       window.web3.eth.getAccounts((error, accounts) => {
-        this.listingContract.deployed().then((instance) => {
+        this.listingContract.deployed()
+        .then((instance) => {
           let weiToGive = window.web3.toWei(ethToGive, 'ether')
           // Buy it for real
-          instance.buyListing(
+          return instance.buyListing(
             listingIndex,
             unitsToBuy,
             {from: accounts[0], value:weiToGive, gas: 4476768} // TODO (SRJ): is gas needed?
           )
-          .then((transactionReceipt) => {
-            // Success
-            resolve(transactionReceipt)
-          })
-          .catch((error) => {
-            console.error(error)
-            reject(error)
-          })
+        })
+        .then((transactionReceipt) => {
+          // Success
+          resolve(transactionReceipt)
+        })
+        .catch((error) => {
+          console.error(error)
+          reject(error)
         })
       })
     })
