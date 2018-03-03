@@ -1,3 +1,5 @@
+@import 'alertify.css';
+
 :root {
   --default-font: 'Lato', 'Helvetica Neue', 'Arial', sans-serif;
   --heading-font: 'Poppins', 'Helvetica Neue', 'Arial', sans-serif;

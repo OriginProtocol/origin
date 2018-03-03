@@ -7,6 +7,8 @@ import ListingDetail from './listing-detail'
 import Form from 'react-jsonschema-form'
 import Overlay from './overlay'
 
+const alertify = require('../../node_modules/alertify/src/alertify.js')
+
 class ListingCreate extends Component {
 
   constructor(props) {
@@ -88,7 +90,7 @@ class ListingCreate extends Component {
       return bytes
     }
     if (roughSizeOfObject(formListing.formData) > this.MAX_UPLOAD_BYTES) {
-      alert("Your listing is too large. Consider using fewer or smaller photos.")
+      alertify.log("Your listing is too large. Consider using fewer or smaller photos.")
     } else {
       this.setState({
         formListing: formListing,
@@ -103,26 +105,20 @@ class ListingCreate extends Component {
     .then((tx) => {
       this.setState({ step: this.STEP.PROCESSING })
       // Submitted to blockchain, now wait for confirmation
-      contractService.waitTransactionFinished(tx)
-      .then((blockNumber) => {
-        this.setState({ step: this.STEP.SUCCESS })
-        // TODO: Where do we take them after successful creation?
-      })
-      .catch((error) => {
-        console.error(error)
-        alert(error)
-        // TODO: Reset form? Do something.
-      })
+      return contractService.waitTransactionFinished(tx)
+    })
+    .then((blockNumber) => {
+      this.setState({ step: this.STEP.SUCCESS })
+      // TODO: Where do we take them after successful creation?
     })
     .catch((error) => {
       console.error(error)
-      alert(error)
+      alertify.log(error.message)
       // TODO: Reset form? Do something.
     })
   }
 
   render() {
-    window.scrollTo(0, 0)
     return (
       <div className="container listing-form">
         { this.state.step === this.STEP.PICK_SCHEMA &&
