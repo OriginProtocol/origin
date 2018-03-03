@@ -21,19 +21,15 @@ class OriginService {
 
   	  	// Submit to ETH contract
         let units = 1; // TODO: Allow users to set number of units in form
-  	    contractService.submitListing(ipfsHash, formListing.formData.price, units)
-  	    .then((transactionReceipt) => {
-          // Success!
-  	    	console.log(`Submitted to ETH blockchain with transactionReceipt.tx: ${transactionReceipt.tx}`)
-          resolve(transactionReceipt.tx)
-  	    })
-  	    .catch((error) => {
-  	      console.error(error)
-          reject(`ETH Failure: ${error}`)
-  	    });
+  	    return contractService.submitListing(ipfsHash, formListing.formData.price, units)
+      })
+      .then((transactionReceipt) => {
+        // Success!
+        console.log(`Submitted to ETH blockchain with transactionReceipt.tx: ${transactionReceipt.tx}`)
+        resolve(transactionReceipt.tx)
       })
       .catch((error) => {
-        reject(`IPFS Failure: ${error}`)
+        reject(`Failure: ${error}`)
       });
 
     });

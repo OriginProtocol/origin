@@ -48,6 +48,8 @@
     "whatwg-fetch": "1.0.0"
   },
   "dependencies": {
+    "ajv": "^4.11.7",
+    "alertify": "github:micahalcorn/alertify.js#webpack_friendly",
     "bs58": "^4.0.1",
     "dotenv": "^2.0.0",
     "ethereumjs-testrpc": "^4.1.3",

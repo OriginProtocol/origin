@@ -4,6 +4,8 @@ import ipfsService from '../services/ipfs-service'
 
 import Overlay from './overlay'
 
+const alertify = require('../../node_modules/alertify/src/alertify.js')
+
 class ListingsDetail extends Component {
 
   constructor(props) {
@@ -34,17 +36,15 @@ class ListingsDetail extends Component {
     contractService.getListing(this.props.listingId)
     .then((listingContractObject) => {
       this.setState(listingContractObject)
-      ipfsService.getListing(this.state.ipfsHash)
-      .then((listingJson) => {
-        const jsonData = JSON.parse(listingJson).data
-        this.setState(jsonData)
-      })
-      .catch((error) => {
-        console.error(`Error fetching IPFS info for listingId: ${this.props.listingId}`)
-      })
+      return ipfsService.getListing(this.state.ipfsHash)
+    })
+    .then((listingJson) => {
+      const jsonData = JSON.parse(listingJson).data
+      this.setState(jsonData)
     })
     .catch((error) => {
-      console.error(`Error fetching contract info for listingId: ${this.props.listingId}`)
+      alertify.log('There was an error loading this listing.')
+      console.error(`Error fetching contract or IPFS info for listingId: ${this.props.listingId}`)
     })
   }
 
@@ -67,20 +67,21 @@ class ListingsDetail extends Component {
     .then((transactionReceipt) => {
       console.log("Purchase request sent.")
       this.setState({step: this.STEP.PROCESSING})
-      contractService.waitTransactionFinished(transactionReceipt.tx)
-      .then((blockNumber) => {
-        this.setState({step: this.STEP.PURCHASED})
-      })
+      return contractService.waitTransactionFinished(transactionReceipt.tx)
+    })
+    .then((blockNumber) => {
+      this.setState({step: this.STEP.PURCHASED})
     })
     .catch((error) => {
       console.log(error)
-      alert(error)
+      alertify.log("There was a problem purchasing this listing.\nSee the console for more details.")
       this.setState({step: this.STEP.VIEW})
     })
   }
 
 
   render() {
+    const price = typeof this.state.price === 'string' ? 0 : this.state.price
     return (
       <div className="listing-detail">
         {this.state.step===this.STEP.METAMASK &&
@@ -120,6 +121,8 @@ class ListingsDetail extends Component {
               <div className="category">{this.state.category}</div>
               <div className="title">{this.state.name}</div>
               <div className="description">{this.state.description}</div>
+              <div className="category">Creator</div>
+              <div className="description">{this.state.lister}</div>
               <a href={ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
                 View on IPFS <big>&rsaquo;</big>
               </a>
@@ -134,7 +137,7 @@ class ListingsDetail extends Component {
                 <div>
                   <span>Price</span>
                   <span className="price">
-                    {Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
+                    {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
                   </span>
                 </div>
                 {(this.state.unitsAvailable > 1) &&

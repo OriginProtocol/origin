@@ -79,18 +79,17 @@ const Layout = ({ children, hideCreateButton }) => (
 const App = () => (
   <Router>
     <ScrollToTop>
-      <div>
-        <Web3Provider
-          web3UnavailableScreen={() => <Web3UnavailableScreen />}
-          accountUnavailableScreen={() => <AccountUnavailableScreen />}
-        >
-          <div>
-            <Route exact path="/" component={HomePage} />
-            <Route path="/listing/:listingId" component={ListingDetailPage} />
-            <Route path="/create" component={CreateListingPage} />
-          </div>
-        </Web3Provider>
-      </div>
+      <Web3Provider
+        web3UnavailableScreen={() => <Web3UnavailableScreen />}
+        accountUnavailableScreen={() => <AccountUnavailableScreen />}
+      >
+        <div>
+          <Route exact path="/" component={HomePage}/>
+          <Route path="/page/:activePage" component={HomePage}/>
+          <Route path="/listing/:listingId" component={ListingDetailPage}/>
+          <Route path="/create" component={CreateListingPage}/>
+        </div>
+      </Web3Provider>
     </ScrollToTop>
   </Router>
 )
