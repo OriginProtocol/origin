@@ -177,7 +177,7 @@ class ListingCreate extends Component {
                   onError={(errors) => console.log(`react-jsonschema-form errors: ${errors.length}`)}
                 >
                   <div className="btn-container">
-                    <button className="btn btn-other" onClick={() => this.setState({step: this.STEP.PICK_SCHEMA})}>
+                    <button type="button" className="btn btn-other" onClick={() => this.setState({step: this.STEP.PICK_SCHEMA})}>
                       Back
                     </button>
                     <button type="submit" className="float-right btn btn-primary">Continue</button>
