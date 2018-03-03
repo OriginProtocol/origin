@@ -1,7 +1,7 @@
 # Origin
 The sharing economy without intermediaries.
 
-## Overview
+## Project Overview
 
 Origin is a sharing economy marketplace that enables buyers and sellers of fractional use goods and services (car-sharing, service-based tasks, home-sharing, etc.) to transact on the distributed, open web. Using the Ethereum blockchain and Interplanetary File System (IPFS), the platform and community are decentralized, allowing for the creation and booking of services and goods without traditional intermediaries.
 
@@ -17,17 +17,14 @@ To accomplish these ambitious goals, the Origin platform is being launched with 
 
 To learn more about this project, please visit [the Origin website](https://www.originprotocol.com) and download our whitepaper.
 
-## Try it on the Rinkeby testnet
+## Try Demo Dapp on the Rinkeby testnet
 
-This demo is currently running on the Rinkeby testnet. You can try it for yourself at:
+This demo is currently running on the Rinkeby testnet.
+- [Overview and step-by-step instructions](https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58) 
+- [Live Demo](http://demo.originprotocol.com)
 
-[demo.originprotocol.com](http://demo.originprotocol.com)
 
-To use the demo, you will need to first install the [Metamask Chrome Browser Extension](https://metamask.io/). If you want to create a listing or make a purchase, you will need to have fake Rinkeby ETH. You can get some for free using the [Rinkeby Authenticated Faucet](https://faucet.rinkeby.io).  **Be careful not to mix up your test wallet with your real one.**
-
-This demo uses our IPFS gateway which is run as a community service and is available at gateway.originprotocol.com.
-
-## Getting up to speed
+## Core Technologies
 
 If you're new to the space, it may be helpful to first familiarize yourself with some of the core technologies that we're using to build Origin.
 
@@ -35,54 +32,70 @@ If you're new to the space, it may be helpful to first familiarize yourself with
  * [IPFS](https://ipfs.io/)
  * [Ethereum](https://www.ethereum.org/)
 
-## Install and run the demo app
+## Install and run Demo DApp locally
 
 Think of this app as a proof of concept and our playground for trying out ideas. While we may eventually reuse pieces of this in production, this is by no means what we envision as the final product. We thought it would be helpful to demonstrate how the various technologies work together from end to end.
 
 
-1. Download [truffle](http://truffleframework.com/):
+1. Make sure you have `node` version 8.5.0 or greater
+```
+node --version
+```
+
+2. Download [truffle](http://truffleframework.com/):
 ```
 npm install -g truffle
 ```
-2. Clone Origin:
+3. Clone Origin:
 ```
 git clone https://github.com/OriginProtocol/demo-dapp origin-demo-dapp && cd origin-demo-dapp
 ```
-3. Start truffle:
+4. Start truffle:
 ```
 truffle develop
 ```
  This will begin a new Ethereum blockchain. It will output 10 accounts that it has put 100 ETH into, and the mnemonic to generate them.
 
-4. In the truffle console, type `migrate`. This will compile our contracts and add them to the blockchain.
+5. In the truffle console, type `migrate`. This will compile our contracts and add them to the blockchain.
 
-5. Install [Metamask Chrome Browser Extension](https://metamask.io/).
+6. Install [Metamask Chrome Browser Extension](https://metamask.io/).
 
-6. Click the Metamask icon in the toolbar, accept terms, and then click `Import Existing DEN`
+7. Click the Metamask icon in the toolbar, accept terms, and then click `Import Existing DEN`
 
-7. Enter the seed phrase (Mnemonic):
+8. Enter the seed phrase (Mnemonic):
 ```
 candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
 ```
  This is the default seed phrase for truffle development.
 
-8. Click where it says "Ethereum Main Network", select "Custom RPC" and enter `http://localhost:9545/`. This takes us off of the real ETH blockchain and onto our local blockchain. Click the back arrow to return to your account.
+9. Click where it says "Ethereum Main Network", select "Custom RPC" and enter `http://localhost:9545/`. This takes us off of the real ETH blockchain and onto our local blockchain. Click the back arrow to return to your account.
 
  **Be careful not to mix up your test wallet with you real one on the Main Network.**
 
-9. You should see your first test account now has 100 ETH. (Address of `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`) Additional generated accounts will also have this amount.
+10. You should see your first test account now has 100 ETH. (Address of `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`) Additional generated accounts will also have this amount.
 
-10. In a new terminal tab, install and start the Origin node application.
+11. In a new terminal tab, install and start the Origin node application.
 ```
 npm install
 npm run start
 ```
 
-11. A browser will open to http://localhost:3000
-![Origin-homepage](https://user-images.githubusercontent.com/673455/30517963-0603f3d8-9b2d-11e7-9ef4-327b747695eb.png)
+12. A browser will open to http://localhost:3000
+![Origin-homepage](https://user-images.githubusercontent.com/673455/34650232-ca4df39c-f37a-11e7-9b18-18861f282dff.png)
 
-12. Try it! Create a listing and post it to IPFS and Ethereum.
+13. Try it! Create a listing and post it to IPFS and Ethereum.
+
+### Using Docker
+
+1. Start container:
+```
+docker-compose up -d
+```
+
+2. Set up Metamask using steps 6-10 above.
+
+3. Visit http://localhost:3000 in your browser.
 
 ## Get involved
 
-We'd love to have you join us on this project.  We're still in the super early stages, but join our [slack channel](http://slack.originprotocol.com) or [email us](mailto:founders@originprotocol.com) to get started.
+We'd love to have you join us on this project.  We're still in the super early stages, but join our [Discord channel](https://discord.gg/jyxpUSe) or [email us](mailto:founders@originprotocol.com) to get started.

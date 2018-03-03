@@ -4,6 +4,8 @@ import ipfsService from '../services/ipfs-service'
 
 import Overlay from './overlay'
 
+const alertify = require('../../node_modules/alertify/src/alertify.js')
+
 class ListingsDetail extends Component {
 
   constructor(props) {
@@ -34,16 +36,15 @@ class ListingsDetail extends Component {
     contractService.getListing(this.props.listingId)
     .then((listingContractObject) => {
       this.setState(listingContractObject)
-        ipfsService.getListing(this.state.ipfsHash)
-        .then((listingJson) => {
-          this.setState(JSON.parse(listingJson).data)
-        })
-        .catch((error) => {
-          console.error(`Error fetching IPFS info for listingId: ${this.props.listingId}`)
-        })
+      return ipfsService.getListing(this.state.ipfsHash)
+    })
+    .then((listingJson) => {
+      const jsonData = JSON.parse(listingJson).data
+      this.setState(jsonData)
     })
     .catch((error) => {
-      console.error(`Error fetching contract info for listingId: ${this.props.listingId}`)
+      alertify.log('There was an error loading this listing.')
+      console.error(`Error fetching contract or IPFS info for listingId: ${this.props.listingId}`)
     })
   }
 
@@ -54,14 +55,7 @@ class ListingsDetail extends Component {
     }
     else if (this.props.listingJson) {
       // Listing json passed in directly
-
-      // TODO: HACK!
-      window.setTimeout(() => {this.setState(this.props.listingJson)}, 1000)
-
-      // TODO: Use Object() to merge..need to look up
-      // for (var prop in this.props.listingJson) {
-      //   this.state[prop] = this.props.listingJson[prop]
-      // }
+      this.setState(this.props.listingJson)
     }
   }
 
@@ -73,27 +67,27 @@ class ListingsDetail extends Component {
     .then((transactionReceipt) => {
       console.log("Purchase request sent.")
       this.setState({step: this.STEP.PROCESSING})
-      contractService.waitTransactionFinished(transactionReceipt.tx)
-      .then((blockNumber) => {
-        // Re-load listing to show change
-        // TODO: Some sort of succes page with tx reference?
-        this.setState({step: this.STEP.PURCHASED})
-        // this.loadListing()
-      })
+      return contractService.waitTransactionFinished(transactionReceipt.tx)
+    })
+    .then((blockNumber) => {
+      this.setState({step: this.STEP.PURCHASED})
     })
     .catch((error) => {
       console.log(error)
-      alert(error)
+      alertify.log("There was a problem purchasing this listing.\nSee the console for more details.")
+      this.setState({step: this.STEP.VIEW})
     })
   }
 
+
   render() {
+    const price = typeof this.state.price === 'string' ? 0 : this.state.price
     return (
       <div className="listing-detail">
         {this.state.step===this.STEP.METAMASK &&
           <Overlay imageUrl="/images/spinner-animation.svg">
             Confirm transaction<br />
-            Press &ldquo;Submit&rdquo; in Metamask window
+            Press &ldquo;Submit&rdquo; in MetaMask window
           </Overlay>
         }
         {this.state.step===this.STEP.PROCESSING &&
@@ -114,7 +108,9 @@ class ListingsDetail extends Component {
           <div className="carousel">
             {this.state.pictures.map(pictureUrl => (
               <div className="photo" key={pictureUrl}>
-                <img src={pictureUrl} role='presentation' />
+                {(new URL(pictureUrl).protocol === "data:") &&
+                  <img src={pictureUrl} role='presentation' />
+                }
               </div>
             ))}
           </div>
@@ -125,11 +121,9 @@ class ListingsDetail extends Component {
               <div className="category">{this.state.category}</div>
               <div className="title">{this.state.name}</div>
               <div className="description">{this.state.description}</div>
-              <div className="lister">
-                <label className="lister-label">Creator </label>
-                <h6 className="lister-address">{this.state.lister}</h6>
-              </div>
-              <a href={`http://gateway.originprotocol.com/ipfs/${this.state.ipfsHash}`} target="_blank">
+              <div className="category">Creator</div>
+              <div className="description">{this.state.lister}</div>
+              <a href={ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
                 View on IPFS <big>&rsaquo;</big>
               </a>
               <div className="debug">
@@ -143,7 +137,7 @@ class ListingsDetail extends Component {
                 <div>
                   <span>Price</span>
                   <span className="price">
-                    {Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
+                    {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
                   </span>
                 </div>
                 {(this.state.unitsAvailable > 1) &&
@@ -165,7 +159,7 @@ class ListingsDetail extends Component {
                       </button>
                       :
                       <div className="sold-banner">
-                        <img src="/images/sold-tag.svg" role="presentation"/>
+                        <img src="/images/sold-tag.svg" role="presentation" />
                         Sold
                       </div>
                     )

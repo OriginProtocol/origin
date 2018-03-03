@@ -1,63 +1,70 @@
 import React, { Component } from 'react'
 import contractService from '../services/contract-service'
 import Pagination from 'react-js-pagination'
+import { withRouter } from 'react-router'
 
 import ListingCard from './listing-card'
 
+const alertify = require('../../node_modules/alertify/src/alertify.js')
+
 class ListingsGrid extends Component {
 
-  constructor(props) {
+  constructor(props, context) {
     super(props)
     this.state = {
       listingIds: [],
-      listingsPerPage: 10,
-      activePage: 1
+      listingsPerPage: 12
     }
-
-    this.handlePageChange = this.handlePageChange.bind(this)
   }
 
   componentWillMount() {
-    // Get listings to hide if on demo
+    this.handlePageChange = this.handlePageChange.bind(this)
+
+    // Get listings to hide
     const hideListPromise = new Promise((resolve, reject) => {
-      if (window.location.hostname !== "demo.originprotocol.com") {
-        resolve([])
+      window.web3.version.getNetwork((err, netId) => { resolve(netId) })
+    })
+    .then((networkId) => {
+      return fetch(`https://raw.githubusercontent.com/OriginProtocol/demo-dapp/hide_list/hidelist_${networkId}.json`)
+    })
+    .then((response) => {
+      if (response.status === 404) {
+        return [] // Default: Don't hide anything
       } else {
-        resolve (
-          fetch('https://raw.githubusercontent.com/OriginProtocol/demo-dapp/hide_list/hidelist.json')
-          .then((response) => response.json())
-        )
+        return response.json()
       }
     })
+
     // Get all listings from contract
     const allListingsPromise = contractService.getAllListingIds()
     .catch((error) => {
       if (error.message.indexOf("(network/artifact mismatch)") > 0) {
-        alert("The Origin Contract was not found on this network.\nYou may need to change networks, or deploy the contract.")
+        console.log("The Origin Contract was not found on this network.\nYou may need to change networks, or deploy the contract.")
       }
     })
     // Wait for both to finish
     Promise.all([hideListPromise, allListingsPromise])
     .then(([hideList, ids]) => {
+      // Filter hidden listings
       const showIds = ids ? ids.filter((i)=>hideList.indexOf(i) < 0) : []
-      this.setState({ listingIds: showIds })
+      this.setState({ listingIds: showIds.reverse() })
     })
     .catch((error) => {
       console.log(error)
-      alert(error.message)
+      alertify.log(error.message)
     })
   }
 
   handlePageChange(pageNumber) {
-    console.log(`active page is ${pageNumber}`)
-    this.setState({activePage: pageNumber})
+    this.props.history.push(`/page/${pageNumber}`)
   }
 
   render() {
+    const activePage = this.props.match.params.activePage || 1
     // Calc listings to show for given page
     const showListingsIds = this.state.listingIds.slice(
-      this.state.listingsPerPage * (this.state.activePage-1),
-      this.state.listingsPerPage * (this.state.activePage)).reverse()
+      this.state.listingsPerPage * (activePage-1),
+      this.state.listingsPerPage * (activePage))
     return (
       <div className="listings-grid">
         <h1>{this.state.listingIds.length} Listings</h1>
@@ -67,7 +74,7 @@ class ListingsGrid extends Component {
           ))}
         </div>
         <Pagination
-          activePage={this.state.activePage}
+          activePage={activePage}
           itemsCountPerPage={this.state.listingsPerPage}
           totalItemsCount={this.state.listingIds.length}
           pageRangeDisplayed={5}
@@ -81,4 +88,4 @@ class ListingsGrid extends Component {
   }
 }
 
-export default ListingsGrid
+export default withRouter(ListingsGrid)

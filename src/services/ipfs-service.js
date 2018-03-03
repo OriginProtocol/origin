@@ -1,4 +1,5 @@
 const ipfsAPI = require('ipfs-api')
+const MapCache = require('map-cache');
 
 class IpfsService {
   static instance
@@ -20,21 +21,20 @@ class IpfsService {
       if (error) {
         console.error("IPFS - Can't connect to the IPFS API.")
         console.error(error)
-      } else {
-        console.log(`IPFS - connected to ${response.length} peers`)
       }
-    });
-
+    })
     IpfsService.instance = this
+
+    // Caching
+    this.mapCache = new MapCache()
   }
 
-  submitListing(formListing) {
+  submitListing(formListingJson) {
     return new Promise((resolve, reject) => {
       const file = {
         path: 'listing.json',
-        content: JSON.stringify(formListing)
+        content: JSON.stringify(formListingJson)
       }
-
       this.ipfs.files.add([file], (error, response) => {
         if (error) {
           console.error("Can't connect to IPFS.")
@@ -42,40 +42,42 @@ class IpfsService {
           reject('Can\'t connect to IPFS. Failure to submit listing to IPFS')
         }
         const file = response[0]
-        const ipfsListing = file.hash
-
-        if (ipfsListing) {
-          resolve(ipfsListing)
+        const ipfsHashStr = file.hash
+        if (ipfsHashStr) {
+          this.mapCache.set(ipfsHashStr, formListingJson)
+          resolve(ipfsHashStr)
         } else {
           reject('Failure to submit listing to IPFS')
         }
       })
-    });
+    })
   }
 
   getListing(ipfsHashStr) {
     return new Promise((resolve, reject) => {
-
-      this.ipfs.files.cat(ipfsHashStr, function (err, stream) {
+      // Check for cache hit
+      if (this.mapCache.has(ipfsHashStr)) {
+        resolve(this.mapCache.get(ipfsHashStr))
+      }
+      // Get from IPFS network
+      this.ipfs.files.cat(ipfsHashStr, (err, stream) => {
         if (err) {
           console.error(err)
           reject("Got ipfs cat err:" + err)
         }
-
         let res = ''
-        stream.on('data', function (chunk) {
+        stream.on('data', (chunk) => {
           res += chunk.toString()
         })
         stream.on('error', function (err) {
           reject("Got ipfs cat stream err:" + err)
         })
-        stream.on('end', function () {
+        stream.on('end', () => {
+          this.mapCache.set(ipfsHashStr, res)
           resolve(res)
         })
-
       })
-
-    });
+    })
   }
 
   gatewayUrlForHash(ipfsHashStr) {
@@ -87,4 +89,4 @@ class IpfsService {
 
 const ipfsService = new IpfsService()
 
-export default ipfsService;
+export default ipfsService
