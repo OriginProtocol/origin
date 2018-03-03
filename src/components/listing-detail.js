@@ -4,6 +4,8 @@ import ipfsService from '../services/ipfs-service'
 
 import Overlay from './overlay'
 
+const alertify = require('../../node_modules/alertify/src/alertify.js')
+
 class ListingsDetail extends Component {
 
   constructor(props) {
@@ -71,7 +73,7 @@ class ListingsDetail extends Component {
     })
     .catch((error) => {
       console.log(error)
-      alert(error)
+      alertify.log(error.message)
       this.setState({step: this.STEP.VIEW})
     })
   }

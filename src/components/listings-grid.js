@@ -5,6 +5,8 @@ import { withRouter } from 'react-router'
 
 import ListingCard from './listing-card'
 
+const alertify = require('../../node_modules/alertify/src/alertify.js')
+
 class ListingsGrid extends Component {
 
   constructor(props, context) {
@@ -49,7 +51,7 @@ class ListingsGrid extends Component {
     })
     .catch((error) => {
       console.log(error)
-      alert(error.message)
+      alertify.log(error.message)
     })
   }
 

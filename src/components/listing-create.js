@@ -7,6 +7,8 @@ import ListingDetail from './listing-detail'
 import Form from 'react-jsonschema-form'
 import Overlay from './overlay'
 
+const alertify = require('../../node_modules/alertify/src/alertify.js')
+
 class ListingCreate extends Component {
 
   constructor(props) {
@@ -88,7 +90,7 @@ class ListingCreate extends Component {
       return bytes
     }
     if (roughSizeOfObject(formListing.formData) > this.MAX_UPLOAD_BYTES) {
-      alert("Your listing is too large. Consider using fewer or smaller photos.")
+      alertify.log("Your listing is too large. Consider using fewer or smaller photos.")
     } else {
       this.setState({
         formListing: formListing,
@@ -111,7 +113,7 @@ class ListingCreate extends Component {
     })
     .catch((error) => {
       console.error(error)
-      alert(error)
+      alertify.log(error.message)
       // TODO: Reset form? Do something.
     })
   }
