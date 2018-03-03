@@ -32,10 +32,10 @@ const Footer = (props) => {
                     <a href="https://www.originprotocol.com/whitepaper">Whitepaper</a>
                   </li>
                   <li>
-                    <a href="https://github.com/OriginProtocol">Github</a>
+                    <a href="https://github.com/OriginProtocol" target="_blank">Github</a>
                   </li>
                   <li>
-                    <a href="http://docs.originprotocol.com/">Docs</a>
+                    <a href="http://docs.originprotocol.com/" target="_blank">Docs</a>
                   </li>
                 </ul>
               </div>
@@ -45,19 +45,19 @@ const Footer = (props) => {
                 </div>
                 <ul className="footer-links">
                   <li>
-                    <a href="http://slack.originprotocol.com">Slack</a>
+                    <a href="https://t.me/originprotocol" target="_blank">Telegram</a>
                   </li>
                   <li>
-                    <a href="https://t.me/originprotocol">Telegram</a>
+                    <a href="https://discord.gg/jyxpUSe" target="_blank">Discord</a>
                   </li>
                   <li>
-                    <a href="https://medium.com/originprotocol">Medium</a>
+                    <a href="https://medium.com/originprotocol" target="_blank">Medium</a>
                   </li>
                   <li>
-                    <a href="https://twitter.com/originprotocol">Twitter</a>
+                    <a href="https://twitter.com/originprotocol" target="_blank">Twitter</a>
                   </li>
                   <li>
-                    <a href="https://www.facebook.com/originprotocol">Facebook</a>
+                    <a href="https://www.facebook.com/originprotocol" target="_blank">Facebook</a>
                   </li>
                 </ul>
               </div>
@@ -67,10 +67,13 @@ const Footer = (props) => {
                 </div>
                 <ul className="footer-links">
                   <li>
+                    <a href="http://www.originprotocol.com/team">Team</a>
+                  </li>
+                  <li>
                     <a href="http://www.originprotocol.com/presale">Presale</a>
                   </li>
                   <li>
-                    <a href="http://www.originprotocol.com/team">Team</a>
+                    <a href="http://www.originprotocol.com/partners">Partners</a>
                   </li>
                   <li>
                     <a href="https://angel.co/originprotocol/jobs">Jobs (We&rsquo;re hiring!)</a>

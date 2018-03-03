@@ -70,7 +70,7 @@ candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
 
 9. Click where it says "Ethereum Main Network", select "Custom RPC" and enter `http://localhost:9545/`. This takes us off of the real ETH blockchain and onto our local blockchain. Click the back arrow to return to your account.
 
- **Be careful not to mix up your test wallet with you real one on the Main Network.**
+ **Be careful not to mix up your test wallet with your real one on the Main Network.**
 
 10. You should see your first test account now has 100 ETH. (Address of `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`) Additional generated accounts will also have this amount.
 
@@ -85,6 +85,17 @@ npm run start
 
 13. Try it! Create a listing and post it to IPFS and Ethereum.
 
+### Using Docker
+
+1. Start container:
+```
+docker-compose up -d
+```
+
+2. Set up Metamask using steps 6-10 above.
+
+3. Visit http://localhost:3000 in your browser.
+
 ## Get involved
 
-We'd love to have you join us on this project.  We're still in the super early stages, but join our [slack channel](http://slack.originprotocol.com) or [email us](mailto:founders@originprotocol.com) to get started.
+We'd love to have you join us on this project.  We're still in the super early stages, but join our [Discord channel](https://discord.gg/jyxpUSe) or [email us](mailto:founders@originprotocol.com) to get started.
