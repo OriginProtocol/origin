@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { contractService, ipfsService, originService } from 'origin'
+import { contractService, originService } from '@originprotocol/origin'
 
 import ListingDetail from './listing-detail'
 import Form from 'react-jsonschema-form'

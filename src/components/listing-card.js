@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { contractService, ipfsService } from 'origin'
+import { contractService, ipfsService } from '@originprotocol/origin'
 import { Link } from 'react-router-dom'
 
 class ListingCard extends Component {

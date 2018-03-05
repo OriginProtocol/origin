@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { contractService, ipfsService } from 'origin'
+import { contractService, ipfsService } from '@originprotocol/origin'
 import Overlay from './overlay'
 
 const alertify = require('../../node_modules/alertify/src/alertify.js')
