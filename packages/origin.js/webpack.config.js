@@ -1,6 +1,6 @@
 var nodeExternals = require('webpack-node-externals');
 
-module.exports = {
+var serverConfig = {
   entry: './src/index.js',
   output: {
     filename: './dist/index.js',
@@ -31,4 +31,30 @@ module.exports = {
       }
     ]
   }
-};
+}
+
+var clientConfig = {
+  entry: './src/index.js',
+  output: {
+    filename: './dist/origin.js',
+    libraryTarget: 'window'
+  },
+  devtool: 'inline-source-map',
+  target: 'web',
+  module: {
+    loaders: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['babel-preset-es2015'],
+          plugins: ['transform-class-properties']
+        }
+      }
+    ]
+  }
+
+}
+
+module.exports = [ serverConfig, clientConfig ];
