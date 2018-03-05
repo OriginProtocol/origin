@@ -42,11 +42,4 @@ contract('ListingsRegistry', accounts => {
     assert.equal(unitsAvailable, 5, 'unitsAvailable is correct')
   })
 
-  it('should be able to buy a listing', async function() {
-    await instance.create(ipfsHash, 2, 5, {from: accounts[0]})
-    await instance.buyListing(initialListingsLength, 3, { from: accounts[1], value: 6 })
-    let [index, lister, hash, price, unitsAvailable] = await instance.getListing(initialListingsLength)
-    assert.equal(unitsAvailable, 2, 'units available has decreased')
-  })
-
 })
