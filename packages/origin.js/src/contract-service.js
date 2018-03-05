@@ -1,4 +1,4 @@
-import ListingsRegistryContract from '../../originSmartContracts/build/contracts/ListingsRegistry.json'
+import ListingsRegistryContract from '../../contracts/build/contracts/ListingsRegistry.json'
 import bs58 from 'bs58'
 
 class ContractService {
