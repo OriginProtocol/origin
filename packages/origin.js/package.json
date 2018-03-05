@@ -1,5 +1,5 @@
 {
-  "name": "origin",
+  "name": "@originprotocol/origin",
   "version": "0.2.0",
   "description": "",
   "main": "./dist/index.js",
