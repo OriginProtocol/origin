@@ -1,4 +1,4 @@
-const contractDefinition = artifacts.require('./Listing.sol');
+const contractDefinition = artifacts.require('./ListingsRegistry.sol');
 
 const initialListingsLength = 5
 const ipfsHash = '0x6b14cac30356789cd0c39fec0acc2176c3573abdb799f3b17ccc6972ab4d39ba'
@@ -9,7 +9,7 @@ const isEVMError = function(err) {
   return str.includes("revert");
 }
 
-contract('Listing', accounts => {
+contract('ListingsRegistry', accounts => {
   var owner = accounts[0];
   var notOwner = accounts[1];
   var instance;
