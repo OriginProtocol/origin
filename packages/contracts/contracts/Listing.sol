@@ -1,5 +1,8 @@
 pragma solidity ^0.4.11;
 
+/// @title Listing
+/// @dev An indiviual Origin Listing representing an offer for booking/purchase
+
 contract Listing {
 
   /*
