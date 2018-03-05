@@ -28,18 +28,17 @@ contract('ListingsRegistry', accounts => {
     assert.equal(listingCount, 5)
   })
 
-  xit('should be able to remove a listing', async function() {
-  })
-
   it('should be able to create a listing', async function() {
-    await instance.create(ipfsHash, 2, 5, {from: accounts[0]})
+    const initPrice = 2
+    const initUnitsAvailable = 5
+    await instance.create(ipfsHash, initPrice, initUnitsAvailable, {from: accounts[0]})
     let listingCount = await instance.listingsLength()
     assert.equal(listingCount, initialListingsLength + 1, 'listings count has incremented')
     let [index, lister, hash, price, unitsAvailable] = await instance.getListing(initialListingsLength)
     assert.equal(lister, accounts[0], 'lister is correct')
     assert.equal(hash, ipfsHash, 'ipfsHash is correct')
-    assert.equal(price, 2, 'price is correct')
-    assert.equal(unitsAvailable, 5, 'unitsAvailable is correct')
+    assert.equal(price, initPrice, 'price is correct')
+    assert.equal(unitsAvailable, initUnitsAvailable, 'unitsAvailable is correct')
   })
 
 })
