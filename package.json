@@ -53,6 +53,7 @@
     "fetch": "^1.1.0",
     "map-cache": "^0.2.2",
     "marked": "^0.3.17",
+    "npm": "^5.7.1",
     "react": "^15.6.2",
     "react-dom": "^15.6.2",
     "react-js-pagination": "^3.0.1",
