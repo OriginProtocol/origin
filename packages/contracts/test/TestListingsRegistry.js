@@ -23,7 +23,7 @@ contract('ListingsRegistry', accounts => {
     assert.equal(contractOwner, owner)
   })
 
-  it('should deploy with 5 listsings', async function() {
+  it('should deploy with 5 listings', async function() {
     let listingCount = await instance.listingsLength()
     assert.equal(listingCount, 5)
   })
