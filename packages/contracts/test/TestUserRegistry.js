@@ -16,28 +16,10 @@ contract('UserRegistry', accounts => {
     instance = await contractDefinition.new({from: accounts[0]});
   });
 
-  it('should be able to create a user', async function() {
-    await instance.create(ipfsHash_1, {from: accounts[0]});
-    let [owner, ipfsHash] = await instance.users(0);
-    assert.equal(owner, accounts[0], 'new user has correct owner')
-    assert.equal(ipfsHash, ipfsHash_1, 'new user has correct ipfsHash')
-  });
-
-  it('should allow owner to update a user', async function() {
-    await instance.create(ipfsHash_1, {from: accounts[0]});
-    await instance.update(0, ipfsHash_2, {from: accounts[0]});
-    let [owner, ipfsHash] = await instance.users(0);
-    assert.equal(ipfsHash, ipfsHash_2, 'ipfsHash has been updated')
-  });
-
-  it('should not allow non-owner to update a user', async function() {
-    await instance.create(ipfsHash_1, {from: accounts[0]});
-    try {
-      await instance.update(0, ipfsHash_2, {from: accounts[1]})
-    } catch (err) {
-      assert.ok(isEVMError(err), 'an EVM error is thrown');
-      let [owner, ipfsHash] = await instance.users(0);
-      assert.equal(ipfsHash, ipfsHash_1, 'ipfsHash has not been updated')
-    }
+  it('should be able to set a user', async function() {
+    await instance.set(ipfsHash_1, {from: accounts[0]});
+    let [ipfsHash, isSet] = await instance.users(accounts[0]);
+    assert.equal(isSet, true, 'user has been set');
+    assert.equal(ipfsHash, ipfsHash_1, 'user has correct ipfsHash');
   });
 });
