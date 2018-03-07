@@ -1,4 +1,5 @@
 import ListingsRegistryContract from '../../contracts/build/contracts/ListingsRegistry.json'
+import UserRegistryContract from '../../contracts/build/contracts/UserRegistry.json'
 import bs58 from 'bs58'
 import contract from 'truffle-contract'
 
@@ -13,6 +14,7 @@ class ContractService {
     ContractService.instance = this
 
     this.listingsRegistryContract = contract(ListingsRegistryContract)
+    this.userRegistryContract = contract(UserRegistryContract)
   }
 
   // Return bytes32 hex string from base58 encoded ipfs hash,
@@ -134,6 +136,40 @@ class ContractService {
             console.error(error)
             reject(error)
           })
+        })
+      })
+    })
+  }
+
+  setUser(ipfsUser) {
+    return new Promise((resolve, reject) => {
+      this.userRegistryContract.setProvider(window.web3.currentProvider)
+      window.web3.eth.getAccounts((error, accounts) => {
+        this.userRegistryContract.deployed().then((instance) => {
+          return instance.set(
+            this.getBytes32FromIpfsHash(ipfsUser),
+            {from: accounts[0]})
+        }).then((result) => {
+          resolve(result)
+        }).catch((error) => {
+          console.error('Error submitting to the Ethereum blockchain: ' + error)
+          reject(error)
+        })
+      })
+    })
+  }
+
+  getUser(userAddress) {
+    return new Promise((resolve, reject) => {
+      this.userRegistryContract.setProvider(window.web3.currentProvider)
+      this.userRegistryContract.deployed().then((instance) => {
+        instance.users(userAddress)
+        .then(([ipfsHash, isSet]) => {
+          resolve(this.getIpfsHashFromBytes32(ipfsHash))
+        })
+        .catch((error) => {
+          console.log(`Error fetching userId: ${userId}`)
+          reject(error)
         })
       })
     })
