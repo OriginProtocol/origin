@@ -25,15 +25,17 @@ contract('Listing', accounts => {
     )
   })
 
-  it('should be able to buy a listing', async function() {
-    const unitsToBuy = 2
-    await instance.buyListing(unitsToBuy, { from: accounts[1], value: 6 })
-    let newUnitsAvailable = await instance.unitsAvailable()
-    assert.equal(
-      newUnitsAvailable,
-      (unitsAvailable - unitsToBuy),
-      'units available has decreased'
-    )
-  })
+  // We're changing how purchasing is done...
+
+  // it('should be able to buy a listing', async function() {
+  //   const unitsToBuy = 2
+  //   await instance.buyListing(unitsToBuy, { from: accounts[1], value: 6 })
+  //   let newUnitsAvailable = await instance.unitsAvailable()
+  //   assert.equal(
+  //     newUnitsAvailable,
+  //     (unitsAvailable - unitsToBuy),
+  //     'units available has decreased'
+  //   )
+  // })
 
 })
