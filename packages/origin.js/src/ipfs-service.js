@@ -42,31 +42,51 @@ class IpfsService {
   }
 
   submitListing(formListingJson) {
+    const file = {
+      path: 'listing.json',
+      content: JSON.stringify(formListingJson)
+    }
+    return this.submitFile(file)
+  }
+
+  getListing(ipfsHashStr) {
+    return this.getFile(ipfsHashStr)
+  }
+
+  submitUser(formUserJson) {
+    const file = {
+      path: 'user.json',
+      content: JSON.stringify(formUserJson)
+    }
+    return this.submitFile(file)
+  }
+
+  getUser(ipfsHashStr) {
+    return this.getFile(ipfsHashStr)
+  }
+
+  submitFile(file) {
     return new Promise((resolve, reject) => {
-      const file = {
-        path: 'listing.json',
-        content: JSON.stringify(formListingJson)
-      }
       this.ipfs.files.add([file], (error, response) => {
         if (error) {
           console.error('Can\'t connect to IPFS.')
           console.error(error)
-          reject('Can\'t connect to IPFS. Failure to submit listing to IPFS')
+          reject('Can\'t connect to IPFS. Failure to submit file to IPFS')
           return;
         }
         const file = response[0]
         const ipfsHashStr = file.hash
         if (ipfsHashStr) {
-          this.mapCache.set(ipfsHashStr, formListingJson)
+          this.mapCache.set(ipfsHashStr, file)
           resolve(ipfsHashStr)
         } else {
-          reject('Failure to submit listing to IPFS')
+          reject('Failure to submit file to IPFS')
         }
       })
     })
   }
 
-  getListing(ipfsHashStr) {
+  getFile(ipfsHashStr) {
     return new Promise((resolve, reject) => {
       // Check for cache hit
       if (this.mapCache.has(ipfsHashStr)) {
