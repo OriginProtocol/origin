@@ -117,3 +117,4 @@ contract Purchase {
     // Right now there's no way to exit this state.
   }
 }
+
