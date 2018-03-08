@@ -49,25 +49,26 @@ contract Purchase {
   */
 
   function Purchase(
-    Listing _listingContract
+    address _listingContractAddress
   )
   public
   {
     buyer = msg.sender;
-    listingContract = _listingContract;
+    listingContract = Listing(_listingContractAddress);
     created = now;
   }
 
 
   function buyerPay()
-  isBuyer
   public
   payable
+  isBuyer
   atStage(Stages.AWAITING_PAYMENT)
   {
     if (this.balance >= listingContract.price()) {
+
       // Buyer has paid enough to cover purchase
-      stage = Stages.SELLER_PENDING;
+      stage = Stages.BUYER_PENDING;
 
       // Mark item as no longer available for sale in Listing
       // TODO: presumable we call function on Listing(), proving that we have the funds to cover purchase.

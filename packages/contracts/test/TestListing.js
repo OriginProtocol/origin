@@ -7,7 +7,7 @@ const isEVMError = function(err) {
 }
 
 const ipfsHash = '0x6b14cac30356789cd0c39fec0acc2176c3573abdb799f3b17ccc6972ab4d39ba'
-const price = 0.1
+const price = 33
 const unitsAvailable = 42
 
 contract('Listing', accounts => {
@@ -22,6 +22,15 @@ contract('Listing', accounts => {
       price,
       unitsAvailable,
       {from: owner}
+    )
+  })
+
+  it('should have correct price', async function() {
+    let newPrice = await instance.price()
+    assert.equal(
+      newPrice,
+      price,
+      'price is correct'
     )
   })
 
