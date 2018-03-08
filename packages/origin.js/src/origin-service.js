@@ -1,84 +1,9 @@
 import contractService from './contract-service'
 import ipfsService from './ipfs-service'
+import userSchema from './schemas/user.json'
 
 var Ajv = require('ajv')
 var ajv = new Ajv()
-
-// TODO: move this to separate file?
-const userSchema = {
-  "$schema":"http://json-schema.org/draft-06/schema#",
-  "title": "User",
-  "type": "object",
-  "required": ["claims"],
-  "properties": {
-    "claims": {
-      "type": "object",
-      "required": ["name"],
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "customFields": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": ["field", "value"],
-            "properties": {
-              "field": {
-                "type": "string"
-              },
-              "value": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
-    },
-    "attestations": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["service", "field", "value", "signature"],
-        "properties": {
-          "service": {
-            "type": "string"
-          },
-          "field": {
-            "type": "string"
-          },
-          "value": {
-            "type": "string"
-          },
-          "signature": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "proofs": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["service", "username", "proofString", "proofLink"],
-        "properties": {
-          "service": {
-            "type": "string"
-          },
-          "username": {
-            "type": "string"
-          },
-          "proofString": {
-            "type": "string"
-          },
-          "proofLink": {
-            "type": "string"
-          }
-        }
-      }
-    }
-  }
-}
 
 class OriginService {
   static instance
