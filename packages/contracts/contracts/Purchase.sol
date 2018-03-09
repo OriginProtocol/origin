@@ -85,7 +85,7 @@ contract Purchase {
   }
 
 
-  function getPayout()
+  function sellerGetPayout()
   public
   isSeller
   atStage(Stages.SELLER_PENDING)
