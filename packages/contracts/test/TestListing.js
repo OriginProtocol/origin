@@ -7,7 +7,7 @@ const isEVMError = function(err) {
 }
 
 const ipfsHash = '0x6b14cac30356789cd0c39fec0acc2176c3573abdb799f3b17ccc6972ab4d39ba'
-const price = 0.1
+const price = 33
 const unitsAvailable = 42
 
 contract('Listing', accounts => {
@@ -25,15 +25,26 @@ contract('Listing', accounts => {
     )
   })
 
-  it('should be able to buy a listing', async function() {
-    const unitsToBuy = 2
-    await instance.buyListing(unitsToBuy, { from: accounts[1], value: 6 })
-    let newUnitsAvailable = await instance.unitsAvailable()
+  it('should have correct price', async function() {
+    let newPrice = await instance.price()
     assert.equal(
-      newUnitsAvailable,
-      (unitsAvailable - unitsToBuy),
-      'units available has decreased'
+      newPrice,
+      price,
+      'price is correct'
     )
   })
+
+  // We're changing how purchasing is done...
+
+  // it('should be able to buy a listing', async function() {
+  //   const unitsToBuy = 2
+  //   await instance.buyListing(unitsToBuy, { from: accounts[1], value: 6 })
+  //   let newUnitsAvailable = await instance.unitsAvailable()
+  //   assert.equal(
+  //     newUnitsAvailable,
+  //     (unitsAvailable - unitsToBuy),
+  //     'units available has decreased'
+  //   )
+  // })
 
 })
