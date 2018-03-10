@@ -1,5 +1,6 @@
 import ListingsRegistryContract from '../../contracts/build/contracts/ListingsRegistry.json'
 import bs58 from 'bs58'
+import contract from 'truffle-contract'
 
 class ContractService {
   static instance
@@ -11,8 +12,7 @@ class ContractService {
 
     ContractService.instance = this
 
-    this.contract = require('truffle-contract')
-    this.listingsRegistryContract = this.contract(ListingsRegistryContract)
+    this.listingsRegistryContract = contract(ListingsRegistryContract)
   }
 
   // Return bytes32 hex string from base58 encoded ipfs hash,
