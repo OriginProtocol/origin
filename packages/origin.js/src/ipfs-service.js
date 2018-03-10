@@ -15,12 +15,15 @@ class IpfsService {
       return IpfsService.instance
     }
 
-    // If connecting to a local IPFS daemon, set envionment variables
-    // IPFS_DOMAIN = 127.0.0.1 and IPFS_API_PORT = 5001
+    // If connecting to a local IPFS daemon, set envionment variables:
+    // IPFS_DOMAIN = 127.0.0.1
+    // IPFS_API_PORT = 5001
+    // IPFS_GATEWAY_PORT = 8080
+    // IPFS_GATEWAY_PROTOCOL = http
     this.ipfsDomain = process.env.IPFS_DOMAIN || 'gateway.originprotocol.com'
     this.ipfsApiPort = process.env.IPFS_API_PORT || '5002'
     this.ipfsGatewayPort = process.env.IPFS_GATEWAY_PORT || ''
-    this.ipfsProtocol = 'https'
+    this.ipfsProtocol = process.env.IPFS_GATEWAY_PROTOCOL || 'https'
 
     this.ipfs = ipfsAPI(
       this.ipfsDomain,
