@@ -90,8 +90,12 @@ class IpfsService {
   }
 
   gatewayUrlForHash(ipfsHashStr) {
-    return (`${this.ipfsProtocol}://${this.ipfsDomain}:` +
-      `${this.ipfsGatewayPort}/ipfs/${ipfsHashStr}`)
+    let port = '';
+    if (String(this.ipfsGatewayPort).length > 0) {
+      port = `:${this.ipfsGatewayPort}`;
+    }
+    return (`${this.ipfsProtocol}://${this.ipfsDomain}${port}` +
+      `/ipfs/${ipfsHashStr}`)
   }
 
 }
