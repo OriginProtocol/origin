@@ -17,7 +17,7 @@ genuine bug. Please join our #engineering channel on Discord and report it!
 
 In terminal
 ```
-truffle develop
+npx truffle develop
 ```
 and then at prompt type:
 ```
@@ -26,6 +26,6 @@ test
 
 ### Rinkeby, Ropsten, Main, and other blockchains
 ```
-truffle test
+npx truffle test
 ```
 
