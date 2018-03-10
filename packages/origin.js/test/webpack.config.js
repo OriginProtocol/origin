@@ -1,7 +1,7 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const [, config] = require('../webpack.config')
-const { EnvironmentPlugin } = require('webpack')
+const { EnvironmentPlugin, NamedModulesPlugin } = require('webpack')
 
 delete config.output
 
@@ -19,6 +19,7 @@ Object.assign(config, {
   entry: path.join(__dirname, 'index.js'),
 
   plugins: [
+    new NamedModulesPlugin(),
     new EnvironmentPlugin({
       IPFS_DOMAIN: '',
       IPFS_API_PORT: '',
