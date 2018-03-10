@@ -43,7 +43,12 @@ import { contractService, ipfsService, originService } from '@originprotocol/ori
 ```
 
 ## Tests
-Needed
+
+When you begin developing, run `npm test` and keep it running while you develop.
+
+View test results in your browser (with MetaMask installed and setup) at http://localhost:8081
+
+Tests are automatically rerun when source or test code is changed.
 
 ## Documentation
 Needed
