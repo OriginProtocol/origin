@@ -42,6 +42,22 @@ yarn add @originprotocol/origin
 import { contractService, ipfsService, originService } from '@originprotocol/origin'
 ```
 
+## Troubleshooting
+
+### Python 3
+
+If you have Python 3 installed, you may see this error when installing dependencies:
+
+```
+gyp ERR! stack Error: Python executable "/Users/aiham/.pyenv/shims/python" is v3.6.4, which is not supported by gyp.
+```
+
+Resolve this by configuring npm to use Python 2 (where python2.7 is a binary accessible from your $PATH):
+
+```
+npm config set python python2.7
+```
+
 ## Tests
 Needed
 
