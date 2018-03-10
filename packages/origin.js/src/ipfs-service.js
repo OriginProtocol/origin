@@ -87,8 +87,15 @@ class IpfsService {
           reject('Got ipfs cat stream err:' + err)
         })
         stream.on('end', () => {
-          this.mapCache.set(ipfsHashStr, res)
-          resolve(res)
+          let parsedResponse;
+          try {
+            parsedResponse = JSON.parse(res)
+          } catch (error) {
+            reject(`Failed to parse response JSON: ${error}`)
+            return;
+          }
+          this.mapCache.set(ipfsHashStr, parsedResponse)
+          resolve(parsedResponse)
         })
       })
     })
