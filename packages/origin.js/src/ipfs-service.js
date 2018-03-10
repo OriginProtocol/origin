@@ -52,6 +52,7 @@ class IpfsService {
           console.error('Can\'t connect to IPFS.')
           console.error(error)
           reject('Can\'t connect to IPFS. Failure to submit listing to IPFS')
+          return;
         }
         const file = response[0]
         const ipfsHashStr = file.hash
@@ -76,6 +77,7 @@ class IpfsService {
         if (err) {
           console.error(err)
           reject('Got ipfs cat err:' + err)
+          return;
         }
         let res = ''
         stream.on('data', (chunk) => {
