@@ -4,6 +4,7 @@ class UserRegistryService {
     static instance
 
     constructor() {
+
         if (UserRegistryService.instance) {
             return UserRegistryService.instance
         }
@@ -13,7 +14,7 @@ class UserRegistryService {
         this.contract = require('truffle-contract')
         this.userRegistryContract = this.contract(UserRegistryContract)
 
-        console.log(this.loginContact);
+        console.log(this.userRegistryContract);
     }
 
 
@@ -37,8 +38,8 @@ class UserRegistryService {
 
 }
 
-const UserRegistryService = new UserRegistryService()
+const userRegistryService = new UserRegistryService()
 
-export default UserRegistryService
+export default userRegistryService
 
 
