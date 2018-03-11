@@ -116,6 +116,7 @@ To use the contracts deployed by Origin, modify the file `build/contracts/Listin
     },
     <...Possibly other networks for local test chains>
 ```
+(Ropsten test network is id 3, and Rinkeby test netork is id 4)
 
 ## Get involved
 
