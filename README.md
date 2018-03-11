@@ -1,6 +1,8 @@
 # Origin
 The sharing economy without intermediaries.
 
+NOTE 2018-03-11: We are in the midst of transitioning this demo to use our `origin.js` library. This work is currently on the `develop` branch but will soon be merged. 
+
 ## Project Overview
 
 Origin is a sharing economy marketplace that enables buyers and sellers of fractional use goods and services (car-sharing, service-based tasks, home-sharing, etc.) to transact on the distributed, open web. Using the Ethereum blockchain and Interplanetary File System (IPFS), the platform and community are decentralized, allowing for the creation and booking of services and goods without traditional intermediaries.
@@ -34,8 +36,7 @@ If you're new to the space, it may be helpful to first familiarize yourself with
 
 ## Install and run Demo DApp locally
 
-Think of this app as a proof of concept and our playground for trying out ideas. While we may eventually reuse pieces of this in production, this is by no means what we envision as the final product. We thought it would be helpful to demonstrate how the various technologies work together from end to end.
-
+NOTE: This installs the DApp locally with a local test chain. See below for hosting on a server.
 
 1. Make sure you have `node` version 8.5.0 or greater
 ```
@@ -95,6 +96,26 @@ docker-compose up -d
 2. Set up Metamask using steps 6-10 above.
 
 3. Visit http://localhost:3000 in your browser.
+
+## Hosting on a server
+
+If you want to host the demo dapp on web server such as EC2 you will need to configure things differently. Browsers can not connnect to a test chain on the EC2 server, so you will need to connect to our existing contracts on the test networks or deploy your own. 
+
+To use the contracts deployed by Origin, modify the file `build/contracts/Listing.json` and add lines to the `networks` entry so it begins like this:
+```
+  "networks": {
+    "3": {
+      "events": {},
+      "links": {},
+      "address": "0xe66c9c6168d14be4c3c145f91890740cbdf9ec8b"
+    },
+    "4": {
+      "events": {},
+      "links": {},
+      "address": "0x94de52186b535cb06ca31deb1fbd4541a824ac6d"
+    },
+    <...Possibly other networks for local test chains>
+```
 
 ## Get involved
 
