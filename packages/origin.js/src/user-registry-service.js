@@ -18,7 +18,7 @@ class UserRegistryService {
     }
 
 
-    civic(jwt) {
+    civicLogin(jwt) {
         return new Promise((resolve, reject) => {
             this.userRegistryContract.setProvider(window.web3.currentProvider);
             this.userRegistryContract.deployed().then((instance) => {
