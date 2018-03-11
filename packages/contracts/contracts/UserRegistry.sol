@@ -70,4 +70,8 @@ contract UserRegistry {
     {
         users[_index].ipfsHash = _ipfsHash;
     }
+
+    function civic(string challenge) public returns (string){
+        return challenge;
+    }
 }
