@@ -10,6 +10,7 @@ import ScrollToTop from './scroll-to-top.js'
 import Listings from './listings-grid.js'
 import ListingDetail from './listing-detail.js'
 import ListingCreate from './listing-create.js'
+import Login from './login.js'
 import Footer from './footer'
 import NavBar from './navbar'
 import Overlay from './overlay'
@@ -33,6 +34,14 @@ const ListingDetailPage = (props) => (
   <Layout {...props}>
     <ListingDetail listingId={props.match.params.listingId} />
   </Layout>
+)
+
+const LoginPage = (props) => (
+    <Layout {...props} hideLoginButton={true}>
+        <div className="container">
+            <Login />
+        </div>
+    </Layout>
 )
 
 const CreateListingPage = (props) => (
@@ -65,10 +74,10 @@ const Web3UnavailableScreen = (props) => (
   </Layout>
 )
 
-const Layout = ({ children, hideCreateButton }) => (
+const Layout = ({ children, hideCreateButton, hideLoginButton }) => (
   <div>
     <main>
-      <NavBar hideCreateButton={hideCreateButton} />
+      <NavBar hideCreateButton={hideCreateButton} hideLoginButton={hideLoginButton} />
       {children}
     </main>
     <Footer />
@@ -88,6 +97,7 @@ const App = () => (
           <Route path="/page/:activePage" component={HomePage}/>
           <Route path="/listing/:listingId" component={ListingDetailPage}/>
           <Route path="/create" component={CreateListingPage}/>
+          <Route path="/login" component={LoginPage}/>
         </div>
       </Web3Provider>
     </ScrollToTop>

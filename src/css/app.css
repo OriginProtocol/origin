@@ -1,4 +1,5 @@
 @import 'alertify.css';
+@import 'https://hosted-sip.civic.com/css/civic-modal.min.css';
 
 :root {
   --default-font: 'Lato', 'Helvetica Neue', 'Arial', sans-serif;
