@@ -27,7 +27,7 @@ function getClientEnvironment(publicUrl) {
       'IPFS_API_PORT': JSON.stringify(process.env.IPFS_API_PORT || "5002"),
       'IPFS_DOMAIN': JSON.stringify(process.env.IPFS_DOMAIN || "gateway.originprotocol.com"),
       // Civic.com identity app managed @ https://integrate.civic.com
-      'CIVIC_APP_ID': JSON.stringify(process.env.CIVIC_APP_ID || "Bk-gDZcdM" )
+      'CIVIC_APP_ID': JSON.stringify(process.env.CIVIC_APP_ID || "SkrCYxpvz" )
     });
   return {'process.env': processEnv};
 }

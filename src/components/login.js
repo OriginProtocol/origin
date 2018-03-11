@@ -17,7 +17,7 @@ class Login extends Component {
     this.civicSip.on('auth-code-received', function (event) {
       console.log(event);
       let jwt = event.response;
-      userRegistryService.civic(jwt).then((loginResponse) => {
+      userRegistryService.civicLogin(jwt).then((loginResponse) => {
           alert("Civic JWT needs to be decrypted: " + loginResponse)
       })
       .catch((error) => {
