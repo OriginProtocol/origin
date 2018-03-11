@@ -52,10 +52,10 @@ describe('IpfsService', () => {
     })
   })
 
-  // Skipped until https://github.com/OriginProtocol/platform/pull/28 is merged
   describe('gatewayUrlForHash', () => {
     ipfsHashes.forEach(({ ipfsHash, url }) => {
-      it(`should correctly create url for IPFS hash ${ipfsHash}`, () => {
+      // Skipped until https://github.com/OriginProtocol/platform/pull/28 is merged
+      xit(`should correctly create url for IPFS hash ${ipfsHash}`, () => {
         const result = ipfsService.gatewayUrlForHash(ipfsHash);
         expect(result).to.equal(url[ipfsEnv]);
       })
