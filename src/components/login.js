@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import loginService from '../services/login-service'
+import { userRegistryService } from '@originprotocol/origin'
 
 const alertify = require('../../node_modules/alertify/src/alertify.js')
 
@@ -8,6 +8,8 @@ class Login extends Component {
   constructor(props) {
     super(props)
 
+    console.log(userRegistryService);
+
     //instantiate civic hosted solution
     this.civicSip = new window.civic.sip({ appId: process.env.CIVIC_APP_ID });
 
@@ -15,11 +17,11 @@ class Login extends Component {
     this.civicSip.on('auth-code-received', function (event) {
       console.log(event);
       let jwt = event.response;
-      loginService.login(jwt).then((loginResponse) => {
+      userRegistryService.civic(jwt).then((loginResponse) => {
           alert("Civic JWT needs to be decrypted: " + loginResponse)
       })
       .catch((error) => {
-          alertify.log('There was an error attempting to login.')
+          alertify.log('There was an error attempting to login with Civic.')
           console.error(error);
       })
     });
