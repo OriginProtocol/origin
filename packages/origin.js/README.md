@@ -28,7 +28,7 @@ For developing on `origin.js`, it is better to link the package rather than inst
 
 In the directory `./packages/contracts/` run:
 ```
-truffle migrate
+truffle compile
 ```
 This will create the `.json` files for our solidity contracts. 
 
