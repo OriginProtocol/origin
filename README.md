@@ -99,7 +99,7 @@ docker-compose up -d
 
 ## Hosting on a server
 
-If you want to host the demo dapp on web server such as EC2 you will need to configure things differently. Browsers can not connnect to a test chain on the EC2 server, so you will need to connect to our existing contracts on the test networks or deploy your own. 
+If you want to host the demo dapp on web server such as EC2 you will need to configure things differently. Browsers can not connect to a test chain on the EC2 server, so you will need to connect to our existing contracts on the test networks or deploy your own. 
 
 To use the contracts deployed by Origin, modify the file `build/contracts/Listing.json` and add lines to the `networks` entry so it begins like this:
 ```
