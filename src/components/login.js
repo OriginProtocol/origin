@@ -8,22 +8,42 @@ class Login extends Component {
   constructor(props) {
     super(props)
 
-    console.log(userRegistryService);
-
     //instantiate civic hosted solution
     this.civicSip = new window.civic.sip({ appId: process.env.CIVIC_APP_ID });
 
     // Listen for civic auth response
     this.civicSip.on('auth-code-received', function (event) {
-      console.log(event);
-      let jwt = event.response;
-      userRegistryService.civicLogin(jwt).then((loginResponse) => {
-          alert("Civic JWT needs to be decrypted: " + loginResponse)
-      })
-      .catch((error) => {
-          alertify.log('There was an error attempting to login with Civic.')
-          console.error(error);
-      })
+
+      let encryptedCivicJWT = event.response;
+
+      let payload = JSON.stringify({"jwt": encryptedCivicJWT});
+
+      console.log("Civic Payload to decrypt", payload);
+
+      fetch("http://localhost:8080/civic/login", {
+          method: "POST",
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+          },
+          body: payload
+      }).then(function(res) {
+          return res.json();
+      }).then(function(decryptedCivicJWT) {
+
+          let payload = {
+              "loginService": "civic",
+              "data": decryptedCivicJWT
+          };
+
+          userRegistryService.create(payload).then((userFromBlockchain) => {
+              console.log("userFromBlockchain", userFromBlockchain);
+          }).catch((error) => {
+              alertify.log('There was an error attempting to login with Civic.');
+              console.error(error);
+          })
+
+      });
     });
 
     // Listen for civic modal close by user
