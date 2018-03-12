@@ -13,6 +13,16 @@ This is still an alpha version which will evolve significantly before the main n
 
 ## Install 
 
+### NPM
+```
+npm install @originprotocol/origin --save
+```
+
+### Yarn
+```
+yarn add @originprotocol/origin
+```
+
 ### Local
 For developing on `origin.js`, it is better to link the package rather than installing it. (Otherwise you would need to run `npm build` everytime you made a change to the package.)
 
@@ -33,15 +43,19 @@ npm link @originprotocol/origin
 ```
 This will create a symlink, direcly linking the dapp to your local `origin.js` package.
 
-### NPM
+Next, you will need to start your local development blockchain. 
+
+In the directory `./packages/contracts/` run:
 ```
-npm install @originprotocol/origin --save
+truffle develop
 ```
 
-### Yarn
+Then in the console run:
 ```
-yarn add @originprotocol/origin
+migrate --reset
 ```
+
+
 
 ## Import 
 ```
