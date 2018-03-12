@@ -16,12 +16,18 @@ This is still an alpha version which will evolve significantly before the main n
 ### Local
 For developing on `origin.js`, it is better to link the package rather than installing it. (Otherwise you would need to run `npm build` everytime you made a change to the package.)
 
-In `origin.js` run:
+In the directory `./packages/contracts/` run:
+```
+truffle migrate
+```
+This will create the `.json` files for our solidity contracts. 
+
+In the directory `./packages/origin.js` run:
 ```
 npm link
 ```
 
-In your dapp (for example, the Origin demo-dapp) run:
+Now change tabs (or diectories) to the repo for your DApp (for example, the [Origin demo-dapp](https://github.com/OriginProtocol/demo-dapp)) run:
 ```
 npm link @originprotocol/origin
 ```
