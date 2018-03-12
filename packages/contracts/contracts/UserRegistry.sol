@@ -71,7 +71,16 @@ contract UserRegistry {
         users[_index].ipfsHash = _ipfsHash;
     }
 
-    function civic(string challenge) public returns (string){
-        return challenge;
+    /// @dev create_another(): Create a new user and associates attenstion or proof with user
+    // @param wallet id
+    // Attestation or proof to associate to the user
+    function create_another(string _id, string payload) public returns (string){
+        return payload;
+    }
+
+    /// @dev get(): returns and existing user associated with wallet id
+    // @param wallet id
+    function get(string _id) public returns (string){
+        return _id;
     }
 }
