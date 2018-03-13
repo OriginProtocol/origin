@@ -26,9 +26,6 @@ contract('ListingsRegistry', accounts => {
   it('should deploy with 5 listings', async function() {
     let listingCount = await instance.listingsLength()
 
-    let listings = await instance.listings(1);
-    console.log(listings)
-
     assert.equal(listingCount, 5)
   })
 
