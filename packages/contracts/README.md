@@ -29,3 +29,16 @@ test
 npx truffle test
 ```
 
+## Troubleshooting
+
+If you get the following error:
+
+```
+Error: Attempting to run transaction which calls a contract function, but recipient address 0x8cdaf0cd259887258bc23a92c0a6da92698644c0 is not a contract address
+```
+
+Resolve this by deleting the previously built contracts:
+
+```sh
+rm build/contracts/*.json
+```
