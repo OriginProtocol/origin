@@ -6,8 +6,10 @@
   "scripts": {
     "test": "mocha-webpack --webpack-config webpack.config.js --require test/.setup.js test/**/*.test.js",
     "test:watch": "mocha-webpack --watch --webpack-config webpack.config.js --require test/.setup.js test/**/*.test.js",
-    "build": "webpack --config webpack.config.js",
-    "build:watch": "webpack --config webpack.config.js --watch",
+    "build:contracts": "cd ../contracts && npx truffle compile",
+    "build:webpack": "webpack --config webpack.config.js",
+    "build": "npm run build:contracts && npm run build:webpack",
+    "build:watch": "npm run build:contracts && npm run build:webpack -- --watch",
     "prepare": "npm run build"
   },
   "files": [
