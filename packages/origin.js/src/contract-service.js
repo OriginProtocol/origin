@@ -95,10 +95,6 @@ class ContractService {
           // Listing is returned as array of properties.
           // IPFS hash (as bytes32 hex string) is in results[2]
           // Convert it to regular IPFS base-58 encoded hash
-          console.log("Listing:")
-          console.log(listing)
-          console.log(instance)
-
           // Address of Listing contract is in: listing[0]
           const listingObject = {
             index: listingId,
@@ -107,7 +103,6 @@ class ContractService {
             price: window.web3.fromWei(listing[3], 'ether').toNumber(),
             unitsAvailable: listing[4].toNumber()
           }
-          console.log(listingObject)
           resolve(listingObject)
         })
         .catch((error) => {

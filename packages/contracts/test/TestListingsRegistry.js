@@ -35,7 +35,7 @@ contract('ListingsRegistry', accounts => {
     await instance.create(ipfsHash, initPrice, initUnitsAvailable, {from: accounts[0]})
     let listingCount = await instance.listingsLength()
     assert.equal(listingCount, initialListingsLength + 1, 'listings count has incremented')
-    let [lister, hash, price, unitsAvailable] = await instance.getListing(initialListingsLength)
+    let [listingAddress, lister, hash, price, unitsAvailable] = await instance.getListing(initialListingsLength)
     assert.equal(lister, accounts[0], 'lister is correct')
     assert.equal(hash, ipfsHash, 'ipfsHash is correct')
     assert.equal(price, initPrice, 'price is correct')
