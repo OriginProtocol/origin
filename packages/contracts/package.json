@@ -1,0 +1,7 @@
+{
+  "name": "origin-protocol-contracts",
+  "private": true,
+  "devDependencies": {
+    "truffle": "^4.1.3"
+  }
+}
