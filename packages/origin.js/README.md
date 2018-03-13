@@ -42,6 +42,25 @@ yarn add @originprotocol/origin
 import { contractService, ipfsService, originService } from '@originprotocol/origin'
 ```
 
+## IPFS
+
+If you are running a local IPFS daemon then set the following environment variables:
+
+```
+export IPFS_DOMAIN=127.0.0.1
+export IPFS_API_PORT=5001
+export IPFS_GATEWAY_PORT=8080
+export IPFS_GATEWAY_PROTOCOL=http
+```
+
+Configure your local IPFS daemon with the following settings to avoid CORS errors:
+
+```
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["localhost:*"]'
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["GET", "POST", "PUT"]'
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials '["true"]'
+```
+
 ## Troubleshooting
 
 ### Python 3
@@ -59,7 +78,14 @@ npm config set python python2.7
 ```
 
 ## Tests
-Needed
+
+When you begin developing, run `npm test` and keep it running while you develop.
+
+View test results in your browser (with MetaMask installed and setup) at http://localhost:8081
+
+Tests are automatically rerun when source or test code is changed.
+
+Run a subset of tests using the `grep` query string parameter, for example: http://localhost:8081/?grep=IpfsService
 
 ## Documentation
 Needed
