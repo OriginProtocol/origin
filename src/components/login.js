@@ -20,7 +20,7 @@ class Login extends Component {
 
       console.log("Civic Payload to decrypt", payload);
 
-      fetch("http://localhost:8080/civic/login", {
+      fetch("https://civic-proxy.originprotocol.com/civic/login", {
           method: "POST",
           headers: {
               'Accept': 'application/json',
