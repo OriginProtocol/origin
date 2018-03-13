@@ -2,7 +2,12 @@
 
 # Origin Platform
 
-Origin Protocol is a library of javascript code and Ethereum smart contracts which allow anyone to create decentralized marketplaces, including for fractional usage. Please refer to our [product brief](https://www.originprotocol.com/product-brief) and [technical whitepaper](https://www.originprotocol.com/whitepaper) for more detail.
+Origin Protocol is a library of javascript code and Ethereum smart contracts which allow anyone to create decentralized marketplaces, including for fractional usage. 
+
+Please refer to our [product brief](https://www.originprotocol.com/product-brief) and [technical whitepaper](https://www.originprotocol.com/whitepaper) for more detail.
+
+ - [README for Javascript code](https://github.com/OriginProtocol/platform/tree/master/packages/origin.js)
+ - [README for Ethereum contracts](https://github.com/OriginProtocol/platform/tree/master/packages/contracts)
 
 ## Follow our progress and get involved
 
