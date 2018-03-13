@@ -1,4 +1,6 @@
-# Origin
+![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
+
+# Origin Demo DApp
 The sharing economy without intermediaries.
 
 NOTE 2018-03-11: We are in the midst of transitioning this demo to use our `origin.js` library. This work is currently on the `develop` branch but will soon be merged. 
