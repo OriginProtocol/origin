@@ -48,7 +48,7 @@
   "dependencies": {
     "@originprotocol/origin": "^0.2.0",
     "ajv": "^4.11.7",
-    "alertify": "github:micahalcorn/alertify.js#webpack_friendly",
+    "alertify": "github:OriginProtocol/alertify.js#webpack_friendly",
     "bs58": "^4.0.1",
     "dotenv": "^2.0.0",
     "fetch": "^1.1.0",
