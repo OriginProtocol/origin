@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { expect } from 'chai'
 import ipfsService from '../src/ipfs-service'
 import { listings, ipfsHashes } from './fixtures'
 
@@ -13,7 +13,7 @@ const methodNames = [
   'gatewayUrlForHash'
 ]
 
-const ipfsEnv = process.env.IPFS_DOMAIN ? 'local' : 'default';
+const ipfsEnv = process.env.IPFS_DOMAIN ? 'local' : 'default'
 
 describe('IpfsService', () => {
 
@@ -46,9 +46,9 @@ describe('IpfsService', () => {
     // Skipped because of https://github.com/OriginProtocol/platform/issues/27
     xit('should reject when listing cannot be found', (done) => {
       ipfsService.getListing('QmWHyrPWQnsz1wxHR219ooJDYTvxJPyZuDUPSDpdsAovN5').then(done.fail, (error) => {
-        expect(error).to.match(/Got ipfs cat error/);
-        done();
-      });
+        expect(error).to.match(/Got ipfs cat error/)
+        done()
+      })
     })
   })
 
@@ -56,8 +56,8 @@ describe('IpfsService', () => {
     ipfsHashes.forEach(({ ipfsHash, url }) => {
       // Skipped until https://github.com/OriginProtocol/platform/pull/28 is merged
       xit(`should correctly create url for IPFS hash ${ipfsHash}`, () => {
-        const result = ipfsService.gatewayUrlForHash(ipfsHash);
-        expect(result).to.equal(url[ipfsEnv]);
+        const result = ipfsService.gatewayUrlForHash(ipfsHash)
+        expect(result).to.equal(url[ipfsEnv])
       })
     })
   })

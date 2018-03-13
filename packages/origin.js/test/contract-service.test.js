@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { expect } from 'chai'
 import contractService from '../src/contract-service'
 import { ipfsHashes } from './fixtures'
 
@@ -19,8 +19,8 @@ describe('ContractService', () => {
   describe('getBytes32FromIpfsHash', () => {
     ipfsHashes.forEach(({ ipfsHash, bytes32 }) => {
       it(`should correctly convert from IPFS hash ${ipfsHash}`, () => {
-        const result = contractService.getBytes32FromIpfsHash(ipfsHash);
-        expect(result).to.equal(bytes32);
+        const result = contractService.getBytes32FromIpfsHash(ipfsHash)
+        expect(result).to.equal(bytes32)
       })
     })
   })
@@ -28,8 +28,8 @@ describe('ContractService', () => {
   describe('getIpfsHashFromBytes32', () => {
     ipfsHashes.forEach(({ ipfsHash, bytes32 }) => {
       it(`should correctly convert to IPFS hash ${ipfsHash}`, () => {
-        const result = contractService.getIpfsHashFromBytes32(bytes32);
-        expect(result).to.equal(ipfsHash);
+        const result = contractService.getIpfsHashFromBytes32(bytes32)
+        expect(result).to.equal(ipfsHash)
       })
     })
   })
@@ -55,9 +55,9 @@ describe('ContractService', () => {
     // Skipped because of https://github.com/OriginProtocol/platform/issues/27
     xit('should reject when listing cannot be found', (done) => {
       contractService.getListing('foo').then(done.fail, (error) => {
-        expect(error).to.match(/Error fetching listingId/);
-        done();
-      });
+        expect(error).to.match(/Error fetching listingId/)
+        done()
+      })
     })
 
     it('should get a listing object', async () => {
