@@ -1,9 +1,10 @@
 # Origin Platform
 
-This repo is under active development. Please refer to our [product brief](http://www.originprotocol.com/product-brief) 
-and [technical whitepaper](http://www.originprotocol.com/whitepaper) for a high level overview of what we're trying to do.
+Origin Protocol is a library of javascript code and Ethereum smart contracts which allow anyone to create decentralized marketplaces, including for fractional usage. Please refer to our [product brief](https://www.originprotocol.com/product-brief) and [technical whitepaper](https://www.originprotocol.com/whitepaper) for more detail.
 
-To follow our progress and get involved:
+## Follow our progress and get involved
+
+This repo is under active development. We welcome your participation!
 
 1. [Join our #engineering channel on Discord](http://www.originprotocol.com/discord).
 
@@ -19,13 +20,13 @@ To follow our progress and get involved:
 
 # What we're building
 
-The main components of this repo will be:
+The main components of this repo are:
 
- - Origin.js
- - Ethereum smart contracts
+ - [Origin.js](/packages/origin.js/)
+ - [Ethereum smart contracts](/packages/contracts/)
  - Origin DApp that's built on top of origin.js (basically our current demo-dapp reworked to use origin.js)
 
-This library will provide an abstraction layer for developers who want to build DApps on our protocol.
+This library is an abstraction layer for developers who want to build DApps on Origin Protocol.
 
 The library will make it easy for sellers to do things like:
 
