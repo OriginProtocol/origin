@@ -90,8 +90,13 @@ class IpfsService {
   }
 
   gatewayUrlForHash(ipfsHashStr) {
-    return (`${this.ipfsProtocol}://${this.ipfsDomain}:` +
-      `${this.ipfsGatewayPort}/ipfs/${ipfsHashStr}`)
+    const defaultPort = this.ipfsProtocol === 'https' ? '443' : '80';
+    let port = String(this.ipfsGatewayPort);
+    if (port.length > 0 && port !== defaultPort) {
+      port = `:${port}`;
+    }
+    return (`${this.ipfsProtocol}://${this.ipfsDomain}${port}` +
+      `/ipfs/${ipfsHashStr}`)
   }
 
 }
