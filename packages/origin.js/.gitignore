@@ -7,6 +7,8 @@
 /node_modules
 
 # IDEs and editors
+.idea/
+/.idea
 /.idea
 .project
 .classpath
@@ -30,3 +32,5 @@
 npm-debug.log
 testem.log
 /typings
+.DS_Store
+

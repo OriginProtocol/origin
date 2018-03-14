@@ -5,4 +5,3 @@ module.exports = function(deployer) {
   deployer.deploy(ListingsRegistry);
   deployer.deploy(UserRegistry);
 };
-

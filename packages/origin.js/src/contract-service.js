@@ -1,5 +1,6 @@
 import ListingsRegistryContract from '../../contracts/build/contracts/ListingsRegistry.json'
 import bs58 from 'bs58'
+import contract from 'truffle-contract'
 
 class ContractService {
   static instance
@@ -11,8 +12,7 @@ class ContractService {
 
     ContractService.instance = this
 
-    this.contract = require('truffle-contract')
-    this.listingsRegistryContract = this.contract(ListingsRegistryContract)
+    this.listingsRegistryContract = contract(ListingsRegistryContract)
   }
 
   // Return bytes32 hex string from base58 encoded ipfs hash,
@@ -95,10 +95,6 @@ class ContractService {
           // Listing is returned as array of properties.
           // IPFS hash (as bytes32 hex string) is in results[2]
           // Convert it to regular IPFS base-58 encoded hash
-          console.log("Listing:")
-          console.log(listing)
-          console.log(instance)
-
           // Address of Listing contract is in: listing[0]
           const listingObject = {
             index: listingId,
@@ -107,7 +103,6 @@ class ContractService {
             price: window.web3.fromWei(listing[3], 'ether').toNumber(),
             unitsAvailable: listing[4].toNumber()
           }
-          console.log(listingObject)
           resolve(listingObject)
         })
         .catch((error) => {

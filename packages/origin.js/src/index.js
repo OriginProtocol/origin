@@ -5,8 +5,11 @@
 import contractService from './contract-service'
 import ipfsService from './ipfs-service'
 import originService from './origin-service'
+import userRegistryService from './user-registry-service'
 
-module.exports = { contractService
-                 , ipfsService
-                 , originService
-                 }
+module.exports = {
+    contractService,
+    ipfsService,
+    originService,
+    userRegistryService
+}
