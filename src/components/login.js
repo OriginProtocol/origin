@@ -19,6 +19,7 @@ class Login extends Component {
       let payload = JSON.stringify({"jwt": encryptedCivicJWT});
 
       console.log("Civic Payload to decrypt", payload);
+      alertify.log("Civic Payload to decrypt:\n" + payload.toString());
 
       fetch("https://civic-proxy.originprotocol.com/civic/login", {
           method: "POST",
@@ -37,7 +38,9 @@ class Login extends Component {
           };
 
           userRegistryService.create(payload).then((userFromBlockchain) => {
+              alertify.log("userFromBlockchain:\n" + userFromBlockchain.toString());
               console.log("userFromBlockchain", userFromBlockchain);
+
           }).catch((error) => {
               alertify.log('There was an error attempting to login with Civic.');
               console.error(error);
