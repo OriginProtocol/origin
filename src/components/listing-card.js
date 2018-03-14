@@ -23,10 +23,10 @@ class ListingCard extends Component {
       return ipfsService.getListing(this.state.ipfsHash)
     })
     .then((listingJson) => {
-      this.setState(JSON.parse(listingJson).data)
+      this.setState(listingJson.data)
     })
     .catch((error) => {
-      console.error(`Error fetching conract or IPFS info for listingId: ${this.props.listingId}`)
+      console.error(`Error fetching contract or IPFS info for listingId: ${this.props.listingId}`)
     })
   }
 
