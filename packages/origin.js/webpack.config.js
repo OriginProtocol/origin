@@ -1,7 +1,7 @@
 var nodeExternals = require('webpack-node-externals');
 
 var serverConfig = {
-  entry: './src/index.js',
+  entry: ["babel-polyfill", './src/index.js'],
   output: {
     filename: './dist/index.js',
     libraryTarget: 'commonjs2'
@@ -34,7 +34,7 @@ var serverConfig = {
 }
 
 var clientConfig = {
-  entry: './src/index.js',
+  entry: ["babel-polyfill", './src/index.js'],
   output: {
     filename: './dist/origin.js',
     libraryTarget: 'window'
