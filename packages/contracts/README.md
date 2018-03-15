@@ -24,6 +24,8 @@ and then at prompt type:
 test
 ```
 
+To show the gas costs of each transaction during a test, set the enviroment variable `GAS_TRACKING` before launching `truffle develop`. For example, using bash: `GAS_TRACKING=1 npx truffle develop`.
+
 ### Rinkeby, Ropsten, Main, and other blockchains
 ```
 npx truffle test
