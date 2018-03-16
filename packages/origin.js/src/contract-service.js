@@ -61,10 +61,10 @@ class ContractService {
   }
 
   async getAllListingIds() {
-    function range(start, count) {
-      return Array.apply(0, Array(count))
+    const range = (start, count) => (
+      Array.apply(0, Array(count))
         .map((element, index) => index + start)
-    }
+    )
 
     this.listingsRegistryContract.setProvider(window.web3.currentProvider)
 
