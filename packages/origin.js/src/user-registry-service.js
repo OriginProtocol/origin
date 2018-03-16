@@ -1,4 +1,5 @@
 import UserRegistryContract from '../../contracts/build/contracts/UserRegistry.json'
+import promisify from 'util.promisify'
 
 class UserRegistryService {
     static instance
@@ -17,53 +18,47 @@ class UserRegistryService {
 
 
     //Creates a new user with attestation or proof payload data and stores in user-registry in relation to wallet ID
-    create(payload) {
-        return new Promise((resolve, reject) => {
-            window.web3.eth.getAccounts((error, accounts) => {
-                let walletId = accounts[0];
-                this.userRegistryContract.setProvider(window.web3.currentProvider);
+    async create(payload) {
+        const { currentProvider, eth } = window.web3;
+        const accounts = await promisify(eth.getAccounts.bind(eth))()
 
-                this.userRegistryContract.deployed().then((instance) => {
-                    return instance.create_another.call(walletId, JSON.stringify(payload))
-                }).then((response)  => {
-                    console.log("user-registry-service found user:", response);
-                resolve(response)
-                }).catch((error) => {
-                        console.log('user-registry-service could not find user:', walletId)
-                    reject(error)
-                })
+        const walletId = accounts[0];
+        this.userRegistryContract.setProvider(currentProvider);
 
-            })
-        })
+        let instance
+        try {
+            instance = await this.userRegistryContract.deployed()
+        } catch (error) {
+            console.log('user-registry-service could not find user:', walletId)
+            throw error
+        }
+
+        const response = instance.create_another.call(walletId, JSON.stringify(payload))
+        console.log("user-registry-service found user:", response);
+        return response
     }
 
 
     //get user from from user-registry by their existing wallet ID
-    get() {
-        return new Promise((resolve, reject) => {
-            window.web3.eth.getAccounts((error, accounts) => {
+    async get() {
+        const { currentProvider, eth } = window.web3;
+        const accounts = await promisify(eth.getAccounts.bind(eth))()
 
-                let walletId = accounts[0];
-                this.userRegistryContract.setProvider(window.web3.currentProvider);
+        const walletId = accounts[0];
+        this.userRegistryContract.setProvider(currentProvider);
 
-                this.userRegistryContract.deployed().then((instance) => {
-                    return instance.get.call(walletId)
-                }).then((response)  => {
-                    console.log("user-registry-service found user:", response);
-                    resolve(response)
-                }).catch((error) => {
-                    console.log('user-registry-service could not find user:', walletId)
-                    reject(error)
-                })
+        let instance
+        try {
+            instance = await this.userRegistryContract.deployed()
+        } catch (error) {
+            console.log('user-registry-service could not find user:', walletId)
+            throw error
+        }
 
-            })
-        })
+        const response = instance.get.call(walletId)
+        console.log("user-registry-service found user:", response);
+        return response
     }
-
-
-
-
-
 
 }
 
