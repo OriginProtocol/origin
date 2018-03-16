@@ -23,7 +23,8 @@
     "dotenv": "^2.0.0",
     "ipfs-api": "^14.3.7",
     "map-cache": "^0.2.2",
-    "truffle-contract": "^1.1.8"
+    "truffle-contract": "^1.1.8",
+    "util.promisify": "^1.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

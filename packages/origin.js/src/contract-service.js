@@ -1,6 +1,7 @@
 import ListingsRegistryContract from '../../contracts/build/contracts/ListingsRegistry.json'
 import bs58 from 'bs58'
 import contract from 'truffle-contract'
+import promisify from 'util.promisify'
 
 class ContractService {
   static instance
