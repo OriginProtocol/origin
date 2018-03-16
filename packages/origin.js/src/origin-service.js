@@ -1,8 +1,8 @@
-import contractService from './contract-service'
-import ipfsService from './ipfs-service'
-
 class OriginService {
-  static instance
+  constructor({ contractService, ipfsService }) {
+    this.contractService = contractService;
+    this.ipfsService = ipfsService;
+  }
 
   async submitListing(formListing, selectedSchemaType) {
 
@@ -14,7 +14,7 @@ class OriginService {
     let ipfsHash;
     try {
       // Submit to IPFS
-      ipfsHash = await ipfsService.submitListing(jsonBlob)
+      ipfsHash = await this.ipfsService.submitListing(jsonBlob)
     } catch (error) {
       throw new Error(`IPFS Failure: ${error}`)
     }
@@ -26,7 +26,7 @@ class OriginService {
     const units = 1 // TODO: Allow users to set number of units in form
     let transactionReceipt;
     try {
-      transactionReceipt = contractService.submitListing(
+      transactionReceipt = this.contractService.submitListing(
         ipfsHash,
         formListing.formData.price,
         units)
@@ -43,6 +43,4 @@ class OriginService {
 
 }
 
-const originService = new OriginService()
-
-export default originService
+export default OriginService

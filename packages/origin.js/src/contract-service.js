@@ -3,15 +3,7 @@ import bs58 from 'bs58'
 import contract from 'truffle-contract'
 
 class ContractService {
-  static instance
-
   constructor() {
-    if (ContractService.instance) {
-      return ContractService.instance
-    }
-
-    ContractService.instance = this
-
     this.listingsRegistryContract = contract(ListingsRegistryContract)
   }
 
@@ -167,6 +159,4 @@ class ContractService {
   }
 }
 
-const contractService = new ContractService()
-
-export default contractService
+export default ContractService
