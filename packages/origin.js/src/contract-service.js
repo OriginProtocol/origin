@@ -133,8 +133,8 @@ class ContractService {
     return transactionReceipt
   }
 
-  waitTransactionFinished(transactionReceipt, pollIntervalMilliseconds=1000) {
-    return new Promise((resolve, reject) => {
+  async waitTransactionFinished(transactionReceipt, pollIntervalMilliseconds=1000) {
+    const blockNumber = await new Promise((resolve, reject) => {
       let txCheckTimer = setInterval(txCheckTimerCallback, pollIntervalMilliseconds)
       function txCheckTimerCallback() {
         window.web3.eth.getTransaction(transactionReceipt, (error, transaction) => {
@@ -158,6 +158,7 @@ class ContractService {
         })
       }
     })
+    return blockNumber
   }
 }
 
