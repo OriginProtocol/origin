@@ -74,13 +74,27 @@ contract UserRegistry {
     /// @dev create_another(): Create a new user and associates attenstion or proof with user
     // @param wallet id
     // Attestation or proof to associate to the user
-    function create_another(string _id, string payload) public returns (string){
+    // TODO: (Brad David) replace with real function
+    function create_another(
+        string _id,
+        string payload)
+        public
+        pure
+        returns (string)
+    {
+        _id; // Dummy "operation" to silence copiler warnigns
         return payload;
     }
 
     /// @dev get(): returns and existing user associated with wallet id
     // @param wallet id
-    function get(string _id) public returns (string){
+    function get(
+        string _id
+    )
+        public
+        pure
+        returns (string)
+    {
         return _id;
     }
 }

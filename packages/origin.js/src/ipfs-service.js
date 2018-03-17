@@ -9,13 +9,7 @@ const MapCache = require('map-cache')
 const promisify = require('util.promisify')
 
 class IpfsService {
-  static instance
-
   constructor() {
-    if (IpfsService.instance) {
-      return IpfsService.instance
-    }
-
     // If connecting to a local IPFS daemon, set envionment variables:
     // IPFS_DOMAIN = 127.0.0.1
     // IPFS_API_PORT = 5001
@@ -36,7 +30,6 @@ class IpfsService {
         console.error(error)
       }
     })
-    IpfsService.instance = this
 
     // Caching
     this.mapCache = new MapCache()
@@ -119,6 +112,4 @@ class IpfsService {
 
 }
 
-const ipfsService = new IpfsService()
-
-export default ipfsService
+export default IpfsService

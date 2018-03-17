@@ -4,15 +4,7 @@ import contract from 'truffle-contract'
 import promisify from 'util.promisify'
 
 class ContractService {
-  static instance
-
   constructor() {
-    if (ContractService.instance) {
-      return ContractService.instance
-    }
-
-    ContractService.instance = this
-
     this.listingsRegistryContract = contract(ListingsRegistryContract)
   }
 
@@ -162,6 +154,4 @@ class ContractService {
   }
 }
 
-const contractService = new ContractService()
-
-export default contractService
+export default ContractService

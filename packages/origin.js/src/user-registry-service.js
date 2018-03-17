@@ -1,21 +1,11 @@
 import UserRegistryContract from '../../contracts/build/contracts/UserRegistry.json'
 import promisify from 'util.promisify'
+import contract from 'truffle-contract'
 
 class UserRegistryService {
-    static instance
-
     constructor() {
-
-        if (UserRegistryService.instance) {
-            return UserRegistryService.instance
-        }
-
-        UserRegistryService.instance = this;
-
-        this.contract = require('truffle-contract')
-        this.userRegistryContract = this.contract(UserRegistryContract)
+        this.userRegistryContract = contract(UserRegistryContract)
     }
-
 
     //Creates a new user with attestation or proof payload data and stores in user-registry in relation to wallet ID
     async create(payload) {
@@ -59,11 +49,6 @@ class UserRegistryService {
         console.log("user-registry-service found user:", response);
         return response
     }
-
 }
 
-const userRegistryService = new UserRegistryService()
-
-export default userRegistryService
-
-
+export default UserRegistryService
