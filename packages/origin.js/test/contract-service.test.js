@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import contractService from '../src/contract-service'
+import ContractService from '../src/contract-service'
 import { ipfsHashes } from './fixtures'
 
 const methodNames = [
@@ -9,6 +9,11 @@ const methodNames = [
 ]
 
 describe('ContractService', () => {
+  let contractService
+
+  beforeEach(() => {
+    contractService = new ContractService()
+  })
 
   methodNames.forEach((methodName) => {
     it(`should have ${methodName} method`, () => {

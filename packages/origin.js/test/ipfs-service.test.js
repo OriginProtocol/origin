@@ -1,8 +1,8 @@
 import { expect } from 'chai'
-import ipfsService from '../src/ipfs-service'
+import IpfsService from '../src/ipfs-service'
 import { listings, ipfsHashes } from './fixtures'
 
-const clearCache = () => {
+const clearCache = (ipfsService) => {
   const { mapCache } = ipfsService
   Object.keys(mapCache.__data__).forEach(key => mapCache.del(key))
 }
@@ -17,7 +17,11 @@ const ipfsEnv = process.env.IPFS_DOMAIN ? 'local' : 'default'
 
 describe('IpfsService', () => {
 
-  beforeEach(clearCache)
+  let ipfsService
+
+  beforeEach(() => {
+    ipfsService = new IpfsService()
+  })
 
   methodNames.forEach((methodName) => {
     it(`should have ${methodName} method`, () => {
@@ -33,9 +37,9 @@ describe('IpfsService', () => {
 
         const cachedData = await ipfsService.getListing(submittedHash)
         expect(cachedData).to.deep.eql(data)
-      })
 
-      it('should successfully get listing after cache is cleared', async () => {
+        clearCache(ipfsService)
+
         const submittedData = await ipfsService.getListing(ipfsHash)
         expect(submittedData).to.deep.eql(data)
       })
