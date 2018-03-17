@@ -5,8 +5,10 @@
   "main": "./dist/index.js",
   "scripts": {
     "test": "webpack-dev-server --hot --config test/webpack.config.js",
-    "build": "webpack --config webpack.config.js",
-    "build:watch": "npm run build --watch",
+    "build:contracts": "cd ../contracts && npx truffle compile",
+    "build:webpack": "webpack --config webpack.config.js",
+    "build": "npm run build:contracts && npm run build:webpack",
+    "build:watch": "npm run build:contracts && npm run build:webpack -- --watch",
     "prepare": "npm run build"
   },
   "files": [
