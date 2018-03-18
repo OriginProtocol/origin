@@ -3,17 +3,15 @@ import {
   BrowserRouter as Router,
   Route
 } from 'react-router-dom'
-import { Web3Provider } from 'react-web3'
 
 // Components
-import ScrollToTop from './scroll-to-top.js'
-import Listings from './listings-grid.js'
-import ListingDetail from './listing-detail.js'
-import ListingCreate from './listing-create.js'
-import Login from './login.js'
-import Footer from './footer'
-import NavBar from './navbar'
-import Overlay from './overlay'
+import ScrollToTop from './scroll-to-top'
+import Layout from './layout'
+import Listings from './listings-grid'
+import ListingDetail from './listing-detail'
+import ListingCreate from './listing-create'
+import Login from './login'
+import Web3Provider from './web3-provider'
 
 // CSS
 import '../css/pure-min.css' // TODO (stan): Is this even used?
@@ -52,46 +50,11 @@ const CreateListingPage = (props) => (
   </Layout>
 )
 
-const AccountUnavailableScreen = (props) => (
-  <Layout {...props}>
-    <Overlay imageUrl="/images/flat_cross_icon.svg">
-      You are not signed in to MetaMask.<br />
-    </Overlay>
-    <div className="container empty-page" />
-  </Layout>
-)
-
-const Web3UnavailableScreen = (props) => (
-  <Layout {...props}>
-    <Overlay imageUrl="/images/flat_cross_icon.svg">
-      MetaMask extension not installed.<br />
-      <a target="_blank" href="https://metamask.io/">Get MetaMask</a><br />
-      <a target="_blank" href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58">
-        Full Instructions for Demo
-      </a>
-    </Overlay>
-    <div className="container empty-page" />
-  </Layout>
-)
-
-const Layout = ({ children, hideCreateButton, hideLoginButton }) => (
-  <div>
-    <main>
-      <NavBar hideCreateButton={hideCreateButton} hideLoginButton={hideLoginButton} />
-      {children}
-    </main>
-    <Footer />
-  </div>
-)
-
 // Top level component
 const App = () => (
   <Router>
     <ScrollToTop>
-      <Web3Provider
-        web3UnavailableScreen={() => <Web3UnavailableScreen />}
-        accountUnavailableScreen={() => <AccountUnavailableScreen />}
-      >
+      <Web3Provider>
         <div>
           <Route exact path="/" component={HomePage}/>
           <Route path="/page/:activePage" component={HomePage}/>

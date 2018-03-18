@@ -11,7 +11,7 @@ const alertify = require('../../node_modules/alertify/src/alertify.js')
 
 class ListingsGrid extends Component {
 
-  constructor(props, context) {
+  constructor(props) {
     super(props)
     this.state = {
       listingIds: [],
