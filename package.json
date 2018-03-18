@@ -60,8 +60,7 @@
     "react-js-pagination": "^3.0.1",
     "react-jsonschema-form": "^1.0.1",
     "react-router": "^4.2.0",
-    "react-router-dom": "^4.2.2",
-    "react-web3": "github:wanderingstan/react-web3#state_didchange_fix"
+    "react-router-dom": "^4.2.2"
   },
   "scripts": {
     "start": "node scripts/start.js",
