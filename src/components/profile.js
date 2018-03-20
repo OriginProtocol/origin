@@ -116,6 +116,20 @@ class Profile extends Component {
               </div>
             </div>
             <div className="col-12 col-lg-4">
+              <div className="verification">
+                <h4>Last Edited</h4>
+                <p>a few seconds ago</p>
+                <h4>Status</h4>
+                <p className="status">
+                  <svg height="0.67rem" width="0.67rem">
+                    <circle cx="0.335rem" cy="0.335rem" r="0.335rem" className="unpublished" />
+                  </svg>Not published on Origin
+                </p>
+                <h4>Last published to Origin</h4>
+                <p>March 15 @ 12:34pm</p>
+                <button className="btn btn-primary" onClick={() => alert('To Do')}>Publish</button>
+                <div className="info icon-container" data-toggle="tooltip" title="You can edit your profile any time but you will need to publish for others to be able to see it."></div>
+              </div>
               <div className="wallet">
                 <div className="image-container">
                   <img src="/images/identicon.png"
@@ -125,20 +139,17 @@ class Profile extends Component {
                 <p>ETH Address:</p>
                 <p><strong>0x32Be343B94f860124dC4fEe278FDCBD38C102D88</strong></p>
                 <hr />
-                <div>
+                <div className="detail">
                   <p>Account Balance:</p>
                   <p>0 ETH</p>
                 </div>
-                <div>
+                <div className="detail">
                   <p>Transaction History:</p>
                   <p><a href="#">ETH</a> | <a href="#">Tokens</a></p>
                 </div>
-              </div>
-              <div className="verification">
-                <div className="image-container">
-                  <img src="/images/identity.svg" alt="identity icon" />
+                <div>
+                  <p><a href="#">View My Listings &gt;</a></p>
                 </div>
-                <p><strong>Verifying your profile</strong> allows other users to know that you are real and increases the changes of successful transactions.</p>
               </div>
             </div>
           </div>

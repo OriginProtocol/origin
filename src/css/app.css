@@ -570,6 +570,7 @@ label[for=root_pictures]:hover {
 
 .profile-wrapper header {
   background-color: var(--dusk);
+  padding-top: 30px;
 }
 
 .profile-wrapper header h1 {
@@ -609,6 +610,28 @@ label[for=root_pictures]:hover {
 
 .profile-wrapper .name .icon-container {
   margin-top: 15px;
+}
+
+.profile-wrapper .icon-container {
+  cursor: default;
+}
+
+.profile-wrapper .icon-container.info {
+  background-image: url(/images/info-icon-inactive.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* image preloader to avoid flicker on hover */
+.profile-wrapper .icon-container.info:after {
+  display: none;
+  content: url(/images/info-icon-active.svg);
+}
+
+.profile-wrapper .icon-container.info:hover {
+  background-image: url(/images/info-icon-active.svg);
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .profile-wrapper .edit-profile {
@@ -657,12 +680,9 @@ label[for=root_pictures]:hover {
 }
 
 .profile-wrapper .service .icon-container {
+  height: 26px;
   text-align: center;
   width: 30px;
-}
-
-.profile-wrapper .service .icon-container:last-of-type {
-  height: 26px;
 }
 
 .profile-wrapper .service img {
@@ -676,34 +696,61 @@ label[for=root_pictures]:hover {
   padding-left: 10px;
 }
 
-.profile-wrapper .service .icon-container.info {
-  background-image: url(/images/info-icon-inactive.svg);
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-/* image preloader to avoid flicker on hover */
-.profile-wrapper .service .icon-container.info:after {
-  display: none;
-  content: url(/images/info-icon-active.svg);
-}
-
-.profile-wrapper .service .icon-container.info:hover {
-  background-image: url(/images/info-icon-active.svg);
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
 .profile-wrapper .service.verified .icon-container:last-of-type {
   background-image: url(/images/verified-icon.svg);
   background-repeat: no-repeat;
   background-position: center;
 }
 
+.profile-wrapper .verification {
+  background-color: var(--pale-grey);
+  border-radius: 5px;
+  color: #0c2033;
+  padding: 20px;
+}
+
+.profile-wrapper .verification .icon-container {
+  position: absolute;
+  height: 26px;
+  right: 10px;
+  top: 10px;
+  width: 26px;
+}
+
+.profile-wrapper .verification h4 {
+  font-size: 0.9rem;
+  font-weight: normal;
+  margin-bottom: 0;
+}
+
+.profile-wrapper .verification p {
+  font-size: 0.9rem;
+  margin: 0 auto 15px;
+}
+
+.profile-wrapper .verification .status svg {
+  margin-right: 0.3rem;
+}
+
+.profile-wrapper .verification .status .unpublished {
+  fill: #d12626;
+}
+
+.profile-wrapper .verification .btn {
+  width: 100%;
+}
+
+.profile-wrapper .verification .image-container,
+.profile-wrapper .wallet .image-container {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
 .profile-wrapper .wallet {
   background-color: var(--dark);
   border-radius: 5px;
   color: white;
+  margin-top: 20px;
   padding: 20px;
 }
 
@@ -711,8 +758,7 @@ label[for=root_pictures]:hover {
   border-top: 1px solid white;
 }
 
-.profile-wrapper .wallet a:hover {
-  color: var(--clear-blue);
+.profile-wrapper .wallet a {
   font-weight: bold;
 }
 
@@ -728,34 +774,17 @@ label[for=root_pictures]:hover {
   width: 80px;
 }
 
-.profile-wrapper .wallet div {
+.profile-wrapper .wallet .detail {
   display: flex;
+  margin-bottom: 5px
 }
 
-.profile-wrapper .wallet div p {
+.profile-wrapper .wallet .detail p:first-of-type {
   flex-grow: 1;
 }
 
-.profile-wrapper .wallet div p:last-of-type {
-  text-align: right;
-}
-
-.profile-wrapper .verification {
-  background-color: var(--pale-grey);
-  border-radius: 5px;
-  color: #0c2033;
-  margin-top: 20px;
-  padding: 20px;
-}
-
-.profile-wrapper .verification p {
-  margin: 0;
-}
-
-.profile-wrapper .verification .image-container,
-.profile-wrapper .wallet .image-container {
-  margin-bottom: 20px;
-  text-align: center;
+.profile-wrapper .wallet .flex:first-child {
+  flex-grow: 1;
 }
 
 .profile-wrapper .profile.modal {
@@ -888,7 +917,7 @@ footer .footer-links li a {
     margin-bottom: 0;
   }
 
-  .profile-wrapper .wallet {
+  .profile-wrapper .verification {
     margin-top: 0;
   }
 
