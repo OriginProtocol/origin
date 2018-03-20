@@ -8,17 +8,18 @@ class Login extends Component {
   constructor(props) {
     super(props)
 
-    //instantiate civic hosted solution
-    this.civicSip = new window.civic.sip({ appId: process.env.CIVIC_APP_ID });
+    // Instantiate civic hosted solution
+    this.civicSip = new window.civic.sip({ appId: process.env.CIVIC_APP_ID })
 
     // Listen for civic auth response
     this.civicSip.on('auth-code-received', function (event) {
 
-      let encryptedCivicJWT = event.response;
+      let encryptedCivicJWT = event.response
 
-      let payload = JSON.stringify({"jwt": encryptedCivicJWT});
+      let payload = JSON.stringify({"jwt": encryptedCivicJWT})
 
-      console.log("Civic Payload to decrypt", payload);
+      console.log("Civic Payload to decrypt", payload)
+      alertify.log("Civic Payload to decrypt:\n" + payload.toString())
 
       fetch("https://civic-proxy.originprotocol.com/civic/login", {
           method: "POST",
@@ -28,45 +29,47 @@ class Login extends Component {
           },
           body: payload
       }).then(function(res) {
-          return res.json();
+          return res.json()
       }).then(function(decryptedCivicJWT) {
 
           let payload = {
               "loginService": "civic",
               "data": decryptedCivicJWT
-          };
+          }
 
           userRegistryService.create(payload).then((userFromBlockchain) => {
-              console.log("userFromBlockchain", userFromBlockchain);
+              alertify.log("userFromBlockchain:\n" + userFromBlockchain.toString())
+              console.log("userFromBlockchain", userFromBlockchain)
+
           }).catch((error) => {
-              alertify.log('There was an error attempting to login with Civic.');
-              console.error(error);
+              alertify.log('There was an error attempting to login with Civic.')
+              console.error(error)
           })
 
-      });
-    });
+      })
+    })
 
     // Listen for civic modal close by user
     this.civicSip.on('user-cancelled', function (event) {
-        console.log(event);
-    });
+        console.log(event)
+    })
 
     // Listen for when mobile app scans QR code
     this.civicSip.on('read', function (event) {
-      console.log(event);
-    });
+      console.log(event)
+    })
 
     // Alert if civic error
    this.civicSip.on('civic-sip-error', function (error) {
-     console.log(error);
-     alertify.log(error);
-    });
+     console.log(error)
+     alertify.log(error)
+    })
 
     this.civicLogin = this.civicLogin.bind(this)
   }
 
   civicLogin() {
-    this.civicSip.signup({ style: 'popup', scopeRequest: this.civicSip.ScopeRequests.BASIC_SIGNUP });
+    this.civicSip.signup({ style: 'popup', scopeRequest: this.civicSip.ScopeRequests.BASIC_SIGNUP })
   }
 
   render() {

@@ -46,7 +46,7 @@
     "whatwg-fetch": "1.0.0"
   },
   "dependencies": {
-    "@originprotocol/origin": "^0.2.0",
+    "@originprotocol/origin": "^0.2.50",
     "ajv": "^4.11.7",
     "alertify": "github:OriginProtocol/alertify.js#webpack_friendly",
     "bs58": "^4.0.1",
@@ -60,8 +60,7 @@
     "react-js-pagination": "^3.0.1",
     "react-jsonschema-form": "^1.0.1",
     "react-router": "^4.2.0",
-    "react-router-dom": "^4.2.2",
-    "react-web3": "github:wanderingstan/react-web3#state_didchange_fix"
+    "react-router-dom": "^4.2.2"
   },
   "scripts": {
     "start": "node scripts/start.js",

@@ -11,7 +11,7 @@ const alertify = require('../../node_modules/alertify/src/alertify.js')
 
 class ListingsGrid extends Component {
 
-  constructor(props, context) {
+  constructor(props) {
     super(props)
     this.state = {
       listingIds: [],
@@ -41,7 +41,8 @@ class ListingsGrid extends Component {
     const allListingsPromise = contractService.getAllListingIds()
     .catch((error) => {
       if (error.message.indexOf("(network/artifact mismatch)") > 0) {
-        console.log("The Origin Contract was not found on this network.\nYou may need to change networks, or deploy the contract.")
+        alertify.alert("The Origin Contract was not found on this network.<br>\n" +
+          "You may need to change networks, or deploy the contract.")
       }
     })
     // Wait for both to finish
@@ -53,7 +54,7 @@ class ListingsGrid extends Component {
     })
     .catch((error) => {
       console.log(error)
-      alertify.log(error.message)
+      alertify.alert(error.message)
     })
   }
 
@@ -69,7 +70,9 @@ class ListingsGrid extends Component {
       this.state.listingsPerPage * (activePage))
     return (
       <div className="listings-grid">
-        <h1>{this.state.listingIds.length} Listings</h1>
+        {(this.state.listingIds.length > 0) &&
+          <h1>{this.state.listingIds.length} Listings</h1>
+        }
         <div className="row">
           {showListingsIds.map(listingId => (
             <ListingCard listingId={listingId} key={listingId}/>

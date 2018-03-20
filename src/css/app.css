@@ -38,7 +38,7 @@ body {
 }
 
 /* sticky footer parent */
-#root > div > div > div {
+#root > div > div {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -47,6 +47,7 @@ body {
 /* sticky footer sibling */
 main {
   flex: 1 0 auto;
+  min-height: 100vh;
 }
 
 /* Common */
@@ -196,12 +197,6 @@ a:hover {
   border: solid 1px var(--light);
   background-color: white;
   color: var(--clear-blue);
-}
-
-/* Special case when we need to render an empty page,
-   but keep footer from toucher navbar */
-.empty-page {
-  height: 800px;
 }
 
 /* Listings */
