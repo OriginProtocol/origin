@@ -58,21 +58,23 @@ contract Purchase {
     created = now;
   }
 
-
-  function buyerPay()
+  // Pay for listing
+  // We used to limit this to buyer, but that prevents Listing contract from
+  // paying
+  function pay()
   public
   payable
-  isBuyer
   atStage(Stages.AWAITING_PAYMENT)
   {
     if (this.balance >= listingContract.price()) {
-
-      // Buyer has paid enough to cover purchase
+      // Buyer (or their proxy) has paid enough to cover purchase
       stage = Stages.BUYER_PENDING;
 
       // Mark item as no longer available for sale in Listing
-      // TODO: presumable we call function on Listing(), proving that we have the funds to cover purchase.
+      // TODO: presumably we call function on Listing(), proving that we have
+      // the funds to cover purchase.
     }
+    // Possible that nothing happens, and contract just accumulates sent value
   }
 
 
