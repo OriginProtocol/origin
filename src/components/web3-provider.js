@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Layout from './layout'
-import Overlay from './overlay'
+import Modal from './modal'
 
 const alertify = require('../../node_modules/alertify/src/alertify.js')
 
@@ -18,9 +18,12 @@ const ONE_MINUTE = ONE_SECOND * 60
 const AccountUnavailable = (props) => (
   <div>
     <Layout {...props}>
-      <Overlay imageUrl="/images/flat_cross_icon.svg">
+      <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
+        <div className="image-container">
+          <img src="/images/flat_cross_icon.svg" role="presentation"/>
+        </div>
         You are not signed in to MetaMask.<br />
-      </Overlay>
+      </Modal>
     </Layout>
   </div>
 )
@@ -36,10 +39,13 @@ const Loading = (props) => (
 const UnsupportedNetwork = (props) => (
   <div>
     <Layout {...props}>
-      <Overlay imageUrl="/images/flat_cross_icon.svg">
+      <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
+        <div className="image-container">
+          <img src="/images/flat_cross_icon.svg" role="presentation"/>
+        </div>
         MetaMask should be on <strong>Rinkeby</strong> Network<br />
         Currently on {props.currentNetworkName}.
-      </Overlay>
+      </Modal>
     </Layout>
   </div>
 )
@@ -47,13 +53,16 @@ const UnsupportedNetwork = (props) => (
 const Web3Unavailable = (props) => (
   <div>
     <Layout {...props}>
-      <Overlay imageUrl="/images/flat_cross_icon.svg">
+      <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
+        <div className="image-container">
+          <img src="/images/flat_cross_icon.svg" role="presentation"/>
+        </div>
         MetaMask extension not installed.<br />
         <a target="_blank" href="https://metamask.io/">Get MetaMask</a><br />
         <a target="_blank" href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58">
           Full Instructions for Demo
         </a>
-      </Overlay>
+      </Modal>
     </Layout>
   </div>
 )
@@ -113,16 +122,16 @@ class Web3Provider extends Component {
     const { web3 } = window
 
     web3 && web3.eth && web3.eth.getAccounts((err, accounts) => {
-      if (!this.state.accountsLoaded) {
-        this.setState({ accountsLoaded: true })
-      }
-
       if (err) {
         console.log(err)
 
         this.setState({ accountsError: err })
       } else {
         this.handleAccounts(accounts)
+      }
+
+      if (!this.state.accountsLoaded) {
+        this.setState({ accountsLoaded: true })
       }
     });
   }

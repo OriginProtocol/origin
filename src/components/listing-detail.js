@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { contractService, ipfsService } from '@originprotocol/origin'
-import Overlay from './overlay'
+import Modal from './modal'
 
 const alertify = require('../../node_modules/alertify/src/alertify.js')
 
@@ -83,24 +83,33 @@ class ListingsDetail extends Component {
     return (
       <div className="listing-detail">
         {this.state.step===this.STEP.METAMASK &&
-          <Overlay imageUrl="/images/spinner-animation.svg">
+          <Modal backdrop="static" isOpen={true}>
+            <div className="image-container">
+              <img src="/images/spinner-animation.svg" role="presentation"/>
+            </div>
             Confirm transaction<br />
             Press &ldquo;Submit&rdquo; in MetaMask window
-          </Overlay>
+          </Modal>
         }
         {this.state.step===this.STEP.PROCESSING &&
-          <Overlay imageUrl="/images/spinner-animation.svg">
+          <Modal backdrop="static" isOpen={true}>
+            <div className="image-container">
+              <img src="/images/spinner-animation.svg" role="presentation"/>
+            </div>
             Processing your purchase<br />
             Please stand by...
-          </Overlay>
+          </Modal>
         }
         {this.state.step===this.STEP.PURCHASED &&
-          <Overlay imageUrl="/images/circular-check-button.svg">
+          <Modal backdrop="static" isOpen={true}>
+            <div className="image-container">
+              <img src="/images/circular-check-button.svg" role="presentation"/>
+            </div>
             Purchase was successful.<br />
             <a href="#" onClick={()=>window.location.reload()}>
               Reload page
             </a>
-          </Overlay>
+          </Modal>
         }
         {this.state.pictures &&
           <div className="carousel">

@@ -2,10 +2,10 @@ import React from 'react'
 import Footer from './footer'
 import NavBar from './navbar'
 
-const Layout = ({ children, hideCreateButton, hideLoginButton }) => (
+const Layout = ({ children, hideCreateLink, hideProfileLink }) => (
   <div>
     <main>
-      <NavBar hideCreateButton={hideCreateButton} hideLoginButton={hideLoginButton} />
+      <NavBar hideCreateLink={hideCreateLink} hideProfileLink={hideProfileLink} />
       {children}
     </main>
     <Footer />

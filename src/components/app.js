@@ -8,12 +8,14 @@ import {
 import ScrollToTop from './scroll-to-top'
 import Layout from './layout'
 import Listings from './listings-grid'
-import ListingDetail from './listing-detail'
 import ListingCreate from './listing-create'
-import Login from './login'
+import ListingDetail from './listing-detail'
+import Profile from './profile.js'
 import Web3Provider from './web3-provider'
+import 'bootstrap/dist/js/bootstrap'
 
 // CSS
+import 'bootstrap/dist/css/bootstrap.css'
 import '../css/pure-min.css' // TODO (stan): Is this even used?
 import '../css/lato-web.css'
 import '../css/poppins.css'
@@ -34,19 +36,17 @@ const ListingDetailPage = (props) => (
   </Layout>
 )
 
-const LoginPage = (props) => (
-    <Layout {...props} hideLoginButton={true}>
-        <div className="container">
-            <Login />
-        </div>
-    </Layout>
-)
-
 const CreateListingPage = (props) => (
-  <Layout {...props} hideCreateButton={true}>
+  <Layout {...props} hideCreateLink={true}>
     <div className="container">
       <ListingCreate />
     </div>
+  </Layout>
+)
+
+const ProfilePage = (props) => (
+  <Layout {...props} hideProfileLink={true}>
+    <Profile />
   </Layout>
 )
 
@@ -56,11 +56,11 @@ const App = () => (
     <ScrollToTop>
       <Web3Provider>
         <div>
-          <Route exact path="/" component={HomePage}/>
-          <Route path="/page/:activePage" component={HomePage}/>
-          <Route path="/listing/:listingId" component={ListingDetailPage}/>
-          <Route path="/create" component={CreateListingPage}/>
-          <Route path="/login" component={LoginPage}/>
+          <Route exact path="/" component={HomePage} />
+          <Route path="/page/:activePage" component={HomePage} />
+          <Route path="/listing/:listingId" component={ListingDetailPage} />
+          <Route path="/create" component={CreateListingPage} />
+          <Route path="/profile" component={ProfilePage} />
         </div>
       </Web3Provider>
     </ScrollToTop>

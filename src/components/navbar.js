@@ -12,17 +12,17 @@ const NavBar = (props) => {
               className="origin-logo" alt="Origin Protocol" />
           </div>
         </Link>
-        {!props.hideCreateButton &&
+        {!props.hideCreateLink &&
           <div className="navbar-create">
             <Link to="/create">
               Create Listing
             </Link>
           </div>
         }
-        {!props.hideLoginButton &&
+        {!props.hideProfileLink &&
           <div className="navbar-create">
-            <Link to="/login">
-              Login
+            <Link to="/profile">
+              Profile
             </Link>
           </div>
         }

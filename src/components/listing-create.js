@@ -4,7 +4,7 @@ import { contractService, originService } from '@originprotocol/origin'
 
 import ListingDetail from './listing-detail'
 import Form from 'react-jsonschema-form'
-import Overlay from './overlay'
+import Modal from './modal'
 
 const alertify = require('../../node_modules/alertify/src/alertify.js')
 
@@ -194,22 +194,31 @@ class ListingCreate extends Component {
         { (this.state.step >= this.STEP.PREVIEW) &&
           <div className="step-container listing-preview">
             {this.state.step === this.STEP.METAMASK &&
-              <Overlay imageUrl="/images/spinner-animation.svg">
+              <Modal backdrop="static" isOpen={true}>
+                <div className="image-container">
+                  <img src="/images/spinner-animation.svg" role="presentation"/>
+                </div>
                 Confirm transaction<br />
                 Press &ldquo;Submit&rdquo; in MetaMask window
-              </Overlay>
+              </Modal>
             }
             {this.state.step === this.STEP.PROCESSING &&
-              <Overlay imageUrl="/images/spinner-animation.svg">
+              <Modal backdrop="static" isOpen={true}>
+                <div className="image-container">
+                  <img src="/images/spinner-animation.svg" role="presentation"/>
+                </div>
                 Uploading your listing<br />
                 Please stand by...
-              </Overlay>
+              </Modal>
             }
             {this.state.step === this.STEP.SUCCESS &&
-              <Overlay imageUrl="/images/circular-check-button.svg">
+              <Modal backdrop="static" isOpen={true}>
+                <div className="image-container">
+                  <img src="/images/circular-check-button.svg" role="presentation"/>
+                </div>
                 Success<br />
                 <Link to="/">See All Listings</Link>
-              </Overlay>
+              </Modal>
             }
             <div className="row">
               <div className="col-md-7">
