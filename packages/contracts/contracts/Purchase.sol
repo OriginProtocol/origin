@@ -99,7 +99,7 @@ contract Purchase {
   }
 
 
-  function openDisute()
+  function openDispute()
   public
   {
     // Must be buyer or seller
