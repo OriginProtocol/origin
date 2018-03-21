@@ -712,7 +712,7 @@ label[for=root_pictures]:hover {
 .profile-wrapper .verification .icon-container {
   position: absolute;
   height: 26px;
-  right: 10px;
+  right: 26px;
   top: 10px;
   width: 26px;
 }
@@ -919,6 +919,10 @@ footer .footer-links li a {
 
   .profile-wrapper .verification {
     margin-top: 0;
+  }
+
+  .profile-wrapper .verification .icon-container {
+    right: 10px;
   }
 
   .profile-wrapper .verification,
