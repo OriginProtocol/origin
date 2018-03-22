@@ -201,6 +201,7 @@ class Profile extends Component {
                 <div className="image-container">
                   <img src="/images/identicon.png"
                     srcSet="/images/identicon@2x.png 2x, /images/identicon@3x.png 3x"
+                    className="identicon"
                     alt="wallet icon" />
                 </div>
                 <p>ETH Address:</p>

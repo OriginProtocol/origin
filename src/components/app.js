@@ -37,7 +37,7 @@ const ListingDetailPage = (props) => (
 )
 
 const CreateListingPage = (props) => (
-  <Layout {...props} hideCreateLink={true}>
+  <Layout {...props}>
     <div className="container">
       <ListingCreate />
     </div>
@@ -45,7 +45,7 @@ const CreateListingPage = (props) => (
 )
 
 const ProfilePage = (props) => (
-  <Layout {...props} hideProfileLink={true}>
+  <Layout {...props}>
     <Profile />
   </Layout>
 )
