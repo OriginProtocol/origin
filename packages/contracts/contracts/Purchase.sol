@@ -49,11 +49,12 @@ contract Purchase {
   */
 
   function Purchase(
-    address _listingContractAddress
+    address _listingContractAddress,
+    address _buyer
   )
   public
   {
-    buyer = msg.sender;
+    buyer = _buyer;
     listingContract = Listing(_listingContractAddress);
     created = now;
   }

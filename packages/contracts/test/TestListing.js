@@ -12,17 +12,17 @@ const price = 33
 const unitsAvailable = 42
 
 contract('Listing', accounts => {
-  var owner = accounts[0]
-  var notOwner = accounts[1]
+  var seller = accounts[0]
+  var buyer = accounts[1]
   var instance
 
   beforeEach(async function() {
     instance = await contractDefinition.new(
-      owner,
+      seller,
       ipfsHash,
       price,
       unitsAvailable,
-      {from: owner}
+      {from: seller}
     )
   })
 
@@ -40,7 +40,7 @@ contract('Listing', accounts => {
     const unitsToBuy = 1 // TODO: Handle multiple units
     const buyTransaction = await instance.buyListing(
       unitsToBuy,
-      { from: accounts[1], value: 6 }
+      { from: buyer, value: 6 }
     )
     const listingPurchasedEvent = buyTransaction.logs.find((e)=>e.event=="ListingPurchased")
     const purchaseContract = purchaseDefinition.at(listingPurchasedEvent.args._purchaseContract)
@@ -50,6 +50,11 @@ contract('Listing', accounts => {
       newUnitsAvailable,
       (unitsAvailable - unitsToBuy),
       'units available has decreased'
+    )
+
+    assert.equal(
+      buyer,
+      await purchaseContract.buyer()
     )
   })
 

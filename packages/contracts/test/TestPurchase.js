@@ -37,6 +37,7 @@ contract('Purchase', accounts => {
 
     instance = await purchaseContractDefinition.new(
       listingInstance.address,
+      buyer,
       {from: buyer}
     )
   })

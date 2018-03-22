@@ -53,7 +53,7 @@ contract Listing {
     require (_unitsToBuy == 1); // HACK
 
     // Create purchase contract
-    Purchase purchaseContract = new Purchase(this);
+    Purchase purchaseContract = new Purchase(this, msg.sender);
 
     // Count units as sold
     unitsAvailable -= _unitsToBuy;
