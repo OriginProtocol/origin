@@ -25,6 +25,7 @@ contract Listing {
     bytes32 public ipfsHash;
     uint public price;
     uint public unitsAvailable;
+    Purchase[] public purchases;
 
 
     function Listing (
@@ -58,10 +59,33 @@ contract Listing {
     // Count units as sold
     unitsAvailable -= _unitsToBuy;
 
+    purchases.push(purchaseContract);
+
     // TODO STAN: How to call function *AND* transfer value??
     purchaseContract.pay.value(msg.value)();
 
     ListingPurchased(purchaseContract);
+  }
+
+  /// @dev purchasesLength(): Return number of listings
+  function purchasesLength()
+    public
+    constant
+    returns (uint)
+  {
+      return purchases.length;
+  }
+
+  /// @dev getPurchase(): Return listing info for given listing
+  /// @param _index the index of the listing we want info about
+  function getPurchase(uint _index)
+    public
+    constant
+    returns (Purchase)
+  {
+    return (
+      purchases[_index]
+    );
   }
 
 }

@@ -35,7 +35,6 @@ contract('Listing', accounts => {
     )
   })
 
-
   it('should be able to buy a listing', async function() {
     const unitsToBuy = 1 // TODO: Handle multiple units
     const buyTransaction = await instance.buyListing(
@@ -45,6 +44,7 @@ contract('Listing', accounts => {
     const listingPurchasedEvent = buyTransaction.logs.find((e)=>e.event=="ListingPurchased")
     const purchaseContract = purchaseDefinition.at(listingPurchasedEvent.args._purchaseContract)
 
+    // Check units available decreased
     let newUnitsAvailable = await instance.unitsAvailable()
     assert.equal(
       newUnitsAvailable,
@@ -52,10 +52,14 @@ contract('Listing', accounts => {
       'units available has decreased'
     )
 
-    assert.equal(
-      buyer,
-      await purchaseContract.buyer()
-    )
+    // Check buyer set correctly
+    assert.equal(await purchaseContract.buyer(), buyer)
+
+    // Check that purchase was stored in listings
+    assert.equal((await instance.purchasesLength()).toNumber(), 1)
+
+    // Check that we can fetch the purchase address
+    assert.equal(await instance.getPurchase(0), purchaseContract.address)
   })
 
 })
