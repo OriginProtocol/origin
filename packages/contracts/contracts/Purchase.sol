@@ -93,10 +93,12 @@ contract Purchase {
   isSeller
   atStage(Stages.SELLER_PENDING)
   {
-    // Send contract funds to seller (ie owner of Listing)
-    listingContract.owner().transfer(this.balance);
+    stage = Stages.COMPLETE;
 
-      stage = Stages.COMPLETE;
+    // Send contract funds to seller (ie owner of Listing)
+    // Transfering money always needs to be the last thing we do, do avoid
+    // rentrancy bugs. (Though here the seller would just be getting their own money)
+    listingContract.owner().transfer(this.balance);
   }
 
 
