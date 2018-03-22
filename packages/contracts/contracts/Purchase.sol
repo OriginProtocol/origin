@@ -21,9 +21,9 @@ contract Purchase {
 
   Stages public stage = Stages.AWAITING_PAYMENT;
 
-  Listing listingContract; // listing that is being purchased
+  Listing public listingContract; // listing that is being purchased
   address public buyer; // User who is buying. Seller is derived from listing
-  uint created;
+  uint public created;
 
   /*
   * Modifiers
@@ -80,8 +80,8 @@ contract Purchase {
 
 
   function buyerConfirmReceipt()
-  isBuyer
   public
+  isBuyer
   atStage(Stages.BUYER_PENDING)
   {
       stage = Stages.SELLER_PENDING;

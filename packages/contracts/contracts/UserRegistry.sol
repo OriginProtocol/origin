@@ -16,13 +16,13 @@ contract UserRegistry {
     */
 
     // Array of all users
-    userStruct[] public users;
+    UserStruct[] public users;
 
     /*
     * Structs
     */
 
-    struct userStruct {
+    struct UserStruct {
         address owner;
         bytes32 ipfsHash;
     }
@@ -53,7 +53,7 @@ contract UserRegistry {
         public
         returns (uint)
     {
-        users.push(userStruct(msg.sender, _ipfsHash));
+        users.push(UserStruct(msg.sender, _ipfsHash));
         NewUser(users.length-1);
         return users.length;
     }
@@ -71,11 +71,11 @@ contract UserRegistry {
         users[_index].ipfsHash = _ipfsHash;
     }
 
-    /// @dev create_another(): Create a new user and associates attenstion or proof with user
+    /// @dev createAnother(): Create a new user and associates attenstion or proof with user
     // @param wallet id
     // Attestation or proof to associate to the user
     // TODO: (Brad David) replace with real function
-    function create_another(
+    function createAnother(
         string _id,
         string payload)
         public
