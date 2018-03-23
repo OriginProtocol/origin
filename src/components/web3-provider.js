@@ -36,6 +36,19 @@ const Loading = (props) => (
   </div>
 )
 
+const UnconnectedNetwork = (props) => (
+  <div>
+    <Layout {...props}>
+      <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
+        <div className="image-container">
+          <img src="/images/flat_cross_icon.svg" role="presentation"/>
+        </div>
+        Connecting to network...
+      </Modal>
+    </Layout>
+  </div>
+)
+
 const UnsupportedNetwork = (props) => (
   <div>
     <Layout {...props}>
@@ -78,6 +91,7 @@ class Web3Provider extends Component {
     this.state = {
       accounts: [],
       accountsLoaded: false,
+      networkConnected: null,
       networkId: null,
       networkError: null,
     }
@@ -164,7 +178,7 @@ class Web3Provider extends Component {
 
       if (err) {
         this.setState({
-          networkError: err,
+          networkError: err
         })
       } else {
         if (networkId !== this.state.networkId) {
@@ -174,14 +188,28 @@ class Web3Provider extends Component {
           })
         }
       }
+
+      if (!this.state.networkConnected) {
+        this.setState({
+          networkConnected: true,
+        })
+      }
+    })
+
+    web3 && web3.version && (web3.version.network === 'loading' || !web3.version.network) && this.setState({
+      networkConnected: false,
     })
   }
 
   render() {
     const { web3 } = window
-    const { accounts, accountsLoaded, networkId } = this.state
+    const { accounts, accountsLoaded, networkConnected, networkId } = this.state
     const currentNetworkName = networkNames[networkId] ? networkNames[networkId] : networkId
     const inProductionEnv = window.location.hostname === 'demo.originprotocol.com'
+
+    if (networkConnected === false) {
+      return <UnconnectedNetwork />
+    }
 
     if (!web3) {
       return <Web3Unavailable />
@@ -192,7 +220,7 @@ class Web3Provider extends Component {
     }
 
     if (!accountsLoaded) {
-      return <Loading />
+      return <Loading/>
     }
 
     if (!accounts.length) {
