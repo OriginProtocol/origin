@@ -150,13 +150,17 @@ class NavBar extends Component {
               </svg>
               <div className="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
                 <div className="wallet">
-                  <div className="image-container">
-                    <img src="/images/identicon.png"
-                      srcSet="/images/identicon@2x.png 2x, /images/identicon@3x.png 3x"
-                      alt="wallet icon" />
+                  <div className="d-flex">
+                    <div className="image-container">
+                      <img src="/images/identicon.png"
+                        srcSet="/images/identicon@2x.png 2x, /images/identicon@3x.png 3x"
+                        alt="wallet icon" />
+                    </div>
+                    <div>
+                      <p>ETH Address:</p>
+                      <p><strong>0x32Be343B94f860124dC4fEe278FDCBD38C102D88</strong></p>
+                    </div>
                   </div>
-                  <p>ETH Address:</p>
-                  <p><strong>0x32Be343B94f860124dC4fEe278FDCBD38C102D88</strong></p>
                   <hr />
                   <div className="d-flex">
                     <div className="avatar-container">
@@ -167,20 +171,7 @@ class NavBar extends Component {
                       <img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" />
                     </div>
                   </div>
-                  <hr />
-                  <div className="detail">
-                    <p>Account Balance:</p>
-                    <p>0 ETH</p>
-                  </div>
-                  <div className="detail">
-                    <p>Transaction History:</p>
-                    <p><a href="#">ETH</a> | <a href="#">Tokens</a></p>
-                  </div>
-                  <div>
-                    <p><a href="#">View My Listings &gt;</a></p>
-                  </div>
                 </div>
-                <Link to="/profile" className="dropdown-item">View My Profile</Link>
               </div>
             </div>
           </div>
