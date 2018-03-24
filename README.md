@@ -1,5 +1,9 @@
-# Origin
+![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
+
+# Origin Demo DApp
 The sharing economy without intermediaries.
+
+NOTE 2018-03-11: We are in the midst of transitioning this demo to use our `origin.js` library. This work is currently on the `develop` branch but will soon be merged. 
 
 ## Project Overview
 
@@ -34,8 +38,7 @@ If you're new to the space, it may be helpful to first familiarize yourself with
 
 ## Install and run Demo DApp locally
 
-Think of this app as a proof of concept and our playground for trying out ideas. While we may eventually reuse pieces of this in production, this is by no means what we envision as the final product. We thought it would be helpful to demonstrate how the various technologies work together from end to end.
-
+NOTE: This installs the DApp locally with a local test chain. See below for hosting on a server.
 
 1. Make sure you have `node` version 8.5.0 or greater
 ```
@@ -95,6 +98,27 @@ docker-compose up -d
 2. Set up Metamask using steps 6-10 above.
 
 3. Visit http://localhost:3000 in your browser.
+
+## Hosting on a server
+
+If you want to host the demo dapp on web server such as EC2 you will need to configure things differently. Browsers can not connect to a test chain on the EC2 server, so you will need to connect to our existing contracts on the test networks or deploy your own. 
+
+To use the contracts deployed by Origin, modify the file `build/contracts/Listing.json` and add lines to the `networks` entry so it begins like this:
+```
+  "networks": {
+    "3": {
+      "events": {},
+      "links": {},
+      "address": "0xe66c9c6168d14be4c3c145f91890740cbdf9ec8b"
+    },
+    "4": {
+      "events": {},
+      "links": {},
+      "address": "0x94de52186b535cb06ca31deb1fbd4541a824ac6d"
+    },
+    <...Possibly other networks for local test chains>
+```
+(Ropsten test network is id 3, and Rinkeby test netork is id 4)
 
 ## Get involved
 
