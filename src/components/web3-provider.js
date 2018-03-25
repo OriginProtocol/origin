@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import Layout from './layout'
 import Modal from './modal'
 
 const alertify = require('../../node_modules/alertify/src/alertify.js')
@@ -16,68 +15,49 @@ const ONE_SECOND = 1000
 const ONE_MINUTE = ONE_SECOND * 60
 
 const AccountUnavailable = (props) => (
-  <div>
-    <Layout {...props}>
-      <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
-        <div className="image-container">
-          <img src="/images/flat_cross_icon.svg" role="presentation"/>
-        </div>
-        You are not signed in to MetaMask.<br />
-      </Modal>
-    </Layout>
-  </div>
+  <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
+    <div className="image-container">
+      <img src="/images/flat_cross_icon.svg" role="presentation"/>
+    </div>
+    You are not signed in to MetaMask.<br />
+  </Modal>
 )
 
 // TODO (micah): potentially add a loading indicator
 const Loading = (props) => (
-  <div>
-    <Layout {...props}>
-    </Layout>
-  </div>
+  null
 )
 
 const UnconnectedNetwork = (props) => (
-  <div>
-    <Layout {...props}>
-      <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
-        <div className="image-container">
-          <img src="/images/flat_cross_icon.svg" role="presentation"/>
-        </div>
-        Connecting to network...
-      </Modal>
-    </Layout>
-  </div>
+  <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
+    <div className="image-container">
+      <img src="/images/flat_cross_icon.svg" role="presentation"/>
+    </div>
+    Connecting to network...
+  </Modal>
 )
 
 const UnsupportedNetwork = (props) => (
-  <div>
-    <Layout {...props}>
-      <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
-        <div className="image-container">
-          <img src="/images/flat_cross_icon.svg" role="presentation"/>
-        </div>
-        MetaMask should be on <strong>Rinkeby</strong> Network<br />
-        Currently on {props.currentNetworkName}.
-      </Modal>
-    </Layout>
-  </div>
+  <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
+    <div className="image-container">
+      <img src="/images/flat_cross_icon.svg" role="presentation"/>
+    </div>
+    MetaMask should be on <strong>Rinkeby</strong> Network<br />
+    Currently on {props.currentNetworkName}.
+  </Modal>
 )
 
 const Web3Unavailable = (props) => (
-  <div>
-    <Layout {...props}>
-      <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
-        <div className="image-container">
-          <img src="/images/flat_cross_icon.svg" role="presentation"/>
-        </div>
-        MetaMask extension not installed.<br />
-        <a target="_blank" href="https://metamask.io/">Get MetaMask</a><br />
-        <a target="_blank" href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58">
-          Full Instructions for Demo
-        </a>
-      </Modal>
-    </Layout>
-  </div>
+  <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
+    <div className="image-container">
+      <img src="/images/flat_cross_icon.svg" role="presentation"/>
+    </div>
+    MetaMask extension not installed.<br />
+    <a target="_blank" href="https://metamask.io/">Get MetaMask</a><br />
+    <a target="_blank" href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58">
+      Full Instructions for Demo
+    </a>
+  </Modal>
 )
 
 class Web3Provider extends Component {

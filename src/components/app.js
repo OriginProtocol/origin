@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import {
   BrowserRouter as Router,
   Route
@@ -23,46 +23,40 @@ import '../css/app.css'
 
 
 const HomePage = (props) => (
-  <Layout {...props}>
-    <div className="container">
-      <Listings />
-    </div>
-  </Layout>
+  <div className="container">
+    <Listings />
+  </div>
 )
 
 const ListingDetailPage = (props) => (
-  <Layout {...props}>
-    <ListingDetail listingId={props.match.params.listingId} />
-  </Layout>
+  <ListingDetail listingId={props.match.params.listingId} />
 )
 
 const CreateListingPage = (props) => (
-  <Layout {...props}>
-    <div className="container">
-      <ListingCreate />
-    </div>
-  </Layout>
+  <div className="container">
+    <ListingCreate />
+  </div>
 )
 
 const ProfilePage = (props) => (
-  <Layout {...props}>
-    <Profile />
-  </Layout>
+  <Profile />
 )
 
 // Top level component
 const App = () => (
   <Router>
     <ScrollToTop>
-      <Web3Provider>
-        <div>
-          <Route exact path="/" component={HomePage} />
-          <Route path="/page/:activePage" component={HomePage} />
-          <Route path="/listing/:listingId" component={ListingDetailPage} />
-          <Route path="/create" component={CreateListingPage} />
-          <Route path="/profile" component={ProfilePage} />
-        </div>
-      </Web3Provider>
+      <Layout>
+        <Web3Provider>
+          <Fragment>
+            <Route exact path="/" component={HomePage} />
+            <Route path="/page/:activePage" component={HomePage} />
+            <Route path="/listing/:listingId" component={ListingDetailPage} />
+            <Route path="/create" component={CreateListingPage} />
+            <Route path="/profile" component={ProfilePage} />
+          </Fragment>
+        </Web3Provider>
+      </Layout>
     </ScrollToTop>
   </Router>
 )

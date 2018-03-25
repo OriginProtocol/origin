@@ -32,15 +32,7 @@ body {
   font-family: var(--default-font);
 }
 
-/* necessary for every sticky footer ancestor */
-#root,
-#root > div,
-#root > div > div {
-  height: 100%;
-}
-
-/* sticky footer parent */
-#root > div > div {
+#root {
   display: flex;
   flex-direction: column;
   height: 100%;
