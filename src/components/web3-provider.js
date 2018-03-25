@@ -172,13 +172,16 @@ class Web3Provider extends Component {
    */
   fetchNetwork() {
     const { web3 } = window
+    let called = false
 
     web3 && web3.version && web3.version.getNetwork((err, netId) => {
+      called = true 
+
       const networkId = parseInt(netId, 10)
 
       if (err) {
         this.setState({
-          networkError: err
+          networkError: err,
         })
       } else {
         if (networkId !== this.state.networkId) {
@@ -196,9 +199,17 @@ class Web3Provider extends Component {
       }
     })
 
-    web3 && web3.version && (web3.version.network === 'loading' || !web3.version.network) && this.setState({
-      networkConnected: false,
-    })
+    // Delay and condition the use of the network value.
+    // https://github.com/MetaMask/metamask-extension/issues/1380#issuecomment-375980850
+    if (this.state.networkConnected === null) {
+      setTimeout(() => {
+        !called && 
+        web3 && web3.version && (web3.version.network === 'loading' || !web3.version.network) &&
+        this.setState({
+          networkConnected: false,
+        })
+      }, 1000)
+    }
   }
 
   render() {
@@ -220,7 +231,7 @@ class Web3Provider extends Component {
     }
 
     if (!accountsLoaded) {
-      return <Loading/>
+      return <Loading />
     }
 
     if (!accounts.length) {
