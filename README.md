@@ -18,7 +18,7 @@ There is currently no practical way to get email or text notifications when your
 
 ## Installing
 
-This is a Python Flask app. The code is all `Python 3.5.0` with `Postgres` for the database.
+This is a Python Flask app. The code is all `Python 3.6.4` with `Postgres` for the database.
 
 Setup a virtualenv
 ```
