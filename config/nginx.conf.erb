@@ -1,0 +1,101 @@
+# The Heroku Nginx buildpack is hardcoded to look for an Nginx config 
+# file in config/nginx.conf.erb. This file cannot be moved.
+
+
+# Heroku requires the server to run in the foreground
+daemon off;
+
+#Heroku dynos have at least 4 cores.
+worker_processes <%= ENV['NGINX_WORKERS'] || 4 %>;
+
+events {
+	use epoll;
+	accept_mutex on;
+	worker_connections 1024;
+}
+
+http {
+	gzip on;
+	gzip_comp_level 2;
+	gzip_min_length 512;
+
+	server_tokens off;
+
+	log_format l2met 'measure#nginx.service=$request_time request_id=$http_x_request_id';
+	access_log logs/nginx/access.log l2met;
+	error_log logs/nginx/error.log;
+
+	include mime.types;
+	default_type application/octet-stream;
+	sendfile on;
+
+	#Must read the body in 5 seconds.
+	client_body_timeout 5;
+
+	upstream app_server {
+		server unix:/tmp/nginx.socket fail_timeout=0;
+	}
+	
+	proxy_cache_path /tmp/cache levels=1:2 keys_zone=my_cache:10m max_size=200m
+	                 inactive=120m use_temp_path=off;
+
+	server {
+		listen <%= ENV["PORT"] %>;
+		server_name _;
+		keepalive_timeout 5;
+
+		# Proxy and cache asset files
+		location ~ ^/static/(css|js)/all_ {
+			expires 20m;
+			add_header Cache-Control public;
+
+			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+			proxy_set_header Host $http_host;
+			proxy_redirect off;
+			proxy_pass http://app_server;
+			
+			proxy_cache my_cache;
+			proxy_cache_valid 200 120m;
+			add_header X-Proxy-Cache $upstream_cache_status;
+			proxy_ignore_headers Cache-Control;
+		}
+
+		location /static/ {
+			alias /app/static/;
+			expires 20m;
+			add_header Cache-Control public;
+			
+			gzip on;
+			gzip_disable "msie6";
+			gzip_vary on;
+			gzip_proxied any;
+			gzip_comp_level 6;
+			gzip_buffers 16 8k;
+			gzip_http_version 1.1;
+			gzip_min_length 256;
+			gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/vnd.ms-fontobject application/x-font-ttf font/opentype image/svg+xml image/x-icon;
+		}
+
+		location / {
+			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+			proxy_set_header Host $http_host;
+			proxy_redirect off;
+			proxy_pass http://app_server;
+			
+
+			# Cache proxied pages that have a language code
+			location ~ ^/([a-z][a-z]|zh_Hans|zh_Hant)(/.*)?$ {
+				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_set_header Host $http_host;
+				proxy_redirect off;
+				proxy_pass http://app_server;
+				
+				proxy_cache my_cache;
+				proxy_cache_valid 200 120m;
+				# No caching if the user has session data (for example  an upcoming flash message)
+				proxy_cache_bypass $cookie_SESSION; 
+				add_header X-Proxy-Cache $upstream_cache_status;
+			}
+		}
+	}
+}
