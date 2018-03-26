@@ -139,8 +139,8 @@ class NavBar extends Component {
               </div>
             </div>
             <Link to="/create" className="nav-item nav-link"><img src="/images/add-listing-icon.svg" alt="Add Listing" className="add-listing" /></Link>
-            <div className="nav-item profile dropdown">
-              <a className="nav-link active dropdown-toggle" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div className="nav-item identity dropdown">
+              <a className="nav-link active dropdown-toggle" id="identityDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src="/images/identicon.png"
                   srcSet="/images/identicon@2x.png 2x, /images/identicon@3x.png 3x"
                   className="identicon" alt="Identicon" />
@@ -148,27 +148,29 @@ class NavBar extends Component {
               <svg height="18" width="18" className="triangle">
                 <polygon points="18,0 18,18 0,18" />
               </svg>
-              <div className="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
+              <div className="dropdown-menu dropdown-menu-right" aria-labelledby="identityDropdown">
                 <div className="wallet">
                   <div className="d-flex">
                     <div className="image-container">
-                      <img src="/images/identicon.png"
-                        srcSet="/images/identicon@2x.png 2x, /images/identicon@3x.png 3x"
-                        alt="wallet icon" />
+                      <Link to="/profile">
+                        <img src="/images/identicon.png"
+                          srcSet="/images/identicon@2x.png 2x, /images/identicon@3x.png 3x"
+                          alt="wallet icon" />
+                      </Link>
                     </div>
                     <div>
-                      <p>ETH Address:</p>
-                      <p><strong>0x32Be343B94f860124dC4fEe278FDCBD38C102D88</strong></p>
+                      <p><Link to="/profile">ETH Address:</Link></p>
+                      <p><Link to="/profile"><strong>0x32Be343B94f860124dC4fEe278FDCBD38C102D88</strong></Link></p>
                     </div>
                   </div>
                   <hr />
                   <div className="d-flex">
                     <div className="avatar-container">
-                      <img src="/images/avatar.svg" alt="avatar" />
+                      <Link to="/profile"><img src="/images/avatar.svg" alt="avatar" /></Link>
                     </div>
                     <div className="identification">
-                      <p>Aure Gimon</p>
-                      <img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" />
+                      <p><Link to="/profile">Aure Gimon</Link></p>
+                      <Link to="/profile"><img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" /></Link>
                     </div>
                   </div>
                 </div>
