@@ -10,7 +10,8 @@ import Layout from './layout'
 import Listings from './listings-grid'
 import ListingCreate from './listing-create'
 import ListingDetail from './listing-detail'
-import Profile from './profile.js'
+import Notifications from './notifications'
+import Profile from './profile'
 import Web3Provider from './web3-provider'
 import 'bootstrap/dist/js/bootstrap'
 
@@ -38,6 +39,10 @@ const CreateListingPage = (props) => (
   </div>
 )
 
+const NotificationsPage = (props) => (
+  <Notifications />
+)
+
 const ProfilePage = (props) => (
   <Profile />
 )
@@ -53,6 +58,7 @@ const App = () => (
             <Route path="/page/:activePage" component={HomePage} />
             <Route path="/listing/:listingId" component={ListingDetailPage} />
             <Route path="/create" component={CreateListingPage} />
+            <Route path="/notifications" component={NotificationsPage} />
             <Route path="/profile" component={ProfilePage} />
           </Fragment>
         </Web3Provider>

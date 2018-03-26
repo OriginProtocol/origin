@@ -1,67 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-
-const notifications = [
-  {
-    _id: '1foo2',
-    transactionType: 'purchased',
-    address: '0x12Be343B94f860124dC4fEe278FDCBD38C102D88',
-    name: 'Matt L',
-    product: 'Super Lambo',
-  },
-  {
-    _id: '3bar4',
-    transactionType: 'confirmed-receipt',
-    address: '0x34Be343B94f860124dC4fEe278FDCBD38C102D88',
-    name: 'Josh F',
-    product: 'Wholesale Component',
-  },
-  {
-    _id: '5baz6',
-    transactionType: 'completed',
-    address: '0x56Be343B94f860124dC4fEe278FDCBD38C102D88',
-    name: 'Micah A',
-    product: 'Blue Suede Shoes',
-  },
-  {
-    _id: '7qux8',
-    transactionType: 'confirmed-withdrawal',
-    address: '0x78Be343B94f860124dC4fEe278FDCBD38C102D88',
-  },
-]
-
-class HumanReadableNotification extends Component {
-  render() {
-    const { className, notification } = this.props
-    const { address, name, product, transactionType } = notification
-    const link = <Link to={`/users/${address}`}>{name || 'Anonymous User'}</Link>
-    let predicate = ''
-
-    if (transactionType === 'completed') {
-      return (
-        <p className={className || ''}>Transaction with {link} complete for <strong>{product}</strong>.</p>
-      )
-    }
-
-    switch(transactionType) {
-      case 'purchased':
-        predicate = 'purchased your listing'
-        break
-      case 'confirmed-receipt':
-        predicate = 'confirmed receipt of'
-        break
-      case 'confirmed-withdrawal':
-        predicate = 'confirmed and withdrawn some amount of something?'
-        break
-      default:
-        predicate = `${transactionType.replace('-', ' ')} ${product}`
-    }
-
-    return (
-      <p className={className || ''}>{link} has {predicate}{product ? (<strong> {product}</strong>) : ''}</p>
-    )
-  }
-}
+import Notification from './notification'
+import data from '../data'
 
 class NavBar extends Component {
   constructor(props) {
@@ -115,22 +55,7 @@ class NavBar extends Component {
                 </header>
                 <div className="notifications-list">
                   <ul className="list-group">
-                    {notifications.map(n => (
-                      <li key={n._id} className="list-group-item d-flex notification">
-                        <div>
-                          <div className="avatar-container">
-                            <img src={`/images/${n.name ? 'avatar' : 'partners-graphic'}.svg`} alt="avatar" />
-                          </div>
-                        </div>
-                        <div>
-                          <HumanReadableNotification notification={n} className="content" />
-                          <p className="address">{n.address}</p>
-                        </div>
-                        <div className="link-container ml-auto">
-                          <Link to={`/notifications/${n._id}`} className="btn">&gt;</Link>
-                        </div>
-                      </li>
-                    ))}
+                    {data.notifications.map(n => <Notification key={`navbar-notification-${n._id}`} notification={n} />)}
                   </ul>
                 </div>
                 <footer>
