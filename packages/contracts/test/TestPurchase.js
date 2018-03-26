@@ -1,5 +1,5 @@
-const purchaseContractDefinition = artifacts.require('./Purchase.sol')
-const listingContractDefinition = artifacts.require('./Listing.sol')
+const Purchase = artifacts.require('./Purchase.sol')
+const Listing = artifacts.require('./Listing.sol')
 
 // Used to assert error cases
 const isEVMError = function(err) {
@@ -27,7 +27,7 @@ contract('Purchase', accounts => {
 
   beforeEach(async function() {
     // Listing that we will be buying
-    listingInstance = await listingContractDefinition.new(
+    listingInstance = await Listing.new(
         seller,
         ipfsHash,
         price,
@@ -35,7 +35,7 @@ contract('Purchase', accounts => {
         {from: seller}
     )
 
-    instance = await purchaseContractDefinition.new(
+    instance = await Purchase.new(
       listingInstance.address,
       buyer,
       {from: buyer}
@@ -128,5 +128,63 @@ contract('Purchase', accounts => {
       'seller made money and buyer lost money'
     )
   })
+
+})
+
+
+
+contract('Purchase', accounts => {
+  var buyer = accounts[0]
+  var seller = accounts[1]
+  var purchase
+  var listing
+  var totalPrice = 48
+  var initialPayment = 6
+
+
+  describe("Success path flow", async () => {
+
+    before(async () => {
+      listing = await Listing.new(
+        seller,
+        ipfsHash,
+        totalPrice,
+        unitsAvailable,
+        { from: seller }
+      )
+    })
+
+    it("should create and link the new purchase", async () => {
+      const unitsToBuy = 1
+      const buyTransaction = await listing.buyListing(
+        unitsToBuy,
+        { from: buyer, value: initialPayment }
+      )
+      const listingPurchasedEvent = buyTransaction.logs.find((e) => e.event == "ListingPurchased")
+      purchase = Purchase.at(listingPurchasedEvent.args._purchaseContract)
+      
+      assert.equal(await listing.getPurchase(0), purchase.address)
+      assert.equal(await purchase.listingContract(), listing.address)
+      assert.equal((await purchase.stage()).toNumber(), AWAITING_PAYMENT)
+    })
+
+    it("should allow buyer to pay", async () => {
+      await purchase.pay({ from: buyer, value: totalPrice - initialPayment })
+      assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)
+    })
+
+    it("should allow buyer to confirm reciept", async () => {
+      await purchase.buyerConfirmReceipt({ from: buyer })
+      assert.equal((await purchase.stage()).toNumber(), SELLER_PENDING)
+    })
+
+    it("should allow seller to collect their money", async () => {
+      await purchase.sellerGetPayout({ from: seller })
+      assert.equal((await purchase.stage()).toNumber(), COMPLETE)
+    })
+
+
+  })
+
 
 })
