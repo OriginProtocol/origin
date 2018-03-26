@@ -41,8 +41,10 @@ class ListingsGrid extends Component {
 
     // Get all listings from contract
     const allListingsPromise = contractService.getAllListingIds()
-    .then(() => {
+    .then((response) => {
       this.setState({ contractFound: true })
+
+      return response
     })
     .catch((error) => {
       if (error.message.indexOf("(network/artifact mismatch)") > 0) {
