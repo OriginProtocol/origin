@@ -1,1 +1,1 @@
-web: bin/start-nginx run-program gunicorn -c nginx/gunicorn.conf main:app
+web: bin/start-nginx gunicorn -c nginx/gunicorn.conf main:app
