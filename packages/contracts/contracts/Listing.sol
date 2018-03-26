@@ -43,6 +43,19 @@ contract Listing {
       unitsAvailable = _unitsAvailable;
     }
 
+  /*
+    * Modifiers
+    */
+
+  modifier isSeller() {
+    require (msg.sender == owner);
+    _;
+  }
+
+  /*
+    * Public functions
+    */
+
 
   /// @dev buyListing(): Buy a listing
   /// @param _unitsToBuy Number of units to buy
@@ -65,6 +78,14 @@ contract Listing {
     purchaseContract.pay.value(msg.value)();
 
     ListingPurchased(purchaseContract);
+  }
+
+  /// @dev close(): Allows a seller to close the listing from further purchases
+  function close()
+    public
+    isSeller
+  {
+    unitsAvailable = 0;
   }
 
   /// @dev purchasesLength(): Return number of listings
