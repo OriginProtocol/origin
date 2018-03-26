@@ -6,8 +6,9 @@ class OriginService {
 
   async submitListing(formListing, selectedSchemaType) {
 
+    // TODO: Why can't we take schematype from the formListing object?
     const jsonBlob = {
-      'schema': `http://localhost:3000/schemas/${selectedSchemaType.type}.json`,
+      'schema': `http://localhost:3000/schemas/${selectedSchemaType}.json`,
       'data': formListing.formData,
     }
 
