@@ -27,7 +27,7 @@ class OriginService {
     const units = 1 // TODO: Allow users to set number of units in form
     let transactionReceipt;
     try {
-      transactionReceipt = this.contractService.submitListing(
+      transactionReceipt = await this.contractService.submitListing(
         ipfsHash,
         formListing.formData.price,
         units)
@@ -38,7 +38,7 @@ class OriginService {
 
     // Success!
     console.log(`Submitted to ETH blockchain with transactionReceipt.tx: ${transactionReceipt.tx}`)
-    return transactionReceipt
+    return transactionReceipt.tx
 
   }
 

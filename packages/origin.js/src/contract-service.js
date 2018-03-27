@@ -127,9 +127,12 @@ class ContractService {
 
   async waitTransactionFinished(transactionReceipt, pollIntervalMilliseconds=1000) {
     const blockNumber = await new Promise((resolve, reject) => {
+      if (!transactionReceipt) {
+        reject(`Invalid transactionReceipt passed: ${transactionReceipt}`)
+      }
       let txCheckTimer = setInterval(txCheckTimerCallback, pollIntervalMilliseconds)
       function txCheckTimerCallback() {
-        window.web3.eth.getTransaction(transactionReceipt.tx, (error, transaction) => {
+        window.web3.eth.getTransaction(transactionReceipt, (error, transaction) => {
           if (transaction.blockNumber != null) {
             console.log(`Transaction mined at block ${transaction.blockNumber}`)
             console.log(transaction)
