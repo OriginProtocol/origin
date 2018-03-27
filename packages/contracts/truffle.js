@@ -35,7 +35,7 @@ if (process.env.RINKEBY_MNEMONIC) {
         process.env.RINKEBY_MNEMONIC,
         `https://rinkeby.infura.io/${process.env.INFURA_ACCESS_TOKEN}`)
     },
-    network_id: 2
+    network_id: 4
   }
 }
 if (process.env.ROPSTEN_MNEMONIC) {
