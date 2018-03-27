@@ -36,6 +36,7 @@ class NavBar extends Component {
             <div className="navbar-nav justify-content-end">
               <a className="nav-item nav-link" onClick={() => alert('To Do')}>My Purchases</a>
               <a className="nav-item nav-link" onClick={() => alert('To Do')}>My Listings</a>
+              <Link to="/create" className="nav-item nav-link"><img src="/images/add-listing-icon.svg" alt="Add Listing" className="add-listing" />Add Listing</Link>
             </div>
           </div>
           <div className="static navbar-nav order-1 order-lg-2">
@@ -63,7 +64,6 @@ class NavBar extends Component {
                 </footer>
               </div>
             </div>
-            <Link to="/create" className="nav-item nav-link"><img src="/images/add-listing-icon.svg" alt="Add Listing" className="add-listing" /></Link>
             <div className="nav-item identity dropdown">
               <a className="nav-link active dropdown-toggle" id="identityDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src="/images/identicon.png"

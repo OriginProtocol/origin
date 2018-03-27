@@ -92,7 +92,8 @@ a:hover {
   font-weight: 600;
 }
 
-.navbar a {
+.navbar a,
+.navbar-dark .navbar-nav .nav-link {
   color: var(--pale-grey);
   font-size: 0.9rem;
   font-weight: bold;
@@ -105,7 +106,7 @@ a:hover {
   border-radius: 50%;
   height: 12px;
   right: 17px;
-  top: 19px;
+  top: 2px;
   width: 12px;
 }
 
@@ -157,7 +158,7 @@ a:hover {
 }
 
 .navbar .notifications .triangle {
-  right: calc(15px + 60px + 60px + 30px);
+  right: calc(15px + 60px + 30px);
 
   -webkit-filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
   filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
@@ -325,6 +326,7 @@ a:hover {
 
 .navbar .static.navbar-nav {
   flex-direction: row;
+  margin-left: 30px;
 }
 
 .navbar .static.navbar-nav .nav-item {
@@ -341,6 +343,12 @@ a:hover {
   padding: 0;
 }
 
+.navbar .navbar-nav .nav-link img.add-listing {
+  height: 15px;
+  margin: -3px 5px 0 0;
+  width: 15px;
+}
+
 .navbar .static.navbar-nav .nav-link {
   cursor: pointer;
 }
@@ -349,13 +357,12 @@ a:hover {
   vertical-align: text-top;
 }
 
-.navbar .static.navbar-nav .nav-link img.add-listing,
 .navbar .static.navbar-nav .nav-link img.notifications {
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
 .navbar .static.navbar-nav .nav-link img.identicon {
-  margin-top: -2px;
+  margin-top: -1px;
 }
 
 .navbar .navbar-toggler {
@@ -1313,7 +1320,7 @@ footer .footer-links li a {
 
   .navbar .notifications .dropdown-menu,
   .navbar .notifications .triangle {
-    right: calc(((100% - 540px) / 2) + 60px + 60px);
+    right: calc(((100% - 540px) / 2) + 60px);
   }
 }
 
@@ -1334,7 +1341,7 @@ footer .footer-links li a {
 
   .navbar .notifications .dropdown-menu,
   .navbar .notifications .triangle {
-    right: calc(((100% - 720px) / 2) + 60px + 60px);
+    right: calc(((100% - 720px) / 2) + 60px);
   }
 
   footer .logo-container {
@@ -1378,7 +1385,7 @@ footer .footer-links li a {
 
   .navbar .notifications .dropdown-menu,
   .navbar .notifications .triangle {
-    right: calc(((100% - 960px) / 2) + 60px + 60px + 15px);
+    right: calc(((100% - 960px) / 2) + 60px + 15px);
   }
 
   .profile-wrapper .services {
@@ -1409,6 +1416,6 @@ footer .footer-links li a {
 
   .navbar .notifications .dropdown-menu,
   .navbar .notifications .triangle {
-    right: calc(((100% - 1140px) / 2) + 60px + 60px + 15px);
+    right: calc(((100% - 1140px) / 2) + 60px + 15px);
   }
 }
