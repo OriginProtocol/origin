@@ -337,25 +337,25 @@ a:hover {
   width: 60px;
 }
 
-.navbar .static.navbar-nav .nav-item img {
-  vertical-align: text-top;
-}
-
-.navbar .static.navbar-nav .nav-item img.add-listing,
-.navbar .static.navbar-nav .nav-item img.notifications {
-  margin-top: 2px;
-}
-
-.navbar .static.navbar-nav .nav-item img.identicon {
-  margin-top: -2px;
-}
-
-.navbar .navbar-nav .nav-item .nav-link {
+.navbar .navbar-nav .nav-link {
   padding: 0;
 }
 
-.navbar .static.navbar-nav .nav-item .nav-link {
+.navbar .static.navbar-nav .nav-link {
   cursor: pointer;
+}
+
+.navbar .static.navbar-nav .nav-link img {
+  vertical-align: text-top;
+}
+
+.navbar .static.navbar-nav .nav-link img.add-listing,
+.navbar .static.navbar-nav .nav-link img.notifications {
+  margin-top: 2px;
+}
+
+.navbar .static.navbar-nav .nav-link img.identicon {
+  margin-top: -2px;
 }
 
 .navbar .navbar-toggler {

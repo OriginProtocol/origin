@@ -52,7 +52,9 @@ class Notification extends Component {
           <p className="address">{address}</p>
         </div>
         <div className="link-container ml-auto">
-          <a href="https://app.zeplin.io/project/59fa2311bac7acbc8d953da9/screen/5aa878781720abc6447f2cd3?did=5ab93f6fa022c2b641639214" className="btn" target="_blank">&gt;</a>
+          <a href="https://app.zeplin.io/project/59fa2311bac7acbc8d953da9/screen/5aa878781720abc6447f2cd3?did=5ab93f6fa022c2b641639214" className="btn" target="_blank">
+            <img src="images/carat.svg" alt="right carat" />
+          </a>
         </div>
       </li>
     )
