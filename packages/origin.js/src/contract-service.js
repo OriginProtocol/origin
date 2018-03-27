@@ -129,7 +129,7 @@ class ContractService {
     const blockNumber = await new Promise((resolve, reject) => {
       let txCheckTimer = setInterval(txCheckTimerCallback, pollIntervalMilliseconds)
       function txCheckTimerCallback() {
-        window.web3.eth.getTransaction(transactionReceipt, (error, transaction) => {
+        window.web3.eth.getTransaction(transactionReceipt.tx, (error, transaction) => {
           if (transaction.blockNumber != null) {
             console.log(`Transaction mined at block ${transaction.blockNumber}`)
             console.log(transaction)

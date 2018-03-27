@@ -38,7 +38,7 @@ class OriginService {
 
     // Success!
     console.log(`Submitted to ETH blockchain with transactionReceipt.tx: ${transactionReceipt.tx}`)
-    return transactionReceipt.tx
+    return transactionReceipt
 
   }
 
