@@ -137,11 +137,11 @@ class ContractService {
             console.log(`Transaction mined at block ${transaction.blockNumber}`)
             console.log(transaction)
             // TODO: Wait maximum number of blocks
-            // TODO: Confirm transaction *sucessful* with gettransactionReceipt()
+            // TODO: Confirm transaction *sucessful* with getTransactionReceipt()
 
             // // TODO (Stan): Metamask web3 doesn't have this method. Probably could fix by
             // // by doing the "copy local web3 over metamask's" technique.
-            // window.web3.eth.gettransactionReceipt(this.props.transactionHash, (error, transactionHash) => {
+            // window.web3.eth.getTransactionReceipt(this.props.transactionHash, (error, transactionHash) => {
             //   console.log(transactionHash)
             // })
 
