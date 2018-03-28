@@ -1,6 +1,12 @@
 import React, { Component } from 'react'
-import { contractService, ipfsService } from '@originprotocol/origin'
+
 import Modal from './modal'
+
+// temporary - we should be getting an origin instance from our app,
+// not using a global singleton
+import origin from '@originprotocol/origin' 
+const contractService = origin.contractService
+const ipfsService = origin.ipfsService
 
 const alertify = require('../../node_modules/alertify/src/alertify.js')
 
@@ -21,7 +27,7 @@ class ListingsDetail extends Component {
       name: "Loading...",
       price: "Loading...",
       ipfsHash: null,
-      lister: null,
+      sellerAddress: null,
       unitsAvailable: null,
       pictures: [],
       step: this.STEP.VIEW,
@@ -30,20 +36,14 @@ class ListingsDetail extends Component {
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
   }
 
-  loadListing() {
-    contractService.getListing(this.props.listingId)
-    .then((listingContractObject) => {
-      this.setState(listingContractObject)
-      return ipfsService.getListing(this.state.ipfsHash)
-    })
-    .then((listingJson) => {
-      const jsonData = JSON.parse(listingJson).data
-      this.setState(jsonData)
-    })
-    .catch((error) => {
+  async loadListing() {
+    try {
+      const listing = await origin.resources.listing.get(this.props.listingId)
+      this.setState(listing)
+    } catch (error) {
       alertify.log('There was an error loading this listing.')
       console.error(`Error fetching contract or IPFS info for listingId: ${this.props.listingId}`)
-    })
+    }
   }
 
   componentWillMount() {
@@ -128,14 +128,14 @@ class ListingsDetail extends Component {
               <div className="category">{this.state.category}</div>
               <div className="title">{this.state.name}</div>
               <div className="description">{this.state.description}</div>
-              <div className="category">Creator</div>
-              <div className="description">{this.state.lister}</div>
+              <div className="category">Seller</div>
+              <div className="description">{this.state.sellerAddress}</div>
               <a href={ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
                 View on IPFS <big>&rsaquo;</big>
               </a>
               <div className="debug">
                 <li>IPFS: {this.state.ipfsHash}</li>
-                <li>Lister: {this.state.lister}</li>
+                <li>Seller: {this.state.sellerAddress}</li>
                 <li>Units: {this.state.unitsAvailable}</li>
               </div>
             </div>
