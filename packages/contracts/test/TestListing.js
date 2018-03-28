@@ -36,6 +36,28 @@ contract('Listing', accounts => {
     )
   })
 
+  it('should decrement the number of units sold', async function(){
+    const unitsToBuy = 3
+    await listing.buyListing(unitsToBuy, {from: buyer, value: 6} )
+    assert.equal(await listing.unitsAvailable(), unitsAvailable - unitsToBuy)
+  })
+
+  it('should decrement the number of units sold to zero if needed', async function(){
+    const unitsToBuy = unitsAvailable
+    await listing.buyListing(unitsToBuy, {from: buyer, value: 6} )
+    assert.equal(await listing.unitsAvailable(), 0)
+  })
+
+  it('should not allow a sale that would decrement the number of units sold to below zero', async function(){
+    const unitsToBuy = unitsAvailable + 1
+    try {
+      await listing.buyListing(unitsToBuy, {from: buyer, value: 6} )
+    } catch (err) {
+      assert.ok(isEVMError(err), 'an EVM error is thrown');
+    }
+    assert.equal(await listing.unitsAvailable(), unitsAvailable)
+  })
+
   it('should allow the seller to close it', async function() {
     assert.equal(await listing.unitsAvailable(), unitsAvailable)
     await listing.close({from: seller})

@@ -63,8 +63,8 @@ contract Listing {
     public
     payable
   {
-    // TODO: Handle units. For now we just do one at a time
-    require (_unitsToBuy == 1); // HACK
+    // Ensure that this is not trying to purchase more than is available.
+    require (_unitsToBuy <= unitsAvailable);
 
     // Create purchase contract
     Purchase purchaseContract = new Purchase(this, msg.sender);
