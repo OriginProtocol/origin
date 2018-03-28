@@ -1026,14 +1026,19 @@ label[for=root_pictures]:hover {
   width: 100%;
 }
 
-@keyframes fill-all {
+@keyframes fill1 {
   from { width: 0; }
-  to { width: 100%; }
+  to { width: 33%; }
 }
 
-@keyframes fill-half {
+@keyframes fill2 {
   from { width: 0; }
-  to { width: 50%; }
+  to { width: 66%; }
+}
+
+@keyframes fill3 {
+  from { width: 0; }
+  to { width: 100%; }
 }
 
 .my-listing .content-container .timeline .fill {
@@ -1044,12 +1049,16 @@ label[for=root_pictures]:hover {
   z-index: 10;
 }
 
-.my-listing .content-container .timeline .fill.half {
-  animation: fill-half 1s 1s forwards;
+.my-listing .content-container .timeline .fill.s1 {
+  animation: fill1 1s 1s forwards;
 }
 
-.my-listing .content-container .timeline .fill.all {
-  animation: fill-all 1s 1s forwards;
+.my-listing .content-container .timeline .fill.s2 {
+  animation: fill2 1s 1s forwards;
+}
+
+.my-listing .content-container .timeline .fill.s3 {
+  animation: fill3 1s 1s forwards;
 }
 
 .my-listing .content-container .timeline .circle {
@@ -1058,15 +1067,19 @@ label[for=root_pictures]:hover {
   border-radius: 50%;
   bottom: -7px;
   height: 20px;
-  left: calc(50% - 10px);
+  left: 0;
   text-align: center;
   vertical-align: middle;
   width: 20px;
   z-index: 11;
 }
 
-.my-listing .content-container .timeline .circle:first-of-type {
-  left: 0;
+.my-listing .content-container .timeline .circle:nth-of-type(2) {
+  left: calc(33% - 10px);
+}
+
+.my-listing .content-container .timeline .circle:nth-of-type(3) {
+  left: calc(66% - 10px);
 }
 
 .my-listing .content-container .timeline .circle:last-of-type {
@@ -1083,7 +1096,13 @@ label[for=root_pictures]:hover {
 
 .my-listing .content-container .timeline .labels p {
   color: var(--dusk);
-  flex-basis: 33%;
+  flex-basis: 25%;
+  font-size: 0.8rem;
+}
+
+.my-listing .content-container .timeline .labels p.text-center {
+  color: var(--dusk);
+  flex-basis: 50%;
   font-size: 0.8rem;
 }
 
