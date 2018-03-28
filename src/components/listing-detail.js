@@ -26,6 +26,7 @@ class ListingsDetail extends Component {
       category: "Loading...",
       name: "Loading...",
       price: "Loading...",
+      address: null,
       ipfsHash: null,
       sellerAddress: null,
       unitsAvailable: null,
@@ -57,24 +58,21 @@ class ListingsDetail extends Component {
     }
   }
 
-  handleBuyClicked() {
+  async handleBuyClicked() {
     const unitsToBuy = 1
     const totalPrice = (unitsToBuy * this.state.price)
     this.setState({step: this.STEP.METAMASK})
-    contractService.buyListing(this.props.listingId, unitsToBuy, totalPrice)
-    .then((transactionReceipt) => {
+    try {
+      const transactionReceipt = await origin.resources.listing.buy(this.state.address, unitsToBuy, totalPrice)
       console.log("Purchase request sent.")
       this.setState({step: this.STEP.PROCESSING})
-      return contractService.waitTransactionFinished(transactionReceipt.tx)
-    })
-    .then((blockNumber) => {
+      const blockNumber = await contractService.waitTransactionFinished(transactionReceipt.tx)
       this.setState({step: this.STEP.PURCHASED})
-    })
-    .catch((error) => {
+    } catch (error) {
       console.log(error)
       alertify.log("There was a problem purchasing this listing.\nSee the console for more details.")
       this.setState({step: this.STEP.VIEW})
-    })
+    }
   }
 
 
