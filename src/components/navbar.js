@@ -34,7 +34,7 @@ class NavBar extends Component {
               <input className="form-control mr-sm-2" type="search" placeholder="Search Listings" aria-label="Search" onChange={this.handleChange} value={this.state.searchQuery} />
             </form>
             <div className="navbar-nav justify-content-end">
-              <a className="nav-item nav-link" onClick={() => alert('To Do')}>My Purchases</a>
+              <Link to="/my-purchases" className="nav-item nav-link">My Purchases</Link>
               <Link to="/my-listings" className="nav-item nav-link">My Listings</Link>
               <Link to="/create" className="nav-item nav-link"><img src="/images/add-listing-icon.svg" alt="Add Listing" className="add-listing" />Add Listing</Link>
             </div>
