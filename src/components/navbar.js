@@ -35,7 +35,7 @@ class NavBar extends Component {
             </form>
             <div className="navbar-nav justify-content-end">
               <a className="nav-item nav-link" onClick={() => alert('To Do')}>My Purchases</a>
-              <a className="nav-item nav-link" onClick={() => alert('To Do')}>My Listings</a>
+              <Link to="/my-listings" className="nav-item nav-link">My Listings</Link>
               <Link to="/create" className="nav-item nav-link"><img src="/images/add-listing-icon.svg" alt="Add Listing" className="add-listing" />Add Listing</Link>
             </div>
           </div>
