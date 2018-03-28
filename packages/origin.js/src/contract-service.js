@@ -98,6 +98,7 @@ class ContractService {
     // Address of Listing contract is in: listing[0]
     const listingObject = {
       index: listingId,
+      address: listing[0],
       lister: listing[1],
       ipfsHash: this.getIpfsHashFromBytes32(listing[2]),
       price: window.web3.fromWei(listing[3], 'ether').toNumber(),

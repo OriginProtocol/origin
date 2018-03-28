@@ -14,6 +14,7 @@ module.exports = {
             'location': ipfsData.data.location,
             'pictures': ipfsData.data.pictures,
             
+            'address': contractData.address,
             'index': contractData.index,
             'ipfsHash': contractData.ipfsHash,
             'sellerAddress': contractData.lister,

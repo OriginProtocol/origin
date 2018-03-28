@@ -69,7 +69,7 @@ describe('ContractService', () => {
       const ids = await contractService.getAllListingIds()
       expect(ids.length).to.be.greaterThan(0)
       const listing = await contractService.getListing(ids[0])
-      expect(listing).to.have.keys('index', 'lister', 'ipfsHash', 'price', 'unitsAvailable')
+      expect(listing).to.have.keys('address', 'index', 'lister', 'ipfsHash', 'price', 'unitsAvailable')
     })
   })
 
