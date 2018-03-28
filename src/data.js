@@ -1,4 +1,40 @@
+import moment from 'moment'
+
 export default {
+  listings: [
+    {
+      _id: '1foo2',
+      active: true,
+      category: 'Antiques',
+      title: 'Title Here and Can Be Long like this',
+      createdAt: moment('2018-03-13').toDate(),
+      soldAt: moment('2018-03-14').toDate(),
+      fulfilledAt: moment('2018-03-15').toDate(),
+      receivedAt: moment('2018-03-16').toDate(),
+    },
+    {
+      _id: '3bar4',
+      active: false,
+      category: 'Cars & Trucks',
+      title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+      status: 0,
+      createdAt: moment('2018-03-13').toDate(),
+      soldAt: null,
+      fulfilledAt: null,
+      receivedAt: null,
+    },
+    {
+      _id: '5baz6',
+      active: true,
+      category: 'Tickets',
+      title: 'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+      status: 3,
+      createdAt: moment('2018-03-13').toDate(),
+      soldAt: moment('2018-03-14').toDate(),
+      fulfilledAt: null,
+      receivedAt: null,
+    },
+  ],
   notifications: [
     {
       _id: '1foo2',
