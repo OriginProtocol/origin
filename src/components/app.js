@@ -11,6 +11,7 @@ import Listings from './listings-grid'
 import ListingCreate from './listing-create'
 import ListingDetail from './listing-detail'
 import MyListings from './my-listings'
+import MyPurchases from './my-purchases'
 import Notifications from './notifications'
 import Profile from './profile'
 import Web3Provider from './web3-provider'
@@ -44,6 +45,10 @@ const MyListingsPage = (props) => (
   <MyListings />
 )
 
+const MyPurchasesPage = (props) => (
+  <MyPurchases />
+)
+
 const NotificationsPage = (props) => (
   <Notifications />
 )
@@ -64,6 +69,7 @@ const App = () => (
             <Route path="/listing/:listingId" component={ListingDetailPage} />
             <Route path="/create" component={CreateListingPage} />
             <Route path="/my-listings" component={MyListingsPage} />
+            <Route path="/my-purchases" component={MyPurchasesPage} />
             <Route path="/notifications" component={NotificationsPage} />
             <Route path="/profile" component={ProfilePage} />
           </Fragment>
