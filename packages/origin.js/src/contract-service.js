@@ -1,4 +1,5 @@
 import ListingsRegistryContract from '../../contracts/build/contracts/ListingsRegistry.json'
+import ListingContract from '../../contracts/build/contracts/Listing.json'
 import bs58 from 'bs58'
 import contract from 'truffle-contract'
 import promisify from 'util.promisify'
@@ -6,6 +7,7 @@ import promisify from 'util.promisify'
 class ContractService {
   constructor() {
     this.listingsRegistryContract = contract(ListingsRegistryContract)
+    this.listingContract = contract(ListingContract)
   }
 
   // Return bytes32 hex string from base58 encoded ipfs hash,
@@ -107,19 +109,18 @@ class ContractService {
     return listingObject
   }
 
-  async buyListing(listingIndex, unitsToBuy, ethToGive) {
-    console.log('request to buy index #' + listingIndex + ', of this many untes ' + unitsToBuy + ' units. Total eth to send:' + ethToGive)
+  async buyListing(listingAddress, unitsToBuy, ethToGive) {
+    // TODO: Shouldn't we be passing wei to this function, not eth?
+    console.log('request to buy listing ' + listingAddress + ', for this many units ' + unitsToBuy + ' units. Total eth to send:' + ethToGive)
 
     const { currentProvider, eth } = window.web3;
-    this.listingsRegistryContract.setProvider(currentProvider)
+    this.listingContract.setProvider(currentProvider)
 
     const accounts = await promisify(eth.getAccounts.bind(eth))()
-    const instance = await this.listingsRegistryContract.deployed()
-
+    const listing = await this.listingContract.at(listingAddress)
     const weiToGive = window.web3.toWei(ethToGive, 'ether')
-    // Buy it for real
-    const transactionReceipt = await instance.buyListing(
-      listingIndex,
+    
+    const transactionReceipt = await listing.buyListing(
       unitsToBuy,
       {from: accounts[0], value:weiToGive, gas: 4476768} // TODO (SRJ): is gas needed?
     )
