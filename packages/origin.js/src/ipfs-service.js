@@ -35,12 +35,31 @@ class IpfsService {
     this.mapCache = new MapCache()
   }
 
-  async submitListing(formListingJson) {
-      const file = {
-        path: 'listing.json',
-        content: JSON.stringify(formListingJson)
-      }
+  submitListing(formListingJson) {
+    const file = {
+      path: 'listing.json',
+      content: JSON.stringify(formListingJson)
+    }
+    return this.submitFile(file)
+  }
 
+  getListing(ipfsHashStr) {
+    return this.getFile(ipfsHashStr)
+  }
+
+  submitUser(formUserJson) {
+    const file = {
+      path: 'user.json',
+      content: JSON.stringify(formUserJson)
+    }
+    return this.submitFile(file)
+  }
+
+  getUser(ipfsHashStr) {
+    return this.getFile(ipfsHashStr)
+  }
+
+  async submitFile(file) {
       const addFile = promisify(this.ipfs.files.add.bind(this.ipfs.files))
 
       let response
@@ -60,7 +79,7 @@ class IpfsService {
       return ipfsHashStr
   }
 
-  async getListing(ipfsHashStr) {
+  async getFile(ipfsHashStr) {
     // Check for cache hit
     if (this.mapCache.has(ipfsHashStr)) {
       return this.mapCache.get(ipfsHashStr)
