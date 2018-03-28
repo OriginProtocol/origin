@@ -11,14 +11,14 @@ describe("Listing Resource", () => {
     })
 
     it("should get a listing", async () => {
-        const listing = await origin.resources.listing.get(testListingIds[0])
+        const listing = await origin.resources.listings.get(testListingIds[0])
         expect(listing.name).to.equal("Zinc House")
         expect(listing.index).to.equal(testListingIds[0])
     })
 
     it("should buy a listing", async () => {
-        const listing = await origin.resources.listing.get(testListingIds[0])
-        const transaction = await origin.resources.listing.buy(listing.address, 1, listing.price * 1)
+        const listing = await origin.resources.listings.get(testListingIds[0])
+        const transaction = await origin.resources.listings.buy(listing.address, 1, listing.price * 1)
         //Todo: Currently this test will fail here with a timeout
         //  because we need to somehow get web3 approve this transaction
         // Todo: wait for transaction, then check that purchase was created.

@@ -20,7 +20,7 @@ var origin = {
 }
 
 var resources = {
-    listing: require('./resources/listing')
+    listings: require('./resources/listings')
 }
 
 // Give each resource access to the origin services.
