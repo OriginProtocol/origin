@@ -42,31 +42,6 @@ class OriginService {
 
   }
 
-  getListing(listingIndex) {
-    return new Promise((resolve, reject) => {
-      let userAddress
-      let listingData
-      contractService.getListing(listingIndex)
-      .then(({ lister, ipfsHash, price, unitsAvailable }) => {
-        userAddress = lister
-        return ipfsService.getListing(ipfsHash)
-      })
-      .then((listingJson) => {
-        listingData = JSON.parse(listingJson).data
-        return contractService.getUser(userAddress)
-      })
-      .then((ipfsHash) => {
-        return ipfsService.getUser(ipfsHash)
-      })
-      .then((userData) => {
-        resolve({ listing: listingData, user: userData })
-      })
-      .catch((error) => {
-        reject(`Error fetching contract or IPFS info for listingId: ${listingIndex}`)
-      })
-    })
-  }
-
   setUser(data) {
     return new Promise((resolve, reject) => {
       var validate = ajv.compile(userSchema)
