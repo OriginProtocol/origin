@@ -59,7 +59,7 @@ contract('Listing', accounts => {
       { from: buyer, value: 6 }
     )
     const listingPurchasedEvent = buyTransaction.logs.find((e)=>e.event=="ListingPurchased")
-    const purchaseContract = Purchase.at(listingPurchasedEvent.args._purchaseContract)
+    const purchaseContract = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
 
     // Check units available decreased
     let newUnitsAvailable = await listing.unitsAvailable()

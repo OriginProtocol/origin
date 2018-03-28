@@ -168,7 +168,7 @@ contract('Purchase', accounts => {
         { from: buyer, value: initialPayment }
       )
       const listingPurchasedEvent = buyTransaction.logs.find((e) => e.event == "ListingPurchased")
-      purchase = Purchase.at(listingPurchasedEvent.args._purchaseContract)
+      purchase = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
       
       assert.equal(await listing.getPurchase(0), purchase.address)
       assert.equal(await purchase.listingContract(), listing.address)
