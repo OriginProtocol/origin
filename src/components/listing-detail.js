@@ -36,9 +36,8 @@ class ListingsDetail extends Component {
       this.setState(listingContractObject)
       return ipfsService.getListing(this.state.ipfsHash)
     })
-    .then((listingJson) => {
-      const jsonData = JSON.parse(listingJson).data
-      this.setState(jsonData)
+    .then(({ data }) => {
+      this.setState(data)
     })
     .catch((error) => {
       alertify.log('There was an error loading this listing.')

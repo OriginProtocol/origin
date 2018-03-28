@@ -46,22 +46,22 @@ class NavBar extends Component {
                 <img src="/images/alerts-icon.svg" className="notifications" alt="Notifications" />
                 <img src="/images/alerts-icon-selected.svg" className="notifications selected" alt="Notifications" />
               </a>
-              <svg height="18" width="18" className="triangle">
-                <polygon points="18,0 18,18 0,18" />
-              </svg>
               <div className="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsDropdown">
-                <header className="d-flex">
-                  <div className="count"><p>4</p></div>
-                  <h3>Notifications</h3>
-                </header>
-                <div className="notifications-list">
-                  <ul className="list-group">
-                    {data.notifications.map(n => <Notification key={`navbar-notification-${n._id}`} notification={n} />)}
-                  </ul>
+                <div className="triangle-container"><div className="triangle"></div></div>
+                <div className="actual-menu">
+                  <header className="d-flex">
+                    <div className="count"><p>4</p></div>
+                    <h3>Notifications</h3>
+                  </header>
+                  <div className="notifications-list">
+                    <ul className="list-group">
+                      {data.notifications.map(n => <Notification key={`navbar-notification-${n._id}`} notification={n} />)}
+                    </ul>
+                  </div>
+                  <footer>
+                    <Link to="/notifications">View All</Link>
+                  </footer>
                 </div>
-                <footer>
-                  <Link to="/notifications">View All</Link>
-                </footer>
               </div>
             </div>
             <div className="nav-item identity dropdown">
@@ -70,32 +70,32 @@ class NavBar extends Component {
                   srcSet="/images/identicon@2x.png 2x, /images/identicon@3x.png 3x"
                   className="identicon" alt="Identicon" />
               </a>
-              <svg height="18" width="18" className="triangle">
-                <polygon points="18,0 18,18 0,18" />
-              </svg>
               <div className="dropdown-menu dropdown-menu-right" aria-labelledby="identityDropdown">
-                <div className="wallet">
-                  <div className="d-flex">
-                    <div className="image-container">
-                      <Link to="/profile">
-                        <img src="/images/identicon.png"
-                          srcSet="/images/identicon@2x.png 2x, /images/identicon@3x.png 3x"
-                          alt="wallet icon" />
-                      </Link>
+                <div className="triangle-container"><div className="triangle"></div></div>
+                <div className="actual-menu">
+                  <div className="wallet">
+                    <div className="d-flex">
+                      <div className="image-container">
+                        <Link to="/profile">
+                          <img src="/images/identicon.png"
+                            srcSet="/images/identicon@2x.png 2x, /images/identicon@3x.png 3x"
+                            alt="wallet icon" />
+                        </Link>
+                      </div>
+                      <div>
+                        <p><Link to="/profile">ETH Address:</Link></p>
+                        <p><Link to="/profile"><strong>0x32Be343B94f860124dC4fEe278FDCBD38C102D88</strong></Link></p>
+                      </div>
                     </div>
-                    <div>
-                      <p><Link to="/profile">ETH Address:</Link></p>
-                      <p><Link to="/profile"><strong>0x32Be343B94f860124dC4fEe278FDCBD38C102D88</strong></Link></p>
-                    </div>
-                  </div>
-                  <hr />
-                  <div className="d-flex">
-                    <div className="avatar-container">
-                      <Link to="/profile"><img src="/images/avatar.svg" alt="avatar" /></Link>
-                    </div>
-                    <div className="identification">
-                      <p><Link to="/profile">Aure Gimon</Link></p>
-                      <Link to="/profile"><img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" /></Link>
+                    <hr />
+                    <div className="d-flex">
+                      <div className="avatar-container">
+                        <Link to="/profile"><img src="/images/avatar.svg" alt="avatar" /></Link>
+                      </div>
+                      <div className="identification">
+                        <p><Link to="/profile">Aure Gimon</Link></p>
+                        <Link to="/profile"><img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" /></Link>
+                      </div>
                     </div>
                   </div>
                 </div>
