@@ -46,13 +46,16 @@ class MyListings extends Component {
             <div className="col-12 col-md-9">
               <div className="my-listings-list">
                 {listings.map(l => {
-                  const { _id, active, category, createdAt, fulfilledAt, receivedAt, soldAt, title } = l
+                  const { _id, active, category, createdAt, fulfilledAt, receivedAt, soldAt, title, withdrawnAt } = l
                   const status = active ? 'active' : 'inactive'
                   const timestamp = (() => {
                     let date
                     let verb
 
-                    if (receivedAt) {
+                    if (withdrawnAt) {
+                      date = withdrawnAt
+                      verb = 'Withdrawn'
+                    } else if (receivedAt) {
                       date = receivedAt
                       verb = 'Received'
                     } else if (fulfilledAt) {
@@ -88,12 +91,14 @@ class MyListings extends Component {
                               <div className={`circle${soldAt ? ' checked' : ''}`}></div>
                               <div className={`circle${fulfilledAt ? ' checked' : ''}`}></div>
                               <div className={`circle${receivedAt ? ' checked' : ''}`}></div>
+                              <div className={`circle${withdrawnAt ? ' checked' : ''}`}></div>
                             </div>
-                            <div className={`line fill${fulfilledAt? ' half' : ''}${receivedAt ? ' all' : ''}`}></div>
+                            <div className={`line fill${fulfilledAt? ' s1' : ''}${receivedAt? ' s2' : ''}${withdrawnAt ? ' s3' : ''}`}></div>
                             <div className="labels d-flex">
                               <p className="text-left">Sold</p>
-                              <p className="text-center">Order Sent</p>
-                              <p className="text-right">Received by buyer</p>
+                              <p className="text-center">Order<br />Sent</p>
+                              <p className="text-center">Received<br />by buyer</p>
+                              <p className="text-right">Funds<br />Withdrawn</p>
                             </div>
                           </div>
                           <div className="actions d-flex">

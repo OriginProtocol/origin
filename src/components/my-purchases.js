@@ -12,7 +12,7 @@ class MyPurchases extends Component {
   render() {
     const { filter } = this.state
     const purchases = (() => {
-      const arr = data.purchases
+      const arr = data.listings
 
       switch(filter) {
         case 'sold':
@@ -46,12 +46,15 @@ class MyPurchases extends Component {
             <div className="col-12 col-md-9">
               <div className="my-listings-list">
                 {purchases.map(p => {
-                  const { _id, category, createdAt, fulfilledAt, receivedAt, soldAt, title } = p
+                  const { _id, category, createdAt, fulfilledAt, receivedAt, soldAt, title, withdrawnAt } = p
                   const timestamp = (() => {
                     let date
                     let verb
 
-                    if (receivedAt) {
+                    if (withdrawnAt) {
+                      date = withdrawnAt
+                      verb = 'Withdrawn'
+                    } else if (receivedAt) {
                       date = receivedAt
                       verb = 'Received'
                     } else if (fulfilledAt) {
@@ -86,12 +89,14 @@ class MyPurchases extends Component {
                               <div className={`circle${soldAt ? ' checked' : ''}`}></div>
                               <div className={`circle${fulfilledAt ? ' checked' : ''}`}></div>
                               <div className={`circle${receivedAt ? ' checked' : ''}`}></div>
+                              <div className={`circle${withdrawnAt ? ' checked' : ''}`}></div>
                             </div>
-                            <div className={`line fill${fulfilledAt? ' half' : ''}${receivedAt ? ' all' : ''}`}></div>
+                            <div className={`line fill${fulfilledAt? ' s1' : ''}${receivedAt? ' s2' : ''}${withdrawnAt ? ' s3' : ''}`}></div>
                             <div className="labels d-flex">
                               <p className="text-left">Purchased</p>
-                              <p className="text-center">Sent by seller</p>
-                              <p className="text-right">Received by me</p>
+                              <p className="text-center">Sent<br />by seller</p>
+                              <p className="text-center">Received<br />by me</p>
+                              <p className="text-right">Funds<br />Withdrawn</p>
                             </div>
                           </div>
                           <div className="actions d-flex">
