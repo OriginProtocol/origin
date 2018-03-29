@@ -10,6 +10,13 @@ describe("Listing Resource", () => {
         testListingIds = await origin.contractService.getAllListingIds()
     })
 
+    it("should get all listing ids", async () => {
+        console.log("b")
+        const ids = await origin.resources.listings.allIds()
+        console.log("a")
+        expect(ids.length).to.equal(5)
+    })
+    
     it("should get a listing", async () => {
         const listing = await origin.resources.listings.get(testListingIds[0])
         expect(listing.name).to.equal("Zinc House")

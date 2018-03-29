@@ -2,6 +2,10 @@
 // contractService and ipfsService.
 
 module.exports = {
+  allIds: async function() {
+    return await this.origin.contractService.getAllListingIds();
+  },
+
   get: async function(listingIndex) {
     const contractData = await this.origin.contractService.getListing(
       listingIndex
