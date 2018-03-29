@@ -19,7 +19,7 @@ class ListingCard extends Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     try {
       const listing = await origin.resources.listings.get(this.props.listingId)
       this.setState(listing)

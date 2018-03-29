@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { contractService } from '@originprotocol/origin'
+import origin from '@originprotocol/origin'
 
 import Pagination from 'react-js-pagination'
 import { withRouter } from 'react-router'
@@ -40,10 +40,9 @@ class ListingsGrid extends Component {
     })
 
     // Get all listings from contract
-    const allListingsPromise = contractService.getAllListingIds()
+    const allListingsPromise = origin.resources.listings.allIds()
     .then((response) => {
       this.setState({ contractFound: true })
-
       return response
     })
     .catch((error) => {
