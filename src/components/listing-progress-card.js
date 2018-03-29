@@ -1,75 +1,100 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import moment from 'moment'
 
 class ListingProgressCard extends Component {
+  constructor(props) {
+    super(props)
+
+    this.calculateProgress = this.calculateProgress.bind(this)
+    this.state = {
+      currentStep: 0,
+      maxStep: props.perspective === 'seller' ? 4 : 3,
+      progressCalculated: false,
+      progressWidth: '0%',
+    }
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.calculateProgress()
+    }, 400)
+  }
+
+  calculateProgress() {
+    const { listing, perspective } = this.props
+    const { fulfilledAt, receivedAt, soldAt, withdrawnAt } = listing
+    let { currentStep, maxStep } = this.state
+
+    if (withdrawnAt) {
+      currentStep = perspective === 'seller' ? 4 : 3
+    } else if (receivedAt) {
+      currentStep = 3
+    } else if (fulfilledAt) {
+      currentStep = 2
+    } else if (soldAt) {
+      currentStep = 1
+    } else {
+      currentStep = 0
+    }
+
+    const progressWidth = `${(currentStep - 1) / (maxStep - 1) * 100}%`
+
+    this.setState({ currentStep, progressCalculated: true, progressWidth })
+  }
+
   render() {
     const { listing, perspective } = this.props
-    const { _id, active, category, createdAt, fulfilledAt, receivedAt, soldAt, title, withdrawnAt } = listing
+    const { currentStep, maxStep, progressCalculated, progressWidth } = this.state
+    const { active, category, createdAt, fulfilledAt, receivedAt, soldAt, title, withdrawnAt } = listing
     const status = active ? 'active' : 'inactive'
-    const timestamp = (() => {
-      let date
-      let verb
+    let date, verb
 
-      if (withdrawnAt) {
-        date = withdrawnAt
-        verb = 'Withdrawn'
-      } else if (receivedAt) {
-        date = receivedAt
-        verb = 'Received'
-      } else if (fulfilledAt) {
-        date = fulfilledAt
-        verb = 'Sent'
-      } else if (soldAt) {
-        date = soldAt
-        verb = perspective === 'seller' ? 'Sold' : 'Purchased'
-      } else {
-        date = createdAt
-        verb = 'Created'
-      }
+    if (currentStep === 4) {
+      date = withdrawnAt
+      verb = 'Withdrawn'
+    } else if (currentStep === 3) {
+      date = receivedAt
+      verb = 'Received'
+    } else if (currentStep === 2) {
+      date = fulfilledAt
+      verb = 'Sent'
+    } else if (currentStep === 1) {
+      date = soldAt
+      verb = perspective === 'seller' ? 'Sold' : 'Purchased'
+    } else {
+      date = createdAt
+      verb = 'Created'
+    }
 
-      return `${verb} on ${moment(date).format('MMMM D, YYYY')}`
-    })()
+    const timestamp = `${verb} on ${moment(date).format('MMMM D, YYYY')}`
 
     return (
-      <div key={`my-${perspective === 'seller' ? 'listing' : 'purchase'}-${_id}`} className="my-listing card">
+      <div className={`my-listing card${progressCalculated ? ' ready' : ''}`}>
         <div className="card-body d-flex flex-column flex-lg-row">
           <div className="image-container">
             <img role="presentation" />
           </div>
-          <div className="content-container d-flex flex-column">
-            {perspective === 'seller' && <span className={`status ${status}`}>{status}</span>}
-            <p className="category">{category}</p>
-            <h2 className="title">{title}</h2>
-            <div className="d-flex">
-              <p className="price">$1,000{perspective === 'seller' && soldAt && <span className="sold-banner">Sold</span>}</p>
-              <p className="timestamp">{timestamp}</p>
-            </div>
-            <div className="timeline">
-              <div className="line">
-                <div className={`circle${soldAt ? ' checked' : ''}`}></div>
-                <div className={`circle${fulfilledAt ? ' checked' : ''}`}></div>
-                <div className={`circle${receivedAt ? ' checked' : ''}`}></div>
-                <div className={`circle${withdrawnAt ? ' checked' : ''}`}></div>
+          {perspective === 'buyer' &&
+            <div className="content-container d-flex flex-column">
+              <p className="category">{category}</p>
+              <h2 className="title">{title}</h2>
+              <div className="d-flex">
+                <p className="price">$1,000</p>
+                <p className="timestamp">{timestamp}</p>
               </div>
-              <div className={`line fill${fulfilledAt? ' s1' : ''}${receivedAt? ' s2' : ''}${withdrawnAt ? ' s3' : ''}`}></div>
-              {perspective === 'buyer' &&
+              <div className="progress-container">
+                <div className="progress">
+                  <div className="progress-bar" role="progressbar" style={{ width: progressWidth }} aria-valuenow={Math.max(maxStep, currentStep)} aria-valuemin="0" aria-valuemax={maxStep}></div>
+                </div>
+                <span className={`circle${soldAt ? ' checked' : ''}`}></span>
+                <span className={`circle${fulfilledAt ? ' checked' : ''}`}></span>
+                <span className={`circle${receivedAt ? ' checked' : ''}`}></span>
                 <div className="labels d-flex">
                   <p className="text-left">Purchased</p>
-                  <p className="text-center">Sent<br />by seller</p>
-                  <p className="text-center">Received<br />by me</p>
-                  <p className="text-right">Funds<br />Withdrawn</p>
+                  <p className="text-center">Sent by seller</p>
+                  <p className="text-right">Received by me</p>
                 </div>
-              }
-              {perspective === 'seller' &&
-                <div className="labels d-flex">
-                  <p className="text-left">Sold</p>
-                  <p className="text-center">Order<br />Sent</p>
-                  <p className="text-center">Received<br />by buyer</p>
-                  <p className="text-right">Funds<br />Withdrawn</p>
-                </div>
-              }
-            </div>
-            {perspective === 'buyer' &&
+              </div>
               <div className="actions d-flex">
                 <div className="links-container">
                   <a onClick={() => alert('To Do')}>Open a Dispute</a>
@@ -80,8 +105,32 @@ class ListingProgressCard extends Component {
                   </div>
                 }
               </div>
-            }
-            {perspective === 'seller' &&
+            </div>
+          }
+          {perspective === 'seller' &&
+            <div className="content-container d-flex flex-column">
+              <span className={`status ${status}`}>{status}</span>
+              <p className="category">{category}</p>
+              <h2 className="title">{title}</h2>
+              <div className="d-flex">
+                <p className="price">$1,000{soldAt && <span className="sold-banner">Sold</span>}</p>
+                <p className="timestamp">{timestamp}</p>
+              </div>
+              <div className="progress-container">
+                <div className="progress">
+                  <div className="progress-bar" role="progressbar" style={{ width: progressWidth }} aria-valuenow={Math.max(maxStep, currentStep)} aria-valuemin="0" aria-valuemax={maxStep}></div>
+                </div>
+                <span className={`circle${soldAt ? ' checked' : ''}`}></span>
+                <span className={`circle${fulfilledAt ? ' checked' : ''}`}></span>
+                <span className={`circle${receivedAt ? ' checked' : ''}`}></span>
+                <span className={`circle${withdrawnAt ? ' checked' : ''}`}></span>
+                <div className="labels d-flex">
+                  <p className="text-left">Sold</p>
+                  <p className="text-center">Order<br />Sent</p>
+                  <p className="text-center">Received<br />by buyer</p>
+                  <p className="text-right">Funds<br />Withdrawn</p>
+                </div>
+              </div>
               <div className="actions d-flex">
                 <div className="links-container">
                   <a onClick={() => alert('To Do')}>Edit</a>
@@ -95,8 +144,8 @@ class ListingProgressCard extends Component {
                   </div>
                 }
               </div>
-            }
-          </div>
+            </div>
+          }
         </div>
       </div>
     )
