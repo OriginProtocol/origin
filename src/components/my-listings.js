@@ -45,7 +45,7 @@ class MyListings extends Component {
             </div>
             <div className="col-12 col-md-9">
               <div className="my-listings-list">
-                {listings.map(p => <ListingProgressCard listing={p} perspective="seller" />)}
+                {listings.map(l => <ListingProgressCard key={`my-listing-${l._id}`} listing={l} perspective="seller" />)}
               </div>
             </div>
           </div>

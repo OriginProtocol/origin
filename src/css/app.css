@@ -1006,101 +1006,88 @@ label[for=root_pictures]:hover {
   font-size: 0.8rem;
   font-weight: 300;
   margin: 0;
+  opacity: 0;
   padding-top: calc(10px + 0.3rem);
+
+  transition: opacity 200ms linear 800ms;
+}
+
+.my-listing.ready .content-container .timestamp {
+  opacity: 1;
 }
 
 .my-listing .content-container .price .sold-banner {
   line-height: 1.4;
 }
 
-.my-listing .content-container .timeline {
+.my-listing .content-container .progress-container {
   position: relative;
   margin: 20px 0;
 }
 
-.my-listing .content-container .timeline .line {
-  position: relative;
+.my-listing .content-container .progress {
   background-color: var(--light);
   border-radius: 3px;
   height: 6px;
-  width: 100%;
 }
 
-@keyframes fill1 {
-  from { width: 0; }
-  to { width: 33%; }
+.my-listing .content-container .progress-bar {
+  background-color: var(--greenblue);
+
+  transition: width 1s;
 }
 
-@keyframes fill2 {
-  from { width: 0; }
-  to { width: 66%; }
-}
-
-@keyframes fill3 {
-  from { width: 0; }
-  to { width: 100%; }
-}
-
-.my-listing .content-container .timeline .fill {
-  position: absolute;
-  background: var(--greenblue);
-  top: 0;
-  width: 0;
-  z-index: 10;
-}
-
-.my-listing .content-container .timeline .fill.s1 {
-  animation: fill1 1s 1s forwards;
-}
-
-.my-listing .content-container .timeline .fill.s2 {
-  animation: fill2 1s 1s forwards;
-}
-
-.my-listing .content-container .timeline .fill.s3 {
-  animation: fill3 1s 1s forwards;
-}
-
-.my-listing .content-container .timeline .circle {
+.my-listing .content-container .progress-container .circle {
   position: absolute;
   background-color: var(--light);
   border-radius: 50%;
-  bottom: -7px;
   height: 20px;
   left: 0;
   text-align: center;
+  top: -7px;
   vertical-align: middle;
   width: 20px;
+  opacity: 0;
   z-index: 11;
+
+  transition: opacity 200ms linear 800ms;
 }
 
-.my-listing .content-container .timeline .circle:nth-of-type(2) {
+.my-listing.ready .content-container .progress-container .circle {
+  opacity: 1;
+}
+
+.my-listing .content-container .progress-container .circle:nth-of-type(2) {
   left: calc(33% - 10px);
 }
 
-.my-listing .content-container .timeline .circle:nth-of-type(3) {
+.my-listing .content-container .progress-container .circle:nth-of-type(3) {
   left: calc(66% - 10px);
 }
 
-.my-listing .content-container .timeline .circle:last-of-type {
+.my-listing .content-container .progress-container .circle:nth-of-type(2):nth-last-of-type(2) {
+  left: calc(50% - 10px);
+}
+
+.my-listing .content-container .progress-container .circle:last-of-type {
   left: unset;
   right: 0;
 }
 
-.my-listing .content-container .timeline .circle.checked {
+.my-listing .content-container .progress-container .circle.checked {
   background-color: var(--greenblue);
   background-image: url(/images/checkmark-white.svg);
   background-repeat: no-repeat;
   background-position: 50%;
 }
 
-.my-listing .content-container .timeline .labels p {
+.my-listing .content-container .progress-container .labels p {
   color: var(--dusk);
   flex-basis: 25%;
   font-size: 0.8rem;
 }
 
-.my-listing .content-container .timeline .labels p.text-center {
+.my-listing .content-container .progress-container .labels p.text-center {
   color: var(--dusk);
   flex-basis: 50%;
   font-size: 0.8rem;
