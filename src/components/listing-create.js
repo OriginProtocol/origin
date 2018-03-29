@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { contractService, originService } from '@originprotocol/origin'
+import origin from '@originprotocol/origin'
 
 import ListingDetail from './listing-detail'
 import Form from 'react-jsonschema-form'
@@ -100,23 +100,20 @@ class ListingCreate extends Component {
     }
   }
 
-  onSubmitListing(formListing, selectedSchemaType) {
-    this.setState({ step: this.STEP.METAMASK })
-    originService.submitListing(formListing, selectedSchemaType)
-    .then((tx) => {
+  async onSubmitListing(formListing, selectedSchemaType) {
+    try {
+      console.log(formListing)
+      this.setState({ step: this.STEP.METAMASK })
+      const transactionReceipt = await origin.resources.listings.create(formListing.formData, selectedSchemaType)
       this.setState({ step: this.STEP.PROCESSING })
       // Submitted to blockchain, now wait for confirmation
-      return contractService.waitTransactionFinished(tx)
-    })
-    .then((blockNumber) => {
+      const blockNumber = await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
       this.setState({ step: this.STEP.SUCCESS })
-      // TODO: Where do we take them after successful creation?
-    })
-    .catch((error) => {
+    } catch (error) {
+      // TODO: We need a failure step to go to here
       console.error(error)
       alertify.log(error.message)
-      // TODO: Reset form? Do something.
-    })
+    }
   }
 
   render() {
