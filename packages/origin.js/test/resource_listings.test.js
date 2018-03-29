@@ -18,13 +18,13 @@ describe("Listing Resource", () => {
   });
 
   it("should get a listing", async () => {
-    const listing = await origin.resources.listings.get(testListingIds[0]);
+    const listing = await origin.resources.listings.getByIndex(testListingIds[0]);
     expect(listing.name).to.equal("Zinc House");
     expect(listing.index).to.equal(testListingIds[0]);
   });
 
   it("should buy a listing", async () => {
-    const listing = await origin.resources.listings.get(testListingIds[0]);
+    const listing = await origin.resources.listings.getByIndex(testListingIds[0]);
     const transaction = await origin.resources.listings.buy(
       listing.address,
       1,

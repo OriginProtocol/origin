@@ -6,7 +6,7 @@ module.exports = {
     return await this.origin.contractService.getAllListingIds();
   },
 
-  get: async function(listingIndex) {
+  getByIndex: async function(listingIndex) {
     const contractData = await this.origin.contractService.getListing(
       listingIndex
     );
