@@ -15,7 +15,7 @@ class OriginService {
     let ipfsHash;
     try {
       // Submit to IPFS
-      ipfsHash = await this.ipfsService.submitListing(jsonBlob)
+      ipfsHash = await this.ipfsService.submitFile(jsonBlob)
     } catch (error) {
       throw new Error(`IPFS Failure: ${error}`)
     }
@@ -74,7 +74,7 @@ class OriginService {
         reject('invalid user data')
       } else {
         // Submit to IPFS
-        ipfsService.submitUser(data)
+        ipfsService.submitFile(data)
         .then((ipfsHash) => {
           console.log(`IPFS file created with hash: ${ipfsHash} for data:`)
           console.log(data)

@@ -35,31 +35,11 @@ class IpfsService {
     this.mapCache = new MapCache()
   }
 
-  submitListing(formListingJson) {
-    const file = {
-      path: 'listing.json',
-      content: JSON.stringify(formListingJson)
-    }
-    return this.submitFile(file)
-  }
-
-  getListing(ipfsHashStr) {
-    return this.getFile(ipfsHashStr)
-  }
-
-  submitUser(formUserJson) {
-    const file = {
-      path: 'user.json',
-      content: JSON.stringify(formUserJson)
-    }
-    return this.submitFile(file)
-  }
-
-  getUser(ipfsHashStr) {
-    return this.getFile(ipfsHashStr)
-  }
-
-  async submitFile(file) {
+  async submitFile(jsonData) {
+      const file = {
+        path: 'file.json',
+        content: JSON.stringify(jsonData)
+      }
       const addFile = promisify(this.ipfs.files.add.bind(this.ipfs.files))
 
       let response
@@ -67,15 +47,15 @@ class IpfsService {
         response = await addFile([file])
       } catch (error) {
         console.error('Can\'t connect to IPFS.', error)
-        throw new Error('Can\'t connect to IPFS. Failure to submit listing to IPFS')
+        throw new Error('Can\'t connect to IPFS. Failure to submit file to IPFS')
       }
 
       const ipfsHashStr = response[0].hash
       if (!ipfsHashStr) {
-        throw new Error('Failure to submit listing to IPFS')
+        throw new Error('Failure to submit file to IPFS')
       }
 
-      this.mapCache.set(ipfsHashStr, formListingJson)
+      this.mapCache.set(ipfsHashStr, jsonData)
       return ipfsHashStr
   }
 
