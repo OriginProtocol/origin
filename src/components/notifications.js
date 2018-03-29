@@ -35,7 +35,7 @@ class Notifications extends Component {
             <div className="col-12 col-md-9">
               <div className="notifications-list">
                 <ul className="list-group">
-                  {notifications.map(n => <Notification key={`navbar-notification-${n._id}`} notification={n} />)}
+                  {notifications.map(n => <Notification key={`notification-${n._id}`} notification={n} />)}
                 </ul>
               </div>
             </div>

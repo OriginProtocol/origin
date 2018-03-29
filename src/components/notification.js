@@ -37,14 +37,14 @@ class HumanReadableNotification extends Component {
 class Notification extends Component {
   render() {
     const { notification } = this.props
-    const { _id, address, name, role } = notification
+    const { address, name, role } = notification
 
     return (
-      <li key={_id} className="list-group-item d-flex notification">
+      <li className="list-group-item d-flex notification">
         <div>
           <div className="avatar-container">
             <img src={`/images/${name ? 'avatar' : 'partners-graphic'}.svg`} alt="avatar" />
-            <div className={`${role} circle`}><img src="/images/arrow.svg" alt="arrow" /></div>
+            <div className={`${role} circle`}></div>
           </div>
         </div>
         <div className="content-container">

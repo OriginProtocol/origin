@@ -1,4 +1,38 @@
+import moment from 'moment'
+
 export default {
+  listings: [
+    {
+      _id: '1foo2',
+      active: true,
+      category: 'Antiques',
+      title: 'Title Here and Can Be Long like this',
+      createdAt: moment('2018-03-13').toDate(),
+      soldAt: moment('2018-03-14').toDate(),
+      fulfilledAt: moment('2018-03-15').toDate(),
+      receivedAt: moment('2018-03-16').toDate(),
+    },
+    {
+      _id: '3bar4',
+      active: false,
+      category: 'Cars & Trucks',
+      title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+      createdAt: moment('2018-03-13').toDate(),
+      soldAt: null,
+      fulfilledAt: null,
+      receivedAt: null,
+    },
+    {
+      _id: '5baz6',
+      active: true,
+      category: 'Tickets',
+      title: 'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+      createdAt: moment('2018-03-13').toDate(),
+      soldAt: moment('2018-03-14').toDate(),
+      fulfilledAt: null,
+      receivedAt: null,
+    },
+  ],
   notifications: [
     {
       _id: '1foo2',
@@ -33,6 +67,26 @@ export default {
       address: '0x78Be343B94f860124dC4fEe278FDCBD38C102D88',
       readAt: new Date(),
       role: 'buy',
+    },
+  ],
+  purchases: [
+    {
+      _id: '1foo2',
+      category: 'Antiques',
+      title: 'Title Here and Can Be Long like this',
+      createdAt: moment('2018-03-13').toDate(),
+      soldAt: moment('2018-03-14').toDate(),
+      fulfilledAt: moment('2018-03-15').toDate(),
+      receivedAt: null,
+    },
+    {
+      _id: '3bar4',
+      category: 'Cars & Trucks',
+      title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+      createdAt: moment('2018-03-13').toDate(),
+      soldAt: moment('2018-03-14').toDate(),
+      fulfilledAt: null,
+      receivedAt: null,
     },
   ],
 }
