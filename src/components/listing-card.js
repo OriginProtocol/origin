@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
-import { contractService, ipfsService } from '@originprotocol/origin'
 import { Link } from 'react-router-dom'
+
+// temporary - we should be getting an origin instance from our app,
+// not using a global singleton
+import origin from '@originprotocol/origin'
 
 class ListingCard extends Component {
 
@@ -17,17 +20,12 @@ class ListingCard extends Component {
   }
 
   componentDidMount() {
-    contractService.getListing(this.props.listingId)
-    .then((listingContractObject) => {
-      this.setState(listingContractObject)
-      return ipfsService.getListing(this.state.ipfsHash)
-    })
-    .then((listingJson) => {
-      this.setState(listingJson.data)
-    })
-    .catch((error) => {
+    try {
+      const listing = await origin.resources.listings.get(this.props.listingId)
+      this.setState(listing)
+    } catch (error) {
       console.error(`Error fetching contract or IPFS info for listingId: ${this.props.listingId}`)
-    })
+    }
   }
 
   render() {

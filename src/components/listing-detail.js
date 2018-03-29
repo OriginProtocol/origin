@@ -5,8 +5,6 @@ import Modal from './modal'
 // temporary - we should be getting an origin instance from our app,
 // not using a global singleton
 import origin from '@originprotocol/origin' 
-const contractService = origin.contractService
-const ipfsService = origin.ipfsService
 
 const alertify = require('../../node_modules/alertify/src/alertify.js')
 
@@ -66,7 +64,7 @@ class ListingsDetail extends Component {
       const transactionReceipt = await origin.resources.listings.buy(this.state.address, unitsToBuy, totalPrice)
       console.log("Purchase request sent.")
       this.setState({step: this.STEP.PROCESSING})
-      const blockNumber = await contractService.waitTransactionFinished(transactionReceipt.tx)
+      const blockNumber = await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
       this.setState({step: this.STEP.PURCHASED})
     } catch (error) {
       console.log(error)
@@ -128,7 +126,7 @@ class ListingsDetail extends Component {
               <div className="description">{this.state.description}</div>
               <div className="category">Seller</div>
               <div className="description">{this.state.sellerAddress}</div>
-              <a href={ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
+              <a href={origin.ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
                 View on IPFS <big>&rsaquo;</big>
               </a>
               <div className="debug">
