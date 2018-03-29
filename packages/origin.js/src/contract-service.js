@@ -1,4 +1,5 @@
 import ListingsRegistryContract from '../../contracts/build/contracts/ListingsRegistry.json'
+import UserRegistryContract from '../../contracts/build/contracts/UserRegistry.json'
 import bs58 from 'bs58'
 import contract from 'truffle-contract'
 import promisify from 'util.promisify'
@@ -6,6 +7,7 @@ import promisify from 'util.promisify'
 class ContractService {
   constructor() {
     this.listingsRegistryContract = contract(ListingsRegistryContract)
+    this.userRegistryContract = contract(UserRegistryContract)
   }
 
   // Return bytes32 hex string from base58 encoded ipfs hash,
@@ -123,6 +125,42 @@ class ContractService {
       {from: accounts[0], value:weiToGive, gas: 4476768} // TODO (SRJ): is gas needed?
     )
     return transactionReceipt
+  }
+
+  async setUser(ipfsUser) {
+    const result = await new Promise((resolve, reject) => {
+      this.userRegistryContract.setProvider(window.web3.currentProvider)
+      window.web3.eth.getAccounts((error, accounts) => {
+        this.userRegistryContract.deployed().then((instance) => {
+          return instance.set(
+            this.getBytes32FromIpfsHash(ipfsUser),
+            {from: accounts[0]})
+        }).then((result) => {
+          resolve(result)
+        }).catch((error) => {
+          console.error('Error submitting to the Ethereum blockchain: ' + error)
+          reject(error)
+        })
+      })
+    })
+    return result
+  }
+
+  async getUser(userAddress) {
+    const ipfsUser = await new Promise((resolve, reject) => {
+      this.userRegistryContract.setProvider(window.web3.currentProvider)
+      this.userRegistryContract.deployed().then((instance) => {
+        instance.users(userAddress)
+        .then(([ipfsHash, isSet]) => {
+          resolve(this.getIpfsHashFromBytes32(ipfsHash))
+        })
+        .catch((error) => {
+          console.log(`Error fetching userId: ${userId}`)
+          reject(error)
+        })
+      })
+    })
+    return ipfsUser
   }
 
   async waitTransactionFinished(transactionHash, pollIntervalMilliseconds=1000) {

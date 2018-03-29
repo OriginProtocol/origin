@@ -1,3 +1,8 @@
+import userSchema from './schemas/user.json'
+
+var Ajv = require('ajv')
+var ajv = new Ajv()
+
 class OriginService {
   constructor({ contractService, ipfsService }) {
     this.contractService = contractService;
@@ -15,7 +20,7 @@ class OriginService {
     let ipfsHash;
     try {
       // Submit to IPFS
-      ipfsHash = await this.ipfsService.submitListing(jsonBlob)
+      ipfsHash = await this.ipfsService.submitFile(jsonBlob)
     } catch (error) {
       throw new Error(`IPFS Failure: ${error}`)
     }
@@ -42,6 +47,37 @@ class OriginService {
 
   }
 
+  setUser(data) {
+    return new Promise((resolve, reject) => {
+      var validate = ajv.compile(userSchema)
+      if (!validate(data)) {
+        reject('invalid user data')
+      } else {
+        // Submit to IPFS
+        this.ipfsService.submitFile(data)
+        .then((ipfsHash) => {
+          console.log(`IPFS file created with hash: ${ipfsHash} for data:`)
+          console.log(data)
+
+          // Submit to ETH contract
+          this.contractService.setUser(
+            ipfsHash)
+          .then((transactionReceipt) => {
+            // Success!
+            console.log(`Submitted to ETH blockchain with transactionReceipt.tx: ${transactionReceipt.tx}`)
+            resolve(transactionReceipt.tx)
+          })
+          .catch((error) => {
+            console.error(error)
+            reject(`ETH Failure: ${error}`)
+          })
+        })
+        .catch((error) => {
+          reject(`IPFS Failure: ${error}`)
+        })
+      }
+    })
+  }
 }
 
 export default OriginService
