@@ -18,13 +18,17 @@ describe("Listing Resource", () => {
   });
 
   it("should get a listing", async () => {
-    const listing = await origin.resources.listings.getByIndex(testListingIds[0]);
+    const listing = await origin.resources.listings.getByIndex(
+      testListingIds[0]
+    );
     expect(listing.name).to.equal("Zinc House");
     expect(listing.index).to.equal(testListingIds[0]);
   });
 
   it("should buy a listing", async () => {
-    const listing = await origin.resources.listings.getByIndex(testListingIds[0]);
+    const listing = await origin.resources.listings.getByIndex(
+      testListingIds[0]
+    );
     const transaction = await origin.resources.listings.buy(
       listing.address,
       1,
@@ -34,4 +38,19 @@ describe("Listing Resource", () => {
     //  because we need to somehow get web3 approve this transaction
     // Todo: wait for transaction, then check that purchase was created.
   }).timeout(5000);
+
+  it("should create a listing", async () => {
+    const listingData = {
+      name: "1972 Geo Metro 255K",
+      category: "Cars & Trucks",
+      location: "New York City",
+      description:
+        "The American auto-show highlight reel will be disproportionately concentrated on the happenings in New York.",
+      pictures: undefined,
+      price: 3.3
+    };
+    const schema = "for-sale";
+    await origin.resources.listings.create(listingData, schema);
+    // Todo: Check that this worked after we have web3 approvals working
+  });
 });

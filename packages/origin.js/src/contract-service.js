@@ -75,6 +75,7 @@ class ContractService {
     try {
       listingsLength = await instance.listingsLength.call()
     } catch (error) {
+      console.log(error)
       console.log(`Can't get number of listings.`)
       throw error
     }
@@ -128,6 +129,8 @@ class ContractService {
   }
 
   async waitTransactionFinished(transactionReceipt, pollIntervalMilliseconds=1000) {
+    console.log("Waiting for transaction")
+    console.log(transactionReceipt)
     const blockNumber = await new Promise((resolve, reject) => {
       let txCheckTimer = setInterval(txCheckTimerCallback, pollIntervalMilliseconds)
       function txCheckTimerCallback() {

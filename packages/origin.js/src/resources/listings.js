@@ -37,6 +37,19 @@ module.exports = {
     return listing;
   },
 
+  create: async function(data, schemaType) {
+    if (data.price == undefined) {
+      throw "You must include a price";
+    }
+    if (data.name == undefined) {
+      throw "You must include a name";
+    }
+    return this.origin.originService.submitListing(
+      { formData: data },
+      schemaType
+    );
+  },
+
   buy: async function(listingAddress, unitsToBuy, ethToPay) {
     return await this.origin.contractService.buyListing(
       listingAddress,
