@@ -1,3 +1,8 @@
+import userSchema from './schemas/user.json'
+
+var Ajv = require('ajv')
+var ajv = new Ajv()
+
 class OriginService {
   constructor({ contractService, ipfsService }) {
     this.contractService = contractService;
@@ -49,13 +54,13 @@ class OriginService {
         reject('invalid user data')
       } else {
         // Submit to IPFS
-        ipfsService.submitFile(data)
+        this.ipfsService.submitFile(data)
         .then((ipfsHash) => {
           console.log(`IPFS file created with hash: ${ipfsHash} for data:`)
           console.log(data)
 
           // Submit to ETH contract
-          contractService.setUser(
+          this.contractService.setUser(
             ipfsHash)
           .then((transactionReceipt) => {
             // Success!
