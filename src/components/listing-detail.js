@@ -37,7 +37,7 @@ class ListingsDetail extends Component {
 
   async loadListing() {
     try {
-      const listing = await origin.resources.listings.get(this.props.listingId)
+      const listing = await origin.resources.listings.getByIndex(this.props.listingId)
       this.setState(listing)
     } catch (error) {
       alertify.log('There was an error loading this listing.')
