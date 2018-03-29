@@ -1,7 +1,8 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import {
   BrowserRouter as Router,
-  Route
+  Route,
+  Switch,
 } from 'react-router-dom'
 
 // Components
@@ -63,7 +64,7 @@ const App = () => (
     <ScrollToTop>
       <Layout>
         <Web3Provider>
-          <Fragment>
+          <Switch>
             <Route exact path="/" component={HomePage} />
             <Route path="/page/:activePage" component={HomePage} />
             <Route path="/listing/:listingId" component={ListingDetailPage} />
@@ -72,7 +73,7 @@ const App = () => (
             <Route path="/my-purchases" component={MyPurchasesPage} />
             <Route path="/notifications" component={NotificationsPage} />
             <Route path="/profile" component={ProfilePage} />
-          </Fragment>
+          </Switch>
         </Web3Provider>
       </Layout>
     </ScrollToTop>
