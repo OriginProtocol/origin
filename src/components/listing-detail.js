@@ -37,7 +37,7 @@ class ListingsDetail extends Component {
 
   async loadListing() {
     try {
-      const listing = await origin.resources.listings.getByIndex(this.props.listingId)
+      const listing = await origin.listings.getByIndex(this.props.listingId)
       this.setState(listing)
     } catch (error) {
       alertify.log('There was an error loading this listing.')
@@ -61,7 +61,7 @@ class ListingsDetail extends Component {
     const totalPrice = (unitsToBuy * this.state.price)
     this.setState({step: this.STEP.METAMASK})
     try {
-      const transactionReceipt = await origin.resources.listings.buy(this.state.address, unitsToBuy, totalPrice)
+      const transactionReceipt = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice)
       console.log("Purchase request sent.")
       this.setState({step: this.STEP.PROCESSING})
       const blockNumber = await origin.contractService.waitTransactionFinished(transactionReceipt.tx)

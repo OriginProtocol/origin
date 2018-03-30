@@ -104,7 +104,7 @@ class ListingCreate extends Component {
     try {
       console.log(formListing)
       this.setState({ step: this.STEP.METAMASK })
-      const transactionReceipt = await origin.resources.listings.create(formListing.formData, selectedSchemaType)
+      const transactionReceipt = await origin.listings.create(formListing.formData, selectedSchemaType)
       this.setState({ step: this.STEP.PROCESSING })
       // Submitted to blockchain, now wait for confirmation
       const blockNumber = await origin.contractService.waitTransactionFinished(transactionReceipt.tx)

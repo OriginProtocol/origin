@@ -21,7 +21,7 @@ class ListingCard extends Component {
 
   async componentDidMount() {
     try {
-      const listing = await origin.resources.listings.getByIndex(this.props.listingId)
+      const listing = await origin.listings.getByIndex(this.props.listingId)
       this.setState(listing)
     } catch (error) {
       console.error(`Error fetching contract or IPFS info for listingId: ${this.props.listingId}`)

@@ -40,7 +40,7 @@ class ListingsGrid extends Component {
     })
 
     // Get all listings from contract
-    const allListingsPromise = origin.resources.listings.allIds()
+    const allListingsPromise = origin.listings.allIds()
     .then((response) => {
       this.setState({ contractFound: true })
       return response
