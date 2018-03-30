@@ -36,10 +36,10 @@ class TransactionProgress extends Component {
           <div className="progress-bar" role="progressbar" style={{ width: progressWidth }} aria-valuenow={Math.max(maxStep, currentStep)} aria-valuemin="0" aria-valuemax={maxStep}></div>
         </div>
         <div className="circles d-flex justify-content-between">
-          <span className={`circle${soldAt ? ' checked' : ''}`}></span>
-          <span className={`circle${fulfilledAt ? ' checked' : ''}`}></span>
-          <span className={`circle${receivedAt ? ' checked' : ''}`}></span>
-          {perspective === 'seller' && <span className={`circle${withdrawnAt ? ' checked' : ''}`}></span>}
+          <span className={`progress-circle${soldAt ? ' checked' : ''}`}></span>
+          <span className={`progress-circle${fulfilledAt ? ' checked' : ''}`}></span>
+          <span className={`progress-circle${receivedAt ? ' checked' : ''}`}></span>
+          {perspective === 'seller' && <span className={`progress-circle${withdrawnAt ? ' checked' : ''}`}></span>}
         </div>
         {perspective === 'buyer' &&
           <div className="labels d-flex justify-content-between text-center">

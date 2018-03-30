@@ -66,6 +66,7 @@ h3 {
 }
 
 p {
+  color: var(--dark);
   font-size: 1.125rem;
   margin: 20px auto;
 }
@@ -183,28 +184,31 @@ a:hover {
   width: 100%;
 }
 
-.progress-container .circle {
+.progress-circle {
   background-color: var(--light);
   border-radius: 50%;
   height: 20px;
   text-align: center;
   vertical-align: middle;
   width: 20px;
-  opacity: 0;
   z-index: 11;
 
   transition: opacity 200ms linear 800ms;
 }
 
-.progress-container.ready .circle {
-  opacity: 1;
-}
-
-.progress-container .circle.checked {
+.progress-circle.checked {
   background-color: var(--greenblue);
   background-image: url(/images/checkmark-white.svg);
   background-repeat: no-repeat;
   background-position: 50%;
+}
+
+.progress-container .progress-circle {
+  opacity: 0;
+}
+
+.progress-container.ready .progress-circle {
+  opacity: 1;
 }
 
 .progress-container .labels div {
@@ -745,7 +749,6 @@ a:hover {
 
 .listing-card .price {
   line-height: 1.4;
-  color: var(--dark);
 }
 
 .listing-card .photo {
@@ -1070,7 +1073,6 @@ label[for=root_pictures]:hover {
 }
 
 .transaction .content-container .title {
-  color: var(--dark);
   font-family: var(--heading-font);
   font-size: 1.5rem;
   font-weight: 300;
@@ -1079,7 +1081,6 @@ label[for=root_pictures]:hover {
 }
 
 .transaction .content-container .price {
-  color: var(--dark);
   flex-grow: 1;
   font-weight: 300;
   margin: 0;
@@ -1103,6 +1104,10 @@ label[for=root_pictures]:hover {
 
 .transaction .content-container .price .sold-banner {
   line-height: 1.4;
+}
+
+.transaction .content-container .progress-container .labels p {
+  white-space: nowrap;
 }
 
 .transaction .content-container .progress-container .labels div:first-of-type p,
@@ -1175,7 +1180,6 @@ label[for=root_pictures]:hover {
 
 .transaction-detail .identification {
   height: 60px;
-  min-width: 0;
   padding: 0 0.8rem;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1201,7 +1205,7 @@ label[for=root_pictures]:hover {
 
 .transaction-detail .identification .address {
   color: #6f8294;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -1212,9 +1216,10 @@ label[for=root_pictures]:hover {
 
 .transaction-detail .guidance {
   position: relative;
-  border: 2px solid black;
+  border: 2px solid var(--dark);
   border-radius: var(--default-radius);
-  height: 100px;
+  margin-bottom: 30px;
+  padding: 30px;
 }
 
 .transaction-detail .guidance .triangle {
@@ -1231,7 +1236,7 @@ label[for=root_pictures]:hover {
 
 .transaction-detail .guidance .triangle:first-of-type {
   border-color: rgba(0, 0, 0, 0);
-  border-bottom-color: black;
+  border-bottom-color: var(--dark);
   border-width: 13px;
   margin-left: -13px;
 }
@@ -1241,6 +1246,53 @@ label[for=root_pictures]:hover {
   border-bottom-color: white;
   border-width: 10px;
   margin-left: -10px;
+}
+
+.transaction-detail .guidance p {
+  margin: 0;
+}
+
+.transaction-detail .guidance .prompt {
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+.transaction-detail .guidance .instruction {
+  font-size: 0.9rem;
+}
+
+.transaction-detail .guidance button {
+  font-size: 1.1rem;
+  font-weight: 900;
+  margin-top: 10px;
+  width: auto;
+}
+
+.transaction-detail .table {
+  font-size: 0.9rem;
+  table-layout: fixed;
+}
+
+.transaction-detail .table th,
+.transaction-detail .table td {
+  border: none;
+  padding: 0.75rem;
+}
+
+.transaction-detail .table th {
+  font-weight: normal;
+}
+
+.transaction-detail .table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 25%;
+}
+
+.transaction-detail .table td .progress-circle {
+  display: inline-block;
+  margin-right: 0.75rem;
 }
 
 /* Notifications */
