@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import ListingProgressCard from './listing-progress-card'
+import TransactionCard from './transaction-card'
 import data from '../data'
 
 class MyListings extends Component {
@@ -45,7 +45,7 @@ class MyListings extends Component {
             </div>
             <div className="col-12 col-md-9">
               <div className="my-listings-list">
-                {listings.map(l => <ListingProgressCard key={`my-listing-${l._id}`} listing={l} perspective="seller" />)}
+                {listings.map(l => <TransactionCard key={`my-listing-${l._id}`} listing={l} perspective="seller" />)}
               </div>
             </div>
           </div>

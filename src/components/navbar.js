@@ -90,7 +90,7 @@ class NavBar extends Component {
                     <hr />
                     <div className="d-flex">
                       <div className="avatar-container">
-                        <Link to="/profile"><img src="/images/avatar.svg" alt="avatar" /></Link>
+                        <Link to="/profile"><img src="/images/avatar-blue.svg" alt="avatar" /></Link>
                       </div>
                       <div className="identification">
                         <p><Link to="/profile">Aure Gimon</Link></p>

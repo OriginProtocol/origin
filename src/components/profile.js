@@ -126,7 +126,7 @@ class Profile extends Component {
               <div className="row">
                 <div className="col-4 col-md-3">
                   <div className="avatar-container">
-                    <img src="/images/avatar.svg" alt="avatar" />
+                    <img src="/images/avatar-blue.svg" alt="avatar" />
                   </div>
                 </div>
                 <div className="col-8 col-md-9">
@@ -230,7 +230,7 @@ class Profile extends Component {
                 <div className="image-container">
                   <div className="image-pair">
                     <div className="avatar-container">
-                      <img src="/images/avatar.svg" alt="avatar" />
+                      <img src="/images/avatar-blue.svg" alt="avatar" />
                     </div>
                     <button className="edit-profile" onClick={() => alert('To Do')}>
                       <img src="/images/camera-icon-circle.svg" alt="camera icon" />
