@@ -1,4 +1,5 @@
 import ListingsRegistryContract from '../../contracts/build/contracts/ListingsRegistry.json'
+import UserRegistryContract from '../../contracts/build/contracts/UserRegistry.json'
 import bs58 from 'bs58'
 import contract from 'truffle-contract'
 import promisify from 'util.promisify'
@@ -6,6 +7,7 @@ import promisify from 'util.promisify'
 class ContractService {
   constructor() {
     this.listingsRegistryContract = contract(ListingsRegistryContract)
+    this.userRegistryContract = contract(UserRegistryContract)
   }
 
   // Return bytes32 hex string from base58 encoded ipfs hash,
@@ -125,11 +127,50 @@ class ContractService {
     return transactionReceipt
   }
 
-  async waitTransactionFinished(transactionReceipt, pollIntervalMilliseconds=1000) {
+  async setUser(ipfsUser) {
+    const result = await new Promise((resolve, reject) => {
+      this.userRegistryContract.setProvider(window.web3.currentProvider)
+      window.web3.eth.getAccounts((error, accounts) => {
+        this.userRegistryContract.deployed().then((instance) => {
+          return instance.set(
+            this.getBytes32FromIpfsHash(ipfsUser),
+            {from: accounts[0]})
+        }).then((result) => {
+          resolve(result)
+        }).catch((error) => {
+          console.error('Error submitting to the Ethereum blockchain: ' + error)
+          reject(error)
+        })
+      })
+    })
+    return result
+  }
+
+  async getUser(userAddress) {
+    const ipfsUser = await new Promise((resolve, reject) => {
+      this.userRegistryContract.setProvider(window.web3.currentProvider)
+      this.userRegistryContract.deployed().then((instance) => {
+        instance.users(userAddress)
+        .then(([ipfsHash, isSet]) => {
+          resolve(this.getIpfsHashFromBytes32(ipfsHash))
+        })
+        .catch((error) => {
+          console.log(`Error fetching userId: ${userId}`)
+          reject(error)
+        })
+      })
+    })
+    return ipfsUser
+  }
+
+  async waitTransactionFinished(transactionHash, pollIntervalMilliseconds=1000) {
     const blockNumber = await new Promise((resolve, reject) => {
+      if (!transactionHash) {
+        reject(`Invalid transactionHash passed: ${transactionHash}`)
+      }
       let txCheckTimer = setInterval(txCheckTimerCallback, pollIntervalMilliseconds)
       function txCheckTimerCallback() {
-        window.web3.eth.getTransaction(transactionReceipt, (error, transaction) => {
+        window.web3.eth.getTransaction(transactionHash, (error, transaction) => {
           if (transaction.blockNumber != null) {
             console.log(`Transaction mined at block ${transaction.blockNumber}`)
             console.log(transaction)
@@ -138,8 +179,8 @@ class ContractService {
 
             // // TODO (Stan): Metamask web3 doesn't have this method. Probably could fix by
             // // by doing the "copy local web3 over metamask's" technique.
-            // window.web3.eth.getTransactionReceipt(this.props.transactionReceipt, (error, transactionReceipt) => {
-            //   console.log(transactionReceipt)
+            // window.web3.eth.getTransactionReceipt(this.props.transactionHash, (error, transactionHash) => {
+            //   console.log(transactionHash)
             // })
 
             clearInterval(txCheckTimer)

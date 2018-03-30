@@ -3,13 +3,15 @@ pragma solidity ^0.4.11;
 /// @title Listing
 /// @dev An indiviual Origin Listing representing an offer for booking/purchase
 
+import "./Purchase.sol";
+
 contract Listing {
 
   /*
    * Events
    */
 
-  event ListingPurchased(uint _unitsToBuy, uint _value);
+  event ListingPurchased(Purchase _purchaseContract);
 
     /*
     * Storage
@@ -47,20 +49,19 @@ contract Listing {
     public
     payable
   {
-    // Insure there is money to pay
-    require (msg.value >= (price * _unitsToBuy));
+    // TODO: Handle units. For now we just do one at a time
+    require (_unitsToBuy == 1); // HACK
 
-    require (_unitsToBuy <= unitsAvailable);
+    // Create purchase contract
+    Purchase purchaseContract = new Purchase(this);
 
     // Count units as sold
     unitsAvailable -= _unitsToBuy;
 
-    // Send funds to lister
-    // TODO: In future there will likely be some sort of escrow
-    owner.transfer(msg.value);
+    // TODO STAN: How to call function *AND* transfer value??
+    purchaseContract.pay.value(msg.value)();
 
-    // TODO: this needs to call logging back on the registry
-    ListingPurchased(_unitsToBuy, msg.value);
+    ListingPurchased(purchaseContract);
   }
 
 }
