@@ -28,8 +28,7 @@ var resources = {
 // and all contracts will follow it
 for(var resourceName in resources){
     resources[resourceName].origin = origin
+    origin[resourceName] = resources[resourceName]
 }
-
-origin.resources = resources
 
 module.exports = origin

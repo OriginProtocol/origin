@@ -12,24 +12,20 @@ describe("Listing Resource", () => {
 
   it("should get all listing ids", async () => {
     console.log("b");
-    const ids = await origin.resources.listings.allIds();
+    const ids = await origin.listings.allIds();
     console.log("a");
     expect(ids.length).to.equal(5);
   });
 
   it("should get a listing", async () => {
-    const listing = await origin.resources.listings.getByIndex(
-      testListingIds[0]
-    );
+    const listing = await origin.listings.getByIndex(testListingIds[0]);
     expect(listing.name).to.equal("Zinc House");
     expect(listing.index).to.equal(testListingIds[0]);
   });
 
   it("should buy a listing", async () => {
-    const listing = await origin.resources.listings.getByIndex(
-      testListingIds[0]
-    );
-    const transaction = await origin.resources.listings.buy(
+    const listing = await origin.listings.getByIndex(testListingIds[0]);
+    const transaction = await origin.listings.buy(
       listing.address,
       1,
       listing.price * 1
@@ -50,7 +46,7 @@ describe("Listing Resource", () => {
       price: 3.3
     };
     const schema = "for-sale";
-    await origin.resources.listings.create(listingData, schema);
+    await origin.listings.create(listingData, schema);
     // Todo: Check that this worked after we have web3 approvals working
   });
 });
