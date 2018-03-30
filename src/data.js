@@ -12,6 +12,14 @@ export default {
       fulfilledAt: moment('2018-03-15').toDate(),
       receivedAt: moment('2018-03-16').toDate(),
       withdrawnAt: null,
+      buyer: {
+        name: 'Matt L.',
+        address: '0x34Be343B94f860124dC4fEe278FDCBD38C102D88',
+      },
+      seller: {
+        name: 'Aure G.',
+        address: '0x12Be343B94f860124dC4fEe278FDCBD38C102D88',
+      },
     },
     {
       _id: '3bar4',
@@ -23,6 +31,14 @@ export default {
       fulfilledAt: moment('2018-03-15').toDate(),
       receivedAt: null,
       withdrawnAt: null,
+      buyer: {
+        name: 'Matt L.',
+        address: '0x34Be343B94f860124dC4fEe278FDCBD38C102D88',
+      },
+      seller: {
+        name: 'Aure G.',
+        address: '0x12Be343B94f860124dC4fEe278FDCBD38C102D88',
+      },
     },
     {
       _id: '5baz6',
@@ -34,6 +50,14 @@ export default {
       fulfilledAt: null,
       receivedAt: null,
       withdrawnAt: null,
+      buyer: {
+        name: 'Matt L.',
+        address: '0x34Be343B94f860124dC4fEe278FDCBD38C102D88',
+      },
+      seller: {
+        name: 'Aure G.',
+        address: '0x12Be343B94f860124dC4fEe278FDCBD38C102D88',
+      },
     },
     {
       _id: '7qux8',
@@ -45,6 +69,14 @@ export default {
       fulfilledAt: null,
       receivedAt: null,
       withdrawnAt: null,
+      buyer: {
+        name: 'Matt L.',
+        address: '0x34Be343B94f860124dC4fEe278FDCBD38C102D88',
+      },
+      seller: {
+        name: 'Aure G.',
+        address: '0x12Be343B94f860124dC4fEe278FDCBD38C102D88',
+      },
     },
   ],
   notifications: [
