@@ -34,7 +34,7 @@ class ListingsDetail extends Component {
     contractService.getListing(this.props.listingId)
     .then((listingContractObject) => {
       this.setState(listingContractObject)
-      return ipfsService.getListing(this.state.ipfsHash)
+      return ipfsService.getFile(this.state.ipfsHash)
     })
     .then(({ data }) => {
       this.setState(data)
