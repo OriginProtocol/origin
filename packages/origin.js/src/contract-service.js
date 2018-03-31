@@ -1,5 +1,6 @@
 import ListingsRegistryContract from '../../contracts/build/contracts/ListingsRegistry.json'
 import ListingContract from '../../contracts/build/contracts/Listing.json'
+import UserRegistryContract from '../../contracts/build/contracts/UserRegistry.json'
 import bs58 from 'bs58'
 import contract from 'truffle-contract'
 import promisify from 'util.promisify'
@@ -8,6 +9,7 @@ class ContractService {
   constructor() {
     this.listingsRegistryContract = contract(ListingsRegistryContract)
     this.listingContract = contract(ListingContract)
+    this.userRegistryContract = contract(UserRegistryContract)
   }
 
   // Return bytes32 hex string from base58 encoded ipfs hash,
@@ -132,9 +134,12 @@ class ContractService {
     console.log("Waiting for transaction")
     console.log(transactionReceipt)
     const blockNumber = await new Promise((resolve, reject) => {
+      if (!transactionHash) {
+        reject(`Invalid transactionHash passed: ${transactionHash}`)
+      }
       let txCheckTimer = setInterval(txCheckTimerCallback, pollIntervalMilliseconds)
       function txCheckTimerCallback() {
-        window.web3.eth.getTransaction(transactionReceipt, (error, transaction) => {
+        window.web3.eth.getTransaction(transactionHash, (error, transaction) => {
           if (transaction.blockNumber != null) {
             console.log(`Transaction mined at block ${transaction.blockNumber}`)
             console.log(transaction)
@@ -143,8 +148,8 @@ class ContractService {
 
             // // TODO (Stan): Metamask web3 doesn't have this method. Probably could fix by
             // // by doing the "copy local web3 over metamask's" technique.
-            // window.web3.eth.getTransactionReceipt(this.props.transactionReceipt, (error, transactionReceipt) => {
-            //   console.log(transactionReceipt)
+            // window.web3.eth.getTransactionReceipt(this.props.transactionHash, (error, transactionHash) => {
+            //   console.log(transactionHash)
             // })
 
             clearInterval(txCheckTimer)

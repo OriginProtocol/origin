@@ -9,36 +9,31 @@ contract UserRegistry {
     * Events
     */
 
-    event NewUser(uint _index);
+    event NewUser(address _address);
 
     /*
     * Storage
     */
 
-    // Array of all users
-    UserStruct[] public users;
+    // Mapping of all users
+    mapping(address => userStruct) public users;
 
     /*
     * Structs
     */
 
-    struct UserStruct {
-        address owner;
+    struct userStruct {
         bytes32 ipfsHash;
+        bool isSet;
     }
 
     /*
     * Modifiers
     */
 
-    modifier isValidUserIndex(uint _index) {
-        require (_index < users.length);
+    modifier isValidUserAddress() {
+        require (users[msg.sender].isSet);
         _;
-    }
-
-    modifier isOwner(uint _index) {
-      require (msg.sender == users[_index].owner);
-      _;
     }
 
     /*
@@ -47,28 +42,13 @@ contract UserRegistry {
 
     /// @dev create(): Create a new user
     /// @param _ipfsHash Hash of data on ipfsHash
-    function create(
+    function set(
         bytes32 _ipfsHash
     )
         public
-        returns (uint)
     {
-        users.push(UserStruct(msg.sender, _ipfsHash));
-        NewUser(users.length-1);
-        return users.length;
-    }
-
-    /// @dev create(): Create a new user
-    /// @param _ipfsHash Hash of data on ipfsHash
-    function update(
-        uint _index,
-        bytes32 _ipfsHash
-    )
-        public
-        isValidUserIndex(_index)
-        isOwner(_index)
-    {
-        users[_index].ipfsHash = _ipfsHash;
+        users[msg.sender] = userStruct(_ipfsHash, true);
+        NewUser(msg.sender);
     }
 
     /// @dev createAnother(): Create a new user and associates attenstion or proof with user

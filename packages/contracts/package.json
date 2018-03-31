@@ -2,6 +2,7 @@
   "name": "origin-protocol-contracts",
   "private": true,
   "devDependencies": {
-    "truffle": "^4.1.3"
+    "truffle": "^4.1.3",
+    "truffle-hdwallet-provider": "0.0.3"
   }
 }
