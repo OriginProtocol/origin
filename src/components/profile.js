@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import moment from 'moment'
 import Modal from './modal'
@@ -216,7 +217,7 @@ class Profile extends Component {
                   <p><a href="#">ETH</a> | <a href="#">Tokens</a></p>
                 </div>
                 <div>
-                  <p><a href="#">View My Listings &gt;</a></p>
+                  <p><Link to="/my-listings">View My Listings &gt;</Link></p>
                 </div>
               </div>
             </div>

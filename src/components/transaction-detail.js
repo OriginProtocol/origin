@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import moment from 'moment'
 import TransactionProgress from './transaction-progress'
 import data from '../data'
 
@@ -56,8 +57,9 @@ class TransactionDetail extends Component {
   render() {
     const { listingId, perspective } = this.props
     const listing = data.listings.find(l => l._id === listingId)
-    const { buyer, seller, fulfilledAt, receivedAt, soldAt, withdrawnAt } = listing
+    const { active, buyer, seller, fulfilledAt, price, receivedAt, soldAt, withdrawnAt } = listing
     const counterparty = ['buyer', 'seller'].find(str => str !== perspective)
+    const status = active ? 'active' : 'inactive'
     const maxStep = perspective === 'seller' ? 4 : 3
     let decimal, left, step
 
@@ -218,10 +220,27 @@ class TransactionDetail extends Component {
           <hr />
           <div className="row">
             <div className="col-12 col-lg-8">
-              {/* Listing Details */}
+              <h2>Listing Details</h2>
             </div>
             <div className="col-12 col-lg-4">
-              {/* Status */}
+              {soldAt &&
+                <div className="summary text-center">
+                  {perspective === 'buyer' && <div className="purchased tag"><p>Purchased</p></div>}
+                  {perspective === 'seller' && <div className="sold tag"><p>Sold</p></div>}
+                  <p className="recap">{listing[counterparty].name} {perspective === 'buyer' ? 'sold' : 'purchased'} on {moment(soldAt).format('MMMM D, YYYY')}</p>
+                  <hr />
+                  <div className="d-flex">
+                    <p className="text-left">Price</p>
+                    <p className="text-right">{price}</p>
+                  </div>
+                  <div className="d-flex">
+                    <p className="text-left">Contract Price</p>
+                    <p className="text-right">{price}</p>
+                  </div>
+                  <hr />
+                  <p className={`status ${status}`}>This listing is {status}</p>
+                </div>
+              }
             </div>
           </div>
         </div>

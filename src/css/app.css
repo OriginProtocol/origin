@@ -1009,6 +1009,14 @@ label[for=root_pictures]:hover {
 
 /* Transactions */
 
+.status.active {
+  color: var(--greenblue);
+}
+
+.status.inactive {
+  color: #ff1a1a;
+}
+
 .transaction {
   position: relative;
   margin-bottom: 30px;
@@ -1053,14 +1061,6 @@ label[for=root_pictures]:hover {
   top: 10px;
   right: 0;
   text-transform: uppercase;
-}
-
-.transaction .content-container .status.active {
-  color: var(--greenblue);
-}
-
-.transaction .content-container .status.inactive {
-  color: #ff1a1a;
 }
 
 .transaction .content-container .category {
@@ -1295,7 +1295,8 @@ label[for=root_pictures]:hover {
   margin-right: 0.75rem;
 }
 
-.transaction-detail .counterparty {
+.transaction-detail .counterparty,
+.transaction-detail .summary {
   background-color: var(--dark);
   border-radius: var(--default-radius);
   margin-top: 20px;
@@ -1324,7 +1325,7 @@ label[for=root_pictures]:hover {
 }
 
 .transaction-detail .counterparty .identity hr {
-  border-color: white;
+  border-color: #6f8294;
 }
 
 .transaction-detail .counterparty .identity .d-flex div:last-of-type {
@@ -1366,6 +1367,84 @@ label[for=root_pictures]:hover {
 
 .transaction-detail .counterparty .btn:hover {
   background-color: var(--dark-clear-blue);
+}
+
+.transaction-detail .summary {
+  color: white;
+  margin-bottom: 30px;
+  padding: 20px;
+}
+
+.transaction-detail .summary hr {
+  border-top: 1px solid #6f8294;
+}
+
+.transaction-detail .summary p {
+  color: white;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.transaction-detail .tag {
+  display: inline-block;
+  background-repeat: no-repeat;
+  height: 58px;
+  margin: 10px auto 20px;
+}
+
+.transaction-detail .tag.purchased {
+  background-image: url(/images/tag-green.svg);
+  width: 176px;
+}
+
+.transaction-detail .tag.sold {
+  background-image: url(/images/tag-purple.svg);
+  width: 136px;
+}
+
+.transaction-detail .tag p {
+  font-size: 24px;
+  font-weight: normal;
+  line-height: 58px;
+  margin-bottom: 27px;
+  margin-left: 26px;
+}
+
+.transaction-detail .tag.purchased p {
+  width: 150px;
+}
+
+.transaction-detail .tag.sold p {
+  width: 110px;
+}
+
+.transaction-detail .summary .d-flex p {
+  flex-basis: 50%;
+  font-size: 1rem;
+  margin: 5px 20px;
+}
+
+.transaction-detail .summary .d-flex p:last-of-type {
+  font-weight: bold;
+}
+
+.transaction-detail .summary .recap,
+.transaction-detail .summary .status,
+.transaction-detail .summary .value {
+  font-weight: bold;
+  margin: 0;
+}
+
+.transaction-detail .summary .recap {
+  font-size: 0.9rem;
+}
+
+.transaction-detail .summary .status.active {
+  color: var(--greenblue);
+}
+
+.transaction-detail .summary .status.inactive {
+  color: #ff1a1a;
 }
 
 /* Notifications */
@@ -1636,7 +1715,7 @@ label[for=root_pictures]:hover {
 }
 
 .wallet hr {
-  border-top: 1px solid white;
+  border-top: 1px solid #6f8294;
 }
 
 .wallet a {
@@ -1901,8 +1980,9 @@ footer .footer-links li a {
     top: 0;
   }
 
-  .transaction-detail .counterparty {
-    margin: 0 0 0 30px;
+  .transaction-detail .counterparty,
+  .transaction-detail .summary {
+    margin: 0 0 30px 30px;
   }
 }
 
