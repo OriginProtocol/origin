@@ -1,19 +1,26 @@
 import React from 'react'
 import {
   BrowserRouter as Router,
-  Route
+  Route,
+  Switch,
 } from 'react-router-dom'
 
 // Components
 import ScrollToTop from './scroll-to-top'
 import Layout from './layout'
 import Listings from './listings-grid'
-import ListingDetail from './listing-detail'
 import ListingCreate from './listing-create'
-import Login from './login'
+import ListingDetail from './listing-detail'
+import MyListings from './my-listings'
+import MyPurchases from './my-purchases'
+import Notifications from './notifications'
+import Profile from './profile'
+import TransactionDetail from './transaction-detail'
 import Web3Provider from './web3-provider'
+import 'bootstrap/dist/js/bootstrap'
 
 // CSS
+import 'bootstrap/dist/css/bootstrap.css'
 import '../css/pure-min.css' // TODO (stan): Is this even used?
 import '../css/lato-web.css'
 import '../css/poppins.css'
@@ -21,48 +28,65 @@ import '../css/app.css'
 
 
 const HomePage = (props) => (
-  <Layout {...props}>
-    <div className="container">
-      <Listings />
-    </div>
-  </Layout>
+  <div className="container">
+    <Listings />
+  </div>
 )
 
 const ListingDetailPage = (props) => (
-  <Layout {...props}>
-    <ListingDetail listingId={props.match.params.listingId} />
-  </Layout>
-)
-
-const LoginPage = (props) => (
-    <Layout {...props} hideLoginButton={true}>
-        <div className="container">
-            <Login />
-        </div>
-    </Layout>
+  <ListingDetail listingId={props.match.params.listingId} />
 )
 
 const CreateListingPage = (props) => (
-  <Layout {...props} hideCreateButton={true}>
-    <div className="container">
-      <ListingCreate />
-    </div>
-  </Layout>
+  <div className="container">
+    <ListingCreate />
+  </div>
+)
+
+const MyListingsPage = (props) => (
+  <MyListings />
+)
+
+const MyListingsTransactionPage = (props) => (
+  <TransactionDetail listingId={props.match.params.listingId} perspective="seller" />
+)
+
+const MyPurchasesPage = (props) => (
+  <MyPurchases />
+)
+
+const MyPurchasesTransactionPage = (props) => (
+  <TransactionDetail listingId={props.match.params.listingId} perspective="buyer" />
+)
+
+const NotificationsPage = (props) => (
+  <Notifications />
+)
+
+const ProfilePage = (props) => (
+  <Profile />
 )
 
 // Top level component
 const App = () => (
   <Router>
     <ScrollToTop>
-      <Web3Provider>
-        <div>
-          <Route exact path="/" component={HomePage}/>
-          <Route path="/page/:activePage" component={HomePage}/>
-          <Route path="/listing/:listingId" component={ListingDetailPage}/>
-          <Route path="/create" component={CreateListingPage}/>
-          <Route path="/login" component={LoginPage}/>
-        </div>
-      </Web3Provider>
+      <Layout>
+        <Web3Provider>
+          <Switch>
+            <Route exact path="/" component={HomePage} />
+            <Route path="/page/:activePage" component={HomePage} />
+            <Route path="/listing/:listingId" component={ListingDetailPage} />
+            <Route path="/create" component={CreateListingPage} />
+            <Route path="/my-listings/:listingId" component={MyListingsTransactionPage} />
+            <Route path="/my-listings" component={MyListingsPage} />
+            <Route path="/my-purchases/:listingId" component={MyPurchasesTransactionPage} />
+            <Route path="/my-purchases" component={MyPurchasesPage} />
+            <Route path="/notifications" component={NotificationsPage} />
+            <Route path="/profile" component={ProfilePage} />
+          </Switch>
+        </Web3Provider>
+      </Layout>
     </ScrollToTop>
   </Router>
 )

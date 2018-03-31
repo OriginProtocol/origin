@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { contractService } from '@originprotocol/origin'
+import origin from '@originprotocol/origin'
 
 import Pagination from 'react-js-pagination'
 import { withRouter } from 'react-router'
@@ -13,9 +13,11 @@ class ListingsGrid extends Component {
 
   constructor(props) {
     super(props)
+
     this.state = {
+      contractFound: null,
       listingIds: [],
-      listingsPerPage: 12
+      listingsPerPage: 12,
     }
   }
 
@@ -38,11 +40,14 @@ class ListingsGrid extends Component {
     })
 
     // Get all listings from contract
-    const allListingsPromise = contractService.getAllListingIds()
+    const allListingsPromise = origin.listings.allIds()
+    .then((response) => {
+      this.setState({ contractFound: true })
+      return response
+    })
     .catch((error) => {
       if (error.message.indexOf("(network/artifact mismatch)") > 0) {
-        alertify.alert("The Origin Contract was not found on this network.<br>\n" +
-          "You may need to change networks, or deploy the contract.")
+        this.setState({ contractFound: false })
       }
     })
     // Wait for both to finish
@@ -50,6 +55,7 @@ class ListingsGrid extends Component {
     .then(([hideList, ids]) => {
       // Filter hidden listings
       const showIds = ids ? ids.filter((i)=>hideList.indexOf(i) < 0) : []
+
       this.setState({ listingIds: showIds.reverse() })
     })
     .catch((error) => {
@@ -63,31 +69,45 @@ class ListingsGrid extends Component {
   }
 
   render() {
+    const { contractFound, listingIds, listingsPerPage } = this.state
     const activePage = this.props.match.params.activePage || 1
     // Calc listings to show for given page
-    const showListingsIds = this.state.listingIds.slice(
-      this.state.listingsPerPage * (activePage-1),
-      this.state.listingsPerPage * (activePage))
+    const showListingsIds = listingIds.slice(
+      listingsPerPage * (activePage-1),
+      listingsPerPage * (activePage))
+
     return (
-      <div className="listings-grid">
-        {(this.state.listingIds.length > 0) &&
-          <h1>{this.state.listingIds.length} Listings</h1>
+      <div className="listings-wrapper">
+        {contractFound === false &&
+          <div className="listings-grid">
+            <div className="alert alert-warning" role="alert">
+              The Origin Contract was not found on this network.<br />
+              You may need to change networks, or deploy the contract.
+            </div>
+          </div>
         }
-        <div className="row">
-          {showListingsIds.map(listingId => (
-            <ListingCard listingId={listingId} key={listingId}/>
-          ))}
-        </div>
-        <Pagination
-          activePage={activePage}
-          itemsCountPerPage={this.state.listingsPerPage}
-          totalItemsCount={this.state.listingIds.length}
-          pageRangeDisplayed={5}
-          onChange={this.handlePageChange}
-          itemClass="page-item"
-          linkClass="page-link"
-          hideDisabled="true"
-        />
+        {contractFound &&
+          <div className="listings-grid">
+            {(listingIds.length > 0) &&
+              <h1>{listingIds.length} Listings</h1>
+            }
+            <div className="row">
+              {showListingsIds.map(listingId => (
+                <ListingCard listingId={listingId} key={listingId}/>
+              ))}
+            </div>
+            <Pagination
+              activePage={activePage}
+              itemsCountPerPage={listingsPerPage}
+              totalItemsCount={listingIds.length}
+              pageRangeDisplayed={5}
+              onChange={this.handlePageChange}
+              itemClass="page-item"
+              linkClass="page-link"
+              hideDisabled="true"
+            />
+          </div>
+        }
       </div>
     )
   }
