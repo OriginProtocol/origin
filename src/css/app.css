@@ -1295,6 +1295,79 @@ label[for=root_pictures]:hover {
   margin-right: 0.75rem;
 }
 
+.transaction-detail .counterparty {
+  background-color: var(--dark);
+  border-radius: var(--default-radius);
+  margin-top: 20px;
+}
+
+.transaction-detail .counterparty .identity {
+  padding: 20px;
+}
+
+.transaction-detail .counterparty .identity h3,
+.transaction-detail .counterparty .identity p {
+  color: white;
+}
+
+.transaction-detail .counterparty .identity h3 {
+  font-size: 1.1rem;
+  font-weight: 300;
+  margin-bottom: 20px;
+}
+
+.transaction-detail .counterparty .identity p {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.transaction-detail .counterparty .identity hr {
+  border-color: white;
+}
+
+.transaction-detail .counterparty .identity .d-flex div:last-of-type {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.transaction-detail .counterparty .identity .avatar-container,
+.transaction-detail .counterparty .identity .image-container {
+  height: 50px;
+  margin: 0 10px 0 0;
+  width: 50px;
+}
+
+.transaction-detail .counterparty .identity .image-container img {
+  height: 50px;
+  width: 50px;
+}
+
+.transaction-detail .counterparty .identity .identification {
+  height: auto;
+  padding: 0;
+}
+
+.transaction-detail .counterparty .identity .identification img {
+  height: 20px;
+  margin: 10px 5px 0 0;
+  width: 20px;
+}
+
+.transaction-detail .counterparty .btn {
+  background-color: var(--dark-grey-blue);
+  border-radius: 0 0 var(--default-radius) var(--default-radius);
+  color: white;
+  font-size: 1.1rem;
+  padding: 0.75rem;
+  width: 100%;
+}
+
+.transaction-detail .counterparty .btn:hover {
+  background-color: var(--dark-clear-blue);
+}
+
 /* Notifications */
 
 .notification {
@@ -1481,6 +1554,9 @@ label[for=root_pictures]:hover {
 .profile-wrapper .service.verified {
   background-color: var(--dark-grey-blue);
   border-color: var(--dark-grey-blue);
+}
+
+.profile-wrapper .service.verified p {
   color: white;
 }
 
@@ -1568,6 +1644,7 @@ label[for=root_pictures]:hover {
 }
 
 .wallet p {
+  color: white;
   font-size: 0.9rem;
   margin: 0;
   word-wrap: break-word;
@@ -1822,6 +1899,10 @@ footer .footer-links li a {
 
   .transaction .content-container .status {
     top: 0;
+  }
+
+  .transaction-detail .counterparty {
+    margin: 0 0 0 30px;
   }
 }
 
