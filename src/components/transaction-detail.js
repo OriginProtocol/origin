@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import TransactionProgress from './transaction-progress'
 import data from '../data'
 
@@ -56,6 +57,7 @@ class TransactionDetail extends Component {
     const { listingId, perspective } = this.props
     const listing = data.listings.find(l => l._id === listingId)
     const { buyer, seller, fulfilledAt, receivedAt, soldAt, withdrawnAt } = listing
+    const counterparty = ['buyer', 'seller'].find(str => str !== perspective)
     const maxStep = perspective === 'seller' ? 4 : 3
     let decimal, left, step
 
@@ -101,7 +103,7 @@ class TransactionDetail extends Component {
             </div>
           </div>
           <div className="row">
-            <div className="col-12 col-md-8">
+            <div className="col-12 col-lg-8">
               <h2>Transaction Status</h2>
               <div className="row">
                 <div className="col-6">
@@ -181,16 +183,44 @@ class TransactionDetail extends Component {
                 </tbody>
               </table>
             </div>
-            <div className="col-12 col-md-4">
-              {/* About the buyer */}
+            <div className="col-12 col-lg-4">
+              <div className="counterparty">
+                <div className="identity">
+                  <h3>About the {counterparty}</h3>
+                  <div className="d-flex">
+                    <div className="image-container">
+                      <Link to="/profile">
+                        <img src="/images/identicon.png"
+                          srcSet="/images/identicon@2x.png 2x, /images/identicon@3x.png 3x"
+                          alt="wallet icon" />
+                      </Link>
+                    </div>
+                    <div>
+                      <p>ETH Address:</p>
+                      <p><strong>{listing[counterparty].address}</strong></p>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className="d-flex">
+                    <div className="avatar-container">
+                      <img src="/images/avatar-blue.svg" alt="avatar" />
+                    </div>
+                    <div className="identification">
+                      <p>Aure Gimon</p>
+                      <img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" />
+                    </div>
+                  </div>
+                </div>
+                <a href="/#" className="btn" onClick={() => alert('To Do')}>View Profile</a>
+              </div>
             </div>
           </div>
           <hr />
           <div className="row">
-            <div className="col-12 col-md-8">
+            <div className="col-12 col-lg-8">
               {/* Listing Details */}
             </div>
-            <div className="col-12 col-md-4">
+            <div className="col-12 col-lg-4">
               {/* Status */}
             </div>
           </div>
