@@ -19,24 +19,11 @@ class ListingCard extends Component {
     }
   }
 
-<<<<<<< HEAD
   async componentDidMount() {
     try {
       const listing = await origin.listings.getByIndex(this.props.listingId)
       this.setState(listing)
     } catch (error) {
-=======
-  componentDidMount() {
-    contractService.getListing(this.props.listingId)
-    .then((listingContractObject) => {
-      this.setState(listingContractObject)
-      return ipfsService.getFile(this.state.ipfsHash)
-    })
-    .then((listingJson) => {
-      this.setState(listingJson.data)
-    })
-    .catch((error) => {
->>>>>>> origin/ui
       console.error(`Error fetching contract or IPFS info for listingId: ${this.props.listingId}`)
     }
   }
