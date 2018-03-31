@@ -10,7 +10,7 @@ module.exports = {
     const contractData = await this.origin.contractService.getListing(
       listingIndex
     );
-    const ipfsData = await this.origin.ipfsService.getListing(
+    const ipfsData = await this.origin.ipfsService.getFile(
       contractData.ipfsHash
     );
     // ipfsService should have already checked the contents match the hash,

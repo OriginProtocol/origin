@@ -11,10 +11,8 @@ describe("Listing Resource", () => {
   });
 
   it("should get all listing ids", async () => {
-    console.log("b");
     const ids = await origin.listings.allIds();
-    console.log("a");
-    expect(ids.length).to.equal(5);
+    expect(ids.length).to.be.greaterThan(4);
   });
 
   it("should get a listing", async () => {
