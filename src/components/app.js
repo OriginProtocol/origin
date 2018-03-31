@@ -1,7 +1,8 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import {
   BrowserRouter as Router,
-  Route
+  Route,
+  Switch,
 } from 'react-router-dom'
 
 // Components
@@ -14,6 +15,7 @@ import MyListings from './my-listings'
 import MyPurchases from './my-purchases'
 import Notifications from './notifications'
 import Profile from './profile'
+import TransactionDetail from './transaction-detail'
 import Web3Provider from './web3-provider'
 import 'bootstrap/dist/js/bootstrap'
 
@@ -45,8 +47,16 @@ const MyListingsPage = (props) => (
   <MyListings />
 )
 
+const MyListingsTransactionPage = (props) => (
+  <TransactionDetail listingId={props.match.params.listingId} perspective="seller" />
+)
+
 const MyPurchasesPage = (props) => (
   <MyPurchases />
+)
+
+const MyPurchasesTransactionPage = (props) => (
+  <TransactionDetail listingId={props.match.params.listingId} perspective="buyer" />
 )
 
 const NotificationsPage = (props) => (
@@ -63,16 +73,18 @@ const App = () => (
     <ScrollToTop>
       <Layout>
         <Web3Provider>
-          <Fragment>
+          <Switch>
             <Route exact path="/" component={HomePage} />
             <Route path="/page/:activePage" component={HomePage} />
             <Route path="/listing/:listingId" component={ListingDetailPage} />
             <Route path="/create" component={CreateListingPage} />
+            <Route path="/my-listings/:listingId" component={MyListingsTransactionPage} />
             <Route path="/my-listings" component={MyListingsPage} />
+            <Route path="/my-purchases/:listingId" component={MyPurchasesTransactionPage} />
             <Route path="/my-purchases" component={MyPurchasesPage} />
             <Route path="/notifications" component={NotificationsPage} />
             <Route path="/profile" component={ProfilePage} />
-          </Fragment>
+          </Switch>
         </Web3Provider>
       </Layout>
     </ScrollToTop>

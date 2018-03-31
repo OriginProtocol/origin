@@ -4,13 +4,22 @@ export default {
   listings: [
     {
       _id: '1foo2',
-      active: true,
+      active: false,
       category: 'Antiques',
       title: 'Title Here and Can Be Long like this',
       createdAt: moment('2018-03-13').toDate(),
       soldAt: moment('2018-03-14').toDate(),
       fulfilledAt: moment('2018-03-15').toDate(),
       receivedAt: moment('2018-03-16').toDate(),
+      withdrawnAt: null,
+      buyer: {
+        name: 'Matt L.',
+        address: '0x34Be343B94f860124dC4fEe278FDCBD38C102D88',
+      },
+      seller: {
+        name: 'Aure G.',
+        address: '0x12Be343B94f860124dC4fEe278FDCBD38C102D88',
+      },
     },
     {
       _id: '3bar4',
@@ -18,9 +27,18 @@ export default {
       category: 'Cars & Trucks',
       title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
       createdAt: moment('2018-03-13').toDate(),
-      soldAt: null,
-      fulfilledAt: null,
+      soldAt: moment('2018-03-14').toDate(),
+      fulfilledAt: moment('2018-03-15').toDate(),
       receivedAt: null,
+      withdrawnAt: null,
+      buyer: {
+        name: 'Matt L.',
+        address: '0x34Be343B94f860124dC4fEe278FDCBD38C102D88',
+      },
+      seller: {
+        name: 'Aure G.',
+        address: '0x12Be343B94f860124dC4fEe278FDCBD38C102D88',
+      },
     },
     {
       _id: '5baz6',
@@ -31,6 +49,34 @@ export default {
       soldAt: moment('2018-03-14').toDate(),
       fulfilledAt: null,
       receivedAt: null,
+      withdrawnAt: null,
+      buyer: {
+        name: 'Matt L.',
+        address: '0x34Be343B94f860124dC4fEe278FDCBD38C102D88',
+      },
+      seller: {
+        name: 'Aure G.',
+        address: '0x12Be343B94f860124dC4fEe278FDCBD38C102D88',
+      },
+    },
+    {
+      _id: '7qux8',
+      active: true,
+      category: 'Dog Walking',
+      title: 'Ut enim ad minim veniam',
+      createdAt: moment('2018-03-13').toDate(),
+      soldAt: null,
+      fulfilledAt: null,
+      receivedAt: null,
+      withdrawnAt: null,
+      buyer: {
+        name: 'Matt L.',
+        address: '0x34Be343B94f860124dC4fEe278FDCBD38C102D88',
+      },
+      seller: {
+        name: 'Aure G.',
+        address: '0x12Be343B94f860124dC4fEe278FDCBD38C102D88',
+      },
     },
   ],
   notifications: [
@@ -67,26 +113,6 @@ export default {
       address: '0x78Be343B94f860124dC4fEe278FDCBD38C102D88',
       readAt: new Date(),
       role: 'buy',
-    },
-  ],
-  purchases: [
-    {
-      _id: '1foo2',
-      category: 'Antiques',
-      title: 'Title Here and Can Be Long like this',
-      createdAt: moment('2018-03-13').toDate(),
-      soldAt: moment('2018-03-14').toDate(),
-      fulfilledAt: moment('2018-03-15').toDate(),
-      receivedAt: null,
-    },
-    {
-      _id: '3bar4',
-      category: 'Cars & Trucks',
-      title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-      createdAt: moment('2018-03-13').toDate(),
-      soldAt: moment('2018-03-14').toDate(),
-      fulfilledAt: null,
-      receivedAt: null,
     },
   ],
 }

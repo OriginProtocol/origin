@@ -1,22 +1,7 @@
 @import 'alertify.css';
+@import 'variables.css';
+@import 'bootstrap.css';
 @import 'https://hosted-sip.civic.com/css/civic-modal.min.css';
-
-:root {
-  --default-font: 'Lato', 'Helvetica Neue', 'Arial', sans-serif;
-  --heading-font: 'Poppins', 'Helvetica Neue', 'Arial', sans-serif;
-  --dark: #111d28;
-  --light: #c2cbd3;
-  --clear-blue: #1a82ff;
-  --dark-grey-blue: #2e3f53;
-  --dark-clear-blue: #0169e6;
-  --dark-grey: #282727;
-  --pale-grey: #ebf0f3;
-  --dusk: #455d75;
-  --greenblue: #26d198;
-  --light-greenblue: #59ffcb;
-  --bluish-purple: #6e3bea;
-  --default-radius: 5px;
-}
 
 html {
   height: 100%;
@@ -48,8 +33,19 @@ main {
 
 h1, h2, h3 {
   color: var(--dark);
-  font-weight: 200;
   font-family: var(--heading-font);
+}
+
+h1 {
+  font-weight: 200;
+}
+
+h2 {
+  font-weight: 300;
+}
+
+h2 {
+  font-weight: 400;
 }
 
 fieldset {
@@ -70,6 +66,7 @@ h3 {
 }
 
 p {
+  color: var(--dark);
   font-size: 1.125rem;
   margin: 20px auto;
 }
@@ -117,6 +114,114 @@ a:hover {
 
 .filters .list-group-item.active:hover {
   color: white;
+}
+
+/* Avatar */
+
+.avatar-container {
+  position: relative;
+  background-color: var(--dark-grey-blue);
+  border-radius: var(--default-radius);
+  height: 40px;
+  margin-right: 15px;
+  width: 40px;
+}
+
+.avatar-container img {
+  bottom: 0;
+  left: 20%;
+  width: 60%;
+  position: absolute;
+}
+
+.avatar-container .circle {
+  position: absolute;
+  border-radius: 50%;
+  bottom: -8px;
+  height: 25px;
+  right: -10px;
+  text-align: center;
+  vertical-align: middle;
+  width: 25px;
+
+  background-image: url(/images/arrow.svg);
+  background-position: 40%;
+  background-repeat: no-repeat;
+}
+
+.avatar-container .circle.buy {
+  background-color: var(--greenblue);
+  transform: rotate(180deg);
+}
+
+.avatar-container .circle.sell {
+  background-color: var(--bluish-purple);
+}
+
+/* Progress */
+
+.progress-container {
+  position: relative;
+  margin: 20px 0;
+}
+
+.progress {
+  background-color: var(--light);
+  border-radius: 3px;
+  height: 6px;
+  margin: 0 10px;
+}
+
+.progress-bar {
+  background-color: var(--greenblue);
+
+  transition: width 1s;
+}
+
+.progress-container .circles {
+  position: absolute;
+  top: -7px;
+  width: 100%;
+}
+
+.progress-circle {
+  background-color: var(--light);
+  border-radius: 50%;
+  height: 20px;
+  text-align: center;
+  vertical-align: middle;
+  width: 20px;
+  z-index: 11;
+
+  transition: opacity 200ms linear 800ms;
+}
+
+.progress-circle.checked {
+  background-color: var(--greenblue);
+  background-image: url(/images/checkmark-white.svg);
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+
+.progress-container .progress-circle {
+  opacity: 0;
+}
+
+.progress-container.ready .progress-circle {
+  opacity: 1;
+}
+
+.progress-container .labels div {
+  width: 20px;
+}
+
+.progress-container .labels p {
+  color: var(--dusk);
+  font-size: 0.8rem;
+  font-weight: normal;
+  margin-left: -100%;
+  margin-right: -100%;
+  text-align: center;
 }
 
 /* Navbar */
@@ -322,18 +427,6 @@ a:hover {
   border-radius: 0;
 }
 
-.navbar .dropdown-menu .avatar-container {
-  position: relative;
-  border-radius: var(--default-radius);
-}
-
-.navbar .dropdown-menu .avatar-container img {
-  bottom: 0;
-  left: 20%;
-  width: 60%;
-  position: absolute;
-}
-
 .navbar .identity .dropdown-menu {
   width: 300px;
 }
@@ -522,10 +615,6 @@ a:hover {
   color: var(--clear-blue);
 }
 
-.avatar-container {
-  background-color: var(--dark-grey-blue);
-}
-
 /* Modal */
 
 .modal-backdrop {
@@ -660,7 +749,6 @@ a:hover {
 
 .listing-card .price {
   line-height: 1.4;
-  color: var(--dark);
 }
 
 .listing-card .photo {
@@ -919,31 +1007,31 @@ label[for=root_pictures]:hover {
   border: solid 1px var(--light);
 }
 
-/* My Listings */
+/* Transactions */
 
-.my-listing {
+.transaction {
   position: relative;
   margin-bottom: 30px;
 }
 
-.my-listing .card-body {
+.transaction .card-body {
   padding: 10px;
 }
 
-.my-listing .image-container {
+.transaction .image-container {
   position: relative;
   flex-basis: 360px;
   max-width: 100%;
 }
 
-.my-listing .image-container::after {
+.transaction .image-container::after {
   content: '';
   display: block;
   padding-bottom: 66.67%;
   height: 0;
 }
 
-.my-listing .image-container img {
+.transaction .image-container img {
   position: absolute;
   background-color: var(--light);
   height: 100%;
@@ -952,13 +1040,13 @@ label[for=root_pictures]:hover {
   width: 100%;
 }
 
-.my-listing .content-container {
+.transaction .content-container {
   position: relative;
   flex-basis: calc(100% - 360px);
   padding: 10px 0 0;
 }
 
-.my-listing .content-container .status {
+.transaction .content-container .status {
   position: absolute;
   font-size: 0.8rem;
   font-weight: 900;
@@ -967,15 +1055,15 @@ label[for=root_pictures]:hover {
   text-transform: uppercase;
 }
 
-.my-listing .content-container .status.active {
+.transaction .content-container .status.active {
   color: var(--greenblue);
 }
 
-.my-listing .content-container .status.inactive {
+.transaction .content-container .status.inactive {
   color: #ff1a1a;
 }
 
-.my-listing .content-container .category {
+.transaction .content-container .category {
   color: var(--dusk);
   font-size: 0.8rem;
   font-weight: normal;
@@ -984,8 +1072,7 @@ label[for=root_pictures]:hover {
   text-transform: uppercase;
 }
 
-.my-listing .content-container .title {
-  color: var(--dark);
+.transaction .content-container .title {
   font-family: var(--heading-font);
   font-size: 1.5rem;
   font-weight: 300;
@@ -993,127 +1080,292 @@ label[for=root_pictures]:hover {
   padding-top: 10px;
 }
 
-.my-listing .content-container .price {
-  color: var(--dark);
+.transaction .content-container .price {
   flex-grow: 1;
   font-weight: 300;
   margin: 0;
   padding-top: 10px;
 }
 
-.my-listing .content-container .timestamp {
+.transaction .content-container .timestamp {
   color: var(--dusk);
   font-size: 0.8rem;
   font-weight: 300;
   margin: 0;
+  opacity: 0;
   padding-top: calc(10px + 0.3rem);
+
+  transition: opacity 200ms linear 800ms;
 }
 
-.my-listing .content-container .price .sold-banner {
+.transaction.ready .content-container .timestamp {
+  opacity: 1;
+}
+
+.transaction .content-container .price .sold-banner {
   line-height: 1.4;
 }
 
-.my-listing .content-container .timeline {
-  position: relative;
-  margin: 20px 0;
+.transaction .content-container .progress-container .labels p {
+  white-space: nowrap;
 }
 
-.my-listing .content-container .timeline .line {
-  position: relative;
-  background-color: var(--light);
-  border-radius: 3px;
-  height: 6px;
-  width: 100%;
+.transaction .content-container .progress-container .labels div:first-of-type p,
+.transaction .content-container .progress-container .labels div:last-of-type p {
+  margin-left: 0;
+  margin-right: 0;
+  word-wrap: normal;
 }
 
-@keyframes fill-all {
-  from { width: 0; }
-  to { width: 100%; }
+.transaction .content-container .progress-container .labels div:last-of-type p {
+  direction: rtl;
 }
 
-@keyframes fill-half {
-  from { width: 0; }
-  to { width: 50%; }
-}
-
-.my-listing .content-container .timeline .fill {
-  position: absolute;
-  background: var(--greenblue);
-  top: 0;
-  width: 0;
-  z-index: 10;
-}
-
-.my-listing .content-container .timeline .fill.half {
-  animation: fill-half 1s 1s forwards;
-}
-
-.my-listing .content-container .timeline .fill.all {
-  animation: fill-all 1s 1s forwards;
-}
-
-.my-listing .content-container .timeline .circle {
-  position: absolute;
-  background-color: var(--light);
-  border-radius: 50%;
-  bottom: -7px;
-  height: 20px;
-  left: calc(50% - 10px);
-  text-align: center;
-  vertical-align: middle;
-  width: 20px;
-  z-index: 11;
-}
-
-.my-listing .content-container .timeline .circle:first-of-type {
-  left: 0;
-}
-
-.my-listing .content-container .timeline .circle:last-of-type {
-  left: unset;
-  right: 0;
-}
-
-.my-listing .content-container .timeline .circle.checked {
-  background-color: var(--greenblue);
-  background-image: url(/images/checkmark-white.svg);
-  background-repeat: no-repeat;
-  background-position: 50%;
-}
-
-.my-listing .content-container .timeline .labels p {
-  color: var(--dusk);
-  flex-basis: 33%;
-  font-size: 0.8rem;
-}
-
-.my-listing .content-container .actions {
+.transaction .content-container .actions {
   margin-top: auto;
 }
 
-.my-listing .content-container .actions a {
+.transaction .content-container .actions a {
   font-size: 0.8rem;
   font-weight: normal;
 }
 
-.my-listing .content-container .actions .links-container a {
+.transaction .content-container .actions .links-container a {
   color: var(--clear-blue);
   margin-right: 1rem;
 }
 
-.my-listing .content-container .actions .links-container .warning {
+.transaction .content-container .actions .links-container .warning {
   color: #ff1a1a;
 }
 
-.my-listing .content-container .actions .button-container {
+.transaction .content-container .actions .button-container {
   margin-left: auto;
 }
 
-.my-listing .content-container .actions .button-container .btn {
+.transaction .content-container .actions .button-container .btn {
   color: white;
   font-weight: 900;
   padding: 0.25rem 1.5rem;
   width: unset;
+}
+
+.transaction-detail .brdcrmb {
+  color: var(--dusk);
+  font-size: 0.9rem;
+  font-weight: normal;
+  margin: 40px auto 0;
+  text-transform: uppercase;
+}
+
+.transaction-detail .brdcrmb .badge {
+  margin: 0 0.8rem;
+  vertical-align: 2px;
+}
+
+.transaction-detail h1 {
+  margin: 0.5rem auto 2rem;
+}
+
+.transaction-detail h2 {
+  margin: 0 auto 1rem;
+}
+
+.transaction-detail .avatar-container {
+  flex-shrink: 0;
+  height: 60px;
+  margin: 0;
+  width: 60px;
+}
+
+.transaction-detail .identification {
+  height: 60px;
+  padding: 0 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.transaction-detail .identification p {
+  flex-basis: 33%;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.transaction-detail .identification .badge {
+  font-size: 0.6rem;
+}
+
+.transaction-detail .identification p:first-of-type {
+  line-height: 0.6rem;
+}
+
+.transaction-detail .identification .name {
+  font-weight: bold;
+}
+
+.transaction-detail .identification .address {
+  color: #6f8294;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.transaction-detail .progress-container {
+  margin: 20px;
+}
+
+.transaction-detail .guidance {
+  position: relative;
+  border: 2px solid var(--dark);
+  border-radius: var(--default-radius);
+  margin-bottom: 30px;
+  padding: 30px;
+}
+
+.transaction-detail .guidance .triangle {
+  position: absolute;
+  border: solid transparent;
+  bottom: 100%;
+  content: '';
+  height: 0;
+  pointer-events: none;
+  width: 0;
+
+  transition: left 200ms linear 800ms;
+}
+
+.transaction-detail .guidance .triangle:first-of-type {
+  border-color: rgba(0, 0, 0, 0);
+  border-bottom-color: var(--dark);
+  border-width: 13px;
+  margin-left: -13px;
+}
+
+.transaction-detail .guidance .triangle:last-of-type {
+  border-color: rgba(255, 255, 255, 0);
+  border-bottom-color: white;
+  border-width: 10px;
+  margin-left: -10px;
+}
+
+.transaction-detail .guidance p {
+  margin: 0;
+}
+
+.transaction-detail .guidance .prompt {
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+.transaction-detail .guidance .instruction {
+  font-size: 0.9rem;
+}
+
+.transaction-detail .guidance button {
+  font-size: 1.1rem;
+  font-weight: 900;
+  margin-top: 10px;
+  width: auto;
+}
+
+.transaction-detail .table {
+  font-size: 0.9rem;
+  table-layout: fixed;
+}
+
+.transaction-detail .table th,
+.transaction-detail .table td {
+  border: none;
+  padding: 0.75rem;
+}
+
+.transaction-detail .table th {
+  font-weight: normal;
+}
+
+.transaction-detail .table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 25%;
+}
+
+.transaction-detail .table td .progress-circle {
+  display: inline-block;
+  margin-right: 0.75rem;
+}
+
+.transaction-detail .counterparty {
+  background-color: var(--dark);
+  border-radius: var(--default-radius);
+  margin-top: 20px;
+}
+
+.transaction-detail .counterparty .identity {
+  padding: 20px;
+}
+
+.transaction-detail .counterparty .identity h3,
+.transaction-detail .counterparty .identity p {
+  color: white;
+}
+
+.transaction-detail .counterparty .identity h3 {
+  font-size: 1.1rem;
+  font-weight: 300;
+  margin-bottom: 20px;
+}
+
+.transaction-detail .counterparty .identity p {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.transaction-detail .counterparty .identity hr {
+  border-color: white;
+}
+
+.transaction-detail .counterparty .identity .d-flex div:last-of-type {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.transaction-detail .counterparty .identity .avatar-container,
+.transaction-detail .counterparty .identity .image-container {
+  height: 50px;
+  margin: 0 10px 0 0;
+  width: 50px;
+}
+
+.transaction-detail .counterparty .identity .image-container img {
+  height: 50px;
+  width: 50px;
+}
+
+.transaction-detail .counterparty .identity .identification {
+  height: auto;
+  padding: 0;
+}
+
+.transaction-detail .counterparty .identity .identification img {
+  height: 20px;
+  margin: 10px 5px 0 0;
+  width: 20px;
+}
+
+.transaction-detail .counterparty .btn {
+  background-color: var(--dark-grey-blue);
+  border-radius: 0 0 var(--default-radius) var(--default-radius);
+  color: white;
+  font-size: 1.1rem;
+  padding: 0.75rem;
+  width: 100%;
+}
+
+.transaction-detail .counterparty .btn:hover {
+  background-color: var(--dark-clear-blue);
 }
 
 /* Notifications */
@@ -1134,36 +1386,6 @@ label[for=root_pictures]:hover {
 .notification .address {
   color: #6f8294;
   font-size: 0.8rem;
-}
-
-.notification .avatar-container {
-  height: 40px;
-  margin-right: 15px;
-  width: 40px;
-}
-
-.notification .avatar-container .circle {
-  position: absolute;
-  border-radius: 50%;
-  bottom: -8px;
-  height: 25px;
-  right: -10px;
-  text-align: center;
-  vertical-align: middle;
-  width: 25px;
-
-  background-image: url(/images/arrow.svg);
-  background-position: 40%;
-  background-repeat: no-repeat;
-}
-
-.notification .avatar-container .circle.buy {
-  background-color: var(--greenblue);
-  transform: rotate(180deg);
-}
-
-.notification .avatar-container .circle.sell {
-  background-color: var(--bluish-purple);
 }
 
 .notification .content-container {
@@ -1332,6 +1554,9 @@ label[for=root_pictures]:hover {
 .profile-wrapper .service.verified {
   background-color: var(--dark-grey-blue);
   border-color: var(--dark-grey-blue);
+}
+
+.profile-wrapper .service.verified p {
   color: white;
 }
 
@@ -1419,6 +1644,7 @@ label[for=root_pictures]:hover {
 }
 
 .wallet p {
+  color: white;
   font-size: 0.9rem;
   margin: 0;
   word-wrap: break-word;
@@ -1667,12 +1893,16 @@ footer .footer-links li a {
     top: calc(-2.0rem * 1.2 - 15px * 2);
   }
 
-  .my-listing .content-container {
+  .transaction .content-container {
     padding: 0 10px 0 20px;
   }
 
-  .my-listing .content-container .status {
+  .transaction .content-container .status {
     top: 0;
+  }
+
+  .transaction-detail .counterparty {
+    margin: 0 0 0 30px;
   }
 }
 
