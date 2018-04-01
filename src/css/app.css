@@ -102,7 +102,7 @@ a:hover {
   border: none;
   border-radius: 0.25rem;
   cursor: pointer;
-  font-size: 1.1rem;
+  font-size: 1.125rem;
   padding: 0.75rem 1.5rem;
 }
 
@@ -626,7 +626,7 @@ a:hover {
   border: none;
   border-radius: 10px;
   color: white;
-  font-size: 1.1rem;
+  font-size: 1.125rem;
   font-weight: normal;
   padding: 30px 15px;
   text-align: center;
@@ -654,7 +654,7 @@ a:hover {
   background-color: #213040;
   border: none;
   color: white;
-  font-size: 1.1rem;
+  font-size: 1.125rem;
   margin: 0 auto 10px;
 }
 
@@ -1171,6 +1171,10 @@ label[for=root_pictures]:hover {
   margin: 0 auto 1rem;
 }
 
+.transaction-detail hr {
+  margin: 30px 0;
+}
+
 .transaction-detail .avatar-container {
   flex-shrink: 0;
   height: 60px;
@@ -1261,8 +1265,8 @@ label[for=root_pictures]:hover {
   font-size: 0.9rem;
 }
 
-.transaction-detail .guidance button {
-  font-size: 1.1rem;
+.transaction-detail button {
+  font-size: 1.125rem;
   font-weight: 900;
   margin-top: 10px;
   width: auto;
@@ -1270,6 +1274,7 @@ label[for=root_pictures]:hover {
 
 .transaction-detail .table {
   font-size: 0.9rem;
+  margin-bottom: 0;
   table-layout: fixed;
 }
 
@@ -1312,7 +1317,7 @@ label[for=root_pictures]:hover {
 }
 
 .transaction-detail .counterparty .identity h3 {
-  font-size: 1.1rem;
+  font-size: 1.125rem;
   font-weight: 300;
   margin-bottom: 20px;
 }
@@ -1326,6 +1331,7 @@ label[for=root_pictures]:hover {
 
 .transaction-detail .counterparty .identity hr {
   border-color: #6f8294;
+  margin: 20px 0;
 }
 
 .transaction-detail .counterparty .identity .d-flex div:last-of-type {
@@ -1360,7 +1366,7 @@ label[for=root_pictures]:hover {
   background-color: var(--dark-grey-blue);
   border-radius: 0 0 var(--default-radius) var(--default-radius);
   color: white;
-  font-size: 1.1rem;
+  font-size: 1.125rem;
   padding: 0.75rem;
   width: 100%;
 }
@@ -1377,11 +1383,12 @@ label[for=root_pictures]:hover {
 
 .transaction-detail .summary hr {
   border-top: 1px solid #6f8294;
+  margin: 20px 0;
 }
 
 .transaction-detail .summary p {
   color: white;
-  font-size: 1.1rem;
+  font-size: 1.125rem;
   margin: 0;
 }
 
@@ -1445,6 +1452,80 @@ label[for=root_pictures]:hover {
 
 .transaction-detail .summary .status.inactive {
   color: #ff1a1a;
+}
+
+.transaction-detail .carousel {
+  height: 156px;
+}
+
+.transaction-detail .availability,
+.transaction-detail .category,
+.transaction-detail .ipfs-hash {
+  color: #6f8294;
+  margin: 0;
+}
+
+.transaction-detail .ipfs-link {
+  font-weight: normal;
+  margin-top: 20px;
+}
+
+.transaction-detail .review-count {
+  color: #98a7b4;
+}
+
+.transaction-detail form {
+  margin-bottom: 30px;
+}
+
+.transaction-detail .form-group {
+  margin-bottom: 10px;
+}
+
+.transaction-detail label,
+.transaction-detail textarea {
+  font-size: 1.125rem;
+  font-weight: normal;
+}
+
+.transaction-detail textarea {
+  height: auto;
+}
+
+.transaction-detail textarea::placeholder {
+  color: #98a7b4;
+}
+
+.transaction-detail .reviews {
+  margin-bottom: 30px;
+}
+
+.transaction-detail .review {
+  margin-bottom: 30px;
+}
+
+.transaction-detail .review .identification {
+  flex-grow: 1;
+}
+
+.transaction-detail .review .identification p:first-of-type {
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+
+.transaction-detail .review .score .age {
+  color: #6f8294;
+  font-size: 1.125rem;
+  margin: 0;
+}
+
+.transaction-detail .review .content {
+  margin-top: 20px;
+}
+
+.transaction-detail .reviews a {
+  font-size: 1.125rem;
+  font-weight: normal;
 }
 
 /* Notifications */
@@ -1651,7 +1732,7 @@ label[for=root_pictures]:hover {
 
 .profile-wrapper .service p {
   flex-grow: 1;
-  font-size: 1.1rem;
+  font-size: 1.125rem;
   margin: 0;
   padding-left: 10px;
 }

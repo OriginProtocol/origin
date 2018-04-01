@@ -4,6 +4,8 @@ import moment from 'moment'
 import TransactionProgress from './transaction-progress'
 import data from '../data'
 
+import origin from '@originprotocol/origin' 
+
 // step 0 was creating the listing
 // nextSteps[0] equates to step 1, etc
 // even-numbered steps are up to seller
@@ -57,7 +59,7 @@ class TransactionDetail extends Component {
   render() {
     const { listingId, perspective } = this.props
     const listing = data.listings.find(l => l._id === listingId)
-    const { active, buyer, seller, fulfilledAt, price, receivedAt, soldAt, withdrawnAt } = listing
+    const { active, buyer, category, seller, fulfilledAt, pictures, price, receivedAt, soldAt, withdrawnAt } = listing
     const counterparty = ['buyer', 'seller'].find(str => str !== perspective)
     const status = active ? 'active' : 'inactive'
     const maxStep = perspective === 'seller' ? 4 : 3
@@ -221,6 +223,70 @@ class TransactionDetail extends Component {
           <div className="row">
             <div className="col-12 col-lg-8">
               <h2>Listing Details</h2>
+              {!!pictures.length &&
+                <div className="carousel">
+                  {pictures.map(pictureUrl => (
+                    <div className="photo" key={pictureUrl}>
+                      <img src={pictureUrl} role='presentation' />
+                    </div>
+                  ))}
+                </div>
+              }
+              <p className="description">Look at these little dudes! Aren’t they just the best?? You get two super fashionable and stylish baby chickens that you can bring to your next party and get the whole crew excited. These baby chickens know how to party and they’re super classy. No matter how fancy the venue, these little guys won’t dissapoint.</p>
+              <p className="category">Category: {category}</p>
+              <p className="availability">2 units available</p>
+              <p className="ipfs-hash">IPFS Hash: frr34rijwoeij39eu0eijwoiejdwioec93idwp</p>
+              <p className="ipfs-link">
+                <a href={origin.ipfsService.gatewayUrlForHash('frr34rijwoeij39eu0eijwoiejdwioec93idwp')} target="_blank">
+                  View on IPFS <big>&rsaquo;</big>
+                </a>
+              </p>
+              <hr />
+              <h2>Reviews <span className="review-count">57</span></h2>
+              <form>
+                <div className="form-group">
+                  <label htmlFor="review">Write a review</label>
+                  <textarea rows="4" id="review" className="form-control" placeholder="Tell us a bit about your purchase"></textarea>
+                </div>
+                <div className="button-container text-right">
+                  <button type="submit" className="btn btn-primary" onClick={() => alert('To Do')}>Submit</button>
+                </div>
+              </form>
+              <div className="reviews">
+                <div className="review">
+                  <div className="d-flex">
+                    <div className="avatar-container">
+                      <img src="/images/avatar-purple.svg" alt="reviewer avatar" />
+                    </div>
+                    <div className="identification d-flex flex-column justify-content-center">
+                      <p className="name">Stan J.</p>
+                      <p className="address">0x32Be343B94f860124dC4fEe278FDCBD38C102D88</p>
+                    </div>
+                    <div className="score d-flex flex-column justify-content-center text-right">
+                      <div className="stars">stars</div>
+                      <p className="age">2d</p>
+                    </div>
+                  </div>
+                  <p className="content">These chicks are HOT! I mean, ever since I got my baby chicken in the mail it’s been non-stop phone calls from all my friends and neighbors and family. Everyone wants a piece of me now. I used to be quite the anti-social but, honestly, I think these baby chickens are just the boost my social life needed. Lovin’ life!</p>
+                </div>
+                <div className="review">
+                  <div className="d-flex">
+                    <div className="avatar-container">
+                      <img src="/images/avatar-blue.svg" alt="reviewer avatar" />
+                    </div>
+                    <div className="identification d-flex flex-column justify-content-center">
+                      <p className="name">Matt L.</p>
+                      <p className="address">0x32Be343B94f860124dC4fEe278FDCBD38C102D88</p>
+                    </div>
+                    <div className="score d-flex flex-column justify-content-center text-right">
+                      <div className="stars">stars</div>
+                      <p className="age">2d</p>
+                    </div>
+                  </div>
+                  <p className="content">I must admit I’ve always had a thing for baby chickens. I think it goes back to my childhood. Growing up all I ever really had access to were regular baby chickens so you can imagine when I saw this listing I totally flipped! I mean, how cute are these little guys?? I would highly recommend you purchase one for yourself and see what all the fuss is about.</p>
+                </div>
+                <a href="#" className="reviews-link" onClick={() => alert('To Do')}>Read More &or;</a>
+              </div>
             </div>
             <div className="col-12 col-lg-4">
               {soldAt &&
