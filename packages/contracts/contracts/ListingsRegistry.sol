@@ -19,7 +19,7 @@ contract ListingsRegistry {
    */
 
   // Contract owner
-  address public owner_address;
+  address public owner;
 
   // Array of all listings
   Listing[] public listings;
@@ -35,7 +35,7 @@ contract ListingsRegistry {
 
 
   modifier isOwner() {
-    require (msg.sender == owner_address);
+    require (msg.sender == owner);
     _;
   }
 
@@ -48,7 +48,7 @@ contract ListingsRegistry {
     public
   {
     // Defines origin admin address - may be removed for public deployment
-    owner_address = msg.sender;
+    owner = msg.sender;
 
     // Sample Listings - May be removed for public deployment
     testingAddSampleListings();

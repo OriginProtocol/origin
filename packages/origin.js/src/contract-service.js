@@ -1,4 +1,5 @@
 import ListingsRegistryContract from '../../contracts/build/contracts/ListingsRegistry.json'
+import ListingContract from '../../contracts/build/contracts/Listing.json'
 import UserRegistryContract from '../../contracts/build/contracts/UserRegistry.json'
 import bs58 from 'bs58'
 import contract from 'truffle-contract'
@@ -7,6 +8,7 @@ import promisify from 'util.promisify'
 class ContractService {
   constructor() {
     this.listingsRegistryContract = contract(ListingsRegistryContract)
+    this.listingContract = contract(ListingContract)
     this.userRegistryContract = contract(UserRegistryContract)
   }
 
@@ -75,6 +77,7 @@ class ContractService {
     try {
       listingsLength = await instance.listingsLength.call()
     } catch (error) {
+      console.log(error)
       console.log(`Can't get number of listings.`)
       throw error
     }
@@ -100,6 +103,7 @@ class ContractService {
     // Address of Listing contract is in: listing[0]
     const listingObject = {
       index: listingId,
+      address: listing[0],
       lister: listing[1],
       ipfsHash: this.getIpfsHashFromBytes32(listing[2]),
       price: window.web3.fromWei(listing[3], 'ether').toNumber(),
@@ -108,62 +112,27 @@ class ContractService {
     return listingObject
   }
 
-  async buyListing(listingIndex, unitsToBuy, ethToGive) {
-    console.log('request to buy index #' + listingIndex + ', of this many untes ' + unitsToBuy + ' units. Total eth to send:' + ethToGive)
+  async buyListing(listingAddress, unitsToBuy, ethToGive) {
+    // TODO: Shouldn't we be passing wei to this function, not eth?
+    console.log('request to buy listing ' + listingAddress + ', for this many units ' + unitsToBuy + ' units. Total eth to send:' + ethToGive)
 
     const { currentProvider, eth } = window.web3;
-    this.listingsRegistryContract.setProvider(currentProvider)
+    this.listingContract.setProvider(currentProvider)
 
     const accounts = await promisify(eth.getAccounts.bind(eth))()
-    const instance = await this.listingsRegistryContract.deployed()
-
+    const listing = await this.listingContract.at(listingAddress)
     const weiToGive = window.web3.toWei(ethToGive, 'ether')
-    // Buy it for real
-    const transactionReceipt = await instance.buyListing(
-      listingIndex,
+    
+    const transactionReceipt = await listing.buyListing(
       unitsToBuy,
       {from: accounts[0], value:weiToGive, gas: 4476768} // TODO (SRJ): is gas needed?
     )
     return transactionReceipt
   }
 
-  async setUser(ipfsUser) {
-    const result = await new Promise((resolve, reject) => {
-      this.userRegistryContract.setProvider(window.web3.currentProvider)
-      window.web3.eth.getAccounts((error, accounts) => {
-        this.userRegistryContract.deployed().then((instance) => {
-          return instance.set(
-            this.getBytes32FromIpfsHash(ipfsUser),
-            {from: accounts[0]})
-        }).then((result) => {
-          resolve(result)
-        }).catch((error) => {
-          console.error('Error submitting to the Ethereum blockchain: ' + error)
-          reject(error)
-        })
-      })
-    })
-    return result
-  }
-
-  async getUser(userAddress) {
-    const ipfsUser = await new Promise((resolve, reject) => {
-      this.userRegistryContract.setProvider(window.web3.currentProvider)
-      this.userRegistryContract.deployed().then((instance) => {
-        instance.users(userAddress)
-        .then(([ipfsHash, isSet]) => {
-          resolve(this.getIpfsHashFromBytes32(ipfsHash))
-        })
-        .catch((error) => {
-          console.log(`Error fetching userId: ${userId}`)
-          reject(error)
-        })
-      })
-    })
-    return ipfsUser
-  }
-
-  async waitTransactionFinished(transactionHash, pollIntervalMilliseconds=1000) {
+  async waitTransactionFinished(transactionReceipt, pollIntervalMilliseconds=1000) {
+    console.log("Waiting for transaction")
+    console.log(transactionReceipt)
     const blockNumber = await new Promise((resolve, reject) => {
       if (!transactionHash) {
         reject(`Invalid transactionHash passed: ${transactionHash}`)

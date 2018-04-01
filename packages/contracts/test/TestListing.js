@@ -1,4 +1,5 @@
-const contractDefinition = artifacts.require('./Listing.sol')
+const Listing = artifacts.require('./Listing.sol')
+const Purchase = artifacts.require('./Purchase.sol')
 
 // Used to assert error cases
 const isEVMError = function(err) {
@@ -11,22 +12,23 @@ const price = 33
 const unitsAvailable = 42
 
 contract('Listing', accounts => {
-  var owner = accounts[0]
-  var notOwner = accounts[1]
-  var instance
+  var seller = accounts[0]
+  var buyer = accounts[1]
+  var stranger = accounts[2]
+  var listing
 
   beforeEach(async function() {
-    instance = await contractDefinition.new(
-      owner,
+    listing = await Listing.new(
+      seller,
       ipfsHash,
       price,
       unitsAvailable,
-      {from: owner}
+      {from: seller}
     )
   })
 
   it('should have correct price', async function() {
-    let newPrice = await instance.price()
+    let newPrice = await listing.price()
     assert.equal(
       newPrice,
       price,
@@ -34,27 +36,69 @@ contract('Listing', accounts => {
     )
   })
 
+  it('should decrement the number of units sold', async function(){
+    const unitsToBuy = 3
+    await listing.buyListing(unitsToBuy, {from: buyer, value: 6} )
+    assert.equal(await listing.unitsAvailable(), unitsAvailable - unitsToBuy)
+  })
+
+  it('should decrement the number of units sold to zero if needed', async function(){
+    const unitsToBuy = unitsAvailable
+    await listing.buyListing(unitsToBuy, {from: buyer, value: 6} )
+    assert.equal(await listing.unitsAvailable(), 0)
+  })
+
+  it('should not allow a sale that would decrement the number of units sold to below zero', async function(){
+    const unitsToBuy = unitsAvailable + 1
+    try {
+      await listing.buyListing(unitsToBuy, {from: buyer, value: 6} )
+    } catch (err) {
+      assert.ok(isEVMError(err), 'an EVM error is thrown');
+    }
+    assert.equal(await listing.unitsAvailable(), unitsAvailable)
+  })
+
+  it('should allow the seller to close it', async function() {
+    assert.equal(await listing.unitsAvailable(), unitsAvailable)
+    await listing.close({from: seller})
+    assert.equal(await listing.unitsAvailable(), 0)
+  })
+
+  it('should not allow a stranger to close it', async function() {
+    assert.equal(await listing.unitsAvailable(), unitsAvailable)
+    try {
+      await listing.close({from: stranger})
+    } catch (err) {
+      assert.ok(isEVMError(err), 'an EVM error is thrown');
+    }
+    assert.equal(await listing.unitsAvailable(), unitsAvailable)
+  })
 
   it('should be able to buy a listing', async function() {
     const unitsToBuy = 1 // TODO: Handle multiple units
-    instance.buyListing(
+    const buyTransaction = await listing.buyListing(
       unitsToBuy,
-      { from: accounts[1], value: 6 }
+      { from: buyer, value: 6 }
     )
+    const listingPurchasedEvent = buyTransaction.logs.find((e)=>e.event=="ListingPurchased")
+    const purchaseContract = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
 
-    // TODO: How to catch events emitted during test?
-    // https://ethereum.stackexchange.com/questions/15353/how-to-listen-for-contract-events-in-javascript-tests
-    // https://github.com/ethereum/web3.js/issues/1023#issuecomment-350791050
-    // We should test that `Purchase` contract was created and has value
-    // sent to it.
-
-    // console.log(purchaseContract)
-    let newUnitsAvailable = await instance.unitsAvailable()
+    // Check units available decreased
+    let newUnitsAvailable = await listing.unitsAvailable()
     assert.equal(
       newUnitsAvailable,
       (unitsAvailable - unitsToBuy),
       'units available has decreased'
     )
+
+    // Check buyer set correctly
+    assert.equal(await purchaseContract.buyer(), buyer)
+
+    // Check that purchase was stored in listings
+    assert.equal((await listing.purchasesLength()).toNumber(), 1)
+
+    // Check that we can fetch the purchase address
+    assert.equal(await listing.getPurchase(0), purchaseContract.address)
   })
 
 })

@@ -23,7 +23,7 @@ class UserRegistryService {
             throw error
         }
 
-        const response = instance.create_another.call(walletId, JSON.stringify(payload))
+        const response = instance.createAnother.call(walletId, JSON.stringify(payload))
         console.log("user-registry-service found user:", response);
         return response
     }

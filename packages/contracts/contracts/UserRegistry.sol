@@ -51,11 +51,11 @@ contract UserRegistry {
         NewUser(msg.sender);
     }
 
-    /// @dev create_another(): Create a new user and associates attenstion or proof with user
+    /// @dev createAnother(): Create a new user and associates attenstion or proof with user
     // @param wallet id
     // Attestation or proof to associate to the user
     // TODO: (Brad David) replace with real function
-    function create_another(
+    function createAnother(
         string _id,
         string payload)
         public

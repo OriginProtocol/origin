@@ -12,9 +12,23 @@ const ipfsService = new IpfsService()
 const originService = new OriginService({ contractService, ipfsService })
 const userRegistryService = new UserRegistryService()
 
-module.exports = {
-    contractService,
-    ipfsService,
-    originService,
-    userRegistryService
+var origin = {
+    contractService: contractService,
+    ipfsService: ipfsService,
+    originService: originService,
+    userRegistryService: userRegistryService
 }
+
+var resources = {
+    listings: require('./resources/listings')
+}
+
+// Give each resource access to the origin services.
+// By having a single origin, its configuration can be changed
+// and all contracts will follow it
+for(var resourceName in resources){
+    resources[resourceName].origin = origin
+    origin[resourceName] = resources[resourceName]
+}
+
+module.exports = origin
