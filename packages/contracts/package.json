@@ -1,7 +1,14 @@
 {
   "name": "origin-protocol-contracts",
   "private": true,
+  "scripts": {
+    "format": "npx prettier --write test/*.js"
+  },
+  "prettier": {
+    "semi": false
+  },
   "devDependencies": {
+    "prettier": "1.11.1",
     "truffle": "^4.1.3",
     "truffle-hdwallet-provider": "0.0.3"
   }
