@@ -7,10 +7,26 @@ const isEVMError = function(err) {
   return str.includes("revert")
 }
 
+const timetravel = async function(seconds) {
+  var transaction = await web3.currentProvider.send({
+    jsonrpc: "2.0",
+    method: "evm_increaseTime",
+    params: [seconds],
+    id: 0
+  })
+  await web3.currentProvider.send({
+    jsonrpc: "2.0",
+    method: "evm_mine",
+    params: [],
+    id: 0
+  })
+}
+
 const ipfsHash =
   "0x6b14cac30356789cd0c39fec0acc2176c3573abdb799f3b17ccc6972ab4d39ba"
 const price = 33
 const unitsAvailable = 42
+const LISTING_EXPIRATION_SECONDS = 60 * 24 * 60 * 60
 
 contract("Listing", accounts => {
   var seller = accounts[0]
@@ -49,6 +65,27 @@ contract("Listing", accounts => {
       assert.ok(isEVMError(err), "an EVM error is thrown")
     }
     assert.equal(await listing.unitsAvailable(), unitsAvailable)
+  })
+
+  it("should not be able to be sold after expiration", async function() {
+    timetravel(LISTING_EXPIRATION_SECONDS + 10)
+    // Try to buy 1
+    try {
+      await listing.buyListing(1, { from: buyer, value: 6 })
+    } catch (err) {
+      // Verify failure
+      assert.ok(isEVMError(err), "an EVM error is thrown")
+    }
+    // Verify no change to listing
+    assert.equal(await listing.unitsAvailable(), unitsAvailable)
+  })
+
+  it("should be able to be sold before expiration", async function() {
+    timetravel(LISTING_EXPIRATION_SECONDS - 10)
+    // Buy 1
+    await listing.buyListing(1, { from: buyer, value: 6 })
+    // Verify sale was good
+    assert.equal(await listing.unitsAvailable(), unitsAvailable - 1)
   })
 
   it("should allow the seller to close it", async function() {
