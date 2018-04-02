@@ -4,6 +4,7 @@ pragma solidity ^0.4.11;
 /// @dev An purchase Origin Listing representing a purchase/booking
 import "./Listing.sol";
 
+
 contract Purchase {
 
   enum Stages {
@@ -19,28 +20,29 @@ contract Purchase {
   * Storage
   */
 
-  Stages public stage = Stages.AWAITING_PAYMENT;
+  Stages private internalStage = Stages.AWAITING_PAYMENT; 
 
   Listing public listingContract; // listing that is being purchased
   address public buyer; // User who is buying. Seller is derived from listing
   uint public created;
+  uint public buyerTimout;
 
   /*
   * Modifiers
   */
 
   modifier isSeller() {
-    require (msg.sender == listingContract.owner());
+    require(msg.sender == listingContract.owner());
     _;
   }
 
   modifier isBuyer() {
-    require (msg.sender == buyer);
+    require(msg.sender == buyer);
     _;
   }
 
   modifier atStage(Stages _stage) {
-    require(stage == _stage);
+    require(stage() == _stage);
     _;
   }
 
@@ -69,31 +71,39 @@ contract Purchase {
   {
     if (this.balance >= listingContract.price()) {
       // Buyer (or their proxy) has paid enough to cover purchase
-      stage = Stages.BUYER_PENDING;
-
-      // Mark item as no longer available for sale in Listing
-      // TODO: presumably we call function on Listing(), proving that we have
-      // the funds to cover purchase.
+      internalStage = Stages.BUYER_PENDING;
+      buyerTimout = now + 21 days;
     }
     // Possible that nothing happens, and contract just accumulates sent value
   }
 
+  function stage()
+  public
+  view 
+  returns (Stages _stage)
+  {
+    if (internalStage == Stages.BUYER_PENDING) {
+      if (now > buyerTimout) {
+        return Stages.SELLER_PENDING;
+      }
+    }
+    return internalStage;
+  }
 
   function buyerConfirmReceipt()
   public
   isBuyer
   atStage(Stages.BUYER_PENDING)
   {
-      stage = Stages.SELLER_PENDING;
+      internalStage = Stages.SELLER_PENDING;
   }
-
 
   function sellerGetPayout()
   public
   isSeller
   atStage(Stages.SELLER_PENDING)
   {
-    stage = Stages.COMPLETE;
+    internalStage = Stages.COMPLETE;
 
     // Send contract funds to seller (ie owner of Listing)
     // Transfering money always needs to be the last thing we do, do avoid
@@ -101,23 +111,22 @@ contract Purchase {
     listingContract.owner().transfer(this.balance);
   }
 
-
   function openDispute()
   public
   {
     // Must be buyer or seller
-    require (
+    require(
       (msg.sender == buyer) ||
       (msg.sender == listingContract.owner())
     );
 
     // Must be in a valid stage
     require(
-      (stage == Stages.BUYER_PENDING) ||
-      (stage == Stages.SELLER_PENDING)
+      (stage() == Stages.BUYER_PENDING) ||
+      (stage() == Stages.SELLER_PENDING)
     );
 
-    stage = Stages.IN_DISPUTE;
+    internalStage = Stages.IN_DISPUTE;
 
     // TODO: Create a dispute contract?
     // Right now there's no way to exit this state.
