@@ -1,25 +1,20 @@
-import { expect } from 'chai';
-import UserRegistryService from '../src/user-registry-service'
+import { expect } from "chai"
+import UserRegistryService from "../src/user-registry-service"
 
-const methodNames = [
-  'create',
-  'get'
-]
+const methodNames = ["create", "get"]
 
-describe('UserRegistryService', () => {
-
+describe("UserRegistryService", () => {
   let userRegistryService
 
   beforeEach(() => {
     userRegistryService = new UserRegistryService()
   })
 
-  methodNames.forEach((methodName) => {
+  methodNames.forEach(methodName => {
     it(`should have ${methodName} method`, () => {
       expect(userRegistryService[methodName]).to.be.an.instanceof(Function)
     })
   })
 
   // TODO: Real tests
-
 })

@@ -3,16 +3,16 @@
 
 module.exports = {
   allIds: async function() {
-    return await this.origin.contractService.getAllListingIds();
+    return await this.origin.contractService.getAllListingIds()
   },
 
   getByIndex: async function(listingIndex) {
     const contractData = await this.origin.contractService.getListing(
       listingIndex
-    );
+    )
     const ipfsData = await this.origin.ipfsService.getFile(
       contractData.ipfsHash
-    );
+    )
     // ipfsService should have already checked the contents match the hash,
     // and that the signature validates
 
@@ -30,24 +30,24 @@ module.exports = {
       sellerAddress: contractData.lister,
       price: contractData.price,
       unitsAvailable: contractData.unitsAvailable
-    };
+    }
 
     // TODO: Validation
 
-    return listing;
+    return listing
   },
 
   create: async function(data, schemaType) {
     if (data.price == undefined) {
-      throw "You must include a price";
+      throw "You must include a price"
     }
     if (data.name == undefined) {
-      throw "You must include a name";
+      throw "You must include a name"
     }
     return this.origin.originService.submitListing(
       { formData: data },
       schemaType
-    );
+    )
   },
 
   buy: async function(listingAddress, unitsToBuy, ethToPay) {
@@ -55,6 +55,6 @@ module.exports = {
       listingAddress,
       unitsToBuy,
       ethToPay
-    );
+    )
   }
-};
+}
