@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import moment from 'moment'
 
 class TransactionProgress extends Component {
   constructor(props) {
@@ -36,10 +37,42 @@ class TransactionProgress extends Component {
           <div className="progress-bar" role="progressbar" style={{ width: progressWidth }} aria-valuenow={Math.max(maxStep, currentStep)} aria-valuemin="0" aria-valuemax={maxStep}></div>
         </div>
         <div className="circles d-flex justify-content-between">
-          <span className={`progress-circle${soldAt ? ' checked' : ''}`}></span>
-          <span className={`progress-circle${fulfilledAt ? ' checked' : ''}`}></span>
-          <span className={`progress-circle${receivedAt ? ' checked' : ''}`}></span>
-          {perspective === 'seller' && <span className={`progress-circle${withdrawnAt ? ' checked' : ''}`}></span>}
+          {!soldAt && <span className="progress-circle"></span>}
+          {soldAt &&
+            <span className="progress-circle checked"
+              data-toggle="tooltip"
+              data-placement="top"
+              data-html="true"
+              title={`Sold on<br /><strong>${moment(soldAt).format('MMM D, YYYY')}</strong>`}>
+            </span>
+          }
+          {!fulfilledAt && <span className="progress-circle"></span>}
+          {fulfilledAt &&
+            <span className="progress-circle checked"
+              data-toggle="tooltip"
+              data-placement="top"
+              data-html="true"
+              title={`Sent by seller on<br /><strong>${moment(fulfilledAt).format('MMM D, YYYY')}</strong>`}>
+            </span>
+          }
+          {!receivedAt && <span className="progress-circle"></span>}
+          {receivedAt &&
+            <span className="progress-circle checked"
+              data-toggle="tooltip"
+              data-placement="top"
+              data-html="true"
+              title={`Received by buyer on<br /><strong>${moment(receivedAt).format('MMM D, YYYY')}</strong>`}>
+            </span>
+          }
+          {perspective === 'seller' && !withdrawnAt && <span className="progress-circle"></span>}
+          {perspective === 'seller' && withdrawnAt &&
+            <span className="progress-circle checked"
+              data-toggle="tooltip"
+              data-placement="top"
+              data-html="true"
+              title={`Funds withdrawn on<br /><strong>${moment(withdrawnAt).format('MMM D, YYYY')}</strong>`}>
+            </span>
+          }
         </div>
         {perspective === 'buyer' &&
           <div className="labels d-flex justify-content-between text-center">
