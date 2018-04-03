@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import $ from 'jquery'
 import moment from 'moment'
 import TransactionProgress from './transaction-progress'
 import data from '../data'
@@ -56,6 +57,10 @@ const nextSteps = [
 ]
 
 class TransactionDetail extends Component {
+  componentDidMount() {
+    $('[data-toggle="tooltip"]').tooltip()
+  }
+
   render() {
     const { listingId, perspective } = this.props
     const listing = data.listings.find(l => l._id === listingId)
@@ -162,7 +167,7 @@ class TransactionDetail extends Component {
                 <tbody>
                   {soldAt &&
                     <tr>
-                      <td><span className="progress-circle checked"></span>Purchased</td>
+                      <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sold on<br /><strong>${moment(soldAt).format('MMM D, YYYY')}</strong>`}></span>{perspective === 'buyer' ? 'Purchased' : 'Sold'}</td>
                       <td><a href="#" onClick={() => alert('To Do')}>0x56Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
                       <td><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
                       <td><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
@@ -170,7 +175,7 @@ class TransactionDetail extends Component {
                   }
                   {fulfilledAt &&
                     <tr>
-                      <td><span className="progress-circle checked"></span>Sent by seller</td>
+                      <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sent by seller on<br /><strong>${moment(fulfilledAt).format('MMM D, YYYY')}</strong>`}></span>Sent by seller</td>
                       <td><a href="#" onClick={() => alert('To Do')}>0x78Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
                       <td><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
                       <td><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
@@ -178,7 +183,15 @@ class TransactionDetail extends Component {
                   }
                   {receivedAt &&
                     <tr>
-                      <td><span className="progress-circle checked"></span>Received by buyer</td>
+                      <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Received buy buyer on<br /><strong>${moment(receivedAt).format('MMM D, YYYY')}</strong>`}></span>Received by buyer</td>
+                      <td><a href="#" onClick={() => alert('To Do')}>0x90Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
+                      <td><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
+                      <td><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
+                    </tr>
+                  }
+                  {perspective === 'seller' && withdrawnAt &&
+                    <tr>
+                      <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Funds withdrawn on<br /><strong>${moment(withdrawnAt).format('MMM D, YYYY')}</strong>`}></span>Funds withdrawn</td>
                       <td><a href="#" onClick={() => alert('To Do')}>0x90Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
                       <td><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
                       <td><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>

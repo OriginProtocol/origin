@@ -1,9 +1,14 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import $ from 'jquery'
 import moment from 'moment'
 import TransactionProgress from './transaction-progress'
 
 class ListingProgressCard extends Component {
+  componentDidMount() {
+    $('[data-toggle="tooltip"]').tooltip()
+  }
+
   render() {
     const { listing, perspective } = this.props
     const { _id, active, category, createdAt, fulfilledAt, receivedAt, soldAt, title, withdrawnAt } = listing
