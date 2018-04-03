@@ -1,1 +1,2 @@
-web: bin/start-nginx gunicorn -c nginx/gunicorn.conf main:app
+release: FLASK_APP=main.py flask db upgrade
+web: waitress-serve --port=$PORT main:app

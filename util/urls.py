@@ -1,11 +1,14 @@
 import urllib
-import urlparse
+try:
+    from urllib import parse as urlparse
+except ImportError:
+    import urlparse
 
-from config import constants
+from config import settings
 
 def absurl(relative_url):
-    protocol = 'https' if constants.HTTPS else 'http'
-    return '%s://%s%s' % (protocol, constants.HOST, relative_url)
+    protocol = 'https' if settings.HTTPS else 'http'
+    return '%s://%s%s' % (protocol, settings.HOST, relative_url)
 
 def append_params(url, params):
     parsed = urlparse.urlparse(url)
