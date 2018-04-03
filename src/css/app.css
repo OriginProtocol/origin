@@ -1026,6 +1026,11 @@ label[for=root_pictures]:hover {
   padding: 10px;
 }
 
+.transaction .card-body .badge {
+  margin-left: 0.75rem;
+  vertical-align: middle;
+}
+
 .transaction .image-container {
   position: relative;
   flex-basis: 360px;
@@ -1080,11 +1085,26 @@ label[for=root_pictures]:hover {
   padding-top: 10px;
 }
 
-.transaction .content-container .price {
-  flex-grow: 1;
+.transaction .content-container .price,
+.transaction .content-container .quantity {
   font-weight: 300;
   margin: 0;
   padding-top: 10px;
+}
+
+.transaction .content-container .price {
+  font-weight: normal;
+  margin-bottom: 0.5rem;
+  padding-right: 2rem;
+}
+
+.transaction .content-container .quantity {
+  flex-grow: 1;
+}
+
+.transaction .content-container .counts p {
+  margin: 0 0 0.5rem;
+  padding-right: 1rem;
 }
 
 .transaction .content-container .timestamp {
@@ -1092,18 +1112,6 @@ label[for=root_pictures]:hover {
   font-size: 0.75rem;
   font-weight: 300;
   margin: 0;
-  opacity: 0;
-  padding-top: calc(10px + 0.3rem);
-
-  transition: opacity 200ms linear 800ms;
-}
-
-.transaction.ready .content-container .timestamp {
-  opacity: 1;
-}
-
-.transaction .content-container .price .sold-banner {
-  line-height: 1.4;
 }
 
 .transaction .content-container .progress-container .labels p {
