@@ -19,7 +19,7 @@ contract('ListingsRegistry', accounts => {
   })
 
   it('should have owner as owner of contract', async function() {
-    let contractOwner = await instance.owner_address()
+    let contractOwner = await instance.owner()
     assert.equal(contractOwner, owner)
   })
 

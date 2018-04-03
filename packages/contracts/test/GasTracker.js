@@ -39,9 +39,6 @@ class GasTracker {
             contractConstructor.new = function (...constructorArgs) {
                 const newContractPromise = oldNew.apply(contractConstructor, constructorArgs)
                 newContractPromise.then(function(newContract){
-                    if (newContract.constructor.contractName == "UserRegistry") {
-                        return // The UserRegistry test don't currently work with this.
-                    }
                     tracker.trackContract(newContract)
                 })
                 return newContractPromise
@@ -86,6 +83,7 @@ class GasTracker {
                         tracker.recordGas(metricName, receipt.gasUsed)
                     })
                 }
+            }).catch(function(err){
             })
             return resultsPromise
         }

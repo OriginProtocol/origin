@@ -21,9 +21,9 @@ contract Purchase {
 
   Stages public stage = Stages.AWAITING_PAYMENT;
 
-  Listing listingContract; // listing that is being purchased
+  Listing public listingContract; // listing that is being purchased
   address public buyer; // User who is buying. Seller is derived from listing
-  uint created;
+  uint public created;
 
   /*
   * Modifiers
@@ -49,11 +49,12 @@ contract Purchase {
   */
 
   function Purchase(
-    address _listingContractAddress
+    address _listingContractAddress,
+    address _buyer
   )
   public
   {
-    buyer = msg.sender;
+    buyer = _buyer;
     listingContract = Listing(_listingContractAddress);
     created = now;
   }
@@ -79,8 +80,8 @@ contract Purchase {
 
 
   function buyerConfirmReceipt()
-  isBuyer
   public
+  isBuyer
   atStage(Stages.BUYER_PENDING)
   {
       stage = Stages.SELLER_PENDING;
@@ -92,10 +93,12 @@ contract Purchase {
   isSeller
   atStage(Stages.SELLER_PENDING)
   {
-    // Send contract funds to seller (ie owner of Listing)
-    listingContract.owner().transfer(this.balance);
+    stage = Stages.COMPLETE;
 
-      stage = Stages.COMPLETE;
+    // Send contract funds to seller (ie owner of Listing)
+    // Transfering money always needs to be the last thing we do, do avoid
+    // rentrancy bugs. (Though here the seller would just be getting their own money)
+    listingContract.owner().transfer(this.balance);
   }
 
 

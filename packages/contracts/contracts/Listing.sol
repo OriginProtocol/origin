@@ -25,6 +25,7 @@ contract Listing {
     bytes32 public ipfsHash;
     uint public price;
     uint public unitsAvailable;
+    Purchase[] public purchases;
 
 
     function Listing (
@@ -42,6 +43,19 @@ contract Listing {
       unitsAvailable = _unitsAvailable;
     }
 
+  /*
+    * Modifiers
+    */
+
+  modifier isSeller() {
+    require (msg.sender == owner);
+    _;
+  }
+
+  /*
+    * Public functions
+    */
+
 
   /// @dev buyListing(): Buy a listing
   /// @param _unitsToBuy Number of units to buy
@@ -49,19 +63,50 @@ contract Listing {
     public
     payable
   {
-    // TODO: Handle units. For now we just do one at a time
-    require (_unitsToBuy == 1); // HACK
+    // Ensure that this is not trying to purchase more than is available.
+    require (_unitsToBuy <= unitsAvailable);
 
     // Create purchase contract
-    Purchase purchaseContract = new Purchase(this);
+    Purchase purchaseContract = new Purchase(this, msg.sender);
 
     // Count units as sold
     unitsAvailable -= _unitsToBuy;
+
+    purchases.push(purchaseContract);
 
     // TODO STAN: How to call function *AND* transfer value??
     purchaseContract.pay.value(msg.value)();
 
     ListingPurchased(purchaseContract);
+  }
+
+  /// @dev close(): Allows a seller to close the listing from further purchases
+  function close()
+    public
+    isSeller
+  {
+    unitsAvailable = 0;
+  }
+
+  /// @dev purchasesLength(): Return number of listings
+  function purchasesLength()
+    public
+    constant
+    returns (uint)
+  {
+      return purchases.length;
+  }
+
+  /// @dev getPurchase(): Return listing info for given listing
+  /// @param _index the index of the listing we want info about
+  function getPurchase(uint _index)
+    public
+    constant
+    returns (Purchase)
+  {
+    return (
+      purchases[_index]
+    );
   }
 
 }
