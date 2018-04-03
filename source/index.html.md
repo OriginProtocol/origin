@@ -2,9 +2,7 @@
 title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
-  - html
   - javascript
-  - json
 
 toc_footers:
   - <a href='http://www.originprotocol.com'>Where it all begins!</a>
@@ -15,6 +13,7 @@ includes:
   - architecture
   - getting_started
   - authentication_identity
+  - resources/listings
   - listing_schemas
   - tbd
 
