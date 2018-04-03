@@ -6,6 +6,14 @@ These docs are very much a work in progress, but you can view them live at:
 
 Contributions welcome!
 
-Credits and detailed documentation on how to use Slate can be found at:
+
+## Contributing
+
+Once you have cloned this repo, just run: 
+
+   bundle install
+   bundle exec middleman server
+   
+Credits and detailed documentation on how to use the Slate documentation system can be found at:
 
 [https://github.com/lord/slate](https://github.com/lord/slate)
