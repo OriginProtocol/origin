@@ -40,13 +40,9 @@ String
 
 # Getting help
 
-## Slack
+## Discord
 
-Our team collaboration is done in public and our company Slack is open to all. If you have questions or need help getting started, our Slack channel is a great place to get assistance from our team of engineers and developers.
-
-[Request an invite to join the Origin Protocol Slack](http://slack.originprotocol.com)
-
-Once inside, find us in one of the `eng` channels.
+Our team collaboration is done in public and our company Discord is open to all. If you have questions or need help getting started, our [Discord #engineering channel](https://www.originprotocol.com/discord) is a great place to get assistance from our team of engineers and developers.
 
 ## Email
 
@@ -120,7 +116,7 @@ Origin is just as much about community as it is about our technology.
 
 We need constant help in improving our documentation, building new tools to interface with our platform, spreading the word to new users, helping new users getting setup and much more.
 
-Please get in touch if you would like to help out. Our `community` channel on [Slack](#slack) is a great place to share ideas and volunteer to help.
+Please get in touch if you would like to help out. Our `general` channel on [Discord](#discord) is a great place to share ideas and volunteer to help.
 
 ### Full Time Positions
 
@@ -128,4 +124,4 @@ Origin occasionally hires developers for part time or full time positions.
 
 We have a strong preference for hiring people who have already started contributing to the project. If you want a full time position on our team, your best shot is to engage with our team and start contributing code. It is very unlikely that we would offer you a full time position on our engineering team unless you've had at least a couple approved pull requests first. 
 
-If you are interested, check out [the Origin Protocol job listings](https://angel.co/originprotocol/jobs). If you'd like to help in other ways, propose your ideas on the [Origin Slack](#slack).
+If you are interested, check out [the Origin Protocol job listings](https://angel.co/originprotocol/jobs). If you'd like to help in other ways, propose your ideas on the [Origin Discord](#discord).
