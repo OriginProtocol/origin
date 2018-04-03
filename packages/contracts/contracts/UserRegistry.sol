@@ -19,15 +19,6 @@ contract UserRegistry {
     mapping(address => bytes32) public users;
 
     /*
-    * Modifiers
-    */
-
-    modifier isValidUserAddress() {
-        require (users[msg.sender] == 0);
-        _;
-    }
-
-    /*
     * Public functions
     */
 
