@@ -12,7 +12,7 @@ class MySales extends Component {
   render() {
     const { filter } = this.state
     const listings = (() => {
-      const arr = data.listings
+      const arr = data.listings.filter(l => l.soldAt)
 
       switch(filter) {
         case 'pending':

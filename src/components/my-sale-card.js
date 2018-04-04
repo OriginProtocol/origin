@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
-import moment from 'moment'
+import Timelapse from './timelapse'
 import TransactionProgress from './transaction-progress'
 
 class MySaleCard extends Component {
@@ -11,7 +11,7 @@ class MySaleCard extends Component {
 
   render() {
     const { listing } = this.props
-    const { _id, buyer, fulfilledAt, price, quantity, receivedAt, title, withdrawnAt } = listing
+    const { _id, buyer, fulfilledAt, price, quantity, receivedAt, soldAt, title, withdrawnAt } = listing
     let step
 
     if (withdrawnAt) {
@@ -37,7 +37,9 @@ class MySaleCard extends Component {
                 <p className="quantity">Quantity: {quantity}</p>
               </div>
             </div>
-            <div className="timestamp order-2 text-muted text-right">3 days ago</div>
+            <div className="timestamp-container order-2 text-muted text-right">
+              <p className="timestamp"><Timelapse reference={soldAt} /></p>
+            </div>
             <div className="image-container order-1 order-lg-3">
               <img role="presentation" />
             </div>

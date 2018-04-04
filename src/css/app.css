@@ -1072,7 +1072,6 @@ label[for=root_pictures]:hover {
 }
 
 .sale .card-body .transaction {
-  flex-basis: 3;
   flex-grow: 1;
   margin-bottom: 0;
 }
@@ -1088,9 +1087,13 @@ label[for=root_pictures]:hover {
   margin: 0;
 }
 
+.sale .card-body .timestamp-container {
+  flex-shrink: 0;
+}
+
 .sale .card-body .timestamp {
-  flex-basis: 1;
-  margin-bottom: 1rem;
+  line-height: 1;
+  margin: 0 0 1rem 1rem;
 }
 
 .sale .card-body .image-container {
@@ -2183,6 +2186,18 @@ footer .footer-links li a {
 
   .navbar .collapse .navbar-nav.show .sell a {
     color: var(--dark);
+  }
+
+  .navbar .sell.dropdown.show {
+    background-color: white;
+  }
+
+  .navbar .sell.dropdown.show .nav-link {
+    color: var(--dark);
+  }
+
+  .navbar .sell.dropdown.show .nav-link:hover {
+    background-color: white;
   }
 
   .navbar .sell .dropdown-menu {

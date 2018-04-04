@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
-import moment from 'moment'
 import Modal from './modal'
+import Timelapse from './timelapse'
 import VerifyWithCivic from './verify-with-civic'
 
 class Profile extends Component {
@@ -10,21 +10,14 @@ class Profile extends Component {
     super(props)
 
     this.handleToggle = this.handleToggle.bind(this)
-    this.updateTimelapse = this.updateTimelapse.bind(this)
     this.state = {
       lastEdit: new Date(),
       modalsOpen: { profile: false, twitter: false },
-      timelapse: 'a few seconds ago',
     }
   }
 
   componentDidMount() {
     $('.profile-wrapper [data-toggle="tooltip"]').tooltip()
-
-    setTimeout(() => {
-      this.ms = 1000
-      this.interval = setInterval(this.updateTimelapse, this.ms)
-    }, 4000)
   }
 
   handleToggle(e) {
@@ -40,66 +33,12 @@ class Profile extends Component {
     this.setState({ modalsOpen: obj })
   }
 
-  updateTimelapse() {
-    const c = this
-    const { lastEdit } = c.state
-    const seconds = moment().diff(lastEdit, 'seconds')
-    const second = 1
-    const minute = 60 * second
-    const hour = 60 * minute
-    const day = 24 * hour
-    const year = 365 * day
-    let int = 0
-    let timelapse = ''
-
-    function conditionallyDecelerateInterval(measure) {
-      if (c.ms / 1000 < measure) {
-        clearInterval(c.interval)
-
-        c.ms = measure * 1000
-        c.interval = setInterval(c.updateTimelapse, c.ms)
-      }
-    }
-
-    if (seconds < minute) {
-      timelapse = `${seconds} seconds ago`
-    } else if (seconds < hour) {
-      int = Math.floor(seconds / minute)
-
-      timelapse = `${int} minute${int > 1 ? 's' : ''} ago`
-
-      conditionallyDecelerateInterval(minute)
-    } else if (seconds < day) {
-      int = Math.floor(seconds / hour)
-
-      timelapse = `${int} hour${int > 1 ? 's' : ''} ago`
-
-      conditionallyDecelerateInterval(hour)
-    } else if (seconds < year) {
-      int = Math.floor(seconds / day)
-
-      timelapse = `over ${int} day${int > 1 ? 's' : ''} ago`
-
-      clearInterval(c.interval)
-    } else {
-      int = Math.floor(seconds / year)
-
-      timelapse = `over ${int} year${int > 1 ? 's' : ''} ago`
-
-      clearInterval(c.interval)
-    }
-
-    c.setState({ timelapse })
-  }
-
   componentWillUnmount() {
     $('.profile-wrapper [data-toggle="tooltip"]').tooltip('dispose')
-
-    clearInterval(this.interval)
   }
 
   render() {
-    const { lastEdit, timelapse } = this.state;
+    const { lastEdit } = this.state;
 
     return (
       <div className="profile-wrapper">
@@ -186,7 +125,7 @@ class Profile extends Component {
             <div className="col-12 col-lg-4">
               <div className="verification">
                 {lastEdit && <h4>Last Edited</h4>}
-                {!!timelapse.length && <p>{timelapse}</p>}
+                {lastEdit && <p><Timelapse reference={lastEdit} /></p>}
                 <h4>Status</h4>
                 <p className="status">
                   <svg height="0.67rem" width="0.67rem">
