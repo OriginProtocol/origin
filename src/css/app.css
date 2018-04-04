@@ -278,19 +278,35 @@ a:hover {
   border-color: white;
 }
 
-.navbar .dropdown-menu {
+.navbar .identity .dropdown-menu,
+.navbar .notifications .dropdown-menu {
   position: absolute;
   left: auto;
   right: 15px;
   width: calc(100% - 15px - 15px);
 }
 
-.navbar .triangle-container {
-  display: flex;
-  justify-content: flex-end;
+.navbar .sell a {
+  color: var(--pale-grey);
 }
 
-.navbar .dropdown-menu::after {
+.navbar .sell a:hover {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.navbar .sell .dropdown-menu {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+
+.navbar .sell .dropdown-item:hover,
+.navbar .sell .dropdown-item:focus {
+  background-color: unset;
+  text-decoration: unset;
+}
+
+.navbar .identity .dropdown-menu::after {
   position: absolute;
   content: '';
   height: 18px;
@@ -320,7 +336,7 @@ a:hover {
   background-color: var(--dark);
 }
 
-.navbar .notifications .dropdown-menu::after {
+.navbar .notifications .dropdown-menu::after{
   background-color: white;
 }
 
@@ -342,11 +358,17 @@ a:hover {
   clip-path: polygon(50% 0, 0% 100%, 100% 100%);
 }
 
+.navbar .sell .triangle {
+  -webkit-clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+  clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+}
+
 .navbar .identity .triangle {
   background-color: var(--dark);
 }
 
-.navbar .notifications .triangle {
+.navbar .notifications .triangle,
+.navbar .sell .triangle {
   background-color: white;
 }
 
@@ -380,7 +402,8 @@ a:hover {
   display: inline;
 }
 
-.navbar .dropdown-menu {
+.navbar .notifications .dropdown-menu,
+.navbar .identity .dropdown-menu {
   background-color: transparent;
   border: none;
   border-radius: 0 0 var(--default-radius) var(--default-radius);
@@ -388,7 +411,8 @@ a:hover {
   top: 59px;
 }
 
-.navbar .dropdown-menu .actual-menu {
+.navbar .notifications .dropdown-menu .actual-menu,
+.navbar .identity .dropdown-menu .actual-menu {
   border-radius: var(--default-radius) 0 var(--default-radius) var(--default-radius);
   z-index: 998;
 
@@ -398,7 +422,22 @@ a:hover {
 
 .navbar .notifications .dropdown-menu .actual-menu {
   background-color: white;
-  width: calc(100% - 15px -15px);
+}
+
+.navbar .sell {
+  cursor: pointer;
+}
+
+.navbar .sell .dropdown-menu .actual-menu .dropdown-item {
+  padding: 0.825rem;
+}
+
+.navbar .sell .dropdown-menu .dropdown-item:first-of-type {
+  border-radius: var(--default-radius) var(--default-radius) 0 0;
+}
+
+.navbar .sell .dropdown-menu .dropdown-item:last-of-type {
+  border-radius: 0 0 var(--default-radius) var(--default-radius);
 }
 
 .navbar .notifications .dropdown-menu a {
@@ -2127,6 +2166,65 @@ footer .footer-links li a {
     right: calc(((100% - 960px) / 2) + 60px + 15px);
   }
 
+  .navbar .collapse .navbar-nav .sell.show {
+    background-color: white;
+    border-radius: 0;
+    margin: 0;
+    padding: 20px 15px;
+  }
+
+  .navbar .collapse .navbar-nav .sell.show a {
+    color: var(--dark);
+  }
+
+  .navbar .sell .dropdown-menu {
+    position: absolute;
+    left: auto;
+    right: calc(((100% - 960px) / 2) + 60px + 60px + 30px + 15px + 120px);
+  }
+
+  .navbar .sell .dropdown-menu .actual-menu {
+    border-radius: var(--default-radius) 0 var(--default-radius) var(--default-radius);
+    z-index: 998;
+
+    -webkit-filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
+  }
+
+  .navbar .sell .dropdown-menu::after {
+    position: absolute;
+    content: '';
+    height: 18px;
+    right: 0;
+    top: 0;
+    width: 18px;
+    z-index: 999;
+
+    -webkit-clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+    clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+  }
+
+  .navbar .sell .dropdown-menu .actual-menu .dropdown-item:not(:last-of-type) {
+    border-bottom: 1px solid #dfe6ea;
+  }
+
+  .navbar .sell .dropdown-menu a {
+    color: var(--dark);
+  }
+
+  .navbar .sell .dropdown-menu::after{
+    background-color: white;
+  }
+
+  .navbar .sell .triangle-container {
+    -webkit-filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
+  }
+
+  .navbar .sell .dropdown-menu .actual-menu {
+    background-color: white;
+  }
+
   .profile-wrapper .services {
     margin-bottom: 0;
   }
@@ -2167,7 +2265,7 @@ footer .footer-links li a {
   }
 }
 
-/* lg + */
+/* xl + */
 @media (min-width: 1200px) {
   .navbar .identity .dropdown-menu {
     right: calc(((100% - 1140px) / 2) + 15px);
@@ -2175,5 +2273,9 @@ footer .footer-links li a {
 
   .navbar .notifications .dropdown-menu {
     right: calc(((100% - 1140px) / 2) + 60px + 15px);
+  }
+
+  .navbar .sell .dropdown-menu {
+    right: calc(((100% - 1140px) / 2) + 60px + 60px + 30px + 15px + 120px);
   }
 }
