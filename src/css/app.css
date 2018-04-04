@@ -429,7 +429,7 @@ a:hover {
 }
 
 .navbar .sell .dropdown-menu .actual-menu .dropdown-item {
-  padding: 0.825rem;
+  padding: 0.825rem 0.825rem 0;
 }
 
 .navbar .sell .dropdown-menu .dropdown-item:first-of-type {
@@ -552,6 +552,10 @@ a:hover {
 
 .navbar .navbar-collapse .navbar-nav .nav-item {
   padding-top: 15px;
+}
+
+.navbar .navbar-collapse .navbar-nav > a.nav-item:last-of-type {
+  padding-bottom: 15px;
 }
 
 .navbar .static.navbar-nav {
@@ -2158,6 +2162,10 @@ footer .footer-links li a {
     background-color: var(--dark-grey-blue);
   }
 
+  .navbar .navbar-collapse .navbar-nav > a.nav-item:last-of-type {
+    padding-bottom: inherit;
+  }
+
   .navbar .identity .dropdown-menu {
     right: calc(((100% - 960px) / 2) + 15px);
   }
@@ -2166,14 +2174,14 @@ footer .footer-links li a {
     right: calc(((100% - 960px) / 2) + 60px + 15px);
   }
 
-  .navbar .collapse .navbar-nav .sell.show {
+  .navbar .collapse .navbar-nav.show .sell {
     background-color: white;
     border-radius: 0;
     margin: 0;
     padding: 20px 15px;
   }
 
-  .navbar .collapse .navbar-nav .sell.show a {
+  .navbar .collapse .navbar-nav.show .sell a {
     color: var(--dark);
   }
 
@@ -2202,6 +2210,10 @@ footer .footer-links li a {
 
     -webkit-clip-path: polygon(100% 0, 0% 100%, 100% 100%);
     clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+  }
+
+  .navbar .sell .dropdown-menu .actual-menu .dropdown-item {
+    padding-bottom: 0.825rem;
   }
 
   .navbar .sell .dropdown-menu .actual-menu .dropdown-item:not(:last-of-type) {
