@@ -21,9 +21,9 @@ contract Purchase {
 
   Stages public stage = Stages.AWAITING_PAYMENT;
 
-  Listing listingContract; // listing that is being purchased
+  Listing public listingContract; // listing that is being purchased
   address public buyer; // User who is buying. Seller is derived from listing
-  uint created;
+  uint public created;
 
   /*
   * Modifiers
@@ -49,36 +49,39 @@ contract Purchase {
   */
 
   function Purchase(
-    address _listingContractAddress
+    address _listingContractAddress,
+    address _buyer
   )
   public
   {
-    buyer = msg.sender;
+    buyer = _buyer;
     listingContract = Listing(_listingContractAddress);
     created = now;
   }
 
-
-  function buyerPay()
+  // Pay for listing
+  // We used to limit this to buyer, but that prevents Listing contract from
+  // paying
+  function pay()
   public
   payable
-  isBuyer
   atStage(Stages.AWAITING_PAYMENT)
   {
     if (this.balance >= listingContract.price()) {
-
-      // Buyer has paid enough to cover purchase
+      // Buyer (or their proxy) has paid enough to cover purchase
       stage = Stages.BUYER_PENDING;
 
       // Mark item as no longer available for sale in Listing
-      // TODO: presumable we call function on Listing(), proving that we have the funds to cover purchase.
+      // TODO: presumably we call function on Listing(), proving that we have
+      // the funds to cover purchase.
     }
+    // Possible that nothing happens, and contract just accumulates sent value
   }
 
 
   function buyerConfirmReceipt()
-  isBuyer
   public
+  isBuyer
   atStage(Stages.BUYER_PENDING)
   {
       stage = Stages.SELLER_PENDING;
@@ -90,14 +93,16 @@ contract Purchase {
   isSeller
   atStage(Stages.SELLER_PENDING)
   {
-    // Send contract funds to seller (ie owner of Listing)
-    listingContract.owner().transfer(this.balance);
+    stage = Stages.COMPLETE;
 
-      stage = Stages.COMPLETE;
+    // Send contract funds to seller (ie owner of Listing)
+    // Transfering money always needs to be the last thing we do, do avoid
+    // rentrancy bugs. (Though here the seller would just be getting their own money)
+    listingContract.owner().transfer(this.balance);
   }
 
 
-  function openDisute()
+  function openDispute()
   public
   {
     // Must be buyer or seller

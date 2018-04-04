@@ -1,6 +1,6 @@
 const ENABLE_GAS_TRACKING = process.env.GAS_TRACKING != undefined
 const GAS_COST = process.env.GAS_COST || 4
-const ETH_USD = process.env.GAS_COST || 700
+const ETH_USD = process.env.ETH_USD || 700
 
 // This module shows the actual gas amounts used for each Ethereum transaction.
 // Currently, it just displays the costs inline during the tests as the transactions occur.
@@ -39,9 +39,6 @@ class GasTracker {
             contractConstructor.new = function (...constructorArgs) {
                 const newContractPromise = oldNew.apply(contractConstructor, constructorArgs)
                 newContractPromise.then(function(newContract){
-                    if (newContract.constructor.contractName == "UserRegistry") {
-                        return // The UserRegistry test don't currently work with this.
-                    }
                     tracker.trackContract(newContract)
                 })
                 return newContractPromise
@@ -86,6 +83,7 @@ class GasTracker {
                         tracker.recordGas(metricName, receipt.gasUsed)
                     })
                 }
+            }).catch(function(err){
             })
             return resultsPromise
         }

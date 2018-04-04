@@ -1,24 +1,26 @@
-import contractService from './contract-service'
-import ipfsService from './ipfs-service'
 import userSchema from './schemas/user.json'
 
 var Ajv = require('ajv')
 var ajv = new Ajv()
 
 class OriginService {
-  static instance
+  constructor({ contractService, ipfsService }) {
+    this.contractService = contractService;
+    this.ipfsService = ipfsService;
+  }
 
   async submitListing(formListing, selectedSchemaType) {
 
+    // TODO: Why can't we take schematype from the formListing object?
     const jsonBlob = {
-      'schema': `http://localhost:3000/schemas/${selectedSchemaType.type}.json`,
+      'schema': `http://localhost:3000/schemas/${selectedSchemaType}.json`,
       'data': formListing.formData,
     }
 
     let ipfsHash;
     try {
       // Submit to IPFS
-      ipfsHash = await ipfsService.submitListing(jsonBlob)
+      ipfsHash = await this.ipfsService.submitFile(jsonBlob)
     } catch (error) {
       throw new Error(`IPFS Failure: ${error}`)
     }
@@ -30,7 +32,7 @@ class OriginService {
     const units = 1 // TODO: Allow users to set number of units in form
     let transactionReceipt;
     try {
-      transactionReceipt = contractService.submitListing(
+      transactionReceipt = await this.contractService.submitListing(
         ipfsHash,
         formListing.formData.price,
         units)
@@ -41,33 +43,8 @@ class OriginService {
 
     // Success!
     console.log(`Submitted to ETH blockchain with transactionReceipt.tx: ${transactionReceipt.tx}`)
-    return transactionReceipt.tx
+    return transactionReceipt
 
-  }
-
-  getListing(listingIndex) {
-    return new Promise((resolve, reject) => {
-      let userAddress
-      let listingData
-      contractService.getListing(listingIndex)
-      .then(({ lister, ipfsHash, price, unitsAvailable }) => {
-        userAddress = lister
-        return ipfsService.getListing(ipfsHash)
-      })
-      .then((listingJson) => {
-        listingData = JSON.parse(listingJson).data
-        return contractService.getUser(userAddress)
-      })
-      .then((ipfsHash) => {
-        return ipfsService.getUser(ipfsHash)
-      })
-      .then((userData) => {
-        resolve({ listing: listingData, user: userData })
-      })
-      .catch((error) => {
-        reject(`Error fetching contract or IPFS info for listingId: ${listingIndex}`)
-      })
-    })
   }
 
   setUser(data) {
@@ -77,13 +54,13 @@ class OriginService {
         reject('invalid user data')
       } else {
         // Submit to IPFS
-        ipfsService.submitUser(data)
+        this.ipfsService.submitFile(data)
         .then((ipfsHash) => {
           console.log(`IPFS file created with hash: ${ipfsHash} for data:`)
           console.log(data)
 
           // Submit to ETH contract
-          contractService.setUser(
+          this.contractService.setUser(
             ipfsHash)
           .then((transactionReceipt) => {
             // Success!
@@ -103,6 +80,4 @@ class OriginService {
   }
 }
 
-const originService = new OriginService()
-
-export default originService
+export default OriginService

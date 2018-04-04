@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import userRegistryService from '../src/user-registry-service'
+import UserRegistryService from '../src/user-registry-service'
 
 const methodNames = [
   'create',
@@ -7,6 +7,12 @@ const methodNames = [
 ]
 
 describe('UserRegistryService', () => {
+
+  let userRegistryService
+
+  beforeEach(() => {
+    userRegistryService = new UserRegistryService()
+  })
 
   methodNames.forEach((methodName) => {
     it(`should have ${methodName} method`, () => {

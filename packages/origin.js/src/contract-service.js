@@ -1,19 +1,14 @@
 import ListingsRegistryContract from '../../contracts/build/contracts/ListingsRegistry.json'
+import ListingContract from '../../contracts/build/contracts/Listing.json'
 import UserRegistryContract from '../../contracts/build/contracts/UserRegistry.json'
 import bs58 from 'bs58'
 import contract from 'truffle-contract'
+import promisify from 'util.promisify'
 
 class ContractService {
-  static instance
-
   constructor() {
-    if (ContractService.instance) {
-      return ContractService.instance
-    }
-
-    ContractService.instance = this
-
     this.listingsRegistryContract = contract(ListingsRegistryContract)
+    this.listingContract = contract(ListingContract)
     this.userRegistryContract = contract(UserRegistryContract)
   }
 
@@ -39,147 +34,112 @@ class ContractService {
     return hashStr
   }
 
-  submitListing(ipfsListing, ethPrice, units) {
-    return new Promise((resolve, reject) => {
-      this.listingsRegistryContract.setProvider(window.web3.currentProvider)
-      window.web3.eth.getAccounts((error, accounts) => {
-        this.listingsRegistryContract.deployed().then((instance) => {
-          let weiToGive = window.web3.toWei(ethPrice, 'ether')
-          // Note we cannot get the listingId returned by our contract.
-          // See: https://forum.ethereum.org/discussion/comment/31529/#Comment_31529
-          return instance.create(
-            this.getBytes32FromIpfsHash(ipfsListing),
-            weiToGive,
-            units,
-            {from: accounts[0]})
-        }).then((result) => {
-          resolve(result)
-        }).catch((error) => {
-          console.error('Error submitting to the Ethereum blockchain: ' + error)
-          reject(error)
-        })
-      })
-    })
+  async submitListing(ipfsListing, ethPrice, units) {
+    try {
+      const { currentProvider, eth } = window.web3;
+      this.listingsRegistryContract.setProvider(currentProvider)
+
+      const accounts = await promisify(eth.getAccounts.bind(eth))()
+      const instance = await this.listingsRegistryContract.deployed()
+
+      const weiToGive = window.web3.toWei(ethPrice, 'ether')
+      // Note we cannot get the listingId returned by our contract.
+      // See: https://forum.ethereum.org/discussion/comment/31529/#Comment_31529
+      return instance.create(
+        this.getBytes32FromIpfsHash(ipfsListing),
+        weiToGive,
+        units,
+        {from: accounts[0]})
+    } catch (error) {
+      console.error('Error submitting to the Ethereum blockchain: ' + error)
+      throw error
+    }
   }
 
-  getAllListingIds() {
-    return new Promise((resolve, reject) => {
-      this.listingsRegistryContract.setProvider(window.web3.currentProvider)
-      this.listingsRegistryContract.deployed().then((instance) => {
-        // Get total number of listings
-        instance.listingsLength.call().then((listingsLength) => {
-          function range(start, count) {
-            return Array.apply(0, Array(count))
-              .map(function (element, index) {
-                return index + start
-            })
-          }
-          resolve(range(0, Number(listingsLength)))
-        })
-        .catch((error) => {
-          console.log(`Can't get number of listings.`)
-          reject(error)
-        })
-      })
-      .catch((error) => {
-        console.log(`Contract not deployed`)
-        reject(error)
-      })
-    })
+  async getAllListingIds() {
+    const range = (start, count) => (
+      Array.apply(0, Array(count))
+        .map((element, index) => index + start)
+    )
+
+    this.listingsRegistryContract.setProvider(window.web3.currentProvider)
+
+    let instance
+    try {
+      instance = await this.listingsRegistryContract.deployed()
+    } catch (error) {
+      console.log(`Contract not deployed`)
+      throw error
+    }
+
+    // Get total number of listings
+    let listingsLength
+    try {
+      listingsLength = await instance.listingsLength.call()
+    } catch (error) {
+      console.log(error)
+      console.log(`Can't get number of listings.`)
+      throw error
+    }
+
+    return range(0, Number(listingsLength))
   }
 
-  getListing(listingId) {
-    return new Promise((resolve, reject) => {
-      this.listingsRegistryContract.setProvider(window.web3.currentProvider)
-      this.listingsRegistryContract.deployed().then((instance) => {
-        instance.getListing.call(listingId)
-        .then((listing)  => {
-          // Listing is returned as array of properties.
-          // IPFS hash (as bytes32 hex string) is in results[2]
-          // Convert it to regular IPFS base-58 encoded hash
-          // Address of Listing contract is in: listing[0]
-          const listingObject = {
-            index: listingId,
-            lister: listing[1],
-            ipfsHash: this.getIpfsHashFromBytes32(listing[2]),
-            price: window.web3.fromWei(listing[3], 'ether').toNumber(),
-            unitsAvailable: listing[4].toNumber()
-          }
-          resolve(listingObject)
-        })
-        .catch((error) => {
-          console.log(`Error fetching listingId: ${listingId}`)
-          reject(error)
-        })
-      })
-    })
+  async getListing(listingId) {
+    this.listingsRegistryContract.setProvider(window.web3.currentProvider)
+    const instance = await this.listingsRegistryContract.deployed()
+
+    let listing
+    try {
+      listing = await instance.getListing.call(listingId)
+    } catch (error) {
+      console.log(`Error fetching listingId: ${listingId}`)
+      throw error
+    }
+
+    // Listing is returned as array of properties.
+    // IPFS hash (as bytes32 hex string) is in results[2]
+    // Convert it to regular IPFS base-58 encoded hash
+    // Address of Listing contract is in: listing[0]
+    const listingObject = {
+      index: listingId,
+      address: listing[0],
+      lister: listing[1],
+      ipfsHash: this.getIpfsHashFromBytes32(listing[2]),
+      price: window.web3.fromWei(listing[3], 'ether').toNumber(),
+      unitsAvailable: listing[4].toNumber()
+    }
+    return listingObject
   }
 
-  buyListing(listingIndex, unitsToBuy, ethToGive) {
-    console.log('request to buy index #' + listingIndex + ', of this many untes ' + unitsToBuy + ' units. Total eth to send:' + ethToGive)
-    return new Promise((resolve, reject) => {
-      this.listingsRegistryContract.setProvider(window.web3.currentProvider)
-      window.web3.eth.getAccounts((error, accounts) => {
-        this.listingsRegistryContract.deployed().then((instance) => {
-          let weiToGive = window.web3.toWei(ethToGive, 'ether')
-          // Buy it for real
-          instance.buyListing(
-            listingIndex,
-            unitsToBuy,
-            {from: accounts[0], value:weiToGive, gas: 4476768} // TODO (SRJ): is gas needed?
-          )
-          .then((transactionReceipt) => {
-            // Success
-            resolve(transactionReceipt)
-          })
-          .catch((error) => {
-            console.error(error)
-            reject(error)
-          })
-        })
-      })
-    })
+  async buyListing(listingAddress, unitsToBuy, ethToGive) {
+    // TODO: Shouldn't we be passing wei to this function, not eth?
+    console.log('request to buy listing ' + listingAddress + ', for this many units ' + unitsToBuy + ' units. Total eth to send:' + ethToGive)
+
+    const { currentProvider, eth } = window.web3;
+    this.listingContract.setProvider(currentProvider)
+
+    const accounts = await promisify(eth.getAccounts.bind(eth))()
+    const listing = await this.listingContract.at(listingAddress)
+    const weiToGive = window.web3.toWei(ethToGive, 'ether')
+    
+    const transactionReceipt = await listing.buyListing(
+      unitsToBuy,
+      {from: accounts[0], value:weiToGive, gas: 4476768} // TODO (SRJ): is gas needed?
+    )
+    return transactionReceipt
   }
 
-  setUser(ipfsUser) {
-    return new Promise((resolve, reject) => {
-      this.userRegistryContract.setProvider(window.web3.currentProvider)
-      window.web3.eth.getAccounts((error, accounts) => {
-        this.userRegistryContract.deployed().then((instance) => {
-          return instance.set(
-            this.getBytes32FromIpfsHash(ipfsUser),
-            {from: accounts[0]})
-        }).then((result) => {
-          resolve(result)
-        }).catch((error) => {
-          console.error('Error submitting to the Ethereum blockchain: ' + error)
-          reject(error)
-        })
-      })
-    })
-  }
-
-  getUser(userAddress) {
-    return new Promise((resolve, reject) => {
-      this.userRegistryContract.setProvider(window.web3.currentProvider)
-      this.userRegistryContract.deployed().then((instance) => {
-        instance.users(userAddress)
-        .then(([ipfsHash, isSet]) => {
-          resolve(this.getIpfsHashFromBytes32(ipfsHash))
-        })
-        .catch((error) => {
-          console.log(`Error fetching userId: ${userId}`)
-          reject(error)
-        })
-      })
-    })
-  }
-
-  waitTransactionFinished(transactionReceipt, pollIntervalMilliseconds=1000) {
-    return new Promise((resolve, reject) => {
+  async waitTransactionFinished(transactionReceipt, pollIntervalMilliseconds=1000) {
+    console.log("Waiting for transaction")
+    console.log(transactionReceipt)
+    const blockNumber = await new Promise((resolve, reject) => {
+      if (!transactionHash) {
+        reject(`Invalid transactionHash passed: ${transactionHash}`)
+      }
       let txCheckTimer = setInterval(txCheckTimerCallback, pollIntervalMilliseconds)
       function txCheckTimerCallback() {
-        window.web3.eth.getTransaction(transactionReceipt, (error, transaction) => {
+        window.web3.eth.getTransaction(transactionHash, (error, transaction) => {
           if (transaction.blockNumber != null) {
             console.log(`Transaction mined at block ${transaction.blockNumber}`)
             console.log(transaction)
@@ -188,8 +148,8 @@ class ContractService {
 
             // // TODO (Stan): Metamask web3 doesn't have this method. Probably could fix by
             // // by doing the "copy local web3 over metamask's" technique.
-            // window.web3.eth.getTransactionReceipt(this.props.transactionReceipt, (error, transactionReceipt) => {
-            //   console.log(transactionReceipt)
+            // window.web3.eth.getTransactionReceipt(this.props.transactionHash, (error, transactionHash) => {
+            //   console.log(transactionHash)
             // })
 
             clearInterval(txCheckTimer)
@@ -200,9 +160,8 @@ class ContractService {
         })
       }
     })
+    return blockNumber
   }
 }
 
-const contractService = new ContractService()
-
-export default contractService
+export default ContractService

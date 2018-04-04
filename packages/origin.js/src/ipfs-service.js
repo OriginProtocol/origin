@@ -6,15 +6,10 @@
 
 const ipfsAPI = require('ipfs-api')
 const MapCache = require('map-cache')
+const promisify = require('util.promisify')
 
 class IpfsService {
-  static instance
-
   constructor() {
-    if (IpfsService.instance) {
-      return IpfsService.instance
-    }
-
     // If connecting to a local IPFS daemon, set envionment variables:
     // IPFS_DOMAIN = 127.0.0.1
     // IPFS_API_PORT = 5001
@@ -35,90 +30,73 @@ class IpfsService {
         console.error(error)
       }
     })
-    IpfsService.instance = this
 
     // Caching
     this.mapCache = new MapCache()
   }
 
-  submitListing(formListingJson) {
-    const file = {
-      path: 'listing.json',
-      content: JSON.stringify(formListingJson)
-    }
-    return this.submitFile(file)
-  }
-
-  getListing(ipfsHashStr) {
-    return this.getFile(ipfsHashStr)
-  }
-
-  submitUser(formUserJson) {
-    const file = {
-      path: 'user.json',
-      content: JSON.stringify(formUserJson)
-    }
-    return this.submitFile(file)
-  }
-
-  getUser(ipfsHashStr) {
-    return this.getFile(ipfsHashStr)
-  }
-
-  submitFile(file) {
-    return new Promise((resolve, reject) => {
-      this.ipfs.files.add([file], (error, response) => {
-        if (error) {
-          console.error('Can\'t connect to IPFS.')
-          console.error(error)
-          reject('Can\'t connect to IPFS. Failure to submit file to IPFS')
-          return;
-        }
-        const file = response[0]
-        const ipfsHashStr = file.hash
-        if (ipfsHashStr) {
-          this.mapCache.set(ipfsHashStr, file)
-          resolve(ipfsHashStr)
-        } else {
-          reject('Failure to submit file to IPFS')
-        }
-      })
-    })
-  }
-
-  getFile(ipfsHashStr) {
-    return new Promise((resolve, reject) => {
-      // Check for cache hit
-      if (this.mapCache.has(ipfsHashStr)) {
-        resolve(this.mapCache.get(ipfsHashStr))
+  async submitFile(jsonData) {
+      const file = {
+        path: 'file.json',
+        content: JSON.stringify(jsonData)
       }
-      // Get from IPFS network
-      this.ipfs.files.cat(ipfsHashStr, (err, stream) => {
-        if (err) {
-          console.error(err)
-          reject('Got ipfs cat err:' + err)
+      const addFile = promisify(this.ipfs.files.add.bind(this.ipfs.files))
+
+      let response
+      try {
+        response = await addFile([file])
+      } catch (error) {
+        console.error('Can\'t connect to IPFS.', error)
+        throw new Error('Can\'t connect to IPFS. Failure to submit file to IPFS')
+      }
+
+      const ipfsHashStr = response[0].hash
+      if (!ipfsHashStr) {
+        throw new Error('Failure to submit file to IPFS')
+      }
+
+      this.mapCache.set(ipfsHashStr, jsonData)
+      return ipfsHashStr
+  }
+
+  async getFile(ipfsHashStr) {
+    // Check for cache hit
+    if (this.mapCache.has(ipfsHashStr)) {
+      return this.mapCache.get(ipfsHashStr)
+    }
+
+    const catFile = promisify(this.ipfs.files.cat.bind(this.ipfs.files))
+
+    // Get from IPFS network
+    let stream
+    try {
+      stream = await catFile(ipfsHashStr)
+    } catch (error) {
+      console.error(error)
+      throw new Error('Got ipfs cat err:' + error)
+    }
+
+    const response = await new Promise((resolve, reject) => {
+      let res = ''
+      stream.on('data', (chunk) => {
+        res += chunk.toString()
+      })
+      stream.on('error', (err) => {
+        reject('Got ipfs cat stream err:' + err)
+      })
+      stream.on('end', () => {
+        let parsedResponse;
+        try {
+          parsedResponse = JSON.parse(res)
+        } catch (error) {
+          reject(`Failed to parse response JSON: ${error}`)
           return;
         }
-        let res = ''
-        stream.on('data', (chunk) => {
-          res += chunk.toString()
-        })
-        stream.on('error', function (err) {
-          reject('Got ipfs cat stream err:' + err)
-        })
-        stream.on('end', () => {
-          let parsedResponse;
-          try {
-            parsedResponse = JSON.parse(res)
-          } catch (error) {
-            reject(`Failed to parse response JSON: ${error}`)
-            return;
-          }
-          this.mapCache.set(ipfsHashStr, parsedResponse)
-          resolve(parsedResponse)
-        })
+        this.mapCache.set(ipfsHashStr, parsedResponse)
+        resolve(parsedResponse)
       })
     })
+    return response
   }
 
   gatewayUrlForHash(ipfsHashStr) {
@@ -133,6 +111,4 @@ class IpfsService {
 
 }
 
-const ipfsService = new IpfsService()
-
-export default ipfsService
+export default IpfsService

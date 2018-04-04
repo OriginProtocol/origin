@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import contractService from '../src/contract-service'
+import ContractService from '../src/contract-service'
 import { ipfsHashes } from './fixtures'
 
 const methodNames = [
@@ -9,10 +9,27 @@ const methodNames = [
 ]
 
 describe('ContractService', () => {
+  let contractService
+
+  beforeEach(() => {
+    contractService = new ContractService()
+  })
 
   methodNames.forEach((methodName) => {
     it(`should have ${methodName} method`, () => {
       expect(contractService[methodName]).to.be.an.instanceof(Function)
+    })
+  })
+
+  describe('blockchain running', () => {
+    it(`should should have injected web3 object`, () => {
+      expect('web3' in window).to.equal(true)
+    })
+    it(`should be connected to local blockchain`, () => {
+      // Will return "connecting" if still waiting for connection,
+      // otherwise network number (e.g. 1 for mainnet)
+      const result = (isNaN(web3.version.network))
+      expect(result).to.equal(false)
     })
   })
 
@@ -64,7 +81,7 @@ describe('ContractService', () => {
       const ids = await contractService.getAllListingIds()
       expect(ids.length).to.be.greaterThan(0)
       const listing = await contractService.getListing(ids[0])
-      expect(listing).to.have.keys('index', 'lister', 'ipfsHash', 'price', 'unitsAvailable')
+      expect(listing).to.have.keys('address', 'index', 'lister', 'ipfsHash', 'price', 'unitsAvailable')
     })
   })
 

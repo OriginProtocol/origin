@@ -16,25 +16,7 @@ contract UserRegistry {
     */
 
     // Mapping of all users
-    mapping(address => userStruct) public users;
-
-    /*
-    * Structs
-    */
-
-    struct userStruct {
-        bytes32 ipfsHash;
-        bool isSet;
-    }
-
-    /*
-    * Modifiers
-    */
-
-    modifier isValidUserAddress() {
-        require (users[msg.sender].isSet);
-        _;
-    }
+    mapping(address => bytes32) public users;
 
     /*
     * Public functions
@@ -47,20 +29,34 @@ contract UserRegistry {
     )
         public
     {
-        users[msg.sender] = userStruct(_ipfsHash, true);
+        users[msg.sender] = _ipfsHash;
         NewUser(msg.sender);
     }
 
-    /// @dev create_another(): Create a new user and associates attenstion or proof with user
+    /// @dev createAnother(): Create a new user and associates attenstion or proof with user
     // @param wallet id
     // Attestation or proof to associate to the user
-    function create_another(string _id, string payload) public returns (string){
+    // TODO: (Brad David) replace with real function
+    function createAnother(
+        string _id,
+        string payload)
+        public
+        pure
+        returns (string)
+    {
+        _id; // Dummy "operation" to silence copiler warnigns
         return payload;
     }
 
     /// @dev get(): returns and existing user associated with wallet id
     // @param wallet id
-    function get(string _id) public returns (string){
+    function get(
+        string _id
+    )
+        public
+        pure
+        returns (string)
+    {
         return _id;
     }
 }
