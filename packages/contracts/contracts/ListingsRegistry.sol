@@ -51,7 +51,8 @@ contract ListingsRegistry {
     owner = msg.sender;
 
     // Sample Listings - May be removed for public deployment
-    testingAddSampleListings();
+    // 2018-04-04 - Temp commented out to get under gas limit.
+    // testingAddSampleListings();
   }
 
   function testingAddSampleListings()
