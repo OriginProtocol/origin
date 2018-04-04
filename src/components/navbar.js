@@ -34,8 +34,18 @@ class NavBar extends Component {
               <input className="form-control mr-sm-2" type="search" placeholder="Search Listings" aria-label="Search" onChange={this.handleChange} value={this.state.searchQuery} />
             </form>
             <div className="navbar-nav justify-content-end">
-              <Link to="/my-purchases" className="nav-item nav-link">My Purchases</Link>
-              <Link to="/my-listings" className="nav-item nav-link">My Listings</Link>
+              <Link to="/my-purchases" className="nav-item nav-link">Buy</Link>
+              <div className="nav-item nav-link sell dropdown">
+                <a className="active dropdown-toggle" id="sellDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sell</a>
+                <div className="dropdown-menu dropdown-menu-right" aria-labelledby="sellDropdown">
+                  <div className="triangle-container d-none d-md-flex justify-content-end"><div className="triangle"></div></div>
+                  <div className="actual-menu">
+                    <Link to="/my-listings" className="dropdown-item">My Listings</Link>
+                    <Link to="/my-sales" className="dropdown-item">My Sales</Link>
+                    <Link to="/create" className="dropdown-item d-none d-lg-block">Add a Listing</Link>
+                  </div>
+                </div>
+              </div>
               <Link to="/create" className="nav-item nav-link"><img src="/images/add-listing-icon.svg" alt="Add Listing" className="add-listing" />Add Listing</Link>
             </div>
           </div>
@@ -47,7 +57,7 @@ class NavBar extends Component {
                 <img src="/images/alerts-icon-selected.svg" className="notifications selected" alt="Notifications" />
               </a>
               <div className="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsDropdown">
-                <div className="triangle-container"><div className="triangle"></div></div>
+                <div className="triangle-container d-flex justify-content-end"><div className="triangle"></div></div>
                 <div className="actual-menu">
                   <header className="d-flex">
                     <div className="count"><p>4</p></div>
@@ -71,7 +81,7 @@ class NavBar extends Component {
                   className="identicon" alt="Identicon" />
               </a>
               <div className="dropdown-menu dropdown-menu-right" aria-labelledby="identityDropdown">
-                <div className="triangle-container"><div className="triangle"></div></div>
+                <div className="triangle-container d-flex justify-content-end"><div className="triangle"></div></div>
                 <div className="actual-menu">
                   <div className="wallet">
                     <div className="d-flex">
