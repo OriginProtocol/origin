@@ -131,5 +131,18 @@ class VerificationServiceTest(test_base.DatabaseWithTestdataTest):
         db_identity = db_models.Identity.query.get(code_data.eth_address)
         self.assertIsNone(db_identity)
 
+    @mock.patch('util.time_.utcnow')
+    def test_generate_phone_verification_rate_limit_exceeded(self, mock_now):
+        req = verification.GeneratePhoneVerificationCodeRequest(
+            eth_address=str_eth(VCD.code1.eth_address),
+            phone=VCD.code1.phone)
+        mock_now.return_value = VCD.code1.updated_at + datetime.timedelta(seconds=9)
+        resp = self.service().invoke('generate_phone_verification_code', req)
+        self.assertEqual('REQUEST_ERROR', resp.response_code)
+        self.assertEqual(1, len(resp.errors))
+        self.assertEqual('RATE_LIMIT_EXCEEDED', resp.errors[0].code)
+        self.assertIsNone(resp.errors[0].path)
+        self.assertEqual('Please wait briefly before requesting a new verification code.', resp.errors[0].message)
+
 if __name__ == '__main__':
     unittest.main()

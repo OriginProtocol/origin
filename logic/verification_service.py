@@ -25,6 +25,11 @@ class VerificationServiceImpl(verification.VerificationService, apilib.ServiceIm
         if db_code is None:
             db_code = db_models.VerificationCode(eth_address=addr)
             db.session.add(db_code)
+        elif (time_.utcnow() - db_code.updated_at).total_seconds() < 10:
+            # If the client has requested a verification code already within the last 10 seconds,
+            # throw a rate limit error, so they can't just keep creating codes and guessing them
+            # rapidly.
+            raise service_utils.req_error(code='RATE_LIMIT_EXCEEDED', message='Please wait briefly before requesting a new verification code.')
         db_code.phone = req.phone
         db_code.code = random_numeric_token()
         db_code.expires_at = time_.utcnow() + datetime.timedelta(minutes=CODE_EXPIRATION_TIME_MINUTES)
