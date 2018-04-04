@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import moment from 'moment'
 
@@ -17,7 +16,7 @@ class MyListingCard extends Component {
       <div className="transaction card">
         <div className="card-body d-flex flex-column flex-lg-row">
           <div className="image-container">
-            <Link to={`/my-listings/${_id}`}><img role="presentation" /></Link>
+            <img role="presentation" />
           </div>
           <div className="content-container d-flex flex-column">
             <span className={`status ${status}`}>{status}</span>

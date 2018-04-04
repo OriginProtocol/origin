@@ -27,12 +27,12 @@ class TransactionProgress extends Component {
     this.setState({ progressCalculated: true, progressWidth })
   }
   render() {
-    const { currentStep, listing, perspective } = this.props
+    const { currentStep, listing, perspective, subdued } = this.props
     const { maxStep, progressCalculated, progressWidth } = this.state
     const { _id, fulfilledAt, receivedAt, soldAt, withdrawnAt } = listing
 
     return (
-      <div className={`progress-container${progressCalculated ? ' ready' : ''}`}>
+      <div className={`progress-container${progressCalculated ? ' ready' : ''}${subdued ? ' subdued' : ''}`}>
         <div className="progress">
           <div className="progress-bar" role="progressbar" style={{ width: progressWidth }} aria-valuenow={Math.max(maxStep, currentStep)} aria-valuemin="0" aria-valuemax={maxStep}></div>
         </div>
@@ -74,14 +74,14 @@ class TransactionProgress extends Component {
             </span>
           }
         </div>
-        {perspective === 'buyer' &&
+        {!subdued && perspective === 'buyer' &&
           <div className="labels d-flex justify-content-between text-center">
             <div><p>Purchased</p></div>
             <div><p>Sent by seller</p></div>
             <div><p>Received by me</p></div>
           </div>
         }
-        {perspective === 'seller' &&
+        {!subdued && perspective === 'seller' &&
           <div className="labels d-flex justify-content-between text-center">
             <div><p>Sold</p></div>
             <div><p>Order<br />Sent</p></div>

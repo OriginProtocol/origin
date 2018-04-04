@@ -162,7 +162,7 @@ a:hover {
 
 .progress-container {
   position: relative;
-  margin: 20px 0;
+  margin: 20px 0 0;
 }
 
 .progress {
@@ -222,6 +222,21 @@ a:hover {
   margin-left: -100%;
   margin-right: -100%;
   text-align: center;
+}
+
+.subdued .progress {
+  height: 2px;
+  margin: 0;
+}
+
+.subdued .circles {
+  top: -4px;
+}
+
+.subdued .progress-circle {
+  background-image: none;
+  height: 10px;
+  width: 10px;
 }
 
 /* Navbar */
@@ -1007,6 +1022,75 @@ label[for=root_pictures]:hover {
   border: solid 1px var(--light);
 }
 
+/* Sales */
+
+.sale.card {
+  margin-bottom: 30px;
+}
+
+.sale .card-body .transaction {
+  flex-basis: 3;
+  flex-grow: 1;
+  margin-bottom: 0;
+}
+
+.sale .card-body .title {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.sale .card-body .address {
+  color: #6f8294;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.sale .card-body .timestamp {
+  flex-basis: 1;
+  margin-bottom: 1rem;
+}
+
+.sale .card-body .image-container {
+  position: relative;
+  flex-basis: 130px;
+  margin-bottom: 1rem;
+  max-width: 100%;
+}
+
+.sale .card-body .image-container::after {
+  content: '';
+  display: block;
+  padding-bottom: 66.67%;
+  height: 0;
+}
+
+.sale .card-body .image-container img {
+  position: absolute;
+  background-color: var(--light);
+  left: 0;
+  padding-bottom: 66.67%;
+  top: 0;
+  width: 100%;
+}
+
+.sale .card-body .progress-container {
+  margin-bottom: 20px;
+}
+
+.sale .card-body .actions p {
+  margin: 0;
+}
+
+.sale .card-body .actions .link-container {
+  flex-shrink: 0;
+  padding-left: 0.75rem;
+}
+
+.sale .card-body .actions .link-container img {
+  margin-left: 0.75rem;
+  vertical-align: baseline;
+}
+
 /* Transactions */
 
 .status.active {
@@ -1023,7 +1107,7 @@ label[for=root_pictures]:hover {
 }
 
 .transaction .card-body {
-  padding: 10px;
+  padding: 0.5625rem;
 }
 
 .transaction .card-body .badge {
@@ -1047,8 +1131,8 @@ label[for=root_pictures]:hover {
 .transaction .image-container img {
   position: absolute;
   background-color: var(--light);
-  height: 100%;
   left: 0;
+  padding-bottom: 66.67%;
   top: 0;
   width: 100%;
 }
@@ -1085,14 +1169,14 @@ label[for=root_pictures]:hover {
   padding-top: 10px;
 }
 
-.transaction .content-container .price,
-.transaction .content-container .quantity {
+.transaction .price,
+.transaction .quantity {
   font-weight: 300;
   margin: 0;
   padding-top: 10px;
 }
 
-.transaction .content-container .price {
+.transaction .price {
   font-weight: normal;
   margin-bottom: 0.5rem;
   padding-right: 2rem;
@@ -2072,6 +2156,14 @@ footer .footer-links li a {
   .transaction-detail .counterparty,
   .transaction-detail .summary {
     margin: 0 0 30px 30px;
+  }
+
+  .sale .card-body .timestamp {
+    padding-right: 1rem;
+  }
+
+  .sale .card-body .image-container {
+    margin: 0;
   }
 }
 
