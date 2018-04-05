@@ -17,6 +17,8 @@ This is still an alpha version which will evolve significantly before the main n
 
 A browser-compatible plain javascript file `origin.js` is available in the "Releases" tab, and will soon be hosted on originprotocol.com. It can be generated locally via `npm build` and will be placed in `dist/origin.js`.
 
+## Install
+
 ### NPM
 ```
 npm install @originprotocol/origin --save
@@ -28,7 +30,6 @@ yarn add @originprotocol/origin
 ```
 
 ### Local
-For developing `origin.js`, it is better to link the package rather than installing it. (Otherwise you would need to run `npm build` everytime you made a change to the package.)
 
 In the directory `./packages/contracts/` run:
 ```
@@ -36,31 +37,35 @@ truffle compile --all
 ```
 This will create the `.json` files for our solidity contracts.
 
+Next, you will need to start your local development blockchain.
+
+In the same directory run:
+```
+truffle develop
+```
+
+Then, you will need to deploy your contracts.
+
+In the same directory run:
+```
+migrate --reset --compile-all
+```
+
+Finally, you will need to build the node module. For developing on `origin.js`, it is better to link the package rather than installing it. (Otherwise you would need to run `npm build` everytime you made a change to the package.)
+
 In the directory `./packages/origin.js` run:
 ```
 npm link
 ```
 
-Now change tabs (or diectories) to the repo for your DApp (for example, the [Origin demo-dapp](https://github.com/OriginProtocol/demo-dapp)) run:
+Now change tabs (or directories) to the repo for your DApp (for example, the [Origin demo-dapp](https://github.com/OriginProtocol/demo-dapp)) and run:
 ```
 npm link @originprotocol/origin
 ```
-This will create a symlink, direcly linking the dapp to your local `origin.js` package.
-
-Next, you will need to start your local development blockchain.
-
-In the directory `./packages/contracts/` run:
-```
-truffle develop
-```
-
-Then in the console run:
-```
-migrate --reset --compile-all
-```
-
+This will create a symlink, direcly linking the DApp to your local `origin.js` package.
 
 ## Import
+
 ```
 import { contractService, ipfsService, originService } from '@originprotocol/origin'
 ```
@@ -111,4 +116,5 @@ Tests are automatically rerun when source or test code is changed.
 Run a subset of tests using the `grep` query string parameter, for example: http://localhost:8081/?grep=IpfsService
 
 ## Documentation
+
 Needed
