@@ -130,9 +130,9 @@ class ContractService {
     return transactionReceipt
   }
 
-  async waitTransactionFinished(transactionReceipt, pollIntervalMilliseconds=1000) {
+  async waitTransactionFinished(transactionHash, pollIntervalMilliseconds=1000) {
     console.log("Waiting for transaction")
-    console.log(transactionReceipt)
+    console.log(transactionHash)
     const blockNumber = await new Promise((resolve, reject) => {
       if (!transactionHash) {
         reject(`Invalid transactionHash passed: ${transactionHash}`)
