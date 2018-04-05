@@ -1,29 +1,35 @@
 import { expect } from "chai"
-import Origin from "../src/index.js"
+import Listings from "../src/resources/listings.js"
+import ContractService from "../src/contract-service.js"
+import IpfsService from "../src/ipfs-service.js"
 
 describe("Listing Resource", () => {
-  var origin
+  var listings
+  var contractService
+  var ipfsService
   var testListingIds
 
   before(async () => {
-    origin = Origin // Doing this little dance because eventualy Origin won't be a singleton, but something we instantiate
-    testListingIds = await origin.contractService.getAllListingIds()
+    contractService = new ContractService()
+    ipfsService = new IpfsService()
+    listings = new Listings({ contractService, ipfsService })
+    testListingIds = await contractService.getAllListingIds()
   })
 
   it("should get all listing ids", async () => {
-    const ids = await origin.listings.allIds()
-    expect(ids.length).to.equal(0)
+    const ids = await listings.allIds()
+    expect(ids.length).to.be.greaterThan(4)
   })
 
   it("should get a listing", async () => {
-    const listing = await origin.listings.getByIndex(testListingIds[0])
+    const listing = await listings.getByIndex(testListingIds[0])
     expect(listing.name).to.equal("Zinc House")
     expect(listing.index).to.equal(testListingIds[0])
   })
 
   it("should buy a listing", async () => {
-    const listing = await origin.listings.getByIndex(testListingIds[0])
-    const transaction = await origin.listings.buy(
+    const listing = await listings.getByIndex(testListingIds[0])
+    const transaction = await listings.buy(
       listing.address,
       1,
       listing.price * 1
@@ -44,7 +50,7 @@ describe("Listing Resource", () => {
       price: 3.3
     }
     const schema = "for-sale"
-    await origin.listings.create(listingData, schema)
+    await listings.create(listingData, schema)
     // Todo: Check that this worked after we have web3 approvals working
   })
 })
