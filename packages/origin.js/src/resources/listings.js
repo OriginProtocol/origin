@@ -2,15 +2,20 @@
 // contractService and ipfsService.
 
 class Listings {
+  constructor({ contractService, ipfsService }) {
+    this.contractService = contractService
+    this.ipfsService = ipfsService
+  }
+
   async allIds() {
-    return await this.origin.contractService.getAllListingIds()
+    return await this.contractService.getAllListingIds()
   }
 
   async getByIndex(listingIndex) {
-    const contractData = await this.origin.contractService.getListing(
+    const contractData = await this.contractService.getListing(
       listingIndex
     )
-    const ipfsData = await this.origin.ipfsService.getFile(
+    const ipfsData = await this.ipfsService.getFile(
       contractData.ipfsHash
     )
     // ipfsService should have already checked the contents match the hash,
@@ -51,7 +56,7 @@ class Listings {
   }
 
   async buy(listingAddress, unitsToBuy, ethToPay) {
-    return await this.origin.contractService.buyListing(
+    return await this.contractService.buyListing(
       listingAddress,
       unitsToBuy,
       ethToPay
