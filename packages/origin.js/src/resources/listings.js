@@ -1,12 +1,12 @@
 // For now, we are just wrapping the methods that are already in
 // contractService and ipfsService.
 
-module.exports = {
-  allIds: async function() {
+class Listings {
+  async allIds() {
     return await this.origin.contractService.getAllListingIds()
-  },
+  }
 
-  getByIndex: async function(listingIndex) {
+  async getByIndex(listingIndex) {
     const contractData = await this.origin.contractService.getListing(
       listingIndex
     )
@@ -35,9 +35,9 @@ module.exports = {
     // TODO: Validation
 
     return listing
-  },
+  }
 
-  create: async function(data, schemaType) {
+  async create(data, schemaType) {
     if (data.price == undefined) {
       throw "You must include a price"
     }
@@ -48,9 +48,9 @@ module.exports = {
       { formData: data },
       schemaType
     )
-  },
+  }
 
-  buy: async function(listingAddress, unitsToBuy, ethToPay) {
+  async buy(listingAddress, unitsToBuy, ethToPay) {
     return await this.origin.contractService.buyListing(
       listingAddress,
       unitsToBuy,
@@ -58,3 +58,5 @@ module.exports = {
     )
   }
 }
+
+module.exports = Listings
