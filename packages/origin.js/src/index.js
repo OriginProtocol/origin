@@ -9,13 +9,6 @@ var resources = {
 
 class Origin {
   constructor() {
-    // Give each resource access to the origin services.
-    // By having a single origin, its configuration can be changed
-    // and all contracts will follow it
-    for (let resourceName in resources) {
-      resources[resourceName].origin = this
-      this[resourceName] = resources[resourceName]
-    }
     this.contractService = new ContractService()
     this.ipfsService = new IpfsService()
     this.originService = new OriginService({
@@ -23,6 +16,15 @@ class Origin {
       ipfsService: this.ipfsService
     })
     this.userRegistryService = new UserRegistryService()
+
+    // Instantiate each resource and give it access to contracts and IPFS
+    for (let resourceName in resources) {
+      let Resource = resources[resourceName]
+      this[resourceName] = new Resource({
+        contractService: this.contractService,
+        ipfsService: this.ipfsService
+      })
+    }
   }
 }
 
