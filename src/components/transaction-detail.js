@@ -121,7 +121,7 @@ class TransactionDetail extends Component {
                     <div className="avatar-container">
                       <img src={`/images/avatar-${perspective === 'seller' ? 'green' : 'blue'}.svg`} alt="seller avatar" />
                     </div>
-                    <div className="identification d-flex flex-column justify-content-between">
+                    <div className="identification d-flex flex-column justify-content-between text-truncate">
                       <p><span className="badge badge-dark">Seller</span></p>
                       <p className="name">{seller.name || 'Anonymous User'}</p>
                       <p className="address">{seller.address}</p>
@@ -130,7 +130,7 @@ class TransactionDetail extends Component {
                 </div>
                 <div className="col-6">
                   <div className="d-flex justify-content-end">
-                    <div className="identification d-flex flex-column text-right justify-content-between">
+                    <div className="identification d-flex flex-column text-right justify-content-between text-truncate">
                       <p><span className="badge badge-dark">Buyer</span></p>
                       <p className="name">{buyer.name || 'Anonymous User'}</p>
                       <p className="address">{buyer.address}</p>
@@ -169,33 +169,33 @@ class TransactionDetail extends Component {
                   {soldAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sold on<br /><strong>${moment(soldAt).format('MMM D, YYYY')}</strong>`}></span>{perspective === 'buyer' ? 'Purchased' : 'Sold'}</td>
-                      <td><a href="#" onClick={() => alert('To Do')}>0x56Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
-                      <td><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
-                      <td><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x56Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
                     </tr>
                   }
                   {fulfilledAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sent by seller on<br /><strong>${moment(fulfilledAt).format('MMM D, YYYY')}</strong>`}></span>Sent by seller</td>
-                      <td><a href="#" onClick={() => alert('To Do')}>0x78Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
-                      <td><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
-                      <td><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x78Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
                     </tr>
                   }
                   {receivedAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Received buy buyer on<br /><strong>${moment(receivedAt).format('MMM D, YYYY')}</strong>`}></span>Received by buyer</td>
-                      <td><a href="#" onClick={() => alert('To Do')}>0x90Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
-                      <td><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
-                      <td><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x90Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
                     </tr>
                   }
                   {perspective === 'seller' && withdrawnAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Funds withdrawn on<br /><strong>${moment(withdrawnAt).format('MMM D, YYYY')}</strong>`}></span>Funds withdrawn</td>
-                      <td><a href="#" onClick={() => alert('To Do')}>0x90Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
-                      <td><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
-                      <td><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x90Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
                     </tr>
                   }
                 </tbody>

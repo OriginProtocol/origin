@@ -73,7 +73,7 @@ class LoginWithCivic extends Component {
 
   render() {
     return (
-      <button className="service verified" onClick={() => this.civicLogin()}>
+      <button className="service verified d-flex" onClick={() => this.civicLogin()}>
         <div className="icon-container">
           <img src="/images/civic-icon.svg" alt="Civic icon" />
         </div>

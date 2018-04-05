@@ -49,7 +49,7 @@ class Profile extends Component {
                 <div className="row">
                   <div className="col-4 col-md-3">
                   </div>
-                  <div className="col-8 col-md-9 name">
+                  <div className="col-8 col-md-9 name d-flex">
                     <h1>Aure Gimon</h1>
                     <div className="icon-container">
                       <button className="edit-profile" data-modal="profile" onClick={this.handleToggle}><img src="/images/edit-icon.svg" alt="edit name" /></button>
@@ -77,26 +77,26 @@ class Profile extends Component {
                 <div className="col-12 col-sm-6">
                   <h2>Verify Yourself</h2>
                   <p>Lorem ipsum dolor sit amet consectetuer adsplicing nonummy pellentesque.</p>
-                  <button className="service" data-modal="twitter" onClick={this.handleToggle}>
+                  <button className="service d-flex" data-modal="twitter" onClick={this.handleToggle}>
                     <div className="icon-container">
                       <img src="/images/twitter-icon.svg" alt="Twitter icon" />
                     </div>
                     <p>Twitter</p>
                     <div className="info icon-container" data-toggle="tooltip" title="To verify your profile, Origin will have you post a tweet to confirm account ownership"></div>
                   </button>
-                  <button className="service" disabled>
+                  <button className="service d-flex" disabled>
                     <div className="icon-container">
                       <img src="/images/reddit-icon.svg" alt="Reddit icon" />
                     </div>
                     <p>Reddit</p>
                   </button>
-                  <button className="service" disabled>
+                  <button className="service d-flex" disabled>
                     <div className="icon-container">
                       <img src="/images/facebook-icon.svg" alt="Facebook icon" />
                     </div>
                     <p>Facebook</p>
                   </button>
-                  <button className="service" disabled>
+                  <button className="service d-flex" disabled>
                     <div className="icon-container">
                       <img src="/images/github-icon.svg" alt="Github icon" />
                     </div>
@@ -107,13 +107,13 @@ class Profile extends Component {
                   <h2>3rd Party</h2>
                   <p>Lorem ipsum dolor sit amet consectetuer adsplicing nonummy pellentesque.</p>
                   <VerifyWithCivic />
-                  <button className="service" disabled>
+                  <button className="service d-flex" disabled>
                     <div className="icon-container">
                       <img src="/images/uport-icon.svg" alt="Uport icon" />
                     </div>
                     <p>Uport</p>
                   </button>
-                  <button className="service" disabled>
+                  <button className="service d-flex" disabled>
                     <div className="icon-container">
                       <img src="/images/origin-icon.svg" alt="Origin icon" />
                     </div>
@@ -147,11 +147,11 @@ class Profile extends Component {
                 <p>ETH Address:</p>
                 <p><strong>0x32Be343B94f860124dC4fEe278FDCBD38C102D88</strong></p>
                 <hr />
-                <div className="detail">
+                <div className="detail d-flex">
                   <p>Account Balance:</p>
                   <p>0 ETH</p>
                 </div>
-                <div className="detail">
+                <div className="detail d-flex">
                   <p>Transaction History:</p>
                   <p><a href="#">ETH</a> | <a href="#">Tokens</a></p>
                 </div>

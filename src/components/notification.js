@@ -48,8 +48,8 @@ class Notification extends Component {
           </div>
         </div>
         <div className="content-container">
-          <HumanReadableNotification notification={notification} className="content" />
-          <p className="address">{address}</p>
+          <HumanReadableNotification notification={notification} className="text-truncate" />
+          <p className="text-truncate">{address}</p>
         </div>
         <div className="link-container ml-auto">
           <a href="https://app.zeplin.io/project/59fa2311bac7acbc8d953da9/screen/5aa878781720abc6447f2cd3?did=5ab93f6fa022c2b641639214" className="btn" target="_blank">

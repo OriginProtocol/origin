@@ -56,7 +56,7 @@ class MyPurchaseCard extends Component {
               {soldAt &&
                 <div className="button-container">
                   {soldAt && fulfilledAt && !receivedAt &&
-                    <a className="btn btn-primary btn-sm" onClick={() => alert('To Do')}>I've Received the Order</a>
+                    <a className="btn btn-primary btn-sm" onClick={() => alert('To Do')}>I&apos;ve Received the Order</a>
                   }
                 </div>
               }

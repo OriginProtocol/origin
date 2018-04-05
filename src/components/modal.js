@@ -27,7 +27,7 @@ class Modal extends Component {
     return (
       <div ref={el => this.el = el} className={`modal fade ${this.props['data-modal']}`} tabIndex="-1" role="dialog" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content">
+          <div className="modal-content d-flex">
             {this.props.children}
           </div>
         </div>

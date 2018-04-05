@@ -18,8 +18,6 @@ body {
 }
 
 #root {
-  display: flex;
-  flex-direction: column;
   height: 100%;
 }
 
@@ -737,7 +735,6 @@ a:hover {
 }
 
 .modal-content .button-container {
-  display: flex;
   margin-top: 20px;
 }
 
@@ -1323,8 +1320,6 @@ label[for=root_pictures]:hover {
 .transaction-detail .identification {
   height: 60px;
   padding: 0 0.75rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .transaction-detail .identification p {
@@ -1348,8 +1343,6 @@ label[for=root_pictures]:hover {
 .transaction-detail .identification .address {
   color: #6f8294;
   font-size: 0.875rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .transaction-detail .progress-container {
@@ -1427,8 +1420,6 @@ label[for=root_pictures]:hover {
 }
 
 .transaction-detail .table td {
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
   width: 25%;
 }
@@ -1703,18 +1694,6 @@ label[for=root_pictures]:hover {
   overflow: hidden;
 }
 
-.notification .content-container .content {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.notification .content-container .address {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .notification .link-container {
   padding-left: 15px;
 }
@@ -1789,10 +1768,6 @@ label[for=root_pictures]:hover {
   font-size: 1rem;
 }
 
-.profile-wrapper .name {
-  display: flex;
-}
-
 .profile-wrapper .name h1 {
   flex-grow: 1;
 }
@@ -1845,7 +1820,6 @@ label[for=root_pictures]:hover {
 }
 
 .profile-wrapper .service {
-  display: flex;
   border: 1px solid var(--light);
   border-radius: var(--default-radius);
   margin-bottom: 10px;
@@ -1968,7 +1942,6 @@ label[for=root_pictures]:hover {
 }
 
 .wallet .detail {
-  display: flex;
   margin-bottom: 5px
 }
 
