@@ -6,7 +6,7 @@ class MySales extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { filter: 'all' }
+    this.state = { filter: 'pending' }
   }
 
   render() {
@@ -35,9 +35,9 @@ class MySales extends Component {
           <div className="row">
             <div className="col-12 col-md-3">
               <div className="filters list-group flex-row flex-md-column">
-                <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>All</a>
                 <a className={`list-group-item list-group-item-action${filter === 'pending' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'pending' })}>Pending</a>
                 <a className={`list-group-item list-group-item-action${filter === 'complete' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'complete' })}>Complete</a>
+                <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>All</a>
               </div>
             </div>
             <div className="col-12 col-md-9">

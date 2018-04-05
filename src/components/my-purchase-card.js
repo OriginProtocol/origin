@@ -48,7 +48,7 @@ class MyPurchaseCard extends Component {
               <p className="price">$1,000</p>
               <p className="quantity">Quantity: {quantity}</p>
             </div>
-            <TransactionProgress currentStep={step} listing={listing} perspective="buyer" />
+            <TransactionProgress currentStep={step} listing={listing} perspective="buyer" subdued={true} />
             <div className="actions d-flex">
               <div className="links-container">
                 <a onClick={() => alert('To Do')}>Open a Dispute</a>

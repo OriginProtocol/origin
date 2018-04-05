@@ -6,7 +6,7 @@ class MyPurchases extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { filter: 'all' }
+    this.state = { filter: 'pending' }
   }
 
   render() {
@@ -15,12 +15,10 @@ class MyPurchases extends Component {
       const arr = data.listings
 
       switch(filter) {
-        case 'sold':
-          return arr.filter(p => p.soldAt)
-        case 'fulfilled':
-          return arr.filter(p => p.fulfilledAt)
-        case 'received':
-          return arr.filter(p => p.receivedAt)
+        case 'pending':
+          return arr.filter(p => !p.reviewedAt)
+        case 'complete':
+          return arr.filter(p => p.reviewedAt)
         default:
           return arr
       }
@@ -37,10 +35,9 @@ class MyPurchases extends Component {
           <div className="row">
             <div className="col-12 col-md-3">
               <div className="filters list-group flex-row flex-md-column">
+                <a className={`list-group-item list-group-item-action${filter === 'pending' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'pending' })}>Pending</a>
+                <a className={`list-group-item list-group-item-action${filter === 'complete' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'complete' })}>Complete</a>
                 <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>All</a>
-                <a className={`list-group-item list-group-item-action${filter === 'sold' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'sold' })}>Purchased</a>
-                <a className={`list-group-item list-group-item-action${filter === 'fulfilled' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'fulfilled' })}>Order Sent</a>
-                <a className={`list-group-item list-group-item-action${filter === 'received' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'received' })}>Received</a>
               </div>
             </div>
             <div className="col-12 col-md-9">
