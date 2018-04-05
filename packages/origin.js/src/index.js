@@ -1,6 +1,5 @@
 import ContractService from "./contract-service"
 import IpfsService from "./ipfs-service"
-import OriginService from "./origin-service"
 import UserRegistryService from "./user-registry-service"
 
 var resources = {
@@ -11,10 +10,8 @@ class Origin {
   constructor() {
     this.contractService = new ContractService()
     this.ipfsService = new IpfsService()
-    this.originService = new OriginService({
-      contractService: this.contractService,
-      ipfsService: this.ipfsService
-    })
+
+    // TODO: This service is deprecated. Remove once the demo dapp no longer depends on it.
     this.userRegistryService = new UserRegistryService()
 
     // Instantiate each resource and give it access to contracts and IPFS
