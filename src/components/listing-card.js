@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 // temporary - we should be getting an origin instance from our app,
 // not using a global singleton
-import origin from '@originprotocol/origin'
+import origin from '../services/origin'
 
 class ListingCard extends Component {
 

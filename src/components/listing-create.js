@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import origin from '@originprotocol/origin'
+import origin from '../services/origin'
 
 import ListingDetail from './listing-detail'
 import Form from 'react-jsonschema-form'

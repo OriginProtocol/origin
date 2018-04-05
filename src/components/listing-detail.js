@@ -4,7 +4,7 @@ import Modal from './modal'
 
 // temporary - we should be getting an origin instance from our app,
 // not using a global singleton
-import origin from '@originprotocol/origin' 
+import origin from '../services/origin' 
 
 const alertify = require('../../node_modules/alertify/src/alertify.js')
 

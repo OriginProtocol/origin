@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import origin from '@originprotocol/origin'
+import origin from '../services/origin'
 
 import Pagination from 'react-js-pagination'
 import { withRouter } from 'react-router'
