@@ -3,15 +3,15 @@
 ## Introduction
 
 Welcome to the origin.js documentation! origin.js is a Javascript library for interacting with the Origin protocol.
-Using the library you can create new listings from your applications, purchase them, or update them from your own off-chain applications. 
+Using the library you can create new listings from your applications, purchase them, or update them from your own off-chain applications.
 
-More information can be found at [Origin Platform Readme](/README.md) 
+More information can be found at [Origin Platform Readme](/README.md).
 
 ### Warning
-This is still an alpha version which will evolve significantly before the main net release. 
+This is still an alpha version which will evolve significantly before the main net release.
 
 
-## Install 
+## Install
 
 ### NPM
 ```
@@ -24,40 +24,42 @@ yarn add @originprotocol/origin
 ```
 
 ### Local
-For developing on `origin.js`, it is better to link the package rather than installing it. (Otherwise you would need to run `npm build` everytime you made a change to the package.)
 
 In the directory `./packages/contracts/` run:
 ```
 truffle compile
 ```
-This will create the `.json` files for our solidity contracts. 
+This will create the `.json` files for our solidity contracts.
+
+Next, you will need to start your local development blockchain.
+
+In the same directory run:
+```
+truffle develop
+```
+
+Then, you will need to deploy your contracts.
+
+In the same directory run:
+```
+migrate --reset
+```
+
+Finally, you will need to build the node module. For developing on `origin.js`, it is better to link the package rather than installing it. (Otherwise you would need to run `npm build` everytime you made a change to the package.)
 
 In the directory `./packages/origin.js` run:
 ```
 npm link
 ```
 
-Now change tabs (or diectories) to the repo for your DApp (for example, the [Origin demo-dapp](https://github.com/OriginProtocol/demo-dapp)) run:
+Now change tabs (or directories) to the repo for your DApp (for example, the [Origin demo-dapp](https://github.com/OriginProtocol/demo-dapp)) and run:
 ```
 npm link @originprotocol/origin
 ```
-This will create a symlink, direcly linking the dapp to your local `origin.js` package.
+This will create a symlink, direcly linking the DApp to your local `origin.js` package.
 
-Next, you will need to start your local development blockchain. 
+## Import
 
-In the directory `./packages/contracts/` run:
-```
-truffle develop
-```
-
-Then in the console run:
-```
-migrate --reset
-```
-
-
-
-## Import 
 ```
 import { contractService, ipfsService, originService } from '@originprotocol/origin'
 ```
@@ -108,4 +110,5 @@ Tests are automatically rerun when source or test code is changed.
 Run a subset of tests using the `grep` query string parameter, for example: http://localhost:8081/?grep=IpfsService
 
 ## Documentation
+
 Needed
