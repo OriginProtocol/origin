@@ -12,7 +12,7 @@ class ListingCard extends Component {
     this.state = {
       category: "Loading...",
       name: "Loading...",
-      price: "Loading...",
+      price: null,
       ipfsHash: null,
       lister: null,
       unitsAvailable: null
@@ -43,7 +43,7 @@ class ListingCard extends Component {
           <div className="category">{this.state.category}</div>
           <div className="title">{this.state.name}</div>
           <div className="price">
-              {Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
+              {this.state.price ? `${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH` : 'Loading...'}
               {this.state.unitsAvailable===0 &&
                 <span className="sold-banner">Sold</span>
               }
