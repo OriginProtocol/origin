@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import moment from 'moment'
+import Review from './review'
 import TransactionProgress from './transaction-progress'
 import data from '../data'
 
@@ -266,38 +267,7 @@ class TransactionDetail extends Component {
                 </div>
               </form>
               <div className="reviews">
-                <div className="review">
-                  <div className="d-flex">
-                    <div className="avatar-container">
-                      <img src="/images/avatar-purple.svg" alt="reviewer avatar" />
-                    </div>
-                    <div className="identification d-flex flex-column justify-content-center">
-                      <p className="name">Stan J.</p>
-                      <p className="address">0x32Be343B94f860124dC4fEe278FDCBD38C102D88</p>
-                    </div>
-                    <div className="score d-flex flex-column justify-content-center text-right">
-                      <div className="stars">stars</div>
-                      <p className="age">2d</p>
-                    </div>
-                  </div>
-                  <p className="content">These chicks are HOT! I mean, ever since I got my baby chicken in the mail it’s been non-stop phone calls from all my friends and neighbors and family. Everyone wants a piece of me now. I used to be quite the anti-social but, honestly, I think these baby chickens are just the boost my social life needed. Lovin’ life!</p>
-                </div>
-                <div className="review">
-                  <div className="d-flex">
-                    <div className="avatar-container">
-                      <img src="/images/avatar-blue.svg" alt="reviewer avatar" />
-                    </div>
-                    <div className="identification d-flex flex-column justify-content-center">
-                      <p className="name">Matt L.</p>
-                      <p className="address">0x32Be343B94f860124dC4fEe278FDCBD38C102D88</p>
-                    </div>
-                    <div className="score d-flex flex-column justify-content-center text-right">
-                      <div className="stars">stars</div>
-                      <p className="age">2d</p>
-                    </div>
-                  </div>
-                  <p className="content">I must admit I’ve always had a thing for baby chickens. I think it goes back to my childhood. Growing up all I ever really had access to were regular baby chickens so you can imagine when I saw this listing I totally flipped! I mean, how cute are these little guys?? I would highly recommend you purchase one for yourself and see what all the fuss is about.</p>
-                </div>
+                {data.reviews.map(r => <Review key={r._id} review={r} />)}
                 <a href="#" className="reviews-link" onClick={() => alert('To Do')}>Read More &or;</a>
               </div>
             </div>

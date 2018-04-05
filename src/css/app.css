@@ -1651,9 +1651,22 @@ label[for=root_pictures]:hover {
   line-height: 1.5;
 }
 
+.transaction-detail .review .score {
+  flex-shrink: 0;
+}
+
+.transaction-detail .review .score .stars {
+  height: 1.5rem;
+}
+
+.transaction-detail .review .score .stars img {
+  height: 1.125rem;
+  vertical-align: text-top;
+}
+
 .transaction-detail .review .score .age {
   color: #6f8294;
-  font-size: 1.125rem;
+  font-size: 0.875rem;
   margin: 0;
 }
 
