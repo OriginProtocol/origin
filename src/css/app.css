@@ -35,32 +35,23 @@ h1, h2, h3 {
 }
 
 h1 {
+  font-size: 2.0rem;
   font-weight: 200;
 }
 
 h2 {
-  font-weight: 300;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0 auto 1rem;
 }
 
-h2 {
-  font-weight: 400;
+h3 {
+  font-size: 1rem;
 }
 
 fieldset {
   border: 0px solid transparent;
   padding: 0px;
-}
-
-h1 {
-  font-size: 2.0rem;
-}
-
-h2 {
-  font-size: 1.5rem;
-}
-
-h3 {
-  font-size: 1rem;
 }
 
 p {
@@ -112,6 +103,44 @@ a:hover {
 
 .filters .list-group-item.active:hover {
   color: white;
+}
+
+.carat {
+  margin-left: 0.75rem;
+  vertical-align: initial;
+}
+
+.carat.down {
+  transform: rotate(90deg);
+}
+
+/* Identification */
+
+.identification {
+  height: 60px;
+  padding: 0 0.75rem;
+}
+
+.identification p {
+  flex-basis: 33%;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.identification .badge {
+  font-size: 0.6rem;
+}
+
+.identification p:first-of-type {
+  line-height: 0.6rem;
+}
+
+.identification .name {
+  font-weight: bold;
+}
+
+.identification .address {
+  font-size: 0.875rem;
 }
 
 /* Avatar */
@@ -819,6 +848,10 @@ a:hover {
 
 /* Listing Detail */
 
+.listing-detail hr {
+  margin: 30px 0;
+}
+
 .carousel {
   width: 100%;
   height: 400px;
@@ -854,29 +887,33 @@ a:hover {
   font-size: 0.875rem;
   color: var(--dusk);
   text-transform: uppercase;
-  margin-bottom: 15px;
 }
 
 .listing-container .title {
   font-family: var(--heading-font);
   font-size: 1.5rem;
-  color: var(--dusk);
   margin-bottom: 15px;
 }
 
 .listing-container .description {
-  color: var(--dusk);
+  font-size: 1.125rem;
   margin-bottom: 30px;
 }
 
-.listing-container .lister-label {
-  font-family: var(--heading-font);
-  color: var(--dusk);
-  font-size: 1.5rem;
+.listing-container .units-available {
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
 }
 
-.listing-container .lister-address {
-  color: var(--dusk);
+.listing-container .seller {
+  margin: 1rem 0 30px;
+}
+
+.listing-container .avatar-container {
+  flex-shrink: 0;
+  height: 60px;
+  margin: 0;
+  width: 60px;
 }
 
 .listing-container .buy-box {
@@ -884,11 +921,19 @@ a:hover {
   background-color: var(--dark-grey-blue);
   padding: 40px;
   font-size: 18px;
-  color: white;
 }
 
-.listing-container .price {
-  float: right;
+.listing-container .buy-box .contract-price {
+  margin-bottom: 1rem;
+}
+
+.listing-container .buy-box p {
+  color: white;
+  margin: 0;
+}
+
+.listing-container .buy-box p:last-child {
+  font-weight: bold;
 }
 
 .listing-container .buy-box button {
@@ -923,6 +968,11 @@ a:hover {
   white-space: pre;
 }
 
+.listing-container a {
+  font-size: 1.125rem;
+  font-weight: normal;
+}
+
 /* Listing Create */
 
 .step-container {
@@ -931,12 +981,11 @@ a:hover {
 }
 
 .step-container h2 {
-  margin: 10px 0px 30px 0px;
   line-height: 1.4;
 }
 
 .schema-details h2 {
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
 }
 
 .listing-submitted-notification {
@@ -1068,6 +1117,10 @@ label[for=root_pictures]:hover {
   margin-bottom: 30px;
 }
 
+.sale .card-body a {
+  font-weight: normal;
+}
+
 .sale .card-body .transaction {
   flex-grow: 1;
   margin-bottom: 0;
@@ -1078,8 +1131,15 @@ label[for=root_pictures]:hover {
   font-weight: bold;
 }
 
+.sale .card-body .title:not(:last-of-type) {
+  margin-bottom: 0;
+}
+
+.sale .card-body .title a {
+  font-weight: bold;
+}
+
 .sale .card-body .address {
-  color: #6f8294;
   font-size: 0.875rem;
   margin: 0;
 }
@@ -1127,11 +1187,6 @@ label[for=root_pictures]:hover {
 .sale .card-body .actions .link-container {
   flex-shrink: 0;
   padding-left: 0.75rem;
-}
-
-.sale .card-body .actions .link-container img {
-  margin-left: 0.75rem;
-  vertical-align: baseline;
 }
 
 /* Transactions */
@@ -1302,10 +1357,6 @@ label[for=root_pictures]:hover {
   margin: 0.5rem auto 2rem;
 }
 
-.transaction-detail h2 {
-  margin: 0 auto 1rem;
-}
-
 .transaction-detail hr {
   margin: 30px 0;
 }
@@ -1315,34 +1366,6 @@ label[for=root_pictures]:hover {
   height: 60px;
   margin: 0;
   width: 60px;
-}
-
-.transaction-detail .identification {
-  height: 60px;
-  padding: 0 0.75rem;
-}
-
-.transaction-detail .identification p {
-  flex-basis: 33%;
-  font-size: 1rem;
-  margin: 0;
-}
-
-.transaction-detail .identification .badge {
-  font-size: 0.6rem;
-}
-
-.transaction-detail .identification p:first-of-type {
-  line-height: 0.6rem;
-}
-
-.transaction-detail .identification .name {
-  font-weight: bold;
-}
-
-.transaction-detail .identification .address {
-  color: #6f8294;
-  font-size: 0.875rem;
 }
 
 .transaction-detail .progress-container {
@@ -1590,7 +1613,6 @@ label[for=root_pictures]:hover {
 .transaction-detail .availability,
 .transaction-detail .category,
 .transaction-detail .ipfs-hash {
-  color: #6f8294;
   margin: 0;
 }
 
@@ -1599,75 +1621,99 @@ label[for=root_pictures]:hover {
   margin-top: 20px;
 }
 
-.transaction-detail .review-count {
-  color: #98a7b4;
-}
+/* Reviews */
 
-.transaction-detail form {
+.reviews {
   margin-bottom: 30px;
 }
 
-.transaction-detail .form-group {
-  margin-bottom: 10px;
-}
-
-.transaction-detail label,
-.transaction-detail textarea {
-  font-size: 1.125rem;
-  font-weight: normal;
-}
-
-.transaction-detail textarea {
-  height: auto;
-}
-
-.transaction-detail textarea::placeholder {
-  color: #98a7b4;
-}
-
-.transaction-detail .reviews {
+.review {
   margin-bottom: 30px;
 }
 
-.transaction-detail .review {
-  margin-bottom: 30px;
+.review .avatar-container {
+  flex-shrink: 0;
+  height: 60px;
+  margin: 0;
+  width: 60px;
 }
 
-.transaction-detail .review .identification {
+.review .identification {
   flex-grow: 1;
+  height: 60px;
+  padding: 0 0.75rem;
 }
 
-.transaction-detail .review .identification p:first-of-type {
+.review .identification p {
+  flex-basis: 33%;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.review .identification .name {
+  font-weight: bold;
+}
+
+.review .identification .address {
+  font-size: 0.875rem;
+}
+
+.review .identification p:first-of-type {
   font-size: 1.125rem;
   line-height: 1.5;
 }
 
-.transaction-detail .review .score {
+.review .score {
   flex-shrink: 0;
 }
 
-.transaction-detail .review .score .stars {
+.review .score .stars {
   height: 1.5rem;
 }
 
-.transaction-detail .review .score .stars img {
+.review .score .stars img {
   height: 1.125rem;
   vertical-align: text-top;
 }
 
-.transaction-detail .review .score .age {
-  color: #6f8294;
+.review .score .age {
   font-size: 0.875rem;
   margin: 0;
 }
 
-.transaction-detail .review .content {
+.review .content {
   margin-top: 20px;
 }
 
-.transaction-detail .reviews a {
+.reviews a {
   font-size: 1.125rem;
   font-weight: normal;
+}
+
+.reviews .review-count {
+  color: #98a7b4;
+}
+
+.reviews form {
+  margin-bottom: 30px;
+}
+
+.reviews .form-group {
+  margin-bottom: 10px;
+}
+
+.reviews label,
+.reviews textarea {
+  font-size: 1.125rem;
+  font-weight: normal;
+}
+
+.reviews textarea {
+  height: auto;
+}
+
+.reviews textarea::placeholder {
+  color: #98a7b4;
 }
 
 /* Notifications */
@@ -1686,7 +1732,6 @@ label[for=root_pictures]:hover {
 }
 
 .notification .address {
-  color: #6f8294;
   font-size: 0.75rem;
 }
 
@@ -1696,6 +1741,10 @@ label[for=root_pictures]:hover {
 
 .notification .link-container {
   padding-left: 15px;
+}
+
+.notification .link-container .carat {
+  margin-left: 0;
 }
 
 .notification .link-container .btn {
@@ -1957,10 +2006,6 @@ label[for=root_pictures]:hover {
   line-height: 1;
 }
 
-.profile-wrapper .profile.modal h2 {
-  margin-bottom: 30px;
-}
-
 .profile-wrapper .profile.modal .container {
   text-align: left;
 }
@@ -2115,6 +2160,10 @@ footer .footer-links li a {
 
   .navbar .notifications .dropdown-menu {
     right: calc(((100% - 720px) / 2) + 60px);
+  }
+
+  .listing-container .seller {
+    margin-bottom: 0;
   }
 
   footer .logo-container {

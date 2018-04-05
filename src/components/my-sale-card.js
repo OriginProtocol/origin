@@ -31,10 +31,10 @@ class MySaleCard extends Component {
             <div className="transaction order-3 order-lg-1">
               <h2 className="title"><Link to={`/my-sales/${_id}`}>{title}</Link></h2>
               <h2 className="title">sold to <Link to={`/my-sales/${_id}`}>{buyer.name}</Link></h2>
-              <p className="address">{buyer.address}</p>
+              <p className="address text-muted">{buyer.address}</p>
               <div className="d-flex">
                 <p className="price">Price: {price}</p>
-                <p className="quantity">Quantity: {quantity}</p>
+                <p className="quantity">Quantity: {quantity.toLocaleString()}</p>
               </div>
             </div>
             <div className="timestamp-container order-2 text-muted text-right">
@@ -50,7 +50,7 @@ class MySaleCard extends Component {
             {step === 2 && <p><strong>Next Step:</strong> Wait for buyer to receive order</p>}
             {step === 3 && <p><strong>Next Step:</strong> Withdraw funds</p>}
             {step === 4 && <p>This order is complete</p>}
-            <p className="link-container"><Link to={`/my-sales/${_id}`}>View Details<img src="/images/carat.svg" alt="right carat" /></Link></p>
+            <p className="link-container"><Link to={`/my-sales/${_id}`}>View Details<img src="/images/carat.svg" className="carat" alt="right carat" /></Link></p>
           </div>
         </div>
       </div>

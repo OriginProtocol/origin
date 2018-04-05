@@ -65,7 +65,7 @@ class TransactionDetail extends Component {
   render() {
     const { listingId, perspective } = this.props
     const listing = data.listings.find(l => l._id === listingId)
-    const { active, buyer, category, seller, fulfilledAt, pictures, price, receivedAt, soldAt, withdrawnAt } = listing
+    const { active, buyer, category, seller, fulfilledAt, pictures, price, receivedAt, reviewedAt, soldAt, withdrawnAt } = listing
     const counterparty = ['buyer', 'seller'].find(str => str !== perspective)
     const status = active ? 'active' : 'inactive'
     const maxStep = perspective === 'seller' ? 4 : 3
@@ -124,7 +124,7 @@ class TransactionDetail extends Component {
                     <div className="identification d-flex flex-column justify-content-between text-truncate">
                       <p><span className="badge badge-dark">Seller</span></p>
                       <p className="name">{seller.name || 'Anonymous User'}</p>
-                      <p className="address">{seller.address}</p>
+                      <p className="address text-muted text-truncate">{seller.address}</p>
                     </div>
                   </div>
                 </div>
@@ -133,7 +133,7 @@ class TransactionDetail extends Component {
                     <div className="identification d-flex flex-column text-right justify-content-between text-truncate">
                       <p><span className="badge badge-dark">Buyer</span></p>
                       <p className="name">{buyer.name || 'Anonymous User'}</p>
-                      <p className="address">{buyer.address}</p>
+                      <p className="address text-muted text-truncate">{buyer.address}</p>
                     </div>
                     <div className="avatar-container">
                       <img src={`/images/avatar-${perspective === 'buyer' ? 'green' : 'blue'}.svg`} alt="buyer avatar" />
@@ -247,28 +247,30 @@ class TransactionDetail extends Component {
                 </div>
               }
               <p className="description">Look at these little dudes! Aren’t they just the best?? You get two super fashionable and stylish baby chickens that you can bring to your next party and get the whole crew excited. These baby chickens know how to party and they’re super classy. No matter how fancy the venue, these little guys won’t dissapoint.</p>
-              <p className="category">Category: {category}</p>
-              <p className="availability">2 units available</p>
-              <p className="ipfs-hash">IPFS Hash: frr34rijwoeij39eu0eijwoiejdwioec93idwp</p>
+              <p className="category text-muted">Category: {category}</p>
+              <p className="availability text-muted">{Number(2).toLocaleString()} units available</p>
+              <p className="ipfs-hash text-muted">IPFS Hash: frr34rijwoeij39eu0eijwoiejdwioec93idwp</p>
               <p className="ipfs-link">
                 <a href={origin.ipfsService.gatewayUrlForHash('frr34rijwoeij39eu0eijwoiejdwioec93idwp')} target="_blank">
                   View on IPFS <big>&rsaquo;</big>
                 </a>
               </p>
               <hr />
-              <h2>Reviews <span className="review-count">57</span></h2>
-              <form>
-                <div className="form-group">
-                  <label htmlFor="review">Write a review</label>
-                  <textarea rows="4" id="review" className="form-control" placeholder="Tell us a bit about your purchase"></textarea>
-                </div>
-                <div className="button-container text-right">
-                  <button type="submit" className="btn btn-primary" onClick={() => alert('To Do')}>Submit</button>
-                </div>
-              </form>
               <div className="reviews">
+                <h2>Reviews <span className="review-count">{Number(57).toLocaleString()}</span></h2>
+                {perspective === 'buyer' && receivedAt && !reviewedAt &&
+                  <form>
+                    <div className="form-group">
+                      <label htmlFor="review">Write a review</label>
+                      <textarea rows="4" id="review" className="form-control" placeholder="Tell us a bit about your purchase"></textarea>
+                    </div>
+                    <div className="button-container text-right">
+                      <button type="submit" className="btn btn-primary" onClick={() => alert('To Do')}>Submit</button>
+                    </div>
+                  </form>
+                }
                 {data.reviews.map(r => <Review key={r._id} review={r} />)}
-                <a href="#" className="reviews-link" onClick={() => alert('To Do')}>Read More &or;</a>
+                <a href="#" className="reviews-link" onClick={() => alert('To Do')}>Read More<img src="/images/carat.svg" className="down carat" alt="down carat" /></a>
               </div>
             </div>
             <div className="col-12 col-lg-4">

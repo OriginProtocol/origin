@@ -60,7 +60,7 @@ class NavBar extends Component {
                 <div className="triangle-container d-flex justify-content-end"><div className="triangle"></div></div>
                 <div className="actual-menu">
                   <header className="d-flex">
-                    <div className="count"><p>4</p></div>
+                    <div className="count"><p>{Number(4).toLocaleString()}</p></div>
                     <h3>Notifications</h3>
                   </header>
                   <div className="notifications-list">

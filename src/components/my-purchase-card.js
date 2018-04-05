@@ -46,7 +46,7 @@ class MyPurchaseCard extends Component {
             <p className="timestamp">{timestamp}</p>
             <div className="d-flex">
               <p className="price">$1,000</p>
-              <p className="quantity">Quantity: {quantity}</p>
+              <p className="quantity">Quantity: {quantity.toLocaleString()}</p>
             </div>
             <TransactionProgress currentStep={step} listing={listing} perspective="buyer" subdued={true} />
             <div className="actions d-flex">

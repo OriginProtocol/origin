@@ -25,12 +25,12 @@ class MyListingCard extends Component {
             <p className="timestamp">{timestamp}</p>
             <p className="price">$1,000</p>
             <div className="d-flex counts">
-              <p>Total Quantity: {unitsAvailable}</p>
-              <p>Total Remaining: {unitsAvailable - quantity}</p>
+              <p>Total Quantity: {unitsAvailable.toLocaleString()}</p>
+              <p>Total Remaining: {(unitsAvailable - quantity).toLocaleString()}</p>
             </div>
             <div className="d-flex counts">
-              <p>2 Pending Transactions</p>
-              <p>3 Completed Transactions</p>
+              <p>{Number(2).toLocaleString()} Pending Transactions</p>
+              <p>{Number(3).toLocaleString()} Completed Transactions</p>
             </div>
             <div className="actions d-flex">
               <div className="links-container">
