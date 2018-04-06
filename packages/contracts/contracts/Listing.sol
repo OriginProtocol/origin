@@ -4,6 +4,7 @@ pragma solidity ^0.4.11;
 /// @dev An indiviual Origin Listing representing an offer for booking/purchase
 
 import "./Purchase.sol";
+import "./PurchaseLibrary.sol";
 
 contract Listing {
 
@@ -67,7 +68,7 @@ contract Listing {
     require (_unitsToBuy <= unitsAvailable);
 
     // Create purchase contract
-    Purchase purchaseContract = new Purchase(this, msg.sender);
+    Purchase purchaseContract = PurchaseLibrary.newPurchase(this, msg.sender);
 
     // Count units as sold
     unitsAvailable -= _unitsToBuy;
