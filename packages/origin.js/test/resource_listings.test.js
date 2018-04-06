@@ -5,6 +5,7 @@ import IpfsService from "../src/ipfs-service.js"
 import Web3 from 'web3'
 
 describe("Listing Resource", function() {
+  this.timeout(5000) // default is 2000
 
   var listings
   var contractService
@@ -41,7 +42,7 @@ describe("Listing Resource", function() {
     //Todo: Currently this test will fail here with a timeout
     //  because we need to somehow get web3 approve this transaction
     // Todo: wait for transaction, then check that purchase was created.
-  }).timeout(5000)
+  })
 
   it("should create a listing", async () => {
     const listingData = {
