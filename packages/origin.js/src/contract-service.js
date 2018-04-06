@@ -56,7 +56,7 @@ class ContractService {
         this.getBytes32FromIpfsHash(ipfsListing),
         weiToGive,
         units,
-        { from: accounts[0] }
+        { from: accounts[0], gas: 4476768 }
       )
     } catch (error) {
       console.error("Error submitting to the Ethereum blockchain: " + error)
