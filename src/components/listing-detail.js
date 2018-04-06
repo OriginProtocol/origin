@@ -27,7 +27,7 @@ class ListingsDetail extends Component {
     this.state = {
       category: "Loading...",
       name: "Loading...",
-      price: "Loading...",
+      price: null,
       address: null,
       ipfsHash: null,
       sellerAddress: null,
@@ -80,7 +80,6 @@ class ListingsDetail extends Component {
 
 
   render() {
-    const price = typeof this.state.price === 'string' ? 0 : this.state.price
     return (
       <div className="listing-detail">
         {this.state.step===this.STEP.METAMASK &&
@@ -132,7 +131,7 @@ class ListingsDetail extends Component {
               {this.state.unitsAvailable && this.state.unitsAvailable < 5 &&
                 <div className="units-available text-danger">Just {this.state.unitsAvailable.toLocaleString()} left!</div>
               }
-              {!this.state.unitsAvailable &&
+              {this.state.price && !this.state.unitsAvailable &&
                 <div className="units-available text-danger">Sold out!</div>
               }
               <a href={origin.ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
@@ -149,7 +148,7 @@ class ListingsDetail extends Component {
                 <div className="price d-flex justify-content-between">
                   <p>Price</p>
                   <p className="text-right">
-                    {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
+                    {this.state.price ? `${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH` : 'Loading...'}
                   </p>
                 </div>
                 {/* What is this? */}
@@ -172,25 +171,27 @@ class ListingsDetail extends Component {
                                     {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
                                   </p>
                                 </div> */}
-                <div>
-                  {(this.props.listingId) && (
-                    (this.state.unitsAvailable > 0) ?
-                      <button
-                        className="button"
-                        onClick={this.handleBuyClicked}
-                        disabled={!this.props.listingId}
-                        onMouseDown={e => e.preventDefault()}
-                      >
-                        Buy Now
-                      </button>
-                      :
-                      <div className="sold-banner">
-                        <img src="/images/sold-tag.svg" role="presentation" />
-                        Sold
-                      </div>
-                    )
-                  }
-                </div>
+                {this.state.price &&
+                  <div>
+                    {(this.props.listingId) && (
+                      (this.state.unitsAvailable > 0) ?
+                        <button
+                          className="button"
+                          onClick={this.handleBuyClicked}
+                          disabled={!this.props.listingId}
+                          onMouseDown={e => e.preventDefault()}
+                        >
+                          Buy Now
+                        </button>
+                        :
+                        <div className="sold-banner">
+                          <img src="/images/sold-tag.svg" role="presentation" />
+                          Sold
+                        </div>
+                      )
+                    }
+                  </div>
+                }
               </div>
               <div className="counterparty">
                 <div className="identity">

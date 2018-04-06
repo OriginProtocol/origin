@@ -29,7 +29,6 @@ class ListingCard extends Component {
   }
 
   render() {
-
     return (
       <div className="col-12 col-md-6 col-lg-4 listing-card">
         <Link to={`/listing/${this.props.listingId}`}>
