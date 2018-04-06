@@ -1,6 +1,7 @@
 import { expect } from "chai"
 import ContractService from "../src/contract-service"
 import { ipfsHashes } from "./fixtures"
+import Web3 from 'web3'
 
 const methodNames = [
   "submitListing",
@@ -12,7 +13,9 @@ describe("ContractService", () => {
   let contractService
 
   beforeEach(() => {
-    contractService = new ContractService()
+    let provider = new Web3.providers.HttpProvider('http://localhost:9545')
+    let web3 = new Web3(provider)
+    contractService = new ContractService({ web3 })
   })
 
   methodNames.forEach(methodName => {
