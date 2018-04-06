@@ -2,15 +2,19 @@ import { expect } from "chai"
 import Listings from "../src/resources/listings.js"
 import ContractService from "../src/contract-service.js"
 import IpfsService from "../src/ipfs-service.js"
+import Web3 from 'web3'
 
-describe("Listing Resource", () => {
+describe("Listing Resource", function() {
+
   var listings
   var contractService
   var ipfsService
   var testListingIds
 
   before(async () => {
-    contractService = new ContractService()
+    let provider = new Web3.providers.HttpProvider('http://localhost:9545')
+    let web3 = new Web3(provider)
+    contractService = new ContractService({ web3 })
     ipfsService = new IpfsService()
     listings = new Listings({ contractService, ipfsService })
     testListingIds = await contractService.getAllListingIds()
