@@ -1,35 +1,41 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 
 class HumanReadableNotification extends Component {
   render() {
     const { className, notification } = this.props
-    const { address, name, product, transactionType } = notification
-    const link = <Link to={`/users/${address}`}>{name || 'Anonymous User'}</Link>
-    let predicate = ''
+    const { counterpartyAddress, countpartyName, eventType, message, listingId, listingName } = notification
+    const productLink = <Link to={`/listing/${listingId}`}>{listingName}</Link>
+    const counterpartyLink = <Link to={`/users/${counterpartyAddress}`}>{countpartyName || 'Unnamed User'}</Link>
+    let subject, presPerf, verb
 
-    if (transactionType === 'completed') {
-      return (
-        <p className={className || ''}>Transaction with {link} complete for <strong>{product}</strong>.</p>
-      )
-    }
-
-    switch(transactionType) {
-      case 'purchased':
-        predicate = 'purchased your listing'
+    switch(eventType) {
+      case 'soldAt':
+        subject = productLink
+        presPerf = 'has been'
+        verb = 'purchased'
         break
-      case 'confirmed-receipt':
-        predicate = 'confirmed receipt of'
+      case 'fulfilledAt':
+        subject = productLink
+        presPerf = 'has been'
+        verb = 'sent'
         break
-      case 'confirmed-withdrawal':
-        predicate = 'confirmed and withdrawn some amount of something?'
+      case 'receivedAt':
+        subject = productLink
+        presPerf = 'has been'
+        verb = 'received'
+        break
+      case 'withdrawnAt':
+        subject = <Fragment>Funds from {productLink}</Fragment>
+        presPerf = 'have been'
+        verb = 'withdrawn'
         break
       default:
-        predicate = `${transactionType.replace('-', ' ')} ${product}`
+        return <p className={className || ''}>{message}</p>
     }
 
     return (
-      <p className={className || ''}>{link} has {predicate}{product ? (<strong> {product}</strong>) : ''}</p>
+      <p className={className || ''}>{subject} {presPerf} {verb} by {counterpartyLink}</p>
     )
   }
 }
@@ -37,19 +43,20 @@ class HumanReadableNotification extends Component {
 class Notification extends Component {
   render() {
     const { notification } = this.props
-    const { address, name, role } = notification
+    const { counterpartyAddress, counterpartyName, eventType, perspective } = notification
 
     return (
       <li className="list-group-item d-flex notification">
         <div>
           <div className="avatar-container">
-            <img src={`/images/avatar-${name ? 'blue' : 'anonymous'}.svg`} alt="avatar" />
-            <div className={`${role} circle`}></div>
+            {!counterpartyAddress && <img src="/images/origin-icon-white.svg" className="no-counterparty" alt="Origin zero" />}
+            {counterpartyAddress && <img src={`/images/avatar-${counterpartyName ? 'blue' : 'anonymous'}.svg`} alt="avatar" />}
+            {counterpartyAddress && <div className={`${perspective} circle`}></div>}
           </div>
         </div>
         <div className="content-container">
           <HumanReadableNotification notification={notification} className="text-truncate" />
-          <p className="text-truncate text-muted">{address}</p>
+          <p className="text-truncate text-muted">{counterpartyAddress}</p>
         </div>
         <div className="link-container ml-auto">
           <a href="https://app.zeplin.io/project/59fa2311bac7acbc8d953da9/screen/5aa878781720abc6447f2cd3?did=5ab93f6fa022c2b641639214" className="btn" target="_blank">

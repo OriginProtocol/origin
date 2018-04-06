@@ -143,7 +143,7 @@ class ListingsDetail extends Component {
                 </div>
                 <div className="identification d-flex flex-column justify-content-between text-truncate">
                   <p><span className="badge badge-dark">Seller</span></p>
-                  <p className="name">{this.state.sellerName || 'Anonymous User'}</p>
+                  <p className="name">{this.state.sellerName || 'Unnamed User'}</p>
                   <p className="address text-muted text-truncate">{this.state.sellerAddress}</p>
                 </div>
               </div>

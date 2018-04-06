@@ -161,6 +161,10 @@ a:hover {
   position: absolute;
 }
 
+.avatar-container .no-counterparty {
+  bottom: 6px;
+}
+
 .avatar-container .circle {
   position: absolute;
   border-radius: 50%;
@@ -176,12 +180,12 @@ a:hover {
   background-repeat: no-repeat;
 }
 
-.avatar-container .circle.buy {
+.avatar-container .circle.buyer {
   background-color: var(--greenblue);
   transform: rotate(180deg);
 }
 
-.avatar-container .circle.sell {
+.avatar-container .circle.seller {
   background-color: var(--bluish-purple);
 }
 
@@ -1739,6 +1743,10 @@ label[for=root_pictures]:hover {
   overflow: hidden;
 }
 
+.notification .content-container a {
+  font-size: 1rem;
+}
+
 .notification .link-container {
   padding-left: 15px;
 }
@@ -1766,13 +1774,6 @@ label[for=root_pictures]:hover {
 .notifications-wrapper .avatar-container {
   position: relative;
   border-radius: var(--default-radius);
-}
-
-.notifications-wrapper .avatar-container img {
-  bottom: 0;
-  left: 20%;
-  width: 60%;
-  position: absolute;
 }
 
 .notifications-wrapper .notification {

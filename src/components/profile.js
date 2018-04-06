@@ -115,7 +115,7 @@ class Profile extends Component {
                   </button>
                   <button className="service d-flex" disabled>
                     <div className="icon-container">
-                      <img src="/images/origin-icon.svg" alt="Origin icon" />
+                      <img src="/images/origin-icon-grey.svg" alt="Origin icon" />
                     </div>
                     <p>Origin Foundation</p>
                   </button>

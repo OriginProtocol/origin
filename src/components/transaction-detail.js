@@ -123,7 +123,7 @@ class TransactionDetail extends Component {
                     </div>
                     <div className="identification d-flex flex-column justify-content-between text-truncate">
                       <p><span className="badge badge-dark">Seller</span></p>
-                      <p className="name">{seller.name || 'Anonymous User'}</p>
+                      <p className="name">{seller.name || 'Unnamed User'}</p>
                       <p className="address text-muted text-truncate">{seller.address}</p>
                     </div>
                   </div>
@@ -132,7 +132,7 @@ class TransactionDetail extends Component {
                   <div className="d-flex justify-content-end">
                     <div className="identification d-flex flex-column text-right justify-content-between text-truncate">
                       <p><span className="badge badge-dark">Buyer</span></p>
-                      <p className="name">{buyer.name || 'Anonymous User'}</p>
+                      <p className="name">{buyer.name || 'Unnamed User'}</p>
                       <p className="address text-muted text-truncate">{buyer.address}</p>
                     </div>
                     <div className="avatar-container">
