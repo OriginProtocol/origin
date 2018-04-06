@@ -229,7 +229,7 @@ class TransactionDetail extends Component {
                     </div>
                   </div>
                 </div>
-                <a href="/#" className="btn" onClick={() => alert('To Do')}>View Profile</a>
+                <Link to={`/users/${listing[counterparty].address}`} className="btn">View Profile</Link>
               </div>
             </div>
           </div>

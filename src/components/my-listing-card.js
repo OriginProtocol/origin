@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import moment from 'moment'
 
@@ -21,9 +22,9 @@ class MyListingCard extends Component {
           <div className="content-container d-flex flex-column">
             <span className={`status ${status}`}>{status}</span>
             <p className="category">{category}</p>
-            <h2 className="title">{title}{unitsAvailable <= quantity && <span className="badge badge-info">Sold Out</span>}</h2>
+            <h2 className="title text-truncate"><Link to={`/listing/${_id}`}>{title}</Link></h2>
             <p className="timestamp">{timestamp}</p>
-            <p className="price">$1,000</p>
+            <p className="price">$1,000{unitsAvailable <= quantity && <span className="badge badge-info">Sold Out</span>}</p>
             <div className="d-flex counts">
               <p>Total Quantity: {unitsAvailable.toLocaleString()}</p>
               <p>Total Remaining: {(unitsAvailable - quantity).toLocaleString()}</p>

@@ -270,6 +270,82 @@ a:hover {
   width: 10px;
 }
 
+/* Counterparty */
+
+.counterparty {
+  background-color: var(--dark);
+  border-radius: var(--default-radius);
+  margin-top: 20px;
+}
+
+.counterparty .btn {
+  background-color: var(--dark-grey-blue);
+  border-radius: 0 0 var(--default-radius) var(--default-radius);
+  color: white;
+  font-size: 1.125rem;
+  padding: 0.75rem;
+  width: 100%;
+}
+
+.counterparty .btn:hover {
+  background-color: var(--dark-clear-blue);
+}
+
+.counterparty .identity {
+  padding: 20px;
+}
+
+.counterparty .identity h3,
+.counterparty .identity p {
+  color: white;
+}
+
+.counterparty .identity h3 {
+  font-size: 1.125rem;
+  font-weight: 300;
+  margin-bottom: 20px;
+}
+
+.counterparty .identity p {
+  font-size: 0.875rem;
+  font-weight: bold;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.counterparty .identity hr {
+  border-color: #6f8294;
+  margin: 20px 0;
+}
+
+.counterparty .identity .d-flex div:last-of-type {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.counterparty .identity .avatar-container,
+.counterparty .identity .image-container {
+  height: 50px;
+  margin: 0 10px 0 0;
+  width: 50px;
+}
+
+.counterparty .identity .image-container img {
+  height: 50px;
+  width: 50px;
+}
+
+.counterparty .identity .identification {
+  height: auto;
+  padding: 0;
+}
+
+.counterparty .identity .identification img {
+  height: 20px;
+  margin: 10px 5px 0 0;
+  width: 20px;
+}
+
 /* Navbar */
 
 .navbar {
@@ -583,6 +659,10 @@ a:hover {
 
 .navbar .navbar-collapse .navbar-nav .nav-item {
   padding-top: 15px;
+}
+
+.navbar .navbar-collapse .navbar-nav .nav-item:hover {
+  color: white;
 }
 
 .navbar .navbar-collapse .navbar-nav > a.nav-item:last-of-type {
@@ -909,8 +989,8 @@ a:hover {
   margin-bottom: 1rem;
 }
 
-.listing-container .seller {
-  margin: 1rem 0 30px;
+.listing-container .detail-info-box {
+  padding-bottom: 20px;
 }
 
 .listing-container .avatar-container {
@@ -1220,6 +1300,7 @@ label[for=root_pictures]:hover {
 .transaction .image-container {
   position: relative;
   flex-basis: 360px;
+  flex-shrink: 0;
   max-width: 100%;
 }
 
@@ -1243,6 +1324,7 @@ label[for=root_pictures]:hover {
   position: relative;
   flex-basis: calc(100% - 360px);
   padding: 10px 0 0;
+  overflow: hidden;
 }
 
 .transaction .content-container .status {
@@ -1264,8 +1346,9 @@ label[for=root_pictures]:hover {
 }
 
 .transaction .content-container .title {
+  color: var(--clear-blue);
   font-family: var(--heading-font);
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 300;
   margin: 0;
   padding-top: 10px;
@@ -1282,6 +1365,10 @@ label[for=root_pictures]:hover {
   font-weight: normal;
   margin-bottom: 0.5rem;
   padding-right: 2rem;
+}
+
+.transaction .price .badge {
+  margin-bottom: 0.2rem;
 }
 
 .transaction .content-container .quantity {
@@ -1456,79 +1543,10 @@ label[for=root_pictures]:hover {
   margin-right: 0.75rem;
 }
 
-.transaction-detail .counterparty,
 .transaction-detail .summary {
   background-color: var(--dark);
   border-radius: var(--default-radius);
   margin-top: 20px;
-}
-
-.transaction-detail .counterparty .identity {
-  padding: 20px;
-}
-
-.transaction-detail .counterparty .identity h3,
-.transaction-detail .counterparty .identity p {
-  color: white;
-}
-
-.transaction-detail .counterparty .identity h3 {
-  font-size: 1.125rem;
-  font-weight: 300;
-  margin-bottom: 20px;
-}
-
-.transaction-detail .counterparty .identity p {
-  font-size: 0.875rem;
-  font-weight: bold;
-  margin: 0;
-  word-wrap: break-word;
-}
-
-.transaction-detail .counterparty .identity hr {
-  border-color: #6f8294;
-  margin: 20px 0;
-}
-
-.transaction-detail .counterparty .identity .d-flex div:last-of-type {
-  flex-grow: 1;
-  overflow: auto;
-}
-
-.transaction-detail .counterparty .identity .avatar-container,
-.transaction-detail .counterparty .identity .image-container {
-  height: 50px;
-  margin: 0 10px 0 0;
-  width: 50px;
-}
-
-.transaction-detail .counterparty .identity .image-container img {
-  height: 50px;
-  width: 50px;
-}
-
-.transaction-detail .counterparty .identity .identification {
-  height: auto;
-  padding: 0;
-}
-
-.transaction-detail .counterparty .identity .identification img {
-  height: 20px;
-  margin: 10px 5px 0 0;
-  width: 20px;
-}
-
-.transaction-detail .counterparty .btn {
-  background-color: var(--dark-grey-blue);
-  border-radius: 0 0 var(--default-radius) var(--default-radius);
-  color: white;
-  font-size: 1.125rem;
-  padding: 0.75rem;
-  width: 100%;
-}
-
-.transaction-detail .counterparty .btn:hover {
-  background-color: var(--dark-clear-blue);
 }
 
 .transaction-detail .summary {

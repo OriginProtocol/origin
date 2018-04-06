@@ -42,11 +42,12 @@ class MyPurchaseCard extends Component {
           </div>
           <div className="content-container d-flex flex-column">
             <p className="category">{category}</p>
-            <h2 className="title">{title}</h2>
+            <h2 className="title text-truncate"><Link to={`/my-purchases/${_id}`}>{title}</Link></h2>
             <p className="timestamp">{timestamp}</p>
             <div className="d-flex">
               <p className="price">$1,000</p>
-              <p className="quantity">Quantity: {quantity.toLocaleString()}</p>
+              {/* Not Yet Relevant */}
+              {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
             </div>
             <TransactionProgress currentStep={step} listing={listing} perspective="buyer" subdued={true} />
             <div className="actions d-flex">

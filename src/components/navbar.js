@@ -34,7 +34,7 @@ class NavBar extends Component {
             <div className="navbar-nav justify-content-end">
               <Link to="/my-purchases" className="nav-item nav-link">Buy</Link>
               <div className="sell dropdown">
-                <a className="active dropdown-toggle nav-item nav-link" id="sellDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sell</a>
+                <a className="dropdown-toggle nav-item nav-link" id="sellDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sell</a>
                 <div className="dropdown-menu dropdown-menu-right" aria-labelledby="sellDropdown">
                   <div className="triangle-container d-none d-md-flex justify-content-end"><div className="triangle"></div></div>
                   <div className="actual-menu">

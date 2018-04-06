@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 import Modal from './modal'
 import Review from './review'
@@ -126,7 +127,7 @@ class ListingsDetail extends Component {
           <div className="row">
             <div className="col-12 col-md-8 detail-info-box">
               <div className="category">{this.state.category}</div>
-              <div className="title">{this.state.name}</div>
+              <div className="title text-truncate">{this.state.name}</div>
               <div className="description">{this.state.description}</div>
               {this.state.unitsAvailable && this.state.unitsAvailable < 5 &&
                 <div className="units-available text-danger">Just {this.state.unitsAvailable.toLocaleString()} left!</div>
@@ -137,16 +138,6 @@ class ListingsDetail extends Component {
               <a href={origin.ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
                 View on IPFS<img src="/images/carat.svg" className="carat" alt="right carat" />
               </a>
-              <div className="seller d-flex">
-                <div className="avatar-container">
-                  <img src="/images/avatar-blue.svg" alt="seller avatar" />
-                </div>
-                <div className="identification d-flex flex-column justify-content-between text-truncate">
-                  <p><span className="badge badge-dark">Seller</span></p>
-                  <p className="name">{this.state.sellerName || 'Unnamed User'}</p>
-                  <p className="address text-muted text-truncate">{this.state.sellerAddress}</p>
-                </div>
-              </div>
               <div className="debug">
                 <li>IPFS: {this.state.ipfsHash}</li>
                 <li>Seller: {this.state.sellerAddress}</li>
@@ -161,24 +152,26 @@ class ListingsDetail extends Component {
                     {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
                   </p>
                 </div>
-                <div className="contract-price d-flex justify-content-between">
-                  <p>Contract Price</p>
-                  <p className="price text-right">
-                    {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
-                  </p>
-                </div>
-                <div className="quantity d-flex justify-content-between">
-                  <p>Quantity</p>
-                  <p className="text-right">
-                    {Number(1).toLocaleString()}
-                  </p>
-                </div>
-                <div className="total-price d-flex justify-content-between">
-                  <p>Total Price</p>
-                  <p className="price text-right">
-                    {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
-                  </p>
-                </div>
+                {/* What is this? */}
+                {/* <div className="contract-price d-flex justify-content-between">
+                                  <p>Contract Price</p>
+                                  <p className="price text-right">
+                                    {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
+                                  </p>
+                                </div> */}
+                {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
+                {/* <div className="quantity d-flex justify-content-between">
+                                  <p>Quantity</p>
+                                  <p className="text-right">
+                                    {Number(1).toLocaleString()}
+                                  </p>
+                                </div>
+                                <div className="total-price d-flex justify-content-between">
+                                  <p>Total Price</p>
+                                  <p className="price text-right">
+                                    {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
+                                  </p>
+                                </div> */}
                 <div>
                   {(this.props.listingId) && (
                     (this.state.unitsAvailable > 0) ?
@@ -198,6 +191,35 @@ class ListingsDetail extends Component {
                     )
                   }
                 </div>
+              </div>
+              <div className="counterparty">
+                <div className="identity">
+                  <h3>About the seller</h3>
+                  <div className="d-flex">
+                    <div className="image-container">
+                      <Link to="/profile">
+                        <img src="/images/identicon.png"
+                          srcSet="/images/identicon@2x.png 2x, /images/identicon@3x.png 3x"
+                          alt="wallet icon" />
+                      </Link>
+                    </div>
+                    <div>
+                      <p>ETH Address:</p>
+                      <p><strong>{this.state.sellerAddress}</strong></p>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className="d-flex">
+                    <div className="avatar-container">
+                      <img src="/images/avatar-blue.svg" alt="avatar" />
+                    </div>
+                    <div className="identification">
+                      <p>Aure Gimon</p>
+                      <img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" />
+                    </div>
+                  </div>
+                </div>
+                <Link to={`/users/${this.state.sellerAddress}`} className="btn">View Profile</Link>
               </div>
             </div>
           </div>
