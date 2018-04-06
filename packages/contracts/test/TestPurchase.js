@@ -240,7 +240,7 @@ contract("Purchase", accounts => {
       assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)
     })
 
-    it("should got to SELLER_PENDING when the time is up", async () => {
+    it("should go to SELLER_PENDING when the time is up", async () => {
       await timetravel(BUYER_TIMEOUT_SECONDS + 10) // Time travel is not yet an exact science
       assert.equal((await purchase.stage()).toNumber(), SELLER_PENDING)
     })
