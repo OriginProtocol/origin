@@ -12,7 +12,7 @@ describe("Listing Resource", () => {
 
   it("should get all listing ids", async () => {
     const ids = await origin.listings.allIds()
-    expect(ids.length).to.be.greaterThan(4)
+    expect(ids.length).to.equal(0)
   })
 
   it("should get a listing", async () => {

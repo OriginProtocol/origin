@@ -16,25 +16,7 @@ contract UserRegistry {
     */
 
     // Mapping of all users
-    mapping(address => userStruct) public users;
-
-    /*
-    * Structs
-    */
-
-    struct userStruct {
-        bytes32 ipfsHash;
-        bool isSet;
-    }
-
-    /*
-    * Modifiers
-    */
-
-    modifier isValidUserAddress() {
-        require (users[msg.sender].isSet);
-        _;
-    }
+    mapping(address => bytes32) public users;
 
     /*
     * Public functions
@@ -47,7 +29,7 @@ contract UserRegistry {
     )
         public
     {
-        users[msg.sender] = userStruct(_ipfsHash, true);
+        users[msg.sender] = _ipfsHash;
         NewUser(msg.sender);
     }
 

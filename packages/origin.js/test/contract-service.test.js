@@ -21,7 +21,19 @@ describe("ContractService", () => {
     })
   })
 
-  describe("getBytes32FromIpfsHash", () => {
+  describe('blockchain running', () => {
+    it(`should should have injected web3 object`, () => {
+      expect('web3' in window).to.equal(true)
+    })
+    it(`should be connected to local blockchain`, () => {
+      // Will return "connecting" if still waiting for connection,
+      // otherwise network number (e.g. 1 for mainnet)
+      const result = (isNaN(web3.version.network))
+      expect(result).to.equal(false)
+    })
+  })
+
+  describe('getBytes32FromIpfsHash', () => {
     ipfsHashes.forEach(({ ipfsHash, bytes32 }) => {
       it(`should correctly convert from IPFS hash ${ipfsHash}`, () => {
         const result = contractService.getBytes32FromIpfsHash(ipfsHash)
