@@ -7,6 +7,21 @@ const isEVMError = function(err) {
   return str.includes("revert")
 }
 
+const timetravel = async function(seconds) {
+  var transaction = await web3.currentProvider.send({
+    jsonrpc: "2.0",
+    method: "evm_increaseTime",
+    params: [seconds],
+    id: 0
+  })
+  await web3.currentProvider.send({
+    jsonrpc: "2.0",
+    method: "evm_mine",
+    params: [],
+    id: 0
+  })
+}
+
 const ipfsHash =
   "0x6b14cac30356789cd0c39fec0acc2176c3573abdb799f3b17ccc6972ab4d39ba"
 const price = web3.toBigNumber(web3.toWei("0.5", "ether"))
@@ -19,6 +34,8 @@ const SELLER_PENDING = 2 // Waiting for seller to confirm all is good
 const IN_DISPUTE = 3 // We are in a dispute
 const REVIEW_PERIOD = 4 // Time for reviews (only when transaction did not go through)
 const COMPLETE = 5 // It's all over
+
+const BUYER_TIMEOUT_SECONDS = 21 * 24 * 60 * 60
 
 contract("Purchase", accounts => {
   var buyer = accounts[0]
@@ -200,6 +217,37 @@ contract("Purchase", accounts => {
     it("should allow seller to collect their money", async () => {
       await purchase.sellerGetPayout({ from: seller })
       assert.equal((await purchase.stage()).toNumber(), COMPLETE)
+    })
+  })
+
+  describe("Buyer timeout", async () => {
+    beforeEach(async () => {
+      listing = await Listing.new(
+        seller,
+        ipfsHash,
+        totalPrice,
+        unitsAvailable,
+        { from: seller }
+      )
+      const buyTransaction = await listing.buyListing(1, {
+        from: buyer,
+        value: totalPrice // Pay all so that we are in buyer pending
+      })
+      const listingPurchasedEvent = buyTransaction.logs.find(
+        e => e.event == "ListingPurchased"
+      )
+      purchase = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
+      assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)
+    })
+
+    it("should go to SELLER_PENDING when the time is up", async () => {
+      await timetravel(BUYER_TIMEOUT_SECONDS + 10) // Time travel is not yet an exact science
+      assert.equal((await purchase.stage()).toNumber(), SELLER_PENDING)
+    })
+
+    it("should remain BUYER_PENDING when the time is not yet up", async () => {
+      await timetravel(BUYER_TIMEOUT_SECONDS - 10)
+      assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)
     })
   })
 })
