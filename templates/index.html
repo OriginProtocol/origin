@@ -1,1 +1,15 @@
-Hello world. Welcome to the Origin bridge server.
+{% extends 'base.html' %}
+
+{% block ng_app %}indexApp{% endblock %}
+
+{% block title %}Title{% endblock %}
+
+{% block content %}
+<div>Hello world</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  angular.module('indexApp', []);
+</script>
+{% endblock %}

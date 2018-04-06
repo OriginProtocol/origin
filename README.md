@@ -2,13 +2,13 @@
 
 # bridge-server
 
-The Origin bridge server connects the old world to the new. 
+The Origin bridge server connects the old world to the new.
 
 Origin Dapps can connect to the bridge server of their choosing in order to enable the following functionality which is either impossible or impractical to do directly onchain, including:
 
-### Indexing 
+### Indexing
 
-Searching, browsing or filtering results is impractical to do either onchain or in the browser. Dapps can connect to a bridge-server to solve this problem. The bridge server will index the blockchain and related JSON content that is stored on IPFS into a quickly queriable format to make searching and filtering results possible from DApps. 
+Searching, browsing or filtering results is impractical to do either onchain or in the browser. Dapps can connect to a bridge-server to solve this problem. The bridge server will index the blockchain and related JSON content that is stored on IPFS into a quickly queriable format to make searching and filtering results possible from DApps.
 
 ### Identity
 
@@ -16,45 +16,109 @@ We need a centralized server that can handle tasks like issuing identity attesta
 
 ### Notifications
 
-There is currently no practical way to get email or text notifications when your bookings are made without a centralized monitoring service that can send you a text or an email to let you know about listings you care about. 
+There is currently no practical way to get email or text notifications when your bookings are made without a centralized monitoring service that can send you a text or an email to let you know about listings you care about.
 
-## Installing
+## One-time Setup
 
-This is a Python Flask app. The code is all `Python 3.6.4` with `Postgres` for the database.
+### Set Up A Virtual Environment
 
-Setup a virtualenv
-```
-virtualenv bridge-server && cd bridge-server
-```
+```bash
+# python2
+virtualenv /path/to/environment
+# python3
+python3 -m venv /path/to/environment
 
-Clone
-```
-git clone https://github.com/OriginProtocol/bridge-server.git && cd bridge-server
-```
-
-Enter virtual environment
-```
-source env.sh
-```
-
-Install requirements
-```
+cd /path/to/environment
+git clone https://github.com/OriginProtocol/bridge-server.git
+cd bridge-server
+source ../bin/activate
 pip install -r requirements.txt
 ```
 
-Rename the file `sample.env` to `.env`, and update env variables as desired.
-```
-mv sample.env .env
+### Clone the Starter Configuration Variables
+
+```python
+cp dev.env .env
 ```
 
-Run it!
+Adjust the values in .env now and in the future to suit your local environment. In particular, set up your ```SQLALCHEMY_DATABASE_URI```
+to point to where you local database is or will be.
+
+When deploying, set appropriate environment variables for production, notably
+
+```bash
+DEBUG=0
+HTTPS=1
+HOST=<your-prod-host>
+FLASK_SECRET_KEY=<unique-key>
+PROJECTPATH=/app  # For Heroku
 ```
+
+Use a unique Flask secret key per environment. Flask suggests that ```python -c "import os; print(os.urandom(24))"```
+is a perfectly reasonable way to generate a secret key.
+
+### Set Up Your Database
+
+```bash
+createdb <db-name>  # Anything you want, perhaps origin-bridge
+```
+
+Make sure the DB name you used is indicated in your ```SQLALCHEMY_DATABASE_URI```.
+
+```bash
+# Applies all migrations to make the DB current. Works even on an empty database.
+FLASK_APP=main.py flask db upgrade
+```
+
+## Every Time You Develop
+
+### Set Up Your Shell
+
+```bash
+cd /path/to/environment/project
+source ../bin/activate
+export PYTHONPATH=.
+```
+
+It's handy to save bash alias for this. Consider adding in your ```~/.bash_profile```:
+
+```bash
+alias myenv='cd /path/to/environment/project && source ../bin/activate && export PYTHONPATH=.'
+```
+
+### Run the Server
+
+```bash
 python main.py
 ```
 
-Open browser to view
+This starts a development server on ```localhost:5000``` by default.
+
+### Run the Tests
+
+As a one-time step, create a Postgres DB called `unittest`, which will be used by the test environment for end-to-end-tests.
+
+```bash
+createdb unittest
 ```
-open http://127.0.0.1:5000/
+
+Throughout the development process and before committing or deploying, run:
+
+```bash
+python testing/all_tests.py
+```
+
+Run individual test files simply as:
+
+```bash
+python path/to/test.py
+```
+
+Run a single test case, or an individual test, using:
+
+```bash
+python path/to/test.py TestCaseName
+python path/to/test.py TestCaseName.test_name
 ```
 
 **Problems?** Hit us up in the `engineering` channel on [Discord](https://www.originprotocol.com/discord) if you need help.
@@ -65,16 +129,23 @@ Please send your pull requests to the `develop` branch. Everything on `master` s
 
 ## Database changes
 
-We use [Flask Migrate](https://flask-migrate.readthedocs.io/en/latest/) to handle database revisions. If you make changes to the database, use `flask db migrate` to generate the required migration file and then `flask db upgrade` to implement and test your changes on your local database before committing.
+We use [Flask Migrate](https://flask-migrate.readthedocs.io/en/latest/) to handle database revisions. If you make changes to the database, use
+
+```bash
+FLASK_APP=main.py flask db migrate
+```
+
+to generate the required migration file. Rename it to add a description of the change after the underscore. Then run
+
+```bash
+FLASK_APP=main.py flask db migrate
+```
+
+to apply your migration to your local database, then test your changes before committing.
 
 ## Dev Deployment on Heroku
 
-To deploy a dev server on Heroku, you'll follow the normal steps you would to deploy on Heroku, with two additional steps.
-
-After the normal setup and linking, you'll need to ensure the site uses both the python and the nginx backend:
-
-	heroku buildpacks:set heroku/python
-	heroku buildpacks:add https://github.com/heroku/heroku-buildpack-nginx
+To deploy a dev server on Heroku, you'll follow the normal steps you would to deploy on Heroku.
 
 As a minium, you must set these three Heroku config variables:
 
@@ -84,6 +155,4 @@ As a minium, you must set these three Heroku config variables:
 |PROJECTPATH     |/app|
 |HOST            |(domain name of your dev heroku app)|
 
-There are more optional config variables you can set. See [sample.env](sample.env) for a full list.
-
-
+There are more optional config variables you can set. See [dev.env](dev.env) for a full list.
