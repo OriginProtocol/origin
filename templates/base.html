@@ -1,14 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="{% block ng_app %}{% endblock %}">
+<html lang="en">
 <head>
   {% block head %}
     <title>{% block title %}{% endblock %}</title>
     <meta name="viewport" content="initial-scale=1"/>
 
     {% block styles %}
-      <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css"/>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Hind:400,300,500"/>
       <link rel="stylesheet" href="/static/css/style.css"/>
 
       {% block extra_styles %}
@@ -22,14 +19,6 @@
     {% endblock %}
 
     {% block scripts %}
-      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
-      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-animate.min.js"></script>
-      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-aria.min.js"></script>
-      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-messages.min.js"></script>
-      <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.1/angular-material.min.js"></script>
-
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-
       <script src="/static/js/script.js"></script>
 
       {% block extra_scripts %}
