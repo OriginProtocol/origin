@@ -24,7 +24,7 @@ PROJECTPATH = os.environ.get('PROJECTPATH') or os.getcwd()
 FLASK_SECRET_KEY = os.environ.get('FLASK_SECRET_KEY')
 PUBLIC_ID_ENCRYPTION_KEY = os.environ.get('PUBLIC_ID_ENCRYPTION_KEY')
 
-SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
+DATABASE_URL = os.environ.get('DATABASE_URL')
 TEST_DATABASE_URI = os.environ.get('TEST_DATABASE_URI', 'postgresql://localhost/unittest')
 
 TEMPLATE_ROOT = os.path.join(PROJECTPATH, 'templates')

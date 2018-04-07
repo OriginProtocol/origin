@@ -41,7 +41,7 @@ pip install -r requirements.txt
 cp dev.env .env
 ```
 
-Adjust the values in .env now and in the future to suit your local environment. In particular, set up your ```SQLALCHEMY_DATABASE_URI```
+Adjust the values in .env now and in the future to suit your local environment. In particular, set up your ```DATABASE_URL```
 to point to where you local database is or will be.
 
 When deploying, set appropriate environment variables for production, notably
@@ -60,10 +60,10 @@ is a perfectly reasonable way to generate a secret key.
 ### Set Up Your Database
 
 ```bash
-createdb <db-name>  # Anything you want, perhaps origin-bridge
+createdb <db-name>  # Anything you want, perhaps bridge-server
 ```
 
-Make sure the DB name you used is indicated in your ```SQLALCHEMY_DATABASE_URI```.
+Make sure the DB name you used is indicated in your ```DATABASE_URL```.
 
 ```bash
 # Applies all migrations to make the DB current. Works even on an empty database.
