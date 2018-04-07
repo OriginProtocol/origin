@@ -41,12 +41,13 @@ h1 {
 
 h2 {
   font-size: 1.5rem;
-  font-weight: 400;
-  margin: 0 auto 1rem;
+  font-weight: 300;
+  margin: 0 0 1rem;
 }
 
 h3 {
   font-size: 1rem;
+  font-weight: 400;
 }
 
 fieldset {
@@ -747,7 +748,7 @@ a:hover {
 }
 
 .navbar input::placeholder {
-  color: #c2cbd3;
+  color: var(--light);
 }
 
 .btn-container {
@@ -886,37 +887,52 @@ a:hover {
 
 .listings-grid {
   padding: 40px 0px;
-  margin-bottom: 40px;
 }
 
 .listings-grid h1 {
-  margin-bottom: 40px;
+  margin: 0 0 2rem;
 }
 
 .listing-card {
-  margin-bottom: 40px;
+  margin-bottom: 80px;
 }
 
 .listing-card .category {
   font-size: 0.75rem;
   color: var(--dusk);
   text-transform: uppercase;
-  margin: 15px 0px 5px 0px;
+  margin: 0 0 0.25rem;
+}
+
+.listing-card.loading .category {
+  min-height: 1.2rem;
+  width: 25%;
 }
 
 .listing-card .title {
   font-family: var(--heading-font);
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   color: var(--dusk);
-  margin: 5px 0px;
+  margin: 0 0 0.25rem;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
 
+.listing-card.loading .title {
+  min-height: 1.5rem;
+  width: 75%;
+}
+
 .listing-card .price {
-  line-height: 1.4;
+  font-size: 1.125rem;
+  margin: 0 0 1rem;
+}
+
+.listing-card.loading .price {
+  min-height: 1.5rem;
+  width: 50%;
 }
 
 .listing-card .photo {
@@ -928,12 +944,13 @@ a:hover {
   background-position: 50% 50%;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
   border-radius: 3px;
+  margin-bottom: 15px;
 }
 
 /* Listing Detail */
 
 .listing-detail hr {
-  margin: 30px 0;
+  margin: 40px 0;
 }
 
 .carousel {
@@ -964,29 +981,59 @@ a:hover {
 }
 
 .listing-container {
-  margin: 80px auto;
+  margin: 50px auto;
+}
+
+.loading .placehold {
+  background-color: #f6f7f8;
+  border-radius: 3px;
+  color: var(--light);
+}
+
+.loading h1 {
+  min-height: 24px;
+  width: 50%;
+}
+
+.loading h2 {
+  min-height: 20px;
+  width: 20%;
+}
+
+.loading p {
+  min-height: 124px;
+  width: 100%;
+}
+
+.listing-container.loading .buy-box {
+  min-height: 192px;
 }
 
 .listing-container .category {
   font-size: 0.875rem;
   color: var(--dusk);
+  margin-bottom: 0.5rem;
   text-transform: uppercase;
 }
 
 .listing-container .title {
   font-family: var(--heading-font);
   font-size: 1.5rem;
-  margin-bottom: 15px;
+  margin: 0 0 1rem;
 }
 
 .listing-container .description {
   font-size: 1.125rem;
-  margin-bottom: 30px;
+  margin: 0 0 1rem;
 }
 
 .listing-container .units-available {
   font-size: 1.125rem;
-  margin-bottom: 1rem;
+  margin: 0;
+}
+
+.listing-container .link-container {
+  margin: 0 0 1rem;
 }
 
 .listing-container .detail-info-box {
@@ -1005,6 +1052,10 @@ a:hover {
   background-color: var(--dark-grey-blue);
   padding: 40px;
   font-size: 18px;
+}
+
+.listing-container.loading .buy-box {
+  background-color: #f6f7f8;
 }
 
 .listing-container .buy-box .contract-price {
@@ -1646,6 +1697,10 @@ label[for=root_pictures]:hover {
 /* Reviews */
 
 .reviews {
+  margin-bottom: 30px;
+}
+
+.reviews h2 {
   margin-bottom: 30px;
 }
 
