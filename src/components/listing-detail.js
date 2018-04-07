@@ -25,14 +25,9 @@ class ListingsDetail extends Component {
     }
 
     this.state = {
-      category: "Loading...",
-      name: "Loading...",
-      price: null,
-      address: null,
-      ipfsHash: null,
-      sellerAddress: null,
-      unitsAvailable: null,
+      loading: true,
       pictures: [],
+      reviews: [],
       step: this.STEP.VIEW,
     }
 
@@ -42,7 +37,9 @@ class ListingsDetail extends Component {
   async loadListing() {
     try {
       const listing = await origin.listings.getByIndex(this.props.listingId)
-      this.setState(listing)
+      const obj = Object.assign({}, listing, { loading: false, reviews: data.reviews })
+
+      this.setState(obj)
     } catch (error) {
       alertify.log('There was an error loading this listing.')
       console.error(`Error fetching contract or IPFS info for listingId: ${this.props.listingId}`)
@@ -55,8 +52,9 @@ class ListingsDetail extends Component {
       this.loadListing()
     }
     else if (this.props.listingJson) {
+      const obj = Object.assign({}, this.props.listingJson, { loading: false })
       // Listing json passed in directly
-      this.setState(this.props.listingJson)
+      this.setState(obj)
     }
   }
 
@@ -111,7 +109,7 @@ class ListingsDetail extends Component {
             </a>
           </Modal>
         }
-        {this.state.pictures &&
+        {(this.state.loading || !!this.state.pictures.length) &&
           <div className="carousel">
             {this.state.pictures.map(pictureUrl => (
               <div className="photo" key={pictureUrl}>
@@ -122,21 +120,25 @@ class ListingsDetail extends Component {
             ))}
           </div>
         }
-        <div className="container listing-container">
+        <div className={`container listing-container${this.state.loading ? ' loading' : ''}`}>
           <div className="row">
             <div className="col-12 col-md-8 detail-info-box">
-              <div className="category">{this.state.category}</div>
-              <div className="title text-truncate">{this.state.name}</div>
-              <div className="description">{this.state.description}</div>
+              <h2 className="category placehold">{this.state.category}</h2>
+              <h1 className="title text-truncate placehold">{this.state.name}</h1>
+              <p className="description placehold">{this.state.description}</p>
               {this.state.unitsAvailable && this.state.unitsAvailable < 5 &&
-                <div className="units-available text-danger">Just {this.state.unitsAvailable.toLocaleString()} left!</div>
+                <p className="units-available text-danger">Just {this.state.unitsAvailable.toLocaleString()} left!</p>
               }
               {this.state.price && !this.state.unitsAvailable &&
-                <div className="units-available text-danger">Sold out!</div>
+                <p className="units-available text-danger">Sold out!</p>
               }
-              <a href={origin.ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
-                View on IPFS<img src="/images/carat.svg" className="carat" alt="right carat" />
-              </a>
+              {this.state.ipfsHash &&
+                <p className="link-container">
+                  <a href={origin.ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
+                    View on IPFS<img src="/images/carat.svg" className="carat" alt="right carat" />
+                  </a>
+                </p>
+              }
               <div className="debug">
                 <li>IPFS: {this.state.ipfsHash}</li>
                 <li>Seller: {this.state.sellerAddress}</li>
@@ -144,13 +146,15 @@ class ListingsDetail extends Component {
               </div>
             </div>
             <div className="col-12 col-md-4">
-              <div className="buy-box">
-                <div className="price d-flex justify-content-between">
-                  <p>Price</p>
-                  <p className="text-right">
-                    {this.state.price ? `${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH` : 'Loading...'}
-                  </p>
-                </div>
+              <div className="buy-box placehold">
+                {this.state.price && 
+                  <div className="price d-flex justify-content-between">
+                    <p>Price</p>
+                    <p className="text-right">
+                      {Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
+                    </p>
+                  </div>
+                }
                 {/* What is this? */}
                 {/* <div className="contract-price d-flex justify-content-between">
                                   <p>Contract Price</p>
@@ -171,7 +175,7 @@ class ListingsDetail extends Component {
                                     {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
                                   </p>
                                 </div> */}
-                {this.state.price &&
+                {!this.state.loading &&
                   <div>
                     {(this.props.listingId) && (
                       (this.state.unitsAvailable > 0) ?
@@ -193,44 +197,46 @@ class ListingsDetail extends Component {
                   </div>
                 }
               </div>
-              <div className="counterparty">
-                <div className="identity">
-                  <h3>About the seller</h3>
-                  <div className="d-flex">
-                    <div className="image-container">
-                      <Link to="/profile">
-                        <img src="/images/identicon.png"
-                          srcSet="/images/identicon@2x.png 2x, /images/identicon@3x.png 3x"
-                          alt="wallet icon" />
-                      </Link>
+              {this.state.sellerAddress &&
+                <div className="counterparty placehold">
+                  <div className="identity">
+                    <h3>About the seller</h3>
+                    <div className="d-flex">
+                      <div className="image-container">
+                        <Link to="/profile">
+                          <img src="/images/identicon.png"
+                            srcSet="/images/identicon@2x.png 2x, /images/identicon@3x.png 3x"
+                            alt="wallet icon" />
+                        </Link>
+                      </div>
+                      <div>
+                        <p>ETH Address:</p>
+                        <p><strong>{this.state.sellerAddress}</strong></p>
+                      </div>
                     </div>
-                    <div>
-                      <p>ETH Address:</p>
-                      <p><strong>{this.state.sellerAddress}</strong></p>
+                    <hr />
+                    <div className="d-flex">
+                      <div className="avatar-container">
+                        <img src="/images/avatar-blue.svg" alt="avatar" />
+                      </div>
+                      <div className="identification">
+                        <p>Aure Gimon</p>
+                        <img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" />
+                      </div>
                     </div>
                   </div>
-                  <hr />
-                  <div className="d-flex">
-                    <div className="avatar-container">
-                      <img src="/images/avatar-blue.svg" alt="avatar" />
-                    </div>
-                    <div className="identification">
-                      <p>Aure Gimon</p>
-                      <img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" />
-                    </div>
-                  </div>
+                  <Link to={`/users/${this.state.sellerAddress}`} className="btn placehold">View Profile</Link>
                 </div>
-                <Link to={`/users/${this.state.sellerAddress}`} className="btn">View Profile</Link>
-              </div>
+              }
             </div>
           </div>
-          {!!data.reviews.length &&
+          {!!this.state.reviews.length &&
             <div className="row">
               <div className="col-12 col-md-8">
                 <hr />
                 <div className="reviews">
                   <h2>Reviews <span className="review-count">57</span></h2>
-                  {data.reviews.map(r => <Review key={r._id} review={r} />)}
+                  {this.state.reviews.map(r => <Review key={r._id} review={r} />)}
                   <a href="#" className="reviews-link" onClick={() => alert('To Do')}>Read More<img src="/images/carat.svg" className="down carat" alt="down carat" /></a>
                 </div>
               </div>

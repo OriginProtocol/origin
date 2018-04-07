@@ -10,19 +10,16 @@ class ListingCard extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      category: "Loading...",
-      name: "Loading...",
-      price: null,
-      ipfsHash: null,
-      lister: null,
-      unitsAvailable: null
+      loading: true,
     }
   }
 
   async componentDidMount() {
     try {
       const listing = await origin.listings.getByIndex(this.props.listingId)
-      this.setState(listing)
+      const obj = Object.assign({}, listing, { loading: false })
+
+      this.setState(obj)
     } catch (error) {
       console.error(`Error fetching contract or IPFS info for listingId: ${this.props.listingId}`)
     }
@@ -30,7 +27,7 @@ class ListingCard extends Component {
 
   render() {
     return (
-      <div className="col-12 col-md-6 col-lg-4 listing-card">
+      <div className={`col-12 col-md-6 col-lg-4 listing-card${this.state.loading ? ' loading' : ''}`}>
         <Link to={`/listing/${this.props.listingId}`}>
           <div className="photo" style={{backgroundImage:`url("${
             (this.state.pictures && this.state.pictures.length>0 &&
@@ -39,14 +36,14 @@ class ListingCard extends Component {
                 '/images/default-image.jpg'}")`
           }}>
           </div>
-          <div className="category">{this.state.category}</div>
-          <div className="title">{this.state.name}</div>
-          <div className="price">
-              {this.state.price ? `${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH` : 'Loading...'}
-              {this.state.unitsAvailable===0 &&
-                <span className="sold-banner">Sold</span>
-              }
-          </div>
+          <p className="category placehold">{this.state.category}</p>
+          <h2 className="title placehold">{this.state.name}</h2>
+          <p className="price placehold">
+            {this.state.price && `${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH`}
+            {this.state.unitsAvailable===0 &&
+              <span className="sold-banner">Sold</span>
+            }
+          </p>
         </Link>
       </div>
     )
