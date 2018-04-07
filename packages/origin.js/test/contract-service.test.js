@@ -16,6 +16,13 @@ describe("ContractService", () => {
     let provider = new Web3.providers.HttpProvider('http://localhost:9545')
     let web3 = new Web3(provider)
     contractService = new ContractService({ web3 })
+
+    // Ensure that there is at least 1 sample listing
+    await contractService.submitListing(
+      "Qmbjig3cZbUUufWqCEFzyCppqdnmQj3RoDjJWomnqYGy1f",
+      "0.00001",
+      1
+    )
   })
 
   methodNames.forEach(methodName => {
