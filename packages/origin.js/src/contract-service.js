@@ -6,10 +6,11 @@ import contract from "truffle-contract"
 import promisify from "util.promisify"
 
 class ContractService {
-  constructor() {
+  constructor({ web3 } = {}) {
     this.listingsRegistryContract = contract(ListingsRegistryContract)
     this.listingContract = contract(ListingContract)
     this.userRegistryContract = contract(UserRegistryContract)
+    this.web3 = web3 || window.web3
   }
 
   // Return bytes32 hex string from base58 encoded ipfs hash,
@@ -42,20 +43,20 @@ class ContractService {
 
   async submitListing(ipfsListing, ethPrice, units) {
     try {
-      const { currentProvider, eth } = window.web3
+      const { currentProvider, eth } = this.web3
       this.listingsRegistryContract.setProvider(currentProvider)
 
       const accounts = await promisify(eth.getAccounts.bind(eth))()
       const instance = await this.listingsRegistryContract.deployed()
 
-      const weiToGive = window.web3.toWei(ethPrice, "ether")
+      const weiToGive = this.web3.toWei(ethPrice, "ether")
       // Note we cannot get the listingId returned by our contract.
       // See: https://forum.ethereum.org/discussion/comment/31529/#Comment_31529
       return instance.create(
         this.getBytes32FromIpfsHash(ipfsListing),
         weiToGive,
         units,
-        { from: accounts[0] }
+        { from: accounts[0], gas: 4476768 }
       )
     } catch (error) {
       console.error("Error submitting to the Ethereum blockchain: " + error)
@@ -67,7 +68,7 @@ class ContractService {
     const range = (start, count) =>
       Array.apply(0, Array(count)).map((element, index) => index + start)
 
-    this.listingsRegistryContract.setProvider(window.web3.currentProvider)
+    this.listingsRegistryContract.setProvider(this.web3.currentProvider)
 
     let instance
     try {
@@ -91,15 +92,14 @@ class ContractService {
   }
 
   async getListing(listingId) {
-    this.listingsRegistryContract.setProvider(window.web3.currentProvider)
+    this.listingsRegistryContract.setProvider(this.web3.currentProvider)
     const instance = await this.listingsRegistryContract.deployed()
 
     let listing
     try {
       listing = await instance.getListing.call(listingId)
     } catch (error) {
-      console.log(`Error fetching listingId: ${listingId}`)
-      throw error
+      throw new Error(`Error fetching listingId: ${listingId}`)
     }
 
     // Listing is returned as array of properties.
@@ -111,7 +111,7 @@ class ContractService {
       address: listing[0],
       lister: listing[1],
       ipfsHash: this.getIpfsHashFromBytes32(listing[2]),
-      price: window.web3.fromWei(listing[3], "ether").toNumber(),
+      price: this.web3.fromWei(listing[3], "ether").toNumber(),
       unitsAvailable: listing[4].toNumber()
     }
     return listingObject
@@ -128,12 +128,12 @@ class ContractService {
         ethToGive
     )
 
-    const { currentProvider, eth } = window.web3
+    const { currentProvider, eth } = this.web3
     this.listingContract.setProvider(currentProvider)
 
     const accounts = await promisify(eth.getAccounts.bind(eth))()
     const listing = await this.listingContract.at(listingAddress)
-    const weiToGive = window.web3.toWei(ethToGive, "ether")
+    const weiToGive = this.web3.toWei(ethToGive, "ether")
 
     const transactionReceipt = await listing.buyListing(
       unitsToBuy,
@@ -157,7 +157,7 @@ class ContractService {
         pollIntervalMilliseconds
       )
       function txCheckTimerCallback() {
-        window.web3.eth.getTransaction(
+        this.web3.eth.getTransaction(
           transactionHash,
           (error, transaction) => {
             if (transaction.blockNumber != null) {
@@ -170,7 +170,7 @@ class ContractService {
 
               // // TODO (Stan): Metamask web3 doesn't have this method. Probably could fix by
               // // by doing the "copy local web3 over metamask's" technique.
-              // window.web3.eth.getTransactionReceipt(this.props.transactionHash, (error, transactionHash) => {
+              // this.web3.eth.getTransactionReceipt(this.props.transactionHash, (error, transactionHash) => {
               //   console.log(transactionHash)
               // })
 

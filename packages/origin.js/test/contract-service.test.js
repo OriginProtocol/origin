@@ -1,6 +1,7 @@
 import { expect } from "chai"
 import ContractService from "../src/contract-service"
 import { ipfsHashes } from "./fixtures"
+import Web3 from 'web3'
 
 const methodNames = [
   "submitListing",
@@ -8,28 +9,27 @@ const methodNames = [
   "getIpfsHashFromBytes32"
 ]
 
-describe("ContractService", () => {
+describe("ContractService", function() {
+  this.timeout(5000) // default is 2000
+
   let contractService
 
-  beforeEach(() => {
-    contractService = new ContractService()
+  before(async () => {
+    let provider = new Web3.providers.HttpProvider('http://localhost:9545')
+    let web3 = new Web3(provider)
+    contractService = new ContractService({ web3 })
+
+    // Ensure that there is at least 1 sample listing
+    await contractService.submitListing(
+      "Qmbjig3cZbUUufWqCEFzyCppqdnmQj3RoDjJWomnqYGy1f",
+      "0.00001",
+      1
+    )
   })
 
   methodNames.forEach(methodName => {
     it(`should have ${methodName} method`, () => {
       expect(contractService[methodName]).to.be.an.instanceof(Function)
-    })
-  })
-
-  describe("blockchain running", () => {
-    it(`should should have injected web3 object`, () => {
-      expect("web3" in window).to.equal(true)
-    })
-    it(`should be connected to local blockchain`, () => {
-      // Will return "connecting" if still waiting for connection,
-      // otherwise network number (e.g. 1 for mainnet)
-      const result = isNaN(web3.version.network)
-      expect(result).to.equal(false)
     })
   })
 
@@ -55,7 +55,7 @@ describe("ContractService", () => {
     // Skipped by default because it pops up MetaMask confirmation dialogue every time you make a
     // change which slows down dev. Should add alternate tests that mock MetaMask and only enable
     // this one as part of manual testing before releases to ensure library works with MetaMask.
-    xit("should successfully submit listing", async () => {
+    it("should successfully submit listing", async () => {
       await contractService.submitListing(
         "Qmbjig3cZbUUufWqCEFzyCppqdnmQj3RoDjJWomnqYGy1f",
         "0.00001",
@@ -74,7 +74,7 @@ describe("ContractService", () => {
 
   describe("getListing", () => {
     // Skipped because of https://github.com/OriginProtocol/platform/issues/27
-    xit("should reject when listing cannot be found", done => {
+    it("should reject when listing cannot be found", done => {
       contractService.getListing("foo").then(done.fail, error => {
         expect(error).to.match(/Error fetching listingId/)
         done()
