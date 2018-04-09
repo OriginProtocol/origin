@@ -11,6 +11,9 @@ class ContractService {
     this.listingContract = contract(ListingContract)
     this.userRegistryContract = contract(UserRegistryContract)
     this.web3 = web3 || window.web3
+
+    this.listingsRegistryContract.setProvider(this.web3.currentProvider)
+    this.listingContract.setProvider(this.web3.currentProvider)
   }
 
   // Return bytes32 hex string from base58 encoded ipfs hash,
@@ -44,7 +47,6 @@ class ContractService {
   async submitListing(ipfsListing, ethPrice, units) {
     try {
       const { currentProvider, eth } = this.web3
-      this.listingsRegistryContract.setProvider(currentProvider)
 
       const accounts = await promisify(eth.getAccounts.bind(eth))()
       const instance = await this.listingsRegistryContract.deployed()
@@ -68,8 +70,6 @@ class ContractService {
     const range = (start, count) =>
       Array.apply(0, Array(count)).map((element, index) => index + start)
 
-    this.listingsRegistryContract.setProvider(this.web3.currentProvider)
-
     let instance
     try {
       instance = await this.listingsRegistryContract.deployed()
@@ -92,7 +92,6 @@ class ContractService {
   }
 
   async getListing(listingId) {
-    this.listingsRegistryContract.setProvider(this.web3.currentProvider)
     const instance = await this.listingsRegistryContract.deployed()
 
     let listing
@@ -129,7 +128,6 @@ class ContractService {
     )
 
     const { currentProvider, eth } = this.web3
-    this.listingContract.setProvider(currentProvider)
 
     const accounts = await promisify(eth.getAccounts.bind(eth))()
     const listing = await this.listingContract.at(listingAddress)
