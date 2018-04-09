@@ -2,7 +2,7 @@
 
 # Origin Platform
 
-Origin Protocol is a library of javascript code and Ethereum smart contracts which allow anyone to create decentralized marketplaces, including for fractional usage. 
+Origin Protocol is a library of javascript code and Ethereum smart contracts which allow anyone to create decentralized marketplaces, including for fractional usage.
 
 Please refer to our [product brief](https://www.originprotocol.com/product-brief) and [technical whitepaper](https://www.originprotocol.com/whitepaper) for more detail.
 
@@ -20,7 +20,7 @@ This repo is under active development. We welcome your participation!
 > | Pacific | Mountain | Central | Eastern | GMT |
 > |---------|----------|---------|---------|-----|
 > | Wed 1pm | Wed 2pm | Wed 3pm | Wed 4pm | Wed 9pm |
-  
+
 3. Catch up on our meeting notes & weekly sprint planning docs (feel free to add comments):
 - [Engineering meeting notes](https://docs.google.com/document/d/1aRcAk_rEjRgd1BppzxZJK9RXfDkbuwKKH8nPQk7FfaU/)
 - [Weekly sprint doc](https://docs.google.com/document/d/1qJ3sem38ED8oRI72JkeilcvIs82oDq5IT3fHKBrhZIM)
@@ -41,9 +41,9 @@ The library will make it easy for sellers to do things like:
  - Update listings
  - Delete listings
  - Validate listings
- 
+
 And buyers to:
- 
+
  - Browse listing
  - Create bookings
  - Update bookings

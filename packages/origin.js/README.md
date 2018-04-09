@@ -1,17 +1,21 @@
-# Origin JS Documentation
+# origin.js Documentation
 
 ## Introduction
 
 Welcome to the origin.js documentation! origin.js is a Javascript library for interacting with the Origin protocol.
-Using the library you can create new listings from your applications, purchase them, or update them from your own off-chain applications. 
 
-More information can be found at [Origin Platform Readme](/README.md) 
+Using the library you can create new listings from your applications, purchase them, or update them from your own off-chain applications.
+
+More information about Origin can be found at [Origin Platform Readme](/README.md)
 
 ### Warning
-This is still an alpha version which will evolve significantly before the main net release. 
+This is still an alpha version which will evolve significantly before the main net release.
 
+## Using origin.js in your project
 
-## Install 
+### Plain javascript
+
+A browser-compatible plain javascript file `origin.js` is available in the "Releases" tab, and will soon be hosted on originprotocol.com. It can be generated locally via `npm build` and will be placed in `dist/origin.js`.
 
 ### NPM
 ```
@@ -24,13 +28,13 @@ yarn add @originprotocol/origin
 ```
 
 ### Local
-For developing on `origin.js`, it is better to link the package rather than installing it. (Otherwise you would need to run `npm build` everytime you made a change to the package.)
+For developing `origin.js`, it is better to link the package rather than installing it. (Otherwise you would need to run `npm build` everytime you made a change to the package.)
 
 In the directory `./packages/contracts/` run:
 ```
 truffle compile
 ```
-This will create the `.json` files for our solidity contracts. 
+This will create the `.json` files for our solidity contracts.
 
 In the directory `./packages/origin.js` run:
 ```
@@ -43,7 +47,7 @@ npm link @originprotocol/origin
 ```
 This will create a symlink, direcly linking the dapp to your local `origin.js` package.
 
-Next, you will need to start your local development blockchain. 
+Next, you will need to start your local development blockchain.
 
 In the directory `./packages/contracts/` run:
 ```
@@ -56,8 +60,7 @@ migrate --reset
 ```
 
 
-
-## Import 
+## Import
 ```
 import { contractService, ipfsService, originService } from '@originprotocol/origin'
 ```
