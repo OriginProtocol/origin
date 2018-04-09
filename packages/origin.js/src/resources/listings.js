@@ -94,6 +94,15 @@ class Listings {
       ethToPay
     )
   }
+
+  async close(listingAddress) {
+    console.log(`Closing listing ${listingAddress}`)
+    const listingContract = this.contractService.listingContract
+    const listing = await listingContract.at(listingAddress)
+    const account = await this.contractService.currentAccount()
+    const transactionReceipt = await listing.close({ from: account }) 
+    return await transactionReceipt
+  }
 }
 
 module.exports = Listings

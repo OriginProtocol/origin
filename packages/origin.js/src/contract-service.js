@@ -11,6 +11,9 @@ class ContractService {
     this.listingContract = contract(ListingContract)
     this.userRegistryContract = contract(UserRegistryContract)
     this.web3 = web3 || window.web3
+
+    this.listingsRegistryContract.setProvider(this.web3.currentProvider)
+    this.listingContract.setProvider(this.web3.currentProvider)
   }
 
   // Return bytes32 hex string from base58 encoded ipfs hash,
@@ -41,12 +44,16 @@ class ContractService {
     return hashStr
   }
 
+  // Returns the first account listed
+  async currentAccount() {
+    const eth = this.web3.eth
+    const accounts = await promisify(eth.getAccounts.bind(eth))()
+    return accounts[0]
+  }
+
   async submitListing(ipfsListing, ethPrice, units) {
     try {
-      const { currentProvider, eth } = this.web3
-      this.listingsRegistryContract.setProvider(currentProvider)
-
-      const accounts = await promisify(eth.getAccounts.bind(eth))()
+      const account = await this.currentAccount()
       const instance = await this.listingsRegistryContract.deployed()
 
       const weiToGive = this.web3.toWei(ethPrice, "ether")
@@ -56,7 +63,7 @@ class ContractService {
         this.getBytes32FromIpfsHash(ipfsListing),
         weiToGive,
         units,
-        { from: accounts[0], gas: 4476768 }
+        { from: account, gas: 4476768 }
       )
     } catch (error) {
       console.error("Error submitting to the Ethereum blockchain: " + error)
@@ -67,8 +74,6 @@ class ContractService {
   async getAllListingIds() {
     const range = (start, count) =>
       Array.apply(0, Array(count)).map((element, index) => index + start)
-
-    this.listingsRegistryContract.setProvider(this.web3.currentProvider)
 
     let instance
     try {
@@ -92,7 +97,6 @@ class ContractService {
   }
 
   async getListing(listingId) {
-    this.listingsRegistryContract.setProvider(this.web3.currentProvider)
     const instance = await this.listingsRegistryContract.deployed()
 
     let listing
@@ -128,16 +132,13 @@ class ContractService {
         ethToGive
     )
 
-    const { currentProvider, eth } = this.web3
-    this.listingContract.setProvider(currentProvider)
-
-    const accounts = await promisify(eth.getAccounts.bind(eth))()
+    const account = await this.currentAccount()
     const listing = await this.listingContract.at(listingAddress)
     const weiToGive = this.web3.toWei(ethToGive, "ether")
 
     const transactionReceipt = await listing.buyListing(
       unitsToBuy,
-      { from: accounts[0], value: weiToGive, gas: 4476768 } // TODO (SRJ): is gas needed?
+      { from: account, value: weiToGive, gas: 4476768 } // TODO (SRJ): is gas needed?
     )
     return transactionReceipt
   }

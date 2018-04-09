@@ -11,7 +11,9 @@ describe("OriginService", () => {
   let originService
 
   beforeEach(() => {
-    contractService = new ContractService()
+    let provider = new Web3.providers.HttpProvider('http://localhost:9545')
+    let web3 = new Web3(provider)
+    contractService = new ContractService({ web3 })
     ipfsService = new IpfsService()
     originService = new OriginService({ contractService, ipfsService })
   })
