@@ -45,7 +45,7 @@ class ContractService {
   }
 
   // Returns the first account listed
-  async currentAccount(){
+  async currentAccount() {
     const eth = this.web3.eth
     const accounts = await promisify(eth.getAccounts.bind(eth))()
     return accounts[0]
@@ -53,8 +53,6 @@ class ContractService {
 
   async submitListing(ipfsListing, ethPrice, units) {
     try {
-      const { currentProvider, eth } = this.web3
-
       const account = await this.currentAccount()
       const instance = await this.listingsRegistryContract.deployed()
 
@@ -133,8 +131,6 @@ class ContractService {
         " units. Total eth to send:" +
         ethToGive
     )
-
-    const { currentProvider, eth } = this.web3
 
     const account = await this.currentAccount()
     const listing = await this.listingContract.at(listingAddress)
