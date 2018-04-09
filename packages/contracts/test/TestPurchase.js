@@ -1,5 +1,5 @@
-const Purchase = artifacts.require('./Purchase.sol')
-const Listing = artifacts.require('./Listing.sol')
+const Purchase = artifacts.require("./Purchase.sol")
+const Listing = artifacts.require("./Listing.sol")
 
 // Used to assert error cases
 const isEVMError = function(err) {
@@ -7,8 +7,24 @@ const isEVMError = function(err) {
   return str.includes("revert")
 }
 
-const ipfsHash = '0x6b14cac30356789cd0c39fec0acc2176c3573abdb799f3b17ccc6972ab4d39ba'
-const price = web3.toBigNumber(web3.toWei('0.5', 'ether'))
+const timetravel = async function(seconds) {
+  var transaction = await web3.currentProvider.send({
+    jsonrpc: "2.0",
+    method: "evm_increaseTime",
+    params: [seconds],
+    id: 0
+  })
+  await web3.currentProvider.send({
+    jsonrpc: "2.0",
+    method: "evm_mine",
+    params: [],
+    id: 0
+  })
+}
+
+const ipfsHash =
+  "0x6b14cac30356789cd0c39fec0acc2176c3573abdb799f3b17ccc6972ab4d39ba"
+const price = web3.toBigNumber(web3.toWei("0.5", "ether"))
 const unitsAvailable = 42
 
 // Enum values
@@ -19,7 +35,9 @@ const IN_DISPUTE = 3 // We are in a dispute
 const REVIEW_PERIOD = 4 // Time for reviews (only when transaction did not go through)
 const COMPLETE = 5 // It's all over
 
-contract('Purchase', accounts => {
+const BUYER_TIMEOUT_SECONDS = 21 * 24 * 60 * 60
+
+contract("Purchase", accounts => {
   var buyer = accounts[0]
   var seller = accounts[1]
   var instance
@@ -28,65 +46,59 @@ contract('Purchase', accounts => {
   beforeEach(async function() {
     // Listing that we will be buying
     listingInstance = await Listing.new(
-        seller,
-        ipfsHash,
-        price,
-        unitsAvailable,
-        {from: seller}
+      seller,
+      ipfsHash,
+      price,
+      unitsAvailable,
+      { from: seller }
     )
 
-    instance = await Purchase.new(
-      listingInstance.address,
-      buyer,
-      {from: buyer}
-    )
+    instance = await Purchase.new(listingInstance.address, buyer, {
+      from: buyer
+    })
   })
 
-  it('should start in stage 0', async function() {
+  it("should start in stage 0", async function() {
     let newStage = await instance.stage()
-    assert.equal(
-      newStage,
-      AWAITING_PAYMENT,
-      'stage is AWAITING_PAYMENT'
-    )
+    assert.equal(newStage, AWAITING_PAYMENT, "stage is AWAITING_PAYMENT")
   })
 
-  it('should fail when not enough paid', async function() {
-    const valueToPay = (price.minus(10))
+  it("should fail when not enough paid", async function() {
+    const valueToPay = price.minus(10)
     await instance.pay({ from: buyer, value: valueToPay })
     let newStage = await instance.stage()
     assert.notEqual(
       newStage.toNumber(),
       BUYER_PENDING,
-      'stage is not BUYER_PENDING'
+      "stage is not BUYER_PENDING"
     )
   })
 
-  it('should progress when buyer pays full amount', async function() {
+  it("should progress when buyer pays full amount", async function() {
     const valueToPay = price
     await instance.pay({ from: buyer, value: valueToPay })
     let newStage = await instance.stage()
     assert.equal(
       newStage.toNumber(),
       BUYER_PENDING,
-      'stage is now BUYER_PENDING'
+      "stage is now BUYER_PENDING"
     )
   })
 
-  it('should progress when buyer pays full amount over multiple payments', async function() {
+  it("should progress when buyer pays full amount over multiple payments", async function() {
     const valueToPay = price.toNumber() / 3 // Odd this doesn't work with bignumber
     await instance.pay({ from: buyer, value: valueToPay })
     await instance.pay({ from: buyer, value: valueToPay })
-    await instance.pay({ from: buyer, value: valueToPay+100 }) // extra in case of division remainder
+    await instance.pay({ from: buyer, value: valueToPay + 100 }) // extra in case of division remainder
     let newStage = await instance.stage()
     assert.equal(
       newStage.toNumber(),
       BUYER_PENDING,
-      'stage is now BUYER_PENDING'
+      "stage is now BUYER_PENDING"
     )
   })
 
-  it('should progress when buyer confirms receipt', async function() {
+  it("should progress when buyer confirms receipt", async function() {
     const valueToPay = price
     await instance.pay({ from: buyer, value: valueToPay })
     // We immediately confirm receipt (in real world could be a while)
@@ -95,11 +107,11 @@ contract('Purchase', accounts => {
     assert.equal(
       newStage.toNumber(),
       SELLER_PENDING,
-      'stage is now SELLER_PENDING'
+      "stage is now SELLER_PENDING"
     )
   })
 
-  it('should transfer the correct amount between buyer and seller', async function() {
+  it("should transfer the correct amount between buyer and seller", async function() {
     const GAS_PRICE = 1
 
     // Before
@@ -108,19 +120,34 @@ contract('Purchase', accounts => {
 
     // Buyer pays
     const valueToPay = price
-    const payTransaction = await instance.pay({ from: buyer, value: valueToPay, gasPrice: GAS_PRICE })
+    const payTransaction = await instance.pay({
+      from: buyer,
+      value: valueToPay,
+      gasPrice: GAS_PRICE
+    })
     const buyerBalanceAfter = await web3.eth.getBalance(buyer)
-    const buyerTransactionCost = web3.toBigNumber(payTransaction.receipt.gasUsed * GAS_PRICE)
-    const buyerExpectedBalance = buyerBalanceBefore.minus(buyerTransactionCost).minus(price)
+    const buyerTransactionCost = web3.toBigNumber(
+      payTransaction.receipt.gasUsed * GAS_PRICE
+    )
+    const buyerExpectedBalance = buyerBalanceBefore
+      .minus(buyerTransactionCost)
+      .minus(price)
 
     // Buyer confirms
     await instance.buyerConfirmReceipt({ from: buyer })
 
     // Seller collects
-    const payoutTransaction = await instance.sellerGetPayout({ from: seller, gasPrice: GAS_PRICE })
+    const payoutTransaction = await instance.sellerGetPayout({
+      from: seller,
+      gasPrice: GAS_PRICE
+    })
     const sellerBalanceAfter = await web3.eth.getBalance(seller)
-    const sellerTransactionCost = web3.toBigNumber(payoutTransaction.receipt.gasUsed * GAS_PRICE)
-    const sellerExpectedBalance = sellerBalanceBefore.minus(sellerTransactionCost).plus(price)
+    const sellerTransactionCost = web3.toBigNumber(
+      payoutTransaction.receipt.gasUsed * GAS_PRICE
+    )
+    const sellerExpectedBalance = sellerBalanceBefore
+      .minus(sellerTransactionCost)
+      .plus(price)
 
     // console.log(`sellerBalanceBefore: ${sellerBalanceBefore}`)
     // console.log(`buyerBalanceBefore: ${buyerBalanceBefore}`)
@@ -130,17 +157,19 @@ contract('Purchase', accounts => {
     // console.log(`sellerdif: ${sellerBalanceAfter-sellerBalanceBefore}`)
     // console.log(`sellerExpectedBalance: ${sellerExpectedBalance}`)
     // console.log(`sellerexpecteddif: ${sellerBalanceAfter-sellerExpectedBalance}`)
-    
-    assert(buyerBalanceAfter.eq(buyerExpectedBalance), "Buyer should spend the correct amount")
-    assert(sellerBalanceAfter.eq(sellerExpectedBalance), "Seller should receive exactly their money")
 
+    assert(
+      buyerBalanceAfter.eq(buyerExpectedBalance),
+      "Buyer should spend the correct amount"
+    )
+    assert(
+      sellerBalanceAfter.eq(sellerExpectedBalance),
+      "Seller should receive exactly their money"
+    )
   })
-
 })
 
-
-
-contract('Purchase', accounts => {
+contract("Purchase", accounts => {
   var buyer = accounts[0]
   var seller = accounts[1]
   var purchase
@@ -148,9 +177,7 @@ contract('Purchase', accounts => {
   var totalPrice = 48
   var initialPayment = 6
 
-
   describe("Success path flow", async () => {
-
     before(async () => {
       listing = await Listing.new(
         seller,
@@ -163,13 +190,15 @@ contract('Purchase', accounts => {
 
     it("should create and link the new purchase", async () => {
       const unitsToBuy = 1
-      const buyTransaction = await listing.buyListing(
-        unitsToBuy,
-        { from: buyer, value: initialPayment }
+      const buyTransaction = await listing.buyListing(unitsToBuy, {
+        from: buyer,
+        value: initialPayment
+      })
+      const listingPurchasedEvent = buyTransaction.logs.find(
+        e => e.event == "ListingPurchased"
       )
-      const listingPurchasedEvent = buyTransaction.logs.find((e) => e.event == "ListingPurchased")
       purchase = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
-      
+
       assert.equal(await listing.getPurchase(0), purchase.address)
       assert.equal(await purchase.listingContract(), listing.address)
       assert.equal((await purchase.stage()).toNumber(), AWAITING_PAYMENT)
@@ -189,9 +218,36 @@ contract('Purchase', accounts => {
       await purchase.sellerGetPayout({ from: seller })
       assert.equal((await purchase.stage()).toNumber(), COMPLETE)
     })
-
-
   })
 
+  describe("Buyer timeout", async () => {
+    beforeEach(async () => {
+      listing = await Listing.new(
+        seller,
+        ipfsHash,
+        totalPrice,
+        unitsAvailable,
+        { from: seller }
+      )
+      const buyTransaction = await listing.buyListing(1, {
+        from: buyer,
+        value: totalPrice // Pay all so that we are in buyer pending
+      })
+      const listingPurchasedEvent = buyTransaction.logs.find(
+        e => e.event == "ListingPurchased"
+      )
+      purchase = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
+      assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)
+    })
 
+    it("should go to SELLER_PENDING when the time is up", async () => {
+      await timetravel(BUYER_TIMEOUT_SECONDS + 10) // Time travel is not yet an exact science
+      assert.equal((await purchase.stage()).toNumber(), SELLER_PENDING)
+    })
+
+    it("should remain BUYER_PENDING when the time is not yet up", async () => {
+      await timetravel(BUYER_TIMEOUT_SECONDS - 10)
+      assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)
+    })
+  })
 })

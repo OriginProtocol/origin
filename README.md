@@ -15,7 +15,7 @@ This repo is under active development. We welcome your participation!
 
 1. [Join our #engineering channel on Discord](http://www.originprotocol.com/discord).
 
-2. Listen in on our weekly engineering call on Google Hangouts. It happens every week and everyone is welcome to listen in and participate. [Join us on Google Hangouts](https://meet.google.com/pws-cgyd-tqp) at the following times:
+2. Listen in on our weekly engineering call on Google Hangouts. It happens every week and everyone is welcome to listen in and participate. [Join us on Google Hangouts](https://meet.google.com/pws-cgyd-tqp) on Wednesdays at 9pm GMT ([Add to Calendar](https://calendar.google.com/event?action=TEMPLATE&tmeid=MHAyNHI3N2hzMjk5b3V2bjhoM2Q1ZWVzY2pfMjAxODA0MTFUMjAwMDAwWiBqb3NoQG9yaWdpbnByb3RvY29sLmNvbQ&tmsrc=josh%40originprotocol.com&scp=ALL)):
 
 > | Pacific | Mountain | Central | Eastern | GMT |
 > |---------|----------|---------|---------|-----|
@@ -25,15 +25,16 @@ This repo is under active development. We welcome your participation!
 - [Engineering meeting notes](https://docs.google.com/document/d/1aRcAk_rEjRgd1BppzxZJK9RXfDkbuwKKH8nPQk7FfaU/)
 - [Weekly sprint doc](https://docs.google.com/document/d/1qJ3sem38ED8oRI72JkeilcvIs82oDq5IT3fHKBrhZIM)
 
+4. Read our simple [contributing and style guide](CONTRIBUTING.md).
+
 # What we're building
 
 The main components of this repo are:
 
  - [Origin.js](/packages/origin.js/)
  - [Ethereum smart contracts](/packages/contracts/)
- - Origin DApp that's built on top of origin.js (basically our current demo-dapp reworked to use origin.js)
-
-This library is an abstraction layer for developers who want to build DApps on Origin Protocol.
+ 
+This library is an abstraction layer for developers who want to build DApps on Origin Protocol, and is also used to build the [Origin Demo DApp](https://github.com/OriginProtocol/demo-dapp).
 
 The library will make it easy for sellers to do things like:
 
@@ -48,3 +49,4 @@ And buyers to:
  - Create bookings
  - Update bookings
  - Cancel bookings
+ 

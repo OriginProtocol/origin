@@ -4,6 +4,8 @@ pragma solidity ^0.4.11;
 /// @dev An indiviual Origin Listing representing an offer for booking/purchase
 
 import "./Purchase.sol";
+import "./PurchaseLibrary.sol";
+
 
 contract Listing {
 
@@ -25,6 +27,7 @@ contract Listing {
     bytes32 public ipfsHash;
     uint public price;
     uint public unitsAvailable;
+    uint public expiration;
     Purchase[] public purchases;
 
 
@@ -41,6 +44,7 @@ contract Listing {
       ipfsHash = _ipfsHash;
       price = _price;
       unitsAvailable = _unitsAvailable;
+      expiration = now + 60 days;
     }
 
   /*
@@ -48,7 +52,7 @@ contract Listing {
     */
 
   modifier isSeller() {
-    require (msg.sender == owner);
+    require(msg.sender == owner);
     _;
   }
 
@@ -64,10 +68,13 @@ contract Listing {
     payable
   {
     // Ensure that this is not trying to purchase more than is available.
-    require (_unitsToBuy <= unitsAvailable);
+    require(_unitsToBuy <= unitsAvailable);
+
+    // Ensure that we are not past the expiration
+    require(now < expiration);
 
     // Create purchase contract
-    Purchase purchaseContract = new Purchase(this, msg.sender);
+    Purchase purchaseContract = PurchaseLibrary.newPurchase(this, msg.sender);
 
     // Count units as sold
     unitsAvailable -= _unitsToBuy;

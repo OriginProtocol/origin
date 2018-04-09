@@ -1,37 +1,53 @@
-import { expect } from "chai";
-import Origin from "../src/index.js";
+import { expect } from "chai"
+import Listings from "../src/resources/listings.js"
+import ContractService from "../src/contract-service.js"
+import IpfsService from "../src/ipfs-service.js"
+import Web3 from 'web3'
 
-describe("Listing Resource", () => {
-  var origin;
-  var testListingIds;
+describe("Listing Resource", function() {
+  this.timeout(5000) // default is 2000
+
+  var listings
+  var contractService
+  var ipfsService
+  var testListingIds
 
   before(async () => {
-    origin = Origin; // Doing this little dance because eventualy Origin won't be a singleton, but something we instantiate
-    testListingIds = await origin.contractService.getAllListingIds();
-  });
+    let provider = new Web3.providers.HttpProvider('http://localhost:9545')
+    let web3 = new Web3(provider)
+    contractService = new ContractService({ web3 })
+    ipfsService = new IpfsService()
+    listings = new Listings({ contractService, ipfsService })
+    testListingIds = await contractService.getAllListingIds()
+
+    // Ensure that there are at least 2 sample listings
+    await listings.create({ name: "Sample Listing 1", price: 1 }, "")
+    await listings.create({ name: "Sample Listing 2", price: 1 }, "")
+  })
 
   it("should get all listing ids", async () => {
-    const ids = await origin.listings.allIds();
-    expect(ids.length).to.be.greaterThan(4);
-  });
+    const ids = await listings.allIds()
+    expect(ids.length).to.be.greaterThan(1)
+  })
 
   it("should get a listing", async () => {
-    const listing = await origin.listings.getByIndex(testListingIds[0]);
-    expect(listing.name).to.equal("Zinc House");
-    expect(listing.index).to.equal(testListingIds[0]);
-  });
+    await listings.create({ name: "Foo Bar", price: 1 }, "")
+    let listingIds = await contractService.getAllListingIds()
+    const listing = await listings.getByIndex(listingIds[listingIds.length - 1])
+    expect(listing.name).to.equal("Foo Bar")
+    expect(listing.index).to.equal(listingIds.length - 1)
+  })
 
   it("should buy a listing", async () => {
-    const listing = await origin.listings.getByIndex(testListingIds[0]);
-    const transaction = await origin.listings.buy(
+    await listings.create({ name: "My Listing", price: 1 }, "")
+    let listingIds = await contractService.getAllListingIds()
+    const listing = await listings.getByIndex(listingIds[listingIds.length - 1])
+    const transaction = await listings.buy(
       listing.address,
       1,
       listing.price * 1
-    );
-    //Todo: Currently this test will fail here with a timeout
-    //  because we need to somehow get web3 approve this transaction
-    // Todo: wait for transaction, then check that purchase was created.
-  }).timeout(5000);
+    )
+  })
 
   it("should create a listing", async () => {
     const listingData = {
@@ -42,9 +58,9 @@ describe("Listing Resource", () => {
         "The American auto-show highlight reel will be disproportionately concentrated on the happenings in New York.",
       pictures: undefined,
       price: 3.3
-    };
-    const schema = "for-sale";
-    await origin.listings.create(listingData, schema);
+    }
+    const schema = "for-sale"
+    await listings.create(listingData, schema)
     // Todo: Check that this worked after we have web3 approvals working
-  });
-});
+  })
+})
