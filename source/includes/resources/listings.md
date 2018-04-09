@@ -48,6 +48,20 @@ await origin.contractService.waitTransactionFinished(transaction.tx)
 
 Buy will create a new `Purchase` contract on the blockchain. This purchase contract will handle the rest of the transaction between the buyer and the seller.
 
+## Close a Listing
+
+> To close a listing
+
+```javascript
+const transaction = await origin.listings.close(
+      listing.address
+    )
+await origin.contractService.waitTransactionFinished(transaction.tx)
+```
+
+Closing a transaction will set the unitsAvailable to zero. This will stop any further purchases of that Listing.
+
+
 ## Get a Listing
 
 > To get a listing
