@@ -11,6 +11,10 @@ Despite being super early, we're going to do our best to make sure tests always 
 If the tests don't pass, either something is wrong with your setup, or you found a
 genuine bug. Please join our #engineering channel on Discord and report it!
 
+## Testnet addresses
+
+The address of our contracts on networks con be found in the "Releases" section of this repo.
+
 ## Testing
 
 ### Test on local blockchain
