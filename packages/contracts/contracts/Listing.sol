@@ -14,6 +14,7 @@ contract Listing {
    */
 
   event ListingPurchased(Purchase _purchaseContract);
+  event ListingChange();
 
     /*
     * Storage
@@ -85,6 +86,7 @@ contract Listing {
     purchaseContract.pay.value(msg.value)();
 
     ListingPurchased(purchaseContract);
+    ListingChange();
   }
 
   /// @dev close(): Allows a seller to close the listing from further purchases
@@ -93,6 +95,7 @@ contract Listing {
     isSeller
   {
     unitsAvailable = 0;
+    ListingChange();
   }
 
   /// @dev purchasesLength(): Return number of listings
