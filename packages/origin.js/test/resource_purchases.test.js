@@ -15,19 +15,19 @@ describe("Purchase Resource", function() {
   var contractService
   var ipfsService
   var testListingIds
+  var web3
 
   before(async () => {
     let provider = new Web3.providers.HttpProvider("http://localhost:9545")
-    let web3 = new Web3(provider)
+    web3 = new Web3(provider)
     contractService = new ContractService({ web3 })
     ipfsService = new IpfsService()
     listings = new Listings({ contractService, ipfsService })
     purchases = new Purchase({ contractService, ipfsService })
   })
 
-  beforeEach(async () => {
+  let resetListingAndPurchase = async () => {
     // Create a new listing and a new purchase for the tests to use.
-    // Create listing:
     const listingData = {
       name: "Australorp Rooser",
       category: "For Sale",
@@ -54,14 +54,37 @@ describe("Purchase Resource", function() {
       e => e.event == "ListingPurchased"
     )
     purchase = await purchases.get(purchaseEvent.args._purchaseContract)
-  })
+  }
 
-  it("should get a purchase", async () => {
-    console.log(purchase)
-    expect(purchase.stage.toNumber()).to.equal(0)
-    expect(purchase.listingAddress).to.equal(listing.address)
-    expect(purchase.buyerAddress).to.equal(
-      await contractService.currentAccount()
-    )
+  describe("simple purchase flow", async () => {
+    before(async () => {
+      await resetListingAndPurchase()
+    })
+
+    it("should get a purchase", async () => {
+      expect(purchase.stage.toNumber()).to.equal(0)
+      expect(purchase.listingAddress).to.equal(listing.address)
+      expect(purchase.buyerAddress).to.equal(
+        await contractService.currentAccount()
+      )
+    })
+
+    it("should allow the buyer to pay", async () => {
+      expect(purchase.stage.toNumber()).to.equal(0)
+      await purchases.pay(
+        purchase.address,
+        contractService.web3.toWei("0.1", "ether")
+      )
+      purchase = await purchases.get(purchase.address)
+      expect(purchase.stage.toNumber()).to.equal(1)
+    })
+
+    it("should allow the seller to mark as shipped", async () => {
+      // Not implimented on the contract yet
+    })
+
+    it("should allow the buyer to mark a purchase received", async () => {})
+
+    it("should allow the seller to collect money", async () => {})
   })
 })
