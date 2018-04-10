@@ -39,6 +39,10 @@ class Purchases {
     async buyerConfirmReceipt(address){
         return await this.contractFn( address, 'buyerConfirmReceipt')
     }
+
+    async sellerGetPayout(address){
+        return await this.contractFn( address, 'sellerGetPayout')
+    }
 }  
 
 module.exports = Purchases

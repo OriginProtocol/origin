@@ -90,6 +90,11 @@ describe("Purchase Resource", function() {
       expect(purchase.stage.toNumber()).to.equal(2)
     })
 
-    it("should allow the seller to collect money", async () => {})
+    it("should allow the seller to collect money", async () => {
+      expect(purchase.stage.toNumber()).to.equal(2)
+      await purchases.sellerGetPayout(purchase.address)
+      purchase = await purchases.get(purchase.address)
+      expect(purchase.stage.toNumber()).to.equal(5)
+    })
   })
 })
