@@ -141,7 +141,7 @@ FLASK_APP=main.py flask db migrate
 to generate the required migration file. Rename it to add a description of the change after the underscore. Then run
 
 ```bash
-FLASK_APP=main.py flask db migrate
+FLASK_APP=main.py flask db upgrade
 ```
 
 to apply your migration to your local database, then test your changes before committing.
