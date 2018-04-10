@@ -10,6 +10,10 @@ from database import db
 from database import db_models
 from logic import service_utils
 from util import time_
+from web3 import Web3, HTTPProvider
+
+web3 = Web3(HTTPProvider('http://localhost:9545')) # TODO: use env vars to connect to live networks
+signing_account = web3.eth.accounts[1] # TODO: allow this to be specified from env var in production
 
 VC = db_models.VerificationCode
 
@@ -73,9 +77,8 @@ class VerificationServiceImpl(
             verified=True)
         db.session.add(db_identity)
         db.session.commit()
-        return verification.VerifyPhoneResponse(
-            attestation=generate_signed_attestation(addr))
-
+        attestation = generate_signed_attestation(req.eth_address)
+        return verification.VerifyPhoneResponse(attestation=attestation)
 
 def numeric_eth(str_eth_address):
     return int(str_eth_address, 16)
@@ -98,4 +101,9 @@ def send_code_via_sms(phone, code):
 
 
 def generate_signed_attestation(addr):
-    return 'Placeholder attestation for {}'.format(addr)
+    # The client will need to use the same data text and the claim type
+    data = Web3.sha3(text='phone verified') # TODO: determine what the text should be
+    claim_type = 10 # TODO: determine claim type integer code for phone verification
+    hashToSign = Web3.soliditySha3(['address', 'uint256', 'bytes32'], [addr, claim_type, data])
+    signature = web3.eth.sign(signing_account, data=hashToSign)
+    return signature.hex()
