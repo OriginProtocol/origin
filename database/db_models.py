@@ -10,6 +10,7 @@ class VerificationCode(db.Model):
             scale=0),
         primary_key=True)
     phone = db.Column(db.String(20), index=True)
+    email = db.Column(db.String(256), index=True)
     code = db.Column(db.String(10))
     expires_at = db.Column(db.DateTime(timezone=True))
     created_at = db.Column(
