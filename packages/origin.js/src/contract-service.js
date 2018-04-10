@@ -8,15 +8,18 @@ import promisify from "util.promisify"
 
 class ContractService {
   constructor({ web3 } = {}) {
-    this.listingsRegistryContract = contract(ListingsRegistryContract)
-    this.listingContract = contract(ListingContract)
-    this.purchaseContract = contract(PurchaseContract)
-    this.userRegistryContract = contract(UserRegistryContract)
     this.web3 = web3 || window.web3
 
-    this.listingsRegistryContract.setProvider(this.web3.currentProvider)
-    this.listingContract.setProvider(this.web3.currentProvider)
-    this.purchaseContract.setProvider(this.web3.currentProvider)
+    const contracts = {
+      listingsRegistryContract: ListingsRegistryContract,
+      listingContract: ListingContract,
+      purchaseContract: PurchaseContract,
+      userRegistryContract: UserRegistryContract
+    }
+    for (let name in contracts) {
+      this[name] = contract(contracts[name])
+      this[name].setProvider(this.web3.currentProvider)
+    }
   }
 
   // Return bytes32 hex string from base58 encoded ipfs hash,
