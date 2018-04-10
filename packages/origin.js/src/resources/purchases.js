@@ -4,12 +4,18 @@ class Purchases {
       this.ipfsService = ipfsService
     }
 
-    async get(address){
+    async contractFn(address, functionName, args=[]){
         const purchaseContract = this.contractService.purchaseContract
         const purchase = await purchaseContract.at(address)
         const account = await this.contractService.currentAccount()
-        const contractData = await purchase.data(
-            { from: account }
+        args.push({ from: account })
+        return await purchase[functionName](args)
+    }
+
+    async get(address){
+        const contractData = await this.contractFn(
+            address,
+            'data'
         )
         return {
             address: address,
