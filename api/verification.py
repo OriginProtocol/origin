@@ -24,6 +24,22 @@ class VerifyPhoneResponse(apilib.Response):
     claim_type = apilib.Field(apilib.String())
     data = apilib.Field(apilib.String())
 
+class GenerateEmailVerificationCodeRequest(apilib.Request):
+    eth_address = apilib.Field(apilib.String(), required=True)
+    email = apilib.Field(apilib.String(), required=True)
+
+class GenerateEmailVerificationCodeResponse(apilib.Response):
+    pass
+
+class VerifyEmailRequest(apilib.Request):
+    eth_address = apilib.Field(apilib.String(), required=True)
+    email = apilib.Field(apilib.String(), required=True)
+    code = apilib.Field(apilib.String(), required=True)
+
+class VerifyEmailResponse(apilib.Response):
+    signature = apilib.Field(apilib.String())
+    claim_type = apilib.Field(apilib.String())
+    data = apilib.Field(apilib.String())
 
 class VerificationService(apilib.Service):
     path = '/api/verification_service'
@@ -35,4 +51,12 @@ class VerificationService(apilib.Service):
         apilib.Method(
             'verify_phone',
             VerifyPhoneRequest,
-            VerifyPhoneResponse))
+            VerifyPhoneResponse),
+        apilib.Method(
+            'generate_email_verification_code',
+            GenerateEmailVerificationCodeRequest,
+            GenerateEmailVerificationCodeResponse),
+        apilib.Method(
+            'verify_email',
+            VerifyEmailRequest,
+            VerifyEmailResponse))
