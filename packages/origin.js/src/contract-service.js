@@ -1,5 +1,6 @@
 import ListingsRegistryContract from "../../contracts/build/contracts/ListingsRegistry.json"
 import ListingContract from "../../contracts/build/contracts/Listing.json"
+import PurchaseContract from "../../contracts/build/contracts/Purchase.json"
 import UserRegistryContract from "../../contracts/build/contracts/UserRegistry.json"
 import bs58 from "bs58"
 import contract from "truffle-contract"
@@ -7,13 +8,18 @@ import promisify from "util.promisify"
 
 class ContractService {
   constructor({ web3 } = {}) {
-    this.listingsRegistryContract = contract(ListingsRegistryContract)
-    this.listingContract = contract(ListingContract)
-    this.userRegistryContract = contract(UserRegistryContract)
     this.web3 = web3 || window.web3
 
-    this.listingsRegistryContract.setProvider(this.web3.currentProvider)
-    this.listingContract.setProvider(this.web3.currentProvider)
+    const contracts = {
+      listingsRegistryContract: ListingsRegistryContract,
+      listingContract: ListingContract,
+      purchaseContract: PurchaseContract,
+      userRegistryContract: UserRegistryContract
+    }
+    for (let name in contracts) {
+      this[name] = contract(contracts[name])
+      this[name].setProvider(this.web3.currentProvider)
+    }
   }
 
   // Return bytes32 hex string from base58 encoded ipfs hash,

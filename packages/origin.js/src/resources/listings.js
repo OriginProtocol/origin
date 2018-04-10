@@ -101,7 +101,7 @@ class Listings {
     const listing = await listingContract.at(listingAddress)
     const account = await this.contractService.currentAccount()
     const transactionReceipt = await listing.close({ from: account }) 
-    return await transactionReceipt
+    return transactionReceipt
   }
 }
 
