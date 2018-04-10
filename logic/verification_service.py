@@ -9,7 +9,7 @@ from config import settings
 from database import db
 from database import db_models
 from logic import service_utils
-from util import time_
+from util import time_, attestations
 from web3 import Web3, HTTPProvider
 
 web3 = Web3(HTTPProvider('http://localhost:9545')) # TODO: use env vars to connect to live networks
@@ -79,7 +79,7 @@ class VerificationServiceImpl(
         db.session.commit()
         data = 'phone verified' # TODO: determine what the text should be
         claim_type = 10 # TODO: determine claim type integer code for phone verification
-        signature = generate_signed_attestation(signing_account, req.eth_address, claim_type, data)
+        signature = attestations.generate_signature(web3, signing_account, req.eth_address, claim_type, data)
         return verification.VerifyPhoneResponse(signature=signature, claim_type=claim_type, data=data)
 
 def numeric_eth(str_eth_address):
@@ -100,11 +100,3 @@ def send_code_via_sms(phone, code):
         from_=settings.TWILIO_NUMBER,
         body=('Your Origin verification code is {}.'
               ' It will expire in 30 minutes.').format(code))
-
-
-def generate_signed_attestation(signer, subject, claim_type, data):
-    # The client will need to use the same data text and the claim type
-    hashed_data = Web3.sha3(text=data)
-    hash_to_sign = Web3.soliditySha3(['address', 'uint256', 'bytes32'], [subject, claim_type, hashed_data])
-    signature = web3.eth.sign(signer, data=hash_to_sign)
-    return signature.hex()
