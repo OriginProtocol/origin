@@ -35,6 +35,10 @@ TEST_DATABASE_URI = os.environ.get(
 TEMPLATE_ROOT = os.path.join(PROJECTPATH, 'templates')
 STATIC_ROOT = os.path.join(PROJECTPATH, 'static')
 
+FROM_EMAIL = os.environ.get('FROM_EMAIL')
+
+SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
+
 TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
 TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
 TWILIO_NUMBER = os.environ.get('TWILIO_NUMBER')
