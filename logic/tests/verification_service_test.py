@@ -75,8 +75,10 @@ class VerificationServiceTest(test_base.DatabaseWithTestdataTest):
             code=code_data.code)
         mock_now.return_value = code_data.expires_at - datetime.timedelta(minutes=1)
         resp = self.service().invoke('verify_phone', req)
-        self.assertEqual('SUCCESS', resp.response_code)
-        self.assertEqual('0x7585215a60cde667abd47fb8d4ab5192673706ee3df0fd311d26bff88df36dc40d8ba2351e8c70ad1d1ac0e84817ca3c9774ac0d21ccb5f9e6c4615d2ac9a64b01', resp.attestation)
+        self.assertEqual(resp.response_code, 'SUCCESS')
+        self.assertEqual(resp.signature, '0x7585215a60cde667abd47fb8d4ab5192673706ee3df0fd311d26bff88df36dc40d8ba2351e8c70ad1d1ac0e84817ca3c9774ac0d21ccb5f9e6c4615d2ac9a64b01')
+        self.assertEqual(resp.claim_type, 10)
+        self.assertEqual(resp.data, 'phone verified')
 
         db_identity = db_models.Identity.query.get(code_data.eth_address)
         self.assertIsNotNone(db_identity)

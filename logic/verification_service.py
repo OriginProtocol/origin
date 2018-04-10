@@ -77,8 +77,10 @@ class VerificationServiceImpl(
             verified=True)
         db.session.add(db_identity)
         db.session.commit()
-        attestation = generate_signed_attestation(req.eth_address)
-        return verification.VerifyPhoneResponse(attestation=attestation)
+        data = 'phone verified' # TODO: determine what the text should be
+        claim_type = 10 # TODO: determine claim type integer code for phone verification
+        signature = generate_signed_attestation(signing_account, req.eth_address, claim_type, data)
+        return verification.VerifyPhoneResponse(signature=signature, claim_type=claim_type, data=data)
 
 def numeric_eth(str_eth_address):
     return int(str_eth_address, 16)
@@ -100,10 +102,9 @@ def send_code_via_sms(phone, code):
               ' It will expire in 30 minutes.').format(code))
 
 
-def generate_signed_attestation(addr):
+def generate_signed_attestation(signer, subject, claim_type, data):
     # The client will need to use the same data text and the claim type
-    data = Web3.sha3(text='phone verified') # TODO: determine what the text should be
-    claim_type = 10 # TODO: determine claim type integer code for phone verification
-    hashToSign = Web3.soliditySha3(['address', 'uint256', 'bytes32'], [addr, claim_type, data])
-    signature = web3.eth.sign(signing_account, data=hashToSign)
+    hashed_data = Web3.sha3(text=data)
+    hash_to_sign = Web3.soliditySha3(['address', 'uint256', 'bytes32'], [subject, claim_type, hashed_data])
+    signature = web3.eth.sign(signer, data=hash_to_sign)
     return signature.hex()

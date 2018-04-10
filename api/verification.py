@@ -20,7 +20,9 @@ class VerifyPhoneResponse(apilib.Response):
     # A successful response will have response_code SUCCESS.
     # Any invalid code with have response_code REQUEST_ERROR
     # and the 'errors' list will be populated.
-    attestation = apilib.Field(apilib.String())
+    signature = apilib.Field(apilib.String())
+    claim_type = apilib.Field(apilib.String())
+    data = apilib.Field(apilib.String())
 
 
 class VerificationService(apilib.Service):
