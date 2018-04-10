@@ -83,7 +83,12 @@ describe("Purchase Resource", function() {
       // Not implimented on the contract yet
     })
 
-    it("should allow the buyer to mark a purchase received", async () => {})
+    it("should allow the buyer to mark a purchase received", async () => {
+      expect(purchase.stage.toNumber()).to.equal(1)
+      await purchases.buyerConfirmReceipt(purchase.address)
+      purchase = await purchases.get(purchase.address)
+      expect(purchase.stage.toNumber()).to.equal(2)
+    })
 
     it("should allow the seller to collect money", async () => {})
   })
