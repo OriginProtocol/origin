@@ -1,5 +1,6 @@
 import ListingsRegistryContract from "../../contracts/build/contracts/ListingsRegistry.json"
 import ListingContract from "../../contracts/build/contracts/Listing.json"
+import PurchaseContract from "../../contracts/build/contracts/Purchase.json"
 import UserRegistryContract from "../../contracts/build/contracts/UserRegistry.json"
 import bs58 from "bs58"
 import contract from "truffle-contract"
@@ -9,11 +10,13 @@ class ContractService {
   constructor({ web3 } = {}) {
     this.listingsRegistryContract = contract(ListingsRegistryContract)
     this.listingContract = contract(ListingContract)
+    this.purchaseContract = contract(PurchaseContract)
     this.userRegistryContract = contract(UserRegistryContract)
     this.web3 = web3 || window.web3
 
     this.listingsRegistryContract.setProvider(this.web3.currentProvider)
     this.listingContract.setProvider(this.web3.currentProvider)
+    this.purchaseContract.setProvider(this.web3.currentProvider)
   }
 
   // Return bytes32 hex string from base58 encoded ipfs hash,
