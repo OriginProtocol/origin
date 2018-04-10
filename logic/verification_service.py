@@ -32,6 +32,7 @@ class VerificationServiceImpl(
         addr = numeric_eth(req.eth_address)
         db_code = VC.query \
             .filter(VC.eth_address == addr) \
+            .filter(VC.phone == req.phone) \
             .first()
         if db_code is None:
             db_code = db_models.VerificationCode(eth_address=addr)
@@ -90,6 +91,7 @@ class VerificationServiceImpl(
         addr = numeric_eth(req.eth_address)
         db_code = VC.query \
             .filter(VC.eth_address == addr) \
+            .filter(VC.email == req.email) \
             .first()
         if db_code is None:
             db_code = db_models.VerificationCode(eth_address=addr)
