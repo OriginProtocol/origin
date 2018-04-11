@@ -1,3 +1,5 @@
+![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
+
 # Origin Protocol Docs
 
 These docs are very much a work in progress, but you can view them live at:
