@@ -2,15 +2,22 @@ class Purchases {
     constructor({ contractService, ipfsService }) {
       this.contractService = contractService
       this.ipfsService = ipfsService
-
-      this.STAGES = {
-        AWAITING_PAYMENT: 0,
-        BUYER_PENDING: 1,
-        SELLER_PENDING: 2,
-        IN_DISPUTE: 3,
-        REVIEW_PERIOD: 4,
-        COMPLETE: 5
+      
+      this._STAGES_TO_NUMBER = {
+        awaiting_payment: 0,
+        buyer_pending: 1,
+        seller_pending: 2,
+        in_dispute: 3,
+        review_period: 4,
+        complete: 5
       }
+      this._NUMBERS_TO_STAGE = {}
+
+      this.STAGES = {}
+      Object.entries(this._STAGES_TO_NUMBER).map(([k, v]) => {
+        this.STAGES[k.toUpperCase()] = k
+        this._NUMBERS_TO_STAGE[v] = k
+      })
     }
 
     async contractFn(address, functionName, args=[], value=0){
@@ -28,7 +35,7 @@ class Purchases {
         )
         return {
             address: address,
-            stage: contractData[0], // perhaps return a string
+            stage: this._NUMBERS_TO_STAGE[contractData[0]],
             listingAddress: contractData[1],
             buyerAddress: contractData[2],
             created: contractData[3],

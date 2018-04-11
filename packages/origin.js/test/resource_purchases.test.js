@@ -60,7 +60,7 @@ describe("Purchase Resource", function() {
   }
 
   let expectStage = function(expectedStage) {
-    expect(purchase.stage.toNumber()).to.equal(expectedStage)
+    expect(purchase.stage).to.equal(expectedStage)
   }
 
   // Tests
