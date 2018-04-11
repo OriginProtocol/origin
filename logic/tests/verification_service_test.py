@@ -148,5 +148,96 @@ class VerificationServiceTest(test_base.DatabaseWithTestdataTest):
         self.assertIsNone(resp.errors[0].path)
         self.assertEqual(resp.errors[0].message, 'Please wait briefly before requesting a new verification code.')
 
+    @mock.patch('python_http_client.client.Client')
+    def test_generate_email_verification_code_new_phone(self, MockHttpClient):
+        req = verification.GenerateEmailVerificationCodeRequest(
+            eth_address='0x112234455C3A32FD11230C42E7BCCD4A84E02010',
+            email='hello@world.foo')
+        resp = self.service().invoke('generate_email_verification_code', req)
+        self.assertEqual(resp.response_code, 'SUCCESS')
+
+        db_code = VC.query.filter(VC.email == req.email).first()
+        self.assertIsNotNone(db_code)
+        self.assertIsNotNone(db_code.code)
+        self.assertEqual(6, len(db_code.code))
+        self.assertIsNotNone(db_code.expires_at)
+        self.assertIsNotNone(db_code.created_at)
+        self.assertIsNotNone(db_code.updated_at)
+
+    @mock.patch('python_http_client.client.Client')
+    def test_generate_email_verification_code_email_already_in_db(self, MockHttpClient):
+        req = verification.GenerateEmailVerificationCodeRequest(
+            eth_address=str_eth(VCD.code1.eth_address),
+            email=VCD.code1.email)
+        resp = self.service().invoke('generate_email_verification_code', req)
+        self.assertEqual(resp.response_code, 'SUCCESS')
+
+        self.assertEqual(VC.query.filter(VC.email == req.email).count(), 1)
+        db_code = VC.query.filter(VC.email == req.email).first()
+        self.assertIsNotNone(db_code)
+        self.assertIsNotNone(db_code.code)
+        self.assertEqual(len(db_code.code), 6)
+        self.assertIsNotNone(db_code.expires_at)
+        self.assertIsNotNone(db_code.created_at)
+        self.assertIsNotNone(db_code.updated_at)
+        self.assertGreater(db_code.updated_at, db_code.created_at)
+        self.assertGreater(db_code.expires_at, VCD.code1.expires_at)
+
+    @mock.patch('util.time_.utcnow')
+    def test_verify_email_valid_code(self, mock_now):
+        code_data = VCD.code1
+        req = verification.VerifyEmailRequest(
+            eth_address=str_eth(code_data.eth_address),
+            email=code_data.email,
+            code=code_data.code)
+        mock_now.return_value = code_data.expires_at - datetime.timedelta(minutes=1)
+        resp = self.service().invoke('verify_email', req)
+        self.assertEqual(resp.response_code, 'SUCCESS')
+        self.assertEqual(resp.signature, '0xb48b4acc7074385d704d47c8dfd34ac58ff519fe1cf5c962d00d250d290043b55248239f269b10dd3b50f9d39b6ca72409910623b0819929b0a5f3399992e34301')
+        self.assertEqual(resp.claim_type, 11)
+        self.assertEqual(resp.data, 'email verified')
+
+    @mock.patch('util.time_.utcnow')
+    def test_verify_email_expired_code(self, mock_now):
+        code_data = VCD.code1
+        req = verification.VerifyEmailRequest(
+            eth_address=str_eth(code_data.eth_address),
+            email=code_data.email,
+            code=code_data.code)
+        mock_now.return_value = code_data.expires_at + datetime.timedelta(minutes=1)
+        resp = self.service().invoke('verify_email', req)
+        self.assertEqual(resp.response_code, 'REQUEST_ERROR')
+        self.assertEqual(len(resp.errors), 1)
+        self.assertEqual(resp.errors[0].code, 'EXPIRED')
+        self.assertEqual(resp.errors[0].path, 'code')
+
+    @mock.patch('util.time_.utcnow')
+    def test_verify_email_wrong_code(self, mock_now):
+        code_data = VCD.code1
+        req = verification.VerifyEmailRequest(
+            eth_address=str_eth(code_data.eth_address),
+            email=code_data.email,
+            code='garbage')
+        mock_now.return_value = code_data.expires_at - datetime.timedelta(minutes=1)
+        resp = self.service().invoke('verify_email', req)
+        self.assertEqual(resp.response_code, 'REQUEST_ERROR')
+        self.assertEqual(len(resp.errors), 1)
+        self.assertEqual(resp.errors[0].code, 'INVALID')
+        self.assertEqual(resp.errors[0].path, 'code')
+
+    @mock.patch('util.time_.utcnow')
+    def test_verify_email_email_not_found(self, mock_now):
+        code_data = VCD.code1
+        req = verification.VerifyEmailRequest(
+            eth_address=str_eth(code_data.eth_address),
+            email='garbage',
+            code=code_data.code)
+        mock_now.return_value = code_data.expires_at - datetime.timedelta(minutes=1)
+        resp = self.service().invoke('verify_email', req)
+        self.assertEqual(resp.response_code, 'REQUEST_ERROR')
+        self.assertEqual(len(resp.errors), 1)
+        self.assertEqual(resp.errors[0].code, 'NOT_FOUND')
+        self.assertEqual(resp.errors[0].path, 'email')
+
 if __name__ == '__main__':
     unittest.main()
