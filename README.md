@@ -17,3 +17,9 @@ Once you have cloned this repo, just run:
 Credits and detailed documentation on how to use the Slate documentation system can be found at:
 
 [https://github.com/lord/slate](https://github.com/lord/slate)
+
+## Deploying changes
+
+Our docs are currently hosted on Github pages. Deploying changes (if you have access to this repo) is as easy as running `./deploy.sh`
+
+[https://github.com/lord/slate/wiki/deploying-slate](https://github.com/lord/slate/wiki/deploying-slate)
