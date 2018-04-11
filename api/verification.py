@@ -41,6 +41,12 @@ class VerifyEmailResponse(apilib.Response):
     claim_type = apilib.Field(apilib.String())
     data = apilib.Field(apilib.String())
 
+class GetFacebookAuthUrlRequest(apilib.Request):
+    redirect_url = apilib.Field(apilib.String(), required=True)
+
+class GetFacebookAuthUrlResponse(apilib.Response):
+    url = apilib.Field(apilib.String())
+
 class VerificationService(apilib.Service):
     path = '/api/verification_service'
     methods = apilib.servicemethods(
@@ -59,4 +65,8 @@ class VerificationService(apilib.Service):
         apilib.Method(
             'verify_email',
             VerifyEmailRequest,
-            VerifyEmailResponse))
+            VerifyEmailResponse),
+        apilib.Method(
+            'get_facebook_auth_url',
+            GetFacebookAuthUrlRequest,
+            GetFacebookAuthUrlResponse))

@@ -35,6 +35,8 @@ TEST_DATABASE_URI = os.environ.get(
 TEMPLATE_ROOT = os.path.join(PROJECTPATH, 'templates')
 STATIC_ROOT = os.path.join(PROJECTPATH, 'static')
 
+FACEBOOK_CLIENT_ID = os.environ.get('FACEBOOK_CLIENT_ID')
+
 FROM_EMAIL = os.environ.get('FROM_EMAIL')
 
 SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
