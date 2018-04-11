@@ -145,7 +145,7 @@ contract("Purchase", accounts => {
 
     // Seller collects
     const sellerBalanceBefore = await web3.eth.getBalance(seller)
-    const payoutTransaction = await instance.sellerGetPayout({
+    const payoutTransaction = await instance.sellerCollectPayout({
       from: seller,
       gasPrice: GAS_PRICE
     })
@@ -234,7 +234,7 @@ contract("Purchase", accounts => {
     })
 
     it("should allow seller to collect their money", async () => {
-      await purchase.sellerGetPayout({ from: seller })
+      await purchase.sellerCollectPayout({ from: seller })
       assert.equal((await purchase.stage()).toNumber(), COMPLETE)
     })
   })

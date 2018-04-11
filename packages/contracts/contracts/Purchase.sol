@@ -114,7 +114,7 @@ contract Purchase {
       internalStage = Stages.SELLER_PENDING;
   }
 
-  function sellerGetPayout()
+  function sellerCollectPayout()
   public
   isSeller
   atStage(Stages.SELLER_PENDING)
