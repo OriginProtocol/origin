@@ -1,4 +1,6 @@
 import datetime
+import http.client
+import json
 import secrets
 import sendgrid
 
@@ -130,9 +132,27 @@ class VerificationServiceImpl(
 
     def facebook_auth_url(self, req):
         client_id = settings.FACEBOOK_CLIENT_ID
-        redirect_uri = req.redirect_url
+        redirect_uri = append_trailing_slash(req.redirect_url)
         url = 'https://www.facebook.com/v2.12/dialog/oauth?client_id={}&redirect_uri={}'.format(client_id, redirect_uri)
         return verification.GetFacebookAuthUrlResponse(url=url)
+
+    def verify_facebook(self, req):
+        base_url = 'graph.facebook.com'
+        client_id = settings.FACEBOOK_CLIENT_ID
+        client_secret = settings.FACEBOOK_CLIENT_SECRET
+        redirect_uri = append_trailing_slash(req.redirect_url)
+        code = req.code
+        path = '/v2.12/oauth/access_token?client_id={}&client_secret={}&redirect_uri={}&code={}'.format(client_id, client_secret, redirect_uri, code)
+        conn = http.client.HTTPSConnection(base_url)
+        conn.request('GET', path)
+        response = json.loads(conn.getresponse().read())
+        has_access_token = ('access_token' in response)
+        if not has_access_token or 'error' in response:
+            raise service_utils.req_error(code='INVALID', path='code', message='The code you provided is invalid.')
+        data = 'facebook verified' # TODO: determine what the text should be
+        claim_type = 3 # TODO: determine claim type integer code for phone verification
+        signature = attestations.generate_signature(web3, signing_account, req.eth_address, claim_type, data)
+        return verification.VerifyFacebookResponse(signature=signature, claim_type=claim_type, data=data)
 
 def numeric_eth(str_eth_address):
     return int(str_eth_address, 16)
@@ -160,3 +180,8 @@ def send_code_via_email(address, code):
     content = Content('text/plain', 'Your Origin verification code is {}. It will expire in 30 minutes.'.format(code))
     mail = Mail(from_email, subject, to_email, content)
     sg.client.mail.send.post(request_body=mail.get())
+
+def append_trailing_slash(url):
+    if url.endswith('/'):
+        return url
+    return url + '/'

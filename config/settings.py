@@ -36,6 +36,7 @@ TEMPLATE_ROOT = os.path.join(PROJECTPATH, 'templates')
 STATIC_ROOT = os.path.join(PROJECTPATH, 'static')
 
 FACEBOOK_CLIENT_ID = os.environ.get('FACEBOOK_CLIENT_ID')
+FACEBOOK_CLIENT_SECRET = os.environ.get('FACEBOOK_CLIENT_SECRET')
 
 FROM_EMAIL = os.environ.get('FROM_EMAIL')
 
