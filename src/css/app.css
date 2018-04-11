@@ -2311,6 +2311,25 @@ sup {
   height: unset;
 }
 
+.unload.modal .button-container .btn {
+  margin: 0 0 20px;
+}
+
+.unload.modal a {
+  color: var(--clear-blue);
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.unload.modal a:hover {
+  color: var(--dark-clear-blue);
+}
+
+.unload.modal .modal-content .image-container img {
+  height: auto;
+  width: auto;
+}
+
 /* Footer */
 
 .dark-footer {
@@ -2403,7 +2422,7 @@ footer .footer-links li a {
 /* md + */
 @media (min-width: 768px) {
   .modal-content {
-    padding: 60px;
+    padding: 40px;
   }
 
   .navbar .identity .dropdown-menu {

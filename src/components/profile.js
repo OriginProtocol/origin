@@ -13,6 +13,7 @@ class Profile extends Component {
     this.handlePublish = this.handlePublish.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleToggle = this.handleToggle.bind(this)
+    this.handleUnload = this.handleUnload.bind(this)
     this.setProgress = this.setProgress.bind(this)
     this.state = {
       lastPublish: null,
@@ -22,6 +23,7 @@ class Profile extends Component {
         phone: false,
         profile: false,
         twitter: false,
+        unload: false,
       },
       progress: {
         provisional: 0,
@@ -54,11 +56,31 @@ class Profile extends Component {
     }
   }
 
+  handleUnload(e) {
+    const message = 'If you exit without publishing, you\'ll lose all your changes.'
+    const modalsOpen = Object.assign({}, this.state.modalsOpen, { unload: true })
+
+    // modal will only render if user cancels unload using native dialog
+    this.setState({ modalsOpen })
+
+    e.returnValue = message
+
+    return message
+  }
+
+  componentDidMount() {
+    window.addEventListener('beforeunload', this.handleUnload)
+  }
+
   componentDidUpdate() {
     const publishable = JSON.stringify(this.state.provisional) !== JSON.stringify(this.state.published)
 
     if (publishable) {
       $('.profile-wrapper [data-toggle="tooltip"]').tooltip()
+
+      window.addEventListener('beforeunload', this.handleUnload)
+    } else {
+      window.removeEventListener('beforeunload', this.handleUnload)
     }
   }
 
@@ -80,12 +102,14 @@ class Profile extends Component {
     this.setProgress({ provisional: provisional + ((100 - published) - provisional) / 2, published })
   }
 
-  handlePublish() {
+  handlePublish(cb) {
     const { provisional, progress } = this.state
 
     this.setState({ lastPublish: new Date(), published: provisional })
 
     this.setProgress({ provisional: 0, published: progress.provisional + progress.published })
+
+    typeof cb === 'function' && cb()
   }
 
   handleSubmit(e) {
@@ -134,6 +158,8 @@ class Profile extends Component {
 
   componentWillUnmount() {
     $('.profile-wrapper [data-toggle="tooltip"]').tooltip('dispose')
+
+    window.removeEventListener('beforeunload', this.handleUnload)
   }
 
   render() {
@@ -149,7 +175,7 @@ class Profile extends Component {
               <div className="row attributes">
                 <div className="col-4 col-md-3">
                   <div className="avatar-container">
-                    <img src="/images/avatar-anonymous.svg" alt="avatar" />
+                    <img src="/images/avatar-unnamed.svg" alt="avatar" />
                   </div>
                 </div>
                 <div className="col-8 col-md-9">
@@ -178,7 +204,7 @@ class Profile extends Component {
                   <div className="col-12 col-sm-6 col-md-4">
                     <button data-modal="phone" className={`service${published.phone ? ' published' : (provisional.phone ? ' verified' : '')}`} onClick={this.handleToggle}>
                       <span className="image-container d-flex text-center justify-content-center">
-                        {/* <img src="/images/phone-icon.svg" alt="phone icon" /> */}
+                        {<img src="/images/phone-icon-light.svg" alt="phone icon" />}
                       </span>
                       <p>Phone</p>
                     </button>
@@ -186,7 +212,7 @@ class Profile extends Component {
                   <div className="col-12 col-sm-6 col-md-4">
                     <button data-modal="email" className={`service${published.email ? ' published' : (provisional.email ? ' verified' : '')}`} onClick={this.handleToggle}>
                       <span className="image-container d-flex text-center justify-content-center">
-                        {/* <img src="/images/email-icon.svg" alt="email icon" /> */}
+                        {<img src="/images/email-icon.svg" alt="email icon" />}
                       </span>
                       <p>Email</p>
                     </button>
@@ -194,7 +220,7 @@ class Profile extends Component {
                   <div className="col-12 col-sm-6 col-md-4">
                     <button className="service disabled" disabled>
                       <span className="image-container d-flex text-center justify-content-center">
-                        {/* <img src="/images/address-icon.svg" alt="address icon" /> */}
+                        <img src="/images/address-icon.svg" alt="address icon" />
                       </span>
                       <span className="unavailable-bg"></span>
                       <span className="unavailable-message">Coming<br />Soon</span>
@@ -220,11 +246,11 @@ class Profile extends Component {
                   <div className="col-12 col-sm-6 col-md-4">
                     <button className="service disabled" disabled>
                       <span className="image-container d-flex text-center justify-content-center">
-                        <img src="/images/github-icon.svg" alt="GitHub icon" />
+                        <img src="/images/google-icon.svg" alt="Google icon" />
                       </span>
                       <span className="unavailable-bg"></span>
                       <span className="unavailable-message">Coming<br />Soon</span>
-                      <p>GitHub</p>
+                      <p>Google</p>
                     </button>
                   </div>
                 </div>
@@ -299,7 +325,7 @@ class Profile extends Component {
                   <div className="image-container">
                     <div className="image-pair">
                       <div className="avatar-container">
-                        <img src="/images/avatar-anonymous.svg" alt="avatar" />
+                        <img src="/images/avatar-unnamed.svg" alt="avatar" />
                       </div>
                       <a className="edit-profile" onClick={() => alert('To Do')}>
                         <img src="/images/camera-icon-circle.svg" alt="camera icon" />
@@ -310,17 +336,17 @@ class Profile extends Component {
                 <div className="col-6">
                   <div className="form-group">
                     <label htmlFor="first-name">First Name</label>
-                    <input type="text" id="first-name" name="firstName" className="form-control" value={form.firstName} onChange={this.handleChange} placeholder="Select one" />
+                    <input type="text" id="first-name" name="firstName" className="form-control" value={form.firstName} onChange={this.handleChange} placeholder="Your First Name" />
                   </div>
                   <div className="form-group">
                     <label htmlFor="last-name">Last Name</label>
-                    <input type="text" id="last-name" name="lastName" className="form-control" value={form.lastName} onChange={this.handleChange} placeholder="Select one" />
+                    <input type="text" id="last-name" name="lastName" className="form-control" value={form.lastName} onChange={this.handleChange} placeholder="Your Last Name" />
                   </div>
                 </div>
                 <div className="col-12">
                   <div className="form-group">
                     <label htmlFor="description">Description</label>
-                    <textarea rows="4" id="description" name="description" className="form-control" value={form.description} onChange={this.handleChange} placeholder="Tell us a bit about yourself"></textarea>
+                    <textarea rows="4" id="description" name="description" className="form-control" value={form.description} onChange={this.handleChange} placeholder="Tell us a little something about yourself"></textarea>
                   </div>
                 </div>
                 <div className="col-12">
@@ -392,6 +418,18 @@ class Profile extends Component {
             <button className="btn btn-clear" data-modal="twitter" onClick={this.handleToggle}>Cancel</button>
             <button className="btn btn-clear" onClick={() => this.handleIdentity('twitter')}>Continue</button>
           </div>
+        </Modal>
+        <Modal isOpen={this.state.modalsOpen.unload} data-modal="unload" handleToggle={this.handleToggle}>
+          <div className="image-container">
+            <img src="/images/public-icon.svg" role="presentation"/>
+          </div>
+          <h2>Wait! You haven’t published yet.</h2>
+          <p>If you exit without publishing you’ll lose all your changes.</p>
+          <p>Ready to go public? By updating your profile, you are publishing your information publicly and others will be able to see it on the blockchain and IPFS.</p>
+          <div className="button-container">
+            <button className="btn btn-clear" onClick={(e) => this.handlePublish(() => this.handleToggle(e))}>Publish Now</button>
+          </div>
+          <a data-modal="unload" onClick={this.handleToggle}>Not Right Now</a>
         </Modal>
       </div>
     )
