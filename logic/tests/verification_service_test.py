@@ -239,5 +239,11 @@ class VerificationServiceTest(test_base.DatabaseWithTestdataTest):
         self.assertEqual(resp.errors[0].code, 'NOT_FOUND')
         self.assertEqual(resp.errors[0].path, 'email')
 
+    def test_get_facebook_auth_url(self):
+        req = verification.GetFacebookAuthUrlRequest(redirect_url='http://hello.world')
+        resp = self.service().invoke('get_facebook_auth_url', req)
+        self.assertEqual(resp.response_code, 'SUCCESS')
+        self.assertEqual(resp.url, 'https://www.facebook.com/v2.12/dialog/oauth?client_id=0123456789&redirect_uri=http://hello.world')
+
 if __name__ == '__main__':
     unittest.main()
