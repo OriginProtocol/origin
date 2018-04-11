@@ -2,6 +2,15 @@ class Purchases {
     constructor({ contractService, ipfsService }) {
       this.contractService = contractService
       this.ipfsService = ipfsService
+
+      this.STAGES = {
+        AWAITING_PAYMENT: 0,
+        BUYER_PENDING: 1,
+        SELLER_PENDING: 2,
+        IN_DISPUTE: 3,
+        REVIEW_PERIOD: 4,
+        COMPLETE: 5
+      }
     }
 
     async contractFn(address, functionName, args=[], value=0){
