@@ -86,11 +86,14 @@ describe("Purchase Resource", function() {
         contractService.web3.toWei("0.1", "ether")
       )
       purchase = await purchases.get(purchase.address)
-      expectStage(purchases.STAGES.BUYER_PENDING)
+      expectStage(purchases.STAGES.SHIPPING_PENDING)
     })
 
     it("should allow the seller to mark as shipped", async () => {
-      // Not implimented on the contract yet
+      expectStage(purchases.STAGES.SHIPPING_PENDING)
+      await purchases.sellerConfirmShipped(purchase.address)
+      purchase = await purchases.get(purchase.address)
+      expectStage(purchases.STAGES.BUYER_PENDING)
     })
 
     it("should allow the buyer to mark a purchase received", async () => {

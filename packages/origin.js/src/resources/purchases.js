@@ -5,11 +5,12 @@ class Purchases {
 
     this._STAGES_TO_NUMBER = {
       awaiting_payment: 0,
-      buyer_pending: 1,
-      seller_pending: 2,
-      in_dispute: 3,
-      review_period: 4,
-      complete: 5
+      shipping_pending: 1,
+      buyer_pending: 2,
+      seller_pending: 3,
+      in_dispute: 4,
+      review_period: 5,
+      complete: 6
     }
     this._NUMBERS_TO_STAGE = {}
 
@@ -44,12 +45,16 @@ class Purchases {
     return await this.contractFn(address, "pay", [], amountWei)
   }
 
+  async sellerConfirmShipped(address) {
+    return await this.contractFn(address, "sellerConfirmShipped")
+  }
+
   async buyerConfirmReceipt(address) {
     return await this.contractFn(address, "buyerConfirmReceipt")
   }
 
   async sellerGetPayout(address) {
-    return await this.contractFn(address, "sellerGetPayout")
+    return await this.contractFn(address, "sellerCollectPayout")
   }
 }
 
