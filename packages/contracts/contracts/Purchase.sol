@@ -9,6 +9,7 @@ contract Purchase {
 
   enum Stages {
     AWAITING_PAYMENT, // Buyer hasn't paid full amount yet
+    SHIPPING_PENDING, // Waiting for the seller to ship
     BUYER_PENDING, // Waiting for buyer to confirm receipt
     SELLER_PENDING, // Waiting for seller to confirm all is good
     IN_DISPUTE, // We are in a dispute
@@ -78,7 +79,7 @@ contract Purchase {
   {
     if (this.balance >= listingContract.price()) {
       // Buyer (or their proxy) has paid enough to cover purchase
-      internalStage = Stages.BUYER_PENDING;
+      internalStage = Stages.SHIPPING_PENDING;
       buyerTimout = now + 21 days;
     }
     // Possible that nothing happens, and contract just accumulates sent value
@@ -95,6 +96,14 @@ contract Purchase {
       }
     }
     return internalStage;
+  }
+
+  function sellerConfirmShipped()
+  public
+  isSeller
+  atStage(Stages.SHIPPING_PENDING)
+  {
+      internalStage = Stages.BUYER_PENDING;
   }
 
   function buyerConfirmReceipt()

@@ -29,11 +29,12 @@ const unitsAvailable = 42
 
 // Enum values
 const AWAITING_PAYMENT = 0 // Buyer hasn't paid full amount yet
-const BUYER_PENDING = 1 // Waiting for buyer to confirm receipt
-const SELLER_PENDING = 2 // Waiting for seller to confirm all is good
-const IN_DISPUTE = 3 // We are in a dispute
-const REVIEW_PERIOD = 4 // Time for reviews (only when transaction did not go through)
-const COMPLETE = 5 // It's all over
+const SHIPPING_PENDING = 1 // Buyer hasn't paid full amount yet
+const BUYER_PENDING = 2 // Waiting for buyer to confirm receipt
+const SELLER_PENDING = 3 // Waiting for seller to confirm all is good
+const IN_DISPUTE = 4 // We are in a dispute
+const REVIEW_PERIOD = 5 // Time for reviews (only when transaction did not go through)
+const COMPLETE = 6 // It's all over
 
 const BUYER_TIMEOUT_SECONDS = 21 * 24 * 60 * 60
 
@@ -80,8 +81,8 @@ contract("Purchase", accounts => {
     let newStage = await instance.stage()
     assert.equal(
       newStage.toNumber(),
-      BUYER_PENDING,
-      "stage is now BUYER_PENDING"
+      SHIPPING_PENDING,
+      "stage should be SHIPPING_PENDING"
     )
   })
 
@@ -93,14 +94,15 @@ contract("Purchase", accounts => {
     let newStage = await instance.stage()
     assert.equal(
       newStage.toNumber(),
-      BUYER_PENDING,
-      "stage is now BUYER_PENDING"
+      SHIPPING_PENDING,
+      "stage should be SHIPPING_PENDING"
     )
   })
 
   it("should progress when buyer confirms receipt", async function() {
     const valueToPay = price
     await instance.pay({ from: buyer, value: valueToPay })
+    await instance.sellerConfirmShipped({ from: seller })
     // We immediately confirm receipt (in real world could be a while)
     await instance.buyerConfirmReceipt({ from: buyer })
     let newStage = await instance.stage()
@@ -115,7 +117,6 @@ contract("Purchase", accounts => {
     const GAS_PRICE = 1
 
     // Before
-    const sellerBalanceBefore = await web3.eth.getBalance(seller)
     const buyerBalanceBefore = await web3.eth.getBalance(buyer)
 
     // Buyer pays
@@ -132,31 +133,44 @@ contract("Purchase", accounts => {
     const buyerExpectedBalance = buyerBalanceBefore
       .minus(buyerTransactionCost)
       .minus(price)
+    
+    // Seller Ships
+    const shipTransaction = await instance.sellerConfirmShipped({from: seller})
+    const shipTransactionCost = web3.toBigNumber(
+      shipTransaction.receipt.gasUsed 
+    ).times(GAS_PRICE)
 
     // Buyer confirms
     await instance.buyerConfirmReceipt({ from: buyer })
 
     // Seller collects
+    const sellerBalanceBefore = await web3.eth.getBalance(seller)
     const payoutTransaction = await instance.sellerGetPayout({
       from: seller,
       gasPrice: GAS_PRICE
     })
-    const sellerBalanceAfter = await web3.eth.getBalance(seller)
-    const sellerTransactionCost = web3.toBigNumber(
+    const sellerCollectTransactionCost = web3.toBigNumber(
       payoutTransaction.receipt.gasUsed * GAS_PRICE
     )
+    const sellerBalanceAfter = await web3.eth.getBalance(seller)
     const sellerExpectedBalance = sellerBalanceBefore
-      .minus(sellerTransactionCost)
       .plus(price)
+      // .minus(shipTransactionCost)
+      .minus(sellerCollectTransactionCost)
+      
 
-    // console.log(`sellerBalanceBefore: ${sellerBalanceBefore}`)
     // console.log(`buyerBalanceBefore: ${buyerBalanceBefore}`)
     // console.log(`buyerBalanceAfter : ${buyerBalanceAfter}`)
-    // console.log(`sellerBalanceAfter : ${sellerBalanceAfter}`)
     // console.log(`buyerdif : ${buyerBalanceAfter-buyerBalanceBefore}`)
-    // console.log(`sellerdif: ${sellerBalanceAfter-sellerBalanceBefore}`)
+    // console.log(`sellerBalanceBefore: ${sellerBalanceBefore}`)
+    // console.log(`shipTransactionCost: ${shipTransactionCost}`)
+    // console.log(`sellerCollectTransactionCost: ${sellerCollectTransactionCost}`)
+    // console.log(`price : ${price}`)
+    // console.log(`sellerBalanceAfter : ${sellerBalanceAfter}`)
     // console.log(`sellerExpectedBalance: ${sellerExpectedBalance}`)
-    // console.log(`sellerexpecteddif: ${sellerBalanceAfter-sellerExpectedBalance}`)
+    // console.log(`seller actual recieved: ${sellerBalanceAfter - sellerBalanceBefore}`)
+    // console.log(`seller actual tx cost: ${sellerBalanceAfter - sellerBalanceBefore - price}`)
+    // console.log(`seller spent difference: ${sellerBalanceAfter-sellerExpectedBalance}`)
 
     assert(
       buyerBalanceAfter.eq(buyerExpectedBalance),
@@ -206,6 +220,11 @@ contract("Purchase", accounts => {
 
     it("should allow buyer to pay", async () => {
       await purchase.pay({ from: buyer, value: totalPrice - initialPayment })
+      assert.equal((await purchase.stage()).toNumber(), SHIPPING_PENDING)
+    })
+
+    it("should allow seller to ship", async () => {
+      await purchase.sellerConfirmShipped({ from: seller})
       assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)
     })
 
@@ -237,6 +256,7 @@ contract("Purchase", accounts => {
         e => e.event == "ListingPurchased"
       )
       purchase = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
+      await purchase.sellerConfirmShipped({from: seller})
       assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)
     })
 
