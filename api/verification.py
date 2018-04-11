@@ -67,6 +67,6 @@ class VerificationService(apilib.Service):
             VerifyEmailRequest,
             VerifyEmailResponse),
         apilib.Method(
-            'get_facebook_auth_url',
+            'facebook_auth_url',
             GetFacebookAuthUrlRequest,
             GetFacebookAuthUrlResponse))

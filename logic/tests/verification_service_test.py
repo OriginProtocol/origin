@@ -241,7 +241,7 @@ class VerificationServiceTest(test_base.DatabaseWithTestdataTest):
 
     def test_get_facebook_auth_url(self):
         req = verification.GetFacebookAuthUrlRequest(redirect_url='http://hello.world')
-        resp = self.service().invoke('get_facebook_auth_url', req)
+        resp = self.service().invoke('facebook_auth_url', req)
         self.assertEqual(resp.response_code, 'SUCCESS')
         self.assertEqual(resp.url, 'https://www.facebook.com/v2.12/dialog/oauth?client_id=0123456789&redirect_uri=http://hello.world')
 

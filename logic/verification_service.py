@@ -128,7 +128,7 @@ class VerificationServiceImpl(
         signature = attestations.generate_signature(web3, signing_account, req.eth_address, claim_type, data)
         return verification.VerifyEmailResponse(signature=signature, claim_type=claim_type, data=data)
 
-    def get_facebook_auth_url(self, req):
+    def facebook_auth_url(self, req):
         client_id = settings.FACEBOOK_CLIENT_ID
         redirect_uri = req.redirect_url
         url = 'https://www.facebook.com/v2.12/dialog/oauth?client_id={}&redirect_uri={}'.format(client_id, redirect_uri)
