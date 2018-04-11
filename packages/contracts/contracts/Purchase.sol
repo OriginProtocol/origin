@@ -61,6 +61,13 @@ contract Purchase {
     created = now;
   }
 
+  function data()
+  public
+  view
+  returns(Stages _stage, Listing _listingContract, address _buyer, uint _created, uint _buyerTimout){
+      return (stage(), listingContract, buyer, created, buyerTimout);
+  }
+
   // Pay for listing
   // We used to limit this to buyer, but that prevents Listing contract from
   // paying

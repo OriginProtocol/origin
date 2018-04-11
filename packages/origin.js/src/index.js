@@ -3,7 +3,8 @@ import IpfsService from "./ipfs-service"
 import UserRegistryService from "./user-registry-service"
 
 var resources = {
-  listings: require("./resources/listings")
+  listings: require("./resources/listings"),
+  purchases: require("./resources/purchases")
 }
 
 class Origin {

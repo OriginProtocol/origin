@@ -2,7 +2,7 @@ import { expect } from "chai"
 import Listings from "../src/resources/listings.js"
 import ContractService from "../src/contract-service.js"
 import IpfsService from "../src/ipfs-service.js"
-import Web3 from 'web3'
+import Web3 from "web3"
 
 describe("Listing Resource", function() {
   this.timeout(5000) // default is 2000
@@ -13,7 +13,7 @@ describe("Listing Resource", function() {
   var testListingIds
 
   before(async () => {
-    let provider = new Web3.providers.HttpProvider('http://localhost:9545')
+    let provider = new Web3.providers.HttpProvider("http://localhost:9545")
     let web3 = new Web3(provider)
     contractService = new ContractService({ web3 })
     ipfsService = new IpfsService()
@@ -62,5 +62,22 @@ describe("Listing Resource", function() {
     const schema = "for-sale"
     await listings.create(listingData, schema)
     // Todo: Check that this worked after we have web3 approvals working
+  })
+
+  it("should close a listing", async () => {
+    await listings.create(
+      { name: "Closing Listing", price: 1, unitsAvailable: 1 },
+      ""
+    )
+    let listingIds = await contractService.getAllListingIds()
+    const listingIndex = listingIds[listingIds.length - 1]
+
+    const listingBefore = await listings.getByIndex(listingIndex)
+    expect(listingBefore.unitsAvailable).to.equal(1)
+
+    await listings.close(listingBefore.address)
+
+    const listingAfter = await listings.getByIndex(listingIndex)
+    expect(listingAfter.unitsAvailable).to.equal(0)
   })
 })

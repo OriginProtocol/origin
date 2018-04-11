@@ -32,7 +32,7 @@ For developing `origin.js`, it is better to link the package rather than install
 
 In the directory `./packages/contracts/` run:
 ```
-truffle compile
+truffle compile --all
 ```
 This will create the `.json` files for our solidity contracts.
 
@@ -56,7 +56,7 @@ truffle develop
 
 Then in the console run:
 ```
-migrate --reset
+migrate --reset --compile-all
 ```
 
 
