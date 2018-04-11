@@ -2,7 +2,9 @@ alembic==0.9.9
 -e git+https://github.com/UnicycleLabs/apilib@bf58376c9c4d532ae6a12aa5685089f8e38c3d43#egg=apilib
 appnope==0.1.0
 asn1crypto==0.24.0
+base58==0.2.5
 bidict==0.15.0
+celery==4.1.0
 certifi==2018.1.18
 cffi==1.11.5
 chardet==3.0.4
@@ -12,10 +14,13 @@ decorator==4.2.1
 fixture==1.5.11
 Flask==0.12.2
 Flask-Migrate==2.1.1
+Flask-Restless==0.17.0
 Flask-SQLAlchemy==2.3.2
 Flask-Testing==0.7.1
 hashids==1.2.0
+hexbytes==0.1.0
 idna==2.6
+ipfsapi==0.4.2
 ipython==6.2.1
 ipython-genutils==0.2.0
 itsdangerous==0.24
@@ -41,6 +46,7 @@ python-dateutil==2.7.2
 python-dotenv==0.8.2
 python-editor==1.0.3
 pytz==2018.3
+redis==2.10.6
 requests==2.18.4
 simplegeneric==0.8.1
 six==1.11.0
@@ -49,5 +55,6 @@ traitlets==4.3.2
 twilio==6.11.0
 urllib3==1.22
 waitress==1.1.0
+web3==4.1.0
 wcwidth==0.1.7
 Werkzeug==0.14.1
