@@ -243,7 +243,49 @@ class VerificationServiceTest(test_base.DatabaseWithTestdataTest):
         req = verification.GetFacebookAuthUrlRequest(redirect_url='http://hello.world')
         resp = self.service().invoke('facebook_auth_url', req)
         self.assertEqual(resp.response_code, 'SUCCESS')
-        self.assertEqual(resp.url, 'https://www.facebook.com/v2.12/dialog/oauth?client_id=0123456789&redirect_uri=http://hello.world')
+        self.assertEqual(resp.url, 'https://www.facebook.com/v2.12/dialog/oauth?client_id=facebook-client-id&redirect_uri=http://hello.world/')
+
+    @mock.patch('http.client.HTTPSConnection')
+    def test_verify_facebook_valid_code(self, MockHttpConnection):
+        mock_http_conn = mock.Mock()
+        mock_get_response = mock.Mock()
+        mock_get_response.read.return_value = '{"access_token": "foo"}'
+        mock_http_conn.getresponse.return_value = mock_get_response
+        MockHttpConnection.return_value = mock_http_conn
+        req = verification.VerifyFacebookRequest(
+            eth_address='0x112234455C3a32FD11230C42E7Bccd4A84e02010',
+            redirect_url='http://hello.world',
+            code='abcde12345')
+        resp = self.service().invoke('verify_facebook', req)
+        mock_http_conn.request.assert_called_once_with(
+            'GET',
+            '/v2.12/oauth/access_token?client_id=facebook-client-id&client_secret=facebook-client-secret&redirect_uri=http://hello.world/&code=abcde12345'
+        )
+        self.assertEqual(resp.response_code, 'SUCCESS')
+        self.assertEqual(resp.signature, '0x6b9914cebe4e05a4e6c83525d653e0f318b33c55b4691f9a16211a63eb7a0ee7458ad753068bb7bbcaf3f3aa7ee339ec110ed07feb29278c029cfd32e816ea5500')
+        self.assertEqual(resp.claim_type, 3)
+        self.assertEqual(resp.data, 'facebook verified')
+
+    @mock.patch('http.client.HTTPSConnection')
+    def test_verify_facebook_invalid_code(self, MockHttpConnection):
+        mock_http_conn = mock.Mock()
+        mock_get_response = mock.Mock()
+        mock_get_response.read.return_value = '{"error": "bar"}'
+        mock_http_conn.getresponse.return_value = mock_get_response
+        MockHttpConnection.return_value = mock_http_conn
+        req = verification.VerifyFacebookRequest(
+            eth_address='0x112234455C3a32FD11230C42E7Bccd4A84e02010',
+            redirect_url='http://hello.world',
+            code='bananas')
+        resp = self.service().invoke('verify_facebook', req)
+        mock_http_conn.request.assert_called_once_with(
+            'GET',
+            '/v2.12/oauth/access_token?client_id=facebook-client-id&client_secret=facebook-client-secret&redirect_uri=http://hello.world/&code=bananas'
+        )
+        self.assertEqual(resp.response_code, 'REQUEST_ERROR')
+        self.assertEqual(len(resp.errors), 1)
+        self.assertEqual(resp.errors[0].code, 'INVALID')
+        self.assertEqual(resp.errors[0].path, 'code')
 
 if __name__ == '__main__':
     unittest.main()
