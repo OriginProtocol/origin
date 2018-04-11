@@ -256,6 +256,7 @@ contract("Purchase", accounts => {
         e => e.event == "ListingPurchased"
       )
       purchase = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
+      await timetravel(60*60) // Some time passes before shipping purchase
       await purchase.sellerConfirmShipped({from: seller})
       assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)
     })

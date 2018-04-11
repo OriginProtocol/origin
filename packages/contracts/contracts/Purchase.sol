@@ -80,7 +80,6 @@ contract Purchase {
     if (this.balance >= listingContract.price()) {
       // Buyer (or their proxy) has paid enough to cover purchase
       internalStage = Stages.SHIPPING_PENDING;
-      buyerTimout = now + 21 days;
     }
     // Possible that nothing happens, and contract just accumulates sent value
   }
@@ -104,6 +103,7 @@ contract Purchase {
   atStage(Stages.SHIPPING_PENDING)
   {
       internalStage = Stages.BUYER_PENDING;
+      buyerTimout = now + 21 days;
   }
 
   function buyerConfirmReceipt()
