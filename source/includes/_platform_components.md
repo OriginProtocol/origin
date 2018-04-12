@@ -22,6 +22,6 @@ Booking contracts are automatically created when buyers book listings on Origin-
 
 ### Contract Modularity
 
-Origin smart contracts are designed to be flexible and modular. We recognize the need for developers and entrepreneurs to have choice in selecting smart contract components that tailor-serve their needs.
+Origin smart contracts are designed to be flexible and modular. We recognize the need for developers and entrepreneurs to have a choice in selecting smart contract components that tailor-serve their needs.
 
 To that end, we will provide default contracts for escrow, arbitration, and insurance that will be inherited by our booking smart contracts. However, developers will be able to specify alternative contracts of their choosing (either their own or approved third-party contracts) in Origin.js function calls to generate custom booking contracts.
