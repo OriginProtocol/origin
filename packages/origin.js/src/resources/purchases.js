@@ -1,7 +1,11 @@
-class Purchases {
+import ResourceBase from"../ResourceBase"
+
+
+class Purchases extends ResourceBase{
   constructor({ contractService, ipfsService }) {
-    this.contractService = contractService
-    this.ipfsService = ipfsService
+    super({ contractService, ipfsService })
+    
+    this.contractDefinition = this.contractService.purchaseContract
 
     this._STAGES_TO_NUMBER = {
       awaiting_payment: 0,
@@ -13,26 +17,11 @@ class Purchases {
       complete: 6
     }
     this._NUMBERS_TO_STAGE = {}
-
     this.STAGES = {}
     Object.entries(this._STAGES_TO_NUMBER).map(([k, v]) => {
       this.STAGES[k.toUpperCase()] = k
       this._NUMBERS_TO_STAGE[v] = k
     })
-  }
-
-  async contractFn(address, functionName, args = [], value = 0) {
-    const purchaseContract = this.contractService.purchaseContract
-    const purchase = await purchaseContract.at(address)
-    const account = await this.contractService.currentAccount()
-    args.push({ from: account, value: value })
-    const result = await purchase[functionName].apply(purchase, args)
-    if(result.tx != undefined){
-      result.whenMined = async () => {
-        await this.contractService.waitTransactionFinished(result.tx)
-      }
-    }
-    return result
   }
 
   async get(address) {
