@@ -4,7 +4,7 @@ Origin provides a simple and powerful javascript library for developers to build
 
 ### Usage
 
-> Visit our Github: [https://github.com/OriginProtocol/origin-js](https://github.com/OriginProtocol/origin-js)
+> Visit our Github: [https://github.com/OriginProtocol](https://github.com/OriginProtocol)
 
 This API documentation will explain how developers can use the origin.js library to create and manage decentralized marketplaces that are built on top of [IPFS](https://github.com/ipfs) and the [Ethereum network](https://https://www.ethereum.org/).
 
@@ -14,7 +14,7 @@ Origin.js aims to create an easy and flexible abstraction layer that:
 * Creates and posts user and listing metadata to distributed IPFS nodes
 * Queries against open-source indexing servers to render content in decentralized applications (DApps)
 
-Origin.js will enable developers to create DApps that onboard new users to the Origin platform, add new listings to the listings registry, create booking contracts, close out bookings (transfer funds, write reviews, etc.), and more.
+Origin.js enables developers to create DApps that onboard new users to the Origin platform, add new listings to the listings registry, create booking contracts, close out bookings (transfer funds, write reviews, etc.), and more.
 
 ### Notes
 

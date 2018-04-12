@@ -63,7 +63,7 @@ No issue is too small. Help us fix our tpyos!
 </aside>
 
  - [Docs issues](https://github.com/OriginProtocol/docs/issues)
- - [Origin.js issues](https://github.com/OriginProtocol/origin-js/issues)
+ - [Platform issues (origin.js & Solidity contracts)](https://github.com/OriginProtocol/platform/issues)
  - [Demo Dapp issues](https://github.com/OriginProtocol/demo-dapp/issues)
  - [Company website issues](https://github.com/OriginProtocol/company-website/issues)
 

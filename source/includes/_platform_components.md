@@ -16,7 +16,7 @@ Origin.js enables developers to register users to the shared user registry, as w
 
 The listing registry stores all valid Origin listings, from cars for rent to freelance design services. Developers will be able to create new listings in JSON, then push them to the Origin listing registry. Under the covers, Origin.js handles the creation of new IPFS content files for static metadata and new entries to the Origin listing registry smart contract.
 
-Note that Origin.js does not support browsing and searching the listing registry directly. It is recommended that developers use our open-source server-side indexing service (or build your own) to efficiently query the blockchain.
+Note that Origin.js does not support browsing and searching the listing registry directly. It is recommended that developers use our open-source bridge server to efficiently query the blockchain.
 
 ### Booking Contracts
 

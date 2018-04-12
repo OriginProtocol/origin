@@ -15,7 +15,7 @@ booking rules and policies.
 
 Listings can easily be searched, browsed, and booked via a frontend DApp. Since we
 anticipate having too many listings to reasonably parse in a browser, the frontend
-DApp connects to an open-source indexing server of the user’s choosing, making it
+DApp connects to an open-source bridge server of the user’s choosing, making it
 possible to search and filter the entire public corpus of listings. Once a listing has
 been selected, a user can make a booking by sending payment to the booking smart
 contract along with the IPFS hash of the chosen listing and the desired interval to
@@ -25,7 +25,7 @@ applicable.
 
 We anticipate most sellers will prefer to list their prices in fiat currencies which
 often have less volatility than digital currencies. To solve this challenge, both the
-booking smart contract and the indexing servers will use a common set of oracles and a
+booking smart contract and the bridge servers will use a common set of oracles and a
 shared algorithm to determine the exchange rate to be used. This allows prices to be
 shown to end users in their preferred fiat currencies while the correct amount of
 digital tokens are sent during the booking. A diverse set of oracles will be chosen to
