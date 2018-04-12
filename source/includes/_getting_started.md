@@ -36,14 +36,18 @@ Simply include the downloaded javascript library in your html to get started.
 ```
 
 ```javascript
-var origin = new Origin();
+const origin = new Origin();
 
-var user = new User();
-user.name = "Joe"
-
-var listing = new Listing();
-listing.owner = user
-
-listing.save()
-
+const listingData = {
+  name: "Kettlebell For Sale",
+  category: "Health and Beauty",
+  location: "San Fransisco, CA",
+  description:
+    "32kg gorilla kettlebell. Mint condition.",
+  pictures: [],
+  price: 0.134
+}
+const schema = "for-sale"
+const transaction = await origin.listings.create(listingData, schema)
+await origin.contractService.waitTransactionFinished(transaction.tx)
 ```

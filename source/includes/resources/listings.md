@@ -1,10 +1,10 @@
-# Listings
+# Listing
 
 A listing is an offer from a seller to sell something.
 
 It is active until there are no more units available or its expiration date is reached.
 
-## Create a Listing
+## create
 
 > To create a listing
 
@@ -31,7 +31,7 @@ The wallet used to create the listing is used as the seller.
 
 A listing will expire 60 days after its expiration date.
 
-## Buy a Listing
+## buy
 
 > To buy a listing
 
@@ -48,7 +48,7 @@ await origin.contractService.waitTransactionFinished(transaction.tx)
 
 Buy will create a new `Purchase` contract on the blockchain. This purchase contract will handle the rest of the transaction between the buyer and the seller.
 
-## Close a Listing
+## close
 
 > To close a listing
 
@@ -59,10 +59,12 @@ const transaction = await origin.listings.close(
 await origin.contractService.waitTransactionFinished(transaction.tx)
 ```
 
+This method is **called by the seller**.
+
 Closing a transaction will set the unitsAvailable to zero. This will stop any further purchases of that Listing.
 
 
-## Get a Listing
+## getByIndex
 
 > To get a listing
 
@@ -89,7 +91,7 @@ Getting a listing will return the fields from the listing according to its listi
 
 In addition, you'll have fields from the contract on the blockchain.
 
-## Find All Listing Indexes
+## allIds
 
 > To find all listing indexes
 
