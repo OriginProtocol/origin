@@ -51,3 +51,6 @@ RPC_PROTOCOL = os.environ.get('RPC_PROTOCOL')
 
 IPFS_DOMAIN = os.environ.get('IPFS_DOMAIN')
 IPFS_PORT = os.environ.get('IPFS_PORT')
+
+TWITTER_CONSUMER_KEY = os.environ.get('TWITTER_CONSUMER_KEY')
+TWITTER_CONSUMER_SECRET = os.environ.get('TWITTER_CONSUMER_SECRET')
