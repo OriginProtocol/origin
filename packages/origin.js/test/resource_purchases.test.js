@@ -121,7 +121,7 @@ describe("Purchase Resource", function() {
         purchase.address,
         contractService.web3.toWei("0.1", "ether")
       )
-      await transaction.whenMined()
+      await transaction.whenFinished()
     })
   })
 })

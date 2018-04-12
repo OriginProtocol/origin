@@ -9,13 +9,13 @@ class ResourceBase {
     const contract = await contractDefinition.at(address)
     const account = await this.contractService.currentAccount()
     args.push({ from: account, value: value })
-    const result = await contract[functionName].apply(contract, args)
-    if (result.tx != undefined) {
-      result.whenMined = async () => {
-        await this.contractService.waitTransactionFinished(result.tx)
+    const transaction = await contract[functionName].apply(contract, args)
+    if (transaction.tx != undefined) {
+      transaction.whenFinished = async () => {
+        await this.contractService.waitTransactionFinished(transaction.tx)
       }
     }
-    return result
+    return transaction
   }
 }
 
