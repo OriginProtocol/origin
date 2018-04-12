@@ -8,8 +8,6 @@ At a high-level, the Origin platform consists of user, listing, and booking data
 
 The Origin user registry is a datastore of all Origin-enabled users. Origin users are identified by their Ethereum wallet addresses. In addition, the user registry also stores a mapping of all forms of identity verification that the user has successfully undertaken.
 
-For example, users may want to verify their identity with third-party services like uPort or Civic, or use publicly-auditable proofs to verify their social media profiles. These identity "proofs" are referenced within the user registry so that DApps, and ultimately counter-parties, are able to verify the validity of these users.
-
 Origin.js enables developers to register users to the shared user registry, as well as query for identity verifications.
 
 ### Listing Registry
