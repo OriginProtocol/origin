@@ -26,7 +26,13 @@ class Purchases {
     const purchase = await purchaseContract.at(address)
     const account = await this.contractService.currentAccount()
     args.push({ from: account, value: value })
-    return await purchase[functionName].apply(purchase, args)
+    const result = await purchase[functionName].apply(purchase, args)
+    if(result.tx != undefined){
+      result.whenMined = async () => {
+        await this.contractService.waitTransactionFinished(result.tx)
+      }
+    }
+    return result
   }
 
   async get(address) {

@@ -110,4 +110,18 @@ describe("Purchase Resource", function() {
       expectStage(purchases.STAGES.COMPLETE)
     })
   })
+
+  describe("transactions have a whenMined promise", async () => {
+    before(async () => {
+      await resetListingAndPurchase()
+    })
+
+    it("should allow us to wait for a transaction to be mined", async () => {
+      const transaction = await purchases.pay(
+        purchase.address,
+        contractService.web3.toWei("0.1", "ether")
+      )
+      await transaction.whenMined()
+    })
+  })
 })
