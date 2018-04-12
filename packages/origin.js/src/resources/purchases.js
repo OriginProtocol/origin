@@ -1,5 +1,16 @@
 import ResourceBase from"../ResourceBase"
 
+_STAGES_TO_NUMBER = {
+  awaiting_payment: 0,
+  shipping_pending: 1,
+  buyer_pending: 2,
+  seller_pending: 3,
+  in_dispute: 4,
+  review_period: 5,
+  complete: 6
+}
+_NUMBERS_TO_STAGE = {}
+
 
 class Purchases extends ResourceBase{
   constructor({ contractService, ipfsService }) {
@@ -7,20 +18,10 @@ class Purchases extends ResourceBase{
     
     this.contractDefinition = this.contractService.purchaseContract
 
-    this._STAGES_TO_NUMBER = {
-      awaiting_payment: 0,
-      shipping_pending: 1,
-      buyer_pending: 2,
-      seller_pending: 3,
-      in_dispute: 4,
-      review_period: 5,
-      complete: 6
-    }
-    this._NUMBERS_TO_STAGE = {}
     this.STAGES = {}
-    Object.entries(this._STAGES_TO_NUMBER).map(([k, v]) => {
+    Object.entries(_STAGES_TO_NUMBER).map(([k, v]) => {
       this.STAGES[k.toUpperCase()] = k
-      this._NUMBERS_TO_STAGE[v] = k
+      _NUMBERS_TO_STAGE[v] = k
     })
   }
 
@@ -28,7 +29,7 @@ class Purchases extends ResourceBase{
     const contractData = await this.contractFn(address, "data")
     return {
       address: address,
-      stage: this._NUMBERS_TO_STAGE[contractData[0]],
+      stage: _NUMBERS_TO_STAGE[contractData[0]],
       listingAddress: contractData[1],
       buyerAddress: contractData[2],
       created: contractData[3],
