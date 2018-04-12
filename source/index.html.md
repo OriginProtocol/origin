@@ -14,6 +14,7 @@ includes:
   - getting_started
   - authentication_identity
   - resources/listings
+  - resources/purchases
   - listing_schemas
   - tbd
 
