@@ -1,6 +1,6 @@
 import ResourceBase from"../ResourceBase"
 
-_STAGES_TO_NUMBER = {
+const _STAGES_TO_NUMBER = {
   awaiting_payment: 0,
   shipping_pending: 1,
   buyer_pending: 2,
@@ -9,7 +9,7 @@ _STAGES_TO_NUMBER = {
   review_period: 5,
   complete: 6
 }
-_NUMBERS_TO_STAGE = {}
+const _NUMBERS_TO_STAGE = {}
 
 
 class Purchases extends ResourceBase{
