@@ -31,6 +31,7 @@ oauth_client = oauth.Client(oauth_consumer)
 
 twitter_request_token_url = 'https://api.twitter.com/oauth/request_token'
 twitter_authenticate_url = 'https://api.twitter.com/oauth/authenticate'
+twitter_access_token_url = 'https://api.twitter.com/oauth/access_token'
 
 CODE_EXPIRATION_TIME_MINUTES = 30
 
@@ -174,6 +175,23 @@ class VerificationServiceImpl(
         session['request_token'] = request_token
         url = "{}?oauth_token={}".format(twitter_authenticate_url, request_token['oauth_token'])
         return verification.TwitterAuthUrlResponse(url=url)
+
+    def verify_twitter(self, req):
+        # Verify authenticity of user
+        token = oauth.Token(session['request_token']['oauth_token'],
+            session['request_token']['oauth_token_secret'])
+        token.set_verifier(req.oauth_verifier)
+        client = oauth.Client(oauth_consumer, token)
+        resp, content = client.request(twitter_access_token_url, "GET")
+        access_token = dict(cgi.parse_qsl(content))
+        if resp['status'] != '200' or not b'oauth_token' in access_token:
+            raise service_utils.req_error(code='INVALID', path='oauth_verifier', message='The verifier you provided is invalid.')
+
+        # Create attestation
+        data = 'twitter verified' # TODO: determine what the text should be
+        claim_type = 4 # TODO: determine claim type integer code for phone verification
+        signature = attestations.generate_signature(web3, signing_account, req.eth_address, claim_type, data)
+        return verification.VerifyTwitterResponse(signature=signature, claim_type=claim_type, data=data)
 
 def numeric_eth(str_eth_address):
     return int(str_eth_address, 16)
