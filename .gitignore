@@ -74,3 +74,6 @@ celerybeat-schedule
 #pytest
 .pytest_cache
 app/test_project.db
+
+# Flask Session files
+*flask_session/
