@@ -18,6 +18,7 @@ Flask==0.12.2
 Flask-Migrate==2.1.1
 Flask-Restless==0.17.0
 Flask-SQLAlchemy==2.3.2
+Flask-Session==0.3.1
 Flask-Testing==0.7.1
 hashids==1.2.0
 hexbytes==0.1.0
@@ -31,6 +32,7 @@ Jinja2==2.10
 Mako==1.0.7
 MarkupSafe==1.0
 mock==2.0.0
+oauth2==1.9.0
 parso==0.1.1
 pbr==4.0.0
 pexpect==4.4.0
