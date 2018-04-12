@@ -41,10 +41,10 @@ class VerifyEmailResponse(apilib.Response):
     claim_type = apilib.Field(apilib.String())
     data = apilib.Field(apilib.String())
 
-class GetFacebookAuthUrlRequest(apilib.Request):
+class FacebookAuthUrlRequest(apilib.Request):
     redirect_url = apilib.Field(apilib.String(), required=True)
 
-class GetFacebookAuthUrlResponse(apilib.Response):
+class FacebookAuthUrlResponse(apilib.Response):
     url = apilib.Field(apilib.String())
 
 class VerifyFacebookRequest(apilib.Request):
@@ -78,8 +78,8 @@ class VerificationService(apilib.Service):
             VerifyEmailResponse),
         apilib.Method(
             'facebook_auth_url',
-            GetFacebookAuthUrlRequest,
-            GetFacebookAuthUrlResponse),
+            FacebookAuthUrlRequest,
+            FacebookAuthUrlResponse),
         apilib.Method(
             'verify_facebook',
              VerifyFacebookRequest,

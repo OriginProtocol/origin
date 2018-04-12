@@ -134,7 +134,7 @@ class VerificationServiceImpl(
         client_id = settings.FACEBOOK_CLIENT_ID
         redirect_uri = append_trailing_slash(req.redirect_url)
         url = 'https://www.facebook.com/v2.12/dialog/oauth?client_id={}&redirect_uri={}'.format(client_id, redirect_uri)
-        return verification.GetFacebookAuthUrlResponse(url=url)
+        return verification.FacebookAuthUrlResponse(url=url)
 
     def verify_facebook(self, req):
         base_url = 'graph.facebook.com'
