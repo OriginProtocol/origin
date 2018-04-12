@@ -7,10 +7,12 @@ import flask_restless
 from config import settings
 from database import db
 from database import db_models
+from flask.ext.session import Session
 
 
 class AppConfig(object):
     SECRET_KEY = settings.FLASK_SECRET_KEY
+    SESSION_TYPE = 'filesystem'
     CSRF_ENABLED = True
 
     SQLALCHEMY_DATABASE_URI = settings.DATABASE_URL
@@ -19,6 +21,8 @@ class AppConfig(object):
 
 
 def init_app(app):
+    sess = Session()
+    sess.init_app(app)
     db.init_app(app)
     flask_migrate.Migrate(app, db, directory='database/migrations')
 
