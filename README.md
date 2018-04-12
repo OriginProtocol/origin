@@ -19,6 +19,8 @@ To get setup to edit the Origin docs:
     bundle exec middleman server
 
 You will then be able to preview your edits in your browser at http://127.0.0.1:4567
+
+The Markdown files that our docoumentation is built from are located in `source/includes`.
    
 Detailed documentation on how to use the Slate documentation system can be found at:
 
