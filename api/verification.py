@@ -57,6 +57,12 @@ class VerifyFacebookResponse(apilib.Response):
     claim_type = apilib.Field(apilib.String())
     data = apilib.Field(apilib.String())
 
+class TwitterAuthUrlRequest(apilib.Request):
+    pass
+
+class TwitterAuthUrlResponse(apilib.Response):
+    url = apilib.Field(apilib.String())
+
 class VerificationService(apilib.Service):
     path = '/api/verification_service'
     methods = apilib.servicemethods(
@@ -83,4 +89,8 @@ class VerificationService(apilib.Service):
         apilib.Method(
             'verify_facebook',
              VerifyFacebookRequest,
-             VerifyFacebookResponse))
+             VerifyFacebookResponse),
+        apilib.Method(
+            'twitter_auth_url',
+            TwitterAuthUrlRequest,
+            TwitterAuthUrlResponse))

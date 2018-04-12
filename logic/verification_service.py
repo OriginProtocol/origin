@@ -1,6 +1,8 @@
+import cgi
 import datetime
 import http.client
 import json
+import oauth2 as oauth
 import secrets
 import sendgrid
 
@@ -12,6 +14,7 @@ from api import verification
 from config import settings
 from database import db
 from database import db_models
+from flask import session
 from logic import service_utils
 from util import time_, attestations
 from web3 import Web3, HTTPProvider
@@ -22,6 +25,12 @@ signing_account = web3.eth.accounts[1] # TODO: allow this to be specified from e
 VC = db_models.VerificationCode
 
 sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
+
+oauth_consumer = oauth.Consumer(settings.TWITTER_CONSUMER_KEY, settings.TWITTER_CONSUMER_SECRET)
+oauth_client = oauth.Client(oauth_consumer)
+
+twitter_request_token_url = 'https://api.twitter.com/oauth/request_token'
+twitter_authenticate_url = 'https://api.twitter.com/oauth/authenticate'
 
 CODE_EXPIRATION_TIME_MINUTES = 30
 
@@ -153,6 +162,18 @@ class VerificationServiceImpl(
         claim_type = 3 # TODO: determine claim type integer code for phone verification
         signature = attestations.generate_signature(web3, signing_account, req.eth_address, claim_type, data)
         return verification.VerifyFacebookResponse(signature=signature, claim_type=claim_type, data=data)
+
+    def twitter_auth_url(self, req):
+        resp, content = oauth_client.request(twitter_request_token_url, "GET")
+        if resp['status'] != '200':
+            raise Exception('Invalid response from Twitter.')
+        request_token_bytes = dict(cgi.parse_qsl(content))
+        request_token = {}
+        request_token['oauth_token'] = request_token_bytes[b'oauth_token'].decode("utf-8")
+        request_token['oauth_token_secret'] = request_token_bytes[b'oauth_token_secret'].decode("utf-8")
+        session['request_token'] = request_token
+        url = "{}?oauth_token={}".format(twitter_authenticate_url, request_token['oauth_token'])
+        return verification.TwitterAuthUrlResponse(url=url)
 
 def numeric_eth(str_eth_address):
     return int(str_eth_address, 16)
