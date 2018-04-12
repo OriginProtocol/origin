@@ -6,6 +6,16 @@ import "./Listing.sol";
 
 
 contract Purchase {
+  
+  /*
+  * Events
+  */
+
+  event PurchaseChange(Stages stage);
+
+  /*
+  * Enum
+  */
 
   enum Stages {
     AWAITING_PAYMENT, // Buyer hasn't paid full amount yet
@@ -60,12 +70,13 @@ contract Purchase {
     buyer = _buyer;
     listingContract = Listing(_listingContractAddress);
     created = now;
+    PurchaseChange(internalStage);
   }
 
   function data()
   public
   view
-  returns(Stages _stage, Listing _listingContract, address _buyer, uint _created, uint _buyerTimout){
+  returns (Stages _stage, Listing _listingContract, address _buyer, uint _created, uint _buyerTimout) {
       return (stage(), listingContract, buyer, created, buyerTimout);
   }
 
@@ -80,6 +91,7 @@ contract Purchase {
     if (this.balance >= listingContract.price()) {
       // Buyer (or their proxy) has paid enough to cover purchase
       internalStage = Stages.SHIPPING_PENDING;
+      PurchaseChange(internalStage);
     }
     // Possible that nothing happens, and contract just accumulates sent value
   }
@@ -104,6 +116,7 @@ contract Purchase {
   {
       internalStage = Stages.BUYER_PENDING;
       buyerTimout = now + 21 days;
+      PurchaseChange(internalStage);
   }
 
   function buyerConfirmReceipt()
@@ -112,6 +125,7 @@ contract Purchase {
   atStage(Stages.BUYER_PENDING)
   {
       internalStage = Stages.SELLER_PENDING;
+      PurchaseChange(internalStage);
   }
 
   function sellerCollectPayout()
@@ -120,6 +134,7 @@ contract Purchase {
   atStage(Stages.SELLER_PENDING)
   {
     internalStage = Stages.COMPLETE;
+    PurchaseChange(internalStage);
 
     // Send contract funds to seller (ie owner of Listing)
     // Transfering money always needs to be the last thing we do, do avoid
@@ -143,6 +158,7 @@ contract Purchase {
     );
 
     internalStage = Stages.IN_DISPUTE;
+    PurchaseChange(internalStage);
 
     // TODO: Create a dispute contract?
     // Right now there's no way to exit this state.
