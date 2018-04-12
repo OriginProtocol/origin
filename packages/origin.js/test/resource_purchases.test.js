@@ -66,6 +66,18 @@ describe("Purchase Resource", function() {
   // Tests
   // -----
 
+  describe("stage names ", ()=>{
+    it("should provide the correct stage names", function(){
+      expect(purchases.STAGES.AWAITING_PAYMENT).to.equal("awaiting_payment")
+      expect(purchases.STAGES.SHIPPING_PENDING).to.equal("shipping_pending")
+      expect(purchases.STAGES.BUYER_PENDING).to.equal("buyer_pending")
+      expect(purchases.STAGES.SELLER_PENDING).to.equal("seller_pending")
+      expect(purchases.STAGES.IN_DISPUTE).to.equal("in_dispute")
+      expect(purchases.STAGES.REVIEW_PERIOD).to.equal("review_period")
+      expect(purchases.STAGES.COMPLETE).to.equal("complete")
+    })
+  })
+
   describe("simple purchase flow", async () => {
     before(async () => {
       await resetListingAndPurchase()
