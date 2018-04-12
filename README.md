@@ -9,14 +9,20 @@ These docs are very much a work in progress, but you can view them live at:
 Contributions welcome!
 
 
-## Contributing
+## Editing the docs
 
-Once you have cloned this repo, just run: 
+To get setup to edit the Origin docs:
 
-   bundle install
-   bundle exec middleman server
+    git clone https://github.com/OriginProtocol/docs.git origin-docs
+    cd origin-docs
+    bundle install
+    bundle exec middleman server
+
+You will then be able to preview your edits in your browser at http://127.0.0.1:4567
+
+The Markdown files that our docoumentation is built from are located in `source/includes`.
    
-Credits and detailed documentation on how to use the Slate documentation system can be found at:
+Detailed documentation on how to use the Slate documentation system can be found at:
 
 [https://github.com/lord/slate](https://github.com/lord/slate)
 
