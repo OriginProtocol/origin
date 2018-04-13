@@ -213,7 +213,7 @@ def send_code_via_sms(phone, code):
               ' It will expire in 30 minutes.').format(code))
 
 def send_code_via_email(address, code):
-    from_email = Email(settings.FROM_EMAIL)
+    from_email = Email(settings.SENDGRID_FROM_EMAIL)
     to_email = Email(address)
     subject = 'Your Origin Verification Code'
     content = Content('text/plain', 'Your Origin verification code is {}. It will expire in 30 minutes.'.format(code))

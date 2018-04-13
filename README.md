@@ -50,6 +50,7 @@ You'll need to set a few API keys:
   - FACEBOOK_CLIENT_SECRET
 - [Sendgrid](https://sendgrid.com/docs/Classroom/Send/How_Emails_Are_Sent/api_keys.html)
   - SENDGRID_API_KEY
+  - SENDGRID_FROM_EMAIL
 - [Twilio](https://www.twilio.com/docs/usage/your-request-to-twilio)
   - TWILIO_ACCOUNT_SID
   - TWILIO_AUTH_TOKEN
