@@ -1,5 +1,5 @@
-<!--
-⚠️ 🚨 ⚠️  STOP AND READ THIS ⚠️ 🚨 ⚠️
+First pull request? Read our [guide to contributing](http://docs.originprotocol.com/#contributing)
 
-👆👆 see that 'base fork' dropdown above? You should change it! The default value of "lord/slate" submits your change to ALL USERS OF SLATE, not just your company. This is PROBABLY NOT WHAT YOU WANT.
--->
+### Description:
+
+Please explain the changes you made here
