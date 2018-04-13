@@ -1,10 +1,11 @@
 // For now, we are just wrapping the methods that are already in
 // contractService and ipfsService.
+import ResourceBase from"../ResourceBase"
 
-class Listings {
+class Listings extends ResourceBase{
   constructor({ contractService, ipfsService }) {
-    this.contractService = contractService
-    this.ipfsService = ipfsService
+    super({ contractService, ipfsService })
+    this.contractDefinition = this.contractService.listingContract
   }
 
   async allIds() {
@@ -87,21 +88,22 @@ class Listings {
     return transactionReceipt
   }
 
-  async buy(listingAddress, unitsToBuy, ethToPay) {
-    return await this.contractService.buyListing(
-      listingAddress,
-      unitsToBuy,
-      ethToPay
-    )
+  async buy(address, unitsToBuy, ethToPay) {
+    // TODO: ethToPay should really be replaced by something that takes Wei.
+    const value = this.contractService.web3.toWei(ethToPay, "ether")
+    return await this.contractFn(address, "buyListing", [unitsToBuy], {value:value, gas: 600000})
   }
 
-  async close(listingAddress) {
-    console.log(`Closing listing ${listingAddress}`)
-    const listingContract = this.contractService.listingContract
-    const listing = await listingContract.at(listingAddress)
-    const account = await this.contractService.currentAccount()
-    const transactionReceipt = await listing.close({ from: account }) 
-    return transactionReceipt
+  async close(address) {
+    return await this.contractFn(address, "close")
+  }
+
+  async purchasesLength(address) {
+    return await this.contractFn(address, "purchasesLength")
+  }
+
+  async purchaseAddressByIndex(address, index) {
+    return await this.contractFn(address, "getPurchase", [index])
   }
 }
 

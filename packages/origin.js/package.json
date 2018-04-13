@@ -16,7 +16,8 @@
     "dist"
   ],
   "prettier": {
-    "semi": false
+    "semi": false,
+    "tabWidth": 2
   },
   "repository": {
     "type": "git",

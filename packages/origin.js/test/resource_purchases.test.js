@@ -26,6 +26,9 @@ describe("Purchase Resource", function() {
     purchases = new Purchase({ contractService, ipfsService })
   })
 
+  // Helpers
+  // -----
+
   let resetListingAndPurchase = async () => {
     // Create a new listing and a new purchase for the tests to use.
     const listingData = {
@@ -56,13 +59,20 @@ describe("Purchase Resource", function() {
     purchase = await purchases.get(purchaseEvent.args._purchaseContract)
   }
 
+  let expectStage = function(expectedStage) {
+    expect(purchase.stage).to.equal(expectedStage)
+  }
+
+  // Tests
+  // -----
+
   describe("simple purchase flow", async () => {
     before(async () => {
       await resetListingAndPurchase()
     })
 
     it("should get a purchase", async () => {
-      expect(purchase.stage.toNumber()).to.equal(0)
+      expectStage("awaiting_payment")
       expect(purchase.listingAddress).to.equal(listing.address)
       expect(purchase.buyerAddress).to.equal(
         await contractService.currentAccount()
@@ -70,31 +80,48 @@ describe("Purchase Resource", function() {
     })
 
     it("should allow the buyer to pay", async () => {
-      expect(purchase.stage.toNumber()).to.equal(0)
+      expectStage("awaiting_payment")
       await purchases.pay(
         purchase.address,
         contractService.web3.toWei("0.1", "ether")
       )
       purchase = await purchases.get(purchase.address)
-      expect(purchase.stage.toNumber()).to.equal(1)
+      expectStage("shipping_pending")
     })
 
     it("should allow the seller to mark as shipped", async () => {
-      // Not implimented on the contract yet
+      expectStage("shipping_pending")
+      await purchases.sellerConfirmShipped(purchase.address)
+      purchase = await purchases.get(purchase.address)
+      expectStage("buyer_pending")
     })
 
     it("should allow the buyer to mark a purchase received", async () => {
-      expect(purchase.stage.toNumber()).to.equal(1)
+      expectStage("buyer_pending")
       await purchases.buyerConfirmReceipt(purchase.address)
       purchase = await purchases.get(purchase.address)
-      expect(purchase.stage.toNumber()).to.equal(2)
+      expectStage("seller_pending")
     })
 
     it("should allow the seller to collect money", async () => {
-      expect(purchase.stage.toNumber()).to.equal(2)
+      expectStage("seller_pending")
       await purchases.sellerGetPayout(purchase.address)
       purchase = await purchases.get(purchase.address)
-      expect(purchase.stage.toNumber()).to.equal(5)
+      expectStage("complete")
+    })
+  })
+
+  describe("transactions have a whenMined promise", async () => {
+    before(async () => {
+      await resetListingAndPurchase()
+    })
+
+    it("should allow us to wait for a transaction to be mined", async () => {
+      const transaction = await purchases.pay(
+        purchase.address,
+        contractService.web3.toWei("0.1", "ether")
+      )
+      await transaction.whenFinished()
     })
   })
 })

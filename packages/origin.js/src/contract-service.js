@@ -127,30 +127,8 @@ class ContractService {
     return listingObject
   }
 
-  async buyListing(listingAddress, unitsToBuy, ethToGive) {
-    // TODO: Shouldn't we be passing wei to this function, not eth?
-    console.log(
-      "request to buy listing " +
-        listingAddress +
-        ", for this many units " +
-        unitsToBuy +
-        " units. Total eth to send:" +
-        ethToGive
-    )
-
-    const account = await this.currentAccount()
-    const listing = await this.listingContract.at(listingAddress)
-    const weiToGive = this.web3.toWei(ethToGive, "ether")
-
-    const transactionReceipt = await listing.buyListing(
-      unitsToBuy,
-      { from: account, value: weiToGive, gas: 4476768 } // TODO (SRJ): is gas needed?
-    )
-    return transactionReceipt
-  }
-
   async waitTransactionFinished(
-    transactionReceipt,
+    transactionHash,
     pollIntervalMilliseconds = 1000
   ) {
     console.log("Waiting for transaction")
@@ -159,36 +137,30 @@ class ContractService {
       if (!transactionHash) {
         reject(`Invalid transactionHash passed: ${transactionHash}`)
       }
-      let txCheckTimer = setInterval(
-        txCheckTimerCallback,
-        pollIntervalMilliseconds
-      )
-      function txCheckTimerCallback() {
-        this.web3.eth.getTransaction(
-          transactionHash,
-          (error, transaction) => {
-            if (transaction.blockNumber != null) {
-              console.log(
-                `Transaction mined at block ${transaction.blockNumber}`
-              )
-              console.log(transaction)
-              // TODO: Wait maximum number of blocks
-              // TODO: Confirm transaction *sucessful* with getTransactionReceipt()
+      var txCheckTimer
+      let txCheckTimerCallback = () => {
+        this.web3.eth.getTransaction(transactionHash, (error, transaction) => {
+          if (transaction.blockNumber != null) {
+            console.log(`Transaction mined at block ${transaction.blockNumber}`)
+            console.log(transaction)
+            // TODO: Wait maximum number of blocks
+            // TODO (Stan): Confirm transaction *sucessful* with getTransactionReceipt()
 
-              // // TODO (Stan): Metamask web3 doesn't have this method. Probably could fix by
-              // // by doing the "copy local web3 over metamask's" technique.
-              // this.web3.eth.getTransactionReceipt(this.props.transactionHash, (error, transactionHash) => {
-              //   console.log(transactionHash)
-              // })
+            // // TODO (Stan): Metamask web3 doesn't have this method. Probably could fix by
+            // // by doing the "copy local web3 over metamask's" technique.
+            // this.web3.eth.getTransactionReceipt(this.props.transactionHash, (error, transactionHash) => {
+            //   console.log(transactionHash)
+            // })
 
-              clearInterval(txCheckTimer)
-              // Hack to wait two seconds, as results don't seem to be
-              // immediately available.
-              setTimeout(() => resolve(transaction.blockNumber), 2000)
-            }
+            clearInterval(txCheckTimer)
+            // Hack to wait two seconds, as results don't seem to be
+            // immediately available.
+            setTimeout(() => resolve(transaction.blockNumber), 2000)
           }
-        )
+        })
       }
+
+      txCheckTimer = setInterval(txCheckTimerCallback, pollIntervalMilliseconds)
     })
     return blockNumber
   }
