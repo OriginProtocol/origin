@@ -989,10 +989,30 @@ a:hover {
   margin: 50px auto;
 }
 
+@-webkit-keyframes shimmer {
+   0% { background-position: 100% 100%; }
+   100% { background-position: 0% 0%; }
+}
+@-moz-keyframes shimmer {
+   0% { background-position: 100% 100%; }
+   100% { background-position: 0% 0%; }
+}
+@keyframes shimmer {
+   0% { background-position: 100% 100%; }
+   100% { background-position: 0% 0%; }
+}
+
 .loading .placehold {
   background-color: #f6f7f8;
   border-radius: 3px;
   color: var(--light);
+
+  background: linear-gradient(90deg, #fafafa, #f6f7f8, #fafafa, #f6f7f8, #fafafa, #f6f7f8);
+  background-size: 400% 400%;
+
+  -webkit-animation: shimmer 2s linear infinite;
+  -moz-animation: shimmer 2s linear infinite;
+  animation: shimmer 2s linear infinite;
 }
 
 .loading h1 {
