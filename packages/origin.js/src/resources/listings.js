@@ -1,10 +1,11 @@
 // For now, we are just wrapping the methods that are already in
 // contractService and ipfsService.
+import ResourceBase from"../ResourceBase"
 
-class Listings {
+class Listings extends ResourceBase{
   constructor({ contractService, ipfsService }) {
-    this.contractService = contractService
-    this.ipfsService = ipfsService
+    super({ contractService, ipfsService })
+    this.contractDefinition = this.contractService.listingContract
   }
 
   async allIds() {
@@ -95,13 +96,8 @@ class Listings {
     )
   }
 
-  async close(listingAddress) {
-    console.log(`Closing listing ${listingAddress}`)
-    const listingContract = this.contractService.listingContract
-    const listing = await listingContract.at(listingAddress)
-    const account = await this.contractService.currentAccount()
-    const transactionReceipt = await listing.close({ from: account }) 
-    return transactionReceipt
+  async close(address) {
+    return await this.contractFn(address, "close")
   }
 }
 
