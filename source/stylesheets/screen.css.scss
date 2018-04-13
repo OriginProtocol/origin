@@ -36,6 +36,11 @@ html, body {
   -webkit-text-size-adjust: none; /* Never autoresize text */
 }
 
+a {
+  color: $anchor-text;
+  font-weight: normal;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // TABLE OF CONTENTS
 ////////////////////////////////////////////////////////////////////////////////
@@ -471,13 +476,20 @@ html, body {
     margin-bottom: 1.5em;
     background: $aside-notice-bg;
     line-height: 1.6;
+    font-weight: 600;
+
+    &.notice {
+      color: $aside-notice-text;
+    }
 
     &.warning {
       background-color: $aside-warning-bg;
+      color: $aside-warning-text;
     }
 
     &.success {
       background-color: $aside-success-bg;
+      color: $aside-success-text;
     }
   }
 
@@ -545,6 +557,8 @@ html, body {
   }
 
   blockquote {
+    border-bottom: 1px solid #2e3f53;
+
     &>p {
       background-color: $code-annotation-bg;
       padding: $code-annotation-padding 2em;
