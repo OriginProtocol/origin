@@ -165,15 +165,15 @@ class VerificationServiceImpl(
 
     def twitter_auth_url(self, req):
         client = oauth.Client(oauth_consumer)
-        resp, content = client.request(twitter_request_token_url, "GET")
+        resp, content = client.request(twitter_request_token_url, 'GET')
         if resp['status'] != '200':
             raise Exception('Invalid response from Twitter.')
         request_token_bytes = dict(cgi.parse_qsl(content))
         request_token = {}
-        request_token['oauth_token'] = request_token_bytes[b'oauth_token'].decode("utf-8")
-        request_token['oauth_token_secret'] = request_token_bytes[b'oauth_token_secret'].decode("utf-8")
+        request_token['oauth_token'] = request_token_bytes[b'oauth_token'].decode('utf-8')
+        request_token['oauth_token_secret'] = request_token_bytes[b'oauth_token_secret'].decode('utf-8')
         session['request_token'] = request_token
-        url = "{}?oauth_token={}".format(twitter_authenticate_url, request_token['oauth_token'])
+        url = '{}?oauth_token={}'.format(twitter_authenticate_url, request_token['oauth_token'])
         return verification.TwitterAuthUrlResponse(url=url)
 
     def verify_twitter(self, req):
@@ -182,7 +182,7 @@ class VerificationServiceImpl(
             session['request_token']['oauth_token_secret'])
         token.set_verifier(req.oauth_verifier)
         client = oauth.Client(oauth_consumer, token)
-        resp, content = client.request(twitter_access_token_url, "GET")
+        resp, content = client.request(twitter_access_token_url, 'GET')
         access_token = dict(cgi.parse_qsl(content))
         if resp['status'] != '200' or not b'oauth_token' in access_token:
             raise service_utils.req_error(code='INVALID', path='oauth_verifier', message='The verifier you provided is invalid.')
