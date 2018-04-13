@@ -107,8 +107,14 @@ a {
     }
   }
 
-  .logo {
-    margin-bottom: $logo-margin;
+  .logo-container {
+    padding: $logo-padding;
+    
+    .logo {
+      height: $logo-height;
+      margin: $logo-margin;
+      max-width: 100%;
+    }
   }
 
   .search-results {

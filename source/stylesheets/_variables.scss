@@ -60,7 +60,9 @@ $aside-warning-text: #fff !default;
 ////////////////////
 $nav-width: 230px !default; // width of the navbar
 $examples-width: 50% !default; // portion of the screen taken up by code examples
+$logo-height: 100px !default; // logo height (limited by maximum width)
 $logo-margin: 0px !default; // margin below logo
+$logo-padding: 0 40px !default; // padding around logo
 $main-padding: 28px !default; // padding to left and right of content & examples
 $nav-padding: 15px !default; // padding to left and right of navbar
 $nav-v-padding: 10px !default; // padding used vertically around search boxes and results
