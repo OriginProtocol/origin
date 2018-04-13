@@ -2332,6 +2332,23 @@ sup {
   height: unset;
 }
 
+.profile-wrapper .identity.modal .image-container {
+  background-image: url(/images/verification-shape-grey.svg);
+  background-position: 0;
+  background-size: 110px 116px;
+  height: 116px;
+  margin: 0 auto 1rem;
+  width: 110px;
+}
+
+.profile-wrapper .identity.modal .image-container img {
+  margin: 0 auto 0;
+}
+
+.profile-wrapper .identity.modal p {
+  margin: 0 auto 1rem;
+}
+
 .unload.modal .button-container .btn {
   margin: 0 0 20px;
 }

@@ -68,10 +68,6 @@ class Profile extends Component {
     return message
   }
 
-  componentDidMount() {
-    window.addEventListener('beforeunload', this.handleUnload)
-  }
-
   componentDidUpdate() {
     const publishable = JSON.stringify(this.state.provisional) !== JSON.stringify(this.state.published)
 
@@ -212,7 +208,7 @@ class Profile extends Component {
                   <div className="col-12 col-sm-6 col-md-4">
                     <button data-modal="email" className={`service${published.email ? ' published' : (provisional.email ? ' verified' : '')}`} onClick={this.handleToggle}>
                       <span className="image-container d-flex text-center justify-content-center">
-                        {<img src="/images/email-icon.svg" alt="email icon" />}
+                        {<img src="/images/email-icon-light.svg" alt="email icon" />}
                       </span>
                       <p>Email</p>
                     </button>
@@ -230,7 +226,7 @@ class Profile extends Component {
                   <div className="col-12 col-sm-6 col-md-4">
                     <button data-modal="facebook" className={`service${published.facebook ? ' published' : (provisional.facebook ? ' verified' : '')}`} onClick={this.handleToggle}>
                       <span className="image-container d-flex text-center justify-content-center">
-                        <img src="/images/facebook-icon.svg" alt="Facebook icon" />
+                        <img src="/images/facebook-icon-light.svg" alt="Facebook icon" />
                       </span>
                       <p>Facebook</p>
                     </button>
@@ -238,7 +234,7 @@ class Profile extends Component {
                   <div className="col-12 col-sm-6 col-md-4">
                     <button data-modal="twitter" className={`service${published.twitter ? ' published' : (provisional.twitter ? ' verified' : '')}`} onClick={this.handleToggle}>
                       <span className="image-container d-flex text-center justify-content-center">
-                        <img src="/images/twitter-icon.svg" alt="Twitter icon" />
+                        <img src="/images/twitter-icon-light.svg" alt="Twitter icon" />
                       </span>
                       <p>Twitter</p>
                     </button>
@@ -294,7 +290,7 @@ class Profile extends Component {
                   </div>
                   <div className="eth">
                     <p>ETH Address:</p>
-                    <p className="address"><strong>0x32Be343B94f860124dC4fEe278FDCBD38C102D88</strong></p>
+                    <p className="address"><strong>0x32Be343B94f860124dC<wbr />4fEe278FDCBD38C102D88</strong></p>
                   </div>
                 </div>
                 <hr />
@@ -375,9 +371,9 @@ class Profile extends Component {
             </Modal>
           */
         }
-        <Modal isOpen={this.state.modalsOpen.email} data-modal="email" handleToggle={this.handleToggle}>
-          <div className="image-container">
-            <img src="/images/verified-icon.svg" role="presentation"/>
+        <Modal isOpen={this.state.modalsOpen.email} data-modal="email" className="identity" handleToggle={this.handleToggle}>
+          <div className="image-container d-flex align-items-center">
+            <img src="/images/email-icon-dark.svg" role="presentation"/>
           </div>
           <h2>Miracle Function</h2>
           <p>You take some action to verify your identity with an email</p>
@@ -386,9 +382,9 @@ class Profile extends Component {
             <button className="btn btn-clear" onClick={() => this.handleIdentity('email')}>Continue</button>
           </div>
         </Modal>
-        <Modal isOpen={this.state.modalsOpen.facebook} data-modal="facebook" handleToggle={this.handleToggle}>
-          <div className="image-container">
-            <img src="/images/verified-icon.svg" role="presentation"/>
+        <Modal isOpen={this.state.modalsOpen.facebook} data-modal="facebook" className="identity" handleToggle={this.handleToggle}>
+          <div className="image-container d-flex align-items-center">
+            <img src="/images/facebook-icon-dark.svg" role="presentation"/>
           </div>
           <h2>Miracle Function</h2>
           <p>You take some action to verify your identity with Facebook</p>
@@ -397,9 +393,9 @@ class Profile extends Component {
             <button className="btn btn-clear" onClick={() => this.handleIdentity('facebook')}>Continue</button>
           </div>
         </Modal>
-        <Modal isOpen={this.state.modalsOpen.phone} data-modal="phone" handleToggle={this.handleToggle}>
-          <div className="image-container">
-            <img src="/images/verified-icon.svg" role="presentation"/>
+        <Modal isOpen={this.state.modalsOpen.phone} data-modal="phone" className="identity" handleToggle={this.handleToggle}>
+          <div className="image-container d-flex align-items-center">
+            <img src="/images/phone-icon-dark.svg" role="presentation"/>
           </div>
           <h2>Miracle Function</h2>
           <p>You take some action to verify your identity with a phone</p>
@@ -408,9 +404,9 @@ class Profile extends Component {
             <button className="btn btn-clear" onClick={() => this.handleIdentity('phone')}>Continue</button>
           </div>
         </Modal>
-        <Modal isOpen={this.state.modalsOpen.twitter} data-modal="twitter" handleToggle={this.handleToggle}>
-          <div className="image-container">
-            <img src="/images/verified-icon.svg" role="presentation"/>
+        <Modal isOpen={this.state.modalsOpen.twitter} data-modal="twitter" className="identity" handleToggle={this.handleToggle}>
+          <div className="image-container d-flex align-items-center">
+            <img src="/images/twitter-icon-dark.svg" role="presentation"/>
           </div>
           <h2>Miracle Function</h2>
           <p>You take some action to verify your identity with Twitter</p>
