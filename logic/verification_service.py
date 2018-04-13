@@ -27,7 +27,6 @@ VC = db_models.VerificationCode
 sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
 
 oauth_consumer = oauth.Consumer(settings.TWITTER_CONSUMER_KEY, settings.TWITTER_CONSUMER_SECRET)
-oauth_client = oauth.Client(oauth_consumer)
 
 twitter_request_token_url = 'https://api.twitter.com/oauth/request_token'
 twitter_authenticate_url = 'https://api.twitter.com/oauth/authenticate'
@@ -165,7 +164,8 @@ class VerificationServiceImpl(
         return verification.VerifyFacebookResponse(signature=signature, claim_type=claim_type, data=data)
 
     def twitter_auth_url(self, req):
-        resp, content = oauth_client.request(twitter_request_token_url, "GET")
+        client = oauth.Client(oauth_consumer)
+        resp, content = client.request(twitter_request_token_url, "GET")
         if resp['status'] != '200':
             raise Exception('Invalid response from Twitter.')
         request_token_bytes = dict(cgi.parse_qsl(content))
