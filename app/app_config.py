@@ -7,7 +7,7 @@ import flask_restless
 from config import settings
 from database import db
 from database import db_models
-from flask.ext.session import Session
+from flask_session import Session
 
 
 class AppConfig(object):
