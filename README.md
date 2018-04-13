@@ -44,6 +44,20 @@ cp dev.env .env
 Adjust the values in .env now and in the future to suit your local environment. In particular, set up your ```DATABASE_URL```
 to point to where you local database is or will be.
 
+You'll need to set a few API keys:
+- [Facebook](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow)
+  - FACEBOOK_CLIENT_ID
+  - FACEBOOK_CLIENT_SECRET
+- [Sendgrid](https://sendgrid.com/docs/Classroom/Send/How_Emails_Are_Sent/api_keys.html)
+  - SENDGRID_API_KEY
+- [Twilio](https://www.twilio.com/docs/usage/your-request-to-twilio)
+  - TWILIO_ACCOUNT_SID
+  - TWILIO_AUTH_TOKEN
+  - TWILIO_NUMBER (Can be added on [this page](https://www.twilio.com/user/account/phone-numbers/))
+- [Twitter](https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens)
+  - TWITTER_CONSUMER_KEY
+  - TWITTER_CONSUMER_SECRET
+
 When deploying, set appropriate environment variables for production, notably
 
 ```bash
