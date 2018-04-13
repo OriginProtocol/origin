@@ -210,6 +210,10 @@ a:hover {
   transition: width 1s;
 }
 
+.progress-bar.provisional {
+  background-color: var(--clear-blue);
+}
+
 .progress-container .circles {
   position: absolute;
   top: -7px;
@@ -804,7 +808,8 @@ a:hover {
 
 .modal-content h1,
 .modal-content h2,
-.modal-content h3 {
+.modal-content h3,
+.modal-content p {
   color: unset;
 }
 
@@ -852,7 +857,7 @@ a:hover {
   margin-top: 20px;
 }
 
-.modal-content .button-container button {
+.modal-content .button-container .btn {
   border: solid 1px white;
   background-color: transparent;
   color: white;
@@ -862,12 +867,12 @@ a:hover {
   padding: 10px;
 }
 
-.modal-content .button-container button:hover {
+.modal-content .button-container .btn:hover {
   background-color: white;
   color: #213040;
 }
 
-.modal-content .button-container button:last-of-type {
+.modal-content .button-container .btn:last-child {
   margin-left: 20px;
 }
 
@@ -1856,18 +1861,12 @@ label[for=root_pictures]:hover {
 /* Profile */
 
 .profile-wrapper {
-  position: relative;
-  padding-bottom: 30px;
+  background-color: #fafbfc;
+  padding: 40px 0;
 }
 
-.profile-wrapper header {
-  background-color: var(--dusk);
-  padding-top: 30px;
-}
-
-.profile-wrapper header h1 {
-  color: white;
-  margin: 15px 0;
+.profile-wrapper .attributes {
+  margin-bottom: 40px;
 }
 
 .profile-wrapper .avatar-container {
@@ -1876,7 +1875,6 @@ label[for=root_pictures]:hover {
   max-height: 183px;
   max-width: 183px;
   padding-top: 100%;
-  top: calc(-2.0rem * 1.2 - 15px * 2);
   width: 100%;
 }
 
@@ -1893,10 +1891,7 @@ label[for=root_pictures]:hover {
 
 .profile-wrapper .name h1 {
   flex-grow: 1;
-}
-
-.profile-wrapper .name .icon-container {
-  margin-top: 15px;
+  margin: 0;
 }
 
 .profile-wrapper .icon-container {
@@ -1928,7 +1923,177 @@ label[for=root_pictures]:hover {
   padding: 0;
 }
 
-.profile-wrapper .services {
+.profile-wrapper .services-container {
+  position: relative;
+  background-color: white;
+  border: solid 1px var(--light);
+  border-radius: var(--default-radius);
+  margin-bottom: 40px;
+  padding: 20px 10px 10px 20px;
+}
+
+.profile-wrapper .services-container .credit {
+  position: absolute;
+  color: #98a7b4;
+  font-size: 0.75rem;
+  margin: 0 0 10px;
+  right: 20px;
+  top: 20px;
+}
+
+.profile-wrapper .services-container .directive {
+  margin: 0 140px 20px 0;
+}
+
+.profile-wrapper .services-container .col-12 {
+  padding-right: 10px;
+}
+
+.profile-wrapper .services-container .service {
+  position: relative;
+  background-color: #fafbfc;
+  border: dashed 1px var(--light);
+  border-radius: var(--default-radius);
+  margin: 0 0 10px 0;
+  overflow: hidden;
+  padding: 15px;
+  width: 100%;
+}
+
+.profile-wrapper .services-container .service p {
+  color: #98a7b4;
+  font-size: 1.125rem;
+  font-weight: normal;
+  margin: 0;
+}
+
+.profile-wrapper .services-container .service.disabled {
+  opacity: 0.5;
+}
+
+.profile-wrapper .services-container .service.published {
+  background-color: #f5fcfa;
+  border: 1px solid var(--greenblue);
+  color: var(--greenblue);
+}
+
+.profile-wrapper .services-container .service.published p {
+  color: var(--greenblue);
+}
+
+.profile-wrapper .services-container .service.verified {
+  background-color: #f5fafc;
+  border: 1px solid var(--clear-blue);
+  color: var(--clear-blue);
+}
+
+.profile-wrapper .services-container .service.verified p {
+  color: var(--clear-blue);
+}
+
+.profile-wrapper .services-container .service:hover.disabled {
+  cursor: not-allowed;
+}
+
+.profile-wrapper .services-container .service:hover:not(.disabled):not(.published):not(.verified) {
+  border: 1px solid var(--clear-blue);
+}
+
+.profile-wrapper .services-container .service .image-container {
+  background-image: url(/images/verification-shape-grey.svg);
+  height: 54px;
+  margin: 0 auto 10px;
+  width: 52px;
+}
+
+.profile-wrapper .services-container .service.published .image-container {
+  background-image: url(/images/verification-shape-green.svg);
+}
+
+.profile-wrapper .services-container .service.verified .image-container {
+  background-image: url(/images/verification-shape-blue.svg);
+}
+
+.profile-wrapper .services-container .service .unavailable-bg {
+  position: absolute;
+  background-color: var(--light);
+  height: 60px;
+  right: 0;
+  top: 0;
+  width: 60px;
+  
+  -webkit-clip-path: polygon(100% 0, 0 0, 100% 100%);
+  clip-path: polygon(100% 0, 0 0, 100% 100%);
+}
+
+.profile-wrapper .services-container .service .unavailable-message {
+  position: absolute;
+  color: #f7f8f9;
+  font-size: 7px;
+  font-weight: 900;
+  right: 5px;
+  text-transform: uppercase;
+  top: 10px;
+  transform: rotate(45deg);
+}
+
+.profile-wrapper .services-container .logo {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+sup {
+  font-size: 66%;
+  top: -0.2rem;
+}
+
+.profile-wrapper .alert {
+  background-color: white;
+  border-color: var(--clear-blue);
+  color: var(--dark);
+}
+
+.profile-wrapper .alert .icon-container {
+  height: 24px;
+  margin-left: 10px;
+  width: 24px;
+}
+
+.profile-wrapper .progress {
+  background-color: var(--pale-grey);
+  margin: 0 0 30px;
+}
+
+.profile-wrapper .publish {
+  font-size: 1.125rem;
+  font-weight: 900;
+  margin: 0 auto 1rem;
+  padding: 0.375rem 3rem;
+  width: auto;
+}
+
+.profile-wrapper .timelapse {
+  font-size: 0.875rem;
+  margin: 0 0 1rem;
+}
+
+.profile-wrapper .guidance {
+  background-color: white;
+  border: 1px solid var(--light);
+  border-radius: var(--default-radius);
+  padding: 20px;
+}
+
+.profile-wrapper .guidance .image-container {
+  margin-bottom: 20px;
+}
+
+.profile-wrapper .guidance p {
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/*.profile-wrapper .services {
   font-size: 0.875rem;
   margin: 10px -15px 0;
 }
@@ -2027,10 +2192,9 @@ label[for=root_pictures]:hover {
 
 .profile-wrapper .verification .btn {
   width: 100%;
-}
+}*/
 
-.verification .image-container,
-.wallet .image-container {
+.verification .image-container {
   margin-bottom: 20px;
   text-align: center;
 }
@@ -2039,12 +2203,12 @@ label[for=root_pictures]:hover {
   background-color: var(--dark);
   border-radius: var(--default-radius);
   color: white;
-  margin-top: 20px;
   padding: 20px;
 }
 
 .wallet hr {
   border-top: 1px solid #6f8294;
+  margin: 20px 0;
 }
 
 .wallet a {
@@ -2058,14 +2222,31 @@ label[for=root_pictures]:hover {
   word-wrap: break-word;
 }
 
-.profile-wrapper .wallet img.identicon {
-  height: 80px;
-  margin: auto;
-  width: 80px;
+.wallet .eth {
+  overflow: hidden;
 }
 
-.wallet .detail {
-  margin-bottom: 5px
+.wallet .eth p:first-child {
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.wallet .address {
+  overflow: auto;
+}
+
+.profile-wrapper .wallet {
+  margin-bottom: 20px;
+}
+
+.profile-wrapper .wallet img.identicon {
+  height: 30px;
+  margin-right: 10px;
+  width: 30px;
+}
+
+.wallet .detail:not(:last-of-type) {
+  margin-bottom: 10px
 }
 
 .wallet .detail p:first-of-type {
@@ -2109,13 +2290,14 @@ label[for=root_pictures]:hover {
   margin: 0;
 }
 
-.profile-wrapper .profile.modal .container .image-container .image-pair button {
+.profile-wrapper .profile.modal .container .image-container .image-pair a {
   position: absolute;
   bottom: 10px;
+  cursor: pointer;
   height: 40px;
   right: 10px;
 }
-.profile-wrapper .profile.modal .container .image-container .image-pair button img {
+.profile-wrapper .profile.modal .container .image-container .image-pair a img {
   height: 40px;
   width: 40px;
 }
@@ -2127,6 +2309,25 @@ label[for=root_pictures]:hover {
 
 .profile-wrapper .profile.modal .container textarea {
   height: unset;
+}
+
+.unload.modal .button-container .btn {
+  margin: 0 0 20px;
+}
+
+.unload.modal a {
+  color: var(--clear-blue);
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.unload.modal a:hover {
+  color: var(--dark-clear-blue);
+}
+
+.unload.modal .modal-content .image-container img {
+  height: auto;
+  width: auto;
 }
 
 /* Footer */
@@ -2221,7 +2422,7 @@ footer .footer-links li a {
 /* md + */
 @media (min-width: 768px) {
   .modal-content {
-    padding: 60px;
+    padding: 40px;
   }
 
   .navbar .identity .dropdown-menu {
@@ -2373,10 +2574,8 @@ footer .footer-links li a {
     right: 10px;
   }
 
-  .verification,
-  .wallet {
+  .verification {
     position: relative;
-    top: calc(-2.0rem * 1.2 - 15px * 2);
   }
 
   .transaction .content-container {

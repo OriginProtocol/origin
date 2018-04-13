@@ -26,6 +26,7 @@ class TransactionProgress extends Component {
 
     this.setState({ progressCalculated: true, progressWidth })
   }
+  
   render() {
     const { currentStep, listing, perspective, subdued } = this.props
     const { maxStep, progressCalculated, progressWidth } = this.state
