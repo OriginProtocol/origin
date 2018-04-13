@@ -1,4 +1,4 @@
-import ResourceBase from"../ResourceBase"
+import ResourceBase from "../ResourceBase"
 
 const _STAGES_TO_NUMBER = {
   awaiting_payment: 0,
@@ -18,9 +18,7 @@ class Purchases extends ResourceBase{
     
     this.contractDefinition = this.contractService.purchaseContract
 
-    this.STAGES = {}
-    Object.entries(_STAGES_TO_NUMBER).map(([k, v]) => {
-      this.STAGES[k.toUpperCase()] = k
+    Object.entries(_STAGES_TO_NUMBER).forEach(([k, v]) => {
       _NUMBERS_TO_STAGE[v] = k
     })
   }
