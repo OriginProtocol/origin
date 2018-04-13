@@ -1,15 +1,15 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import Footer from './footer'
 import NavBar from './navbar'
 
-const Layout = ({ children, hideCreateButton, hideLoginButton }) => (
-  <div>
+const Layout = ({ children }) => (
+  <Fragment>
     <main>
-      <NavBar hideCreateButton={hideCreateButton} hideLoginButton={hideLoginButton} />
+      <NavBar />
       {children}
     </main>
     <Footer />
-  </div>
+  </Fragment>
 )
 
 export default Layout

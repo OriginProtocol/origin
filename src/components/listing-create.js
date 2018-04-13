@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { contractService, originService } from '@originprotocol/origin'
+import origin from '../services/origin'
 
 import ListingDetail from './listing-detail'
 import Form from 'react-jsonschema-form'
-import Overlay from './overlay'
+import Modal from './modal'
 
 const alertify = require('../../node_modules/alertify/src/alertify.js')
 
@@ -100,23 +100,20 @@ class ListingCreate extends Component {
     }
   }
 
-  onSubmitListing(formListing, selectedSchemaType) {
-    this.setState({ step: this.STEP.METAMASK })
-    originService.submitListing(formListing, selectedSchemaType)
-    .then((tx) => {
+  async onSubmitListing(formListing, selectedSchemaType) {
+    try {
+      console.log(formListing)
+      this.setState({ step: this.STEP.METAMASK })
+      const transactionReceipt = await origin.listings.create(formListing.formData, selectedSchemaType)
       this.setState({ step: this.STEP.PROCESSING })
       // Submitted to blockchain, now wait for confirmation
-      return contractService.waitTransactionFinished(tx)
-    })
-    .then((blockNumber) => {
+      const blockNumber = await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
       this.setState({ step: this.STEP.SUCCESS })
-      // TODO: Where do we take them after successful creation?
-    })
-    .catch((error) => {
+    } catch (error) {
+      // TODO: We need a failure step to go to here
       console.error(error)
       alertify.log(error.message)
-      // TODO: Reset form? Do something.
-    })
+    }
   }
 
   render() {
@@ -194,22 +191,31 @@ class ListingCreate extends Component {
         { (this.state.step >= this.STEP.PREVIEW) &&
           <div className="step-container listing-preview">
             {this.state.step === this.STEP.METAMASK &&
-              <Overlay imageUrl="/images/spinner-animation.svg">
+              <Modal backdrop="static" isOpen={true}>
+                <div className="image-container">
+                  <img src="/images/spinner-animation.svg" role="presentation"/>
+                </div>
                 Confirm transaction<br />
                 Press &ldquo;Submit&rdquo; in MetaMask window
-              </Overlay>
+              </Modal>
             }
             {this.state.step === this.STEP.PROCESSING &&
-              <Overlay imageUrl="/images/spinner-animation.svg">
+              <Modal backdrop="static" isOpen={true}>
+                <div className="image-container">
+                  <img src="/images/spinner-animation.svg" role="presentation"/>
+                </div>
                 Uploading your listing<br />
                 Please stand by...
-              </Overlay>
+              </Modal>
             }
             {this.state.step === this.STEP.SUCCESS &&
-              <Overlay imageUrl="/images/circular-check-button.svg">
+              <Modal backdrop="static" isOpen={true}>
+                <div className="image-container">
+                  <img src="/images/circular-check-button.svg" role="presentation"/>
+                </div>
                 Success<br />
                 <Link to="/">See All Listings</Link>
-              </Overlay>
+              </Modal>
             }
             <div className="row">
               <div className="col-md-7">
