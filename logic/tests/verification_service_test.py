@@ -239,7 +239,7 @@ class VerificationServiceTest(test_base.DatabaseWithTestdataTest):
         self.assertEqual(resp.errors[0].code, 'NOT_FOUND')
         self.assertEqual(resp.errors[0].path, 'email')
 
-    def test_get_facebook_auth_url(self):
+    def test_facebook_auth_url(self):
         req = verification.FacebookAuthUrlRequest(redirect_url='http://hello.world')
         resp = self.service().invoke('facebook_auth_url', req)
         self.assertEqual(resp.response_code, 'SUCCESS')
@@ -286,6 +286,50 @@ class VerificationServiceTest(test_base.DatabaseWithTestdataTest):
         self.assertEqual(len(resp.errors), 1)
         self.assertEqual(resp.errors[0].code, 'INVALID')
         self.assertEqual(resp.errors[0].path, 'code')
+
+    @mock.patch('oauth2.Client')
+    @mock.patch('logic.verification_service.session')
+    def test_twitter_auth_url(self, mock_session, MockOauthClient):
+        mock_oauth_client = mock.Mock()
+        mock_oauth_client.request.return_value = {'status': '200'}, b'oauth_token=peaches&oauth_token_secret=pears'
+        MockOauthClient.return_value = mock_oauth_client
+        req = verification.TwitterAuthUrlRequest()
+        resp = self.service().invoke('twitter_auth_url', req)
+        mock_oauth_client.request.assert_called_once_with('https://api.twitter.com/oauth/request_token', 'GET')
+        self.assertEqual(resp.response_code, 'SUCCESS')
+        self.assertEqual(resp.url, 'https://api.twitter.com/oauth/authenticate?oauth_token=peaches')
+
+    @mock.patch('oauth2.Client')
+    @mock.patch('logic.verification_service.session')
+    def test_verify_twitter_valid_code(self, mock_session, MockOauthClient):
+        mock_oauth_client = mock.Mock()
+        mock_oauth_client.request.return_value = {'status': '200'}, b'oauth_token=guavas&oauth_token_secret=mangos'
+        MockOauthClient.return_value = mock_oauth_client
+        req = verification.VerifyTwitterRequest(
+            eth_address='0x112234455C3a32FD11230C42E7Bccd4A84e02010',
+            oauth_verifier='blueberries')
+        resp = self.service().invoke('verify_twitter', req)
+        mock_oauth_client.request.assert_called_once_with('https://api.twitter.com/oauth/access_token', 'GET')
+        self.assertEqual(resp.response_code, 'SUCCESS')
+        self.assertEqual(resp.signature, '0x05b4c162b9e27671430f2a13692bd0c335a580c0ab1494eb777199b9bfb87d4c333935d48319cdff53f130459cd03614f5871c0f36095cbe0245046bee57156200')
+        self.assertEqual(resp.claim_type, 4)
+        self.assertEqual(resp.data, 'twitter verified')
+
+    @mock.patch('oauth2.Client')
+    @mock.patch('logic.verification_service.session')
+    def test_verify_twitter_invalid_verifier(self, mock_session, MockOauthClient):
+        mock_oauth_client = mock.Mock()
+        mock_oauth_client.request.return_value = {'status': '401'}, b''
+        MockOauthClient.return_value = mock_oauth_client
+        req = verification.VerifyTwitterRequest(
+            eth_address='0x112234455C3a32FD11230C42E7Bccd4A84e02010',
+            oauth_verifier='pineapples')
+        resp = self.service().invoke('verify_twitter', req)
+        mock_oauth_client.request.assert_called_once_with('https://api.twitter.com/oauth/access_token', 'GET')
+        self.assertEqual(resp.response_code, 'REQUEST_ERROR')
+        self.assertEqual(len(resp.errors), 1)
+        self.assertEqual(resp.errors[0].code, 'INVALID')
+        self.assertEqual(resp.errors[0].path, 'oauth_verifier')
 
 if __name__ == '__main__':
     unittest.main()
