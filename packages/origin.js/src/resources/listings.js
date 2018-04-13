@@ -88,12 +88,10 @@ class Listings extends ResourceBase{
     return transactionReceipt
   }
 
-  async buy(listingAddress, unitsToBuy, ethToPay) {
-    return await this.contractService.buyListing(
-      listingAddress,
-      unitsToBuy,
-      ethToPay
-    )
+  async buy(address, unitsToBuy, ethToPay) {
+    // TODO: ethToPay should really be replaced by something that takes Wei.
+    const value = this.contractService.web3.toWei(ethToPay, "ether")
+    return await this.contractFn(address, "buyListing", [unitsToBuy], {value:value, gas: 600000})
   }
 
   async close(address) {

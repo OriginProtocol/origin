@@ -127,28 +127,6 @@ class ContractService {
     return listingObject
   }
 
-  async buyListing(listingAddress, unitsToBuy, ethToGive) {
-    // TODO: Shouldn't we be passing wei to this function, not eth?
-    console.log(
-      "request to buy listing " +
-        listingAddress +
-        ", for this many units " +
-        unitsToBuy +
-        " units. Total eth to send:" +
-        ethToGive
-    )
-
-    const account = await this.currentAccount()
-    const listing = await this.listingContract.at(listingAddress)
-    const weiToGive = this.web3.toWei(ethToGive, "ether")
-
-    const transactionReceipt = await listing.buyListing(
-      unitsToBuy,
-      { from: account, value: weiToGive, gas: 4476768 } // TODO (SRJ): is gas needed?
-    )
-    return transactionReceipt
-  }
-
   async waitTransactionFinished(
     transactionHash,
     pollIntervalMilliseconds = 1000

@@ -66,8 +66,8 @@ describe("Purchase Resource", function() {
   // Tests
   // -----
 
-  describe("stage names ", ()=>{
-    it("should provide the correct stage names", function(){
+  describe("stage names ", () => {
+    it("should provide the correct stage names", function() {
       expect(purchases.STAGES.AWAITING_PAYMENT).to.equal("awaiting_payment")
       expect(purchases.STAGES.SHIPPING_PENDING).to.equal("shipping_pending")
       expect(purchases.STAGES.BUYER_PENDING).to.equal("buyer_pending")
