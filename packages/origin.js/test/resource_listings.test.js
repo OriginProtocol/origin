@@ -80,4 +80,24 @@ describe("Listing Resource", function() {
     const listingAfter = await listings.getByIndex(listingIndex)
     expect(listingAfter.unitsAvailable).to.equal(0)
   })
+
+  describe("Getting purchase addresses", async () => {
+    var listing
+    before(async () => {
+      await listings.create({ name: "My Listing", price: 1 }, "")
+      const listingIds = await contractService.getAllListingIds()
+      listing = await listings.getByIndex(listingIds[listingIds.length - 1])
+      const transaction = await listings.buy(listing.address, 1, 1)
+    })
+
+    it("should get the number of purchases", async () => {
+      const numPurchases = await listings.purchasesLength(listing.address)
+      expect(numPurchases.toNumber()).to.equal(1)
+    })
+
+    it("should get the address of a purchase", async () => {
+      const address = await listings.purchaseAddressByIndex(listing.address, 0)
+      expect(address.slice(0, 2)).to.equal("0x")
+    })
+  })
 })

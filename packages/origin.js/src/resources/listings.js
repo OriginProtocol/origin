@@ -97,6 +97,14 @@ class Listings extends ResourceBase{
   async close(address) {
     return await this.contractFn(address, "close")
   }
+
+  async purchasesLength(address) {
+    return await this.contractFn(address, "purchasesLength")
+  }
+
+  async purchaseAddressByIndex(address, index) {
+    return await this.contractFn(address, "getPurchase", [index])
+  }
 }
 
 module.exports = Listings
