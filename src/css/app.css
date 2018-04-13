@@ -1882,6 +1882,7 @@ label[for=root_pictures]:hover {
 
 .profile-wrapper {
   background-color: #fafbfc;
+  flex-grow: 1;
   padding: 40px 0;
 }
 
