@@ -1,8 +1,60 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import Modal from './modal'
 import Timelapse from './timelapse'
+
+const countryOptions = [
+  {
+    code: 'us',
+    name: 'United States',
+    prefix: '1',
+  },
+  {
+    code: 'cn',
+    name: 'China',
+    prefix: '86',
+  },
+  {
+    code: 'jp',
+    name: 'Japan',
+    prefix: '81',
+  },
+  {
+    code: 'de',
+    name: 'Germany',
+    prefix: '49',
+  },
+  {
+    code: 'fr',
+    name: 'France',
+    prefix: '33',
+  },
+  {
+    code: 'ru',
+    name: 'Russia',
+    prefix: '7',
+  },
+  {
+    code: 'br',
+    name: 'Brazil',
+    prefix: '55',
+  },
+  {
+    code: 'it',
+    name: 'Italy',
+    prefix: '39',
+  },
+  {
+    code: 'gb',
+    name: 'United Kingdom',
+    prefix: '44',
+  },
+  {
+    code: 'kr',
+    name: 'South Korea',
+    prefix: '82',
+  },
+]
 
 class Profile extends Component {
   constructor(props) {
@@ -17,6 +69,11 @@ class Profile extends Component {
     this.setProgress = this.setProgress.bind(this)
     this.state = {
       lastPublish: null,
+      emailForm: {
+        address: '',
+        verificationCode: '',
+        verificationRequested: false,
+      },
       modalsOpen: {
         email: false,
         facebook: false,
@@ -25,15 +82,15 @@ class Profile extends Component {
         twitter: false,
         unload: false,
       },
+      phoneForm: {
+        countryCode: 'us',
+        number: '',
+        verificationCode: '',
+        verificationRequested: false,
+      },
       progress: {
         provisional: 0,
         published: 0,
-      },
-      strength: 0,
-      form: {
-        description: '',
-        firstName: '',
-        lastName: '',
       },
       provisional: {
         description: '',
@@ -53,6 +110,14 @@ class Profile extends Component {
         phone: false,
         twitter: false,
       },
+      strength: 0,
+      userForm: {
+        description: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+      },
     }
   }
 
@@ -68,8 +133,9 @@ class Profile extends Component {
     return message
   }
 
-  componentDidUpdate() {
-    const publishable = JSON.stringify(this.state.provisional) !== JSON.stringify(this.state.published)
+  componentDidUpdate(prevProps, prevState) {
+    const { phoneForm, provisional, published, userForm } = this.state
+    const publishable = JSON.stringify(provisional) !== JSON.stringify(published)
 
     if (publishable) {
       $('.profile-wrapper [data-toggle="tooltip"]').tooltip()
@@ -78,16 +144,35 @@ class Profile extends Component {
     } else {
       window.removeEventListener('beforeunload', this.handleUnload)
     }
+
+    // concatenate phone number segments when country code or number is changed
+    if ((prevState.phoneForm.countryCode !== phoneForm.countryCode) || prevState.phoneForm.number !== phoneForm.number) {
+      const obj = Object.assign({}, userForm, {
+        phone: `${countryOptions.find(c => c.code === phoneForm.countryCode).prefix}${phoneForm.number}`,
+      })
+
+      this.setState({ userForm: obj })
+    }
+
+    console.log(this.state)
   }
 
   handleChange(e) {
     const { name, value } = e.target
-    const form = Object.assign({}, this.state.form, { [name]: value })
+    const userForm = Object.assign({}, this.state.userForm, { [name]: value })
 
-    this.setState({ form })
+    this.setState({ userForm })
   }
 
   handleIdentity(name) {
+    if (name === 'email' && !this.state.emailForm.verificationRequested) {
+      return this.setState({ emailForm: Object.assign({}, this.state.emailForm, { verificationRequested: true }) })
+    }
+
+    if (name === 'phone' && !this.state.phoneForm.verificationRequested) {
+      return this.setState({ phoneForm: Object.assign({}, this.state.phoneForm, { verificationRequested: true }) })
+    }
+
     const modalsOpen = Object.assign({}, this.state.modalsOpen, { [name]: false })
     let obj = Object.assign({}, this.state.provisional, { [name]: true })
 
@@ -112,9 +197,9 @@ class Profile extends Component {
     e.preventDefault()
 
     const modalsOpen = Object.assign({}, this.state.modalsOpen, { profile: false })
-    let { form, progress, provisional } = this.state
+    let { provisional, userForm } = this.state
 
-    this.setState({ provisional: Object.assign({}, provisional, form), modalsOpen })
+    this.setState({ provisional: Object.assign({}, provisional, userForm), modalsOpen })
   }
 
   handleToggle(e) {
@@ -159,7 +244,7 @@ class Profile extends Component {
   }
 
   render() {
-    const { form, lastPublish, progress, provisional, published, strength } = this.state;
+    const { emailForm, lastPublish, modalsOpen, phoneForm, progress, provisional, published, strength, userForm } = this.state;
     const publishable = JSON.stringify(provisional) !== JSON.stringify(published)
     const fullName = [provisional.firstName, provisional.lastName].join(' ').trim()
 
@@ -312,9 +397,9 @@ class Profile extends Component {
             </div>
           </div>
         </div>
-        <Modal isOpen={this.state.modalsOpen.profile} data-modal="profile" handleToggle={this.handleToggle}>
+        <Modal isOpen={modalsOpen.profile} data-modal="profile" handleToggle={this.handleToggle}>
           <h2>Edit Profile</h2>
-          <form ref={form => this.form = form} onSubmit={this.handleSubmit}>
+          <form onSubmit={this.handleSubmit}>
             <div className="container">
               <div className="row">
                 <div className="col-6">
@@ -332,17 +417,17 @@ class Profile extends Component {
                 <div className="col-6">
                   <div className="form-group">
                     <label htmlFor="first-name">First Name</label>
-                    <input type="text" id="first-name" name="firstName" className="form-control" value={form.firstName} onChange={this.handleChange} placeholder="Your First Name" />
+                    <input type="text" id="first-name" name="firstName" className="form-control" value={userForm.firstName} onChange={this.handleChange} placeholder="Your First Name" />
                   </div>
                   <div className="form-group">
                     <label htmlFor="last-name">Last Name</label>
-                    <input type="text" id="last-name" name="lastName" className="form-control" value={form.lastName} onChange={this.handleChange} placeholder="Your Last Name" />
+                    <input type="text" id="last-name" name="lastName" className="form-control" value={userForm.lastName} onChange={this.handleChange} placeholder="Your Last Name" />
                   </div>
                 </div>
                 <div className="col-12">
                   <div className="form-group">
                     <label htmlFor="description">Description</label>
-                    <textarea rows="4" id="description" name="description" className="form-control" value={form.description} onChange={this.handleChange} placeholder="Tell us a little something about yourself"></textarea>
+                    <textarea rows="4" id="description" name="description" className="form-control" value={userForm.description} onChange={this.handleChange} placeholder="Tell us a little something about yourself"></textarea>
                   </div>
                 </div>
                 <div className="col-12">
@@ -355,67 +440,123 @@ class Profile extends Component {
             </div>
           </form>
         </Modal>
-        {
-          /*
-            <Modal isOpen={this.state.modalsOpen.twitter} data-modal="twitter" handleToggle={this.handleToggle}>
-              <div className="image-container">
-                <img src="/images/twitter-icon.svg" role="presentation"/>
-              </div>
-              <h2>Verify your Twitter Account</h2>
-              <label htmlFor="twitter">Twitter Username</label>
-              <input type="text" id="twitter" className="form-control" placeholder="Select one" />
-              <div className="button-container">
-                <button className="btn btn-clear" data-modal="twitter" onClick={this.handleToggle}>Cancel</button>
-                <button className="btn btn-clear" onClick={() => alert('To Do')}>Continue</button>
-              </div>
-            </Modal>
-          */
-        }
-        <Modal isOpen={this.state.modalsOpen.email} data-modal="email" className="identity" handleToggle={this.handleToggle}>
+        <Modal isOpen={modalsOpen.email} data-modal="email" className="identity" handleToggle={this.handleToggle}>
           <div className="image-container d-flex align-items-center">
             <img src="/images/email-icon-dark.svg" role="presentation"/>
           </div>
-          <h2>Miracle Function</h2>
-          <p>You take some action to verify your identity with an email</p>
-          <div className="button-container">
-            <button className="btn btn-clear" data-modal="email" onClick={this.handleToggle}>Cancel</button>
-            <button className="btn btn-clear" onClick={() => this.handleIdentity('email')}>Continue</button>
-          </div>
+          <form onSubmit={(e) => {
+            e.preventDefault()
+
+            this.handleIdentity('email')
+          }}>
+            <h2>Verify Your Email Address</h2>
+            {!emailForm.verificationRequested &&
+              <div className="form-group">
+                <label htmlFor="email">Enter your email below</label>
+                <input type="email" className="form-control" id="email" name="email" value={emailForm.address} onChange={(e) => {
+                  this.setState({ emailForm: Object.assign({}, emailForm, { address: e.target.value })})
+                }} placeholder="Valid email address" required />
+              </div>
+            }
+            {emailForm.verificationRequested &&
+              <div className="form-group">
+                <label htmlFor="emailVerificationCode">Enter the code we sent you below</label>
+                <input className="form-control" id="emailVerificationCode" name="phone-verification-code" value={emailForm.verificationCode} onChange={(e) => {
+                  this.setState({ emailForm: Object.assign({}, emailForm, { verificationCode: e.target.value })})
+                }} placeholder="Verification code" pattern="[a-zA-Z0-9]{6}" title="6-Character Verification Code" required />
+              </div>
+            }
+            <div className="button-container">
+              <a className="btn btn-clear" data-modal="email" onClick={this.handleToggle}>Cancel</a>
+              <button type="submit" className="btn btn-clear">Continue</button>
+            </div>
+          </form>
         </Modal>
-        <Modal isOpen={this.state.modalsOpen.facebook} data-modal="facebook" className="identity" handleToggle={this.handleToggle}>
+        <Modal isOpen={modalsOpen.facebook} data-modal="facebook" className="identity" handleToggle={this.handleToggle}>
           <div className="image-container d-flex align-items-center">
             <img src="/images/facebook-icon-dark.svg" role="presentation"/>
           </div>
-          <h2>Miracle Function</h2>
-          <p>You take some action to verify your identity with Facebook</p>
-          <div className="button-container">
-            <button className="btn btn-clear" data-modal="facebook" onClick={this.handleToggle}>Cancel</button>
-            <button className="btn btn-clear" onClick={() => this.handleIdentity('facebook')}>Continue</button>
-          </div>
+          <h2>Verify Your Facebook Account</h2>
+          <pre style={{ color: 'white', fontSize: '1.5rem' }}>To Do &#10003;</pre>
+          <form onSubmit={(e) => {
+            e.preventDefault()
+
+            this.handleIdentity('facebook')
+          }}>
+            <div className="button-container">
+              <a className="btn btn-clear" data-modal="facebook" onClick={this.handleToggle}>Cancel</a>
+              <button type="submit" className="btn btn-clear">Continue</button>
+            </div>
+          </form>
         </Modal>
-        <Modal isOpen={this.state.modalsOpen.phone} data-modal="phone" className="identity" handleToggle={this.handleToggle}>
+        <Modal isOpen={modalsOpen.phone} data-modal="phone" className="identity" handleToggle={this.handleToggle}>
           <div className="image-container d-flex align-items-center">
             <img src="/images/phone-icon-dark.svg" role="presentation"/>
           </div>
-          <h2>Miracle Function</h2>
-          <p>You take some action to verify your identity with a phone</p>
-          <div className="button-container">
-            <button className="btn btn-clear" data-modal="phone" onClick={this.handleToggle}>Cancel</button>
-            <button className="btn btn-clear" onClick={() => this.handleIdentity('phone')}>Continue</button>
-          </div>
+          <form onSubmit={(e) => {
+            e.preventDefault()
+
+            this.handleIdentity('phone')
+          }}>
+            <h2>Verify Your Phone Number</h2>
+            {!phoneForm.verificationRequested &&
+              <div className="form-group">
+                <label htmlFor="phoneNumber">Enter your phone number below</label>
+                <div className="d-flex">
+                  <div className="country-code dropdown">
+                    <div className="dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <img src={`/images/flags/${phoneForm.countryCode}.svg`} role="presentation" alt={`${phoneForm.countryCode.toUpperCase()} flag`} />
+                    </div>
+                    <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                      {countryOptions.map(c => (
+                        <div key={c.prefix} className="dropdown-item d-flex" onClick={() => {
+                          this.setState({ phoneForm: Object.assign({}, phoneForm, { countryCode: c.code }) })
+                        }}>
+                          <div><img src={`/images/flags/${c.code}.svg`} role="presentation" alt={`${c.code.toUpperCase()} flag`} /></div>
+                          <div>{c.name}</div>
+                          <div>+{c.prefix}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <input type="phone" className="form-control" id="phoneNumber" name="phone-number" value={phoneForm.number} onChange={(e) => {
+                    this.setState({ phoneForm: Object.assign({}, phoneForm, { number: e.target.value })})
+                  }} placeholder="Area code and phone number" pattern="\d+" title="Numbers only" required />
+                </div>
+              </div>
+            }
+            {phoneForm.verificationRequested &&
+              <div className="form-group">
+                <label htmlFor="phoneVerificationCode">Enter the code we sent you below</label>
+                <input className="form-control" id="phoneVerificationCode" name="phone-verification-code" value={phoneForm.verificationCode} onChange={(e) => {
+                  this.setState({ phoneForm: Object.assign({}, phoneForm, { verificationCode: e.target.value })})
+                }} placeholder="Verification code" pattern="[a-zA-Z0-9]{6}" title="6-Character Verification Code" required />
+              </div>
+            }
+            <div className="button-container">
+              <a className="btn btn-clear" data-modal="phone" onClick={this.handleToggle}>Cancel</a>
+              <button type="submit" className="btn btn-clear">Continue</button>
+            </div>
+          </form>
         </Modal>
-        <Modal isOpen={this.state.modalsOpen.twitter} data-modal="twitter" className="identity" handleToggle={this.handleToggle}>
+        <Modal isOpen={modalsOpen.twitter} data-modal="twitter" className="identity" handleToggle={this.handleToggle}>
           <div className="image-container d-flex align-items-center">
             <img src="/images/twitter-icon-dark.svg" role="presentation"/>
           </div>
-          <h2>Miracle Function</h2>
-          <p>You take some action to verify your identity with Twitter</p>
-          <div className="button-container">
-            <button className="btn btn-clear" data-modal="twitter" onClick={this.handleToggle}>Cancel</button>
-            <button className="btn btn-clear" onClick={() => this.handleIdentity('twitter')}>Continue</button>
-          </div>
+          <h2>Verify Your Twitter Account</h2>
+          <pre style={{ color: 'white', fontSize: '1.5rem' }}>To Do &#10003;</pre>
+          <form onSubmit={(e) => {
+            e.preventDefault()
+
+            this.handleIdentity('twitter')
+          }}>
+            <div className="button-container">
+              <a className="btn btn-clear" data-modal="twitter" onClick={this.handleToggle}>Cancel</a>
+              <button type="submit" className="btn btn-clear">Continue</button>
+            </div>
+          </form>
         </Modal>
-        <Modal isOpen={this.state.modalsOpen.unload} data-modal="unload" handleToggle={this.handleToggle}>
+        <Modal isOpen={modalsOpen.unload} data-modal="unload" handleToggle={this.handleToggle}>
           <div className="image-container">
             <img src="/images/public-icon.svg" role="presentation"/>
           </div>

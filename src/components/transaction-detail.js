@@ -270,7 +270,7 @@ class TransactionDetail extends Component {
                   </form>
                 }
                 {data.reviews.map(r => <Review key={r._id} review={r} />)}
-                <a href="#" className="reviews-link" onClick={() => alert('To Do')}>Read More<img src="/images/carat.svg" className="down carat" alt="down carat" /></a>
+                <a href="#" className="reviews-link" onClick={() => alert('To Do')}>Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a>
               </div>
             </div>
             <div className="col-12 col-lg-4">

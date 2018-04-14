@@ -2337,7 +2337,7 @@ sup {
   background-position: 0;
   background-size: 110px 116px;
   height: 116px;
-  margin: 0 auto 1rem;
+  margin: 0 auto 1.5rem;
   width: 110px;
 }
 
@@ -2345,8 +2345,75 @@ sup {
   margin: 0 auto 0;
 }
 
-.profile-wrapper .identity.modal p {
-  margin: 0 auto 1rem;
+.profile-wrapper .identity.modal label {
+  color: var(--pale-grey);
+  font-size: 1.125rem;
+}
+
+.profile-wrapper .phone.modal .dropdown {
+  background-color: #213040;
+  border-radius: var(--default-radius);
+  height: 46px;
+  margin: 0 10px 10px auto;
+}
+
+.profile-wrapper .phone.modal .dropdown img {
+  height: 18px;
+  width: 28px;
+}
+
+.profile-wrapper .phone.modal .dropdown.show {
+  background-color: var(--dark);
+}
+
+.profile-wrapper .phone.modal .dropdown .dropdown-toggle {
+  cursor: pointer;
+  line-height: 1;
+  margin-bottom: 10px;
+  padding: 14px;
+}
+
+.profile-wrapper .phone.modal .dropdown .dropdown-toggle:after {
+  background-image: url(/images/carat-white.svg);
+  background-repeat: no-repeat;
+  border: none;
+  height: 12px;
+  margin: 0 0 0 10px;
+  vertical-align: middle;
+  width: 8px;
+
+  transform: rotate(90deg);
+}
+
+.profile-wrapper .phone.modal .dropdown .dropdown-menu {
+  background-color: var(--dark);
+  margin: 0;
+  padding: 7px 0;
+  top: 10px !important;
+}
+
+.profile-wrapper .phone.modal .dropdown .dropdown-item {
+  color: white;
+  cursor: pointer;
+  padding: 7px 14px;
+}
+
+.profile-wrapper .phone.modal .dropdown .dropdown-item:hover {
+  background-color: #213040;
+}
+
+.profile-wrapper .phone.modal .dropdown .dropdown-item > :first-child {
+  padding-right: 14px;
+}
+
+.profile-wrapper .phone.modal .dropdown .dropdown-item > :last-child {
+  color: var(--dusk);;
+  margin-left: auto;
+  padding-left: 14px;
+}
+
+.profile-wrapper .phone.modal #phoneNumber {
+  margin: 0 auto 10px 0;
 }
 
 .unload.modal .button-container .btn {

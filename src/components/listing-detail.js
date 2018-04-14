@@ -135,7 +135,7 @@ class ListingsDetail extends Component {
               {this.state.ipfsHash &&
                 <p className="link-container">
                   <a href={origin.ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
-                    View on IPFS<img src="/images/carat.svg" className="carat" alt="right carat" />
+                    View on IPFS<img src="/images/carat-blue.svg" className="carat" alt="right carat" />
                   </a>
                 </p>
               }
@@ -237,7 +237,7 @@ class ListingsDetail extends Component {
                 <div className="reviews">
                   <h2>Reviews <span className="review-count">57</span></h2>
                   {this.state.reviews.map(r => <Review key={r._id} review={r} />)}
-                  <a href="#" className="reviews-link" onClick={() => alert('To Do')}>Read More<img src="/images/carat.svg" className="down carat" alt="down carat" /></a>
+                  <a href="#" className="reviews-link" onClick={() => alert('To Do')}>Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a>
                 </div>
               </div>
             </div>

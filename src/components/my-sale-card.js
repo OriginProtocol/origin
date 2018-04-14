@@ -50,7 +50,7 @@ class MySaleCard extends Component {
             {step === 2 && <p><strong>Next Step:</strong> Wait for buyer to receive order</p>}
             {step === 3 && <p><strong>Next Step:</strong> Withdraw funds</p>}
             {step === 4 && <p>This order is complete</p>}
-            <p className="link-container"><Link to={`/my-sales/${_id}`}>View Details<img src="/images/carat.svg" className="carat" alt="right carat" /></Link></p>
+            <p className="link-container"><Link to={`/my-sales/${_id}`}>View Details<img src="/images/carat-blue.svg" className="carat" alt="right carat" /></Link></p>
           </div>
         </div>
       </div>
