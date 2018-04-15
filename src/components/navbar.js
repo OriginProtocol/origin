@@ -16,6 +16,11 @@ class NavBar extends Component {
   }
 
   render() {
+    // randomly select from three examples
+    const exampleCounts = [4, 44, 444][Math.floor(Math.random() * 3)]
+    // avoid integers greater than two digits
+    const notificationCount = exampleCounts < 100 ? Number(exampleCounts).toLocaleString() : `${Number(99).toLocaleString()}+`
+
     return (
       <nav className="navbar navbar-expand-lg navbar-dark">
         <div className="container">
@@ -36,7 +41,7 @@ class NavBar extends Component {
               <div className="sell dropdown">
                 <a className="dropdown-toggle nav-item nav-link" id="sellDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sell</a>
                 <div className="dropdown-menu dropdown-menu-right" aria-labelledby="sellDropdown">
-                  <div className="triangle-container d-none d-md-flex justify-content-end"><div className="triangle"></div></div>
+                  <div className="triangle-container d-none d-lg-flex justify-content-end"><div className="triangle"></div></div>
                   <div className="actual-menu">
                     <Link to="/my-listings" className="dropdown-item">My Listings</Link>
                     <Link to="/my-sales" className="dropdown-item">My Sales</Link>
@@ -58,7 +63,9 @@ class NavBar extends Component {
                 <div className="triangle-container d-flex justify-content-end"><div className="triangle"></div></div>
                 <div className="actual-menu">
                   <header className="d-flex">
-                    <div className="count"><p>{Number(4).toLocaleString()}</p></div>
+                    <div className="count">
+                      <p className="d-inline-block">{notificationCount}</p>
+                    </div>
                     <h3>Notifications</h3>
                   </header>
                   <div className="notifications-list">

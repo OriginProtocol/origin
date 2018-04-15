@@ -573,11 +573,11 @@ a:hover {
 
 .navbar .notifications .dropdown-menu header .count p {
   background-color: var(--greenblue);
-  border-radius: 50%;
+  border-radius: 12px;
   color: white;
-  font-size: 1rem;
-  height: 25px;
-  width: 25px;
+  font-size: 16px;
+  height: 24px;
+  padding: 0 8px;
 }
 
 .navbar .notifications .dropdown-menu footer {
