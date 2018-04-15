@@ -4,9 +4,8 @@ import { Link } from 'react-router-dom'
 class HumanReadableNotification extends Component {
   render() {
     const { className, notification } = this.props
-    const { counterpartyAddress, countpartyName, eventType, message, listingId, listingName } = notification
+    const { eventType, message, listingId, listingName } = notification
     const productLink = <Link to={`/listing/${listingId}`}>{listingName}</Link>
-    const counterpartyLink = <Link to={`/users/${counterpartyAddress}`}>{countpartyName || 'Unnamed User'}</Link>
     let subject, presPerf, verb
 
     switch(eventType) {
@@ -35,7 +34,7 @@ class HumanReadableNotification extends Component {
     }
 
     return (
-      <p className={className || ''}>{subject} {presPerf} {verb} by {counterpartyLink}</p>
+      <p className={className || ''}>{subject} {presPerf} {verb}</p>
     )
   }
 }
@@ -43,22 +42,21 @@ class HumanReadableNotification extends Component {
 class Notification extends Component {
   render() {
     const { notification } = this.props
-    const { counterpartyAddress, counterpartyName, eventType, perspective } = notification
+    const { counterpartyAddress, counterpartyName, eventType, listingId, listingImageURL, listingName, perspective } = notification
 
     return (
-      <li className="list-group-item d-flex notification">
-        <div>
-          <div className="avatar-container">
-            {!counterpartyAddress && <img src="/images/origin-icon-white.svg" className="no-counterparty" alt="Origin zero" />}
-            {counterpartyAddress && <img src={`/images/avatar-${counterpartyName ? 'blue' : 'anonymous'}.svg`} alt="avatar" />}
-            {counterpartyAddress && <div className={`${perspective} circle`}></div>}
-          </div>
+      <li className="list-group-item d-flex align-items-stretch notification">
+        <div className="image-container d-flex align-items-center justify-content-center">
+          {!listingId && <img src="/images/origin-icon-white.svg" alt="Origin zero" />}
+          {listingId && !listingImageURL && <img src="/images/origin-icon-white.svg" alt="Origin zero" />}
+          {listingId && listingImageURL && <img src={listingImageURL} className="listing-related" alt={listingName} />}
         </div>
-        <div className="content-container">
+        <div className="content-container d-flex flex-column justify-content-between">
           <HumanReadableNotification notification={notification} className="text-truncate" />
-          <p className="text-truncate text-muted">{counterpartyAddress}</p>
+          {counterpartyAddress && <p className="text-truncate"><strong>{perspective === 'buyer' ? 'Seller' : 'Buyer'}</strong>: <Link to={`/users/${counterpartyAddress}`}>{counterpartyName || 'Unnamed User'}</Link></p>}
+          {counterpartyAddress && <p className="text-truncate text-muted">{counterpartyAddress}</p>}
         </div>
-        <div className="link-container ml-auto">
+        <div className="link-container m-auto">
           <a href="https://app.zeplin.io/project/59fa2311bac7acbc8d953da9/screen/5aa878781720abc6447f2cd3?did=5ab93f6fa022c2b641639214" className="btn" target="_blank">
             <img src="/images/carat-blue.svg" className="carat" alt="right carat" />
           </a>

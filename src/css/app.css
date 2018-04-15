@@ -162,10 +162,6 @@ a:hover {
   position: absolute;
 }
 
-.avatar-container .no-counterparty {
-  bottom: 6px;
-}
-
 .avatar-container .circle {
   position: absolute;
   border-radius: 50%;
@@ -1837,12 +1833,42 @@ label[for=root_pictures]:hover {
   font-size: 0.75rem;
 }
 
+.notification .image-container {
+  background-color: var(--dark-grey-blue);
+  font-size: 0.75rem;
+  height: 3rem;
+  margin-right: 0.625rem;
+  overflow: hidden;
+  width: 4.5rem;
+}
+
+.notification .image-container .listing-related {
+  max-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+}
+
 .notification .content-container {
+  flex-grow: 1;
+  line-height: 1.2;
   overflow: hidden;
 }
 
 .notification .content-container a {
   font-size: 1rem;
+}
+
+.notification .content-container p:nth-of-type(2) {
+  font-size: 0.75rem;
+}
+
+.notification .content-container p:nth-of-type(2) a {
+  font-size: 0.75rem;
+}
+
+.notification .content-container .text-muted {
+  font-size: 0.625rem;
+  line-height: 1;
 }
 
 .notification .link-container {
@@ -1867,11 +1893,6 @@ label[for=root_pictures]:hover {
 
 .notifications-wrapper {
   padding: 40px 0;
-}
-
-.notifications-wrapper .avatar-container {
-  position: relative;
-  border-radius: var(--default-radius);
 }
 
 .notifications-wrapper .notification {
