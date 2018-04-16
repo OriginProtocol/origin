@@ -1,4 +1,4 @@
-import UserRegistryContract from "../../contracts/build/contracts/UserRegistry.json"
+import UserRegistryContract from "../build/contracts/UserRegistry.json"
 import promisify from "util.promisify"
 import contract from "truffle-contract"
 

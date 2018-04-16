@@ -1,9 +1,10 @@
-var ListingsRegistryContract = require("../../contracts/build/contracts/ListingsRegistry.json")
+var ListingsRegistryContract = require("../build/contracts/ListingsRegistry.json")
 var contract = require("truffle-contract")
 
 module.exports = function(deployer, network) {
   console.log('network', network)
-  if (network === 'develop') {
+  if (network === 'development') {
+    console.log('deploying listings')
     let deployed
     let listingRegistryContract = contract(ListingsRegistryContract)
     listingRegistryContract.setProvider(web3.currentProvider)

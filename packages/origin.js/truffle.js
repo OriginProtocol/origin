@@ -6,7 +6,7 @@ truffleSetup = {
   networks: {
     development: {
       host: "localhost",
-      port: 8545,  // `truffle develop` will override and use port 9545
+      port: 9545,  // `truffle develop` will override and use port 9545
       network_id: "*" // Match any network id
     },
   },
