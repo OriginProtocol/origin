@@ -88,7 +88,7 @@ contract Purchase {
   payable
   atStage(Stages.AWAITING_PAYMENT)
   {
-    if (this.balance >= listingContract.price()) {
+    if (address(this).balance >= listingContract.price()) {
       // Buyer (or their proxy) has paid enough to cover purchase
       internalStage = Stages.SHIPPING_PENDING;
       emit PurchaseChange(internalStage);
@@ -139,7 +139,7 @@ contract Purchase {
     // Send contract funds to seller (ie owner of Listing)
     // Transfering money always needs to be the last thing we do, do avoid
     // rentrancy bugs. (Though here the seller would just be getting their own money)
-    listingContract.owner().transfer(this.balance);
+    listingContract.owner().transfer(address(this).balance);
   }
 
   function openDispute()
