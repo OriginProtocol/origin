@@ -97,7 +97,7 @@ contract ListingsRegistry {
     returns (uint)
   {
     listings.push(new Listing(msg.sender, _ipfsHash, _price, _unitsAvailable));
-    NewListing(listings.length-1);
+    emit NewListing(listings.length-1);
     return listings.length;
   }
 
