@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "prettier": "1.11.1",
-    "truffle": "^4.1.3",
+    "truffle": "4.1.6",
     "truffle-contract": "^1.1.8",
     "truffle-hdwallet-provider": "0.0.3"
   },

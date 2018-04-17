@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity 0.4.21;
 
 /// @title UserRegistry
 /// @dev Used to keep registry of user identifies

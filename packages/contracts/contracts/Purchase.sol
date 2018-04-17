@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity 0.4.21;
 
 /// @title Purchase
 /// @dev An purchase Origin Listing representing a purchase/booking
