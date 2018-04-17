@@ -30,7 +30,7 @@ contract UserRegistry {
         public
     {
         users[msg.sender] = _ipfsHash;
-        NewUser(msg.sender);
+        emit NewUser(msg.sender);
     }
 
     /// @dev createAnother(): Create a new user and associates attenstion or proof with user
