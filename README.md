@@ -34,8 +34,8 @@ This repo is under active development. We welcome your participation!
 The main components of this repo are:
 
  - [Origin.js](/packages/origin.js/)
- - [Ethereum smart contracts](/packages/contracts/)
- 
+ - [Ethereum smart contracts](/contracts/)
+
 This library is an abstraction layer for developers who want to build DApps on Origin Protocol, and is also used to build the [Origin Demo DApp](https://github.com/OriginProtocol/demo-dapp).
 
 The library will make it easy for sellers to do things like:
@@ -51,4 +51,3 @@ And buyers to:
  - Create bookings
  - Update bookings
  - Cancel bookings
- 
