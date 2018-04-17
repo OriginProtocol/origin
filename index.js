@@ -4,6 +4,9 @@ const watch = require('node-watch')
 const webpack = require('webpack')
 const webpackConfig = require('./webpack.config.js')
 
+const args = process.argv.slice(2)
+const shouldWatch = (args.length && args[0] === 'serve')
+
 const startGanache = () => {
   return new Promise((resolve, reject) => {
     var server = Ganache.server({
@@ -19,6 +22,22 @@ const startGanache = () => {
         return reject(err)
       }
       console.log('Ganache listening.')
+      resolve()
+    })
+  })
+}
+
+const buildContracts = () => {
+  return new Promise((resolve, reject) => {
+    const truffleMigrate = spawn('./node_modules/.bin/truffle', ['compile'], { cwd: './contracts' })
+    truffleMigrate.stdout.pipe(process.stdout)
+    truffleMigrate.stderr.pipe(process.stderr)
+
+    truffleMigrate.on('exit', code => {
+      if (code !== 0) {
+        return reject()
+      }
+      console.log('Truffle compile finished OK.')
       resolve()
     })
   })
@@ -40,21 +59,37 @@ const deployContracts = () => {
   })
 }
 
-
 async function start() {
-  await startGanache()
-  await deployContracts()
+  let compiler = webpack(webpackConfig)
 
-  // watch contracts
-  watch('./contracts/contracts', { recursive: true }, (evt, name) => {
-    console.log('%s changed.', name)
-    deployContracts()
-  })
+  if (shouldWatch) {
+    await startGanache()
+    await deployContracts()
 
-  // watch js
-  webpack(webpackConfig).watch({}, () => {
-    console.log('origin.js built successfully')
-  })
+    // watch contracts
+    watch('./contracts/contracts', { recursive: true }, (evt, name) => {
+      console.log('%s changed.', name)
+      deployContracts()
+    })
+
+    // watch js
+    compiler.watch({}, (err, stats) => {
+      if(err) {
+        console.log(err)
+      } else {
+        console.log('webpack compiling')
+      }
+    })
+  } else {
+    await buildContracts()
+    compiler.run((err, stats) => {
+      if(err) {
+        console.log(err)
+      } else {
+        console.log('webpack compiled successfully')
+      }
+    })
+  }
 }
 
 start()
