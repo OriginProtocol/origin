@@ -8,8 +8,8 @@ Origin Protocol is a library of javascript code and Ethereum smart contracts whi
 
 Please refer to our [product brief](https://www.originprotocol.com/product-brief) and [technical whitepaper](https://www.originprotocol.com/whitepaper) for more detail.
 
- - [README for Javascript code](https://github.com/OriginProtocol/platform/tree/master/packages/origin.js)
- - [README for Ethereum contracts](https://github.com/OriginProtocol/platform/tree/master/packages/contracts)
+ - [README for Javascript code](#originjs-documentation)
+ - [README for Ethereum contracts](/contracts/)
 
 ## Follow our progress and get involved
 
@@ -33,7 +33,7 @@ This repo is under active development. We welcome your participation!
 
 The main components of this repo are:
 
- - [Origin.js](#originjs-Documentation)
+ - [Origin.js](#originjs-documentation)
  - [Ethereum smart contracts](/contracts/)
 
 This library is an abstraction layer for developers who want to build DApps on Origin Protocol, and is also used to build the [Origin Demo DApp](https://github.com/OriginProtocol/demo-dapp).
