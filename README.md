@@ -38,7 +38,7 @@ If you're new to the space, it may be helpful to first familiarize yourself with
 
 ## Install and run Demo DApp locally
 
-NOTE: This installs the DApp locally with a local test chain. See below for hosting on a server.
+NOTE: This installs the DApp locally for use with the Rinkeby and Ropsten test nets. See below for developing with a local test chain or for hosting on a server. If you need some Rinkeby eth, you can get some at [this faucet](https://faucet.rinkeby.io/).
 
 ### 1. Check node version
 
@@ -48,16 +48,12 @@ Make sure you have `node` version 8.5.0 or greater
 node --version
 ```
 
-### 2. Set up and run *origin.js* locally
-
-[Follow the instructions in that repo.](https://github.com/OriginProtocol/platform#local) Origin.js is needed to run a local blockchain and make it accessible to your dapp.
-
-### 3. Set up the dapp
+### 2. Set up the dapp
 
 In a new tab:
 ```
 git clone https://github.com/OriginProtocol/demo-dapp origin-demo-dapp && cd origin-demo-dapp
-npm run setup
+npm install
 npm run start
 ```
 
@@ -65,26 +61,53 @@ A browser will open to http://localhost:3000. You're not quite done though! You'
 
 ![Origin-homepage](https://user-images.githubusercontent.com/673455/34650232-ca4df39c-f37a-11e7-9b18-18861f282dff.png)
 
-### 4. Set up Metamask
+### 3. Set up Metamask
 
   -  Install [Metamask Chrome Browser Extension](https://metamask.io/).
 
-  - Click the Metamask icon in the toolbar, accept terms, and then click `Import Existing DEN`
+  - Follow the instructions to set up your wallet.
 
-  - Enter the seed phrase (Mnemonic):
-  ```
-  candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
-  ```
-  This is the default seed phrase for truffle development.
-
-  - Click where it says "Ethereum Main Network", select "Custom RPC" and enter `http://localhost:9545/`. This takes us off of the real ETH blockchain and onto our local blockchain. Click the back arrow to return to your account.
+  - Click where it says "Ethereum Main Network" and select "Rinkeby". This takes us off of the real ETH blockchain and onto the Rinkeby test net.
 
    **Be careful not to mix up your test wallet with your real one on the Main Network.**
 
-  - You should see your first test account now has 100 ETH. (Address of `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`) Additional generated accounts will also have this amount.
-
-### 5. Try it!
+### 4. Try it!
 Create a listing and post it to IPFS and Ethereum.
+
+## Developing with a local chain
+
+### 1. Set up and run *origin.js* locally
+
+[Follow these instructions to setup and run origin.js.](https://github.com/OriginProtocol/platform#local) Origin.js is needed to run a local blockchain and make it accessible to your dapp.
+
+### 2. Set up the dapp
+
+In a separate tab:
+```
+git clone https://github.com/OriginProtocol/demo-dapp origin-demo-dapp && cd origin-demo-dapp
+npm run install:dev
+npm run start
+```
+
+The `install:dev` script performs the regular install and then links to your local origin.js.
+
+### 3. Connect to your local blockchain in Metamask
+
+-  Install [Metamask Chrome Browser Extension](https://metamask.io/).
+
+- Click the Metamask icon in the toolbar, accept terms, and then click `Import Existing DEN`
+
+- Enter the seed phrase (Mnemonic):
+```
+candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
+```
+This is the default seed phrase for truffle development.
+
+- Click where it says "Ethereum Main Network", select "Custom RPC" and enter `http://localhost:9545/`. Click the back arrow to return to your account.
+
+ **Be careful not to mix up your test wallet with your real one on the Main Network.**
+
+- You should see your first test account now has 100 ETH. (Address of `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`) Additional generated accounts will also have this amount.
 
 ## Hosting on a server
 
