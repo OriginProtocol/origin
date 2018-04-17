@@ -9,7 +9,6 @@ Origin Protocol is a library of javascript code and Ethereum smart contracts whi
 Please refer to our [product brief](https://www.originprotocol.com/product-brief) and [technical whitepaper](https://www.originprotocol.com/whitepaper) for more detail.
 
  - [README for Javascript code](#originjs-documentation)
- - [README for Ethereum contracts](/contracts/)
 
 ## Follow our progress and get involved
 
@@ -30,11 +29,6 @@ This repo is under active development. We welcome your participation!
 4. Read our simple [contributing and style guide](CONTRIBUTING.md).
 
 # What we're building
-
-The main components of this repo are:
-
- - [Origin.js](#originjs-documentation)
- - [Ethereum smart contracts](/contracts/)
 
 This library is an abstraction layer for developers who want to build DApps on Origin Protocol, and is also used to build the [Origin Demo DApp](https://github.com/OriginProtocol/demo-dapp).
 
@@ -175,7 +169,7 @@ And buyers to:
 
  Run a subset of tests using the `grep` query string parameter, for example: http://localhost:8081/?grep=IpfsService
 
- We also have contract unit tests that are not run in the browser. These can be run with `npm run test:contracts`.
+ We also have contract unit tests that are not run in the browser. These can be run with `npm run test:contracts` (you should *not* have the server running at this time, as these tests start their own local blockchain instance).
 
  ## Documentation
 
