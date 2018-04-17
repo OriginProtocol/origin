@@ -87,12 +87,12 @@ git clone https://github.com/OriginProtocol/platform origin-platform && cd origi
  npm run setup
  ```
 
- (In another terminal, in your dapp codebase, you will need to run `npm link @originprotocol/origin` to use this local package.)
-
 3. Start the localblockchain and create the build. Code changes will trigger a live rebuild.
  ```
  npm start
  ```
+
+ 4. To develop against a working dapp and UI, see [the instructions in our demo dapp](https://github.com/OriginProtocol/demo-dapp#developing-with-a-local-chain).
 
  ## Import
 
