@@ -77,25 +77,22 @@ And buyers to:
 
  ### Local
 
+1. Clone
+```
+git clone https://github.com/OriginProtocol/platform origin-platform && cd origin-platform
+```
+
+2. Setup (shortcut for `npm install && npm link`). Linking makes this available as a local npm package for local dapp development.
  ```
- npm install
+ npm run setup
  ```
 
+ (In another terminal, in your dapp codebase, you will need to run `npm link @originprotocol/origin` to use this local package.)
+
+3. Start the localblockchain and create the build. Code changes will trigger a live rebuild.
  ```
  npm start
  ```
-
- Finally, you will need to build the node module. For developing on `origin.js`, it is better to link the package rather than installing it. (Otherwise you would need to run `npm build` everytime you made a change to the package.)
-
- ```
- npm link
- ```
-
- Now change tabs (or directories) to the repo for your DApp (for example, the [Origin demo-dapp](https://github.com/OriginProtocol/demo-dapp)) and run:
- ```
- npm link @originprotocol/origin
- ```
- This will create a symlink, direcly linking the DApp to your local `origin.js` package.
 
  ## Import
 
