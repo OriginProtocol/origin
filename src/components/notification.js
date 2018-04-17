@@ -1,6 +1,10 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 
+/*
+  This subcomponent turns structured notification objects into dom elements,
+  which wrap an anchor if there is a relevant listing.
+*/
 class HumanReadableNotification extends Component {
   render() {
     const { className, notification } = this.props
@@ -42,7 +46,7 @@ class HumanReadableNotification extends Component {
 class Notification extends Component {
   render() {
     const { notification } = this.props
-    const { counterpartyAddress, counterpartyName, eventType, listingId, listingImageURL, listingName, perspective } = notification
+    const { counterpartyAddress, counterpartyName, listingId, listingImageURL, listingName, perspective } = notification
 
     return (
       <li className="list-group-item d-flex align-items-stretch notification">
@@ -52,7 +56,7 @@ class Notification extends Component {
           {listingId && listingImageURL && <img src={listingImageURL} className="listing-related" alt={listingName} />}
         </div>
         <div className="content-container d-flex flex-column justify-content-between">
-          <HumanReadableNotification notification={notification} className="text-truncate" />
+          <HumanReadableNotification notification={notification} className={`text-truncate${counterpartyAddress ? '' : ' m-auto'}`} />
           {counterpartyAddress && <p className="text-truncate"><strong>{perspective === 'buyer' ? 'Seller' : 'Buyer'}</strong>: <Link to={`/users/${counterpartyAddress}`}>{counterpartyName || 'Unnamed User'}</Link></p>}
           {counterpartyAddress && <p className="text-truncate text-muted">{counterpartyAddress}</p>}
         </div>

@@ -1,7 +1,6 @@
 @import 'alertify.css';
 @import 'variables.css';
 @import 'bootstrap.css';
-@import 'https://hosted-sip.civic.com/css/civic-modal.min.css';
 
 html {
   height: 100%;
@@ -2134,107 +2133,6 @@ sup {
   font-size: 0.875rem;
   margin: 0;
 }
-
-/*.profile-wrapper .services {
-  font-size: 0.875rem;
-  margin: 10px -15px 0;
-}
-
-.profile-wrapper .services > div {
-  margin-bottom: 30px;
-}
-
-.profile-wrapper .services p {
-  font-size: 0.875rem;
-  margin: 10px 0;
-}
-
-.profile-wrapper .service {
-  border: 1px solid var(--light);
-  border-radius: var(--default-radius);
-  margin-bottom: 10px;
-  padding: 10px;
-  text-align: left;
-  width: 100%;
-}
-
-.profile-wrapper .service:disabled {
-  opacity: 0.5;
-}
-
-.profile-wrapper .service:focus {
-  outline: none;
-}
-
-.profile-wrapper .service.verified {
-  background-color: var(--dark-grey-blue);
-  border-color: var(--dark-grey-blue);
-}
-
-.profile-wrapper .service.verified p {
-  color: white;
-}
-
-.profile-wrapper .service .icon-container {
-  height: 26px;
-  text-align: center;
-  width: 30px;
-}
-
-.profile-wrapper .service img {
-  height: 1.5rem;
-}
-
-.profile-wrapper .service p {
-  flex-grow: 1;
-  font-size: 1.125rem;
-  margin: 0;
-  padding-left: 10px;
-}
-
-.profile-wrapper .service.verified .icon-container:last-of-type {
-  background-image: url(/images/verified-icon.svg);
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-.profile-wrapper .verification {
-  background-color: var(--pale-grey);
-  border-radius: var(--default-radius);
-  color: #0c2033;
-  padding: 20px;
-}
-
-.profile-wrapper .verification .icon-container {
-  position: absolute;
-  height: 26px;
-  right: 26px;
-  top: 10px;
-  width: 26px;
-}
-
-.profile-wrapper .verification h4 {
-  font-size: 0.875rem;
-  font-weight: normal;
-  margin-bottom: 0;
-}
-
-.profile-wrapper .verification p {
-  font-size: 0.875rem;
-  margin: 0 auto 15px;
-}
-
-.profile-wrapper .verification .status svg {
-  margin-right: 0.3rem;
-}
-
-.profile-wrapper .verification .status .unpublished {
-  fill: #d12626;
-}
-
-.profile-wrapper .verification .btn {
-  width: 100%;
-}*/
 
 .verification .image-container {
   margin-bottom: 20px;

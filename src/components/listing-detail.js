@@ -155,13 +155,6 @@ class ListingsDetail extends Component {
                     </p>
                   </div>
                 }
-                {/* What is this? */}
-                {/* <div className="contract-price d-flex justify-content-between">
-                                  <p>Contract Price</p>
-                                  <p className="price text-right">
-                                    {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
-                                  </p>
-                                </div> */}
                 {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
                 {/* <div className="quantity d-flex justify-content-between">
                                   <p>Quantity</p>

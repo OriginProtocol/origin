@@ -3,6 +3,7 @@ import $ from 'jquery'
 import Modal from './modal'
 import Timelapse from './timelapse'
 
+// sample list of available countries for phone number prefix
 const countryOptions = [
   {
     code: 'us',
@@ -66,9 +67,20 @@ class Profile extends Component {
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleToggle = this.handleToggle.bind(this)
     this.handleUnload = this.handleUnload.bind(this)
+    this.hasUnpublishedChanges = this.hasUnpublishedChanges.bind(this)
     this.setProgress = this.setProgress.bind(this)
+    /*
+      Three-ish Profile States
+
+      published: Published to blockchain
+      provisional: Ready to publish to blockchain
+      userForm: Values for controlled components
+      * TODO: retrieve current profile from blockchain
+      * TODO: cache provisional state with local storage (if approved by Stan/Matt/Josh)
+    */
     this.state = {
       lastPublish: null,
+      // control state of email form, but do not nest in userForm
       emailForm: {
         address: '',
         verificationCode: '',
@@ -82,12 +94,14 @@ class Profile extends Component {
         twitter: false,
         unload: false,
       },
+      // control state of phone form, but do not nest in userForm
       phoneForm: {
         countryCode: 'us',
         number: '',
         verificationCode: '',
         verificationRequested: false,
       },
+      // percentage widths for two progress bars
       progress: {
         provisional: 0,
         published: 0,
@@ -110,7 +124,9 @@ class Profile extends Component {
         phone: false,
         twitter: false,
       },
+      // sum of two progress bar widths
       strength: 0,
+      // control state of profile attributes and computed email/phone values
       userForm: {
         description: '',
         firstName: '',
@@ -121,23 +137,11 @@ class Profile extends Component {
     }
   }
 
-  handleUnload(e) {
-    const message = 'If you exit without publishing, you\'ll lose all your changes.'
-    const modalsOpen = Object.assign({}, this.state.modalsOpen, { unload: true })
-
-    // modal will only render if user cancels unload using native dialog
-    this.setState({ modalsOpen })
-
-    e.returnValue = message
-
-    return message
-  }
-
   componentDidUpdate(prevProps, prevState) {
-    const { phoneForm, provisional, published, userForm } = this.state
-    const publishable = JSON.stringify(provisional) !== JSON.stringify(published)
+    const { phoneForm, userForm } = this.state
 
-    if (publishable) {
+    // prompt user if tab/window is closing before changes have been published
+    if (this.hasUnpublishedChanges()) {
       $('.profile-wrapper [data-toggle="tooltip"]').tooltip()
 
       window.addEventListener('beforeunload', this.handleUnload)
@@ -157,6 +161,7 @@ class Profile extends Component {
     console.log(this.state)
   }
 
+  // update state for controlled names and description components
   handleChange(e) {
     const { name, value } = e.target
     const userForm = Object.assign({}, this.state.userForm, { [name]: value })
@@ -164,6 +169,7 @@ class Profile extends Component {
     this.setState({ userForm })
   }
 
+  // initiate validation sequence for the named identity service
   handleIdentity(name) {
     if (name === 'email' && !this.state.emailForm.verificationRequested) {
       return this.setState({ emailForm: Object.assign({}, this.state.emailForm, { verificationRequested: true }) })
@@ -174,6 +180,7 @@ class Profile extends Component {
     }
 
     const modalsOpen = Object.assign({}, this.state.modalsOpen, { [name]: false })
+    // TODO: use token or hashed/salted value instead of boolean to indicate verification
     let obj = Object.assign({}, this.state.provisional, { [name]: true })
 
     this.setState({ modalsOpen, provisional: obj })
@@ -183,6 +190,7 @@ class Profile extends Component {
     this.setProgress({ provisional: provisional + ((100 - published) - provisional) / 2, published })
   }
 
+  // copy provisional state to published and run optional callback
   handlePublish(cb) {
     const { provisional, progress } = this.state
 
@@ -193,6 +201,7 @@ class Profile extends Component {
     typeof cb === 'function' && cb()
   }
 
+  // copy userForm changes to provisional state and close profile modal
   handleSubmit(e) {
     e.preventDefault()
 
@@ -202,9 +211,15 @@ class Profile extends Component {
     this.setState({ provisional: Object.assign({}, provisional, userForm), modalsOpen })
   }
 
+  // conditionally close modal identified by data attribute
   handleToggle(e) {
     const { modal } = e.currentTarget.dataset
 
+    /*
+      We currently ignore the click if the idenity has been verified.
+      TODO: Allow provisional validations to be reviewed and/or
+      undone individually before publishing to the blockchain.
+    */
     if (this.state.published[modal] || this.state.provisional[modal]) {
       return
     }
@@ -220,10 +235,32 @@ class Profile extends Component {
     this.setState({ modalsOpen: obj })
   }
 
+  // warning message will be ignored by the native dialog in Chrome and Firefox
+  handleUnload(e) {
+    const message = 'If you exit without publishing, you\'ll lose all your changes.'
+    const modalsOpen = Object.assign({}, this.state.modalsOpen, { unload: true })
+
+    // modal will only render if user cancels unload using native dialog
+    this.setState({ modalsOpen })
+
+    e.returnValue = message
+
+    return message
+  }
+
+  // TODO: consider using a more robust object comparison strategy
+  hasUnpublishedChanges() {
+    const { provisional, published } = this.state
+
+    return JSON.stringify(provisional) !== JSON.stringify(published)
+  }
+
+  // cause profile strength counter to increment (gradually) and progress bar to widen
   setProgress(progress) {
     const strength = progress.provisional + progress.published
     let i = this.state.strength
 
+    // lots of state changes here, there may be a better way to increment counter
     const int = setInterval(() => {
       i += 1
 
@@ -244,8 +281,8 @@ class Profile extends Component {
   }
 
   render() {
-    const { emailForm, lastPublish, modalsOpen, phoneForm, progress, provisional, published, strength, userForm } = this.state;
-    const publishable = JSON.stringify(provisional) !== JSON.stringify(published)
+    const { emailForm, lastPublish, modalsOpen, phoneForm, progress, provisional, published, strength, userForm } = this.state
+    const publishable = this.hasUnpublishedChanges()
     const fullName = [provisional.firstName, provisional.lastName].join(' ').trim()
 
     return (
@@ -348,23 +385,6 @@ class Profile extends Component {
               {lastPublish && <p className="timelapse text-center">Last Published <Timelapse reference={lastPublish} /></p>}
             </div>
             <div className="col-12 col-lg-4">
-              {
-                /* 
-                  <div className="verification">
-                    {lastEdit && <h4>Last Edited</h4>}
-                    {lastEdit && <p><Timelapse reference={lastEdit} /></p>}
-                    <h4>Status</h4>
-                    <p className="status">
-                      <svg height="0.67rem" width="0.67rem">
-                        <circle cx="0.335rem" cy="0.335rem" r="0.335rem" className="unpublished" />
-                      </svg>Not published on Origin
-                    </p>
-                    <h4>Last published to Origin</h4>
-                    <p>March 15 @ 12:34pm</p>
-                    <div className="info icon-container" data-toggle="tooltip" title="You can edit your profile any time but you will need to publish for others to be able to see it."></div>
-                  </div>
-                */
-              }
               <div className="wallet">
                 <div className="d-flex">
                   <div className="image-container">

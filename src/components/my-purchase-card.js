@@ -11,7 +11,7 @@ class MyPurchaseCard extends Component {
 
   render() {
     const { listing } = this.props
-    const { _id, category, createdAt, fulfilledAt, quantity, receivedAt, soldAt, title } = listing
+    const { _id, category, createdAt, fulfilledAt, receivedAt, soldAt, title } = listing
     let date, step, verb
 
     if (receivedAt) {
