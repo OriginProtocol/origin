@@ -169,13 +169,13 @@ And buyers to:
 
  ## Tests
 
- When you begin developing, run `npm test` and keep it running while you develop.
-
- View test results in your browser at http://localhost:8081
+ Browser tests are automatically served at `http://localhost:8081` when you run `npm start`.
 
  Tests are automatically rerun when source or test code is changed.
 
  Run a subset of tests using the `grep` query string parameter, for example: http://localhost:8081/?grep=IpfsService
+
+ We also have contract unit tests that are not run in the browser. These can be run with `npm run test:contracts`.
 
  ## Documentation
 
