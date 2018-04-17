@@ -5,10 +5,8 @@
   "main": "./dist/index.js",
   "scripts": {
     "test": "webpack-dev-server --hot --config test/webpack.config.js",
-    "build:contracts": "npx truffle compile",
     "build:webpack": "webpack --config webpack.config.js",
-    "build": "npm run build:contracts && npm run build:webpack",
-    "build:watch": "npm run build:contracts && npm run build:webpack -- --watch",
+    "build": "npm run build:webpack",
     "format": "npx prettier --write test/*.js src/**.js",
     "prepare": "npm run build",
     "start": "node index.js"
@@ -54,7 +52,7 @@
     "node-watch": "^0.5.8",
     "prettier": "1.11.1",
     "sinon": "^2.4.1",
-    "truffle": "^4.1.3",
+    "truffle": "^4.1.6",
     "truffle-hdwallet-provider": "0.0.3",
     "web3": "^0.20.1",
     "webpack": "^3.4.1",

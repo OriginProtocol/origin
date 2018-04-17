@@ -26,7 +26,7 @@ const startGanache = () => {
 
 const deployContracts = () => {
   return new Promise((resolve, reject) => {
-    const truffleMigrate = spawn('../contracts/node_modules/.bin/truffle', ['migrate', '--reset', '--compile-all'], { cwd: '../contracts' })
+    const truffleMigrate = spawn('./node_modules/.bin/truffle', ['migrate', '--reset', '--compile-all'], { cwd: './contracts' })
     truffleMigrate.stdout.pipe(process.stdout)
     truffleMigrate.stderr.pipe(process.stderr)
 
@@ -46,7 +46,7 @@ async function start() {
   await deployContracts()
 
   // watch contracts
-  watch('../contracts/contracts', { recursive: true }, (evt, name) => {
+  watch('./contracts/contracts', { recursive: true }, (evt, name) => {
     console.log('%s changed.', name)
     deployContracts()
   })
