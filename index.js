@@ -10,12 +10,12 @@ const shouldWatch = (args.length && args[0] === 'serve')
 const startGanache = () => {
   return new Promise((resolve, reject) => {
     var server = Ganache.server({
-      total_accounts: 5,
-      default_balance_ether: 20,
+      total_accounts: 10,
+      default_balance_ether: 100,
       network_id: 999,
       seed: 123,
-      blocktime: 3,
-      mnemonic: 'rubber negative firm purity helmet barely six asset imitate nephew october pluck'
+      blocktime: 0,
+      mnemonic: 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'
     })
     server.listen(9545, err => {
       if (err) {
