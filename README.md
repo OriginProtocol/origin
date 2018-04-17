@@ -108,18 +108,39 @@ And buyers to:
  ```
  import Origin from '@originprotocol/origin'
 
- let { contractService, ipfsService, originService } = new Origin()
+ let configOptions = {}
+
+ let { contractService, ipfsService, originService } = new Origin(configOptions)
  ```
+
+ ## Configuration Options
+
+ Config options are passed into the Origin constructor at instantiation.
+
+ ```
+ let configOptions = {
+   option: 'value'
+ }
+ let origin = new Origin(configOptions)
+ ```
+
+ Valid options:
+ - `ipfsDomain`
+ - `ipfsApiPort`
+ - `ipfsGatewayPort`
+ - `ipfsGatewayProtocol`
 
  ## IPFS
 
- If you are running a local IPFS daemon then set the following environment variables:
+ If you are running a local IPFS daemon then set the following config options ([see config options](#configuration-options)):
 
  ```
- export IPFS_DOMAIN=127.0.0.1
- export IPFS_API_PORT=5001
- export IPFS_GATEWAY_PORT=8080
- export IPFS_GATEWAY_PROTOCOL=http
+ {
+   ipfsDomain: '127.0.0.1',
+   ipfsApiPort: '5001',
+   ipfsGatewayPort: '8080',
+   ipfsGatewayProtocol: 'http'
+ }
  ```
 
  Configure your local IPFS daemon with the following settings to avoid CORS errors:
