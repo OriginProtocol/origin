@@ -106,7 +106,9 @@ And buyers to:
  ## Import
 
  ```
- import { contractService, ipfsService, originService } from '@originprotocol/origin'
+ import Origin from '@originprotocol/origin'
+
+ let { contractService, ipfsService, originService } = new Origin()
  ```
 
  ## IPFS
@@ -148,7 +150,7 @@ And buyers to:
 
  When you begin developing, run `npm test` and keep it running while you develop.
 
- View test results in your browser (with MetaMask installed and setup) at http://localhost:8081
+ View test results in your browser at http://localhost:8081
 
  Tests are automatically rerun when source or test code is changed.
 
