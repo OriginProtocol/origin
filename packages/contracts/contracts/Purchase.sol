@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity 0.4.21;
 
 /// @title Purchase
 /// @dev An purchase Origin Listing representing a purchase/booking
@@ -70,7 +70,7 @@ contract Purchase {
     buyer = _buyer;
     listingContract = Listing(_listingContractAddress);
     created = now;
-    PurchaseChange(internalStage);
+    emit PurchaseChange(internalStage);
   }
 
   function data()
@@ -88,10 +88,10 @@ contract Purchase {
   payable
   atStage(Stages.AWAITING_PAYMENT)
   {
-    if (this.balance >= listingContract.price()) {
+    if (address(this).balance >= listingContract.price()) {
       // Buyer (or their proxy) has paid enough to cover purchase
       internalStage = Stages.SHIPPING_PENDING;
-      PurchaseChange(internalStage);
+      emit PurchaseChange(internalStage);
     }
     // Possible that nothing happens, and contract just accumulates sent value
   }
@@ -116,7 +116,7 @@ contract Purchase {
   {
       internalStage = Stages.BUYER_PENDING;
       buyerTimout = now + 21 days;
-      PurchaseChange(internalStage);
+      emit PurchaseChange(internalStage);
   }
 
   function buyerConfirmReceipt()
@@ -125,7 +125,7 @@ contract Purchase {
   atStage(Stages.BUYER_PENDING)
   {
       internalStage = Stages.SELLER_PENDING;
-      PurchaseChange(internalStage);
+      emit PurchaseChange(internalStage);
   }
 
   function sellerCollectPayout()
@@ -134,12 +134,12 @@ contract Purchase {
   atStage(Stages.SELLER_PENDING)
   {
     internalStage = Stages.COMPLETE;
-    PurchaseChange(internalStage);
+    emit PurchaseChange(internalStage);
 
     // Send contract funds to seller (ie owner of Listing)
     // Transfering money always needs to be the last thing we do, do avoid
     // rentrancy bugs. (Though here the seller would just be getting their own money)
-    listingContract.owner().transfer(this.balance);
+    listingContract.owner().transfer(address(this).balance);
   }
 
   function openDispute()
@@ -158,7 +158,7 @@ contract Purchase {
     );
 
     internalStage = Stages.IN_DISPUTE;
-    PurchaseChange(internalStage);
+    emit PurchaseChange(internalStage);
 
     // TODO: Create a dispute contract?
     // Right now there's no way to exit this state.

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity 0.4.21;
 
 /// @title Listing
 /// @dev Used to keep marketplace of listings for buyers and sellers
@@ -97,7 +97,7 @@ contract ListingsRegistry {
     returns (uint)
   {
     listings.push(new Listing(msg.sender, _ipfsHash, _price, _unitsAvailable));
-    NewListing(listings.length-1);
+    emit NewListing(listings.length-1);
     return listings.length;
   }
 

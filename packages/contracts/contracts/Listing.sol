@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity 0.4.21;
 
 /// @title Listing
 /// @dev An indiviual Origin Listing representing an offer for booking/purchase
@@ -85,8 +85,8 @@ contract Listing {
     // TODO STAN: How to call function *AND* transfer value??
     purchaseContract.pay.value(msg.value)();
 
-    ListingPurchased(purchaseContract);
-    ListingChange();
+    emit ListingPurchased(purchaseContract);
+    emit ListingChange();
   }
 
   /// @dev close(): Allows a seller to close the listing from further purchases
@@ -95,7 +95,7 @@ contract Listing {
     isSeller
   {
     unitsAvailable = 0;
-    ListingChange();
+    emit ListingChange();
   }
 
   /// @dev purchasesLength(): Return number of listings
