@@ -103,7 +103,7 @@ candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
 ```
 This is the default seed phrase for truffle development.
 
-- Click where it says "Ethereum Main Network", select "Custom RPC" and enter `http://localhost:9545/`. Click the back arrow to return to your account.
+- Click where it says "Ethereum Main Network" and select "Localhost 8545". Click the back arrow to return to your account.
 
  **Be careful not to mix up your test wallet with your real one on the Main Network.**
 
