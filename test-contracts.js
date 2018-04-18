@@ -1,6 +1,8 @@
 const spawn = require('child_process').spawn
 const Ganache = require('ganache-core')
 
+const PORT = 8545
+
 const startGanache = () => {
   return new Promise((resolve, reject) => {
     var server = Ganache.server({
@@ -11,11 +13,11 @@ const startGanache = () => {
       blocktime: 0,
       mnemonic: 'rubber negative firm purity helmet barely six asset imitate nephew october pluck'
     })
-    server.listen(9545, err => {
+    server.listen(PORT, err => {
       if (err) {
         return reject(err)
       }
-      console.log('Ganache listening.')
+      console.log(`Ganache listening on port ${PORT}`)
       resolve()
     })
   })

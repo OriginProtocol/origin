@@ -15,7 +15,7 @@ describe("ContractService", function() {
   let contractService
 
   before(async () => {
-    let provider = new Web3.providers.HttpProvider("http://localhost:9545")
+    let provider = new Web3.providers.HttpProvider("http://localhost:8545")
     let web3 = new Web3(provider)
     contractService = new ContractService({ web3 })
 
