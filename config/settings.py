@@ -33,3 +33,9 @@ STATIC_ROOT = os.path.join(PROJECTPATH, 'static')
 TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
 TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
 TWILIO_NUMBER = os.environ.get('TWILIO_NUMBER')
+
+RPC_SERVER = os.environ.get('RPC_SERVER')
+RPC_PROTOCOL = os.environ.get('RPC_PROTOCOL')
+
+IPFS_DOMAIN = os.environ.get('IPFS_DOMAIN')
+IPFS_PORT = os.environ.get('IPFS_PORT')

@@ -63,6 +63,10 @@ build_webpack/
 
 # Python
 *.pyc
+ve
 
 # Mac OS
 .DS_Store
+
+#celery
+celerybeat-schedule
