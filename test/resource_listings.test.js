@@ -16,7 +16,12 @@ describe("Listing Resource", function() {
     let provider = new Web3.providers.HttpProvider("http://localhost:8545")
     let web3 = new Web3(provider)
     contractService = new ContractService({ web3 })
-    ipfsService = new IpfsService()
+    ipfsService = new IpfsService({
+      ipfsDomain: '127.0.0.1',
+      ipfsApiPort: '5001',
+      ipfsGatewayPort: '8080',
+      ipfsGatewayProtocol: 'http'
+    })
     listings = new Listings({ contractService, ipfsService })
     testListingIds = await contractService.getAllListingIds()
 
