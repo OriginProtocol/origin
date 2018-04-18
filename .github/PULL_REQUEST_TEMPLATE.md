@@ -2,10 +2,8 @@ First pull request? Read our [guide to contributing](http://docs.originprotocol.
 
 ### Checklist:
 
-- [ ] Code contains relevant tests for the problem you are solving
-- [ ] Ensure all new and existing tests pass
+- [ ] Test your work and double check you didn't break anything
 - [ ] Update any relevant READMEs and [docs](https://github.com/OriginProtocol/docs)
-- [ ] Submit to the `develop` branch instead of `master`
 
 ### Description:
 
