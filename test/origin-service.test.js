@@ -2,6 +2,7 @@ import { expect } from "chai"
 import ContractService from "../src/contract-service"
 import IpfsService from "../src/ipfs-service"
 import OriginService from "../src/origin-service"
+import Web3 from "web3"
 
 const methodNames = ["submitListing"]
 

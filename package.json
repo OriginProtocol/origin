@@ -4,8 +4,7 @@
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
-    "test:contracts": "node test-contracts.js",
-    "test": "webpack-dev-server --hot --config test/webpack.config.js",
+    "test": "node test.js",
     "build": "node index.js",
     "format": "npx prettier --write test/*.js src/**.js",
     "prepare": "npm run build",
