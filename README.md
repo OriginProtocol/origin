@@ -8,8 +8,7 @@ Origin Protocol is a library of javascript code and Ethereum smart contracts whi
 
 Please refer to our [product brief](https://www.originprotocol.com/product-brief) and [technical whitepaper](https://www.originprotocol.com/whitepaper) for more detail.
 
- - [README for Javascript code](https://github.com/OriginProtocol/platform/tree/master/packages/origin.js)
- - [README for Ethereum contracts](https://github.com/OriginProtocol/platform/tree/master/packages/contracts)
+ - [README for Javascript code](#originjs-documentation)
 
 ## Follow our progress and get involved
 
@@ -31,11 +30,6 @@ This repo is under active development. We welcome your participation!
 
 # What we're building
 
-The main components of this repo are:
-
- - [Origin.js](/packages/origin.js/)
- - [Ethereum smart contracts](/packages/contracts/)
- 
 This library is an abstraction layer for developers who want to build DApps on Origin Protocol, and is also used to build the [Origin Demo DApp](https://github.com/OriginProtocol/demo-dapp).
 
 The library will make it easy for sellers to do things like:
@@ -51,4 +45,129 @@ And buyers to:
  - Create bookings
  - Update bookings
  - Cancel bookings
- 
+
+ # origin.js Documentation
+
+ ## Introduction
+
+ Welcome to the origin.js documentation! origin.js is a Javascript library for interacting with the Origin protocol.
+
+ Using the library you can create new listings from your applications, purchase them, or update them from your own off-chain applications.
+
+ ### Warning
+ This is still an alpha version which will evolve significantly before the main net release.
+
+ ## Using origin.js in your project
+
+ ### Plain javascript
+
+ A browser-compatible plain javascript file `origin.js` is available in the "Releases" tab, and will soon be hosted on originprotocol.com. It can be generated locally via `npm build` and will be placed in `dist/origin.js`.
+
+ ## Install
+
+ ### NPM
+ ```
+ npm install @originprotocol/origin --save
+ ```
+
+ ### Yarn
+ ```
+ yarn add @originprotocol/origin
+ ```
+
+ ### Local
+
+1. Clone
+```
+git clone https://github.com/OriginProtocol/platform origin-platform && cd origin-platform
+```
+
+2. Setup (shortcut for `npm install && npm link`). Linking makes this available as a local npm package for local dapp development.
+ ```
+ npm run setup
+ ```
+
+3. Start the localblockchain and create the build. Code changes will trigger a live rebuild.
+ ```
+ npm start
+ ```
+
+ 4. To develop against a working dapp and UI, see [the instructions in our demo dapp](https://github.com/OriginProtocol/demo-dapp#developing-with-a-local-chain).
+
+ ## Import
+
+ ```
+ import Origin from '@originprotocol/origin'
+
+ let configOptions = {}
+
+ let { contractService, ipfsService, originService } = new Origin(configOptions)
+ ```
+
+ ## Configuration Options
+
+ Config options are passed into the Origin constructor at instantiation.
+
+ ```
+ let configOptions = {
+   option: 'value'
+ }
+ let origin = new Origin(configOptions)
+ ```
+
+ Valid options:
+ - `ipfsDomain`
+ - `ipfsApiPort`
+ - `ipfsGatewayPort`
+ - `ipfsGatewayProtocol`
+
+ ## IPFS
+
+ If you are running a local IPFS daemon then set the following config options ([see config options](#configuration-options)):
+
+ ```
+ {
+   ipfsDomain: '127.0.0.1',
+   ipfsApiPort: '5001',
+   ipfsGatewayPort: '8080',
+   ipfsGatewayProtocol: 'http'
+ }
+ ```
+
+ Configure your local IPFS daemon with the following settings to avoid CORS errors:
+
+ ```
+ ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["localhost:*"]'
+ ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["GET", "POST", "PUT"]'
+ ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials '["true"]'
+ ```
+
+ ## Troubleshooting
+
+ ### Python 3
+
+ If you have Python 3 installed, you may see this error when installing dependencies:
+
+ ```
+ gyp ERR! stack Error: Python executable "/Users/aiham/.pyenv/shims/python" is v3.6.4, which is not supported by gyp.
+ ```
+
+ Resolve this by configuring npm to use Python 2 (where python2.7 is a binary accessible from your $PATH):
+
+ ```
+ npm config set python python2.7
+ ```
+
+ ## Tests
+
+ Browser tests are automatically served at `http://localhost:8081` when you run `npm start`.
+
+ Tests are automatically rerun when source or test code is changed.
+
+ Run a subset of tests using the `grep` query string parameter, for example: http://localhost:8081/?grep=IpfsService
+
+ We also have contract unit tests that are not run in the browser. These can be run with `npm run test:contracts` (you should *not* have the server running at this time, as these tests start their own local blockchain instance).
+
+ ## Documentation
+
+ Needed

@@ -9,19 +9,14 @@ const MapCache = require("map-cache")
 const promisify = require("util.promisify")
 
 class IpfsService {
-  constructor() {
-    // If connecting to a local IPFS daemon, set envionment variables:
-    // IPFS_DOMAIN = 127.0.0.1
-    // IPFS_API_PORT = 5001
-    // IPFS_GATEWAY_PORT = 8080
-    // IPFS_GATEWAY_PROTOCOL = http
-    this.ipfsDomain = process.env.IPFS_DOMAIN || "gateway.originprotocol.com"
-    this.ipfsApiPort = process.env.IPFS_API_PORT || "5002"
-    this.ipfsGatewayPort = process.env.IPFS_GATEWAY_PORT || ""
-    this.ipfsProtocol = process.env.IPFS_GATEWAY_PROTOCOL || "https"
+  constructor({ ipfsDomain, ipfsApiPort, ipfsGatewayPort, ipfsGatewayProtocol } = {}) {
+    this.ipfsDomain = ipfsDomain || "gateway.originprotocol.com"
+    this.ipfsApiPort = ipfsApiPort || "5002"
+    this.ipfsGatewayPort = ipfsGatewayPort || ""
+    this.ipfsGatewayProtocol = ipfsGatewayProtocol || "https"
 
     this.ipfs = ipfsAPI(this.ipfsDomain, this.ipfsApiPort, {
-      protocol: this.ipfsProtocol
+      protocol: this.ipfsGatewayProtocol
     })
     this.ipfs.swarm.peers(function(error, response) {
       if (error) {
@@ -99,13 +94,13 @@ class IpfsService {
   }
 
   gatewayUrlForHash(ipfsHashStr) {
-    const defaultPort = this.ipfsProtocol === "https" ? "443" : "80"
+    const defaultPort = this.ipfsGatewayProtocol === "https" ? "443" : "80"
     let port = String(this.ipfsGatewayPort)
     if (port.length > 0 && port !== defaultPort) {
       port = `:${port}`
     }
     return (
-      `${this.ipfsProtocol}://${this.ipfsDomain}${port}` +
+      `${this.ipfsGatewayProtocol}://${this.ipfsDomain}${port}` +
       `/ipfs/${ipfsHashStr}`
     )
   }
