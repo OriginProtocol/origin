@@ -82,9 +82,9 @@ And buyers to:
 git clone https://github.com/OriginProtocol/platform origin-platform && cd origin-platform
 ```
 
-2. Setup (shortcut for `npm install && npm link`). Linking makes this available as a local npm package for local dapp development.
+2. Install:dev (shortcut for `npm install && npm link`). Linking makes this available as a local npm package for local dapp development.
  ```
- npm run setup
+ npm run install:dev
  ```
 
 3. Start the localblockchain and create the build. Code changes will trigger a live rebuild.

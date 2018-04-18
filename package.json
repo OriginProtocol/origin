@@ -9,7 +9,7 @@
     "build": "node index.js",
     "format": "npx prettier --write test/*.js src/**.js",
     "prepare": "npm run build",
-    "setup": "npm install && npm link",
+    "install:dev": "npm install && npm link",
     "start": "node index.js serve"
   },
   "files": [
