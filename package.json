@@ -1,6 +1,6 @@
 {
-  "name": "@originprotocol/origin",
-  "version": "0.2.60",
+  "name": "origin",
+  "version": "0.5.7",
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/OriginProtocol/platform"
+    "url": "https://github.com/OriginProtocol/origin-js"
   },
   "author": "Stan James <stan@originprotocol.com>",
   "license": "MIT",
