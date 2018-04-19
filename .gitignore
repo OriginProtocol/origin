@@ -64,3 +64,8 @@ build_webpack/
 
 # Mac OS
 .DS_Store
+
+
+#Webstorm IDE
+.idea
+/.idea
