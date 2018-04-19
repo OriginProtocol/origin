@@ -9,7 +9,7 @@ const webpackConfig = require('../webpack.config.js')
 const args = process.argv.slice(2)
 const shouldWatch = (args.length && args[0] === 'serve')
 
-async function start() {
+const start = async () => {
   let compiler = webpack(webpackConfig)
 
   if (shouldWatch) {
