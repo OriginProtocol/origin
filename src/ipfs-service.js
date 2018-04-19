@@ -9,7 +9,12 @@ const MapCache = require("map-cache")
 const promisify = require("util.promisify")
 
 class IpfsService {
-  constructor({ ipfsDomain, ipfsApiPort, ipfsGatewayPort, ipfsGatewayProtocol } = {}) {
+  constructor({
+    ipfsDomain,
+    ipfsApiPort,
+    ipfsGatewayPort,
+    ipfsGatewayProtocol
+  } = {}) {
     this.ipfsDomain = ipfsDomain || "gateway.originprotocol.com"
     this.ipfsApiPort = ipfsApiPort || "5002"
     this.ipfsGatewayPort = ipfsGatewayPort || ""

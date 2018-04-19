@@ -8,9 +8,19 @@ var resources = {
 }
 
 class Origin {
-  constructor({ ipfsDomain, ipfsApiPort, ipfsGatewayPort, ipfsGatewayProtocol } = {}) {
+  constructor({
+    ipfsDomain,
+    ipfsApiPort,
+    ipfsGatewayPort,
+    ipfsGatewayProtocol
+  } = {}) {
     this.contractService = new ContractService()
-    this.ipfsService = new IpfsService({ ipfsDomain, ipfsApiPort, ipfsGatewayPort, ipfsGatewayProtocol })
+    this.ipfsService = new IpfsService({
+      ipfsDomain,
+      ipfsApiPort,
+      ipfsGatewayPort,
+      ipfsGatewayProtocol
+    })
 
     // TODO: This service is deprecated. Remove once the demo dapp no longer
     // depends on it.
