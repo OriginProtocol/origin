@@ -6,7 +6,7 @@ import Review from './review'
 import TransactionProgress from './transaction-progress'
 import data from '../data'
 
-import origin from '@originprotocol/origin' 
+import origin from '../services/origin' 
 
 // step 0 was creating the listing
 // nextSteps[0] equates to step 1, etc

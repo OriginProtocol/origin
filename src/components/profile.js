@@ -216,7 +216,7 @@ class Profile extends Component {
     const { modal } = e.currentTarget.dataset
 
     /*
-      We currently ignore the click if the idenity has been verified.
+      We currently ignore the click if the identity has been verified.
       TODO: Allow provisional validations to be reviewed and/or
       undone individually before publishing to the blockchain.
     */
