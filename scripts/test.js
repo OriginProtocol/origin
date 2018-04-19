@@ -15,14 +15,16 @@ const start = async () => {
     await testJavascript()
     await testFormat()
     console.log('Tests passed. :)')
+    daemon.kill()
+    process.exit()
   }
   catch(error) {
-    console.log(`Tests failed.\n\n${error}`)
+    console.error(`Tests failed.\n\n${error}`)
+    if (daemon) {
+      daemon.kill()
+    }
+    process.exit(1)
   }
-  if (daemon) {
-    daemon.kill()
-  }
-  process.exit()
 }
 
 start()
