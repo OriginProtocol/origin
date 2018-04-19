@@ -160,13 +160,21 @@ git clone https://github.com/OriginProtocol/platform origin-platform && cd origi
 
  ## Tests
 
- Browser tests are automatically served at `http://localhost:8081` when you run `npm start`.
+ ### Command Line Tests
 
- Tests are automatically rerun when source or test code is changed.
+Our full test suite can be run with:
 
- Run a subset of tests using the `grep` query string parameter, for example: http://localhost:8081/?grep=IpfsService
+ ```
+ npm run test
+ ```
 
- We also have contract unit tests that are not run in the browser. These can be run with `npm run test:contracts` (you should *not* have the server running at this time, as these tests start their own local blockchain instance).
+ Note: you should *not* have the server running at this time, as these tests start their own local blockchain instance.
+
+ ### Browser Tests
+
+ A subset of our tests can be run from the browser. These tests are automatically served at `http://localhost:8081` when you run `npm start`. These tests are automatically rerun when source or test code is changed.
+
+ Run a subset of these tests using the `grep` query string parameter, for example: http://localhost:8081/?grep=IpfsService
 
  ## Documentation
 
