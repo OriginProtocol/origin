@@ -2,6 +2,9 @@
   "name": "@originprotocol/origin",
   "version": "0.2.60",
   "description": "",
+  "engines": {
+    "node": "9.11.1"
+  },
   "main": "./dist/index.js",
   "scripts": {
     "test": "node scripts/test.js",
