@@ -4,12 +4,10 @@ const testContracts = () => {
   return new Promise((resolve, reject) => {
     const truffleTest = spawn('../node_modules/.bin/truffle', ['test'], { cwd: './contracts' })
     truffleTest.stdout.pipe(process.stdout)
-    truffleTest.stderr.pipe(process.stderr)
-
+    truffleTest.stderr.on('data', data => {
+      reject(String(data))
+    })
     truffleTest.on('exit', code => {
-      if (code !== 0) {
-        return reject()
-      }
       resolve()
     })
   })
