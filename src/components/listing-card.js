@@ -4,6 +4,10 @@ import { Link } from 'react-router-dom'
 // temporary - we should be getting an origin instance from our app,
 // not using a global singleton
 import origin from '../services/origin'
+global.fetch = require('node-fetch')
+const cc = require('cryptocompare')
+
+const targetCurrencyCode = 'ETH';
 
 class ListingCard extends Component {
 
@@ -11,6 +15,14 @@ class ListingCard extends Component {
     super(props)
     this.state = {
       loading: true,
+      category: "Loading...",
+      name: "Loading...",
+      price: "Loading...",
+      approxPrice: "Loading...",
+      currencyCode: "USD",
+      ipfsHash: null,
+      lister: null,
+      unitsAvailable: null
     }
   }
 
@@ -18,11 +30,21 @@ class ListingCard extends Component {
     try {
       const listing = await origin.listings.getByIndex(this.props.listingId)
       const obj = Object.assign({}, listing, { loading: false })
-
       this.setState(obj)
+      this.retrieveConversion()
     } catch (error) {
       console.error(`Error fetching contract or IPFS info for listingId: ${this.props.listingId}`)
     }
+  }
+
+  retrieveConversion(currencyCode){
+    const desiredCurrencyCode = currencyCode ? currencyCode : this.state.currencyCode
+    return new Promise((resolve, reject) => {
+      cc.price(targetCurrencyCode, [desiredCurrencyCode]).then(prices => {
+        resolve(this.setState({ approxPrice: prices[desiredCurrencyCode] * this.state.price }));
+      })
+      .catch(console.error)
+    });
   }
 
   render() {
@@ -43,6 +65,9 @@ class ListingCard extends Component {
             {this.state.unitsAvailable===0 &&
               <span className="sold-banner">Sold</span>
             }
+          </p>
+          <p className="price approxPrice">
+            (~{Number(this.state.approxPrice).toLocaleString(undefined, {minimumFractionDigits: 0})} {this.state.currencyCode})
           </p>
         </Link>
       </div>
