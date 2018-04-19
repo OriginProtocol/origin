@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { userRegistryService } from '@originprotocol/origin'
+import { userRegistryService } from 'origin'
 
 const alertify = require('../../node_modules/alertify/src/alertify.js')
 

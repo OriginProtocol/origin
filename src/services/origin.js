@@ -1,4 +1,4 @@
-import Origin from '@originprotocol/origin'
+import Origin from 'origin'
 
 let config = {}
 

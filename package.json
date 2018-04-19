@@ -46,7 +46,7 @@
     "whatwg-fetch": "1.0.0"
   },
   "dependencies": {
-    "@originprotocol/origin": "^0.2.50",
+    "origin": "0.5.7",
     "ajv": "^4.11.7",
     "alertify": "github:OriginProtocol/alertify.js#webpack_friendly",
     "babel-polyfill": "^6.26.0",
@@ -69,7 +69,7 @@
     "webcrypto-shim": "^0.1.3"
   },
   "scripts": {
-    "install:dev": "npm install && npm link @originprotocol/origin",
+    "install:dev": "npm install && npm link origin",
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
