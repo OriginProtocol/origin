@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
-import contractService from '../services/contract-service'
-import ipfsService from '../services/ipfs-service'
 
-import Overlay from './overlay'
+import Modal from './modal'
+
+// temporary - we should be getting an origin instance from our app,
+// not using a global singleton
+import origin from '../services/origin' 
 
 const alertify = require('../../node_modules/alertify/src/alertify.js')
 
@@ -22,8 +24,9 @@ class ListingsDetail extends Component {
       category: "Loading...",
       name: "Loading...",
       price: "Loading...",
+      address: null,
       ipfsHash: null,
-      lister: null,
+      sellerAddress: null,
       unitsAvailable: null,
       pictures: [],
       step: this.STEP.VIEW,
@@ -32,20 +35,14 @@ class ListingsDetail extends Component {
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
   }
 
-  loadListing() {
-    contractService.getListing(this.props.listingId)
-    .then((listingContractObject) => {
-      this.setState(listingContractObject)
-      return ipfsService.getListing(this.state.ipfsHash)
-    })
-    .then((listingJson) => {
-      const jsonData = JSON.parse(listingJson).data
-      this.setState(jsonData)
-    })
-    .catch((error) => {
+  async loadListing() {
+    try {
+      const listing = await origin.listings.getByIndex(this.props.listingId)
+      this.setState(listing)
+    } catch (error) {
       alertify.log('There was an error loading this listing.')
       console.error(`Error fetching contract or IPFS info for listingId: ${this.props.listingId}`)
-    })
+    }
   }
 
   componentWillMount() {
@@ -59,24 +56,21 @@ class ListingsDetail extends Component {
     }
   }
 
-  handleBuyClicked() {
+  async handleBuyClicked() {
     const unitsToBuy = 1
     const totalPrice = (unitsToBuy * this.state.price)
     this.setState({step: this.STEP.METAMASK})
-    contractService.buyListing(this.props.listingId, unitsToBuy, totalPrice)
-    .then((transactionReceipt) => {
+    try {
+      const transactionReceipt = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice)
       console.log("Purchase request sent.")
       this.setState({step: this.STEP.PROCESSING})
-      return contractService.waitTransactionFinished(transactionReceipt.tx)
-    })
-    .then((blockNumber) => {
+      const blockNumber = await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
       this.setState({step: this.STEP.PURCHASED})
-    })
-    .catch((error) => {
+    } catch (error) {
       console.log(error)
       alertify.log("There was a problem purchasing this listing.\nSee the console for more details.")
       this.setState({step: this.STEP.VIEW})
-    })
+    }
   }
 
 
@@ -85,24 +79,33 @@ class ListingsDetail extends Component {
     return (
       <div className="listing-detail">
         {this.state.step===this.STEP.METAMASK &&
-          <Overlay imageUrl="/images/spinner-animation.svg">
+          <Modal backdrop="static" isOpen={true}>
+            <div className="image-container">
+              <img src="/images/spinner-animation.svg" role="presentation"/>
+            </div>
             Confirm transaction<br />
             Press &ldquo;Submit&rdquo; in MetaMask window
-          </Overlay>
+          </Modal>
         }
         {this.state.step===this.STEP.PROCESSING &&
-          <Overlay imageUrl="/images/spinner-animation.svg">
+          <Modal backdrop="static" isOpen={true}>
+            <div className="image-container">
+              <img src="/images/spinner-animation.svg" role="presentation"/>
+            </div>
             Processing your purchase<br />
             Please stand by...
-          </Overlay>
+          </Modal>
         }
         {this.state.step===this.STEP.PURCHASED &&
-          <Overlay imageUrl="/images/circular-check-button.svg">
+          <Modal backdrop="static" isOpen={true}>
+            <div className="image-container">
+              <img src="/images/circular-check-button.svg" role="presentation"/>
+            </div>
             Purchase was successful.<br />
             <a href="#" onClick={()=>window.location.reload()}>
               Reload page
             </a>
-          </Overlay>
+          </Modal>
         }
         {this.state.pictures &&
           <div className="carousel">
@@ -121,14 +124,14 @@ class ListingsDetail extends Component {
               <div className="category">{this.state.category}</div>
               <div className="title">{this.state.name}</div>
               <div className="description">{this.state.description}</div>
-              <div className="category">Creator</div>
-              <div className="description">{this.state.lister}</div>
-              <a href={ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
+              <div className="category">Seller</div>
+              <div className="description">{this.state.sellerAddress}</div>
+              <a href={origin.ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
                 View on IPFS <big>&rsaquo;</big>
               </a>
               <div className="debug">
                 <li>IPFS: {this.state.ipfsHash}</li>
-                <li>Lister: {this.state.lister}</li>
+                <li>Seller: {this.state.sellerAddress}</li>
                 <li>Units: {this.state.unitsAvailable}</li>
               </div>
             </div>
