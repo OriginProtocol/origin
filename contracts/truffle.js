@@ -45,6 +45,7 @@ if (process.env.ROPSTEN_MNEMONIC) {
         process.env.ROPSTEN_MNEMONIC,
         `https://ropsten.infura.io/${process.env.INFURA_ACCESS_TOKEN}`)
     },
+    gas: 3712388,
     network_id: 3
   }
 }
