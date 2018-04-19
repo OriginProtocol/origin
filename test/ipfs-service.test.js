@@ -15,7 +15,7 @@ describe("IpfsService", () => {
   beforeEach(() => {
     ipfsService = new IpfsService({
       ipfsDomain: '127.0.0.1',
-      ipfsApiPort: '5001',
+      ipfsApiPort: '5002',
       ipfsGatewayPort: '8080',
       ipfsGatewayProtocol: 'http'
     })
