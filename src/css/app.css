@@ -331,6 +331,21 @@ a:hover {
   background-color: var(--dark);
 }
 
+.listing-card .approxPrice {
+  font-size: 0.75em;
+}
+
+.listing-container .buy-box button {
+  height: 50px;
+  width: 100%;
+  margin-top: 35px;
+  border-radius: 30px;
+  background-color: var(--clear-blue);
+  border: solid 1px var(--clear-blue);
+  color: white;
+  font-weight: 700;
+}
+
 .navbar .notifications .triangle {
   background-color: white;
 }
