@@ -9,8 +9,8 @@ First pull request? Read our [guide to contributing](http://docs.originprotocol.
 
 ### Description:
 
-Please explain the changes you made here:
+Please explain the changes in this PR:
 
-- A description of the problem you're trying to solve
-- An overview of the suggested solution
-- If the feature changes current behavior, reasons why your solution is better
+- Description of the problem being solved
+- Overview of the suggested solution
+- If the feature changes current behavior, reasons why this solution is better
