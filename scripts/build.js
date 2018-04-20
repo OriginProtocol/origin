@@ -1,6 +1,7 @@
 const startGanache = require('./start-ganache')
 const buildContracts = require('./build-contracts')
 const deployContracts = require('./deploy-contracts')
+const startIpfs = require('./start-ipfs')
 const startTestServer = require('./start-test-server')
 const watch = require('node-watch')
 const webpack = require('webpack')
@@ -15,6 +16,7 @@ const start = async () => {
   if (shouldWatch) {
     await startGanache()
     await deployContracts()
+    await startIpfs()
 
     // watch contracts
     watch('./contracts/contracts', { recursive: true }, (evt, name) => {
