@@ -8,6 +8,7 @@
   "main": "./dist/index.js",
   "scripts": {
     "test": "node scripts/_test.js",
+    "test:contracts": "node scripts/_test-contracts.js",
     "build": "node scripts/_build.js",
     "format": "npx prettier --write test/*.js src/**.js",
     "prepare": "npm run build",
