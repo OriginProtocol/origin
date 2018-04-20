@@ -16,6 +16,11 @@ class NavBar extends Component {
   }
 
   render() {
+    // randomly select from three examples
+    const exampleCounts = [4, 44, 444][Math.floor(Math.random() * 3)]
+    // avoid integers greater than two digits
+    const notificationCount = exampleCounts < 100 ? Number(exampleCounts).toLocaleString() : `${Number(99).toLocaleString()}+`
+
     return (
       <nav className="navbar navbar-expand-lg navbar-dark">
         <div className="container">
@@ -24,9 +29,7 @@ class NavBar extends Component {
           </button>
           <Link to="/" className="navbar-brand mr-auto mr-lg-3">
             <div className="logo-container">
-              <img src="/images/origin-logo.png"
-                srcSet="/images/origin-logo@2x.png 2x, /images/origin-logo@3x.png 3x"
-                className="origin-logo" alt="Origin Protocol" />
+              <img src="/images/origin-logo.svg" className="origin-logo" alt="Origin Protocol" />
             </div>
           </Link>
           <div className="collapse navbar-collapse order-2 order-lg-1" id="navbarSupportedContent">
@@ -34,8 +37,18 @@ class NavBar extends Component {
               <input className="form-control mr-sm-2" type="search" placeholder="Search Listings" aria-label="Search" onChange={this.handleChange} value={this.state.searchQuery} />
             </form>
             <div className="navbar-nav justify-content-end">
-              <Link to="/my-purchases" className="nav-item nav-link">My Purchases</Link>
-              <Link to="/my-listings" className="nav-item nav-link">My Listings</Link>
+              <Link to="/my-purchases" className="nav-item nav-link">Buy</Link>
+              <div className="sell dropdown">
+                <a className="dropdown-toggle nav-item nav-link" id="sellDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sell</a>
+                <div className="dropdown-menu dropdown-menu-right" aria-labelledby="sellDropdown">
+                  <div className="triangle-container d-none d-lg-flex justify-content-end"><div className="triangle"></div></div>
+                  <div className="actual-menu">
+                    <Link to="/my-listings" className="dropdown-item">My Listings</Link>
+                    <Link to="/my-sales" className="dropdown-item">My Sales</Link>
+                    <Link to="/create" className="dropdown-item d-none d-lg-block">Add a Listing</Link>
+                  </div>
+                </div>
+              </div>
               <Link to="/create" className="nav-item nav-link"><img src="/images/add-listing-icon.svg" alt="Add Listing" className="add-listing" />Add Listing</Link>
             </div>
           </div>
@@ -47,10 +60,12 @@ class NavBar extends Component {
                 <img src="/images/alerts-icon-selected.svg" className="notifications selected" alt="Notifications" />
               </a>
               <div className="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsDropdown">
-                <div className="triangle-container"><div className="triangle"></div></div>
+                <div className="triangle-container d-flex justify-content-end"><div className="triangle"></div></div>
                 <div className="actual-menu">
                   <header className="d-flex">
-                    <div className="count"><p>4</p></div>
+                    <div className="count">
+                      <p className="d-inline-block">{notificationCount}</p>
+                    </div>
                     <h3>Notifications</h3>
                   </header>
                   <div className="notifications-list">
@@ -71,7 +86,7 @@ class NavBar extends Component {
                   className="identicon" alt="Identicon" />
               </a>
               <div className="dropdown-menu dropdown-menu-right" aria-labelledby="identityDropdown">
-                <div className="triangle-container"><div className="triangle"></div></div>
+                <div className="triangle-container d-flex justify-content-end"><div className="triangle"></div></div>
                 <div className="actual-menu">
                   <div className="wallet">
                     <div className="d-flex">

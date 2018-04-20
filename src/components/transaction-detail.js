@@ -1,7 +1,12 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import $ from 'jquery'
+import moment from 'moment'
+import Review from './review'
 import TransactionProgress from './transaction-progress'
 import data from '../data'
+
+import origin from '../services/origin' 
 
 // step 0 was creating the listing
 // nextSteps[0] equates to step 1, etc
@@ -53,11 +58,16 @@ const nextSteps = [
 ]
 
 class TransactionDetail extends Component {
+  componentDidMount() {
+    $('[data-toggle="tooltip"]').tooltip()
+  }
+
   render() {
     const { listingId, perspective } = this.props
     const listing = data.listings.find(l => l._id === listingId)
-    const { buyer, seller, fulfilledAt, receivedAt, soldAt, withdrawnAt } = listing
+    const { active, buyer, category, seller, fulfilledAt, pictures, price, receivedAt, reviewedAt, soldAt, withdrawnAt } = listing
     const counterparty = ['buyer', 'seller'].find(str => str !== perspective)
+    const status = active ? 'active' : 'inactive'
     const maxStep = perspective === 'seller' ? 4 : 3
     let decimal, left, step
 
@@ -111,19 +121,19 @@ class TransactionDetail extends Component {
                     <div className="avatar-container">
                       <img src={`/images/avatar-${perspective === 'seller' ? 'green' : 'blue'}.svg`} alt="seller avatar" />
                     </div>
-                    <div className="identification d-flex flex-column justify-content-between">
+                    <div className="identification d-flex flex-column justify-content-between text-truncate">
                       <p><span className="badge badge-dark">Seller</span></p>
-                      <p className="name">{seller.name || 'Anonymous User'}</p>
-                      <p className="address">{seller.address}</p>
+                      <p className="name">{seller.name || 'Unnamed User'}</p>
+                      <p className="address text-muted text-truncate">{seller.address}</p>
                     </div>
                   </div>
                 </div>
                 <div className="col-6">
                   <div className="d-flex justify-content-end">
-                    <div className="identification d-flex flex-column text-right justify-content-between">
+                    <div className="identification d-flex flex-column text-right justify-content-between text-truncate">
                       <p><span className="badge badge-dark">Buyer</span></p>
-                      <p className="name">{buyer.name || 'Anonymous User'}</p>
-                      <p className="address">{buyer.address}</p>
+                      <p className="name">{buyer.name || 'Unnamed User'}</p>
+                      <p className="address text-muted text-truncate">{buyer.address}</p>
                     </div>
                     <div className="avatar-container">
                       <img src={`/images/avatar-${perspective === 'buyer' ? 'green' : 'blue'}.svg`} alt="buyer avatar" />
@@ -158,26 +168,34 @@ class TransactionDetail extends Component {
                 <tbody>
                   {soldAt &&
                     <tr>
-                      <td><span className="progress-circle checked"></span>Purchased</td>
-                      <td><a href="#" onClick={() => alert('To Do')}>0x56Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
-                      <td><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
-                      <td><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
+                      <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sold on<br /><strong>${moment(soldAt).format('MMM D, YYYY')}</strong>`}></span>{perspective === 'buyer' ? 'Purchased' : 'Sold'}</td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x56Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
                     </tr>
                   }
                   {fulfilledAt &&
                     <tr>
-                      <td><span className="progress-circle checked"></span>Sent by seller</td>
-                      <td><a href="#" onClick={() => alert('To Do')}>0x78Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
-                      <td><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
-                      <td><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
+                      <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sent by seller on<br /><strong>${moment(fulfilledAt).format('MMM D, YYYY')}</strong>`}></span>Sent by seller</td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x78Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
                     </tr>
                   }
                   {receivedAt &&
                     <tr>
-                      <td><span className="progress-circle checked"></span>Received by buyer</td>
-                      <td><a href="#" onClick={() => alert('To Do')}>0x90Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
-                      <td><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
-                      <td><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
+                      <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Received buy buyer on<br /><strong>${moment(receivedAt).format('MMM D, YYYY')}</strong>`}></span>Received by buyer</td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x90Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
+                    </tr>
+                  }
+                  {perspective === 'seller' && withdrawnAt &&
+                    <tr>
+                      <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Funds withdrawn on<br /><strong>${moment(withdrawnAt).format('MMM D, YYYY')}</strong>`}></span>Funds withdrawn</td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x90Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
+                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
                     </tr>
                   }
                 </tbody>
@@ -211,17 +229,69 @@ class TransactionDetail extends Component {
                     </div>
                   </div>
                 </div>
-                <a href="/#" className="btn" onClick={() => alert('To Do')}>View Profile</a>
+                <Link to={`/users/${listing[counterparty].address}`} className="btn">View Profile</Link>
               </div>
             </div>
           </div>
           <hr />
           <div className="row">
             <div className="col-12 col-lg-8">
-              {/* Listing Details */}
+              <h2>Listing Details</h2>
+              {!!pictures.length &&
+                <div className="carousel">
+                  {pictures.map(pictureUrl => (
+                    <div className="photo" key={pictureUrl}>
+                      <img src={pictureUrl} role='presentation' />
+                    </div>
+                  ))}
+                </div>
+              }
+              <p className="description">Look at these little dudes! Aren’t they just the best?? You get two super fashionable and stylish baby chickens that you can bring to your next party and get the whole crew excited. These baby chickens know how to party and they’re super classy. No matter how fancy the venue, these little guys won’t dissapoint.</p>
+              <p className="category text-muted">Category: {category}</p>
+              <p className="availability text-muted">{Number(2).toLocaleString()} units available</p>
+              <p className="ipfs-hash text-muted">IPFS Hash: frr34rijwoeij39eu0eijwoiejdwioec93idwp</p>
+              <p className="ipfs-link">
+                <a href={origin.ipfsService.gatewayUrlForHash('frr34rijwoeij39eu0eijwoiejdwioec93idwp')} target="_blank">
+                  View on IPFS <big>&rsaquo;</big>
+                </a>
+              </p>
+              <hr />
+              <div className="reviews">
+                <h2>Reviews <span className="review-count">{Number(57).toLocaleString()}</span></h2>
+                {perspective === 'buyer' && receivedAt && !reviewedAt &&
+                  <form>
+                    <div className="form-group">
+                      <label htmlFor="review">Write a review</label>
+                      <textarea rows="4" id="review" className="form-control" placeholder="Tell us a bit about your purchase"></textarea>
+                    </div>
+                    <div className="button-container text-right">
+                      <button type="submit" className="btn btn-primary" onClick={() => alert('To Do')}>Submit</button>
+                    </div>
+                  </form>
+                }
+                {data.reviews.map(r => <Review key={r._id} review={r} />)}
+                <a href="#" className="reviews-link" onClick={() => alert('To Do')}>Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a>
+              </div>
             </div>
             <div className="col-12 col-lg-4">
-              {/* Status */}
+              {soldAt &&
+                <div className="summary text-center">
+                  {perspective === 'buyer' && <div className="purchased tag"><p>Purchased</p></div>}
+                  {perspective === 'seller' && <div className="sold tag"><p>Sold</p></div>}
+                  <p className="recap">{listing[counterparty].name} {perspective === 'buyer' ? 'sold' : 'purchased'} on {moment(soldAt).format('MMMM D, YYYY')}</p>
+                  <hr />
+                  <div className="d-flex">
+                    <p className="text-left">Price</p>
+                    <p className="text-right">{price}</p>
+                  </div>
+                  <div className="d-flex">
+                    <p className="text-left">Contract Price</p>
+                    <p className="text-right">{price}</p>
+                  </div>
+                  <hr />
+                  <p className={`status ${status}`}>This listing is {status}</p>
+                </div>
+              }
             </div>
           </div>
         </div>
