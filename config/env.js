@@ -25,7 +25,11 @@ function getClientEnvironment(publicUrl) {
       // To use a local IPFS daemon, set IPFS_DOMAIN env var to 127.0.01
       // and IPFS_API_PORT env var to 5001
       'IPFS_API_PORT': JSON.stringify(process.env.IPFS_API_PORT || "5002"),
-      'IPFS_DOMAIN': JSON.stringify(process.env.IPFS_DOMAIN || "gateway.originprotocol.com")
+      'IPFS_DOMAIN': JSON.stringify(process.env.IPFS_DOMAIN || "gateway.originprotocol.com"),
+      'IPFS_GATEWAY_PORT': JSON.stringify(process.env.IPFS_GATEWAY_PORT || ""),
+      'IPFS_GATEWAY_PROTOCOL': JSON.stringify(process.env.IPFS_GATEWAY_PROTOCOL || "https"),
+      // Civic.com identity app managed @ https://integrate.civic.com
+      'CIVIC_APP_ID': JSON.stringify(process.env.CIVIC_APP_ID || "SkrCYxpvz" )
     });
   return {'process.env': processEnv};
 }
