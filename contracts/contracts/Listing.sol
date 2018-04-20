@@ -61,6 +61,13 @@ contract Listing {
     * Public functions
     */
 
+  function data()
+    public
+    view
+    returns (address _owner, bytes32 _ipfsHash, uint _price, uint _unitsAvailable, uint _expiration)
+  {
+    return (owner, ipfsHash, price, unitsAvailable, expiration);
+  }
 
   /// @dev buyListing(): Buy a listing
   /// @param _unitsToBuy Number of units to buy

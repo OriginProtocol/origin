@@ -12,13 +12,34 @@ class Listings extends ResourceBase{
     return await this.contractService.getAllListingIds()
   }
 
+  async get(address) {
+    const contractData = await this.contractFn(address, "data")
+    let ipfsHash = this.contractService.getIpfsHashFromBytes32(contractData[1])
+    const ipfsData = await this.ipfsService.getFile(ipfsHash)
+
+    let listing = {
+      address: address,
+      ipfsHash: ipfsHash,
+      sellerAddress: contractData[0],
+      priceWei: contractData[2],
+      price: this.contractService.web3.fromWei(contractData[2], "ether").toNumber(),
+      unitsAvailable: contractData[3],
+      expiration: contractData[4].toNumber(),
+
+      name: ipfsData.data.name,
+      category: ipfsData.data.category,
+      description: ipfsData.data.description,
+      location: ipfsData.data.location,
+      pictures: ipfsData.data.pictures
+    }
+
+    return listing
+  }
+
+  // This method is DEPRCIATED
   async getByIndex(listingIndex) {
-    const contractData = await this.contractService.getListing(
-      listingIndex
-    )
-    const ipfsData = await this.ipfsService.getFile(
-      contractData.ipfsHash
-    )
+    const contractData = await this.contractService.getListing(listingIndex)
+    const ipfsData = await this.ipfsService.getFile(contractData.ipfsHash)
     // ipfsService should have already checked the contents match the hash,
     // and that the signature validates
 
