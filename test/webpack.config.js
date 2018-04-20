@@ -16,7 +16,7 @@ Object.assign(config, {
     }
   },
 
-  entry: path.join(__dirname, "index.js"),
+  entry: ["babel-polyfill", path.join(__dirname, "index.js")],
 
   plugins: [
     new NamedModulesPlugin(),
