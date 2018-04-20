@@ -9,13 +9,16 @@ const clearCache = ipfsService => {
 
 const methodNames = ["submitFile", "getFile", "gatewayUrlForHash"]
 
-const ipfsEnv = process.env.IPFS_DOMAIN ? "local" : "default"
-
 describe("IpfsService", () => {
   let ipfsService
 
   beforeEach(() => {
-    ipfsService = new IpfsService()
+    ipfsService = new IpfsService({
+      ipfsDomain: "127.0.0.1",
+      ipfsApiPort: "5002",
+      ipfsGatewayPort: "8080",
+      ipfsGatewayProtocol: "http"
+    })
   })
 
   methodNames.forEach(methodName => {
@@ -57,7 +60,7 @@ describe("IpfsService", () => {
     ipfsHashes.forEach(({ ipfsHash, url }) => {
       it(`should correctly create url for IPFS hash ${ipfsHash}`, () => {
         const result = ipfsService.gatewayUrlForHash(ipfsHash)
-        expect(result).to.equal(url[ipfsEnv])
+        expect(result).to.equal(url["local"])
       })
     })
   })

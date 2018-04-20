@@ -18,10 +18,15 @@ describe("Purchase Resource", function() {
   var web3
 
   before(async () => {
-    let provider = new Web3.providers.HttpProvider("http://localhost:9545")
+    let provider = new Web3.providers.HttpProvider("http://localhost:8545")
     web3 = new Web3(provider)
     contractService = new ContractService({ web3 })
-    ipfsService = new IpfsService()
+    ipfsService = new IpfsService({
+      ipfsDomain: "127.0.0.1",
+      ipfsApiPort: "5002",
+      ipfsGatewayPort: "8080",
+      ipfsGatewayProtocol: "http"
+    })
     listings = new Listings({ contractService, ipfsService })
     purchases = new Purchase({ contractService, ipfsService })
   })
