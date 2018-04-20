@@ -19,7 +19,7 @@ const AccountUnavailable = (props) => (
     <div className="image-container">
       <img src="/images/flat_cross_icon.svg" role="presentation"/>
     </div>
-    { (props.onMobile) ? "You are not signed into a wallet-enabled browser." : "You are not signed into MetaMask." }<br />
+    { (props.onMobile) ? "You are not signed in to a wallet-enabled browser." : "You are not signed in to MetaMask." }<br />
   </Modal>
 )
 
@@ -53,7 +53,7 @@ const Web3Unavailable = (props) => (
     <div className="image-container">
       <img src="/images/flat_cross_icon.svg" role="presentation"/>
     </div>
-      {(!props.onMobile || (props.onMobile == "Android")) &&
+      {(!props.onMobile || (props.onMobile === "Android")) &&
         <div>Please install the MetaMask extension<br />to access this site.<br />
           <a target="_blank" href="https://metamask.io/">Get MetaMask</a><br />
           <a target="_blank" href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58">
