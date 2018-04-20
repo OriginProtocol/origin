@@ -26,10 +26,14 @@ const start = async () => {
 
     // watch js
     compiler.watch({}, (err, stats) => {
-      if(err) {
-        console.log(err)
+      if(err || stats.hasErrors()) {
+        console.error(err)
       } else {
-        console.log('webpack compiling')
+        console.log(stats.toString({
+          hash: false,
+          modules: false,
+          version: false
+        }))
       }
     })
 
