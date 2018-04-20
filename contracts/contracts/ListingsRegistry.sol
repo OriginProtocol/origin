@@ -83,7 +83,7 @@ contract ListingsRegistry {
 
   /// @dev create(): Create a new listing
   /// @param _ipfsHash Hash of data on ipfsHash
-  /// @param _price Price of unit. Currently ETH, will change to 0T
+  /// @param _price Price of unit in wei
   /// @param _unitsAvailable Number of units availabe for sale at start
   ///
   /// Sample Remix invocation:
