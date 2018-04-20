@@ -160,12 +160,22 @@ git clone https://github.com/OriginProtocol/platform origin-platform && cd origi
 
  ## Tests
 
- ### Command Line Tests
+ ### Command Line (All Tests)
 
 Our full test suite can be run with:
 
  ```
  npm run test
+ ```
+
+ Note: you should *not* have the server running at this time, as these tests start their own local blockchain instance.
+
+ ### Command Line (Only Solidity Tests)
+
+Our Solidity tests (which use [Truffle](http://truffleframework.com/docs/getting_started/javascript-tests)) are located at `contracts/test`.
+
+ ```
+ npm run test:contracts
  ```
 
  Note: you should *not* have the server running at this time, as these tests start their own local blockchain instance.
