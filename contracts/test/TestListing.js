@@ -51,7 +51,8 @@ contract("Listing", accounts => {
     assert.equal(data[1], ipfsHash, "ipfsHash")
     assert.equal(data[2], price, "price")
     assert.equal(data[3], unitsAvailable, "unitsAvailable")
-    assert.equal(data[4].toNumber(), (await listing.expiration()).toNumber() , "expiration")
+    assert.equal(data[4].toNumber(), (await listing.created()).toNumber() , "created")
+    assert.equal(data[5].toNumber(), (await listing.expiration()).toNumber() , "expiration")
   })
 
   it("should decrement the number of units sold", async function() {

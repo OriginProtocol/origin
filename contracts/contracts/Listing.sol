@@ -28,6 +28,7 @@ contract Listing {
     bytes32 public ipfsHash;
     uint public price;
     uint public unitsAvailable;
+    uint public created;
     uint public expiration;
     Purchase[] public purchases;
 
@@ -45,7 +46,8 @@ contract Listing {
       ipfsHash = _ipfsHash;
       price = _price;
       unitsAvailable = _unitsAvailable;
-      expiration = now + 60 days;
+      created = now;
+      expiration = created + 60 days;
     }
 
   /*
@@ -64,9 +66,9 @@ contract Listing {
   function data()
     public
     view
-    returns (address _owner, bytes32 _ipfsHash, uint _price, uint _unitsAvailable, uint _expiration)
+    returns (address _owner, bytes32 _ipfsHash, uint _price, uint _unitsAvailable, uint _created, uint _expiration)
   {
-    return (owner, ipfsHash, price, unitsAvailable, expiration);
+    return (owner, ipfsHash, price, unitsAvailable, created, expiration);
   }
 
   /// @dev buyListing(): Buy a listing

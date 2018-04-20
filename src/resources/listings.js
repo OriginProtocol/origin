@@ -24,7 +24,8 @@ class Listings extends ResourceBase{
       priceWei: contractData[2],
       price: this.contractService.web3.fromWei(contractData[2], "ether").toNumber(),
       unitsAvailable: contractData[3],
-      expiration: contractData[4].toNumber(),
+      created: contractData[4].toNumber(),
+      expiration: contractData[5].toNumber(),
 
       name: ipfsData.data.name,
       category: ipfsData.data.category,
