@@ -7,13 +7,13 @@
   },
   "main": "./dist/index.js",
   "scripts": {
-    "test": "node scripts/_test.js",
-    "test:contracts": "node scripts/_test-contracts.js",
-    "build": "node scripts/_build.js",
+    "test": "node scripts/test.js",
+    "test:contracts": "node scripts/test-contracts.js",
+    "build": "node scripts/build.js",
     "format": "npx prettier --write test/*.js src/**.js",
     "prepare": "npm run build",
     "install:dev": "npm install && npm link",
-    "start": "node scripts/_build.js serve"
+    "start": "node scripts/build.js serve"
   },
   "files": [
     "dist"

@@ -1,9 +1,9 @@
-const startGanache = require('./start-ganache')
-const deployContracts = require('./deploy-contracts')
-const testContracts = require('./test-contracts')
-const startIpfs = require('./start-ipfs')
-const testJavascript = require('./test-javascript')
-const testFormat = require('./test-format')
+const startGanache = require('./helpers/start-ganache')
+const deployContracts = require('./helpers/deploy-contracts')
+const testContracts = require('./helpers/test-contracts')
+const startIpfs = require('./helpers/start-ipfs')
+const testJavascript = require('./helpers/test-javascript')
+const testFormat = require('./helpers/test-format')
 
 const start = async () => {
   let daemon
