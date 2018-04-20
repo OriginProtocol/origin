@@ -18,9 +18,9 @@ This repo is under active development. We welcome your participation!
 
 2. Listen in on our weekly engineering call on Google Hangouts. It happens every week and everyone is welcome to listen in and participate. [Join us on Google Hangouts](https://meet.google.com/pws-cgyd-tqp) on Wednesdays at 9pm GMT ([Add to Calendar](https://calendar.google.com/event?action=TEMPLATE&tmeid=MHAyNHI3N2hzMjk5b3V2bjhoM2Q1ZWVzY2pfMjAxODA0MTFUMjAwMDAwWiBqb3NoQG9yaWdpbnByb3RvY29sLmNvbQ&tmsrc=josh%40originprotocol.com&scp=ALL)):
 
-> | Pacific | Mountain | Central | Eastern | GMT |
-> |---------|----------|---------|---------|-----|
-> | Wed 1pm | Wed 2pm | Wed 3pm | Wed 4pm | Wed 9pm |
+| Pacific | Mountain | Central | Eastern | GMT |
+|---------|----------|---------|---------|-----|
+| Wed 1pm | Wed 2pm | Wed 3pm | Wed 4pm | Wed 9pm |
 
 3. Catch up on our meeting notes & weekly sprint planning docs (feel free to add comments):
 - [Engineering meeting notes](https://docs.google.com/document/d/1aRcAk_rEjRgd1BppzxZJK9RXfDkbuwKKH8nPQk7FfaU/)
