@@ -7,12 +7,12 @@
   },
   "main": "./dist/index.js",
   "scripts": {
-    "test": "node scripts/test.js",
-    "build": "node scripts/build.js",
+    "test": "node scripts/_test.js",
+    "build": "node scripts/_build.js",
     "format": "npx prettier --write test/*.js src/**.js",
     "prepare": "npm run build",
     "install:dev": "npm install && npm link",
-    "start": "node scripts/build.js serve"
+    "start": "node scripts/_build.js serve"
   },
   "files": [
     "dist"
