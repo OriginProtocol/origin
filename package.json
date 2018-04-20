@@ -46,7 +46,7 @@
     "whatwg-fetch": "1.0.0"
   },
   "dependencies": {
-    "origin": "0.5.7",
+    "origin": "0.5.9",
     "ajv": "^4.11.7",
     "alertify": "github:OriginProtocol/alertify.js#webpack_friendly",
     "babel-polyfill": "^6.26.0",
