@@ -3,7 +3,7 @@
 ![origin_npm_version](https://img.shields.io/npm/v/origin.svg) ![origin_license](https://img.shields.io/npm/l/origin.svg)
 ![origin_travis_banner](https://travis-ci.org/OriginProtocol/origin-js.svg?branch=master)
 
-# Origin Platform
+# Origin Protocol
 
 Origin Protocol is a library of javascript code and Ethereum smart contracts which allow anyone to create decentralized marketplaces, including for fractional usage.
 
@@ -80,7 +80,7 @@ And buyers to:
 
 1. Clone
 ```
-git clone https://github.com/OriginProtocol/platform origin-platform && cd origin-platform
+git clone https://github.com/OriginProtocol/origin-js && cd origin-js
 ```
 
 2. Install:dev (shortcut for `npm install && npm link`). Linking makes this available as a local npm package for local dapp development.
