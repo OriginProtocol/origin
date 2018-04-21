@@ -43,10 +43,12 @@ describe("Listing Resource", function() {
     expect(listing.index).to.equal(listingIds.length - 1)
   })
 
-  it("should get a listing by hash", async () => {
+  it("should get a listing by address", async () => {
     await listings.create({ name: "Foo Bar", price: 1 }, "")
     let listingIds = await contractService.getAllListingIds()
-    const listingFromIndex = await listings.getByIndex(listingIds[listingIds.length - 1])
+    const listingFromIndex = await listings.getByIndex(
+      listingIds[listingIds.length - 1]
+    )
     const listing = await listings.get(listingFromIndex.address)
     expect(listing.name).to.equal("Foo Bar")
   })
