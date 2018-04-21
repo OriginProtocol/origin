@@ -3,13 +3,8 @@ var ListingContract = require("../build/contracts/Listing.json")
 var PurchaseContract = require("../build/contracts/Purchase.json")
 var contract = require("truffle-contract")
 
-module.exports = function(deployer, network) {
-  console.log("network", network)
-  if (network === "development") {
-    return deploy_sample_contracts()
-  } else {
-    // Don't create seed data on main net
-  }
+module.exports = function(deployer/*, network*/) {
+  return deploy_sample_contracts()
 }
 
 async function deploy_sample_contracts() {
