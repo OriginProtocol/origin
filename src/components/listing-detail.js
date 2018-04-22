@@ -36,18 +36,18 @@ class ListingsDetail extends Component {
 
   async loadListing() {
     try {
-      const listing = await origin.listings.getByIndex(this.props.listingId)
+      const listing = await origin.listings.get(this.props.listingAddress)
       const obj = Object.assign({}, listing, { loading: false, reviews: data.reviews })
-
       this.setState(obj)
     } catch (error) {
       alertify.log('There was an error loading this listing.')
-      console.error(`Error fetching contract or IPFS info for listingId: ${this.props.listingId}`)
+      console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingAddress}`)
+      console.log(error)
     }
   }
 
   componentWillMount() {
-    if (this.props.listingId) {
+    if (this.props.listingAddress) {
       // Load from IPFS
       this.loadListing()
     }
@@ -170,12 +170,12 @@ class ListingsDetail extends Component {
                                 </div> */}
                 {!this.state.loading &&
                   <div>
-                    {(this.props.listingId) && (
+                    {(this.state.address) && (
                       (this.state.unitsAvailable > 0) ?
                         <button
                           className="button"
                           onClick={this.handleBuyClicked}
-                          disabled={!this.props.listingId}
+                          disabled={!this.state.address}
                           onMouseDown={e => e.preventDefault()}
                         >
                           Buy Now

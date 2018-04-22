@@ -35,7 +35,7 @@ const HomePage = (props) => (
 )
 
 const ListingDetailPage = (props) => (
-  <ListingDetail listingId={props.match.params.listingId} />
+  <ListingDetail listingAddress={props.match.params.listingAddress} />
 )
 
 const CreateListingPage = (props) => (
@@ -81,7 +81,7 @@ const App = () => (
           <Switch>
             <Route exact path="/" component={HomePage} />
             <Route path="/page/:activePage" component={HomePage} />
-            <Route path="/listing/:listingId" component={ListingDetailPage} />
+            <Route path="/listing/:listingAddress" component={ListingDetailPage} />
             <Route path="/create" component={CreateListingPage} />
             <Route path="/my-listings" component={MyListingsPage} />
             <Route path="/my-purchases/:listingId" component={MyPurchasesTransactionPage} />

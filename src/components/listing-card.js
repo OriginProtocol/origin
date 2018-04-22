@@ -28,7 +28,7 @@ class ListingCard extends Component {
   render() {
     return (
       <div className={`col-12 col-md-6 col-lg-4 listing-card${this.state.loading ? ' loading' : ''}`}>
-        <Link to={`/listing/${this.props.listingId}`}>
+        <Link to={`/listing/${this.state.address}`}>
           <div className="photo" style={{backgroundImage:`url("${
             (this.state.pictures && this.state.pictures.length>0 &&
               (new URL(this.state.pictures[0])).protocol === "data:") ?
