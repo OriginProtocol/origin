@@ -99,7 +99,7 @@ This starts a development server on ```localhost:5000``` by default.
 Throughout the development process and before committing or deploying, run:
 
 ```bash
-pytest --flakes
+pytest --flakes --codestyle
 ```
 
 Run individual test files simply as:
@@ -115,6 +115,16 @@ pytest path/to/test.py::test_case_name
 ```
 
 **Problems?** Hit us up in the `engineering` channel on [Discord](https://www.originprotocol.com/discord) if you need help.
+
+### Code Formatting
+
+We are using [pycodestyle](https://github.com/PyCQA/pycodestyle) to enforce code formatting. The tests will throw errors when code is not formatted properly, when using the `--codestyle` option.
+
+To automatically format the code:
+
+```
+autopep8 --in-place --recursive --a --a .
+```
 
 ## Contributing
 

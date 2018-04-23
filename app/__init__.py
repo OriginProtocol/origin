@@ -2,10 +2,13 @@ from flask import Flask
 
 from config import settings
 
+
 class MyFlask(Flask):
     def get_send_file_max_age(self, name):
-        # This disables caching for static js and css files, which is helpful for development.
-        # In production you may either want to disable this an used versioned compiled static files,
+        # This disables caching for static js and css files,
+        # which is helpful for development.
+        # In production you may either want to disable this an used versioned
+        # compiled static files,
         # or serve static files from a CDN.
         if name.startswith('js/') or name.startswith('css/'):
             return 0
@@ -21,6 +24,7 @@ class MyFlask(Flask):
         self.config['TEMPLATES_AUTO_RELOAD'] = settings.DEBUG
         return super(MyFlask, self).create_jinja_environment()
 
+
 app = MyFlask(__name__,
-    template_folder=settings.TEMPLATE_ROOT,
-    static_folder=settings.STATIC_ROOT)
+              template_folder=settings.TEMPLATE_ROOT,
+              static_folder=settings.STATIC_ROOT)

@@ -33,7 +33,6 @@ def init_api(app):
                        results_per_page=10,)
 
 
-
 # App initialization only appropriate for dev/production but not tests.
 def init_prod_app(app):
     app.config.from_object(__name__ + '.AppConfig')
@@ -43,8 +42,10 @@ def init_prod_app(app):
         '%(asctime)s %(levelname)s [in %(pathname)s:%(lineno)d]: %(message)s')
     log_level = logging.WARNING
     if not settings.DEBUG:
-        # This logs to stdout which is appropriate for Heroku, which saves stdout to a file,
-        # but may not be appropriate in other environments. Use a log file instead.
+        # This logs to stdout which is appropriate for Heroku, which saves
+        # stdout to a file,
+        # but may not be appropriate in other environments. Use a log file
+        # instead.
         handler = logging.StreamHandler(sys.stdout)
         handler.setLevel(log_level)
         handler.setFormatter(log_formatter)

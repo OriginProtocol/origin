@@ -28,6 +28,7 @@ def make_celery(app):
     celery.Task = ContextTask
     return celery
 
+
 flask_app = Flask(__name__)
 
 flask_app.config.update(

@@ -3,6 +3,7 @@ First pull request? Read our [guide to contributing](http://docs.originprotocol.
 ### Checklist:
 
 - [ ] Code contains relevant tests for the problem you are solving
+- [ ] Code has been formatted with `autopep8 --in-place --recursive --a --a .`
 - [ ] Ensure all new and existing tests pass
 - [ ] Update any relevant READMEs and [docs](https://github.com/OriginProtocol/docs)
 

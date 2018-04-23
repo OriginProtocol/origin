@@ -33,14 +33,17 @@ def create_or_update_listing(payload):
     registry_index = contract_helper.convert_event_data('NewListing',
                                                         payload['data'])
     listing_data = contract.functions.getListing(registry_index).call()
-    listing_obj = Listing.query.filter_by(contract_address=listing_data[0]).first()
+    listing_obj = Listing.query.filter_by(
+        contract_address=listing_data[0]).first()
 
     exclude_ipfs_fields = ['pictures']
 
     if not listing_obj:
-        ipfs_data = IPFSHelper().file_from_hash(hex_to_base58(listing_data[2]),
-                                                root_attr='data',
-                                                exclude_fields=exclude_ipfs_fields)
+        ipfs_data = IPFSHelper().file_from_hash(
+            hex_to_base58(
+                listing_data[2]),
+            root_attr='data',
+            exclude_fields=exclude_ipfs_fields)
 
         listing_obj = Listing(contract_address=listing_data[0],
                               owner_address=listing_data[1],
@@ -54,9 +57,9 @@ def create_or_update_listing(payload):
     else:
         if listing_obj.ipfs_hash != hex_to_base58(listing_data[2]):
             listing_obj.ipfs_hash = hex_to_base58(listing_data[2])
-            listing_obj.ipfs_data = IPFSHelper().file_from_hash(hex_to_base58(listing_data[2]),
-                                                                root_attr='data',
-                                                                exclude_fields=exclude_ipfs_fields)
+            listing_obj.ipfs_data = IPFSHelper().file_from_hash(hex_to_base58(
+                listing_data[2]), root_attr='data',
+                exclude_fields=exclude_ipfs_fields)
         listing_obj.price = Web3.fromWei(listing_data[3], 'ether')
         listing_obj.units = listing_data[4]
     db.session.commit()
