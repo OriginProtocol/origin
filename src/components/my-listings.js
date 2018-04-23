@@ -8,7 +8,9 @@ class MyListings extends Component {
   constructor(props) {
     super(props)
 
+    this.getListingIds = this.getListingIds.bind(this)
     this.loadListing = this.loadListing.bind(this)
+    this.loadListings = this.loadListings.bind(this)
     this.state = { filter: 'all', listings: [], loading: true }
   }
 
@@ -21,24 +23,32 @@ class MyListings extends Component {
 
         this.setState({ listings })
       }
+
+      return listing
     } catch (error) {
       console.error(`Error fetching contract or IPFS info for listingId: ${id}`)
     }
   }
 
-  // simulate a getListingsBySellerAddress request
-  componentWillMount() {
-    origin.listings.allIds()
-    .then((response) => {
-      response.forEach(id => {
-        this.loadListing(id)
-      })
+  async loadListings(ids) {
+    return await Promise.all(ids.map(this.loadListing))
+  }
 
-      this.setState({ loading: false })
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+  async getListingIds() {
+    try {
+      const ids = await origin.listings.allIds()
+
+      return this.loadListings(ids)
+    } catch(error) {
+      console.error('Error fetching listing ids')
+    }
+  }
+
+  // simulate a getListingsBySellerAddress request
+  async componentWillMount() {
+    await this.getListingIds()
+
+    this.setState({ loading: false })
   }
 
   render() {

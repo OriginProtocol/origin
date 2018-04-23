@@ -38,9 +38,9 @@ class MyListingCard extends Component {
             </div>
             <div className="actions d-flex">
               <div className="links-container">
-                <a onClick={() => alert('To Do')}>Edit</a>
-                {!active && <a onClick={() => alert('To Do')}>Enable</a>}
-                {active && <a onClick={() => alert('To Do')}>Disable</a>}
+                {/*<a onClick={() => alert('To Do')}>Edit</a>*/}
+                {/*!active && <a onClick={() => alert('To Do')}>Enable</a>*/}
+                {/*active && <a onClick={() => alert('To Do')}>Disable</a>*/}
                 <a className="warning" onClick={() => alert('To Do')}>Delete</a>
               </div>
             </div>
