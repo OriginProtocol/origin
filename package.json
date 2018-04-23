@@ -10,7 +10,7 @@
     "test": "node scripts/test.js",
     "test:contracts": "node scripts/test-contracts.js",
     "build": "node scripts/build.js",
-    "format": "npx prettier --write test/*.js src/**.js",
+    "format": "npx prettier --write test/*.js src/**.js contracts/test/**.js",
     "prepare": "npm run build",
     "install:dev": "npm install && npm link",
     "start": "node scripts/build.js serve"

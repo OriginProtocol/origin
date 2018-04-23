@@ -18,9 +18,9 @@ contract("UserRegistry", accounts => {
     instance = await contractDefinition.new({ from: accounts[0] })
   })
 
-  it('should be able to set a user', async function() {
-    await instance.set(ipfsHash_1, {from: accounts[0]});
-    let ipfsHash = await instance.users(accounts[0]);
-    assert.equal(ipfsHash, ipfsHash_1, 'user has correct ipfsHash');
-  });
-});
+  it("should be able to set a user", async function() {
+    await instance.set(ipfsHash_1, { from: accounts[0] })
+    let ipfsHash = await instance.users(accounts[0])
+    assert.equal(ipfsHash, ipfsHash_1, "user has correct ipfsHash")
+  })
+})
