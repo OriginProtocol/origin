@@ -99,7 +99,7 @@ This starts a development server on ```localhost:5000``` by default.
 Throughout the development process and before committing or deploying, run:
 
 ```bash
-pytest --flakes
+pytest --flakes --codestyle
 ```
 
 Run individual test files simply as:
