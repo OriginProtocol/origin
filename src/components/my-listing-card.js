@@ -9,7 +9,7 @@ class MyListingCard extends Component {
   }
 
   render() {
-    const { _id, active, category, createdAt, quantity, title, unitsAvailable } = this.props.listing
+    const { active, address, category, createdAt, name, price, quantity, unitsAvailable } = this.props.listing
     const status = active ? 'active' : 'inactive'
     const timestamp = `Created on ${moment(createdAt).format('MMMM D, YYYY')}`
 
@@ -22,9 +22,12 @@ class MyListingCard extends Component {
           <div className="content-container d-flex flex-column">
             <span className={`status ${status}`}>{status}</span>
             <p className="category">{category}</p>
-            <h2 className="title text-truncate"><Link to={`/listing/${_id}`}>{title}</Link></h2>
+            <h2 className="title text-truncate"><Link to={`/listing/${address}`}>{name}</Link></h2>
             <p className="timestamp">{timestamp}</p>
-            <p className="price">$1,000{unitsAvailable <= quantity && <span className="badge badge-info">Sold Out</span>}</p>
+            <p className="price">
+              {`${Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH`}
+              {unitsAvailable <= quantity && <span className="badge badge-info">Sold Out</span>}
+            </p>
             <div className="d-flex counts">
               <p>Total Quantity: {unitsAvailable.toLocaleString()}</p>
               <p>Total Remaining: {(unitsAvailable - quantity).toLocaleString()}</p>
