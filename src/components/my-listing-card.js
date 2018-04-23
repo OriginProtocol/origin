@@ -9,8 +9,16 @@ class MyListingCard extends Component {
   }
 
   render() {
-    const { active, address, category, createdAt, name, price, quantity, unitsAvailable } = this.props.listing
-    const status = active ? 'active' : 'inactive'
+    const { address, category, createdAt, name, price, quantity, unitsAvailable } = this.props.listing
+    /*
+     *  Micah 4/23/2018
+     *  ~~~~~~~~~~~~~~~
+     *  origin.listings.close sets unitsAvailable to 0.
+     *  There is no distinction between active/inactive, sold out, or closed.
+     *  These states should be considered as editing is explored.
+     *  There are no denormalized "transaction completed" or "transaction in progress" counts.
+     */
+    const status = unitsAvailable > 0 ? 'active' : 'inactive'
     const timestamp = `Created on ${moment(createdAt).format('MMMM D, YYYY')}`
 
     return (
@@ -23,18 +31,18 @@ class MyListingCard extends Component {
             <span className={`status ${status}`}>{status}</span>
             <p className="category">{category}</p>
             <h2 className="title text-truncate"><Link to={`/listing/${address}`}>{name}</Link></h2>
-            <p className="timestamp">{timestamp}</p>
+            {/*<p className="timestamp">{timestamp}</p>*/}
             <p className="price">
-              {`${Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH`}
-              {unitsAvailable <= quantity && <span className="badge badge-info">Sold Out</span>}
+              {`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ETH`}
+              {/*unitsAvailable <= quantity && <span className="badge badge-info">Sold Out</span>*/}
             </p>
             <div className="d-flex counts">
               <p>Total Quantity: {unitsAvailable.toLocaleString()}</p>
-              <p>Total Remaining: {(unitsAvailable - quantity).toLocaleString()}</p>
+              {/*<p>Total Remaining: {(unitsAvailable - quantity).toLocaleString()}</p>*/}
             </div>
             <div className="d-flex counts">
-              <p>{Number(2).toLocaleString()} Pending Transactions</p>
-              <p>{Number(3).toLocaleString()} Completed Transactions</p>
+              {/*<p>{Number(2).toLocaleString()} Pending Transactions</p>*/}
+              {/*<p>{Number(3).toLocaleString()} Completed Transactions</p>*/}
             </div>
             <div className="actions d-flex">
               <div className="links-container">
