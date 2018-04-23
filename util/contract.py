@@ -33,9 +33,10 @@ class ContractHelper:
 
     def get_instance(self, contract_name, address):
         abi = self.get_contract_abi(contract_name)
-        contract = self.web3.eth.contract(abi=abi,
-                                          address=Web3.toChecksumAddress(address),
-                                          ContractFactoryClass=Contract)
+        contract = self.web3.eth.contract(
+            abi=abi,
+            address=Web3.toChecksumAddress(address),
+            ContractFactoryClass=Contract)
         return contract
 
     @classmethod

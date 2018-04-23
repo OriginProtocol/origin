@@ -26,5 +26,11 @@ class VerifyPhoneResponse(apilib.Response):
 class VerificationService(apilib.Service):
     path = '/api/verification_service'
     methods = apilib.servicemethods(
-        apilib.Method('generate_phone_verification_code', GeneratePhoneVerificationCodeRequest, GeneratePhoneVerificationCodeResponse),
-        apilib.Method('verify_phone', VerifyPhoneRequest, VerifyPhoneResponse))
+        apilib.Method(
+            'generate_phone_verification_code',
+            GeneratePhoneVerificationCodeRequest,
+            GeneratePhoneVerificationCodeResponse),
+        apilib.Method(
+            'verify_phone',
+            VerifyPhoneRequest,
+            VerifyPhoneResponse))

@@ -10,11 +10,14 @@ else:
     if dotenv_filename:
         dotenv.load_dotenv(dotenv_filename)
 
+
 def parse_bool(env_value):
     return env_value is not None and env_value.lower() not in ('0', 'false')
 
+
 def abspath(relative_file_path):
     return os.path.join(PROJECTPATH, relative_file_path)
+
 
 DEBUG = parse_bool(os.environ.get('DEBUG'))
 
@@ -25,7 +28,9 @@ FLASK_SECRET_KEY = os.environ.get('FLASK_SECRET_KEY')
 PUBLIC_ID_ENCRYPTION_KEY = os.environ.get('PUBLIC_ID_ENCRYPTION_KEY')
 
 DATABASE_URL = os.environ.get('DATABASE_URL')
-TEST_DATABASE_URI = os.environ.get('TEST_DATABASE_URI', 'postgresql://localhost/unittest')
+TEST_DATABASE_URI = os.environ.get(
+    'TEST_DATABASE_URI',
+    'postgresql://localhost/unittest')
 
 TEMPLATE_ROOT = os.path.join(PROJECTPATH, 'templates')
 STATIC_ROOT = os.path.join(PROJECTPATH, 'static')

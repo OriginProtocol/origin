@@ -1,4 +1,4 @@
-from views import web_views # noqa
+from views import web_views  # noqa
 
 
 def test_index(client):

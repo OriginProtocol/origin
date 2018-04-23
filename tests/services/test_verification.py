@@ -32,7 +32,8 @@ def test_generate_phone_verification_code_new_phone(mock_send_sms):
     assert db_code.updated_at is not None
 
 
-def test_generate_phone_verification_code_phone_already_in_db(mock_send_sms, session):
+def test_generate_phone_verification_code_phone_already_in_db(
+        mock_send_sms, session):
     vc_obj = VerificationCodeFactory.build()
     expires_at = vc_obj.expires_at
     vc_obj.created_at = utcnow() - datetime.timedelta(seconds=10)
@@ -46,9 +47,9 @@ def test_generate_phone_verification_code_phone_already_in_db(mock_send_sms, ses
     resp = service().invoke('generate_phone_verification_code', req)
 
     assert 'SUCCESS' == resp.response_code
-    assert VC.query.filter(VC.phone==req.phone).count() == 1
+    assert VC.query.filter(VC.phone == req.phone).count() == 1
 
-    db_code = VC.query.filter(VC.phone==req.phone).first()
+    db_code = VC.query.filter(VC.phone == req.phone).first()
     assert db_code is not None
     assert db_code.code is not None
     assert len(db_code.code) == 6
@@ -157,4 +158,4 @@ def test_generate_phone_verification_rate_limit_exceeded(session):
     assert len(resp.errors) == 1
     assert resp.errors[0].code == 'RATE_LIMIT_EXCEEDED'
     assert resp.errors[0].path is None
-    assert resp.errors[0].message == 'Please wait briefly before requesting a new verification code.' 
+    assert resp.errors[0].message == 'Please wait briefly before requesting a new verification code.'

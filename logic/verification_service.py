@@ -16,7 +16,9 @@ VC = db_models.VerificationCode
 CODE_EXPIRATION_TIME_MINUTES = 30
 
 
-class VerificationServiceImpl(verification.VerificationService, apilib.ServiceImplementation):
+class VerificationServiceImpl(
+        verification.VerificationService,
+        apilib.ServiceImplementation):
 
     def generate_phone_verification_code(self, req):
         addr = numeric_eth(req.eth_address)
@@ -30,10 +32,13 @@ class VerificationServiceImpl(verification.VerificationService, apilib.ServiceIm
             # If the client has requested a verification code already within the last 10 seconds,
             # throw a rate limit error, so they can't just keep creating codes and guessing them
             # rapidly.
-            raise service_utils.req_error(code='RATE_LIMIT_EXCEEDED', message='Please wait briefly before requesting a new verification code.')
+            raise service_utils.req_error(
+                code='RATE_LIMIT_EXCEEDED',
+                message='Please wait briefly before requesting a new verification code.')
         db_code.phone = req.phone
         db_code.code = random_numeric_token()
-        db_code.expires_at = time_.utcnow() + datetime.timedelta(minutes=CODE_EXPIRATION_TIME_MINUTES)
+        db_code.expires_at = time_.utcnow(
+        ) + datetime.timedelta(minutes=CODE_EXPIRATION_TIME_MINUTES)
         db.session.commit()
         send_code_via_sms(req.phone, db_code.code)
         return verification.GeneratePhoneVerificationCodeResponse()
@@ -45,21 +50,28 @@ class VerificationServiceImpl(verification.VerificationService, apilib.ServiceIm
             .filter(VC.phone == req.phone) \
             .first()
         if db_code is None:
-            raise service_utils.req_error(code='NOT_FOUND', path='phone',
-                                          message='The given phone number was not found.')
+            raise service_utils.req_error(
+                code='NOT_FOUND',
+                path='phone',
+                message='The given phone number was not found.')
         if req.code != db_code.code:
-            raise service_utils.req_error(code='INVALID', path='code',
-                                          message='The code you provided is invalid.')
+            raise service_utils.req_error(
+                code='INVALID',
+                path='code',
+                message='The code you provided is invalid.')
         if time_.utcnow() > db_code.expires_at:
-            raise service_utils.req_error(code='EXPIRED', path='code',
-                                          message='The code you provided has expired.')
+            raise service_utils.req_error(
+                code='EXPIRED',
+                path='code',
+                message='The code you provided has expired.')
         db_identity = db_models.Identity(
             eth_address=addr,
             phone=req.phone,
             verified=True)
         db.session.add(db_identity)
         db.session.commit()
-        return verification.VerifyPhoneResponse(attestation=generate_signed_attestation(addr))
+        return verification.VerifyPhoneResponse(
+            attestation=generate_signed_attestation(addr))
 
 
 def numeric_eth(str_eth_address):
