@@ -63,3 +63,23 @@ This method is **called by the seller** when the Purchase is in the **"seller_pe
 The seller will receive all eth value on the contract.
 
 The Purchase will change to the **"complete"** stage.
+
+## get
+
+> To get a purchase
+
+```javascript
+const purchaseAddress = "0x061b8d5f9e432e6b23d79fac02e5792eb8746ce5"
+const purchase = await origin.purchases.get(purchaseAddress)
+// Returns 
+{
+	address: "0xefb3fd7f9260874d8afd7cb4b42183babea0ca1b",
+	stage: "seller_pending",
+	listingAddress: "0x05a52d9a9e9e91c6932ec2af7bf0c127660fa181",
+	buyerAddress: "0x627306090abab3a6e1400e9345bc60c78a8bef57",
+	created: 1524492517,
+	buyerTimout: 0
+}
+```
+
+This will return information about the purchase.
