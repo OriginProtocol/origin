@@ -64,6 +64,35 @@ This method is **called by the seller**.
 Closing a transaction will set the unitsAvailable to zero. This will stop any further purchases of that Listing.
 
 
+## get
+
+> To get a listing
+
+```javascript
+const listingAddress = "0x061b8d5f9e432e6b23d79fac02e5792eb8746ce5"
+const listing = await origin.listings.get(listingAddress)
+// Returns 
+{
+  name: "Kettlebell For Sale",
+  category: "Health and Beauty",
+  description: "32kg gorilla kettlebell",
+  location: "San Fransisco, CA",
+  pictures: [],
+  
+  address: "0x061b8d5f9e432e6b23d79fac02e5792eb8746ce5",
+  ipfsHash: "QmWZDcDq4aYGx9XmkPcx4mnKaGW2jCxf5tknrCtbfpJJFf",
+  sellerAddress: "0x627306090abab3a6e1400e9345bc60c78a8bef57",
+  priceWei: "1000000000000000000",
+  price: 1,  // deprecated
+  unitsAvailable: 1,
+  created: 1524490159,
+  expiration: 1529674159,
+}
+```
+
+This will return information about the listing, combining information from IPFS and the blockchain. In the future, fields returned may differ based on the listing's schema.
+
+
 ## getByIndex
 
 > To get a listing
@@ -87,9 +116,10 @@ const listing = await origin.listings.getByIndex(1)
 }
 ```
 
-Getting a listing will return the fields from the listing according to its listing schema.
 
-In addition, you'll have fields from the contract on the blockchain.
+**This method is deprecated**, and will be removed soon. Use `get` instead.
+
+This will return information about the listing, combining information from IPFS and the blockchain. In the future, fields returned may differ based on the listing's schema.
 
 ## allIds
 
