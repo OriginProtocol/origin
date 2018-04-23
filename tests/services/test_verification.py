@@ -158,4 +158,5 @@ def test_generate_phone_verification_rate_limit_exceeded(session):
     assert len(resp.errors) == 1
     assert resp.errors[0].code == 'RATE_LIMIT_EXCEEDED'
     assert resp.errors[0].path is None
-    assert resp.errors[0].message == 'Please wait briefly before requesting a new verification code.'
+    assert resp.errors[0].message == ('Please wait briefly before requesting a'
+                                      ' new verification code.')

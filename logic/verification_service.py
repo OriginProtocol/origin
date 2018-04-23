@@ -29,12 +29,15 @@ class VerificationServiceImpl(
             db_code = db_models.VerificationCode(eth_address=addr)
             db.session.add(db_code)
         elif (time_.utcnow() - db_code.updated_at).total_seconds() < 10:
-            # If the client has requested a verification code already within the last 10 seconds,
-            # throw a rate limit error, so they can't just keep creating codes and guessing them
+            # If the client has requested a verification code already within
+            # the last 10 seconds,
+            # throw a rate limit error, so they can't just keep creating codes
+            # and guessing them
             # rapidly.
             raise service_utils.req_error(
                 code='RATE_LIMIT_EXCEEDED',
-                message='Please wait briefly before requesting a new verification code.')
+                message=('Please wait briefly before requesting a new '
+                         'verification code.'))
         db_code.phone = req.phone
         db_code.code = random_numeric_token()
         db_code.expires_at = time_.utcnow(
@@ -90,7 +93,8 @@ def send_code_via_sms(phone, code):
     client.messages.create(
         to=phone,
         from_=settings.TWILIO_NUMBER,
-        body='Your Origin verification code is {}. It will expire in 30 minutes.'.format(code))
+        body=('Your Origin verification code is {}.'
+              ' It will expire in 30 minutes.').format(code))
 
 
 def generate_signed_attestation(addr):

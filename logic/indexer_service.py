@@ -58,7 +58,8 @@ def create_or_update_listing(payload):
         if listing_obj.ipfs_hash != hex_to_base58(listing_data[2]):
             listing_obj.ipfs_hash = hex_to_base58(listing_data[2])
             listing_obj.ipfs_data = IPFSHelper().file_from_hash(hex_to_base58(
-                listing_data[2]), root_attr='data', exclude_fields=exclude_ipfs_fields)
+                listing_data[2]), root_attr='data',
+                exclude_fields=exclude_ipfs_fields)
         listing_obj.price = Web3.fromWei(listing_data[3], 'ether')
         listing_obj.units = listing_data[4]
     db.session.commit()

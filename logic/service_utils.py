@@ -50,7 +50,10 @@ def apply_ordering(
         api_ordering,
         db_to_api_mapping,
         default_ordering=None):
-    api_criteria = api_ordering.criteria if api_ordering and api_ordering.criteria else []
+    if api_ordering and api_ordering.criteria:
+        api_criteria = api_ordering.criteria
+    else:
+        api_criteria = []
     db_columns = []
     for api_criterion in api_criteria:
         db_column = db_to_api_mapping.db_column_for_api_field_name(

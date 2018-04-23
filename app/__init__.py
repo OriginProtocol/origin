@@ -5,8 +5,10 @@ from config import settings
 
 class MyFlask(Flask):
     def get_send_file_max_age(self, name):
-        # This disables caching for static js and css files, which is helpful for development.
-        # In production you may either want to disable this an used versioned compiled static files,
+        # This disables caching for static js and css files,
+        # which is helpful for development.
+        # In production you may either want to disable this an used versioned
+        # compiled static files,
         # or serve static files from a CDN.
         if name.startswith('js/') or name.startswith('css/'):
             return 0
