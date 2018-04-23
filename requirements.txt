@@ -44,6 +44,7 @@ PyJWT==1.6.1
 pyOpenSSL==17.5.0
 PySocks==1.6.8
 pytest==3.5.0
+pytest-codestyle==1.2.2
 pytest-flakes==2.0.0
 python-dateutil==2.7.2
 python-dotenv==0.8.2
