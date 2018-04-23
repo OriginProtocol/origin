@@ -116,6 +116,16 @@ pytest path/to/test.py::test_case_name
 
 **Problems?** Hit us up in the `engineering` channel on [Discord](https://www.originprotocol.com/discord) if you need help.
 
+### Code Formatting
+
+We are using [pycodestyle](https://github.com/PyCQA/pycodestyle) to enforce code formatting. The tests will throw errors when code is not formatted properly, when using the `--codestyle` option.
+
+To automatically format the code:
+
+```
+autopep8 --in-place --recursive --a --a .
+```
+
 ## Contributing
 
 Please send your pull requests to the `develop` branch. Everything on `master` should be live at `bridge.originprotocol.com`
