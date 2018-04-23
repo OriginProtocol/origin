@@ -1,7 +1,7 @@
 ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
 
 # Origin Demo DApp
-This is an examle DApp (Decentralized Application) that shows how easy it is to create a decentralized marketplace on the ethereum blockchain. It showcases the power of [origin.js](https://github.com/OriginProtocol/platform).  Using only javascript commands, you can search listings, create listings, purchase listings, and more. 
+This is an examle DApp (Decentralized Application) that shows how easy it is to create a decentralized marketplace on the ethereum blockchain. It showcases the power of [origin.js](https://github.com/OriginProtocol/origin-js).  Using only javascript commands, you can search listings, create listings, purchase listings, and more.
 
 Documentation for origin.js is located here: http://docs.originprotocol.com/
 
@@ -62,7 +62,7 @@ By default, this demo will connect to the global test networks of Rinkeby or Rop
 
 ### 1. Set up and run *origin.js* locally
 
-[Follow these instructions to setup and run origin.js.](https://github.com/OriginProtocol/platform#local) Origin.js is needed to run a local blockchain and make it accessible to your dapp.
+[Follow these instructions to setup and run origin.js.](https://github.com/OriginProtocol/origin-js#local) Origin.js is needed to run a local blockchain and make it accessible to your dapp.
 
 ### 2. Set up the dapp
 
