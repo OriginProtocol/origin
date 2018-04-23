@@ -4,6 +4,63 @@ A listing is an offer from a seller to sell something.
 
 It is active until there are no more units available or its expiration date is reached.
 
+## get
+
+> To get a listing
+
+```javascript
+const listingAddress = "0x061b8d5f9e432e6b23d79fac02e5792eb8746ce5"
+const listing = await origin.listings.get(listingAddress)
+// Returns 
+{
+  name: "Kettlebell For Sale",
+  category: "Health and Beauty",
+  description: "32kg gorilla kettlebell",
+  location: "San Fransisco, CA",
+  pictures: [],
+  
+  address: "0x061b8d5f9e432e6b23d79fac02e5792eb8746ce5",
+  ipfsHash: "QmWZDcDq4aYGx9XmkPcx4mnKaGW2jCxf5tknrCtbfpJJFf",
+  sellerAddress: "0x627306090abab3a6e1400e9345bc60c78a8bef57",
+  priceWei: "1000000000000000000",
+  price: 1,  // deprecated
+  unitsAvailable: 1,
+  created: 1524490159,
+  expiration: 1529674159,
+}
+```
+
+This will return information about the listing, combining information from IPFS and the blockchain. In the future, fields returned may differ based on the listing's schema.
+
+
+## getByIndex
+
+> To get a listing
+
+```javascript
+const listing = await origin.listings.getByIndex(1)
+// Returns 
+{
+  name: "Kettlebell For Sale",
+  category: "Health and Beauty",
+  description: "32kg gorilla kettlebell",
+  location: "San Fransisco, CA",
+  pictures: [],
+
+  address: "659cbb0e2411a44db63778987b1e22153c086a95eb6b18bdf89de078917abc63",
+  index: 1,
+  ipfsHash: "QmWZDcDq4aYGx9XmkPcx4mnKaGW2jCxf5tknrCtbfpJJFf",
+  sellerAddress: "0f62d96d6675f32685bbdb8ac13cda7c23436f63efbb9d07700d8669ff12b7c4",
+  price: 0.004,
+  unitsAvailable: 1
+}
+```
+
+
+**This method is deprecated**, and will be removed soon.  Use `get` instead.
+
+This will return information about the listing, combining information from IPFS and the blockchain. In the future, fields returned may differ based on the listing's schema.
+
 ## create
 
 > To create a listing
@@ -62,64 +119,6 @@ await origin.contractService.waitTransactionFinished(transaction.tx)
 This method is **called by the seller**.
 
 Closing a transaction will set the unitsAvailable to zero. This will stop any further purchases of that Listing.
-
-
-## get
-
-> To get a listing
-
-```javascript
-const listingAddress = "0x061b8d5f9e432e6b23d79fac02e5792eb8746ce5"
-const listing = await origin.listings.get(listingAddress)
-// Returns 
-{
-  name: "Kettlebell For Sale",
-  category: "Health and Beauty",
-  description: "32kg gorilla kettlebell",
-  location: "San Fransisco, CA",
-  pictures: [],
-  
-  address: "0x061b8d5f9e432e6b23d79fac02e5792eb8746ce5",
-  ipfsHash: "QmWZDcDq4aYGx9XmkPcx4mnKaGW2jCxf5tknrCtbfpJJFf",
-  sellerAddress: "0x627306090abab3a6e1400e9345bc60c78a8bef57",
-  priceWei: "1000000000000000000",
-  price: 1,  // deprecated
-  unitsAvailable: 1,
-  created: 1524490159,
-  expiration: 1529674159,
-}
-```
-
-This will return information about the listing, combining information from IPFS and the blockchain. In the future, fields returned may differ based on the listing's schema.
-
-
-## getByIndex
-
-> To get a listing
-
-```javascript
-const listing = await origin.listings.getByIndex(1)
-// Returns 
-{
-  name: "Kettlebell For Sale",
-  category: "Health and Beauty",
-  description: "32kg gorilla kettlebell",
-  location: "San Fransisco, CA",
-  pictures: [],
-
-  address: "659cbb0e2411a44db63778987b1e22153c086a95eb6b18bdf89de078917abc63",
-  index: 1,
-  ipfsHash: "QmWZDcDq4aYGx9XmkPcx4mnKaGW2jCxf5tknrCtbfpJJFf",
-  sellerAddress: "0f62d96d6675f32685bbdb8ac13cda7c23436f63efbb9d07700d8669ff12b7c4",
-  price: 0.004,
-  unitsAvailable: 1
-}
-```
-
-
-**This method is deprecated**, and will be removed soon. Use `get` instead.
-
-This will return information about the listing, combining information from IPFS and the blockchain. In the future, fields returned may differ based on the listing's schema.
 
 ## allIds
 
