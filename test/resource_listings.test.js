@@ -35,12 +35,22 @@ describe("Listing Resource", function() {
     expect(ids.length).to.be.greaterThan(1)
   })
 
-  it("should get a listing", async () => {
+  it("should get a listing by index", async () => {
     await listings.create({ name: "Foo Bar", price: 1 }, "")
     let listingIds = await contractService.getAllListingIds()
     const listing = await listings.getByIndex(listingIds[listingIds.length - 1])
     expect(listing.name).to.equal("Foo Bar")
     expect(listing.index).to.equal(listingIds.length - 1)
+  })
+
+  it("should get a listing by address", async () => {
+    await listings.create({ name: "Foo Bar", price: 1 }, "")
+    let listingIds = await contractService.getAllListingIds()
+    const listingFromIndex = await listings.getByIndex(
+      listingIds[listingIds.length - 1]
+    )
+    const listing = await listings.get(listingFromIndex.address)
+    expect(listing.name).to.equal("Foo Bar")
   })
 
   it("should buy a listing", async () => {
