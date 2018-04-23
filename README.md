@@ -96,29 +96,22 @@ This starts a development server on ```localhost:5000``` by default.
 
 ### Run the Tests
 
-As a one-time step, create a Postgres DB called `unittest`, which will be used by the test environment for end-to-end-tests.
-
-```bash
-createdb unittest
-```
-
 Throughout the development process and before committing or deploying, run:
 
 ```bash
-python testing/all_tests.py
+pytest --flakes
 ```
 
 Run individual test files simply as:
 
 ```bash
-python path/to/test.py
+pytest path/to/test.py
 ```
 
 Run a single test case, or an individual test, using:
 
 ```bash
-python path/to/test.py TestCaseName
-python path/to/test.py TestCaseName.test_name
+pytest path/to/test.py::test_case_name
 ```
 
 **Problems?** Hit us up in the `engineering` channel on [Discord](https://www.originprotocol.com/discord) if you need help.

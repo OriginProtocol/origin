@@ -15,6 +15,7 @@ VC = db_models.VerificationCode
 
 CODE_EXPIRATION_TIME_MINUTES = 30
 
+
 class VerificationServiceImpl(verification.VerificationService, apilib.ServiceImplementation):
 
     def generate_phone_verification_code(self, req):
@@ -44,11 +45,14 @@ class VerificationServiceImpl(verification.VerificationService, apilib.ServiceIm
             .filter(VC.phone == req.phone) \
             .first()
         if db_code is None:
-            raise service_utils.req_error(code='NOT_FOUND', path='phone', message='The given phone number was not found.')
+            raise service_utils.req_error(code='NOT_FOUND', path='phone',
+                                          message='The given phone number was not found.')
         if req.code != db_code.code:
-            raise service_utils.req_error(code='INVALID', path='code', message='The code you provided is invalid.')
+            raise service_utils.req_error(code='INVALID', path='code',
+                                          message='The code you provided is invalid.')
         if time_.utcnow() > db_code.expires_at:
-            raise service_utils.req_error(code='EXPIRED', path='code', message='The code you provided has expired.')
+            raise service_utils.req_error(code='EXPIRED', path='code',
+                                          message='The code you provided has expired.')
         db_identity = db_models.Identity(
             eth_address=addr,
             phone=req.phone,
@@ -57,8 +61,10 @@ class VerificationServiceImpl(verification.VerificationService, apilib.ServiceIm
         db.session.commit()
         return verification.VerifyPhoneResponse(attestation=generate_signed_attestation(addr))
 
+
 def numeric_eth(str_eth_address):
     return int(str_eth_address, 16)
+
 
 # Generates a six-digit numeric token.
 def random_numeric_token():
@@ -66,12 +72,14 @@ def random_numeric_token():
     rand = secrets.randbelow(1000000 - 1000)
     return '{0:06d}'.format(rand + 1000)
 
+
 def send_code_via_sms(phone, code):
     client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     client.messages.create(
         to=phone,
         from_=settings.TWILIO_NUMBER,
         body='Your Origin verification code is {}. It will expire in 30 minutes.'.format(code))
+
 
 def generate_signed_attestation(addr):
     return 'Placeholder attestation for {}'.format(addr)
