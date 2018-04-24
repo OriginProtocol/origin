@@ -25,10 +25,9 @@ class MyListingCard extends Component {
     }
 
     try {
-      const transactionReceipt = await origin.listings.close(address)
-      console.log(transactionReceipt)
-      const blockNumber = await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
-      console.log(blockNumber)
+      const transaction = await origin.listings.close(address)
+      console.log(transaction)
+      await transaction.whenFinished()
       this.props.handleUpdate(address)
     } catch(error) {
       console.error(`Error closing listing ${address}`)
