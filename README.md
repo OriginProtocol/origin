@@ -78,22 +78,24 @@ And buyers to:
 
  ### Local
 
+1. Fork the repo on GitHub
+
 1. Clone
-```
-git clone https://github.com/OriginProtocol/platform origin-platform && cd origin-platform
-```
+    ```
+    git clone git@github.com:YOUR_GITHUB_USERNAME/origin-js.git && cd origin-js
+    ```
 
-2. Install:dev (shortcut for `npm install && npm link`). Linking makes this available as a local npm package for local dapp development.
- ```
- npm run install:dev
- ```
+1. Install:dev (shortcut for `npm install && npm link`). Linking makes this available as a local npm package for local dapp development.
+    ```
+    npm run install:dev
+    ```
 
-3. Start the localblockchain and create the build. Code changes will trigger a live rebuild.
- ```
- npm start
- ```
+1. Start the localblockchain and create the build. Code changes will trigger a live rebuild.
+    ```
+    npm start
+    ```
 
- 4. To develop against a working dapp and UI, see [the instructions in our demo dapp](https://github.com/OriginProtocol/demo-dapp#developing-with-a-local-chain).
+1. To develop against a working dapp and UI, see [the instructions in our demo dapp](https://github.com/OriginProtocol/demo-dapp#developing-with-a-local-chain).
 
  ## Import
 
