@@ -9,7 +9,7 @@ class MyListingCard extends Component {
   }
 
   render() {
-    const { address, category, createdAt, name, price, quantity, unitsAvailable } = this.props.listing
+    const { address, category, createdAt, name, pictures, price, quantity, unitsAvailable } = this.props.listing
     /*
      *  Micah 4/23/2018
      *  ~~~~~~~~~~~~~~~
@@ -24,8 +24,10 @@ class MyListingCard extends Component {
     return (
       <div className="transaction card">
         <div className="card-body d-flex flex-column flex-lg-row">
-          <div className="image-container">
-            <img role="presentation" />
+          <div className="aspect-ratio">
+            <div className="image-container">
+              <img src={(pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:") ? pictures[0] : '/images/default-image.jpg'} role="presentation" />
+            </div>
           </div>
           <div className="content-container d-flex flex-column">
             <span className={`status ${status}`}>{status}</span>

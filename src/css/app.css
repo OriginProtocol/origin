@@ -1368,27 +1368,25 @@ label[for=root_pictures]:hover {
   vertical-align: middle;
 }
 
-.transaction .image-container {
+.transaction .aspect-ratio {
   position: relative;
-  flex-basis: 360px;
   flex-shrink: 0;
   max-width: 100%;
+  overflow: hidden;
+  padding-top: 66.67%;
 }
 
-.transaction .image-container::after {
-  content: '';
-  display: block;
-  padding-bottom: 66.67%;
-  height: 0;
+.transaction .image-container {
+  position: absolute;
+  height: 100%;
+  top: 0;
+  width: 100%;
 }
 
 .transaction .image-container img {
-  position: absolute;
-  background-color: var(--light);
-  left: 0;
-  padding-bottom: 66.67%;
-  top: 0;
-  width: 100%;
+  max-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
 }
 
 .transaction .content-container {
@@ -2600,6 +2598,11 @@ footer .footer-links li a {
 
   .verification {
     position: relative;
+  }
+
+  .transaction .aspect-ratio {
+    flex-basis: 360px;
+    padding-top: 33.33%;
   }
 
   .transaction .content-container {
