@@ -20,7 +20,7 @@ from util import time_, attestations
 from web3 import Web3, HTTPProvider
 
 web3 = Web3(HTTPProvider('http://localhost:9545')) # TODO: use env vars to connect to live networks
-signing_account = web3.eth.accounts[1] # TODO: allow this to be specified from env var in production
+signing_key = settings.ORIGIN_SIGNING_KEY
 
 VC = db_models.VerificationCode
 
@@ -95,7 +95,7 @@ class VerificationServiceImpl(
         db.session.commit()
         data = 'phone verified' # TODO: determine what the text should be
         claim_type = 10 # TODO: determine claim type integer code for phone verification
-        signature = attestations.generate_signature(web3, signing_account, req.eth_address, claim_type, data)
+        signature = attestations.generate_signature(web3, signing_key, req.eth_address, claim_type, data)
         return verification.VerifyPhoneResponse(signature=signature, claim_type=claim_type, data=data)
 
     def generate_email_verification_code(self, req):
@@ -136,7 +136,7 @@ class VerificationServiceImpl(
 
         data = 'email verified' # TODO: determine what the text should be
         claim_type = 11 # TODO: determine claim type integer code for email verification
-        signature = attestations.generate_signature(web3, signing_account, req.eth_address, claim_type, data)
+        signature = attestations.generate_signature(web3, signing_key, req.eth_address, claim_type, data)
         return verification.VerifyEmailResponse(signature=signature, claim_type=claim_type, data=data)
 
     def facebook_auth_url(self, req):
@@ -160,7 +160,7 @@ class VerificationServiceImpl(
             raise service_utils.req_error(code='INVALID', path='code', message='The code you provided is invalid.')
         data = 'facebook verified' # TODO: determine what the text should be
         claim_type = 3 # TODO: determine claim type integer code for phone verification
-        signature = attestations.generate_signature(web3, signing_account, req.eth_address, claim_type, data)
+        signature = attestations.generate_signature(web3, signing_key, req.eth_address, claim_type, data)
         return verification.VerifyFacebookResponse(signature=signature, claim_type=claim_type, data=data)
 
     def twitter_auth_url(self, req):
@@ -190,7 +190,7 @@ class VerificationServiceImpl(
         # Create attestation
         data = 'twitter verified' # TODO: determine what the text should be
         claim_type = 4 # TODO: determine claim type integer code for phone verification
-        signature = attestations.generate_signature(web3, signing_account, req.eth_address, claim_type, data)
+        signature = attestations.generate_signature(web3, signing_key, req.eth_address, claim_type, data)
         return verification.VerifyTwitterResponse(signature=signature, claim_type=claim_type, data=data)
 
 def numeric_eth(str_eth_address):
