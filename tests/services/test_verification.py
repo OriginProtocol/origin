@@ -3,13 +3,14 @@ import datetime
 from api import verification
 from database import db_models
 from logic import verification_service
+from web3 import Web3
 from tests.factories.verification import VerificationCodeFactory
 from util.time_ import utcnow
 VC = db_models.VerificationCode
 
 
 def str_eth(numeric_eth_address):
-    return '0x{:02X}'.format(int(numeric_eth_address))
+    return Web3.toChecksumAddress(hex(int(numeric_eth_address)))
 
 
 def service():
