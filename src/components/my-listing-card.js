@@ -10,6 +10,9 @@ class MyListingCard extends Component {
     super(props)
 
     this.closeListing = this.closeListing.bind(this)
+    this.state = {
+      unitsAvailable: this.props.listing.unitsAvailable
+    }
   }
 
   componentDidMount() {
@@ -36,7 +39,8 @@ class MyListingCard extends Component {
   }
 
   render() {
-    const { address, category, createdAt, name, pictures, price, /*quantity, */unitsAvailable } = this.props.listing
+    const { address, category, createdAt, name, pictures, price } = this.props.listing
+    const unitsAvailable = this.state.unitsAvailable
     /*
      *  Micah 4/23/2018
      *  ~~~~~~~~~~~~~~~
