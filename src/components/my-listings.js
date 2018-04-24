@@ -25,7 +25,7 @@ class MyListings extends Component {
       }
 
       return listing
-    } catch (error) {
+    } catch(error) {
       console.error(`Error fetching contract or IPFS info for listingId: ${id}`)
     }
   }

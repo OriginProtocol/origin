@@ -3,13 +3,40 @@ import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import moment from 'moment'
 
+import origin from '../services/origin'
+
 class MyListingCard extends Component {
+  constructor(props) {
+    super(props)
+
+    this.closeListing = this.closeListing.bind(this)
+  }
+
   componentDidMount() {
     $('[data-toggle="tooltip"]').tooltip()
   }
 
+  async closeListing() {
+    const { address } = this.props.listing
+    const prompt = confirm('Are you sure that you want to permanently close this listing? This cannot be undone.')
+
+    if (!prompt) {
+      return null
+    }
+
+    try {
+      const transactionReceipt = await origin.listings.close(address)
+      console.log(transactionReceipt)
+      const blockNumber = await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
+      console.log(blockNumber)
+      this.setState({ unitsAvailable: 0 })
+    } catch(error) {
+      console.error(`Error closing listing ${address}`)
+    }
+  }
+
   render() {
-    const { address, category, createdAt, name, pictures, price, quantity, unitsAvailable } = this.props.listing
+    const { address, category, createdAt, name, pictures, price, /*quantity, */unitsAvailable } = this.props.listing
     /*
      *  Micah 4/23/2018
      *  ~~~~~~~~~~~~~~~
@@ -19,7 +46,7 @@ class MyListingCard extends Component {
      *  There are no denormalized "transaction completed" or "transaction in progress" counts.
      */
     const status = unitsAvailable > 0 ? 'active' : 'inactive'
-    const timestamp = `Created on ${moment(createdAt).format('MMMM D, YYYY')}`
+    // const timestamp = `Created on ${moment(createdAt).format('MMMM D, YYYY')}`
 
     return (
       <div className="transaction card">
@@ -51,7 +78,7 @@ class MyListingCard extends Component {
                 {/*<a onClick={() => alert('To Do')}>Edit</a>*/}
                 {/*!active && <a onClick={() => alert('To Do')}>Enable</a>*/}
                 {/*active && <a onClick={() => alert('To Do')}>Disable</a>*/}
-                <a className="warning" onClick={() => alert('To Do')}>Delete</a>
+                <a className="warning" onClick={this.closeListing}>Close Listing</a>
               </div>
             </div>
           </div>

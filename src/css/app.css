@@ -16,10 +16,6 @@ body {
   font-family: var(--default-font);
 }
 
-#root {
-  height: 100%;
-}
-
 /* sticky footer sibling */
 main {
   flex: 1 0 auto;
@@ -1498,6 +1494,10 @@ label[for=root_pictures]:hover {
   font-weight: 900;
   padding: 0.25rem 1.5rem;
   width: unset;
+}
+
+.transaction .links-container a {
+  cursor: pointer;
 }
 
 .transaction-detail .brdcrmb {
