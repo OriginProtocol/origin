@@ -3,11 +3,11 @@ var ListingContract = require("../build/contracts/Listing.json")
 var PurchaseContract = require("../build/contracts/Purchase.json")
 var contract = require("truffle-contract")
 
-module.exports = function(deployer/*, network*/) {
-  return deploy_sample_contracts()
+module.exports = function(deployer, network) {
+  return deploy_sample_contracts(network)
 }
 
-async function deploy_sample_contracts() {
+async function deploy_sample_contracts(network) {
   console.log("deploying listings")
 
   const default_account = web3.eth.accounts[0]
@@ -71,21 +71,23 @@ async function deploy_sample_contracts() {
     { from: default_account, gas: 4476768 }
   )
 
-  // Creating ticket purchases at different stages
-  const ticketsListing = await getListingContract(ticketsTransaction)
-  let purchase
+  if (network === "development") {
+    // Creating ticket purchases at different stages
+    const ticketsListing = await getListingContract(ticketsTransaction)
+    let purchase
 
-  purchase = await buyListing(ticketsListing, 1, a_buyer_account)
+    purchase = await buyListing(ticketsListing, 1, a_buyer_account)
 
-  purchase = await buyListing(ticketsListing, 1, a_buyer_account)
-  await purchase.sellerConfirmShipped({ from: default_account })
+    purchase = await buyListing(ticketsListing, 1, a_buyer_account)
+    await purchase.sellerConfirmShipped({ from: default_account })
 
-  purchase = await buyListing(ticketsListing, 1, another_buyer_account)
-  await purchase.sellerConfirmShipped({ from: default_account })
-  await purchase.buyerConfirmReceipt({ from: another_buyer_account })
+    purchase = await buyListing(ticketsListing, 1, another_buyer_account)
+    await purchase.sellerConfirmShipped({ from: default_account })
+    await purchase.buyerConfirmReceipt({ from: another_buyer_account })
 
-  purchase = await buyListing(ticketsListing, 1, another_buyer_account)
-  await purchase.sellerConfirmShipped({ from: default_account })
-  await purchase.buyerConfirmReceipt({ from: another_buyer_account })
-  await purchase.sellerCollectPayout({ from: default_account })
+    purchase = await buyListing(ticketsListing, 1, another_buyer_account)
+    await purchase.sellerConfirmShipped({ from: default_account })
+    await purchase.buyerConfirmReceipt({ from: another_buyer_account })
+    await purchase.sellerCollectPayout({ from: default_account })
+  }
 }
