@@ -40,7 +40,7 @@ class Purchases extends ResourceBase{
   }
 
   async sellerConfirmShipped(address) {
-    return await this.contractFn(address, "sellerConfirmShipped")
+    return await this.contractFn(address, "sellerConfirmShipped",[], {gas: 80000})
   }
 
   async buyerConfirmReceipt(address) {
