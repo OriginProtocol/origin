@@ -24,53 +24,66 @@ class VerifyPhoneResponse(apilib.Response):
     claim_type = apilib.Field(apilib.String())
     data = apilib.Field(apilib.String())
 
+
 class GenerateEmailVerificationCodeRequest(apilib.Request):
     eth_address = apilib.Field(apilib.String(), required=True)
     email = apilib.Field(apilib.String(), required=True)
 
+
 class GenerateEmailVerificationCodeResponse(apilib.Response):
     pass
+
 
 class VerifyEmailRequest(apilib.Request):
     eth_address = apilib.Field(apilib.String(), required=True)
     email = apilib.Field(apilib.String(), required=True)
     code = apilib.Field(apilib.String(), required=True)
 
+
 class VerifyEmailResponse(apilib.Response):
     signature = apilib.Field(apilib.String())
     claim_type = apilib.Field(apilib.String())
     data = apilib.Field(apilib.String())
 
+
 class FacebookAuthUrlRequest(apilib.Request):
     redirect_url = apilib.Field(apilib.String(), required=True)
 
+
 class FacebookAuthUrlResponse(apilib.Response):
     url = apilib.Field(apilib.String())
+
 
 class VerifyFacebookRequest(apilib.Request):
     eth_address = apilib.Field(apilib.String(), required=True)
     code = apilib.Field(apilib.String(), required=True)
     redirect_url = apilib.Field(apilib.String(), required=True)
 
+
 class VerifyFacebookResponse(apilib.Response):
     signature = apilib.Field(apilib.String())
     claim_type = apilib.Field(apilib.String())
     data = apilib.Field(apilib.String())
 
+
 class TwitterAuthUrlRequest(apilib.Request):
     pass
 
+
 class TwitterAuthUrlResponse(apilib.Response):
     url = apilib.Field(apilib.String())
+
 
 class VerifyTwitterRequest(apilib.Request):
     eth_address = apilib.Field(apilib.String(), required=True)
     oauth_verifier = apilib.Field(apilib.String(), required=True)
 
+
 class VerifyTwitterResponse(apilib.Response):
     signature = apilib.Field(apilib.String())
     claim_type = apilib.Field(apilib.String())
     data = apilib.Field(apilib.String())
+
 
 class VerificationService(apilib.Service):
     path = '/api/verification_service'
@@ -97,8 +110,8 @@ class VerificationService(apilib.Service):
             FacebookAuthUrlResponse),
         apilib.Method(
             'verify_facebook',
-             VerifyFacebookRequest,
-             VerifyFacebookResponse),
+            VerifyFacebookRequest,
+            VerifyFacebookResponse),
         apilib.Method(
             'twitter_auth_url',
             TwitterAuthUrlRequest,
