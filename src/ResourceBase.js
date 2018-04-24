@@ -25,6 +25,7 @@ class ResourceBase {
     // Setup options
     const opts = Object.assign(options, {}) // clone options
     opts.from = await this.contractService.currentAccount()
+    opts.gas = options.gas || 50000 // Default gas
     // Get contract and run trasaction
     const contractDefinition = this.contractDefinition
     const contract = await contractDefinition.at(address)
