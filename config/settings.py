@@ -1,14 +1,10 @@
 import os
-import sys
 
 import dotenv
 
-if '_test.py' in sys.argv[0] or 'tests.py' in sys.argv[0]:
-    dotenv.load_dotenv('testing/test.env')
-else:
-    dotenv_filename = dotenv.find_dotenv()
-    if dotenv_filename:
-        dotenv.load_dotenv(dotenv_filename)
+dotenv_filename = dotenv.find_dotenv()
+if dotenv_filename:
+    dotenv.load_dotenv(dotenv_filename)
 
 
 def parse_bool(env_value):
