@@ -3,7 +3,7 @@
 ![origin_npm_version](https://img.shields.io/npm/v/origin.svg) ![origin_license](https://img.shields.io/npm/l/origin.svg)
 ![origin_travis_banner](https://travis-ci.org/OriginProtocol/origin-js.svg?branch=master)
 
-# Origin Platform
+# Origin Protocol
 
 Origin Protocol is a library of javascript code and Ethereum smart contracts which allow anyone to create decentralized marketplaces, including for fractional usage.
 
@@ -77,8 +77,6 @@ And buyers to:
  ```
 
  ### Local
-
-1. Fork the repo on GitHub
 
 1. `git clone` your fork. Note that the latest commits will be on the `develop`
    branch. So switch to that branch if you want to submit a PR or check out
