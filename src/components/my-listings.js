@@ -9,6 +9,7 @@ class MyListings extends Component {
     super(props)
 
     this.getListingIds = this.getListingIds.bind(this)
+    this.handleUpdate = this.handleUpdate.bind(this)
     this.loadListing = this.loadListing.bind(this)
     this.state = { filter: 'all', listings: [], loading: true }
   }
@@ -46,6 +47,20 @@ class MyListings extends Component {
     this.setState({ loading: false })
   }
 
+  async handleUpdate(address) {
+    try {
+      const listing = await origin.listings.get(address)
+      const listings = [...this.state.listings]
+      const index = listings.findIndex(l => l.address === address)
+
+      listings[index] = listing
+
+      this.setState({ listings })
+    } catch(error) {
+      console.error(`Error handling update for listing: ${address}`)
+    }
+  }
+
   render() {
     const { filter, listings, loading } = this.state
     const filteredListings = (() => {
@@ -80,7 +95,7 @@ class MyListings extends Component {
             </div>
             <div className="col-12 col-md-9">
               <div className="my-listings-list">
-                {filteredListings.map(l => <MyListingCard key={`my-listing-${l.address}`} listing={l} />)}
+                {filteredListings.map(l => <MyListingCard key={`my-listing-${l.address}`} listing={l} handleUpdate={this.handleUpdate} />)}
               </div>
             </div>
           </div>

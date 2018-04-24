@@ -10,9 +10,6 @@ class MyListingCard extends Component {
     super(props)
 
     this.closeListing = this.closeListing.bind(this)
-    this.state = {
-      unitsAvailable: this.props.listing.unitsAvailable
-    }
   }
 
   componentDidMount() {
@@ -32,15 +29,14 @@ class MyListingCard extends Component {
       console.log(transactionReceipt)
       const blockNumber = await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
       console.log(blockNumber)
-      this.setState({ unitsAvailable: 0 })
+      this.props.handleUpdate(address)
     } catch(error) {
       console.error(`Error closing listing ${address}`)
     }
   }
 
   render() {
-    const { address, category, createdAt, name, pictures, price } = this.props.listing
-    const unitsAvailable = this.state.unitsAvailable
+    const { address, category, createdAt, name, pictures, price, unitsAvailable } = this.props.listing
     /*
      *  Micah 4/23/2018
      *  ~~~~~~~~~~~~~~~
