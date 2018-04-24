@@ -32,7 +32,7 @@ Jinja2==2.10
 Mako==1.0.7
 MarkupSafe==1.0
 mock==2.0.0
-oauth2==1.9.0
+oauth2==1.9.0.post1
 parso==0.1.1
 pbr==4.0.0
 pexpect==4.4.0
