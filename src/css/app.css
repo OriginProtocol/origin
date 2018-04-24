@@ -16,10 +16,6 @@ body {
   font-family: var(--default-font);
 }
 
-#root {
-  height: 100%;
-}
-
 /* sticky footer sibling */
 main {
   flex: 1 0 auto;
