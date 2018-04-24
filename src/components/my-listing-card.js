@@ -78,7 +78,7 @@ class MyListingCard extends Component {
                 {/*<a onClick={() => alert('To Do')}>Edit</a>*/}
                 {/*!active && <a onClick={() => alert('To Do')}>Enable</a>*/}
                 {/*active && <a onClick={() => alert('To Do')}>Disable</a>*/}
-                <a className="warning" onClick={this.closeListing}>Close Listing</a>
+                {!!unitsAvailable && <a className="warning" onClick={this.closeListing}>Close Listing</a>}
               </div>
             </div>
           </div>
