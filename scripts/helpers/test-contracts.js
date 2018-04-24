@@ -8,7 +8,11 @@ const testContracts = () => {
       reject(String(data))
     })
     truffleTest.on('exit', code => {
-      resolve()
+      if (code === 0) {
+        resolve()
+      } else {
+        reject('Contract tests failed')
+      }
     })
   })
 }
