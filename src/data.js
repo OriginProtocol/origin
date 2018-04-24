@@ -23,11 +23,7 @@ export default {
         name: 'Aure G.',
         address: '0x12Be343B94f860124dC4fEe278FDCBD38C102D88',
       },
-      pictures: [
-        '',
-        '',
-        '',
-      ],
+      pictures: [],
     },
     {
       _id: '3bar4',
@@ -50,11 +46,7 @@ export default {
         name: 'Aure G.',
         address: '0x12Be343B94f860124dC4fEe278FDCBD38C102D88',
       },
-      pictures: [
-        '',
-        '',
-        '',
-      ],
+      pictures: [],
     },
     {
       _id: '5baz6',
@@ -77,11 +69,7 @@ export default {
         name: 'Aure G.',
         address: '0x12Be343B94f860124dC4fEe278FDCBD38C102D88',
       },
-      pictures: [
-        '',
-        '',
-        '',
-      ],
+      pictures: [],
     },
     {
       _id: '7qux8',
@@ -104,11 +92,7 @@ export default {
         name: 'Aure G.',
         address: '0x12Be343B94f860124dC4fEe278FDCBD38C102D88',
       },
-      pictures: [
-        '',
-        '',
-        '',
-      ],
+      pictures: [],
     },
   ],
   notifications: [

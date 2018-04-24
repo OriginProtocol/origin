@@ -11,7 +11,7 @@ class MyPurchaseCard extends Component {
 
   render() {
     const { listing } = this.props
-    const { _id, category, createdAt, fulfilledAt, receivedAt, soldAt, title } = listing
+    const { _id, category, createdAt, fulfilledAt, pictures, receivedAt, soldAt, title } = listing
     let date, step, verb
 
     if (receivedAt) {
@@ -37,8 +37,10 @@ class MyPurchaseCard extends Component {
     return (
       <div className="transaction card">
         <div className="card-body d-flex flex-column flex-lg-row">
-          <div className="image-container">
-            <Link to={`/my-purchases/${_id}`}><img role="presentation" /></Link>
+          <div className="aspect-ratio">
+            <div className="image-container">
+              <img src={(pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:") ? pictures[0] : '/images/default-image.jpg'} role="presentation" />
+            </div>
           </div>
           <div className="content-container d-flex flex-column">
             <p className="category">{category}</p>
