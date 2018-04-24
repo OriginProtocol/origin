@@ -16,6 +16,7 @@ from database import db
 from database import db_models
 from flask import session
 from logic import service_utils
+from sqlalchemy import func
 from util import time_, attestations
 from web3 import Web3, HTTPProvider
 
@@ -108,7 +109,7 @@ class VerificationServiceImpl(
         addr = numeric_eth(req.eth_address)
         db_code = VC.query \
             .filter(VC.eth_address == addr) \
-            .filter(VC.email == req.email) \
+            .filter(func.lower(VC.email) == func.lower(req.email)) \
             .first()
         if db_code is None:
             db_code = db_models.VerificationCode(eth_address=addr)
@@ -133,7 +134,7 @@ class VerificationServiceImpl(
         addr = numeric_eth(req.eth_address)
         db_code = VC.query \
             .filter(VC.eth_address == addr) \
-            .filter(VC.email == req.email) \
+            .filter(func.lower(VC.email) == func.lower(req.email)) \
             .first()
         if db_code is None:
             raise service_utils.req_error(

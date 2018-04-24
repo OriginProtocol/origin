@@ -221,7 +221,7 @@ def test_verify_email_valid_code(mock_now, session):
 
     req = verification.VerifyEmailRequest(
         eth_address=str_eth(vc_obj.eth_address),
-        email=vc_obj.email,
+        email=vc_obj.email.upper(),
         code=vc_obj.code)
     mock_now.return_value = vc_obj.expires_at - datetime.timedelta(minutes=1)
     resp = service().invoke('verify_email', req)
