@@ -80,10 +80,9 @@ And buyers to:
 
 1. Fork the repo on GitHub
 
-1. Clone
-    ```
-    git clone git@github.com:YOUR_GITHUB_USERNAME/origin-js.git && cd origin-js
-    ```
+1. `git clone` your fork. Note that the latest commits will be on the `develop`
+   branch. So switch to that branch if you want to submit a PR or check out
+   recently merged code.
 
 1. Install:dev (shortcut for `npm install && npm link`). Linking makes this available as a local npm package for local dapp development.
     ```
