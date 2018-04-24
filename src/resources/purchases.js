@@ -30,8 +30,8 @@ class Purchases extends ResourceBase{
       stage: _NUMBERS_TO_STAGE[contractData[0]],
       listingAddress: contractData[1],
       buyerAddress: contractData[2],
-      created: contractData[3],
-      buyerTimout: contractData[4]
+      created: contractData[3].toNumber(),
+      buyerTimout: contractData[4].toNumber()
     }
   }
 
