@@ -10,7 +10,6 @@ class MyListings extends Component {
 
     this.getListingIds = this.getListingIds.bind(this)
     this.loadListing = this.loadListing.bind(this)
-    this.loadListings = this.loadListings.bind(this)
     this.state = { filter: 'all', listings: [], loading: true }
   }
 
@@ -30,15 +29,11 @@ class MyListings extends Component {
     }
   }
 
-  async loadListings(ids) {
-    return await Promise.all(ids.map(this.loadListing))
-  }
-
   async getListingIds() {
     try {
       const ids = await origin.listings.allIds()
 
-      return this.loadListings(ids)
+      return await Promise.all(ids.map(this.loadListing))
     } catch(error) {
       console.error('Error fetching listing ids')
     }
@@ -52,19 +47,17 @@ class MyListings extends Component {
   }
 
   render() {
-    // const { filter, listings } = this.state
-    // const filteredListings = (() => {
-    //   const arr = data.listings
-
-    //   switch(filter) {
-    //     case 'active':
-    //       return arr.filter(l => l.active)
-    //     case 'inactive':
-    //       return arr.filter(l => !l.active)
-    //     default:
-    //       return arr
-    //   }
-    // })()
+    const { filter, listings, loading } = this.state
+    const filteredListings = (() => {
+      switch(filter) {
+        case 'active':
+          return listings.filter(l => l.unitsAvailable)
+        case 'inactive':
+          return listings.filter(l => !l.unitsAvailable)
+        default:
+          return listings
+      }
+    })()
 
     return (
       <div className="my-listings-wrapper">
@@ -76,16 +69,18 @@ class MyListings extends Component {
           </div>
           <div className="row">
             <div className="col-12 col-md-3">
-              {this.state.loading && 'Loading...'}
-              {/*<div className="filters list-group flex-row flex-md-column">
-                              <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>All</a>
-                              <a className={`list-group-item list-group-item-action${filter === 'active' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'active' })}>Active</a>
-                              <a className={`list-group-item list-group-item-action${filter === 'inactive' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'inactive' })}>Inactive</a>
-                            </div>*/}
+              {loading && 'Loading...'}
+              {!loading &&
+                <div className="filters list-group flex-row flex-md-column">
+                  <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>All</a>
+                  <a className={`list-group-item list-group-item-action${filter === 'active' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'active' })}>Active</a>
+                  <a className={`list-group-item list-group-item-action${filter === 'inactive' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'inactive' })}>Inactive</a>
+                </div>
+              }
             </div>
             <div className="col-12 col-md-9">
               <div className="my-listings-list">
-                {this.state.listings.map(l => <MyListingCard key={`my-listing-${l.address}`} listing={l} />)}
+                {filteredListings.map(l => <MyListingCard key={`my-listing-${l.address}`} listing={l} />)}
               </div>
             </div>
           </div>
