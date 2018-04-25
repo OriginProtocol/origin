@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import moment from 'moment'
@@ -275,26 +275,36 @@ class PurchaseDetail extends Component {
           <hr />
           <div className="row">
             <div className="col-12 col-lg-8">
-              <h2>Listing Details</h2>
-              {!!pictures.length &&
-                <div className="carousel">
-                  {pictures.map(pictureUrl => (
-                    <div className="photo" key={pictureUrl}>
-                      <img src={pictureUrl} role='presentation' />
+              {listing.address &&
+                <Fragment>
+                  <h2>Listing Details</h2>
+                  {!!pictures.length &&
+                    <div className="carousel small">
+                      {pictures.map(pictureUrl => (
+                        <div className="photo" key={pictureUrl}>
+                          <img src={pictureUrl} role='presentation' />
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  }
+                  <div className="detail-info-box">
+                    <h2 className="category placehold">{listing.category}</h2>
+                    <h1 className="title text-truncate placehold">{listing.name}</h1>
+                    <p className="description placehold">{listing.description}</p>
+                    {!!listing.unitsAvailable && listing.unitsAvailable < 5 &&
+                      <p className="units-available text-danger">Just {listing.unitsAvailable.toLocaleString()} left!</p>
+                    }
+                    {listing.ipfsHash &&
+                      <p className="link-container">
+                        <a href={origin.ipfsService.gatewayUrlForHash(listing.ipfsHash)} target="_blank">
+                          View on IPFS<img src="/images/carat-blue.svg" className="carat" alt="right carat" />
+                        </a>
+                      </p>
+                    }
+                  </div>
+                  <hr />
+                </Fragment>
               }
-              <p className="description">Look at these little dudes! Aren’t they just the best?? You get two super fashionable and stylish baby chickens that you can bring to your next party and get the whole crew excited. These baby chickens know how to party and they’re super classy. No matter how fancy the venue, these little guys won’t dissapoint.</p>
-              <p className="category text-muted">Category: {category}</p>
-              <p className="availability text-muted">{Number(2).toLocaleString()} units available</p>
-              <p className="ipfs-hash text-muted">IPFS Hash: frr34rijwoeij39eu0eijwoiejdwioec93idwp</p>
-              <p className="ipfs-link">
-                <a href={origin.ipfsService.gatewayUrlForHash('frr34rijwoeij39eu0eijwoiejdwioec93idwp')} target="_blank">
-                  View on IPFS <big>&rsaquo;</big>
-                </a>
-              </p>
-              <hr />
               <div className="reviews">
                 <h2>Reviews <span className="review-count">{Number(57).toLocaleString()}</span></h2>
                 {perspective === 'buyer' && receivedAt && !reviewedAt &&

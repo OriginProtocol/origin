@@ -960,6 +960,10 @@ a:hover {
   background-color: var(--dark-grey);
 }
 
+.carousel.small {
+  height: 200px;
+}
+
 .carousel .photo {
   display: inline-block;
   vertical-align: top;
@@ -968,6 +972,11 @@ a:hover {
   height: 400px;
   background-color: var(--light);
   margin-right: 1px;
+}
+
+.carousel.small .photo {
+  height: 200px;
+  width: 300px;
 }
 
 .carousel .photo img {
@@ -1026,34 +1035,34 @@ a:hover {
   min-height: 192px;
 }
 
-.listing-container .category {
+.detail-info-box .category {
   font-size: 0.875rem;
   color: var(--dusk);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
 }
 
-.listing-container .title {
+.detail-info-box .title {
   font-family: var(--heading-font);
   font-size: 1.5rem;
   margin: 0 0 1rem;
 }
 
-.listing-container .description {
+.detail-info-box .description {
   font-size: 1.125rem;
   margin: 0 0 1rem;
 }
 
-.listing-container .units-available {
+.detail-info-box .units-available {
   font-size: 1.125rem;
   margin: 0;
 }
 
-.listing-container .link-container {
+.detail-info-box .link-container {
   margin: 0 0 1rem;
 }
 
-.listing-container .detail-info-box {
+.detail-info-box {
   padding-bottom: 20px;
 }
 
@@ -1702,10 +1711,8 @@ label[for=root_pictures]:hover {
   color: #ff1a1a;
 }
 
-.transaction-detail .availability,
-.transaction-detail .category,
-.transaction-detail .ipfs-hash {
-  margin: 0;
+.transaction-detail .carousel {
+  margin-bottom: 1rem;
 }
 
 .transaction-detail .ipfs-link {
