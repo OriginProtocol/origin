@@ -1,8 +1,10 @@
 from marshmallow import Schema, fields, ValidationError
 from logic import service_utils
 
+
 class StandardRequest(Schema):
     pass
+
 
 class StandardResponse(Schema):
     errors = fields.List(
@@ -12,6 +14,7 @@ class StandardResponse(Schema):
             message=fields.Str()
         )
     )
+
 
 def handle_request(data, handler, request_schema, response_schema):
     try:
