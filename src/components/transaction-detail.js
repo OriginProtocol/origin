@@ -58,26 +58,64 @@ const nextSteps = [
 ]
 
 class TransactionDetail extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      listing: {},
+      purchase: {}
+    }
+  }
+
   componentDidMount() {
+    this.loadPurchase()
     $('[data-toggle="tooltip"]').tooltip()
   }
 
+  async loadPurchase() {
+    const purchaseAddress = this.props.purchaseAddress
+    const purchase = await origin.purchases.get(purchaseAddress)
+    this.setState({purchase: purchase})
+    const listing = await origin.listings.get(purchase.listingAddress)
+    this.setState({listing: listing})
+  }
+
+  
+
   render() {
-    const { listingId, perspective } = this.props
-    const listing = data.listings.find(l => l._id === listingId)
-    const { active, buyer, category, seller, fulfilledAt, pictures, price, receivedAt, reviewedAt, soldAt, withdrawnAt } = listing
+    const purchase = this.state.purchase
+    const listing = this.state.listing
+    if(this.state.purchase.length == 0 || this.state.listing.length == 0 ){
+      return []
+    }
+    console.log(purchase)
+    console.log(listing)
+    
+    const { perspective } = this.props
+    const seller = {name: "Unnamed User", address: listing.sellerAddress}
+    const buyer = {name: "Unnamed User", address: purchase.buyerAddress}
+    const pictures = listing.pictures || []
+    const category = listing.category || ""
+    const active = listing.unitsAvailable == 0 // Todo, move to origin.js, take into account listing expiration
+    const soldAt = undefined
+    const fulfilledAt = undefined
+    const receivedAt = undefined
+    const withdrawnAt = undefined
+    const reviewedAt = undefined
+    const price = undefined // change to priceEth
+
     const counterparty = ['buyer', 'seller'].find(str => str !== perspective)
+    const counterpartyUser = counterparty == 'buyer' ? buyer : seller
     const status = active ? 'active' : 'inactive'
     const maxStep = perspective === 'seller' ? 4 : 3
     let decimal, left, step
 
-    if (withdrawnAt) {
+    if (purchase.stage == "complete") {
       step = maxStep
-    } else if (receivedAt) {
+    } else if (purchase.stage == "seller_pending") {
       step = 3
-    } else if (fulfilledAt) {
+    } else if (purchase.stage == "buyer_pending") {
       step = 2
-    } else if (soldAt) {
+    } else if (purchase.stage == "shipping_pending") {
       step = 1
     } else {
       step = 0
@@ -215,7 +253,7 @@ class TransactionDetail extends Component {
                     </div>
                     <div>
                       <p>ETH Address:</p>
-                      <p><strong>{listing[counterparty].address}</strong></p>
+                      <p><strong>{counterpartyUser.address}</strong></p>
                     </div>
                   </div>
                   <hr />
@@ -229,7 +267,7 @@ class TransactionDetail extends Component {
                     </div>
                   </div>
                 </div>
-                <Link to={`/users/${listing[counterparty].address}`} className="btn">View Profile</Link>
+                <Link to={`/users/${counterpartyUser.address}`} className="btn">View Profile</Link>
               </div>
             </div>
           </div>

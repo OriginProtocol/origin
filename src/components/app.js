@@ -57,7 +57,7 @@ const MyPurchasesPage = (props) => (
 )
 
 const MyPurchasesTransactionPage = (props) => (
-  <TransactionDetail listingId={props.match.params.listingId} perspective="buyer" />
+  <TransactionDetail purchaseAddress={props.match.params.purchaseAddress} perspective="buyer" />
 )
 
 const MySalesPage = (props) => (
@@ -84,7 +84,7 @@ const App = () => (
             <Route path="/listing/:listingAddress" component={ListingDetailPage} />
             <Route path="/create" component={CreateListingPage} />
             <Route path="/my-listings" component={MyListingsPage} />
-            <Route path="/my-purchases/:listingId" component={MyPurchasesTransactionPage} />
+            <Route path="/my-purchases/:purchaseAddress" component={MyPurchasesTransactionPage} />
             <Route path="/my-purchases" component={MyPurchasesPage} />
             <Route path="/my-sales/:listingId" component={MySaleTransactionPage} />
             <Route path="/my-sales" component={MySalesPage} />

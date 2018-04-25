@@ -28,6 +28,7 @@ class ListingsDetail extends Component {
       loading: true,
       pictures: [],
       reviews: [],
+      purchases: [],
       step: this.STEP.VIEW,
     }
 
@@ -37,7 +38,7 @@ class ListingsDetail extends Component {
   async loadListing() {
     try {
       const listing = await origin.listings.get(this.props.listingAddress)
-      const obj = Object.assign({}, listing, { loading: false, reviews: data.reviews })
+      const obj = Object.assign({}, listing, { loading: false, reviews: data.reviews})
       this.setState(obj)
     } catch (error) {
       alertify.log('There was an error loading this listing.')
@@ -46,10 +47,24 @@ class ListingsDetail extends Component {
     }
   }
 
+  async loadPurchases() {
+    const address = this.props.listingAddress
+    const length = await origin.listings.purchasesLength(address)
+    console.log("purchases length", length)
+    for(let i = 0; i < length; i++){
+      let purchaseAddress = await origin.listings.purchaseAddressByIndex(address, i)
+      let purchase = await origin.purchases.get(purchaseAddress)
+      this.setState((prevState, props) => {
+        return {purchases: [...prevState.purchases, purchase]};
+      });
+    }
+  }
+
   componentWillMount() {
     if (this.props.listingAddress) {
       // Load from IPFS
       this.loadListing()
+      this.loadPurchases()
     }
     else if (this.props.listingJson) {
       const obj = Object.assign({}, this.props.listingJson, { loading: false })
@@ -78,6 +93,7 @@ class ListingsDetail extends Component {
 
 
   render() {
+    console.log(this.state.purchases)
     return (
       <div className="listing-detail">
         {this.state.step===this.STEP.METAMASK &&
@@ -141,6 +157,20 @@ class ListingsDetail extends Component {
                 <li>Seller: {this.state.sellerAddress}</li>
                 <li>Units: {this.state.unitsAvailable}</li>
               </div>
+              {this.state.purchases.length > 0 &&
+                <div>
+                  <h3>Purchases</h3>
+                  <table class="table table-sm">
+                  {this.state.purchases.map((purchase) =>                     
+                      <tr>
+                        <td>{purchase.stage.replace("_"," ")}</td>
+                        <td><Link to={`/my-purchases/${purchase.address}`}>{purchase.address}</Link></td>
+                      </tr>
+                  )}
+                  </table>
+                </div>
+              }
+              
             </div>
             <div className="col-12 col-md-4">
               <div className="buy-box placehold">
