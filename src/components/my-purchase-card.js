@@ -54,7 +54,7 @@ class MyPurchaseCard extends Component {
         <div className="card-body d-flex flex-column flex-lg-row">
           <div className="aspect-ratio">
             <div className="image-container">
-              <Link to={`/my-purchases/${address}`}>
+              <Link to={`/purchases/${address}`}>
                 <img src={(pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:") ? pictures[0] : '/images/default-image.jpg'} role="presentation" />
               </Link>
             </div>
@@ -62,7 +62,7 @@ class MyPurchaseCard extends Component {
           {!this.state.loading &&
             <div className="content-container d-flex flex-column">
               <p className="category">{category}</p>
-              <h2 className="title text-truncate"><Link to={`/my-purchases/${address}`}>{name}</Link></h2>
+              <h2 className="title text-truncate"><Link to={`/purchases/${address}`}>{name}</Link></h2>
               <p className="timestamp">{timestamp}</p>
               <div className="d-flex">
                 <p className="price">{`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ETH`}</p>

@@ -16,7 +16,7 @@ import MyPurchases from './my-purchases'
 import MySales from './my-sales'
 import Notifications from './notifications'
 import Profile from './profile'
-import TransactionDetail from './transaction-detail'
+import PurchaseDetail from './purchase-detail'
 import Web3Provider from './web3-provider'
 import 'bootstrap/dist/js/bootstrap'
 
@@ -48,16 +48,12 @@ const MyListingsPage = (props) => (
   <MyListings />
 )
 
-const MySaleTransactionPage = (props) => (
-  <TransactionDetail listingId={props.match.params.listingId} perspective="seller" />
+const PurchaseDetailPage = (props) => (
+  <PurchaseDetail purchaseAddress={props.match.params.purchaseAddress}  />
 )
 
 const MyPurchasesPage = (props) => (
   <MyPurchases />
-)
-
-const MyPurchasesTransactionPage = (props) => (
-  <TransactionDetail purchaseAddress={props.match.params.purchaseAddress} perspective="buyer" />
 )
 
 const MySalesPage = (props) => (
@@ -84,9 +80,8 @@ const App = () => (
             <Route path="/listing/:listingAddress" component={ListingDetailPage} />
             <Route path="/create" component={CreateListingPage} />
             <Route path="/my-listings" component={MyListingsPage} />
-            <Route path="/my-purchases/:purchaseAddress" component={MyPurchasesTransactionPage} />
+            <Route path="/purchases/:purchaseAddress" component={PurchaseDetailPage} />
             <Route path="/my-purchases" component={MyPurchasesPage} />
-            <Route path="/my-sales/:listingId" component={MySaleTransactionPage} />
             <Route path="/my-sales" component={MySalesPage} />
             <Route path="/notifications" component={NotificationsPage} />
             <Route path="/profile" component={ProfilePage} />

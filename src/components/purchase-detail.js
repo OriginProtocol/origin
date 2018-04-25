@@ -57,7 +57,7 @@ const nextSteps = [
   },
 ]
 
-class TransactionDetail extends Component {
+class PurchaseDetail extends Component {
   constructor(props){
     super(props)
     this.state = {
@@ -84,18 +84,18 @@ class TransactionDetail extends Component {
   render() {
     const purchase = this.state.purchase
     const listing = this.state.listing
-    if(this.state.purchase.length == 0 || this.state.listing.length == 0 ){
-      return []
+    if(this.state.purchase.length === 0 || this.state.listing.length === 0 ){
+      return null
     }
     console.log(purchase)
     console.log(listing)
     
-    const { perspective } = this.props
+    const perspective = window.web3.eth.accounts[0] === purchase.buyerAddress ? 'buyer' : 'seller'
     const seller = {name: "Unnamed User", address: listing.sellerAddress}
     const buyer = {name: "Unnamed User", address: purchase.buyerAddress}
     const pictures = listing.pictures || []
     const category = listing.category || ""
-    const active = listing.unitsAvailable == 0 // Todo, move to origin.js, take into account listing expiration
+    const active = listing.unitsAvailable === 0 // Todo, move to origin.js, take into account listing expiration
     const soldAt = undefined
     const fulfilledAt = undefined
     const receivedAt = undefined
@@ -104,18 +104,18 @@ class TransactionDetail extends Component {
     const price = undefined // change to priceEth
 
     const counterparty = ['buyer', 'seller'].find(str => str !== perspective)
-    const counterpartyUser = counterparty == 'buyer' ? buyer : seller
+    const counterpartyUser = counterparty === 'buyer' ? buyer : seller
     const status = active ? 'active' : 'inactive'
     const maxStep = perspective === 'seller' ? 4 : 3
     let decimal, left, step
 
-    if (purchase.stage == "complete") {
+    if (purchase.stage === "complete") {
       step = maxStep
-    } else if (purchase.stage == "seller_pending") {
+    } else if (purchase.stage === "seller_pending") {
       step = 3
-    } else if (purchase.stage == "buyer_pending") {
+    } else if (purchase.stage === "buyer_pending") {
       step = 2
-    } else if (purchase.stage == "shipping_pending") {
+    } else if (purchase.stage === "shipping_pending") {
       step = 1
     } else {
       step = 0
@@ -193,7 +193,7 @@ class TransactionDetail extends Component {
                   </div>
                 }
               </div>
-              <h2>Transaction Status</h2>
+              {/*<h2>Transaction Status</h2>
               <table className="table table-striped">
                 <thead>
                   <tr>
@@ -238,6 +238,7 @@ class TransactionDetail extends Component {
                   }
                 </tbody>
               </table>
+              */}
             </div>
             <div className="col-12 col-lg-4">
               <div className="counterparty">
@@ -338,4 +339,4 @@ class TransactionDetail extends Component {
   }
 }
 
-export default TransactionDetail
+export default PurchaseDetail
