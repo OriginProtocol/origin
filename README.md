@@ -18,6 +18,10 @@ We need a centralized server that can handle tasks like issuing identity attesta
 
 There is currently no practical way to get email or text notifications when your bookings are made without a centralized monitoring service that can send you a text or an email to let you know about listings you care about.
 
+## API documentation
+
+See the [README for the API](api)
+
 ## One-time Setup
 
 ### Set Up A Virtual Environment
