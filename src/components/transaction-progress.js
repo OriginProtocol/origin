@@ -30,7 +30,7 @@ class TransactionProgress extends Component {
   render() {
     const { currentStep, perspective, purchase, subdued } = this.props
     const { maxStep, progressCalculated, progressWidth } = this.state
-    const { _id, fulfilledAt, receivedAt, soldAt, withdrawnAt } = purchase
+    const { fulfilledAt, receivedAt, soldAt, withdrawnAt } = purchase
 
     return (
       <div className={`progress-container${progressCalculated ? ' ready' : ''}${subdued ? ' subdued' : ''}`}>

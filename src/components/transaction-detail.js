@@ -141,7 +141,7 @@ class TransactionDetail extends Component {
                   </div>
                 </div>
                 <div className="col-12">
-                  <TransactionProgress currentStep={step} listing={listing} maxStep={maxStep} perspective={perspective} />
+                  <TransactionProgress currentStep={step} purchase={listing} maxStep={maxStep} perspective={perspective} />
                 </div>
                 {nextStep &&
                   <div className="col-12">

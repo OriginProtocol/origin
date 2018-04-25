@@ -10,8 +10,8 @@ class MySaleCard extends Component {
   }
 
   render() {
-    const { listing } = this.props
-    const { _id, buyer, fulfilledAt, price, quantity, receivedAt, soldAt, title, withdrawnAt } = listing
+    const { purchase } = this.props
+    const { _id, buyer, fulfilledAt, price, quantity, receivedAt, soldAt, title, withdrawnAt } = purchase
     let step
 
     if (withdrawnAt) {
@@ -44,7 +44,7 @@ class MySaleCard extends Component {
               <img role="presentation" />
             </div>
           </div>
-          <TransactionProgress currentStep={step} listing={listing} perspective="seller" subdued="true" />
+          <TransactionProgress currentStep={step} purchase={purchase} perspective="seller" subdued="true" />
           <div className="d-flex justify-content-between actions">
             {step === 1 && <p><strong>Next Step:</strong> Send the order to buyer</p>}
             {step === 2 && <p><strong>Next Step:</strong> Wait for buyer to receive order</p>}
