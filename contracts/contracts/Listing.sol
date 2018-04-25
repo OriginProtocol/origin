@@ -1,4 +1,4 @@
-pragma solidity 0.4.21;
+pragma solidity ^0.4.21;
 
 /// @title Listing
 /// @dev An indiviual Origin Listing representing an offer for booking/purchase
