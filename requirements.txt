@@ -1,5 +1,4 @@
 alembic==0.9.9
--e git+https://github.com/UnicycleLabs/apilib@bf58376c9c4d532ae6a12aa5685089f8e38c3d43#egg=apilib
 appnope==0.1.0
 asn1crypto==0.24.0
 autopep8==1.3.5
