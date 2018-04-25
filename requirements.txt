@@ -16,6 +16,7 @@ factory-boy==2.10.0
 fixture==1.5.11
 Flask==0.12.2
 Flask-Migrate==2.1.1
+Flask-RESTful==0.3.6
 Flask-Restless==0.17.0
 Flask-SQLAlchemy==2.3.2
 Flask-Session==0.3.1
@@ -31,6 +32,7 @@ jedi==0.11.1
 Jinja2==2.10
 Mako==1.0.7
 MarkupSafe==1.0
+marshmallow==3.0.0b8
 mock==2.0.0
 oauth2==1.9.0.post1
 parso==0.1.1
