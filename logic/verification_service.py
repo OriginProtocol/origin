@@ -88,7 +88,7 @@ class VerificationService:
                 message='The code you provided has expired.')
         db_identity = db_models.Identity(
             eth_address=addr,
-            phone=req.phone,
+            phone=req['phone'],
             verified=True)
         db.session.add(db_identity)
         db.session.commit()
