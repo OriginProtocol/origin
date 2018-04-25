@@ -8,6 +8,7 @@ from config import settings
 from database import db
 from database import db_models
 from flask_session import Session
+from api import start_restful_api
 
 
 class AppConfig(object):
@@ -28,6 +29,8 @@ def init_app(app):
 
 
 def init_api(app):
+    start_restful_api(app)
+
     # Create the Flask-Restless API manager.
     manager = flask_restless.APIManager(app, flask_sqlalchemy_db=db)
     # Create API endpoints, which will be available at /api/<tablename> by
