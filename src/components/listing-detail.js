@@ -50,7 +50,7 @@ class ListingsDetail extends Component {
   async loadPurchases() {
     const address = this.props.listingAddress
     const length = await origin.listings.purchasesLength(address)
-    console.log("purchases length", length)
+    console.log("purchases length", +length)
     for(let i = 0; i < length; i++){
       let purchaseAddress = await origin.listings.purchaseAddressByIndex(address, i)
       let purchase = await origin.purchases.get(purchaseAddress)
@@ -160,13 +160,15 @@ class ListingsDetail extends Component {
               {this.state.purchases.length > 0 &&
                 <div>
                   <h3>Purchases</h3>
-                  <table class="table table-sm">
-                  {this.state.purchases.map((purchase) =>                     
-                      <tr>
-                        <td>{purchase.stage.replace("_"," ")}</td>
-                        <td><Link to={`/my-purchases/${purchase.address}`}>{purchase.address}</Link></td>
-                      </tr>
-                  )}
+                  <table className="table table-sm">
+                    <tbody>
+                      {this.state.purchases.map(({ address, stage }) =>
+                        <tr key={address}>
+                          <td>{stage.replace("_"," ")}</td>
+                          <td><Link to={`/my-purchases/${address}`}>{address}</Link></td>
+                        </tr>
+                      )}
+                    </tbody>
                   </table>
                 </div>
               }
