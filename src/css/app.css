@@ -1702,10 +1702,6 @@ label[for=root_pictures]:hover {
   color: #ff1a1a;
 }
 
-.transaction-detail .carousel {
-  height: 156px;
-}
-
 .transaction-detail .availability,
 .transaction-detail .category,
 .transaction-detail .ipfs-hash {
