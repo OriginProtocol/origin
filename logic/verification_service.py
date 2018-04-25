@@ -85,12 +85,6 @@ class VerificationService:
                 code='EXPIRED',
                 path='code',
                 message='The code you provided has expired.')
-        db_identity = db_models.Identity(
-            eth_address=addr,
-            phone=req['phone'],
-            verified=True)
-        db.session.add(db_identity)
-        db.session.commit()
         # TODO: determine what the text should be
         data = 'phone verified'
         # TODO: determine claim type integer code for phone verification
@@ -149,9 +143,6 @@ class VerificationService:
                 code='EXPIRED',
                 path='code',
                 message='The code you provided has expired.')
-
-        # Don't save identity to the db for now for simplicity - we can adjust
-        # this as needed
 
         # TODO: determine what the text should be
         data = 'email verified'

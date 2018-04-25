@@ -78,10 +78,6 @@ def test_verify_phone_valid_code(session):
     assert resp['claim_type'] == 10
     assert resp['data'] == 'phone verified'
 
-    db_identity = db_models.Identity.query.get(vc_obj.eth_address)
-    assert db_identity is not None
-    assert db_identity.verified
-
 
 def test_verify_phone_expired_code(session):
     vc_obj = VerificationCodeFactory.build()
@@ -99,12 +95,10 @@ def test_verify_phone_expired_code(session):
     code = service_err.value.args[0]['code']
     message = service_err.value.args[0]['message']
     path = service_err.value.args[0]['path']
-    db_identity = db_models.Identity.query.get(vc_obj.eth_address)
 
     assert message == 'The code you provided has expired.'
     assert code == 'EXPIRED'
     assert path == 'code'
-    assert db_identity is None
 
 
 def test_verify_phone_wrong_code(session):
@@ -122,12 +116,10 @@ def test_verify_phone_wrong_code(session):
     code = service_err.value.args[0]['code']
     message = service_err.value.args[0]['message']
     path = service_err.value.args[0]['path']
-    db_identity = db_models.Identity.query.get(vc_obj.eth_address)
 
     assert message == 'The code you provided is invalid.'
     assert code == 'INVALID'
     assert path == 'code'
-    assert db_identity is None
 
 
 def test_verify_phone_phone_not_found(session):
@@ -145,12 +137,10 @@ def test_verify_phone_phone_not_found(session):
     code = service_err.value.args[0]['code']
     message = service_err.value.args[0]['message']
     path = service_err.value.args[0]['path']
-    db_identity = db_models.Identity.query.get(vc_obj.eth_address)
 
     assert message == 'The given phone number was not found.'
     assert code == 'NOT_FOUND'
     assert path == 'phone'
-    assert db_identity is None
 
 
 def test_generate_phone_verification_rate_limit_exceeded(session):
