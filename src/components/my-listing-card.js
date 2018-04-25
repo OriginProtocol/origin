@@ -62,7 +62,7 @@ class MyListingCard extends Component {
             {/*<p className="timestamp">{timestamp}</p>*/}
             <p className="price">
               {`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ETH`}
-              {/*unitsAvailable <= quantity && <span className="badge badge-info">Sold Out</span>*/}
+              {!unitsAvailable /*<= quantity*/ && <span className="badge badge-info">Sold Out</span>}
             </p>
             <div className="d-flex counts">
               <p>Total Quantity: {unitsAvailable.toLocaleString()}</p>

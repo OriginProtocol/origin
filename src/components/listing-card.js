@@ -38,12 +38,14 @@ class ListingCard extends Component {
           </div>
           <p className="category placehold">{this.state.category}</p>
           <h2 className="title placehold">{this.state.name}</h2>
-          <p className="price placehold">
-            {this.state.price && `${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH`}
+          <div className="d-flex align-items-center">
+            <p className="price placehold">
+              {this.state.price && `${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH`}
+            </p>
             {this.state.unitsAvailable===0 &&
               <span className="sold-banner">Sold</span>
             }
-          </p>
+          </div>
         </Link>
       </div>
     )

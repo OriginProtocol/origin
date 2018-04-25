@@ -65,20 +65,6 @@ a:hover {
   text-decoration: none;
 }
 
-.sold-banner {
-  display: inline-block;
-  width: 70px;
-  height: 22px;
-  background-image: url(/images/card-sold-tag.svg);
-  background-repeat: no-repeat;
-  background-position: left;
-  background-size: 58px 20px;
-  font-weight: 400;
-  font-size: 0.875rem;
-  color: white;
-  padding: 0.8px 8px 5px 20px;
-}
-
 .filters.list-group {
   margin-bottom: 30px;
 }
@@ -923,7 +909,7 @@ a:hover {
 
 .listing-card .price {
   font-size: 1.125rem;
-  margin: 0 0 1rem;
+  margin: 0;
 }
 
 .listing-card.loading .price {
@@ -941,6 +927,21 @@ a:hover {
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
   border-radius: 3px;
   margin-bottom: 15px;
+}
+
+.listing-card .sold-banner {
+  display: inline-block;
+  width: 70px;
+  height: 22px;
+  line-height: 22px;
+  background-image: url(/images/card-sold-tag.svg);
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: 58px 20px;
+  font-weight: 600;
+  font-size: 12px;
+  color: white;
+  padding: 0.8px 8px 5px 20px;
 }
 
 /* Listing Detail */
@@ -1107,7 +1108,9 @@ a:hover {
   font-weight: 700;
   border-top: 1px solid white;
   border-bottom: 1px solid white;
+  color: white;
 }
+
 .listing-container .buy-box .sold-banner img {
   margin-right: 4px;
 }

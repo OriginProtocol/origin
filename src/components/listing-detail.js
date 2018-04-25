@@ -126,11 +126,8 @@ class ListingsDetail extends Component {
               <h2 className="category placehold">{this.state.category}</h2>
               <h1 className="title text-truncate placehold">{this.state.name}</h1>
               <p className="description placehold">{this.state.description}</p>
-              {this.state.unitsAvailable && this.state.unitsAvailable < 5 &&
+              {!!this.state.unitsAvailable && this.state.unitsAvailable < 5 &&
                 <p className="units-available text-danger">Just {this.state.unitsAvailable.toLocaleString()} left!</p>
-              }
-              {this.state.price && !this.state.unitsAvailable &&
-                <p className="units-available text-danger">Sold out!</p>
               }
               {this.state.ipfsHash &&
                 <p className="link-container">
@@ -183,7 +180,7 @@ class ListingsDetail extends Component {
                         :
                         <div className="sold-banner">
                           <img src="/images/sold-tag.svg" role="presentation" />
-                          Sold
+                          Sold Out
                         </div>
                       )
                     }
