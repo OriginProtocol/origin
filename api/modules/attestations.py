@@ -21,12 +21,12 @@ class VerifyPhoneRequest(StandardRequest):
 
 class VerifyPhoneResponse(StandardResponse):
     signature = fields.Str()
-    claim_type = fields.Str(data_key='claim-type')
+    claim_type = fields.Integer(data_key='claim-type')
     data = fields.Str(required=True)
 
 
 class EmailVerificationCodeRequest(StandardRequest):
-    email = fields.Str(required=True)
+    email = fields.Email(required=True)
 
 
 class EmailVerificationCodeResponse(StandardResponse):
@@ -35,33 +35,33 @@ class EmailVerificationCodeResponse(StandardResponse):
 
 class VerifyEmailRequest(StandardRequest):
     eth_address = fields.Str(required=True, data_key='identity')
-    email = fields.Str(required=True)
+    email = fields.Email(required=True)
     code = fields.Str(required=True)
 
 
 class VerifyEmailResponse(StandardResponse):
     signature = fields.Str()
-    claim_type = fields.Str(data_key='claim-type')
+    claim_type = fields.Integer(data_key='claim-type')
     data = fields.Str()
 
 
 class FacebookAuthUrlRequest(StandardRequest):
-    redirect_url = fields.Str(required=True, data_key='redirect-url')
+    redirect_url = fields.Url(required=True, data_key='redirect-url')
 
 
 class FacebookAuthUrlResponse(StandardResponse):
-    url = fields.Str()
+    url = fields.Url()
 
 
 class VerifyFacebookRequest(StandardRequest):
     eth_address = fields.Str(required=True, data_key='identity')
     code = fields.Str(required=True)
-    redirect_url = fields.Str(required=True, data_key='redirect-url')
+    redirect_url = fields.Url(required=True, data_key='redirect-url')
 
 
 class VerifyFacebookResponse(StandardResponse):
     signature = fields.Str()
-    claim_type = fields.Str(data_key='claim-type')
+    claim_type = fields.Integer(data_key='claim-type')
     data = fields.Str()
 
 
@@ -70,7 +70,7 @@ class TwitterAuthUrlRequest(StandardRequest):
 
 
 class TwitterAuthUrlResponse(StandardResponse):
-    url = fields.Str()
+    url = fields.Url()
 
 
 class VerifyTwitterRequest(StandardRequest):
@@ -80,7 +80,7 @@ class VerifyTwitterRequest(StandardRequest):
 
 class VerifyTwitterResponse(StandardResponse):
     signature = fields.Str()
-    claim_type = fields.Str(data_key='claim-type')
+    claim_type = fields.Integer(data_key='claim-type')
     data = fields.Str()
 
 
