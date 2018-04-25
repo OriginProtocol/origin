@@ -6,7 +6,7 @@ from api.helpers import StandardRequest, StandardResponse, handle_request
 
 
 class PhoneVerificationCodeRequest(StandardRequest):
-    eth_address = fields.Str(required=True, data_key='eth-address')
+    eth_address = fields.Str(required=True, data_key='identity')
     phone = fields.Str(required=True)
 
 
@@ -15,7 +15,7 @@ class PhoneVerificationCodeResponse(StandardResponse):
 
 
 class VerifyPhoneRequest(StandardRequest):
-    eth_address = fields.Str(required=True, data_key='eth-address')
+    eth_address = fields.Str(required=True, data_key='identity')
     phone = fields.Str(required=True)
     code = fields.Str(required=True)
 
@@ -27,7 +27,7 @@ class VerifyPhoneResponse(StandardResponse):
 
 
 class EmailVerificationCodeRequest(StandardRequest):
-    eth_address = fields.Str(required=True, data_key='eth-address')
+    eth_address = fields.Str(required=True, data_key='identity')
     email = fields.Str(required=True)
 
 
@@ -36,7 +36,7 @@ class EmailVerificationCodeResponse(StandardResponse):
 
 
 class VerifyEmailRequest(StandardRequest):
-    eth_address = fields.Str(required=True, data_key='eth-address')
+    eth_address = fields.Str(required=True, data_key='identity')
     email = fields.Str(required=True)
     code = fields.Str(required=True)
 
@@ -56,7 +56,7 @@ class FacebookAuthUrlResponse(StandardResponse):
 
 
 class VerifyFacebookRequest(StandardRequest):
-    eth_address = fields.Str(required=True, data_key='eth-address')
+    eth_address = fields.Str(required=True, data_key='identity')
     code = fields.Str(required=True)
     redirect_url = fields.Str(required=True, data_key='redirect-url')
 
@@ -76,7 +76,7 @@ class TwitterAuthUrlResponse(StandardResponse):
 
 
 class VerifyTwitterRequest(StandardRequest):
-    eth_address = fields.Str(required=True, data_key='eth-address')
+    eth_address = fields.Str(required=True, data_key='identity')
     oauth_verifier = fields.Str(required=True, data_key='oauth-verifier')
 
 
@@ -123,9 +123,9 @@ class VerifyEmail(Resource):
 
 
 class FacebookAuthUrl(Resource):
-    def post(self):
+    def get(self):
         return handle_request(
-            data=request.json,
+            data=request.values,
             handler=VerificationService.facebook_auth_url,
             request_schema=FacebookAuthUrlRequest,
             response_schema=FacebookAuthUrlResponse)
@@ -141,9 +141,9 @@ class VerifyFacebook(Resource):
 
 
 class TwitterAuthUrl(Resource):
-    def post(self):
+    def get(self):
         return handle_request(
-            data=request.json,
+            data=request.values,
             handler=VerificationService.twitter_auth_url,
             request_schema=TwitterAuthUrlRequest,
             response_schema=TwitterAuthUrlResponse)
@@ -160,12 +160,12 @@ class VerifyTwitter(Resource):
 
 resources = {
     # 'hello-world-path': HelloWorldResource
-    'generate-phone-verification-code': PhoneVerificationCode,
-    'verify-phone': VerifyPhone,
-    'generate-email-verification-code': EmailVerificationCode,
-    'verify-email': VerifyEmail,
-    'facebook-auth-url': FacebookAuthUrl,
-    'verify-facebook': VerifyFacebook,
-    'twitter-auth-url': TwitterAuthUrl,
-    'verify-twitter': VerifyTwitter
+    'phone/generate-code': PhoneVerificationCode,
+    'phone/verify': VerifyPhone,
+    'email/generate-code': EmailVerificationCode,
+    'email/verify': VerifyEmail,
+    'facebook/auth-url': FacebookAuthUrl,
+    'facebook/verify': VerifyFacebook,
+    'twitter/auth-url': TwitterAuthUrl,
+    'twitter/verify': VerifyTwitter
 }

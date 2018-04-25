@@ -1,4 +1,4 @@
-from api.modules import verification
+from api.modules import attestations
 
 
 def add_resources(api, resources, namespace):
@@ -8,4 +8,4 @@ def add_resources(api, resources, namespace):
 
 def init_routes(api):
     # add routes for new modules here
-    add_resources(api, verification.resources, '/api/verification/')
+    add_resources(api, attestations.resources, '/api/attestations/')
