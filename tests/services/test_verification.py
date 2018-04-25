@@ -10,6 +10,8 @@ from tests.factories.verification import VerificationCodeFactory
 from util.time_ import utcnow
 VC = db_models.VerificationCode
 
+sample_eth_address = 562046206989085878832492993516240920558397288279
+
 
 def str_eth(numeric_eth_address):
     return Web3.toChecksumAddress(hex(int(numeric_eth_address)))
@@ -17,7 +19,6 @@ def str_eth(numeric_eth_address):
 
 def test_generate_phone_verification_code_new_phone(mock_send_sms):
     req = {
-        'eth_address': '0x112234455C3A32FD11230C42E7BCCD4A84E02010',
         'phone': '5551231212'
     }
     VerificationService.generate_phone_verification_code(req)
@@ -41,7 +42,6 @@ def test_generate_phone_verification_code_phone_already_in_db(
     session.commit()
 
     req = {
-        'eth_address': str_eth(vc_obj.eth_address),
         'phone': vc_obj.phone
     }
     VerificationService.generate_phone_verification_code(req)
@@ -65,7 +65,7 @@ def test_verify_phone_valid_code(session):
     session.commit()
 
     req = {
-        'eth_address': str_eth(vc_obj.eth_address),
+        'eth_address': str_eth(sample_eth_address),
         'phone': vc_obj.phone,
         'code': vc_obj.code
     }
@@ -86,7 +86,7 @@ def test_verify_phone_expired_code(session):
     session.commit()
 
     req = {
-        'eth_address': str_eth(vc_obj.eth_address),
+        'eth_address': str_eth(sample_eth_address),
         'phone': vc_obj.phone,
         'code': vc_obj.code
     }
@@ -107,7 +107,7 @@ def test_verify_phone_wrong_code(session):
     session.commit()
 
     req = {
-        'eth_address': str_eth(vc_obj.eth_address),
+        'eth_address': str_eth(sample_eth_address),
         'phone': vc_obj.phone,
         'code': 'garbage'
     }
@@ -128,7 +128,7 @@ def test_verify_phone_phone_not_found(session):
     session.commit()
 
     req = {
-        'eth_address': str_eth(vc_obj.eth_address),
+        'eth_address': str_eth(sample_eth_address),
         'phone': 'garbage',
         'code': vc_obj.code
     }
@@ -150,7 +150,6 @@ def test_generate_phone_verification_rate_limit_exceeded(session):
     session.commit()
 
     req = {
-        'eth_address': str_eth(vc_obj.eth_address),
         'phone': vc_obj.phone
     }
     with pytest.raises(ServiceError) as service_err:
@@ -168,7 +167,6 @@ def test_generate_phone_verification_rate_limit_exceeded(session):
 @mock.patch('python_http_client.client.Client')
 def test_generate_email_verification_code_new_phone(MockHttpClient):
     req = {
-        'eth_address': '0x112234455C3A32FD11230C42E7BCCD4A84E02010',
         'email': 'hello@world.foo'
     }
     VerificationService.generate_email_verification_code(req)
@@ -193,7 +191,6 @@ def test_generate_email_verification_code_email_already_in_db(
     session.commit()
 
     req = {
-        'eth_address': str_eth(vc_obj.eth_address),
         'email': vc_obj.email
     }
     VerificationService.generate_email_verification_code(req)
@@ -217,7 +214,7 @@ def test_verify_email_valid_code(mock_now, session):
     session.commit()
 
     req = {
-        'eth_address': str_eth(vc_obj.eth_address),
+        'eth_address': str_eth(sample_eth_address),
         'email': vc_obj.email.upper(),
         'code': vc_obj.code
     }
@@ -238,7 +235,7 @@ def test_verify_email_expired_code(mock_now, session):
     session.commit()
 
     req = {
-        'eth_address': str_eth(vc_obj.eth_address),
+        'eth_address': str_eth(sample_eth_address),
         'email': vc_obj.email,
         'code': vc_obj.code
     }
@@ -261,7 +258,7 @@ def test_verify_email_wrong_code(mock_now, session):
     session.commit()
 
     req = {
-        'eth_address': str_eth(vc_obj.eth_address),
+        'eth_address': str_eth(sample_eth_address),
         'email': vc_obj.email,
         'code': 'garbage'
     }
@@ -284,7 +281,7 @@ def test_verify_email_email_not_found(mock_now, session):
     session.commit()
 
     req = {
-        'eth_address': str_eth(vc_obj.eth_address),
+        'eth_address': str_eth(sample_eth_address),
         'email': 'garbage',
         'code': vc_obj.code
     }

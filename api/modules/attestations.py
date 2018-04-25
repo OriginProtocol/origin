@@ -6,7 +6,6 @@ from api.helpers import StandardRequest, StandardResponse, handle_request
 
 
 class PhoneVerificationCodeRequest(StandardRequest):
-    eth_address = fields.Str(required=True, data_key='identity')
     phone = fields.Str(required=True)
 
 
@@ -27,7 +26,6 @@ class VerifyPhoneResponse(StandardResponse):
 
 
 class EmailVerificationCodeRequest(StandardRequest):
-    eth_address = fields.Str(required=True, data_key='identity')
     email = fields.Str(required=True)
 
 

@@ -15,7 +15,6 @@ class VerificationCodeFactory(alchemy.SQLAlchemyModelFactory):
         model = VerificationCode
         sqlalchemy_session = db.session  # the SQLAlchemy session object
 
-    eth_address = 562046206989085878832492993516240920558397288279
     email = "hello@world.foo"
     phone = "5551231212"
     code = "98765"

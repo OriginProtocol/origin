@@ -4,14 +4,9 @@ from database import db
 
 
 class VerificationCode(db.Model):
-    eth_address = db.Column(
-        db.Numeric(
-            precision=50,
-            scale=0),
-        primary_key=True)
     phone = db.Column(db.String(20), index=True)
     email = db.Column(db.String(256), index=True)
-    code = db.Column(db.String(10))
+    code = db.Column(db.String(10), primary_key=True)
     expires_at = db.Column(db.DateTime(timezone=True))
     created_at = db.Column(
         db.DateTime(

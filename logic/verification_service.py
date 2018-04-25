@@ -38,13 +38,11 @@ CODE_EXPIRATION_TIME_MINUTES = 30
 
 class VerificationService:
     def generate_phone_verification_code(req):
-        addr = numeric_eth(req['eth_address'])
         db_code = VC.query \
-            .filter(VC.eth_address == addr) \
             .filter(VC.phone == req['phone']) \
             .first()
         if db_code is None:
-            db_code = db_models.VerificationCode(eth_address=addr)
+            db_code = db_models.VerificationCode()
             db.session.add(db_code)
         elif (time_.utcnow() - db_code.updated_at).total_seconds() < 10:
             # If the client has requested a verification code already within
@@ -65,9 +63,7 @@ class VerificationService:
         return
 
     def verify_phone(req):
-        addr = numeric_eth(req['eth_address'])
         db_code = VC.query \
-            .filter(VC.eth_address == addr) \
             .filter(VC.phone == req['phone']) \
             .first()
         if db_code is None:
@@ -98,13 +94,11 @@ class VerificationService:
         }
 
     def generate_email_verification_code(req):
-        addr = numeric_eth(req['eth_address'])
         db_code = VC.query \
-            .filter(VC.eth_address == addr) \
             .filter(func.lower(VC.email) == func.lower(req['email'])) \
             .first()
         if db_code is None:
-            db_code = db_models.VerificationCode(eth_address=addr)
+            db_code = db_models.VerificationCode()
             db.session.add(db_code)
         elif (time_.utcnow() - db_code.updated_at).total_seconds() < 10:
             # If the client has requested a verification code already within
@@ -123,9 +117,7 @@ class VerificationService:
         return
 
     def verify_email(req):
-        addr = numeric_eth(req['eth_address'])
         db_code = VC.query \
-            .filter(VC.eth_address == addr) \
             .filter(func.lower(VC.email) == func.lower(req['email'])) \
             .first()
         if db_code is None:
