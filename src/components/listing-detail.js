@@ -165,7 +165,7 @@ class ListingsDetail extends Component {
                       {this.state.purchases.map(({ address, stage }) =>
                         <tr key={address}>
                           <td>{stage.replace("_"," ")}</td>
-                          <td><Link to={`/my-purchases/${address}`}>{address}</Link></td>
+                          <td><Link to={`/purchases/${address}`}>{address}</Link></td>
                         </tr>
                       )}
                     </tbody>

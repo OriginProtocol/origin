@@ -19,6 +19,12 @@ class TransactionProgress extends Component {
     }, 400)
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.currentStep !== this.props.currentStep) {
+      this.calculateProgress()
+    }
+  }
+
   calculateProgress() {
     const { currentStep } = this.props
     const { maxStep } = this.state
@@ -30,7 +36,12 @@ class TransactionProgress extends Component {
   render() {
     const { currentStep, perspective, purchase, subdued } = this.props
     const { maxStep, progressCalculated, progressWidth } = this.state
-    const { fulfilledAt, receivedAt, soldAt, withdrawnAt } = purchase
+
+    // timestamps not yet available
+    const soldAt = !!currentStep
+    const fulfilledAt = currentStep > 1
+    const receivedAt = currentStep > 2
+    const withdrawnAt = currentStep > 3
 
     return (
       <div className={`progress-container${progressCalculated ? ' ready' : ''}${subdued ? ' subdued' : ''}`}>
@@ -44,7 +55,7 @@ class TransactionProgress extends Component {
               data-toggle="tooltip"
               data-placement="top"
               data-html="true"
-              title={`Sold on<br /><strong>${moment(soldAt).format('MMM D, YYYY')}</strong>`}>
+              title={null/*`Sold on<br /><strong>${moment(soldAt).format('MMM D, YYYY')}</strong>`*/}>
             </span>
           }
           {!fulfilledAt && <span className="progress-circle"></span>}
@@ -53,7 +64,7 @@ class TransactionProgress extends Component {
               data-toggle="tooltip"
               data-placement="top"
               data-html="true"
-              title={`Sent by seller on<br /><strong>${moment(fulfilledAt).format('MMM D, YYYY')}</strong>`}>
+              title={null/*`Sent by seller on<br /><strong>${moment(fulfilledAt).format('MMM D, YYYY')}</strong>`*/}>
             </span>
           }
           {!receivedAt && <span className="progress-circle"></span>}
@@ -62,7 +73,7 @@ class TransactionProgress extends Component {
               data-toggle="tooltip"
               data-placement="top"
               data-html="true"
-              title={`Received by buyer on<br /><strong>${moment(receivedAt).format('MMM D, YYYY')}</strong>`}>
+              title={null/*`Received by buyer on<br /><strong>${moment(receivedAt).format('MMM D, YYYY')}</strong>`*/}>
             </span>
           }
           {perspective === 'seller' && !withdrawnAt && <span className="progress-circle"></span>}
@@ -71,7 +82,7 @@ class TransactionProgress extends Component {
               data-toggle="tooltip"
               data-placement="top"
               data-html="true"
-              title={`Funds withdrawn on<br /><strong>${moment(withdrawnAt).format('MMM D, YYYY')}</strong>`}>
+              title={null/*`Funds withdrawn on<br /><strong>${moment(withdrawnAt).format('MMM D, YYYY')}</strong>`*/}>
             </span>
           }
         </div>

@@ -1552,7 +1552,9 @@ label[for=root_pictures]:hover {
   pointer-events: none;
   width: 0;
 
-  transition: left 200ms linear 800ms;
+  /* nice to have this animation follow the transaction progress bar */
+  /* but they tend to not be perfectly in sync */
+  /*transition: left 200ms linear 800ms;*/
 }
 
 .transaction-detail .guidance .triangle:first-of-type {
