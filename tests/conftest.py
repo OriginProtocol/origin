@@ -74,7 +74,7 @@ def session(db):
 
 @pytest.yield_fixture(scope='function')
 def mock_send_sms(app):
-    patcher = patch('logic.verification_service.send_code_via_sms',
+    patcher = patch('logic.attestation_service.send_code_via_sms',
                     return_value=True)
     yield patcher.start()
     patcher.stop()

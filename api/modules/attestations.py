@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource
 from marshmallow import fields
-from logic.verification_service import VerificationService
+from logic.attestation_service import VerificationService
 from api.helpers import StandardRequest, StandardResponse, handle_request
 
 

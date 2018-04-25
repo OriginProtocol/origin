@@ -3,10 +3,10 @@ import mock
 import pytest
 
 from database import db_models
-from logic.verification_service import VerificationService
+from logic.attestation_service import VerificationService
 from logic.service_utils import ServiceError
 from web3 import Web3
-from tests.factories.verification import VerificationCodeFactory
+from tests.factories.attestation import VerificationCodeFactory
 from util.time_ import utcnow
 VC = db_models.VerificationCode
 
@@ -362,7 +362,7 @@ def test_verify_facebook_invalid_code(MockHttpConnection):
 
 
 @mock.patch('oauth2.Client')
-@mock.patch('logic.verification_service.session')
+@mock.patch('logic.attestation_service.session')
 def test_twitter_auth_url(mock_session, MockOauthClient):
     mock_oauth_client = mock.Mock()
     mock_oauth_client.request.return_value = {
@@ -377,7 +377,7 @@ def test_twitter_auth_url(mock_session, MockOauthClient):
 
 
 @mock.patch('oauth2.Client')
-@mock.patch('logic.verification_service.session')
+@mock.patch('logic.attestation_service.session')
 def test_verify_twitter_valid_code(mock_session, MockOauthClient):
     mock_oauth_client = mock.Mock()
     mock_oauth_client.request.return_value = {
@@ -399,7 +399,7 @@ def test_verify_twitter_valid_code(mock_session, MockOauthClient):
 
 
 @mock.patch('oauth2.Client')
-@mock.patch('logic.verification_service.session')
+@mock.patch('logic.attestation_service.session')
 def test_verify_twitter_invalid_verifier(mock_session, MockOauthClient):
     mock_oauth_client = mock.Mock()
     mock_oauth_client.request.return_value = {'status': '401'}, b''
