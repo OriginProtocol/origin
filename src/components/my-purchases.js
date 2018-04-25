@@ -85,16 +85,16 @@ class MyPurchases extends Component {
 
   render() {
     const { filter, loading, purchases } = this.state
-    // const filteredPurchases = (() => {
-    //   switch(filter) {
-    //     case 'pending':
-    //       return purchases.filter(p => !p.reviewedAt)
-    //     case 'complete':
-    //       return purchases.filter(p => p.reviewedAt)
-    //     default:
-    //       return purchases
-    //   }
-    // })()
+    const filteredPurchases = (() => {
+      switch(filter) {
+        case 'pending':
+          return purchases.filter(p => p.stage !== 'complete')
+        case 'complete':
+          return purchases.filter(p => p.stage === 'complete')
+        default:
+          return purchases
+      }
+    })()
 
     return (
       <div className="my-listings-wrapper">
@@ -108,17 +108,17 @@ class MyPurchases extends Component {
             <div className="col-12 col-md-3">
               {loading && 'Loading...'}
               {!loading && !purchases.length && 'You have no purchases.'}
-              {/*!loading && !!purchases.length &&
+              {!loading && !!purchases.length &&
                 <div className="filters list-group flex-row flex-md-column">
                   <a className={`list-group-item list-group-item-action${filter === 'pending' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'pending' })}>Pending</a>
                   <a className={`list-group-item list-group-item-action${filter === 'complete' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'complete' })}>Complete</a>
                   <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>All</a>
                 </div>
-              */}
+              }
             </div>
             <div className="col-12 col-md-9">
               <div className="my-listings-list">
-                {purchases.map(p => <MyPurchaseCard key={`my-purchase-${p.address}`} purchase={p} />)}
+                {filteredPurchases.map(p => <MyPurchaseCard key={`my-purchase-${p.address}`} purchase={p} />)}
               </div>
             </div>
           </div>

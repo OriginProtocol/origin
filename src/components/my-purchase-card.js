@@ -11,14 +11,14 @@ class MyPurchaseCard extends Component {
     super(props)
 
     this.loadListing = this.loadListing.bind(this)
-    this.state = { listing: {} }
+    this.state = { listing: {}, loading: true }
   }
 
   async loadListing(addr) {
     try {
       const listing = await origin.listings.get(addr)
 
-      this.setState({ listing })
+      this.setState({ listing, loading: false })
     } catch(error) {
       console.error(`Error fetching contract or IPFS info for listing: ${addr}`)
     }
@@ -56,7 +56,7 @@ class MyPurchaseCard extends Component {
     const timestamp = `${verb} on ${moment(created).format('MMMM D, YYYY')}`
 
     return (
-      <div className="transaction card">
+      <div className={`transaction card${this.state.loading ? ' loading' : ''}`}>
         <div className="card-body d-flex flex-column flex-lg-row">
           <div className="aspect-ratio">
             <div className="image-container">
@@ -65,29 +65,31 @@ class MyPurchaseCard extends Component {
               </a>
             </div>
           </div>
-          <div className="content-container d-flex flex-column">
-            <p className="category">{category}</p>
-            <h2 className="title text-truncate"><a onClick={() => alert('To Do')}>{name}</a></h2>
-            {/* Purchase detail not ready for real address */}
-            {/*<h2 className="title text-truncate"><Link to={`/my-purchases/${address}`}>{name}</Link></h2>*/}
-            <p className="timestamp">{timestamp}</p>
-            <div className="d-flex">
-              <p className="price">{`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ETH`}</p>
-              {/* Not Yet Relevant */}
-              {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
-            </div>
-            {/*<TransactionProgress currentStep={step} perspective="buyer" purchase={this.props.purchase} subdued={true} />*/}
-            <div className="actions d-flex">
-              <div className="links-container">
-                {/*<a onClick={() => alert('To Do')}>Open a Dispute</a>*/}
+          {!this.state.loading &&
+            <div className="content-container d-flex flex-column">
+              <p className="category">{category}</p>
+              <h2 className="title text-truncate"><a onClick={() => alert('To Do')}>{name}</a></h2>
+              {/* Purchase detail not ready for real address */}
+              {/*<h2 className="title text-truncate"><Link to={`/my-purchases/${address}`}>{name}</Link></h2>*/}
+              <p className="timestamp">{timestamp}</p>
+              <div className="d-flex">
+                <p className="price">{`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ETH`}</p>
+                {/* Not Yet Relevant */}
+                {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
               </div>
-              <div className="button-container">
-                {stage === 'buyer_pending' &&
-                  <a className="btn btn-primary btn-sm" onClick={() => alert('To Do')}>I&apos;ve Received the Order</a>
-                }
+              {/*<TransactionProgress currentStep={step} perspective="buyer" purchase={this.props.purchase} subdued={true} />*/}
+              <div className="actions d-flex">
+                <div className="links-container">
+                  {/*<a onClick={() => alert('To Do')}>Open a Dispute</a>*/}
+                </div>
+                <div className="button-container">
+                  {stage === 'buyer_pending' &&
+                    <a className="btn btn-primary btn-sm" onClick={() => alert('To Do')}>I&apos;ve Received the Order</a>
+                  }
+                </div>
               </div>
             </div>
-          </div>
+          }
         </div>
       </div>
     )
