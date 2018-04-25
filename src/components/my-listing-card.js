@@ -35,7 +35,7 @@ class MyListingCard extends Component {
   }
 
   render() {
-    const { address, category, createdAt, name, pictures, price, unitsAvailable } = this.props.listing
+    const { address, category, /*createdAt, */name, pictures, price, unitsAvailable } = this.props.listing
     /*
      *  Micah 4/23/2018
      *  ~~~~~~~~~~~~~~~
