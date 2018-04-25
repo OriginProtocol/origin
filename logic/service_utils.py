@@ -3,9 +3,12 @@ from bidict import bidict
 import six
 
 
+class ServiceError(Exception):
+    pass
+
+
 def req_error(code=None, path=None, message=None):
-    error = apilib.ApiError(code=code, path=path, message=message)
-    return apilib.ApiException.request_error(errors=[error])
+    return ServiceError({'code': code, 'message': message, 'path': path})
 
 
 class DbToApiMapping(object):
