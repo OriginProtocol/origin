@@ -37,8 +37,7 @@ class MyPurchases extends Component {
 
   async getPurchasesLength(addr) {
     try {
-      // len is a BigNumber
-      const len = +(await origin.listings.purchasesLength(addr))
+      const len = await origin.listings.purchasesLength(addr)
 
       if (!len) {
         return len
