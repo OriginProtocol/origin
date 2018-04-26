@@ -44,3 +44,6 @@ RPC_PROTOCOL = os.environ.get('RPC_PROTOCOL')
 
 IPFS_DOMAIN = os.environ.get('IPFS_DOMAIN')
 IPFS_PORT = os.environ.get('IPFS_PORT')
+
+REDIS_URL = os.environ.get('REDIS_URL')
+CELERY_DEBUG = parse_bool(os.environ.get('CELERY_DEBUG'))
