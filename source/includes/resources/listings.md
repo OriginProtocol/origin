@@ -137,23 +137,21 @@ You can get a simple list of all listing indexes in the registry, which will all
 > To find the number of purchases for a listing
 
 ```javascript
-const listingAddress = "0xbad99f5653c95ff1bc71f8bd1b2838b3d1a9548b"
+const listingAddress = "0xbe3a878bfc1e1527858756c062fbfe0db069c459"
 const length = await origin.listings.purchasesLength(listingAddress)
 // Returns 
-BigNumber {s: 1, e: 0, c: Array(1)}
+4
 ```
 
 This will return the number of purchases that have occurred for a given listing address.
-
-**The return value of this method will be a [BigNumber](http://mikemcl.github.io/bignumber.js/).**
 
 ## purchaseAddressByIndex
 
 > To find a purchase address for a listing
 
 ```javascript
-const listingAddress = "0xbad99f5653c95ff1bc71f8bd1b2838b3d1a9548b"
-const length = await origin.listings.purchaseAddressByIndex(listingAddress, 0)
+const listingAddress = "0xbe3a878bfc1e1527858756c062fbfe0db069c459"
+await origin.listings.purchaseAddressByIndex(listingAddress, 0)
 // Returns 
 "0x9deee0195f88caf7dee2fa8a6777f8236d847ef8"
 ```
