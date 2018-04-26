@@ -50,6 +50,48 @@ class Purchases extends ResourceBase{
   async sellerGetPayout(address) {
     return await this.contractFn(address, "sellerCollectPayout")
   }
+
+  async getLogs(address) {
+    const web3 = this.contractService.web3
+    const contract = await this.contractDefinition.at(address)
+    return new Promise((resolve, reject) => {
+      // Get all logs on this contract
+      contract
+      .allEvents({fromBlock:0})
+      .get(function(error, rawLogs){
+        if(error){
+          return reject(error)
+        }
+        // Format logs we receive
+        let logs = rawLogs.map((log)=>{
+          const stage = _NUMBERS_TO_STAGE[log.args.stage]
+          return {
+            transactionHash: log.transactionHash,
+            stage: stage,
+            blockNumber: log.blockNumber, 
+            blockHash: log.blockHash,
+            event: log.event
+          }
+        })
+        // Fetch user and timestamp information for all logs, in parallel 
+        const addUserAddressFn = async (event)=>{
+          event.from = (await web3.eth.getTransaction(event.transactionHash)).from
+        }
+        const addTimestampFn = async (event)=>{
+          event.timestamp = (await web3.eth.getBlock(event.blockHash)).timestamp
+        }
+        const fetchPromises = [].concat(
+          logs.map(addUserAddressFn),
+          logs.map(addTimestampFn)
+        )
+        Promise.all(fetchPromises)
+        .then(()=>{ resolve(logs) })
+        .catch((error)=>reject(error))
+      })
+    })
+  }
+
+
 }
 
 module.exports = Purchases
