@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import moment from 'moment'
 
@@ -29,21 +30,25 @@ class MyPurchaseCard extends Component {
   }
 
   render() {
-    const { created, stage } = this.props.purchase
+    const { address, created, stage } = this.props.purchase
     const { category, name, pictures, price } = this.state.listing
-    let verb
+    let date, step, verb
 
     switch(stage) {
       case 'seller_pending':
+        step = 3
         verb = 'Received'
         break
       case 'buyer_pending':
+        step = 2
         verb = 'Sent by seller'
         break
       case 'shipping_pending':
+        step = 1
         verb = 'Purchased'
         break
       default:
+        step = 0
         verb = 'Unknown'
     }
 

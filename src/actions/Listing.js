@@ -18,50 +18,59 @@ export function getListingIds() {
 
     // Get listings to hide
     const hideListPromise = new Promise((resolve, reject) => {
-      window.web3.version.getNetwork((err, netId) => { resolve(netId) })
+      window.web3.version.getNetwork((err, netId) => {
+        resolve(netId)
+      })
     })
-    .then((networkId) => {
-      return fetch(`https://raw.githubusercontent.com/OriginProtocol/demo-dapp/hide_list/hidelist_${networkId}.json`)
-    })
-    .then((response) => {
-      if (response.status === 404) {
-        return [] // Default: Don't hide anything
-      } else {
-        return response.json()
-      }
-    })
+      .then(networkId => {
+        // Ignore hidden listings for local testnets
+        if (networkId > 10) {
+          return { status: 404 }
+        } else {
+          return fetch(
+            `https://raw.githubusercontent.com/OriginProtocol/demo-dapp/hide_list/hidelist_${networkId}.json`
+          )
+        }
+      })
+      .then(response => {
+        if (response.status === 404) {
+          return [] // Default: Don't hide anything
+        } else {
+          return response.json()
+        }
+      })
 
     // Get all listings from contract
-    const allListingsPromise = origin.listings.allIds()
-    .then((response) => {
-      // this.setState({ contractFound: true })
-      return response
-    })
-    .catch((error) => {
-      if (error.message.indexOf("(network/artifact mismatch)") > 0) {
-        // this.setState({ contractFound: false })
-      }
-    })
+    const allListingsPromise = origin.listings
+      .allIds()
+      .then(response => {
+        // this.setState({ contractFound: true })
+        return response
+      })
+      .catch(error => {
+        if (error.message.indexOf('(network/artifact mismatch)') > 0) {
+          // this.setState({ contractFound: false })
+        }
+      })
     // Wait for both to finish
     Promise.all([hideListPromise, allListingsPromise])
-    .then(([hideList, ids]) => {
-      // Filter hidden listings
-      const showIds = ids ? ids.filter((i)=>hideList.indexOf(i) < 0) : []
+      .then(([hideList, ids]) => {
+        // Filter hidden listings
+        const showIds = ids ? ids.filter(i => hideList.indexOf(i) < 0) : []
 
-      dispatch({
-        type: ListingConstants.FETCH_IDS_SUCCESS,
-        ids: showIds.reverse()
+        dispatch({
+          type: ListingConstants.FETCH_IDS_SUCCESS,
+          ids: showIds.reverse()
+        })
       })
-    })
-    .catch((error) => {
-      console.log(error)
-      alertify.alert(error.message)
+      .catch(error => {
+        console.log(error)
+        alertify.alert(error.message)
 
-      dispatch({
-        type: ListingConstants.FETCH_IDS_ERROR,
-        error: error.message
+        dispatch({
+          type: ListingConstants.FETCH_IDS_ERROR,
+          error: error.message
+        })
       })
-    })
-
   }
 }
