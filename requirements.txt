@@ -67,5 +67,6 @@ twilio==6.11.0
 urllib3==1.22
 waitress==1.1.0
 wcwidth==0.1.7
-web3==4.1.0
+eth-account==0.2.2
+web3==4.2.0
 Werkzeug==0.14.1

@@ -18,12 +18,10 @@ def str_eth(numeric_eth_address):
 
 
 def test_generate_phone_verification_code_new_phone(mock_send_sms):
-    req = {
-        'phone': '5551231212'
-    }
-    VerificationService.generate_phone_verification_code(req)
+    phone = '5551231212'
+    VerificationService.generate_phone_verification_code(phone)
 
-    db_code = VC.query.filter(VC.phone == req['phone']).first()
+    db_code = VC.query.filter(VC.phone == phone).first()
     assert db_code is not None
     assert db_code.code is not None
     assert len(db_code.code) == 6
@@ -41,14 +39,12 @@ def test_generate_phone_verification_code_phone_already_in_db(
     session.add(vc_obj)
     session.commit()
 
-    req = {
-        'phone': vc_obj.phone
-    }
-    VerificationService.generate_phone_verification_code(req)
+    phone = vc_obj.phone
+    VerificationService.generate_phone_verification_code(phone)
 
-    assert VC.query.filter(VC.phone == req['phone']).count() == 1
+    assert VC.query.filter(VC.phone == phone).count() == 1
 
-    db_code = VC.query.filter(VC.phone == req['phone']).first()
+    db_code = VC.query.filter(VC.phone == phone).first()
     assert db_code is not None
     assert db_code.code is not None
     assert len(db_code.code) == 6
@@ -64,12 +60,12 @@ def test_verify_phone_valid_code(session):
     session.add(vc_obj)
     session.commit()
 
-    req = {
+    args = {
         'eth_address': str_eth(sample_eth_address),
         'phone': vc_obj.phone,
         'code': vc_obj.code
     }
-    resp = VerificationService.verify_phone(req)
+    resp = VerificationService.verify_phone(**args)
 
     assert resp['signature'] == (
         '0x1aa9ad132f99cee742206f66663cd92cb769de97ffad'
@@ -85,13 +81,13 @@ def test_verify_phone_expired_code(session):
     session.add(vc_obj)
     session.commit()
 
-    req = {
+    args = {
         'eth_address': str_eth(sample_eth_address),
         'phone': vc_obj.phone,
         'code': vc_obj.code
     }
     with pytest.raises(ServiceError) as service_err:
-        VerificationService.verify_phone(req)
+        VerificationService.verify_phone(**args)
     code = service_err.value.args[0]['code']
     message = service_err.value.args[0]['message']
     path = service_err.value.args[0]['path']
@@ -106,13 +102,13 @@ def test_verify_phone_wrong_code(session):
     session.add(vc_obj)
     session.commit()
 
-    req = {
+    args = {
         'eth_address': str_eth(sample_eth_address),
         'phone': vc_obj.phone,
         'code': 'garbage'
     }
     with pytest.raises(ServiceError) as service_err:
-        VerificationService.verify_phone(req)
+        VerificationService.verify_phone(**args)
     code = service_err.value.args[0]['code']
     message = service_err.value.args[0]['message']
     path = service_err.value.args[0]['path']
@@ -127,13 +123,13 @@ def test_verify_phone_phone_not_found(session):
     session.add(vc_obj)
     session.commit()
 
-    req = {
+    args = {
         'eth_address': str_eth(sample_eth_address),
         'phone': 'garbage',
         'code': vc_obj.code
     }
     with pytest.raises(ServiceError) as service_err:
-        VerificationService.verify_phone(req)
+        VerificationService.verify_phone(**args)
     code = service_err.value.args[0]['code']
     message = service_err.value.args[0]['message']
     path = service_err.value.args[0]['path']
@@ -149,11 +145,9 @@ def test_generate_phone_verification_rate_limit_exceeded(session):
     session.add(vc_obj)
     session.commit()
 
-    req = {
-        'phone': vc_obj.phone
-    }
+    phone = vc_obj.phone
     with pytest.raises(ServiceError) as service_err:
-        VerificationService.generate_phone_verification_code(req)
+        VerificationService.generate_phone_verification_code(phone)
     code = service_err.value.args[0]['code']
     message = service_err.value.args[0]['message']
     path = service_err.value.args[0]['path']
@@ -166,12 +160,10 @@ def test_generate_phone_verification_rate_limit_exceeded(session):
 
 @mock.patch('python_http_client.client.Client')
 def test_generate_email_verification_code_new_phone(MockHttpClient):
-    req = {
-        'email': 'hello@world.foo'
-    }
-    VerificationService.generate_email_verification_code(req)
+    email = 'hello@world.foo'
+    VerificationService.generate_email_verification_code(email)
 
-    db_code = VC.query.filter(VC.email == req['email']).first()
+    db_code = VC.query.filter(VC.email == email).first()
     assert db_code is not None
     assert db_code.code is not None
     assert 6 == len(db_code.code)
@@ -190,13 +182,11 @@ def test_generate_email_verification_code_email_already_in_db(
     session.add(vc_obj)
     session.commit()
 
-    req = {
-        'email': vc_obj.email
-    }
-    VerificationService.generate_email_verification_code(req)
+    email = vc_obj.email
+    VerificationService.generate_email_verification_code(email)
 
-    assert VC.query.filter(VC.email == req['email']).count() == 1
-    db_code = VC.query.filter(VC.email == req['email']).first()
+    assert VC.query.filter(VC.email == email).count() == 1
+    db_code = VC.query.filter(VC.email == email).first()
     assert db_code is not None
     assert db_code.code is not None
     assert len(db_code.code) == 6
@@ -219,7 +209,7 @@ def test_verify_email_valid_code(mock_now, session):
         'code': vc_obj.code
     }
     mock_now.return_value = vc_obj.expires_at - datetime.timedelta(minutes=1)
-    resp = VerificationService.verify_email(req)
+    resp = VerificationService.verify_email(**req)
     assert resp['signature'] == (
         '0x02fb9b226d84e0124ad16915324359432ecc4091273c8'
         'f3e275c4545c3d79b1e0afc0560eab381649c9bc19407f'
@@ -241,7 +231,7 @@ def test_verify_email_expired_code(mock_now, session):
     }
     mock_now.return_value = vc_obj.expires_at + datetime.timedelta(minutes=1)
     with pytest.raises(ServiceError) as service_err:
-        VerificationService.verify_email(req)
+        VerificationService.verify_email(**req)
     code = service_err.value.args[0]['code']
     message = service_err.value.args[0]['message']
     path = service_err.value.args[0]['path']
@@ -264,7 +254,7 @@ def test_verify_email_wrong_code(mock_now, session):
     }
     mock_now.return_value = vc_obj.expires_at - datetime.timedelta(minutes=1)
     with pytest.raises(ServiceError) as service_err:
-        VerificationService.verify_email(req)
+        VerificationService.verify_email(**req)
     code = service_err.value.args[0]['code']
     message = service_err.value.args[0]['message']
     path = service_err.value.args[0]['path']
@@ -280,14 +270,14 @@ def test_verify_email_email_not_found(mock_now, session):
     session.add(vc_obj)
     session.commit()
 
-    req = {
+    args = {
         'eth_address': str_eth(sample_eth_address),
         'email': 'garbage',
         'code': vc_obj.code
     }
     mock_now.return_value = vc_obj.expires_at - datetime.timedelta(minutes=1)
     with pytest.raises(ServiceError) as service_err:
-        VerificationService.verify_email(req)
+        VerificationService.verify_email(**args)
     code = service_err.value.args[0]['code']
     message = service_err.value.args[0]['message']
     path = service_err.value.args[0]['path']
@@ -298,10 +288,8 @@ def test_verify_email_email_not_found(mock_now, session):
 
 
 def test_facebook_auth_url():
-    req = {
-        'redirect_url': 'http://hello.world'
-    }
-    resp = VerificationService.facebook_auth_url(req)
+    redirect_url = 'http://hello.world'
+    resp = VerificationService.facebook_auth_url(redirect_url)
     assert resp['url'] == (
         'https://www.facebook.com/v2.12/dialog/oauth?client_id'
         '=facebook-client-id&redirect_uri=http://hello.world/')
@@ -314,12 +302,12 @@ def test_verify_facebook_valid_code(MockHttpConnection):
     mock_get_response.read.return_value = '{"access_token": "foo"}'
     mock_http_conn.getresponse.return_value = mock_get_response
     MockHttpConnection.return_value = mock_http_conn
-    req = {
+    args = {
         'eth_address': '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
         'redirect_url': 'http://hello.world',
         'code': 'abcde12345'
     }
-    resp = VerificationService.verify_facebook(req)
+    resp = VerificationService.verify_facebook(**args)
     mock_http_conn.request.assert_called_once_with(
         'GET',
         '/v2.12/oauth/access_token?client_id=facebook-client-id&' +
@@ -340,13 +328,13 @@ def test_verify_facebook_invalid_code(MockHttpConnection):
     mock_get_response.read.return_value = '{"error": "bar"}'
     mock_http_conn.getresponse.return_value = mock_get_response
     MockHttpConnection.return_value = mock_http_conn
-    req = {
+    args = {
         'eth_address': '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
         'redirect_url': 'http://hello.world',
         'code': 'bananas'
     }
     with pytest.raises(ServiceError) as service_err:
-        VerificationService.verify_facebook(req)
+        VerificationService.verify_facebook(**args)
     code = service_err.value.args[0]['code']
     message = service_err.value.args[0]['message']
     path = service_err.value.args[0]['path']
@@ -368,8 +356,7 @@ def test_twitter_auth_url(mock_session, MockOauthClient):
     mock_oauth_client.request.return_value = {
         'status': '200'}, b'oauth_token=peaches&oauth_token_secret=pears'
     MockOauthClient.return_value = mock_oauth_client
-    req = {}
-    resp = VerificationService.twitter_auth_url(req)
+    resp = VerificationService.twitter_auth_url()
     mock_oauth_client.request.assert_called_once_with(
         'https://api.twitter.com/oauth/request_token', 'GET')
     assert resp['url'] == ('https://api.twitter.com/oauth/authenticate?'
@@ -383,11 +370,11 @@ def test_verify_twitter_valid_code(mock_session, MockOauthClient):
     mock_oauth_client.request.return_value = {
         'status': '200'}, b'oauth_token=guavas&oauth_token_secret=mangos'
     MockOauthClient.return_value = mock_oauth_client
-    req = {
+    args = {
         'eth_address': '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
         'oauth_verifier': 'blueberries'
     }
-    resp = VerificationService.verify_twitter(req)
+    resp = VerificationService.verify_twitter(**args)
     mock_oauth_client.request.assert_called_once_with(
         'https://api.twitter.com/oauth/access_token', 'GET')
     assert resp['signature'] == (
@@ -404,12 +391,12 @@ def test_verify_twitter_invalid_verifier(mock_session, MockOauthClient):
     mock_oauth_client = mock.Mock()
     mock_oauth_client.request.return_value = {'status': '401'}, b''
     MockOauthClient.return_value = mock_oauth_client
-    req = {
+    args = {
         'eth_address': '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
         'oauth_verifier': 'pineapples'
     }
     with pytest.raises(ServiceError) as service_err:
-        VerificationService.verify_twitter(req)
+        VerificationService.verify_twitter(**args)
     code = service_err.value.args[0]['code']
     message = service_err.value.args[0]['message']
     path = service_err.value.args[0]['path']

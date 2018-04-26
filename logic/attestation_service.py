@@ -37,9 +37,9 @@ CODE_EXPIRATION_TIME_MINUTES = 30
 
 
 class VerificationService:
-    def generate_phone_verification_code(req):
+    def generate_phone_verification_code(phone):
         db_code = VC.query \
-            .filter(VC.phone == req['phone']) \
+            .filter(VC.phone == phone) \
             .first()
         if db_code is None:
             db_code = db_models.VerificationCode()
@@ -54,24 +54,24 @@ class VerificationService:
                 code='RATE_LIMIT_EXCEEDED',
                 message=('Please wait briefly before requesting a new '
                          'verification code.'))
-        db_code.phone = req['phone']
+        db_code.phone = phone
         db_code.code = random_numeric_token()
         db_code.expires_at = time_.utcnow(
         ) + datetime.timedelta(minutes=CODE_EXPIRATION_TIME_MINUTES)
         db.session.commit()
-        send_code_via_sms(req['phone'], db_code.code)
+        send_code_via_sms(phone, db_code.code)
         return
 
-    def verify_phone(req):
+    def verify_phone(phone, code, eth_address):
         db_code = VC.query \
-            .filter(VC.phone == req['phone']) \
+            .filter(VC.phone == phone) \
             .first()
         if db_code is None:
             raise service_utils.req_error(
                 code='NOT_FOUND',
                 path='phone',
                 message='The given phone number was not found.')
-        if req['code'] != db_code.code:
+        if code != db_code.code:
             raise service_utils.req_error(
                 code='INVALID',
                 path='code',
@@ -86,16 +86,16 @@ class VerificationService:
         # TODO: determine claim type integer code for phone verification
         claim_type = 10
         signature = attestations.generate_signature(
-            web3, signing_key, req['eth_address'], claim_type, data)
+            web3, signing_key, eth_address, claim_type, data)
         return {
             'signature': signature,
             'claim_type': claim_type,
             'data': data
         }
 
-    def generate_email_verification_code(req):
+    def generate_email_verification_code(email):
         db_code = VC.query \
-            .filter(func.lower(VC.email) == func.lower(req['email'])) \
+            .filter(func.lower(VC.email) == func.lower(email)) \
             .first()
         if db_code is None:
             db_code = db_models.VerificationCode()
@@ -108,24 +108,24 @@ class VerificationService:
                 code='RATE_LIMIT_EXCEEDED', message=(
                     'Please wait briefly before requesting a '
                     'new verification code.'))
-        db_code.email = req['email']
+        db_code.email = email
         db_code.code = random_numeric_token()
         db_code.expires_at = time_.utcnow() + datetime.timedelta(
             minutes=CODE_EXPIRATION_TIME_MINUTES)
         db.session.commit()
-        send_code_via_email(req['email'], db_code.code)
+        send_code_via_email(email, db_code.code)
         return
 
-    def verify_email(req):
+    def verify_email(email, code, eth_address):
         db_code = VC.query \
-            .filter(func.lower(VC.email) == func.lower(req['email'])) \
+            .filter(func.lower(VC.email) == func.lower(email)) \
             .first()
         if db_code is None:
             raise service_utils.req_error(
                 code='NOT_FOUND',
                 path='email',
                 message='The given email was not found.')
-        if req['code'] != db_code.code:
+        if code != db_code.code:
             raise service_utils.req_error(
                 code='INVALID',
                 path='code',
@@ -141,26 +141,26 @@ class VerificationService:
         # TODO: determine claim type integer code for email verification
         claim_type = 11
         signature = attestations.generate_signature(
-            web3, signing_key, req['eth_address'], claim_type, data)
+            web3, signing_key, eth_address, claim_type, data)
         return {
             'signature': signature,
             'claim_type': claim_type,
             'data': data
         }
 
-    def facebook_auth_url(req):
+    def facebook_auth_url(redirect_url):
         client_id = settings.FACEBOOK_CLIENT_ID
-        redirect_uri = append_trailing_slash(req['redirect_url'])
+        redirect_uri = append_trailing_slash(redirect_url)
         url = ('https://www.facebook.com/v2.12/dialog/oauth?client_id={}'
                '&redirect_uri={}').format(client_id, redirect_uri)
         return {'url': url}
 
-    def verify_facebook(req):
+    def verify_facebook(redirect_url, code, eth_address):
         base_url = 'graph.facebook.com'
         client_id = settings.FACEBOOK_CLIENT_ID
         client_secret = settings.FACEBOOK_CLIENT_SECRET
-        redirect_uri = append_trailing_slash(req['redirect_url'])
-        code = req['code']
+        redirect_uri = append_trailing_slash(redirect_url)
+        code = code
         path = ('/v2.12/oauth/access_token?client_id={}'
                 '&client_secret={}&redirect_uri={}&code={}').format(
                     client_id, client_secret, redirect_uri, code)
@@ -178,14 +178,14 @@ class VerificationService:
         # TODO: determine claim type integer code for phone verification
         claim_type = 3
         signature = attestations.generate_signature(
-            web3, signing_key, req['eth_address'], claim_type, data)
+            web3, signing_key, eth_address, claim_type, data)
         return {
             'signature': signature,
             'claim_type': claim_type,
             'data': data
         }
 
-    def twitter_auth_url(req):
+    def twitter_auth_url():
         client = oauth.Client(oauth_consumer)
         resp, content = client.request(twitter_request_token_url, 'GET')
         if resp['status'] != '200':
@@ -202,11 +202,11 @@ class VerificationService:
             request_token['oauth_token'])
         return {'url': url}
 
-    def verify_twitter(req):
+    def verify_twitter(oauth_verifier, eth_address):
         # Verify authenticity of user
         token = oauth.Token(session['request_token']['oauth_token'],
                             session['request_token']['oauth_token_secret'])
-        token.set_verifier(req['oauth_verifier'])
+        token.set_verifier(oauth_verifier)
         client = oauth.Client(oauth_consumer, token)
         resp, content = client.request(twitter_access_token_url, 'GET')
         access_token = dict(cgi.parse_qsl(content))
@@ -222,7 +222,7 @@ class VerificationService:
         # TODO: determine claim type integer code for phone verification
         claim_type = 4
         signature = attestations.generate_signature(
-            web3, signing_key, req['eth_address'], claim_type, data)
+            web3, signing_key, eth_address, claim_type, data)
         return {
             'signature': signature,
             'claim_type': claim_type,
