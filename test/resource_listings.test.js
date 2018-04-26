@@ -107,7 +107,7 @@ describe("Listing Resource", function() {
 
     it("should get the number of purchases", async () => {
       const numPurchases = await listings.purchasesLength(listing.address)
-      expect(numPurchases.toNumber()).to.equal(1)
+      expect(numPurchases).to.equal(1)
     })
 
     it("should get the address of a purchase", async () => {

@@ -121,7 +121,7 @@ class Listings extends ResourceBase{
   }
 
   async purchasesLength(address) {
-    return await this.contractFn(address, "purchasesLength")
+    return (await this.contractFn(address, "purchasesLength")).toNumber()
   }
 
   async purchaseAddressByIndex(address, index) {
