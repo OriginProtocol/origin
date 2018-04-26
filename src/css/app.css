@@ -65,6 +65,31 @@ a:hover {
   text-decoration: none;
 }
 
+.table {
+  font-size: 0.875rem;
+  margin-bottom: 0;
+  table-layout: fixed;
+}
+
+.table thead th,
+.table tbody td {
+  border: none;
+  padding: 0.75rem;
+}
+
+.table thead th {
+  font-weight: normal;
+}
+
+.table tbody td {
+  white-space: nowrap;
+}
+
+.table .progress-circle {
+  display: inline-block;
+  margin-right: 0.75rem;
+}
+
 .filters.list-group {
   margin-bottom: 30px;
 }
@@ -1062,10 +1087,6 @@ a:hover {
   margin: 0 0 1rem;
 }
 
-.detail-info-box {
-  padding-bottom: 20px;
-}
-
 .listing-container .avatar-container {
   flex-shrink: 0;
   height: 60px;
@@ -1131,8 +1152,7 @@ a:hover {
   white-space: pre;
 }
 
-.listing-container a {
-  font-size: 1.125rem;
+.listing-container .ipfs a {
   font-weight: normal;
 }
 
@@ -1598,32 +1618,6 @@ label[for=root_pictures]:hover {
   font-weight: 900;
   margin-top: 10px;
   width: auto;
-}
-
-.transaction-detail .table {
-  font-size: 0.875rem;
-  margin-bottom: 0;
-  table-layout: fixed;
-}
-
-.transaction-detail .table th,
-.transaction-detail .table td {
-  border: none;
-  padding: 0.75rem;
-}
-
-.transaction-detail .table th {
-  font-weight: normal;
-}
-
-.transaction-detail .table td {
-  white-space: nowrap;
-  width: 25%;
-}
-
-.transaction-detail .table td .progress-circle {
-  display: inline-block;
-  margin-right: 0.75rem;
 }
 
 .transaction-detail .summary {

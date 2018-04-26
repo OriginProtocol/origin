@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 
 import Modal from './modal'
@@ -146,7 +146,7 @@ class ListingsDetail extends Component {
                 <p className="units-available text-danger">Just {this.state.unitsAvailable.toLocaleString()} left!</p>
               }
               {this.state.ipfsHash &&
-                <p className="link-container">
+                <p className="ipfs link-container">
                   <a href={origin.ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
                     View on IPFS<img src="/images/carat-blue.svg" className="carat" alt="right carat" />
                   </a>
@@ -157,20 +157,27 @@ class ListingsDetail extends Component {
                 <li>Seller: {this.state.sellerAddress}</li>
                 <li>Units: {this.state.unitsAvailable}</li>
               </div>
-              {this.state.purchases.length > 0 &&
-                <div>
-                  <h3>Purchases</h3>
-                  <table className="table table-sm">
+              {!this.state.loading && this.state.purchases.length > 0 &&
+                <Fragment>
+                  <hr />
+                  <h2>Purchases</h2>
+                  <table className="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col" style={{ width: '200px' }}>Status</th>
+                        <th scope="col">TxHash</th>
+                      </tr>
+                    </thead>
                     <tbody>
                       {this.state.purchases.map(({ address, stage }) =>
                         <tr key={address}>
                           <td>{stage.replace("_"," ")}</td>
-                          <td><Link to={`/purchases/${address}`}>{address}</Link></td>
+                          <td className="text-truncate"><Link to={`/purchases/${address}`}>{address}</Link></td>
                         </tr>
                       )}
                     </tbody>
                   </table>
-                </div>
+                </Fragment>
               }
             </div>
             <div className="col-12 col-md-4">

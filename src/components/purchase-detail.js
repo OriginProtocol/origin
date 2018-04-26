@@ -193,7 +193,7 @@ class PurchaseDetail extends Component {
                   </div>
                 }
               </div>
-              {/*<h2>Transaction Status</h2>
+              <h2>Transaction History</h2>
               <table className="table table-striped">
                 <thead>
                   <tr>
@@ -204,41 +204,39 @@ class PurchaseDetail extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {soldAt &&
-                    <tr>
-                      <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sold on<br /><strong>${moment(soldAt).format('MMM D, YYYY')}</strong>`}></span>{perspective === 'buyer' ? 'Purchased' : 'Sold'}</td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x56Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
-                    </tr>
-                  }
-                  {fulfilledAt &&
+                  <tr>
+                    <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sold on<br /><strong>${moment(purchase.created).format('MMM D, YYYY')}</strong>`}></span>{perspective === 'buyer' ? 'Purchased' : 'Sold'}</td>
+                    <td className="text-truncate">{purchase.address}</td>
+                    <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
+                    <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
+                  </tr>
+                  {/*fulfilledAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sent by seller on<br /><strong>${moment(fulfilledAt).format('MMM D, YYYY')}</strong>`}></span>Sent by seller</td>
                       <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x78Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
                       <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
                       <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
                     </tr>
-                  }
-                  {receivedAt &&
+                  */}
+                  {/*receivedAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Received buy buyer on<br /><strong>${moment(receivedAt).format('MMM D, YYYY')}</strong>`}></span>Received by buyer</td>
                       <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x90Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
                       <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
                       <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
                     </tr>
-                  }
-                  {perspective === 'seller' && withdrawnAt &&
+                  */}
+                  {/*perspective === 'seller' && withdrawnAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Funds withdrawn on<br /><strong>${moment(withdrawnAt).format('MMM D, YYYY')}</strong>`}></span>Funds withdrawn</td>
                       <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x90Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
                       <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
                       <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
                     </tr>
-                  }
+                  */}
                 </tbody>
               </table>
-              */}
+              <hr />
             </div>
             <div className="col-12 col-lg-4">
               <div className="counterparty">
@@ -272,7 +270,6 @@ class PurchaseDetail extends Component {
               </div>
             </div>
           </div>
-          <hr />
           <div className="row">
             <div className="col-12 col-lg-8">
               {listing.address &&
