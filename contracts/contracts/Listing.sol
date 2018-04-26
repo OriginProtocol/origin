@@ -107,7 +107,7 @@ contract Listing {
     emit ListingChange();
   }
 
-  /// @dev purchasesLength(): Return number of purchases for given listings
+  /// @dev purchasesLength(): Return number of purchases for a given listing
   function purchasesLength()
     public
     constant
@@ -116,7 +116,7 @@ contract Listing {
       return purchases.length;
   }
 
-  /// @dev getPurchase(): Return purchase info for given listing
+  /// @dev getPurchase(): Return purchase info for a given listing
   /// @param _index the index of the listing we want info about
   function getPurchase(uint _index)
     public

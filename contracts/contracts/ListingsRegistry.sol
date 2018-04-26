@@ -60,7 +60,7 @@ contract ListingsRegistry {
       return listings.length;
   }
 
-  /// @dev getListing(): Return listing info for given listing
+  /// @dev getListing(): Return listing info for a given listing
   /// @param _index the index of the listing we want info about
   function getListing(uint _index)
     public
