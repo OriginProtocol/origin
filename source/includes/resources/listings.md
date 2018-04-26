@@ -6,7 +6,7 @@ It is active until there are no more units available or its expiration date is r
 
 ## get
 
-> To get a listing
+> To get a listing by address
 
 ```javascript
 const listingAddress = "0x061b8d5f9e432e6b23d79fac02e5792eb8746ce5"
@@ -35,7 +35,7 @@ This will return information about the listing, combining information from IPFS 
 
 ## getByIndex
 
-> To get a listing
+> To get a listing by index position
 
 ```javascript
 const listing = await origin.listings.getByIndex(1)
@@ -131,3 +131,31 @@ const indexes = await origin.listings.allIds()
 ```
 
 You can get a simple list of all listing indexes in the registry, which will allow you to loop through fetch information about each Listing.
+
+## purchasesLength
+
+> To find the number of purchases for a listing
+
+```javascript
+const listingAddress = "0xbad99f5653c95ff1bc71f8bd1b2838b3d1a9548b"
+const length = await origin.listings.purchasesLength(listingAddress)
+// Returns 
+BigNumber {s: 1, e: 0, c: Array(1)}
+```
+
+This will return the number of purchases that have occurred for a given listing address.
+
+**The return value of this method will be a [BigNumber](http://mikemcl.github.io/bignumber.js/).**
+
+## purchaseAddressByIndex
+
+> To find a purchase address for a listing
+
+```javascript
+const listingAddress = "0xbad99f5653c95ff1bc71f8bd1b2838b3d1a9548b"
+const length = await origin.listings.purchaseAddressByIndex(listingAddress, 0)
+// Returns 
+"0x9deee0195f88caf7dee2fa8a6777f8236d847ef8"
+```
+
+For listings that have one or more purchases, you can get the purchase address at a given index position.
