@@ -10,7 +10,7 @@ import './ClaimHolder.sol';
 
 contract Identity is ClaimHolder {
 
-    function Identity(
+    constructor(
         uint256[] _claimType,
         uint256[] _scheme,
         address[] _issuer,
@@ -57,7 +57,11 @@ contract Identity is ClaimHolder {
         }
     }
 
-    function getBytes(bytes _str, uint256 _offset, uint256 _length) constant returns (bytes) {
+    function getBytes(bytes _str, uint256 _offset, uint256 _length)
+        private
+        pure
+        returns (bytes)
+    {
         bytes memory sig = new bytes(_length);
         uint256 j = 0;
         for (uint256 k = _offset; k< _offset + _length; k++) {
@@ -67,7 +71,11 @@ contract Identity is ClaimHolder {
         return sig;
     }
 
-    function getString(string _str, uint256 _offset, uint256 _length) constant returns (string) {
+    function getString(string _str, uint256 _offset, uint256 _length)
+        private
+        pure
+        returns (string)
+    {
         bytes memory strBytes = bytes(_str);
         bytes memory sig = new bytes(_length);
         uint256 j = 0;

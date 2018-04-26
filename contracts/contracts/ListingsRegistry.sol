@@ -44,7 +44,7 @@ contract ListingsRegistry {
    * Public functions
    */
 
-  function ListingsRegistry()
+  constructor()
     public
   {
     // Defines origin admin address - may be removed for public deployment

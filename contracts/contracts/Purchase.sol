@@ -61,7 +61,7 @@ contract Purchase {
   * Public functions
   */
 
-  function Purchase(
+  constructor(
     address _listingContractAddress,
     address _buyer
   )
