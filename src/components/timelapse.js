@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import moment from 'moment'
 
 class Timelapse extends Component {

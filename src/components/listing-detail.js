@@ -66,7 +66,7 @@ class ListingsDetail extends Component {
       const transactionReceipt = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice)
       console.log("Purchase request sent.")
       this.setState({step: this.STEP.PROCESSING})
-      const blockNumber = await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
+      await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
       this.setState({step: this.STEP.PURCHASED})
     } catch (error) {
       window.err = error
@@ -144,7 +144,7 @@ class ListingsDetail extends Component {
             </div>
             <div className="col-12 col-md-4">
               <div className="buy-box placehold">
-                {this.state.price && 
+                {this.state.price &&
                   <div className="price d-flex justify-content-between">
                     <p>Price</p>
                     <p className="text-right">

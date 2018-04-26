@@ -107,7 +107,7 @@ class ListingCreate extends Component {
       const transactionReceipt = await origin.listings.create(formListing.formData, selectedSchemaType)
       this.setState({ step: this.STEP.PROCESSING })
       // Submitted to blockchain, now wait for confirmation
-      const blockNumber = await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
+      await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
       this.setState({ step: this.STEP.SUCCESS })
     } catch (error) {
       // TODO: We need a failure step to go to here
