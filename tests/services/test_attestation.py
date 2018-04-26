@@ -2,19 +2,13 @@ import datetime
 import mock
 import pytest
 
+from tests.helpers.eth_utils import sample_eth_address, str_eth
 from database import db_models
 from logic.attestation_service import VerificationService
 from logic.service_utils import ServiceError
-from web3 import Web3
 from tests.factories.attestation import VerificationCodeFactory
 from util.time_ import utcnow
 VC = db_models.VerificationCode
-
-sample_eth_address = 562046206989085878832492993516240920558397288279
-
-
-def str_eth(numeric_eth_address):
-    return Web3.toChecksumAddress(hex(int(numeric_eth_address)))
 
 
 def test_generate_phone_verification_code_new_phone(mock_send_sms):
