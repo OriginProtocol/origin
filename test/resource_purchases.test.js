@@ -114,6 +114,15 @@ describe("Purchase Resource", function() {
       purchase = await purchases.get(purchase.address)
       expectStage("complete")
     })
+
+    it("should list logs", async () => {
+      var logs = await purchases.getLogs(purchase.address)
+      expect(logs[0].stage).to.equal("awaiting_payment")
+      expect(logs[1].stage).to.equal("shipping_pending")
+      expect(logs[2].stage).to.equal("buyer_pending")
+      expect(logs[3].stage).to.equal("seller_pending")
+      expect(logs[4].stage).to.equal("complete")
+    })
   })
 
   describe("transactions have a whenMined promise", async () => {

@@ -24,7 +24,7 @@ class ResourceBase {
   async contractFn(address, functionName, args = [], options = {}) {
     // Setup options
     const opts = Object.assign(options, {}) // clone options
-    opts.from = await this.contractService.currentAccount()
+    opts.from = opts.from || (await this.contractService.currentAccount())
     opts.gas = options.gas || 50000 // Default gas
     // Get contract and run trasaction
     const contractDefinition = this.contractDefinition
