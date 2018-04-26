@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 
-const cc = require('cryptocompare')
-
-const targetCurrencyCode = 'ETH';
+const baseCurrencyCode = 'ETH';
 
 class ListingCardPrices extends Component {
 
@@ -13,12 +11,13 @@ class ListingCardPrices extends Component {
       exchangeRate: null,
       approxPrice: "Loading...",
       currencyCode: "USD",
-      defaultDecimalPlaces: 5
+      defaultDecimalPlaces: 5,
+      exchangeBaseURL: 'https://api.cryptonator.com/api/ticker/'
     }
   }
 
   componentWillReceiveProps(nextProps){
-    const p = nextProps.price;
+    let p = nextProps.price;
     this.setState({
       price: p,
       defaultDecimalPlaces: this.getPrecision(p)
@@ -26,8 +25,8 @@ class ListingCardPrices extends Component {
   }
 
   getPrecision(n) {
-    const asString = n.toString();
-    const scientificMatch = asString.match(/e-(\d+)/);
+    let asString = n.toString();
+    let scientificMatch = asString.match(/e-(\d+)/);
     if(scientificMatch && scientificMatch.length > 0) {
       return scientificMatch[1];
     } else {
@@ -44,11 +43,15 @@ class ListingCardPrices extends Component {
   }
 
   retrieveConversion(currencyCode){
-    const desiredCurrencyCode = currencyCode ? currencyCode : this.state.currencyCode
-    const instance = this;
+    let targetCurrencyCode = currencyCode ? currencyCode : this.state.currencyCode
+    let exchangeURL = this.state.exchangeBaseURL;
+    exchangeURL += baseCurrencyCode.toLowerCase();
+    exchangeURL += "-";
+    exchangeURL += this.state.currencyCode.toLowerCase();
+
     return new Promise((resolve, reject) => {
-      cc.price(targetCurrencyCode, [desiredCurrencyCode]).then(prices => {
-        resolve(this.setState({ exchangeRate: prices[desiredCurrencyCode] }));
+      fetch(exchangeURL).then(res => res.json()).then(json => {
+        resolve(this.setState({ exchangeRate: json.ticker.price }));
       }).catch(console.error)
     });
   }

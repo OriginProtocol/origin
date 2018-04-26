@@ -8,16 +8,15 @@ import ListingCardPrices from '../listing-card-prices.js';
 
 configure({ adapter: new Adapter() });
 
-const arbitraryListingId = 1
-const peggedPrices = { USD: 546.61, EUR: 441.5 } // as returned from CryptoCompare
-const URL = 'https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms='
+let peggedPrices = { USD: 546.61, EUR: 441.5 } // as returned from CryptoCompare
+let URL = 'https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms='
 
 describe('<ListingCardPrices />', () => {
 
   describe('retrieveConversion', () => {
 
-    const wrapper = mount(<ListingCardPrices />);
-    const instance = wrapper.instance();
+    let wrapper = mount(<ListingCardPrices />);
+    let instance = wrapper.instance();
 
 
     afterEach(() => {
@@ -26,11 +25,12 @@ describe('<ListingCardPrices />', () => {
 
     describe('no currency passed in', () => {
 
-      const currencyCode = 'USD'
+      let currencyCode = 'USD'
 
       beforeEach(() => {
         instance.setState({ price: 0.0001 })
-        fetchMock.mock(URL + currencyCode, { USD: peggedPrices[currencyCode] })
+        let URL = instance.state.exchangeBaseURL + 'eth-usd';
+        fetchMock.mock(URL, { ticker: { price: peggedPrices[currencyCode] } })
       })
 
       it('sets exchangeRate', async () => {
@@ -47,11 +47,12 @@ describe('<ListingCardPrices />', () => {
 
     describe('currency passed in', () => {
 
-      const currencyCode = 'EUR'
+      let currencyCode = 'EUR'
 
       beforeEach(() => {
         instance.setState({ price: 0.0001, currencyCode: currencyCode })
-        fetchMock.mock(URL + currencyCode, { EUR: peggedPrices[currencyCode] })
+        let URL = instance.state.exchangeBaseURL + 'eth-eur';
+        fetchMock.mock(URL, { ticker: { price: peggedPrices[currencyCode] } })
       })
 
       it('sets exchangeRate', async () => {
