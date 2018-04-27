@@ -32,7 +32,7 @@ def test_phone_verify(client, mock_send_sms):
                       'code': db_code.code})
     print(json_of_response(resp))
     assert resp.status_code == 200
-    assert json_of_response(resp)['data'] == 'phone verified'
+    assert len(json_of_response(resp)['signature']) == 132
 
 
 @mock.patch('python_http_client.client.Client')
@@ -52,7 +52,7 @@ def test_email_verify(MockHttpClient, client):
                       'code': db_code.code})
     print(json_of_response(resp))
     assert resp.status_code == 200
-    assert json_of_response(resp)['data'] == 'email verified'
+    assert len(json_of_response(resp)['signature']) == 132
 
 
 @mock.patch("http.client.HTTPSConnection")
