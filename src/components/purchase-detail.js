@@ -74,9 +74,11 @@ class PurchaseDetail extends Component {
   async loadPurchase() {
     const purchaseAddress = this.props.purchaseAddress
     const purchase = await origin.purchases.get(purchaseAddress)
-    this.setState({purchase: purchase})
+    this.setState({ purchase })
+    console.log(purchase)
     const listing = await origin.listings.get(purchase.listingAddress)
-    this.setState({listing: listing})
+    this.setState({ listing })
+    console.log(listing)
   }
 
   
@@ -84,19 +86,18 @@ class PurchaseDetail extends Component {
   render() {
     const purchase = this.state.purchase
     const listing = this.state.listing
-    if(this.state.purchase.length === 0 || this.state.listing.length === 0 ){
+
+    if (!purchase.address || !listing.address ){
       return null
     }
-    console.log(purchase)
-    console.log(listing)
     
     const perspective = window.web3.eth.accounts[0] === purchase.buyerAddress ? 'buyer' : 'seller'
-    const seller = {name: "Unnamed User", address: listing.sellerAddress}
-    const buyer = {name: "Unnamed User", address: purchase.buyerAddress}
+    const seller = { name: 'Unnamed User', address: listing.sellerAddress }
+    const buyer = { name: 'Unnamed User', address: purchase.buyerAddress }
     const pictures = listing.pictures || []
     const category = listing.category || ""
-    const active = listing.unitsAvailable === 0 // Todo, move to origin.js, take into account listing expiration
-    const soldAt = undefined
+    const active = listing.unitsAvailable > 0 // Todo, move to origin.js, take into account listing expiration
+    const soldAt = purchase.created * 1000 // convert seconds since epoch to ms
     const fulfilledAt = undefined
     const receivedAt = undefined
     const withdrawnAt = undefined
@@ -109,13 +110,13 @@ class PurchaseDetail extends Component {
     const maxStep = perspective === 'seller' ? 4 : 3
     let decimal, left, step
 
-    if (purchase.stage === "complete") {
+    if (purchase.stage === 'complete') {
       step = maxStep
-    } else if (purchase.stage === "seller_pending") {
+    } else if (purchase.stage === 'seller_pending') {
       step = 3
-    } else if (purchase.stage === "buyer_pending") {
+    } else if (purchase.stage === 'buyer_pending') {
       step = 2
-    } else if (purchase.stage === "shipping_pending") {
+    } else if (purchase.stage === 'shipping_pending') {
       step = 1
     } else {
       step = 0
@@ -205,7 +206,7 @@ class PurchaseDetail extends Component {
                 </thead>
                 <tbody>
                   <tr>
-                    <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sold on<br /><strong>${moment(purchase.created).format('MMM D, YYYY')}</strong>`}></span>{perspective === 'buyer' ? 'Purchased' : 'Sold'}</td>
+                    <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sold on<br /><strong>${moment(soldAt).format('MMM D, YYYY')}</strong>`}></span>{perspective === 'buyer' ? 'Purchased' : 'Sold'}</td>
                     <td className="text-truncate">{purchase.address}</td>
                     <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
                     <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
@@ -324,7 +325,7 @@ class PurchaseDetail extends Component {
                 <div className="summary text-center">
                   {perspective === 'buyer' && <div className="purchased tag"><p>Purchased</p></div>}
                   {perspective === 'seller' && <div className="sold tag"><p>Sold</p></div>}
-                  <p className="recap">{listing[counterparty].name} {perspective === 'buyer' ? 'sold' : 'purchased'} on {moment(soldAt).format('MMMM D, YYYY')}</p>
+                  <p className="recap">{counterpartyUser.name} {perspective === 'buyer' ? 'sold' : 'purchased'} on {moment(soldAt).format('MMMM D, YYYY')}</p>
                   <hr />
                   <div className="d-flex">
                     <p className="text-left">Price</p>

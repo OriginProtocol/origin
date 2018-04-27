@@ -32,6 +32,7 @@ class MyPurchaseCard extends Component {
   render() {
     const { address, created, stage } = this.props.purchase
     const { category, name, pictures, price } = this.state.listing
+    const soldAt = created * 1000 // convert seconds since epoch to ms
     let date, step, verb
 
     switch(stage) {
@@ -52,7 +53,7 @@ class MyPurchaseCard extends Component {
         verb = 'Unknown'
     }
 
-    const timestamp = `${verb} on ${moment(created).format('MMMM D, YYYY')}`
+    const timestamp = `${verb} on ${moment(soldAt).format('MMMM D, YYYY')}`
 
     return (
       <div className={`transaction card${this.state.loading ? ' loading' : ''}`}>
