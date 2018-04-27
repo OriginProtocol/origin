@@ -12,7 +12,6 @@ const numBytesInSignature = 65
 const numBytesInDataHash = 32
 
 contract("ClaimHolderPresigned", accounts => {
-  let instance
   let attestation_1 = {
     claimType: 1,
     scheme: 11,
@@ -30,9 +29,9 @@ contract("ClaimHolderPresigned", accounts => {
       uri: "https://foo.bar/attestation2"
   }
 
-  beforeEach(async function() {
-    instance = await contractDefinition.new(
-      [ attestation_1.claim_type, attestation_2.claim_type] ,
+  it("should deploy identity with attestations", async function() {
+    let instance = await contractDefinition.new(
+      [ attestation_1.claim_type, attestation_2.claim_type ],
       [ attestation_1.scheme, attestation_2.scheme ],
       [ attestation_1.issuer, attestation_2.issuer ],
       attestation_1.signature + attestation_2.signature.slice(2),
@@ -43,9 +42,6 @@ contract("ClaimHolderPresigned", accounts => {
       [ attestation_1.uri.length, attestation_2.uri.length ],
       { from: accounts[0] }
     )
-  })
-
-  it("should deploy identity with attestations", async function() {
     assert.ok(instance)
   })
 })
