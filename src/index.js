@@ -1,6 +1,5 @@
 import ContractService from "./contract-service"
 import IpfsService from "./ipfs-service"
-import UserRegistryService from "./user-registry-service"
 
 var resources = {
   listings: require("./resources/listings"),
@@ -21,10 +20,6 @@ class Origin {
       ipfsGatewayPort,
       ipfsGatewayProtocol
     })
-
-    // TODO: This service is deprecated. Remove once the demo dapp no longer
-    // depends on it.
-    this.userRegistryService = new UserRegistryService()
 
     // Instantiate each resource and give it access to contracts and IPFS
     for (let resourceName in resources) {
