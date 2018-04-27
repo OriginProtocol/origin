@@ -30,7 +30,6 @@ def test_phone_verify(client, mock_send_sms):
                      {"phone": phone,
                       "identity": str_eth(sample_eth_address),
                       'code': db_code.code})
-    print(json_of_response(resp))
     assert resp.status_code == 200
     assert len(json_of_response(resp)['signature']) == 132
 
@@ -50,7 +49,6 @@ def test_email_verify(MockHttpClient, client):
                      {"email": email,
                       "identity": str_eth(sample_eth_address),
                       'code': db_code.code})
-    print(json_of_response(resp))
     assert resp.status_code == 200
     assert len(json_of_response(resp)['signature']) == 132
 
