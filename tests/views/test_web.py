@@ -53,3 +53,47 @@ def test_email_verify(MockHttpClient, client):
     print(json_of_response(resp))
     assert resp.status_code == 200
     assert json_of_response(resp)['data'] == 'email verified'
+
+
+@mock.patch("http.client.HTTPSConnection")
+def test_facebook_verify(MockHttpConnection, client):
+    mock_http_conn = mock.Mock()
+    mock_get_response = mock.Mock()
+    mock_get_response.read.return_value = '{"access_token": "foo"}'
+    mock_http_conn.getresponse.return_value = mock_get_response
+    MockHttpConnection.return_value = mock_http_conn
+
+    resp = client.get(
+        "/api/attestations/facebook/auth-url?redirect-url=http://foo.bar")
+    expected_url = "?client_id=facebook-client-id&redirect_uri=http://foo.bar"
+    assert resp.status_code == 200
+    assert expected_url in json_of_response(resp)['url']
+
+    resp = post_json(client,
+                     "/api/attestations/facebook/verify",
+                     {"redirect-url": "http://foo.bar",
+                      "identity": str_eth(sample_eth_address),
+                      "code": "abcde12345"})
+    assert resp.status_code == 200
+    assert len(json_of_response(resp)['signature']) == 132
+
+
+@mock.patch('oauth2.Client')
+def test_twitter_verify(MockOauthClient, client):
+    mock_oauth_client = mock.Mock()
+    mock_oauth_client.request.return_value = {
+        'status': '200'}, b'oauth_token=peaches&oauth_token_secret=pears'
+    MockOauthClient.return_value = mock_oauth_client
+
+    resp = client.get(
+        "/api/attestations/twitter/auth-url")
+    expected_url = "oauth_token=peaches"
+    assert resp.status_code == 200
+    assert expected_url in json_of_response(resp)['url']
+
+    resp = post_json(client,
+                     "/api/attestations/twitter/verify",
+                     {"identity": str_eth(sample_eth_address),
+                      "oauth-verifier": "abcde12345"})
+    assert resp.status_code == 200
+    assert len(json_of_response(resp)['signature']) == 132
