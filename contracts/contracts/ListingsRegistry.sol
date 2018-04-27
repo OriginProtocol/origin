@@ -1,4 +1,4 @@
-pragma solidity 0.4.21;
+pragma solidity ^0.4.21;
 
 /// @title Listing
 /// @dev Used to keep marketplace of listings for buyers and sellers
@@ -44,7 +44,7 @@ contract ListingsRegistry {
    * Public functions
    */
 
-  function ListingsRegistry()
+  constructor()
     public
   {
     // Defines origin admin address - may be removed for public deployment
