@@ -21,7 +21,7 @@ Start serving locally with:
 
 Preview your edits in your browser at: http://127.0.0.1:4567
 
-The Markdown files that our docoumentation is built from are located in `source/includes`.
+The Markdown files that our docoumentation is built from are located in [`source/includes`](source/includes).
    
 Detailed documentation on how to use the Slate documentation system can be found at: [https://github.com/lord/slate](https://github.com/lord/slate)
 
