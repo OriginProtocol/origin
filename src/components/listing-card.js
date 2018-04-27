@@ -5,12 +5,19 @@ import { Link } from 'react-router-dom'
 // not using a global singleton
 import origin from '../services/origin'
 
+import ListingCardPrices from './listing-card-prices.js';
+
 class ListingCard extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
       loading: true,
+      category: "Loading...",
+      name: "Loading...",
+      ipfsHash: null,
+      lister: null,
+      unitsAvailable: null
     }
   }
 
@@ -18,7 +25,6 @@ class ListingCard extends Component {
     try {
       const listing = await origin.listings.getByIndex(this.props.listingId)
       const obj = Object.assign({}, listing, { loading: false })
-
       this.setState(obj)
     } catch (error) {
       console.error(`Error fetching contract or IPFS info for listingId: ${this.props.listingId}`)
@@ -38,12 +44,7 @@ class ListingCard extends Component {
           </div>
           <p className="category placehold">{this.state.category}</p>
           <h2 className="title placehold">{this.state.name}</h2>
-          <p className="price placehold">
-            {this.state.price && `${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH`}
-            {this.state.unitsAvailable===0 &&
-              <span className="sold-banner">Sold</span>
-            }
-          </p>
+          <ListingCardPrices price={this.state.price} />
         </Link>
       </div>
     )

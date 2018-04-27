@@ -475,6 +475,23 @@ a:hover {
   background-color: white;
 }
 
+.listing-card .approxPrice {
+  margin: 0;
+  font-size: 0.75em;
+  vertical-align: text-bottom;
+}
+
+.listing-container .buy-box button {
+  height: 50px;
+  width: 100%;
+  margin-top: 35px;
+  border-radius: 30px;
+  background-color: var(--clear-blue);
+  border: solid 1px var(--clear-blue);
+  color: white;
+  font-weight: 700;
+}
+
 .navbar .identity .triangle-container {
   -webkit-filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.25));
   filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.25));
@@ -923,7 +940,7 @@ a:hover {
 
 .listing-card .price {
   font-size: 1.125rem;
-  margin: 0 0 1rem;
+  margin: 0 0 0.5rem;
 }
 
 .listing-card.loading .price {
