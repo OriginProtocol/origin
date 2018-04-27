@@ -1,4 +1,7 @@
-const contractDefinition = artifacts.require("ClaimHolderPresigned")
+var web3Utils = require('web3-utils')
+
+const ClaimHolder = artifacts.require("ClaimHolder")
+const ClaimHolderPresigned = artifacts.require("ClaimHolderPresigned")
 
 const signature_1 = "0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"
 const signature_2 = "0x061ef9cdd7707d90d7a7d95b53ddbd94905cb05dfe4734f97744c7976f2776145fef298fd0e31afa43a103cd7f5b00e3b226b0d62e4c492d54bec02eb0c2a0901b"
@@ -30,8 +33,8 @@ contract("ClaimHolderPresigned", accounts => {
   }
 
   it("should deploy identity with attestations", async function() {
-    let instance = await contractDefinition.new(
-      [ attestation_1.claim_type, attestation_2.claim_type ],
+    let instance = await ClaimHolderPresigned.new(
+      [ attestation_1.claimType, attestation_2.claimType ],
       [ attestation_1.scheme, attestation_2.scheme ],
       [ attestation_1.issuer, attestation_2.issuer ],
       attestation_1.signature + attestation_2.signature.slice(2),
@@ -42,6 +45,29 @@ contract("ClaimHolderPresigned", accounts => {
       [ attestation_1.uri.length, attestation_2.uri.length ],
       { from: accounts[0] }
     )
-    assert.ok(instance)
+
+    // Check attestation 1
+    let claimId_1 = web3Utils.soliditySha3(attestation_1.issuer, attestation_1.claimType)
+    let fetchedClaim_1 = await instance.getClaim(claimId_1, { from: accounts[0] })
+    assert.ok(fetchedClaim_1)
+    let [ claimType_1, scheme_1, issuer_1, signature_1, data_1, uri_1 ] = fetchedClaim_1
+    assert.equal(claimType_1.toNumber(), attestation_1.claimType)
+    assert.equal(scheme_1.toNumber(), attestation_1.scheme)
+    assert.equal(issuer_1, attestation_1.issuer)
+    assert.equal(signature_1, attestation_1.signature)
+    assert.equal(data_1, attestation_1.data)
+    assert.equal(uri_1, attestation_1.uri)
+
+    // Check attestation 2
+    let claimId_2 = web3Utils.soliditySha3(attestation_2.issuer, attestation_2.claimType)
+    let fetchedClaim_2 = await instance.getClaim(claimId_2, { from: accounts[0] })
+    assert.ok(fetchedClaim_2)
+    let [ claimType_2, scheme_2, issuer_2, signature_2, data_2, uri_2 ] = fetchedClaim_2
+    assert.equal(claimType_2.toNumber(), attestation_2.claimType)
+    assert.equal(scheme_2.toNumber(), attestation_2.scheme)
+    assert.equal(issuer_2, attestation_2.issuer)
+    assert.equal(signature_2, attestation_2.signature)
+    assert.equal(data_2, attestation_2.data)
+    assert.equal(uri_2, attestation_2.uri)
   })
 })
