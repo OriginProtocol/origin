@@ -8,7 +8,7 @@ import './ClaimHolder.sol';
  * instead.
  */
 
-contract Identity is ClaimHolder {
+contract ClaimHolderPresigned is ClaimHolder {
 
     constructor(
         uint256[] _claimType,
