@@ -92,13 +92,13 @@ And buyers to:
     ```
     npm start
     ```
-
-- In order to conduct test transactions, you can create a new wallet using the following seed phrase (Mnemonic):
-
-*_Be careful to back up the seed phrases and private keys for any existing wallets before creating a new one._*
-```
-candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
-```
+    
+    In order to conduct test transactions, you can create a new wallet using the following seed phrase (Mnemonic):
+    
+    _**Be careful to back up the seed phrases and private keys for any existing wallets before creating a new one.**_
+    ```
+    candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
+    ```
 
 1. To develop against a working dapp and UI, see [the instructions in our demo dapp](https://github.com/OriginProtocol/demo-dapp#developing-with-a-local-chain).
 
