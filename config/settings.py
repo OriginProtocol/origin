@@ -52,3 +52,6 @@ TWITTER_CONSUMER_KEY = os.environ.get('TWITTER_CONSUMER_KEY')
 TWITTER_CONSUMER_SECRET = os.environ.get('TWITTER_CONSUMER_SECRET')
 
 ORIGIN_SIGNING_KEY = os.environ.get('ORIGIN_SIGNING_KEY')
+
+REDIS_URL = os.environ.get('REDIS_URL')
+CELERY_DEBUG = parse_bool(os.environ.get('CELERY_DEBUG'))
