@@ -27,6 +27,12 @@ Detailed documentation on how to use the Slate documentation system can be found
 
 ## Deploying changes
 
-Our docs are currently hosted on Github pages. Deploying changes (if you have access to this repo) is as easy as running `./deploy.sh`
+Our docs are currently hosted on Github pages. 
+
+You'll need to rename your git remote to `gitub`:
+
+    git remote rename origin github
+
+Then deploying changes (if you have access to this repo) is as easy as running `./deploy.sh`
 
 [https://github.com/lord/slate/wiki/deploying-slate](https://github.com/lord/slate/wiki/deploying-slate)
