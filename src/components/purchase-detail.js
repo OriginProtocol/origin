@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import moment from 'moment'
@@ -57,27 +57,65 @@ const nextSteps = [
   },
 ]
 
-class TransactionDetail extends Component {
+class PurchaseDetail extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      listing: {},
+      purchase: {}
+    }
+  }
+
   componentDidMount() {
+    this.loadPurchase()
     $('[data-toggle="tooltip"]').tooltip()
   }
 
+  async loadPurchase() {
+    const purchaseAddress = this.props.purchaseAddress
+    const purchase = await origin.purchases.get(purchaseAddress)
+    this.setState({purchase: purchase})
+    const listing = await origin.listings.get(purchase.listingAddress)
+    this.setState({listing: listing})
+  }
+
+  
+
   render() {
-    const { listingId, perspective } = this.props
-    const listing = data.listings.find(l => l._id === listingId)
-    const { active, buyer, category, seller, fulfilledAt, pictures, price, receivedAt, reviewedAt, soldAt, withdrawnAt } = listing
+    const purchase = this.state.purchase
+    const listing = this.state.listing
+    if(this.state.purchase.length === 0 || this.state.listing.length === 0 ){
+      return null
+    }
+    console.log(purchase)
+    console.log(listing)
+    
+    const perspective = window.web3.eth.accounts[0] === purchase.buyerAddress ? 'buyer' : 'seller'
+    const seller = {name: "Unnamed User", address: listing.sellerAddress}
+    const buyer = {name: "Unnamed User", address: purchase.buyerAddress}
+    const pictures = listing.pictures || []
+    const category = listing.category || ""
+    const active = listing.unitsAvailable === 0 // Todo, move to origin.js, take into account listing expiration
+    const soldAt = undefined
+    const fulfilledAt = undefined
+    const receivedAt = undefined
+    const withdrawnAt = undefined
+    const reviewedAt = undefined
+    const price = undefined // change to priceEth
+
     const counterparty = ['buyer', 'seller'].find(str => str !== perspective)
+    const counterpartyUser = counterparty === 'buyer' ? buyer : seller
     const status = active ? 'active' : 'inactive'
     const maxStep = perspective === 'seller' ? 4 : 3
     let decimal, left, step
 
-    if (withdrawnAt) {
+    if (purchase.stage === "complete") {
       step = maxStep
-    } else if (receivedAt) {
+    } else if (purchase.stage === "seller_pending") {
       step = 3
-    } else if (fulfilledAt) {
+    } else if (purchase.stage === "buyer_pending") {
       step = 2
-    } else if (soldAt) {
+    } else if (purchase.stage === "shipping_pending") {
       step = 1
     } else {
       step = 0
@@ -141,7 +179,7 @@ class TransactionDetail extends Component {
                   </div>
                 </div>
                 <div className="col-12">
-                  <TransactionProgress currentStep={step} listing={listing} maxStep={maxStep} perspective={perspective} />
+                  <TransactionProgress currentStep={step} maxStep={maxStep} purchase={listing} perspective={perspective} />
                 </div>
                 {nextStep &&
                   <div className="col-12">
@@ -155,7 +193,7 @@ class TransactionDetail extends Component {
                   </div>
                 }
               </div>
-              <h2>Transaction Status</h2>
+              <h2>Transaction History</h2>
               <table className="table table-striped">
                 <thead>
                   <tr>
@@ -166,40 +204,39 @@ class TransactionDetail extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {soldAt &&
-                    <tr>
-                      <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sold on<br /><strong>${moment(soldAt).format('MMM D, YYYY')}</strong>`}></span>{perspective === 'buyer' ? 'Purchased' : 'Sold'}</td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x56Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
-                    </tr>
-                  }
-                  {fulfilledAt &&
+                  <tr>
+                    <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sold on<br /><strong>${moment(purchase.created).format('MMM D, YYYY')}</strong>`}></span>{perspective === 'buyer' ? 'Purchased' : 'Sold'}</td>
+                    <td className="text-truncate">{purchase.address}</td>
+                    <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
+                    <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
+                  </tr>
+                  {/*fulfilledAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sent by seller on<br /><strong>${moment(fulfilledAt).format('MMM D, YYYY')}</strong>`}></span>Sent by seller</td>
                       <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x78Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
                       <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
                       <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
                     </tr>
-                  }
-                  {receivedAt &&
+                  */}
+                  {/*receivedAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Received buy buyer on<br /><strong>${moment(receivedAt).format('MMM D, YYYY')}</strong>`}></span>Received by buyer</td>
                       <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x90Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
                       <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
                       <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
                     </tr>
-                  }
-                  {perspective === 'seller' && withdrawnAt &&
+                  */}
+                  {/*perspective === 'seller' && withdrawnAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Funds withdrawn on<br /><strong>${moment(withdrawnAt).format('MMM D, YYYY')}</strong>`}></span>Funds withdrawn</td>
                       <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x90Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
                       <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
                       <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
                     </tr>
-                  }
+                  */}
                 </tbody>
               </table>
+              <hr />
             </div>
             <div className="col-12 col-lg-4">
               <div className="counterparty">
@@ -215,7 +252,7 @@ class TransactionDetail extends Component {
                     </div>
                     <div>
                       <p>ETH Address:</p>
-                      <p><strong>{listing[counterparty].address}</strong></p>
+                      <p><strong>{counterpartyUser.address}</strong></p>
                     </div>
                   </div>
                   <hr />
@@ -229,33 +266,42 @@ class TransactionDetail extends Component {
                     </div>
                   </div>
                 </div>
-                <Link to={`/users/${listing[counterparty].address}`} className="btn">View Profile</Link>
+                <Link to={`/users/${counterpartyUser.address}`} className="btn">View Profile</Link>
               </div>
             </div>
           </div>
-          <hr />
           <div className="row">
             <div className="col-12 col-lg-8">
-              <h2>Listing Details</h2>
-              {!!pictures.length &&
-                <div className="carousel">
-                  {pictures.map(pictureUrl => (
-                    <div className="photo" key={pictureUrl}>
-                      <img src={pictureUrl} role='presentation' />
+              {listing.address &&
+                <Fragment>
+                  <h2>Listing Details</h2>
+                  {!!pictures.length &&
+                    <div className="carousel small">
+                      {pictures.map(pictureUrl => (
+                        <div className="photo" key={pictureUrl}>
+                          <img src={pictureUrl} role='presentation' />
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  }
+                  <div className="detail-info-box">
+                    <h2 className="category placehold">{listing.category}</h2>
+                    <h1 className="title text-truncate placehold">{listing.name}</h1>
+                    <p className="description placehold">{listing.description}</p>
+                    {!!listing.unitsAvailable && listing.unitsAvailable < 5 &&
+                      <p className="units-available text-danger">Just {listing.unitsAvailable.toLocaleString()} left!</p>
+                    }
+                    {listing.ipfsHash &&
+                      <p className="link-container">
+                        <a href={origin.ipfsService.gatewayUrlForHash(listing.ipfsHash)} target="_blank">
+                          View on IPFS<img src="/images/carat-blue.svg" className="carat" alt="right carat" />
+                        </a>
+                      </p>
+                    }
+                  </div>
+                  <hr />
+                </Fragment>
               }
-              <p className="description">Look at these little dudes! Aren’t they just the best?? You get two super fashionable and stylish baby chickens that you can bring to your next party and get the whole crew excited. These baby chickens know how to party and they’re super classy. No matter how fancy the venue, these little guys won’t dissapoint.</p>
-              <p className="category text-muted">Category: {category}</p>
-              <p className="availability text-muted">{Number(2).toLocaleString()} units available</p>
-              <p className="ipfs-hash text-muted">IPFS Hash: frr34rijwoeij39eu0eijwoiejdwioec93idwp</p>
-              <p className="ipfs-link">
-                <a href={origin.ipfsService.gatewayUrlForHash('frr34rijwoeij39eu0eijwoiejdwioec93idwp')} target="_blank">
-                  View on IPFS <big>&rsaquo;</big>
-                </a>
-              </p>
-              <hr />
               <div className="reviews">
                 <h2>Reviews <span className="review-count">{Number(57).toLocaleString()}</span></h2>
                 {perspective === 'buyer' && receivedAt && !reviewedAt &&
@@ -300,4 +346,4 @@ class TransactionDetail extends Component {
   }
 }
 
-export default TransactionDetail
+export default PurchaseDetail

@@ -42,7 +42,7 @@ class MySales extends Component {
             </div>
             <div className="col-12 col-md-9">
               <div className="my-listings-list">
-                {listings.map(l => <MySaleCard key={`my-listing-${l._id}`} listing={l} />)}
+                {listings.map(l => <MySaleCard key={`my-listing-${l._id}`} purchase={l} />)}
               </div>
             </div>
           </div>

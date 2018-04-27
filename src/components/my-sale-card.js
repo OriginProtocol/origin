@@ -10,8 +10,8 @@ class MySaleCard extends Component {
   }
 
   render() {
-    const { listing } = this.props
-    const { _id, buyer, fulfilledAt, price, quantity, receivedAt, soldAt, title, withdrawnAt } = listing
+    const { purchase } = this.props
+    const { _id, buyer, fulfilledAt, price, quantity, receivedAt, soldAt, title, withdrawnAt } = purchase
     let step
 
     if (withdrawnAt) {
@@ -29,8 +29,8 @@ class MySaleCard extends Component {
         <div className="card-body">
           <div className="d-flex flex-column flex-lg-row">
             <div className="transaction order-3 order-lg-1">
-              <h2 className="title"><Link to={`/my-sales/${_id}`}>{title}</Link></h2>
-              <h2 className="title">sold to <Link to={`/my-sales/${_id}`}>{buyer.name}</Link></h2>
+              <h2 className="title"><Link to={`/purchases/${_id}`}>{title}</Link></h2>
+              <h2 className="title">sold to <Link to={`/purchases/${_id}`}>{buyer.name}</Link></h2>
               <p className="address text-muted">{buyer.address}</p>
               <div className="d-flex">
                 <p className="price">Price: {price}</p>
@@ -44,13 +44,13 @@ class MySaleCard extends Component {
               <img role="presentation" />
             </div>
           </div>
-          <TransactionProgress currentStep={step} listing={listing} perspective="seller" subdued="true" />
+          <TransactionProgress currentStep={step} purchase={purchase} perspective="seller" subdued="true" />
           <div className="d-flex justify-content-between actions">
             {step === 1 && <p><strong>Next Step:</strong> Send the order to buyer</p>}
             {step === 2 && <p><strong>Next Step:</strong> Wait for buyer to receive order</p>}
             {step === 3 && <p><strong>Next Step:</strong> Withdraw funds</p>}
             {step === 4 && <p>This order is complete</p>}
-            <p className="link-container"><Link to={`/my-sales/${_id}`}>View Details<img src="/images/carat-blue.svg" className="carat" alt="right carat" /></Link></p>
+            <p className="link-container"><Link to={`/purchases/${_id}`}>View Details<img src="/images/carat-blue.svg" className="carat" alt="right carat" /></Link></p>
           </div>
         </div>
       </div>

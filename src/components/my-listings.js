@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import MyListingCard from './my-listing-card'
-import data from '../data'
 
 import origin from '../services/origin'
 
@@ -12,6 +11,21 @@ class MyListings extends Component {
     this.handleUpdate = this.handleUpdate.bind(this)
     this.loadListing = this.loadListing.bind(this)
     this.state = { filter: 'all', listings: [], loading: true }
+  }
+
+  /*
+  * For now, we mock a getBySellerAddress request by fetching all
+  * listings individually, filtering each by sellerAddress.
+  */
+
+  async getListingIds() {
+    try {
+      const ids = await origin.listings.allIds()
+
+      return await Promise.all(ids.map(this.loadListing))
+    } catch(error) {
+      console.error('Error fetching listing ids')
+    }
   }
 
   async loadListing(id) {
@@ -30,17 +44,6 @@ class MyListings extends Component {
     }
   }
 
-  async getListingIds() {
-    try {
-      const ids = await origin.listings.allIds()
-
-      return await Promise.all(ids.map(this.loadListing))
-    } catch(error) {
-      console.error('Error fetching listing ids')
-    }
-  }
-
-  // simulate a getListingsBySellerAddress request
   async componentWillMount() {
     await this.getListingIds()
 

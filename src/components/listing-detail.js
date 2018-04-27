@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 
 import Modal from './modal'
@@ -28,6 +28,7 @@ class ListingsDetail extends Component {
       loading: true,
       pictures: [],
       reviews: [],
+      purchases: [],
       step: this.STEP.VIEW,
     }
 
@@ -37,7 +38,7 @@ class ListingsDetail extends Component {
   async loadListing() {
     try {
       const listing = await origin.listings.get(this.props.listingAddress)
-      const obj = Object.assign({}, listing, { loading: false, reviews: data.reviews })
+      const obj = Object.assign({}, listing, { loading: false, reviews: data.reviews})
       this.setState(obj)
     } catch (error) {
       alertify.log('There was an error loading this listing.')
@@ -46,10 +47,24 @@ class ListingsDetail extends Component {
     }
   }
 
+  async loadPurchases() {
+    const address = this.props.listingAddress
+    const length = await origin.listings.purchasesLength(address)
+    console.log("purchases length", length)
+    for(let i = 0; i < length; i++){
+      let purchaseAddress = await origin.listings.purchaseAddressByIndex(address, i)
+      let purchase = await origin.purchases.get(purchaseAddress)
+      this.setState((prevState, props) => {
+        return {purchases: [...prevState.purchases, purchase]};
+      });
+    }
+  }
+
   componentWillMount() {
     if (this.props.listingAddress) {
       // Load from IPFS
       this.loadListing()
+      this.loadPurchases()
     }
     else if (this.props.listingJson) {
       const obj = Object.assign({}, this.props.listingJson, { loading: false })
@@ -66,7 +81,7 @@ class ListingsDetail extends Component {
       const transactionReceipt = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice)
       console.log("Purchase request sent.")
       this.setState({step: this.STEP.PROCESSING})
-      const blockNumber = await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
+      await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
       this.setState({step: this.STEP.PURCHASED})
     } catch (error) {
       window.err = error
@@ -78,6 +93,7 @@ class ListingsDetail extends Component {
 
 
   render() {
+    console.log(this.state.purchases)
     return (
       <div className="listing-detail">
         {this.state.step===this.STEP.METAMASK &&
@@ -126,14 +142,11 @@ class ListingsDetail extends Component {
               <h2 className="category placehold">{this.state.category}</h2>
               <h1 className="title text-truncate placehold">{this.state.name}</h1>
               <p className="description placehold">{this.state.description}</p>
-              {this.state.unitsAvailable && this.state.unitsAvailable < 5 &&
+              {!!this.state.unitsAvailable && this.state.unitsAvailable < 5 &&
                 <p className="units-available text-danger">Just {this.state.unitsAvailable.toLocaleString()} left!</p>
               }
-              {this.state.price && !this.state.unitsAvailable &&
-                <p className="units-available text-danger">Sold out!</p>
-              }
               {this.state.ipfsHash &&
-                <p className="link-container">
+                <p className="ipfs link-container">
                   <a href={origin.ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
                     View on IPFS<img src="/images/carat-blue.svg" className="carat" alt="right carat" />
                   </a>
@@ -144,10 +157,32 @@ class ListingsDetail extends Component {
                 <li>Seller: {this.state.sellerAddress}</li>
                 <li>Units: {this.state.unitsAvailable}</li>
               </div>
+              {!this.state.loading && this.state.purchases.length > 0 &&
+                <Fragment>
+                  <hr />
+                  <h2>Purchases</h2>
+                  <table className="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col" style={{ width: '200px' }}>Status</th>
+                        <th scope="col">TxHash</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {this.state.purchases.map(({ address, stage }) =>
+                        <tr key={address}>
+                          <td>{stage.replace("_"," ")}</td>
+                          <td className="text-truncate"><Link to={`/purchases/${address}`}>{address}</Link></td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </Fragment>
+              }
             </div>
             <div className="col-12 col-md-4">
               <div className="buy-box placehold">
-                {this.state.price && 
+                {this.state.price &&
                   <div className="price d-flex justify-content-between">
                     <p>Price</p>
                     <p className="text-right">
@@ -183,7 +218,7 @@ class ListingsDetail extends Component {
                         :
                         <div className="sold-banner">
                           <img src="/images/sold-tag.svg" role="presentation" />
-                          Sold
+                          Sold Out
                         </div>
                       )
                     }
