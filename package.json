@@ -9,6 +9,7 @@
   "scripts": {
     "test": "node scripts/test.js",
     "test:contracts": "node scripts/test-contracts.js",
+    "test:js": "mocha --compilers js:babel-core/register --require babel-polyfill",
     "build": "node scripts/build.js",
     "format": "npx prettier --write test/*.js src/**.js contracts/test/**.js",
     "prepare": "npm run build",
@@ -32,6 +33,7 @@
     "babel-polyfill": "^6.23.0",
     "bs58": "^4.0.1",
     "ipfs-api": "^14.3.7",
+    "cross-fetch": "^2.1.1",
     "map-cache": "^0.2.2",
     "npm": "^5.8.0",
     "truffle-contract": "^1.1.8",

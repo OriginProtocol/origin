@@ -1,6 +1,7 @@
 const startGanache = require('./helpers/start-ganache')
 const testContracts = require('./helpers/test-contracts')
 const buildContracts = require('./helpers/build-contracts')
+const startIpfs = require('./helpers/start-ipfs')
 const watch = require('node-watch')
 
 // Simple enqueueing system to prevent interrupting a test. Rerunning in the middle of a test causes issues.
@@ -23,6 +24,7 @@ const runTests = async () => {
 
 const start = async () => {
   await startGanache()
+  await startIpfs()
 
   runTests()
 
