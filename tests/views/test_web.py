@@ -30,8 +30,10 @@ def test_phone_verify(client, mock_send_sms):
                      {"phone": phone,
                       "identity": str_eth(sample_eth_address),
                       'code': db_code.code})
+    resp_json = json_of_response(resp)
     assert resp.status_code == 200
-    assert len(json_of_response(resp)['signature']) == 132
+    assert len(resp_json['signature']) == 132
+    assert resp_json['data'] == 'phone verified'
 
 
 @mock.patch('python_http_client.client.Client')
@@ -49,8 +51,10 @@ def test_email_verify(MockHttpClient, client):
                      {"email": email,
                       "identity": str_eth(sample_eth_address),
                       'code': db_code.code})
+    resp_json = json_of_response(resp)
     assert resp.status_code == 200
-    assert len(json_of_response(resp)['signature']) == 132
+    assert len(resp_json['signature']) == 132
+    assert resp_json['data'] == 'email verified'
 
 
 @mock.patch("http.client.HTTPSConnection")
@@ -72,8 +76,10 @@ def test_facebook_verify(MockHttpConnection, client):
                      {"redirect-url": "http://foo.bar",
                       "identity": str_eth(sample_eth_address),
                       "code": "abcde12345"})
+    resp_json = json_of_response(resp)
     assert resp.status_code == 200
-    assert len(json_of_response(resp)['signature']) == 132
+    assert len(resp_json['signature']) == 132
+    assert resp_json['data'] == 'facebook verified'
 
 
 @mock.patch('oauth2.Client')
@@ -93,5 +99,7 @@ def test_twitter_verify(MockOauthClient, client):
                      "/api/attestations/twitter/verify",
                      {"identity": str_eth(sample_eth_address),
                       "oauth-verifier": "abcde12345"})
+    resp_json = json_of_response(resp)
     assert resp.status_code == 200
-    assert len(json_of_response(resp)['signature']) == 132
+    assert len(resp_json['signature']) == 132
+    assert resp_json['data'] == 'twitter verified'
