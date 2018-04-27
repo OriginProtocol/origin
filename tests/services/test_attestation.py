@@ -360,6 +360,8 @@ def test_twitter_auth_url(mock_session, MockOauthClient):
 @mock.patch('oauth2.Client')
 @mock.patch('logic.attestation_service.session')
 def test_verify_twitter_valid_code(mock_session, MockOauthClient):
+    dict = {'request_token': 'bar'}
+    mock_session.__contains__.side_effect = dict.__contains__
     mock_oauth_client = mock.Mock()
     mock_oauth_client.request.return_value = {
         'status': '200'}, b'oauth_token=guavas&oauth_token_secret=mangos'
@@ -382,6 +384,8 @@ def test_verify_twitter_valid_code(mock_session, MockOauthClient):
 @mock.patch('oauth2.Client')
 @mock.patch('logic.attestation_service.session')
 def test_verify_twitter_invalid_verifier(mock_session, MockOauthClient):
+    dict = {'request_token': 'bar'}
+    mock_session.__contains__.side_effect = dict.__contains__
     mock_oauth_client = mock.Mock()
     mock_oauth_client.request.return_value = {'status': '401'}, b''
     MockOauthClient.return_value = mock_oauth_client
@@ -400,3 +404,20 @@ def test_verify_twitter_invalid_verifier(mock_session, MockOauthClient):
     assert code == 'INVALID'
     assert path == 'oauth_verifier'
     assert message == 'The verifier you provided is invalid.'
+
+
+@mock.patch('oauth2.Client')
+@mock.patch('logic.attestation_service.session')
+def test_verify_twitter_invalid_session(mock_session, MockOauthClient):
+    args = {
+        'eth_address': '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
+        'oauth_verifier': 'pineapples'
+    }
+
+    with pytest.raises(ServiceError) as service_err:
+        VerificationService.verify_twitter(**args)
+    code = service_err.value.args[0]['code']
+    message = service_err.value.args[0]['message']
+
+    assert code == 'INVALID'
+    assert message == 'Session not found.'

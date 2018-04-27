@@ -204,6 +204,10 @@ class VerificationService:
 
     def verify_twitter(oauth_verifier, eth_address):
         # Verify authenticity of user
+        if 'request_token' not in session:
+            raise service_utils.req_error(
+                code='INVALID',
+                message='Session not found.')
         token = oauth.Token(session['request_token']['oauth_token'],
                             session['request_token']['oauth_token_secret'])
         token.set_verifier(oauth_verifier)
