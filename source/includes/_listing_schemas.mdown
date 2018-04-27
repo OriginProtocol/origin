@@ -1,5 +1,9 @@
 # Listing Schemas
 
+<aside class="warning">
+This section contains out of date, draft material.
+</aside>
+
 Since many unrelated developers will be reading and writing to
 the same data layer, it is essential that everyone adhere to common standards.
 We will publish and maintain the rules for what constitutes a “valid Origin

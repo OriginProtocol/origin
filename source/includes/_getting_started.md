@@ -2,15 +2,15 @@
 
 ### Download Origin
 
-Origin.js is under active development. Our upcoming 0.1 release will be available at our [Github repo](https://github.com/OriginProtocol/origin-js) soon.
+Origin.js is under active development. Our latest releases are available on our [Github](https://github.com/OriginProtocol).
 
-### Use an Ethereum browser
+### Use an Ethereum-enabled browser
 
-For testing and interacting with your DApp, you will need to use an Ethereum-enabled browser. Currently, we recommend using Metamask with Chrome.
-
-Install the [Metamask Chrome Browser Extension](https://metamask.io/). This will enable you to connect to the Ethereum network from your browser. Metamask allows you to run Ethereum DApps right in your browser without running a full Ethereum node.
+For testing and interacting with your DApp, you will need to use a browser that supports Web3. We recommend using the [Metamask Chrome Browser Extension](https://metamask.io/). This will enable you to connect to the Ethereum network from your browser. Metamask allows you to run Ethereum DApps right in your browser without running a full Ethereum node.
 
 Alternatively, you can run the official Ethereum browser [Mist](https://github.com/ethereum/mist).
+
+On mobile, we recommend trying [Toshi](https://www.toshi.org/), [Cipher](https://www.cipherbrowser.com/) and [Trust Wallet](https://trustwalletapp.com/features/trust-browser).
 
 ### Acquire Test ETH
 
@@ -36,14 +36,18 @@ Simply include the downloaded javascript library in your html to get started.
 ```
 
 ```javascript
-var origin = new Origin();
+const origin = new Origin();
 
-var user = new User();
-user.name = "Joe"
-
-var listing = new Listing();
-listing.owner = user
-
-listing.save()
-
+const listingData = {
+  name: "Kettlebell For Sale",
+  category: "Health and Beauty",
+  location: "San Fransisco, CA",
+  description:
+    "32kg gorilla kettlebell. Mint condition.",
+  pictures: [],
+  price: 0.134
+}
+const schema = "for-sale"
+const transaction = await origin.listings.create(listingData, schema)
+await origin.contractService.waitTransactionFinished(transaction.tx)
 ```

@@ -23,40 +23,46 @@ under the License.
 
 // BACKGROUND COLORS
 ////////////////////
-$nav-bg: #2E3336 !default;
-$examples-bg: #2E3336 !default;
-$code-bg: #1E2224 !default;
-$code-annotation-bg: #191D1F !default;
-$nav-subitem-bg: #1E2224 !default;
-$nav-active-bg: #0F75D4 !default;
-$nav-active-parent-bg: #1E2224 !default; // parent links of the current section
+$nav-bg: #2e3f53 !default;
+$examples-bg: #2e3f53 !default;
+$code-bg: #111d28 !default;
+$code-annotation-bg: #111d28 !default;
+$nav-subitem-bg: #111d28 !default;
+$nav-active-bg: #1a82ff !default;
+$nav-active-parent-bg: #111d28 !default; // parent links of the current section
 $lang-select-border: #000 !default;
-$lang-select-bg: #1E2224 !default;
+$lang-select-bg: #111d28 !default;
 $lang-select-active-bg: $examples-bg !default; // feel free to change this to blue or something
 $lang-select-pressed-bg: #111 !default; // color of language tab bg when mouse is pressed
-$main-bg: #F3F7F9 !default;
-$aside-notice-bg: #8fbcd4 !default;
-$aside-warning-bg: #c97a7e !default;
-$aside-success-bg: #6ac174 !default;
-$search-notice-bg: #c97a7e !default;
+$main-bg: #ebf0f3 !default;
+$aside-notice-bg: #6e3bea !default;
+$aside-warning-bg: #ff1a1a !default;
+$aside-success-bg: #26d198 !default;
+$search-notice-bg: #ff1a1a !default;
 
 
 // TEXT COLORS
 ////////////////////
-$main-text: #333 !default; // main content text color
+$main-text: #111d28 !default; // main content text color
 $nav-text: #fff !default;
 $nav-active-text: #fff !default;
 $nav-active-parent-text: #fff !default; // parent links of the current section
 $lang-select-text: #fff !default; // color of unselected language tab text
 $lang-select-active-text: #fff !default; // color of selected language tab text
 $lang-select-pressed-text: #fff !default; // color of language tab text when mouse is pressed
+$anchor-text: $nav-active-bg !default;
+$aside-notice-text: #fff !default;
+$aside-success-text: #fff !default;
+$aside-warning-text: #fff !default;
 
 
 // SIZES
 ////////////////////
 $nav-width: 230px !default; // width of the navbar
 $examples-width: 50% !default; // portion of the screen taken up by code examples
+$logo-height: 100px !default; // logo height (limited by maximum width)
 $logo-margin: 0px !default; // margin below logo
+$logo-padding: 0 40px !default; // padding around logo
 $main-padding: 28px !default; // padding to left and right of content & examples
 $nav-padding: 15px !default; // padding to left and right of navbar
 $nav-v-padding: 10px !default; // padding used vertically around search boxes and results
@@ -70,13 +76,14 @@ $phone-width: $tablet-width - $nav-width !default; // min width before reverting
 // FONTS
 ////////////////////
 %default-font {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: 'Lato', 'Helvetica Neue', 'Arial', sans-serif;
   font-size: 14px;
+  font-weight: 300;
 }
 
 %header-font {
   @extend %default-font;
-  font-weight: bold;
+  font-family: 'Poppins', sans-serif;
 }
 
 %code-font {
@@ -98,6 +105,6 @@ $search-box-border-color: #666 !default;
 // These settings are probably best left alone.
 
 %break-words {
-    word-break: break-all;
-    hyphens: auto;
+  word-break: break-all;
+  hyphens: auto;
 }
