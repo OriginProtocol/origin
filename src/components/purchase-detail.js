@@ -8,12 +8,15 @@ import data from '../data'
 
 import origin from '../services/origin' 
 
-// step 0 was creating the listing
-// nextSteps[0] equates to step 1, etc
-// even-numbered steps are up to seller
-// odd-numbered steps are up to buyer
+/* Transaction stages: no disputes and no seller review of buyer/transaction
+ *  - step 0 was creating the listing
+ *  - nextSteps[0] equates to step 1, etc
+ *  - even-numbered steps are seller's resposibility
+ *  - odd-numbered steps are buyer's responsibility
+ */
 const nextSteps = [
   {
+    // we should never be in this state
     buyer: {
       prompt: 'Purchase this listing',
       instruction: 'Why is this here if you have not yet purchased it?',
@@ -31,6 +34,7 @@ const nextSteps = [
       prompt: 'Send the order to buyer',
       instruction: 'Click the button below once the order has shipped.',
       buttonText: 'Order Sent',
+      functionName: 'confirmShipped',
     },
   },
   {
@@ -38,6 +42,7 @@ const nextSteps = [
       prompt: 'Confirm receipt of the order',
       instruction: 'Click the button below once you\'ve received the order.',
       buttonText: 'Order Received',
+      functionName: 'confirmReceipt',
     },
     seller: {
       prompt: 'Wait for the buyer to receive the order',
@@ -48,11 +53,13 @@ const nextSteps = [
       prompt: 'You\'ve confirmed receipt of your order',
       instruction: 'Would you like to write a review to let us know how you like your purchase?',
       buttonText: 'Write a review',
+      functionName: 'todo',
     },
     seller: {
       prompt: 'Complete transaction by withdrawing funds',
       instruction: 'Click the button below to initiate the withdrawal',
       buttonText: 'Withdraw Funds',
+      functionName: 'withdrawFunds',
     },
   },
 ]
@@ -60,28 +67,96 @@ const nextSteps = [
 class PurchaseDetail extends Component {
   constructor(props){
     super(props)
+
+    this.confirmReceipt = this.confirmReceipt.bind(this)
+    this.confirmShipped = this.confirmShipped.bind(this)
+    this.withdrawFunds = this.withdrawFunds.bind(this)
     this.state = {
       listing: {},
-      purchase: {}
+      purchase: {},
     }
   }
 
   componentDidMount() {
     this.loadPurchase()
+
     $('[data-toggle="tooltip"]').tooltip()
   }
 
-  async loadPurchase() {
-    const purchaseAddress = this.props.purchaseAddress
-    const purchase = await origin.purchases.get(purchaseAddress)
-    this.setState({ purchase })
-    console.log(purchase)
-    const listing = await origin.listings.get(purchase.listingAddress)
-    this.setState({ listing })
-    console.log(listing)
+  componentDidUpdate(prevProps, prevState) {
+    const { listingAddress } = this.state.purchase
+
+    if (prevState.purchase.listingAddress !== listingAddress) {
+      this.loadListing(listingAddress)
+    }
   }
 
-  
+  async loadListing(addr) {
+    try {
+      const listing = await origin.listings.get(addr)
+      this.setState({ listing })
+      console.log(listing)
+    } catch(error) {
+      console.error(`Error loading listing ${addr}`)
+      console.error(error)
+    }
+  }
+
+  async loadPurchase() {
+    const { purchaseAddress } = this.props
+
+    try {
+      const purchase = await origin.purchases.get(purchaseAddress)
+      this.setState({ purchase })
+      console.log(purchase)
+    } catch(error) {
+      console.error(`Error loading purchase ${purchaseAddress}`)
+      console.error(error)
+    }
+  }
+
+  async confirmReceipt() {
+    const { purchaseAddress } = this.props
+
+    try {
+      const transactionReceipt = await origin.purchases.buyerConfirmReceipt(purchaseAddress)
+      await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
+      this.loadPurchase()
+    } catch(error) {
+      console.error('Error marking purchase received by buyer')
+      console.error(error)
+    }
+  }
+
+  async confirmShipped() {
+    const { purchaseAddress } = this.props
+
+    try {
+      const transactionReceipt = await origin.purchases.sellerConfirmShipped(purchaseAddress)
+      await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
+      this.loadPurchase()
+    } catch(error) {
+      console.error('Error marking purchase shipped by seller')
+      console.error(error)
+    }
+  }
+
+  async withdrawFunds() {
+    const { purchaseAddress } = this.props
+
+    try {
+      const transactionReceipt = await origin.purchases.sellerGetPayout(purchaseAddress)
+      await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
+      this.loadPurchase()
+    } catch(error) {
+      console.error('Error withdrawing funds for seller')
+      console.error(error)
+    }
+  }
+
+  todo() {
+    alert('To Do')
+  }
 
   render() {
     const purchase = this.state.purchase
@@ -139,7 +214,7 @@ class PurchaseDetail extends Component {
     }
 
     const nextStep = nextSteps[step]
-    const { buttonText, instruction, prompt } = nextStep ? nextStep[perspective] : {}
+    const { buttonText, functionName, instruction, prompt } = nextStep ? nextStep[perspective] : {}
 
     return (
       <div className="transaction-detail">
@@ -189,7 +264,7 @@ class PurchaseDetail extends Component {
                       <div className="triangle" style={{ left }}></div>
                       <p className="prompt"><strong>Next Step:</strong> {prompt}</p>
                       <p className="instruction">{instruction || 'Nothing for you to do at this time. Check back later'}</p>
-                      {buttonText && <button className="btn btn-primary" onClick={() => alert('To Do')}>{buttonText}</button>}
+                      {buttonText && <button className="btn btn-primary" onClick={this[functionName]}>{buttonText}</button>}
                     </div>
                   </div>
                 }
