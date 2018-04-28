@@ -14,7 +14,7 @@ Clone locally with:
 
     git clone https://github.com/OriginProtocol/docs.git origin-docs && cd origin-docs
 
-Make sure you have Ruby installed or install (e.g. with Homebrew on Mac):
+Make sure you have Ruby >=2.3.1 installed or install with Homebrew/rvm:
 
     brew install ruby
     
