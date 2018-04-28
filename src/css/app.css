@@ -1336,27 +1336,26 @@ label[for=root_pictures]:hover {
   margin: 0 0 1rem 1rem;
 }
 
-.sale .card-body .image-container {
+.sale .card-body .aspect-ratio {
   position: relative;
   flex-basis: 130px;
   margin-bottom: 1rem;
   max-width: 100%;
+  overflow: hidden;
+  /*padding-top: 66.67%;*/
 }
 
-.sale .card-body .image-container::after {
-  content: '';
-  display: block;
-  padding-bottom: 66.67%;
-  height: 0;
+.sale .card-body .image-container {
+  position: absolute;
+  height: 100%;
+  top: 0;
+  width: 100%;
 }
 
 .sale .card-body .image-container img {
-  position: absolute;
-  background-color: var(--light);
-  left: 0;
-  padding-bottom: 66.67%;
-  top: 0;
-  width: 100%;
+  max-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
 }
 
 .sale .card-body .progress-container {

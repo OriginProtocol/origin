@@ -177,7 +177,7 @@ class PurchaseDetail extends Component {
     const receivedAt = undefined
     const withdrawnAt = undefined
     const reviewedAt = undefined
-    const price = undefined // change to priceEth
+    const price = `${Number(listing.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH` // change to priceEth
 
     const counterparty = ['buyer', 'seller'].find(str => str !== perspective)
     const counterpartyUser = counterparty === 'buyer' ? buyer : seller
@@ -404,10 +404,6 @@ class PurchaseDetail extends Component {
                   <hr />
                   <div className="d-flex">
                     <p className="text-left">Price</p>
-                    <p className="text-right">{price}</p>
-                  </div>
-                  <div className="d-flex">
-                    <p className="text-left">Contract Price</p>
                     <p className="text-right">{price}</p>
                   </div>
                   <hr />

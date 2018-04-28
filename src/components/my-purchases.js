@@ -15,6 +15,11 @@ class MyPurchases extends Component {
     this.state = { filter: 'pending', purchases: [], loading: true }
   }
 
+  /*
+  * For now, we mock a getByPurchaserAddress request by fetching all
+  * listings individually and fetching all related purchases individually.
+  */
+
   async getListingIds() {
     try {
       const ids = await origin.listings.allIds()
@@ -63,7 +68,6 @@ class MyPurchases extends Component {
     try {
       const purchase = await origin.purchases.get(addr)
 
-
       if (purchase.buyerAddress === window.web3.eth.accounts[0]) {
         const purchases = [...this.state.purchases, purchase]
 
@@ -109,9 +113,12 @@ class MyPurchases extends Component {
               {!loading && !purchases.length && 'You have no purchases.'}
               {!loading && !!purchases.length &&
                 <div className="filters list-group flex-row flex-md-column">
-                  <a className={`list-group-item list-group-item-action${filter === 'pending' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'pending' })}>Pending</a>
-                  <a className={`list-group-item list-group-item-action${filter === 'complete' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'complete' })}>Complete</a>
-                  <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>All</a>
+                  <a className={`list-group-item list-group-item-action${filter === 'pending' ? ' active' : ''}`}
+                    onClick={() => this.setState({ filter: 'pending' })}>Pending</a>
+                  <a className={`list-group-item list-group-item-action${filter === 'complete' ? ' active' : ''}`}
+                    onClick={() => this.setState({ filter: 'complete' })}>Complete</a>
+                  <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`}
+                    onClick={() => this.setState({ filter: 'all' })}>All</a>
                 </div>
               }
             </div>

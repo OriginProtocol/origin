@@ -33,7 +33,7 @@ class MyPurchaseCard extends Component {
     const { address, created, stage } = this.props.purchase
     const { category, name, pictures, price } = this.state.listing
     const soldAt = created * 1000 // convert seconds since epoch to ms
-    let date, step, verb
+    let step, verb
 
     switch(stage) {
       case 'seller_pending':

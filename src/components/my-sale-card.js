@@ -10,18 +10,29 @@ class MySaleCard extends Component {
   }
 
   render() {
-    const { purchase } = this.props
-    const { _id, buyer, fulfilledAt, price, quantity, receivedAt, soldAt, title, withdrawnAt } = purchase
+    const { listing, purchase } = this.props
+
+    if (!listing) {
+      console.error(`Listing not found for purchase ${purchase.address}`)
+      return null
+    }
+
+    const buyer = { name: 'Unnamed User', address: purchase.buyerAddress }
+    const price = `${Number(listing.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH` // change to priceEth
+    const soldAt = purchase.created * 1000 // convert seconds since epoch to ms
+
     let step
 
-    if (withdrawnAt) {
+    if (purchase.stage === 'complete') {
       step = 4
-    } else if (receivedAt) {
+    } else if (purchase.stage === 'seller_pending') {
       step = 3
-    } else if (fulfilledAt) {
+    } else if (purchase.stage === 'buyer_pending') {
       step = 2
-    } else {
+    } else if (purchase.stage === 'shipping_pending') {
       step = 1
+    } else {
+      step = 0
     }
 
     return (
@@ -29,19 +40,24 @@ class MySaleCard extends Component {
         <div className="card-body">
           <div className="d-flex flex-column flex-lg-row">
             <div className="transaction order-3 order-lg-1">
-              <h2 className="title"><Link to={`/purchases/${_id}`}>{title}</Link></h2>
-              <h2 className="title">sold to <Link to={`/purchases/${_id}`}>{buyer.name}</Link></h2>
+              <h2 className="title"><Link to={`/purchases/${purchase.address}`}>{listing.name}</Link></h2>
+              <h2 className="title">sold to <Link to={`/users/${buyer.address}`}>{buyer.name}</Link></h2>
               <p className="address text-muted">{buyer.address}</p>
               <div className="d-flex">
                 <p className="price">Price: {price}</p>
-                <p className="quantity">Quantity: {quantity.toLocaleString()}</p>
+                {/* Not Yet Relevant */}
+                {/*<p className="quantity">Quantity: {quantity.toLocaleString()}</p>*/}
               </div>
             </div>
             <div className="timestamp-container order-2 text-muted text-right">
               <p className="timestamp"><Timelapse reference={soldAt} /></p>
             </div>
-            <div className="image-container order-1 order-lg-3">
-              <img role="presentation" />
+            <div className="aspect-ratio order-1 order-lg-3">
+              <div className="image-container">
+                {listing.pictures && !!listing.pictures.length &&
+                  <img src={(new URL(listing.pictures[0])).protocol === "data:" ? listing.pictures[0] : '/images/default-image.jpg'} role="presentation" />
+                }
+              </div>
             </div>
           </div>
           <TransactionProgress currentStep={step} purchase={purchase} perspective="seller" subdued="true" />
@@ -50,7 +66,7 @@ class MySaleCard extends Component {
             {step === 2 && <p><strong>Next Step:</strong> Wait for buyer to receive order</p>}
             {step === 3 && <p><strong>Next Step:</strong> Withdraw funds</p>}
             {step === 4 && <p>This order is complete</p>}
-            <p className="link-container"><Link to={`/purchases/${_id}`}>View Details<img src="/images/carat-blue.svg" className="carat" alt="right carat" /></Link></p>
+            <p className="link-container"><Link to={`/purchases/${purchase.address}`}>View Details<img src="/images/carat-blue.svg" className="carat" alt="right carat" /></Link></p>
           </div>
         </div>
       </div>
