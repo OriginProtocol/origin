@@ -1,5 +1,7 @@
 pragma solidity ^0.4.21;
 
+import './identity/ClaimHolderPresigned.sol';
+
 /// @title UserRegistry
 /// @dev Used to keep registry of user identifies
 /// @author Matt Liu <matt@originprotocol.com>, Josh Fraser <josh@originprotocol.com>, Stan James <stan@originprotocol.com>
@@ -9,28 +11,37 @@ contract UserRegistry {
     * Events
     */
 
-    event NewUser(address _address);
+    event NewUser(address _address, address _identity);
 
     /*
     * Storage
     */
 
-    // Mapping of all users
-    mapping(address => bytes32) public users;
+    // Mapping from ethereum wallet to ERC725 identity
+    mapping(address => address) public users;
 
     /*
     * Public functions
     */
 
-    /// @dev create(): Create a new user
-    /// @param _ipfsHash Hash of data on ipfsHash
-    function set(
-        bytes32 _ipfsHash
+    /// @dev create(): Create a user
+    // Params correspond to params of ClaimHolderPresigned
+    function createWithClaims(
+        uint256[] _claimType,
+        address[] _issuer,
+        bytes _signature,
+        bytes _data
     )
         public
     {
-        users[msg.sender] = _ipfsHash;
-        emit NewUser(msg.sender);
+        ClaimHolderPresigned _identity = new ClaimHolderPresigned(
+          _claimType,
+          _issuer,
+          _signature,
+          _data
+        );
+        users[msg.sender] = _identity;
+        emit NewUser(msg.sender, _identity);
     }
 
     /// @dev get(): returns and existing user associated with wallet id
