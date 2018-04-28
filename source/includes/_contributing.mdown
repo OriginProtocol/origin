@@ -21,7 +21,7 @@ Read our [development process](#development-process) and [community guidelines](
 
 We follow the [GitFlow](http://nvie.com/posts/a-successful-git-branching-model/) branching model for development. The latest merged code generally lives in the `develop` branch of each repository. Your development flow should look like:
 
-1. Find an interesting issue and communicate! Please let the #engineering Slack channel know what you want to work on
+1. Find an interesting issue and communicate! Please let the #engineering Discord channel know what you want to work on
 2. Add a comment to the issue or self-assign so we don't have multiple contributors unintentionally working on the same task
 3. Start with the `develop` branch and check out a new feature branch unless you're contributing to an existing feature
 4. Follow the appropriate [coding style](#code-style) and write some awesome code
