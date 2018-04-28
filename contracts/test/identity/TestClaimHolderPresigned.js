@@ -17,32 +17,27 @@ const numBytesInDataHash = 32
 contract("ClaimHolderPresigned", accounts => {
   let attestation_1 = {
     claimType: 1,
-    scheme: 11,
+    scheme: 1,
     issuer: accounts[1],
     signature: signature_1,
     data: dataHash_1,
-    uri: "https://foo.bar/attestation1"
+    uri: ""
   }
   let attestation_2 = {
       claimType: 2,
-      scheme: 12,
+      scheme: 1,
       issuer: accounts[2],
       signature: signature_2,
       data: dataHash_2,
-      uri: "https://foo.bar/attestation2"
+      uri: ""
   }
 
   it("should deploy identity with attestations", async function() {
     let instance = await ClaimHolderPresigned.new(
       [ attestation_1.claimType, attestation_2.claimType ],
-      [ attestation_1.scheme, attestation_2.scheme ],
       [ attestation_1.issuer, attestation_2.issuer ],
       attestation_1.signature + attestation_2.signature.slice(2),
       attestation_1.data + attestation_2.data.slice(2),
-      attestation_1.uri + attestation_2.uri,
-      [ numBytesInSignature, numBytesInSignature ],
-      [ numBytesInDataHash, numBytesInDataHash ],
-      [ attestation_1.uri.length, attestation_2.uri.length ],
       { from: accounts[0] }
     )
 
