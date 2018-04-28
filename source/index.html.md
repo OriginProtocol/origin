@@ -16,7 +16,8 @@ includes:
   - resources/listings
   - resources/purchases
   - listing_schemas
-  - tbd
+  - getting_help
+  - contributing
 
 search: true
 ---

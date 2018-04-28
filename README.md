@@ -12,7 +12,11 @@ Contributions are welcome!
 
 Clone locally with:
 
-    git clone https://github.com/OriginProtocol/docs.git origin-docs && origin-docs
+    git clone https://github.com/OriginProtocol/docs.git origin-docs && cd origin-docs
+
+Make sure you have Ruby installed or install (e.g. with Homebrew on Mac):
+
+    brew install ruby
     
 Start serving locally with: 
 
