@@ -25,6 +25,14 @@ contract UserRegistry {
     */
 
     /// @dev create(): Create a user
+    function create() public
+    {
+        ClaimHolder _identity = new ClaimHolder();
+        users[msg.sender] = _identity;
+        emit NewUser(msg.sender, _identity);
+    }
+
+    /// @dev createWithClaims(): Create a user with presigned claims
     // Params correspond to params of ClaimHolderPresigned
     function createWithClaims(
         uint256[] _claimType,

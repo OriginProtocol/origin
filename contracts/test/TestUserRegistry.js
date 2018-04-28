@@ -28,6 +28,17 @@ contract("UserRegistry", accounts => {
     userRegistry = await UserRegistry.new({ from: accounts[0] })
   })
 
+  it("should be able to create a user", async function() {
+    let create = await userRegistry.create({ from: accounts[1] })
+    let identityAddress = await userRegistry.users(accounts[1])
+    let newUserEvent = create.logs.find(
+      e => e.event == "NewUser"
+    )
+    assert.ok(identityAddress)
+    assert.notEqual(identityAddress, "0x0000000000000000000000000000000000000000")
+    assert.equal(newUserEvent.args['_identity'], identityAddress)
+  })
+
   it("should be able to create a user with claims", async function() {
     let createWithClaims = await userRegistry.createWithClaims(
       [ attestation_1.claimType ],
