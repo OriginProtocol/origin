@@ -4,7 +4,7 @@ Want to hack on Origin? Awesome!
 
 Origin is an Open Source project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community.
 
-There are three main repositories:
+There are three main repositories that are considered as core components of the Origin platform:
 
 - [Origin.js](https://github.com/OriginProtocol/origin-js) - solidity contracts and the Origin JS API
 - [Demo DApp](https://github.com/OriginProtocol/demo-dapp) - example react powered front end 
@@ -25,13 +25,16 @@ Read our [development process](#contributing-email-development-process) and [com
 
 We follow the [GitFlow](http://nvie.com/posts/a-successful-git-branching-model/) branching model for development. The latest merged code generally lives in the `develop` branch of each repository. Your development flow should look like:
 
-1. Find an interesting issue and communicate! Please let the #engineering Slack channel know what you want to work on
-2. Add a comment to the issue or self-assign so we don't have multiple contributors unintentionally working on the same task
-3. Start with the `develop` branch and check out a new feature branch unless you're contributing to an existing feature
-4. Follow the appropriate [coding style](#contributing-email-coding-style) and write some awesome code
-5. Push your branch to the upstream repository (i.e. https://github.com/OriginProtocol/[repo]) so other contributors can easily work off of it if necessary
-6. Open a pull request to the `develop` branch, not `master`
-7. Please request a review in the PR by clicking on the gear icon next to "Reviewers" in the right column. Pull requests must be peer reviewed before being merged! Check in the #engineering Slack channel for appropriate reviewers
+1. Find an interesting issue and communicate! Please let the #engineering Discord channel know what you want to work on
+1. Either request to join our [contributors team](https://github.com/orgs/OriginProtocol/teams/contributors) or plan to work from your own fork
+1. Add a comment to the issue or self-assign so we don't have multiple contributors unintentionally working on the same task
+1. Start with the `develop` branch and check out a new feature branch unless you're contributing to an existing feature
+1. Follow the appropriate [coding style](#contributing-email-coding-style) and write some awesome code
+1. Push your branch to the upstream repository (i.e. https://github.com/OriginProtocol/[repo]) so other contributors can easily work off of it if necessary
+1. Open a pull request to the `develop` branch, not `master`
+1. Please request a review in the PR by clicking on the gear icon next to "Reviewers" in the right column. 
+
+Both the `develop` and `master` branches are locked so that only members of the [core team](https://github.com/orgs/OriginProtocol/teams/core) are able to merge your pull requests. Pull requests that are peer reviewed by other trusted contributors will be fast-tracked and merged faster! Check in the #engineering Discord channel for appropriate reviewers.
 
 The instructions above assume you're in the [contributors team](https://github.com/orgs/OriginProtocol/teams/contributors/members). Click 'Request to join' to be added! If you're not a contributor, you'll need to fork the relevant repository and push feature branches to your own fork.
 

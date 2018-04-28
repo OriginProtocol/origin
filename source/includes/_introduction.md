@@ -6,7 +6,7 @@ Origin provides a simple and powerful javascript library for developers to build
 
 > Visit our Github: [https://github.com/OriginProtocol](https://github.com/OriginProtocol)
 
-This API documentation will explain how developers can use the origin.js library to create and manage decentralized marketplaces that are built on top of [IPFS](https://github.com/ipfs) and the [Ethereum network](https://https://www.ethereum.org/).
+This API documentation will explain how developers can use the origin.js library to create and manage decentralized marketplaces that are built on top of [IPFS](https://github.com/ipfs) and the [Ethereum network](https://www.ethereum.org/).
 
 Origin.js aims to create an easy and flexible abstraction layer that:
 
