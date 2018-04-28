@@ -12,47 +12,20 @@ contract ClaimHolderPresigned is ClaimHolder {
 
     constructor(
         uint256[] _claimType,
-        uint256[] _scheme,
         address[] _issuer,
         bytes _signature,
-        bytes _data,
-        string _uri,
-        uint256[] _sigSizes,
-        uint256[] dataSizes,
-        uint256[] uriSizes
+        bytes _data
     )
         public
     {
-        bytes32 claimId;
-        uint offset = 0;
-        uint uoffset = 0;
-        uint doffset = 0;
-
-        for (uint i = 0; i < _claimType.length; i++) {
-
-            claimId = keccak256(_issuer[i], _claimType[i]);
-
-            claims[claimId] = Claim(
-                _claimType[i],
-                _scheme[i],
-                _issuer[i],
-                getBytes(_signature, offset, _sigSizes[i]),
-                getBytes(_data, doffset, dataSizes[i]),
-                getString(_uri, uoffset, uriSizes[i])
-            );
-
-            offset += _sigSizes[i];
-            uoffset += uriSizes[i];
-            doffset += dataSizes[i];
-
-            emit ClaimAdded(
-                claimId,
-                claims[claimId].claimType,
-                claims[claimId].scheme,
-                claims[claimId].issuer,
-                claims[claimId].signature,
-                claims[claimId].data,
-                claims[claimId].uri
+        for (uint8 i = 0; i < _claimType.length; i++) {
+            addClaim(
+              _claimType[i],
+              1,
+              _issuer[i],
+              getBytes(_signature, (i * 65), 65),
+              getBytes(_data, (i * 32), 32),
+              ""
             );
         }
     }
