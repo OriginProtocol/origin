@@ -43,16 +43,4 @@ contract UserRegistry {
         users[msg.sender] = _identity;
         emit NewUser(msg.sender, _identity);
     }
-
-    /// @dev get(): returns and existing user associated with wallet id
-    // @param wallet id
-    function get(
-        string _id
-    )
-        public
-        pure
-        returns (string)
-    {
-        return _id;
-    }
 }
