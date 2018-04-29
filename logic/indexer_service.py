@@ -1,14 +1,15 @@
 from web3 import Web3
 
 from database import db
-from database.db_models import Listing, EventTracker
+from database.db_models import Listing, EventTracker, Purchase
 from util.contract import ContractHelper
 from util.ipfs import hex_to_base58, IPFSHelper
-
+from util.time_ import unix_to_datetime
 
 def get_event_action(event):
     return {
         Web3.sha3(text='NewListing(uint256)').hex(): create_or_update_listing,
+        Web3.sha3(text='ListingPurchased(address)').hex(): create_or_update_purchase,
     }.get(event)
 
 
@@ -66,4 +67,24 @@ def create_or_update_listing(payload):
 
 
 def create_or_update_purchase(payload):
-    pass
+    contract_helper = ContractHelper()
+    purchase_address = contract_helper.convert_event_data('ListingPurchased',
+                                                          payload['data'])
+    contract = contract_helper.get_instance('Purchase',
+                                            purchase_address)
+
+    purchase_data = contract.functions.data().call()
+    purchase_obj = Purchase.query.filter_by(contract_address=purchase_address).first()
+
+    if not purchase_obj:
+        purchase_obj = Purchase(contract_address=purchase_address,
+                                buyer_address=purchase_data[2],
+                                listing_address=purchase_data[1],
+                                stage=purchase_data[0],
+                                created_at=unix_to_datetime(purchase_data[3]),
+                                buyer_timeout=unix_to_datetime(purchase_data[4]))
+        db.session.add(purchase_obj)
+    else:
+        if purchase_obj.stage != purchase_data[0]:
+            purchase_obj.stage = purchase_data[0]
+    db.session.commit()

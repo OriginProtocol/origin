@@ -50,7 +50,7 @@ def event_listner():
         event_tracker = db_models.EventTracker(last_read=0)
         db.session.add(event_tracker)
         db.session.commit()
-    ContractHelper().fetch_events(['NewListing(uint256)'],
+    ContractHelper().fetch_events(['NewListing(uint256)', 'ListingPurchased(address)'],
                                   block_from=event_tracker.last_read,
                                   block_to='latest',
                                   f=event_reducer)
