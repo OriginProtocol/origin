@@ -62,6 +62,8 @@ class ContractHelper:
             addr = decode_single('address',
                                  hexbytes.HexBytes(data))
             return to_checksum_address(addr)
+        elif event_type == 'PurchaseChange':
+            return int(data, 0)
 
     @staticmethod
     def numeric_eth(str_eth_address):
