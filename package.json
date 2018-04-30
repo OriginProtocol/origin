@@ -37,7 +37,8 @@
     "map-cache": "^0.2.2",
     "npm": "^5.8.0",
     "truffle-contract": "^1.1.8",
-    "util.promisify": "^1.0.0"
+    "util.promisify": "^1.0.0",
+    "web3": "^0.20.6"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -60,7 +61,6 @@
     "sinon": "^2.4.1",
     "truffle": "^4.1.7",
     "truffle-hdwallet-provider": "0.0.3",
-    "web3": "^0.20.1",
     "webpack": "^3.4.1",
     "webpack-dev-server": "^2.11.2",
     "webpack-node-externals": "^1.6.0"
