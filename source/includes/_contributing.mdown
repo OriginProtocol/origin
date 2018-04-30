@@ -17,7 +17,8 @@ We also actively work on these repositories:
 
 ### Dive Right In
 
-If you're ready to start hacking on Origin right now and you just need an issue to focus on, check out [this list of good first issues](https://github.com/orgs/OriginProtocol/projects/2?card_filter_query=label%3A%22good+first+issue%22+no%3Aassignee).
+If you're ready to start hacking on Origin right now and you just need an issue to focus on, check out our [open issues](https://github.com/search?utf8=%E2%9C%93&q=user%3AOriginProtocol+is%3Aopen+&type=Issues) especially those tagged as a [good first issue](
+https://github.com/search?utf8=%E2%9C%93&q=user%3AOriginProtocol+is%3Aopen++label%3A%22good+first+issue%22&type=Issues&ref=advsearch&l=&l=).
 
 Read our [development process](#contributing-email-development-process) and [community guidelines](#contributing-email-community-guidelines) first and have fun!
 
