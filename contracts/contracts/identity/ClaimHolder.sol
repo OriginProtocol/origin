@@ -51,6 +51,26 @@ contract ClaimHolder is KeyHolder, ERC735 {
         return claimId;
     }
 
+    function addClaims(
+        uint256[] _claimType,
+        address[] _issuer,
+        bytes _signature,
+        bytes _data
+    )
+        public
+    {
+        for (uint8 i = 0; i < _claimType.length; i++) {
+            addClaim(
+              _claimType[i],
+              1,
+              _issuer[i],
+              getBytes(_signature, (i * 65), 65),
+              getBytes(_data, (i * 32), 32),
+              ""
+            );
+        }
+    }
+
     function removeClaim(bytes32 _claimId) public returns (bool success) {
         if (msg.sender != address(this)) {
           require(keyHasPurpose(keccak256(msg.sender), 1), "Sender does not have management key");
