@@ -14,19 +14,22 @@ contract ClaimHolderPresigned is ClaimHolder {
         uint256[] _claimType,
         address[] _issuer,
         bytes _signature,
-        bytes _data
+        bytes _data,
+        uint256[] _offsets
     )
         public
     {
+        uint offset = 0;
         for (uint8 i = 0; i < _claimType.length; i++) {
             addClaim(
               _claimType[i],
               1,
               _issuer[i],
               getBytes(_signature, (i * 65), 65),
-              getBytes(_data, (i * 32), 32),
+              getBytes(_data, offset, _offsets[i]),
               ""
             );
+            offset += _offsets[i];
         }
     }
 
@@ -42,20 +45,5 @@ contract ClaimHolderPresigned is ClaimHolder {
           j++;
         }
         return sig;
-    }
-
-    function getString(string _str, uint256 _offset, uint256 _length)
-        private
-        pure
-        returns (string)
-    {
-        bytes memory strBytes = bytes(_str);
-        bytes memory sig = new bytes(_length);
-        uint256 j = 0;
-        for (uint256 k = _offset; k< _offset + _length; k++) {
-          sig[j] = strBytes[k];
-          j++;
-        }
-        return string(sig);
     }
 }

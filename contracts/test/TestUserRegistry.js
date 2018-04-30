@@ -50,6 +50,7 @@ contract("UserRegistry", accounts => {
       [attestation_1.issuer],
       attestation_1.signature,
       attestation_1.data,
+      [32],
       { from: accounts[1] }
     )
     let identityAddress = await userRegistry.users(accounts[1])
