@@ -15,7 +15,7 @@ class VerificationCodeFactory(alchemy.SQLAlchemyModelFactory):
         model = VerificationCode
         sqlalchemy_session = db.session  # the SQLAlchemy session object
 
-    eth_address = 1246920381690549211058421991838046914431377695997
+    email = "hello@world.foo"
     phone = "5551231212"
     code = "98765"
     expires_at = LazyFunction(get_future_expiry)

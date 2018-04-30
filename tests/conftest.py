@@ -3,6 +3,7 @@ from mock import patch
 from testing.postgresql import Postgresql
 
 from app import app as flask_app
+from app.app_config import init_api
 from database import db as _db
 from config import settings
 
@@ -25,6 +26,7 @@ class TestConfig(object):
 def app():
     _app = flask_app
     _app.config.from_object(__name__ + '.TestConfig')
+    init_api(_app)
     with Postgresql() as postgresql:
         _app.config['SQLALCHEMY_DATABASE_URI'] = postgresql.url()
         ctx = _app.app_context()
@@ -74,7 +76,7 @@ def session(db):
 
 @pytest.yield_fixture(scope='function')
 def mock_send_sms(app):
-    patcher = patch('logic.verification_service.send_code_via_sms',
+    patcher = patch('logic.attestation_service.send_code_via_sms',
                     return_value=True)
     yield patcher.start()
     patcher.stop()

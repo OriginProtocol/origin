@@ -18,6 +18,10 @@ We need a centralized server that can handle tasks like issuing identity attesta
 
 There is currently no practical way to get email or text notifications when your bookings are made without a centralized monitoring service that can send you a text or an email to let you know about listings you care about.
 
+## API documentation
+
+See the [README for the API](api)
+
 ## One-time Setup
 
 ### Set Up A Virtual Environment
@@ -43,6 +47,21 @@ cp dev.env .env
 
 Adjust the values in .env now and in the future to suit your local environment. In particular, set up your ```DATABASE_URL```
 to point to where you local database is or will be.
+
+You'll need to set a few API keys:
+- [Facebook](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow)
+  - FACEBOOK_CLIENT_ID
+  - FACEBOOK_CLIENT_SECRET
+- [Sendgrid](https://sendgrid.com/docs/Classroom/Send/How_Emails_Are_Sent/api_keys.html)
+  - SENDGRID_API_KEY
+  - SENDGRID_FROM_EMAIL
+- [Twilio](https://www.twilio.com/docs/usage/your-request-to-twilio)
+  - TWILIO_ACCOUNT_SID
+  - TWILIO_AUTH_TOKEN
+  - TWILIO_NUMBER (Can be added on [this page](https://www.twilio.com/user/account/phone-numbers/))
+- [Twitter](https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens)
+  - TWITTER_CONSUMER_KEY
+  - TWITTER_CONSUMER_SECRET
 
 When deploying, set appropriate environment variables for production, notably
 
@@ -141,7 +160,7 @@ FLASK_APP=main.py flask db migrate
 to generate the required migration file. Rename it to add a description of the change after the underscore. Then run
 
 ```bash
-FLASK_APP=main.py flask db migrate
+FLASK_APP=main.py flask db upgrade
 ```
 
 to apply your migration to your local database, then test your changes before committing.
