@@ -38,7 +38,8 @@ contract UserRegistry {
         uint256[] _claimType,
         address[] _issuer,
         bytes _signature,
-        bytes _data
+        bytes _data,
+        uint256[] _offsets
     )
         public
     {
@@ -46,7 +47,8 @@ contract UserRegistry {
           _claimType,
           _issuer,
           _signature,
-          _data
+          _data,
+          _offsets
         );
         users[msg.sender] = _identity;
         emit NewUser(msg.sender, _identity);
