@@ -20,6 +20,8 @@ We also actively work on these repositories:
 If you're ready to start hacking on Origin right now and you just need an issue to focus on, check out our [open issues](https://github.com/search?utf8=%E2%9C%93&q=user%3AOriginProtocol+is%3Aopen+&type=Issues) especially those tagged as a [good first issue](
 https://github.com/search?utf8=%E2%9C%93&q=user%3AOriginProtocol+is%3Aopen++label%3A%22good+first+issue%22&type=Issues&ref=advsearch&l=&l=).
 
+We use two week development sprints and you can see what we're currently prioritizing on [our Github project board](https://github.com/orgs/OriginProtocol/projects/2).
+
 Read our [development process](#contributing-email-development-process) and [community guidelines](#contributing-email-community-guidelines) first and have fun!
 
 ### Development Process
