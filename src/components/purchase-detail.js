@@ -119,8 +119,8 @@ class PurchaseDetail extends Component {
     const { purchaseAddress } = this.props
 
     try {
-      const transactionReceipt = await origin.purchases.buyerConfirmReceipt(purchaseAddress)
-      await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
+      const transaction = await origin.purchases.buyerConfirmReceipt(purchaseAddress)
+      await transaction.whenFinished()
       this.loadPurchase()
     } catch(error) {
       console.error('Error marking purchase received by buyer')
@@ -132,8 +132,8 @@ class PurchaseDetail extends Component {
     const { purchaseAddress } = this.props
 
     try {
-      const transactionReceipt = await origin.purchases.sellerConfirmShipped(purchaseAddress)
-      await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
+      const transaction = await origin.purchases.sellerConfirmShipped(purchaseAddress)
+      await transaction.whenFinished()
       this.loadPurchase()
     } catch(error) {
       console.error('Error marking purchase shipped by seller')
@@ -145,8 +145,8 @@ class PurchaseDetail extends Component {
     const { purchaseAddress } = this.props
 
     try {
-      const transactionReceipt = await origin.purchases.sellerGetPayout(purchaseAddress)
-      await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
+      const transaction = await origin.purchases.sellerGetPayout(purchaseAddress)
+      await transaction.whenFinished()
       this.loadPurchase()
     } catch(error) {
       console.error('Error withdrawing funds for seller')
