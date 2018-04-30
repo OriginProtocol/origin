@@ -9,11 +9,6 @@ const signature_2 = "0x061ef9cdd7707d90d7a7d95b53ddbd94905cb05dfe4734f97744c7976
 const dataHash_1 = "0x4f32f7a7d40b4d65a917926cbfd8fd521483e7472bcc4d024179735622447dc9"
 const dataHash_2 = "0xa183d4eb3552e730c2dd3df91384426eb88879869b890ad12698320d8b88cb48"
 
-// number of bytes in a hex string:
-// num characters (without "0x") divided by 2
-const numBytesInSignature = 65
-const numBytesInDataHash = 32
-
 contract("ClaimHolderPresigned", accounts => {
   let attestation_1 = {
     claimType: 1,
