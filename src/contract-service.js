@@ -5,10 +5,17 @@ import UserRegistryContract from "./../contracts/build/contracts/UserRegistry.js
 import bs58 from "bs58"
 import contract from "truffle-contract"
 import promisify from "util.promisify"
+import Web3 from "web3"
 
 class ContractService {
-  constructor({ web3 } = {}) {
-    this.web3 = web3 || window.web3
+  constructor(options = {}) {
+    const externalWeb3 = options.web3 || window.web3
+    if (!externalWeb3) {
+      throw new Error(
+        "web3 is required for Origin.js. Please pass in web3 as a config option."
+      )
+    }
+    this.web3 = new Web3(externalWeb3.currentProvider)
 
     const contracts = {
       listingsRegistryContract: ListingsRegistryContract,
