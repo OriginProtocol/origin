@@ -22,23 +22,23 @@
       "required": true
     },
     "TWILIO_ACCOUNT_SID": {
-      "description": "The Account SID, which acts as a username",
+      "description": "Account SID which acts as a username",
       "required": false
     },
     "TWILIO_AUTH_TOKEN": {
-      "description": "Auth Token which acts as a password",
+      "description": "Auth token which acts as a password",
       "required": false
     },
     "TWILIO_NUMBER": {
-      "description": "your twilio number",
+      "description": "Twilio number",
       "required": false
     },
     "RPC_SERVER": {
-      "description": "rpc server url",
+      "description": "RPC server URL",
       "required": false
     },
     "RPC_PROTOCOL": {
-      "description": "rpc server protocol [wss, https]",
+      "description": "RPC server protocol [wss, https]",
       "required": false
     },
     "IPFS_DOMAIN": {
@@ -46,7 +46,7 @@
       "required": false
     },
     "IPFS_PORT": {
-      "description": "IPFS domain name",
+      "description": "IPFS port",
       "required": false
     },
     "ORIGIN_SIGNING_KEY": {
