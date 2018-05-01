@@ -33,6 +33,7 @@
     "babel-polyfill": "^6.26.0",
     "bs58": "^4.0.1",
     "cross-fetch": "^2.1.1",
+    "ethereumjs-util": "^5.2.0",
     "form-data": "^2.3.2",
     "ipfs-api": "^20.2.0",
     "map-cache": "^0.2.2",
