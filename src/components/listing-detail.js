@@ -50,10 +50,11 @@ class ListingsDetail extends Component {
   async loadPurchases() {
     const address = this.props.listingAddress
     const length = await origin.listings.purchasesLength(address)
-    console.log("purchases length", length)
+    console.log('Purchases length', length)
     for(let i = 0; i < length; i++){
       let purchaseAddress = await origin.listings.purchaseAddressByIndex(address, i)
       let purchase = await origin.purchases.get(purchaseAddress)
+      console.log('Purchase:', purchase)
       this.setState((prevState, props) => {
         return {purchases: [...prevState.purchases, purchase]};
       });
@@ -79,7 +80,7 @@ class ListingsDetail extends Component {
     this.setState({step: this.STEP.METAMASK})
     try {
       const transactionReceipt = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice)
-      console.log("Purchase request sent.")
+      console.log('Purchase request sent.')
       this.setState({step: this.STEP.PROCESSING})
       await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
       this.setState({step: this.STEP.PURCHASED})
@@ -93,7 +94,6 @@ class ListingsDetail extends Component {
 
 
   render() {
-    console.log(this.state.purchases)
     return (
       <div className="listing-detail">
         {this.state.step===this.STEP.METAMASK &&

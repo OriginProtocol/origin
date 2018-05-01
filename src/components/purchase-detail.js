@@ -73,6 +73,7 @@ class PurchaseDetail extends Component {
     this.withdrawFunds = this.withdrawFunds.bind(this)
     this.state = {
       listing: {},
+      logs: [],
       purchase: {},
     }
   }
@@ -95,7 +96,7 @@ class PurchaseDetail extends Component {
     try {
       const listing = await origin.listings.get(addr)
       this.setState({ listing })
-      console.log(listing)
+      console.log('Listing: ', listing)
     } catch(error) {
       console.error(`Error loading listing ${addr}`)
       console.error(error)
@@ -108,7 +109,10 @@ class PurchaseDetail extends Component {
     try {
       const purchase = await origin.purchases.get(purchaseAddress)
       this.setState({ purchase })
-      console.log(purchase)
+      console.log('Purchase: ', purchase)
+      const logs = await origin.purchases.getLogs(purchaseAddress)
+      this.setState({ logs })
+      console.log('Logs: ', logs)
     } catch(error) {
       console.error(`Error loading purchase ${purchaseAddress}`)
       console.error(error)
@@ -159,8 +163,7 @@ class PurchaseDetail extends Component {
   }
 
   render() {
-    const purchase = this.state.purchase
-    const listing = this.state.listing
+    const { listing, purchase, logs } = this.state
 
     if (!purchase.address || !listing.address ){
       return null
@@ -173,10 +176,17 @@ class PurchaseDetail extends Component {
     const category = listing.category || ""
     const active = listing.unitsAvailable > 0 // Todo, move to origin.js, take into account listing expiration
     const soldAt = purchase.created * 1000 // convert seconds since epoch to ms
-    const fulfilledAt = undefined
-    const receivedAt = undefined
-    const withdrawnAt = undefined
-    const reviewedAt = undefined
+
+    // log events
+    const paymentEvent = logs.find(l => l.stage === 'shipping_pending')
+    const paidAt = paymentEvent ? paymentEvent.timestamp * 1000 : null
+    const fulfillmentEvent = logs.find(l => l.stage === 'buyer_pending')
+    const fulfilledAt = fulfillmentEvent ? fulfillmentEvent.timestamp * 1000 : null
+    const receiptEvent = logs.find(l => l.stage === 'seller_pending')
+    const receivedAt = receiptEvent ? receiptEvent.timestamp * 1000 : null
+    const withdrawalEvent = logs.find(l => l.stage === 'complete')
+    const withdrawnAt = withdrawalEvent ? withdrawalEvent.timestamp * 1000 : null
+    const reviewedAt = null
     const price = `${Number(listing.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH` // change to priceEth
 
     const counterparty = ['buyer', 'seller'].find(str => str !== perspective)
@@ -280,36 +290,38 @@ class PurchaseDetail extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sold on<br /><strong>${moment(soldAt).format('MMM D, YYYY')}</strong>`}></span>{perspective === 'buyer' ? 'Purchased' : 'Sold'}</td>
-                    <td className="text-truncate">{purchase.address}</td>
-                    <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
-                    <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
-                  </tr>
-                  {/*fulfilledAt &&
+                  {paidAt &&
+                    <tr>
+                      <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Payment received on<br /><strong>${moment(paidAt).format('MMM D, YYYY')}</strong>`}></span>Payment Received</td>
+                      <td className="text-truncate">{paymentEvent.transactionHash}</td>
+                      <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{buyer.address}</Link></td>
+                      <td className="text-truncate"><Link to={`/users/${seller.address}`}>{seller.address}</Link></td>
+                    </tr>
+                  }
+                  {fulfilledAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sent by seller on<br /><strong>${moment(fulfilledAt).format('MMM D, YYYY')}</strong>`}></span>Sent by seller</td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x78Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
+                      <td className="text-truncate">{fulfillmentEvent.transactionHash}</td>
+                      <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{seller.address}</Link></td>
+                      <td className="text-truncate"><Link to={`/users/${seller.address}`}>{buyer.address}</Link></td>
                     </tr>
-                  */}
-                  {/*receivedAt &&
+                  }
+                  {receivedAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Received buy buyer on<br /><strong>${moment(receivedAt).format('MMM D, YYYY')}</strong>`}></span>Received by buyer</td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x90Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
+                      <td className="text-truncate">{receiptEvent.transactionHash}</td>
+                      <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{buyer.address}</Link></td>
+                      <td className="text-truncate"><Link to={`/users/${seller.address}`}>{seller.address}</Link></td>
                     </tr>
-                  */}
-                  {/*perspective === 'seller' && withdrawnAt &&
+                  }
+                  {perspective === 'seller' && withdrawnAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Funds withdrawn on<br /><strong>${moment(withdrawnAt).format('MMM D, YYYY')}</strong>`}></span>Funds withdrawn</td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x90Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
+                      <td className="text-truncate">{withdrawalEvent.transactionHash}</td>
+                      <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{seller.address}</Link></td>
+                      <td className="text-truncate"><Link to={`/users/${seller.address}`}>{buyer.address}</Link></td>
                     </tr>
-                  */}
+                  }
                 </tbody>
               </table>
               <hr />
