@@ -78,7 +78,11 @@ class Attestations {
     }
     return await this.post(
       "phone/verify",
-      { identity, phone, code },
+      {
+        identity: web3Utils.toChecksumAddress(identity),
+        phone,
+        code
+      },
       this.responseToAttestation
     )
   }
@@ -93,7 +97,11 @@ class Attestations {
     }
     return await this.post(
       "email/verify",
-      { identity, email, code },
+      {
+        identity: web3Utils.toChecksumAddress(identity),
+        email,
+        code
+      },
       this.responseToAttestation
     )
   }
@@ -111,7 +119,11 @@ class Attestations {
     }
     return await this.post(
       "facebook/verify",
-      { identity, "redirect-url": redirectUrl, code },
+      {
+        identity: web3Utils.toChecksumAddress(identity),
+        "redirect-url": redirectUrl,
+        code
+      },
       this.responseToAttestation
     )
   }
@@ -129,7 +141,10 @@ class Attestations {
     }
     return await this.post(
       "twitter/verify",
-      { identity, "oauth-verifier": oauthVerifier },
+      {
+        identity: web3Utils.toChecksumAddress(identity),
+        "oauth-verifier": oauthVerifier
+      },
       this.responseToAttestation
     )
   }
