@@ -49,7 +49,8 @@ class Users extends ResourceBase {
         return signature.substr(2)
       }).join("")
       let data = "0x" + attestations.map(({ data }) => {
-        return web3.sha3(data).substr(2)
+        let hashed = (data.substr(0, 2) === "0x") ? data : web3.sha3(data)
+        return hashed.substr(2)
       }).join("")
       return await userRegistry.createUserWithClaims(
         claimTypes,
