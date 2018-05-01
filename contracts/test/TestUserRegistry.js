@@ -33,7 +33,7 @@ contract("UserRegistry", accounts => {
   })
 
   it("should be able to create a user", async function() {
-    let create = await userRegistry.create({ from: accounts[1] })
+    let create = await userRegistry.createUser({ from: accounts[1] })
     let identityAddress = await userRegistry.users(accounts[1])
     let newUserEvent = create.logs.find(e => e.event == "NewUser")
     assert.ok(identityAddress)
@@ -45,7 +45,7 @@ contract("UserRegistry", accounts => {
   })
 
   it("should be able to create a user with claims", async function() {
-    let createWithClaims = await userRegistry.createWithClaims(
+    let createWithClaims = await userRegistry.createUserWithClaims(
       [attestation_1.claimType],
       [attestation_1.issuer],
       attestation_1.signature,

@@ -25,7 +25,7 @@ contract UserRegistry {
     */
 
     /// @dev create(): Create a user
-    function create() public
+    function createUser() public
     {
         ClaimHolder _identity = new ClaimHolder();
         users[msg.sender] = _identity;
@@ -34,7 +34,7 @@ contract UserRegistry {
 
     /// @dev createWithClaims(): Create a user with presigned claims
     // Params correspond to params of ClaimHolderPresigned
-    function createWithClaims(
+    function createUserWithClaims(
         uint256[] _claimType,
         address[] _issuer,
         bytes _signature,
