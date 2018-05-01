@@ -165,11 +165,16 @@ FLASK_APP=main.py flask db upgrade
 
 to apply your migration to your local database, then test your changes before committing.
 
-## Dev Deployment on Heroku
 
-To deploy a dev server on Heroku, you'll follow the normal steps you would to deploy on Heroku.
+## Heroku Deploy
 
-As a minium, you must set these three Heroku config variables:
+To deploy a development copy of the site on Heroku, just choose which branch you would like to use and follow the instructions: 
+
+| `Master` branch <br>(stable) | `Develop` branch<br> (active development) | 
+|---------|----------|
+| [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/OriginProtocol/bridge-server/tree/master) | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/OriginProtocol/bridge-server/tree/develop) | 
+
+Heroku will prompt you to set config variables. At a minium, you must set these three:
 
 |Config          |Value|
 |----------------|------|
@@ -177,4 +182,9 @@ As a minium, you must set these three Heroku config variables:
 |PROJECTPATH     |/app|
 |HOST            |(domain name of your dev heroku app)|
 
-There are more optional config variables you can set. See [dev.env](dev.env) for a full list.
+See [dev.env](dev.env) for a full list of other optional config variables.
+
+
+We use following buildpacks:
+
+  heroku buildpacks:set heroku/python
