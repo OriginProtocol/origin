@@ -2,8 +2,10 @@ import ContractService from "./contract-service"
 import IpfsService from "./ipfs-service"
 
 var resources = {
+  attestations: require("./resources/attestations").Attestations,
   listings: require("./resources/listings"),
-  purchases: require("./resources/purchases")
+  purchases: require("./resources/purchases"),
+  users: require("./resources/users")
 }
 
 class Origin {
