@@ -64,6 +64,32 @@ class ContractService {
     return accounts[0]
   }
 
+  // async convenience method for getting block details
+  getBlock(blockHash) {
+    return new Promise((resolve, reject) => {
+      this.web3.eth.getBlock(blockHash, (error, data) => {
+        if (error) {
+          reject(error)
+        } else {
+          resolve(data)
+        }
+      })
+    })
+  }
+
+  // async convenience method for getting transaction details
+  getTransaction(transactionHash) {
+    return new Promise((resolve, reject) => {
+      this.web3.eth.getTransaction(transactionHash, (error, data) => {
+        if (error) {
+          reject(error)
+        } else {
+          resolve(data)
+        }
+      })
+    })
+  }
+
   async submitListing(ipfsListing, ethPrice, units) {
     try {
       const account = await this.currentAccount()

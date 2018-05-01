@@ -52,6 +52,7 @@ class Purchases extends ResourceBase{
   }
 
   async getLogs(address) {
+    const self = this
     const web3 = this.contractService.web3
     const contract = await this.contractDefinition.at(address)
     return new Promise((resolve, reject) => {
@@ -75,10 +76,10 @@ class Purchases extends ResourceBase{
         })
         // Fetch user and timestamp information for all logs, in parallel 
         const addUserAddressFn = async (event)=>{
-          event.from = (await web3.eth.getTransaction(event.transactionHash)).from
+          event.from = (await self.contractService.getTransaction(event.transactionHash)).from
         }
         const addTimestampFn = async (event)=>{
-          event.timestamp = (await web3.eth.getBlock(event.blockHash)).timestamp
+          event.timestamp = (await self.contractService.getBlock(event.blockHash)).timestamp
         }
         const fetchPromises = [].concat(
           logs.map(addUserAddressFn),
