@@ -40,7 +40,8 @@
     "rlp": "^2.0.0",
     "truffle-contract": "^3.0.5",
     "util.promisify": "^1.0.0",
-    "web3": "^1.0.0-beta.34"
+    "web3": "^1.0.0-beta.34",
+    "web3-eth-accounts": "^1.0.0-beta.34"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
