@@ -50,7 +50,7 @@ class ListingsDetail extends Component {
   async loadPurchases() {
     const address = this.props.listingAddress
     const length = await origin.listings.purchasesLength(address)
-    console.log('Purchases length', length)
+    console.log('Purchase count:', length)
     for(let i = 0; i < length; i++){
       let purchaseAddress = await origin.listings.purchaseAddressByIndex(address, i)
       let purchase = await origin.purchases.get(purchaseAddress)
