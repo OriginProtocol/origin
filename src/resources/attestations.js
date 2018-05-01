@@ -1,4 +1,6 @@
 import fetch from "cross-fetch"
+import RLP from "rlp"
+import web3Utils from "web3-utils"
 
 const appendSlash = (url) => {
   return (url.substr(-1) === "/") ? url : url + "/"
@@ -34,8 +36,9 @@ let http = async (baseUrl, url, body, successFn, method) => {
 }
 
 class Attestations {
-  constructor({ serverUrl, issuer }) {
+  constructor({ serverUrl, issuer, contractService }) {
     this.serverUrl = serverUrl
+    this.contractService = contractService
 
     this.responseToAttestation = (resp = {}) => {
       return new AttestationObject({
@@ -55,11 +58,24 @@ class Attestations {
     return await http(this.serverUrl, url, undefined, successFn, 'GET')
   }
 
+  async predictIdentityAddress(wallet) {
+    let web3 = this.contractService.web3
+    let nonce = await new Promise((resolve, reject) => {
+      web3.eth.getTransactionCount(wallet, (err, count) => {
+        resolve(count)
+      })
+    })
+    return "0x" + web3Utils.sha3(RLP.encode([wallet, nonce])).substring(26, 66)
+  }
+
   async phoneGenerateCode({ phone }) {
     return await this.post("phone/generate-code", { phone })
   }
 
-  async phoneVerify({ identity, phone, code }) {
+  async phoneVerify({ identity, wallet, phone, code }) {
+    if (wallet && !identity) {
+      identity = await this.predictIdentityAddress(wallet)
+    }
     return await this.post(
       "phone/verify",
       { identity, phone, code },
@@ -71,7 +87,10 @@ class Attestations {
     return await this.post("email/generate-code", { email })
   }
 
-  async emailVerify({ identity, email, code }) {
+  async emailVerify({ identity, wallet, email, code }) {
+    if (wallet && !identity) {
+      identity = await this.predictIdentityAddress(wallet)
+    }
     return await this.post(
       "email/verify",
       { identity, email, code },
@@ -86,7 +105,10 @@ class Attestations {
     )
   }
 
-  async facebookVerify({ identity, redirectUrl, code }) {
+  async facebookVerify({ identity, wallet, redirectUrl, code }) {
+    if (wallet && !identity) {
+      identity = await this.predictIdentityAddress(wallet)
+    }
     return await this.post(
       "facebook/verify",
       { identity, "redirect-url": redirectUrl, code },
@@ -101,7 +123,10 @@ class Attestations {
     )
   }
 
-  async twitterVerify({ identity, oauthVerifier }) {
+  async twitterVerify({ identity, wallet, oauthVerifier }) {
+    if (wallet && !identity) {
+      identity = await this.predictIdentityAddress(wallet)
+    }
     return await this.post(
       "twitter/verify",
       { identity, "oauth-verifier": oauthVerifier },
