@@ -141,19 +141,16 @@ class Users extends ResourceBase {
       let ipfsHash = this.contractService.getIpfsHashFromBytes32(bytes32)
       profile = await this.ipfsService.getFile(ipfsHash)
     }
+    let validAttestations = await this.validAttestations(identityAddress, nonProfileClaims)
     return {
       profile,
-      attestations: this.validAttestations(identityAddress, nonProfileClaims)
+      attestations: validAttestations
     }
   }
 
-  validAttestations(identityAddress, attestations) {
-    return attestations.filter(({ claimType, issuer, data, signature }) => {
-      if (issuer.toLowerCase() !== this.issuer.toLowerCase()) {
-        // TODO: we should be checking that issuer has key purpose on a master origin identity contract
-        // (rather than hard-coding a single issuer)
-        return false
-      }
+  async validAttestations(identityAddress, attestations) {
+    let originIdentity = await this.contractService.originIdentityContract.deployed()
+    return attestations.filter(async ({ claimType, issuer, data, signature }) => {
       let msg = web3Utils.soliditySha3(identityAddress, claimType, data)
       let prefixedMsg = this.web3EthAccounts.hashMessage(msg)
       let dataBuf = toBuffer(prefixedMsg)
@@ -162,7 +159,7 @@ class Users extends ResourceBase {
       let recoveredBuf = pubToAddress(recovered)
       let recoveredHex = bufferToHex(recoveredBuf)
       let hashedRecovered = web3Utils.soliditySha3(recoveredHex)
-      return recoveredHex.toLowerCase() === issuer.toLowerCase()
+      return await originIdentity.keyHasPurpose(hashedRecovered, 3)
     })
   }
 }

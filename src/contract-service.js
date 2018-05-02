@@ -4,6 +4,7 @@ import ListingsRegistryContract from "./../contracts/build/contracts/ListingsReg
 import ListingContract from "./../contracts/build/contracts/Listing.json"
 import PurchaseContract from "./../contracts/build/contracts/Purchase.json"
 import UserRegistryContract from "./../contracts/build/contracts/UserRegistry.json"
+import OriginIdentityContract from "./../contracts/build/contracts/OriginIdentity.json"
 import bs58 from "bs58"
 import Web3 from "web3"
 
@@ -23,7 +24,8 @@ class ContractService {
       purchaseContract: PurchaseContract,
       userRegistryContract: UserRegistryContract,
       claimHolderRegisteredContract: ClaimHolderRegisteredContract,
-      claimHolderPresignedContract: ClaimHolderPresignedContract
+      claimHolderPresignedContract: ClaimHolderPresignedContract,
+      originIdentityContract: OriginIdentityContract
     }
     for (let name in contracts) {
       this[name] = contracts[name]
