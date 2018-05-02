@@ -1,6 +1,15 @@
 import ResourceBase from "../ResourceBase"
 import { AttestationObject } from "./attestations"
-import userSchema from '../schemas/user.json'
+import userSchema from "../schemas/user.json"
+import {
+  fromRpcSig,
+  ecrecover,
+  toBuffer,
+  bufferToHex,
+  pubToAddress
+} from "ethereumjs-util"
+import web3Utils from "web3-utils" // not necessary with web3 1.0
+import Web3EthAccounts from "web3-eth-accounts" // not necessary with web3 1.0
 
 var Ajv = require('ajv')
 var ajv = new Ajv()
@@ -17,8 +26,10 @@ let validateUser = (data) => {
 }
 
 class Users extends ResourceBase {
-  constructor({ contractService, ipfsService }) {
-    super(...arguments)
+  constructor({ contractService, ipfsService, issuer }) {
+    super({ contractService, ipfsService })
+    this.issuer = issuer
+    this.web3EthAccounts = new Web3EthAccounts()
   }
 
   async set({ profile, attestations = [] }) {
@@ -49,7 +60,7 @@ class Users extends ResourceBase {
         return signature.substr(2)
       }).join("")
       let data = "0x" + attestations.map(({ data }) => {
-        let hashed = (data.substr(0, 2) === "0x") ? data : web3.sha3(data)
+        let hashed = (data.substr(0, 2) === "0x") ? data : web3Utils.sha3(data)
         return hashed.substr(2)
       }).join("")
       return await userRegistry.createUserWithClaims(
@@ -103,13 +114,31 @@ class Users extends ResourceBase {
     }
     return {
       profile,
-      attestations: validAttestations(nonProfileClaims)
+      attestations: this.validAttestations(identityAddress, nonProfileClaims)
     }
   }
 
-  validAttestations(attestations) {
-    // TODO
-    return attestations
+  validAttestations(identityAddress, attestations) {
+    return attestations.filter(({ claimType, issuer, data, signature }) => {
+      if (issuer.toLowerCase() !== this.issuer.toLowerCase()) {
+        // TODO: we should be checking that issuer has key purpose on a master origin identity contract
+        // (rather than hard-coding a single issuer)
+        return false
+      }
+      let msg = web3Utils.soliditySha3(
+        identityAddress,
+        claimType,
+        data
+      )
+      let prefixedMsg = this.web3EthAccounts.hashMessage(msg)
+      let dataBuf = toBuffer(prefixedMsg)
+      let sig = fromRpcSig(signature)
+      let recovered = ecrecover(dataBuf, sig.v, sig.r, sig.s)
+      let recoveredBuf = pubToAddress(recovered)
+      let recoveredHex = bufferToHex(recoveredBuf)
+      let hashedRecovered = web3Utils.soliditySha3(recoveredHex)
+      return recoveredHex.toLowerCase() === issuer.toLowerCase()
+    })
   }
 }
 
