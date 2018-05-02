@@ -76,8 +76,7 @@ class Users extends ResourceBase {
         return signature.substr(2)
       }).join("")
       let data = "0x" + attestations.map(({ data }) => {
-        let hashed = (data.substr(0, 2) === "0x") ? data : web3Utils.sha3(data)
-        return hashed.substr(2)
+        return data.substr(2)
       }).join("")
       let dataOffsets = attestations.map(() => 32) // all data hashes will be 32 bytes
 

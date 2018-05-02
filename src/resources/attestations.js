@@ -9,8 +9,8 @@ const appendSlash = (url) => {
 class AttestationObject {
   constructor({ claimType, data, signature }) {
     this.claimType = claimType
-    this.data = data
-    this.signature = signature,
+    this.data = web3Utils.sha3(data)
+    this.signature = signature
   }
 }
 
