@@ -7,7 +7,9 @@ const keyPurpose = 3
 const keyType = 1
 
 module.exports = function(deployer, network) {
-  return add_sample_issuer(network)
+  return deployer.then(() => {
+    return add_sample_issuer(network)
+  })
 }
 
 async function add_sample_issuer(network) {

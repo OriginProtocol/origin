@@ -3,7 +3,9 @@ var Listing = artifacts.require("./Listing.sol");
 var Purchase = artifacts.require("./Purchase.sol");
 
 module.exports = function(deployer, network) {
-  return deploy_sample_contracts(network)
+  return deployer.then(() => {
+    return deploy_sample_contracts(network)
+  })
 }
 
 async function deploy_sample_contracts(network) {
