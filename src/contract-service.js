@@ -1,4 +1,4 @@
-import ClaimHolderContract from "./../contracts/build/contracts/ClaimHolder.json"
+import ClaimHolderRegisteredContract from "./../contracts/build/contracts/ClaimHolderRegistered.json"
 import ClaimHolderPresignedContract from "./../contracts/build/contracts/ClaimHolderPresigned.json"
 import ListingsRegistryContract from "./../contracts/build/contracts/ListingsRegistry.json"
 import ListingContract from "./../contracts/build/contracts/Listing.json"
@@ -22,7 +22,7 @@ class ContractService {
       listingContract: ListingContract,
       purchaseContract: PurchaseContract,
       userRegistryContract: UserRegistryContract,
-      claimHolderContract: ClaimHolderContract,
+      claimHolderRegisteredContract: ClaimHolderRegisteredContract,
       claimHolderPresignedContract: ClaimHolderPresignedContract
     }
     for (let name in contracts) {

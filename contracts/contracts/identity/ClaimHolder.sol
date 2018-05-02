@@ -2,18 +2,8 @@ pragma solidity ^0.4.23;
 
 import './ERC735.sol';
 import './KeyHolder.sol';
-import '../UserRegistry.sol';
 
 contract ClaimHolder is KeyHolder, ERC735 {
-
-  constructor (
-    address _userRegistryAddress
-  )
-      public
-  {
-      UserRegistry userRegistry = UserRegistry(_userRegistryAddress);
-      userRegistry.registerUser();
-  }
 
     bytes32 claimId;
     mapping (bytes32 => Claim) claims;

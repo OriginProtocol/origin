@@ -1,6 +1,6 @@
 const web3Utils = require('web3-utils')
 
-const ClaimHolder = artifacts.require("ClaimHolder")
+const ClaimHolderRegistered = artifacts.require("ClaimHolderRegistered")
 const UserRegistry = artifacts.require("UserRegistry")
 
 const signature_1 = "0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"
@@ -9,8 +9,8 @@ const signature_2 = "0x061ef9cdd7707d90d7a7d95b53ddbd94905cb05dfe4734f97744c7976
 const dataHash_1 = "0x4f32f7a7d40b4d65a917926cbfd8fd521483e7472bcc4d024179735622447dc9"
 const dataHash_2 = "0xa183d4eb3552e730c2dd3df91384426eb88879869b890ad12698320d8b88cb48"
 
-contract("ClaimHolder", accounts => {
-  let claimHolder, userRegistry
+contract("ClaimHolderRegistered", accounts => {
+  let claimHolderRegistered, userRegistry
   let attestation_1 = {
     claimType: 1,
     scheme: 1,
@@ -30,7 +30,7 @@ contract("ClaimHolder", accounts => {
 
   beforeEach(async function() {
     userRegistry = await UserRegistry.new( { from: accounts[1] } )
-    claimHolder = await ClaimHolder.new(userRegistry.address, { from: accounts[0] })
+    claimHolderRegistered = await ClaimHolderRegistered.new(userRegistry.address, { from: accounts[0] })
   })
 
   it("can add and get claim", async function() {
@@ -38,7 +38,7 @@ contract("ClaimHolder", accounts => {
       attestation_1.issuer,
       attestation_1.claimType
     )
-    await claimHolder.addClaim(
+    await claimHolderRegistered.addClaim(
       attestation_1.claimType,
       attestation_1.scheme,
       attestation_1.issuer,
@@ -47,7 +47,7 @@ contract("ClaimHolder", accounts => {
       attestation_1.uri,
       { from: accounts[0] }
     )
-    let fetchedClaim = await claimHolder.getClaim(claimId, { from: accounts[0] })
+    let fetchedClaim = await claimHolderRegistered.getClaim(claimId, { from: accounts[0] })
     assert.ok(fetchedClaim)
     let [ claimType, scheme, issuer, signature, data, uri ] = fetchedClaim
     assert.equal(claimType.toNumber(), attestation_1.claimType)
@@ -59,7 +59,7 @@ contract("ClaimHolder", accounts => {
   })
 
   it("can batch add claims", async function() {
-    await claimHolder.addClaims(
+    await claimHolderRegistered.addClaims(
       [ attestation_1.claimType, attestation_2.claimType ],
       [ attestation_1.issuer, attestation_2.issuer ],
       attestation_1.signature + attestation_2.signature.slice(2),
@@ -71,7 +71,7 @@ contract("ClaimHolder", accounts => {
       attestation_1.issuer,
       attestation_1.claimType
     )
-    let fetchedClaim_1 = await claimHolder.getClaim(claimId_1, { from: accounts[0] })
+    let fetchedClaim_1 = await claimHolderRegistered.getClaim(claimId_1, { from: accounts[0] })
     assert.ok(fetchedClaim_1)
     let [ claimType_1, scheme_1, issuer_1, signature_1, data_1, uri_1 ] = fetchedClaim_1
     assert.equal(claimType_1.toNumber(), attestation_1.claimType)
@@ -85,7 +85,7 @@ contract("ClaimHolder", accounts => {
       attestation_2.issuer,
       attestation_2.claimType
     )
-    let fetchedClaim_2 = await claimHolder.getClaim(claimId_2, { from: accounts[0] })
+    let fetchedClaim_2 = await claimHolderRegistered.getClaim(claimId_2, { from: accounts[0] })
     assert.ok(fetchedClaim_2)
     let [ claimType_2, scheme_2, issuer_2, signature_2, data_2, uri_2 ] = fetchedClaim_2
     assert.equal(claimType_2.toNumber(), attestation_2.claimType)

@@ -84,7 +84,7 @@ class Users extends ResourceBase {
 
       if (hasRegisteredIdentity) {
         // batch add claims to existing identity
-        let claimHolder = await this.contractService.claimHolderContract.at(identityAddress)
+        let claimHolder = await this.contractService.claimHolderRegisteredContract.at(identityAddress)
         return await claimHolder.addClaims(
           claimTypes,
           issuers,
@@ -106,7 +106,7 @@ class Users extends ResourceBase {
       }
     } else if (!hasRegisteredIdentity) {
       // create identity
-      return await this.contractService.claimHolderContract.new(
+      return await this.contractService.claimHolderRegisteredContract.new(
         userRegistry.address,
         { from: account, gas: 4000000 }
       )
@@ -114,7 +114,7 @@ class Users extends ResourceBase {
   }
 
   async getClaims(identityAddress) {
-    let identity = this.contractService.claimHolderContract.at(identityAddress)
+    let identity = this.contractService.claimHolderRegisteredContract.at(identityAddress)
     let allEvents = identity.allEvents({fromBlock: 0, toBlock: 'latest'})
     let claims = await new Promise((resolve, reject) => {
       allEvents.get((err, events) => {
