@@ -65,21 +65,31 @@ class Attestations {
         resolve(count)
       })
     })
-    return "0x" + web3Utils.sha3(RLP.encode([wallet, nonce])).substring(26, 66)
+    let address = "0x" + web3Utils.sha3(RLP.encode([wallet, nonce])).substring(26, 66)
+    return web3Utils.toChecksumAddress(address)
+  }
+
+  async getIdentityAddress(wallet) {
+    let userRegistry = await this.contractService.userRegistryContract.deployed()
+    let identityAddress = await userRegistry.users(wallet)
+    let hasRegisteredIdentity = identityAddress !== "0x0000000000000000000000000000000000000000"
+    if (hasRegisteredIdentity) {
+      return web3Utils.toChecksumAddress(identityAddress)
+    } else {
+      return this.predictIdentityAddress(wallet)
+    }
   }
 
   async phoneGenerateCode({ phone }) {
     return await this.post("phone/generate-code", { phone })
   }
 
-  async phoneVerify({ identity, wallet, phone, code }) {
-    if (wallet && !identity) {
-      identity = await this.predictIdentityAddress(wallet)
-    }
+  async phoneVerify({ wallet, phone, code }) {
+    let identity = await this.getIdentityAddress(wallet)
     return await this.post(
       "phone/verify",
       {
-        identity: web3Utils.toChecksumAddress(identity),
+        identity,
         phone,
         code
       },
@@ -91,14 +101,12 @@ class Attestations {
     return await this.post("email/generate-code", { email })
   }
 
-  async emailVerify({ identity, wallet, email, code }) {
-    if (wallet && !identity) {
-      identity = await this.predictIdentityAddress(wallet)
-    }
+  async emailVerify({ wallet, email, code }) {
+    let identity = await this.getIdentityAddress(wallet)
     return await this.post(
       "email/verify",
       {
-        identity: web3Utils.toChecksumAddress(identity),
+        identity,
         email,
         code
       },
@@ -113,14 +121,12 @@ class Attestations {
     )
   }
 
-  async facebookVerify({ identity, wallet, redirectUrl, code }) {
-    if (wallet && !identity) {
-      identity = await this.predictIdentityAddress(wallet)
-    }
+  async facebookVerify({ wallet, redirectUrl, code }) {
+    let identity = await this.getIdentityAddress(wallet)
     return await this.post(
       "facebook/verify",
       {
-        identity: web3Utils.toChecksumAddress(identity),
+        identity,
         "redirect-url": redirectUrl,
         code
       },
@@ -135,14 +141,12 @@ class Attestations {
     )
   }
 
-  async twitterVerify({ identity, wallet, oauthVerifier }) {
-    if (wallet && !identity) {
-      identity = await this.predictIdentityAddress(wallet)
-    }
+  async twitterVerify({ wallet, oauthVerifier }) {
+    let identity = await this.getIdentityAddress(wallet)
     return await this.post(
       "twitter/verify",
       {
-        identity: web3Utils.toChecksumAddress(identity),
+        identity,
         "oauth-verifier": oauthVerifier
       },
       this.responseToAttestation
