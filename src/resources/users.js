@@ -33,50 +33,11 @@ class Users extends ResourceBase {
   }
 
   async set({ profile, attestations = [] }) {
-    let account = await this.contractService.currentAccount()
-    let userRegistry = await this.contractService.userRegistryContract.deployed()
-
     if (profile && validateUser(profile)) {
-      // Submit to IPFS
-      let ipfsHash = await this.ipfsService.submitFile(profile)
-      let asBytes32 = this.contractService.getBytes32FromIpfsHash(ipfsHash)
-      // For now we'll ignore issuer & signature for self attestations
-      // If it's a self-attestation, then no validation is necessary
-      // A signature would be an extra UI step, so we don't want to add it if not necessary
-      let selfAttestation = new AttestationObject({
-        claimType: selfAttestationClaimType,
-        data: asBytes32,
-        issuer: "0x0000000000000000000000000000000000000000",
-        signature: "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-      })
+      let selfAttestation = await this.profileAttestation(profile)
       attestations.push(selfAttestation)
     }
-
-    if (attestations.length) {
-      let web3 = this.contractService.web3
-      let claimTypes = attestations.map(({ claimType }) => claimType)
-      let issuers = attestations.map(({ issuer }) => issuer)
-      let sigs = "0x" + attestations.map(({ signature }) => {
-        return signature.substr(2)
-      }).join("")
-      let data = "0x" + attestations.map(({ data }) => {
-        let hashed = (data.substr(0, 2) === "0x") ? data : web3Utils.sha3(data)
-        return hashed.substr(2)
-      }).join("")
-      return await this.contractService.claimHolderPresignedContract.new(
-        userRegistry.address,
-        claimTypes,
-        issuers,
-        sigs,
-        data,
-        { from: account, gas: 4000000 }
-      )
-    } else {
-      return await this.contractService.claimHolderContract.new(
-        userRegistry.address,
-        { from: account, gas: 4000000 }
-      )
-    }
+    this.addAttestations(attestations)
   }
 
   async get(address) {
@@ -86,6 +47,70 @@ class Users extends ResourceBase {
     let identityAddress = await userRegistry.users(address)
     let claims = await this.getClaims(identityAddress)
     return claims
+  }
+
+  async profileAttestation(profile) {
+    // Submit to IPFS
+    let ipfsHash = await this.ipfsService.submitFile(profile)
+    let asBytes32 = this.contractService.getBytes32FromIpfsHash(ipfsHash)
+    // For now we'll ignore issuer & signature for self attestations
+    // If it's a self-attestation, then no validation is necessary
+    // A signature would be an extra UI step, so we don't want to add it if not necessary
+    return new AttestationObject({
+      claimType: selfAttestationClaimType,
+      data: asBytes32,
+      issuer: "0x0000000000000000000000000000000000000000",
+      signature: "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    })
+  }
+
+  async addAttestations(attestations) {
+    let account = await this.contractService.currentAccount()
+    let userRegistry = await this.contractService.userRegistryContract.deployed()
+    if (attestations.length) {
+      // format params for solidity methods to batch add claims
+      let identityAddress = await userRegistry.users(account)
+      let hasRegisteredIdentity = identityAddress !== "0x0000000000000000000000000000000000000000"
+      let claimTypes = attestations.map(({ claimType }) => claimType)
+      let issuers = attestations.map(({ issuer }) => issuer)
+      let sigs = "0x" + attestations.map(({ signature }) => {
+        return signature.substr(2)
+      }).join("")
+      let data = "0x" + attestations.map(({ data }) => {
+        let hashed = (data.substr(0, 2) === "0x") ? data : web3Utils.sha3(data)
+        return hashed.substr(2)
+      }).join("")
+      let dataOffsets = attestations.map(() => 32) // all data hashes will be 32 bytes
+
+      if (hasRegisteredIdentity) {
+        // batch add claims to existing identity
+        let claimHolder = await this.contractService.claimHolderContract.at(identityAddress)
+        return await claimHolder.addClaims(
+          claimTypes,
+          issuers,
+          sigs,
+          data,
+          { from: account, gas: 4000000 }
+        )
+      } else {
+        // create identity with presigned claims
+        return await this.contractService.claimHolderPresignedContract.new(
+          userRegistry.address,
+          claimTypes,
+          issuers,
+          sigs,
+          data,
+          dataOffsets,
+          { from: account, gas: 4000000 }
+        )
+      }
+    } else if (!hasRegisteredIdentity) {
+      // create identity
+      return await this.contractService.claimHolderContract.new(
+        userRegistry.address,
+        { from: account, gas: 4000000 }
+      )
+    }
   }
 
   async getClaims(identityAddress) {
