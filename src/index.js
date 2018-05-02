@@ -1,11 +1,11 @@
 import ContractService from "./contract-service"
 import IpfsService from "./ipfs-service"
 import { Attestations } from "./resources/attestations"
+import Users from "./resources/users"
 
 var resources = {
   listings: require("./resources/listings"),
-  purchases: require("./resources/purchases"),
-  users: require("./resources/users")
+  purchases: require("./resources/purchases")
 }
 
 class Origin {
@@ -28,6 +28,11 @@ class Origin {
       serverUrl: attestationServerUrl,
       issuer: attestationIssuer,
       contractService: this.contractService
+    })
+    this.users = new Users({
+      contractService: this.contractService,
+      ipfsService: this.ipfsService,
+      issuer: attestationIssuer
     })
 
     // Instantiate each resource and give it access to contracts and IPFS
