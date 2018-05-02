@@ -1,5 +1,4 @@
-var OriginIdentityContract = require("../build/contracts/OriginIdentity.json")
-var contract = require("truffle-contract")
+var OriginIdentity = artifacts.require("./OriginIdentity.sol");
 var web3Utils = require("web3-utils")
 
 const issuer = "0x99C03fBb0C995ff1160133A8bd210D0E77bCD101"
@@ -14,9 +13,7 @@ module.exports = function(deployer, network) {
 async function add_sample_issuer(network) {
   let defaultAccount = web3.eth.accounts[0]
 
-  let originIdentityContract = contract(OriginIdentityContract)
-  originIdentityContract.setProvider(web3.currentProvider)
-  let originIdentity = await originIdentityContract.deployed()
+  let originIdentity = await OriginIdentity.deployed()
 
   return await originIdentity.addKey(
     issuerHashed,
