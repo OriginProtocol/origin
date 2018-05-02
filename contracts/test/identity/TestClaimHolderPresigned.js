@@ -2,6 +2,7 @@ var web3Utils = require('web3-utils')
 
 const ClaimHolder = artifacts.require("ClaimHolder")
 const ClaimHolderPresigned = artifacts.require("ClaimHolderPresigned")
+const UserRegistry = artifacts.require("UserRegistry")
 
 const signature_1 = "0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"
 const signature_2 = "0x061ef9cdd7707d90d7a7d95b53ddbd94905cb05dfe4734f97744c7976f2776145fef298fd0e31afa43a103cd7f5b00e3b226b0d62e4c492d54bec02eb0c2a0901b"
@@ -28,7 +29,9 @@ contract("ClaimHolderPresigned", accounts => {
   }
 
   it("should deploy identity with attestations", async function() {
+    let userRegistry = await UserRegistry.new( { from: accounts[3] } )
     let instance = await ClaimHolderPresigned.new(
+      userRegistry.address,
       [ attestation_1.claimType, attestation_2.claimType ],
       [ attestation_1.issuer, attestation_2.issuer ],
       attestation_1.signature + attestation_2.signature.slice(2),
@@ -60,5 +63,10 @@ contract("ClaimHolderPresigned", accounts => {
     assert.equal(signature_2, attestation_2.signature)
     assert.equal(data_2, attestation_2.data)
     assert.equal(uri_2, attestation_2.uri)
+
+    // Check user registry
+    let identityAddress = await userRegistry.users(accounts[0])
+    assert.ok(identityAddress)
+    assert.notEqual(identityAddress, "0x0000000000000000000000000000000000000000")
   })
 })

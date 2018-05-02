@@ -11,12 +11,14 @@ import './ClaimHolder.sol';
 contract ClaimHolderPresigned is ClaimHolder {
 
     constructor(
+        address _userRegistryAddress,
         uint256[] _claimType,
         address[] _issuer,
         bytes _signature,
         bytes _data,
         uint256[] _offsets
     )
+        ClaimHolder(_userRegistryAddress)
         public
     {
         uint offset = 0;

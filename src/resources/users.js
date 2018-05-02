@@ -63,7 +63,8 @@ class Users extends ResourceBase {
         let hashed = (data.substr(0, 2) === "0x") ? data : web3Utils.sha3(data)
         return hashed.substr(2)
       }).join("")
-      return await userRegistry.createUserWithClaims(
+      return await this.contractService.claimHolderPresignedContract.new(
+        userRegistry.address,
         claimTypes,
         issuers,
         sigs,
@@ -71,7 +72,10 @@ class Users extends ResourceBase {
         { from: account, gas: 4000000 }
       )
     } else {
-      return await userRegistry.createUser({ from: account, gas: 4000000 })
+      return await this.contractService.claimHolderContract.new(
+        userRegistry.address,
+        { from: account, gas: 4000000 }
+      )
     }
   }
 
@@ -125,11 +129,7 @@ class Users extends ResourceBase {
         // (rather than hard-coding a single issuer)
         return false
       }
-      let msg = web3Utils.soliditySha3(
-        identityAddress,
-        claimType,
-        data
-      )
+      let msg = web3Utils.soliditySha3(identityAddress, claimType, data)
       let prefixedMsg = this.web3EthAccounts.hashMessage(msg)
       let dataBuf = toBuffer(prefixedMsg)
       let sig = fromRpcSig(signature)
