@@ -7,11 +7,10 @@ const appendSlash = (url) => {
 }
 
 class AttestationObject {
-  constructor({ claimType, data, signature, issuer }) {
+  constructor({ claimType, data, signature }) {
     this.claimType = claimType
     this.data = data
     this.signature = signature,
-    this.issuer = issuer
   }
 }
 

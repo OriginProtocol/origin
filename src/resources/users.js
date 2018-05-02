@@ -26,9 +26,8 @@ let validateUser = (data) => {
 }
 
 class Users extends ResourceBase {
-  constructor({ contractService, ipfsService, issuer }) {
+  constructor({ contractService, ipfsService }) {
     super({ contractService, ipfsService })
-    this.issuer = issuer
     this.web3EthAccounts = new Web3EthAccounts()
   }
 
