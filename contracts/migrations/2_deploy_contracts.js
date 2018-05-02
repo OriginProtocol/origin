@@ -2,6 +2,7 @@ var ListingsRegistry = artifacts.require("./ListingsRegistry.sol");
 var Listing = artifacts.require("./Listing.sol");
 var UserRegistry = artifacts.require("./UserRegistry.sol");
 var PurchaseLibrary = artifacts.require("./PurchaseLibrary.sol");
+var OriginIdentity = artifacts.require("./OriginIdentity.sol");
 
 module.exports = function(deployer) {
   deployer.deploy(PurchaseLibrary);
@@ -9,4 +10,5 @@ module.exports = function(deployer) {
   deployer.link(PurchaseLibrary, Listing)
   deployer.deploy(ListingsRegistry);
   deployer.deploy(UserRegistry);
+  deployer.deploy(OriginIdentity);
 };
