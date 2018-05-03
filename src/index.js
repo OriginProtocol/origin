@@ -2,6 +2,7 @@ import ContractService from "./contract-service"
 import IpfsService from "./ipfs-service"
 import { Attestations } from "./resources/attestations"
 import Users from "./resources/users"
+import fetch from "cross-fetch"
 
 var resources = {
   listings: require("./resources/listings"),
@@ -26,7 +27,8 @@ class Origin {
     })
     this.attestations = new Attestations({
       serverUrl: attestationServerUrl,
-      contractService: this.contractService
+      contractService: this.contractService,
+      fetch
     })
 
     // Instantiate each resource and give it access to contracts and IPFS

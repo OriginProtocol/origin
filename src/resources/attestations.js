@@ -1,4 +1,3 @@
-import fetch from "cross-fetch"
 import RLP from "rlp"
 import web3Utils from "web3-utils"
 
@@ -26,43 +25,43 @@ let responseToUrl = (resp = {}) => {
   return resp['url']
 }
 
-let http = async (baseUrl, url, body, successFn, method) => {
-  let response = await fetch(
-    appendSlash(baseUrl) + url,
-    {
-      method,
-      body: body ? JSON.stringify(body) : undefined,
-      headers: { "content-type": "application/json" }
-    }
-  )
-  let json = await response.json()
-  if (response.ok) {
-    return successFn ? successFn(json) : json
-  }
-  return Promise.reject(JSON.stringify(json))
-}
-
 class Attestations {
-  constructor({ serverUrl, issuer, contractService }) {
+  constructor({ serverUrl, contractService, fetch }) {
     this.serverUrl = serverUrl
     this.contractService = contractService
+    this.fetch = fetch
 
     this.responseToAttestation = (resp = {}) => {
       return new AttestationObject({
         claimType: resp['claim-type'],
         data: web3Utils.sha3(resp['data']),
-        signature: resp['signature'],
-        issuer
+        signature: resp['signature']
       })
     }
   }
 
+  async http(baseUrl, url, body, successFn, method) {
+    let response = await this.fetch(
+      appendSlash(baseUrl) + url,
+      {
+        method,
+        body: body ? JSON.stringify(body) : undefined,
+        headers: { "content-type": "application/json" }
+      }
+    )
+    let json = await response.json()
+    if (response.ok) {
+      return successFn ? successFn(json) : json
+    }
+    return Promise.reject(JSON.stringify(json))
+  }
+
   async post(url, body, successFn) {
-    return await http(this.serverUrl, url, body, successFn, 'POST')
+    return await this.http(this.serverUrl, url, body, successFn, 'POST')
   }
 
   async get(url, successFn) {
-    return await http(this.serverUrl, url, undefined, successFn, 'GET')
+    return await this.http(this.serverUrl, url, undefined, successFn, 'GET')
   }
 
   async predictIdentityAddress(wallet) {
@@ -77,8 +76,8 @@ class Attestations {
   }
 
   async getIdentityAddress(wallet) {
-    let userRegistry = await this.contractService.userRegistryContract.deployed()
-    let identityAddress = await userRegistry.users(wallet)
+    let userRegistry = await this.contractService.deployed(this.contractService.userRegistryContract)
+    let identityAddress = await userRegistry.methods.users(wallet).call()
     let hasRegisteredIdentity = identityAddress !== "0x0000000000000000000000000000000000000000"
     if (hasRegisteredIdentity) {
       return web3Utils.toChecksumAddress(identityAddress)
