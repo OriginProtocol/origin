@@ -31,4 +31,11 @@ contract UserRegistry {
         users[tx.origin] = msg.sender;
         emit NewUser(tx.origin, msg.sender);
     }
+
+    /// @dev clearUser(): Remove user from the registry
+    function clearUser()
+      public
+    {
+        users[msg.sender] = 0;
+    }
 }
