@@ -42,6 +42,8 @@ class Attestations {
   }
 
   async getIdentityAddress(wallet) {
+    let currentAccount = await this.contractService.currentAccount()
+    wallet = wallet || currentAccount
     let userRegistry = await this.contractService.deployed(this.contractService.userRegistryContract)
     let identityAddress = await userRegistry.methods.users(wallet).call()
     let hasRegisteredIdentity = identityAddress !== "0x0000000000000000000000000000000000000000"
