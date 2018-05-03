@@ -9,7 +9,7 @@ const appendSlash = (url) => {
 class AttestationObject {
   constructor({ claimType, data, signature }) {
     this.claimType = claimType
-    this.data = web3Utils.sha3(data)
+    this.data = data
     this.signature = signature
   }
 }
@@ -42,7 +42,7 @@ class Attestations {
     this.responseToAttestation = (resp = {}) => {
       return new AttestationObject({
         claimType: resp['claim-type'],
-        data: resp['data'],
+        data: web3Utils.sha3(resp['data']),
         signature: resp['signature'],
         issuer
       })
