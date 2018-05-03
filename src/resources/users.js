@@ -15,6 +15,7 @@ var Ajv = require('ajv')
 var ajv = new Ajv()
 
 const selfAttestationClaimType = 13 // TODO: use the correct number here
+const zeroAddress = "0x0000000000000000000000000000000000000000"
 
 let validateUser = (data) => {
   let validate = ajv.compile(userSchema)
@@ -36,16 +37,27 @@ class Users extends ResourceBase {
       let selfAttestation = await this.profileAttestation(profile)
       attestations.push(selfAttestation)
     }
-    this.addAttestations(attestations)
+    let newAttestations = await this.newAttestations(attestations)
+    this.addAttestations(newAttestations)
   }
 
   async get(address) {
+    let identityAddress = await this.identityAddress(address)
+    if (identityAddress) {
+      return await this.getClaims(identityAddress)
+    }
+    return []
+  }
+
+  async identityAddress(address) {
     let account = await this.contractService.currentAccount()
     let userRegistry = await this.contractService.userRegistryContract.deployed()
     address = address || account
-    let identityAddress = await userRegistry.users(address)
-    let claims = await this.getClaims(identityAddress)
-    return claims
+    let result = await userRegistry.users(address)
+    if (String(result) === zeroAddress) {
+    } else {
+      return result
+    }
   }
 
   async profileAttestation(profile) {
@@ -63,13 +75,31 @@ class Users extends ResourceBase {
     })
   }
 
+  async newAttestations(attestations) {
+    let identityAddress = await this.identityAddress()
+    let existingAttestations = []
+    if (identityAddress) {
+      let claims = await this.getClaims(identityAddress)
+      existingAttestations = claims.attestations
+    }
+    return attestations.filter((attestation) => {
+      let matchingAttestation = existingAttestations.filter((existingAttestation) => {
+        let claimTypeMatches = attestation.claimType === existingAttestation.claimType
+        let dataMatches = attestation.data === existingAttestation.data
+        let sigMatches = attestation.signature === existingAttestation.signature
+        return claimTypeMatches || dataMatches || sigMatches
+      })
+      let isNew = matchingAttestation.length === 0
+      return isNew
+    })
+  }
+
   async addAttestations(attestations) {
     let account = await this.contractService.currentAccount()
     let userRegistry = await this.contractService.userRegistryContract.deployed()
+    let identityAddress = await this.identityAddress()
     if (attestations.length) {
       // format params for solidity methods to batch add claims
-      let identityAddress = await userRegistry.users(account)
-      let hasRegisteredIdentity = identityAddress !== "0x0000000000000000000000000000000000000000"
       let claimTypes = attestations.map(({ claimType }) => claimType)
       let issuers = attestations.map(({ issuer }) => issuer)
       let sigs = "0x" + attestations.map(({ signature }) => {
@@ -80,7 +110,7 @@ class Users extends ResourceBase {
       }).join("")
       let dataOffsets = attestations.map(() => 32) // all data hashes will be 32 bytes
 
-      if (hasRegisteredIdentity) {
+      if (identityAddress) {
         // batch add claims to existing identity
         let claimHolder = await this.contractService.claimHolderRegisteredContract.at(identityAddress)
         return await claimHolder.addClaims(
@@ -102,7 +132,7 @@ class Users extends ResourceBase {
           { from: account, gas: 4000000 }
         )
       }
-    } else if (!hasRegisteredIdentity) {
+    } else if (!identityAddress) {
       // create identity
       return await this.contractService.claimHolderRegisteredContract.new(
         userRegistry.address,
