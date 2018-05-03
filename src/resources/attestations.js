@@ -40,41 +40,6 @@ class Attestations {
     }
   }
 
-  async http(baseUrl, url, body, successFn, method) {
-    let response = await this.fetch(
-      appendSlash(baseUrl) + url,
-      {
-        method,
-        body: body ? JSON.stringify(body) : undefined,
-        headers: { "content-type": "application/json" }
-      }
-    )
-    let json = await response.json()
-    if (response.ok) {
-      return successFn ? successFn(json) : json
-    }
-    return Promise.reject(JSON.stringify(json))
-  }
-
-  async post(url, body, successFn) {
-    return await this.http(this.serverUrl, url, body, successFn, 'POST')
-  }
-
-  async get(url, successFn) {
-    return await this.http(this.serverUrl, url, undefined, successFn, 'GET')
-  }
-
-  async predictIdentityAddress(wallet) {
-    let web3 = this.contractService.web3
-    let nonce = await new Promise((resolve, reject) => {
-      web3.eth.getTransactionCount(wallet, (err, count) => {
-        resolve(count)
-      })
-    })
-    let address = "0x" + web3Utils.sha3(RLP.encode([wallet, nonce])).substring(26, 66)
-    return web3Utils.toChecksumAddress(address)
-  }
-
   async getIdentityAddress(wallet) {
     let userRegistry = await this.contractService.deployed(this.contractService.userRegistryContract)
     let identityAddress = await userRegistry.methods.users(wallet).call()
@@ -157,6 +122,41 @@ class Attestations {
       },
       this.responseToAttestation
     )
+  }
+  
+  async http(baseUrl, url, body, successFn, method) {
+    let response = await this.fetch(
+      appendSlash(baseUrl) + url,
+      {
+        method,
+        body: body ? JSON.stringify(body) : undefined,
+        headers: { "content-type": "application/json" }
+      }
+    )
+    let json = await response.json()
+    if (response.ok) {
+      return successFn ? successFn(json) : json
+    }
+    return Promise.reject(JSON.stringify(json))
+  }
+
+  async post(url, body, successFn) {
+    return await this.http(this.serverUrl, url, body, successFn, 'POST')
+  }
+
+  async get(url, successFn) {
+    return await this.http(this.serverUrl, url, undefined, successFn, 'GET')
+  }
+
+  async predictIdentityAddress(wallet) {
+    let web3 = this.contractService.web3
+    let nonce = await new Promise((resolve, reject) => {
+      web3.eth.getTransactionCount(wallet, (err, count) => {
+        resolve(count)
+      })
+    })
+    let address = "0x" + web3Utils.sha3(RLP.encode([wallet, nonce])).substring(26, 66)
+    return web3Utils.toChecksumAddress(address)
   }
 }
 
