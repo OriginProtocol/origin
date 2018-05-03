@@ -119,6 +119,14 @@ class ContractService {
     )
   }
 
+  async deploy(contract, args, options) {
+    let deployed = await this.deployed(contract)
+    return await deployed.deploy({
+      data: contract.bytecode,
+      arguments: args
+    }).send(options)
+  }
+
   async getAllListingIds() {
     const range = (start, count) =>
       Array.apply(0, Array(count)).map((element, index) => index + start)
