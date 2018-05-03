@@ -12,6 +12,7 @@ includes:
   - platform_components
   - architecture
   - getting_started
+  - local_development
   - authentication_identity
   - resources/listings
   - resources/purchases
