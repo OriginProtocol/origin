@@ -50,7 +50,10 @@ def event_listner():
         event_tracker = db_models.EventTracker(last_read=0)
         db.session.add(event_tracker)
         db.session.commit()
-    ContractHelper().fetch_events(['NewListing(uint256)', 'ListingPurchased(address)'],
+    ContractHelper().fetch_events(['NewListing(uint256)',
+                                   'ListingPurchased(address)',
+                                   'ListingChange()',
+                                   'PurchaseChange(uint8)'],
                                   block_from=event_tracker.last_read,
                                   block_to='latest',
                                   f=event_reducer)
@@ -58,5 +61,4 @@ def event_listner():
 
 @celery.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
-    # run every 2 minutes for now
-    sender.add_periodic_task(20.0, event_listner)
+    sender.add_periodic_task(10.0, event_listner)

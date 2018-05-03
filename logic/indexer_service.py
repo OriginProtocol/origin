@@ -12,7 +12,7 @@ def get_event_action(event):
         Web3.sha3(text='NewListing(uint256)').hex(): new_listing,
         Web3.sha3(text='ListingPurchased(address)').hex(): listing_purchased,
         Web3.sha3(text='ListingChange()').hex(): listing_change,
-        Web3.sha3(text='PurchaseChange(Stages)').hex(): purchase_change,
+        Web3.sha3(text='PurchaseChange(uint8)').hex(): purchase_change,
     }.get(event)
 
 
