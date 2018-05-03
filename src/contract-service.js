@@ -110,12 +110,12 @@ class ContractService {
     }
   }
 
-  async deployed(contract) {
+  async deployed(contract, addrs) {
     const net = await this.web3.eth.net.getId()
-    const addrs = contract.networks[net]
+    addrs = addrs || contract.networks[net].address || null
     return new this.web3.eth.Contract(
       contract.abi,
-      addrs ? addrs.address : null
+      addrs
     )
   }
 
