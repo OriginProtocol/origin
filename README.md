@@ -128,6 +128,7 @@ And buyers to:
  - `ipfsApiPort`
  - `ipfsGatewayPort`
  - `ipfsGatewayProtocol`
+ - `attestationServerUrl`
 
  ## IPFS
 
