@@ -170,10 +170,8 @@ class Users extends ResourceBase {
       profile = await this.ipfsService.getFile(ipfsHash)
     }
     let validAttestations = await this.validAttestations(identityAddress, nonProfileClaims)
-    return {
-      profile,
-      attestations: validAttestations
-    }
+    let attestations = validAttestations.map(att => new AttestationObject(att))
+    return { profile, attestations }
   }
 
   async validAttestations(identityAddress, attestations) {
