@@ -13,7 +13,7 @@ from config import settings
 from database import db
 from database import db_models
 from flask import session
-from logic import service_utils
+from logic.service_utils import PhoneVerificationError, EmailVerificationError, FacebookVerificationError, TwitterVerificationError
 from sqlalchemy import func
 from util import time_, attestations
 from web3 import Web3, HTTPProvider
@@ -50,10 +50,7 @@ class VerificationService:
             # throw a rate limit error, so they can't just keep creating codes
             # and guessing them
             # rapidly.
-            raise service_utils.req_error(
-                code='RATE_LIMIT_EXCEEDED',
-                message=('Please wait briefly before requesting a new '
-                         'verification code.'))
+            raise PhoneVerificationError('Please wait briefly before requesting a new verification code.')
         db_code.phone = phone
         db_code.code = random_numeric_token()
         db_code.expires_at = time_.utcnow(
@@ -67,20 +64,11 @@ class VerificationService:
             .filter(VC.phone == phone) \
             .first()
         if db_code is None:
-            raise service_utils.req_error(
-                code='NOT_FOUND',
-                path='phone',
-                message='The given phone number was not found.')
+            raise PhoneVerificationError('The given phone number was not found.')
         if code != db_code.code:
-            raise service_utils.req_error(
-                code='INVALID',
-                path='code',
-                message='The code you provided is invalid.')
+            raise PhoneVerificationError('The code you provided is invalid.')
         if time_.utcnow() > db_code.expires_at:
-            raise service_utils.req_error(
-                code='EXPIRED',
-                path='code',
-                message='The code you provided has expired.')
+            raise PhoneVerificationError('The code you provided has expired.')
         # TODO: determine what the text should be
         data = 'phone verified'
         # TODO: determine claim type integer code for phone verification
@@ -104,10 +92,7 @@ class VerificationService:
             # If the client has requested a verification code already within
             # the last 10 seconds, throw a rate limit error, so they can't just
             # keep creating codes and guessing them rapidly.
-            raise service_utils.req_error(
-                code='RATE_LIMIT_EXCEEDED', message=(
-                    'Please wait briefly before requesting a '
-                    'new verification code.'))
+            raise EmailVericationError('Please wait briefly before requesting a new verification code.')
         db_code.email = email
         db_code.code = random_numeric_token()
         db_code.expires_at = time_.utcnow() + datetime.timedelta(
@@ -121,20 +106,11 @@ class VerificationService:
             .filter(func.lower(VC.email) == func.lower(email)) \
             .first()
         if db_code is None:
-            raise service_utils.req_error(
-                code='NOT_FOUND',
-                path='email',
-                message='The given email was not found.')
+            raise EmailVerificationError('The given email was not found.')
         if code != db_code.code:
-            raise service_utils.req_error(
-                code='INVALID',
-                path='code',
-                message='The code you provided is invalid.')
+            raise EmailVerificationError('The code you provided is invalid.')
         if time_.utcnow() > db_code.expires_at:
-            raise service_utils.req_error(
-                code='EXPIRED',
-                path='code',
-                message='The code you provided has expired.')
+            raise EmailVerificationError('The code you provided has expired.')
 
         # TODO: determine what the text should be
         data = 'email verified'
@@ -169,10 +145,7 @@ class VerificationService:
         response = json.loads(conn.getresponse().read())
         has_access_token = ('access_token' in response)
         if not has_access_token or 'error' in response:
-            raise service_utils.req_error(
-                code='INVALID',
-                path='code',
-                message='The code you provided is invalid.')
+            raise FacebookVerificationError('The code you provided is invalid.')
         # TODO: determine what the text should be
         data = 'facebook verified'
         # TODO: determine claim type integer code for phone verification
@@ -189,7 +162,7 @@ class VerificationService:
         client = oauth.Client(oauth_consumer)
         resp, content = client.request(twitter_request_token_url, 'GET')
         if resp['status'] != '200':
-            raise Exception('Invalid response from Twitter.')
+            raise TwitterVerificationError('Invalid response from Twitter.')
         as_bytes = dict(cgi.parse_qsl(content))
         token_b = as_bytes[b'oauth_token']
         token_secret_b = as_bytes[b'oauth_token_secret']
@@ -205,9 +178,7 @@ class VerificationService:
     def verify_twitter(oauth_verifier, eth_address):
         # Verify authenticity of user
         if 'request_token' not in session:
-            raise service_utils.req_error(
-                code='INVALID',
-                message='Session not found.')
+            raise TwitterVerificationError('Session not found.')
         token = oauth.Token(session['request_token']['oauth_token'],
                             session['request_token']['oauth_token_secret'])
         token.set_verifier(oauth_verifier)
@@ -215,10 +186,7 @@ class VerificationService:
         resp, content = client.request(twitter_access_token_url, 'GET')
         access_token = dict(cgi.parse_qsl(content))
         if resp['status'] != '200' or b'oauth_token' not in access_token:
-            raise service_utils.req_error(
-                code='INVALID',
-                path='oauth_verifier',
-                message='The verifier you provided is invalid.')
+            raise TwitterVerificationError('The verifier you provided is invalid.')
 
         # Create attestation
         # TODO: determine what the text should be
