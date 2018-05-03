@@ -1,0 +1,107 @@
+# User
+
+A **User** is an object used to represent a particular user in Origin Protocol.
+Users are implemented as [ERC725 identities](https://medium.com/originprotocol/managing-identity-with-a-ui-for-erc-725-5c7422b38c09). Identities in Origin will be portable across platforms that support ERC725.
+
+A user object consists of 2 properties:
+
+- `profile`: Profile information a user chooses to reveal publicly
+- `attestations`: A list of 3rd party attestations that the user has added to their identity (see [Attestation documentation](#attestation) for details)
+
+## set
+
+> To create/update a user
+
+```javascript
+// Get a phone attestation object
+await origin.attestations.phoneGenerateCode({
+  phone: "555-555-5555"
+})
+let phoneAttestation = await origin.attestations.phoneVerify({
+  wallet: myWalletAddress,
+  phone: "555-555-5555",
+  code: "123456"
+})
+
+// Get a Facebook attestation object
+await origin.attestations.facebookAuthUrl({
+  redirectUrl: "http://redirect.url"
+})
+// (do some stuff to guide user through Facebook auth flow here)
+let facebookAttestation = await origin.attestations.facebookVerify({
+  wallet: myWalletAddress,
+  redirectUrl: "http://redirect.url"
+  code: "12345"
+})
+
+let myNewUser = {
+  profile: { claims: { name: "Wonder Woman" } },
+  attestations: [ phoneAttestation, facebookAttestation ]
+}
+let createdUser = await origin.users.set(myNewUser)
+
+// User has been created!
+
+// Get an email attestation object
+await origin.attestations.emailGenerateCode({
+  email: "me@my.domain"
+})
+let emailAttestation = await origin.attestations.emailVerify({
+  wallet: myWalletAddress,
+  email: "me@my.domain",
+  code: "123456"
+})
+
+createdUser.attestations.push(emailAttestation)
+let updatedUser = await origin.users.set(createdUser)
+
+// User has been updated!
+// final `updatedUser`:
+{
+  {
+    profile: { claims: { name: "Wonder Woman" } },
+    attestations: [
+      {
+        signature: "0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c",
+        data: "0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01",
+        claimType: 10,
+        service: "phone"
+      },
+      {
+        signature: "0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c",
+        data: "0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01",
+        claimType: 3,
+        service: "facebook"
+      },
+      {
+        signature: "0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c",
+        data: "0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01",
+        claimType: 4,
+        service: "twitter"
+      }
+    ]
+  }
+}
+```
+
+If the user does not already exist, it will be created. If it exists, it will be updated.
+
+**Note**: this method should be used as if it will completely override the existing data.
+Updates should be made by taking the existing user object, making modifications to it, and then passing the entire updated object into the `set` method.
+
+## get
+
+> To retrieve a user
+
+```javascript
+let myUser = await origin.users.get()
+let anotherUser = await origin.users.get(otherUserAddress)
+// Returns (user object)
+{
+  profile: {}
+  attestations: []
+}
+```
+
+With no parameters passed in, this will return the current user.
+If a wallet address is passed in, this will return the user associated with that wallet.
