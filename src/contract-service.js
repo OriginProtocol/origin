@@ -114,18 +114,17 @@ class ContractService {
     const net = await this.web3.eth.net.getId()
     let storedAddress = contract.networks[net] && contract.networks[net].address
     addrs = addrs || storedAddress || null
-    return new this.web3.eth.Contract(
-      contract.abi,
-      addrs
-    )
+    return new this.web3.eth.Contract(contract.abi, addrs)
   }
 
   async deploy(contract, args, options) {
     let deployed = await this.deployed(contract)
-    return await deployed.deploy({
-      data: contract.bytecode,
-      arguments: args
-    }).send(options)
+    return await deployed
+      .deploy({
+        data: contract.bytecode,
+        arguments: args
+      })
+      .send(options)
   }
 
   async getAllListingIds() {
