@@ -11,18 +11,22 @@ from config import settings
 
 class ContractHelper:
 
-    def __init__(self):
-        if settings.RPC_PROTOCOL == 'https':
+    def __init__(self, web3=None):
+        if web3:
+            self.web3 = web3
+        elif settings.RPC_PROTOCOL == 'https':
             self.web3 = Web3(HTTPProvider(settings.RPC_SERVER))
+
+            # add geth poa middleware to handle overflowing extraData field
+            # https://ethereum.stackexchange.com/a/44131
+            self.web3.middleware_stack.inject(geth_poa_middleware, layer=0)
         elif settings.RPC_PROTOCOL == 'wss':
             self.web3 = Web3(WebsocketProvider(settings.RPC_SERVER))
-
-        # add geth poa middleware to handle overflowing extraData field
-        # https://ethereum.stackexchange.com/a/44131
-        self.web3.middleware_stack.inject(geth_poa_middleware, layer=0)
+            self.web3.middleware_stack.inject(geth_poa_middleware, layer=0)
 
     def fetch_events(self, event_names, f,
-                     block_from=0, block_to='latest'):
+                     block_from=0, block_to='latest',
+                     web3=None):
         event_name_hashes = []
         for name in event_names:
             event_name_hashes.append(self.web3.sha3(text=name).hex())
@@ -36,10 +40,10 @@ class ContractHelper:
 
     def get_instance(self, contract_name, address):
         abi = self.get_contract_abi(contract_name)
-        contract = self.web3.eth.contract(
-            abi=abi,
-            address=Web3.toChecksumAddress(address),
-            ContractFactoryClass=Contract)
+        address = Web3.toChecksumAddress(address)
+        contract = self.web3.eth.contract(abi=abi,
+                                          address=address,
+                                          ContractFactoryClass=Contract)
         return contract
 
     @classmethod
@@ -69,8 +73,9 @@ class ContractHelper:
     def numeric_eth(str_eth_address):
         return int(str_eth_address, 16)
 
+
 def get_contract_internal_name(contract):
     # create a 40 byte placeholder used in linked contracts
     contract_slice = contract[:36]
-    return "__{contract_slice}{suffix}".format(contract_slice=contract_slice,
-                                               suffix=(38-len(contract_slice)) * '_')
+    return "__{name}{suffix}".format(name=contract_slice,
+                                     suffix=(38-len(contract_slice)) * '_')

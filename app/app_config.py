@@ -42,6 +42,7 @@ def init_api(app):
                        primary_key='contract_address',
                        results_per_page=10,)
 
+
 # App initialization only appropriate for dev/production but not tests.
 def init_prod_app(app):
     app.config.from_object(__name__ + '.AppConfig')

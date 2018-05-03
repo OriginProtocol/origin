@@ -12,7 +12,7 @@ def get_event_action(event):
         Web3.sha3(text='NewListing(uint256)').hex(): new_listing,
         Web3.sha3(text='ListingPurchased(address)').hex(): listing_purchased,
         Web3.sha3(text='ListingChange()').hex(): listing_change,
-        Web3.sha3(text='PurchaseChange(uint8)').hex(): purchase_change,
+        Web3.sha3(text='PurchaseChange(Stages)').hex(): purchase_change,
     }.get(event)
 
 
@@ -54,8 +54,8 @@ def purchase_change(payload):
     create_or_update_purchase(Web3.toChecksumAddress(payload['address']))
 
 
-def create_or_update_listing(address):
-    contract_helper = ContractHelper()
+def create_or_update_listing(address, web3=None):
+    contract_helper = ContractHelper(web3)
     contract = contract_helper.get_instance('Listing',
                                             address)
     listing_data = {
@@ -67,22 +67,25 @@ def create_or_update_listing(address):
 
     }
 
-    listing_obj = Listing.query.filter_by(contract_address=listing_data['contract_address']).first()
+    listing_obj = Listing.query\
+        .filter_by(contract_address=listing_data['contract_address']).first()
 
     exclude_ipfs_fields = ['pictures']
 
     if not listing_obj:
-        listing_data['ipfs_data'] = IPFSHelper().file_from_hash(listing_data['ipfs_hash'],
-                                                                root_attr='data',
-                                                                exclude_fields=exclude_ipfs_fields)
+        listing_data['ipfs_data'] = \
+            IPFSHelper().file_from_hash(listing_data['ipfs_hash'],
+                                        root_attr='data',
+                                        exclude_fields=exclude_ipfs_fields)
         listing_obj = Listing(**listing_data)
         db.session.add(listing_obj)
     else:
         if listing_obj.ipfs_hash != listing_data['ipfs_hash']:
             listing_obj.ipfs_hash = listing_data['ipfs_hash']
-            listing_data['ipfs_data'] = IPFSHelper().file_from_hash(listing_data['ipfs_hash'],
-                                                                    root_attr='data',
-                                                                    exclude_fields=exclude_ipfs_fields)
+            listing_data['ipfs_data'] = \
+                IPFSHelper().file_from_hash(listing_data['ipfs_hash'],
+                                            root_attr='data',
+                                            exclude_fields=exclude_ipfs_fields)
             listing_obj.ipfs_data = listing_data['ipfs_data']
 
         listing_obj.price = listing_data['price']
@@ -90,9 +93,9 @@ def create_or_update_listing(address):
     db.session.commit()
 
 
-def create_or_update_purchase(address):
-    contract = ContractHelper().get_instance('Purchase',
-                                             address)
+def create_or_update_purchase(address, web3=None):
+    contract = ContractHelper(web3).get_instance('Purchase',
+                                                 address)
 
     contract_data = contract.functions.data().call()
     purchase_data = {
@@ -104,7 +107,8 @@ def create_or_update_purchase(address):
         "buyer_timeout": unix_to_datetime(contract_data[4])
     }
 
-    purchase_obj = Purchase.query.filter_by(contract_address=purchase_data['contract_address']).first()
+    purchase_obj = Purchase.query\
+        .filter_by(contract_address=purchase_data['contract_address']).first()
 
     if not purchase_obj:
         purchase_obj = Purchase(**purchase_data)

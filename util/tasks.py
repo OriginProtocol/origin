@@ -44,19 +44,20 @@ celery = make_celery(flask_app)
 
 
 @celery.task
-def event_listner():
+def event_listner(web3=None):
     event_tracker = db_models.EventTracker.query.first()
     if not event_tracker:
         event_tracker = db_models.EventTracker(last_read=0)
         db.session.add(event_tracker)
         db.session.commit()
-    ContractHelper().fetch_events(['NewListing(uint256)',
-                                   'ListingPurchased(address)',
-                                   'ListingChange()',
-                                   'PurchaseChange(uint8)'],
-                                  block_from=event_tracker.last_read,
-                                  block_to='latest',
-                                  f=event_reducer)
+    ContractHelper(web3).fetch_events(['NewListing(uint256)',
+                                       'ListingPurchased(address)',
+                                       'ListingChange()',
+                                       'PurchaseChange(uint8)'],
+                                      block_from=event_tracker.last_read,
+                                      block_to='latest',
+                                      f=event_reducer,
+                                      web3=web3)
 
 
 @celery.on_after_configure.connect
