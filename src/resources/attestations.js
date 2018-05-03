@@ -14,6 +14,7 @@ const appendSlash = (url) => {
 
 class AttestationObject {
   constructor({ claimType, data, signature }) {
+    claimType = Number(claimType)
     this.claimType = claimType
     this.service = claimTypeMapping[claimType]
     this.data = data
