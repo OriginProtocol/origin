@@ -38,7 +38,8 @@ class Users extends ResourceBase {
       attestations.push(selfAttestation)
     }
     let newAttestations = await this.newAttestations(attestations)
-    this.addAttestations(newAttestations)
+    await this.addAttestations(newAttestations)
+    return await this.get()
   }
 
   async get(address) {
