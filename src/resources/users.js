@@ -87,7 +87,7 @@ class Users extends ResourceBase {
         let claimTypeMatches = attestation.claimType === existingAttestation.claimType
         let dataMatches = attestation.data === existingAttestation.data
         let sigMatches = attestation.signature === existingAttestation.signature
-        return claimTypeMatches || dataMatches || sigMatches
+        return claimTypeMatches && dataMatches && sigMatches
       })
       let isNew = matchingAttestation.length === 0
       return isNew
