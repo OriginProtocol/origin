@@ -18,7 +18,8 @@ export function getListingIds() {
 
     // Get listings to hide
     const hideListPromise = new Promise((resolve, reject) => {
-      window.web3.version.getNetwork((err, netId) => {
+      window.web3.eth.net.getId((err, netId) => {
+        if (err) { return reject(err) }
         resolve(netId)
       })
     })

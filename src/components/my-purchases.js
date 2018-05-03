@@ -67,8 +67,8 @@ class MyPurchases extends Component {
   async loadPurchase(addr) {
     try {
       const purchase = await origin.purchases.get(addr)
-
-      if (purchase.buyerAddress === window.web3.eth.accounts[0]) {
+      var accounts = await web3.eth.getAccounts()
+      if (purchase.buyerAddress === accounts[0]) {
         const purchases = [...this.state.purchases, purchase]
 
         this.setState({ purchases })
@@ -76,7 +76,7 @@ class MyPurchases extends Component {
 
       return purchase
     } catch(error) {
-      console.error(`Error fetching purchase: ${addr}`)
+      console.error(`Error fetching purchase: ${addr}`, error)
     }
   }
 
