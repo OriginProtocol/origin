@@ -165,7 +165,7 @@ class Users extends ResourceBase {
     let nonProfileClaims = claims.filter(({ claimType }) => claimType !== selfAttestationClaimType )
     let profile = {}
     if (profileClaims.length) {
-      let bytes32 = profileClaims[0].data
+      let bytes32 = profileClaims[profileClaims.length - 1].data
       let ipfsHash = this.contractService.getIpfsHashFromBytes32(bytes32)
       profile = await this.ipfsService.getFile(ipfsHash)
     }
