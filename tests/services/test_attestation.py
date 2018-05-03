@@ -4,7 +4,8 @@ import pytest
 
 from tests.helpers.eth_utils import sample_eth_address, str_eth
 from database import db_models
-from logic.attestation_service import VerificationService
+from logic.attestation_service import (VerificationService,
+                                       VerificationServiceResponse)
 from logic.service_utils import (PhoneVerificationError,
                                  EmailVerificationError,
                                  FacebookVerificationError,
@@ -16,7 +17,8 @@ VC = db_models.VerificationCode
 
 def test_generate_phone_verification_code_new_phone(mock_send_sms):
     phone = '5551231212'
-    VerificationService.generate_phone_verification_code(phone)
+    resp = VerificationService.generate_phone_verification_code(phone)
+    assert isinstance(resp, VerificationServiceResponse)
 
     db_code = VC.query.filter(VC.phone == phone).first()
     assert db_code is not None
@@ -37,7 +39,8 @@ def test_generate_phone_verification_code_phone_already_in_db(
     session.commit()
 
     phone = vc_obj.phone
-    VerificationService.generate_phone_verification_code(phone)
+    resp = VerificationService.generate_phone_verification_code(phone)
+    assert isinstance(resp, VerificationServiceResponse)
 
     assert VC.query.filter(VC.phone == phone).count() == 1
 
@@ -63,13 +66,15 @@ def test_verify_phone_valid_code(session):
         'code': vc_obj.code
     }
     resp = VerificationService.verify_phone(**args)
+    assert isinstance(resp, VerificationServiceResponse)
+    resp_data = resp.data
 
-    assert resp['signature'] == (
+    assert resp_data['signature'] == (
         '0x1aa9ad132f99cee742206f66663cd92cb769de97ffad'
         'fff61d37306b23866f385882a122633df05fe478e3e3'
         '908196892a18c1666a31f19be7bcb83d8b321b661c')
-    assert resp['claim_type'] == 10
-    assert resp['data'] == 'phone verified'
+    assert resp_data['claim_type'] == 10
+    assert resp_data['data'] == 'phone verified'
 
 
 def test_verify_phone_expired_code(session):
@@ -137,7 +142,8 @@ def test_generate_phone_verification_rate_limit_exceeded(session):
 @mock.patch('python_http_client.client.Client')
 def test_generate_email_verification_code_new_phone(MockHttpClient):
     email = 'hello@world.foo'
-    VerificationService.generate_email_verification_code(email)
+    resp = VerificationService.generate_email_verification_code(email)
+    assert isinstance(resp, VerificationServiceResponse)
 
     db_code = VC.query.filter(VC.email == email).first()
     assert db_code is not None
@@ -159,7 +165,8 @@ def test_generate_email_verification_code_email_already_in_db(
     session.commit()
 
     email = vc_obj.email
-    VerificationService.generate_email_verification_code(email)
+    resp = VerificationService.generate_email_verification_code(email)
+    assert isinstance(resp, VerificationServiceResponse)
 
     assert VC.query.filter(VC.email == email).count() == 1
     db_code = VC.query.filter(VC.email == email).first()
@@ -186,12 +193,13 @@ def test_verify_email_valid_code(mock_now, session):
     }
     mock_now.return_value = vc_obj.expires_at - datetime.timedelta(minutes=1)
     resp = VerificationService.verify_email(**req)
-    assert resp['signature'] == (
+    resp_data = resp.data
+    assert resp_data['signature'] == (
         '0x02fb9b226d84e0124ad16915324359432ecc4091273c8'
         'f3e275c4545c3d79b1e0afc0560eab381649c9bc19407f'
         '9e344b9a20370e8b32564c5ce6b6ebdaee4061c')
-    assert resp['claim_type'] == 11
-    assert resp['data'] == 'email verified'
+    assert resp_data['claim_type'] == 11
+    assert resp_data['data'] == 'email verified'
 
 
 @mock.patch('util.time_.utcnow')
@@ -251,7 +259,9 @@ def test_verify_email_email_not_found(mock_now, session):
 def test_facebook_auth_url():
     redirect_url = 'http://hello.world'
     resp = VerificationService.facebook_auth_url(redirect_url)
-    assert resp['url'] == (
+    assert isinstance(resp, VerificationServiceResponse)
+    resp_data = resp.data
+    assert resp_data['url'] == (
         'https://www.facebook.com/v2.12/dialog/oauth?client_id'
         '=facebook-client-id&redirect_uri=http://hello.world/')
 
@@ -269,17 +279,19 @@ def test_verify_facebook_valid_code(MockHttpConnection):
         'code': 'abcde12345'
     }
     resp = VerificationService.verify_facebook(**args)
+    assert isinstance(resp, VerificationServiceResponse)
+    resp_data = resp.data
     mock_http_conn.request.assert_called_once_with(
         'GET',
         '/v2.12/oauth/access_token?client_id=facebook-client-id&' +
         'client_secret=facebook-client-secret&' +
         'redirect_uri=http://hello.world/&code=abcde12345')
-    assert resp['signature'] == (
+    assert resp_data['signature'] == (
         '0x77e08f08e7ba15535cf60617660865e3b8e4a2d98aff'
         'b3f6b2ffe853d005033e000da2e51a3bd401f388ba57e7b'
         '9f6c5af9415ef341a3145d314d7438a526b831b')
-    assert resp['claim_type'] == 3
-    assert resp['data'] == 'facebook verified'
+    assert resp_data['claim_type'] == 3
+    assert resp_data['data'] == 'facebook verified'
 
 
 @mock.patch('http.client.HTTPSConnection')
@@ -313,10 +325,12 @@ def test_twitter_auth_url(mock_session, MockOauthClient):
         'status': '200'}, b'oauth_token=peaches&oauth_token_secret=pears'
     MockOauthClient.return_value = mock_oauth_client
     resp = VerificationService.twitter_auth_url()
+    assert isinstance(resp, VerificationServiceResponse)
+    resp_data = resp.data
     mock_oauth_client.request.assert_called_once_with(
         'https://api.twitter.com/oauth/request_token', 'GET')
-    assert resp['url'] == ('https://api.twitter.com/oauth/authenticate?'
-                           'oauth_token=peaches')
+    assert resp_data['url'] == ('https://api.twitter.com/oauth/authenticate?'
+                                'oauth_token=peaches')
 
 
 @mock.patch('oauth2.Client')
@@ -333,14 +347,16 @@ def test_verify_twitter_valid_code(mock_session, MockOauthClient):
         'oauth_verifier': 'blueberries'
     }
     resp = VerificationService.verify_twitter(**args)
+    assert isinstance(resp, VerificationServiceResponse)
+    resp_data = resp.data
     mock_oauth_client.request.assert_called_once_with(
         'https://api.twitter.com/oauth/access_token', 'GET')
-    assert resp['signature'] == (
+    assert resp_data['signature'] == (
         '0xeae23a894a3b41ee4b824deea5c121174a7d9a951a6e'
         'ef6d958d0c68648d65ef11a0eb99d653932927d5565a517'
         '91df58e5c82dd7777c4e796c3a7bc1104d95c1c')
-    assert resp['claim_type'] == 4
-    assert resp['data'] == 'twitter verified'
+    assert resp_data['claim_type'] == 4
+    assert resp_data['data'] == 'twitter verified'
 
 
 @mock.patch('oauth2.Client')

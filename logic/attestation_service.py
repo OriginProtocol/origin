@@ -35,6 +35,9 @@ twitter_access_token_url = 'https://api.twitter.com/oauth/access_token'
 
 CODE_EXPIRATION_TIME_MINUTES = 30
 
+class VerificationServiceResponse():
+    def __init__(self, data = {}):
+        self.data = data
 
 class VerificationService:
     def generate_phone_verification_code(phone):
@@ -57,7 +60,7 @@ class VerificationService:
         ) + datetime.timedelta(minutes=CODE_EXPIRATION_TIME_MINUTES)
         db.session.commit()
         send_code_via_sms(phone, db_code.code)
-        return
+        return VerificationServiceResponse()
 
     def verify_phone(phone, code, eth_address):
         db_code = VC.query \
@@ -75,11 +78,11 @@ class VerificationService:
         claim_type = 10
         signature = attestations.generate_signature(
             web3, signing_key, eth_address, claim_type, data)
-        return {
+        return VerificationServiceResponse({
             'signature': signature,
             'claim_type': claim_type,
             'data': data
-        }
+        })
 
     def generate_email_verification_code(email):
         db_code = VC.query \
@@ -99,7 +102,7 @@ class VerificationService:
             minutes=CODE_EXPIRATION_TIME_MINUTES)
         db.session.commit()
         send_code_via_email(email, db_code.code)
-        return
+        return VerificationServiceResponse()
 
     def verify_email(email, code, eth_address):
         db_code = VC.query \
@@ -118,18 +121,18 @@ class VerificationService:
         claim_type = 11
         signature = attestations.generate_signature(
             web3, signing_key, eth_address, claim_type, data)
-        return {
+        return VerificationServiceResponse({
             'signature': signature,
             'claim_type': claim_type,
             'data': data
-        }
+        })
 
     def facebook_auth_url(redirect_url):
         client_id = settings.FACEBOOK_CLIENT_ID
         redirect_uri = append_trailing_slash(redirect_url)
         url = ('https://www.facebook.com/v2.12/dialog/oauth?client_id={}'
                '&redirect_uri={}').format(client_id, redirect_uri)
-        return {'url': url}
+        return VerificationServiceResponse({'url': url})
 
     def verify_facebook(redirect_url, code, eth_address):
         base_url = 'graph.facebook.com'
@@ -152,11 +155,11 @@ class VerificationService:
         claim_type = 3
         signature = attestations.generate_signature(
             web3, signing_key, eth_address, claim_type, data)
-        return {
+        return VerificationServiceResponse({
             'signature': signature,
             'claim_type': claim_type,
             'data': data
-        }
+        })
 
     def twitter_auth_url():
         client = oauth.Client(oauth_consumer)
@@ -173,7 +176,7 @@ class VerificationService:
         url = '{}?oauth_token={}'.format(
             twitter_authenticate_url,
             request_token['oauth_token'])
-        return {'url': url}
+        return VerificationServiceResponse({'url': url})
 
     def verify_twitter(oauth_verifier, eth_address):
         # Verify authenticity of user
@@ -195,11 +198,11 @@ class VerificationService:
         claim_type = 4
         signature = attestations.generate_signature(
             web3, signing_key, eth_address, claim_type, data)
-        return {
+        return VerificationServiceResponse({
             'signature': signature,
             'claim_type': claim_type,
             'data': data
-        }
+        })
 
 
 def numeric_eth(str_eth_address):

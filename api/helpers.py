@@ -33,8 +33,8 @@ def handle_request(data, handler, request_schema, response_schema):
         }
         return response_schema().dump(resp), 400
     try:
-        resp = handler(**req) or {}
-        return response_schema().dump(resp), 200
+        resp = handler(**req)
+        return response_schema().dump(resp.data), 200
     # Handle custom errors we have explicitly thrown from our services
     except service_utils.ServiceError as service_err:
         resp = {
