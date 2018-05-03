@@ -16,7 +16,7 @@ class Timelapse extends Component {
 
     const delay = this.props.delay || 4000
 
-    setTimeout(() => {
+    this.timeout = setTimeout(() => {
       this.ms = 1000
       this.interval = setInterval(this.updateTimelapse, this.ms)
     }, delay)
@@ -82,7 +82,7 @@ class Timelapse extends Component {
 
   render() {
     const { timelapse } = this.state;
-
+    clearTimeout(this.timeout)
     return this.props.reference ? timelapse : null
   }
 }

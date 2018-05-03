@@ -6,7 +6,7 @@ import Review from './review'
 import TransactionProgress from './transaction-progress'
 import data from '../data'
 
-import origin from '../services/origin' 
+import origin from '../services/origin'
 
 /* Transaction stages: no disputes and no seller review of buyer/transaction
  *  - step 0 was creating the listing
@@ -168,7 +168,7 @@ class PurchaseDetail extends Component {
     if (!purchase.address || !listing.address ){
       return null
     }
-    
+
     const perspective = window.web3.eth.accounts[0] === purchase.buyerAddress ? 'buyer' : 'seller'
     const seller = { name: 'Unnamed User', address: listing.sellerAddress }
     const buyer = { name: 'Unnamed User', address: purchase.buyerAddress }

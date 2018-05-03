@@ -82,7 +82,7 @@ class ListingsDetail extends Component {
       const transactionReceipt = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice)
       console.log('Purchase request sent.')
       this.setState({step: this.STEP.PROCESSING})
-      await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
+      await origin.contractService.waitTransactionFinished(transactionReceipt.transactionHash)
       this.setState({step: this.STEP.PURCHASED})
     } catch (error) {
       window.err = error
@@ -120,12 +120,15 @@ class ListingsDetail extends Component {
               <img src="/images/circular-check-button.svg" role="presentation"/>
             </div>
             Purchase was successful.<br />
-            <a href="#" onClick={()=>window.location.reload()}>
+            <a href="#" onClick={e => {
+              e.preventDefault()
+              window.location.reload()
+            }}>
               Reload page
             </a>
           </Modal>
         }
-        {(this.state.loading || !!this.state.pictures.length) &&
+        {(this.state.loading || (this.state.pictures && this.state.pictures.length)) &&
           <div className="carousel">
             {this.state.pictures.map(pictureUrl => (
               <div className="photo" key={pictureUrl}>
