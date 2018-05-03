@@ -25,94 +25,93 @@
       "type": "function"
     }
   ],
-  "bytecode": "0x6060604052341561000f57600080fd5b6106f08061001e6000396000f3006060604052600436106100405763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416631c6b9b038114610045575b600080fd5b61006c73ffffffffffffffffffffffffffffffffffffffff60043581169060243516610095565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b600082826100a16100e3565b73ffffffffffffffffffffffffffffffffffffffff92831681529116602082015260409081019051809103906000f08015156100dc57600080fd5b9392505050565b6040516105d1806100f483390190560060606040526000805460ff19169055341561001957600080fd5b6040516040806105d1833981016040528080519190602001805160018054600160a060020a031916600160a060020a039283161790556000805461010060a860020a031916610100959092169490940217835550504260025561054f90819061008290396000f30060606040526004361061007f5763ffffffff60e060020a6000350416631b9265b88114610084578063252455cc1461008e578063325a19f1146100a15780634fd6137c146100c65780637150d8ae146100d9578063c040e6b814610108578063d51653271461013f578063e5a4e1be14610152578063f3c76fa914610165575b600080fd5b61008c610178565b005b341561009957600080fd5b61008c61022b565b34156100ac57600080fd5b6100b4610383565b60405190815260200160405180910390f35b34156100d157600080fd5b61008c610389565b34156100e457600080fd5b6100ec610477565b604051600160a060020a03909116815260200160405180910390f35b341561011357600080fd5b61011b610486565b6040518082600581111561012b57fe5b60ff16815260200191505060405180910390f35b341561014a57600080fd5b6100ec6104be565b341561015d57600080fd5b6100b46104d2565b341561017057600080fd5b61008c6104d8565b600080610183610486565b600581111561018e57fe5b1461019857600080fd5b600080546101009004600160a060020a03169063a035b1fe90604051602001526040518163ffffffff1660e060020a028152600401602060405180830381600087803b15156101e657600080fd5b6102c65a03f115156101f757600080fd5b5050506040518051600160a060020a03301631109050610228576000805460ff1916600117905542621baf80016003555b50565b600080546101009004600160a060020a031690638da5cb5b90604051602001526040518163ffffffff1660e060020a028152600401602060405180830381600087803b151561027957600080fd5b6102c65a03f1151561028a57600080fd5b50505060405180519050600160a060020a031633600160a060020a03161415156102b357600080fd5b6002806102be610486565b60058111156102c957fe5b146102d357600080fd5b6000805460ff1916600517808255600160a060020a036101009091041690638da5cb5b90604051602001526040518163ffffffff1660e060020a028152600401602060405180830381600087803b151561032c57600080fd5b6102c65a03f1151561033d57600080fd5b50505060405180519050600160a060020a03166108fc30600160a060020a0316319081150290604051600060405180830381858888f19350505050151561022857600080fd5b60025481565b60015433600160a060020a039081169116148061041f5750600080546101009004600160a060020a031690638da5cb5b90604051602001526040518163ffffffff1660e060020a028152600401602060405180830381600087803b15156103ef57600080fd5b6102c65a03f1151561040057600080fd5b50505060405180519050600160a060020a031633600160a060020a0316145b151561042a57600080fd5b6001610434610486565b600581111561043f57fe5b148061045d57506002610450610486565b600581111561045b57fe5b145b151561046857600080fd5b6000805460ff19166003179055565b600154600160a060020a031681565b6000600160005460ff16600581111561049b57fe5b14156104b3576003544211156104b3575060026104bb565b5060005460ff165b90565b6000546101009004600160a060020a031681565b60035481565b60015433600160a060020a039081169116146104f357600080fd5b6001806104fe610486565b600581111561050957fe5b1461051357600080fd5b506000805460ff191660021790555600a165627a7a723058209957082e75a608964d51a7be8ccad06de84b658bfef88e97c62b01d8df5336040029a165627a7a72305820cecadc86ccd138e4a93ebe925d7b17811c27f00f956cd040bee661a5df2f38440029",
-  "deployedBytecode": "0x6060604052600436106100405763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416631c6b9b038114610045575b600080fd5b61006c73ffffffffffffffffffffffffffffffffffffffff60043581169060243516610095565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b600082826100a16100e3565b73ffffffffffffffffffffffffffffffffffffffff92831681529116602082015260409081019051809103906000f08015156100dc57600080fd5b9392505050565b6040516105d1806100f483390190560060606040526000805460ff19169055341561001957600080fd5b6040516040806105d1833981016040528080519190602001805160018054600160a060020a031916600160a060020a039283161790556000805461010060a860020a031916610100959092169490940217835550504260025561054f90819061008290396000f30060606040526004361061007f5763ffffffff60e060020a6000350416631b9265b88114610084578063252455cc1461008e578063325a19f1146100a15780634fd6137c146100c65780637150d8ae146100d9578063c040e6b814610108578063d51653271461013f578063e5a4e1be14610152578063f3c76fa914610165575b600080fd5b61008c610178565b005b341561009957600080fd5b61008c61022b565b34156100ac57600080fd5b6100b4610383565b60405190815260200160405180910390f35b34156100d157600080fd5b61008c610389565b34156100e457600080fd5b6100ec610477565b604051600160a060020a03909116815260200160405180910390f35b341561011357600080fd5b61011b610486565b6040518082600581111561012b57fe5b60ff16815260200191505060405180910390f35b341561014a57600080fd5b6100ec6104be565b341561015d57600080fd5b6100b46104d2565b341561017057600080fd5b61008c6104d8565b600080610183610486565b600581111561018e57fe5b1461019857600080fd5b600080546101009004600160a060020a03169063a035b1fe90604051602001526040518163ffffffff1660e060020a028152600401602060405180830381600087803b15156101e657600080fd5b6102c65a03f115156101f757600080fd5b5050506040518051600160a060020a03301631109050610228576000805460ff1916600117905542621baf80016003555b50565b600080546101009004600160a060020a031690638da5cb5b90604051602001526040518163ffffffff1660e060020a028152600401602060405180830381600087803b151561027957600080fd5b6102c65a03f1151561028a57600080fd5b50505060405180519050600160a060020a031633600160a060020a03161415156102b357600080fd5b6002806102be610486565b60058111156102c957fe5b146102d357600080fd5b6000805460ff1916600517808255600160a060020a036101009091041690638da5cb5b90604051602001526040518163ffffffff1660e060020a028152600401602060405180830381600087803b151561032c57600080fd5b6102c65a03f1151561033d57600080fd5b50505060405180519050600160a060020a03166108fc30600160a060020a0316319081150290604051600060405180830381858888f19350505050151561022857600080fd5b60025481565b60015433600160a060020a039081169116148061041f5750600080546101009004600160a060020a031690638da5cb5b90604051602001526040518163ffffffff1660e060020a028152600401602060405180830381600087803b15156103ef57600080fd5b6102c65a03f1151561040057600080fd5b50505060405180519050600160a060020a031633600160a060020a0316145b151561042a57600080fd5b6001610434610486565b600581111561043f57fe5b148061045d57506002610450610486565b600581111561045b57fe5b145b151561046857600080fd5b6000805460ff19166003179055565b600154600160a060020a031681565b6000600160005460ff16600581111561049b57fe5b14156104b3576003544211156104b3575060026104bb565b5060005460ff165b90565b6000546101009004600160a060020a031681565b60035481565b60015433600160a060020a039081169116146104f357600080fd5b6001806104fe610486565b600581111561050957fe5b1461051357600080fd5b506000805460ff191660021790555600a165627a7a723058209957082e75a608964d51a7be8ccad06de84b658bfef88e97c62b01d8df5336040029a165627a7a72305820cecadc86ccd138e4a93ebe925d7b17811c27f00f956cd040bee661a5df2f38440029",
-  "sourceMap": "158:196:3:-;;;;;;;;;;;;;;;;;",
-  "deployedSourceMap": "158:196:3:-;;;;;;;;;;;;;;;;;;;;;;;189:158;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;267:17;324:7;333:6;311:29;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;300:40;189:158;-1:-1:-1;;;189:158:3:o;158:196::-;;;;;;;;;;:::o",
-  "source": "pragma solidity ^0.4.11;\n\n/// @title PurchaseLibrary\n/// @dev An collection of helper tools for a purchase\n\nimport \"./Purchase.sol\";\nimport \"./Listing.sol\";\n\nlibrary PurchaseLibrary {\n\n    function newPurchase(Listing listing, address _buyer)\n    public\n    returns (Purchase purchase)\n    {\n        purchase = new Purchase(listing, _buyer);\n    }\n    \n}",
-  "sourcePath": "/home/gagan/Documents/platform/packages/contracts/contracts/PurchaseLibrary.sol",
+  "bytecode": "0x6109ae610030600b82828239805160001a6073146000811461002057610022565bfe5b5030600052607381538281f30073000000000000000000000000000000000000000030146060604052600436106100575763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416631c6b9b03811461005c575b600080fd5b811561006757600080fd5b61008e73ffffffffffffffffffffffffffffffffffffffff600435811690602435166100b7565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b600082826100c3610105565b73ffffffffffffffffffffffffffffffffffffffff92831681529116602082015260409081019051809103906000f08015156100fe57600080fd5b9392505050565b60405161086d8061011683390190560060606040526000805460ff19169055341561001957600080fd5b60405160408061086d833981016040528080519190602001805160018054600160a060020a031916600160a060020a03838116919091179091556000805461010060a860020a031916610100928716929092029190911790819055426002559092507f297fa9ffcce4a8f1e427986966e131669169a104212e72d48d20e93539187339915060ff16604051808260068111156100b157fe5b60ff16815260200191505060405180910390a15050610798806100d56000396000f3006060604052600436106100955763ffffffff60e060020a6000350416631b9265b8811461009a578063325a19f1146100a45780633d7b7400146100c95780634fd6137c146100dc5780637150d8ae146100ef57806373d4a13a1461011e578063a3c0ac1014610195578063c040e6b8146101a8578063d5165327146101df578063e5a4e1be146101f2578063f3c76fa914610205575b600080fd5b6100a2610218565b005b34156100af57600080fd5b6100b76102f4565b60405190815260200160405180910390f35b34156100d457600080fd5b6100a26102fa565b34156100e757600080fd5b6100a2610470565b34156100fa57600080fd5b610102610588565b604051600160a060020a03909116815260200160405180910390f35b341561012957600080fd5b610131610597565b6040518086600681111561014157fe5b60ff16815260200185600160a060020a0316600160a060020a0316815260200184600160a060020a0316600160a060020a031681526020018381526020018281526020019550505050505060405180910390f35b34156101a057600080fd5b6100a26105d6565b34156101b357600080fd5b6101bb6106ab565b604051808260068111156101cb57fe5b60ff16815260200191505060405180910390f35b34156101ea57600080fd5b6101026106e3565b34156101fd57600080fd5b6100b76106f7565b341561021057600080fd5b6100a26106fd565b6000806102236106ab565b600681111561022e57fe5b1461023857600080fd5b6000546101009004600160a060020a031663a035b1fe6040518163ffffffff1660e060020a028152600401602060405180830381600087803b151561027c57600080fd5b5af1151561028957600080fd5b5050506040518051600160a060020a033016311090506102f157600080546001919060ff191682805b021790555060005460008051602061074d8339815191529060ff16604051808260068111156102dd57fe5b60ff16815260200191505060405180910390a15b50565b60025481565b6000546101009004600160a060020a0316638da5cb5b6040518163ffffffff1660e060020a028152600401602060405180830381600087803b151561033e57600080fd5b5af1151561034b57600080fd5b50505060405180519050600160a060020a031633600160a060020a031614151561037457600080fd5b60038061037f6106ab565b600681111561038a57fe5b1461039457600080fd5b6000805460ff19166006179081905560008051602061074d8339815191529060ff16604051808260068111156103c657fe5b60ff16815260200191505060405180910390a16000546101009004600160a060020a0316638da5cb5b6040518163ffffffff1660e060020a028152600401602060405180830381600087803b151561041d57600080fd5b5af1151561042a57600080fd5b50505060405180519050600160a060020a03166108fc30600160a060020a0316319081150290604051600060405180830381858888f1935050505015156102f157600080fd5b60015433600160a060020a03908116911614806104f857506000546101009004600160a060020a0316638da5cb5b6040518163ffffffff1660e060020a028152600401602060405180830381600087803b15156104cc57600080fd5b5af115156104d957600080fd5b50505060405180519050600160a060020a031633600160a060020a0316145b151561050357600080fd5b600261050d6106ab565b600681111561051857fe5b1480610536575060036105296106ab565b600681111561053457fe5b145b151561054157600080fd5b6000805460ff19166004179081905560008051602061074d8339815191529060ff166040518082600681111561057357fe5b60ff16815260200191505060405180910390a1565b600154600160a060020a031681565b60008060008060006105a76106ab565b6000546001546002546003549399610100909304600160a060020a039081169950909116965094509092509050565b6000546101009004600160a060020a0316638da5cb5b6040518163ffffffff1660e060020a028152600401602060405180830381600087803b151561061a57600080fd5b5af1151561062757600080fd5b50505060405180519050600160a060020a031633600160a060020a031614151561065057600080fd5b60018061065b6106ab565b600681111561066657fe5b1461067057600080fd5b6000805460ff19166002179081905542621baf800160035560008051602061074d8339815191529060ff16604051808260068111156102dd57fe5b6000600260005460ff1660068111156106c057fe5b14156106d8576003544211156106d8575060036106e0565b5060005460ff165b90565b6000546101009004600160a060020a031681565b60035481565b60015433600160a060020a0390811691161461071857600080fd5b6002806107236106ab565b600681111561072e57fe5b1461073857600080fd5b600080546003919060ff19166001836102b25600297fa9ffcce4a8f1e427986966e131669169a104212e72d48d20e93539187339a165627a7a72305820574a1a269c434fd457af8722562f6ec30b6f26d9bc5c1b75f615548f0fa3ac7e0029a165627a7a723058203e7c1fed351b47545c1d93251806252259b0eb6690d36153639ce8d5adda52fc0029",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146060604052600436106100575763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416631c6b9b03811461005c575b600080fd5b811561006757600080fd5b61008e73ffffffffffffffffffffffffffffffffffffffff600435811690602435166100b7565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b600082826100c3610105565b73ffffffffffffffffffffffffffffffffffffffff92831681529116602082015260409081019051809103906000f08015156100fe57600080fd5b9392505050565b60405161086d8061011683390190560060606040526000805460ff19169055341561001957600080fd5b60405160408061086d833981016040528080519190602001805160018054600160a060020a031916600160a060020a03838116919091179091556000805461010060a860020a031916610100928716929092029190911790819055426002559092507f297fa9ffcce4a8f1e427986966e131669169a104212e72d48d20e93539187339915060ff16604051808260068111156100b157fe5b60ff16815260200191505060405180910390a15050610798806100d56000396000f3006060604052600436106100955763ffffffff60e060020a6000350416631b9265b8811461009a578063325a19f1146100a45780633d7b7400146100c95780634fd6137c146100dc5780637150d8ae146100ef57806373d4a13a1461011e578063a3c0ac1014610195578063c040e6b8146101a8578063d5165327146101df578063e5a4e1be146101f2578063f3c76fa914610205575b600080fd5b6100a2610218565b005b34156100af57600080fd5b6100b76102f4565b60405190815260200160405180910390f35b34156100d457600080fd5b6100a26102fa565b34156100e757600080fd5b6100a2610470565b34156100fa57600080fd5b610102610588565b604051600160a060020a03909116815260200160405180910390f35b341561012957600080fd5b610131610597565b6040518086600681111561014157fe5b60ff16815260200185600160a060020a0316600160a060020a0316815260200184600160a060020a0316600160a060020a031681526020018381526020018281526020019550505050505060405180910390f35b34156101a057600080fd5b6100a26105d6565b34156101b357600080fd5b6101bb6106ab565b604051808260068111156101cb57fe5b60ff16815260200191505060405180910390f35b34156101ea57600080fd5b6101026106e3565b34156101fd57600080fd5b6100b76106f7565b341561021057600080fd5b6100a26106fd565b6000806102236106ab565b600681111561022e57fe5b1461023857600080fd5b6000546101009004600160a060020a031663a035b1fe6040518163ffffffff1660e060020a028152600401602060405180830381600087803b151561027c57600080fd5b5af1151561028957600080fd5b5050506040518051600160a060020a033016311090506102f157600080546001919060ff191682805b021790555060005460008051602061074d8339815191529060ff16604051808260068111156102dd57fe5b60ff16815260200191505060405180910390a15b50565b60025481565b6000546101009004600160a060020a0316638da5cb5b6040518163ffffffff1660e060020a028152600401602060405180830381600087803b151561033e57600080fd5b5af1151561034b57600080fd5b50505060405180519050600160a060020a031633600160a060020a031614151561037457600080fd5b60038061037f6106ab565b600681111561038a57fe5b1461039457600080fd5b6000805460ff19166006179081905560008051602061074d8339815191529060ff16604051808260068111156103c657fe5b60ff16815260200191505060405180910390a16000546101009004600160a060020a0316638da5cb5b6040518163ffffffff1660e060020a028152600401602060405180830381600087803b151561041d57600080fd5b5af1151561042a57600080fd5b50505060405180519050600160a060020a03166108fc30600160a060020a0316319081150290604051600060405180830381858888f1935050505015156102f157600080fd5b60015433600160a060020a03908116911614806104f857506000546101009004600160a060020a0316638da5cb5b6040518163ffffffff1660e060020a028152600401602060405180830381600087803b15156104cc57600080fd5b5af115156104d957600080fd5b50505060405180519050600160a060020a031633600160a060020a0316145b151561050357600080fd5b600261050d6106ab565b600681111561051857fe5b1480610536575060036105296106ab565b600681111561053457fe5b145b151561054157600080fd5b6000805460ff19166004179081905560008051602061074d8339815191529060ff166040518082600681111561057357fe5b60ff16815260200191505060405180910390a1565b600154600160a060020a031681565b60008060008060006105a76106ab565b6000546001546002546003549399610100909304600160a060020a039081169950909116965094509092509050565b6000546101009004600160a060020a0316638da5cb5b6040518163ffffffff1660e060020a028152600401602060405180830381600087803b151561061a57600080fd5b5af1151561062757600080fd5b50505060405180519050600160a060020a031633600160a060020a031614151561065057600080fd5b60018061065b6106ab565b600681111561066657fe5b1461067057600080fd5b6000805460ff19166002179081905542621baf800160035560008051602061074d8339815191529060ff16604051808260068111156102dd57fe5b6000600260005460ff1660068111156106c057fe5b14156106d8576003544211156106d8575060036106e0565b5060005460ff165b90565b6000546101009004600160a060020a031681565b60035481565b60015433600160a060020a0390811691161461071857600080fd5b6002806107236106ab565b600681111561072e57fe5b1461073857600080fd5b600080546003919060ff19166001836102b25600297fa9ffcce4a8f1e427986966e131669169a104212e72d48d20e93539187339a165627a7a72305820574a1a269c434fd457af8722562f6ec30b6f26d9bc5c1b75f615548f0fa3ac7e0029a165627a7a723058203e7c1fed351b47545c1d93251806252259b0eb6690d36153639ce8d5adda52fc0029",
+  "sourceMap": "157:196:4:-;;132:2:-1;166:7;155:9;146:7;137:37;252:7;246:14;243:1;238:23;232:4;229:33;270:1;265:20;;;;222:63;;265:20;274:9;222:63;;298:9;295:1;288:20;328:4;319:7;311:22;352:7;343;336:24",
+  "deployedSourceMap": "157:196:4:-;;;;;;;;;;;;;;;;;;;;;;;;;;188:158;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;266:17;323:7;332:6;310:29;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;299:40;188:158;-1:-1:-1;;;188:158:4:o;157:196::-;;;;;;;;;;:::o",
+  "source": "pragma solidity 0.4.21;\n\n/// @title PurchaseLibrary\n/// @dev An collection of helper tools for a purchase\n\nimport \"./Purchase.sol\";\nimport \"./Listing.sol\";\n\nlibrary PurchaseLibrary {\n\n    function newPurchase(Listing listing, address _buyer)\n    public\n    returns (Purchase purchase)\n    {\n        purchase = new Purchase(listing, _buyer);\n    }\n    \n}\n",
+  "sourcePath": "/home/gagan/Documents/origin-platform/contracts/contracts/PurchaseLibrary.sol",
   "ast": {
-    "absolutePath": "/home/gagan/Documents/platform/packages/contracts/contracts/PurchaseLibrary.sol",
+    "absolutePath": "/home/gagan/Documents/origin-platform/contracts/contracts/PurchaseLibrary.sol",
     "exportedSymbols": {
       "PurchaseLibrary": [
-        521
+        656
       ]
     },
-    "id": 522,
+    "id": 657,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 500,
+        "id": 635,
         "literals": [
           "solidity",
-          "^",
           "0.4",
-          ".11"
+          ".21"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:3"
+        "src": "0:23:4"
       },
       {
-        "absolutePath": "/home/gagan/Documents/platform/packages/contracts/contracts/Purchase.sol",
+        "absolutePath": "/home/gagan/Documents/origin-platform/contracts/contracts/Purchase.sol",
         "file": "./Purchase.sol",
-        "id": 501,
+        "id": 636,
         "nodeType": "ImportDirective",
-        "scope": 522,
-        "sourceUnit": 499,
-        "src": "108:24:3",
+        "scope": 657,
+        "sourceUnit": 634,
+        "src": "107:24:4",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "/home/gagan/Documents/platform/packages/contracts/contracts/Listing.sol",
+        "absolutePath": "/home/gagan/Documents/origin-platform/contracts/contracts/Listing.sol",
         "file": "./Listing.sol",
-        "id": 502,
+        "id": 637,
         "nodeType": "ImportDirective",
-        "scope": 522,
-        "sourceUnit": 157,
-        "src": "133:23:3",
+        "scope": 657,
+        "sourceUnit": 165,
+        "src": "132:23:4",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "baseContracts": [],
         "contractDependencies": [
-          498
+          633
         ],
         "contractKind": "library",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 521,
+        "id": 656,
         "linearizedBaseContracts": [
-          521
+          656
         ],
         "name": "PurchaseLibrary",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 519,
+              "id": 654,
               "nodeType": "Block",
-              "src": "290:57:3",
+              "src": "289:57:4",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 517,
+                    "id": 652,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 511,
+                      "id": 646,
                       "name": "purchase",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 509,
-                      "src": "300:8:3",
+                      "referencedDeclaration": 644,
+                      "src": "299:8:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Purchase_$498",
+                        "typeIdentifier": "t_contract$_Purchase_$633",
                         "typeString": "contract Purchase"
                       }
                     },
@@ -123,25 +122,25 @@
                       "arguments": [
                         {
                           "argumentTypes": null,
-                          "id": 514,
+                          "id": 649,
                           "name": "listing",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 504,
-                          "src": "324:7:3",
+                          "referencedDeclaration": 639,
+                          "src": "323:7:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_contract$_Listing_$156",
+                            "typeIdentifier": "t_contract$_Listing_$164",
                             "typeString": "contract Listing"
                           }
                         },
                         {
                           "argumentTypes": null,
-                          "id": 515,
+                          "id": 650,
                           "name": "_buyer",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 506,
-                          "src": "333:6:3",
+                          "referencedDeclaration": 641,
+                          "src": "332:6:4",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -151,7 +150,7 @@
                       "expression": {
                         "argumentTypes": [
                           {
-                            "typeIdentifier": "t_contract$_Listing_$156",
+                            "typeIdentifier": "t_contract$_Listing_$164",
                             "typeString": "contract Listing"
                           },
                           {
@@ -159,31 +158,31 @@
                             "typeString": "address"
                           }
                         ],
-                        "id": 513,
+                        "id": 648,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "nodeType": "NewExpression",
-                        "src": "311:12:3",
+                        "src": "310:12:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_function_creation_nonpayable$_t_address_$_t_address_$returns$_t_contract$_Purchase_$498_$",
+                          "typeIdentifier": "t_function_creation_nonpayable$_t_address_$_t_address_$returns$_t_contract$_Purchase_$633_$",
                           "typeString": "function (address,address) returns (contract Purchase)"
                         },
                         "typeName": {
                           "contractScope": null,
-                          "id": 512,
+                          "id": 647,
                           "name": "Purchase",
                           "nodeType": "UserDefinedTypeName",
-                          "referencedDeclaration": 498,
-                          "src": "315:8:3",
+                          "referencedDeclaration": 633,
+                          "src": "314:8:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_contract$_Purchase_$498",
+                            "typeIdentifier": "t_contract$_Purchase_$633",
                             "typeString": "contract Purchase"
                           }
                         }
                       },
-                      "id": 516,
+                      "id": 651,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -191,25 +190,26 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "311:29:3",
+                      "src": "310:29:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Purchase_$498",
+                        "typeIdentifier": "t_contract$_Purchase_$633",
                         "typeString": "contract Purchase"
                       }
                     },
-                    "src": "300:40:3",
+                    "src": "299:40:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Purchase_$498",
+                      "typeIdentifier": "t_contract$_Purchase_$633",
                       "typeString": "contract Purchase"
                     }
                   },
-                  "id": 518,
+                  "id": 653,
                   "nodeType": "ExpressionStatement",
-                  "src": "300:40:3"
+                  "src": "299:40:4"
                 }
               ]
             },
-            "id": 520,
+            "documentation": null,
+            "id": 655,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -217,31 +217,31 @@
             "name": "newPurchase",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 507,
+              "id": 642,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 504,
+                  "id": 639,
                   "name": "listing",
                   "nodeType": "VariableDeclaration",
-                  "scope": 520,
-                  "src": "210:15:3",
+                  "scope": 655,
+                  "src": "209:15:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_Listing_$156",
+                    "typeIdentifier": "t_contract$_Listing_$164",
                     "typeString": "contract Listing"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 503,
+                    "id": 638,
                     "name": "Listing",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 156,
-                    "src": "210:7:3",
+                    "referencedDeclaration": 164,
+                    "src": "209:7:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Listing_$156",
+                      "typeIdentifier": "t_contract$_Listing_$164",
                       "typeString": "contract Listing"
                     }
                   },
@@ -250,11 +250,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 506,
+                  "id": 641,
                   "name": "_buyer",
                   "nodeType": "VariableDeclaration",
-                  "scope": 520,
-                  "src": "227:14:3",
+                  "scope": 655,
+                  "src": "226:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -262,10 +262,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 505,
+                    "id": 640,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "227:7:3",
+                    "src": "226:7:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -275,35 +275,35 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "209:33:3"
+              "src": "208:33:4"
             },
             "payable": false,
             "returnParameters": {
-              "id": 510,
+              "id": 645,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 509,
+                  "id": 644,
                   "name": "purchase",
                   "nodeType": "VariableDeclaration",
-                  "scope": 520,
-                  "src": "267:17:3",
+                  "scope": 655,
+                  "src": "266:17:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_Purchase_$498",
+                    "typeIdentifier": "t_contract$_Purchase_$633",
                     "typeString": "contract Purchase"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 508,
+                    "id": 643,
                     "name": "Purchase",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 498,
-                    "src": "267:8:3",
+                    "referencedDeclaration": 633,
+                    "src": "266:8:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Purchase_$498",
+                      "typeIdentifier": "t_contract$_Purchase_$633",
                       "typeString": "contract Purchase"
                     }
                   },
@@ -311,103 +311,102 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "266:19:3"
+              "src": "265:19:4"
             },
-            "scope": 521,
-            "src": "189:158:3",
+            "scope": 656,
+            "src": "188:158:4",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 522,
-        "src": "158:196:3"
+        "scope": 657,
+        "src": "157:196:4"
       }
     ],
-    "src": "0:354:3"
+    "src": "0:354:4"
   },
   "legacyAST": {
-    "absolutePath": "/home/gagan/Documents/platform/packages/contracts/contracts/PurchaseLibrary.sol",
+    "absolutePath": "/home/gagan/Documents/origin-platform/contracts/contracts/PurchaseLibrary.sol",
     "exportedSymbols": {
       "PurchaseLibrary": [
-        521
+        656
       ]
     },
-    "id": 522,
+    "id": 657,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 500,
+        "id": 635,
         "literals": [
           "solidity",
-          "^",
           "0.4",
-          ".11"
+          ".21"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:3"
+        "src": "0:23:4"
       },
       {
-        "absolutePath": "/home/gagan/Documents/platform/packages/contracts/contracts/Purchase.sol",
+        "absolutePath": "/home/gagan/Documents/origin-platform/contracts/contracts/Purchase.sol",
         "file": "./Purchase.sol",
-        "id": 501,
+        "id": 636,
         "nodeType": "ImportDirective",
-        "scope": 522,
-        "sourceUnit": 499,
-        "src": "108:24:3",
+        "scope": 657,
+        "sourceUnit": 634,
+        "src": "107:24:4",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "/home/gagan/Documents/platform/packages/contracts/contracts/Listing.sol",
+        "absolutePath": "/home/gagan/Documents/origin-platform/contracts/contracts/Listing.sol",
         "file": "./Listing.sol",
-        "id": 502,
+        "id": 637,
         "nodeType": "ImportDirective",
-        "scope": 522,
-        "sourceUnit": 157,
-        "src": "133:23:3",
+        "scope": 657,
+        "sourceUnit": 165,
+        "src": "132:23:4",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "baseContracts": [],
         "contractDependencies": [
-          498
+          633
         ],
         "contractKind": "library",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 521,
+        "id": 656,
         "linearizedBaseContracts": [
-          521
+          656
         ],
         "name": "PurchaseLibrary",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 519,
+              "id": 654,
               "nodeType": "Block",
-              "src": "290:57:3",
+              "src": "289:57:4",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 517,
+                    "id": 652,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 511,
+                      "id": 646,
                       "name": "purchase",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 509,
-                      "src": "300:8:3",
+                      "referencedDeclaration": 644,
+                      "src": "299:8:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Purchase_$498",
+                        "typeIdentifier": "t_contract$_Purchase_$633",
                         "typeString": "contract Purchase"
                       }
                     },
@@ -418,25 +417,25 @@
                       "arguments": [
                         {
                           "argumentTypes": null,
-                          "id": 514,
+                          "id": 649,
                           "name": "listing",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 504,
-                          "src": "324:7:3",
+                          "referencedDeclaration": 639,
+                          "src": "323:7:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_contract$_Listing_$156",
+                            "typeIdentifier": "t_contract$_Listing_$164",
                             "typeString": "contract Listing"
                           }
                         },
                         {
                           "argumentTypes": null,
-                          "id": 515,
+                          "id": 650,
                           "name": "_buyer",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 506,
-                          "src": "333:6:3",
+                          "referencedDeclaration": 641,
+                          "src": "332:6:4",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -446,7 +445,7 @@
                       "expression": {
                         "argumentTypes": [
                           {
-                            "typeIdentifier": "t_contract$_Listing_$156",
+                            "typeIdentifier": "t_contract$_Listing_$164",
                             "typeString": "contract Listing"
                           },
                           {
@@ -454,31 +453,31 @@
                             "typeString": "address"
                           }
                         ],
-                        "id": 513,
+                        "id": 648,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "nodeType": "NewExpression",
-                        "src": "311:12:3",
+                        "src": "310:12:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_function_creation_nonpayable$_t_address_$_t_address_$returns$_t_contract$_Purchase_$498_$",
+                          "typeIdentifier": "t_function_creation_nonpayable$_t_address_$_t_address_$returns$_t_contract$_Purchase_$633_$",
                           "typeString": "function (address,address) returns (contract Purchase)"
                         },
                         "typeName": {
                           "contractScope": null,
-                          "id": 512,
+                          "id": 647,
                           "name": "Purchase",
                           "nodeType": "UserDefinedTypeName",
-                          "referencedDeclaration": 498,
-                          "src": "315:8:3",
+                          "referencedDeclaration": 633,
+                          "src": "314:8:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_contract$_Purchase_$498",
+                            "typeIdentifier": "t_contract$_Purchase_$633",
                             "typeString": "contract Purchase"
                           }
                         }
                       },
-                      "id": 516,
+                      "id": 651,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -486,25 +485,26 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "311:29:3",
+                      "src": "310:29:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Purchase_$498",
+                        "typeIdentifier": "t_contract$_Purchase_$633",
                         "typeString": "contract Purchase"
                       }
                     },
-                    "src": "300:40:3",
+                    "src": "299:40:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Purchase_$498",
+                      "typeIdentifier": "t_contract$_Purchase_$633",
                       "typeString": "contract Purchase"
                     }
                   },
-                  "id": 518,
+                  "id": 653,
                   "nodeType": "ExpressionStatement",
-                  "src": "300:40:3"
+                  "src": "299:40:4"
                 }
               ]
             },
-            "id": 520,
+            "documentation": null,
+            "id": 655,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -512,31 +512,31 @@
             "name": "newPurchase",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 507,
+              "id": 642,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 504,
+                  "id": 639,
                   "name": "listing",
                   "nodeType": "VariableDeclaration",
-                  "scope": 520,
-                  "src": "210:15:3",
+                  "scope": 655,
+                  "src": "209:15:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_Listing_$156",
+                    "typeIdentifier": "t_contract$_Listing_$164",
                     "typeString": "contract Listing"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 503,
+                    "id": 638,
                     "name": "Listing",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 156,
-                    "src": "210:7:3",
+                    "referencedDeclaration": 164,
+                    "src": "209:7:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Listing_$156",
+                      "typeIdentifier": "t_contract$_Listing_$164",
                       "typeString": "contract Listing"
                     }
                   },
@@ -545,11 +545,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 506,
+                  "id": 641,
                   "name": "_buyer",
                   "nodeType": "VariableDeclaration",
-                  "scope": 520,
-                  "src": "227:14:3",
+                  "scope": 655,
+                  "src": "226:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -557,10 +557,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 505,
+                    "id": 640,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "227:7:3",
+                    "src": "226:7:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -570,35 +570,35 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "209:33:3"
+              "src": "208:33:4"
             },
             "payable": false,
             "returnParameters": {
-              "id": 510,
+              "id": 645,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 509,
+                  "id": 644,
                   "name": "purchase",
                   "nodeType": "VariableDeclaration",
-                  "scope": 520,
-                  "src": "267:17:3",
+                  "scope": 655,
+                  "src": "266:17:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_Purchase_$498",
+                    "typeIdentifier": "t_contract$_Purchase_$633",
                     "typeString": "contract Purchase"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 508,
+                    "id": 643,
                     "name": "Purchase",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 498,
-                    "src": "267:8:3",
+                    "referencedDeclaration": 633,
+                    "src": "266:8:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Purchase_$498",
+                      "typeIdentifier": "t_contract$_Purchase_$633",
                       "typeString": "contract Purchase"
                     }
                   },
@@ -606,33 +606,33 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "266:19:3"
+              "src": "265:19:4"
             },
-            "scope": 521,
-            "src": "189:158:3",
+            "scope": 656,
+            "src": "188:158:4",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 522,
-        "src": "158:196:3"
+        "scope": 657,
+        "src": "157:196:4"
       }
     ],
-    "src": "0:354:3"
+    "src": "0:354:4"
   },
   "compiler": {
     "name": "solc",
-    "version": "0.4.19+commit.c4cbbb05.Emscripten.clang"
+    "version": "0.4.21+commit.dfe3193c.Emscripten.clang"
   },
   "networks": {
-    "4447": {
+    "999": {
       "events": {},
       "links": {},
-      "address": "0xfb88de099e13c3ed21f80a7a1e49f8caecf10df6",
-      "transactionHash": "0xcfd3866e8bd91f86ebdff65e17314a43f4977d6ae8ee90a399c16dca1736a95b"
+      "address": "0x345ca3e014aaf5dca488057592ee47305d9b3e10",
+      "transactionHash": "0xfe7a3fa6b45c739bffa68c9a49e6c3c796f2fe2143286e3d82ab68aeb4b80db1"
     }
   },
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-04-08T10:31:34.103Z"
+  "updatedAt": "2018-04-29T17:21:27.404Z"
 }
