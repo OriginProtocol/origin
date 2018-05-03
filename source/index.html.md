@@ -13,6 +13,7 @@ includes:
   - architecture
   - getting_started
   - authentication_identity
+  - resources/attestations
   - resources/listings
   - resources/purchases
   - listing_schemas
