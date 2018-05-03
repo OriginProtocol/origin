@@ -3,9 +3,10 @@ var nodeExternals = require('webpack-node-externals');
 var serverConfig = {
   entry: ["babel-polyfill", './src/index.js'],
   output: {
-    filename: './dist/index.js',
+    filename: './index.js',
     libraryTarget: 'commonjs2'
   },
+  mode: 'development',
   devtool: 'inline-source-map',
   target: 'node',
   externals: [nodeExternals()],
@@ -19,7 +20,7 @@ var serverConfig = {
     */
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
@@ -36,13 +37,14 @@ var serverConfig = {
 var clientConfig = {
   entry: ["babel-polyfill", './src/index.js'],
   output: {
-    filename: './dist/origin.js',
+    filename: './origin.js',
     libraryTarget: 'window'
   },
+  mode: 'development',
   devtool: 'inline-source-map',
   target: 'web',
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,

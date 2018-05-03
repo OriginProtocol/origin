@@ -11,11 +11,10 @@ const _STAGES_TO_NUMBER = {
 }
 const _NUMBERS_TO_STAGE = {}
 
-
-class Purchases extends ResourceBase{
+class Purchases extends ResourceBase {
   constructor({ contractService, ipfsService }) {
     super({ contractService, ipfsService })
-    
+
     this.contractDefinition = this.contractService.purchaseContract
 
     Object.entries(_STAGES_TO_NUMBER).forEach(([k, v]) => {
@@ -30,17 +29,19 @@ class Purchases extends ResourceBase{
       stage: _NUMBERS_TO_STAGE[contractData[0]],
       listingAddress: contractData[1],
       buyerAddress: contractData[2],
-      created: contractData[3].toNumber(),
-      buyerTimout: contractData[4].toNumber()
+      created: Number(contractData[3]),
+      buyerTimout: Number(contractData[4])
     }
   }
 
   async pay(address, amountWei) {
-    return await this.contractFn(address, "pay", [], {value:amountWei})
+    return await this.contractFn(address, "pay", [], { value: amountWei })
   }
 
   async sellerConfirmShipped(address) {
-    return await this.contractFn(address, "sellerConfirmShipped",[], {gas: 80000})
+    return await this.contractFn(address, "sellerConfirmShipped", [], {
+      gas: 80000
+    })
   }
 
   async buyerConfirmReceipt(address) {
@@ -54,45 +55,47 @@ class Purchases extends ResourceBase{
   async getLogs(address) {
     const self = this
     const web3 = this.contractService.web3
-    const contract = await this.contractDefinition.at(address)
+    const contract = new web3.eth.Contract(this.contractDefinition.abi, address)
     return new Promise((resolve, reject) => {
       // Get all logs on this contract
-      contract
-      .allEvents({fromBlock:0})
-      .get(function(error, rawLogs){
-        if(error){
+      contract.getPastEvents('allEvents', { fromBlock: 0 }, function(error, rawLogs) {
+        if (error) {
           return reject(error)
         }
         // Format logs we receive
-        let logs = rawLogs.map((log)=>{
-          const stage = _NUMBERS_TO_STAGE[log.args.stage]
+        let logs = rawLogs.map(log => {
+          const stage = _NUMBERS_TO_STAGE[log.returnValues.stage]
           return {
             transactionHash: log.transactionHash,
             stage: stage,
-            blockNumber: log.blockNumber, 
+            blockNumber: log.blockNumber,
             blockHash: log.blockHash,
             event: log.event
           }
         })
-        // Fetch user and timestamp information for all logs, in parallel 
-        const addUserAddressFn = async (event)=>{
-          event.from = (await self.contractService.getTransaction(event.transactionHash)).from
+        // Fetch user and timestamp information for all logs, in parallel
+        const addUserAddressFn = async event => {
+          event.from = (await self.contractService.getTransaction(
+            event.transactionHash
+          )).from
         }
-        const addTimestampFn = async (event)=>{
-          event.timestamp = (await self.contractService.getBlock(event.blockHash)).timestamp
+        const addTimestampFn = async event => {
+          event.timestamp = (await self.contractService.getBlock(
+            event.blockHash
+          )).timestamp
         }
         const fetchPromises = [].concat(
           logs.map(addUserAddressFn),
           logs.map(addTimestampFn)
         )
         Promise.all(fetchPromises)
-        .then(()=>{ resolve(logs) })
-        .catch((error)=>reject(error))
+          .then(() => {
+            resolve(logs)
+          })
+          .catch(error => reject(error))
       })
     })
   }
-
-
 }
 
 module.exports = Purchases
