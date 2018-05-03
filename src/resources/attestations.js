@@ -2,6 +2,13 @@ import fetch from "cross-fetch"
 import RLP from "rlp"
 import web3Utils from "web3-utils"
 
+const claimTypeMapping = {
+  3: "facebook",
+  4: "twitter",
+  10: "phone",
+  11: "email"
+}
+
 const appendSlash = (url) => {
   return (url.substr(-1) === "/") ? url : url + "/"
 }
@@ -9,6 +16,7 @@ const appendSlash = (url) => {
 class AttestationObject {
   constructor({ claimType, data, signature }) {
     this.claimType = claimType
+    this.service = claimTypeMapping[claimType]
     this.data = data
     this.signature = signature
   }
