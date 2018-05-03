@@ -177,19 +177,27 @@ class Users extends ResourceBase {
     return { profile, attestations }
   }
 
-  async validAttestations(identityAddress, attestations) {
+  async isValidAttestation({ claimType, data, signature }, identityAddress) {
     let originIdentity = await this.contractService.deployed(this.contractService.originIdentityContract)
-    return attestations.filter(async ({ claimType, issuer, data, signature }) => {
-      let msg = Web3.utils.soliditySha3(identityAddress, claimType, data)
-      let prefixedMsg = this.web3EthAccounts.hashMessage(msg)
-      let dataBuf = toBuffer(prefixedMsg)
-      let sig = fromRpcSig(signature)
-      let recovered = ecrecover(dataBuf, sig.v, sig.r, sig.s)
-      let recoveredBuf = pubToAddress(recovered)
-      let recoveredHex = bufferToHex(recoveredBuf)
-      let hashedRecovered = Web3.utils.soliditySha3(recoveredHex)
-      return await originIdentity.methods.keyHasPurpose(hashedRecovered, 3).call()
+    let msg = Web3.utils.soliditySha3(identityAddress, claimType, data)
+    let prefixedMsg = this.web3EthAccounts.hashMessage(msg)
+    let dataBuf = toBuffer(prefixedMsg)
+    let sig = fromRpcSig(signature)
+    let recovered = ecrecover(dataBuf, sig.v, sig.r, sig.s)
+    let recoveredBuf = pubToAddress(recovered)
+    let recoveredHex = bufferToHex(recoveredBuf)
+    let hashedRecovered = Web3.utils.soliditySha3(recoveredHex)
+    return await originIdentity.methods.keyHasPurpose(hashedRecovered, 3).call()
+  }
+
+  async validAttestations(identityAddress, attestations) {
+    let promiseWithValidation = attestations.map(async (attestation) => {
+      let isValid = await this.isValidAttestation(attestation, identityAddress)
+      return { isValid, attestation }
     })
+    let withValidation = await Promise.all(promiseWithValidation)
+    let filtered = withValidation.filter(({ isValid, attestation }) => isValid)
+    return filtered.map(({ attestation }) => attestation)
   }
 }
 
