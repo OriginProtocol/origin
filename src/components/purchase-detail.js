@@ -8,12 +8,15 @@ import data from '../data'
 
 import origin from '../services/origin' 
 
-// step 0 was creating the listing
-// nextSteps[0] equates to step 1, etc
-// even-numbered steps are up to seller
-// odd-numbered steps are up to buyer
+/* Transaction stages: no disputes and no seller review of buyer/transaction
+ *  - step 0 was creating the listing
+ *  - nextSteps[0] equates to step 1, etc
+ *  - even-numbered steps are seller's resposibility
+ *  - odd-numbered steps are buyer's responsibility
+ */
 const nextSteps = [
   {
+    // we should never be in this state
     buyer: {
       prompt: 'Purchase this listing',
       instruction: 'Why is this here if you have not yet purchased it?',
@@ -31,6 +34,7 @@ const nextSteps = [
       prompt: 'Send the order to buyer',
       instruction: 'Click the button below once the order has shipped.',
       buttonText: 'Order Sent',
+      functionName: 'confirmShipped',
     },
   },
   {
@@ -38,6 +42,7 @@ const nextSteps = [
       prompt: 'Confirm receipt of the order',
       instruction: 'Click the button below once you\'ve received the order.',
       buttonText: 'Order Received',
+      functionName: 'confirmReceipt',
     },
     seller: {
       prompt: 'Wait for the buyer to receive the order',
@@ -48,11 +53,13 @@ const nextSteps = [
       prompt: 'You\'ve confirmed receipt of your order',
       instruction: 'Would you like to write a review to let us know how you like your purchase?',
       buttonText: 'Write a review',
+      functionName: 'todo',
     },
     seller: {
       prompt: 'Complete transaction by withdrawing funds',
       instruction: 'Click the button below to initiate the withdrawal',
       buttonText: 'Withdraw Funds',
+      functionName: 'withdrawFunds',
     },
   },
 ]
@@ -60,48 +67,127 @@ const nextSteps = [
 class PurchaseDetail extends Component {
   constructor(props){
     super(props)
+
+    this.confirmReceipt = this.confirmReceipt.bind(this)
+    this.confirmShipped = this.confirmShipped.bind(this)
+    this.withdrawFunds = this.withdrawFunds.bind(this)
     this.state = {
       listing: {},
-      purchase: {}
+      logs: [],
+      purchase: {},
     }
   }
 
   componentDidMount() {
     this.loadPurchase()
+
     $('[data-toggle="tooltip"]').tooltip()
   }
 
-  async loadPurchase() {
-    const purchaseAddress = this.props.purchaseAddress
-    const purchase = await origin.purchases.get(purchaseAddress)
-    this.setState({purchase: purchase})
-    const listing = await origin.listings.get(purchase.listingAddress)
-    this.setState({listing: listing})
+  componentDidUpdate(prevProps, prevState) {
+    const { listingAddress } = this.state.purchase
+
+    if (prevState.purchase.listingAddress !== listingAddress) {
+      this.loadListing(listingAddress)
+    }
   }
 
-  
+  async loadListing(addr) {
+    try {
+      const listing = await origin.listings.get(addr)
+      this.setState({ listing })
+      console.log('Listing: ', listing)
+    } catch(error) {
+      console.error(`Error loading listing ${addr}`)
+      console.error(error)
+    }
+  }
+
+  async loadPurchase() {
+    const { purchaseAddress } = this.props
+
+    try {
+      const purchase = await origin.purchases.get(purchaseAddress)
+      this.setState({ purchase })
+      console.log('Purchase: ', purchase)
+      const logs = await origin.purchases.getLogs(purchaseAddress)
+      this.setState({ logs })
+      console.log('Logs: ', logs)
+    } catch(error) {
+      console.error(`Error loading purchase ${purchaseAddress}`)
+      console.error(error)
+    }
+  }
+
+  async confirmReceipt() {
+    const { purchaseAddress } = this.props
+
+    try {
+      const transaction = await origin.purchases.buyerConfirmReceipt(purchaseAddress)
+      await transaction.whenFinished()
+      this.loadPurchase()
+    } catch(error) {
+      console.error('Error marking purchase received by buyer')
+      console.error(error)
+    }
+  }
+
+  async confirmShipped() {
+    const { purchaseAddress } = this.props
+
+    try {
+      const transaction = await origin.purchases.sellerConfirmShipped(purchaseAddress)
+      await transaction.whenFinished()
+      this.loadPurchase()
+    } catch(error) {
+      console.error('Error marking purchase shipped by seller')
+      console.error(error)
+    }
+  }
+
+  async withdrawFunds() {
+    const { purchaseAddress } = this.props
+
+    try {
+      const transaction = await origin.purchases.sellerGetPayout(purchaseAddress)
+      await transaction.whenFinished()
+      this.loadPurchase()
+    } catch(error) {
+      console.error('Error withdrawing funds for seller')
+      console.error(error)
+    }
+  }
+
+  todo() {
+    alert('To Do')
+  }
 
   render() {
-    const purchase = this.state.purchase
-    const listing = this.state.listing
-    if(this.state.purchase.length === 0 || this.state.listing.length === 0 ){
+    const { listing, purchase, logs } = this.state
+
+    if (!purchase.address || !listing.address ){
       return null
     }
-    console.log(purchase)
-    console.log(listing)
     
     const perspective = window.web3.eth.accounts[0] === purchase.buyerAddress ? 'buyer' : 'seller'
-    const seller = {name: "Unnamed User", address: listing.sellerAddress}
-    const buyer = {name: "Unnamed User", address: purchase.buyerAddress}
+    const seller = { name: 'Unnamed User', address: listing.sellerAddress }
+    const buyer = { name: 'Unnamed User', address: purchase.buyerAddress }
     const pictures = listing.pictures || []
     const category = listing.category || ""
-    const active = listing.unitsAvailable === 0 // Todo, move to origin.js, take into account listing expiration
-    const soldAt = undefined
-    const fulfilledAt = undefined
-    const receivedAt = undefined
-    const withdrawnAt = undefined
-    const reviewedAt = undefined
-    const price = undefined // change to priceEth
+    const active = listing.unitsAvailable > 0 // Todo, move to origin.js, take into account listing expiration
+    const soldAt = purchase.created * 1000 // convert seconds since epoch to ms
+
+    // log events
+    const paymentEvent = logs.find(l => l.stage === 'shipping_pending')
+    const paidAt = paymentEvent ? paymentEvent.timestamp * 1000 : null
+    const fulfillmentEvent = logs.find(l => l.stage === 'buyer_pending')
+    const fulfilledAt = fulfillmentEvent ? fulfillmentEvent.timestamp * 1000 : null
+    const receiptEvent = logs.find(l => l.stage === 'seller_pending')
+    const receivedAt = receiptEvent ? receiptEvent.timestamp * 1000 : null
+    const withdrawalEvent = logs.find(l => l.stage === 'complete')
+    const withdrawnAt = withdrawalEvent ? withdrawalEvent.timestamp * 1000 : null
+    const reviewedAt = null
+    const price = `${Number(listing.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH` // change to priceEth
 
     const counterparty = ['buyer', 'seller'].find(str => str !== perspective)
     const counterpartyUser = counterparty === 'buyer' ? buyer : seller
@@ -109,13 +195,13 @@ class PurchaseDetail extends Component {
     const maxStep = perspective === 'seller' ? 4 : 3
     let decimal, left, step
 
-    if (purchase.stage === "complete") {
+    if (purchase.stage === 'complete') {
       step = maxStep
-    } else if (purchase.stage === "seller_pending") {
+    } else if (purchase.stage === 'seller_pending') {
       step = 3
-    } else if (purchase.stage === "buyer_pending") {
+    } else if (purchase.stage === 'buyer_pending') {
       step = 2
-    } else if (purchase.stage === "shipping_pending") {
+    } else if (purchase.stage === 'shipping_pending') {
       step = 1
     } else {
       step = 0
@@ -138,7 +224,7 @@ class PurchaseDetail extends Component {
     }
 
     const nextStep = nextSteps[step]
-    const { buttonText, instruction, prompt } = nextStep ? nextStep[perspective] : {}
+    const { buttonText, functionName, instruction, prompt } = nextStep ? nextStep[perspective] : {}
 
     return (
       <div className="transaction-detail">
@@ -188,7 +274,7 @@ class PurchaseDetail extends Component {
                       <div className="triangle" style={{ left }}></div>
                       <p className="prompt"><strong>Next Step:</strong> {prompt}</p>
                       <p className="instruction">{instruction || 'Nothing for you to do at this time. Check back later'}</p>
-                      {buttonText && <button className="btn btn-primary" onClick={() => alert('To Do')}>{buttonText}</button>}
+                      {buttonText && <button className="btn btn-primary" onClick={this[functionName]}>{buttonText}</button>}
                     </div>
                   </div>
                 }
@@ -204,36 +290,38 @@ class PurchaseDetail extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sold on<br /><strong>${moment(purchase.created).format('MMM D, YYYY')}</strong>`}></span>{perspective === 'buyer' ? 'Purchased' : 'Sold'}</td>
-                    <td className="text-truncate">{purchase.address}</td>
-                    <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
-                    <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
-                  </tr>
-                  {/*fulfilledAt &&
+                  {paidAt &&
+                    <tr>
+                      <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Payment received on<br /><strong>${moment(paidAt).format('MMM D, YYYY')}</strong>`}></span>Payment Received</td>
+                      <td className="text-truncate">{paymentEvent.transactionHash}</td>
+                      <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{buyer.address}</Link></td>
+                      <td className="text-truncate"><Link to={`/users/${seller.address}`}>{seller.address}</Link></td>
+                    </tr>
+                  }
+                  {fulfilledAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sent by seller on<br /><strong>${moment(fulfilledAt).format('MMM D, YYYY')}</strong>`}></span>Sent by seller</td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x78Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
+                      <td className="text-truncate">{fulfillmentEvent.transactionHash}</td>
+                      <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{seller.address}</Link></td>
+                      <td className="text-truncate"><Link to={`/users/${seller.address}`}>{buyer.address}</Link></td>
                     </tr>
-                  */}
-                  {/*receivedAt &&
+                  }
+                  {receivedAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Received buy buyer on<br /><strong>${moment(receivedAt).format('MMM D, YYYY')}</strong>`}></span>Received by buyer</td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x90Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
+                      <td className="text-truncate">{receiptEvent.transactionHash}</td>
+                      <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{buyer.address}</Link></td>
+                      <td className="text-truncate"><Link to={`/users/${seller.address}`}>{seller.address}</Link></td>
                     </tr>
-                  */}
-                  {/*perspective === 'seller' && withdrawnAt &&
+                  }
+                  {perspective === 'seller' && withdrawnAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Funds withdrawn on<br /><strong>${moment(withdrawnAt).format('MMM D, YYYY')}</strong>`}></span>Funds withdrawn</td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>0x90Be343B94f860124dC4fEe278FDCBD38C102D88</a></td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{buyer.address}</a></td>
-                      <td className="text-truncate"><a href="#" onClick={() => alert('To Do')}>{seller.address}</a></td>
+                      <td className="text-truncate">{withdrawalEvent.transactionHash}</td>
+                      <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{seller.address}</Link></td>
+                      <td className="text-truncate"><Link to={`/users/${seller.address}`}>{buyer.address}</Link></td>
                     </tr>
-                  */}
+                  }
                 </tbody>
               </table>
               <hr />
@@ -324,14 +412,10 @@ class PurchaseDetail extends Component {
                 <div className="summary text-center">
                   {perspective === 'buyer' && <div className="purchased tag"><p>Purchased</p></div>}
                   {perspective === 'seller' && <div className="sold tag"><p>Sold</p></div>}
-                  <p className="recap">{listing[counterparty].name} {perspective === 'buyer' ? 'sold' : 'purchased'} on {moment(soldAt).format('MMMM D, YYYY')}</p>
+                  <p className="recap">{counterpartyUser.name} {perspective === 'buyer' ? 'sold' : 'purchased'} on {moment(soldAt).format('MMMM D, YYYY')}</p>
                   <hr />
                   <div className="d-flex">
                     <p className="text-left">Price</p>
-                    <p className="text-right">{price}</p>
-                  </div>
-                  <div className="d-flex">
-                    <p className="text-left">Contract Price</p>
                     <p className="text-right">{price}</p>
                   </div>
                   <hr />

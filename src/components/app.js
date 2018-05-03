@@ -16,6 +16,7 @@ import MyPurchases from './my-purchases'
 import MySales from './my-sales'
 import Notifications from './notifications'
 import Profile from './profile'
+import User from './user'
 import PurchaseDetail from './purchase-detail'
 import Web3Provider from './web3-provider'
 import 'bootstrap/dist/js/bootstrap'
@@ -68,6 +69,10 @@ const ProfilePage = (props) => (
   <Profile />
 )
 
+const UserPage = (props) => (
+  <User userAddress={props.match.params.userAddress} />
+)
+
 // Top level component
 const App = () => (
   <Router>
@@ -85,6 +90,7 @@ const App = () => (
             <Route path="/my-sales" component={MySalesPage} />
             <Route path="/notifications" component={NotificationsPage} />
             <Route path="/profile" component={ProfilePage} />
+            <Route path="/users/:userAddress" component={UserPage} />
           </Switch>
         </Web3Provider>
       </Layout>
