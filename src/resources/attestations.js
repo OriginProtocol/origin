@@ -1,5 +1,5 @@
 import RLP from "rlp"
-import web3Utils from "web3-utils"
+import Web3 from "web3"
 
 const claimTypeMapping = {
   3: "facebook",
@@ -34,7 +34,7 @@ class Attestations {
     this.responseToAttestation = (resp = {}) => {
       return new AttestationObject({
         claimType: resp['claim-type'],
-        data: web3Utils.sha3(resp['data']),
+        data: Web3.utils.soliditySha3(resp['data']),
         signature: resp['signature']
       })
     }
@@ -45,7 +45,7 @@ class Attestations {
     let identityAddress = await userRegistry.methods.users(wallet).call()
     let hasRegisteredIdentity = identityAddress !== "0x0000000000000000000000000000000000000000"
     if (hasRegisteredIdentity) {
-      return web3Utils.toChecksumAddress(identityAddress)
+      return Web3.utils.toChecksumAddress(identityAddress)
     } else {
       return this.predictIdentityAddress(wallet)
     }
@@ -123,7 +123,7 @@ class Attestations {
       this.responseToAttestation
     )
   }
-  
+
   async http(baseUrl, url, body, successFn, method) {
     let response = await this.fetch(
       appendSlash(baseUrl) + url,
@@ -155,8 +155,8 @@ class Attestations {
         resolve(count)
       })
     })
-    let address = "0x" + web3Utils.sha3(RLP.encode([wallet, nonce])).substring(26, 66)
-    return web3Utils.toChecksumAddress(address)
+    let address = "0x" + Web3.utils.sha3(RLP.encode([wallet, nonce])).substring(26, 66)
+    return Web3.utils.toChecksumAddress(address)
   }
 }
 

@@ -1,4 +1,4 @@
-const web3Utils = require('web3-utils')
+var Web3 = require("web3")
 
 const ClaimHolderRegistered = artifacts.require("ClaimHolderRegistered")
 const UserRegistry = artifacts.require("UserRegistry")
@@ -34,7 +34,7 @@ contract("ClaimHolderRegistered", accounts => {
   })
 
   it("can add and get claim", async function() {
-    let claimId = web3Utils.soliditySha3(
+    let claimId = Web3.utils.soliditySha3(
       attestation_1.issuer,
       attestation_1.claimType
     )
@@ -67,7 +67,7 @@ contract("ClaimHolderRegistered", accounts => {
       { from: accounts[0] }
     )
 
-    let claimId_1 = web3Utils.soliditySha3(
+    let claimId_1 = Web3.utils.soliditySha3(
       attestation_1.issuer,
       attestation_1.claimType
     )
@@ -81,7 +81,7 @@ contract("ClaimHolderRegistered", accounts => {
     assert.equal(data_1, attestation_1.data)
     assert.equal(uri_1, attestation_1.uri)
 
-    let claimId_2 = web3Utils.soliditySha3(
+    let claimId_2 = Web3.utils.soliditySha3(
       attestation_2.issuer,
       attestation_2.claimType
     )

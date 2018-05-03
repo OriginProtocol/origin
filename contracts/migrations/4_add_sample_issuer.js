@@ -1,8 +1,8 @@
 var OriginIdentity = artifacts.require("./OriginIdentity.sol");
-var web3Utils = require("web3-utils")
+var Web3 = require("web3")
 
 const issuer = "0x99C03fBb0C995ff1160133A8bd210D0E77bCD101"
-const issuerHashed = web3Utils.soliditySha3(issuer)
+const issuerHashed = Web3.utils.soliditySha3(issuer)
 const keyPurpose = 3
 const keyType = 1
 

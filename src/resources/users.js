@@ -8,8 +8,7 @@ import {
   bufferToHex,
   pubToAddress
 } from "ethereumjs-util"
-import web3Utils from "web3-utils" // not necessary with web3 1.0
-import Web3EthAccounts from "web3-eth-accounts" // not necessary with web3 1.0
+import Web3 from "web3"
 
 var Ajv = require('ajv')
 var ajv = new Ajv()
@@ -29,7 +28,7 @@ let validateUser = (data) => {
 class Users extends ResourceBase {
   constructor({ contractService, ipfsService }) {
     super({ contractService, ipfsService })
-    this.web3EthAccounts = new Web3EthAccounts()
+    this.web3EthAccounts = this.contractService.web3.eth.accounts
   }
 
   async set({ profile, attestations = [] }) {
@@ -178,7 +177,7 @@ class Users extends ResourceBase {
   async validAttestations(identityAddress, attestations) {
     let originIdentity = await this.contractService.originIdentityContract.deployed()
     return attestations.filter(async ({ claimType, issuer, data, signature }) => {
-      let msg = web3Utils.soliditySha3(identityAddress, claimType, data)
+      let msg = Web3.utils.soliditySha3(identityAddress, claimType, data)
       let prefixedMsg = this.web3EthAccounts.hashMessage(msg)
       let dataBuf = toBuffer(prefixedMsg)
       let sig = fromRpcSig(signature)

@@ -1,4 +1,4 @@
-var web3Utils = require('web3-utils')
+var Web3 = require("web3")
 
 const ClaimHolder = artifacts.require("ClaimHolder")
 const ClaimHolderPresigned = artifacts.require("ClaimHolderPresigned")
@@ -41,7 +41,7 @@ contract("ClaimHolderPresigned", accounts => {
     )
 
     // Check attestation 1
-    let claimId_1 = web3Utils.soliditySha3(attestation_1.issuer, attestation_1.claimType)
+    let claimId_1 = Web3.utils.soliditySha3(attestation_1.issuer, attestation_1.claimType)
     let fetchedClaim_1 = await instance.getClaim(claimId_1, { from: accounts[0] })
     assert.ok(fetchedClaim_1)
     let [ claimType_1, scheme_1, issuer_1, signature_1, data_1, uri_1 ] = fetchedClaim_1
@@ -53,7 +53,7 @@ contract("ClaimHolderPresigned", accounts => {
     assert.equal(uri_1, attestation_1.uri)
 
     // Check attestation 2
-    let claimId_2 = web3Utils.soliditySha3(attestation_2.issuer, attestation_2.claimType)
+    let claimId_2 = Web3.utils.soliditySha3(attestation_2.issuer, attestation_2.claimType)
     let fetchedClaim_2 = await instance.getClaim(claimId_2, { from: accounts[0] })
     assert.ok(fetchedClaim_2)
     let [ claimType_2, scheme_2, issuer_2, signature_2, data_2, uri_2 ] = fetchedClaim_2
