@@ -68,3 +68,9 @@ class ContractHelper:
     @staticmethod
     def numeric_eth(str_eth_address):
         return int(str_eth_address, 16)
+
+def get_contract_internal_name(contract):
+    # create a 40 byte placeholder used in linked contracts
+    contract_slice = contract[:36]
+    return "__{contract_slice}{suffix}".format(contract_slice=contract_slice,
+                                               suffix=(38-len(contract_slice)) * '_')
