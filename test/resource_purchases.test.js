@@ -47,10 +47,9 @@ describe("Purchase Resource", function() {
     }
     const schema = "for-sale"
     const listingTransaction = await listings.create(listingData, schema)
-    const listingEvent = listingTransaction.logs.find(
-      e => e.event == "NewListing"
-    )
-    listing = await listings.getByIndex(listingEvent.args._index)
+
+    const listingEvent = listingTransaction.events.NewListing
+    listing = await listings.getByIndex(listingEvent.returnValues._index)
 
     // Buy listing to create a purchase
     const purchaseTransaction = await listings.buy(
@@ -58,10 +57,8 @@ describe("Purchase Resource", function() {
       1,
       listing.price - 0.1
     )
-    const purchaseEvent = purchaseTransaction.logs.find(
-      e => e.event == "ListingPurchased"
-    )
-    purchase = await purchases.get(purchaseEvent.args._purchaseContract)
+    const purchaseEvent = purchaseTransaction.events.ListingPurchased
+    purchase = await purchases.get(purchaseEvent.returnValues._purchaseContract)
   }
 
   let expectStage = function(expectedStage) {
@@ -88,7 +85,7 @@ describe("Purchase Resource", function() {
       expectStage("awaiting_payment")
       await purchases.pay(
         purchase.address,
-        contractService.web3.toWei("0.1", "ether")
+        contractService.web3.utils.toWei("0.1", "ether")
       )
       purchase = await purchases.get(purchase.address)
       expectStage("shipping_pending")
@@ -133,7 +130,7 @@ describe("Purchase Resource", function() {
     it("should allow us to wait for a transaction to be mined", async () => {
       const transaction = await purchases.pay(
         purchase.address,
-        contractService.web3.toWei("0.1", "ether")
+        contractService.web3.utils.toWei("0.1", "ether")
       )
       await transaction.whenFinished()
     })

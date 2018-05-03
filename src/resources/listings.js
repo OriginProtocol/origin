@@ -22,10 +22,10 @@ class Listings extends ResourceBase{
       ipfsHash: ipfsHash,
       sellerAddress: contractData[0],
       priceWei: contractData[2].toString(),
-      price: this.contractService.web3.fromWei(contractData[2], "ether").toNumber(),
-      unitsAvailable: contractData[3].toNumber(),
-      created: contractData[4].toNumber(),
-      expiration: contractData[5].toNumber(),
+      price: this.contractService.web3.utils.fromWei(contractData[2], "ether"),
+      unitsAvailable: contractData[3],
+      created: contractData[4],
+      expiration: contractData[5],
 
       name: ipfsData.data.name,
       category: ipfsData.data.category,
@@ -56,8 +56,8 @@ class Listings extends ResourceBase{
       index: contractData.index,
       ipfsHash: contractData.ipfsHash,
       sellerAddress: contractData.lister,
-      price: contractData.price,
-      unitsAvailable: contractData.unitsAvailable
+      price: Number(contractData.price),
+      unitsAvailable: Number(contractData.unitsAvailable)
     }
 
     // TODO: Validation
@@ -112,7 +112,7 @@ class Listings extends ResourceBase{
 
   async buy(address, unitsToBuy, ethToPay) {
     // TODO: ethToPay should really be replaced by something that takes Wei.
-    const value = this.contractService.web3.toWei(ethToPay, "ether")
+    const value = this.contractService.web3.utils.toWei(String(ethToPay), "ether")
     return await this.contractFn(address, "buyListing", [unitsToBuy], {value:value, gas: 650000})
   }
 
@@ -121,7 +121,7 @@ class Listings extends ResourceBase{
   }
 
   async purchasesLength(address) {
-    return (await this.contractFn(address, "purchasesLength")).toNumber()
+    return Number(await this.contractFn(address, "purchasesLength"))
   }
 
   async purchaseAddressByIndex(address, index) {

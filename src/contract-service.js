@@ -3,8 +3,6 @@ import ListingContract from "./../contracts/build/contracts/Listing.json"
 import PurchaseContract from "./../contracts/build/contracts/Purchase.json"
 import UserRegistryContract from "./../contracts/build/contracts/UserRegistry.json"
 import bs58 from "bs58"
-import contract from "truffle-contract"
-import promisify from "util.promisify"
 import Web3 from "web3"
 
 class ContractService {
@@ -24,8 +22,7 @@ class ContractService {
       userRegistryContract: UserRegistryContract
     }
     for (let name in contracts) {
-      this[name] = contract(contracts[name])
-      this[name].setProvider(this.web3.currentProvider)
+      this[name] = contracts[name]
     }
   }
 
@@ -59,8 +56,7 @@ class ContractService {
 
   // Returns the first account listed
   async currentAccount() {
-    const eth = this.web3.eth
-    const accounts = await promisify(eth.getAccounts.bind(eth))()
+    const accounts = await this.web3.eth.getAccounts()
     return accounts[0]
   }
 
@@ -92,22 +88,29 @@ class ContractService {
 
   async submitListing(ipfsListing, ethPrice, units) {
     try {
+      const net = await this.web3.eth.net.getId()
       const account = await this.currentAccount()
-      const instance = await this.listingsRegistryContract.deployed()
+      const instance = await this.deployed(ListingsRegistryContract)
 
-      const weiToGive = this.web3.toWei(ethPrice, "ether")
+      const weiToGive = this.web3.utils.toWei(String(ethPrice), "ether")
       // Note we cannot get the listingId returned by our contract.
       // See: https://forum.ethereum.org/discussion/comment/31529/#Comment_31529
-      return instance.create(
-        this.getBytes32FromIpfsHash(ipfsListing),
-        weiToGive,
-        units,
-        { from: account, gas: 4476768 }
-      )
+      return instance.methods
+        .create(this.getBytes32FromIpfsHash(ipfsListing), weiToGive, units)
+        .send({ from: account, gas: 4476768 })
     } catch (error) {
       console.error("Error submitting to the Ethereum blockchain: " + error)
       throw error
     }
+  }
+
+  async deployed(contract) {
+    const net = await this.web3.eth.net.getId()
+    const addrs = contract.networks[net]
+    return new this.web3.eth.Contract(
+      contract.abi,
+      addrs ? addrs.address : null
+    )
   }
 
   async getAllListingIds() {
@@ -116,7 +119,7 @@ class ContractService {
 
     let instance
     try {
-      instance = await this.listingsRegistryContract.deployed()
+      instance = await this.deployed(ListingsRegistryContract)
     } catch (error) {
       console.log(`Contract not deployed`)
       throw error
@@ -125,7 +128,7 @@ class ContractService {
     // Get total number of listings
     let listingsLength
     try {
-      listingsLength = await instance.listingsLength.call()
+      listingsLength = await instance.methods.listingsLength().call()
     } catch (error) {
       console.log(error)
       console.log(`Can't get number of listings.`)
@@ -136,11 +139,11 @@ class ContractService {
   }
 
   async getListing(listingId) {
-    const instance = await this.listingsRegistryContract.deployed()
+    const instance = await this.deployed(ListingsRegistryContract)
 
     let listing
     try {
-      listing = await instance.getListing.call(listingId)
+      listing = await instance.methods.getListing(listingId).call()
     } catch (error) {
       throw new Error(`Error fetching listingId: ${listingId}`)
     }
@@ -154,8 +157,8 @@ class ContractService {
       address: listing[0],
       lister: listing[1],
       ipfsHash: this.getIpfsHashFromBytes32(listing[2]),
-      price: this.web3.fromWei(listing[3], "ether").toNumber(),
-      unitsAvailable: listing[4].toNumber()
+      price: this.web3.utils.fromWei(listing[3], "ether"),
+      unitsAvailable: listing[4]
     }
     return listingObject
   }
@@ -169,6 +172,7 @@ class ContractService {
     const blockNumber = await new Promise((resolve, reject) => {
       if (!transactionHash) {
         reject(`Invalid transactionHash passed: ${transactionHash}`)
+        return
       }
       var txCheckTimer
       let txCheckTimerCallback = () => {
