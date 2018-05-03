@@ -55,6 +55,7 @@ class Users extends ResourceBase {
     address = address || account
     let result = await userRegistry.methods.users(address).call()
     if (String(result) === zeroAddress) {
+      return false
     } else {
       return result
     }
@@ -121,7 +122,7 @@ class Users extends ResourceBase {
           issuers,
           sigs,
           data
-        ).call({ from: account, gas: 4000000 })
+        ).send({ from: account, gas: 4000000 })
       } else {
         // create identity with presigned claims
         return await this.contractService.deploy(
