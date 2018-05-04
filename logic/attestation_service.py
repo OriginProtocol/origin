@@ -13,7 +13,12 @@ from config import settings
 from database import db
 from database import db_models
 from flask import session
-from logic.service_utils import PhoneVerificationError, EmailVerificationError, FacebookVerificationError, TwitterVerificationError
+from logic.service_utils import (
+    PhoneVerificationError,
+    EmailVerificationError,
+    FacebookVerificationError,
+    TwitterVerificationError
+)
 from sqlalchemy import func
 from util import time_, attestations
 from web3 import Web3, HTTPProvider
@@ -35,9 +40,11 @@ twitter_access_token_url = 'https://api.twitter.com/oauth/access_token'
 
 CODE_EXPIRATION_TIME_MINUTES = 30
 
+
 class VerificationServiceResponse():
-    def __init__(self, data = {}):
+    def __init__(self, data={}):
         self.data = data
+
 
 class VerificationService:
     def generate_phone_verification_code(phone):
@@ -53,7 +60,9 @@ class VerificationService:
             # throw a rate limit error, so they can't just keep creating codes
             # and guessing them
             # rapidly.
-            raise PhoneVerificationError('Please wait briefly before requesting a new verification code.')
+            raise PhoneVerificationError(
+                'Please wait briefly before requesting'
+                ' a new verification code.')
         db_code.phone = phone
         db_code.code = random_numeric_token()
         db_code.expires_at = time_.utcnow(
@@ -67,11 +76,14 @@ class VerificationService:
             .filter(VC.phone == phone) \
             .first()
         if db_code is None:
-            raise PhoneVerificationError('The given phone number was not found.')
+            raise PhoneVerificationError(
+                'The given phone number was not found.')
         if code != db_code.code:
-            raise PhoneVerificationError('The code you provided is invalid.')
+            raise PhoneVerificationError('The code you provided'
+                                         ' is invalid.')
         if time_.utcnow() > db_code.expires_at:
-            raise PhoneVerificationError('The code you provided has expired.')
+            raise PhoneVerificationError('The code you provided'
+                                         ' has expired.')
         # TODO: determine what the text should be
         data = 'phone verified'
         # TODO: determine claim type integer code for phone verification
@@ -95,7 +107,9 @@ class VerificationService:
             # If the client has requested a verification code already within
             # the last 10 seconds, throw a rate limit error, so they can't just
             # keep creating codes and guessing them rapidly.
-            raise EmailVericationError('Please wait briefly before requesting a new verification code.')
+            raise EmailVerificationError(
+                'Please wait briefly before requesting'
+                ' a new verification code.')
         db_code.email = email
         db_code.code = random_numeric_token()
         db_code.expires_at = time_.utcnow() + datetime.timedelta(
@@ -109,11 +123,14 @@ class VerificationService:
             .filter(func.lower(VC.email) == func.lower(email)) \
             .first()
         if db_code is None:
-            raise EmailVerificationError('The given email was not found.')
+            raise EmailVerificationError('The given email was'
+                                         ' not found.')
         if code != db_code.code:
-            raise EmailVerificationError('The code you provided is invalid.')
+            raise EmailVerificationError('The code you provided'
+                                         ' is invalid.')
         if time_.utcnow() > db_code.expires_at:
-            raise EmailVerificationError('The code you provided has expired.')
+            raise EmailVerificationError('The code you provided'
+                                         ' has expired.')
 
         # TODO: determine what the text should be
         data = 'email verified'
@@ -148,7 +165,8 @@ class VerificationService:
         response = json.loads(conn.getresponse().read())
         has_access_token = ('access_token' in response)
         if not has_access_token or 'error' in response:
-            raise FacebookVerificationError('The code you provided is invalid.')
+            raise FacebookVerificationError(
+                'The code you provided is invalid.')
         # TODO: determine what the text should be
         data = 'facebook verified'
         # TODO: determine claim type integer code for phone verification
@@ -189,7 +207,8 @@ class VerificationService:
         resp, content = client.request(twitter_access_token_url, 'GET')
         access_token = dict(cgi.parse_qsl(content))
         if resp['status'] != '200' or b'oauth_token' not in access_token:
-            raise TwitterVerificationError('The verifier you provided is invalid.')
+            raise TwitterVerificationError(
+                'The verifier you provided is invalid.')
 
         # Create attestation
         # TODO: determine what the text should be
