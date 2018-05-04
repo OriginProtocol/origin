@@ -125,22 +125,24 @@ def mock_send_sms(app):
     patcher.stop()
 
 
-# @pytest.fixture(scope="module")
-# def eth_tester():
-#     _eth_tester = EthereumTester()
-#     return _eth_tester
+@pytest.yield_fixture(scope='function')
+def mock_ipfs_init(app):
+    patcher = patch('util.ipfs.IPFSHelper.__init__',
+                    return_value=None)
+
+    yield patcher.start()
+    patcher.stop()
 
 
-# @pytest.fixture(scope="module")
-# def eth_tester_provider(eth_tester):
-#     provider = EthereumTesterProvider(eth_tester)
-#     return provider
+@pytest.yield_fixture(scope='function')
+def mock_ipfs(app, mock_ipfs_init):
+    with open("./tests/ipfs/sample.json") as f:
+        ipfs_data = json.loads(f.read())
+    patcher = patch('util.ipfs.IPFSHelper.file_from_hash',
+                    return_value=ipfs_data)
+    yield patcher.start()
+    patcher.stop()
 
-
-# @pytest.fixture(scope="module")
-# def web3(eth_tester_provider):
-#     _web3 = Web3(eth_tester_provider)
-#     return _web3
 
 @pytest.fixture()
 def wait_for_block():
@@ -261,6 +263,30 @@ def listing_contract(web3, wait_for_transaction, wait_for_block,
                              base58_to_hex(ipfs_hash),
                              3, 25).transact({'from': web3.eth.coinbase,
                                               'gas': 1000000})
+    deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
+    contract_address = deploy_receipt['contractAddress']
+    return contract(address=contract_address)
+
+
+@pytest.fixture()
+def purchase_contract(web3, wait_for_transaction, wait_for_block,
+                      listing_contract):
+    contract_name = 'Purchase'
+    with open("./contracts/{}.json".format(contract_name)) as f:
+        contract_interface = json.loads(f.read())
+    wait_for_block(web3)
+
+    CONTRACT_META = {
+        "abi": contract_interface['abi'],
+        "bytecode": contract_interface['bytecode']
+    }
+
+    contract = web3.eth.contract(**CONTRACT_META)
+    deploy_txn_hash = \
+        contract.constructor(listing_contract.address,
+                             listing_contract.address
+                             ).transact({'from': web3.eth.coinbase,
+                                         'gas': 1000000})
     deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
     contract_address = deploy_receipt['contractAddress']
     return contract(address=contract_address)

@@ -22,16 +22,16 @@ def update_event_counter(block_number):
     db.session.commit()
 
 
-def event_reducer(payload):
+def event_reducer(payload, web3=None):
     event_hash = payload['topics'][0].hex()
     event_action = get_event_action(event_hash)
     if event_action:
-        event_action(payload)
+        event_action(payload, web3)
         update_event_counter(payload['blockNumber'])
 
 
-def new_listing(payload):
-    contract_helper = ContractHelper()
+def new_listing(payload, web3=None):
+    contract_helper = ContractHelper(web3)
     contract = contract_helper.get_instance('ListingsRegistry',
                                             payload['address'])
     registry_index = contract_helper.convert_event_data('NewListing',
@@ -40,18 +40,21 @@ def new_listing(payload):
     create_or_update_listing(listing_data[0])
 
 
-def listing_change(payload):
-    create_or_update_listing(Web3.toChecksumAddress(payload['address']))
+def listing_change(payload, web3=None):
+    create_or_update_listing(Web3.toChecksumAddress(payload['address']),
+                             web3)
 
 
-def listing_purchased(payload):
+def listing_purchased(payload, web3=None):
     address = ContractHelper.convert_event_data('ListingPurchased',
                                                 payload['data'])
-    create_or_update_purchase(address)
+    create_or_update_purchase(address,
+                              web3)
 
 
-def purchase_change(payload):
-    create_or_update_purchase(Web3.toChecksumAddress(payload['address']))
+def purchase_change(payload, web3=None):
+    create_or_update_purchase(Web3.toChecksumAddress(payload['address']),
+                              web3)
 
 
 def create_or_update_listing(address, web3=None):
