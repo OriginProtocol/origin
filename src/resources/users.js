@@ -25,6 +25,13 @@ let validateUser = (data) => {
   }
 }
 
+class UserObject {
+  constructor({ profile, attestations } = {}) {
+    this.profile = profile
+    this.attestations = attestations
+  }
+}
+
 class Users extends ResourceBase {
   constructor({ contractService, ipfsService }) {
     super({ contractService, ipfsService })
@@ -44,9 +51,10 @@ class Users extends ResourceBase {
   async get(address) {
     let identityAddress = await this.identityAddress(address)
     if (identityAddress) {
-      return await this.getClaims(identityAddress)
+      let userData = await this.getClaims(identityAddress)
+      return new UserObject(userData)
     }
-    return []
+    return new UserObject()
   }
 
   async identityAddress(address) {
