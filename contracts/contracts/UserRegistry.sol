@@ -24,33 +24,18 @@ contract UserRegistry {
     * Public functions
     */
 
-    /// @dev create(): Create a user
-    function create() public
+    /// @dev registerUser(): Add a user to the registry
+    function registerUser()
+      public
     {
-        ClaimHolder _identity = new ClaimHolder();
-        users[msg.sender] = _identity;
-        emit NewUser(msg.sender, _identity);
+        users[tx.origin] = msg.sender;
+        emit NewUser(tx.origin, msg.sender);
     }
 
-    /// @dev createWithClaims(): Create a user with presigned claims
-    // Params correspond to params of ClaimHolderPresigned
-    function createWithClaims(
-        uint256[] _claimType,
-        address[] _issuer,
-        bytes _signature,
-        bytes _data,
-        uint256[] _offsets
-    )
-        public
+    /// @dev clearUser(): Remove user from the registry
+    function clearUser()
+      public
     {
-        ClaimHolderPresigned _identity = new ClaimHolderPresigned(
-          _claimType,
-          _issuer,
-          _signature,
-          _data,
-          _offsets
-        );
-        users[msg.sender] = _identity;
-        emit NewUser(msg.sender, _identity);
+        users[msg.sender] = 0;
     }
 }

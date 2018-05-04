@@ -1,6 +1,6 @@
 pragma solidity ^0.4.23;
 
-import './ClaimHolder.sol';
+import './ClaimHolderRegistered.sol';
 
 /**
  * NOTE: This contract exists as a convenience for deploying an identity with
@@ -8,15 +8,17 @@ import './ClaimHolder.sol';
  * instead.
  */
 
-contract ClaimHolderPresigned is ClaimHolder {
+contract ClaimHolderPresigned is ClaimHolderRegistered {
 
     constructor(
+        address _userRegistryAddress,
         uint256[] _claimType,
         address[] _issuer,
         bytes _signature,
         bytes _data,
         uint256[] _offsets
     )
+        ClaimHolderRegistered(_userRegistryAddress)
         public
     {
         uint offset = 0;
@@ -31,19 +33,5 @@ contract ClaimHolderPresigned is ClaimHolder {
             );
             offset += _offsets[i];
         }
-    }
-
-    function getBytes(bytes _str, uint256 _offset, uint256 _length)
-        private
-        pure
-        returns (bytes)
-    {
-        bytes memory sig = new bytes(_length);
-        uint256 j = 0;
-        for (uint256 k = _offset; k< _offset + _length; k++) {
-          sig[j] = _str[k];
-          j++;
-        }
-        return sig;
     }
 }
