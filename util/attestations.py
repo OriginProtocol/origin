@@ -11,6 +11,6 @@ def generate_signature(web3, private_key, subject, claim_type, data):
     hash_to_sign = Web3.soliditySha3(['address', 'uint256', 'bytes32'], [
                                      subject, claim_type, hashed_data])
     result = w3.eth.account.signHash(
-        message_hash=defunct_hash_message(text=hash_to_sign.hex()),
+        message_hash=defunct_hash_message(hexstr=hash_to_sign.hex()),
         private_key=private_key)
     return result['signature'].hex()
