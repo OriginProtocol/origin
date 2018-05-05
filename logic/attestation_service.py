@@ -8,6 +8,7 @@ import sendgrid
 
 from sendgrid.helpers.mail import Email, Content, Mail
 from twilio.rest import Client
+from twilio.base.exceptions import TwilioRestException
 
 from config import settings
 from database import db
@@ -68,7 +69,13 @@ class VerificationService:
         db_code.expires_at = time_.utcnow(
         ) + datetime.timedelta(minutes=CODE_EXPIRATION_TIME_MINUTES)
         db.session.commit()
-        send_code_via_sms(phone, db_code.code)
+        try:
+            send_code_via_sms(phone, db_code.code)
+        except TwilioRestException as e:
+            db.session.rollback()
+            raise PhoneVerificationError(
+                'Could not send'
+                ' verification code.')
         return VerificationServiceResponse()
 
     def verify_phone(phone, code, eth_address):
@@ -237,11 +244,14 @@ def random_numeric_token():
 
 def send_code_via_sms(phone, code):
     client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-    client.messages.create(
-        to=phone,
-        from_=settings.TWILIO_NUMBER,
-        body=('Your Origin verification code is {}.'
-              ' It will expire in 30 minutes.').format(code))
+    try:
+        client.messages.create(
+            to=phone,
+            from_=settings.TWILIO_NUMBER,
+            body=('Your Origin verification code is {}.'
+                  ' It will expire in 30 minutes.').format(code))
+    except TwilioRestException as e:
+        raise e
 
 
 def send_code_via_email(address, code):

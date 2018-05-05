@@ -55,6 +55,17 @@ def test_generate_phone_verification_code_phone_already_in_db(
     assert db_code.expires_at > expires_at
 
 
+def test_generate_phone_verification_code_twilio_exception(
+        mock_send_sms_exception, session):
+    phone = '5551231212'
+    with pytest.raises(PhoneVerificationError) as service_err:
+        VerificationService.generate_phone_verification_code(phone)
+
+    assert str(service_err.value) == 'Could not send verification code.'
+    db_code = VC.query.filter(VC.phone == phone).first()
+    assert db_code is None
+
+
 def test_verify_phone_valid_code(session):
     vc_obj = VerificationCodeFactory.build()
     session.add(vc_obj)

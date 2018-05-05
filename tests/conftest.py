@@ -1,6 +1,7 @@
 import pytest
 from mock import patch
 from testing.postgresql import Postgresql
+from twilio.base.exceptions import TwilioRestException
 
 from app import app as flask_app
 from app.app_config import init_api
@@ -78,5 +79,14 @@ def session(db):
 def mock_send_sms(app):
     patcher = patch('logic.attestation_service.send_code_via_sms',
                     return_value=True)
+    yield patcher.start()
+    patcher.stop()
+
+
+@pytest.yield_fixture(scope='function')
+def mock_send_sms_exception(app):
+    patcher = patch('logic.attestation_service.send_code_via_sms',
+                    side_effect=TwilioRestException(
+                        status=400, uri='/Accounts/testtest/Messages.json'))
     yield patcher.start()
     patcher.stop()
