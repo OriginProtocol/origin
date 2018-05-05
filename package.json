@@ -37,6 +37,7 @@
     "form-data": "^2.3.2",
     "ipfs-api": "^20.2.0",
     "map-cache": "^0.2.2",
+    "npm": "^6.0.0",
     "rlp": "^2.0.0",
     "truffle-contract": "^3.0.5",
     "util.promisify": "^1.0.0",
