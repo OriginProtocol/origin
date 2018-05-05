@@ -1,5 +1,5 @@
 from marshmallow import Schema, fields, ValidationError
-from logic import service_utils
+from logic.service_utils import ServiceError
 
 
 class StandardRequest(Schema):
@@ -36,11 +36,8 @@ def handle_request(data, handler, request_schema, response_schema):
         resp = handler(**req)
         return response_schema().dump(resp.data), 200
     # Handle custom errors we have explicitly thrown from our services
-    except service_utils.ServiceError as service_err:
+    except ServiceError as service_err:
         resp = {
-            'errors': [{
-                'code': service_err.args[0]['code'],
-                'message': service_err.args[0]['message']
-            }]
+            'errors': [str(service_err)]
         }
         return response_schema().dump(resp), 422
