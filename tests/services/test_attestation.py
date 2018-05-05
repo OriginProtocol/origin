@@ -14,6 +14,8 @@ from tests.factories.attestation import VerificationCodeFactory
 from util.time_ import utcnow
 VC = db_models.VerificationCode
 
+SIGNATURE_LENGTH = 132
+
 
 def test_generate_phone_verification_code_new_phone(mock_send_sms):
     phone = '5551231212'
@@ -80,10 +82,7 @@ def test_verify_phone_valid_code(session):
     assert isinstance(resp, VerificationServiceResponse)
     resp_data = resp.data
 
-    assert resp_data['signature'] == (
-        '0x1aa9ad132f99cee742206f66663cd92cb769de97ffad'
-        'fff61d37306b23866f385882a122633df05fe478e3e3'
-        '908196892a18c1666a31f19be7bcb83d8b321b661c')
+    assert len(resp_data['signature']) == SIGNATURE_LENGTH
     assert resp_data['claim_type'] == 10
     assert resp_data['data'] == 'phone verified'
 
@@ -205,10 +204,7 @@ def test_verify_email_valid_code(mock_now, session):
     mock_now.return_value = vc_obj.expires_at - datetime.timedelta(minutes=1)
     resp = VerificationService.verify_email(**req)
     resp_data = resp.data
-    assert resp_data['signature'] == (
-        '0x02fb9b226d84e0124ad16915324359432ecc4091273c8'
-        'f3e275c4545c3d79b1e0afc0560eab381649c9bc19407f'
-        '9e344b9a20370e8b32564c5ce6b6ebdaee4061c')
+    assert len(resp_data['signature']) == SIGNATURE_LENGTH
     assert resp_data['claim_type'] == 11
     assert resp_data['data'] == 'email verified'
 
@@ -297,10 +293,7 @@ def test_verify_facebook_valid_code(MockHttpConnection):
         '/v2.12/oauth/access_token?client_id=facebook-client-id&' +
         'client_secret=facebook-client-secret&' +
         'redirect_uri=http://hello.world/&code=abcde12345')
-    assert resp_data['signature'] == (
-        '0x77e08f08e7ba15535cf60617660865e3b8e4a2d98aff'
-        'b3f6b2ffe853d005033e000da2e51a3bd401f388ba57e7b'
-        '9f6c5af9415ef341a3145d314d7438a526b831b')
+    assert len(resp_data['signature']) == SIGNATURE_LENGTH
     assert resp_data['claim_type'] == 3
     assert resp_data['data'] == 'facebook verified'
 
@@ -362,10 +355,7 @@ def test_verify_twitter_valid_code(mock_session, MockOauthClient):
     resp_data = resp.data
     mock_oauth_client.request.assert_called_once_with(
         'https://api.twitter.com/oauth/access_token', 'GET')
-    assert resp_data['signature'] == (
-        '0xeae23a894a3b41ee4b824deea5c121174a7d9a951a6e'
-        'ef6d958d0c68648d65ef11a0eb99d653932927d5565a517'
-        '91df58e5c82dd7777c4e796c3a7bc1104d95c1c')
+    assert len(resp_data['signature']) == SIGNATURE_LENGTH
     assert resp_data['claim_type'] == 4
     assert resp_data['data'] == 'twitter verified'
 
