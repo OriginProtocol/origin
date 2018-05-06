@@ -111,9 +111,8 @@
     }
   },
   "jest": {
-      "setupFiles": [
-          "./src/setupTests.js"
-      ]
+    "setupFiles": [
+      "./src/setupTests.js"
+    ]
   }
-
 }
