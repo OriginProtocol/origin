@@ -13,7 +13,16 @@ module.exports = function(deployer, network) {
 }
 
 async function add_sample_issuer(network) {
-  let defaultAccount = web3.eth.accounts[0]
+  let accounts = await new Promise((resolve, reject) => {
+    web3.eth.getAccounts((error, result) => {
+      if (error) {
+        reject(err)
+      }
+      resolve(result)
+    })
+  })
+
+  let defaultAccount = accounts[0]
 
   let originIdentity = await OriginIdentity.deployed()
 

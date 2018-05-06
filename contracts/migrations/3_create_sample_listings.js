@@ -9,12 +9,19 @@ module.exports = function(deployer, network) {
 }
 
 async function deploy_sample_contracts(network) {
-  console.log("deploying listings")
+  let accounts = await new Promise((resolve, reject) => {
+    web3.eth.getAccounts((error, result) => {
+      if (error) {
+        reject(err)
+      }
+      resolve(result)
+    })
+  })
 
-  const default_account = web3.eth.accounts[0]
-  const a_seller_account = web3.eth.accounts[1]
-  const a_buyer_account = web3.eth.accounts[2]
-  const another_buyer_account = web3.eth.accounts[3]
+  const default_account = accounts[0]
+  const a_seller_account = accounts[1]
+  const a_buyer_account = accounts[2]
+  const another_buyer_account = accounts[3]
 
   const listingsRegistry = await ListingsRegistry.deployed()
 
