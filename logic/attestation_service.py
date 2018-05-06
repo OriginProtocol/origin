@@ -32,6 +32,8 @@ VC = db_models.VerificationCode
 
 sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
 
+twilio_client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+
 oauth_consumer = oauth.Consumer(
     settings.TWITTER_CONSUMER_KEY, settings.TWITTER_CONSUMER_SECRET)
 
@@ -243,9 +245,8 @@ def random_numeric_token():
 
 
 def send_code_via_sms(phone, code):
-    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     try:
-        client.messages.create(
+        twilio_client.messages.create(
             to=phone,
             from_=settings.TWILIO_NUMBER,
             body=('Your Origin verification code is {}.'
