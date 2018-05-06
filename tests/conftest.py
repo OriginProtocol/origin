@@ -90,3 +90,11 @@ def mock_send_sms_exception(app):
                         status=400, uri='/Accounts/testtest/Messages.json'))
     yield patcher.start()
     patcher.stop()
+
+
+@pytest.yield_fixture(scope='function')
+def mock_normalize_number(app):
+    patcher = patch('logic.attestation_service.normalize_number',
+                    side_effect=(lambda phone: phone))
+    yield patcher.start()
+    patcher.stop()

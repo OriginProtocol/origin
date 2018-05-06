@@ -51,6 +51,8 @@ class VerificationServiceResponse():
 
 class VerificationService:
     def generate_phone_verification_code(phone):
+        phone = normalize_number(phone)
+
         db_code = VC.query \
             .filter(VC.phone == phone) \
             .first()
@@ -232,6 +234,12 @@ class VerificationService:
             'data': data
         })
 
+def normalize_number(phone):
+    try:
+        lookup = twilio_client.lookups.phone_numbers(phone).fetch()
+        return lookup.national_format
+    except TwilioRestException as e:
+        raise PhoneVerificationError('Invalid phone number.')
 
 def numeric_eth(str_eth_address):
     return int(str_eth_address, 16)

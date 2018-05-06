@@ -17,7 +17,8 @@ VC = db_models.VerificationCode
 SIGNATURE_LENGTH = 132
 
 
-def test_generate_phone_verification_code_new_phone(mock_send_sms):
+def test_generate_phone_verification_code_new_phone(
+        mock_send_sms, mock_normalize_number):
     phone = '5551231212'
     resp = VerificationService.generate_phone_verification_code(phone)
     assert isinstance(resp, VerificationServiceResponse)
@@ -32,7 +33,7 @@ def test_generate_phone_verification_code_new_phone(mock_send_sms):
 
 
 def test_generate_phone_verification_code_phone_already_in_db(
-        mock_send_sms, session):
+        mock_send_sms, session, mock_normalize_number):
     vc_obj = VerificationCodeFactory.build()
     expires_at = vc_obj.expires_at
     vc_obj.created_at = utcnow() - datetime.timedelta(seconds=10)
@@ -58,7 +59,7 @@ def test_generate_phone_verification_code_phone_already_in_db(
 
 
 def test_generate_phone_verification_code_twilio_exception(
-        mock_send_sms_exception, session):
+        mock_send_sms_exception, session, mock_normalize_number):
     phone = '5551231212'
     with pytest.raises(PhoneVerificationError) as service_err:
         VerificationService.generate_phone_verification_code(phone)
@@ -136,7 +137,8 @@ def test_verify_phone_phone_not_found(session):
     assert str(service_err.value) == 'The given phone number was not found.'
 
 
-def test_generate_phone_verification_rate_limit_exceeded(session):
+def test_generate_phone_verification_rate_limit_exceeded(
+        session, mock_normalize_number):
     vc_obj = VerificationCodeFactory.build()
     vc_obj.updated_at = utcnow() + datetime.timedelta(seconds=9)
     session.add(vc_obj)
