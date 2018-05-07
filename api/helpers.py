@@ -31,7 +31,7 @@ def handle_request(data, handler, request_schema, response_schema):
         resp = {
             'errors': errors
         }
-        return response_schema().dump(resp), 400
+        return response_schema().dump(resp), 422
     try:
         resp = handler(**req)
         return response_schema().dump(resp.data), 200
