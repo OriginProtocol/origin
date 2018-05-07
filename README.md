@@ -1,12 +1,8 @@
 ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
 
-<<<<<<< HEAD
-![origin_npm_version](https://img.shields.io/npm/v/origin.svg) ![origin_license](https://img.shields.io/npm/l/origin.svg)
-=======
 ![origin_npm_version](https://img.shields.io/npm/v/origin.svg?style=flat-square&colorA=111d28&colorB=1a82ff) 
 ![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)
 ![origin_travis_banner](https://img.shields.io/travis/OriginProtocol/origin-js/master.svg?style=flat-square&colorA=111d28)
->>>>>>> develop
 
 # Origin Protocol
 
