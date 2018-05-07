@@ -7,13 +7,7 @@ class StandardRequest(Schema):
 
 
 class StandardResponse(Schema):
-    errors = fields.List(
-        fields.Dict(
-            code=fields.Str(),
-            path=fields.Str(),
-            message=fields.Str()
-        )
-    )
+    errors = fields.List(fields.Str)
 
 
 def handle_request(data, handler, request_schema, response_schema):
@@ -23,11 +17,7 @@ def handle_request(data, handler, request_schema, response_schema):
     except ValidationError as validation_err:
         errors = []
         for attr, msg in validation_err.messages.items():
-            errors.append({
-                'code': 'INVALID_REQUEST',
-                'path': attr,
-                'message': ' '.join(msg)
-            })
+            errors.append("%s: %s" % (attr, " ".join(msg).lower()))
         resp = {
             'errors': errors
         }
