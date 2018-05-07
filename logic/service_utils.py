@@ -3,7 +3,7 @@ class ServiceError(Exception):
 
 
 class AccountNotFoundError(ServiceError):
-	pass
+    pass
 
 
 class PhoneVerificationError(ServiceError):

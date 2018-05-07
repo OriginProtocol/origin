@@ -14,7 +14,7 @@ def test_index(client):
     assert resp.status_code == 200
 
 
-def test_phone_verify(client, mock_send_sms):
+def test_phone_verify(client, mock_send_sms, mock_normalize_number):
     phone = "6666666666"
     resp = post_json(client,
                      "/api/attestations/phone/generate-code",

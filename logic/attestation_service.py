@@ -22,8 +22,6 @@ from logic.service_utils import (
 )
 from sqlalchemy import func
 from util import time_, attestations
-from web3 import Web3, HTTPProvider
-from web3.auto.http import w3
 
 signing_key = settings.ORIGIN_SIGNING_KEY
 
@@ -235,12 +233,14 @@ class VerificationService:
             'data': data
         })
 
+
 def normalize_number(phone):
     try:
         lookup = twilio_client.lookups.phone_numbers(phone).fetch()
         return lookup.national_format
     except TwilioRestException as e:
         raise PhoneVerificationError('Invalid phone number.')
+
 
 def numeric_eth(str_eth_address):
     return int(str_eth_address, 16)
