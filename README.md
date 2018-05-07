@@ -18,6 +18,10 @@ We need a centralized server that can handle tasks like issuing identity attesta
 
 There is currently no practical way to get email or text notifications when your bookings are made without a centralized monitoring service that can send you a text or an email to let you know about listings you care about.
 
+## API documentation
+
+See the [README for the API](api)
+
 ## One-time Setup
 
 ### Set Up A Virtual Environment
@@ -43,6 +47,21 @@ cp dev.env .env
 
 Adjust the values in .env now and in the future to suit your local environment. In particular, set up your ```DATABASE_URL```
 to point to where you local database is or will be.
+
+You'll need to set a few API keys:
+- [Facebook](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow)
+  - FACEBOOK_CLIENT_ID
+  - FACEBOOK_CLIENT_SECRET
+- [Sendgrid](https://sendgrid.com/docs/Classroom/Send/How_Emails_Are_Sent/api_keys.html)
+  - SENDGRID_API_KEY
+  - SENDGRID_FROM_EMAIL
+- [Twilio](https://www.twilio.com/docs/usage/your-request-to-twilio)
+  - TWILIO_ACCOUNT_SID
+  - TWILIO_AUTH_TOKEN
+  - TWILIO_NUMBER (Can be added on [this page](https://www.twilio.com/user/account/phone-numbers/))
+- [Twitter](https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens)
+  - TWITTER_CONSUMER_KEY
+  - TWITTER_CONSUMER_SECRET
 
 When deploying, set appropriate environment variables for production, notably
 
@@ -141,16 +160,21 @@ FLASK_APP=main.py flask db migrate
 to generate the required migration file. Rename it to add a description of the change after the underscore. Then run
 
 ```bash
-FLASK_APP=main.py flask db migrate
+FLASK_APP=main.py flask db upgrade
 ```
 
 to apply your migration to your local database, then test your changes before committing.
 
-## Dev Deployment on Heroku
 
-To deploy a dev server on Heroku, you'll follow the normal steps you would to deploy on Heroku.
+## Heroku Deploy
 
-As a minium, you must set these three Heroku config variables:
+To deploy a development copy of the site on Heroku, just choose which branch you would like to use and follow the instructions: 
+
+| `Master` branch <br>(stable) | `Develop` branch<br> (active development) | 
+|---------|----------|
+| [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/OriginProtocol/bridge-server/tree/master) | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/OriginProtocol/bridge-server/tree/develop) | 
+
+Heroku will prompt you to set config variables. At a minium, you must set these three:
 
 |Config          |Value|
 |----------------|------|
@@ -158,4 +182,9 @@ As a minium, you must set these three Heroku config variables:
 |PROJECTPATH     |/app|
 |HOST            |(domain name of your dev heroku app)|
 
-There are more optional config variables you can set. See [dev.env](dev.env) for a full list.
+See [dev.env](dev.env) for a full list of other optional config variables.
+
+
+We use following buildpacks:
+
+  heroku buildpacks:set heroku/python

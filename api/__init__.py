@@ -1,3 +1,8 @@
-import config
+from flask_restful import Api
+from api.routes import init_routes
 
-assert config  # Silence pyflakes
+
+def start_restful_api(app):
+    api = Api(app)
+    init_routes(api)
+    return api

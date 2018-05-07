@@ -4,33 +4,10 @@ from database import db
 
 
 class VerificationCode(db.Model):
-    eth_address = db.Column(
-        db.Numeric(
-            precision=50,
-            scale=0),
-        primary_key=True)
     phone = db.Column(db.String(20), index=True)
-    code = db.Column(db.String(10))
+    email = db.Column(db.String(256), index=True)
+    code = db.Column(db.String(10), primary_key=True)
     expires_at = db.Column(db.DateTime(timezone=True))
-    created_at = db.Column(
-        db.DateTime(
-            timezone=True),
-        server_default=func.now())
-    updated_at = db.Column(
-        db.DateTime(
-            timezone=True),
-        server_default=func.now(),
-        onupdate=func.now())
-
-
-class Identity(db.Model):
-    eth_address = db.Column(
-        db.Numeric(
-            precision=50,
-            scale=0),
-        primary_key=True)
-    phone = db.Column(db.String(20), index=True)
-    verified = db.Column(db.Boolean())
     created_at = db.Column(
         db.DateTime(
             timezone=True),
@@ -62,3 +39,16 @@ class Listing(db.Model):
 class EventTracker(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     last_read = db.Column(db.Integer())
+
+
+class Purchase(db.Model):
+    contract_address = db.Column(db.String(255),
+                                 primary_key=True)
+    buyer_address = db.Column(db.String(255),
+                              index=True)
+    listing_address = db.Column(db.String(255),
+                                db.ForeignKey('listing.contract_address'),
+                                nullable=False)
+    stage = db.Column(db.String(255))
+    created_at = db.Column(db.DateTime(timezone=True))
+    buyer_timeout = db.Column(db.DateTime(timezone=True))

@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 
 from config import settings
 
@@ -28,3 +29,5 @@ class MyFlask(Flask):
 app = MyFlask(__name__,
               template_folder=settings.TEMPLATE_ROOT,
               static_folder=settings.STATIC_ROOT)
+
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
