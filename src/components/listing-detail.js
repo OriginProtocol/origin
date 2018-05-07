@@ -1,10 +1,14 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
+import { Link } from 'react-router-dom'
 
 import Modal from './modal'
+import Review from './review'
+
+import data from '../data'
 
 // temporary - we should be getting an origin instance from our app,
 // not using a global singleton
-import origin from '../services/origin' 
+import origin from '../services/origin'
 
 const alertify = require('../../node_modules/alertify/src/alertify.js')
 
@@ -21,14 +25,10 @@ class ListingsDetail extends Component {
     }
 
     this.state = {
-      category: "Loading...",
-      name: "Loading...",
-      price: "Loading...",
-      address: null,
-      ipfsHash: null,
-      sellerAddress: null,
-      unitsAvailable: null,
+      loading: true,
       pictures: [],
+      reviews: [],
+      purchases: [],
       step: this.STEP.VIEW,
     }
 
@@ -37,22 +37,40 @@ class ListingsDetail extends Component {
 
   async loadListing() {
     try {
-      const listing = await origin.listings.getByIndex(this.props.listingId)
-      this.setState(listing)
+      const listing = await origin.listings.get(this.props.listingAddress)
+      const obj = Object.assign({}, listing, { loading: false, reviews: data.reviews})
+      this.setState(obj)
     } catch (error) {
       alertify.log('There was an error loading this listing.')
-      console.error(`Error fetching contract or IPFS info for listingId: ${this.props.listingId}`)
+      console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingAddress}`)
+      console.log(error)
+    }
+  }
+
+  async loadPurchases() {
+    const address = this.props.listingAddress
+    const length = await origin.listings.purchasesLength(address)
+    console.log('Purchase count:', length)
+    for(let i = 0; i < length; i++){
+      let purchaseAddress = await origin.listings.purchaseAddressByIndex(address, i)
+      let purchase = await origin.purchases.get(purchaseAddress)
+      console.log('Purchase:', purchase)
+      this.setState((prevState, props) => {
+        return {purchases: [...prevState.purchases, purchase]};
+      });
     }
   }
 
   componentWillMount() {
-    if (this.props.listingId) {
+    if (this.props.listingAddress) {
       // Load from IPFS
       this.loadListing()
+      this.loadPurchases()
     }
     else if (this.props.listingJson) {
+      const obj = Object.assign({}, this.props.listingJson, { loading: false })
       // Listing json passed in directly
-      this.setState(this.props.listingJson)
+      this.setState(obj)
     }
   }
 
@@ -62,11 +80,12 @@ class ListingsDetail extends Component {
     this.setState({step: this.STEP.METAMASK})
     try {
       const transactionReceipt = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice)
-      console.log("Purchase request sent.")
+      console.log('Purchase request sent.')
       this.setState({step: this.STEP.PROCESSING})
-      const blockNumber = await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
+      await origin.contractService.waitTransactionFinished(transactionReceipt.transactionHash)
       this.setState({step: this.STEP.PURCHASED})
     } catch (error) {
+      window.err = error
       console.log(error)
       alertify.log("There was a problem purchasing this listing.\nSee the console for more details.")
       this.setState({step: this.STEP.VIEW})
@@ -75,7 +94,6 @@ class ListingsDetail extends Component {
 
 
   render() {
-    const price = typeof this.state.price === 'string' ? 0 : this.state.price
     return (
       <div className="listing-detail">
         {this.state.step===this.STEP.METAMASK &&
@@ -102,12 +120,15 @@ class ListingsDetail extends Component {
               <img src="/images/circular-check-button.svg" role="presentation"/>
             </div>
             Purchase was successful.<br />
-            <a href="#" onClick={()=>window.location.reload()}>
+            <a href="#" onClick={e => {
+              e.preventDefault()
+              window.location.reload()
+            }}>
               Reload page
             </a>
           </Modal>
         }
-        {this.state.pictures &&
+        {(this.state.loading || (this.state.pictures && this.state.pictures.length)) &&
           <div className="carousel">
             {this.state.pictures.map(pictureUrl => (
               <div className="photo" key={pictureUrl}>
@@ -118,59 +139,140 @@ class ListingsDetail extends Component {
             ))}
           </div>
         }
-        <div className="container listing-container">
+        <div className={`container listing-container${this.state.loading ? ' loading' : ''}`}>
           <div className="row">
             <div className="col-12 col-md-8 detail-info-box">
-              <div className="category">{this.state.category}</div>
-              <div className="title">{this.state.name}</div>
-              <div className="description">{this.state.description}</div>
-              <div className="category">Seller</div>
-              <div className="description">{this.state.sellerAddress}</div>
-              <a href={origin.ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
-                View on IPFS <big>&rsaquo;</big>
-              </a>
+              <h2 className="category placehold">{this.state.category}</h2>
+              <h1 className="title text-truncate placehold">{this.state.name}</h1>
+              <p className="description placehold">{this.state.description}</p>
+              {!!this.state.unitsAvailable && this.state.unitsAvailable < 5 &&
+                <p className="units-available text-danger">Just {this.state.unitsAvailable.toLocaleString()} left!</p>
+              }
+              {this.state.ipfsHash &&
+                <p className="ipfs link-container">
+                  <a href={origin.ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
+                    View on IPFS<img src="/images/carat-blue.svg" className="carat" alt="right carat" />
+                  </a>
+                </p>
+              }
               <div className="debug">
                 <li>IPFS: {this.state.ipfsHash}</li>
                 <li>Seller: {this.state.sellerAddress}</li>
                 <li>Units: {this.state.unitsAvailable}</li>
               </div>
+              {!this.state.loading && this.state.purchases.length > 0 &&
+                <Fragment>
+                  <hr />
+                  <h2>Purchases</h2>
+                  <table className="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col" style={{ width: '200px' }}>Status</th>
+                        <th scope="col">TxHash</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {this.state.purchases.map(({ address, stage }) =>
+                        <tr key={address}>
+                          <td>{stage.replace("_"," ")}</td>
+                          <td className="text-truncate"><Link to={`/purchases/${address}`}>{address}</Link></td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </Fragment>
+              }
             </div>
             <div className="col-12 col-md-4">
-              <div className="buy-box">
-                <div>
-                  <span>Price</span>
-                  <span className="price">
-                    {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
-                  </span>
-                </div>
-                {(this.state.unitsAvailable > 1) &&
-                  <div>
-                    <span>Units Available</span>
-                    <span className="price">{this.state.unitsAvailable.toLocaleString()}</span>
+              <div className="buy-box placehold">
+                {this.state.price &&
+                  <div className="price d-flex justify-content-between">
+                    <p>Price</p>
+                    <p className="text-right">
+                      {Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
+                    </p>
                   </div>
                 }
-                <div>
-                  {(this.props.listingId) && (
-                    (this.state.unitsAvailable > 0) ?
-                      <button
-                        className="button"
-                        onClick={this.handleBuyClicked}
-                        disabled={!this.props.listingId}
-                        onMouseDown={e => e.preventDefault()}
-                      >
-                        Buy Now
-                      </button>
-                      :
-                      <div className="sold-banner">
-                        <img src="/images/sold-tag.svg" role="presentation" />
-                        Sold
+                {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
+                {/* <div className="quantity d-flex justify-content-between">
+                                  <p>Quantity</p>
+                                  <p className="text-right">
+                                    {Number(1).toLocaleString()}
+                                  </p>
+                                </div>
+                                <div className="total-price d-flex justify-content-between">
+                                  <p>Total Price</p>
+                                  <p className="price text-right">
+                                    {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
+                                  </p>
+                                </div> */}
+                {!this.state.loading &&
+                  <div>
+                    {(this.state.address) && (
+                      (this.state.unitsAvailable > 0) ?
+                        <button
+                          className="button"
+                          onClick={this.handleBuyClicked}
+                          disabled={!this.state.address}
+                          onMouseDown={e => e.preventDefault()}
+                        >
+                          Buy Now
+                        </button>
+                        :
+                        <div className="sold-banner">
+                          <img src="/images/sold-tag.svg" role="presentation" />
+                          Sold Out
+                        </div>
+                      )
+                    }
+                  </div>
+                }
+              </div>
+              {this.state.sellerAddress &&
+                <div className="counterparty placehold">
+                  <div className="identity">
+                    <h3>About the seller</h3>
+                    <div className="d-flex">
+                      <div className="image-container">
+                        <Link to="/profile">
+                          <img src="/images/identicon.png"
+                            srcSet="/images/identicon@2x.png 2x, /images/identicon@3x.png 3x"
+                            alt="wallet icon" />
+                        </Link>
                       </div>
-                    )
-                  }
+                      <div>
+                        <p>ETH Address:</p>
+                        <p><strong>{this.state.sellerAddress}</strong></p>
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="d-flex">
+                      <div className="avatar-container">
+                        <img src="/images/avatar-blue.svg" alt="avatar" />
+                      </div>
+                      <div className="identification">
+                        <p>Aure Gimon</p>
+                        <img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" />
+                      </div>
+                    </div>
+                  </div>
+                  <Link to={`/users/${this.state.sellerAddress}`} className="btn placehold">View Profile</Link>
+                </div>
+              }
+            </div>
+          </div>
+          {!!this.state.reviews.length &&
+            <div className="row">
+              <div className="col-12 col-md-8">
+                <hr />
+                <div className="reviews">
+                  <h2>Reviews <span className="review-count">57</span></h2>
+                  {this.state.reviews.map(r => <Review key={r._id} review={r} />)}
+                  <a href="#" className="reviews-link" onClick={() => alert('To Do')}>Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a>
                 </div>
               </div>
             </div>
-          </div>
+          }
         </div>
       </div>
     )

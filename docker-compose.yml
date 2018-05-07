@@ -14,4 +14,4 @@ services:
     working_dir: /src
     ports:
       - "9545:9545"
-    command: bash /bin/docker-truffle.sh
+    command: bash /scripts/docker-truffle.sh

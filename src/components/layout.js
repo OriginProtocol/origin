@@ -4,7 +4,7 @@ import NavBar from './navbar'
 
 const Layout = ({ children }) => (
   <Fragment>
-    <main>
+    <main className="d-flex flex-column">
       <NavBar />
       {children}
     </main>

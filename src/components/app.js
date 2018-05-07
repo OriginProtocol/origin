@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Route,
   Switch,
 } from 'react-router-dom'
@@ -13,9 +13,11 @@ import ListingCreate from './listing-create'
 import ListingDetail from './listing-detail'
 import MyListings from './my-listings'
 import MyPurchases from './my-purchases'
+import MySales from './my-sales'
 import Notifications from './notifications'
 import Profile from './profile'
-import TransactionDetail from './transaction-detail'
+import User from './user'
+import PurchaseDetail from './purchase-detail'
 import Web3Provider from './web3-provider'
 import 'bootstrap/dist/js/bootstrap'
 
@@ -34,7 +36,7 @@ const HomePage = (props) => (
 )
 
 const ListingDetailPage = (props) => (
-  <ListingDetail listingId={props.match.params.listingId} />
+  <ListingDetail listingAddress={props.match.params.listingAddress} />
 )
 
 const CreateListingPage = (props) => (
@@ -47,16 +49,16 @@ const MyListingsPage = (props) => (
   <MyListings />
 )
 
-const MyListingsTransactionPage = (props) => (
-  <TransactionDetail listingId={props.match.params.listingId} perspective="seller" />
+const PurchaseDetailPage = (props) => (
+  <PurchaseDetail purchaseAddress={props.match.params.purchaseAddress}  />
 )
 
 const MyPurchasesPage = (props) => (
   <MyPurchases />
 )
 
-const MyPurchasesTransactionPage = (props) => (
-  <TransactionDetail listingId={props.match.params.listingId} perspective="buyer" />
+const MySalesPage = (props) => (
+  <MySales />
 )
 
 const NotificationsPage = (props) => (
@@ -65,6 +67,10 @@ const NotificationsPage = (props) => (
 
 const ProfilePage = (props) => (
   <Profile />
+)
+
+const UserPage = (props) => (
+  <User userAddress={props.match.params.userAddress} />
 )
 
 // Top level component
@@ -76,14 +82,15 @@ const App = () => (
           <Switch>
             <Route exact path="/" component={HomePage} />
             <Route path="/page/:activePage" component={HomePage} />
-            <Route path="/listing/:listingId" component={ListingDetailPage} />
+            <Route path="/listing/:listingAddress" component={ListingDetailPage} />
             <Route path="/create" component={CreateListingPage} />
-            <Route path="/my-listings/:listingId" component={MyListingsTransactionPage} />
             <Route path="/my-listings" component={MyListingsPage} />
-            <Route path="/my-purchases/:listingId" component={MyPurchasesTransactionPage} />
+            <Route path="/purchases/:purchaseAddress" component={PurchaseDetailPage} />
             <Route path="/my-purchases" component={MyPurchasesPage} />
+            <Route path="/my-sales" component={MySalesPage} />
             <Route path="/notifications" component={NotificationsPage} />
             <Route path="/profile" component={ProfilePage} />
+            <Route path="/users/:userAddress" component={UserPage} />
           </Switch>
         </Web3Provider>
       </Layout>
