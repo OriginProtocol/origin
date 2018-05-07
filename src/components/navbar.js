@@ -109,6 +109,9 @@ class NavBar extends Component {
                       </div>
                       <div className="identification">
                         <p><Link to="/profile">Aure Gimon</Link></p>
+                        <Link to="/profile"><img src="/images/phone-icon-verified.svg" alt="phone verified icon" /></Link>
+                        <Link to="/profile"><img src="/images/email-icon-verified.svg" alt="email verified icon" /></Link>
+                        <Link to="/profile"><img src="/images/facebook-icon-verified.svg" alt="Facebook verified icon" /></Link>
                         <Link to="/profile"><img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" /></Link>
                       </div>
                     </div>
