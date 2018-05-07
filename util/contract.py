@@ -7,6 +7,7 @@ from eth_abi import decode_single
 from eth_utils import to_checksum_address
 
 from config import settings
+from enum import Enum
 
 
 class ContractHelper:
@@ -57,6 +58,18 @@ class ContractHelper:
         with open("./contracts/{}.json".format(contract_name)) as f:
             contract_interface = json.loads(f.read())
         return contract_interface['bytecode']
+
+    @classmethod
+    def get_contract_enums(cls, contract_name, enum_name):
+        with open("./contracts/{}.json".format(contract_name)) as f:
+            contract_interface = json.loads(f.read())
+        for root_node in contract_interface['ast']['nodes']:
+            if root_node.get("nodeType") == "ContractDefinition" and root_node.get("name") == contract_name:
+                for node in root_node["nodes"]:
+                    if node.get("canonicalName") == "%s.%s" % (contract_name, enum_name):
+                        members = node.get("members")
+                        if members and isinstance(members, list):
+                            return Enum(enum_name, " ".join(e["name"] for e in members), start=0)
 
     @classmethod
     def convert_event_data(cls, event_type, data):

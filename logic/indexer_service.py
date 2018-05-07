@@ -5,6 +5,7 @@ from database.db_models import Listing, EventTracker, Purchase
 from util.contract import ContractHelper
 from util.ipfs import hex_to_base58, IPFSHelper
 from util.time_ import unix_to_datetime
+from notifier_service import notify_purchased, notify_listing, notify_listing_update
 
 
 def get_event_action(event):
@@ -37,25 +38,23 @@ def new_listing(payload, web3=None):
     registry_index = contract_helper.convert_event_data('NewListing',
                                                         payload['data'])
     listing_data = contract.functions.getListing(registry_index).call()
-    create_or_update_listing(listing_data[0])
+    notify_listing(create_or_update_listing(listing_data[0]))
 
 
 def listing_change(payload, web3=None):
-    create_or_update_listing(Web3.toChecksumAddress(payload['address']),
-                             web3)
-
+    notify_listing_update(create_or_update_listing(Web3.toChecksumAddress(payload['address']),
+                             web3))
 
 def listing_purchased(payload, web3=None):
     address = ContractHelper.convert_event_data('ListingPurchased',
                                                 payload['data'])
-    create_or_update_purchase(address,
-                              web3)
+    notify_purchased(create_or_update_purchase(address,
+                              web3))
 
 
 def purchase_change(payload, web3=None):
-    create_or_update_purchase(Web3.toChecksumAddress(payload['address']),
-                              web3)
-
+    notify_purchased(create_or_update_purchase(Web3.toChecksumAddress(payload['address']),
+                              web3))
 
 def create_or_update_listing(address, web3=None):
     contract_helper = ContractHelper(web3)
@@ -94,6 +93,7 @@ def create_or_update_listing(address, web3=None):
         listing_obj.price = listing_data['price']
         listing_obj.units = listing_data['units']
     db.session.commit()
+    return listing_obj
 
 
 def create_or_update_purchase(address, web3=None):
@@ -120,3 +120,4 @@ def create_or_update_purchase(address, web3=None):
         if purchase_obj.stage != purchase_data['stage']:
             purchase_obj.stage = purchase_data['stage']
     db.session.commit()
+    return purchase_obj
