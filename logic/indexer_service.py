@@ -5,7 +5,7 @@ from database.db_models import Listing, EventTracker, Purchase
 from util.contract import ContractHelper
 from util.ipfs import hex_to_base58, IPFSHelper
 from util.time_ import unix_to_datetime
-from notifier_service import notify_purchased, notify_listing, notify_listing_update
+from logic.notifier_service import notify_purchased, notify_listing, notify_listing_update
 
 
 def get_event_action(event):

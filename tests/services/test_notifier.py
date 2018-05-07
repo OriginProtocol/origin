@@ -1,5 +1,6 @@
+from database import db
 from database.db_models import EthNotificationEndpoint, EthNotificationTypes
-from logic.indexer_service import register_eth_notification
+from logic.notifier_service import register_eth_notification
 from tests.helpers.eth_utils import sample_eth_address, str_eth
 
 def test_new_endpoint(db):

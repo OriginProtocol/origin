@@ -1,5 +1,6 @@
-from database.db_models import EthNotificationEndpoint, EthNotificationType
-from util import ContractHelper
+from database import db
+from database.db_models import EthNotificationEndpoint, EthNotificationTypes
+from util.contract import ContractHelper
 from util.ipfs import hex_to_base58, IPFSHelper
 from enum import Enum
 
@@ -10,8 +11,18 @@ class Notification(Enum):
     SOLD = 2
     PURCHASED = 3
     UPDATED = 4
-    SOLD_UPDATE = 5
-    PURCHASED_UPDATE = 6
+    PENDING_PAYMENT = 5
+    PENDING_PAY = 6
+    PENDING_SHIP = 7
+    PENDING_SHIPMENT = 8
+    PENDING_BUYER_CONFIRMATION = 9
+    PENDING_BUY_CONFIRM = 10
+    PENDING_SELLER_CONFIRM = 11
+    PENDING_SELLER_CONFIRMATION = 12
+    SELLER_DISPUTE = 13
+    BUYER_DISPUTE = 14
+    SELLER_REVIEW = 15
+    BUYER_REVIEW = 16
 
 notification_messages = {
         Notification.LIST:"New listing online:%{name}",
@@ -20,24 +31,24 @@ notification_messages = {
         Notification.UPDATED:"Your listing, %{name} has been updated",
         Notification.PENDING_PAYMENT:"Waiting for buyer payment",
         Notification.PENDING_PAY:"Payment required",
-        Notification.Notification.PENDING_SHIP:"Waiting on shipment",
+        Notification.PENDING_SHIP:"Waiting on shipment",
         Notification.PENDING_SHIPMENT:"Item is being shipped",
         Notification.PENDING_BUYER_CONFIRMATION:"Waiting for buyer confirmation",
         Notification.PENDING_BUY_CONFIRM:"Please confirm purchase",
         Notification.PENDING_SELLER_CONFIRM:"Please confirm sale",
         Notification.PENDING_SELLER_CONFIRMATION:"Waiting on seller confirmation",
         Notification.SELLER_DISPUTE:"Your item is in dispute",
-        Notication.BUYER_DISPUTE:"Your purchase is in dispute",
+        Notification.BUYER_DISPUTE:"Your purchase is in dispute",
         Notification.SELLER_REVIEW:"Your item is in review",
-        Notication.BUYER_REVIEW:"Your purchase is in review"
+        Notification.BUYER_REVIEW:"Your purchase is in review"
         }
 
-def register_eth_notification(eth_address, type, token, verification_signature = None):
+def register_eth_notification(eth_address, type, device_token, verification_signature = None):
     #todo check verification sig if we want this to be a verified endpoint
     notification_obj = EthNotificationEndpoint(eth_address = eth_address,
-                        token = token,
+                        device_token = device_token,
                         type = type,
-                        active = True), 
+                        active = True)
     db.session.add(notification_obj)
     db.session.commit()
 
