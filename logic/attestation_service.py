@@ -83,6 +83,8 @@ class VerificationService:
         return VerificationServiceResponse()
 
     def verify_phone(phone, code, eth_address):
+        phone = normalize_number(phone)
+
         db_code = VC.query \
             .filter(VC.phone == phone) \
             .first()

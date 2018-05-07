@@ -69,7 +69,7 @@ def test_generate_phone_verification_code_twilio_exception(
     assert db_code is None
 
 
-def test_verify_phone_valid_code(session):
+def test_verify_phone_valid_code(session, mock_normalize_number):
     vc_obj = VerificationCodeFactory.build()
     session.add(vc_obj)
     session.commit()
@@ -88,7 +88,7 @@ def test_verify_phone_valid_code(session):
     assert resp_data['data'] == 'phone verified'
 
 
-def test_verify_phone_expired_code(session):
+def test_verify_phone_expired_code(session, mock_normalize_number):
     vc_obj = VerificationCodeFactory.build()
     vc_obj.expires_at = utcnow() - datetime.timedelta(days=1)
     session.add(vc_obj)
@@ -105,7 +105,7 @@ def test_verify_phone_expired_code(session):
     assert str(service_err.value) == 'The code you provided has expired.'
 
 
-def test_verify_phone_wrong_code(session):
+def test_verify_phone_wrong_code(session, mock_normalize_number):
     vc_obj = VerificationCodeFactory.build()
     session.add(vc_obj)
     session.commit()
@@ -121,7 +121,7 @@ def test_verify_phone_wrong_code(session):
     assert str(service_err.value) == 'The code you provided is invalid.'
 
 
-def test_verify_phone_phone_not_found(session):
+def test_verify_phone_phone_not_found(session, mock_normalize_number):
     vc_obj = VerificationCodeFactory.build()
     session.add(vc_obj)
     session.commit()
