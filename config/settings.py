@@ -55,3 +55,5 @@ ORIGIN_SIGNING_KEY = os.environ.get('ORIGIN_SIGNING_KEY')
 
 REDIS_URL = os.environ.get('REDIS_URL')
 CELERY_DEBUG = parse_bool(os.environ.get('CELERY_DEBUG'))
+
+APNS_CERT_FILE = os.environ.get('APNS_CERT_FILE')

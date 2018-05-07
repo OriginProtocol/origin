@@ -3,7 +3,7 @@ from sqlalchemy import func
 from enum import Enum
 
 class EthNotificationTypes(Enum):
-    APN = 1 #Apple notification service
+    APN = 1 #Apple notification
     FCM = 2 #Firebase cloud messaging
 
 class EthNotificationEndpoint(db.Model):
