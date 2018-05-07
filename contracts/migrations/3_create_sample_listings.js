@@ -39,6 +39,11 @@ async function deploy_sample_contracts(network) {
     return Purchase.at(address)
   }
 
+  console.log(`default_account:       ${default_account}`)
+  console.log(`a_seller_account:      ${a_seller_account}`)
+  console.log(`a_buyer_account:       ${a_buyer_account}`)
+  console.log(`another_buyer_account: ${another_buyer_account}`)
+
   await listingsRegistry.create(
     "0x4f32f7a7d40b4d65a917926cbfd8fd521483e7472bcc4d024179735622447dc9",
     web3.toWei(3, "ether"),
