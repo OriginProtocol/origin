@@ -1,4 +1,4 @@
-from database.db_models import EthNotificationToken, EthNotificationType
+from database.db_models import EthNotificationEndpoint, EthNotificationType
 from util import ContractHelper
 from util.ipfs import hex_to_base58, IPFSHelper
 from enum import Enum
@@ -32,13 +32,17 @@ notification_messages = {
         Notication.BUYER_REVIEW:"Your purchase is in review"
         }
 
-def register_eth_notification_endpoint(eth_address, token, type, verification_signature):
-    notification_obj = EthNotification(eth_address, 
+def register_eth_notification(eth_address, type, token, verification_signature = None):
+    #todo check verification sig if we want this to be a verified endpoint
+    notification_obj = EthNotificationEndpoint(eth_address = eth_address,
+                        token = token,
+                        type = type,
+                        active = True), 
     db.session.add(notification_obj)
     db.session.commit()
 
 def send_notification(notify_address, notification_type, verify_required = True, **data):
-    for notification_token in EthNotificationToken.query.filter_by(eth_address=notify_address, active = True):
+    for notification_token in EthNotificationEndpoint.query.filter_by(eth_address=notify_address, active = True):
         if notification_token.type == EthNotificationTypes.APN:
             #send apn notification here
             pass
