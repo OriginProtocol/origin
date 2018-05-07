@@ -23,9 +23,8 @@ from logic.service_utils import (
 from sqlalchemy import func
 from util import time_, attestations
 from web3 import Web3, HTTPProvider
+from web3.auto.http import w3
 
-# TODO: use env vars to connect to live networks
-web3 = Web3(HTTPProvider('http://localhost:9545'))
 signing_key = settings.ORIGIN_SIGNING_KEY
 
 VC = db_models.VerificationCode
@@ -102,7 +101,7 @@ class VerificationService:
         # TODO: determine claim type integer code for phone verification
         claim_type = 10
         signature = attestations.generate_signature(
-            web3, signing_key, eth_address, claim_type, data)
+            signing_key, eth_address, claim_type, data)
         return VerificationServiceResponse({
             'signature': signature,
             'claim_type': claim_type,
@@ -150,7 +149,7 @@ class VerificationService:
         # TODO: determine claim type integer code for email verification
         claim_type = 11
         signature = attestations.generate_signature(
-            web3, signing_key, eth_address, claim_type, data)
+            signing_key, eth_address, claim_type, data)
         return VerificationServiceResponse({
             'signature': signature,
             'claim_type': claim_type,
@@ -185,7 +184,7 @@ class VerificationService:
         # TODO: determine claim type integer code for phone verification
         claim_type = 3
         signature = attestations.generate_signature(
-            web3, signing_key, eth_address, claim_type, data)
+            signing_key, eth_address, claim_type, data)
         return VerificationServiceResponse({
             'signature': signature,
             'claim_type': claim_type,
@@ -229,7 +228,7 @@ class VerificationService:
         # TODO: determine claim type integer code for phone verification
         claim_type = 4
         signature = attestations.generate_signature(
-            web3, signing_key, eth_address, claim_type, data)
+            signing_key, eth_address, claim_type, data)
         return VerificationServiceResponse({
             'signature': signature,
             'claim_type': claim_type,
