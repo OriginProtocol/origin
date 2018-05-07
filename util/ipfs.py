@@ -2,6 +2,8 @@ import json
 import base58
 import ipfsapi
 
+from hexbytes import HexBytes
+
 from config import settings
 
 
@@ -11,6 +13,10 @@ def hex_to_base58(byte32_hex):
     # and cut off leading "0x"
     hash_hex = b'\x12 ' + byte32_hex
     return base58.b58encode(hash_hex)
+
+
+def base58_to_hex(hash):
+    return HexBytes(base58.b58decode(hash)[2:])
 
 
 class IPFSHelper:
