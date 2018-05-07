@@ -24,14 +24,29 @@ class ResourceBase {
   async contractFn(address, functionName, args = [], options = {}) {
     // Setup options
     const opts = Object.assign(options, {}) // clone options
-    opts.from = await this.contractService.currentAccount()
+    opts.from = opts.from || (await this.contractService.currentAccount())
+    opts.gas = options.gas || 50000 // Default gas
     // Get contract and run trasaction
     const contractDefinition = this.contractDefinition
-    const contract = await contractDefinition.at(address)
-    args.push(opts)
-    const transaction = await contract[functionName].apply(contract, args)
+    const contract = await this.contractService.deployed(contractDefinition)
+    contract.options.address = address
+
+    const method = contract.methods[functionName].apply(contract, args)
+    if (method._method.constant) {
+      return await method.call(opts)
+    }
+    var transaction = await new Promise((resolve, reject) => {
+      method
+        .send(opts)
+        .on("receipt", receipt => {
+          resolve(receipt)
+        })
+        .on("error", err => reject(err))
+    })
+
+    transaction.tx = transaction.transactionHash
     // Decorate transaction with whenFinished promise
-    if (transaction.tx != undefined) {
+    if (transaction.tx !== undefined) {
       transaction.whenFinished = async () => {
         await this.contractService.waitTransactionFinished(transaction.tx)
       }

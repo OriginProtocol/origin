@@ -1,4 +1,4 @@
-pragma solidity 0.4.21;
+pragma solidity 0.4.23;
 
 /// @title Listing
 /// @dev An indiviual Origin Listing representing an offer for booking/purchase
@@ -28,11 +28,12 @@ contract Listing {
     bytes32 public ipfsHash;
     uint public price;
     uint public unitsAvailable;
+    uint public created;
     uint public expiration;
     Purchase[] public purchases;
 
 
-    function Listing (
+    constructor (
       address _owner,
       bytes32 _ipfsHash,
       uint _price,
@@ -45,7 +46,8 @@ contract Listing {
       ipfsHash = _ipfsHash;
       price = _price;
       unitsAvailable = _unitsAvailable;
-      expiration = now + 60 days;
+      created = now;
+      expiration = created + 60 days;
     }
 
   /*
@@ -61,6 +63,13 @@ contract Listing {
     * Public functions
     */
 
+  function data()
+    public
+    view
+    returns (address _owner, bytes32 _ipfsHash, uint _price, uint _unitsAvailable, uint _created, uint _expiration)
+  {
+    return (owner, ipfsHash, price, unitsAvailable, created, expiration);
+  }
 
   /// @dev buyListing(): Buy a listing
   /// @param _unitsToBuy Number of units to buy
@@ -98,7 +107,7 @@ contract Listing {
     emit ListingChange();
   }
 
-  /// @dev purchasesLength(): Return number of listings
+  /// @dev purchasesLength(): Return number of purchases for a given listing
   function purchasesLength()
     public
     constant
@@ -107,7 +116,7 @@ contract Listing {
       return purchases.length;
   }
 
-  /// @dev getPurchase(): Return listing info for given listing
+  /// @dev getPurchase(): Return purchase info for a given listing
   /// @param _index the index of the listing we want info about
   function getPurchase(uint _index)
     public

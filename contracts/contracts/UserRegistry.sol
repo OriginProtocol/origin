@@ -1,4 +1,6 @@
-pragma solidity 0.4.21;
+pragma solidity 0.4.23;
+
+import './identity/ClaimHolderPresigned.sol';
 
 /// @title UserRegistry
 /// @dev Used to keep registry of user identifies
@@ -9,54 +11,31 @@ contract UserRegistry {
     * Events
     */
 
-    event NewUser(address _address);
+    event NewUser(address _address, address _identity);
 
     /*
     * Storage
     */
 
-    // Mapping of all users
-    mapping(address => bytes32) public users;
+    // Mapping from ethereum wallet to ERC725 identity
+    mapping(address => address) public users;
 
     /*
     * Public functions
     */
 
-    /// @dev create(): Create a new user
-    /// @param _ipfsHash Hash of data on ipfsHash
-    function set(
-        bytes32 _ipfsHash
-    )
-        public
+    /// @dev registerUser(): Add a user to the registry
+    function registerUser()
+      public
     {
-        users[msg.sender] = _ipfsHash;
-        emit NewUser(msg.sender);
+        users[tx.origin] = msg.sender;
+        emit NewUser(tx.origin, msg.sender);
     }
 
-    /// @dev createAnother(): Create a new user and associates attenstion or proof with user
-    // @param wallet id
-    // Attestation or proof to associate to the user
-    // TODO: (Brad David) replace with real function
-    function createAnother(
-        string _id,
-        string payload)
-        public
-        pure
-        returns (string)
+    /// @dev clearUser(): Remove user from the registry
+    function clearUser()
+      public
     {
-        _id; // Dummy "operation" to silence copiler warnigns
-        return payload;
-    }
-
-    /// @dev get(): returns and existing user associated with wallet id
-    // @param wallet id
-    function get(
-        string _id
-    )
-        public
-        pure
-        returns (string)
-    {
-        return _id;
+        users[msg.sender] = 0;
     }
 }

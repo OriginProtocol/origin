@@ -1,8 +1,14 @@
 ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
 
+<<<<<<< HEAD
 ![origin_npm_version](https://img.shields.io/npm/v/origin.svg) ![origin_license](https://img.shields.io/npm/l/origin.svg)
+=======
+![origin_npm_version](https://img.shields.io/npm/v/origin.svg?style=flat-square&colorA=111d28&colorB=1a82ff) 
+![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)
+![origin_travis_banner](https://img.shields.io/travis/OriginProtocol/origin-js/master.svg?style=flat-square&colorA=111d28)
+>>>>>>> develop
 
-# Origin Platform
+# Origin Protocol
 
 Origin Protocol is a library of javascript code and Ethereum smart contracts which allow anyone to create decentralized marketplaces, including for fractional usage.
 
@@ -77,22 +83,28 @@ And buyers to:
 
  ### Local
 
-1. Clone
-```
-git clone https://github.com/OriginProtocol/platform origin-platform && cd origin-platform
-```
+1. `git clone` your fork. Note that the latest commits will be on the `develop`
+   branch. So switch to that branch if you want to submit a PR or check out
+   recently merged code.
 
-2. Setup (shortcut for `npm install && npm link`). Linking makes this available as a local npm package for local dapp development.
- ```
- npm run setup
- ```
+1. Install:dev (shortcut for `npm install && npm link`). Linking makes this available as a local npm package for local dapp development.
+    ```
+    npm run install:dev
+    ```
 
-3. Start the localblockchain and create the build. Code changes will trigger a live rebuild.
- ```
- npm start
- ```
+1. Start the localblockchain and create the build. Code changes will trigger a live rebuild.
+    ```
+    npm start
+    ```
+    
+    In order to conduct test transactions, you can create a new wallet using the following seed phrase (Mnemonic):
+    
+    _**Be careful to back up the seed phrases and private keys for any existing wallets before creating a new one.**_
+    ```
+    candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
+    ```
 
- 4. To develop against a working dapp and UI, see [the instructions in our demo dapp](https://github.com/OriginProtocol/demo-dapp#developing-with-a-local-chain).
+1. To develop against a working dapp and UI, see [the instructions in our demo dapp](https://github.com/OriginProtocol/demo-dapp#developing-with-a-local-chain).
 
  ## Import
 
@@ -120,6 +132,7 @@ git clone https://github.com/OriginProtocol/platform origin-platform && cd origi
  - `ipfsApiPort`
  - `ipfsGatewayPort`
  - `ipfsGatewayProtocol`
+ - `attestationServerUrl`
 
  ## IPFS
 
@@ -160,13 +173,31 @@ git clone https://github.com/OriginProtocol/platform origin-platform && cd origi
 
  ## Tests
 
- Browser tests are automatically served at `http://localhost:8081` when you run `npm start`.
+ ### Command Line (All Tests)
 
- Tests are automatically rerun when source or test code is changed.
+Our full test suite can be run with:
 
- Run a subset of tests using the `grep` query string parameter, for example: http://localhost:8081/?grep=IpfsService
+ ```
+ npm run test
+ ```
 
- We also have contract unit tests that are not run in the browser. These can be run with `npm run test:contracts` (you should *not* have the server running at this time, as these tests start their own local blockchain instance).
+ Note: you should *not* have the server running at this time, as these tests start their own local blockchain instance.
+
+ ### Command Line (Only Solidity Tests)
+
+Our Solidity tests (which use [Truffle](http://truffleframework.com/docs/getting_started/javascript-tests)) are located at `contracts/test`.
+
+ ```
+ npm run test:contracts
+ ```
+
+ Note: you should *not* have the server running at this time, as these tests start their own local blockchain instance.
+
+ ### Browser Tests
+
+ A subset of our tests can be run from the browser. These tests are automatically served at `http://localhost:8081` when you run `npm start`. These tests are automatically rerun when source or test code is changed.
+
+ Run a subset of these tests using the `grep` query string parameter, for example: http://localhost:8081/?grep=IpfsService
 
  ## Documentation
 

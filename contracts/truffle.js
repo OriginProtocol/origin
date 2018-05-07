@@ -1,12 +1,16 @@
 var HDWalletProvider = require("truffle-hdwallet-provider");
 
+// How many addresses in wallet should we unlock?
+// (For deploying test data, we use other addresses as buyers and sellers)
+const numAddressesToUnlock = 4
+
 // Local setup
 truffleSetup = {
   migrations_directory: "./migrations",
   networks: {
     development: {
       host: "localhost",
-      port: 9545,  // `truffle develop` will override and use port 9545
+      port: 8545,
       network_id: "*" // Match any network id
     },
   },
@@ -23,7 +27,8 @@ if (process.env.MAINNET_MNEMONIC) {
     provider: function() {
       return new HDWalletProvider(
         process.env.MAINNET_MNEMONIC,
-        `https://mainnet.infura.io/${process.env.INFURA_ACCESS_TOKEN}`)
+        `https://mainnet.infura.io/${process.env.INFURA_ACCESS_TOKEN}`,
+        0, numAddressesToUnlock)
     },
     network_id: 1
   }
@@ -33,7 +38,8 @@ if (process.env.RINKEBY_MNEMONIC) {
     provider: function() {
       return new HDWalletProvider(
         process.env.RINKEBY_MNEMONIC,
-        `https://rinkeby.infura.io/${process.env.INFURA_ACCESS_TOKEN}`)
+        `https://rinkeby.infura.io/${process.env.INFURA_ACCESS_TOKEN}`,
+        0, numAddressesToUnlock)
     },
     network_id: 4
   }
@@ -43,7 +49,8 @@ if (process.env.ROPSTEN_MNEMONIC) {
     provider: function() {
       return new HDWalletProvider(
         process.env.ROPSTEN_MNEMONIC,
-        `https://ropsten.infura.io/${process.env.INFURA_ACCESS_TOKEN}`)
+        `https://ropsten.infura.io/${process.env.INFURA_ACCESS_TOKEN}`,
+        0, numAddressesToUnlock)
     },
     gas: 3712388,
     network_id: 3

@@ -133,12 +133,14 @@ contract("Purchase", accounts => {
     const buyerExpectedBalance = buyerBalanceBefore
       .minus(buyerTransactionCost)
       .minus(price)
-    
+
     // Seller Ships
-    const shipTransaction = await instance.sellerConfirmShipped({from: seller})
-    const shipTransactionCost = web3.toBigNumber(
-      shipTransaction.receipt.gasUsed 
-    ).times(GAS_PRICE)
+    const shipTransaction = await instance.sellerConfirmShipped({
+      from: seller
+    })
+    const shipTransactionCost = web3
+      .toBigNumber(shipTransaction.receipt.gasUsed)
+      .times(GAS_PRICE)
 
     // Buyer confirms
     await instance.buyerConfirmReceipt({ from: buyer })
@@ -157,7 +159,6 @@ contract("Purchase", accounts => {
       .plus(price)
       // .minus(shipTransactionCost)
       .minus(sellerCollectTransactionCost)
-      
 
     // console.log(`buyerBalanceBefore: ${buyerBalanceBefore}`)
     // console.log(`buyerBalanceAfter : ${buyerBalanceAfter}`)
@@ -224,7 +225,7 @@ contract("Purchase", accounts => {
     })
 
     it("should allow seller to ship", async () => {
-      await purchase.sellerConfirmShipped({ from: seller})
+      await purchase.sellerConfirmShipped({ from: seller })
       assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)
     })
 
@@ -256,8 +257,8 @@ contract("Purchase", accounts => {
         e => e.event == "ListingPurchased"
       )
       purchase = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
-      await timetravel(60*60) // Some time passes before shipping purchase
-      await purchase.sellerConfirmShipped({from: seller})
+      await timetravel(60 * 60) // Some time passes before shipping purchase
+      await purchase.sellerConfirmShipped({ from: seller })
       assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)
     })
 

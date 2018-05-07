@@ -45,6 +45,24 @@ contract("Listing", accounts => {
     assert.equal(newPrice, price, "price is correct")
   })
 
+  it("should allow getting listing information", async function() {
+    let data = await listing.data()
+    assert.equal(data[0], seller, "owner")
+    assert.equal(data[1], ipfsHash, "ipfsHash")
+    assert.equal(data[2], price, "price")
+    assert.equal(data[3], unitsAvailable, "unitsAvailable")
+    assert.equal(
+      data[4].toNumber(),
+      (await listing.created()).toNumber(),
+      "created"
+    )
+    assert.equal(
+      data[5].toNumber(),
+      (await listing.expiration()).toNumber(),
+      "expiration"
+    )
+  })
+
   it("should decrement the number of units sold", async function() {
     const unitsToBuy = 3
     await listing.buyListing(unitsToBuy, { from: buyer, value: 6 })

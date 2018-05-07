@@ -1,4 +1,4 @@
-pragma solidity 0.4.21;
+pragma solidity 0.4.23;
 
 /// @title PurchaseLibrary
 /// @dev An collection of helper tools for a purchase
@@ -14,5 +14,5 @@ library PurchaseLibrary {
     {
         purchase = new Purchase(listing, _buyer);
     }
-    
+
 }

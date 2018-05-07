@@ -13,10 +13,15 @@ describe("Listing Resource", function() {
   var testListingIds
 
   before(async () => {
-    let provider = new Web3.providers.HttpProvider("http://localhost:9545")
+    let provider = new Web3.providers.HttpProvider("http://localhost:8545")
     let web3 = new Web3(provider)
     contractService = new ContractService({ web3 })
-    ipfsService = new IpfsService()
+    ipfsService = new IpfsService({
+      ipfsDomain: "127.0.0.1",
+      ipfsApiPort: "5002",
+      ipfsGatewayPort: "8080",
+      ipfsGatewayProtocol: "http"
+    })
     listings = new Listings({ contractService, ipfsService })
     testListingIds = await contractService.getAllListingIds()
 
@@ -30,12 +35,22 @@ describe("Listing Resource", function() {
     expect(ids.length).to.be.greaterThan(1)
   })
 
-  it("should get a listing", async () => {
+  it("should get a listing by index", async () => {
     await listings.create({ name: "Foo Bar", price: 1 }, "")
     let listingIds = await contractService.getAllListingIds()
     const listing = await listings.getByIndex(listingIds[listingIds.length - 1])
     expect(listing.name).to.equal("Foo Bar")
     expect(listing.index).to.equal(listingIds.length - 1)
+  })
+
+  it("should get a listing by address", async () => {
+    await listings.create({ name: "Foo Bar", price: 1 }, "")
+    let listingIds = await contractService.getAllListingIds()
+    const listingFromIndex = await listings.getByIndex(
+      listingIds[listingIds.length - 1]
+    )
+    const listing = await listings.get(listingFromIndex.address)
+    expect(listing.name).to.equal("Foo Bar")
   })
 
   it("should buy a listing", async () => {
@@ -92,7 +107,7 @@ describe("Listing Resource", function() {
 
     it("should get the number of purchases", async () => {
       const numPurchases = await listings.purchasesLength(listing.address)
-      expect(numPurchases.toNumber()).to.equal(1)
+      expect(numPurchases).to.equal(1)
     })
 
     it("should get the address of a purchase", async () => {

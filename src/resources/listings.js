@@ -12,13 +12,35 @@ class Listings extends ResourceBase{
     return await this.contractService.getAllListingIds()
   }
 
+  async get(address) {
+    const contractData = await this.contractFn(address, "data")
+    let ipfsHash = this.contractService.getIpfsHashFromBytes32(contractData[1])
+    const ipfsData = await this.ipfsService.getFile(ipfsHash)
+
+    let listing = {
+      address: address,
+      ipfsHash: ipfsHash,
+      sellerAddress: contractData[0],
+      priceWei: contractData[2].toString(),
+      price: this.contractService.web3.utils.fromWei(contractData[2], "ether"),
+      unitsAvailable: contractData[3],
+      created: contractData[4],
+      expiration: contractData[5],
+
+      name: ipfsData.data.name,
+      category: ipfsData.data.category,
+      description: ipfsData.data.description,
+      location: ipfsData.data.location,
+      pictures: ipfsData.data.pictures
+    }
+
+    return listing
+  }
+
+  // This method is DEPRCIATED
   async getByIndex(listingIndex) {
-    const contractData = await this.contractService.getListing(
-      listingIndex
-    )
-    const ipfsData = await this.ipfsService.getFile(
-      contractData.ipfsHash
-    )
+    const contractData = await this.contractService.getListing(listingIndex)
+    const ipfsData = await this.ipfsService.getFile(contractData.ipfsHash)
     // ipfsService should have already checked the contents match the hash,
     // and that the signature validates
 
@@ -34,8 +56,8 @@ class Listings extends ResourceBase{
       index: contractData.index,
       ipfsHash: contractData.ipfsHash,
       sellerAddress: contractData.lister,
-      price: contractData.price,
-      unitsAvailable: contractData.unitsAvailable
+      price: Number(contractData.price),
+      unitsAvailable: Number(contractData.unitsAvailable)
     }
 
     // TODO: Validation
@@ -90,8 +112,8 @@ class Listings extends ResourceBase{
 
   async buy(address, unitsToBuy, ethToPay) {
     // TODO: ethToPay should really be replaced by something that takes Wei.
-    const value = this.contractService.web3.toWei(ethToPay, "ether")
-    return await this.contractFn(address, "buyListing", [unitsToBuy], {value:value, gas: 600000})
+    const value = this.contractService.web3.utils.toWei(String(ethToPay), "ether")
+    return await this.contractFn(address, "buyListing", [unitsToBuy], {value:value, gas: 650000})
   }
 
   async close(address) {
@@ -99,7 +121,7 @@ class Listings extends ResourceBase{
   }
 
   async purchasesLength(address) {
-    return await this.contractFn(address, "purchasesLength")
+    return Number(await this.contractFn(address, "purchasesLength"))
   }
 
   async purchaseAddressByIndex(address, index) {

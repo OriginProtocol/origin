@@ -1,4 +1,4 @@
-pragma solidity 0.4.21;
+pragma solidity 0.4.23;
 
 /// @title Purchase
 /// @dev An purchase Origin Listing representing a purchase/booking
@@ -6,7 +6,7 @@ import "./Listing.sol";
 
 
 contract Purchase {
-  
+
   /*
   * Events
   */
@@ -31,7 +31,7 @@ contract Purchase {
   * Storage
   */
 
-  Stages private internalStage = Stages.AWAITING_PAYMENT; 
+  Stages private internalStage = Stages.AWAITING_PAYMENT;
 
   Listing public listingContract; // listing that is being purchased
   address public buyer; // User who is buying. Seller is derived from listing
@@ -61,7 +61,7 @@ contract Purchase {
   * Public functions
   */
 
-  function Purchase(
+  constructor(
     address _listingContractAddress,
     address _buyer
   )
@@ -98,7 +98,7 @@ contract Purchase {
 
   function stage()
   public
-  view 
+  view
   returns (Stages _stage)
   {
     if (internalStage == Stages.BUYER_PENDING) {
@@ -164,4 +164,3 @@ contract Purchase {
     // Right now there's no way to exit this state.
   }
 }
-

@@ -9,18 +9,53 @@ const clearCache = ipfsService => {
 
 const methodNames = ["submitFile", "getFile", "gatewayUrlForHash"]
 
-const ipfsEnv = process.env.IPFS_DOMAIN ? "local" : "default"
-
 describe("IpfsService", () => {
   let ipfsService
 
   beforeEach(() => {
-    ipfsService = new IpfsService()
+    ipfsService = new IpfsService({
+      ipfsDomain: "127.0.0.1",
+      ipfsApiPort: "5002",
+      ipfsGatewayPort: "8080",
+      ipfsGatewayProtocol: "http"
+    })
   })
 
   methodNames.forEach(methodName => {
     it(`should have ${methodName} method`, () => {
       expect(ipfsService[methodName]).to.be.an.instanceof(Function)
+    })
+  })
+
+  describe("constructor", () => {
+    it("should default to origin", () => {
+      var service = new IpfsService()
+      expect(service.gateway).to.equal("https://gateway.originprotocol.com")
+      expect(service.api).to.equal("https://gateway.originprotocol.com")
+    })
+
+    it("should use specified port if not protocol default", () => {
+      var service = new IpfsService({ ipfsGatewayPort: "8080" })
+      expect(service.gateway).to.equal(
+        "https://gateway.originprotocol.com:8080"
+      )
+
+      service = new IpfsService({
+        ipfsGatewayProtocol: "http",
+        ipfsGatewayPort: "8080"
+      })
+      expect(service.gateway).to.equal("http://gateway.originprotocol.com:8080")
+
+      service = new IpfsService({
+        ipfsGatewayProtocol: "http",
+        ipfsApiPort: "8080"
+      })
+      expect(service.api).to.equal("http://gateway.originprotocol.com:8080")
+    })
+
+    it("should use default protocol port if given port is empty", () => {
+      var service = new IpfsService({ ipfsGatewayPort: "" })
+      expect(service.gateway).to.equal("https://gateway.originprotocol.com")
     })
   })
 
@@ -57,7 +92,7 @@ describe("IpfsService", () => {
     ipfsHashes.forEach(({ ipfsHash, url }) => {
       it(`should correctly create url for IPFS hash ${ipfsHash}`, () => {
         const result = ipfsService.gatewayUrlForHash(ipfsHash)
-        expect(result).to.equal(url[ipfsEnv])
+        expect(result).to.equal(url["local"])
       })
     })
   })
