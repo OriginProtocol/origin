@@ -10,7 +10,7 @@
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   }
 
-  var oauthVerifier = getParameterByName('oauth-verifier');
-  window.opener.postMessage(oauthVerifier, '*')
+  var oauthVerifier = getParameterByName('oauth_verifier');
+  window.opener.postMessage("twitter-oauth-verifier:" + oauthVerifier, '*')
   window.close()
 </script>
