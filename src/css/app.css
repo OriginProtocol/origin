@@ -147,21 +147,8 @@ a:hover {
   transform: rotate(90deg);
 }
 
-/* Address */
-
 .address {
-  position: relative;
-}
-
-.address div {
-  overflow: hidden;
-  white-space: nowrap;
-  word-break: break-all
-}
-
-.address :last-child {
-  direction: rtl;
-  text-overflow: ellipsis;
+  font-size: 0.875rem;
 }
 
 /* Identification */
@@ -176,17 +163,16 @@ a:hover {
   padding: 0;
 }
 
-.identification p {
+.transaction-status .identification > div {
   flex-basis: 33%;
-  font-size: 1rem;
   margin: 0;
 }
 
-.identification .badge {
+.transaction-status .identification .badge {
   font-size: 0.6rem;
 }
 
-.identification p:first-of-type {
+.transaction-status .identification > :first-of-type {
   line-height: 0.6rem;
 }
 
@@ -194,8 +180,17 @@ a:hover {
   font-weight: bold;
 }
 
-.identification .address {
-  font-size: 0.875rem;
+.identification a {
+  color: white;
+}
+
+.user-card .identification > div {
+  flex-basis: 50%;
+}
+
+.user-card .identification > :first-of-type {
+  font-size: 1rem;
+  line-height: 1;
 }
 
 /* Avatar */
@@ -350,7 +345,6 @@ a:hover {
 }
 
 .user-card .identity .address {
-  font-size: 0.875rem;
   font-weight: bold;
   margin: 0;
   word-wrap: break-word;
@@ -384,6 +378,26 @@ a:hover {
   width: 20px;
 }
 
+/* Status Indicator */
+
+.status-indicator {
+  border-radius: 50%;
+  height: 12px;
+  width: 12px;
+}
+
+.status-indicator.danger {
+  background-color: #ff1a1a;
+}
+
+.status-indicator.success {
+  background-color: var(--greenblue);
+}
+
+.status-indicator.warning {
+  background-color: #f4c110;
+}
+
 /* Navbar */
 
 .navbar {
@@ -402,13 +416,9 @@ a:hover {
 
 .navbar .unread-badge {
   position: absolute;
-  background-color: var(--greenblue);
   border: 2px solid var(--dusk);
-  border-radius: 50%;
-  height: 12px;
   right: 17px;
   top: 2px;
-  width: 12px;
 }
 
 .navbar .dropdown {
@@ -799,7 +809,7 @@ a:hover {
   width: 156px;
 }
 
-.btn:hover {
+.btn-primary:hover {
   background-color: var(--dark-clear-blue);
   color: white;
 }
@@ -1309,7 +1319,6 @@ label[for=root_pictures]:hover {
 }
 
 .sale .card-body .address {
-  font-size: 0.875rem;
   margin: 0;
 }
 
@@ -1718,7 +1727,6 @@ label[for=root_pictures]:hover {
 
 .review .address {
   flex-basis: 33%;
-  font-size: 0.875rem;
 }
 
 .review .score {
@@ -1925,8 +1933,14 @@ label[for=root_pictures]:hover {
   background-color: white;
   border: solid 1px var(--light);
   border-radius: var(--default-radius);
-  margin-bottom: 40px;
+  margin-bottom: 1rem;
   padding: 20px 10px 10px 20px;
+}
+
+.services-container h3 {
+  font-weight: normal;
+  margin-bottom: 1rem;
+  padding-top: 1rem;
 }
 
 .services-container .credit {
@@ -1934,11 +1948,12 @@ label[for=root_pictures]:hover {
   color: #98a7b4;
   font-size: 0.75rem;
   margin: 0 0 1rem;
-  right: 20px;
-  top: 20px;
+  right: 10px;
+  top: 10px;
 }
 
 .services-container .directive {
+  font-size: 1rem;
   margin: 0 140px 20px 0;
 }
 
@@ -1947,25 +1962,18 @@ label[for=root_pictures]:hover {
 }
 
 .service {
-  position: relative;
   background-color: #fafbfc;
   border: dashed 1px var(--light);
   border-radius: var(--default-radius);
   margin: 0 0 10px 0;
   overflow: hidden;
-  padding: 15px;
+  padding: 10px;
+  position: relative;
   width: 100%;
 }
 
 .service:not(.published) {
   cursor: pointer;
-}
-
-.service p {
-  color: #98a7b4;
-  font-size: 1.125rem;
-  font-weight: normal;
-  margin: 0;
 }
 
 .service.disabled {
@@ -2002,9 +2010,24 @@ label[for=root_pictures]:hover {
 
 .service .image-container {
   background-image: url(/images/verification-shape-grey.svg);
-  height: 54px;
-  margin: 0 auto 10px;
-  width: 52px;
+  background-repeat: no-repeat;
+  background-size: 34px 36px;
+  height: 36px;
+  width: 34px;
+}
+
+.service .image-container img {
+  max-height: 50%;
+  max-width: 50%;
+}
+
+.service-name {
+  color: #98a7b4;
+  font-size: 1.125rem;
+  font-weight: normal;
+  line-height: 36px;
+  margin-left: 10px;
+  vertical-align: middle;
 }
 
 .service.published .image-container {
@@ -2062,15 +2085,7 @@ sup {
 
 .profile-wrapper .progress {
   background-color: var(--pale-grey);
-  margin: 0 0 30px;
-}
-
-.profile-wrapper .publish {
-  font-size: 1.125rem;
-  font-weight: 900;
-  margin: 0 auto 1rem;
-  padding: 0.375rem 3rem;
-  width: auto;
+  margin: 0 0 1rem;
 }
 
 .profile-wrapper .timelapse {
@@ -2118,6 +2133,30 @@ sup {
   overflow: hidden;
 }
 
+.publish {
+  font-size: 1.125rem;
+  font-weight: 900;
+  margin: 0 auto 1rem;
+  padding: 0.375rem 3rem;
+  width: auto;
+}
+
+.published-status {
+  font-size: 0.75rem;
+}
+
+.published-status :first-child {
+  font-weight: normal;
+  margin-right: 0.25rem;
+}
+
+.published-status .not-published {
+  color: #ff1a1a;
+  font-size: 0.625rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
 .profile-wrapper .wallet {
   margin-bottom: 20px;
 }
@@ -2138,6 +2177,10 @@ sup {
 
 .wallet .flex:first-child {
   flex-grow: 1;
+}
+
+.wallet .progress {
+  margin: 0.875rem 0;
 }
 
 .profile-wrapper .profile.modal {

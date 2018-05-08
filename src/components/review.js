@@ -21,7 +21,7 @@ class Review extends Component {
                 <img key={`score-star-${i}`} src={`/images/star-${score > i ? 'filled' : 'empty'}.svg`} alt="review score star" />
               )
             })}</div>
-            <div className="age text-muted"><Timelapse reference={createdAt} /></div>
+            <div className="age text-muted"><Timelapse reactive={false} reference={createdAt} /></div>
           </div>
         </div>
         <p className="content">{content}</p>

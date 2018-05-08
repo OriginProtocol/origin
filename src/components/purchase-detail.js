@@ -254,7 +254,7 @@ class PurchaseDetail extends Component {
               <h1>{listing.name}</h1>
             </div>
           </div>
-          <div className="row">
+          <div className="transaction-status row">
             <div className="col-12 col-lg-8">
               <h2>Transaction Status</h2>
               <div className="row">
@@ -345,7 +345,7 @@ class PurchaseDetail extends Component {
               <hr />
             </div>
             <div className="col-12 col-lg-4">
-              <UserCard user={{ address: counterparty.address, name: 'Aure Gimon', title: counterparty }} />
+              <UserCard user={{ address: counterpartyUser.address, name: 'Aure Gimon', title: counterparty }} />
             </div>
           </div>
           <div className="row">

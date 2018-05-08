@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import $ from 'jquery'
 import Modal from './modal'
 import Timelapse from './timelapse'
-import TruncatableAddress from './truncatable-address'
 import UserCard from './user-card'
 
 // sample list of available countries for phone number prefix
@@ -159,8 +158,6 @@ class Profile extends Component {
 
       this.setState({ userForm: obj })
     }
-
-    console.log(this.state)
   }
 
   // update state for controlled names and description components
@@ -308,81 +305,86 @@ class Profile extends Component {
                   <p>{provisional.description}</p>
                 </div>
               </div>
-              {publishable &&
-                <div className="alert d-flex">
-                  Your profile includes unpublished changes.
-                  <div className="info icon-container" data-toggle="tooltip" title="Tell me more about what it means to publish and why I should do it."></div>
-                </div>
-              }
               <h2>Verify yourself on Origin</h2>
               <div className="services-container">
                 <div className="credit">Powered by <span className="logo">Origin<sup>ID</sup></span></div>
                 <div className="directive">Please connect your accounts below to strengthen your identity on Origin.</div>
                 <div className="row no-gutters">
                   <div className="col-12 col-sm-6 col-md-4">
-                    <button data-modal="phone" className={`service${published.phone ? ' published' : (provisional.phone ? ' verified' : '')}`} onClick={this.handleToggle}>
-                      <span className="image-container d-flex text-center justify-content-center">
+                    <button data-modal="phone" className={`service d-flex${published.phone ? ' published' : (provisional.phone ? ' verified' : '')}`} onClick={this.handleToggle}>
+                      <span className="image-container d-flex align-items-center justify-content-center">
                         {<img src="/images/phone-icon-light.svg" alt="phone icon" />}
                       </span>
-                      <p>Phone</p>
+                      <span className="service-name">Phone</span>
                     </button>
                   </div>
                   <div className="col-12 col-sm-6 col-md-4">
-                    <button data-modal="email" className={`service${published.email ? ' published' : (provisional.email ? ' verified' : '')}`} onClick={this.handleToggle}>
-                      <span className="image-container d-flex text-center justify-content-center">
+                    <button data-modal="email" className={`service d-flex${published.email ? ' published' : (provisional.email ? ' verified' : '')}`} onClick={this.handleToggle}>
+                      <span className="image-container d-flex align-items-center justify-content-center">
                         {<img src="/images/email-icon-light.svg" alt="email icon" />}
                       </span>
-                      <p>Email</p>
+                      <span className="service-name">Email</span>
                     </button>
                   </div>
                   <div className="col-12 col-sm-6 col-md-4">
-                    <button className="service disabled" disabled>
-                      <span className="image-container d-flex text-center justify-content-center">
+                    <button className="service d-flex disabled" disabled>
+                      <span className="image-container d-flex align-items-center justify-content-center">
                         <img src="/images/address-icon.svg" alt="address icon" />
                       </span>
                       <span className="unavailable-bg"></span>
                       <span className="unavailable-message">Coming<br />Soon</span>
-                      <p>Address</p>
+                      <span className="service-name">Address</span>
                     </button>
                   </div>
                   <div className="col-12 col-sm-6 col-md-4">
-                    <button data-modal="facebook" className={`service${published.facebook ? ' published' : (provisional.facebook ? ' verified' : '')}`} onClick={this.handleToggle}>
-                      <span className="image-container d-flex text-center justify-content-center">
+                    <button data-modal="facebook" className={`service d-flex${published.facebook ? ' published' : (provisional.facebook ? ' verified' : '')}`} onClick={this.handleToggle}>
+                      <span className="image-container d-flex align-items-center justify-content-center">
                         <img src="/images/facebook-icon-light.svg" alt="Facebook icon" />
                       </span>
-                      <p>Facebook</p>
+                      <span className="service-name">Facebook</span>
                     </button>
                   </div>
                   <div className="col-12 col-sm-6 col-md-4">
-                    <button data-modal="twitter" className={`service${published.twitter ? ' published' : (provisional.twitter ? ' verified' : '')}`} onClick={this.handleToggle}>
-                      <span className="image-container d-flex text-center justify-content-center">
+                    <button data-modal="twitter" className={`service d-flex${published.twitter ? ' published' : (provisional.twitter ? ' verified' : '')}`} onClick={this.handleToggle}>
+                      <span className="image-container d-flex align-items-center justify-content-center">
                         <img src="/images/twitter-icon-light.svg" alt="Twitter icon" />
                       </span>
-                      <p>Twitter</p>
+                      <span className="service-name">Twitter</span>
                     </button>
                   </div>
                   <div className="col-12 col-sm-6 col-md-4">
-                    <button className="service disabled" disabled>
-                      <span className="image-container d-flex text-center justify-content-center">
+                    <button className="service d-flex disabled" disabled>
+                      <span className="image-container d-flex align-items-center justify-content-center">
                         <img src="/images/google-icon.svg" alt="Google icon" />
                       </span>
                       <span className="unavailable-bg"></span>
                       <span className="unavailable-message">Coming<br />Soon</span>
-                      <p>Google</p>
+                      <span className="service-name">Google</span>
                     </button>
+                  </div>
+                  <div className="col-12">
+                    <div className="d-flex justify-content-between">
+                      <h3>Profile Strength</h3>
+                      <h3>{strength}%</h3>
+                    </div>
+                    <div className="progress">
+                      <div className="progress-bar" role="progressbar" style={{ width: `${progress.published}%` }} aria-valuenow={progress.published} aria-valuemin="0" aria-valuemax="100"></div>
+                      <div className="progress-bar provisional" role="progressbar" style={{ width: `${progress.provisional}%` }} aria-valuenow={progress.provisional} aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    {!publishable &&
+                      <button className="publish btn btn-sm btn-primary d-block" disabled>Publish Now</button>
+                    }
+                    {publishable &&
+                      <button className="publish btn btn-sm btn-primary d-block" onClick={this.handlePublish}>Publish Now</button>
+                    }
+                    <div className="published-status text-center">
+                      <span>Status:</span>
+                      {!lastPublish && <span className="not-published">Not Published</span>}
+                      {lastPublish && <span>Last published <Timelapse reactive={true} reference={lastPublish} /></span>}
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="d-flex justify-content-between">
-                <h2>Profile Strength</h2>
-                <h2>{strength}%</h2>
-              </div>
-              <div className="progress">
-                <div className="progress-bar" role="progressbar" style={{ width: `${progress.published}%` }} aria-valuenow={progress.published} aria-valuemin="0" aria-valuemax="100"></div>
-                <div className="progress-bar provisional" role="progressbar" style={{ width: `${progress.provisional}%` }} aria-valuenow={progress.provisional} aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-              {publishable && <button className="publish btn btn-primary d-block" onClick={this.handlePublish}>Publish Now</button>}
-              {lastPublish && <p className="timelapse text-center">Last Published <Timelapse reference={lastPublish} /></p>}
             </div>
             <div className="col-12 col-lg-4">
               <div className="wallet">
@@ -395,7 +397,7 @@ class Profile extends Component {
                   </div>
                   <div className="eth d-flex flex-column justify-content-between">
                     <div>ETH Address:</div>
-                    <TruncatableAddress address="0x32Be343B94f860124dC4fEe278FDCBD38C102D88" />
+                    <div>0x32Be343B94f860124dC4fEe278FDCBD38C102D88</div>
                   </div>
                 </div>
                 <hr className="dark sm" />

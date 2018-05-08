@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import Notification from './notification'
-import TruncatableAddress from './truncatable-address'
 import data from '../data'
 
 class NavBar extends Component {
@@ -100,9 +99,7 @@ class NavBar extends Component {
                       </div>
                       <div className="eth d-flex flex-column justify-content-between">
                         <div>ETH Address:</div>
-                        <Link to="/profile"><strong>
-                          <TruncatableAddress address="0x32Be343B94f860124dC4fEe278FDCBD38C102D88" />
-                        </strong></Link>
+                        <Link to="/profile"><strong>0x32Be343B94f860124dC4fEe278FDCBD38C102D88</strong></Link>
                       </div>
                     </div>
                     <hr className="dark sm" />
