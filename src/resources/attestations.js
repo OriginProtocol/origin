@@ -88,20 +88,19 @@ class Attestations {
     )
   }
 
-  async facebookAuthUrl({ redirectUrl }) {
+  async facebookAuthUrl() {
     return await this.get(
-      `facebook/auth-url?redirect-url=${redirectUrl}`,
+      `facebook/auth-url`,
       responseToUrl
     )
   }
 
-  async facebookVerify({ wallet, redirectUrl, code }) {
+  async facebookVerify({ wallet, code }) {
     let identity = await this.getIdentityAddress(wallet)
     return await this.post(
       "facebook/verify",
       {
         identity,
-        "redirect-url": redirectUrl,
         code
       },
       this.responseToAttestation
