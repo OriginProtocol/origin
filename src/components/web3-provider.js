@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import Modal from './modal'
 
 import origin from '../services/origin'
+import Store from '../Store'
+import { showAlert } from '../actions/Alert'
 
 const web3 = origin.contractService.web3
-const alertify = require('../../node_modules/alertify/src/alertify.js')
 
 const networkNames = {
   1: 'Main',
@@ -145,7 +146,7 @@ class Web3Provider extends Component {
     curr = curr && curr.toLowerCase()
 
     if (curr !== next) {
-      curr && alertify.log('MetaMask account has changed.')
+      curr && Store.dispatch(showAlert('MetaMask account has changed.'))
 
       this.setState({
         accountsError: null,

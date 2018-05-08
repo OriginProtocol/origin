@@ -5,6 +5,8 @@ import {
   Switch,
 } from 'react-router-dom'
 
+import Alert from './alert'
+
 // Components
 import ScrollToTop from './scroll-to-top'
 import Layout from './layout'
@@ -94,6 +96,7 @@ const App = () => (
           </Switch>
         </Web3Provider>
       </Layout>
+      <Alert />
     </ScrollToTop>
   </Router>
 )
