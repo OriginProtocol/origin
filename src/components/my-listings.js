@@ -38,6 +38,8 @@ class MyListings extends Component {
       const accounts = await web3.eth.getAccounts()
 
       this.setState({ accounts })
+
+      return accounts
     } catch(error) {
       console.error('Error loading accounts')
       console.error(error)
