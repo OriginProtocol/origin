@@ -25,7 +25,6 @@ import 'bootstrap/dist/js/bootstrap'
 
 // CSS
 import 'bootstrap/dist/css/bootstrap.css'
-import '../css/pure-min.css' // TODO (stan): Is this even used?
 import '../css/lato-web.css'
 import '../css/poppins.css'
 import '../css/app.css'

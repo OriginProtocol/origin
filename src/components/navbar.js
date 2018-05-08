@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import Notification from './notification'
+import TruncatableAddress from './truncatable-address'
 import data from '../data'
 
 class NavBar extends Component {
@@ -64,7 +65,7 @@ class NavBar extends Component {
                 <div className="actual-menu">
                   <header className="d-flex">
                     <div className="count">
-                      <p className="d-inline-block">{notificationCount}</p>
+                      <div className="d-inline-block">{notificationCount}</div>
                     </div>
                     <h3>Notifications</h3>
                   </header>
@@ -97,22 +98,34 @@ class NavBar extends Component {
                             alt="wallet icon" />
                         </Link>
                       </div>
-                      <div>
-                        <p><Link to="/profile">ETH Address:</Link></p>
-                        <p><Link to="/profile"><strong>0x32Be343B94f860124dC4fEe278FDCBD38C102D88</strong></Link></p>
+                      <div className="eth d-flex flex-column justify-content-between">
+                        <div>ETH Address:</div>
+                        <Link to="/profile"><strong>
+                          <TruncatableAddress address="0x32Be343B94f860124dC4fEe278FDCBD38C102D88" />
+                        </strong></Link>
                       </div>
                     </div>
-                    <hr />
+                    <hr className="dark sm" />
                     <div className="d-flex">
                       <div className="avatar-container">
                         <Link to="/profile"><img src="/images/avatar-blue.svg" alt="avatar" /></Link>
                       </div>
-                      <div className="identification">
-                        <p><Link to="/profile">Aure Gimon</Link></p>
-                        <Link to="/profile"><img src="/images/phone-icon-verified.svg" alt="phone verified icon" /></Link>
-                        <Link to="/profile"><img src="/images/email-icon-verified.svg" alt="email verified icon" /></Link>
-                        <Link to="/profile"><img src="/images/facebook-icon-verified.svg" alt="Facebook verified icon" /></Link>
-                        <Link to="/profile"><img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" /></Link>
+                      <div className="identification d-flex flex-column justify-content-between">
+                        <div><Link to="/profile">Aure Gimon</Link></div>
+                        <div>
+                          <Link to="/profile">
+                            <img src="/images/phone-icon-verified.svg" alt="phone verified icon" />
+                          </Link>
+                          <Link to="/profile">
+                            <img src="/images/email-icon-verified.svg" alt="email verified icon" />
+                          </Link>
+                          <Link to="/profile">
+                            <img src="/images/facebook-icon-verified.svg" alt="Facebook verified icon" />
+                          </Link>
+                          <Link to="/profile">
+                            <img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" />
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   </div>

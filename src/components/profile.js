@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import $ from 'jquery'
 import Modal from './modal'
 import Timelapse from './timelapse'
+import TruncatableAddress from './truncatable-address'
+import UserCard from './user-card'
 
 // sample list of available countries for phone number prefix
 const countryOptions = [
@@ -314,10 +316,8 @@ class Profile extends Component {
               }
               <h2>Verify yourself on Origin</h2>
               <div className="services-container">
-                <p className="credit">
-                  Powered by <span className="logo">Origin<sup>ID</sup></span>
-                </p>
-                <p className="directive">Please connect your accounts below to strengthen your identity on Origin.</p>
+                <div className="credit">Powered by <span className="logo">Origin<sup>ID</sup></span></div>
+                <div className="directive">Please connect your accounts below to strengthen your identity on Origin.</div>
                 <div className="row no-gutters">
                   <div className="col-12 col-sm-6 col-md-4">
                     <button data-modal="phone" className={`service${published.phone ? ' published' : (provisional.phone ? ' verified' : '')}`} onClick={this.handleToggle}>
@@ -393,19 +393,19 @@ class Profile extends Component {
                       className="identicon"
                       alt="wallet icon" />
                   </div>
-                  <div className="eth">
-                    <p>ETH Address:</p>
-                    <p className="address"><strong>0x32Be343B94f860124dC<wbr />4fEe278FDCBD38C102D88</strong></p>
+                  <div className="eth d-flex flex-column justify-content-between">
+                    <div>ETH Address:</div>
+                    <TruncatableAddress address="0x32Be343B94f860124dC4fEe278FDCBD38C102D88" />
                   </div>
                 </div>
-                <hr />
+                <hr className="dark sm" />
                 <div className="detail d-flex">
-                  <p>Account Balance:</p>
-                  <p>0 ETH</p>
+                  <div>Account Balance:</div>
+                  <div>0 ETH</div>
                 </div>
                 <div className="detail d-flex">
-                  <p>Transaction History:</p>
-                  <p><a href="#">ETH</a> | <a href="#">Tokens</a></p>
+                  <div>Transaction History:</div>
+                  <div><a href="#">ETH</a> | <a href="#">Tokens</a></div>
                 </div>
               </div>
               <div className="guidance">
