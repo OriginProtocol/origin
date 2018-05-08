@@ -2,7 +2,7 @@ import cgi
 import datetime
 import http.client
 import json
-import oauth2 as oauth
+import requests
 import secrets
 import sendgrid
 
@@ -14,6 +14,7 @@ from database import db
 from database import db_models
 from flask import session
 from logic import service_utils
+from requests_oauthlib import OAuth1
 from sqlalchemy import func
 from util import time_, attestations
 from web3 import Web3, HTTPProvider
@@ -25,9 +26,6 @@ signing_key = settings.ORIGIN_SIGNING_KEY
 VC = db_models.VerificationCode
 
 sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
-
-oauth_consumer = oauth.Consumer(
-    settings.TWITTER_CONSUMER_KEY, settings.TWITTER_CONSUMER_SECRET)
 
 twitter_request_token_url = 'https://api.twitter.com/oauth/request_token'
 twitter_authenticate_url = 'https://api.twitter.com/oauth/authenticate'
@@ -188,11 +186,14 @@ class VerificationService:
         }
 
     def twitter_auth_url():
-        client = oauth.Client(oauth_consumer)
-        resp, content = client.request(twitter_request_token_url, 'GET')
-        if resp['status'] != '200':
-            raise Exception('Invalid response from Twitter.')
-        as_bytes = dict(cgi.parse_qsl(content))
+        host = append_trailing_slash(settings.HOST)
+        callback_uri = "{}redirects/twitter/".format(host)
+        oauth = OAuth1(
+            settings.TWITTER_CONSUMER_KEY,
+            settings.TWITTER_CONSUMER_SECRET,
+            callback_uri=callback_uri)
+        r = requests.post(url=twitter_request_token_url, auth=oauth)
+        as_bytes = dict(cgi.parse_qsl(r.content))
         token_b = as_bytes[b'oauth_token']
         token_secret_b = as_bytes[b'oauth_token_secret']
         request_token = {}
@@ -210,13 +211,14 @@ class VerificationService:
             raise service_utils.req_error(
                 code='INVALID',
                 message='Session not found.')
-        token = oauth.Token(session['request_token']['oauth_token'],
-                            session['request_token']['oauth_token_secret'])
-        token.set_verifier(oauth_verifier)
-        client = oauth.Client(oauth_consumer, token)
-        resp, content = client.request(twitter_access_token_url, 'GET')
-        access_token = dict(cgi.parse_qsl(content))
-        if resp['status'] != '200' or b'oauth_token' not in access_token:
+        oauth = OAuth1(
+            settings.TWITTER_CONSUMER_KEY,
+            settings.TWITTER_CONSUMER_SECRET,
+            session['request_token']['oauth_token'],
+            session['request_token']['oauth_token_secret'],
+            verifier=oauth_verifier)
+        r = requests.post(url=twitter_access_token_url, auth=oauth)
+        if r.status_code != 200:
             raise service_utils.req_error(
                 code='INVALID',
                 path='oauth_verifier',
