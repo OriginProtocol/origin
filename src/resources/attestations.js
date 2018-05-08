@@ -132,7 +132,8 @@ class Attestations {
       {
         method,
         body: body ? JSON.stringify(body) : undefined,
-        headers: { "content-type": "application/json" }
+        headers: { "content-type": "application/json" },
+        credentials: 'include'
       }
     )
     let json = await response.json()
