@@ -1,5 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { showAlert } from '../actions/Alert'
 
 import Modal from './modal'
 import Review from './review'
@@ -9,8 +11,6 @@ import data from '../data'
 // temporary - we should be getting an origin instance from our app,
 // not using a global singleton
 import origin from '../services/origin'
-
-const alertify = require('../../node_modules/alertify/src/alertify.js')
 
 class ListingsDetail extends Component {
 
@@ -41,7 +41,7 @@ class ListingsDetail extends Component {
       const obj = Object.assign({}, listing, { loading: false, reviews: data.reviews})
       this.setState(obj)
     } catch (error) {
-      alertify.log('There was an error loading this listing.')
+      this.props.showAlert('There was an error loading this listing.')
       console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingAddress}`)
       console.log(error)
     }
@@ -55,7 +55,7 @@ class ListingsDetail extends Component {
       let purchaseAddress = await origin.listings.purchaseAddressByIndex(address, i)
       let purchase = await origin.purchases.get(purchaseAddress)
       console.log('Purchase:', purchase)
-      this.setState((prevState, props) => {
+      this.setState((prevState) => {
         return {purchases: [...prevState.purchases, purchase]};
       });
     }
@@ -87,7 +87,7 @@ class ListingsDetail extends Component {
     } catch (error) {
       window.err = error
       console.log(error)
-      alertify.log("There was a problem purchasing this listing.\nSee the console for more details.")
+      this.props.showAlert("There was a problem purchasing this listing.\nSee the console for more details.")
       this.setState({step: this.STEP.VIEW})
     }
   }
@@ -279,4 +279,9 @@ class ListingsDetail extends Component {
   }
 }
 
-export default ListingsDetail
+
+const mapDispatchToProps = dispatch => ({
+  showAlert: (msg) => dispatch(showAlert(msg))
+})
+
+export default connect(undefined, mapDispatchToProps)(ListingsDetail)
