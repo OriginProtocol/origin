@@ -282,7 +282,7 @@ def test_facebook_auth_url():
     assert resp['url'] == (
         'https://www.facebook.com/v2.12/dialog/oauth?client_id'
         '=facebook-client-id&redirect_uri'
-        '=http://testhost.com/redirects/facebook/')
+        '=https://testhost.com/redirects/facebook/')
 
 
 @mock.patch('http.client.HTTPSConnection')
@@ -300,8 +300,8 @@ def test_verify_facebook_valid_code(MockHttpConnection):
     mock_http_conn.request.assert_called_once_with(
         'GET',
         '/v2.12/oauth/access_token?client_id=facebook-client-id&' +
-        'client_secret=facebook-client-secret&' +
-        'redirect_uri=http://testhost.com/redirects/facebook/&code=abcde12345')
+        'client_secret=facebook-client-secret&redirect_uri=' +
+        'https://testhost.com/redirects/facebook/&code=abcde12345')
     assert len(resp['signature']) == SIGNATURE_LENGTH
     assert resp['claim_type'] == 3
     assert resp['data'] == 'facebook verified'
@@ -328,7 +328,7 @@ def test_verify_facebook_invalid_code(MockHttpConnection):
         'GET',
         '/v2.12/oauth/access_token?client_id=facebook-client-id' +
         '&client_secret=facebook-client-secret&' +
-        'redirect_uri=http://testhost.com/redirects/facebook/&code=bananas')
+        'redirect_uri=https://testhost.com/redirects/facebook/&code=bananas')
     assert code == 'INVALID'
     assert path == 'code'
     assert message == 'The code you provided is invalid.'

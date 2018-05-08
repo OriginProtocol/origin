@@ -16,7 +16,7 @@ from flask import session
 from logic import service_utils
 from requests_oauthlib import OAuth1
 from sqlalchemy import func
-from util import time_, attestations
+from util import time_, attestations, urls
 from web3 import Web3, HTTPProvider
 
 # TODO: use env vars to connect to live networks
@@ -148,8 +148,7 @@ class VerificationService:
 
     def facebook_auth_url():
         client_id = settings.FACEBOOK_CLIENT_ID
-        host = append_trailing_slash(settings.HOST)
-        redirect_uri = "{}redirects/facebook/".format(host)
+        redirect_uri = urls.absurl("/redirects/facebook/")
         url = ('https://www.facebook.com/v2.12/dialog/oauth?client_id={}'
                '&redirect_uri={}').format(client_id, redirect_uri)
         return {'url': url}
@@ -158,8 +157,7 @@ class VerificationService:
         base_url = 'graph.facebook.com'
         client_id = settings.FACEBOOK_CLIENT_ID
         client_secret = settings.FACEBOOK_CLIENT_SECRET
-        host = append_trailing_slash(settings.HOST)
-        redirect_uri = "{}redirects/facebook/".format(host)
+        redirect_uri = urls.absurl("/redirects/facebook/")
         code = code
         path = ('/v2.12/oauth/access_token?client_id={}'
                 '&client_secret={}&redirect_uri={}&code={}').format(
@@ -186,8 +184,7 @@ class VerificationService:
         }
 
     def twitter_auth_url():
-        host = append_trailing_slash(settings.HOST)
-        callback_uri = "{}redirects/twitter/".format(host)
+        callback_uri = urls.absurl("/redirects/twitter/")
         oauth = OAuth1(
             settings.TWITTER_CONSUMER_KEY,
             settings.TWITTER_CONSUMER_SECRET,
@@ -268,9 +265,3 @@ def send_code_via_email(address, code):
          ' It will expire in 30 minutes.').format(code))
     mail = Mail(from_email, subject, to_email, content)
     sg.client.mail.send.post(request_body=mail.get())
-
-
-def append_trailing_slash(url):
-    if url.endswith('/'):
-        return url
-    return url + '/'
