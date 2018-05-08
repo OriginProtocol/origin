@@ -63,12 +63,7 @@ You'll need to set a few API keys:
   - TWITTER_CONSUMER_KEY
   - TWITTER_CONSUMER_SECRET
 
-For EnvKey support and shared credentials use:
-```python
-cp EnvKey.env .env
-
-```
-Set ENVKEY to the key of the generated local developement key
+For EnvKey support set ENVKEY to the key of the generated local developement key
 
 When deploying, set appropriate environment variables for production, notably
 
