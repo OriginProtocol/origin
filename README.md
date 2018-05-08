@@ -24,18 +24,21 @@ See the [README for the API](api)
 
 ## One-time Setup
 
+### Prerequisites
+- Python 3.5 or higher required
+- Postgresql 9.3 or higher required
+- Redis 4.0+ recommended
+
 ### Set Up A Virtual Environment
 
 ```bash
-# python2
-virtualenv /path/to/environment
-# python3
-python3 -m venv /path/to/environment
-
-cd /path/to/environment
 git clone https://github.com/OriginProtocol/bridge-server.git
 cd bridge-server
-source ../bin/activate
+
+python3 -m venv ve
+
+source ve/bin/activate
+
 pip install -r requirements.txt
 ```
 
@@ -78,13 +81,31 @@ PROJECTPATH=/app  # For Heroku
 Use a unique Flask secret key per environment. Flask suggests that ```python -c "import os; print(os.urandom(24))"```
 is a perfectly reasonable way to generate a secret key.
 
+Enviroment keys for Indexing server:
+- RPC_SERVER: Set this to RPC server URL, you want the indexing server to listen to events on.
+- RPC_PROTOCOL: Different connection protocols for RPC server. Options are `https` or `wss`
+
+  example configurations:
+    - Rinkeby:
+      RPC_SERVER: `wss://rinkeby.infura.io/_ws`
+      RPC_PROTOCOL: `wss`
+
+    - Connecting to local RPC server:
+      RPC_SERVER: `http://127.0.0.1:8545/`
+      RPC_PROTOCOL: `https`
+
+- IPFS_DOMAIN: Set this to domain of an IPFS daemon. for example `127.0.0.1` or `gateway.originprotocol.com`
+- IPFS_PORT: port on which the IPFS daemon is listening.
+
 ### Set Up Your Database
 
 ```bash
 createdb <db-name>  # Anything you want, perhaps bridge-server
 ```
 
-Make sure the DB name you used is indicated in your ```DATABASE_URL```.
+Make sure the DB name you used is indicated in your ```DATABASE_URL``` in the `.env` file.
+Example: `DATABASE_URL`=`postgresql://localhost:5432/bridge_server`
+
 
 ```bash
 # Applies all migrations to make the DB current. Works even on an empty database.
@@ -114,6 +135,16 @@ python main.py
 ```
 
 This starts a development server on ```localhost:5000``` by default.
+
+### Run the Celery worker
+
+```bash
+celery -A util.tasks worker -c=1
+celery -A util.tasks beat
+```
+
+This starts a celery beat to issue periodic tasks and a celery worker to process the tasks.
+
 
 ### Run the Tests
 
@@ -170,11 +201,11 @@ to apply your migration to your local database, then test your changes before co
 
 ## Heroku Deploy
 
-To deploy a development copy of the site on Heroku, just choose which branch you would like to use and follow the instructions: 
+To deploy a development copy of the site on Heroku, just choose which branch you would like to use and follow the instructions:
 
-| `Master` branch <br>(stable) | `Develop` branch<br> (active development) | 
+| `Master` branch <br>(stable) | `Develop` branch<br> (active development) |
 |---------|----------|
-| [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/OriginProtocol/bridge-server/tree/master) | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/OriginProtocol/bridge-server/tree/develop) | 
+| [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/OriginProtocol/bridge-server/tree/master) | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/OriginProtocol/bridge-server/tree/develop) |
 
 Heroku will prompt you to set config variables. At a minium, you must set these three:
 
