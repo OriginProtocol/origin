@@ -141,9 +141,7 @@ POST `/api/attestations/email/verify`
 
 #### Request:
 
-GET `/api/attestations/facebook/auth-url?redirect-url=https://my-url.mydomain`
-
-- redirect-url: [see Facebook login documentation](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow)
+GET `/api/attestations/facebook/auth-url`
 
 #### Response:
 
@@ -163,13 +161,11 @@ POST `/api/attestations/facebook/verify`
 
 - identity (string): address of ERC725 identity contract
 - code (string): [facebook access token code](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow)
-- redirect-url (string): same redirect url sent in the [facebook/auth-url](#facebookauth-url) request
 
 ```
 {
     "identity": "0xC741715d55dE72BF12461760bAAf97e0468E7B8e",
-    "code": "abcde12345",
-    "redirect-url": "https://my-url.mydomain"
+    "code": "abcde12345"
 }
 ```
 
@@ -195,7 +191,7 @@ GET `/api/attestations/twitter/auth-url`
 
 #### Response:
 
-- url (string): url to be used on the client side to retrieve the [oauth verifier token](https://dev.twitter.com/web/sign-in/implementing)
+- url (string): url to be used on the client side to retrieve the [oauth verifier token](https://dev.twitter.com/web/sign-in/implementing). (Note: You will need to set the callback url in your Twitter app to `<host>/redirects/twitter/`. The trailing slash is important.)
 
 ```
 {
