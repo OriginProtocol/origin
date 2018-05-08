@@ -6,6 +6,14 @@ dotenv_filename = dotenv.find_dotenv()
 if dotenv_filename:
     dotenv.load_dotenv(dotenv_filename)
 
+env_key = os.environ.get("ENVKEY")
+if env_key:
+    # if ENVKEY is set load up envkey
+    # NOTE: this actually load_dotenv twice in the __init__ file.
+    # Also seems to imply .env use is dev only. May need a PR to
+    # resolve that issue
+    __import__("envkey")
+
 
 def parse_bool(env_value):
     return env_value is not None and env_value.lower() not in ('0', 'false')

@@ -72,3 +72,4 @@ wcwidth==0.1.7
 eth-account==0.2.2
 web3==4.2.0
 Werkzeug==0.14.1
+envkey==1.1.0
