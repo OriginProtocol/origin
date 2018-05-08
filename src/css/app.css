@@ -159,6 +159,9 @@ a:hover {
   height: 40px;
   margin-right: 15px;
   width: 40px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center center;
 }
 
 .avatar-container img {
@@ -2061,7 +2064,7 @@ label[for=root_pictures]:hover {
   right: 0;
   top: 0;
   width: 60px;
-  
+
   -webkit-clip-path: polygon(100% 0, 0 0, 100% 100%);
   clip-path: polygon(100% 0, 0 0, 100% 100%);
 }
@@ -2224,19 +2227,23 @@ sup {
   top: unset;
 }
 
-.profile-wrapper .profile.modal .container .image-container .image-pair .avatar-container img {
-  height: auto;
-  margin: 0;
+.profile-wrapper .profile.modal .container .image-container .image-pair .avatar-container canvas {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  border-radius: 20px;
 }
 
-.profile-wrapper .profile.modal .container .image-container .image-pair a {
+.profile-wrapper .profile.modal .container .image-container .image-pair label {
   position: absolute;
   bottom: 10px;
   cursor: pointer;
   height: 40px;
   right: 10px;
 }
-.profile-wrapper .profile.modal .container .image-container .image-pair a img {
+.profile-wrapper .profile.modal .container .image-container .image-pair label img {
   height: 40px;
   width: 40px;
 }
