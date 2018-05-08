@@ -10,7 +10,12 @@ class MyListings extends Component {
     this.getListingIds = this.getListingIds.bind(this)
     this.handleUpdate = this.handleUpdate.bind(this)
     this.loadListing = this.loadListing.bind(this)
-    this.state = { filter: 'all', listings: [], loading: true }
+    this.state = {
+      accounts: [],
+      filter: 'all',
+      listings: [],
+      loading: true,
+    }
   }
 
   /*
@@ -28,11 +33,22 @@ class MyListings extends Component {
     }
   }
 
+  async loadAccounts() {
+    try {
+      const accounts = await web3.eth.getAccounts()
+
+      this.setState({ accounts })
+    } catch(error) {
+      console.error('Error loading accounts')
+      console.error(error)
+    }
+  }
+
   async loadListing(id) {
     try {
       const listing = await origin.listings.getByIndex(id)
 
-      if (listing.sellerAddress === window.web3.eth.accounts[0]) {
+      if (listing.sellerAddress === this.state.accounts[0]) {
         const listings = [...this.state.listings, listing]
 
         this.setState({ listings })
@@ -45,6 +61,7 @@ class MyListings extends Component {
   }
 
   async componentWillMount() {
+    await this.loadAccounts()
     await this.getListingIds()
 
     this.setState({ loading: false })
