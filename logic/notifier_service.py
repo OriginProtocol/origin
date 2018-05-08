@@ -2,7 +2,9 @@ from database import db
 from database.db_models import EthNotificationEndpoint, EthNotificationTypes
 from util.contract import ContractHelper
 from util.ipfs import hex_to_base58, IPFSHelper
+from config import settings
 from enum import Enum
+
 #for apns2
 from apns2.client import APNsClient
 from apns2.payload import Payload
@@ -46,6 +48,8 @@ notification_messages = {
         Notification.BUYER_REVIEW:"Your purchase is in review"
         }
 
+require_verified_messages = () #list of types in here
+
 def register_eth_notification(eth_address, type, device_token, verification_signature = None):
     #todo check verification sig if we want this to be a verified endpoint
     notification_obj = EthNotificationEndpoint(eth_address = eth_address,
@@ -55,11 +59,19 @@ def register_eth_notification(eth_address, type, device_token, verification_sign
     db.session.add(notification_obj)
     db.session.commit()
 
-def send_notification(notify_address, notification_type, verify_required = True, **data):
-    for notification_token in EthNotificationEndpoint.query.filter_by(eth_address=notify_address, active = True):
+def send_apn_notification(message, endpoint):
+    token = endpoint.device_token
+    payload = Payload(test=message, sound = "default", badge = 1)
+    client = APNsClient(setting.APNS_CERT_FILE,  use_sandbox = settings.DEBUG, use_alternative_port=False)
+    topic = settings.APNS_APP_BUNDLE_ID
+    client.send(token, payload, topic)
+
+def send_notification(notify_address, notification_type, **data):
+    for notification_endpoint in EthNotificationEndpoint.query.filter_by(eth_address=notify_address, active = True):
+        notify_message = notification_messages[notification_type] % data
         if notification_token.type == EthNotificationTypes.APN:
             #send apn notification here
-            pass
+            send_apn_notification(message, notification_endpoint)
         elif notification_token.type == EthNotificationTypes.FCM:
             #send FCM notification here
             pass
