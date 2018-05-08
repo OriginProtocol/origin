@@ -12,7 +12,13 @@ class MySales extends Component {
     this.getPurchasesLength = this.getPurchasesLength.bind(this)
     this.loadListing = this.loadListing.bind(this)
     this.loadPurchase = this.loadPurchase.bind(this)
-    this.state = { filter: 'pending', listings: [], loading: true, purchases: [] }
+    this.state = {
+      accounts: [],
+      filter: 'pending',
+      listings: [],
+      loading: true,
+      purchases: [],
+    }
   }
 
   /*
@@ -55,12 +61,25 @@ class MySales extends Component {
     }
   }
 
+  async loadAccounts() {
+    try {
+      const accounts = await web3.eth.getAccounts()
+
+      this.setState({ accounts })
+
+      return accounts
+    } catch(error) {
+      console.error('Error loading accounts')
+      console.error(error)
+    }
+  }
+
   async loadListing(id) {
     try {
       const listing = await origin.listings.getByIndex(id)
 
       // only save to state and get purchases for current user's listings
-      if (listing.sellerAddress === window.web3.eth.accounts[0]) {
+      if (listing.sellerAddress === this.state.accounts[0]) {
         const listings = [...this.state.listings, listing]
 
         this.setState({ listings })
@@ -88,6 +107,7 @@ class MySales extends Component {
   }
 
   async componentWillMount() {
+    await this.loadAccounts()
     await this.getListingIds()
 
     this.setState({ loading: false })
