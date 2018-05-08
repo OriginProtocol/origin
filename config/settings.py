@@ -57,7 +57,6 @@ FLASK_SECRET_KEY = get_env_default('FLASK_SECRET_KEY')
 PUBLIC_ID_ENCRYPTION_KEY = get_env_default('PUBLIC_ID_ENCRYPTION_KEY')
 
 DATABASE_URL = get_env_default('DATABASE_URL')
-TEST_DATABASE_URI = get_env_default('TEST_DATABASE_URI')
 
 TEMPLATE_ROOT = os.path.join(PROJECTPATH, 'templates')
 STATIC_ROOT = os.path.join(PROJECTPATH, 'static')
