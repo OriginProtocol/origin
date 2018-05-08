@@ -43,8 +43,8 @@ pip install -r requirements.txt
 
 ```python
 cp dev.env .env
-```
 
+```
 Adjust the values in .env now and in the future to suit your local environment. In particular, set up your ```DATABASE_URL```
 to point to where you local database is or will be.
 
@@ -62,6 +62,13 @@ You'll need to set a few API keys:
 - [Twitter](https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens)
   - TWITTER_CONSUMER_KEY
   - TWITTER_CONSUMER_SECRET
+
+For EnvKey support and shared credentials use:
+```python
+cp EnvKey.env .env
+
+```
+Set ENVKEY to the key of the generated local developement key
 
 When deploying, set appropriate environment variables for production, notably
 
