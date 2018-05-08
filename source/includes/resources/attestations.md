@@ -91,16 +91,22 @@ This will verify that the `code` submitted in the request is the one that was se
 > To get Facebook authentication url
 
 ```javascript
-await origin.attestations.facebookAuthUrl({
-  redirectUrl: "http://redirect.url"
+let url = await origin.attestations.facebookAuthUrl()
+
+window.open(url, '', 'width=650,height=500')
+let code = await new Promise((resolve, reject) => {
+  window.addEventListener('message', (e) => {
+    if (String(e.data).match(/^origin-code:/)) {
+      resolve(e.data.split(':')[1])
+    }
+  }, false)
 })
-// Returns
-"http://foo.bar"
+console.log('code', code) // use this value in `facebookVerify`
 ```
 
-This will return a url which your dapp can redirect the user to.
+This will return a url which your dapp should open in a popup window.
 The page will ask the user to grant permissions to the Origin app, which will be used to verify their Facebook identity.
-The user will be redirected to the specified `redirectUrl` after authentication. See the [Facebook login documentation](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow) for more details.
+Once permissions have been granted, the popup window will [post a message](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) back to the dapp. You should listen for this message, which will contain the `code` needed for the `facebookVerify` call.
 
 ## facebookVerify
 
@@ -108,9 +114,7 @@ The user will be redirected to the specified `redirectUrl` after authentication.
 
 ```javascript
 let facebookAttestation = await origin.attestations.facebookVerify({
-  wallet: myWalletAddress,
-  redirectUrl: "http://redirect.url"
-  code: "12345"
+  code: "12345" // code obtained from `facebookAuthUrl`
 })
 // Returns (attestation object)
 {
@@ -121,22 +125,31 @@ let facebookAttestation = await origin.attestations.facebookVerify({
 }
 ```
 
-This will perform Facebook oauth verification on the specified `code` and `redirectUrl`. If it is valid, an attestation object will be returned.
+This will perform Facebook oauth verification on the specified `code`. If it is valid, an attestation object will be returned.
 
-Note that `code` is the oauth code generated in `facebookAuthUrl` (it will be added as a query param the url when the user is redirected - see the [documentation](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow) for details). `redirectUrl` *must* match the `redirectUrl` specified in the `facebookAuthUrl` call.
+Note that `code` is the oauth code generated in `facebookAuthUrl`.
 
 ## twitterAuthUrl
 
 > To get Twitter authentication url
 
 ```javascript
-await origin.attestations.twitterAuthUrl()
-// Returns
-"http://foo.bar"
+let url = await origin.attestations.twitterAuthUrl()
+
+window.open(url, '', 'width=650,height=500')
+let code = await new Promise((resolve, reject) => {
+  window.addEventListener('message', (e) => {
+    if (String(e.data).match(/^origin-code:/)) {
+      resolve(e.data.split(':')[1])
+    }
+  }, false)
+})
+console.log('code', code) // use this value in `twitterVerify`
 ```
 
-This will return a url which your dapp can redirect the user to.
-The page will ask the user to grant permissions to the Origin app, which will be used to verify their Twitter identity. See the [Twitter authentication documentation](https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens) for more details.
+This will return a url which your dapp should open in a popup window.
+The page will ask the user to grant permissions to the Origin app, which will be used to verify their Twitter identity.
+Once permissions have been granted, the popup window will [post a message](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) back to the dapp. You should listen for this message, which will contain the `code` needed for the `twitterVerify` call.
 
 ## twitterVerify
 
@@ -144,8 +157,7 @@ The page will ask the user to grant permissions to the Origin app, which will be
 
 ```javascript
 let twitterAttestation = await origin.attestations.twitterVerify({
-  wallet: myWalletAddress,
-  oauthVerifier: "12345"
+  code: "12345" // code obtained from `twitterAuthUrl`
 })
 // Returns (attestation object)
 {
@@ -156,6 +168,6 @@ let twitterAttestation = await origin.attestations.twitterVerify({
 }
 ```
 
-This will perform Twitter oauth verification on the specified `oauthVerifier`. If it is valid, an attestation object will be returned.
+This will perform Twitter oauth verification on the specified `code`. If it is valid, an attestation object will be returned.
 
-Note that `oauthVerifier` is the oauth verifier code generated in `twitterAuthUrl` (it will be added as a query param the url when the user is redirected - see the [documentation](https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens) for details).
+Note that `code` is the code generated in `twitterAuthUrl`
