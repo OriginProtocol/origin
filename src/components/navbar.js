@@ -68,7 +68,7 @@ class NavBar extends Component {
                 <div className="actual-menu">
                   <header className="d-flex">
                     <div className="count">
-                      <p className="d-inline-block">{notificationCount}</p>
+                      <div className="d-inline-block">{notificationCount}</div>
                     </div>
                     <h3>Notifications</h3>
                   </header>
@@ -102,7 +102,7 @@ class NavBar extends Component {
                         <Link to="/profile"><strong>{this.props.wallet}</strong></Link>
                       </div>
                     </div>
-                    <hr />
+                    <hr className="dark sm" />
                     <div className="d-flex">
                       <div className="avatar-container">
                         <Link to="/profile">

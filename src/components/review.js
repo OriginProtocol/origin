@@ -12,8 +12,8 @@ class Review extends Component {
             <img src="/images/avatar-purple.svg" alt="reviewer avatar" />
           </div>
           <div className="identification d-flex flex-column justify-content-center text-truncate">
-            <p className="name">{reviewer.name}</p>
-            <p className="address text-muted text-truncate">{reviewer.address}</p>
+            <div className="name">{reviewer.name}</div>
+            <div className="address text-muted text-truncate">{reviewer.address}</div>
           </div>
           <div className="score d-flex flex-column justify-content-center text-right">
             <div className="stars">{[...Array(5)].map((undef, i) => {
@@ -21,7 +21,7 @@ class Review extends Component {
                 <img key={`score-star-${i}`} src={`/images/star-${score > i ? 'filled' : 'empty'}.svg`} alt="review score star" />
               )
             })}</div>
-            <p className="age text-muted"><Timelapse reference={createdAt} /></p>
+            <div className="age text-muted"><Timelapse reactive={false} reference={createdAt} /></div>
           </div>
         </div>
         <p className="content">{content}</p>

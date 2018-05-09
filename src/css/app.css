@@ -3,17 +3,19 @@
 @import 'bootstrap.css';
 
 html {
-  height: 100%;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100%;
 }
 
 body {
-  height: 100%;
-  font-size: 1.0rem;
-  font-weight: 300;
+  color: var(--dark);
   font-family: var(--default-font);
+  font-size: 1.125rem;
+  font-weight: 300;
+  height: 100%;
+  line-height: 1.5;
 }
 
 /* sticky footer sibling */
@@ -24,36 +26,56 @@ main {
 
 /* Common */
 
-h1, h2, h3 {
-  color: var(--dark);
+hr {
+  border-bottom: 1px solid var(--light);
+  border-top: 0;
+  margin: 0 auto 2rem;
+  padding: 2rem 0 0;
+}
+
+hr.dark {
+  border-bottom: 1px solid #6f8294;
+}
+
+hr.sm {
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+}
+
+h1,
+h2,
+h3 {
   font-family: var(--heading-font);
+  line-height: 1.5;
 }
 
 h1 {
-  font-size: 2.0rem;
+  font-size: 2.5rem;
   font-weight: 200;
+  margin-bottom: 1.5rem;
 }
 
 h2 {
   font-size: 1.5rem;
   font-weight: 300;
-  margin: 0 0 1rem;
+  margin-bottom: 1.25rem;
 }
 
 h3 {
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 400;
-}
-
-fieldset {
-  border: 0px solid transparent;
-  padding: 0px;
+  margin-bottom: 1.125rem;
 }
 
 p {
   color: var(--dark);
   font-size: 1.125rem;
-  margin: 20px auto;
+  margin-bottom: 1rem;
+}
+
+fieldset {
+  border: 0 solid transparent;
+  padding: 0;
 }
 
 label {
@@ -63,6 +85,10 @@ label {
 
 a:hover {
   text-decoration: none;
+}
+
+.btn {
+  font-weight: 900;
 }
 
 .table {
@@ -121,6 +147,10 @@ a:hover {
   transform: rotate(90deg);
 }
 
+.address {
+  font-size: 0.875rem;
+}
+
 /* Identification */
 
 .identification {
@@ -128,17 +158,21 @@ a:hover {
   padding: 0 0.75rem;
 }
 
-.identification p {
+.navbar .identification {
+  height: auto;
+  padding: 0;
+}
+
+.transaction-status .identification > div {
   flex-basis: 33%;
-  font-size: 1rem;
   margin: 0;
 }
 
-.identification .badge {
+.transaction-status .identification .badge {
   font-size: 0.6rem;
 }
 
-.identification p:first-of-type {
+.transaction-status .identification > :first-of-type {
   line-height: 0.6rem;
 }
 
@@ -146,8 +180,17 @@ a:hover {
   font-weight: bold;
 }
 
-.identification .address {
-  font-size: 0.875rem;
+.identification a {
+  color: white;
+}
+
+.user-card .identification > div {
+  flex-basis: 50%;
+}
+
+.user-card .identification > :first-of-type {
+  font-size: 1rem;
+  line-height: 1;
 }
 
 /* Avatar */
@@ -252,12 +295,12 @@ a:hover {
   opacity: 1;
 }
 
-.progress-container .labels div {
+.progress-container .stage-container {
+  padding-top: 1rem;
   width: 20px;
 }
 
-.progress-container .labels p {
-  color: var(--dusk);
+.progress-container .stage {
   font-size: 0.75rem;
   font-weight: normal;
   margin-left: -100%;
@@ -280,80 +323,82 @@ a:hover {
   width: 10px;
 }
 
-/* Counterparty */
+/* User Card */
 
-.counterparty {
+.user-card {
   background-color: var(--dark);
   border-radius: var(--default-radius);
-  margin-top: 20px;
+  color: white;
 }
 
-.counterparty .btn {
+.user-card .btn {
   background-color: var(--dark-grey-blue);
   border-radius: 0 0 var(--default-radius) var(--default-radius);
   color: white;
-  font-size: 1.125rem;
   padding: 0.75rem;
   width: 100%;
 }
 
-.counterparty .btn:hover {
+.user-card .btn:hover {
   background-color: var(--dark-clear-blue);
 }
 
-.counterparty .identity {
-  padding: 20px;
+.user-card .identity {
+  padding: 1rem;
 }
 
-.counterparty .identity h3,
-.counterparty .identity p {
-  color: white;
-}
-
-.counterparty .identity h3 {
-  font-size: 1.125rem;
-  font-weight: 300;
-  margin-bottom: 20px;
-}
-
-.counterparty .identity p {
-  font-size: 0.875rem;
+.user-card .identity .address {
   font-weight: bold;
   margin: 0;
   word-wrap: break-word;
 }
 
-.counterparty .identity hr {
-  border-color: #6f8294;
-  margin: 20px 0;
-}
-
-.counterparty .identity .d-flex div:last-of-type {
+.user-card .identity .d-flex div:last-of-type {
   flex-grow: 1;
   overflow: auto;
 }
 
-.counterparty .identity .avatar-container,
-.counterparty .identity .image-container {
+.user-card .identity .avatar-container,
+.user-card .identity .image-container {
   height: 50px;
   margin: 0 10px 0 0;
   width: 50px;
 }
 
-.counterparty .identity .image-container img {
+.user-card .identity .image-container img {
   height: 50px;
   width: 50px;
 }
 
-.counterparty .identity .identification {
+.user-card .identity .identification {
   height: auto;
   padding: 0;
 }
 
-.counterparty .identity .identification img {
+.user-card .identity .identification img {
   height: 20px;
-  margin: 10px 5px 0 0;
+  margin: 0 5px 5px 0;
   width: 20px;
+}
+
+/* Status Indicator */
+
+.status-indicator {
+  border-radius: 50%;
+  height: 12px;
+  width: 12px;
+}
+
+.status-indicator.danger {
+  background-color: #ff1a1a;
+}
+
+.status-indicator.success {
+  background-color: var(--greenblue);
+}
+
+.status-indicator.warning {
+  background-color: #f4c110;
 }
 
 /* Navbar */
@@ -374,13 +419,9 @@ a:hover {
 
 .navbar .unread-badge {
   position: absolute;
-  background-color: var(--greenblue);
   border: 2px solid var(--dusk);
-  border-radius: 50%;
-  height: 12px;
   right: 17px;
   top: 2px;
-  width: 12px;
 }
 
 .navbar .dropdown {
@@ -432,8 +473,8 @@ a:hover {
   width: 18px;
   z-index: 999;
 
-  -webkit-clip-path: polygon(100% 0, 0% 100%, 100% 100%);
-  clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+  -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
+  clip-path: polygon(100% 0, 0 100%, 100% 100%);
 }
 
 .navbar .notifications .dropdown-menu::after {
@@ -445,8 +486,8 @@ a:hover {
   width: 36px;
   z-index: 999;
 
-  -webkit-clip-path: polygon(50% 0, 0% 100%, 100% 100%);
-  clip-path: polygon(50% 0, 0% 100%, 100% 100%);
+  -webkit-clip-path: polygon(50% 0, 0 100%, 100% 100%);
+  clip-path: polygon(50% 0, 0 100%, 100% 100%);
 }
 
 .navbar .identity .dropdown-menu::after {
@@ -463,21 +504,21 @@ a:hover {
 }
 
 .navbar .identity .triangle {
-  -webkit-clip-path: polygon(100% 0, 0% 100%, 100% 100%);
-  clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+  -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
+  clip-path: polygon(100% 0, 0 100%, 100% 100%);
 }
 
 .navbar .notifications .triangle {
   margin-right: 70px;
   width: 36px;
 
-  -webkit-clip-path: polygon(50% 0, 0% 100%, 100% 100%);
-  clip-path: polygon(50% 0, 0% 100%, 100% 100%);
+  -webkit-clip-path: polygon(50% 0, 0 100%, 100% 100%);
+  clip-path: polygon(50% 0, 0 100%, 100% 100%);
 }
 
 .navbar .sell .triangle {
-  -webkit-clip-path: polygon(100% 0, 0% 100%, 100% 100%);
-  clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+  -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
+  clip-path: polygon(100% 0, 0 100%, 100% 100%);
 }
 
 .navbar .identity .triangle {
@@ -576,7 +617,7 @@ a:hover {
   width: 68px;
 }
 
-.navbar .notifications .dropdown-menu header .count p {
+.navbar .notifications .dropdown-menu header .count div {
   background-color: var(--greenblue);
   border-radius: 12px;
   color: white;
@@ -612,7 +653,6 @@ a:hover {
 }
 
 .navbar .identity .dropdown-menu .wallet .d-flex div:last-of-type {
-  flex-grow: 1;
   overflow: auto;
 }
 
@@ -766,13 +806,13 @@ a:hover {
 
 .btn {
   border-radius: 30px;
+  font-size: 1.125rem;
   padding-right: 30px;
   padding-left: 30px;
   width: 156px;
-  font-size: 1.2rem;
 }
 
-.btn:hover {
+.btn-primary:hover {
   background-color: var(--dark-clear-blue);
   color: white;
 }
@@ -907,19 +947,16 @@ a:hover {
   margin-bottom: 2rem;
 }
 
-.listings-grid h1 {
-  margin: 0 0 2rem;
+.listings-grid {
+  padding: 3.5rem 0;
 }
 
 .listing-card {
-  margin-bottom: 80px;
+  margin-bottom: 5rem;
 }
 
-.listing-card .category {
-  font-size: 0.75rem;
-  color: var(--dusk);
-  text-transform: uppercase;
-  margin: 0 0 0.25rem;
+.listing-card a {
+  color: var(--dark);
 }
 
 .listing-card.loading .category {
@@ -928,24 +965,12 @@ a:hover {
 }
 
 .listing-card .title {
-  font-family: var(--heading-font);
-  font-size: 1.5rem;
-  color: var(--dusk);
-  margin: 0 0 0.25rem;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  margin-bottom: 0.25rem;
 }
 
 .listing-card.loading .title {
   min-height: 1.5rem;
   width: 75%;
-}
-
-.listing-card .price {
-  font-size: 1.125rem;
-  margin: 0;
 }
 
 .listing-card.loading .price {
@@ -982,8 +1007,14 @@ a:hover {
 
 /* Listing Detail */
 
-.listing-detail hr {
-  margin: 40px 0;
+.buy-box {
+  color: white;
+  font-weight: normal;
+  margin-bottom: 1rem;
+}
+
+.buy-box .text-right {
+  font-weight: bold;
 }
 
 .carousel {
@@ -1023,20 +1054,20 @@ a:hover {
 }
 
 .listing-container {
-  margin: 50px auto;
+  margin: 3rem auto;
 }
 
 @-webkit-keyframes shimmer {
    0% { background-position: 100% 100%; }
-   100% { background-position: 0% 0%; }
+   100% { background-position: 0 0; }
 }
 @-moz-keyframes shimmer {
    0% { background-position: 100% 100%; }
-   100% { background-position: 0% 0%; }
+   100% { background-position: 0 0; }
 }
 @keyframes shimmer {
    0% { background-position: 100% 100%; }
-   100% { background-position: 0% 0%; }
+   100% { background-position: 0 0; }
 }
 
 .loading .placehold {
@@ -1071,33 +1102,6 @@ a:hover {
   min-height: 192px;
 }
 
-.detail-info-box .category {
-  font-size: 0.875rem;
-  color: var(--dusk);
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-}
-
-.detail-info-box .title {
-  font-family: var(--heading-font);
-  font-size: 1.5rem;
-  margin: 0 0 1rem;
-}
-
-.detail-info-box .description {
-  font-size: 1.125rem;
-  margin: 0 0 1rem;
-}
-
-.detail-info-box .units-available {
-  font-size: 1.125rem;
-  margin: 0;
-}
-
-.detail-info-box .link-container {
-  margin: 0 0 1rem;
-}
-
 .listing-container .avatar-container {
   flex-shrink: 0;
   height: 60px;
@@ -1105,39 +1109,23 @@ a:hover {
   width: 60px;
 }
 
-.listing-container .buy-box {
+.buy-box {
   border-radius: var(--default-radius);
   background-color: var(--dark-grey-blue);
-  padding: 40px;
+  padding: 2rem;
   font-size: 18px;
 }
 
-.listing-container.loading .buy-box {
+.loading .buy-box {
   background-color: #f6f7f8;
 }
 
-.listing-container .buy-box .contract-price {
-  margin-bottom: 1rem;
-}
-
-.listing-container .buy-box p {
-  color: white;
-  margin: 0;
-}
-
-.listing-container .buy-box p:last-child {
-  font-weight: bold;
-}
-
-.listing-container .buy-box button {
-  height: 50px;
-  width: 100%;
-  margin-top: 35px;
-  border-radius: 30px;
+.buy-box .btn {
   background-color: var(--clear-blue);
   border: solid 1px var(--clear-blue);
+  border-radius: 2rem;
   color: white;
-  font-weight: 700;
+  width: 100%;
 }
 
 .listing-container .buy-box .sold-banner {
@@ -1170,7 +1158,7 @@ a:hover {
 /* Listing Create */
 
 .step-container {
-  padding: 60px 0px;
+  padding: 60px 0;
   margin-bottom: 40px;
 }
 
@@ -1212,7 +1200,7 @@ a:hover {
 }
 
 .field-description {
-  margin-top: 0px;
+  margin-top: 0;
 }
 
 .form-control,
@@ -1233,7 +1221,7 @@ label[for=root_pictures] {
   margin-top: 10px;
   border-radius: var(--default-radius);
   border: solid 1px var(--light);
-  margin-bottom: 0px;
+  margin-bottom: 0;
   padding: 10px 10px 10px 35px;
   width: 100%;
   color: var(--dusk);
@@ -1251,7 +1239,7 @@ label[for=root_pictures]:hover {
 
 .file-info {
   list-style-type: none;
-  padding-left: 0px;
+  padding-left: 0;
 }
 
 #root_pictures + label {
@@ -1334,7 +1322,6 @@ label[for=root_pictures]:hover {
 }
 
 .sale .card-body .address {
-  font-size: 0.875rem;
   margin: 0;
 }
 
@@ -1444,7 +1431,6 @@ label[for=root_pictures]:hover {
 }
 
 .transaction .content-container .category {
-  color: var(--dusk);
   font-size: 0.75rem;
   font-weight: normal;
   margin: 0;
@@ -1542,11 +1528,14 @@ label[for=root_pictures]:hover {
   cursor: pointer;
 }
 
+.transaction-detail {
+  padding: 3rem 0 3.5rem;
+}
+
 .transaction-detail .brdcrmb {
   color: var(--dusk);
   font-size: 0.875rem;
   font-weight: normal;
-  margin: 40px auto 0;
   text-transform: uppercase;
 }
 
@@ -1555,34 +1544,26 @@ label[for=root_pictures]:hover {
   vertical-align: 2px;
 }
 
-.transaction-detail h1 {
-  margin: 0.5rem auto 2rem;
-}
-
-.transaction-detail hr {
-  margin: 30px 0;
-}
-
 .transaction-detail .avatar-container {
   flex-shrink: 0;
   height: 60px;
-  margin: 0;
+  margin: 0 0 1rem;
   width: 60px;
 }
 
 .transaction-detail .progress-container {
-  margin: 20px;
+  margin: 0 1rem 1rem;
 }
 
-.transaction-detail .guidance {
+.guidance {
   position: relative;
   border: 2px solid var(--dark);
   border-radius: var(--default-radius);
-  margin-bottom: 30px;
-  padding: 30px;
+  margin-bottom: 3rem;
+  padding: 2rem;
 }
 
-.transaction-detail .guidance .triangle {
+.guidance .triangle {
   position: absolute;
   border: solid transparent;
   bottom: 100%;
@@ -1596,37 +1577,36 @@ label[for=root_pictures]:hover {
   /*transition: left 200ms linear 800ms;*/
 }
 
-.transaction-detail .guidance .triangle:first-of-type {
+.guidance .triangle:first-of-type {
   border-color: rgba(0, 0, 0, 0);
   border-bottom-color: var(--dark);
   border-width: 13px;
   margin-left: -13px;
 }
 
-.transaction-detail .guidance .triangle:last-of-type {
+.guidance .triangle:not(:first-of-type) {
   border-color: rgba(255, 255, 255, 0);
   border-bottom-color: white;
   border-width: 10px;
   margin-left: -10px;
 }
 
-.transaction-detail .guidance p {
-  margin: 0;
-}
-
-.transaction-detail .guidance .prompt {
+.guidance .prompt {
   font-size: 1rem;
   font-weight: normal;
 }
 
-.transaction-detail .guidance .instruction {
+.guidance .instruction {
   font-size: 0.875rem;
+}
+
+.guidance .instruction:not(:last-child) {
+  margin-bottom: 1rem;
 }
 
 .transaction-detail button {
   font-size: 1.125rem;
   font-weight: 900;
-  margin-top: 10px;
   width: auto;
 }
 
@@ -1640,11 +1620,6 @@ label[for=root_pictures]:hover {
   color: white;
   margin-bottom: 30px;
   padding: 20px;
-}
-
-.transaction-detail .summary hr {
-  border-top: 1px solid #6f8294;
-  margin: 20px 0;
 }
 
 .transaction-detail .summary p {
@@ -1670,7 +1645,7 @@ label[for=root_pictures]:hover {
   width: 136px;
 }
 
-.transaction-detail .tag p {
+.transaction-detail .tag div {
   font-size: 24px;
   font-weight: normal;
   line-height: 58px;
@@ -1678,21 +1653,22 @@ label[for=root_pictures]:hover {
   margin-left: 26px;
 }
 
-.transaction-detail .tag.purchased p {
+.transaction-detail .tag.purchased div {
   width: 150px;
 }
 
-.transaction-detail .tag.sold p {
+.transaction-detail .tag.sold div {
   width: 110px;
 }
 
-.transaction-detail .summary .d-flex p {
+.transaction-detail .summary .d-flex div {
   flex-basis: 50%;
   font-size: 1rem;
+  font-weight: normal;
   margin: 5px 20px;
 }
 
-.transaction-detail .summary .d-flex p:last-of-type {
+.transaction-detail .summary .d-flex div:last-of-type {
   font-weight: bold;
 }
 
@@ -1726,16 +1702,12 @@ label[for=root_pictures]:hover {
 
 /* Reviews */
 
-.reviews {
-  margin-bottom: 30px;
-}
-
-.reviews h2 {
-  margin-bottom: 30px;
-}
-
 .review {
-  margin-bottom: 30px;
+  margin-bottom: 2rem;
+}
+
+.review > .d-flex {
+  margin-bottom: 1rem;
 }
 
 .review .avatar-container {
@@ -1751,45 +1723,30 @@ label[for=root_pictures]:hover {
   padding: 0 0.75rem;
 }
 
-.review .identification p {
+.review .name {
   flex-basis: 33%;
-  font-size: 1rem;
-  margin: 0;
-}
-
-.review .identification .name {
   font-weight: bold;
 }
 
-.review .identification .address {
-  font-size: 0.875rem;
-}
-
-.review .identification p:first-of-type {
-  font-size: 1.125rem;
-  line-height: 1.5;
+.review .address {
+  flex-basis: 33%;
 }
 
 .review .score {
   flex-shrink: 0;
 }
 
-.review .score .stars {
+.review .stars {
   height: 1.5rem;
 }
 
-.review .score .stars img {
+.review .stars img {
   height: 1.125rem;
   vertical-align: text-top;
 }
 
-.review .score .age {
+.review .age {
   font-size: 0.875rem;
-  margin: 0;
-}
-
-.review .content {
-  margin-top: 20px;
 }
 
 .reviews a {
@@ -1916,28 +1873,55 @@ label[for=root_pictures]:hover {
   padding: 40px 0;
 }
 
-.profile-wrapper .attributes {
+.profile-wrapper .address {
+  line-height: 1.5;
+}
+
+.verifications-box {
+  background-color: var(--pale-grey);
+  border-radius: 20px;
+  color: #0c2033;
+  font-size: 0.825rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+.verifications-box h3 {
+  font-size: 0.825rem;
+  font-weight: normal;
+  margin-bottom: 1rem;
+}
+
+.verifications-box img {
+  height: 30px;
+}
+
+.verifications-box .service :first-child {
+  margin-right: 0.5rem;
+}
+
+.verifications-box .service :last-child {
+  line-height: 30px;
+  vertical-align: middle;
+}
+
+.verifications-box .service:not(:last-of-type) {
+  margin-bottom: 0.5rem;
+}
+
+.current-user .attributes {
   margin-bottom: 40px;
 }
 
-.profile-wrapper .avatar-container {
+.primary.avatar-container {
   position: relative;
   border-radius: 20px;
-  max-height: 183px;
-  max-width: 183px;
   padding-top: 100%;
   width: 100%;
 }
 
-.profile-wrapper .avatar-container img {
-  position: absolute;
-  bottom: 0;
-  left: 20%;
-  width: 60%;
-}
-
-.profile-wrapper p {
-  font-size: 1rem;
+.public-user .primary.avatar-container {
+  margin-bottom: 1rem;
 }
 
 .profile-wrapper .name h1 {
@@ -1967,105 +1951,124 @@ label[for=root_pictures]:hover {
   background-position: center;
 }
 
-.profile-wrapper .edit-profile {
+.edit-profile {
   background-color: transparent;
   border: none;
   border-radius: 50%;
   padding: 0;
 }
 
-.profile-wrapper .services-container {
+.services-container {
   position: relative;
   background-color: white;
   border: solid 1px var(--light);
   border-radius: var(--default-radius);
-  margin-bottom: 40px;
+  margin-bottom: 1rem;
   padding: 20px 10px 10px 20px;
 }
 
-.profile-wrapper .services-container .credit {
+.services-container h3 {
+  font-weight: normal;
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+}
+
+.services-container .credit {
   position: absolute;
   color: #98a7b4;
   font-size: 0.75rem;
-  margin: 0 0 10px;
-  right: 20px;
-  top: 20px;
+  margin: 0 0 1rem;
+  right: 10px;
+  top: 10px;
 }
 
-.profile-wrapper .services-container .directive {
+.services-container .directive {
+  font-size: 1rem;
   margin: 0 140px 20px 0;
 }
 
-.profile-wrapper .services-container .col-12 {
+.services-container .col-12 {
   padding-right: 10px;
 }
 
-.profile-wrapper .services-container .service {
-  position: relative;
+.services-container .service {
   background-color: #fafbfc;
   border: dashed 1px var(--light);
   border-radius: var(--default-radius);
   margin: 0 0 10px 0;
   overflow: hidden;
-  padding: 15px;
+  padding: 10px;
+  position: relative;
   width: 100%;
 }
 
-.profile-wrapper .services-container .service p {
-  color: #98a7b4;
-  font-size: 1.125rem;
-  font-weight: normal;
-  margin: 0;
+.services-container .service:not(.published) {
+  cursor: pointer;
 }
 
-.profile-wrapper .services-container .service.disabled {
+.services-container .service.disabled {
   opacity: 0.5;
 }
 
-.profile-wrapper .services-container .service.published {
+.services-container .service.published {
   background-color: #f5fcfa;
   border: 1px solid var(--greenblue);
   color: var(--greenblue);
 }
 
-.profile-wrapper .services-container .service.published p {
+.services-container .service.published p {
   color: var(--greenblue);
 }
 
-.profile-wrapper .services-container .service.verified {
+.services-container .service.verified {
   background-color: #f5fafc;
   border: 1px solid var(--clear-blue);
   color: var(--clear-blue);
 }
 
-.profile-wrapper .services-container .service.verified p {
+.services-container .service.verified p {
   color: var(--clear-blue);
 }
 
-.profile-wrapper .services-container .service:hover.disabled {
+.services-container .service:hover.disabled {
   cursor: not-allowed;
 }
 
-.profile-wrapper .services-container .service:hover:not(.disabled):not(.published):not(.verified) {
+.services-container .service:hover:not(.disabled):not(.published):not(.verified) {
   border: 1px solid var(--clear-blue);
 }
 
-.profile-wrapper .services-container .service .image-container {
+.services-container .service .image-container {
   background-image: url(/images/verification-shape-grey.svg);
-  height: 54px;
-  margin: 0 auto 10px;
-  width: 52px;
+  background-repeat: no-repeat;
+  background-size: 34px 36px;
+  height: 36px;
+  width: 34px;
 }
 
-.profile-wrapper .services-container .service.published .image-container {
+.services-container .service .image-container img {
+  max-height: 50%;
+  max-width: 50%;
+}
+
+.service-name {
+  color: #98a7b4;
+  font-size: 1.125rem;
+  font-weight: normal;
+  line-height: 36px;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+.services-container .service.published .image-container {
   background-image: url(/images/verification-shape-green.svg);
 }
 
-.profile-wrapper .services-container .service.verified .image-container {
+.services-container .service.verified .image-container {
   background-image: url(/images/verification-shape-blue.svg);
 }
 
-.profile-wrapper .services-container .service .unavailable-bg {
+.services-container .service .unavailable-bg {
   position: absolute;
   background-color: var(--light);
   height: 60px;
@@ -2077,7 +2080,7 @@ label[for=root_pictures]:hover {
   clip-path: polygon(100% 0, 0 0, 100% 100%);
 }
 
-.profile-wrapper .services-container .service .unavailable-message {
+.services-container .service .unavailable-message {
   position: absolute;
   color: #f7f8f9;
   font-size: 7px;
@@ -2088,7 +2091,7 @@ label[for=root_pictures]:hover {
   transform: rotate(45deg);
 }
 
-.profile-wrapper .services-container .logo {
+.services-container .logo {
   font-weight: bold;
   text-transform: uppercase;
 }
@@ -2112,15 +2115,7 @@ sup {
 
 .profile-wrapper .progress {
   background-color: var(--pale-grey);
-  margin: 0 0 30px;
-}
-
-.profile-wrapper .publish {
-  font-size: 1.125rem;
-  font-weight: 900;
-  margin: 0 auto 1rem;
-  padding: 0.375rem 3rem;
-  width: auto;
+  margin: 0 0 1rem;
 }
 
 .profile-wrapper .timelapse {
@@ -2153,22 +2148,14 @@ sup {
   background-color: var(--dark);
   border-radius: var(--default-radius);
   color: white;
+  font-size: 0.875rem;
+  font-weight: normal;
+  line-height: 1;
   padding: 20px;
-}
-
-.wallet hr {
-  border-top: 1px solid #6f8294;
-  margin: 20px 0;
 }
 
 .wallet a {
   font-weight: bold;
-}
-
-.wallet p {
-  color: white;
-  font-size: 0.875rem;
-  margin: 0;
   word-wrap: break-word;
 }
 
@@ -2176,13 +2163,28 @@ sup {
   overflow: hidden;
 }
 
-.wallet .eth p:first-child {
-  line-height: 1;
-  margin-bottom: 0.5rem;
+.publish {
+  font-size: 1.125rem;
+  font-weight: 900;
+  margin: 0 auto 1rem;
+  padding: 0.375rem 3rem;
+  width: auto;
 }
 
-.wallet .address {
-  overflow: auto;
+.published-status {
+  font-size: 0.75rem;
+}
+
+.published-status :first-child {
+  font-weight: normal;
+  margin-right: 0.25rem;
+}
+
+.published-status .not-published {
+  color: #ff1a1a;
+  font-size: 0.625rem;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 .profile-wrapper .wallet {
@@ -2196,10 +2198,10 @@ sup {
 }
 
 .wallet .detail:not(:last-of-type) {
-  margin-bottom: 10px
+  margin-bottom: 1rem;
 }
 
-.wallet .detail p:first-of-type {
+.wallet .detail :first-of-type {
   flex-grow: 1;
 }
 
@@ -2207,26 +2209,30 @@ sup {
   flex-grow: 1;
 }
 
-.profile-wrapper .profile.modal {
+.wallet .progress {
+  margin: 0.875rem 0;
+}
+
+.profile.modal {
   line-height: 1;
 }
 
-.profile-wrapper .profile.modal .container {
+.profile.modal .container {
   text-align: left;
 }
 
-.profile-wrapper .profile.modal .container .image-container {
+.profile.modal .container .image-container {
   margin-bottom: 20px;
   text-align: center;
 }
 
-.profile-wrapper .profile.modal .container .image-container .image-pair {
+.profile.modal .container .image-container .image-pair {
   position: relative;
   display: inline-block;
   width: 100%;
 }
 
-.profile-wrapper .profile.modal .container .image-container .image-pair .avatar-container  {
+.profile.modal .container .image-container .image-pair .avatar-container  {
   position: relative;
   background-color: #213040;
   border-radius: 20px;
@@ -2257,16 +2263,16 @@ sup {
   width: 40px;
 }
 
-.profile-wrapper .profile.modal .container .form-control {
+.profile.modal .container .form-control {
   text-align: left;
   max-width: unset;
 }
 
-.profile-wrapper .profile.modal .container textarea {
+.profile.modal .container textarea {
   height: unset;
 }
 
-.profile-wrapper .identity.modal .image-container {
+.identity.modal .image-container {
   background-image: url(/images/verification-shape-grey.svg);
   background-position: 0;
   background-size: 110px 116px;
@@ -2275,39 +2281,39 @@ sup {
   width: 110px;
 }
 
-.profile-wrapper .identity.modal .image-container img {
+.identity.modal .image-container img {
   margin: 0 auto 0;
 }
 
-.profile-wrapper .identity.modal label {
+.identity.modal label {
   color: var(--pale-grey);
   font-size: 1.125rem;
 }
 
-.profile-wrapper .phone.modal .dropdown {
+.phone.modal .dropdown {
   background-color: #213040;
   border-radius: var(--default-radius);
   height: 46px;
   margin: 0 10px 10px auto;
 }
 
-.profile-wrapper .phone.modal .dropdown img {
+.phone.modal .dropdown img {
   height: 18px;
   width: 28px;
 }
 
-.profile-wrapper .phone.modal .dropdown.show {
+.phone.modal .dropdown.show {
   background-color: var(--dark);
 }
 
-.profile-wrapper .phone.modal .dropdown .dropdown-toggle {
+.phone.modal .dropdown .dropdown-toggle {
   cursor: pointer;
   line-height: 1;
   margin-bottom: 10px;
   padding: 14px;
 }
 
-.profile-wrapper .phone.modal .dropdown .dropdown-toggle:after {
+.phone.modal .dropdown .dropdown-toggle:after {
   background-image: url(/images/carat-white.svg);
   background-repeat: no-repeat;
   border: none;
@@ -2319,34 +2325,34 @@ sup {
   transform: rotate(90deg);
 }
 
-.profile-wrapper .phone.modal .dropdown .dropdown-menu {
+.phone.modal .dropdown .dropdown-menu {
   background-color: var(--dark);
   margin: 0;
   padding: 7px 0;
   top: 10px !important;
 }
 
-.profile-wrapper .phone.modal .dropdown .dropdown-item {
+.phone.modal .dropdown .dropdown-item {
   color: white;
   cursor: pointer;
   padding: 7px 14px;
 }
 
-.profile-wrapper .phone.modal .dropdown .dropdown-item:hover {
+.phone.modal .dropdown .dropdown-item:hover {
   background-color: #213040;
 }
 
-.profile-wrapper .phone.modal .dropdown .dropdown-item > :first-child {
+.phone.modal .dropdown .dropdown-item > :first-child {
   padding-right: 14px;
 }
 
-.profile-wrapper .phone.modal .dropdown .dropdown-item > :last-child {
+.phone.modal .dropdown .dropdown-item > :last-child {
   color: var(--dusk);;
   margin-left: auto;
   padding-left: 14px;
 }
 
-.profile-wrapper .phone.modal #phoneNumber {
+.phone.modal #phoneNumber {
   margin: 0 auto 10px 0;
 }
 
@@ -2373,7 +2379,7 @@ sup {
 
 .dark-footer {
   background-color: var(--dark-grey-blue);
-  padding: 80px 0px;
+  padding: 80px 0;
   min-height: 522px;
 }
 
@@ -2383,7 +2389,7 @@ footer .logo-container {
 
 footer .company-mission {
   max-width: 360px;
-  margin-left: 0px;
+  margin-left: 0;
 }
 
 footer p {
@@ -2400,7 +2406,7 @@ footer .footer-header {
 
 footer .footer-links {
   list-style-type: none;
-  padding-left: 0px;
+  padding-left: 0;
 }
 
 footer .footer-links li {
@@ -2425,24 +2431,24 @@ footer .footer-links li a {
   }
 
   .navbar .identity .triangle {
-    -webkit-clip-path: polygon(100% 0, 0% 100%, 100% 100%);
-    clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+    -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    clip-path: polygon(100% 0, 0 100%, 100% 100%);
   }
 
   .navbar .notifications .triangle {
     margin-right: 0;
     width: 18px;
 
-    -webkit-clip-path: polygon(100% 0, 0% 100%, 100% 100%);
-    clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+    -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    clip-path: polygon(100% 0, 0 100%, 100% 100%);
   }
 
   .navbar .notifications .dropdown-menu::after {
     right: 0;
     width: 18px;
 
-    -webkit-clip-path: polygon(100% 0, 0% 100%, 100% 100%);
-    clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+    -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    clip-path: polygon(100% 0, 0 100%, 100% 100%);
   }
 
   .navbar .identity .dropdown-menu {
@@ -2579,8 +2585,8 @@ footer .footer-links li a {
     width: 18px;
     z-index: 999;
 
-    -webkit-clip-path: polygon(100% 0, 0% 100%, 100% 100%);
-    clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+    -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    clip-path: polygon(100% 0, 0 100%, 100% 100%);
   }
 
   .navbar .sell .dropdown-menu .actual-menu .dropdown-item {
@@ -2635,11 +2641,6 @@ footer .footer-links li a {
 
   .transaction .content-container .status {
     top: 0;
-  }
-
-  .transaction-detail .counterparty,
-  .transaction-detail .summary {
-    margin: 0 0 30px 30px;
   }
 
   .sale .card-body .timestamp {

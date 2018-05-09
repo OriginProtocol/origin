@@ -50,7 +50,7 @@ class MySaleCard extends Component {
               </div>
             </div>
             <div className="timestamp-container order-2 text-muted text-right">
-              <p className="timestamp"><Timelapse reference={soldAt} /></p>
+              <p className="timestamp"><Timelapse reactive={false} reference={soldAt} /></p>
             </div>
             <div className="aspect-ratio order-1 order-lg-3">
               <div className="image-container">

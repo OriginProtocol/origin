@@ -88,17 +88,31 @@ class TransactionProgress extends Component {
         </div>
         {!subdued && perspective === 'buyer' &&
           <div className="labels d-flex justify-content-between text-center">
-            <div><p>Purchased</p></div>
-            <div><p>Sent by seller</p></div>
-            <div><p>Received by me</p></div>
+            <div className="stage-container">
+              <div className="stage">Purchased</div>
+            </div>
+            <div className="stage-container">
+              <div className="stage">Sent by seller</div>
+            </div>
+            <div className="stage-container">
+              <div className="stage">Received by me</div>
+            </div>
           </div>
         }
         {!subdued && perspective === 'seller' &&
           <div className="labels d-flex justify-content-between text-center">
-            <div><p>Sold</p></div>
-            <div><p>Order<br />Sent</p></div>
-            <div><p>Received<br />by buyer</p></div>
-            <div><p>Funds<br />Withdrawn</p></div>
+            <div className="stage-container">
+              <div className="stage">Sold</div>
+            </div>
+            <div className="stage-container">
+              <div className="stage">Order<br />Sent</div>
+            </div>
+            <div className="stage-container">
+              <div className="stage">Received<br />by buyer</div>
+            </div>
+            <div className="stage-container">
+              <div className="stage">Funds<br />Withdrawn</div>
+            </div>
           </div>
         }
       </div>

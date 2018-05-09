@@ -200,7 +200,7 @@ class Web3Provider extends Component {
           this.setState({
             networkConnected: false
           })
-      }, 1000)
+      }, 4000)
     }
   }
 
