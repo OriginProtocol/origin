@@ -72,6 +72,7 @@ class PurchaseDetail extends Component {
     this.confirmShipped = this.confirmShipped.bind(this)
     this.withdrawFunds = this.withdrawFunds.bind(this)
     this.state = {
+      accounts: [],
       listing: {},
       logs: [],
       purchase: {},
@@ -79,6 +80,7 @@ class PurchaseDetail extends Component {
   }
 
   componentDidMount() {
+    this.loadAccounts()
     this.loadPurchase()
 
     $('[data-toggle="tooltip"]').tooltip()
@@ -89,6 +91,17 @@ class PurchaseDetail extends Component {
 
     if (prevState.purchase.listingAddress !== listingAddress) {
       this.loadListing(listingAddress)
+    }
+  }
+
+  async loadAccounts() {
+    try {
+      const accounts = await web3.eth.getAccounts()
+
+      this.setState({ accounts })
+    } catch(error) {
+      console.error('Error loading accounts')
+      console.error(error)
     }
   }
 
@@ -163,13 +176,13 @@ class PurchaseDetail extends Component {
   }
 
   render() {
-    const { listing, purchase, logs } = this.state
+    const { accounts, listing, purchase, logs } = this.state
 
     if (!purchase.address || !listing.address ){
       return null
     }
 
-    const perspective = window.web3.eth.accounts[0] === purchase.buyerAddress ? 'buyer' : 'seller'
+    const perspective = accounts[0] === purchase.buyerAddress ? 'buyer' : 'seller'
     const seller = { name: 'Unnamed User', address: listing.sellerAddress }
     const buyer = { name: 'Unnamed User', address: purchase.buyerAddress }
     const pictures = listing.pictures || []
