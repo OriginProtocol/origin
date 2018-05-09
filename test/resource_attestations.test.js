@@ -184,7 +184,7 @@ describe("Attestation Resource", function() {
       })
       let response = await attestations.twitterVerify({
         wallet: sampleWallet,
-        oauthVerifier: "foo.bar"
+        code: "foo.bar"
       })
       expectAttestation(response)
     })

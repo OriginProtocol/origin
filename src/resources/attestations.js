@@ -114,13 +114,13 @@ class Attestations {
     )
   }
 
-  async twitterVerify({ wallet, oauthVerifier }) {
+  async twitterVerify({ wallet, code }) {
     let identity = await this.getIdentityAddress(wallet)
     return await this.post(
       "twitter/verify",
       {
         identity,
-        "oauth-verifier": oauthVerifier
+        "oauth-verifier": code
       },
       this.responseToAttestation
     )
