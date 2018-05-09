@@ -74,3 +74,4 @@ web3==4.2.0
 Werkzeug==0.14.1
 apns2==0.4.0
 envkey==1.1.0
+pyfcm==1.4.5
