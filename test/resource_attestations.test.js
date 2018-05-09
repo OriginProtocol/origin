@@ -138,12 +138,10 @@ describe("Attestation Resource", function() {
     it("should process the request", async () => {
       let attestations = setupWithServer({
         expectedMethod: "GET",
-        expectedPath: "facebook/auth-url?redirect-url=http://redirect.url",
+        expectedPath: "facebook/auth-url",
         responseStub: { url: "foo.bar" }
       })
-      let response = await attestations.facebookAuthUrl({
-        redirectUrl: "http://redirect.url"
-      })
+      let response = await attestations.facebookAuthUrl()
       expect(response).to.equal("foo.bar")
     })
   })
@@ -153,12 +151,11 @@ describe("Attestation Resource", function() {
       let attestations = setupWithServer({
         expectedMethod: "POST",
         expectedPath: "facebook/verify",
-        expectedParams: ["identity", "code", "redirect-url"],
+        expectedParams: ["identity", "code"],
         responseStub: sampleAttestation
       })
       let response = await attestations.facebookVerify({
         wallet: sampleWallet,
-        redirectUrl: "foo.bar",
         code: "12345"
       })
       expectAttestation(response)
@@ -187,7 +184,7 @@ describe("Attestation Resource", function() {
       })
       let response = await attestations.twitterVerify({
         wallet: sampleWallet,
-        oauthVerifier: "foo.bar"
+        code: "foo.bar"
       })
       expectAttestation(response)
     })
