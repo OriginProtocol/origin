@@ -30,6 +30,7 @@ class IPFSHelper:
             exclude_fields = []
         ipfs_data = json.loads(self.connector.cat(ipfs_hash))
         ipfs_data = ipfs_data[root_attr] if root_attr else ipfs_data
-        for field in exclude_fields:
-            ipfs_data.pop(field, None)
+        if exclude_fields:
+            for field in exclude_fields:
+                ipfs_data.pop(field, None)
         return ipfs_data

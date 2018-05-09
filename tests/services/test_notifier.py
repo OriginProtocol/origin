@@ -41,4 +41,5 @@ def test_endpoint_notification(db, web3, wait_for_block, wait_for_transaction, l
     assert len([1 for b in notification_list if b[0][0] == buyer_notify_token]) == 1
     assert len([1 for b in notification_list if b[0][0] == seller_notify_token]) == 3
     assert notification_list[0][0][1].alert.startswith(notification_messages[Notification.LIST][:10])
+    #import pdb;pdb.set_trace() 
 

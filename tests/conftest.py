@@ -133,12 +133,20 @@ def mock_ipfs_init(app):
     patcher.stop()
 
 
-@pytest.yield_fixture(scope='function')
-def mock_ipfs(app, mock_ipfs_init):
+def __file_from_hash(self, ipfs_hash, root_attr=None, exclude_fields=None):
     with open("./tests/ipfs/sample.json") as f:
         ipfs_data = json.loads(f.read())
+    #make a copy of the data so that we're clean
+    ipfs_data = ipfs_data[root_attr] if root_attr else ipfs_data
+    if exclude_fields:
+        for field in exclude_fields:
+            ipfs_data.pop(field, None)
+    return ipfs_data
+
+@pytest.yield_fixture(scope='function')
+def mock_ipfs(app, mock_ipfs_init):
     patcher = patch('util.ipfs.IPFSHelper.file_from_hash',
-                    return_value=ipfs_data)
+                    autospec = True, side_effect=__file_from_hash)
     yield patcher.start()
     patcher.stop()
 
