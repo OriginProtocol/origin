@@ -30,4 +30,6 @@ app = MyFlask(__name__,
               template_folder=settings.TEMPLATE_ROOT,
               static_folder=settings.STATIC_ROOT)
 
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+cors = CORS(app,
+            resources={r"/api/*": {"origins": "*"}},
+            supports_credentials=True)
