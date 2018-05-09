@@ -1955,6 +1955,7 @@ label[for=root_pictures]:hover {
   background-color: transparent;
   border: none;
   border-radius: 50%;
+  cursor: pointer;
   padding: 0;
 }
 
@@ -2236,9 +2237,12 @@ sup {
   position: relative;
   background-color: #213040;
   border-radius: 20px;
+  height: 170px;
+  margin-bottom: 1rem;
   max-height: unset;
   max-width: unset;
   top: unset;
+  width: 180px;
 }
 
 .profile.modal .container .image-container .image-pair .avatar-container canvas {
