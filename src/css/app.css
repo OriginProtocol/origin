@@ -2464,7 +2464,6 @@ footer .footer-links li a {
   }
 
   .current-user .avatar-container {
-    background-size: 60%;
     background-position-y: bottom;
     max-height: 183px;
     max-width: 183px;
