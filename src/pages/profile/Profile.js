@@ -2,29 +2,34 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import $ from 'jquery'
 
-import { deployProfile, updateProfile, addAttestation } from 'actions/Profile'
+import {
+  deployProfile,
+  deployProfileReset,
+  updateProfile,
+  addAttestation
+} from 'actions/Profile'
 import { getBalance } from 'actions/Wallet'
 
 import Timelapse from 'components/timelapse'
+import Modal from 'components/modal'
 
-import countryOptions from './_countryOptions'
 import Services from './_Services'
 import Wallet from './_Wallet'
 import Guidance from './_Guidance'
+import Strength from './_Strength'
 
 import EditProfile from './EditProfile'
 import VerifyPhone from './VerifyPhone'
 import VerifyEmail from './VerifyEmail'
 import VerifyFacebook from './VerifyFacebook'
 import VerifyTwitter from './VerifyTwitter'
-import ConfirmExit from './ConfirmExit'
+import ConfirmPublish from './ConfirmPublish'
 
 class Profile extends Component {
   constructor(props) {
     super(props)
 
     this.handleIdentity = this.handleIdentity.bind(this)
-    this.handlePublish = this.handlePublish.bind(this)
     this.handleToggle = this.handleToggle.bind(this)
     this.handleUnload = this.handleUnload.bind(this)
     this.setProgress = this.setProgress.bind(this)
@@ -34,7 +39,6 @@ class Profile extends Component {
       published: Published to blockchain
       provisional: Ready to publish to blockchain
       userForm: Values for controlled components
-      * TODO: retrieve current profile from blockchain
       * TODO: cache provisional state with local storage (if approved by Stan/Matt/Josh)
     */
 
@@ -44,12 +48,6 @@ class Profile extends Component {
       lastPublish: null,
       address: props.address,
       userForm: { firstName, lastName, description },
-      phoneForm: {
-        countryCode: 'us',
-        number: '',
-        verificationCode: '',
-        verificationRequested: false
-      },
       modalsOpen: {
         email: false,
         facebook: false,
@@ -71,29 +69,13 @@ class Profile extends Component {
     this.props.getBalance()
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { phoneForm, userForm } = this.state
-
+  componentDidUpdate(prevProps) {
     // prompt user if tab/window is closing before changes have been published
     if (this.props.hasChanges) {
       $('.profile-wrapper [data-toggle="tooltip"]').tooltip()
       // window.addEventListener('beforeunload', this.handleUnload)
     } else {
       // window.removeEventListener('beforeunload', this.handleUnload)
-    }
-
-    // concatenate phone number segments when country code or number is changed
-    if (
-      prevState.phoneForm.countryCode !== phoneForm.countryCode ||
-      prevState.phoneForm.number !== phoneForm.number
-    ) {
-      const obj = Object.assign({}, userForm, {
-        phone: `${
-          countryOptions.find(c => c.code === phoneForm.countryCode).prefix
-        }${phoneForm.number}`
-      })
-
-      this.setState({ userForm: obj })
     }
 
     if (
@@ -204,9 +186,9 @@ class Profile extends Component {
   }
 
   render() {
-    const { lastPublish, modalsOpen, phoneForm, progress } = this.state
+    const { lastPublish, modalsOpen, progress } = this.state
 
-    const { provisional, published } = this.props
+    const { provisional, published, profile } = this.props
 
     const fullName = `${provisional.firstName} ${provisional.lastName}`.trim()
     const hasChanges = this.props.hasChanges
@@ -249,6 +231,7 @@ class Profile extends Component {
                   />
                 </div>
               )}
+
               <h2>Verify yourself on Origin</h2>
               <Services
                 published={published}
@@ -256,32 +239,14 @@ class Profile extends Component {
                 handleToggle={this.handleToggle}
               />
 
-              <div className="d-flex justify-content-between">
-                <h2>Profile Strength</h2>
-                <h2>{this.props.profile.strength}%</h2>
-              </div>
-              <div className="progress">
-                <div
-                  className="progress-bar"
-                  role="progressbar"
-                  style={{ width: `${progress.published}%` }}
-                  aria-valuenow={progress.published}
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                />
-                <div
-                  className="progress-bar provisional"
-                  role="progressbar"
-                  style={{ width: `${progress.provisional}%` }}
-                  aria-valuenow={progress.provisional}
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                />
-              </div>
               {hasChanges && (
                 <button
                   className="publish btn btn-primary d-block"
-                  onClick={this.handlePublish}
+                  onClick={() => {
+                    this.setState({
+                      modalsOpen: { ...this.state.modalsOpen, unload: true }
+                    })
+                  }}
                 >
                   Publish Now
                 </button>
@@ -297,6 +262,7 @@ class Profile extends Component {
                 balance={this.props.balance}
                 address={this.props.address}
               />
+              <Strength strength={profile.strength} progress={progress} />
               <Guidance />
             </div>
           </div>
@@ -311,15 +277,18 @@ class Profile extends Component {
               modalsOpen: { ...this.state.modalsOpen, profile: false }
             })
           }}
-          data={this.props.profile.provisional}
+          data={profile.provisional}
         />
 
         <VerifyPhone
           open={modalsOpen.phone}
-          phoneForm={phoneForm}
           handleToggle={this.handleToggle}
-          handleIdentity={this.handleIdentity}
-          updateForm={phoneForm => this.setState({ phoneForm })}
+          onSuccess={data => {
+            this.props.addAttestation(data)
+            this.setState({
+              modalsOpen: { ...this.state.modalsOpen, phone: false }
+            })
+          }}
         />
 
         <VerifyEmail
@@ -357,20 +326,82 @@ class Profile extends Component {
           }}
         />
 
-        <ConfirmExit
+        <ConfirmPublish
           open={modalsOpen.unload}
           handleToggle={this.handleToggle}
           handlePublish={this.handlePublish}
+          onConfirm={() => {
+            this.setState({
+              modalsOpen: { ...this.state.modalsOpen, unload: false },
+              step: 'metamask'
+            })
+            this.props.deployProfile({
+              facebook: this.state.facebookForm,
+              user: this.state.userForm
+            })
+          }}
         />
+
+        {this.props.profile.status === 'confirming' && (
+          <Modal backdrop="static" isOpen={true}>
+            <div className="image-container">
+              <img src="/images/spinner-animation.svg" role="presentation" />
+            </div>
+            Confirm transaction<br />
+            Press &ldquo;Submit&rdquo; in MetaMask window
+          </Modal>
+        )}
+
+        {this.props.profile.status === 'processing' && (
+          <Modal backdrop="static" isOpen={true}>
+            <div className="image-container">
+              <img src="/images/spinner-animation.svg" role="presentation" />
+            </div>
+            Deploying your identity<br />
+            Please stand by...
+          </Modal>
+        )}
+
+        {this.props.profile.status === 'error' && (
+          <Modal backdrop="static" isOpen={true}>
+            <div className="image-container">
+              <img src="/images/flat_cross_icon.svg" role="presentation" />
+            </div>
+            Error<br />
+            <a
+              href="#"
+              onClick={e => {
+                e.preventDefault()
+                this.props.deployProfileReset()
+              }}
+            >
+              OK
+            </a>
+          </Modal>
+        )}
+
+        {this.props.profile.status === 'success' && (
+          <Modal backdrop="static" isOpen={true}>
+            <div className="image-container">
+              <img
+                src="/images/circular-check-button.svg"
+                role="presentation"
+              />
+            </div>
+            Success<br />
+            <a
+              href="#"
+              onClick={e => {
+                e.preventDefault()
+                this.props.deployProfileReset()
+              }}
+            >
+              Continue
+            </a>
+          </Modal>
+        )}
       </div>
     )
-  }
-
-  handlePublish() {
-    this.props.deployProfile({
-      facebook: this.state.facebookForm,
-      user: this.state.userForm
-    })
   }
 }
 
@@ -408,6 +439,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   deployProfile: opts => dispatch(deployProfile(opts)),
+  deployProfileReset: () => dispatch(deployProfileReset()),
   updateProfile: data => dispatch(updateProfile(data)),
   addAttestation: data => dispatch(addAttestation(data)),
   getBalance: () => dispatch(getBalance())

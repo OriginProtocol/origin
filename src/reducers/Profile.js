@@ -19,7 +19,8 @@ const initialState = {
   hasChanges: false,
   provisionalProgress: 0,
   publishedProgress: 0,
-  strength: 0
+  strength: 0,
+  status: null
 }
 initialState.provisional = { ...initialState.published }
 
@@ -78,8 +79,14 @@ function unpackUser(state) {
       if (attestation.service === 'facebook') {
         state.provisional.facebook = state.published.facebook = true
       }
+      if (attestation.service === 'twitter') {
+        state.provisional.twitter = state.published.twitter = true
+      }
       if (attestation.service === 'email') {
         state.provisional.email = state.published.email = true
+      }
+      if (attestation.service === 'phone') {
+        state.provisional.phone = state.published.phone = true
       }
     })
 
@@ -109,6 +116,8 @@ export default function Profile(state = initialState, action = {}) {
         toAdd.twitter = action.attestation
       } else if (action.attestation.claimType === 11) {
         toAdd.email = action.attestation
+      } else if (action.attestation.claimType === 10) {
+        toAdd.phone = action.attestation
       }
       return hasChanges({
         ...state,
@@ -123,6 +132,22 @@ export default function Profile(state = initialState, action = {}) {
           ...action.data
         }
       })
+
+    case ProfileConstants.DEPLOY:
+      return { ...state, status: 'confirming' }
+
+    case ProfileConstants.DEPLOY_ERROR:
+      return { ...state, status: 'error' }
+
+    case ProfileConstants.DEPLOY_SUCCESS:
+      return hasChanges({
+        ...state,
+        status: 'success',
+        published: state.provisional
+      })
+
+    case ProfileConstants.DEPLOY_RESET:
+      return { ...state, status: null }
   }
 
   return state

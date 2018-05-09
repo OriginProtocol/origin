@@ -4,31 +4,35 @@ import Modal from 'components/modal'
 
 class ConfirmPublish extends Component {
   render() {
-    const { open, handleToggle, handlePublish } = this.props
+    const { open, handleToggle } = this.props
 
     return (
       <Modal isOpen={open} data-modal="unload" handleToggle={handleToggle}>
         <div className="image-container">
           <img src="/images/public-icon.svg" role="presentation" />
         </div>
-        <h2>Wait! You haven’t published yet.</h2>
-        <p>If you exit without publishing you’ll lose all your changes.</p>
+        <h2>Ready to go public?</h2>
         <p>
-          Ready to go public? By updating your profile, you are publishing your
+          By updating your profile, you are publishing your
           information publicly and others will be able to see it on the
           blockchain and IPFS.
         </p>
         <div className="button-container">
-          <button
-            className="btn btn-clear"
-            onClick={e => handlePublish(() => handleToggle(e))}
+          <a
+            className="btn btn-clear mr-3"
+            data-modal="unload"
+            onClick={this.props.handleToggle}
           >
-            Publish Now
+            Oops, no wait...
+          </a>
+          <button
+            type="submit"
+            className="btn btn-clear"
+            onClick={() => this.props.onConfirm()}
+          >
+            Let&apos;s do it!
           </button>
         </div>
-        <a data-modal="unload" onClick={handleToggle}>
-          Not Right Now
-        </a>
       </Modal>
     )
   }

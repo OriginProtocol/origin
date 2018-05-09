@@ -1,8 +1,22 @@
 import React, { Component } from 'react'
-
 import Modal from 'components/modal'
 
+import origin from '../../services/origin'
+
 class VerifyTwitter extends Component {
+  constructor() {
+    super()
+    this.state = {}
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.open && this.props.open && !this.state.url) {
+      origin.attestations.twitterAuthUrl().then(url => {
+        this.setState({ url })
+      })
+    }
+  }
+
   render() {
     return (
       <Modal
@@ -15,32 +29,45 @@ class VerifyTwitter extends Component {
           <img src="/images/twitter-icon-dark.svg" role="presentation" />
         </div>
         <h2>Verify Your Twitter Account</h2>
-        <pre style={{ color: 'white', fontSize: '1.5rem' }}>To Do &#10003;</pre>
-        <form
-          onSubmit={e => {
-            e.preventDefault()
-            this.props.onSuccess({
-              claimType: 4,
-              data: '0x00',
-              signature: '0x00'
-            })
-          }}
-        >
-          <div className="button-container">
-            <a
-              className="btn btn-clear"
-              data-modal="twitter"
-              onClick={this.props.handleToggle}
-            >
-              Cancel
-            </a>
-            <button type="submit" className="btn btn-clear">
-              Continue
-            </button>
-          </div>
-        </form>
+        <div className="button-container">
+          <a
+            className="btn btn-clear"
+            data-modal="twitter"
+            onClick={this.props.handleToggle}
+          >
+            Cancel
+          </a>
+          <button
+            type="submit"
+            className="btn btn-clear"
+            onClick={() => this.onCertify()}
+          >
+            Continue
+          </button>
+        </div>
       </Modal>
     )
+  }
+
+  onCertify() {
+    var w = window.open(this.state.url, '', 'width=650,height=500')
+
+    const finish = e => {
+      var data = String(e.data)
+      if (!data.match(/^origin-code:/)) {
+        return
+      }
+      window.removeEventListener('message', finish, false)
+      if (!w.closed) {
+        w.close()
+      }
+
+      origin.attestations
+        .twitterVerify({ code: data.split(':')[1] })
+        .then(result => this.props.onSuccess(result))
+    }
+
+    window.addEventListener('message', finish, false)
   }
 }
 

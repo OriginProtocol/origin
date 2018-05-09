@@ -105,7 +105,10 @@ class NavBar extends Component {
                     <hr />
                     <div className="d-flex">
                       <div className="avatar-container">
-                        <Link to="/profile"><img src={this.props.profile.pic} alt="avatar" /></Link>
+                        <Link to="/profile">
+                          {/* <img src={this.props.profile.pic} alt="avatar" /> */}
+                          <img src="/images/avatar-blue.svg" alt="avatar" />
+                        </Link>
                       </div>
                       <div className="identification">
                         <p><Link to="/profile">{this.props.profile.name}</Link></p>

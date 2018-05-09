@@ -3,18 +3,18 @@ import Modal from 'components/modal'
 
 import origin from '../../services/origin'
 
-const redirectUrl = 'https://bridge-server-test.herokuapp.com/api/attestations/facebook/auth-url'
-
 class VerifyFacebook extends Component {
   constructor() {
     super()
     this.state = {}
   }
 
-  componentDidMount() {
-    origin.attestations.facebookAuthUrl({ redirectUrl }).then(url => {
-      this.setState({ url })
-    })
+  componentDidUpdate(prevProps) {
+    if (!prevProps.open && this.props.open && !this.state.url) {
+      origin.attestations.facebookAuthUrl().then(url => {
+        this.setState({ url })
+      })
+    }
   }
 
   render() {
@@ -53,23 +53,18 @@ class VerifyFacebook extends Component {
     var w = window.open(this.state.url, '', 'width=650,height=500')
 
     const finish = e => {
-      if (String(e.data).match(/^signed-data:/)) {
-        var [, signature, data, claimType] = e.data.split(':')
-        this.props.updateForm({
-          ...this.props.form,
-          signature,
-          data,
-          claimType
-        })
-        this.props.handleIdentity('facebook')
-      } else if (e.data !== 'success') {
+      var data = String(e.data)
+      if (!data.match(/^origin-code:/)) {
         return
       }
       window.removeEventListener('message', finish, false)
-
       if (!w.closed) {
         w.close()
       }
+
+      origin.attestations
+        .facebookVerify({ code: data.split(':')[1] })
+        .then(result => this.props.onSuccess(result))
     }
 
     window.addEventListener('message', finish, false)

@@ -11,6 +11,7 @@ export const ProfileConstants = keyMirror(
     DEPLOY: null,
     DEPLOY_SUCCESS: null,
     DEPLOY_ERROR: null,
+    DEPLOY_RESET: null,
 
     ADD_ATTESTATION: null
   },
@@ -40,6 +41,9 @@ export function addAttestation(attestation) {
 
 export function deployProfile() {
   return async function(dispatch, getState) {
+
+    dispatch({ type: ProfileConstants.DEPLOY })
+
     const {
       profile: { provisional, published }
     } = getState()
@@ -62,11 +66,27 @@ export function deployProfile() {
       userData.attestations.push(provisional.facebook)
     }
 
+    if (!published.twitter && provisional.twitter) {
+      userData.attestations.push(provisional.twitter)
+    }
+
     if (!published.email && provisional.email) {
       userData.attestations.push(provisional.email)
     }
 
-    var user = await origin.users.set(userData)
-    dispatch({ type: ProfileConstants.DEPLOY_SUCCESS, user })
+    if (!published.phone && provisional.phone) {
+      userData.attestations.push(provisional.phone)
+    }
+
+    try {
+      var user = await origin.users.set(userData)
+      dispatch({ type: ProfileConstants.DEPLOY_SUCCESS, user })
+    } catch(error) {
+      dispatch({ type: ProfileConstants.DEPLOY_ERROR, error })
+    }
   }
+}
+
+export function deployProfileReset() {
+  return { type: ProfileConstants.DEPLOY_RESET }
 }
