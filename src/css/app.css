@@ -895,8 +895,16 @@ a:hover {
 
 /* Listings */
 
-.listings-grid {
-  padding: 40px 0px;
+.category {
+  color: var(--dusk);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.price-container {
+  font-size: 1.125rem;
+  margin-bottom: 2rem;
 }
 
 .listings-grid h1 {
@@ -2227,7 +2235,7 @@ sup {
   top: unset;
 }
 
-.profile-wrapper .profile.modal .container .image-container .image-pair .avatar-container canvas {
+.profile.modal .container .image-container .image-pair .avatar-container canvas {
   top: 0;
   left: 0;
   right: 0;
@@ -2236,14 +2244,15 @@ sup {
   border-radius: 20px;
 }
 
-.profile-wrapper .profile.modal .container .image-container .image-pair label {
+.profile.modal .container .image-container .image-pair label {
   position: absolute;
   bottom: 10px;
   cursor: pointer;
   height: 40px;
   right: 10px;
 }
-.profile-wrapper .profile.modal .container .image-container .image-pair label img {
+
+.profile.modal .container .image-container .image-pair label img {
   height: 40px;
   width: 40px;
 }
@@ -2446,6 +2455,13 @@ footer .footer-links li a {
 
   .navbar .notifications .dropdown-menu {
     right: calc(((100% - 540px) / 2) + 60px);
+  }
+
+  .current-user .avatar-container {
+    background-size: 60%;
+    background-position-y: bottom;
+    max-height: 183px;
+    max-width: 183px;
   }
 }
 

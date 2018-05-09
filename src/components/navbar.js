@@ -97,9 +97,9 @@ class NavBar extends Component {
                           <Identicon address={this.props.wallet} />
                         </Link>
                       </div>
-                      <div>
-                        <p><Link to="/profile">ETH Address:</Link></p>
-                        <p><Link to="/profile"><strong>{this.props.wallet}</strong></Link></p>
+                      <div className="eth d-flex flex-column justify-content-between">
+                        <div>ETH Address:</div>
+                        <Link to="/profile"><strong>{this.props.wallet}</strong></Link>
                       </div>
                     </div>
                     <hr />
@@ -110,13 +110,30 @@ class NavBar extends Component {
                           <img src="/images/avatar-blue.svg" alt="avatar" />
                         </Link>
                       </div>
-                      <div className="identification">
-                        <p><Link to="/profile">{this.props.profile.name}</Link></p>
-                        {this.props.profile.published.twitter &&
-                          <Link to="/profile">
-                            <img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" />
-                          </Link>
-                        }
+                      <div className="identification d-flex flex-column justify-content-between">
+                        <div><Link to="/profile">{this.props.profile.name}</Link></div>
+                        <div>
+                          {this.props.profile.published.phone &&
+                            <Link to="/profile">
+                              <img src="/images/phone-icon-verified.svg" alt="phone verified icon" />
+                            </Link>
+                          }
+                          {this.props.profile.published.email &&
+                            <Link to="/profile">
+                              <img src="/images/email-icon-verified.svg" alt="email verified icon" />
+                            </Link>
+                          }
+                          {this.props.profile.published.facebook &&
+                            <Link to="/profile">
+                              <img src="/images/facebook-icon-verified.svg" alt="Facebook verified icon" />
+                            </Link>
+                          }
+                          {this.props.profile.published.twitter &&
+                            <Link to="/profile">
+                              <img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" />
+                            </Link>
+                          }
+                        </div>
                       </div>
                     </div>
                   </div>

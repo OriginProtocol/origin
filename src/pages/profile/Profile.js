@@ -194,14 +194,14 @@ class Profile extends Component {
     const hasChanges = this.props.hasChanges
 
     return (
-      <div className="profile-wrapper">
+      <div className="current-user profile-wrapper">
         <div className="container">
           <div className="row">
             <div className="col-12 col-lg-8">
               <div className="row attributes">
                 <div className="col-4 col-md-3">
                   <div
-                    className="avatar-container"
+                    className="primary avatar-container"
                     style={{ backgroundImage: `url(${provisional.pic})` }}
                   />
                 </div>
@@ -221,16 +221,6 @@ class Profile extends Component {
                   <p>{provisional.description}</p>
                 </div>
               </div>
-              {hasChanges && (
-                <div className="alert d-flex">
-                  Your profile includes unpublished changes.
-                  <div
-                    className="info icon-container"
-                    data-toggle="tooltip"
-                    title="Tell me more about what it means to publish and why I should do it."
-                  />
-                </div>
-              )}
 
               <h2>Verify yourself on Origin</h2>
               <Services
@@ -239,30 +229,50 @@ class Profile extends Component {
                 handleToggle={this.handleToggle}
               />
 
-              {hasChanges && (
-                <button
-                  className="publish btn btn-primary d-block"
-                  onClick={() => {
-                    this.setState({
-                      modalsOpen: { ...this.state.modalsOpen, unload: true }
-                    })
-                  }}
-                >
-                  Publish Now
-                </button>
-              )}
-              {lastPublish && (
-                <p className="timelapse text-center">
-                  Last Published <Timelapse reference={lastPublish} />
-                </p>
-              )}
+              <div className="col-12">
+                <Strength strength={profile.strength} progress={progress} />
+                {!hasChanges && (
+                  <button
+                    className="publish btn btn-sm btn-primary d-block"
+                    disabled
+                  >
+                    Publish Now
+                  </button>
+                )}
+                {hasChanges && (
+                  <button
+                    className="publish btn btn-sm btn-primary d-block"
+                    onClick={() => {
+                      this.setState({
+                        modalsOpen: { ...this.state.modalsOpen, unload: true }
+                      })
+                    }}
+                  >
+                    Publish Now
+                  </button>
+                )}
+                <div className="published-status text-center">
+                  <span>Status:</span>
+                  {!lastPublish && (
+                    <span className="not-published">
+                      Not Published
+                    </span>
+                  )}
+                  {lastPublish && (
+                    <span>
+                      Last published
+                      {' '}
+                      <Timelapse reactive={true} reference={lastPublish} />
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
             <div className="col-12 col-lg-4">
               <Wallet
                 balance={this.props.balance}
                 address={this.props.address}
               />
-              <Strength strength={profile.strength} progress={progress} />
               <Guidance />
             </div>
           </div>
