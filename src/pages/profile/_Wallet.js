@@ -14,25 +14,25 @@ class Wallet extends Component {
           <div className="image-container">
             <Identicon address={this.props.address} />
           </div>
-          <div className="eth">
-            <p>ETH Address:</p>
-            <p className="address">
+          <div className="eth d-flex flex-column justify-content-between">
+            <div>ETH Address:</div>
+            <div className="address">
               <strong>
                 {address.slice(0, len)}<wbr />{address.slice(len, fullLen)}
               </strong>
-            </p>
+            </div>
           </div>
         </div>
-        <hr />
+        <hr className="dark sm" />
         <div className="detail d-flex">
-          <p>Account Balance:</p>
-          <p>{this.props.balance} ETH</p>
+          <div>Account Balance:</div>
+          <div>{this.props.balance} ETH</div>
         </div>
         <div className="detail d-flex">
-          <p>Transaction History:</p>
-          <p>
-            <a href="#">ETH</a> | <a href="#">Tokens</a>
-          </p>
+          <div>Transaction History:</div>
+          <div>
+            <a onClick={() => alert('To do')}>ETH</a> | <a onClick={() => alert('To do')}>Tokens</a>
+          </div>
         </div>
       </div>
     )

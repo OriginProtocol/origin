@@ -36,12 +36,12 @@ class ListingCard extends Component {
                 '/images/default-image.jpg'}")`
           }}>
           </div>
-          <p className="category placehold">{this.state.category}</p>
-          <h2 className="title placehold">{this.state.name}</h2>
-          <div className="d-flex align-items-center">
-            <p className="price placehold">
+          <div className="category placehold">{this.state.category}</div>
+          <h2 className="title placehold text-truncate">{this.state.name}</h2>
+          <div className="d-flex align-items-center price-container">
+            <div className="price placehold">
               {this.state.price && `${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH`}
-            </p>
+            </div>
             {this.state.unitsAvailable===0 &&
               <span className="sold-banner">Sold</span>
             }

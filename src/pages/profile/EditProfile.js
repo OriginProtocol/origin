@@ -136,7 +136,7 @@ class EditProfile extends Component {
                 </div>
               </div>
               <div className="col-12">
-                <div className="button-container">
+                <div className="button-container text-center">
                   <a
                     className="btn btn-clear"
                     data-modal="profile"
