@@ -186,6 +186,13 @@ def eth_tester_provider(eth_tester):
     provider = EthereumTesterProvider(eth_tester)
     return provider
 
+@pytest.fixture(scope="module")
+def eth_test_seller(eth_tester):
+    return eth_tester.get_accounts()[2]
+
+@pytest.fixture(scope="module")
+def eth_test_buyer(eth_tester):
+    return eth_tester.get_accounts()[3]
 
 @pytest.fixture(scope="module")
 def web3(eth_tester_provider):
@@ -241,7 +248,7 @@ def listing_registry_contract(web3, wait_for_transaction, wait_for_block,
 
 @pytest.fixture()
 def listing_contract(web3, wait_for_transaction, wait_for_block,
-                     purchase_lib_contract, listing_registry_contract):
+                     purchase_lib_contract, listing_registry_contract, eth_test_seller):
     contract_name = 'Listing'
     linked_contract = 'PurchaseLibrary'
     with open("./contracts/{}.json".format(contract_name)) as f:
@@ -250,27 +257,32 @@ def listing_contract(web3, wait_for_transaction, wait_for_block,
 
     CONTRACT_META = {
         "abi": contract_interface['abi'],
-        "bytecode": contract_interface['bytecode'].replace(
-            get_contract_internal_name(linked_contract),
-            purchase_lib_contract.address[2:],
-        )
+        #"bytecode": contract_interface['bytecode'].replace(
+        #    get_contract_internal_name(linked_contract),
+        #    purchase_lib_contract.address[2:],
+        #)
     }
 
     contract = web3.eth.contract(**CONTRACT_META)
     ipfs_hash = "QmZtQDL4UjQWryQLjsS5JUsbdbn2B27Tmvz2gvLkw7wmmb"
     deploy_txn_hash = \
-        contract.constructor(purchase_lib_contract.address,
+        listing_registry_contract.functions.create(
                              base58_to_hex(ipfs_hash),
-                             3, 25).transact({'from': web3.eth.coinbase,
+                             3, 25).transact({'from': eth_test_seller,
                                               'gas': 1000000})
     deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
-    contract_address = deploy_receipt['contractAddress']
+    assert deploy_receipt["gasUsed"] > 0
+    #we better have created one of these
+    listings_length = listing_registry_contract.functions.listingsLength().call()
+    assert listings_length > 0 
+    #get the last listing created
+    contract_address = listing_registry_contract.functions.getListing(listings_length-1).call()[0]
     return contract(address=contract_address)
 
 
 @pytest.fixture()
 def purchase_contract(web3, wait_for_transaction, wait_for_block,
-                      listing_contract):
+                      listing_contract, eth_test_buyer):
     contract_name = 'Purchase'
     with open("./contracts/{}.json".format(contract_name)) as f:
         contract_interface = json.loads(f.read())
@@ -278,15 +290,19 @@ def purchase_contract(web3, wait_for_transaction, wait_for_block,
 
     CONTRACT_META = {
         "abi": contract_interface['abi'],
-        "bytecode": contract_interface['bytecode']
+        #"bytecode": contract_interface['bytecode']
     }
 
     contract = web3.eth.contract(**CONTRACT_META)
     deploy_txn_hash = \
-        contract.constructor(listing_contract.address,
-                             listing_contract.address
-                             ).transact({'from': web3.eth.coinbase,
+        listing_contract.functions.buyListing( 5
+                             ).transact({'from': eth_test_buyer,
                                          'gas': 1000000})
     deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
-    contract_address = deploy_receipt['contractAddress']
+    assert deploy_receipt["gasUsed"] > 0
+    #we better have created one of these
+    purchases_length = listing_contract.functions.purchasesLength().call()
+    assert purchases_length > 0 
+    #get the last listing created
+    contract_address = listing_contract.functions.getPurchase(purchases_length-1).call()
     return contract(address=contract_address)

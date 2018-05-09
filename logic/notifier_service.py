@@ -62,7 +62,7 @@ def register_eth_notification(eth_address, type, device_token, verification_sign
 def send_apn_notification(message, endpoint):
     token = endpoint.device_token
     payload = Payload(test=message, sound = "default", badge = 1)
-    client = APNsClient(setting.APNS_CERT_FILE,  use_sandbox = settings.DEBUG, use_alternative_port=False)
+    client = APNsClient(settings.APNS_CERT_FILE, password = settings.APNS_CERT_PASSWORD, use_sandbox = settings.DEBUG, use_alternative_port=False)
     topic = settings.APNS_APP_BUNDLE_ID
     client.send(token, payload, topic)
 
