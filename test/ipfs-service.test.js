@@ -1,5 +1,5 @@
 import { expect } from "chai"
-import IpfsService from "../src/ipfs-service"
+import IpfsService from "../src/services/ipfs-service"
 import { listings, ipfsHashes } from "./fixtures"
 
 const clearCache = ipfsService => {

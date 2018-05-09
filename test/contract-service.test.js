@@ -1,5 +1,5 @@
 import { expect } from "chai"
-import ContractService from "../src/contract-service"
+import ContractService from "../src/services/contract-service"
 import { ipfsHashes } from "./fixtures"
 import Web3 from "web3"
 

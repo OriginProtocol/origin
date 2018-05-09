@@ -3,8 +3,8 @@ import {
   Attestations,
   AttestationObject
 } from "../src/resources/attestations.js"
-import ContractService from "../src/contract-service.js"
-import IpfsService from "../src/ipfs-service.js"
+import ContractService from "../src/services/contract-service"
+import IpfsService from "../src/services/ipfs-service.js"
 import { expect } from "chai"
 import Web3 from "web3"
 
