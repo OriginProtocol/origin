@@ -128,7 +128,7 @@ class ContractService {
 
   async deploy(contract, args, options) {
     let deployed = await this.deployed(contract)
-    let transaction = await new Promise((resolve, reject) => {
+    let txReceipt = await new Promise((resolve, reject) => {
       deployed
         .deploy({
           data: contract.bytecode,
@@ -140,7 +140,7 @@ class ContractService {
         })
         .on("error", err => reject(err))
     })
-    return await this.waitTransactionFinished(transaction.transactionHash)
+    return txReceipt
   }
 
   async getAllListingIds() {
