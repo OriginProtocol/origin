@@ -1,7 +1,7 @@
 import keyMirror from '../utils/keyMirror'
 import origin from '../services/origin'
 
-const alertify = require('../../node_modules/alertify/src/alertify.js')
+import { showAlert } from './Alert'
 
 export const ListingConstants = keyMirror(
   {
@@ -13,7 +13,7 @@ export const ListingConstants = keyMirror(
 )
 
 export function getListingIds() {
-  return async function(dispatch, getState) {
+  return async function(dispatch) {
     dispatch({ type: ListingConstants.FETCH_IDS })
 
     // Get listings to hide
@@ -66,7 +66,7 @@ export function getListingIds() {
       })
       .catch(error => {
         console.log(error)
-        alertify.alert(error.message)
+        dispatch(showAlert(error.message))
 
         dispatch({
           type: ListingConstants.FETCH_IDS_ERROR,
