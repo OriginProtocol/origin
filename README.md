@@ -29,6 +29,12 @@ See the [README for the API](api)
 - Postgresql 9.3 or higher required
 - Redis 4.0+ recommended
 
+#### Mac OS specifics
+Install build tools packages:
+```bash
+brew install automake autoconf libtool
+```
+
 ### Set Up A Virtual Environment
 
 ```bash
@@ -96,6 +102,7 @@ Enviroment keys for Indexing server:
 
 - IPFS_DOMAIN: Set this to domain of an IPFS daemon. for example `127.0.0.1` or `gateway.originprotocol.com`
 - IPFS_PORT: port on which the IPFS daemon is listening.
+- REDIS_URL: Set this to point to your local Redis server. For example `redis://127.0.0.1:6379/0`
 
 ### Set Up Your Database
 
