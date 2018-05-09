@@ -81,7 +81,7 @@ IPFS_PORT = get_env_default('IPFS_PORT')
 TWITTER_CONSUMER_KEY = get_env_default('TWITTER_CONSUMER_KEY')
 TWITTER_CONSUMER_SECRET = get_env_default('TWITTER_CONSUMER_SECRET')
 
-ORIGIN_SIGNING_KEY = get_env_default('ORIGIN_SIGNING_KEY')
+ATTESTATION_SIGNING_KEY = get_env_default('ATTESTATION_SIGNING_KEY')
 
 REDIS_URL = get_env_default('REDIS_URL')
 CELERY_DEBUG = parse_bool(get_env_default('CELERY_DEBUG'))

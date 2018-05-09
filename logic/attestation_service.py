@@ -21,7 +21,7 @@ from web3 import Web3, HTTPProvider
 
 # TODO: use env vars to connect to live networks
 web3 = Web3(HTTPProvider('http://localhost:9545'))
-signing_key = settings.ORIGIN_SIGNING_KEY
+signing_key = settings.ATTESTATION_SIGNING_KEY
 
 VC = db_models.VerificationCode
 
