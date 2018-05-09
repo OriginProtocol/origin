@@ -40,6 +40,13 @@ twitter_access_token_url = 'https://api.twitter.com/oauth/access_token'
 
 CODE_EXPIRATION_TIME_MINUTES = 30
 
+CLAIM_TYPES = {
+    'phone': 10,
+    'email': 11,
+    'facebook': 3,
+    'twitter': 4
+}
+
 
 class VerificationServiceResponse():
     def __init__(self, data={}):
@@ -97,12 +104,11 @@ class VerificationService:
         # TODO: determine what the text should be
         data = 'phone verified'
         # TODO: determine claim type integer code for phone verification
-        claim_type = 10
         signature = attestations.generate_signature(
-            signing_key, eth_address, claim_type, data)
+            signing_key, eth_address, CLAIM_TYPES['phone'], data)
         return VerificationServiceResponse({
             'signature': signature,
-            'claim_type': claim_type,
+            'claim_type': CLAIM_TYPES['phone'],
             'data': data
         })
 
@@ -145,12 +151,11 @@ class VerificationService:
         # TODO: determine what the text should be
         data = 'email verified'
         # TODO: determine claim type integer code for email verification
-        claim_type = 11
         signature = attestations.generate_signature(
-            signing_key, eth_address, claim_type, data)
+            signing_key, eth_address, CLAIM_TYPES['email'], data)
         return VerificationServiceResponse({
             'signature': signature,
-            'claim_type': claim_type,
+            'claim_type': CLAIM_TYPES['email'],
             'data': data
         })
 
@@ -182,12 +187,11 @@ class VerificationService:
         # TODO: determine what the text should be
         data = 'facebook verified'
         # TODO: determine claim type integer code for phone verification
-        claim_type = 3
         signature = attestations.generate_signature(
-            signing_key, eth_address, claim_type, data)
+            signing_key, eth_address, CLAIM_TYPES['facebook'], data)
         return VerificationServiceResponse({
             'signature': signature,
-            'claim_type': claim_type,
+            'claim_type': CLAIM_TYPES['facebook'],
             'data': data
         })
 
@@ -226,12 +230,11 @@ class VerificationService:
         # TODO: determine what the text should be
         data = 'twitter verified'
         # TODO: determine claim type integer code for phone verification
-        claim_type = 4
         signature = attestations.generate_signature(
-            signing_key, eth_address, claim_type, data)
+            signing_key, eth_address, CLAIM_TYPES['twitter'], data)
         return VerificationServiceResponse({
             'signature': signature,
-            'claim_type': claim_type,
+            'claim_type': CLAIM_TYPES['twitter'],
             'data': data
         })
 

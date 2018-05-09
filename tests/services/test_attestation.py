@@ -6,6 +6,7 @@ from tests.helpers.eth_utils import sample_eth_address, str_eth
 from database import db_models
 from logic.attestation_service import (VerificationService,
                                        VerificationServiceResponse)
+from logic.attestation_service import CLAIM_TYPES
 from logic.service_utils import (PhoneVerificationError,
                                  EmailVerificationError,
                                  FacebookVerificationError,
@@ -84,7 +85,7 @@ def test_verify_phone_valid_code(session, mock_normalize_number):
     resp_data = resp.data
 
     assert len(resp_data['signature']) == SIGNATURE_LENGTH
-    assert resp_data['claim_type'] == 10
+    assert resp_data['claim_type'] == CLAIM_TYPES['phone']
     assert resp_data['data'] == 'phone verified'
 
 
@@ -207,7 +208,7 @@ def test_verify_email_valid_code(mock_now, session):
     resp = VerificationService.verify_email(**req)
     resp_data = resp.data
     assert len(resp_data['signature']) == SIGNATURE_LENGTH
-    assert resp_data['claim_type'] == 11
+    assert resp_data['claim_type'] == CLAIM_TYPES['email']
     assert resp_data['data'] == 'email verified'
 
 
@@ -294,7 +295,7 @@ def test_verify_facebook_valid_code(MockHttpConnection):
         'client_secret=facebook-client-secret&' +
         'redirect_uri=http://testhost.com/redirects/facebook/&code=abcde12345')
     assert len(resp_data['signature']) == SIGNATURE_LENGTH
-    assert resp_data['claim_type'] == 3
+    assert resp_data['claim_type'] == CLAIM_TYPES['facebook']
     assert resp_data['data'] == 'facebook verified'
 
 
@@ -355,7 +356,7 @@ def test_verify_twitter_valid_code(mock_session, MockOauthClient):
     mock_oauth_client.request.assert_called_once_with(
         'https://api.twitter.com/oauth/access_token', 'GET')
     assert len(resp_data['signature']) == SIGNATURE_LENGTH
-    assert resp_data['claim_type'] == 4
+    assert resp_data['claim_type'] == CLAIM_TYPES['twitter']
     assert resp_data['data'] == 'twitter verified'
 
 
