@@ -39,3 +39,16 @@ class Listing(db.Model):
 class EventTracker(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     last_read = db.Column(db.Integer())
+
+
+class Purchase(db.Model):
+    contract_address = db.Column(db.String(255),
+                                 primary_key=True)
+    buyer_address = db.Column(db.String(255),
+                              index=True)
+    listing_address = db.Column(db.String(255),
+                                db.ForeignKey('listing.contract_address'),
+                                nullable=False)
+    stage = db.Column(db.String(255))
+    created_at = db.Column(db.DateTime(timezone=True))
+    buyer_timeout = db.Column(db.DateTime(timezone=True))

@@ -66,15 +66,15 @@ def test_facebook_verify(MockHttpConnection, client):
     MockHttpConnection.return_value = mock_http_conn
 
     resp = client.get(
-        "/api/attestations/facebook/auth-url?redirect-url=http://foo.bar")
-    expected_url = "?client_id=facebook-client-id&redirect_uri=http://foo.bar"
+        "/api/attestations/facebook/auth-url")
+    expected_url = ("?client_id=facebook-client-id&redirect_uri"
+                    "=http://testhost.com/redirects/facebook/")
     assert resp.status_code == 200
     assert expected_url in json_of_response(resp)['url']
 
     resp = post_json(client,
                      "/api/attestations/facebook/verify",
-                     {"redirect-url": "http://foo.bar",
-                      "identity": str_eth(sample_eth_address),
+                     {"identity": str_eth(sample_eth_address),
                       "code": "abcde12345"})
     resp_json = json_of_response(resp)
     assert resp.status_code == 200

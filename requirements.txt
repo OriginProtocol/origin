@@ -11,6 +11,7 @@ chardet==3.0.4
 click==6.7
 cryptography==2.2.2
 decorator==4.2.1
+eth-tester[pyethereum16]==0.1.0b23
 factory-boy==2.10.0
 fixture==1.5.11
 Flask==0.12.2
@@ -71,3 +72,4 @@ wcwidth==0.1.7
 eth-account==0.2.2
 web3==4.2.0
 Werkzeug==0.14.1
+envkey==1.1.0

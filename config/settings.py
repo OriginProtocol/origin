@@ -1,5 +1,5 @@
 import os
-
+from config import origin_defaults
 import dotenv
 
 dotenv_filename = dotenv.find_dotenv()
@@ -11,47 +11,77 @@ def parse_bool(env_value):
     return env_value is not None and env_value.lower() not in ('0', 'false')
 
 
+def get_env_default(key):
+    v = os.environ.get(key)
+    if v in (None, "") and hasattr(origin_defaults, key):
+        return getattr(origin_defaults, key)
+    else:
+        return v
+
+
+DEBUG = parse_bool(get_env_default('DEBUG'))
+
+env_key = os.environ.get("ENVKEY")
+if env_key:
+    # if ENVKEY is set load up envkey
+    # NOTE: this actually load_dotenv twice in the __init__ file.
+    # Also seems to imply .env use is dev only. May need a PR to
+    # resolve that issue
+    from envkey import fetch
+    import json
+
+    # This is taken from https://github.com/envkey/envkey-python/
+    # customized because it doesn't allow different default values
+    # and .env live environments
+    # TODO: add a seperate env variable to indicate dev/staging/live
+    fetch_res = fetch.fetch_env(env_key, is_dev=DEBUG)
+
+    if fetch_res.startswith("error: "):
+        raise ValueError("ENVKEY invalid. Couldn't load vars.")
+
+    parsed = json.loads(fetch_res)
+    vars_set = dict()
+    for k, v in parsed.items():
+        if os.environ.get(k) in (None, ""):
+            os.environ[k] = v
+
+
 def abspath(relative_file_path):
     return os.path.join(PROJECTPATH, relative_file_path)
 
 
-DEBUG = parse_bool(os.environ.get('DEBUG'))
+HOST = get_env_default('HOST')
+HTTPS = parse_bool(get_env_default('HTTPS'))
+PROJECTPATH = get_env_default('PROJECTPATH') or os.getcwd()
+FLASK_SECRET_KEY = get_env_default('FLASK_SECRET_KEY')
+PUBLIC_ID_ENCRYPTION_KEY = get_env_default('PUBLIC_ID_ENCRYPTION_KEY')
 
-HOST = os.environ.get('HOST')
-HTTPS = parse_bool(os.environ.get('HTTPS'))
-PROJECTPATH = os.environ.get('PROJECTPATH') or os.getcwd()
-FLASK_SECRET_KEY = os.environ.get('FLASK_SECRET_KEY')
-PUBLIC_ID_ENCRYPTION_KEY = os.environ.get('PUBLIC_ID_ENCRYPTION_KEY')
-
-DATABASE_URL = os.environ.get('DATABASE_URL')
-TEST_DATABASE_URI = os.environ.get(
-    'TEST_DATABASE_URI',
-    'postgresql://localhost/unittest')
+DATABASE_URL = get_env_default('DATABASE_URL')
 
 TEMPLATE_ROOT = os.path.join(PROJECTPATH, 'templates')
 STATIC_ROOT = os.path.join(PROJECTPATH, 'static')
 
-FACEBOOK_CLIENT_ID = os.environ.get('FACEBOOK_CLIENT_ID')
-FACEBOOK_CLIENT_SECRET = os.environ.get('FACEBOOK_CLIENT_SECRET')
+FACEBOOK_CLIENT_ID = get_env_default('FACEBOOK_CLIENT_ID')
+FACEBOOK_CLIENT_SECRET = get_env_default('FACEBOOK_CLIENT_SECRET')
 
-SENDGRID_FROM_EMAIL = os.environ.get('SENDGRID_FROM_EMAIL')
+SENDGRID_FROM_EMAIL = get_env_default('SENDGRID_FROM_EMAIL')
 
-SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
+SENDGRID_API_KEY = get_env_default('SENDGRID_API_KEY')
 
-TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
-TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
-TWILIO_NUMBER = os.environ.get('TWILIO_NUMBER')
+TWILIO_ACCOUNT_SID = get_env_default('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = get_env_default('TWILIO_AUTH_TOKEN')
+TWILIO_NUMBER = get_env_default('TWILIO_NUMBER')
 
-RPC_SERVER = os.environ.get('RPC_SERVER')
-RPC_PROTOCOL = os.environ.get('RPC_PROTOCOL')
+RPC_SERVER = get_env_default('RPC_SERVER')
+RPC_PROTOCOL = get_env_default('RPC_PROTOCOL')
 
-IPFS_DOMAIN = os.environ.get('IPFS_DOMAIN')
-IPFS_PORT = os.environ.get('IPFS_PORT')
+IPFS_DOMAIN = get_env_default('IPFS_DOMAIN')
+IPFS_PORT = get_env_default('IPFS_PORT')
 
-TWITTER_CONSUMER_KEY = os.environ.get('TWITTER_CONSUMER_KEY')
-TWITTER_CONSUMER_SECRET = os.environ.get('TWITTER_CONSUMER_SECRET')
+TWITTER_CONSUMER_KEY = get_env_default('TWITTER_CONSUMER_KEY')
+TWITTER_CONSUMER_SECRET = get_env_default('TWITTER_CONSUMER_SECRET')
 
-ORIGIN_SIGNING_KEY = os.environ.get('ORIGIN_SIGNING_KEY')
+ORIGIN_SIGNING_KEY = get_env_default('ORIGIN_SIGNING_KEY')
 
-REDIS_URL = os.environ.get('REDIS_URL')
-CELERY_DEBUG = parse_bool(os.environ.get('CELERY_DEBUG'))
+REDIS_URL = get_env_default('REDIS_URL')
+CELERY_DEBUG = parse_bool(get_env_default('CELERY_DEBUG'))

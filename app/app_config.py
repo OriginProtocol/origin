@@ -36,7 +36,10 @@ def init_api(app):
     # Create API endpoints, which will be available at /api/<tablename> by
     # default. Allowed HTTP methods can be specified as well.
     manager.create_api(db_models.Listing, methods=['GET'],
-                       primary_key='registry_id',
+                       primary_key='contract_address',
+                       results_per_page=10,)
+    manager.create_api(db_models.Purchase, methods=['GET'],
+                       primary_key='contract_address',
                        results_per_page=10,)
 
 

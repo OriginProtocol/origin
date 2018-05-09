@@ -154,18 +154,20 @@ class VerificationService:
             'data': data
         })
 
-    def facebook_auth_url(redirect_url):
+    def facebook_auth_url():
         client_id = settings.FACEBOOK_CLIENT_ID
-        redirect_uri = append_trailing_slash(redirect_url)
+        host = append_trailing_slash(settings.HOST)
+        redirect_uri = "{}redirects/facebook/".format(host)
         url = ('https://www.facebook.com/v2.12/dialog/oauth?client_id={}'
                '&redirect_uri={}').format(client_id, redirect_uri)
         return VerificationServiceResponse({'url': url})
 
-    def verify_facebook(redirect_url, code, eth_address):
+    def verify_facebook(code, eth_address):
         base_url = 'graph.facebook.com'
         client_id = settings.FACEBOOK_CLIENT_ID
         client_secret = settings.FACEBOOK_CLIENT_SECRET
-        redirect_uri = append_trailing_slash(redirect_url)
+        host = append_trailing_slash(settings.HOST)
+        redirect_uri = "{}redirects/facebook/".format(host)
         code = code
         path = ('/v2.12/oauth/access_token?client_id={}'
                 '&client_secret={}&redirect_uri={}&code={}').format(

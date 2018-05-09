@@ -46,7 +46,7 @@ class VerifyEmailResponse(StandardResponse):
 
 
 class FacebookAuthUrlRequest(StandardRequest):
-    redirect_url = fields.Url(required=True, data_key='redirect-url')
+    pass
 
 
 class FacebookAuthUrlResponse(StandardResponse):
@@ -56,7 +56,6 @@ class FacebookAuthUrlResponse(StandardResponse):
 class VerifyFacebookRequest(StandardRequest):
     eth_address = fields.Str(required=True, data_key='identity')
     code = fields.Str(required=True)
-    redirect_url = fields.Url(required=True, data_key='redirect-url')
 
 
 class VerifyFacebookResponse(StandardResponse):
