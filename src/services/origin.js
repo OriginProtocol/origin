@@ -12,8 +12,8 @@ config.ipfsGatewayPort = process.env.IPFS_GATEWAY_PORT
 config.ipfsGatewayProtocol = process.env.IPFS_GATEWAY_PROTOCOL
   ? process.env.IPFS_GATEWAY_PROTOCOL
   : null
-config.attestationServerUrl =
-  'http://bridge-server-test.herokuapp.com/api/attestations'
+config.attestationServerUrl = process.env.ATTESTATION_SERVER_URL
+  || 'http://bridge-server-test.herokuapp.com/api/attestations'
 
 const origin = new Origin(config)
 window.web3 = origin.contractService.web3
