@@ -1874,24 +1874,51 @@ label[for=root_pictures]:hover {
   line-height: 1.5;
 }
 
-.profile-wrapper .attributes {
+.verifications-box {
+  background-color: var(--pale-grey);
+  border-radius: 20px;
+  color: #0c2033;
+  font-size: 0.825rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+.verifications-box h3 {
+  font-size: 0.825rem;
+  font-weight: normal;
+  margin-bottom: 1rem;
+}
+
+.verifications-box img {
+  height: 30px;
+}
+
+.verifications-box .service :first-child {
+  margin-right: 0.5rem;
+}
+
+.verifications-box .service :last-child {
+  line-height: 30px;
+  vertical-align: middle;
+}
+
+.verifications-box .service:not(:last-of-type) {
+  margin-bottom: 0.5rem;
+}
+
+.current-user .attributes {
   margin-bottom: 40px;
 }
 
-.profile-wrapper .avatar-container {
+.primary.avatar-container {
   position: relative;
   border-radius: 20px;
-  max-height: 183px;
-  max-width: 183px;
   padding-top: 100%;
   width: 100%;
 }
 
-.profile-wrapper .avatar-container img {
-  position: absolute;
-  bottom: 0;
-  left: 20%;
-  width: 60%;
+.public-user .primary.avatar-container {
+  margin-bottom: 1rem;
 }
 
 .profile-wrapper .name h1 {
@@ -1961,7 +1988,7 @@ label[for=root_pictures]:hover {
   padding-right: 10px;
 }
 
-.service {
+.services-container .service {
   background-color: #fafbfc;
   border: dashed 1px var(--light);
   border-radius: var(--default-radius);
@@ -1972,43 +1999,43 @@ label[for=root_pictures]:hover {
   width: 100%;
 }
 
-.service:not(.published) {
+.services-container .service:not(.published) {
   cursor: pointer;
 }
 
-.service.disabled {
+.services-container .service.disabled {
   opacity: 0.5;
 }
 
-.service.published {
+.services-container .service.published {
   background-color: #f5fcfa;
   border: 1px solid var(--greenblue);
   color: var(--greenblue);
 }
 
-.service.published p {
+.services-container .service.published p {
   color: var(--greenblue);
 }
 
-.service.verified {
+.services-container .service.verified {
   background-color: #f5fafc;
   border: 1px solid var(--clear-blue);
   color: var(--clear-blue);
 }
 
-.service.verified p {
+.services-container .service.verified p {
   color: var(--clear-blue);
 }
 
-.service:hover.disabled {
+.services-container .service:hover.disabled {
   cursor: not-allowed;
 }
 
-.service:hover:not(.disabled):not(.published):not(.verified) {
+.services-container .service:hover:not(.disabled):not(.published):not(.verified) {
   border: 1px solid var(--clear-blue);
 }
 
-.service .image-container {
+.services-container .service .image-container {
   background-image: url(/images/verification-shape-grey.svg);
   background-repeat: no-repeat;
   background-size: 34px 36px;
@@ -2016,7 +2043,7 @@ label[for=root_pictures]:hover {
   width: 34px;
 }
 
-.service .image-container img {
+.services-container .service .image-container img {
   max-height: 50%;
   max-width: 50%;
 }
@@ -2030,15 +2057,15 @@ label[for=root_pictures]:hover {
   vertical-align: middle;
 }
 
-.service.published .image-container {
+.services-container .service.published .image-container {
   background-image: url(/images/verification-shape-green.svg);
 }
 
-.service.verified .image-container {
+.services-container .service.verified .image-container {
   background-image: url(/images/verification-shape-blue.svg);
 }
 
-.service .unavailable-bg {
+.services-container .service .unavailable-bg {
   position: absolute;
   background-color: var(--light);
   height: 60px;
@@ -2050,7 +2077,7 @@ label[for=root_pictures]:hover {
   clip-path: polygon(100% 0, 0 0, 100% 100%);
 }
 
-.service .unavailable-message {
+.services-container .service .unavailable-message {
   position: absolute;
   color: #f7f8f9;
   font-size: 7px;
@@ -2183,26 +2210,26 @@ sup {
   margin: 0.875rem 0;
 }
 
-.profile-wrapper .profile.modal {
+.profile.modal {
   line-height: 1;
 }
 
-.profile-wrapper .profile.modal .container {
+.profile.modal .container {
   text-align: left;
 }
 
-.profile-wrapper .profile.modal .container .image-container {
+.profile.modal .container .image-container {
   margin-bottom: 20px;
   text-align: center;
 }
 
-.profile-wrapper .profile.modal .container .image-container .image-pair {
+.profile.modal .container .image-container .image-pair {
   position: relative;
   display: inline-block;
   width: 100%;
 }
 
-.profile-wrapper .profile.modal .container .image-container .image-pair .avatar-container  {
+.profile.modal .container .image-container .image-pair .avatar-container  {
   position: relative;
   background-color: #213040;
   border-radius: 20px;
@@ -2211,33 +2238,34 @@ sup {
   top: unset;
 }
 
-.profile-wrapper .profile.modal .container .image-container .image-pair .avatar-container img {
+.profile.modal .container .image-container .image-pair .avatar-container img {
   height: auto;
   margin: 0;
 }
 
-.profile-wrapper .profile.modal .container .image-container .image-pair a {
+.profile.modal .container .image-container .image-pair a {
   position: absolute;
   bottom: 10px;
   cursor: pointer;
   height: 40px;
   right: 10px;
 }
-.profile-wrapper .profile.modal .container .image-container .image-pair a img {
+
+.profile.modal .container .image-container .image-pair a img {
   height: 40px;
   width: 40px;
 }
 
-.profile-wrapper .profile.modal .container .form-control {
+.profile.modal .container .form-control {
   text-align: left;
   max-width: unset;
 }
 
-.profile-wrapper .profile.modal .container textarea {
+.profile.modal .container textarea {
   height: unset;
 }
 
-.profile-wrapper .identity.modal .image-container {
+.identity.modal .image-container {
   background-image: url(/images/verification-shape-grey.svg);
   background-position: 0;
   background-size: 110px 116px;
@@ -2246,39 +2274,39 @@ sup {
   width: 110px;
 }
 
-.profile-wrapper .identity.modal .image-container img {
+.identity.modal .image-container img {
   margin: 0 auto 0;
 }
 
-.profile-wrapper .identity.modal label {
+.identity.modal label {
   color: var(--pale-grey);
   font-size: 1.125rem;
 }
 
-.profile-wrapper .phone.modal .dropdown {
+.phone.modal .dropdown {
   background-color: #213040;
   border-radius: var(--default-radius);
   height: 46px;
   margin: 0 10px 10px auto;
 }
 
-.profile-wrapper .phone.modal .dropdown img {
+.phone.modal .dropdown img {
   height: 18px;
   width: 28px;
 }
 
-.profile-wrapper .phone.modal .dropdown.show {
+.phone.modal .dropdown.show {
   background-color: var(--dark);
 }
 
-.profile-wrapper .phone.modal .dropdown .dropdown-toggle {
+.phone.modal .dropdown .dropdown-toggle {
   cursor: pointer;
   line-height: 1;
   margin-bottom: 10px;
   padding: 14px;
 }
 
-.profile-wrapper .phone.modal .dropdown .dropdown-toggle:after {
+.phone.modal .dropdown .dropdown-toggle:after {
   background-image: url(/images/carat-white.svg);
   background-repeat: no-repeat;
   border: none;
@@ -2290,34 +2318,34 @@ sup {
   transform: rotate(90deg);
 }
 
-.profile-wrapper .phone.modal .dropdown .dropdown-menu {
+.phone.modal .dropdown .dropdown-menu {
   background-color: var(--dark);
   margin: 0;
   padding: 7px 0;
   top: 10px !important;
 }
 
-.profile-wrapper .phone.modal .dropdown .dropdown-item {
+.phone.modal .dropdown .dropdown-item {
   color: white;
   cursor: pointer;
   padding: 7px 14px;
 }
 
-.profile-wrapper .phone.modal .dropdown .dropdown-item:hover {
+.phone.modal .dropdown .dropdown-item:hover {
   background-color: #213040;
 }
 
-.profile-wrapper .phone.modal .dropdown .dropdown-item > :first-child {
+.phone.modal .dropdown .dropdown-item > :first-child {
   padding-right: 14px;
 }
 
-.profile-wrapper .phone.modal .dropdown .dropdown-item > :last-child {
+.phone.modal .dropdown .dropdown-item > :last-child {
   color: var(--dusk);;
   margin-left: auto;
   padding-left: 14px;
 }
 
-.profile-wrapper .phone.modal #phoneNumber {
+.phone.modal #phoneNumber {
   margin: 0 auto 10px 0;
 }
 
@@ -2426,6 +2454,11 @@ footer .footer-links li a {
 
   .navbar .notifications .dropdown-menu {
     right: calc(((100% - 540px) / 2) + 60px);
+  }
+
+  .current-user .avatar-container {
+    max-height: 183px;
+    max-width: 183px;
   }
 }
 

@@ -285,13 +285,13 @@ class Profile extends Component {
     const fullName = [provisional.firstName, provisional.lastName].join(' ').trim()
 
     return (
-      <div className="profile-wrapper">
+      <div className="current-user profile-wrapper">
         <div className="container">
           <div className="row">
             <div className="col-12 col-lg-8">
               <div className="row attributes">
                 <div className="col-4 col-md-3">
-                  <div className="avatar-container">
+                  <div className="primary avatar-container">
                     <img src="/images/avatar-unnamed.svg" alt="avatar" />
                   </div>
                 </div>
