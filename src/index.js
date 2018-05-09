@@ -16,9 +16,10 @@ class Origin {
     ipfsApiPort,
     ipfsGatewayPort,
     ipfsGatewayProtocol,
-    attestationServerUrl
+    attestationServerUrl,
+    contractAddresses
   } = {}) {
-    this.contractService = new ContractService()
+    this.contractService = new ContractService({ contractAddresses })
     this.ipfsService = new IpfsService({
       ipfsDomain,
       ipfsApiPort,

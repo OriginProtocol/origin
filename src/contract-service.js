@@ -29,6 +29,15 @@ class ContractService {
     }
     for (let name in contracts) {
       this[name] = contracts[name]
+      try {
+        this[name].networks = Object.assign(
+          {},
+          this[name].networks,
+          options.contractAddresses[name]
+        )
+      } catch (e) {
+        /* Ignore */
+      }
     }
   }
 
