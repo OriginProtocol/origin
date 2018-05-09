@@ -1,5 +1,5 @@
 from database import db
-from database.db_models import EthNotificationEndpoint, EthNotificationTypes
+from database.db_models import EthNotificationEndpoint, EthNotificationTypes, Listing
 from util.contract import ContractHelper
 from util.ipfs import hex_to_base58, IPFSHelper
 from config import settings
@@ -30,10 +30,10 @@ class Notification(Enum):
     BUYER_REVIEW = 16
 
 notification_messages = {
-        Notification.LIST:"New listing online:%{name}",
-        Notification.SOLD:"You just sold %{name}",
-        Notification.PURCHASED:"You just bought %{name}",
-        Notification.UPDATED:"Your listing, %{name} has been updated",
+        Notification.LIST:"New listing online:{name}",
+        Notification.SOLD:"You just sold {name}",
+        Notification.PURCHASED:"You just purchased {name}",
+        Notification.UPDATED:"Your listing, {name} has been updated",
         Notification.PENDING_PAYMENT:"Waiting for buyer payment",
         Notification.PENDING_PAY:"Payment required",
         Notification.PENDING_SHIP:"Waiting on shipment",
@@ -61,18 +61,19 @@ def register_eth_notification(eth_address, type, device_token, verification_sign
 
 def send_apn_notification(message, endpoint):
     token = endpoint.device_token
-    payload = Payload(test=message, sound = "default", badge = 1)
-    client = APNsClient(settings.APNS_CERT_FILE, password = settings.APNS_CERT_PASSWORD, use_sandbox = settings.DEBUG, use_alternative_port=False)
-    topic = settings.APNS_APP_BUNDLE_ID
-    client.send(token, payload, topic)
+    payload = Payload(alert=message, sound = "default", badge = 1)
+    if settings.APNS_CERT_FILE:
+        client = APNsClient(settings.APNS_CERT_FILE, password = settings.APNS_CERT_PASSWORD, use_sandbox = settings.DEBUG, use_alternative_port=False)
+        topic = settings.APNS_APP_BUNDLE_ID
+        client.send_notification(token, payload, topic)
 
 def send_notification(notify_address, notification_type, **data):
     for notification_endpoint in EthNotificationEndpoint.query.filter_by(eth_address=notify_address, active = True):
-        notify_message = notification_messages[notification_type] % data
-        if notification_token.type == EthNotificationTypes.APN:
+        notify_message = notification_messages[notification_type].format(**data)
+        if notification_endpoint.type == EthNotificationTypes.APN:
             #send apn notification here
-            send_apn_notification(message, notification_endpoint)
-        elif notification_token.type == EthNotificationTypes.FCM:
+            send_apn_notification(notify_message, notification_endpoint)
+        elif notification_endpoint.type == EthNotificationTypes.FCM:
             #send FCM notification here
             pass
 
@@ -90,25 +91,25 @@ def listing_info(listing_obj):
 
 
 def notify_purchased(purchase_obj):
-    if not purchase.listing_address:
+    if not purchase_obj.listing_address:
         return
 
     seller_notification, buyer_notification = {
-            PurchaseStages.COMPLETE: (Notification.SOLD, Notification.BOUGHT),
+            PurchaseStages.COMPLETE: (Notification.SOLD, Notification.PURCHASED),
             PurchaseStages.AWAITING_PAYMENT: (Notification.PENDING_PAYMENT, Notification.PENDING_PAY),
-            PurchaseStages.AWAITING_SHIPPING_PENDING: (Notification.PENDING_SHIP, Notification.PENDING_SHIPMENT),
+            PurchaseStages.SHIPPING_PENDING: (Notification.PENDING_SHIP, Notification.PENDING_SHIPMENT),
             PurchaseStages.BUYER_PENDING: (Notification.PENDING_BUYER_CONFIRMATION, Notification.PENDING_BUY_CONFIRM),
             PurchaseStages.SELLER_PENDING: (Notification.PENDING_SELLER_CONFIRM, Notification.PENDING_SELLER_CONFIRMATION),
-            PurchaseStages.IN_DISPUTE: (Notification.SELLER_DISPUTE, Notication.BUYER_DISPUTE),
-            PurchaseStages.REVIEW_PERIOD: (Notification.SELLER_REVIEW, Notication.BUYER_REVIEW)
+            PurchaseStages.IN_DISPUTE: (Notification.SELLER_DISPUTE, Notification.BUYER_DISPUTE),
+            PurchaseStages.REVIEW_PERIOD: (Notification.SELLER_REVIEW, Notification.BUYER_REVIEW)
             }.get(PurchaseStages(purchase_obj.stage), (None, None))
 
     if seller_notification or buyer_notification:
-        listing_obj = Listing.query.filter_by(contract_address=listing_address).first()
+        listing_obj = Listing.query.filter_by(contract_address=purchase_obj.listing_address).first()
         if listing_obj:
             listing_params = listing_info(listing_obj)
-            seller_notification and send_notification(listing_obj.owner_address, seller_notificaiton, **listing_params)
-            buyfer_notification and send_notification(listing_obj.buy_address, buyer_notification, **listing_params)
+            seller_notification and send_notification(listing_obj.owner_address, seller_notification, **listing_params)
+            buyer_notification and send_notification(purchase_obj.buyer_address, buyer_notification, **listing_params)
 
 
 def notify_listing(listing_obj):
@@ -116,4 +117,5 @@ def notify_listing(listing_obj):
     send_notification(listing_obj.owner_address, Notification.LIST, **listing_params)
 
 def notify_listing_update(listing_obj):
+    listing_params = listing_info(listing_obj)
     send_notification(listing_obj.owner_address, Notification.UPDATED, **listing_params)

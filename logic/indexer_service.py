@@ -38,7 +38,7 @@ def new_listing(payload, web3=None):
     registry_index = contract_helper.convert_event_data('NewListing',
                                                         payload['data'])
     listing_data = contract.functions.getListing(registry_index).call()
-    notify_listing(create_or_update_listing(listing_data[0]))
+    notify_listing(create_or_update_listing(listing_data[0], web3))
 
 
 def listing_change(payload, web3=None):

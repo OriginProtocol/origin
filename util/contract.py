@@ -28,16 +28,18 @@ class ContractHelper:
     def fetch_events(self, event_names, f,
                      block_from=0, block_to='latest',
                      web3=None):
+        if web3 is None:
+            web3 = self.web3
         event_name_hashes = []
         for name in event_names:
-            event_name_hashes.append(self.web3.sha3(text=name).hex())
-        self.event_filter = self.web3.eth.filter({
+            event_name_hashes.append(web3.sha3(text=name).hex())
+        self.event_filter = web3.eth.filter({
             "topics": [event_name_hashes],
             "fromBlock": block_from,
             "toBlock": block_to
         })
         for event in self.event_filter.get_all_entries():
-            f(event)
+            f(event, web3)
 
     def get_instance(self, contract_name, address):
         abi = self.get_contract_abi(contract_name)

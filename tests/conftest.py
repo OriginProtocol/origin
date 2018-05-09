@@ -64,7 +64,6 @@ class TestConfig(object):
     # Temporary workaroudn for https://github.com/pallets/flask/issues/2549
     JSONIFY_PRETTYPRINT_REGULAR = False
 
-
 @pytest.yield_fixture(scope='session')
 def app():
     _app = flask_app
@@ -143,6 +142,15 @@ def mock_ipfs(app, mock_ipfs_init):
     yield patcher.start()
     patcher.stop()
 
+@pytest.yield_fixture(scope='function')
+def mock_apns(app):
+    patcher = patch('logic.notifier_service.APNsClient',
+                    autospec = True)
+    old_cert = settings.APNS_CERT_FILE
+    settings.APNS_CERT_FILE = "testing.pem"
+    yield patcher.start()
+    patcher.stop()
+    settings.APNS_CERT_FILE = old_cert
 
 @pytest.fixture()
 def wait_for_block():
