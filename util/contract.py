@@ -66,12 +66,15 @@ class ContractHelper:
         with open("./contracts/{}.json".format(contract_name)) as f:
             contract_interface = json.loads(f.read())
         for root_node in contract_interface['ast']['nodes']:
-            if root_node.get("nodeType") == "ContractDefinition" and root_node.get("name") == contract_name:
+            if root_node.get("nodeType") == "ContractDefinition" and root_node.get(
+                    "name") == contract_name:
                 for node in root_node["nodes"]:
-                    if node.get("canonicalName") == "%s.%s" % (contract_name, enum_name):
+                    if node.get("canonicalName") == "%s.%s" % (
+                            contract_name, enum_name):
                         members = node.get("members")
                         if members and isinstance(members, list):
-                            return Enum(enum_name, " ".join(e["name"] for e in members), start=0)
+                            return Enum(enum_name, " ".join(
+                                e["name"] for e in members), start=0)
 
     @classmethod
     def convert_event_data(cls, event_type, data):
@@ -93,4 +96,4 @@ def get_contract_internal_name(contract):
     # create a 40 byte placeholder used in linked contracts
     contract_slice = contract[:36]
     return "__{name}{suffix}".format(name=contract_slice,
-                                     suffix=(38-len(contract_slice)) * '_')
+                                     suffix=(38 - len(contract_slice)) * '_')

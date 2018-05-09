@@ -64,6 +64,7 @@ class TestConfig(object):
     # Temporary workaroudn for https://github.com/pallets/flask/issues/2549
     JSONIFY_PRETTYPRINT_REGULAR = False
 
+
 @pytest.yield_fixture(scope='session')
 def app():
     _app = flask_app
@@ -136,29 +137,43 @@ def mock_ipfs_init(app):
 def __file_from_hash(self, ipfs_hash, root_attr=None, exclude_fields=None):
     with open("./tests/ipfs/sample.json") as f:
         ipfs_data = json.loads(f.read())
-    #make a copy of the data so that we're clean
+    # make a copy of the data so that we're clean
     ipfs_data = ipfs_data[root_attr] if root_attr else ipfs_data
     if exclude_fields:
         for field in exclude_fields:
             ipfs_data.pop(field, None)
     return ipfs_data
 
+
 @pytest.yield_fixture(scope='function')
 def mock_ipfs(app, mock_ipfs_init):
     patcher = patch('util.ipfs.IPFSHelper.file_from_hash',
-                    autospec = True, side_effect=__file_from_hash)
+                    autospec=True, side_effect=__file_from_hash)
     yield patcher.start()
     patcher.stop()
+
 
 @pytest.yield_fixture(scope='function')
 def mock_apns(app):
     patcher = patch('logic.notifier_service.APNsClient',
-                    autospec = True)
+                    autospec=True)
     old_cert = settings.APNS_CERT_FILE
     settings.APNS_CERT_FILE = "testing.pem"
     yield patcher.start()
     patcher.stop()
     settings.APNS_CERT_FILE = old_cert
+
+
+@pytest.yield_fixture(scope='function')
+def mock_fcm(app):
+    patcher = patch('logic.notifier_service.FCMNotification',
+                    autospec=True)
+    old_key = settings.FCM_API_KEY
+    settings.FCM_API_KEY = "fcm_key"
+    yield patcher.start()
+    patcher.stop()
+    settings.FCM_API_KEY = old_key
+
 
 @pytest.fixture()
 def wait_for_block():
@@ -202,13 +217,16 @@ def eth_tester_provider(eth_tester):
     provider = EthereumTesterProvider(eth_tester)
     return provider
 
+
 @pytest.fixture(scope="module")
 def eth_test_seller(eth_tester):
     return eth_tester.get_accounts()[2]
 
+
 @pytest.fixture(scope="module")
 def eth_test_buyer(eth_tester):
     return eth_tester.get_accounts()[3]
+
 
 @pytest.fixture(scope="module")
 def web3(eth_tester_provider):
@@ -266,33 +284,29 @@ def listing_registry_contract(web3, wait_for_transaction, wait_for_block,
 def listing_contract(web3, wait_for_transaction, wait_for_block,
                      purchase_lib_contract, listing_registry_contract, eth_test_seller):
     contract_name = 'Listing'
-    linked_contract = 'PurchaseLibrary'
     with open("./contracts/{}.json".format(contract_name)) as f:
         contract_interface = json.loads(f.read())
     wait_for_block(web3)
 
     CONTRACT_META = {
-        "abi": contract_interface['abi'],
-        #"bytecode": contract_interface['bytecode'].replace(
-        #    get_contract_internal_name(linked_contract),
-        #    purchase_lib_contract.address[2:],
-        #)
+        "abi": contract_interface['abi']
     }
 
     contract = web3.eth.contract(**CONTRACT_META)
     ipfs_hash = "QmZtQDL4UjQWryQLjsS5JUsbdbn2B27Tmvz2gvLkw7wmmb"
     deploy_txn_hash = \
         listing_registry_contract.functions.create(
-                             base58_to_hex(ipfs_hash),
-                             3, 25).transact({'from': eth_test_seller,
-                                              'gas': 1000000})
+            base58_to_hex(ipfs_hash),
+            3, 25).transact({'from': eth_test_seller,
+                             'gas': 1000000})
     deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
     assert deploy_receipt["gasUsed"] > 0
-    #we better have created one of these
+    # we better have created one of these
     listings_length = listing_registry_contract.functions.listingsLength().call()
-    assert listings_length > 0 
-    #get the last listing created
-    contract_address = listing_registry_contract.functions.getListing(listings_length-1).call()[0]
+    assert listings_length > 0
+    # get the last listing created
+    contract_address = listing_registry_contract.functions.getListing(
+        listings_length - 1).call()[0]
     return contract(address=contract_address)
 
 
@@ -306,19 +320,20 @@ def purchase_contract(web3, wait_for_transaction, wait_for_block,
 
     CONTRACT_META = {
         "abi": contract_interface['abi'],
-        #"bytecode": contract_interface['bytecode']
+        # "bytecode": contract_interface['bytecode']
     }
 
     contract = web3.eth.contract(**CONTRACT_META)
     deploy_txn_hash = \
-        listing_contract.functions.buyListing( 5
-                             ).transact({'from': eth_test_buyer,
-                                         'gas': 1000000})
+        listing_contract.functions.buyListing(5
+                                              ).transact({'from': eth_test_buyer,
+                                                          'gas': 1000000})
     deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
     assert deploy_receipt["gasUsed"] > 0
-    #we better have created one of these
+    # we better have created one of these
     purchases_length = listing_contract.functions.purchasesLength().call()
-    assert purchases_length > 0 
-    #get the last listing created
-    contract_address = listing_contract.functions.getPurchase(purchases_length-1).call()
+    assert purchases_length > 0
+    # get the last listing created
+    contract_address = listing_contract.functions.getPurchase(
+        purchases_length - 1).call()
     return contract(address=contract_address)

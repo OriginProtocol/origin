@@ -1,7 +1,7 @@
 from sqlalchemy import func
 
 from database import db
-from database.notification_models import *
+from .notification_models import *  # NOQA
 
 
 class VerificationCode(db.Model):

@@ -5,7 +5,8 @@ from database.db_models import Listing, EventTracker, Purchase
 from util.contract import ContractHelper
 from util.ipfs import hex_to_base58, IPFSHelper
 from util.time_ import unix_to_datetime
-from logic.notifier_service import notify_purchased, notify_listing, notify_listing_update
+from logic.notifier_service import (notify_purchased, notify_listing,
+                                    notify_listing_update)
 
 
 def get_event_action(event):
@@ -42,19 +43,23 @@ def new_listing(payload, web3=None):
 
 
 def listing_change(payload, web3=None):
-    notify_listing_update(create_or_update_listing(Web3.toChecksumAddress(payload['address']),
-                             web3))
+    notify_listing_update(create_or_update_listing(
+        Web3.toChecksumAddress(payload['address']),
+        web3))
+
 
 def listing_purchased(payload, web3=None):
     address = ContractHelper.convert_event_data('ListingPurchased',
                                                 payload['data'])
     notify_purchased(create_or_update_purchase(address,
-                              web3))
+                                               web3))
 
 
 def purchase_change(payload, web3=None):
-    notify_purchased(create_or_update_purchase(Web3.toChecksumAddress(payload['address']),
-                              web3))
+    notify_purchased(create_or_update_purchase(
+        Web3.toChecksumAddress(payload['address']),
+        web3))
+
 
 def create_or_update_listing(address, web3=None):
     contract_helper = ContractHelper(web3)
