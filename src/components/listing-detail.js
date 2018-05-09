@@ -279,7 +279,6 @@ class ListingsDetail extends Component {
   }
 }
 
-
 const mapDispatchToProps = dispatch => ({
   showAlert: (msg) => dispatch(showAlert(msg))
 })
