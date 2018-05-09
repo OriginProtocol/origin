@@ -1,4 +1,4 @@
-import ResourceBase from "../ResourceBase"
+import ResourceBase from "./_resource-base"
 import { AttestationObject } from "./attestations"
 import userSchema from "../schemas/user.json"
 import {

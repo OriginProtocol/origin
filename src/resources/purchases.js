@@ -1,4 +1,4 @@
-import ResourceBase from "../ResourceBase"
+import ResourceBase from "./_resource-base"
 
 const _STAGES_TO_NUMBER = {
   awaiting_payment: 0,
