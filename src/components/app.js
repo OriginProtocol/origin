@@ -92,7 +92,7 @@ const App = () => (
             <Route path="/notifications" component={NotificationsPage} />
             <Route path="/profile" component={ProfilePage} />
             <Route path="/users/:userAddress" component={UserPage} />
-            <Route exact path="*" component={NotFound} />
+            <Route component={NotFound} />
           </Switch>
         </Web3Provider>
       </Layout>
