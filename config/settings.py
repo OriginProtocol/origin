@@ -54,7 +54,6 @@ HOST = get_env_default('HOST')
 HTTPS = parse_bool(get_env_default('HTTPS'))
 PROJECTPATH = get_env_default('PROJECTPATH') or os.getcwd()
 FLASK_SECRET_KEY = get_env_default('FLASK_SECRET_KEY')
-PUBLIC_ID_ENCRYPTION_KEY = get_env_default('PUBLIC_ID_ENCRYPTION_KEY')
 
 DATABASE_URL = get_env_default('DATABASE_URL')
 
@@ -81,7 +80,7 @@ IPFS_PORT = get_env_default('IPFS_PORT')
 TWITTER_CONSUMER_KEY = get_env_default('TWITTER_CONSUMER_KEY')
 TWITTER_CONSUMER_SECRET = get_env_default('TWITTER_CONSUMER_SECRET')
 
-ORIGIN_SIGNING_KEY = get_env_default('ORIGIN_SIGNING_KEY')
+ATTESTATION_SIGNING_KEY = get_env_default('ATTESTATION_SIGNING_KEY')
 
 REDIS_URL = get_env_default('REDIS_URL')
 CELERY_DEBUG = parse_bool(get_env_default('CELERY_DEBUG'))

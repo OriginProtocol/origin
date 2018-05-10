@@ -49,7 +49,7 @@
       "description": "IPFS port",
       "required": false
     },
-    "ORIGIN_SIGNING_KEY": {
+    "ATTESTATION_SIGNING_KEY": {
       "description": "Origin signing key",
       "value": "0x0000000000000000000000000000000000000000000000000000000000000001"
     },
@@ -64,7 +64,7 @@
     "SENDGRID_FROM_EMAIL": {
       "description": "This will display to the user as the email address who sent this email.",
       "required": false
-    }, 
+    },
     "SENDGRID_API_KEY": {
       "description": "Sendgrid API key associated with your account",
       "required": false
