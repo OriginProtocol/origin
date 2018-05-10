@@ -19,6 +19,7 @@ import Profile from '../pages/profile/Profile'
 import User from '../pages/user/User'
 import PurchaseDetail from './purchase-detail'
 import Web3Provider from './web3-provider'
+import NotFound from './not-found'
 import 'bootstrap/dist/js/bootstrap'
 
 // CSS
@@ -79,6 +80,7 @@ class App extends Component {
                 <Route path="/notifications" component={Notifications} />
                 <Route path="/profile" component={Profile} />
                 <Route path="/users/:userAddress" component={UserPage} />
+                <Route component={NotFound} />
               </Switch>
             </Web3Provider>
           </Layout>
