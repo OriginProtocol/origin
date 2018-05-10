@@ -1,100 +1,6 @@
 import moment from 'moment'
 
 export default {
-  listings: [
-    {
-      _id: '1foo2',
-      active: false,
-      category: 'Antiques',
-      title: 'Title Here and Can Be Long like this',
-      price: '$1000',
-      quantity: 1,
-      unitsAvailable: 4,
-      createdAt: moment('2018-03-13').toDate(),
-      soldAt: moment('2018-03-14').toDate(),
-      fulfilledAt: moment('2018-03-15').toDate(),
-      receivedAt: moment('2018-03-16').toDate(),
-      withdrawnAt: null,
-      buyer: {
-        name: 'Matt L.',
-        address: '0x34Be343B94f860124dC4fEe278FDCBD38C102D88',
-      },
-      seller: {
-        name: 'Aure G.',
-        address: '0x12Be343B94f860124dC4fEe278FDCBD38C102D88',
-      },
-      pictures: [],
-    },
-    {
-      _id: '3bar4',
-      active: false,
-      category: 'Cars & Trucks',
-      title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-      price: '$2000',
-      quantity: 2,
-      unitsAvailable: 4,
-      createdAt: moment('2018-03-13').toDate(),
-      soldAt: moment('2018-03-14').toDate(),
-      fulfilledAt: moment('2018-03-15').toDate(),
-      receivedAt: null,
-      withdrawnAt: null,
-      buyer: {
-        name: 'Matt L.',
-        address: '0x34Be343B94f860124dC4fEe278FDCBD38C102D88',
-      },
-      seller: {
-        name: 'Aure G.',
-        address: '0x12Be343B94f860124dC4fEe278FDCBD38C102D88',
-      },
-      pictures: [],
-    },
-    {
-      _id: '5baz6',
-      active: true,
-      category: 'Tickets',
-      title: 'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
-      price: '$3000',
-      quantity: 3,
-      unitsAvailable: 4,
-      createdAt: moment('2018-03-13').toDate(),
-      soldAt: moment('2018-03-14').toDate(),
-      fulfilledAt: null,
-      receivedAt: null,
-      withdrawnAt: null,
-      buyer: {
-        name: 'Matt L.',
-        address: '0x34Be343B94f860124dC4fEe278FDCBD38C102D88',
-      },
-      seller: {
-        name: 'Aure G.',
-        address: '0x12Be343B94f860124dC4fEe278FDCBD38C102D88',
-      },
-      pictures: [],
-    },
-    {
-      _id: '7qux8',
-      active: true,
-      category: 'Dog Walking',
-      title: 'Ut enim ad minim veniam',
-      price: '$4000',
-      quantity: 4,
-      unitsAvailable: 4,
-      createdAt: moment('2018-03-13').toDate(),
-      soldAt: null,
-      fulfilledAt: null,
-      receivedAt: null,
-      withdrawnAt: null,
-      buyer: {
-        name: 'Matt L.',
-        address: '0x34Be343B94f860124dC4fEe278FDCBD38C102D88',
-      },
-      seller: {
-        name: 'Aure G.',
-        address: '0x12Be343B94f860124dC4fEe278FDCBD38C102D88',
-      },
-      pictures: [],
-    },
-  ],
   notifications: [
     {
       _id: '1foo2',
@@ -150,20 +56,14 @@ export default {
       _id: '1foo2',
       content: "These chicks are HOT! I mean, ever since I got my baby chicken in the mail it's been non-stop phone calls from all my friends and neighbors and family. Everyone wants a piece of me now. I used to be quite the anti-social but, honestly, I think these baby chickens are just the boost my social life needed. Lovin' life!",
       createdAt: new Date(),
-      reviewer: {
-        name: 'Stan J.',
-        address: '0x12Be343B94f860124dC4fEe278FDCBD38C102D88',
-      },
+      reviewerAddress: '0x627306090abaB3A6e1400e9345bC60c78a8BEf57',
       score: Math.floor(Math.random() * 6),
     },
     {
       _id: '3bar4',
       content: "I must admit I've always had a thing for baby chickens. I think it goes back to my childhood. Growing up all I ever really had access to were regular baby chickens so you can imagine when I saw this listing I totally flipped! I mean, how cute are these little guys?? I would highly recommend you purchase one for yourself and see what all the fuss is about.",
       createdAt: new Date(),
-      reviewer: {
-        name: 'Matt L.',
-        address: '0x34Be343B94f860124dC4fEe278FDCBD38C102D88',
-      },
+      reviewerAddress: '0x627306090abaB3A6e1400e9345bC60c78a8BEf57',
       score: Math.floor(Math.random() * 6),
     }
   ],

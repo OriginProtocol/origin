@@ -68,6 +68,7 @@ class MyPurchases extends Component {
     try {
       const purchase = await origin.purchases.get(addr)
       var accounts = await web3.eth.getAccounts()
+      
       if (purchase.buyerAddress === accounts[0]) {
         const purchases = [...this.state.purchases, purchase]
 
@@ -100,7 +101,7 @@ class MyPurchases extends Component {
     })()
 
     return (
-      <div className="my-listings-wrapper">
+      <div className="my-purchases-wrapper">
         <div className="container">
           <div className="row">
             <div className="col-12">

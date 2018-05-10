@@ -1,16 +1,17 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { showAlert } from '../actions/Alert'
 
 import Modal from './modal'
 import Review from './review'
+import UserCard from './user-card'
 
 import data from '../data'
 
 // temporary - we should be getting an origin instance from our app,
 // not using a global singleton
 import origin from '../services/origin'
-
-const alertify = require('../../node_modules/alertify/src/alertify.js')
 
 class ListingsDetail extends Component {
 
@@ -41,7 +42,7 @@ class ListingsDetail extends Component {
       const obj = Object.assign({}, listing, { loading: false, reviews: data.reviews})
       this.setState(obj)
     } catch (error) {
-      alertify.log('There was an error loading this listing.')
+      this.props.showAlert('There was an error loading this listing.')
       console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingAddress}`)
       console.log(error)
     }
@@ -55,7 +56,7 @@ class ListingsDetail extends Component {
       let purchaseAddress = await origin.listings.purchaseAddressByIndex(address, i)
       let purchase = await origin.purchases.get(purchaseAddress)
       console.log('Purchase:', purchase)
-      this.setState((prevState, props) => {
+      this.setState((prevState) => {
         return {purchases: [...prevState.purchases, purchase]};
       });
     }
@@ -87,7 +88,7 @@ class ListingsDetail extends Component {
     } catch (error) {
       window.err = error
       console.log(error)
-      alertify.log("There was a problem purchasing this listing.\nSee the console for more details.")
+      this.props.showAlert("There was a problem purchasing this listing.\nSee the console for more details.")
       this.setState({step: this.STEP.VIEW})
     }
   }
@@ -142,18 +143,18 @@ class ListingsDetail extends Component {
         <div className={`container listing-container${this.state.loading ? ' loading' : ''}`}>
           <div className="row">
             <div className="col-12 col-md-8 detail-info-box">
-              <h2 className="category placehold">{this.state.category}</h2>
+              <div className="category placehold">{this.state.category}</div>
               <h1 className="title text-truncate placehold">{this.state.name}</h1>
               <p className="description placehold">{this.state.description}</p>
               {!!this.state.unitsAvailable && this.state.unitsAvailable < 5 &&
-                <p className="units-available text-danger">Just {this.state.unitsAvailable.toLocaleString()} left!</p>
+                <div className="units-available text-danger">Just {this.state.unitsAvailable.toLocaleString()} left!</div>
               }
               {this.state.ipfsHash &&
-                <p className="ipfs link-container">
+                <div className="ipfs link-container">
                   <a href={origin.ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
                     View on IPFS<img src="/images/carat-blue.svg" className="carat" alt="right carat" />
                   </a>
-                </p>
+                </div>
               }
               <div className="debug">
                 <li>IPFS: {this.state.ipfsHash}</li>
@@ -187,31 +188,31 @@ class ListingsDetail extends Component {
               <div className="buy-box placehold">
                 {this.state.price &&
                   <div className="price d-flex justify-content-between">
-                    <p>Price</p>
-                    <p className="text-right">
+                    <div>Price</div>
+                    <div className="text-right">
                       {Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
-                    </p>
+                    </div>
                   </div>
                 }
                 {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
                 {/* <div className="quantity d-flex justify-content-between">
-                                  <p>Quantity</p>
-                                  <p className="text-right">
+                                  <div>Quantity</div>
+                                  <div className="text-right">
                                     {Number(1).toLocaleString()}
-                                  </p>
+                                  </div>
                                 </div>
                                 <div className="total-price d-flex justify-content-between">
-                                  <p>Total Price</p>
-                                  <p className="price text-right">
+                                  <div>Total Price</div>
+                                  <div className="price text-right">
                                     {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
-                                  </p>
+                                  </div>
                                 </div> */}
                 {!this.state.loading &&
                   <div>
                     {(this.state.address) && (
                       (this.state.unitsAvailable > 0) ?
                         <button
-                          className="button"
+                          className="btn btn-primary"
                           onClick={this.handleBuyClicked}
                           disabled={!this.state.address}
                           onMouseDown={e => e.preventDefault()}
@@ -228,37 +229,7 @@ class ListingsDetail extends Component {
                   </div>
                 }
               </div>
-              {this.state.sellerAddress &&
-                <div className="counterparty placehold">
-                  <div className="identity">
-                    <h3>About the seller</h3>
-                    <div className="d-flex">
-                      <div className="image-container">
-                        <Link to="/profile">
-                          <img src="/images/identicon.png"
-                            srcSet="/images/identicon@2x.png 2x, /images/identicon@3x.png 3x"
-                            alt="wallet icon" />
-                        </Link>
-                      </div>
-                      <div>
-                        <p>ETH Address:</p>
-                        <p><strong>{this.state.sellerAddress}</strong></p>
-                      </div>
-                    </div>
-                    <hr />
-                    <div className="d-flex">
-                      <div className="avatar-container">
-                        <img src="/images/avatar-blue.svg" alt="avatar" />
-                      </div>
-                      <div className="identification">
-                        <p>Aure Gimon</p>
-                        <img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" />
-                      </div>
-                    </div>
-                  </div>
-                  <Link to={`/users/${this.state.sellerAddress}`} className="btn placehold">View Profile</Link>
-                </div>
-              }
+              {this.state.sellerAddress && <UserCard title="seller" userAddress={this.state.sellerAddress} />}
             </div>
           </div>
           {!!this.state.reviews.length &&
@@ -279,4 +250,8 @@ class ListingsDetail extends Component {
   }
 }
 
-export default ListingsDetail
+const mapDispatchToProps = dispatch => ({
+  showAlert: (msg) => dispatch(showAlert(msg))
+})
+
+export default connect(undefined, mapDispatchToProps)(ListingsDetail)

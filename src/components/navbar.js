@@ -1,5 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+
+import { connect } from 'react-redux'
+
+import Identicon from 'components/Identicon'
 import Notification from './notification'
 import data from '../data'
 
@@ -64,7 +68,7 @@ class NavBar extends Component {
                 <div className="actual-menu">
                   <header className="d-flex">
                     <div className="count">
-                      <p className="d-inline-block">{notificationCount}</p>
+                      <div className="d-inline-block">{notificationCount}</div>
                     </div>
                     <h3>Notifications</h3>
                   </header>
@@ -81,9 +85,7 @@ class NavBar extends Component {
             </div>
             <div className="nav-item identity dropdown">
               <a className="nav-link active dropdown-toggle" id="identityDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <img src="/images/identicon.png"
-                  srcSet="/images/identicon@2x.png 2x, /images/identicon@3x.png 3x"
-                  className="identicon" alt="Identicon" />
+                <Identicon address={this.props.wallet} />
               </a>
               <div className="dropdown-menu dropdown-menu-right" aria-labelledby="identityDropdown">
                 <div className="triangle-container d-flex justify-content-end"><div className="triangle"></div></div>
@@ -92,24 +94,46 @@ class NavBar extends Component {
                     <div className="d-flex">
                       <div className="image-container">
                         <Link to="/profile">
-                          <img src="/images/identicon.png"
-                            srcSet="/images/identicon@2x.png 2x, /images/identicon@3x.png 3x"
-                            alt="wallet icon" />
+                          <Identicon address={this.props.wallet} size={50} />
                         </Link>
                       </div>
-                      <div>
-                        <p><Link to="/profile">ETH Address:</Link></p>
-                        <p><Link to="/profile"><strong>0x32Be343B94f860124dC4fEe278FDCBD38C102D88</strong></Link></p>
+                      <div className="eth d-flex flex-column justify-content-between">
+                        <div>ETH Address:</div>
+                        <Link to="/profile"><strong>{this.props.wallet}</strong></Link>
                       </div>
                     </div>
-                    <hr />
+                    <hr className="dark sm" />
                     <div className="d-flex">
                       <div className="avatar-container">
-                        <Link to="/profile"><img src="/images/avatar-blue.svg" alt="avatar" /></Link>
+                        <Link to="/profile">
+                          {/* <img src={this.props.profile.pic} alt="avatar" /> */}
+                          <img src="/images/avatar-blue.svg" alt="avatar" />
+                        </Link>
                       </div>
-                      <div className="identification">
-                        <p><Link to="/profile">Aure Gimon</Link></p>
-                        <Link to="/profile"><img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" /></Link>
+                      <div className="identification d-flex flex-column justify-content-between">
+                        <div><Link to="/profile">{this.props.profile.name}</Link></div>
+                        <div>
+                          {this.props.profile.published.phone &&
+                            <Link to="/profile">
+                              <img src="/images/phone-icon-verified.svg" alt="phone verified icon" />
+                            </Link>
+                          }
+                          {this.props.profile.published.email &&
+                            <Link to="/profile">
+                              <img src="/images/email-icon-verified.svg" alt="email verified icon" />
+                            </Link>
+                          }
+                          {this.props.profile.published.facebook &&
+                            <Link to="/profile">
+                              <img src="/images/facebook-icon-verified.svg" alt="Facebook verified icon" />
+                            </Link>
+                          }
+                          {this.props.profile.published.twitter &&
+                            <Link to="/profile">
+                              <img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" />
+                            </Link>
+                          }
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -123,4 +147,12 @@ class NavBar extends Component {
   }
 }
 
-export default NavBar
+
+const mapStateToProps = state => {
+  return {
+    wallet: state.wallet.address,
+    profile: state.profile,
+  }
+}
+
+export default connect(mapStateToProps)(NavBar)

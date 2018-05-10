@@ -4,6 +4,8 @@ import $ from 'jquery'
 import moment from 'moment'
 import Review from './review'
 import TransactionProgress from './transaction-progress'
+import UserCard from './user-card'
+
 import data from '../data'
 
 import origin from '../services/origin'
@@ -72,23 +74,44 @@ class PurchaseDetail extends Component {
     this.confirmShipped = this.confirmShipped.bind(this)
     this.withdrawFunds = this.withdrawFunds.bind(this)
     this.state = {
+      accounts: [],
+      buyer: {},
       listing: {},
       logs: [],
       purchase: {},
+      seller: {},
     }
   }
 
   componentDidMount() {
+    this.loadAccounts()
     this.loadPurchase()
 
     $('[data-toggle="tooltip"]').tooltip()
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { listingAddress } = this.state.purchase
+    const { buyerAddress, listingAddress } = this.state.purchase
+    const { sellerAddress } = this.state.listing
 
     if (prevState.purchase.listingAddress !== listingAddress) {
       this.loadListing(listingAddress)
+      this.loadBuyer(buyerAddress)
+    }
+
+    if (prevState.listing.sellerAddress !== sellerAddress) {
+      this.loadSeller(sellerAddress)
+    }
+  }
+
+  async loadAccounts() {
+    try {
+      const accounts = await web3.eth.getAccounts()
+
+      this.setState({ accounts })
+    } catch(error) {
+      console.error('Error loading accounts')
+      console.error(error)
     }
   }
 
@@ -115,6 +138,28 @@ class PurchaseDetail extends Component {
       console.log('Logs: ', logs)
     } catch(error) {
       console.error(`Error loading purchase ${purchaseAddress}`)
+      console.error(error)
+    }
+  }
+
+  async loadBuyer(addr) {
+    try {
+      const user = await origin.users.get(addr)
+      this.setState({ buyer: { ...user, address: addr } })
+      console.log('Buyer: ', this.state.buyer)
+    } catch(error) {
+      console.error(`Error loading buyer ${addr}`)
+      console.error(error)
+    }
+  }
+
+  async loadSeller(addr) {
+    try {
+      const user = await origin.users.get(addr)
+      this.setState({ seller: { ...user, address: addr } })
+      console.log('Seller: ', this.state.seller)
+    } catch(error) {
+      console.error(`Error loading seller ${addr}`)
       console.error(error)
     }
   }
@@ -163,15 +208,13 @@ class PurchaseDetail extends Component {
   }
 
   render() {
-    const { listing, purchase, logs } = this.state
+    const { accounts, buyer, listing, logs, purchase, seller } = this.state
 
     if (!purchase.address || !listing.address ){
       return null
     }
 
-    const perspective = window.web3.eth.accounts[0] === purchase.buyerAddress ? 'buyer' : 'seller'
-    const seller = { name: 'Unnamed User', address: listing.sellerAddress }
-    const buyer = { name: 'Unnamed User', address: purchase.buyerAddress }
+    const perspective = accounts[0] === purchase.buyerAddress ? 'buyer' : 'seller'
     const pictures = listing.pictures || []
     const category = listing.category || ""
     const active = listing.unitsAvailable > 0 // Todo, move to origin.js, take into account listing expiration
@@ -231,12 +274,15 @@ class PurchaseDetail extends Component {
         <div className="container">
           <div className="row">
             <div className="col-12">
-              {perspective === 'buyer' && <p className="brdcrmb">My Purchases{soldAt && <span className="badge badge-success">Purchased</span>}</p>}
-              {perspective === 'seller' && <p className="brdcrmb">My Listings{soldAt && <span className="badge badge-info">Sold</span>}</p>}
-              <h1>{listing.title}</h1>
+              <div className="brdcrmb">
+                {perspective === 'buyer' ? 'Purchased' : 'Sold'}
+                {' from '}
+                <Link to={`/users/${counterpartyUser.address}`}>{counterpartyUser.name}</Link>
+              </div>
+              <h1>{listing.name}</h1>
             </div>
           </div>
-          <div className="row">
+          <div className="transaction-status row">
             <div className="col-12 col-lg-8">
               <h2>Transaction Status</h2>
               <div className="row">
@@ -246,18 +292,18 @@ class PurchaseDetail extends Component {
                       <img src={`/images/avatar-${perspective === 'seller' ? 'green' : 'blue'}.svg`} alt="seller avatar" />
                     </div>
                     <div className="identification d-flex flex-column justify-content-between text-truncate">
-                      <p><span className="badge badge-dark">Seller</span></p>
-                      <p className="name">{seller.name || 'Unnamed User'}</p>
-                      <p className="address text-muted text-truncate">{seller.address}</p>
+                      <div><span className="badge badge-dark">Seller</span></div>
+                      <div className="name">{seller.profile && seller.profile.claims && seller.profile.claims.name || 'Unnamed User'}</div>
+                      <div className="address text-muted text-truncate">{seller.address}</div>
                     </div>
                   </div>
                 </div>
                 <div className="col-6">
                   <div className="d-flex justify-content-end">
                     <div className="identification d-flex flex-column text-right justify-content-between text-truncate">
-                      <p><span className="badge badge-dark">Buyer</span></p>
-                      <p className="name">{buyer.name || 'Unnamed User'}</p>
-                      <p className="address text-muted text-truncate">{buyer.address}</p>
+                      <div><span className="badge badge-dark">Buyer</span></div>
+                      <div className="name">{buyer.profile && buyer.profile.claims && buyer.profile.claims.name || 'Unnamed User'}</div>
+                      <div className="address text-muted text-truncate">{buyer.address}</div>
                     </div>
                     <div className="avatar-container">
                       <img src={`/images/avatar-${perspective === 'buyer' ? 'green' : 'blue'}.svg`} alt="buyer avatar" />
@@ -272,8 +318,8 @@ class PurchaseDetail extends Component {
                     <div className="guidance text-center">
                       <div className="triangle" style={{ left }}></div>
                       <div className="triangle" style={{ left }}></div>
-                      <p className="prompt"><strong>Next Step:</strong> {prompt}</p>
-                      <p className="instruction">{instruction || 'Nothing for you to do at this time. Check back later'}</p>
+                      <div className="prompt"><strong>Next Step:</strong> {prompt}</div>
+                      <div className="instruction">{instruction || 'Nothing for you to do at this time. Check back later'}</div>
                       {buttonText && <button className="btn btn-primary" onClick={this[functionName]}>{buttonText}</button>}
                     </div>
                   </div>
@@ -327,35 +373,7 @@ class PurchaseDetail extends Component {
               <hr />
             </div>
             <div className="col-12 col-lg-4">
-              <div className="counterparty">
-                <div className="identity">
-                  <h3>About the {counterparty}</h3>
-                  <div className="d-flex">
-                    <div className="image-container">
-                      <Link to="/profile">
-                        <img src="/images/identicon.png"
-                          srcSet="/images/identicon@2x.png 2x, /images/identicon@3x.png 3x"
-                          alt="wallet icon" />
-                      </Link>
-                    </div>
-                    <div>
-                      <p>ETH Address:</p>
-                      <p><strong>{counterpartyUser.address}</strong></p>
-                    </div>
-                  </div>
-                  <hr />
-                  <div className="d-flex">
-                    <div className="avatar-container">
-                      <img src="/images/avatar-blue.svg" alt="avatar" />
-                    </div>
-                    <div className="identification">
-                      <p>Aure Gimon</p>
-                      <img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" />
-                    </div>
-                  </div>
-                </div>
-                <Link to={`/users/${counterpartyUser.address}`} className="btn">View Profile</Link>
-              </div>
+              <UserCard title={counterparty} userAddress={counterpartyUser.address} />
             </div>
           </div>
           <div className="row">
@@ -377,14 +395,14 @@ class PurchaseDetail extends Component {
                     <h1 className="title text-truncate placehold">{listing.name}</h1>
                     <p className="description placehold">{listing.description}</p>
                     {!!listing.unitsAvailable && listing.unitsAvailable < 5 &&
-                      <p className="units-available text-danger">Just {listing.unitsAvailable.toLocaleString()} left!</p>
+                      <div className="units-available text-danger">Just {listing.unitsAvailable.toLocaleString()} left!</div>
                     }
                     {listing.ipfsHash &&
-                      <p className="link-container">
+                      <div className="link-container">
                         <a href={origin.ipfsService.gatewayUrlForHash(listing.ipfsHash)} target="_blank">
                           View on IPFS<img src="/images/carat-blue.svg" className="carat" alt="right carat" />
                         </a>
-                      </p>
+                      </div>
                     }
                   </div>
                   <hr />
@@ -410,16 +428,16 @@ class PurchaseDetail extends Component {
             <div className="col-12 col-lg-4">
               {soldAt &&
                 <div className="summary text-center">
-                  {perspective === 'buyer' && <div className="purchased tag"><p>Purchased</p></div>}
-                  {perspective === 'seller' && <div className="sold tag"><p>Sold</p></div>}
-                  <p className="recap">{counterpartyUser.name} {perspective === 'buyer' ? 'sold' : 'purchased'} on {moment(soldAt).format('MMMM D, YYYY')}</p>
-                  <hr />
+                  {perspective === 'buyer' && <div className="purchased tag"><div>Purchased</div></div>}
+                  {perspective === 'seller' && <div className="sold tag"><div>Sold</div></div>}
+                  <div className="recap">{counterpartyUser.name} {perspective === 'buyer' ? 'sold' : 'purchased'} on {moment(soldAt).format('MMMM D, YYYY')}</div>
+                  <hr className="dark sm" />
                   <div className="d-flex">
-                    <p className="text-left">Price</p>
-                    <p className="text-right">{price}</p>
+                    <div className="text-left">Price</div>
+                    <div className="text-right">{price}</div>
                   </div>
-                  <hr />
-                  <p className={`status ${status}`}>This listing is {status}</p>
+                  <hr className="dark sm" />
+                  <div className={`status ${status}`}>This listing is {status}</div>
                 </div>
               }
             </div>
