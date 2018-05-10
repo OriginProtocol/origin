@@ -39,7 +39,7 @@ class Profile extends Component {
       published: Published to blockchain
       provisional: Ready to publish to blockchain
       userForm: Values for controlled components
-      * TODO: cache provisional state with local storage (if approved by Stan/Matt/Josh)
+      * TODO: cache provisional state with local storage
     */
 
     const { firstName, lastName, description } = this.props.provisional

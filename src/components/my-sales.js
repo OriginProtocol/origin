@@ -127,7 +127,7 @@ class MySales extends Component {
     })()
 
     return (
-      <div className="my-listings-wrapper">
+      <div className="my-purchases-wrapper">
         <div className="container">
           <div className="row">
             <div className="col-12">

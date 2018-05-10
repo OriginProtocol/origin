@@ -229,7 +229,7 @@ class ListingsDetail extends Component {
                   </div>
                 }
               </div>
-              {this.state.sellerAddress && <UserCard user={{ address: this.state.sellerAddress, name: 'Aure Gimon', title: 'seller' }} />}
+              {this.state.sellerAddress && <UserCard title="seller" userAddress={this.state.sellerAddress} />}
             </div>
           </div>
           {!!this.state.reviews.length &&

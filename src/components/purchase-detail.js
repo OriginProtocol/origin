@@ -75,9 +75,11 @@ class PurchaseDetail extends Component {
     this.withdrawFunds = this.withdrawFunds.bind(this)
     this.state = {
       accounts: [],
+      buyer: {},
       listing: {},
       logs: [],
       purchase: {},
+      seller: {},
     }
   }
 
@@ -89,10 +91,16 @@ class PurchaseDetail extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { listingAddress } = this.state.purchase
+    const { buyerAddress, listingAddress } = this.state.purchase
+    const { sellerAddress } = this.state.listing
 
     if (prevState.purchase.listingAddress !== listingAddress) {
       this.loadListing(listingAddress)
+      this.loadBuyer(buyerAddress)
+    }
+
+    if (prevState.listing.sellerAddress !== sellerAddress) {
+      this.loadSeller(sellerAddress)
     }
   }
 
@@ -130,6 +138,28 @@ class PurchaseDetail extends Component {
       console.log('Logs: ', logs)
     } catch(error) {
       console.error(`Error loading purchase ${purchaseAddress}`)
+      console.error(error)
+    }
+  }
+
+  async loadBuyer(addr) {
+    try {
+      const user = await origin.users.get(addr)
+      this.setState({ buyer: { ...user, address: addr } })
+      console.log('Buyer: ', this.state.buyer)
+    } catch(error) {
+      console.error(`Error loading buyer ${addr}`)
+      console.error(error)
+    }
+  }
+
+  async loadSeller(addr) {
+    try {
+      const user = await origin.users.get(addr)
+      this.setState({ seller: { ...user, address: addr } })
+      console.log('Seller: ', this.state.seller)
+    } catch(error) {
+      console.error(`Error loading seller ${addr}`)
       console.error(error)
     }
   }
@@ -178,15 +208,13 @@ class PurchaseDetail extends Component {
   }
 
   render() {
-    const { accounts, listing, purchase, logs } = this.state
+    const { accounts, buyer, listing, logs, purchase, seller } = this.state
 
     if (!purchase.address || !listing.address ){
       return null
     }
 
     const perspective = accounts[0] === purchase.buyerAddress ? 'buyer' : 'seller'
-    const seller = { name: 'Unnamed User', address: listing.sellerAddress }
-    const buyer = { name: 'Unnamed User', address: purchase.buyerAddress }
     const pictures = listing.pictures || []
     const category = listing.category || ""
     const active = listing.unitsAvailable > 0 // Todo, move to origin.js, take into account listing expiration
@@ -265,7 +293,7 @@ class PurchaseDetail extends Component {
                     </div>
                     <div className="identification d-flex flex-column justify-content-between text-truncate">
                       <div><span className="badge badge-dark">Seller</span></div>
-                      <div className="name">{seller.name || 'Unnamed User'}</div>
+                      <div className="name">{seller.profile && seller.profile.claims && seller.profile.claims.name || 'Unnamed User'}</div>
                       <div className="address text-muted text-truncate">{seller.address}</div>
                     </div>
                   </div>
@@ -274,7 +302,7 @@ class PurchaseDetail extends Component {
                   <div className="d-flex justify-content-end">
                     <div className="identification d-flex flex-column text-right justify-content-between text-truncate">
                       <div><span className="badge badge-dark">Buyer</span></div>
-                      <div className="name">{buyer.name || 'Unnamed User'}</div>
+                      <div className="name">{buyer.profile && buyer.profile.claims && buyer.profile.claims.name || 'Unnamed User'}</div>
                       <div className="address text-muted text-truncate">{buyer.address}</div>
                     </div>
                     <div className="avatar-container">
@@ -345,7 +373,7 @@ class PurchaseDetail extends Component {
               <hr />
             </div>
             <div className="col-12 col-lg-4">
-              <UserCard user={{ address: counterpartyUser.address, name: 'Aure Gimon', title: counterparty }} />
+              <UserCard title={counterparty} userAddress={counterpartyUser.address} />
             </div>
           </div>
           <div className="row">

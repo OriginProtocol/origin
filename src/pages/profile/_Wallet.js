@@ -4,9 +4,7 @@ import Identicon from 'components/Identicon'
 
 class Wallet extends Component {
   render() {
-    var address = this.props.address,
-        fullLen = address.length,
-        len = address.length / 2
+    var address = this.props.address
 
     return (
       <div className="wallet">
@@ -17,9 +15,7 @@ class Wallet extends Component {
           <div className="eth d-flex flex-column justify-content-between">
             <div>ETH Address:</div>
             <div className="address">
-              <strong>
-                {address.slice(0, len)}<wbr />{address.slice(len, fullLen)}
-              </strong>
+              <strong>{address}</strong>
             </div>
           </div>
         </div>
