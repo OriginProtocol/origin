@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component } from "react"
 
-import Identicon from 'components/Identicon'
+import Identicon from "components/Identicon"
 
 class Wallet extends Component {
   render() {
@@ -27,7 +27,8 @@ class Wallet extends Component {
         <div className="detail d-flex">
           <div>Transaction History:</div>
           <div>
-            <a onClick={() => alert('To do')}>ETH</a> | <a onClick={() => alert('To do')}>Tokens</a>
+            <a onClick={() => alert("To do")}>ETH</a> |{" "}
+            <a onClick={() => alert("To do")}>Tokens</a>
           </div>
         </div>
       </div>

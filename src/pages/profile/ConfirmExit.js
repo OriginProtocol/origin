@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component } from "react"
 
-import Modal from 'components/modal'
+import Modal from "components/modal"
 
 class ConfirmPublish extends Component {
   render() {

@@ -59,7 +59,7 @@
     "dev": "webpack-dev-server --open",
     "build": "NODE_ENV=production webpack --progress",
     "test": "node scripts/test.js --env=jsdom",
-    "format": "npx prettier --write src/*/*.js scripts/*.js"
+    "format": "npx prettier --write \"src/**/**.js\" \"scripts/**.js\""
   },
   "prettier": {
     "semi": false,

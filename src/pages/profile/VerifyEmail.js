@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
+import React, { Component } from "react"
 
-import Modal from 'components/modal'
+import Modal from "components/modal"
 
-import origin from '../../services/origin'
+import origin from "../../services/origin"
 
 class VerifyEmail extends Component {
   constructor() {
     super()
-    this.state = { mode: 'email', email: '', code: '' }
+    this.state = { mode: "email", email: "", code: "" }
   }
 
   render() {
@@ -24,12 +24,12 @@ class VerifyEmail extends Component {
         <form
           onSubmit={async e => {
             e.preventDefault()
-            if (this.state.mode === 'email') {
+            if (this.state.mode === "email") {
               origin.attestations.emailGenerateCode({
                 email: this.state.email
               })
-              this.setState({ mode: 'code' })
-            } else if (this.state.mode === 'code') {
+              this.setState({ mode: "code" })
+            } else if (this.state.mode === "code") {
               let emailAttestation = await origin.attestations.emailVerify({
                 email: this.state.email,
                 code: this.state.code,
@@ -40,7 +40,7 @@ class VerifyEmail extends Component {
           }}
         >
           <h2>Verify Your Email Address</h2>
-          {this.state.mode === 'email'
+          {this.state.mode === "email"
             ? this.renderEmailForm()
             : this.renderCodeForm()}
           <div className="button-container">
@@ -70,9 +70,7 @@ class VerifyEmail extends Component {
           id="email"
           name="email"
           value={this.state.email}
-          onChange={e =>
-            this.setState({ email: e.currentTarget.value })
-          }
+          onChange={e => this.setState({ email: e.currentTarget.value })}
           placeholder="Valid email address"
           required
         />
