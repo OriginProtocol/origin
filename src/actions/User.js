@@ -17,7 +17,7 @@ export function fetchUser(address) {
 
       dispatch({
         type: UserConstants.FETCH_SUCCESS,
-        user: Object.assign({}, user, { address }),
+        user: { ...user, address },
       })
     } catch(error) {
       dispatch({ type: UserConstants.FETCH_ERROR, error })
