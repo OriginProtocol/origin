@@ -1,16 +1,16 @@
-import { ProfileConstants } from '../actions/Profile'
+import { ProfileConstants } from "../actions/Profile"
 
 const initialState = {
   user: {
     profile: { claims: { customFields: [] } },
     attestations: []
   },
-  name: 'Unnamed User',
+  name: "Unnamed User",
   published: {
-    firstName: '',
-    lastName: '',
-    description: '',
-    pic: '/images/avatar-unnamed.svg',
+    firstName: "",
+    lastName: "",
+    description: "",
+    pic: "/images/avatar-unnamed.svg",
     email: false,
     facebook: false,
     phone: false,
@@ -61,9 +61,9 @@ function unpackUser(state) {
   try {
     var user = state.user,
       customFields = user.profile.claims.customFields,
-      firstName = customFields.find(f => f.field === 'firstName'),
-      lastName = customFields.find(f => f.field === 'lastName'),
-      description = customFields.find(f => f.field === 'description')
+      firstName = customFields.find(f => f.field === "firstName"),
+      lastName = customFields.find(f => f.field === "lastName"),
+      description = customFields.find(f => f.field === "description")
 
     if (firstName && firstName.value) {
       state.provisional.firstName = state.published.firstName = firstName.value
@@ -75,17 +75,17 @@ function unpackUser(state) {
       state.provisional.description = state.published.description =
         description.value
     }
-    (user.attestations || []).forEach(attestation => {
-      if (attestation.service === 'facebook') {
+    ;(user.attestations || []).forEach(attestation => {
+      if (attestation.service === "facebook") {
         state.provisional.facebook = state.published.facebook = true
       }
-      if (attestation.service === 'twitter') {
+      if (attestation.service === "twitter") {
         state.provisional.twitter = state.published.twitter = true
       }
-      if (attestation.service === 'email') {
+      if (attestation.service === "email") {
         state.provisional.email = state.published.email = true
       }
-      if (attestation.service === 'phone') {
+      if (attestation.service === "phone") {
         state.provisional.phone = state.published.phone = true
       }
     })
@@ -134,15 +134,15 @@ export default function Profile(state = initialState, action = {}) {
       })
 
     case ProfileConstants.DEPLOY:
-      return { ...state, status: 'confirming' }
+      return { ...state, status: "confirming" }
 
     case ProfileConstants.DEPLOY_ERROR:
-      return { ...state, status: 'error' }
+      return { ...state, status: "error" }
 
     case ProfileConstants.DEPLOY_SUCCESS:
       return hasChanges({
         ...state,
-        status: 'success',
+        status: "success",
         published: state.provisional
       })
 

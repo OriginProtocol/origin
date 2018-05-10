@@ -1,29 +1,29 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import $ from 'jquery'
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import $ from "jquery"
 
 import {
   deployProfile,
   deployProfileReset,
   updateProfile,
   addAttestation
-} from 'actions/Profile'
-import { getBalance } from 'actions/Wallet'
+} from "actions/Profile"
+import { getBalance } from "actions/Wallet"
 
-import Timelapse from 'components/timelapse'
-import Modal from 'components/modal'
+import Timelapse from "components/timelapse"
+import Modal from "components/modal"
 
-import Services from './_Services'
-import Wallet from './_Wallet'
-import Guidance from './_Guidance'
-import Strength from './_Strength'
+import Services from "./_Services"
+import Wallet from "./_Wallet"
+import Guidance from "./_Guidance"
+import Strength from "./_Strength"
 
-import EditProfile from './EditProfile'
-import VerifyPhone from './VerifyPhone'
-import VerifyEmail from './VerifyEmail'
-import VerifyFacebook from './VerifyFacebook'
-import VerifyTwitter from './VerifyTwitter'
-import ConfirmPublish from './ConfirmPublish'
+import EditProfile from "./EditProfile"
+import VerifyPhone from "./VerifyPhone"
+import VerifyEmail from "./VerifyEmail"
+import VerifyFacebook from "./VerifyFacebook"
+import VerifyTwitter from "./VerifyTwitter"
+import ConfirmPublish from "./ConfirmPublish"
 
 class Profile extends Component {
   constructor(props) {
@@ -117,7 +117,7 @@ class Profile extends Component {
       published: progress.provisional + progress.published
     })
 
-    typeof cb === 'function' && cb()
+    typeof cb === "function" && cb()
   }
 
   // conditionally close modal identified by data attribute
@@ -180,9 +180,9 @@ class Profile extends Component {
   }
 
   componentWillUnmount() {
-    $('.profile-wrapper [data-toggle="tooltip"]').tooltip('dispose')
+    $('.profile-wrapper [data-toggle="tooltip"]').tooltip("dispose")
 
-    window.removeEventListener('beforeunload', this.handleUnload)
+    window.removeEventListener("beforeunload", this.handleUnload)
   }
 
   render() {
@@ -207,7 +207,7 @@ class Profile extends Component {
                 </div>
                 <div className="col-8 col-md-9">
                   <div className="name d-flex">
-                    <h1>{fullName.length ? fullName : 'Unnamed User'}</h1>
+                    <h1>{fullName.length ? fullName : "Unnamed User"}</h1>
                     <div className="icon-container">
                       <button
                         className="edit-profile"
@@ -254,14 +254,11 @@ class Profile extends Component {
                 <div className="published-status text-center">
                   <span>Status:</span>
                   {!lastPublish && (
-                    <span className="not-published">
-                      Not Published
-                    </span>
+                    <span className="not-published">Not Published</span>
                   )}
                   {lastPublish && (
                     <span>
-                      Last published
-                      {' '}
+                      Last published{" "}
                       <Timelapse reactive={true} reference={lastPublish} />
                     </span>
                   )}
@@ -343,7 +340,7 @@ class Profile extends Component {
           onConfirm={() => {
             this.setState({
               modalsOpen: { ...this.state.modalsOpen, unload: false },
-              step: 'metamask'
+              step: "metamask"
             })
             this.props.deployProfile({
               facebook: this.state.facebookForm,
@@ -352,7 +349,7 @@ class Profile extends Component {
           }}
         />
 
-        {this.props.profile.status === 'confirming' && (
+        {this.props.profile.status === "confirming" && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img src="/images/spinner-animation.svg" role="presentation" />
@@ -362,7 +359,7 @@ class Profile extends Component {
           </Modal>
         )}
 
-        {this.props.profile.status === 'processing' && (
+        {this.props.profile.status === "processing" && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img src="/images/spinner-animation.svg" role="presentation" />
@@ -372,7 +369,7 @@ class Profile extends Component {
           </Modal>
         )}
 
-        {this.props.profile.status === 'error' && (
+        {this.props.profile.status === "error" && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img src="/images/flat_cross_icon.svg" role="presentation" />
@@ -390,7 +387,7 @@ class Profile extends Component {
           </Modal>
         )}
 
-        {this.props.profile.status === 'success' && (
+        {this.props.profile.status === "success" && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img

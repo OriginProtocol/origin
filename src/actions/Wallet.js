@@ -1,5 +1,5 @@
-import keyMirror from 'utils/keyMirror'
-import origin from '../services/origin'
+import keyMirror from "utils/keyMirror"
+import origin from "../services/origin"
 
 export const WalletConstants = keyMirror(
   {
@@ -9,9 +9,9 @@ export const WalletConstants = keyMirror(
 
     BALANCE: null,
     BALANCE_SUCCESS: null,
-    BALANCE_ERROR: null,
+    BALANCE_ERROR: null
   },
-  'WALLET'
+  "WALLET"
 )
 
 export function init() {
@@ -31,7 +31,7 @@ export function getBalance() {
     var balance = await web3.eth.getBalance(account)
     dispatch({
       type: WalletConstants.BALANCE_SUCCESS,
-      balance: web3.utils.fromWei(balance, 'ether')
+      balance: web3.utils.fromWei(balance, "ether")
     })
   }
 }

@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component } from "react"
 
-import Modal from 'components/modal'
+import Modal from "components/modal"
 
 class ConfirmPublish extends Component {
   render() {
@@ -13,9 +13,8 @@ class ConfirmPublish extends Component {
         </div>
         <h2>Ready to go public?</h2>
         <p>
-          By updating your profile, you are publishing your
-          information publicly and others will be able to see it on the
-          blockchain and IPFS.
+          By updating your profile, you are publishing your information publicly
+          and others will be able to see it on the blockchain and IPFS.
         </p>
         <div className="button-container">
           <a

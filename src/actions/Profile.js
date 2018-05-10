@@ -1,5 +1,5 @@
-import keyMirror from 'utils/keyMirror'
-import origin from '../services/origin'
+import keyMirror from "utils/keyMirror"
+import origin from "../services/origin"
 
 export const ProfileConstants = keyMirror(
   {
@@ -15,13 +15,13 @@ export const ProfileConstants = keyMirror(
 
     ADD_ATTESTATION: null
   },
-  'PROFILE'
+  "PROFILE"
 )
 
 export function fetchProfile() {
   return async function(dispatch) {
     var user = await origin.users.get(),
-        wallet = await origin.contractService.currentAccount()
+      wallet = await origin.contractService.currentAccount()
 
     dispatch({
       type: ProfileConstants.FETCH_SUCCESS,
@@ -41,7 +41,6 @@ export function addAttestation(attestation) {
 
 export function deployProfile() {
   return async function(dispatch, getState) {
-
     dispatch({ type: ProfileConstants.DEPLOY })
 
     const {
@@ -53,9 +52,9 @@ export function deployProfile() {
         claims: {
           name: `${provisional.firstName} ${provisional.lastName}`,
           customFields: [
-            { field: 'firstName', value: provisional.firstName },
-            { field: 'lastName', value: provisional.lastName },
-            { field: 'description', value: provisional.description }
+            { field: "firstName", value: provisional.firstName },
+            { field: "lastName", value: provisional.lastName },
+            { field: "description", value: provisional.description }
           ]
         }
       },
@@ -81,7 +80,7 @@ export function deployProfile() {
     try {
       var user = await origin.users.set(userData)
       dispatch({ type: ProfileConstants.DEPLOY_SUCCESS, user })
-    } catch(error) {
+    } catch (error) {
       dispatch({ type: ProfileConstants.DEPLOY_ERROR, error })
     }
   }

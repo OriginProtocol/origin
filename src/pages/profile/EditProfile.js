@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import AvatarEditor from 'react-avatar-editor'
+import React, { Component } from "react"
+import AvatarEditor from "react-avatar-editor"
 
-import Modal from 'components/modal'
+import Modal from "components/modal"
 
 class EditProfile extends Component {
   constructor(props) {
@@ -40,14 +40,14 @@ class EditProfile extends Component {
               description: this.state.description
             }
             if (this.state.picChanged) {
-              await new Promise((resolve) => {
-                const canvas = this.imageEditor.getImage().toDataURL();
+              await new Promise(resolve => {
+                const canvas = this.imageEditor.getImage().toDataURL()
                 fetch(canvas)
-                .then(res => res.blob())
-                .then(blob => {
-                  data.pic = window.URL.createObjectURL(blob)
-                  resolve()
-                });
+                  .then(res => res.blob())
+                  .then(blob => {
+                    data.pic = window.URL.createObjectURL(blob)
+                    resolve()
+                  })
               })
             }
             this.props.handleSubmit({ data })
@@ -77,7 +77,7 @@ class EditProfile extends Component {
                       <input
                         type="file"
                         ref={r => (this.editPic = r)}
-                        style={{ opacity: 0, position: 'absolute', zIndex: -1 }}
+                        style={{ opacity: 0, position: "absolute", zIndex: -1 }}
                         onChange={e => {
                           this.setState({
                             picChanged: true,

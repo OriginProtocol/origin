@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { Component } from "react"
+import { connect } from "react-redux"
 
-import { getListingIds } from '../actions/Listing'
+import { getListingIds } from "../actions/Listing"
 
-import Pagination from 'react-js-pagination'
-import { withRouter } from 'react-router'
+import Pagination from "react-js-pagination"
+import { withRouter } from "react-router"
 
-import ListingCard from './listing-card'
+import ListingCard from "./listing-card"
 
 class ListingsGrid extends Component {
   constructor(props) {

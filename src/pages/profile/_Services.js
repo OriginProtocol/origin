@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from "react"
 
 class VerifierServices extends Component {
   render() {
@@ -6,7 +6,7 @@ class VerifierServices extends Component {
     return (
       <div className="services-container">
         <p className="credit">
-          Powered by{' '}
+          Powered by{" "}
           <span className="logo">
             Origin<sup>ID</sup>
           </span>
@@ -21,10 +21,10 @@ class VerifierServices extends Component {
               data-modal="phone"
               className={`service d-flex${
                 published.phone
-                  ? ' published'
+                  ? " published"
                   : provisional.phone
-                    ? ' verified'
-                    : ''
+                    ? " verified"
+                    : ""
               }`}
               onClick={handleToggle}
             >
@@ -39,10 +39,10 @@ class VerifierServices extends Component {
               data-modal="email"
               className={`service d-flex${
                 published.email
-                  ? ' published'
+                  ? " published"
                   : provisional.email
-                    ? ' verified'
-                    : ''
+                    ? " verified"
+                    : ""
               }`}
               onClick={handleToggle}
             >
@@ -69,10 +69,10 @@ class VerifierServices extends Component {
               data-modal="facebook"
               className={`service d-flex${
                 published.facebook
-                  ? ' published'
+                  ? " published"
                   : provisional.facebook
-                    ? ' verified'
-                    : ''
+                    ? " verified"
+                    : ""
               }`}
               onClick={handleToggle}
             >
@@ -90,10 +90,10 @@ class VerifierServices extends Component {
               data-modal="twitter"
               className={`service d-flex${
                 published.twitter
-                  ? ' published'
+                  ? " published"
                   : provisional.twitter
-                    ? ' verified'
-                    : ''
+                    ? " verified"
+                    : ""
               }`}
               onClick={handleToggle}
             >

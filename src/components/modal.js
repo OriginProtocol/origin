@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import $ from 'jquery'
+import React, { Component } from "react"
+import $ from "jquery"
 
 class Modal extends Component {
   componentDidMount() {
@@ -7,7 +7,7 @@ class Modal extends Component {
 
     this.$el.modal({
       backdrop: this.props.backdrop || true,
-      show: this.props.isOpen,
+      show: this.props.isOpen
     })
   }
 
@@ -15,23 +15,29 @@ class Modal extends Component {
     const { isOpen } = this.props
 
     if (prevProps.isOpen !== isOpen) {
-      this.$el.modal(isOpen ? 'show' : 'hide')
+      this.$el.modal(isOpen ? "show" : "hide")
     }
   }
 
   componentWillUnmount() {
-    this.$el.modal('hide')
+    this.$el.modal("hide")
   }
 
   render() {
     const { children, className } = this.props
 
     return (
-      <div ref={el => this.el = el} className={`modal fade ${this.props['data-modal']}${className ? ` ${className}` : ''}`} tabIndex="-1" role="dialog" aria-hidden="true">
+      <div
+        ref={el => (this.el = el)}
+        className={`modal fade ${this.props["data-modal"]}${
+          className ? ` ${className}` : ""
+        }`}
+        tabIndex="-1"
+        role="dialog"
+        aria-hidden="true"
+      >
         <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content d-flex">
-            {children}
-          </div>
+          <div className="modal-content d-flex">{children}</div>
         </div>
       </div>
     )

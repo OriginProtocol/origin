@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import Modal from 'components/modal'
+import React, { Component } from "react"
+import Modal from "components/modal"
 
-import origin from '../../services/origin'
+import origin from "../../services/origin"
 
 class VerifyFacebook extends Component {
   constructor() {
@@ -50,24 +50,24 @@ class VerifyFacebook extends Component {
   }
 
   onCertify() {
-    var w = window.open(this.state.url, '', 'width=650,height=500')
+    var w = window.open(this.state.url, "", "width=650,height=500")
 
     const finish = e => {
       var data = String(e.data)
       if (!data.match(/^origin-code:/)) {
         return
       }
-      window.removeEventListener('message', finish, false)
+      window.removeEventListener("message", finish, false)
       if (!w.closed) {
         w.close()
       }
 
       origin.attestations
-        .facebookVerify({ code: data.split(':')[1] })
+        .facebookVerify({ code: data.split(":")[1] })
         .then(result => this.props.onSuccess(result))
     }
 
-    window.addEventListener('message', finish, false)
+    window.addEventListener("message", finish, false)
   }
 }
 

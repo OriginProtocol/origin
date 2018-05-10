@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import MyListingCard from './my-listing-card'
+import React, { Component } from "react"
+import MyListingCard from "./my-listing-card"
 
-import origin from '../services/origin'
+import origin from "../services/origin"
 
 class MyListings extends Component {
   constructor(props) {
@@ -12,9 +12,9 @@ class MyListings extends Component {
     this.loadListing = this.loadListing.bind(this)
     this.state = {
       accounts: [],
-      filter: 'all',
+      filter: "all",
       listings: [],
-      loading: true,
+      loading: true
     }
   }
 
@@ -28,8 +28,8 @@ class MyListings extends Component {
       const ids = await origin.listings.allIds()
 
       return await Promise.all(ids.map(this.loadListing))
-    } catch(error) {
-      console.error('Error fetching listing ids')
+    } catch (error) {
+      console.error("Error fetching listing ids")
     }
   }
 
@@ -40,8 +40,8 @@ class MyListings extends Component {
       this.setState({ accounts })
 
       return accounts
-    } catch(error) {
-      console.error('Error loading accounts')
+    } catch (error) {
+      console.error("Error loading accounts")
       console.error(error)
     }
   }
@@ -57,7 +57,7 @@ class MyListings extends Component {
       }
 
       return listing
-    } catch(error) {
+    } catch (error) {
       console.error(`Error fetching contract or IPFS info for listingId: ${id}`)
     }
   }
@@ -78,7 +78,7 @@ class MyListings extends Component {
       listings[index] = listing
 
       this.setState({ listings })
-    } catch(error) {
+    } catch (error) {
       console.error(`Error handling update for listing: ${address}`)
     }
   }
@@ -86,10 +86,10 @@ class MyListings extends Component {
   render() {
     const { filter, listings, loading } = this.state
     const filteredListings = (() => {
-      switch(filter) {
-        case 'active':
+      switch (filter) {
+        case "active":
           return listings.filter(l => l.unitsAvailable)
-        case 'inactive':
+        case "inactive":
           return listings.filter(l => !l.unitsAvailable)
         default:
           return listings
@@ -106,18 +106,45 @@ class MyListings extends Component {
           </div>
           <div className="row">
             <div className="col-12 col-md-3">
-              {loading && 'Loading...'}
-              {!loading &&
+              {loading && "Loading..."}
+              {!loading && (
                 <div className="filters list-group flex-row flex-md-column">
-                  <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>All</a>
-                  <a className={`list-group-item list-group-item-action${filter === 'active' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'active' })}>Active</a>
-                  <a className={`list-group-item list-group-item-action${filter === 'inactive' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'inactive' })}>Inactive</a>
+                  <a
+                    className={`list-group-item list-group-item-action${
+                      filter === "all" ? " active" : ""
+                    }`}
+                    onClick={() => this.setState({ filter: "all" })}
+                  >
+                    All
+                  </a>
+                  <a
+                    className={`list-group-item list-group-item-action${
+                      filter === "active" ? " active" : ""
+                    }`}
+                    onClick={() => this.setState({ filter: "active" })}
+                  >
+                    Active
+                  </a>
+                  <a
+                    className={`list-group-item list-group-item-action${
+                      filter === "inactive" ? " active" : ""
+                    }`}
+                    onClick={() => this.setState({ filter: "inactive" })}
+                  >
+                    Inactive
+                  </a>
                 </div>
-              }
+              )}
             </div>
             <div className="col-12 col-md-9">
               <div className="my-listings-list">
-                {filteredListings.map(l => <MyListingCard key={`my-listing-${l.address}`} listing={l} handleUpdate={this.handleUpdate} />)}
+                {filteredListings.map(l => (
+                  <MyListingCard
+                    key={`my-listing-${l.address}`}
+                    listing={l}
+                    handleUpdate={this.handleUpdate}
+                  />
+                ))}
               </div>
             </div>
           </div>

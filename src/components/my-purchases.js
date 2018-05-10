@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import MyPurchaseCard from './my-purchase-card'
+import React, { Component } from "react"
+import MyPurchaseCard from "./my-purchase-card"
 
-import origin from '../services/origin'
+import origin from "../services/origin"
 
 class MyPurchases extends Component {
   constructor(props) {
@@ -12,7 +12,7 @@ class MyPurchases extends Component {
     this.getPurchasesLength = this.getPurchasesLength.bind(this)
     this.loadListing = this.loadListing.bind(this)
     this.loadPurchase = this.loadPurchase.bind(this)
-    this.state = { filter: 'pending', purchases: [], loading: true }
+    this.state = { filter: "pending", purchases: [], loading: true }
   }
 
   /*
@@ -25,8 +25,8 @@ class MyPurchases extends Component {
       const ids = await origin.listings.allIds()
 
       return await Promise.all(ids.map(this.loadListing))
-    } catch(error) {
-      console.error('Error fetching listing ids')
+    } catch (error) {
+      console.error("Error fetching listing ids")
     }
   }
 
@@ -35,7 +35,7 @@ class MyPurchases extends Component {
       const purchAddr = await origin.listings.purchaseAddressByIndex(addr, i)
 
       return this.loadPurchase(purchAddr)
-    } catch(error) {
+    } catch (error) {
       console.error(`Error fetching purchase address at: ${i}`)
     }
   }
@@ -48,8 +48,10 @@ class MyPurchases extends Component {
         return len
       }
 
-      return await Promise.all([...Array(len).keys()].map(i => this.getPurchaseAddress(addr, i)))
-    } catch(error) {
+      return await Promise.all(
+        [...Array(len).keys()].map(i => this.getPurchaseAddress(addr, i))
+      )
+    } catch (error) {
       console.error(`Error fetching purchases length for listing: ${addr}`)
     }
   }
@@ -59,7 +61,7 @@ class MyPurchases extends Component {
       const listing = await origin.listings.getByIndex(id)
 
       return this.getPurchasesLength(listing.address)
-    } catch(error) {
+    } catch (error) {
       console.error(`Error fetching contract or IPFS info for listingId: ${id}`)
     }
   }
@@ -68,7 +70,7 @@ class MyPurchases extends Component {
     try {
       const purchase = await origin.purchases.get(addr)
       var accounts = await web3.eth.getAccounts()
-      
+
       if (purchase.buyerAddress === accounts[0]) {
         const purchases = [...this.state.purchases, purchase]
 
@@ -76,7 +78,7 @@ class MyPurchases extends Component {
       }
 
       return purchase
-    } catch(error) {
+    } catch (error) {
       console.error(`Error fetching purchase: ${addr}`, error)
     }
   }
@@ -90,11 +92,11 @@ class MyPurchases extends Component {
   render() {
     const { filter, loading, purchases } = this.state
     const filteredPurchases = (() => {
-      switch(filter) {
-        case 'pending':
-          return purchases.filter(p => p.stage !== 'complete')
-        case 'complete':
-          return purchases.filter(p => p.stage === 'complete')
+      switch (filter) {
+        case "pending":
+          return purchases.filter(p => p.stage !== "complete")
+        case "complete":
+          return purchases.filter(p => p.stage === "complete")
         default:
           return purchases
       }
@@ -110,22 +112,46 @@ class MyPurchases extends Component {
           </div>
           <div className="row">
             <div className="col-12 col-md-3">
-              {loading && 'Loading...'}
-              {!loading && !purchases.length && 'You have no purchases.'}
-              {!loading && !!purchases.length &&
-                <div className="filters list-group flex-row flex-md-column">
-                  <a className={`list-group-item list-group-item-action${filter === 'pending' ? ' active' : ''}`}
-                    onClick={() => this.setState({ filter: 'pending' })}>Pending</a>
-                  <a className={`list-group-item list-group-item-action${filter === 'complete' ? ' active' : ''}`}
-                    onClick={() => this.setState({ filter: 'complete' })}>Complete</a>
-                  <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`}
-                    onClick={() => this.setState({ filter: 'all' })}>All</a>
-                </div>
-              }
+              {loading && "Loading..."}
+              {!loading && !purchases.length && "You have no purchases."}
+              {!loading &&
+                !!purchases.length && (
+                  <div className="filters list-group flex-row flex-md-column">
+                    <a
+                      className={`list-group-item list-group-item-action${
+                        filter === "pending" ? " active" : ""
+                      }`}
+                      onClick={() => this.setState({ filter: "pending" })}
+                    >
+                      Pending
+                    </a>
+                    <a
+                      className={`list-group-item list-group-item-action${
+                        filter === "complete" ? " active" : ""
+                      }`}
+                      onClick={() => this.setState({ filter: "complete" })}
+                    >
+                      Complete
+                    </a>
+                    <a
+                      className={`list-group-item list-group-item-action${
+                        filter === "all" ? " active" : ""
+                      }`}
+                      onClick={() => this.setState({ filter: "all" })}
+                    >
+                      All
+                    </a>
+                  </div>
+                )}
             </div>
             <div className="col-12 col-md-9">
               <div className="my-listings-list">
-                {filteredPurchases.map(p => <MyPurchaseCard key={`my-purchase-${p.address}`} purchase={p} />)}
+                {filteredPurchases.map(p => (
+                  <MyPurchaseCard
+                    key={`my-purchase-${p.address}`}
+                    purchase={p}
+                  />
+                ))}
               </div>
             </div>
           </div>

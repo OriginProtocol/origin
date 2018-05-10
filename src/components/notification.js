@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react'
-import { Link } from 'react-router-dom'
+import React, { Component, Fragment } from "react"
+import { Link } from "react-router-dom"
 
 /*
   This subcomponent turns structured notification objects into dom elements,
@@ -12,33 +12,35 @@ class HumanReadableNotification extends Component {
     const productLink = <Link to={`/listing/${listingId}`}>{listingName}</Link>
     let subject, presPerf, verb
 
-    switch(eventType) {
-      case 'soldAt':
+    switch (eventType) {
+      case "soldAt":
         subject = productLink
-        presPerf = 'has been'
-        verb = 'purchased'
+        presPerf = "has been"
+        verb = "purchased"
         break
-      case 'fulfilledAt':
+      case "fulfilledAt":
         subject = productLink
-        presPerf = 'has been'
-        verb = 'sent'
+        presPerf = "has been"
+        verb = "sent"
         break
-      case 'receivedAt':
+      case "receivedAt":
         subject = productLink
-        presPerf = 'has been'
-        verb = 'received'
+        presPerf = "has been"
+        verb = "received"
         break
-      case 'withdrawnAt':
+      case "withdrawnAt":
         subject = <Fragment>Funds from {productLink}</Fragment>
-        presPerf = 'have been'
-        verb = 'withdrawn'
+        presPerf = "have been"
+        verb = "withdrawn"
         break
       default:
-        return <p className={className || ''}>{message}</p>
+        return <p className={className || ""}>{message}</p>
     }
 
     return (
-      <p className={className || ''}>{subject} {presPerf} {verb}</p>
+      <p className={className || ""}>
+        {subject} {presPerf} {verb}
+      </p>
     )
   }
 }
@@ -46,23 +48,64 @@ class HumanReadableNotification extends Component {
 class Notification extends Component {
   render() {
     const { notification } = this.props
-    const { counterpartyAddress, counterpartyName, listingId, listingImageURL, listingName, perspective } = notification
+    const {
+      counterpartyAddress,
+      counterpartyName,
+      listingId,
+      listingImageURL,
+      listingName,
+      perspective
+    } = notification
 
     return (
       <li className="list-group-item d-flex align-items-stretch notification">
         <div className="image-container d-flex align-items-center justify-content-center">
-          {!listingId && <img src="/images/origin-icon-white.svg" alt="Origin zero" />}
-          {listingId && !listingImageURL && <img src="/images/origin-icon-white.svg" alt="Origin zero" />}
-          {listingId && listingImageURL && <img src={listingImageURL} className="listing-related" alt={listingName} />}
+          {!listingId && (
+            <img src="/images/origin-icon-white.svg" alt="Origin zero" />
+          )}
+          {listingId &&
+            !listingImageURL && (
+              <img src="/images/origin-icon-white.svg" alt="Origin zero" />
+            )}
+          {listingId &&
+            listingImageURL && (
+              <img
+                src={listingImageURL}
+                className="listing-related"
+                alt={listingName}
+              />
+            )}
         </div>
         <div className="content-container d-flex flex-column justify-content-between">
-          <HumanReadableNotification notification={notification} className={`text-truncate${counterpartyAddress ? '' : ' no-counterparty'}`} />
-          {counterpartyAddress && <p className="text-truncate"><strong>{perspective === 'buyer' ? 'Seller' : 'Buyer'}</strong>: <Link to={`/users/${counterpartyAddress}`}>{counterpartyName || 'Unnamed User'}</Link></p>}
-          {counterpartyAddress && <p className="text-truncate text-muted">{counterpartyAddress}</p>}
+          <HumanReadableNotification
+            notification={notification}
+            className={`text-truncate${
+              counterpartyAddress ? "" : " no-counterparty"
+            }`}
+          />
+          {counterpartyAddress && (
+            <p className="text-truncate">
+              <strong>{perspective === "buyer" ? "Seller" : "Buyer"}</strong>:{" "}
+              <Link to={`/users/${counterpartyAddress}`}>
+                {counterpartyName || "Unnamed User"}
+              </Link>
+            </p>
+          )}
+          {counterpartyAddress && (
+            <p className="text-truncate text-muted">{counterpartyAddress}</p>
+          )}
         </div>
         <div className="link-container m-auto">
-          <a href="https://app.zeplin.io/project/59fa2311bac7acbc8d953da9/screen/5aa878781720abc6447f2cd3?did=5ab93f6fa022c2b641639214" className="btn" target="_blank">
-            <img src="/images/carat-blue.svg" className="carat" alt="right carat" />
+          <a
+            href="https://app.zeplin.io/project/59fa2311bac7acbc8d953da9/screen/5aa878781720abc6447f2cd3?did=5ab93f6fa022c2b641639214"
+            className="btn"
+            target="_blank"
+          >
+            <img
+              src="/images/carat-blue.svg"
+              className="carat"
+              alt="right carat"
+            />
           </a>
         </div>
       </li>

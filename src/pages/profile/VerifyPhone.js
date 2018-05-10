@@ -1,19 +1,19 @@
-import React, { Component } from 'react'
+import React, { Component } from "react"
 
-import origin from '../../services/origin'
+import origin from "../../services/origin"
 
-import Modal from 'components/modal'
-import countryOptions from './_countryOptions'
+import Modal from "components/modal"
+import countryOptions from "./_countryOptions"
 
 class VerifyPhone extends Component {
   constructor() {
     super()
     this.state = {
-      mode: 'phone',
-      countryCode: 'us',
-      number: '',
-      code: '',
-      prefix: '1'
+      mode: "phone",
+      countryCode: "us",
+      number: "",
+      code: "",
+      prefix: "1"
     }
   }
 
@@ -34,20 +34,21 @@ class VerifyPhone extends Component {
           onSubmit={async e => {
             e.preventDefault()
             var phone = `+${this.state.prefix}${this.state.number}`
-            if (this.state.mode === 'phone') {
+            if (this.state.mode === "phone") {
               await origin.attestations.phoneGenerateCode({ phone })
-              this.setState({ mode: 'code' })
-            } else if (this.state.mode === 'code') {
+              this.setState({ mode: "code" })
+            } else if (this.state.mode === "code") {
               let phoneAttestation = await origin.attestations.phoneVerify({
-                phone, code: this.state.code
+                phone,
+                code: this.state.code
               })
               this.props.onSuccess(phoneAttestation)
             }
           }}
         >
           <h2>Verify Your Phone Number</h2>
-          {this.state.mode === 'phone' && this.renderPhoneForm()}
-          {this.state.mode === 'code' && this.renderCodeForm()}
+          {this.state.mode === "phone" && this.renderPhoneForm()}
+          {this.state.mode === "code" && this.renderCodeForm()}
           <div className="button-container">
             <a
               className="btn btn-clear"

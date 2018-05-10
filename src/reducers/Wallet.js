@@ -1,9 +1,9 @@
-import { WalletConstants } from '../actions/Wallet'
-import { ProfileConstants } from '../actions/Profile'
+import { WalletConstants } from "../actions/Wallet"
+import { ProfileConstants } from "../actions/Profile"
 
 const initialState = {
-  address: '0x000000000000000000000000',
-  balance: '0'
+  address: "0x000000000000000000000000",
+  balance: "0"
 }
 
 export default function Wallet(state = initialState, action = {}) {

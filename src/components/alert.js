@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { Component } from "react"
+import { connect } from "react-redux"
 
-import { hideAlert } from '../actions/Alert'
+import { hideAlert } from "../actions/Alert"
 
 class Alert extends Component {
   constructor(props) {
     super(props)
-    this.state = { show: props.show, className: '' }
+    this.state = { show: props.show, className: "" }
   }
 
   componentDidUpdate(prevProps) {
@@ -23,14 +23,14 @@ class Alert extends Component {
   show() {
     this.setState({ show: true })
     this.showTimeout = setTimeout(() => {
-      this.setState({ className: ' origin-alert-show' })
+      this.setState({ className: " origin-alert-show" })
     }, 10)
     this.hideTimeout = setTimeout(() => this.hide(), 2000)
   }
 
   hide() {
     clearTimeout(this.hideTimeout)
-    this.setState({ className: '' })
+    this.setState({ className: "" })
     this.hideTimeout = setTimeout(() => this.props.hideAlert(), 500)
   }
 

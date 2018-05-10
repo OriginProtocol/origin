@@ -1,7 +1,7 @@
-import keyMirror from 'utils/keyMirror'
-import origin from '../services/origin'
+import keyMirror from "utils/keyMirror"
+import origin from "../services/origin"
 
-import { showAlert } from './Alert'
+import { showAlert } from "./Alert"
 
 export const ListingConstants = keyMirror(
   {
@@ -9,7 +9,7 @@ export const ListingConstants = keyMirror(
     FETCH_IDS_SUCCESS: null,
     FETCH_IDS_ERROR: null
   },
-  'LISTING'
+  "LISTING"
 )
 
 export function getListingIds() {
@@ -17,12 +17,14 @@ export function getListingIds() {
     dispatch({ type: ListingConstants.FETCH_IDS })
 
     const inProductionEnv =
-      window.location.hostname === 'demo.originprotocol.com'
+      window.location.hostname === "demo.originprotocol.com"
 
     // Get listings to hide
     const hideListPromise = new Promise((resolve, reject) => {
       window.web3.eth.net.getId((err, netId) => {
-        if (err) { return reject(err) }
+        if (err) {
+          return reject(err)
+        }
         resolve(netId)
       })
     })
@@ -52,7 +54,7 @@ export function getListingIds() {
         return response
       })
       .catch(error => {
-        if (error.message.indexOf('(network/artifact mismatch)') > 0) {
+        if (error.message.indexOf("(network/artifact mismatch)") > 0) {
           // this.setState({ contractFound: false })
         }
       })
