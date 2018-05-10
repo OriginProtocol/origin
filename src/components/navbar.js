@@ -94,7 +94,7 @@ class NavBar extends Component {
                     <div className="d-flex">
                       <div className="image-container">
                         <Link to="/profile">
-                          <Identicon address={this.props.wallet} />
+                          <Identicon address={this.props.wallet} size={50} />
                         </Link>
                       </div>
                       <div className="eth d-flex flex-column justify-content-between">

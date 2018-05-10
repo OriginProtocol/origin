@@ -661,14 +661,17 @@ a:hover {
   font-weight: normal;
 }
 
-.navbar .identity .dropdown-menu .wallet .avatar-container,
-.navbar .identity .dropdown-menu .wallet .image-container {
+.navbar .identity .wallet .avatar-container {
   height: 50px;
   margin: 0 10px 0 0;
   width: 50px;
 }
 
-.navbar .identity .dropdown-menu .wallet .image-container img {
+.navbar .wallet .image-container {
+  margin-right: 10px;
+}
+
+.navbar .wallet .image-container img {
   height: 50px;
   width: 50px;
 }
@@ -1875,6 +1878,7 @@ label[for=root_pictures]:hover {
 
 .profile-wrapper .address {
   line-height: 1.5;
+  word-wrap: break-word;
 }
 
 .verifications-box {
@@ -2161,7 +2165,7 @@ sup {
 }
 
 .wallet .eth {
-  overflow: hidden;
+  overflow: auto;
 }
 
 .publish {
@@ -2174,6 +2178,7 @@ sup {
 
 .published-status {
   font-size: 0.75rem;
+  margin-bottom: 1rem;
 }
 
 .published-status :first-child {
