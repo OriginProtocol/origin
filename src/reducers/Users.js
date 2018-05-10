@@ -8,17 +8,10 @@ export default function Users(state = [], action = {}) {
 
     case UserConstants.FETCH_SUCCESS:
       const { user } = action
-      const arr = [...state]
+      const users = [...state]
+      const i = users.findIndex(u => u.address === user.address)
 
-      // non-existent idenity will return { profile: undefined, attestations: undefined }
-      if (!user.wallet) {
-        return state
-      }
-      
-      const i = arr.findIndex(u => u.wallet === user.wallet)
-      const users = i > -1 ? [...arr, user] : arr
-
-      return users
+      return i === -1 ? [...users, user] : users.map(u => u.address === user.address ? user : u)
 
     default:
       return state

@@ -15,12 +15,12 @@ class User extends Component {
   }
 
   render() {
-    const { profile, attestations, wallet } = this.props.user
+    const { profile, attestations } = this.props.user
     const { claims } = profile
     const fullName = (claims && claims.name) || 'Unnamed User'
     const customFields = claims && claims.customFields
     const description = (customFields && customFields.find(f => f.field === 'description')) ||
-                        'An Origin user without a description'
+                        { value: 'An Origin user without a description' }
 
     return (
       <div className="public-user profile-wrapper">
@@ -35,7 +35,7 @@ class User extends Component {
               <div className="name d-flex">
                 <h1>{fullName}</h1>
               </div>
-              <p>{description}</p>
+              <p>{description.value}</p>
             </div>
             <div className="col-12 col-sm-4 col-md-3 col-lg-2">
               {!!attestations.length &&
@@ -88,13 +88,12 @@ const mapStateToProps = (state, { userAddress }) => {
     user: state.users.find(u => u.address === userAddress) || {
       profile: {},
       attestations: [],
-      wallet: userAddress,
     },
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: () => dispatch(fetchUser())
+  fetchUser: address => dispatch(fetchUser(address))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(User)
