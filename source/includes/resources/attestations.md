@@ -11,7 +11,7 @@ The following attestations are currently offered:
  - Facebook
  - Twitter
 
-Currently, attestation is simply a public *confirmation* that something has been verified by Origin.
+Currently, an attestation is simply a public *confirmation* that something has been verified by Origin.
 The information itself is not made public.
 
 For example, when a user adds an email attestation to their profile, all that anyone else will be able to see is that their email has been verified by Origin.
@@ -30,7 +30,7 @@ await origin.attestations.phoneGenerateCode({
 })
 ```
 
-This will send a text to the given phone number containing a verification code.
+This will send a text message to the given phone number containing a verification code.
 
 ## phoneVerify
 
