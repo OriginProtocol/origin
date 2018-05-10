@@ -209,7 +209,6 @@ class ContractService {
         this.web3.eth.getTransaction(transactionHash, (error, transaction) => {
           if (transaction.blockNumber != null) {
             console.log(`Transaction mined at block ${transaction.blockNumber}`)
-            console.log(transaction)
             // TODO: Wait maximum number of blocks
             // TODO (Stan): Confirm transaction *sucessful* with getTransactionReceipt()
 
