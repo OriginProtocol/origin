@@ -18,20 +18,26 @@ await origin.attestations.phoneGenerateCode({
   phone: "555-555-5555"
 })
 let phoneAttestation = await origin.attestations.phoneVerify({
-  wallet: myWalletAddress,
   phone: "555-555-5555",
   code: "123456"
 })
 
 // Get a Facebook attestation object
-await origin.attestations.facebookAuthUrl({
-  redirectUrl: "http://redirect.url"
+let url = await origin.attestations.facebookAuthUrl()
+
+// Open facebook authentication popup and retrieve authentication code
+window.open(url, '', 'width=650,height=500')
+let code = await new Promise((resolve, reject) => {
+  window.addEventListener('message', (e) => {
+    if (String(e.data).match(/^origin-code:/)) {
+      resolve(e.data.split(':')[1])
+    }
+  }, false)
 })
-// (do some stuff to guide user through Facebook auth flow here)
+
+// Send code to obtain attestation
 let facebookAttestation = await origin.attestations.facebookVerify({
-  wallet: myWalletAddress,
-  redirectUrl: "http://redirect.url"
-  code: "12345"
+  code: code
 })
 
 let myNewUser = {
@@ -47,7 +53,6 @@ await origin.attestations.emailGenerateCode({
   email: "me@my.domain"
 })
 let emailAttestation = await origin.attestations.emailVerify({
-  wallet: myWalletAddress,
   email: "me@my.domain",
   code: "123456"
 })
