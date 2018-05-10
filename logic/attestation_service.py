@@ -30,8 +30,6 @@ VC = db_models.VerificationCode
 
 sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
 
-twilio_client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-
 twitter_request_token_url = 'https://api.twitter.com/oauth/request_token'
 twitter_authenticate_url = 'https://api.twitter.com/oauth/authenticate'
 twitter_access_token_url = 'https://api.twitter.com/oauth/access_token'
@@ -242,7 +240,7 @@ class VerificationService:
 
 def normalize_number(phone):
     try:
-        lookup = twilio_client.lookups.phone_numbers(phone).fetch()
+        lookup = get_twilio_client().lookups.phone_numbers(phone).fetch()
         return lookup.national_format
     except TwilioRestException as e:
         raise PhoneVerificationError('Invalid phone number.')
@@ -261,7 +259,7 @@ def random_numeric_token():
 
 def send_code_via_sms(phone, code):
     try:
-        twilio_client.messages.create(
+        get_twilio_client().messages.create(
             to=phone,
             from_=settings.TWILIO_NUMBER,
             body=('Your Origin verification code is {}.'
@@ -280,3 +278,8 @@ def send_code_via_email(address, code):
          ' It will expire in 30 minutes.').format(code))
     mail = Mail(from_email, subject, to_email, content)
     sg.client.mail.send.post(request_body=mail.get())
+
+
+# proxy function so that we can do caching on this later on if we want to
+def get_twilio_client():
+    return Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
