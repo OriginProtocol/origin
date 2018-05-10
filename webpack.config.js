@@ -1,5 +1,6 @@
 const webpack = require('webpack')
 const path = require('path')
+const Dotenv = require('dotenv-webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
@@ -7,19 +8,15 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-const env = isProduction
-  ? {
-      IPFS_DOMAIN: 'gateway.originprotocol.com',
-      IPFS_API_PORT: 443,
-      IPFS_GATEWAY_PORT: 443,
-      IPFS_GATEWAY_PROTOCOL: 'https'
-    }
-  : {
-      IPFS_DOMAIN: 'localhost',
-      IPFS_API_PORT: 5002,
-      IPFS_GATEWAY_PORT: 8080,
-      IPFS_GATEWAY_PROTOCOL: 'http'
-    }
+const env = { CONTRACT_ADDRESSES: '{}' }
+if (!isProduction) {
+  Object.assign(env, {
+    IPFS_DOMAIN: 'localhost',
+    IPFS_API_PORT: 5002,
+    IPFS_GATEWAY_PORT: 8080,
+    IPFS_GATEWAY_PROTOCOL: 'http'
+  })
+}
 
 var config = {
   entry: { app: './src/index.js' },
@@ -89,6 +86,7 @@ var config = {
     new HtmlWebpackPlugin({
       template: isProduction ? 'public/index.html' : 'public/dev.html'
     }),
+    new Dotenv(),
     new webpack.EnvironmentPlugin(env),
     new CopyWebpackPlugin([
       'public/favicon.ico',
