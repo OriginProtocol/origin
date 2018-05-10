@@ -16,7 +16,7 @@ class User extends Component {
 
   render() {
     const { profile, attestations } = this.props.user
-    const { claims } = profile
+    const claims = profile && profile.claims
     const fullName = (claims && claims.name) || 'Unnamed User'
     const customFields = claims && claims.customFields
     const description = (customFields && customFields.find(f => f.field === 'description')) ||
@@ -38,7 +38,7 @@ class User extends Component {
               <p>{description.value}</p>
             </div>
             <div className="col-12 col-sm-4 col-md-3 col-lg-2">
-              {!!attestations.length &&
+              {attestations && !!attestations.length &&
                 <div className="verifications-box">
                   <h3>Verified Info</h3>
                   {/* need to know how to verify signature instead of just finding object by key */}
@@ -85,10 +85,7 @@ class User extends Component {
 
 const mapStateToProps = (state, { userAddress }) => {
   return {
-    user: state.users.find(u => u.address === userAddress) || {
-      profile: {},
-      attestations: [],
-    },
+    user: state.users.find(u => u.address === userAddress) || {},
   }
 }
 
