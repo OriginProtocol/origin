@@ -1,5 +1,5 @@
 from marshmallow import Schema, fields, ValidationError
-from logic import service_utils
+from logic.service_utils import ServiceError
 
 
 class StandardRequest(Schema):
@@ -7,13 +7,7 @@ class StandardRequest(Schema):
 
 
 class StandardResponse(Schema):
-    errors = fields.List(
-        fields.Dict(
-            code=fields.Str(),
-            path=fields.Str(),
-            message=fields.Str()
-        )
-    )
+    errors = fields.List(fields.Str)
 
 
 def handle_request(data, handler, request_schema, response_schema):
@@ -23,24 +17,17 @@ def handle_request(data, handler, request_schema, response_schema):
     except ValidationError as validation_err:
         errors = []
         for attr, msg in validation_err.messages.items():
-            errors.append({
-                'code': 'INVALID_REQUEST',
-                'path': attr,
-                'message': ' '.join(msg)
-            })
+            errors.append("%s: %s" % (attr, " ".join(msg).lower()))
         resp = {
             'errors': errors
         }
-        return response_schema().dump(resp), 400
+        return response_schema().dump(resp), 422
     try:
-        resp = handler(**req) or {}
-        return response_schema().dump(resp), 200
+        resp = handler(**req)
+        return response_schema().dump(resp.data), 200
     # Handle custom errors we have explicitly thrown from our services
-    except service_utils.ServiceError as service_err:
+    except ServiceError as service_err:
         resp = {
-            'errors': [{
-                'code': service_err.args[0]['code'],
-                'message': service_err.args[0]['message']
-            }]
+            'errors': [str(service_err)]
         }
         return response_schema().dump(resp), 422

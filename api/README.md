@@ -10,17 +10,17 @@ One of the following HTTP status codes will be returned:
 - `422` (error processing request; will be accompanied by errors array, see below)
 - `500` (unexpected server error)
 
-Example error response (for `400` and `422` status codes):
+Example error responses (for `400` and `422` status codes):
 
 ```
 {
-    "errors": [
-        {
-            "code": "INVALID_REQUEST",
-            "path": "phone",
-            "message": "Missing data for required field."
-        }
-    ]
+    "errors": ["Invalid phone number."]
+}
+```
+
+```
+{
+    "errors": ["code: not a valid string.", "identity: not a valid string."]
 }
 ```
 

@@ -19,6 +19,7 @@ from web3 import Web3
 
 from mock import patch
 from testing.postgresql import Postgresql
+from twilio.base.exceptions import TwilioRestException
 
 from app import app as flask_app
 from app.app_config import init_api
@@ -126,10 +127,26 @@ def mock_send_sms(app):
 
 
 @pytest.yield_fixture(scope='function')
+def mock_send_sms_exception(app):
+    patcher = patch('logic.attestation_service.send_code_via_sms',
+                    side_effect=TwilioRestException(
+                        status=400, uri='/Accounts/testtest/Messages.json'))
+    yield patcher.start()
+    patcher.stop()
+
+
+@pytest.yield_fixture(scope='function')
+def mock_normalize_number(app):
+    patcher = patch('logic.attestation_service.normalize_number',
+                    side_effect=(lambda phone: phone))
+    yield patcher.start()
+    patcher.stop()
+
+
+@pytest.yield_fixture(scope='function')
 def mock_ipfs_init(app):
     patcher = patch('util.ipfs.IPFSHelper.__init__',
                     return_value=None)
-
     yield patcher.start()
     patcher.stop()
 
