@@ -4,6 +4,8 @@
 
 The Origin bridge server connects the old world to the new.
 
+You can connect to and use our hosted bridge server at [bridge.originprotocol.com](https://bridge.originprotocol.com). The `develop` branch of this repo is available at [dev.bridge.originprotocol.com](https://dev.bridge.originprotocol.com).
+
 Origin Dapps can connect to the bridge server of their choosing in order to enable the following functionality which is either impossible or impractical to do directly onchain, including:
 
 ### Indexing
