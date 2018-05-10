@@ -84,3 +84,10 @@ ATTESTATION_SIGNING_KEY = get_env_default('ATTESTATION_SIGNING_KEY')
 
 REDIS_URL = get_env_default('REDIS_URL')
 CELERY_DEBUG = parse_bool(get_env_default('CELERY_DEBUG'))
+
+APNS_CERT_FILE = get_env_default('APNS_CERT_FILE')
+APNS_CERT_PASSWORD = get_env_default('APNS_CERT_PASSWORD')
+APNS_APP_BUNDLE_ID = get_env_default('APNS_APP_BUNDLE_ID')
+
+FCM_API_KEY = get_env_default('FCM_API_KEY')
+FCM_TITLE = get_env_default('FCM_TITLE')

@@ -1,6 +1,7 @@
 from sqlalchemy import func
 
 from database import db
+from .notification_models import *  # NOQA
 
 
 class VerificationCode(db.Model):
@@ -49,6 +50,6 @@ class Purchase(db.Model):
     listing_address = db.Column(db.String(255),
                                 db.ForeignKey('listing.contract_address'),
                                 nullable=False)
-    stage = db.Column(db.String(255))
+    stage = db.Column(db.Integer())
     created_at = db.Column(db.DateTime(timezone=True))
     buyer_timeout = db.Column(db.DateTime(timezone=True))
