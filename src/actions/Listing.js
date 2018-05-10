@@ -16,6 +16,9 @@ export function getListingIds() {
   return async function(dispatch) {
     dispatch({ type: ListingConstants.FETCH_IDS })
 
+    const inProductionEnv =
+      window.location.hostname === 'demo.originprotocol.com'
+
     // Get listings to hide
     const hideListPromise = new Promise((resolve, reject) => {
       window.web3.eth.net.getId((err, netId) => {
@@ -25,7 +28,7 @@ export function getListingIds() {
     })
       .then(networkId => {
         // Ignore hidden listings for local testnets
-        if (networkId > 10) {
+        if (!inProductionEnv || networkId > 10) {
           return { status: 404 }
         } else {
           return fetch(
