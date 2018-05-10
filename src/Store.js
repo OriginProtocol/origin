@@ -1,5 +1,5 @@
 import thunkMiddleware from 'redux-thunk'
-import { createStore, applyMiddleware, combineReducers } from 'redux'
+import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 
 import listings from './reducers/Listings'
 import profile from './reducers/Profile'
@@ -14,6 +14,7 @@ if (process.env.NODE_ENV !== 'production') {
   middlewares.push(logger)
 }
 
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
   combineReducers({
     listings,
@@ -22,7 +23,9 @@ const store = createStore(
     alert,
     users,
   }),
-  applyMiddleware(...middlewares)
+  composeEnhancers(
+  	applyMiddleware(...middlewares)
+  ),
 )
 
 export default store
