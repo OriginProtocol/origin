@@ -11,6 +11,6 @@
   }
 
   var code = getParameterByName('code');
-  window.opener.postMessage("facebook-code:" + code, '*')
+  window.opener.postMessage("origin-code:" + code, '*')
   window.close()
 </script>

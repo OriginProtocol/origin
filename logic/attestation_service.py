@@ -2,7 +2,7 @@ import cgi
 import datetime
 import http.client
 import json
-import oauth2 as oauth
+import requests
 import secrets
 import sendgrid
 
@@ -20,19 +20,17 @@ from logic.service_utils import (
     FacebookVerificationError,
     TwitterVerificationError
 )
+from requests_oauthlib import OAuth1
 from sqlalchemy import func
-from util import time_, attestations
+from util import time_, attestations, urls
 
-signing_key = settings.ORIGIN_SIGNING_KEY
+signing_key = settings.ATTESTATION_SIGNING_KEY
 
 VC = db_models.VerificationCode
 
 sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
 
 twilio_client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-
-oauth_consumer = oauth.Consumer(
-    settings.TWITTER_CONSUMER_KEY, settings.TWITTER_CONSUMER_SECRET)
 
 twitter_request_token_url = 'https://api.twitter.com/oauth/request_token'
 twitter_authenticate_url = 'https://api.twitter.com/oauth/authenticate'
@@ -161,8 +159,7 @@ class VerificationService:
 
     def facebook_auth_url():
         client_id = settings.FACEBOOK_CLIENT_ID
-        host = append_trailing_slash(settings.HOST)
-        redirect_uri = "{}redirects/facebook/".format(host)
+        redirect_uri = urls.absurl("/redirects/facebook/")
         url = ('https://www.facebook.com/v2.12/dialog/oauth?client_id={}'
                '&redirect_uri={}').format(client_id, redirect_uri)
         return VerificationServiceResponse({'url': url})
@@ -171,8 +168,7 @@ class VerificationService:
         base_url = 'graph.facebook.com'
         client_id = settings.FACEBOOK_CLIENT_ID
         client_secret = settings.FACEBOOK_CLIENT_SECRET
-        host = append_trailing_slash(settings.HOST)
-        redirect_uri = "{}redirects/facebook/".format(host)
+        redirect_uri = urls.absurl("/redirects/facebook/")
         code = code
         path = ('/v2.12/oauth/access_token?client_id={}'
                 '&client_secret={}&redirect_uri={}&code={}').format(
@@ -196,11 +192,15 @@ class VerificationService:
         })
 
     def twitter_auth_url():
-        client = oauth.Client(oauth_consumer)
-        resp, content = client.request(twitter_request_token_url, 'GET')
-        if resp['status'] != '200':
+        callback_uri = urls.absurl("/redirects/twitter/")
+        oauth = OAuth1(
+            settings.TWITTER_CONSUMER_KEY,
+            settings.TWITTER_CONSUMER_SECRET,
+            callback_uri=callback_uri)
+        r = requests.post(url=twitter_request_token_url, auth=oauth)
+        if r.status_code != 200:
             raise TwitterVerificationError('Invalid response from Twitter.')
-        as_bytes = dict(cgi.parse_qsl(content))
+        as_bytes = dict(cgi.parse_qsl(r.content))
         token_b = as_bytes[b'oauth_token']
         token_secret_b = as_bytes[b'oauth_token_secret']
         request_token = {}
@@ -216,13 +216,14 @@ class VerificationService:
         # Verify authenticity of user
         if 'request_token' not in session:
             raise TwitterVerificationError('Session not found.')
-        token = oauth.Token(session['request_token']['oauth_token'],
-                            session['request_token']['oauth_token_secret'])
-        token.set_verifier(oauth_verifier)
-        client = oauth.Client(oauth_consumer, token)
-        resp, content = client.request(twitter_access_token_url, 'GET')
-        access_token = dict(cgi.parse_qsl(content))
-        if resp['status'] != '200' or b'oauth_token' not in access_token:
+        oauth = OAuth1(
+            settings.TWITTER_CONSUMER_KEY,
+            settings.TWITTER_CONSUMER_SECRET,
+            session['request_token']['oauth_token'],
+            session['request_token']['oauth_token_secret'],
+            verifier=oauth_verifier)
+        r = requests.post(url=twitter_access_token_url, auth=oauth)
+        if r.status_code != 200:
             raise TwitterVerificationError(
                 'The verifier you provided is invalid.')
 
@@ -279,9 +280,3 @@ def send_code_via_email(address, code):
          ' It will expire in 30 minutes.').format(code))
     mail = Mail(from_email, subject, to_email, content)
     sg.client.mail.send.post(request_body=mail.get())
-
-
-def append_trailing_slash(url):
-    if url.endswith('/'):
-        return url
-    return url + '/'

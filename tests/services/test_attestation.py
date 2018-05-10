@@ -272,7 +272,7 @@ def test_facebook_auth_url():
     assert resp_data['url'] == (
         'https://www.facebook.com/v2.12/dialog/oauth?client_id'
         '=facebook-client-id&redirect_uri'
-        '=http://testhost.com/redirects/facebook/')
+        '=https://testhost.com/redirects/facebook/')
 
 
 @mock.patch('http.client.HTTPSConnection')
@@ -292,8 +292,8 @@ def test_verify_facebook_valid_code(MockHttpConnection):
     mock_http_conn.request.assert_called_once_with(
         'GET',
         '/v2.12/oauth/access_token?client_id=facebook-client-id&' +
-        'client_secret=facebook-client-secret&' +
-        'redirect_uri=http://testhost.com/redirects/facebook/&code=abcde12345')
+        'client_secret=facebook-client-secret&redirect_uri=' +
+        'https://testhost.com/redirects/facebook/&code=abcde12345')
     assert len(resp_data['signature']) == SIGNATURE_LENGTH
     assert resp_data['claim_type'] == CLAIM_TYPES['facebook']
     assert resp_data['data'] == 'facebook verified'
@@ -317,57 +317,47 @@ def test_verify_facebook_invalid_code(MockHttpConnection):
         'GET',
         '/v2.12/oauth/access_token?client_id=facebook-client-id' +
         '&client_secret=facebook-client-secret&' +
-        'redirect_uri=http://testhost.com/redirects/facebook/&code=bananas')
+        'redirect_uri=https://testhost.com/redirects/facebook/&code=bananas')
     assert str(service_err.value) == 'The code you provided is invalid.'
 
 
-@mock.patch('oauth2.Client')
+@mock.patch('logic.attestation_service.requests')
 @mock.patch('logic.attestation_service.session')
-def test_twitter_auth_url(mock_session, MockOauthClient):
-    mock_oauth_client = mock.Mock()
-    mock_oauth_client.request.return_value = {
-        'status': '200'}, b'oauth_token=peaches&oauth_token_secret=pears'
-    MockOauthClient.return_value = mock_oauth_client
+def test_twitter_auth_url(mock_session, mock_requests):
+    response_content = b'oauth_token=peaches&oauth_token_secret=pears'
+    mock_requests.post().content = response_content
+    mock_requests.post().status_code = 200
     resp = VerificationService.twitter_auth_url()
-    assert isinstance(resp, VerificationServiceResponse)
     resp_data = resp.data
-    mock_oauth_client.request.assert_called_once_with(
-        'https://api.twitter.com/oauth/request_token', 'GET')
+    assert isinstance(resp, VerificationServiceResponse)
     assert resp_data['url'] == ('https://api.twitter.com/oauth/authenticate?'
                                 'oauth_token=peaches')
 
 
-@mock.patch('oauth2.Client')
+@mock.patch('logic.attestation_service.requests')
 @mock.patch('logic.attestation_service.session')
-def test_verify_twitter_valid_code(mock_session, MockOauthClient):
+def test_verify_twitter_valid_code(mock_session, mock_requests):
     dict = {'request_token': 'bar'}
     mock_session.__contains__.side_effect = dict.__contains__
-    mock_oauth_client = mock.Mock()
-    mock_oauth_client.request.return_value = {
-        'status': '200'}, b'oauth_token=guavas&oauth_token_secret=mangos'
-    MockOauthClient.return_value = mock_oauth_client
+    mock_requests.post().status_code = 200
     args = {
         'eth_address': '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
         'oauth_verifier': 'blueberries'
     }
     resp = VerificationService.verify_twitter(**args)
-    assert isinstance(resp, VerificationServiceResponse)
     resp_data = resp.data
-    mock_oauth_client.request.assert_called_once_with(
-        'https://api.twitter.com/oauth/access_token', 'GET')
+    assert isinstance(resp, VerificationServiceResponse)
     assert len(resp_data['signature']) == SIGNATURE_LENGTH
     assert resp_data['claim_type'] == CLAIM_TYPES['twitter']
     assert resp_data['data'] == 'twitter verified'
 
 
-@mock.patch('oauth2.Client')
+@mock.patch('logic.attestation_service.requests')
 @mock.patch('logic.attestation_service.session')
-def test_verify_twitter_invalid_verifier(mock_session, MockOauthClient):
+def test_verify_twitter_invalid_verifier(mock_session, mock_requests):
     dict = {'request_token': 'bar'}
     mock_session.__contains__.side_effect = dict.__contains__
-    mock_oauth_client = mock.Mock()
-    mock_oauth_client.request.return_value = {'status': '401'}, b''
-    MockOauthClient.return_value = mock_oauth_client
+    mock_requests.post().status_code = 401
     args = {
         'eth_address': '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
         'oauth_verifier': 'pineapples'
@@ -375,14 +365,12 @@ def test_verify_twitter_invalid_verifier(mock_session, MockOauthClient):
     with pytest.raises(TwitterVerificationError) as service_err:
         VerificationService.verify_twitter(**args)
 
-    mock_oauth_client.request.assert_called_once_with(
-        'https://api.twitter.com/oauth/access_token', 'GET')
     assert str(service_err.value) == 'The verifier you provided is invalid.'
 
 
-@mock.patch('oauth2.Client')
+@mock.patch('logic.attestation_service.requests')
 @mock.patch('logic.attestation_service.session')
-def test_verify_twitter_invalid_session(mock_session, MockOauthClient):
+def test_verify_twitter_invalid_session(mock_session, mock_requests):
     args = {
         'eth_address': '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
         'oauth_verifier': 'pineapples'

@@ -4,6 +4,8 @@
 
 The Origin bridge server connects the old world to the new.
 
+You can connect to and use our hosted bridge server at [bridge.originprotocol.com](https://bridge.originprotocol.com). The `develop` branch of this repo is available at [dev.bridge.originprotocol.com](https://dev.bridge.originprotocol.com).
+
 Origin Dapps can connect to the bridge server of their choosing in order to enable the following functionality which is either impossible or impractical to do directly onchain, including:
 
 ### Indexing
@@ -28,6 +30,12 @@ See the [README for the API](api)
 - Python 3.5 or higher required
 - Postgresql 9.3 or higher required
 - Redis 4.0+ recommended
+
+#### Mac OS specifics
+Install build tools packages:
+```bash
+brew install automake autoconf libtool
+```
 
 ### Set Up A Virtual Environment
 
@@ -96,6 +104,7 @@ Enviroment keys for Indexing server:
 
 - IPFS_DOMAIN: Set this to domain of an IPFS daemon. for example `127.0.0.1` or `gateway.originprotocol.com`
 - IPFS_PORT: port on which the IPFS daemon is listening.
+- REDIS_URL: Set this to point to your local Redis server. For example `redis://127.0.0.1:6379/0`
 
 ### Set Up Your Database
 

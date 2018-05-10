@@ -68,7 +68,7 @@ def test_facebook_verify(MockHttpConnection, client):
     resp = client.get(
         "/api/attestations/facebook/auth-url")
     expected_url = ("?client_id=facebook-client-id&redirect_uri"
-                    "=http://testhost.com/redirects/facebook/")
+                    "=https://testhost.com/redirects/facebook/")
     assert resp.status_code == 200
     assert expected_url in json_of_response(resp)['url']
 
@@ -82,12 +82,11 @@ def test_facebook_verify(MockHttpConnection, client):
     assert resp_json['data'] == 'facebook verified'
 
 
-@mock.patch('oauth2.Client')
-def test_twitter_verify(MockOauthClient, client):
-    mock_oauth_client = mock.Mock()
-    mock_oauth_client.request.return_value = {
-        'status': '200'}, b'oauth_token=peaches&oauth_token_secret=pears'
-    MockOauthClient.return_value = mock_oauth_client
+@mock.patch('logic.attestation_service.requests')
+def test_twitter_verify(mock_requests, client):
+    response_content = b'oauth_token=peaches&oauth_token_secret=pears'
+    mock_requests.post().content = response_content
+    mock_requests.post().status_code = 200
 
     resp = client.get(
         "/api/attestations/twitter/auth-url")
