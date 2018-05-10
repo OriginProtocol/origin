@@ -56,7 +56,7 @@ class Notification extends Component {
           {listingId && listingImageURL && <img src={listingImageURL} className="listing-related" alt={listingName} />}
         </div>
         <div className="content-container d-flex flex-column justify-content-between">
-          <HumanReadableNotification notification={notification} className={`text-truncate${counterpartyAddress ? '' : ' m-auto'}`} />
+          <HumanReadableNotification notification={notification} className={`text-truncate${counterpartyAddress ? '' : ' no-counterparty'}`} />
           {counterpartyAddress && <p className="text-truncate"><strong>{perspective === 'buyer' ? 'Seller' : 'Buyer'}</strong>: <Link to={`/users/${counterpartyAddress}`}>{counterpartyName || 'Unnamed User'}</Link></p>}
           {counterpartyAddress && <p className="text-truncate text-muted">{counterpartyAddress}</p>}
         </div>

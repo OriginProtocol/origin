@@ -151,6 +151,12 @@ a:hover {
   font-size: 0.875rem;
 }
 
+.my-listings-wrapper,
+.my-purchases-wrapper,
+.notifications-wrapper {
+  padding: 3.5rem 0;
+}
+
 /* Identification */
 
 .identification {
@@ -1860,12 +1866,12 @@ label[for=root_pictures]:hover {
   color: white;
 }
 
-.notifications-wrapper {
-  padding: 40px 0;
-}
-
 .notifications-wrapper .notification {
   background-color: white;
+}
+
+.notification .no-counterparty {
+  margin: auto 0;
 }
 
 /* Profile */
