@@ -1,4 +1,4 @@
-import Origin from 'origin'
+import Origin from "origin"
 
 let config = {
   ipfsDomain: process.env.IPFS_DOMAIN || undefined,
@@ -7,7 +7,7 @@ let config = {
   ipfsGatewayProtocol: process.env.IPFS_GATEWAY_PROTOCOL || undefined,
   attestationServerUrl:
     process.env.ATTESTATION_SERVER_URL ||
-    'https://dev.bridge.originprotocol.com/api/attestations'
+    "https://dev.bridge.originprotocol.com/api/attestations"
 }
 
 try {

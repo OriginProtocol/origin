@@ -1,32 +1,32 @@
-import React, { Component } from 'react'
-import { HashRouter as Router, Route, Switch } from 'react-router-dom'
-import { connect } from 'react-redux'
+import React, { Component } from "react"
+import { HashRouter as Router, Route, Switch } from "react-router-dom"
+import { connect } from "react-redux"
 
-import { fetchProfile } from 'actions/Profile'
+import { fetchProfile } from "actions/Profile"
 
 // Components
-import Alert from './alert'
-import ScrollToTop from './scroll-to-top'
-import Layout from './layout'
-import Listings from './listings-grid'
-import ListingCreate from './listing-create'
-import ListingDetail from './listing-detail'
-import MyListings from './my-listings'
-import MyPurchases from './my-purchases'
-import MySales from './my-sales'
-import Notifications from './notifications'
-import Profile from '../pages/profile/Profile'
-import User from '../pages/user/User'
-import PurchaseDetail from './purchase-detail'
-import Web3Provider from './web3-provider'
-import NotFound from './not-found'
-import 'bootstrap/dist/js/bootstrap'
+import Alert from "./alert"
+import ScrollToTop from "./scroll-to-top"
+import Layout from "./layout"
+import Listings from "./listings-grid"
+import ListingCreate from "./listing-create"
+import ListingDetail from "./listing-detail"
+import MyListings from "./my-listings"
+import MyPurchases from "./my-purchases"
+import MySales from "./my-sales"
+import Notifications from "./notifications"
+import Profile from "../pages/profile/Profile"
+import User from "../pages/user/User"
+import PurchaseDetail from "./purchase-detail"
+import Web3Provider from "./web3-provider"
+import NotFound from "./not-found"
+import "bootstrap/dist/js/bootstrap"
 
 // CSS
-import 'bootstrap/dist/css/bootstrap.css'
-import '../css/lato-web.css'
-import '../css/poppins.css'
-import '../css/app.css'
+import "bootstrap/dist/css/bootstrap.css"
+import "../css/lato-web.css"
+import "../css/poppins.css"
+import "../css/app.css"
 
 const HomePage = () => (
   <div className="container">
@@ -92,7 +92,7 @@ class App extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchProfile: () => dispatch(fetchProfile()),
+  fetchProfile: () => dispatch(fetchProfile())
 })
 
 export default connect(undefined, mapDispatchToProps)(App)

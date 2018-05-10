@@ -4,7 +4,7 @@ export default function(obj, namespace) {
 
   for (key in obj) {
     if (namespace) {
-      ret[key] = namespace + '_' + key
+      ret[key] = namespace + "_" + key
     } else {
       ret[key] = key
     }

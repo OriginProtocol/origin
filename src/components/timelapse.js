@@ -1,5 +1,5 @@
-import { Component } from 'react'
-import moment from 'moment'
+import { Component } from "react"
+import moment from "moment"
 
 class Timelapse extends Component {
   constructor(props) {
@@ -7,7 +7,7 @@ class Timelapse extends Component {
 
     this.updateTimelapse = this.updateTimelapse.bind(this)
     this.state = {
-      timelapse: '',
+      timelapse: ""
     }
   }
 
@@ -29,14 +29,14 @@ class Timelapse extends Component {
   updateTimelapse() {
     const c = this
     const { reference } = c.props
-    const seconds = moment().diff(reference, 'seconds')
+    const seconds = moment().diff(reference, "seconds")
     const second = 1
     const minute = 60 * second
     const hour = 60 * minute
     const day = 24 * hour
     const year = 365 * day
     let int = 0
-    let timelapse = ''
+    let timelapse = ""
 
     function conditionallyDecelerateInterval(measure) {
       if (c.ms / 1000 < measure) {
@@ -48,31 +48,31 @@ class Timelapse extends Component {
     }
 
     if (seconds < (c.props.delay || 4000) / 1000) {
-      timelapse = 'a few seconds ago'
+      timelapse = "a few seconds ago"
     } else if (seconds < minute) {
       timelapse = `${seconds} seconds ago`
     } else if (seconds < hour) {
       int = Math.floor(seconds / minute)
 
-      timelapse = `${int} minute${int > 1 ? 's' : ''} ago`
+      timelapse = `${int} minute${int > 1 ? "s" : ""} ago`
 
       conditionallyDecelerateInterval(minute)
     } else if (seconds < day) {
       int = Math.floor(seconds / hour)
 
-      timelapse = `${int} hour${int > 1 ? 's' : ''} ago`
+      timelapse = `${int} hour${int > 1 ? "s" : ""} ago`
 
       conditionallyDecelerateInterval(hour)
     } else if (seconds < year) {
       int = Math.floor(seconds / day)
 
-      timelapse = `${int} day${int > 1 ? 's' : ''} ago`
+      timelapse = `${int} day${int > 1 ? "s" : ""} ago`
 
       clearInterval(c.interval)
     } else {
       int = Math.floor(seconds / year)
 
-      timelapse = `over ${int} year${int > 1 ? 's' : ''} ago`
+      timelapse = `over ${int} year${int > 1 ? "s" : ""} ago`
 
       clearInterval(c.interval)
     }
@@ -85,7 +85,7 @@ class Timelapse extends Component {
   }
 
   render() {
-    const { timelapse } = this.state;
+    const { timelapse } = this.state
 
     return this.props.reference ? timelapse : null
   }

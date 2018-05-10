@@ -1,11 +1,11 @@
-import keyMirror from '../utils/keyMirror'
+import keyMirror from "../utils/keyMirror"
 
 export const AlertConstants = keyMirror(
   {
     SHOW: null,
-    HIDE: null,
+    HIDE: null
   },
-  'ALERT'
+  "ALERT"
 )
 
 export function showAlert(message) {

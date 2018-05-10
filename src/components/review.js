@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { fetchUser } from 'actions/User'
-import Timelapse from './timelapse'
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import { fetchUser } from "actions/User"
+import Timelapse from "./timelapse"
 
 class Review extends Component {
   constructor(props) {
@@ -17,7 +17,7 @@ class Review extends Component {
     const { content, createdAt, score } = review
     const { address, profile } = user
     const claims = profile && profile.claims
-    const fullName = (claims && claims.name) || 'Unnamed User'
+    const fullName = (claims && claims.name) || "Unnamed User"
 
     return (
       <div className="review">
@@ -30,12 +30,20 @@ class Review extends Component {
             <div className="address text-muted text-truncate">{address}</div>
           </div>
           <div className="score d-flex flex-column justify-content-center text-right">
-            <div className="stars">{[...Array(5)].map((undef, i) => {
-              return (
-                <img key={`score-star-${i}`} src={`/images/star-${score > i ? 'filled' : 'empty'}.svg`} alt="review score star" />
-              )
-            })}</div>
-            <div className="age text-muted"><Timelapse reactive={false} reference={createdAt} /></div>
+            <div className="stars">
+              {[...Array(5)].map((undef, i) => {
+                return (
+                  <img
+                    key={`score-star-${i}`}
+                    src={`/images/star-${score > i ? "filled" : "empty"}.svg`}
+                    alt="review score star"
+                  />
+                )
+              })}
+            </div>
+            <div className="age text-muted">
+              <Timelapse reactive={false} reference={createdAt} />
+            </div>
           </div>
         </div>
         <p className="content">{content}</p>
@@ -46,7 +54,7 @@ class Review extends Component {
 
 const mapStateToProps = (state, { review }) => {
   return {
-    user: state.users.find(u => u.address === review.reviewerAddress) || {},
+    user: state.users.find(u => u.address === review.reviewerAddress) || {}
   }
 }
 

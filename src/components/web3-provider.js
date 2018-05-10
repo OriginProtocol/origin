@@ -1,18 +1,18 @@
-import React, { Component } from 'react'
-import Modal from './modal'
+import React, { Component } from "react"
+import Modal from "./modal"
 
-import origin from '../services/origin'
-import Store from '../Store'
-import { showAlert } from '../actions/Alert'
+import origin from "../services/origin"
+import Store from "../Store"
+import { showAlert } from "../actions/Alert"
 
 const web3 = origin.contractService.web3
 
 const networkNames = {
-  1: 'Main',
-  2: 'Morden',
-  3: 'Ropsten',
-  4: 'Rinkeby',
-  42: 'Kovan'
+  1: "Main",
+  2: "Morden",
+  3: "Ropsten",
+  4: "Rinkeby",
+  42: "Kovan"
 }
 const supportedNetworkIds = [3, 4]
 const ONE_SECOND = 1000
@@ -146,7 +146,7 @@ class Web3Provider extends Component {
     curr = curr && curr.toLowerCase()
 
     if (curr !== next) {
-      curr && Store.dispatch(showAlert('MetaMask account has changed.'))
+      curr && Store.dispatch(showAlert("MetaMask account has changed."))
 
       this.setState({
         accountsError: null,
@@ -196,7 +196,7 @@ class Web3Provider extends Component {
         !called &&
           web3 &&
           web3.version &&
-          (web3.version.network === 'loading' || !web3.version.network) &&
+          (web3.version.network === "loading" || !web3.version.network) &&
           this.setState({
             networkConnected: false
           })
@@ -210,7 +210,7 @@ class Web3Provider extends Component {
       ? networkNames[networkId]
       : networkId
     const inProductionEnv =
-      window.location.hostname === 'demo.originprotocol.com'
+      window.location.hostname === "demo.originprotocol.com"
 
     if (networkConnected === false) {
       return <UnconnectedNetwork />
