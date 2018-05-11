@@ -12,7 +12,7 @@ var resources = {
 
 const defaultBridgeServer = "https://bridge.originprotocol.com"
 const defaultIpfsDomain = "gateway.originprotocol.com"
-const defaultIpfsApiPort = "443"
+const defaultIpfsApiPort = "5002"
 const defaultIpfsGatewayPort = "443"
 const defaultIpfsGatewayProtocol = "https"
 const defaultAttestationServerUrl = `${defaultBridgeServer}/api/attestations`
