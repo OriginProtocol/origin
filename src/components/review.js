@@ -23,7 +23,7 @@ class Review extends Component {
       <div className="review">
         <div className="d-flex">
           <div className="avatar-container">
-            <img src="/images/avatar-purple.svg" alt="reviewer avatar" />
+            <img src="images/avatar-purple.svg" alt="reviewer avatar" />
           </div>
           <div className="identification d-flex flex-column justify-content-center text-truncate">
             <div className="name">{fullName}</div>
@@ -32,7 +32,7 @@ class Review extends Component {
           <div className="score d-flex flex-column justify-content-center text-right">
             <div className="stars">{[...Array(5)].map((undef, i) => {
               return (
-                <img key={`score-star-${i}`} src={`/images/star-${score > i ? 'filled' : 'empty'}.svg`} alt="review score star" />
+                <img key={`score-star-${i}`} src={`images/star-${score > i ? 'filled' : 'empty'}.svg`} alt="review score star" />
               )
             })}</div>
             <div className="age text-muted"><Timelapse reactive={false} reference={createdAt} /></div>

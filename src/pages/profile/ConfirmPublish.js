@@ -9,7 +9,7 @@ class ConfirmPublish extends Component {
     return (
       <Modal isOpen={open} data-modal="unload" handleToggle={handleToggle}>
         <div className="image-container">
-          <img src="/images/public-icon.svg" role="presentation" />
+          <img src="images/public-icon.svg" role="presentation" />
         </div>
         <h2>Ready to go public?</h2>
         <p>

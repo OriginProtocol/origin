@@ -10,7 +10,7 @@ const initialState = {
     firstName: '',
     lastName: '',
     description: '',
-    pic: '/images/avatar-unnamed.svg',
+    pic: 'images/avatar-unnamed.svg',
     email: false,
     facebook: false,
     phone: false,

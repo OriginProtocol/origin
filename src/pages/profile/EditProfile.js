@@ -61,7 +61,7 @@ class EditProfile extends Component {
                     <div className="avatar-container">
                       <AvatarEditor
                         ref={r => (this.imageEditor = r)}
-                        image={this.state.pic || "/images/avatar-unnamed.svg"}
+                        image={this.state.pic || "images/avatar-unnamed.svg"}
                         width={140}
                         height={140}
                         border={20}
@@ -71,7 +71,7 @@ class EditProfile extends Component {
                     </div>
                     <label className="edit-profile">
                       <img
-                        src="/images/camera-icon-circle.svg"
+                        src="images/camera-icon-circle.svg"
                         alt="camera icon"
                       />
                       <input

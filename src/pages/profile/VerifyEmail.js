@@ -19,7 +19,7 @@ class VerifyEmail extends Component {
         handleToggle={this.props.handleToggle}
       >
         <div className="image-container d-flex align-items-center">
-          <img src="/images/email-icon-dark.svg" role="presentation" />
+          <img src="images/email-icon-dark.svg" role="presentation" />
         </div>
         <form
           onSubmit={async e => {

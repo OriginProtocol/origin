@@ -26,7 +26,7 @@ class VerifyFacebook extends Component {
         handleToggle={this.props.handleToggle}
       >
         <div className="image-container d-flex align-items-center">
-          <img src="/images/facebook-icon-dark.svg" role="presentation" />
+          <img src="images/facebook-icon-dark.svg" role="presentation" />
         </div>
         <h2>Verify Your Facebook Account</h2>
         <div className="button-container">

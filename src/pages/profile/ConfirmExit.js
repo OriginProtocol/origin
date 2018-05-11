@@ -9,7 +9,7 @@ class ConfirmPublish extends Component {
     return (
       <Modal isOpen={open} data-modal="unload" handleToggle={handleToggle}>
         <div className="image-container">
-          <img src="/images/public-icon.svg" role="presentation" />
+          <img src="images/public-icon.svg" role="presentation" />
         </div>
         <h2>Wait! You haven’t published yet.</h2>
         <p>If you exit without publishing you’ll lose all your changes.</p>
