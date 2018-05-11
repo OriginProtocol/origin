@@ -18,6 +18,20 @@
 //	   read: read listings from blockchain to data file
 // 	   write: write listings from data file to blockchain, record migration status for each listing
 //		      Assumes all listings in data file have not been migrated
+
+/////////////////////////////////////////////////
+// from origin-js#contract-service.js
+var bs58 = require('bs58')
+function getBytes32FromIpfsHash(ipfsListing) {
+    return (
+      "0x" +
+      bs58
+        .decode(ipfsListing)
+        .slice(2)
+        .toString("hex")
+    )
+  }
+/////////////////////////////////////////////////
 var Web3 = require('web3');
 var ArgumentParser = require('argparse').ArgumentParser;
 
@@ -105,4 +119,42 @@ if (args.action == 'read') {
 	});
 
 } else if (args.action == 'write') {
+	console.log("Writing to network: " + config.dstNetworkName + " - Gateway: " + config.dstGateway);
+
+	try {
+		var listings = require(args.dataFile);
+		console.log("Read " + listings.length + " listings.");
+	} catch (e) {
+		console.log("Error loading data file: " + e);
+		process.exit();
+	}
+
+	web3 = new Web3(new Web3.providers.HttpProvider(config.dstGateway));
+
+	let dstAddress = config.dstListingsRegistryAddress_v0_2;
+	let dstContract = new web3.eth.Contract(listingsRegistryAbi_v0_2, dstAddress);
+
+	var account = config.account;
+	var privateKey = config.;
+
+	listingData = {
+		_ipfsHash: listings[0].ipfsHash,
+		_price: listings[0].price,
+		_unitsAvailable: listings[0].unitsAvailable
+	}
+
+	// Issue #1
+	// IPFS hash taken from listing gives an error. The Solidity type is bytes32, but that may be different than the format required here, or perhaps a conversion is required upon reading from the contract
+	// working ipfs hash: getBytes32FromIpfsHash('QmU4cYFPkWbrdfbRFvpGvHsWZtKAGRaAL4CFuaLhfVcrL2')
+	let methodCall = dstContract.methods.create(listingData._ipfsHash,listingData.price,listingData.unitsAvailable)
+
+	// Issue #2
+	// transaction returns "Error: Returned error: sender account not recognized", but a call to web3.eth.getBalance() returns a value
+	methodCall.send({ from: account, gas: 4476768 })
+
+
+	// TODOs
+	// wait N confirmations before marking listing as migrated (conf: # confirmations)
+	// parallelize listing creation (conf: batch size)
+
 }
