@@ -1,11 +1,11 @@
 import Origin from 'origin'
 
 let config = {
-  ipfsDomain: process.env.IPFS_DOMAIN || undefined,
-  ipfsApiPort: process.env.IPFS_API_PORT || undefined,
-  ipfsGatewayPort: process.env.IPFS_GATEWAY_PORT || undefined,
-  ipfsGatewayProtocol: process.env.IPFS_GATEWAY_PROTOCOL || undefined,
-  attestationServerUrl: process.env.ATTESTATION_SERVER_URL || undefined
+  ipfsDomain: process.env.IPFS_DOMAIN,
+  ipfsApiPort: process.env.IPFS_API_PORT,
+  ipfsGatewayPort: process.env.IPFS_GATEWAY_PORT,
+  ipfsGatewayProtocol: process.env.IPFS_GATEWAY_PROTOCOL,
+  attestationServerUrl: process.env.ATTESTATION_SERVER_URL
 }
 
 try {
