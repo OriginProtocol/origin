@@ -28,7 +28,7 @@ class VerifyPhone extends Component {
         handleToggle={handleToggle}
       >
         <div className="image-container d-flex align-items-center">
-          <img src="/images/phone-icon-dark.svg" role="presentation" />
+          <img src="images/phone-icon-dark.svg" role="presentation" />
         </div>
         <form
           onSubmit={async e => {
@@ -80,7 +80,7 @@ class VerifyPhone extends Component {
               aria-expanded="false"
             >
               <img
-                src={`/images/flags/${this.state.countryCode}.svg`}
+                src={`images/flags/${this.state.countryCode}.svg`}
                 role="presentation"
                 alt={`${this.state.countryCode.toUpperCase()} flag`}
               />
@@ -99,7 +99,7 @@ class VerifyPhone extends Component {
                 >
                   <div>
                     <img
-                      src={`/images/flags/${c.code}.svg`}
+                      src={`images/flags/${c.code}.svg`}
                       role="presentation"
                       alt={`${c.code.toUpperCase()} flag`}
                     />

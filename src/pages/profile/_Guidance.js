@@ -5,7 +5,7 @@ class Guidance extends Component {
     return (
       <div className="guidance">
         <div className="image-container text-center">
-          <img src="/images/identity.svg" alt="identity icon" />
+          <img src="images/identity.svg" alt="identity icon" />
         </div>
         <p>
           <strong>Verifying your profile</strong> allows other users to know

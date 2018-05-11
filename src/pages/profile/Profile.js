@@ -214,7 +214,7 @@ class Profile extends Component {
                         data-modal="profile"
                         onClick={this.handleToggle}
                       >
-                        <img src="/images/edit-icon.svg" alt="edit name" />
+                        <img src="images/edit-icon.svg" alt="edit name" />
                       </button>
                     </div>
                   </div>
@@ -355,7 +355,7 @@ class Profile extends Component {
         {this.props.profile.status === 'confirming' && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
-              <img src="/images/spinner-animation.svg" role="presentation" />
+              <img src="images/spinner-animation.svg" role="presentation" />
             </div>
             Confirm transaction<br />
             Press &ldquo;Submit&rdquo; in MetaMask window
@@ -365,7 +365,7 @@ class Profile extends Component {
         {this.props.profile.status === 'processing' && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
-              <img src="/images/spinner-animation.svg" role="presentation" />
+              <img src="images/spinner-animation.svg" role="presentation" />
             </div>
             Deploying your identity<br />
             Please stand by...
@@ -375,7 +375,7 @@ class Profile extends Component {
         {this.props.profile.status === 'error' && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
-              <img src="/images/flat_cross_icon.svg" role="presentation" />
+              <img src="images/flat_cross_icon.svg" role="presentation" />
             </div>
             Error<br />
             <a
@@ -394,7 +394,7 @@ class Profile extends Component {
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img
-                src="/images/circular-check-button.svg"
+                src="images/circular-check-button.svg"
                 role="presentation"
               />
             </div>

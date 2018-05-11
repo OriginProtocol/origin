@@ -61,7 +61,7 @@ class MyPurchaseCard extends Component {
           <div className="aspect-ratio">
             <div className="image-container">
               <Link to={`/purchases/${address}`}>
-                <img src={(pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:") ? pictures[0] : '/images/default-image.jpg'} role="presentation" />
+                <img src={(pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:") ? pictures[0] : 'images/default-image.jpg'} role="presentation" />
               </Link>
             </div>
           </div>
