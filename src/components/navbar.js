@@ -22,10 +22,10 @@ class NavBar extends Component {
       <nav className="navbar navbar-expand-lg navbar-dark">
         <div className="container">
           <button className="navbar-toggler mr-3" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <img src="/images/menu-icon-light.svg" alt="Menu" />
+            <img src="/images/origin-icon-white.svg" alt="Origin menu" />
           </button>
           <Link to="/" className="navbar-brand mr-auto mr-lg-3">
-            <div className="logo-container">
+            <div className="d-none d-lg-block logo-container">
               <img src="/images/origin-logo.svg" className="origin-logo" alt="Origin Protocol" />
             </div>
           </Link>
