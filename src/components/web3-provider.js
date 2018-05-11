@@ -12,7 +12,8 @@ const networkNames = {
   2: 'Morden',
   3: 'Ropsten',
   4: 'Rinkeby',
-  42: 'Kovan'
+  42: 'Kovan',
+  999: 'Localhost',
 }
 const supportedNetworkIds = [3, 4]
 const ONE_SECOND = 1000

@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
-import { connect } from 'react-redux'
-
-import Identicon from 'components/Identicon'
-import Notification from './notification'
-import data from '../data'
+import ConnectivityDropdown from 'components/dropdowns/connectivity'
+import NotificationsDropdown from 'components/dropdowns/notifications'
+import UserDropdown from 'components/dropdowns/user'
 
 class NavBar extends Component {
   constructor(props) {
@@ -20,19 +18,14 @@ class NavBar extends Component {
   }
 
   render() {
-    // randomly select from three examples
-    const exampleCounts = [4, 44, 444][Math.floor(Math.random() * 3)]
-    // avoid integers greater than two digits
-    const notificationCount = exampleCounts < 100 ? Number(exampleCounts).toLocaleString() : `${Number(99).toLocaleString()}+`
-
     return (
       <nav className="navbar navbar-expand-lg navbar-dark">
         <div className="container">
           <button className="navbar-toggler mr-3" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <img src="/images/menu-icon-light.svg" alt="Menu" />
+            <img src="/images/origin-icon-white.svg" alt="Origin menu" />
           </button>
           <Link to="/" className="navbar-brand mr-auto mr-lg-3">
-            <div className="logo-container">
+            <div className="d-none d-lg-block logo-container">
               <img src="/images/origin-logo.svg" className="origin-logo" alt="Origin Protocol" />
             </div>
           </Link>
@@ -57,89 +50,9 @@ class NavBar extends Component {
             </div>
           </div>
           <div className="static navbar-nav order-1 order-lg-2">
-            <div className="nav-item notifications dropdown">
-              <a className="nav-link active dropdown-toggle" id="notificationsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <div className="unread-badge"></div>
-                <img src="/images/alerts-icon.svg" className="notifications" alt="Notifications" />
-                <img src="/images/alerts-icon-selected.svg" className="notifications selected" alt="Notifications" />
-              </a>
-              <div className="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsDropdown">
-                <div className="triangle-container d-flex justify-content-end"><div className="triangle"></div></div>
-                <div className="actual-menu">
-                  <header className="d-flex">
-                    <div className="count">
-                      <div className="d-inline-block">{notificationCount}</div>
-                    </div>
-                    <h3>Notifications</h3>
-                  </header>
-                  <div className="notifications-list">
-                    <ul className="list-group">
-                      {data.notifications.map(n => <Notification key={`navbar-notification-${n._id}`} notification={n} />)}
-                    </ul>
-                  </div>
-                  <footer>
-                    <Link to="/notifications">View All</Link>
-                  </footer>
-                </div>
-              </div>
-            </div>
-            <div className="nav-item identity dropdown">
-              <a className="nav-link active dropdown-toggle" id="identityDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <Identicon address={this.props.wallet} />
-              </a>
-              <div className="dropdown-menu dropdown-menu-right" aria-labelledby="identityDropdown">
-                <div className="triangle-container d-flex justify-content-end"><div className="triangle"></div></div>
-                <div className="actual-menu">
-                  <div className="wallet">
-                    <div className="d-flex">
-                      <div className="image-container">
-                        <Link to="/profile">
-                          <Identicon address={this.props.wallet} size={50} />
-                        </Link>
-                      </div>
-                      <div className="eth d-flex flex-column justify-content-between">
-                        <div>ETH Address:</div>
-                        <Link to="/profile"><strong>{this.props.wallet}</strong></Link>
-                      </div>
-                    </div>
-                    <hr className="dark sm" />
-                    <div className="d-flex">
-                      <div className="avatar-container">
-                        <Link to="/profile">
-                          {/* <img src={this.props.profile.pic} alt="avatar" /> */}
-                          <img src="/images/avatar-blue.svg" alt="avatar" />
-                        </Link>
-                      </div>
-                      <div className="identification d-flex flex-column justify-content-between">
-                        <div><Link to="/profile">{this.props.profile.name}</Link></div>
-                        <div>
-                          {this.props.profile.published.phone &&
-                            <Link to="/profile">
-                              <img src="/images/phone-icon-verified.svg" alt="phone verified icon" />
-                            </Link>
-                          }
-                          {this.props.profile.published.email &&
-                            <Link to="/profile">
-                              <img src="/images/email-icon-verified.svg" alt="email verified icon" />
-                            </Link>
-                          }
-                          {this.props.profile.published.facebook &&
-                            <Link to="/profile">
-                              <img src="/images/facebook-icon-verified.svg" alt="Facebook verified icon" />
-                            </Link>
-                          }
-                          {this.props.profile.published.twitter &&
-                            <Link to="/profile">
-                              <img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" />
-                            </Link>
-                          }
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <ConnectivityDropdown />
+            <NotificationsDropdown />
+            <UserDropdown />
           </div>
         </div>
       </nav>
@@ -147,12 +60,4 @@ class NavBar extends Component {
   }
 }
 
-
-const mapStateToProps = state => {
-  return {
-    wallet: state.wallet.address,
-    profile: state.profile,
-  }
-}
-
-export default connect(mapStateToProps)(NavBar)
+export default NavBar
