@@ -2,7 +2,7 @@ import { ProfileConstants } from '../actions/Profile'
 
 const initialState = {
   user: {
-    profile: { claims: { customFields: [] } },
+    profile: {},
     attestations: []
   },
   name: 'Unnamed User',
@@ -58,46 +58,40 @@ function hasChanges(state) {
 }
 
 function unpackUser(state) {
-  try {
-    var user = state.user,
-      customFields = user.profile.claims.customFields,
-      firstName = customFields.find(f => f.field === 'firstName'),
-      lastName = customFields.find(f => f.field === 'lastName'),
-      description = customFields.find(f => f.field === 'description')
+  var user = state.user,
+    firstName = user.profile.firstName,
+    lastName = user.profile.lastName,
+    description = user.profile.description
 
-    if (firstName && firstName.value) {
-      state.provisional.firstName = state.published.firstName = firstName.value
+  if (firstName) {
+    state.provisional.firstName = state.published.firstName = firstName
+  }
+  if (lastName) {
+    state.provisional.lastName = state.published.lastName = lastName
+  }
+  if (description) {
+    state.provisional.description = state.published.description = description
+  }
+  (user.attestations || []).forEach(attestation => {
+    if (attestation.service === 'facebook') {
+      state.provisional.facebook = state.published.facebook = true
     }
-    if (lastName && lastName.value) {
-      state.provisional.lastName = state.published.lastName = lastName.value
+    if (attestation.service === 'twitter') {
+      state.provisional.twitter = state.published.twitter = true
     }
-    if (description && description.value) {
-      state.provisional.description = state.published.description =
-        description.value
+    if (attestation.service === 'email') {
+      state.provisional.email = state.published.email = true
     }
-    (user.attestations || []).forEach(attestation => {
-      if (attestation.service === 'facebook') {
-        state.provisional.facebook = state.published.facebook = true
-      }
-      if (attestation.service === 'twitter') {
-        state.provisional.twitter = state.published.twitter = true
-      }
-      if (attestation.service === 'email') {
-        state.provisional.email = state.published.email = true
-      }
-      if (attestation.service === 'phone') {
-        state.provisional.phone = state.published.phone = true
-      }
-    })
+    if (attestation.service === 'phone') {
+      state.provisional.phone = state.published.phone = true
+    }
+  })
 
-    if (firstName && lastName) {
-      var name = `${firstName.value} ${lastName.value}`.trim()
-      if (name) {
-        state.name = name
-      }
+  if (firstName && lastName) {
+    var name = `${firstName} ${lastName}`.trim()
+    if (name) {
+      state.name = name
     }
-  } catch (e) {
-    /* Ignore */
   }
 
   return hasChanges(state)

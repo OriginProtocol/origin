@@ -50,14 +50,9 @@ export function deployProfile() {
 
     let userData = {
       profile: {
-        claims: {
-          name: `${provisional.firstName} ${provisional.lastName}`,
-          customFields: [
-            { field: 'firstName', value: provisional.firstName },
-            { field: 'lastName', value: provisional.lastName },
-            { field: 'description', value: provisional.description }
-          ]
-        }
+        firstName: provisional.firstName,
+        lastName: provisional.lastName,
+        description: provisional.description
       },
       attestations: []
     }
