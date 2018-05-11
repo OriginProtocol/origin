@@ -424,10 +424,14 @@ a:hover {
 }
 
 .navbar .unread-badge {
-  position: absolute;
+  background-color: var(--greenblue);
   border: 2px solid var(--dusk);
+  border-radius: 50%;
+  height: 12px;
+  position: absolute;
   right: 17px;
   top: 2px;
+  width: 12px;
 }
 
 .navbar .dropdown {
