@@ -5,9 +5,7 @@ let config = {
   ipfsApiPort: process.env.IPFS_API_PORT || undefined,
   ipfsGatewayPort: process.env.IPFS_GATEWAY_PORT || undefined,
   ipfsGatewayProtocol: process.env.IPFS_GATEWAY_PROTOCOL || undefined,
-  attestationServerUrl:
-    process.env.ATTESTATION_SERVER_URL ||
-    'https://dev.bridge.originprotocol.com/api/attestations'
+  attestationServerUrl: process.env.ATTESTATION_SERVER_URL || undefined
 }
 
 try {

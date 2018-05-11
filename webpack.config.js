@@ -9,14 +9,6 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const isProduction = process.env.NODE_ENV === 'production'
 
 const env = { CONTRACT_ADDRESSES: '{}' }
-if (!isProduction) {
-  Object.assign(env, {
-    IPFS_DOMAIN: 'localhost',
-    IPFS_API_PORT: 5002,
-    IPFS_GATEWAY_PORT: 8080,
-    IPFS_GATEWAY_PROTOCOL: 'http'
-  })
-}
 
 var config = {
   entry: { app: './src/index.js' },
