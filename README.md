@@ -71,6 +71,7 @@ In a separate tab:
 git clone https://github.com/OriginProtocol/demo-dapp origin-demo-dapp && cd origin-demo-dapp
 npm run install:dev
 npm run start
+cp .env.dev .env
 ```
 
 The `install:dev` script performs the regular install and then links to your local origin.js.
