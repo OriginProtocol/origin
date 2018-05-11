@@ -1,8 +1,8 @@
 {
-	"fromNetworkName": "Ropsten",
-	"toNetworkName": "Local",
-	"fromGateway": "https://ropsten.infura.io",
-	"toGateway": "http://localhost:8545",
-	"fromListingAddress_v0_1": "0xAddress",
-	"toListingsRegistryAddress_v0_2":"0xAddress"
+	"srcNetworkName": "Ropsten",
+	"dstNetworkName": "Local",
+	"srcGateway": "https://ropsten.infura.io",
+	"dstGateway": "http://localhost:8545",
+	"srcListingAddress_v0_1": "0xAddress",
+	"dstListingsRegistryAddress_v0_2":"0xAddress"
 }

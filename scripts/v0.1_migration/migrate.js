@@ -1,25 +1,30 @@
 // Usage: 	node migrate.js [-h] -c CONFIGFILE -d DATAFILE -a {read,write}
 // Ex.		node migrate.js -c ./conf-test.json -d ./data.json -a read
-
-// config (json):
-//	from_network_name, to_network_name
-// 	from_gateway, to_gateway
-// 	from_listing_address_v0_1, to_listings_registry_address_v0_2
-
+//
 // test the migration by setting "to_*" vars to localhost values
-
-// data_file (json): file to which listings will be read to and migrated from
-
-// action:
-//	read: read listings from blockchain to data file
-// 	write: write listings from data file to blockchain, record migration status for each listing
+//
+// TODOs:
+//   check for any duplicate IPFS hashes before migrating
+//
+// Args:
+//   config (json):
+//	   srcNetworkName, toNetworkName
+// 	   srcGateway, toGateway
+// 	   srcListingAddress_v0_1, dstListingsRegistryAddress_v0_2
+//
+//   data_file (json): a file which listings to migrate will be written to and read from 
+//
+//   action:
+//	   read: read listings from blockchain to data file
+// 	   write: write listings from data file to blockchain, record migration status for each listing
+//		      Assumes all listings in data file have not been migrated
 var Web3 = require('web3');
 var ArgumentParser = require('argparse').ArgumentParser;
 
 var fs = require('fs');
 
-var listing_abi_v0_1 = require("./Listing_v0_1");
-var listings_registry_abi_v0_2 = require("./ListingsRegistry_v0_2")['abi'];
+var listingAbi_v0_1 = require("./Listing_v0_1");
+var listingsRegistryAbi_v0_2 = require("./ListingsRegistry_v0_2")['abi'];
 
 var parser = new ArgumentParser({addHelp: true});
 parser.addArgument(
@@ -50,30 +55,27 @@ var args = parser.parseArgs();
 try {
 	var config = require(args.configFile);
 } catch(e) {
-	console.log("Error loading config file: " + e)
-	process.exit()
+	console.log("Error loading config file: " + e);
+	process.exit();
 }
 
-// todo: data file is writeable/readable
-// console.log("Invalid data file: " + e)
-
 if (args.action == 'read') {
-	console.log("Reading from: " + config.fromNetworkName + " - Gateway: " + config.fromGateway)
-	web3 = new Web3(new Web3.providers.HttpProvider(config.fromGateway))
+	console.log("Reading from network: " + config.srcNetworkName + " - Gateway: " + config.srcGateway);
+	web3 = new Web3(new Web3.providers.HttpProvider(config.srcGateway));
 
-	let address = config.fromListingAddress_v0_1
-	let contract = new web3.eth.Contract(listings_registry_abi_v0_2, address);
+	let srcAddress = config.srcListingAddress_v0_1;
+	let srcContract = new web3.eth.Contract(listingAbi_v0_1, srcAddress);
 
-	contract.methods.listingsLength().call().then((numListings) => {
+	srcContract.methods.listingsLength().call().then((numListings) => {
 		console.log("Found " + numListings + " listings.")
 		if (numListings == 0) {
-			process.exit()
+			process.exit();
 		}
 
 		let getListingCalls = []
 
 		for(let i = 0; i < numListings; i++) {
-			getListingCalls.push(contract.methods.getListing(i).call().then((listingData) => {
+			getListingCalls.push(srcContract.methods.getListing(i).call().then((listingData) => {
 				listing = {
 					lister: listingData[1],
 					ipfsHash: listingData[2],
@@ -83,20 +85,24 @@ if (args.action == 'read') {
 				}
 
 				return listing;
+			}).catch((e) => {
+				return false;
 			}))
 		}
 
 		Promise.all(getListingCalls).then((listings) => {
-			fs.writeFile(args.dataFile, JSON.stringify(listings), () => {
-			console.log("Wrote " + listings.length + " listings to: " + args.dataFile)
-		});
+			retrievedListings = listings.filter((el) => el);
+			console.log("Retrieved " + retrievedListings.length + " listings.");
+
+			fs.writeFile(args.dataFile, JSON.stringify(retrievedListings, null, 4), () => {
+				console.log("Wrote " + retrievedListings.length + " listings to: " + args.dataFile);
+			});
 		})
 
 	}).catch((e) => {
-		console.log("error reading listings data: " + e)
-		process.exit()
+		console.log("Error reading listings data: " + e);
+		process.exit();
 	});
 
 } else if (args.action == 'write') {
-	// require a method to create a listing while setting lister to an address other than msg.sender
 }
