@@ -9,15 +9,16 @@ class Review extends Component {
   }
 
   componentWillMount() {
-    this.props.fetchUser(this.props.review.reviewerAddress)
+    this.props.fetchUser(this.props.review.reviewer)
   }
 
   render() {
     const { review, user } = this.props
-    const { content, createdAt, score } = review
+    const { content, rating, timestamp } = review
     const { address, profile } = user
     const claims = profile && profile.claims
     const fullName = (claims && claims.name) || 'Unnamed User'
+    const createdAt = timestamp * 1000 // convert seconds since epoch to ms
 
     return (
       <div className="review">
@@ -29,13 +30,13 @@ class Review extends Component {
             <div className="name">{fullName}</div>
             <div className="address text-muted text-truncate">{address}</div>
           </div>
-          <div className="score d-flex flex-column justify-content-center text-right">
+          <div className="rating d-flex flex-column justify-content-center text-right">
             <div className="stars">{[...Array(5)].map((undef, i) => {
               return (
-                <img key={`score-star-${i}`} src={`/images/star-${score > i ? 'filled' : 'empty'}.svg`} alt="review score star" />
+                <img key={`rating-star-${i}`} src={`/images/star-${rating > i ? 'filled' : 'empty'}.svg`} alt="review rating star" />
               )
             })}</div>
-            <div className="age text-muted"><Timelapse reactive={false} reference={createdAt} /></div>
+            <div className="age text-muted"><Timelapse reactive={false} reference={new Date(createdAt)} /></div>
           </div>
         </div>
         <p className="content">{content}</p>
@@ -46,7 +47,7 @@ class Review extends Component {
 
 const mapStateToProps = (state, { review }) => {
   return {
-    user: state.users.find(u => u.address === review.reviewerAddress) || {},
+    user: state.users.find(u => u.address === review.reviewer) || {},
   }
 }
 

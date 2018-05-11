@@ -1809,7 +1809,7 @@ label[for=root_pictures]:hover {
   flex-basis: 33%;
 }
 
-.review .score {
+.review .rating {
   flex-shrink: 0;
 }
 
