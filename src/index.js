@@ -10,13 +10,20 @@ var resources = {
   users: require("./resources/users")
 }
 
+const defaultBridgeServer = "https://bridge.originprotocol.com"
+const defaultIpfsDomain = "gateway.originprotocol.com"
+const defaultIpfsApiPort = "443"
+const defaultIpfsGatewayPort = "443"
+const defaultIpfsGatewayProtocol = "https"
+const defaultAttestationServerUrl = `${defaultBridgeServer}/api/attestations`
+
 class Origin {
   constructor({
-    ipfsDomain,
-    ipfsApiPort,
-    ipfsGatewayPort,
-    ipfsGatewayProtocol,
-    attestationServerUrl,
+    ipfsDomain = defaultIpfsDomain,
+    ipfsApiPort = defaultIpfsApiPort,
+    ipfsGatewayPort = defaultIpfsGatewayPort,
+    ipfsGatewayProtocol = defaultIpfsGatewayProtocol,
+    attestationServerUrl = defaultAttestationServerUrl,
     contractAddresses
   } = {}) {
     this.contractService = new ContractService({ contractAddresses })

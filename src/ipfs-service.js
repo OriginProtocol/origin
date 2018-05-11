@@ -13,10 +13,10 @@ const Ports = {
 
 class IpfsService {
   constructor({
-    ipfsGatewayProtocol = "https",
-    ipfsDomain = "gateway.originprotocol.com",
-    ipfsGatewayPort = "443",
-    ipfsApiPort = "443"
+    ipfsGatewayProtocol,
+    ipfsDomain,
+    ipfsGatewayPort,
+    ipfsApiPort
   } = {}) {
     this.gateway = `${ipfsGatewayProtocol}://${ipfsDomain}`
     this.api = `${ipfsGatewayProtocol}://${ipfsDomain}`
