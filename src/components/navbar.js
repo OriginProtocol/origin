@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
+import ConnectivityDropdown from 'components/dropdowns/connectivity'
 import NotificationsDropdown from 'components/dropdowns/notifications'
 import UserDropdown from 'components/dropdowns/user'
 
@@ -49,6 +50,7 @@ class NavBar extends Component {
             </div>
           </div>
           <div className="static navbar-nav order-1 order-lg-2">
+            <ConnectivityDropdown />
             <NotificationsDropdown />
             <UserDropdown />
           </div>

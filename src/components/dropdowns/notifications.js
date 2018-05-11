@@ -18,7 +18,7 @@ class NotificationsDropdown extends Component {
     return (
       <div className="nav-item notifications dropdown">
         <a className="nav-link active dropdown-toggle" id="notificationsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <div className="unread-badge"></div>
+          <div className="unread-indicator"></div>
           <img src="/images/alerts-icon.svg" className="notifications" alt="Notifications" />
           <img src="/images/alerts-icon-selected.svg" className="notifications selected" alt="Notifications" />
         </a>
