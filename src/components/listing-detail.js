@@ -7,8 +7,6 @@ import Modal from './modal'
 import Review from './review'
 import UserCard from './user-card'
 
-import data from '../data'
-
 // temporary - we should be getting an origin instance from our app,
 // not using a global singleton
 import origin from '../services/origin'
@@ -74,7 +72,9 @@ class ListingsDetail extends Component {
     const { purchases } = this.state
 
     try {
-      const reviews = await Promise.all(purchases.map(p => origin.reviews.find({ purchaseAddress: p.address })))
+      const reviews = await Promise.all(
+        purchases.map(p => origin.reviews.find({ purchaseAddress: p.address }))
+      )
       const flattened = [].concat(...reviews)
       console.log('Reviews:', flattened)
       this.setState({ reviews: flattened })

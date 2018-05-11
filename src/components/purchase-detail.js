@@ -6,8 +6,6 @@ import Review from './review'
 import TransactionProgress from './transaction-progress'
 import UserCard from './user-card'
 
-import data from '../data'
-
 import origin from '../services/origin'
 
 /* Transaction stages: no disputes and no seller review of buyer/transaction
@@ -72,6 +70,7 @@ class PurchaseDetail extends Component {
 
     this.confirmReceipt = this.confirmReceipt.bind(this)
     this.confirmShipped = this.confirmShipped.bind(this)
+    this.loadPurchase = this.loadPurchase.bind(this)
     this.withdrawFunds = this.withdrawFunds.bind(this)
     this.state = {
       accounts: [],
@@ -79,13 +78,14 @@ class PurchaseDetail extends Component {
       listing: {},
       logs: [],
       purchase: {},
+      reviews: [],
       seller: {},
     }
   }
 
   componentDidMount() {
     this.loadAccounts()
-    this.loadPurchase()
+    this.loadPurchase(this.props.purchaseAddress, true)
 
     $('[data-toggle="tooltip"]').tooltip()
   }
@@ -97,6 +97,7 @@ class PurchaseDetail extends Component {
     if (prevState.purchase.listingAddress !== listingAddress) {
       this.loadListing(listingAddress)
       this.loadBuyer(buyerAddress)
+      this.loadReviews(listingAddress)
     }
 
     if (prevState.listing.sellerAddress !== sellerAddress) {
@@ -126,19 +127,65 @@ class PurchaseDetail extends Component {
     }
   }
 
-  async loadPurchase() {
-    const { purchaseAddress } = this.props
-
+  async loadPurchase(purchaseAddress, withLogs) {
     try {
       const purchase = await origin.purchases.get(purchaseAddress)
+      console.log(purchase)
       this.setState({ purchase })
       console.log('Purchase: ', purchase)
-      const logs = await origin.purchases.getLogs(purchaseAddress)
-      this.setState({ logs })
-      console.log('Logs: ', logs)
+
+      if (withLogs) {
+        const logs = await origin.purchases.getLogs(purchaseAddress)
+        this.setState({ logs })
+        console.log('Logs: ', logs)
+      }
+
+      return purchase
     } catch(error) {
       console.error(`Error loading purchase ${purchaseAddress}`)
       console.error(error)
+    }
+  }
+
+  async getPurchaseAddress(addr, i) {
+    try {
+      return await origin.listings.purchaseAddressByIndex(addr, i)
+    } catch(error) {
+      console.error(`Error fetching purchase address at: ${i}`)
+    }
+  }
+
+  async loadPurchases(listingAddress) {
+    try {
+      const length = await origin.listings.purchasesLength(listingAddress)
+      console.log('Purchase count:', length)
+
+      const purchaseAddresses = await Promise.all(
+        [...Array(length).keys()].map(i => this.getPurchaseAddress(listingAddress, i))
+      )
+
+      return await Promise.all(
+        purchaseAddresses.map(this.loadPurchase)
+      )
+    } catch(error) {
+      console.error(`Error fetching purchases for listing: ${listingAddress}`)
+      console.error(error)
+    }
+  }
+
+  async loadReviews(listingAddress) {
+    try {
+      const purchases = await this.loadPurchases(listingAddress)
+      console.log('PURCHASES', purchases)
+      const reviews = await Promise.all(
+        purchases.map(p => origin.reviews.find({ purchaseAddress: p.address }))
+      )
+      const flattened = [].concat(...reviews)
+      console.log('Reviews:', flattened)
+      this.setState({ reviews: flattened })
+    } catch(error) {
+      console.error(error)
+      console.error(`Error fetching reviews`)
     }
   }
 
@@ -170,7 +217,7 @@ class PurchaseDetail extends Component {
     try {
       const transaction = await origin.purchases.buyerConfirmReceipt(purchaseAddress)
       await transaction.whenFinished()
-      this.loadPurchase()
+      this.loadPurchase(purchaseAddress, true)
     } catch(error) {
       console.error('Error marking purchase received by buyer')
       console.error(error)
@@ -183,7 +230,7 @@ class PurchaseDetail extends Component {
     try {
       const transaction = await origin.purchases.sellerConfirmShipped(purchaseAddress)
       await transaction.whenFinished()
-      this.loadPurchase()
+      this.loadPurchase(purchaseAddress, true)
     } catch(error) {
       console.error('Error marking purchase shipped by seller')
       console.error(error)
@@ -196,7 +243,7 @@ class PurchaseDetail extends Component {
     try {
       const transaction = await origin.purchases.sellerGetPayout(purchaseAddress)
       await transaction.whenFinished()
-      this.loadPurchase()
+      this.loadPurchase(purchaseAddress, true)
     } catch(error) {
       console.error('Error withdrawing funds for seller')
       console.error(error)
@@ -208,7 +255,8 @@ class PurchaseDetail extends Component {
   }
 
   render() {
-    const { accounts, buyer, listing, logs, purchase, seller } = this.state
+    const { accounts, buyer, listing, logs, purchase, reviews, seller } = this.state
+    const buyersReviews = reviews.filter(r => r.revieweeRole === 'SELLER')
 
     if (!purchase.address || !listing.address ){
       return null
@@ -408,22 +456,25 @@ class PurchaseDetail extends Component {
                   <hr />
                 </Fragment>
               }
-              <div className="reviews">
-                <h2>Reviews <span className="review-count">{Number(57).toLocaleString()}</span></h2>
-                {perspective === 'buyer' && receivedAt && !reviewedAt &&
-                  <form>
-                    <div className="form-group">
-                      <label htmlFor="review">Write a review</label>
-                      <textarea rows="4" id="review" className="form-control" placeholder="Tell us a bit about your purchase"></textarea>
-                    </div>
-                    <div className="button-container text-right">
-                      <button type="submit" className="btn btn-primary" onClick={() => alert('To Do')}>Submit</button>
-                    </div>
-                  </form>
-                }
-                {data.reviews.map(r => <Review key={r._id} review={r} />)}
-                <a href="#" className="reviews-link" onClick={() => alert('To Do')}>Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a>
-              </div>
+              {!!buyersReviews.length &&
+                <div className="reviews">
+                  <h2>Reviews <span className="review-count">{Number(buyersReviews.length).toLocaleString()}</span></h2>
+                  {perspective === 'buyer' && receivedAt && !reviewedAt &&
+                    <form>
+                      <div className="form-group">
+                        <label htmlFor="review">Write a review</label>
+                        <textarea rows="4" id="review" className="form-control" placeholder="Tell us a bit about your purchase"></textarea>
+                      </div>
+                      <div className="button-container text-right">
+                        <button type="submit" className="btn btn-primary" onClick={() => alert('To Do')}>Submit</button>
+                      </div>
+                    </form>
+                  }
+                  {buyersReviews.map(r => <Review key={r.transactionHash} review={r} />)}
+                  {/* To Do: pagination */}
+                  {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
+                </div>
+              }
             </div>
             <div className="col-12 col-lg-4">
               {soldAt &&
