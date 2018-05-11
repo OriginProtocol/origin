@@ -83,10 +83,12 @@ class PurchaseDetail extends Component {
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.loadAccounts()
-    this.loadPurchase(this.props.purchaseAddress, true)
+    this.loadPurchase()
+  }
 
+  componentDidMount() {
     $('[data-toggle="tooltip"]').tooltip()
   }
 
@@ -127,19 +129,19 @@ class PurchaseDetail extends Component {
     }
   }
 
-  async loadPurchase(purchaseAddress, withLogs) {
+  async loadPurchase() {
+    const { purchaseAddress } = this.props
+
     try {
       const purchase = await origin.purchases.get(purchaseAddress)
       console.log(purchase)
       this.setState({ purchase })
       console.log('Purchase: ', purchase)
 
-      if (withLogs) {
-        const logs = await origin.purchases.getLogs(purchaseAddress)
-        this.setState({ logs })
-        console.log('Logs: ', logs)
-      }
-
+      const logs = await origin.purchases.getLogs(purchaseAddress)
+      this.setState({ logs })
+      console.log('Logs: ', logs)
+      
       return purchase
     } catch(error) {
       console.error(`Error loading purchase ${purchaseAddress}`)
@@ -165,7 +167,7 @@ class PurchaseDetail extends Component {
       )
 
       return await Promise.all(
-        purchaseAddresses.map(this.loadPurchase)
+        purchaseAddresses.map(addr => origin.purchases.get(addr))
       )
     } catch(error) {
       console.error(`Error fetching purchases for listing: ${listingAddress}`)
@@ -217,7 +219,7 @@ class PurchaseDetail extends Component {
     try {
       const transaction = await origin.purchases.buyerConfirmReceipt(purchaseAddress)
       await transaction.whenFinished()
-      this.loadPurchase(purchaseAddress, true)
+      this.loadPurchase()
     } catch(error) {
       console.error('Error marking purchase received by buyer')
       console.error(error)
@@ -230,7 +232,7 @@ class PurchaseDetail extends Component {
     try {
       const transaction = await origin.purchases.sellerConfirmShipped(purchaseAddress)
       await transaction.whenFinished()
-      this.loadPurchase(purchaseAddress, true)
+      this.loadPurchase()
     } catch(error) {
       console.error('Error marking purchase shipped by seller')
       console.error(error)
@@ -243,7 +245,7 @@ class PurchaseDetail extends Component {
     try {
       const transaction = await origin.purchases.sellerGetPayout(purchaseAddress)
       await transaction.whenFinished()
-      this.loadPurchase(purchaseAddress, true)
+      this.loadPurchase()
     } catch(error) {
       console.error('Error withdrawing funds for seller')
       console.error(error)
@@ -285,7 +287,7 @@ class PurchaseDetail extends Component {
     const status = active ? 'active' : 'inactive'
     const maxStep = perspective === 'seller' ? 4 : 3
     let decimal, left, step
-
+console.log(purchase)
     if (purchase.stage === 'complete') {
       step = maxStep
     } else if (purchase.stage === 'seller_pending') {
@@ -297,7 +299,7 @@ class PurchaseDetail extends Component {
     } else {
       step = 0
     }
-
+console.log('step', step)
     if (!step) {
       left = '28px'
     } else if (step === 1) {
