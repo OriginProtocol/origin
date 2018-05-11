@@ -55,7 +55,7 @@ class MySaleCard extends Component {
             <div className="aspect-ratio order-1 order-lg-3">
               <div className="image-container">
                 {listing.pictures && !!listing.pictures.length &&
-                  <img src={(new URL(listing.pictures[0])).protocol === "data:" ? listing.pictures[0] : '/images/default-image.jpg'} role="presentation" />
+                  <img src={(new URL(listing.pictures[0])).protocol === "data:" ? listing.pictures[0] : 'images/default-image.jpg'} role="presentation" />
                 }
               </div>
             </div>
@@ -66,7 +66,7 @@ class MySaleCard extends Component {
             {step === 2 && <p><strong>Next Step:</strong> Wait for buyer to receive order</p>}
             {step === 3 && <p><strong>Next Step:</strong> Withdraw funds</p>}
             {step === 4 && <p>This order is complete</p>}
-            <p className="link-container"><Link to={`/purchases/${purchase.address}`}>View Details<img src="/images/carat-blue.svg" className="carat" alt="right carat" /></Link></p>
+            <p className="link-container"><Link to={`/purchases/${purchase.address}`}>View Details<img src="images/carat-blue.svg" className="carat" alt="right carat" /></Link></p>
           </div>
         </div>
       </div>

@@ -25,8 +25,8 @@ class UserCard extends Component {
           <div className="d-flex">
             <div className="image-container">
               <Link to={`/users/${userAddress}`}>
-                <img src="/images/identicon.png"
-                  srcSet="/images/identicon@2x.png 2x, /images/identicon@3x.png 3x"
+                <img src="images/identicon.png"
+                  srcSet="images/identicon@2x.png 2x, images/identicon@3x.png 3x"
                   alt="wallet icon" />
               </Link>
             </div>
@@ -38,7 +38,7 @@ class UserCard extends Component {
           <hr className="dark sm" />
           <div className="d-flex">
             <div className="avatar-container">
-              <img src="/images/avatar-blue.svg" alt="avatar" />
+              <img src="images/avatar-blue.svg" alt="avatar" />
             </div>
             <div className="identification d-flex flex-column justify-content-between">
               <div><Link to={`/users/${userAddress}`}>{fullName}</Link></div>
@@ -46,22 +46,22 @@ class UserCard extends Component {
                 <div>
                   {attestations.find(a => a.service === 'phone') &&
                     <Link to={`/users/${userAddress}`}>
-                      <img src="/images/phone-icon-verified.svg" alt="phone verified icon" />
+                      <img src="images/phone-icon-verified.svg" alt="phone verified icon" />
                     </Link>
                   }
                   {attestations.find(a => a.service === 'email') &&
                     <Link to={`/users/${userAddress}`}>
-                      <img src="/images/email-icon-verified.svg" alt="email verified icon" />
+                      <img src="images/email-icon-verified.svg" alt="email verified icon" />
                     </Link>
                   }
                   {attestations.find(a => a.service === 'facebook') &&
                     <Link to={`/users/${userAddress}`}>
-                      <img src="/images/facebook-icon-verified.svg" alt="Facebook verified icon" />
+                      <img src="images/facebook-icon-verified.svg" alt="Facebook verified icon" />
                     </Link>
                   }
                   {attestations.find(a => a.service === 'twitter') &&
                     <Link to={`/users/${userAddress}`}>
-                      <img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" />
+                      <img src="images/twitter-icon-verified.svg" alt="Twitter verified icon" />
                     </Link>
                   }
                 </div>

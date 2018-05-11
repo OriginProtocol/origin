@@ -36,7 +36,7 @@ class UserDropdown extends Component {
                 <div className="avatar-container">
                   <Link to="/profile">
                     {/* <img src={this.props.profile.pic} alt="avatar" /> */}
-                    <img src="/images/avatar-blue.svg" alt="avatar" />
+                    <img src="images/avatar-blue.svg" alt="avatar" />
                   </Link>
                 </div>
                 <div className="identification d-flex flex-column justify-content-between">
@@ -44,22 +44,22 @@ class UserDropdown extends Component {
                   <div>
                     {this.props.profile.published.phone &&
                       <Link to="/profile">
-                        <img src="/images/phone-icon-verified.svg" alt="phone verified icon" />
+                        <img src="images/phone-icon-verified.svg" alt="phone verified icon" />
                       </Link>
                     }
                     {this.props.profile.published.email &&
                       <Link to="/profile">
-                        <img src="/images/email-icon-verified.svg" alt="email verified icon" />
+                        <img src="images/email-icon-verified.svg" alt="email verified icon" />
                       </Link>
                     }
                     {this.props.profile.published.facebook &&
                       <Link to="/profile">
-                        <img src="/images/facebook-icon-verified.svg" alt="Facebook verified icon" />
+                        <img src="images/facebook-icon-verified.svg" alt="Facebook verified icon" />
                       </Link>
                     }
                     {this.props.profile.published.twitter &&
                       <Link to="/profile">
-                        <img src="/images/twitter-icon-verified.svg" alt="Twitter verified icon" />
+                        <img src="images/twitter-icon-verified.svg" alt="Twitter verified icon" />
                       </Link>
                     }
                   </div>

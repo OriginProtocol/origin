@@ -17,7 +17,7 @@ var config = {
     path: path.resolve(__dirname, 'build'),
     pathinfo: true,
     filename: '[name].[hash:8].js',
-    publicPath: '/'
+    publicPath: ''
   },
   module: {
     noParse: [/^react$/],
@@ -35,11 +35,17 @@ var config = {
               use: [
                 {
                   loader: 'css-loader',
-                  options: { minimize: true, sourceMap: false }
+                  options: { minimize: true, sourceMap: false, url: false }
                 }
               ]
             })
-          : ['style-loader', 'css-loader']
+          : [
+              'style-loader',
+              {
+                loader: 'css-loader',
+                options: { url: false }
+              }
+            ]
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
@@ -83,6 +89,7 @@ var config = {
     new CopyWebpackPlugin([
       'public/favicon.ico',
       { from: 'public/images', to: 'images' },
+      { from: 'public/fonts', to: 'fonts' },
       { from: 'public/schemas', to: 'schemas' }
     ])
   ]

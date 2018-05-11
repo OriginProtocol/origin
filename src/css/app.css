@@ -230,7 +230,7 @@ a:hover {
   vertical-align: middle;
   width: 25px;
 
-  background-image: url(/images/arrow.svg);
+  background-image: url(images/arrow.svg);
   background-position: 40%;
   background-repeat: no-repeat;
 }
@@ -288,7 +288,7 @@ a:hover {
 
 .progress-circle.checked {
   background-color: var(--greenblue);
-  background-image: url(/images/checkmark-white.svg);
+  background-image: url(images/checkmark-white.svg);
   background-repeat: no-repeat;
   background-position: 50%;
 }
@@ -1072,7 +1072,7 @@ a:hover {
   width: 70px;
   height: 22px;
   line-height: 22px;
-  background-image: url(/images/card-sold-tag.svg);
+  background-image: url(images/card-sold-tag.svg);
   background-repeat: no-repeat;
   background-position: left;
   background-size: 58px 20px;
@@ -1270,7 +1270,7 @@ a:hover {
   border: solid 1px var(--dark-grey-blue);
   background-color: var(--dark-grey-blue);
   color: white;
-  background-image: url(/images/checkmark-green.svg);
+  background-image: url(images/checkmark-green.svg);
   background-repeat: no-repeat;
   background-position: 97% 50%;
   background-size: 18px 18px;
@@ -1302,7 +1302,7 @@ label[for=root_pictures] {
   padding: 10px 10px 10px 35px;
   width: 100%;
   color: var(--dusk);
-  background-image: url(/images/camera-icon.svg);
+  background-image: url(images/camera-icon.svg);
   background-repeat: no-repeat;
   background-position: 10px 50%;
   background-size: 18px 15px;
@@ -1713,12 +1713,12 @@ label[for=root_pictures]:hover {
 }
 
 .transaction-detail .tag.purchased {
-  background-image: url(/images/tag-green.svg);
+  background-image: url(images/tag-green.svg);
   width: 176px;
 }
 
 .transaction-detail .tag.sold {
-  background-image: url(/images/tag-purple.svg);
+  background-image: url(images/tag-purple.svg);
   width: 136px;
 }
 
@@ -2012,7 +2012,7 @@ label[for=root_pictures]:hover {
 }
 
 .profile-wrapper .icon-container.info {
-  background-image: url(/images/info-icon-inactive.svg);
+  background-image: url(images/info-icon-inactive.svg);
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -2020,11 +2020,11 @@ label[for=root_pictures]:hover {
 /* image preloader to avoid flicker on hover */
 .profile-wrapper .icon-container.info:after {
   display: none;
-  content: url(/images/info-icon-active.svg);
+  content: url(images/info-icon-active.svg);
 }
 
 .profile-wrapper .icon-container.info:hover {
-  background-image: url(/images/info-icon-active.svg);
+  background-image: url(images/info-icon-active.svg);
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -2118,7 +2118,7 @@ label[for=root_pictures]:hover {
 }
 
 .services-container .service .image-container {
-  background-image: url(/images/verification-shape-grey.svg);
+  background-image: url(images/verification-shape-grey.svg);
   background-repeat: no-repeat;
   background-size: 34px 36px;
   height: 36px;
@@ -2140,11 +2140,11 @@ label[for=root_pictures]:hover {
 }
 
 .services-container .service.published .image-container {
-  background-image: url(/images/verification-shape-green.svg);
+  background-image: url(images/verification-shape-green.svg);
 }
 
 .services-container .service.verified .image-container {
-  background-image: url(/images/verification-shape-blue.svg);
+  background-image: url(images/verification-shape-blue.svg);
 }
 
 .services-container .service .unavailable-bg {
@@ -2356,7 +2356,7 @@ sup {
 }
 
 .identity.modal .image-container {
-  background-image: url(/images/verification-shape-grey.svg);
+  background-image: url(images/verification-shape-grey.svg);
   background-position: 0;
   background-size: 110px 116px;
   height: 116px;
@@ -2397,7 +2397,7 @@ sup {
 }
 
 .phone.modal .dropdown .dropdown-toggle:after {
-  background-image: url(/images/carat-white.svg);
+  background-image: url(images/carat-white.svg);
   background-repeat: no-repeat;
   border: none;
   height: 12px;

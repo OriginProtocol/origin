@@ -33,7 +33,7 @@ class ListingCard extends Component {
             (this.state.pictures && this.state.pictures.length>0 &&
               (new URL(this.state.pictures[0])).protocol === "data:") ?
                 this.state.pictures[0] :
-                '/images/default-image.jpg'}")`
+                'images/default-image.jpg'}")`
           }}>
           </div>
           <div className="category placehold">{this.state.category}</div>
