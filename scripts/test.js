@@ -8,8 +8,8 @@ const testFormat = require('./helpers/test-format')
 const start = async () => {
   try {
     await startGanache()
-    await deployContracts()
     await testContracts()
+    await deployContracts()
     await startIpfs()
     await testJavascript()
     await testFormat()

@@ -29,7 +29,7 @@ contract("ClaimHolderRegistered", accounts => {
   }
 
   beforeEach(async function() {
-    userRegistry = await UserRegistry.new( { from: accounts[1] } )
+    userRegistry = await UserRegistry.deployed()
     claimHolderRegistered = await ClaimHolderRegistered.new(userRegistry.address, { from: accounts[0] })
   })
 

@@ -88,20 +88,19 @@ class Attestations {
     )
   }
 
-  async facebookAuthUrl({ redirectUrl }) {
+  async facebookAuthUrl() {
     return await this.get(
-      `facebook/auth-url?redirect-url=${redirectUrl}`,
+      `facebook/auth-url`,
       responseToUrl
     )
   }
 
-  async facebookVerify({ wallet, redirectUrl, code }) {
+  async facebookVerify({ wallet, code }) {
     let identity = await this.getIdentityAddress(wallet)
     return await this.post(
       "facebook/verify",
       {
         identity,
-        "redirect-url": redirectUrl,
         code
       },
       this.responseToAttestation
@@ -115,13 +114,13 @@ class Attestations {
     )
   }
 
-  async twitterVerify({ wallet, oauthVerifier }) {
+  async twitterVerify({ wallet, code }) {
     let identity = await this.getIdentityAddress(wallet)
     return await this.post(
       "twitter/verify",
       {
         identity,
-        "oauth-verifier": oauthVerifier
+        "oauth-verifier": code
       },
       this.responseToAttestation
     )
@@ -133,7 +132,8 @@ class Attestations {
       {
         method,
         body: body ? JSON.stringify(body) : undefined,
-        headers: { "content-type": "application/json" }
+        headers: { "content-type": "application/json" },
+        credentials: 'include'
       }
     )
     let json = await response.json()
