@@ -17,6 +17,7 @@ const initialState = {
     twitter: false
   },
   hasChanges: false,
+  lastPublish: null,
   provisionalProgress: 0,
   publishedProgress: 0,
   strength: 0,
@@ -143,6 +144,7 @@ export default function Profile(state = initialState, action = {}) {
       return hasChanges({
         ...state,
         status: 'success',
+        lastPublish: new Date(),
         published: state.provisional
       })
 
