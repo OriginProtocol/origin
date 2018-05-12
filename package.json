@@ -13,7 +13,7 @@
     "fetch": "^1.1.0",
     "jquery": "^3.3.1",
     "moment": "^2.22.1",
-    "origin": "0.5.9",
+    "origin": "0.5.10",
     "popper.js": "^1.14.3",
     "react": "^16.3.2",
     "react-avatar-editor": "^11.0.2",
