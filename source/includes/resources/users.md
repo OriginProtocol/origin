@@ -41,10 +41,11 @@ let facebookAttestation = await origin.attestations.facebookVerify({
 })
 
 let myNewUser = {
-  profile: { claims: { name: "Wonder Woman" } },
+  profile: { firstName: "Wonder", lastName: "Woman" },
   attestations: [ phoneAttestation, facebookAttestation ]
 }
-let createdUser = await origin.users.set(myNewUser)
+await origin.users.set(myNewUser)
+let createdUser = await users.get()
 
 // User has been created!
 
@@ -58,13 +59,14 @@ let emailAttestation = await origin.attestations.emailVerify({
 })
 
 createdUser.attestations.push(emailAttestation)
-let updatedUser = await origin.users.set(createdUser)
+await origin.users.set(createdUser)
+let updatedUser = await users.get()
 
 // User has been updated!
 // final `updatedUser`:
 {
   {
-    profile: { claims: { name: "Wonder Woman" } },
+    profile: { firstName: "Wonder", lastName: "Woman" },
     attestations: [
       {
         signature: "0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c",
