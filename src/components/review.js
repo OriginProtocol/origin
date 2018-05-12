@@ -33,7 +33,11 @@ class Review extends Component {
           <div className="rating d-flex flex-column justify-content-center text-right">
             <div className="stars">{[...Array(5)].map((undef, i) => {
               return (
-                <img key={`rating-star-${i}`} src={`/images/star-${rating > i ? 'filled' : 'empty'}.svg`} alt="review rating star" />
+                <img
+                  key={`rating-star-${i}`}
+                  src={`/images/star-${rating > i ? 'filled' : 'empty'}.svg`}
+                  alt="review rating star"
+                />
               )
             })}</div>
             <div className="age text-muted"><Timelapse reactive={false} reference={new Date(createdAt)} /></div>

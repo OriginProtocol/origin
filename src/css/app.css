@@ -1777,6 +1777,32 @@ label[for=root_pictures]:hover {
   margin-top: 20px;
 }
 
+.transaction-detail form {
+  padding-top: 1rem;
+}
+
+.transaction-detail label,
+.transaction-detail textarea {
+  font-size: 1.125rem;
+  font-weight: normal;
+}
+
+.transaction-detail textarea {
+  height: auto;
+}
+
+.transaction-detail textarea::placeholder {
+  color: #98a7b4;
+}
+
+form .stars {
+  margin-bottom: 1rem;
+}
+
+form .stars img {
+  cursor: pointer;
+}
+
 /* Reviews */
 
 .review {
@@ -1841,20 +1867,6 @@ label[for=root_pictures]:hover {
 
 .reviews .form-group {
   margin-bottom: 10px;
-}
-
-.reviews label,
-.reviews textarea {
-  font-size: 1.125rem;
-  font-weight: normal;
-}
-
-.reviews textarea {
-  height: auto;
-}
-
-.reviews textarea::placeholder {
-  color: #98a7b4;
 }
 
 /* Notifications */
