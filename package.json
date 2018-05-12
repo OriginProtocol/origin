@@ -40,7 +40,7 @@
     "jquery": "^3.3.1",
     "map-cache": "^0.2.2",
     "moment": "^2.22.1",
-    "origin": "0.5.9",
+    "origin": "0.5.10",
     "popper.js": "^1.14.3",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
