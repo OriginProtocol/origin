@@ -33,15 +33,15 @@ class ListingCard extends Component {
             (this.state.pictures && this.state.pictures.length>0 &&
               (new URL(this.state.pictures[0])).protocol === "data:") ?
                 this.state.pictures[0] :
-                '/images/default-image.jpg'}")`
+                'images/default-image.jpg'}")`
           }}>
           </div>
-          <p className="category placehold">{this.state.category}</p>
-          <h2 className="title placehold">{this.state.name}</h2>
-          <div className="d-flex align-items-center">
-            <p className="price placehold">
+          <div className="category placehold">{this.state.category}</div>
+          <h2 className="title placehold text-truncate">{this.state.name}</h2>
+          <div className="d-flex align-items-center price-container">
+            <div className="price placehold">
               {this.state.price && `${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH`}
-            </p>
+            </div>
             {this.state.unitsAvailable===0 &&
               <span className="sold-banner">Sold</span>
             }

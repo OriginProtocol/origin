@@ -2,16 +2,18 @@ import React, { Component } from 'react'
 import Modal from './modal'
 
 import origin from '../services/origin'
+import Store from '../Store'
+import { showAlert } from '../actions/Alert'
 
 const web3 = origin.contractService.web3
-const alertify = require('../../node_modules/alertify/src/alertify.js')
 
 const networkNames = {
   1: 'Main',
   2: 'Morden',
   3: 'Ropsten',
   4: 'Rinkeby',
-  42: 'Kovan'
+  42: 'Kovan',
+  999: 'Localhost',
 }
 const supportedNetworkIds = [3, 4]
 const ONE_SECOND = 1000
@@ -20,7 +22,7 @@ const ONE_MINUTE = ONE_SECOND * 60
 const AccountUnavailable = () => (
   <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
     <div className="image-container">
-      <img src="/images/flat_cross_icon.svg" role="presentation" />
+      <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
     You are not signed in to MetaMask.<br />
   </Modal>
@@ -32,7 +34,7 @@ const Loading = () => null
 const UnconnectedNetwork = () => (
   <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
     <div className="image-container">
-      <img src="/images/flat_cross_icon.svg" role="presentation" />
+      <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
     Connecting to network...
   </Modal>
@@ -41,7 +43,7 @@ const UnconnectedNetwork = () => (
 const UnsupportedNetwork = props => (
   <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
     <div className="image-container">
-      <img src="/images/flat_cross_icon.svg" role="presentation" />
+      <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
     MetaMask should be on <strong>Rinkeby</strong> Network<br />
     Currently on {props.currentNetworkName}.
@@ -51,7 +53,7 @@ const UnsupportedNetwork = props => (
 const Web3Unavailable = () => (
   <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
     <div className="image-container">
-      <img src="/images/flat_cross_icon.svg" role="presentation" />
+      <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
     MetaMask extension not installed.<br />
     <a target="_blank" href="https://metamask.io/" rel="noopener noreferrer">
@@ -145,7 +147,7 @@ class Web3Provider extends Component {
     curr = curr && curr.toLowerCase()
 
     if (curr !== next) {
-      curr && alertify.log('MetaMask account has changed.')
+      curr && Store.dispatch(showAlert('MetaMask account has changed.'))
 
       this.setState({
         accountsError: null,
@@ -199,7 +201,7 @@ class Web3Provider extends Component {
           this.setState({
             networkConnected: false
           })
-      }, 1000)
+      }, 4000)
     }
   }
 

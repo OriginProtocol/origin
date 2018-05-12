@@ -1,11 +1,11 @@
-import React from 'react'
-import {
-  HashRouter as Router,
-  Route,
-  Switch,
-} from 'react-router-dom'
+import React, { Component } from 'react'
+import { HashRouter as Router, Route, Switch } from 'react-router-dom'
+import { connect } from 'react-redux'
+
+import { fetchProfile } from 'actions/Profile'
 
 // Components
+import Alert from './alert'
 import ScrollToTop from './scroll-to-top'
 import Layout from './layout'
 import Listings from './listings-grid'
@@ -15,87 +15,84 @@ import MyListings from './my-listings'
 import MyPurchases from './my-purchases'
 import MySales from './my-sales'
 import Notifications from './notifications'
-import Profile from './profile'
-import User from './user'
+import Profile from '../pages/profile/Profile'
+import User from '../pages/user/User'
 import PurchaseDetail from './purchase-detail'
 import Web3Provider from './web3-provider'
+import NotFound from './not-found'
 import 'bootstrap/dist/js/bootstrap'
 
 // CSS
 import 'bootstrap/dist/css/bootstrap.css'
-import '../css/pure-min.css' // TODO (stan): Is this even used?
 import '../css/lato-web.css'
 import '../css/poppins.css'
 import '../css/app.css'
 
-
-const HomePage = (props) => (
+const HomePage = () => (
   <div className="container">
     <Listings />
   </div>
 )
 
-const ListingDetailPage = (props) => (
+const ListingDetailPage = props => (
   <ListingDetail listingAddress={props.match.params.listingAddress} />
 )
 
-const CreateListingPage = (props) => (
+const CreateListingPage = () => (
   <div className="container">
     <ListingCreate />
   </div>
 )
 
-const MyListingsPage = (props) => (
-  <MyListings />
+const PurchaseDetailPage = props => (
+  <PurchaseDetail purchaseAddress={props.match.params.purchaseAddress} />
 )
 
-const PurchaseDetailPage = (props) => (
-  <PurchaseDetail purchaseAddress={props.match.params.purchaseAddress}  />
-)
-
-const MyPurchasesPage = (props) => (
-  <MyPurchases />
-)
-
-const MySalesPage = (props) => (
-  <MySales />
-)
-
-const NotificationsPage = (props) => (
-  <Notifications />
-)
-
-const ProfilePage = (props) => (
-  <Profile />
-)
-
-const UserPage = (props) => (
-  <User userAddress={props.match.params.userAddress} />
-)
+const UserPage = props => <User userAddress={props.match.params.userAddress} />
 
 // Top level component
-const App = () => (
-  <Router>
-    <ScrollToTop>
-      <Layout>
-        <Web3Provider>
-          <Switch>
-            <Route exact path="/" component={HomePage} />
-            <Route path="/page/:activePage" component={HomePage} />
-            <Route path="/listing/:listingAddress" component={ListingDetailPage} />
-            <Route path="/create" component={CreateListingPage} />
-            <Route path="/my-listings" component={MyListingsPage} />
-            <Route path="/purchases/:purchaseAddress" component={PurchaseDetailPage} />
-            <Route path="/my-purchases" component={MyPurchasesPage} />
-            <Route path="/my-sales" component={MySalesPage} />
-            <Route path="/notifications" component={NotificationsPage} />
-            <Route path="/profile" component={ProfilePage} />
-            <Route path="/users/:userAddress" component={UserPage} />
-          </Switch>
-        </Web3Provider>
-      </Layout>
-    </ScrollToTop>
-  </Router>
-)
+class App extends Component {
+  componentDidMount() {
+    this.props.fetchProfile()
+  }
 
-export default App
+  render() {
+    return (
+      <Router>
+        <ScrollToTop>
+          <Layout>
+            <Web3Provider>
+              <Switch>
+                <Route exact path="/" component={HomePage} />
+                <Route path="/page/:activePage" component={HomePage} />
+                <Route
+                  path="/listing/:listingAddress"
+                  component={ListingDetailPage}
+                />
+                <Route path="/create" component={CreateListingPage} />
+                <Route path="/my-listings" component={MyListings} />
+                <Route
+                  path="/purchases/:purchaseAddress"
+                  component={PurchaseDetailPage}
+                />
+                <Route path="/my-purchases" component={MyPurchases} />
+                <Route path="/my-sales" component={MySales} />
+                <Route path="/notifications" component={Notifications} />
+                <Route path="/profile" component={Profile} />
+                <Route path="/users/:userAddress" component={UserPage} />
+                <Route component={NotFound} />
+              </Switch>
+            </Web3Provider>
+          </Layout>
+          <Alert />
+        </ScrollToTop>
+      </Router>
+    )
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  fetchProfile: () => dispatch(fetchProfile()),
+})
+
+export default connect(undefined, mapDispatchToProps)(App)

@@ -51,7 +51,7 @@ class MyListingCard extends Component {
         <div className="card-body d-flex flex-column flex-lg-row">
           <div className="aspect-ratio">
             <div className="image-container">
-              <img src={(pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:") ? pictures[0] : '/images/default-image.jpg'} role="presentation" />
+              <img src={(pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:") ? pictures[0] : 'images/default-image.jpg'} role="presentation" />
             </div>
           </div>
           <div className="content-container d-flex flex-column">

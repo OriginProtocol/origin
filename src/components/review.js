@@ -1,27 +1,41 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { fetchUser } from 'actions/User'
 import Timelapse from './timelapse'
 
 class Review extends Component {
+  constructor(props) {
+    super(props)
+  }
+
+  componentWillMount() {
+    this.props.fetchUser(this.props.review.reviewerAddress)
+  }
+
   render() {
-    const { content, createdAt, reviewer, score } = this.props.review
+    const { review, user } = this.props
+    const { content, createdAt, score } = review
+    const { address, profile } = user
+    const claims = profile && profile.claims
+    const fullName = (claims && claims.name) || 'Unnamed User'
 
     return (
       <div className="review">
         <div className="d-flex">
           <div className="avatar-container">
-            <img src="/images/avatar-purple.svg" alt="reviewer avatar" />
+            <img src="images/avatar-purple.svg" alt="reviewer avatar" />
           </div>
           <div className="identification d-flex flex-column justify-content-center text-truncate">
-            <p className="name">{reviewer.name}</p>
-            <p className="address text-muted text-truncate">{reviewer.address}</p>
+            <div className="name">{fullName}</div>
+            <div className="address text-muted text-truncate">{address}</div>
           </div>
           <div className="score d-flex flex-column justify-content-center text-right">
             <div className="stars">{[...Array(5)].map((undef, i) => {
               return (
-                <img key={`score-star-${i}`} src={`/images/star-${score > i ? 'filled' : 'empty'}.svg`} alt="review score star" />
+                <img key={`score-star-${i}`} src={`images/star-${score > i ? 'filled' : 'empty'}.svg`} alt="review score star" />
               )
             })}</div>
-            <p className="age text-muted"><Timelapse reference={createdAt} /></p>
+            <div className="age text-muted"><Timelapse reactive={false} reference={createdAt} /></div>
           </div>
         </div>
         <p className="content">{content}</p>
@@ -30,4 +44,14 @@ class Review extends Component {
   }
 }
 
-export default Review
+const mapStateToProps = (state, { review }) => {
+  return {
+    user: state.users.find(u => u.address === review.reviewerAddress) || {},
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  fetchUser: address => dispatch(fetchUser(address))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Review)
