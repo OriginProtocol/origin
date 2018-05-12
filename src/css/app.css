@@ -2493,7 +2493,7 @@ footer .footer-links li a {
 }
 
 .indented {
-  border-left: 1px solid #dee0e2;
+  border-left: 1px solid var(--pale-grey);
   padding-left: 20px;
 }
 
