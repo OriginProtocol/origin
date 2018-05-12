@@ -1,4 +1,4 @@
-import ResourceBase from "../ResourceBase"
+import ResourceBase from "./_resource-base"
 import { AttestationObject } from "./attestations"
 import userSchema from "../schemas/user.json"
 import {
@@ -44,8 +44,7 @@ class Users extends ResourceBase {
       attestations.push(selfAttestation)
     }
     let newAttestations = await this.newAttestations(attestations)
-    await this.addAttestations(newAttestations)
-    return await this.get()
+    return await this.addAttestations(newAttestations)
   }
 
   async get(address) {
@@ -121,16 +120,13 @@ class Users extends ResourceBase {
 
       if (identityAddress) {
         // batch add claims to existing identity
-        let claimHolder = await this.contractService.deployed(
+        return await this.contractService.contractFn(
           this.contractService.claimHolderRegisteredContract,
-          identityAddress
+          identityAddress,
+          "addClaims",
+          [claimTypes, issuers, sigs, data],
+          { from: account, gas: 4000000 }
         )
-        return await claimHolder.methods.addClaims(
-          claimTypes,
-          issuers,
-          sigs,
-          data
-        ).send({ from: account, gas: 4000000 })
       } else {
         // create identity with presigned claims
         return await this.contractService.deploy(
@@ -148,8 +144,11 @@ class Users extends ResourceBase {
       }
     } else if (!identityAddress) {
       // create identity
-      return await this.contractService.claimHolderRegisteredContract.new(
-        userRegistry.address,
+      return await this.contractService.deploy(
+        this.contractService.claimHolderRegisteredContract,
+        [
+          userRegistry.options.address,
+        ],
         { from: account, gas: 4000000 }
       )
     }

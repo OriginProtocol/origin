@@ -2,7 +2,7 @@ import {
   Attestations,
   AttestationObject
 } from "../src/resources/attestations.js"
-import ContractService from "../src/contract-service"
+import ContractService from "../src/services/contract-service"
 import { expect } from "chai"
 import Web3 from "web3"
 import fetchMock from "fetch-mock"
