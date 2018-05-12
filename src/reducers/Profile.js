@@ -58,10 +58,13 @@ function hasChanges(state) {
 }
 
 function unpackUser(state) {
-  var user = state.user,
-    firstName = user.profile.firstName,
-    lastName = user.profile.lastName,
-    description = user.profile.description
+  var user = state.user || {},
+    profile = user.profile || {},
+    attestations = user.attestations || [],
+    firstName = profile.firstName,
+    lastName = profile.lastName,
+    description = profile.description,
+    pic = profile.avatar
 
   if (firstName) {
     state.provisional.firstName = state.published.firstName = firstName
@@ -72,7 +75,10 @@ function unpackUser(state) {
   if (description) {
     state.provisional.description = state.published.description = description
   }
-  (user.attestations || []).forEach(attestation => {
+  if (pic) {
+    state.provisional.pic = state.published.pic = pic
+  }
+  attestations.forEach(attestation => {
     if (attestation.service === 'facebook') {
       state.provisional.facebook = state.published.facebook = true
     }

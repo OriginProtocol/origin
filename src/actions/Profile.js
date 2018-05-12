@@ -52,7 +52,8 @@ export function deployProfile() {
       profile: {
         firstName: provisional.firstName,
         lastName: provisional.lastName,
-        description: provisional.description
+        description: provisional.description,
+        avatar: provisional.pic
       },
       attestations: []
     }

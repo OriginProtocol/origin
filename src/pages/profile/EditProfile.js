@@ -40,15 +40,7 @@ class EditProfile extends Component {
               description: this.state.description
             }
             if (this.state.picChanged) {
-              await new Promise((resolve) => {
-                const canvas = this.imageEditor.getImage().toDataURL();
-                fetch(canvas)
-                .then(res => res.blob())
-                .then(blob => {
-                  data.pic = window.URL.createObjectURL(blob)
-                  resolve()
-                });
-              })
+              data.pic = this.imageEditor.getImage().toDataURL()
             }
             this.props.handleSubmit({ data })
           }}
