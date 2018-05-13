@@ -22,11 +22,11 @@ class NavBar extends Component {
       <nav className="navbar navbar-expand-lg navbar-dark">
         <div className="container">
           <button className="navbar-toggler mr-3" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <img src="/images/origin-icon-white.svg" alt="Origin menu" />
+            <img src="images/origin-icon-white.svg" alt="Origin menu" />
           </button>
           <Link to="/" className="navbar-brand mr-auto mr-lg-3">
             <div className="d-none d-lg-block logo-container">
-              <img src="/images/origin-logo.svg" className="origin-logo" alt="Origin Protocol" />
+              <img src="images/origin-logo.svg" className="origin-logo" alt="Origin Protocol" />
             </div>
           </Link>
           <div className="collapse navbar-collapse order-2 order-lg-1" id="navbarSupportedContent">
@@ -46,7 +46,7 @@ class NavBar extends Component {
                   </div>
                 </div>
               </div>
-              <Link to="/create" className="nav-item nav-link"><img src="/images/add-listing-icon.svg" alt="Add Listing" className="add-listing" />Add Listing</Link>
+              <Link to="/create" className="nav-item nav-link"><img src="images/add-listing-icon.svg" alt="Add Listing" className="add-listing" />Add Listing</Link>
             </div>
           </div>
           <div className="static navbar-nav order-1 order-lg-2">

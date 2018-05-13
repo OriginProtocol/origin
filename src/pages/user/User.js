@@ -90,7 +90,7 @@ class User extends Component {
           <div className="row">
             <div className="col-12 col-sm-4 col-md-3 col-lg-2">
               <div className="primary avatar-container">
-                <img src="/images/avatar-blue.svg" alt="avatar" />
+                <img src="images/avatar-blue.svg" alt="avatar" />
               </div>
             </div>
             <div className="col-12 col-sm-8 col-md-9 col-lg-10">
@@ -106,25 +106,25 @@ class User extends Component {
                   {/* need to know how to verify signature instead of just finding object by key */}
                   {attestations.find(a => a.service === 'phone') &&
                     <div className="service d-flex">
-                      <img src="/images/phone-icon-verified.svg" alt="phone verified icon" />
+                      <img src="images/phone-icon-verified.svg" alt="phone verified icon" />
                       <div>Phone</div>
                     </div>
                   }
                   {attestations.find(a => a.service === 'email') &&
                     <div className="service d-flex">
-                      <img src="/images/phone-icon-verified.svg" alt="email verified icon" />
+                      <img src="images/phone-icon-verified.svg" alt="email verified icon" />
                       <div>Email</div>
                     </div>
                   }
                   {attestations.find(a => a.service === 'facebook') &&
                     <div className="service d-flex">
-                      <img src="/images/phone-icon-verified.svg" alt="Facebook verified icon" />
+                      <img src="images/phone-icon-verified.svg" alt="Facebook verified icon" />
                       <div>Facebook</div>
                     </div>
                   }
                   {attestations.find(a => a.service === 'twitter') &&
                     <div className="service d-flex">
-                      <img src="/images/phone-icon-verified.svg" alt="Twitter verified icon" />
+                      <img src="images/phone-icon-verified.svg" alt="Twitter verified icon" />
                       <div>Twitter</div>
                     </div>
                   }

@@ -24,7 +24,7 @@ class Review extends Component {
       <div className="review">
         <div className="d-flex">
           <div className="avatar-container">
-            <img src="/images/avatar-purple.svg" alt="reviewer avatar" />
+            <img src="images/avatar-purple.svg" alt="reviewer avatar" />
           </div>
           <div className="identification d-flex flex-column justify-content-center text-truncate">
             <div className="name">{fullName}</div>

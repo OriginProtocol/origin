@@ -50,7 +50,7 @@ class ListingCreate extends Component {
   }
 
   handleSchemaSelection() {
-    fetch(`/schemas/${this.state.selectedSchemaType}.json`)
+    fetch(`schemas/${this.state.selectedSchemaType}.json`)
     .then((response) => response.json())
     .then((schemaJson) => {
       this.setState({
@@ -127,7 +127,7 @@ class ListingCreate extends Component {
                 <div className="info-box">
                   <h2>Choose a schema for your product or service</h2>
                   <p>Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services.</p>
-                  <div className="info-box-image"><img className="d-none d-md-block" src="/images/features-graphic.svg" role="presentation" /></div>
+                  <div className="info-box-image"><img className="d-none d-md-block" src="images/features-graphic.svg" role="presentation" /></div>
                 </div>
               </div>
 
@@ -162,8 +162,8 @@ class ListingCreate extends Component {
             <div className="row flex-sm-row-reverse">
                <div className="col-md-5 offset-md-2">
                   <div className="info-box">
-                    <div><h2>How it works</h2>Origin uses a Mozilla project called <a href="http://json-schema.org/" rel="noopener noreferrer" target="_blank">JSONSchema</a> to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer.<br/><br/>Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.<br/><br/><a href={`/schemas/${this.state.selectedSchemaType}.json`} target="_blank">View the <code>{this.state.selectedSchema.name}</code> schema</a></div>
-                    <div className="info-box-image"><img className="d-none d-md-block" src="/images/features-graphic.svg" role="presentation" /></div>
+                    <div><h2>How it works</h2>Origin uses a Mozilla project called <a href="http://json-schema.org/" rel="noopener noreferrer" target="_blank">JSONSchema</a> to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer.<br/><br/>Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.<br/><br/><a href={`schemas/${this.state.selectedSchemaType}.json`} target="_blank">View the <code>{this.state.selectedSchema.name}</code> schema</a></div>
+                    <div className="info-box-image"><img className="d-none d-md-block" src="images/features-graphic.svg" role="presentation" /></div>
                   </div>
                 </div>
               <div className="col-md-5">
@@ -194,7 +194,7 @@ class ListingCreate extends Component {
             {this.state.step === this.STEP.METAMASK &&
               <Modal backdrop="static" isOpen={true}>
                 <div className="image-container">
-                  <img src="/images/spinner-animation.svg" role="presentation"/>
+                  <img src="images/spinner-animation.svg" role="presentation"/>
                 </div>
                 Confirm transaction<br />
                 Press &ldquo;Submit&rdquo; in MetaMask window
@@ -203,7 +203,7 @@ class ListingCreate extends Component {
             {this.state.step === this.STEP.PROCESSING &&
               <Modal backdrop="static" isOpen={true}>
                 <div className="image-container">
-                  <img src="/images/spinner-animation.svg" role="presentation"/>
+                  <img src="images/spinner-animation.svg" role="presentation"/>
                 </div>
                 Uploading your listing<br />
                 Please stand by...
@@ -212,7 +212,7 @@ class ListingCreate extends Component {
             {this.state.step === this.STEP.SUCCESS &&
               <Modal backdrop="static" isOpen={true}>
                 <div className="image-container">
-                  <img src="/images/circular-check-button.svg" role="presentation"/>
+                  <img src="images/circular-check-button.svg" role="presentation"/>
                 </div>
                 Success<br />
                 <Link to="/">See All Listings</Link>

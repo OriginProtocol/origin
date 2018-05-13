@@ -36,7 +36,7 @@ npm run start
 
 A browser will open to http://localhost:3000. You're not quite done though! You'll need metamask if you don't already have it. See next step.
 
-![Origin-homepage](https://user-images.githubusercontent.com/673455/34650232-ca4df39c-f37a-11e7-9b18-18861f282dff.png)
+![Origin-homepage](https://user-images.githubusercontent.com/673455/39952325-6d37e3be-5551-11e8-9651-b1697bad3412.png)
 
 ### 3. Set up Metamask
 
@@ -71,6 +71,7 @@ In a separate tab:
 git clone https://github.com/OriginProtocol/demo-dapp origin-demo-dapp && cd origin-demo-dapp
 npm run install:dev
 npm run start
+cp .env.dev .env
 ```
 
 The `install:dev` script performs the regular install and then links to your local origin.js.

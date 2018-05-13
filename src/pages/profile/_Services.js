@@ -29,7 +29,7 @@ class VerifierServices extends Component {
               onClick={handleToggle}
             >
               <span className="image-container d-flex align-items-center justify-content-center">
-                <img src="/images/phone-icon-light.svg" alt="phone icon" />
+                <img src="images/phone-icon-light.svg" alt="phone icon" />
               </span>
               <span className="service-name">Phone</span>
             </button>
@@ -47,7 +47,7 @@ class VerifierServices extends Component {
               onClick={handleToggle}
             >
               <span className="image-container d-flex align-items-center justify-content-center">
-                <img src="/images/email-icon-light.svg" alt="email icon" />
+                <img src="images/email-icon-light.svg" alt="email icon" />
               </span>
               <span className="service-name">Email</span>
             </button>
@@ -55,7 +55,7 @@ class VerifierServices extends Component {
           <div className="col-12 col-sm-6 col-md-4">
             <button className="service d-flex disabled" disabled>
               <span className="image-container d-flex align-items-center justify-content-center">
-                <img src="/images/address-icon.svg" alt="address icon" />
+                <img src="images/address-icon.svg" alt="address icon" />
               </span>
               <span className="unavailable-bg" />
               <span className="unavailable-message">
@@ -78,7 +78,7 @@ class VerifierServices extends Component {
             >
               <span className="image-container d-flex align-items-center justify-content-center">
                 <img
-                  src="/images/facebook-icon-light.svg"
+                  src="images/facebook-icon-light.svg"
                   alt="Facebook icon"
                 />
               </span>
@@ -98,7 +98,7 @@ class VerifierServices extends Component {
               onClick={handleToggle}
             >
               <span className="image-container d-flex align-items-center justify-content-center">
-                <img src="/images/twitter-icon-light.svg" alt="Twitter icon" />
+                <img src="images/twitter-icon-light.svg" alt="Twitter icon" />
               </span>
               <span className="service-name">Twitter</span>
             </button>
@@ -106,7 +106,7 @@ class VerifierServices extends Component {
           <div className="col-12 col-sm-6 col-md-4">
             <button className="service d-flex disabled" disabled>
               <span className="image-container d-flex align-items-center justify-content-center">
-                <img src="/images/google-icon.svg" alt="Google icon" />
+                <img src="images/google-icon.svg" alt="Google icon" />
               </span>
               <span className="unavailable-bg" />
               <span className="unavailable-message">

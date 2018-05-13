@@ -370,7 +370,7 @@ class PurchaseDetail extends Component {
                 <div className="col-6">
                   <div className="d-flex">
                     <div className="avatar-container">
-                      <img src={`/images/avatar-${perspective === 'seller' ? 'green' : 'blue'}.svg`} alt="seller avatar" />
+                      <img src={`images/avatar-${perspective === 'seller' ? 'green' : 'blue'}.svg`} alt="seller avatar" />
                     </div>
                     <div className="identification d-flex flex-column justify-content-between text-truncate">
                       <div><span className="badge badge-dark">Seller</span></div>
@@ -387,7 +387,7 @@ class PurchaseDetail extends Component {
                       <div className="address text-muted text-truncate">{buyer.address}</div>
                     </div>
                     <div className="avatar-container">
-                      <img src={`/images/avatar-${perspective === 'buyer' ? 'green' : 'blue'}.svg`} alt="buyer avatar" />
+                      <img src={`images/avatar-${perspective === 'buyer' ? 'green' : 'blue'}.svg`} alt="buyer avatar" />
                     </div>
                   </div>
                 </div>
@@ -517,7 +517,7 @@ class PurchaseDetail extends Component {
                     {listing.ipfsHash &&
                       <div className="link-container">
                         <a href={origin.ipfsService.gatewayUrlForHash(listing.ipfsHash)} target="_blank">
-                          View on IPFS<img src="/images/carat-blue.svg" className="carat" alt="right carat" />
+                          View on IPFS<img src="images/carat-blue.svg" className="carat" alt="right carat" />
                         </a>
                       </div>
                     }

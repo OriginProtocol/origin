@@ -107,19 +107,6 @@ class Profile extends Component {
     })
   }
 
-  // copy provisional state to published and run optional callback
-  handlePublishSuccess(cb) {
-    const { provisional, progress } = this.state
-
-    this.setState({ lastPublish: new Date(), published: provisional })
-    this.setProgress({
-      provisional: 0,
-      published: progress.provisional + progress.published
-    })
-
-    typeof cb === 'function' && cb()
-  }
-
   // conditionally close modal identified by data attribute
   handleToggle(e) {
     const { modal } = e.currentTarget.dataset
@@ -186,12 +173,29 @@ class Profile extends Component {
   }
 
   render() {
-    const { lastPublish, modalsOpen, progress } = this.state
+    const { modalsOpen, progress } = this.state
 
-    const { provisional, published, profile } = this.props
+    const { provisional, published, profile, lastPublish } = this.props
 
     const fullName = `${provisional.firstName} ${provisional.lastName}`.trim()
     const hasChanges = this.props.hasChanges
+
+    let statusClassMap = {
+      unpublished: 'not-published'
+    }
+    let statusTextMap = {
+      unpublished: 'Not Published'
+    }
+
+    let publishStatus, hasPublishedAllChanges = false
+    if (hasChanges) {
+      publishStatus = 'unpublished'
+    } else if(lastPublish) {
+      publishStatus = 'published'
+      hasPublishedAllChanges = true
+    }
+    let statusClass = statusClassMap[publishStatus]
+    let statusText = statusTextMap[publishStatus]
 
     return (
       <div className="current-user profile-wrapper">
@@ -214,7 +218,7 @@ class Profile extends Component {
                         data-modal="profile"
                         onClick={this.handleToggle}
                       >
-                        <img src="/images/edit-icon.svg" alt="edit name" />
+                        <img src="images/edit-icon.svg" alt="edit name" />
                       </button>
                     </div>
                   </div>
@@ -251,21 +255,21 @@ class Profile extends Component {
                     Publish Now
                   </button>
                 )}
-                <div className="published-status text-center">
-                  <span>Status:</span>
-                  {!lastPublish && (
-                    <span className="not-published">
-                      Not Published
+                {publishStatus && (
+                  <div className="published-status text-center">
+                    <span>Status:</span>
+                    <span className={statusClass}>
+                      {statusText}
                     </span>
-                  )}
-                  {lastPublish && (
-                    <span>
-                      Last published
-                      {' '}
-                      <Timelapse reactive={true} reference={lastPublish} />
-                    </span>
-                  )}
-                </div>
+                    {hasPublishedAllChanges && (
+                      <span>
+                        Last published
+                        {' '}
+                        <Timelapse reactive={true} reference={lastPublish} />
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
             <div className="col-12 col-lg-4">
@@ -355,7 +359,7 @@ class Profile extends Component {
         {this.props.profile.status === 'confirming' && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
-              <img src="/images/spinner-animation.svg" role="presentation" />
+              <img src="images/spinner-animation.svg" role="presentation" />
             </div>
             Confirm transaction<br />
             Press &ldquo;Submit&rdquo; in MetaMask window
@@ -365,7 +369,7 @@ class Profile extends Component {
         {this.props.profile.status === 'processing' && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
-              <img src="/images/spinner-animation.svg" role="presentation" />
+              <img src="images/spinner-animation.svg" role="presentation" />
             </div>
             Deploying your identity<br />
             Please stand by...
@@ -375,7 +379,7 @@ class Profile extends Component {
         {this.props.profile.status === 'error' && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
-              <img src="/images/flat_cross_icon.svg" role="presentation" />
+              <img src="images/flat_cross_icon.svg" role="presentation" />
             </div>
             Error<br />
             <a
@@ -394,7 +398,7 @@ class Profile extends Component {
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img
-                src="/images/circular-check-button.svg"
+                src="images/circular-check-button.svg"
                 role="presentation"
               />
             </div>
@@ -440,6 +444,7 @@ const mapStateToProps = state => {
     provisional: state.profile.provisional,
     strength: state.profile.strength,
     hasChanges: state.profile.hasChanges,
+    lastPublish: state.profile.lastPublish,
     provisionalProgress: state.profile.provisionalProgress,
     publishedProgress: state.profile.publishedProgress,
     profile: state.profile,

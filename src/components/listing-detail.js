@@ -125,7 +125,7 @@ class ListingsDetail extends Component {
         {this.state.step===this.STEP.METAMASK &&
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
-              <img src="/images/spinner-animation.svg" role="presentation"/>
+              <img src="images/spinner-animation.svg" role="presentation"/>
             </div>
             Confirm transaction<br />
             Press &ldquo;Submit&rdquo; in MetaMask window
@@ -134,7 +134,7 @@ class ListingsDetail extends Component {
         {this.state.step===this.STEP.PROCESSING &&
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
-              <img src="/images/spinner-animation.svg" role="presentation"/>
+              <img src="images/spinner-animation.svg" role="presentation"/>
             </div>
             Processing your purchase<br />
             Please stand by...
@@ -143,7 +143,7 @@ class ListingsDetail extends Component {
         {this.state.step===this.STEP.PURCHASED &&
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
-              <img src="/images/circular-check-button.svg" role="presentation"/>
+              <img src="images/circular-check-button.svg" role="presentation"/>
             </div>
             Purchase was successful.<br />
             <a href="#" onClick={e => {
@@ -177,7 +177,7 @@ class ListingsDetail extends Component {
               {this.state.ipfsHash &&
                 <div className="ipfs link-container">
                   <a href={origin.ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
-                    View on IPFS<img src="/images/carat-blue.svg" className="carat" alt="right carat" />
+                    View on IPFS<img src="images/carat-blue.svg" className="carat" alt="right carat" />
                   </a>
                 </div>
               }
@@ -246,7 +246,7 @@ class ListingsDetail extends Component {
                         </button>
                         :
                         <div className="sold-banner">
-                          <img src="/images/sold-tag.svg" role="presentation" />
+                          <img src="images/sold-tag.svg" role="presentation" />
                           Sold Out
                         </div>
                       )

@@ -9,14 +9,6 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const isProduction = process.env.NODE_ENV === 'production'
 
 const env = { CONTRACT_ADDRESSES: '{}' }
-if (!isProduction) {
-  Object.assign(env, {
-    IPFS_DOMAIN: 'localhost',
-    IPFS_API_PORT: 5002,
-    IPFS_GATEWAY_PORT: 8080,
-    IPFS_GATEWAY_PROTOCOL: 'http'
-  })
-}
 
 var config = {
   entry: { app: './src/index.js' },
@@ -25,7 +17,7 @@ var config = {
     path: path.resolve(__dirname, 'build'),
     pathinfo: true,
     filename: '[name].[hash:8].js',
-    publicPath: '/'
+    publicPath: ''
   },
   module: {
     noParse: [/^react$/],
@@ -43,11 +35,17 @@ var config = {
               use: [
                 {
                   loader: 'css-loader',
-                  options: { minimize: true, sourceMap: false }
+                  options: { minimize: true, sourceMap: false, url: false }
                 }
               ]
             })
-          : ['style-loader', 'css-loader']
+          : [
+              'style-loader',
+              {
+                loader: 'css-loader',
+                options: { url: false }
+              }
+            ]
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
@@ -91,6 +89,7 @@ var config = {
     new CopyWebpackPlugin([
       'public/favicon.ico',
       { from: 'public/images', to: 'images' },
+      { from: 'public/fonts', to: 'fonts' },
       { from: 'public/schemas', to: 'schemas' }
     ])
   ]
