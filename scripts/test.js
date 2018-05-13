@@ -7,12 +7,12 @@ const testFormat = require('./helpers/test-format')
 
 const start = async () => {
   try {
+    await testFormat()
     await startGanache()
     await testContracts()
     await deployContracts()
     await startIpfs()
     await testJavascript()
-    await testFormat()
     console.log('Tests passed. :)')
     process.exit()
   }
