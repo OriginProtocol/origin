@@ -82,7 +82,7 @@ class User extends Component {
     const customFields = claims && claims.customFields
     const description = (customFields && customFields.find(f => f.field === 'description')) ||
                         { value: 'An Origin user without a description' }
-    const usersReviews = this.state.reviews.filter(r => r.reviewer === address || r.reviewee === address)
+    const usersReviews = this.state.reviews.filter(r => r.reviewee === address)
 
     return (
       <div className="public-user profile-wrapper">
