@@ -9,7 +9,7 @@ class Review extends Component {
   }
 
   componentWillMount() {
-    this.props.fetchUser(this.props.review.reviewer)
+    this.props.fetchUser(this.props.review.reviewerAddress)
   }
 
   render() {
@@ -51,7 +51,7 @@ class Review extends Component {
 
 const mapStateToProps = (state, { review }) => {
   return {
-    user: state.users.find(u => u.address === review.reviewer) || {},
+    user: state.users.find(u => u.address === review.reviewerAddress) || {},
   }
 }
 
