@@ -4,6 +4,7 @@ import Modal from './modal'
 import origin from '../services/origin'
 import Store from '../Store'
 import { showAlert } from '../actions/Alert'
+import getCurrentProvider from '../utils/getCurrentProvider'
 
 const web3 = origin.contractService.web3
 
@@ -19,12 +20,12 @@ const supportedNetworkIds = [3, 4]
 const ONE_SECOND = 1000
 const ONE_MINUTE = ONE_SECOND * 60
 
-const AccountUnavailable = () => (
+const AccountUnavailable = props => (
   <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
-    You are not signed in to MetaMask.<br />
+    You are not signed in to {props.currentProvider}.<br />
   </Modal>
 )
 
@@ -45,7 +46,7 @@ const UnsupportedNetwork = props => (
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
-    MetaMask should be on <strong>Rinkeby</strong> Network<br />
+    {props.currentProvider} should be on <strong>Rinkeby</strong> Network<br />
     Currently on {props.currentNetworkName}.
   </Modal>
 )
@@ -78,12 +79,14 @@ class Web3Provider extends Component {
     this.networkInterval = null
     this.fetchAccounts = this.fetchAccounts.bind(this)
     this.fetchNetwork = this.fetchNetwork.bind(this)
+    this.handleAccounts = this.handleAccounts.bind(this)
     this.state = {
       accounts: [],
       accountsLoaded: false,
       networkConnected: null,
       networkId: null,
-      networkError: null
+      networkError: null,
+      currentProvider: getCurrentProvider(web3)
     }
   }
 
@@ -147,7 +150,7 @@ class Web3Provider extends Component {
     curr = curr && curr.toLowerCase()
 
     if (curr !== next) {
-      curr && Store.dispatch(showAlert('MetaMask account has changed.'))
+      curr && Store.dispatch(showAlert('{this.state.currentProvider} account has changed.'))
 
       this.setState({
         accountsError: null,
@@ -206,7 +209,7 @@ class Web3Provider extends Component {
   }
 
   render() {
-    const { accounts, accountsLoaded, networkConnected, networkId } = this.state
+    const { accounts, accountsLoaded, networkConnected, networkId, currentProvider } = this.state
     const currentNetworkName = networkNames[networkId]
       ? networkNames[networkId]
       : networkId
@@ -226,7 +229,7 @@ class Web3Provider extends Component {
       inProductionEnv &&
       supportedNetworkIds.indexOf(networkId) < 0
     ) {
-      return <UnsupportedNetwork currentNetworkName={currentNetworkName} />
+      return <UnsupportedNetwork currentNetworkName={currentNetworkName} currentProvider={currentProvider} />
     }
 
     if (!accountsLoaded) {
@@ -234,7 +237,7 @@ class Web3Provider extends Component {
     }
 
     if (!accounts.length) {
-      return <AccountUnavailable />
+      return <AccountUnavailable currentProvider={currentProvider} />
     }
 
     return this.props.children

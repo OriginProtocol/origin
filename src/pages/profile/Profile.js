@@ -25,6 +25,9 @@ import VerifyFacebook from './VerifyFacebook'
 import VerifyTwitter from './VerifyTwitter'
 import ConfirmPublish from './ConfirmPublish'
 
+import getCurrentProvider from '../../utils/getCurrentProvider'
+import origin from '../../services/origin'
+
 class Profile extends Component {
   constructor(props) {
     super(props)
@@ -61,7 +64,8 @@ class Profile extends Component {
         provisional: 0,
         published: 0
       },
-      provisional: props.provisional
+      provisional: props.provisional,
+      currentProvider: getCurrentProvider(origin && origin.contractService && origin.contractService.web3)
     }
   }
 
@@ -362,7 +366,7 @@ class Profile extends Component {
               <img src="images/spinner-animation.svg" role="presentation" />
             </div>
             Confirm transaction<br />
-            Press &ldquo;Submit&rdquo; in MetaMask window
+            Press &ldquo;Submit&rdquo; in {this.state.currentProvider} window
           </Modal>
         )}
 

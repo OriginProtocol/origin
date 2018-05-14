@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import origin from '../services/origin'
+import getCurrentProvider from '../utils/getCurrentProvider'
 
 import { showAlert } from '../actions/Alert'
 
@@ -42,7 +43,8 @@ class ListingCreate extends Component {
       selectedSchemaType: this.schemaList[0],
       selectedSchema: null,
       schemaFetched: false,
-      formListing: {formData: null}
+      formListing: {formData: null},
+      currentProvider: getCurrentProvider(origin && origin.contractService && origin.contractService.web3)
     }
 
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
@@ -197,7 +199,7 @@ class ListingCreate extends Component {
                   <img src="images/spinner-animation.svg" role="presentation"/>
                 </div>
                 Confirm transaction<br />
-                Press &ldquo;Submit&rdquo; in MetaMask window
+                Press &ldquo;Submit&rdquo; in {this.state.currentProvider} window
               </Modal>
             }
             {this.state.step === this.STEP.PROCESSING &&

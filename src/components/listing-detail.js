@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { showAlert } from '../actions/Alert'
+import getCurrentProvider from '../utils/getCurrentProvider'
 
 import Modal from './modal'
 import Review from './review'
@@ -31,6 +32,7 @@ class ListingsDetail extends Component {
       reviews: [],
       purchases: [],
       step: this.STEP.VIEW,
+      currentProvider: getCurrentProvider(origin && origin.contractService && origin.contractService.web3)
     }
 
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
@@ -103,7 +105,7 @@ class ListingsDetail extends Component {
               <img src="images/spinner-animation.svg" role="presentation"/>
             </div>
             Confirm transaction<br />
-            Press &ldquo;Submit&rdquo; in MetaMask window
+            Press &ldquo;Submit&rdquo; in {this.state.currentProvider} window
           </Modal>
         }
         {this.state.step===this.STEP.PROCESSING &&
