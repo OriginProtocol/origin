@@ -6,7 +6,6 @@
 	"srcListingAddress_v0_1": "0xAddress",
 	"dstListingsRegistryAddress_v0_2":"0xAddress",
 	"privateKey":"0xPK",
-	"gasSafetyMarginMultiplier": 1.3,
-	"numConfirmations": 6, // TODO
-	"batchSize": 50 // TODO
+	"gasSafetyMarginMultiplier": 1.2,
+	"numConfirmations": 6
 }
