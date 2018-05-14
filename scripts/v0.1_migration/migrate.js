@@ -32,7 +32,7 @@ const ArgumentParser = require('argparse').ArgumentParser;
 const fs = require('fs');
 
 // polling interval for checking confirmations
-const POLL_INTERVAL = 1000;
+const POLL_INTERVAL = 5000;
 
 const listingAbi_v0_1 = require("./Listing_v0_1");
 const listingsRegistryAbi_v0_2 = require("./ListingsRegistry_v0_2")['abi'];
@@ -42,6 +42,15 @@ parser.addArgument(['-c', '--configFile'], {help: 'config file path', required: 
 parser.addArgument(['-d', '--dataFile'] ,{help: 'data file path', required: true});
 parser.addArgument(['-a', '--action'], {help: 'action: \'read\' or \'write\'', required: true, choices: ['read', 'write']});
 const args = parser.parseArgs();
+
+Array.prototype.remove = function(el) {
+    var index = this.indexOf(el);
+    if (index > -1) {
+        return this.splice(index, 1);
+    } else {
+        return this;
+    }
+}
 
 try {
     var config = require(args.configFile);
@@ -69,6 +78,7 @@ function Migration(config, dataFile) {
     this.contractAddress = null;
     this.account = null;
 
+    this.submittedListings = [];
     this.minedListings = [];
     this.confirmedListings = [];
     this.errors = [];
@@ -102,8 +112,7 @@ Migration.prototype.getListing = async function(index) {
             lister: listingData[1],
             ipfsHash: this.getIpfsHashFromBytes32(listingData[2]),
             price: String(listingData[3]), // in wei
-            unitsAvailable: parseInt(listingData[4]),
-            migrated: false
+            unitsAvailable: parseInt(listingData[4])
         }
         return listing;
     } catch(e) {
@@ -139,6 +148,7 @@ Migration.prototype.createListing = async function(listing) {
                 web3.eth
                     .sendSignedTransaction(signedTransaction.rawTransaction, function(err, txHash) {
                         if (err) {
+                            console.log("error submitting listing: " + err);
                             reject();
                         } else {
                             // Mark completed when transaction has been submitted
@@ -154,7 +164,7 @@ Migration.prototype.createListing = async function(listing) {
         }
 
         try {
-            res = await txHash(this.web3)
+            res = await txHash(this.web3);
             return res;
         } catch(e) {
             // failed to submit the transaction
@@ -168,20 +178,58 @@ Migration.prototype.createListing = async function(listing) {
     }
 }
 
-Migration.prototype.confirm = async function(submittedListings) {
-    // setInterval(() => {
-    //     // currentBlock = await web3.eth.getBlockNumber()
-    //     //Promise.all(submittedListings)
-    //     //if web3.eth.getTransactionReceipt(hash) for a submittedListing
-    //     //  confirmations = currentBlock - block
-    //     //  if > this.numConfirmations this.confirmedListrings
-    //     //  else this.minedListings
-    //     //  update listings to block
-    //     //  remove from object
 
-    //     this.minedListings
-    //     this.confirmedListings
-    // }, POLL_INTERVAL)
+// Listings go into three arrays: submitted, mined, and confirmed
+// Each interval, get the current block + receipts for any listings that have
+// not reached N confirmations, then move listings between the arrays
+// TODO: probably a simpler way of doing this...
+Migration.prototype.confirm = async function(txToListings) {
+    const numTotalTransactions = Object.keys(txToListings).length;
+    while (true) {
+        console.log("<<<<<<<<<<<<<< polling >>>>>>>>>>>>>>>");
+        const currentBlockRequest = this.web3.eth.getBlockNumber();
+        let pendingRequests = [currentBlockRequest];
+        Object.keys(txToListings).map((txHash) => {
+            pendingRequests.push(this.web3.eth.getTransactionReceipt(txHash));
+        });
+
+        try {
+            const responses = await Promise.all(pendingRequests);
+            const currentBlock = responses[0];
+            console.log("    current block: " + currentBlock);
+            const receipts = responses.slice(1).filter((el) => el);
+            console.log("    recieved receipts for: " + receipts.length + " listings.")
+
+            for (let i = 0; i < receipts.length; i++) {
+                const receipt = receipts[i];
+                const blockNumber = receipt.blockNumber;
+                const txHash = receipt.transactionHash;
+                const listingID = txToListings[txHash];
+                this.submittedListings.remove(listingID);
+
+                if ((currentBlock - blockNumber) >= (this.numConfirmations - 1)) {
+                    this.confirmedListings.push(listingID);
+                    this.minedListings.remove(listingID);
+                    delete txToListings[txHash];
+                } else {
+                    if (this.minedListings.indexOf(listingID) == -1) {
+                        this.minedListings.push(listingID);
+                    }
+                }
+            }
+
+                console.log("    submitted: " + this.submittedListings.length + " confirmed: " + this.confirmedListings.length + " mined: " + this.minedListings.length);
+                if (this.confirmedListings.length == numTotalTransactions) {
+                    return true;
+                }
+
+        } catch(e) {
+            console.log("Request error: " + e + ", continuing to next interval.");
+            console.log("Pressing CTRL+C will print current state before exiting.");
+        }
+
+        await new Promise(resolve => setTimeout(resolve, POLL_INTERVAL));
+    }
 }
 
 Migration.prototype.read = async function() {
@@ -240,37 +288,37 @@ Migration.prototype.write = async function() {
 
     const startingNumListings = await this.contract.methods.listingsLength().call();
     console.log("Starting # listings in ListingsRegistry: " + startingNumListings);
-    console.log("--------------------------------------------")
+    console.log("--------------------------------------------");
 
     this.account = this.web3.eth.accounts.privateKeyToAccount(this.privateKey);
 
     const listingIDs = Object.keys(listings).map((id) => parseInt(id));
     const numListings = listingIDs.length;
 
-    var submittedListings = {};
+    var txToListings = {};
 
     for (i = 0; i < numListings; i++) {
         const listingID = listingIDs[i];
         console.log("Submitting listing: " + listingID);
         txHash = await this.createListing(listings[listingID], this.account);
         if (txHash) {
-            submittedListings[listingID] = txHash;
+            txToListings[txHash] = listingID;
+            this.submittedListings.push(listingID);
         } else {
             this.errors.push(listingID);
         }
     };
 
-    console.log("--------------------------------------------")
-    console.log("Submitted " + Object.keys(submittedListings).length + " listings");
+    console.log("--------------------------------------------");
+    console.log("Submitted " + this.submittedListings.length + " listings");
 
-    // TBD
-    // await this.confirm(submittedListings);
+    await this.confirm(txToListings);
 
-    console.log("--------------------------------------------")
-    console.log("All submitted listings were mined and reached " + this.numConfirmations + " confirmations.");
+    console.log("--------------------------------------------");
+    console.log("Listings have " + this.numConfirmations + " confirmations.");
 
     const endingNumListings = await this.contract.methods.listingsLength().call();
-    console.log("Ending # listings in ListingsRegistry: " + endingNumListings + " (" + (endingNumListings - startingNumListings) + ") created");
+    console.log("Ending # listings in ListingsRegistry: " + endingNumListings + " (" + (endingNumListings - startingNumListings) + " created)");
 
     this.printResults();
     process.exit();
@@ -284,13 +332,13 @@ Migration.prototype.write = async function() {
 //   (mined listings - errors).shouldEqual(# created in ListingsRegistry)
 //   (mined listings).shouldEqual(confirmed listings)
 Migration.prototype.printResults = function() {
-    console.log("--------------------------------------------")
+    console.log("--------------------------------------------");
     console.log("Results:")
-    console.log(this.minedListings.length + " listings in mined transactions: " + this.minedListings);
-    console.log(this.confirmedListings.length + " listings having " + this.numConfirmations + " confirmations: " + this.confirmedListings);
+    console.log(this.submittedListings.length + " listing currently in submitted state: " + this.submittedListings);
+    console.log(this.minedListings.length + " listings currently in mined state: " + this.minedListings);
+    console.log(this.confirmedListings.length + " listings with " + this.numConfirmations + " confirmations: " + this.confirmedListings);
     console.log(this.errors.length + " errors: " + this.errors);
 }
-
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -298,7 +346,7 @@ var migration = new Migration(config, args.dataFile);
 
 if (args.action == 'read') {
     console.log("Reading listings from: " + config.srcNetworkName + " - Gateway: " + config.srcGateway);
-    console.log("--------------------------------------------")
+    console.log("--------------------------------------------");
 
     try {
         migration.read();
@@ -309,7 +357,7 @@ if (args.action == 'read') {
 
 } else if (args.action == 'write') {
     console.log("Creating listings on: " + config.dstNetworkName + " - Gateway: " + config.dstGateway);
-    console.log("--------------------------------------------")
+    console.log("--------------------------------------------");
 
     // Assumes no listings in data file have been migrated
     // TODO: check for and flag duplicate listings in destination contract (using IPFS hash)
@@ -327,6 +375,6 @@ if (args.action == 'read') {
         console.log("--------------------------------------------");
         console.log("CTRL+C detected");
         migration.printResults();
-        process.exit()
+        process.exit();
     });
 } // illegal actions should be caught by ArgumentParser
