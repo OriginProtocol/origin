@@ -35,7 +35,7 @@ npm run start
 
 A browser will open to http://localhost:3000. If you don't have the MetaMask extension (or another wallet provider) proceed to the next step.
 
-![Origin-homepage](https://user-images.githubusercontent.com/673455/34650232-ca4df39c-f37a-11e7-9b18-18861f282dff.png)
+![Origin-homepage](https://user-images.githubusercontent.com/673455/39952325-6d37e3be-5551-11e8-9651-b1697bad3412.png)
 
 ### 3. Set up Metamask
 
