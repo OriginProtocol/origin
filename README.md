@@ -61,7 +61,7 @@ If you want hack on origin-js code, or if you just want to use a private local b
 
 ### 1. Set up and run origin-js locally
 
-[Follow these instructions to setup and run origin.js.](https://github.com/OriginProtocol/origin-js#local-development) origin-js is needed to run a local blockchain and make it accessible to your DApp.
+[Follow these instructions to setup and run origin-js.](https://github.com/OriginProtocol/origin-js#local-development)
 
 ### 2. Set up the DApp for local development
 
