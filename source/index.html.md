@@ -14,6 +14,7 @@ includes:
   - getting_started
   - local_development
   - authentication_identity
+  - resources/origin
   - resources/attestations
   - resources/listings
   - resources/purchases
