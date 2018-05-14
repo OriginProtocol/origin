@@ -7,8 +7,6 @@ import Modal from './modal'
 import Review from './review'
 import UserCard from './user-card'
 
-import data from '../data'
-
 // temporary - we should be getting an origin instance from our app,
 // not using a global singleton
 import origin from '../services/origin'
@@ -39,34 +37,59 @@ class ListingsDetail extends Component {
   async loadListing() {
     try {
       const listing = await origin.listings.get(this.props.listingAddress)
-      const obj = Object.assign({}, listing, { loading: false, reviews: data.reviews})
+      const obj = Object.assign({}, listing, { loading: false })
       this.setState(obj)
     } catch (error) {
       this.props.showAlert('There was an error loading this listing.')
       console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingAddress}`)
-      console.log(error)
+      console.error(error)
     }
   }
 
   async loadPurchases() {
-    const address = this.props.listingAddress
-    const length = await origin.listings.purchasesLength(address)
-    console.log('Purchase count:', length)
-    for(let i = 0; i < length; i++){
-      let purchaseAddress = await origin.listings.purchaseAddressByIndex(address, i)
-      let purchase = await origin.purchases.get(purchaseAddress)
-      console.log('Purchase:', purchase)
-      this.setState((prevState) => {
-        return {purchases: [...prevState.purchases, purchase]};
-      });
+    const { listingAddress } = this.props
+
+    try {
+      const length = await origin.listings.purchasesLength(listingAddress)
+      console.log('Purchase count:', length)
+
+      for (let i = 0; i < length; i++) {
+        let purchaseAddress = await origin.listings.purchaseAddressByIndex(listingAddress, i)
+        let purchase = await origin.purchases.get(purchaseAddress)
+        console.log('Purchase:', purchase)
+
+        this.setState((prevState) => {
+          return { purchases: [...prevState.purchases, purchase] }
+        })
+      }
+    } catch(error) {
+      console.error(`Error fetching purchases for listing: ${listingAddress}`)
+      console.error(error)
     }
   }
 
-  componentWillMount() {
+  async loadReviews() {
+    const { purchases } = this.state
+
+    try {
+      const reviews = await Promise.all(
+        purchases.map(p => origin.reviews.find({ purchaseAddress: p.address }))
+      )
+      const flattened = [].concat(...reviews)
+      console.log('Reviews:', flattened)
+      this.setState({ reviews: flattened })
+    } catch(error) {
+      console.error(error)
+      console.error(`Error fetching reviews`)
+    }
+  }
+
+  async componentWillMount() {
     if (this.props.listingAddress) {
       // Load from IPFS
-      this.loadListing()
-      this.loadPurchases()
+      await this.loadListing()
+      await this.loadPurchases()
+      this.loadReviews()
     }
     else if (this.props.listingJson) {
       const obj = Object.assign({}, this.props.listingJson, { loading: false })
@@ -87,7 +110,7 @@ class ListingsDetail extends Component {
       this.setState({step: this.STEP.PURCHASED})
     } catch (error) {
       window.err = error
-      console.log(error)
+      console.error(error)
       this.props.showAlert("There was a problem purchasing this listing.\nSee the console for more details.")
       this.setState({step: this.STEP.VIEW})
     }
@@ -95,6 +118,8 @@ class ListingsDetail extends Component {
 
 
   render() {
+    const buyersReviews = this.state.reviews.filter(r => r.revieweeRole === 'SELLER')
+
     return (
       <div className="listing-detail">
         {this.state.step===this.STEP.METAMASK &&
@@ -232,18 +257,17 @@ class ListingsDetail extends Component {
               {this.state.sellerAddress && <UserCard title="seller" userAddress={this.state.sellerAddress} />}
             </div>
           </div>
-          {!!this.state.reviews.length &&
-            <div className="row">
-              <div className="col-12 col-md-8">
-                <hr />
-                <div className="reviews">
-                  <h2>Reviews <span className="review-count">57</span></h2>
-                  {this.state.reviews.map(r => <Review key={r._id} review={r} />)}
-                  <a href="#" className="reviews-link" onClick={() => alert('To Do')}>Read More<img src="images/carat-blue.svg" className="down carat" alt="down carat" /></a>
-                </div>
+          <div className="row">
+            <div className="col-12 col-md-8">
+              <hr />
+              <div className="reviews">
+                <h2>Reviews <span className="review-count">{buyersReviews.length}</span></h2>
+                {buyersReviews.map(r => <Review key={r.transactionHash} review={r} />)}
+                {/* To Do: pagination */}
+                {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
               </div>
             </div>
-          }
+          </div>
         </div>
       </div>
     )
