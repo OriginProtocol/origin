@@ -1,5 +1,10 @@
 #!/usr/local/bin/node
-
+/////////////////////////////////////////////////
+// This script migrates listings from a source contract to a
+// destination contract. The lister of the migrated listings
+// is the account that performed the migration, rather than the
+// original lister.
+//
 // Usage:   node migrate.js [-h] -c CONFIGFILE -d DATAFILE -a {read,write}
 // Ex.      node migrate.js -c ./conf-test.json -d ./data.json -a read
 //          node migrate.js -c ./conf-test.json -d ./data.json -a write
@@ -120,6 +125,14 @@ Migration.prototype.getListing = async function(index) {
     }
 }
 
+/**
+ * Queries for the nonce and estimate of gas required,
+ * then creates and submits a signed transaction, getting the transaction
+ * hash. In order to be able to retrieve the nonce for a subsequent
+ * transaction, the tranasction hash is returned instead of
+ * waiting for a receipt that the tx was mined, in order to allow
+ * for parallelization of requests
+ */
 Migration.prototype.createListing = async function(listing) {
     const nonce = await this.web3.eth.getTransactionCount(this.account.address, "pending");
     console.log("   nonce: " + nonce);
@@ -178,11 +191,13 @@ Migration.prototype.createListing = async function(listing) {
     }
 }
 
-
-// Listings go into three arrays: submitted, mined, and confirmed
-// Each interval, get the current block + receipts for any listings that have
-// not reached N confirmations, then move listings between the arrays
-// TODO: probably a simpler way of doing this...
+/**
+* Using the transaction hashes, we can poll for the status of each
+* transaction. All transactions start in a submitted state, then when
+* a receipt becomes available we know that it has been mined.
+* After numConfirmation additional blocks have been mined, the
+* transaction is confirmed.
+*/
 Migration.prototype.confirm = async function(txToListings) {
     const numTotalTransactions = Object.keys(txToListings).length;
     while (true) {
@@ -200,6 +215,7 @@ Migration.prototype.confirm = async function(txToListings) {
             const receipts = responses.slice(1).filter((el) => el);
             console.log("    recieved receipts for: " + receipts.length + " listings.")
 
+            // If there is a receipt, we know that the block has been mined
             for (let i = 0; i < receipts.length; i++) {
                 const receipt = receipts[i];
                 const blockNumber = receipt.blockNumber;
@@ -218,7 +234,7 @@ Migration.prototype.confirm = async function(txToListings) {
                 }
             }
 
-                console.log("    submitted: " + this.submittedListings.length + " confirmed: " + this.confirmedListings.length + " mined: " + this.minedListings.length);
+                console.log("    submitted: " + this.submittedListings.length + " | mined: " + this.minedListings.length + " | confirmed: " + this.confirmedListings.length);
                 if (this.confirmedListings.length == numTotalTransactions) {
                     return true;
                 }
@@ -232,6 +248,11 @@ Migration.prototype.confirm = async function(txToListings) {
     }
 }
 
+/**
+ * Gets number of listings, then spawns requests to retrieve the
+ * listing data. When all requests have completed, the ones that returned
+ * listings are written to the data file.
+ */
 Migration.prototype.read = async function() {
     this.web3 = new Web3(new Web3.providers.HttpProvider(this.srcGateway));
     this.contractAddress = this.srcListingAddress_v0_1;
@@ -264,6 +285,17 @@ Migration.prototype.read = async function() {
     });
 }
 
+/**
+ * Reads listings to migrate from the data file, then spawns requests to create
+ * listings. The idea is to create the listings in parallel, but submitting
+ * to the provider is done in serial in order to allow querying for each nonce
+ * (I think the nonce can also just be calculated via applying an offset, but
+ * when I used this approach I ran into a transient issue where the provider
+ * expected a different nonce than was submitted with the transaction).
+ *     The returned transaction hashes are then passed to a method to poll the
+ * provider for the status of the transactions:
+ * [submitted] -> [included in a mined block] -> [reached n confirmations]
+ */
 Migration.prototype.write = async function() {
     try {
         var listings = require(this.dataFile);
@@ -317,6 +349,8 @@ Migration.prototype.write = async function() {
     console.log("--------------------------------------------");
     console.log("Listings have " + this.numConfirmations + " confirmations.");
 
+    // Query the contract for the number of listings created, which should
+    // equal the number of listings we have recorded as migrated.
     const endingNumListings = await this.contract.methods.listingsLength().call();
     console.log("Ending # listings in ListingsRegistry: " + endingNumListings + " (" + (endingNumListings - startingNumListings) + " created)");
 
@@ -336,11 +370,12 @@ Migration.prototype.printResults = function() {
     console.log("Results:")
     console.log(this.submittedListings.length + " listing currently in submitted state: " + this.submittedListings);
     console.log(this.minedListings.length + " listings currently in mined state: " + this.minedListings);
-    console.log(this.confirmedListings.length + " listings with " + this.numConfirmations + " confirmations: " + this.confirmedListings);
+    console.log(this.confirmedListings.length + " listings migrated: " + this.confirmedListings);
     console.log(this.errors.length + " errors: " + this.errors);
 }
 
 /////////////////////////////////////////////////
+// Entrypoint
 /////////////////////////////////////////////////
 var migration = new Migration(config, args.dataFile);
 
@@ -368,9 +403,9 @@ if (args.action == 'read') {
         process.exit();
     }
 
-    // trap CTRL+C for the case:
-    //   - some listings were never mined
-    //   - some listings never reached numConfirmations
+    // allow the operator to CTRL+C for the cases where:
+    //   - some listings to never get mined
+    //   - some listings to never reach numConfirmations
     process.on('SIGINT', function() {
         console.log("--------------------------------------------");
         console.log("CTRL+C detected");
