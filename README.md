@@ -37,7 +37,7 @@ A browser will open to http://localhost:3000. If you don't have the MetaMask ext
 
 ![Origin-homepage](https://user-images.githubusercontent.com/673455/39952325-6d37e3be-5551-11e8-9651-b1697bad3412.png)
 
-### 3. Set up Metamask
+### 3. Set up MetaMask
 
 - Install [MetaMask Chrome Browser Extension](https://metamask.io/).
 
@@ -73,9 +73,9 @@ npm run install:dev
 npm run start
 ```
 
-The `install:dev` script performs the regular install and then links to your local origin-js. Changes made to origin-js code will be immediately reflected in Demo DApp without requiring `npm install`. 
+The `install:dev` script performs the regular install and then links to your local origin-js from step 1. Changes made to origin-js code will then immediately reflected in Demo DApp without requiring `npm install`. 
 
-### 3. Connect to your local blockchain in Metamask
+### 3. Connect to your local blockchain in MetaMask
 
 -  Install [MetaMask Chrome Browser Extension](https://metamask.io/).
 
