@@ -117,8 +117,8 @@ class ListingCreate extends Component {
     }
   }
 
-  resetToStepOne() {
-    this.setState({ step: this.STEP.PICK_SCHEMA })
+  resetToPreview() {
+    this.setState({ step: this.STEP.PREVIEW })
   }
 
   render() {
@@ -232,7 +232,7 @@ class ListingCreate extends Component {
                   href="#"
                   onClick={e => {
                     e.preventDefault()
-                    this.resetToStepOne()
+                    this.resetToPreview()
                   }}
                 >
                   OK
