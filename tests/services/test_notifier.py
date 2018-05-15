@@ -4,7 +4,7 @@ from tests.helpers.eth_utils import sample_eth_address, str_eth
 from util.contract import ContractHelper
 
 # use indexer to drive notification events
-from logic.indexer_service import event_reducer
+from logic.indexer_service import EventHandler
 
 
 def test_new_endpoint(db):
@@ -60,11 +60,12 @@ def test_endpoint_notification(db, web3, wait_for_block, wait_for_transaction,
     db.session.commit()
 
     # HUGE assumption that only one contract have been created...
-    ContractHelper(web3).fetch_events([],
-                                      block_from=event_tracker.last_read,
-                                      block_to='latest',
-                                      f=event_reducer,
-                                      web3=web3)
+    handler = EventHandler(web3=web3)
+    ContractHelper(web3=web3).fetch_events(
+                                    [],
+                                    block_from=event_tracker.last_read,
+                                    block_to='latest',
+                                    callback=handler.process)
 
     apn_notification_list = mock_apns.return_value.send_notification.call_args_list
     assert len([1 for b in apn_notification_list if b[0]

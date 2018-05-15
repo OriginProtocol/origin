@@ -125,46 +125,61 @@ def listing_info(listing_obj):
                 pictures=get_listing_picture(listing_obj))
 
 
-def notify_purchased(purchase_obj):
-    if not purchase_obj.listing_address:
-        return
+class Notifier():
+    """
+    Notifier sends mobile notifications.
+    """
+    @classmethod
+    def notify_purchased(cls, purchase_obj):
+        if not purchase_obj.listing_address:
+            return
 
-    seller_notification, buyer_notification = {
-        PurchaseStages.COMPLETE: (Notification.SOLD, Notification.PURCHASED),
-        PurchaseStages.AWAITING_PAYMENT: (Notification.PENDING_PAYMENT, Notification.PENDING_PAY),
-        PurchaseStages.SHIPPING_PENDING: (Notification.PENDING_SHIP, Notification.PENDING_SHIPMENT),
-        PurchaseStages.BUYER_PENDING: (Notification.PENDING_BUYER_CONFIRMATION,
-                                       Notification.PENDING_BUY_CONFIRM),
-        PurchaseStages.SELLER_PENDING: (Notification.PENDING_SELLER_CONFIRM,
-                                        Notification.PENDING_SELLER_CONFIRMATION),
-        PurchaseStages.IN_DISPUTE: (Notification.SELLER_DISPUTE, Notification.BUYER_DISPUTE),
-        PurchaseStages.REVIEW_PERIOD: (
-            Notification.SELLER_REVIEW,
-            Notification.BUYER_REVIEW)
-    }.get(PurchaseStages(purchase_obj.stage), (None, None))
+        seller_notification, buyer_notification = {
+            PurchaseStages.COMPLETE: (
+                Notification.SOLD,
+                Notification.PURCHASED),
+            PurchaseStages.AWAITING_PAYMENT: (
+                Notification.PENDING_PAYMENT,
+                Notification.PENDING_PAY),
+            PurchaseStages.SHIPPING_PENDING: (
+                Notification.PENDING_SHIP,
+                Notification.PENDING_SHIPMENT),
+            PurchaseStages.BUYER_PENDING: (
+                Notification.PENDING_BUYER_CONFIRMATION,
+                Notification.PENDING_BUY_CONFIRM),
+            PurchaseStages.SELLER_PENDING: (
+                Notification.PENDING_SELLER_CONFIRM,
+                Notification.PENDING_SELLER_CONFIRMATION),
+            PurchaseStages.IN_DISPUTE: (
+                Notification.SELLER_DISPUTE,
+                Notification.BUYER_DISPUTE),
+            PurchaseStages.REVIEW_PERIOD: (
+                Notification.SELLER_REVIEW,
+                Notification.BUYER_REVIEW)
+        }.get(PurchaseStages(purchase_obj.stage), (None, None))
 
-    if seller_notification or buyer_notification:
-        listing_obj = Listing.query.filter_by(
-            contract_address=purchase_obj.listing_address).first()
-        if listing_obj:
-            listing_params = listing_info(listing_obj)
-            seller_notification and send_notification(
-                listing_obj.owner_address, seller_notification, **listing_params)
-            buyer_notification and send_notification(
-                purchase_obj.buyer_address, buyer_notification, **listing_params)
+        if seller_notification or buyer_notification:
+            listing_obj = Listing.query.filter_by(
+                contract_address=purchase_obj.listing_address).first()
+            if listing_obj:
+                listing_params = listing_info(listing_obj)
+                seller_notification and send_notification(
+                    listing_obj.owner_address, seller_notification, **listing_params)
+                buyer_notification and send_notification(
+                    purchase_obj.buyer_address, buyer_notification, **listing_params)
 
+    @classmethod
+    def notify_listing(cls, listing_obj):
+        listing_params = listing_info(listing_obj)
+        send_notification(
+            listing_obj.owner_address,
+            Notification.LIST,
+            **listing_params)
 
-def notify_listing(listing_obj):
-    listing_params = listing_info(listing_obj)
-    send_notification(
-        listing_obj.owner_address,
-        Notification.LIST,
-        **listing_params)
-
-
-def notify_listing_update(listing_obj):
-    listing_params = listing_info(listing_obj)
-    send_notification(
-        listing_obj.owner_address,
-        Notification.UPDATED,
-        **listing_params)
+    @classmethod
+    def notify_listing_update(cls, listing_obj):
+        listing_params = listing_info(listing_obj)
+        send_notification(
+            listing_obj.owner_address,
+            Notification.UPDATED,
+            **listing_params)

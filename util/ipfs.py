@@ -8,6 +8,14 @@ from config import settings
 
 
 def hex_to_base58(byte32_hex):
+    """
+    Converts IPFS hash stored in contract to base58.
+
+    IPFS hashes are base58 encoded but are stored using a different
+    encoding in the smart contract in order to save space
+    (and therefore minimize gas cost when recording a transaction).
+    For details see https://ethereum.stackexchange.com/a/17112/20332
+    """
     # Add our default ipfs values for first 2 bytes:
     # function:0x12=sha2, size:0x20=256 bits converted to bytes: \x12
     # and cut off leading "0x"

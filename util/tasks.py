@@ -6,7 +6,7 @@ from flask import Flask
 from database import db
 from database import db_models
 from .contract import ContractHelper
-from logic.indexer_service import event_reducer
+from logic.indexer_service import EventHandler
 
 logger = get_task_logger(__name__)
 
@@ -44,22 +44,26 @@ celery = make_celery(flask_app)
 
 
 @celery.task
-def event_listner(web3=None):
+def event_listener(web3=None):
+    # Load our block cursor from the event_tracker table.
     event_tracker = db_models.EventTracker.query.first()
     if not event_tracker:
+        # No cursor found. Start from the beginning at block 0.
         event_tracker = db_models.EventTracker(last_read=0)
         db.session.add(event_tracker)
         db.session.commit()
-    ContractHelper(web3).fetch_events(['NewListing(uint256)',
-                                       'ListingPurchased(address)',
-                                       'ListingChange()',
-                                       'PurchaseChange(uint8)'],
-                                      block_from=event_tracker.last_read,
-                                      block_to='latest',
-                                      f=event_reducer,
-                                      web3=web3)
+
+    # Create an event handler and attempt to fetch events from the network.
+    handler = EventHandler(web3=web3)
+    ContractHelper().fetch_events(['NewListing(uint256)',
+                                   'ListingPurchased(address)',
+                                   'ListingChange()',
+                                   'PurchaseChange(uint8)'],
+                                  block_from=event_tracker.last_read,
+                                  block_to='latest',
+                                  callback=handler.process)
 
 
 @celery.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
-    sender.add_periodic_task(10.0, event_listner)
+    sender.add_periodic_task(10.0, event_listener)
