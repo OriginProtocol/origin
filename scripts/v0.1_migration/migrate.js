@@ -5,10 +5,11 @@
 //          node migrate.js -c ./conf-test.json -d ./data.json -a write
 //
 // This script migrates listings from a source contract to a
-// destination contract.
+// destination contract. Notes:
 //     - the lister of the migrated listings is the account that performed the
 // migration, rather than the original lister.
-//     - test the migration by setting "dst_*" vars to localhost values
+//     - the migration can be tested by setting "dst_*" vars to localhost values
+//     - if any source listing has an IPFS hash that already exists in the destination, that listing is not migrated
 //
 // Script parameters:
 //
@@ -109,6 +110,54 @@ Migration.prototype.getIpfsHashFromBytes32 = function(bytes32Hex) {
     return hashStr
 }
 
+// If any source listing has an IPFS hash that already exists in the destination, that listing is not migrated
+Migration.prototype.checkDuplicates = async function(sourceListings, numDestinationListings) {
+    console.log("Checking for duplicates...")
+
+    destinationListings = await this.getAllListings(numDestinationListings);
+    const sourceListingsHashes = Object.keys(sourceListings).map((id) => sourceListings[id].ipfsHash);
+    const destinationListingsHashes = Object.keys(destinationListings).map((id) => destinationListings[id].ipfsHash);
+    const [lowerCardinalityArray, higherCardinalityArray] = (sourceListingsHashes.length < destinationListingsHashes.length) ? [sourceListingsHashes, destinationListingsHashes] : [destinationListingsHashes, sourceListingsHashes];
+
+    let duplicates = [];
+    lowerCardinalityArray.map((ipfsHash) => {
+        if (higherCardinalityArray.indexOf(ipfsHash) > -1) {
+            duplicates.push(ipfsHash);
+        }
+    });
+
+    // Halt the migration if duplicates are detected
+    if (duplicates.length) {
+        console.log("    Found duplicate listings: " + duplicates);
+        console.log("Please remove these entries from the datafile before running the migration.");
+        process.exit();
+    } else {
+        // stackoverflow/19687407
+        console.log("No duplicate listings found.\n");
+        console.log("Press any key to start the migration.");
+        await async function() {
+            process.stdin.setRawMode(true);
+            return new Promise((resolve) => process.stdin.once('data', () => {
+                process.stdin.setRawMode(false);
+                resolve();
+            }));
+        }()
+    }
+
+    return sourceListings;
+}
+
+// Indexes for listings in ListingsRegistry are currently in a contiguous block
+Migration.prototype.getAllListings = async function(numListings) {
+    let getListingCalls = [];
+    for(let i = 0; i < numListings; i++) {
+        getListingCalls.push(this.getListing(i));
+    }
+    const listings = await Promise.all(getListingCalls);
+    const retrievedListings = listings.filter((el) => el);
+    return retrievedListings;
+}
+
 Migration.prototype.getListing = async function(index) {
     try {
         const listingData = await this.contract.methods.getListing(index).call();
@@ -121,6 +170,7 @@ Migration.prototype.getListing = async function(index) {
         }
         return listing;
     } catch(e) {
+        console.log("error getting listing: " + e);
         return false;
     }
 }
@@ -266,14 +316,7 @@ Migration.prototype.read = async function() {
         process.exit();
     }
 
-    let getListingsCalls = [];
-
-    for(let i = 0; i < numListings; i++) {
-        getListingsCalls.push(this.getListing(i));
-    }
-
-    const listings = await Promise.all(getListingsCalls);
-    const retrievedListings = listings.filter((el) => el);
+    retrievedListings = await this.getAllListings();
     console.log("Retrieved " + retrievedListings.length + " listings from source contract.");
 
     var output = {};
@@ -293,8 +336,8 @@ Migration.prototype.read = async function() {
  */
 Migration.prototype.write = async function() {
     try {
-        var listings = require(this.dataFile);
-        console.log("Read " + Object.keys(listings).length + " listings to migrate from data file.");
+        var sourceListings = require(this.dataFile);
+        console.log("Read " + Object.keys(sourceListings).length + " listings from data file.");
     } catch (e) {
         console.log("Error loading data file: " + e);
         process.exit();
@@ -315,9 +358,14 @@ Migration.prototype.write = async function() {
 
     this.account = this.web3.eth.accounts.privateKeyToAccount(this.privateKey);
     console.log("Creating listings using account: " + this.account.address);
+    console.log("--------------------------------------------");
 
     const startingNumListings = await this.contract.methods.listingsLength().call();
     console.log("Starting # listings in ListingsRegistry: " + startingNumListings);
+
+    const listings = await this.checkDuplicates(sourceListings, startingNumListings);
+    console.log("--------------------------------------------");
+    console.log("    Migrating " + Object.keys(listings).length + " listings.")
     console.log("--------------------------------------------");
 
     const listingIDs = Object.keys(listings).map((id) => parseInt(id));
@@ -369,6 +417,7 @@ Migration.prototype.write = async function() {
 
     this.printResults();
 
+    this.checkData(listings, startingNumListings, endingNumListings);
     process.exit();
 }
 
