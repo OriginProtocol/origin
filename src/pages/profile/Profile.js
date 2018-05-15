@@ -25,6 +25,7 @@ import VerifyFacebook from './VerifyFacebook'
 import VerifyTwitter from './VerifyTwitter'
 import ConfirmPublish from './ConfirmPublish'
 import ConfirmUnload from './ConfirmUnload'
+import AttestationSuccess from './AttestationSuccess'
 
 class Profile extends Component {
   constructor(props) {
@@ -49,6 +50,7 @@ class Profile extends Component {
       address: props.address,
       userForm: { firstName, lastName, description },
       modalsOpen: {
+        attestationSuccess: false,
         email: false,
         facebook: false,
         phone: false,
@@ -62,7 +64,8 @@ class Profile extends Component {
         provisional: 0,
         published: 0
       },
-      provisional: props.provisional
+      provisional: props.provisional,
+      successMessage: '',
     }
   }
 
@@ -93,6 +96,8 @@ class Profile extends Component {
 
   // conditionally close modal identified by data attribute
   handleToggle(e) {
+    e.preventDefault()
+    
     const { modal } = e.currentTarget.dataset
 
     /*
@@ -157,7 +162,7 @@ class Profile extends Component {
   }
 
   render() {
-    const { modalsOpen, progress } = this.state
+    const { modalsOpen, progress, successMessage } = this.state
 
     const { provisional, published, profile, lastPublish } = this.props
 
@@ -285,7 +290,8 @@ class Profile extends Component {
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
-              modalsOpen: { ...this.state.modalsOpen, phone: false }
+              successMessage: 'Phone verified!',
+              modalsOpen: { ...this.state.modalsOpen, phone: false, attestationSuccess: true }
             })
           }}
         />
@@ -297,7 +303,8 @@ class Profile extends Component {
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
-              modalsOpen: { ...this.state.modalsOpen, email: false }
+              successMessage: 'Email verified!',
+              modalsOpen: { ...this.state.modalsOpen, email: false, attestationSuccess: true }
             })
           }}
         />
@@ -309,7 +316,8 @@ class Profile extends Component {
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
-              modalsOpen: { ...this.state.modalsOpen, facebook: false }
+              successMessage: 'Facebook verified!',
+              modalsOpen: { ...this.state.modalsOpen, facebook: false, attestationSuccess: true }
             })
           }}
         />
@@ -320,7 +328,8 @@ class Profile extends Component {
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
-              modalsOpen: { ...this.state.modalsOpen, twitter: false }
+              successMessage: 'Twitter verified!',
+              modalsOpen: { ...this.state.modalsOpen, twitter: false, attestationSuccess: true }
             })
           }}
         />
@@ -357,6 +366,12 @@ class Profile extends Component {
           }}
         />
 
+        <AttestationSuccess
+          open={modalsOpen.attestationSuccess}
+          message={successMessage}
+          handleToggle={this.handleToggle}
+        />
+
         {this.props.profile.status === 'confirming' && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
@@ -382,16 +397,16 @@ class Profile extends Component {
             <div className="image-container">
               <img src="images/flat_cross_icon.svg" role="presentation" />
             </div>
-            Error<br />
-            <a
-              href="#"
-              onClick={e => {
-                e.preventDefault()
-                this.props.deployProfileReset()
-              }}
-            >
-              OK
-            </a>
+            <h2>Error</h2>
+            <div>See the console for more details</div>
+            <div className="button-container">
+              <button
+                className="btn btn-clear"
+                onClick={this.props.deployProfileReset}
+              >
+                OK
+              </button>
+            </div>
           </Modal>
         )}
 
@@ -403,16 +418,15 @@ class Profile extends Component {
                 role="presentation"
               />
             </div>
-            Success<br />
-            <a
-              href="#"
-              onClick={e => {
-                e.preventDefault()
-                this.props.deployProfileReset()
-              }}
-            >
-              Continue
-            </a>
+            <h2>Success</h2>
+            <div className="button-container">
+              <button
+                className="btn btn-clear"
+                onClick={this.props.deployProfileReset}
+              >
+                Continue
+              </button>
+            </div>
           </Modal>
         )}
       </div>

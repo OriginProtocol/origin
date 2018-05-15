@@ -19,6 +19,7 @@ class ConfirmPublish extends Component {
         </p>
         <div className="button-container">
           <a
+            href="#"
             className="btn btn-clear mr-3"
             data-modal="publish"
             onClick={this.props.handleToggle}

@@ -26,7 +26,7 @@ class ConfirmUnload extends Component {
             Publish Now
           </button>
         </div>
-        <a data-modal="unload" onClick={handleToggle}>
+        <a href="#" data-modal="unload" onClick={handleToggle}>
           Not Right Now
         </a>
       </Modal>

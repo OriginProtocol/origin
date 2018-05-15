@@ -91,6 +91,18 @@ a:hover {
   font-weight: 900;
 }
 
+.btn-clear {
+  border: solid 1px white;
+  background-color: transparent;
+  color: white;
+}
+
+.btn-clear:hover,
+a.btn-clear:hover {
+  background-color: white;
+  color: #213040;
+}
+
 .table {
   font-size: 0.875rem;
   margin-bottom: 0;
@@ -935,6 +947,10 @@ a:hover {
   color: unset;
 }
 
+.modal-content .success-message {
+  color: var(--greenblue);
+}
+
 .modal-content .image-container img {
   width: 54px;
   height: 54px;
@@ -967,34 +983,18 @@ a:hover {
   color: var(--dusk);
 }
 
-.modal-content a {
-  color: var(--greenblue);
-}
-
-.modal-content a:hover {
-  color: var(--light-greenblue);
-}
-
 .modal-content .button-container {
   margin-top: 20px;
 }
 
 .modal-content .button-container .btn {
-  border: solid 1px white;
-  background-color: transparent;
-  color: white;
   flex-basis: 50%;
   font-size: 1rem;
   font-weight: bold;
   padding: 10px;
 }
 
-.modal-content .button-container .btn:hover {
-  background-color: white;
-  color: #213040;
-}
-
-.modal-content .button-container .btn:last-child {
+.modal-content .button-container .btn:last-child:not(:first-child) {
   margin-left: 20px;
 }
 

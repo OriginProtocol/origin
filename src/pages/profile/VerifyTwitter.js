@@ -31,6 +31,7 @@ class VerifyTwitter extends Component {
         <h2>Verify Your Twitter Account</h2>
         <div className="button-container">
           <a
+            href="#"
             className="btn btn-clear"
             data-modal="twitter"
             onClick={this.props.handleToggle}
