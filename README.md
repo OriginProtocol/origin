@@ -77,23 +77,21 @@ The `install:dev` script performs the regular install and then links to your loc
 
 ### 3. Connect to your local blockchain in MetaMask
 
--  Install [MetaMask Chrome Browser Extension](https://metamask.io/).
+-  Log out of MetaMask.
 
-- Click the MetaMask icon in the toolbar, accept terms, and click `Import Existing DEN`
+- Click `Restore from seed phrase`
 
-- Enter this seed phrase (Mnemonic):
+- Enter the following seed phrase (Mnemonic):
 ```
 candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
 ```
+This is the default seed phrase used by [Truffle](https://github.com/trufflesuite/truffle) for development.
 
-This is a standard seed phrase for development. (Used by [Truffle](https://github.com/trufflesuite/truffle))
+ ⚠️ Be careful not to mix up your test wallet with your real one on the Main Network.
 
-**Be careful not to mix up your test wallet with your real one on the Main Network.**
+- Click where it says "Ethereum Main Network" and select "Localhost 8545". Click the back arrow to return to your account.
 
-- Click where it says "Ethereum Main Network" and select "Localhost 8545" to use your local blockchain. 
-
-- You should see your first test account now has 100 ETH. (Address of `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`) Additional generated accounts will also have this amount.
-
+- You should see your first test account now has 100 ETH and the address `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`. Additional generated accounts will also have this amount.
 
 ## Contributing
 
