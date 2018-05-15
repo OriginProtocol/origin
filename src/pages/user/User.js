@@ -3,24 +3,86 @@ import { connect } from 'react-redux'
 import { fetchUser } from 'actions/User'
 import Review from 'components/review'
 
-import data from '../../data'
+import origin from '../../services/origin'
 
 class User extends Component {
   constructor(props) {
     super(props)
+
+    this.state = { reviews: [] }
   }
 
-  componentWillMount() {
+  async mapPurchaseLengths(listing) {
+    try {
+      const len = await origin.listings.purchasesLength(listing.address)
+
+      return { ...listing, len }
+    } catch(error) {
+      console.error(`Error fetching purchases length for listing: ${listing.address}`)
+    }
+  }
+
+  async loadListing(id) {
+    try {
+      return await origin.listings.getByIndex(id)
+    } catch(error) {
+      console.error(`Error fetching contract or IPFS info for listingId: ${id}`)
+    }
+  }
+
+  async fetchListings() {
+    try {
+      const ids = await origin.listings.allIds()
+
+      return await Promise.all(ids.map(this.loadListing))
+    } catch(error) {
+      console.error('Error fetching listing ids')
+    }
+  }
+
+  async getPurchaseAddress(addr, i) {
+    try {
+      return await origin.listings.purchaseAddressByIndex(addr, i)
+    } catch(error) {
+      console.error(`Error fetching purchase address at: ${i}`)
+    }
+  }
+
+  async getAllReviews() {
+    const listings = await this.fetchListings()
+    const purchaseMaps = await Promise.all(
+      listings.map(this.mapPurchaseLengths)
+    )
+    const purchaseAddresses = await Promise.all(
+      purchaseMaps.filter(l => l.len).map(({ address, len }) => {
+        return Promise.all(
+          [...Array(len).keys()].map(i => this.getPurchaseAddress(address, i))
+        )
+      })
+    )
+    const flattenedAddressArray = [].concat(...purchaseAddresses)
+    const reviews = await Promise.all(
+      flattenedAddressArray.map(purchaseAddress => origin.reviews.find({ purchaseAddress }))
+    )
+    const flattenedReviews = [].concat(...reviews)
+    console.log('Reviews:', flattenedReviews)
+    this.setState({ reviews: flattenedReviews })
+  }
+
+  async componentWillMount() {
     this.props.fetchUser(this.props.userAddress)
+
+    this.getAllReviews()
   }
 
   render() {
-    const { profile, attestations } = this.props.user
+    const { address, profile, attestations } = this.props.user
     const claims = profile && profile.claims
     const fullName = (claims && claims.name) || 'Unnamed User'
     const customFields = claims && claims.customFields
     const description = (customFields && customFields.find(f => f.field === 'description')) ||
                         { value: 'An Origin user without a description' }
+    const usersReviews = this.state.reviews.filter(r => r.revieweeAddress === address)
 
     return (
       <div className="public-user profile-wrapper">
@@ -71,9 +133,10 @@ class User extends Component {
             </div>
             <div className="col-12 col-sm-8 col-md-9 col-lg-10">
               <div className="reviews">
-                <h2>Reviews <span className="review-count">{Number(57).toLocaleString()}</span></h2>
-                {data.reviews.map(r => <Review key={r._id} review={r} />)}
-                <a href="#" className="reviews-link" onClick={() => alert('To Do')}>Read More<img src="images/carat-blue.svg" className="down carat" alt="down carat" /></a>
+                <h2>Reviews <span className="review-count">{Number(usersReviews.length).toLocaleString()}</span></h2>
+                {usersReviews.map(r => <Review key={r.transactionHash} review={r} />)}
+                {/* To Do: pagination */}
+                {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
               </div>
             </div>
           </div>

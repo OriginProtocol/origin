@@ -7,9 +7,6 @@ class MySales extends Component {
   constructor(props) {
     super(props)
 
-    this.getListingIds = this.getListingIds.bind(this)
-    this.getPurchaseAddress = this.getPurchaseAddress.bind(this)
-    this.getPurchasesLength = this.getPurchasesLength.bind(this)
     this.loadListing = this.loadListing.bind(this)
     this.loadPurchase = this.loadPurchase.bind(this)
     this.state = {
@@ -22,6 +19,9 @@ class MySales extends Component {
   }
 
   /*
+  * WARNING: These functions don't actually return what they might imply.
+  * They use return statements to chain together async calls. Oops.
+  *
   * For now, we mock a getBySellerAddress request by fetching all
   * listings individually, filtering each by sellerAddress
   * and then getting the related purchases individually.
