@@ -30,9 +30,11 @@ class Wallet extends Component {
             <a onClick={() => alert('To do')}>ETH</a> | <a onClick={() => alert('To do')}>Tokens</a>
           </div>
         </div>
-        <div>
-          <a href={`https://erc725.originprotocol.com/#/identity/${identityAddress}`} target="_blank">Identity Contract Detail</a>
-        </div>
+        {identityAddress &&
+          <div>
+            <a href={`https://erc725.originprotocol.com/#/identity/${identityAddress}`} target="_blank">Identity Contract Detail</a>
+          </div>
+        }
       </div>
     )
   }
