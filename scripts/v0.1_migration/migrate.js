@@ -36,8 +36,10 @@ const bs58 = require('bs58');
 const ArgumentParser = require('argparse').ArgumentParser;
 const fs = require('fs');
 
-// polling interval for checking confirmations
-const POLL_INTERVAL = 5000;
+const POLL_INTERVAL = 10000;
+const RETRY_INTERVAL = 10000;
+const BACKOFF_FACTOR = 1.5;
+const MAX_RETRIES = 3;
 
 const listingAbi_v0_1 = require("./Listing_v0_1");
 const listingsRegistryAbi_v0_2 = require("./ListingsRegistry_v0_2")['abi'];
@@ -161,8 +163,7 @@ Migration.prototype.createListing = async function(listing) {
                 web3.eth
                     .sendSignedTransaction(signedTransaction.rawTransaction, function(err, txHash) {
                         if (err) {
-                            console.log("error submitting listing: " + err);
-                            reject();
+                            reject(err);
                         } else {
                             // Mark completed when transaction has been submitted
                             resolve(txHash);
@@ -181,11 +182,13 @@ Migration.prototype.createListing = async function(listing) {
             return res;
         } catch(e) {
             // failed to submit the transaction
+            console.log("error submitting transaction: " + e);
             return false;
         }
 
     } catch(e) {
         // failed to create and sign the tranasction
+        console.log("error creating transaction: " + e);
         return false;
 
     }
@@ -318,26 +321,44 @@ Migration.prototype.write = async function() {
     console.log("Gas multiplier: " + gasMultiplier);
     console.log("# Confirmations to wait: " + numConfirmations);
 
+    this.account = this.web3.eth.accounts.privateKeyToAccount(this.privateKey);
+    console.log("Creating listings using account: " + this.account.address);
+
     const startingNumListings = await this.contract.methods.listingsLength().call();
     console.log("Starting # listings in ListingsRegistry: " + startingNumListings);
     console.log("--------------------------------------------");
-
-    this.account = this.web3.eth.accounts.privateKeyToAccount(this.privateKey);
 
     const listingIDs = Object.keys(listings).map((id) => parseInt(id));
     const numListings = listingIDs.length;
 
     var txToListings = {};
 
+    let numRetries = 0;
     for (i = 0; i < numListings; i++) {
         const listingID = listingIDs[i];
         console.log("Submitting listing: " + listingID);
         txHash = await this.createListing(listings[listingID], this.account);
         if (txHash) {
+            numRetries = 0;
             txToListings[txHash] = listingID;
             this.submittedListings.push(listingID);
         } else {
-            this.errors.push(listingID);
+            // Retry logic
+            if (numRetries < MAX_RETRIES) {
+                i -= 1;
+                let retryInterval = null;
+                if (numRetries > 0) {
+                    retryInterval = numRetries * RETRY_INTERVAL * BACKOFF_FACTOR;
+                } else {
+                    retryInterval = RETRY_INTERVAL;
+                }
+                numRetries += 1;
+                console.log("    Retrying after " + retryInterval/1000.0 + " seconds");
+                await new Promise(resolve => setTimeout(resolve, retryInterval));
+            } else {
+                console.log("    Listing " + listingID + " exceeded retry limit.");
+                this.errors.push(listingID);
+            }
         }
     };
 
