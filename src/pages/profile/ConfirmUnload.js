@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import Modal from 'components/modal'
 
-class ConfirmPublish extends Component {
+class ConfirmUnload extends Component {
   render() {
     const { open, handleToggle, handlePublish } = this.props
 
@@ -34,4 +34,4 @@ class ConfirmPublish extends Component {
   }
 }
 
-export default ConfirmPublish
+export default ConfirmUnload

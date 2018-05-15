@@ -24,6 +24,7 @@ import VerifyEmail from './VerifyEmail'
 import VerifyFacebook from './VerifyFacebook'
 import VerifyTwitter from './VerifyTwitter'
 import ConfirmPublish from './ConfirmPublish'
+import ConfirmUnload from './ConfirmUnload'
 
 class Profile extends Component {
   constructor(props) {
@@ -52,8 +53,9 @@ class Profile extends Component {
         facebook: false,
         phone: false,
         profile: false,
+        publish: false,
         twitter: false,
-        unload: false
+        unload: false,
       },
       // percentage widths for two progress bars
       progress: {
@@ -230,7 +232,7 @@ class Profile extends Component {
                     className="publish btn btn-sm btn-primary d-block"
                     onClick={() => {
                       this.setState({
-                        modalsOpen: { ...this.state.modalsOpen, unload: true }
+                        modalsOpen: { ...this.state.modalsOpen, publish: true }
                       })
                     }}
                   >
@@ -324,6 +326,22 @@ class Profile extends Component {
         />
 
         <ConfirmPublish
+          open={modalsOpen.publish}
+          handleToggle={this.handleToggle}
+          handlePublish={this.handlePublish}
+          onConfirm={() => {
+            this.setState({
+              modalsOpen: { ...this.state.modalsOpen, publish: false },
+              step: 'metamask'
+            })
+            this.props.deployProfile({
+              facebook: this.state.facebookForm,
+              user: this.state.userForm
+            })
+          }}
+        />
+
+        <ConfirmUnload
           open={modalsOpen.unload}
           handleToggle={this.handleToggle}
           handlePublish={this.handlePublish}
