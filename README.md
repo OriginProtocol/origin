@@ -33,7 +33,7 @@ npm install
 npm run start
 ```
 
-A browser will open to http://localhost:3000. If you don't have the MetaMask extension (or another wallet provider) proceed to the next step.
+A browser will open to http://localhost:3000. If you don't have the MetaMask extension (or another wallet provider) follow instructions of the next step.
 
 ![Origin-homepage](https://user-images.githubusercontent.com/673455/39952325-6d37e3be-5551-11e8-9651-b1697bad3412.png)
 
@@ -74,6 +74,8 @@ npm run start
 ```
 
 The `install:dev` script performs the regular install and then links to your local origin-js from step 1. Changes made to origin-js code will then immediately reflected in Demo DApp without requiring `npm install`. 
+
+Your browser will open to [http://localhost:3000](http://localhost:3000) and display the DApp.
 
 ### 3. Connect to your local blockchain in MetaMask
 
