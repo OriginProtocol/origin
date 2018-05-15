@@ -1,9 +1,12 @@
 import Origin from 'origin'
 
-const bridgeServerProtocol = process.env.BRIDGE_SERVER_PROTOCOL
-const bridgeServerDomain = process.env.BRIDGE_SERVER_DOMAIN
-const attestationServerUrl =
-`${bridgeServerProtocol}://${bridgeServerDomain}/api/attestations`
+const defaultBridgeUrl = "https://bridge.originprotocol.com"
+const bridgeProtocol = process.env.BRIDGE_SERVER_PROTOCOL
+const bridgeDomain = process.env.BRIDGE_SERVER_DOMAIN
+const customBridgeUrl = `${bridgeProtocol}://${bridgeDomain}`
+const hasCustomBridge = bridgeProtocol && bridgeDomain
+const bridgeUrl = hasCustomBridge ? customBridgeUrl : defaultBridgeUrl
+const attestationServerUrl = `${bridgeUrl}/api/attestations`
 
 const config = {
   ipfsDomain: process.env.IPFS_DOMAIN,
