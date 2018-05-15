@@ -24,7 +24,7 @@ origin-js is showcased in our Demo DApp currently running on the Rinkeby testnet
 
 ## Using origin-js in your project
 
-## As node package
+### As a node package
 
 ```
 npm install origin --save
@@ -52,7 +52,7 @@ git clone https://github.com/OriginProtocol/origin-js.git && cd origin-js
 
 If you would like to submit pull requests, you should instead fork this repo and then clone your fork. Note pull requests should always be made to the `develop` branch, which always has the latest commits.
 
-### 2. Install dependcies and link
+### 2. Install dependencies and link
 ```
 npm run install:dev
 ```
