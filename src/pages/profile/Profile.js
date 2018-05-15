@@ -276,6 +276,7 @@ class Profile extends Component {
               <Wallet
                 balance={this.props.balance}
                 address={this.props.address}
+                identityAddress={this.props.identityAddress}
               />
               <Guidance />
             </div>
@@ -448,7 +449,8 @@ const mapStateToProps = state => {
     provisionalProgress: state.profile.provisionalProgress,
     publishedProgress: state.profile.publishedProgress,
     profile: state.profile,
-    balance: state.wallet.balance
+    balance: state.wallet.balance,
+    identityAddress: state.profile.user.identityAddress,
   }
 }
 

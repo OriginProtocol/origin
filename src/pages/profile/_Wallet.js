@@ -4,13 +4,13 @@ import Identicon from 'components/Identicon'
 
 class Wallet extends Component {
   render() {
-    var address = this.props.address
+    const { address, balance, identityAddress } = this.props
 
     return (
       <div className="wallet">
         <div className="d-flex">
           <div className="image-container">
-            <Identicon address={this.props.address} />
+            <Identicon address={address} />
           </div>
           <div className="eth d-flex flex-column justify-content-between">
             <div>ETH Address:</div>
@@ -22,7 +22,7 @@ class Wallet extends Component {
         <hr className="dark sm" />
         <div className="detail d-flex">
           <div>Account Balance:</div>
-          <div>{this.props.balance} ETH</div>
+          <div>{balance} ETH</div>
         </div>
         <div className="detail d-flex">
           <div>Transaction History:</div>
@@ -30,6 +30,11 @@ class Wallet extends Component {
             <a onClick={() => alert('To do')}>ETH</a> | <a onClick={() => alert('To do')}>Tokens</a>
           </div>
         </div>
+        {identityAddress &&
+          <div>
+            <a href={`https://erc725.originprotocol.com/#/identity/${identityAddress}`} target="_blank">Identity Contract Detail</a>
+          </div>
+        }
       </div>
     )
   }
