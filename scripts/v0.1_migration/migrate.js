@@ -39,7 +39,7 @@ const fs = require('fs');
 const POLL_INTERVAL = 10000;
 const RETRY_INTERVAL = 10000;
 const BACKOFF_FACTOR = 1.5;
-const MAX_RETRIES = 3;
+const MAX_RETRIES = 5;
 
 const listingAbi_v0_1 = require("./Listing_v0_1");
 const listingsRegistryAbi_v0_2 = require("./ListingsRegistry_v0_2")['abi'];
@@ -348,7 +348,7 @@ Migration.prototype.write = async function() {
                 i -= 1;
                 let retryInterval = null;
                 if (numRetries > 0) {
-                    retryInterval = numRetries * RETRY_INTERVAL * BACKOFF_FACTOR;
+                    retryInterval =  RETRY_INTERVAL * Math.pow(BACKOFF_FACTOR, numRetries);
                 } else {
                     retryInterval = RETRY_INTERVAL;
                 }
