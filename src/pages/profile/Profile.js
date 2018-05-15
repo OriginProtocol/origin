@@ -72,7 +72,7 @@ class Profile extends Component {
     // prompt user if tab/window is closing before changes have been published
     if (this.props.hasChanges) {
       $('.profile-wrapper [data-toggle="tooltip"]').tooltip()
-      
+
       window.addEventListener('beforeunload', this.handleUnload)
     } else {
       window.removeEventListener('beforeunload', this.handleUnload)
@@ -98,7 +98,7 @@ class Profile extends Component {
       TODO: Allow provisional validations to be reviewed and/or
       undone individually before publishing to the blockchain.
     */
-    if (this.props.published[modal] || this.state.provisional[modal]) {
+    if (this.props.published[modal] || this.props.provisional[modal]) {
       return
     }
 
