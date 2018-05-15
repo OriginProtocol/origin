@@ -23,6 +23,7 @@ class ListingsDetail extends Component {
       METAMASK: 2,
       PROCESSING: 3,
       PURCHASED: 4,
+      ERROR: 5
     }
 
     this.state = {
@@ -87,17 +88,20 @@ class ListingsDetail extends Component {
       this.setState({step: this.STEP.PURCHASED})
     } catch (error) {
       window.err = error
-      console.log(error)
-      this.props.showAlert("There was a problem purchasing this listing.\nSee the console for more details.")
-      this.setState({step: this.STEP.VIEW})
+      console.error(error)
+      this.setState({step: this.STEP.ERROR})
     }
+  }
+
+  resetToStepOne() {
+    this.setState({step: this.STEP.VIEW})
   }
 
 
   render() {
     return (
       <div className="listing-detail">
-        {this.state.step===this.STEP.METAMASK &&
+        {this.state.step === this.STEP.METAMASK &&
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img src="images/spinner-animation.svg" role="presentation"/>
@@ -106,7 +110,7 @@ class ListingsDetail extends Component {
             Press &ldquo;Submit&rdquo; in MetaMask window
           </Modal>
         }
-        {this.state.step===this.STEP.PROCESSING &&
+        {this.state.step === this.STEP.PROCESSING &&
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img src="images/spinner-animation.svg" role="presentation"/>
@@ -115,7 +119,7 @@ class ListingsDetail extends Component {
             Please stand by...
           </Modal>
         }
-        {this.state.step===this.STEP.PURCHASED &&
+        {this.state.step === this.STEP.PURCHASED &&
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img src="images/circular-check-button.svg" role="presentation"/>
@@ -129,6 +133,23 @@ class ListingsDetail extends Component {
             </a>
           </Modal>
         }
+        {this.state.step === this.STEP.ERROR && (
+          <Modal backdrop="static" isOpen={true}>
+            <div className="image-container">
+              <img src="images/flat_cross_icon.svg" role="presentation" />
+            </div>
+            There was a problem purchasing this listing.<br />See the console for more details.<br />
+            <a
+              href="#"
+              onClick={e => {
+                e.preventDefault()
+                this.resetToStepOne()
+              }}
+            >
+              OK
+            </a>
+          </Modal>
+        )}
         {(this.state.loading || (this.state.pictures && this.state.pictures.length)) &&
           <div className="carousel">
             {this.state.pictures.map(pictureUrl => (
