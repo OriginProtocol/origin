@@ -1,16 +1,14 @@
 #!/usr/local/bin/node
 /////////////////////////////////////////////////
-// This script migrates listings from a source contract to a
-// destination contract. The lister of the migrated listings
-// is the account that performed the migration, rather than the
-// original lister.
-//
 // Usage:   node migrate.js [-h] -c CONFIGFILE -d DATAFILE -a {read,write}
 // Ex.      node migrate.js -c ./conf-test.json -d ./data.json -a read
 //          node migrate.js -c ./conf-test.json -d ./data.json -a write
 //
-// test the migration by setting "dst_*" vars to localhost values
-//
+// This script migrates listings from a source contract to a
+// destination contract.
+//     - the lister of the migrated listings is the account that performed the
+// migration, rather than the original lister.
+//     - test the migration by setting "dst_*" vars to localhost values
 //
 // Script parameters:
 //
@@ -128,12 +126,8 @@ Migration.prototype.getListing = async function(index) {
 }
 
 /**
- * Queries for the nonce and estimate of gas required,
- * then creates and submits a signed transaction, getting the transaction
- * hash. In order to be able to retrieve the nonce for a subsequent
- * transaction, the tranasction hash is returned instead of
- * waiting for a receipt that the tx was mined, in order to allow
- * for parallelization of requests
+ * Queries for the nonce and gas estimate, then create -> sign -> submit a
+ * transaction. Returns the transaction hash.
  */
 Migration.prototype.createListing = async function(listing) {
     const nonce = await this.web3.eth.getTransactionCount(this.account.address, "pending");
@@ -195,11 +189,13 @@ Migration.prototype.createListing = async function(listing) {
 }
 
 /**
-* Using the transaction hashes, we can poll for the status of each
-* transaction. All transactions start in a submitted state, then when
-* a receipt becomes available we know that it has been mined.
-* After numConfirmation additional blocks have been mined, the
-* transaction is confirmed.
+* Using the transaction hashes, we can poll for the status of each listing
+* as it is being migrated. All transactions start in a submitted state, and when
+* a receipt becomes available we know that it has been mined. After
+* numConfirmation additional blocks have been mined, the transaction is
+* confirmed. There isn't a concept of transaction finality (before Casper is
+* implemented), but the probability that a block will be reverted after 6
+* confirmations is extremely low.
 */
 Migration.prototype.confirm = async function(txToListings) {
     const numTotalTransactions = Object.keys(txToListings).length;
@@ -290,11 +286,7 @@ Migration.prototype.read = async function() {
 
 /**
  * Reads listings to migrate from the data file, then spawns requests to create
- * listings. The idea is to create the listings in parallel, but submitting
- * to the provider is done in serial in order to allow querying for each nonce
- * (I think the nonce can also just be calculated via applying an offset, but
- * when I used this approach I ran into a transient issue where the provider
- * expected a different nonce than was submitted with the transaction).
+ * listings.
  *     The returned transaction hashes are then passed to a method to poll the
  * provider for the status of the transactions:
  * [submitted] -> [included in a mined block] -> [reached n confirmations]
@@ -376,14 +368,10 @@ Migration.prototype.write = async function() {
     console.log("Ending # listings in ListingsRegistry: " + endingNumListings + " (" + (endingNumListings - startingNumListings) + " created)");
 
     this.printResults();
+
     process.exit();
 }
 
-// There could be a listing that gets:
-//   - submitted but is not included in a block and mined
-//   - included in a block and mined, but not yet 'finalized'/numConfirmations
-//   - included in a block but there is a softfork (the code does not handle this case)
-//
 //   (mined listings - errors).shouldEqual(# created in ListingsRegistry)
 //   (mined listings).shouldEqual(confirmed listings)
 Migration.prototype.printResults = function() {
@@ -433,4 +421,4 @@ if (args.action == 'read') {
         migration.printResults();
         process.exit();
     });
-} // illegal actions should be caught by ArgumentParser
+}
