@@ -29,7 +29,6 @@ class Profile extends Component {
   constructor(props) {
     super(props)
 
-    this.handleIdentity = this.handleIdentity.bind(this)
     this.handleToggle = this.handleToggle.bind(this)
     this.handleUnload = this.handleUnload.bind(this)
     this.setProgress = this.setProgress.bind(this)
@@ -87,24 +86,6 @@ class Profile extends Component {
         published: this.props.publishedProgress
       })
     }
-  }
-
-  // initiate validation sequence for the named identity service
-  handleIdentity(name) {
-    const modalsOpen = Object.assign({}, this.state.modalsOpen, {
-      [name]: false
-    })
-    // TODO: use token or hashed/salted value instead of boolean to indicate verification
-    let obj = Object.assign({}, this.state.provisional, { [name]: true })
-
-    this.setState({ modalsOpen, provisional: obj })
-
-    let { provisional, published } = this.state.progress
-
-    this.setProgress({
-      provisional: provisional + (100 - published - provisional) / 2,
-      published
-    })
   }
 
   // conditionally close modal identified by data attribute
