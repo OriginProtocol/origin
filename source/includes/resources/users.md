@@ -7,6 +7,7 @@ A user object consists of 2 properties:
 
 - `profile`: Profile information a user chooses to reveal publicly
 - `attestations`: A list of 3rd party attestations that the user has added to their identity (see [Attestation documentation](#attestation) for details)
+- `identityAddress`: Ethereum address for the identity contract
 
 ## set
 
@@ -86,7 +87,8 @@ let updatedUser = await users.get()
         claimType: 4,
         service: "twitter"
       }
-    ]
+    ],
+    identityAddress: "0x4E72770760c011647D4873f60A3CF6cDeA896CD8"
   }
 }
 ```
@@ -106,7 +108,8 @@ let anotherUser = await origin.users.get(otherUserAddress)
 // Returns (user object)
 {
   profile: {}
-  attestations: []
+  attestations: [],
+  identityAddress: ''
 }
 ```
 
