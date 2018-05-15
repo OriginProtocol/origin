@@ -72,9 +72,10 @@ class Profile extends Component {
     // prompt user if tab/window is closing before changes have been published
     if (this.props.hasChanges) {
       $('.profile-wrapper [data-toggle="tooltip"]').tooltip()
-      // window.addEventListener('beforeunload', this.handleUnload)
+      
+      window.addEventListener('beforeunload', this.handleUnload)
     } else {
-      // window.removeEventListener('beforeunload', this.handleUnload)
+      window.removeEventListener('beforeunload', this.handleUnload)
     }
 
     if (
