@@ -26,9 +26,10 @@ let validateUser = (data) => {
 }
 
 class UserObject {
-  constructor({ profile, attestations } = {}) {
+  constructor({ profile, attestations, identityAddress } = {}) {
     this.profile = profile
     this.attestations = attestations
+    this.identityAddress = identityAddress
   }
 }
 
@@ -51,6 +52,7 @@ class Users extends ResourceBase {
     let identityAddress = await this.identityAddress(address)
     if (identityAddress) {
       let userData = await this.getClaims(identityAddress)
+      userData.identityAddress = identityAddress
       return new UserObject(userData)
     }
     return new UserObject()
