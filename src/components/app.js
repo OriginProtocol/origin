@@ -35,7 +35,7 @@ const HomePage = () => (
 )
 
 const ListingDetailPage = props => (
-  <ListingDetail listingAddress={props.match.params.listingAddress} />
+  <ListingDetail listingAddress={props.match.params.listingAddress} withReviews={true} />
 )
 
 const CreateListingPage = () => (
