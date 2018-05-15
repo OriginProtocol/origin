@@ -278,17 +278,19 @@ class ListingsDetail extends Component {
               {this.state.sellerAddress && <UserCard title="seller" userAddress={this.state.sellerAddress} />}
             </div>
           </div>
-          <div className="row">
-            <div className="col-12 col-md-8">
-              <hr />
-              <div className="reviews">
-                <h2>Reviews <span className="review-count">{buyersReviews.length}</span></h2>
-                {buyersReviews.map(r => <Review key={r.transactionHash} review={r} />)}
-                {/* To Do: pagination */}
-                {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
+          {this.props.withReviews &&
+            <div className="row">
+              <div className="col-12 col-md-8">
+                <hr />
+                <div className="reviews">
+                  <h2>Reviews <span className="review-count">{buyersReviews.length}</span></h2>
+                  {buyersReviews.map(r => <Review key={r.transactionHash} review={r} />)}
+                  {/* To Do: pagination */}
+                  {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
+                </div>
               </div>
             </div>
-          </div>
+          }
         </div>
       </div>
     )
