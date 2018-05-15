@@ -7,6 +7,7 @@ import fetch from "cross-fetch"
 var resources = {
   listings: require("./resources/listings"),
   purchases: require("./resources/purchases"),
+  reviews: require("./resources/reviews"),
   users: require("./resources/users")
 }
 
