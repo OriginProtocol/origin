@@ -97,8 +97,7 @@ a:hover {
   color: white;
 }
 
-.btn-clear:hover,
-a.btn-clear:hover {
+.btn-clear:hover {
   background-color: white;
   color: #213040;
 }
