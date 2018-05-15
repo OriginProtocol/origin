@@ -43,14 +43,14 @@ A browser will open to http://localhost:3000. If you don't have the MetaMask ext
 
 - Follow the instructions to set up your wallet.
 
-- Click where it says "Ethereum Main Network" and select "Rinkeby Test Netowrk" or "Ropsten Test Network". This takes us off of the real Ethereum network and onto a test network. Ethers on test networks cannot be exchanged for fiat currency.
+- Click where it says "Ethereum Main Network" and select "Rinkeby Test Network" or "Ropsten Test Network". This takes us off of the real Ethereum network and onto a test network. Ethers on test networks cannot be exchanged for fiat currency.
 
 **Be careful not to mix up your test wallet with your real one on the Main Network.**
 
 ### 4. Get test ether
 
-- Get Rinkeby ether at [this faucet](https://faucet.rinkeby.io/).
-- Get Ropsten ether at [this faucet](https://faucet.metamask.io/).
+- Get Rinkeby ether from the [Rinkeby faucet](https://faucet.rinkeby.io/).
+- Get Ropsten ether from the [Ropsten faucet](https://faucet.metamask.io/).
 
 ### 4. Try it!
 Create a listing and post it to IPFS and Ethereum.
