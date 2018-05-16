@@ -423,18 +423,39 @@ Migration.prototype.write = async function() {
     process.exit();
 }
 
+Migration.prototype.calculateChecksum = function(listingsArray) {
+    let listingsHash = crypto.createHash('md5');
+
+    let orderedListings = [];
+    let ipfsHashesToListings = {};
+    listingsArray.map((listing) => {
+        delete listing.lister;
+        delete listing.index;
+        ipfsHashesToListings[listing.ipfsHash] = listing;
+    });
+
+    const ipfsHashes = Object.keys(ipfsHashesToListings);
+
+    const sortedIpfsHashes = ipfsHashes.sort();
+    for (let i = 0; i < sortedIpfsHashes.length; i++) {
+        orderedListings.push(ipfsHashesToListings[i])
+    }
+
+    listingsHash.update(JSON.stringify(orderedListings));
+
+    return listingsHash.digest().toString();
+}
+
 /**
-* The v0.1 and v0.2 listings will have different indexes and listers, though
-* I thought it would be cool to do a data integrity check using a subset of
-* the data (in this case the IPFS hashes) to calculate checksums.
+* The v0.1 and v0.2 listings may have different indexes and listers, but
+* the other fields (IPFS hash, price, quantity) will be the same and can be
+* used for a data integrity check.
 */
 Migration.prototype.checkData = async function(sourceListingsArray, startIndex, endIndex) {
     console.log("--------------------------------------------");
     console.log("Checking data...");
 
-    let sourceListingsHash = crypto.createHash('md5');
-    let createdListingsHash = crypto.createHash('md5');
-
+    // bug in node 0.9.5 requires casting params to use in for loop, not an issue in 0.10
     let startIndexInt = parseInt(startIndex);
     let endIndexInt = parseInt(endIndex);
 
@@ -446,14 +467,8 @@ Migration.prototype.checkData = async function(sourceListingsArray, startIndex, 
     const listings = await Promise.all(getListingCalls);
     const createdListingsArray = listings.filter((el) => el);
 
-    const filteredSourceListings = sourceListingsArray.map((listing) => listing.ipfsHash);
-    const filteredCreatedListings = createdListingsArray.map((listing) => listing.ipfsHash);
-
-    sourceListingsHash.update(JSON.stringify(filteredSourceListings.sort()));
-    createdListingsHash.update(JSON.stringify(filteredCreatedListings.sort()));
-
-    sourceListingsChecksum = sourceListingsHash.digest().toString();
-    createdListingsChecksum = createdListingsHash.digest().toString();
+    const sourceListingsChecksum = this.calculateChecksum(sourceListingsArray)
+    const createdListingsChecksum = this.calculateChecksum(createdListingsArray)
 
     if (sourceListingsChecksum == createdListingsChecksum) {
         console.log("Checksums of the created listings and the ones in the datafile match.");
