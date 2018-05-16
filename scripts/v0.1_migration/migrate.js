@@ -31,6 +31,7 @@
 //     write: write listings from data file to destination contract
 /////////////////////////////////////////////////
 const Web3 = require('web3');
+const crypto = require('crypto');
 const bs58 = require('bs58');
 const ArgumentParser = require('argparse').ArgumentParser;
 const fs = require('fs');
@@ -417,8 +418,52 @@ Migration.prototype.write = async function() {
 
     this.printResults();
 
-    this.checkData(listings, startingNumListings, endingNumListings);
+    await this.checkData(Object.values(listings), startingNumListings, endingNumListings);
+
     process.exit();
+}
+
+/**
+* The v0.1 and v0.2 listings will have different indexes and listers, though
+* I thought it would be cool to do a data integrity check using a subset of
+* the data (in this case the IPFS hashes) to calculate checksums.
+*/
+Migration.prototype.checkData = async function(sourceListingsArray, startIndex, endIndex) {
+    console.log("--------------------------------------------");
+    console.log("Checking data...");
+
+    let sourceListingsHash = crypto.createHash('md5');
+    let createdListingsHash = crypto.createHash('md5');
+
+    let startIndexInt = parseInt(startIndex);
+    let endIndexInt = parseInt(endIndex);
+
+    let getListingCalls = [];
+
+    for(let i = startIndexInt; i < endIndexInt; i++) {
+        getListingCalls.push(this.getListing(i));
+    }
+    const listings = await Promise.all(getListingCalls);
+    const createdListingsArray = listings.filter((el) => el);
+
+    const filteredSourceListings = sourceListingsArray.map((listing) => listing.ipfsHash);
+    const filteredCreatedListings = createdListingsArray.map((listing) => listing.ipfsHash);
+
+    sourceListingsHash.update(JSON.stringify(filteredSourceListings.sort()));
+    createdListingsHash.update(JSON.stringify(filteredCreatedListings.sort()));
+
+    sourceListingsChecksum = sourceListingsHash.digest().toString();
+    createdListingsChecksum = createdListingsHash.digest().toString();
+
+    if (sourceListingsChecksum == createdListingsChecksum) {
+        console.log("Checksums of the created listings and the ones in the datafile match.");
+        return true;
+    } else {
+        console.log("Error! Checksums of the created listings and the ones in the datafile do not match.");
+        return false;
+    }
+
+
 }
 
 //   (mined listings - errors).shouldEqual(# created in ListingsRegistry)
