@@ -129,7 +129,10 @@ Migration.prototype.checkDuplicates = async function(sourceListings, numDestinat
 
     // Halt the migration if duplicates are detected
     if (duplicates.length) {
-        console.log("    Found duplicate listings: " + duplicates);
+        let ipfsHashesToListingIDs = {};
+        Object.keys(sourceListings).map((id) => ipfsHashesToListingIDs[sourceListings[id].ipfsHash] = id)
+        let duplicateListingIDs = duplicates.map((ipfsHash) => ipfsHashesToListingIDs[ipfsHash]);
+        console.log("    Found duplicate listings: " + duplicateListingIDs);
         console.log("Please remove these entries from the datafile before running the migration.");
         process.exit();
     } else {
@@ -145,7 +148,7 @@ Migration.prototype.checkDuplicates = async function(sourceListings, numDestinat
         }()
     }
 
-    return sourceListings;
+    return true;
 }
 
 // Indexes for listings in ListingsRegistry are currently in a contiguous block
@@ -364,7 +367,8 @@ Migration.prototype.write = async function() {
     const startingNumListings = await this.contract.methods.listingsLength().call();
     console.log("Starting # listings in ListingsRegistry: " + startingNumListings);
 
-    const listings = await this.checkDuplicates(sourceListings, startingNumListings);
+    await this.checkDuplicates(sourceListings, startingNumListings);
+    const listings = sourceListings;
     console.log("--------------------------------------------");
     console.log("    Migrating " + Object.keys(listings).length + " listings.")
     console.log("--------------------------------------------");
