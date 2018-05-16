@@ -163,19 +163,20 @@ Migration.prototype.getAllListings = async function(numListings) {
 }
 
 Migration.prototype.getListing = async function(index) {
-    try {
-        const listingData = await this.contract.methods.getListing(index).call();
-        listing = {
-            index: index,
-            lister: listingData[1],
-            ipfsHash: this.getIpfsHashFromBytes32(listingData[2]),
-            price: String(listingData[3]), // in wei
-            unitsAvailable: parseInt(listingData[4])
+    for (let i = 0; i < MAX_RETRIES; i++) {
+        try {
+            const listingData = await this.contract.methods.getListing(index).call();
+            listing = {
+                index: index,
+                lister: listingData[1],
+                ipfsHash: this.getIpfsHashFromBytes32(listingData[2]),
+                price: String(listingData[3]), // in wei
+                unitsAvailable: parseInt(listingData[4])
+            }
+            return listing;
+        } catch(e) {
+            console.log("error getting listing, retrying: " + e);
         }
-        return listing;
-    } catch(e) {
-        console.log("error getting listing: " + e);
-        return false;
     }
 }
 
