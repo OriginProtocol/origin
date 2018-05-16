@@ -39,7 +39,7 @@ const fs = require('fs');
 const POLL_INTERVAL = 10000;
 const RETRY_INTERVAL = 10000;
 const BACKOFF_FACTOR = 1.5;
-const MAX_RETRIES = 5;
+const MAX_RETRIES = 7;
 
 const listingAbi_v0_1 = require("./Listing_v0_1");
 const listingsRegistryAbi_v0_2 = require("./ListingsRegistry_v0_2")['abi'];
