@@ -126,7 +126,7 @@ class Users extends ResourceBase {
           this.contractService.claimHolderRegisteredContract,
           identityAddress,
           "addClaims",
-          [claimTypes, issuers, sigs, data],
+          [claimTypes, issuers, sigs, data, dataOffsets],
           { from: account, gas: 4000000 }
         )
       } else {

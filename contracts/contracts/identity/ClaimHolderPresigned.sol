@@ -21,17 +21,14 @@ contract ClaimHolderPresigned is ClaimHolderRegistered {
         ClaimHolderRegistered(_userRegistryAddress)
         public
     {
-        uint offset = 0;
-        for (uint8 i = 0; i < _claimType.length; i++) {
-            addClaim(
-              _claimType[i],
-              1,
-              _issuer[i],
-              getBytes(_signature, (i * 65), 65),
-              getBytes(_data, offset, _offsets[i]),
-              ""
-            );
-            offset += _offsets[i];
-        }
+        ClaimHolderLibrary.addClaims(
+            keyHolderData,
+            claims,
+            _claimType,
+            _issuer,
+            _signature,
+            _data,
+            _offsets
+        );
     }
 }

@@ -64,6 +64,7 @@ contract("ClaimHolderRegistered", accounts => {
       [ attestation_1.issuer, attestation_2.issuer ],
       attestation_1.signature + attestation_2.signature.slice(2),
       attestation_1.data + attestation_2.data.slice(2),
+      [32, 32],
       { from: accounts[0] }
     )
 

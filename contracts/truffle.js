@@ -7,6 +7,13 @@ const numAddressesToUnlock = 4
 // Local setup
 truffleSetup = {
   migrations_directory: "./migrations",
+  mocha: {
+    reporter: 'eth-gas-reporter',
+    reporterOptions : {
+      currency: 'USD',
+      onlyCalledMethods: true
+    }
+  },
   networks: {
     development: {
       host: "localhost",

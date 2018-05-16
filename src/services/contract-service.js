@@ -1,5 +1,7 @@
 import ClaimHolderRegisteredContract from "./../../contracts/build/contracts/ClaimHolderRegistered.json"
 import ClaimHolderPresignedContract from "./../../contracts/build/contracts/ClaimHolderPresigned.json"
+import ClaimHolderLibrary from "./../../contracts/build/contracts/ClaimHolderLibrary.json"
+import KeyHolderLibrary from "./../../contracts/build/contracts/KeyHolderLibrary.json"
 import ListingsRegistryContract from "./../../contracts/build/contracts/ListingsRegistry.json"
 import ListingContract from "./../../contracts/build/contracts/Listing.json"
 import PurchaseContract from "./../../contracts/build/contracts/Purchase.json"
@@ -27,6 +29,9 @@ class ContractService {
       claimHolderPresignedContract: ClaimHolderPresignedContract,
       originIdentityContract: OriginIdentityContract
     }
+    this.libraries = {}
+    this.libraries.ClaimHolderLibrary = ClaimHolderLibrary
+    this.libraries.KeyHolderLibrary = KeyHolderLibrary
     for (let name in contracts) {
       this[name] = contracts[name]
       try {
@@ -126,12 +131,26 @@ class ContractService {
     return new this.web3.eth.Contract(contract.abi, addrs)
   }
 
+  async getBytecode(contract) {
+    let net = await this.web3.eth.net.getId()
+    let bytecode = contract.bytecode
+    let withLibraryAddresses = bytecode.replace(/__[^_]+_+/g, (matchedStr) => {
+      let libraryName = matchedStr.replace(/_/g, '')
+      let library = this.libraries[libraryName]
+      let libraryAddress = library.networks[net] && library.networks[net].address
+      let withoutPrefix = libraryAddress.slice(2)
+      return withoutPrefix
+    })
+    return withLibraryAddresses
+  }
+
   async deploy(contract, args, options) {
+    let bytecode = await this.getBytecode(contract)
     let deployed = await this.deployed(contract)
     let txReceipt = await new Promise((resolve, reject) => {
       deployed
         .deploy({
-          data: contract.bytecode,
+          data: bytecode,
           arguments: args
         })
         .send(options)
