@@ -254,7 +254,7 @@ class ListingsDetail extends Component {
                                   </div>
                                 </div> */}
                 {!this.state.loading &&
-                  <div>
+                  <div className="btn-container">
                     {(this.state.address) && (
                       (this.state.unitsAvailable > 0) ?
                         <button
