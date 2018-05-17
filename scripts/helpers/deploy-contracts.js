@@ -1,4 +1,5 @@
 const { spawn } = require('child_process')
+const minifyContracts = require('./minify-contracts')
 
 const deployContracts = () => {
   return new Promise((resolve, reject) => {
@@ -11,6 +12,7 @@ const deployContracts = () => {
       if (code === 0) {
         console.log('Truffle migrate finished OK.')
       }
+      minifyContracts()
       resolve()
     })
   })

@@ -1,5 +1,5 @@
 import { expect } from "chai"
-import IpfsService from "../src/ipfs-service"
+import IpfsService from "../src/services/ipfs-service"
 import { listings, ipfsHashes } from "./fixtures"
 
 const clearCache = ipfsService => {
@@ -24,38 +24,6 @@ describe("IpfsService", () => {
   methodNames.forEach(methodName => {
     it(`should have ${methodName} method`, () => {
       expect(ipfsService[methodName]).to.be.an.instanceof(Function)
-    })
-  })
-
-  describe("constructor", () => {
-    it("should default to origin", () => {
-      var service = new IpfsService()
-      expect(service.gateway).to.equal("https://gateway.originprotocol.com")
-      expect(service.api).to.equal("https://gateway.originprotocol.com")
-    })
-
-    it("should use specified port if not protocol default", () => {
-      var service = new IpfsService({ ipfsGatewayPort: "8080" })
-      expect(service.gateway).to.equal(
-        "https://gateway.originprotocol.com:8080"
-      )
-
-      service = new IpfsService({
-        ipfsGatewayProtocol: "http",
-        ipfsGatewayPort: "8080"
-      })
-      expect(service.gateway).to.equal("http://gateway.originprotocol.com:8080")
-
-      service = new IpfsService({
-        ipfsGatewayProtocol: "http",
-        ipfsApiPort: "8080"
-      })
-      expect(service.api).to.equal("http://gateway.originprotocol.com:8080")
-    })
-
-    it("should use default protocol port if given port is empty", () => {
-      var service = new IpfsService({ ipfsGatewayPort: "" })
-      expect(service.gateway).to.equal("https://gateway.originprotocol.com")
     })
   })
 

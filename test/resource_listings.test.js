@@ -1,7 +1,7 @@
 import { expect } from "chai"
 import Listings from "../src/resources/listings.js"
-import ContractService from "../src/contract-service.js"
-import IpfsService from "../src/ipfs-service.js"
+import ContractService from "../src/services/contract-service"
+import IpfsService from "../src/services/ipfs-service.js"
 import Web3 from "web3"
 
 describe("Listing Resource", function() {

@@ -1,8 +1,9 @@
 import { expect } from "chai"
 import Listings from "../src/resources/listings.js"
 import Purchase from "../src/resources/purchases.js"
-import ContractService from "../src/contract-service.js"
-import IpfsService from "../src/ipfs-service.js"
+import Review from "../src/resources/reviews.js"
+import ContractService from "../src/services/contract-service"
+import IpfsService from "../src/services/ipfs-service.js"
 import Web3 from "web3"
 
 describe("Purchase Resource", function() {
@@ -12,6 +13,7 @@ describe("Purchase Resource", function() {
   var listing
   var purchases
   var purchase
+  var reviews
   var contractService
   var ipfsService
   var testListingIds
@@ -29,6 +31,7 @@ describe("Purchase Resource", function() {
     })
     listings = new Listings({ contractService, ipfsService })
     purchases = new Purchase({ contractService, ipfsService })
+    reviews = new Review({ contractService, ipfsService })
   })
 
   // Helpers
@@ -100,16 +103,26 @@ describe("Purchase Resource", function() {
 
     it("should allow the buyer to mark a purchase received", async () => {
       expectStage("buyer_pending")
-      await purchases.buyerConfirmReceipt(purchase.address)
+      await purchases.buyerConfirmReceipt(purchase.address, { rating: 3 })
       purchase = await purchases.get(purchase.address)
       expectStage("seller_pending")
     })
 
     it("should allow the seller to collect money", async () => {
       expectStage("seller_pending")
-      await purchases.sellerGetPayout(purchase.address)
+      var reviewText = "Some delay before marking purchase recieved"
+      await purchases.sellerGetPayout(purchase.address, {
+        rating: 4,
+        reviewText: reviewText
+      })
       purchase = await purchases.get(purchase.address)
       expectStage("complete")
+      const purchaseReviews = await reviews.find({
+        purchaseAddress: purchase.address
+      })
+      expect(purchaseReviews[1].rating).to.equal(4)
+      expect(purchaseReviews[1].revieweeAddress).to.equal(purchase.buyerAddress)
+      expect(purchaseReviews[1].revieweeRole).to.equal("BUYER")
     })
 
     it("should list logs", async () => {

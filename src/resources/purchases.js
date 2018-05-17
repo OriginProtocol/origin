@@ -1,4 +1,4 @@
-import ResourceBase from "../ResourceBase"
+import ResourceBase from "./_resource-base"
 
 const _STAGES_TO_NUMBER = {
   awaiting_payment: 0,
@@ -10,6 +10,8 @@ const _STAGES_TO_NUMBER = {
   complete: 6
 }
 const _NUMBERS_TO_STAGE = {}
+
+const EMPTY_IPFS = "0x0000000000000000000000000000000000000000000000000000000000000000"
 
 class Purchases extends ResourceBase {
   constructor({ contractService, ipfsService }) {
@@ -44,12 +46,34 @@ class Purchases extends ResourceBase {
     })
   }
 
-  async buyerConfirmReceipt(address) {
-    return await this.contractFn(address, "buyerConfirmReceipt")
+  async buyerConfirmReceipt(address, data={}) {
+    const review = await this._buildReview(data)
+    const args = [review.rating, review.ipfsHashBytes]
+    return await this.contractFn(address, "buyerConfirmReceipt", args)
   }
 
-  async sellerGetPayout(address) {
-    return await this.contractFn(address, "sellerCollectPayout")
+  async sellerGetPayout(address, data={}) {
+    const review = await this._buildReview(data)
+    const args = [review.rating, review.ipfsHashBytes]
+    return await this.contractFn(address, "sellerCollectPayout", args, {gas: 100000})
+  }
+
+  async _buildReview(data={}){
+    // Check Rating
+    const rating = data.rating || 5
+    if(!(rating >= 1 && rating <= 5)){
+      throw new Error("You must set a rating between 1 and 5")
+    }
+    // IPFS for review text, if needed
+    let ipfsHashBytes = EMPTY_IPFS
+    const reviewText = data.reviewText
+    if(reviewText && typeof reviewText == "string" && reviewText.length > 2){
+      const ipfsData = {version:1, reviewText:reviewText}
+      const ipfsHash = await this.ipfsService.submitFile(ipfsData)
+      ipfsHashBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
+    }
+    // Return review data
+    return {rating: rating, ipfsHashBytes: ipfsHashBytes} 
   }
 
   async getLogs(address) {
@@ -63,7 +87,9 @@ class Purchases extends ResourceBase {
           return reject(error)
         }
         // Format logs we receive
-        let logs = rawLogs.map(log => {
+        let logs = rawLogs
+        .filter((x)=> x.event == "PurchaseChange")
+        .map(log => {
           const stage = _NUMBERS_TO_STAGE[log.returnValues.stage]
           return {
             transactionHash: log.transactionHash,

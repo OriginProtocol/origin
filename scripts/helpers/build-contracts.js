@@ -1,4 +1,5 @@
 const { spawn } = require('child_process')
+const minifyContracts = require('./minify-contracts')
 
 const buildContracts = () => {
   return new Promise((resolve, reject) => {
@@ -11,6 +12,7 @@ const buildContracts = () => {
       if (code === 0) {
         console.log('Truffle compile finished OK.')
       }
+      minifyContracts()
       resolve()
     })
   })

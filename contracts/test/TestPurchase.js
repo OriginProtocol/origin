@@ -36,6 +36,9 @@ const IN_DISPUTE = 4 // We are in a dispute
 const REVIEW_PERIOD = 5 // Time for reviews (only when transaction did not go through)
 const COMPLETE = 6 // It's all over
 
+const ROLE_BUYER = 0
+const ROLE_SELLER = 1
+
 const BUYER_TIMEOUT_SECONDS = 21 * 24 * 60 * 60
 
 contract("Purchase", accounts => {
@@ -104,7 +107,7 @@ contract("Purchase", accounts => {
     await instance.pay({ from: buyer, value: valueToPay })
     await instance.sellerConfirmShipped({ from: seller })
     // We immediately confirm receipt (in real world could be a while)
-    await instance.buyerConfirmReceipt({ from: buyer })
+    await instance.buyerConfirmReceipt(5, "", { from: buyer })
     let newStage = await instance.stage()
     assert.equal(
       newStage.toNumber(),
@@ -143,14 +146,18 @@ contract("Purchase", accounts => {
       .times(GAS_PRICE)
 
     // Buyer confirms
-    await instance.buyerConfirmReceipt({ from: buyer })
+    await instance.buyerConfirmReceipt(5, "IPFS", { from: buyer })
 
     // Seller collects
     const sellerBalanceBefore = await web3.eth.getBalance(seller)
-    const payoutTransaction = await instance.sellerCollectPayout({
-      from: seller,
-      gasPrice: GAS_PRICE
-    })
+    const payoutTransaction = await instance.sellerCollectPayout(
+      4,
+      "IPFS_HASH_HERE",
+      {
+        from: seller,
+        gasPrice: GAS_PRICE
+      }
+    )
     const sellerCollectTransactionCost = web3.toBigNumber(
       payoutTransaction.receipt.gasUsed * GAS_PRICE
     )
@@ -230,13 +237,155 @@ contract("Purchase", accounts => {
     })
 
     it("should allow buyer to confirm reciept", async () => {
-      await purchase.buyerConfirmReceipt({ from: buyer })
+      await purchase.buyerConfirmReceipt(5, "IPFS", { from: buyer })
       assert.equal((await purchase.stage()).toNumber(), SELLER_PENDING)
     })
 
     it("should allow seller to collect their money", async () => {
-      await purchase.sellerCollectPayout({ from: seller })
+      await purchase.sellerCollectPayout(1, "IPFS_HASH_HERE", { from: seller })
       assert.equal((await purchase.stage()).toNumber(), COMPLETE)
+    })
+  })
+
+  describe("Reviews", async () => {
+    const reviewIpfsHash = "DCBA1234"
+    const reviewIpfsBytes =
+      "0x4443424131323334000000000000000000000000000000000000000000000000"
+
+    beforeEach(async () => {
+      listing = await Listing.new(
+        seller,
+        ipfsHash,
+        totalPrice,
+        unitsAvailable,
+        { from: seller }
+      )
+      const unitsToBuy = 1
+      const buyTransaction = await listing.buyListing(unitsToBuy, {
+        from: buyer,
+        value: totalPrice
+      })
+      const listingPurchasedEvent = buyTransaction.logs.find(
+        e => e.event == "ListingPurchased"
+      )
+      purchase = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
+      assert.equal((await purchase.stage()).toNumber(), SHIPPING_PENDING)
+      await purchase.sellerConfirmShipped({ from: seller })
+      assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)
+    })
+
+    describe("Seller review of Buyer", async () => {
+      beforeEach(async () => {
+        await purchase.buyerConfirmReceipt(5, "IPFS", { from: buyer })
+      })
+
+      const itShouldAllowRating = async rating => {
+        it("Should allow rating " + rating, async () => {
+          const transaction = await purchase.sellerCollectPayout(
+            rating,
+            reviewIpfsHash,
+            {
+              from: seller
+            }
+          )
+          const reviewLog = transaction.logs.find(
+            e => e.event == "PurchaseReview"
+          )
+          assert.equal(reviewLog.args.reviewer, seller, "reviewer")
+          assert.equal(reviewLog.args.reviewee, buyer, "reviewee")
+          assert.equal(
+            reviewLog.args.revieweeRole.toNumber(),
+            ROLE_BUYER,
+            "revieweeRole"
+          )
+          assert.equal(reviewLog.args.rating, rating, "rating")
+          assert.equal(reviewLog.args.ipfsHash, reviewIpfsBytes, "ipfsHash")
+        })
+      }
+
+      const itShouldNotAllowRating = async rating => {
+        it("Should not allow rating " + rating, async () => {
+          try {
+            const transaction = await purchase.sellerCollectPayout(
+              rating,
+              reviewIpfsHash,
+              {
+                from: seller
+              }
+            )
+            assert.ok(false, "allowed an invalid rating")
+          } catch (err) {
+            assert.ok(isEVMError(err), "an EVM error should be thrown")
+          }
+        })
+      }
+
+      itShouldAllowRating(1)
+      itShouldAllowRating(2)
+      itShouldAllowRating(3)
+      itShouldAllowRating(4)
+      itShouldAllowRating(5)
+
+      itShouldNotAllowRating(-1)
+      itShouldNotAllowRating(0)
+      itShouldNotAllowRating(6)
+      itShouldNotAllowRating(255)
+      itShouldNotAllowRating(3000)
+    })
+
+    describe("Buyer review of Seller", async () => {
+      const itShouldAllowRating = async rating => {
+        it("Should allow rating " + rating, async () => {
+          const transaction = await purchase.buyerConfirmReceipt(
+            rating,
+            reviewIpfsHash,
+            {
+              from: buyer
+            }
+          )
+          const reviewLog = transaction.logs.find(
+            e => e.event == "PurchaseReview"
+          )
+          assert.equal(reviewLog.args.reviewer, buyer, "reviewer")
+          assert.equal(reviewLog.args.reviewee, seller, "reviewee")
+          assert.equal(
+            reviewLog.args.revieweeRole.toNumber(),
+            ROLE_SELLER,
+            "revieweeRole"
+          )
+          assert.equal(reviewLog.args.rating, rating, "rating")
+          assert.equal(reviewLog.args.ipfsHash, reviewIpfsBytes, "ipfsHash")
+        })
+      }
+
+      const itShouldNotAllowRating = async rating => {
+        it("Should not allow rating " + rating, async () => {
+          try {
+            const transaction = await purchase.buyerConfirmReceipt(
+              rating,
+              reviewIpfsHash,
+              {
+                from: buyer
+              }
+            )
+            assert.ok(false, "allowed an invalid rating")
+          } catch (err) {
+            assert.ok(isEVMError(err), "an EVM error should be thrown")
+          }
+        })
+      }
+
+      itShouldAllowRating(1)
+      itShouldAllowRating(2)
+      itShouldAllowRating(3)
+      itShouldAllowRating(4)
+      itShouldAllowRating(5)
+
+      itShouldNotAllowRating(-1)
+      itShouldNotAllowRating(0)
+      itShouldNotAllowRating(6)
+      itShouldNotAllowRating(255)
+      itShouldNotAllowRating(3000)
     })
   })
 

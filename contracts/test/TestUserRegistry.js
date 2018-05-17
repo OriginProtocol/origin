@@ -4,7 +4,7 @@ contract("UserRegistry", accounts => {
   let userRegistry
 
   beforeEach(async () => {
-    userRegistry = await UserRegistry.new({ from: accounts[0] })
+    userRegistry = await UserRegistry.deployed()
   })
 
   it("should be able to register a user", async function() {

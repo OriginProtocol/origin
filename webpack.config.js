@@ -38,10 +38,11 @@ var clientConfig = {
   entry: ["babel-polyfill", './src/index.js'],
   output: {
     filename: './origin.js',
-    libraryTarget: 'window'
+    libraryTarget: 'var',
+    library: 'Origin'
   },
-  mode: 'development',
-  devtool: 'inline-source-map',
+  mode: 'production',
+  devtool: false,
   target: 'web',
   module: {
     rules: [

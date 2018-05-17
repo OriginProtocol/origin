@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 const startGanache = require('./helpers/start-ganache')
 const buildContracts = require('./helpers/build-contracts')
 const deployContracts = require('./helpers/deploy-contracts')
@@ -14,8 +15,11 @@ const start = async () => {
   let compiler = webpack(webpackConfig)
 
   if (shouldWatch) {
+    console.log(chalk`\n{bold.hex('#1a82ff') ⬢  Starting Local Blockchain }\n`);
     await startGanache()
+    console.log(chalk`\n{bold.hex('#26d198') ⬢  Deploying Smart Contracts }\n`);
     await deployContracts()
+    console.log(chalk`\n{bold.hex('#6e3bea') ⬢  Starting Local IPFS }\n`);
     await startIpfs()
 
     // watch contracts
@@ -37,9 +41,12 @@ const start = async () => {
       }
     })
 
+    console.log(chalk`\n{bold.hex('#1a82ff') ⬢  Starting Test Server }\n`);
     startTestServer()
   } else {
+    console.log(chalk`\n{bold.hex('#1a82ff') ⬢  Compiling Smart Contracts }\n`);
     await buildContracts()
+    console.log(chalk`\n{bold.hex('#26d198') ⬢  Compiling Webpack }\n`);
     compiler.run((err, stats) => {
       if(err) {
         console.log(err)
@@ -49,5 +56,6 @@ const start = async () => {
     })
   }
 }
+
 
 start()
