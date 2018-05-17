@@ -24,22 +24,6 @@ contract ListingsRegistry {
   // Array of all listings
   Listing[] public listings;
 
-
-  /*
-   * Modifiers
-   */
-  modifier isValidListingIndex(uint _index) {
-    require (_index < listings.length);
-    _;
-  }
-
-
-  modifier isOwner() {
-    require (msg.sender == owner);
-    _;
-  }
-
-
   /*
    * Public functions
    */
@@ -101,5 +85,24 @@ contract ListingsRegistry {
     return listings.length;
   }
 
-
+  /// @dev createOnBehalf(): Create a new listing with specified creator
+  ///                        Used for migrating from old contracts (admin only)
+  /// @param _ipfsHash Hash of data on ipfsHash
+  /// @param _price Price of unit in wei
+  /// @param _unitsAvailable Number of units availabe for sale at start
+  /// @param _creatorAddress Address of account to be the creator
+  function createOnBehalf(
+    bytes32 _ipfsHash,
+    uint _price,
+    uint _unitsAvailable,
+    address _creatorAddress
+  )
+    public
+    returns (uint)
+  {
+    require (msg.sender == owner, "Only callable by registry owner");
+    listings.push(new Listing(_creatorAddress, _ipfsHash, _price, _unitsAvailable));
+    emit NewListing(listings.length-1);
+    return listings.length;
+  }
 }
