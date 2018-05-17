@@ -72,8 +72,8 @@
     "deploy:ipfs": "./scripts/deploy.sh",
     "build": "NODE_ENV=production webpack --progress --display errors-only",
     "test": "node scripts/test.js --env=jsdom",
-    "lint": "eslint \"src/**/**.js\" \"scripts/**.js\"",
-    "format": "prettier-eslint --write \"src/**/**.js\" \"scripts/**.js\"",
+    "lint": "eslint \"src/**/*.js\" \"scripts/*.js\"",
+    "format": "prettier-eslint --write \"src/**/*.js\" \"scripts/*.js\"",
     "precommit": "lint-staged"
   },
   "lint-staged": {
