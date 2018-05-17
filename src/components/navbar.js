@@ -31,9 +31,10 @@ class NavBar extends Component {
             </div>
           </Link>
           <div className="collapse navbar-collapse order-2 order-lg-1" id="navbarSupportedContent">
-            <form className="form-inline my-2 my-lg-0">
+            {/* Hidden for current deployment */}
+            {/* <form className="form-inline my-2 my-lg-0">
               <input className="form-control mr-sm-2" type="search" placeholder="Search Listings" aria-label="Search" onChange={this.handleChange} value={this.state.searchQuery} />
-            </form>
+            </form> */}
             <div className="navbar-nav justify-content-end">
               <Link to="/my-purchases" className="nav-item nav-link">Buy</Link>
               <div className="sell dropdown">
