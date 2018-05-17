@@ -49,6 +49,7 @@
     "html-webpack-plugin": "3.2.0",
     "identicon.js": "^2.3.2",
     "prettier": "1.12.1",
+    "prettier-eslint-cli": "^4.7.1",
     "style-loader": "0.21.0",
     "webpack": "4.8.1",
     "webpack-cli": "^2.1.3",
@@ -63,7 +64,8 @@
     "deploy:ipfs": "./scripts/deploy.sh",
     "build": "NODE_ENV=production webpack --progress --display errors-only",
     "test": "node scripts/test.js --env=jsdom",
-    "lint": "eslint \"src/**/**.js\" \"scripts/**.js\""
+    "lint": "eslint \"src/**/**.js\" \"scripts/**.js\"",
+    "format": "prettier-eslint --write \"src/**/**.js\" \"scripts/**.js\""
   },
   "babel": {
     "presets": [
