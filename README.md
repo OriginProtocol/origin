@@ -106,6 +106,13 @@ Enviroment keys for Indexing server:
 - IPFS_PORT: port on which the IPFS daemon is listening.
 - REDIS_URL: Set this to point to your local Redis server. For example `redis://127.0.0.1:6379/0`
 
+If you wish to setup push notification for your mobile apps
+- APNS_CERT_FILE: Apple notification service certificate(This needs to be .pem file. Refer to http://www.apptuitions.com/generate-pem-file-for-push-notification/ for how to generate)
+- APNS_CERT_PASSWORD: Passphrase for the pem file if you do not strip it out when you exported to pem
+- APNS_APP_BUNDLE_ID: The bundle id of your app
+
+FCM support forthcoming
+
 ### Set Up Your Database
 
 ```bash
