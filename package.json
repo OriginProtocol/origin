@@ -42,8 +42,14 @@
     "dotenv": "^5.0.1",
     "eslint": "4.19.1",
     "eslint-config-prettier": "^2.9.0",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-config-standard-react": "^6.0.0",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-prettier": "^2.6.0",
-    "eslint-plugin-react": "7.7.0",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-react": "^7.7.0",
+    "eslint-plugin-standard": "^3.1.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "1.1.11",
     "html-webpack-plugin": "3.2.0",
@@ -112,9 +118,9 @@
       "react"
     ],
     "extends": [
-      "eslint:recommended",
-      "plugin:react/recommended",
-      "plugin:prettier/recommended"
+      "plugin:prettier/recommended",
+      "standard",
+      "standard-react"
     ],
     "rules": {
       "react/prop-types": "off",
