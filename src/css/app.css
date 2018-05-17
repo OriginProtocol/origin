@@ -1021,6 +1021,8 @@ a:hover {
 
 .price-container {
   font-size: 1.125rem;
+}
+.price-container:last-of-type {
   margin-bottom: 2rem;
 }
 
