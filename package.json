@@ -133,9 +133,11 @@
       "standard-react"
     ],
     "rules": {
-      "react/prop-types": "off",
-      "react/no-children-prop": "off",
       "no-console": "off",
+      "jsx-quotes": "off",
+      "space-before-function-paren": "off",
+      "react/prop-types": "off",
+      "indent": "warn",
       "prettier/prettier": "error"
     }
   },
