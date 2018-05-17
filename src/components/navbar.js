@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 import ConnectivityDropdown from 'components/dropdowns/connectivity'
-import NotificationsDropdown from 'components/dropdowns/notifications'
+// Hidden for current deployment
+// import NotificationsDropdown from 'components/dropdowns/notifications'
 import UserDropdown from 'components/dropdowns/user'
 
 class NavBar extends Component {
@@ -51,7 +52,8 @@ class NavBar extends Component {
           </div>
           <div className="static navbar-nav order-1 order-lg-2">
             <ConnectivityDropdown />
-            <NotificationsDropdown />
+            {/* Hidden for current deployment */}
+            {/* <NotificationsDropdown /> */}
             <UserDropdown />
           </div>
         </div>
