@@ -138,5 +138,8 @@
       "no-console": "off",
       "prettier/prettier": "error"
     }
+  },
+  "prettier": {
+    "semi": false
   }
 }
