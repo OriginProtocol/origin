@@ -15,8 +15,7 @@ class UserCard extends Component {
   render() {
     const { title, user, userAddress } = this.props
     const { profile, attestations } = user
-    const claims = profile && profile.claims
-    const fullName = (claims && claims.name) || 'Unnamed User'
+    const fullName = (profile && `${profile.firstName} ${profile.lastName}`) || 'Unnamed User'
 
     return (
       <div className="user-card placehold">
