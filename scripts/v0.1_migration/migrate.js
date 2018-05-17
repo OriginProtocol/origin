@@ -188,11 +188,12 @@ Migration.prototype.createListing = async function(listing) {
     const nonce = await this.web3.eth.getTransactionCount(this.account.address, "pending");
     console.log("   nonce: " + nonce);
     try {
+        const lister = listing.lister;
+        const price = this.web3.utils.toBN(listing.price);
         const ipfsHash = this.getBytes32FromIpfsHash(listing.ipfsHash);
         const unitsAvailable = listing.unitsAvailable;
-        const price = this.web3.utils.toBN(listing.price);
 
-        const contractFunction = this.contract.methods.create(ipfsHash, price, unitsAvailable);
+        const contractFunction = this.contract.methods.createOnBehalf(ipfsHash, price, unitsAvailable, lister);
         const gasAmount = await contractFunction.estimateGas({from: this.account.address});
         const estimatedGas = parseInt(gasAmount * this.gasMultiplier);
         console.log("   estimated gas: " + estimatedGas);
@@ -434,7 +435,7 @@ Migration.prototype.calculateChecksum = function(listingsArray) {
     let orderedListings = [];
     let ipfsHashesToListings = {};
     listingsArray.map((listing) => {
-        delete listing.lister;
+        // delete listing.lister;
         delete listing.index;
         ipfsHashesToListings[listing.ipfsHash] = listing;
     });
