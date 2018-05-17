@@ -57,7 +57,7 @@ class ListingCardPrices extends Component {
   }
 
   formatApproxPrice(){
-    return Number(this.state.price * this.state.exchangeRate).toLocaleString(undefined, {minimumFractionDigits: this.state.defaultDecimalPlaces});
+    return Number(this.state.price * this.state.exchangeRate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
   }
 
   render() {
@@ -67,15 +67,13 @@ class ListingCardPrices extends Component {
           <div>
             <div className="price placehold">
               {this.state.price && `${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH`}
+
+              <small class="text-muted"> ~ {this.formatApproxPrice()} {this.state.currencyCode}</small>
             </div>
+
             {this.state.unitsAvailable===0 &&
               <span className="sold-banner">Sold</span>
             }
-          </div>
-        </div>
-        <div className="d-flex align-items-center price-container">
-          <div className="price placehold">
-            <span className="approxPrice">(~{this.formatApproxPrice()} {this.state.currencyCode})</span>
           </div>
         </div>
       </div>
