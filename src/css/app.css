@@ -956,6 +956,23 @@ a:hover {
   color: unset;
 }
 
+.modal-content ul {
+  list-style: none;
+  margin-bottom: 1rem;
+  padding: 0;
+  text-align: left;
+  width: fit-content;
+}
+
+.modal-content ul:first-of-type:not(:last-of-type) {
+  margin-right: 1rem;
+}
+
+.modal-content li:before {
+  content: '✓';
+  margin-right: 0.5rem;
+}
+
 .modal-content .success-message {
   color: var(--greenblue);
 }
@@ -1076,6 +1093,11 @@ a:hover {
   margin-bottom: 15px;
 }
 
+.listing-card .image-container {
+  background-color: var(--light); 
+  height: 240px;
+}
+
 .listing-card .sold-banner {
   display: inline-block;
   width: 70px;
@@ -1089,6 +1111,10 @@ a:hover {
   font-size: 12px;
   color: white;
   padding: 0.8px 8px 5px 20px;
+}
+
+.listing.image-container {
+  background-color: var(--light);
 }
 
 /* Listing Detail */
@@ -1488,13 +1514,14 @@ label[for=root_pictures]:hover {
 }
 
 .transaction .image-container {
-  position: absolute;
+  background-color: var(--light);
   height: 100%;
+  position: absolute;
   top: 0;
   width: 100%;
 }
 
-.transaction .image-container img {
+.transaction .image-container:not(.placeholder) img {
   max-width: 100%;
   min-height: 100%;
   object-fit: cover;
@@ -2106,7 +2133,7 @@ form .stars img {
   width: 100%;
 }
 
-.services-container .service:not(.published) {
+.services-container .service:not(.published):not(.verified) {
   cursor: pointer;
 }
 
@@ -2470,21 +2497,25 @@ sup {
   margin: 0 auto 10px 0;
 }
 
-.unload.modal .button-container .btn {
+.publish.modal .button-container,
+.unload.modal .button-container {
   margin: 0 0 20px;
 }
 
+.publish.modal a,
 .unload.modal a {
   color: var(--clear-blue);
   cursor: pointer;
   font-size: 0.875rem;
 }
 
+.publish.modal a:hover,
 .unload.modal a:hover {
   color: var(--dark-clear-blue);
 }
 
-.unload.modal .modal-content .image-container img {
+.publish.modal img,
+.unload.modal img {
   height: auto;
   width: auto;
 }

@@ -75,7 +75,7 @@ class Profile extends Component {
 
   componentDidUpdate(prevProps) {
     // prompt user if tab/window is closing before changes have been published
-    if (this.props.hasChanges) {
+    if (!!this.props.changes.length) {
       $('.profile-wrapper [data-toggle="tooltip"]').tooltip()
 
       window.addEventListener('beforeunload', this.handleUnload)
@@ -164,10 +164,10 @@ class Profile extends Component {
   render() {
     const { modalsOpen, progress, successMessage } = this.state
 
-    const { provisional, published, profile, lastPublish } = this.props
+    const { changes, provisional, published, profile, lastPublish } = this.props
 
     const fullName = `${provisional.firstName} ${provisional.lastName}`.trim()
-    const hasChanges = this.props.hasChanges
+    const hasChanges = !!changes.length
     const description = provisional.description || 'An Origin user without a description'
 
     let statusClassMap = {
@@ -337,6 +337,7 @@ class Profile extends Component {
 
         <ConfirmPublish
           open={modalsOpen.publish}
+          changes={changes}
           handleToggle={this.handleToggle}
           handlePublish={this.handlePublish}
           onConfirm={() => {
@@ -353,6 +354,7 @@ class Profile extends Component {
 
         <ConfirmUnload
           open={modalsOpen.unload}
+          changes={changes}
           handleToggle={this.handleToggle}
           handlePublish={this.handlePublish}
           onConfirm={() => {
@@ -459,7 +461,7 @@ const mapStateToProps = state => {
     published: state.profile.published,
     provisional: state.profile.provisional,
     strength: state.profile.strength,
-    hasChanges: state.profile.hasChanges,
+    changes: state.profile.changes,
     lastPublish: state.profile.lastPublish,
     provisionalProgress: state.profile.provisionalProgress,
     publishedProgress: state.profile.publishedProgress,
