@@ -50,6 +50,7 @@ class VerifyPhone extends Component {
           {this.state.mode === 'code' && this.renderCodeForm()}
           <div className="button-container">
             <a
+              href="#"
               className="btn btn-clear"
               data-modal="phone"
               onClick={handleToggle}

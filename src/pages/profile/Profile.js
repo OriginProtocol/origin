@@ -24,12 +24,13 @@ import VerifyEmail from './VerifyEmail'
 import VerifyFacebook from './VerifyFacebook'
 import VerifyTwitter from './VerifyTwitter'
 import ConfirmPublish from './ConfirmPublish'
+import ConfirmUnload from './ConfirmUnload'
+import AttestationSuccess from './AttestationSuccess'
 
 class Profile extends Component {
   constructor(props) {
     super(props)
 
-    this.handleIdentity = this.handleIdentity.bind(this)
     this.handleToggle = this.handleToggle.bind(this)
     this.handleUnload = this.handleUnload.bind(this)
     this.setProgress = this.setProgress.bind(this)
@@ -49,19 +50,22 @@ class Profile extends Component {
       address: props.address,
       userForm: { firstName, lastName, description },
       modalsOpen: {
+        attestationSuccess: false,
         email: false,
         facebook: false,
         phone: false,
         profile: false,
+        publish: false,
         twitter: false,
-        unload: false
+        unload: false,
       },
       // percentage widths for two progress bars
       progress: {
         provisional: 0,
         published: 0
       },
-      provisional: props.provisional
+      provisional: props.provisional,
+      successMessage: '',
     }
   }
 
@@ -73,9 +77,10 @@ class Profile extends Component {
     // prompt user if tab/window is closing before changes have been published
     if (this.props.hasChanges) {
       $('.profile-wrapper [data-toggle="tooltip"]').tooltip()
-      // window.addEventListener('beforeunload', this.handleUnload)
+
+      window.addEventListener('beforeunload', this.handleUnload)
     } else {
-      // window.removeEventListener('beforeunload', this.handleUnload)
+      window.removeEventListener('beforeunload', this.handleUnload)
     }
 
     if (
@@ -89,26 +94,10 @@ class Profile extends Component {
     }
   }
 
-  // initiate validation sequence for the named identity service
-  handleIdentity(name) {
-    const modalsOpen = Object.assign({}, this.state.modalsOpen, {
-      [name]: false
-    })
-    // TODO: use token or hashed/salted value instead of boolean to indicate verification
-    let obj = Object.assign({}, this.state.provisional, { [name]: true })
-
-    this.setState({ modalsOpen, provisional: obj })
-
-    let { provisional, published } = this.state.progress
-
-    this.setProgress({
-      provisional: provisional + (100 - published - provisional) / 2,
-      published
-    })
-  }
-
   // conditionally close modal identified by data attribute
   handleToggle(e) {
+    e.preventDefault()
+    
     const { modal } = e.currentTarget.dataset
 
     /*
@@ -116,7 +105,7 @@ class Profile extends Component {
       TODO: Allow provisional validations to be reviewed and/or
       undone individually before publishing to the blockchain.
     */
-    if (this.props.published[modal] || this.state.provisional[modal]) {
+    if (this.props.published[modal] || this.props.provisional[modal]) {
       return
     }
 
@@ -173,7 +162,7 @@ class Profile extends Component {
   }
 
   render() {
-    const { modalsOpen, progress } = this.state
+    const { modalsOpen, progress, successMessage } = this.state
 
     const { provisional, published, profile, lastPublish } = this.props
 
@@ -248,7 +237,7 @@ class Profile extends Component {
                     className="publish btn btn-sm btn-primary d-block"
                     onClick={() => {
                       this.setState({
-                        modalsOpen: { ...this.state.modalsOpen, unload: true }
+                        modalsOpen: { ...this.state.modalsOpen, publish: true }
                       })
                     }}
                   >
@@ -301,7 +290,8 @@ class Profile extends Component {
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
-              modalsOpen: { ...this.state.modalsOpen, phone: false }
+              successMessage: 'Phone verified!',
+              modalsOpen: { ...this.state.modalsOpen, phone: false, attestationSuccess: true }
             })
           }}
         />
@@ -313,7 +303,8 @@ class Profile extends Component {
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
-              modalsOpen: { ...this.state.modalsOpen, email: false }
+              successMessage: 'Email verified!',
+              modalsOpen: { ...this.state.modalsOpen, email: false, attestationSuccess: true }
             })
           }}
         />
@@ -325,7 +316,8 @@ class Profile extends Component {
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
-              modalsOpen: { ...this.state.modalsOpen, facebook: false }
+              successMessage: 'Facebook verified!',
+              modalsOpen: { ...this.state.modalsOpen, facebook: false, attestationSuccess: true }
             })
           }}
         />
@@ -336,12 +328,29 @@ class Profile extends Component {
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
-              modalsOpen: { ...this.state.modalsOpen, twitter: false }
+              successMessage: 'Twitter verified!',
+              modalsOpen: { ...this.state.modalsOpen, twitter: false, attestationSuccess: true }
             })
           }}
         />
 
         <ConfirmPublish
+          open={modalsOpen.publish}
+          handleToggle={this.handleToggle}
+          handlePublish={this.handlePublish}
+          onConfirm={() => {
+            this.setState({
+              modalsOpen: { ...this.state.modalsOpen, publish: false },
+              step: 'metamask'
+            })
+            this.props.deployProfile({
+              facebook: this.state.facebookForm,
+              user: this.state.userForm
+            })
+          }}
+        />
+
+        <ConfirmUnload
           open={modalsOpen.unload}
           handleToggle={this.handleToggle}
           handlePublish={this.handlePublish}
@@ -355,6 +364,12 @@ class Profile extends Component {
               user: this.state.userForm
             })
           }}
+        />
+
+        <AttestationSuccess
+          open={modalsOpen.attestationSuccess}
+          message={successMessage}
+          handleToggle={this.handleToggle}
         />
 
         {this.props.profile.status === 'confirming' && (
@@ -382,16 +397,16 @@ class Profile extends Component {
             <div className="image-container">
               <img src="images/flat_cross_icon.svg" role="presentation" />
             </div>
-            Error<br />
-            <a
-              href="#"
-              onClick={e => {
-                e.preventDefault()
-                this.props.deployProfileReset()
-              }}
-            >
-              OK
-            </a>
+            <h2>Error</h2>
+            <div>See the console for more details</div>
+            <div className="button-container">
+              <button
+                className="btn btn-clear"
+                onClick={this.props.deployProfileReset}
+              >
+                OK
+              </button>
+            </div>
           </Modal>
         )}
 
@@ -403,16 +418,15 @@ class Profile extends Component {
                 role="presentation"
               />
             </div>
-            Success<br />
-            <a
-              href="#"
-              onClick={e => {
-                e.preventDefault()
-                this.props.deployProfileReset()
-              }}
-            >
-              Continue
-            </a>
+            <h2>Success</h2>
+            <div className="button-container">
+              <button
+                className="btn btn-clear"
+                onClick={this.props.deployProfileReset}
+              >
+                Continue
+              </button>
+            </div>
           </Modal>
         )}
       </div>

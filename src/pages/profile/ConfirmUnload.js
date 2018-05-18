@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import Modal from 'components/modal'
 
-class ConfirmPublish extends Component {
+class ConfirmUnload extends Component {
   render() {
     const { open, handleToggle, handlePublish } = this.props
 
@@ -26,7 +26,7 @@ class ConfirmPublish extends Component {
             Publish Now
           </button>
         </div>
-        <a data-modal="unload" onClick={handleToggle}>
+        <a href="#" data-modal="unload" onClick={handleToggle}>
           Not Right Now
         </a>
       </Modal>
@@ -34,4 +34,4 @@ class ConfirmPublish extends Component {
   }
 }
 
-export default ConfirmPublish
+export default ConfirmUnload

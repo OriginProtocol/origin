@@ -31,6 +31,7 @@ class VerifyFacebook extends Component {
         <h2>Verify Your Facebook Account</h2>
         <div className="button-container">
           <a
+            href="#"
             className="btn btn-clear"
             data-modal="facebook"
             onClick={this.props.handleToggle}
