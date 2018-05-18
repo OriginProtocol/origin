@@ -27,7 +27,7 @@ class ListingCardPrices extends Component {
   getPrecision(n) {
     let asString = n.toString();
     let scientificMatch = asString.match(/e-(\d+)/);
-    if(scientificMatch && scientificMatch.length > 0) {
+    if (scientificMatch && scientificMatch.length > 0) {
       return scientificMatch[1];
     } else {
       return asString.indexOf('.') + 1;
