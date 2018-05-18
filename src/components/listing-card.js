@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom'
 // not using a global singleton
 import origin from '../services/origin'
 
+import ListingCardPrices from './listing-card-prices.js';
+
 class ListingCard extends Component {
 
   constructor(props) {
@@ -38,14 +40,7 @@ class ListingCard extends Component {
           </div>
           <div className="category placehold">{this.state.category}</div>
           <h2 className="title placehold text-truncate">{this.state.name}</h2>
-          <div className="d-flex align-items-center price-container">
-            <div className="price placehold">
-              {this.state.price && `${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH`}
-            </div>
-            {this.state.unitsAvailable===0 &&
-              <span className="sold-banner">Sold</span>
-            }
-          </div>
+          <ListingCardPrices price={this.state.price} />
         </Link>
       </div>
     )
