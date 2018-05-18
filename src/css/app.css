@@ -91,6 +91,12 @@ a:hover {
   font-weight: 900;
 }
 
+.btn.disabled,
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.33;
+}
+
 .table {
   font-size: 0.875rem;
   margin-bottom: 0;
