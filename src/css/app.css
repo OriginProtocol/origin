@@ -1818,6 +1818,10 @@ form .stars img {
   margin-bottom: 2rem;
 }
 
+.review .name {
+  color: var(--dark);
+}
+
 .review > .d-flex {
   margin-bottom: 1rem;
 }
