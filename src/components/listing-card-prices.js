@@ -67,9 +67,8 @@ class ListingCardPrices extends Component {
           <div>
             <div className="price placehold">
               {this.state.price && `${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH`}
-
-              <small class="text-muted"> ~ {this.formatApproxPrice()} {this.state.currencyCode}</small>
             </div>
+            <div class="alternate-price text-muted">${this.formatApproxPrice()} {this.state.currencyCode}</div>
 
             {this.state.unitsAvailable===0 &&
               <span className="sold-banner">Sold</span>

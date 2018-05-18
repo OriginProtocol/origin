@@ -1025,6 +1025,10 @@ a:hover {
 .price-container:last-of-type {
   margin-bottom: 2rem;
 }
+.price-container .alternate-price  {
+  font-size: 0.800rem;
+  text-transform: lowercase;
+}
 
 .listings-grid {
   padding: 3.5rem 0;
