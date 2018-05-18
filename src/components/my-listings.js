@@ -109,7 +109,8 @@ class MyListings extends Component {
           <div className="row">
             <div className="col-12 col-md-3">
               {loading && 'Loading...'}
-              {!loading &&
+              {!loading && !listings.length && 'You currently have no listings.'}
+              {!loading && !!listings.length &&
                 <div className="filters list-group flex-row flex-md-column">
                   <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>All</a>
                   <a className={`list-group-item list-group-item-action${filter === 'active' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'active' })}>Active</a>
