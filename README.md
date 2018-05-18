@@ -2,15 +2,19 @@
 
 # bridge-server
 
-The Origin bridge server connects the old world to the new.
+The Origin Bridge Server connects the old world to the new.
 
-You can connect to and use our hosted bridge server at [bridge.originprotocol.com](https://bridge.originprotocol.com). The `develop` branch of this repo is available at [dev.bridge.originprotocol.com](https://dev.bridge.originprotocol.com).
+Most traditional web APIs, such as those from Facebook and Twitter, can only interact with a centralized server located at a specific domain. A decentralized application, like our Origin Demo DApp, doesn't need to "live" on a particular server. (In fact, you can load it from any IPFS gateway!) Thus, in order for the DApp to use an "old world" API, it needs a Bridge Server. 
 
-Origin Dapps can connect to the bridge server of their choosing in order to enable the following functionality which is either impossible or impractical to do directly onchain, including:
+Origin hosts a Bridge Server, but in the true spirit of decentralization, anyone is free to clone our open source code and host their own.
+
+You can connect to and use our hosted Bridge Server at [bridge.originprotocol.com](https://bridge.originprotocol.com). The `develop` branch of this repo is available at [dev.bridge.originprotocol.com](https://dev.bridge.originprotocol.com).
+
+DApps can connect to the Bridge Server of their choosing in order to enable the following functionality which is either impossible or impractical to do directly onchain, including:
 
 ### Indexing
 
-Searching, browsing or filtering results is impractical to do either onchain or in the browser. Dapps can connect to a bridge-server to solve this problem. The bridge server will index the blockchain and related JSON content that is stored on IPFS into a quickly queriable format to make searching and filtering results possible from DApps.
+Searching, browsing or filtering results is impractical to do either onchain or in the browser. DApps can connect to a bridge-server to solve this problem. The bridge server will index the blockchain and related JSON content that is stored on IPFS into a quickly queriable format to make searching and filtering results possible from DApps.
 
 ### Identity
 
@@ -230,3 +234,9 @@ See [dev.env](dev.env) for a full list of other optional config variables.
 We use following buildpacks:
 
   heroku buildpacks:set heroku/python
+
+## Contributing
+
+Origin is an 100% open-source and community-driven project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community. 
+
+To get involved, please join our [Discord channel](https://discord.gg/jyxpUSe) and review our [guide to contributing](https://docs.originprotocol.com/#contributing).
