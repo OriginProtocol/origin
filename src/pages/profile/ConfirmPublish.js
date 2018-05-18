@@ -4,7 +4,7 @@ import Modal from 'components/modal'
 
 class ConfirmPublish extends Component {
   render() {
-    const { open, handleToggle } = this.props
+    const { open, onConfirm, handleToggle } = this.props
 
     return (
       <Modal isOpen={open} data-modal="publish" handleToggle={handleToggle}>
@@ -13,27 +13,20 @@ class ConfirmPublish extends Component {
         </div>
         <h2>Ready to go public?</h2>
         <p>
-          By updating your profile, you are publishing your
-          information publicly and others will be able to see it on the
-          blockchain and IPFS.
+          By publishing to the blockchain, other users will be able to see that you have verified your account.
         </p>
         <div className="button-container">
-          <a
-            href="#"
-            className="btn btn-clear mr-3"
-            data-modal="publish"
-            onClick={this.props.handleToggle}
-          >
-            Oops, no wait...
-          </a>
           <button
             type="submit"
             className="btn btn-clear"
-            onClick={() => this.props.onConfirm()}
+            onClick={onConfirm}
           >
             Let&apos;s do it!
           </button>
         </div>
+        <a href="#" data-modal="publish" onClick={handleToggle}>
+          Oops, no wait...
+        </a>
       </Modal>
     )
   }

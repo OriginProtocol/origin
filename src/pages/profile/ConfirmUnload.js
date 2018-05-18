@@ -4,7 +4,7 @@ import Modal from 'components/modal'
 
 class ConfirmUnload extends Component {
   render() {
-    const { open, handleToggle, handlePublish } = this.props
+    const { open, onConfirm, handleToggle } = this.props
 
     return (
       <Modal isOpen={open} data-modal="unload" handleToggle={handleToggle}>
@@ -14,14 +14,12 @@ class ConfirmUnload extends Component {
         <h2>Wait! You haven’t published yet.</h2>
         <p>If you exit without publishing you’ll lose all your changes.</p>
         <p>
-          Ready to go public? By updating your profile, you are publishing your
-          information publicly and others will be able to see it on the
-          blockchain and IPFS.
+          Ready to go public? By publishing to the blockchain, other users will be able to see that you have verified your account.
         </p>
         <div className="button-container">
           <button
             className="btn btn-clear"
-            onClick={e => handlePublish(() => handleToggle(e))}
+            onClick={onConfirm}
           >
             Publish Now
           </button>

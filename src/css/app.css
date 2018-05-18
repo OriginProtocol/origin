@@ -2394,7 +2394,7 @@ sup {
   font-size: 1rem;
 }
 
-.identity.modal .explanation {
+.profile-wrapper .modal .explanation {
   color: var(--pale-grey);
   font-size: 0.875rem;
   padding-top: 0.5rem;

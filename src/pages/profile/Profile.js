@@ -291,7 +291,7 @@ class Profile extends Component {
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
-              successMessage: 'Phone verified!',
+              successMessage: 'Phone number verified!',
               modalsOpen: { ...this.state.modalsOpen, phone: false, attestationSuccess: true }
             })
           }}
@@ -304,7 +304,7 @@ class Profile extends Component {
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
-              successMessage: 'Email verified!',
+              successMessage: 'Email address verified!',
               modalsOpen: { ...this.state.modalsOpen, email: false, attestationSuccess: true }
             })
           }}
@@ -317,7 +317,7 @@ class Profile extends Component {
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
-              successMessage: 'Facebook verified!',
+              successMessage: 'Facebook account verified!',
               modalsOpen: { ...this.state.modalsOpen, facebook: false, attestationSuccess: true }
             })
           }}
@@ -329,7 +329,7 @@ class Profile extends Component {
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
-              successMessage: 'Twitter verified!',
+              successMessage: 'Twitter account verified!',
               modalsOpen: { ...this.state.modalsOpen, twitter: false, attestationSuccess: true }
             })
           }}
