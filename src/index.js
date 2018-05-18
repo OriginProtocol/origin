@@ -1,5 +1,5 @@
-import ContractService from "./contract-service"
-import IpfsService from "./ipfs-service"
+import ContractService from "./services/contract-service"
+import IpfsService from "./services/ipfs-service"
 import { Attestations } from "./resources/attestations"
 import Users from "./resources/users"
 import fetch from "cross-fetch"
@@ -7,6 +7,7 @@ import fetch from "cross-fetch"
 var resources = {
   listings: require("./resources/listings"),
   purchases: require("./resources/purchases"),
+  reviews: require("./resources/reviews"),
   users: require("./resources/users")
 }
 

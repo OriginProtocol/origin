@@ -52,4 +52,37 @@ contract("ListingsRegistry", accounts => {
       "unitsAvailable is correct"
     )
   })
+
+  it("should be able to create a listing on behalf of other", async function() {
+    const initPrice = 2
+    const initUnitsAvailable = 5
+    await instance.createOnBehalf(
+      ipfsHash,
+      initPrice,
+      initUnitsAvailable,
+      accounts[1],
+      { from: accounts[0] }
+    )
+    let listingCount = await instance.listingsLength()
+    assert.equal(
+      listingCount,
+      initialListingsLength + 1,
+      "listings count has incremented"
+    )
+    let [
+      listingAddress,
+      lister,
+      hash,
+      price,
+      unitsAvailable
+    ] = await instance.getListing(initialListingsLength)
+    assert.equal(lister, accounts[1], "lister is correct as other account")
+    assert.equal(hash, ipfsHash, "ipfsHash is correct")
+    assert.equal(price, initPrice, "price is correct")
+    assert.equal(
+      unitsAvailable,
+      initUnitsAvailable,
+      "unitsAvailable is correct"
+    )
+  })
 })

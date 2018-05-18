@@ -2,12 +2,11 @@ pragma solidity ^0.4.23;
 
 import './ERC735.sol';
 import './KeyHolder.sol';
+import "./ClaimHolderLibrary.sol";
 
 contract ClaimHolder is KeyHolder, ERC735 {
 
-    bytes32 claimId;
-    mapping (bytes32 => Claim) claims;
-    mapping (uint256 => bytes32[]) claimsByType;
+    ClaimHolderLibrary.Claims claims;
 
     function addClaim(
         uint256 _claimType,
@@ -20,26 +19,9 @@ contract ClaimHolder is KeyHolder, ERC735 {
         public
         returns (bytes32 claimRequestId)
     {
-        claimId = keccak256(_issuer, _claimType);
-        KeyHolder issuer = KeyHolder(issuer);
-
-        if (msg.sender != address(this)) {
-          require(keyHasPurpose(keccak256(msg.sender), 3), "Sender does not have management key");
-        }
-
-        if (claims[claimId].issuer != _issuer) {
-            claimsByType[_claimType].push(claimId);
-        }
-
-        claims[claimId].claimType = _claimType;
-        claims[claimId].scheme = _scheme;
-        claims[claimId].issuer = _issuer;
-        claims[claimId].signature = _signature;
-        claims[claimId].data = _data;
-        claims[claimId].uri = _uri;
-
-        emit ClaimAdded(
-            claimId,
+        return ClaimHolderLibrary.addClaim(
+            keyHolderData,
+            claims,
             _claimType,
             _scheme,
             _issuer,
@@ -47,51 +29,30 @@ contract ClaimHolder is KeyHolder, ERC735 {
             _data,
             _uri
         );
-
-        return claimId;
     }
 
     function addClaims(
         uint256[] _claimType,
         address[] _issuer,
         bytes _signature,
-        bytes _data
+        bytes _data,
+        uint256[] _offsets
     )
         public
     {
-        for (uint8 i = 0; i < _claimType.length; i++) {
-            addClaim(
-              _claimType[i],
-              1,
-              _issuer[i],
-              getBytes(_signature, (i * 65), 65),
-              getBytes(_data, (i * 32), 32),
-              ""
-            );
-        }
+        ClaimHolderLibrary.addClaims(
+            keyHolderData,
+            claims,
+            _claimType,
+            _issuer,
+            _signature,
+            _data,
+            _offsets
+        );
     }
 
     function removeClaim(bytes32 _claimId) public returns (bool success) {
-        if (msg.sender != address(this)) {
-          require(keyHasPurpose(keccak256(msg.sender), 1), "Sender does not have management key");
-        }
-
-        /* uint index; */
-        /* (index, ) = claimsByType[claims[_claimId].claimType].indexOf(_claimId);
-        claimsByType[claims[_claimId].claimType].removeByIndex(index); */
-
-        emit ClaimRemoved(
-            _claimId,
-            claims[_claimId].claimType,
-            claims[_claimId].scheme,
-            claims[_claimId].issuer,
-            claims[_claimId].signature,
-            claims[_claimId].data,
-            claims[_claimId].uri
-        );
-
-        delete claims[_claimId];
-        return true;
+        return ClaimHolderLibrary.removeClaim(keyHolderData, claims, _claimId);
     }
 
     function getClaim(bytes32 _claimId)
@@ -106,14 +67,7 @@ contract ClaimHolder is KeyHolder, ERC735 {
             string uri
         )
     {
-        return (
-            claims[_claimId].claimType,
-            claims[_claimId].scheme,
-            claims[_claimId].issuer,
-            claims[_claimId].signature,
-            claims[_claimId].data,
-            claims[_claimId].uri
-        );
+        return ClaimHolderLibrary.getClaim(claims, _claimId);
     }
 
     function getClaimIdsByType(uint256 _claimType)
@@ -121,20 +75,6 @@ contract ClaimHolder is KeyHolder, ERC735 {
         constant
         returns(bytes32[] claimIds)
     {
-        return claimsByType[_claimType];
-    }
-
-    function getBytes(bytes _str, uint256 _offset, uint256 _length)
-        internal
-        pure
-        returns (bytes)
-    {
-        bytes memory sig = new bytes(_length);
-        uint256 j = 0;
-        for (uint256 k = _offset; k< _offset + _length; k++) {
-          sig[j] = _str[k];
-          j++;
-        }
-        return sig;
+        return claims.byType[_claimType];
     }
 }

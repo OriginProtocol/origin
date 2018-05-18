@@ -16,6 +16,8 @@ Object.assign(config, {
     }
   },
 
+  performance: { hints: false },
+
   entry: ["babel-polyfill", path.join(__dirname, "index.js")],
 
   plugins: [

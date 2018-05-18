@@ -4,178 +4,83 @@
 ![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)
 ![origin_travis_banner](https://img.shields.io/travis/OriginProtocol/origin-js/master.svg?style=flat-square&colorA=111d28)
 
-# Origin Protocol
+# origin-js
 
-Origin Protocol is a library of javascript code and Ethereum smart contracts which allow anyone to create decentralized marketplaces, including for fractional usage.
+origin-js is a library of javascript code and Ethereum smart contracts which allow anyone to create decentralized marketplaces, including for fractional usage. It is an open source project created by [Origin Protocol](https://www.originprotocol.com/). 
 
-Please refer to our [product brief](https://www.originprotocol.com/product-brief) and [technical whitepaper](https://www.originprotocol.com/whitepaper) for more detail.
+To learn more about Origin Protocol, please read our [product brief](https://www.originprotocol.com/product-brief) and [whitepaper](https://www.originprotocol.com/whitepaper) for a high-level description of what we're building and why it matters. Our official website is [https://www.originprotocol.com](https://www.originprotocol.com).
 
- - [README for Javascript code](#originjs-documentation)
+⚠️ This is an alpha version which is not suitable for production environments.
 
-## Follow our progress and get involved
+## Documentation
+[origin-js documentation](http://docs.originprotocol.com/)
 
-This repo is under active development. We welcome your participation!
+## Demo
 
-1. [Join our #engineering channel on Discord](http://www.originprotocol.com/discord).
+origin-js is showcased in our Demo DApp currently running on the Rinkeby testnet. 
+- [Overview and step-by-step instructions](https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58)
+- [Live Demo](http://demo.originprotocol.com)
+- [Github Repo](https://github.com/OriginProtocol/demo-dapp)
 
-2. Listen in on our weekly engineering call on Google Hangouts. It happens every week and everyone is welcome to listen in and participate. [Join us on Google Hangouts](https://meet.google.com/pws-cgyd-tqp) on Wednesdays at 9pm GMT ([Add to Calendar](https://calendar.google.com/event?action=TEMPLATE&tmeid=MHAyNHI3N2hzMjk5b3V2bjhoM2Q1ZWVzY2pfMjAxODA0MTFUMjAwMDAwWiBqb3NoQG9yaWdpbnByb3RvY29sLmNvbQ&tmsrc=josh%40originprotocol.com&scp=ALL)):
+## Using origin-js in your project
 
-| Pacific | Mountain | Central | Eastern | GMT |
-|---------|----------|---------|---------|-----|
-| Wed 1pm | Wed 2pm | Wed 3pm | Wed 4pm | Wed 9pm |
+### As a node package
 
-3. Catch up on our meeting notes & weekly sprint planning docs (feel free to add comments):
-- [Engineering meeting notes](https://docs.google.com/document/d/1aRcAk_rEjRgd1BppzxZJK9RXfDkbuwKKH8nPQk7FfaU/)
-- [Weekly sprint doc](https://docs.google.com/document/d/1qJ3sem38ED8oRI72JkeilcvIs82oDq5IT3fHKBrhZIM)
+```
+npm install origin --save
+```
+or
+```
+yarn add origin
+```
 
-4. Read our simple [contributing and style guide](CONTRIBUTING.md).
+### Plain javascript
 
-# What we're building
+A browser-compatible plain javascript file `origin.js` is available in the [Releases section](https://github.com/OriginProtocol/origin-js/releases). A hosted version can be directly included in your html as:
+```html
+<script src="https://code.originprotocol.com/origin-js/origin-v0.5.10.js"></script>
+```
 
-This library is an abstraction layer for developers who want to build DApps on Origin Protocol, and is also used to build the [Origin Demo DApp](https://github.com/OriginProtocol/demo-dapp).
+`npm build` will generate this file and save it to `dist/origin.js`.
 
-The library will make it easy for sellers to do things like:
+## Local development
 
- - Create listings
- - Update listings
- - Delete listings
- - Validate listings
+### 1. Clone this repo.
+```
+git clone https://github.com/OriginProtocol/origin-js.git && cd origin-js
+```
 
-And buyers to:
+If you would like to submit pull requests, you should instead fork this repo and then clone your fork. Note pull requests should always be made to the `develop` branch, which always has the latest commits.
 
- - Browse listing
- - Create bookings
- - Update bookings
- - Cancel bookings
+### 2. Install dependencies and link
+```
+npm run install:dev
+```
 
- # origin.js Documentation
+`install:dev` is shortcut for `npm install && npm link`. Linking means that changes to `origin-js` code are immediately available to local DApps without an `npm install`. 
 
- ## Introduction
+### 3. Start the local blockchain and build origin-js
 
- Welcome to the origin.js documentation! origin.js is a Javascript library for interacting with the Origin protocol.
+```
+npm start
+```
 
- Using the library you can create new listings from your applications, purchase them, or update them from your own off-chain applications.
-
- ### Warning
- This is still an alpha version which will evolve significantly before the main net release.
-
- ## Using origin.js in your project
-
- ### Plain javascript
-
- A browser-compatible plain javascript file `origin.js` is available in the "Releases" tab, and will soon be hosted on originprotocol.com. It can be generated locally via `npm build` and will be placed in `dist/origin.js`.
-
- ## Install
-
- ### NPM
- ```
- npm install @originprotocol/origin --save
- ```
-
- ### Yarn
- ```
- yarn add @originprotocol/origin
- ```
-
- ### Local
-
-1. `git clone` your fork. Note that the latest commits will be on the `develop`
-   branch. So switch to that branch if you want to submit a PR or check out
-   recently merged code.
-
-1. Install:dev (shortcut for `npm install && npm link`). Linking makes this available as a local npm package for local dapp development.
-    ```
-    npm run install:dev
-    ```
-
-1. Start the localblockchain and create the build. Code changes will trigger a live rebuild.
-    ```
-    npm start
-    ```
+Code changes will trigger a live rebuild.
     
-    In order to conduct test transactions, you can create a new wallet using the following seed phrase (Mnemonic):
-    
-    _**Be careful to back up the seed phrases and private keys for any existing wallets before creating a new one.**_
-    ```
-    candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
-    ```
+### 4. Use with local Demo DApp
 
-1. To develop against a working dapp and UI, see [the instructions in our demo dapp](https://github.com/OriginProtocol/demo-dapp#developing-with-a-local-chain).
+To interact with your local origin-js and local blockahin, see [the instructions in our Demo DApp](https://github.com/OriginProtocol/demo-dapp#developing-with-a-local-chain).
 
- ## Import
 
- ```
- import Origin from '@originprotocol/origin'
+## Tests
 
- let configOptions = {}
-
- let { contractService, ipfsService, originService } = new Origin(configOptions)
- ```
-
- ## Configuration Options
-
- Config options are passed into the Origin constructor at instantiation.
-
- ```
- let configOptions = {
-   option: 'value'
- }
- let origin = new Origin(configOptions)
- ```
-
- Valid options:
- - `ipfsDomain`
- - `ipfsApiPort`
- - `ipfsGatewayPort`
- - `ipfsGatewayProtocol`
- - `attestationServerUrl`
-
- ## IPFS
-
- If you are running a local IPFS daemon then set the following config options ([see config options](#configuration-options)):
-
- ```
- {
-   ipfsDomain: '127.0.0.1',
-   ipfsApiPort: '5001',
-   ipfsGatewayPort: '8080',
-   ipfsGatewayProtocol: 'http'
- }
- ```
-
- Configure your local IPFS daemon with the following settings to avoid CORS errors:
-
- ```
- ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["localhost:*"]'
- ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["GET", "POST", "PUT"]'
- ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials '["true"]'
- ```
-
- ## Troubleshooting
-
- ### Python 3
-
- If you have Python 3 installed, you may see this error when installing dependencies:
-
- ```
- gyp ERR! stack Error: Python executable "/Users/aiham/.pyenv/shims/python" is v3.6.4, which is not supported by gyp.
- ```
-
- Resolve this by configuring npm to use Python 2 (where python2.7 is a binary accessible from your $PATH):
-
- ```
- npm config set python python2.7
- ```
-
- ## Tests
-
- ### Command Line (All Tests)
+### Command Line (All Tests)
 
 Our full test suite can be run with:
 
- ```
- npm run test
- ```
+```
+npm run test
+```
 
  Note: you should *not* have the server running at this time, as these tests start their own local blockchain instance.
 
@@ -187,14 +92,32 @@ Our Solidity tests (which use [Truffle](http://truffleframework.com/docs/getting
  npm run test:contracts
  ```
 
- Note: you should *not* have the server running at this time, as these tests start their own local blockchain instance.
+Note: you should *not* have the server running at this time, as these tests start their own local blockchain instance.
 
- ### Browser Tests
+### Browser Tests
 
- A subset of our tests can be run from the browser. These tests are automatically served at `http://localhost:8081` when you run `npm start`. These tests are automatically rerun when source or test code is changed.
+A subset of our tests can be run from the browser. These tests are automatically served at `http://localhost:8081` when you run `npm start`. These tests are automatically rerun when source or test code is changed.
 
- Run a subset of these tests using the `grep` query string parameter, for example: http://localhost:8081/?grep=IpfsService
+Run a subset of these tests using the `grep` query string parameter, for example: http://localhost:8081/?grep=IpfsService
 
- ## Documentation
+## Troubleshooting
 
- Needed
+### Python 3
+
+If you have Python 3 installed, you may see this error when installing dependencies:
+
+```
+gyp ERR! stack Error: Python executable "/Users/aiham/.pyenv/shims/python" is v3.6.4, which is not supported by gyp.
+```
+
+Resolve this by configuring npm to use Python 2 (where python2.7 is a binary accessible from your $PATH):
+
+```
+npm config set python python2.7
+```
+ 
+## Contributing
+
+Origin is an 100% open-source and community-driven project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community. 
+
+To get involved, please join our [Discord channel](https://discord.gg/jyxpUSe) and review our [guide to contributing](https://docs.originprotocol.com/#contributing).

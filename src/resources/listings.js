@@ -1,8 +1,9 @@
 // For now, we are just wrapping the methods that are already in
 // contractService and ipfsService.
-import ResourceBase from"../ResourceBase"
 
-class Listings extends ResourceBase{
+import ResourceBase from "./_resource-base"
+
+class Listings extends ResourceBase {
   constructor({ contractService, ipfsService }) {
     super({ contractService, ipfsService })
     this.contractDefinition = this.contractService.listingContract
@@ -113,7 +114,7 @@ class Listings extends ResourceBase{
   async buy(address, unitsToBuy, ethToPay) {
     // TODO: ethToPay should really be replaced by something that takes Wei.
     const value = this.contractService.web3.utils.toWei(String(ethToPay), "ether")
-    return await this.contractFn(address, "buyListing", [unitsToBuy], {value:value, gas: 650000})
+    return await this.contractFn(address, "buyListing", [unitsToBuy], {value:value, gas: 750000})
   }
 
   async close(address) {

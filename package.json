@@ -1,6 +1,6 @@
 {
   "name": "origin",
-  "version": "0.5.10",
+  "version": "0.6.0",
   "description": "",
   "engines": {
     "node": "9.11.1"
@@ -50,6 +50,8 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "chai": "^4.1.2",
+    "chalk": "^2.4.1",
+    "eth-gas-reporter": "^0.1.2",
     "fetch-mock": "^6.3.0",
     "flow-bin": "^0.71.0",
     "ganache-core": "^2.1.0",
