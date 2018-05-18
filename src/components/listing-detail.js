@@ -207,7 +207,8 @@ class ListingsDetail extends Component {
                 <li>Seller: {this.state.sellerAddress}</li>
                 <li>Units: {this.state.unitsAvailable}</li>
               </div>
-              {!this.state.loading && this.state.purchases.length > 0 &&
+              {/* Hidden for current deployment */}
+              {/*!this.state.loading && this.state.purchases.length > 0 &&
                 <Fragment>
                   <hr />
                   <h2>Purchases</h2>
@@ -228,7 +229,7 @@ class ListingsDetail extends Component {
                     </tbody>
                   </table>
                 </Fragment>
-              }
+              */}
             </div>
             <div className="col-12 col-md-4">
               <div className="buy-box placehold">
@@ -254,7 +255,7 @@ class ListingsDetail extends Component {
                                   </div>
                                 </div> */}
                 {!this.state.loading &&
-                  <div>
+                  <div className="btn-container">
                     {(this.state.address) && (
                       (this.state.unitsAvailable > 0) ?
                         <button

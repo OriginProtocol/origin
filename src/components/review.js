@@ -14,10 +14,9 @@ class Review extends Component {
 
   render() {
     const { review, user } = this.props
-    const { content, rating, timestamp } = review
+    const { rating, reviewText, timestamp } = review
     const { address, profile } = user
-    const claims = profile && profile.claims
-    const fullName = (claims && claims.name) || 'Unnamed User'
+    const fullName = (profile && `${profile.firstName} ${profile.lastName}`) || 'Unnamed User'
     const createdAt = timestamp * 1000 // convert seconds since epoch to ms
 
     return (
@@ -43,7 +42,7 @@ class Review extends Component {
             <div className="age text-muted"><Timelapse reactive={false} reference={new Date(createdAt)} /></div>
           </div>
         </div>
-        <p className="content">{content}</p>
+        <p className="content">{reviewText}</p>
       </div>
     )
   }

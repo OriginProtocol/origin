@@ -77,27 +77,26 @@ class User extends Component {
 
   render() {
     const { address, profile, attestations } = this.props.user
-    const claims = profile && profile.claims
-    const fullName = (claims && claims.name) || 'Unnamed User'
-    const customFields = claims && claims.customFields
-    const description = (customFields && customFields.find(f => f.field === 'description')) ||
-                        { value: 'An Origin user without a description' }
+    const fullName = (profile && `${profile.firstName} ${profile.lastName}`) || 'Unnamed User'
+    const description = (profile && profile.description) || 'An Origin user without a description'
     const usersReviews = this.state.reviews.filter(r => r.revieweeAddress === address)
+    const avatarURL = (profile && profile.avatar) || 'images/avatar-blue.svg'
 
     return (
       <div className="public-user profile-wrapper">
         <div className="container">
           <div className="row">
             <div className="col-12 col-sm-4 col-md-3 col-lg-2">
-              <div className="primary avatar-container">
-                <img src="images/avatar-blue.svg" alt="avatar" />
-              </div>
+              <div
+                className="primary avatar-container"
+                style={{ backgroundImage: `url(${avatarURL})` }}
+              />
             </div>
             <div className="col-12 col-sm-8 col-md-9 col-lg-10">
               <div className="name d-flex">
                 <h1>{fullName}</h1>
               </div>
-              <p>{description.value}</p>
+              <p>{description}</p>
             </div>
             <div className="col-12 col-sm-4 col-md-3 col-lg-2">
               {attestations && !!attestations.length &&

@@ -7,7 +7,7 @@ class ConfirmPublish extends Component {
     const { open, handleToggle } = this.props
 
     return (
-      <Modal isOpen={open} data-modal="unload" handleToggle={handleToggle}>
+      <Modal isOpen={open} data-modal="publish" handleToggle={handleToggle}>
         <div className="image-container">
           <img src="images/public-icon.svg" role="presentation" />
         </div>
@@ -19,8 +19,9 @@ class ConfirmPublish extends Component {
         </p>
         <div className="button-container">
           <a
+            href="#"
             className="btn btn-clear mr-3"
-            data-modal="unload"
+            data-modal="publish"
             onClick={this.props.handleToggle}
           >
             Oops, no wait...

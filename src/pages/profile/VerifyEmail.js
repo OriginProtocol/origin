@@ -45,6 +45,7 @@ class VerifyEmail extends Component {
             : this.renderCodeForm()}
           <div className="button-container">
             <a
+              href="#"
               className="btn btn-clear"
               data-modal="email"
               onClick={this.props.handleToggle}

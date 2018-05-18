@@ -349,6 +349,8 @@ class PurchaseDetail extends Component {
 
     const nextStep = nextSteps[step]
     const { buttonText, functionName, instruction, placeholderText, prompt, reviewable } = nextStep ? nextStep[perspective] : {}
+    const buyerName = (buyer.profile && `${buyer.profile.firstName} ${buyer.profile.lastName}`) || 'Unnamed User'
+    const sellerName = (seller.profile && `${seller.profile.firstName} ${seller.profile.lastName}`) || 'Unnamed User'
 
     return (
       <div className="transaction-detail">
@@ -374,7 +376,7 @@ class PurchaseDetail extends Component {
                     </div>
                     <div className="identification d-flex flex-column justify-content-between text-truncate">
                       <div><span className="badge badge-dark">Seller</span></div>
-                      <div className="name">{seller.profile && seller.profile.claims && seller.profile.claims.name || 'Unnamed User'}</div>
+                      <div className="name">{sellerName}</div>
                       <div className="address text-muted text-truncate">{seller.address}</div>
                     </div>
                   </div>
@@ -383,7 +385,7 @@ class PurchaseDetail extends Component {
                   <div className="d-flex justify-content-end">
                     <div className="identification d-flex flex-column text-right justify-content-between text-truncate">
                       <div><span className="badge badge-dark">Buyer</span></div>
-                      <div className="name">{buyer.profile && buyer.profile.claims && buyer.profile.claims.name || 'Unnamed User'}</div>
+                      <div className="name">{buyerName}</div>
                       <div className="address text-muted text-truncate">{buyer.address}</div>
                     </div>
                     <div className="avatar-container">

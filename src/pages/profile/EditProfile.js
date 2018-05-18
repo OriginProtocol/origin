@@ -130,6 +130,7 @@ class EditProfile extends Component {
               <div className="col-12">
                 <div className="button-container text-center">
                   <a
+                    href="#"
                     className="btn btn-clear"
                     data-modal="profile"
                     onClick={handleToggle}
