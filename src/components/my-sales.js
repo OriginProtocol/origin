@@ -137,7 +137,7 @@ class MySales extends Component {
           <div className="row">
             <div className="col-12 col-md-3">
               {loading && 'Loading...'}
-              {!loading && !purchases.length && 'You have no sales.'}
+              {!loading && !purchases.length && 'You currently have no sales.'}
               {!loading && !!purchases.length &&
                 <div className="filters list-group flex-row flex-md-column">
                   <a className={`list-group-item list-group-item-action${filter === 'pending' ? ' active' : ''}`}

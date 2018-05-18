@@ -9,7 +9,7 @@ class Guidance extends Component {
         </div>
         <p>
           <strong>Verifying your profile</strong> allows other users to know
-          that you are real and increases the chances of successful transactions
+          that you are a real person and increases the chances of successful transactions
           on Origin.
         </p>
       </div>
