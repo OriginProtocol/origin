@@ -2388,7 +2388,13 @@ sup {
 
 .identity.modal label {
   color: var(--pale-grey);
-  font-size: 1.125rem;
+  font-size: 1rem;
+}
+
+.identity.modal .explanation {
+  color: var(--pale-grey);
+  font-size: 0.875rem;
+  padding-top: 0.5rem;
 }
 
 .phone.modal .dropdown {

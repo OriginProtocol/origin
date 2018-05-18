@@ -68,7 +68,11 @@ class VerifyPhone extends Component {
   renderPhoneForm() {
     return (
       <div className="form-group">
-        <label htmlFor="phoneNumber">Enter your phone number below</label>
+        <label htmlFor="phoneNumber">
+          {'Enter your phone number below and Origin'}
+          <sup>ID</sup>
+          {' will send you a verification code'}
+        </label>
         <div className="d-flex">
           <div className="country-code dropdown">
             <div
@@ -125,6 +129,11 @@ class VerifyPhone extends Component {
             required
           />
         </div>
+        <div className="explanation">
+          {'Other users will know that you have a verified phone number. Your actual phone number '}
+          <strong>will not</strong>
+          {' be published on the blockchain.'}
+        </div>
       </div>
     )
   }
@@ -132,9 +141,13 @@ class VerifyPhone extends Component {
   renderCodeForm() {
     return (
       <div className="form-group">
-        <label>Enter the code we sent you below</label>
+        <label htmlFor="phoneVerificationCode">
+          Enter the code we sent you below
+        </label>
         <input
           className="form-control"
+          id="phoneVerificationCode"
+          name="phone-verification-code"
           value={this.state.code}
           onChange={e => {
             this.setState({ code: e.target.value })
