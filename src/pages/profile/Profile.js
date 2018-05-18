@@ -168,6 +168,7 @@ class Profile extends Component {
 
     const fullName = `${provisional.firstName} ${provisional.lastName}`.trim()
     const hasChanges = this.props.hasChanges
+    const description = provisional.description || 'An Origin user without a description'
 
     let statusClassMap = {
       unpublished: 'not-published'
@@ -211,7 +212,7 @@ class Profile extends Component {
                       </button>
                     </div>
                   </div>
-                  <p>{provisional.description}</p>
+                  <p>{description}</p>
                 </div>
               </div>
 

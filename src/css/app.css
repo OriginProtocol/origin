@@ -851,7 +851,7 @@ a:hover {
 }
 
 .btn-container {
-  margin: 30px auto;
+  padding-top: 1rem;
 }
 
 .btn {
