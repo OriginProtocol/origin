@@ -35,6 +35,7 @@ const crypto = require('crypto');
 const bs58 = require('bs58');
 const ArgumentParser = require('argparse').ArgumentParser;
 const fs = require('fs');
+var HDWalletProvider = require("truffle-hdwallet-provider");
 
 const POLL_INTERVAL = 10000;
 const RETRY_INTERVAL = 10000;
@@ -82,6 +83,7 @@ function Migration(config, dataFile) {
     this.dataFile = dataFile;
 
     this.web3 = null;
+    this.provider = null;
     this.contractAddress = null;
     this.account = null;
 
@@ -166,6 +168,7 @@ Migration.prototype.getListing = async function(index) {
     for (let i = 0; i < MAX_RETRIES; i++) {
         try {
             const listingData = await this.contract.methods.getListing(index).call();
+
             listing = {
                 index: index,
                 lister: listingData[1],
@@ -207,11 +210,12 @@ Migration.prototype.createListing = async function(listing) {
             nonce: this.web3.utils.toHex(nonce)
         };
 
-        const signedTransaction = await this.web3.eth.accounts.signTransaction(tx, this.privateKey);
+        // const signedTransaction = await this.web3.eth.accounts.signTransaction(tx, this.privateKey);
         const txHash = async function(web3) {
             return new Promise(function(resolve, reject) {
                 web3.eth
-                    .sendSignedTransaction(signedTransaction.rawTransaction, function(err, txHash) {
+                    // .sendSignedTransaction(signedTransaction.rawTransaction, function(err, txHash) {
+                       .sendTransaction(tx, function(err, txHash) {
                         if (err) {
                             reject(err);
                         } else {
@@ -309,7 +313,10 @@ Migration.prototype.confirm = async function(txToListings) {
  * listings are written to the data file.
  */
 Migration.prototype.read = async function() {
-    this.web3 = new Web3(new Web3.providers.HttpProvider(this.srcGateway));
+    this.web3 = new Web3();
+    this.provider = new HDWalletProvider(config.mnemonic, this.srcGateway);
+    this.web3.setProvider(this.provider);
+    // this.web3 = new Web3(new Web3.providers.HttpProvider(this.srcGateway));
     this.contractAddress = this.srcListingAddress_v0_1;
     this.contract = new this.web3.eth.Contract(listingAbi_v0_1, this.contractAddress);
 
@@ -322,7 +329,7 @@ Migration.prototype.read = async function() {
         process.exit();
     }
 
-    retrievedListings = await this.getAllListings();
+    retrievedListings = await this.getAllListings(numListings);
     console.log("Retrieved " + retrievedListings.length + " listings from source contract.");
 
     var output = {};
@@ -330,6 +337,7 @@ Migration.prototype.read = async function() {
 
     fs.writeFile(this.dataFile, JSON.stringify(output, null, 4), () => {
         console.log("Wrote " + Object.keys(output).length + " listings to data file: " + this.dataFile);
+        process.exit();
     });
 }
 
@@ -349,7 +357,10 @@ Migration.prototype.write = async function() {
         process.exit();
     }
 
-    this.web3 = new Web3(new Web3.providers.HttpProvider(this.dstGateway));
+    // this.web3 = new Web3(new Web3.providers.HttpProvider(this.dstGateway));
+    this.web3 = new Web3();
+    this.provider = new HDWalletProvider(config.mnemonic, this.dstGateway);
+    this.web3.setProvider(this.provider);
     this.contractAddress = this.dstListingsRegistryAddress_v0_2;
     this.contract = new this.web3.eth.Contract(listingsRegistryAbi_v0_2, this.contractAddress);
 
@@ -362,7 +373,9 @@ Migration.prototype.write = async function() {
     console.log("Gas multiplier: " + gasMultiplier);
     console.log("# Confirmations to wait: " + numConfirmations);
 
-    this.account = this.web3.eth.accounts.privateKeyToAccount(this.privateKey);
+    // this.account = this.web3.eth.accounts.privateKeyToAccount(this.privateKey);
+    this.account = {address:this.provider.getAddress()}; // to keep the API the same
+    // console.log(this.web3.eth.personal.unlockAccount(this.account.address))
     console.log("Creating listings using account: " + this.account.address);
     console.log("--------------------------------------------");
 
