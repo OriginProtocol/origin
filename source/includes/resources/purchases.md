@@ -61,7 +61,8 @@ The Purchase will change to the **"buyer_pending"** stage. A 21 day timer will s
 > To mark a purchase as received
 
 ```javascript
-const transaction = await origin.purchases.buyerConfirmReceipt(purchaseAddress)
+const review = {rating: 5, reviewText: "Prompt shipping!" }
+const transaction = await origin.purchases.buyerConfirmReceipt(purchaseAddress, review)
 await transaction.isFinished()
 ```
 
@@ -69,12 +70,15 @@ This method is **called by the buyer** when the Purchase is in the **"buyer_pend
 
 The Purchase will change to the **"seller_pending"** stage.
 
+A rating from 1 to 5 is required as a part of a review. Review text is optional.
+
 ## sellerGetPayout
 
 > To mark a purchase as received
 
 ```javascript
-const transaction = await origin.purchases.sellerGetPayout(purchaseAddress)
+const review = {rating: 5, reviewText: "Good buyer!" }
+const transaction = await origin.purchases.sellerGetPayout(purchaseAddress, review)
 await transaction.isFinished()
 ```
 
@@ -83,6 +87,8 @@ This method is **called by the seller** when the Purchase is in the **"seller_pe
 The seller will receive all eth value on the contract.
 
 The Purchase will change to the **"complete"** stage.
+
+A rating from 1 to 5 is required as a part of a review. Review text is optional.
 
 ## getLogs
 

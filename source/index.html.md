@@ -18,6 +18,7 @@ includes:
   - resources/attestations
   - resources/listings
   - resources/purchases
+  - resources/reviews
   - resources/users
   - listing_schemas
   - getting_help
