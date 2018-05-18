@@ -33,7 +33,7 @@ const nextSteps = [
     seller: {
       prompt: 'Send the order to buyer',
       instruction: 'Click the button below once the order has shipped.',
-      buttonText: 'Order Sent',
+      buttonText: 'Mark Order as Sent',
       functionName: 'confirmShipped',
     },
   },
@@ -43,7 +43,7 @@ const nextSteps = [
       instruction: 'Submit this form once you have reviewed shipment of your order.',
       buttonText: 'Confirm and Review',
       functionName: 'confirmReceipt',
-      placeholderText: 'A review should inform others about your experience transacting with this seller, not about the product itself.',
+      placeholderText: 'Your review should inform others about your experience transacting with this seller, not about the product itself.',
       reviewable: true,
     },
     seller: {
@@ -55,11 +55,11 @@ const nextSteps = [
       prompt: 'Wait for the seller to withdraw the funds',
     },
     seller: {
-      prompt: 'Complete transaction by withdrawing funds',
+      prompt: 'Complete your transaction by withdrawing funds',
       instruction: 'Click the button below to initiate the withdrawal',
-      buttonText: 'Withdraw Funds',
+      buttonText: 'Withdraw and Review',
       functionName: 'withdrawFunds',
-      placeholderText: 'A review should inform others about your experience transacting with this buyer.',
+      placeholderText: 'Your review should inform others about your experience transacting with this buyer.',
       reviewable: true,
     },
   },
