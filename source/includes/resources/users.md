@@ -3,9 +3,14 @@
 A **User** is an object used to represent a particular user in Origin Protocol.
 Users are implemented as [ERC725 identities](https://medium.com/originprotocol/managing-identity-with-a-ui-for-erc-725-5c7422b38c09). Identities in Origin will be portable across platforms that support ERC725.
 
-A user object consists of 2 properties:
+A user object consists of 4 properties:
 
+- `address`: Ethereum address for the user contract
 - `profile`: Profile information a user chooses to reveal publicly
+  - `firstName`
+  - `lastName`
+  - `description`
+  - `avatar`
 - `attestations`: A list of 3rd party attestations that the user has added to their identity (see [Attestation documentation](#attestation) for details)
 - `identityAddress`: Ethereum address for the identity contract
 
@@ -46,7 +51,7 @@ let myNewUser = {
   attestations: [ phoneAttestation, facebookAttestation ]
 }
 await origin.users.set(myNewUser)
-let createdUser = await users.get()
+let createdUser = await origin.users.get()
 
 // User has been created!
 
@@ -61,12 +66,13 @@ let emailAttestation = await origin.attestations.emailVerify({
 
 createdUser.attestations.push(emailAttestation)
 await origin.users.set(createdUser)
-let updatedUser = await users.get()
+let updatedUser = await origin.users.get()
 
 // User has been updated!
 // final `updatedUser`:
 {
   {
+    address: "0x627306090abaB3A6e1400e9345bC60c78a8BEf57",
     profile: { firstName: "Wonder", lastName: "Woman" },
     attestations: [
       {
@@ -107,7 +113,13 @@ let myUser = await origin.users.get()
 let anotherUser = await origin.users.get(otherUserAddress)
 // Returns (user object)
 {
-  profile: {}
+  address: '',
+  profile: {
+    firstName: '',
+    lastName: '',
+    description: '',
+    avatar: ''
+  },
   attestations: [],
   identityAddress: ''
 }
