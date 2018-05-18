@@ -45,13 +45,14 @@ class MyListingCard extends Component {
      */
     const status = unitsAvailable > 0 ? 'active' : 'inactive'
     // const timestamp = `Created on ${moment(createdAt).format('MMMM D, YYYY')}`
+    const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
 
     return (
       <div className="transaction card">
         <div className="card-body d-flex flex-column flex-lg-row">
           <div className="aspect-ratio">
-            <div className="image-container">
-              <img src={(pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:") ? pictures[0] : 'images/default-image.jpg'} role="presentation" />
+            <div className={`${photo ? '' : 'placeholder '}image-container d-flex justify-content-center`}>
+              <img src={photo || 'images/default-image.svg'} role="presentation" />
             </div>
           </div>
           <div className="content-container d-flex flex-column">

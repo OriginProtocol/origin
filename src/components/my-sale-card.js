@@ -17,6 +17,8 @@ class MySaleCard extends Component {
       return null
     }
 
+    const { name, pictures } = listing
+    const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
     const buyer = { name: 'Unnamed User', address: purchase.buyerAddress }
     const price = `${Number(listing.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH` // change to priceEth
     const soldAt = purchase.created * 1000 // convert seconds since epoch to ms
@@ -40,7 +42,7 @@ class MySaleCard extends Component {
         <div className="card-body">
           <div className="d-flex flex-column flex-lg-row">
             <div className="transaction order-3 order-lg-1">
-              <h2 className="title"><Link to={`/purchases/${purchase.address}`}>{listing.name}</Link></h2>
+              <h2 className="title"><Link to={`/purchases/${purchase.address}`}>{name}</Link></h2>
               <h2 className="title">sold to <Link to={`/users/${buyer.address}`}>{buyer.name}</Link></h2>
               <p className="address text-muted">{buyer.address}</p>
               <div className="d-flex">
@@ -53,10 +55,8 @@ class MySaleCard extends Component {
               <p className="timestamp"><Timelapse reactive={false} reference={soldAt} /></p>
             </div>
             <div className="aspect-ratio order-1 order-lg-3">
-              <div className="image-container">
-                {listing.pictures && !!listing.pictures.length &&
-                  <img src={(new URL(listing.pictures[0])).protocol === "data:" ? listing.pictures[0] : 'images/default-image.jpg'} role="presentation" />
-                }
+              <div className={`${photo ? '' : 'placeholder '}image-container d-flex justify-content-center`}>
+                <img src={photo || 'images/default-image.svg'} role="presentation" />
               </div>
             </div>
           </div>
