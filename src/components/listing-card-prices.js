@@ -66,9 +66,10 @@ class ListingCardPrices extends Component {
         <div className="d-flex align-items-center price-container">
           <div>
             <div className="price placehold">
-              {this.state.price && `${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH`}
+            {this.state.exchangeRate == null && "Loading..." }
+            {this.state.exchangeRate != null && this.formatApproxPrice() + " " + this.state.currencyCode }
+              <span class="alternate-price text-muted"> | {`${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 5, maximumFractionDigits: 9})}`} ETH</span>
             </div>
-            <div class="alternate-price text-muted">${this.formatApproxPrice()} {this.state.currencyCode}</div>
 
             {this.state.unitsAvailable===0 &&
               <span className="sold-banner">Sold</span>
