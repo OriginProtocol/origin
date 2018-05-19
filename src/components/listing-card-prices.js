@@ -7,21 +7,13 @@ class ListingCardPrices extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      price: "Loading...",
+      price: props.price,
       exchangeRate: null,
       approxPrice: "Loading...",
       currencyCode: "USD",
-      defaultDecimalPlaces: 5,
+      defaultDecimalPlaces: this.getPrecision(props.price),
       exchangeBaseURL: 'https://api.cryptonator.com/api/ticker/'
     }
-  }
-
-  componentWillReceiveProps(nextProps){
-    let p = nextProps.price;
-    this.setState({
-      price: p,
-      defaultDecimalPlaces: this.getPrecision(p)
-    });
   }
 
   getPrecision(n) {
