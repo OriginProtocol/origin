@@ -15,7 +15,7 @@ class ConfirmUnload extends Component {
         <h2>Wait! You haven’t published yet.</h2>
         <p>If you exit without publishing you’ll lose all your changes.</p>
         <p>
-          Ready to go public? After you publish to the blockchain, other users will be able to see that you have verified your account.
+          Ready to go public? After you publish your changes to the blockchain, other users will be able to see that you have verified the following:
         </p>
         {!!changes.length &&
           <ProvisionedChanges changes={changes} />

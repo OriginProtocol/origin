@@ -14,7 +14,7 @@ class ConfirmPublish extends Component {
         </div>
         <h2>Ready to go public?</h2>
         <p>
-          After you publish to the blockchain, other users will be able to see that you have verified your account.
+          After you publish your changes to the blockchain, other users will be able to see that you have verified the following:
         </p>
         {!!changes.length &&
           <ProvisionedChanges changes={changes} />

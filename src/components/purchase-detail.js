@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import moment from 'moment'
+import Avatar from './avatar'
 import Review from './review'
 import TransactionProgress from './transaction-progress'
 import UserCard from './user-card'
@@ -371,9 +372,10 @@ class PurchaseDetail extends Component {
               <div className="row">
                 <div className="col-6">
                   <div className="d-flex">
-                    <div className="avatar-container">
-                      <img src={`images/avatar-${perspective === 'seller' ? 'green' : 'blue'}.svg`} alt="seller avatar" />
-                    </div>
+                    <Avatar
+                      image={seller.profile && seller.profile.avatar}
+                      placeholderStyle={perspective === 'seller' ? 'green' : 'blue'}
+                    />
                     <div className="identification d-flex flex-column justify-content-between text-truncate">
                       <div><span className="badge badge-dark">Seller</span></div>
                       <div className="name">{sellerName}</div>
@@ -388,9 +390,10 @@ class PurchaseDetail extends Component {
                       <div className="name">{buyerName}</div>
                       <div className="address text-muted text-truncate">{buyer.address}</div>
                     </div>
-                    <div className="avatar-container">
-                      <img src={`images/avatar-${perspective === 'buyer' ? 'green' : 'blue'}.svg`} alt="buyer avatar" />
-                    </div>
+                    <Avatar
+                      image={buyer.profile && buyer.profile.avatar}
+                      placeholderStyle={perspective === 'buyer' ? 'green' : 'blue'}
+                    />
                   </div>
                 </div>
                 <div className="col-12">

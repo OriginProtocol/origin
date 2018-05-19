@@ -10,7 +10,7 @@ const initialState = {
     firstName: '',
     lastName: '',
     description: '',
-    pic: 'images/avatar-unnamed.svg',
+    pic: '',
     email: false,
     facebook: false,
     phone: false,
@@ -49,7 +49,7 @@ function changes(state) {
   })
 
   let changes = []
-  
+
   Object.keys(state.provisional).forEach(k => {
     if (state.provisional.hasOwnProperty(k)) {
       if (JSON.stringify(state.provisional[k]) !== JSON.stringify(state.published[k])) {

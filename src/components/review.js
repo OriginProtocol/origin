@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { fetchUser } from 'actions/User'
+import Avatar from './avatar'
 import Timelapse from './timelapse'
 
 class Review extends Component {
@@ -22,11 +23,9 @@ class Review extends Component {
 
     return (
       <div className="review">
-        <Link to={`users/${address}`}>
+        <Link to={`/users/${address}`}>
           <div className="d-flex">
-            <div className="avatar-container">
-              <img src="images/avatar-purple.svg" alt="reviewer avatar" />
-            </div>
+            <Avatar image={profile && profile.avatar} placeholderStyle="purple" />
             <div className="identification d-flex flex-column justify-content-center text-truncate">
               <div className="name">{fullName}</div>
               <div className="address text-muted text-truncate">{address}</div>

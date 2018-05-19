@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { fetchUser } from 'actions/User'
+import Avatar from 'components/avatar'
 import Review from 'components/review'
 
 import origin from '../../services/origin'
@@ -80,17 +81,13 @@ class User extends Component {
     const fullName = (profile && `${profile.firstName} ${profile.lastName}`) || 'Unnamed User'
     const description = (profile && profile.description) || 'An Origin user without a description'
     const usersReviews = this.state.reviews.filter(r => r.revieweeAddress === address)
-    const avatarURL = (profile && profile.avatar) || 'images/avatar-blue.svg'
 
     return (
       <div className="public-user profile-wrapper">
         <div className="container">
           <div className="row">
             <div className="col-12 col-sm-4 col-md-3 col-lg-2">
-              <div
-                className="primary avatar-container"
-                style={{ backgroundImage: `url(${avatarURL})` }}
-              />
+              <Avatar image={profile && profile.avatar} className="primary" placeholderStyle="purple" />
             </div>
             <div className="col-12 col-sm-8 col-md-9 col-lg-10">
               <div className="name d-flex">

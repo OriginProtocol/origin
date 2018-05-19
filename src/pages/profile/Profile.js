@@ -10,8 +10,9 @@ import {
 } from 'actions/Profile'
 import { getBalance } from 'actions/Wallet'
 
-import Timelapse from 'components/timelapse'
+import Avatar from 'components/avatar'
 import Modal from 'components/modal'
+import Timelapse from 'components/timelapse'
 
 import Services from './_Services'
 import Wallet from './_Wallet'
@@ -194,10 +195,7 @@ class Profile extends Component {
             <div className="col-12 col-lg-8">
               <div className="row attributes">
                 <div className="col-4 col-md-3">
-                  <div
-                    className="primary avatar-container"
-                    style={{ backgroundImage: `url(${provisional.pic})` }}
-                  />
+                  <Avatar image={provisional.pic} className="primary" placeholderStyle="unnamed" />
                 </div>
                 <div className="col-8 col-md-9">
                   <div className="name d-flex">

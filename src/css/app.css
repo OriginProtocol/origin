@@ -1036,6 +1036,11 @@ a:hover {
   padding: 1.2rem;
 }
 
+.tooltip img {
+  height: 0.66rem;
+  margin-right: 0.25rem;
+}
+
 /* Listings */
 
 .category {
@@ -1082,20 +1087,19 @@ a:hover {
 }
 
 .listing-card .photo {
-  width: 100%;
-  height: 240px;
-  overflow: hidden;
-  background-size: cover;
-  background-repeat: no-repeat;
   background-position: 50% 50%;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
-  border-radius: 3px;
-  margin-bottom: 15px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 240px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  width: 100%;
 }
 
 .listing-card .image-container {
-  background-color: var(--light); 
+  background-color: var(--light);
   height: 240px;
+  margin-bottom: 1rem;
 }
 
 .listing-card .sold-banner {
@@ -2191,6 +2195,14 @@ form .stars img {
   vertical-align: middle;
 }
 
+.published .service-name {
+  color: var(--greenblue);
+}
+
+.verified .service-name {
+  color: var(--clear-blue);
+}
+
 .services-container .service.published .image-container {
   background-image: url(images/verification-shape-green.svg);
 }
@@ -2507,6 +2519,32 @@ sup {
   color: var(--clear-blue);
   cursor: pointer;
   font-size: 0.875rem;
+}
+
+.publish.modal p,
+.unload.modal p {
+  font-size: 1rem;
+}
+
+.change-icons {
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.change-icons .change-icon {
+  margin-bottom: 16px;
+}
+
+.change-icons .image-container {
+  padding-left: 12px;
+}
+
+.change-icons .image-container img {
+  margin-bottom: 0;
+}
+
+.change-icons .text-center {
+  font-size: 0.75rem;
 }
 
 .publish.modal a:hover,

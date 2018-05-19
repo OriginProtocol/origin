@@ -1,69 +1,127 @@
 import React, { Component } from 'react'
-
-const keyMap = {
-  'firstName': {
-    publiclyVisible: true,
-    value: 'First Name',
-  },
-  'lastName': {
-    publiclyVisible: true,
-    value: 'Last Name',
-  },
-  'description': {
-    publiclyVisible: true,
-    value: 'Description',
-  },
-  'pic': {
-    publiclyVisible: true,
-    value: 'Picture',
-  },
-  'phone': {
-    publiclyVisible: false,
-    value: 'Phone Number',
-  },
-  'email': {
-    publiclyVisible: false,
-    value: 'Email Address',
-  },
-  'address': {
-    publiclyVisible: false,
-    value: 'Mailing Address',
-  },
-  'facebook': {
-    publiclyVisible: false,
-    value: 'Facebook'
-  },
-  'twitter': {
-    publiclyVisible: false,
-    value: 'Twitter',
-  },
-  'google': {
-    publiclyVisible: false,
-    value: 'Google',
-  },
-}
+import $ from 'jquery'
 
 class ProvisionedChanges extends Component {
+  componentDidMount() {
+    $('[data-toggle="tooltip"]').tooltip()
+  }
+
   render() {
-    const mappedChanges = this.props.changes.map(c => keyMap[c])
-    const publiclyVisibleChanges = mappedChanges.filter(c => c.publiclyVisible)
-    const attestationChanges = mappedChanges.filter(c => !c.publiclyVisible)
+    const { changes } = this.props
+    let profileTooltip = `<div class="text-left">You are publishing:<br />`
+
+    if (changes.find(c => c === 'firstName')) {
+      profileTooltip += `<img src="/images/checkmark-green.svg" alt="checkmark icon" /> First name<br />`
+    }
+
+    if (changes.find(c => c === 'lastName')) {
+      profileTooltip += `<img src="/images/checkmark-green.svg" alt="checkmark icon" /> Last name<br />`
+    }
+
+    if (changes.find(c => c === 'description')) {
+      profileTooltip += `<img src="/images/checkmark-green.svg" alt="checkmark icon" /> Description<br />`
+    }
+
+    if (changes.find(c => c === 'pic')) {
+      profileTooltip += `<img src="/images/checkmark-green.svg" alt="checkmark icon" /> Picture<br />`
+    }
+
+    profileTooltip += `<br /><img src="/images/eye-yes.svg" alt="visible icon" /> <strong>Visible on the blockchain</strong></div>`
 
     return (
-      <div className="d-flex justify-content-center">
-        {!!publiclyVisibleChanges.length &&
-          <ul>
-            {publiclyVisibleChanges.map(({ value }, i) => (
-              <li key={`${value}~${i}`}>{value}</li>
-            ))}
-          </ul>
+      <div className="d-flex change-icons justify-content-center">
+        {changes.find(c => c.match(/name|desc|pic/i)) &&
+          <div className="change-icon"
+            data-toggle="tooltip"
+            data-placement="top"
+            data-html="true"
+            title={profileTooltip}
+          >
+            <div className="image-container">
+              <img src="/images/publish-profile-icon.svg" alt="profile icon" />
+            </div>
+            <div className="text-center">Profile</div>
+          </div>
         }
-        {!!attestationChanges.length &&
-          <ul>
-            {attestationChanges.map(({ value }, i) => (
-              <li key={`${value}~${i}`}>{value}</li>
-            ))}
-          </ul>
+        {changes.find(c => c === 'phone') &&
+          <div className="change-icon"
+            data-toggle="tooltip"
+            data-placement="top"
+            data-html="true"
+            title={`
+              <div class="text-left">
+                You are verifying:<br />
+                <img src="/images/checkmark-green.svg" alt="checkmark icon" /> Phone number<br />
+                <br />
+                <img src="/images/eye-no.svg" alt="not-visible icon" /> <strong>Not visible on the blockchain</strong>
+              </div>
+            `}
+          >
+            <div className="image-container">
+              <img src="/images/publish-phone-icon.svg" alt="phone icon" />
+            </div>
+            <div className="text-center">Phone</div>
+          </div>
+        }
+        {changes.find(c => c === 'email') &&
+          <div className="change-icon"
+            data-toggle="tooltip"
+            data-placement="top"
+            data-html="true"
+            title={`
+              <div class="text-left">
+                You are verifying:<br />
+                <img src="/images/checkmark-green.svg" alt="checkmark icon" /> Email address<br />
+                <br />
+                <img src="/images/eye-no.svg" alt="not-visible icon" /> <strong>Not visible on the blockchain</strong>
+              </div>
+            `}
+          >
+            <div className="image-container">
+              <img src="/images/publish-email-icon.svg" alt="email icon" />
+            </div>
+            <div className="text-center">Email</div>
+          </div>
+        }
+        {changes.find(c => c === 'facebook') &&
+          <div className="change-icon"
+            data-toggle="tooltip"
+            data-placement="top"
+            data-html="true"
+            title={`
+              <div class="text-left">
+                You are verifying:<br />
+                <img src="/images/checkmark-green.svg" alt="checkmark icon" /> Facebook account<br />
+                <br />
+                <img src="/images/eye-no.svg" alt="not-visible icon" /> <strong>Not visible on the blockchain</strong>
+              </div>
+            `}
+          >
+            <div className="image-container">
+              <img src="/images/publish-Facebook-icon.svg" alt="Facebook icon" />
+            </div>
+            <div className="text-center">Facebook</div>
+          </div>
+        }
+        {changes.find(c => c === 'twitter') &&
+          <div className="change-icon"
+            data-toggle="tooltip"
+            data-placement="top"
+            data-html="true"
+            title={`
+              <div class="text-left">
+                You are verifying:<br />
+                <img src="/images/checkmark-green.svg" alt="checkmark icon" /> Twitter account<br />
+                <br />
+                <img src="/images/eye-no.svg" alt="not-visible icon" /> <strong>Not visible on the blockchain</strong>
+              </div>
+            `}
+          >
+            <div className="image-container">
+              <img src="/images/publish-twitter-icon.svg" alt="Twitter icon" />
+            </div>
+            <div className="text-center">Twitter</div>
+          </div>
         }
       </div>
     )
