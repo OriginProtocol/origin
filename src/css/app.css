@@ -1052,7 +1052,15 @@ a:hover {
 
 .price-container {
   font-size: 1.125rem;
+}
+.price-container .currency {
+  font-size: 0.875rem;
+}
+.price-container:last-of-type {
   margin-bottom: 2rem;
+}
+.price-container .alternate-price  {
+  font-size: 0.875rem;
 }
 
 .listings-grid {
