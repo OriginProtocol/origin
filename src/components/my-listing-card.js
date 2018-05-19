@@ -27,7 +27,10 @@ class MyListingCard extends Component {
       const transaction = await origin.listings.close(address)
       console.log(transaction)
       await transaction.whenFinished()
-      this.props.handleUpdate(address)
+      // why is this delay often required???
+      setTimeout(() => {
+        this.props.handleUpdate(address)
+      }, 1000)
     } catch(error) {
       console.error(`Error closing listing ${address}`)
     }

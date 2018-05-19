@@ -1,16 +1,22 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
+import { fetchUser } from 'actions/User'
 import Timelapse from './timelapse'
 import TransactionProgress from './transaction-progress'
 
 class MySaleCard extends Component {
+  componentWillMount() {
+    this.props.fetchUser(this.props.purchase.buyerAddress)
+  }
+
   componentDidMount() {
     $('[data-toggle="tooltip"]').tooltip()
   }
 
   render() {
-    const { listing, purchase } = this.props
+    const { listing, purchase, user } = this.props
 
     if (!listing) {
       console.error(`Listing not found for purchase ${purchase.address}`)
@@ -19,7 +25,7 @@ class MySaleCard extends Component {
 
     const { name, pictures } = listing
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
-    const buyer = { name: 'Unnamed User', address: purchase.buyerAddress }
+    const buyerName = (user && user.profile && `${user.profile.firstName} ${user.profile.lastName}`) || 'Unnamed User'
     const price = `${Number(listing.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH` // change to priceEth
     const soldAt = purchase.created * 1000 // convert seconds since epoch to ms
 
@@ -43,8 +49,8 @@ class MySaleCard extends Component {
           <div className="d-flex flex-column flex-lg-row">
             <div className="transaction order-3 order-lg-1">
               <h2 className="title"><Link to={`/purchases/${purchase.address}`}>{name}</Link></h2>
-              <h2 className="title">sold to <Link to={`/users/${buyer.address}`}>{buyer.name}</Link></h2>
-              <p className="address text-muted">{buyer.address}</p>
+              <h2 className="title">sold to <Link to={`/users/${user.address}`}>{buyerName}</Link></h2>
+              <p className="address text-muted">{user.address}</p>
               <div className="d-flex">
                 <p className="price">Price: {price}</p>
                 {/* Not Yet Relevant */}
@@ -74,4 +80,14 @@ class MySaleCard extends Component {
   }
 }
 
-export default MySaleCard
+const mapStateToProps = (state, { purchase }) => {
+  return {
+    user: state.users.find(u => u.address === purchase.buyerAddress) || {},
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  fetchUser: address => dispatch(fetchUser(address))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(MySaleCard)

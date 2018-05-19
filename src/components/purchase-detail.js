@@ -231,8 +231,11 @@ class PurchaseDetail extends Component {
         reviewText: reviewText.trim(),
       })
       await transaction.whenFinished()
-      this.loadPurchase()
-      this.loadReviews(this.state.listing.address)
+      // why is this delay often required???
+      setTimeout(() => {
+        this.loadPurchase()
+        this.loadReviews(this.state.listing.address)
+      }, 1000)
     } catch(error) {
       console.error('Error marking purchase received by buyer')
       console.error(error)
@@ -245,7 +248,10 @@ class PurchaseDetail extends Component {
     try {
       const transaction = await origin.purchases.sellerConfirmShipped(purchaseAddress)
       await transaction.whenFinished()
-      this.loadPurchase()
+      // why is this delay often required???
+      setTimeout(() => {
+        this.loadPurchase()
+      }, 1000)
     } catch(error) {
       console.error('Error marking purchase shipped by seller')
       console.error(error)
@@ -262,7 +268,10 @@ class PurchaseDetail extends Component {
         reviewText: reviewText.trim(),
       })
       await transaction.whenFinished()
-      this.loadPurchase()
+      // why is this delay often required???
+      setTimeout(() => {
+        this.loadPurchase()
+      }, 1000)
     } catch(error) {
       console.error('Error withdrawing funds for seller')
       console.error(error)

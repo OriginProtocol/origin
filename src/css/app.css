@@ -1849,6 +1849,10 @@ form .stars img {
   margin-bottom: 2rem;
 }
 
+.review .content {
+  padding-top: 1rem;
+}
+
 .review .name {
   color: var(--dark);
 }
