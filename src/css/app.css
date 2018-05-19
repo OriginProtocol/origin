@@ -1050,19 +1050,6 @@ a:hover {
   margin-bottom: 0.25rem;
 }
 
-.price-container {
-  font-size: 1.125rem;
-}
-.price-container .currency {
-  font-size: 0.875rem;
-}
-.price-container:last-of-type {
-  margin-bottom: 2rem;
-}
-.price-container .alternate-price  {
-  font-size: 0.875rem;
-}
-
 .listings-grid {
   padding: 3.5rem 0;
 }
@@ -1108,6 +1095,14 @@ a:hover {
   background-color: var(--light);
   height: 240px;
   margin-bottom: 1rem;
+}
+
+.price-container .currency {
+  font-size: 0.875rem;
+}
+
+.price-container .alternate-price  {
+  font-size: 0.875rem;
 }
 
 .listing-card .sold-banner {
