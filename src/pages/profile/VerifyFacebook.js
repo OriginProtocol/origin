@@ -29,8 +29,16 @@ class VerifyFacebook extends Component {
           <img src="images/facebook-icon-dark.svg" role="presentation" />
         </div>
         <h2>Verify Your Facebook Account</h2>
+        <div className="explanation">
+          Other users will know that you have a verified Facebook account. Your name
+          &nbsp;
+          <strong>will not</strong>
+          &nbsp;
+          be published on the blockchain. We will never post on your behalf.
+        </div>
         <div className="button-container">
           <a
+            href="#"
             className="btn btn-clear"
             data-modal="facebook"
             onClick={this.props.handleToggle}

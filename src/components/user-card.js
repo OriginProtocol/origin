@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { fetchUser } from 'actions/User'
+import Avatar from './avatar'
 
 class UserCard extends Component {
   constructor(props) {
@@ -15,8 +16,7 @@ class UserCard extends Component {
   render() {
     const { title, user, userAddress } = this.props
     const { profile, attestations } = user
-    const claims = profile && profile.claims
-    const fullName = (claims && claims.name) || 'Unnamed User'
+    const fullName = (profile && `${profile.firstName} ${profile.lastName}`) || 'Unnamed User'
 
     return (
       <div className="user-card placehold">
@@ -37,9 +37,7 @@ class UserCard extends Component {
           </div>
           <hr className="dark sm" />
           <div className="d-flex">
-            <div className="avatar-container">
-              <img src="images/avatar-blue.svg" alt="avatar" />
-            </div>
+            <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
             <div className="identification d-flex flex-column justify-content-between">
               <div><Link to={`/users/${userAddress}`}>{fullName}</Link></div>
               {attestations && !!attestations.length &&
