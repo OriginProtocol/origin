@@ -15,7 +15,8 @@ class AttestationSuccess extends Component {
           />
         </div>
         <h2 className="success-message">{message}</h2>
-        <div className="reminder">Don&apos;t forget to publish your changes</div>
+        <div className="reminder">Don&apos;t forget to publish your changes.</div>
+        <div className="explanation">Publishing to the blockchain lets other users know that you have a verified profile.</div>
         <div className="button-container">
           <button
             data-modal="attestationSuccess"

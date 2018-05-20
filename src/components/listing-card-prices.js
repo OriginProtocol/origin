@@ -7,21 +7,13 @@ class ListingCardPrices extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      price: "Loading...",
+      price: props.price,
       exchangeRate: null,
       approxPrice: "Loading...",
       currencyCode: "USD",
-      defaultDecimalPlaces: 5,
+      defaultDecimalPlaces: this.getPrecision(props.price),
       exchangeBaseURL: 'https://api.cryptonator.com/api/ticker/'
     }
-  }
-
-  componentWillReceiveProps(nextProps){
-    let p = nextProps.price;
-    this.setState({
-      price: p,
-      defaultDecimalPlaces: this.getPrecision(p)
-    });
   }
 
   getPrecision(n) {
@@ -65,13 +57,12 @@ class ListingCardPrices extends Component {
       <div>
         <div className="d-flex align-items-center price-container">
           <div>
-            <div className="price placehold">
-            {this.state.exchangeRate == null && "Loading..." }
-            {this.state.exchangeRate != null && this.formatApproxPrice() + " " + this.state.currencyCode }
-              <span class="alternate-price text-muted"> | {`${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 5, maximumFractionDigits: 9})}`} ETH</span>
+            <div className="d-inline-block price placehold">
+              {this.state.exchangeRate == null && "Loading..." }
+              {this.state.exchangeRate != null && this.formatApproxPrice() + " " + this.state.currencyCode }
+              <span className="alternate-price text-muted"> | {`${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 5, maximumFractionDigits: 9})}`} ETH</span>
             </div>
-
-            {this.state.unitsAvailable===0 &&
+            {this.props.unitsAvailable === 0 &&
               <span className="sold-banner">Sold</span>
             }
           </div>

@@ -10,13 +10,13 @@ const initialState = {
     firstName: '',
     lastName: '',
     description: '',
-    pic: 'images/avatar-unnamed.svg',
+    pic: '',
     email: false,
     facebook: false,
     phone: false,
     twitter: false
   },
-  hasChanges: false,
+  changes: [],
   lastPublish: null,
   provisionalProgress: 0,
   publishedProgress: 0,
@@ -35,7 +35,7 @@ const progressPct = {
   twitter: 10
 }
 
-function hasChanges(state) {
+function changes(state) {
   var provisionalProgress = 0,
     publishedProgress = 0
 
@@ -48,13 +48,22 @@ function hasChanges(state) {
     }
   })
 
+  let changes = []
+
+  Object.keys(state.provisional).forEach(k => {
+    if (state.provisional.hasOwnProperty(k)) {
+      if (JSON.stringify(state.provisional[k]) !== JSON.stringify(state.published[k])) {
+        changes.push(k)
+      }
+    }
+  })
+
   return {
     ...state,
     provisionalProgress,
     publishedProgress,
     strength: provisionalProgress + publishedProgress,
-    hasChanges:
-      JSON.stringify(state.provisional) !== JSON.stringify(state.published)
+    changes,
   }
 }
 
@@ -101,7 +110,7 @@ function unpackUser(state) {
     }
   }
 
-  return hasChanges(state)
+  return changes(state)
 }
 
 export default function Profile(state = initialState, action = {}) {
@@ -120,13 +129,13 @@ export default function Profile(state = initialState, action = {}) {
       } else if (action.attestation.claimType === 10) {
         toAdd.phone = action.attestation
       }
-      return hasChanges({
+      return changes({
         ...state,
         provisional: { ...state.provisional, ...toAdd }
       })
 
     case ProfileConstants.UPDATE:
-      return hasChanges({
+      return changes({
         ...state,
         provisional: {
           ...state.provisional,
@@ -141,7 +150,7 @@ export default function Profile(state = initialState, action = {}) {
       return { ...state, status: 'error' }
 
     case ProfileConstants.DEPLOY_SUCCESS:
-      return hasChanges({
+      return changes({
         ...state,
         status: 'success',
         lastPublish: new Date(),
