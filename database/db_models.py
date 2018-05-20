@@ -1,3 +1,4 @@
+import enum
 from sqlalchemy import func
 
 from database import db
@@ -53,3 +54,20 @@ class Purchase(db.Model):
     stage = db.Column(db.Integer())
     created_at = db.Column(db.DateTime(timezone=True))
     buyer_timeout = db.Column(db.DateTime(timezone=True))
+
+
+class Review(db.Model):
+    ROLES = ['buyer', 'seller']
+
+    id = db.Column(db.Integer, primary_key=True)
+    contract_address = db.Column(db.String(255),
+                                 db.ForeignKey('purchase.contract_address'),
+                                 nullable=False)
+    reviewer_address = db.Column(db.String(255),
+                                 index=True)
+    reviewee_address = db.Column(db.String(255),
+                                 index=True)
+    rating = db.Column(db.Integer())
+    role = db.Column(db.Enum(*ROLES, name='roles'), nullable=False)
+    ipfs_hash = db.Column(db.String(255))
+    ipfs_data = db.Column(db.JSON())
