@@ -2,11 +2,10 @@ import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import moment from 'moment'
+import Avatar from './avatar'
 import Review from './review'
 import TransactionProgress from './transaction-progress'
 import UserCard from './user-card'
-
-import data from '../data'
 
 import origin from '../services/origin'
 
@@ -35,16 +34,18 @@ const nextSteps = [
     seller: {
       prompt: 'Send the order to buyer',
       instruction: 'Click the button below once the order has shipped.',
-      buttonText: 'Order Sent',
+      buttonText: 'Mark Order as Sent',
       functionName: 'confirmShipped',
     },
   },
   {
     buyer: {
-      prompt: 'Confirm receipt of the order',
-      instruction: 'Click the button below once you\'ve received the order.',
-      buttonText: 'Order Received',
+      prompt: 'Confirm receipt of the order and leave a review',
+      instruction: 'Submit this form once you have reviewed shipment of your order.',
+      buttonText: 'Confirm and Review',
       functionName: 'confirmReceipt',
+      placeholderText: 'Your review should inform others about your experience transacting with this seller, not about the product itself.',
+      reviewable: true,
     },
     seller: {
       prompt: 'Wait for the buyer to receive the order',
@@ -52,16 +53,15 @@ const nextSteps = [
   },
   {
     buyer: {
-      prompt: 'You\'ve confirmed receipt of your order',
-      instruction: 'Would you like to write a review to let us know how you like your purchase?',
-      buttonText: 'Write a review',
-      functionName: 'todo',
+      prompt: 'Wait for the seller to withdraw the funds',
     },
     seller: {
-      prompt: 'Complete transaction by withdrawing funds',
+      prompt: 'Complete your transaction by withdrawing funds',
       instruction: 'Click the button below to initiate the withdrawal',
-      buttonText: 'Withdraw Funds',
+      buttonText: 'Withdraw and Review',
       functionName: 'withdrawFunds',
+      placeholderText: 'Your review should inform others about your experience transacting with this buyer.',
+      reviewable: true,
     },
   },
 ]
@@ -72,21 +72,31 @@ class PurchaseDetail extends Component {
 
     this.confirmReceipt = this.confirmReceipt.bind(this)
     this.confirmShipped = this.confirmShipped.bind(this)
+    this.handleRating = this.handleRating.bind(this)
+    this.handleReviewText = this.handleReviewText.bind(this)
+    this.loadPurchase = this.loadPurchase.bind(this)
     this.withdrawFunds = this.withdrawFunds.bind(this)
     this.state = {
       accounts: [],
       buyer: {},
+      form: {
+        rating: 5,
+        reviewText: '',
+      },
       listing: {},
       logs: [],
       purchase: {},
+      reviews: [],
       seller: {},
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.loadAccounts()
     this.loadPurchase()
+  }
 
+  componentDidMount() {
     $('[data-toggle="tooltip"]').tooltip()
   }
 
@@ -97,6 +107,7 @@ class PurchaseDetail extends Component {
     if (prevState.purchase.listingAddress !== listingAddress) {
       this.loadListing(listingAddress)
       this.loadBuyer(buyerAddress)
+      this.loadReviews(listingAddress)
     }
 
     if (prevState.listing.sellerAddress !== sellerAddress) {
@@ -131,14 +142,60 @@ class PurchaseDetail extends Component {
 
     try {
       const purchase = await origin.purchases.get(purchaseAddress)
+      console.log(purchase)
       this.setState({ purchase })
       console.log('Purchase: ', purchase)
+
       const logs = await origin.purchases.getLogs(purchaseAddress)
       this.setState({ logs })
       console.log('Logs: ', logs)
+
+      return purchase
     } catch(error) {
       console.error(`Error loading purchase ${purchaseAddress}`)
       console.error(error)
+    }
+  }
+
+  async getPurchaseAddress(addr, i) {
+    try {
+      return await origin.listings.purchaseAddressByIndex(addr, i)
+    } catch(error) {
+      console.error(`Error fetching purchase address at: ${i}`)
+    }
+  }
+
+  async loadPurchases(listingAddress) {
+    try {
+      const length = await origin.listings.purchasesLength(listingAddress)
+      console.log('Purchase count:', length)
+
+      const purchaseAddresses = await Promise.all(
+        [...Array(length).keys()].map(i => this.getPurchaseAddress(listingAddress, i))
+      )
+
+      return await Promise.all(
+        purchaseAddresses.map(addr => origin.purchases.get(addr))
+      )
+    } catch(error) {
+      console.error(`Error fetching purchases for listing: ${listingAddress}`)
+      console.error(error)
+    }
+  }
+
+  async loadReviews(listingAddress) {
+    try {
+      const purchases = await this.loadPurchases(listingAddress)
+      console.log('PURCHASES', purchases)
+      const reviews = await Promise.all(
+        purchases.map(p => origin.reviews.find({ purchaseAddress: p.address }))
+      )
+      const flattened = [].concat(...reviews)
+      console.log('Reviews:', flattened)
+      this.setState({ reviews: flattened })
+    } catch(error) {
+      console.error(error)
+      console.error(`Error fetching reviews`)
     }
   }
 
@@ -166,11 +223,19 @@ class PurchaseDetail extends Component {
 
   async confirmReceipt() {
     const { purchaseAddress } = this.props
+    const { rating, reviewText } = this.state.form
 
     try {
-      const transaction = await origin.purchases.buyerConfirmReceipt(purchaseAddress)
+      const transaction = await origin.purchases.buyerConfirmReceipt(purchaseAddress, {
+        rating,
+        reviewText: reviewText.trim(),
+      })
       await transaction.whenFinished()
-      this.loadPurchase()
+      // why is this delay often required???
+      setTimeout(() => {
+        this.loadPurchase()
+        this.loadReviews(this.state.listing.address)
+      }, 1000)
     } catch(error) {
       console.error('Error marking purchase received by buyer')
       console.error(error)
@@ -183,7 +248,10 @@ class PurchaseDetail extends Component {
     try {
       const transaction = await origin.purchases.sellerConfirmShipped(purchaseAddress)
       await transaction.whenFinished()
-      this.loadPurchase()
+      // why is this delay often required???
+      setTimeout(() => {
+        this.loadPurchase()
+      }, 1000)
     } catch(error) {
       console.error('Error marking purchase shipped by seller')
       console.error(error)
@@ -192,23 +260,46 @@ class PurchaseDetail extends Component {
 
   async withdrawFunds() {
     const { purchaseAddress } = this.props
+    const { rating, reviewText } = this.state.form
 
     try {
-      const transaction = await origin.purchases.sellerGetPayout(purchaseAddress)
+      const transaction = await origin.purchases.sellerGetPayout(purchaseAddress, {
+        rating,
+        reviewText: reviewText.trim(),
+      })
       await transaction.whenFinished()
-      this.loadPurchase()
+      // why is this delay often required???
+      setTimeout(() => {
+        this.loadPurchase()
+      }, 1000)
     } catch(error) {
       console.error('Error withdrawing funds for seller')
       console.error(error)
     }
   }
 
-  todo() {
-    alert('To Do')
+  /*
+  * rating: 1 <= integer <= 5
+  */
+  handleRating(rating) {
+    this.setState(prevState => {
+      return { form: { ...prevState.form, rating } }
+    })
+  }
+
+
+  handleReviewText(e) {
+    const { value } = e.target
+
+    this.setState(prevState => {
+      return { form: { ...prevState.form, reviewText: value } }
+    })
   }
 
   render() {
-    const { accounts, buyer, listing, logs, purchase, seller } = this.state
+    const { accounts, buyer, form, listing, logs, purchase, reviews, seller } = this.state
+    const { rating, reviewText } = form
+    const buyersReviews = reviews.filter(r => r.revieweeRole === 'SELLER')
 
     if (!purchase.address || !listing.address ){
       return null
@@ -267,7 +358,9 @@ class PurchaseDetail extends Component {
     }
 
     const nextStep = nextSteps[step]
-    const { buttonText, functionName, instruction, prompt } = nextStep ? nextStep[perspective] : {}
+    const { buttonText, functionName, instruction, placeholderText, prompt, reviewable } = nextStep ? nextStep[perspective] : {}
+    const buyerName = (buyer.profile && `${buyer.profile.firstName} ${buyer.profile.lastName}`) || 'Unnamed User'
+    const sellerName = (seller.profile && `${seller.profile.firstName} ${seller.profile.lastName}`) || 'Unnamed User'
 
     return (
       <div className="transaction-detail">
@@ -288,12 +381,13 @@ class PurchaseDetail extends Component {
               <div className="row">
                 <div className="col-6">
                   <div className="d-flex">
-                    <div className="avatar-container">
-                      <img src={`images/avatar-${perspective === 'seller' ? 'green' : 'blue'}.svg`} alt="seller avatar" />
-                    </div>
+                    <Avatar
+                      image={seller.profile && seller.profile.avatar}
+                      placeholderStyle={perspective === 'seller' ? 'green' : 'blue'}
+                    />
                     <div className="identification d-flex flex-column justify-content-between text-truncate">
                       <div><span className="badge badge-dark">Seller</span></div>
-                      <div className="name">{seller.profile && seller.profile.claims && seller.profile.claims.name || 'Unnamed User'}</div>
+                      <div className="name">{sellerName}</div>
                       <div className="address text-muted text-truncate">{seller.address}</div>
                     </div>
                   </div>
@@ -302,12 +396,13 @@ class PurchaseDetail extends Component {
                   <div className="d-flex justify-content-end">
                     <div className="identification d-flex flex-column text-right justify-content-between text-truncate">
                       <div><span className="badge badge-dark">Buyer</span></div>
-                      <div className="name">{buyer.profile && buyer.profile.claims && buyer.profile.claims.name || 'Unnamed User'}</div>
+                      <div className="name">{buyerName}</div>
                       <div className="address text-muted text-truncate">{buyer.address}</div>
                     </div>
-                    <div className="avatar-container">
-                      <img src={`images/avatar-${perspective === 'buyer' ? 'green' : 'blue'}.svg`} alt="buyer avatar" />
-                    </div>
+                    <Avatar
+                      image={buyer.profile && buyer.profile.avatar}
+                      placeholderStyle={perspective === 'buyer' ? 'green' : 'blue'}
+                    />
                   </div>
                 </div>
                 <div className="col-12">
@@ -319,8 +414,44 @@ class PurchaseDetail extends Component {
                       <div className="triangle" style={{ left }}></div>
                       <div className="triangle" style={{ left }}></div>
                       <div className="prompt"><strong>Next Step:</strong> {prompt}</div>
-                      <div className="instruction">{instruction || 'Nothing for you to do at this time. Check back later'}</div>
-                      {buttonText && <button className="btn btn-primary" onClick={this[functionName]}>{buttonText}</button>}
+                      {reviewable &&
+                        <form onSubmit={e => {
+                          e.preventDefault()
+
+                          this[functionName]()
+                        }}>
+                          <div className="form-group">
+                            <label htmlFor="review">Review</label>
+                            <div className="stars">{[...Array(5)].map((undef, i) => {
+                              return (
+                                <img
+                                  key={`rating-star-${i}`}
+                                  src={`/images/star-${rating > i ? 'filled' : 'empty'}.svg`}
+                                  alt="review rating star"
+                                  onClick={() => this.handleRating(i + 1)}
+                                />
+                              )
+                            })}</div>
+                            <textarea
+                              rows="4"
+                              id="review"
+                              className="form-control"
+                              value={reviewText}
+                              placeholder={placeholderText}
+                              onChange={this.handleReviewText}>
+                            </textarea>
+                          </div>
+                          <div className="button-container text-right">
+                            <button type="submit" className="btn btn-primary">{buttonText}</button>
+                          </div>
+                        </form>
+                      }
+                      {!reviewable && buttonText &&
+                        <Fragment>
+                          <div className="instruction">{instruction || 'Nothing for you to do at this time. Check back later'}</div>
+                          <button className="btn btn-primary" onClick={this[functionName]}>{buttonText}</button>
+                        </Fragment>
+                      }
                     </div>
                   </div>
                 }
@@ -409,20 +540,10 @@ class PurchaseDetail extends Component {
                 </Fragment>
               }
               <div className="reviews">
-                <h2>Reviews <span className="review-count">{Number(57).toLocaleString()}</span></h2>
-                {perspective === 'buyer' && receivedAt && !reviewedAt &&
-                  <form>
-                    <div className="form-group">
-                      <label htmlFor="review">Write a review</label>
-                      <textarea rows="4" id="review" className="form-control" placeholder="Tell us a bit about your purchase"></textarea>
-                    </div>
-                    <div className="button-container text-right">
-                      <button type="submit" className="btn btn-primary" onClick={() => alert('To Do')}>Submit</button>
-                    </div>
-                  </form>
-                }
-                {data.reviews.map(r => <Review key={r._id} review={r} />)}
-                <a href="#" className="reviews-link" onClick={() => alert('To Do')}>Read More<img src="images/carat-blue.svg" className="down carat" alt="down carat" /></a>
+                <h2>Reviews <span className="review-count">{Number(buyersReviews.length).toLocaleString()}</span></h2>
+                {buyersReviews.map(r => <Review key={r.transactionHash} review={r} />)}
+                {/* To Do: pagination */}
+                {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
               </div>
             </div>
             <div className="col-12 col-lg-4">

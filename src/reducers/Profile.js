@@ -2,7 +2,7 @@ import { ProfileConstants } from '../actions/Profile'
 
 const initialState = {
   user: {
-    profile: { claims: { customFields: [] } },
+    profile: {},
     attestations: []
   },
   name: 'Unnamed User',
@@ -10,13 +10,14 @@ const initialState = {
     firstName: '',
     lastName: '',
     description: '',
-    pic: 'images/avatar-unnamed.svg',
+    pic: '',
     email: false,
     facebook: false,
     phone: false,
     twitter: false
   },
-  hasChanges: false,
+  changes: [],
+  lastPublish: null,
   provisionalProgress: 0,
   publishedProgress: 0,
   strength: 0,
@@ -34,7 +35,7 @@ const progressPct = {
   twitter: 10
 }
 
-function hasChanges(state) {
+function changes(state) {
   var provisionalProgress = 0,
     publishedProgress = 0
 
@@ -47,60 +48,69 @@ function hasChanges(state) {
     }
   })
 
+  let changes = []
+
+  Object.keys(state.provisional).forEach(k => {
+    if (state.provisional.hasOwnProperty(k)) {
+      if (JSON.stringify(state.provisional[k]) !== JSON.stringify(state.published[k])) {
+        changes.push(k)
+      }
+    }
+  })
+
   return {
     ...state,
     provisionalProgress,
     publishedProgress,
     strength: provisionalProgress + publishedProgress,
-    hasChanges:
-      JSON.stringify(state.provisional) !== JSON.stringify(state.published)
+    changes,
   }
 }
 
 function unpackUser(state) {
-  try {
-    var user = state.user,
-      customFields = user.profile.claims.customFields,
-      firstName = customFields.find(f => f.field === 'firstName'),
-      lastName = customFields.find(f => f.field === 'lastName'),
-      description = customFields.find(f => f.field === 'description')
+  var user = state.user || {},
+    profile = user.profile || {},
+    attestations = user.attestations || [],
+    firstName = profile.firstName,
+    lastName = profile.lastName,
+    description = profile.description,
+    pic = profile.avatar
 
-    if (firstName && firstName.value) {
-      state.provisional.firstName = state.published.firstName = firstName.value
+  if (firstName) {
+    state.provisional.firstName = state.published.firstName = firstName
+  }
+  if (lastName) {
+    state.provisional.lastName = state.published.lastName = lastName
+  }
+  if (description) {
+    state.provisional.description = state.published.description = description
+  }
+  if (pic) {
+    state.provisional.pic = state.published.pic = pic
+  }
+  attestations.forEach(attestation => {
+    if (attestation.service === 'facebook') {
+      state.provisional.facebook = state.published.facebook = true
     }
-    if (lastName && lastName.value) {
-      state.provisional.lastName = state.published.lastName = lastName.value
+    if (attestation.service === 'twitter') {
+      state.provisional.twitter = state.published.twitter = true
     }
-    if (description && description.value) {
-      state.provisional.description = state.published.description =
-        description.value
+    if (attestation.service === 'email') {
+      state.provisional.email = state.published.email = true
     }
-    (user.attestations || []).forEach(attestation => {
-      if (attestation.service === 'facebook') {
-        state.provisional.facebook = state.published.facebook = true
-      }
-      if (attestation.service === 'twitter') {
-        state.provisional.twitter = state.published.twitter = true
-      }
-      if (attestation.service === 'email') {
-        state.provisional.email = state.published.email = true
-      }
-      if (attestation.service === 'phone') {
-        state.provisional.phone = state.published.phone = true
-      }
-    })
+    if (attestation.service === 'phone') {
+      state.provisional.phone = state.published.phone = true
+    }
+  })
 
-    if (firstName && lastName) {
-      var name = `${firstName.value} ${lastName.value}`.trim()
-      if (name) {
-        state.name = name
-      }
+  if (firstName && lastName) {
+    var name = `${firstName} ${lastName}`.trim()
+    if (name) {
+      state.name = name
     }
-  } catch (e) {
-    /* Ignore */
   }
 
-  return hasChanges(state)
+  return changes(state)
 }
 
 export default function Profile(state = initialState, action = {}) {
@@ -119,13 +129,13 @@ export default function Profile(state = initialState, action = {}) {
       } else if (action.attestation.claimType === 10) {
         toAdd.phone = action.attestation
       }
-      return hasChanges({
+      return changes({
         ...state,
         provisional: { ...state.provisional, ...toAdd }
       })
 
     case ProfileConstants.UPDATE:
-      return hasChanges({
+      return changes({
         ...state,
         provisional: {
           ...state.provisional,
@@ -140,9 +150,10 @@ export default function Profile(state = initialState, action = {}) {
       return { ...state, status: 'error' }
 
     case ProfileConstants.DEPLOY_SUCCESS:
-      return hasChanges({
+      return changes({
         ...state,
         status: 'success',
+        lastPublish: new Date(),
         published: state.provisional
       })
 
