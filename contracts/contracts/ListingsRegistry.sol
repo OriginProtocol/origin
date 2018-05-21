@@ -106,4 +106,18 @@ contract ListingsRegistry {
     emit NewListing(listingStorage.length()-1);
     return listingStorage.length();
   }
+
+  // @dev isTrustedListing(): Checks to see if a listing belongs to 
+  //                          this registry, and thus trusting that
+  //                          it was created with good bytecode and
+  //                          the proper initialization was completed.
+  function isTrustedListing(
+    address _listingAddress
+  )
+    public
+    view
+    returns(bool)
+  {
+    return listingStorage.isTrustedListing(_listingAddress);
+  }
 }

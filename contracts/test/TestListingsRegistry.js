@@ -93,4 +93,26 @@ contract("ListingsRegistry", accounts => {
       "unitsAvailable is correct"
     )
   })
+
+  describe("Trusted listing check", async function() {
+    it("should verify a trusted listing", async function() {
+      await instance.create(ipfsHash, 3000, 1, { from: owner })
+      const listingIndex = (await instance.listingsLength()) - 1
+      trustedListingAddress = (await instance.getListing(listingIndex))[0]
+      const isVerified = await instance.isTrustedListing(trustedListingAddress)
+      expect(isVerified).to.equal(true)
+    })
+    it("should not verify an untrusted listing", async function() {
+      const otherStorage = await ListingsRegistryStorage.new()
+      const otherRegistry = await contractDefinition.new(otherStorage.address)
+      await otherStorage.setActiveRegistry(otherRegistry.address)
+      await otherRegistry.create(ipfsHash, 3000, 1)
+      const listingIndex = (await otherRegistry.listingsLength()) - 1
+      const otherListingAddress = (await otherRegistry.getListing(
+        listingIndex
+      ))[0]
+      const isVerified = await instance.isTrustedListing(otherListingAddress)
+      expect(isVerified).to.equal(false)
+    })
+  })
 })

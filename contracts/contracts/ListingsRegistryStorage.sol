@@ -72,20 +72,20 @@ contract ListingsRegistryStorage {
   * Listing Storage Methods
   */
 
-  function add(address _listing)
+  function add(address _listingAddress)
     public 
     isRegistryOrOwner()
-  returns (uint)
+    returns (uint)
   {
-    listings.push(_listing);
-    listingsMap[_listing] = true;
+    listings.push(_listingAddress);
+    listingsMap[_listingAddress] = true;
     return (listings.length-1);
   }
 
   function get(uint _index)
     public
     view
-  returns (address)
+    returns (address)
   {
     return listings[_index];
   }
@@ -93,9 +93,16 @@ contract ListingsRegistryStorage {
   function length()
     public
     view
-  returns (uint)
+    returns (uint)
   {
     return listings.length;
   }
 
+  function isTrustedListing(address _listingAddress)
+    public
+    view
+    returns (bool)
+  {
+    return listingsMap[_listingAddress];
+  }
 }
