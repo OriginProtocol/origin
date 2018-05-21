@@ -8,7 +8,7 @@ from web3.providers.eth_tester import (
 
 from eth_tester import (
     EthereumTester,
-    PyEthereum16Backend
+    PyEthereum21Backend
 )
 
 from web3.utils.threads import (
@@ -225,7 +225,7 @@ def wait_for_transaction():
 
 @pytest.fixture(scope="module")
 def eth_tester():
-    _eth_tester = EthereumTester(backend=PyEthereum16Backend())
+    _eth_tester = EthereumTester(backend=PyEthereum21Backend())
     return _eth_tester
 
 
@@ -357,9 +357,10 @@ def purchase_contract(web3, wait_for_transaction, wait_for_block,
 
 
 @pytest.fixture()
-def purchase_review_added(web3, wait_for_transaction, wait_for_block,
-                          purchase_contract, eth_test_buyer,
-                          eth_test_seller):
+def purchase_stage_awaiting_payment(web3, wait_for_transaction,
+                                    wait_for_block,
+                                    purchase_contract,
+                                    eth_test_buyer):
     # add payment to the purchase to move the stage forward
     deploy_txn_hash = \
         purchase_contract.functions.pay().transact({'from': eth_test_buyer,
@@ -367,7 +368,15 @@ def purchase_review_added(web3, wait_for_transaction, wait_for_block,
                                                     'value': 25})
     deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
     assert deploy_receipt["gasUsed"] > 0
+    return purchase_contract
 
+
+@pytest.fixture()
+def purchase_stage_shipping_pending(web3, wait_for_transaction, wait_for_block,
+                                    purchase_stage_awaiting_payment,
+                                    eth_test_seller):
+
+    purchase_contract = purchase_stage_awaiting_payment
     # confirm shipping to move the stage forward
     deploy_txn_hash = \
         purchase_contract.functions.sellerConfirmShipped()\
@@ -375,6 +384,15 @@ def purchase_review_added(web3, wait_for_transaction, wait_for_block,
     deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
     assert deploy_receipt["gasUsed"] > 0
 
+    return purchase_contract
+
+
+@pytest.fixture()
+def purchase_stage_buyer_pending(web3, wait_for_transaction, wait_for_block,
+                                 purchase_stage_shipping_pending,
+                                 eth_test_buyer):
+
+    purchase_contract = purchase_stage_shipping_pending
     # confirm receipt to move the stage forward, this is the Stage
     # where the review event would be emitted
     deploy_txn_hash = \
@@ -382,3 +400,5 @@ def purchase_review_added(web3, wait_for_transaction, wait_for_block,
         .transact({'from': eth_test_buyer, 'gas': 1000000})
     deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
     assert deploy_receipt["gasUsed"] > 0
+
+    return purchase_contract
