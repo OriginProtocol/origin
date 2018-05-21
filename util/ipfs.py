@@ -34,8 +34,6 @@ class IPFSHelper:
                                          settings.IPFS_PORT)
 
     def file_from_hash(self, ipfs_hash, root_attr=None, exclude_fields=None):
-        if not exclude_fields:
-            exclude_fields = []
         ipfs_data = json.loads(self.connector.cat(ipfs_hash))
         ipfs_data = ipfs_data[root_attr] if root_attr else ipfs_data
         if exclude_fields:

@@ -10,6 +10,21 @@ class StandardResponse(Schema):
     errors = fields.List(fields.Str)
 
 
+class SafeResponse(object):
+    data = None
+    errors = None
+
+
+def safe_handler(call):
+    def __call_handler(*args, **kargs):
+        rsp = SafeResponse()
+        # TODO:wrap a try catch around the handler_call for errors
+        # catch errors and set it in the response...
+        rsp.data = call(*args, **kargs)
+        return rsp
+    return __call_handler
+
+
 def handle_request(data, handler, request_schema, response_schema):
     try:
         req = request_schema().load(data)

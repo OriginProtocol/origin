@@ -1,4 +1,5 @@
 import logging
+import logging.config
 import sys
 
 import flask_migrate
@@ -19,6 +20,7 @@ class AppConfig(object):
     SQLALCHEMY_DATABASE_URI = settings.DATABASE_URL
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
+    SERVER_NAME = settings.HOST
 
 
 def init_app(app):
@@ -60,5 +62,6 @@ def init_prod_app(app):
         handler.setLevel(log_level)
         handler.setFormatter(log_formatter)
         app.logger.addHandler(handler)
-
+    else:
+        logging.config.fileConfig('debug.logging.ini')
     return app

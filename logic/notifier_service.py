@@ -4,6 +4,8 @@ from util.contract import ContractHelper
 from util.ipfs import IPFSHelper
 from config import settings
 from enum import Enum
+from web3 import Web3
+import logging
 
 # for apns2
 from apns2.client import APNsClient
@@ -61,12 +63,19 @@ require_verified_messages = ()  # list of types in here
 def register_eth_notification(
         eth_address, type, device_token, verification_signature=None):
     # todo check verification sig if we want this to be a verified endpoint
-    notification_obj = EthNotificationEndpoint(eth_address=eth_address,
-                                               device_token=device_token,
-                                               type=type,
-                                               active=True)
+    eth_address = Web3.toChecksumAddress(eth_address)
+    notification_obj = EthNotificationEndpoint.query.filter_by(
+        eth_address=eth_address, device_token=device_token, type=type).first()
+    if notification_obj:
+        notification_obj.active = True
+    else:
+        notification_obj = EthNotificationEndpoint(eth_address=eth_address,
+                                                   device_token=device_token,
+                                                   type=type,
+                                                   active=True)
     db.session.add(notification_obj)
     db.session.commit()
+    logging.debug("token registered %s to %s" % (device_token, eth_address))
 
 
 def send_apn_notification(message, endpoint):
@@ -84,6 +93,8 @@ def send_apn_notification(message, endpoint):
                 use_alternative_port=False)
         topic = settings.APNS_APP_BUNDLE_ID
         apns_client.send_notification(token, payload, topic)
+        logging.debug("%s sent to %s @ %s" %
+                      (message, endpoint.eth_address, token))
 
 
 def send_fcm_notification(message, endpoint):
@@ -156,7 +167,7 @@ class Notifier():
             PurchaseStages.REVIEW_PERIOD: (
                 Notification.SELLER_REVIEW,
                 Notification.BUYER_REVIEW)
-        }.get(PurchaseStages(purchase_obj.stage), (None, None))
+        }.get(PurchaseStages(int(purchase_obj.stage)), (None, None))
 
         if seller_notification or buyer_notification:
             listing_obj = Listing.query.filter_by(

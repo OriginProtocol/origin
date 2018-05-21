@@ -1,4 +1,4 @@
-"""empty message
+"""Add the Notification Endpoint table
 
 Revision ID: 12dac0fc84c8
 Revises: 7eca0eca2ada

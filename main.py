@@ -13,4 +13,12 @@ app_config.init_prod_app(app)
 
 if __name__ == '__main__':
     app.debug = settings.DEBUG
-    app.run()
+    host = None
+    port = None
+    if settings.BIND_HOST:
+        if ':' in settings.HOST:
+            host, port_str = settings.HOST.split(':')
+            port = int(port_str)
+        else:
+            host = settings.HOST
+    app.run(host=host, port=port, debug=app.debug)

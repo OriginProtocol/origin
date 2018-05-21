@@ -34,6 +34,7 @@ Jinja2==2.10
 Mako==1.0.7
 MarkupSafe==1.0
 marshmallow==3.0.0b8
+marshmallow-enum==1.4.1
 mock==2.0.0
 parso==0.1.1
 pbr==4.0.0
