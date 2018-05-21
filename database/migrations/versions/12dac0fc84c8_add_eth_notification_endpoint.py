@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 """Add the Notification Endpoint table
-=======
-"""empty message
->>>>>>> adds review model and migrations
 
 Revision ID: 12dac0fc84c8
 Revises: 7eca0eca2ada
