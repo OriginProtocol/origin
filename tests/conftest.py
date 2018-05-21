@@ -354,3 +354,31 @@ def purchase_contract(web3, wait_for_transaction, wait_for_block,
     contract_address = listing_contract.functions.getPurchase(
         purchases_length - 1).call()
     return contract(address=contract_address)
+
+
+@pytest.fixture()
+def purchase_review_added(web3, wait_for_transaction, wait_for_block,
+                          purchase_contract, eth_test_buyer,
+                          eth_test_seller):
+    # add payment to the purchase to move the stage forward
+    deploy_txn_hash = \
+        purchase_contract.functions.pay().transact({'from': eth_test_buyer,
+                                                    'gas': 1000000,
+                                                    'value': 25})
+    deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
+    assert deploy_receipt["gasUsed"] > 0
+
+    # confirm shipping to move the stage forward
+    deploy_txn_hash = \
+        purchase_contract.functions.sellerConfirmShipped()\
+        .transact({'from': eth_test_seller, 'gas': 1000000})
+    deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
+    assert deploy_receipt["gasUsed"] > 0
+
+    # confirm receipt to move the stage forward, this is the Stage
+    # where the review event would be emitted
+    deploy_txn_hash = \
+        purchase_contract.functions.buyerConfirmReceipt(2, "0x")\
+        .transact({'from': eth_test_buyer, 'gas': 1000000})
+    deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
+    assert deploy_receipt["gasUsed"] > 0

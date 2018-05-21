@@ -10,7 +10,7 @@ class TestEventHandler():
     def test_new_listing_and_purchase(
             self, db, web3, wait_for_block, wait_for_transaction,
             listing_registry_contract, listing_contract, purchase_contract,
-            mock_ipfs):
+            mock_ipfs, purchase_review_added):
         # Init the event tracker so that it can be updated by EventHandler.
         event_tracker = EventTracker(last_read=0)
         db.session.add(event_tracker)
