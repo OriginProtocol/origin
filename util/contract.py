@@ -3,7 +3,7 @@ import hexbytes
 from web3 import Web3, HTTPProvider, WebsocketProvider
 from web3.contract import Contract
 from web3.middleware import geth_poa_middleware
-from eth_abi import decode_single
+from eth_abi import decode_single, decode_abi
 from eth_utils import to_checksum_address
 
 from config import settings
@@ -91,6 +91,9 @@ class ContractHelper:
             return to_checksum_address(addr)
         elif event_type == 'PurchaseChange':
             return int(data, 0)
+        elif event_type == 'PurchaseReview':
+            return decode_abi(['address', 'address', 'uint8', 'uint8', 'bytes32'],
+                              hexbytes.HexBytes(data))
 
     @staticmethod
     def numeric_eth(str_eth_address):

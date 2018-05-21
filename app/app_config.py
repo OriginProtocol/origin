@@ -43,6 +43,9 @@ def init_api(app):
     manager.create_api(db_models.Purchase, methods=['GET'],
                        primary_key='contract_address',
                        results_per_page=10,)
+    manager.create_api(db_models.Review, methods=['GET'],
+                       primary_key='contract_address',
+                       results_per_page=10,)
 
 
 # App initialization only appropriate for dev/production but not tests.
