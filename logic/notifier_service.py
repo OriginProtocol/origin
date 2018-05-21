@@ -194,3 +194,8 @@ class Notifier():
             listing_obj.owner_address,
             Notification.UPDATED,
             **listing_params)
+
+    @classmethod
+    def notify_review(cls, review_obj):
+        # TODO(gagan): implement
+        pass

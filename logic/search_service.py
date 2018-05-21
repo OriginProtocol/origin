@@ -13,3 +13,7 @@ class SearchIndexer():
     def create_or_update_purchase(self, purchase_data):
         # TODO(franck): implement
         pass
+
+    def create_or_update_review(self, review_data):
+        # TODO(gagan): implement
+        pass

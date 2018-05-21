@@ -58,7 +58,8 @@ def event_listener(web3=None):
     ContractHelper().fetch_events(['NewListing(uint256)',
                                    'ListingPurchased(address)',
                                    'ListingChange()',
-                                   'PurchaseChange(uint8)'],
+                                   'PurchaseChange(uint8)',
+                                   'PurchaseReview(address,address,uint8,uint8,bytes32)'],
                                   block_from=event_tracker.last_read,
                                   block_to='latest',
                                   callback=handler.process)

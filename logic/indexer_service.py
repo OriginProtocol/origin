@@ -4,7 +4,7 @@ from enum import Enum
 from web3 import Web3
 
 from database import db
-from database.db_models import Listing, EventTracker, Purchase
+from database.db_models import Listing, EventTracker, Purchase, Review
 from logic.notifier_service import Notifier
 from logic.search_service import SearchIndexer
 from util.contract import ContractHelper
@@ -17,6 +17,7 @@ class EventType(Enum):
     LISTING_PURCHASED = 2
     LISTING_CHANGE = 3
     PURCHASE_CHANGE = 4
+    PURCHASE_REVIEW = 5
 
 
 EVENT_HASH_TO_EVENT_TYPE_MAP = {
@@ -24,6 +25,8 @@ EVENT_HASH_TO_EVENT_TYPE_MAP = {
     Web3.sha3(text='ListingPurchased(address)').hex(): EventType.LISTING_PURCHASED,
     Web3.sha3(text='ListingChange()').hex(): EventType.LISTING_CHANGE,
     Web3.sha3(text='PurchaseChange(Stages)').hex(): EventType.PURCHASE_CHANGE,
+    Web3.sha3(text='PurchaseReview(address,address,uint8,uint8,bytes32)').hex():
+        EventType.PURCHASE_REVIEW,
 }
 
 
@@ -77,6 +80,20 @@ class DatabaseIndexer():
                 purchase_obj.stage = purchase_data['stage']
         db.session.commit()
         return purchase_obj
+
+    @classmethod
+    def create_or_update_review(cls, review_data):
+        """
+        Creates a new Review row in the database.
+        Not sure if we would have updates on Review, sticking to classmethod
+        naming covention for now.
+        """
+        review_data['ipfs_data'] = \
+            IPFSHelper().file_from_hash(review_data['ipfs_hash'])
+        review_obj = Review(**review_data)
+        db.session.add(review_obj)
+        db.session.commit()
+        return review_obj
 
 
 class EventHandler():
@@ -158,6 +175,24 @@ class EventHandler():
         }
         return purchase_data
 
+    def _get_review_data(self, payload):
+        """
+        Parses and returns Review data from PurchaseReview event.
+        """
+        event_data = ContractHelper.convert_event_data('PurchaseReview',
+                                                       payload['data'])
+        contract_address = Web3.toChecksumAddress(payload['address'])
+
+        review_data = {
+            "contract_address": contract_address,
+            "reviewer_address": event_data[0],
+            "reviewee_address": event_data[1],
+            "role": Review.ROLES[int(event_data[2])],
+            "rating": int(event_data[3]),
+            "ipfs_hash": hex_to_base58(event_data[4]),
+        }
+        return review_data
+
     def process(self, payload):
         """
         Processes an event by loading relevant data and calling
@@ -197,6 +232,12 @@ class EventHandler():
             purchase_obj = self.db_indexer.create_or_update_purchase(data)
             self.notifier.notify_purchased(purchase_obj)
             self.search_indexer.create_or_update_purchase(data)
+
+        elif event_type == EventType.PURCHASE_REVIEW:
+            data = self._get_review_data(payload)
+            review_obj = self.db_indexer.create_or_update_review(data)
+            self.notifier.notify_review(review_obj)
+            self.search_indexer.create_or_update_review(data)
 
         else:
             logging.info("Received unexpected event type %s hash %s",
