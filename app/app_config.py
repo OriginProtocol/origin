@@ -20,7 +20,6 @@ class AppConfig(object):
     SQLALCHEMY_DATABASE_URI = settings.DATABASE_URL
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
-    SERVER_NAME = settings.HOST
 
 
 def init_app(app):

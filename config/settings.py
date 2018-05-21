@@ -92,4 +92,4 @@ APNS_APP_BUNDLE_ID = get_env_default('APNS_APP_BUNDLE_ID')
 FCM_API_KEY = get_env_default('FCM_API_KEY')
 FCM_TITLE = get_env_default('FCM_TITLE')
 
-BIND_HOST = parse_bool(get_env_default("BIND_HOST"))
+BIND_HOST = get_env_default("BIND_HOST")
