@@ -10,8 +10,9 @@ import {
 } from 'actions/Profile'
 import { getBalance } from 'actions/Wallet'
 
-import Timelapse from 'components/timelapse'
+import Avatar from 'components/avatar'
 import Modal from 'components/modal'
+import Timelapse from 'components/timelapse'
 
 import Services from './_Services'
 import Wallet from './_Wallet'
@@ -75,7 +76,7 @@ class Profile extends Component {
 
   componentDidUpdate(prevProps) {
     // prompt user if tab/window is closing before changes have been published
-    if (this.props.hasChanges) {
+    if (!!this.props.changes.length) {
       $('.profile-wrapper [data-toggle="tooltip"]').tooltip()
 
       window.addEventListener('beforeunload', this.handleUnload)
@@ -164,10 +165,10 @@ class Profile extends Component {
   render() {
     const { modalsOpen, progress, successMessage } = this.state
 
-    const { provisional, published, profile, lastPublish } = this.props
+    const { changes, provisional, published, profile, lastPublish } = this.props
 
     const fullName = `${provisional.firstName} ${provisional.lastName}`.trim()
-    const hasChanges = this.props.hasChanges
+    const hasChanges = !!changes.length
     const description = provisional.description || 'An Origin user without a description'
 
     let statusClassMap = {
@@ -194,10 +195,7 @@ class Profile extends Component {
             <div className="col-12 col-lg-8">
               <div className="row attributes">
                 <div className="col-4 col-md-3">
-                  <div
-                    className="primary avatar-container"
-                    style={{ backgroundImage: `url(${provisional.pic})` }}
-                  />
+                  <Avatar image={provisional.pic} className="primary" placeholderStyle="unnamed" />
                 </div>
                 <div className="col-8 col-md-9">
                   <div className="name d-flex">
@@ -291,7 +289,7 @@ class Profile extends Component {
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
-              successMessage: 'Phone verified!',
+              successMessage: 'Phone number verified!',
               modalsOpen: { ...this.state.modalsOpen, phone: false, attestationSuccess: true }
             })
           }}
@@ -304,7 +302,7 @@ class Profile extends Component {
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
-              successMessage: 'Email verified!',
+              successMessage: 'Email address verified!',
               modalsOpen: { ...this.state.modalsOpen, email: false, attestationSuccess: true }
             })
           }}
@@ -317,7 +315,7 @@ class Profile extends Component {
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
-              successMessage: 'Facebook verified!',
+              successMessage: 'Facebook account verified!',
               modalsOpen: { ...this.state.modalsOpen, facebook: false, attestationSuccess: true }
             })
           }}
@@ -329,7 +327,7 @@ class Profile extends Component {
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
-              successMessage: 'Twitter verified!',
+              successMessage: 'Twitter account verified!',
               modalsOpen: { ...this.state.modalsOpen, twitter: false, attestationSuccess: true }
             })
           }}
@@ -337,6 +335,7 @@ class Profile extends Component {
 
         <ConfirmPublish
           open={modalsOpen.publish}
+          changes={changes}
           handleToggle={this.handleToggle}
           handlePublish={this.handlePublish}
           onConfirm={() => {
@@ -353,6 +352,7 @@ class Profile extends Component {
 
         <ConfirmUnload
           open={modalsOpen.unload}
+          changes={changes}
           handleToggle={this.handleToggle}
           handlePublish={this.handlePublish}
           onConfirm={() => {
@@ -459,7 +459,7 @@ const mapStateToProps = state => {
     published: state.profile.published,
     provisional: state.profile.provisional,
     strength: state.profile.strength,
-    hasChanges: state.profile.hasChanges,
+    changes: state.profile.changes,
     lastPublish: state.profile.lastPublish,
     provisionalProgress: state.profile.provisionalProgress,
     publishedProgress: state.profile.publishedProgress,

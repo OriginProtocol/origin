@@ -29,6 +29,13 @@ class VerifyTwitter extends Component {
           <img src="images/twitter-icon-dark.svg" role="presentation" />
         </div>
         <h2>Verify Your Twitter Account</h2>
+        <div className="explanation">
+          Other users will know that you have a verified Twitter account. Your username
+          &nbsp;
+          <strong>will not</strong>
+          &nbsp;
+          be published on the blockchain. We will never tweet on your behalf.
+        </div>
         <div className="button-container">
           <a
             href="#"

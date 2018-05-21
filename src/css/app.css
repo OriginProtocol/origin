@@ -956,6 +956,23 @@ a:hover {
   color: unset;
 }
 
+.modal-content ul {
+  list-style: none;
+  margin-bottom: 1rem;
+  padding: 0;
+  text-align: left;
+  width: fit-content;
+}
+
+.modal-content ul:first-of-type:not(:last-of-type) {
+  margin-right: 1rem;
+}
+
+.modal-content li:before {
+  content: '✓';
+  margin-right: 0.5rem;
+}
+
 .modal-content .success-message {
   color: var(--greenblue);
 }
@@ -1019,6 +1036,11 @@ a:hover {
   padding: 1.2rem;
 }
 
+.tooltip img {
+  height: 0.66rem;
+  margin-right: 0.25rem;
+}
+
 /* Listings */
 
 .category {
@@ -1026,11 +1048,6 @@ a:hover {
   font-size: 0.875rem;
   text-transform: uppercase;
   margin-bottom: 0.25rem;
-}
-
-.price-container {
-  font-size: 1.125rem;
-  margin-bottom: 2rem;
 }
 
 .listings-grid {
@@ -1065,15 +1082,27 @@ a:hover {
 }
 
 .listing-card .photo {
-  width: 100%;
-  height: 240px;
-  overflow: hidden;
-  background-size: cover;
-  background-repeat: no-repeat;
   background-position: 50% 50%;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
-  border-radius: 3px;
-  margin-bottom: 15px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 240px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  width: 100%;
+}
+
+.listing-card .image-container {
+  background-color: var(--light);
+  height: 240px;
+  margin-bottom: 1rem;
+}
+
+.price-container .currency {
+  font-size: 0.875rem;
+}
+
+.price-container .alternate-price  {
+  font-size: 0.875rem;
 }
 
 .listing-card .sold-banner {
@@ -1089,6 +1118,10 @@ a:hover {
   font-size: 12px;
   color: white;
   padding: 0.8px 8px 5px 20px;
+}
+
+.listing.image-container {
+  background-color: var(--light);
 }
 
 /* Listing Detail */
@@ -1488,13 +1521,14 @@ label[for=root_pictures]:hover {
 }
 
 .transaction .image-container {
-  position: absolute;
+  background-color: var(--light);
   height: 100%;
+  position: absolute;
   top: 0;
   width: 100%;
 }
 
-.transaction .image-container img {
+.transaction .image-container:not(.placeholder) img {
   max-width: 100%;
   min-height: 100%;
   object-fit: cover;
@@ -1818,6 +1852,14 @@ form .stars img {
   margin-bottom: 2rem;
 }
 
+.review .content {
+  padding-top: 1rem;
+}
+
+.review .name {
+  color: var(--dark);
+}
+
 .review > .d-flex {
   margin-bottom: 1rem;
 }
@@ -2102,7 +2144,7 @@ form .stars img {
   width: 100%;
 }
 
-.services-container .service:not(.published) {
+.services-container .service:not(.published):not(.verified) {
   cursor: pointer;
 }
 
@@ -2158,6 +2200,14 @@ form .stars img {
   line-height: 36px;
   margin-left: 10px;
   vertical-align: middle;
+}
+
+.published .service-name {
+  color: var(--greenblue);
+}
+
+.verified .service-name {
+  color: var(--clear-blue);
 }
 
 .services-container .service.published .image-container {
@@ -2394,7 +2444,7 @@ sup {
   font-size: 1rem;
 }
 
-.identity.modal .explanation {
+.profile-wrapper .modal .explanation {
   color: var(--pale-grey);
   font-size: 0.875rem;
   padding-top: 0.5rem;
@@ -2466,21 +2516,51 @@ sup {
   margin: 0 auto 10px 0;
 }
 
-.unload.modal .button-container .btn {
+.publish.modal .button-container,
+.unload.modal .button-container {
   margin: 0 0 20px;
 }
 
+.publish.modal a,
 .unload.modal a {
   color: var(--clear-blue);
   cursor: pointer;
   font-size: 0.875rem;
 }
 
+.publish.modal p,
+.unload.modal p {
+  font-size: 1rem;
+}
+
+.change-icons {
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.change-icons .change-icon {
+  margin-bottom: 16px;
+}
+
+.change-icons .image-container {
+  padding-left: 12px;
+}
+
+.change-icons .image-container img {
+  margin-bottom: 0;
+}
+
+.change-icons .text-center {
+  font-size: 0.75rem;
+}
+
+.publish.modal a:hover,
 .unload.modal a:hover {
   color: var(--dark-clear-blue);
 }
 
-.unload.modal .modal-content .image-container img {
+.publish.modal img,
+.unload.modal img {
   height: auto;
   width: auto;
 }
