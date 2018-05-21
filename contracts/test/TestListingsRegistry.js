@@ -1,3 +1,6 @@
+const ListingsRegistryStorage = artifacts.require(
+  "./ListingsRegistryStorage.sol"
+)
 const contractDefinition = artifacts.require("./ListingsRegistry.sol")
 
 const initialListingsLength = 0
@@ -14,9 +17,14 @@ contract("ListingsRegistry", accounts => {
   var owner = accounts[0]
   var notOwner = accounts[1]
   var instance
+  var listingsRegistryStorage
 
   beforeEach(async function() {
-    instance = await contractDefinition.new({ from: owner })
+    listingsRegistryStorage = await ListingsRegistryStorage.new({ from: owner })
+    instance = await contractDefinition.new(listingsRegistryStorage.address, {
+      from: owner
+    })
+    listingsRegistryStorage.setActiveRegistry(instance.address)
   })
 
   it("should have owner as owner of contract", async function() {

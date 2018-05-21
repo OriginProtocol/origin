@@ -5,6 +5,7 @@ pragma solidity 0.4.23;
 /// @author Matt Liu <matt@originprotocol.com>, Josh Fraser <josh@originprotocol.com>, Stan James <stan@originprotocol.com>
 
 import "./Listing.sol";
+import "./ListingsRegistryStorage.sol";
 
 contract ListingsRegistry {
 
@@ -18,21 +19,20 @@ contract ListingsRegistry {
    * Storage
    */
 
-  // Contract owner
   address public owner;
 
-  // Array of all listings
-  Listing[] public listings;
+  ListingsRegistryStorage public listingStorage;
 
   /*
    * Public functions
    */
 
-  constructor()
+  constructor(ListingsRegistryStorage _listingStorage)
     public
   {
     // Defines origin admin address - may be removed for public deployment
     owner = msg.sender;
+    listingStorage = _listingStorage;
   }
 
   /// @dev listingsLength(): Return number of listings
@@ -41,7 +41,7 @@ contract ListingsRegistry {
     constant
     returns (uint)
   {
-      return listings.length;
+      return listingStorage.length();
   }
 
   /// @dev getListing(): Return listing info for a given listing
@@ -56,12 +56,13 @@ contract ListingsRegistry {
 
     // TODO (Stan): Determine if less gas to do one array lookup into var, and
     // return var struct parts
+    Listing listing = Listing(listingStorage.get(_index));
     return (
-      listings[_index],
-      listings[_index].owner(),
-      listings[_index].ipfsHash(),
-      listings[_index].price(),
-      listings[_index].unitsAvailable()
+      listing,
+      listing.owner(),
+      listing.ipfsHash(),
+      listing.price(),
+      listing.unitsAvailable()
     );
   }
 
@@ -80,9 +81,9 @@ contract ListingsRegistry {
     public
     returns (uint)
   {
-    listings.push(new Listing(msg.sender, _ipfsHash, _price, _unitsAvailable));
-    emit NewListing(listings.length-1);
-    return listings.length;
+    listingStorage.add(new Listing(msg.sender, _ipfsHash, _price, _unitsAvailable));
+    emit NewListing((listingStorage.length())-1);
+    return listingStorage.length();
   }
 
   /// @dev createOnBehalf(): Create a new listing with specified creator
@@ -101,8 +102,8 @@ contract ListingsRegistry {
     returns (uint)
   {
     require (msg.sender == owner, "Only callable by registry owner");
-    listings.push(new Listing(_creatorAddress, _ipfsHash, _price, _unitsAvailable));
-    emit NewListing(listings.length-1);
-    return listings.length;
+    listingStorage.add(new Listing(_creatorAddress, _ipfsHash, _price, _unitsAvailable));
+    emit NewListing(listingStorage.length()-1);
+    return listingStorage.length();
   }
 }
