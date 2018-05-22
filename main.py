@@ -16,8 +16,8 @@ if __name__ == '__main__':
     host = None
     port = None
     if settings.BIND_HOST:
-        if ':' in settings.HOST:
-            host, port_str = settings.HOST.split(':')
+        if ':' in settings.BIND_HOST:
+            host, port_str = settings.BIND_HOST.split(':')
             port = int(port_str)
         else:
             host = settings.HOST
