@@ -55,7 +55,7 @@ const Web3Unavailable = () => (
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
-    MetaMask extension not installed.<br />
+    Please use a web3-enabled browser or install the MetaMask extension.<br />
     <a target="_blank" href="https://metamask.io/" rel="noopener noreferrer">
       Get MetaMask
     </a>
@@ -83,8 +83,13 @@ class Web3Provider extends Component {
       accountsLoaded: false,
       networkConnected: null,
       networkId: null,
-      networkError: null
+      networkError: null,
+      provider: null,
     }
+  }
+
+  componentWillMount() {
+    this.setState({ provider: web3.currentProvider })
   }
 
   /**
@@ -123,7 +128,7 @@ class Web3Provider extends Component {
    * @return {void}
    */
   fetchAccounts() {
-    web3 &&
+    web3.currentProvider &&
       web3.eth &&
       web3.eth.getAccounts((err, accounts) => {
         if (err) {
@@ -164,7 +169,7 @@ class Web3Provider extends Component {
   fetchNetwork() {
     let called = false
 
-    web3 &&
+    web3.currentProvider &&
       web3.version &&
       web3.eth.net.getId((err, netId) => {
         called = true
@@ -207,19 +212,19 @@ class Web3Provider extends Component {
   }
 
   render() {
-    const { accounts, accountsLoaded, networkConnected, networkId } = this.state
+    const { accounts, accountsLoaded, networkConnected, networkId, provider } = this.state
     const currentNetworkName = networkNames[networkId]
       ? networkNames[networkId]
       : networkId
-    const inProductionEnv =
-      window.location.hostname === 'demo.originprotocol.com'
+    const inProductionEnv = true //
+      //window.location.hostname === 'demo.originprotocol.com'
+
+    if (!provider) {
+      return <Web3Unavailable />
+    }
 
     if (networkConnected === false) {
       return <UnconnectedNetwork />
-    }
-
-    if (!web3) {
-      return <Web3Unavailable />
     }
 
     if (
