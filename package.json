@@ -41,11 +41,23 @@
     "css-loader": "0.28.11",
     "dotenv": "^5.0.1",
     "eslint": "4.19.1",
-    "eslint-plugin-react": "7.7.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-config-standard-react": "^6.0.0",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-prettier": "^2.6.0",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-react": "^7.7.0",
+    "eslint-plugin-standard": "^3.1.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "1.1.11",
     "html-webpack-plugin": "3.2.0",
+    "husky": "^0.14.3",
     "identicon.js": "^2.3.2",
+    "lint-staged": "^7.1.0",
+    "prettier": "1.12.1",
+    "prettier-eslint-cli": "^4.7.1",
     "style-loader": "0.21.0",
     "webpack": "4.8.1",
     "webpack-cli": "^2.1.3",
@@ -59,7 +71,17 @@
     "dev": "webpack-dev-server --open",
     "deploy:ipfs": "./scripts/deploy.sh",
     "build": "NODE_ENV=production webpack --progress --display errors-only",
-    "test": "node scripts/test.js --env=jsdom"
+    "test": "node scripts/test.js --env=jsdom",
+    "lint": "eslint \"src/**/*.js\" \"scripts/*.js\"",
+    "format": "prettier-eslint --write \"src/**/*.js\" \"scripts/*.js\"",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "src/**/*.js": [
+      "prettier --write",
+      "eslint --fix",
+      "git add"
+    ]
   },
   "babel": {
     "presets": [
@@ -68,6 +90,7 @@
     ],
     "plugins": [
       [
+        "prettier",
         "module-resolver",
         {
           "alias": {
@@ -105,13 +128,21 @@
       "react"
     ],
     "extends": [
-      "eslint:recommended",
-      "plugin:react/recommended"
+      "plugin:prettier/recommended",
+      "standard",
+      "standard-react"
     ],
     "rules": {
+      "no-console": "off",
+      "jsx-quotes": "off",
+      "space-before-function-paren": "off",
       "react/prop-types": "off",
-      "react/no-children-prop": "off",
-      "no-console": "off"
+      "indent": "warn",
+      "prettier/prettier": "error"
     }
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }
