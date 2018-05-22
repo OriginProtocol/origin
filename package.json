@@ -1,117 +1,118 @@
 {
   "name": "origin-demo-dapp",
-  "version": "0.2.0",
-  "private": true,
-  "devDependencies": {
-    "autoprefixer": "6.5.1",
-    "babel-core": "6.17.0",
-    "babel-eslint": "7.1.1",
-    "babel-jest": "17.0.2",
-    "babel-loader": "6.2.7",
-    "babel-preset-react-app": "^2.0.1",
-    "case-sensitive-paths-webpack-plugin": "1.1.4",
-    "chalk": "1.1.3",
-    "connect-history-api-fallback": "1.3.0",
-    "cross-spawn": "4.0.2",
-    "css-loader": "0.26.0",
-    "detect-port": "1.0.1",
-    "eslint": "3.8.1",
-    "eslint-config-react-app": "^0.5.0",
-    "eslint-loader": "1.6.0",
-    "eslint-plugin-flowtype": "2.21.0",
-    "eslint-plugin-import": "2.0.1",
-    "eslint-plugin-jsx-a11y": "2.2.3",
-    "eslint-plugin-react": "6.4.1",
-    "extract-text-webpack-plugin": "1.0.1",
-    "file-loader": "0.9.0",
-    "filesize": "3.3.0",
-    "fs-extra": "0.30.0",
-    "gzip-size": "3.0.0",
-    "html-webpack-plugin": "2.24.0",
-    "http-proxy-middleware": "0.17.2",
-    "jest": "18.1.0",
-    "json-loader": "0.5.4",
-    "object-assign": "4.1.0",
-    "path-exists": "2.1.0",
-    "postcss-loader": "1.0.0",
-    "promise": "7.1.1",
-    "react-dev-utils": "^0.4.2",
-    "recursive-readdir": "2.1.0",
-    "strip-ansi": "3.0.1",
-    "style-loader": "0.13.1",
-    "url-loader": "0.5.7",
-    "webpack": "1.14.0",
-    "webpack-dev-server": "1.16.2",
-    "webpack-manifest-plugin": "1.1.0",
-    "whatwg-fetch": "1.0.0"
+  "version": "0.3.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OriginProtocol/demo-dapp.git"
   },
   "dependencies": {
-    "@originprotocol/origin": "^0.2.50",
-    "ajv": "^4.11.7",
-    "alertify": "github:OriginProtocol/alertify.js#webpack_friendly",
-    "babel-polyfill": "^6.26.0",
-    "bootstrap": "^4.0.0",
-    "bs58": "^4.0.1",
-    "dotenv": "^2.0.0",
+    "babel-loader": "^8.0.0-beta.2",
+    "bootstrap": "^4.1.1",
+    "dotenv-webpack": "^1.5.5",
     "fetch": "^1.1.0",
     "jquery": "^3.3.1",
-    "map-cache": "^0.2.2",
-    "marked": "^0.3.17",
-    "moment": "^2.21.0",
-    "npm": "^5.8.0",
-    "popper.js": "^1.14.1",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-js-pagination": "^3.0.1",
-    "react-jsonschema-form": "^1.0.1",
+    "moment": "^2.22.1",
+    "origin": "OriginProtocol/origin-js#develop",
+    "popper.js": "^1.14.3",
+    "react": "^16.3.2",
+    "react-avatar-editor": "^11.0.2",
+    "react-dom": "^16.3.2",
+    "react-js-pagination": "^3.0.2",
+    "react-jsonschema-form": "^1.0.3",
+    "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "webcrypto-shim": "^0.1.3"
+    "redux": "^4.0.0",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.2.0",
+    "serve": "^6.5.6",
+    "web3": "^1.0.0-beta.34"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0-beta.46",
+    "@babel/core": "^7.0.0-beta.46",
+    "@babel/preset-env": "^7.0.0-beta.46",
+    "@babel/preset-react": "^7.0.0-beta.46",
+    "@babel/register": "^7.0.0-beta.46",
+    "babel-eslint": "^8.2.3",
+    "babel-plugin-module-resolver": "^3.1.1",
+    "clean-webpack-plugin": "^0.1.19",
+    "copy-webpack-plugin": "^4.5.1",
+    "css-loader": "0.28.11",
+    "dotenv": "^5.0.1",
+    "eslint": "4.19.1",
+    "eslint-plugin-react": "7.7.0",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "file-loader": "1.1.11",
+    "html-webpack-plugin": "3.2.0",
+    "identicon.js": "^2.3.2",
+    "style-loader": "0.21.0",
+    "webpack": "4.8.1",
+    "webpack-cli": "^2.1.3",
+    "webpack-dev-server": "3.1.4"
   },
   "scripts": {
-    "install:dev": "npm install && npm link @originprotocol/origin",
-    "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
+    "heroku-postbuild": "npm run build",
+    "install:dev": "npm install && npm link origin",
+    "start": "if [ \"$NODE_ENV\" = \"production\" ]; then npm run serve; else npm run dev; fi",
+    "serve": "serve build",
+    "dev": "webpack-dev-server --open",
+    "deploy:ipfs": "./scripts/deploy.sh",
+    "build": "NODE_ENV=production webpack --progress --display errors-only",
     "test": "node scripts/test.js --env=jsdom"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx}"
-    ],
-    "setupFiles": [
-      "<rootDir>/config/polyfills.js"
-    ],
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.js?(x)",
-      "<rootDir>/src/**/?(*.)(spec|test).js?(x)"
-    ],
-    "testEnvironment": "node",
-    "testURL": "http://localhost",
-    "transform": {
-      "^.+\\.(js|jsx)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"
-    ],
-    "moduleNameMapper": {
-      "^react-native$": "react-native-web"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "json",
-      "web.jsx",
-      "jsx"
-    ]
   },
   "babel": {
     "presets": [
-      "react-app"
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      [
+        "module-resolver",
+        {
+          "alias": {
+            "actions": "./src/actions",
+            "components": "./src/components",
+            "constants": "./src/constants",
+            "pages": "./src/pages",
+            "reducers": "./src/reducers",
+            "utils": "./src/utils"
+          }
+        }
+      ]
     ]
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true,
+        "impliedStrict": true
+      }
+    },
+    "globals": {
+      "web3": true
+    },
+    "env": {
+      "browser": true,
+      "node": true,
+      "es6": true,
+      "mocha": true
+    },
+    "plugins": [
+      "react"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended"
+    ],
+    "rules": {
+      "react/prop-types": "off",
+      "react/no-children-prop": "off",
+      "no-console": "off"
+    }
   }
 }

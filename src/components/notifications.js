@@ -12,7 +12,7 @@ class Notifications extends Component {
   render() {
     const { filter } = this.state
     const notifications = filter === 'all' ? data.notifications : data.notifications.filter(n => {
-      return filter === 'unread' ? !n.readAt : (n.role === filter)
+      return filter === 'unread' ? !n.readAt : (n.perspective === filter)
     })
 
     return (
@@ -28,8 +28,8 @@ class Notifications extends Component {
               <div className="filters list-group flex-row flex-md-column">
                 <a className={`list-group-item list-group-item-action${filter === 'unread' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'unread' })}>Unread</a>
                 <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>All</a>
-                <a className={`list-group-item list-group-item-action${filter === 'buy' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'buy' })}>Buy</a>
-                <a className={`list-group-item list-group-item-action${filter === 'sell' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'sell' })}>Sell</a>
+                <a className={`list-group-item list-group-item-action${filter === 'buyer' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'buyer' })}>Buy</a>
+                <a className={`list-group-item list-group-item-action${filter === 'seller' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'seller' })}>Sell</a>
               </div>
             </div>
             <div className="col-12 col-md-9">
