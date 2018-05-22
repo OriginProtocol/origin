@@ -26,7 +26,8 @@ class ListingCreate extends Component {
       PREVIEW: 3,
       METAMASK: 4,
       PROCESSING: 5,
-      SUCCESS: 6
+      SUCCESS: 6,
+      ERROR: 7
     }
 
     this.schemaList = [
@@ -113,10 +114,13 @@ class ListingCreate extends Component {
       await origin.contractService.waitTransactionFinished(transactionReceipt.transactionHash)
       this.setState({ step: this.STEP.SUCCESS })
     } catch (error) {
-      // TODO: We need a failure step to go to here
       console.error(error)
-      this.props.showAlert(error.message)
+      this.setState({ step: this.STEP.ERROR })
     }
+  }
+
+  resetToPreview() {
+    this.setState({ step: this.STEP.PREVIEW })
   }
 
   render() {
@@ -220,6 +224,23 @@ class ListingCreate extends Component {
                 <Link to="/">See All Listings</Link>
               </Modal>
             }
+            {this.state.step === this.STEP.ERROR && (
+              <Modal backdrop="static" isOpen={true}>
+                <div className="image-container">
+                  <img src="images/flat_cross_icon.svg" role="presentation" />
+                </div>
+                There was a problem creating this listing.<br />See the console for more details.<br />
+                <a
+                  href="#"
+                  onClick={e => {
+                    e.preventDefault()
+                    this.resetToPreview()
+                  }}
+                >
+                  OK
+                </a>
+              </Modal>
+            )}
             <div className="row">
               <div className="col-md-7">
                 <label className="create-step">STEP {Number(this.state.step)}</label>

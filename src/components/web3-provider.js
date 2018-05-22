@@ -150,12 +150,16 @@ class Web3Provider extends Component {
     curr = curr && curr.toLowerCase()
 
     if (curr !== next) {
+
       curr && Store.dispatch(showAlert(`${this.state.currentProvider} account has changed.`))
 
       this.setState({
         accountsError: null,
         accounts
       })
+
+      // force reload instead of showing alert
+      curr && window.location.reload()
     }
   }
 

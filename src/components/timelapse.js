@@ -12,11 +12,11 @@ class Timelapse extends Component {
   }
 
   componentDidMount() {
+    this.updateTimelapse()
+
     if (!this.props.reactive) {
       return
     }
-
-    this.updateTimelapse()
 
     const delay = this.props.delay || 4000
 

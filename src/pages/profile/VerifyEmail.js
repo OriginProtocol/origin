@@ -45,6 +45,7 @@ class VerifyEmail extends Component {
             : this.renderCodeForm()}
           <div className="button-container">
             <a
+              href="#"
               className="btn btn-clear"
               data-modal="email"
               onClick={this.props.handleToggle}
@@ -63,7 +64,11 @@ class VerifyEmail extends Component {
   renderEmailForm() {
     return (
       <div className="form-group">
-        <label htmlFor="email">Enter your email below</label>
+        <label htmlFor="email">
+          {'Enter your email address below and Origin'}
+          <sup>ID</sup>
+          {' will send you a verification code'}
+        </label>
         <input
           type="email"
           className="form-control"
@@ -76,6 +81,11 @@ class VerifyEmail extends Component {
           placeholder="Valid email address"
           required
         />
+        <div className="explanation">
+          {'Other users will know that you have a verified email address. Your actual email address '}
+          <strong>will not</strong>
+          {' be published on the blockchain.'}
+        </div>
       </div>
     )
   }
@@ -89,7 +99,7 @@ class VerifyEmail extends Component {
         <input
           className="form-control"
           id="emailVerificationCode"
-          name="phone-verification-code"
+          name="email-verification-code"
           value={this.state.code}
           onChange={e => this.setState({ code: e.currentTarget.value })}
           placeholder="Verification code"

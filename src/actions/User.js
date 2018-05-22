@@ -17,7 +17,7 @@ export function fetchUser(address) {
 
       dispatch({
         type: UserConstants.FETCH_SUCCESS,
-        user: { ...user, address },
+        user,
       })
     } catch(error) {
       dispatch({ type: UserConstants.FETCH_ERROR, error })

@@ -128,8 +128,12 @@ class EditProfile extends Component {
                 </div>
               </div>
               <div className="col-12">
+                <div className="explanation text-center">
+                  This information will be published on the blockchain and will be visible to everyone.
+                </div>
                 <div className="button-container text-center">
                   <a
+                    href="#"
                     className="btn btn-clear"
                     data-modal="profile"
                     onClick={handleToggle}

@@ -7,15 +7,15 @@ class MyPurchases extends Component {
   constructor(props) {
     super(props)
 
-    this.getListingIds = this.getListingIds.bind(this)
-    this.getPurchaseAddress = this.getPurchaseAddress.bind(this)
-    this.getPurchasesLength = this.getPurchasesLength.bind(this)
     this.loadListing = this.loadListing.bind(this)
     this.loadPurchase = this.loadPurchase.bind(this)
     this.state = { filter: 'pending', purchases: [], loading: true }
   }
 
   /*
+  * WARNING: These functions don't actually return what they might imply.
+  * They use return statements to chain together async calls. Oops.
+  *
   * For now, we mock a getByPurchaserAddress request by fetching all
   * listings individually and fetching all related purchases individually.
   */
@@ -111,7 +111,7 @@ class MyPurchases extends Component {
           <div className="row">
             <div className="col-12 col-md-3">
               {loading && 'Loading...'}
-              {!loading && !purchases.length && 'You have no purchases.'}
+              {!loading && !purchases.length && 'You currently have no purchases.'}
               {!loading && !!purchases.length &&
                 <div className="filters list-group flex-row flex-md-column">
                   <a className={`list-group-item list-group-item-action${filter === 'pending' ? ' active' : ''}`}

@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 
 import Modal from 'components/modal'
+import ProvisionedChanges from './_ProvisionedChanges'
 
-class ConfirmPublish extends Component {
+class ConfirmUnload extends Component {
   render() {
-    const { open, handleToggle, handlePublish } = this.props
+    const { open, changes, onConfirm, handleToggle } = this.props
 
     return (
       <Modal isOpen={open} data-modal="unload" handleToggle={handleToggle}>
@@ -14,19 +15,20 @@ class ConfirmPublish extends Component {
         <h2>Wait! You haven’t published yet.</h2>
         <p>If you exit without publishing you’ll lose all your changes.</p>
         <p>
-          Ready to go public? By updating your profile, you are publishing your
-          information publicly and others will be able to see it on the
-          blockchain and IPFS.
+          Ready to go public? After you publish your changes to the blockchain, other users will be able to see that you have verified the following:
         </p>
+        {!!changes.length &&
+          <ProvisionedChanges changes={changes} />
+        }
         <div className="button-container">
           <button
             className="btn btn-clear"
-            onClick={e => handlePublish(() => handleToggle(e))}
+            onClick={onConfirm}
           >
             Publish Now
           </button>
         </div>
-        <a data-modal="unload" onClick={handleToggle}>
+        <a href="#" data-modal="unload" onClick={handleToggle}>
           Not Right Now
         </a>
       </Modal>
@@ -34,4 +36,4 @@ class ConfirmPublish extends Component {
   }
 }
 
-export default ConfirmPublish
+export default ConfirmUnload
