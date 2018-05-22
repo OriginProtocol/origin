@@ -19,7 +19,7 @@ const supportedNetworkIds = [3, 4]
 const ONE_SECOND = 1000
 const ONE_MINUTE = ONE_SECOND * 60
 
-const AccountUnavailable = () => (
+const AccountUnavailable = props => (
   <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
@@ -51,7 +51,7 @@ const UnsupportedNetwork = props => (
   </Modal>
 )
 
-const Web3Unavailable = () => (
+const Web3Unavailable = props => (
   <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
