@@ -1,0 +1,13 @@
+# Setting supported browsers for babel so we don't get as many strange browser-related errors
+#
+# This file is consumed by @babel/preset-env, which is configured in package.json
+#
+# Docs here:
+# https://github.com/babel/babel/tree/master/packages/babel-preset-env
+#
+# See best practices here: 
+# https://github.com/browserslist/browserslist#best-practices
+
+last 1 version
+not dead
+> 0.2%
