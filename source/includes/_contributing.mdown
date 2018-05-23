@@ -49,6 +49,10 @@ For JavaScript, we use [NPM's style](https://docs.npmjs.com/misc/coding-style), 
 
 For Solidity, we use two space indents.
 
+### Troubleshooting a Development Environment
+
+* If you encounter errors while executing `npm install` for any of the Origin repositories, try running a recent LTS version of Node.js. [nvm](https://github.com/creationix/nvm) is a tool that can install specific versions of Node.js. After installing `nvm`, run `nvm install --lts`, remove your `node_modules` directory, and run `npm install` again.
+
 ### Protocol Design
 
 When considering protocol or implementation design proposals, we are looking for:
