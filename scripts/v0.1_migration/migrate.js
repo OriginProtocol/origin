@@ -187,8 +187,7 @@ Migration.prototype.getListing = async function(index) {
  * Queries for the nonce and gas estimate, then create -> sign -> submit a
  * transaction. Returns the transaction hash.
  */
-Migration.prototype.createListing = async function(listing) {
-    const nonce = await this.web3.eth.getTransactionCount(this.account.address, "pending");
+Migration.prototype.createListing = async function(listing, nonce) {
     console.log("   nonce: " + nonce);
     try {
         const lister = listing.lister;
@@ -388,6 +387,8 @@ Migration.prototype.write = async function() {
     console.log("    Migrating " + Object.keys(listings).length + " listings.")
     console.log("--------------------------------------------");
 
+    const initialNonce = await this.web3.eth.getTransactionCount(this.account.address, "pending");
+
     const listingIDs = Object.keys(listings).map((id) => parseInt(id));
     const numListings = listingIDs.length;
 
@@ -397,7 +398,7 @@ Migration.prototype.write = async function() {
     for (i = 0; i < numListings; i++) {
         const listingID = listingIDs[i];
         console.log("Submitting listing: " + listingID);
-        txHash = await this.createListing(listings[listingID], this.account);
+        txHash = await this.createListing(listings[listingID], initialNonce + i);
         if (txHash) {
             numRetries = 0;
             txToListings[txHash] = listingID;
@@ -420,6 +421,8 @@ Migration.prototype.write = async function() {
                 this.errors.push(listingID);
             }
         }
+
+        await new Promise(resolve => setTimeout(resolve, 500));
     };
 
     console.log("--------------------------------------------");
