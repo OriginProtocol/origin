@@ -10,10 +10,10 @@ const Footer = (props) => {
               <img src="images/origin-logo.svg" className="origin-logo" alt="Origin Protocol"/>
             </div>
             <p className="company-mission">
-              Origin is building the sharing economy of tomorrow. Buyers and sellers will be able to transact without rent-seeking middlemen. We believe in lowering transaction fees, reducing censorship and regulation, and giving early participants in the community a stake in the network.
+              Origin is building the sharing economy of tomorrow. Buyers and sellers will be able to transact without rent-seeking middlemen. We believe in lowering transaction fees, promoting free and transparent commerce, and giving early participants in the community a stake in the network.
             </p>
             <p>
-              &copy; 2018 Origin, Inc.
+              &copy; {(new Date().getFullYear())} Origin Protocol, Inc.
             </p>
           </div>
           <div className="col-12 col-md-6">
@@ -53,6 +53,9 @@ const Footer = (props) => {
                   </li>
                   <li>
                     <a href="https://twitter.com/originprotocol" target="_blank">Twitter</a>
+                  </li>
+                  <li>
+                    <a href="https://instagram.com/originprotocol" target="_blank">Instagram</a>
                   </li>
                   <li>
                     <a href="https://www.facebook.com/originprotocol" target="_blank">Facebook</a>
