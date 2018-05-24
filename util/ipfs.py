@@ -40,3 +40,19 @@ class IPFSHelper:
             for field in exclude_fields:
                 ipfs_data.pop(field, None)
         return ipfs_data
+
+    def directly_pinned_hashes(self, pin_types=None):
+        """
+        Returns the hashes of IPFS objects that are directly pinned (as opposed
+        to those that are indirectly pinned through some other recursively
+        pinned hash).
+        """
+        pin_types = ['direct', 'recursive']
+        pinned_keys = self.connector.pin_ls()['Keys']
+        return [k[0] for k in pinned_keys.items() if k[1]['Type'] in pin_types]
+
+    def pin_hashes(self, *hashes):
+        return self.connector.pin_add(*hashes)
+
+    def unpin_hashes(self, *hashes):
+        return self.connector.pin_rm(*hashes, recursive=True)
