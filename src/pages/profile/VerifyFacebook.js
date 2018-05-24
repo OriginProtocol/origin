@@ -30,7 +30,7 @@ class VerifyFacebook extends Component {
         </div>
         <h2>Verify Your Facebook Account</h2>
         <div className="explanation">
-          Other users will know that you have a verified Facebook account. Your name
+          Other users will know that you have a verified Facebook account, but your account details
           &nbsp;
           <strong>will not</strong>
           &nbsp;
