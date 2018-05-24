@@ -50,7 +50,7 @@ class ListingsGrid extends Component {
               ))}
             </div>
             <Pagination
-              activePage={activePage}
+              activePage={parseInt(activePage)}
               itemsCountPerPage={listingsPerPage}
               totalItemsCount={listingIds.length}
               pageRangeDisplayed={5}
