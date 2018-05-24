@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 import origin from '../services/origin'
+
+import { showAlert } from '../actions/Alert'
 
 import ListingDetail from './listing-detail'
 import Form from 'react-jsonschema-form'
 import Modal from './modal'
-
-const alertify = require('../../node_modules/alertify/src/alertify.js')
 
 class ListingCreate extends Component {
 
@@ -24,7 +25,8 @@ class ListingCreate extends Component {
       PREVIEW: 3,
       METAMASK: 4,
       PROCESSING: 5,
-      SUCCESS: 6
+      SUCCESS: 6,
+      ERROR: 7
     }
 
     this.schemaList = [
@@ -49,7 +51,7 @@ class ListingCreate extends Component {
   }
 
   handleSchemaSelection() {
-    fetch(`/schemas/${this.state.selectedSchemaType}.json`)
+    fetch(`schemas/${this.state.selectedSchemaType}.json`)
     .then((response) => response.json())
     .then((schemaJson) => {
       this.setState({
@@ -90,7 +92,7 @@ class ListingCreate extends Component {
       return bytes
     }
     if (roughSizeOfObject(formListing.formData) > this.MAX_UPLOAD_BYTES) {
-      alertify.log("Your listing is too large. Consider using fewer or smaller photos.")
+      this.props.showAlert("Your listing is too large. Consider using fewer or smaller photos.")
     } else {
       this.setState({
         formListing: formListing,
@@ -107,13 +109,16 @@ class ListingCreate extends Component {
       const transactionReceipt = await origin.listings.create(formListing.formData, selectedSchemaType)
       this.setState({ step: this.STEP.PROCESSING })
       // Submitted to blockchain, now wait for confirmation
-      const blockNumber = await origin.contractService.waitTransactionFinished(transactionReceipt.tx)
+      await origin.contractService.waitTransactionFinished(transactionReceipt.transactionHash)
       this.setState({ step: this.STEP.SUCCESS })
     } catch (error) {
-      // TODO: We need a failure step to go to here
       console.error(error)
-      alertify.log(error.message)
+      this.setState({ step: this.STEP.ERROR })
     }
+  }
+
+  resetToPreview() {
+    this.setState({ step: this.STEP.PREVIEW })
   }
 
   render() {
@@ -126,7 +131,7 @@ class ListingCreate extends Component {
                 <div className="info-box">
                   <h2>Choose a schema for your product or service</h2>
                   <p>Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services.</p>
-                  <div className="info-box-image"><img className="d-none d-md-block" src="/images/features-graphic.svg" role="presentation" /></div>
+                  <div className="info-box-image"><img className="d-none d-md-block" src="images/features-graphic.svg" role="presentation" /></div>
                 </div>
               </div>
 
@@ -161,8 +166,8 @@ class ListingCreate extends Component {
             <div className="row flex-sm-row-reverse">
                <div className="col-md-5 offset-md-2">
                   <div className="info-box">
-                    <div><h2>How it works</h2>Origin uses a Mozilla project called <a href="http://json-schema.org/" target="_blank">JSONSchema</a> to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer.<br/><br/>Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.<br/><br/><a href={`/schemas/${this.state.selectedSchemaType}.json`} target="_blank">View the <code>{this.state.selectedSchema.name}</code> schema</a></div>
-                    <div className="info-box-image"><img className="d-none d-md-block" src="/images/features-graphic.svg" role="presentation" /></div>
+                    <div><h2>How it works</h2>Origin uses a Mozilla project called <a href="http://json-schema.org/" rel="noopener noreferrer" target="_blank">JSONSchema</a> to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer.<br/><br/>Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.<br/><br/><a href={`schemas/${this.state.selectedSchemaType}.json`} target="_blank">View the <code>{this.state.selectedSchema.name}</code> schema</a></div>
+                    <div className="info-box-image"><img className="d-none d-md-block" src="images/features-graphic.svg" role="presentation" /></div>
                   </div>
                 </div>
               <div className="col-md-5">
@@ -193,7 +198,7 @@ class ListingCreate extends Component {
             {this.state.step === this.STEP.METAMASK &&
               <Modal backdrop="static" isOpen={true}>
                 <div className="image-container">
-                  <img src="/images/spinner-animation.svg" role="presentation"/>
+                  <img src="images/spinner-animation.svg" role="presentation"/>
                 </div>
                 Confirm transaction<br />
                 Press &ldquo;Submit&rdquo; in MetaMask window
@@ -202,7 +207,7 @@ class ListingCreate extends Component {
             {this.state.step === this.STEP.PROCESSING &&
               <Modal backdrop="static" isOpen={true}>
                 <div className="image-container">
-                  <img src="/images/spinner-animation.svg" role="presentation"/>
+                  <img src="images/spinner-animation.svg" role="presentation"/>
                 </div>
                 Uploading your listing<br />
                 Please stand by...
@@ -211,12 +216,29 @@ class ListingCreate extends Component {
             {this.state.step === this.STEP.SUCCESS &&
               <Modal backdrop="static" isOpen={true}>
                 <div className="image-container">
-                  <img src="/images/circular-check-button.svg" role="presentation"/>
+                  <img src="images/circular-check-button.svg" role="presentation"/>
                 </div>
                 Success<br />
                 <Link to="/">See All Listings</Link>
               </Modal>
             }
+            {this.state.step === this.STEP.ERROR && (
+              <Modal backdrop="static" isOpen={true}>
+                <div className="image-container">
+                  <img src="images/flat_cross_icon.svg" role="presentation" />
+                </div>
+                There was a problem creating this listing.<br />See the console for more details.<br />
+                <a
+                  href="#"
+                  onClick={e => {
+                    e.preventDefault()
+                    this.resetToPreview()
+                  }}
+                >
+                  OK
+                </a>
+              </Modal>
+            )}
             <div className="row">
               <div className="col-md-7">
                 <label className="create-step">STEP {Number(this.state.step)}</label>
@@ -226,7 +248,7 @@ class ListingCreate extends Component {
             <div className="row flex-sm-row-reverse">
               <div className="col-md-5">
                 <div className="info-box">
-                  <div><h2>What happens next?</h2>When you hit submit, a JSON object representing your listing will be published to <a target="_blank" href="https://ipfs.io">IPFS</a> and the content hash will be published to a listing smart contract running on the Ethereum network.<br/><br/>Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left.</div>
+                  <div><h2>What happens next?</h2>When you hit submit, a JSON object representing your listing will be published to <a target="_blank" rel="noopener noreferrer" href="https://ipfs.io">IPFS</a> and the content hash will be published to a listing smart contract running on the Ethereum network.<br/><br/>Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left.</div>
                 </div>
               </div>
               <div className="col-md-7">
@@ -251,4 +273,8 @@ class ListingCreate extends Component {
   }
 }
 
-export default ListingCreate
+const mapDispatchToProps = dispatch => ({
+  showAlert: (msg) => dispatch(showAlert(msg))
+})
+
+export default connect(undefined, mapDispatchToProps)(ListingCreate)
