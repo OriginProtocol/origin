@@ -24,12 +24,13 @@ class Wallet extends Component {
           <div>Account Balance:</div>
           <div>{balance} ETH</div>
         </div>
-        <div className="detail d-flex">
+        {/* Hidden for current deployment */}
+        {/*<div className="detail d-flex">
           <div>Transaction History:</div>
           <div>
             <a onClick={() => alert('To do')}>ETH</a> | <a onClick={() => alert('To do')}>Tokens</a>
           </div>
-        </div>
+        </div>*/}
         {/* Hidden for current deployment */}
         {/* identityAddress &&
           <div>
