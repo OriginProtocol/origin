@@ -216,8 +216,7 @@ class Web3Provider extends Component {
     const currentNetworkName = networkNames[networkId]
       ? networkNames[networkId]
       : networkId
-    const inProductionEnv = true //
-      //window.location.hostname === 'demo.originprotocol.com'
+    const inProductionEnv = window.location.hostname === 'demo.originprotocol.com'
 
     if (!provider) {
       return <Web3Unavailable />
