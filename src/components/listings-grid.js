@@ -75,6 +75,4 @@ const mapDispatchToProps = dispatch => ({
   getListingIds: () => dispatch(getListingIds())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  withRouter(ListingsGrid)
-)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ListingsGrid))
