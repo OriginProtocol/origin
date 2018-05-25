@@ -22,7 +22,7 @@ class ListingsGrid extends Component {
 
   render() {
     const { listingsPerPage } = this.state
-    const { contractFound, listingIds } = this.props
+    const { contractFound, listingIds, hideList } = this.props
 
     const activePage = this.props.match.params.activePage || 1
     // Calc listings to show for given page
@@ -46,7 +46,7 @@ class ListingsGrid extends Component {
             {listingIds.length > 0 && <h1>{listingIds.length} Listings</h1>}
             <div className="row">
               {showListingsIds.map(listingId => (
-                <ListingCard listingId={listingId} key={listingId} />
+                <ListingCard listingId={listingId} key={listingId} hideList={hideList} />
               ))}
             </div>
             <Pagination
@@ -68,6 +68,7 @@ class ListingsGrid extends Component {
 
 const mapStateToProps = state => ({
   listingIds: state.listings.ids,
+  hideList: state.listings.hideList,
   contractFound: state.listings.contractFound
 })
 

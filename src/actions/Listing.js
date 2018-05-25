@@ -46,7 +46,8 @@ export function getListingIds() {
 
       dispatch({
         type: ListingConstants.FETCH_IDS_SUCCESS,
-        ids: showIds.reverse()
+        ids: showIds.reverse(),
+        hideList
       })
     } catch (error) {
       dispatch(showAlert(error.message))
