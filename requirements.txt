@@ -31,6 +31,7 @@ ipython-genutils==0.2.0
 itsdangerous==0.24
 jedi==0.11.1
 Jinja2==2.10
+kombu==4.1.0
 Mako==1.0.7
 MarkupSafe==1.0
 marshmallow==3.0.0b8
