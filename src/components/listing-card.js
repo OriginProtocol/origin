@@ -34,7 +34,7 @@ class ListingCard extends Component {
     return (
       <div className={`col-12 col-md-6 col-lg-4 listing-card${loading ? ' loading' : ''}`}>
         <Link to={`/listing/${address}`}>
-          {photo &&
+          {!!photo &&
             <div className="photo" style={{ backgroundImage: `url("${photo}")` }}></div>
           }
           {!photo &&

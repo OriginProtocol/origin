@@ -50,7 +50,7 @@ class ListingsGrid extends Component {
               ))}
             </div>
             <Pagination
-              activePage={activePage}
+              activePage={parseInt(activePage)}
               itemsCountPerPage={listingsPerPage}
               totalItemsCount={listingIds.length}
               pageRangeDisplayed={5}
@@ -75,6 +75,4 @@ const mapDispatchToProps = dispatch => ({
   getListingIds: () => dispatch(getListingIds())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  withRouter(ListingsGrid)
-)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ListingsGrid))
