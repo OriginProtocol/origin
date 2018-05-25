@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { connect } from 'react-redux'
 
+import Avatar from 'components/avatar'
 import Identicon from 'components/Identicon'
 
 class UserDropdown extends Component {
@@ -11,6 +12,8 @@ class UserDropdown extends Component {
   }
 
   render() {
+    const { user } = this.props.profile
+
     return (
       <div className="nav-item identity dropdown">
         <a className="nav-link active dropdown-toggle" id="identityDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -33,12 +36,9 @@ class UserDropdown extends Component {
               </div>
               <hr className="dark sm" />
               <div className="d-flex">
-                <div className="avatar-container">
-                  <Link to="/profile">
-                    {/* <img src={this.props.profile.pic} alt="avatar" /> */}
-                    <img src="images/avatar-blue.svg" alt="avatar" />
-                  </Link>
-                </div>
+                <Link to="/profile">
+                  <Avatar image={user && user.profile && user.profile.avatar} placeholderStyle="blue" />
+                </Link>
                 <div className="identification d-flex flex-column justify-content-between">
                   <div><Link to="/profile">{this.props.profile.name}</Link></div>
                   <div>
@@ -72,7 +72,6 @@ class UserDropdown extends Component {
     )
   }
 }
-
 
 const mapStateToProps = state => {
   return {

@@ -122,6 +122,7 @@ class ListingsDetail extends Component {
 
 
   render() {
+    const unitsAvailable = parseInt(this.state.unitsAvailable) // convert string to integer
     const buyersReviews = this.state.reviews.filter(r => r.revieweeRole === 'SELLER')
 
     return (
@@ -175,7 +176,7 @@ class ListingsDetail extends Component {
             </a>
           </Modal>
         )}
-        {(this.state.loading || (this.state.pictures && this.state.pictures.length)) &&
+        {(this.state.loading || (this.state.pictures && !!this.state.pictures.length)) &&
           <div className="carousel">
             {this.state.pictures.map(pictureUrl => (
               <div className="photo" key={pictureUrl}>
@@ -192,9 +193,10 @@ class ListingsDetail extends Component {
               <div className="category placehold">{this.state.category}</div>
               <h1 className="title text-truncate placehold">{this.state.name}</h1>
               <p className="description placehold">{this.state.description}</p>
-              {!!this.state.unitsAvailable && this.state.unitsAvailable < 5 &&
-                <div className="units-available text-danger">Just {this.state.unitsAvailable.toLocaleString()} left!</div>
-              }
+              {/* Via Stan 5/25/2018: Hide until contracts allow for unitsAvailable > 1 */}
+              {/*!!unitsAvailable && unitsAvailable < 5 &&
+                <div className="units-available text-danger">Just {unitsAvailable.toLocaleString()} left!</div>
+              */}
               {this.state.ipfsHash &&
                 <div className="ipfs link-container">
                   <a href={origin.ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
@@ -205,7 +207,7 @@ class ListingsDetail extends Component {
               <div className="debug">
                 <li>IPFS: {this.state.ipfsHash}</li>
                 <li>Seller: {this.state.sellerAddress}</li>
-                <li>Units: {this.state.unitsAvailable}</li>
+                <li>Units: {unitsAvailable}</li>
               </div>
               {/* Hidden for current deployment */}
               {/*!this.state.loading && this.state.purchases.length > 0 &&
@@ -232,50 +234,50 @@ class ListingsDetail extends Component {
               */}
             </div>
             <div className="col-12 col-md-4">
-              <div className="buy-box placehold">
-                {this.state.price &&
+              {this.state.price &&
+                <div className="buy-box placehold">
                   <div className="price d-flex justify-content-between">
                     <div>Price</div>
                     <div className="text-right">
                       {Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
                     </div>
                   </div>
-                }
-                {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
-                {/* <div className="quantity d-flex justify-content-between">
-                                  <div>Quantity</div>
-                                  <div className="text-right">
-                                    {Number(1).toLocaleString()}
+                  {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
+                  {/* <div className="quantity d-flex justify-content-between">
+                                    <div>Quantity</div>
+                                    <div className="text-right">
+                                      {Number(1).toLocaleString()}
+                                    </div>
                                   </div>
-                                </div>
-                                <div className="total-price d-flex justify-content-between">
-                                  <div>Total Price</div>
-                                  <div className="price text-right">
-                                    {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
-                                  </div>
-                                </div> */}
-                {!this.state.loading &&
-                  <div className="btn-container">
-                    {(this.state.address) && (
-                      (this.state.unitsAvailable > 0) ?
-                        <button
-                          className="btn btn-primary"
-                          onClick={this.handleBuyClicked}
-                          disabled={!this.state.address}
-                          onMouseDown={e => e.preventDefault()}
-                        >
-                          Buy Now
-                        </button>
-                        :
-                        <div className="sold-banner">
-                          <img src="images/sold-tag.svg" role="presentation" />
-                          Sold Out
-                        </div>
-                      )
-                    }
-                  </div>
-                }
-              </div>
+                                  <div className="total-price d-flex justify-content-between">
+                                    <div>Total Price</div>
+                                    <div className="price text-right">
+                                      {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
+                                    </div>
+                                  </div> */}
+                  {!this.state.loading &&
+                    <div className="btn-container">
+                      {(this.state.address) && (
+                        (unitsAvailable > 0) ?
+                          <button
+                            className="btn btn-primary"
+                            onClick={this.handleBuyClicked}
+                            disabled={!this.state.address}
+                            onMouseDown={e => e.preventDefault()}
+                          >
+                            Buy Now
+                          </button>
+                          :
+                          <div className="sold-banner">
+                            <img src="images/sold-tag.svg" role="presentation" />
+                            Sold Out
+                          </div>
+                        )
+                      }
+                    </div>
+                  }
+                </div>
+              }
               {this.state.sellerAddress && <UserCard title="seller" userAddress={this.state.sellerAddress} />}
             </div>
           </div>
