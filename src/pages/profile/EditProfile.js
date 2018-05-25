@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import AvatarEditor from 'react-avatar-editor'
+import readAndCompressImage from 'browser-image-resizer';
 
 import Modal from 'components/modal'
 
@@ -25,6 +26,14 @@ class EditProfile extends Component {
     }
   }
 
+  blobToDataURL(blob) {
+    return new Promise((resolve) => {
+      let a = new FileReader()
+      a.onload = function(e) {resolve(e.target.result)}
+      a.readAsDataURL(blob)
+    })
+  }
+
   render() {
     const { open, handleToggle } = this.props
 
@@ -40,7 +49,15 @@ class EditProfile extends Component {
               description: this.state.description
             }
             if (this.state.picChanged) {
-              data.pic = this.imageEditor.getImage().toDataURL()
+              let canvas = this.imageEditor.getImage().toDataURL()
+              let res = await fetch(canvas)
+              let blob = await res.blob()
+              let resized = await readAndCompressImage(blob, {
+                quality: 1,
+                maxWidth: 500,
+                maxHeight: 500
+              })
+              data.pic = await this.blobToDataURL(resized)
             }
             this.props.handleSubmit({ data })
           }}

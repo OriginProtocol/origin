@@ -9,6 +9,7 @@
   "dependencies": {
     "babel-loader": "^8.0.0-beta.2",
     "bootstrap": "^4.1.1",
+    "browser-image-resizer": "^1.1.4",
     "dotenv-webpack": "^1.5.5",
     "fetch": "^1.1.0",
     "jquery": "^3.3.1",
