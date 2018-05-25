@@ -36,6 +36,7 @@ class NavBar extends Component {
               <input className="form-control mr-sm-2" type="search" placeholder="Search Listings" aria-label="Search" onChange={this.handleChange} value={this.state.searchQuery} />
             </form> */}
             <div className="navbar-nav justify-content-end">
+              <Link to="/" className="d-lg-none nav-item nav-link">Listings</Link>
               <Link to="/my-purchases" className="nav-item nav-link">Buy</Link>
               <div className="sell dropdown">
                 <a className="dropdown-toggle nav-item nav-link" id="sellDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sell</a>
