@@ -175,7 +175,7 @@ class ListingsDetail extends Component {
             </a>
           </Modal>
         )}
-        {(this.state.loading || (this.state.pictures && this.state.pictures.length)) &&
+        {(this.state.loading || (this.state.pictures && !!this.state.pictures.length)) &&
           <div className="carousel">
             {this.state.pictures.map(pictureUrl => (
               <div className="photo" key={pictureUrl}>
