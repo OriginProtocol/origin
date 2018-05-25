@@ -5,16 +5,15 @@ const initialState = {
 }
 
 export default function Listings(state = initialState, action = {}) {
-    switch (action.type) {
+  switch (action.type) {
 
-      case AlertConstants.SHOW:
-        return { ...state, message: action.message, show: true }
+    case AlertConstants.SHOW:
+      return { ...state, message: action.message, show: true }
 
-      case AlertConstants.HIDE:
-        return { ...state, message: '', show: false }
+    case AlertConstants.HIDE:
+      return { ...state, message: '', show: false }
 
-      default:
-        return state
-    }
-
+    default:
+      return state
+  }
 }
