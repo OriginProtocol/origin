@@ -26,6 +26,7 @@ class ContractHelper:
             self.web3.middleware_stack.inject(geth_poa_middleware, layer=0)
 
     def fetch_events(self, event_names, callback,
+                     log_index, transaction_index,
                      block_from=0, block_to='latest'):
         """
         Makes an RPC call to the Ethereum network to fetch events by name.
@@ -43,8 +44,23 @@ class ContractHelper:
             "fromBlock": block_from,
             "toBlock": block_to
         })
+
+        process_events = False
+
         for event in self.event_filter.get_all_entries():
-            callback(event)
+            if block_from == event['blockNumber']:
+                if transaction_index == event['transactionIndex']\
+                        and log_index == event['logIndex']:
+                    # switch on the process_events flag and continue since
+                    # we last read uptil this point
+                    process_events = True
+                    continue
+            elif block_from < event['blockNumber']:
+                # case to process the first event ever
+                process_events = True
+
+            if process_events:
+                callback(event)
 
     def get_instance(self, contract_name, address):
         abi = self.get_contract_abi(contract_name)
@@ -92,8 +108,8 @@ class ContractHelper:
         elif event_type == 'PurchaseChange':
             return int(data, 0)
         elif event_type == 'PurchaseReview':
-            return decode_abi(['address', 'address', 'uint8', 'uint8', 'bytes32'],
-                              hexbytes.HexBytes(data))
+            return decode_abi(['address', 'address', 'uint8',
+                               'uint8', 'bytes32'], hexbytes.HexBytes(data))
 
     @staticmethod
     def numeric_eth(str_eth_address):

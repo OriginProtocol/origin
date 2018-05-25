@@ -18,9 +18,19 @@ def test_new_endpoint(db):
         eth_address=eth_address).count() == 1)
 
 
-def test_endpoint_notification(db, web3, wait_for_block, wait_for_transaction,
-                               listing_registry_contract, listing_contract, purchase_contract,
-                               mock_ipfs, eth_test_seller, eth_test_buyer, mock_apns, mock_fcm):
+def test_endpoint_notification(
+        db,
+        web3,
+        wait_for_block,
+        wait_for_transaction,
+        listing_registry_contract,
+        listing_contract,
+        purchase_contract,
+        mock_ipfs,
+        eth_test_seller,
+        eth_test_buyer,
+        mock_apns,
+        mock_fcm):
     buyer_apn_notify_token = "APN_TOKEN_DEVICE_BUYER"
     seller_apn_notify_token = "APN_TOKEN_DEVICE_SELLER"
     seller_address = eth_test_seller
@@ -55,17 +65,21 @@ def test_endpoint_notification(db, web3, wait_for_block, wait_for_transaction,
     assert(EthNotificationEndpoint.query.filter_by(
         eth_address=buyer_address).count() == 2)
 
-    event_tracker = EventTracker(last_read=0)
+    event_tracker = EventTracker(block_index=0,
+                                 transaction_index=0,
+                                 log_index=0)
     db.session.add(event_tracker)
     db.session.commit()
 
     # HUGE assumption that only one contract have been created...
     handler = EventHandler(web3=web3)
     ContractHelper(web3=web3).fetch_events(
-                                    [],
-                                    block_from=event_tracker.last_read,
-                                    block_to='latest',
-                                    callback=handler.process)
+        [],
+        block_from=event_tracker.block_index,
+        block_to='latest',
+        callback=handler.process,
+        log_index=event_tracker.log_index,
+        transaction_index=event_tracker.transaction_index)
 
     apn_notification_list = mock_apns.return_value.send_notification.call_args_list
     assert len([1 for b in apn_notification_list if b[0]

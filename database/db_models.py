@@ -39,7 +39,9 @@ class Listing(db.Model):
 
 class EventTracker(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    last_read = db.Column(db.Integer())
+    block_index = db.Column(db.Integer())
+    transaction_index = db.Column(db.Integer())
+    log_index = db.Column(db.Integer())
 
 
 class Purchase(db.Model):

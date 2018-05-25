@@ -114,13 +114,15 @@ class EventHandler():
         self.web3 = web3
 
     @classmethod
-    def _update_tracker(cls, block_number):
+    def _update_tracker(cls, block_index, log_index, transaction_index):
         """
         Updates the block_number in the event_tracker db table. This acts as
         a cursor to keep track of blocks that have been processed so far.
         """
         event_tracker = EventTracker.query.first()
-        event_tracker.last_read = block_number
+        event_tracker.block_index = block_index
+        event_tracker.transaction_index = transaction_index
+        event_tracker.log_index = log_index
         db.session.commit()
 
     @classmethod
@@ -244,4 +246,6 @@ class EventHandler():
                          event_type, event_hash)
 
         # After successfully processing the event, update the event tracker.
-        self._update_tracker(payload['blockNumber'])
+        self._update_tracker(block_index=payload['blockNumber'],
+                             log_index=payload['logIndex'],
+                             transaction_index=payload['transactionIndex'])

@@ -49,7 +49,9 @@ def event_listener(web3=None):
     event_tracker = db_models.EventTracker.query.first()
     if not event_tracker:
         # No cursor found. Start from the beginning at block 0.
-        event_tracker = db_models.EventTracker(last_read=0)
+        event_tracker = db_models.EventTracker(block_index=0,
+                                               log_index=0,
+                                               transaction_index=0)
         db.session.add(event_tracker)
         db.session.commit()
 
@@ -60,9 +62,11 @@ def event_listener(web3=None):
                                    'ListingChange()',
                                    'PurchaseChange(uint8)',
                                    'PurchaseReview(address,address,uint8,uint8,bytes32)'],
-                                  block_from=event_tracker.last_read,
+                                  block_from=event_tracker.block_index,
                                   block_to='latest',
-                                  callback=handler.process)
+                                  callback=handler.process,
+                                  log_index=event_tracker.log_index,
+                                  transaction_index=event_tracker.transaction_index)
 
 
 @celery.on_after_configure.connect
