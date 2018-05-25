@@ -19,14 +19,15 @@ const supportedNetworkIds = [3, 4]
 const ONE_SECOND = 1000
 const ONE_MINUTE = ONE_SECOND * 60
 
-const AccountUnavailable = () => (
+const AccountUnavailable = props => (
   <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
-    You are not signed in to MetaMask.<br />
+    { (props.onMobile) ? "You are not signed in to a wallet-enabled browser." : "You are not signed in to MetaMask." }<br />
   </Modal>
 )
+
 
 // TODO (micah): potentially add a loading indicator
 const Loading = () => null
@@ -45,28 +46,31 @@ const UnsupportedNetwork = props => (
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
-    MetaMask should be on <strong>Rinkeby</strong> Network<br />
+    <span>{ (props.onMobile) ? "Your wallet-enabled browser" : "MetaMask" } should be on <strong>Rinkeby</strong> Network<br /></span>
     Currently on {props.currentNetworkName}.
   </Modal>
 )
 
-const Web3Unavailable = () => (
+const Web3Unavailable = props => (
   <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
-    Please use a web3-enabled browser or install the MetaMask extension.<br />
-    <a target="_blank" href="https://metamask.io/" rel="noopener noreferrer">
-      Get MetaMask
-    </a>
-    <br />
-    <a
-      target="_blank"
-      href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58"
-      rel="noopener noreferrer"
-    >
-      Full Instructions for Demo
-    </a>
+    {(!props.onMobile || (props.onMobile === "Android")) &&
+      <div>Please install the MetaMask extension<br />to access this site.<br />
+        <a target="_blank" href="https://metamask.io/">Get MetaMask</a><br />
+        <a target="_blank" href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58">
+          Full Instructions for Demo
+        </a>
+      </div>
+    }
+    {(props.onMobile && (props.onMobile !== "Android")) &&
+      <div>Please access this site through <br />a wallet-enabled browser:<br />
+        <a target="_blank" href="https://itunes.apple.com/us/app/toshi-ethereum/id1278383455">Toshi</a>&nbsp;&nbsp;|&nbsp;
+        <a target="_blank" href="https://itunes.apple.com/us/app/cipher-browser-ethereum/id1294572970">Cipher</a>&nbsp;&nbsp;|&nbsp;
+        <a target="_blank" href="https://itunes.apple.com/ae/app/trust-ethereum-wallet/id1288339409">Trust Wallet</a>
+      </div>
+    }
   </Modal>
 )
 
@@ -84,6 +88,7 @@ class Web3Provider extends Component {
       networkConnected: null,
       networkId: null,
       networkError: null,
+      onMobile: false,
       provider: null,
     }
   }
@@ -97,6 +102,7 @@ class Web3Provider extends Component {
    * react to the user changing accounts or networks.
    */
   componentDidMount() {
+    this.detectMobile()
     this.fetchAccounts()
     this.fetchNetwork()
     this.initPoll()
@@ -211,6 +217,22 @@ class Web3Provider extends Component {
     }
   }
 
+  /**
+   * Detect if accessing from a mobile browser
+   * @return {void}
+   */
+  detectMobile() {
+    let userAgent = navigator.userAgent || navigator.vendor || window.opera
+
+    if (/android/i.test(userAgent)) {
+        this.setState({ onMobile: "Android" })
+    } else if (/iPad|iPhone|iPod/.test(userAgent)) {
+        this.setState({ onMobile: "iOS" })
+    } else {
+      this.setState({ onMobile: false })
+    }
+  }
+
   render() {
     const { accounts, accountsLoaded, networkConnected, networkId, provider } = this.state
     const currentNetworkName = networkNames[networkId]
@@ -219,19 +241,18 @@ class Web3Provider extends Component {
     const inProductionEnv = window.location.hostname === 'demo.originprotocol.com'
 
     if (!provider) {
-      return <Web3Unavailable />
+      return <Web3Unavailable onMobile={this.state.onMobile} />
     }
 
     if (networkConnected === false) {
       return <UnconnectedNetwork />
     }
 
-    if (
-      networkId &&
+    if (networkId &&
       inProductionEnv &&
-      supportedNetworkIds.indexOf(networkId) < 0
+      (supportedNetworkIds.indexOf(networkId) < 0)
     ) {
-      return <UnsupportedNetwork currentNetworkName={currentNetworkName} />
+      return <UnsupportedNetwork currentNetworkName={currentNetworkName} onMobile={ this.state.onMobile } />
     }
 
     if (!accountsLoaded) {
@@ -239,7 +260,7 @@ class Web3Provider extends Component {
     }
 
     if (!accounts.length) {
-      return <AccountUnavailable />
+      return <AccountUnavailable onMobile={this.state.onMobile} />
     }
 
     return this.props.children
