@@ -122,6 +122,7 @@ class ListingsDetail extends Component {
 
 
   render() {
+    const unitsAvailable = parseInt(this.state.unitsAvailable) // convert string to integer
     const buyersReviews = this.state.reviews.filter(r => r.revieweeRole === 'SELLER')
 
     return (
@@ -192,9 +193,10 @@ class ListingsDetail extends Component {
               <div className="category placehold">{this.state.category}</div>
               <h1 className="title text-truncate placehold">{this.state.name}</h1>
               <p className="description placehold">{this.state.description}</p>
-              {!!this.state.unitsAvailable && this.state.unitsAvailable < 5 &&
-                <div className="units-available text-danger">Just {this.state.unitsAvailable.toLocaleString()} left!</div>
-              }
+              {/* Via Stan 5/25/2018: Hide until contracts allow for unitsAvailable > 1 */}
+              {/*!!unitsAvailable && unitsAvailable < 5 &&
+                <div className="units-available text-danger">Just {unitsAvailable.toLocaleString()} left!</div>
+              */}
               {this.state.ipfsHash &&
                 <div className="ipfs link-container">
                   <a href={origin.ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
@@ -205,7 +207,7 @@ class ListingsDetail extends Component {
               <div className="debug">
                 <li>IPFS: {this.state.ipfsHash}</li>
                 <li>Seller: {this.state.sellerAddress}</li>
-                <li>Units: {this.state.unitsAvailable}</li>
+                <li>Units: {unitsAvailable}</li>
               </div>
               {/* Hidden for current deployment */}
               {/*!this.state.loading && this.state.purchases.length > 0 &&
@@ -256,7 +258,7 @@ class ListingsDetail extends Component {
                   {!this.state.loading &&
                     <div className="btn-container">
                       {(this.state.address) && (
-                        (this.state.unitsAvailable > 0) ?
+                        (unitsAvailable > 0) ?
                           <button
                             className="btn btn-primary"
                             onClick={this.handleBuyClicked}
