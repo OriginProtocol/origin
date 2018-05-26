@@ -10,6 +10,7 @@ import { showAlert } from '../actions/Alert'
 import { storeWeb3Account } from '../actions/App'
 
 const web3 = origin.contractService.web3
+const productionHostname = process.env.PRODUCTION_DOMAIN || 'demo.originprotocol.com'
 
 const networkNames = {
   1: 'Main',
@@ -200,7 +201,7 @@ class Web3Provider extends Component {
     const currentNetworkName = networkNames[networkId]
       ? networkNames[networkId]
       : networkId
-    const inProductionEnv = window.location.hostname === 'demo.originprotocol.com'
+    const inProductionEnv = window.location.hostname === productionHostname
 
     if (!provider) {
       return <Web3Unavailable onMobile={onMobile} />
