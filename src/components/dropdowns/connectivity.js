@@ -53,20 +53,20 @@ class ConnectivityDropdown extends Component {
           <div className="actual-menu">
             <div className="connectivity-list">
               <ul className="list-group">
-                <li className="connection d-flex">
+                <li className="connection d-flex flex-wrap">
                   <div className="indicator connected"></div>
                   <div className="name"><strong>Blockchain Network:</strong></div>
-                  <div>{networkName}</div>
+                  <div className="ml-auto">{networkName}</div>
                 </li>
-                <li className="connection d-flex">
+                <li className="connection d-flex flex-wrap">
                   <div className="indicator connected"></div>
                   <div className="name"><strong>IPFS Gateway:</strong></div>
-                  <div>{ipfsGateway}</div>
+                  <div className="ml-auto">{ipfsGateway}</div>
                 </li>
-                <li className="connection d-flex">
+                <li className="connection d-flex flex-wrap">
                   <div className="indicator connected"></div>
                   <div className="name"><strong>Bridge Server:</strong></div>
-                  <div>{bridgeServerDomain}</div>
+                  <div className="ml-auto">{bridgeServerDomain}</div>
                 </li>
               </ul>
             </div>
