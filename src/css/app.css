@@ -1271,6 +1271,10 @@ a:hover {
   white-space: pre;
 }
 
+.listing-container .ipfs {
+  margin-bottom: 1rem;
+}
+
 .listing-container .ipfs a {
   font-weight: normal;
 }

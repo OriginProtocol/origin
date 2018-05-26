@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
+
 import Modal from './modal'
 
 import origin from '../services/origin'
 import Store from '../Store'
 import { showAlert } from '../actions/Alert'
+import { storeWeb3Account } from '../actions/App'
 
 const web3 = origin.contractService.web3
 
@@ -18,16 +22,6 @@ const networkNames = {
 const supportedNetworkIds = [3, 4]
 const ONE_SECOND = 1000
 const ONE_MINUTE = ONE_SECOND * 60
-
-const AccountUnavailable = props => (
-  <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
-    <div className="image-container">
-      <img src="images/flat_cross_icon.svg" role="presentation" />
-    </div>
-    { (props.onMobile) ? "You are not signed in to a wallet-enabled browser." : "You are not signed in to MetaMask." }<br />
-  </Modal>
-)
-
 
 // TODO (micah): potentially add a loading indicator
 const Loading = () => null
@@ -78,17 +72,14 @@ class Web3Provider extends Component {
   constructor(props) {
     super(props)
 
-    this.interval = null
+    this.accountsInterval = null
     this.networkInterval = null
     this.fetchAccounts = this.fetchAccounts.bind(this)
     this.fetchNetwork = this.fetchNetwork.bind(this)
     this.state = {
-      accounts: [],
-      accountsLoaded: false,
       networkConnected: null,
       networkId: null,
       networkError: null,
-      onMobile: false,
       provider: null,
     }
   }
@@ -98,14 +89,13 @@ class Web3Provider extends Component {
   }
 
   /**
-   * Start polling accounts, & network. We poll indefinitely so that we can
-   * react to the user changing accounts or networks.
+   * Start polling network. We poll indefinitely so that we can
+   * react to the user changing networks.
    */
   componentDidMount() {
-    this.detectMobile()
     this.fetchAccounts()
     this.fetchNetwork()
-    this.initPoll()
+    this.initAccountsPoll()
     this.initNetworkPoll()
   }
 
@@ -113,9 +103,9 @@ class Web3Provider extends Component {
    * Init web3/account polling, and prevent duplicate interval.
    * @return {void}
    */
-  initPoll() {
-    if (!this.interval) {
-      this.interval = setInterval(this.fetchAccounts, ONE_SECOND)
+  initAccountsPoll() {
+    if (!this.accountsInterval) {
+      this.accountsInterval = setInterval(this.fetchAccounts, ONE_SECOND)
     }
   }
 
@@ -134,38 +124,13 @@ class Web3Provider extends Component {
    * @return {void}
    */
   fetchAccounts() {
-    web3.currentProvider &&
-      web3.eth &&
-      web3.eth.getAccounts((err, accounts) => {
-        if (err) {
-          console.log(err)
-
-          this.setState({ accountsError: err })
-        } else {
-          this.handleAccounts(accounts)
-        }
-
-        if (!this.state.accountsLoaded) {
-          this.setState({ accountsLoaded: true })
-        }
-      })
-  }
-
-  handleAccounts(accounts) {
-    let next = accounts[0]
-    let curr = this.state.accounts[0]
-    next = next && next.toLowerCase()
-    curr = curr && curr.toLowerCase()
-
-    if (curr !== next) {
-      this.setState({
-        accountsError: null,
-        accounts
-      })
-
-      // force reload instead of showing alert
-      curr && window.location.reload()
-    }
+    web3.eth.getAccounts((err, accounts) => {
+      if (err) {
+        console.error(err)
+      } else {
+        this.handleAccounts(accounts)
+      }
+    })
   }
 
   /**
@@ -217,31 +182,30 @@ class Web3Provider extends Component {
     }
   }
 
-  /**
-   * Detect if accessing from a mobile browser
-   * @return {void}
-   */
-  detectMobile() {
-    let userAgent = navigator.userAgent || navigator.vendor || window.opera
+  handleAccounts(accounts) {
+    let curr = accounts[0]
+    let prev = this.props.web3Account
 
-    if (/android/i.test(userAgent)) {
-        this.setState({ onMobile: "Android" })
-    } else if (/iPad|iPhone|iPod/.test(userAgent)) {
-        this.setState({ onMobile: "iOS" })
-    } else {
-      this.setState({ onMobile: false })
+    curr = curr && curr.toLowerCase()
+
+    if (curr !== prev) {
+      this.props.storeWeb3Account(curr)
+
+      // force reload on account change
+      prev !== null && window.location.reload()
     }
   }
 
   render() {
-    const { accounts, accountsLoaded, networkConnected, networkId, provider } = this.state
+    const { onMobile } = this.props
+    const { networkConnected, networkId, provider } = this.state
     const currentNetworkName = networkNames[networkId]
       ? networkNames[networkId]
       : networkId
     const inProductionEnv = window.location.hostname === 'demo.originprotocol.com'
 
     if (!provider) {
-      return <Web3Unavailable onMobile={this.state.onMobile} />
+      return <Web3Unavailable onMobile={onMobile} />
     }
 
     if (networkConnected === false) {
@@ -252,19 +216,22 @@ class Web3Provider extends Component {
       inProductionEnv &&
       (supportedNetworkIds.indexOf(networkId) < 0)
     ) {
-      return <UnsupportedNetwork currentNetworkName={currentNetworkName} onMobile={ this.state.onMobile } />
-    }
-
-    if (!accountsLoaded) {
-      return <Loading />
-    }
-
-    if (!accounts.length) {
-      return <AccountUnavailable onMobile={this.state.onMobile} />
+      return <UnsupportedNetwork currentNetworkName={currentNetworkName} onMobile={onMobile} />
     }
 
     return this.props.children
   }
 }
 
-export default Web3Provider
+const mapDispatchToProps = dispatch => ({
+  storeWeb3Account: addr => dispatch(storeWeb3Account(addr)),
+})
+
+const mapStateToProps = state => {
+  return {
+    web3Account: state.app.web3.account,
+    onMobile: state.app.onMobile,
+  }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Web3Provider))

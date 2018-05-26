@@ -29,6 +29,9 @@ class ListingsDetail extends Component {
       pictures: [],
       reviews: [],
       purchases: [],
+      noWeb3Account: false,
+      notWeb3EnabledDesktop: false,
+      notWeb3EnabledMobile: false,
       step: this.STEP.VIEW,
     }
 
@@ -100,6 +103,22 @@ class ListingsDetail extends Component {
   }
 
   async handleBuyClicked() {
+    if (!web3.givenProvider) {
+      return this.props.onMobile ?
+        this.setState({
+          notWeb3EnabledMobile: !this.state.notWeb3EnabledMobile,
+        }) :
+        this.setState({
+          notWeb3EnabledDesktop: !this.state.notWeb3EnabledDesktop,
+        })
+    }
+
+    if (!this.props.web3Account) {
+      return this.setState({
+        noWeb3Account: !this.state.noWeb3Account,
+      })
+    }
+
     const unitsToBuy = 1
     const totalPrice = (unitsToBuy * this.state.price)
     this.setState({step: this.STEP.METAMASK})
@@ -119,7 +138,6 @@ class ListingsDetail extends Component {
   resetToStepOne() {
     this.setState({step: this.STEP.VIEW})
   }
-
 
   render() {
     const unitsAvailable = parseInt(this.state.unitsAvailable) // convert string to integer
@@ -187,6 +205,67 @@ class ListingsDetail extends Component {
             ))}
           </div>
         }
+
+
+        {this.state.notWeb3EnabledDesktop &&
+          <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
+            <div className="image-container">
+              <img src="images/flat_cross_icon.svg" role="presentation" />
+            </div>
+            <div>In order to buy this listing, you must install MetaMask.</div>
+            <br />
+            <a target="_blank" href="https://metamask.io/">Get MetaMask</a><br />
+            <a target="_blank" href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58">
+              Full Instructions for Demo
+            </a><br />
+            <a onClick={() => {
+              this.setState({
+                notWeb3EnabledDesktop: false,
+              })
+            }}>
+              Return to Origin
+            </a>
+          </Modal>
+        }
+
+        {this.state.notWeb3EnabledMobile &&
+          <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
+            <div className="image-container">
+              <img src="images/flat_cross_icon.svg" role="presentation" />
+            </div>
+            <div>In order to buy this listing, you must use an Ethereum wallet-enabled browser.</div>
+            <br />
+            <div><strong>Popular Ethereum Wallets</strong></div>
+            <div><a href="https://trustwalletapp.com/" target="_blank">Trust</a></div>
+            <div><a href="https://www.cipherbrowser.com/" target="_blank">Cipher</a></div>
+            <div><a href="https://www.toshi.org/" target="_blank">Toshi</a></div>
+            <br />
+            <a onClick={() => {
+              this.setState({
+                notWeb3EnabledMobile: false,
+              })
+            }}>
+              Return to Origin
+            </a>
+          </Modal>
+        }
+
+        {this.state.noWeb3Account &&
+          <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
+            <div className="image-container">
+              <img src="images/flat_cross_icon.svg" role="presentation" />
+            </div>
+            <div>In order to buy this listing, you must sign in to MetaMask.</div>
+            <a onClick={() => {
+              this.setState({
+                noWeb3Account: false,
+              })
+            }}>
+              Return to Origin
+            </a>
+          </Modal>
+        }
+
         <div className={`container listing-container${this.state.loading ? ' loading' : ''}`}>
           <div className="row">
             <div className="col-12 col-md-8 detail-info-box">
@@ -300,8 +379,16 @@ class ListingsDetail extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    onMobile: state.app.onMobile,
+    wallet: state.wallet,
+    web3Account: state.app.web3.account,
+  }
+}
+
 const mapDispatchToProps = dispatch => ({
   showAlert: (msg) => dispatch(showAlert(msg))
 })
 
-export default connect(undefined, mapDispatchToProps)(ListingsDetail)
+export default connect(mapStateToProps, mapDispatchToProps)(ListingsDetail)

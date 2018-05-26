@@ -54,6 +54,9 @@ class Profile extends Component {
         attestationSuccess: false,
         email: false,
         facebook: false,
+        noWeb3Account: false,
+        notWeb3EnabledDesktop: false,
+        notWeb3EnabledMobile: false,
         phone: false,
         profile: false,
         publish: false,
@@ -98,6 +101,31 @@ class Profile extends Component {
   // conditionally close modal identified by data attribute
   handleToggle(e) {
     e.preventDefault()
+
+    if (!web3.givenProvider) {
+      return this.props.onMobile ?
+        this.setState({
+          modalsOpen: {
+            ...modalsOpen,
+            notWeb3EnabledMobile: !this.state.modalsOpen.notWeb3EnabledMobile,
+          },
+        }) :
+        this.setState({
+          modalsOpen: {
+            ...modalsOpen,
+            notWeb3EnabledDesktop: !this.state.modalsOpen.notWeb3EnabledDesktop,
+          },
+        })
+    }
+
+    if (!this.props.web3Account) {
+      return this.setState({
+        modalsOpen: {
+          ...modalsOpen,
+          noWeb3Account: !this.state.modalsOpen.noWeb3Account,
+        },
+      })
+    }
     
     const { modal } = e.currentTarget.dataset
 
@@ -236,7 +264,7 @@ class Profile extends Component {
                     className="publish btn btn-sm btn-primary d-block"
                     onClick={() => {
                       this.setState({
-                        modalsOpen: { ...this.state.modalsOpen, publish: true }
+                        modalsOpen: { ...modalsOpen, publish: true }
                       })
                     }}
                   >
@@ -277,7 +305,7 @@ class Profile extends Component {
           handleSubmit={data => {
             this.props.updateProfile(data)
             this.setState({
-              modalsOpen: { ...this.state.modalsOpen, profile: false }
+              modalsOpen: { ...modalsOpen, profile: false }
             })
           }}
           data={profile.provisional}
@@ -290,7 +318,7 @@ class Profile extends Component {
             this.props.addAttestation(data)
             this.setState({
               successMessage: 'Phone number verified!',
-              modalsOpen: { ...this.state.modalsOpen, phone: false, attestationSuccess: true }
+              modalsOpen: { ...modalsOpen, phone: false, attestationSuccess: true }
             })
           }}
         />
@@ -303,7 +331,7 @@ class Profile extends Component {
             this.props.addAttestation(data)
             this.setState({
               successMessage: 'Email address verified!',
-              modalsOpen: { ...this.state.modalsOpen, email: false, attestationSuccess: true }
+              modalsOpen: { ...modalsOpen, email: false, attestationSuccess: true }
             })
           }}
         />
@@ -316,7 +344,7 @@ class Profile extends Component {
             this.props.addAttestation(data)
             this.setState({
               successMessage: 'Facebook account verified!',
-              modalsOpen: { ...this.state.modalsOpen, facebook: false, attestationSuccess: true }
+              modalsOpen: { ...modalsOpen, facebook: false, attestationSuccess: true }
             })
           }}
         />
@@ -328,7 +356,7 @@ class Profile extends Component {
             this.props.addAttestation(data)
             this.setState({
               successMessage: 'Twitter account verified!',
-              modalsOpen: { ...this.state.modalsOpen, twitter: false, attestationSuccess: true }
+              modalsOpen: { ...modalsOpen, twitter: false, attestationSuccess: true }
             })
           }}
         />
@@ -340,7 +368,7 @@ class Profile extends Component {
           handlePublish={this.handlePublish}
           onConfirm={() => {
             this.setState({
-              modalsOpen: { ...this.state.modalsOpen, publish: false },
+              modalsOpen: { ...modalsOpen, publish: false },
               step: 'metamask'
             })
             this.props.deployProfile({
@@ -357,7 +385,7 @@ class Profile extends Component {
           handlePublish={this.handlePublish}
           onConfirm={() => {
             this.setState({
-              modalsOpen: { ...this.state.modalsOpen, unload: false },
+              modalsOpen: { ...modalsOpen, unload: false },
               step: 'metamask'
             })
             this.props.deployProfile({
@@ -430,6 +458,65 @@ class Profile extends Component {
             </div>
           </Modal>
         )}
+
+        {modalsOpen.notWeb3EnabledDesktop &&
+          <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
+            <div className="image-container">
+              <img src="images/flat_cross_icon.svg" role="presentation" />
+            </div>
+            <div>In order to manage your profile, you must install MetaMask.</div>
+            <br />
+            <a target="_blank" href="https://metamask.io/">Get MetaMask</a><br />
+            <a target="_blank" href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58">
+              Full Instructions for Demo
+            </a><br />
+            <a onClick={() => {
+              this.setState({
+                modalsOpen: { ...modalsOpen, notWeb3EnabledDesktop: false },
+              })
+            }}>
+              Return to Origin
+            </a>
+          </Modal>
+        }
+
+        {modalsOpen.notWeb3EnabledMobile &&
+          <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
+            <div className="image-container">
+              <img src="images/flat_cross_icon.svg" role="presentation" />
+            </div>
+            <div>In order to manage your profile, you must use an Ethereum wallet-enabled browser.</div>
+            <br />
+            <div><strong>Popular Ethereum Wallets</strong></div>
+            <div><a href="https://trustwalletapp.com/" target="_blank">Trust</a></div>
+            <div><a href="https://www.cipherbrowser.com/" target="_blank">Cipher</a></div>
+            <div><a href="https://www.toshi.org/" target="_blank">Toshi</a></div>
+            <br />
+            <a onClick={() => {
+              this.setState({
+                modalsOpen: { ...modalsOpen, notWeb3EnabledMobile: false },
+              })
+            }}>
+              Return to Origin
+            </a>
+          </Modal>
+        }
+
+        {modalsOpen.noWeb3Account &&
+          <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
+            <div className="image-container">
+              <img src="images/flat_cross_icon.svg" role="presentation" />
+            </div>
+            <div>In order to manage your profile, you must sign in to MetaMask.</div>
+            <a onClick={() => {
+              this.setState({
+                modalsOpen: { ...modalsOpen, noWeb3Account: false },
+              })
+            }}>
+              Return to Origin
+            </a>
+          </Modal>
+        }
       </div>
     )
   }
@@ -466,6 +553,8 @@ const mapStateToProps = state => {
     profile: state.profile,
     balance: state.wallet.balance,
     identityAddress: state.profile.user.identityAddress,
+    onMobile: state.app.onMobile,
+    web3Account: state.app.web3.account,
   }
 }
 
@@ -474,7 +563,7 @@ const mapDispatchToProps = dispatch => ({
   deployProfileReset: () => dispatch(deployProfileReset()),
   updateProfile: data => dispatch(updateProfile(data)),
   addAttestation: data => dispatch(addAttestation(data)),
-  getBalance: () => dispatch(getBalance())
+  getBalance: () => dispatch(getBalance()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile)

@@ -12,12 +12,13 @@ class UserDropdown extends Component {
   }
 
   render() {
-    const { user } = this.props.profile
+    const { profile, wallet } = this.props
+    const { user } = profile
 
     return (
       <div className="nav-item identity dropdown">
         <a className="nav-link active dropdown-toggle" id="identityDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <Identicon address={this.props.wallet} />
+          <Identicon address={wallet.address} />
         </a>
         <div className="dropdown-menu dropdown-menu-right" aria-labelledby="identityDropdown">
           <div className="triangle-container d-flex justify-content-end"><div className="triangle"></div></div>
@@ -26,12 +27,12 @@ class UserDropdown extends Component {
               <div className="d-flex">
                 <div className="image-container">
                   <Link to="/profile">
-                    <Identicon address={this.props.wallet} size={50} />
+                    <Identicon address={wallet.address} size={50} />
                   </Link>
                 </div>
                 <div className="eth d-flex flex-column justify-content-between">
-                  <div>ETH Address:</div>
-                  <Link to="/profile"><strong>{this.props.wallet}</strong></Link>
+                  {wallet.address && <div>ETH Address:</div>}
+                  <Link to="/profile"><strong>{wallet.address || 'No ETH Account Connected'}</strong></Link>
                 </div>
               </div>
               <hr className="dark sm" />
@@ -40,24 +41,24 @@ class UserDropdown extends Component {
                   <Avatar image={user && user.profile && user.profile.avatar} placeholderStyle="blue" />
                 </Link>
                 <div className="identification d-flex flex-column justify-content-between">
-                  <div><Link to="/profile">{this.props.profile.name}</Link></div>
+                  <div><Link to="/profile">{profile.name}</Link></div>
                   <div>
-                    {this.props.profile.published.phone &&
+                    {profile.published.phone &&
                       <Link to="/profile">
                         <img src="images/phone-icon-verified.svg" alt="phone verified icon" />
                       </Link>
                     }
-                    {this.props.profile.published.email &&
+                    {profile.published.email &&
                       <Link to="/profile">
                         <img src="images/email-icon-verified.svg" alt="email verified icon" />
                       </Link>
                     }
-                    {this.props.profile.published.facebook &&
+                    {profile.published.facebook &&
                       <Link to="/profile">
                         <img src="images/facebook-icon-verified.svg" alt="Facebook verified icon" />
                       </Link>
                     }
-                    {this.props.profile.published.twitter &&
+                    {profile.published.twitter &&
                       <Link to="/profile">
                         <img src="images/twitter-icon-verified.svg" alt="Twitter verified icon" />
                       </Link>
@@ -75,7 +76,7 @@ class UserDropdown extends Component {
 
 const mapStateToProps = state => {
   return {
-    wallet: state.wallet.address,
+    wallet: state.wallet,
     profile: state.profile,
   }
 }
