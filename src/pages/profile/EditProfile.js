@@ -64,7 +64,7 @@ class EditProfile extends Component {
         >
           <div className="container">
             <div className="row">
-              <div className="col-6">
+              <div className="col-12 col-sm-6">
                 <div className="image-container">
                   <div className="image-pair">
                     <div className="avatar-container">
@@ -98,7 +98,7 @@ class EditProfile extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-6">
+              <div className="col-12 col-sm-6">
                 <div className="form-group">
                   <label htmlFor="first-name">First Name</label>
                   <input
