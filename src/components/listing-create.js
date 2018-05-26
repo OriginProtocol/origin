@@ -15,7 +15,7 @@ class ListingCreate extends Component {
     super(props)
 
     // This is non-ideal fix until IPFS can correctly return 443 errors
-    // Server limit is 2MB, withg 100K safety buffer
+    // Server limit is 2MB, with 100K safety buffer
     this.MAX_UPLOAD_BYTES = (2e6 - 1e5)
 
     // Enum of our states

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 
@@ -6,7 +6,6 @@ import Modal from './modal'
 
 import origin from '../services/origin'
 import Store from '../Store'
-import { showAlert } from '../actions/Alert'
 import { storeWeb3Account } from '../actions/App'
 
 const web3 = origin.contractService.web3
@@ -202,23 +201,34 @@ class Web3Provider extends Component {
       ? networkNames[networkId]
       : networkId
     const inProductionEnv = window.location.hostname === productionHostname
+    const networkNotSupported = supportedNetworkIds.indexOf(networkId) < 0
 
-    if (!provider) {
-      return <Web3Unavailable onMobile={onMobile} />
-    }
+    return (
+      <Fragment>
 
-    if (networkConnected === false) {
-      return <UnconnectedNetwork />
-    }
+        {/* provider should always be present */
+          !provider &&
+          <Web3Unavailable onMobile={onMobile} />
+        }
 
-    if (networkId &&
-      inProductionEnv &&
-      (supportedNetworkIds.indexOf(networkId) < 0)
-    ) {
-      return <UnsupportedNetwork currentNetworkName={currentNetworkName} onMobile={onMobile} />
-    }
+        {/* networkConnected initial state is null */
+          provider &&
+          networkConnected === false &&
+          <UnconnectedNetwork />
+        }
 
-    return this.props.children
+        {/* production  */
+          provider &&
+          networkId &&
+          inProductionEnv &&
+          networkNotSupported &&
+          <UnsupportedNetwork currentNetworkName={currentNetworkName} onMobile={onMobile} />
+        }
+
+        {this.props.children}
+
+      </Fragment>
+    )
   }
 }
 

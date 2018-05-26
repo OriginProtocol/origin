@@ -81,8 +81,8 @@ class App extends Component {
     return (
       <Router>
         <ScrollToTop>
-          <Layout>
-            <Web3Provider>
+          <Web3Provider>
+            <Layout>
               <Switch>
                 <Route exact path="/" component={HomePage} />
                 <Route path="/page/:activePage" component={HomePage} />
@@ -103,9 +103,9 @@ class App extends Component {
                 <Route path="/users/:userAddress" component={UserPage} />
                 <Route component={NotFound} />
               </Switch>
-            </Web3Provider>
-          </Layout>
-          <Alert />
+            </Layout>
+            <Alert />
+          </Web3Provider>
         </ScrollToTop>
       </Router>
     )
