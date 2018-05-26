@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import MySaleCard from './my-sale-card'
 
 import origin from '../services/origin'
@@ -10,7 +11,6 @@ class MySales extends Component {
     this.loadListing = this.loadListing.bind(this)
     this.loadPurchase = this.loadPurchase.bind(this)
     this.state = {
-      accounts: [],
       filter: 'pending',
       listings: [],
       loading: true,
@@ -61,25 +61,12 @@ class MySales extends Component {
     }
   }
 
-  async loadAccounts() {
-    try {
-      const accounts = await web3.eth.getAccounts()
-
-      this.setState({ accounts })
-
-      return accounts
-    } catch(error) {
-      console.error('Error loading accounts')
-      console.error(error)
-    }
-  }
-
   async loadListing(id) {
     try {
       const listing = await origin.listings.getByIndex(id)
 
       // only save to state and get purchases for current user's listings
-      if (listing.sellerAddress === this.state.accounts[0]) {
+      if (listing.sellerAddress === this.props.web3Account) {
         const listings = [...this.state.listings, listing]
 
         this.setState({ listings })
@@ -107,7 +94,6 @@ class MySales extends Component {
   }
 
   async componentWillMount() {
-    await this.loadAccounts()
     await this.getListingIds()
 
     this.setState({ loading: false })
@@ -165,4 +151,10 @@ class MySales extends Component {
   }
 }
 
-export default MySales
+const mapStateToProps = state => {
+  return {
+    web3Account: state.app.web3.account,
+  }
+}
+
+export default connect(mapStateToProps)(MySales)

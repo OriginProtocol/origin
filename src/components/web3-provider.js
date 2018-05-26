@@ -186,8 +186,6 @@ class Web3Provider extends Component {
     let curr = accounts[0]
     let prev = this.props.web3Account
 
-    curr = curr && curr.toLowerCase()
-
     if (curr !== prev) {
       this.props.storeWeb3Account(curr)
 

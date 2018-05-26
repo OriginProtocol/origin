@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import MyPurchaseCard from './my-purchase-card'
 
 import origin from '../services/origin'
@@ -67,9 +68,8 @@ class MyPurchases extends Component {
   async loadPurchase(addr) {
     try {
       const purchase = await origin.purchases.get(addr)
-      var accounts = await web3.eth.getAccounts()
       
-      if (purchase.buyerAddress === accounts[0]) {
+      if (purchase.buyerAddress === this.props.web3Account) {
         const purchases = [...this.state.purchases, purchase]
 
         this.setState({ purchases })
@@ -135,4 +135,10 @@ class MyPurchases extends Component {
   }
 }
 
-export default MyPurchases
+const mapStateToProps = state => {
+  return {
+    web3Account: state.app.web3.account,
+  }
+}
+
+export default connect(mapStateToProps)(MyPurchases)
