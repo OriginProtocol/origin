@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import moment from 'moment'
@@ -77,7 +78,6 @@ class PurchaseDetail extends Component {
     this.loadPurchase = this.loadPurchase.bind(this)
     this.withdrawFunds = this.withdrawFunds.bind(this)
     this.state = {
-      accounts: [],
       buyer: {},
       form: {
         rating: 5,
@@ -92,7 +92,6 @@ class PurchaseDetail extends Component {
   }
 
   componentWillMount() {
-    this.loadAccounts()
     this.loadPurchase()
   }
 
@@ -112,17 +111,6 @@ class PurchaseDetail extends Component {
 
     if (prevState.listing.sellerAddress !== sellerAddress) {
       this.loadSeller(sellerAddress)
-    }
-  }
-
-  async loadAccounts() {
-    try {
-      const accounts = await web3.eth.getAccounts()
-
-      this.setState({ accounts })
-    } catch(error) {
-      console.error('Error loading accounts')
-      console.error(error)
     }
   }
 
@@ -297,7 +285,8 @@ class PurchaseDetail extends Component {
   }
 
   render() {
-    const { accounts, buyer, form, listing, logs, purchase, reviews, seller } = this.state
+    const { web3Account } = this.props
+    const { buyer, form, listing, logs, purchase, reviews, seller } = this.state
     const { rating, reviewText } = form
     const buyersReviews = reviews.filter(r => r.revieweeRole === 'SELLER')
 
@@ -305,7 +294,14 @@ class PurchaseDetail extends Component {
       return null
     }
 
-    const perspective = accounts[0] === purchase.buyerAddress ? 'buyer' : 'seller'
+    let perspective
+    // may potentially be neither buyer nor seller
+    if (web3Account === purchase.buyerAddress) {
+      perspective = 'buyer'
+    } else if (web3Account === purchase.sellerAddress) {
+      perspective = 'seller'
+    }
+
     const pictures = listing.pictures || []
     const category = listing.category || ""
     const active = listing.unitsAvailable > 0 // Todo, move to origin.js, take into account listing expiration
@@ -357,7 +353,7 @@ class PurchaseDetail extends Component {
       left = `calc(${decimal * 100}% + ${decimal * 28}px)`
     }
 
-    const nextStep = nextSteps[step]
+    const nextStep = perspective && nextSteps[step]
     const { buttonText, functionName, instruction, placeholderText, prompt, reviewable } = nextStep ? nextStep[perspective] : {}
     const buyerName = (buyer.profile && `${buyer.profile.firstName} ${buyer.profile.lastName}`) || 'Unnamed User'
     const sellerName = (seller.profile && `${seller.profile.firstName} ${seller.profile.lastName}`) || 'Unnamed User'
@@ -569,4 +565,10 @@ class PurchaseDetail extends Component {
   }
 }
 
-export default PurchaseDetail
+const mapStateToProps = state => {
+  return {
+    web3Account: state.app.web3.account,
+  }
+}
+
+export default connect(mapStateToProps)(PurchaseDetail)
