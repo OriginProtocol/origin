@@ -206,7 +206,6 @@ class ListingsDetail extends Component {
           </div>
         }
 
-
         {this.state.notWeb3EnabledDesktop &&
           <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
             <div className="image-container">

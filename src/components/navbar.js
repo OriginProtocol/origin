@@ -1,21 +1,51 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import ConnectivityDropdown from 'components/dropdowns/connectivity'
 // Hidden for current deployment
 // import NotificationsDropdown from 'components/dropdowns/notifications'
 import UserDropdown from 'components/dropdowns/user'
+import Modal from './modal'
 
 class NavBar extends Component {
   constructor(props) {
     super(props)
 
     this.handleChange = this.handleChange.bind(this)
-    this.state = { searchQuery: '' }
+    this.handleLink = this.handleLink.bind(this)
+    this.state = {
+      noWeb3Account: false,
+      notWeb3EnabledDesktop: false,
+      notWeb3EnabledMobile: false,
+      searchQuery: '',
+    }
   }
 
   handleChange(e) {
     this.setState({ searchQuery: e.target.value })
+  }
+
+  handleLink(e) {
+    if (!web3.givenProvider) {
+      e.preventDefault()
+
+      return this.props.onMobile ?
+        this.setState({
+          notWeb3EnabledMobile: !this.state.notWeb3EnabledMobile,
+        }) :
+        this.setState({
+          notWeb3EnabledDesktop: !this.state.notWeb3EnabledDesktop,
+        })
+    }
+
+    if (!this.props.web3Account) {
+      e.preventDefault()
+      
+      return this.setState({
+        noWeb3Account: !this.state.noWeb3Account,
+      })
+    }
   }
 
   render() {
@@ -45,11 +75,16 @@ class NavBar extends Component {
                   <div className="actual-menu">
                     <Link to="/my-listings" className="dropdown-item">My Listings</Link>
                     <Link to="/my-sales" className="dropdown-item">My Sales</Link>
-                    <Link to="/create" className="dropdown-item d-none d-lg-block">Add a Listing</Link>
+                    <Link to="/create" className="dropdown-item d-none d-lg-block" onClick={this.handleLink}>
+                      Add a Listing
+                    </Link>
                   </div>
                 </div>
               </div>
-              <Link to="/create" className="nav-item nav-link"><img src="images/add-listing-icon.svg" alt="Add Listing" className="add-listing" />Add Listing</Link>
+              <Link to="/create" className="nav-item nav-link" onClick={this.handleLink}>
+                <img src="images/add-listing-icon.svg" alt="Add Listing" className="add-listing" />
+                Add Listing
+              </Link>
             </div>
           </div>
           <div className="static navbar-nav order-1 order-lg-2">
@@ -59,9 +94,76 @@ class NavBar extends Component {
             <UserDropdown />
           </div>
         </div>
+
+        {this.state.notWeb3EnabledDesktop &&
+          <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
+            <div className="image-container">
+              <img src="images/flat_cross_icon.svg" role="presentation" />
+            </div>
+            <div>In order to create a listing, you must install MetaMask.</div>
+            <br />
+            <a target="_blank" href="https://metamask.io/">Get MetaMask</a><br />
+            <a target="_blank" href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58">
+              Full Instructions for Demo
+            </a><br />
+            <a onClick={() => {
+              this.setState({
+                notWeb3EnabledDesktop: false,
+              })
+            }}>
+              Return to Origin
+            </a>
+          </Modal>
+        }
+
+        {this.state.notWeb3EnabledMobile &&
+          <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
+            <div className="image-container">
+              <img src="images/flat_cross_icon.svg" role="presentation" />
+            </div>
+            <div>In order to create a listing, you must use an Ethereum wallet-enabled browser.</div>
+            <br />
+            <div><strong>Popular Ethereum Wallets</strong></div>
+            <div><a href="https://trustwalletapp.com/" target="_blank">Trust</a></div>
+            <div><a href="https://www.cipherbrowser.com/" target="_blank">Cipher</a></div>
+            <div><a href="https://www.toshi.org/" target="_blank">Toshi</a></div>
+            <br />
+            <a onClick={() => {
+              this.setState({
+                notWeb3EnabledMobile: false,
+              })
+            }}>
+              Return to Origin
+            </a>
+          </Modal>
+        }
+
+        {this.state.noWeb3Account &&
+          <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
+            <div className="image-container">
+              <img src="images/flat_cross_icon.svg" role="presentation" />
+            </div>
+            <div>In order to create a listing, you must sign in to MetaMask.</div>
+            <a onClick={() => {
+              this.setState({
+                noWeb3Account: false,
+              })
+            }}>
+              Return to Origin
+            </a>
+          </Modal>
+        }
       </nav>
     )
   }
 }
 
-export default NavBar
+const mapStateToProps = state => {
+  return {
+    onMobile: state.app.onMobile,
+    web3Account: state.app.web3.account,
+  }
+}
+
+export default connect(mapStateToProps)(NavBar)
+
