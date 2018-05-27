@@ -27,7 +27,7 @@ const ONE_MINUTE = ONE_SECOND * 60
 const Loading = () => null
 
 const NotWeb3EnabledDesktop = props => (
-  <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
+  <Modal backdrop="static" className="not-web3-enabled" isOpen={true}>
     <div className="image-container">
       <img src="images/metamask.png" role="presentation" />
     </div>
@@ -39,7 +39,7 @@ const NotWeb3EnabledDesktop = props => (
       <span aria-hidden="true">&times;</span>
     </a>
     <div>In order to {props.web3Intent}, you must install MetaMask.</div>
-    <div className="button-container">
+    <div className="button-container d-flex">
       <a href="https://metamask.io/"
         target="_blank"
         className="btn btn-clear">
@@ -55,7 +55,7 @@ const NotWeb3EnabledDesktop = props => (
 )
 
 const NotWeb3EnabledMobile = props => (
-  <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
+  <Modal backdrop="static" className="not-web3-enabled" isOpen={true}>
     <div className="ethereum image-container">
       <img src="images/ethereum.png" role="presentation" />
     </div>

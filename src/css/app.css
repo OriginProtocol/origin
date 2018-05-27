@@ -870,7 +870,7 @@ a:hover {
   font-size: 1.125rem;
   padding-right: 30px;
   padding-left: 30px;
-  width: 156px;
+  width: 196px;
 }
 
 .btn-primary:hover {
@@ -1000,7 +1000,6 @@ a:hover {
 .modal-content .ethereum img {
   width: 108px;
   height: 108px;
-  margin-bottom: 0;
 }
 
 .modal-content .form-control {
@@ -1030,19 +1029,16 @@ a:hover {
 }
 
 .modal-content .button-container {
-  margin-top: 20px;
+  margin: 0 -20px -20px 0;
+  padding-top: 20px;
 }
 
 .modal-content .button-container .btn {
   flex-basis: 50%;
   font-size: 1rem;
   font-weight: bold;
-  max-width: 40%;
+  margin: 0 20px 20px 0;
   padding: 10px;
-}
-
-.modal-content .button-container .btn:last-child:not(:first-child) {
-  margin-left: 20px;
 }
 
 /* Tooltip */
