@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import MyListingCard from './my-listing-card'
 
+import { storeWeb3Intent } from '../actions/App'
 import origin from '../services/origin'
 
 class MyListings extends Component {
@@ -14,6 +15,12 @@ class MyListings extends Component {
       filter: 'all',
       listings: [],
       loading: true,
+    }
+  }
+
+  componentDidMount() {
+    if(!web3.givenProvider || !this.props.web3Account) {
+      this.props.storeWeb3Intent('view your listings')
     }
   }
 
@@ -119,7 +126,12 @@ class MyListings extends Component {
 const mapStateToProps = state => {
   return {
     web3Account: state.app.web3.account,
+    web3Intent: state.app.web3.intent,
   }
 }
 
-export default connect(mapStateToProps)(MyListings)
+const mapDispatchToProps = dispatch => ({
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyListings)
