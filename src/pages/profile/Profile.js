@@ -66,7 +66,7 @@ class Profile extends Component {
       // percentage widths for two progress bars
       progress: {
         provisional: 0,
-        published: 0
+        published: 0,
       },
       provisional: props.provisional,
       successMessage: '',

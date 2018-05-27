@@ -4,6 +4,7 @@ const initialState = {
   onMobile: null,
   web3: {
     account: null,
+    intent: null,
   },
 }
 
@@ -14,8 +15,11 @@ export default function App(state = initialState, action = {}) {
 
       return { ...state, onMobile: action.device }
 
-    case AppConstants.WEB3:
+    case AppConstants.WEB3_ACCOUNT:
       return { ...state, web3: { ...web3, account: action.address }}
+
+    case AppConstants.WEB3_INTENT:
+      return { ...state, web3: { ...web3, intent: action.intent }}
 
     default:
       return state

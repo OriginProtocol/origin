@@ -7,6 +7,7 @@ import ConnectivityDropdown from 'components/dropdowns/connectivity'
 // import NotificationsDropdown from 'components/dropdowns/notifications'
 import UserDropdown from 'components/dropdowns/user'
 import Modal from './modal'
+import { storeWeb3Intent } from '../actions/App'
 
 class NavBar extends Component {
   constructor(props) {
@@ -27,24 +28,10 @@ class NavBar extends Component {
   }
 
   handleLink(e) {
-    if (!web3.givenProvider) {
-      e.preventDefault()
+    this.props.storeWeb3Intent('create a listing')
 
-      return this.props.onMobile ?
-        this.setState({
-          notWeb3EnabledMobile: !this.state.notWeb3EnabledMobile,
-        }) :
-        this.setState({
-          notWeb3EnabledDesktop: !this.state.notWeb3EnabledDesktop,
-        })
-    }
-
-    if (!this.props.web3Account) {
+    if (!web3.givenProvider || !this.props.web3Account) {
       e.preventDefault()
-      
-      return this.setState({
-        noWeb3Account: !this.state.noWeb3Account,
-      })
     }
   }
 
@@ -94,65 +81,6 @@ class NavBar extends Component {
             <UserDropdown />
           </div>
         </div>
-
-        {this.state.notWeb3EnabledDesktop &&
-          <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
-            <div className="image-container">
-              <img src="images/flat_cross_icon.svg" role="presentation" />
-            </div>
-            <div>In order to create a listing, you must install MetaMask.</div>
-            <br />
-            <a target="_blank" href="https://metamask.io/">Get MetaMask</a><br />
-            <a target="_blank" href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58">
-              Full Instructions for Demo
-            </a><br />
-            <a onClick={() => {
-              this.setState({
-                notWeb3EnabledDesktop: false,
-              })
-            }}>
-              Return to Origin
-            </a>
-          </Modal>
-        }
-
-        {this.state.notWeb3EnabledMobile &&
-          <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
-            <div className="image-container">
-              <img src="images/flat_cross_icon.svg" role="presentation" />
-            </div>
-            <div>In order to create a listing, you must use an Ethereum wallet-enabled browser.</div>
-            <br />
-            <div><strong>Popular Ethereum Wallets</strong></div>
-            <div><a href="https://trustwalletapp.com/" target="_blank">Trust</a></div>
-            <div><a href="https://www.cipherbrowser.com/" target="_blank">Cipher</a></div>
-            <div><a href="https://www.toshi.org/" target="_blank">Toshi</a></div>
-            <br />
-            <a onClick={() => {
-              this.setState({
-                notWeb3EnabledMobile: false,
-              })
-            }}>
-              Return to Origin
-            </a>
-          </Modal>
-        }
-
-        {this.state.noWeb3Account &&
-          <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
-            <div className="image-container">
-              <img src="images/flat_cross_icon.svg" role="presentation" />
-            </div>
-            <div>In order to create a listing, you must sign in to MetaMask.</div>
-            <a onClick={() => {
-              this.setState({
-                noWeb3Account: false,
-              })
-            }}>
-              Return to Origin
-            </a>
-          </Modal>
-        }
       </nav>
     )
   }
@@ -162,8 +90,13 @@ const mapStateToProps = state => {
   return {
     onMobile: state.app.onMobile,
     web3Account: state.app.web3.account,
+    web3Intent: state.app.web3.intent,
   }
 }
 
-export default connect(mapStateToProps)(NavBar)
+const mapDispatchToProps = dispatch => ({
+  storeWeb3Intent: (intent) => dispatch(storeWeb3Intent(intent)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar)
 

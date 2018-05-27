@@ -6,7 +6,7 @@ import Modal from './modal'
 
 import origin from '../services/origin'
 import Store from '../Store'
-import { storeWeb3Account } from '../actions/App'
+import { storeWeb3Account, storeWeb3Intent } from '../actions/App'
 
 const web3 = origin.contractService.web3
 const productionHostname = process.env.PRODUCTION_DOMAIN || 'demo.originprotocol.com'
@@ -25,6 +25,53 @@ const ONE_MINUTE = ONE_SECOND * 60
 
 // TODO (micah): potentially add a loading indicator
 const Loading = () => null
+
+const NotWeb3EnabledDesktop = props => (
+  <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
+    <div className="image-container">
+      <img src="images/flat_cross_icon.svg" role="presentation" />
+    </div>
+    <div>In order to {props.web3Intent}, you must install MetaMask.</div>
+    <br />
+    <a target="_blank" href="https://metamask.io/">Get MetaMask</a><br />
+    <a target="_blank" href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58">
+      Full Instructions for Demo
+    </a><br />
+    <a onClick={() => props.storeWeb3Intent(null)}>
+      Return to Origin
+    </a>
+  </Modal>
+)
+
+const NotWeb3EnabledMobile = props => (
+  <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
+    <div className="image-container">
+      <img src="images/flat_cross_icon.svg" role="presentation" />
+    </div>
+    <div>In order to {props.web3Intent}, you must use an Ethereum wallet-enabled browser.</div>
+    <br />
+    <div><strong>Popular Ethereum Wallets</strong></div>
+    <div><a href="https://trustwalletapp.com/" target="_blank">Trust</a></div>
+    <div><a href="https://www.cipherbrowser.com/" target="_blank">Cipher</a></div>
+    <div><a href="https://www.toshi.org/" target="_blank">Toshi</a></div>
+    <br />
+    <a onClick={() => props.storeWeb3Intent(null)}>
+      Return to Origin
+    </a>
+  </Modal>
+)
+
+const NoWeb3Account = props => (
+  <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
+    <div className="image-container">
+      <img src="images/flat_cross_icon.svg" role="presentation" />
+    </div>
+    <div>In order to {props.web3Intent}, you must sign in to MetaMask.</div>
+    <a onClick={() => props.storeWeb3Intent(null)}>
+      Return to Origin
+    </a>
+  </Modal>
+)
 
 const UnconnectedNetwork = () => (
   <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
@@ -195,7 +242,7 @@ class Web3Provider extends Component {
   }
 
   render() {
-    const { onMobile } = this.props
+    const { onMobile, web3Account, web3Intent, storeWeb3Intent } = this.props
     const { networkConnected, networkId, provider } = this.state
     const currentNetworkName = networkNames[networkId]
       ? networkNames[networkId]
@@ -206,23 +253,44 @@ class Web3Provider extends Component {
     return (
       <Fragment>
 
-        {/* provider should always be present */
+        { /* provider should always be present */
           !provider &&
           <Web3Unavailable onMobile={onMobile} />
         }
 
-        {/* networkConnected initial state is null */
+        { /* networkConnected initial state is null */
           provider &&
           networkConnected === false &&
           <UnconnectedNetwork />
         }
 
-        {/* production  */
+        { /* production  */
           provider &&
           networkId &&
           inProductionEnv &&
           networkNotSupported &&
           <UnsupportedNetwork currentNetworkName={currentNetworkName} onMobile={onMobile} />
+        }
+
+        { /* attempting to use web3 in unsupported mobile browser */
+          web3Intent &&
+          !web3.givenProvider &&
+          onMobile &&
+          <NotWeb3EnabledMobile web3Intent={web3Intent} storeWeb3Intent={storeWeb3Intent} />
+        }
+
+        { /* attempting to use web3 in unsupported desktop browser */
+          web3Intent &&
+          !web3.givenProvider &&
+          !onMobile &&
+          <NotWeb3EnabledDesktop web3Intent={web3Intent} storeWeb3Intent={storeWeb3Intent} />
+        }
+
+        { /* attempting to use web3 without being signed in */
+          web3Intent &&
+          web3.givenProvider &&
+          web3Account === undefined &&
+          <NoWeb3Account web3Intent={web3Intent} storeWeb3Intent={storeWeb3Intent} />
         }
 
         {this.props.children}
@@ -232,15 +300,17 @@ class Web3Provider extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  storeWeb3Account: addr => dispatch(storeWeb3Account(addr)),
-})
-
 const mapStateToProps = state => {
   return {
     web3Account: state.app.web3.account,
+    web3Intent: state.app.web3.intent,
     onMobile: state.app.onMobile,
   }
 }
+
+const mapDispatchToProps = dispatch => ({
+  storeWeb3Account: addr => dispatch(storeWeb3Account(addr)),
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
+})
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Web3Provider))
