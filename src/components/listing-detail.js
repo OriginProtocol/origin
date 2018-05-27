@@ -97,6 +97,10 @@ class ListingsDetail extends Component {
       // Listing json passed in directly
       this.setState(obj)
     }
+    const networkName = await web3.eth.net.getNetworkType() // Actually returns name, e.g. 'ropsten'
+    this.setState({
+        networkName: networkName,
+    })
   }
 
   async handleBuyClicked() {
@@ -124,6 +128,8 @@ class ListingsDetail extends Component {
   render() {
     const unitsAvailable = parseInt(this.state.unitsAvailable) // convert string to integer
     const buyersReviews = this.state.reviews.filter(r => r.revieweeRole === 'SELLER')
+
+    console.log(this.state)
 
     return (
       <div className="listing-detail">
@@ -201,6 +207,13 @@ class ListingsDetail extends Component {
                 <div className="ipfs link-container">
                   <a href={origin.ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
                     View on IPFS<img src="images/carat-blue.svg" className="carat" alt="right carat" />
+                  </a>
+                </div>
+              }
+              {this.state.address &&
+                <div>
+                  <a href={`https://${(this.state.networkName)}.etherscan.io/address/${(this.state.address)}#internaltx`} target="_blank">
+                    View on Etherscan<img src="images/carat-blue.svg" className="carat" alt="right carat" />
                   </a>
                 </div>
               }
