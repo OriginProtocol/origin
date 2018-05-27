@@ -40,7 +40,10 @@
     "price": {
       "type": "number",
       "title": "Price in ETH",
-      "default": 0
+      "default": 0,
+      "enum": [
+        0
+      ]
     },
     "pictures": {
       "type": "array",
