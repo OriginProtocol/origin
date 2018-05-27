@@ -30,8 +30,8 @@ def base58_to_hex(hash):
 class IPFSHelper:
 
     def __init__(self):
-        self.connector = ipfsapi.connect(settings.IPFS_DOMAIN,
-                                         settings.IPFS_PORT)
+        self.connector = ipfsapi.Client(settings.IPFS_DOMAIN,
+                                        settings.IPFS_PORT)
 
     def file_from_hash(self, ipfs_hash, root_attr=None, exclude_fields=None):
         ipfs_data = json.loads(self.connector.cat(ipfs_hash))
