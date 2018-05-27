@@ -12,7 +12,7 @@ contract ListingsRegistry {
    * Events
    */
 
-  event NewListing(uint _index);
+  event NewListing(uint _index, address _address);
 
   /*
    * Storage
@@ -80,8 +80,9 @@ contract ListingsRegistry {
     public
     returns (uint)
   {
-    listings.push(new Listing(msg.sender, _ipfsHash, _price, _unitsAvailable));
-    emit NewListing(listings.length-1);
+    Listing newListing = new Listing(msg.sender, _ipfsHash, _price, _unitsAvailable);
+    listings.push(newListing);
+    emit NewListing(listings.length-1, address(newListing));
     return listings.length;
   }
 
@@ -101,8 +102,9 @@ contract ListingsRegistry {
     returns (uint)
   {
     require (msg.sender == owner, "Only callable by registry owner");
-    listings.push(new Listing(_creatorAddress, _ipfsHash, _price, _unitsAvailable));
-    emit NewListing(listings.length-1);
+    Listing newListing = new Listing(_creatorAddress, _ipfsHash, _price, _unitsAvailable);
+    listings.push(newListing);
+    emit NewListing(listings.length-1, address(newListing));
     return listings.length;
   }
 }
