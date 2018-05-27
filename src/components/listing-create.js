@@ -178,6 +178,11 @@ class ListingCreate extends Component {
                   onSubmit={this.onDetailsEntered}
                   formData={this.state.formListing.formData}
                   onError={(errors) => console.log(`react-jsonschema-form errors: ${errors.length}`)}
+                  uiSchema={
+                    this.state.selectedSchema.properties['price'].default === 0 ?
+                    { price: { 'ui:widget': 'hidden' } } :
+                    undefined
+                  }
                 >
                   <div className="btn-container">
                     <button type="button" className="btn btn-other" onClick={() => this.setState({step: this.STEP.PICK_SCHEMA})}>
