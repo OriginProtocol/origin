@@ -997,6 +997,12 @@ a:hover {
   margin-bottom: 30px;
 }
 
+.modal-content .ethereum img {
+  width: 108px;
+  height: 108px;
+  margin-bottom: 0;
+}
+
 .modal-content .form-control {
   text-align: center;
   max-width: 288px;

@@ -56,8 +56,8 @@ const NotWeb3EnabledDesktop = props => (
 
 const NotWeb3EnabledMobile = props => (
   <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
-    <div className="image-container">
-      <img src="images/metamask.png" role="presentation" />
+    <div className="ethereum image-container">
+      <img src="images/ethereum.png" role="presentation" />
     </div>
     <a
       className="close"
