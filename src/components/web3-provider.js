@@ -29,47 +29,91 @@ const Loading = () => null
 const NotWeb3EnabledDesktop = props => (
   <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
     <div className="image-container">
-      <img src="images/flat_cross_icon.svg" role="presentation" />
+      <img src="images/metamask.png" role="presentation" />
     </div>
-    <div>In order to {props.web3Intent}, you must install MetaMask.</div>
-    <br />
-    <a target="_blank" href="https://metamask.io/">Get MetaMask</a><br />
-    <a target="_blank" href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58">
-      Full Instructions for Demo
-    </a><br />
-    <a onClick={() => props.storeWeb3Intent(null)}>
-      Return to Origin
+    <a
+      className="close"
+      aria-label="Close"
+      onClick={() => props.storeWeb3Intent(null)}
+    >
+      <span aria-hidden="true">&times;</span>
     </a>
+    <div>In order to {props.web3Intent}, you must install MetaMask.</div>
+    <div className="button-container">
+      <a href="https://metamask.io/"
+        target="_blank"
+        className="btn btn-clear">
+        Get MetaMask
+      </a>
+      <a href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58"
+        target="_blank"
+        className="btn btn-clear">
+        Full Instructions
+      </a>
+    </div>
   </Modal>
 )
 
 const NotWeb3EnabledMobile = props => (
   <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
     <div className="image-container">
-      <img src="images/flat_cross_icon.svg" role="presentation" />
+      <img src="images/metamask.png" role="presentation" />
     </div>
+    <a
+      className="close"
+      aria-label="Close"
+      onClick={() => props.storeWeb3Intent(null)}
+    >
+      <span aria-hidden="true">&times;</span>
+    </a>
     <div>In order to {props.web3Intent}, you must use an Ethereum wallet-enabled browser.</div>
     <br />
     <div><strong>Popular Ethereum Wallets</strong></div>
-    <div><a href="https://trustwalletapp.com/" target="_blank">Trust</a></div>
-    <div><a href="https://www.cipherbrowser.com/" target="_blank">Cipher</a></div>
-    <div><a href="https://www.toshi.org/" target="_blank">Toshi</a></div>
-    <br />
-    <a onClick={() => props.storeWeb3Intent(null)}>
-      Return to Origin
-    </a>
+    <div className="button-container">
+      <a href="https://trustwalletapp.com/"
+        target="_blank"
+        className="btn btn-clear">
+        Trust
+      </a>
+    </div>
+    <div className="button-container">
+      <a href="https://www.cipherbrowser.com/"
+        target="_blank"
+        className="btn btn-clear">
+        Cipher
+      </a>
+    </div>
+    <div className="button-container">
+      <a href="https://www.toshi.org/"
+        target="_blank"
+        className="btn btn-clear">
+        Toshi
+      </a>
+    </div>
   </Modal>
 )
 
 const NoWeb3Account = props => (
   <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
     <div className="image-container">
-      <img src="images/flat_cross_icon.svg" role="presentation" />
+      <img src="images/metamask.png" role="presentation" />
     </div>
-    <div>In order to {props.web3Intent}, you must sign in to MetaMask.</div>
-    <a onClick={() => props.storeWeb3Intent(null)}>
-      Return to Origin
+    <a
+      className="close"
+      aria-label="Close"
+      onClick={() => props.storeWeb3Intent(null)}
+    >
+      <span aria-hidden="true">&times;</span>
     </a>
+    <div>In order to {props.web3Intent}, you must sign in to MetaMask.</div>
+    <div className="button-container">
+      <button
+        className="btn btn-clear"
+        onClick={() => props.storeWeb3Intent(null)}
+      >
+        OK
+      </button>
+    </div>
   </Modal>
 )
 

@@ -955,6 +955,14 @@ a:hover {
   text-align: center;
 }
 
+.modal-content .close {
+  color: white;
+  opacity: 1;
+  position: absolute;
+  right: 20px;
+  top: 15px;
+}
+
 .modal-content h1,
 .modal-content h2,
 .modal-content h3,
