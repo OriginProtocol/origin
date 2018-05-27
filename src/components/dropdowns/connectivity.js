@@ -1,3 +1,4 @@
+import $ from 'jquery'
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -19,33 +20,56 @@ class ConnectivityDropdown extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { networkName: null }
+    this.state = {
+      connectedStatus: {
+        network: false,
+        ipfsGateway: false,
+        bridgeServer: false,
+      },
+      networkName: null,
+    }
   }
 
   async componentDidMount() {
+    !web3.givenProvider && $('#connectivityDropdown').dropdown('toggle')
+
     try {
       const networkId = await web3.eth.net.getId()
 
       this.setState({
         networkName: networkNames[networkId],
         ipfsGateway,
-        bridgeServerDomain
+        bridgeServerDomain,
       })
+
+      // simulate delayed connections
+
+      setTimeout(() => {
+        this.setState({ connectedStatus: { ...this.state.connectedStatus, network: true }})
+      }, 1000)
+
+      setTimeout(() => {
+        this.setState({ connectedStatus: { ...this.state.connectedStatus, ipfsGateway: true }})
+      }, 2000)
+
+      setTimeout(() => {
+        this.setState({ connectedStatus: { ...this.state.connectedStatus, bridgeServer: true }})
+      }, 3000)
     } catch(error) {
       console.error(error)
     }
   }
 
   render() {
-    const { networkName, ipfsGateway } = this.state
+    const { networkName, ipfsGateway, connectedStatus } = this.state
 
     return (
       <div className="nav-item connectivity dropdown">
         <a className="nav-link active dropdown-toggle" id="connectivityDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <div className="d-flex indicators align-items-center">
-            <span className="blockchain indicator ml-auto connected"></span>
-            <span className="gateway indicator m-1 connected"></span>
-            <span className="server indicator mr-auto connected"></span>
+            <span className={`blockchain indicator ml-auto${connectedStatus.network ? ' connected' : ''}`}></span>
+            <span className={`gateway indicator m-1${connectedStatus.ipfsGateway ? ' connected' : ''}`}></span>
+            <span className={`server indicator mr-auto${connectedStatus.bridgeServer ? ' connected' : ''}`}></span>
           </div>
         </a>
         <div className="dropdown-menu dropdown-menu-right" aria-labelledby="connectivityDropdown">
@@ -54,19 +78,19 @@ class ConnectivityDropdown extends Component {
             <div className="connectivity-list">
               <ul className="list-group">
                 <li className="connection d-flex flex-wrap">
-                  <div className="indicator connected"></div>
+                  <div className={`indicator${connectedStatus.network ? ' connected' : ''}`}></div>
                   <div className="name"><strong>Blockchain Network:</strong></div>
-                  <div className="ml-auto">{networkName}</div>
+                  <div className="ml-auto">{connectedStatus.network ? networkName : 'Loading...'}</div>
                 </li>
                 <li className="connection d-flex flex-wrap">
-                  <div className="indicator connected"></div>
+                  <div className={`indicator${connectedStatus.ipfsGateway ? ' connected' : ''}`}></div>
                   <div className="name"><strong>IPFS Gateway:</strong></div>
-                  <div className="ml-auto">{ipfsGateway}</div>
+                  <div className="ml-auto">{connectedStatus.ipfsGateway ? ipfsGateway : 'Loading...'}</div>
                 </li>
                 <li className="connection d-flex flex-wrap">
-                  <div className="indicator connected"></div>
+                  <div className={`indicator${connectedStatus.bridgeServer ? ' connected' : ''}`}></div>
                   <div className="name"><strong>Bridge Server:</strong></div>
-                  <div className="ml-auto">{bridgeServerDomain}</div>
+                  <div className="ml-auto">{connectedStatus.bridgeServer ? bridgeServerDomain : 'Loading...'}</div>
                 </li>
               </ul>
             </div>
