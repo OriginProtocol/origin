@@ -155,6 +155,8 @@ class ListingsDetail extends Component {
   render() {
     const unitsAvailable = parseInt(this.state.unitsAvailable) // convert string to integer
     const buyersReviews = this.state.reviews.filter(r => r.revieweeRole === 'SELLER')
+    const userIsSeller = this.state.sellerAddress === this.props.web3Account
+
     return (
       <div className="listing-detail">
         {this.state.step === this.STEP.METAMASK &&
@@ -294,24 +296,26 @@ class ListingsDetail extends Component {
                                       {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
                                     </div>
                                   </div> */}
-                  {!this.state.loading &&
+                  {!this.state.loading && this.state.address &&
                     <div className="btn-container">
-                      {(this.state.address) && (
-                        (unitsAvailable > 0) ?
-                          <button
-                            className="btn btn-primary"
-                            onClick={this.handleBuyClicked}
-                            disabled={!this.state.address}
-                            onMouseDown={e => e.preventDefault()}
-                          >
-                            Buy Now
-                          </button>
-                          :
-                          <div className="sold-banner">
-                            <img src="images/sold-tag.svg" role="presentation" />
-                            Sold Out
-                          </div>
-                        )
+                      {!!unitsAvailable && !userIsSeller &&
+                        <button
+                          className="btn btn-primary"
+                          onClick={this.handleBuyClicked}
+                          disabled={!this.state.address}
+                          onMouseDown={e => e.preventDefault()}
+                        >
+                          Buy Now
+                        </button>
+                      }
+                      {!!unitsAvailable && userIsSeller &&
+                        <Link to="/my-listings" className="btn">My Listings</Link>
+                      }
+                      {!unitsAvailable &&
+                        <div className="sold-banner">
+                          <img src="images/sold-tag.svg" role="presentation" />
+                          Sold Out
+                        </div>
                       }
                     </div>
                   }
