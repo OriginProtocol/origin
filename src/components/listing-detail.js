@@ -12,6 +12,14 @@ import UserCard from './user-card'
 // not using a global singleton
 import origin from '../services/origin'
 
+/* linking to contract Etherscan requires knowledge of which network we're on */
+const etherscanDomains = {
+  1: 'etherscan.io',
+  3: 'ropsten.etherscan.io',
+  4: 'rinkeby.etherscan.io',
+  42: 'kovan.etherscan.io',
+}
+
 class ListingsDetail extends Component {
 
   constructor(props) {
@@ -26,6 +34,7 @@ class ListingsDetail extends Component {
     }
 
     this.state = {
+      etherscanDomain: null,
       loading: true,
       pictures: [],
       reviews: [],
@@ -100,6 +109,24 @@ class ListingsDetail extends Component {
     }
   }
 
+  async componentWillMount() {
+    if (this.props.listingAddress) {
+      // Load from IPFS
+      await this.loadListing()
+      await this.loadPurchases()
+      this.loadReviews()
+    }
+    else if (this.props.listingJson) {
+      const obj = Object.assign({}, this.props.listingJson, { loading: false })
+      // Listing json passed in directly
+      this.setState(obj)
+    }
+    const networkId = await web3.eth.net.getId()
+    this.setState({
+      etherscanDomain: etherscanDomains[networkId],
+    })
+  }
+
   async handleBuyClicked() {
     this.props.storeWeb3Intent('buy this listing')
 
@@ -128,7 +155,6 @@ class ListingsDetail extends Component {
   render() {
     const unitsAvailable = parseInt(this.state.unitsAvailable) // convert string to integer
     const buyersReviews = this.state.reviews.filter(r => r.revieweeRole === 'SELLER')
-
     return (
       <div className="listing-detail">
         {this.state.step === this.STEP.METAMASK &&
@@ -207,6 +233,13 @@ class ListingsDetail extends Component {
                 <div className="ipfs link-container">
                   <a href={origin.ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
                     View on IPFS<img src="images/carat-blue.svg" className="carat" alt="right carat" />
+                  </a>
+                </div>
+              }
+              {this.state.address && this.state.etherscanDomain &&
+                <div className="etherscan link-container">
+                  <a href={`https://${(this.state.etherscanDomain)}/address/${(this.state.address)}#internaltx`} target="_blank">
+                    View on Etherscan<img src="images/carat-blue.svg" className="carat" alt="right carat" />
                   </a>
                 </div>
               }

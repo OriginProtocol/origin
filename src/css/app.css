@@ -1297,11 +1297,7 @@ a:hover {
   white-space: pre;
 }
 
-.listing-container .ipfs {
-  margin-bottom: 1rem;
-}
-
-.listing-container .ipfs a {
+.detail-info-box .link-container a {
   font-weight: normal;
 }
 
