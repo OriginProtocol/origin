@@ -26,7 +26,8 @@ let validateUser = (data) => {
 }
 
 class UserObject {
-  constructor({ profile, attestations, identityAddress } = {}) {
+  constructor({ address, profile, attestations, identityAddress } = {}) {
+    this.address = address
     this.profile = profile
     this.attestations = attestations
     this.identityAddress = identityAddress
@@ -49,13 +50,14 @@ class Users extends ResourceBase {
   }
 
   async get(address) {
-    let identityAddress = await this.identityAddress(address)
+    const identityAddress = await this.identityAddress(address)
     if (identityAddress) {
-      let userData = await this.getClaims(identityAddress)
-      userData.identityAddress = identityAddress
-      return new UserObject(userData)
+      const userData = await this.getClaims(identityAddress)
+      const obj = Object.assign({}, userData, { address, identityAddress })
+
+      return new UserObject(obj)
     }
-    return new UserObject()
+    return new UserObject({ address })
   }
 
   async identityAddress(address) {
