@@ -99,7 +99,7 @@ class ListingsDetail extends Component {
     }
     const networkName = await web3.eth.net.getNetworkType() // Actually returns name, e.g. 'ropsten'
     this.setState({
-        networkName: networkName,
+      networkName: networkName,
     })
   }
 
@@ -208,7 +208,7 @@ class ListingsDetail extends Component {
                 </div>
               }
               {this.state.address &&
-                <div>
+                <div className="etherscan link-container">
                   <a href={`https://${(this.state.networkName)}.etherscan.io/address/${(this.state.address)}#internaltx`} target="_blank">
                     View on Etherscan<img src="images/carat-blue.svg" className="carat" alt="right carat" />
                   </a>
