@@ -11,6 +11,14 @@ import UserCard from './user-card'
 // not using a global singleton
 import origin from '../services/origin'
 
+/* linking to contract Etherscan requires knowledge of which network we're on */
+const etherscanDomains = {
+  1: 'etherscan.io',
+  3: 'ropsten.etherscan.io',
+  4: 'rinkeby.etherscan.io',
+  42: 'kovan.etherscan.io',
+}
+
 class ListingsDetail extends Component {
 
   constructor(props) {
@@ -25,6 +33,7 @@ class ListingsDetail extends Component {
     }
 
     this.state = {
+      etherscanDomain: null,
       loading: true,
       pictures: [],
       reviews: [],
@@ -97,9 +106,9 @@ class ListingsDetail extends Component {
       // Listing json passed in directly
       this.setState(obj)
     }
-    const networkName = await web3.eth.net.getNetworkType() // Actually returns name, e.g. 'ropsten'
+    const networkId = await web3.eth.net.getId()
     this.setState({
-      networkName: networkName,
+      etherscanDomain: etherscanDomains[networkId],
     })
   }
 
@@ -207,9 +216,9 @@ class ListingsDetail extends Component {
                   </a>
                 </div>
               }
-              {this.state.address &&
+              {this.state.address && this.state.etherscanDomain &&
                 <div className="etherscan link-container">
-                  <a href={`https://${(this.state.networkName)}.etherscan.io/address/${(this.state.address)}#internaltx`} target="_blank">
+                  <a href={`https://${(this.state.etherscanDomain)}/address/${(this.state.address)}#internaltx`} target="_blank">
                     View on Etherscan<img src="images/carat-blue.svg" className="carat" alt="right carat" />
                   </a>
                 </div>
