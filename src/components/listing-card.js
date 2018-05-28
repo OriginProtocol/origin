@@ -13,32 +13,26 @@ class ListingCard extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: true,
-      shouldRender: true
+      loading: true
     }
   }
 
   async componentDidMount() {
     try {
       const listing = await origin.listings.getByIndex(this.props.listingId)
-      const translatedListing = translateListingCategory(listing)
-      if (!this.props.hideList.includes(translatedListing.address)) {
-        const obj = Object.assign({}, translatedListing, { loading: false })
 
-        this.setState(obj)
-      } else {
-        this.setState({ shouldRender: false })
-      }
+      const translatedListing = translateListingCategory(listing)
+      const obj = Object.assign({}, translatedListing, { loading: false })
+
+      this.setState(obj)
     } catch (error) {
       console.error(`Error fetching contract or IPFS info for listingId: ${this.props.listingId}`)
     }
   }
 
   render() {
-    const { address, category, loading, name, pictures, price, unitsAvailable, shouldRender } = this.state
+    const { address, category, loading, name, pictures, price, unitsAvailable } = this.state
     const photo = pictures && pictures.length && (new URL(pictures[0])).protocol === "data:" && pictures[0]
-
-    if (!shouldRender) return false
 
     return (
       <div className={`col-12 col-md-6 col-lg-4 listing-card${loading ? ' loading' : ''}`}>
