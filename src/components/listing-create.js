@@ -122,6 +122,10 @@ class ListingCreate extends Component {
   }
 
   render() {
+    const { selectedSchema } = this.state
+    const enumeratedPrice = selectedSchema && selectedSchema.properties['price'].enum
+    const priceHidden = enumeratedPrice && enumeratedPrice.length === 1 && enumeratedPrice[0] === 0
+
     return (
       <div className="container listing-form">
         { this.state.step === this.STEP.PICK_SCHEMA &&
@@ -178,6 +182,7 @@ class ListingCreate extends Component {
                   onSubmit={this.onDetailsEntered}
                   formData={this.state.formListing.formData}
                   onError={(errors) => console.log(`react-jsonschema-form errors: ${errors.length}`)}
+                  uiSchema={priceHidden ? { price: { 'ui:widget': 'hidden' } } : undefined}
                 >
                   <div className="btn-container">
                     <button type="button" className="btn btn-other" onClick={() => this.setState({step: this.STEP.PICK_SCHEMA})}>
