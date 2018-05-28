@@ -302,7 +302,7 @@ class PurchaseDetail extends Component {
     // may potentially be neither buyer nor seller
     if (web3Account === purchase.buyerAddress) {
       perspective = 'buyer'
-    } else if (web3Account === purchase.sellerAddress) {
+    } else if (web3Account === listing.sellerAddress) {
       perspective = 'seller'
     }
 
@@ -471,21 +471,21 @@ class PurchaseDetail extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  
+
                   {paidAt &&
                     <TransactionEvent timestamp={paidAt} eventName="Payment received" transaction={paymentEvent} buyer={buyer} seller={seller} />
                   }
 
                   {fulfilledAt &&
-                    <TransactionEvent timestamp={fulfilledAt} eventName="Sent by seller" transaction={fulfilledAt} buyer={buyer} seller={seller} />
+                    <TransactionEvent timestamp={fulfilledAt} eventName="Sent by seller" transaction={fulfillmentEvent} buyer={buyer} seller={seller} />
                   }
 
                   {receivedAt &&
-                    <TransactionEvent timestamp={receivedAt} eventName="Received by buyer" transaction={receivedAt} buyer={buyer} seller={seller} />
+                    <TransactionEvent timestamp={receivedAt} eventName="Received by buyer" transaction={receiptEvent} buyer={buyer} seller={seller} />
                   }
 
                   {withdrawnAt &&
-                    <TransactionEvent timestamp={withdrawnAt} eventName="Funds withdrawn" transaction={withdrawnAt} buyer={buyer} seller={seller} />
+                    <TransactionEvent timestamp={withdrawnAt} eventName="Funds withdrawn" transaction={withdrawalEvent} buyer={buyer} seller={seller} />
                   }
 
                 </tbody>
