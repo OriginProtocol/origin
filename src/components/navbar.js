@@ -1,21 +1,38 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import ConnectivityDropdown from 'components/dropdowns/connectivity'
 // Hidden for current deployment
 // import NotificationsDropdown from 'components/dropdowns/notifications'
 import UserDropdown from 'components/dropdowns/user'
+import Modal from './modal'
+import { storeWeb3Intent } from '../actions/App'
 
 class NavBar extends Component {
   constructor(props) {
     super(props)
 
     this.handleChange = this.handleChange.bind(this)
-    this.state = { searchQuery: '' }
+    this.handleLink = this.handleLink.bind(this)
+    this.state = {
+      noWeb3Account: false,
+      notWeb3EnabledDesktop: false,
+      notWeb3EnabledMobile: false,
+      searchQuery: '',
+    }
   }
 
   handleChange(e) {
     this.setState({ searchQuery: e.target.value })
+  }
+
+  handleLink(e) {
+    this.props.storeWeb3Intent('create a listing')
+
+    if (!web3.givenProvider || !this.props.web3Account) {
+      e.preventDefault()
+    }
   }
 
   render() {
@@ -45,11 +62,16 @@ class NavBar extends Component {
                   <div className="actual-menu">
                     <Link to="/my-listings" className="dropdown-item">My Listings</Link>
                     <Link to="/my-sales" className="dropdown-item">My Sales</Link>
-                    <Link to="/create" className="dropdown-item d-none d-lg-block">Add a Listing</Link>
+                    <Link to="/create" className="dropdown-item d-none d-lg-block" onClick={this.handleLink}>
+                      Add a Listing
+                    </Link>
                   </div>
                 </div>
               </div>
-              <Link to="/create" className="nav-item nav-link"><img src="images/add-listing-icon.svg" alt="Add Listing" className="add-listing" />Add Listing</Link>
+              <Link to="/create" className="nav-item nav-link" onClick={this.handleLink}>
+                <img src="images/add-listing-icon.svg" alt="Add Listing" className="add-listing" />
+                Add Listing
+              </Link>
             </div>
           </div>
           <div className="static navbar-nav order-1 order-lg-2">
@@ -64,4 +86,17 @@ class NavBar extends Component {
   }
 }
 
-export default NavBar
+const mapStateToProps = state => {
+  return {
+    onMobile: state.app.onMobile,
+    web3Account: state.app.web3.account,
+    web3Intent: state.app.web3.intent,
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  storeWeb3Intent: (intent) => dispatch(storeWeb3Intent(intent)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar)
+

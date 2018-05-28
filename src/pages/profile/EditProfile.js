@@ -64,7 +64,7 @@ class EditProfile extends Component {
         >
           <div className="container">
             <div className="row">
-              <div className="col-6">
+              <div className="col-12 col-sm-6">
                 <div className="image-container">
                   <div className="image-pair">
                     <div className="avatar-container">
@@ -98,7 +98,7 @@ class EditProfile extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-6">
+              <div className="col-12 col-sm-6">
                 <div className="form-group">
                   <label htmlFor="first-name">First Name</label>
                   <input
@@ -148,18 +148,19 @@ class EditProfile extends Component {
                 <div className="explanation text-center">
                   This information will be published on the blockchain and will be visible to everyone.
                 </div>
-                <div className="button-container text-center">
+                <div className="button-container d-flex justify-content-center">
+                  <button type="submit" className="btn btn-clear">
+                    Continue
+                  </button>
+                </div>
+                <div className="link-container text-center">
                   <a
                     href="#"
-                    className="btn btn-clear"
                     data-modal="profile"
                     onClick={handleToggle}
                   >
                     Cancel
                   </a>
-                  <button type="submit" className="btn btn-clear">
-                    Continue
-                  </button>
                 </div>
               </div>
             </div>

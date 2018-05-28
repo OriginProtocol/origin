@@ -16,7 +16,8 @@ export const WalletConstants = keyMirror(
 
 export function init() {
   return async function(dispatch) {
-    var address = await origin.contractService.currentAccount()
+    const address = await origin.contractService.currentAccount()
+
     dispatch({
       type: WalletConstants.INIT_SUCCESS,
       address
@@ -27,8 +28,9 @@ export function init() {
 export function getBalance() {
   return async function(dispatch) {
     const { web3 } = origin.contractService
-    var account = await origin.contractService.currentAccount()
-    var balance = await web3.eth.getBalance(account)
+    const account = await origin.contractService.currentAccount()
+    const balance = await web3.eth.getBalance(account)
+
     dispatch({
       type: WalletConstants.BALANCE_SUCCESS,
       balance: web3.utils.fromWei(balance, 'ether')

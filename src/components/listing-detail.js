@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { showAlert } from '../actions/Alert'
+import { storeWeb3Intent } from '../actions/App'
 
 import Modal from './modal'
 import Review from './review'
@@ -113,26 +114,29 @@ class ListingsDetail extends Component {
   }
 
   async handleBuyClicked() {
-    const unitsToBuy = 1
-    const totalPrice = (unitsToBuy * this.state.price)
-    this.setState({step: this.STEP.METAMASK})
-    try {
-      const transactionReceipt = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice)
-      console.log('Purchase request sent.')
-      this.setState({step: this.STEP.PROCESSING})
-      await origin.contractService.waitTransactionFinished(transactionReceipt.transactionHash)
-      this.setState({step: this.STEP.PURCHASED})
-    } catch (error) {
-      window.err = error
-      console.error(error)
-      this.setState({step: this.STEP.ERROR})
+    this.props.storeWeb3Intent('buy this listing')
+
+    if (web3.givenProvider && this.props.web3Account) {
+      const unitsToBuy = 1
+      const totalPrice = (unitsToBuy * this.state.price)
+      this.setState({step: this.STEP.METAMASK})
+      try {
+        const transactionReceipt = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice)
+        console.log('Purchase request sent.')
+        this.setState({step: this.STEP.PROCESSING})
+        await origin.contractService.waitTransactionFinished(transactionReceipt.transactionHash)
+        this.setState({step: this.STEP.PURCHASED})
+      } catch (error) {
+        window.err = error
+        console.error(error)
+        this.setState({step: this.STEP.ERROR})
+      }
     }
   }
 
   resetToStepOne() {
     this.setState({step: this.STEP.VIEW})
   }
-
 
   render() {
     const unitsAvailable = parseInt(this.state.unitsAvailable) // convert string to integer
@@ -162,13 +166,12 @@ class ListingsDetail extends Component {
             <div className="image-container">
               <img src="images/circular-check-button.svg" role="presentation"/>
             </div>
-            Purchase was successful.<br />
-            <a href="#" onClick={e => {
-              e.preventDefault()
-              window.location.reload()
-            }}>
-              Reload page
-            </a>
+            Purchase was successful.
+            <div className="button-container">
+              <Link to="/my-purchases" className="btn btn-clear">
+                Go To Purchases
+              </Link>
+            </div>
           </Modal>
         }
         {this.state.step === this.STEP.ERROR && (
@@ -176,16 +179,18 @@ class ListingsDetail extends Component {
             <div className="image-container">
               <img src="images/flat_cross_icon.svg" role="presentation" />
             </div>
-            There was a problem purchasing this listing.<br />See the console for more details.<br />
-            <a
-              href="#"
-              onClick={e => {
-                e.preventDefault()
-                this.resetToStepOne()
-              }}
-            >
-              OK
-            </a>
+            There was a problem purchasing this listing.<br />See the console for more details.
+            <div className="button-container">
+              <a
+                className="btn btn-clear"
+                onClick={e => {
+                  e.preventDefault()
+                  this.resetToStepOne()
+                }}
+              >
+                OK
+              </a>
+            </div>
           </Modal>
         )}
         {(this.state.loading || (this.state.pictures && !!this.state.pictures.length)) &&
@@ -199,6 +204,7 @@ class ListingsDetail extends Component {
             ))}
           </div>
         }
+
         <div className={`container listing-container${this.state.loading ? ' loading' : ''}`}>
           <div className="row">
             <div className="col-12 col-md-8 detail-info-box">
@@ -319,8 +325,17 @@ class ListingsDetail extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    onMobile: state.app.onMobile,
+    web3Account: state.app.web3.account,
+    web3Intent: state.app.web3.intent,
+  }
+}
+
 const mapDispatchToProps = dispatch => ({
-  showAlert: (msg) => dispatch(showAlert(msg))
+  showAlert: (msg) => dispatch(showAlert(msg)),
+  storeWeb3Intent: (intent) => dispatch(storeWeb3Intent(intent)),
 })
 
-export default connect(undefined, mapDispatchToProps)(ListingsDetail)
+export default connect(mapStateToProps, mapDispatchToProps)(ListingsDetail)

@@ -87,6 +87,10 @@ a:hover {
   text-decoration: none;
 }
 
+.line {
+  display: inline-block;
+}
+
 .btn {
   font-weight: 900;
 }
@@ -105,7 +109,7 @@ a:hover {
 
 .btn-clear:hover {
   background-color: white;
-  color: #213040;
+  color: #213040 !important;
 }
 
 .table {
@@ -448,6 +452,7 @@ a:hover {
 .notifications .dropdown-menu {
   position: absolute;
   left: auto;
+  max-width: calc(100% - 15px - 15px);
   right: 15px;
 }
 
@@ -624,6 +629,10 @@ a:hover {
 
   -webkit-filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
   filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
+}
+
+.connectivity .dropdown-menu .actual-menu {
+  border-radius: var(--default-radius);
 }
 
 .connectivity .dropdown-menu .actual-menu,
@@ -865,7 +874,7 @@ a:hover {
   font-size: 1.125rem;
   padding-right: 30px;
   padding-left: 30px;
-  width: 156px;
+  width: 196px;
 }
 
 .btn-primary:hover {
@@ -915,6 +924,7 @@ a:hover {
 }
 
 .connectivity .actual-menu .indicator {
+  flex-shrink: 0;
   height: 25px;
   margin-right: 10px;
   width: 25px;
@@ -947,6 +957,14 @@ a:hover {
   font-weight: normal;
   padding: 30px 15px;
   text-align: center;
+}
+
+.modal-content .close {
+  color: white;
+  opacity: 1;
+  position: absolute;
+  right: 20px;
+  top: 15px;
 }
 
 .modal-content h1,
@@ -983,6 +1001,11 @@ a:hover {
   margin-bottom: 30px;
 }
 
+.modal-content .ethereum img {
+  width: 108px;
+  height: 108px;
+}
+
 .modal-content .form-control {
   text-align: center;
   max-width: 288px;
@@ -1010,18 +1033,21 @@ a:hover {
 }
 
 .modal-content .button-container {
-  margin-top: 20px;
+  margin: 0 -20px -20px 0;
+  padding-top: 20px;
 }
 
 .modal-content .button-container .btn {
   flex-basis: 50%;
   font-size: 1rem;
   font-weight: bold;
+  margin: 0 20px 20px 0;
   padding: 10px;
 }
 
-.modal-content .button-container .btn:last-child:not(:first-child) {
-  margin-left: 20px;
+.modal-content .link-container {
+  font-size: 0.875rem;
+  padding-top: 20px;
 }
 
 /* Tooltip */
@@ -2444,6 +2470,10 @@ sup {
   font-size: 1rem;
 }
 
+.profile-wrapper .modal .form-group {
+  margin-bottom: 0;
+}
+
 .profile-wrapper .modal .explanation {
   color: var(--pale-grey);
   font-size: 0.875rem;
@@ -2519,6 +2549,12 @@ sup {
 .publish.modal .button-container,
 .unload.modal .button-container {
   margin: 0 0 20px;
+  padding: 0;
+}
+
+.publish.modal .btn-clear,
+.unload.modal .btn-clear {
+  margin: 0;
 }
 
 .publish.modal a,
@@ -2722,6 +2758,10 @@ footer .footer-links li a {
     right: calc(((100% - 540px) / 2) + 60px);
     /*right: calc(((100% - 540px) / 2) + 60px + 60px);*/
     /*width: calc(540px - 60px - 60px);*/
+  }
+
+  .connectivity .dropdown-menu .actual-menu {
+    border-radius: var(--default-radius) 0 var(--default-radius) var(--default-radius);
   }
 
   .navbar .identity .dropdown-menu {
