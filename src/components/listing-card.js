@@ -51,7 +51,7 @@ class ListingCard extends Component {
           }
           <div className="category placehold">{category}</div>
           <h2 className="title placehold text-truncate">{name}</h2>
-          {price >= 0 && <ListingCardPrices price={price} unitsAvailable={unitsAvailable} />}
+          {price > 0 && <ListingCardPrices price={price} unitsAvailable={unitsAvailable} />}
         </Link>
       </div>
     )
