@@ -209,7 +209,7 @@ a:hover {
 }
 
 .identification a {
-  color: var(--dusk);
+  color: white;
 }
 
 .user-card .identification > div {
