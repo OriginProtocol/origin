@@ -128,9 +128,6 @@ class ListingsDetail extends Component {
   render() {
     const unitsAvailable = parseInt(this.state.unitsAvailable) // convert string to integer
     const buyersReviews = this.state.reviews.filter(r => r.revieweeRole === 'SELLER')
-
-    console.log(this.state)
-
     return (
       <div className="listing-detail">
         {this.state.step === this.STEP.METAMASK &&
