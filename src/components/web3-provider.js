@@ -12,11 +12,11 @@ const web3 = origin.contractService.web3
 const productionHostname = process.env.PRODUCTION_DOMAIN || 'demo.originprotocol.com'
 
 const networkNames = {
-  1: 'Main',
-  2: 'Morden',
-  3: 'Ropsten',
-  4: 'Rinkeby',
-  42: 'Kovan',
+  1: 'Main Ethereum Network',
+  2: 'Morden Test Network',
+  3: 'Ropsten Test Network',
+  4: 'Rinkeby Test Network',
+  42: 'Kovan Test Network',
   999: 'Localhost',
 }
 const supportedNetworkIds = [3, 4]
@@ -131,7 +131,10 @@ const UnsupportedNetwork = props => (
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
-    <span>{ (props.onMobile) ? "Your wallet-enabled browser" : "MetaMask" } should be on <strong>Rinkeby</strong> Network<br /></span>
+    <p>
+      <span className="line">{ (props.onMobile) ? "Your wallet-enabled browser" : "MetaMask" } should be on&nbsp;</span>
+      <span className="line"><strong>Rinkeby Test Network</strong></span>
+    </p>
     Currently on {props.currentNetworkName}.
   </Modal>
 )

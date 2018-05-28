@@ -87,6 +87,10 @@ a:hover {
   text-decoration: none;
 }
 
+.line {
+  display: inline-block;
+}
+
 .btn {
   font-weight: 900;
 }

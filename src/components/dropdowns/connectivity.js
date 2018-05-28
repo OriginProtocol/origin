@@ -8,11 +8,11 @@ const ipfsGateway = process.env.IPFS_DOMAIN || 'gateway.originprotocol.com'
 const bridgeServerDomain = process.env.BRIDGE_SERVER_DOMAIN || 'bridge.originprotocol.com'
 const web3 = origin.contractService.web3
 const networkNames = {
-  1: 'Main',
-  2: 'Morden',
-  3: 'Ropsten',
-  4: 'Rinkeby',
-  42: 'Kovan',
+  1: 'Main Ethereum Network',
+  2: 'Morden Test Network',
+  3: 'Ropsten Test Network',
+  4: 'Rinkeby Test Network',
+  42: 'Kovan Test Network',
   999: 'Localhost',
 }
 const ONE_SECOND = 1000
@@ -84,18 +84,18 @@ class ConnectivityDropdown extends Component {
               <ul className="list-group">
                 <li className="connection d-flex flex-wrap">
                   <div className={`indicator${connectedStatus.network ? ' connected' : ''}`}></div>
-                  <div className="name"><strong>Blockchain Network:</strong></div>
-                  <div className="ml-auto">{connectedStatus.network ? networkName : 'Loading...'}</div>
+                  <div className="name"><strong>Ethereum Network:</strong></div>
+                  <div className="ml-auto">{connectedStatus.network ? networkName : 'Connecting...'}</div>
                 </li>
                 <li className="connection d-flex flex-wrap">
                   <div className={`indicator${connectedStatus.ipfsGateway ? ' connected' : ''}`}></div>
                   <div className="name"><strong>IPFS Gateway:</strong></div>
-                  <div className="ml-auto">{connectedStatus.ipfsGateway ? ipfsGateway : 'Loading...'}</div>
+                  <div className="ml-auto">{connectedStatus.ipfsGateway ? ipfsGateway : 'Connecting...'}</div>
                 </li>
                 <li className="connection d-flex flex-wrap">
                   <div className={`indicator${connectedStatus.bridgeServer ? ' connected' : ''}`}></div>
                   <div className="name"><strong>Bridge Server:</strong></div>
-                  <div className="ml-auto">{connectedStatus.bridgeServer ? bridgeServerDomain : 'Loading...'}</div>
+                  <div className="ml-auto">{connectedStatus.bridgeServer ? bridgeServerDomain : 'Connecting...'}</div>
                 </li>
               </ul>
             </div>

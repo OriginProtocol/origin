@@ -10,6 +10,16 @@ import UserCard from './user-card'
 
 import origin from '../services/origin'
 
+const web3 = origin.contractService.web3
+
+/* linking to transactions on Etherscan requires knowledge of which network we're on */
+const etherscanDomains = {
+  1: 'etherscan.io',
+  3: 'ropsten.etherscan.io',
+  4: 'rinkeby.etherscan.io',
+  42: 'kovan.etherscan.io',
+}
+
 /* Transaction stages: no disputes and no seller review of buyer/transaction
  *  - step 0 was creating the listing
  *  - nextSteps[0] equates to step 1, etc
@@ -88,6 +98,7 @@ class PurchaseDetail extends Component {
       purchase: {},
       reviews: [],
       seller: {},
+      etherscanDomain: false
     }
   }
 
@@ -97,6 +108,18 @@ class PurchaseDetail extends Component {
 
   componentDidMount() {
     $('[data-toggle="tooltip"]').tooltip()
+  }
+
+  async componentDidMount() {
+    try {
+      const networkId = await web3.eth.net.getId()
+
+      this.setState({
+        etherscanDomain: etherscanDomains[networkId],
+      })
+    } catch(error) {
+      console.error(error)
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -286,6 +309,7 @@ class PurchaseDetail extends Component {
 
   render() {
     const { web3Account } = this.props
+
     const { buyer, form, listing, logs, purchase, reviews, seller } = this.state
     const { rating, reviewText } = form
     const buyersReviews = reviews.filter(r => r.revieweeRole === 'SELLER')
@@ -357,6 +381,8 @@ class PurchaseDetail extends Component {
     const { buttonText, functionName, instruction, placeholderText, prompt, reviewable } = nextStep ? nextStep[perspective] : {}
     const buyerName = (buyer.profile && `${buyer.profile.firstName} ${buyer.profile.lastName}`) || 'Unnamed User'
     const sellerName = (seller.profile && `${seller.profile.firstName} ${seller.profile.lastName}`) || 'Unnamed User'
+
+    const etherscanDomain = this.state.etherscanDomain || ''
 
     return (
       <div className="transaction-detail">
@@ -466,7 +492,7 @@ class PurchaseDetail extends Component {
                   {paidAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Payment received on<br /><strong>${moment(paidAt).format('MMM D, YYYY')}</strong>`}></span>Payment Received</td>
-                      <td className="text-truncate">{paymentEvent.transactionHash}</td>
+                      <td className="text-truncate"><a href={'https://' + etherscanDomain + '/tx/' + paymentEvent.transactionHash}>{paymentEvent.transactionHash}</a></td>
                       <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{buyer.address}</Link></td>
                       <td className="text-truncate"><Link to={`/users/${seller.address}`}>{seller.address}</Link></td>
                     </tr>
@@ -474,7 +500,7 @@ class PurchaseDetail extends Component {
                   {fulfilledAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sent by seller on<br /><strong>${moment(fulfilledAt).format('MMM D, YYYY')}</strong>`}></span>Sent by seller</td>
-                      <td className="text-truncate">{fulfillmentEvent.transactionHash}</td>
+                      <td className="text-truncate"><a href={'https://' + etherscanDomain + '/tx/' + fulfillmentEvent.transactionHash}>{fulfillmentEvent.transactionHash}</a></td>
                       <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{seller.address}</Link></td>
                       <td className="text-truncate"><Link to={`/users/${seller.address}`}>{buyer.address}</Link></td>
                     </tr>
@@ -482,7 +508,7 @@ class PurchaseDetail extends Component {
                   {receivedAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Received buy buyer on<br /><strong>${moment(receivedAt).format('MMM D, YYYY')}</strong>`}></span>Received by buyer</td>
-                      <td className="text-truncate">{receiptEvent.transactionHash}</td>
+                      <td className="text-truncate"><a href={'https://' + etherscanDomain + '/tx/' + receiptEvent.transactionHash}>{receiptEvent.transactionHash}</a></td>
                       <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{buyer.address}</Link></td>
                       <td className="text-truncate"><Link to={`/users/${seller.address}`}>{seller.address}</Link></td>
                     </tr>
@@ -490,7 +516,7 @@ class PurchaseDetail extends Component {
                   {perspective === 'seller' && withdrawnAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Funds withdrawn on<br /><strong>${moment(withdrawnAt).format('MMM D, YYYY')}</strong>`}></span>Funds withdrawn</td>
-                      <td className="text-truncate">{withdrawalEvent.transactionHash}</td>
+                      <td className="text-truncate"><a href={'https://' + etherscanDomain + '/tx/' + withdrawalEvent.transactionHash}>{withdrawalEvent.transactionHash}</a></td>
                       <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{seller.address}</Link></td>
                       <td className="text-truncate"><Link to={`/users/${seller.address}`}>{buyer.address}</Link></td>
                     </tr>
