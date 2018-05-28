@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import MyListingCard from './my-listing-card'
 
+import { storeWeb3Intent } from '../actions/App'
 import origin from '../services/origin'
 
 class MyListings extends Component {
@@ -10,10 +12,15 @@ class MyListings extends Component {
     this.handleUpdate = this.handleUpdate.bind(this)
     this.loadListing = this.loadListing.bind(this)
     this.state = {
-      accounts: [],
       filter: 'all',
       listings: [],
       loading: true,
+    }
+  }
+
+  componentDidMount() {
+    if(!web3.givenProvider || !this.props.web3Account) {
+      this.props.storeWeb3Intent('view your listings')
     }
   }
 
@@ -35,24 +42,11 @@ class MyListings extends Component {
     }
   }
 
-  async loadAccounts() {
-    try {
-      const accounts = await web3.eth.getAccounts()
-
-      this.setState({ accounts })
-
-      return accounts
-    } catch(error) {
-      console.error('Error loading accounts')
-      console.error(error)
-    }
-  }
-
   async loadListing(id) {
     try {
       const listing = await origin.listings.getByIndex(id)
 
-      if (listing.sellerAddress === this.state.accounts[0]) {
+      if (listing.sellerAddress === this.props.web3Account) {
         const listings = [...this.state.listings, listing]
 
         this.setState({ listings })
@@ -65,7 +59,6 @@ class MyListings extends Component {
   }
 
   async componentWillMount() {
-    await this.loadAccounts()
     await this.getListingIds()
 
     this.setState({ loading: false })
@@ -130,4 +123,15 @@ class MyListings extends Component {
   }
 }
 
-export default MyListings
+const mapStateToProps = state => {
+  return {
+    web3Account: state.app.web3.account,
+    web3Intent: state.app.web3.intent,
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyListings)

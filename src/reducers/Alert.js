@@ -4,7 +4,7 @@ const initialState = {
   message: ''
 }
 
-export default function Listings(state = initialState, action = {}) {
+export default function Alert(state = initialState, action = {}) {
   switch (action.type) {
 
     case AlertConstants.SHOW:

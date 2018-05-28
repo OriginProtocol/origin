@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import MyPurchaseCard from './my-purchase-card'
 
+import { storeWeb3Intent } from '../actions/App'
 import origin from '../services/origin'
 
 class MyPurchases extends Component {
@@ -10,6 +12,12 @@ class MyPurchases extends Component {
     this.loadListing = this.loadListing.bind(this)
     this.loadPurchase = this.loadPurchase.bind(this)
     this.state = { filter: 'pending', purchases: [], loading: true }
+  }
+
+  componentDidMount() {
+    if(!web3.givenProvider || !this.props.web3Account) {
+      this.props.storeWeb3Intent('view your purchases')
+    }
   }
 
   /*
@@ -67,9 +75,8 @@ class MyPurchases extends Component {
   async loadPurchase(addr) {
     try {
       const purchase = await origin.purchases.get(addr)
-      var accounts = await web3.eth.getAccounts()
       
-      if (purchase.buyerAddress === accounts[0]) {
+      if (purchase.buyerAddress === this.props.web3Account) {
         const purchases = [...this.state.purchases, purchase]
 
         this.setState({ purchases })
@@ -135,4 +142,15 @@ class MyPurchases extends Component {
   }
 }
 
-export default MyPurchases
+const mapStateToProps = state => {
+  return {
+    web3Account: state.app.web3.account,
+    web3Intent: state.app.web3.intent,
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyPurchases)
