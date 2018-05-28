@@ -302,7 +302,7 @@ class PurchaseDetail extends Component {
     // may potentially be neither buyer nor seller
     if (web3Account === purchase.buyerAddress) {
       perspective = 'buyer'
-    } else if (web3Account === purchase.sellerAddress) {
+    } else if (web3Account === listing.sellerAddress) {
       perspective = 'seller'
     }
 
