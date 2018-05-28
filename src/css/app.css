@@ -204,6 +204,7 @@ a:hover {
 }
 
 .identification .name {
+  color: var(--dark);
   font-weight: bold;
 }
 

@@ -380,34 +380,38 @@ class PurchaseDetail extends Component {
               <h2>Transaction Status</h2>
               <div className="row">
                 <div className="col-6">
-                  <div className="d-flex">
-                    <Link to={`/users/${seller.address}`}>
-                      <Avatar
-                        image={seller.profile && seller.profile.avatar}
-                        placeholderStyle={perspective === 'seller' ? 'green' : 'blue'}
-                      />
-                    </Link>
-                    <div className="identification d-flex flex-column justify-content-between text-truncate">
-                      <div><span className="badge badge-dark">Seller</span></div>
-                      <div className="name"><Link to={`/users/${seller.address}`}>{sellerName}</Link></div>
-                      <div className="address text-muted text-truncate">{seller.address}</div>
+                  <Link to={`/users/${seller.address}`}>
+                    <div className="d-flex">
+                      <Link to={`/users/${seller.address}`}>
+                        <Avatar
+                          image={seller.profile && seller.profile.avatar}
+                          placeholderStyle={perspective === 'seller' ? 'green' : 'blue'}
+                        />
+                      </Link>
+                      <div className="identification d-flex flex-column justify-content-between text-truncate">
+                        <div><span className="badge badge-dark">Seller</span></div>
+                        <div className="name">{sellerName}</div>
+                        <div className="address text-muted text-truncate">{seller.address}</div>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 </div>
                 <div className="col-6">
-                  <div className="d-flex justify-content-end">
-                    <div className="identification d-flex flex-column text-right justify-content-between text-truncate">
-                      <div><span className="badge badge-dark">Buyer</span></div>
-                      <div className="name"><Link to={`/users/${buyer.address}`}>{buyerName}</Link></div>
-                      <div className="address text-muted text-truncate">{buyer.address}</div>
+                  <Link to={`/users/${buyer.address}`}>
+                    <div className="d-flex justify-content-end">
+                      <div className="identification d-flex flex-column text-right justify-content-between text-truncate">
+                        <div><span className="badge badge-dark">Buyer</span></div>
+                        <div className="name">{buyerName}</div>
+                        <div className="address text-muted text-truncate">{buyer.address}</div>
+                      </div>
+                      <Link to={`/users/${buyer.address}`}>
+                        <Avatar
+                          image={buyer.profile && buyer.profile.avatar}
+                          placeholderStyle={perspective === 'buyer' ? 'green' : 'blue'}
+                        />
+                      </Link>
                     </div>
-                    <Link to={`/users/${buyer.address}`}>
-                      <Avatar
-                        image={buyer.profile && buyer.profile.avatar}
-                        placeholderStyle={perspective === 'buyer' ? 'green' : 'blue'}
-                      />
-                    </Link>
-                  </div>
+                  </Link>
                 </div>
                 <div className="col-12">
                   <TransactionProgress currentStep={step} maxStep={maxStep} purchase={listing} perspective={perspective} />
@@ -481,7 +485,7 @@ class PurchaseDetail extends Component {
                   }
 
                   {receivedAt &&
-                    <TransactionEvent tinmestamp={receivedAt} eventName="Received by buyer" transaction={receivedAt} buyer={buyer} seller={seller} />
+                    <TransactionEvent timestamp={receivedAt} eventName="Received by buyer" transaction={receivedAt} buyer={buyer} seller={seller} />
                   }
 
                   {withdrawnAt &&
