@@ -12,11 +12,11 @@ const web3 = origin.contractService.web3
 const productionHostname = process.env.PRODUCTION_DOMAIN || 'demo.originprotocol.com'
 
 const networkNames = {
-  1: 'Main',
-  2: 'Morden',
-  3: 'Ropsten',
-  4: 'Rinkeby',
-  42: 'Kovan',
+  1: 'Main Ethereum Network',
+  2: 'Morden Test Network',
+  3: 'Ropsten Test Network',
+  4: 'Rinkeby Test Network',
+  42: 'Kovan Test Network',
   999: 'Localhost',
 }
 const supportedNetworkIds = [3, 4]
