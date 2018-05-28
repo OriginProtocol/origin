@@ -131,7 +131,10 @@ const UnsupportedNetwork = props => (
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
-    <span>{ (props.onMobile) ? "Your wallet-enabled browser" : "MetaMask" } should be on <strong>Rinkeby</strong> Network<br /></span>
+    <p>
+      <span className="line">{ (props.onMobile) ? "Your wallet-enabled browser" : "MetaMask" } should be on&nbsp;</span>
+      <span className="line"><strong>Rinkeby Test Network</strong></span>
+    </p>
     Currently on {props.currentNetworkName}.
   </Modal>
 )
