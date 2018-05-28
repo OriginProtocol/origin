@@ -23,10 +23,11 @@ class ListingsGrid extends Component {
   render() {
     const { listingsPerPage } = this.state
     const { contractFound, listingIds, hideList } = this.props
-
+    const pinnedListingIds = [0, 1, 2, 3, 4]
     const activePage = this.props.match.params.activePage || 1
+    const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
     // Calc listings to show for given page
-    const showListingsIds = listingIds.slice(
+    const showListingsIds = arrangedListingIds.slice(
       listingsPerPage * (activePage - 1),
       listingsPerPage * activePage
     )
@@ -52,7 +53,7 @@ class ListingsGrid extends Component {
             <Pagination
               activePage={parseInt(activePage)}
               itemsCountPerPage={listingsPerPage}
-              totalItemsCount={listingIds.length}
+              totalItemsCount={arrangedListingIds.length}
               pageRangeDisplayed={5}
               onChange={page => this.props.history.push(`/page/${page}`)}
               itemClass="page-item"

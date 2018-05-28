@@ -49,7 +49,10 @@ class ListingCard extends Component {
               <img src="images/default-image.svg" alt="camera icon" />
             </div>
           }
-          <div className="category placehold">{category}</div>
+          <div className="category placehold d-flex justify-content-between">
+            <div>{category}</div>
+            {!loading && <div>{this.props.listingId < 5 && <span className="featured badge">Featured</span>}</div>}
+          </div>
           <h2 className="title placehold text-truncate">{name}</h2>
           {price > 0 && <ListingCardPrices price={price} unitsAvailable={unitsAvailable} />}
         </Link>
