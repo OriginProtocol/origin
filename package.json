@@ -27,7 +27,8 @@
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
-    "serve": "^6.5.6"
+    "serve": "^6.5.6",
+    "web3": "^1.0.0-beta.34"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.46",
