@@ -45,6 +45,20 @@ class ListingsDetail extends Component {
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
   }
 
+  async componentWillMount() {
+    if (this.props.listingAddress) {
+      // Load from IPFS
+      await this.loadListing()
+      await this.loadPurchases()
+      this.loadReviews()
+    }
+    else if (this.props.listingJson) {
+      const obj = Object.assign({}, this.props.listingJson, { loading: false })
+      // Listing json passed in directly
+      this.setState(obj)
+    }
+  }
+
   async loadListing() {
     try {
       const listing = await origin.listings.get(this.props.listingAddress)
@@ -259,7 +273,7 @@ class ListingsDetail extends Component {
               */}
             </div>
             <div className="col-12 col-md-4">
-              {this.state.price &&
+              {!!this.state.price && !!parseFloat(this.state.price) &&
                 <div className="buy-box placehold">
                   <div className="price d-flex justify-content-between">
                     <div>Price</div>

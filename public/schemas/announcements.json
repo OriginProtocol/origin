@@ -2,7 +2,7 @@
   "$schema":"http://json-schema.org/draft-06/schema#",
   "description":"Distributed Nextdoor",
   "type": "object",
-  "required": ["name","category","description"],
+  "required": ["name","category","description","price"],
   "properties": {
     "name": {
       "type": "string",
@@ -36,6 +36,14 @@
       "title": "Description",
       "minLength": 10,
       "maxLength": 1024
+    },
+    "price": {
+      "type": "number",
+      "title": "Price in ETH",
+      "default": 0,
+      "enum": [
+        0
+      ]
     },
     "pictures": {
       "type": "array",
