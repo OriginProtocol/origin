@@ -514,9 +514,9 @@ class PurchaseDetail extends Component {
                     <h2 className="category placehold">{listing.category}</h2>
                     <h1 className="title text-truncate placehold">{listing.name}</h1>
                     <p className="description placehold">{listing.description}</p>
-                    {!!listing.unitsAvailable && listing.unitsAvailable < 5 &&
+                    {/*!!listing.unitsAvailable && listing.unitsAvailable < 5 &&
                       <div className="units-available text-danger">Just {listing.unitsAvailable.toLocaleString()} left!</div>
-                    }
+                    */}
                     {listing.ipfsHash &&
                       <div className="link-container">
                         <a href={origin.ipfsService.gatewayUrlForHash(listing.ipfsHash)} target="_blank">
