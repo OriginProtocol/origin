@@ -2479,6 +2479,11 @@ sup {
 .identity.modal label {
   color: var(--pale-grey);
   font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.identity.modal input {
+  margin-bottom: 1rem;
 }
 
 .profile-wrapper .modal .form-group {
@@ -2488,7 +2493,8 @@ sup {
 .profile-wrapper .modal .explanation {
   color: var(--pale-grey);
   font-size: 0.875rem;
-  padding-top: 0.5rem;
+  padding-top: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .phone.modal .dropdown {
