@@ -238,13 +238,14 @@ class ListingsDetail extends Component {
                   </a>
                 </div>
               }
-              {this.state.address && this.state.etherscanDomain &&
+              {/* Remove per Matt 5/28/2018 */}
+              {/* this.state.address && this.state.etherscanDomain &&
                 <div className="etherscan link-container">
                   <a href={`https://${(this.state.etherscanDomain)}/address/${(this.state.address)}#internaltx`} target="_blank">
                     View on Etherscan<img src="images/carat-blue.svg" className="carat" alt="right carat" />
                   </a>
                 </div>
-              }
+              */}
               <div className="debug">
                 <li>IPFS: {this.state.ipfsHash}</li>
                 <li>Seller: {this.state.sellerAddress}</li>
