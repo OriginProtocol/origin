@@ -208,7 +208,7 @@ a:hover {
 }
 
 .identification a {
-  color: white;
+  color: var(--dusk);
 }
 
 .user-card .identification > div {

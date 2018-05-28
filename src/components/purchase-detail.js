@@ -5,20 +5,13 @@ import $ from 'jquery'
 import moment from 'moment'
 import Avatar from './avatar'
 import Review from './review'
+import TransactionEvent from '../pages/purchases/transaction-event'
 import TransactionProgress from './transaction-progress'
 import UserCard from './user-card'
 
 import origin from '../services/origin'
 
 const web3 = origin.contractService.web3
-
-/* linking to transactions on Etherscan requires knowledge of which network we're on */
-const etherscanDomains = {
-  1: 'etherscan.io',
-  3: 'ropsten.etherscan.io',
-  4: 'rinkeby.etherscan.io',
-  42: 'kovan.etherscan.io',
-}
 
 /* Transaction stages: no disputes and no seller review of buyer/transaction
  *  - step 0 was creating the listing
@@ -97,8 +90,7 @@ class PurchaseDetail extends Component {
       logs: [],
       purchase: {},
       reviews: [],
-      seller: {},
-      etherscanDomain: false
+      seller: {}
     }
   }
 
@@ -108,18 +100,6 @@ class PurchaseDetail extends Component {
 
   componentDidMount() {
     $('[data-toggle="tooltip"]').tooltip()
-  }
-
-  async componentDidMount() {
-    try {
-      const networkId = await web3.eth.net.getId()
-
-      this.setState({
-        etherscanDomain: etherscanDomains[networkId],
-      })
-    } catch(error) {
-      console.error(error)
-    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -382,8 +362,6 @@ class PurchaseDetail extends Component {
     const buyerName = (buyer.profile && `${buyer.profile.firstName} ${buyer.profile.lastName}`) || 'Unnamed User'
     const sellerName = (seller.profile && `${seller.profile.firstName} ${seller.profile.lastName}`) || 'Unnamed User'
 
-    const etherscanDomain = this.state.etherscanDomain || ''
-
     return (
       <div className="transaction-detail">
         <div className="container">
@@ -403,13 +381,15 @@ class PurchaseDetail extends Component {
               <div className="row">
                 <div className="col-6">
                   <div className="d-flex">
-                    <Avatar
-                      image={seller.profile && seller.profile.avatar}
-                      placeholderStyle={perspective === 'seller' ? 'green' : 'blue'}
-                    />
+                    <Link to={`/users/${seller.address}`}>
+                      <Avatar
+                        image={seller.profile && seller.profile.avatar}
+                        placeholderStyle={perspective === 'seller' ? 'green' : 'blue'}
+                      />
+                    </Link>
                     <div className="identification d-flex flex-column justify-content-between text-truncate">
                       <div><span className="badge badge-dark">Seller</span></div>
-                      <div className="name">{sellerName}</div>
+                      <div className="name"><Link to={`/users/${seller.address}`}>{sellerName}</Link></div>
                       <div className="address text-muted text-truncate">{seller.address}</div>
                     </div>
                   </div>
@@ -418,13 +398,15 @@ class PurchaseDetail extends Component {
                   <div className="d-flex justify-content-end">
                     <div className="identification d-flex flex-column text-right justify-content-between text-truncate">
                       <div><span className="badge badge-dark">Buyer</span></div>
-                      <div className="name">{buyerName}</div>
+                      <div className="name"><Link to={`/users/${buyer.address}`}>{buyerName}</Link></div>
                       <div className="address text-muted text-truncate">{buyer.address}</div>
                     </div>
-                    <Avatar
-                      image={buyer.profile && buyer.profile.avatar}
-                      placeholderStyle={perspective === 'buyer' ? 'green' : 'blue'}
-                    />
+                    <Link to={`/users/${buyer.address}`}>
+                      <Avatar
+                        image={buyer.profile && buyer.profile.avatar}
+                        placeholderStyle={perspective === 'buyer' ? 'green' : 'blue'}
+                      />
+                    </Link>
                   </div>
                 </div>
                 <div className="col-12">
@@ -489,38 +471,23 @@ class PurchaseDetail extends Component {
                   </tr>
                 </thead>
                 <tbody>
+                  
                   {paidAt &&
-                    <tr>
-                      <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Payment received on<br /><strong>${moment(paidAt).format('MMM D, YYYY')}</strong>`}></span>Payment Received</td>
-                      <td className="text-truncate"><a href={'https://' + etherscanDomain + '/tx/' + paymentEvent.transactionHash}>{paymentEvent.transactionHash}</a></td>
-                      <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{buyer.address}</Link></td>
-                      <td className="text-truncate"><Link to={`/users/${seller.address}`}>{seller.address}</Link></td>
-                    </tr>
+                    <TransactionEvent timestamp={paidAt} eventName="Payment received" transaction={paymentEvent} buyer={buyer} seller={seller} />
                   }
+
                   {fulfilledAt &&
-                    <tr>
-                      <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sent by seller on<br /><strong>${moment(fulfilledAt).format('MMM D, YYYY')}</strong>`}></span>Sent by seller</td>
-                      <td className="text-truncate"><a href={'https://' + etherscanDomain + '/tx/' + fulfillmentEvent.transactionHash}>{fulfillmentEvent.transactionHash}</a></td>
-                      <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{seller.address}</Link></td>
-                      <td className="text-truncate"><Link to={`/users/${seller.address}`}>{buyer.address}</Link></td>
-                    </tr>
+                    <TransactionEvent timestamp={fulfilledAt} eventName="Sent by seller" transaction={fulfilledAt} buyer={buyer} seller={seller} />
                   }
+
                   {receivedAt &&
-                    <tr>
-                      <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Received buy buyer on<br /><strong>${moment(receivedAt).format('MMM D, YYYY')}</strong>`}></span>Received by buyer</td>
-                      <td className="text-truncate"><a href={'https://' + etherscanDomain + '/tx/' + receiptEvent.transactionHash}>{receiptEvent.transactionHash}</a></td>
-                      <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{buyer.address}</Link></td>
-                      <td className="text-truncate"><Link to={`/users/${seller.address}`}>{seller.address}</Link></td>
-                    </tr>
+                    <TransactionEvent tinmestamp={receivedAt} eventName="Received by buyer" transaction={receivedAt} buyer={buyer} seller={seller} />
                   }
-                  {perspective === 'seller' && withdrawnAt &&
-                    <tr>
-                      <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Funds withdrawn on<br /><strong>${moment(withdrawnAt).format('MMM D, YYYY')}</strong>`}></span>Funds withdrawn</td>
-                      <td className="text-truncate"><a href={'https://' + etherscanDomain + '/tx/' + withdrawalEvent.transactionHash}>{withdrawalEvent.transactionHash}</a></td>
-                      <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{seller.address}</Link></td>
-                      <td className="text-truncate"><Link to={`/users/${seller.address}`}>{buyer.address}</Link></td>
-                    </tr>
+
+                  {withdrawnAt &&
+                    <TransactionEvent timestamp={withdrawnAt} eventName="Funds withdrawn" transaction={withdrawnAt} buyer={buyer} seller={seller} />
                   }
+
                 </tbody>
               </table>
               <hr />
