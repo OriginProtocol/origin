@@ -2772,6 +2772,7 @@ footer .footer-links li a {
 
   .connectivity .dropdown-menu .actual-menu {
     border-radius: var(--default-radius) 0 var(--default-radius) var(--default-radius);
+    width: 384px;
   }
 
   .navbar .identity .dropdown-menu {
