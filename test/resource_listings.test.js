@@ -35,6 +35,12 @@ describe("Listing Resource", function() {
     expect(ids.length).to.be.greaterThan(1)
   })
 
+  it("should get all listing addresses", async () => {
+    await listings.create({ name: "Sample Listing 2", price: 2 }, "")
+    let addresses = await listings.allAddresses()
+    expect(addresses.length).to.be.greaterThan(1)
+  })
+
   it("should get a listing by index", async () => {
     await listings.create({ name: "Foo Bar", price: 1 }, "")
     let listingIds = await contractService.getAllListingIds()

@@ -13,6 +13,18 @@ class Listings extends ResourceBase {
     return await this.contractService.getAllListingIds()
   }
 
+  async allAddresses() {
+    let contract = this.contractService.listingsRegistryContract
+    let deployed = await this.contractService.deployed(contract)
+    let events = await deployed.getPastEvents(
+      "NewListing",
+      { fromBlock: 0, toBlock: "latest" }
+    )
+    return events.map(({ returnValues }) => {
+      return returnValues["_address"]
+    })
+  }
+
   async get(address) {
     const contractData = await this.contractFn(address, "data")
     let ipfsHash = this.contractService.getIpfsHashFromBytes32(contractData[1])
