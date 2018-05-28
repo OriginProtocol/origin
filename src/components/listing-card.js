@@ -7,14 +7,6 @@ import origin from '../services/origin'
 
 import ListingCardPrices from './listing-card-prices.js';
 
-const featuredListingAddresses = [
-  '0x78021968E77E547e27136e8D2696B4B67105365F',
-  '0x6CEA8C4D16B9a45479701FE52266AEc8540cC213',
-  '0x970bE6bb3066c4C3a86E9dB1f48498a8028Db4A1',
-  '0x59de8f7677bfe4ABB60D13c0F1f7Ee94F6c30D92',
-  '0x6DffeB5C47Edc99Be92F2daDD2E0D8Db2920a2aB',
-]
-
 class ListingCard extends Component {
 
   constructor(props) {
@@ -59,7 +51,7 @@ class ListingCard extends Component {
           }
           <div className="category placehold d-flex justify-content-between">
             <div>{category}</div>
-            <div>{featuredListingAddresses.includes(address) && <span className="featured badge">Featured</span>}</div>
+            {!loading && <div>{this.props.listingId < 5 && <span className="featured badge">Featured</span>}</div>}
           </div>
           <h2 className="title placehold text-truncate">{name}</h2>
           {price > 0 && <ListingCardPrices price={price} unitsAvailable={unitsAvailable} />}
