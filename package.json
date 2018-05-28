@@ -90,7 +90,7 @@
       [
         "react-intl",
         {
-          "messagesDir": "./messages",
+          "messagesDir": "./locales/messages",
           "enforceDescriptions": false
         }
       ]

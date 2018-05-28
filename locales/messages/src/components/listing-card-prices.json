@@ -1,0 +1,14 @@
+[
+  {
+    "id": "loadingMessage",
+    "defaultMessage": "Loading..."
+  },
+  {
+    "id": "etheriumCurrencyAbbrev",
+    "defaultMessage": "ETH"
+  },
+  {
+    "id": "listing-card-prices.sold",
+    "defaultMessage": "Sold"
+  }
+]

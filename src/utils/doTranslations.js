@@ -2,7 +2,7 @@ const fs = require('fs');
 const glob = require('glob');
 const mkdirp = require('mkdirp');
 
-const filePattern = './messages/**/*.json';
+const filePattern = './locales/messages/**/*.json';
 const outputLanguageDataDir = './locales/';
 
 // Aggregates the default messages that were extracted from the example app's
@@ -25,4 +25,4 @@ const defaultMessages = glob.sync(filePattern)
 
 mkdirp.sync(outputLanguageDataDir);
 
-fs.writeFileSync(outputLanguageDataDir + 'data.json', `{ "en": ${JSON.stringify(defaultMessages, null, 2)} }`);
+fs.writeFileSync(outputLanguageDataDir + 'allMessages.json', `{ "en": ${JSON.stringify(defaultMessages, null, 2)} }`);
