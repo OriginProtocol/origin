@@ -382,12 +382,10 @@ class PurchaseDetail extends Component {
                 <div className="col-6">
                   <Link to={`/users/${seller.address}`}>
                     <div className="d-flex">
-                      <Link to={`/users/${seller.address}`}>
-                        <Avatar
-                          image={seller.profile && seller.profile.avatar}
-                          placeholderStyle={perspective === 'seller' ? 'green' : 'blue'}
-                        />
-                      </Link>
+                      <Avatar
+                        image={seller.profile && seller.profile.avatar}
+                        placeholderStyle={perspective === 'seller' ? 'green' : 'blue'}
+                      />
                       <div className="identification d-flex flex-column justify-content-between text-truncate">
                         <div><span className="badge badge-dark">Seller</span></div>
                         <div className="name">{sellerName}</div>
@@ -404,12 +402,10 @@ class PurchaseDetail extends Component {
                         <div className="name">{buyerName}</div>
                         <div className="address text-muted text-truncate">{buyer.address}</div>
                       </div>
-                      <Link to={`/users/${buyer.address}`}>
-                        <Avatar
-                          image={buyer.profile && buyer.profile.avatar}
-                          placeholderStyle={perspective === 'buyer' ? 'green' : 'blue'}
-                        />
-                      </Link>
+                      <Avatar
+                        image={buyer.profile && buyer.profile.avatar}
+                        placeholderStyle={perspective === 'buyer' ? 'green' : 'blue'}
+                      />
                     </div>
                   </Link>
                 </div>
