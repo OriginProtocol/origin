@@ -493,7 +493,7 @@ class PurchaseDetail extends Component {
               <hr />
             </div>
             <div className="col-12 col-lg-4">
-              <UserCard title={counterparty} userAddress={counterpartyUser.address} />
+              {counterpartyUser.address && <UserCard title={counterparty} userAddress={counterpartyUser.address} />}
             </div>
           </div>
           <div className="row">
