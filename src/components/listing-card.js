@@ -12,31 +12,23 @@ class ListingCard extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: true,
-      shouldRender: true
+      loading: true
     }
   }
 
   async componentDidMount() {
     try {
       const listing = await origin.listings.getByIndex(this.props.listingId)
-      if (!this.props.hideList.includes(listing.address)) {
-        const obj = Object.assign({}, listing, { loading: false })
-
-        this.setState(obj)
-      } else {
-        this.setState({ shouldRender: false })
-      }
+      const obj = Object.assign({}, listing, { loading: false })
+      this.setState(obj)
     } catch (error) {
       console.error(`Error fetching contract or IPFS info for listingId: ${this.props.listingId}`)
     }
   }
 
   render() {
-    const { address, category, loading, name, pictures, price, unitsAvailable, shouldRender } = this.state
+    const { address, category, loading, name, pictures, price, unitsAvailable } = this.state
     const photo = pictures && pictures.length && (new URL(pictures[0])).protocol === "data:" && pictures[0]
-
-    if (!shouldRender) return false
 
     return (
       <div className={`col-12 col-md-6 col-lg-4 listing-card${loading ? ' loading' : ''}`}>
@@ -50,7 +42,7 @@ class ListingCard extends Component {
             </div>
           }
           <div className="category placehold">{category}</div>
-          <h2 className="title placehold text-truncate">{name}</h2>
+          <h2 className="title placehold text-truncate" data-listing-index={this.props.listingId}>{name}</h2>
           {price > 0 && <ListingCardPrices price={price} unitsAvailable={unitsAvailable} />}
         </Link>
       </div>
