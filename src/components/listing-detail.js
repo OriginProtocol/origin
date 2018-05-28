@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { showAlert } from '../actions/Alert'
+import { storeWeb3Intent } from '../actions/App'
 
 import Modal from './modal'
 import Review from './review'
@@ -100,19 +101,23 @@ class ListingsDetail extends Component {
   }
 
   async handleBuyClicked() {
-    const unitsToBuy = 1
-    const totalPrice = (unitsToBuy * this.state.price)
-    this.setState({step: this.STEP.METAMASK})
-    try {
-      const transactionReceipt = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice)
-      console.log('Purchase request sent.')
-      this.setState({step: this.STEP.PROCESSING})
-      await origin.contractService.waitTransactionFinished(transactionReceipt.transactionHash)
-      this.setState({step: this.STEP.PURCHASED})
-    } catch (error) {
-      window.err = error
-      console.error(error)
-      this.setState({step: this.STEP.ERROR})
+    this.props.storeWeb3Intent('buy this listing')
+
+    if (web3.givenProvider && this.props.web3Account) {
+      const unitsToBuy = 1
+      const totalPrice = (unitsToBuy * this.state.price)
+      this.setState({step: this.STEP.METAMASK})
+      try {
+        const transactionReceipt = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice)
+        console.log('Purchase request sent.')
+        this.setState({step: this.STEP.PROCESSING})
+        await origin.contractService.waitTransactionFinished(transactionReceipt.transactionHash)
+        this.setState({step: this.STEP.PURCHASED})
+      } catch (error) {
+        window.err = error
+        console.error(error)
+        this.setState({step: this.STEP.ERROR})
+      }
     }
   }
 
@@ -120,8 +125,8 @@ class ListingsDetail extends Component {
     this.setState({step: this.STEP.VIEW})
   }
 
-
   render() {
+    const unitsAvailable = parseInt(this.state.unitsAvailable) // convert string to integer
     const buyersReviews = this.state.reviews.filter(r => r.revieweeRole === 'SELLER')
 
     return (
@@ -149,13 +154,12 @@ class ListingsDetail extends Component {
             <div className="image-container">
               <img src="images/circular-check-button.svg" role="presentation"/>
             </div>
-            Purchase was successful.<br />
-            <a href="#" onClick={e => {
-              e.preventDefault()
-              window.location.reload()
-            }}>
-              Reload page
-            </a>
+            Purchase was successful.
+            <div className="button-container">
+              <Link to="/my-purchases" className="btn btn-clear">
+                Go To Purchases
+              </Link>
+            </div>
           </Modal>
         }
         {this.state.step === this.STEP.ERROR && (
@@ -163,19 +167,21 @@ class ListingsDetail extends Component {
             <div className="image-container">
               <img src="images/flat_cross_icon.svg" role="presentation" />
             </div>
-            There was a problem purchasing this listing.<br />See the console for more details.<br />
-            <a
-              href="#"
-              onClick={e => {
-                e.preventDefault()
-                this.resetToStepOne()
-              }}
-            >
-              OK
-            </a>
+            There was a problem purchasing this listing.<br />See the console for more details.
+            <div className="button-container">
+              <a
+                className="btn btn-clear"
+                onClick={e => {
+                  e.preventDefault()
+                  this.resetToStepOne()
+                }}
+              >
+                OK
+              </a>
+            </div>
           </Modal>
         )}
-        {(this.state.loading || (this.state.pictures && this.state.pictures.length)) &&
+        {(this.state.loading || (this.state.pictures && !!this.state.pictures.length)) &&
           <div className="carousel">
             {this.state.pictures.map(pictureUrl => (
               <div className="photo" key={pictureUrl}>
@@ -186,15 +192,17 @@ class ListingsDetail extends Component {
             ))}
           </div>
         }
+
         <div className={`container listing-container${this.state.loading ? ' loading' : ''}`}>
           <div className="row">
             <div className="col-12 col-md-8 detail-info-box">
               <div className="category placehold">{this.state.category}</div>
               <h1 className="title text-truncate placehold">{this.state.name}</h1>
               <p className="description placehold">{this.state.description}</p>
-              {!!this.state.unitsAvailable && this.state.unitsAvailable < 5 &&
-                <div className="units-available text-danger">Just {this.state.unitsAvailable.toLocaleString()} left!</div>
-              }
+              {/* Via Stan 5/25/2018: Hide until contracts allow for unitsAvailable > 1 */}
+              {/*!!unitsAvailable && unitsAvailable < 5 &&
+                <div className="units-available text-danger">Just {unitsAvailable.toLocaleString()} left!</div>
+              */}
               {this.state.ipfsHash &&
                 <div className="ipfs link-container">
                   <a href={origin.ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
@@ -205,7 +213,7 @@ class ListingsDetail extends Component {
               <div className="debug">
                 <li>IPFS: {this.state.ipfsHash}</li>
                 <li>Seller: {this.state.sellerAddress}</li>
-                <li>Units: {this.state.unitsAvailable}</li>
+                <li>Units: {unitsAvailable}</li>
               </div>
               {/* Hidden for current deployment */}
               {/*!this.state.loading && this.state.purchases.length > 0 &&
@@ -232,50 +240,50 @@ class ListingsDetail extends Component {
               */}
             </div>
             <div className="col-12 col-md-4">
-              <div className="buy-box placehold">
-                {this.state.price &&
+              {this.state.price &&
+                <div className="buy-box placehold">
                   <div className="price d-flex justify-content-between">
                     <div>Price</div>
                     <div className="text-right">
                       {Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
                     </div>
                   </div>
-                }
-                {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
-                {/* <div className="quantity d-flex justify-content-between">
-                                  <div>Quantity</div>
-                                  <div className="text-right">
-                                    {Number(1).toLocaleString()}
+                  {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
+                  {/* <div className="quantity d-flex justify-content-between">
+                                    <div>Quantity</div>
+                                    <div className="text-right">
+                                      {Number(1).toLocaleString()}
+                                    </div>
                                   </div>
-                                </div>
-                                <div className="total-price d-flex justify-content-between">
-                                  <div>Total Price</div>
-                                  <div className="price text-right">
-                                    {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
-                                  </div>
-                                </div> */}
-                {!this.state.loading &&
-                  <div className="btn-container">
-                    {(this.state.address) && (
-                      (this.state.unitsAvailable > 0) ?
-                        <button
-                          className="btn btn-primary"
-                          onClick={this.handleBuyClicked}
-                          disabled={!this.state.address}
-                          onMouseDown={e => e.preventDefault()}
-                        >
-                          Buy Now
-                        </button>
-                        :
-                        <div className="sold-banner">
-                          <img src="images/sold-tag.svg" role="presentation" />
-                          Sold Out
-                        </div>
-                      )
-                    }
-                  </div>
-                }
-              </div>
+                                  <div className="total-price d-flex justify-content-between">
+                                    <div>Total Price</div>
+                                    <div className="price text-right">
+                                      {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
+                                    </div>
+                                  </div> */}
+                  {!this.state.loading &&
+                    <div className="btn-container">
+                      {(this.state.address) && (
+                        (unitsAvailable > 0) ?
+                          <button
+                            className="btn btn-primary"
+                            onClick={this.handleBuyClicked}
+                            disabled={!this.state.address}
+                            onMouseDown={e => e.preventDefault()}
+                          >
+                            Buy Now
+                          </button>
+                          :
+                          <div className="sold-banner">
+                            <img src="images/sold-tag.svg" role="presentation" />
+                            Sold Out
+                          </div>
+                        )
+                      }
+                    </div>
+                  }
+                </div>
+              }
               {this.state.sellerAddress && <UserCard title="seller" userAddress={this.state.sellerAddress} />}
             </div>
           </div>
@@ -298,8 +306,17 @@ class ListingsDetail extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    onMobile: state.app.onMobile,
+    web3Account: state.app.web3.account,
+    web3Intent: state.app.web3.intent,
+  }
+}
+
 const mapDispatchToProps = dispatch => ({
-  showAlert: (msg) => dispatch(showAlert(msg))
+  showAlert: (msg) => dispatch(showAlert(msg)),
+  storeWeb3Intent: (intent) => dispatch(storeWeb3Intent(intent)),
 })
 
-export default connect(undefined, mapDispatchToProps)(ListingsDetail)
+export default connect(mapStateToProps, mapDispatchToProps)(ListingsDetail)

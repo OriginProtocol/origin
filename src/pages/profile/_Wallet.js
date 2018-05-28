@@ -13,9 +13,9 @@ class Wallet extends Component {
             <Identicon address={address} />
           </div>
           <div className="eth d-flex flex-column justify-content-between">
-            <div>ETH Address:</div>
+            {address && <div>ETH Address:</div>}
             <div className="address">
-              <strong>{address}</strong>
+              <strong>{address || 'No ETH Account Connected'}</strong>
             </div>
           </div>
         </div>

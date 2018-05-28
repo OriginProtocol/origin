@@ -2,6 +2,7 @@ import { ListingConstants } from '../actions/Listing'
 
 const initialState = {
   ids: [],
+  hideList: [],
   contractFound: true
 }
 
@@ -12,7 +13,7 @@ export default function Listings(state = initialState, action = {}) {
         return { ...state, ids: [], contractFound: action.contractFound }
 
       case ListingConstants.FETCH_IDS_SUCCESS:
-        return { ...state, ids: action.ids }
+        return { ...state, ids: action.ids, hideList: action.hideList }
 
       default:
         return state

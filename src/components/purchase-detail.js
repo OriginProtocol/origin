@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import moment from 'moment'
@@ -8,6 +9,16 @@ import TransactionProgress from './transaction-progress'
 import UserCard from './user-card'
 
 import origin from '../services/origin'
+
+const web3 = origin.contractService.web3
+
+/* linking to transactions on Etherscan requires knowledge of which network we're on */
+const etherscanDomains = {
+  1: 'etherscan.io',
+  3: 'ropsten.etherscan.io',
+  4: 'rinkeby.etherscan.io',
+  42: 'kovan.etherscan.io',
+}
 
 /* Transaction stages: no disputes and no seller review of buyer/transaction
  *  - step 0 was creating the listing
@@ -77,7 +88,6 @@ class PurchaseDetail extends Component {
     this.loadPurchase = this.loadPurchase.bind(this)
     this.withdrawFunds = this.withdrawFunds.bind(this)
     this.state = {
-      accounts: [],
       buyer: {},
       form: {
         rating: 5,
@@ -88,16 +98,28 @@ class PurchaseDetail extends Component {
       purchase: {},
       reviews: [],
       seller: {},
+      etherscanDomain: false
     }
   }
 
   componentWillMount() {
-    this.loadAccounts()
     this.loadPurchase()
   }
 
   componentDidMount() {
     $('[data-toggle="tooltip"]').tooltip()
+  }
+
+  async componentDidMount() {
+    try {
+      const networkId = await web3.eth.net.getId()
+
+      this.setState({
+        etherscanDomain: etherscanDomains[networkId],
+      })
+    } catch(error) {
+      console.error(error)
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -112,17 +134,6 @@ class PurchaseDetail extends Component {
 
     if (prevState.listing.sellerAddress !== sellerAddress) {
       this.loadSeller(sellerAddress)
-    }
-  }
-
-  async loadAccounts() {
-    try {
-      const accounts = await web3.eth.getAccounts()
-
-      this.setState({ accounts })
-    } catch(error) {
-      console.error('Error loading accounts')
-      console.error(error)
     }
   }
 
@@ -297,7 +308,9 @@ class PurchaseDetail extends Component {
   }
 
   render() {
-    const { accounts, buyer, form, listing, logs, purchase, reviews, seller } = this.state
+    const { web3Account } = this.props
+
+    const { buyer, form, listing, logs, purchase, reviews, seller } = this.state
     const { rating, reviewText } = form
     const buyersReviews = reviews.filter(r => r.revieweeRole === 'SELLER')
 
@@ -305,7 +318,14 @@ class PurchaseDetail extends Component {
       return null
     }
 
-    const perspective = accounts[0] === purchase.buyerAddress ? 'buyer' : 'seller'
+    let perspective
+    // may potentially be neither buyer nor seller
+    if (web3Account === purchase.buyerAddress) {
+      perspective = 'buyer'
+    } else if (web3Account === purchase.sellerAddress) {
+      perspective = 'seller'
+    }
+
     const pictures = listing.pictures || []
     const category = listing.category || ""
     const active = listing.unitsAvailable > 0 // Todo, move to origin.js, take into account listing expiration
@@ -357,10 +377,12 @@ class PurchaseDetail extends Component {
       left = `calc(${decimal * 100}% + ${decimal * 28}px)`
     }
 
-    const nextStep = nextSteps[step]
+    const nextStep = perspective && nextSteps[step]
     const { buttonText, functionName, instruction, placeholderText, prompt, reviewable } = nextStep ? nextStep[perspective] : {}
     const buyerName = (buyer.profile && `${buyer.profile.firstName} ${buyer.profile.lastName}`) || 'Unnamed User'
     const sellerName = (seller.profile && `${seller.profile.firstName} ${seller.profile.lastName}`) || 'Unnamed User'
+
+    const etherscanDomain = this.state.etherscanDomain || ''
 
     return (
       <div className="transaction-detail">
@@ -470,7 +492,7 @@ class PurchaseDetail extends Component {
                   {paidAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Payment received on<br /><strong>${moment(paidAt).format('MMM D, YYYY')}</strong>`}></span>Payment Received</td>
-                      <td className="text-truncate">{paymentEvent.transactionHash}</td>
+                      <td className="text-truncate"><a href={'https://' + etherscanDomain + '/tx/' + paymentEvent.transactionHash}>{paymentEvent.transactionHash}</a></td>
                       <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{buyer.address}</Link></td>
                       <td className="text-truncate"><Link to={`/users/${seller.address}`}>{seller.address}</Link></td>
                     </tr>
@@ -478,7 +500,7 @@ class PurchaseDetail extends Component {
                   {fulfilledAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sent by seller on<br /><strong>${moment(fulfilledAt).format('MMM D, YYYY')}</strong>`}></span>Sent by seller</td>
-                      <td className="text-truncate">{fulfillmentEvent.transactionHash}</td>
+                      <td className="text-truncate"><a href={'https://' + etherscanDomain + '/tx/' + fulfillmentEvent.transactionHash}>{fulfillmentEvent.transactionHash}</a></td>
                       <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{seller.address}</Link></td>
                       <td className="text-truncate"><Link to={`/users/${seller.address}`}>{buyer.address}</Link></td>
                     </tr>
@@ -486,7 +508,7 @@ class PurchaseDetail extends Component {
                   {receivedAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Received buy buyer on<br /><strong>${moment(receivedAt).format('MMM D, YYYY')}</strong>`}></span>Received by buyer</td>
-                      <td className="text-truncate">{receiptEvent.transactionHash}</td>
+                      <td className="text-truncate"><a href={'https://' + etherscanDomain + '/tx/' + receiptEvent.transactionHash}>{receiptEvent.transactionHash}</a></td>
                       <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{buyer.address}</Link></td>
                       <td className="text-truncate"><Link to={`/users/${seller.address}`}>{seller.address}</Link></td>
                     </tr>
@@ -494,7 +516,7 @@ class PurchaseDetail extends Component {
                   {perspective === 'seller' && withdrawnAt &&
                     <tr>
                       <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Funds withdrawn on<br /><strong>${moment(withdrawnAt).format('MMM D, YYYY')}</strong>`}></span>Funds withdrawn</td>
-                      <td className="text-truncate">{withdrawalEvent.transactionHash}</td>
+                      <td className="text-truncate"><a href={'https://' + etherscanDomain + '/tx/' + withdrawalEvent.transactionHash}>{withdrawalEvent.transactionHash}</a></td>
                       <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{seller.address}</Link></td>
                       <td className="text-truncate"><Link to={`/users/${seller.address}`}>{buyer.address}</Link></td>
                     </tr>
@@ -569,4 +591,10 @@ class PurchaseDetail extends Component {
   }
 }
 
-export default PurchaseDetail
+const mapStateToProps = state => {
+  return {
+    web3Account: state.app.web3.account,
+  }
+}
+
+export default connect(mapStateToProps)(PurchaseDetail)

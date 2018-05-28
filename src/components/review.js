@@ -17,8 +17,7 @@ class Review extends Component {
   render() {
     const { review, user } = this.props
     const { rating, reviewText, timestamp } = review
-    const { address, profile } = user
-    const fullName = (profile && `${profile.firstName} ${profile.lastName}`) || 'Unnamed User'
+    const { address, fullName, profile } = user
     const createdAt = timestamp * 1000 // convert seconds since epoch to ms
 
     return (
