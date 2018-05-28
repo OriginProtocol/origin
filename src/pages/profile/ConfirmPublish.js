@@ -28,7 +28,7 @@ class ConfirmPublish extends Component {
             Let&apos;s do it!
           </button>
         </div>
-        <a href="#" data-modal="publish" onClick={handleToggle}>
+        <a data-modal="publish" onClick={handleToggle}>
           Oops, no wait...
         </a>
       </Modal>

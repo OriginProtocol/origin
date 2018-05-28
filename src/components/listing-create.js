@@ -218,8 +218,10 @@ class ListingCreate extends Component {
                 <div className="image-container">
                   <img src="images/circular-check-button.svg" role="presentation"/>
                 </div>
-                Success<br />
-                <Link to="/">See All Listings</Link>
+                Success
+                <div className="button-container">
+                  <Link to="/" className="btn btn-clear">See All Listings</Link>
+                </div>
               </Modal>
             }
             {this.state.step === this.STEP.ERROR && (
@@ -227,16 +229,18 @@ class ListingCreate extends Component {
                 <div className="image-container">
                   <img src="images/flat_cross_icon.svg" role="presentation" />
                 </div>
-                There was a problem creating this listing.<br />See the console for more details.<br />
-                <a
-                  href="#"
-                  onClick={e => {
-                    e.preventDefault()
-                    this.resetToPreview()
-                  }}
-                >
-                  OK
-                </a>
+                There was a problem creating this listing.<br />See the console for more details.
+                <div className="button-container">
+                  <a
+                    className="btn btn-clear"
+                    onClick={e => {
+                      e.preventDefault()
+                      this.resetToPreview()
+                    }}
+                  >
+                    OK
+                  </a>
+                </div>
               </Modal>
             )}
             <div className="row">

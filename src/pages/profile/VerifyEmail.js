@@ -44,17 +44,18 @@ class VerifyEmail extends Component {
             ? this.renderEmailForm()
             : this.renderCodeForm()}
           <div className="button-container">
+            <button type="submit" className="btn btn-clear">
+              Continue
+            </button>
+          </div>
+          <div className="link-container">
             <a
               href="#"
-              className="btn btn-clear"
               data-modal="email"
               onClick={this.props.handleToggle}
             >
               Cancel
             </a>
-            <button type="submit" className="btn btn-clear">
-              Continue
-            </button>
           </div>
         </form>
       </Modal>

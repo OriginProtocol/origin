@@ -37,14 +37,6 @@ class VerifyTwitter extends Component {
           be published on the blockchain. We will never tweet on your behalf.
         </div>
         <div className="button-container">
-          <a
-            href="#"
-            className="btn btn-clear"
-            data-modal="twitter"
-            onClick={this.props.handleToggle}
-          >
-            Cancel
-          </a>
           <button
             type="submit"
             className="btn btn-clear"
@@ -52,6 +44,15 @@ class VerifyTwitter extends Component {
           >
             Continue
           </button>
+        </div>
+        <div className="link-container">
+          <a
+            href="#"
+            data-modal="twitter"
+            onClick={this.props.handleToggle}
+          >
+            Cancel
+          </a>
         </div>
       </Modal>
     )

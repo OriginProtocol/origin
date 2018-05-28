@@ -154,13 +154,12 @@ class ListingsDetail extends Component {
             <div className="image-container">
               <img src="images/circular-check-button.svg" role="presentation"/>
             </div>
-            Purchase was successful.<br />
-            <a href="#" onClick={e => {
-              e.preventDefault()
-              window.location.reload()
-            }}>
-              Reload page
-            </a>
+            Purchase was successful.
+            <div className="button-container">
+              <Link to="/my-purchases" className="btn btn-clear">
+                Go To Purchases
+              </Link>
+            </div>
           </Modal>
         }
         {this.state.step === this.STEP.ERROR && (
@@ -168,16 +167,18 @@ class ListingsDetail extends Component {
             <div className="image-container">
               <img src="images/flat_cross_icon.svg" role="presentation" />
             </div>
-            There was a problem purchasing this listing.<br />See the console for more details.<br />
-            <a
-              href="#"
-              onClick={e => {
-                e.preventDefault()
-                this.resetToStepOne()
-              }}
-            >
-              OK
-            </a>
+            There was a problem purchasing this listing.<br />See the console for more details.
+            <div className="button-container">
+              <a
+                className="btn btn-clear"
+                onClick={e => {
+                  e.preventDefault()
+                  this.resetToStepOne()
+                }}
+              >
+                OK
+              </a>
+            </div>
           </Modal>
         )}
         {(this.state.loading || (this.state.pictures && !!this.state.pictures.length)) &&

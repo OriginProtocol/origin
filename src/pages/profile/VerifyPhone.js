@@ -49,17 +49,18 @@ class VerifyPhone extends Component {
           {this.state.mode === 'phone' && this.renderPhoneForm()}
           {this.state.mode === 'code' && this.renderCodeForm()}
           <div className="button-container">
-            <a
-              href="#"
-              className="btn btn-clear"
-              data-modal="phone"
-              onClick={handleToggle}
-            >
-              Cancel
-            </a>
             <button type="submit" className="btn btn-clear">
               Continue
             </button>
+          </div>
+          <div className="link-container">
+            <a
+              href="#"
+              data-modal="phone"
+              onClick={this.props.handleToggle}
+            >
+              Cancel
+            </a>
           </div>
         </form>
       </Modal>

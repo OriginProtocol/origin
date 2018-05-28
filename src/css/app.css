@@ -105,7 +105,7 @@ a:hover {
 
 .btn-clear:hover {
   background-color: white;
-  color: #213040;
+  color: #213040 !important;
 }
 
 .table {
@@ -1039,6 +1039,11 @@ a:hover {
   font-weight: bold;
   margin: 0 20px 20px 0;
   padding: 10px;
+}
+
+.modal-content .link-container {
+  font-size: 0.875rem;
+  padding-top: 20px;
 }
 
 /* Tooltip */
@@ -2465,6 +2470,10 @@ sup {
   font-size: 1rem;
 }
 
+.profile-wrapper .modal .form-group {
+  margin-bottom: 0;
+}
+
 .profile-wrapper .modal .explanation {
   color: var(--pale-grey);
   font-size: 0.875rem;
@@ -2540,6 +2549,12 @@ sup {
 .publish.modal .button-container,
 .unload.modal .button-container {
   margin: 0 0 20px;
+  padding: 0;
+}
+
+.publish.modal .btn-clear,
+.unload.modal .btn-clear {
+  margin: 0;
 }
 
 .publish.modal a,
