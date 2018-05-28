@@ -180,8 +180,8 @@ class Web3Provider extends Component {
   }
 
   /**
-   * Start polling network. We poll indefinitely so that we can
-   * react to the user changing networks.
+   * Start polling accounts and network. We poll indefinitely so that we can
+   * react to the user changing accounts or networks.
    */
   componentDidMount() {
     this.fetchAccounts()

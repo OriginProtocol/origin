@@ -15,6 +15,7 @@ const networkNames = {
   42: 'Kovan',
   999: 'Localhost',
 }
+const ONE_SECOND = 1000
 
 class ConnectivityDropdown extends Component {
   constructor(props) {
@@ -31,7 +32,11 @@ class ConnectivityDropdown extends Component {
   }
 
   async componentDidMount() {
-    !web3.givenProvider && $('#connectivityDropdown').dropdown('toggle')
+    !web3.givenProvider && $('#connectivityDropdown').dropdown('toggle') && setTimeout(() => {
+      if ($('.connectivity.dropdown').hasClass('show')) {
+        $('#connectivityDropdown').dropdown('toggle')
+      }
+    }, 10 * ONE_SECOND)
 
     try {
       const networkId = await web3.eth.net.getId()
@@ -46,15 +51,15 @@ class ConnectivityDropdown extends Component {
 
       setTimeout(() => {
         this.setState({ connectedStatus: { ...this.state.connectedStatus, network: true }})
-      }, 1000)
+      }, ONE_SECOND)
 
       setTimeout(() => {
         this.setState({ connectedStatus: { ...this.state.connectedStatus, ipfsGateway: true }})
-      }, 2000)
+      }, 2 * ONE_SECOND)
 
       setTimeout(() => {
         this.setState({ connectedStatus: { ...this.state.connectedStatus, bridgeServer: true }})
-      }, 3000)
+      }, 3 * ONE_SECOND)
     } catch(error) {
       console.error(error)
     }
