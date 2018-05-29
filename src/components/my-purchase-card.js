@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import moment from 'moment'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import origin from '../services/origin'
 
@@ -11,6 +12,29 @@ class MyPurchaseCard extends Component {
 
     this.loadListing = this.loadListing.bind(this)
     this.state = { listing: {}, loading: true }
+
+    this.intlMessages = defineMessages({
+      received: {
+        id: 'my-purchase-card.received',
+        defaultMessage: 'Received'
+      },
+      sentBySeller: {
+        id: 'my-purchase-card.sentBySeller',
+        defaultMessage: 'Sent by Seller'
+      },
+      purchased: {
+        id: 'my-purchase-card.purchased',
+        defaultMessage: 'Purchased'
+      },
+      unknown: {
+        id: 'my-purchase-card.unknown',
+        defaultMessage: 'Unknown'
+      },
+      ETH: {
+        id: 'my-purchase-card.etheriumCurrencyAbbrev',
+        defaultMessage: 'ETH'
+      }
+    })
   }
 
   async loadListing(addr) {
@@ -38,22 +62,22 @@ class MyPurchaseCard extends Component {
     switch(stage) {
       case 'seller_pending':
         step = 3
-        verb = 'Received'
+        verb = this.props.intl.formatMessage(this.intlMessages.received)
         break
       case 'buyer_pending':
         step = 2
-        verb = 'Sent by seller'
+        verb = this.props.intl.formatMessage(this.intlMessages.sentBySeller)
         break
       case 'shipping_pending':
         step = 1
-        verb = 'Purchased'
+        verb = this.props.intl.formatMessage(this.intlMessages.purchased)
         break
       default:
         step = 0
-        verb = 'Unknown'
+        verb = this.props.intl.formatMessage(this.intlMessages.unknown)
     }
 
-    const timestamp = `${verb} on ${moment(soldAt).format('MMMM D, YYYY')}`
+    const timestamp = `${verb} on ${this.props.intl.formatDate(soldAt)}`
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
 
     return (
@@ -72,7 +96,7 @@ class MyPurchaseCard extends Component {
               <h2 className="title text-truncate"><Link to={`/purchases/${address}`}>{name}</Link></h2>
               <p className="timestamp">{timestamp}</p>
               <div className="d-flex">
-                <p className="price">{`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ETH`}</p>
+                <p className="price">{`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ${this.props.intl.formatMessage(this.intlMessages.ETH)}`}</p>
                 {/* Not Yet Relevant */}
                 {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
               </div>
@@ -83,7 +107,12 @@ class MyPurchaseCard extends Component {
                 </div>
                 <div className="button-container">
                   {stage === 'buyer_pending' &&
-                    <a className="btn btn-primary btn-sm" onClick={() => alert('To Do')}>I&apos;ve Received the Order</a>
+                    <a className="btn btn-primary btn-sm" onClick={() => alert('To Do')}>
+                      <FormattedMessage
+                        id={ 'my-purchase-card.iReceivedTheOrder' }
+                        defaultMessage={ 'I\'ve Received the Order' }
+                      />
+                    </a>
                   }
                 </div>
               </div>
@@ -95,4 +124,4 @@ class MyPurchaseCard extends Component {
   }
 }
 
-export default MyPurchaseCard
+export default injectIntl(MyPurchaseCard)

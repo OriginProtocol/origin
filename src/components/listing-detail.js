@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'react-intl'
 import { showAlert } from '../actions/Alert'
 
 import Modal from './modal'
@@ -32,6 +33,13 @@ class ListingsDetail extends Component {
       step: this.STEP.VIEW,
     }
 
+    this.intlMessages = defineMessages({
+      loadingError: {
+        id: 'listing-detail.loadingError',
+        defaultMessage: 'There was an error loading this listing.'
+      }
+    })
+
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
   }
 
@@ -41,7 +49,7 @@ class ListingsDetail extends Component {
       const obj = Object.assign({}, listing, { loading: false })
       this.setState(obj)
     } catch (error) {
-      this.props.showAlert('There was an error loading this listing.')
+      this.props.showAlert(this.props.formatMessage(this.intlMessages.loadingError))
       console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingAddress}`)
       console.error(error)
     }
@@ -131,8 +139,16 @@ class ListingsDetail extends Component {
             <div className="image-container">
               <img src="images/spinner-animation.svg" role="presentation"/>
             </div>
-            Confirm transaction<br />
-            Press &ldquo;Submit&rdquo; in MetaMask window
+            <FormattedMessage
+              id={ 'listing-detail.confirmTransaction' }
+              defaultMessage={ 'Confirm transaction' }
+            />
+            <br />
+            <FormattedMessage
+              id={ 'listing-detail.pressSubmitInMetaMask' }
+              defaultMessage={ 'Press {submit} in MetaMask window' }
+              values={{ submit: <span>&ldquo;Submit&rdquo;</span> }}
+            />
           </Modal>
         }
         {this.state.step === this.STEP.PROCESSING &&
@@ -140,8 +156,15 @@ class ListingsDetail extends Component {
             <div className="image-container">
               <img src="images/spinner-animation.svg" role="presentation"/>
             </div>
-            Processing your purchase<br />
-            Please stand by...
+            <FormattedMessage
+              id={ 'listing-detail.processingPurchase' }
+              defaultMessage={ 'Processing your purchase' }
+            />
+            <br />
+            <FormattedMessage
+              id={ 'listing-detail.pleaseStandBy' }
+              defaultMessage={ 'Please stand by...' }
+            />
           </Modal>
         }
         {this.state.step === this.STEP.PURCHASED &&
@@ -149,12 +172,19 @@ class ListingsDetail extends Component {
             <div className="image-container">
               <img src="images/circular-check-button.svg" role="presentation"/>
             </div>
-            Purchase was successful.<br />
+            <FormattedMessage
+              id={ 'listing-detail.purchaseSuccessful' }
+              defaultMessage={ 'Purchase was successful.' }
+            />
+            <br />
             <a href="#" onClick={e => {
               e.preventDefault()
               window.location.reload()
             }}>
-              Reload page
+              <FormattedMessage
+                id={ 'listing-detail.reloadPageMessage' }
+                defaultMessage={ 'Reload page' }
+              />
             </a>
           </Modal>
         }
@@ -163,7 +193,16 @@ class ListingsDetail extends Component {
             <div className="image-container">
               <img src="images/flat_cross_icon.svg" role="presentation" />
             </div>
-            There was a problem purchasing this listing.<br />See the console for more details.<br />
+            <FormattedMessage
+              id={ 'listing-detail.errorPurchasingListing' }
+              defaultMessage={ 'There was a problem purchasing this listing.' }
+            />
+            <br />
+            <FormattedMessage
+              id={ 'listing-detail.seeConsoleForDetails' }
+              defaultMessage={ 'See the console for more details.' }
+            />
+            <br />
             <a
               href="#"
               onClick={e => {
@@ -171,7 +210,10 @@ class ListingsDetail extends Component {
                 this.resetToStepOne()
               }}
             >
-              OK
+              <FormattedMessage
+                id={ 'listing-detail.OK' }
+                defaultMessage={ 'OK' }
+              />
             </a>
           </Modal>
         )}
@@ -193,19 +235,47 @@ class ListingsDetail extends Component {
               <h1 className="title text-truncate placehold">{this.state.name}</h1>
               <p className="description placehold">{this.state.description}</p>
               {!!this.state.unitsAvailable && this.state.unitsAvailable < 5 &&
-                <div className="units-available text-danger">Just {this.state.unitsAvailable.toLocaleString()} left!</div>
+                <div className="units-available text-danger">
+                  <FormattedMessage
+                    id={ 'listing-detail.unitsAvailable' }
+                    defaultMessage={ 'Just {unitsAvailable} left!' }
+                    values={{ unitsAvailable: <FormattedNumber value={ this.state.unitsAvailable.toLocaleString() } /> }}
+                  />
+                </div>
               }
               {this.state.ipfsHash &&
                 <div className="ipfs link-container">
                   <a href={origin.ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
-                    View on IPFS<img src="images/carat-blue.svg" className="carat" alt="right carat" />
+                    <FormattedMessage
+                      id={ 'listing-detail.viewOnIpfs' }
+                      defaultMessage={ 'View on IPFS' }
+                    />
+                    <img src="images/carat-blue.svg" className="carat" alt="right carat" />
                   </a>
                 </div>
               }
               <div className="debug">
-                <li>IPFS: {this.state.ipfsHash}</li>
-                <li>Seller: {this.state.sellerAddress}</li>
-                <li>Units: {this.state.unitsAvailable}</li>
+                <li>
+                  <FormattedMessage
+                    id={ 'listing-detail.IPFS' }
+                    defaultMessage={ 'IPFS: {ipfsHash}' }
+                    values={{ ipfsHash: this.state.ipfsHash }}
+                  />
+                </li>
+                <li>
+                  <FormattedMessage
+                    id={ 'listing-detail.seller' }
+                    defaultMessage={ 'Seller: {sellerAddress}' }
+                    values={{ sellerAddress: this.state.sellerAddress }}
+                  />
+                </li>
+                <li>
+                  <FormattedMessage
+                    id={ 'listing-detail.units' }
+                    defaultMessage={ 'Units: {unitsAvailable}' }
+                    values={{ unitsAvailable: this.state.unitsAvailable }}
+                  />
+                </li>
               </div>
               {/* Hidden for current deployment */}
               {/*!this.state.loading && this.state.purchases.length > 0 &&
@@ -235,9 +305,19 @@ class ListingsDetail extends Component {
               <div className="buy-box placehold">
                 {this.state.price &&
                   <div className="price d-flex justify-content-between">
-                    <div>Price</div>
+                    <div>
+                      <FormattedMessage
+                        id={ 'listing-detail.price' }
+                        defaultMessage={ 'Price' }
+                      />
+                    </div>
                     <div className="text-right">
-                      {Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
+                      {Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})}
+                      &nbsp;
+                      <FormattedMessage
+                        id={ 'listing-detail.etheriumCurrencyAbbrev' }
+                        defaultMessage={ 'ETH' }
+                      />
                     </div>
                   </div>
                 }
@@ -264,12 +344,18 @@ class ListingsDetail extends Component {
                           disabled={!this.state.address}
                           onMouseDown={e => e.preventDefault()}
                         >
-                          Buy Now
+                          <FormattedMessage
+                            id={ 'listing-detail.buyNow' }
+                            defaultMessage={ 'Buy Now' }
+                          />
                         </button>
                         :
                         <div className="sold-banner">
                           <img src="images/sold-tag.svg" role="presentation" />
-                          Sold Out
+                          <FormattedMessage
+                            id={ 'listing-detail.soldOut' }
+                            defaultMessage={ 'Sold Out' }
+                          />
                         </div>
                       )
                     }
@@ -284,7 +370,16 @@ class ListingsDetail extends Component {
               <div className="col-12 col-md-8">
                 <hr />
                 <div className="reviews">
-                  <h2>Reviews <span className="review-count">{buyersReviews.length}</span></h2>
+                  <h2>
+                    <FormattedMessage
+                      id={ 'listing-detail.reviews' }
+                      defaultMessage={ 'Reviews' }
+                    />
+                    &nbsp;
+                    <span className="review-count">
+                      <FormattedNumber value={buyersReviews.length} />
+                    </span>
+                  </h2>
                   {buyersReviews.map(r => <Review key={r.transactionHash} review={r} />)}
                   {/* To Do: pagination */}
                   {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
@@ -302,4 +397,4 @@ const mapDispatchToProps = dispatch => ({
   showAlert: (msg) => dispatch(showAlert(msg))
 })
 
-export default connect(undefined, mapDispatchToProps)(ListingsDetail)
+export default connect(undefined, mapDispatchToProps)(injectIntl(ListingsDetail))

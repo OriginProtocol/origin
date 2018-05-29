@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import moment from 'moment'
+import { FormattedMessage } from 'react-intl'
 
 class TransactionProgress extends Component {
   constructor(props) {
@@ -89,29 +90,64 @@ class TransactionProgress extends Component {
         {!subdued && perspective === 'buyer' &&
           <div className="labels d-flex justify-content-between text-center">
             <div className="stage-container">
-              <div className="stage">Purchased</div>
+              <div className="stage">
+                <FormattedMessage
+                  id={ 'transaction-progress.purchased' }
+                  defaultMessage={ 'Purchased' }
+                />
+              </div>
             </div>
             <div className="stage-container">
-              <div className="stage">Sent by seller</div>
+              <div className="stage">
+                <FormattedMessage
+                  id={ 'transaction-progress.sentBySeller' }
+                  defaultMessage={ 'Sent by seller' }
+                />
+              </div>
             </div>
             <div className="stage-container">
-              <div className="stage">Received by me</div>
+              <div className="stage">
+                <FormattedMessage
+                  id={ 'transaction-progress.receivedByMe' }
+                  defaultMessage={ 'Received by me' }
+                />
+              </div>
             </div>
           </div>
         }
         {!subdued && perspective === 'seller' &&
           <div className="labels d-flex justify-content-between text-center">
             <div className="stage-container">
-              <div className="stage">Sold</div>
+              <div className="stage">
+                <FormattedMessage
+                  id={ 'transaction-progress.sold' }
+                  defaultMessage={ 'Sold' }
+                />
+              </div>
             </div>
             <div className="stage-container">
-              <div className="stage">Order<br />Sent</div>
+              <div className="stage">
+                <FormattedMessage
+                  id={ 'transaction-progress.orderSent' }
+                  defaultMessage={ 'Order Sent' }
+                />
+              </div>
             </div>
             <div className="stage-container">
-              <div className="stage">Received<br />by buyer</div>
+              <div className="stage">
+                <FormattedMessage
+                  id={ 'transaction-progress.receivedByBuyer' }
+                  defaultMessage={ 'Received by buyer' }
+                />
+              </div>
             </div>
             <div className="stage-container">
-              <div className="stage">Funds<br />Withdrawn</div>
+              <div className="stage">
+                <FormattedMessage
+                  id={ 'transaction-progress.fundsWithdrawn' }
+                  defaultMessage={ 'Funds Withdrawn' }
+                />
+              </div>
             </div>
           </div>
         }

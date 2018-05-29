@@ -61,7 +61,7 @@ class ListingCardPrices extends Component {
             <div className="d-inline-block price placehold">
               {this.state.exchangeRate == null &&
                 <FormattedMessage
-                  id={ 'loadingMessage' }
+                  id={ 'listing-card-prices.loadingMessage' }
                   defaultMessage={ 'Loading...' }
                 />
               }
@@ -69,7 +69,7 @@ class ListingCardPrices extends Component {
               <span className="alternate-price text-muted">
                 &nbsp;| {`${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 5, maximumFractionDigits: 9})}`}&nbsp;
                 <FormattedMessage
-                  id={ 'etheriumCurrencyAbbrev' }
+                  id={ 'listing-card-prices.etheriumCurrencyAbbrev' }
                   defaultMessage={ 'ETH' }
                 />
               </span>

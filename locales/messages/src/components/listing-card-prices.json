@@ -1,10 +1,10 @@
 [
   {
-    "id": "loadingMessage",
+    "id": "listing-card-prices.loadingMessage",
     "defaultMessage": "Loading..."
   },
   {
-    "id": "etheriumCurrencyAbbrev",
+    "id": "listing-card-prices.etheriumCurrencyAbbrev",
     "defaultMessage": "ETH"
   },
   {

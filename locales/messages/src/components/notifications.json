@@ -1,0 +1,18 @@
+[
+  {
+    "id": "notifications.unread",
+    "defaultMessage": "Unread"
+  },
+  {
+    "id": "notifications.all",
+    "defaultMessage": "All"
+  },
+  {
+    "id": "notifications.buy",
+    "defaultMessage": "Buy"
+  },
+  {
+    "id": "notifications.sell",
+    "defaultMessage": "Sell"
+  }
+]

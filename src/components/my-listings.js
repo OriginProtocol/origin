@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import MyListingCard from './my-listing-card'
+import { FormattedMessage } from 'react-intl'
 
 import origin from '../services/origin'
 
@@ -103,18 +104,48 @@ class MyListings extends Component {
         <div className="container">
           <div className="row">
             <div className="col-12">
-              <h1>My Listings</h1>
+              <h1>
+                <FormattedMessage
+                  id={ 'my-listings.myListingsHeading' }
+                  defaultMessage={ 'My Listings' }
+                />
+              </h1>
             </div>
           </div>
           <div className="row">
             <div className="col-12 col-md-3">
-              {loading && 'Loading...'}
-              {!loading && !listings.length && 'You currently have no listings.'}
+              {loading &&
+                <FormattedMessage
+                  id={ 'my-listings.loading' }
+                  defaultMessage={ 'Loading...' }
+                />
+              }
+              {!loading && !listings.length && 
+                  <FormattedMessage
+                    id={ 'my-listings.noListingsMessage' }
+                    defaultMessage={ 'You currently have no listings.' }
+                  />
+              }
               {!loading && !!listings.length &&
                 <div className="filters list-group flex-row flex-md-column">
-                  <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>All</a>
-                  <a className={`list-group-item list-group-item-action${filter === 'active' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'active' })}>Active</a>
-                  <a className={`list-group-item list-group-item-action${filter === 'inactive' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'inactive' })}>Inactive</a>
+                  <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>
+                  <FormattedMessage
+                      id={ 'my-listings.all' }
+                      defaultMessage={ 'All' }
+                    />
+                  </a>
+                  <a className={`list-group-item list-group-item-action${filter === 'active' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'active' })}>
+                    <FormattedMessage
+                      id={ 'my-listings.active' }
+                      defaultMessage={ 'Active' }
+                    />
+                  </a>
+                  <a className={`list-group-item list-group-item-action${filter === 'inactive' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'inactive' })}>
+                    <FormattedMessage
+                      id={ 'my-listings.inactive' }
+                      defaultMessage={ 'Inactive' }
+                    />
+                  </a>
                 </div>
               }
             </div>

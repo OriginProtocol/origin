@@ -1,11 +1,47 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
+import { defineMessages, injectIntl } from 'react-intl'
 
 /*
   This subcomponent turns structured notification objects into dom elements,
   which wrap an anchor if there is a relevant listing.
 */
 class HumanReadableNotification extends Component {
+  constructor(props){
+    super(props)
+
+    this.intlMessages = defineMessages({
+      purchased: {
+        id: 'notification.purchased',
+        defaultMessage: 'purchased'
+      },
+      sent: {
+        id: 'notification.sent',
+        defaultMessage: 'sent'
+      },
+      received: {
+        id: 'notification.received',
+        defaultMessage: 'received'
+      },
+      withdrawn: {
+        id: 'notification.withdrawn',
+        defaultMessage: 'withdrawn'
+      },
+      hasBeen: {
+        id: 'notification.hasBeen',
+        defaultMessage: 'has been'
+      },
+      haveBeen: {
+        id: 'notification.haveBeen',
+        defaultMessage: 'have been'
+      },
+      fundsFromProduct: {
+        id: 'notification.fundsFromProduct',
+        defaultMessage: 'Funds from {productLink}'
+      }
+    });
+  }
+
   render() {
     const { className, notification } = this.props
     const { eventType, message, listingId, listingName } = notification
@@ -15,23 +51,23 @@ class HumanReadableNotification extends Component {
     switch(eventType) {
       case 'soldAt':
         subject = productLink
-        presPerf = 'has been'
-        verb = 'purchased'
+        presPerf = this.props.intl.formatMessage(this.intlMessages.hasBeen)
+        verb = this.props.intl.formatMessage(this.intlMessages.purchased)
         break
       case 'fulfilledAt':
         subject = productLink
-        presPerf = 'has been'
-        verb = 'sent'
+        presPerf = this.props.intl.formatMessage(this.intlMessages.hasBeen)
+        verb = this.props.intl.formatMessage(this.intlMessages.sent)
         break
       case 'receivedAt':
         subject = productLink
-        presPerf = 'has been'
-        verb = 'received'
+        presPerf = this.props.intl.formatMessage(this.intlMessages.hasBeen)
+        verb = this.props.intl.formatMessage(this.intlMessages.received)
         break
       case 'withdrawnAt':
-        subject = <Fragment>Funds from {productLink}</Fragment>
-        presPerf = 'have been'
-        verb = 'withdrawn'
+        subject = <Fragment>this.props.intl.formatMessage(this.intlMessages.fundsFromProduct, { productLink })</Fragment>
+        presPerf = this.props.intl.formatMessage(this.intlMessages.haveBeen)
+        verb = this.props.intl.formatMessage(this.intlMessages.withdrawn)
         break
       default:
         return <p className={className || ''}>{message}</p>
@@ -56,7 +92,7 @@ class Notification extends Component {
           {listingId && listingImageURL && <img src={listingImageURL} className="listing-related" alt={listingName} />}
         </div>
         <div className="content-container d-flex flex-column justify-content-between">
-          <HumanReadableNotification notification={notification} className={`text-truncate${counterpartyAddress ? '' : ' no-counterparty'}`} />
+          <HumanReadableNotification intl={this.props.intl} notification={notification} className={`text-truncate${counterpartyAddress ? '' : ' no-counterparty'}`} />
           {counterpartyAddress && <p className="text-truncate"><strong>{perspective === 'buyer' ? 'Seller' : 'Buyer'}</strong>: <Link to={`/users/${counterpartyAddress}`}>{counterpartyName || 'Unnamed User'}</Link></p>}
           {counterpartyAddress && <p className="text-truncate text-muted">{counterpartyAddress}</p>}
         </div>
@@ -70,4 +106,4 @@ class Notification extends Component {
   }
 }
 
-export default Notification
+export default injectIntl(Notification)

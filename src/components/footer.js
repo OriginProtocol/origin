@@ -150,7 +150,7 @@ const Footer = (props) => {
                     <a href="https://angel.co/originprotocol/jobs">
                       <FormattedMessage
                         id={ 'footer.hiringLink' }
-                        defaultMessage={ 'Jobs (We&rsquo;re hiring!)' }
+                        defaultMessage={ 'Jobs (We\'re hiring!)' }
                       />
                     </a>
                   </li>

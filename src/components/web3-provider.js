@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { FormattedMessage } from 'react-intl'
 import Modal from './modal'
 
 import origin from '../services/origin'
@@ -24,7 +25,11 @@ const AccountUnavailable = () => (
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
-    You are not signed in to MetaMask.<br />
+    <FormattedMessage
+      id={ 'web3-provider.notSignedIntoMetaMask' }
+      defaultMessage={ 'You are not signed in to MetaMask.' }
+    />
+    <br />
   </Modal>
 )
 
@@ -36,7 +41,10 @@ const UnconnectedNetwork = () => (
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
-    Connecting to network...
+    <FormattedMessage
+      id={ 'web3-provider.connecting' }
+      defaultMessage={ 'Connecting to network...' }
+    />
   </Modal>
 )
 
@@ -45,8 +53,17 @@ const UnsupportedNetwork = props => (
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
-    MetaMask should be on <strong>Rinkeby</strong> Network<br />
-    Currently on {props.currentNetworkName}.
+    <FormattedMessage
+      id={ 'web3-provider.wrongNetwork' }
+      defaultMessage={ 'MetaMask should be on {rinkeby} Network' }
+      values={{ rinkeby: <strong>Rinkeby</strong> }}
+    />
+    <br />
+    <FormattedMessage
+      id={ 'web3-provider.currentNetwork' }
+      defaultMessage={ 'Currently on {networkName}.' }
+      values={{ networkName: props.currentNetworkName }}
+    />
   </Modal>
 )
 
@@ -55,9 +72,16 @@ const Web3Unavailable = () => (
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
-    Please use a web3-enabled browser or install the MetaMask extension.<br />
+    <FormattedMessage
+      id={ 'web3-provider.installMetaMask' }
+      defaultMessage={ 'Please use a web3-enabled browser or install the MetaMask extension.' }
+    />
+    <br />
     <a target="_blank" href="https://metamask.io/" rel="noopener noreferrer">
-      Get MetaMask
+      <FormattedMessage
+        id={ 'web3-provider.getMetaMask' }
+        defaultMessage={ 'Get MetaMask' }
+      />
     </a>
     <br />
     <a
@@ -65,7 +89,10 @@ const Web3Unavailable = () => (
       href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58"
       rel="noopener noreferrer"
     >
-      Full Instructions for Demo
+      <FormattedMessage
+        id={ 'web3-provider.demoInstructions' }
+        defaultMessage={ 'Full Instructions for Demo' }
+      />
     </a>
   </Modal>
 )

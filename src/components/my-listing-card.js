@@ -1,12 +1,24 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
+import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'react-intl'
 
 import origin from '../services/origin'
 
 class MyListingCard extends Component {
   constructor(props) {
     super(props)
+
+    this.intlMessages = defineMessages({
+      confirmCloseListing: {
+        id: 'my-listing-card.confirmCloseListing',
+        defaultMessage: 'Are you sure that you want to permanently close this listing? This cannot be undone.'
+      },
+      ETH: {
+        id: 'my-listing-card.etheriumCurrencyAbbrev',
+        defaultMessage: 'ETH'
+      }
+    })
 
     this.closeListing = this.closeListing.bind(this)
   }
@@ -17,7 +29,7 @@ class MyListingCard extends Component {
 
   async closeListing() {
     const { address } = this.props.listing
-    const prompt = confirm('Are you sure that you want to permanently close this listing? This cannot be undone.')
+    const prompt = confirm(this.props.intl.formatMessage(this.intlMessages.confirmCloseListing))
 
     if (!prompt) {
       return null
@@ -64,11 +76,23 @@ class MyListingCard extends Component {
             <h2 className="title text-truncate"><Link to={`/listing/${address}`}>{name}</Link></h2>
             {/*<p className="timestamp">{timestamp}</p>*/}
             <p className="price">
-              {`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ETH`}
-              {!unitsAvailable /*<= quantity*/ && <span className="badge badge-info">Sold Out</span>}
+              {`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ${this.props.intl.formatMessage(this.intlMessages.ETH)}`}
+              {!unitsAvailable /*<= quantity*/ && 
+                <span className="badge badge-info">
+                  <FormattedMessage
+                    id={ 'my-listing-card.soldOut' }
+                    defaultMessage={ 'Sold Out' }
+                  />
+                </span>}
             </p>
             <div className="d-flex counts">
-              <p>Total Quantity: {unitsAvailable.toLocaleString()}</p>
+              <p>
+                <FormattedMessage
+                  id={ 'my-listing-card.totalQuantity' }
+                  defaultMessage={ 'Total Quantity : {quantity}' }
+                  values={{ quantity: <FormattedNumber value={unitsAvailable.toLocaleString()} /> }}
+                />
+              </p>
               {/*<p>Total Remaining: {(unitsAvailable - quantity).toLocaleString()}</p>*/}
             </div>
             <div className="d-flex counts">
@@ -80,7 +104,13 @@ class MyListingCard extends Component {
                 {/*<a onClick={() => alert('To Do')}>Edit</a>*/}
                 {/*!active && <a onClick={() => alert('To Do')}>Enable</a>*/}
                 {/*active && <a onClick={() => alert('To Do')}>Disable</a>*/}
-                {!!unitsAvailable && <a className="warning" onClick={this.closeListing}>Close Listing</a>}
+                {!!unitsAvailable && 
+                  <a className="warning" onClick={this.closeListing}>
+                    <FormattedMessage
+                      id={ 'my-listing-card.closeListing' }
+                      defaultMessage={ 'Close Listing' }
+                    />
+                  </a>}
               </div>
             </div>
           </div>
@@ -90,4 +120,4 @@ class MyListingCard extends Component {
   }
 }
 
-export default MyListingCard
+export default injectIntl(MyListingCard)
