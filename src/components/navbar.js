@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
+import origin from '../services/origin'
 
 import ConnectivityDropdown from 'components/dropdowns/connectivity'
 // Hidden for current deployment
@@ -31,7 +32,7 @@ class NavBar extends Component {
   handleLink(e) {
     this.props.storeWeb3Intent('create a listing')
 
-    if (!web3.givenProvider || !this.props.web3Account) {
+    if ((!web3.givenProvider || !this.props.web3Account) && !origin.contractService.walletLinker) {
       e.preventDefault()
     }
   }

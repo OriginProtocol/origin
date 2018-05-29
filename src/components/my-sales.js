@@ -22,8 +22,9 @@ class MySales extends Component {
   }
 
   componentDidMount() {
-    if(!web3.givenProvider || !this.props.web3Account) {
+    if(!this.props.web3Account) {
       this.props.storeWeb3Intent('view your sales')
+      origin.contractService.showLinkPopUp()
     }
   }
 

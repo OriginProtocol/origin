@@ -22,6 +22,7 @@ class MyListings extends Component {
   componentDidMount() {
     if(!web3.givenProvider || !this.props.web3Account) {
       this.props.storeWeb3Intent('view your listings')
+      origin.contractService.showLinkPopUp()
     }
   }
 

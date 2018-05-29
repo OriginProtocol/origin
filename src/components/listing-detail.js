@@ -140,7 +140,7 @@ class ListingsDetail extends Component {
   async handleBuyClicked() {
     this.props.storeWeb3Intent('buy this listing')
 
-    if (web3.givenProvider && this.props.web3Account) {
+    if ((web3.givenProvider && this.props.web3Account) || origin.contractService.walletLinker) {
       const unitsToBuy = 1
       const totalPrice = (unitsToBuy * this.state.price)
       this.setState({step: this.STEP.METAMASK})

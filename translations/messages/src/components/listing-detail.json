@@ -9,7 +9,7 @@
   },
   {
     "id": "listing-detail.pressSubmitInMetaMask",
-    "defaultMessage": "Press {submit} in MetaMask window"
+    "defaultMessage": "Press {submit} in {currentProvider} window"
   },
   {
     "id": "listing-detail.processingPurchase",
