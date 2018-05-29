@@ -100,6 +100,20 @@ A subset of our tests can be run from the browser. These tests are automatically
 
 Run a subset of these tests using the `grep` query string parameter, for example: http://localhost:8081/?grep=IpfsService
 
+## Using the Ganache GUI
+
+By default, starting origin locally starts [ganache-cli](https://github.com/trufflesuite/ganache-cli) automatically.
+However, for development you might want to connect to the [GUI version of Ganache](http://truffleframework.com/ganache/). This provides a nice interface for browsing your local blockchain activity and can be useful for debugging.
+
+To use the Ganache GUI:
+1. [Install Ganache](http://truffleframework.com/ganache/)
+1. Start Ganache
+1. Navigate to the settings in Ganache (click on the gear in the upper right-hand corner)
+1. Set `Port Number` to `8545`
+1. Set `Network ID` to `999`
+1. Under the `Accounts & Keys` tab, set the mnemonic to `candy maple cake sugar pudding cream honey rich smooth crumble sweet treat`
+1. When starting origin-js locally, run `npm run start:no-ganache` (instead of `npm run start`)
+
 ## Troubleshooting
 
 ### Python 3
