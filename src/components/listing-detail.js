@@ -239,7 +239,7 @@ class ListingsDetail extends Component {
                   <FormattedMessage
                     id={ 'listing-detail.unitsAvailable' }
                     defaultMessage={ 'Just {unitsAvailable} left!' }
-                    values={{ unitsAvailable: <FormattedNumber value={ this.state.unitsAvailable.toLocaleString() } /> }}
+                    values={{ unitsAvailable: <FormattedNumber value={ this.state.unitsAvailable } /> }}
                   />
                 </div>
               }
