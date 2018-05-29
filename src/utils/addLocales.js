@@ -16,8 +16,6 @@ import ru from 'react-intl/locale-data/ru'
 import th from 'react-intl/locale-data/th'
 import tr from 'react-intl/locale-data/tr'
 import zh from 'react-intl/locale-data/zh'
-// import zh_Hans from 'react-intl/locale-data/zh_Hans'
-// import zh_Hant from 'react-intl/locale-data/zh_Hant'
 
 const addLocales = () => { 
   addLocaleData([
@@ -37,8 +35,6 @@ const addLocales = () => {
     ...ru,
     ...th,
     ...tr,
-    // ...zh_Hans,
-    // ...zh_Hant
     ...zh])
 }
 
