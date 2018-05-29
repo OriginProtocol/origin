@@ -39,7 +39,7 @@ import { FormattedMessage } from 'react-intl'
 ```
 These are compiled automatically into JSON message files by `babel-plugin-react-intl`
 
-2) Generate and aggregated `.po` file from all of the auto-generated JSON message files
+2) Generate and aggregated `.po` file from all of the auto-generated JSON message files by running: 
 
 `npm run build:json2po`
 
@@ -51,5 +51,6 @@ This `.po` file is now ready for translation
 
 2. Extract the `.po` files from the .zip file and move them to `/translations/translatedPOFiles`. Rename them to the two-character representation of the language they contain - e.g. change `en-US.po` to `en.po`
 
-3. Convert the new/updated `.po` files to an aggregated JSON that `react-intl` can consume
+3. Convert the new/updated `.po` files to an aggregated JSON that `react-intl` can consume by running:
+
 `npm run build:po2json`
