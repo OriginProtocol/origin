@@ -95,10 +95,10 @@ const NotWeb3EnabledMobile = props => (
   </Modal>
 )
 
-const NoWeb3Account = props => (
+const NoWeb3Account = ({ currentProvider, storeWeb3Intent, web3Intent }) => (
   <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
     <div className="image-container">
-      <img src="images/metamask.png" role="presentation" />
+      <img src={`images/${currentProvider === 'MetaMask' ? 'metamask' : 'ethereum'}.png`} role="presentation" />
     </div>
     <a
       className="close"
@@ -107,11 +107,11 @@ const NoWeb3Account = props => (
     >
       <span aria-hidden="true">&times;</span>
     </a>
-    <div>In order to {props.web3Intent}, you must sign in to {props.currentProvider}.</div>
+    <div>In order to {web3Intent}, you must sign in to {currentProvider}.</div>
     <div className="button-container">
       <button
         className="btn btn-clear"
-        onClick={() => props.storeWeb3Intent(null)}
+        onClick={() => storeWeb3Intent(null)}
       >
         OK
       </button>
@@ -245,9 +245,6 @@ class Web3Provider extends Component {
     curr = curr && curr.toLowerCase()
 
     if (curr !== next) {
-
-      curr && Store.dispatch(showAlert(`${this.state.currentProvider} account has changed.`))
-
       this.setState({
         accountsError: null,
         accounts
