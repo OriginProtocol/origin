@@ -95,6 +95,20 @@ This is the default seed phrase used by [Truffle](https://github.com/trufflesuit
 
 - You should see your first test account now has 100 ETH and the address `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`. Additional generated accounts will also have this amount.
 
+## Deploy on Heroku or IPFS
+
+To deploy a development copy of the site on Heroku, choose which branch you would like to use and follow the instructions: 
+
+| `Master` branch <br>(stable) | `Develop` branch<br> (active development) | 
+|---------|----------|
+| [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/originprotocol/demo-dapp/tree/master) | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/originprotocol/demo-dapp/tree/develop) | 
+
+Heroku will prompt you to set some config variables. You will likely want to stick with the defaults which use [Origin's IPFS Gateway](https://gateway.originprotocol.com) and [Bridge Server](https://github.com/originprotocol/bridge-server). We also recommend using [Infura](https://infura.io/) for connecting to Ethereum even when visitors don't have web3-enabled browsers.
+
+Since this app is just a bunch of HTML and JavaScript, you can also deploy and use it directly from IPFS. Just run:
+
+`./scripts/deploy.sh`
+
 ## Contributing
 
 Origin is an 100% open-source and community-driven project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community. 
