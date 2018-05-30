@@ -16,8 +16,8 @@ const start = async () => {
   let compiler = webpack(webpackConfig)
 
   if (shouldWatch) {
-    console.log(chalk`\n{bold.hex('#1a82ff') ⬢  Starting Local Blockchain }\n`);
     if (!noGanache) {
+      console.log(chalk`\n{bold.hex('#1a82ff') ⬢  Starting Local Blockchain }\n`);
       await startGanache()
     }
     console.log(chalk`\n{bold.hex('#26d198') ⬢  Deploying Smart Contracts }\n`);
