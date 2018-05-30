@@ -9,7 +9,7 @@
     "PROVIDER_URL": {
       "description": "Sign up for your own Infura key at https://infura.io/ and append it to the end of this URL",
       "value": "https://rinkeby.infura.io/",
-      "required": true
+      "required": false
     },
     "IPFS_DOMAIN": {
       "value": "bridge.originprotocol.com",
