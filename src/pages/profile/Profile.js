@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import $ from 'jquery'
 
+import { storeWeb3Intent } from 'actions/App'
 import {
   deployProfile,
   deployProfileReset,
@@ -66,7 +67,7 @@ class Profile extends Component {
       // percentage widths for two progress bars
       progress: {
         provisional: 0,
-        published: 0
+        published: 0,
       },
       provisional: props.provisional,
       currentProvider: getCurrentProvider(origin && origin.contractService && origin.contractService.web3),
@@ -102,27 +103,31 @@ class Profile extends Component {
   // conditionally close modal identified by data attribute
   handleToggle(e) {
     e.preventDefault()
-    
-    const { modal } = e.currentTarget.dataset
 
-    /*
-      We currently ignore the click if the identity has been verified.
-      TODO: Allow provisional validations to be reviewed and/or
-      undone individually before publishing to the blockchain.
-    */
-    if (this.props.published[modal] || this.props.provisional[modal]) {
-      return
-    }
+    this.props.storeWeb3Intent('manage your profile')
 
-    let modalsOpen = Object.assign({}, this.state.modalsOpen)
+    if (web3.givenProvider && this.props.web3Account) {
+      const { modal } = e.currentTarget.dataset
 
-    for (let k in modalsOpen) {
-      if (modalsOpen.hasOwnProperty(k)) {
-        modalsOpen[k] = k === modal ? !modalsOpen[k] : false
+      /*
+        We currently ignore the click if the identity has been verified.
+        TODO: Allow provisional validations to be reviewed and/or
+        undone individually before publishing to the blockchain.
+      */
+      if (this.props.published[modal] || this.props.provisional[modal]) {
+        return
       }
-    }
 
-    this.setState({ modalsOpen })
+      let modalsOpen = Object.assign({}, this.state.modalsOpen)
+
+      for (let k in modalsOpen) {
+        if (modalsOpen.hasOwnProperty(k)) {
+          modalsOpen[k] = k === modal ? !modalsOpen[k] : false
+        }
+      }
+
+      this.setState({ modalsOpen })
+    }
   }
 
   // warning message will be ignored by the native dialog in Chrome and Firefox
@@ -240,7 +245,7 @@ class Profile extends Component {
                     className="publish btn btn-sm btn-primary d-block"
                     onClick={() => {
                       this.setState({
-                        modalsOpen: { ...this.state.modalsOpen, publish: true }
+                        modalsOpen: { ...modalsOpen, publish: true }
                       })
                     }}
                   >
@@ -281,7 +286,7 @@ class Profile extends Component {
           handleSubmit={data => {
             this.props.updateProfile(data)
             this.setState({
-              modalsOpen: { ...this.state.modalsOpen, profile: false }
+              modalsOpen: { ...modalsOpen, profile: false }
             })
           }}
           data={profile.provisional}
@@ -294,7 +299,7 @@ class Profile extends Component {
             this.props.addAttestation(data)
             this.setState({
               successMessage: 'Phone number verified!',
-              modalsOpen: { ...this.state.modalsOpen, phone: false, attestationSuccess: true }
+              modalsOpen: { ...modalsOpen, phone: false, attestationSuccess: true }
             })
           }}
         />
@@ -307,7 +312,7 @@ class Profile extends Component {
             this.props.addAttestation(data)
             this.setState({
               successMessage: 'Email address verified!',
-              modalsOpen: { ...this.state.modalsOpen, email: false, attestationSuccess: true }
+              modalsOpen: { ...modalsOpen, email: false, attestationSuccess: true }
             })
           }}
         />
@@ -320,7 +325,7 @@ class Profile extends Component {
             this.props.addAttestation(data)
             this.setState({
               successMessage: 'Facebook account verified!',
-              modalsOpen: { ...this.state.modalsOpen, facebook: false, attestationSuccess: true }
+              modalsOpen: { ...modalsOpen, facebook: false, attestationSuccess: true }
             })
           }}
         />
@@ -332,7 +337,7 @@ class Profile extends Component {
             this.props.addAttestation(data)
             this.setState({
               successMessage: 'Twitter account verified!',
-              modalsOpen: { ...this.state.modalsOpen, twitter: false, attestationSuccess: true }
+              modalsOpen: { ...modalsOpen, twitter: false, attestationSuccess: true }
             })
           }}
         />
@@ -344,7 +349,7 @@ class Profile extends Component {
           handlePublish={this.handlePublish}
           onConfirm={() => {
             this.setState({
-              modalsOpen: { ...this.state.modalsOpen, publish: false },
+              modalsOpen: { ...modalsOpen, publish: false },
               step: 'metamask'
             })
             this.props.deployProfile({
@@ -361,7 +366,7 @@ class Profile extends Component {
           handlePublish={this.handlePublish}
           onConfirm={() => {
             this.setState({
-              modalsOpen: { ...this.state.modalsOpen, unload: false },
+              modalsOpen: { ...modalsOpen, unload: false },
               step: 'metamask'
             })
             this.props.deployProfile({
@@ -470,6 +475,9 @@ const mapStateToProps = state => {
     profile: state.profile,
     balance: state.wallet.balance,
     identityAddress: state.profile.user.identityAddress,
+    onMobile: state.app.onMobile,
+    web3Account: state.app.web3.account,
+    web3Intent: state.app.web3.intent,
   }
 }
 
@@ -478,7 +486,8 @@ const mapDispatchToProps = dispatch => ({
   deployProfileReset: () => dispatch(deployProfileReset()),
   updateProfile: data => dispatch(updateProfile(data)),
   addAttestation: data => dispatch(addAttestation(data)),
-  getBalance: () => dispatch(getBalance())
+  getBalance: () => dispatch(getBalance()),
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile)

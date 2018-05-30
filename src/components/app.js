@@ -2,7 +2,9 @@ import React, { Component } from 'react'
 import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
 
+import { setMobile } from 'actions/App'
 import { fetchProfile } from 'actions/Profile'
+import { init as initWallet } from 'actions/Wallet'
 
 // Components
 import Alert from './alert'
@@ -54,14 +56,33 @@ const UserPage = props => <User userAddress={props.match.params.userAddress} />
 class App extends Component {
   componentDidMount() {
     this.props.fetchProfile()
+    this.props.initWallet()
+
+    this.detectMobile()
+  }
+
+  /**
+   * Detect if accessing from a mobile browser
+   * @return {void}
+   */
+  detectMobile() {
+    let userAgent = navigator.userAgent || navigator.vendor || window.opera
+
+    if (/android/i.test(userAgent)) {
+      this.props.setMobile('Android')
+    } else if (/iPad|iPhone|iPod/.test(userAgent)) {
+      this.props.setMobile('iOS')
+    } else {
+      this.props.setMobile(null)
+    }
   }
 
   render() {
     return (
       <Router>
         <ScrollToTop>
-          <Layout>
-            <Web3Provider>
+          <Web3Provider>
+            <Layout>
               <Switch>
                 <Route exact path="/" component={HomePage} />
                 <Route path="/page/:activePage" component={HomePage} />
@@ -82,9 +103,9 @@ class App extends Component {
                 <Route path="/users/:userAddress" component={UserPage} />
                 <Route component={NotFound} />
               </Switch>
-            </Web3Provider>
-          </Layout>
-          <Alert />
+            </Layout>
+            <Alert />
+          </Web3Provider>
         </ScrollToTop>
       </Router>
     )
@@ -93,6 +114,8 @@ class App extends Component {
 
 const mapDispatchToProps = dispatch => ({
   fetchProfile: () => dispatch(fetchProfile()),
+  initWallet: () => dispatch(initWallet()),
+  setMobile: device => dispatch(setMobile(device)),
 })
 
 export default connect(undefined, mapDispatchToProps)(App)

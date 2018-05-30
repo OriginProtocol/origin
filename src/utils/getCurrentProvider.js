@@ -18,7 +18,7 @@ export default function getCurrentProvider(web3) {
 
   if (web3.currentProvider.host && web3.currentProvider.host.indexOf('infura') !== -1) return 'Infura'
 
-  if (web3.currentProvider.host && web3.currentProvider.host.indexOf('localhost') !== -1) return 'localhost'
+  if (web3.currentProvider.host && web3.currentProvider.host.indexOf('localhost') !== -1) return 'Localhost'
 
   return 'Unknown Provider'
 }

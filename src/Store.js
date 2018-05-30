@@ -6,6 +6,7 @@ import profile from './reducers/Profile'
 import wallet from './reducers/Wallet'
 import alert from './reducers/Alert'
 import users from './reducers/Users'
+import app from './reducers/App'
 
 let middlewares = [thunkMiddleware]
 
@@ -21,6 +22,7 @@ const store = createStore(
     wallet,
     alert,
     users,
+    app,
   }),
   applyMiddleware(...middlewares)
 )

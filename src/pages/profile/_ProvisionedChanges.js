@@ -98,7 +98,7 @@ class ProvisionedChanges extends Component {
             `}
           >
             <div className="image-container">
-              <img src="/images/publish-Facebook-icon.svg" alt="Facebook icon" />
+              <img src="/images/publish-facebook-icon.svg" alt="Facebook icon" />
             </div>
             <div className="text-center">Facebook</div>
           </div>

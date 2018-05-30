@@ -82,9 +82,10 @@ class MyPurchaseCard extends Component {
                   {/*<a onClick={() => alert('To Do')}>Open a Dispute</a>*/}
                 </div>
                 <div className="button-container">
-                  {stage === 'buyer_pending' &&
+                  {/* Hidden for current deployment */}
+                  {/* stage === 'buyer_pending' &&
                     <a className="btn btn-primary btn-sm" onClick={() => alert('To Do')}>I&apos;ve Received the Order</a>
-                  }
+                  */}
                 </div>
               </div>
             </div>

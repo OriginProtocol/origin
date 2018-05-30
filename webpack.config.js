@@ -8,7 +8,11 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-const env = { CONTRACT_ADDRESSES: '{}' }
+const env = {
+  CONTRACT_ADDRESSES: '{}',
+  PRODUCTION_DOMAIN: '',
+  PROVIDER_URL: '',
+}
 
 var config = {
   entry: { app: './src/index.js' },

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { fetchUser } from 'actions/User'
 import Avatar from './avatar'
+import EtherscanLink from './etherscan-link'
 
 class UserCard extends Component {
   constructor(props) {
@@ -15,8 +16,7 @@ class UserCard extends Component {
 
   render() {
     const { title, user, userAddress } = this.props
-    const { profile, attestations } = user
-    const fullName = (profile && `${profile.firstName} ${profile.lastName}`) || 'Unnamed User'
+    const { fullName, profile, attestations } = user
 
     return (
       <div className="user-card placehold">
@@ -32,7 +32,7 @@ class UserCard extends Component {
             </div>
             <div>
               <div>ETH Address:</div>
-              <div className="address"><strong>{userAddress}</strong></div>
+              <div className="address">{userAddress && <EtherscanLink hash={userAddress} />}</div>
             </div>
           </div>
           <hr className="dark sm" />

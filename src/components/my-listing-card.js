@@ -46,7 +46,7 @@ class MyListingCard extends Component {
      *  These states should be considered as editing is explored.
      *  There are no denormalized "transaction completed" or "transaction in progress" counts.
      */
-    const status = unitsAvailable > 0 ? 'active' : 'inactive'
+    const status = parseInt(unitsAvailable) > 0 ? 'active' : 'inactive'
     // const timestamp = `Created on ${moment(createdAt).format('MMMM D, YYYY')}`
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
 
@@ -65,10 +65,10 @@ class MyListingCard extends Component {
             {/*<p className="timestamp">{timestamp}</p>*/}
             <p className="price">
               {`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ETH`}
-              {!unitsAvailable /*<= quantity*/ && <span className="badge badge-info">Sold Out</span>}
+              {!parseInt(unitsAvailable) /*<= quantity*/ && <span className="badge badge-info">Sold Out</span>}
             </p>
             <div className="d-flex counts">
-              <p>Total Quantity: {unitsAvailable.toLocaleString()}</p>
+              <p>Total Quantity: {parseInt(unitsAvailable).toLocaleString()}</p>
               {/*<p>Total Remaining: {(unitsAvailable - quantity).toLocaleString()}</p>*/}
             </div>
             <div className="d-flex counts">
@@ -80,7 +80,7 @@ class MyListingCard extends Component {
                 {/*<a onClick={() => alert('To Do')}>Edit</a>*/}
                 {/*!active && <a onClick={() => alert('To Do')}>Enable</a>*/}
                 {/*active && <a onClick={() => alert('To Do')}>Disable</a>*/}
-                {!!unitsAvailable && <a className="warning" onClick={this.closeListing}>Close Listing</a>}
+                {!!parseInt(unitsAvailable) && <a className="warning" onClick={this.closeListing}>Close Listing</a>}
               </div>
             </div>
           </div>

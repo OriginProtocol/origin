@@ -22,11 +22,12 @@ class ListingsGrid extends Component {
 
   render() {
     const { listingsPerPage } = this.state
-    const { contractFound, listingIds } = this.props
-
+    const { contractFound, listingIds, hideList } = this.props
+    const pinnedListingIds = [0, 1, 2, 3, 4]
     const activePage = this.props.match.params.activePage || 1
+    const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
     // Calc listings to show for given page
-    const showListingsIds = listingIds.slice(
+    const showListingsIds = arrangedListingIds.slice(
       listingsPerPage * (activePage - 1),
       listingsPerPage * activePage
     )
@@ -46,13 +47,13 @@ class ListingsGrid extends Component {
             {listingIds.length > 0 && <h1>{listingIds.length} Listings</h1>}
             <div className="row">
               {showListingsIds.map(listingId => (
-                <ListingCard listingId={listingId} key={listingId} />
+                <ListingCard listingId={listingId} key={listingId} hideList={hideList} />
               ))}
             </div>
             <Pagination
-              activePage={activePage}
+              activePage={parseInt(activePage)}
               itemsCountPerPage={listingsPerPage}
-              totalItemsCount={listingIds.length}
+              totalItemsCount={arrangedListingIds.length}
               pageRangeDisplayed={5}
               onChange={page => this.props.history.push(`/page/${page}`)}
               itemClass="page-item"
@@ -68,6 +69,7 @@ class ListingsGrid extends Component {
 
 const mapStateToProps = state => ({
   listingIds: state.listings.ids,
+  hideList: state.listings.hideList,
   contractFound: state.listings.contractFound
 })
 
@@ -75,6 +77,4 @@ const mapDispatchToProps = dispatch => ({
   getListingIds: () => dispatch(getListingIds())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  withRouter(ListingsGrid)
-)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ListingsGrid))

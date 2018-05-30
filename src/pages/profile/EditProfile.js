@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import AvatarEditor from 'react-avatar-editor'
+import readAndCompressImage from 'browser-image-resizer';
 
 import Modal from 'components/modal'
 
@@ -25,6 +26,14 @@ class EditProfile extends Component {
     }
   }
 
+  blobToDataURL(blob) {
+    return new Promise((resolve) => {
+      let a = new FileReader()
+      a.onload = function(e) {resolve(e.target.result)}
+      a.readAsDataURL(blob)
+    })
+  }
+
   render() {
     const { open, handleToggle } = this.props
 
@@ -40,14 +49,22 @@ class EditProfile extends Component {
               description: this.state.description
             }
             if (this.state.picChanged) {
-              data.pic = this.imageEditor.getImage().toDataURL()
+              let canvas = this.imageEditor.getImage().toDataURL()
+              let res = await fetch(canvas)
+              let blob = await res.blob()
+              let resized = await readAndCompressImage(blob, {
+                quality: 1,
+                maxWidth: 500,
+                maxHeight: 500
+              })
+              data.pic = await this.blobToDataURL(resized)
             }
             this.props.handleSubmit({ data })
           }}
         >
           <div className="container">
             <div className="row">
-              <div className="col-6">
+              <div className="col-12 col-sm-6">
                 <div className="image-container">
                   <div className="image-pair">
                     <div className="avatar-container">
@@ -81,7 +98,7 @@ class EditProfile extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-6">
+              <div className="col-12 col-sm-6">
                 <div className="form-group">
                   <label htmlFor="first-name">First Name</label>
                   <input
@@ -131,18 +148,19 @@ class EditProfile extends Component {
                 <div className="explanation text-center">
                   This information will be published on the blockchain and will be visible to everyone.
                 </div>
-                <div className="button-container text-center">
+                <div className="button-container d-flex justify-content-center">
+                  <button type="submit" className="btn btn-clear">
+                    Continue
+                  </button>
+                </div>
+                <div className="link-container text-center">
                   <a
                     href="#"
-                    className="btn btn-clear"
                     data-modal="profile"
                     onClick={handleToggle}
                   >
                     Cancel
                   </a>
-                  <button type="submit" className="btn btn-clear">
-                    Continue
-                  </button>
                 </div>
               </div>
             </div>
