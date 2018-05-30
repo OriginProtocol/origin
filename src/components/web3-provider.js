@@ -2,6 +2,8 @@ import { FormattedMessage } from 'react-intl'
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
+import { fetchProfile } from 'actions/Profile'
+import { getBalance } from 'actions/Wallet'
 
 import QRCode from 'qrcode.react'
 import Modal from './modal'
@@ -370,17 +372,8 @@ class Web3Provider extends Component {
       this.props.storeWeb3Account(curr)
 
       // force reload on account change
-      if (prev !== null && (!curr) )
-      {
-        window.location.reload()
-      }
-      else
-      {
-        if (prev !== null && confirm("Your account have changed do you wish to reload this page."))
-        {
-           window.location.reload()
-        }
-      }
+      this.props.fetchProfile()
+      this.props.getBalance()
     }
   }
 
@@ -454,6 +447,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
+  fetchProfile: () => dispatch(fetchProfile()),
+  getBalance: () => dispatch(getBalance()),
   storeWeb3Account: addr => dispatch(storeWeb3Account(addr)),
   storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
 })
