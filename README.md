@@ -102,7 +102,7 @@ Run a subset of these tests using the `grep` query string parameter, for example
 
 ## Using the Ganache GUI
 
-By default, starting origin locally starts [ganache-cli](https://github.com/trufflesuite/ganache-cli) automatically.
+By default, starting origin-js locally starts [ganache-cli](https://github.com/trufflesuite/ganache-cli) automatically.
 However, for development you might want to connect to the [GUI version of Ganache](http://truffleframework.com/ganache/). This provides a nice interface for browsing your local blockchain activity and can be useful for debugging.
 
 To use the Ganache GUI:
