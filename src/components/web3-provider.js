@@ -212,7 +212,7 @@ class Web3Provider extends Component {
    */
   initNetworkPoll() {
     if (!this.networkInterval) {
-      this.networkInterval = setInterval(this.fetchNetwork, ONE_MINUTE)
+      this.networkInterval = setInterval(this.fetchNetwork, ONE_SECOND)
     }
   }
 
@@ -221,8 +221,7 @@ class Web3Provider extends Component {
    * @return {void}
    */
   fetchAccounts() {
-    web3 &&
-      web3.eth &&
+    this.state.networkConnected &&
       web3.eth.getAccounts((err, accounts) => {
         if (err) {
           console.log(err)
@@ -261,8 +260,25 @@ class Web3Provider extends Component {
    */
   fetchNetwork() {
     let called = false
+    const providerExists = web3.currentProvider
+    const networkConnected = web3.currentProvider.connected || (
+                                  typeof web3.currentProvider.isConnected === 'function' &&
+                                  web3.currentProvider.isConnected()
+                                )
 
-    web3.currentProvider &&
+    if (networkConnected !== this.state.networkConnected) {
+      if (this.state.networkConnected !== null) {
+        // switch from one second to one minute after change
+        clearInterval(this.networkInterval)
+
+        this.networkInterval = setInterval(this.fetchNetwork, ONE_MINUTE)
+      }
+
+      this.setState({ networkConnected })
+    }
+
+    providerExists &&
+      networkConnected &&
       web3.version &&
       web3.eth.net.getId((err, netId) => {
         called = true
@@ -288,20 +304,6 @@ class Web3Provider extends Component {
           })
         }
       })
-
-    // Delay and condition the use of the network value.
-    // https://github.com/MetaMask/metamask-extension/issues/1380#issuecomment-375980850
-    if (this.state.networkConnected === null) {
-      setTimeout(() => {
-        !called &&
-          web3 &&
-          web3.version &&
-          (web3.version.network === 'loading' || !web3.version.network) &&
-          this.setState({
-            networkConnected: false
-          })
-      }, 4000)
-    }
   }
 
   handleAccounts(accounts) {
