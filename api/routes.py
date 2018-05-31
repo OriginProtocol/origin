@@ -1,4 +1,8 @@
-from api.modules import attestations, notifications, search
+from api.modules import (
+    attestations,
+    notifications,
+    search,
+)
 
 
 def add_resources(api, resources, namespace):

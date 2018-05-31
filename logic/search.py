@@ -66,31 +66,38 @@ class SearchClient(Singleton):
         # Query for searching Listing data.
         # TODO(franck): If query gets more complex, consider using the
         # ElasticSearch DSL library for building it.
-        query_template = '''{
-          "from" : %d, "size" : %d,
-          "query": {
-            "bool": {
+        query_template = '''{{
+          "from" : {offset}, "size" : {num},
+          "query": {{
+            "bool": {{
               "should": [
-                {"match": {"name": "%s"}},
-                {"match": {"description": "%s"}}
+                {{"match": {{"name": "{name}"}}}},
+                {{"match": {{"description": "{description}"}}}}
               ]
-              %s
-            }
-          }
-        }'''
+              {filter_clause}
+            }}
+          }}
+        }}'''
 
         # Construct the optional filter clause.
         filters = []
         filter_clause = ""
         if category:
-            filters.append('{"match": {"category": "%s"}}' % category)
+            cat_filter = '{{"match": {{"category": "{cat}"}}}}'.format(cat=category)
+            filters.append(cat_filter)
         if location:
-            filters.append('{"match": {"location": "%s"}}' % location)
+            loc_filter = '{{"match": {{"location": "{loc}"}}}}'.format(loc=location)
+            filters.append(loc_filter)
         if filters:
             filter_clause = ',"must": [' + ",".join(filters) + ']'
 
         # Construct the query.
-        query = query_template % (offset, num, query, query, filter_clause)
+        query = query_template.format(
+            offset=offset,
+            num=num,
+            name=query,
+            description=query,
+            filter_clause=filter_clause)
 
         # Query the search engine.
         res = self.client.search(
