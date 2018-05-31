@@ -3,6 +3,8 @@ from flask_cors import CORS
 
 from config import settings
 
+from util.encoder import JSONEncoder
+
 
 class MyFlask(Flask):
     def get_send_file_max_age(self, name):
@@ -29,6 +31,7 @@ class MyFlask(Flask):
 app = MyFlask(__name__,
               template_folder=settings.TEMPLATE_ROOT,
               static_folder=settings.STATIC_ROOT)
+app.json_encoder = JSONEncoder
 
 cors = CORS(app,
             resources={r"/api/*": {"origins": "*"}},

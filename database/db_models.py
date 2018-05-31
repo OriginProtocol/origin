@@ -26,7 +26,7 @@ class Listing(db.Model):
     owner_address = db.Column(db.String(255), index=True)
     registry_id = db.Column(db.Integer())
 
-    price = db.Column(db.Integer())
+    price = db.Column(db.Numeric(10, 2))
     units = db.Column(db.Integer())
     expired = db.Column(db.Boolean())
 
