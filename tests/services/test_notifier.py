@@ -1,10 +1,10 @@
+from mock import MagicMock
+
 from database.db_models import EthNotificationEndpoint, EthNotificationTypes, EventTracker
+from logic.indexer_service import EventHandler
 from logic.notifier_service import register_eth_notification, notification_messages, Notification
 from tests.helpers.eth_utils import sample_eth_address, str_eth
 from util.contract import ContractHelper
-
-# use indexer to drive notification events
-from logic.indexer_service import EventHandler
 
 
 def test_new_endpoint(db):
@@ -72,7 +72,7 @@ def test_endpoint_notification(
     db.session.commit()
 
     # HUGE assumption that only one contract have been created...
-    handler = EventHandler(web3=web3)
+    handler = EventHandler(search_indexer=MagicMock(), web3=web3)
     ContractHelper(web3=web3).fetch_events(
         [],
         block_from=event_tracker.block_index,

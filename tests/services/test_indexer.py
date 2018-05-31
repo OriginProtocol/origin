@@ -79,7 +79,8 @@ class TestDBIndexer():
             wait_for_transaction, listing_contract,
             purchase_contract, mock_ipfs):
 
-        handler = EventHandler(web3=web3)
+        handler = EventHandler(
+            notifier=MagicMock(), search_indexer=MagicMock(), web3=web3)
         listing_data = handler._fetch_listing_data(listing_contract.address)
         purchase_data = handler._fetch_purchase_data(purchase_contract.address)
 
