@@ -58,7 +58,7 @@ class MyListingCard extends Component {
      *  These states should be considered as editing is explored.
      *  There are no denormalized "transaction completed" or "transaction in progress" counts.
      */
-    const status = unitsAvailable > 0 ? 'active' : 'inactive'
+    const status = parseInt(unitsAvailable) > 0 ? 'active' : 'inactive'
     // const timestamp = `Created on ${moment(createdAt).format('MMMM D, YYYY')}`
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
 
@@ -76,21 +76,22 @@ class MyListingCard extends Component {
             <h2 className="title text-truncate"><Link to={`/listing/${address}`}>{name}</Link></h2>
             {/*<p className="timestamp">{timestamp}</p>*/}
             <p className="price">
-              {`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ${this.props.intl.formatMessage(this.intlMessages.ETH)}`}
-              {!unitsAvailable /*<= quantity*/ && 
+              {`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ETH`}
+              {!parseInt(unitsAvailable) /*<= quantity*/ && 
                 <span className="badge badge-info">
                   <FormattedMessage
                     id={ 'my-listing-card.soldOut' }
                     defaultMessage={ 'Sold Out' }
                   />
-                </span>}
+                </span>
+              }
             </p>
             <div className="d-flex counts">
               <p>
                 <FormattedMessage
                   id={ 'my-listing-card.totalQuantity' }
                   defaultMessage={ 'Total Quantity : {quantity}' }
-                  values={{ quantity: <FormattedNumber value={unitsAvailable.toLocaleString()} /> }}
+                  values={{ quantity: <FormattedNumber value={unitsAvailable} /> }}
                 />
               </p>
               {/*<p>Total Remaining: {(unitsAvailable - quantity).toLocaleString()}</p>*/}
@@ -111,6 +112,14 @@ class MyListingCard extends Component {
                       defaultMessage={ 'Close Listing' }
                     />
                   </a>}
+                {!!parseInt(unitsAvailable) && 
+                  <a className="warning" onClick={this.closeListing}>
+                    <FormattedMessage
+                      id={ 'my-listing-card.closeListing' }
+                      defaultMessage={ 'Close Listing' }
+                    />
+                  </a>
+                }
               </div>
             </div>
           </div>

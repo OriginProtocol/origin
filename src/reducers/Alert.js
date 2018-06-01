@@ -4,17 +4,16 @@ const initialState = {
   message: ''
 }
 
-export default function Listings(state = initialState, action = {}) {
-    switch (action.type) {
+export default function Alert(state = initialState, action = {}) {
+  switch (action.type) {
 
-      case AlertConstants.SHOW:
-        return { ...state, message: action.message, show: true }
+    case AlertConstants.SHOW:
+      return { ...state, message: action.message, show: true }
 
-      case AlertConstants.HIDE:
-        return { ...state, message: '', show: false }
+    case AlertConstants.HIDE:
+      return { ...state, message: '', show: false }
 
-      default:
-        return state
-    }
-
+    default:
+      return state
+  }
 }

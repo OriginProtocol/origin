@@ -30,21 +30,13 @@ class VerifyFacebook extends Component {
         </div>
         <h2>Verify Your Facebook Account</h2>
         <div className="explanation">
-          Other users will know that you have a verified Facebook account. Your name
+          Other users will know that you have a verified Facebook account, but your account details
           &nbsp;
           <strong>will not</strong>
           &nbsp;
           be published on the blockchain. We will never post on your behalf.
         </div>
         <div className="button-container">
-          <a
-            href="#"
-            className="btn btn-clear"
-            data-modal="facebook"
-            onClick={this.props.handleToggle}
-          >
-            Cancel
-          </a>
           <button
             type="submit"
             className="btn btn-clear"
@@ -52,6 +44,15 @@ class VerifyFacebook extends Component {
           >
             Continue
           </button>
+        </div>
+        <div className="link-container">
+          <a
+            href="#"
+            data-modal="facebook"
+            onClick={this.props.handleToggle}
+          >
+            Cancel
+          </a>
         </div>
       </Modal>
     )

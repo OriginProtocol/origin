@@ -1,13 +1,17 @@
 import React, { Component, Fragment } from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import moment from 'moment'
 import Avatar from './avatar'
 import Review from './review'
+import TransactionEvent from '../pages/purchases/transaction-event'
 import TransactionProgress from './transaction-progress'
 import UserCard from './user-card'
 
 import origin from '../services/origin'
+
+const web3 = origin.contractService.web3
 
 /* Transaction stages: no disputes and no seller review of buyer/transaction
  *  - step 0 was creating the listing
@@ -77,7 +81,6 @@ class PurchaseDetail extends Component {
     this.loadPurchase = this.loadPurchase.bind(this)
     this.withdrawFunds = this.withdrawFunds.bind(this)
     this.state = {
-      accounts: [],
       buyer: {},
       form: {
         rating: 5,
@@ -87,12 +90,11 @@ class PurchaseDetail extends Component {
       logs: [],
       purchase: {},
       reviews: [],
-      seller: {},
+      seller: {}
     }
   }
 
   componentWillMount() {
-    this.loadAccounts()
     this.loadPurchase()
   }
 
@@ -112,17 +114,6 @@ class PurchaseDetail extends Component {
 
     if (prevState.listing.sellerAddress !== sellerAddress) {
       this.loadSeller(sellerAddress)
-    }
-  }
-
-  async loadAccounts() {
-    try {
-      const accounts = await web3.eth.getAccounts()
-
-      this.setState({ accounts })
-    } catch(error) {
-      console.error('Error loading accounts')
-      console.error(error)
     }
   }
 
@@ -297,7 +288,9 @@ class PurchaseDetail extends Component {
   }
 
   render() {
-    const { accounts, buyer, form, listing, logs, purchase, reviews, seller } = this.state
+    const { web3Account } = this.props
+
+    const { buyer, form, listing, logs, purchase, reviews, seller } = this.state
     const { rating, reviewText } = form
     const buyersReviews = reviews.filter(r => r.revieweeRole === 'SELLER')
 
@@ -305,7 +298,14 @@ class PurchaseDetail extends Component {
       return null
     }
 
-    const perspective = accounts[0] === purchase.buyerAddress ? 'buyer' : 'seller'
+    let perspective
+    // may potentially be neither buyer nor seller
+    if (web3Account === purchase.buyerAddress) {
+      perspective = 'buyer'
+    } else if (web3Account === listing.sellerAddress) {
+      perspective = 'seller'
+    }
+
     const pictures = listing.pictures || []
     const category = listing.category || ""
     const active = listing.unitsAvailable > 0 // Todo, move to origin.js, take into account listing expiration
@@ -357,7 +357,7 @@ class PurchaseDetail extends Component {
       left = `calc(${decimal * 100}% + ${decimal * 28}px)`
     }
 
-    const nextStep = nextSteps[step]
+    const nextStep = perspective && nextSteps[step]
     const { buttonText, functionName, instruction, placeholderText, prompt, reviewable } = nextStep ? nextStep[perspective] : {}
     const buyerName = (buyer.profile && `${buyer.profile.firstName} ${buyer.profile.lastName}`) || 'Unnamed User'
     const sellerName = (seller.profile && `${seller.profile.firstName} ${seller.profile.lastName}`) || 'Unnamed User'
@@ -380,30 +380,34 @@ class PurchaseDetail extends Component {
               <h2>Transaction Status</h2>
               <div className="row">
                 <div className="col-6">
-                  <div className="d-flex">
-                    <Avatar
-                      image={seller.profile && seller.profile.avatar}
-                      placeholderStyle={perspective === 'seller' ? 'green' : 'blue'}
-                    />
-                    <div className="identification d-flex flex-column justify-content-between text-truncate">
-                      <div><span className="badge badge-dark">Seller</span></div>
-                      <div className="name">{sellerName}</div>
-                      <div className="address text-muted text-truncate">{seller.address}</div>
+                  <Link to={`/users/${seller.address}`}>
+                    <div className="d-flex">
+                      <Avatar
+                        image={seller.profile && seller.profile.avatar}
+                        placeholderStyle={perspective === 'seller' ? 'green' : 'blue'}
+                      />
+                      <div className="identification d-flex flex-column justify-content-between text-truncate">
+                        <div><span className="badge badge-dark">Seller</span></div>
+                        <div className="name">{sellerName}</div>
+                        <div className="address text-muted text-truncate">{seller.address}</div>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 </div>
                 <div className="col-6">
-                  <div className="d-flex justify-content-end">
-                    <div className="identification d-flex flex-column text-right justify-content-between text-truncate">
-                      <div><span className="badge badge-dark">Buyer</span></div>
-                      <div className="name">{buyerName}</div>
-                      <div className="address text-muted text-truncate">{buyer.address}</div>
+                  <Link to={`/users/${buyer.address}`}>
+                    <div className="d-flex justify-content-end">
+                      <div className="identification d-flex flex-column text-right justify-content-between text-truncate">
+                        <div><span className="badge badge-dark">Buyer</span></div>
+                        <div className="name">{buyerName}</div>
+                        <div className="address text-muted text-truncate">{buyer.address}</div>
+                      </div>
+                      <Avatar
+                        image={buyer.profile && buyer.profile.avatar}
+                        placeholderStyle={perspective === 'buyer' ? 'green' : 'blue'}
+                      />
                     </div>
-                    <Avatar
-                      image={buyer.profile && buyer.profile.avatar}
-                      placeholderStyle={perspective === 'buyer' ? 'green' : 'blue'}
-                    />
-                  </div>
+                  </Link>
                 </div>
                 <div className="col-12">
                   <TransactionProgress currentStep={step} maxStep={maxStep} purchase={listing} perspective={perspective} />
@@ -467,44 +471,29 @@ class PurchaseDetail extends Component {
                   </tr>
                 </thead>
                 <tbody>
+
                   {paidAt &&
-                    <tr>
-                      <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Payment received on<br /><strong>${moment(paidAt).format('MMM D, YYYY')}</strong>`}></span>Payment Received</td>
-                      <td className="text-truncate">{paymentEvent.transactionHash}</td>
-                      <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{buyer.address}</Link></td>
-                      <td className="text-truncate"><Link to={`/users/${seller.address}`}>{seller.address}</Link></td>
-                    </tr>
+                    <TransactionEvent timestamp={paidAt} eventName="Payment received" transaction={paymentEvent} buyer={buyer} seller={seller} />
                   }
+
                   {fulfilledAt &&
-                    <tr>
-                      <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Sent by seller on<br /><strong>${moment(fulfilledAt).format('MMM D, YYYY')}</strong>`}></span>Sent by seller</td>
-                      <td className="text-truncate">{fulfillmentEvent.transactionHash}</td>
-                      <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{seller.address}</Link></td>
-                      <td className="text-truncate"><Link to={`/users/${seller.address}`}>{buyer.address}</Link></td>
-                    </tr>
+                    <TransactionEvent timestamp={fulfilledAt} eventName="Sent by seller" transaction={fulfillmentEvent} buyer={buyer} seller={seller} />
                   }
+
                   {receivedAt &&
-                    <tr>
-                      <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Received buy buyer on<br /><strong>${moment(receivedAt).format('MMM D, YYYY')}</strong>`}></span>Received by buyer</td>
-                      <td className="text-truncate">{receiptEvent.transactionHash}</td>
-                      <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{buyer.address}</Link></td>
-                      <td className="text-truncate"><Link to={`/users/${seller.address}`}>{seller.address}</Link></td>
-                    </tr>
+                    <TransactionEvent timestamp={receivedAt} eventName="Received by buyer" transaction={receiptEvent} buyer={buyer} seller={seller} />
                   }
-                  {perspective === 'seller' && withdrawnAt &&
-                    <tr>
-                      <td><span className="progress-circle checked" data-toggle="tooltip" data-placement="top" data-html="true" title={`Funds withdrawn on<br /><strong>${moment(withdrawnAt).format('MMM D, YYYY')}</strong>`}></span>Funds withdrawn</td>
-                      <td className="text-truncate">{withdrawalEvent.transactionHash}</td>
-                      <td className="text-truncate"><Link to={`/users/${buyer.address}`}>{seller.address}</Link></td>
-                      <td className="text-truncate"><Link to={`/users/${seller.address}`}>{buyer.address}</Link></td>
-                    </tr>
+
+                  {withdrawnAt &&
+                    <TransactionEvent timestamp={withdrawnAt} eventName="Funds withdrawn" transaction={withdrawalEvent} buyer={buyer} seller={seller} />
                   }
+
                 </tbody>
               </table>
               <hr />
             </div>
             <div className="col-12 col-lg-4">
-              <UserCard title={counterparty} userAddress={counterpartyUser.address} />
+              {counterpartyUser.address && <UserCard title={counterparty} userAddress={counterpartyUser.address} />}
             </div>
           </div>
           <div className="row">
@@ -525,9 +514,9 @@ class PurchaseDetail extends Component {
                     <h2 className="category placehold">{listing.category}</h2>
                     <h1 className="title text-truncate placehold">{listing.name}</h1>
                     <p className="description placehold">{listing.description}</p>
-                    {!!listing.unitsAvailable && listing.unitsAvailable < 5 &&
+                    {/*!!listing.unitsAvailable && listing.unitsAvailable < 5 &&
                       <div className="units-available text-danger">Just {listing.unitsAvailable.toLocaleString()} left!</div>
-                    }
+                    */}
                     {listing.ipfsHash &&
                       <div className="link-container">
                         <a href={origin.ipfsService.gatewayUrlForHash(listing.ipfsHash)} target="_blank">
@@ -569,4 +558,10 @@ class PurchaseDetail extends Component {
   }
 }
 
-export default PurchaseDetail
+const mapStateToProps = state => {
+  return {
+    web3Account: state.app.web3.account,
+  }
+}
+
+export default connect(mapStateToProps)(PurchaseDetail)

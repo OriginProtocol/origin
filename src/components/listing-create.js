@@ -16,7 +16,7 @@ class ListingCreate extends Component {
     super(props)
 
     // This is non-ideal fix until IPFS can correctly return 443 errors
-    // Server limit is 2MB, withg 100K safety buffer
+    // Server limit is 2MB, with 100K safety buffer
     this.MAX_UPLOAD_BYTES = (2e6 - 1e5)
 
     // Enum of our states
@@ -150,6 +150,10 @@ class ListingCreate extends Component {
   }
 
   render() {
+    const { selectedSchema } = this.state
+    const enumeratedPrice = selectedSchema && selectedSchema.properties['price'].enum
+    const priceHidden = enumeratedPrice && enumeratedPrice.length === 1 && enumeratedPrice[0] === 0
+
     return (
       <div className="container listing-form">
         { this.state.step === this.STEP.PICK_SCHEMA &&
@@ -272,6 +276,7 @@ class ListingCreate extends Component {
                   onSubmit={this.onDetailsEntered}
                   formData={this.state.formListing.formData}
                   onError={(errors) => console.log(`react-jsonschema-form errors: ${errors.length}`)}
+                  uiSchema={priceHidden ? { price: { 'ui:widget': 'hidden' } } : undefined}
                 >
                   <div className="btn-container">
                     <button type="button" className="btn btn-other" onClick={() => this.setState({step: this.STEP.PICK_SCHEMA})}>
@@ -339,13 +344,14 @@ class ListingCreate extends Component {
                   id={ 'listing-create.successMessage' }
                   defaultMessage={ 'Success' }
                 />
-                <br />
-                <Link to="/">
-                  <FormattedMessage
-                    id={ 'listing-create.seeAllListings' }
-                    defaultMessage={ 'See All Listings' }
-                  />
-                </Link>
+                <div className="button-container">
+                  <Link to="/" className="btn btn-clear">
+                    <FormattedMessage
+                      id={ 'listing-create.seeAllListings' }
+                      defaultMessage={ 'See All Listings' }
+                    />
+                  </Link>
+                </div>
               </Modal>
             }
             {this.state.step === this.STEP.ERROR && (
@@ -362,19 +368,20 @@ class ListingCreate extends Component {
                   id={ 'listing-create.error2' }
                   defaultMessage={ 'See the console for more details.' }
                 />
-                <br />
-                <a
-                  href="#"
-                  onClick={e => {
-                    e.preventDefault()
-                    this.resetToPreview()
-                  }}
-                >
-                  <FormattedMessage
-                    id={ 'listing-create.OK' }
-                    defaultMessage={ 'OK' }
-                  />
-                </a>
+                <div className="button-container">
+                  <a
+                    className="btn btn-clear"
+                    onClick={e => {
+                      e.preventDefault()
+                      this.resetToPreview()
+                    }}
+                  >
+                    <FormattedMessage
+                      id={ 'listing-create.OK' }
+                      defaultMessage={ 'OK' }
+                    />
+                  </a>
+                </div>
               </Modal>
             )}
             <div className="row">

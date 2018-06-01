@@ -77,8 +77,7 @@ class User extends Component {
   }
 
   render() {
-    const { address, profile, attestations } = this.props.user
-    const fullName = (profile && `${profile.firstName} ${profile.lastName}`) || 'Unnamed User'
+    const { address, fullName, profile, attestations } = this.props.user
     const description = (profile && profile.description) || 'An Origin user without a description'
     const usersReviews = this.state.reviews.filter(r => r.revieweeAddress === address)
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
 import Identicon from 'components/Identicon'
+import EtherscanLink from '../../components/etherscan-link'
 
 class Wallet extends Component {
   render() {
@@ -13,9 +14,9 @@ class Wallet extends Component {
             <Identicon address={address} />
           </div>
           <div className="eth d-flex flex-column justify-content-between">
-            <div>ETH Address:</div>
+            {address && <div>ETH Address:</div>}
             <div className="address">
-              <strong>{address}</strong>
+             {address ? <EtherscanLink hash={address} /> : 'No ETH Account Connected'}
             </div>
           </div>
         </div>
@@ -24,12 +25,13 @@ class Wallet extends Component {
           <div>Account Balance:</div>
           <div>{balance} ETH</div>
         </div>
-        <div className="detail d-flex">
+        {/* Hidden for current deployment */}
+        {/*<div className="detail d-flex">
           <div>Transaction History:</div>
           <div>
             <a onClick={() => alert('To do')}>ETH</a> | <a onClick={() => alert('To do')}>Tokens</a>
           </div>
-        </div>
+        </div>*/}
         {/* Hidden for current deployment */}
         {/* identityAddress &&
           <div>

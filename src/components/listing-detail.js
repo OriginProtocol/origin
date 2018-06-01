@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'react-intl'
 import { showAlert } from '../actions/Alert'
+import { storeWeb3Intent } from '../actions/App'
 
 import Modal from './modal'
 import Review from './review'
@@ -11,6 +12,14 @@ import UserCard from './user-card'
 // temporary - we should be getting an origin instance from our app,
 // not using a global singleton
 import origin from '../services/origin'
+
+/* linking to contract Etherscan requires knowledge of which network we're on */
+const etherscanDomains = {
+  1: 'etherscan.io',
+  3: 'ropsten.etherscan.io',
+  4: 'rinkeby.etherscan.io',
+  42: 'kovan.etherscan.io',
+}
 
 class ListingsDetail extends Component {
 
@@ -26,6 +35,7 @@ class ListingsDetail extends Component {
     }
 
     this.state = {
+      etherscanDomain: null,
       loading: true,
       pictures: [],
       reviews: [],
@@ -41,6 +51,20 @@ class ListingsDetail extends Component {
     })
 
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
+  }
+
+  async componentWillMount() {
+    if (this.props.listingAddress) {
+      // Load from IPFS
+      await this.loadListing()
+      await this.loadPurchases()
+      this.loadReviews()
+    }
+    else if (this.props.listingJson) {
+      const obj = Object.assign({}, this.props.listingJson, { loading: false })
+      // Listing json passed in directly
+      this.setState(obj)
+    }
   }
 
   async loadListing() {
@@ -105,22 +129,30 @@ class ListingsDetail extends Component {
       // Listing json passed in directly
       this.setState(obj)
     }
+    const networkId = await web3.eth.net.getId()
+    this.setState({
+      etherscanDomain: etherscanDomains[networkId],
+    })
   }
 
   async handleBuyClicked() {
-    const unitsToBuy = 1
-    const totalPrice = (unitsToBuy * this.state.price)
-    this.setState({step: this.STEP.METAMASK})
-    try {
-      const transactionReceipt = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice)
-      console.log('Purchase request sent.')
-      this.setState({step: this.STEP.PROCESSING})
-      await origin.contractService.waitTransactionFinished(transactionReceipt.transactionHash)
-      this.setState({step: this.STEP.PURCHASED})
-    } catch (error) {
-      window.err = error
-      console.error(error)
-      this.setState({step: this.STEP.ERROR})
+    this.props.storeWeb3Intent('buy this listing')
+
+    if (web3.givenProvider && this.props.web3Account) {
+      const unitsToBuy = 1
+      const totalPrice = (unitsToBuy * this.state.price)
+      this.setState({step: this.STEP.METAMASK})
+      try {
+        const transactionReceipt = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice)
+        console.log('Purchase request sent.')
+        this.setState({step: this.STEP.PROCESSING})
+        await origin.contractService.waitTransactionFinished(transactionReceipt.transactionHash)
+        this.setState({step: this.STEP.PURCHASED})
+      } catch (error) {
+        window.err = error
+        console.error(error)
+        this.setState({step: this.STEP.ERROR})
+      }
     }
   }
 
@@ -128,9 +160,10 @@ class ListingsDetail extends Component {
     this.setState({step: this.STEP.VIEW})
   }
 
-
   render() {
+    const unitsAvailable = parseInt(this.state.unitsAvailable) // convert string to integer
     const buyersReviews = this.state.reviews.filter(r => r.revieweeRole === 'SELLER')
+    const userIsSeller = this.state.sellerAddress === this.props.web3Account
 
     return (
       <div className="listing-detail">
@@ -176,16 +209,14 @@ class ListingsDetail extends Component {
               id={ 'listing-detail.purchaseSuccessful' }
               defaultMessage={ 'Purchase was successful.' }
             />
-            <br />
-            <a href="#" onClick={e => {
-              e.preventDefault()
-              window.location.reload()
-            }}>
-              <FormattedMessage
-                id={ 'listing-detail.reloadPageMessage' }
-                defaultMessage={ 'Reload page' }
-              />
-            </a>
+            <div className="button-container">
+              <Link to="/my-purchases" className="btn btn-clear">
+                <FormattedMessage
+                  id={ 'listing-detail.goToPurchases' }
+                  defaultMessage={ 'Go To Purchases' }
+                />
+              </Link>
+            </div>
           </Modal>
         }
         {this.state.step === this.STEP.ERROR && (
@@ -202,22 +233,23 @@ class ListingsDetail extends Component {
               id={ 'listing-detail.seeConsoleForDetails' }
               defaultMessage={ 'See the console for more details.' }
             />
-            <br />
-            <a
-              href="#"
-              onClick={e => {
-                e.preventDefault()
-                this.resetToStepOne()
-              }}
-            >
+            <div className="button-container">
+              <a
+                className="btn btn-clear"
+                onClick={e => {
+                  e.preventDefault()
+                  this.resetToStepOne()
+                }}
+              >
               <FormattedMessage
                 id={ 'listing-detail.OK' }
                 defaultMessage={ 'OK' }
               />
-            </a>
+              </a>
+            </div>
           </Modal>
         )}
-        {(this.state.loading || (this.state.pictures && this.state.pictures.length)) &&
+        {(this.state.loading || (this.state.pictures && !!this.state.pictures.length)) &&
           <div className="carousel">
             {this.state.pictures.map(pictureUrl => (
               <div className="photo" key={pictureUrl}>
@@ -228,13 +260,15 @@ class ListingsDetail extends Component {
             ))}
           </div>
         }
+
         <div className={`container listing-container${this.state.loading ? ' loading' : ''}`}>
           <div className="row">
             <div className="col-12 col-md-8 detail-info-box">
               <div className="category placehold">{this.state.category}</div>
               <h1 className="title text-truncate placehold">{this.state.name}</h1>
               <p className="description placehold">{this.state.description}</p>
-              {!!this.state.unitsAvailable && this.state.unitsAvailable < 5 &&
+              {/* Via Stan 5/25/2018: Hide until contracts allow for unitsAvailable > 1 */}
+              {/*!!unitsAvailable && unitsAvailable < 5 &&
                 <div className="units-available text-danger">
                   <FormattedMessage
                     id={ 'listing-detail.unitsAvailable' }
@@ -242,7 +276,7 @@ class ListingsDetail extends Component {
                     values={{ unitsAvailable: <FormattedNumber value={ this.state.unitsAvailable } /> }}
                   />
                 </div>
-              }
+              */}
               {this.state.ipfsHash &&
                 <div className="ipfs link-container">
                   <a href={origin.ipfsService.gatewayUrlForHash(this.state.ipfsHash)} target="_blank">
@@ -254,6 +288,14 @@ class ListingsDetail extends Component {
                   </a>
                 </div>
               }
+              {/* Remove per Matt 5/28/2018 */}
+              {/* this.state.address && this.state.etherscanDomain &&
+                <div className="etherscan link-container">
+                  <a href={`https://${(this.state.etherscanDomain)}/address/${(this.state.address)}#internaltx`} target="_blank">
+                    View on Etherscan<img src="images/carat-blue.svg" className="carat" alt="right carat" />
+                  </a>
+                </div>
+              */}
               <div className="debug">
                 <li>
                   <FormattedMessage
@@ -271,9 +313,9 @@ class ListingsDetail extends Component {
                 </li>
                 <li>
                   <FormattedMessage
-                    id={ 'listing-detail.units' }
-                    defaultMessage={ 'Units: {unitsAvailable}' }
-                    values={{ unitsAvailable: this.state.unitsAvailable }}
+                    id={ 'listing-detail.IPFS' }
+                    defaultMessage={ 'IPFS: {ipfsHash}' }
+                    values={{ ipfsHash: this.state.ipfsHash }}
                   />
                 </li>
               </div>
@@ -302,8 +344,8 @@ class ListingsDetail extends Component {
               */}
             </div>
             <div className="col-12 col-md-4">
-              <div className="buy-box placehold">
-                {this.state.price &&
+              {!!this.state.price && !!parseFloat(this.state.price) &&
+                <div className="buy-box placehold">
                   <div className="price d-flex justify-content-between">
                     <div>
                       <FormattedMessage
@@ -320,24 +362,22 @@ class ListingsDetail extends Component {
                       />
                     </div>
                   </div>
-                }
-                {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
-                {/* <div className="quantity d-flex justify-content-between">
-                                  <div>Quantity</div>
-                                  <div className="text-right">
-                                    {Number(1).toLocaleString()}
+                  {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
+                  {/* <div className="quantity d-flex justify-content-between">
+                                    <div>Quantity</div>
+                                    <div className="text-right">
+                                      {Number(1).toLocaleString()}
+                                    </div>
                                   </div>
-                                </div>
-                                <div className="total-price d-flex justify-content-between">
-                                  <div>Total Price</div>
-                                  <div className="price text-right">
-                                    {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
-                                  </div>
-                                </div> */}
-                {!this.state.loading &&
-                  <div className="btn-container">
-                    {(this.state.address) && (
-                      (this.state.unitsAvailable > 0) ?
+                                  <div className="total-price d-flex justify-content-between">
+                                    <div>Total Price</div>
+                                    <div className="price text-right">
+                                      {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
+                                    </div>
+                                  </div> */}
+                  {!this.state.loading && this.state.address &&
+                    <div className="btn-container">
+                      {!!unitsAvailable && !userIsSeller &&
                         <button
                           className="btn btn-primary"
                           onClick={this.handleBuyClicked}
@@ -349,7 +389,11 @@ class ListingsDetail extends Component {
                             defaultMessage={ 'Buy Now' }
                           />
                         </button>
-                        :
+                      }
+                      {!!unitsAvailable && userIsSeller &&
+                        <Link to="/my-listings" className="btn">My Listings</Link>
+                      }
+                      {!unitsAvailable &&
                         <div className="sold-banner">
                           <img src="images/sold-tag.svg" role="presentation" />
                           <FormattedMessage
@@ -357,11 +401,11 @@ class ListingsDetail extends Component {
                             defaultMessage={ 'Sold Out' }
                           />
                         </div>
-                      )
-                    }
-                  </div>
-                }
-              </div>
+                      }
+                    </div>
+                  }
+                </div>
+              }
               {this.state.sellerAddress && <UserCard title="seller" userAddress={this.state.sellerAddress} />}
             </div>
           </div>
@@ -393,8 +437,17 @@ class ListingsDetail extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    onMobile: state.app.onMobile,
+    web3Account: state.app.web3.account,
+    web3Intent: state.app.web3.intent,
+  }
+}
+
 const mapDispatchToProps = dispatch => ({
-  showAlert: (msg) => dispatch(showAlert(msg))
+  showAlert: (msg) => dispatch(showAlert(msg)),
+  storeWeb3Intent: (intent) => dispatch(storeWeb3Intent(intent)),
 })
 
-export default connect(undefined, mapDispatchToProps)(injectIntl(ListingsDetail))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(ListingsDetail))
