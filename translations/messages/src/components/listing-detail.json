@@ -24,8 +24,8 @@
     "defaultMessage": "Purchase was successful."
   },
   {
-    "id": "listing-detail.reloadPageMessage",
-    "defaultMessage": "Reload page"
+    "id": "listing-detail.goToPurchases",
+    "defaultMessage": "Go To Purchases"
   },
   {
     "id": "listing-detail.errorPurchasingListing",
@@ -40,10 +40,6 @@
     "defaultMessage": "OK"
   },
   {
-    "id": "listing-detail.unitsAvailable",
-    "defaultMessage": "Just {unitsAvailable} left!"
-  },
-  {
     "id": "listing-detail.viewOnIpfs",
     "defaultMessage": "View on IPFS"
   },
@@ -54,10 +50,6 @@
   {
     "id": "listing-detail.seller",
     "defaultMessage": "Seller: {sellerAddress}"
-  },
-  {
-    "id": "listing-detail.units",
-    "defaultMessage": "Units: {unitsAvailable}"
   },
   {
     "id": "listing-detail.price",

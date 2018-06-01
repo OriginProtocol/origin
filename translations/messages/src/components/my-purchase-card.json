@@ -18,9 +18,5 @@
   {
     "id": "my-purchase-card.etheriumCurrencyAbbrev",
     "defaultMessage": "ETH"
-  },
-  {
-    "id": "my-purchase-card.iReceivedTheOrder",
-    "defaultMessage": "I've Received the Order"
   }
 ]

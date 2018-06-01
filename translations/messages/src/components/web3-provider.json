@@ -6,25 +6,5 @@
   {
     "id": "web3-provider.connecting",
     "defaultMessage": "Connecting to network..."
-  },
-  {
-    "id": "web3-provider.wrongNetwork",
-    "defaultMessage": "MetaMask should be on {rinkeby} Network"
-  },
-  {
-    "id": "web3-provider.currentNetwork",
-    "defaultMessage": "Currently on {networkName}."
-  },
-  {
-    "id": "web3-provider.installMetaMask",
-    "defaultMessage": "Please use a web3-enabled browser or install the MetaMask extension."
-  },
-  {
-    "id": "web3-provider.getMetaMask",
-    "defaultMessage": "Get MetaMask"
-  },
-  {
-    "id": "web3-provider.demoInstructions",
-    "defaultMessage": "Full Instructions for Demo"
   }
 ]

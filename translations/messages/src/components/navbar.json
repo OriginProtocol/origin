@@ -1,5 +1,9 @@
 [
   {
+    "id": "navbar.listings",
+    "defaultMessage": "Listings"
+  },
+  {
     "id": "navbar.buy",
     "defaultMessage": "Buy"
   },

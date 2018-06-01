@@ -1,7 +1,7 @@
 [
   {
     "id": "footer.mission",
-    "defaultMessage": "Origin is building the sharing economy of tomorrow. Buyers and sellers will be able to transact without rent-seeking middlemen. We believe in lowering transaction fees, reducing censorship and regulation, and giving early participants in the community a stake in the network."
+    "defaultMessage": "Origin is building the sharing economy of tomorrow. Buyers and sellers will be able to transact without rent-seeking middlemen. We believe in lowering transaction fees, promoting free and transparent commerce, and giving early participants in the community a stake in the network."
   },
   {
     "id": "footer.documentationHeading",
@@ -42,6 +42,10 @@
   {
     "id": "footer.twitterLink",
     "defaultMessage": "Twitter"
+  },
+  {
+    "id": "footer.instagramLink",
+    "defaultMessage": "Instagram"
   },
   {
     "id": "footer.facebookLink",
