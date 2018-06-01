@@ -56,7 +56,7 @@
     "defaultMessage": "Price"
   },
   {
-    "id": "listing-detail.etheriumCurrencyAbbrev",
+    "id": "listing-detail.ethereumCurrencyAbbrev",
     "defaultMessage": "ETH"
   },
   {

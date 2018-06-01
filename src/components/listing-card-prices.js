@@ -69,7 +69,7 @@ class ListingCardPrices extends Component {
               <span className="alternate-price text-muted">
                 &nbsp;| {`${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 5, maximumFractionDigits: 9})}`}&nbsp;
                 <FormattedMessage
-                  id={ 'listing-card-prices.etheriumCurrencyAbbrev' }
+                  id={ 'listing-card-prices.ethereumCurrencyAbbrev' }
                   defaultMessage={ 'ETH' }
                 />
               </span>

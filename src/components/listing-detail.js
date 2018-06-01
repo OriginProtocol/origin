@@ -357,7 +357,7 @@ class ListingsDetail extends Component {
                       {Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})}
                       &nbsp;
                       <FormattedMessage
-                        id={ 'listing-detail.etheriumCurrencyAbbrev' }
+                        id={ 'listing-detail.ethereumCurrencyAbbrev' }
                         defaultMessage={ 'ETH' }
                       />
                     </div>

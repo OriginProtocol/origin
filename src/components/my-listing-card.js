@@ -15,7 +15,7 @@ class MyListingCard extends Component {
         defaultMessage: 'Are you sure that you want to permanently close this listing? This cannot be undone.'
       },
       ETH: {
-        id: 'my-listing-card.etheriumCurrencyAbbrev',
+        id: 'my-listing-card.ethereumCurrencyAbbrev',
         defaultMessage: 'ETH'
       }
     })

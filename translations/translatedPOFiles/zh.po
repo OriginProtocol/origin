@@ -205,23 +205,23 @@ msgid "Done"
 msgstr "完成"
 
 #: translations/messages/src/components/listing-card-prices.json
-#. [listing-card-prices.etheriumCurrencyAbbrev]
+#. [listing-card-prices.ethereumCurrencyAbbrev]
 #. defaultMessage is:
 #. ETH
 #: translations/messages/src/components/listing-detail.json
-#. [listing-detail.etheriumCurrencyAbbrev]
+#. [listing-detail.ethereumCurrencyAbbrev]
 #. defaultMessage is:
 #. ETH
 #: translations/messages/src/components/my-listing-card.json
-#. [my-listing-card.etheriumCurrencyAbbrev]
+#. [my-listing-card.ethereumCurrencyAbbrev]
 #. defaultMessage is:
 #. ETH
 #: translations/messages/src/components/my-purchase-card.json
-#. [my-purchase-card.etheriumCurrencyAbbrev]
+#. [my-purchase-card.ethereumCurrencyAbbrev]
 #. defaultMessage is:
 #. ETH
 #: translations/messages/src/components/my-sale-card.json
-#. [my-sale-card.etheriumCurrencyAbbrev]
+#. [my-sale-card.ethereumCurrencyAbbrev]
 #. defaultMessage is:
 #. ETH
 msgid "ETH"

@@ -13,7 +13,7 @@ class MySaleCard extends Component {
 
     this.intlMessages = defineMessages({
       ETH: {
-        id: 'my-sale-card.etheriumCurrencyAbbrev',
+        id: 'my-sale-card.ethereumCurrencyAbbrev',
         defaultMessage: 'ETH'
       },
       unnamedUser: {

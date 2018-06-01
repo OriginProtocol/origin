@@ -16,7 +16,7 @@
     "defaultMessage": "Unknown"
   },
   {
-    "id": "my-purchase-card.etheriumCurrencyAbbrev",
+    "id": "my-purchase-card.ethereumCurrencyAbbrev",
     "defaultMessage": "ETH"
   }
 ]

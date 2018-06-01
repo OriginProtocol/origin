@@ -31,7 +31,7 @@ class MyPurchaseCard extends Component {
         defaultMessage: 'Unknown'
       },
       ETH: {
-        id: 'my-purchase-card.etheriumCurrencyAbbrev',
+        id: 'my-purchase-card.ethereumCurrencyAbbrev',
         defaultMessage: 'ETH'
       }
     })
