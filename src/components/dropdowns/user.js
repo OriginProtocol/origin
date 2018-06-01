@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 
 import { connect } from 'react-redux'
+import origin from '../../services/origin'
 
 import Avatar from 'components/avatar'
 import Identicon from 'components/Identicon'
@@ -66,6 +67,14 @@ class UserDropdown extends Component {
                   </div>
                 </div>
               </div>
+              {
+                origin.contractService.walletLinker &&
+                origin.contractService.walletLinker.linked &&
+                <Fragment><hr className="dark sm" />
+                  <button className="btn btn-primary" onClick={() => origin.contractService.walletLinker.unlink()}>Unlink Mobile</button>
+                </Fragment>
+              }
+
             </div>
           </div>
         </div>

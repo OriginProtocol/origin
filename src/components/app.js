@@ -30,6 +30,8 @@ import '../css/lato-web.css'
 import '../css/poppins.css'
 import '../css/app.css'
 
+import { Link } from 'react-router-dom'
+
 const HomePage = () => (
   <div className="container">
     <Listings />
