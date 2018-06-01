@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import Store from './Store'
 import { IntlProvider } from 'react-intl'
 import addLocales from './utils/addLocales'
-import translations from './../translations/allMessages.json'
+import translations from './../translations/translated-messages.json'
 
 // Add locale data to react-intl
 addLocales()
