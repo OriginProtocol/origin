@@ -75,7 +75,7 @@ class ContractService {
   }
 
   // Returns the first account listed, unless a default account has been set
-  // expcicitly
+  // explicitly
   async currentAccount() {
     const accounts = await this.web3.eth.getAccounts()
     const defaultAccount = this.web3.eth.defaultAccount
