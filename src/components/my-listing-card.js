@@ -105,13 +105,6 @@ class MyListingCard extends Component {
                 {/*<a onClick={() => alert('To Do')}>Edit</a>*/}
                 {/*!active && <a onClick={() => alert('To Do')}>Enable</a>*/}
                 {/*active && <a onClick={() => alert('To Do')}>Disable</a>*/}
-                {!!unitsAvailable && 
-                  <a className="warning" onClick={this.closeListing}>
-                    <FormattedMessage
-                      id={ 'my-listing-card.closeListing' }
-                      defaultMessage={ 'Close Listing' }
-                    />
-                  </a>}
                 {!!parseInt(unitsAvailable) && 
                   <a className="warning" onClick={this.closeListing}>
                     <FormattedMessage
