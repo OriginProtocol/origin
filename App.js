@@ -22,6 +22,8 @@ const ORIGIN_QR_PREFIX = "orgw:";
 const DEFAULT_TEST_BUYER = "0xc5fdf4076b8f3a5357c5e395ab970b5b54098fef";
 const RPC_SERVER = "http://localhost:8545";
 const INTERNAL_RPC_SERVER = "http://" + API_SERVER_IP + ":8545";
+const ORIGIN_PROTOCOL_PREFIX = "http://www.originprotocol.com/mobile/";
+const SECURE_ORIGIN_PROTOCOL_PREFIX = "https://www.originprotocol.com/mobile/";
 const DEFAULT_MNEMONIC = "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
 const DEFAULT_MNEMONIC_PATH_INDEX = "4";
 const LAST_MESSAGE_IDS = "last_message_ids";
@@ -132,7 +134,7 @@ export default class OriginCatcherApp extends Component {
         }
         else
         {
-          if (this.copied_code == code)
+          if (responseJson.return_url && this.copied_code == code)
           {
             Linking.openURL(responseJson.return_url)
           }
@@ -308,6 +310,7 @@ export default class OriginCatcherApp extends Component {
 
   onQRScanned(scan) {
     console.log("Address scanned:", scan.data);
+    let key;
     if (scan.data.startsWith(ETHEREUM_QR_PREFIX))
     {
       let ethAddress = scan.data.substr(ETHEREUM_QR_PREFIX.length);
@@ -320,14 +323,59 @@ export default class OriginCatcherApp extends Component {
     }
     else if (scan.data.startsWith(ORIGIN_QR_PREFIX))
     {
-      let linkCode = scan.data.substr(ORIGIN_QR_PREFIX.length);
-      console.log("link code is:" + linkCode);
-      if (linkCode != this.state.linkCode)
-      {
-        this.setState({linkCode}, () => {
-          this.checkDoLink();
-        });
-      }
+      let linkCode = scan.data.substr(ORIGIN_QR_PREFIX.length)
+      this.setLinkCode(linkCode)
+    }
+    else if (key = this.checkStripOriginUrl(scan.data))
+    {
+      this.setLinkCode(key)
+    }
+  }
+
+  checkStripOriginUrl(url){
+    if (url.startsWith(ORIGIN_PROTOCOL_PREFIX))
+    {
+      return url.substr(ORIGIN_PROTOCOL_PREFIX.length)
+    }
+    if (url.startsWith(SECURE_ORIGIN_PROTOCOL_PREFIX))
+    {
+      return url.substr(SECURE_ORIGIN_PROTOCOL_PREFIX.length)
+    }
+  }
+
+  checkIncomingUrl(url) {
+    let key = this.checkStripOriginUrl(url);
+    if (key)
+    {
+      this.promptForLink(key)
+    }
+  }
+
+  setLinkCode(linkCode){
+    if (linkCode != this.state.linkCode)
+    {
+      this.setState({linkCode}, () => {
+        this.checkDoLink();
+      });
+    }
+  }
+
+  promptForLink(linkCode) {
+    console.log("link code is:" + linkCode);
+    if (this.linking_code != linkCode)
+    {
+      this.linking_code = linkCode
+      Alert.alert(
+        "Link Wallet",
+        "Do you wish to link against:"+ linkCode,
+        [
+          {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+          {text: 'OK', onPress: () => { 
+            this.setLinkCode(linkCode)
+          }},
+        ],
+        { cancelable: false }
+      )
     }
   }
 
@@ -338,28 +386,13 @@ export default class OriginCatcherApp extends Component {
     {
       let linkCode = content.substr(ORIGIN_QR_PREFIX.length);
       this.copied_code = linkCode;
-      console.log("link code is:" + linkCode);
-      if (linkCode != this.state.linkCode)
-      {
-        Clipboard.setString("")
-        Alert.alert(
-              "Link Wallet",
-                    "Do you wish to link against:"+ linkCode,
-                    [
-                      {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                      {text: 'OK', onPress: () => { 
-                        this.setState({linkCode}, () => {
-                          this.checkDoLink();
-                        });
-                      }},
-                    ],
-                    { cancelable: false }
-                  )
-      }
+      Clipboard.setString("")
+      this.promptForLink(linkCode)
     }
   }
 
-  handleOpenFromOut() {
+  handleOpenFromOut(event) {
+    this.checkIncomingUrl(event.url)
     this.checkClipboardLink()
   }
 
@@ -369,6 +402,7 @@ export default class OriginCatcherApp extends Component {
     Linking.getInitialURL().then((url) => {
       if (url) {
         console.log('Initial url is: ' + url);
+        this.checkIncomingUrl(url);
       }
     }).catch(err => console.error('An error occurred', err));
 
