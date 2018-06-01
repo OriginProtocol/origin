@@ -1,0 +1,1107 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2018-05-30T16:38:32.451Z\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"MIME-Version: 1.0\n"
+"X-Generator: react-intl-po\n"
+
+#: translations/messages/src/components/user-card.json
+#. [user-card.heading]
+#. defaultMessage is:
+#. About the {title}
+msgid "About the {title}"
+msgstr "关于{title}"
+
+#: translations/messages/src/components/my-listings.json
+#. [my-listings.active]
+#. defaultMessage is:
+#. Active
+msgid "Active"
+msgstr "活跃"
+
+#: translations/messages/src/components/navbar.json
+#. [navbar.addListing]
+#. defaultMessage is:
+#. Add a Listing
+msgid "Add a Listing"
+msgstr "添加一个列表"
+
+#: translations/messages/src/components/my-listings.json
+#. [my-listings.all]
+#. defaultMessage is:
+#. All
+#: translations/messages/src/components/my-purchases.json
+#. [my-purchases.all]
+#. defaultMessage is:
+#. All
+#: translations/messages/src/components/my-sales.json
+#. [my-sales.all]
+#. defaultMessage is:
+#. All
+#: translations/messages/src/components/notifications.json
+#. [notifications.all]
+#. defaultMessage is:
+#. All
+msgid "All"
+msgstr "所有"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.announcements]
+#. defaultMessage is:
+#. Announcements
+msgid "Announcements"
+msgstr "通知。"
+
+#: translations/messages/src/components/my-listing-card.json
+#. [my-listing-card.confirmCloseListing]
+#. defaultMessage is:
+#. Are you sure that you want to permanently close this listing? This cannot be undone.
+msgid "Are you sure that you want to permanently close this listing? This cannot be undone."
+msgstr "您确定要永久关闭此列表吗？这不能被撤消。"
+
+#: translations/messages/src/components/listing-create.json
+#. [backButtonLabel]
+#. defaultMessage is:
+#. Back
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.backButtonLabel]
+#. defaultMessage is:
+#. Back
+msgid "Back"
+msgstr "回去"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.howItWorksContentPart2]
+#. defaultMessage is:
+#. Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.
+msgid "Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering."
+msgstr "一定要给你的列表一个适当的标题和描述，以告知他人你提供的是什么。"
+
+#: translations/messages/src/components/navbar.json
+#. [navbar.buy]
+#. defaultMessage is:
+#. Buy
+#: translations/messages/src/components/notifications.json
+#. [notifications.buy]
+#. defaultMessage is:
+#. Buy
+msgid "Buy"
+msgstr "购买"
+
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.buyNow]
+#. defaultMessage is:
+#. Buy Now
+msgid "Buy Now"
+msgstr "立即购买"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.chooseSchema]
+#. defaultMessage is:
+#. Choose a schema for your product or service
+msgid "Choose a schema for your product or service"
+msgstr "为您的产品或服务选择一个模式"
+
+#: translations/messages/src/components/my-listing-card.json
+#. [my-listing-card.closeListing]
+#. defaultMessage is:
+#. Close Listing
+msgid "Close Listing"
+msgstr "关闭清单"
+
+#: translations/messages/src/components/footer.json
+#. [footer.communityHeading]
+#. defaultMessage is:
+#. Community
+msgid "Community"
+msgstr "社区"
+
+#: translations/messages/src/components/my-purchases.json
+#. [my-purchases.complete]
+#. defaultMessage is:
+#. Complete
+#: translations/messages/src/components/my-sales.json
+#. [my-sales.complete]
+#. defaultMessage is:
+#. Complete
+msgid "Complete"
+msgstr "完成"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.confirmTransaction]
+#. defaultMessage is:
+#. Confirm transaction
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.confirmTransaction]
+#. defaultMessage is:
+#. Confirm transaction
+msgid "Confirm transaction"
+msgstr "确认交易"
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.connecting]
+#. defaultMessage is:
+#. Connecting to network...
+msgid "Connecting to network..."
+msgstr "连接到网络..."
+
+#: translations/messages/src/components/listing-create.json
+#. [continueButtonLabel]
+#. defaultMessage is:
+#. Continue
+msgid "Continue"
+msgstr "继续"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.createListingHeading]
+#. defaultMessage is:
+#. Create your listing
+msgid "Create your listing"
+msgstr "创建您的列表"
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.currentNetwork]
+#. defaultMessage is:
+#. Currently on {networkName}.
+msgid "Currently on {networkName}."
+msgstr "目前位于{networkName}。"
+
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+#. [_ProvisionedChanges.description]
+#. defaultMessage is:
+#. Description
+msgid "Description"
+msgstr "Description"
+
+#: translations/messages/src/components/footer.json
+#. [footer.discordLink]
+#. defaultMessage is:
+#. Discord
+msgid "Discord"
+msgstr "不和"
+
+#: translations/messages/src/components/footer.json
+#. [footer.docsLink]
+#. defaultMessage is:
+#. Docs
+msgid "Docs"
+msgstr "档案
+"
+
+#: translations/messages/src/components/footer.json
+#. [footer.documentationHeading]
+#. defaultMessage is:
+#. Documentation
+msgid "Documentation"
+msgstr "文件
+"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.doneButtonLabel]
+#. defaultMessage is:
+#. Done
+msgid "Done"
+msgstr "完成"
+
+#: translations/messages/src/components/listing-card-prices.json
+#. [listing-card-prices.etheriumCurrencyAbbrev]
+#. defaultMessage is:
+#. ETH
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.etheriumCurrencyAbbrev]
+#. defaultMessage is:
+#. ETH
+#: translations/messages/src/components/my-listing-card.json
+#. [my-listing-card.etheriumCurrencyAbbrev]
+#. defaultMessage is:
+#. ETH
+#: translations/messages/src/components/my-purchase-card.json
+#. [my-purchase-card.etheriumCurrencyAbbrev]
+#. defaultMessage is:
+#. ETH
+#: translations/messages/src/components/my-sale-card.json
+#. [my-sale-card.etheriumCurrencyAbbrev]
+#. defaultMessage is:
+#. ETH
+msgid "ETH"
+msgstr "ETH"
+
+#: translations/messages/src/components/user-card.json
+#. [transaction-progress.ethAddress]
+#. defaultMessage is:
+#. ETH Address:
+msgid "ETH Address:"
+msgstr "ETH地址："
+
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+#. [_ProvisionedChanges.email]
+#. defaultMessage is:
+#. Email
+msgid "Email"
+msgstr "电子邮件"
+
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+#. [_ProvisionedChanges.emailAddress]
+#. defaultMessage is:
+#. Email Address
+msgid "Email Address"
+msgstr "电子邮件地址： *"
+
+#: translations/messages/src/components/footer.json
+#. [footer.facebookLink]
+#. defaultMessage is:
+#. Facebook
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+#. [_ProvisionedChanges.facebook]
+#. defaultMessage is:
+#. Facebook
+msgid "Facebook"
+msgstr "面书"
+
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+#. [_ProvisionedChanges.facebookAccount]
+#. defaultMessage is:
+#. Facebook account
+msgid "Facebook account"
+msgstr "脸书账号"
+
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+#. [_ProvisionedChanges.firstName]
+#. defaultMessage is:
+#. First name
+msgid "First name"
+msgstr "名字： *"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.forSaleLabel]
+#. defaultMessage is:
+#. For Sale
+msgid "For Sale"
+msgstr "待售"
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.demoInstructions]
+#. defaultMessage is:
+#. Full Instructions for Demo
+msgid "Full Instructions for Demo"
+msgstr "演示的完整说明"
+
+#: translations/messages/src/components/transaction-progress.json
+#. [transaction-progress.fundsWithdrawn]
+#. defaultMessage is:
+#. Funds Withdrawn
+msgid "Funds Withdrawn"
+msgstr "资金撤出"
+
+#: translations/messages/src/components/notification.json
+#. [notification.fundsFromProduct]
+#. defaultMessage is:
+#. Funds from {productLink}
+msgid "Funds from {productLink}"
+msgstr "来自{productLink}的资金"
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.getMetaMask]
+#. defaultMessage is:
+#. Get MetaMask
+msgid "Get MetaMask"
+msgstr "获取MetaMask"
+
+#: translations/messages/src/components/footer.json
+#. [footer.githubLink]
+#. defaultMessage is:
+#. Github
+msgid "Github"
+msgstr "Github上"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.housingLabel]
+#. defaultMessage is:
+#. Housing
+msgid "Housing"
+msgstr "外壳"
+
+#: translations/messages/src/components/not-found.json
+#. [not-found.heading]
+#. defaultMessage is:
+#. How did I get here?
+msgid "How did I get here?"
+msgstr "我怎么到这里了？"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.howItWorksHeading]
+#. defaultMessage is:
+#. How it works
+msgid "How it works"
+msgstr "怎么运行的"
+
+#: translations/messages/src/components/my-purchase-card.json
+#. [my-purchase-card.iReceivedTheOrder]
+#. defaultMessage is:
+#. I've Received the Order
+msgid "I've Received the Order"
+msgstr "我已收到订单"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.IPFS]
+#. defaultMessage is:
+#. IPFS
+msgid "IPFS"
+msgstr "IPFS"
+
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.IPFS]
+#. defaultMessage is:
+#. IPFS: {ipfsHash}
+msgid "IPFS: {ipfsHash}"
+msgstr "IPFS：{ipfsHash}"
+
+#: translations/messages/src/components/my-listings.json
+#. [my-listings.inactive]
+#. defaultMessage is:
+#. Inactive
+msgid "Inactive"
+msgstr "不活跃"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.jsonSchema]
+#. defaultMessage is:
+#. JSONSchema
+msgid "JSONSchema"
+msgstr "JSONSchema"
+
+#: translations/messages/src/components/footer.json
+#. [footer.hiringLink]
+#. defaultMessage is:
+#. Jobs (We're hiring!)
+msgid "Jobs (We're hiring!)"
+msgstr "工作机会（我们正在招聘！）"
+
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.unitsAvailable]
+#. defaultMessage is:
+#. Just {unitsAvailable} left!
+msgid "Just {unitsAvailable} left!"
+msgstr "只剩{unitsAvailable}了！"
+
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+#. [_ProvisionedChanges.lastName]
+#. defaultMessage is:
+#. Last Name
+msgid "Last Name"
+msgstr "姓"
+
+#: translations/messages/src/components/listing-card-prices.json
+#. [listing-card-prices.loadingMessage]
+#. defaultMessage is:
+#. Loading...
+#: translations/messages/src/components/my-listings.json
+#. [my-listings.loading]
+#. defaultMessage is:
+#. Loading...
+#: translations/messages/src/components/my-purchases.json
+#. [my-purchases.loading]
+#. defaultMessage is:
+#. Loading...
+#: translations/messages/src/components/my-sales.json
+#. [my-sales.loading]
+#. defaultMessage is:
+#. Loading...
+msgid "Loading..."
+msgstr "正在加载..."
+
+#: translations/messages/src/components/footer.json
+#. [footer.mediumLink]
+#. defaultMessage is:
+#. Medium
+msgid "Medium"
+msgstr "Medium"
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.wrongNetwork]
+#. defaultMessage is:
+#. MetaMask should be on {rinkeby} Network
+msgid "MetaMask should be on {rinkeby} Network"
+msgstr "MetaMask应该在{rinkeby}网络上"
+
+#: translations/messages/src/components/my-listings.json
+#. [my-listings.myListingsHeading]
+#. defaultMessage is:
+#. My Listings
+#: translations/messages/src/components/navbar.json
+#. [navbar.myListings]
+#. defaultMessage is:
+#. My Listings
+msgid "My Listings"
+msgstr "{0}{/0}我的广告"
+
+#: translations/messages/src/components/my-purchases.json
+#. [my-purchases.myPurchasesHeading]
+#. defaultMessage is:
+#. My Purchases
+msgid "My Purchases"
+msgstr "我的购买"
+
+#: translations/messages/src/components/my-sales.json
+#. [my-sales.mySalesHeading]
+#. defaultMessage is:
+#. My Sales
+#: translations/messages/src/components/navbar.json
+#. [navbar.mySales]
+#. defaultMessage is:
+#. My Sales
+msgid "My Sales"
+msgstr "我的销售额"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.next]
+#. defaultMessage is:
+#. Next
+msgid "Next"
+msgstr "下一步"
+
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+#. [_ProvisionedChanges.notVisibleOnBlockchain]
+#. defaultMessage is:
+#. Not visible on the blockchain
+msgid "Not visible on the blockchain"
+msgstr "在区块链上不可见"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.OK]
+#. defaultMessage is:
+#. OK
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.OK]
+#. defaultMessage is:
+#. OK
+msgid "OK"
+msgstr "好"
+
+#: translations/messages/src/components/transaction-progress.json
+#. [transaction-progress.orderSent]
+#. defaultMessage is:
+#. Order Sent
+msgid "Order Sent"
+msgstr "订单已发送"
+
+#: translations/messages/src/components/footer.json
+#. [footer.organizationHeading]
+#. defaultMessage is:
+#. Organization
+msgid "Organization"
+msgstr "组织"
+
+#: translations/messages/src/components/footer.json
+#. [footer.mission]
+#. defaultMessage is:
+#. Origin is building the sharing economy of tomorrow. Buyers and sellers will be able to transact without rent-seeking middlemen. We believe in lowering transaction fees, reducing censorship and regulation, and giving early participants in the community a stake in the network.
+msgid "Origin is building the sharing economy of tomorrow. Buyers and sellers will be able to transact without rent-seeking middlemen. We believe in lowering transaction fees, reducing censorship and regulation, and giving early participants in the community a stake in the network."
+msgstr "Origin正在建立明日的共享经济。买家和卖家可以在没有中介人的情况下进行交易。我们相信降低交易费用，减少审查和监管，让社区的早期参与者参与到网络中。
+"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.howItWorksContentPart1]
+#. defaultMessage is:
+#. Origin uses a Mozilla project called {jsonSchemaLink}  to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer.
+msgid "Origin uses a Mozilla project called {jsonSchemaLink}  to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer."
+msgstr "Origin使用称为{jsonSchemaLink}的Mozilla项目根据标准规则验证您的列表。这种标准化是允许非附属实体读取和写入相同数据层的关键。"
+
+#: translations/messages/src/components/footer.json
+#. [footer.partnersLink]
+#. defaultMessage is:
+#. Partners
+msgid "Partners"
+msgstr "伙伴"
+
+#: translations/messages/src/components/my-purchases.json
+#. [my-purchases.pending]
+#. defaultMessage is:
+#. Pending
+#: translations/messages/src/components/my-sales.json
+#. [my-sales.pending]
+#. defaultMessage is:
+#. Pending
+msgid "Pending"
+msgstr "待定"
+
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+#. [_ProvisionedChanges.phone]
+#. defaultMessage is:
+#. Phone
+msgid "Phone"
+msgstr "电话： *"
+
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+#. [_ProvisionedChanges.phoneNumber]
+#. defaultMessage is:
+#. Phone Number
+msgid "Phone Number"
+msgstr "电话号码"
+
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+#. [_ProvisionedChanges.picture]
+#. defaultMessage is:
+#. Picture
+msgid "Picture"
+msgstr "图片"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.whatHappensNextContent2]
+#. defaultMessage is:
+#. Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left.
+msgid "Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left."
+msgstr "提交前请检查您的列表。您的列表将显示给其他人，就像它在左侧窗口中显示的一样。"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.pleaseStandBy]
+#. defaultMessage is:
+#. Please stand by...
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.pleaseStandBy]
+#. defaultMessage is:
+#. Please stand by...
+msgid "Please stand by..."
+msgstr "请支持..."
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.installMetaMask]
+#. defaultMessage is:
+#. Please use a web3-enabled browser or install the MetaMask extension.
+msgid "Please use a web3-enabled browser or install the MetaMask extension."
+msgstr "请使用支持web3的浏览器或安装MetaMask扩展。"
+
+#: translations/messages/src/components/footer.json
+#. [footer.presaleLink]
+#. defaultMessage is:
+#. Presale
+msgid "Presale"
+msgstr "预售
+"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.pressSubmitInMetaMask]
+#. defaultMessage is:
+#. Press {submit} in MetaMask window
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.pressSubmitInMetaMask]
+#. defaultMessage is:
+#. Press {submit} in MetaMask window
+msgid "Press {submit} in MetaMask window"
+msgstr "在MetaMask窗口中按{提交}"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.previewListingHeading]
+#. defaultMessage is:
+#. Preview your listing
+msgid "Preview your listing"
+msgstr "预览您的列表"
+
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.price]
+#. defaultMessage is:
+#. Price
+msgid "Price"
+msgstr "价钱"
+
+#: translations/messages/src/components/my-sale-card.json
+#. [my-sale-card.price]
+#. defaultMessage is:
+#. Price: {price}
+msgid "Price: {price}"
+msgstr "价格：{价格}"
+
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.processingPurchase]
+#. defaultMessage is:
+#. Processing your purchase
+msgid "Processing your purchase"
+msgstr "处理您的购买"
+
+#: translations/messages/src/components/footer.json
+#. [footer.productBriefLink]
+#. defaultMessage is:
+#. Product Brief
+msgid "Product Brief"
+msgstr "产品简介"
+
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+#. [_ProvisionedChanges.profile]
+#. defaultMessage is:
+#. Profile
+msgid "Profile"
+msgstr "简历"
+
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.purchaseSuccessful]
+#. defaultMessage is:
+#. Purchase was successful.
+msgid "Purchase was successful."
+msgstr "采购成功。"
+
+#: translations/messages/src/components/my-purchase-card.json
+#. [my-purchase-card.purchased]
+#. defaultMessage is:
+#. Purchased
+#: translations/messages/src/components/transaction-progress.json
+#. [transaction-progress.purchased]
+#. defaultMessage is:
+#. Purchased
+msgid "Purchased"
+msgstr "购买"
+
+#: translations/messages/src/components/my-purchase-card.json
+#. [my-purchase-card.received]
+#. defaultMessage is:
+#. Received
+msgid "Received"
+msgstr "收到"
+
+#: translations/messages/src/components/transaction-progress.json
+#. [transaction-progress.receivedByBuyer]
+#. defaultMessage is:
+#. Received by buyer
+msgid "Received by buyer"
+msgstr "由买方收到"
+
+#: translations/messages/src/components/transaction-progress.json
+#. [transaction-progress.receivedByMe]
+#. defaultMessage is:
+#. Received by me
+msgid "Received by me"
+msgstr "收到我的"
+
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.reloadPageMessage]
+#. defaultMessage is:
+#. Reload page
+msgid "Reload page"
+msgstr "重新加载页面"
+
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.reviews]
+#. defaultMessage is:
+#. Reviews
+msgid "Reviews"
+msgstr "评测"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.stepNumberLabel]
+#. defaultMessage is:
+#. STEP {stepNumber}
+msgid "STEP {stepNumber}"
+msgstr "STEP {stepNumber}"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.seeAllListings]
+#. defaultMessage is:
+#. See All Listings
+msgid "See All Listings"
+msgstr "查看所有列表"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.error2]
+#. defaultMessage is:
+#. See the console for more details.
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.seeConsoleForDetails]
+#. defaultMessage is:
+#. See the console for more details.
+msgid "See the console for more details."
+msgstr "有关更多详情，请参阅控制台。"
+
+#: translations/messages/src/components/navbar.json
+#. [navbar.sell]
+#. defaultMessage is:
+#. Sell
+#: translations/messages/src/components/notifications.json
+#. [notifications.sell]
+#. defaultMessage is:
+#. Sell
+msgid "Sell"
+msgstr "卖"
+
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.seller]
+#. defaultMessage is:
+#. Seller: {sellerAddress}
+msgid "Seller: {sellerAddress}"
+msgstr "卖家：{sellerAddress}"
+
+#: translations/messages/src/components/my-purchase-card.json
+#. [my-purchase-card.sentBySeller]
+#. defaultMessage is:
+#. Sent by Seller
+msgid "Sent by Seller"
+msgstr "由卖方发送"
+
+#: translations/messages/src/components/transaction-progress.json
+#. [transaction-progress.sentBySeller]
+#. defaultMessage is:
+#. Sent by seller
+msgid "Sent by seller"
+msgstr "卖家发送"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.services]
+#. defaultMessage is:
+#. Services
+msgid "Services"
+msgstr "服务"
+
+#: translations/messages/src/components/listing-card-prices.json
+#. [listing-card-prices.sold]
+#. defaultMessage is:
+#. Sold
+#: translations/messages/src/components/transaction-progress.json
+#. [transaction-progress.sold]
+#. defaultMessage is:
+#. Sold
+msgid "Sold"
+msgstr "出售"
+
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.soldOut]
+#. defaultMessage is:
+#. Sold Out
+#: translations/messages/src/components/my-listing-card.json
+#. [my-listing-card.soldOut]
+#. defaultMessage is:
+#. Sold Out
+msgid "Sold Out"
+msgstr "卖光了"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.successMessage]
+#. defaultMessage is:
+#. Success
+msgid "Success"
+msgstr "成功！"
+
+#: translations/messages/src/components/footer.json
+#. [footer.teamLink]
+#. defaultMessage is:
+#. Team
+msgid "Team"
+msgstr "球队"
+
+#: translations/messages/src/components/footer.json
+#. [footer.telegramLink]
+#. defaultMessage is:
+#. Telegram
+msgid "Telegram"
+msgstr "Telegram"
+
+#: translations/messages/src/components/listings-grid.json
+#. [listings-grid.originContractNotFound]
+#. defaultMessage is:
+#. The Origin Contract was not found on this network.
+msgid "The Origin Contract was not found on this network."
+msgstr "未在此网络上找到原始合同。"
+
+#: translations/messages/src/components/not-found.json
+#. [not-found.content]
+#. defaultMessage is:
+#. The page you’re looking for is no longer here, maybe it was never here in the first place. In any case, we sincerely apologize if it’s us and we forgive you if it’s you :)
+msgid "The page you’re looking for is no longer here, maybe it was never here in the first place. In any case, we sincerely apologize if it’s us and we forgive you if it’s you :)"
+msgstr "你正在寻找的页面不再在这里，也许它从来没有在这里摆在首位。无论如何，我们真诚地道歉，如果是我们，我们原谅你，如果它是你:)"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.error1]
+#. defaultMessage is:
+#. There was a problem creating this listing.
+msgid "There was a problem creating this listing."
+msgstr "创建此列表时出现问题。"
+
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.errorPurchasingListing]
+#. defaultMessage is:
+#. There was a problem purchasing this listing.
+msgid "There was a problem purchasing this listing."
+msgstr "购买此列表时出现问题。"
+
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.loadingError]
+#. defaultMessage is:
+#. There was an error loading this listing.
+msgid "There was an error loading this listing."
+msgstr "加载此列表时出错。"
+
+#: translations/messages/src/components/my-sale-card.json
+#. [my-sale-card.orderComplete]
+#. defaultMessage is:
+#. This order is complete
+msgid "This order is complete"
+msgstr "此订单已完成"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.tickets]
+#. defaultMessage is:
+#. Tickets
+msgid "Tickets"
+msgstr "门票"
+
+#: translations/messages/src/components/my-listing-card.json
+#. [my-listing-card.totalQuantity]
+#. defaultMessage is:
+#. Total Quantity : {quantity}
+msgid "Total Quantity : {quantity}"
+msgstr "总量：{数量}"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.transportation]
+#. defaultMessage is:
+#. Transportation
+msgid "Transportation"
+msgstr "交通"
+
+#: translations/messages/src/components/footer.json
+#. [footer.twitterLink]
+#. defaultMessage is:
+#. Twitter
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+#. [_ProvisionedChanges.twitter]
+#. defaultMessage is:
+#. Twitter
+msgid "Twitter"
+msgstr "微博"
+
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+#. [_ProvisionedChanges.twitterAccount]
+#. defaultMessage is:
+#. Twitter account
+msgid "Twitter account"
+msgstr "Twitter帐户"
+
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.units]
+#. defaultMessage is:
+#. Units: {unitsAvailable}
+msgid "Units: {unitsAvailable}"
+msgstr "单位：{unitsAvailable}"
+
+#: translations/messages/src/components/my-purchase-card.json
+#. [my-purchase-card.unknown]
+#. defaultMessage is:
+#. Unknown
+msgid "Unknown"
+msgstr "未知"
+
+#: translations/messages/src/components/my-sale-card.json
+#. [my-sale-card.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+msgid "Unnamed User"
+msgstr "未命名用户"
+
+#: translations/messages/src/components/notifications.json
+#. [notifications.unread]
+#. defaultMessage is:
+#. Unread
+msgid "Unread"
+msgstr "未读"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.uploadingYourListing]
+#. defaultMessage is:
+#. Uploading your listing
+msgid "Uploading your listing"
+msgstr "上传您的列表"
+
+#: translations/messages/src/components/my-sale-card.json
+#. [my-sale-card.viewDetails]
+#. defaultMessage is:
+#. View Details
+msgid "View Details"
+msgstr "查看详情"
+
+#: translations/messages/src/components/user-card.json
+#. [transaction-progress.viewProfile]
+#. defaultMessage is:
+#. View Profile
+msgid "View Profile"
+msgstr "查看资料"
+
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.viewOnIpfs]
+#. defaultMessage is:
+#. View on IPFS
+msgid "View on IPFS"
+msgstr "查看IPFS"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.viewSchemaLinkLabel]
+#. defaultMessage is:
+#. View the {schemaName} schema
+msgid "View the {schemaName} schema"
+msgstr "查看{schemaName}模式"
+
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+#. [_ProvisionedChanges.visibleOnBlockchain]
+#. defaultMessage is:
+#. Visible on the blockchain
+msgid "Visible on the blockchain"
+msgstr "在区块链上可见"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.whatHappensNextHeading]
+#. defaultMessage is:
+#. What happens next?
+msgid "What happens next?"
+msgstr "接下来发生什么？"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.whatTypeOfListing]
+#. defaultMessage is:
+#. What type of listing do you want to create?
+msgid "What type of listing do you want to create?"
+msgstr "你想创建什么类型的列表？"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.whatHappensNextContent1]
+#. defaultMessage is:
+#. When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network.
+msgid "When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network."
+msgstr "当您点击提交时，代表您的列表的JSON对象将被发布到{ipfsLink}，并且内容哈希将被发布到在以太坊网络上运行的列表智能合约。"
+
+#: translations/messages/src/components/footer.json
+#. [footer.whitepaperLink]
+#. defaultMessage is:
+#. Whitepaper
+msgid "Whitepaper"
+msgstr "白皮书"
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.notSignedIntoMetaMask]
+#. defaultMessage is:
+#. You are not signed in to MetaMask.
+msgid "You are not signed in to MetaMask."
+msgstr "您没有登录MetaMask。"
+
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+#. [_ProvisionedChanges.youArePublishing]
+#. defaultMessage is:
+#. You are publishing:
+msgid "You are publishing:"
+msgstr "您正在发布："
+
+#: translations/messages/src/components/my-listings.json
+#. [my-listings.noListingsMessage]
+#. defaultMessage is:
+#. You currently have no listings.
+msgid "You currently have no listings."
+msgstr "您目前没有列表。"
+
+#: translations/messages/src/components/my-purchases.json
+#. [my-purchases.noPurchases]
+#. defaultMessage is:
+#. You currently have no purchases.
+msgid "You currently have no purchases."
+msgstr "您目前没有购买。"
+
+#: translations/messages/src/components/my-sales.json
+#. [my-sales.noSales]
+#. defaultMessage is:
+#. You currently have no sales.
+msgid "You currently have no sales."
+msgstr "您目前没有销售。"
+
+#: translations/messages/src/components/listings-grid.json
+#. [listings-grid.changeNetworks]
+#. defaultMessage is:
+#. You may need to change networks, or deploy the contract.
+msgid "You may need to change networks, or deploy the contract."
+msgstr "您可能需要更换网络或部署合同。"
+
+#: translations/messages/src/components/listing-create.json
+#. [listing-create.schemaExplainer]
+#. defaultMessage is:
+#. Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services.
+msgid "Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services."
+msgstr "您的产品或服务将使用模式来描述其属性，如名称，说明和价格。 Origin已经有多种模式，可以映射到众所周知的房源类别，如房屋，汽车和服务。"
+
+#: translations/messages/src/components/notification.json
+#. [notification.hasBeen]
+#. defaultMessage is:
+#. has been
+msgid "has been"
+msgstr "已经"
+
+#: translations/messages/src/components/notification.json
+#. [notification.haveBeen]
+#. defaultMessage is:
+#. have been
+msgid "have been"
+msgstr "已经"
+
+#: translations/messages/src/components/notification.json
+#. [notification.purchased]
+#. defaultMessage is:
+#. purchased
+msgid "purchased"
+msgstr "购买"
+
+#: translations/messages/src/components/notification.json
+#. [notification.received]
+#. defaultMessage is:
+#. received
+msgid "received"
+msgstr "收到"
+
+#: translations/messages/src/components/notification.json
+#. [notification.sent]
+#. defaultMessage is:
+#. sent
+msgid "sent"
+msgstr "发送"
+
+#: translations/messages/src/components/my-sale-card.json
+#. [my-sale-card.buyerNameLink]
+#. defaultMessage is:
+#. sold to {linkToBuyer}
+msgid "sold to {linkToBuyer}"
+msgstr "卖给{linkToBuyer}"
+
+#: translations/messages/src/components/notification.json
+#. [notification.withdrawn]
+#. defaultMessage is:
+#. withdrawn
+msgid "withdrawn"
+msgstr "取消"
+
+#: translations/messages/src/components/listings-grid.json
+#. [listings-grid.listingsCount]
+#. defaultMessage is:
+#. {listingIdsCount} Listings
+msgid "{listingIdsCount} Listings"
+msgstr "{listingIdsCount}列表"
+
+#: translations/messages/src/components/my-sale-card.json
+#. [my-sale-card.nextStep1]
+#. defaultMessage is:
+#. {nextStep} Send the order to buyer
+msgid "{nextStep} Send the order to buyer"
+msgstr "{nextStep}将订单发送给买家"
+
+#: translations/messages/src/components/my-sale-card.json
+#. [my-sale-card.nextStep2]
+#. defaultMessage is:
+#. {nextStep} Wait for buyer to receive order
+msgid "{nextStep} Wait for buyer to receive order"
+msgstr "{nextStep}等待买家接收订单"
+
+#: translations/messages/src/components/my-sale-card.json
+#. [my-sale-card.nextStep3]
+#. defaultMessage is:
+#. {nextStep} Withdraw funds
+msgid "{nextStep} Withdraw funds"
+msgstr "{nextStep}提取资金"
+
+#: translations/messages/src/pages/profile/_Guidance.json
+#. [_Guidance.content]
+#. defaultMessage is:
+#. {verifyingYourProfile} allows other users to know that you are a real person and increases the chances of successful transactions on Origin.
+msgid "{verifyingYourProfile} allows other users to know that you are a real person and increases the chances of successful transactions on Origin."
+msgstr "{验证你的配置文件}允许其他用户知道你是一个真实的人，并增加在Origin上成功交易的机会。"
+
