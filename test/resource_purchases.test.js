@@ -5,6 +5,7 @@ import Review from "../src/resources/reviews.js"
 import ContractService from "../src/services/contract-service"
 import IpfsService from "../src/services/ipfs-service.js"
 import Web3 from "web3"
+import asAccount from "./helpers/as-account"
 
 describe("Purchase Resource", function() {
   this.timeout(5000) // default is 2000
@@ -18,6 +19,7 @@ describe("Purchase Resource", function() {
   var ipfsService
   var testListingIds
   var web3
+  var buyer
 
   before(async () => {
     let provider = new Web3.providers.HttpProvider("http://localhost:8545")
@@ -32,6 +34,8 @@ describe("Purchase Resource", function() {
     listings = new Listings({ contractService, ipfsService })
     purchases = new Purchase({ contractService, ipfsService })
     reviews = new Review({ contractService, ipfsService })
+    const accounts = await web3.eth.getAccounts()
+    buyer = accounts[1]
   })
 
   // Helpers
@@ -55,10 +59,12 @@ describe("Purchase Resource", function() {
     listing = await listings.getByIndex(listingEvent.returnValues._index)
 
     // Buy listing to create a purchase
-    const purchaseTransaction = await listings.buy(
-      listing.address,
-      1,
-      listing.price - 0.1
+    const purchaseTransaction = await asAccount(
+      contractService.web3,
+      buyer,
+      async () => {
+        return await listings.buy(listing.address, 1, listing.price - 0.1)
+      }
     )
     const purchaseEvent = purchaseTransaction.events.ListingPurchased
     purchase = await purchases.get(purchaseEvent.returnValues._purchaseContract)
@@ -79,17 +85,17 @@ describe("Purchase Resource", function() {
     it("should get a purchase", async () => {
       expectStage("awaiting_payment")
       expect(purchase.listingAddress).to.equal(listing.address)
-      expect(purchase.buyerAddress).to.equal(
-        await contractService.currentAccount()
-      )
+      expect(purchase.buyerAddress).to.equal(buyer)
     })
 
     it("should allow the buyer to pay", async () => {
       expectStage("awaiting_payment")
-      await purchases.pay(
-        purchase.address,
-        contractService.web3.utils.toWei("0.1", "ether")
-      )
+      await asAccount(contractService.web3, buyer, async () => {
+        await purchases.pay(
+          purchase.address,
+          contractService.web3.utils.toWei("0.1", "ether")
+        )
+      })
       purchase = await purchases.get(purchase.address)
       expectStage("shipping_pending")
     })
@@ -103,7 +109,9 @@ describe("Purchase Resource", function() {
 
     it("should allow the buyer to mark a purchase received", async () => {
       expectStage("buyer_pending")
-      await purchases.buyerConfirmReceipt(purchase.address, { rating: 3 })
+      await asAccount(contractService.web3, buyer, async () => {
+        await purchases.buyerConfirmReceipt(purchase.address, { rating: 3 })
+      })
       purchase = await purchases.get(purchase.address)
       expectStage("seller_pending")
     })
