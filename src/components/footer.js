@@ -164,7 +164,7 @@ const Footer = (props) => {
                   </li>
                   <li>
                     <a href="https://www.google.com/maps/place/845+Market+St+%23450a,+San+Francisco,+CA+94103">
-                      845 Market St, #450A, San Francisco, CA 94103
+                      845 Market St, &#35;450A<br />San Francisco, CA 94103
                     </a>
                   </li>
                   <li>
