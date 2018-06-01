@@ -83,12 +83,10 @@ class NavBar extends Component {
                       />
                     </Link>
                     <Link to="/my-sales" className="dropdown-item">
-                      <Link to="/my-sales" className="dropdown-item">
                       <FormattedMessage
                         id={ 'navbar.mySales' }
                         defaultMessage={ 'My Sales' }
                       />
-                    </Link>
                     </Link>
                     <Link to="/create" className="dropdown-item d-none d-lg-block" onClick={this.handleLink}>
                       <FormattedMessage
