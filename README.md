@@ -111,7 +111,6 @@ Heroku will prompt you to set some config variables. You will likely want to sti
 Since this app is just a bunch of HTML and JavaScript, you can also deploy and use it directly from IPFS. Just run:
 
 `./scripts/deploy.sh`
->>>>>>> develop
 
 ## Contributing
 
