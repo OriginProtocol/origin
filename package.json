@@ -68,7 +68,7 @@
     "deploy:ipfs": "./scripts/deploy.sh",
     "build": "NODE_ENV=production webpack --progress --display errors-only",
     "build:json2po": "react-intl-po json2pot 'translations/messages/**/*.json' -o 'translations/allMessages.po' --message-context 'id'",
-    "build:po2json": "react-intl-po po2json 'translations/translatedPOFiles/*.po' -m 'translations/messages/**/*.json' -o 'translations/allMessages.json' --indentation 2 --sort-by-id --message-context 'id'",
+    "build:po2json": "react-intl-po po2json 'translations/translatedPOFiles/*.po' -m 'translations/messages/**/*.json' -o 'translations/allMessages.json' --indentation 2 --sort-by-id",
     "test": "node scripts/test.js --env=jsdom"
   },
   "babel": {
