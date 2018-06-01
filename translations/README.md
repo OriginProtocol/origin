@@ -23,7 +23,7 @@
 
 ## Implementation
 
-Localization is done with `react-intl`. [See Documentation here.](https://github.com/yahoo/react-intl/wiki).
+Localization is done with `react-intl`. [See Documentation here](https://github.com/yahoo/react-intl/wiki).
 
 ## Extract new/edited English strings for translation
 
@@ -37,19 +37,19 @@ import { FormattedMessage } from 'react-intl'
   defaultMessage={ 'The Origin Contract was not found on this network.' }
 />
 ```
-These are compiled automatically into JSON message files by `babel-plugin-react-intl`
+These are compiled automatically into JSON message files by `babel-plugin-react-intl`.
 
-2) Generate and aggregated `.po` file from all of the auto-generated JSON message files by running: 
+2) Generate an aggregated `.po` file from all of the auto-generated JSON message files by running: 
 
 `npm run build:json2po`
 
-This `.po` file is now ready for translation
+This `.po` file is now ready for translation.
 
 ## Updating translations in the DApp
 
 1. Download the new translations from Google Translator Toolkit. The file will be called `archive.zip` by default. (Note, you must download 2 or more languages to get a `.zip` file.)
 
-2. Extract the `.po` files from the .zip file and move them to `/translations/translatedPOFiles`. Rename them to the two-character representation of the language they contain - e.g. change `en-US.po` to `en.po`
+2. Extract the `.po` files from the .zip file and move them to `/translations/translatedPOFiles`. Rename them to the two-character representation of the language they contain - e.g. change `en-US.po` to `en.po`.
 
 3. Convert the new/updated `.po` files to an aggregated JSON that `react-intl` can consume by running:
 
