@@ -15,12 +15,16 @@ addLocales()
 //
 
 // Detect user's preferred settings
-const language = (navigator.languages && navigator.languages[0]) ||
+const detectedLanguage = (navigator.languages && navigator.languages[0]) ||
                  navigator.language ||
                  navigator.userLanguage;
 
 // Split locales with a region code
-const languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
+const languageWithoutRegionCode = detectedLanguage.toLowerCase().split(/[_-]+/)[0];
+
+// English is our default - to prevent errors, we set to undefined for English
+// https://github.com/yahoo/react-intl/issues/619#issuecomment-242765427
+const language = (languageWithoutRegionCode === "en-US") ? undefined : languageWithoutRegionCode
 
 // Try full locale, try locale without region code, fallback to 'en'
 const messages = translations[languageWithoutRegionCode] || translations[language] || translations.en;
