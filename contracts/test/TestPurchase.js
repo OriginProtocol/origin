@@ -421,4 +421,19 @@ contract("Purchase", accounts => {
       assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)
     })
   })
+
+  it("should not allow purchase of listing by its seller", async () => {
+    listing = await Listing.new(seller, ipfsHash, totalPrice, unitsAvailable, {
+      from: seller
+    })
+    try {
+      await listing.buyListing(1, {
+        from: seller,
+        value: totalPrice
+      })
+      assert.ok(false, "allowed a seller to purchase their own listing")
+    } catch (err) {
+      assert.ok(isEVMError(err), "an EVM error should be thrown")
+    }
+  })
 })

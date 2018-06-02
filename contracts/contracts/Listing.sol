@@ -59,6 +59,11 @@ contract Listing {
     _;
   }
 
+  modifier isNotSeller() {
+    require(msg.sender != owner);
+    _;
+  }
+
   /*
     * Public functions
     */
@@ -76,6 +81,7 @@ contract Listing {
   function buyListing(uint _unitsToBuy)
     public
     payable
+    isNotSeller
   {
     // Ensure that this is not trying to purchase more than is available.
     require(_unitsToBuy <= unitsAvailable);
