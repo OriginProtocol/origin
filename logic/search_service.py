@@ -7,7 +7,7 @@ class SearchIndexer():
     """
 
     def __init__(self, client=None):
-        self.client = SearchClient.instance(client=client)
+        self.client = client if client else SearchClient.instance()
 
     def create_or_update_listing(self, listing_data):
         # Create a doc for indexing.

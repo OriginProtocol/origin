@@ -21,6 +21,9 @@ class SearchClient(Singleton):
     a local instance while in prod environment it uses "Bonsai ElasticSearch"
     which is a hosted solution provided as a Heroku add-on.
     """
+    INDEX = "origin"
+    LISTING_DOC_TYPE = "listing"
+
     def __init__(self, client=None):
         """
         Note: callers should not call this constructor directly but rather
@@ -47,19 +50,19 @@ class SearchClient(Singleton):
 
     def index_listing(self, doc_id, doc):
         """
-        Indexes a listing in the search engine.
+        Indexes a listing.
         """
         res = self.client.index(
-            index="origin",
-            doc_type="listing",
+            index=self.INDEX,
+            doc_type=self.LISTING_DOC_TYPE,
             id=doc_id,
             body=doc)
 
         # TODO(franck): implement retry policy.
         if res['result'] not in ('created', 'updated'):
-            raise IndexingError("Failed indexing listing", res, doc_id, doc)
+            raise IndexingError("Failed indexing listing", doc_id, res)
 
-    def listings(self, query, category=None, location=None, num=0, offset=100):
+    def search_listings(self, query, category=None, location=None, num=100, offset=0):
         """
         Issues a search query against the listing data.
         """
@@ -101,8 +104,8 @@ class SearchClient(Singleton):
 
         # Query the search engine.
         res = self.client.search(
-            index=["origin"],
-            doc_type="listing",
+            index=[self.INDEX],
+            doc_type=self.LISTING_DOC_TYPE,
             body=query)
         if res.get("error"):
             raise QueryError(res.get("reason"))

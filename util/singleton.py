@@ -13,12 +13,12 @@ class Singleton():
     __instance = None
 
     @classmethod
-    def instance(cls, *args, **kwargs):
+    def instance(cls):
         """
         Implement the singleton pattern.
         """
         if not cls.__instance:
             with cls.__lock:
                 if not cls.__instance:
-                    cls.__instance = cls(*args, **kwargs)
+                    cls.__instance = cls()
         return cls.__instance
