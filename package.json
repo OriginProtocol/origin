@@ -14,7 +14,8 @@
     "format": "npx prettier --write test/*.js src/**.js contracts/test/**.js",
     "prepare": "npm run build",
     "install:dev": "npm install && npm link",
-    "start": "node scripts/build.js serve"
+    "start": "node scripts/build.js serve",
+    "start:no-ganache": "node scripts/build.js serve no-ganache"
   },
   "files": [
     "dist"
