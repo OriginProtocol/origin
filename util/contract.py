@@ -34,7 +34,7 @@ class ContractHelper:
 
         Args:
             event_names(list[str]): List of event names.
-            callback(function): Callback function
+            callback(function(event)): Callback function
         """
         event_name_hashes = []
         for name in event_names:
