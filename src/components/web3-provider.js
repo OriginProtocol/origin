@@ -1,3 +1,4 @@
+import { FormattedMessage } from 'react-intl'
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
@@ -51,6 +52,11 @@ const NotWeb3EnabledDesktop = props => (
         Full Instructions
       </a>
     </div>
+    <FormattedMessage
+      id={ 'web3-provider.notSignedIntoMetaMask' }
+      defaultMessage={ 'You are not signed in to MetaMask.' }
+    />
+    <br />
   </Modal>
 )
 
@@ -122,7 +128,10 @@ const UnconnectedNetwork = () => (
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
-    Connecting to network...
+    <FormattedMessage
+      id={ 'web3-provider.connecting' }
+      defaultMessage={ 'Connecting to network...' }
+    />
   </Modal>
 )
 

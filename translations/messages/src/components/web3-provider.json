@@ -1,0 +1,10 @@
+[
+  {
+    "id": "web3-provider.notSignedIntoMetaMask",
+    "defaultMessage": "You are not signed in to MetaMask."
+  },
+  {
+    "id": "web3-provider.connecting",
+    "defaultMessage": "Connecting to network..."
+  }
+]

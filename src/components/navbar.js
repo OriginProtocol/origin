@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { FormattedMessage } from 'react-intl'
 
 import ConnectivityDropdown from 'components/dropdowns/connectivity'
 // Hidden for current deployment
@@ -53,24 +54,55 @@ class NavBar extends Component {
               <input className="form-control mr-sm-2" type="search" placeholder="Search Listings" aria-label="Search" onChange={this.handleChange} value={this.state.searchQuery} />
             </form> */}
             <div className="navbar-nav justify-content-end">
-              <Link to="/" className="d-lg-none nav-item nav-link">Listings</Link>
-              <Link to="/my-purchases" className="nav-item nav-link">Buy</Link>
+              <Link to="/" className="d-lg-none nav-item nav-link">
+                <FormattedMessage
+                  id={ 'navbar.listings' }
+                  defaultMessage={ 'Listings' }
+                />
+              </Link>
+              <Link to="/my-purchases" className="nav-item nav-link">
+                <FormattedMessage
+                  id={ 'navbar.buy' }
+                  defaultMessage={ 'Buy' }
+                />
+              </Link>
               <div className="sell dropdown">
-                <a className="dropdown-toggle nav-item nav-link" id="sellDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sell</a>
+                <a className="dropdown-toggle nav-item nav-link" id="sellDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <FormattedMessage
+                    id={ 'navbar.sell' }
+                    defaultMessage={ 'Sell' }
+                  />
+                </a>
                 <div className="dropdown-menu dropdown-menu-right" aria-labelledby="sellDropdown">
                   <div className="triangle-container d-none d-lg-flex justify-content-end"><div className="triangle"></div></div>
                   <div className="actual-menu">
-                    <Link to="/my-listings" className="dropdown-item">My Listings</Link>
-                    <Link to="/my-sales" className="dropdown-item">My Sales</Link>
+                    <Link to="/my-listings" className="dropdown-item">
+                      <FormattedMessage
+                        id={ 'navbar.myListings' }
+                        defaultMessage={ 'My Listings' }
+                      />
+                    </Link>
+                    <Link to="/my-sales" className="dropdown-item">
+                      <FormattedMessage
+                        id={ 'navbar.mySales' }
+                        defaultMessage={ 'My Sales' }
+                      />
+                    </Link>
                     <Link to="/create" className="dropdown-item d-none d-lg-block" onClick={this.handleLink}>
-                      Add a Listing
+                      <FormattedMessage
+                        id={ 'navbar.addListing' }
+                        defaultMessage={ 'Add a Listing' }
+                      />
                     </Link>
                   </div>
                 </div>
               </div>
               <Link to="/create" className="nav-item nav-link" onClick={this.handleLink}>
                 <img src="images/add-listing-icon.svg" alt="Add Listing" className="add-listing" />
-                Add Listing
+                <FormattedMessage
+                  id={ 'navbar.addListing' }
+                  defaultMessage={ 'Add a Listing' }
+                />
               </Link>
             </div>
           </div>
