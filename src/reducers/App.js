@@ -6,6 +6,10 @@ const initialState = {
     account: null,
     intent: null,
   },
+  translations: {
+    language: null,
+    messages: null
+  }
 }
 
 export default function App(state = initialState, action = {}) {
@@ -20,6 +24,9 @@ export default function App(state = initialState, action = {}) {
 
     case AppConstants.WEB3_INTENT:
       return { ...state, web3: { ...state.web3, intent: action.intent }}
+
+    case AppConstants.TRANSLATIONS:
+      return { ...state, translations: { language: action.language, messages: action.messages }}
 
     default:
       return state
