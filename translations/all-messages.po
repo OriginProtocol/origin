@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-06-01T22:28:56.147Z\n"
+"POT-Creation-Date: 2018-06-02T06:25:44.855Z\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "MIME-Version: 1.0\n"
@@ -13,6 +13,14 @@ msgstr ""
 #. About the {title}
 msgctxt "user-card.heading"
 msgid "About the {title}"
+msgstr ""
+
+#: translations/messages/src/pages/profile/_Wallet.json
+#. [_Wallet.accountBalance]
+#. defaultMessage is:
+#. Account Balance:
+msgctxt "_Wallet.accountBalance"
+msgid "Account Balance:"
 msgstr ""
 
 #: translations/messages/src/components/my-listings.json
@@ -29,6 +37,22 @@ msgstr ""
 #. Add a Listing
 msgctxt "navbar.addListing"
 msgid "Add a Listing"
+msgstr ""
+
+#: translations/messages/src/pages/profile/_Services.json
+#. [_Services.address]
+#. defaultMessage is:
+#. Address
+msgctxt "_Services.address"
+msgid "Address"
+msgstr ""
+
+#: translations/messages/src/pages/profile/ConfirmPublish.json
+#. [ConfirmPublish.afterYouPublishNotice]
+#. defaultMessage is:
+#. After you publish your changes to the blockchain, other users will be able to see that you have verified the following:
+msgctxt "ConfirmPublish.afterYouPublishNotice"
+msgid "After you publish your changes to the blockchain, other users will be able to see that you have verified the following:"
 msgstr ""
 
 #: translations/messages/src/components/my-listings.json
@@ -61,6 +85,14 @@ msgstr ""
 #. All
 msgctxt "notifications.all"
 msgid "All"
+msgstr ""
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.noDescriptionUser]
+#. defaultMessage is:
+#. An Origin user without a description
+msgctxt "Profile.noDescriptionUser"
+msgid "An Origin user without a description"
 msgstr ""
 
 #: translations/messages/src/components/listing-create.json
@@ -127,6 +159,46 @@ msgctxt "listing-detail.buyNow"
 msgid "Buy Now"
 msgstr ""
 
+#: translations/messages/src/pages/profile/EditProfile.json
+#. [EditProfile.cancel]
+#. defaultMessage is:
+#. Cancel
+msgctxt "EditProfile.cancel"
+msgid "Cancel"
+msgstr ""
+
+#: translations/messages/src/pages/profile/VerifyEmail.json
+#. [VerifyEmail.cancel]
+#. defaultMessage is:
+#. Cancel
+msgctxt "VerifyEmail.cancel"
+msgid "Cancel"
+msgstr ""
+
+#: translations/messages/src/pages/profile/VerifyFacebook.json
+#. [VerifyFacebook.cancel]
+#. defaultMessage is:
+#. Cancel
+msgctxt "VerifyFacebook.cancel"
+msgid "Cancel"
+msgstr ""
+
+#: translations/messages/src/pages/profile/VerifyPhone.json
+#. [VerifyPhone.cancel]
+#. defaultMessage is:
+#. Cancel
+msgctxt "VerifyPhone.cancel"
+msgid "Cancel"
+msgstr ""
+
+#: translations/messages/src/pages/profile/VerifyTwitter.json
+#. [VerifyTwitter.cancel]
+#. defaultMessage is:
+#. Cancel
+msgctxt "VerifyTwitter.cancel"
+msgid "Cancel"
+msgstr ""
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.chooseSchema]
 #. defaultMessage is:
@@ -135,12 +207,28 @@ msgctxt "listing-create.chooseSchema"
 msgid "Choose a schema for your product or service"
 msgstr ""
 
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.cipher]
+#. defaultMessage is:
+#. Cipher
+msgctxt "web3-provider.cipher"
+msgid "Cipher"
+msgstr ""
+
 #: translations/messages/src/components/my-listing-card.json
 #. [my-listing-card.closeListing]
 #. defaultMessage is:
 #. Close Listing
 msgctxt "my-listing-card.closeListing"
 msgid "Close Listing"
+msgstr ""
+
+#: translations/messages/src/pages/profile/_Services.json
+#. [_Services.comingSoon]
+#. defaultMessage is:
+#. Coming {br} Soon
+msgctxt "_Services.comingSoon"
+msgid "Coming {br} Soon"
 msgstr ""
 
 #: translations/messages/src/components/footer.json
@@ -183,6 +271,14 @@ msgctxt "listing-detail.confirmTransaction"
 msgid "Confirm transaction"
 msgstr ""
 
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.confirmTransaction]
+#. defaultMessage is:
+#. Confirm transaction
+msgctxt "Profile.confirmTransaction"
+msgid "Confirm transaction"
+msgstr ""
+
 #: translations/messages/src/components/web3-provider.json
 #. [web3-provider.connecting]
 #. defaultMessage is:
@@ -199,6 +295,62 @@ msgctxt "continueButtonLabel"
 msgid "Continue"
 msgstr ""
 
+#: translations/messages/src/pages/profile/AttestationSuccess.json
+#. [AttestationSuccess.continue]
+#. defaultMessage is:
+#. Continue
+msgctxt "AttestationSuccess.continue"
+msgid "Continue"
+msgstr ""
+
+#: translations/messages/src/pages/profile/EditProfile.json
+#. [EditProfile.continue]
+#. defaultMessage is:
+#. Continue
+msgctxt "EditProfile.continue"
+msgid "Continue"
+msgstr ""
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.continue]
+#. defaultMessage is:
+#. Continue
+msgctxt "Profile.continue"
+msgid "Continue"
+msgstr ""
+
+#: translations/messages/src/pages/profile/VerifyEmail.json
+#. [VerifyEmail.continue]
+#. defaultMessage is:
+#. Continue
+msgctxt "VerifyEmail.continue"
+msgid "Continue"
+msgstr ""
+
+#: translations/messages/src/pages/profile/VerifyFacebook.json
+#. [VerifyFacebook.continue]
+#. defaultMessage is:
+#. Continue
+msgctxt "VerifyFacebook.continue"
+msgid "Continue"
+msgstr ""
+
+#: translations/messages/src/pages/profile/VerifyPhone.json
+#. [VerifyPhone.continue]
+#. defaultMessage is:
+#. Continue
+msgctxt "VerifyPhone.continue"
+msgid "Continue"
+msgstr ""
+
+#: translations/messages/src/pages/profile/VerifyTwitter.json
+#. [VerifyTwitter.continue]
+#. defaultMessage is:
+#. Continue
+msgctxt "VerifyTwitter.continue"
+msgid "Continue"
+msgstr ""
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.createListingHeading]
 #. defaultMessage is:
@@ -207,11 +359,35 @@ msgctxt "listing-create.createListingHeading"
 msgid "Create your listing"
 msgstr ""
 
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.currentlyOnNetwork]
+#. defaultMessage is:
+#. Currently on {currentNetworkName}.
+msgctxt "web3-provider.currentlyOnNetwork"
+msgid "Currently on {currentNetworkName}."
+msgstr ""
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.deployingIdentity]
+#. defaultMessage is:
+#. Deploying your identity
+msgctxt "Profile.deployingIdentity"
+msgid "Deploying your identity"
+msgstr ""
+
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.description]
 #. defaultMessage is:
 #. Description
 msgctxt "_ProvisionedChanges.description"
+msgid "Description"
+msgstr ""
+
+#: translations/messages/src/pages/profile/EditProfile.json
+#. [EditProfile.description]
+#. defaultMessage is:
+#. Description
+msgctxt "EditProfile.description"
 msgid "Description"
 msgstr ""
 
@@ -237,6 +413,14 @@ msgstr ""
 #. Documentation
 msgctxt "footer.documentationHeading"
 msgid "Documentation"
+msgstr ""
+
+#: translations/messages/src/pages/profile/AttestationSuccess.json
+#. [AttestationSuccess.publishChangesReminder]
+#. defaultMessage is:
+#. Don't forget to publish your changes.
+msgctxt "AttestationSuccess.publishChangesReminder"
+msgid "Don't forget to publish your changes."
 msgstr ""
 
 #: translations/messages/src/components/listing-create.json
@@ -295,11 +479,43 @@ msgctxt "transaction-progress.ethAddress"
 msgid "ETH Address:"
 msgstr ""
 
+#: translations/messages/src/pages/profile/_Wallet.json
+#. [_Wallet.ethAddress]
+#. defaultMessage is:
+#. ETH Address:
+msgctxt "_Wallet.ethAddress"
+msgid "ETH Address:"
+msgstr ""
+
+#: translations/messages/src/pages/profile/EditProfile.json
+#. [EditProfile.editProfileHeading]
+#. defaultMessage is:
+#. Edit Profile
+msgctxt "EditProfile.editProfileHeading"
+msgid "Edit Profile"
+msgstr ""
+
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.email]
 #. defaultMessage is:
 #. Email
 msgctxt "_ProvisionedChanges.email"
+msgid "Email"
+msgstr ""
+
+#: translations/messages/src/pages/profile/_Services.json
+#. [_Services.email]
+#. defaultMessage is:
+#. Email
+msgctxt "_Services.email"
+msgid "Email"
+msgstr ""
+
+#: translations/messages/src/pages/user/User.json
+#. [User.email]
+#. defaultMessage is:
+#. Email
+msgctxt "User.email"
 msgid "Email"
 msgstr ""
 
@@ -309,6 +525,46 @@ msgstr ""
 #. Email Address
 msgctxt "_ProvisionedChanges.emailAddress"
 msgid "Email Address"
+msgstr ""
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.emailVerified]
+#. defaultMessage is:
+#. Email address verified!
+msgctxt "Profile.emailVerified"
+msgid "Email address verified!"
+msgstr ""
+
+#: translations/messages/src/pages/profile/VerifyEmail.json
+#. [VerifyEmail.enterCode]
+#. defaultMessage is:
+#. Enter the code we sent you below
+msgctxt "VerifyEmail.enterCode"
+msgid "Enter the code we sent you below"
+msgstr ""
+
+#: translations/messages/src/pages/profile/VerifyPhone.json
+#. [VerifyPhone.enterCodeBelow]
+#. defaultMessage is:
+#. Enter the code we sent you below
+msgctxt "VerifyPhone.enterCodeBelow"
+msgid "Enter the code we sent you below"
+msgstr ""
+
+#: translations/messages/src/pages/profile/VerifyPhone.json
+#. [VerifyPhone.enterPhoneNumber]
+#. defaultMessage is:
+#. Enter your phone number below and {originId} will send you a verification code
+msgctxt "VerifyPhone.enterPhoneNumber"
+msgid "Enter your phone number below and {originId} will send you a verification code"
+msgstr ""
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.error]
+#. defaultMessage is:
+#. Error
+msgctxt "Profile.error"
+msgid "Error"
 msgstr ""
 
 #: translations/messages/src/components/footer.json
@@ -327,12 +583,44 @@ msgctxt "_ProvisionedChanges.facebook"
 msgid "Facebook"
 msgstr ""
 
+#: translations/messages/src/pages/profile/_Services.json
+#. [_Services.facebook]
+#. defaultMessage is:
+#. Facebook
+msgctxt "_Services.facebook"
+msgid "Facebook"
+msgstr ""
+
+#: translations/messages/src/pages/user/User.json
+#. [User.facebook]
+#. defaultMessage is:
+#. Facebook
+msgctxt "User.facebook"
+msgid "Facebook"
+msgstr ""
+
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.facebookAccount]
 #. defaultMessage is:
 #. Facebook account
 msgctxt "_ProvisionedChanges.facebookAccount"
 msgid "Facebook account"
+msgstr ""
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.facebookVerified]
+#. defaultMessage is:
+#. Facebook account verified!
+msgctxt "Profile.facebookVerified"
+msgid "Facebook account verified!"
+msgstr ""
+
+#: translations/messages/src/pages/profile/EditProfile.json
+#. [EditProfile.firstName]
+#. defaultMessage is:
+#. First Name
+msgctxt "EditProfile.firstName"
+msgid "First Name"
 msgstr ""
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
@@ -351,6 +639,22 @@ msgctxt "listing-create.forSaleLabel"
 msgid "For Sale"
 msgstr ""
 
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.fullInstructions]
+#. defaultMessage is:
+#. Full Instructions
+msgctxt "web3-provider.fullInstructions"
+msgid "Full Instructions"
+msgstr ""
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.fullInstructionsForDemo]
+#. defaultMessage is:
+#. Full Instructions for Demo
+msgctxt "web3-provider.fullInstructionsForDemo"
+msgid "Full Instructions for Demo"
+msgstr ""
+
 #: translations/messages/src/components/transaction-progress.json
 #. [transaction-progress.fundsWithdrawn]
 #. defaultMessage is:
@@ -367,6 +671,14 @@ msgctxt "notification.fundsFromProduct"
 msgid "Funds from {productLink}"
 msgstr ""
 
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.getMetaMask]
+#. defaultMessage is:
+#. Get MetaMask
+msgctxt "web3-provider.getMetaMask"
+msgid "Get MetaMask"
+msgstr ""
+
 #: translations/messages/src/components/footer.json
 #. [footer.githubLink]
 #. defaultMessage is:
@@ -381,6 +693,14 @@ msgstr ""
 #. Go To Purchases
 msgctxt "listing-detail.goToPurchases"
 msgid "Go To Purchases"
+msgstr ""
+
+#: translations/messages/src/pages/profile/_Services.json
+#. [_Services.google]
+#. defaultMessage is:
+#. Google
+msgctxt "_Services.google"
+msgid "Google"
 msgstr ""
 
 #: translations/messages/src/components/listing-create.json
@@ -423,6 +743,46 @@ msgctxt "listing-detail.IPFS"
 msgid "IPFS: {ipfsHash}"
 msgstr ""
 
+#: translations/messages/src/pages/profile/ConfirmUnload.json
+#. [ConfirmUpload.ifYouExitNotice]
+#. defaultMessage is:
+#. If you exit without publishing you’ll lose all your changes.
+msgctxt "ConfirmUpload.ifYouExitNotice"
+msgid "If you exit without publishing you’ll lose all your changes."
+msgstr ""
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.unsavedChangesWarn]
+#. defaultMessage is:
+#. If you exit without publishing, you'll lose all your changes.
+msgctxt "Profile.unsavedChangesWarn"
+msgid "If you exit without publishing, you'll lose all your changes."
+msgstr ""
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.intentRequiresMetaMask]
+#. defaultMessage is:
+#. In order to {web3Intent}, you must install MetaMask.
+msgctxt "web3-provider.intentRequiresMetaMask"
+msgid "In order to {web3Intent}, you must install MetaMask."
+msgstr ""
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.intentRequiresSignIn]
+#. defaultMessage is:
+#. In order to {web3Intent}, you must sign in to {currentProvider}.
+msgctxt "web3-provider.intentRequiresSignIn"
+msgid "In order to {web3Intent}, you must sign in to {currentProvider}."
+msgstr ""
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.intentRequiresEthereumEnabledBrowser]
+#. defaultMessage is:
+#. In order to {web3Intent}, you must use an Ethereum wallet-enabled browser.
+msgctxt "web3-provider.intentRequiresEthereumEnabledBrowser"
+msgid "In order to {web3Intent}, you must use an Ethereum wallet-enabled browser."
+msgstr ""
+
 #: translations/messages/src/components/my-listings.json
 #. [my-listings.inactive]
 #. defaultMessage is:
@@ -461,6 +821,30 @@ msgstr ""
 #. Last Name
 msgctxt "_ProvisionedChanges.lastName"
 msgid "Last Name"
+msgstr ""
+
+#: translations/messages/src/pages/profile/EditProfile.json
+#. [EditProfile.lastName]
+#. defaultMessage is:
+#. Last Name
+msgctxt "EditProfile.lastName"
+msgid "Last Name"
+msgstr ""
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.lastPublished]
+#. defaultMessage is:
+#. Last published
+msgctxt "Profile.lastPublished"
+msgid "Last published"
+msgstr ""
+
+#: translations/messages/src/pages/profile/ConfirmPublish.json
+#. [ConfirmPublish.letsDoIt]
+#. defaultMessage is:
+#. Let's do it!
+msgctxt "ConfirmPublish.letsDoIt"
+msgid "Let's do it!"
 msgstr ""
 
 #: translations/messages/src/components/navbar.json
@@ -559,6 +943,22 @@ msgctxt "listing-create.next"
 msgid "Next"
 msgstr ""
 
+#: translations/messages/src/pages/profile/_Wallet.json
+#. [_Wallet.noEthAccountConnected]
+#. defaultMessage is:
+#. No ETH Account Connected
+msgctxt "_Wallet.noEthAccountConnected"
+msgid "No ETH Account Connected"
+msgstr ""
+
+#: translations/messages/src/pages/profile/ConfirmUnload.json
+#. [ConfirmUpload.notRightNow]
+#. defaultMessage is:
+#. Not Right Now
+msgctxt "ConfirmUpload.notRightNow"
+msgid "Not Right Now"
+msgstr ""
+
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.notVisibleOnBlockchain]
 #. defaultMessage is:
@@ -581,6 +981,22 @@ msgstr ""
 #. OK
 msgctxt "listing-detail.OK"
 msgid "OK"
+msgstr ""
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.ok]
+#. defaultMessage is:
+#. OK
+msgctxt "Profile.ok"
+msgid "OK"
+msgstr ""
+
+#: translations/messages/src/pages/profile/ConfirmPublish.json
+#. [ConfirmPublish.oopsNoWait]
+#. defaultMessage is:
+#. Oops, no wait...
+msgctxt "ConfirmPublish.oopsNoWait"
+msgid "Oops, no wait..."
 msgstr ""
 
 #: translations/messages/src/components/transaction-progress.json
@@ -615,6 +1031,38 @@ msgctxt "listing-create.howItWorksContentPart1"
 msgid "Origin uses a Mozilla project called {jsonSchemaLink}  to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer."
 msgstr ""
 
+#: translations/messages/src/pages/profile/VerifyFacebook.json
+#. [VerifyFacebook.accountNotPublic]
+#. defaultMessage is:
+#. Other users will know that you have a verified Facebook account, but your account details will not be published on the blockchain. We will never post on your behalf.
+msgctxt "VerifyFacebook.accountNotPublic"
+msgid "Other users will know that you have a verified Facebook account, but your account details will not be published on the blockchain. We will never post on your behalf."
+msgstr ""
+
+#: translations/messages/src/pages/profile/VerifyTwitter.json
+#. [VerifyTwitter.twitterNotPublic]
+#. defaultMessage is:
+#. Other users will know that you have a verified Twitter account. Your username will not be published on the blockchain. We will never tweet on your behalf.
+msgctxt "VerifyTwitter.twitterNotPublic"
+msgid "Other users will know that you have a verified Twitter account. Your username will not be published on the blockchain. We will never tweet on your behalf."
+msgstr ""
+
+#: translations/messages/src/pages/profile/VerifyEmail.json
+#. [VerifyEmail.emailNotPublished]
+#. defaultMessage is:
+#. Other users will know that you have a verified email address. Your actual email address will not be published on the blockchain.
+msgctxt "VerifyEmail.emailNotPublished"
+msgid "Other users will know that you have a verified email address. Your actual email address will not be published on the blockchain."
+msgstr ""
+
+#: translations/messages/src/pages/profile/VerifyPhone.json
+#. [VerifyPhone.phoneNumberNotPublished]
+#. defaultMessage is:
+#. Other users will know that you have a verified phone number. Your actual phone number will not be published on the blockchain.
+msgctxt "VerifyPhone.phoneNumberNotPublished"
+msgid "Other users will know that you have a verified phone number. Your actual phone number will not be published on the blockchain."
+msgstr ""
+
 #: translations/messages/src/components/footer.json
 #. [footer.partnersLink]
 #. defaultMessage is:
@@ -647,6 +1095,22 @@ msgctxt "_ProvisionedChanges.phone"
 msgid "Phone"
 msgstr ""
 
+#: translations/messages/src/pages/profile/_Services.json
+#. [_Services.phone]
+#. defaultMessage is:
+#. Phone
+msgctxt "_Services.phone"
+msgid "Phone"
+msgstr ""
+
+#: translations/messages/src/pages/user/User.json
+#. [User.phone]
+#. defaultMessage is:
+#. Phone
+msgctxt "User.phone"
+msgid "Phone"
+msgstr ""
+
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.phoneNumber]
 #. defaultMessage is:
@@ -655,12 +1119,44 @@ msgctxt "_ProvisionedChanges.phoneNumber"
 msgid "Phone Number"
 msgstr ""
 
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.phoneVerified]
+#. defaultMessage is:
+#. Phone number verified!
+msgctxt "Profile.phoneVerified"
+msgid "Phone number verified!"
+msgstr ""
+
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.picture]
 #. defaultMessage is:
 #. Picture
 msgctxt "_ProvisionedChanges.picture"
 msgid "Picture"
+msgstr ""
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.useWalletEnabledBrowser]
+#. defaultMessage is:
+#. Please access this site through a wallet-enabled browser:
+msgctxt "web3-provider.useWalletEnabledBrowser"
+msgid "Please access this site through a wallet-enabled browser:"
+msgstr ""
+
+#: translations/messages/src/pages/profile/_Services.json
+#. [_Services.pleaseConnectAccounts]
+#. defaultMessage is:
+#. Please connect your accounts below to strengthen your identity on Origin.
+msgctxt "_Services.pleaseConnectAccounts"
+msgid "Please connect your accounts below to strengthen your identity on Origin."
+msgstr ""
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.pleaseInstallMetaMask]
+#. defaultMessage is:
+#. Please install the MetaMask extension to access this site.
+msgctxt "web3-provider.pleaseInstallMetaMask"
+msgid "Please install the MetaMask extension to access this site."
 msgstr ""
 
 #: translations/messages/src/components/listing-create.json
@@ -687,6 +1183,30 @@ msgctxt "listing-detail.pleaseStandBy"
 msgid "Please stand by..."
 msgstr ""
 
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.pleaseStandBy]
+#. defaultMessage is:
+#. Please stand by...
+msgctxt "Profile.pleaseStandBy"
+msgid "Please stand by..."
+msgstr ""
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.popularEthereumWallets]
+#. defaultMessage is:
+#. Popular Ethereum Wallets
+msgctxt "web3-provider.popularEthereumWallets"
+msgid "Popular Ethereum Wallets"
+msgstr ""
+
+#: translations/messages/src/pages/profile/_Services.json
+#. [_Services.poweredBy]
+#. defaultMessage is:
+#. Powered by
+msgctxt "_Services.poweredBy"
+msgid "Powered by"
+msgstr ""
+
 #: translations/messages/src/components/footer.json
 #. [footer.presaleLink]
 #. defaultMessage is:
@@ -695,20 +1215,28 @@ msgctxt "footer.presaleLink"
 msgid "Presale"
 msgstr ""
 
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.pressSubmit]
+#. defaultMessage is:
+#. Press "Submit" in {currentProvider} window
+msgctxt "Profile.pressSubmit"
+msgid "Press \"Submit\" in {currentProvider} window"
+msgstr ""
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.pressSubmitInMetaMask]
 #. defaultMessage is:
-#. Press {submit} in MetaMask window
+#. Press {submit} in {currentProvider} window
 msgctxt "listing-create.pressSubmitInMetaMask"
-msgid "Press {submit} in MetaMask window"
+msgid "Press {submit} in {currentProvider} window"
 msgstr ""
 
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.pressSubmitInMetaMask]
 #. defaultMessage is:
-#. Press {submit} in MetaMask window
+#. Press {submit} in {currentProvider} window
 msgctxt "listing-detail.pressSubmitInMetaMask"
-msgid "Press {submit} in MetaMask window"
+msgid "Press {submit} in {currentProvider} window"
 msgstr ""
 
 #: translations/messages/src/components/listing-create.json
@@ -759,6 +1287,38 @@ msgctxt "_ProvisionedChanges.profile"
 msgid "Profile"
 msgstr ""
 
+#: translations/messages/src/pages/profile/_Strength.json
+#. [_Strength.profileStrength]
+#. defaultMessage is:
+#. Profile Strength
+msgctxt "_Strength.profileStrength"
+msgid "Profile Strength"
+msgstr ""
+
+#: translations/messages/src/pages/profile/ConfirmUnload.json
+#. [ConfirmUpload.publishNow]
+#. defaultMessage is:
+#. Publish Now
+msgctxt "ConfirmUpload.publishNow"
+msgid "Publish Now"
+msgstr ""
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.publishNow]
+#. defaultMessage is:
+#. Publish Now
+msgctxt "Profile.publishNow"
+msgid "Publish Now"
+msgstr ""
+
+#: translations/messages/src/pages/profile/AttestationSuccess.json
+#. [AttestationSuccess.publishChangesNotice]
+#. defaultMessage is:
+#. Publishing to the blockchain lets other users know that you have a verified profile.
+msgctxt "AttestationSuccess.publishChangesNotice"
+msgid "Publishing to the blockchain lets other users know that you have a verified profile."
+msgstr ""
+
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.purchaseSuccessful]
 #. defaultMessage is:
@@ -781,6 +1341,22 @@ msgstr ""
 #. Purchased
 msgctxt "transaction-progress.purchased"
 msgid "Purchased"
+msgstr ""
+
+#: translations/messages/src/pages/profile/ConfirmPublish.json
+#. [ConfirmPublish.readyToGoPublic]
+#. defaultMessage is:
+#. Ready to go public?
+msgctxt "ConfirmPublish.readyToGoPublic"
+msgid "Ready to go public?"
+msgstr ""
+
+#: translations/messages/src/pages/profile/ConfirmUnload.json
+#. [ConfirmUpload.readyToGoPublic]
+#. defaultMessage is:
+#. Ready to go public? After you publish your changes to the blockchain, other users will be able to see that you have verified the following:
+msgctxt "ConfirmUpload.readyToGoPublic"
+msgid "Ready to go public? After you publish your changes to the blockchain, other users will be able to see that you have verified the following:"
 msgstr ""
 
 #: translations/messages/src/components/my-purchase-card.json
@@ -815,6 +1391,14 @@ msgctxt "listing-detail.reviews"
 msgid "Reviews"
 msgstr ""
 
+#: translations/messages/src/pages/user/User.json
+#. [User.reviews]
+#. defaultMessage is:
+#. Reviews
+msgctxt "User.reviews"
+msgid "Reviews"
+msgstr ""
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.stepNumberLabel]
 #. defaultMessage is:
@@ -829,6 +1413,14 @@ msgstr ""
 #. See All Listings
 msgctxt "listing-create.seeAllListings"
 msgid "See All Listings"
+msgstr ""
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.seeConsole]
+#. defaultMessage is:
+#. See the console for more details
+msgctxt "Profile.seeConsole"
+msgid "See the console for more details"
 msgstr ""
 
 #: translations/messages/src/components/listing-create.json
@@ -927,11 +1519,27 @@ msgctxt "my-listing-card.soldOut"
 msgid "Sold Out"
 msgstr ""
 
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.status]
+#. defaultMessage is:
+#. Status:
+msgctxt "Profile.status"
+msgid "Status:"
+msgstr ""
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.successMessage]
 #. defaultMessage is:
 #. Success
 msgctxt "listing-create.successMessage"
+msgid "Success"
+msgstr ""
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.success]
+#. defaultMessage is:
+#. Success
+msgctxt "Profile.success"
 msgid "Success"
 msgstr ""
 
@@ -991,6 +1599,14 @@ msgctxt "listing-detail.loadingError"
 msgid "There was an error loading this listing."
 msgstr ""
 
+#: translations/messages/src/pages/profile/EditProfile.json
+#. [EditProfile.publicDataNotice]
+#. defaultMessage is:
+#. This information will be published on the blockchain and will be visible to everyone.
+msgctxt "EditProfile.publicDataNotice"
+msgid "This information will be published on the blockchain and will be visible to everyone."
+msgstr ""
+
 #: translations/messages/src/components/my-sale-card.json
 #. [my-sale-card.orderComplete]
 #. defaultMessage is:
@@ -1005,6 +1621,14 @@ msgstr ""
 #. Tickets
 msgctxt "listing-create.tickets"
 msgid "Tickets"
+msgstr ""
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.toshi]
+#. defaultMessage is:
+#. Toshi
+msgctxt "web3-provider.toshi"
+msgid "Toshi"
 msgstr ""
 
 #: translations/messages/src/components/my-listing-card.json
@@ -1023,6 +1647,22 @@ msgctxt "listing-create.transportation"
 msgid "Transportation"
 msgstr ""
 
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.trust]
+#. defaultMessage is:
+#. Trust
+msgctxt "web3-provider.trust"
+msgid "Trust"
+msgstr ""
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.trustWallet]
+#. defaultMessage is:
+#. Trust Wallet
+msgctxt "web3-provider.trustWallet"
+msgid "Trust Wallet"
+msgstr ""
+
 #: translations/messages/src/components/footer.json
 #. [footer.twitterLink]
 #. defaultMessage is:
@@ -1039,12 +1679,36 @@ msgctxt "_ProvisionedChanges.twitter"
 msgid "Twitter"
 msgstr ""
 
+#: translations/messages/src/pages/profile/_Services.json
+#. [_Services.twitter]
+#. defaultMessage is:
+#. Twitter
+msgctxt "_Services.twitter"
+msgid "Twitter"
+msgstr ""
+
+#: translations/messages/src/pages/user/User.json
+#. [User.twitter]
+#. defaultMessage is:
+#. Twitter
+msgctxt "User.twitter"
+msgid "Twitter"
+msgstr ""
+
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.twitterAccount]
 #. defaultMessage is:
 #. Twitter account
 msgctxt "_ProvisionedChanges.twitterAccount"
 msgid "Twitter account"
+msgstr ""
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.twitterVerified]
+#. defaultMessage is:
+#. Twitter account verified!
+msgctxt "Profile.twitterVerified"
+msgid "Twitter account verified!"
 msgstr ""
 
 #: translations/messages/src/components/my-purchase-card.json
@@ -1077,6 +1741,54 @@ msgstr ""
 #. Uploading your listing
 msgctxt "listing-create.uploadingYourListing"
 msgid "Uploading your listing"
+msgstr ""
+
+#: translations/messages/src/pages/profile/VerifyEmail.json
+#. [VerifyEmail.validEmail]
+#. defaultMessage is:
+#. Valid email address
+msgctxt "VerifyEmail.validEmail"
+msgid "Valid email address"
+msgstr ""
+
+#: translations/messages/src/pages/user/User.json
+#. [User.verifiedInto]
+#. defaultMessage is:
+#. Verified Info
+msgctxt "User.verifiedInto"
+msgid "Verified Info"
+msgstr ""
+
+#: translations/messages/src/pages/profile/VerifyFacebook.json
+#. [VerifyFacebook.verifyFBHeading]
+#. defaultMessage is:
+#. Verify Your Facebook Account
+msgctxt "VerifyFacebook.verifyFBHeading"
+msgid "Verify Your Facebook Account"
+msgstr ""
+
+#: translations/messages/src/pages/profile/VerifyPhone.json
+#. [VerifyPhone.verifyPhoneHeading]
+#. defaultMessage is:
+#. Verify Your Phone Number
+msgctxt "VerifyPhone.verifyPhoneHeading"
+msgid "Verify Your Phone Number"
+msgstr ""
+
+#: translations/messages/src/pages/profile/VerifyTwitter.json
+#. [VerifyTwitter.verifyTwitterHeading]
+#. defaultMessage is:
+#. Verify Your Twitter Account
+msgctxt "VerifyTwitter.verifyTwitterHeading"
+msgid "Verify Your Twitter Account"
+msgstr ""
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.verifyYourselfHeading]
+#. defaultMessage is:
+#. Verify yourself on Origin
+msgctxt "Profile.verifyYourselfHeading"
+msgid "Verify yourself on Origin"
 msgstr ""
 
 #: translations/messages/src/components/my-sale-card.json
@@ -1117,6 +1829,14 @@ msgstr ""
 #. Visible on the blockchain
 msgctxt "_ProvisionedChanges.visibleOnBlockchain"
 msgid "Visible on the blockchain"
+msgstr ""
+
+#: translations/messages/src/pages/profile/ConfirmUnload.json
+#. [ConfirmUpload.waitNotice]
+#. defaultMessage is:
+#. Wait! You haven’t published yet.
+msgctxt "ConfirmUpload.waitNotice"
+msgid "Wait! You haven’t published yet."
 msgstr ""
 
 #: translations/messages/src/components/listing-create.json
@@ -1223,6 +1943,14 @@ msgctxt "notification.haveBeen"
 msgid "have been"
 msgstr ""
 
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.manageYourProfile]
+#. defaultMessage is:
+#. manage your profile
+msgctxt "Profile.manageYourProfile"
+msgid "manage your profile"
+msgstr ""
+
 #: translations/messages/src/components/notification.json
 #. [notification.purchased]
 #. defaultMessage is:
@@ -1261,6 +1989,22 @@ msgstr ""
 #. withdrawn
 msgctxt "notification.withdrawn"
 msgid "withdrawn"
+msgstr ""
+
+#: translations/messages/src/pages/profile/_Wallet.json
+#. [_Wallet.ethBalance]
+#. defaultMessage is:
+#. {balance} ETH
+msgctxt "_Wallet.ethBalance"
+msgid "{balance} ETH"
+msgstr ""
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.shouldBeOnRinkeby]
+#. defaultMessage is:
+#. {currentProvider} should be on Rinkeby Test Network
+msgctxt "web3-provider.shouldBeOnRinkeby"
+msgid "{currentProvider} should be on Rinkeby Test Network"
 msgstr ""
 
 #: translations/messages/src/components/listings-grid.json
