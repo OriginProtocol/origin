@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'react-intl'
 import { showAlert } from '../actions/Alert'
 import { storeWeb3Intent } from '../actions/App'
+import getCurrentProvider from '../utils/getCurrentProvider'
 
 import Modal from './modal'
 import Review from './review'
@@ -41,6 +42,7 @@ class ListingsDetail extends Component {
       reviews: [],
       purchases: [],
       step: this.STEP.VIEW,
+      currentProvider: getCurrentProvider(origin && origin.contractService && origin.contractService.web3)
     }
 
     this.intlMessages = defineMessages({
@@ -179,8 +181,11 @@ class ListingsDetail extends Component {
             <br />
             <FormattedMessage
               id={ 'listing-detail.pressSubmitInMetaMask' }
-              defaultMessage={ 'Press {submit} in MetaMask window' }
-              values={{ submit: <span>&ldquo;Submit&rdquo;</span> }}
+              defaultMessage={ 'Press {submit} in {currentProvider} window' }
+              values={{
+                currentProvider: this.state.currentProvider,
+                submit: <span>&ldquo;Submit&rdquo;</span>,
+              }}
             />
           </Modal>
         }

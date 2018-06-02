@@ -22,7 +22,7 @@ const web3 = new Web3(
   // Use wallet-enabled browser provider
   Web3.givenProvider ||
   // Create a provider with Infura node
-  new Web3.providers.HttpProvider(defaultProviderUrl)
+  new Web3.providers.HttpProvider(defaultProviderUrl, 20000)
 )
 
 const config = {

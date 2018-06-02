@@ -7,7 +7,9 @@ import Modal from './modal'
 
 import origin from '../services/origin'
 import Store from '../Store'
+import { showAlert } from '../actions/Alert'
 import { storeWeb3Account, storeWeb3Intent } from '../actions/App'
+import getCurrentProvider from '../utils/getCurrentProvider'
 
 const web3 = origin.contractService.web3
 const productionHostname = process.env.PRODUCTION_DOMAIN || 'demo.originprotocol.com'
@@ -99,10 +101,10 @@ const NotWeb3EnabledMobile = props => (
   </Modal>
 )
 
-const NoWeb3Account = props => (
+const NoWeb3Account = ({ currentProvider, storeWeb3Intent, web3Intent }) => (
   <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
     <div className="image-container">
-      <img src="images/metamask.png" role="presentation" />
+      <img src={`images/${currentProvider === 'MetaMask' ? 'metamask' : 'ethereum'}.png`} role="presentation" />
     </div>
     <a
       className="close"
@@ -111,11 +113,11 @@ const NoWeb3Account = props => (
     >
       <span aria-hidden="true">&times;</span>
     </a>
-    <div>In order to {props.web3Intent}, you must sign in to MetaMask.</div>
+    <div>In order to {web3Intent}, you must sign in to {currentProvider}.</div>
     <div className="button-container">
       <button
         className="btn btn-clear"
-        onClick={() => props.storeWeb3Intent(null)}
+        onClick={() => storeWeb3Intent(null)}
       >
         OK
       </button>
@@ -141,7 +143,7 @@ const UnsupportedNetwork = props => (
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
     <p>
-      <span className="line">{ (props.onMobile) ? "Your wallet-enabled browser" : "MetaMask" } should be on&nbsp;</span>
+      <span className="line">{props.currentProvider} should be on&nbsp;</span>
       <span className="line"><strong>Rinkeby Test Network</strong></span>
     </p>
     Currently on {props.currentNetworkName}.
@@ -179,11 +181,12 @@ class Web3Provider extends Component {
     this.networkInterval = null
     this.fetchAccounts = this.fetchAccounts.bind(this)
     this.fetchNetwork = this.fetchNetwork.bind(this)
+    this.handleAccounts = this.handleAccounts.bind(this)
     this.state = {
       networkConnected: null,
       networkId: null,
       networkError: null,
-      provider: null,
+      currentProvider: getCurrentProvider(web3)
     }
   }
 
@@ -218,7 +221,7 @@ class Web3Provider extends Component {
    */
   initNetworkPoll() {
     if (!this.networkInterval) {
-      this.networkInterval = setInterval(this.fetchNetwork, ONE_MINUTE)
+      this.networkInterval = setInterval(this.fetchNetwork, ONE_SECOND)
     }
   }
 
@@ -227,13 +230,37 @@ class Web3Provider extends Component {
    * @return {void}
    */
   fetchAccounts() {
-    web3.eth.getAccounts((err, accounts) => {
-      if (err) {
-        console.error(err)
-      } else {
-        this.handleAccounts(accounts)
-      }
-    })
+    this.state.networkConnected &&
+      web3.eth.getAccounts((err, accounts) => {
+        if (err) {
+          console.log(err)
+
+          this.setState({ accountsError: err })
+        } else {
+          this.handleAccounts(accounts)
+        }
+
+        if (!this.state.accountsLoaded) {
+          this.setState({ accountsLoaded: true })
+        }
+      })
+  }
+
+  handleAccounts(accounts) {
+    let next = accounts[0]
+    let curr = this.state.accounts[0]
+    next = next && next.toLowerCase()
+    curr = curr && curr.toLowerCase()
+
+    if (curr !== next) {
+      this.setState({
+        accountsError: null,
+        accounts
+      })
+
+      // force reload instead of showing alert
+      curr && window.location.reload()
+    }
   }
 
   /**
@@ -242,8 +269,25 @@ class Web3Provider extends Component {
    */
   fetchNetwork() {
     let called = false
+    const providerExists = web3.currentProvider
+    const networkConnected = web3.currentProvider.connected || (
+                                  typeof web3.currentProvider.isConnected === 'function' &&
+                                  web3.currentProvider.isConnected()
+                                )
 
-    web3.currentProvider &&
+    if (networkConnected !== this.state.networkConnected) {
+      if (this.state.networkConnected !== null) {
+        // switch from one second to one minute after change
+        clearInterval(this.networkInterval)
+
+        this.networkInterval = setInterval(this.fetchNetwork, ONE_MINUTE)
+      }
+
+      this.setState({ networkConnected })
+    }
+
+    providerExists &&
+      networkConnected &&
       web3.version &&
       web3.eth.net.getId((err, netId) => {
         called = true
@@ -269,20 +313,6 @@ class Web3Provider extends Component {
           })
         }
       })
-
-    // Delay and condition the use of the network value.
-    // https://github.com/MetaMask/metamask-extension/issues/1380#issuecomment-375980850
-    if (this.state.networkConnected === null) {
-      setTimeout(() => {
-        !called &&
-          web3 &&
-          web3.version &&
-          (web3.version.network === 'loading' || !web3.version.network) &&
-          this.setState({
-            networkConnected: false
-          })
-      }, 4000)
-    }
   }
 
   handleAccounts(accounts) {
@@ -299,7 +329,7 @@ class Web3Provider extends Component {
 
   render() {
     const { onMobile, web3Account, web3Intent, storeWeb3Intent } = this.props
-    const { networkConnected, networkId, provider } = this.state
+    const { networkConnected, networkId, currentProvider } = this.state
     const currentNetworkName = networkNames[networkId]
       ? networkNames[networkId]
       : networkId
@@ -309,23 +339,23 @@ class Web3Provider extends Component {
     return (
       <Fragment>
 
-        { /* provider should always be present */
-          !provider &&
+        { /* currentProvider should always be present */
+          !currentProvider &&
           <Web3Unavailable onMobile={onMobile} />
         }
 
         { /* networkConnected initial state is null */
-          provider &&
+          currentProvider &&
           networkConnected === false &&
           <UnconnectedNetwork />
         }
 
         { /* production  */
-          provider &&
+          currentProvider &&
           networkId &&
           inProductionEnv &&
           networkNotSupported &&
-          <UnsupportedNetwork currentNetworkName={currentNetworkName} onMobile={onMobile} />
+          <UnsupportedNetwork currentNetworkName={currentNetworkName} currentProvider={currentProvider} />
         }
 
         { /* attempting to use web3 in unsupported mobile browser */
@@ -346,7 +376,7 @@ class Web3Provider extends Component {
           web3Intent &&
           web3.givenProvider &&
           web3Account === undefined &&
-          <NoWeb3Account web3Intent={web3Intent} storeWeb3Intent={storeWeb3Intent} />
+          <NoWeb3Account web3Intent={web3Intent} storeWeb3Intent={storeWeb3Intent} currentProvider={currentProvider} />
         }
 
         {this.props.children}

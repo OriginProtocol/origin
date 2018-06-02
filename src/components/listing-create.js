@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import origin from '../services/origin'
+import getCurrentProvider from '../utils/getCurrentProvider'
 
 import { showAlert } from '../actions/Alert'
 
@@ -71,7 +72,8 @@ class ListingCreate extends Component {
       selectedSchemaType: this.schemaList[0],
       selectedSchema: null,
       schemaFetched: false,
-      formListing: {formData: null}
+      formListing: {formData: null},
+      currentProvider: getCurrentProvider(origin && origin.contractService && origin.contractService.web3)
     }
 
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
@@ -314,8 +316,11 @@ class ListingCreate extends Component {
                 <br />
                 <FormattedMessage
                   id={ 'listing-create.pressSubmitInMetaMask' }
-                  defaultMessage={ 'Press {submit} in MetaMask window' }
-                  values={{ submit: <span>&ldquo;Submit&rdquo;</span> }}
+                  defaultMessage={ 'Press {submit} in {currentProvider} window' }
+                  values={{
+                    currentProvider: this.state.currentProvider,
+                    submit: <span>&ldquo;Submit&rdquo;</span>,
+                  }}
                 />
               </Modal>
             }

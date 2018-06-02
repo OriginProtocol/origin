@@ -29,6 +29,9 @@ import ConfirmPublish from './ConfirmPublish'
 import ConfirmUnload from './ConfirmUnload'
 import AttestationSuccess from './AttestationSuccess'
 
+import getCurrentProvider from '../../utils/getCurrentProvider'
+import origin from '../../services/origin'
+
 class Profile extends Component {
   constructor(props) {
     super(props)
@@ -67,7 +70,8 @@ class Profile extends Component {
         published: 0,
       },
       provisional: props.provisional,
-      successMessage: '',
+      currentProvider: getCurrentProvider(origin && origin.contractService && origin.contractService.web3),
+      successMessage: ''
     }
   }
 
@@ -384,7 +388,7 @@ class Profile extends Component {
               <img src="images/spinner-animation.svg" role="presentation" />
             </div>
             Confirm transaction<br />
-            Press &ldquo;Submit&rdquo; in MetaMask window
+            Press &ldquo;Submit&rdquo; in {this.state.currentProvider} window
           </Modal>
         )}
 
