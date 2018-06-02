@@ -28,7 +28,7 @@ class SearchListings(Resource):
         search_client = SearchClient.instance()
         return handle_request(
             data=request.values,
-            handler=safe_handler(search_client.listings),
+            handler=safe_handler(search_client.search_listings),
             request_schema=ListingsRequest,
             response_schema=ListingsResponse)
 
