@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router-dom'
 import { fetchUser } from 'actions/User'
 import Avatar from './avatar'
@@ -21,7 +22,13 @@ class UserCard extends Component {
     return (
       <div className="user-card placehold">
         <div className="identity">
-          <h3>About the {title}</h3>
+          <h3>
+            <FormattedMessage
+              id={ 'user-card.heading' }
+              defaultMessage={ 'About the {title}' }
+              values={{ title }}
+            />
+          </h3>
           <div className="d-flex">
             <div className="image-container">
               <Link to={`/users/${userAddress}`}>
@@ -31,7 +38,12 @@ class UserCard extends Component {
               </Link>
             </div>
             <div>
-              <div>ETH Address:</div>
+              <div>
+                <FormattedMessage
+                  id={ 'transaction-progress.ethAddress' }
+                  defaultMessage={ 'ETH Address:' }
+                />
+              </div>
               <div className="address">{userAddress && <EtherscanLink hash={userAddress} />}</div>
             </div>
           </div>
@@ -67,7 +79,12 @@ class UserCard extends Component {
             </div>
           </div>
         </div>
-        <Link to={`/users/${userAddress}`} className="btn placehold">View Profile</Link>
+        <Link to={`/users/${userAddress}`} className="btn placehold">
+          <FormattedMessage
+            id={ 'transaction-progress.viewProfile' }
+            defaultMessage={ 'View Profile' }
+          />
+        </Link>
       </div>
     )
   }

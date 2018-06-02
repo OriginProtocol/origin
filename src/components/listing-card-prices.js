@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { FormattedMessage } from 'react-intl'
 
 const baseCurrencyCode = 'ETH';
 
@@ -58,12 +59,28 @@ class ListingCardPrices extends Component {
         <div className="d-flex align-items-center price-container">
           <div>
             <div className="d-inline-block price placehold">
-              {this.state.exchangeRate == null && "Loading..." }
+              {this.state.exchangeRate == null &&
+                <FormattedMessage
+                  id={ 'listing-card-prices.loadingMessage' }
+                  defaultMessage={ 'Loading...' }
+                />
+              }
               {this.state.exchangeRate != null && this.formatApproxPrice() + " " + this.state.currencyCode }
-              <span className="alternate-price text-muted"> | {`${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 5, maximumFractionDigits: 9})}`} ETH</span>
+              <span className="alternate-price text-muted">
+                &nbsp;| {`${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 5, maximumFractionDigits: 9})}`}&nbsp;
+                <FormattedMessage
+                  id={ 'listing-card-prices.ethereumCurrencyAbbrev' }
+                  defaultMessage={ 'ETH' }
+                />
+              </span>
             </div>
             {this.props.unitsAvailable === 0 &&
-              <span className="sold-banner">Sold</span>
+              <span className="sold-banner">
+                <FormattedMessage
+                  id={ 'listing-card-prices.sold' }
+                  defaultMessage={ 'Sold' }
+                />
+              </span>
             }
           </div>
         </div>

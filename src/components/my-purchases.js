@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import MyPurchaseCard from './my-purchase-card'
+import { FormattedMessage } from 'react-intl'
 
 import { storeWeb3Intent } from '../actions/App'
 import origin from '../services/origin'
@@ -112,21 +113,51 @@ class MyPurchases extends Component {
         <div className="container">
           <div className="row">
             <div className="col-12">
-              <h1>My Purchases</h1>
+              <h1>
+                <FormattedMessage
+                  id={ 'my-purchases.myPurchasesHeading' }
+                  defaultMessage={ 'My Purchases' }
+                />
+              </h1>
             </div>
           </div>
           <div className="row">
             <div className="col-12 col-md-3">
-              {loading && 'Loading...'}
-              {!loading && !purchases.length && 'You currently have no purchases.'}
+              {loading && 
+                <FormattedMessage
+                  id={ 'my-purchases.loading' }
+                  defaultMessage={ 'Loading...' }
+                />
+              }
+              {!loading && !purchases.length &&
+                <FormattedMessage
+                  id={ 'my-purchases.noPurchases' }
+                  defaultMessage={ 'You currently have no purchases.' }
+                />
+              }
               {!loading && !!purchases.length &&
                 <div className="filters list-group flex-row flex-md-column">
                   <a className={`list-group-item list-group-item-action${filter === 'pending' ? ' active' : ''}`}
-                    onClick={() => this.setState({ filter: 'pending' })}>Pending</a>
+                    onClick={() => this.setState({ filter: 'pending' })}>
+                    <FormattedMessage
+                      id={ 'my-purchases.pending' }
+                      defaultMessage={ 'Pending' }
+                    />
+                  </a>
                   <a className={`list-group-item list-group-item-action${filter === 'complete' ? ' active' : ''}`}
-                    onClick={() => this.setState({ filter: 'complete' })}>Complete</a>
+                    onClick={() => this.setState({ filter: 'complete' })}>
+                    <FormattedMessage
+                      id={ 'my-purchases.complete' }
+                      defaultMessage={ 'Complete' }
+                    />
+                  </a>
                   <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`}
-                    onClick={() => this.setState({ filter: 'all' })}>All</a>
+                    onClick={() => this.setState({ filter: 'all' })}>
+                    <FormattedMessage
+                      id={ 'my-purchases.all' }
+                      defaultMessage={ 'All' }
+                    />
+                  </a>
                 </div>
               }
             </div>

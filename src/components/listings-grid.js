@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { FormattedMessage, FormattedNumber } from 'react-intl'
 
 import { getListingIds } from '../actions/Listing'
 
@@ -37,14 +38,29 @@ class ListingsGrid extends Component {
         {contractFound === false && (
           <div className="listings-grid">
             <div className="alert alert-warning" role="alert">
-              The Origin Contract was not found on this network.<br />
-              You may need to change networks, or deploy the contract.
+              <FormattedMessage
+                id={ 'listings-grid.originContractNotFound' }
+                defaultMessage={ 'The Origin Contract was not found on this network.' }
+              />
+              <br />
+              <FormattedMessage
+                id={ 'listings-grid.changeNetworks' }
+                defaultMessage={ 'You may need to change networks, or deploy the contract.' }
+              />
             </div>
           </div>
         )}
         {contractFound && (
           <div className="listings-grid">
-            {listingIds.length > 0 && <h1>{listingIds.length} Listings</h1>}
+            {listingIds.length > 0 && 
+              <h1>
+                <FormattedMessage
+                  id={ 'listings-grid.listingsCount' }
+                  defaultMessage={ '{listingIdsCount} Listings' }
+                  values={{ listingIdsCount: <FormattedNumber value={ listingIds.length } /> }}
+                />
+              </h1>
+            }
             <div className="row">
               {showListingsIds.map(listingId => (
                 <ListingCard listingId={listingId} key={listingId} hideList={hideList} />
