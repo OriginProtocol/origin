@@ -148,7 +148,7 @@ const NoWeb3Account = ({ currentProvider, storeWeb3Intent, web3Intent }) => (
     <a
       className="close"
       aria-label="Close"
-      onClick={() => props.storeWeb3Intent(null)}
+      onClick={() => storeWeb3Intent(null)}
     >
       <span aria-hidden="true">&times;</span>
     </a>
@@ -156,7 +156,7 @@ const NoWeb3Account = ({ currentProvider, storeWeb3Intent, web3Intent }) => (
       <FormattedMessage
         id={ 'web3-provider.intentRequiresSignIn' }
         defaultMessage={ 'In order to {web3Intent}, you must sign in to {currentProvider}.' }
-        values={{ web3Intent }}
+        values={{ web3Intent, currentProvider }}
       />
     </div>
     <div className="button-container">
@@ -214,7 +214,9 @@ const Web3Unavailable = props => (
           defaultMessage={ 'Please install the MetaMask extension to access this site.' }
         />
         <br />
-        <a target="_blank" href="https://metamask.io/">
+        <a target="_blank"
+          rel="noopener noreferrer"
+          href="https://metamask.io/">
           <FormattedMessage
             id={ 'web3-provider.getMetaMask' }
             defaultMessage={ 'Get MetaMask' }
@@ -225,7 +227,7 @@ const Web3Unavailable = props => (
           rel="noopener noreferrer"
           href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58">
           <FormattedMessage
-            id={ 'web3-provider.fullInstructions' }
+            id={ 'web3-provider.fullInstructionsForDemo' }
             defaultMessage={ 'Full Instructions for Demo' }
           />
         </a>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { FormattedMessage } from 'react-intl'
 import AvatarEditor from 'react-avatar-editor'
 import readAndCompressImage from 'browser-image-resizer';
 
@@ -39,7 +40,12 @@ class EditProfile extends Component {
 
     return (
       <Modal isOpen={open} data-modal="profile" handleToggle={handleToggle}>
-        <h2>Edit Profile</h2>
+        <h2>
+          <FormattedMessage
+            id={ 'EditProfile.editProfileHeading' }
+            defaultMessage={ 'Edit Profile' }
+          />
+        </h2>
         <form
           onSubmit={async e => {
             e.preventDefault()
@@ -100,7 +106,12 @@ class EditProfile extends Component {
               </div>
               <div className="col-12 col-sm-6">
                 <div className="form-group">
-                  <label htmlFor="first-name">First Name</label>
+                  <label htmlFor="first-name">
+                    <FormattedMessage
+                      id={ 'EditProfile.firstName' }
+                      defaultMessage={ 'First Name' }
+                    />
+                  </label>
                   <input
                     type="text"
                     ref={this.nameRef}
@@ -114,7 +125,12 @@ class EditProfile extends Component {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="last-name">Last Name</label>
+                  <label htmlFor="last-name">
+                    <FormattedMessage
+                      id={ 'EditProfile.lastName' }
+                      defaultMessage={ 'Last Name' }
+                    />
+                  </label>
                   <input
                     type="text"
                     id="last-name"
@@ -130,7 +146,12 @@ class EditProfile extends Component {
               </div>
               <div className="col-12">
                 <div className="form-group">
-                  <label htmlFor="description">Description</label>
+                  <label htmlFor="description">
+                    <FormattedMessage
+                      id={ 'EditProfile.description' }
+                      defaultMessage={ 'Description' }
+                    />
+                  </label>
                   <textarea
                     rows="4"
                     id="description"
@@ -140,17 +161,27 @@ class EditProfile extends Component {
                     onChange={e =>
                       this.setState({ description: e.currentTarget.value })
                     }
-                    placeholder="Tell us a little something about yourself"
+                    placeholder={ <FormattedMessage 
+                                    id={ 'EditProfile.descriptionPlaceholder' } 
+                                    defaultMesssage={ 'Tell us a little something about yourself' } 
+                                  />
+                                }
                   />
                 </div>
               </div>
               <div className="col-12">
                 <div className="explanation text-center">
-                  This information will be published on the blockchain and will be visible to everyone.
+                  <FormattedMessage
+                    id={ 'EditProfile.publicDataNotice' }
+                    defaultMessage={ 'This information will be published on the blockchain and will be visible to everyone.' }
+                  />
                 </div>
                 <div className="button-container d-flex justify-content-center">
                   <button type="submit" className="btn btn-clear">
-                    Continue
+                    <FormattedMessage
+                      id={ 'EditProfile.continue' }
+                      defaultMessage={ 'Continue' }
+                    />
                   </button>
                 </div>
                 <div className="link-container text-center">
@@ -159,7 +190,10 @@ class EditProfile extends Component {
                     data-modal="profile"
                     onClick={handleToggle}
                   >
-                    Cancel
+                    <FormattedMessage
+                      id={ 'EditProfile.cancel' }
+                      defaultMessage={ 'Cancel' }
+                    />
                   </a>
                 </div>
               </div>

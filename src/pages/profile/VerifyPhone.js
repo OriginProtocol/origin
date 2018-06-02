@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { FormattedMessage } from 'react-intl'
 
 import origin from '../../services/origin'
 
@@ -45,12 +46,20 @@ class VerifyPhone extends Component {
             }
           }}
         >
-          <h2>Verify Your Phone Number</h2>
+          <h2>
+            <FormattedMessage
+              id={ 'VerifyPhone.verifyPhoneHeading' }
+              defaultMessage={ 'Verify Your Phone Number' }
+            />
+          </h2>
           {this.state.mode === 'phone' && this.renderPhoneForm()}
           {this.state.mode === 'code' && this.renderCodeForm()}
           <div className="button-container">
             <button type="submit" className="btn btn-clear">
-              Continue
+              <FormattedMessage
+                id={ 'VerifyPhone.continue' }
+                defaultMessage={ 'Continue' }
+              />
             </button>
           </div>
           <div className="link-container">
@@ -59,7 +68,10 @@ class VerifyPhone extends Component {
               data-modal="phone"
               onClick={this.props.handleToggle}
             >
-              Cancel
+              <FormattedMessage
+                id={ 'VerifyPhone.cancel' }
+                defaultMessage={ 'Cancel' }
+              />
             </a>
           </div>
         </form>
@@ -71,9 +83,11 @@ class VerifyPhone extends Component {
     return (
       <div className="form-group">
         <label htmlFor="phoneNumber">
-          {'Enter your phone number below and Origin'}
-          <sup>ID</sup>
-          {' will send you a verification code'}
+          <FormattedMessage
+            id={ 'VerifyPhone.enterPhoneNumber' }
+            defaultMessage={ 'Enter your phone number below and {originId} will send you a verification code' }
+            values={{ originId: <span>Origin<sup>ID</sup></span> }}
+          />
         </label>
         <div className="d-flex">
           <div className="country-code dropdown">
@@ -132,9 +146,10 @@ class VerifyPhone extends Component {
           />
         </div>
         <div className="explanation">
-          {'Other users will know that you have a verified phone number. Your actual phone number '}
-          <strong>will not</strong>
-          {' be published on the blockchain.'}
+           <FormattedMessage
+            id={ 'VerifyPhone.phoneNumberNotPublished' }
+            defaultMessage={ 'Other users will know that you have a verified phone number. Your actual phone number will not be published on the blockchain.' }
+          />
         </div>
       </div>
     )
@@ -144,7 +159,10 @@ class VerifyPhone extends Component {
     return (
       <div className="form-group">
         <label htmlFor="phoneVerificationCode">
-          Enter the code we sent you below
+          <FormattedMessage
+            id={ 'VerifyPhone.enterCodeBelow' }
+            defaultMessage={ 'Enter the code we sent you below' }
+          />
         </label>
         <input
           className="form-control"

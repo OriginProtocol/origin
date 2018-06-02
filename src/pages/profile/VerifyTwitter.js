@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { FormattedMessage } from 'react-intl'
 import Modal from 'components/modal'
 
 import origin from '../../services/origin'
@@ -28,13 +29,17 @@ class VerifyTwitter extends Component {
         <div className="image-container d-flex align-items-center">
           <img src="images/twitter-icon-dark.svg" role="presentation" />
         </div>
-        <h2>Verify Your Twitter Account</h2>
+        <h2>
+          <FormattedMessage
+            id={ 'VerifyTwitter.verifyTwitterHeading' }
+            defaultMessage={ 'Verify Your Twitter Account' }
+          />
+        </h2>
         <div className="explanation">
-          Other users will know that you have a verified Twitter account. Your username
-          &nbsp;
-          <strong>will not</strong>
-          &nbsp;
-          be published on the blockchain. We will never tweet on your behalf.
+          <FormattedMessage
+            id={ 'VerifyTwitter.twitterNotPublic' }
+            defaultMessage={ 'Other users will know that you have a verified Twitter account. Your username will not be published on the blockchain. We will never tweet on your behalf.' }
+          />
         </div>
         <div className="button-container">
           <button
@@ -42,7 +47,10 @@ class VerifyTwitter extends Component {
             className="btn btn-clear"
             onClick={() => this.onCertify()}
           >
-            Continue
+            <FormattedMessage
+              id={ 'VerifyTwitter.continue' }
+              defaultMessage={ 'Continue' }
+            />
           </button>
         </div>
         <div className="link-container">
@@ -51,7 +59,10 @@ class VerifyTwitter extends Component {
             data-modal="twitter"
             onClick={this.props.handleToggle}
           >
-            Cancel
+            <FormattedMessage
+              id={ 'VerifyTwitter.cancel' }
+              defaultMessage={ 'Cancel' }
+            />
           </a>
         </div>
       </Modal>
