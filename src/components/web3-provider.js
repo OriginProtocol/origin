@@ -41,17 +41,31 @@ const NotWeb3EnabledDesktop = props => (
     >
       <span aria-hidden="true">&times;</span>
     </a>
-    <div>In order to {props.web3Intent}, you must install MetaMask.</div>
+    <div>
+      <FormattedMessage
+        id={ 'web3-provider.intentRequiresMetaMask' }
+        defaultMessage={ 'In order to {web3Intent}, you must install MetaMask.' }
+        values={{ web3Intent: props.web3Intent }}
+      />
+    </div>
     <div className="button-container d-flex">
       <a href="https://metamask.io/"
         target="_blank"
+        rel="noopener noreferrer"
         className="btn btn-clear">
-        Get MetaMask
+        <FormattedMessage
+          id={ 'web3-provider.getMetaMask' }
+          defaultMessage={ 'Get MetaMask' }
+        />
       </a>
       <a href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58"
         target="_blank"
+        rel="noopener noreferrer"
         className="btn btn-clear">
-        Full Instructions
+        <FormattedMessage
+          id={ 'web3-provider.fullInstructions' }
+          defaultMessage={ 'Full Instructions' }
+        />
       </a>
     </div>
     <FormattedMessage
@@ -74,28 +88,53 @@ const NotWeb3EnabledMobile = props => (
     >
       <span aria-hidden="true">&times;</span>
     </a>
-    <div>In order to {props.web3Intent}, you must use an Ethereum wallet-enabled browser.</div>
+    <div>
+      <FormattedMessage
+        id={ 'web3-provider.intentRequiresEthereumEnabledBrowser' }
+        defaultMessage={ 'In order to {web3Intent}, you must use an Ethereum wallet-enabled browser.' }
+        values={{ web3Intent: props.web3Intent }}
+      />
+    </div>
     <br />
-    <div><strong>Popular Ethereum Wallets</strong></div>
+    <div>
+      <strong>
+        <FormattedMessage
+          id={ 'web3-provider.popularEthereumWallets' }
+          defaultMessage={ 'Popular Ethereum Wallets' }
+        />
+      </strong>
+    </div>
     <div className="button-container">
       <a href="https://trustwalletapp.com/"
         target="_blank"
+        rel="noopener noreferrer"
         className="btn btn-clear">
-        Trust
+        <FormattedMessage
+          id={ 'web3-provider.trust' }
+          defaultMessage={ 'Trust' }
+        />
       </a>
     </div>
     <div className="button-container">
       <a href="https://www.cipherbrowser.com/"
         target="_blank"
+        rel="noopener noreferrer"
         className="btn btn-clear">
-        Cipher
+        <FormattedMessage
+          id={ 'web3-provider.cipher' }
+          defaultMessage={ 'Cipher' }
+        />
       </a>
     </div>
     <div className="button-container">
       <a href="https://www.toshi.org/"
         target="_blank"
+        rel="noopener noreferrer"
         className="btn btn-clear">
-        Toshi
+        <FormattedMessage
+          id={ 'web3-provider.toshi' }
+          defaultMessage={ 'Toshi' }
+        />
       </a>
     </div>
   </Modal>
@@ -113,7 +152,13 @@ const NoWeb3Account = ({ currentProvider, storeWeb3Intent, web3Intent }) => (
     >
       <span aria-hidden="true">&times;</span>
     </a>
-    <div>In order to {web3Intent}, you must sign in to {currentProvider}.</div>
+    <div>
+      <FormattedMessage
+        id={ 'web3-provider.intentRequiresSignIn' }
+        defaultMessage={ 'In order to {web3Intent}, you must sign in to {currentProvider}.' }
+        values={{ web3Intent }}
+      />
+    </div>
     <div className="button-container">
       <button
         className="btn btn-clear"
@@ -143,10 +188,17 @@ const UnsupportedNetwork = props => (
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
     <p>
-      <span className="line">{props.currentProvider} should be on&nbsp;</span>
-      <span className="line"><strong>Rinkeby Test Network</strong></span>
+      <FormattedMessage
+        id={ 'web3-provider.shouldBeOnRinkeby' }
+        defaultMessage={ '{currentProvider} should be on Rinkeby Test Network' }
+        values={{ currentProvider: props.currentProvider }}
+      />
     </p>
-    Currently on {props.currentNetworkName}.
+    <FormattedMessage
+      id={ 'web3-provider.currentlyOnNetwork' }
+      defaultMessage={ 'Currently on {currentNetworkName}.' }
+      values={{ currentNetworkName: props.currentNetworkName }}
+    />
   </Modal>
 )
 
@@ -156,18 +208,60 @@ const Web3Unavailable = props => (
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
     {(!props.onMobile || (props.onMobile === "Android")) &&
-      <div>Please install the MetaMask extension<br />to access this site.<br />
-        <a target="_blank" href="https://metamask.io/">Get MetaMask</a><br />
-        <a target="_blank" href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58">
-          Full Instructions for Demo
+      <div>
+        <FormattedMessage
+          id={ 'web3-provider.pleaseInstallMetaMask' }
+          defaultMessage={ 'Please install the MetaMask extension to access this site.' }
+        />
+        <br />
+        <a target="_blank" href="https://metamask.io/">
+          <FormattedMessage
+            id={ 'web3-provider.getMetaMask' }
+            defaultMessage={ 'Get MetaMask' }
+          />
+        </a>
+        <br />
+        <a target="_blank" 
+          rel="noopener noreferrer"
+          href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58">
+          <FormattedMessage
+            id={ 'web3-provider.fullInstructions' }
+            defaultMessage={ 'Full Instructions for Demo' }
+          />
         </a>
       </div>
     }
     {(props.onMobile && (props.onMobile !== "Android")) &&
-      <div>Please access this site through <br />a wallet-enabled browser:<br />
-        <a target="_blank" href="https://itunes.apple.com/us/app/toshi-ethereum/id1278383455">Toshi</a>&nbsp;&nbsp;|&nbsp;
-        <a target="_blank" href="https://itunes.apple.com/us/app/cipher-browser-ethereum/id1294572970">Cipher</a>&nbsp;&nbsp;|&nbsp;
-        <a target="_blank" href="https://itunes.apple.com/ae/app/trust-ethereum-wallet/id1288339409">Trust Wallet</a>
+      <div>
+        <FormattedMessage
+          id={ 'web3-provider.useWalletEnabledBrowser' }
+          defaultMessage={ 'Please access this site through a wallet-enabled browser:' }
+        />
+        <br />
+        <a target="_blank"
+          rel="noopener noreferrer"
+          href="https://itunes.apple.com/us/app/toshi-ethereum/id1278383455">
+          <FormattedMessage
+            id={ 'web3-provider.toshi' }
+            defaultMessage={ 'Toshi' }
+          />
+        </a>&nbsp;&nbsp;|&nbsp;
+        <a target="_blank"
+          rel="noopener noreferrer"
+          href="https://itunes.apple.com/us/app/cipher-browser-ethereum/id1294572970">
+          <FormattedMessage
+            id={ 'web3-provider.cipher' }
+            defaultMessage={ 'Cipher' }
+          />
+        </a>&nbsp;&nbsp;|&nbsp;
+        <a target="_blank"
+          rel="noopener noreferrer"
+          href="https://itunes.apple.com/ae/app/trust-ethereum-wallet/id1288339409">
+          <FormattedMessage
+            id={ 'web3-provider.trustWallet' }
+            defaultMessage={ 'Trust Wallet' }
+          />
+        </a>
       </div>
     }
   </Modal>
