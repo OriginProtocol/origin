@@ -23,7 +23,7 @@ class Wallet extends Component {
         <hr className="dark sm" />
         <div className="detail d-flex">
           <div>Account Balance:</div>
-          <div>{balance} ETH</div>
+          <div>{Number(balance).toLocaleString(undefined, {minimumFractionDigits: 5})} ETH</div>
         </div>
         {/* Hidden for current deployment */}
         {/*<div className="detail d-flex">
