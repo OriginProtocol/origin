@@ -21,10 +21,10 @@ class EventType(Enum):
 
 
 EVENT_HASH_TO_EVENT_TYPE_MAP = {
-    Web3.sha3(text='NewListing(uint256)').hex(): EventType.NEW_LISTING,
+    Web3.sha3(text='NewListing(uint256,address)').hex(): EventType.NEW_LISTING,
     Web3.sha3(text='ListingPurchased(address)').hex(): EventType.LISTING_PURCHASED,
     Web3.sha3(text='ListingChange()').hex(): EventType.LISTING_CHANGE,
-    Web3.sha3(text='PurchaseChange(Stages)').hex(): EventType.PURCHASE_CHANGE,
+    Web3.sha3(text='PurchaseChange(uint8)').hex(): EventType.PURCHASE_CHANGE,
     Web3.sha3(text='PurchaseReview(address,address,uint8,uint8,bytes32)').hex():
         EventType.PURCHASE_REVIEW,
 }
@@ -140,7 +140,7 @@ class EventHandler():
         contract = contract_helper.get_instance('ListingsRegistry',
                                                 payload['address'])
         registry_index = contract_helper.convert_event_data('NewListing',
-                                                            payload['data'])
+                                                            payload['data'])[0]
         listing_data = contract.functions.getListing(registry_index).call()
         return listing_data[0]
 

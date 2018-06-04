@@ -17,9 +17,9 @@ class TestEventHandler():
         assert mock_search_indexer.create_or_update_listing.call_count == 2
 
         # Handler should have received a LISTING_PURCHASED event.
-        assert mock_db_indexer.create_or_update_purchase.call_count == 1
-        assert mock_notifier.notify_purchased.call_count == 1
-        assert mock_search_indexer.create_or_update_purchase.call_count == 1
+        assert mock_db_indexer.create_or_update_purchase.call_count > 1
+        assert mock_notifier.notify_purchased.call_count > 1
+        assert mock_search_indexer.create_or_update_purchase.call_count > 1
 
         # Handler should have received a PURCHASE_REVIEW event.
         assert mock_db_indexer.create_or_update_review.call_count == 1

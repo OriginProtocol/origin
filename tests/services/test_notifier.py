@@ -83,16 +83,16 @@ def test_endpoint_notification(
 
     apn_notification_list = mock_apns.return_value.send_notification.call_args_list
     assert len([1 for b in apn_notification_list if b[0]
-                [0] == buyer_apn_notify_token]) == 1
+                [0] == buyer_apn_notify_token]) == 2
     assert len([1 for b in apn_notification_list if b[0]
-                [0] == seller_apn_notify_token]) == 3
+                [0] == seller_apn_notify_token]) == 4
     assert apn_notification_list[0][0][1].alert.startswith(
         notification_messages[Notification.LIST][:10])
 
     fcm_notification_list = mock_fcm.return_value.notify_single_device.call_args_list
     assert len([1 for b in fcm_notification_list if b[1]
-                ['registration_id'] == buyer_fcm_notify_token]) == 1
+                ['registration_id'] == buyer_fcm_notify_token]) == 2
     assert len([1 for b in fcm_notification_list if b[1]
-                ['registration_id'] == seller_fcm_notify_token]) == 3
+                ['registration_id'] == seller_fcm_notify_token]) == 4
     assert fcm_notification_list[0][1]['message_body'].startswith(
         notification_messages[Notification.LIST][:10])

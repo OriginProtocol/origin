@@ -100,7 +100,7 @@ class ContractHelper:
     @classmethod
     def convert_event_data(cls, event_type, data):
         if event_type == 'NewListing':
-            return int(data, 0)
+            return decode_abi(['uint256', 'address'], hexbytes.HexBytes(data))
         elif event_type == 'ListingPurchased':
             addr = decode_single('address',
                                  hexbytes.HexBytes(data))
