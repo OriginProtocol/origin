@@ -7,7 +7,9 @@ const initialState = {
     intent: null,
   },
   translations: {
-    language: null,
+    selectedLanguageAbbrev: null,
+    selectedLanguageFull: null,
+    availableLanguages: null,
     messages: null
   }
 }
@@ -26,7 +28,15 @@ export default function App(state = initialState, action = {}) {
       return { ...state, web3: { ...state.web3, intent: action.intent }}
 
     case AppConstants.TRANSLATIONS:
-      return { ...state, translations: { language: action.language, messages: action.messages }}
+      return { 
+        ...state, 
+        translations: { 
+          selectedLanguageAbbrev: action.selectedLanguageAbbrev, 
+          selectedLanguageFull: action.selectedLanguageFull,
+          availableLanguages: action.availableLanguages,
+          messages: action.messages 
+        }
+      }
 
     default:
       return state

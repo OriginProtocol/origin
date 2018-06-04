@@ -1,6 +1,6 @@
 import keyMirror from '../utils/keyMirror'
-import addLocales from '../utils/addLocales'
 import translations from '../../translations/translated-messages.json'
+import { addLocales, getLangFullName, getAvailableLanguages } from '../utils/translationUtils'
 
 export const AppConstants = keyMirror(
   {
@@ -24,26 +24,46 @@ export function storeWeb3Intent(intent) {
   return { type: AppConstants.WEB3_INTENT, intent }
 }
 
-export function localizeApp() {
+export function localizeApp(userSelectedLangAbbrev) {
+  let messages;
+  let selectedLanguageAbbrev;
+
   // Add locale data to react-intl
   addLocales()
 
-  // Detect user's preferred settings
-  const detectedLanguage = (navigator.languages && navigator.languages[0]) ||
-                           navigator.language ||
-                           navigator.userLanguage
-
-  // Split locales with a region code
-  // const languageWithoutRegionCode = detectedLanguage.toLowerCase().split(/[_-]+/)[0]
-  const languageWithoutRegionCode = 'zh'
-
   // English is our default - to prevent errors, we set to undefined for English
   // https://github.com/yahoo/react-intl/issues/619#issuecomment-242765427
-  // Try full locale, try locale without region code, fallback to 'en'
-  let messages;
-  if (languageWithoutRegionCode !== 'en') {
-    messages = translations[languageWithoutRegionCode] || translations[detectedLanguage]
+  // If we aren't handling a user-selected language from the dropdown menu
+  // (i.e. if userSelectedLangAbbrev is undefined), try locale without region code
+  if (userSelectedLangAbbrev) {
+
+    selectedLanguageAbbrev = userSelectedLangAbbrev
+
+    // English is our default - to prevent errors, we set to undefined for English
+    if (selectedLanguageAbbrev !== 'en') {
+      messages = translations[userSelectedLangAbbrev]
+    }
+
+  } else {
+
+    // Detect user's preferred settings
+    const detectedLanguage = (navigator.languages && navigator.languages[0]) ||
+                             navigator.language ||
+                             navigator.userLanguage
+
+    // Split locales with a region code
+    selectedLanguageAbbrev = detectedLanguage.toLowerCase().split(/[_-]+/)[0]
+
+    if (selectedLanguageAbbrev !== 'en') {
+      messages = translations[selectedLanguageAbbrev] || translations[detectedLanguage]
+    }
   }
 
-  return { type: AppConstants.TRANSLATIONS, languageWithoutRegionCode, messages }
+  return { 
+    type: AppConstants.TRANSLATIONS,
+    selectedLanguageAbbrev: selectedLanguageAbbrev,
+    selectedLanguageFull: getLangFullName(selectedLanguageAbbrev),
+    availableLanguages: getAvailableLanguages(),
+    messages 
+  }
 }

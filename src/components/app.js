@@ -55,13 +55,11 @@ const UserPage = props => <User userAddress={props.match.params.userAddress} />
 
 // Top level component
 class App extends Component {
-  componentWillMount() {
-    this.props.localizeApp()
-  }
 
   componentDidMount() {
     this.props.fetchProfile()
     this.props.initWallet()
+    this.props.localizeApp()
 
     this.detectMobile()
   }
@@ -84,7 +82,7 @@ class App extends Component {
 
   render() {
     return (
-      <IntlProvider locale={this.props.language || 'en'} messages={this.props.messages}>
+      <IntlProvider locale={this.props.selectedLanguageAbbrev || 'en'} messages={this.props.messages}>
         <Router>
           <ScrollToTop>
             <Web3Provider>
