@@ -1,4 +1,5 @@
 import { addLocaleData } from 'react-intl'
+import translations from '../../translations/translated-messages.json'
 import ar from 'react-intl/locale-data/ar'
 import de from 'react-intl/locale-data/de'
 import el from 'react-intl/locale-data/el'
@@ -17,7 +18,7 @@ import th from 'react-intl/locale-data/th'
 import tr from 'react-intl/locale-data/tr'
 import zh from 'react-intl/locale-data/zh'
 
-const addLocales = () => {
+export function addLocales() {
 
   // If browser doesn't support Intl (i.e. Safari), then we manually import
   // the intl polyfill and locale data.
@@ -57,4 +58,81 @@ const addLocales = () => {
     ...zh])
 }
 
-export default addLocales
+export function getLangFullName(langAbbrev) {
+  
+  switch (langAbbrev) {
+    case 'en':
+      return 'English'
+      
+    case 'de':
+      return 'Deutsch'
+
+    case 'es':
+      return 'Español'
+
+    case 'fr':
+      return 'Français'
+
+    case 'hr':
+      return 'Hrvatski'
+
+    case 'it':
+      return 'Italiano'
+
+    case 'nl':
+      return 'Nederlands'
+
+    case 'pt':
+      return 'Português'
+
+    case 'tr':
+      return 'Türkçe'
+
+    case 'el':
+      return 'Ελληνικά'
+
+    case 'ru':
+      return 'Русский'
+
+    case 'he':
+      return 'עברית'
+
+    case 'ar':
+      return 'العربية'
+
+    case 'th':
+      return 'ไทย'
+
+    case 'ko':
+      return '한국어'
+
+    case 'ja':
+      return '日本語'
+
+    case 'zh':
+      return '简体中文'
+  }
+}
+
+export function getAvailableLanguages() {
+  if (!translations || typeof translations !== 'object') {
+    return [];
+  }
+
+  const availableLangs = []
+
+  for (let languageAbbrev in translations) {
+
+    // Don't include English b/c we hard-code it in the footer dropdown to make sure it's always available
+    if (languageAbbrev !== 'en') {
+
+      availableLangs.push({
+        selectedLanguageAbbrev: languageAbbrev,
+        selectedLanguageFull: getLangFullName(languageAbbrev)
+      })
+
+    }
+  }
+
+  return availableLangs
+}
