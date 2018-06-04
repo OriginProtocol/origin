@@ -56,7 +56,7 @@ contract ListingsRegistry {
 
     // TODO (Stan): Determine if less gas to do one array lookup into var, and
     // return var struct parts
-    Listing listing = Listing(listingStorage.get(_index));
+    Listing listing = Listing(listingStorage.listings(_index));
     return (
       listing,
       listing.owner(),

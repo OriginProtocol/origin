@@ -82,14 +82,6 @@ contract ListingsRegistryStorage {
     return (listings.length-1);
   }
 
-  function get(uint _index)
-    public
-    view
-    returns (address)
-  {
-    return listings[_index];
-  }
-
   function length()
     public
     view
