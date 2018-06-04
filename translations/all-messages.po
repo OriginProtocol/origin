@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-06-04T02:37:08.057Z\n"
+"POT-Creation-Date: 2018-06-04T21:59:21.017Z\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "MIME-Version: 1.0\n"
@@ -1789,6 +1789,14 @@ msgstr ""
 #. Verify yourself on Origin
 msgctxt "Profile.verifyYourselfHeading"
 msgid "Verify yourself on Origin"
+msgstr ""
+
+#: translations/messages/src/pages/profile/_Guidance.json
+#. [_Guidance.verifyingYourProfile]
+#. defaultMessage is:
+#. Verifying your profile
+msgctxt "_Guidance.verifyingYourProfile"
+msgid "Verifying your profile"
 msgstr ""
 
 #: translations/messages/src/components/my-sale-card.json

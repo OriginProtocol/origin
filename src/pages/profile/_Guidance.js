@@ -12,7 +12,10 @@ class Guidance extends Component {
           <FormattedMessage
             id={ '_Guidance.content' }
             defaultMessage={ '{verifyingYourProfile} allows other users to know that you are a real person and increases the chances of successful transactions on Origin.' }
-            values={{ verifyingYourProfile: <strong>Verifying your profile</strong> }}
+            values={{ verifyingYourProfile: (<strong>
+                                                <FormattedMessage id={ '_Guidance.verifyingYourProfile' }
+                                                                  defaultMessage={ 'Verifying your profile' } />
+                                              </strong>) }}
           />
         </p>
       </div>
