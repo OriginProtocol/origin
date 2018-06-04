@@ -3,9 +3,9 @@ pragma solidity 0.4.23;
 
 // ListingsRegistryStorage provides long term storage for the replacable
 // ListingRegistry.
-// 
-// This ListingsRegistryStorage provides only the ability to add new Listing 
-// contracts to storage. There is no provision for deleting them. 
+//
+// This ListingsRegistryStorage provides only the ability to add new Listing
+// contracts to storage. There is no provision for deleting them.
 contract ListingsRegistryStorage {
 
   /*
@@ -73,7 +73,7 @@ contract ListingsRegistryStorage {
   */
 
   function add(address _listingAddress)
-    public 
+    public
     isRegistryOrOwner()
     returns (uint)
   {
