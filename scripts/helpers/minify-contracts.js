@@ -13,8 +13,8 @@ module.exports = function() {
   files.forEach(file => {
     const filePath = `${contractDir}/${file}`
     const contractJSON = fs.readFileSync(filePath).toString()
-    const { abi, bytecode, contractName, networks } = JSON.parse(contractJSON)
-    const simplifiedJSON = { abi, bytecode, contractName, networks }
+    const { abi, bytecode, contractName, networks, ast } = JSON.parse(contractJSON)
+    const simplifiedJSON = { abi, bytecode, contractName, networks, ast }
     fs.writeFileSync(filePath, JSON.stringify(simplifiedJSON, null, 4))
   })
 }
