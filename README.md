@@ -4,7 +4,7 @@
 
 The Origin Bridge Server connects the old world to the new.
 
-Most traditional web APIs, such as those from Facebook and Twitter, can only interact with a centralized server located at a specific domain. A decentralized application, like our Origin Demo DApp, doesn't need to "live" on a particular server. (In fact, you can load it from any IPFS gateway!) Thus, in order for the DApp to use an "old world" API, it needs a Bridge Server. 
+Most traditional web APIs, such as those from Facebook and Twitter, can only interact with a centralized server located at a specific domain. A decentralized application, like our Origin Demo DApp, doesn't need to "live" on a particular server. (In fact, you can load it from any IPFS gateway!) Thus, in order for the DApp to use an "old world" API, it needs a Bridge Server.
 
 Origin hosts a Bridge Server, but in the true spirit of decentralization, anyone is free to clone our open source code and host their own.
 
@@ -78,7 +78,7 @@ You'll need to set a few API keys:
   - TWITTER_CONSUMER_KEY
   - TWITTER_CONSUMER_SECRET
 
-For EnvKey support set ENVKEY to the key of the generated local developement key
+For [EnvKey](https://www.envkey.com/) support, set ENVKEY to the key of the generated local development key.
 
 When deploying, set appropriate environment variables for production, notably
 
@@ -124,11 +124,13 @@ createdb <db-name>  # Anything you want, perhaps bridge-server
 ```
 
 Make sure the DB name you used is indicated in your ```DATABASE_URL``` in the `.env` file.
-Example: `DATABASE_URL`=`postgresql://localhost:5432/bridge_server`
+Example: `DATABASE_URL`=`postgresql://localhost:5432/bridge-server`
 
 
 ```bash
 # Applies all migrations to make the DB current. Works even on an empty database.
+#
+# Run this in the virtual environment you set up above.
 FLASK_APP=main.py flask db upgrade
 ```
 
@@ -151,6 +153,7 @@ alias myenv='cd /path/to/environment/project && source ../bin/activate && export
 ### Run the Server
 
 ```bash
+# Run this in the virtual environment you set up above.
 python main.py
 ```
 
@@ -159,6 +162,7 @@ This starts a development server on ```localhost:5000``` by default.
 ### Run the Celery worker
 
 ```bash
+# Run these in the virtual environment you set up above.
 celery -A util.tasks worker -c=1
 celery -A util.tasks beat
 ```
@@ -244,6 +248,6 @@ We use following buildpacks:
 
 ## Contributing
 
-Origin is an 100% open-source and community-driven project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community. 
+Origin is an 100% open-source and community-driven project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community.
 
 To get involved, please join our [Discord channel](https://discord.gg/jyxpUSe) and review our [guide to contributing](https://docs.originprotocol.com/#contributing).
