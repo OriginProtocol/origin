@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-05-30T16:38:32.451Z\n"
+"POT-Creation-Date: 2018-06-04T02:37:08.057Z\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "MIME-Version: 1.0\n"
@@ -10,53 +10,103 @@ msgstr ""
 #. [user-card.heading]
 #. defaultMessage is:
 #. About the {title}
+msgctxt "user-card.heading"
 msgid "About the {title}"
 msgstr "关于{title}"
+
+#: translations/messages/src/pages/profile/_Wallet.json
+#. [_Wallet.accountBalance]
+#. defaultMessage is:
+#. Account Balance:
+msgctxt "_Wallet.accountBalance"
+msgid "Account Balance:"
+msgstr "账户余额："
 
 #: translations/messages/src/components/my-listings.json
 #. [my-listings.active]
 #. defaultMessage is:
 #. Active
+msgctxt "my-listings.active"
 msgid "Active"
-msgstr "活跃"
+msgstr "活性"
 
 #: translations/messages/src/components/navbar.json
 #. [navbar.addListing]
 #. defaultMessage is:
 #. Add a Listing
+msgctxt "navbar.addListing"
 msgid "Add a Listing"
 msgstr "添加一个列表"
+
+#: translations/messages/src/pages/profile/_Services.json
+#. [_Services.address]
+#. defaultMessage is:
+#. Address
+msgctxt "_Services.address"
+msgid "Address"
+msgstr "地址"
+
+#: translations/messages/src/pages/profile/ConfirmPublish.json
+#. [ConfirmPublish.afterYouPublishNotice]
+#. defaultMessage is:
+#. After you publish your changes to the blockchain, other users will be able to see that you have verified the following:
+msgctxt "ConfirmPublish.afterYouPublishNotice"
+msgid "After you publish your changes to the blockchain, other users will be able to see that you have verified the following:"
+msgstr "将更改发布到区块链后，其他用户将能够看到您已验证以下内容："
 
 #: translations/messages/src/components/my-listings.json
 #. [my-listings.all]
 #. defaultMessage is:
 #. All
+msgctxt "my-listings.all"
+msgid "All"
+msgstr "所有"
+
 #: translations/messages/src/components/my-purchases.json
 #. [my-purchases.all]
 #. defaultMessage is:
 #. All
+msgctxt "my-purchases.all"
+msgid "All"
+msgstr "所有"
+
 #: translations/messages/src/components/my-sales.json
 #. [my-sales.all]
 #. defaultMessage is:
 #. All
+msgctxt "my-sales.all"
+msgid "All"
+msgstr "所有"
+
 #: translations/messages/src/components/notifications.json
 #. [notifications.all]
 #. defaultMessage is:
 #. All
+msgctxt "notifications.all"
 msgid "All"
 msgstr "所有"
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.noDescriptionUser]
+#. defaultMessage is:
+#. An Origin user without a description
+msgctxt "Profile.noDescriptionUser"
+msgid "An Origin user without a description"
+msgstr "没有说明的原始用户"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.announcements]
 #. defaultMessage is:
 #. Announcements
+msgctxt "listing-create.announcements"
 msgid "Announcements"
-msgstr "通知。"
+msgstr "公告"
 
 #: translations/messages/src/components/my-listing-card.json
 #. [my-listing-card.confirmCloseListing]
 #. defaultMessage is:
 #. Are you sure that you want to permanently close this listing? This cannot be undone.
+msgctxt "my-listing-card.confirmCloseListing"
 msgid "Are you sure that you want to permanently close this listing? This cannot be undone."
 msgstr "您确定要永久关闭此列表吗？这不能被撤消。"
 
@@ -64,17 +114,23 @@ msgstr "您确定要永久关闭此列表吗？这不能被撤消。"
 #. [backButtonLabel]
 #. defaultMessage is:
 #. Back
+msgctxt "backButtonLabel"
+msgid "Back"
+msgstr "返回"
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.backButtonLabel]
 #. defaultMessage is:
 #. Back
+msgctxt "listing-create.backButtonLabel"
 msgid "Back"
-msgstr "回去"
+msgstr "返回"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.howItWorksContentPart2]
 #. defaultMessage is:
 #. Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.
+msgctxt "listing-create.howItWorksContentPart2"
 msgid "Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering."
 msgstr "一定要给你的列表一个适当的标题和描述，以告知他人你提供的是什么。"
 
@@ -82,38 +138,103 @@ msgstr "一定要给你的列表一个适当的标题和描述，以告知他人
 #. [navbar.buy]
 #. defaultMessage is:
 #. Buy
+msgctxt "navbar.buy"
+msgid "Buy"
+msgstr "买"
+
 #: translations/messages/src/components/notifications.json
 #. [notifications.buy]
 #. defaultMessage is:
 #. Buy
+msgctxt "notifications.buy"
 msgid "Buy"
-msgstr "购买"
+msgstr "买"
 
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.buyNow]
 #. defaultMessage is:
 #. Buy Now
+msgctxt "listing-detail.buyNow"
 msgid "Buy Now"
-msgstr "立即购买"
+msgstr "现在订购"
+
+#: translations/messages/src/pages/profile/EditProfile.json
+#. [EditProfile.cancel]
+#. defaultMessage is:
+#. Cancel
+msgctxt "EditProfile.cancel"
+msgid "Cancel"
+msgstr "取消"
+
+#: translations/messages/src/pages/profile/VerifyEmail.json
+#. [VerifyEmail.cancel]
+#. defaultMessage is:
+#. Cancel
+msgctxt "VerifyEmail.cancel"
+msgid "Cancel"
+msgstr "取消"
+
+#: translations/messages/src/pages/profile/VerifyFacebook.json
+#. [VerifyFacebook.cancel]
+#. defaultMessage is:
+#. Cancel
+msgctxt "VerifyFacebook.cancel"
+msgid "Cancel"
+msgstr "取消"
+
+#: translations/messages/src/pages/profile/VerifyPhone.json
+#. [VerifyPhone.cancel]
+#. defaultMessage is:
+#. Cancel
+msgctxt "VerifyPhone.cancel"
+msgid "Cancel"
+msgstr "取消"
+
+#: translations/messages/src/pages/profile/VerifyTwitter.json
+#. [VerifyTwitter.cancel]
+#. defaultMessage is:
+#. Cancel
+msgctxt "VerifyTwitter.cancel"
+msgid "Cancel"
+msgstr "取消"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.chooseSchema]
 #. defaultMessage is:
 #. Choose a schema for your product or service
+msgctxt "listing-create.chooseSchema"
 msgid "Choose a schema for your product or service"
 msgstr "为您的产品或服务选择一个模式"
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.cipher]
+#. defaultMessage is:
+#. Cipher
+msgctxt "web3-provider.cipher"
+msgid "Cipher"
+msgstr "密码"
 
 #: translations/messages/src/components/my-listing-card.json
 #. [my-listing-card.closeListing]
 #. defaultMessage is:
 #. Close Listing
+msgctxt "my-listing-card.closeListing"
 msgid "Close Listing"
 msgstr "关闭清单"
+
+#: translations/messages/src/pages/profile/_Services.json
+#. [_Services.comingSoon]
+#. defaultMessage is:
+#. Coming {br} Soon
+msgctxt "_Services.comingSoon"
+msgid "Coming {br} Soon"
+msgstr "即将到来"
 
 #: translations/messages/src/components/footer.json
 #. [footer.communityHeading]
 #. defaultMessage is:
 #. Community
+msgctxt "footer.communityHeading"
 msgid "Community"
 msgstr "社区"
 
@@ -121,10 +242,15 @@ msgstr "社区"
 #. [my-purchases.complete]
 #. defaultMessage is:
 #. Complete
+msgctxt "my-purchases.complete"
+msgid "Complete"
+msgstr "完成"
+
 #: translations/messages/src/components/my-sales.json
 #. [my-sales.complete]
 #. defaultMessage is:
 #. Complete
+msgctxt "my-sales.complete"
 msgid "Complete"
 msgstr "完成"
 
@@ -132,10 +258,23 @@ msgstr "完成"
 #. [listing-create.confirmTransaction]
 #. defaultMessage is:
 #. Confirm transaction
+msgctxt "listing-create.confirmTransaction"
+msgid "Confirm transaction"
+msgstr "确认交易"
+
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.confirmTransaction]
 #. defaultMessage is:
 #. Confirm transaction
+msgctxt "listing-detail.confirmTransaction"
+msgid "Confirm transaction"
+msgstr "确认交易"
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.confirmTransaction]
+#. defaultMessage is:
+#. Confirm transaction
+msgctxt "Profile.confirmTransaction"
 msgid "Confirm transaction"
 msgstr "确认交易"
 
@@ -143,6 +282,7 @@ msgstr "确认交易"
 #. [web3-provider.connecting]
 #. defaultMessage is:
 #. Connecting to network...
+msgctxt "web3-provider.connecting"
 msgid "Connecting to network..."
 msgstr "连接到网络..."
 
@@ -150,6 +290,63 @@ msgstr "连接到网络..."
 #. [continueButtonLabel]
 #. defaultMessage is:
 #. Continue
+msgctxt "continueButtonLabel"
+msgid "Continue"
+msgstr "继续"
+
+#: translations/messages/src/pages/profile/AttestationSuccess.json
+#. [AttestationSuccess.continue]
+#. defaultMessage is:
+#. Continue
+msgctxt "AttestationSuccess.continue"
+msgid "Continue"
+msgstr "继续"
+
+#: translations/messages/src/pages/profile/EditProfile.json
+#. [EditProfile.continue]
+#. defaultMessage is:
+#. Continue
+msgctxt "EditProfile.continue"
+msgid "Continue"
+msgstr "继续"
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.continue]
+#. defaultMessage is:
+#. Continue
+msgctxt "Profile.continue"
+msgid "Continue"
+msgstr "继续"
+
+#: translations/messages/src/pages/profile/VerifyEmail.json
+#. [VerifyEmail.continue]
+#. defaultMessage is:
+#. Continue
+msgctxt "VerifyEmail.continue"
+msgid "Continue"
+msgstr "继续"
+
+#: translations/messages/src/pages/profile/VerifyFacebook.json
+#. [VerifyFacebook.continue]
+#. defaultMessage is:
+#. Continue
+msgctxt "VerifyFacebook.continue"
+msgid "Continue"
+msgstr "继续"
+
+#: translations/messages/src/pages/profile/VerifyPhone.json
+#. [VerifyPhone.continue]
+#. defaultMessage is:
+#. Continue
+msgctxt "VerifyPhone.continue"
+msgid "Continue"
+msgstr "继续"
+
+#: translations/messages/src/pages/profile/VerifyTwitter.json
+#. [VerifyTwitter.continue]
+#. defaultMessage is:
+#. Continue
+msgctxt "VerifyTwitter.continue"
 msgid "Continue"
 msgstr "继续"
 
@@ -157,27 +354,47 @@ msgstr "继续"
 #. [listing-create.createListingHeading]
 #. defaultMessage is:
 #. Create your listing
+msgctxt "listing-create.createListingHeading"
 msgid "Create your listing"
 msgstr "创建您的列表"
 
 #: translations/messages/src/components/web3-provider.json
-#. [web3-provider.currentNetwork]
+#. [web3-provider.currentlyOnNetwork]
 #. defaultMessage is:
-#. Currently on {networkName}.
-msgid "Currently on {networkName}."
-msgstr "目前位于{networkName}。"
+#. Currently on {currentNetworkName}.
+msgctxt "web3-provider.currentlyOnNetwork"
+msgid "Currently on {currentNetworkName}."
+msgstr "目前位于{currentNetworkName}。"
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.deployingIdentity]
+#. defaultMessage is:
+#. Deploying your identity
+msgctxt "Profile.deployingIdentity"
+msgid "Deploying your identity"
+msgstr "部署您的身份"
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.description]
 #. defaultMessage is:
 #. Description
+msgctxt "_ProvisionedChanges.description"
 msgid "Description"
-msgstr "Description"
+msgstr "描述"
+
+#: translations/messages/src/pages/profile/EditProfile.json
+#. [EditProfile.description]
+#. defaultMessage is:
+#. Description
+msgctxt "EditProfile.description"
+msgid "Description"
+msgstr "描述"
 
 #: translations/messages/src/components/footer.json
 #. [footer.discordLink]
 #. defaultMessage is:
 #. Discord
+msgctxt "footer.discordLink"
 msgid "Discord"
 msgstr "不和"
 
@@ -185,6 +402,7 @@ msgstr "不和"
 #. [footer.docsLink]
 #. defaultMessage is:
 #. Docs
+msgctxt "footer.docsLink"
 msgid "Docs"
 msgstr "档案
 "
@@ -193,14 +411,23 @@ msgstr "档案
 #. [footer.documentationHeading]
 #. defaultMessage is:
 #. Documentation
+msgctxt "footer.documentationHeading"
 msgid "Documentation"
-msgstr "文件
-"
+msgstr "文档"
+
+#: translations/messages/src/pages/profile/AttestationSuccess.json
+#. [AttestationSuccess.publishChangesReminder]
+#. defaultMessage is:
+#. Don't forget to publish your changes.
+msgctxt "AttestationSuccess.publishChangesReminder"
+msgid "Don't forget to publish your changes."
+msgstr "不要忘记发布您的更改。"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.doneButtonLabel]
 #. defaultMessage is:
 #. Done
+msgctxt "listing-create.doneButtonLabel"
 msgid "Done"
 msgstr "完成"
 
@@ -208,22 +435,39 @@ msgstr "完成"
 #. [listing-card-prices.ethereumCurrencyAbbrev]
 #. defaultMessage is:
 #. ETH
+msgctxt "listing-card-prices.ethereumCurrencyAbbrev"
+msgid "ETH"
+msgstr "ETH"
+
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.ethereumCurrencyAbbrev]
 #. defaultMessage is:
 #. ETH
+msgctxt "listing-detail.ethereumCurrencyAbbrev"
+msgid "ETH"
+msgstr "ETH"
+
 #: translations/messages/src/components/my-listing-card.json
 #. [my-listing-card.ethereumCurrencyAbbrev]
 #. defaultMessage is:
 #. ETH
+msgctxt "my-listing-card.ethereumCurrencyAbbrev"
+msgid "ETH"
+msgstr "ETH"
+
 #: translations/messages/src/components/my-purchase-card.json
 #. [my-purchase-card.ethereumCurrencyAbbrev]
 #. defaultMessage is:
 #. ETH
+msgctxt "my-purchase-card.ethereumCurrencyAbbrev"
+msgid "ETH"
+msgstr "ETH"
+
 #: translations/messages/src/components/my-sale-card.json
 #. [my-sale-card.ethereumCurrencyAbbrev]
 #. defaultMessage is:
 #. ETH
+msgctxt "my-sale-card.ethereumCurrencyAbbrev"
 msgid "ETH"
 msgstr "ETH"
 
@@ -231,59 +475,183 @@ msgstr "ETH"
 #. [transaction-progress.ethAddress]
 #. defaultMessage is:
 #. ETH Address:
+msgctxt "transaction-progress.ethAddress"
 msgid "ETH Address:"
 msgstr "ETH地址："
+
+#: translations/messages/src/pages/profile/_Wallet.json
+#. [_Wallet.ethAddress]
+#. defaultMessage is:
+#. ETH Address:
+msgctxt "_Wallet.ethAddress"
+msgid "ETH Address:"
+msgstr "ETH地址："
+
+#: translations/messages/src/pages/profile/EditProfile.json
+#. [EditProfile.editProfileHeading]
+#. defaultMessage is:
+#. Edit Profile
+msgctxt "EditProfile.editProfileHeading"
+msgid "Edit Profile"
+msgstr "编辑个人资料"
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.email]
 #. defaultMessage is:
 #. Email
+msgctxt "_ProvisionedChanges.email"
 msgid "Email"
-msgstr "电子邮件"
+msgstr "邮箱"
+
+#: translations/messages/src/pages/profile/_Services.json
+#. [_Services.email]
+#. defaultMessage is:
+#. Email
+msgctxt "_Services.email"
+msgid "Email"
+msgstr "邮箱"
+
+#: translations/messages/src/pages/user/User.json
+#. [User.email]
+#. defaultMessage is:
+#. Email
+msgctxt "User.email"
+msgid "Email"
+msgstr "邮箱"
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.emailAddress]
 #. defaultMessage is:
 #. Email Address
+msgctxt "_ProvisionedChanges.emailAddress"
 msgid "Email Address"
-msgstr "电子邮件地址： *"
+msgstr "邮箱地址"
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.emailVerified]
+#. defaultMessage is:
+#. Email address verified!
+msgctxt "Profile.emailVerified"
+msgid "Email address verified!"
+msgstr "验证电子邮件地址"
+
+#: translations/messages/src/pages/profile/VerifyEmail.json
+#. [VerifyEmail.enterCode]
+#. defaultMessage is:
+#. Enter the code we sent you below
+msgctxt "VerifyEmail.enterCode"
+msgid "Enter the code we sent you below"
+msgstr "在下面输入我们发送的代码"
+
+#: translations/messages/src/pages/profile/VerifyPhone.json
+#. [VerifyPhone.enterCodeBelow]
+#. defaultMessage is:
+#. Enter the code we sent you below
+msgctxt "VerifyPhone.enterCodeBelow"
+msgid "Enter the code we sent you below"
+msgstr "在下面输入我们发送的代码"
+
+#: translations/messages/src/pages/profile/VerifyPhone.json
+#. [VerifyPhone.enterPhoneNumber]
+#. defaultMessage is:
+#. Enter your phone number below and {originId} will send you a verification code
+msgctxt "VerifyPhone.enterPhoneNumber"
+msgid "Enter your phone number below and {originId} will send you a verification code"
+msgstr "在下面输入您的电话号码，{originId}会向您发送验证码"
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.error]
+#. defaultMessage is:
+#. Error
+msgctxt "Profile.error"
+msgid "Error"
+msgstr "错误"
 
 #: translations/messages/src/components/footer.json
 #. [footer.facebookLink]
 #. defaultMessage is:
 #. Facebook
+msgctxt "footer.facebookLink"
+msgid "Facebook"
+msgstr "Facebook"
+
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.facebook]
 #. defaultMessage is:
 #. Facebook
+msgctxt "_ProvisionedChanges.facebook"
 msgid "Facebook"
-msgstr "面书"
+msgstr "Facebook"
+
+#: translations/messages/src/pages/profile/_Services.json
+#. [_Services.facebook]
+#. defaultMessage is:
+#. Facebook
+msgctxt "_Services.facebook"
+msgid "Facebook"
+msgstr "Facebook"
+
+#: translations/messages/src/pages/user/User.json
+#. [User.facebook]
+#. defaultMessage is:
+#. Facebook
+msgctxt "User.facebook"
+msgid "Facebook"
+msgstr "Facebook"
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.facebookAccount]
 #. defaultMessage is:
 #. Facebook account
+msgctxt "_ProvisionedChanges.facebookAccount"
 msgid "Facebook account"
 msgstr "脸书账号"
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.facebookVerified]
+#. defaultMessage is:
+#. Facebook account verified!
+msgctxt "Profile.facebookVerified"
+msgid "Facebook account verified!"
+msgstr "Facebook帐户已验证！"
+
+#: translations/messages/src/pages/profile/EditProfile.json
+#. [EditProfile.firstName]
+#. defaultMessage is:
+#. First Name
+msgctxt "EditProfile.firstName"
+msgid "First Name"
+msgstr "名"
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.firstName]
 #. defaultMessage is:
 #. First name
+msgctxt "_ProvisionedChanges.firstName"
 msgid "First name"
-msgstr "名字： *"
+msgstr "名字"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.forSaleLabel]
 #. defaultMessage is:
 #. For Sale
+msgctxt "listing-create.forSaleLabel"
 msgid "For Sale"
-msgstr "待售"
+msgstr "出售"
 
 #: translations/messages/src/components/web3-provider.json
-#. [web3-provider.demoInstructions]
+#. [web3-provider.fullInstructions]
+#. defaultMessage is:
+#. Full Instructions
+msgctxt "web3-provider.fullInstructions"
+msgid "Full Instructions"
+msgstr "完整说明"
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.fullInstructionsForDemo]
 #. defaultMessage is:
 #. Full Instructions for Demo
+msgctxt "web3-provider.fullInstructionsForDemo"
 msgid "Full Instructions for Demo"
 msgstr "演示的完整说明"
 
@@ -291,6 +659,7 @@ msgstr "演示的完整说明"
 #. [transaction-progress.fundsWithdrawn]
 #. defaultMessage is:
 #. Funds Withdrawn
+msgctxt "transaction-progress.fundsWithdrawn"
 msgid "Funds Withdrawn"
 msgstr "资金撤出"
 
@@ -298,6 +667,7 @@ msgstr "资金撤出"
 #. [notification.fundsFromProduct]
 #. defaultMessage is:
 #. Funds from {productLink}
+msgctxt "notification.fundsFromProduct"
 msgid "Funds from {productLink}"
 msgstr "来自{productLink}的资金"
 
@@ -305,6 +675,7 @@ msgstr "来自{productLink}的资金"
 #. [web3-provider.getMetaMask]
 #. defaultMessage is:
 #. Get MetaMask
+msgctxt "web3-provider.getMetaMask"
 msgid "Get MetaMask"
 msgstr "获取MetaMask"
 
@@ -312,41 +683,55 @@ msgstr "获取MetaMask"
 #. [footer.githubLink]
 #. defaultMessage is:
 #. Github
+msgctxt "footer.githubLink"
 msgid "Github"
-msgstr "Github上"
+msgstr "Github"
+
+#: translations/messages/src/components/listing-detail.json
+#. [listing-detail.goToPurchases]
+#. defaultMessage is:
+#. Go To Purchases
+msgctxt "listing-detail.goToPurchases"
+msgid "Go To Purchases"
+msgstr "去购买"
+
+#: translations/messages/src/pages/profile/_Services.json
+#. [_Services.google]
+#. defaultMessage is:
+#. Google
+msgctxt "_Services.google"
+msgid "Google"
+msgstr "谷歌"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.housingLabel]
 #. defaultMessage is:
 #. Housing
+msgctxt "listing-create.housingLabel"
 msgid "Housing"
-msgstr "外壳"
+msgstr "外壳 "
 
 #: translations/messages/src/components/not-found.json
 #. [not-found.heading]
 #. defaultMessage is:
 #. How did I get here?
+msgctxt "not-found.heading"
 msgid "How did I get here?"
-msgstr "我怎么到这里了？"
+msgstr "我怎么到这里的？"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.howItWorksHeading]
 #. defaultMessage is:
 #. How it works
+msgctxt "listing-create.howItWorksHeading"
 msgid "How it works"
-msgstr "怎么运行的"
-
-#: translations/messages/src/components/my-purchase-card.json
-#. [my-purchase-card.iReceivedTheOrder]
-#. defaultMessage is:
-#. I've Received the Order
-msgid "I've Received the Order"
-msgstr "我已收到订单"
+msgstr "运行原理"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.IPFS]
 #. defaultMessage is:
 #. IPFS
+msgctxt "listing-create.IPFS"
 msgid "IPFS"
 msgstr "IPFS"
 
@@ -354,20 +739,71 @@ msgstr "IPFS"
 #. [listing-detail.IPFS]
 #. defaultMessage is:
 #. IPFS: {ipfsHash}
+msgctxt "listing-detail.IPFS"
 msgid "IPFS: {ipfsHash}"
 msgstr "IPFS：{ipfsHash}"
+
+#: translations/messages/src/pages/profile/ConfirmUnload.json
+#. [ConfirmUpload.ifYouExitNotice]
+#. defaultMessage is:
+#. If you exit without publishing you’ll lose all your changes.
+msgctxt "ConfirmUpload.ifYouExitNotice"
+msgid "If you exit without publishing you’ll lose all your changes."
+msgstr "如果您未发布而退出，您将失去所有更改。"
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.unsavedChangesWarn]
+#. defaultMessage is:
+#. If you exit without publishing, you'll lose all your changes.
+msgctxt "Profile.unsavedChangesWarn"
+msgid "If you exit without publishing, you'll lose all your changes."
+msgstr "如果您未发布而退出，您将失去所有更改。"
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.intentRequiresMetaMask]
+#. defaultMessage is:
+#. In order to {web3Intent}, you must install MetaMask.
+msgctxt "web3-provider.intentRequiresMetaMask"
+msgid "In order to {web3Intent}, you must install MetaMask."
+msgstr "为了{web3Intent}，您必须安装MetaMask。"
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.intentRequiresSignIn]
+#. defaultMessage is:
+#. In order to {web3Intent}, you must sign in to {currentProvider}.
+msgctxt "web3-provider.intentRequiresSignIn"
+msgid "In order to {web3Intent}, you must sign in to {currentProvider}."
+msgstr "为了{web3Intent}，您必须登录到{currentProvider}。"
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.intentRequiresEthereumEnabledBrowser]
+#. defaultMessage is:
+#. In order to {web3Intent}, you must use an Ethereum wallet-enabled browser.
+msgctxt "web3-provider.intentRequiresEthereumEnabledBrowser"
+msgid "In order to {web3Intent}, you must use an Ethereum wallet-enabled browser."
+msgstr "为了{web3Intent}，您必须使用启用了以太坊钱包的浏览器。"
 
 #: translations/messages/src/components/my-listings.json
 #. [my-listings.inactive]
 #. defaultMessage is:
 #. Inactive
+msgctxt "my-listings.inactive"
 msgid "Inactive"
-msgstr "不活跃"
+msgstr "无效"
+
+#: translations/messages/src/components/footer.json
+#. [footer.instagramLink]
+#. defaultMessage is:
+#. Instagram
+msgctxt "footer.instagramLink"
+msgid "Instagram"
+msgstr "Instagram"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.jsonSchema]
 #. defaultMessage is:
 #. JSONSchema
+msgctxt "listing-create.jsonSchema"
 msgid "JSONSchema"
 msgstr "JSONSchema"
 
@@ -375,71 +811,111 @@ msgstr "JSONSchema"
 #. [footer.hiringLink]
 #. defaultMessage is:
 #. Jobs (We're hiring!)
+msgctxt "footer.hiringLink"
 msgid "Jobs (We're hiring!)"
-msgstr "工作机会（我们正在招聘！）"
-
-#: translations/messages/src/components/listing-detail.json
-#. [listing-detail.unitsAvailable]
-#. defaultMessage is:
-#. Just {unitsAvailable} left!
-msgid "Just {unitsAvailable} left!"
-msgstr "只剩{unitsAvailable}了！"
+msgstr "工作（我们正在招聘！）"
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.lastName]
 #. defaultMessage is:
 #. Last Name
+msgctxt "_ProvisionedChanges.lastName"
 msgid "Last Name"
 msgstr "姓"
+
+#: translations/messages/src/pages/profile/EditProfile.json
+#. [EditProfile.lastName]
+#. defaultMessage is:
+#. Last Name
+msgctxt "EditProfile.lastName"
+msgid "Last Name"
+msgstr "姓"
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.lastPublished]
+#. defaultMessage is:
+#. Last published
+msgctxt "Profile.lastPublished"
+msgid "Last published"
+msgstr "上次发布"
+
+#: translations/messages/src/pages/profile/ConfirmPublish.json
+#. [ConfirmPublish.letsDoIt]
+#. defaultMessage is:
+#. Let's do it!
+msgctxt "ConfirmPublish.letsDoIt"
+msgid "Let's do it!"
+msgstr "我们算吧"
+
+#: translations/messages/src/components/navbar.json
+#. [navbar.listings]
+#. defaultMessage is:
+#. Listings
+msgctxt "navbar.listings"
+msgid "Listings"
+msgstr "信息"
 
 #: translations/messages/src/components/listing-card-prices.json
 #. [listing-card-prices.loadingMessage]
 #. defaultMessage is:
 #. Loading...
+msgctxt "listing-card-prices.loadingMessage"
+msgid "Loading..."
+msgstr "载入中..."
+
 #: translations/messages/src/components/my-listings.json
 #. [my-listings.loading]
 #. defaultMessage is:
 #. Loading...
+msgctxt "my-listings.loading"
+msgid "Loading..."
+msgstr "载入中..."
+
 #: translations/messages/src/components/my-purchases.json
 #. [my-purchases.loading]
 #. defaultMessage is:
 #. Loading...
+msgctxt "my-purchases.loading"
+msgid "Loading..."
+msgstr "载入中..."
+
 #: translations/messages/src/components/my-sales.json
 #. [my-sales.loading]
 #. defaultMessage is:
 #. Loading...
+msgctxt "my-sales.loading"
 msgid "Loading..."
-msgstr "正在加载..."
+msgstr "载入中..."
 
 #: translations/messages/src/components/footer.json
 #. [footer.mediumLink]
 #. defaultMessage is:
 #. Medium
+msgctxt "footer.mediumLink"
 msgid "Medium"
-msgstr "Medium"
-
-#: translations/messages/src/components/web3-provider.json
-#. [web3-provider.wrongNetwork]
-#. defaultMessage is:
-#. MetaMask should be on {rinkeby} Network
-msgid "MetaMask should be on {rinkeby} Network"
-msgstr "MetaMask应该在{rinkeby}网络上"
+msgstr "中"
 
 #: translations/messages/src/components/my-listings.json
 #. [my-listings.myListingsHeading]
 #. defaultMessage is:
 #. My Listings
+msgctxt "my-listings.myListingsHeading"
+msgid "My Listings"
+msgstr "我的房源"
+
 #: translations/messages/src/components/navbar.json
 #. [navbar.myListings]
 #. defaultMessage is:
 #. My Listings
+msgctxt "navbar.myListings"
 msgid "My Listings"
-msgstr "{0}{/0}我的广告"
+msgstr "我的房源"
 
 #: translations/messages/src/components/my-purchases.json
 #. [my-purchases.myPurchasesHeading]
 #. defaultMessage is:
 #. My Purchases
+msgctxt "my-purchases.myPurchasesHeading"
 msgid "My Purchases"
 msgstr "我的购买"
 
@@ -447,10 +923,15 @@ msgstr "我的购买"
 #. [my-sales.mySalesHeading]
 #. defaultMessage is:
 #. My Sales
+msgctxt "my-sales.mySalesHeading"
+msgid "My Sales"
+msgstr "我的销售额"
+
 #: translations/messages/src/components/navbar.json
 #. [navbar.mySales]
 #. defaultMessage is:
 #. My Sales
+msgctxt "navbar.mySales"
 msgid "My Sales"
 msgstr "我的销售额"
 
@@ -458,13 +939,31 @@ msgstr "我的销售额"
 #. [listing-create.next]
 #. defaultMessage is:
 #. Next
+msgctxt "listing-create.next"
 msgid "Next"
-msgstr "下一步"
+msgstr "下香"
+
+#: translations/messages/src/pages/profile/_Wallet.json
+#. [_Wallet.noEthAccountConnected]
+#. defaultMessage is:
+#. No ETH Account Connected
+msgctxt "_Wallet.noEthAccountConnected"
+msgid "No ETH Account Connected"
+msgstr "没有连接ETH帐户"
+
+#: translations/messages/src/pages/profile/ConfirmUnload.json
+#. [ConfirmUpload.notRightNow]
+#. defaultMessage is:
+#. Not Right Now
+msgctxt "ConfirmUpload.notRightNow"
+msgid "Not Right Now"
+msgstr "跳过"
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.notVisibleOnBlockchain]
 #. defaultMessage is:
 #. Not visible on the blockchain
+msgctxt "_ProvisionedChanges.notVisibleOnBlockchain"
 msgid "Not visible on the blockchain"
 msgstr "在区块链上不可见"
 
@@ -472,17 +971,39 @@ msgstr "在区块链上不可见"
 #. [listing-create.OK]
 #. defaultMessage is:
 #. OK
+msgctxt "listing-create.OK"
+msgid "OK"
+msgstr "好"
+
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.OK]
 #. defaultMessage is:
 #. OK
+msgctxt "listing-detail.OK"
 msgid "OK"
 msgstr "好"
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.ok]
+#. defaultMessage is:
+#. OK
+msgctxt "Profile.ok"
+msgid "OK"
+msgstr "好"
+
+#: translations/messages/src/pages/profile/ConfirmPublish.json
+#. [ConfirmPublish.oopsNoWait]
+#. defaultMessage is:
+#. Oops, no wait...
+msgctxt "ConfirmPublish.oopsNoWait"
+msgid "Oops, no wait..."
+msgstr "哎呀，别再等了......"
 
 #: translations/messages/src/components/transaction-progress.json
 #. [transaction-progress.orderSent]
 #. defaultMessage is:
 #. Order Sent
+msgctxt "transaction-progress.orderSent"
 msgid "Order Sent"
 msgstr "订单已发送"
 
@@ -490,28 +1011,63 @@ msgstr "订单已发送"
 #. [footer.organizationHeading]
 #. defaultMessage is:
 #. Organization
+msgctxt "footer.organizationHeading"
 msgid "Organization"
 msgstr "组织"
 
 #: translations/messages/src/components/footer.json
 #. [footer.mission]
 #. defaultMessage is:
-#. Origin is building the sharing economy of tomorrow. Buyers and sellers will be able to transact without rent-seeking middlemen. We believe in lowering transaction fees, reducing censorship and regulation, and giving early participants in the community a stake in the network.
-msgid "Origin is building the sharing economy of tomorrow. Buyers and sellers will be able to transact without rent-seeking middlemen. We believe in lowering transaction fees, reducing censorship and regulation, and giving early participants in the community a stake in the network."
-msgstr "Origin正在建立明日的共享经济。买家和卖家可以在没有中介人的情况下进行交易。我们相信降低交易费用，减少审查和监管，让社区的早期参与者参与到网络中。
-"
+#. Origin is building the sharing economy of tomorrow. Buyers and sellers will be able to transact without rent-seeking middlemen. We believe in lowering transaction fees, promoting free and transparent commerce, and giving early participants in the community a stake in the network.
+msgctxt "footer.mission"
+msgid "Origin is building the sharing economy of tomorrow. Buyers and sellers will be able to transact without rent-seeking middlemen. We believe in lowering transaction fees, promoting free and transparent commerce, and giving early participants in the community a stake in the network."
+msgstr "Origin正在构建明天的共享经济。买家和卖家可以在没有寻租中介人的情况下进行交易。我们相信降低交易费用，促进自由和透明的商业，并让社区的早期参与者参与网络。"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.howItWorksContentPart1]
 #. defaultMessage is:
 #. Origin uses a Mozilla project called {jsonSchemaLink}  to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer.
+msgctxt "listing-create.howItWorksContentPart1"
 msgid "Origin uses a Mozilla project called {jsonSchemaLink}  to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer."
 msgstr "Origin使用称为{jsonSchemaLink}的Mozilla项目根据标准规则验证您的列表。这种标准化是允许非附属实体读取和写入相同数据层的关键。"
+
+#: translations/messages/src/pages/profile/VerifyFacebook.json
+#. [VerifyFacebook.accountNotPublic]
+#. defaultMessage is:
+#. Other users will know that you have a verified Facebook account, but your account details will not be published on the blockchain. We will never post on your behalf.
+msgctxt "VerifyFacebook.accountNotPublic"
+msgid "Other users will know that you have a verified Facebook account, but your account details will not be published on the blockchain. We will never post on your behalf."
+msgstr "其他用户会知道您拥有经过验证的Facebook帐户，但您的帐户详情不会在区块链上发布。我们绝不会代表您发布。"
+
+#: translations/messages/src/pages/profile/VerifyTwitter.json
+#. [VerifyTwitter.twitterNotPublic]
+#. defaultMessage is:
+#. Other users will know that you have a verified Twitter account. Your username will not be published on the blockchain. We will never tweet on your behalf.
+msgctxt "VerifyTwitter.twitterNotPublic"
+msgid "Other users will know that you have a verified Twitter account. Your username will not be published on the blockchain. We will never tweet on your behalf."
+msgstr "其他用户会知道你有一个经过验证的Twitter帐户。您的用户名不会在区块链上发布。我们绝不会以您的名义发微博。"
+
+#: translations/messages/src/pages/profile/VerifyEmail.json
+#. [VerifyEmail.emailNotPublished]
+#. defaultMessage is:
+#. Other users will know that you have a verified email address. Your actual email address will not be published on the blockchain.
+msgctxt "VerifyEmail.emailNotPublished"
+msgid "Other users will know that you have a verified email address. Your actual email address will not be published on the blockchain."
+msgstr "其他用户会知道你有一个经过验证的电子邮件地址。您的实际电子邮件地址不会在区块链上发布。"
+
+#: translations/messages/src/pages/profile/VerifyPhone.json
+#. [VerifyPhone.phoneNumberNotPublished]
+#. defaultMessage is:
+#. Other users will know that you have a verified phone number. Your actual phone number will not be published on the blockchain.
+msgctxt "VerifyPhone.phoneNumberNotPublished"
+msgid "Other users will know that you have a verified phone number. Your actual phone number will not be published on the blockchain."
+msgstr "其他用户会知道你有一个经过验证的电话号码。您的实际电话号码不会在区块链上发布。"
 
 #: translations/messages/src/components/footer.json
 #. [footer.partnersLink]
 #. defaultMessage is:
 #. Partners
+msgctxt "footer.partnersLink"
 msgid "Partners"
 msgstr "伙伴"
 
@@ -519,38 +1075,95 @@ msgstr "伙伴"
 #. [my-purchases.pending]
 #. defaultMessage is:
 #. Pending
+msgctxt "my-purchases.pending"
+msgid "Pending"
+msgstr "待审"
+
 #: translations/messages/src/components/my-sales.json
 #. [my-sales.pending]
 #. defaultMessage is:
 #. Pending
+msgctxt "my-sales.pending"
 msgid "Pending"
-msgstr "待定"
+msgstr "待审"
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.phone]
 #. defaultMessage is:
 #. Phone
+msgctxt "_ProvisionedChanges.phone"
 msgid "Phone"
-msgstr "电话： *"
+msgstr "电话"
+
+#: translations/messages/src/pages/profile/_Services.json
+#. [_Services.phone]
+#. defaultMessage is:
+#. Phone
+msgctxt "_Services.phone"
+msgid "Phone"
+msgstr "电话"
+
+#: translations/messages/src/pages/user/User.json
+#. [User.phone]
+#. defaultMessage is:
+#. Phone
+msgctxt "User.phone"
+msgid "Phone"
+msgstr "电话"
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.phoneNumber]
 #. defaultMessage is:
 #. Phone Number
+msgctxt "_ProvisionedChanges.phoneNumber"
 msgid "Phone Number"
 msgstr "电话号码"
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.phoneVerified]
+#. defaultMessage is:
+#. Phone number verified!
+msgctxt "Profile.phoneVerified"
+msgid "Phone number verified!"
+msgstr "电话号码验证！"
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.picture]
 #. defaultMessage is:
 #. Picture
+msgctxt "_ProvisionedChanges.picture"
 msgid "Picture"
 msgstr "图片"
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.useWalletEnabledBrowser]
+#. defaultMessage is:
+#. Please access this site through a wallet-enabled browser:
+msgctxt "web3-provider.useWalletEnabledBrowser"
+msgid "Please access this site through a wallet-enabled browser:"
+msgstr "请通过启用钱包的浏览器访问此网站："
+
+#: translations/messages/src/pages/profile/_Services.json
+#. [_Services.pleaseConnectAccounts]
+#. defaultMessage is:
+#. Please connect your accounts below to strengthen your identity on Origin.
+msgctxt "_Services.pleaseConnectAccounts"
+msgid "Please connect your accounts below to strengthen your identity on Origin."
+msgstr "请在下方连接您的帐户以加强您在Origin的身份。"
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.pleaseInstallMetaMask]
+#. defaultMessage is:
+#. Please install the MetaMask extension to access this site.
+msgctxt "web3-provider.pleaseInstallMetaMask"
+msgid "Please install the MetaMask extension to access this site."
+msgstr "请安装MetaMask扩展程序以访问此网站。"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.whatHappensNextContent2]
 #. defaultMessage is:
 #. Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left.
+msgctxt "listing-create.whatHappensNextContent2"
 msgid "Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left."
 msgstr "提交前请检查您的列表。您的列表将显示给其他人，就像它在左侧窗口中显示的一样。"
 
@@ -558,43 +1171,80 @@ msgstr "提交前请检查您的列表。您的列表将显示给其他人，就
 #. [listing-create.pleaseStandBy]
 #. defaultMessage is:
 #. Please stand by...
+msgctxt "listing-create.pleaseStandBy"
+msgid "Please stand by..."
+msgstr "请稍候..."
+
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.pleaseStandBy]
 #. defaultMessage is:
 #. Please stand by...
+msgctxt "listing-detail.pleaseStandBy"
 msgid "Please stand by..."
-msgstr "请支持..."
+msgstr "请稍候..."
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.pleaseStandBy]
+#. defaultMessage is:
+#. Please stand by...
+msgctxt "Profile.pleaseStandBy"
+msgid "Please stand by..."
+msgstr "请稍候..."
 
 #: translations/messages/src/components/web3-provider.json
-#. [web3-provider.installMetaMask]
+#. [web3-provider.popularEthereumWallets]
 #. defaultMessage is:
-#. Please use a web3-enabled browser or install the MetaMask extension.
-msgid "Please use a web3-enabled browser or install the MetaMask extension."
-msgstr "请使用支持web3的浏览器或安装MetaMask扩展。"
+#. Popular Ethereum Wallets
+msgctxt "web3-provider.popularEthereumWallets"
+msgid "Popular Ethereum Wallets"
+msgstr "流行的以太坊钱包"
+
+#: translations/messages/src/pages/profile/_Services.json
+#. [_Services.poweredBy]
+#. defaultMessage is:
+#. Powered by
+msgctxt "_Services.poweredBy"
+msgid "Powered by"
+msgstr "提供"
 
 #: translations/messages/src/components/footer.json
 #. [footer.presaleLink]
 #. defaultMessage is:
 #. Presale
+msgctxt "footer.presaleLink"
 msgid "Presale"
 msgstr "预售
 "
 
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.pressSubmit]
+#. defaultMessage is:
+#. Press "Submit" in {currentProvider} window
+msgctxt "Profile.pressSubmit"
+msgid "Press \"Submit\" in {currentProvider} window"
+msgstr "在{currentProvider}窗口中按“提交”"
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.pressSubmitInMetaMask]
 #. defaultMessage is:
-#. Press {submit} in MetaMask window
+#. Press {submit} in {currentProvider} window
+msgctxt "listing-create.pressSubmitInMetaMask"
+msgid "Press {submit} in {currentProvider} window"
+msgstr "在{currentProvider}窗口中按{提交}"
+
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.pressSubmitInMetaMask]
 #. defaultMessage is:
-#. Press {submit} in MetaMask window
-msgid "Press {submit} in MetaMask window"
-msgstr "在MetaMask窗口中按{提交}"
+#. Press {submit} in {currentProvider} window
+msgctxt "listing-detail.pressSubmitInMetaMask"
+msgid "Press {submit} in {currentProvider} window"
+msgstr "在{currentProvider}窗口中按{提交}"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.previewListingHeading]
 #. defaultMessage is:
 #. Preview your listing
+msgctxt "listing-create.previewListingHeading"
 msgid "Preview your listing"
 msgstr "预览您的列表"
 
@@ -602,13 +1252,15 @@ msgstr "预览您的列表"
 #. [listing-detail.price]
 #. defaultMessage is:
 #. Price
+msgctxt "listing-detail.price"
 msgid "Price"
-msgstr "价钱"
+msgstr "价格"
 
 #: translations/messages/src/components/my-sale-card.json
 #. [my-sale-card.price]
 #. defaultMessage is:
 #. Price: {price}
+msgctxt "my-sale-card.price"
 msgid "Price: {price}"
 msgstr "价格：{价格}"
 
@@ -616,6 +1268,7 @@ msgstr "价格：{价格}"
 #. [listing-detail.processingPurchase]
 #. defaultMessage is:
 #. Processing your purchase
+msgctxt "listing-detail.processingPurchase"
 msgid "Processing your purchase"
 msgstr "处理您的购买"
 
@@ -623,6 +1276,7 @@ msgstr "处理您的购买"
 #. [footer.productBriefLink]
 #. defaultMessage is:
 #. Product Brief
+msgctxt "footer.productBriefLink"
 msgid "Product Brief"
 msgstr "产品简介"
 
@@ -630,13 +1284,47 @@ msgstr "产品简介"
 #. [_ProvisionedChanges.profile]
 #. defaultMessage is:
 #. Profile
+msgctxt "_ProvisionedChanges.profile"
 msgid "Profile"
-msgstr "简历"
+msgstr "档案"
+
+#: translations/messages/src/pages/profile/_Strength.json
+#. [_Strength.profileStrength]
+#. defaultMessage is:
+#. Profile Strength
+msgctxt "_Strength.profileStrength"
+msgid "Profile Strength"
+msgstr "轮廓强度"
+
+#: translations/messages/src/pages/profile/ConfirmUnload.json
+#. [ConfirmUpload.publishNow]
+#. defaultMessage is:
+#. Publish Now
+msgctxt "ConfirmUpload.publishNow"
+msgid "Publish Now"
+msgstr "0183 现在发布"
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.publishNow]
+#. defaultMessage is:
+#. Publish Now
+msgctxt "Profile.publishNow"
+msgid "Publish Now"
+msgstr "0183 现在发布"
+
+#: translations/messages/src/pages/profile/AttestationSuccess.json
+#. [AttestationSuccess.publishChangesNotice]
+#. defaultMessage is:
+#. Publishing to the blockchain lets other users know that you have a verified profile.
+msgctxt "AttestationSuccess.publishChangesNotice"
+msgid "Publishing to the blockchain lets other users know that you have a verified profile."
+msgstr "发布到区块链可让其他用户知道您拥有已验证的个人资料。"
 
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.purchaseSuccessful]
 #. defaultMessage is:
 #. Purchase was successful.
+msgctxt "listing-detail.purchaseSuccessful"
 msgid "Purchase was successful."
 msgstr "采购成功。"
 
@@ -644,17 +1332,39 @@ msgstr "采购成功。"
 #. [my-purchase-card.purchased]
 #. defaultMessage is:
 #. Purchased
+msgctxt "my-purchase-card.purchased"
+msgid "Purchased"
+msgstr "购买"
+
 #: translations/messages/src/components/transaction-progress.json
 #. [transaction-progress.purchased]
 #. defaultMessage is:
 #. Purchased
+msgctxt "transaction-progress.purchased"
 msgid "Purchased"
 msgstr "购买"
+
+#: translations/messages/src/pages/profile/ConfirmPublish.json
+#. [ConfirmPublish.readyToGoPublic]
+#. defaultMessage is:
+#. Ready to go public?
+msgctxt "ConfirmPublish.readyToGoPublic"
+msgid "Ready to go public?"
+msgstr "准备上市？"
+
+#: translations/messages/src/pages/profile/ConfirmUnload.json
+#. [ConfirmUpload.readyToGoPublic]
+#. defaultMessage is:
+#. Ready to go public? After you publish your changes to the blockchain, other users will be able to see that you have verified the following:
+msgctxt "ConfirmUpload.readyToGoPublic"
+msgid "Ready to go public? After you publish your changes to the blockchain, other users will be able to see that you have verified the following:"
+msgstr "准备上市？将更改发布到区块链后，其他用户将能够看到您已验证以下内容："
 
 #: translations/messages/src/components/my-purchase-card.json
 #. [my-purchase-card.received]
 #. defaultMessage is:
 #. Received
+msgctxt "my-purchase-card.received"
 msgid "Received"
 msgstr "收到"
 
@@ -662,6 +1372,7 @@ msgstr "收到"
 #. [transaction-progress.receivedByBuyer]
 #. defaultMessage is:
 #. Received by buyer
+msgctxt "transaction-progress.receivedByBuyer"
 msgid "Received by buyer"
 msgstr "由买方收到"
 
@@ -669,27 +1380,31 @@ msgstr "由买方收到"
 #. [transaction-progress.receivedByMe]
 #. defaultMessage is:
 #. Received by me
+msgctxt "transaction-progress.receivedByMe"
 msgid "Received by me"
 msgstr "收到我的"
-
-#: translations/messages/src/components/listing-detail.json
-#. [listing-detail.reloadPageMessage]
-#. defaultMessage is:
-#. Reload page
-msgid "Reload page"
-msgstr "重新加载页面"
 
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.reviews]
 #. defaultMessage is:
 #. Reviews
+msgctxt "listing-detail.reviews"
 msgid "Reviews"
-msgstr "评测"
+msgstr "评价"
+
+#: translations/messages/src/pages/user/User.json
+#. [User.reviews]
+#. defaultMessage is:
+#. Reviews
+msgctxt "User.reviews"
+msgid "Reviews"
+msgstr "评价"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.stepNumberLabel]
 #. defaultMessage is:
 #. STEP {stepNumber}
+msgctxt "listing-create.stepNumberLabel"
 msgid "STEP {stepNumber}"
 msgstr "STEP {stepNumber}"
 
@@ -697,17 +1412,31 @@ msgstr "STEP {stepNumber}"
 #. [listing-create.seeAllListings]
 #. defaultMessage is:
 #. See All Listings
+msgctxt "listing-create.seeAllListings"
 msgid "See All Listings"
 msgstr "查看所有列表"
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.seeConsole]
+#. defaultMessage is:
+#. See the console for more details
+msgctxt "Profile.seeConsole"
+msgid "See the console for more details"
+msgstr "有关更多详情，请参阅控制台"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.error2]
 #. defaultMessage is:
 #. See the console for more details.
+msgctxt "listing-create.error2"
+msgid "See the console for more details."
+msgstr "有关更多详情，请参阅控制台。"
+
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.seeConsoleForDetails]
 #. defaultMessage is:
 #. See the console for more details.
+msgctxt "listing-detail.seeConsoleForDetails"
 msgid "See the console for more details."
 msgstr "有关更多详情，请参阅控制台。"
 
@@ -715,10 +1444,15 @@ msgstr "有关更多详情，请参阅控制台。"
 #. [navbar.sell]
 #. defaultMessage is:
 #. Sell
+msgctxt "navbar.sell"
+msgid "Sell"
+msgstr "卖"
+
 #: translations/messages/src/components/notifications.json
 #. [notifications.sell]
 #. defaultMessage is:
 #. Sell
+msgctxt "notifications.sell"
 msgid "Sell"
 msgstr "卖"
 
@@ -726,6 +1460,7 @@ msgstr "卖"
 #. [listing-detail.seller]
 #. defaultMessage is:
 #. Seller: {sellerAddress}
+msgctxt "listing-detail.seller"
 msgid "Seller: {sellerAddress}"
 msgstr "卖家：{sellerAddress}"
 
@@ -733,6 +1468,7 @@ msgstr "卖家：{sellerAddress}"
 #. [my-purchase-card.sentBySeller]
 #. defaultMessage is:
 #. Sent by Seller
+msgctxt "my-purchase-card.sentBySeller"
 msgid "Sent by Seller"
 msgstr "由卖方发送"
 
@@ -740,6 +1476,7 @@ msgstr "由卖方发送"
 #. [transaction-progress.sentBySeller]
 #. defaultMessage is:
 #. Sent by seller
+msgctxt "transaction-progress.sentBySeller"
 msgid "Sent by seller"
 msgstr "卖家发送"
 
@@ -747,49 +1484,79 @@ msgstr "卖家发送"
 #. [listing-create.services]
 #. defaultMessage is:
 #. Services
+msgctxt "listing-create.services"
 msgid "Services"
-msgstr "服务"
+msgstr "产品"
 
 #: translations/messages/src/components/listing-card-prices.json
 #. [listing-card-prices.sold]
 #. defaultMessage is:
 #. Sold
+msgctxt "listing-card-prices.sold"
+msgid "Sold"
+msgstr "售完"
+
 #: translations/messages/src/components/transaction-progress.json
 #. [transaction-progress.sold]
 #. defaultMessage is:
 #. Sold
+msgctxt "transaction-progress.sold"
 msgid "Sold"
-msgstr "出售"
+msgstr "售完"
 
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.soldOut]
 #. defaultMessage is:
 #. Sold Out
+msgctxt "listing-detail.soldOut"
+msgid "Sold Out"
+msgstr "卖光了"
+
 #: translations/messages/src/components/my-listing-card.json
 #. [my-listing-card.soldOut]
 #. defaultMessage is:
 #. Sold Out
+msgctxt "my-listing-card.soldOut"
 msgid "Sold Out"
 msgstr "卖光了"
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.status]
+#. defaultMessage is:
+#. Status:
+msgctxt "Profile.status"
+msgid "Status:"
+msgstr "状态:"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.successMessage]
 #. defaultMessage is:
 #. Success
+msgctxt "listing-create.successMessage"
 msgid "Success"
-msgstr "成功！"
+msgstr "成功"
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.success]
+#. defaultMessage is:
+#. Success
+msgctxt "Profile.success"
+msgid "Success"
+msgstr "成功"
 
 #: translations/messages/src/components/footer.json
 #. [footer.teamLink]
 #. defaultMessage is:
 #. Team
+msgctxt "footer.teamLink"
 msgid "Team"
-msgstr "球队"
+msgstr "团队"
 
 #: translations/messages/src/components/footer.json
 #. [footer.telegramLink]
 #. defaultMessage is:
 #. Telegram
+msgctxt "footer.telegramLink"
 msgid "Telegram"
 msgstr "Telegram"
 
@@ -797,6 +1564,7 @@ msgstr "Telegram"
 #. [listings-grid.originContractNotFound]
 #. defaultMessage is:
 #. The Origin Contract was not found on this network.
+msgctxt "listings-grid.originContractNotFound"
 msgid "The Origin Contract was not found on this network."
 msgstr "未在此网络上找到原始合同。"
 
@@ -804,6 +1572,7 @@ msgstr "未在此网络上找到原始合同。"
 #. [not-found.content]
 #. defaultMessage is:
 #. The page you’re looking for is no longer here, maybe it was never here in the first place. In any case, we sincerely apologize if it’s us and we forgive you if it’s you :)
+msgctxt "not-found.content"
 msgid "The page you’re looking for is no longer here, maybe it was never here in the first place. In any case, we sincerely apologize if it’s us and we forgive you if it’s you :)"
 msgstr "你正在寻找的页面不再在这里，也许它从来没有在这里摆在首位。无论如何，我们真诚地道歉，如果是我们，我们原谅你，如果它是你:)"
 
@@ -811,6 +1580,7 @@ msgstr "你正在寻找的页面不再在这里，也许它从来没有在这里
 #. [listing-create.error1]
 #. defaultMessage is:
 #. There was a problem creating this listing.
+msgctxt "listing-create.error1"
 msgid "There was a problem creating this listing."
 msgstr "创建此列表时出现问题。"
 
@@ -818,6 +1588,7 @@ msgstr "创建此列表时出现问题。"
 #. [listing-detail.errorPurchasingListing]
 #. defaultMessage is:
 #. There was a problem purchasing this listing.
+msgctxt "listing-detail.errorPurchasingListing"
 msgid "There was a problem purchasing this listing."
 msgstr "购买此列表时出现问题。"
 
@@ -825,13 +1596,23 @@ msgstr "购买此列表时出现问题。"
 #. [listing-detail.loadingError]
 #. defaultMessage is:
 #. There was an error loading this listing.
+msgctxt "listing-detail.loadingError"
 msgid "There was an error loading this listing."
 msgstr "加载此列表时出错。"
+
+#: translations/messages/src/pages/profile/EditProfile.json
+#. [EditProfile.publicDataNotice]
+#. defaultMessage is:
+#. This information will be published on the blockchain and will be visible to everyone.
+msgctxt "EditProfile.publicDataNotice"
+msgid "This information will be published on the blockchain and will be visible to everyone."
+msgstr "这些信息将在区块链上发布，并且每个人都可以看到。"
 
 #: translations/messages/src/components/my-sale-card.json
 #. [my-sale-card.orderComplete]
 #. defaultMessage is:
 #. This order is complete
+msgctxt "my-sale-card.orderComplete"
 msgid "This order is complete"
 msgstr "此订单已完成"
 
@@ -839,13 +1620,23 @@ msgstr "此订单已完成"
 #. [listing-create.tickets]
 #. defaultMessage is:
 #. Tickets
+msgctxt "listing-create.tickets"
 msgid "Tickets"
-msgstr "门票"
+msgstr "彩票"
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.toshi]
+#. defaultMessage is:
+#. Toshi
+msgctxt "web3-provider.toshi"
+msgid "Toshi"
+msgstr "都市"
 
 #: translations/messages/src/components/my-listing-card.json
 #. [my-listing-card.totalQuantity]
 #. defaultMessage is:
 #. Total Quantity : {quantity}
+msgctxt "my-listing-card.totalQuantity"
 msgid "Total Quantity : {quantity}"
 msgstr "总量：{数量}"
 
@@ -853,38 +1644,79 @@ msgstr "总量：{数量}"
 #. [listing-create.transportation]
 #. defaultMessage is:
 #. Transportation
+msgctxt "listing-create.transportation"
 msgid "Transportation"
 msgstr "交通"
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.trust]
+#. defaultMessage is:
+#. Trust
+msgctxt "web3-provider.trust"
+msgid "Trust"
+msgstr "相信"
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.trustWallet]
+#. defaultMessage is:
+#. Trust Wallet
+msgctxt "web3-provider.trustWallet"
+msgid "Trust Wallet"
+msgstr "信任钱包"
 
 #: translations/messages/src/components/footer.json
 #. [footer.twitterLink]
 #. defaultMessage is:
 #. Twitter
+msgctxt "footer.twitterLink"
+msgid "Twitter"
+msgstr "推特"
+
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.twitter]
 #. defaultMessage is:
 #. Twitter
+msgctxt "_ProvisionedChanges.twitter"
 msgid "Twitter"
-msgstr "微博"
+msgstr "推特"
+
+#: translations/messages/src/pages/profile/_Services.json
+#. [_Services.twitter]
+#. defaultMessage is:
+#. Twitter
+msgctxt "_Services.twitter"
+msgid "Twitter"
+msgstr "推特"
+
+#: translations/messages/src/pages/user/User.json
+#. [User.twitter]
+#. defaultMessage is:
+#. Twitter
+msgctxt "User.twitter"
+msgid "Twitter"
+msgstr "推特"
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.twitterAccount]
 #. defaultMessage is:
 #. Twitter account
+msgctxt "_ProvisionedChanges.twitterAccount"
 msgid "Twitter account"
 msgstr "Twitter帐户"
 
-#: translations/messages/src/components/listing-detail.json
-#. [listing-detail.units]
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.twitterVerified]
 #. defaultMessage is:
-#. Units: {unitsAvailable}
-msgid "Units: {unitsAvailable}"
-msgstr "单位：{unitsAvailable}"
+#. Twitter account verified!
+msgctxt "Profile.twitterVerified"
+msgid "Twitter account verified!"
+msgstr "Twitter帐户验证！"
 
 #: translations/messages/src/components/my-purchase-card.json
 #. [my-purchase-card.unknown]
 #. defaultMessage is:
 #. Unknown
+msgctxt "my-purchase-card.unknown"
 msgid "Unknown"
 msgstr "未知"
 
@@ -892,6 +1724,7 @@ msgstr "未知"
 #. [my-sale-card.unnamedUser]
 #. defaultMessage is:
 #. Unnamed User
+msgctxt "my-sale-card.unnamedUser"
 msgid "Unnamed User"
 msgstr "未命名用户"
 
@@ -899,6 +1732,7 @@ msgstr "未命名用户"
 #. [notifications.unread]
 #. defaultMessage is:
 #. Unread
+msgctxt "notifications.unread"
 msgid "Unread"
 msgstr "未读"
 
@@ -906,27 +1740,79 @@ msgstr "未读"
 #. [listing-create.uploadingYourListing]
 #. defaultMessage is:
 #. Uploading your listing
+msgctxt "listing-create.uploadingYourListing"
 msgid "Uploading your listing"
 msgstr "上传您的列表"
+
+#: translations/messages/src/pages/profile/VerifyEmail.json
+#. [VerifyEmail.validEmail]
+#. defaultMessage is:
+#. Valid email address
+msgctxt "VerifyEmail.validEmail"
+msgid "Valid email address"
+msgstr "有效的电子邮件地址"
+
+#: translations/messages/src/pages/user/User.json
+#. [User.verifiedInto]
+#. defaultMessage is:
+#. Verified Info
+msgctxt "User.verifiedInto"
+msgid "Verified Info"
+msgstr "已验证信息"
+
+#: translations/messages/src/pages/profile/VerifyFacebook.json
+#. [VerifyFacebook.verifyFBHeading]
+#. defaultMessage is:
+#. Verify Your Facebook Account
+msgctxt "VerifyFacebook.verifyFBHeading"
+msgid "Verify Your Facebook Account"
+msgstr "验证您的Facebook帐户"
+
+#: translations/messages/src/pages/profile/VerifyPhone.json
+#. [VerifyPhone.verifyPhoneHeading]
+#. defaultMessage is:
+#. Verify Your Phone Number
+msgctxt "VerifyPhone.verifyPhoneHeading"
+msgid "Verify Your Phone Number"
+msgstr "验证您的电话号码"
+
+#: translations/messages/src/pages/profile/VerifyTwitter.json
+#. [VerifyTwitter.verifyTwitterHeading]
+#. defaultMessage is:
+#. Verify Your Twitter Account
+msgctxt "VerifyTwitter.verifyTwitterHeading"
+msgid "Verify Your Twitter Account"
+msgstr "验证你的Twitter帐户"
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.verifyYourselfHeading]
+#. defaultMessage is:
+#. Verify yourself on Origin
+msgctxt "Profile.verifyYourselfHeading"
+msgid "Verify yourself on Origin"
+msgstr "在Origin上验证自己"
 
 #: translations/messages/src/components/my-sale-card.json
 #. [my-sale-card.viewDetails]
 #. defaultMessage is:
 #. View Details
+msgctxt "my-sale-card.viewDetails"
 msgid "View Details"
-msgstr "查看详情"
+msgstr "View Details"
 
 #: translations/messages/src/components/user-card.json
 #. [transaction-progress.viewProfile]
 #. defaultMessage is:
 #. View Profile
+msgctxt "transaction-progress.viewProfile"
 msgid "View Profile"
-msgstr "查看资料"
+msgstr "查看档案"
 
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.viewOnIpfs]
 #. defaultMessage is:
 #. View on IPFS
+msgctxt "listing-detail.viewOnIpfs"
 msgid "View on IPFS"
 msgstr "查看IPFS"
 
@@ -934,6 +1820,7 @@ msgstr "查看IPFS"
 #. [listing-create.viewSchemaLinkLabel]
 #. defaultMessage is:
 #. View the {schemaName} schema
+msgctxt "listing-create.viewSchemaLinkLabel"
 msgid "View the {schemaName} schema"
 msgstr "查看{schemaName}模式"
 
@@ -941,20 +1828,31 @@ msgstr "查看{schemaName}模式"
 #. [_ProvisionedChanges.visibleOnBlockchain]
 #. defaultMessage is:
 #. Visible on the blockchain
+msgctxt "_ProvisionedChanges.visibleOnBlockchain"
 msgid "Visible on the blockchain"
 msgstr "在区块链上可见"
+
+#: translations/messages/src/pages/profile/ConfirmUnload.json
+#. [ConfirmUpload.waitNotice]
+#. defaultMessage is:
+#. Wait! You haven’t published yet.
+msgctxt "ConfirmUpload.waitNotice"
+msgid "Wait! You haven’t published yet."
+msgstr "等待！您尚未发布。"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.whatHappensNextHeading]
 #. defaultMessage is:
 #. What happens next?
+msgctxt "listing-create.whatHappensNextHeading"
 msgid "What happens next?"
-msgstr "接下来发生什么？"
+msgstr "下一步是什么？"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.whatTypeOfListing]
 #. defaultMessage is:
 #. What type of listing do you want to create?
+msgctxt "listing-create.whatTypeOfListing"
 msgid "What type of listing do you want to create?"
 msgstr "你想创建什么类型的列表？"
 
@@ -962,6 +1860,7 @@ msgstr "你想创建什么类型的列表？"
 #. [listing-create.whatHappensNextContent1]
 #. defaultMessage is:
 #. When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network.
+msgctxt "listing-create.whatHappensNextContent1"
 msgid "When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network."
 msgstr "当您点击提交时，代表您的列表的JSON对象将被发布到{ipfsLink}，并且内容哈希将被发布到在以太坊网络上运行的列表智能合约。"
 
@@ -969,6 +1868,7 @@ msgstr "当您点击提交时，代表您的列表的JSON对象将被发布到{i
 #. [footer.whitepaperLink]
 #. defaultMessage is:
 #. Whitepaper
+msgctxt "footer.whitepaperLink"
 msgid "Whitepaper"
 msgstr "白皮书"
 
@@ -976,6 +1876,7 @@ msgstr "白皮书"
 #. [web3-provider.notSignedIntoMetaMask]
 #. defaultMessage is:
 #. You are not signed in to MetaMask.
+msgctxt "web3-provider.notSignedIntoMetaMask"
 msgid "You are not signed in to MetaMask."
 msgstr "您没有登录MetaMask。"
 
@@ -983,6 +1884,7 @@ msgstr "您没有登录MetaMask。"
 #. [_ProvisionedChanges.youArePublishing]
 #. defaultMessage is:
 #. You are publishing:
+msgctxt "_ProvisionedChanges.youArePublishing"
 msgid "You are publishing:"
 msgstr "您正在发布："
 
@@ -990,6 +1892,7 @@ msgstr "您正在发布："
 #. [my-listings.noListingsMessage]
 #. defaultMessage is:
 #. You currently have no listings.
+msgctxt "my-listings.noListingsMessage"
 msgid "You currently have no listings."
 msgstr "您目前没有列表。"
 
@@ -997,6 +1900,7 @@ msgstr "您目前没有列表。"
 #. [my-purchases.noPurchases]
 #. defaultMessage is:
 #. You currently have no purchases.
+msgctxt "my-purchases.noPurchases"
 msgid "You currently have no purchases."
 msgstr "您目前没有购买。"
 
@@ -1004,6 +1908,7 @@ msgstr "您目前没有购买。"
 #. [my-sales.noSales]
 #. defaultMessage is:
 #. You currently have no sales.
+msgctxt "my-sales.noSales"
 msgid "You currently have no sales."
 msgstr "您目前没有销售。"
 
@@ -1011,6 +1916,7 @@ msgstr "您目前没有销售。"
 #. [listings-grid.changeNetworks]
 #. defaultMessage is:
 #. You may need to change networks, or deploy the contract.
+msgctxt "listings-grid.changeNetworks"
 msgid "You may need to change networks, or deploy the contract."
 msgstr "您可能需要更换网络或部署合同。"
 
@@ -1018,6 +1924,7 @@ msgstr "您可能需要更换网络或部署合同。"
 #. [listing-create.schemaExplainer]
 #. defaultMessage is:
 #. Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services.
+msgctxt "listing-create.schemaExplainer"
 msgid "Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services."
 msgstr "您的产品或服务将使用模式来描述其属性，如名称，说明和价格。 Origin已经有多种模式，可以映射到众所周知的房源类别，如房屋，汽车和服务。"
 
@@ -1025,6 +1932,7 @@ msgstr "您的产品或服务将使用模式来描述其属性，如名称，说
 #. [notification.hasBeen]
 #. defaultMessage is:
 #. has been
+msgctxt "notification.hasBeen"
 msgid "has been"
 msgstr "已经"
 
@@ -1032,13 +1940,23 @@ msgstr "已经"
 #. [notification.haveBeen]
 #. defaultMessage is:
 #. have been
+msgctxt "notification.haveBeen"
 msgid "have been"
 msgstr "已经"
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.manageYourProfile]
+#. defaultMessage is:
+#. manage your profile
+msgctxt "Profile.manageYourProfile"
+msgid "manage your profile"
+msgstr "管理你的档案"
 
 #: translations/messages/src/components/notification.json
 #. [notification.purchased]
 #. defaultMessage is:
 #. purchased
+msgctxt "notification.purchased"
 msgid "purchased"
 msgstr "购买"
 
@@ -1046,13 +1964,15 @@ msgstr "购买"
 #. [notification.received]
 #. defaultMessage is:
 #. received
+msgctxt "notification.received"
 msgid "received"
-msgstr "收到"
+msgstr "received"
 
 #: translations/messages/src/components/notification.json
 #. [notification.sent]
 #. defaultMessage is:
 #. sent
+msgctxt "notification.sent"
 msgid "sent"
 msgstr "发送"
 
@@ -1060,6 +1980,7 @@ msgstr "发送"
 #. [my-sale-card.buyerNameLink]
 #. defaultMessage is:
 #. sold to {linkToBuyer}
+msgctxt "my-sale-card.buyerNameLink"
 msgid "sold to {linkToBuyer}"
 msgstr "卖给{linkToBuyer}"
 
@@ -1067,13 +1988,31 @@ msgstr "卖给{linkToBuyer}"
 #. [notification.withdrawn]
 #. defaultMessage is:
 #. withdrawn
+msgctxt "notification.withdrawn"
 msgid "withdrawn"
-msgstr "取消"
+msgstr "3 撤销。"
+
+#: translations/messages/src/pages/profile/_Wallet.json
+#. [_Wallet.ethBalance]
+#. defaultMessage is:
+#. {balance} ETH
+msgctxt "_Wallet.ethBalance"
+msgid "{balance} ETH"
+msgstr "{balance} ETH"
+
+#: translations/messages/src/components/web3-provider.json
+#. [web3-provider.shouldBeOnRinkeby]
+#. defaultMessage is:
+#. {currentProvider} should be on Rinkeby Test Network
+msgctxt "web3-provider.shouldBeOnRinkeby"
+msgid "{currentProvider} should be on Rinkeby Test Network"
+msgstr "{currentProvider}应该在Rinkeby测试网络上"
 
 #: translations/messages/src/components/listings-grid.json
 #. [listings-grid.listingsCount]
 #. defaultMessage is:
 #. {listingIdsCount} Listings
+msgctxt "listings-grid.listingsCount"
 msgid "{listingIdsCount} Listings"
 msgstr "{listingIdsCount}列表"
 
@@ -1081,6 +2020,7 @@ msgstr "{listingIdsCount}列表"
 #. [my-sale-card.nextStep1]
 #. defaultMessage is:
 #. {nextStep} Send the order to buyer
+msgctxt "my-sale-card.nextStep1"
 msgid "{nextStep} Send the order to buyer"
 msgstr "{nextStep}将订单发送给买家"
 
@@ -1088,6 +2028,7 @@ msgstr "{nextStep}将订单发送给买家"
 #. [my-sale-card.nextStep2]
 #. defaultMessage is:
 #. {nextStep} Wait for buyer to receive order
+msgctxt "my-sale-card.nextStep2"
 msgid "{nextStep} Wait for buyer to receive order"
 msgstr "{nextStep}等待买家接收订单"
 
@@ -1095,6 +2036,7 @@ msgstr "{nextStep}等待买家接收订单"
 #. [my-sale-card.nextStep3]
 #. defaultMessage is:
 #. {nextStep} Withdraw funds
+msgctxt "my-sale-card.nextStep3"
 msgid "{nextStep} Withdraw funds"
 msgstr "{nextStep}提取资金"
 
@@ -1102,6 +2044,7 @@ msgstr "{nextStep}提取资金"
 #. [_Guidance.content]
 #. defaultMessage is:
 #. {verifyingYourProfile} allows other users to know that you are a real person and increases the chances of successful transactions on Origin.
+msgctxt "_Guidance.content"
 msgid "{verifyingYourProfile} allows other users to know that you are a real person and increases the chances of successful transactions on Origin."
 msgstr "{验证你的配置文件}允许其他用户知道你是一个真实的人，并增加在Origin上成功交易的机会。"
 
