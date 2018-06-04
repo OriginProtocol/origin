@@ -13,7 +13,7 @@ contract ListingsRegistry {
    * Events
    */
 
-  event NewListing(uint _index);
+  event NewListing(uint _index, address _address);
 
   /*
    * Storage
@@ -81,8 +81,9 @@ contract ListingsRegistry {
     public
     returns (uint)
   {
-    listingStorage.add(new Listing(msg.sender, _ipfsHash, _price, _unitsAvailable));
-    emit NewListing((listingStorage.length())-1);
+    Listing newListing = new Listing(msg.sender, _ipfsHash, _price, _unitsAvailable);
+    listingStorage.add(newListing);
+    emit NewListing((listingStorage.length())-1, address(newListing));
     return listingStorage.length();
   }
 
@@ -102,12 +103,13 @@ contract ListingsRegistry {
     returns (uint)
   {
     require (msg.sender == owner, "Only callable by registry owner");
-    listingStorage.add(new Listing(_creatorAddress, _ipfsHash, _price, _unitsAvailable));
-    emit NewListing(listingStorage.length()-1);
+    Listing newListing = new Listing(_creatorAddress, _ipfsHash, _price, _unitsAvailable);
+    listingStorage.add(newListing);
+    emit NewListing(listingStorage.length()-1, address(newListing));
     return listingStorage.length();
   }
 
-  // @dev isTrustedListing(): Checks to see if a listing belongs to 
+  // @dev isTrustedListing(): Checks to see if a listing belongs to
   //                          this registry, and thus trusting that
   //                          it was created with good bytecode and
   //                          the proper initialization was completed.

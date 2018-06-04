@@ -10,13 +10,16 @@ const webpackConfig = require('../webpack.config.js')
 
 const args = process.argv.slice(2)
 const shouldWatch = (args.length && args[0] === 'serve')
+const noGanache = (args.length && args[1] === 'no-ganache')
 
 const start = async () => {
   let compiler = webpack(webpackConfig)
 
   if (shouldWatch) {
-    console.log(chalk`\n{bold.hex('#1a82ff') ⬢  Starting Local Blockchain }\n`);
-    await startGanache()
+    if (!noGanache) {
+      console.log(chalk`\n{bold.hex('#1a82ff') ⬢  Starting Local Blockchain }\n`);
+      await startGanache()
+    }
     console.log(chalk`\n{bold.hex('#26d198') ⬢  Deploying Smart Contracts }\n`);
     await deployContracts()
     console.log(chalk`\n{bold.hex('#6e3bea') ⬢  Starting Local IPFS }\n`);

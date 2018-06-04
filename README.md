@@ -1,12 +1,12 @@
 ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
 
-![origin_npm_version](https://img.shields.io/npm/v/origin.svg?style=flat-square&colorA=111d28&colorB=1a82ff) 
+![origin_npm_version](https://img.shields.io/npm/v/origin.svg?style=flat-square&colorA=111d28&colorB=1a82ff)
 ![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)
 ![origin_travis_banner](https://img.shields.io/travis/OriginProtocol/origin-js/master.svg?style=flat-square&colorA=111d28)
 
 # origin-js
 
-origin-js is a library of javascript code and Ethereum smart contracts which allow anyone to create decentralized marketplaces, including for fractional usage. It is an open source project created by [Origin Protocol](https://www.originprotocol.com/). 
+origin-js is a library of javascript code and Ethereum smart contracts which allow anyone to create decentralized marketplaces, including for fractional usage. It is an open source project created by [Origin Protocol](https://www.originprotocol.com/).
 
 To learn more about Origin Protocol, please read our [product brief](https://www.originprotocol.com/product-brief) and [whitepaper](https://www.originprotocol.com/whitepaper) for a high-level description of what we're building and why it matters. Our official website is [https://www.originprotocol.com](https://www.originprotocol.com).
 
@@ -17,7 +17,7 @@ To learn more about Origin Protocol, please read our [product brief](https://www
 
 ## Demo
 
-origin-js is showcased in our Demo DApp currently running on the Rinkeby testnet. 
+origin-js is showcased in our Demo DApp currently running on the Rinkeby testnet.
 - [Overview and step-by-step instructions](https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58)
 - [Live Demo](http://demo.originprotocol.com)
 - [Github Repo](https://github.com/OriginProtocol/demo-dapp)
@@ -57,7 +57,7 @@ If you would like to submit pull requests, you should instead fork this repo and
 npm run install:dev
 ```
 
-`install:dev` is shortcut for `npm install && npm link`. Linking means that changes to `origin-js` code are immediately available to local DApps without an `npm install`. 
+`install:dev` is shortcut for `npm install && npm link`. Linking means that changes to `origin-js` code are immediately available to local DApps without an `npm install`.
 
 ### 3. Start the local blockchain and build origin-js
 
@@ -66,7 +66,7 @@ npm start
 ```
 
 Code changes will trigger a live rebuild.
-    
+
 ### 4. Use with local Demo DApp
 
 To interact with your local origin-js and local blockahin, see [the instructions in our Demo DApp](https://github.com/OriginProtocol/demo-dapp#developing-with-a-local-chain).
@@ -100,6 +100,20 @@ A subset of our tests can be run from the browser. These tests are automatically
 
 Run a subset of these tests using the `grep` query string parameter, for example: http://localhost:8081/?grep=IpfsService
 
+## Using the Ganache GUI
+
+By default, starting origin-js locally starts [ganache-cli](https://github.com/trufflesuite/ganache-cli) automatically.
+However, for development you might want to connect to the [GUI version of Ganache](http://truffleframework.com/ganache/). This provides a nice interface for browsing your local blockchain activity and can be useful for debugging.
+
+To use the Ganache GUI:
+1. [Install Ganache](http://truffleframework.com/ganache/)
+1. Start Ganache
+1. Navigate to the settings in Ganache (click on the gear in the upper right-hand corner)
+1. Set `Port Number` to `8545`
+1. Set `Network ID` to `999`
+1. Under the `Accounts & Keys` tab, set the mnemonic to `candy maple cake sugar pudding cream honey rich smooth crumble sweet treat`
+1. When starting origin-js locally, run `npm run start:no-ganache` (instead of `npm run start`)
+
 ## Troubleshooting
 
 ### Python 3
@@ -115,9 +129,9 @@ Resolve this by configuring npm to use Python 2 (where python2.7 is a binary acc
 ```
 npm config set python python2.7
 ```
- 
+
 ## Contributing
 
-Origin is an 100% open-source and community-driven project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community. 
+Origin is an 100% open-source and community-driven project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community.
 
 To get involved, please join our [Discord channel](https://discord.gg/jyxpUSe) and review our [guide to contributing](https://docs.originprotocol.com/#contributing).
