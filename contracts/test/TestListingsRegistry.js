@@ -1,3 +1,6 @@
+const ListingsRegistryStorage = artifacts.require(
+  "./ListingsRegistryStorage.sol"
+)
 const contractDefinition = artifacts.require("./ListingsRegistry.sol")
 
 const initialListingsLength = 0
@@ -14,9 +17,14 @@ contract("ListingsRegistry", accounts => {
   var owner = accounts[0]
   var notOwner = accounts[1]
   var instance
+  var listingsRegistryStorage
 
   beforeEach(async function() {
-    instance = await contractDefinition.new({ from: owner })
+    listingsRegistryStorage = await ListingsRegistryStorage.new({ from: owner })
+    instance = await contractDefinition.new(listingsRegistryStorage.address, {
+      from: owner
+    })
+    listingsRegistryStorage.setActiveRegistry(instance.address)
   })
 
   it("should have owner as owner of contract", async function() {
@@ -84,5 +92,27 @@ contract("ListingsRegistry", accounts => {
       initUnitsAvailable,
       "unitsAvailable is correct"
     )
+  })
+
+  describe("Trusted listing check", async function() {
+    it("should verify a trusted listing", async function() {
+      await instance.create(ipfsHash, 3000, 1, { from: owner })
+      const listingIndex = (await instance.listingsLength()) - 1
+      trustedListingAddress = (await instance.getListing(listingIndex))[0]
+      const isVerified = await instance.isTrustedListing(trustedListingAddress)
+      expect(isVerified).to.equal(true)
+    })
+    it("should not verify an untrusted listing", async function() {
+      const otherStorage = await ListingsRegistryStorage.new()
+      const otherRegistry = await contractDefinition.new(otherStorage.address)
+      await otherStorage.setActiveRegistry(otherRegistry.address)
+      await otherRegistry.create(ipfsHash, 3000, 1)
+      const listingIndex = (await otherRegistry.listingsLength()) - 1
+      const otherListingAddress = (await otherRegistry.getListing(
+        listingIndex
+      ))[0]
+      const isVerified = await instance.isTrustedListing(otherListingAddress)
+      expect(isVerified).to.equal(false)
+    })
   })
 })
