@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { FormattedMessage } from 'react-intl'
 import $ from 'jquery'
 import moment from 'moment'
 import Avatar from './avatar'
@@ -387,7 +388,14 @@ class PurchaseDetail extends Component {
                         placeholderStyle={perspective === 'seller' ? 'green' : 'blue'}
                       />
                       <div className="identification d-flex flex-column justify-content-between text-truncate">
-                        <div><span className="badge badge-dark">Seller</span></div>
+                        <div>
+                          <span className="badge badge-dark">
+                            <FormattedMessage
+                              id={ 'purchase-detail.seller' }
+                              defaultMessage={ 'Seller' }
+                            />
+                          </span>
+                        </div>
                         <div className="name">{sellerName}</div>
                         <div className="address text-muted text-truncate">{seller.address}</div>
                       </div>
@@ -398,7 +406,14 @@ class PurchaseDetail extends Component {
                   <Link to={`/users/${buyer.address}`}>
                     <div className="d-flex justify-content-end">
                       <div className="identification d-flex flex-column text-right justify-content-between text-truncate">
-                        <div><span className="badge badge-dark">Buyer</span></div>
+                        <div>
+                          <span className="badge badge-dark">
+                            <FormattedMessage
+                              id={ 'purchase-detail.buyer' }
+                              defaultMessage={ 'Buyer' }
+                            />
+                          </span>
+                        </div>
                         <div className="name">{buyerName}</div>
                         <div className="address text-muted text-truncate">{buyer.address}</div>
                       </div>
