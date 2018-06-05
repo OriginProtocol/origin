@@ -28,7 +28,7 @@ class Timelapse extends Component {
 
   updateTimelapse() {
     const c = this
-    const { reference } = c.props
+    const { abbreviated, reference } = c.props
     const seconds = moment().diff(reference, 'seconds')
     const second = 1
     const minute = 60 * second
@@ -48,31 +48,31 @@ class Timelapse extends Component {
     }
 
     if (seconds < (c.props.delay || 4000) / 1000) {
-      timelapse = 'a few seconds ago'
+      timelapse = abbreviated ? '' : 'a few seconds ago'
     } else if (seconds < minute) {
-      timelapse = `${seconds} seconds ago`
+      timelapse = abbreviated ? `${seconds}s` : `${seconds} seconds ago`
     } else if (seconds < hour) {
       int = Math.floor(seconds / minute)
 
-      timelapse = `${int} minute${int > 1 ? 's' : ''} ago`
+      timelapse = abbreviated ? `${int}m` : `${int} minute${int > 1 ? 's' : ''} ago`
 
       conditionallyDecelerateInterval(minute)
     } else if (seconds < day) {
       int = Math.floor(seconds / hour)
 
-      timelapse = `${int} hour${int > 1 ? 's' : ''} ago`
+      timelapse = abbreviated ? `${int}h` : `${int} hour${int > 1 ? 's' : ''} ago`
 
       conditionallyDecelerateInterval(hour)
     } else if (seconds < year) {
       int = Math.floor(seconds / day)
 
-      timelapse = `${int} day${int > 1 ? 's' : ''} ago`
+      timelapse = abbreviated ? `${int}d` : `${int} day${int > 1 ? 's' : ''} ago`
 
       clearInterval(c.interval)
     } else {
       int = Math.floor(seconds / year)
 
-      timelapse = `over ${int} year${int > 1 ? 's' : ''} ago`
+      timelapse = abbreviated ? `${int}y` : `over ${int} year${int > 1 ? 's' : ''} ago`
 
       clearInterval(c.interval)
     }

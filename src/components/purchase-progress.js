@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import moment from 'moment'
 import { FormattedMessage } from 'react-intl'
 
-class TransactionProgress extends Component {
+class PurchaseProgress extends Component {
   constructor(props) {
     super(props)
 
@@ -156,4 +156,4 @@ class TransactionProgress extends Component {
   }
 }
 
-export default TransactionProgress
+export default PurchaseProgress
