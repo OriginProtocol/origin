@@ -369,9 +369,16 @@ class PurchaseDetail extends Component {
           <div className="row">
             <div className="col-12">
               <div className="brdcrmb">
-                {perspective === 'buyer' ? 'Purchased' : 'Sold'}
-                {' from '}
-                <Link to={`/users/${counterpartyUser.address}`}>{counterpartyUser.name}</Link>
+                {perspective === 'buyer' &&
+                  <Fragment>
+                    Purchased from <Link to={`/users/${counterpartyUser.address}`}>{sellerName}</Link>
+                  </Fragment>
+                }
+                {perspective === 'seller' &&
+                  <Fragment>
+                    Sold to <Link to={`/users/${counterpartyUser.address}`}>{buyerName}</Link>
+                  </Fragment>
+                }
               </div>
               <h1>{listing.name}</h1>
             </div>
@@ -555,7 +562,18 @@ class PurchaseDetail extends Component {
                 <div className="summary text-center">
                   {perspective === 'buyer' && <div className="purchased tag"><div>Purchased</div></div>}
                   {perspective === 'seller' && <div className="sold tag"><div>Sold</div></div>}
-                  <div className="recap">{counterpartyUser.name} {perspective === 'buyer' ? 'sold' : 'purchased'} on {moment(soldAt).format('MMMM D, YYYY')}</div>
+                  <div className="recap">
+                    {perspective === 'buyer' &&
+                      <Fragment>
+                        Purchased from {sellerName} on {moment(soldAt).format('MMMM D, YYYY')}
+                      </Fragment>
+                    }
+                    {perspective === 'seller' &&
+                      <Fragment>
+                        Sold to {buyerName} on {moment(soldAt).format('MMMM D, YYYY')}
+                      </Fragment>
+                    }
+                  </div>
                   <hr className="dark sm" />
                   <div className="d-flex">
                     <div className="text-left">Price</div>
