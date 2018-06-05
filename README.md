@@ -34,6 +34,7 @@ See the [README for the API](api)
 - Python 3.5 or higher required
 - Postgresql 9.3 or higher required
 - Redis 4.0+ recommended
+- ElasticSearch 5.X
 
 #### Mac OS specifics
 Install build tools packages:
