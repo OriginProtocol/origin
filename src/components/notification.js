@@ -65,7 +65,7 @@ class HumanReadableNotification extends Component {
         verb = this.props.intl.formatMessage(this.intlMessages.received)
         break
       case 'withdrawnAt':
-        subject = <Fragment>this.props.intl.formatMessage(this.intlMessages.fundsFromProduct, { productLink })</Fragment>
+        subject = <Fragment>{this.props.intl.formatMessage(this.intlMessages.fundsFromProduct, { productLink })}</Fragment>
         presPerf = this.props.intl.formatMessage(this.intlMessages.haveBeen)
         verb = this.props.intl.formatMessage(this.intlMessages.withdrawn)
         break
