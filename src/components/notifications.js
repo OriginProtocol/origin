@@ -1,18 +1,29 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import Notification from './notification'
-import data from '../data'
+
+import origin from '../services/origin'
 
 class Notifications extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { filter: 'unread' }
+    this.state = { filter: 'unread', notifications: [] }
+  }
+
+  async componentWillMount() {
+    try {
+      const notifications = await origin.notifications.all('0x627306090abaB3A6e1400e9345bC60c78a8BEf57')
+console.log('page notifications', notifications)
+      this.setState({ notifications })
+    } catch(e) {
+      console.error(e)
+    }
   }
 
   render() {
-    const { filter } = this.state
-    const notifications = filter === 'all' ? data.notifications : data.notifications.filter(n => {
+    const { filter, notifications } = this.state
+    const filteredNotifications = filter === 'all' ? notifications : notifications.filter(n => {
       return filter === 'unread' ? !n.readAt : (n.perspective === filter)
     })
 
@@ -56,7 +67,7 @@ class Notifications extends Component {
             <div className="col-12 col-md-9">
               <div className="notifications-list">
                 <ul className="list-group">
-                  {notifications.map(n => <Notification key={`notification-${n._id}`} notification={n} />)}
+                  {filteredNotifications.map(n => <Notification key={`page-notification:${n.id}`} notification={n} />)}
                 </ul>
               </div>
             </div>

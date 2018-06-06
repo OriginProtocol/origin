@@ -2,18 +2,32 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 import Notification from 'components/notification'
-import data from '../../data'
+
+import origin from '../../services/origin'
 
 class NotificationsDropdown extends Component {
   constructor(props) {
     super(props)
+
+    this.state = { notifications: [] }
+  }
+
+  async componentWillMount() {
+    try {
+      const notifications = await origin.notifications.all()
+console.log('navbar notifications', notifications)
+      this.setState({ notifications })
+    } catch(e) {
+      console.error(e)
+    }
   }
 
   render() {
-    // randomly select from three examples
-    const exampleCounts = [4, 44, 444][Math.floor(Math.random() * 3)]
+    const { notifications } = this.state
     // avoid integers greater than two digits
-    const notificationCount = exampleCounts < 100 ? Number(exampleCounts).toLocaleString() : `${Number(99).toLocaleString()}+`
+    const notificationCount = notifications.length < 100 ?
+                              Number(notifications.length).toLocaleString() :
+                              `${Number(99).toLocaleString()}+`
 
     return (
       <div className="nav-item notifications dropdown">
@@ -33,7 +47,7 @@ class NotificationsDropdown extends Component {
             </header>
             <div className="notifications-list">
               <ul className="list-group">
-                {data.notifications.map(n => <Notification key={`navbar-notification-${n._id}`} notification={n} />)}
+                {notifications.map(n => <Notification key={`dropdown-notification:${n.id}`} notification={n} />)}
               </ul>
             </div>
             <footer>
