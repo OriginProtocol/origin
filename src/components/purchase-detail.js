@@ -6,7 +6,7 @@ import moment from 'moment'
 import Avatar from './avatar'
 import Review from './review'
 import TransactionEvent from '../pages/purchases/transaction-event'
-import TransactionProgress from './transaction-progress'
+import PurchaseProgress from './purchase-progress'
 import UserCard from './user-card'
 
 import origin from '../services/origin'
@@ -363,7 +363,7 @@ class PurchaseDetail extends Component {
     const sellerName = (seller.profile && `${seller.profile.firstName} ${seller.profile.lastName}`) || 'Unnamed User'
 
     return (
-      <div className="transaction-detail">
+      <div className="purchase-detail">
         <div className="container">
           <div className="row">
             <div className="col-12">
@@ -375,7 +375,7 @@ class PurchaseDetail extends Component {
               <h1>{listing.name}</h1>
             </div>
           </div>
-          <div className="transaction-status row">
+          <div className="purchase-status row">
             <div className="col-12 col-lg-8">
               <h2>Transaction Status</h2>
               <div className="row">
@@ -410,7 +410,7 @@ class PurchaseDetail extends Component {
                   </Link>
                 </div>
                 <div className="col-12">
-                  <TransactionProgress currentStep={step} maxStep={maxStep} purchase={listing} perspective={perspective} />
+                  <PurchaseProgress currentStep={step} maxStep={maxStep} purchase={listing} perspective={perspective} />
                 </div>
                 {nextStep &&
                   <div className="col-12">

@@ -63,7 +63,7 @@ class MyListingCard extends Component {
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
 
     return (
-      <div className="transaction card">
+      <div className="purchase card">
         <div className="card-body d-flex flex-column flex-lg-row">
           <div className="aspect-ratio">
             <div className={`${photo ? '' : 'placeholder '}image-container d-flex justify-content-center`}>
