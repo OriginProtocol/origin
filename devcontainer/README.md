@@ -15,13 +15,13 @@ This docker image installs and runs the bridge server (along with postgres, redi
 - bridge server envionment variable file is located at `/opt/bridge-server/.env` within the container
 - database url: postgresql://docker:docker@localhost:5432/bridge-server
 - if running the demo-dapp locally alongside the container, use these settings for the environment variable (.env) file:
-`BRIDGE_SERVER_PROTOCOL=http
-BRIDGE_SERVER_DOMAIN=localhost:5000
-IPFS_API_PORT=5002
-IPFS_DOMAIN=localhost
-IPFS_GATEWAY_PORT=8080
-IPFS_GATEWAY_PROTOCOL=http
-PROVIDER_URL=http://localhost:8545`
+    - `BRIDGE_SERVER_PROTOCOL=http`
+    - `BRIDGE_SERVER_DOMAIN=localhost:5000`
+    - `IPFS_API_PORT=5002`
+    - `IPFS_DOMAIN=localhost`
+    - `IPFS_GATEWAY_PORT=8080`
+    - `IPFS_GATEWAY_PROTOCOL=http`
+    - `PROVIDER_URL=http://localhost:8545`
 
 **Connectivity tests from localhost**
 - bridge server: curl http://127.0.0.1:5000
