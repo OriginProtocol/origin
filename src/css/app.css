@@ -3212,7 +3212,7 @@ footer .footer-links li a {
   .navbar .sell .dropdown-menu {
     position: absolute;
     left: auto;
-    right: calc(((100% - 960px) / 2) + 60px + 60px + 60px + 60px + 30px + 15px + 120px);
+    right: calc(((100% - 960px) / 2) + 60px + 60px + 60px + 60px + 30px + 15px + 120px + 10px);
   }
 
   .navbar .sell .dropdown-menu .actual-menu {
@@ -3314,7 +3314,7 @@ footer .footer-links li a {
   }
 
   .navbar .sell .dropdown-menu {
-    right: calc(((100% - 1140px) / 2) + 60px + 60px + 60px + 60px + 30px + 15px + 120px);
+    right: calc(((100% - 1140px) / 2) + 60px + 60px + 60px + 60px + 30px + 15px + 120px + 10px);
   }
 
   .navbar .transactions .dropdown-menu {
