@@ -3,7 +3,9 @@ const minifyContracts = require('./minify-contracts')
 
 const buildContracts = () => {
   return new Promise((resolve, reject) => {
-    const truffleCompile = spawn('../node_modules/.bin/truffle', ['compile'], { cwd: './contracts' })
+    const truffleCompile = spawn('../node_modules/.bin/truffle', ['compile'], {
+      cwd: './contracts'
+    })
     truffleCompile.stdout.pipe(process.stdout)
     truffleCompile.stderr.on('data', data => {
       reject(String(data))

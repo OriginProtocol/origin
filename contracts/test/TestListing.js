@@ -1,38 +1,38 @@
-const Listing = artifacts.require("./Listing.sol")
-const Purchase = artifacts.require("./Purchase.sol")
+const Listing = artifacts.require('./Listing.sol')
+const Purchase = artifacts.require('./Purchase.sol')
 
 // Used to assert error cases
 const isEVMError = function(err) {
-  let str = err.toString()
-  return str.includes("revert")
+  const str = err.toString()
+  return str.includes('revert')
 }
 
 const timetravel = async function(seconds) {
-  var transaction = await web3.currentProvider.send({
-    jsonrpc: "2.0",
-    method: "evm_increaseTime",
+  await web3.currentProvider.send({
+    jsonrpc: '2.0',
+    method: 'evm_increaseTime',
     params: [seconds],
     id: 0
   })
   await web3.currentProvider.send({
-    jsonrpc: "2.0",
-    method: "evm_mine",
+    jsonrpc: '2.0',
+    method: 'evm_mine',
     params: [],
     id: 0
   })
 }
 
 const ipfsHash =
-  "0x6b14cac30356789cd0c39fec0acc2176c3573abdb799f3b17ccc6972ab4d39ba"
+  '0x6b14cac30356789cd0c39fec0acc2176c3573abdb799f3b17ccc6972ab4d39ba'
 const price = 33
 const unitsAvailable = 42
 const LISTING_EXPIRATION_SECONDS = 60 * 24 * 60 * 60
 
-contract("Listing", accounts => {
-  var seller = accounts[0]
-  var buyer = accounts[1]
-  var stranger = accounts[2]
-  var listing
+contract('Listing', accounts => {
+  const seller = accounts[0]
+  const buyer = accounts[1]
+  const stranger = accounts[2]
+  let listing
 
   beforeEach(async function() {
     listing = await Listing.new(seller, ipfsHash, price, unitsAvailable, {
@@ -40,65 +40,65 @@ contract("Listing", accounts => {
     })
   })
 
-  it("should have correct price", async function() {
-    let newPrice = await listing.price()
-    assert.equal(newPrice, price, "price is correct")
+  it('should have correct price', async function() {
+    const newPrice = await listing.price()
+    assert.equal(newPrice, price, 'price is correct')
   })
 
-  it("should allow getting listing information", async function() {
-    let data = await listing.data()
-    assert.equal(data[0], seller, "owner")
-    assert.equal(data[1], ipfsHash, "ipfsHash")
-    assert.equal(data[2], price, "price")
-    assert.equal(data[3], unitsAvailable, "unitsAvailable")
+  it('should allow getting listing information', async function() {
+    const data = await listing.data()
+    assert.equal(data[0], seller, 'owner')
+    assert.equal(data[1], ipfsHash, 'ipfsHash')
+    assert.equal(data[2], price, 'price')
+    assert.equal(data[3], unitsAvailable, 'unitsAvailable')
     assert.equal(
       data[4].toNumber(),
       (await listing.created()).toNumber(),
-      "created"
+      'created'
     )
     assert.equal(
       data[5].toNumber(),
       (await listing.expiration()).toNumber(),
-      "expiration"
+      'expiration'
     )
   })
 
-  it("should decrement the number of units sold", async function() {
+  it('should decrement the number of units sold', async function() {
     const unitsToBuy = 3
     await listing.buyListing(unitsToBuy, { from: buyer, value: 6 })
     assert.equal(await listing.unitsAvailable(), unitsAvailable - unitsToBuy)
   })
 
-  it("should decrement the number of units sold to zero if needed", async function() {
+  it('should decrement the number of units sold to zero if needed', async function() {
     const unitsToBuy = unitsAvailable
     await listing.buyListing(unitsToBuy, { from: buyer, value: 6 })
     assert.equal(await listing.unitsAvailable(), 0)
   })
 
-  it("should not allow a sale that would decrement the number of units sold to below zero", async function() {
+  it('should not allow a sale that would decrement the number of units sold to below zero', async function() {
     const unitsToBuy = unitsAvailable + 1
     try {
       await listing.buyListing(unitsToBuy, { from: buyer, value: 6 })
     } catch (err) {
-      assert.ok(isEVMError(err), "an EVM error is thrown")
+      assert.ok(isEVMError(err), 'an EVM error is thrown')
     }
     assert.equal(await listing.unitsAvailable(), unitsAvailable)
   })
 
-  it("should not be able to be sold after expiration", async function() {
+  it('should not be able to be sold after expiration', async function() {
     timetravel(LISTING_EXPIRATION_SECONDS + 10)
     // Try to buy 1
     try {
       await listing.buyListing(1, { from: buyer, value: 6 })
     } catch (err) {
       // Verify failure
-      assert.ok(isEVMError(err), "an EVM error is thrown")
+      assert.ok(isEVMError(err), 'an EVM error is thrown')
     }
     // Verify no change to listing
     assert.equal(await listing.unitsAvailable(), unitsAvailable)
   })
 
-  it("should be able to be sold before expiration", async function() {
+  it('should be able to be sold before expiration', async function() {
     timetravel(LISTING_EXPIRATION_SECONDS - 10)
     // Buy 1
     await listing.buyListing(1, { from: buyer, value: 6 })
@@ -106,41 +106,41 @@ contract("Listing", accounts => {
     assert.equal(await listing.unitsAvailable(), unitsAvailable - 1)
   })
 
-  it("should allow the seller to close it", async function() {
+  it('should allow the seller to close it', async function() {
     assert.equal(await listing.unitsAvailable(), unitsAvailable)
     await listing.close({ from: seller })
     assert.equal(await listing.unitsAvailable(), 0)
   })
 
-  it("should not allow a stranger to close it", async function() {
+  it('should not allow a stranger to close it', async function() {
     assert.equal(await listing.unitsAvailable(), unitsAvailable)
     try {
       await listing.close({ from: stranger })
     } catch (err) {
-      assert.ok(isEVMError(err), "an EVM error is thrown")
+      assert.ok(isEVMError(err), 'an EVM error is thrown')
     }
     assert.equal(await listing.unitsAvailable(), unitsAvailable)
   })
 
-  it("should be able to buy a listing", async function() {
+  it('should be able to buy a listing', async function() {
     const unitsToBuy = 1 // TODO: Handle multiple units
     const buyTransaction = await listing.buyListing(unitsToBuy, {
       from: buyer,
       value: 6
     })
     const listingPurchasedEvent = buyTransaction.logs.find(
-      e => e.event == "ListingPurchased"
+      e => e.event == 'ListingPurchased'
     )
     const purchaseContract = await Purchase.at(
       listingPurchasedEvent.args._purchaseContract
     )
 
     // Check units available decreased
-    let newUnitsAvailable = await listing.unitsAvailable()
+    const newUnitsAvailable = await listing.unitsAvailable()
     assert.equal(
       newUnitsAvailable,
       unitsAvailable - unitsToBuy,
-      "units available has decreased"
+      'units available has decreased'
     )
 
     // Check buyer set correctly

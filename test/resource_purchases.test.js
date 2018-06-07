@@ -1,35 +1,34 @@
-import { expect } from "chai"
-import Listings from "../src/resources/listings.js"
-import Purchase from "../src/resources/purchases.js"
-import Review from "../src/resources/reviews.js"
-import ContractService from "../src/services/contract-service"
-import IpfsService from "../src/services/ipfs-service.js"
-import Web3 from "web3"
-import asAccount from "./helpers/as-account"
+import { expect } from 'chai'
+import Listings from '../src/resources/listings.js'
+import Purchase from '../src/resources/purchases.js'
+import Review from '../src/resources/reviews.js'
+import ContractService from '../src/services/contract-service'
+import IpfsService from '../src/services/ipfs-service.js'
+import Web3 from 'web3'
+import asAccount from './helpers/as-account'
 
-describe("Purchase Resource", function() {
+describe('Purchase Resource', function() {
   this.timeout(5000) // default is 2000
 
-  var listings
-  var listing
-  var purchases
-  var purchase
-  var reviews
-  var contractService
-  var ipfsService
-  var testListingIds
-  var web3
-  var buyer
+  let listings
+  let listing
+  let purchases
+  let purchase
+  let reviews
+  let contractService
+  let ipfsService
+  let web3
+  let buyer
 
   before(async () => {
-    let provider = new Web3.providers.HttpProvider("http://localhost:8545")
+    const provider = new Web3.providers.HttpProvider('http://localhost:8545')
     web3 = new Web3(provider)
     contractService = new ContractService({ web3 })
     ipfsService = new IpfsService({
-      ipfsDomain: "127.0.0.1",
-      ipfsApiPort: "5002",
-      ipfsGatewayPort: "8080",
-      ipfsGatewayProtocol: "http"
+      ipfsDomain: '127.0.0.1',
+      ipfsApiPort: '5002',
+      ipfsGatewayPort: '8080',
+      ipfsGatewayProtocol: 'http'
     })
     listings = new Listings({ contractService, ipfsService })
     purchases = new Purchase({ contractService, ipfsService })
@@ -41,18 +40,18 @@ describe("Purchase Resource", function() {
   // Helpers
   // -----
 
-  let resetListingAndPurchase = async () => {
+  const resetListingAndPurchase = async () => {
     // Create a new listing and a new purchase for the tests to use.
     const listingData = {
-      name: "Australorp Rooser",
-      category: "For Sale",
-      location: "Atlanta, GA",
+      name: 'Australorp Rooser',
+      category: 'For Sale',
+      location: 'Atlanta, GA',
       description:
-        "Peaceful and dignified, Australorps are an absolutely delightful bird which we highly recommend to anyone who wants a pet chicken that lays dependably.",
+        'Peaceful and dignified, Australorps are an absolutely delightful bird which we highly recommend to anyone who wants a pet chicken that lays dependably.',
       pictures: undefined,
       price: 0.2
     }
-    const schema = "for-sale"
+    const schema = 'for-sale'
     const listingTransaction = await listings.create(listingData, schema)
 
     const listingEvent = listingTransaction.events.NewListing
@@ -70,88 +69,88 @@ describe("Purchase Resource", function() {
     purchase = await purchases.get(purchaseEvent.returnValues._purchaseContract)
   }
 
-  let expectStage = function(expectedStage) {
+  const expectStage = function(expectedStage) {
     expect(purchase.stage).to.equal(expectedStage)
   }
 
   // Tests
   // -----
 
-  describe("simple purchase flow", async () => {
+  describe('simple purchase flow', async () => {
     before(async () => {
       await resetListingAndPurchase()
     })
 
-    it("should get a purchase", async () => {
-      expectStage("awaiting_payment")
+    it('should get a purchase', async () => {
+      expectStage('awaiting_payment')
       expect(purchase.listingAddress).to.equal(listing.address)
       expect(purchase.buyerAddress).to.equal(buyer)
     })
 
-    it("should allow the buyer to pay", async () => {
-      expectStage("awaiting_payment")
+    it('should allow the buyer to pay', async () => {
+      expectStage('awaiting_payment')
       await asAccount(contractService.web3, buyer, async () => {
         await purchases.pay(
           purchase.address,
-          contractService.web3.utils.toWei("0.1", "ether")
+          contractService.web3.utils.toWei('0.1', 'ether')
         )
       })
       purchase = await purchases.get(purchase.address)
-      expectStage("shipping_pending")
+      expectStage('shipping_pending')
     })
 
-    it("should allow the seller to mark as shipped", async () => {
-      expectStage("shipping_pending")
+    it('should allow the seller to mark as shipped', async () => {
+      expectStage('shipping_pending')
       await purchases.sellerConfirmShipped(purchase.address)
       purchase = await purchases.get(purchase.address)
-      expectStage("buyer_pending")
+      expectStage('buyer_pending')
     })
 
-    it("should allow the buyer to mark a purchase received", async () => {
-      expectStage("buyer_pending")
+    it('should allow the buyer to mark a purchase received', async () => {
+      expectStage('buyer_pending')
       await asAccount(contractService.web3, buyer, async () => {
         await purchases.buyerConfirmReceipt(purchase.address, { rating: 3 })
       })
       purchase = await purchases.get(purchase.address)
-      expectStage("seller_pending")
+      expectStage('seller_pending')
     })
 
-    it("should allow the seller to collect money", async () => {
-      expectStage("seller_pending")
-      var reviewText = "Some delay before marking purchase recieved"
+    it('should allow the seller to collect money', async () => {
+      expectStage('seller_pending')
+      const reviewText = 'Some delay before marking purchase recieved'
       await purchases.sellerGetPayout(purchase.address, {
         rating: 4,
         reviewText: reviewText
       })
       purchase = await purchases.get(purchase.address)
-      expectStage("complete")
+      expectStage('complete')
       const purchaseReviews = await reviews.find({
         purchaseAddress: purchase.address
       })
       expect(purchaseReviews[1].rating).to.equal(4)
       expect(purchaseReviews[1].revieweeAddress).to.equal(purchase.buyerAddress)
-      expect(purchaseReviews[1].revieweeRole).to.equal("BUYER")
+      expect(purchaseReviews[1].revieweeRole).to.equal('BUYER')
     })
 
-    it("should list logs", async () => {
-      var logs = await purchases.getLogs(purchase.address)
-      expect(logs[0].stage).to.equal("awaiting_payment")
-      expect(logs[1].stage).to.equal("shipping_pending")
-      expect(logs[2].stage).to.equal("buyer_pending")
-      expect(logs[3].stage).to.equal("seller_pending")
-      expect(logs[4].stage).to.equal("complete")
+    it('should list logs', async () => {
+      const logs = await purchases.getLogs(purchase.address)
+      expect(logs[0].stage).to.equal('awaiting_payment')
+      expect(logs[1].stage).to.equal('shipping_pending')
+      expect(logs[2].stage).to.equal('buyer_pending')
+      expect(logs[3].stage).to.equal('seller_pending')
+      expect(logs[4].stage).to.equal('complete')
     })
   })
 
-  describe("transactions have a whenMined promise", async () => {
+  describe('transactions have a whenMined promise', async () => {
     before(async () => {
       await resetListingAndPurchase()
     })
 
-    it("should allow us to wait for a transaction to be mined", async () => {
+    it('should allow us to wait for a transaction to be mined', async () => {
       const transaction = await purchases.pay(
         purchase.address,
-        contractService.web3.utils.toWei("0.1", "ether")
+        contractService.web3.utils.toWei('0.1', 'ether')
       )
       await transaction.whenFinished()
     })

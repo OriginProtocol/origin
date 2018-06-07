@@ -1,4 +1,4 @@
-const chalk = require('chalk');
+const chalk = require('chalk')
 const startGanache = require('./helpers/start-ganache')
 const testContracts = require('./helpers/test-contracts')
 const buildContracts = require('./helpers/build-contracts')
@@ -11,9 +11,9 @@ let isEnqueued = false
 const runTests = async () => {
   if (!isRunning) {
     isRunning = true
-    console.log(chalk`\n{bold.hex('#6e3bea') ⬢  Compiling Smart Contracts }\n`);
+    console.log(chalk`\n{bold.hex('#6e3bea') ⬢  Compiling Smart Contracts }\n`)
     await buildContracts()
-    console.log(chalk`\n{bold.hex('#1a82ff') ⬢  Testing Smart Contracts }\n`);
+    console.log(chalk`\n{bold.hex('#1a82ff') ⬢  Testing Smart Contracts }\n`)
     await testContracts()
     isRunning = false
     if (isEnqueued) {
@@ -26,18 +26,22 @@ const runTests = async () => {
 }
 
 const start = async () => {
-  console.log(chalk`\n{bold.hex('#26d198') ⬢  Starting Local Blockchain }\n`);
+  console.log(chalk`\n{bold.hex('#26d198') ⬢  Starting Local Blockchain }\n`)
   await startGanache()
-  console.log(chalk`\n{bold.hex('#1a82ff') ⬢  Starting Local IPFS }\n`);
+  console.log(chalk`\n{bold.hex('#1a82ff') ⬢  Starting Local IPFS }\n`)
   await startIpfs()
 
   runTests()
 
   // watch contracts
-  watch(['./contracts/contracts', './contracts/test'], { recursive: true }, async (evt, name) => {
-    console.log('%s changed.', name)
-    runTests()
-  })
+  watch(
+    ['./contracts/contracts', './contracts/test'],
+    { recursive: true },
+    async (evt, name) => {
+      console.log('%s changed.', name)
+      runTests()
+    }
+  )
 }
 
 start()
