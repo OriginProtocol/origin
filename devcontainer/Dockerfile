@@ -54,7 +54,7 @@ RUN pip3 install virtualenv
 RUN git clone https://github.com/OriginProtocol/bridge-server.git
 WORKDIR /opt/bridge-server/
 RUN git branch --track origin remotes/origin/develop && \
-	git pull origin develop
+	git checkout develop
 RUN virtualenv bridge-server-venv && \
 	. bridge-server-venv/bin/activate
 # for compiling dependencies of bridge server... dependencies (on 16.04)
