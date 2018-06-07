@@ -14,12 +14,6 @@ WORKDIR /tmp
 RUN curl -sL https://deb.nodesource.com/setup_9.x | bash -
 RUN apt-get install -y nodejs
 
-# IPFS, Ganache (through origin-js)
-WORKDIR /opt
-RUN git clone https://github.com/OriginProtocol/origin-js.git
-WORKDIR /opt/origin-js
-RUN npm run install:dev
-
 # Postgresql 9.3
 # https://docs.docker.com/engine/examples/postgresql_service/#connecting-from-your-host-system
 WORKDIR /opt/pg
