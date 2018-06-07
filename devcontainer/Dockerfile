@@ -60,10 +60,10 @@ RUN virtualenv bridge-server-venv && \
 # for compiling dependencies of bridge server... dependencies (on 16.04)
 RUN apt-get install -y pkg-config libffi-dev autoconf libtool libssl-dev
 # TODO: remove hacks
-RUN sed -i '/pytest-*/d' requirements.txt 
+RUN sed -i '/pytest-*/d' requirements.txt
 RUN bridge-server-venv/bin/pip3.6 install -r requirements.txt
 COPY files/config/bridge_server_dev.env .env
-# needed by flask 
+# needed by flask
 ENV LC_ALL=C.UTF-8 \
     LANG=C.UTF-8
 RUN /etc/init.d/postgresql start && \
