@@ -24,8 +24,7 @@ const languageWithoutRegionCode = detectedLanguage.toLowerCase().split(/[_-]+/)[
 
 // English is our default - to prevent errors, we set to undefined for English
 // https://github.com/yahoo/react-intl/issues/619#issuecomment-242765427
-// const language = (languageWithoutRegionCode === "en-US") ? undefined : languageWithoutRegionCode
-const language = 'zh'
+const language = (languageWithoutRegionCode === "en-US") ? undefined : languageWithoutRegionCode
 
 // Try full locale, try locale without region code, fallback to 'en'
 const messages = translations[languageWithoutRegionCode] || translations[language] || translations.en;
