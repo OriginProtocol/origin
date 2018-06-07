@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-06-04T21:59:21.017Z\n"
+"POT-Creation-Date: 2018-06-07T06:28:00.446Z\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "MIME-Version: 1.0\n"
@@ -159,6 +159,14 @@ msgctxt "listing-detail.buyNow"
 msgid "Buy Now"
 msgstr ""
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.buyer]
+#. defaultMessage is:
+#. Buyer
+msgctxt "purchase-detail.buyer"
+msgid "Buyer"
+msgstr ""
+
 #: translations/messages/src/pages/profile/EditProfile.json
 #. [EditProfile.cancel]
 #. defaultMessage is:
@@ -215,6 +223,22 @@ msgctxt "web3-provider.cipher"
 msgid "Cipher"
 msgstr ""
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.sendOrderInstruction]
+#. defaultMessage is:
+#. Click the button below once the order has shipped.
+msgctxt "purchase-detail.sendOrderInstruction"
+msgid "Click the button below once the order has shipped."
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.clickToWithdraw]
+#. defaultMessage is:
+#. Click the button below to initiate the withdrawal
+msgctxt "purchase-detail.clickToWithdraw"
+msgid "Click the button below to initiate the withdrawal"
+msgstr ""
+
 #: translations/messages/src/components/my-listing-card.json
 #. [my-listing-card.closeListing]
 #. defaultMessage is:
@@ -253,6 +277,30 @@ msgstr ""
 #. Complete
 msgctxt "my-sales.complete"
 msgid "Complete"
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.completeByWithdrawing]
+#. defaultMessage is:
+#. Complete your transaction by withdrawing funds
+msgctxt "purchase-detail.completeByWithdrawing"
+msgid "Complete your transaction by withdrawing funds"
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.confirmAndReview]
+#. defaultMessage is:
+#. Confirm and Review
+msgctxt "purchase-detail.confirmAndReview"
+msgid "Confirm and Review"
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.confirmReceiptOfOrder]
+#. defaultMessage is:
+#. Confirm receipt of the order and leave a review
+msgctxt "purchase-detail.confirmReceiptOfOrder"
+msgid "Confirm receipt of the order and leave a review"
 msgstr ""
 
 #: translations/messages/src/components/listing-create.json
@@ -615,6 +663,14 @@ msgctxt "Profile.facebookVerified"
 msgid "Facebook account verified!"
 msgstr ""
 
+#: translations/messages/src/components/listing-card.json
+#. [listing-card.featured]
+#. defaultMessage is:
+#. Featured
+msgctxt "listing-card.featured"
+msgid "Featured"
+msgstr ""
+
 #: translations/messages/src/pages/profile/EditProfile.json
 #. [EditProfile.firstName]
 #. defaultMessage is:
@@ -637,6 +693,14 @@ msgstr ""
 #. For Sale
 msgctxt "listing-create.forSaleLabel"
 msgid "For Sale"
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.from]
+#. defaultMessage is:
+#. From
+msgctxt "purchase-detail.from"
+msgid "From"
 msgstr ""
 
 #: translations/messages/src/components/web3-provider.json
@@ -847,6 +911,14 @@ msgctxt "ConfirmPublish.letsDoIt"
 msgid "Let's do it!"
 msgstr ""
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.listingDetails]
+#. defaultMessage is:
+#. Listing Details
+msgctxt "purchase-detail.listingDetails"
+msgid "Listing Details"
+msgstr ""
+
 #: translations/messages/src/components/navbar.json
 #. [navbar.listings]
 #. defaultMessage is:
@@ -885,6 +957,14 @@ msgstr ""
 #. Loading...
 msgctxt "my-sales.loading"
 msgid "Loading..."
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.markOrderSent]
+#. defaultMessage is:
+#. Mark Order as Sent
+msgctxt "purchase-detail.markOrderSent"
+msgid "Mark Order as Sent"
 msgstr ""
 
 #: translations/messages/src/components/footer.json
@@ -943,6 +1023,14 @@ msgctxt "listing-create.next"
 msgid "Next"
 msgstr ""
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.nextStep]
+#. defaultMessage is:
+#. Next Step:
+msgctxt "purchase-detail.nextStep"
+msgid "Next Step:"
+msgstr ""
+
 #: translations/messages/src/pages/profile/_Wallet.json
 #. [_Wallet.noEthAccountConnected]
 #. defaultMessage is:
@@ -965,6 +1053,14 @@ msgstr ""
 #. Not visible on the blockchain
 msgctxt "_ProvisionedChanges.notVisibleOnBlockchain"
 msgid "Not visible on the blockchain"
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.nothingToDo]
+#. defaultMessage is:
+#. Nothing for you to do at this time. Check back later
+msgctxt "purchase-detail.nothingToDo"
+msgid "Nothing for you to do at this time. Check back later"
 msgstr ""
 
 #: translations/messages/src/components/listing-create.json
@@ -1255,6 +1351,14 @@ msgctxt "listing-detail.price"
 msgid "Price"
 msgstr ""
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.price]
+#. defaultMessage is:
+#. Price
+msgctxt "purchase-detail.price"
+msgid "Price"
+msgstr ""
+
 #: translations/messages/src/components/my-sale-card.json
 #. [my-sale-card.price]
 #. defaultMessage is:
@@ -1343,6 +1447,22 @@ msgctxt "transaction-progress.purchased"
 msgid "Purchased"
 msgstr ""
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.purchasedFrom]
+#. defaultMessage is:
+#. Purchased from {sellerLink}
+msgctxt "purchase-detail.purchasedFrom"
+msgid "Purchased from {sellerLink}"
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.purchasedFromOn]
+#. defaultMessage is:
+#. Purchased from {sellerName} on {date}
+msgctxt "purchase-detail.purchasedFromOn"
+msgid "Purchased from {sellerName} on {date}"
+msgstr ""
+
 #: translations/messages/src/pages/profile/ConfirmPublish.json
 #. [ConfirmPublish.readyToGoPublic]
 #. defaultMessage is:
@@ -1383,11 +1503,27 @@ msgctxt "transaction-progress.receivedByMe"
 msgid "Received by me"
 msgstr ""
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.reviewLabel]
+#. defaultMessage is:
+#. Review
+msgctxt "purchase-detail.reviewLabel"
+msgid "Review"
+msgstr ""
+
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.reviews]
 #. defaultMessage is:
 #. Reviews
 msgctxt "listing-detail.reviews"
+msgid "Reviews"
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.reviewsHeading]
+#. defaultMessage is:
+#. Reviews
+msgctxt "purchase-detail.reviewsHeading"
 msgid "Reviews"
 msgstr ""
 
@@ -1455,12 +1591,28 @@ msgctxt "notifications.sell"
 msgid "Sell"
 msgstr ""
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.seller]
+#. defaultMessage is:
+#. Seller
+msgctxt "purchase-detail.seller"
+msgid "Seller"
+msgstr ""
+
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.seller]
 #. defaultMessage is:
 #. Seller: {sellerAddress}
 msgctxt "listing-detail.seller"
 msgid "Seller: {sellerAddress}"
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.sendOrder]
+#. defaultMessage is:
+#. Send the order to buyer
+msgctxt "purchase-detail.sendOrder"
+msgid "Send the order to buyer"
 msgstr ""
 
 #: translations/messages/src/components/my-purchase-card.json
@@ -1519,12 +1671,36 @@ msgctxt "my-listing-card.soldOut"
 msgid "Sold Out"
 msgstr ""
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.soldTo]
+#. defaultMessage is:
+#. Sold to {buyerLink}
+msgctxt "purchase-detail.soldTo"
+msgid "Sold to {buyerLink}"
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.soldToOn]
+#. defaultMessage is:
+#. Sold to {buyerName} on {date}
+msgctxt "purchase-detail.soldToOn"
+msgid "Sold to {buyerName} on {date}"
+msgstr ""
+
 #: translations/messages/src/pages/profile/Profile.json
 #. [Profile.status]
 #. defaultMessage is:
 #. Status:
 msgctxt "Profile.status"
 msgid "Status:"
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.submitThisForm]
+#. defaultMessage is:
+#. Submit this form once you have reviewed shipment of your order.
+msgctxt "purchase-detail.submitThisForm"
+msgid "Submit this form once you have reviewed shipment of your order."
 msgstr ""
 
 #: translations/messages/src/components/listing-create.json
@@ -1607,6 +1783,14 @@ msgctxt "EditProfile.publicDataNotice"
 msgid "This information will be published on the blockchain and will be visible to everyone."
 msgstr ""
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.listingStatus]
+#. defaultMessage is:
+#. This listing is {status}
+msgctxt "purchase-detail.listingStatus"
+msgid "This listing is {status}"
+msgstr ""
+
 #: translations/messages/src/components/my-sale-card.json
 #. [my-sale-card.orderComplete]
 #. defaultMessage is:
@@ -1623,6 +1807,14 @@ msgctxt "listing-create.tickets"
 msgid "Tickets"
 msgstr ""
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.to]
+#. defaultMessage is:
+#. To
+msgctxt "purchase-detail.to"
+msgid "To"
+msgstr ""
+
 #: translations/messages/src/components/web3-provider.json
 #. [web3-provider.toshi]
 #. defaultMessage is:
@@ -1637,6 +1829,22 @@ msgstr ""
 #. Total Quantity : {quantity}
 msgctxt "my-listing-card.totalQuantity"
 msgid "Total Quantity : {quantity}"
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.transactionHistoryHeading]
+#. defaultMessage is:
+#. Transaction History
+msgctxt "purchase-detail.transactionHistoryHeading"
+msgid "Transaction History"
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.transactionStatusHeading]
+#. defaultMessage is:
+#. Transaction Status
+msgctxt "purchase-detail.transactionStatusHeading"
+msgid "Transaction Status"
 msgstr ""
 
 #: translations/messages/src/components/listing-create.json
@@ -1709,6 +1917,22 @@ msgstr ""
 #. Twitter account verified!
 msgctxt "Profile.twitterVerified"
 msgid "Twitter account verified!"
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.txHash]
+#. defaultMessage is:
+#. TxHash
+msgctxt "purchase-detail.txHash"
+msgid "TxHash"
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.txName]
+#. defaultMessage is:
+#. TxName
+msgctxt "purchase-detail.txName"
+msgid "TxName"
 msgstr ""
 
 #: translations/messages/src/components/my-purchase-card.json
@@ -1823,6 +2047,14 @@ msgctxt "listing-detail.viewOnIpfs"
 msgid "View on IPFS"
 msgstr ""
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.viewOnIPFS]
+#. defaultMessage is:
+#. View on IPFS
+msgctxt "purchase-detail.viewOnIPFS"
+msgid "View on IPFS"
+msgstr ""
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.viewSchemaLinkLabel]
 #. defaultMessage is:
@@ -1837,6 +2069,30 @@ msgstr ""
 #. Visible on the blockchain
 msgctxt "_ProvisionedChanges.visibleOnBlockchain"
 msgid "Visible on the blockchain"
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.waitForBuyer]
+#. defaultMessage is:
+#. Wait for the buyer to receive the order
+msgctxt "purchase-detail.waitForBuyer"
+msgid "Wait for the buyer to receive the order"
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.awaitOrder]
+#. defaultMessage is:
+#. Wait for the seller to send the order
+msgctxt "purchase-detail.awaitOrder"
+msgid "Wait for the seller to send the order"
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.awaitSellerWithdrawl]
+#. defaultMessage is:
+#. Wait for the seller to withdraw the funds
+msgctxt "purchase-detail.awaitSellerWithdrawl"
+msgid "Wait for the seller to withdraw the funds"
 msgstr ""
 
 #: translations/messages/src/pages/profile/ConfirmUnload.json
@@ -1877,6 +2133,14 @@ msgstr ""
 #. Whitepaper
 msgctxt "footer.whitepaperLink"
 msgid "Whitepaper"
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.withdrawAndReview]
+#. defaultMessage is:
+#. Withdraw and Review
+msgctxt "purchase-detail.withdrawAndReview"
+msgid "Withdraw and Review"
 msgstr ""
 
 #: translations/messages/src/components/web3-provider.json
@@ -1933,6 +2197,22 @@ msgstr ""
 #. Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services.
 msgctxt "listing-create.schemaExplainer"
 msgid "Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services."
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.sellerReviewPlaceholder]
+#. defaultMessage is:
+#. Your review should inform others about your experience transacting with this buyer.
+msgctxt "purchase-detail.sellerReviewPlaceholder"
+msgid "Your review should inform others about your experience transacting with this buyer."
+msgstr ""
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.buyerReviewPlaceholder]
+#. defaultMessage is:
+#. Your review should inform others about your experience transacting with this seller, not about the product itself.
+msgctxt "purchase-detail.buyerReviewPlaceholder"
+msgid "Your review should inform others about your experience transacting with this seller, not about the product itself."
 msgstr ""
 
 #: translations/messages/src/components/notification.json

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-06-04T21:59:21.017Z\n"
+"POT-Creation-Date: 2018-06-07T06:28:00.446Z\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "MIME-Version: 1.0\n"
@@ -60,7 +60,7 @@ msgstr "将更改发布到区块链后，其他用户将能够看到您已验证
 #. All
 msgctxt "my-listings.all"
 msgid "All"
-msgstr "所有"
+msgstr "合计"
 
 #: translations/messages/src/components/my-purchases.json
 #. [my-purchases.all]
@@ -68,7 +68,7 @@ msgstr "所有"
 #. All
 msgctxt "my-purchases.all"
 msgid "All"
-msgstr "所有"
+msgstr "合计"
 
 #: translations/messages/src/components/my-sales.json
 #. [my-sales.all]
@@ -76,7 +76,7 @@ msgstr "所有"
 #. All
 msgctxt "my-sales.all"
 msgid "All"
-msgstr "所有"
+msgstr "合计"
 
 #: translations/messages/src/components/notifications.json
 #. [notifications.all]
@@ -84,7 +84,7 @@ msgstr "所有"
 #. All
 msgctxt "notifications.all"
 msgid "All"
-msgstr "所有"
+msgstr "合计"
 
 #: translations/messages/src/pages/profile/Profile.json
 #. [Profile.noDescriptionUser]
@@ -158,6 +158,14 @@ msgctxt "listing-detail.buyNow"
 msgid "Buy Now"
 msgstr "现在订购"
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.buyer]
+#. defaultMessage is:
+#. Buyer
+msgctxt "purchase-detail.buyer"
+msgid "Buyer"
+msgstr "买方"
+
 #: translations/messages/src/pages/profile/EditProfile.json
 #. [EditProfile.cancel]
 #. defaultMessage is:
@@ -214,6 +222,22 @@ msgctxt "web3-provider.cipher"
 msgid "Cipher"
 msgstr "密码"
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.sendOrderInstruction]
+#. defaultMessage is:
+#. Click the button below once the order has shipped.
+msgctxt "purchase-detail.sendOrderInstruction"
+msgid "Click the button below once the order has shipped."
+msgstr "订单发货后点击下面的按钮。"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.clickToWithdraw]
+#. defaultMessage is:
+#. Click the button below to initiate the withdrawal
+msgctxt "purchase-detail.clickToWithdraw"
+msgid "Click the button below to initiate the withdrawal"
+msgstr "点击下面的按钮开始提款"
+
 #: translations/messages/src/components/my-listing-card.json
 #. [my-listing-card.closeListing]
 #. defaultMessage is:
@@ -253,6 +277,30 @@ msgstr "完成"
 msgctxt "my-sales.complete"
 msgid "Complete"
 msgstr "完成"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.completeByWithdrawing]
+#. defaultMessage is:
+#. Complete your transaction by withdrawing funds
+msgctxt "purchase-detail.completeByWithdrawing"
+msgid "Complete your transaction by withdrawing funds"
+msgstr "通过提取资金完成交易"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.confirmAndReview]
+#. defaultMessage is:
+#. Confirm and Review
+msgctxt "purchase-detail.confirmAndReview"
+msgid "Confirm and Review"
+msgstr "确认并检查"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.confirmReceiptOfOrder]
+#. defaultMessage is:
+#. Confirm receipt of the order and leave a review
+msgctxt "purchase-detail.confirmReceiptOfOrder"
+msgid "Confirm receipt of the order and leave a review"
+msgstr "确认收到订单并留下评论"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.confirmTransaction]
@@ -615,6 +663,14 @@ msgctxt "Profile.facebookVerified"
 msgid "Facebook account verified!"
 msgstr "Facebook帐户已验证！"
 
+#: translations/messages/src/components/listing-card.json
+#. [listing-card.featured]
+#. defaultMessage is:
+#. Featured
+msgctxt "listing-card.featured"
+msgid "Featured"
+msgstr "精选"
+
 #: translations/messages/src/pages/profile/EditProfile.json
 #. [EditProfile.firstName]
 #. defaultMessage is:
@@ -638,6 +694,14 @@ msgstr "名字"
 msgctxt "listing-create.forSaleLabel"
 msgid "For Sale"
 msgstr "出售"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.from]
+#. defaultMessage is:
+#. From
+msgctxt "purchase-detail.from"
+msgid "From"
+msgstr "从"
 
 #: translations/messages/src/components/web3-provider.json
 #. [web3-provider.fullInstructions]
@@ -847,6 +911,14 @@ msgctxt "ConfirmPublish.letsDoIt"
 msgid "Let's do it!"
 msgstr "我们算吧"
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.listingDetails]
+#. defaultMessage is:
+#. Listing Details
+msgctxt "purchase-detail.listingDetails"
+msgid "Listing Details"
+msgstr "商品详情"
+
 #: translations/messages/src/components/navbar.json
 #. [navbar.listings]
 #. defaultMessage is:
@@ -886,6 +958,14 @@ msgstr "载入中..."
 msgctxt "my-sales.loading"
 msgid "Loading..."
 msgstr "载入中..."
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.markOrderSent]
+#. defaultMessage is:
+#. Mark Order as Sent
+msgctxt "purchase-detail.markOrderSent"
+msgid "Mark Order as Sent"
+msgstr "将订单标记为已发送"
 
 #: translations/messages/src/components/footer.json
 #. [footer.mediumLink]
@@ -943,6 +1023,14 @@ msgctxt "listing-create.next"
 msgid "Next"
 msgstr "下香"
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.nextStep]
+#. defaultMessage is:
+#. Next Step:
+msgctxt "purchase-detail.nextStep"
+msgid "Next Step:"
+msgstr "下一步: "
+
 #: translations/messages/src/pages/profile/_Wallet.json
 #. [_Wallet.noEthAccountConnected]
 #. defaultMessage is:
@@ -966,6 +1054,14 @@ msgstr "跳过"
 msgctxt "_ProvisionedChanges.notVisibleOnBlockchain"
 msgid "Not visible on the blockchain"
 msgstr "在区块链上不可见"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.nothingToDo]
+#. defaultMessage is:
+#. Nothing for you to do at this time. Check back later
+msgctxt "purchase-detail.nothingToDo"
+msgid "Nothing for you to do at this time. Check back later"
+msgstr "目前没有什么可以做的。过一会再来检查"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.OK]
@@ -1230,7 +1326,7 @@ msgstr "在{currentProvider}窗口中按“提交”"
 #. Press {submit} in {currentProvider} window
 msgctxt "listing-create.pressSubmitInMetaMask"
 msgid "Press {submit} in {currentProvider} window"
-msgstr "在{currentProvider}窗口中按{提交}"
+msgstr "在{currentProvider}窗口中按{currentProvider}"
 
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.pressSubmitInMetaMask]
@@ -1238,7 +1334,7 @@ msgstr "在{currentProvider}窗口中按{提交}"
 #. Press {submit} in {currentProvider} window
 msgctxt "listing-detail.pressSubmitInMetaMask"
 msgid "Press {submit} in {currentProvider} window"
-msgstr "在{currentProvider}窗口中按{提交}"
+msgstr "在{currentProvider}窗口中按{currentProvider}"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.previewListingHeading]
@@ -1256,13 +1352,21 @@ msgctxt "listing-detail.price"
 msgid "Price"
 msgstr "价格"
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.price]
+#. defaultMessage is:
+#. Price
+msgctxt "purchase-detail.price"
+msgid "Price"
+msgstr "价格"
+
 #: translations/messages/src/components/my-sale-card.json
 #. [my-sale-card.price]
 #. defaultMessage is:
 #. Price: {price}
 msgctxt "my-sale-card.price"
 msgid "Price: {price}"
-msgstr "价格：{价格}"
+msgstr "价格：{price}"
 
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.processingPurchase]
@@ -1344,6 +1448,22 @@ msgctxt "transaction-progress.purchased"
 msgid "Purchased"
 msgstr "购买"
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.purchasedFrom]
+#. defaultMessage is:
+#. Purchased from {sellerLink}
+msgctxt "purchase-detail.purchasedFrom"
+msgid "Purchased from {sellerLink}"
+msgstr "从{sellerLink}购买"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.purchasedFromOn]
+#. defaultMessage is:
+#. Purchased from {sellerName} on {date}
+msgctxt "purchase-detail.purchasedFromOn"
+msgid "Purchased from {sellerName} on {date}"
+msgstr "在{date}上从{sellerName}购买"
+
 #: translations/messages/src/pages/profile/ConfirmPublish.json
 #. [ConfirmPublish.readyToGoPublic]
 #. defaultMessage is:
@@ -1384,11 +1504,27 @@ msgctxt "transaction-progress.receivedByMe"
 msgid "Received by me"
 msgstr "收到我的"
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.reviewLabel]
+#. defaultMessage is:
+#. Review
+msgctxt "purchase-detail.reviewLabel"
+msgid "Review"
+msgstr "评价"
+
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.reviews]
 #. defaultMessage is:
 #. Reviews
 msgctxt "listing-detail.reviews"
+msgid "Reviews"
+msgstr "评价"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.reviewsHeading]
+#. defaultMessage is:
+#. Reviews
+msgctxt "purchase-detail.reviewsHeading"
 msgid "Reviews"
 msgstr "评价"
 
@@ -1456,6 +1592,14 @@ msgctxt "notifications.sell"
 msgid "Sell"
 msgstr "卖"
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.seller]
+#. defaultMessage is:
+#. Seller
+msgctxt "purchase-detail.seller"
+msgid "Seller"
+msgstr "卖方"
+
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.seller]
 #. defaultMessage is:
@@ -1463,6 +1607,14 @@ msgstr "卖"
 msgctxt "listing-detail.seller"
 msgid "Seller: {sellerAddress}"
 msgstr "卖家：{sellerAddress}"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.sendOrder]
+#. defaultMessage is:
+#. Send the order to buyer
+msgctxt "purchase-detail.sendOrder"
+msgid "Send the order to buyer"
+msgstr "将订单发送给买方"
 
 #: translations/messages/src/components/my-purchase-card.json
 #. [my-purchase-card.sentBySeller]
@@ -1520,6 +1672,22 @@ msgctxt "my-listing-card.soldOut"
 msgid "Sold Out"
 msgstr "卖光了"
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.soldTo]
+#. defaultMessage is:
+#. Sold to {buyerLink}
+msgctxt "purchase-detail.soldTo"
+msgid "Sold to {buyerLink}"
+msgstr "卖给{buyerLink}"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.soldToOn]
+#. defaultMessage is:
+#. Sold to {buyerName} on {date}
+msgctxt "purchase-detail.soldToOn"
+msgid "Sold to {buyerName} on {date}"
+msgstr "在{date}上出售给{buyerName}"
+
 #: translations/messages/src/pages/profile/Profile.json
 #. [Profile.status]
 #. defaultMessage is:
@@ -1527,6 +1695,14 @@ msgstr "卖光了"
 msgctxt "Profile.status"
 msgid "Status:"
 msgstr "状态:"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.submitThisForm]
+#. defaultMessage is:
+#. Submit this form once you have reviewed shipment of your order.
+msgctxt "purchase-detail.submitThisForm"
+msgid "Submit this form once you have reviewed shipment of your order."
+msgstr "提交此表格后，您已经审查了您的订单。"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.successMessage]
@@ -1608,6 +1784,14 @@ msgctxt "EditProfile.publicDataNotice"
 msgid "This information will be published on the blockchain and will be visible to everyone."
 msgstr "这些信息将在区块链上发布，并且每个人都可以看到。"
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.listingStatus]
+#. defaultMessage is:
+#. This listing is {status}
+msgctxt "purchase-detail.listingStatus"
+msgid "This listing is {status}"
+msgstr "此列表是{status}"
+
 #: translations/messages/src/components/my-sale-card.json
 #. [my-sale-card.orderComplete]
 #. defaultMessage is:
@@ -1624,6 +1808,14 @@ msgctxt "listing-create.tickets"
 msgid "Tickets"
 msgstr "彩票"
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.to]
+#. defaultMessage is:
+#. To
+msgctxt "purchase-detail.to"
+msgid "To"
+msgstr "到"
+
 #: translations/messages/src/components/web3-provider.json
 #. [web3-provider.toshi]
 #. defaultMessage is:
@@ -1638,7 +1830,23 @@ msgstr "都市"
 #. Total Quantity : {quantity}
 msgctxt "my-listing-card.totalQuantity"
 msgid "Total Quantity : {quantity}"
-msgstr "总量：{数量}"
+msgstr "总量：{quantity}"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.transactionHistoryHeading]
+#. defaultMessage is:
+#. Transaction History
+msgctxt "purchase-detail.transactionHistoryHeading"
+msgid "Transaction History"
+msgstr "交易历史"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.transactionStatusHeading]
+#. defaultMessage is:
+#. Transaction Status
+msgctxt "purchase-detail.transactionStatusHeading"
+msgid "Transaction Status"
+msgstr "交易状态"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.transportation]
@@ -1711,6 +1919,22 @@ msgstr "Twitter帐户"
 msgctxt "Profile.twitterVerified"
 msgid "Twitter account verified!"
 msgstr "Twitter帐户验证！"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.txHash]
+#. defaultMessage is:
+#. TxHash
+msgctxt "purchase-detail.txHash"
+msgid "TxHash"
+msgstr "TxHash"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.txName]
+#. defaultMessage is:
+#. TxName
+msgctxt "purchase-detail.txName"
+msgid "TxName"
+msgstr "TxName"
 
 #: translations/messages/src/components/my-purchase-card.json
 #. [my-purchase-card.unknown]
@@ -1824,6 +2048,14 @@ msgctxt "listing-detail.viewOnIpfs"
 msgid "View on IPFS"
 msgstr "查看IPFS"
 
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.viewOnIPFS]
+#. defaultMessage is:
+#. View on IPFS
+msgctxt "purchase-detail.viewOnIPFS"
+msgid "View on IPFS"
+msgstr "查看IPFS"
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.viewSchemaLinkLabel]
 #. defaultMessage is:
@@ -1839,6 +2071,30 @@ msgstr "查看{schemaName}模式"
 msgctxt "_ProvisionedChanges.visibleOnBlockchain"
 msgid "Visible on the blockchain"
 msgstr "在区块链上可见"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.waitForBuyer]
+#. defaultMessage is:
+#. Wait for the buyer to receive the order
+msgctxt "purchase-detail.waitForBuyer"
+msgid "Wait for the buyer to receive the order"
+msgstr "等待买家收到订单"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.awaitOrder]
+#. defaultMessage is:
+#. Wait for the seller to send the order
+msgctxt "purchase-detail.awaitOrder"
+msgid "Wait for the seller to send the order"
+msgstr "等待卖家发送订单"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.awaitSellerWithdrawl]
+#. defaultMessage is:
+#. Wait for the seller to withdraw the funds
+msgctxt "purchase-detail.awaitSellerWithdrawl"
+msgid "Wait for the seller to withdraw the funds"
+msgstr "等待卖家撤回资金"
 
 #: translations/messages/src/pages/profile/ConfirmUnload.json
 #. [ConfirmUpload.waitNotice]
@@ -1879,6 +2135,14 @@ msgstr "当您点击提交时，代表您的列表的JSON对象将被发布到{i
 msgctxt "footer.whitepaperLink"
 msgid "Whitepaper"
 msgstr "白皮书"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.withdrawAndReview]
+#. defaultMessage is:
+#. Withdraw and Review
+msgctxt "purchase-detail.withdrawAndReview"
+msgid "Withdraw and Review"
+msgstr "撤回和审查"
 
 #: translations/messages/src/components/web3-provider.json
 #. [web3-provider.notSignedIntoMetaMask]
@@ -1935,6 +2199,22 @@ msgstr "您可能需要更换网络或部署合同。"
 msgctxt "listing-create.schemaExplainer"
 msgid "Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services."
 msgstr "您的产品或服务将使用模式来描述其属性，如名称，说明和价格。 Origin已经有多种模式，可以映射到众所周知的房源类别，如房屋，汽车和服务。"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.sellerReviewPlaceholder]
+#. defaultMessage is:
+#. Your review should inform others about your experience transacting with this buyer.
+msgctxt "purchase-detail.sellerReviewPlaceholder"
+msgid "Your review should inform others about your experience transacting with this buyer."
+msgstr "您的评论应告知其他人有关您与该买家进行交易的经历。"
+
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.buyerReviewPlaceholder]
+#. defaultMessage is:
+#. Your review should inform others about your experience transacting with this seller, not about the product itself.
+msgctxt "purchase-detail.buyerReviewPlaceholder"
+msgid "Your review should inform others about your experience transacting with this seller, not about the product itself."
+msgstr "您的评论应告知其他人您与该卖家进行交易的经历，而不是关于产品本身。"
 
 #: translations/messages/src/components/notification.json
 #. [notification.hasBeen]
@@ -2055,4 +2335,3 @@ msgstr "{nextStep}提取资金"
 msgctxt "_Guidance.content"
 msgid "{verifyingYourProfile} allows other users to know that you are a real person and increases the chances of successful transactions on Origin."
 msgstr "{verifyingYourProfile}允许其他用户知道你是一个真实的人，并增加在Origin上成功交易的机会。"
-
