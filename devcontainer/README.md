@@ -1,7 +1,10 @@
-This docker image installs and runs the bridge server (along with postgres, redis), ipfs and ganache (via origin-js `npm run start`) on Ubuntu 16.04, managing the processes using pm2. To run, have docker installed and be in the same directory as the Dockerfile then:
+This docker image installs and runs the bridge server (along with postgres, redis), ipfs and ganache (via origin-js `npm run start`) on Ubuntu 16.04, managing the processes using pm2. To run:
+
+1. Make sure you have Docker **version 18 or greater**:
+`docker --version`
 
 1. Build the docker image:
-`docker build -f Dockerfile -t <image name> .`
+`docker build ./devcontainer -t <image name> .`
 
 2. Get the image ID:
 `docker images`
