@@ -28,6 +28,10 @@
     "defaultMessage": "Twitter account verified!"
   },
   {
+    "id": "Profile.unnamedUser",
+    "defaultMessage": "Unnamed User"
+  },
+  {
     "id": "Profile.verifyYourselfHeading",
     "defaultMessage": "Verify yourself on Origin"
   },

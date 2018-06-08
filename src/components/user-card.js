@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { Link } from 'react-router-dom'
 import { fetchUser } from 'actions/User'
 import Avatar from './avatar'
@@ -9,10 +9,17 @@ import EtherscanLink from './etherscan-link'
 class UserCard extends Component {
   constructor(props) {
     super(props)
+
+    this.intlMessages = defineMessages({
+      unnamedUser: {
+        id: 'user-card.unnamedUser',
+        defaultMessage: 'Unnamed User'
+      }
+    });
   }
 
   componentWillMount() {
-    this.props.fetchUser(this.props.userAddress)
+    this.props.fetchUser(this.props.userAddress, this.props.intl.formatMessage(this.intlMessages.unnamedUser))
   }
 
   render() {
@@ -100,4 +107,4 @@ const mapDispatchToProps = dispatch => ({
   fetchUser: address => dispatch(fetchUser(address))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserCard)
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(UserCard))

@@ -419,8 +419,16 @@ class PurchaseDetail extends Component {
 
     const nextStep = perspective && this.nextSteps[step]
     const { buttonText, functionName, instruction, placeholderText, prompt, reviewable } = nextStep ? nextStep[perspective] : {}
-    const buyerName = (buyer.profile && `${buyer.profile.firstName} ${buyer.profile.lastName}`) || 'Unnamed User'
-    const sellerName = (seller.profile && `${seller.profile.firstName} ${seller.profile.lastName}`) || 'Unnamed User'
+    const buyerName = (buyer.profile && `${buyer.profile.firstName} ${buyer.profile.lastName}`) ||
+            <FormattedMessage
+              id={ 'purchase-detail.unnamedUser' }
+              defaultMessage={ 'Unnamed User' }
+            />
+    const sellerName = (seller.profile && `${seller.profile.firstName} ${seller.profile.lastName}`) ||
+            <FormattedMessage
+              id={ 'purchase-detail.unnamedUser' }
+              defaultMessage={ 'Unnamed User' }
+            />
 
     return (
       <div className="transaction-detail">

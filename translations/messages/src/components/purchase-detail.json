@@ -56,6 +56,10 @@
     "defaultMessage": "Your review should inform others about your experience transacting with this buyer."
   },
   {
+    "id": "purchase-detail.unnamedUser",
+    "defaultMessage": "Unnamed User"
+  },
+  {
     "id": "purchase-detail.purchasedFrom",
     "defaultMessage": "Purchased from {sellerLink}"
   },

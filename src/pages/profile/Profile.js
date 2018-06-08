@@ -239,7 +239,13 @@ class Profile extends Component {
                 </div>
                 <div className="col-8 col-md-9">
                   <div className="name d-flex">
-                    <h1>{fullName.length ? fullName : 'Unnamed User'}</h1>
+                    <h1>{fullName.length ? fullName :
+                          <FormattedMessage
+                            id={ 'Profile.unnamedUser' }
+                            defaultMessage={ 'Unnamed User' }
+                          />
+                        }
+                    </h1>
                     <div className="icon-container">
                       <button
                         className="edit-profile"

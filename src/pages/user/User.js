@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { fetchUser } from 'actions/User'
 import Avatar from 'components/avatar'
@@ -12,6 +12,13 @@ class User extends Component {
     super(props)
 
     this.state = { reviews: [] }
+
+    this.intlMessages = defineMessages({
+      unnamedUser: {
+        id: 'user.unnamedUser',
+        defaultMessage: 'Unnamed User'
+      }
+    });
   }
 
   async mapPurchaseLengths(listing) {
@@ -72,7 +79,7 @@ class User extends Component {
   }
 
   async componentWillMount() {
-    this.props.fetchUser(this.props.userAddress)
+    this.props.fetchUser(this.props.userAddress, this.props.intl.formatMessage(this.intlMessages.unnamedUser))
 
     this.getAllReviews()
   }
@@ -183,4 +190,4 @@ const mapDispatchToProps = dispatch => ({
   fetchUser: address => dispatch(fetchUser(address))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(User)
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(User))
