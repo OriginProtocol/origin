@@ -2902,6 +2902,19 @@ footer .footer-links li a {
   color: white;
 }
 
+footer .dropdown {
+  color: white;
+  cursor: pointer;
+}
+
+footer .dropdown-menu {
+  padding: 0.5rem;
+}
+
+footer .dropdown-menu li:hover {
+  color: var(--clear-blue);
+}
+
 .container.listing-wait-confirmation {
   min-height: 675px;
 }
