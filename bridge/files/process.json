@@ -1,0 +1,33 @@
+{
+  "apps" : [{
+    "name"       : "redis",
+    "script"     : "redis-server",
+    "args"       : "/etc/redis/redis.conf"
+  },{
+    "name"       : "bridge server",
+    "script"     : "start-bridge-server.sh",
+    "cwd"        : "/opt/bridge-server",
+    "interpreter": "/bin/bash",
+    "env": {
+      "BRIDGE_SERVER_PATH": "/opt/bridge-server"
+    }
+  },{
+    "name"       : "celery",
+    "script"     : "start-celery.sh",
+    "cwd"        : "/opt/bridge-server",
+    "interpreter": "/bin/bash",
+    "env": {
+      "BRIDGE_SERVER_PATH": "/opt/bridge-server"
+    }
+  },{
+    "name"       : "postgresql",
+    "script"     : "start-pg.sh",
+    "cwd"        : "/opt/pg",
+    "interpreter": "/bin/bash"
+  },{
+    "name"       : "elasticsearch",
+    "script"     : "start-es.sh",
+    "cwd"        : "/opt/es",
+    "interpreter": "/bin/bash"
+  }]
+}
