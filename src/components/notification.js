@@ -1,109 +1,152 @@
 import React, { Component, Fragment } from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { defineMessages, injectIntl } from 'react-intl'
 
-/*
-  This subcomponent turns structured notification objects into dom elements,
-  which wrap an anchor if there is a relevant listing.
-*/
-class HumanReadableNotification extends Component {
+import { fetchUser } from 'actions/User'
+
+// support other derived notifications in the future
+const NON_PURCHASE_RELATED_MESSAGE = 'A message from Origin that does not involve a listing'
+
+class NotificationMessage extends Component {
   constructor(props){
     super(props)
 
     this.intlMessages = defineMessages({
-      purchased: {
+      shippingPending: {
         id: 'notification.purchased',
-        defaultMessage: 'purchased'
+        defaultMessage: 'You have a new purchase.',
       },
-      sent: {
+      buyerPending: {
         id: 'notification.sent',
-        defaultMessage: 'sent'
+        defaultMessage: 'Your purchase has been shipped.',
       },
-      received: {
+      sellerPending: {
         id: 'notification.received',
-        defaultMessage: 'received'
+        defaultMessage: 'You have a new review.',
       },
-      withdrawn: {
+      complete: {
         id: 'notification.withdrawn',
-        defaultMessage: 'withdrawn'
+        defaultMessage: 'You have a new review.',
       },
-      hasBeen: {
-        id: 'notification.hasBeen',
-        defaultMessage: 'has been'
-      },
-      haveBeen: {
-        id: 'notification.haveBeen',
-        defaultMessage: 'have been'
-      },
-      fundsFromProduct: {
-        id: 'notification.fundsFromProduct',
-        defaultMessage: 'Funds from {productLink}'
-      }
     });
   }
 
   render() {
-    const { className, notification } = this.props
-    const { eventType, message, listingId, listingName } = notification
-    const productLink = <Link to={`/listing/${listingId}`}>{listingName}</Link>
-    let subject, presPerf, verb
+    const { className, listing, stage } = this.props
+    let message
 
-    switch(eventType) {
-      case 'soldAt':
-        subject = productLink
-        presPerf = this.props.intl.formatMessage(this.intlMessages.hasBeen)
-        verb = this.props.intl.formatMessage(this.intlMessages.purchased)
+    switch(stage) {
+      case 'complete':
+        message = this.props.intl.formatMessage(this.intlMessages.complete)
         break
-      case 'fulfilledAt':
-        subject = productLink
-        presPerf = this.props.intl.formatMessage(this.intlMessages.hasBeen)
-        verb = this.props.intl.formatMessage(this.intlMessages.sent)
+      case 'seller_pending':
+        message = this.props.intl.formatMessage(this.intlMessages.sellerPending)
         break
-      case 'receivedAt':
-        subject = productLink
-        presPerf = this.props.intl.formatMessage(this.intlMessages.hasBeen)
-        verb = this.props.intl.formatMessage(this.intlMessages.received)
+      case 'buyer_pending':
+        message = this.props.intl.formatMessage(this.intlMessages.buyerPending)
         break
-      case 'withdrawnAt':
-        subject = <Fragment>this.props.intl.formatMessage(this.intlMessages.fundsFromProduct, { productLink })</Fragment>
-        presPerf = this.props.intl.formatMessage(this.intlMessages.haveBeen)
-        verb = this.props.intl.formatMessage(this.intlMessages.withdrawn)
+      case 'shipping_pending':
+        message = this.props.intl.formatMessage(this.intlMessages.shippingPending)
         break
       default:
-        return <p className={className || ''}>{message}</p>
+        return <p className={className || ''}>{NON_PURCHASE_RELATED_MESSAGE}</p>
     }
 
     return (
-      <p className={className || ''}>{subject} {presPerf} {verb}</p>
+      <div className={`message${className ? ` ${className}` : ''}`}>{message}</div>
     )
   }
 }
 
 class Notification extends Component {
+  constructor(props){
+    super(props)
+
+    const { notification, web3Account } = this.props
+    const { listing, purchase } = notification.resources
+    const counterpartyAddress = [listing.sellerAddress, purchase.buyerAddress].find(addr => addr !== web3Account)
+    const perspective = web3Account === listing.sellerAddress ? 'seller' : 'buyer'
+
+    this.state = {
+      counterpartyAddress,
+      counterpartyName: '',
+      listing,
+      perspective,
+      purchase,
+    }
+  }
+
+  componentWillMount() {
+    this.props.fetchUser(this.state.counterpartyAddress)
+  }
+
+  componentDidUpdate() {
+    const user = this.props.users.find(u => u.address === this.state.counterpartyAddress)
+    const counterpartyName = user && user.fullName
+
+    if (this.state.counterpartyName !== counterpartyName) {
+      this.setState({ counterpartyName })
+    }
+  }
+
   render() {
-    const { notification } = this.props
-    const { counterpartyAddress, counterpartyName, listingId, listingImageURL, listingName, perspective } = notification
+    const { intl, notification, web3Account } = this.props
+    const { counterpartyAddress, counterpartyName, listing, perspective, purchase } = this.state
+    const { pictures } = listing
+    const listingImageURL = pictures && pictures.length && (new URL(pictures[0])).protocol === "data:" && pictures[0]
 
     return (
-      <li className="list-group-item d-flex align-items-stretch notification">
-        <div className="image-container d-flex align-items-center justify-content-center">
-          {!listingId && <img src="images/origin-icon-white.svg" alt="Origin zero" />}
-          {listingId && !listingImageURL && <img src="images/origin-icon-white.svg" alt="Origin zero" />}
-          {listingId && listingImageURL && <img src={listingImageURL} className="listing-related" alt={listingName} />}
-        </div>
-        <div className="content-container d-flex flex-column justify-content-between">
-          <HumanReadableNotification intl={this.props.intl} notification={notification} className={`text-truncate${counterpartyAddress ? '' : ' no-counterparty'}`} />
-          {counterpartyAddress && <p className="text-truncate"><strong>{perspective === 'buyer' ? 'Seller' : 'Buyer'}</strong>: <Link to={`/users/${counterpartyAddress}`}>{counterpartyName || 'Unnamed User'}</Link></p>}
-          {counterpartyAddress && <p className="text-truncate text-muted">{counterpartyAddress}</p>}
-        </div>
-        <div className="link-container m-auto">
-          <a href="https://app.zeplin.io/project/59fa2311bac7acbc8d953da9/screen/5aa878781720abc6447f2cd3?did=5ab93f6fa022c2b641639214" className="btn" target="_blank">
-            <img src="images/carat-blue.svg" className="carat" alt="right carat" />
-          </a>
-        </div>
+      <li className="list-group-item notification">
+        <Link to={`/purchases/${purchase.address}`}>
+          <div className="d-flex align-items-stretch">
+            <div className="image-container d-flex align-items-center justify-content-center">
+              {!listing.address && <img src="images/origin-icon-white.svg" alt="Origin zero" />}
+              {listing.address && !listingImageURL && <img src="images/origin-icon-white.svg" alt="Origin zero" />}
+              {listing.address && listingImageURL && <img src={listingImageURL} className="listing-related" alt={listing.name} />}
+            </div>
+            <div className="content-container d-flex flex-column justify-content-between">
+              <NotificationMessage
+                intl={intl}
+                listing={listing}
+                stage={purchase.stage}
+                className={`text-truncate${counterpartyAddress ? '' : ' no-counterparty'}`}
+              />
+              {listing &&
+                <div className="listing text-truncate">{listing.name}</div>
+              }
+              {counterpartyAddress &&
+                <div className="counterparty d-flex">
+                  <div className="text-truncate">
+                    <strong>{perspective === 'buyer' ? 'Seller' : 'Buyer'}</strong>:
+                    &nbsp;
+                    {counterpartyName || 'Unnamed User'}
+                  </div>
+                  <div className="text-truncate text-muted">{counterpartyAddress}</div>
+                </div>
+              }
+            </div>
+            <div className="button-container m-auto">
+              <button className="btn">
+                <img src="images/carat-blue.svg" className="carat" alt="right carat" />
+              </button>
+            </div>
+          </div>
+        </Link>
       </li>
     )
   }
 }
 
-export default injectIntl(Notification)
+const mapStateToProps = state => {
+  return {
+    users: state.users,
+    web3Account: state.app.web3.account,
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  fetchUser: address => dispatch(fetchUser(address))
+})
+
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Notification))

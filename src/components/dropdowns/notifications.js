@@ -15,7 +15,7 @@ class NotificationsDropdown extends Component {
   async componentWillMount() {
     try {
       const notifications = await origin.notifications.all()
-console.log('navbar notifications', notifications)
+
       this.setState({ notifications })
     } catch(e) {
       console.error(e)
