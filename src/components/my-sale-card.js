@@ -24,7 +24,7 @@ class MySaleCard extends Component {
   }
 
   componentWillMount() {
-    this.props.fetchUser(this.props.purchase.buyerAddress)
+    this.props.fetchUser(this.props.purchase.buyerAddress, this.props.intl.formatMessage(this.intlMessages.unnamedUser))
   }
 
   componentDidMount() {

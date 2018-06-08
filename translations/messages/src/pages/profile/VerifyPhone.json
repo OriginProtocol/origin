@@ -1,0 +1,26 @@
+[
+  {
+    "id": "VerifyPhone.verifyPhoneHeading",
+    "defaultMessage": "Verify Your Phone Number"
+  },
+  {
+    "id": "VerifyPhone.continue",
+    "defaultMessage": "Continue"
+  },
+  {
+    "id": "VerifyPhone.cancel",
+    "defaultMessage": "Cancel"
+  },
+  {
+    "id": "VerifyPhone.enterPhoneNumber",
+    "defaultMessage": "Enter your phone number below and {originId} will send you a verification code"
+  },
+  {
+    "id": "VerifyPhone.phoneNumberNotPublished",
+    "defaultMessage": "Other users will know that you have a verified phone number. Your actual phone number will not be published on the blockchain."
+  },
+  {
+    "id": "VerifyPhone.enterCodeBelow",
+    "defaultMessage": "Enter the code we sent you below"
+  }
+]

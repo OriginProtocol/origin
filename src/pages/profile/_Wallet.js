@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { FormattedMessage, FormattedNumber } from 'react-intl'
 
 import Identicon from 'components/Identicon'
 import EtherscanLink from '../../components/etherscan-link'
@@ -14,16 +15,40 @@ class Wallet extends Component {
             <Identicon address={address} />
           </div>
           <div className="eth d-flex flex-column justify-content-between">
-            {address && <div>ETH Address:</div>}
+            {address && 
+              <div>
+                <FormattedMessage
+                  id={ '_Wallet.ethAddress' }
+                  defaultMessage={ 'ETH Address:' }
+                />
+              </div>
+            }
             <div className="address">
-             {address ? <EtherscanLink hash={address} /> : 'No ETH Account Connected'}
+              {address ? 
+                <EtherscanLink hash={address} /> :
+                <FormattedMessage
+                  id={ '_Wallet.noEthAccountConnected' }
+                  defaultMessage={ 'No ETH Account Connected' }
+                />
+              }
             </div>
           </div>
         </div>
         <hr className="dark sm" />
         <div className="detail d-flex">
-          <div>Account Balance:</div>
-          <div>{balance} ETH</div>
+          <div>
+            <FormattedMessage
+              id={ '_Wallet.accountBalance' }
+              defaultMessage={ 'Account Balance:' }
+            />
+          </div>
+          <div>
+            <FormattedMessage
+              id={ '_Wallet.ethBalance' }
+              defaultMessage={ '{balance} ETH' }
+              values={{ balance: <FormattedNumber value={ balance } /> }}
+            />
+          </div>
         </div>
         {/* Hidden for current deployment */}
         {/*<div className="detail d-flex">

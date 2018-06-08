@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { FormattedMessage } from 'react-intl'
 
 import Modal from 'components/modal'
 
@@ -45,7 +46,10 @@ class VerifyEmail extends Component {
             : this.renderCodeForm()}
           <div className="button-container">
             <button type="submit" className="btn btn-clear">
-              Continue
+              <FormattedMessage
+                id={ 'VerifyEmail.continue' }
+                defaultMessage={ 'Continue' }
+              />
             </button>
           </div>
           <div className="link-container">
@@ -54,7 +58,10 @@ class VerifyEmail extends Component {
               data-modal="email"
               onClick={this.props.handleToggle}
             >
-              Cancel
+              <FormattedMessage
+                id={ 'VerifyEmail.cancel' }
+                defaultMessage={ 'Cancel' }
+              />
             </a>
           </div>
         </form>
@@ -79,13 +86,17 @@ class VerifyEmail extends Component {
           onChange={e =>
             this.setState({ email: e.currentTarget.value })
           }
-          placeholder="Valid email address"
+          placeholder={ <FormattedMessage
+                          id={ 'VerifyEmail.validEmail' }
+                          defaultMessage={ 'Valid email address' }
+                        /> }
           required
         />
         <div className="explanation">
-          {'Other users will know that you have a verified email address. Your actual email address '}
-          <strong>will not</strong>
-          {' be published on the blockchain.'}
+          <FormattedMessage
+            id={ 'VerifyEmail.emailNotPublished' }
+            defaultMessage={ 'Other users will know that you have a verified email address. Your actual email address will not be published on the blockchain.' }
+          />
         </div>
       </div>
     )
@@ -95,7 +106,10 @@ class VerifyEmail extends Component {
     return (
       <div className="form-group">
         <label htmlFor="emailVerificationCode">
-          Enter the code we sent you below
+          <FormattedMessage
+            id={ 'VerifyEmail.enterCode' }
+            defaultMessage={ 'Enter the code we sent you below' }
+          />
         </label>
         <input
           className="form-control"

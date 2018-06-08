@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router-dom'
 
 import Notification from 'components/notification'
@@ -29,7 +30,12 @@ class NotificationsDropdown extends Component {
               <div className="count">
                 <div className="d-inline-block">{notificationCount}</div>
               </div>
-              <h3>Notifications</h3>
+              <h3>
+                <FormattedMessage
+                  id={ 'notifications.notificationsHeading' }
+                  defaultMessage={ 'Notifications' }
+                />
+              </h3>
             </header>
             <div className="notifications-list">
               <ul className="list-group">
@@ -37,7 +43,12 @@ class NotificationsDropdown extends Component {
               </ul>
             </div>
             <footer>
-              <Link to="/notifications">View All</Link>
+              <Link to="/notifications">
+                <FormattedMessage
+                  id={ 'notifications.viewAll' }
+                  defaultMessage={ 'View All' }
+                />
+              </Link>
             </footer>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router-dom'
 
 import { connect } from 'react-redux'
@@ -31,8 +32,24 @@ class UserDropdown extends Component {
                   </Link>
                 </div>
                 <div className="eth d-flex flex-column justify-content-between">
-                  {wallet.address && <div>ETH Address:</div>}
-                  <Link to="/profile"><strong>{wallet.address || 'No ETH Account Connected'}</strong></Link>
+                  {wallet.address && 
+                    <div>
+                      <FormattedMessage
+                        id={ 'user.ethAddress' }
+                        defaultMessage={ 'ETH Address:' }
+                      />
+                    </div>
+                  }
+                  <Link to="/profile">
+                    <strong>
+                      {wallet.address ||
+                        <FormattedMessage
+                          id={ 'user.noEthAccountConnected' }
+                          defaultMessage={ 'No ETH Account Connected' }
+                        />
+                      }
+                    </strong>
+                  </Link>
                 </div>
               </div>
               <hr className="dark sm" />

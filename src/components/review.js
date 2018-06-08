@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { fetchUser } from 'actions/User'
@@ -8,10 +9,17 @@ import Timelapse from './timelapse'
 class Review extends Component {
   constructor(props) {
     super(props)
+
+    this.intlMessages = defineMessages({
+      unnamedUser: {
+        id: 'review.unnamedUser',
+        defaultMessage: 'Unnamed User'
+      }
+    });
   }
 
   componentWillMount() {
-    this.props.fetchUser(this.props.review.reviewerAddress)
+    this.props.fetchUser(this.props.review.reviewerAddress, this.props.intl.formatMessage(this.intlMessages.unnamedUser))
   }
 
   render() {
@@ -59,4 +67,4 @@ const mapDispatchToProps = dispatch => ({
   fetchUser: address => dispatch(fetchUser(address))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Review)
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Review))

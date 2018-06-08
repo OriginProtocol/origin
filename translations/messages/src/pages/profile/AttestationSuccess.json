@@ -1,0 +1,14 @@
+[
+  {
+    "id": "AttestationSuccess.publishChangesReminder",
+    "defaultMessage": "Don't forget to publish your changes."
+  },
+  {
+    "id": "AttestationSuccess.publishChangesNotice",
+    "defaultMessage": "Publishing to the blockchain lets other users know that you have a verified profile."
+  },
+  {
+    "id": "AttestationSuccess.continue",
+    "defaultMessage": "Continue"
+  }
+]
