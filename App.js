@@ -3,7 +3,8 @@ import {Alert, StyleSheet, Text, View, PushNotificationIOS, TouchableOpacity, Te
 import PushNotification from 'react-native-push-notification';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { BRIDGE_SERVER_PROTOCOL,  BRIDGE_SERVER_DOMAIN, BRIDGE_SERVER_PORT } from 'react-native-dotenv';
-import ethers from 'ethers'
+import './global'
+import Web3 from 'web3'
 
 const API_SERVER_IP = BRIDGE_SERVER_DOMAIN ?
     BRIDGE_SERVER_DOMAIN : NativeModules.SourceCode.scriptURL.split('://')[1].split('/')[0].split(':')[0];
@@ -19,23 +20,21 @@ const API_WALLET_LINKER_RETURN_CALL = API_WALLET_LINKER + "/wallet-called";
 const APN_NOTIFICATION_TYPE = "APN";
 const ETHEREUM_QR_PREFIX = "ethereum:";
 const ORIGIN_QR_PREFIX = "orgw:";
-const DEFAULT_TEST_BUYER = "0xc5fdf4076b8f3a5357c5e395ab970b5b54098fef";
 const RPC_SERVER = "http://localhost:8545";
 const INTERNAL_RPC_SERVER = "http://" + API_SERVER_IP + ":8545";
 const ORIGIN_PROTOCOL_PREFIX = "http://www.originprotocol.com/mobile/";
 const SECURE_ORIGIN_PROTOCOL_PREFIX = "https://www.originprotocol.com/mobile/";
-const DEFAULT_MNEMONIC = "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
-const DEFAULT_MNEMONIC_PATH_INDEX = "4";
 const LAST_MESSAGE_IDS = "last_message_ids";
+const TEST_PRIVATE_KEY = "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418"
+const WALLET_PASSWORD = "TEST_PASS"
+const WALLET_STORE = "WALLET_STORE"
 
 
 export default class OriginCatcherApp extends Component {
   constructor(props) {
     super(props);
-    this.state = {notifyTime:null, notifyMessage:null, deviceToken:undefined, notificationType:undefined, ethAddress:undefined, linkCode:undefined,
-      mnemonic:DEFAULT_MNEMONIC, mnemonicIndex:DEFAULT_MNEMONIC_PATH_INDEX
-    };
-    this.wallet = undefined
+    this.state = {notifyTime:null, notifyMessage:null, deviceToken:undefined, notificationType:undefined, ethAddress:undefined, linkCode:undefined};
+    this.web3 = undefined
     this.new_messages = true;
     this.last_message_ids = {}
     this.check_messages_interval = setInterval(this.checkServerMessages.bind(this), 1000)
@@ -130,7 +129,7 @@ export default class OriginCatcherApp extends Component {
         {
           let msg = responseJson.pending_call
           let call = responseJson.pending_call.call
-          this.processCall(call[0], msg.call_id, call[1], responseJson.return_url, msg.session_token, true)
+          this.processCall(msg.meta, call[0], msg.call_id, call[1], responseJson.return_url, msg.session_token, true)
         }
         else
         {
@@ -191,34 +190,35 @@ export default class OriginCatcherApp extends Component {
 
   }
 
-  processCall(call_name, call_id, params, return_url, session_token, force_from = false) {
+  processCall(meta, call_name, call_id, params, return_url, session_token, force_from = false) {
 
     if (force_from && params.txn_object)
     {
-      params.txn_object.from = this.wallet.address
+      params.txn_object.from = this.state.ethAddress
     }
+    let info = meta.info
     if (call_name == "signTransaction")
     {
-      if (params.txn_object.from.toLowerCase() == this.wallet.address.toLowerCase())
+      if (params.txn_object.from.toLowerCase() == this.state.ethAddress.toLowerCase())
       {
-
         Alert.alert(
-          "Transaction pending",
-          "Do you approve this transaction?",
+          info.action + " pending",
+          "Do you wish to " + info.action + " " + info.name + "?",
           [
             {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
             {text: 'OK', onPress: () => { 
               console.log(params)
-              ret = this.wallet.sign(params.txn_object)
-              this.returnCall(this.state.deviceToken, call_id, session_token, ret).then(
-                (success) => {
-                  if (return_url)
-                  {
-                    console.log("transaction approved returning to:", message.return_url)
-                    alert("Please tap the return to safari button up top to complete transaction..")
-                    //Linking.openURL(message.return_url)
-                  }
-                })
+              this.web3.eth.signTransaction(params.txn_object).then(ret => {
+                this.returnCall(this.state.deviceToken, call_id, session_token, ret["raw"]).then(
+                  (success) => {
+                    if (return_url)
+                    {
+                      console.log("transaction approved returning to:", message.return_url)
+                      alert("Please tap the return to safari button up top to complete transaction..")
+                      //Linking.openURL(message.return_url)
+                    }
+                  })
+              })
             }},
           ],
           { cancelable: false }
@@ -227,30 +227,40 @@ export default class OriginCatcherApp extends Component {
     }
     else if (call_name == "processTransaction")
     {
-      if (params.txn_object.from.toLowerCase() == this.wallet.address.toLowerCase())
+      if (params.txn_object.from.toLowerCase() == this.state.ethAddress.toLowerCase())
       {
 
         Alert.alert(
-          "Incoming Transaction",
-          "Do you approve this transaction?",
+          info.action + " pending",
+          "Do you wish to " + info.action + " "  + info.name + "?",
           [
             {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
             {text: 'Yes', onPress: () => { 
               console.log(params)
-              this.wallet.sendTransaction(params.txn_object).then((transaction) => {
-                console.log("transaction sent:", transaction)
-                // TODO: detect purchase assume it's all purchases for now.
-                let transactionResult = {hash:transaction.hash, purchase:true}
-                this.returnCall(this.state.deviceToken, call_id, session_token, transactionResult).then(
-                  (success) => {
-                    if (return_url)
-                    {
-                      console.log("transaction approved returning to:", return_url)
-                      Linking.openURL(return_url)
-                    }
+              this.web3.eth.sendTransaction(params.txn_object).on('receipt', (receipt) => {
+                console.log("transaction sent:", receipt)
+              }).on('confirmation', (conf_number, receipt) => {
+                console.log("confirmation:", conf_number)
+                if (conf_number == 2)  // TODO: set this as a setting
+                {
+                  // TODO: detect purchase assume it's all purchases for now.
+                  let call = undefined
+                  if (params.meta && params.meta.call)
+                  {
+                    call = params.meta.call
                   }
-                )
-              })
+                  let transactionResult = {hash:receipt.transactionHash, call}
+                  this.returnCall(this.state.deviceToken, call_id, session_token, transactionResult).then(
+                    (success) => {
+                      if (return_url)
+                      {
+                        console.log("transaction approved returning to:", return_url)
+                        Linking.openURL(return_url)
+                      }
+                    }
+                  )
+                }
+              }).on('error', console.error); // TODO: handle error and completion here!
             }},
           ],
           { cancelable: false }
@@ -273,7 +283,7 @@ export default class OriginCatcherApp extends Component {
         {
           if (message.type == "CALL")
           {
-            this.processCall(message.call[0], message.call_id, message.call[1], message.return_url, message.session_token)  
+            this.processCall(message.meta, message.call[0], message.call_id, message.call[1], message.return_url, message.session_token)  
           }
           last_message_id = message.id
         }
@@ -396,9 +406,12 @@ export default class OriginCatcherApp extends Component {
     this.checkClipboardLink()
   }
 
+  componentWillMount() {
+    this.initWallet();
+  }
+
 
   componentDidMount() {
-    this.genWallet();
     Linking.getInitialURL().then((url) => {
       if (url) {
         console.log('Initial url is: ' + url);
@@ -414,6 +427,8 @@ export default class OriginCatcherApp extends Component {
   }
 
   componentWillUnmount() {
+    //store the wallet
+    saveWallet()
     Linking.removeEventListener('url', this.handleOpenFromOut)
   }
 
@@ -422,7 +437,7 @@ export default class OriginCatcherApp extends Component {
 
     if (state.notifyTime)
     {
-      return <Text>Last Notification@{state.notifyTime.toLocaleString()}:{state.notifyMessage}</Text>
+      return <Text>Last Notification@{state.notifyTime.toLocaleString()}:{state.notifyMessage.title ? state.notifyMessage.title : state.notifyMessage}</Text>
     }
     else
     {
@@ -430,21 +445,40 @@ export default class OriginCatcherApp extends Component {
     }
   }
 
-  genWallet() {
-    let state = this.state;
+  saveWallet() {
+    //save the freaking wallet
+    AsyncStorage.setItem(WALLET_STORE, JSON.stringify(this.web3.accounts.wallet));
+  }
 
-    if (state.mnemonic && state.mnemonicIndex)
-    {
-        this.wallet = ethers.Wallet.fromMnemonic(state.mnemonic, "m/44'/60'/0'/0/"+state.mnemonicIndex);
-        this.wallet.provider = new ethers.providers.JsonRpcProvider(INTERNAL_RPC_SERVER)
-        let ethAddress = this.wallet.address;
-        if (ethAddress != this.state.ethAddress)
+  initWallet() {
+    let state = this.state;
+    this.web3 = new Web3(new Web3.providers.HttpProvider(INTERNAL_RPC_SERVER))
+
+    AsyncStorage.getItem(WALLET_STORE).then((wallet_str) => { 
+      let web3 = this.web3
+      if (wallet_str) {
+        wallet_data = JSON.parse(wallet_str)
+        if (wallet_data)
         {
-          this.setState({ethAddress}, () => {
-            this.checkRegisterNotification();
-          });
+          web3.eth.accounts.wallet.decrypt(wallet_data, WALLET_PASSWORD)
         }
-    }
+      }
+
+      if(!web3.eth.accounts.wallet.length)
+      {
+        //generate our wallet
+        web3.eth.accounts.wallet.add(TEST_PRIVATE_KEY)
+      }
+
+      let ethAddress = web3.eth.accounts.wallet[0].address;
+      if (ethAddress != this.state.ethAddress)
+      {
+        this.setState({ethAddress}, () => {
+          this.checkRegisterNotification();
+        });
+      }
+
+    })
   }
 
   render() {
@@ -466,7 +500,6 @@ export default class OriginCatcherApp extends Component {
         bottomContent={
           <View>
           <Text>Token: {this.state.deviceToken} </Text>
-          <Text>Mnmonic: {this.state.mnemonic} -- {this.state.mnemonicIndex}</Text>
           <TouchableOpacity style={styles.buttonTouchable} onPress={() => {this.onClearMessages()}}>
             <Text style={styles.buttonText}>Clear Message Ids</Text>
           </TouchableOpacity>
