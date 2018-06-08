@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl'
 import origin from '../../services/origin'
 
 import Modal from 'components/modal'
-import countryOptions from './_countryOptions'
+import CountryOptions from './_countryOptions'
 
 class VerifyPhone extends Component {
   constructor() {
@@ -16,6 +16,15 @@ class VerifyPhone extends Component {
       code: '',
       prefix: '1'
     }
+
+    this.setSelectedCountry = this.setSelectedCountry.bind(this)
+  }
+
+  setSelectedCountry(country) {
+    this.setState({
+      countryCode: country.code,
+      prefix: country.prefix
+    })
   }
 
   render() {
@@ -106,28 +115,7 @@ class VerifyPhone extends Component {
               />
             </div>
             <div className="dropdown-menu">
-              {countryOptions.map(c => (
-                <div
-                  key={c.prefix}
-                  className="dropdown-item d-flex"
-                  onClick={() => {
-                    this.setState({
-                      countryCode: c.code,
-                      prefix: c.prefix
-                    })
-                  }}
-                >
-                  <div>
-                    <img
-                      src={`images/flags/${c.code}.svg`}
-                      role="presentation"
-                      alt={`${c.code.toUpperCase()} flag`}
-                    />
-                  </div>
-                  <div>{c.name}</div>
-                  <div>+{c.prefix}</div>
-                </div>
-              ))}
+              <CountryOptions setSelectedCountry={ this.setSelectedCountry } />
             </div>
           </div>
           <input
