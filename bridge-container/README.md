@@ -1,4 +1,4 @@
-This docker image installs and runs the bridge server (along with postgres, redis), ipfs and ganache (via origin-js `npm run start`) on Ubuntu 16.04, managing the processes using pm2. To run:
+This docker image installs and runs the bridge server (along with postgres, redis) on Ubuntu 16.04, managing the processes using pm2. To run:
 
 1. Make sure you have Docker **version 18 or greater**:
 `docker --version`
@@ -28,10 +28,8 @@ This docker image installs and runs the bridge server (along with postgres, redi
 
 **Connectivity tests from localhost**
 - bridge server: curl http://127.0.0.1:5000
-- ipfs: curl 127.0.0.1:5002; curl 127.0.0.1:8080
 - postgres:  psql -h 127.0.0.1 -p 5432 -d "bridge-server" -U docker --password <-- currently only working from within the container
 - redis: redis-cli <-- defaults to connecting to 127.0.0.1:6379
-- ganache: geth attach http://127.0.0.1:8545
 - elasticsearch: curl http://127.0.0.1:9200
 - pm2 API (has stats for running applications): curl http://127.0.0.1:4000
 
