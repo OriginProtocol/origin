@@ -1,0 +1,22 @@
+[
+  {
+    "id": "VerifyEmail.continue",
+    "defaultMessage": "Continue"
+  },
+  {
+    "id": "VerifyEmail.cancel",
+    "defaultMessage": "Cancel"
+  },
+  {
+    "id": "VerifyEmail.validEmail",
+    "defaultMessage": "Valid email address"
+  },
+  {
+    "id": "VerifyEmail.emailNotPublished",
+    "defaultMessage": "Other users will know that you have a verified email address. Your actual email address will not be published on the blockchain."
+  },
+  {
+    "id": "VerifyEmail.enterCode",
+    "defaultMessage": "Enter the code we sent you below"
+  }
+]

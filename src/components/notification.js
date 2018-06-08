@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { defineMessages, injectIntl } from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import { fetchUser } from 'actions/User'
 
@@ -14,19 +14,19 @@ class NotificationMessage extends Component {
 
     this.intlMessages = defineMessages({
       shippingPending: {
-        id: 'notification.purchased',
+        id: 'notification.purchaseCreated',
         defaultMessage: 'You have a new purchase.',
       },
       buyerPending: {
-        id: 'notification.sent',
+        id: 'notification.purchaseSent',
         defaultMessage: 'Your purchase has been shipped.',
       },
       sellerPending: {
-        id: 'notification.received',
+        id: 'notification.purchaseReceived',
         defaultMessage: 'You have a new review.',
       },
       complete: {
-        id: 'notification.withdrawn',
+        id: 'notification.purchaseComplete',
         defaultMessage: 'You have a new review.',
       },
     });

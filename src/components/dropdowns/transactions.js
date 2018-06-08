@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 
@@ -80,16 +81,30 @@ class TransactionsDropdown extends Component {
                 <div className="d-inline-block">{notCompletedTransactions.length}</div>
               </div>
               <h3 className="mr-auto">
-                <span className="d-none d-md-inline">Pending </span>
-                <span className="d-none d-sm-inline">Blockchain </span>
-                Transactions
+                <span className="d-none d-md-inline">
+                  <FormattedMessage
+                    id={ 'transactions.pendingTransactions' }
+                    defaultMessage={ 'Pending Blockchain Transactions' }
+                  />
+                  &nbsp;
+                </span>
               </h3>
               <div className="button-container">
                 {!transactionsCanBeCleared &&
-                  <button className="btn btn-clear" onClick={this.handleClick} disabled>Clear</button>
+                  <button className="btn btn-clear" onClick={this.handleClick} disabled>
+                    <FormattedMessage
+                      id={ 'transactions.clear' }
+                      defaultMessage={ 'Clear' }
+                    />
+                  </button>
                 }
                 {transactionsCanBeCleared &&
-                  <button className="btn btn-clear" onClick={this.handleClick}>Clear</button>
+                  <button className="btn btn-clear" onClick={this.handleClick}>
+                    <FormattedMessage
+                      id={ 'transactions.clear' }
+                      defaultMessage={ 'Clear' }
+                    />
+                  </button>
                 }
               </div>
             </header>
@@ -115,9 +130,30 @@ class TransactionsDropdown extends Component {
                         </div>
                         <div className="d-flex">
                           <div className="addresses">
-                            From {truncatedFrom} <img src="images/arrow-dark.svg" /> To {truncatedTo}
+                            <FormattedMessage
+                              id={ 'transactions.from' }
+                              defaultMessage={ 'From' }
+                            />
+                            &nbsp;
+                            {truncatedFrom}
+                            &nbsp;
+                            <img src="images/arrow-dark.svg" />
+                            &nbsp;
+                            <FormattedMessage
+                              id={ 'transactions.to' }
+                              defaultMessage={ 'To' }
+                            />
+                            &nbsp;
+                            {truncatedTo}
                           </div>
-                          <div className="confirmations-count ml-auto">{percentage} completed</div>
+                          <div className="confirmations-count ml-auto">
+                            {percentage}
+                            &nbsp;
+                            <FormattedMessage
+                              id={ 'transactions.completed' }
+                              defaultMessage={ 'Completed' }
+                            />
+                          </div>
                         </div>
                       </div>
                       <div className="graphic-container">

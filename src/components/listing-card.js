@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import { FormattedMessage } from 'react-intl'
 
 // temporary - we should be getting an origin instance from our app,
 // not using a global singleton
@@ -51,7 +52,18 @@ class ListingCard extends Component {
           }
           <div className="category placehold d-flex justify-content-between">
             <div>{category}</div>
-            {!loading && <div>{this.props.listingId < 5 && <span className="featured badge">Featured</span>}</div>}
+            {!loading &&
+              <div>
+                {this.props.listingId < 5 &&
+                  <span className="featured badge">
+                    <FormattedMessage
+                      id={ 'listing-card.featured' }
+                      defaultMessage={ 'Featured' }
+                    />
+                  </span>
+                }
+              </div>
+            }
           </div>
           <h2 className="title placehold text-truncate">{name}</h2>
           {price > 0 && <ListingCardPrices price={price} unitsAvailable={unitsAvailable} />}

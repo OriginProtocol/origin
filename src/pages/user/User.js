@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { fetchUser } from 'actions/User'
 import Avatar from 'components/avatar'
@@ -11,6 +12,13 @@ class User extends Component {
     super(props)
 
     this.state = { reviews: [] }
+
+    this.intlMessages = defineMessages({
+      unnamedUser: {
+        id: 'user.unnamedUser',
+        defaultMessage: 'Unnamed User'
+      }
+    });
   }
 
   async mapPurchaseLengths(listing) {
@@ -71,7 +79,7 @@ class User extends Component {
   }
 
   async componentWillMount() {
-    this.props.fetchUser(this.props.userAddress)
+    this.props.fetchUser(this.props.userAddress, this.props.intl.formatMessage(this.intlMessages.unnamedUser))
 
     this.getAllReviews()
   }
@@ -97,30 +105,55 @@ class User extends Component {
             <div className="col-12 col-sm-4 col-md-3 col-lg-2">
               {attestations && !!attestations.length &&
                 <div className="verifications-box">
-                  <h3>Verified Info</h3>
+                  <h3>
+                    <FormattedMessage
+                      id={ 'User.verifiedInto' }
+                      defaultMessage={ 'Verified Info' }
+                    />
+                  </h3>
                   {/* need to know how to verify signature instead of just finding object by key */}
                   {attestations.find(a => a.service === 'phone') &&
                     <div className="service d-flex">
                       <img src="images/phone-icon-verified.svg" alt="phone verified icon" />
-                      <div>Phone</div>
+                      <div>
+                        <FormattedMessage
+                          id={ 'User.phone' }
+                          defaultMessage={ 'Phone' }
+                        />
+                      </div>
                     </div>
                   }
                   {attestations.find(a => a.service === 'email') &&
                     <div className="service d-flex">
                       <img src="images/phone-icon-verified.svg" alt="email verified icon" />
-                      <div>Email</div>
+                      <div>
+                        <FormattedMessage
+                          id={ 'User.email' }
+                          defaultMessage={ 'Email' }
+                        />
+                      </div>
                     </div>
                   }
                   {attestations.find(a => a.service === 'facebook') &&
                     <div className="service d-flex">
                       <img src="images/phone-icon-verified.svg" alt="Facebook verified icon" />
-                      <div>Facebook</div>
+                      <div>
+                        <FormattedMessage
+                          id={ 'User.facebook' }
+                          defaultMessage={ 'Facebook' }
+                        />
+                      </div>
                     </div>
                   }
                   {attestations.find(a => a.service === 'twitter') &&
                     <div className="service d-flex">
                       <img src="images/phone-icon-verified.svg" alt="Twitter verified icon" />
-                      <div>Twitter</div>
+                      <div>
+                        <FormattedMessage
+                          id={ 'User.twitter' }
+                          defaultMessage={ 'Twitter' }
+                        />
+                      </div>
                     </div>
                   }
                 </div>
@@ -128,7 +161,13 @@ class User extends Component {
             </div>
             <div className="col-12 col-sm-8 col-md-9 col-lg-10">
               <div className="reviews">
-                <h2>Reviews <span className="review-count">{Number(usersReviews.length).toLocaleString()}</span></h2>
+                <h2>
+                  <FormattedMessage
+                    id={ 'User.reviews' }
+                    defaultMessage={ 'Reviews' }
+                  />
+                  &nbsp;<span className="review-count">{Number(usersReviews.length).toLocaleString()}</span>
+                </h2>
                 {usersReviews.map(r => <Review key={r.transactionHash} review={r} />)}
                 {/* To Do: pagination */}
                 {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
@@ -151,4 +190,4 @@ const mapDispatchToProps = dispatch => ({
   fetchUser: address => dispatch(fetchUser(address))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(User)
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(User))
