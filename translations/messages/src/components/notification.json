@@ -26,5 +26,17 @@
   {
     "id": "notification.fundsFromProduct",
     "defaultMessage": "Funds from {productLink}"
+  },
+  {
+    "id": "purchase-detail.seller",
+    "defaultMessage": "Seller"
+  },
+  {
+    "id": "purchase-detail.buyer",
+    "defaultMessage": "Buyer"
+  },
+  {
+    "id": "purchase-detail.unnamedUser",
+    "defaultMessage": "Unnamed User"
   }
 ]

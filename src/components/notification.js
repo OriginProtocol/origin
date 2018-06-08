@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
-import { defineMessages, injectIntl } from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 /*
   This subcomponent turns structured notification objects into dom elements,
@@ -65,7 +65,7 @@ class HumanReadableNotification extends Component {
         verb = this.props.intl.formatMessage(this.intlMessages.received)
         break
       case 'withdrawnAt':
-        subject = <Fragment>this.props.intl.formatMessage(this.intlMessages.fundsFromProduct, { productLink })</Fragment>
+        subject = <Fragment>{this.props.intl.formatMessage(this.intlMessages.fundsFromProduct, { productLink })}</Fragment>
         presPerf = this.props.intl.formatMessage(this.intlMessages.haveBeen)
         verb = this.props.intl.formatMessage(this.intlMessages.withdrawn)
         break
@@ -93,7 +93,30 @@ class Notification extends Component {
         </div>
         <div className="content-container d-flex flex-column justify-content-between">
           <HumanReadableNotification intl={this.props.intl} notification={notification} className={`text-truncate${counterpartyAddress ? '' : ' no-counterparty'}`} />
-          {counterpartyAddress && <p className="text-truncate"><strong>{perspective === 'buyer' ? 'Seller' : 'Buyer'}</strong>: <Link to={`/users/${counterpartyAddress}`}>{counterpartyName || 'Unnamed User'}</Link></p>}
+          {
+            counterpartyAddress && 
+              <p className="text-truncate">
+                <strong>{perspective === 'buyer' ?
+                          <FormattedMessage
+                            id={ 'purchase-detail.seller' }
+                            defaultMessage={ 'Seller' }
+                          /> :
+                          <FormattedMessage
+                            id={ 'purchase-detail.buyer' }
+                            defaultMessage={ 'Buyer' }
+                          />
+                        }
+                </strong>:
+                <Link to={`/users/${counterpartyAddress}`}>
+                  {counterpartyName ||
+                    <FormattedMessage
+                      id={ 'purchase-detail.unnamedUser' }
+                      defaultMessage={ 'Unnamed User' }
+                    />
+                  }
+                </Link>
+              </p>
+          }
           {counterpartyAddress && <p className="text-truncate text-muted">{counterpartyAddress}</p>}
         </div>
         <div className="link-container m-auto">

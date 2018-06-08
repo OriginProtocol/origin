@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { FormattedMessage } from 'react-intl'
 
 class VerifierServices extends Component {
   render() {
@@ -6,14 +7,20 @@ class VerifierServices extends Component {
     return (
       <div className="services-container">
         <p className="credit">
-          Powered by{' '}
+          <FormattedMessage
+            id={ '_Services.poweredBy' }
+            defaultMessage={ 'Powered by' }
+          />
+          {' '}
           <span className="logo">
             Origin<sup>ID</sup>
           </span>
         </p>
         <p className="directive">
-          Please connect your accounts below to strengthen your identity on
-          Origin.
+          <FormattedMessage
+            id={ '_Services.pleaseConnectAccounts' }
+            defaultMessage={ 'Please connect your accounts below to strengthen your identity on Origin.' }
+          />
         </p>
         <div className="row no-gutters">
           <div className="col-12 col-sm-6 col-md-4">
@@ -31,7 +38,12 @@ class VerifierServices extends Component {
               <span className="image-container d-flex align-items-center justify-content-center">
                 <img src="images/phone-icon-light.svg" alt="phone icon" />
               </span>
-              <span className="service-name">Phone</span>
+              <span className="service-name">
+                <FormattedMessage
+                  id={ '_Services.phone' }
+                  defaultMessage={ 'Phone' }
+                />
+              </span>
             </button>
           </div>
           <div className="col-12 col-sm-6 col-md-4">
@@ -49,7 +61,12 @@ class VerifierServices extends Component {
               <span className="image-container d-flex align-items-center justify-content-center">
                 <img src="images/email-icon-light.svg" alt="email icon" />
               </span>
-              <span className="service-name">Email</span>
+              <span className="service-name">
+                <FormattedMessage
+                  id={ '_Services.email' }
+                  defaultMessage={ 'Email' }
+                />
+              </span>
             </button>
           </div>
           <div className="col-12 col-sm-6 col-md-4">
@@ -59,9 +76,18 @@ class VerifierServices extends Component {
               </span>
               <span className="unavailable-bg" />
               <span className="unavailable-message">
-                Coming<br />Soon
+                <FormattedMessage
+                  id={ '_Services.comingSoon' }
+                  defaultMessage={ 'Coming {br} Soon' }
+                  values={{ br: <br /> }}
+                />
               </span>
-              <span className="service-name">Address</span>
+              <span className="service-name">
+                <FormattedMessage
+                  id={ '_Services.address' }
+                  defaultMessage={ 'Address' }
+                />
+              </span>
             </button>
           </div>
           <div className="col-12 col-sm-6 col-md-4">
@@ -82,7 +108,12 @@ class VerifierServices extends Component {
                   alt="Facebook icon"
                 />
               </span>
-              <span className="service-name">Facebook</span>
+              <span className="service-name">
+                <FormattedMessage
+                  id={ '_Services.facebook' }
+                  defaultMessage={ 'Facebook' }
+                />
+              </span>
             </button>
           </div>
           <div className="col-12 col-sm-6 col-md-4">
@@ -100,7 +131,12 @@ class VerifierServices extends Component {
               <span className="image-container d-flex align-items-center justify-content-center">
                 <img src="images/twitter-icon-light.svg" alt="Twitter icon" />
               </span>
-              <span className="service-name">Twitter</span>
+              <span className="service-name">
+                <FormattedMessage
+                  id={ '_Services.twitter' }
+                  defaultMessage={ 'Twitter' }
+                />
+              </span>
             </button>
           </div>
           <div className="col-12 col-sm-6 col-md-4">
@@ -110,9 +146,18 @@ class VerifierServices extends Component {
               </span>
               <span className="unavailable-bg" />
               <span className="unavailable-message">
-                Coming<br />Soon
+                <FormattedMessage
+                  id={ '_Services.comingSoon' }
+                  defaultMessage={ 'Coming {br} Soon' }
+                  values={{ br: <br /> }}
+                />
               </span>
-              <span className="service-name">Google</span>
+              <span className="service-name">
+                <FormattedMessage
+                  id={ '_Services.google' }
+                  defaultMessage={ 'Google' }
+                />
+              </span>
             </button>
           </div>
         </div>

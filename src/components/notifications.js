@@ -21,7 +21,12 @@ class Notifications extends Component {
         <div className="container">
           <div className="row">
             <div className="col-12">
-              <h1>Notifications</h1>
+              <h1>
+                <FormattedMessage
+                  id={ 'notifications.notificationsHeading' }
+                  defaultMessage={ 'Notifications' }
+                />
+              </h1>
             </div>
           </div>
           <div className="row">
