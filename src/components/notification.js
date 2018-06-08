@@ -118,7 +118,20 @@ class Notification extends Component {
               {counterpartyAddress &&
                 <div className="counterparty d-flex">
                   <div className="text-truncate">
-                    <strong>{perspective === 'buyer' ? 'Seller' : 'Buyer'}</strong>:
+                    <strong>
+                      {perspective === 'buyer' &&
+                        <FormattedMessage
+                          id={ 'purchase-detail.buyer' }
+                          defaultMessage={ 'Buyer' }
+                        />
+                      }
+                      {perspective === 'seller' &&
+                        <FormattedMessage
+                          id={ 'purchase-detail.seller' }
+                          defaultMessage={ 'Seller' }
+                        />
+                      }
+                    </strong>:
                     &nbsp;
                     {counterpartyName || 'Unnamed User'}
                   </div>

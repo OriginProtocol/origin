@@ -13,8 +13,8 @@ class Notifications extends Component {
 
   async componentWillMount() {
     try {
-      const notifications = await origin.notifications.all('0x627306090abaB3A6e1400e9345bC60c78a8BEf57')
-console.log('page notifications', notifications)
+      const notifications = await origin.notifications.all()
+
       this.setState({ notifications })
     } catch(e) {
       console.error(e)
