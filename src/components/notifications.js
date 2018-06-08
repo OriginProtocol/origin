@@ -10,7 +10,7 @@ class Notifications extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { filter: 'unread', notifications: [] }
+    this.state = { filter: 'all', notifications: [] }
   }
 
   async componentWillMount() {
@@ -53,16 +53,16 @@ class Notifications extends Component {
           <div className="row">
             <div className="col-12 col-md-3">
               <div className="filters list-group flex-row flex-md-column">
-                <a className={`list-group-item list-group-item-action${filter === 'unread' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'unread' })}>
-                  <FormattedMessage
-                    id={ 'notifications.unread' }
-                    defaultMessage={ 'Unread' }
-                  />
-                </a>
                 <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>
                   <FormattedMessage
                     id={ 'notifications.all' }
                     defaultMessage={ 'All' }
+                  />
+                </a>
+                <a className={`list-group-item list-group-item-action${filter === 'unread' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'unread' })}>
+                  <FormattedMessage
+                    id={ 'notifications.unread' }
+                    defaultMessage={ 'Unread' }
                   />
                 </a>
                 <a className={`list-group-item list-group-item-action${filter === 'buyer' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'buyer' })}>

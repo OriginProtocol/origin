@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom'
 
 import { fetchUser } from 'actions/User'
 
+import origin from '../services/origin'
+
 // support other derived notifications in the future
 const NON_PURCHASE_RELATED_MESSAGE = 'A message from Origin that does not involve a listing'
 
@@ -67,6 +69,7 @@ class Notification extends Component {
     const { listing, purchase } = notification.resources
     const counterpartyAddress = [listing.sellerAddress, purchase.buyerAddress].find(addr => addr !== web3Account)
 
+    this.handleClick = this.handleClick.bind(this)
     this.state = {
       counterpartyAddress,
       counterpartyName: '',
@@ -88,6 +91,14 @@ class Notification extends Component {
     }
   }
 
+  async handleClick() {
+    try {
+      await origin.notifications.set({ id: this.props.notification.id, status: 'read' })
+    } catch(e) {
+      console.error(e)
+    }
+  }
+
   render() {
     const { intl, notification } = this.props
     const { counterpartyAddress, counterpartyName, listing, purchase } = this.state
@@ -96,7 +107,7 @@ class Notification extends Component {
 
     return (
       <li className="list-group-item notification">
-        <Link to={`/purchases/${purchase.address}`}>
+        <Link to={`/purchases/${purchase.address}`} onClick={this.handleClick}>
           <div className="d-flex align-items-stretch">
             <div className="image-container d-flex align-items-center justify-content-center">
               {!listing.address && <img src="images/origin-icon-white.svg" alt="Origin zero" />}

@@ -32,9 +32,10 @@ class NotificationsDropdown extends Component {
 
       return { ...n, perspective: web3Account === sellerAddress ? 'seller' : 'buyer' }
     })
+    const filteredNotifications = notificationsWithPerspective.filter(n => n.status === 'unread')
     // avoid integers greater than two digits
-    const notificationCount = notifications.length < 100 ?
-                              Number(notifications.length).toLocaleString() :
+    const notificationCount = filteredNotifications.length < 100 ?
+                              Number(filteredNotifications.length).toLocaleString() :
                               `${Number(99).toLocaleString()}+`
 
     return (
@@ -54,13 +55,13 @@ class NotificationsDropdown extends Component {
               <h3>
                 <FormattedMessage
                   id={ 'notifications.notificationsHeading' }
-                  defaultMessage={ 'Notifications' }
+                  defaultMessage={ 'Unread Notifications' }
                 />
               </h3>
             </header>
             <div className="notifications-list">
               <ul className="list-group">
-                {notificationsWithPerspective.map(n => <Notification key={`dropdown-notification:${n.id}`} notification={n} />)}
+                {filteredNotifications.map(n => <Notification key={`dropdown-notification:${n.id}`} notification={n} />)}
               </ul>
             </div>
             <footer>
