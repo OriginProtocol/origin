@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import { fetchUser } from 'actions/User'
 
@@ -66,13 +66,11 @@ class Notification extends Component {
     const { notification, web3Account } = this.props
     const { listing, purchase } = notification.resources
     const counterpartyAddress = [listing.sellerAddress, purchase.buyerAddress].find(addr => addr !== web3Account)
-    const perspective = web3Account === listing.sellerAddress ? 'seller' : 'buyer'
 
     this.state = {
       counterpartyAddress,
       counterpartyName: '',
       listing,
-      perspective,
       purchase,
     }
   }
@@ -91,8 +89,8 @@ class Notification extends Component {
   }
 
   render() {
-    const { intl, notification, web3Account } = this.props
-    const { counterpartyAddress, counterpartyName, listing, perspective, purchase } = this.state
+    const { intl, notification } = this.props
+    const { counterpartyAddress, counterpartyName, listing, purchase } = this.state
     const { pictures } = listing
     const listingImageURL = pictures && pictures.length && (new URL(pictures[0])).protocol === "data:" && pictures[0]
 
@@ -119,13 +117,13 @@ class Notification extends Component {
                 <div className="counterparty d-flex">
                   <div className="text-truncate">
                     <strong>
-                      {perspective === 'buyer' &&
+                      {notification.perspective === 'buyer' &&
                         <FormattedMessage
                           id={ 'purchase-detail.buyer' }
                           defaultMessage={ 'Buyer' }
                         />
                       }
-                      {perspective === 'seller' &&
+                      {notification.perspective === 'seller' &&
                         <FormattedMessage
                           id={ 'purchase-detail.seller' }
                           defaultMessage={ 'Seller' }
@@ -162,4 +160,4 @@ const mapDispatchToProps = dispatch => ({
   fetchUser: address => dispatch(fetchUser(address))
 })
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Notification))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Notification))

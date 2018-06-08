@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import Notification from 'components/notification'
@@ -24,7 +25,13 @@ class NotificationsDropdown extends Component {
   }
 
   render() {
+    const { web3Account } = this.props
     const { notifications } = this.state
+    const notificationsWithPerspective = notifications.map(n => {
+      const { sellerAddress } = n.resources.listing
+
+      return { ...n, perspective: web3Account === sellerAddress ? 'seller' : 'buyer' }
+    })
     // avoid integers greater than two digits
     const notificationCount = notifications.length < 100 ?
                               Number(notifications.length).toLocaleString() :
@@ -53,7 +60,7 @@ class NotificationsDropdown extends Component {
             </header>
             <div className="notifications-list">
               <ul className="list-group">
-                {notifications.map(n => <Notification key={`dropdown-notification:${n.id}`} notification={n} />)}
+                {notificationsWithPerspective.map(n => <Notification key={`dropdown-notification:${n.id}`} notification={n} />)}
               </ul>
             </div>
             <footer>
@@ -71,4 +78,10 @@ class NotificationsDropdown extends Component {
   }
 }
 
-export default NotificationsDropdown
+const mapStateToProps = state => {
+  return {
+    web3Account: state.app.web3.account,
+  }
+}
+
+export default connect(mapStateToProps)(NotificationsDropdown)

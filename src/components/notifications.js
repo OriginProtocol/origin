@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
+
 import Notification from './notification'
 
 import origin from '../services/origin'
@@ -22,10 +24,18 @@ class Notifications extends Component {
   }
 
   render() {
+    const { web3Account } = this.props
     const { filter, notifications } = this.state
-    const filteredNotifications = filter === 'all' ? notifications : notifications.filter(n => {
-      return filter === 'unread' ? !n.readAt : (n.perspective === filter)
+    const notificationsWithPerspective = notifications.map(n => {
+      const { sellerAddress } = n.resources.listing
+
+      return {...n, perspective: web3Account === sellerAddress ? 'seller' : 'buyer' }
     })
+    const filteredNotifications = filter === 'all' ? 
+                                  notificationsWithPerspective :
+                                  notificationsWithPerspective.filter(n => {
+                                    return filter === 'unread' ? n.status === 'unread' : (n.perspective === filter)
+                                  })
 
     return (
       <div className="notifications-wrapper">
@@ -83,4 +93,10 @@ class Notifications extends Component {
   }
 }
 
-export default Notifications
+const mapStateToProps = state => {
+  return {
+    web3Account: state.app.web3.account,
+  }
+}
+
+export default connect(mapStateToProps)(Notifications)
