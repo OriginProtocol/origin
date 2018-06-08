@@ -1,28 +1,27 @@
 import React,{Component} from 'react';
-import {Alert, StyleSheet, Text, View, PushNotificationIOS, TouchableOpacity, TextInput, NativeModules, AsyncStorage, Linking, Clipboard} from 'react-native';
+import {Alert, StyleSheet, Text, View, PushNotificationIOS, TouchableOpacity, TextInput, Linking, Clipboard} from 'react-native';
 import PushNotification from 'react-native-push-notification';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import { BRIDGE_SERVER_PROTOCOL,  BRIDGE_SERVER_DOMAIN, BRIDGE_SERVER_PORT } from 'react-native-dotenv';
 import './global'
+import {localfy, storeData, loadData} from './tools'
+import origin, {bridgeUrl, defaultProviderUrl} from './origin'
 import Web3 from 'web3'
+import fetch from 'cross-fetch'
 
-const API_SERVER_IP = BRIDGE_SERVER_DOMAIN ?
-    BRIDGE_SERVER_DOMAIN : NativeModules.SourceCode.scriptURL.split('://')[1].split('/')[0].split(':')[0];
 
-const API_SERVER = BRIDGE_SERVER_PORT ?
-    API_SERVER_IP + ":" + BRIDGE_SERVER_PORT : API_SERVER_IP;
+const providerUrl = defaultProviderUrl
 
-const API_ETH_NOTIFICATION = BRIDGE_SERVER_PROTOCOL + "://" + API_SERVER + "/api/notifications/eth-endpoint";
-const API_WALLET_LINKER = BRIDGE_SERVER_PROTOCOL + "://" + API_SERVER + "/api/wallet-linker";
+const API_ETH_NOTIFICATION = `${bridgeUrl}/api/notifications/eth-endpoint`;
+const API_WALLET_LINKER = `${bridgeUrl}/api/wallet-linker`
 const API_WALLET_LINKER_LINK = API_WALLET_LINKER + "/link-wallet";
 const API_WALLET_LINKER_MESSAGES = API_WALLET_LINKER + "/wallet-messages";
 const API_WALLET_LINKER_RETURN_CALL = API_WALLET_LINKER + "/wallet-called";
 const APN_NOTIFICATION_TYPE = "APN";
 const ETHEREUM_QR_PREFIX = "ethereum:";
 const ORIGIN_QR_PREFIX = "orgw:";
-const RPC_SERVER = "http://localhost:8545";
-const INTERNAL_RPC_SERVER = "http://" + API_SERVER_IP + ":8545";
-const ORIGIN_PROTOCOL_PREFIX = "http://www.originprotocol.com/mobile/";
+
+
+const ORIGIN_PROTOCOL_PREFIX = "http://www.originprotocol.com/mobile/"
 const SECURE_ORIGIN_PROTOCOL_PREFIX = "https://www.originprotocol.com/mobile/";
 const LAST_MESSAGE_IDS = "last_message_ids";
 const TEST_PRIVATE_KEY = "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418"
@@ -34,14 +33,13 @@ export default class OriginCatcherApp extends Component {
   constructor(props) {
     super(props);
     this.state = {notifyTime:null, notifyMessage:null, deviceToken:undefined, notificationType:undefined, ethAddress:undefined, linkCode:undefined};
-    this.web3 = undefined
     this.new_messages = true;
     this.last_message_ids = {}
     this.check_messages_interval = setInterval(this.checkServerMessages.bind(this), 1000)
 
-    AsyncStorage.getItem(LAST_MESSAGE_IDS).then((ids_str) => { 
-      if (ids_str) {
-        this.last_message_ids = JSON.parse(ids_str);
+    loadData(LAST_MESSAGE_IDS).then((ids) => { 
+      if (ids) {
+        this.last_message_ids = ids;
       }
     })
 
@@ -85,7 +83,7 @@ export default class OriginCatcherApp extends Component {
   }
 
   syncLastMessages() {
-    AsyncStorage.setItem(LAST_MESSAGE_IDS, JSON.stringify(this.last_message_ids));
+    storeData(LAST_MESSAGE_IDS, this.last_message_ids);
   }
 
   onClearMessages() {
@@ -160,7 +158,7 @@ export default class OriginCatcherApp extends Component {
     if (state.linkCode && state.deviceToken && state.ethAddress)
     {
         console.log("linking...");
-        let rpc_server = this.copied_code == state.linkCode ? INTERNAL_RPC_SERVER : RPC_SERVER
+        let rpc_server = this.copied_code == state.linkCode ? localfy(providerUrl) : providerUrl
         this.doLink(state.deviceToken, state.linkCode, rpc_server, [state.ethAddress]);
     }
   }
@@ -190,6 +188,11 @@ export default class OriginCatcherApp extends Component {
 
   }
 
+  async fetchListing(address) {
+    let listing = await origin.listings.get(address)
+    console.log("listing is:", listing)
+  }
+
   processCall(meta, call_name, call_id, params, return_url, session_token, force_from = false) {
 
     if (force_from && params.txn_object)
@@ -197,18 +200,30 @@ export default class OriginCatcherApp extends Component {
       params.txn_object.from = this.state.ethAddress
     }
     let info = meta.info
+    let title = "Transaction pending"
+    let description = "Do you approve of this transaction?"
+    if (info)
+    {
+      title = info.action + " pending"
+      description = "Do you wish to " + info.action + " " + info.name + "?"
+
+      if (info.type == "Listing")
+      {
+          this.fetchListing(info.address)
+      }
+    }
     if (call_name == "signTransaction")
     {
       if (params.txn_object.from.toLowerCase() == this.state.ethAddress.toLowerCase())
       {
         Alert.alert(
-          info.action + " pending",
-          "Do you wish to " + info.action + " " + info.name + "?",
+          title,
+          description,
           [
             {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
             {text: 'OK', onPress: () => { 
               console.log(params)
-              this.web3.eth.signTransaction(params.txn_object).then(ret => {
+              web3.eth.signTransaction(params.txn_object).then(ret => {
                 this.returnCall(this.state.deviceToken, call_id, session_token, ret["raw"]).then(
                   (success) => {
                     if (return_url)
@@ -231,17 +246,17 @@ export default class OriginCatcherApp extends Component {
       {
 
         Alert.alert(
-          info.action + " pending",
-          "Do you wish to " + info.action + " "  + info.name + "?",
+          title,
+          description,
           [
             {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
             {text: 'Yes', onPress: () => { 
               console.log(params)
-              this.web3.eth.sendTransaction(params.txn_object).on('receipt', (receipt) => {
+              web3.eth.sendTransaction(params.txn_object).on('receipt', (receipt) => {
                 console.log("transaction sent:", receipt)
               }).on('confirmation', (conf_number, receipt) => {
                 console.log("confirmation:", conf_number)
-                if (conf_number == 2)  // TODO: set this as a setting
+                if (conf_number == 1)  // TODO: set this as a setting
                 {
                   // TODO: detect purchase assume it's all purchases for now.
                   let call = undefined
@@ -447,21 +462,19 @@ export default class OriginCatcherApp extends Component {
 
   saveWallet() {
     //save the freaking wallet
-    AsyncStorage.setItem(WALLET_STORE, JSON.stringify(this.web3.accounts.wallet));
+    storeData(WALLET_STORE, web3.accounts.wallet);
   }
 
   initWallet() {
     let state = this.state;
-    this.web3 = new Web3(new Web3.providers.HttpProvider(INTERNAL_RPC_SERVER))
-
-    AsyncStorage.getItem(WALLET_STORE).then((wallet_str) => { 
-      let web3 = this.web3
-      if (wallet_str) {
-        wallet_data = JSON.parse(wallet_str)
-        if (wallet_data)
-        {
-          web3.eth.accounts.wallet.decrypt(wallet_data, WALLET_PASSWORD)
-        }
+    loadData(WALLET_STORE).then((wallet_data) => { 
+      //set the provider here..
+      //this should probably also come from the data block
+      //in case when we want to let people change providers...
+      web3.setProvider(new Web3.providers.HttpProvider(localfy(providerUrl), 20000))
+      if (wallet_data)
+      {
+        web3.eth.accounts.wallet.decrypt(wallet_data, WALLET_PASSWORD)
       }
 
       if(!web3.eth.accounts.wallet.length)

@@ -56,6 +56,21 @@ yarn start --reset-cache
 
 Runs the [jest](https://github.com/facebook/jest) test runner on your tests.
 
+
+### Using local origin-js install
+
+Instal the install-local script to install a static depedency into the node_modules
+
+```
+npm install -g install-local
+```
+
+Install the origin-js library using the script. NOTE: please be in the directory of the react native repo. `../` assumes that the origin-js directory exists at the same level.
+
+```
+install-local <../directory of origin-js>
+```
+
 #### `npm run ios`
 
 Like `npm start`, but also attempts to open your app in the iOS Simulator if you're on a Mac and have it installed.
