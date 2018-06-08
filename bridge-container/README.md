@@ -1,14 +1,17 @@
-This docker image installs and runs the bridge server (along with postgres, redis), ipfs and ganache (via origin-js `npm run start`) on Ubuntu 16.04, managing the processes using pm2. To run, have docker installed and be in the same directory as the Dockerfile then:
+This docker image installs and runs the bridge server (along with postgres, redis) on Ubuntu 16.04, managing the processes using pm2. To run:
+
+1. Make sure you have Docker **version 18 or greater**:
+`docker --version`
 
 1. Build the docker image:
-`docker build -f Dockerfile -t <image name> .`
+`npm run bridge:build`
 
-2. Get the image ID:
-`docker images`
+3. Run the image with port mappings: `npm run bridge:start`
 
-3. Run the image with port mappings: `docker run -d -p 4000:4000 -p 5000:5000 -p 5002:5002 -p 5432:5432 -p 6379:6379 -p 8080:8080 -p 8545:8545 -p 9200:9200 --name origin-dev <image ID>`
+4. Access the CLI:
+`npm run bridge:bash`
 
-4. Access the CLI using `docker exec -it <container ID> /bin/bash` (get the container ID from `docker ps`)
+5. Stop and remove the container: `npm run bridge:stop`.
 
 
 **Configuration**
@@ -25,10 +28,8 @@ This docker image installs and runs the bridge server (along with postgres, redi
 
 **Connectivity tests from localhost**
 - bridge server: curl http://127.0.0.1:5000
-- ipfs: curl 127.0.0.1:5002; curl 127.0.0.1:8080
 - postgres:  psql -h 127.0.0.1 -p 5432 -d "bridge-server" -U docker --password <-- currently only working from within the container
 - redis: redis-cli <-- defaults to connecting to 127.0.0.1:6379
-- ganache: geth attach http://127.0.0.1:8545
 - elasticsearch: curl http://127.0.0.1:9200
 - pm2 API (has stats for running applications): curl http://127.0.0.1:4000
 
@@ -55,7 +56,7 @@ This docker image installs and runs the bridge server (along with postgres, redi
 | elasticsearch      | 7  | fork | x    | online | 0       | XXs    | 0%  | 1.6 MB     | root | disabled |
 | origin-js          | 1  | fork | x    | online | 0       | XXm    | 0%  | 30.5 MB    | root | disabled |
 | pm2-http-interface | 6  | fork | x    | online | 0       | XXm    | 0%  | 29.0 MB    | root | disabled |
-| postgresql         | 6  | fork | x    | online | 0       | XXh    | 0%  | 1.5 MB     | root | disabled | 
+| postgresql         | 6  | fork | x    | online | 0       | XXh    | 0%  | 1.5 MB     | root | disabled |
 | redis              | 0  | fork | x    | online | 0       | XXm    | 0%  | 3.2 MB     | root | disabled |
 
 

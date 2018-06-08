@@ -14,12 +14,6 @@ WORKDIR /tmp
 RUN curl -sL https://deb.nodesource.com/setup_9.x | bash -
 RUN apt-get install -y nodejs
 
-# IPFS, Ganache (through origin-js)
-WORKDIR /opt
-RUN git clone https://github.com/OriginProtocol/origin-js.git
-WORKDIR /opt/origin-js
-RUN npm run install:dev
-
 # Postgresql 9.3
 # https://docs.docker.com/engine/examples/postgresql_service/#connecting-from-your-host-system
 WORKDIR /opt/pg
@@ -60,16 +54,16 @@ RUN pip3 install virtualenv
 RUN git clone https://github.com/OriginProtocol/bridge-server.git
 WORKDIR /opt/bridge-server/
 RUN git branch --track origin remotes/origin/develop && \
-	git pull origin develop
+	git checkout develop
 RUN virtualenv bridge-server-venv && \
 	. bridge-server-venv/bin/activate
 # for compiling dependencies of bridge server... dependencies (on 16.04)
 RUN apt-get install -y pkg-config libffi-dev autoconf libtool libssl-dev
 # TODO: remove hacks
-RUN sed -i '/pytest-*/d' requirements.txt 
+RUN sed -i '/pytest-*/d' requirements.txt
 RUN bridge-server-venv/bin/pip3.6 install -r requirements.txt
 COPY files/config/bridge_server_dev.env .env
-# needed by flask 
+# needed by flask
 ENV LC_ALL=C.UTF-8 \
     LANG=C.UTF-8
 RUN /etc/init.d/postgresql start && \

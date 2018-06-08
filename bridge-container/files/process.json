@@ -29,10 +29,5 @@
     "script"     : "start-es.sh",
     "cwd"        : "/opt/es",
     "interpreter": "/bin/bash"
-  },{
-    "name"       : "origin-js",
-    "script"     : "npm",
-    "args"       : "start",
-    "cwd"        : "/opt/origin-js"
   }]
 }
