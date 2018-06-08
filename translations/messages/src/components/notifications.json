@@ -1,5 +1,9 @@
 [
   {
+    "id": "notifications.notificationsHeading",
+    "defaultMessage": "Notifications"
+  },
+  {
     "id": "notifications.unread",
     "defaultMessage": "Unread"
   },
