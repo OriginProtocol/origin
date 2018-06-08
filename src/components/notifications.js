@@ -67,14 +67,14 @@ class Notifications extends Component {
                 </a>
                 <a className={`list-group-item list-group-item-action${filter === 'buyer' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'buyer' })}>
                   <FormattedMessage
-                    id={ 'notifications.buy' }
-                    defaultMessage={ 'Buy' }
+                    id={ 'notifications.buying' }
+                    defaultMessage={ 'Buying' }
                   />
                 </a>
                 <a className={`list-group-item list-group-item-action${filter === 'seller' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'seller' })}>
                   <FormattedMessage
-                    id={ 'notifications.sell' }
-                    defaultMessage={ 'Sell' }
+                    id={ 'notifications.selling' }
+                    defaultMessage={ 'Selling' }
                   />
                 </a>
               </div>
