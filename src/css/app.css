@@ -113,7 +113,7 @@ a:hover {
 
 .btn-clear:hover {
   background-color: white;
-  color: #213040 !important;
+  color: #213040;
 }
 
 .table {
@@ -194,16 +194,16 @@ a:hover {
   padding: 0;
 }
 
-.transaction-status .identification > div {
+.purchase-status .identification > div {
   flex-basis: 33%;
   margin: 0;
 }
 
-.transaction-status .identification .badge {
+.purchase-status .identification .badge {
   font-size: 0.6rem;
 }
 
-.transaction-status .identification > :first-of-type {
+.purchase-status .identification > :first-of-type {
   line-height: 0.6rem;
 }
 
@@ -256,7 +256,7 @@ a:hover {
   vertical-align: middle;
   width: 25px;
 
-  background-image: url(images/arrow.svg);
+  background-image: url(images/arrow-light.svg);
   background-position: 40%;
   background-repeat: no-repeat;
 }
@@ -440,8 +440,41 @@ a:hover {
   width: 12px;
 }
 
+.navbar .transaction .dropdown-toggle {
+  position: relative;
+}
+
+.navbar .transactions.dropdown .arrows-container {
+  background-color: var(--dusk);
+  border-radius: 50%;
+  height: 16px;
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  width: 16px;
+}
+
+.navbar .transactions.dropdown.show .arrows-container {
+  background-color: white;
+}
+
+.navbar .dropdown-toggle .rotating-arrows {
+  height: 12px;
+  width: 12px;
+}
+
 .navbar .dropdown {
   position: static;
+}
+
+.navbar .btn-clear:hover {
+  background-color: var(--clear-blue);
+  color: white;
+}
+
+.navbar .btn-clear:disabled:hover {
+  background-color: white;
+  color: var(--clear-blue);
 }
 
 .navbar .dropdown .dropdown-toggle {
@@ -454,7 +487,8 @@ a:hover {
 
 .connectivity .dropdown-menu,
 .identity .dropdown-menu,
-.notifications .dropdown-menu {
+.notifications .dropdown-menu,
+.transactions .dropdown-menu {
   position: absolute;
   left: auto;
   max-width: calc(100% - 15px - 15px);
@@ -485,9 +519,7 @@ a:hover {
   position: absolute;
   content: '';
   height: 18px;
-  /* Temporary shift for current deployment */
-  right: 70px;
-  /*right: 130px;*/
+  right: 190px;
   top: 0;
   width: 36px;
   z-index: 999;
@@ -522,6 +554,19 @@ a:hover {
   clip-path: polygon(50% 0, 0 100%, 100% 100%);
 }
 
+.transactions .dropdown-menu::after {
+  position: absolute;
+  content: '';
+  height: 18px;
+  right: 130px;
+  top: 0;
+  width: 36px;
+  z-index: 999;
+
+  -webkit-clip-path: polygon(50% 0, 0 100%, 100% 100%);
+  clip-path: polygon(50% 0, 0 100%, 100% 100%);
+}
+
 .connectivity .dropdown-menu::after{
   background-color: white;
 }
@@ -534,15 +579,17 @@ a:hover {
   background-color: white;
 }
 
+.transactions .dropdown-menu::after{
+  background-color: white;
+}
+
 .navbar .triangle {
   height: 18px;
   width: 18px;
 }
 
 .connectivity .triangle {
-  /* Temporary shift for current deployment */
-  margin-right: 70px;
-  /*margin-right: 130px;*/
+  margin-right: 190px;
   width: 36px;
 
   -webkit-clip-path: polygon(50% 0, 0 100%, 100% 100%);
@@ -562,6 +609,14 @@ a:hover {
   clip-path: polygon(50% 0, 0 100%, 100% 100%);
 }
 
+.transactions .triangle {
+  margin-right: 130px;
+  width: 36px;
+
+  -webkit-clip-path: polygon(50% 0, 0 100%, 100% 100%);
+  clip-path: polygon(50% 0, 0 100%, 100% 100%);
+}
+
 .sell .triangle {
   -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
   clip-path: polygon(100% 0, 0 100%, 100% 100%);
@@ -573,7 +628,8 @@ a:hover {
 
 .connectivity .triangle,
 .notifications .triangle,
-.sell .triangle {
+.sell .triangle,
+.transactions .triangle {
   background-color: white;
 }
 
@@ -592,33 +648,43 @@ a:hover {
   filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
 }
 
+.transactions .triangle-container {
+  -webkit-filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
+}
+
 .nav-item.identity.dropdown.show {
   background-color: var(--dark);
 }
 
 .nav-item.connectivity.dropdown.show,
-.nav-item.notifications.dropdown.show {
+.nav-item.notifications.dropdown.show,
+.nav-item.transactions.dropdown.show {
   background-color: white;
 }
 
 .nav-item.connectivity.dropdown .connectivity.selected,
-.nav-item.notifications.dropdown .notifications.selected {
+.nav-item.notifications.dropdown .notifications.selected,
+.nav-item.transactions.dropdown .transactions.selected {
   display: none;
 }
 
 .nav-item.connectivity.dropdown.show .connectivity,
-.nav-item.notifications.dropdown.show .notifications {
+.nav-item.notifications.dropdown.show .notifications,
+.nav-item.transactions.dropdown.show .transactions {
   display: none;
 }
 
 .nav-item.connectivity.dropdown.show .connectivity.selected,
-.nav-item.notifications.dropdown.show .notifications.selected {
+.nav-item.notifications.dropdown.show .notifications.selected,
+.nav-item.transactions.dropdown.show .transactions.selected {
   display: inline;
 }
 
 .connectivity .dropdown-menu,
+.identity .dropdown-menu,
 .notifications .dropdown-menu,
-.identity .dropdown-menu {
+.transactions .dropdown-menu {
   background-color: transparent;
   border: none;
   border-radius: 0 0 var(--default-radius) var(--default-radius);
@@ -627,9 +693,10 @@ a:hover {
 }
 
 .connectivity .dropdown-menu .actual-menu,
+.identity .dropdown-menu .actual-menu,
 .notifications .dropdown-menu .actual-menu,
-.identity .dropdown-menu .actual-menu {
-  border-radius: var(--default-radius) 0 var(--default-radius) var(--default-radius);
+.transactions .dropdown-menu .actual-menu {
+  border-radius: var(--default-radius);
   z-index: 998;
 
   -webkit-filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
@@ -641,7 +708,8 @@ a:hover {
 }
 
 .connectivity .dropdown-menu .actual-menu,
-.notifications .dropdown-menu .actual-menu {
+.notifications .dropdown-menu .actual-menu,
+.transactions .dropdown-menu .actual-menu {
   background-color: white;
 }
 
@@ -661,7 +729,8 @@ a:hover {
   border-radius: 0 0 var(--default-radius) var(--default-radius);
 }
 
-.notifications .dropdown-menu {
+.notifications .dropdown-menu,
+.transactions .dropdown-menu {
   width: calc(100% - 15px - 15px);
 }
 
@@ -669,23 +738,31 @@ a:hover {
   color: var(--clear-blue);
 }
 
-.notifications .dropdown-menu header {
+.notifications .dropdown-menu header,
+.transactions .dropdown-menu header {
   align-items: center;
   height: 48px;
 }
 
-.notifications .dropdown-menu h3 {
+.notifications .dropdown-menu h3,
+.transactions .dropdown-menu h3 {
+  font-size: 1.125rem;
   font-weight: 600;
+  margin-bottom: 0;
+}
+
+.notifications .dropdown-menu h3 {
   margin: 0 22px 0 0;
 }
 
-.notifications .dropdown-menu .count {
+.notifications .dropdown-menu .count,
+.transactions .dropdown-menu .count {
   text-align: center;
   width: 68px;
 }
 
-.notifications .dropdown-menu .count div {
-  background-color: var(--greenblue);
+.notifications .dropdown-menu .count div,
+.transactions .dropdown-menu .count div {
   border-radius: 12px;
   color: white;
   font-size: 16px;
@@ -693,16 +770,30 @@ a:hover {
   padding: 0 8px;
 }
 
-.notifications .dropdown-menu footer {
+.notifications .dropdown-menu .count div {
+  background-color: var(--greenblue);
+}
+
+.transactions .dropdown-menu .count div {
+  background-color: var(--clear-blue);
+}
+
+.notifications .dropdown-menu footer,
+.transactions .dropdown-menu footer {
   background-color: #dfe6ea;
   border-radius: 0 0 var(--default-radius) var(--default-radius);
   padding: 12px;
   text-align: center;
 }
 
-.notifications .dropdown-menu .notification {
+.notifications .dropdown-menu .notification,
+.transactions .dropdown-menu .transaction {
   border-left-width: 0;
+  border-radius: 0;
   border-right-width: 0;
+}
+
+.notifications .dropdown-menu .notification {
   border-radius: 0;
 }
 
@@ -712,6 +803,7 @@ a:hover {
 
 .identity .dropdown-menu .actual-menu {
   background-color: var(--dark);
+  border-radius: var(--default-radius) 0 var(--default-radius) var(--default-radius);
 }
 
 .identity .dropdown-menu .wallet {
@@ -1460,7 +1552,7 @@ label[for=root_pictures]:hover {
   font-weight: normal;
 }
 
-.sale .card-body .transaction {
+.sale .card-body .purchase {
   flex-grow: 1;
   margin-bottom: 0;
 }
@@ -1526,7 +1618,7 @@ label[for=root_pictures]:hover {
   padding-left: 0.75rem;
 }
 
-/* Transactions */
+/* Purchases */
 
 .status.active {
   color: var(--greenblue);
@@ -1536,21 +1628,21 @@ label[for=root_pictures]:hover {
   color: #ff1a1a;
 }
 
-.transaction {
+.purchase {
   position: relative;
   margin-bottom: 30px;
 }
 
-.transaction .card-body {
+.purchase .card-body {
   padding: 0.5625rem;
 }
 
-.transaction .card-body .badge {
+.purchase .card-body .badge {
   margin-left: 0.75rem;
   vertical-align: middle;
 }
 
-.transaction .aspect-ratio {
+.purchase .aspect-ratio {
   position: relative;
   flex-shrink: 0;
   max-width: 100%;
@@ -1558,7 +1650,7 @@ label[for=root_pictures]:hover {
   padding-top: 66.67%;
 }
 
-.transaction .image-container {
+.purchase .image-container {
   background-color: var(--light);
   height: 100%;
   position: absolute;
@@ -1566,20 +1658,20 @@ label[for=root_pictures]:hover {
   width: 100%;
 }
 
-.transaction .image-container:not(.placeholder) img {
+.purchase .image-container:not(.placeholder) img {
   max-width: 100%;
   min-height: 100%;
   object-fit: cover;
 }
 
-.transaction .content-container {
+.purchase .content-container {
   position: relative;
   flex-basis: calc(100% - 360px);
   padding: 10px 0 0;
   overflow: hidden;
 }
 
-.transaction .content-container .status {
+.purchase .content-container .status {
   position: absolute;
   font-size: 0.75rem;
   font-weight: 900;
@@ -1588,7 +1680,7 @@ label[for=root_pictures]:hover {
   text-transform: uppercase;
 }
 
-.transaction .content-container .category {
+.purchase .content-container .category {
   font-size: 0.75rem;
   font-weight: normal;
   margin: 0;
@@ -1596,7 +1688,7 @@ label[for=root_pictures]:hover {
   text-transform: uppercase;
 }
 
-.transaction .content-container .title {
+.purchase .content-container .title {
   color: var(--clear-blue);
   font-family: var(--heading-font);
   font-size: 1.25rem;
@@ -1605,111 +1697,111 @@ label[for=root_pictures]:hover {
   padding-top: 10px;
 }
 
-.transaction .price,
-.transaction .quantity {
+.purchase .price,
+.purchase .quantity {
   font-weight: 300;
   margin: 0;
   padding-top: 10px;
 }
 
-.transaction .price {
+.purchase .price {
   font-weight: normal;
   margin-bottom: 0.5rem;
   padding-right: 2rem;
 }
 
-.transaction .price .badge {
+.purchase .price .badge {
   margin-bottom: 0.2rem;
 }
 
-.transaction .content-container .quantity {
+.purchase .content-container .quantity {
   flex-grow: 1;
 }
 
-.transaction .content-container .counts p {
+.purchase .content-container .counts p {
   margin: 0 0 0.5rem;
   padding-right: 1rem;
 }
 
-.transaction .content-container .timestamp {
+.purchase .content-container .timestamp {
   color: var(--dusk);
   font-size: 0.75rem;
   font-weight: 300;
   margin: 0;
 }
 
-.transaction .content-container .progress-container .labels p {
+.purchase .content-container .progress-container .labels p {
   white-space: nowrap;
 }
 
-.transaction .content-container .progress-container .labels div:first-of-type p,
-.transaction .content-container .progress-container .labels div:last-of-type p {
+.purchase .content-container .progress-container .labels div:first-of-type p,
+.purchase .content-container .progress-container .labels div:last-of-type p {
   margin-left: 0;
   margin-right: 0;
   word-wrap: normal;
 }
 
-.transaction .content-container .progress-container .labels div:last-of-type p {
+.purchase .content-container .progress-container .labels div:last-of-type p {
   direction: rtl;
 }
 
-.transaction .content-container .actions {
+.purchase .content-container .actions {
   margin-top: auto;
 }
 
-.transaction .content-container .actions a {
+.purchase .content-container .actions a {
   font-size: 0.75rem;
   font-weight: normal;
 }
 
-.transaction .content-container .actions .links-container a {
+.purchase .content-container .actions .links-container a {
   color: var(--clear-blue);
   margin-right: 1rem;
 }
 
-.transaction .content-container .actions .links-container .warning {
+.purchase .content-container .actions .links-container .warning {
   color: #ff1a1a;
 }
 
-.transaction .content-container .actions .button-container {
+.purchase .content-container .actions .button-container {
   margin-left: auto;
 }
 
-.transaction .content-container .actions .button-container .btn {
+.purchase .content-container .actions .button-container .btn {
   color: white;
   font-weight: 900;
   padding: 0.25rem 1.5rem;
   width: unset;
 }
 
-.transaction .links-container a {
+.purchase .links-container a {
   cursor: pointer;
 }
 
-.transaction-detail {
+.purchase-detail {
   padding: 3rem 0 3.5rem;
 }
 
-.transaction-detail .brdcrmb {
+.purchase-detail .brdcrmb {
   color: var(--dusk);
   font-size: 0.875rem;
   font-weight: normal;
   text-transform: uppercase;
 }
 
-.transaction-detail .brdcrmb .badge {
+.purchase-detail .brdcrmb .badge {
   margin: 0 0.75rem;
   vertical-align: 2px;
 }
 
-.transaction-detail .avatar-container {
+.purchase-detail .avatar-container {
   flex-shrink: 0;
   height: 60px;
   margin: 0 0 1rem;
   width: 60px;
 }
 
-.transaction-detail .progress-container {
+.purchase-detail .progress-container {
   margin: 0 1rem 1rem;
 }
 
@@ -1730,7 +1822,7 @@ label[for=root_pictures]:hover {
   pointer-events: none;
   width: 0;
 
-  /* nice to have this animation follow the transaction progress bar */
+  /* nice to have this animation follow the purchase progress bar */
   /* but they tend to not be perfectly in sync */
   /*transition: left 200ms linear 800ms;*/
 }
@@ -1762,48 +1854,48 @@ label[for=root_pictures]:hover {
   margin-bottom: 1rem;
 }
 
-.transaction-detail button {
+.purchase-detail button {
   font-size: 1.125rem;
   font-weight: 900;
   width: auto;
 }
 
-.transaction-detail .summary {
+.purchase-detail .summary {
   background-color: var(--dark);
   border-radius: var(--default-radius);
   margin-top: 20px;
 }
 
-.transaction-detail .summary {
+.purchase-detail .summary {
   color: white;
   margin-bottom: 30px;
   padding: 20px;
 }
 
-.transaction-detail .summary p {
+.purchase-detail .summary p {
   color: white;
   font-size: 1.125rem;
   margin: 0;
 }
 
-.transaction-detail .tag {
+.purchase-detail .tag {
   display: inline-block;
   background-repeat: no-repeat;
   height: 58px;
   margin: 10px auto 20px;
 }
 
-.transaction-detail .tag.purchased {
+.purchase-detail .tag.purchased {
   background-image: url(images/tag-green.svg);
   width: 176px;
 }
 
-.transaction-detail .tag.sold {
+.purchase-detail .tag.sold {
   background-image: url(images/tag-purple.svg);
   width: 136px;
 }
 
-.transaction-detail .tag div {
+.purchase-detail .tag div {
   font-size: 24px;
   font-weight: normal;
   line-height: 58px;
@@ -1811,68 +1903,68 @@ label[for=root_pictures]:hover {
   margin-left: 26px;
 }
 
-.transaction-detail .tag.purchased div {
+.purchase-detail .tag.purchased div {
   width: 150px;
 }
 
-.transaction-detail .tag.sold div {
+.purchase-detail .tag.sold div {
   width: 110px;
 }
 
-.transaction-detail .summary .d-flex div {
+.purchase-detail .summary .d-flex div {
   flex-basis: 50%;
   font-size: 1rem;
   font-weight: normal;
   margin: 5px 20px;
 }
 
-.transaction-detail .summary .d-flex div:last-of-type {
+.purchase-detail .summary .d-flex div:last-of-type {
   font-weight: bold;
 }
 
-.transaction-detail .summary .recap,
-.transaction-detail .summary .status,
-.transaction-detail .summary .value {
+.purchase-detail .summary .recap,
+.purchase-detail .summary .status,
+.purchase-detail .summary .value {
   font-weight: bold;
   margin: 0;
 }
 
-.transaction-detail .summary .recap {
+.purchase-detail .summary .recap {
   font-size: 0.875rem;
 }
 
-.transaction-detail .summary .status.active {
+.purchase-detail .summary .status.active {
   color: var(--greenblue);
 }
 
-.transaction-detail .summary .status.inactive {
+.purchase-detail .summary .status.inactive {
   color: #ff1a1a;
 }
 
-.transaction-detail .carousel {
+.purchase-detail .carousel {
   margin-bottom: 1rem;
 }
 
-.transaction-detail .ipfs-link {
+.purchase-detail .ipfs-link {
   font-weight: normal;
   margin-top: 20px;
 }
 
-.transaction-detail form {
+.purchase-detail form {
   padding-top: 1rem;
 }
 
-.transaction-detail label,
-.transaction-detail textarea {
+.purchase-detail label,
+.purchase-detail textarea {
   font-size: 1.125rem;
   font-weight: normal;
 }
 
-.transaction-detail textarea {
+.purchase-detail textarea {
   height: auto;
 }
 
-.transaction-detail textarea::placeholder {
+.purchase-detail textarea::placeholder {
   color: #98a7b4;
 }
 
@@ -1956,6 +2048,155 @@ form .stars img {
 
 .reviews .form-group {
   margin-bottom: 10px;
+}
+
+/* Transactions */
+
+.transactions header {
+  padding-right: 15px;
+}
+
+.transactions .btn {
+  border: 1px solid var(--clear-blue);
+  color: var(--clear-blue);
+  font-size: 0.875rem;
+  font-weight: 900;
+  margin-left: 1rem;
+  padding: 0.25rem 1.5rem;
+  width: 80px;
+}
+
+.transactions-list li {
+  border-radius: 0;
+}
+
+.transactions-list li:last-of-type {
+  border-radius: 0 0 var(--default-radius) var(--default-radius);
+}
+
+.transaction {
+  align-items: center;
+  background-color: #f6f7f8;
+  border-color: var(--light);
+  padding: 15px;
+}
+
+.transaction .text-container {
+  flex-grow: 1;
+  font-weight: normal;
+}
+
+.transaction .addresses {
+  color: #6f8294;
+  font-size: 0.75rem;
+}
+
+.transaction .timelapse,
+.transaction .confirmations-count {
+  color: #98a7b4;
+  font-size: 0.75rem;
+}
+
+.transaction .graphic-container {
+  height: 32px;
+  margin: auto 0 auto 1rem;
+  width: 32px;
+}
+
+.transaction .outer-circle {
+  border-radius: 32px;
+  height: 32px;
+  position: relative;
+  width: 32px;
+}
+
+.transaction .slice {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 32px;
+  height: 32px;
+  border-radius: 32px;
+  clip: rect(0px, 32px, 32px, 16px);
+}
+
+.transaction .slice:nth-of-type(1) {
+  transform: rotate(0deg);
+}
+
+.transaction .slice:nth-of-type(2) {
+  transform: rotate(60deg);
+}
+
+.transaction .slice:nth-of-type(3) {
+  transform: rotate(120deg);
+}
+
+.transaction .slice:nth-of-type(4) {
+  transform: rotate(180deg);
+}
+
+.transaction .slice:nth-of-type(5) {
+  transform: rotate(240deg);
+}
+
+.transaction .slice:nth-of-type(6) {
+  transform: rotate(300deg);
+}
+
+.transaction .slice .crust {
+  background-color: #dfe6ea;
+  border-radius: 32px;
+  clip: rect(0px, 16px, 32px, 0px);
+  height: 32px;
+  left: 0px;
+  position: absolute;
+  top: 0px;
+  transform: rotate(60deg);
+  width: 32px;
+}
+
+.transaction .slice.confirmed .crust {
+  background-color: var(--greenblue);
+}
+
+.transaction .inner-circle {
+  background-color: #f6f7f8;
+  border-radius: 50%;
+  height: 24px;
+  left: 4px;
+  position: absolute;
+  top: 4px;
+  width: 24px;
+}
+
+.transaction .completed-circle {
+  background-color: var(--greenblue);
+  background-image: url(images/checkmark-white.svg);
+  background-repeat: no-repeat;
+  background-position: 50%;
+  border-radius: 32px;
+  height: 32px;
+  position: relative;
+  width: 32px;
+}
+
+@keyframes rotate {
+  100% { transform: rotate(0deg); }
+  0% { transform: rotate(360deg); }
+}
+
+.rotating-arrows {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  animation: 2.5s rotate infinite;
+  animation-timing-function: linear;
+}
+
+.transaction .addresses img {
+  margin: 0 0.2rem 0 0.4rem;
+  vertical-align: baseline;
 }
 
 /* Notifications */
@@ -2734,19 +2975,11 @@ footer .footer-links li a {
   }
 
   .navbar .connectivity .triangle {
-    margin-right: 0;
-    width: 18px;
-
-    -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
-    clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    margin-right: 205px;
   }
 
-  .navbar .connectivity .dropdown-menu::after {
-    right: 0;
-    width: 18px;
-
-    -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
-    clip-path: polygon(100% 0, 0 100%, 100% 100%);
+  .connectivity .dropdown-menu::after {
+    right: 205px;
   }
 
   .navbar .identity .triangle {
@@ -2770,16 +3003,34 @@ footer .footer-links li a {
     clip-path: polygon(100% 0, 0 100%, 100% 100%);
   }
 
-  .navbar .connectivity .dropdown-menu {
-    /* Temporary shift for current deployment */
-    right: calc(((100% - 540px) / 2) + 60px);
-    /*right: calc(((100% - 540px) / 2) + 60px + 60px);*/
-    /*width: calc(540px - 60px - 60px);*/
+  .navbar .transactions .triangle {
+    margin-right: 0;
+    width: 18px;
+
+    -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    clip-path: polygon(100% 0, 0 100%, 100% 100%);
+  }
+
+  .navbar .transactions .dropdown-menu {
+    right: calc(((100% - 540px) / 2) + 60px + 60px);
+    width: calc(540px - 60px - 60px);
+  }
+
+  .navbar .transactions .dropdown-menu::after {
+    right: 0;
+    width: 18px;
+
+    -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    clip-path: polygon(100% 0, 0 100%, 100% 100%);
   }
 
   .connectivity .dropdown-menu .actual-menu {
+    min-width: 384px;
+  }
+
+  .notifications .dropdown-menu .actual-menu,
+  .transactions .dropdown-menu .actual-menu {
     border-radius: var(--default-radius) 0 var(--default-radius) var(--default-radius);
-    width: 384px;
   }
 
   .navbar .identity .dropdown-menu {
@@ -2805,10 +3056,28 @@ footer .footer-links li a {
   }
 
   .navbar .connectivity .dropdown-menu {
-    /* Temporary shift for current deployment */
-    right: calc(((100% - 720px) / 2) + 60px);
-    /*right: calc(((100% - 720px) / 2) + 60px + 60px);*/
-    /*width: 520px;*/
+    right: calc(((100% - 720px) / 2) + 60px + 60px + 60px);
+    width: 520px;
+  }
+
+  .connectivity .dropdown-menu .actual-menu {
+    border-radius: var(--default-radius) 0 var(--default-radius) var(--default-radius);
+  }
+
+  .navbar .connectivity .triangle {
+    margin-right: 0;
+    width: 18px;
+
+    -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    clip-path: polygon(100% 0, 0 100%, 100% 100%);
+  }
+
+  .navbar .connectivity .dropdown-menu::after {
+    right: 0;
+    width: 18px;
+
+    -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    clip-path: polygon(100% 0, 0 100%, 100% 100%);
   }
 
   .navbar .identity .dropdown-menu {
@@ -2817,6 +3086,11 @@ footer .footer-links li a {
 
   .navbar .notifications .dropdown-menu {
     right: calc(((100% - 720px) / 2) + 60px);
+    width: 520px;
+  }
+
+  .navbar .transactions .dropdown-menu {
+    right: calc(((100% - 720px) / 2) + 60px + 60px);
     width: 520px;
   }
 
@@ -2897,9 +3171,7 @@ footer .footer-links li a {
   }
 
   .navbar .connectivity .dropdown-menu {
-    /* Temporary shift for current deployment */
-    right: calc(((100% - 960px) / 2) + 60px + 15px);
-    /*right: calc(((100% - 960px) / 2) + 60px + 60px + 15px);*/
+    right: calc(((100% - 960px) / 2) + 60px + 60px + 60px + 15px);
   }
 
   .navbar .identity .dropdown-menu {
@@ -2908,6 +3180,10 @@ footer .footer-links li a {
 
   .navbar .notifications .dropdown-menu {
     right: calc(((100% - 960px) / 2) + 60px + 15px);
+  }
+
+  .navbar .transactions .dropdown-menu {
+    right: calc(((100% - 960px) / 2) + 60px + 60px + 15px);
   }
 
   .navbar .collapse .navbar-nav.show .sell {
@@ -2936,7 +3212,7 @@ footer .footer-links li a {
   .navbar .sell .dropdown-menu {
     position: absolute;
     left: auto;
-    right: calc(((100% - 960px) / 2) + 60px + 60px + 30px + 15px + 120px);
+    right: calc(((100% - 960px) / 2) + 60px + 60px + 60px + 60px + 30px + 15px + 120px);
   }
 
   .navbar .sell .dropdown-menu .actual-menu {
@@ -3001,16 +3277,16 @@ footer .footer-links li a {
     position: relative;
   }
 
-  .transaction .aspect-ratio {
+  .purchase .aspect-ratio {
     flex-basis: 360px;
     padding-top: 33.33%;
   }
 
-  .transaction .content-container {
+  .purchase .content-container {
     padding: 0 10px 0 20px;
   }
 
-  .transaction .content-container .status {
+  .purchase .content-container .status {
     top: 0;
   }
 
@@ -3026,9 +3302,7 @@ footer .footer-links li a {
 /* xl + */
 @media (min-width: 1200px) {
   .navbar .connectivity .dropdown-menu {
-    /* Temporary shift for current deployment */
-    right: calc(((100% - 1140px) / 2) + 60px + 15px);
-    /*right: calc(((100% - 1140px) / 2) + 60px + 60px + 15px);*/
+    right: calc(((100% - 1140px) / 2) + 60px + 60px + 60px + 15px);
   }
 
   .navbar .identity .dropdown-menu {
@@ -3040,6 +3314,10 @@ footer .footer-links li a {
   }
 
   .navbar .sell .dropdown-menu {
-    right: calc(((100% - 1140px) / 2) + 60px + 60px + 30px + 15px + 120px);
+    right: calc(((100% - 1140px) / 2) + 60px + 60px + 60px + 60px + 30px + 15px + 120px);
+  }
+
+  .navbar .transactions .dropdown-menu {
+    right: calc(((100% - 1140px) / 2) + 60px + 60px + 15px);
   }
 }

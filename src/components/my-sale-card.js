@@ -5,7 +5,7 @@ import $ from 'jquery'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { fetchUser } from 'actions/User'
 import Timelapse from './timelapse'
-import TransactionProgress from './transaction-progress'
+import PurchaseProgress from './purchase-progress'
 
 class MySaleCard extends Component {
   constructor(props) {
@@ -63,7 +63,7 @@ class MySaleCard extends Component {
       <div className="sale card">
         <div className="card-body">
           <div className="d-flex flex-column flex-lg-row">
-            <div className="transaction order-3 order-lg-1">
+            <div className="purchase order-3 order-lg-1">
               <h2 className="title"><Link to={`/purchases/${purchase.address}`}>{name}</Link></h2>
               <h2 className="title">
                 <FormattedMessage
@@ -94,7 +94,7 @@ class MySaleCard extends Component {
               </div>
             </div>
           </div>
-          <TransactionProgress currentStep={step} purchase={purchase} perspective="seller" subdued="true" />
+          <PurchaseProgress currentStep={step} purchase={purchase} perspective="seller" subdued="true" />
           <div className="d-flex justify-content-between actions">
             {step === 1 && 
               <p>

@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
 
 import ConnectivityDropdown from 'components/dropdowns/connectivity'
-// Hidden for current deployment
-// import NotificationsDropdown from 'components/dropdowns/notifications'
+import NotificationsDropdown from 'components/dropdowns/notifications'
+import TransactionsDropdown from 'components/dropdowns/transactions'
 import UserDropdown from 'components/dropdowns/user'
 import Modal from './modal'
 import { storeWeb3Intent } from '../actions/App'
@@ -108,8 +108,8 @@ class NavBar extends Component {
           </div>
           <div className="static navbar-nav order-1 order-lg-2">
             <ConnectivityDropdown />
-            {/* Hidden for current deployment */}
-            {/* <NotificationsDropdown /> */}
+            <TransactionsDropdown />
+            <NotificationsDropdown />
             <UserDropdown />
           </div>
         </div>
