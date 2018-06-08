@@ -4,14 +4,14 @@ This docker image installs and runs the bridge server (along with postgres, redi
 `docker --version`
 
 1. Build the docker image:
-`docker build ./devcontainer -t <image name> .`
+`npm run bridge:build`
 
-2. Get the image ID:
-`docker images`
+3. Run the image with port mappings: `npm run bridge:start`
 
-3. Run the image with port mappings: `docker run -d -p 4000:4000 -p 5432:5432 -p 6379:6379 -p 9200:9200 --name origin-dev <image ID>`
+4. Access the CLI:
+`npm run bridge:bash`
 
-4. Access the CLI using `docker exec -it <container ID> /bin/bash` (get the container ID from `docker ps`)
+5. Stop and remove the container: `npm run bridge:stop`.
 
 
 **Configuration**
