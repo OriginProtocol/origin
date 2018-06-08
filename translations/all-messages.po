@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-06-07T06:28:00.446Z\n"
+"POT-Creation-Date: 2018-06-08T06:10:44.014Z\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "MIME-Version: 1.0\n"
@@ -135,6 +135,22 @@ msgctxt "listing-create.howItWorksContentPart2"
 msgid "Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering."
 msgstr ""
 
+#: translations/messages/src/pages/profile/_countryOptions.json
+#. [_countryOptions.brazil]
+#. defaultMessage is:
+#. Brazil
+msgctxt "_countryOptions.brazil"
+msgid "Brazil"
+msgstr ""
+
+#: translations/messages/src/components/dropdowns/connectivity.json
+#. [connectivity.bridgeServer]
+#. defaultMessage is:
+#. Bridge Server:
+msgctxt "connectivity.bridgeServer"
+msgid "Bridge Server:"
+msgstr ""
+
 #: translations/messages/src/components/navbar.json
 #. [navbar.buy]
 #. defaultMessage is:
@@ -159,6 +175,10 @@ msgctxt "listing-detail.buyNow"
 msgid "Buy Now"
 msgstr ""
 
+#: translations/messages/src/components/notification.json
+#. [purchase-detail.buyer]
+#. defaultMessage is:
+#. Buyer
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.buyer]
 #. defaultMessage is:
@@ -205,6 +225,22 @@ msgstr ""
 #. Cancel
 msgctxt "VerifyTwitter.cancel"
 msgid "Cancel"
+msgstr ""
+
+#: translations/messages/src/pages/profile/_countryOptions.json
+#. [_countryOptions.unitedStates]
+#. defaultMessage is:
+#. China
+msgctxt "_countryOptions.unitedStates"
+msgid "China"
+msgstr ""
+
+#: translations/messages/src/pages/profile/_countryOptions.json
+#. [_countryOptions.china]
+#. defaultMessage is:
+#. China
+msgctxt "_countryOptions.china"
+msgid "China"
 msgstr ""
 
 #: translations/messages/src/components/listing-create.json
@@ -333,6 +369,14 @@ msgstr ""
 #. Connecting to network...
 msgctxt "web3-provider.connecting"
 msgid "Connecting to network..."
+msgstr ""
+
+#: translations/messages/src/components/dropdowns/connectivity.json
+#. [connectivity.connecting]
+#. defaultMessage is:
+#. Connecting...
+msgctxt "connectivity.connecting"
+msgid "Connecting..."
 msgstr ""
 
 #: translations/messages/src/components/listing-create.json
@@ -519,6 +563,14 @@ msgctxt "my-sale-card.ethereumCurrencyAbbrev"
 msgid "ETH"
 msgstr ""
 
+#: translations/messages/src/components/dropdowns/user.json
+#. [user.ethAddress]
+#. defaultMessage is:
+#. ETH Address:
+msgctxt "user.ethAddress"
+msgid "ETH Address:"
+msgstr ""
+
 #: translations/messages/src/components/user-card.json
 #. [transaction-progress.ethAddress]
 #. defaultMessage is:
@@ -615,6 +667,14 @@ msgctxt "Profile.error"
 msgid "Error"
 msgstr ""
 
+#: translations/messages/src/components/dropdowns/connectivity.json
+#. [connectivity.ethereumNetwork]
+#. defaultMessage is:
+#. Ethereum Network:
+msgctxt "connectivity.ethereumNetwork"
+msgid "Ethereum Network:"
+msgstr ""
+
 #: translations/messages/src/components/footer.json
 #. [footer.facebookLink]
 #. defaultMessage is:
@@ -695,6 +755,14 @@ msgctxt "listing-create.forSaleLabel"
 msgid "For Sale"
 msgstr ""
 
+#: translations/messages/src/pages/profile/_countryOptions.json
+#. [_countryOptions.france]
+#. defaultMessage is:
+#. France
+msgctxt "_countryOptions.france"
+msgid "France"
+msgstr ""
+
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.from]
 #. defaultMessage is:
@@ -733,6 +801,14 @@ msgstr ""
 #. Funds from {productLink}
 msgctxt "notification.fundsFromProduct"
 msgid "Funds from {productLink}"
+msgstr ""
+
+#: translations/messages/src/pages/profile/_countryOptions.json
+#. [_countryOptions.germany]
+#. defaultMessage is:
+#. Germany
+msgctxt "_countryOptions.germany"
+msgid "Germany"
 msgstr ""
 
 #: translations/messages/src/components/web3-provider.json
@@ -799,6 +875,14 @@ msgctxt "listing-create.IPFS"
 msgid "IPFS"
 msgstr ""
 
+#: translations/messages/src/components/dropdowns/connectivity.json
+#. [connectivity.ipfsGateway]
+#. defaultMessage is:
+#. IPFS Gateway:
+msgctxt "connectivity.ipfsGateway"
+msgid "IPFS Gateway:"
+msgstr ""
+
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.IPFS]
 #. defaultMessage is:
@@ -863,6 +947,14 @@ msgctxt "footer.instagramLink"
 msgid "Instagram"
 msgstr ""
 
+#: translations/messages/src/pages/profile/_countryOptions.json
+#. [_countryOptions.italy]
+#. defaultMessage is:
+#. Italy
+msgctxt "_countryOptions.italy"
+msgid "Italy"
+msgstr ""
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.jsonSchema]
 #. defaultMessage is:
@@ -871,12 +963,28 @@ msgctxt "listing-create.jsonSchema"
 msgid "JSONSchema"
 msgstr ""
 
+#: translations/messages/src/pages/profile/_countryOptions.json
+#. [_countryOptions.japan]
+#. defaultMessage is:
+#. Japan
+msgctxt "_countryOptions.japan"
+msgid "Japan"
+msgstr ""
+
 #: translations/messages/src/components/footer.json
 #. [footer.hiringLink]
 #. defaultMessage is:
 #. Jobs (We're hiring!)
 msgctxt "footer.hiringLink"
 msgid "Jobs (We're hiring!)"
+msgstr ""
+
+#: translations/messages/src/components/dropdowns/connectivity.json
+#. [connectivity.kovanTestNetwork]
+#. defaultMessage is:
+#. Kovan Test Network
+msgctxt "connectivity.kovanTestNetwork"
+msgid "Kovan Test Network"
 msgstr ""
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
@@ -959,6 +1067,22 @@ msgctxt "my-sales.loading"
 msgid "Loading..."
 msgstr ""
 
+#: translations/messages/src/components/dropdowns/connectivity.json
+#. [connectivity.localhost]
+#. defaultMessage is:
+#. Localhost
+msgctxt "connectivity.localhost"
+msgid "Localhost"
+msgstr ""
+
+#: translations/messages/src/components/dropdowns/connectivity.json
+#. [connectivity.mainEthereumNetwork]
+#. defaultMessage is:
+#. Main Ethereum Network
+msgctxt "connectivity.mainEthereumNetwork"
+msgid "Main Ethereum Network"
+msgstr ""
+
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.markOrderSent]
 #. defaultMessage is:
@@ -973,6 +1097,14 @@ msgstr ""
 #. Medium
 msgctxt "footer.mediumLink"
 msgid "Medium"
+msgstr ""
+
+#: translations/messages/src/components/dropdowns/connectivity.json
+#. [connectivity.mordenTestNetwork]
+#. defaultMessage is:
+#. Morden Test Network
+msgctxt "connectivity.mordenTestNetwork"
+msgid "Morden Test Network"
 msgstr ""
 
 #: translations/messages/src/components/my-listings.json
@@ -1029,6 +1161,14 @@ msgstr ""
 #. Next Step:
 msgctxt "purchase-detail.nextStep"
 msgid "Next Step:"
+msgstr ""
+
+#: translations/messages/src/components/dropdowns/user.json
+#. [user.noEthAccountConnected]
+#. defaultMessage is:
+#. No ETH Account Connected
+msgctxt "user.noEthAccountConnected"
+msgid "No ETH Account Connected"
 msgstr ""
 
 #: translations/messages/src/pages/profile/_Wallet.json
@@ -1535,6 +1675,30 @@ msgctxt "User.reviews"
 msgid "Reviews"
 msgstr ""
 
+#: translations/messages/src/components/dropdowns/connectivity.json
+#. [connectivity.rinkebyTestNetwork]
+#. defaultMessage is:
+#. Rinkeby Test Network
+msgctxt "connectivity.rinkebyTestNetwork"
+msgid "Rinkeby Test Network"
+msgstr ""
+
+#: translations/messages/src/components/dropdowns/connectivity.json
+#. [connectivity.ropstenTestNetwork]
+#. defaultMessage is:
+#. Ropsten Test Network
+msgctxt "connectivity.ropstenTestNetwork"
+msgid "Ropsten Test Network"
+msgstr ""
+
+#: translations/messages/src/pages/profile/_countryOptions.json
+#. [_countryOptions.russia]
+#. defaultMessage is:
+#. Russia
+msgctxt "_countryOptions.russia"
+msgid "Russia"
+msgstr ""
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.stepNumberLabel]
 #. defaultMessage is:
@@ -1591,6 +1755,10 @@ msgctxt "notifications.sell"
 msgid "Sell"
 msgstr ""
 
+#: translations/messages/src/components/notification.json
+#. [purchase-detail.seller]
+#. defaultMessage is:
+#. Seller
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.seller]
 #. defaultMessage is:
@@ -1685,6 +1853,14 @@ msgstr ""
 #. Sold to {buyerName} on {date}
 msgctxt "purchase-detail.soldToOn"
 msgid "Sold to {buyerName} on {date}"
+msgstr ""
+
+#: translations/messages/src/pages/profile/_countryOptions.json
+#. [_countryOptions.southKorea]
+#. defaultMessage is:
+#. South Korea
+msgctxt "_countryOptions.southKorea"
+msgid "South Korea"
 msgstr ""
 
 #: translations/messages/src/pages/profile/Profile.json
@@ -1935,6 +2111,14 @@ msgctxt "purchase-detail.txName"
 msgid "TxName"
 msgstr ""
 
+#: translations/messages/src/pages/profile/_countryOptions.json
+#. [_countryOptions.unitedKingdom]
+#. defaultMessage is:
+#. United Kingdom
+msgctxt "_countryOptions.unitedKingdom"
+msgid "United Kingdom"
+msgstr ""
+
 #: translations/messages/src/components/my-purchase-card.json
 #. [my-purchase-card.unknown]
 #. defaultMessage is:
@@ -1948,6 +2132,54 @@ msgstr ""
 #. defaultMessage is:
 #. Unnamed User
 msgctxt "my-sale-card.unnamedUser"
+msgid "Unnamed User"
+msgstr ""
+
+#: translations/messages/src/components/notification.json
+#. [purchase-detail.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+#: translations/messages/src/reducers/Users.json
+#. [purchase-detail.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+msgctxt "purchase-detail.unnamedUser"
+msgid "Unnamed User"
+msgstr ""
+
+#: translations/messages/src/components/review.json
+#. [review.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+msgctxt "review.unnamedUser"
+msgid "Unnamed User"
+msgstr ""
+
+#: translations/messages/src/components/user-card.json
+#. [user-card.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+msgctxt "user-card.unnamedUser"
+msgid "Unnamed User"
+msgstr ""
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+msgctxt "Profile.unnamedUser"
+msgid "Unnamed User"
+msgstr ""
+
+#: translations/messages/src/pages/user/User.json
+#. [user.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+msgctxt "user.unnamedUser"
 msgid "Unnamed User"
 msgstr ""
 

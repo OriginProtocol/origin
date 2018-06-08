@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-06-07T06:28:00.446Z\n"
+"POT-Creation-Date: 2018-06-08T06:10:44.014Z\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "MIME-Version: 1.0\n"
@@ -134,6 +134,22 @@ msgctxt "listing-create.howItWorksContentPart2"
 msgid "Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering."
 msgstr "一定要给你的列表一个适当的标题和描述，以告知他人你提供的是什么。"
 
+#: translations/messages/src/pages/profile/_countryOptions.json
+#. [_countryOptions.brazil]
+#. defaultMessage is:
+#. Brazil
+msgctxt "_countryOptions.brazil"
+msgid "Brazil"
+msgstr "巴西"
+
+#: translations/messages/src/components/dropdowns/connectivity.json
+#. [connectivity.bridgeServer]
+#. defaultMessage is:
+#. Bridge Server:
+msgctxt "connectivity.bridgeServer"
+msgid "Bridge Server:"
+msgstr "网桥服务器："
+
 #: translations/messages/src/components/navbar.json
 #. [navbar.buy]
 #. defaultMessage is:
@@ -158,6 +174,10 @@ msgctxt "listing-detail.buyNow"
 msgid "Buy Now"
 msgstr "现在订购"
 
+#: translations/messages/src/components/notification.json
+#. [purchase-detail.buyer]
+#. defaultMessage is:
+#. Buyer
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.buyer]
 #. defaultMessage is:
@@ -205,6 +225,22 @@ msgstr "取消"
 msgctxt "VerifyTwitter.cancel"
 msgid "Cancel"
 msgstr "取消"
+
+#: translations/messages/src/pages/profile/_countryOptions.json
+#. [_countryOptions.unitedStates]
+#. defaultMessage is:
+#. China
+msgctxt "_countryOptions.unitedStates"
+msgid "China"
+msgstr "中国"
+
+#: translations/messages/src/pages/profile/_countryOptions.json
+#. [_countryOptions.china]
+#. defaultMessage is:
+#. China
+msgctxt "_countryOptions.china"
+msgid "China"
+msgstr "中国"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.chooseSchema]
@@ -333,6 +369,14 @@ msgstr "确认交易"
 msgctxt "web3-provider.connecting"
 msgid "Connecting to network..."
 msgstr "连接到网络..."
+
+#: translations/messages/src/components/dropdowns/connectivity.json
+#. [connectivity.connecting]
+#. defaultMessage is:
+#. Connecting...
+msgctxt "connectivity.connecting"
+msgid "Connecting..."
+msgstr "连接中..."
 
 #: translations/messages/src/components/listing-create.json
 #. [continueButtonLabel]
@@ -519,6 +563,14 @@ msgctxt "my-sale-card.ethereumCurrencyAbbrev"
 msgid "ETH"
 msgstr "ETH"
 
+#: translations/messages/src/components/dropdowns/user.json
+#. [user.ethAddress]
+#. defaultMessage is:
+#. ETH Address:
+msgctxt "user.ethAddress"
+msgid "ETH Address:"
+msgstr "ETH地址："
+
 #: translations/messages/src/components/user-card.json
 #. [transaction-progress.ethAddress]
 #. defaultMessage is:
@@ -615,6 +667,14 @@ msgctxt "Profile.error"
 msgid "Error"
 msgstr "错误"
 
+#: translations/messages/src/components/dropdowns/connectivity.json
+#. [connectivity.ethereumNetwork]
+#. defaultMessage is:
+#. Ethereum Network:
+msgctxt "connectivity.ethereumNetwork"
+msgid "Ethereum Network:"
+msgstr "以太坊网络："
+
 #: translations/messages/src/components/footer.json
 #. [footer.facebookLink]
 #. defaultMessage is:
@@ -695,6 +755,14 @@ msgctxt "listing-create.forSaleLabel"
 msgid "For Sale"
 msgstr "出售"
 
+#: translations/messages/src/pages/profile/_countryOptions.json
+#. [_countryOptions.france]
+#. defaultMessage is:
+#. France
+msgctxt "_countryOptions.france"
+msgid "France"
+msgstr "法国"
+
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.from]
 #. defaultMessage is:
@@ -734,6 +802,14 @@ msgstr "资金撤出"
 msgctxt "notification.fundsFromProduct"
 msgid "Funds from {productLink}"
 msgstr "来自{productLink}的资金"
+
+#: translations/messages/src/pages/profile/_countryOptions.json
+#. [_countryOptions.germany]
+#. defaultMessage is:
+#. Germany
+msgctxt "_countryOptions.germany"
+msgid "Germany"
+msgstr "德国"
 
 #: translations/messages/src/components/web3-provider.json
 #. [web3-provider.getMetaMask]
@@ -799,6 +875,14 @@ msgctxt "listing-create.IPFS"
 msgid "IPFS"
 msgstr "IPFS"
 
+#: translations/messages/src/components/dropdowns/connectivity.json
+#. [connectivity.ipfsGateway]
+#. defaultMessage is:
+#. IPFS Gateway:
+msgctxt "connectivity.ipfsGateway"
+msgid "IPFS Gateway:"
+msgstr "IPFS网关："
+
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.IPFS]
 #. defaultMessage is:
@@ -863,6 +947,14 @@ msgctxt "footer.instagramLink"
 msgid "Instagram"
 msgstr "Instagram"
 
+#: translations/messages/src/pages/profile/_countryOptions.json
+#. [_countryOptions.italy]
+#. defaultMessage is:
+#. Italy
+msgctxt "_countryOptions.italy"
+msgid "Italy"
+msgstr "意大利"
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.jsonSchema]
 #. defaultMessage is:
@@ -871,6 +963,14 @@ msgctxt "listing-create.jsonSchema"
 msgid "JSONSchema"
 msgstr "JSONSchema"
 
+#: translations/messages/src/pages/profile/_countryOptions.json
+#. [_countryOptions.japan]
+#. defaultMessage is:
+#. Japan
+msgctxt "_countryOptions.japan"
+msgid "Japan"
+msgstr "日本"
+
 #: translations/messages/src/components/footer.json
 #. [footer.hiringLink]
 #. defaultMessage is:
@@ -878,6 +978,14 @@ msgstr "JSONSchema"
 msgctxt "footer.hiringLink"
 msgid "Jobs (We're hiring!)"
 msgstr "工作（我们正在招聘！）"
+
+#: translations/messages/src/components/dropdowns/connectivity.json
+#. [connectivity.kovanTestNetwork]
+#. defaultMessage is:
+#. Kovan Test Network
+msgctxt "connectivity.kovanTestNetwork"
+msgid "Kovan Test Network"
+msgstr "高文测试网络"
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.lastName]
@@ -959,6 +1067,22 @@ msgctxt "my-sales.loading"
 msgid "Loading..."
 msgstr "载入中..."
 
+#: translations/messages/src/components/dropdowns/connectivity.json
+#. [connectivity.localhost]
+#. defaultMessage is:
+#. Localhost
+msgctxt "connectivity.localhost"
+msgid "Localhost"
+msgstr " 。"
+
+#: translations/messages/src/components/dropdowns/connectivity.json
+#. [connectivity.mainEthereumNetwork]
+#. defaultMessage is:
+#. Main Ethereum Network
+msgctxt "connectivity.mainEthereumNetwork"
+msgid "Main Ethereum Network"
+msgstr "以太坊网络"
+
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.markOrderSent]
 #. defaultMessage is:
@@ -974,6 +1098,14 @@ msgstr "将订单标记为已发送"
 msgctxt "footer.mediumLink"
 msgid "Medium"
 msgstr "中"
+
+#: translations/messages/src/components/dropdowns/connectivity.json
+#. [connectivity.mordenTestNetwork]
+#. defaultMessage is:
+#. Morden Test Network
+msgctxt "connectivity.mordenTestNetwork"
+msgid "Morden Test Network"
+msgstr "现代测试网络"
 
 #: translations/messages/src/components/my-listings.json
 #. [my-listings.myListingsHeading]
@@ -1030,6 +1162,14 @@ msgstr "下香"
 msgctxt "purchase-detail.nextStep"
 msgid "Next Step:"
 msgstr "下一步: "
+
+#: translations/messages/src/components/dropdowns/user.json
+#. [user.noEthAccountConnected]
+#. defaultMessage is:
+#. No ETH Account Connected
+msgctxt "user.noEthAccountConnected"
+msgid "No ETH Account Connected"
+msgstr "没有连接ETH帐户"
 
 #: translations/messages/src/pages/profile/_Wallet.json
 #. [_Wallet.noEthAccountConnected]
@@ -1326,7 +1466,7 @@ msgstr "在{currentProvider}窗口中按“提交”"
 #. Press {submit} in {currentProvider} window
 msgctxt "listing-create.pressSubmitInMetaMask"
 msgid "Press {submit} in {currentProvider} window"
-msgstr "在{currentProvider}窗口中按{currentProvider}"
+msgstr "在{currentProvider}窗口中按{submit}"
 
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.pressSubmitInMetaMask]
@@ -1334,7 +1474,7 @@ msgstr "在{currentProvider}窗口中按{currentProvider}"
 #. Press {submit} in {currentProvider} window
 msgctxt "listing-detail.pressSubmitInMetaMask"
 msgid "Press {submit} in {currentProvider} window"
-msgstr "在{currentProvider}窗口中按{currentProvider}"
+msgstr "在{currentProvider}窗口中按{submit}"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.previewListingHeading]
@@ -1536,6 +1676,30 @@ msgctxt "User.reviews"
 msgid "Reviews"
 msgstr "评价"
 
+#: translations/messages/src/components/dropdowns/connectivity.json
+#. [connectivity.rinkebyTestNetwork]
+#. defaultMessage is:
+#. Rinkeby Test Network
+msgctxt "connectivity.rinkebyTestNetwork"
+msgid "Rinkeby Test Network"
+msgstr "林克比测试网络"
+
+#: translations/messages/src/components/dropdowns/connectivity.json
+#. [connectivity.ropstenTestNetwork]
+#. defaultMessage is:
+#. Ropsten Test Network
+msgctxt "connectivity.ropstenTestNetwork"
+msgid "Ropsten Test Network"
+msgstr "Ropsten测试网络"
+
+#: translations/messages/src/pages/profile/_countryOptions.json
+#. [_countryOptions.russia]
+#. defaultMessage is:
+#. Russia
+msgctxt "_countryOptions.russia"
+msgid "Russia"
+msgstr "俄罗斯"
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.stepNumberLabel]
 #. defaultMessage is:
@@ -1592,6 +1756,10 @@ msgctxt "notifications.sell"
 msgid "Sell"
 msgstr "卖"
 
+#: translations/messages/src/components/notification.json
+#. [purchase-detail.seller]
+#. defaultMessage is:
+#. Seller
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.seller]
 #. defaultMessage is:
@@ -1687,6 +1855,14 @@ msgstr "卖给{buyerLink}"
 msgctxt "purchase-detail.soldToOn"
 msgid "Sold to {buyerName} on {date}"
 msgstr "在{date}上出售给{buyerName}"
+
+#: translations/messages/src/pages/profile/_countryOptions.json
+#. [_countryOptions.southKorea]
+#. defaultMessage is:
+#. South Korea
+msgctxt "_countryOptions.southKorea"
+msgid "South Korea"
+msgstr "韩国"
 
 #: translations/messages/src/pages/profile/Profile.json
 #. [Profile.status]
@@ -1936,6 +2112,14 @@ msgctxt "purchase-detail.txName"
 msgid "TxName"
 msgstr "TxName"
 
+#: translations/messages/src/pages/profile/_countryOptions.json
+#. [_countryOptions.unitedKingdom]
+#. defaultMessage is:
+#. United Kingdom
+msgctxt "_countryOptions.unitedKingdom"
+msgid "United Kingdom"
+msgstr "英国"
+
 #: translations/messages/src/components/my-purchase-card.json
 #. [my-purchase-card.unknown]
 #. defaultMessage is:
@@ -1949,6 +2133,54 @@ msgstr "未知"
 #. defaultMessage is:
 #. Unnamed User
 msgctxt "my-sale-card.unnamedUser"
+msgid "Unnamed User"
+msgstr "未命名用户"
+
+#: translations/messages/src/components/notification.json
+#. [purchase-detail.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+#: translations/messages/src/components/purchase-detail.json
+#. [purchase-detail.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+#: translations/messages/src/reducers/Users.json
+#. [purchase-detail.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+msgctxt "purchase-detail.unnamedUser"
+msgid "Unnamed User"
+msgstr "未命名用户"
+
+#: translations/messages/src/components/review.json
+#. [review.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+msgctxt "review.unnamedUser"
+msgid "Unnamed User"
+msgstr "未命名用户"
+
+#: translations/messages/src/components/user-card.json
+#. [user-card.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+msgctxt "user-card.unnamedUser"
+msgid "Unnamed User"
+msgstr "未命名用户"
+
+#: translations/messages/src/pages/profile/Profile.json
+#. [Profile.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+msgctxt "Profile.unnamedUser"
+msgid "Unnamed User"
+msgstr "未命名用户"
+
+#: translations/messages/src/pages/user/User.json
+#. [user.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+msgctxt "user.unnamedUser"
 msgid "Unnamed User"
 msgstr "未命名用户"
 
