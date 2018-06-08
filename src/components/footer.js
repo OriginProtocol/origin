@@ -2,15 +2,27 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 
-import { localizeApp } from 'actions/App'
-
-const languageOption = (langObj) => (
-  <li className="connection d-flex flex-wrap" onClick={ this.props.localizeApp(langObj.selectedLanguageAbbrev) }>
-    { langObj.selectedLanguageFull }
-  </li>
-)
+import { localizeApp, toggleShowApp } from 'actions/App'
 
 class Footer extends Component {
+
+  constructor(props) {
+    super(props)
+
+    this.localizeApp = this.localizeApp.bind(this)
+  }
+
+  localizeApp(langAbbrev) {
+    this.props.localizeApp(langAbbrev)
+    
+    // This is janky but it's needed to re-render the entire app
+    // and pass the user-selected language into react-intl
+    this.props.toggleShowApp(false)
+    setTimeout(() => {
+      this.props.toggleShowApp(true)
+    })
+  }
+
   render() {
     return (
       <footer className="dark-footer">
@@ -38,13 +50,13 @@ class Footer extends Component {
                   <div className="actual-menu">
                     <div className="connectivity-list">
                       <ul className="list-group">
-                        <li className="connection d-flex flex-wrap" onClick={ () => { this.props.localizeApp('en') } } >
+                        <li className="connection d-flex flex-wrap" onClick={ () => { this.localizeApp('en') } } >
                           English
                         </li>
                         {this.props.availableLanguages && this.props.availableLanguages.map(langObj => (
                           <li className="connection d-flex flex-wrap"
                               key={ langObj.selectedLanguageAbbrev }
-                              onClick={ () => { this.props.localizeApp(langObj.selectedLanguageAbbrev) } }>
+                              onClick={ () => { this.localizeApp(langObj.selectedLanguageAbbrev) } }>
                             { langObj.selectedLanguageFull }
                           </li>
                         ))}
@@ -224,7 +236,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  localizeApp: (selectedLangAbbrev) => dispatch(localizeApp(selectedLangAbbrev))
+  localizeApp: (selectedLangAbbrev) => dispatch(localizeApp(selectedLangAbbrev)),
+  toggleShowApp: (shouldShowApp) => dispatch(toggleShowApp(shouldShowApp))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Footer)

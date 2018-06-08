@@ -7,6 +7,7 @@ export const AppConstants = keyMirror(
     ON_MOBILE: null,
     WEB3_ACCOUNT: null,
     WEB3_INTENT: null,
+    SHOULD_SHOW_APP: true,
     TRANSLATIONS: null,
   },
   'APP'
@@ -22,6 +23,10 @@ export function storeWeb3Account(address) {
 
 export function storeWeb3Intent(intent) {
   return { type: AppConstants.WEB3_INTENT, intent }
+}
+
+export function toggleShowApp(shouldShowApp) {
+  return { type: AppConstants.SHOULD_SHOW_APP, shouldShowApp }
 }
 
 export function localizeApp(userSelectedLangAbbrev) {

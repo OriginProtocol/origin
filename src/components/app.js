@@ -82,44 +82,49 @@ class App extends Component {
 
   render() {
     return (
-      <IntlProvider locale={this.props.selectedLanguageAbbrev || 'en'} messages={this.props.messages}>
-        <Router>
-          <ScrollToTop>
-            <Web3Provider>
-              <Layout>
-                <Switch>
-                  <Route exact path="/" component={HomePage} />
-                  <Route path="/page/:activePage" component={HomePage} />
-                  <Route
-                    path="/listing/:listingAddress"
-                    component={ListingDetailPage}
-                  />
-                  <Route path="/create" component={CreateListingPage} />
-                  <Route path="/my-listings" component={MyListings} />
-                  <Route
-                    path="/purchases/:purchaseAddress"
-                    component={PurchaseDetailPage}
-                  />
-                  <Route path="/my-purchases" component={MyPurchases} />
-                  <Route path="/my-sales" component={MySales} />
-                  <Route path="/notifications" component={Notifications} />
-                  <Route path="/profile" component={Profile} />
-                  <Route path="/users/:userAddress" component={UserPage} />
-                  <Route component={NotFound} />
-                </Switch>
-              </Layout>
-              <Alert />
-            </Web3Provider>
-          </ScrollToTop>
-        </Router>
-      </IntlProvider>
+      <div>
+        {this.props.shouldShowApp !== false &&
+          <IntlProvider locale={this.props.selectedLanguageAbbrev || 'en'} messages={this.props.messages}>
+            <Router>
+              <ScrollToTop>
+                <Web3Provider>
+                  <Layout>
+                    <Switch>
+                      <Route exact path="/" component={HomePage} />
+                      <Route path="/page/:activePage" component={HomePage} />
+                      <Route
+                        path="/listing/:listingAddress"
+                        component={ListingDetailPage}
+                      />
+                      <Route path="/create" component={CreateListingPage} />
+                      <Route path="/my-listings" component={MyListings} />
+                      <Route
+                        path="/purchases/:purchaseAddress"
+                        component={PurchaseDetailPage}
+                      />
+                      <Route path="/my-purchases" component={MyPurchases} />
+                      <Route path="/my-sales" component={MySales} />
+                      <Route path="/notifications" component={Notifications} />
+                      <Route path="/profile" component={Profile} />
+                      <Route path="/users/:userAddress" component={UserPage} />
+                      <Route component={NotFound} />
+                    </Switch>
+                  </Layout>
+                  <Alert />
+                </Web3Provider>
+              </ScrollToTop>
+            </Router>
+          </IntlProvider>
+        }
+      </div>
     )
   }
 }
 
 const mapStateToProps = state => ({
   language: state.app.translations.language,
-  messages: state.app.translations.messages
+  messages: state.app.translations.messages,
+  shouldShowApp: state.app.shouldShowApp
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -27,6 +27,9 @@ export default function App(state = initialState, action = {}) {
     case AppConstants.WEB3_INTENT:
       return { ...state, web3: { ...state.web3, intent: action.intent }}
 
+    case AppConstants.SHOULD_SHOW_APP:
+      return { ...state, shouldShowApp: action.shouldShowApp }
+
     case AppConstants.TRANSLATIONS:
       return { 
         ...state, 
