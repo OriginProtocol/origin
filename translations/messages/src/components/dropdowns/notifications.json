@@ -1,0 +1,10 @@
+[
+  {
+    "id": "notifications.notificationsHeading",
+    "defaultMessage": "Notifications"
+  },
+  {
+    "id": "notifications.viewAll",
+    "defaultMessage": "View All"
+  }
+]

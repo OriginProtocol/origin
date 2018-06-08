@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-06-08T06:10:44.014Z\n"
+"POT-Creation-Date: 2018-06-08T06:29:45.883Z\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "MIME-Version: 1.0\n"
@@ -258,6 +258,14 @@ msgctxt "web3-provider.cipher"
 msgid "Cipher"
 msgstr "密码"
 
+#: translations/messages/src/components/dropdowns/transactions.json
+#. [transactions.clear]
+#. defaultMessage is:
+#. Clear
+msgctxt "transactions.clear"
+msgid "Clear"
+msgstr "清空"
+
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.sendOrderInstruction]
 #. defaultMessage is:
@@ -321,6 +329,14 @@ msgstr "完成"
 msgctxt "purchase-detail.completeByWithdrawing"
 msgid "Complete your transaction by withdrawing funds"
 msgstr "通过提取资金完成交易"
+
+#: translations/messages/src/components/dropdowns/transactions.json
+#. [transactions.completed]
+#. defaultMessage is:
+#. Completed
+msgctxt "transactions.completed"
+msgid "Completed"
+msgstr "完成"
 
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.confirmAndReview]
@@ -763,6 +779,14 @@ msgctxt "_countryOptions.france"
 msgid "France"
 msgstr "法国"
 
+#: translations/messages/src/components/dropdowns/transactions.json
+#. [transactions.from]
+#. defaultMessage is:
+#. From
+msgctxt "transactions.from"
+msgid "From"
+msgstr "从"
+
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.from]
 #. defaultMessage is:
@@ -787,6 +811,10 @@ msgctxt "web3-provider.fullInstructionsForDemo"
 msgid "Full Instructions for Demo"
 msgstr "演示的完整说明"
 
+#: translations/messages/src/components/purchase-progress.json
+#. [transaction-progress.fundsWithdrawn]
+#. defaultMessage is:
+#. Funds Withdrawn
 #: translations/messages/src/components/transaction-progress.json
 #. [transaction-progress.fundsWithdrawn]
 #. defaultMessage is:
@@ -1203,6 +1231,14 @@ msgctxt "purchase-detail.nothingToDo"
 msgid "Nothing for you to do at this time. Check back later"
 msgstr "目前没有什么可以做的。过一会再来检查"
 
+#: translations/messages/src/components/dropdowns/notifications.json
+#. [notifications.notificationsHeading]
+#. defaultMessage is:
+#. Notifications
+msgctxt "notifications.notificationsHeading"
+msgid "Notifications"
+msgstr "通知"
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.OK]
 #. defaultMessage is:
@@ -1235,6 +1271,10 @@ msgctxt "ConfirmPublish.oopsNoWait"
 msgid "Oops, no wait..."
 msgstr "哎呀，别再等了......"
 
+#: translations/messages/src/components/purchase-progress.json
+#. [transaction-progress.orderSent]
+#. defaultMessage is:
+#. Order Sent
 #: translations/messages/src/components/transaction-progress.json
 #. [transaction-progress.orderSent]
 #. defaultMessage is:
@@ -1322,6 +1362,14 @@ msgstr "待审"
 msgctxt "my-sales.pending"
 msgid "Pending"
 msgstr "待审"
+
+#: translations/messages/src/components/dropdowns/transactions.json
+#. [transactions.pendingTransactions]
+#. defaultMessage is:
+#. Pending Blockchain Transactions
+msgctxt "transactions.pendingTransactions"
+msgid "Pending Blockchain Transactions"
+msgstr "待处理区块链交易"
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.phone]
@@ -1580,6 +1628,10 @@ msgctxt "my-purchase-card.purchased"
 msgid "Purchased"
 msgstr "购买"
 
+#: translations/messages/src/components/purchase-progress.json
+#. [transaction-progress.purchased]
+#. defaultMessage is:
+#. Purchased
 #: translations/messages/src/components/transaction-progress.json
 #. [transaction-progress.purchased]
 #. defaultMessage is:
@@ -1628,6 +1680,10 @@ msgctxt "my-purchase-card.received"
 msgid "Received"
 msgstr "收到"
 
+#: translations/messages/src/components/purchase-progress.json
+#. [transaction-progress.receivedByBuyer]
+#. defaultMessage is:
+#. Received by buyer
 #: translations/messages/src/components/transaction-progress.json
 #. [transaction-progress.receivedByBuyer]
 #. defaultMessage is:
@@ -1636,6 +1692,10 @@ msgctxt "transaction-progress.receivedByBuyer"
 msgid "Received by buyer"
 msgstr "由买方收到"
 
+#: translations/messages/src/components/purchase-progress.json
+#. [transaction-progress.receivedByMe]
+#. defaultMessage is:
+#. Received by me
 #: translations/messages/src/components/transaction-progress.json
 #. [transaction-progress.receivedByMe]
 #. defaultMessage is:
@@ -1792,6 +1852,10 @@ msgctxt "my-purchase-card.sentBySeller"
 msgid "Sent by Seller"
 msgstr "由卖方发送"
 
+#: translations/messages/src/components/purchase-progress.json
+#. [transaction-progress.sentBySeller]
+#. defaultMessage is:
+#. Sent by seller
 #: translations/messages/src/components/transaction-progress.json
 #. [transaction-progress.sentBySeller]
 #. defaultMessage is:
@@ -1816,6 +1880,10 @@ msgctxt "listing-card-prices.sold"
 msgid "Sold"
 msgstr "售完"
 
+#: translations/messages/src/components/purchase-progress.json
+#. [transaction-progress.sold]
+#. defaultMessage is:
+#. Sold
 #: translations/messages/src/components/transaction-progress.json
 #. [transaction-progress.sold]
 #. defaultMessage is:
@@ -1983,6 +2051,14 @@ msgstr "此订单已完成"
 msgctxt "listing-create.tickets"
 msgid "Tickets"
 msgstr "彩票"
+
+#: translations/messages/src/components/dropdowns/transactions.json
+#. [transactions.to]
+#. defaultMessage is:
+#. To
+msgctxt "transactions.to"
+msgid "To"
+msgstr "到"
 
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.to]
@@ -2255,6 +2331,14 @@ msgstr "在Origin上验证自己"
 msgctxt "_Guidance.verifyingYourProfile"
 msgid "Verifying your profile"
 msgstr "验证你的个人资料"
+
+#: translations/messages/src/components/dropdowns/notifications.json
+#. [notifications.viewAll]
+#. defaultMessage is:
+#. View All
+msgctxt "notifications.viewAll"
+msgid "View All"
+msgstr "查看全部"
 
 #: translations/messages/src/components/my-sale-card.json
 #. [my-sale-card.viewDetails]
