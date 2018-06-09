@@ -35,20 +35,20 @@ class NotificationMessage extends Component {
   }
 
   render() {
-    const { className, listing, stage } = this.props
+    const { className, listing, type } = this.props
     let message
 
-    switch(stage) {
-      case 'complete':
+    switch(type) {
+      case 'buyer_review_received':
         message = this.props.intl.formatMessage(this.intlMessages.complete)
         break
-      case 'seller_pending':
+      case 'seller_review_received':
         message = this.props.intl.formatMessage(this.intlMessages.sellerPending)
         break
-      case 'buyer_pending':
+      case 'buyer_listing_shipped':
         message = this.props.intl.formatMessage(this.intlMessages.buyerPending)
         break
-      case 'shipping_pending':
+      case 'seller_listing_purchased':
         message = this.props.intl.formatMessage(this.intlMessages.shippingPending)
         break
       default:
@@ -118,7 +118,7 @@ class Notification extends Component {
               <NotificationMessage
                 intl={intl}
                 listing={listing}
-                stage={purchase.stage}
+                type={notification.type}
                 className={`text-truncate${counterpartyAddress ? '' : ' no-counterparty'}`}
               />
               {listing &&
