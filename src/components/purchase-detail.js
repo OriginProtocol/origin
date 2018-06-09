@@ -14,6 +14,19 @@ import origin from '../services/origin'
 
 const web3 = origin.contractService.web3
 
+const defaultState = {
+  buyer: {},
+  form: {
+    rating: 5,
+    reviewText: '',
+  },
+  listing: {},
+  logs: [],
+  purchase: {},
+  reviews: [],
+  seller: {}
+}
+
 class PurchaseDetail extends Component {
   constructor(props){
     super(props)
@@ -24,18 +37,7 @@ class PurchaseDetail extends Component {
     this.handleReviewText = this.handleReviewText.bind(this)
     this.loadPurchase = this.loadPurchase.bind(this)
     this.withdrawFunds = this.withdrawFunds.bind(this)
-    this.state = {
-      buyer: {},
-      form: {
-        rating: 5,
-        reviewText: '',
-      },
-      listing: {},
-      logs: [],
-      purchase: {},
-      reviews: [],
-      seller: {}
-    }
+    this.state = defaultState
 
     this.intlMessages = defineMessages({
       awaitOrder: {
@@ -163,7 +165,7 @@ class PurchaseDetail extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { buyerAddress, listingAddress } = this.state.purchase
+    const { address, buyerAddress, listingAddress } = this.state.purchase
     const { sellerAddress } = this.state.listing
 
     if (prevState.purchase.listingAddress !== listingAddress) {
@@ -174,6 +176,13 @@ class PurchaseDetail extends Component {
 
     if (prevState.listing.sellerAddress !== sellerAddress) {
       this.loadSeller(sellerAddress)
+    }
+
+    // detect route param change and reload data
+    if (address && address !== this.props.purchaseAddress) {
+      this.setState(defaultState)
+
+      this.loadPurchase()
     }
   }
 
