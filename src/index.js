@@ -1,7 +1,9 @@
 import ContractService from './services/contract-service'
 import IpfsService from './services/ipfs-service'
 import { Attestations } from './resources/attestations'
+import Notifications from './resources/notifications'
 import fetch from 'cross-fetch'
+import store from 'store'
 
 const resources = {
   listings: require('./resources/listings'),
@@ -49,6 +51,13 @@ class Origin {
         ipfsService: this.ipfsService
       })
     }
+
+    this.notifications = new Notifications({
+      listings: this.listings,
+      purchases: this.purchases,
+      contractService: this.contractService,
+      store
+    })
   }
 }
 

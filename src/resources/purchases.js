@@ -85,17 +85,15 @@ class Purchases extends ResourceBase {
     const contract = new web3.eth.Contract(this.contractDefinition.abi, address)
     return new Promise((resolve, reject) => {
       // Get all logs on this contract
-      contract.getPastEvents('allEvents', { fromBlock: 0 }, function(
-        error,
-        rawLogs
-      ) {
-        if (error) {
-          return reject(error)
-        }
-        // Format logs we receive
-        const logs = rawLogs
-          .filter(x => x.event == 'PurchaseChange')
-          .map(log => {
+      contract.getPastEvents(
+        'PurchaseChange',
+        { fromBlock: 0, toBlock: 'latest' },
+        function(error, rawLogs) {
+          if (error) {
+            return reject(error)
+          }
+          // Format logs we receive
+          const logs = rawLogs.map(log => {
             const stage = _NUMBERS_TO_STAGE[log.returnValues.stage]
             return {
               transactionHash: log.transactionHash,
@@ -105,27 +103,28 @@ class Purchases extends ResourceBase {
               event: log.event
             }
           })
-        // Fetch user and timestamp information for all logs, in parallel
-        const addUserAddressFn = async event => {
-          event.from = (await self.contractService.getTransaction(
-            event.transactionHash
-          )).from
+          // Fetch user and timestamp information for all logs, in parallel
+          const addUserAddressFn = async event => {
+            event.from = (await self.contractService.getTransaction(
+              event.transactionHash
+            )).from
+          }
+          const addTimestampFn = async event => {
+            event.timestamp = (await self.contractService.getBlock(
+              event.blockHash
+            )).timestamp
+          }
+          const fetchPromises = [].concat(
+            logs.map(addUserAddressFn),
+            logs.map(addTimestampFn)
+          )
+          Promise.all(fetchPromises)
+            .then(() => {
+              resolve(logs)
+            })
+            .catch(error => reject(error))
         }
-        const addTimestampFn = async event => {
-          event.timestamp = (await self.contractService.getBlock(
-            event.blockHash
-          )).timestamp
-        }
-        const fetchPromises = [].concat(
-          logs.map(addUserAddressFn),
-          logs.map(addTimestampFn)
-        )
-        Promise.all(fetchPromises)
-          .then(() => {
-            resolve(logs)
-          })
-          .catch(error => reject(error))
-      })
+      )
     })
   }
 }

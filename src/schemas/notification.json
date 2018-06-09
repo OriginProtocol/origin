@@ -1,0 +1,21 @@
+{
+  "$id":"http://json-schema.org/draft-06/schema",
+  "title": "Notification",
+  "type": "object",
+  "required": ["id", "type", "status"],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "read",
+        "unread"
+      ]
+    }
+  }
+}

@@ -39,6 +39,7 @@
     "form-data": "^2.3.2",
     "map-cache": "^0.2.2",
     "rlp": "^2.0.0",
+    "store": "^2.0.12",
     "web3": "^1.0.0-beta.34"
   },
   "devDependencies": {

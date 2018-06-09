@@ -31,6 +31,7 @@ class Listings extends ResourceBase {
       contractData[1]
     )
     const ipfsData = await this.ipfsService.getFile(ipfsHash)
+    const hasIpfsData = ipfsData && ipfsData.data
 
     const listing = {
       address: address,
@@ -42,11 +43,11 @@ class Listings extends ResourceBase {
       created: contractData[4],
       expiration: contractData[5],
 
-      name: ipfsData.data.name,
-      category: ipfsData.data.category,
-      description: ipfsData.data.description,
-      location: ipfsData.data.location,
-      pictures: ipfsData.data.pictures
+      name: hasIpfsData ? ipfsData.data.name : null,
+      category: hasIpfsData ? ipfsData.data.category : null,
+      description: hasIpfsData ? ipfsData.data.description : null,
+      location: hasIpfsData ? ipfsData.data.location : null,
+      pictures: hasIpfsData ? ipfsData.data.pictures : null
     }
 
     return listing
