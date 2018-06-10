@@ -1,65 +1,13 @@
 import React, { Component, Fragment } from 'react'
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import { fetchUser } from 'actions/User'
 
+import NotificationMessage from './notification-message'
+
 import origin from '../services/origin'
-
-// support other derived notifications in the future
-const NON_PURCHASE_RELATED_MESSAGE = 'A message from Origin that does not involve a listing'
-
-class NotificationMessage extends Component {
-  constructor(props){
-    super(props)
-
-    this.intlMessages = defineMessages({
-      shippingPending: {
-        id: 'notification.purchaseCreated',
-        defaultMessage: 'You have a new purchase.',
-      },
-      buyerPending: {
-        id: 'notification.purchaseSent',
-        defaultMessage: 'Your purchase has been shipped.',
-      },
-      sellerPending: {
-        id: 'notification.purchaseReceived',
-        defaultMessage: 'You have a new review.',
-      },
-      complete: {
-        id: 'notification.purchaseComplete',
-        defaultMessage: 'You have a new review.',
-      },
-    });
-  }
-
-  render() {
-    const { className, listing, type } = this.props
-    let message
-
-    switch(type) {
-      case 'buyer_review_received':
-        message = this.props.intl.formatMessage(this.intlMessages.complete)
-        break
-      case 'seller_review_received':
-        message = this.props.intl.formatMessage(this.intlMessages.sellerPending)
-        break
-      case 'buyer_listing_shipped':
-        message = this.props.intl.formatMessage(this.intlMessages.buyerPending)
-        break
-      case 'seller_listing_purchased':
-        message = this.props.intl.formatMessage(this.intlMessages.shippingPending)
-        break
-      default:
-        return <p className={className || ''}>{NON_PURCHASE_RELATED_MESSAGE}</p>
-    }
-
-    return (
-      <div className={`message${className ? ` ${className}` : ''}`}>{message}</div>
-    )
-  }
-}
 
 class Notification extends Component {
   constructor(props){
@@ -100,7 +48,7 @@ class Notification extends Component {
   }
 
   render() {
-    const { intl, notification } = this.props
+    const { notification } = this.props
     const { counterpartyAddress, counterpartyName, listing, purchase } = this.state
     const { pictures } = listing
     const listingImageURL = pictures && pictures.length && (new URL(pictures[0])).protocol === "data:" && pictures[0]
@@ -116,7 +64,6 @@ class Notification extends Component {
             </div>
             <div className="content-container d-flex flex-column justify-content-between">
               <NotificationMessage
-                intl={intl}
                 listing={listing}
                 type={notification.type}
                 className={`text-truncate${counterpartyAddress ? '' : ' no-counterparty'}`}
@@ -171,4 +118,4 @@ const mapDispatchToProps = dispatch => ({
   fetchUser: address => dispatch(fetchUser(address))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Notification))
+export default connect(mapStateToProps, mapDispatchToProps)(Notification)
