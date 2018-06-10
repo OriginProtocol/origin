@@ -1,3 +1,4 @@
+import store from 'store'
 import keyMirror from '../utils/keyMirror'
 import translations from '../../translations/translated-messages.json'
 import { addLocales, getLangFullName, getAvailableLanguages } from '../utils/translationUtils'
@@ -7,7 +8,6 @@ export const AppConstants = keyMirror(
     ON_MOBILE: null,
     WEB3_ACCOUNT: null,
     WEB3_INTENT: null,
-    SHOULD_SHOW_APP: true,
     TRANSLATIONS: null,
   },
   'APP'
@@ -25,11 +25,7 @@ export function storeWeb3Intent(intent) {
   return { type: AppConstants.WEB3_INTENT, intent }
 }
 
-export function toggleShowApp(shouldShowApp) {
-  return { type: AppConstants.SHOULD_SHOW_APP, shouldShowApp }
-}
-
-export function localizeApp(userSelectedLangAbbrev) {
+export function localizeApp() {
   let messages;
   let selectedLanguageAbbrev;
 
@@ -38,8 +34,9 @@ export function localizeApp(userSelectedLangAbbrev) {
 
   // English is our default - to prevent errors, we set to undefined for English
   // https://github.com/yahoo/react-intl/issues/619#issuecomment-242765427
-  // If we aren't handling a user-selected language from the dropdown menu
-  // (i.e. if userSelectedLangAbbrev is undefined), try locale without region code
+  // Check for a user-selected language from the dropdown menu (stored in local storage)
+  const userSelectedLangAbbrev = store.get('preferredLang')
+
   if (userSelectedLangAbbrev) {
 
     selectedLanguageAbbrev = userSelectedLangAbbrev

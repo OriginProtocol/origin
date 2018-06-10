@@ -1,26 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-
-import { localizeApp, toggleShowApp } from 'actions/App'
+import store from 'store'
 
 class Footer extends Component {
 
   constructor(props) {
     super(props)
-
-    this.localizeApp = this.localizeApp.bind(this)
   }
 
   localizeApp(langAbbrev) {
-    this.props.localizeApp(langAbbrev)
-    
-    // This is janky but it's needed to re-render the entire app
-    // and pass the user-selected language into react-intl
-    this.props.toggleShowApp(false)
-    setTimeout(() => {
-      this.props.toggleShowApp(true)
-    })
+    store.set('preferredLang', langAbbrev)
+    window.location.reload()
   }
 
   render() {
@@ -235,9 +226,4 @@ const mapStateToProps = state => ({
   availableLanguages: state.app.translations.availableLanguages
 })
 
-const mapDispatchToProps = dispatch => ({
-  localizeApp: (selectedLangAbbrev) => dispatch(localizeApp(selectedLangAbbrev)),
-  toggleShowApp: (shouldShowApp) => dispatch(toggleShowApp(shouldShowApp))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Footer)
+export default connect(mapStateToProps)(Footer)
