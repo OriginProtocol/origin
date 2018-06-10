@@ -6,40 +6,40 @@
   "properties": {
     "name": {
       "type": "string",
-      "title": "Title",
+      "title": "schema.transportation.title",
       "minLength": 3,
       "maxLength": 100
     },
     "category": {
       "type": "string",
-      "title": "Category",
+      "title": "schema.transportation.category",
       "enum": [
-        "Airplane Charter",
-        "Bike Rentals",
-        "Boat Rentals",
-        "Car Rentals",
-        "Taxi service",
-        "Yacht charters"
+        "schema.transportation.airplaneCharter",
+        "schema.transportation.bikeRentals",
+        "schema.transportation.boatRentals",
+        "schema.transportation.carRentals",
+        "schema.transportation.taxiService",
+        "schema.transportation.yachtCharters"
       ],
-      "default":"Car Rentals"
+      "default":"schema.transportation.carRentals"
     },
     "description": {
       "type": "string",
-      "title": "Description",
+      "title": "schema.transportation.description",
       "minLength": 10,
       "maxLength": 1024
     },
     "location": {
       "type": "string",
-      "title": "Location"
+      "title": "schema.transportation.location"
     },
     "price": {
       "type": "number",
-      "title": "Price in ETH"
+      "title": "schema.transportation.priceInETH"
     },
     "pictures": {
       "type": "array",
-      "title": "Select photos",
+      "title": "schema.transportation.selectPhotos",
       "items": {
         "type": "string",
         "format": "data-url"
