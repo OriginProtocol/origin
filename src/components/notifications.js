@@ -1,20 +1,41 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
+
 import Notification from './notification'
-import data from '../data'
+
+import origin from '../services/origin'
 
 class Notifications extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { filter: 'unread' }
+    this.state = { filter: 'all', notifications: [] }
+  }
+
+  async componentWillMount() {
+    try {
+      const notifications = await origin.notifications.all()
+
+      this.setState({ notifications })
+    } catch(e) {
+      console.error(e)
+    }
   }
 
   render() {
-    const { filter } = this.state
-    const notifications = filter === 'all' ? data.notifications : data.notifications.filter(n => {
-      return filter === 'unread' ? !n.readAt : (n.perspective === filter)
+    const { web3Account } = this.props
+    const { filter, notifications } = this.state
+    const notificationsWithPerspective = notifications.map(n => {
+      const { sellerAddress } = n.resources.listing
+
+      return {...n, perspective: web3Account === sellerAddress ? 'seller' : 'buyer' }
     })
+    const filteredNotifications = filter === 'all' ? 
+                                  notificationsWithPerspective :
+                                  notificationsWithPerspective.filter(n => {
+                                    return filter === 'unread' ? n.status === 'unread' : (n.perspective === filter)
+                                  })
 
     return (
       <div className="notifications-wrapper">
@@ -32,28 +53,28 @@ class Notifications extends Component {
           <div className="row">
             <div className="col-12 col-md-3">
               <div className="filters list-group flex-row flex-md-column">
-                <a className={`list-group-item list-group-item-action${filter === 'unread' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'unread' })}>
-                  <FormattedMessage
-                    id={ 'notifications.unread' }
-                    defaultMessage={ 'Unread' }
-                  />
-                </a>
                 <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>
                   <FormattedMessage
                     id={ 'notifications.all' }
                     defaultMessage={ 'All' }
                   />
                 </a>
+                <a className={`list-group-item list-group-item-action${filter === 'unread' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'unread' })}>
+                  <FormattedMessage
+                    id={ 'notifications.unread' }
+                    defaultMessage={ 'Unread' }
+                  />
+                </a>
                 <a className={`list-group-item list-group-item-action${filter === 'buyer' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'buyer' })}>
                   <FormattedMessage
-                    id={ 'notifications.buy' }
-                    defaultMessage={ 'Buy' }
+                    id={ 'notifications.buying' }
+                    defaultMessage={ 'Buying' }
                   />
                 </a>
                 <a className={`list-group-item list-group-item-action${filter === 'seller' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'seller' })}>
                   <FormattedMessage
-                    id={ 'notifications.sell' }
-                    defaultMessage={ 'Sell' }
+                    id={ 'notifications.selling' }
+                    defaultMessage={ 'Selling' }
                   />
                 </a>
               </div>
@@ -61,7 +82,7 @@ class Notifications extends Component {
             <div className="col-12 col-md-9">
               <div className="notifications-list">
                 <ul className="list-group">
-                  {notifications.map(n => <Notification key={`notification-${n._id}`} notification={n} />)}
+                  {filteredNotifications.map(n => <Notification key={`page-notification:${n.id}`} notification={n} />)}
                 </ul>
               </div>
             </div>
@@ -72,4 +93,10 @@ class Notifications extends Component {
   }
 }
 
-export default Notifications
+const mapStateToProps = state => {
+  return {
+    web3Account: state.app.web3.account,
+  }
+}
+
+export default connect(mapStateToProps)(Notifications)

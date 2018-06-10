@@ -62,15 +62,15 @@ class NavBar extends Component {
               </Link>
               <Link to="/my-purchases" className="nav-item nav-link">
                 <FormattedMessage
-                  id={ 'navbar.buy' }
-                  defaultMessage={ 'Buy' }
+                  id={ 'navbar.buying' }
+                  defaultMessage={ 'Buying' }
                 />
               </Link>
               <div className="sell dropdown">
                 <a className="dropdown-toggle nav-item nav-link" id="sellDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <FormattedMessage
-                    id={ 'navbar.sell' }
-                    defaultMessage={ 'Sell' }
+                    id={ 'navbar.selling' }
+                    defaultMessage={ 'Selling' }
                   />
                 </a>
                 <div className="dropdown-menu dropdown-menu-right" aria-labelledby="sellDropdown">

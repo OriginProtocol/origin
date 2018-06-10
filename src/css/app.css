@@ -2208,18 +2208,18 @@ form .stars img {
   padding: 15px;
 }
 
-.notification p {
-  font-size: 1rem;
-  font-weight: normal;
-  margin: 0;
+.notification:hover {
+  background-color: #eaeef1;
 }
 
-.notification .address {
-  font-size: 0.75rem;
+.notification div {
+  color: var(--dark);
+  line-height: 1;
 }
 
 .notification .image-container {
   background-color: var(--dark-grey-blue);
+  flex-shrink: 0;
   font-size: 0.75rem;
   height: 3rem;
   margin-right: 0.625rem;
@@ -2239,32 +2239,37 @@ form .stars img {
   overflow: hidden;
 }
 
-.notification .content-container a {
+.notification .message {
   font-size: 1rem;
+  font-weight: normal;
+  margin: 0;
 }
 
-.notification .content-container p:nth-of-type(2) {
+.notification .counterparty,
+.notification .listing {
   font-size: 0.75rem;
 }
 
-.notification .content-container p:nth-of-type(2) a {
-  font-size: 0.75rem;
+.notification .counterparty :first-child {
+  flex-shrink: 0;
 }
 
-.notification .content-container .text-muted {
-  font-size: 0.625rem;
+.notification .text-muted {
+  font-size: 0.5rem;
   line-height: 1;
+  padding: 0.175rem 0 0 0.5rem;
 }
 
-.notification .link-container {
+.notification .button-container {
   padding-left: 15px;
 }
 
-.notification .link-container .carat {
+.notification .button-container .carat {
   margin-left: 0;
 }
 
-.notification .link-container .btn {
+.notification .button-container .btn {
+  background-color: transparent;
   border: 1px solid var(--clear-blue);
   font-size: 18px;
   height: 30px;
@@ -2272,7 +2277,7 @@ form .stars img {
   width: 30px;
 }
 
-.notification .link-container .btn:hover {
+.notification .button-container .btn:hover {
   color: white;
 }
 
@@ -3225,7 +3230,7 @@ footer .dropdown-menu li:hover {
   .navbar .sell .dropdown-menu {
     position: absolute;
     left: auto;
-    right: calc(((100% - 960px) / 2) + 60px + 60px + 60px + 60px + 30px + 15px + 120px);
+    right: calc(((100% - 960px) / 2) + 60px + 60px + 60px + 60px + 30px + 15px + 120px + 10px);
   }
 
   .navbar .sell .dropdown-menu .actual-menu {
@@ -3327,7 +3332,7 @@ footer .dropdown-menu li:hover {
   }
 
   .navbar .sell .dropdown-menu {
-    right: calc(((100% - 1140px) / 2) + 60px + 60px + 60px + 60px + 30px + 15px + 120px);
+    right: calc(((100% - 1140px) / 2) + 60px + 60px + 60px + 60px + 30px + 15px + 120px + 10px);
   }
 
   .navbar .transactions .dropdown-menu {

@@ -1,25 +1,47 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import Notification from 'components/notification'
-import data from '../../data'
+
+import origin from '../../services/origin'
 
 class NotificationsDropdown extends Component {
   constructor(props) {
     super(props)
+
+    this.state = { notifications: [] }
+  }
+
+  async componentWillMount() {
+    try {
+      const notifications = await origin.notifications.all()
+
+      this.setState({ notifications })
+    } catch(e) {
+      console.error(e)
+    }
   }
 
   render() {
-    // randomly select from three examples
-    const exampleCounts = [4, 44, 444][Math.floor(Math.random() * 3)]
+    const { web3Account } = this.props
+    const { notifications } = this.state
+    const notificationsWithPerspective = notifications.map(n => {
+      const { sellerAddress } = n.resources.listing
+
+      return { ...n, perspective: web3Account === sellerAddress ? 'seller' : 'buyer' }
+    })
+    const filteredNotifications = notificationsWithPerspective.filter(n => n.status === 'unread')
     // avoid integers greater than two digits
-    const notificationCount = exampleCounts < 100 ? Number(exampleCounts).toLocaleString() : `${Number(99).toLocaleString()}+`
+    const notificationCount = filteredNotifications.length < 100 ?
+                              Number(filteredNotifications.length).toLocaleString() :
+                              `${Number(99).toLocaleString()}+`
 
     return (
       <div className="nav-item notifications dropdown">
         <a className="nav-link active dropdown-toggle" id="notificationsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <div className="unread-indicator"></div>
+          {!!filteredNotifications.length && <div className="unread-indicator"></div>}
           <img src="images/alerts-icon.svg" className="notifications" alt="Notifications" />
           <img src="images/alerts-icon-selected.svg" className="notifications selected" alt="Notifications" />
         </a>
@@ -33,13 +55,13 @@ class NotificationsDropdown extends Component {
               <h3>
                 <FormattedMessage
                   id={ 'notifications.notificationsHeading' }
-                  defaultMessage={ 'Notifications' }
+                  defaultMessage={ 'Unread Notifications' }
                 />
               </h3>
             </header>
             <div className="notifications-list">
               <ul className="list-group">
-                {data.notifications.map(n => <Notification key={`navbar-notification-${n._id}`} notification={n} />)}
+                {filteredNotifications.map(n => <Notification key={`dropdown-notification:${n.id}`} notification={n} />)}
               </ul>
             </div>
             <footer>
@@ -57,4 +79,10 @@ class NotificationsDropdown extends Component {
   }
 }
 
-export default NotificationsDropdown
+const mapStateToProps = state => {
+  return {
+    web3Account: state.app.web3.account,
+  }
+}
+
+export default connect(mapStateToProps)(NotificationsDropdown)
