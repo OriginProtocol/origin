@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
+import { translateSchema } from '../utils/translationUtils'
 import origin from '../services/origin'
 import getCurrentProvider from '../utils/getCurrentProvider'
 
@@ -274,7 +275,7 @@ class ListingCreate extends Component {
                   />
                 </h2>
                 <Form
-                  schema={this.state.selectedSchema}
+                  schema={translateSchema(this.state.selectedSchema, this.state.selectedSchemaType)}
                   onSubmit={this.onDetailsEntered}
                   formData={this.state.formListing.formData}
                   onError={(errors) => console.log(`react-jsonschema-form errors: ${errors.length}`)}

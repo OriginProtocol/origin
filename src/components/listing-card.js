@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
+import { translateListingCategory } from '../utils/translationUtils'
 
 // temporary - we should be getting an origin instance from our app,
 // not using a global singleton
@@ -21,8 +22,9 @@ class ListingCard extends Component {
   async componentDidMount() {
     try {
       const listing = await origin.listings.getByIndex(this.props.listingId)
-      if (!this.props.hideList.includes(listing.address)) {
-        const obj = Object.assign({}, listing, { loading: false })
+      const translatedListing = translateListingCategory(listing)
+      if (!this.props.hideList.includes(translatedListing.address)) {
+        const obj = Object.assign({}, translatedListing, { loading: false })
 
         this.setState(obj)
       } else {
