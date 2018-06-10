@@ -54,3 +54,17 @@ The file `/translations/all-messages.po` is now ready for translation.
 3. Convert the new/updated `.po` files to an aggregated JSON that `react-intl` can consume by running:
 
 `npm run translate:build-translated`
+
+## Adding/Editing strings in schemas
+
+In order to avoid having English strings in schemas, we use `react-intl` IDs to represent strings in schemas. Each schema has a corresponding file in `/src/schemaMessages/` that maps the string IDs with their English defaultMessages.
+
+So, in the `housing.json` schema, the string "Category" is represented by the ID `schema.housing.category`, which is mapped in `/src/schemaMessages/housing.js` like this:
+```
+'schema.housing.category': {
+  id: 'schema.housing.category',
+  defaultMessage: 'Category'
+}
+```
+
+If you need to make changes to strings in schemas, make sure you also make the corresponding changes in the schema's translation map file, then follow the steps above for extracting English strings and updating translations in the DApp.
