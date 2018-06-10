@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { IntlProvider } from 'react-intl'
 
-import { setMobile } from 'actions/App'
+import { setMobile, localizeApp } from 'actions/App'
 import { fetchProfile } from 'actions/Profile'
 import { init as initWallet } from 'actions/Wallet'
 
@@ -54,9 +55,11 @@ const UserPage = props => <User userAddress={props.match.params.userAddress} />
 
 // Top level component
 class App extends Component {
+
   componentDidMount() {
     this.props.fetchProfile()
     this.props.initWallet()
+    this.props.localizeApp()
 
     this.detectMobile()
   }
@@ -79,43 +82,51 @@ class App extends Component {
 
   render() {
     return (
-      <Router>
-        <ScrollToTop>
-          <Web3Provider>
-            <Layout>
-              <Switch>
-                <Route exact path="/" component={HomePage} />
-                <Route path="/page/:activePage" component={HomePage} />
-                <Route
-                  path="/listing/:listingAddress"
-                  component={ListingDetailPage}
-                />
-                <Route path="/create" component={CreateListingPage} />
-                <Route path="/my-listings" component={MyListings} />
-                <Route
-                  path="/purchases/:purchaseAddress"
-                  component={PurchaseDetailPage}
-                />
-                <Route path="/my-purchases" component={MyPurchases} />
-                <Route path="/my-sales" component={MySales} />
-                <Route path="/notifications" component={Notifications} />
-                <Route path="/profile" component={Profile} />
-                <Route path="/users/:userAddress" component={UserPage} />
-                <Route component={NotFound} />
-              </Switch>
-            </Layout>
-            <Alert />
-          </Web3Provider>
-        </ScrollToTop>
-      </Router>
+      <IntlProvider locale={this.props.selectedLanguageAbbrev || 'en'} messages={this.props.messages}>
+        <Router>
+          <ScrollToTop>
+            <Web3Provider>
+              <Layout>
+                <Switch>
+                  <Route exact path="/" component={HomePage} />
+                  <Route path="/page/:activePage" component={HomePage} />
+                  <Route
+                    path="/listing/:listingAddress"
+                    component={ListingDetailPage}
+                  />
+                  <Route path="/create" component={CreateListingPage} />
+                  <Route path="/my-listings" component={MyListings} />
+                  <Route
+                    path="/purchases/:purchaseAddress"
+                    component={PurchaseDetailPage}
+                  />
+                  <Route path="/my-purchases" component={MyPurchases} />
+                  <Route path="/my-sales" component={MySales} />
+                  <Route path="/notifications" component={Notifications} />
+                  <Route path="/profile" component={Profile} />
+                  <Route path="/users/:userAddress" component={UserPage} />
+                  <Route component={NotFound} />
+                </Switch>
+              </Layout>
+              <Alert />
+            </Web3Provider>
+          </ScrollToTop>
+        </Router>
+      </IntlProvider>
     )
   }
 }
+
+const mapStateToProps = state => ({
+  language: state.app.translations.language,
+  messages: state.app.translations.messages,
+})
 
 const mapDispatchToProps = dispatch => ({
   fetchProfile: () => dispatch(fetchProfile()),
   initWallet: () => dispatch(initWallet()),
   setMobile: device => dispatch(setMobile(device)),
+  localizeApp: () => dispatch(localizeApp())
 })
 
-export default connect(undefined, mapDispatchToProps)(App)
+export default connect(mapStateToProps, mapDispatchToProps)(App)

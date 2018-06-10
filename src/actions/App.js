@@ -1,10 +1,14 @@
+import store from 'store'
 import keyMirror from '../utils/keyMirror'
+import translations from '../../translations/translated-messages.json'
+import { addLocales, getLangFullName, getAvailableLanguages } from '../utils/translationUtils'
 
 export const AppConstants = keyMirror(
   {
     ON_MOBILE: null,
     WEB3_ACCOUNT: null,
     WEB3_INTENT: null,
+    TRANSLATIONS: null,
   },
   'APP'
 )
@@ -19,4 +23,49 @@ export function storeWeb3Account(address) {
 
 export function storeWeb3Intent(intent) {
   return { type: AppConstants.WEB3_INTENT, intent }
+}
+
+export function localizeApp() {
+  let messages;
+  let selectedLanguageAbbrev;
+
+  // Add locale data to react-intl
+  addLocales()
+
+  // English is our default - to prevent errors, we set to undefined for English
+  // https://github.com/yahoo/react-intl/issues/619#issuecomment-242765427
+  // Check for a user-selected language from the dropdown menu (stored in local storage)
+  const userSelectedLangAbbrev = store.get('preferredLang')
+
+  if (userSelectedLangAbbrev) {
+
+    selectedLanguageAbbrev = userSelectedLangAbbrev
+
+    // English is our default - to prevent errors, we set to undefined for English
+    if (selectedLanguageAbbrev !== 'en') {
+      messages = translations[userSelectedLangAbbrev]
+    }
+
+  } else {
+
+    // Detect user's preferred settings
+    const detectedLanguage = (navigator.languages && navigator.languages[0]) ||
+                             navigator.language ||
+                             navigator.userLanguage
+
+    // Split locales with a region code
+    selectedLanguageAbbrev = detectedLanguage.toLowerCase().split(/[_-]+/)[0]
+
+    if (selectedLanguageAbbrev !== 'en') {
+      messages = translations[selectedLanguageAbbrev] || translations[detectedLanguage]
+    }
+  }
+
+  return { 
+    type: AppConstants.TRANSLATIONS,
+    selectedLanguageAbbrev: selectedLanguageAbbrev,
+    selectedLanguageFull: getLangFullName(selectedLanguageAbbrev),
+    availableLanguages: getAvailableLanguages(),
+    messages 
+  }
 }
