@@ -1,42 +1,10 @@
 [
   {
-    "id": "notification.purchased",
-    "defaultMessage": "purchased"
-  },
-  {
-    "id": "notification.sent",
-    "defaultMessage": "sent"
-  },
-  {
-    "id": "notification.received",
-    "defaultMessage": "received"
-  },
-  {
-    "id": "notification.withdrawn",
-    "defaultMessage": "withdrawn"
-  },
-  {
-    "id": "notification.hasBeen",
-    "defaultMessage": "has been"
-  },
-  {
-    "id": "notification.haveBeen",
-    "defaultMessage": "have been"
-  },
-  {
-    "id": "notification.fundsFromProduct",
-    "defaultMessage": "Funds from {productLink}"
-  },
-  {
-    "id": "purchase-detail.seller",
-    "defaultMessage": "Seller"
-  },
-  {
     "id": "purchase-detail.buyer",
     "defaultMessage": "Buyer"
   },
   {
-    "id": "purchase-detail.unnamedUser",
-    "defaultMessage": "Unnamed User"
+    "id": "purchase-detail.seller",
+    "defaultMessage": "Seller"
   }
 ]
