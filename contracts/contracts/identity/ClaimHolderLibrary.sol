@@ -34,7 +34,7 @@ library ClaimHolderLibrary {
       returns (bytes32 claimRequestId)
   {
       if (msg.sender != address(this)) {
-        require(KeyHolderLibrary.keyHasPurpose(_keyHolderData, keccak256(msg.sender), 3), "Sender does not have management key");
+        require(KeyHolderLibrary.keyHasPurpose(_keyHolderData, keccak256(msg.sender), 3), "Sender does not have claim signer key");
       }
 
       bytes32 claimId = keccak256(_issuer, _claimType);
