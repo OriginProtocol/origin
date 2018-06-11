@@ -122,7 +122,8 @@ export default class OriginCatcherApp extends Component {
         current_rpc,
         current_accounts
       }).then((responseJson) => {
-        console.log("We are now linked to a remote wallet:", responseJson);
+        let app_info = responseJson.app_info
+        console.log("We are now linked to a remote wallet:", responseJson, " browser is:", app_info);
         if (responseJson.pending_call)
         {
           let msg = responseJson.pending_call
@@ -137,7 +138,7 @@ export default class OriginCatcherApp extends Component {
           }
           else
           {
-            alert("We are now linked return url:"+ responseJson.return_url);
+            alert("We are now linked return url:"+ responseJson.return_url + " on browser:" + app_info.browser);
           }
         }
       }).catch((error) => {
