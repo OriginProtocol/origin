@@ -43,7 +43,7 @@
     },
     "price": {
       "type": "number",
-      "title": "schema.tickets.PriceInETH"
+      "title": "schema.tickets.priceInETH"
     },
     "pictures": {
       "type": "array",

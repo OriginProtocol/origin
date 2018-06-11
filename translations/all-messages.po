@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-06-10T23:13:38.538Z\n"
+"POT-Creation-Date: 2018-06-11T22:29:52.005Z\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "MIME-Version: 1.0\n"
@@ -897,6 +897,54 @@ msgstr ""
 #. Discord
 msgctxt "footer.discordLink"
 msgid "Discord"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.schemaDescription]
+#. defaultMessage is:
+#. Distributed Airbnb
+msgctxt "schema.housing.schemaDescription"
+msgid "Distributed Airbnb"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.schemaDescription]
+#. defaultMessage is:
+#. Distributed Craigslist/Ebay/Amazon
+msgctxt "schema.forSale.schemaDescription"
+msgid "Distributed Craigslist/Ebay/Amazon"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.schemaDescription]
+#. defaultMessage is:
+#. Distributed Elance/99 Designs/Postmates/Fiver/Handy/Thumbtack
+msgctxt "schema.services.schemaDescription"
+msgid "Distributed Elance/99 Designs/Postmates/Fiver/Handy/Thumbtack"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.schemaDescription]
+#. defaultMessage is:
+#. Distributed Getaround
+msgctxt "schema.transportation.schemaDescription"
+msgid "Distributed Getaround"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.schemaDescription]
+#. defaultMessage is:
+#. Distributed Nextdoor
+msgctxt "schema.announcements.schemaDescription"
+msgid "Distributed Nextdoor"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.schemaDescription]
+#. defaultMessage is:
+#. Distributed Ticketmaster/Eventbrite
+msgctxt "schema.tickets.schemaDescription"
+msgid "Distributed Ticketmaster/Eventbrite"
 msgstr ""
 
 #: translations/messages/src/components/footer.json
