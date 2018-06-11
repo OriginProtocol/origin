@@ -153,6 +153,7 @@ export function translateSchema(schemaJson, schemaType) {
   // Copy the schema so we don't modify the original
   const schema = JSON.parse(JSON.stringify(schemaJson))
   const properties = schema.properties
+  schemaType = schemaType === 'for-sale' ? 'forSale' : schemaType
 
   for (let property in properties) {
     const propertyObj = properties[property]
