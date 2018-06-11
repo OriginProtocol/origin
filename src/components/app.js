@@ -56,10 +56,13 @@ const UserPage = props => <User userAddress={props.match.params.userAddress} />
 // Top level component
 class App extends Component {
 
+  componentWillMount() {
+    this.props.localizeApp()
+  }
+
   componentDidMount() {
     this.props.fetchProfile()
     this.props.initWallet()
-    this.props.localizeApp()
 
     this.detectMobile()
   }
@@ -81,45 +84,51 @@ class App extends Component {
   }
 
   render() {
+    console.log("============================== this.props.selectedLanguageAbbrev: ", this.props.selectedLanguageAbbrev)
+    console.log('=============================== this.props.messages: ', this.props.messages)
     return (
-      <IntlProvider locale={this.props.selectedLanguageAbbrev || 'en'} messages={this.props.messages}>
-        <Router>
-          <ScrollToTop>
-            <Web3Provider>
-              <Layout>
-                <Switch>
-                  <Route exact path="/" component={HomePage} />
-                  <Route path="/page/:activePage" component={HomePage} />
-                  <Route
-                    path="/listing/:listingAddress"
-                    component={ListingDetailPage}
-                  />
-                  <Route path="/create" component={CreateListingPage} />
-                  <Route path="/my-listings" component={MyListings} />
-                  <Route
-                    path="/purchases/:purchaseAddress"
-                    component={PurchaseDetailPage}
-                  />
-                  <Route path="/my-purchases" component={MyPurchases} />
-                  <Route path="/my-sales" component={MySales} />
-                  <Route path="/notifications" component={Notifications} />
-                  <Route path="/profile" component={Profile} />
-                  <Route path="/users/:userAddress" component={UserPage} />
-                  <Route component={NotFound} />
-                </Switch>
-              </Layout>
-              <Alert />
-            </Web3Provider>
-          </ScrollToTop>
-        </Router>
-      </IntlProvider>
+      <div>
+        { this.props.selectedLanguageAbbrev &&
+          <IntlProvider locale={this.props.selectedLanguageAbbrev || 'en'} messages={this.props.messages}>
+            <Router>
+              <ScrollToTop>
+                <Web3Provider>
+                  <Layout>
+                    <Switch>
+                      <Route exact path="/" component={HomePage} />
+                      <Route path="/page/:activePage" component={HomePage} />
+                      <Route
+                        path="/listing/:listingAddress"
+                        component={ListingDetailPage}
+                      />
+                      <Route path="/create" component={CreateListingPage} />
+                      <Route path="/my-listings" component={MyListings} />
+                      <Route
+                        path="/purchases/:purchaseAddress"
+                        component={PurchaseDetailPage}
+                      />
+                      <Route path="/my-purchases" component={MyPurchases} />
+                      <Route path="/my-sales" component={MySales} />
+                      <Route path="/notifications" component={Notifications} />
+                      <Route path="/profile" component={Profile} />
+                      <Route path="/users/:userAddress" component={UserPage} />
+                      <Route component={NotFound} />
+                    </Switch>
+                  </Layout>
+                  <Alert />
+                </Web3Provider>
+              </ScrollToTop>
+            </Router>
+          </IntlProvider>
+        }
+      </div>
     )
   }
 }
 
 const mapStateToProps = state => ({
-  language: state.app.translations.language,
   messages: state.app.translations.messages,
+  selectedLanguageAbbrev: state.app.translations.selectedLanguageAbbrev
 })
 
 const mapDispatchToProps = dispatch => ({
