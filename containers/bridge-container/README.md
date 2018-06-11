@@ -3,15 +3,13 @@ This docker image installs and runs the bridge server (along with postgres, redi
 1. Make sure you have Docker **version 18 or greater**:
 `docker --version`
 
-1. Build the docker image:
-`npm run bridge:build`
+1. Run the setup script (from origin-in-a-box root directory):
+`./scripts/setup-bridge.sh`
 
-3. Run the image with port mappings: `npm run bridge:start`
+1. Run the start script: `./scripts/start-bridge.sh`
 
 4. Access the CLI:
-`npm run bridge:bash`
-
-5. Stop and remove the container: `npm run bridge:stop`.
+`./scripts/bash-bridge.sh`
 
 
 **Configuration**
