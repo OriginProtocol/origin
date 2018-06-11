@@ -6,18 +6,20 @@
   },{
     "name"       : "bridge server",
     "script"     : "start-bridge-server.sh",
-    "cwd"        : "/opt/bridge-server",
+    "cwd"        : "/opt/bridge-server/scripts",
     "interpreter": "/bin/bash",
     "env": {
-      "BRIDGE_SERVER_PATH": "/opt/bridge-server"
+      "BRIDGE_SERVER_PATH": "/opt/bridge-server/source",
+      "BRIDGE_SERVER_ENV_PATH": "/opt/bridge-server/bridge-server-venv"
     }
   },{
     "name"       : "celery",
     "script"     : "start-celery.sh",
-    "cwd"        : "/opt/bridge-server",
+    "cwd"        : "/opt/bridge-server/scripts",
     "interpreter": "/bin/bash",
     "env": {
-      "BRIDGE_SERVER_PATH": "/opt/bridge-server"
+      "BRIDGE_SERVER_PATH": "/opt/bridge-server/source",
+      "BRIDGE_SERVER_ENV_PATH": "/opt/bridge-server/bridge-server-venv"
     }
   },{
     "name"       : "postgresql",

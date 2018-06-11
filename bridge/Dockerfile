@@ -51,26 +51,27 @@ RUN pip3 install pip --upgrade
 # TODO: integrate envkey
 WORKDIR /opt
 RUN pip3 install virtualenv
-RUN git clone https://github.com/OriginProtocol/bridge-server.git
-WORKDIR /opt/bridge-server/
-RUN git branch --track origin remotes/origin/develop && \
-	git checkout develop
+WORKDIR /opt/bridge-server
+RUN git clone https://github.com/OriginProtocol/bridge-server.git source
+WORKDIR /opt/bridge-server/source
+RUN git checkout develop
+WORKDIR /opt/bridge-server
 RUN virtualenv bridge-server-venv && \
 	. bridge-server-venv/bin/activate
 # for compiling dependencies of bridge server... dependencies (on 16.04)
 RUN apt-get install -y pkg-config libffi-dev autoconf libtool libssl-dev
 # TODO: remove hacks
+WORKDIR /opt/bridge-server/source
 RUN sed -i '/pytest-*/d' requirements.txt
-RUN bridge-server-venv/bin/pip3.6 install -r requirements.txt
-COPY files/config/bridge_server_dev.env .env
+RUN ../bridge-server-venv/bin/pip3.6 install -r requirements.txt
 # needed by flask
 ENV LC_ALL=C.UTF-8 \
     LANG=C.UTF-8
 RUN /etc/init.d/postgresql start && \
-	. bridge-server-venv/bin/activate && \
+	. ../bridge-server-venv/bin/activate && \
 	DATABASE_URL=postgresql://docker:docker@localhost:5432/bridge-server FLASK_APP=main.py flask db upgrade
 # https://github.com/OriginProtocol/bridge-server/issues/71
-RUN bridge-server-venv/bin/pip3.6 install kombu==4.1
+RUN ../bridge-server-venv/bin/pip3.6 install kombu==4.1
 # https://github.com/OriginProtocol/bridge-server/issues/74
 RUN sed -i '24s/.*/    return True\n    """/' /opt/bridge-server/bridge-server-venv/lib/python3.6/site-packages/ipfsapi/client.py
 
@@ -94,8 +95,9 @@ WORKDIR /opt/es
 # run everything with pm2 (thanks Gabo!)
 WORKDIR /opt
 RUN npm install -g pm2
-COPY files/scripts/start-bridge-server.sh /opt/bridge-server
-COPY files/scripts/start-celery.sh /opt/bridge-server
+RUN mkdir /opt/bridge-server/scripts
+COPY files/scripts/start-bridge-server.sh /opt/bridge-server/scripts
+COPY files/scripts/start-celery.sh /opt/bridge-server/scripts
 COPY files/scripts/start-pg.sh /opt/pg
 COPY files/scripts/start-es.sh /opt/es
 COPY files/process.json /opt

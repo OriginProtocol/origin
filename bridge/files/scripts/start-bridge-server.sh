@@ -1,5 +1,5 @@
 #!/bin/bash
 
-source $BRIDGE_SERVER_PATH/bridge-server-venv/bin/activate
-python $BRIDGE_SERVER_PATH/main.py
-
+cd $BRIDGE_SERVER_PATH
+source $BRIDGE_SERVER_ENV_PATH/bin/activate
+python main.py

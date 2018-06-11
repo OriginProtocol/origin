@@ -1,0 +1,14 @@
+version: '3'
+services:
+  bridge:
+    container_name: "origin-bridge-container"
+    image: origin-bridge-image
+    build: ./bridge
+    volumes:
+      - ./source:/opt/bridge-server/source
+    ports:
+      - "4000:4000"
+      - "5000:5000"
+      - "5432:5432"
+      - "6379:6379"
+      - "9200:9200"
