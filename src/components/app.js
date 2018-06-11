@@ -87,7 +87,7 @@ class App extends Component {
     return (
       <div>
         { this.props.selectedLanguageAbbrev &&
-          <IntlProvider locale={this.props.selectedLanguageAbbrev || 'en'} messages={this.props.messages}>
+          <IntlProvider locale={this.props.selectedLanguageAbbrev} messages={this.props.messages}>
             <Router>
               <ScrollToTop>
                 <Web3Provider>
