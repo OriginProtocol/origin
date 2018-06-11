@@ -84,8 +84,6 @@ class App extends Component {
   }
 
   render() {
-    console.log("============================== this.props.selectedLanguageAbbrev: ", this.props.selectedLanguageAbbrev)
-    console.log('=============================== this.props.messages: ', this.props.messages)
     return (
       <div>
         { this.props.selectedLanguageAbbrev &&
