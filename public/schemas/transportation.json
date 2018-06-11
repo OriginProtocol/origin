@@ -1,6 +1,6 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
-  "description": "Distributed Getaround",
+  "description": "schema.transportation.schemaDescription",
   "type": "object",
   "required": ["name","category","description","price"],
   "properties": {

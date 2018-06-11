@@ -1,5 +1,9 @@
 [
   {
+    "id": "schema.housing.schemaDescription",
+    "defaultMessage": "Distributed Airbnb"
+  },
+  {
     "id": "schema.housing.title",
     "defaultMessage": "Title"
   },
