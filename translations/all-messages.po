@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-06-08T06:29:45.883Z\n"
+"POT-Creation-Date: 2018-06-11T22:29:52.005Z\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "MIME-Version: 1.0\n"
@@ -31,6 +31,14 @@ msgctxt "my-listings.active"
 msgid "Active"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.activities]
+#. defaultMessage is:
+#. Activities
+msgctxt "schema.announcements.activities"
+msgid "Activities"
+msgstr ""
+
 #: translations/messages/src/components/navbar.json
 #. [navbar.addListing]
 #. defaultMessage is:
@@ -53,6 +61,14 @@ msgstr ""
 #. After you publish your changes to the blockchain, other users will be able to see that you have verified the following:
 msgctxt "ConfirmPublish.afterYouPublishNotice"
 msgid "After you publish your changes to the blockchain, other users will be able to see that you have verified the following:"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.airplaneCharter]
+#. defaultMessage is:
+#. Airplane Charter
+msgctxt "schema.transportation.airplaneCharter"
+msgid "Airplane Charter"
 msgstr ""
 
 #: translations/messages/src/components/my-listings.json
@@ -103,12 +119,100 @@ msgctxt "listing-create.announcements"
 msgid "Announcements"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.antiques]
+#. defaultMessage is:
+#. Antiques
+msgctxt "schema.forSale.antiques"
+msgid "Antiques"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.appliances]
+#. defaultMessage is:
+#. Appliances
+msgctxt "schema.forSale.appliances"
+msgid "Appliances"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.aptsWanted]
+#. defaultMessage is:
+#. Apts Wanted
+msgctxt "schema.housing.aptsWanted"
+msgid "Apts Wanted"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.aptsHousingForRent]
+#. defaultMessage is:
+#. Apts/Housing for Rent
+msgctxt "schema.housing.aptsHousingForRent"
+msgid "Apts/Housing for Rent"
+msgstr ""
+
 #: translations/messages/src/components/my-listing-card.json
 #. [my-listing-card.confirmCloseListing]
 #. defaultMessage is:
 #. Are you sure that you want to permanently close this listing? This cannot be undone.
 msgctxt "my-listing-card.confirmCloseListing"
 msgid "Are you sure that you want to permanently close this listing? This cannot be undone."
+msgstr ""
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.artists]
+#. defaultMessage is:
+#. Artists
+msgctxt "schema.announcements.artists"
+msgid "Artists"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.arts]
+#. defaultMessage is:
+#. Arts
+msgctxt "schema.tickets.arts"
+msgid "Arts"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.artsCrafts]
+#. defaultMessage is:
+#. Arts & Crafts
+msgctxt "schema.forSale.artsCrafts"
+msgid "Arts & Crafts"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.atvsUtvsSnowmobiles]
+#. defaultMessage is:
+#. Atvs, UTVs, Snowmobiles
+msgctxt "schema.forSale.atvsUtvsSnowmobiles"
+msgid "Atvs, UTVs, Snowmobiles"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.autoParts]
+#. defaultMessage is:
+#. Auto Parts
+msgctxt "schema.forSale.autoParts"
+msgid "Auto Parts"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.autoWheelsTires]
+#. defaultMessage is:
+#. Auto Wheels & Tires
+msgctxt "schema.forSale.autoWheelsTires"
+msgid "Auto Wheels & Tires"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.babyKidStuff]
+#. defaultMessage is:
+#. Baby & Kid Stuff
+msgctxt "schema.forSale.babyKidStuff"
+msgid "Baby & Kid Stuff"
 msgstr ""
 
 #: translations/messages/src/components/listing-create.json
@@ -127,12 +231,76 @@ msgctxt "listing-create.backButtonLabel"
 msgid "Back"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.barter]
+#. defaultMessage is:
+#. Barter
+msgctxt "schema.forSale.barter"
+msgid "Barter"
+msgstr ""
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.howItWorksContentPart2]
 #. defaultMessage is:
 #. Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.
 msgctxt "listing-create.howItWorksContentPart2"
 msgid "Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering."
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.bicycleParts]
+#. defaultMessage is:
+#. Bicycle Parts
+msgctxt "schema.forSale.bicycleParts"
+msgid "Bicycle Parts"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.bicycles]
+#. defaultMessage is:
+#. Bicycles
+msgctxt "schema.forSale.bicycles"
+msgid "Bicycles"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.bikeRentals]
+#. defaultMessage is:
+#. Bike Rentals
+msgctxt "schema.transportation.bikeRentals"
+msgid "Bike Rentals"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.boatPartsAccessories]
+#. defaultMessage is:
+#. Boat Parts & Accessories
+msgctxt "schema.forSale.boatPartsAccessories"
+msgid "Boat Parts & Accessories"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.boatRentals]
+#. defaultMessage is:
+#. Boat Rentals
+msgctxt "schema.transportation.boatRentals"
+msgid "Boat Rentals"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.boats]
+#. defaultMessage is:
+#. Boats
+msgctxt "schema.forSale.boats"
+msgid "Boats"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.booksMagazines]
+#. defaultMessage is:
+#. Books & Magazines
+msgctxt "schema.forSale.booksMagazines"
+msgid "Books & Magazines"
 msgstr ""
 
 #: translations/messages/src/pages/profile/_countryOptions.json
@@ -151,12 +319,20 @@ msgctxt "connectivity.bridgeServer"
 msgid "Bridge Server:"
 msgstr ""
 
-#: translations/messages/src/components/navbar.json
-#. [navbar.buy]
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.business]
 #. defaultMessage is:
-#. Buy
-msgctxt "navbar.buy"
-msgid "Buy"
+#. Business
+msgctxt "schema.forSale.business"
+msgid "Business"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.businessServices]
+#. defaultMessage is:
+#. Business Services
+msgctxt "schema.services.businessServices"
+msgid "Business Services"
 msgstr ""
 
 #: translations/messages/src/components/notifications.json
@@ -185,6 +361,22 @@ msgstr ""
 #. Buyer
 msgctxt "purchase-detail.buyer"
 msgid "Buyer"
+msgstr ""
+
+#: translations/messages/src/components/navbar.json
+#. [navbar.buying]
+#. defaultMessage is:
+#. Buying
+msgctxt "navbar.buying"
+msgid "Buying"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.cdsDvdsVhs]
+#. defaultMessage is:
+#. CDs / DVDs / VHS
+msgctxt "schema.forSale.cdsDvdsVhs"
+msgid "CDs / DVDs / VHS"
 msgstr ""
 
 #: translations/messages/src/pages/profile/EditProfile.json
@@ -227,6 +419,86 @@ msgctxt "VerifyTwitter.cancel"
 msgid "Cancel"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.carRentals]
+#. defaultMessage is:
+#. Car Rentals
+msgctxt "schema.transportation.carRentals"
+msgid "Car Rentals"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.carsTrucks]
+#. defaultMessage is:
+#. Cars & Trucks
+msgctxt "schema.forSale.carsTrucks"
+msgid "Cars & Trucks"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.category]
+#. defaultMessage is:
+#. Category
+msgctxt "schema.announcements.category"
+msgid "Category"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.category]
+#. defaultMessage is:
+#. Category
+msgctxt "schema.forSale.category"
+msgid "Category"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.category]
+#. defaultMessage is:
+#. Category
+msgctxt "schema.housing.category"
+msgid "Category"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.category]
+#. defaultMessage is:
+#. Category
+msgctxt "schema.services.category"
+msgid "Category"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.category]
+#. defaultMessage is:
+#. Category
+msgctxt "schema.tickets.category"
+msgid "Category"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.category]
+#. defaultMessage is:
+#. Category
+msgctxt "schema.transportation.category"
+msgid "Category"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.cellPhones]
+#. defaultMessage is:
+#. Cell Phones
+msgctxt "schema.forSale.cellPhones"
+msgid "Cell Phones"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.childcare]
+#. defaultMessage is:
+#. Childcare
+msgctxt "schema.announcements.childcare"
+msgid "Childcare"
+msgstr ""
+
 #: translations/messages/src/pages/profile/_countryOptions.json
 #. [_countryOptions.unitedStates]
 #. defaultMessage is:
@@ -259,6 +531,22 @@ msgctxt "web3-provider.cipher"
 msgid "Cipher"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.classes]
+#. defaultMessage is:
+#. Classes
+msgctxt "schema.announcements.classes"
+msgid "Classes"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.classesWorkshops]
+#. defaultMessage is:
+#. Classes & Workshops
+msgctxt "schema.tickets.classesWorkshops"
+msgid "Classes & Workshops"
+msgstr ""
+
 #: translations/messages/src/components/dropdowns/transactions.json
 #. [transactions.clear]
 #. defaultMessage is:
@@ -289,6 +577,22 @@ msgstr ""
 #. Close Listing
 msgctxt "my-listing-card.closeListing"
 msgid "Close Listing"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.clothingAccessories]
+#. defaultMessage is:
+#. Clothing & Accessories
+msgctxt "schema.forSale.clothingAccessories"
+msgid "Clothing & Accessories"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.collectibles]
+#. defaultMessage is:
+#. Collectibles
+msgctxt "schema.forSale.collectibles"
+msgid "Collectibles"
 msgstr ""
 
 #: translations/messages/src/pages/profile/_Services.json
@@ -337,6 +641,30 @@ msgstr ""
 #. Completed
 msgctxt "transactions.completed"
 msgid "Completed"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.computerParts]
+#. defaultMessage is:
+#. Computer Parts
+msgctxt "schema.forSale.computerParts"
+msgid "Computer Parts"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.computers]
+#. defaultMessage is:
+#. Computers
+msgctxt "schema.forSale.computers"
+msgid "Computers"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.conference]
+#. defaultMessage is:
+#. Conference
+msgctxt "schema.tickets.conference"
+msgid "Conference"
 msgstr ""
 
 #: translations/messages/src/components/purchase-detail.json
@@ -459,6 +787,14 @@ msgctxt "VerifyTwitter.continue"
 msgid "Continue"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.counseling]
+#. defaultMessage is:
+#. Counseling
+msgctxt "schema.services.counseling"
+msgid "Counseling"
+msgstr ""
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.createListingHeading]
 #. defaultMessage is:
@@ -473,6 +809,14 @@ msgstr ""
 #. Currently on {currentNetworkName}.
 msgctxt "web3-provider.currentlyOnNetwork"
 msgid "Currently on {currentNetworkName}."
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.deliveryService]
+#. defaultMessage is:
+#. Delivery Service
+msgctxt "schema.services.deliveryService"
+msgid "Delivery Service"
 msgstr ""
 
 #: translations/messages/src/pages/profile/Profile.json
@@ -499,12 +843,108 @@ msgctxt "EditProfile.description"
 msgid "Description"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.description]
+#. defaultMessage is:
+#. Description
+msgctxt "schema.announcements.description"
+msgid "Description"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.description]
+#. defaultMessage is:
+#. Description
+msgctxt "schema.forSale.description"
+msgid "Description"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.description]
+#. defaultMessage is:
+#. Description
+msgctxt "schema.housing.description"
+msgid "Description"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.description]
+#. defaultMessage is:
+#. Description
+msgctxt "schema.services.description"
+msgid "Description"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.description]
+#. defaultMessage is:
+#. Description
+msgctxt "schema.tickets.description"
+msgid "Description"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.description]
+#. defaultMessage is:
+#. Description
+msgctxt "schema.transportation.description"
+msgid "Description"
+msgstr ""
+
 #: translations/messages/src/components/footer.json
 #. [footer.discordLink]
 #. defaultMessage is:
 #. Discord
 msgctxt "footer.discordLink"
 msgid "Discord"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.schemaDescription]
+#. defaultMessage is:
+#. Distributed Airbnb
+msgctxt "schema.housing.schemaDescription"
+msgid "Distributed Airbnb"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.schemaDescription]
+#. defaultMessage is:
+#. Distributed Craigslist/Ebay/Amazon
+msgctxt "schema.forSale.schemaDescription"
+msgid "Distributed Craigslist/Ebay/Amazon"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.schemaDescription]
+#. defaultMessage is:
+#. Distributed Elance/99 Designs/Postmates/Fiver/Handy/Thumbtack
+msgctxt "schema.services.schemaDescription"
+msgid "Distributed Elance/99 Designs/Postmates/Fiver/Handy/Thumbtack"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.schemaDescription]
+#. defaultMessage is:
+#. Distributed Getaround
+msgctxt "schema.transportation.schemaDescription"
+msgid "Distributed Getaround"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.schemaDescription]
+#. defaultMessage is:
+#. Distributed Nextdoor
+msgctxt "schema.announcements.schemaDescription"
+msgid "Distributed Nextdoor"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.schemaDescription]
+#. defaultMessage is:
+#. Distributed Ticketmaster/Eventbrite
+msgctxt "schema.tickets.schemaDescription"
+msgid "Distributed Ticketmaster/Eventbrite"
 msgstr ""
 
 #: translations/messages/src/components/footer.json
@@ -521,6 +961,14 @@ msgstr ""
 #. Documentation
 msgctxt "footer.documentationHeading"
 msgid "Documentation"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.dogWalking]
+#. defaultMessage is:
+#. Dog Walking
+msgctxt "schema.services.dogWalking"
+msgid "Dog Walking"
 msgstr ""
 
 #: translations/messages/src/pages/profile/AttestationSuccess.json
@@ -609,6 +1057,22 @@ msgstr ""
 #. Edit Profile
 msgctxt "EditProfile.editProfileHeading"
 msgid "Edit Profile"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.electrical]
+#. defaultMessage is:
+#. Electrical
+msgctxt "schema.services.electrical"
+msgid "Electrical"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.electronics]
+#. defaultMessage is:
+#. Electronics
+msgctxt "schema.forSale.electronics"
+msgid "Electronics"
 msgstr ""
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
@@ -739,6 +1203,14 @@ msgctxt "Profile.facebookVerified"
 msgid "Facebook account verified!"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.farmGarden]
+#. defaultMessage is:
+#. Farm & Garden
+msgctxt "schema.forSale.farmGarden"
+msgid "Farm & Garden"
+msgstr ""
+
 #: translations/messages/src/components/listing-card.json
 #. [listing-card.featured]
 #. defaultMessage is:
@@ -779,6 +1251,14 @@ msgctxt "_countryOptions.france"
 msgid "France"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.freeStuff]
+#. defaultMessage is:
+#. Free Stuff
+msgctxt "schema.forSale.freeStuff"
+msgid "Free Stuff"
+msgstr ""
+
 #: translations/messages/src/components/dropdowns/transactions.json
 #. [transactions.from]
 #. defaultMessage is:
@@ -811,6 +1291,14 @@ msgctxt "web3-provider.fullInstructionsForDemo"
 msgid "Full Instructions for Demo"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.fundraisers]
+#. defaultMessage is:
+#. Fundraisers
+msgctxt "schema.tickets.fundraisers"
+msgid "Fundraisers"
+msgstr ""
+
 #: translations/messages/src/components/purchase-progress.json
 #. [transaction-progress.fundsWithdrawn]
 #. defaultMessage is:
@@ -823,12 +1311,36 @@ msgctxt "transaction-progress.fundsWithdrawn"
 msgid "Funds Withdrawn"
 msgstr ""
 
-#: translations/messages/src/components/notification.json
-#. [notification.fundsFromProduct]
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.furniture]
 #. defaultMessage is:
-#. Funds from {productLink}
-msgctxt "notification.fundsFromProduct"
-msgid "Funds from {productLink}"
+#. Furniture
+msgctxt "schema.forSale.furniture"
+msgid "Furniture"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.garageMovingSales]
+#. defaultMessage is:
+#. Garage & Moving Sales
+msgctxt "schema.forSale.garageMovingSales"
+msgid "Garage & Moving Sales"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.general]
+#. defaultMessage is:
+#. General
+msgctxt "schema.announcements.general"
+msgid "General"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.generalForSale]
+#. defaultMessage is:
+#. General For Sale
+msgctxt "schema.forSale.generalForSale"
+msgid "General For Sale"
 msgstr ""
 
 #: translations/messages/src/pages/profile/_countryOptions.json
@@ -871,12 +1383,76 @@ msgctxt "_Services.google"
 msgid "Google"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.graphicDesign]
+#. defaultMessage is:
+#. Graphic Design
+msgctxt "schema.services.graphicDesign"
+msgid "Graphic Design"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.groups]
+#. defaultMessage is:
+#. Groups
+msgctxt "schema.announcements.groups"
+msgid "Groups"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.handyman]
+#. defaultMessage is:
+#. Handyman
+msgctxt "schema.services.handyman"
+msgid "Handyman"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.healthBeauty]
+#. defaultMessage is:
+#. Health & Beauty
+msgctxt "schema.forSale.healthBeauty"
+msgid "Health & Beauty"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.heavyEquipment]
+#. defaultMessage is:
+#. Heavy Equipment
+msgctxt "schema.forSale.heavyEquipment"
+msgid "Heavy Equipment"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.homeCleaning]
+#. defaultMessage is:
+#. Home Cleaning
+msgctxt "schema.services.homeCleaning"
+msgid "Home Cleaning"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.householdItems]
+#. defaultMessage is:
+#. Household Items
+msgctxt "schema.forSale.householdItems"
+msgid "Household Items"
+msgstr ""
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.housingLabel]
 #. defaultMessage is:
 #. Housing
 msgctxt "listing-create.housingLabel"
 msgid "Housing"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.housingSwap]
+#. defaultMessage is:
+#. Housing Swap
+msgctxt "schema.housing.housingSwap"
+msgid "Housing Swap"
 msgstr ""
 
 #: translations/messages/src/components/not-found.json
@@ -999,6 +1575,14 @@ msgctxt "_countryOptions.japan"
 msgid "Japan"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.jewelry]
+#. defaultMessage is:
+#. Jewelry
+msgctxt "schema.forSale.jewelry"
+msgid "Jewelry"
+msgstr ""
+
 #: translations/messages/src/components/footer.json
 #. [footer.hiringLink]
 #. defaultMessage is:
@@ -1037,6 +1621,14 @@ msgstr ""
 #. Last published
 msgctxt "Profile.lastPublished"
 msgid "Last published"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.legal]
+#. defaultMessage is:
+#. Legal
+msgctxt "schema.services.legal"
+msgid "Legal"
 msgstr ""
 
 #: translations/messages/src/pages/profile/ConfirmPublish.json
@@ -1095,12 +1687,60 @@ msgctxt "my-sales.loading"
 msgid "Loading..."
 msgstr ""
 
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.localNews]
+#. defaultMessage is:
+#. Local News
+msgctxt "schema.announcements.localNews"
+msgid "Local News"
+msgstr ""
+
 #: translations/messages/src/components/dropdowns/connectivity.json
 #. [connectivity.localhost]
 #. defaultMessage is:
 #. Localhost
 msgctxt "connectivity.localhost"
 msgid "Localhost"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.location]
+#. defaultMessage is:
+#. Location
+msgctxt "schema.forSale.location"
+msgid "Location"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.location]
+#. defaultMessage is:
+#. Location
+msgctxt "schema.housing.location"
+msgid "Location"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.location]
+#. defaultMessage is:
+#. Location
+msgctxt "schema.services.location"
+msgid "Location"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.location]
+#. defaultMessage is:
+#. Location
+msgctxt "schema.transportation.location"
+msgid "Location"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.lostFound]
+#. defaultMessage is:
+#. Lost & Found
+msgctxt "schema.announcements.lostFound"
+msgid "Lost & Found"
 msgstr ""
 
 #: translations/messages/src/components/dropdowns/connectivity.json
@@ -1119,6 +1759,14 @@ msgctxt "purchase-detail.markOrderSent"
 msgid "Mark Order as Sent"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.materials]
+#. defaultMessage is:
+#. Materials
+msgctxt "schema.forSale.materials"
+msgid "Materials"
+msgstr ""
+
 #: translations/messages/src/components/footer.json
 #. [footer.mediumLink]
 #. defaultMessage is:
@@ -1133,6 +1781,54 @@ msgstr ""
 #. Morden Test Network
 msgctxt "connectivity.mordenTestNetwork"
 msgid "Morden Test Network"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.motorcyclePartsAccessories]
+#. defaultMessage is:
+#. Motorcycle Parts & Accessories
+msgctxt "schema.forSale.motorcyclePartsAccessories"
+msgid "Motorcycle Parts & Accessories"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.motorcyclesScooters]
+#. defaultMessage is:
+#. Motorcycles & Scooters
+msgctxt "schema.forSale.motorcyclesScooters"
+msgid "Motorcycles & Scooters"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.movingHelp]
+#. defaultMessage is:
+#. Moving Help
+msgctxt "schema.services.movingHelp"
+msgid "Moving Help"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.music]
+#. defaultMessage is:
+#. Music
+msgctxt "schema.tickets.music"
+msgid "Music"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.musicalInstruments]
+#. defaultMessage is:
+#. Musical Instruments
+msgctxt "schema.forSale.musicalInstruments"
+msgid "Musical Instruments"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.musicians]
+#. defaultMessage is:
+#. Musicians
+msgctxt "schema.announcements.musicians"
+msgid "Musicians"
 msgstr ""
 
 #: translations/messages/src/components/my-listings.json
@@ -1207,6 +1903,14 @@ msgctxt "_Wallet.noEthAccountConnected"
 msgid "No ETH Account Connected"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.nonProfitEvent]
+#. defaultMessage is:
+#. Non-profit event
+msgctxt "schema.tickets.nonProfitEvent"
+msgid "Non-profit event"
+msgstr ""
+
 #: translations/messages/src/pages/profile/ConfirmUnload.json
 #. [ConfirmUpload.notRightNow]
 #. defaultMessage is:
@@ -1232,6 +1936,10 @@ msgid "Nothing for you to do at this time. Check back later"
 msgstr ""
 
 #: translations/messages/src/components/dropdowns/notifications.json
+#. [notifications.notificationsHeading]
+#. defaultMessage is:
+#. Notifications
+#: translations/messages/src/components/notifications.json
 #. [notifications.notificationsHeading]
 #. defaultMessage is:
 #. Notifications
@@ -1261,6 +1969,14 @@ msgstr ""
 #. OK
 msgctxt "Profile.ok"
 msgid "OK"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.officeCommercial]
+#. defaultMessage is:
+#. Office & Commercial
+msgctxt "schema.housing.officeCommercial"
+msgid "Office & Commercial"
 msgstr ""
 
 #: translations/messages/src/pages/profile/ConfirmPublish.json
@@ -1307,6 +2023,14 @@ msgctxt "listing-create.howItWorksContentPart1"
 msgid "Origin uses a Mozilla project called {jsonSchemaLink}  to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer."
 msgstr ""
 
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.other]
+#. defaultMessage is:
+#. Other
+msgctxt "schema.tickets.other"
+msgid "Other"
+msgstr ""
+
 #: translations/messages/src/pages/profile/VerifyFacebook.json
 #. [VerifyFacebook.accountNotPublic]
 #. defaultMessage is:
@@ -1339,6 +2063,22 @@ msgctxt "VerifyPhone.phoneNumberNotPublished"
 msgid "Other users will know that you have a verified phone number. Your actual phone number will not be published on the blockchain."
 msgstr ""
 
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.painting]
+#. defaultMessage is:
+#. Painting
+msgctxt "schema.services.painting"
+msgid "Painting"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.parkingStorage]
+#. defaultMessage is:
+#. Parking & Storage
+msgctxt "schema.housing.parkingStorage"
+msgid "Parking & Storage"
+msgstr ""
+
 #: translations/messages/src/components/footer.json
 #. [footer.partnersLink]
 #. defaultMessage is:
@@ -1369,6 +2109,22 @@ msgstr ""
 #. Pending Blockchain Transactions
 msgctxt "transactions.pendingTransactions"
 msgid "Pending Blockchain Transactions"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.personals]
+#. defaultMessage is:
+#. Personals
+msgctxt "schema.announcements.personals"
+msgid "Personals"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.pets]
+#. defaultMessage is:
+#. Pets
+msgctxt "schema.announcements.pets"
+msgid "Pets"
 msgstr ""
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
@@ -1409,6 +2165,22 @@ msgstr ""
 #. Phone number verified!
 msgctxt "Profile.phoneVerified"
 msgid "Phone number verified!"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.photoVideo]
+#. defaultMessage is:
+#. Photo & Video
+msgctxt "schema.forSale.photoVideo"
+msgid "Photo & Video"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.photography]
+#. defaultMessage is:
+#. Photography
+msgctxt "schema.services.photography"
+msgid "Photography"
 msgstr ""
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
@@ -1473,6 +2245,22 @@ msgstr ""
 #. Please stand by...
 msgctxt "Profile.pleaseStandBy"
 msgid "Please stand by..."
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.plumbing]
+#. defaultMessage is:
+#. Plumbing
+msgctxt "schema.services.plumbing"
+msgid "Plumbing"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.politics]
+#. defaultMessage is:
+#. Politics
+msgctxt "schema.announcements.politics"
+msgid "Politics"
 msgstr ""
 
 #: translations/messages/src/components/web3-provider.json
@@ -1545,6 +2333,54 @@ msgstr ""
 #. Price
 msgctxt "purchase-detail.price"
 msgid "Price"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+msgctxt "schema.announcements.priceInETH"
+msgid "Price in ETH"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+msgctxt "schema.forSale.priceInETH"
+msgid "Price in ETH"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+msgctxt "schema.housing.priceInETH"
+msgid "Price in ETH"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+msgctxt "schema.services.priceInETH"
+msgid "Price in ETH"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+msgctxt "schema.tickets.priceInETH"
+msgid "Price in ETH"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+msgctxt "schema.transportation.priceInETH"
+msgid "Price in ETH"
 msgstr ""
 
 #: translations/messages/src/components/my-sale-card.json
@@ -1671,6 +2507,22 @@ msgctxt "ConfirmUpload.readyToGoPublic"
 msgid "Ready to go public? After you publish your changes to the blockchain, other users will be able to see that you have verified the following:"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.realEstate]
+#. defaultMessage is:
+#. Real Estate
+msgctxt "schema.housing.realEstate"
+msgid "Real Estate"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.realEstateWanted]
+#. defaultMessage is:
+#. Real Estate Wanted
+msgctxt "schema.housing.realEstateWanted"
+msgid "Real Estate Wanted"
+msgstr ""
+
 #: translations/messages/src/components/my-purchase-card.json
 #. [my-purchase-card.received]
 #. defaultMessage is:
@@ -1701,6 +2553,30 @@ msgstr ""
 #. Received by me
 msgctxt "transaction-progress.receivedByMe"
 msgid "Received by me"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.recreationalVehicles]
+#. defaultMessage is:
+#. Recreational Vehicles
+msgctxt "schema.forSale.recreationalVehicles"
+msgid "Recreational Vehicles"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.repairTechnicalSupport]
+#. defaultMessage is:
+#. Repair & Technical Support
+msgctxt "schema.services.repairTechnicalSupport"
+msgid "Repair & Technical Support"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.resumes]
+#. defaultMessage is:
+#. Resumes
+msgctxt "schema.announcements.resumes"
+msgid "Resumes"
 msgstr ""
 
 #: translations/messages/src/components/purchase-detail.json
@@ -1741,6 +2617,22 @@ msgstr ""
 #. Rinkeby Test Network
 msgctxt "connectivity.rinkebyTestNetwork"
 msgid "Rinkeby Test Network"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.roomShareWanted]
+#. defaultMessage is:
+#. Room/Share Wanted
+msgctxt "schema.housing.roomShareWanted"
+msgid "Room/Share Wanted"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.roomsShares]
+#. defaultMessage is:
+#. Rooms & Shares
+msgctxt "schema.housing.roomsShares"
+msgid "Rooms & Shares"
 msgstr ""
 
 #: translations/messages/src/components/dropdowns/connectivity.json
@@ -1799,12 +2691,52 @@ msgctxt "listing-detail.seeConsoleForDetails"
 msgid "See the console for more details."
 msgstr ""
 
-#: translations/messages/src/components/navbar.json
-#. [navbar.sell]
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.selectPhotos]
 #. defaultMessage is:
-#. Sell
-msgctxt "navbar.sell"
-msgid "Sell"
+#. Select photos
+msgctxt "schema.announcements.selectPhotos"
+msgid "Select photos"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+msgctxt "schema.forSale.selectPhotos"
+msgid "Select photos"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+msgctxt "schema.housing.selectPhotos"
+msgid "Select photos"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+msgctxt "schema.services.selectPhotos"
+msgid "Select photos"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+msgctxt "schema.tickets.selectPhotos"
+msgid "Select photos"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+msgctxt "schema.transportation.selectPhotos"
+msgid "Select photos"
 msgstr ""
 
 #: translations/messages/src/components/notifications.json
@@ -1833,6 +2765,14 @@ msgstr ""
 #. Seller: {sellerAddress}
 msgctxt "listing-detail.seller"
 msgid "Seller: {sellerAddress}"
+msgstr ""
+
+#: translations/messages/src/components/navbar.json
+#. [navbar.selling]
+#. defaultMessage is:
+#. Selling
+msgctxt "navbar.selling"
+msgid "Selling"
 msgstr ""
 
 #: translations/messages/src/components/purchase-detail.json
@@ -1869,6 +2809,14 @@ msgstr ""
 #. Services
 msgctxt "listing-create.services"
 msgid "Services"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.softwareDevelopement]
+#. defaultMessage is:
+#. Software Developement
+msgctxt "schema.services.softwareDevelopement"
+msgid "Software Developement"
 msgstr ""
 
 #: translations/messages/src/components/listing-card-prices.json
@@ -1931,12 +2879,44 @@ msgctxt "_countryOptions.southKorea"
 msgid "South Korea"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.sportingGoods]
+#. defaultMessage is:
+#. Sporting Goods
+msgctxt "schema.forSale.sportingGoods"
+msgid "Sporting Goods"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.sports]
+#. defaultMessage is:
+#. Sports
+msgctxt "schema.tickets.sports"
+msgid "Sports"
+msgstr ""
+
 #: translations/messages/src/pages/profile/Profile.json
 #. [Profile.status]
 #. defaultMessage is:
 #. Status:
 msgctxt "Profile.status"
 msgid "Status:"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.subletTempWanted]
+#. defaultMessage is:
+#. Sublet/Temp Wanted
+msgctxt "schema.housing.subletTempWanted"
+msgid "Sublet/Temp Wanted"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.subletsTemporary]
+#. defaultMessage is:
+#. Sublets & Temporary
+msgctxt "schema.housing.subletsTemporary"
+msgid "Sublets & Temporary"
 msgstr ""
 
 #: translations/messages/src/components/purchase-detail.json
@@ -1961,6 +2941,14 @@ msgstr ""
 #. Success
 msgctxt "Profile.success"
 msgid "Success"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.taxiService]
+#. defaultMessage is:
+#. Taxi Service
+msgctxt "schema.transportation.taxiService"
+msgid "Taxi Service"
 msgstr ""
 
 #: translations/messages/src/components/footer.json
@@ -1993,6 +2981,14 @@ msgstr ""
 #. The page you’re looking for is no longer here, maybe it was never here in the first place. In any case, we sincerely apologize if it’s us and we forgive you if it’s you :)
 msgctxt "not-found.content"
 msgid "The page you’re looking for is no longer here, maybe it was never here in the first place. In any case, we sincerely apologize if it’s us and we forgive you if it’s you :)"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.theater]
+#. defaultMessage is:
+#. Theater
+msgctxt "schema.tickets.theater"
+msgid "Theater"
 msgstr ""
 
 #: translations/messages/src/components/listing-create.json
@@ -2051,6 +3047,62 @@ msgctxt "listing-create.tickets"
 msgid "Tickets"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.tickets]
+#. defaultMessage is:
+#. Tickets
+msgctxt "schema.forSale.tickets"
+msgid "Tickets"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.title]
+#. defaultMessage is:
+#. Title
+msgctxt "schema.announcements.title"
+msgid "Title"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.title]
+#. defaultMessage is:
+#. Title
+msgctxt "schema.forSale.title"
+msgid "Title"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.title]
+#. defaultMessage is:
+#. Title
+msgctxt "schema.housing.title"
+msgid "Title"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.title]
+#. defaultMessage is:
+#. Title
+msgctxt "schema.services.title"
+msgid "Title"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.title]
+#. defaultMessage is:
+#. Title
+msgctxt "schema.tickets.title"
+msgid "Title"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.title]
+#. defaultMessage is:
+#. Title
+msgctxt "schema.transportation.title"
+msgid "Title"
+msgstr ""
+
 #: translations/messages/src/components/dropdowns/transactions.json
 #. [transactions.to]
 #. defaultMessage is:
@@ -2067,6 +3119,14 @@ msgctxt "purchase-detail.to"
 msgid "To"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.tools]
+#. defaultMessage is:
+#. Tools
+msgctxt "schema.forSale.tools"
+msgid "Tools"
+msgstr ""
+
 #: translations/messages/src/components/web3-provider.json
 #. [web3-provider.toshi]
 #. defaultMessage is:
@@ -2081,6 +3141,30 @@ msgstr ""
 #. Total Quantity : {quantity}
 msgctxt "my-listing-card.totalQuantity"
 msgid "Total Quantity : {quantity}"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.toysGames]
+#. defaultMessage is:
+#. Toys & Games
+msgctxt "schema.forSale.toysGames"
+msgid "Toys & Games"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.tradeshow]
+#. defaultMessage is:
+#. Tradeshow
+msgctxt "schema.tickets.tradeshow"
+msgid "Tradeshow"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.trailers]
+#. defaultMessage is:
+#. Trailers
+msgctxt "schema.forSale.trailers"
+msgid "Trailers"
 msgstr ""
 
 #: translations/messages/src/components/purchase-detail.json
@@ -2211,10 +3295,6 @@ msgctxt "my-sale-card.unnamedUser"
 msgid "Unnamed User"
 msgstr ""
 
-#: translations/messages/src/components/notification.json
-#. [purchase-detail.unnamedUser]
-#. defaultMessage is:
-#. Unnamed User
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.unnamedUser]
 #. defaultMessage is:
@@ -2275,6 +3355,14 @@ msgctxt "listing-create.uploadingYourListing"
 msgid "Uploading your listing"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.vacationRentals]
+#. defaultMessage is:
+#. Vacation Rentals
+msgctxt "schema.housing.vacationRentals"
+msgid "Vacation Rentals"
+msgstr ""
+
 #: translations/messages/src/pages/profile/VerifyEmail.json
 #. [VerifyEmail.validEmail]
 #. defaultMessage is:
@@ -2329,6 +3417,14 @@ msgstr ""
 #. Verifying your profile
 msgctxt "_Guidance.verifyingYourProfile"
 msgid "Verifying your profile"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.videoGaming]
+#. defaultMessage is:
+#. Video Gaming
+msgctxt "schema.forSale.videoGaming"
+msgid "Video Gaming"
 msgstr ""
 
 #: translations/messages/src/components/dropdowns/notifications.json
@@ -2387,6 +3483,14 @@ msgctxt "_ProvisionedChanges.visibleOnBlockchain"
 msgid "Visible on the blockchain"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.volunteers]
+#. defaultMessage is:
+#. Volunteers
+msgctxt "schema.announcements.volunteers"
+msgid "Volunteers"
+msgstr ""
+
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.waitForBuyer]
 #. defaultMessage is:
@@ -2419,6 +3523,22 @@ msgctxt "ConfirmUpload.waitNotice"
 msgid "Wait! You haven’t published yet."
 msgstr ""
 
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.wanted]
+#. defaultMessage is:
+#. Wanted
+msgctxt "schema.forSale.wanted"
+msgid "Wanted"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.webDesign]
+#. defaultMessage is:
+#. Web Design
+msgctxt "schema.services.webDesign"
+msgid "Web Design"
+msgstr ""
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.whatHappensNextHeading]
 #. defaultMessage is:
@@ -2435,12 +3555,28 @@ msgctxt "listing-create.whatTypeOfListing"
 msgid "What type of listing do you want to create?"
 msgstr ""
 
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.when]
+#. defaultMessage is:
+#. When
+msgctxt "schema.tickets.when"
+msgid "When"
+msgstr ""
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.whatHappensNextContent1]
 #. defaultMessage is:
 #. When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network.
 msgctxt "listing-create.whatHappensNextContent1"
 msgid "When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network."
+msgstr ""
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.where]
+#. defaultMessage is:
+#. Where
+msgctxt "schema.tickets.where"
+msgid "Where"
 msgstr ""
 
 #: translations/messages/src/components/footer.json
@@ -2457,6 +3593,22 @@ msgstr ""
 #. Withdraw and Review
 msgctxt "purchase-detail.withdrawAndReview"
 msgid "Withdraw and Review"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.writingTranslationTranscription]
+#. defaultMessage is:
+#. Writing, Translation & Transcription
+msgctxt "schema.services.writingTranslationTranscription"
+msgid "Writing, Translation & Transcription"
+msgstr ""
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.yachtCharters]
+#. defaultMessage is:
+#. Yacht Charters
+msgctxt "schema.transportation.yachtCharters"
+msgid "Yacht Charters"
 msgstr ""
 
 #: translations/messages/src/components/web3-provider.json
@@ -2499,6 +3651,30 @@ msgctxt "my-sales.noSales"
 msgid "You currently have no sales."
 msgstr ""
 
+#: translations/messages/src/components/notification-message.json
+#. [notification.purchaseCreated]
+#. defaultMessage is:
+#. You have a new purchase.
+msgctxt "notification.purchaseCreated"
+msgid "You have a new purchase."
+msgstr ""
+
+#: translations/messages/src/components/notification-message.json
+#. [notification.purchaseReceived]
+#. defaultMessage is:
+#. You have a new review.
+msgctxt "notification.purchaseReceived"
+msgid "You have a new review."
+msgstr ""
+
+#: translations/messages/src/components/notification-message.json
+#. [notification.purchaseComplete]
+#. defaultMessage is:
+#. You have a new review.
+msgctxt "notification.purchaseComplete"
+msgid "You have a new review."
+msgstr ""
+
 #: translations/messages/src/components/listings-grid.json
 #. [listings-grid.changeNetworks]
 #. defaultMessage is:
@@ -2513,6 +3689,14 @@ msgstr ""
 #. Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services.
 msgctxt "listing-create.schemaExplainer"
 msgid "Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services."
+msgstr ""
+
+#: translations/messages/src/components/notification-message.json
+#. [notification.purchaseSent]
+#. defaultMessage is:
+#. Your purchase has been shipped.
+msgctxt "notification.purchaseSent"
+msgid "Your purchase has been shipped."
 msgstr ""
 
 #: translations/messages/src/components/purchase-detail.json
@@ -2531,22 +3715,6 @@ msgctxt "purchase-detail.buyerReviewPlaceholder"
 msgid "Your review should inform others about your experience transacting with this seller, not about the product itself."
 msgstr ""
 
-#: translations/messages/src/components/notification.json
-#. [notification.hasBeen]
-#. defaultMessage is:
-#. has been
-msgctxt "notification.hasBeen"
-msgid "has been"
-msgstr ""
-
-#: translations/messages/src/components/notification.json
-#. [notification.haveBeen]
-#. defaultMessage is:
-#. have been
-msgctxt "notification.haveBeen"
-msgid "have been"
-msgstr ""
-
 #: translations/messages/src/pages/profile/Profile.json
 #. [Profile.manageYourProfile]
 #. defaultMessage is:
@@ -2555,44 +3723,12 @@ msgctxt "Profile.manageYourProfile"
 msgid "manage your profile"
 msgstr ""
 
-#: translations/messages/src/components/notification.json
-#. [notification.purchased]
-#. defaultMessage is:
-#. purchased
-msgctxt "notification.purchased"
-msgid "purchased"
-msgstr ""
-
-#: translations/messages/src/components/notification.json
-#. [notification.received]
-#. defaultMessage is:
-#. received
-msgctxt "notification.received"
-msgid "received"
-msgstr ""
-
-#: translations/messages/src/components/notification.json
-#. [notification.sent]
-#. defaultMessage is:
-#. sent
-msgctxt "notification.sent"
-msgid "sent"
-msgstr ""
-
 #: translations/messages/src/components/my-sale-card.json
 #. [my-sale-card.buyerNameLink]
 #. defaultMessage is:
 #. sold to {linkToBuyer}
 msgctxt "my-sale-card.buyerNameLink"
 msgid "sold to {linkToBuyer}"
-msgstr ""
-
-#: translations/messages/src/components/notification.json
-#. [notification.withdrawn]
-#. defaultMessage is:
-#. withdrawn
-msgctxt "notification.withdrawn"
-msgid "withdrawn"
 msgstr ""
 
 #: translations/messages/src/pages/profile/_Wallet.json

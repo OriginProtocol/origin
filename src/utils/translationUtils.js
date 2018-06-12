@@ -1,4 +1,4 @@
-import { addLocaleData } from 'react-intl'
+import { addLocaleData, IntlProvider } from 'react-intl'
 import translations from '../../translations/translated-messages.json'
 import ar from 'react-intl/locale-data/ar'
 import de from 'react-intl/locale-data/de'
@@ -17,6 +17,9 @@ import ru from 'react-intl/locale-data/ru'
 import th from 'react-intl/locale-data/th'
 import tr from 'react-intl/locale-data/tr'
 import zh from 'react-intl/locale-data/zh'
+import schemaMessages from '../schemaMessages/index'
+
+let globalIntlProvider
 
 export function addLocales() {
 
@@ -135,4 +138,72 @@ export function getAvailableLanguages() {
   }
 
   return availableLangs
+}
+
+export function setGlobalIntlProvider(language, messages) {
+  const { intl } = new IntlProvider({ locale: language, messages: messages }, {}).getChildContext()
+  globalIntlProvider = intl
+}
+
+export function GlobalIntlProvider() {
+  return globalIntlProvider
+}
+
+export function translateSchema(schemaJson, schemaType) {
+  // Copy the schema so we don't modify the original
+  const schema = JSON.parse(JSON.stringify(schemaJson))
+  const properties = schema.properties
+  schemaType = schemaType === 'for-sale' ? 'forSale' : schemaType
+
+  if (schema.description) {
+
+    schema.description = globalIntlProvider.formatMessage(schemaMessages[schemaType][schema.description])
+
+  }
+
+  for (let property in properties) {
+    const propertyObj = properties[property]
+
+    if (propertyObj.title) {
+
+      propertyObj.title = globalIntlProvider.formatMessage(schemaMessages[schemaType][propertyObj.title])
+
+    }
+
+    if (propertyObj.default && typeof propertyObj.default === 'number') {
+
+      propertyObj.default = globalIntlProvider.formatMessage(schemaMessages[schemaType][propertyObj.default])
+
+    }
+
+
+    if (propertyObj.enum && propertyObj.enum.length) {
+
+      propertyObj.enumNames = propertyObj.enum.map((enumStr) => (
+        typeof enumStr === 'string' ? globalIntlProvider.formatMessage(schemaMessages[schemaType][enumStr]) : enumStr
+      ))
+
+    }    
+  }
+
+  return schema
+}
+
+export function translateListingCategory(listingObj) {
+  // Copy the schema so we don't modify the original
+  const listing = JSON.parse(JSON.stringify(listingObj))
+  const category = listing.category
+
+  // Check to see if category is a react-intl ID
+  if (/schema\./.test(category)) {
+
+    // loop over all schemaMessages to find the correct ID
+    for (let schemaType in schemaMessages) {
+      if (schemaMessages[schemaType][category]) {
+        listing.category = globalIntlProvider.formatMessage(schemaMessages[schemaType][category])
+      }
+    }
+  }
+
+  return listing
 }

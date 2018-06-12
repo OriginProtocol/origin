@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-06-08T06:29:45.883Z\n"
+"POT-Creation-Date: 2018-06-11T22:29:52.005Z\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "MIME-Version: 1.0\n"
@@ -30,6 +30,14 @@ msgctxt "my-listings.active"
 msgid "Active"
 msgstr "活性"
 
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.activities]
+#. defaultMessage is:
+#. Activities
+msgctxt "schema.announcements.activities"
+msgid "Activities"
+msgstr "活动"
+
 #: translations/messages/src/components/navbar.json
 #. [navbar.addListing]
 #. defaultMessage is:
@@ -54,13 +62,21 @@ msgctxt "ConfirmPublish.afterYouPublishNotice"
 msgid "After you publish your changes to the blockchain, other users will be able to see that you have verified the following:"
 msgstr "将更改发布到区块链后，其他用户将能够看到您已验证以下内容："
 
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.airplaneCharter]
+#. defaultMessage is:
+#. Airplane Charter
+msgctxt "schema.transportation.airplaneCharter"
+msgid "Airplane Charter"
+msgstr "飞机宪章"
+
 #: translations/messages/src/components/my-listings.json
 #. [my-listings.all]
 #. defaultMessage is:
 #. All
 msgctxt "my-listings.all"
 msgid "All"
-msgstr "合计"
+msgstr "所有"
 
 #: translations/messages/src/components/my-purchases.json
 #. [my-purchases.all]
@@ -68,7 +84,7 @@ msgstr "合计"
 #. All
 msgctxt "my-purchases.all"
 msgid "All"
-msgstr "合计"
+msgstr "所有"
 
 #: translations/messages/src/components/my-sales.json
 #. [my-sales.all]
@@ -76,7 +92,7 @@ msgstr "合计"
 #. All
 msgctxt "my-sales.all"
 msgid "All"
-msgstr "合计"
+msgstr "所有"
 
 #: translations/messages/src/components/notifications.json
 #. [notifications.all]
@@ -84,7 +100,7 @@ msgstr "合计"
 #. All
 msgctxt "notifications.all"
 msgid "All"
-msgstr "合计"
+msgstr "所有"
 
 #: translations/messages/src/pages/profile/Profile.json
 #. [Profile.noDescriptionUser]
@@ -100,7 +116,39 @@ msgstr "没有说明的原始用户"
 #. Announcements
 msgctxt "listing-create.announcements"
 msgid "Announcements"
-msgstr "公告"
+msgstr "通告"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.antiques]
+#. defaultMessage is:
+#. Antiques
+msgctxt "schema.forSale.antiques"
+msgid "Antiques"
+msgstr "古董"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.appliances]
+#. defaultMessage is:
+#. Appliances
+msgctxt "schema.forSale.appliances"
+msgid "Appliances"
+msgstr "家电"
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.aptsWanted]
+#. defaultMessage is:
+#. Apts Wanted
+msgctxt "schema.housing.aptsWanted"
+msgid "Apts Wanted"
+msgstr "公寓通缉"
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.aptsHousingForRent]
+#. defaultMessage is:
+#. Apts/Housing for Rent
+msgctxt "schema.housing.aptsHousingForRent"
+msgid "Apts/Housing for Rent"
+msgstr "公寓/房屋出租"
 
 #: translations/messages/src/components/my-listing-card.json
 #. [my-listing-card.confirmCloseListing]
@@ -110,13 +158,69 @@ msgctxt "my-listing-card.confirmCloseListing"
 msgid "Are you sure that you want to permanently close this listing? This cannot be undone."
 msgstr "您确定要永久关闭此列表吗？这不能被撤消。"
 
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.artists]
+#. defaultMessage is:
+#. Artists
+msgctxt "schema.announcements.artists"
+msgid "Artists"
+msgstr "艺术家"
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.arts]
+#. defaultMessage is:
+#. Arts
+msgctxt "schema.tickets.arts"
+msgid "Arts"
+msgstr "艺术"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.artsCrafts]
+#. defaultMessage is:
+#. Arts & Crafts
+msgctxt "schema.forSale.artsCrafts"
+msgid "Arts & Crafts"
+msgstr "工艺品"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.atvsUtvsSnowmobiles]
+#. defaultMessage is:
+#. Atvs, UTVs, Snowmobiles
+msgctxt "schema.forSale.atvsUtvsSnowmobiles"
+msgid "Atvs, UTVs, Snowmobiles"
+msgstr "Atvs，UTVs，雪地摩托车"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.autoParts]
+#. defaultMessage is:
+#. Auto Parts
+msgctxt "schema.forSale.autoParts"
+msgid "Auto Parts"
+msgstr "汽车零件"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.autoWheelsTires]
+#. defaultMessage is:
+#. Auto Wheels & Tires
+msgctxt "schema.forSale.autoWheelsTires"
+msgid "Auto Wheels & Tires"
+msgstr "汽车轮胎和轮胎"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.babyKidStuff]
+#. defaultMessage is:
+#. Baby & Kid Stuff
+msgctxt "schema.forSale.babyKidStuff"
+msgid "Baby & Kid Stuff"
+msgstr "婴孩和孩子的东西"
+
 #: translations/messages/src/components/listing-create.json
 #. [backButtonLabel]
 #. defaultMessage is:
 #. Back
 msgctxt "backButtonLabel"
 msgid "Back"
-msgstr "返回"
+msgstr "背部"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.backButtonLabel]
@@ -124,7 +228,15 @@ msgstr "返回"
 #. Back
 msgctxt "listing-create.backButtonLabel"
 msgid "Back"
-msgstr "返回"
+msgstr "背部"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.barter]
+#. defaultMessage is:
+#. Barter
+msgctxt "schema.forSale.barter"
+msgid "Barter"
+msgstr "物物交换"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.howItWorksContentPart2]
@@ -133,6 +245,62 @@ msgstr "返回"
 msgctxt "listing-create.howItWorksContentPart2"
 msgid "Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering."
 msgstr "一定要给你的列表一个适当的标题和描述，以告知他人你提供的是什么。"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.bicycleParts]
+#. defaultMessage is:
+#. Bicycle Parts
+msgctxt "schema.forSale.bicycleParts"
+msgid "Bicycle Parts"
+msgstr "自行车零件"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.bicycles]
+#. defaultMessage is:
+#. Bicycles
+msgctxt "schema.forSale.bicycles"
+msgid "Bicycles"
+msgstr "自行车"
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.bikeRentals]
+#. defaultMessage is:
+#. Bike Rentals
+msgctxt "schema.transportation.bikeRentals"
+msgid "Bike Rentals"
+msgstr "自行车出租"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.boatPartsAccessories]
+#. defaultMessage is:
+#. Boat Parts & Accessories
+msgctxt "schema.forSale.boatPartsAccessories"
+msgid "Boat Parts & Accessories"
+msgstr "船零件及配件"
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.boatRentals]
+#. defaultMessage is:
+#. Boat Rentals
+msgctxt "schema.transportation.boatRentals"
+msgid "Boat Rentals"
+msgstr "船租赁"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.boats]
+#. defaultMessage is:
+#. Boats
+msgctxt "schema.forSale.boats"
+msgid "Boats"
+msgstr "船"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.booksMagazines]
+#. defaultMessage is:
+#. Books & Magazines
+msgctxt "schema.forSale.booksMagazines"
+msgid "Books & Magazines"
+msgstr "书籍和杂志"
 
 #: translations/messages/src/pages/profile/_countryOptions.json
 #. [_countryOptions.brazil]
@@ -150,13 +318,21 @@ msgctxt "connectivity.bridgeServer"
 msgid "Bridge Server:"
 msgstr "网桥服务器："
 
-#: translations/messages/src/components/navbar.json
-#. [navbar.buy]
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.business]
 #. defaultMessage is:
-#. Buy
-msgctxt "navbar.buy"
-msgid "Buy"
-msgstr "买"
+#. Business
+msgctxt "schema.forSale.business"
+msgid "Business"
+msgstr "商业"
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.businessServices]
+#. defaultMessage is:
+#. Business Services
+msgctxt "schema.services.businessServices"
+msgid "Business Services"
+msgstr "商业服务"
 
 #: translations/messages/src/components/notifications.json
 #. [notifications.buy]
@@ -164,7 +340,7 @@ msgstr "买"
 #. Buy
 msgctxt "notifications.buy"
 msgid "Buy"
-msgstr "买"
+msgstr "购买"
 
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.buyNow]
@@ -172,7 +348,7 @@ msgstr "买"
 #. Buy Now
 msgctxt "listing-detail.buyNow"
 msgid "Buy Now"
-msgstr "现在订购"
+msgstr "立即购买"
 
 #: translations/messages/src/components/notification.json
 #. [purchase-detail.buyer]
@@ -185,6 +361,22 @@ msgstr "现在订购"
 msgctxt "purchase-detail.buyer"
 msgid "Buyer"
 msgstr "买方"
+
+#: translations/messages/src/components/navbar.json
+#. [navbar.buying]
+#. defaultMessage is:
+#. Buying
+msgctxt "navbar.buying"
+msgid "Buying"
+msgstr "购买"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.cdsDvdsVhs]
+#. defaultMessage is:
+#. CDs / DVDs / VHS
+msgctxt "schema.forSale.cdsDvdsVhs"
+msgid "CDs / DVDs / VHS"
+msgstr "CD / DVD / VHS"
 
 #: translations/messages/src/pages/profile/EditProfile.json
 #. [EditProfile.cancel]
@@ -226,6 +418,86 @@ msgctxt "VerifyTwitter.cancel"
 msgid "Cancel"
 msgstr "取消"
 
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.carRentals]
+#. defaultMessage is:
+#. Car Rentals
+msgctxt "schema.transportation.carRentals"
+msgid "Car Rentals"
+msgstr "租车"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.carsTrucks]
+#. defaultMessage is:
+#. Cars & Trucks
+msgctxt "schema.forSale.carsTrucks"
+msgid "Cars & Trucks"
+msgstr "汽车与卡车"
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.category]
+#. defaultMessage is:
+#. Category
+msgctxt "schema.announcements.category"
+msgid "Category"
+msgstr "类别"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.category]
+#. defaultMessage is:
+#. Category
+msgctxt "schema.forSale.category"
+msgid "Category"
+msgstr "类别"
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.category]
+#. defaultMessage is:
+#. Category
+msgctxt "schema.housing.category"
+msgid "Category"
+msgstr "类别"
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.category]
+#. defaultMessage is:
+#. Category
+msgctxt "schema.services.category"
+msgid "Category"
+msgstr "类别"
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.category]
+#. defaultMessage is:
+#. Category
+msgctxt "schema.tickets.category"
+msgid "Category"
+msgstr "类别"
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.category]
+#. defaultMessage is:
+#. Category
+msgctxt "schema.transportation.category"
+msgid "Category"
+msgstr "类别"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.cellPhones]
+#. defaultMessage is:
+#. Cell Phones
+msgctxt "schema.forSale.cellPhones"
+msgid "Cell Phones"
+msgstr "手机"
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.childcare]
+#. defaultMessage is:
+#. Childcare
+msgctxt "schema.announcements.childcare"
+msgid "Childcare"
+msgstr "育儿"
+
 #: translations/messages/src/pages/profile/_countryOptions.json
 #. [_countryOptions.unitedStates]
 #. defaultMessage is:
@@ -256,7 +528,23 @@ msgstr "为您的产品或服务选择一个模式"
 #. Cipher
 msgctxt "web3-provider.cipher"
 msgid "Cipher"
-msgstr "密码"
+msgstr "暗号"
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.classes]
+#. defaultMessage is:
+#. Classes
+msgctxt "schema.announcements.classes"
+msgid "Classes"
+msgstr "类"
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.classesWorkshops]
+#. defaultMessage is:
+#. Classes & Workshops
+msgctxt "schema.tickets.classesWorkshops"
+msgid "Classes & Workshops"
+msgstr "课程和工作坊"
 
 #: translations/messages/src/components/dropdowns/transactions.json
 #. [transactions.clear]
@@ -264,7 +552,7 @@ msgstr "密码"
 #. Clear
 msgctxt "transactions.clear"
 msgid "Clear"
-msgstr "清空"
+msgstr "明确"
 
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.sendOrderInstruction]
@@ -289,6 +577,22 @@ msgstr "点击下面的按钮开始提款"
 msgctxt "my-listing-card.closeListing"
 msgid "Close Listing"
 msgstr "关闭清单"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.clothingAccessories]
+#. defaultMessage is:
+#. Clothing & Accessories
+msgctxt "schema.forSale.clothingAccessories"
+msgid "Clothing & Accessories"
+msgstr "服装与饰品"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.collectibles]
+#. defaultMessage is:
+#. Collectibles
+msgctxt "schema.forSale.collectibles"
+msgid "Collectibles"
+msgstr "收藏品"
 
 #: translations/messages/src/pages/profile/_Services.json
 #. [_Services.comingSoon]
@@ -336,7 +640,31 @@ msgstr "通过提取资金完成交易"
 #. Completed
 msgctxt "transactions.completed"
 msgid "Completed"
-msgstr "完成"
+msgstr "已完成"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.computerParts]
+#. defaultMessage is:
+#. Computer Parts
+msgctxt "schema.forSale.computerParts"
+msgid "Computer Parts"
+msgstr "电脑零件"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.computers]
+#. defaultMessage is:
+#. Computers
+msgctxt "schema.forSale.computers"
+msgid "Computers"
+msgstr "电脑"
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.conference]
+#. defaultMessage is:
+#. Conference
+msgctxt "schema.tickets.conference"
+msgid "Conference"
+msgstr "会议"
 
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.confirmAndReview]
@@ -392,7 +720,7 @@ msgstr "连接到网络..."
 #. Connecting...
 msgctxt "connectivity.connecting"
 msgid "Connecting..."
-msgstr "连接中..."
+msgstr "连接..."
 
 #: translations/messages/src/components/listing-create.json
 #. [continueButtonLabel]
@@ -458,6 +786,14 @@ msgctxt "VerifyTwitter.continue"
 msgid "Continue"
 msgstr "继续"
 
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.counseling]
+#. defaultMessage is:
+#. Counseling
+msgctxt "schema.services.counseling"
+msgid "Counseling"
+msgstr "辅导服务"
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.createListingHeading]
 #. defaultMessage is:
@@ -473,6 +809,14 @@ msgstr "创建您的列表"
 msgctxt "web3-provider.currentlyOnNetwork"
 msgid "Currently on {currentNetworkName}."
 msgstr "目前位于{currentNetworkName}。"
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.deliveryService]
+#. defaultMessage is:
+#. Delivery Service
+msgctxt "schema.services.deliveryService"
+msgid "Delivery Service"
+msgstr "送货服务"
 
 #: translations/messages/src/pages/profile/Profile.json
 #. [Profile.deployingIdentity]
@@ -498,6 +842,54 @@ msgctxt "EditProfile.description"
 msgid "Description"
 msgstr "描述"
 
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.description]
+#. defaultMessage is:
+#. Description
+msgctxt "schema.announcements.description"
+msgid "Description"
+msgstr "描述"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.description]
+#. defaultMessage is:
+#. Description
+msgctxt "schema.forSale.description"
+msgid "Description"
+msgstr "描述"
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.description]
+#. defaultMessage is:
+#. Description
+msgctxt "schema.housing.description"
+msgid "Description"
+msgstr "描述"
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.description]
+#. defaultMessage is:
+#. Description
+msgctxt "schema.services.description"
+msgid "Description"
+msgstr "描述"
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.description]
+#. defaultMessage is:
+#. Description
+msgctxt "schema.tickets.description"
+msgid "Description"
+msgstr "描述"
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.description]
+#. defaultMessage is:
+#. Description
+msgctxt "schema.transportation.description"
+msgid "Description"
+msgstr "描述"
+
 #: translations/messages/src/components/footer.json
 #. [footer.discordLink]
 #. defaultMessage is:
@@ -506,14 +898,61 @@ msgctxt "footer.discordLink"
 msgid "Discord"
 msgstr "不和"
 
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.schemaDescription]
+#. defaultMessage is:
+#. Distributed Airbnb
+msgctxt "schema.housing.schemaDescription"
+msgid "Distributed Airbnb"
+msgstr "分布式Airbnb"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.schemaDescription]
+#. defaultMessage is:
+#. Distributed Craigslist/Ebay/Amazon
+msgctxt "schema.forSale.schemaDescription"
+msgid "Distributed Craigslist/Ebay/Amazon"
+msgstr "分布Craigslist /易趣/亚马逊"
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.schemaDescription]
+#. defaultMessage is:
+#. Distributed Elance/99 Designs/Postmates/Fiver/Handy/Thumbtack
+msgctxt "schema.services.schemaDescription"
+msgid "Distributed Elance/99 Designs/Postmates/Fiver/Handy/Thumbtack"
+msgstr "分布式Elance / 99设计/ Postmates / Fiver / Handy /图钉"
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.schemaDescription]
+#. defaultMessage is:
+#. Distributed Getaround
+msgctxt "schema.transportation.schemaDescription"
+msgid "Distributed Getaround"
+msgstr "分布式Getaround"
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.schemaDescription]
+#. defaultMessage is:
+#. Distributed Nextdoor
+msgctxt "schema.announcements.schemaDescription"
+msgid "Distributed Nextdoor"
+msgstr "分布式Nextdoor"
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.schemaDescription]
+#. defaultMessage is:
+#. Distributed Ticketmaster/Eventbrite
+msgctxt "schema.tickets.schemaDescription"
+msgid "Distributed Ticketmaster/Eventbrite"
+msgstr "分布式Ticketmaster / Eventbrite"
+
 #: translations/messages/src/components/footer.json
 #. [footer.docsLink]
 #. defaultMessage is:
 #. Docs
 msgctxt "footer.docsLink"
 msgid "Docs"
-msgstr "档案
-"
+msgstr "文件"
 
 #: translations/messages/src/components/footer.json
 #. [footer.documentationHeading]
@@ -522,6 +961,14 @@ msgstr "档案
 msgctxt "footer.documentationHeading"
 msgid "Documentation"
 msgstr "文档"
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.dogWalking]
+#. defaultMessage is:
+#. Dog Walking
+msgctxt "schema.services.dogWalking"
+msgid "Dog Walking"
+msgstr "遛狗"
 
 #: translations/messages/src/pages/profile/AttestationSuccess.json
 #. [AttestationSuccess.publishChangesReminder]
@@ -611,13 +1058,29 @@ msgctxt "EditProfile.editProfileHeading"
 msgid "Edit Profile"
 msgstr "编辑个人资料"
 
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.electrical]
+#. defaultMessage is:
+#. Electrical
+msgctxt "schema.services.electrical"
+msgid "Electrical"
+msgstr "电动"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.electronics]
+#. defaultMessage is:
+#. Electronics
+msgctxt "schema.forSale.electronics"
+msgid "Electronics"
+msgstr "电子产品"
+
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.email]
 #. defaultMessage is:
 #. Email
 msgctxt "_ProvisionedChanges.email"
 msgid "Email"
-msgstr "邮箱"
+msgstr "电子邮件"
 
 #: translations/messages/src/pages/profile/_Services.json
 #. [_Services.email]
@@ -625,7 +1088,7 @@ msgstr "邮箱"
 #. Email
 msgctxt "_Services.email"
 msgid "Email"
-msgstr "邮箱"
+msgstr "电子邮件"
 
 #: translations/messages/src/pages/user/User.json
 #. [User.email]
@@ -633,7 +1096,7 @@ msgstr "邮箱"
 #. Email
 msgctxt "User.email"
 msgid "Email"
-msgstr "邮箱"
+msgstr "电子邮件"
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.emailAddress]
@@ -641,7 +1104,7 @@ msgstr "邮箱"
 #. Email Address
 msgctxt "_ProvisionedChanges.emailAddress"
 msgid "Email Address"
-msgstr "邮箱地址"
+msgstr "电子邮件地址"
 
 #: translations/messages/src/pages/profile/Profile.json
 #. [Profile.emailVerified]
@@ -697,7 +1160,7 @@ msgstr "以太坊网络："
 #. Facebook
 msgctxt "footer.facebookLink"
 msgid "Facebook"
-msgstr "Facebook"
+msgstr "Facebook的"
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.facebook]
@@ -705,7 +1168,7 @@ msgstr "Facebook"
 #. Facebook
 msgctxt "_ProvisionedChanges.facebook"
 msgid "Facebook"
-msgstr "Facebook"
+msgstr "Facebook的"
 
 #: translations/messages/src/pages/profile/_Services.json
 #. [_Services.facebook]
@@ -713,7 +1176,7 @@ msgstr "Facebook"
 #. Facebook
 msgctxt "_Services.facebook"
 msgid "Facebook"
-msgstr "Facebook"
+msgstr "Facebook的"
 
 #: translations/messages/src/pages/user/User.json
 #. [User.facebook]
@@ -721,7 +1184,7 @@ msgstr "Facebook"
 #. Facebook
 msgctxt "User.facebook"
 msgid "Facebook"
-msgstr "Facebook"
+msgstr "Facebook的"
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.facebookAccount]
@@ -739,6 +1202,14 @@ msgctxt "Profile.facebookVerified"
 msgid "Facebook account verified!"
 msgstr "Facebook帐户已验证！"
 
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.farmGarden]
+#. defaultMessage is:
+#. Farm & Garden
+msgctxt "schema.forSale.farmGarden"
+msgid "Farm & Garden"
+msgstr "农场和花园"
+
 #: translations/messages/src/components/listing-card.json
 #. [listing-card.featured]
 #. defaultMessage is:
@@ -753,7 +1224,7 @@ msgstr "精选"
 #. First Name
 msgctxt "EditProfile.firstName"
 msgid "First Name"
-msgstr "名"
+msgstr "名字"
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.firstName]
@@ -769,7 +1240,7 @@ msgstr "名字"
 #. For Sale
 msgctxt "listing-create.forSaleLabel"
 msgid "For Sale"
-msgstr "出售"
+msgstr "待售"
 
 #: translations/messages/src/pages/profile/_countryOptions.json
 #. [_countryOptions.france]
@@ -778,6 +1249,14 @@ msgstr "出售"
 msgctxt "_countryOptions.france"
 msgid "France"
 msgstr "法国"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.freeStuff]
+#. defaultMessage is:
+#. Free Stuff
+msgctxt "schema.forSale.freeStuff"
+msgid "Free Stuff"
+msgstr "免费的东西"
 
 #: translations/messages/src/components/dropdowns/transactions.json
 #. [transactions.from]
@@ -811,6 +1290,14 @@ msgctxt "web3-provider.fullInstructionsForDemo"
 msgid "Full Instructions for Demo"
 msgstr "演示的完整说明"
 
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.fundraisers]
+#. defaultMessage is:
+#. Fundraisers
+msgctxt "schema.tickets.fundraisers"
+msgid "Fundraisers"
+msgstr "募款"
+
 #: translations/messages/src/components/purchase-progress.json
 #. [transaction-progress.fundsWithdrawn]
 #. defaultMessage is:
@@ -823,13 +1310,37 @@ msgctxt "transaction-progress.fundsWithdrawn"
 msgid "Funds Withdrawn"
 msgstr "资金撤出"
 
-#: translations/messages/src/components/notification.json
-#. [notification.fundsFromProduct]
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.furniture]
 #. defaultMessage is:
-#. Funds from {productLink}
-msgctxt "notification.fundsFromProduct"
-msgid "Funds from {productLink}"
-msgstr "来自{productLink}的资金"
+#. Furniture
+msgctxt "schema.forSale.furniture"
+msgid "Furniture"
+msgstr "家具"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.garageMovingSales]
+#. defaultMessage is:
+#. Garage & Moving Sales
+msgctxt "schema.forSale.garageMovingSales"
+msgid "Garage & Moving Sales"
+msgstr "车库和移动销售"
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.general]
+#. defaultMessage is:
+#. General
+msgctxt "schema.announcements.general"
+msgid "General"
+msgstr "一般"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.generalForSale]
+#. defaultMessage is:
+#. General For Sale
+msgctxt "schema.forSale.generalForSale"
+msgid "General For Sale"
+msgstr "一般出售"
 
 #: translations/messages/src/pages/profile/_countryOptions.json
 #. [_countryOptions.germany]
@@ -853,7 +1364,7 @@ msgstr "获取MetaMask"
 #. Github
 msgctxt "footer.githubLink"
 msgid "Github"
-msgstr "Github"
+msgstr "Github上"
 
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.goToPurchases]
@@ -871,13 +1382,77 @@ msgctxt "_Services.google"
 msgid "Google"
 msgstr "谷歌"
 
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.graphicDesign]
+#. defaultMessage is:
+#. Graphic Design
+msgctxt "schema.services.graphicDesign"
+msgid "Graphic Design"
+msgstr "平面设计"
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.groups]
+#. defaultMessage is:
+#. Groups
+msgctxt "schema.announcements.groups"
+msgid "Groups"
+msgstr "组"
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.handyman]
+#. defaultMessage is:
+#. Handyman
+msgctxt "schema.services.handyman"
+msgid "Handyman"
+msgstr "勤杂工"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.healthBeauty]
+#. defaultMessage is:
+#. Health & Beauty
+msgctxt "schema.forSale.healthBeauty"
+msgid "Health & Beauty"
+msgstr "健康与美容"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.heavyEquipment]
+#. defaultMessage is:
+#. Heavy Equipment
+msgctxt "schema.forSale.heavyEquipment"
+msgid "Heavy Equipment"
+msgstr "重型设备"
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.homeCleaning]
+#. defaultMessage is:
+#. Home Cleaning
+msgctxt "schema.services.homeCleaning"
+msgid "Home Cleaning"
+msgstr "家庭清洁"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.householdItems]
+#. defaultMessage is:
+#. Household Items
+msgctxt "schema.forSale.householdItems"
+msgid "Household Items"
+msgstr "家居用品"
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.housingLabel]
 #. defaultMessage is:
 #. Housing
 msgctxt "listing-create.housingLabel"
 msgid "Housing"
-msgstr "外壳 "
+msgstr "住房"
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.housingSwap]
+#. defaultMessage is:
+#. Housing Swap
+msgctxt "schema.housing.housingSwap"
+msgid "Housing Swap"
+msgstr "房屋交换"
 
 #: translations/messages/src/components/not-found.json
 #. [not-found.heading]
@@ -885,7 +1460,7 @@ msgstr "外壳 "
 #. How did I get here?
 msgctxt "not-found.heading"
 msgid "How did I get here?"
-msgstr "我怎么到这里的？"
+msgstr "我怎么到这里了？"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.howItWorksHeading]
@@ -893,7 +1468,7 @@ msgstr "我怎么到这里的？"
 #. How it works
 msgctxt "listing-create.howItWorksHeading"
 msgid "How it works"
-msgstr "运行原理"
+msgstr "怎么运行的"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.IPFS]
@@ -965,7 +1540,7 @@ msgstr "为了{web3Intent}，您必须使用启用了以太坊钱包的浏览器
 #. Inactive
 msgctxt "my-listings.inactive"
 msgid "Inactive"
-msgstr "无效"
+msgstr "待用"
 
 #: translations/messages/src/components/footer.json
 #. [footer.instagramLink]
@@ -973,7 +1548,7 @@ msgstr "无效"
 #. Instagram
 msgctxt "footer.instagramLink"
 msgid "Instagram"
-msgstr "Instagram"
+msgstr "Instagram的"
 
 #: translations/messages/src/pages/profile/_countryOptions.json
 #. [_countryOptions.italy]
@@ -998,6 +1573,14 @@ msgstr "JSONSchema"
 msgctxt "_countryOptions.japan"
 msgid "Japan"
 msgstr "日本"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.jewelry]
+#. defaultMessage is:
+#. Jewelry
+msgctxt "schema.forSale.jewelry"
+msgid "Jewelry"
+msgstr "首饰"
 
 #: translations/messages/src/components/footer.json
 #. [footer.hiringLink]
@@ -1039,13 +1622,21 @@ msgctxt "Profile.lastPublished"
 msgid "Last published"
 msgstr "上次发布"
 
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.legal]
+#. defaultMessage is:
+#. Legal
+msgctxt "schema.services.legal"
+msgid "Legal"
+msgstr "法律"
+
 #: translations/messages/src/pages/profile/ConfirmPublish.json
 #. [ConfirmPublish.letsDoIt]
 #. defaultMessage is:
 #. Let's do it!
 msgctxt "ConfirmPublish.letsDoIt"
 msgid "Let's do it!"
-msgstr "我们算吧"
+msgstr "我们开始做吧！"
 
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.listingDetails]
@@ -1053,7 +1644,7 @@ msgstr "我们算吧"
 #. Listing Details
 msgctxt "purchase-detail.listingDetails"
 msgid "Listing Details"
-msgstr "商品详情"
+msgstr "房源详情"
 
 #: translations/messages/src/components/navbar.json
 #. [navbar.listings]
@@ -1061,7 +1652,7 @@ msgstr "商品详情"
 #. Listings
 msgctxt "navbar.listings"
 msgid "Listings"
-msgstr "信息"
+msgstr "房源"
 
 #: translations/messages/src/components/listing-card-prices.json
 #. [listing-card-prices.loadingMessage]
@@ -1095,13 +1686,61 @@ msgctxt "my-sales.loading"
 msgid "Loading..."
 msgstr "载入中..."
 
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.localNews]
+#. defaultMessage is:
+#. Local News
+msgctxt "schema.announcements.localNews"
+msgid "Local News"
+msgstr "本地新闻"
+
 #: translations/messages/src/components/dropdowns/connectivity.json
 #. [connectivity.localhost]
 #. defaultMessage is:
 #. Localhost
 msgctxt "connectivity.localhost"
 msgid "Localhost"
-msgstr " 。"
+msgstr "本地主机"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.location]
+#. defaultMessage is:
+#. Location
+msgctxt "schema.forSale.location"
+msgid "Location"
+msgstr "位置"
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.location]
+#. defaultMessage is:
+#. Location
+msgctxt "schema.housing.location"
+msgid "Location"
+msgstr "位置"
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.location]
+#. defaultMessage is:
+#. Location
+msgctxt "schema.services.location"
+msgid "Location"
+msgstr "位置"
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.location]
+#. defaultMessage is:
+#. Location
+msgctxt "schema.transportation.location"
+msgid "Location"
+msgstr "位置"
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.lostFound]
+#. defaultMessage is:
+#. Lost & Found
+msgctxt "schema.announcements.lostFound"
+msgid "Lost & Found"
+msgstr "失物招领"
 
 #: translations/messages/src/components/dropdowns/connectivity.json
 #. [connectivity.mainEthereumNetwork]
@@ -1119,6 +1758,14 @@ msgctxt "purchase-detail.markOrderSent"
 msgid "Mark Order as Sent"
 msgstr "将订单标记为已发送"
 
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.materials]
+#. defaultMessage is:
+#. Materials
+msgctxt "schema.forSale.materials"
+msgid "Materials"
+msgstr "物料"
+
 #: translations/messages/src/components/footer.json
 #. [footer.mediumLink]
 #. defaultMessage is:
@@ -1134,6 +1781,54 @@ msgstr "中"
 msgctxt "connectivity.mordenTestNetwork"
 msgid "Morden Test Network"
 msgstr "现代测试网络"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.motorcyclePartsAccessories]
+#. defaultMessage is:
+#. Motorcycle Parts & Accessories
+msgctxt "schema.forSale.motorcyclePartsAccessories"
+msgid "Motorcycle Parts & Accessories"
+msgstr "摩托车零配件"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.motorcyclesScooters]
+#. defaultMessage is:
+#. Motorcycles & Scooters
+msgctxt "schema.forSale.motorcyclesScooters"
+msgid "Motorcycles & Scooters"
+msgstr "摩托车＆滑板车"
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.movingHelp]
+#. defaultMessage is:
+#. Moving Help
+msgctxt "schema.services.movingHelp"
+msgid "Moving Help"
+msgstr "移动帮助"
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.music]
+#. defaultMessage is:
+#. Music
+msgctxt "schema.tickets.music"
+msgid "Music"
+msgstr "音乐"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.musicalInstruments]
+#. defaultMessage is:
+#. Musical Instruments
+msgctxt "schema.forSale.musicalInstruments"
+msgid "Musical Instruments"
+msgstr "乐器"
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.musicians]
+#. defaultMessage is:
+#. Musicians
+msgctxt "schema.announcements.musicians"
+msgid "Musicians"
+msgstr "音乐家"
 
 #: translations/messages/src/components/my-listings.json
 #. [my-listings.myListingsHeading]
@@ -1181,7 +1876,7 @@ msgstr "我的销售额"
 #. Next
 msgctxt "listing-create.next"
 msgid "Next"
-msgstr "下香"
+msgstr "下一个"
 
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.nextStep]
@@ -1189,7 +1884,7 @@ msgstr "下香"
 #. Next Step:
 msgctxt "purchase-detail.nextStep"
 msgid "Next Step:"
-msgstr "下一步: "
+msgstr "下一步："
 
 #: translations/messages/src/components/dropdowns/user.json
 #. [user.noEthAccountConnected]
@@ -1207,13 +1902,21 @@ msgctxt "_Wallet.noEthAccountConnected"
 msgid "No ETH Account Connected"
 msgstr "没有连接ETH帐户"
 
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.nonProfitEvent]
+#. defaultMessage is:
+#. Non-profit event
+msgctxt "schema.tickets.nonProfitEvent"
+msgid "Non-profit event"
+msgstr "非营利活动"
+
 #: translations/messages/src/pages/profile/ConfirmUnload.json
 #. [ConfirmUpload.notRightNow]
 #. defaultMessage is:
 #. Not Right Now
 msgctxt "ConfirmUpload.notRightNow"
 msgid "Not Right Now"
-msgstr "跳过"
+msgstr "不是现在"
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.notVisibleOnBlockchain]
@@ -1232,6 +1935,10 @@ msgid "Nothing for you to do at this time. Check back later"
 msgstr "目前没有什么可以做的。过一会再来检查"
 
 #: translations/messages/src/components/dropdowns/notifications.json
+#. [notifications.notificationsHeading]
+#. defaultMessage is:
+#. Notifications
+#: translations/messages/src/components/notifications.json
 #. [notifications.notificationsHeading]
 #. defaultMessage is:
 #. Notifications
@@ -1262,6 +1969,14 @@ msgstr "好"
 msgctxt "Profile.ok"
 msgid "OK"
 msgstr "好"
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.officeCommercial]
+#. defaultMessage is:
+#. Office & Commercial
+msgctxt "schema.housing.officeCommercial"
+msgid "Office & Commercial"
+msgstr "办公室和商业"
 
 #: translations/messages/src/pages/profile/ConfirmPublish.json
 #. [ConfirmPublish.oopsNoWait]
@@ -1307,6 +2022,14 @@ msgctxt "listing-create.howItWorksContentPart1"
 msgid "Origin uses a Mozilla project called {jsonSchemaLink}  to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer."
 msgstr "Origin使用称为{jsonSchemaLink}的Mozilla项目根据标准规则验证您的列表。这种标准化是允许非附属实体读取和写入相同数据层的关键。"
 
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.other]
+#. defaultMessage is:
+#. Other
+msgctxt "schema.tickets.other"
+msgid "Other"
+msgstr "其他"
+
 #: translations/messages/src/pages/profile/VerifyFacebook.json
 #. [VerifyFacebook.accountNotPublic]
 #. defaultMessage is:
@@ -1339,6 +2062,22 @@ msgctxt "VerifyPhone.phoneNumberNotPublished"
 msgid "Other users will know that you have a verified phone number. Your actual phone number will not be published on the blockchain."
 msgstr "其他用户会知道你有一个经过验证的电话号码。您的实际电话号码不会在区块链上发布。"
 
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.painting]
+#. defaultMessage is:
+#. Painting
+msgctxt "schema.services.painting"
+msgid "Painting"
+msgstr "绘画"
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.parkingStorage]
+#. defaultMessage is:
+#. Parking & Storage
+msgctxt "schema.housing.parkingStorage"
+msgid "Parking & Storage"
+msgstr "停车和存储"
+
 #: translations/messages/src/components/footer.json
 #. [footer.partnersLink]
 #. defaultMessage is:
@@ -1353,7 +2092,7 @@ msgstr "伙伴"
 #. Pending
 msgctxt "my-purchases.pending"
 msgid "Pending"
-msgstr "待审"
+msgstr "有待"
 
 #: translations/messages/src/components/my-sales.json
 #. [my-sales.pending]
@@ -1361,7 +2100,7 @@ msgstr "待审"
 #. Pending
 msgctxt "my-sales.pending"
 msgid "Pending"
-msgstr "待审"
+msgstr "有待"
 
 #: translations/messages/src/components/dropdowns/transactions.json
 #. [transactions.pendingTransactions]
@@ -1370,6 +2109,22 @@ msgstr "待审"
 msgctxt "transactions.pendingTransactions"
 msgid "Pending Blockchain Transactions"
 msgstr "待处理区块链交易"
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.personals]
+#. defaultMessage is:
+#. Personals
+msgctxt "schema.announcements.personals"
+msgid "Personals"
+msgstr "征婚启事"
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.pets]
+#. defaultMessage is:
+#. Pets
+msgctxt "schema.announcements.pets"
+msgid "Pets"
+msgstr "宠物"
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.phone]
@@ -1410,6 +2165,22 @@ msgstr "电话号码"
 msgctxt "Profile.phoneVerified"
 msgid "Phone number verified!"
 msgstr "电话号码验证！"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.photoVideo]
+#. defaultMessage is:
+#. Photo & Video
+msgctxt "schema.forSale.photoVideo"
+msgid "Photo & Video"
+msgstr "照片和视频"
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.photography]
+#. defaultMessage is:
+#. Photography
+msgctxt "schema.services.photography"
+msgid "Photography"
+msgstr "摄影"
 
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 #. [_ProvisionedChanges.picture]
@@ -1457,7 +2228,7 @@ msgstr "提交前请检查您的列表。您的列表将显示给其他人，就
 #. Please stand by...
 msgctxt "listing-create.pleaseStandBy"
 msgid "Please stand by..."
-msgstr "请稍候..."
+msgstr "请支持..."
 
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.pleaseStandBy]
@@ -1465,7 +2236,7 @@ msgstr "请稍候..."
 #. Please stand by...
 msgctxt "listing-detail.pleaseStandBy"
 msgid "Please stand by..."
-msgstr "请稍候..."
+msgstr "请支持..."
 
 #: translations/messages/src/pages/profile/Profile.json
 #. [Profile.pleaseStandBy]
@@ -1473,7 +2244,23 @@ msgstr "请稍候..."
 #. Please stand by...
 msgctxt "Profile.pleaseStandBy"
 msgid "Please stand by..."
-msgstr "请稍候..."
+msgstr "请支持..."
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.plumbing]
+#. defaultMessage is:
+#. Plumbing
+msgctxt "schema.services.plumbing"
+msgid "Plumbing"
+msgstr "水暖"
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.politics]
+#. defaultMessage is:
+#. Politics
+msgctxt "schema.announcements.politics"
+msgid "Politics"
+msgstr "政治"
 
 #: translations/messages/src/components/web3-provider.json
 #. [web3-provider.popularEthereumWallets]
@@ -1489,7 +2276,7 @@ msgstr "流行的以太坊钱包"
 #. Powered by
 msgctxt "_Services.poweredBy"
 msgid "Powered by"
-msgstr "提供"
+msgstr "供电"
 
 #: translations/messages/src/components/footer.json
 #. [footer.presaleLink]
@@ -1497,8 +2284,7 @@ msgstr "提供"
 #. Presale
 msgctxt "footer.presaleLink"
 msgid "Presale"
-msgstr "预售
-"
+msgstr "预售"
 
 #: translations/messages/src/pages/profile/Profile.json
 #. [Profile.pressSubmit]
@@ -1538,7 +2324,7 @@ msgstr "预览您的列表"
 #. Price
 msgctxt "listing-detail.price"
 msgid "Price"
-msgstr "价格"
+msgstr "价钱"
 
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.price]
@@ -1546,7 +2332,55 @@ msgstr "价格"
 #. Price
 msgctxt "purchase-detail.price"
 msgid "Price"
-msgstr "价格"
+msgstr "价钱"
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+msgctxt "schema.announcements.priceInETH"
+msgid "Price in ETH"
+msgstr "价格在ETH"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+msgctxt "schema.forSale.priceInETH"
+msgid "Price in ETH"
+msgstr "价格在ETH"
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+msgctxt "schema.housing.priceInETH"
+msgid "Price in ETH"
+msgstr "价格在ETH"
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+msgctxt "schema.services.priceInETH"
+msgid "Price in ETH"
+msgstr "价格在ETH"
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+msgctxt "schema.tickets.priceInETH"
+msgid "Price in ETH"
+msgstr "价格在ETH"
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+msgctxt "schema.transportation.priceInETH"
+msgid "Price in ETH"
+msgstr "价格在ETH"
 
 #: translations/messages/src/components/my-sale-card.json
 #. [my-sale-card.price]
@@ -1578,7 +2412,7 @@ msgstr "产品简介"
 #. Profile
 msgctxt "_ProvisionedChanges.profile"
 msgid "Profile"
-msgstr "档案"
+msgstr "轮廓"
 
 #: translations/messages/src/pages/profile/_Strength.json
 #. [_Strength.profileStrength]
@@ -1594,7 +2428,7 @@ msgstr "轮廓强度"
 #. Publish Now
 msgctxt "ConfirmUpload.publishNow"
 msgid "Publish Now"
-msgstr "0183 现在发布"
+msgstr "现在发布"
 
 #: translations/messages/src/pages/profile/Profile.json
 #. [Profile.publishNow]
@@ -1602,7 +2436,7 @@ msgstr "0183 现在发布"
 #. Publish Now
 msgctxt "Profile.publishNow"
 msgid "Publish Now"
-msgstr "0183 现在发布"
+msgstr "现在发布"
 
 #: translations/messages/src/pages/profile/AttestationSuccess.json
 #. [AttestationSuccess.publishChangesNotice]
@@ -1672,6 +2506,22 @@ msgctxt "ConfirmUpload.readyToGoPublic"
 msgid "Ready to go public? After you publish your changes to the blockchain, other users will be able to see that you have verified the following:"
 msgstr "准备上市？将更改发布到区块链后，其他用户将能够看到您已验证以下内容："
 
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.realEstate]
+#. defaultMessage is:
+#. Real Estate
+msgctxt "schema.housing.realEstate"
+msgid "Real Estate"
+msgstr "房地产"
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.realEstateWanted]
+#. defaultMessage is:
+#. Real Estate Wanted
+msgctxt "schema.housing.realEstateWanted"
+msgid "Real Estate Wanted"
+msgstr "房地产通缉"
+
 #: translations/messages/src/components/my-purchase-card.json
 #. [my-purchase-card.received]
 #. defaultMessage is:
@@ -1704,13 +2554,37 @@ msgctxt "transaction-progress.receivedByMe"
 msgid "Received by me"
 msgstr "收到我的"
 
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.recreationalVehicles]
+#. defaultMessage is:
+#. Recreational Vehicles
+msgctxt "schema.forSale.recreationalVehicles"
+msgid "Recreational Vehicles"
+msgstr "休闲车"
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.repairTechnicalSupport]
+#. defaultMessage is:
+#. Repair & Technical Support
+msgctxt "schema.services.repairTechnicalSupport"
+msgid "Repair & Technical Support"
+msgstr "维修和技术支持"
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.resumes]
+#. defaultMessage is:
+#. Resumes
+msgctxt "schema.announcements.resumes"
+msgid "Resumes"
+msgstr "简历"
+
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.reviewLabel]
 #. defaultMessage is:
 #. Review
 msgctxt "purchase-detail.reviewLabel"
 msgid "Review"
-msgstr "评价"
+msgstr "评论"
 
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.reviews]
@@ -1718,7 +2592,7 @@ msgstr "评价"
 #. Reviews
 msgctxt "listing-detail.reviews"
 msgid "Reviews"
-msgstr "评价"
+msgstr "评测"
 
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.reviewsHeading]
@@ -1726,7 +2600,7 @@ msgstr "评价"
 #. Reviews
 msgctxt "purchase-detail.reviewsHeading"
 msgid "Reviews"
-msgstr "评价"
+msgstr "评测"
 
 #: translations/messages/src/pages/user/User.json
 #. [User.reviews]
@@ -1734,7 +2608,7 @@ msgstr "评价"
 #. Reviews
 msgctxt "User.reviews"
 msgid "Reviews"
-msgstr "评价"
+msgstr "评测"
 
 #: translations/messages/src/components/dropdowns/connectivity.json
 #. [connectivity.rinkebyTestNetwork]
@@ -1743,6 +2617,22 @@ msgstr "评价"
 msgctxt "connectivity.rinkebyTestNetwork"
 msgid "Rinkeby Test Network"
 msgstr "林克比测试网络"
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.roomShareWanted]
+#. defaultMessage is:
+#. Room/Share Wanted
+msgctxt "schema.housing.roomShareWanted"
+msgid "Room/Share Wanted"
+msgstr "房间/股份通缉"
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.roomsShares]
+#. defaultMessage is:
+#. Rooms & Shares
+msgctxt "schema.housing.roomsShares"
+msgid "Rooms & Shares"
+msgstr "客房和股份"
 
 #: translations/messages/src/components/dropdowns/connectivity.json
 #. [connectivity.ropstenTestNetwork]
@@ -1758,7 +2648,7 @@ msgstr "Ropsten测试网络"
 #. Russia
 msgctxt "_countryOptions.russia"
 msgid "Russia"
-msgstr "俄罗斯"
+msgstr "俄国"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.stepNumberLabel]
@@ -1800,13 +2690,53 @@ msgctxt "listing-detail.seeConsoleForDetails"
 msgid "See the console for more details."
 msgstr "有关更多详情，请参阅控制台。"
 
-#: translations/messages/src/components/navbar.json
-#. [navbar.sell]
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.selectPhotos]
 #. defaultMessage is:
-#. Sell
-msgctxt "navbar.sell"
-msgid "Sell"
-msgstr "卖"
+#. Select photos
+msgctxt "schema.announcements.selectPhotos"
+msgid "Select photos"
+msgstr "选择照片"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+msgctxt "schema.forSale.selectPhotos"
+msgid "Select photos"
+msgstr "选择照片"
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+msgctxt "schema.housing.selectPhotos"
+msgid "Select photos"
+msgstr "选择照片"
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+msgctxt "schema.services.selectPhotos"
+msgid "Select photos"
+msgstr "选择照片"
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+msgctxt "schema.tickets.selectPhotos"
+msgid "Select photos"
+msgstr "选择照片"
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+msgctxt "schema.transportation.selectPhotos"
+msgid "Select photos"
+msgstr "选择照片"
 
 #: translations/messages/src/components/notifications.json
 #. [notifications.sell]
@@ -1826,7 +2756,7 @@ msgstr "卖"
 #. Seller
 msgctxt "purchase-detail.seller"
 msgid "Seller"
-msgstr "卖方"
+msgstr "卖家"
 
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.seller]
@@ -1835,6 +2765,14 @@ msgstr "卖方"
 msgctxt "listing-detail.seller"
 msgid "Seller: {sellerAddress}"
 msgstr "卖家：{sellerAddress}"
+
+#: translations/messages/src/components/navbar.json
+#. [navbar.selling]
+#. defaultMessage is:
+#. Selling
+msgctxt "navbar.selling"
+msgid "Selling"
+msgstr "销售"
 
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.sendOrder]
@@ -1870,7 +2808,15 @@ msgstr "卖家发送"
 #. Services
 msgctxt "listing-create.services"
 msgid "Services"
-msgstr "产品"
+msgstr "服务"
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.softwareDevelopement]
+#. defaultMessage is:
+#. Software Developement
+msgctxt "schema.services.softwareDevelopement"
+msgid "Software Developement"
+msgstr "软件开发"
 
 #: translations/messages/src/components/listing-card-prices.json
 #. [listing-card-prices.sold]
@@ -1878,7 +2824,7 @@ msgstr "产品"
 #. Sold
 msgctxt "listing-card-prices.sold"
 msgid "Sold"
-msgstr "售完"
+msgstr "出售"
 
 #: translations/messages/src/components/purchase-progress.json
 #. [transaction-progress.sold]
@@ -1890,7 +2836,7 @@ msgstr "售完"
 #. Sold
 msgctxt "transaction-progress.sold"
 msgid "Sold"
-msgstr "售完"
+msgstr "出售"
 
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.soldOut]
@@ -1932,13 +2878,45 @@ msgctxt "_countryOptions.southKorea"
 msgid "South Korea"
 msgstr "韩国"
 
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.sportingGoods]
+#. defaultMessage is:
+#. Sporting Goods
+msgctxt "schema.forSale.sportingGoods"
+msgid "Sporting Goods"
+msgstr "体育用品"
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.sports]
+#. defaultMessage is:
+#. Sports
+msgctxt "schema.tickets.sports"
+msgid "Sports"
+msgstr "体育"
+
 #: translations/messages/src/pages/profile/Profile.json
 #. [Profile.status]
 #. defaultMessage is:
 #. Status:
 msgctxt "Profile.status"
 msgid "Status:"
-msgstr "状态:"
+msgstr "状态："
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.subletTempWanted]
+#. defaultMessage is:
+#. Sublet/Temp Wanted
+msgctxt "schema.housing.subletTempWanted"
+msgid "Sublet/Temp Wanted"
+msgstr "分租/温度通缉"
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.subletsTemporary]
+#. defaultMessage is:
+#. Sublets & Temporary
+msgctxt "schema.housing.subletsTemporary"
+msgid "Sublets & Temporary"
+msgstr "转租和临时"
 
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.submitThisForm]
@@ -1964,13 +2942,21 @@ msgctxt "Profile.success"
 msgid "Success"
 msgstr "成功"
 
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.taxiService]
+#. defaultMessage is:
+#. Taxi Service
+msgctxt "schema.transportation.taxiService"
+msgid "Taxi Service"
+msgstr "出租车服务"
+
 #: translations/messages/src/components/footer.json
 #. [footer.teamLink]
 #. defaultMessage is:
 #. Team
 msgctxt "footer.teamLink"
 msgid "Team"
-msgstr "团队"
+msgstr "球队"
 
 #: translations/messages/src/components/footer.json
 #. [footer.telegramLink]
@@ -1978,7 +2964,7 @@ msgstr "团队"
 #. Telegram
 msgctxt "footer.telegramLink"
 msgid "Telegram"
-msgstr "Telegram"
+msgstr "电报"
 
 #: translations/messages/src/components/listings-grid.json
 #. [listings-grid.originContractNotFound]
@@ -1995,6 +2981,14 @@ msgstr "未在此网络上找到原始合同。"
 msgctxt "not-found.content"
 msgid "The page you’re looking for is no longer here, maybe it was never here in the first place. In any case, we sincerely apologize if it’s us and we forgive you if it’s you :)"
 msgstr "你正在寻找的页面不再在这里，也许它从来没有在这里摆在首位。无论如何，我们真诚地道歉，如果是我们，我们原谅你，如果它是你:)"
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.theater]
+#. defaultMessage is:
+#. Theater
+msgctxt "schema.tickets.theater"
+msgid "Theater"
+msgstr "剧院"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.error1]
@@ -2050,7 +3044,63 @@ msgstr "此订单已完成"
 #. Tickets
 msgctxt "listing-create.tickets"
 msgid "Tickets"
-msgstr "彩票"
+msgstr "门票"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.tickets]
+#. defaultMessage is:
+#. Tickets
+msgctxt "schema.forSale.tickets"
+msgid "Tickets"
+msgstr "门票"
+
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.title]
+#. defaultMessage is:
+#. Title
+msgctxt "schema.announcements.title"
+msgid "Title"
+msgstr "标题"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.title]
+#. defaultMessage is:
+#. Title
+msgctxt "schema.forSale.title"
+msgid "Title"
+msgstr "标题"
+
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.title]
+#. defaultMessage is:
+#. Title
+msgctxt "schema.housing.title"
+msgid "Title"
+msgstr "标题"
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.title]
+#. defaultMessage is:
+#. Title
+msgctxt "schema.services.title"
+msgid "Title"
+msgstr "标题"
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.title]
+#. defaultMessage is:
+#. Title
+msgctxt "schema.tickets.title"
+msgid "Title"
+msgstr "标题"
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.title]
+#. defaultMessage is:
+#. Title
+msgctxt "schema.transportation.title"
+msgid "Title"
+msgstr "标题"
 
 #: translations/messages/src/components/dropdowns/transactions.json
 #. [transactions.to]
@@ -2058,7 +3108,7 @@ msgstr "彩票"
 #. To
 msgctxt "transactions.to"
 msgid "To"
-msgstr "到"
+msgstr "至"
 
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.to]
@@ -2066,7 +3116,15 @@ msgstr "到"
 #. To
 msgctxt "purchase-detail.to"
 msgid "To"
-msgstr "到"
+msgstr "至"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.tools]
+#. defaultMessage is:
+#. Tools
+msgctxt "schema.forSale.tools"
+msgid "Tools"
+msgstr "工具"
 
 #: translations/messages/src/components/web3-provider.json
 #. [web3-provider.toshi]
@@ -2083,6 +3141,30 @@ msgstr "都市"
 msgctxt "my-listing-card.totalQuantity"
 msgid "Total Quantity : {quantity}"
 msgstr "总量：{quantity}"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.toysGames]
+#. defaultMessage is:
+#. Toys & Games
+msgctxt "schema.forSale.toysGames"
+msgid "Toys & Games"
+msgstr "玩具和游戏"
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.tradeshow]
+#. defaultMessage is:
+#. Tradeshow
+msgctxt "schema.tickets.tradeshow"
+msgid "Tradeshow"
+msgstr "贸易展览会"
+
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.trailers]
+#. defaultMessage is:
+#. Trailers
+msgctxt "schema.forSale.trailers"
+msgid "Trailers"
+msgstr "拖车"
 
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.transactionHistoryHeading]
@@ -2106,7 +3188,7 @@ msgstr "交易状态"
 #. Transportation
 msgctxt "listing-create.transportation"
 msgid "Transportation"
-msgstr "交通"
+msgstr "运输"
 
 #: translations/messages/src/components/web3-provider.json
 #. [web3-provider.trust]
@@ -2212,10 +3294,6 @@ msgctxt "my-sale-card.unnamedUser"
 msgid "Unnamed User"
 msgstr "未命名用户"
 
-#: translations/messages/src/components/notification.json
-#. [purchase-detail.unnamedUser]
-#. defaultMessage is:
-#. Unnamed User
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.unnamedUser]
 #. defaultMessage is:
@@ -2276,13 +3354,21 @@ msgctxt "listing-create.uploadingYourListing"
 msgid "Uploading your listing"
 msgstr "上传您的列表"
 
+#: translations/messages/src/schemaMessages/housing.json
+#. [schema.housing.vacationRentals]
+#. defaultMessage is:
+#. Vacation Rentals
+msgctxt "schema.housing.vacationRentals"
+msgid "Vacation Rentals"
+msgstr "度假公寓"
+
 #: translations/messages/src/pages/profile/VerifyEmail.json
 #. [VerifyEmail.validEmail]
 #. defaultMessage is:
 #. Valid email address
 msgctxt "VerifyEmail.validEmail"
 msgid "Valid email address"
-msgstr "有效的电子邮件地址"
+msgstr "合法的邮件地址"
 
 #: translations/messages/src/pages/user/User.json
 #. [User.verifiedInto]
@@ -2332,6 +3418,14 @@ msgctxt "_Guidance.verifyingYourProfile"
 msgid "Verifying your profile"
 msgstr "验证你的个人资料"
 
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.videoGaming]
+#. defaultMessage is:
+#. Video Gaming
+msgctxt "schema.forSale.videoGaming"
+msgid "Video Gaming"
+msgstr "视频游戏"
+
 #: translations/messages/src/components/dropdowns/notifications.json
 #. [notifications.viewAll]
 #. defaultMessage is:
@@ -2346,7 +3440,7 @@ msgstr "查看全部"
 #. View Details
 msgctxt "my-sale-card.viewDetails"
 msgid "View Details"
-msgstr "View Details"
+msgstr "查看详情"
 
 #: translations/messages/src/components/user-card.json
 #. [transaction-progress.viewProfile]
@@ -2354,7 +3448,7 @@ msgstr "View Details"
 #. View Profile
 msgctxt "transaction-progress.viewProfile"
 msgid "View Profile"
-msgstr "查看档案"
+msgstr "查看资料"
 
 #: translations/messages/src/components/listing-detail.json
 #. [listing-detail.viewOnIpfs]
@@ -2388,6 +3482,14 @@ msgctxt "_ProvisionedChanges.visibleOnBlockchain"
 msgid "Visible on the blockchain"
 msgstr "在区块链上可见"
 
+#: translations/messages/src/schemaMessages/announcements.json
+#. [schema.announcements.volunteers]
+#. defaultMessage is:
+#. Volunteers
+msgctxt "schema.announcements.volunteers"
+msgid "Volunteers"
+msgstr "志愿者"
+
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.waitForBuyer]
 #. defaultMessage is:
@@ -2420,13 +3522,29 @@ msgctxt "ConfirmUpload.waitNotice"
 msgid "Wait! You haven’t published yet."
 msgstr "等待！您尚未发布。"
 
+#: translations/messages/src/schemaMessages/for-sale.json
+#. [schema.forSale.wanted]
+#. defaultMessage is:
+#. Wanted
+msgctxt "schema.forSale.wanted"
+msgid "Wanted"
+msgstr "通缉"
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.webDesign]
+#. defaultMessage is:
+#. Web Design
+msgctxt "schema.services.webDesign"
+msgid "Web Design"
+msgstr "网页设计"
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.whatHappensNextHeading]
 #. defaultMessage is:
 #. What happens next?
 msgctxt "listing-create.whatHappensNextHeading"
 msgid "What happens next?"
-msgstr "下一步是什么？"
+msgstr "接下来发生什么？"
 
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.whatTypeOfListing]
@@ -2436,6 +3554,14 @@ msgctxt "listing-create.whatTypeOfListing"
 msgid "What type of listing do you want to create?"
 msgstr "你想创建什么类型的列表？"
 
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.when]
+#. defaultMessage is:
+#. When
+msgctxt "schema.tickets.when"
+msgid "When"
+msgstr "什么时候"
+
 #: translations/messages/src/components/listing-create.json
 #. [listing-create.whatHappensNextContent1]
 #. defaultMessage is:
@@ -2443,6 +3569,14 @@ msgstr "你想创建什么类型的列表？"
 msgctxt "listing-create.whatHappensNextContent1"
 msgid "When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network."
 msgstr "当您点击提交时，代表您的列表的JSON对象将被发布到{ipfsLink}，并且内容哈希将被发布到在以太坊网络上运行的列表智能合约。"
+
+#: translations/messages/src/schemaMessages/tickets.json
+#. [schema.tickets.where]
+#. defaultMessage is:
+#. Where
+msgctxt "schema.tickets.where"
+msgid "Where"
+msgstr "哪里"
 
 #: translations/messages/src/components/footer.json
 #. [footer.whitepaperLink]
@@ -2459,6 +3593,22 @@ msgstr "白皮书"
 msgctxt "purchase-detail.withdrawAndReview"
 msgid "Withdraw and Review"
 msgstr "撤回和审查"
+
+#: translations/messages/src/schemaMessages/services.json
+#. [schema.services.writingTranslationTranscription]
+#. defaultMessage is:
+#. Writing, Translation & Transcription
+msgctxt "schema.services.writingTranslationTranscription"
+msgid "Writing, Translation & Transcription"
+msgstr "写作，翻译和转录"
+
+#: translations/messages/src/schemaMessages/transportation.json
+#. [schema.transportation.yachtCharters]
+#. defaultMessage is:
+#. Yacht Charters
+msgctxt "schema.transportation.yachtCharters"
+msgid "Yacht Charters"
+msgstr "游艇宪章"
 
 #: translations/messages/src/components/web3-provider.json
 #. [web3-provider.notSignedIntoMetaMask]
@@ -2500,6 +3650,30 @@ msgctxt "my-sales.noSales"
 msgid "You currently have no sales."
 msgstr "您目前没有销售。"
 
+#: translations/messages/src/components/notification-message.json
+#. [notification.purchaseCreated]
+#. defaultMessage is:
+#. You have a new purchase.
+msgctxt "notification.purchaseCreated"
+msgid "You have a new purchase."
+msgstr "你有一个新的购买。"
+
+#: translations/messages/src/components/notification-message.json
+#. [notification.purchaseReceived]
+#. defaultMessage is:
+#. You have a new review.
+msgctxt "notification.purchaseReceived"
+msgid "You have a new review."
+msgstr "你有一个新的评论。"
+
+#: translations/messages/src/components/notification-message.json
+#. [notification.purchaseComplete]
+#. defaultMessage is:
+#. You have a new review.
+msgctxt "notification.purchaseComplete"
+msgid "You have a new review."
+msgstr "你有一个新的评论。"
+
 #: translations/messages/src/components/listings-grid.json
 #. [listings-grid.changeNetworks]
 #. defaultMessage is:
@@ -2515,6 +3689,14 @@ msgstr "您可能需要更换网络或部署合同。"
 msgctxt "listing-create.schemaExplainer"
 msgid "Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services."
 msgstr "您的产品或服务将使用模式来描述其属性，如名称，说明和价格。 Origin已经有多种模式，可以映射到众所周知的房源类别，如房屋，汽车和服务。"
+
+#: translations/messages/src/components/notification-message.json
+#. [notification.purchaseSent]
+#. defaultMessage is:
+#. Your purchase has been shipped.
+msgctxt "notification.purchaseSent"
+msgid "Your purchase has been shipped."
+msgstr "您的购买已发货。"
 
 #: translations/messages/src/components/purchase-detail.json
 #. [purchase-detail.sellerReviewPlaceholder]
@@ -2532,22 +3714,6 @@ msgctxt "purchase-detail.buyerReviewPlaceholder"
 msgid "Your review should inform others about your experience transacting with this seller, not about the product itself."
 msgstr "您的评论应告知其他人您与该卖家进行交易的经历，而不是关于产品本身。"
 
-#: translations/messages/src/components/notification.json
-#. [notification.hasBeen]
-#. defaultMessage is:
-#. has been
-msgctxt "notification.hasBeen"
-msgid "has been"
-msgstr "已经"
-
-#: translations/messages/src/components/notification.json
-#. [notification.haveBeen]
-#. defaultMessage is:
-#. have been
-msgctxt "notification.haveBeen"
-msgid "have been"
-msgstr "已经"
-
 #: translations/messages/src/pages/profile/Profile.json
 #. [Profile.manageYourProfile]
 #. defaultMessage is:
@@ -2556,30 +3722,6 @@ msgctxt "Profile.manageYourProfile"
 msgid "manage your profile"
 msgstr "管理你的档案"
 
-#: translations/messages/src/components/notification.json
-#. [notification.purchased]
-#. defaultMessage is:
-#. purchased
-msgctxt "notification.purchased"
-msgid "purchased"
-msgstr "购买"
-
-#: translations/messages/src/components/notification.json
-#. [notification.received]
-#. defaultMessage is:
-#. received
-msgctxt "notification.received"
-msgid "received"
-msgstr "received"
-
-#: translations/messages/src/components/notification.json
-#. [notification.sent]
-#. defaultMessage is:
-#. sent
-msgctxt "notification.sent"
-msgid "sent"
-msgstr "发送"
-
 #: translations/messages/src/components/my-sale-card.json
 #. [my-sale-card.buyerNameLink]
 #. defaultMessage is:
@@ -2587,14 +3729,6 @@ msgstr "发送"
 msgctxt "my-sale-card.buyerNameLink"
 msgid "sold to {linkToBuyer}"
 msgstr "卖给{linkToBuyer}"
-
-#: translations/messages/src/components/notification.json
-#. [notification.withdrawn]
-#. defaultMessage is:
-#. withdrawn
-msgctxt "notification.withdrawn"
-msgid "withdrawn"
-msgstr "3 撤销。"
 
 #: translations/messages/src/pages/profile/_Wallet.json
 #. [_Wallet.ethBalance]
@@ -2650,4 +3784,4 @@ msgstr "{nextStep}提取资金"
 #. {verifyingYourProfile} allows other users to know that you are a real person and increases the chances of successful transactions on Origin.
 msgctxt "_Guidance.content"
 msgid "{verifyingYourProfile} allows other users to know that you are a real person and increases the chances of successful transactions on Origin."
-msgstr "{verifyingYourProfile}允许其他用户知道你是一个真实的人，并增加在Origin上成功交易的机会。"
+msgstr "{verifyingYorProfile}允许其他用户知道你是一个真实的人，并增加在Origin上成功交易的机会。"

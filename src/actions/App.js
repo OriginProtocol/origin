@@ -1,7 +1,12 @@
 import store from 'store'
 import keyMirror from '../utils/keyMirror'
 import translations from '../../translations/translated-messages.json'
-import { addLocales, getLangFullName, getAvailableLanguages } from '../utils/translationUtils'
+import { 
+  addLocales,
+  getLangFullName,
+  getAvailableLanguages,
+  setGlobalIntlProvider
+} from '../utils/translationUtils'
 
 export const AppConstants = keyMirror(
   {
@@ -60,6 +65,8 @@ export function localizeApp() {
       messages = translations[selectedLanguageAbbrev] || translations[detectedLanguage]
     }
   }
+
+  setGlobalIntlProvider(selectedLanguageAbbrev, messages)
 
   return { 
     type: AppConstants.TRANSLATIONS,

@@ -4,12 +4,12 @@
     "defaultMessage": "Listings"
   },
   {
-    "id": "navbar.buy",
-    "defaultMessage": "Buy"
+    "id": "navbar.buying",
+    "defaultMessage": "Buying"
   },
   {
-    "id": "navbar.sell",
-    "defaultMessage": "Sell"
+    "id": "navbar.selling",
+    "defaultMessage": "Selling"
   },
   {
     "id": "navbar.myListings",

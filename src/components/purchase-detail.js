@@ -11,6 +11,7 @@ import PurchaseProgress from './purchase-progress'
 import UserCard from './user-card'
 
 import origin from '../services/origin'
+import { translateListingCategory } from '../utils/translationUtils'
 
 const web3 = origin.contractService.web3
 
@@ -360,6 +361,7 @@ class PurchaseDetail extends Component {
     const { web3Account } = this.props
 
     const { buyer, form, listing, logs, purchase, reviews, seller } = this.state
+    const translatedListing = translateListingCategory(listing)
     const { rating, reviewText } = form
     const buyersReviews = reviews.filter(r => r.revieweeRole === 'SELLER')
 
@@ -376,7 +378,7 @@ class PurchaseDetail extends Component {
     }
 
     const pictures = listing.pictures || []
-    const category = listing.category || ""
+    const category = translatedListing.category || ""
     const active = listing.unitsAvailable > 0 // Todo, move to origin.js, take into account listing expiration
     const soldAt = purchase.created * 1000 // convert seconds since epoch to ms
 
@@ -460,7 +462,7 @@ class PurchaseDetail extends Component {
                   />
                 }
               </div>
-              <h1>{listing.name}</h1>
+              <h1>{translatedListing.name}</h1>
             </div>
           </div>
           <div className="purchase-status row">
@@ -517,7 +519,7 @@ class PurchaseDetail extends Component {
                   </Link>
                 </div>
                 <div className="col-12">
-                  <PurchaseProgress currentStep={step} maxStep={maxStep} purchase={listing} perspective={perspective} />
+                  <PurchaseProgress currentStep={step} maxStep={maxStep} purchase={purchase} perspective={perspective} />
                 </div>
                 {nextStep &&
                   <div className="col-12">
@@ -668,9 +670,9 @@ class PurchaseDetail extends Component {
                     </div>
                   }
                   <div className="detail-info-box">
-                    <h2 className="category placehold">{listing.category}</h2>
-                    <h1 className="title text-truncate placehold">{listing.name}</h1>
-                    <p className="description placehold">{listing.description}</p>
+                    <h2 className="category placehold">{translatedListing.category}</h2>
+                    <h1 className="title text-truncate placehold">{translatedListing.name}</h1>
+                    <p className="description placehold">{translatedListing.description}</p>
                     {/*!!listing.unitsAvailable && listing.unitsAvailable < 5 &&
                       <div className="units-available text-danger">Just {listing.unitsAvailable.toLocaleString()} left!</div>
                     */}

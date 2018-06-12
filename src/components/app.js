@@ -56,10 +56,13 @@ const UserPage = props => <User userAddress={props.match.params.userAddress} />
 // Top level component
 class App extends Component {
 
+  componentWillMount() {
+    this.props.localizeApp()
+  }
+
   componentDidMount() {
     this.props.fetchProfile()
     this.props.initWallet()
-    this.props.localizeApp()
 
     this.detectMobile()
   }
@@ -81,8 +84,8 @@ class App extends Component {
   }
 
   render() {
-    return (
-      <IntlProvider locale={this.props.selectedLanguageAbbrev || 'en'} messages={this.props.messages}>
+    return this.props.selectedLanguageAbbrev ? (
+      <IntlProvider locale={this.props.selectedLanguageAbbrev} messages={this.props.messages}>
         <Router>
           <ScrollToTop>
             <Web3Provider>
@@ -113,13 +116,13 @@ class App extends Component {
           </ScrollToTop>
         </Router>
       </IntlProvider>
-    )
+    ) : null // potentially a loading indicator
   }
 }
 
 const mapStateToProps = state => ({
-  language: state.app.translations.language,
   messages: state.app.translations.messages,
+  selectedLanguageAbbrev: state.app.translations.selectedLanguageAbbrev
 })
 
 const mapDispatchToProps = dispatch => ({

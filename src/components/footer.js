@@ -7,11 +7,15 @@ class Footer extends Component {
 
   constructor(props) {
     super(props)
+
+    this.localizeApp = this.localizeApp.bind(this)
   }
 
   localizeApp(langAbbrev) {
-    store.set('preferredLang', langAbbrev)
-    window.location.reload()
+    if (langAbbrev !== this.props.selectedLanguageAbbrev) {
+      store.set('preferredLang', langAbbrev)
+      window.location.reload()
+    }
   }
 
   render() {
