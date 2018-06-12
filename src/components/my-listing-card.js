@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'react-intl'
 
+import { translateListingCategory } from '../utils/translationUtils'
+
 import origin from '../services/origin'
 
 class MyListingCard extends Component {
@@ -49,7 +51,7 @@ class MyListingCard extends Component {
   }
 
   render() {
-    const { address, category, /*createdAt, */name, pictures, price, unitsAvailable } = this.props.listing
+    const { address, category, /*createdAt, */name, pictures, price, unitsAvailable } = translateListingCategory(this.props.listing)
     /*
      *  Micah 4/23/2018
      *  ~~~~~~~~~~~~~~~

@@ -4,6 +4,8 @@ import $ from 'jquery'
 import moment from 'moment'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
+import { translateListingCategory } from '../utils/translationUtils'
+
 // import PurchaseProgress from './purchase-progress'
 import origin from '../services/origin'
 
@@ -56,7 +58,7 @@ class MyPurchaseCard extends Component {
 
   render() {
     const { address, created, stage } = this.props.purchase
-    const { category, name, pictures, price } = this.state.listing
+    const { category, name, pictures, price } = translateListingCategory(this.state.listing)
     const soldAt = created * 1000 // convert seconds since epoch to ms
     let step, verb
 

@@ -5,6 +5,7 @@ import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'r
 import { showAlert } from '../actions/Alert'
 import { storeWeb3Intent } from '../actions/App'
 import getCurrentProvider from '../utils/getCurrentProvider'
+import { translateListingCategory } from '../utils/translationUtils'
 
 import Modal from './modal'
 import Review from './review'
@@ -72,7 +73,8 @@ class ListingsDetail extends Component {
   async loadListing() {
     try {
       const listing = await origin.listings.get(this.props.listingAddress)
-      const obj = Object.assign({}, listing, { loading: false })
+      const translatedListing = translateListingCategory(listing)
+      const obj = Object.assign({}, translatedListing, { loading: false })
       this.setState(obj)
     } catch (error) {
       this.props.showAlert(this.props.formatMessage(this.intlMessages.loadingError))
