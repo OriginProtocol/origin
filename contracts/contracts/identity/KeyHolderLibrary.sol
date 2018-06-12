@@ -93,6 +93,7 @@ library KeyHolderLibrary {
       returns (bool success)
   {
       require(keyHasPurpose(_keyHolderData, keccak256(msg.sender), 2), "Sender does not have action key");
+      require(!_keyHolderData.executions[_id].executed, "Already executed");
 
       emit Approved(_id, _approve);
 
