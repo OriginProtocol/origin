@@ -42,7 +42,7 @@ contract Purchase {
   Listing public listingContract; // listing that is being purchased
   address public buyer; // User who is buying. Seller is derived from listing
   uint public created;
-  uint public buyerTimout;
+  uint public buyerTimeout;
 
   /*
   * Modifiers
@@ -82,8 +82,8 @@ contract Purchase {
   function data()
   public
   view
-  returns (Stages _stage, Listing _listingContract, address _buyer, uint _created, uint _buyerTimout) {
-      return (stage(), listingContract, buyer, created, buyerTimout);
+  returns (Stages _stage, Listing _listingContract, address _buyer, uint _created, uint _buyerTimeout) {
+      return (stage(), listingContract, buyer, created, buyerTimeout);
   }
 
   // Pay for listing
@@ -107,7 +107,7 @@ contract Purchase {
   returns (Stages _stage)
   {
     if (internalStage == Stages.BUYER_PENDING) {
-      if (now > buyerTimout) {
+      if (now > buyerTimeout) {
         return Stages.SELLER_PENDING;
       }
     }
@@ -119,7 +119,7 @@ contract Purchase {
   isSeller
   atStage(Stages.SHIPPING_PENDING)
   {
-      buyerTimout = now + 21 days;
+      buyerTimeout = now + 21 days;
       setStage(Stages.BUYER_PENDING);
   }
 
