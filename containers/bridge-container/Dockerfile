@@ -75,6 +75,14 @@ RUN ../bridge-server-venv/bin/pip3.6 install kombu==4.1
 # https://github.com/OriginProtocol/bridge-server/issues/74
 RUN sed -i '24s/.*/    return True\n    """/' /opt/bridge-server/bridge-server-venv/lib/python3.6/site-packages/ipfsapi/client.py
 
+# install node modules
+WORKDIR /opt/js
+RUN git clone https://github.com/OriginProtocol/origin-js.git source
+WORKDIR /opt/js/source
+RUN git checkout develop
+ENV NODE_PATH=/opt/js/node_modules
+RUN npm run install:dev
+
 # Elasticsearch 5.4.3 (minimum across regions, of the highest version in a region)
 WORKDIR /tmp
 RUN apt-get install -y openjdk-8-jre
@@ -108,6 +116,6 @@ RUN rm -rf /tmp/*
 
 # Expose ports for pm2 health check endpoint, bridge server, ipfs, postgres, redis, ganache, elasticsearch
 # TODO: pull these from configs
-EXPOSE 4000 5000 5002 8080 5432 6379 8545 9200
+EXPOSE 4000 5000 5002 8080 8081 5432 6379 8545 9200
 
 CMD pm2-runtime /opt/process.json --web 4000

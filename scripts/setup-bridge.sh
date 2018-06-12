@@ -6,6 +6,14 @@ cd bridge
 git checkout develop
 cd ..
 
+# Clone js source
+git clone https://github.com/OriginProtocol/origin-js.git js
+
+# Checkout js develop branch
+cd js
+git checkout develop
+cd ..
+
 # Copy .env file to source
 cp ./containers/bridge-container/files/config/bridge_server_dev.env ./bridge/.env
 
