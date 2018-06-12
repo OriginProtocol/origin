@@ -12,3 +12,13 @@ services:
       - "5432:5432"
       - "6379:6379"
       - "9200:9200"
+  js:
+    container_name: "origin-js-container"
+    image: origin-js-image
+    build: ./containers/js-container
+    volumes:
+      - ./js:/opt/origin-js/source
+    ports:
+      - "5002:5002"
+      - "8080:8080"
+      - "8545:8545"
