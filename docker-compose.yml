@@ -1,9 +1,9 @@
 version: '3'
 services:
-  bridge:
-    container_name: "origin-bridge-container"
-    image: origin-bridge-image
-    build: ./containers/bridge-container
+  origin:
+    container_name: "origin-container"
+    image: origin-image
+    build: ./container
     volumes:
       - ./bridge:/opt/bridge-server/source
       - ./js:/opt/origin-js/source

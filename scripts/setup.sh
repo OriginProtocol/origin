@@ -15,7 +15,7 @@ git checkout develop
 cd ..
 
 # Copy .env file to source
-cp ./containers/bridge-container/files/config/bridge_server_dev.env ./bridge/.env
+cp ./container/files/config/bridge_server_dev.env ./bridge/.env
 
 # Build bridge server image
-docker build ./containers/bridge-container -t origin-bridge-image
+docker build ./container -t origin-image
