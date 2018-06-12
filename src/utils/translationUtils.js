@@ -179,7 +179,7 @@ export function translateSchema(schemaJson, schemaType) {
 
     if (propertyObj.enum && propertyObj.enum.length) {
 
-      propertyObj.enum = propertyObj.enum.map((enumStr) => (
+      propertyObj.enumNames = propertyObj.enum.map((enumStr) => (
         typeof enumStr === 'string' ? globalIntlProvider.formatMessage(schemaMessages[schemaType][enumStr]) : enumStr
       ))
 
