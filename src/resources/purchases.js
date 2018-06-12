@@ -33,7 +33,7 @@ class Purchases extends ResourceBase {
       listingAddress: contractData[1],
       buyerAddress: contractData[2],
       created: Number(contractData[3]),
-      buyerTimout: Number(contractData[4])
+      buyerTimeout: Number(contractData[4])
     }
   }
 
