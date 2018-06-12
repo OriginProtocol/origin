@@ -148,7 +148,7 @@ class Notifications {
 
   purchaseNotifications(logs, type) {
     return logs.map(({ log, listing, purchase }) => {
-      const id = `${type}_${log.transactionHash}`
+      const id = `${type}_${log.transactionHash}_${purchase.address}`
       const timestampInMilli = log.timestamp * 1000
       const isWatched =
         timestampInMilli >
