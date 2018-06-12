@@ -199,8 +199,7 @@ export function translateListingCategory(listingObj) {
 
     // loop over all schemaMessages to find the correct ID
     for (let schemaType in schemaMessages) {
-
-      if (schemaMessages[schemaType][schemaMessages]) {
+      if (schemaMessages[schemaType][category]) {
         listing.category = globalIntlProvider.formatMessage(schemaMessages[schemaType][category])
       }
     }
