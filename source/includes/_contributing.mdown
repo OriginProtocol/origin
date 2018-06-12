@@ -15,6 +15,20 @@ We also actively work on these repositories:
 - [Company Website](https://github.com/OriginProtocol/company-website) - code for originprotocol.com
 - [Identity Playground](https://github.com/OriginProtocol/identity-playground) - implementation of ERC 725/735 for blockchain identity
 
+### Weekly Engineering Call
+
+We have an open weekly engineering call on Google Hangouts every Wednesday at 1pm pacific time. [Add to Calendar](https://calendar.google.com/event?action=TEMPLATE&tmeid=M2llYjc1MDA1aXVhbzZnYWRmbWhjbmRvcmRfMjAxODA2MTNUMjAwMDAwWiBvcmlnaW5wcm90b2NvbC5jb21fcXY1NWNvNmd2bTN2c3Y3OW9iNXFsZjVhaWtAZw&tmsrc=originprotocol.com_qv55co6gvm3vsv79ob5qlf5aik%40group.calendar.google.com&scp=ALL)
+
+<a href="https://meet.google.com/pws-cgyd-tqp"><img src="images/origin_engineering_call.png" /></a>
+
+Join the call here: [https://meet.google.com/pws-cgyd-tqp](https://meet.google.com/pws-cgyd-tqp)
+
+Every is welcome to join, even if you're just lurking. All we ask if that you  mute when not speaking to minimize background noise. All our meeting notes are public and can be reviewed here:
+
+- [Engineering Notes](https://docs.google.com/document/d/1aRcAk_rEjRgd1BppzxZJK9RXfDkbuwKKH8nPQk7FfaU)
+- [Product/Design Notes](https://docs.google.com/document/d/1tVx2O3qeplh9vawJpURTsJxZfUe1B0FrTHOMJbxKm-s)
+- [Sprint Planning Notes](https://docs.google.com/document/d/1DvRWYhrr0UXdvhyZIpEd3WEU-1pQk2Frj1l-mQS8B4M)
+
 ### Dive Right In
 
 If you're ready to start hacking on Origin right now and you just need an issue to focus on, check out our [open issues](https://github.com/search?utf8=%E2%9C%93&q=user%3AOriginProtocol+is%3Aopen+&type=Issues) especially those tagged as a [good first issue](
@@ -29,7 +43,7 @@ Read our [development process](#contributing-email-development-process) and [com
 We follow the [GitFlow](http://nvie.com/posts/a-successful-git-branching-model/) branching model for development. The latest merged code generally lives in the `develop` branch of each repository. Your development flow should look like:
 
 1. Find an interesting issue and communicate! Please let the #engineering Discord channel know what you want to work on
-1. Either request to join our [contributors team](https://github.com/orgs/OriginProtocol/teams/contributors) or plan to work from your own fork
+1. Ping a [core team member](https://github.com/orgs/OriginProtocol/teams/contributors) member on Discord and ask to be added to our [contributors team](https://github.com/orgs/OriginProtocol/teams/contributors). Otherwise, you'll need to fork the relevant repository and push feature branches to your own fork.
 1. Add a comment to the issue or self-assign so we don't have multiple contributors unintentionally working on the same task
 1. Start with the `develop` branch and check out a new feature branch unless you're contributing to an existing feature
 1. Follow the appropriate [coding style](#contributing-email-coding-style) and write some awesome code
@@ -38,8 +52,6 @@ We follow the [GitFlow](http://nvie.com/posts/a-successful-git-branching-model/)
 1. Please request a review in the PR by clicking on the gear icon next to "Reviewers" in the right column. 
 
 Both the `develop` and `master` branches are locked so that only members of the [core team](https://github.com/orgs/OriginProtocol/teams/core) are able to merge your pull requests. Pull requests that are peer reviewed by other trusted contributors will be fast-tracked and merged faster! Check in the #engineering Discord channel for appropriate reviewers.
-
-The instructions above assume you're in the [contributors team](https://github.com/orgs/OriginProtocol/teams/contributors/members). Click 'Request to join' to be added! If you're not a contributor, you'll need to fork the relevant repository and push feature branches to your own fork.
 
 ### Coding Style
 
