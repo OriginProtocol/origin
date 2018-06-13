@@ -18,11 +18,11 @@ Origin Box currently supports the following components:
 
 ## System Requirements
 
-- Docker **version 18 or greater**
+- Docker **version 18 or greater**:
 `docker --version`
-- Git
-git --version
-- Unix-based system (OSX or Linux) - needed to run the bash scripts
+- Git:
+`git --version`
+- Unix-based system (OSX or Linux) needed to run the bash scripts
 
 ## Usage
 
@@ -31,5 +31,13 @@ git --version
 
 1. Run the start script: `./scripts/start-bridge.sh`
 
-4. Access the CLI:
+1. Access the CLI:
 `./scripts/bash-bridge.sh`
+
+You may now edit the source code using your favorite editor in the ignored directories (currently `dapp`, `js`, and `bridge`). These are just normal git repositories that get cloned as part of the `scripts/setup.sh` script, so you can treat them as you would any other git repository. You can make changes, commit them, and change branches - and the container will be automatically kept in sync.
+
+However, non-git related actions should be performed from within the container. For example, running any sort of npm command (e.g. `npm test`) should be done from within the container cli. The same applies for python commands.
+
+### pm2
+
+Currently we're using [pm2](http://pm2.keymetrics.io/) to automatically start and manage core processes for all of the components. You can run `pm2 list` from within the container cli to see all currently running processes.
