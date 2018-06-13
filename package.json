@@ -65,7 +65,7 @@
     "install:dev": "npm install && npm link origin",
     "start": "if [ \"$NODE_ENV\" = \"production\" ]; then npm run serve; else npm run dev; fi",
     "serve": "serve build",
-    "dev": "webpack-dev-server --open",
+    "dev": "npx webpack-dev-server --open --host 0.0.0.0",
     "deploy:ipfs": "./scripts/deploy.sh",
     "build": "NODE_ENV=production webpack --progress --display errors-only",
     "translate:build-source": "react-intl-po json2pot 'translations/messages/**/*.json' -o 'translations/all-messages.po' --message-context 'id'",
