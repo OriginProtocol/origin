@@ -173,7 +173,7 @@ class ContractService {
     try {
       instance = await this.deployed(ListingsRegistryContract)
     } catch (error) {
-      console.log(`Contract not deployed`)
+      console.log('Contract not deployed')
       throw error
     }
 
@@ -183,7 +183,7 @@ class ContractService {
       listingsLength = await instance.methods.listingsLength().call()
     } catch (error) {
       console.log(error)
-      console.log(`Can't get number of listings.`)
+      console.log('Can\'t get number of listings.')
       throw error
     }
 
