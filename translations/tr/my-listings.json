@@ -1,0 +1,26 @@
+[
+    {
+        "id": "my-listings.myListingsHeading",
+        "defaultMessage": "My Listings"
+    },
+    {
+        "id": "my-listings.loading",
+        "defaultMessage": "Loading..."
+    },
+    {
+        "id": "my-listings.noListingsMessage",
+        "defaultMessage": "You currently have no listings."
+    },
+    {
+        "id": "my-listings.all",
+        "defaultMessage": "All"
+    },
+    {
+        "id": "my-listings.active",
+        "defaultMessage": "Active"
+    },
+    {
+        "id": "my-listings.inactive",
+        "defaultMessage": "Inactive"
+    }
+]
