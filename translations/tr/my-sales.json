@@ -1,0 +1,26 @@
+[
+    {
+        "id": "my-sales.mySalesHeading",
+        "defaultMessage": "My Sales"
+    },
+    {
+        "id": "my-sales.loading",
+        "defaultMessage": "Loading..."
+    },
+    {
+        "id": "my-sales.noSales",
+        "defaultMessage": "You currently have no sales."
+    },
+    {
+        "id": "my-sales.pending",
+        "defaultMessage": "Pending"
+    },
+    {
+        "id": "my-sales.complete",
+        "defaultMessage": "Complete"
+    },
+    {
+        "id": "my-sales.all",
+        "defaultMessage": "All"
+    }
+]
