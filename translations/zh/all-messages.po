@@ -7,13 +7,13 @@ msgstr ""
 "X-Generator: crowdin.com\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Crowdin-Project: originprotocol\n"
-"X-Crowdin-Language: zh-CN\n"
+"X-Crowdin-Language: zh-TW\n"
 "X-Crowdin-File: /develop/translations/all-messages.po\n"
 "Project-Id-Version: originprotocol\n"
 "Last-Translator: OriginProtocol <coleman@originprotocol.com>\n"
-"Language-Team: Chinese Simplified\n"
-"Language: zh_CN\n"
-"PO-Revision-Date: 2018-06-13 18:37-0400\n"
+"Language-Team: Chinese Traditional\n"
+"Language: zh_TW\n"
+"PO-Revision-Date: 2018-06-13 19:21-0400\n"
 
 #. [user-card.heading]
 #. defaultMessage is:
