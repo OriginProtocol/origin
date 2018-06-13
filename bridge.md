@@ -1,17 +1,3 @@
-This docker image installs and runs the bridge server (along with postgres, redis) on Ubuntu 16.04, managing the processes using pm2. To run:
-
-1. Make sure you have Docker **version 18 or greater**:
-`docker --version`
-
-1. Run the setup script (from origin-in-a-box root directory):
-`./scripts/setup-bridge.sh`
-
-1. Run the start script: `./scripts/start-bridge.sh`
-
-4. Access the CLI:
-`./scripts/bash-bridge.sh`
-
-
 **Configuration**
 - bridge server envionment variable file is located at `/opt/bridge-server/.env` within the container
 - database url: postgresql://docker:docker@localhost:5432/bridge-server
