@@ -3,11 +3,12 @@
 <head>
   {% block head %}
     <title>{% block title %}{% endblock %}</title>
-    <meta name="viewport" content="initial-scale=1"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/static/images/favicon.ico">
 
     {% block styles %}
-      <link rel="stylesheet" href="/static/css/style.css"/>
-
+      <link rel="stylesheet" href="/static/css/app.css"/>
       {% block extra_styles %}
       {% endblock %}
     {% endblock %}
