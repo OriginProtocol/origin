@@ -197,7 +197,8 @@ class ContractService {
     try {
       listing = await instance.methods.getListing(listingId).call()
     } catch (error) {
-      throw new Error(`Error fetching listingId: ${listingId}`)
+      console.log('Error fetching listingId: ' + listingId)
+      throw error
     }
 
     // Listing is returned as array of properties.
