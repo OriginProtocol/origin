@@ -32,12 +32,14 @@
     "cwd"        : "/opt/es",
     "interpreter": "/bin/bash"
   },{
-    "name": "origin-js",
-    "script": "npm",
-    "args": "start",
-    "cwd": "/opt/origin-js/source",
-    "env": {
-      "NODE_PATH": "/opt/js/node_modules"
-    }
+    "name"       : "origin-js",
+    "script"     : "start-js.sh",
+    "cwd"        : "/opt/origin-js/scripts",
+    "interpreter": "/bin/bash"
+  },{
+    "name"       : "origin-dapp",
+    "script"     : "start-dapp.sh",
+    "cwd"        : "/opt/origin-dapp/scripts",
+    "interpreter": "/bin/bash"
   }]
 }

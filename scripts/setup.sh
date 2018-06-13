@@ -14,6 +14,14 @@ cd js
 git checkout develop
 cd ..
 
+# Clone dapp source
+git clone https://github.com/OriginProtocol/demo-dapp.git dapp
+
+# Checkout dapp develop branch
+cd dapp
+git checkout develop
+cd ..
+
 # Copy .env file to source
 cp ./container/files/config/bridge_server_dev.env ./bridge/.env
 
