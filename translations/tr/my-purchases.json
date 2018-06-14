@@ -1,0 +1,26 @@
+[
+    {
+        "id": "my-purchases.myPurchasesHeading",
+        "defaultMessage": "My Purchases"
+    },
+    {
+        "id": "my-purchases.loading",
+        "defaultMessage": "Loading..."
+    },
+    {
+        "id": "my-purchases.noPurchases",
+        "defaultMessage": "You currently have no purchases."
+    },
+    {
+        "id": "my-purchases.pending",
+        "defaultMessage": "Pending"
+    },
+    {
+        "id": "my-purchases.complete",
+        "defaultMessage": "Complete"
+    },
+    {
+        "id": "my-purchases.all",
+        "defaultMessage": "All"
+    }
+]

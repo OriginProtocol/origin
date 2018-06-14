@@ -1,0 +1,10 @@
+[
+    {
+        "id": "purchase-detail.buyer",
+        "defaultMessage": "Buyer"
+    },
+    {
+        "id": "purchase-detail.seller",
+        "defaultMessage": "Seller"
+    }
+]
