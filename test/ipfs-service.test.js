@@ -50,7 +50,7 @@ describe('IpfsService', () => {
       ipfsService
         .getFile('QmWHyrPWQnsz1wxHR219ooJDYTvxJPyZuDUPSDpdsAovN5')
         .then(done.fail, error => {
-          expect(error).to.match(/Got ipfs cat error/)
+          expect(error).to.be.instanceof(Error)
           done()
         })
     })
