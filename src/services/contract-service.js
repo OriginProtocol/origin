@@ -173,7 +173,7 @@ class ContractService {
     try {
       instance = await this.deployed(ListingsRegistryContract)
     } catch (error) {
-      console.log(`Contract not deployed`)
+      console.log('Contract not deployed')
       throw error
     }
 
@@ -183,7 +183,7 @@ class ContractService {
       listingsLength = await instance.methods.listingsLength().call()
     } catch (error) {
       console.log(error)
-      console.log(`Can't get number of listings.`)
+      console.log('Can\'t get number of listings.')
       throw error
     }
 
@@ -197,7 +197,8 @@ class ContractService {
     try {
       listing = await instance.methods.getListing(listingId).call()
     } catch (error) {
-      throw new Error(`Error fetching listingId: ${listingId}`)
+      console.log('Error fetching listingId: ' + listingId)
+      throw error
     }
 
     // Listing is returned as array of properties.
