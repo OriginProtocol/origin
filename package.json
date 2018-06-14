@@ -66,8 +66,6 @@
     "dev": "npx webpack-dev-server --open --host 0.0.0.0",
     "deploy:ipfs": "./scripts/deploy.sh",
     "build": "NODE_ENV=production webpack --progress --display errors-only",
-    "translate:build-source": "react-intl-po json2pot 'translations/messages/**/*.json' -o 'translations/all-messages.po' --message-context 'id'",
-    "translate:build-translated": "react-intl-po po2json 'translations/languages/*.po' -m 'translations/messages/**/*.json' -o 'translations/translated-messages.json' --indentation 2 --sort-by-id --message-context 'id'",
     "test": "node scripts/test.js --env=jsdom"
   },
   "babel": {
