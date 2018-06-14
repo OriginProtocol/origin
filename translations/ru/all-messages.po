@@ -13,7 +13,7 @@ msgstr ""
 "Last-Translator: OriginProtocol <coleman@originprotocol.com>\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
-"PO-Revision-Date: 2018-06-13 18:24-0400\n"
+"PO-Revision-Date: 2018-06-14 04:54-0400\n"
 
 #. [user-card.heading]
 #. defaultMessage is:
@@ -21,7 +21,7 @@ msgstr ""
 #: translations/messages/src/components/user-card.json
 msgctxt "user-card.heading"
 msgid "About the {title}"
-msgstr ""
+msgstr "О {title}"
 
 #. [_Wallet.accountBalance]
 #. defaultMessage is:
@@ -29,7 +29,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/_Wallet.json
 msgctxt "_Wallet.accountBalance"
 msgid "Account Balance:"
-msgstr ""
+msgstr "Баланс учетной записи:"
 
 #. [my-listings.active]
 #. defaultMessage is:
@@ -37,7 +37,7 @@ msgstr ""
 #: translations/messages/src/components/my-listings.json
 msgctxt "my-listings.active"
 msgid "Active"
-msgstr ""
+msgstr "Активный"
 
 #. [schema.announcements.activities]
 #. defaultMessage is:
@@ -45,7 +45,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/announcements.json
 msgctxt "schema.announcements.activities"
 msgid "Activities"
-msgstr ""
+msgstr "Действия"
 
 #. [navbar.addListing]
 #. defaultMessage is:
@@ -53,7 +53,7 @@ msgstr ""
 #: translations/messages/src/components/navbar.json
 msgctxt "navbar.addListing"
 msgid "Add a Listing"
-msgstr ""
+msgstr "Добавить список"
 
 #. [_Services.address]
 #. defaultMessage is:
@@ -61,7 +61,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/_Services.json
 msgctxt "_Services.address"
 msgid "Address"
-msgstr ""
+msgstr "Адрес"
 
 #. [ConfirmPublish.afterYouPublishNotice]
 #. defaultMessage is:
