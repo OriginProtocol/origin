@@ -13,7 +13,7 @@ msgstr ""
 "Last-Translator: OriginProtocol <coleman@originprotocol.com>\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
-"PO-Revision-Date: 2018-06-14 05:39-0400\n"
+"PO-Revision-Date: 2018-06-14 05:47-0400\n"
 
 #. [user-card.heading]
 #. defaultMessage is:
@@ -449,7 +449,7 @@ msgstr "Автомобили и грузовые автомобили"
 #: translations/messages/src/schemaMessages/announcements.json
 msgctxt "schema.announcements.category"
 msgid "Category"
-msgstr ""
+msgstr "Категория"
 
 #. [schema.forSale.category]
 #. defaultMessage is:
@@ -457,7 +457,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.category"
 msgid "Category"
-msgstr ""
+msgstr "Категория"
 
 #. [schema.housing.category]
 #. defaultMessage is:
@@ -465,7 +465,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/housing.json
 msgctxt "schema.housing.category"
 msgid "Category"
-msgstr ""
+msgstr "Категория"
 
 #. [schema.services.category]
 #. defaultMessage is:
@@ -473,7 +473,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/services.json
 msgctxt "schema.services.category"
 msgid "Category"
-msgstr ""
+msgstr "Категория"
 
 #. [schema.tickets.category]
 #. defaultMessage is:
@@ -481,7 +481,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/tickets.json
 msgctxt "schema.tickets.category"
 msgid "Category"
-msgstr ""
+msgstr "Категория"
 
 #. [schema.transportation.category]
 #. defaultMessage is:
@@ -489,7 +489,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/transportation.json
 msgctxt "schema.transportation.category"
 msgid "Category"
-msgstr ""
+msgstr "Категория"
 
 #. [schema.forSale.cellPhones]
 #. defaultMessage is:
