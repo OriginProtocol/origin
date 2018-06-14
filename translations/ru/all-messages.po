@@ -13,7 +13,7 @@ msgstr ""
 "Last-Translator: OriginProtocol <coleman@originprotocol.com>\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
-"PO-Revision-Date: 2018-06-14 04:54-0400\n"
+"PO-Revision-Date: 2018-06-14 05:04-0400\n"
 
 #. [user-card.heading]
 #. defaultMessage is:
@@ -69,7 +69,7 @@ msgstr "Адрес"
 #: translations/messages/src/pages/profile/ConfirmPublish.json
 msgctxt "ConfirmPublish.afterYouPublishNotice"
 msgid "After you publish your changes to the blockchain, other users will be able to see that you have verified the following:"
-msgstr ""
+msgstr "После того как вы опубликуете изменения в блокчейн другие пользователи смогут увидеть, что вы подтвердили следующее:"
 
 #. [schema.transportation.airplaneCharter]
 #. defaultMessage is:
@@ -77,7 +77,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/transportation.json
 msgctxt "schema.transportation.airplaneCharter"
 msgid "Airplane Charter"
-msgstr ""
+msgstr "Чартер самолета"
 
 #. [my-listings.all]
 #. defaultMessage is:
@@ -85,7 +85,7 @@ msgstr ""
 #: translations/messages/src/components/my-listings.json
 msgctxt "my-listings.all"
 msgid "All"
-msgstr ""
+msgstr "Все"
 
 #. [my-purchases.all]
 #. defaultMessage is:
@@ -93,7 +93,7 @@ msgstr ""
 #: translations/messages/src/components/my-purchases.json
 msgctxt "my-purchases.all"
 msgid "All"
-msgstr ""
+msgstr "Все"
 
 #. [my-sales.all]
 #. defaultMessage is:
@@ -101,7 +101,7 @@ msgstr ""
 #: translations/messages/src/components/my-sales.json
 msgctxt "my-sales.all"
 msgid "All"
-msgstr ""
+msgstr "Все"
 
 #. [notifications.all]
 #. defaultMessage is:
@@ -109,7 +109,7 @@ msgstr ""
 #: translations/messages/src/components/notifications.json
 msgctxt "notifications.all"
 msgid "All"
-msgstr ""
+msgstr "Все"
 
 #. [Profile.noDescriptionUser]
 #. defaultMessage is:
@@ -117,7 +117,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/Profile.json
 msgctxt "Profile.noDescriptionUser"
 msgid "An Origin user without a description"
-msgstr ""
+msgstr "Пользователь Origin без описания"
 
 #. [listing-create.announcements]
 #. defaultMessage is:
@@ -125,7 +125,7 @@ msgstr ""
 #: translations/messages/src/components/listing-create.json
 msgctxt "listing-create.announcements"
 msgid "Announcements"
-msgstr ""
+msgstr "Объявления"
 
 #. [schema.forSale.antiques]
 #. defaultMessage is:
@@ -133,7 +133,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.antiques"
 msgid "Antiques"
-msgstr ""
+msgstr "Антиквариат"
 
 #. [schema.forSale.appliances]
 #. defaultMessage is:
@@ -141,7 +141,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.appliances"
 msgid "Appliances"
-msgstr ""
+msgstr "Приборы"
 
 #. [schema.housing.aptsWanted]
 #. defaultMessage is:
@@ -149,7 +149,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/housing.json
 msgctxt "schema.housing.aptsWanted"
 msgid "Apts Wanted"
-msgstr ""
+msgstr "Поиск квартир"
 
 #. [schema.housing.aptsHousingForRent]
 #. defaultMessage is:
@@ -157,7 +157,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/housing.json
 msgctxt "schema.housing.aptsHousingForRent"
 msgid "Apts/Housing for Rent"
-msgstr ""
+msgstr "Аренда квартир/домов"
 
 #. [my-listing-card.confirmCloseListing]
 #. defaultMessage is:
@@ -165,7 +165,7 @@ msgstr ""
 #: translations/messages/src/components/my-listing-card.json
 msgctxt "my-listing-card.confirmCloseListing"
 msgid "Are you sure that you want to permanently close this listing? This cannot be undone."
-msgstr ""
+msgstr "Вы уверены, что хотите навсегда закрыть этот список? Это действие не может быть отменено."
 
 #. [schema.announcements.artists]
 #. defaultMessage is:
@@ -173,7 +173,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/announcements.json
 msgctxt "schema.announcements.artists"
 msgid "Artists"
-msgstr ""
+msgstr "Дизайнеры"
 
 #. [schema.tickets.arts]
 #. defaultMessage is:
@@ -181,7 +181,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/tickets.json
 msgctxt "schema.tickets.arts"
 msgid "Arts"
-msgstr ""
+msgstr "Искусство"
 
 #. [schema.forSale.artsCrafts]
 #. defaultMessage is:
