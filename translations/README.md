@@ -37,23 +37,13 @@ import { FormattedMessage } from 'react-intl'
   defaultMessage={ 'The Origin Contract was not found on this network.' }
 />
 ```
-These are compiled automatically into JSON message files by `babel-plugin-react-intl`.
+These are compiled automatically into JSON message files by `babel-plugin-react-intl` and a custom webpack plugin.
 
-2) Generate an aggregated `.po` file with all of the messages to be translated:
-
-`npm run translate:build-source`
-
-The file `/translations/all-messages.po` is now ready for translation.
+The auto-generated file `translated-messges.json` is parsed by Crowdin each time it is pushed to a branch and new/edited messages are queued for translation.
 
 ## Updating translations in the DApp
 
-1. Download the new translations from Google Translator Toolkit. The file will be called `archive.zip` by default. (Note, you must download 2 or more languages to get a `.zip` file.)
-
-2. Extract the `.po` files from the .zip file and move them to `/translations/languages`. Rename them to the two-character representation of the language they contain - e.g. change `en-US.po` to `en.po`.
-
-3. Convert the new/updated `.po` files to an aggregated JSON that `react-intl` can consume by running:
-
-`npm run translate:build-translated`
+This process is currently being developed to work optimally with the new Crowdin platform. Stay tuned...
 
 ## Adding/Editing strings in schemas
 
