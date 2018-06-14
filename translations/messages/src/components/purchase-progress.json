@@ -1,30 +1,30 @@
 [
   {
-    "id": "transaction-progress.purchased",
+    "id": "purchase-progress.purchased",
     "defaultMessage": "Purchased"
   },
   {
-    "id": "transaction-progress.sentBySeller",
+    "id": "purchase-progress.sentBySeller",
     "defaultMessage": "Sent by seller"
   },
   {
-    "id": "transaction-progress.receivedByMe",
+    "id": "purchase-progress.receivedByMe",
     "defaultMessage": "Received by me"
   },
   {
-    "id": "transaction-progress.sold",
+    "id": "purchase-progress.sold",
     "defaultMessage": "Sold"
   },
   {
-    "id": "transaction-progress.orderSent",
+    "id": "purchase-progress.orderSent",
     "defaultMessage": "Order Sent"
   },
   {
-    "id": "transaction-progress.receivedByBuyer",
+    "id": "purchase-progress.receivedByBuyer",
     "defaultMessage": "Received by buyer"
   },
   {
-    "id": "transaction-progress.fundsWithdrawn",
+    "id": "purchase-progress.fundsWithdrawn",
     "defaultMessage": "Funds Withdrawn"
   }
 ]

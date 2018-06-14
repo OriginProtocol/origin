@@ -54,7 +54,7 @@ class NotificationsDropdown extends Component {
               </div>
               <h3>
                 <FormattedMessage
-                  id={ 'notifications.notificationsHeading' }
+                  id={ 'notificationsDropdown.notificationsHeading' }
                   defaultMessage={ 'Unread Notifications' }
                 />
               </h3>
@@ -67,7 +67,7 @@ class NotificationsDropdown extends Component {
             <footer>
               <Link to="/notifications">
                 <FormattedMessage
-                  id={ 'notifications.viewAll' }
+                  id={ 'notificationsDropdown.viewAll' }
                   defaultMessage={ 'View All' }
                 />
               </Link>

@@ -1,10 +1,10 @@
 [
   {
-    "id": "notifications.notificationsHeading",
-    "defaultMessage": "Notifications"
+    "id": "notificationsDropdown.notificationsHeading",
+    "defaultMessage": "Unread Notifications"
   },
   {
-    "id": "notifications.viewAll",
+    "id": "notificationsDropdown.viewAll",
     "defaultMessage": "View All"
   }
 ]

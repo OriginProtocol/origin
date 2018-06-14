@@ -44,7 +44,7 @@ class Notifications extends Component {
             <div className="col-12">
               <h1>
                 <FormattedMessage
-                  id={ 'notifications.notificationsHeading' }
+                  id={ 'notificationsComponent.notificationsHeading' }
                   defaultMessage={ 'Notifications' }
                 />
               </h1>
@@ -55,25 +55,25 @@ class Notifications extends Component {
               <div className="filters list-group flex-row flex-md-column">
                 <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>
                   <FormattedMessage
-                    id={ 'notifications.all' }
+                    id={ 'notificationsComponent.all' }
                     defaultMessage={ 'All' }
                   />
                 </a>
                 <a className={`list-group-item list-group-item-action${filter === 'unread' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'unread' })}>
                   <FormattedMessage
-                    id={ 'notifications.unread' }
+                    id={ 'notificationsComponent.unread' }
                     defaultMessage={ 'Unread' }
                   />
                 </a>
                 <a className={`list-group-item list-group-item-action${filter === 'buyer' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'buyer' })}>
                   <FormattedMessage
-                    id={ 'notifications.buying' }
+                    id={ 'notificationsComponent.buying' }
                     defaultMessage={ 'Buying' }
                   />
                 </a>
                 <a className={`list-group-item list-group-item-action${filter === 'seller' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'seller' })}>
                   <FormattedMessage
-                    id={ 'notifications.selling' }
+                    id={ 'notificationsComponent.selling' }
                     defaultMessage={ 'Selling' }
                   />
                 </a>
