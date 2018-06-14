@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const prepareMessagesPlugin = require('./translations/scripts/prepareMessagesPlugin')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -95,7 +96,8 @@ var config = {
       { from: 'public/images', to: 'images' },
       { from: 'public/fonts', to: 'fonts' },
       { from: 'public/schemas', to: 'schemas' }
-    ])
+    ]),
+    new prepareMessagesPlugin()
   ]
 }
 
