@@ -13,7 +13,7 @@ msgstr ""
 "Last-Translator: OriginProtocol <coleman@originprotocol.com>\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
-"PO-Revision-Date: 2018-06-14 05:04-0400\n"
+"PO-Revision-Date: 2018-06-14 05:12-0400\n"
 
 #. [user-card.heading]
 #. defaultMessage is:
@@ -189,7 +189,7 @@ msgstr "Искусство"
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.artsCrafts"
 msgid "Arts & Crafts"
-msgstr ""
+msgstr "Народное творчество"
 
 #. [schema.forSale.atvsUtvsSnowmobiles]
 #. defaultMessage is:
@@ -197,7 +197,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.atvsUtvsSnowmobiles"
 msgid "Atvs, UTVs, Snowmobiles"
-msgstr ""
+msgstr "Снегоходы, квадроциклы, мотовездеходы"
 
 #. [schema.forSale.autoParts]
 #. defaultMessage is:
@@ -205,7 +205,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.autoParts"
 msgid "Auto Parts"
-msgstr ""
+msgstr "Авто запчасти"
 
 #. [schema.forSale.autoWheelsTires]
 #. defaultMessage is:
@@ -213,7 +213,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.autoWheelsTires"
 msgid "Auto Wheels & Tires"
-msgstr ""
+msgstr "Авто диски и шины"
 
 #. [schema.forSale.babyKidStuff]
 #. defaultMessage is:
@@ -221,7 +221,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.babyKidStuff"
 msgid "Baby & Kid Stuff"
-msgstr ""
+msgstr "Детские вещи"
 
 #. [backButtonLabel]
 #. defaultMessage is:
@@ -229,7 +229,7 @@ msgstr ""
 #: translations/messages/src/components/listing-create.json
 msgctxt "backButtonLabel"
 msgid "Back"
-msgstr ""
+msgstr "Назад"
 
 #. [listing-create.backButtonLabel]
 #. defaultMessage is:
@@ -237,7 +237,7 @@ msgstr ""
 #: translations/messages/src/components/listing-create.json
 msgctxt "listing-create.backButtonLabel"
 msgid "Back"
-msgstr ""
+msgstr "Назад"
 
 #. [schema.forSale.barter]
 #. defaultMessage is:
@@ -245,7 +245,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.barter"
 msgid "Barter"
-msgstr ""
+msgstr "Обмен"
 
 #. [listing-create.howItWorksContentPart2]
 #. defaultMessage is:
