@@ -13,7 +13,7 @@ msgstr ""
 "Last-Translator: OriginProtocol <coleman@originprotocol.com>\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
-"PO-Revision-Date: 2018-06-14 05:12-0400\n"
+"PO-Revision-Date: 2018-06-14 05:39-0400\n"
 
 #. [user-card.heading]
 #. defaultMessage is:
@@ -253,7 +253,7 @@ msgstr "Обмен"
 #: translations/messages/src/components/listing-create.json
 msgctxt "listing-create.howItWorksContentPart2"
 msgid "Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering."
-msgstr ""
+msgstr "Убедитесь в том, что у вашего объявления соответствующее название и описание, которые содержат информацию для других людей о товаре, который вы предлагаете."
 
 #. [schema.forSale.bicycleParts]
 #. defaultMessage is:
@@ -261,7 +261,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.bicycleParts"
 msgid "Bicycle Parts"
-msgstr ""
+msgstr "Детали велосипеда"
 
 #. [schema.forSale.bicycles]
 #. defaultMessage is:
@@ -269,7 +269,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.bicycles"
 msgid "Bicycles"
-msgstr ""
+msgstr "Велосипеды"
 
 #. [schema.transportation.bikeRentals]
 #. defaultMessage is:
@@ -277,7 +277,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/transportation.json
 msgctxt "schema.transportation.bikeRentals"
 msgid "Bike Rentals"
-msgstr ""
+msgstr "Аренда велосипедов"
 
 #. [schema.forSale.boatPartsAccessories]
 #. defaultMessage is:
@@ -285,7 +285,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.boatPartsAccessories"
 msgid "Boat Parts & Accessories"
-msgstr ""
+msgstr "Детали и аксессуары к лодкам"
 
 #. [schema.transportation.boatRentals]
 #. defaultMessage is:
@@ -293,7 +293,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/transportation.json
 msgctxt "schema.transportation.boatRentals"
 msgid "Boat Rentals"
-msgstr ""
+msgstr "Аренда лодок"
 
 #. [schema.forSale.boats]
 #. defaultMessage is:
@@ -301,7 +301,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.boats"
 msgid "Boats"
-msgstr ""
+msgstr "Лодки"
 
 #. [schema.forSale.booksMagazines]
 #. defaultMessage is:
@@ -309,7 +309,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.booksMagazines"
 msgid "Books & Magazines"
-msgstr ""
+msgstr "Журналы и книги"
 
 #. [_countryOptions.brazil]
 #. defaultMessage is:
@@ -317,7 +317,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/_countryOptions.json
 msgctxt "_countryOptions.brazil"
 msgid "Brazil"
-msgstr ""
+msgstr "Бразилия"
 
 #. [connectivity.bridgeServer]
 #. defaultMessage is:
@@ -325,7 +325,7 @@ msgstr ""
 #: translations/messages/src/components/dropdowns/connectivity.json
 msgctxt "connectivity.bridgeServer"
 msgid "Bridge Server:"
-msgstr ""
+msgstr "Сервер Bridge Server:"
 
 #. [schema.forSale.business]
 #. defaultMessage is:
@@ -333,7 +333,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.business"
 msgid "Business"
-msgstr ""
+msgstr "Бизнес"
 
 #. [schema.services.businessServices]
 #. defaultMessage is:
@@ -341,7 +341,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/services.json
 msgctxt "schema.services.businessServices"
 msgid "Business Services"
-msgstr ""
+msgstr "Бизнес услуги"
 
 #. [notifications.buy]
 #. defaultMessage is:
@@ -349,7 +349,7 @@ msgstr ""
 #: translations/messages/src/components/notifications.json
 msgctxt "notifications.buy"
 msgid "Buy"
-msgstr ""
+msgstr "Купить"
 
 #. [listing-detail.buyNow]
 #. defaultMessage is:
@@ -357,7 +357,7 @@ msgstr ""
 #: translations/messages/src/components/listing-detail.json
 msgctxt "listing-detail.buyNow"
 msgid "Buy Now"
-msgstr ""
+msgstr "Купить сейчас"
 
 #. [purchase-detail.buyer]
 #. defaultMessage is:
@@ -369,7 +369,7 @@ msgstr ""
 #: translations/messages/src/components/purchase-detail.json
 msgctxt "purchase-detail.buyer"
 msgid "Buyer"
-msgstr ""
+msgstr "Покупатель"
 
 #. [navbar.buying]
 #. defaultMessage is:
@@ -377,7 +377,7 @@ msgstr ""
 #: translations/messages/src/components/navbar.json
 msgctxt "navbar.buying"
 msgid "Buying"
-msgstr ""
+msgstr "Покупка"
 
 #. [schema.forSale.cdsDvdsVhs]
 #. defaultMessage is:
@@ -385,7 +385,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.cdsDvdsVhs"
 msgid "CDs / DVDs / VHS"
-msgstr ""
+msgstr "CD / DVD / VHS"
 
 #. [EditProfile.cancel]
 #. defaultMessage is:
@@ -393,7 +393,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/EditProfile.json
 msgctxt "EditProfile.cancel"
 msgid "Cancel"
-msgstr ""
+msgstr "Отмена"
 
 #. [VerifyEmail.cancel]
 #. defaultMessage is:
@@ -401,7 +401,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/VerifyEmail.json
 msgctxt "VerifyEmail.cancel"
 msgid "Cancel"
-msgstr ""
+msgstr "Отмена"
 
 #. [VerifyFacebook.cancel]
 #. defaultMessage is:
@@ -409,7 +409,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/VerifyFacebook.json
 msgctxt "VerifyFacebook.cancel"
 msgid "Cancel"
-msgstr ""
+msgstr "Отмена"
 
 #. [VerifyPhone.cancel]
 #. defaultMessage is:
@@ -417,7 +417,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/VerifyPhone.json
 msgctxt "VerifyPhone.cancel"
 msgid "Cancel"
-msgstr ""
+msgstr "Отмена"
 
 #. [VerifyTwitter.cancel]
 #. defaultMessage is:
@@ -425,7 +425,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/VerifyTwitter.json
 msgctxt "VerifyTwitter.cancel"
 msgid "Cancel"
-msgstr ""
+msgstr "Отмена"
 
 #. [schema.transportation.carRentals]
 #. defaultMessage is:
@@ -433,7 +433,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/transportation.json
 msgctxt "schema.transportation.carRentals"
 msgid "Car Rentals"
-msgstr ""
+msgstr "Аренда автомобилей"
 
 #. [schema.forSale.carsTrucks]
 #. defaultMessage is:
@@ -441,7 +441,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.carsTrucks"
 msgid "Cars & Trucks"
-msgstr ""
+msgstr "Автомобили и грузовые автомобили"
 
 #. [schema.announcements.category]
 #. defaultMessage is:
