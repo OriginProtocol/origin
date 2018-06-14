@@ -60,12 +60,14 @@ class IpfsService {
     if (this.mapCache.has(ipfsHashStr)) {
       return this.mapCache.get(ipfsHashStr)
     }
-
-    const response = await fetch(this.gatewayUrlForHash(ipfsHashStr))
-    const ipfsData = await response.json()
-    this.mapCache.set(ipfsHashStr, ipfsData)
-
-    return ipfsData
+    try {
+      const response = await fetch(this.gatewayUrlForHash(ipfsHashStr))
+      const ipfsData = await response.json()  
+      this.mapCache.set(ipfsHashStr, ipfsData)
+      return ipfsData
+    } catch (error) {
+      throw new Error('Failure to get IPFS file', error)
+    }
   }
 
   gatewayUrlForHash(ipfsHashStr) {
