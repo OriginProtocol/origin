@@ -7,7 +7,9 @@ services:
     volumes:
       - ./bridge:/opt/bridge-server/source
       - ./js:/opt/origin-js/source
+      - /opt/origin-js/source/node_modules
       - ./dapp:/opt/origin-dapp/source
+      - /opt/origin-dapp/source/node_modules
     ports:
       - "3000:3000"
       - "4000:4000"

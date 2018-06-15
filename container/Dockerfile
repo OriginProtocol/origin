@@ -75,24 +75,6 @@ RUN ../bridge-server-venv/bin/pip3.6 install kombu==4.1
 # https://github.com/OriginProtocol/bridge-server/issues/74
 RUN sed -i '24s/.*/    return True\n    """/' /opt/bridge-server/bridge-server-venv/lib/python3.6/site-packages/ipfsapi/client.py
 
-# js - install node modules
-RUN mkdir /opt/origin-js
-WORKDIR /opt/origin-js
-RUN git clone https://github.com/OriginProtocol/origin-js.git temp-source
-WORKDIR /opt/origin-js/temp-source
-RUN git checkout develop
-RUN npm run install:dev
-RUN cp -r node_modules /opt/origin-js/node_modules
-
-# dapp - install node modules
-RUN mkdir /opt/origin-dapp
-WORKDIR /opt/origin-dapp
-RUN git clone https://github.com/OriginProtocol/demo-dapp.git temp-source
-WORKDIR /opt/origin-dapp/temp-source
-RUN git checkout develop
-RUN npm run install:dev
-RUN mv node_modules /opt/origin-dapp/node_modules
-
 # Copy start scripts for js and dapp
 COPY files/scripts/start-js.sh /opt/origin-js/scripts/start-js.sh
 COPY files/scripts/start-dapp.sh /opt/origin-dapp/scripts/start-dapp.sh
