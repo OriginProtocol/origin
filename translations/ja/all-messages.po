@@ -13,7 +13,7 @@ msgstr ""
 "Last-Translator: OriginProtocol <coleman@originprotocol.com>\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
-"PO-Revision-Date: 2018-06-15 19:40-0400\n"
+"PO-Revision-Date: 2018-06-15 19:50-0400\n"
 
 #. [user-card.heading]
 #. defaultMessage is:
@@ -53,7 +53,7 @@ msgstr "アクティビティ"
 #: translations/messages/src/components/navbar.json
 msgctxt "navbar.addListing"
 msgid "Add a Listing"
-msgstr "リストに追加する"
+msgstr "掲載する"
 
 #. [_Services.address]
 #. defaultMessage is:
@@ -149,7 +149,7 @@ msgstr "家電"
 #: translations/messages/src/schemaMessages/housing.json
 msgctxt "schema.housing.aptsWanted"
 msgid "Apts Wanted"
-msgstr ""
+msgstr "賃貸（借りる）"
 
 #. [schema.housing.aptsHousingForRent]
 #. defaultMessage is:
@@ -157,7 +157,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/housing.json
 msgctxt "schema.housing.aptsHousingForRent"
 msgid "Apts/Housing for Rent"
-msgstr ""
+msgstr "アパートまたは一軒家の賃貸（貸す）"
 
 #. [my-listing-card.confirmCloseListing]
 #. defaultMessage is:
@@ -165,7 +165,7 @@ msgstr ""
 #: translations/messages/src/components/my-listing-card.json
 msgctxt "my-listing-card.confirmCloseListing"
 msgid "Are you sure that you want to permanently close this listing? This cannot be undone."
-msgstr ""
+msgstr "本当にこの情報の掲載を取りやめますか？掲載の取りやめると元に戻せません。"
 
 #. [schema.announcements.artists]
 #. defaultMessage is:
@@ -173,7 +173,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/announcements.json
 msgctxt "schema.announcements.artists"
 msgid "Artists"
-msgstr ""
+msgstr "アーティスト"
 
 #. [schema.tickets.arts]
 #. defaultMessage is:
@@ -181,7 +181,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/tickets.json
 msgctxt "schema.tickets.arts"
 msgid "Arts"
-msgstr ""
+msgstr "アート（チケット）"
 
 #. [schema.forSale.artsCrafts]
 #. defaultMessage is:
@@ -189,7 +189,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.artsCrafts"
 msgid "Arts & Crafts"
-msgstr ""
+msgstr "アート＆工芸品"
 
 #. [schema.forSale.atvsUtvsSnowmobiles]
 #. defaultMessage is:
@@ -197,7 +197,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.atvsUtvsSnowmobiles"
 msgid "Atvs, UTVs, Snowmobiles"
-msgstr ""
+msgstr "ATV（全地形用車両）、UTV（サイド・バイ・サイド・ビークル）、スノーモービル"
 
 #. [schema.forSale.autoParts]
 #. defaultMessage is:
@@ -205,7 +205,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.autoParts"
 msgid "Auto Parts"
-msgstr ""
+msgstr "自動車部品"
 
 #. [schema.forSale.autoWheelsTires]
 #. defaultMessage is:
