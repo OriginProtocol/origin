@@ -1,61 +1,88 @@
-import React,{Component} from 'react';
-import {Alert, StyleSheet, Text, View, PushNotificationIOS, TouchableOpacity, TextInput, Linking, Clipboard} from 'react-native';
-import PushNotification from 'react-native-push-notification';
-import QRCodeScanner from 'react-native-qrcode-scanner';
+import React, { Component } from 'react'
+import {Alert, StyleSheet, Text, View, PushNotificationIOS, TouchableOpacity, TextInput, Linking, Clipboard} from 'react-native'
+import PushNotification from 'react-native-push-notification'
+import QRCodeScanner from 'react-native-qrcode-scanner'
 import './global'
 import {localfy, storeData, loadData} from './tools'
 import origin, {bridgeUrl, defaultProviderUrl} from './origin'
 import Web3 from 'web3'
 import fetch from 'cross-fetch'
 
+import {
+  createBottomTabNavigator,
+  createStackNavigator,
+} from 'react-navigation'
+import { FlatList, Image, Modal, SectionList, StatusBar, TouchableHighlight, YellowBox } from 'react-native'
+
+import ScanMarker from './src/components/scan-marker'
+
+import AlertsScreen from './src/screens/alerts'
+import DevicesScreen from './src/screens/devices'
+import HomeScreen from './src/screens/home'
+import SettingsScreen from './src/screens/settings'
+import WalletScreen from './src/screens/wallet'
+
+YellowBox.ignoreWarnings([
+  // https://github.com/facebook/react-native/issues/18868
+  'Warning: isMounted(...) is deprecated',
+  // https://github.com/facebook/react-native/issues/17504
+  'Module RCTImageLoader requires main queue setup'
+])
 
 const providerUrl = defaultProviderUrl
 
-const API_ETH_NOTIFICATION = `${bridgeUrl}/api/notifications/eth-endpoint`;
+const API_ETH_NOTIFICATION = `${bridgeUrl}/api/notifications/eth-endpoint`
 const API_WALLET_LINKER = `${bridgeUrl}/api/wallet-linker`
-const API_WALLET_LINKER_LINK = API_WALLET_LINKER + "/link-wallet";
-const API_WALLET_LINKER_MESSAGES = API_WALLET_LINKER + "/wallet-messages";
-const API_WALLET_LINKER_RETURN_CALL = API_WALLET_LINKER + "/wallet-called";
-const APN_NOTIFICATION_TYPE = "APN";
-const ETHEREUM_QR_PREFIX = "ethereum:";
-const ORIGIN_QR_PREFIX = "orgw:";
+const API_WALLET_LINKER_LINK = API_WALLET_LINKER + "/link-wallet"
+const API_WALLET_LINKER_MESSAGES = API_WALLET_LINKER + "/wallet-messages"
+const API_WALLET_LINKER_RETURN_CALL = API_WALLET_LINKER + "/wallet-called"
+const APN_NOTIFICATION_TYPE = "APN"
+const ETHEREUM_QR_PREFIX = "ethereum:"
+const ORIGIN_QR_PREFIX = "orgw:"
 
 
 const ORIGIN_PROTOCOL_PREFIX = "http://www.originprotocol.com/mobile/"
-const SECURE_ORIGIN_PROTOCOL_PREFIX = "https://www.originprotocol.com/mobile/";
-const LAST_MESSAGE_IDS = "last_message_ids";
+const SECURE_ORIGIN_PROTOCOL_PREFIX = "https://www.originprotocol.com/mobile/"
+const LAST_MESSAGE_IDS = "last_message_ids"
 const TEST_PRIVATE_KEY = "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418"
 const WALLET_PASSWORD = "TEST_PASS"
 const WALLET_STORE = "WALLET_STORE"
 
 
-export default class OriginCatcherApp extends Component {
+class ScanScreen extends Component {
   constructor(props) {
-    super(props);
-    this.state = {notifyTime:null, notifyMessage:null, deviceToken:undefined, notificationType:undefined, ethAddress:undefined, linkCode:undefined};
-    this.new_messages = true;
+    super(props)
+    this.state = {
+      notifyTime: null,
+      notifyMessage: null,
+      deviceToken: undefined,
+      notificationType: undefined,
+      ethAddress: undefined,
+      linkCode: undefined,
+    }
+    this.new_messages = true
     this.last_message_ids = {}
     this.check_messages_interval = setInterval(this.checkServerMessages.bind(this), 1000)
 
     loadData(LAST_MESSAGE_IDS).then((ids) => { 
       if (ids) {
-        this.last_message_ids = ids;
+        this.last_message_ids = ids
       }
     })
 
     PushNotification.configure({
       // (optional) Called when Token is generated (iOS and Android)
       onRegister: function(device_token) {
-        this.onNotificationRegistered(device_token["token"], APN_NOTIFICATION_TYPE);
+        this.onNotificationRegistered(device_token["token"], APN_NOTIFICATION_TYPE)
       }.bind(this),
 
       // (required) Called when a remote or local notification is opened or received
       onNotification: function(notification) {
-          console.log( 'NOTIFICATION:', notification );
-          this.onNotification(notification)
+        console.log( 'NOTIFICATION:', notification )
+        this.onNotification(notification)
 
-          // required on iOS only (see fetchCompletionHandler docs: https://facebook.github.io/react-native/docs/pushnotificationios.html)
-          notification.finish(PushNotificationIOS.FetchResult.NoData);
+        // required on iOS only (see fetchCompletionHandler docs: https://facebook.github.io/react-native/docs/pushnotificationios.html)
+        notification.finish(PushNotificationIOS.FetchResult.NoData)
       }.bind(this),
 
       // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications)
@@ -63,9 +90,9 @@ export default class OriginCatcherApp extends Component {
 
       // IOS ONLY (optional): default: all - Permissions to register.
       permissions: {
-          alert: true,
-          badge: true,
-          sound: true
+        alert: true,
+        badge: true,
+        sound: true
       },
 
       // Should the initial notification be popped automatically
@@ -78,12 +105,20 @@ export default class OriginCatcherApp extends Component {
         * - if not, you must call PushNotificationsHandler.requestPermissions() later
         */
       requestPermissions: true,
-    });
+    })
+  }
 
+  static navigationOptions = {
+    title: 'Scan',
+    headerTitleStyle: {
+      fontFamily: 'Poppins',
+      fontSize: 17,
+      fontWeight: 'normal',
+    },
   }
 
   syncLastMessages() {
-    storeData(LAST_MESSAGE_IDS, this.last_message_ids);
+    storeData(LAST_MESSAGE_IDS, this.last_message_ids)
   }
 
   onClearMessages() {
@@ -93,85 +128,85 @@ export default class OriginCatcherApp extends Component {
   }
 
   doFetch(endpoint, method, data){
-   return fetch(endpoint, {
+    return fetch(endpoint, {
       method: method,
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
-    }).then((response) => response.json());
+    }).then((response) => response.json())
   }
 
   registerNotificationAddress(eth_address, device_token, notification_type) {
     return this.doFetch(API_ETH_NOTIFICATION, 'POST', {
-        eth_address: eth_address,
-        device_token: device_token,
-        type: notification_type
-      }).then((responseJson) => {
-        console.log("We are now subscribed to:" + eth_address);
-      }).catch((error) => {
-        console.error(error);
-      });
+      eth_address: eth_address,
+      device_token: device_token,
+      type: notification_type
+    }).then((responseJson) => {
+      console.log("We are now subscribed to:" + eth_address)
+    }).catch((error) => {
+      console.error(error)
+    })
   }
 
   doLink(wallet_token, code, current_rpc, current_accounts) {
     return this.doFetch(API_WALLET_LINKER_LINK, 'POST', {
-        wallet_token,
-        code,
-        current_rpc,
-        current_accounts
-      }).then((responseJson) => {
-        let app_info = responseJson.app_info
-        console.log("We are now linked to a remote wallet:", responseJson, " browser is:", app_info);
-        if (responseJson.pending_call)
+      wallet_token,
+      code,
+      current_rpc,
+      current_accounts
+    }).then((responseJson) => {
+      let app_info = responseJson.app_info
+      console.log("We are now linked to a remote wallet:", responseJson, " browser is:", app_info)
+      if (responseJson.pending_call)
+      {
+        let msg = responseJson.pending_call
+        let call = responseJson.pending_call.call
+        this.processCall(msg.meta, call[0], msg.call_id, call[1], responseJson.return_url, msg.session_token, true)
+      }
+      else
+      {
+        if (responseJson.return_url && this.copied_code == code)
         {
-          let msg = responseJson.pending_call
-          let call = responseJson.pending_call.call
-          this.processCall(msg.meta, call[0], msg.call_id, call[1], responseJson.return_url, msg.session_token, true)
+          Linking.openURL(responseJson.return_url)
         }
         else
         {
-          if (responseJson.return_url && this.copied_code == code)
-          {
-            Linking.openURL(responseJson.return_url)
-          }
-          else
-          {
-            alert("We are now linked return url:"+ responseJson.return_url + " on browser:" + app_info.browser);
-          }
+          alert("We are now linked return url:"+ responseJson.return_url + " on browser:" + app_info.browser)
         }
-      }).catch((error) => {
-        console.error(error);
-      });
+      }
+    }).catch((error) => {
+      console.error(error)
+    })
   }
 
   checkRegisterNotification() {
-    let state = this.state;
+    let state = this.state
     if (state.ethAddress && state.notificationType && state.deviceToken)
     {
-        this.registerNotificationAddress(state.ethAddress, state.deviceToken, state.notificationType);
+      this.registerNotificationAddress(state.ethAddress, state.deviceToken, state.notificationType)
     }
   }
 
   checkDoLink() {
-    let state = this.state;
+    let state = this.state
     if (state.linkCode && state.deviceToken && state.ethAddress)
     {
-        console.log("linking...");
-        let rpc_server = this.copied_code == state.linkCode ? localfy(providerUrl) : providerUrl
-        this.doLink(state.deviceToken, state.linkCode, rpc_server, [state.ethAddress]);
+      console.log("linking...")
+      let rpc_server = this.copied_code == state.linkCode ? localfy(providerUrl) : providerUrl
+      this.doLink(state.deviceToken, state.linkCode, rpc_server, [state.ethAddress])
     }
   }
 
 
   onNotificationRegistered(deviceToken, notification_type) {
-	  // TODO: Send the token to my server so it could send back push notifications...
-		console.log("Device Token Received", deviceToken);
+    // TODO: Send the token to my server so it could send back push notifications...
+    console.log("Device Token Received", deviceToken)
 
     this.setState({deviceToken, notificationType:notification_type}, () => {
-      this.checkRegisterNotification();
-    });
+      this.checkRegisterNotification()
+    })
   }
 
   returnCall(wallet_token, call_id, session_token, result) {
@@ -179,14 +214,13 @@ export default class OriginCatcherApp extends Component {
       wallet_token,
         call_id,
       session_token,
-      result}).then((responseJson) => {
-        console.log("returnCall successful:", responseJson.success);
-        return responseJson.success
-      }).catch((error) => {
-        console.error(error);
-      });
-
-
+      result,
+    }).then((responseJson) => {
+      console.log("returnCall successful:", responseJson.success)
+      return responseJson.success
+    }).catch((error) => {
+      console.error(error)
+    })
   }
 
   async fetchListing(address) {
@@ -195,7 +229,6 @@ export default class OriginCatcherApp extends Component {
   }
 
   processCall(meta, call_name, call_id, params, return_url, session_token, force_from = false) {
-
     if (force_from && params.txn_object)
     {
       params.txn_object.from = this.state.ethAddress
@@ -276,7 +309,7 @@ export default class OriginCatcherApp extends Component {
                     }
                   )
                 }
-              }).on('error', console.error); // TODO: handle error and completion here!
+              }).on('error', console.error) // TODO: handle error and completion here!
             }},
           ],
           { cancelable: false }
@@ -287,13 +320,13 @@ export default class OriginCatcherApp extends Component {
 
   getServerMessages() {
     let last_message_id = this.last_message_ids[this.state.ethAddress]
-    console.log("Getting messages for last_message_id:", last_message_id);
+    console.log("Getting messages for last_message_id:", last_message_id)
     return this.doFetch(API_WALLET_LINKER_MESSAGES, 'POST', {
         wallet_token:this.state.deviceToken,
         last_message_id:last_message_id,
         accounts:[this.state.ethAddress]
       }).then((responseJson) => {
-        console.log("we got some messages:", responseJson.messages);
+        console.log("we got some messages:", responseJson.messages)
 
         for (let message of responseJson.messages)
         {
@@ -308,11 +341,11 @@ export default class OriginCatcherApp extends Component {
           this.last_message_ids[this.state.ethAddress] = last_message_id
           this.syncLastMessages()
           //there's some messages here we might have more
-          this.new_messages = true;
+          this.new_messages = true
         }
       }).catch((error) => {
-        console.error(error);
-      });
+        console.error(error)
+      })
   }
 
   checkServerMessages() {
@@ -325,26 +358,26 @@ export default class OriginCatcherApp extends Component {
 
   onNotification(notification) {
     this.setState( previousState => {
-        previousState.notifyTime = new Date();
-        previousState.notifyMessage = notification.message;
-        return previousState;
+        previousState.notifyTime = new Date()
+        previousState.notifyMessage = notification.message
+        return previousState
     }, ()=> {
-      console.log("checking server for messages..");
-      this.new_messages = true;
-    });
+      console.log("checking server for messages..")
+      this.new_messages = true
+    })
   }
 
   onQRScanned(scan) {
-    console.log("Address scanned:", scan.data);
-    let key;
+    console.log("Address scanned:", scan.data)
+    let key
     if (scan.data.startsWith(ETHEREUM_QR_PREFIX))
     {
-      let ethAddress = scan.data.substr(ETHEREUM_QR_PREFIX.length);
+      let ethAddress = scan.data.substr(ETHEREUM_QR_PREFIX.length)
       if (ethAddress != this.state.ethAddress)
       {
         this.setState({ethAddress}, () => {
-          this.checkRegisterNotification();
-        });
+          this.checkRegisterNotification()
+        })
       }
     }
     else if (scan.data.startsWith(ORIGIN_QR_PREFIX))
@@ -370,7 +403,7 @@ export default class OriginCatcherApp extends Component {
   }
 
   checkIncomingUrl(url) {
-    let key = this.checkStripOriginUrl(url);
+    let key = this.checkStripOriginUrl(url)
     if (key)
     {
       this.promptForLink(key)
@@ -381,13 +414,13 @@ export default class OriginCatcherApp extends Component {
     if (linkCode != this.state.linkCode)
     {
       this.setState({linkCode}, () => {
-        this.checkDoLink();
-      });
+        this.checkDoLink()
+      })
     }
   }
 
   promptForLink(linkCode) {
-    console.log("link code is:" + linkCode);
+    console.log("link code is:" + linkCode)
     if (this.linking_code != linkCode)
     {
       this.linking_code = linkCode
@@ -410,8 +443,8 @@ export default class OriginCatcherApp extends Component {
 
     if (content && content.startsWith(ORIGIN_QR_PREFIX))
     {
-      let linkCode = content.substr(ORIGIN_QR_PREFIX.length);
-      this.copied_code = linkCode;
+      let linkCode = content.substr(ORIGIN_QR_PREFIX.length)
+      this.copied_code = linkCode
       Clipboard.setString("")
       this.promptForLink(linkCode)
     }
@@ -423,17 +456,17 @@ export default class OriginCatcherApp extends Component {
   }
 
   componentWillMount() {
-    this.initWallet();
+    this.initWallet()
   }
 
 
   componentDidMount() {
     Linking.getInitialURL().then((url) => {
       if (url) {
-        console.log('Initial url is: ' + url);
-        this.checkIncomingUrl(url);
+        console.log('Initial url is: ' + url)
+        this.checkIncomingUrl(url)
       }
-    }).catch(err => console.error('An error occurred', err));
+    }).catch(err => console.error('An error occurred', err))
 
     //in case it's an initial install
     this.checkClipboardLink()
@@ -449,7 +482,7 @@ export default class OriginCatcherApp extends Component {
   }
 
   lastNotify() {
-    let state = this.state;
+    let state = this.state
 
     if (state.notifyTime)
     {
@@ -463,11 +496,11 @@ export default class OriginCatcherApp extends Component {
 
   saveWallet() {
     //save the freaking wallet
-    storeData(WALLET_STORE, web3.accounts.wallet);
+    storeData(WALLET_STORE, web3.accounts.wallet)
   }
 
   initWallet() {
-    let state = this.state;
+    let state = this.state
     loadData(WALLET_STORE).then((wallet_data) => { 
       //set the provider here..
       //this should probably also come from the data block
@@ -484,69 +517,138 @@ export default class OriginCatcherApp extends Component {
         web3.eth.accounts.wallet.add(TEST_PRIVATE_KEY)
       }
 
-      let ethAddress = web3.eth.accounts.wallet[0].address;
+      let ethAddress = web3.eth.accounts.wallet[0].address
       if (ethAddress != this.state.ethAddress)
       {
         this.setState({ethAddress}, () => {
-          this.checkRegisterNotification();
-        });
+          this.checkRegisterNotification()
+        })
       }
-
     })
   }
 
   render() {
     return (
-      <QRCodeScanner
-        reactivate={true}
-        reactivateTimeout={5000}
-        onRead={this.onQRScanned.bind(this)}
-        topContent={
-          <View >
-            <Text style={styles.centerText}>
-            Account: {this.state.ethAddress}
-            </Text>
-            <Text style={styles.centerText}>
-                  {this.lastNotify()}
-            </Text>
-          </View>
-        }
-        bottomContent={
-          <View>
-          <Text>Token: {this.state.deviceToken} </Text>
-          <TouchableOpacity style={styles.buttonTouchable} onPress={() => {this.onClearMessages()}}>
-            <Text style={styles.buttonText}>Clear Message Ids</Text>
-          </TouchableOpacity>
-          </View>
-        }
-      />
-    );
+      <View style={{ flex: 1 }}>
+        <QRCodeScanner
+          reactivate={true}
+          reactivateTimeout={5000}
+          onRead={this.onQRScanned.bind(this)}
+          showMarker={true}
+          customMarker={<ScanMarker />}
+          cameraStyle={{ height: '100%' }}
+        />
+      </View>
+    )
   }
 }
+
+const navigationOptions = ({ navigation }) => ({
+  headerStyle: {
+    backgroundColor: 'white',
+  },
+})
+
+const AlertsStack = createStackNavigator({
+  Alerts: AlertsScreen,
+}, {
+  navigationOptions,
+})
+
+const HomeStack = createStackNavigator({
+  Home: HomeScreen,
+}, {
+  navigationOptions,
+})
+
+const ScanStack = createStackNavigator({
+  Scan: ScanScreen,
+}, {
+  navigationOptions,
+})
+
+const SettingsStack = createStackNavigator({
+  Devices: DevicesScreen,
+  Settings: SettingsScreen,
+  Wallet: WalletScreen,
+}, {
+  initialRouteName: 'Settings',
+  navigationOptions,
+})
+
+export default createBottomTabNavigator({
+  Alerts: AlertsStack,
+  Home: HomeStack,
+  Scan: ScanStack,
+  Settings: SettingsStack,
+}, {
+  initialRouteName: 'Home',
+  order: ['Home', 'Alerts', 'Scan', 'Settings'],
+  navigationOptions: ({ navigation }) => ({
+    tabBarIcon: ({ focused, tintColor }) => {
+      const { routeName } = navigation.state
+
+      // require expects string literal :(
+      if (routeName === 'Alerts') {
+        return focused ?
+          <Image source={require('./assets/images/alerts-active.png')} /> :
+          <Image source={require('./assets/images/alerts-inactive.png')} />
+      } else if (routeName === 'Home') {
+        return focused ?
+          <Image source={require('./assets/images/home-active.png')} /> :
+          <Image source={require('./assets/images/home-inactive.png')} />
+      } else if (routeName === 'Scan') {
+        return focused ?
+          <Image source={require('./assets/images/scan-active.png')} /> :
+          <Image source={require('./assets/images/scan-inactive.png')} />
+      } else if (routeName === 'Settings') {
+        return focused ?
+          <Image source={require('./assets/images/settings-active.png')} /> :
+          <Image source={require('./assets/images/settings-inactive.png')} />
+      }
+    },
+  }),
+  tabBarOptions: {
+    activeTintColor: '#007fff',
+    inactiveTintColor: 'white',
+    style: {
+      backgroundColor: '#293f55',
+    },
+    iconStyle: {
+      marginTop: 10,
+    },
+    labelStyle: {
+      fontFamily: 'Lato',
+      fontSize: 10,
+      fontWeight: 'normal',
+    },
+    tabStyle: {
+      justifyContent: 'space-around',
+    }
+  },
+})
 
 const styles = StyleSheet.create({
   centerText: {
     fontSize: 18,
     padding: 10,
-    color: '#777',
     textAlign:'center',
   },
   textBold: {
     fontWeight: '500',
-    color: '#000',
   },
   buttonText: {
-    fontSize: 21,
     color: 'rgb(0,122,255)',
+    fontSize: 21,
   },
   buttonTouchable: {
     padding: 16,
   },
   input: {
-      margin: 15,
-      height: 40,
-      color:'black',
-      borderColor: 'gray',
-      borderWidth: 1
-   },
-});
+    borderColor: 'gray',
+    borderWidth: 1,
+    color: 'black',
+    height: 40,
+    margin: 15,
+  },
+})

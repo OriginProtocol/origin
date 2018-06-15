@@ -23,13 +23,22 @@
   },
   "dependencies": {
     "cross-fetch": "^2.2.1",
+    "identicon.js": "^2.3.2",
+    "moment": "^2.22.2",
     "node-libs-browser": "^2.1.0",
     "origin": "0.6.1",
     "react": "16.3.1",
+    "react-moment": "^0.7.5",
     "react-native": "^0.55.3",
     "react-native-camera": "^1.1.2",
     "react-native-push-notification": "^3.0.2",
     "react-native-qrcode-scanner": "^1.0.1",
+    "react-navigation": "^2.2.5",
     "web3": "^1.0.0-beta.34"
+  },
+  "rnpm": {
+    "assets": [
+      "./assets/fonts/"
+    ]
   }
 }
