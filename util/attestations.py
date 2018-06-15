@@ -12,7 +12,7 @@ def generate_signature(private_key, subject, claim_type, data):
     try:
         hashed_data = Web3.sha3(text=data)
         hash_to_sign = Web3.soliditySha3(['address', 'uint256', 'bytes32'], [
-                                     subject, claim_type, hashed_data])
+            subject, claim_type, hashed_data])
 
         result = w3.eth.account.signHash(
             message_hash=defunct_hash_message(hexstr=hash_to_sign.hex()),
