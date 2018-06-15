@@ -13,7 +13,7 @@ msgstr ""
 "Last-Translator: OriginProtocol <coleman@originprotocol.com>\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
-"PO-Revision-Date: 2018-06-13 18:24-0400\n"
+"PO-Revision-Date: 2018-06-15 19:40-0400\n"
 
 #. [user-card.heading]
 #. defaultMessage is:
@@ -21,7 +21,7 @@ msgstr ""
 #: translations/messages/src/components/user-card.json
 msgctxt "user-card.heading"
 msgid "About the {title}"
-msgstr ""
+msgstr "{title} について"
 
 #. [_Wallet.accountBalance]
 #. defaultMessage is:
@@ -29,7 +29,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/_Wallet.json
 msgctxt "_Wallet.accountBalance"
 msgid "Account Balance:"
-msgstr ""
+msgstr "残高："
 
 #. [my-listings.active]
 #. defaultMessage is:
@@ -37,7 +37,7 @@ msgstr ""
 #: translations/messages/src/components/my-listings.json
 msgctxt "my-listings.active"
 msgid "Active"
-msgstr ""
+msgstr "有効"
 
 #. [schema.announcements.activities]
 #. defaultMessage is:
@@ -45,7 +45,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/announcements.json
 msgctxt "schema.announcements.activities"
 msgid "Activities"
-msgstr ""
+msgstr "アクティビティ"
 
 #. [navbar.addListing]
 #. defaultMessage is:
@@ -53,7 +53,7 @@ msgstr ""
 #: translations/messages/src/components/navbar.json
 msgctxt "navbar.addListing"
 msgid "Add a Listing"
-msgstr ""
+msgstr "リストに追加する"
 
 #. [_Services.address]
 #. defaultMessage is:
@@ -61,7 +61,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/_Services.json
 msgctxt "_Services.address"
 msgid "Address"
-msgstr ""
+msgstr "アドレス"
 
 #. [ConfirmPublish.afterYouPublishNotice]
 #. defaultMessage is:
@@ -69,7 +69,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/ConfirmPublish.json
 msgctxt "ConfirmPublish.afterYouPublishNotice"
 msgid "After you publish your changes to the blockchain, other users will be able to see that you have verified the following:"
-msgstr ""
+msgstr "更新内容をブロックチェーンに発行した後に、他のユーザーは下記の内容があなたによって認証された事を確認できます。"
 
 #. [schema.transportation.airplaneCharter]
 #. defaultMessage is:
@@ -77,7 +77,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/transportation.json
 msgctxt "schema.transportation.airplaneCharter"
 msgid "Airplane Charter"
-msgstr ""
+msgstr "飛行機のチャーター"
 
 #. [my-listings.all]
 #. defaultMessage is:
@@ -85,7 +85,7 @@ msgstr ""
 #: translations/messages/src/components/my-listings.json
 msgctxt "my-listings.all"
 msgid "All"
-msgstr ""
+msgstr "すべて"
 
 #. [my-purchases.all]
 #. defaultMessage is:
@@ -93,7 +93,7 @@ msgstr ""
 #: translations/messages/src/components/my-purchases.json
 msgctxt "my-purchases.all"
 msgid "All"
-msgstr ""
+msgstr "すべて"
 
 #. [my-sales.all]
 #. defaultMessage is:
@@ -101,7 +101,7 @@ msgstr ""
 #: translations/messages/src/components/my-sales.json
 msgctxt "my-sales.all"
 msgid "All"
-msgstr ""
+msgstr "すべて"
 
 #. [notifications.all]
 #. defaultMessage is:
@@ -109,7 +109,7 @@ msgstr ""
 #: translations/messages/src/components/notifications.json
 msgctxt "notifications.all"
 msgid "All"
-msgstr ""
+msgstr "すべて"
 
 #. [Profile.noDescriptionUser]
 #. defaultMessage is:
@@ -125,7 +125,7 @@ msgstr ""
 #: translations/messages/src/components/listing-create.json
 msgctxt "listing-create.announcements"
 msgid "Announcements"
-msgstr ""
+msgstr "お知らせ"
 
 #. [schema.forSale.antiques]
 #. defaultMessage is:
@@ -133,7 +133,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.antiques"
 msgid "Antiques"
-msgstr ""
+msgstr "アンティーク"
 
 #. [schema.forSale.appliances]
 #. defaultMessage is:
@@ -141,7 +141,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.appliances"
 msgid "Appliances"
-msgstr ""
+msgstr "家電"
 
 #. [schema.housing.aptsWanted]
 #. defaultMessage is:
