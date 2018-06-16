@@ -13,7 +13,7 @@ msgstr ""
 "Last-Translator: OriginProtocol <coleman@originprotocol.com>\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
-"PO-Revision-Date: 2018-06-15 19:50-0400\n"
+"PO-Revision-Date: 2018-06-15 20:01-0400\n"
 
 #. [user-card.heading]
 #. defaultMessage is:
@@ -117,7 +117,7 @@ msgstr "すべて"
 #: translations/messages/src/pages/profile/Profile.json
 msgctxt "Profile.noDescriptionUser"
 msgid "An Origin user without a description"
-msgstr ""
+msgstr "Originユーザー（備考の記載なし）"
 
 #. [listing-create.announcements]
 #. defaultMessage is:
@@ -213,7 +213,7 @@ msgstr "自動車部品"
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.autoWheelsTires"
 msgid "Auto Wheels & Tires"
-msgstr ""
+msgstr "自動車のホイール＆タイヤ"
 
 #. [schema.forSale.babyKidStuff]
 #. defaultMessage is:
@@ -221,7 +221,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.babyKidStuff"
 msgid "Baby & Kid Stuff"
-msgstr ""
+msgstr "乳児＆幼児用品"
 
 #. [backButtonLabel]
 #. defaultMessage is:
@@ -229,7 +229,7 @@ msgstr ""
 #: translations/messages/src/components/listing-create.json
 msgctxt "backButtonLabel"
 msgid "Back"
-msgstr ""
+msgstr "戻る"
 
 #. [listing-create.backButtonLabel]
 #. defaultMessage is:
@@ -237,7 +237,7 @@ msgstr ""
 #: translations/messages/src/components/listing-create.json
 msgctxt "listing-create.backButtonLabel"
 msgid "Back"
-msgstr ""
+msgstr "戻る"
 
 #. [schema.forSale.barter]
 #. defaultMessage is:
@@ -245,7 +245,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.barter"
 msgid "Barter"
-msgstr ""
+msgstr "物々交換"
 
 #. [listing-create.howItWorksContentPart2]
 #. defaultMessage is:
@@ -253,7 +253,7 @@ msgstr ""
 #: translations/messages/src/components/listing-create.json
 msgctxt "listing-create.howItWorksContentPart2"
 msgid "Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering."
-msgstr ""
+msgstr "掲載する情報には、あなたが提供している物に対して適切なタイトルと説明を付けてください。"
 
 #. [schema.forSale.bicycleParts]
 #. defaultMessage is:
@@ -261,7 +261,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.bicycleParts"
 msgid "Bicycle Parts"
-msgstr ""
+msgstr "自転車部品"
 
 #. [schema.forSale.bicycles]
 #. defaultMessage is:
@@ -269,7 +269,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.bicycles"
 msgid "Bicycles"
-msgstr ""
+msgstr "自転車"
 
 #. [schema.transportation.bikeRentals]
 #. defaultMessage is:
@@ -277,7 +277,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/transportation.json
 msgctxt "schema.transportation.bikeRentals"
 msgid "Bike Rentals"
-msgstr ""
+msgstr "レンタル自転車"
 
 #. [schema.forSale.boatPartsAccessories]
 #. defaultMessage is:
@@ -285,7 +285,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.boatPartsAccessories"
 msgid "Boat Parts & Accessories"
-msgstr ""
+msgstr "ボート部品＆アクセサリー"
 
 #. [schema.transportation.boatRentals]
 #. defaultMessage is:
@@ -293,7 +293,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/transportation.json
 msgctxt "schema.transportation.boatRentals"
 msgid "Boat Rentals"
-msgstr ""
+msgstr "ボートの貸出"
 
 #. [schema.forSale.boats]
 #. defaultMessage is:
@@ -301,7 +301,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.boats"
 msgid "Boats"
-msgstr ""
+msgstr "ボート"
 
 #. [schema.forSale.booksMagazines]
 #. defaultMessage is:
@@ -309,7 +309,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.booksMagazines"
 msgid "Books & Magazines"
-msgstr ""
+msgstr "本＆雑誌"
 
 #. [_countryOptions.brazil]
 #. defaultMessage is:
@@ -317,7 +317,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/_countryOptions.json
 msgctxt "_countryOptions.brazil"
 msgid "Brazil"
-msgstr ""
+msgstr "ブラジル"
 
 #. [connectivity.bridgeServer]
 #. defaultMessage is:
@@ -325,7 +325,7 @@ msgstr ""
 #: translations/messages/src/components/dropdowns/connectivity.json
 msgctxt "connectivity.bridgeServer"
 msgid "Bridge Server:"
-msgstr ""
+msgstr "ブリッジ・サーバー："
 
 #. [schema.forSale.business]
 #. defaultMessage is:
@@ -333,7 +333,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.business"
 msgid "Business"
-msgstr ""
+msgstr "ビジネス"
 
 #. [schema.services.businessServices]
 #. defaultMessage is:
@@ -341,7 +341,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/services.json
 msgctxt "schema.services.businessServices"
 msgid "Business Services"
-msgstr ""
+msgstr "ビジネスサービス"
 
 #. [notifications.buy]
 #. defaultMessage is:
@@ -349,7 +349,7 @@ msgstr ""
 #: translations/messages/src/components/notifications.json
 msgctxt "notifications.buy"
 msgid "Buy"
-msgstr ""
+msgstr "買う"
 
 #. [listing-detail.buyNow]
 #. defaultMessage is:
@@ -357,7 +357,7 @@ msgstr ""
 #: translations/messages/src/components/listing-detail.json
 msgctxt "listing-detail.buyNow"
 msgid "Buy Now"
-msgstr ""
+msgstr "すぐ買う"
 
 #. [purchase-detail.buyer]
 #. defaultMessage is:
@@ -369,7 +369,7 @@ msgstr ""
 #: translations/messages/src/components/purchase-detail.json
 msgctxt "purchase-detail.buyer"
 msgid "Buyer"
-msgstr ""
+msgstr "購入者"
 
 #. [navbar.buying]
 #. defaultMessage is:
@@ -377,7 +377,7 @@ msgstr ""
 #: translations/messages/src/components/navbar.json
 msgctxt "navbar.buying"
 msgid "Buying"
-msgstr ""
+msgstr "購入中"
 
 #. [schema.forSale.cdsDvdsVhs]
 #. defaultMessage is:
@@ -385,7 +385,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.cdsDvdsVhs"
 msgid "CDs / DVDs / VHS"
-msgstr ""
+msgstr "CD / DVD / VHSビデオ"
 
 #. [EditProfile.cancel]
 #. defaultMessage is:
@@ -393,7 +393,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/EditProfile.json
 msgctxt "EditProfile.cancel"
 msgid "Cancel"
-msgstr ""
+msgstr "キャンセル"
 
 #. [VerifyEmail.cancel]
 #. defaultMessage is:
@@ -401,7 +401,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/VerifyEmail.json
 msgctxt "VerifyEmail.cancel"
 msgid "Cancel"
-msgstr ""
+msgstr "キャンセル"
 
 #. [VerifyFacebook.cancel]
 #. defaultMessage is:
@@ -409,7 +409,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/VerifyFacebook.json
 msgctxt "VerifyFacebook.cancel"
 msgid "Cancel"
-msgstr ""
+msgstr "キャンセル"
 
 #. [VerifyPhone.cancel]
 #. defaultMessage is:
@@ -417,7 +417,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/VerifyPhone.json
 msgctxt "VerifyPhone.cancel"
 msgid "Cancel"
-msgstr ""
+msgstr "キャンセル"
 
 #. [VerifyTwitter.cancel]
 #. defaultMessage is:
