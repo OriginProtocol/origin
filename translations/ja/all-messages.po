@@ -13,7 +13,7 @@ msgstr ""
 "Last-Translator: OriginProtocol <coleman@originprotocol.com>\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
-"PO-Revision-Date: 2018-06-15 20:01-0400\n"
+"PO-Revision-Date: 2018-06-15 20:10-0400\n"
 
 #. [user-card.heading]
 #. defaultMessage is:
@@ -825,7 +825,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/services.json
 msgctxt "schema.services.deliveryService"
 msgid "Delivery Service"
-msgstr ""
+msgstr "デリバリーサービス"
 
 #. [Profile.deployingIdentity]
 #. defaultMessage is:
@@ -841,7 +841,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 msgctxt "_ProvisionedChanges.description"
 msgid "Description"
-msgstr ""
+msgstr "説明"
 
 #. [EditProfile.description]
 #. defaultMessage is:
@@ -849,7 +849,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/EditProfile.json
 msgctxt "EditProfile.description"
 msgid "Description"
-msgstr ""
+msgstr "説明"
 
 #. [schema.announcements.description]
 #. defaultMessage is:
@@ -857,7 +857,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/announcements.json
 msgctxt "schema.announcements.description"
 msgid "Description"
-msgstr ""
+msgstr "説明"
 
 #. [schema.forSale.description]
 #. defaultMessage is:
@@ -865,7 +865,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.description"
 msgid "Description"
-msgstr ""
+msgstr "説明"
 
 #. [schema.housing.description]
 #. defaultMessage is:
@@ -873,7 +873,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/housing.json
 msgctxt "schema.housing.description"
 msgid "Description"
-msgstr ""
+msgstr "説明"
 
 #. [schema.services.description]
 #. defaultMessage is:
@@ -881,7 +881,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/services.json
 msgctxt "schema.services.description"
 msgid "Description"
-msgstr ""
+msgstr "説明"
 
 #. [schema.tickets.description]
 #. defaultMessage is:
@@ -889,7 +889,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/tickets.json
 msgctxt "schema.tickets.description"
 msgid "Description"
-msgstr ""
+msgstr "説明"
 
 #. [schema.transportation.description]
 #. defaultMessage is:
@@ -897,7 +897,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/transportation.json
 msgctxt "schema.transportation.description"
 msgid "Description"
-msgstr ""
+msgstr "説明"
 
 #. [footer.discordLink]
 #. defaultMessage is:
@@ -905,7 +905,7 @@ msgstr ""
 #: translations/messages/src/components/footer.json
 msgctxt "footer.discordLink"
 msgid "Discord"
-msgstr ""
+msgstr "ディスコード"
 
 #. [schema.housing.schemaDescription]
 #. defaultMessage is:
@@ -977,7 +977,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/services.json
 msgctxt "schema.services.dogWalking"
 msgid "Dog Walking"
-msgstr ""
+msgstr "犬の散歩代行"
 
 #. [AttestationSuccess.publishChangesReminder]
 #. defaultMessage is:
