@@ -8,7 +8,16 @@ class Footer extends Component {
   constructor(props) {
     super(props)
 
+    this.state = {
+      companyWebsiteLanguageAbbrev: 'en'
+    }
+
     this.localizeApp = this.localizeApp.bind(this)
+    this.localizeWhitepaperUrl = this.localizeWhitepaperUrl.bind(this)
+  }
+
+  componentWillMount() {
+    this.localizeWhitepaperUrl()
   }
 
   localizeApp(langAbbrev) {
@@ -16,6 +25,13 @@ class Footer extends Component {
       store.set('preferredLang', langAbbrev)
       window.location.reload()
     }
+  }
+
+  localizeWhitepaperUrl() {
+    const { selectedLanguageAbbrev: langAbbrev } = this.props
+    const companyWebsiteLanguageAbbrev = langAbbrev === 'zh' ? `${langAbbrev}_Hans` : langAbbrev
+
+    this.setState({ companyWebsiteLanguageAbbrev })
   }
 
   render() {
@@ -72,7 +88,7 @@ class Footer extends Component {
                   </div>
                   <ul className="footer-links">
                     <li>
-                      <a href="https://www.originprotocol.com/product-brief">
+                      <a href={ `https://www.originprotocol.com/${this.state.companyWebsiteLanguageAbbrev}/product-brief` }>
                         <FormattedMessage
                           id={ 'footer.productBriefLink' }
                           defaultMessage={ 'Product Brief' }
@@ -80,7 +96,7 @@ class Footer extends Component {
                       </a>
                     </li>
                     <li>
-                      <a href="https://www.originprotocol.com/whitepaper">
+                      <a href={ `https://www.originprotocol.com/${this.state.companyWebsiteLanguageAbbrev}/whitepaper` }>
                         <FormattedMessage
                           id={ 'footer.whitepaperLink' }
                           defaultMessage={ 'Whitepaper' }
