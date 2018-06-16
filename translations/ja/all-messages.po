@@ -13,7 +13,7 @@ msgstr ""
 "Last-Translator: OriginProtocol <coleman@originprotocol.com>\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
-"PO-Revision-Date: 2018-06-16 19:21-0400\n"
+"PO-Revision-Date: 2018-06-16 19:30-0400\n"
 
 #. [user-card.heading]
 #. defaultMessage is:
@@ -689,7 +689,7 @@ msgstr "確認とレビュー"
 #: translations/messages/src/components/purchase-detail.json
 msgctxt "purchase-detail.confirmReceiptOfOrder"
 msgid "Confirm receipt of the order and leave a review"
-msgstr ""
+msgstr "注文の受領を承認し、レビューを書く"
 
 #. [listing-create.confirmTransaction]
 #. defaultMessage is:
@@ -697,7 +697,7 @@ msgstr ""
 #: translations/messages/src/components/listing-create.json
 msgctxt "listing-create.confirmTransaction"
 msgid "Confirm transaction"
-msgstr ""
+msgstr "トランザクションを承認する"
 
 #. [listing-detail.confirmTransaction]
 #. defaultMessage is:
@@ -705,7 +705,7 @@ msgstr ""
 #: translations/messages/src/components/listing-detail.json
 msgctxt "listing-detail.confirmTransaction"
 msgid "Confirm transaction"
-msgstr ""
+msgstr "トランザクションを承認する"
 
 #. [Profile.confirmTransaction]
 #. defaultMessage is:
@@ -713,7 +713,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/Profile.json
 msgctxt "Profile.confirmTransaction"
 msgid "Confirm transaction"
-msgstr ""
+msgstr "トランザクションを承認する"
 
 #. [web3-provider.connecting]
 #. defaultMessage is:
@@ -721,7 +721,7 @@ msgstr ""
 #: translations/messages/src/components/web3-provider.json
 msgctxt "web3-provider.connecting"
 msgid "Connecting to network..."
-msgstr ""
+msgstr "ネットワークに接続する"
 
 #. [connectivity.connecting]
 #. defaultMessage is:
@@ -729,7 +729,7 @@ msgstr ""
 #: translations/messages/src/components/dropdowns/connectivity.json
 msgctxt "connectivity.connecting"
 msgid "Connecting..."
-msgstr ""
+msgstr "接続中です..."
 
 #. [continueButtonLabel]
 #. defaultMessage is:
@@ -737,7 +737,7 @@ msgstr ""
 #: translations/messages/src/components/listing-create.json
 msgctxt "continueButtonLabel"
 msgid "Continue"
-msgstr ""
+msgstr "続ける"
 
 #. [AttestationSuccess.continue]
 #. defaultMessage is:
@@ -745,7 +745,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/AttestationSuccess.json
 msgctxt "AttestationSuccess.continue"
 msgid "Continue"
-msgstr ""
+msgstr "続ける"
 
 #. [EditProfile.continue]
 #. defaultMessage is:
@@ -753,7 +753,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/EditProfile.json
 msgctxt "EditProfile.continue"
 msgid "Continue"
-msgstr ""
+msgstr "続ける"
 
 #. [Profile.continue]
 #. defaultMessage is:
@@ -761,7 +761,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/Profile.json
 msgctxt "Profile.continue"
 msgid "Continue"
-msgstr ""
+msgstr "続ける"
 
 #. [VerifyEmail.continue]
 #. defaultMessage is:
@@ -769,7 +769,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/VerifyEmail.json
 msgctxt "VerifyEmail.continue"
 msgid "Continue"
-msgstr ""
+msgstr "続ける"
 
 #. [VerifyFacebook.continue]
 #. defaultMessage is:
@@ -777,7 +777,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/VerifyFacebook.json
 msgctxt "VerifyFacebook.continue"
 msgid "Continue"
-msgstr ""
+msgstr "続ける"
 
 #. [VerifyPhone.continue]
 #. defaultMessage is:
@@ -785,7 +785,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/VerifyPhone.json
 msgctxt "VerifyPhone.continue"
 msgid "Continue"
-msgstr ""
+msgstr "続ける"
 
 #. [VerifyTwitter.continue]
 #. defaultMessage is:
@@ -793,7 +793,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/VerifyTwitter.json
 msgctxt "VerifyTwitter.continue"
 msgid "Continue"
-msgstr ""
+msgstr "続ける"
 
 #. [schema.services.counseling]
 #. defaultMessage is:
@@ -801,7 +801,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/services.json
 msgctxt "schema.services.counseling"
 msgid "Counseling"
-msgstr ""
+msgstr "カウンセリング"
 
 #. [listing-create.createListingHeading]
 #. defaultMessage is:
@@ -809,7 +809,7 @@ msgstr ""
 #: translations/messages/src/components/listing-create.json
 msgctxt "listing-create.createListingHeading"
 msgid "Create your listing"
-msgstr ""
+msgstr "情報を掲載する"
 
 #. [web3-provider.currentlyOnNetwork]
 #. defaultMessage is:
@@ -817,7 +817,7 @@ msgstr ""
 #: translations/messages/src/components/web3-provider.json
 msgctxt "web3-provider.currentlyOnNetwork"
 msgid "Currently on {currentNetworkName}."
-msgstr ""
+msgstr "{currentNetworkName} に接続中です。"
 
 #. [schema.services.deliveryService]
 #. defaultMessage is:
@@ -1477,7 +1477,7 @@ msgstr ""
 #: translations/messages/src/components/listing-create.json
 msgctxt "listing-create.howItWorksHeading"
 msgid "How it works"
-msgstr ""
+msgstr "使い方"
 
 #. [listing-create.IPFS]
 #. defaultMessage is:
@@ -1485,7 +1485,7 @@ msgstr ""
 #: translations/messages/src/components/listing-create.json
 msgctxt "listing-create.IPFS"
 msgid "IPFS"
-msgstr ""
+msgstr "IPFS"
 
 #. [connectivity.ipfsGateway]
 #. defaultMessage is:
@@ -1493,7 +1493,7 @@ msgstr ""
 #: translations/messages/src/components/dropdowns/connectivity.json
 msgctxt "connectivity.ipfsGateway"
 msgid "IPFS Gateway:"
-msgstr ""
+msgstr "IPFS ゲートウェイ:"
 
 #. [listing-detail.IPFS]
 #. defaultMessage is:
@@ -1501,7 +1501,7 @@ msgstr ""
 #: translations/messages/src/components/listing-detail.json
 msgctxt "listing-detail.IPFS"
 msgid "IPFS: {ipfsHash}"
-msgstr ""
+msgstr "IPFS: {ipfsHash}"
 
 #. [ConfirmUpload.ifYouExitNotice]
 #. defaultMessage is:
@@ -1509,7 +1509,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/ConfirmUnload.json
 msgctxt "ConfirmUpload.ifYouExitNotice"
 msgid "If you exit without publishing you’ll lose all your changes."
-msgstr ""
+msgstr "公開せずに終了すると、更新した内容は全て失われます。"
 
 #. [Profile.unsavedChangesWarn]
 #. defaultMessage is:
@@ -1517,7 +1517,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/Profile.json
 msgctxt "Profile.unsavedChangesWarn"
 msgid "If you exit without publishing, you'll lose all your changes."
-msgstr ""
+msgstr "公開せずに終了すると、更新した内容は全て失われます。"
 
 #. [web3-provider.intentRequiresMetaMask]
 #. defaultMessage is:
@@ -1525,7 +1525,7 @@ msgstr ""
 #: translations/messages/src/components/web3-provider.json
 msgctxt "web3-provider.intentRequiresMetaMask"
 msgid "In order to {web3Intent}, you must install MetaMask."
-msgstr ""
+msgstr "{web3Intent} を行うためにはMetaMaskをインストールしてください。"
 
 #. [web3-provider.intentRequiresSignIn]
 #. defaultMessage is:
@@ -1533,7 +1533,7 @@ msgstr ""
 #: translations/messages/src/components/web3-provider.json
 msgctxt "web3-provider.intentRequiresSignIn"
 msgid "In order to {web3Intent}, you must sign in to {currentProvider}."
-msgstr ""
+msgstr "{web3Intent} を行うためには{currentProvider} にサインインしてください。"
 
 #. [web3-provider.intentRequiresEthereumEnabledBrowser]
 #. defaultMessage is:
@@ -1541,7 +1541,7 @@ msgstr ""
 #: translations/messages/src/components/web3-provider.json
 msgctxt "web3-provider.intentRequiresEthereumEnabledBrowser"
 msgid "In order to {web3Intent}, you must use an Ethereum wallet-enabled browser."
-msgstr ""
+msgstr "{web3Intent} を行うためにはイーサリウムウオレットが使用可能なブラウザを使用してください。"
 
 #. [my-listings.inactive]
 #. defaultMessage is:
@@ -1549,7 +1549,7 @@ msgstr ""
 #: translations/messages/src/components/my-listings.json
 msgctxt "my-listings.inactive"
 msgid "Inactive"
-msgstr ""
+msgstr "無効"
 
 #. [footer.instagramLink]
 #. defaultMessage is:
@@ -1557,7 +1557,7 @@ msgstr ""
 #: translations/messages/src/components/footer.json
 msgctxt "footer.instagramLink"
 msgid "Instagram"
-msgstr ""
+msgstr "インスタグラム"
 
 #. [_countryOptions.italy]
 #. defaultMessage is:
@@ -1565,7 +1565,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/_countryOptions.json
 msgctxt "_countryOptions.italy"
 msgid "Italy"
-msgstr ""
+msgstr "イタリア"
 
 #. [listing-create.jsonSchema]
 #. defaultMessage is:
