@@ -16,7 +16,7 @@ class Footer extends Component {
     this.localizeWhitepaperUrl = this.localizeWhitepaperUrl.bind(this)
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.localizeWhitepaperUrl()
   }
 
