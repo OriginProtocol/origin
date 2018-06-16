@@ -13,7 +13,7 @@ msgstr ""
 "Last-Translator: OriginProtocol <coleman@originprotocol.com>\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
-"PO-Revision-Date: 2018-06-16 19:10-0400\n"
+"PO-Revision-Date: 2018-06-16 19:21-0400\n"
 
 #. [user-card.heading]
 #. defaultMessage is:
@@ -529,7 +529,7 @@ msgstr "中国"
 #: translations/messages/src/components/listing-create.json
 msgctxt "listing-create.chooseSchema"
 msgid "Choose a schema for your product or service"
-msgstr ""
+msgstr "製品やサービスの概要を選択してください。"
 
 #. [web3-provider.cipher]
 #. defaultMessage is:
@@ -553,7 +553,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/tickets.json
 msgctxt "schema.tickets.classesWorkshops"
 msgid "Classes & Workshops"
-msgstr ""
+msgstr "勉強会＆ワークショップ"
 
 #. [transactions.clear]
 #. defaultMessage is:
@@ -561,7 +561,7 @@ msgstr ""
 #: translations/messages/src/components/dropdowns/transactions.json
 msgctxt "transactions.clear"
 msgid "Clear"
-msgstr ""
+msgstr "消す"
 
 #. [purchase-detail.sendOrderInstruction]
 #. defaultMessage is:
@@ -569,7 +569,7 @@ msgstr ""
 #: translations/messages/src/components/purchase-detail.json
 msgctxt "purchase-detail.sendOrderInstruction"
 msgid "Click the button below once the order has shipped."
-msgstr ""
+msgstr "オーダーが発送されたら下のボタンを押してください。"
 
 #. [purchase-detail.clickToWithdraw]
 #. defaultMessage is:
@@ -577,7 +577,7 @@ msgstr ""
 #: translations/messages/src/components/purchase-detail.json
 msgctxt "purchase-detail.clickToWithdraw"
 msgid "Click the button below to initiate the withdrawal"
-msgstr ""
+msgstr "下のボタンを押して出金を開始してください。"
 
 #. [my-listing-card.closeListing]
 #. defaultMessage is:
@@ -585,7 +585,7 @@ msgstr ""
 #: translations/messages/src/components/my-listing-card.json
 msgctxt "my-listing-card.closeListing"
 msgid "Close Listing"
-msgstr ""
+msgstr "掲載を終了する。"
 
 #. [schema.forSale.clothingAccessories]
 #. defaultMessage is:
@@ -593,7 +593,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.clothingAccessories"
 msgid "Clothing & Accessories"
-msgstr ""
+msgstr "服＆アクセサリー"
 
 #. [schema.forSale.collectibles]
 #. defaultMessage is:
@@ -601,7 +601,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.collectibles"
 msgid "Collectibles"
-msgstr ""
+msgstr "コレクターアイテム"
 
 #. [_Services.comingSoon]
 #. defaultMessage is:
@@ -609,7 +609,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/_Services.json
 msgctxt "_Services.comingSoon"
 msgid "Coming {br} Soon"
-msgstr ""
+msgstr "近日 {br} 公開"
 
 #. [footer.communityHeading]
 #. defaultMessage is:
@@ -617,7 +617,7 @@ msgstr ""
 #: translations/messages/src/components/footer.json
 msgctxt "footer.communityHeading"
 msgid "Community"
-msgstr ""
+msgstr "コミュニティ"
 
 #. [my-purchases.complete]
 #. defaultMessage is:
@@ -625,7 +625,7 @@ msgstr ""
 #: translations/messages/src/components/my-purchases.json
 msgctxt "my-purchases.complete"
 msgid "Complete"
-msgstr ""
+msgstr "完了"
 
 #. [my-sales.complete]
 #. defaultMessage is:
@@ -633,7 +633,7 @@ msgstr ""
 #: translations/messages/src/components/my-sales.json
 msgctxt "my-sales.complete"
 msgid "Complete"
-msgstr ""
+msgstr "完了"
 
 #. [purchase-detail.completeByWithdrawing]
 #. defaultMessage is:
@@ -641,7 +641,7 @@ msgstr ""
 #: translations/messages/src/components/purchase-detail.json
 msgctxt "purchase-detail.completeByWithdrawing"
 msgid "Complete your transaction by withdrawing funds"
-msgstr ""
+msgstr "資金を引き出してトランザクションを完了してください。"
 
 #. [transactions.completed]
 #. defaultMessage is:
@@ -649,7 +649,7 @@ msgstr ""
 #: translations/messages/src/components/dropdowns/transactions.json
 msgctxt "transactions.completed"
 msgid "Completed"
-msgstr ""
+msgstr "完了しました"
 
 #. [schema.forSale.computerParts]
 #. defaultMessage is:
@@ -657,7 +657,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.computerParts"
 msgid "Computer Parts"
-msgstr ""
+msgstr "コンピューターパーツ"
 
 #. [schema.forSale.computers]
 #. defaultMessage is:
@@ -665,7 +665,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.computers"
 msgid "Computers"
-msgstr ""
+msgstr "コンピューター"
 
 #. [schema.tickets.conference]
 #. defaultMessage is:
@@ -673,7 +673,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/tickets.json
 msgctxt "schema.tickets.conference"
 msgid "Conference"
-msgstr ""
+msgstr "コンファレンス"
 
 #. [purchase-detail.confirmAndReview]
 #. defaultMessage is:
@@ -681,7 +681,7 @@ msgstr ""
 #: translations/messages/src/components/purchase-detail.json
 msgctxt "purchase-detail.confirmAndReview"
 msgid "Confirm and Review"
-msgstr ""
+msgstr "確認とレビュー"
 
 #. [purchase-detail.confirmReceiptOfOrder]
 #. defaultMessage is:
