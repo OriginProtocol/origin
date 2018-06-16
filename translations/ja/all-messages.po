@@ -13,7 +13,7 @@ msgstr ""
 "Last-Translator: OriginProtocol <coleman@originprotocol.com>\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
-"PO-Revision-Date: 2018-06-15 20:10-0400\n"
+"PO-Revision-Date: 2018-06-15 20:51-0400\n"
 
 #. [user-card.heading]
 #. defaultMessage is:
@@ -969,7 +969,7 @@ msgstr ""
 #: translations/messages/src/components/footer.json
 msgctxt "footer.documentationHeading"
 msgid "Documentation"
-msgstr ""
+msgstr "ドキュメント"
 
 #. [schema.services.dogWalking]
 #. defaultMessage is:
@@ -985,7 +985,7 @@ msgstr "犬の散歩代行"
 #: translations/messages/src/pages/profile/AttestationSuccess.json
 msgctxt "AttestationSuccess.publishChangesReminder"
 msgid "Don't forget to publish your changes."
-msgstr ""
+msgstr "更新の公開を必ず行ってください。"
 
 #. [listing-create.doneButtonLabel]
 #. defaultMessage is:
@@ -993,7 +993,7 @@ msgstr ""
 #: translations/messages/src/components/listing-create.json
 msgctxt "listing-create.doneButtonLabel"
 msgid "Done"
-msgstr ""
+msgstr "完了"
 
 #. [listing-card-prices.ethereumCurrencyAbbrev]
 #. defaultMessage is:
@@ -1001,7 +1001,7 @@ msgstr ""
 #: translations/messages/src/components/listing-card-prices.json
 msgctxt "listing-card-prices.ethereumCurrencyAbbrev"
 msgid "ETH"
-msgstr ""
+msgstr "ETH"
 
 #. [listing-detail.ethereumCurrencyAbbrev]
 #. defaultMessage is:
@@ -1009,7 +1009,7 @@ msgstr ""
 #: translations/messages/src/components/listing-detail.json
 msgctxt "listing-detail.ethereumCurrencyAbbrev"
 msgid "ETH"
-msgstr ""
+msgstr "ETH"
 
 #. [my-listing-card.ethereumCurrencyAbbrev]
 #. defaultMessage is:
@@ -1017,7 +1017,7 @@ msgstr ""
 #: translations/messages/src/components/my-listing-card.json
 msgctxt "my-listing-card.ethereumCurrencyAbbrev"
 msgid "ETH"
-msgstr ""
+msgstr "ETH"
 
 #. [my-purchase-card.ethereumCurrencyAbbrev]
 #. defaultMessage is:
@@ -1025,7 +1025,7 @@ msgstr ""
 #: translations/messages/src/components/my-purchase-card.json
 msgctxt "my-purchase-card.ethereumCurrencyAbbrev"
 msgid "ETH"
-msgstr ""
+msgstr "ETH"
 
 #. [my-sale-card.ethereumCurrencyAbbrev]
 #. defaultMessage is:
@@ -1033,7 +1033,7 @@ msgstr ""
 #: translations/messages/src/components/my-sale-card.json
 msgctxt "my-sale-card.ethereumCurrencyAbbrev"
 msgid "ETH"
-msgstr ""
+msgstr "ETH"
 
 #. [user.ethAddress]
 #. defaultMessage is:
@@ -1065,7 +1065,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/EditProfile.json
 msgctxt "EditProfile.editProfileHeading"
 msgid "Edit Profile"
-msgstr ""
+msgstr "プロフィールの編集"
 
 #. [schema.services.electrical]
 #. defaultMessage is:
@@ -1073,7 +1073,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/services.json
 msgctxt "schema.services.electrical"
 msgid "Electrical"
-msgstr ""
+msgstr "電気関連サービス"
 
 #. [schema.forSale.electronics]
 #. defaultMessage is:
@@ -1081,7 +1081,7 @@ msgstr ""
 #: translations/messages/src/schemaMessages/for-sale.json
 msgctxt "schema.forSale.electronics"
 msgid "Electronics"
-msgstr ""
+msgstr "エレクトロニクス"
 
 #. [_ProvisionedChanges.email]
 #. defaultMessage is:
@@ -1089,7 +1089,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 msgctxt "_ProvisionedChanges.email"
 msgid "Email"
-msgstr ""
+msgstr "Eメール"
 
 #. [_Services.email]
 #. defaultMessage is:
@@ -1097,7 +1097,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/_Services.json
 msgctxt "_Services.email"
 msgid "Email"
-msgstr ""
+msgstr "Eメール"
 
 #. [User.email]
 #. defaultMessage is:
@@ -1105,7 +1105,7 @@ msgstr ""
 #: translations/messages/src/pages/user/User.json
 msgctxt "User.email"
 msgid "Email"
-msgstr ""
+msgstr "Eメール"
 
 #. [_ProvisionedChanges.emailAddress]
 #. defaultMessage is:
@@ -1113,7 +1113,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/_ProvisionedChanges.json
 msgctxt "_ProvisionedChanges.emailAddress"
 msgid "Email Address"
-msgstr ""
+msgstr "Eメールアドレス"
 
 #. [Profile.emailVerified]
 #. defaultMessage is:
@@ -1121,7 +1121,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/Profile.json
 msgctxt "Profile.emailVerified"
 msgid "Email address verified!"
-msgstr ""
+msgstr "Eメールアドレスを認証しました。"
 
 #. [VerifyEmail.enterCode]
 #. defaultMessage is:
@@ -1129,7 +1129,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/VerifyEmail.json
 msgctxt "VerifyEmail.enterCode"
 msgid "Enter the code we sent you below"
-msgstr ""
+msgstr "送付されたコードを記入ください"
 
 #. [VerifyPhone.enterCodeBelow]
 #. defaultMessage is:
@@ -1137,7 +1137,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/VerifyPhone.json
 msgctxt "VerifyPhone.enterCodeBelow"
 msgid "Enter the code we sent you below"
-msgstr ""
+msgstr "送付されたコードを記入ください"
 
 #. [VerifyPhone.enterPhoneNumber]
 #. defaultMessage is:
@@ -1145,7 +1145,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/VerifyPhone.json
 msgctxt "VerifyPhone.enterPhoneNumber"
 msgid "Enter your phone number below and {originId} will send you a verification code"
-msgstr ""
+msgstr "{originId} からの認証コードを受け取るための、電話番号を記入ください。"
 
 #. [Profile.error]
 #. defaultMessage is:
@@ -1153,7 +1153,7 @@ msgstr ""
 #: translations/messages/src/pages/profile/Profile.json
 msgctxt "Profile.error"
 msgid "Error"
-msgstr ""
+msgstr "エラー"
 
 #. [connectivity.ethereumNetwork]
 #. defaultMessage is:
@@ -1161,7 +1161,7 @@ msgstr ""
 #: translations/messages/src/components/dropdowns/connectivity.json
 msgctxt "connectivity.ethereumNetwork"
 msgid "Ethereum Network:"
-msgstr ""
+msgstr "イーサリウムネットワーク"
 
 #. [footer.facebookLink]
 #. defaultMessage is:
