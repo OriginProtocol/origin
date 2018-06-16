@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
+import moment from 'moment'
 import { defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { fetchUser } from 'actions/User'
 import Avatar from './avatar'
-import Timelapse from './timelapse'
 
 class Review extends Component {
   constructor(props) {
@@ -47,7 +47,7 @@ class Review extends Component {
                   />
                 )
               })}</div>
-              <div className="age text-muted"><Timelapse reactive={false} reference={new Date(createdAt)} /></div>
+              <div className="age text-muted">{ moment(createdAt).fromNow() }</div>
             </div>
           </div>
         </Link>

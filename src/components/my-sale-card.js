@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
+import moment from 'moment'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { fetchUser } from 'actions/User'
-import Timelapse from './timelapse'
 import PurchaseProgress from './purchase-progress'
 
 class MySaleCard extends Component {
@@ -86,7 +86,7 @@ class MySaleCard extends Component {
               </div>
             </div>
             <div className="timestamp-container order-2 text-muted text-right">
-              <p className="timestamp"><Timelapse reactive={false} reference={soldAt} /></p>
+              <p className="timestamp">{ moment(soldAt).fromNow() }</p>
             </div>
             <div className="aspect-ratio order-1 order-lg-3">
               <div className={`${photo ? '' : 'placeholder '}image-container d-flex justify-content-center`}>

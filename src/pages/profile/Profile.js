@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
+import moment from 'moment'
 import $ from 'jquery'
 
 import { storeWeb3Intent } from 'actions/App'
@@ -14,7 +15,6 @@ import { getBalance } from 'actions/Wallet'
 
 import Avatar from 'components/avatar'
 import Modal from 'components/modal'
-import Timelapse from 'components/timelapse'
 
 import Services from './_Services'
 import Wallet from './_Wallet'
@@ -318,7 +318,7 @@ class Profile extends Component {
                           defaultMessage={ 'Last published' }
                         />
                         {' '}
-                        <Timelapse reactive={true} reference={lastPublish} />
+                        { moment(lastPublish).fromNow() }
                       </span>
                     )}
                   </div>
