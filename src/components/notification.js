@@ -77,13 +77,13 @@ class Notification extends Component {
                     <strong>
                       {notification.perspective === 'buyer' &&
                         <FormattedMessage
-                          id={ 'purchase-detail.buyer' }
+                          id={ 'notification.buyer' }
                           defaultMessage={ 'Buyer' }
                         />
                       }
                       {notification.perspective === 'seller' &&
                         <FormattedMessage
-                          id={ 'purchase-detail.seller' }
+                          id={ 'notification.seller' }
                           defaultMessage={ 'Seller' }
                         />
                       }

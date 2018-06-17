@@ -1,10 +1,10 @@
 [
   {
-    "id": "purchase-detail.buyer",
+    "id": "notification.buyer",
     "defaultMessage": "Buyer"
   },
   {
-    "id": "purchase-detail.seller",
+    "id": "notification.seller",
     "defaultMessage": "Seller"
   }
 ]

@@ -92,7 +92,7 @@ class PurchaseProgress extends Component {
             <div className="stage-container">
               <div className="stage">
                 <FormattedMessage
-                  id={ 'transaction-progress.purchased' }
+                  id={ 'purchase-progress.purchased' }
                   defaultMessage={ 'Purchased' }
                 />
               </div>
@@ -100,7 +100,7 @@ class PurchaseProgress extends Component {
             <div className="stage-container">
               <div className="stage">
                 <FormattedMessage
-                  id={ 'transaction-progress.sentBySeller' }
+                  id={ 'purchase-progress.sentBySeller' }
                   defaultMessage={ 'Sent by seller' }
                 />
               </div>
@@ -108,7 +108,7 @@ class PurchaseProgress extends Component {
             <div className="stage-container">
               <div className="stage">
                 <FormattedMessage
-                  id={ 'transaction-progress.receivedByMe' }
+                  id={ 'purchase-progress.receivedByMe' }
                   defaultMessage={ 'Received by me' }
                 />
               </div>
@@ -120,7 +120,7 @@ class PurchaseProgress extends Component {
             <div className="stage-container">
               <div className="stage">
                 <FormattedMessage
-                  id={ 'transaction-progress.sold' }
+                  id={ 'purchase-progress.sold' }
                   defaultMessage={ 'Sold' }
                 />
               </div>
@@ -128,7 +128,7 @@ class PurchaseProgress extends Component {
             <div className="stage-container">
               <div className="stage">
                 <FormattedMessage
-                  id={ 'transaction-progress.orderSent' }
+                  id={ 'purchase-progress.orderSent' }
                   defaultMessage={ 'Order Sent' }
                 />
               </div>
@@ -136,7 +136,7 @@ class PurchaseProgress extends Component {
             <div className="stage-container">
               <div className="stage">
                 <FormattedMessage
-                  id={ 'transaction-progress.receivedByBuyer' }
+                  id={ 'purchase-progress.receivedByBuyer' }
                   defaultMessage={ 'Received by buyer' }
                 />
               </div>
@@ -144,7 +144,7 @@ class PurchaseProgress extends Component {
             <div className="stage-container">
               <div className="stage">
                 <FormattedMessage
-                  id={ 'transaction-progress.fundsWithdrawn' }
+                  id={ 'purchase-progress.fundsWithdrawn' }
                   defaultMessage={ 'Funds Withdrawn' }
                 />
               </div>
