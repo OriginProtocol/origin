@@ -27,12 +27,12 @@ Origin Box currently supports the following components:
 ## Usage
 
 1. Run the setup script (from origin-box root directory):
-`./scripts/setup-bridge.sh`
+`./scripts/setup.sh`
 
-1. Run the start script: `./scripts/start-bridge.sh`
+1. Run the start script: `./scripts/start.sh`
 
 1. Access the CLI:
-`./scripts/bash-bridge.sh`
+`./scripts/cli.sh`
 
 You may now edit the source code using your favorite editor in the ignored directories (currently `dapp`, `js`, and `bridge`). These are just normal git repositories that get cloned as part of the `scripts/setup.sh` script, so you can treat them as you would any other git repository. You can make changes, commit them, and change branches - and the container will be automatically kept in sync.
 
