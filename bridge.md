@@ -1,3 +1,9 @@
+## Usage
+
+- Activate the environment:
+
+  `$ source /opt/bridge-server/bridge-server-venv/bin/activate`
+
 **Configuration**
 - bridge server envionment variable file is located at `/opt/bridge-server/.env` within the container
 - database url: postgresql://docker:docker@localhost:5432/bridge-server
