@@ -11,6 +11,12 @@ class MySaleCard extends Component {
   constructor(props) {
     super(props)
 
+    this.state = {
+      soldAtTime: null
+    }
+
+    this.setSoldAtTime = this.setSoldAtTime.bind(this)
+
     this.intlMessages = defineMessages({
       ETH: {
         id: 'my-sale-card.ethereumCurrencyAbbrev',
@@ -29,6 +35,16 @@ class MySaleCard extends Component {
 
   componentDidMount() {
     $('[data-toggle="tooltip"]').tooltip()
+  }
+
+  setSoldAtTime(soldAt) {
+    setInterval(() => {
+
+      this.setState({
+        soldAtTime: moment(soldAt).fromNow()
+      })
+
+    }, 30000)
   }
 
   render() {
@@ -86,7 +102,7 @@ class MySaleCard extends Component {
               </div>
             </div>
             <div className="timestamp-container order-2 text-muted text-right">
-              <p className="timestamp">{ moment(soldAt).fromNow() }</p>
+              <p className="timestamp">{ this.state.soldAtTime || this.setSoldAtTime(soldAt) }</p>
             </div>
             <div className="aspect-ratio order-1 order-lg-3">
               <div className={`${photo ? '' : 'placeholder '}image-container d-flex justify-content-center`}>

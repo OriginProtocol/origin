@@ -10,6 +10,12 @@ class Review extends Component {
   constructor(props) {
     super(props)
 
+    this.state = {
+      createdAtTime: null
+    }
+
+    this.setCreatedAtTime = this.setCreatedAtTime.bind(this)
+
     this.intlMessages = defineMessages({
       unnamedUser: {
         id: 'review.unnamedUser',
@@ -20,6 +26,16 @@ class Review extends Component {
 
   componentWillMount() {
     this.props.fetchUser(this.props.review.reviewerAddress, this.props.intl.formatMessage(this.intlMessages.unnamedUser))
+  }
+
+  setCreatedAtTime(createdAt) {
+    setInterval(() => {
+
+      this.setState({
+        createdAtTime: moment(createdAt).fromNow()
+      })
+
+    }, 30000)
   }
 
   render() {
@@ -47,7 +63,7 @@ class Review extends Component {
                   />
                 )
               })}</div>
-              <div className="age text-muted">{ moment(createdAt).fromNow() }</div>
+              <div className="age text-muted">{ this.state.createdAtTime || this.setCreatedAtTime(createdAt) }</div>
             </div>
           </div>
         </Link>

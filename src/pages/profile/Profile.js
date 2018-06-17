@@ -40,6 +40,7 @@ class Profile extends Component {
     this.handleToggle = this.handleToggle.bind(this)
     this.handleUnload = this.handleUnload.bind(this)
     this.setProgress = this.setProgress.bind(this)
+    this.setLastPublishTime = this.setLastPublishTime.bind(this)
     /*
       Three-ish Profile States
 
@@ -55,6 +56,7 @@ class Profile extends Component {
       lastPublish: null,
       address: props.address,
       userForm: { firstName, lastName, description },
+      lastPublishTime: null,
       modalsOpen: {
         attestationSuccess: false,
         email: false,
@@ -196,6 +198,16 @@ class Profile extends Component {
     this.setState({ progress })
   }
 
+  setLastPublishTime(lastPublish) {
+    setInterval(() => {
+
+      this.setState({
+        lastPublishTime: moment(lastPublish).fromNow()
+      })
+
+    }, 30000)
+  }
+
   componentWillUnmount() {
     $('.profile-wrapper [data-toggle="tooltip"]').tooltip('dispose')
 
@@ -318,7 +330,7 @@ class Profile extends Component {
                           defaultMessage={ 'Last published' }
                         />
                         {' '}
-                        { moment(lastPublish).fromNow() }
+                        { this.state.lastPublishTime || this.setLastPublishTime(lastPublish) }
                       </span>
                     )}
                   </div>
