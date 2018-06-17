@@ -160,6 +160,29 @@ class VerifierServices extends Component {
               </span>
             </button>
           </div>
+          <div className="col-12 col-sm-6 col-md-4">
+            <button
+              data-modal="airbnb"
+              className={`service d-flex${
+                published.airbnb
+                  ? ' published'
+                  : provisional.airbnb
+                    ? ' verified'
+                    : ''
+              }`}
+              onClick={handleToggle}
+            >
+              <span className="image-container d-flex align-items-center justify-content-center">
+                <img src="images/airbnb-icon-light.svg" alt="Airbnb icon" />
+              </span>
+              <span className="service-name">
+                <FormattedMessage
+                  id={ '_Services.airbnb' }
+                  defaultMessage={ 'Airbnb' }
+                />
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     )

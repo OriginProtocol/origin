@@ -34,5 +34,9 @@
   {
     "id": "_Services.google",
     "defaultMessage": "Google"
+  },
+  {
+    "id": "_Services.airbnb",
+    "defaultMessage": "Airbnb"
   }
 ]

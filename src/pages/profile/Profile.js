@@ -26,6 +26,7 @@ import VerifyPhone from './VerifyPhone'
 import VerifyEmail from './VerifyEmail'
 import VerifyFacebook from './VerifyFacebook'
 import VerifyTwitter from './VerifyTwitter'
+import VerifyAirbnb from './VerifyAirbnb'
 import ConfirmPublish from './ConfirmPublish'
 import ConfirmUnload from './ConfirmUnload'
 import AttestationSuccess from './AttestationSuccess'
@@ -61,6 +62,7 @@ class Profile extends Component {
         facebook: false,
         phone: false,
         profile: false,
+        airbnb: false,
         publish: false,
         twitter: false,
         unload: false,
@@ -103,6 +105,10 @@ class Profile extends Component {
       twitterVerified: {
         id: 'Profile.twitterVerified',
         defaultMessage: 'Twitter account verified!'
+      },
+      airbnbVerified: {
+        id: 'Profile.airbnbVerified',
+        defaultMessage: 'Airbnb account verified!'
       }
     });
   }
@@ -394,6 +400,20 @@ class Profile extends Component {
             this.setState({
               successMessage: this.props.intl.formatMessage(this.intlMessages.twitterVerified),
               modalsOpen: { ...modalsOpen, twitter: false, attestationSuccess: true }
+            })
+          }}
+        />
+
+        <VerifyAirbnb
+          open={modalsOpen.airbnb}
+          handleToggle={this.handleToggle}
+          intl={this.props.intl}
+          web3Account = {this.props.web3Account}
+          onSuccess={data => {
+            this.props.addAttestation(data)
+            this.setState({
+              successMessage: this.props.intl.formatMessage(this.intlMessages.airbnbVerified),
+              modalsOpen: { ...modalsOpen, airbnb: false, attestationSuccess: true }
             })
           }}
         />
