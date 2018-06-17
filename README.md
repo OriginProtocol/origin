@@ -38,6 +38,9 @@ You may now edit the source code using your favorite editor in the ignored direc
 
 However, non-git related actions should be performed from within the container. For example, running any sort of npm command (e.g. `npm test`) should be done from within the container cli. The same applies for python commands.
 
+Repo-specific instructions:
+- [bridge-server](bridge.md)
+
 ### pm2
 
 Currently we're using [pm2](http://pm2.keymetrics.io/) to automatically start and manage core processes for all of the components. You can run `pm2 list` from within the container cli to see all currently running processes.
