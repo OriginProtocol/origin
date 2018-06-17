@@ -1,10 +1,12 @@
+# origin-box: bridge
+
 ## Usage
 
 - Activate the environment:
 
   `$ source /opt/bridge-server/bridge-server-venv/bin/activate`
 
-**Configuration**
+## Configuration
 - bridge server envionment variable file is located at `/opt/bridge-server/.env` within the container
 - database url: postgresql://docker:docker@localhost:5432/bridge-server
 - if running the demo-dapp locally alongside the container, use these settings for the environment variable (.env) file:
@@ -16,7 +18,7 @@
     - `IPFS_GATEWAY_PROTOCOL=http`
     - `PROVIDER_URL=http://localhost:8545`
 
-**Connectivity tests from localhost**
+## Connectivity tests from localhost
 - bridge server: curl http://127.0.0.1:5000
 - postgres:  psql -h 127.0.0.1 -p 5432 -d "bridge-server" -U docker --password <-- currently only working from within the container
 - redis: redis-cli <-- defaults to connecting to 127.0.0.1:6379
@@ -50,7 +52,7 @@
 | redis              | 0  | fork | x    | online | 0       | XXm    | 0%  | 3.2 MB     | root | disabled |
 
 
-**TODOS:**
+## TODOS
 - envkey integration
 - templating / user configurability / live updating of configs
 - SDK, integration testing
