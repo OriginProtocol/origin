@@ -45,7 +45,7 @@ describe('Listing Resource', function() {
 
   it('should get a listing by index', async () => {
     await listings.create({ name: 'Foo Bar', price: 1 }, '')
-    const listingIds = await contractService.getAllListingIds()
+    const listingIds = await listings.allIds()
     const listing = await listings.getByIndex(listingIds[listingIds.length - 1])
     expect(listing.name).to.equal('Foo Bar')
     expect(listing.index).to.equal(listingIds.length - 1)
@@ -53,7 +53,7 @@ describe('Listing Resource', function() {
 
   it('should get a listing by address', async () => {
     await listings.create({ name: 'Foo Bar', price: 1 }, '')
-    const listingIds = await contractService.getAllListingIds()
+    const listingIds = await listings.allIds()
     const listingFromIndex = await listings.getByIndex(
       listingIds[listingIds.length - 1]
     )
@@ -63,7 +63,7 @@ describe('Listing Resource', function() {
 
   it('should buy a listing', async () => {
     await listings.create({ name: 'My Listing', price: 1 }, '')
-    const listingIds = await contractService.getAllListingIds()
+    const listingIds = await listings.allIds()
     const listing = await listings.getByIndex(listingIds[listingIds.length - 1])
     await asAccount(contractService.web3, buyer, async () => {
       await listings.buy(listing.address, 1, listing.price * 1)
@@ -90,7 +90,7 @@ describe('Listing Resource', function() {
       { name: 'Closing Listing', price: 1, unitsAvailable: 1 },
       ''
     )
-    const listingIds = await contractService.getAllListingIds()
+    const listingIds = await listings.allIds()
     const listingIndex = listingIds[listingIds.length - 1]
 
     const listingBefore = await listings.getByIndex(listingIndex)
@@ -106,7 +106,7 @@ describe('Listing Resource', function() {
     let listing
     before(async () => {
       await listings.create({ name: 'My Listing', price: 1 }, '')
-      const listingIds = await contractService.getAllListingIds()
+      const listingIds = await listings.allIds()
       listing = await listings.getByIndex(listingIds[listingIds.length - 1])
       await asAccount(contractService.web3, buyer, async () => {
         await listings.buy(listing.address, 1, 1)

@@ -148,31 +148,6 @@ class ContractService {
     return txReceipt
   }
 
-  async getAllListingIds() {
-    const range = (start, count) =>
-      Array.apply(0, Array(count)).map((element, index) => index + start)
-
-    let instance
-    try {
-      instance = await this.deployed(ListingsRegistryContract)
-    } catch (error) {
-      console.log('Contract not deployed')
-      throw error
-    }
-
-    // Get total number of listings
-    let listingsLength
-    try {
-      listingsLength = await instance.methods.listingsLength().call()
-    } catch (error) {
-      console.log(error)
-      console.log('Can\'t get number of listings.')
-      throw error
-    }
-
-    return range(0, Number(listingsLength))
-  }
-
   async getListing(listingId) {
     const instance = await this.deployed(ListingsRegistryContract)
 

@@ -43,14 +43,6 @@ describe('ContractService', function() {
     })
   })
 
-  describe('getAllListingIds', () => {
-    it('should get an array of numbers', async () => {
-      const result = await contractService.getAllListingIds()
-      expect(result).to.be.an('array')
-      result.forEach(id => expect(id).to.be.a('number'))
-    })
-  })
-
   describe('getListing', () => {
     // Skipped because of https://github.com/OriginProtocol/platform/issues/27
     it('should reject when listing cannot be found', done => {
@@ -61,9 +53,7 @@ describe('ContractService', function() {
     })
 
     it('should get a listing object', async () => {
-      const ids = await contractService.getAllListingIds()
-      expect(ids.length).to.be.greaterThan(0)
-      const listing = await contractService.getListing(ids[0])
+      const listing = await contractService.getListing(0)
       expect(listing).to.have.keys(
         'address',
         'index',
