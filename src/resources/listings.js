@@ -112,7 +112,7 @@ class Listings extends ResourceBase {
     const units = 1 // TODO: Allow users to set number of units in form
     let transactionReceipt
     try {
-      transactionReceipt = await this.contractService.submitListing(
+      transactionReceipt = await this.submitListing(
         ipfsHash,
         formListing.formData.price,
         units
@@ -153,6 +153,23 @@ class Listings extends ResourceBase {
 
   async purchaseAddressByIndex(address, index) {
     return await this.contractFn(address, 'getPurchase', [index])
+  }
+
+  async submitListing(ipfsListing, ethPrice, units) {
+    try {
+      const account = await this.contractService.currentAccount()
+      const instance = await this.contractService.deployed(this.contractService.listingsRegistryContract)
+
+      const weiToGive = this.contractService.web3.utils.toWei(String(ethPrice), 'ether')
+      // Note we cannot get the listingId returned by our contract.
+      // See: https://forum.ethereum.org/discussion/comment/31529/#Comment_31529
+      return instance.methods
+        .create(this.contractService.getBytes32FromIpfsHash(ipfsListing), weiToGive, units)
+        .send({ from: account, gas: 4476768 })
+    } catch (error) {
+      console.error('Error submitting to the Ethereum blockchain: ' + error)
+      throw error
+    }
   }
 }
 
