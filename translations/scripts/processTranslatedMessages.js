@@ -12,9 +12,13 @@ glob.sync('./translations/languages/**/*.json')
     const langNameObj = languageNames.filter((lang) => lang.name.toLowerCase() === languageName.toLowerCase())
     const langAbbrev = langNameObj[0] && langNameObj[0].code
 
-    translatedMessages[langAbbrev] = contents
-
-    console.info(`✔ ${languageName}`)
+    if(langAbbrev && contents) {
+      translatedMessages[langAbbrev] = contents
+      console.info(`✔ ${languageName}`)
+    } else {
+      console.info(`❌ Error processing translations for ${languageName}`)
+    }
+    
   })
 
 fs.writeFileSync('./translations/translated-messages.json', JSON.stringify(translatedMessages, null, 2));
