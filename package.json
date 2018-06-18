@@ -66,6 +66,7 @@
     "dev": "npx webpack-dev-server --open --host 0.0.0.0",
     "deploy:ipfs": "./scripts/deploy.sh",
     "build": "NODE_ENV=production webpack --progress --display errors-only",
+    "translations": "node translations/scripts/processTranslatedMessages.js",
     "test": "node scripts/test.js --env=jsdom"
   },
   "babel": {

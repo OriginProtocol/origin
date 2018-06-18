@@ -18,6 +18,7 @@ import th from 'react-intl/locale-data/th'
 import tr from 'react-intl/locale-data/tr'
 import zh from 'react-intl/locale-data/zh'
 import schemaMessages from '../schemaMessages/index'
+import languageNames from './languageNames.json'
 
 let globalIntlProvider
 
@@ -28,16 +29,42 @@ export function addLocales() {
   if (!window.Intl) {
     require.ensure([
       'intl',
+      'intl/locale-data/jsonp/ar.js',
+      'intl/locale-data/jsonp/de.js',
+      'intl/locale-data/jsonp/el.js',
       'intl/locale-data/jsonp/en.js',
       'intl/locale-data/jsonp/es.js',
       'intl/locale-data/jsonp/fr.js',
+      'intl/locale-data/jsonp/he.js',
+      'intl/locale-data/jsonp/hr.js',
       'intl/locale-data/jsonp/it.js',
+      'intl/locale-data/jsonp/ja.js',
+      'intl/locale-data/jsonp/ko.js',
+      'intl/locale-data/jsonp/nl.js',
+      'intl/locale-data/jsonp/pt.js',
+      'intl/locale-data/jsonp/ru.js',
+      'intl/locale-data/jsonp/th.js',
+      'intl/locale-data/jsonp/tr.js',
+      'intl/locale-data/jsonp/zh.js'
     ], (require) => {
       require('intl')
+      require('intl/locale-data/jsonp/ar.js')
+      require('intl/locale-data/jsonp/de.js')
+      require('intl/locale-data/jsonp/el.js')
       require('intl/locale-data/jsonp/en.js')
       require('intl/locale-data/jsonp/es.js')
       require('intl/locale-data/jsonp/fr.js')
+      require('intl/locale-data/jsonp/he.js')
+      require('intl/locale-data/jsonp/hr.js')
       require('intl/locale-data/jsonp/it.js')
+      require('intl/locale-data/jsonp/ja.js')
+      require('intl/locale-data/jsonp/ko.js')
+      require('intl/locale-data/jsonp/nl.js')
+      require('intl/locale-data/jsonp/pt.js')
+      require('intl/locale-data/jsonp/ru.js')
+      require('intl/locale-data/jsonp/th.js')
+      require('intl/locale-data/jsonp/tr.js')
+      require('intl/locale-data/jsonp/zh.js')
     })
   }
 
@@ -62,59 +89,8 @@ export function addLocales() {
 }
 
 export function getLangFullName(langAbbrev) {
-  
-  switch (langAbbrev) {
-    case 'en':
-      return 'English'
-      
-    case 'de':
-      return 'Deutsch'
-
-    case 'es':
-      return 'Español'
-
-    case 'fr':
-      return 'Français'
-
-    case 'hr':
-      return 'Hrvatski'
-
-    case 'it':
-      return 'Italiano'
-
-    case 'nl':
-      return 'Nederlands'
-
-    case 'pt':
-      return 'Português'
-
-    case 'tr':
-      return 'Türkçe'
-
-    case 'el':
-      return 'Ελληνικά'
-
-    case 'ru':
-      return 'Русский'
-
-    case 'he':
-      return 'עברית'
-
-    case 'ar':
-      return 'العربية'
-
-    case 'th':
-      return 'ไทย'
-
-    case 'ko':
-      return '한국어'
-
-    case 'ja':
-      return '日本語'
-
-    case 'zh':
-      return '简体中文'
-  }
+  const langNameObj = languageNames.filter((lang) => lang.code === langAbbrev)
+  return langNameObj[0] && langNameObj[0].nativeName
 }
 
 export function getAvailableLanguages() {
