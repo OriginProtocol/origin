@@ -390,7 +390,7 @@ def test_generate_airbnb_verification_code():
     assert resp.data['code'] == "0x66dd6b0b"
 
 
-def test_generate_airbnb_verification_code_oncorrect_user_id_format():
+def test_generate_airbnb_verification_code_incorrect_user_id_format():
     with pytest.raises(AirbnbVerificationError) as service_err:
         VerificationService.generate_airbnb_verification_code('0x112234455C3a32FD11230C42E7Bccd4A84e02010', '12a34')
 
@@ -432,3 +432,13 @@ def test_verify_airbnb_verification_code_incorrect(mock_urllib_request):
         VerificationService.verify_airbnb('0x112234455C3a32FD11230C42E7Bccd4A84e02010', "123456")
 
     assert str(service_err.value) == "Origin verification code: 0x66dd6b0b has not been found in user's Airbnb profile."
+
+@mock.patch('logic.attestation_service.urllib.request')
+def test_verify_airbnb_verification_code_incorrect_user_id_format(mock_urllib_request):
+    urlopen = mock_urllib_request.urlopen.return_value
+    urlopen.read.return_value = "<html><div> Airbnb profile description Origin verification code: 0x1234567 some more profile description</div></html>"
+
+    with pytest.raises(AirbnbVerificationError) as service_err:
+        VerificationService.verify_airbnb('0x112234455C3a32FD11230C42E7Bccd4A84e02010', "12a34")
+
+    assert str(service_err.value) == 'AirbnbUserId should be a number.'

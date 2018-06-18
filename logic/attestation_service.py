@@ -249,6 +249,9 @@ class VerificationService:
         return VerificationServiceResponse({'code': generate_airbnb_verification_code(eth_address, airbnbUserId)})
 
     def verify_airbnb(eth_address, airbnbUserId):
+        if not re.compile("^\d*$").match(airbnbUserId):
+            raise AirbnbVerificationError('AirbnbUserId should be a number.')
+            
         code = generate_airbnb_verification_code(eth_address, airbnbUserId)
 
         response = urllib.request.urlopen('https://www.airbnb.com/users/show/' + airbnbUserId)
