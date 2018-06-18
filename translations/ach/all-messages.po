@@ -1,0 +1,3797 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2018-06-11T22:29:52.005Z\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"MIME-Version: 1.0\n"
+"X-Generator: crowdin.com\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Crowdin-Project: originprotocol\n"
+"X-Crowdin-Language: ach\n"
+"X-Crowdin-File: /develop/translations/all-messages.po\n"
+"Project-Id-Version: originprotocol\n"
+"Last-Translator: OriginProtocol <coleman@originprotocol.com>\n"
+"Language-Team: Acholi\n"
+"Language: ach_UG\n"
+"PO-Revision-Date: 2018-06-13 20:01-0400\n"
+
+#. [user-card.heading]
+#. defaultMessage is:
+#. About the {title}
+#: translations/messages/src/components/user-card.json
+msgctxt "user-card.heading"
+msgid "About the {title}"
+msgstr "crwdns957:0{title}crwdne957:0"
+
+#. [_Wallet.accountBalance]
+#. defaultMessage is:
+#. Account Balance:
+#: translations/messages/src/pages/profile/_Wallet.json
+msgctxt "_Wallet.accountBalance"
+msgid "Account Balance:"
+msgstr "crwdns958:0crwdne958:0"
+
+#. [my-listings.active]
+#. defaultMessage is:
+#. Active
+#: translations/messages/src/components/my-listings.json
+msgctxt "my-listings.active"
+msgid "Active"
+msgstr "crwdns959:0crwdne959:0"
+
+#. [schema.announcements.activities]
+#. defaultMessage is:
+#. Activities
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.activities"
+msgid "Activities"
+msgstr "crwdns960:0crwdne960:0"
+
+#. [navbar.addListing]
+#. defaultMessage is:
+#. Add a Listing
+#: translations/messages/src/components/navbar.json
+msgctxt "navbar.addListing"
+msgid "Add a Listing"
+msgstr "crwdns961:0crwdne961:0"
+
+#. [_Services.address]
+#. defaultMessage is:
+#. Address
+#: translations/messages/src/pages/profile/_Services.json
+msgctxt "_Services.address"
+msgid "Address"
+msgstr "crwdns962:0crwdne962:0"
+
+#. [ConfirmPublish.afterYouPublishNotice]
+#. defaultMessage is:
+#. After you publish your changes to the blockchain, other users will be able to see that you have verified the following:
+#: translations/messages/src/pages/profile/ConfirmPublish.json
+msgctxt "ConfirmPublish.afterYouPublishNotice"
+msgid "After you publish your changes to the blockchain, other users will be able to see that you have verified the following:"
+msgstr "crwdns963:0crwdne963:0"
+
+#. [schema.transportation.airplaneCharter]
+#. defaultMessage is:
+#. Airplane Charter
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.airplaneCharter"
+msgid "Airplane Charter"
+msgstr "crwdns964:0crwdne964:0"
+
+#. [my-listings.all]
+#. defaultMessage is:
+#. All
+#: translations/messages/src/components/my-listings.json
+msgctxt "my-listings.all"
+msgid "All"
+msgstr "crwdns965:0crwdne965:0"
+
+#. [my-purchases.all]
+#. defaultMessage is:
+#. All
+#: translations/messages/src/components/my-purchases.json
+msgctxt "my-purchases.all"
+msgid "All"
+msgstr "crwdns966:0crwdne966:0"
+
+#. [my-sales.all]
+#. defaultMessage is:
+#. All
+#: translations/messages/src/components/my-sales.json
+msgctxt "my-sales.all"
+msgid "All"
+msgstr "crwdns967:0crwdne967:0"
+
+#. [notifications.all]
+#. defaultMessage is:
+#. All
+#: translations/messages/src/components/notifications.json
+msgctxt "notifications.all"
+msgid "All"
+msgstr "crwdns968:0crwdne968:0"
+
+#. [Profile.noDescriptionUser]
+#. defaultMessage is:
+#. An Origin user without a description
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.noDescriptionUser"
+msgid "An Origin user without a description"
+msgstr "crwdns969:0crwdne969:0"
+
+#. [listing-create.announcements]
+#. defaultMessage is:
+#. Announcements
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.announcements"
+msgid "Announcements"
+msgstr "crwdns970:0crwdne970:0"
+
+#. [schema.forSale.antiques]
+#. defaultMessage is:
+#. Antiques
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.antiques"
+msgid "Antiques"
+msgstr "crwdns971:0crwdne971:0"
+
+#. [schema.forSale.appliances]
+#. defaultMessage is:
+#. Appliances
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.appliances"
+msgid "Appliances"
+msgstr "crwdns972:0crwdne972:0"
+
+#. [schema.housing.aptsWanted]
+#. defaultMessage is:
+#. Apts Wanted
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.aptsWanted"
+msgid "Apts Wanted"
+msgstr "crwdns973:0crwdne973:0"
+
+#. [schema.housing.aptsHousingForRent]
+#. defaultMessage is:
+#. Apts/Housing for Rent
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.aptsHousingForRent"
+msgid "Apts/Housing for Rent"
+msgstr "crwdns974:0crwdne974:0"
+
+#. [my-listing-card.confirmCloseListing]
+#. defaultMessage is:
+#. Are you sure that you want to permanently close this listing? This cannot be undone.
+#: translations/messages/src/components/my-listing-card.json
+msgctxt "my-listing-card.confirmCloseListing"
+msgid "Are you sure that you want to permanently close this listing? This cannot be undone."
+msgstr "crwdns975:0crwdne975:0"
+
+#. [schema.announcements.artists]
+#. defaultMessage is:
+#. Artists
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.artists"
+msgid "Artists"
+msgstr "crwdns976:0crwdne976:0"
+
+#. [schema.tickets.arts]
+#. defaultMessage is:
+#. Arts
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.arts"
+msgid "Arts"
+msgstr "crwdns977:0crwdne977:0"
+
+#. [schema.forSale.artsCrafts]
+#. defaultMessage is:
+#. Arts & Crafts
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.artsCrafts"
+msgid "Arts & Crafts"
+msgstr "crwdns978:0crwdne978:0"
+
+#. [schema.forSale.atvsUtvsSnowmobiles]
+#. defaultMessage is:
+#. Atvs, UTVs, Snowmobiles
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.atvsUtvsSnowmobiles"
+msgid "Atvs, UTVs, Snowmobiles"
+msgstr "crwdns979:0crwdne979:0"
+
+#. [schema.forSale.autoParts]
+#. defaultMessage is:
+#. Auto Parts
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.autoParts"
+msgid "Auto Parts"
+msgstr "crwdns980:0crwdne980:0"
+
+#. [schema.forSale.autoWheelsTires]
+#. defaultMessage is:
+#. Auto Wheels & Tires
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.autoWheelsTires"
+msgid "Auto Wheels & Tires"
+msgstr "crwdns981:0crwdne981:0"
+
+#. [schema.forSale.babyKidStuff]
+#. defaultMessage is:
+#. Baby & Kid Stuff
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.babyKidStuff"
+msgid "Baby & Kid Stuff"
+msgstr "crwdns982:0crwdne982:0"
+
+#. [backButtonLabel]
+#. defaultMessage is:
+#. Back
+#: translations/messages/src/components/listing-create.json
+msgctxt "backButtonLabel"
+msgid "Back"
+msgstr "crwdns983:0crwdne983:0"
+
+#. [listing-create.backButtonLabel]
+#. defaultMessage is:
+#. Back
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.backButtonLabel"
+msgid "Back"
+msgstr "crwdns984:0crwdne984:0"
+
+#. [schema.forSale.barter]
+#. defaultMessage is:
+#. Barter
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.barter"
+msgid "Barter"
+msgstr "crwdns985:0crwdne985:0"
+
+#. [listing-create.howItWorksContentPart2]
+#. defaultMessage is:
+#. Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.howItWorksContentPart2"
+msgid "Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering."
+msgstr "crwdns986:0crwdne986:0"
+
+#. [schema.forSale.bicycleParts]
+#. defaultMessage is:
+#. Bicycle Parts
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.bicycleParts"
+msgid "Bicycle Parts"
+msgstr "crwdns987:0crwdne987:0"
+
+#. [schema.forSale.bicycles]
+#. defaultMessage is:
+#. Bicycles
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.bicycles"
+msgid "Bicycles"
+msgstr "crwdns988:0crwdne988:0"
+
+#. [schema.transportation.bikeRentals]
+#. defaultMessage is:
+#. Bike Rentals
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.bikeRentals"
+msgid "Bike Rentals"
+msgstr "crwdns989:0crwdne989:0"
+
+#. [schema.forSale.boatPartsAccessories]
+#. defaultMessage is:
+#. Boat Parts & Accessories
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.boatPartsAccessories"
+msgid "Boat Parts & Accessories"
+msgstr "crwdns990:0crwdne990:0"
+
+#. [schema.transportation.boatRentals]
+#. defaultMessage is:
+#. Boat Rentals
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.boatRentals"
+msgid "Boat Rentals"
+msgstr "crwdns991:0crwdne991:0"
+
+#. [schema.forSale.boats]
+#. defaultMessage is:
+#. Boats
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.boats"
+msgid "Boats"
+msgstr "crwdns992:0crwdne992:0"
+
+#. [schema.forSale.booksMagazines]
+#. defaultMessage is:
+#. Books & Magazines
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.booksMagazines"
+msgid "Books & Magazines"
+msgstr "crwdns993:0crwdne993:0"
+
+#. [_countryOptions.brazil]
+#. defaultMessage is:
+#. Brazil
+#: translations/messages/src/pages/profile/_countryOptions.json
+msgctxt "_countryOptions.brazil"
+msgid "Brazil"
+msgstr "crwdns994:0crwdne994:0"
+
+#. [connectivity.bridgeServer]
+#. defaultMessage is:
+#. Bridge Server:
+#: translations/messages/src/components/dropdowns/connectivity.json
+msgctxt "connectivity.bridgeServer"
+msgid "Bridge Server:"
+msgstr "crwdns995:0crwdne995:0"
+
+#. [schema.forSale.business]
+#. defaultMessage is:
+#. Business
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.business"
+msgid "Business"
+msgstr "crwdns996:0crwdne996:0"
+
+#. [schema.services.businessServices]
+#. defaultMessage is:
+#. Business Services
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.businessServices"
+msgid "Business Services"
+msgstr "crwdns997:0crwdne997:0"
+
+#. [notifications.buy]
+#. defaultMessage is:
+#. Buy
+#: translations/messages/src/components/notifications.json
+msgctxt "notifications.buy"
+msgid "Buy"
+msgstr "crwdns998:0crwdne998:0"
+
+#. [listing-detail.buyNow]
+#. defaultMessage is:
+#. Buy Now
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.buyNow"
+msgid "Buy Now"
+msgstr "crwdns999:0crwdne999:0"
+
+#. [purchase-detail.buyer]
+#. defaultMessage is:
+#. Buyer
+#. [purchase-detail.buyer]
+#. defaultMessage is:
+#. Buyer
+#: translations/messages/src/components/notification.json
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.buyer"
+msgid "Buyer"
+msgstr "crwdns1000:0crwdne1000:0"
+
+#. [navbar.buying]
+#. defaultMessage is:
+#. Buying
+#: translations/messages/src/components/navbar.json
+msgctxt "navbar.buying"
+msgid "Buying"
+msgstr "crwdns1001:0crwdne1001:0"
+
+#. [schema.forSale.cdsDvdsVhs]
+#. defaultMessage is:
+#. CDs / DVDs / VHS
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.cdsDvdsVhs"
+msgid "CDs / DVDs / VHS"
+msgstr "crwdns1002:0crwdne1002:0"
+
+#. [EditProfile.cancel]
+#. defaultMessage is:
+#. Cancel
+#: translations/messages/src/pages/profile/EditProfile.json
+msgctxt "EditProfile.cancel"
+msgid "Cancel"
+msgstr "crwdns1003:0crwdne1003:0"
+
+#. [VerifyEmail.cancel]
+#. defaultMessage is:
+#. Cancel
+#: translations/messages/src/pages/profile/VerifyEmail.json
+msgctxt "VerifyEmail.cancel"
+msgid "Cancel"
+msgstr "crwdns1004:0crwdne1004:0"
+
+#. [VerifyFacebook.cancel]
+#. defaultMessage is:
+#. Cancel
+#: translations/messages/src/pages/profile/VerifyFacebook.json
+msgctxt "VerifyFacebook.cancel"
+msgid "Cancel"
+msgstr "crwdns1005:0crwdne1005:0"
+
+#. [VerifyPhone.cancel]
+#. defaultMessage is:
+#. Cancel
+#: translations/messages/src/pages/profile/VerifyPhone.json
+msgctxt "VerifyPhone.cancel"
+msgid "Cancel"
+msgstr "crwdns1006:0crwdne1006:0"
+
+#. [VerifyTwitter.cancel]
+#. defaultMessage is:
+#. Cancel
+#: translations/messages/src/pages/profile/VerifyTwitter.json
+msgctxt "VerifyTwitter.cancel"
+msgid "Cancel"
+msgstr "crwdns1007:0crwdne1007:0"
+
+#. [schema.transportation.carRentals]
+#. defaultMessage is:
+#. Car Rentals
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.carRentals"
+msgid "Car Rentals"
+msgstr "crwdns1008:0crwdne1008:0"
+
+#. [schema.forSale.carsTrucks]
+#. defaultMessage is:
+#. Cars & Trucks
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.carsTrucks"
+msgid "Cars & Trucks"
+msgstr "crwdns1009:0crwdne1009:0"
+
+#. [schema.announcements.category]
+#. defaultMessage is:
+#. Category
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.category"
+msgid "Category"
+msgstr "crwdns1010:0crwdne1010:0"
+
+#. [schema.forSale.category]
+#. defaultMessage is:
+#. Category
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.category"
+msgid "Category"
+msgstr "crwdns1011:0crwdne1011:0"
+
+#. [schema.housing.category]
+#. defaultMessage is:
+#. Category
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.category"
+msgid "Category"
+msgstr "crwdns1012:0crwdne1012:0"
+
+#. [schema.services.category]
+#. defaultMessage is:
+#. Category
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.category"
+msgid "Category"
+msgstr "crwdns1013:0crwdne1013:0"
+
+#. [schema.tickets.category]
+#. defaultMessage is:
+#. Category
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.category"
+msgid "Category"
+msgstr "crwdns1014:0crwdne1014:0"
+
+#. [schema.transportation.category]
+#. defaultMessage is:
+#. Category
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.category"
+msgid "Category"
+msgstr "crwdns1015:0crwdne1015:0"
+
+#. [schema.forSale.cellPhones]
+#. defaultMessage is:
+#. Cell Phones
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.cellPhones"
+msgid "Cell Phones"
+msgstr "crwdns1016:0crwdne1016:0"
+
+#. [schema.announcements.childcare]
+#. defaultMessage is:
+#. Childcare
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.childcare"
+msgid "Childcare"
+msgstr "crwdns1017:0crwdne1017:0"
+
+#. [_countryOptions.unitedStates]
+#. defaultMessage is:
+#. China
+#: translations/messages/src/pages/profile/_countryOptions.json
+msgctxt "_countryOptions.unitedStates"
+msgid "China"
+msgstr "crwdns1018:0crwdne1018:0"
+
+#. [_countryOptions.china]
+#. defaultMessage is:
+#. China
+#: translations/messages/src/pages/profile/_countryOptions.json
+msgctxt "_countryOptions.china"
+msgid "China"
+msgstr "crwdns1019:0crwdne1019:0"
+
+#. [listing-create.chooseSchema]
+#. defaultMessage is:
+#. Choose a schema for your product or service
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.chooseSchema"
+msgid "Choose a schema for your product or service"
+msgstr "crwdns1020:0crwdne1020:0"
+
+#. [web3-provider.cipher]
+#. defaultMessage is:
+#. Cipher
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.cipher"
+msgid "Cipher"
+msgstr "crwdns1021:0crwdne1021:0"
+
+#. [schema.announcements.classes]
+#. defaultMessage is:
+#. Classes
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.classes"
+msgid "Classes"
+msgstr "crwdns1022:0crwdne1022:0"
+
+#. [schema.tickets.classesWorkshops]
+#. defaultMessage is:
+#. Classes & Workshops
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.classesWorkshops"
+msgid "Classes & Workshops"
+msgstr "crwdns1023:0crwdne1023:0"
+
+#. [transactions.clear]
+#. defaultMessage is:
+#. Clear
+#: translations/messages/src/components/dropdowns/transactions.json
+msgctxt "transactions.clear"
+msgid "Clear"
+msgstr "crwdns1024:0crwdne1024:0"
+
+#. [purchase-detail.sendOrderInstruction]
+#. defaultMessage is:
+#. Click the button below once the order has shipped.
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.sendOrderInstruction"
+msgid "Click the button below once the order has shipped."
+msgstr "crwdns1025:0crwdne1025:0"
+
+#. [purchase-detail.clickToWithdraw]
+#. defaultMessage is:
+#. Click the button below to initiate the withdrawal
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.clickToWithdraw"
+msgid "Click the button below to initiate the withdrawal"
+msgstr "crwdns1026:0crwdne1026:0"
+
+#. [my-listing-card.closeListing]
+#. defaultMessage is:
+#. Close Listing
+#: translations/messages/src/components/my-listing-card.json
+msgctxt "my-listing-card.closeListing"
+msgid "Close Listing"
+msgstr "crwdns1027:0crwdne1027:0"
+
+#. [schema.forSale.clothingAccessories]
+#. defaultMessage is:
+#. Clothing & Accessories
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.clothingAccessories"
+msgid "Clothing & Accessories"
+msgstr "crwdns1028:0crwdne1028:0"
+
+#. [schema.forSale.collectibles]
+#. defaultMessage is:
+#. Collectibles
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.collectibles"
+msgid "Collectibles"
+msgstr "crwdns1029:0crwdne1029:0"
+
+#. [_Services.comingSoon]
+#. defaultMessage is:
+#. Coming {br} Soon
+#: translations/messages/src/pages/profile/_Services.json
+msgctxt "_Services.comingSoon"
+msgid "Coming {br} Soon"
+msgstr "crwdns1030:0{br}crwdne1030:0"
+
+#. [footer.communityHeading]
+#. defaultMessage is:
+#. Community
+#: translations/messages/src/components/footer.json
+msgctxt "footer.communityHeading"
+msgid "Community"
+msgstr "crwdns1031:0crwdne1031:0"
+
+#. [my-purchases.complete]
+#. defaultMessage is:
+#. Complete
+#: translations/messages/src/components/my-purchases.json
+msgctxt "my-purchases.complete"
+msgid "Complete"
+msgstr "crwdns1032:0crwdne1032:0"
+
+#. [my-sales.complete]
+#. defaultMessage is:
+#. Complete
+#: translations/messages/src/components/my-sales.json
+msgctxt "my-sales.complete"
+msgid "Complete"
+msgstr "crwdns1033:0crwdne1033:0"
+
+#. [purchase-detail.completeByWithdrawing]
+#. defaultMessage is:
+#. Complete your transaction by withdrawing funds
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.completeByWithdrawing"
+msgid "Complete your transaction by withdrawing funds"
+msgstr "crwdns1034:0crwdne1034:0"
+
+#. [transactions.completed]
+#. defaultMessage is:
+#. Completed
+#: translations/messages/src/components/dropdowns/transactions.json
+msgctxt "transactions.completed"
+msgid "Completed"
+msgstr "crwdns1035:0crwdne1035:0"
+
+#. [schema.forSale.computerParts]
+#. defaultMessage is:
+#. Computer Parts
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.computerParts"
+msgid "Computer Parts"
+msgstr "crwdns1036:0crwdne1036:0"
+
+#. [schema.forSale.computers]
+#. defaultMessage is:
+#. Computers
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.computers"
+msgid "Computers"
+msgstr "crwdns1037:0crwdne1037:0"
+
+#. [schema.tickets.conference]
+#. defaultMessage is:
+#. Conference
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.conference"
+msgid "Conference"
+msgstr "crwdns1038:0crwdne1038:0"
+
+#. [purchase-detail.confirmAndReview]
+#. defaultMessage is:
+#. Confirm and Review
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.confirmAndReview"
+msgid "Confirm and Review"
+msgstr "crwdns1039:0crwdne1039:0"
+
+#. [purchase-detail.confirmReceiptOfOrder]
+#. defaultMessage is:
+#. Confirm receipt of the order and leave a review
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.confirmReceiptOfOrder"
+msgid "Confirm receipt of the order and leave a review"
+msgstr "crwdns1040:0crwdne1040:0"
+
+#. [listing-create.confirmTransaction]
+#. defaultMessage is:
+#. Confirm transaction
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.confirmTransaction"
+msgid "Confirm transaction"
+msgstr "crwdns1041:0crwdne1041:0"
+
+#. [listing-detail.confirmTransaction]
+#. defaultMessage is:
+#. Confirm transaction
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.confirmTransaction"
+msgid "Confirm transaction"
+msgstr "crwdns1042:0crwdne1042:0"
+
+#. [Profile.confirmTransaction]
+#. defaultMessage is:
+#. Confirm transaction
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.confirmTransaction"
+msgid "Confirm transaction"
+msgstr "crwdns1043:0crwdne1043:0"
+
+#. [web3-provider.connecting]
+#. defaultMessage is:
+#. Connecting to network...
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.connecting"
+msgid "Connecting to network..."
+msgstr "crwdns1044:0crwdne1044:0"
+
+#. [connectivity.connecting]
+#. defaultMessage is:
+#. Connecting...
+#: translations/messages/src/components/dropdowns/connectivity.json
+msgctxt "connectivity.connecting"
+msgid "Connecting..."
+msgstr "crwdns1045:0crwdne1045:0"
+
+#. [continueButtonLabel]
+#. defaultMessage is:
+#. Continue
+#: translations/messages/src/components/listing-create.json
+msgctxt "continueButtonLabel"
+msgid "Continue"
+msgstr "crwdns1046:0crwdne1046:0"
+
+#. [AttestationSuccess.continue]
+#. defaultMessage is:
+#. Continue
+#: translations/messages/src/pages/profile/AttestationSuccess.json
+msgctxt "AttestationSuccess.continue"
+msgid "Continue"
+msgstr "crwdns1047:0crwdne1047:0"
+
+#. [EditProfile.continue]
+#. defaultMessage is:
+#. Continue
+#: translations/messages/src/pages/profile/EditProfile.json
+msgctxt "EditProfile.continue"
+msgid "Continue"
+msgstr "crwdns1048:0crwdne1048:0"
+
+#. [Profile.continue]
+#. defaultMessage is:
+#. Continue
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.continue"
+msgid "Continue"
+msgstr "crwdns1049:0crwdne1049:0"
+
+#. [VerifyEmail.continue]
+#. defaultMessage is:
+#. Continue
+#: translations/messages/src/pages/profile/VerifyEmail.json
+msgctxt "VerifyEmail.continue"
+msgid "Continue"
+msgstr "crwdns1050:0crwdne1050:0"
+
+#. [VerifyFacebook.continue]
+#. defaultMessage is:
+#. Continue
+#: translations/messages/src/pages/profile/VerifyFacebook.json
+msgctxt "VerifyFacebook.continue"
+msgid "Continue"
+msgstr "crwdns1051:0crwdne1051:0"
+
+#. [VerifyPhone.continue]
+#. defaultMessage is:
+#. Continue
+#: translations/messages/src/pages/profile/VerifyPhone.json
+msgctxt "VerifyPhone.continue"
+msgid "Continue"
+msgstr "crwdns1052:0crwdne1052:0"
+
+#. [VerifyTwitter.continue]
+#. defaultMessage is:
+#. Continue
+#: translations/messages/src/pages/profile/VerifyTwitter.json
+msgctxt "VerifyTwitter.continue"
+msgid "Continue"
+msgstr "crwdns1053:0crwdne1053:0"
+
+#. [schema.services.counseling]
+#. defaultMessage is:
+#. Counseling
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.counseling"
+msgid "Counseling"
+msgstr "crwdns1054:0crwdne1054:0"
+
+#. [listing-create.createListingHeading]
+#. defaultMessage is:
+#. Create your listing
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.createListingHeading"
+msgid "Create your listing"
+msgstr "crwdns1055:0crwdne1055:0"
+
+#. [web3-provider.currentlyOnNetwork]
+#. defaultMessage is:
+#. Currently on {currentNetworkName}.
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.currentlyOnNetwork"
+msgid "Currently on {currentNetworkName}."
+msgstr "crwdns1056:0{currentNetworkName}crwdne1056:0"
+
+#. [schema.services.deliveryService]
+#. defaultMessage is:
+#. Delivery Service
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.deliveryService"
+msgid "Delivery Service"
+msgstr "crwdns1057:0crwdne1057:0"
+
+#. [Profile.deployingIdentity]
+#. defaultMessage is:
+#. Deploying your identity
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.deployingIdentity"
+msgid "Deploying your identity"
+msgstr "crwdns1058:0crwdne1058:0"
+
+#. [_ProvisionedChanges.description]
+#. defaultMessage is:
+#. Description
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.description"
+msgid "Description"
+msgstr "crwdns1059:0crwdne1059:0"
+
+#. [EditProfile.description]
+#. defaultMessage is:
+#. Description
+#: translations/messages/src/pages/profile/EditProfile.json
+msgctxt "EditProfile.description"
+msgid "Description"
+msgstr "crwdns1060:0crwdne1060:0"
+
+#. [schema.announcements.description]
+#. defaultMessage is:
+#. Description
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.description"
+msgid "Description"
+msgstr "crwdns1061:0crwdne1061:0"
+
+#. [schema.forSale.description]
+#. defaultMessage is:
+#. Description
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.description"
+msgid "Description"
+msgstr "crwdns1062:0crwdne1062:0"
+
+#. [schema.housing.description]
+#. defaultMessage is:
+#. Description
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.description"
+msgid "Description"
+msgstr "crwdns1063:0crwdne1063:0"
+
+#. [schema.services.description]
+#. defaultMessage is:
+#. Description
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.description"
+msgid "Description"
+msgstr "crwdns1064:0crwdne1064:0"
+
+#. [schema.tickets.description]
+#. defaultMessage is:
+#. Description
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.description"
+msgid "Description"
+msgstr "crwdns1065:0crwdne1065:0"
+
+#. [schema.transportation.description]
+#. defaultMessage is:
+#. Description
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.description"
+msgid "Description"
+msgstr "crwdns1066:0crwdne1066:0"
+
+#. [footer.discordLink]
+#. defaultMessage is:
+#. Discord
+#: translations/messages/src/components/footer.json
+msgctxt "footer.discordLink"
+msgid "Discord"
+msgstr "crwdns1067:0crwdne1067:0"
+
+#. [schema.housing.schemaDescription]
+#. defaultMessage is:
+#. Distributed Airbnb
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.schemaDescription"
+msgid "Distributed Airbnb"
+msgstr "crwdns1068:0crwdne1068:0"
+
+#. [schema.forSale.schemaDescription]
+#. defaultMessage is:
+#. Distributed Craigslist/Ebay/Amazon
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.schemaDescription"
+msgid "Distributed Craigslist/Ebay/Amazon"
+msgstr "crwdns1069:0crwdne1069:0"
+
+#. [schema.services.schemaDescription]
+#. defaultMessage is:
+#. Distributed Elance/99 Designs/Postmates/Fiver/Handy/Thumbtack
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.schemaDescription"
+msgid "Distributed Elance/99 Designs/Postmates/Fiver/Handy/Thumbtack"
+msgstr "crwdns1070:0crwdne1070:0"
+
+#. [schema.transportation.schemaDescription]
+#. defaultMessage is:
+#. Distributed Getaround
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.schemaDescription"
+msgid "Distributed Getaround"
+msgstr "crwdns1071:0crwdne1071:0"
+
+#. [schema.announcements.schemaDescription]
+#. defaultMessage is:
+#. Distributed Nextdoor
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.schemaDescription"
+msgid "Distributed Nextdoor"
+msgstr "crwdns1072:0crwdne1072:0"
+
+#. [schema.tickets.schemaDescription]
+#. defaultMessage is:
+#. Distributed Ticketmaster/Eventbrite
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.schemaDescription"
+msgid "Distributed Ticketmaster/Eventbrite"
+msgstr "crwdns1073:0crwdne1073:0"
+
+#. [footer.docsLink]
+#. defaultMessage is:
+#. Docs
+#: translations/messages/src/components/footer.json
+msgctxt "footer.docsLink"
+msgid "Docs"
+msgstr "crwdns1074:0crwdne1074:0"
+
+#. [footer.documentationHeading]
+#. defaultMessage is:
+#. Documentation
+#: translations/messages/src/components/footer.json
+msgctxt "footer.documentationHeading"
+msgid "Documentation"
+msgstr "crwdns1075:0crwdne1075:0"
+
+#. [schema.services.dogWalking]
+#. defaultMessage is:
+#. Dog Walking
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.dogWalking"
+msgid "Dog Walking"
+msgstr "crwdns1076:0crwdne1076:0"
+
+#. [AttestationSuccess.publishChangesReminder]
+#. defaultMessage is:
+#. Don't forget to publish your changes.
+#: translations/messages/src/pages/profile/AttestationSuccess.json
+msgctxt "AttestationSuccess.publishChangesReminder"
+msgid "Don't forget to publish your changes."
+msgstr "crwdns1077:0crwdne1077:0"
+
+#. [listing-create.doneButtonLabel]
+#. defaultMessage is:
+#. Done
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.doneButtonLabel"
+msgid "Done"
+msgstr "crwdns1078:0crwdne1078:0"
+
+#. [listing-card-prices.ethereumCurrencyAbbrev]
+#. defaultMessage is:
+#. ETH
+#: translations/messages/src/components/listing-card-prices.json
+msgctxt "listing-card-prices.ethereumCurrencyAbbrev"
+msgid "ETH"
+msgstr "crwdns1079:0crwdne1079:0"
+
+#. [listing-detail.ethereumCurrencyAbbrev]
+#. defaultMessage is:
+#. ETH
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.ethereumCurrencyAbbrev"
+msgid "ETH"
+msgstr "crwdns1080:0crwdne1080:0"
+
+#. [my-listing-card.ethereumCurrencyAbbrev]
+#. defaultMessage is:
+#. ETH
+#: translations/messages/src/components/my-listing-card.json
+msgctxt "my-listing-card.ethereumCurrencyAbbrev"
+msgid "ETH"
+msgstr "crwdns1081:0crwdne1081:0"
+
+#. [my-purchase-card.ethereumCurrencyAbbrev]
+#. defaultMessage is:
+#. ETH
+#: translations/messages/src/components/my-purchase-card.json
+msgctxt "my-purchase-card.ethereumCurrencyAbbrev"
+msgid "ETH"
+msgstr "crwdns1082:0crwdne1082:0"
+
+#. [my-sale-card.ethereumCurrencyAbbrev]
+#. defaultMessage is:
+#. ETH
+#: translations/messages/src/components/my-sale-card.json
+msgctxt "my-sale-card.ethereumCurrencyAbbrev"
+msgid "ETH"
+msgstr "crwdns1083:0crwdne1083:0"
+
+#. [user.ethAddress]
+#. defaultMessage is:
+#. ETH Address:
+#: translations/messages/src/components/dropdowns/user.json
+msgctxt "user.ethAddress"
+msgid "ETH Address:"
+msgstr "crwdns1084:0crwdne1084:0"
+
+#. [transaction-progress.ethAddress]
+#. defaultMessage is:
+#. ETH Address:
+#: translations/messages/src/components/user-card.json
+msgctxt "transaction-progress.ethAddress"
+msgid "ETH Address:"
+msgstr "crwdns1085:0crwdne1085:0"
+
+#. [_Wallet.ethAddress]
+#. defaultMessage is:
+#. ETH Address:
+#: translations/messages/src/pages/profile/_Wallet.json
+msgctxt "_Wallet.ethAddress"
+msgid "ETH Address:"
+msgstr "crwdns1086:0crwdne1086:0"
+
+#. [EditProfile.editProfileHeading]
+#. defaultMessage is:
+#. Edit Profile
+#: translations/messages/src/pages/profile/EditProfile.json
+msgctxt "EditProfile.editProfileHeading"
+msgid "Edit Profile"
+msgstr "crwdns1087:0crwdne1087:0"
+
+#. [schema.services.electrical]
+#. defaultMessage is:
+#. Electrical
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.electrical"
+msgid "Electrical"
+msgstr "crwdns1088:0crwdne1088:0"
+
+#. [schema.forSale.electronics]
+#. defaultMessage is:
+#. Electronics
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.electronics"
+msgid "Electronics"
+msgstr "crwdns1089:0crwdne1089:0"
+
+#. [_ProvisionedChanges.email]
+#. defaultMessage is:
+#. Email
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.email"
+msgid "Email"
+msgstr "crwdns1090:0crwdne1090:0"
+
+#. [_Services.email]
+#. defaultMessage is:
+#. Email
+#: translations/messages/src/pages/profile/_Services.json
+msgctxt "_Services.email"
+msgid "Email"
+msgstr "crwdns1091:0crwdne1091:0"
+
+#. [User.email]
+#. defaultMessage is:
+#. Email
+#: translations/messages/src/pages/user/User.json
+msgctxt "User.email"
+msgid "Email"
+msgstr "crwdns1092:0crwdne1092:0"
+
+#. [_ProvisionedChanges.emailAddress]
+#. defaultMessage is:
+#. Email Address
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.emailAddress"
+msgid "Email Address"
+msgstr "crwdns1093:0crwdne1093:0"
+
+#. [Profile.emailVerified]
+#. defaultMessage is:
+#. Email address verified!
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.emailVerified"
+msgid "Email address verified!"
+msgstr "crwdns1094:0crwdne1094:0"
+
+#. [VerifyEmail.enterCode]
+#. defaultMessage is:
+#. Enter the code we sent you below
+#: translations/messages/src/pages/profile/VerifyEmail.json
+msgctxt "VerifyEmail.enterCode"
+msgid "Enter the code we sent you below"
+msgstr "crwdns1095:0crwdne1095:0"
+
+#. [VerifyPhone.enterCodeBelow]
+#. defaultMessage is:
+#. Enter the code we sent you below
+#: translations/messages/src/pages/profile/VerifyPhone.json
+msgctxt "VerifyPhone.enterCodeBelow"
+msgid "Enter the code we sent you below"
+msgstr "crwdns1096:0crwdne1096:0"
+
+#. [VerifyPhone.enterPhoneNumber]
+#. defaultMessage is:
+#. Enter your phone number below and {originId} will send you a verification code
+#: translations/messages/src/pages/profile/VerifyPhone.json
+msgctxt "VerifyPhone.enterPhoneNumber"
+msgid "Enter your phone number below and {originId} will send you a verification code"
+msgstr "crwdns1097:0{originId}crwdne1097:0"
+
+#. [Profile.error]
+#. defaultMessage is:
+#. Error
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.error"
+msgid "Error"
+msgstr "crwdns1098:0crwdne1098:0"
+
+#. [connectivity.ethereumNetwork]
+#. defaultMessage is:
+#. Ethereum Network:
+#: translations/messages/src/components/dropdowns/connectivity.json
+msgctxt "connectivity.ethereumNetwork"
+msgid "Ethereum Network:"
+msgstr "crwdns1099:0crwdne1099:0"
+
+#. [footer.facebookLink]
+#. defaultMessage is:
+#. Facebook
+#: translations/messages/src/components/footer.json
+msgctxt "footer.facebookLink"
+msgid "Facebook"
+msgstr "crwdns1100:0crwdne1100:0"
+
+#. [_ProvisionedChanges.facebook]
+#. defaultMessage is:
+#. Facebook
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.facebook"
+msgid "Facebook"
+msgstr "crwdns1101:0crwdne1101:0"
+
+#. [_Services.facebook]
+#. defaultMessage is:
+#. Facebook
+#: translations/messages/src/pages/profile/_Services.json
+msgctxt "_Services.facebook"
+msgid "Facebook"
+msgstr "crwdns1102:0crwdne1102:0"
+
+#. [User.facebook]
+#. defaultMessage is:
+#. Facebook
+#: translations/messages/src/pages/user/User.json
+msgctxt "User.facebook"
+msgid "Facebook"
+msgstr "crwdns1103:0crwdne1103:0"
+
+#. [_ProvisionedChanges.facebookAccount]
+#. defaultMessage is:
+#. Facebook account
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.facebookAccount"
+msgid "Facebook account"
+msgstr "crwdns1104:0crwdne1104:0"
+
+#. [Profile.facebookVerified]
+#. defaultMessage is:
+#. Facebook account verified!
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.facebookVerified"
+msgid "Facebook account verified!"
+msgstr "crwdns1105:0crwdne1105:0"
+
+#. [schema.forSale.farmGarden]
+#. defaultMessage is:
+#. Farm & Garden
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.farmGarden"
+msgid "Farm & Garden"
+msgstr "crwdns1106:0crwdne1106:0"
+
+#. [listing-card.featured]
+#. defaultMessage is:
+#. Featured
+#: translations/messages/src/components/listing-card.json
+msgctxt "listing-card.featured"
+msgid "Featured"
+msgstr "crwdns1107:0crwdne1107:0"
+
+#. [EditProfile.firstName]
+#. defaultMessage is:
+#. First Name
+#: translations/messages/src/pages/profile/EditProfile.json
+msgctxt "EditProfile.firstName"
+msgid "First Name"
+msgstr "crwdns1108:0crwdne1108:0"
+
+#. [_ProvisionedChanges.firstName]
+#. defaultMessage is:
+#. First name
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.firstName"
+msgid "First name"
+msgstr "crwdns1109:0crwdne1109:0"
+
+#. [listing-create.forSaleLabel]
+#. defaultMessage is:
+#. For Sale
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.forSaleLabel"
+msgid "For Sale"
+msgstr "crwdns1110:0crwdne1110:0"
+
+#. [_countryOptions.france]
+#. defaultMessage is:
+#. France
+#: translations/messages/src/pages/profile/_countryOptions.json
+msgctxt "_countryOptions.france"
+msgid "France"
+msgstr "crwdns1111:0crwdne1111:0"
+
+#. [schema.forSale.freeStuff]
+#. defaultMessage is:
+#. Free Stuff
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.freeStuff"
+msgid "Free Stuff"
+msgstr "crwdns1112:0crwdne1112:0"
+
+#. [transactions.from]
+#. defaultMessage is:
+#. From
+#: translations/messages/src/components/dropdowns/transactions.json
+msgctxt "transactions.from"
+msgid "From"
+msgstr "crwdns1113:0crwdne1113:0"
+
+#. [purchase-detail.from]
+#. defaultMessage is:
+#. From
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.from"
+msgid "From"
+msgstr "crwdns1114:0crwdne1114:0"
+
+#. [web3-provider.fullInstructions]
+#. defaultMessage is:
+#. Full Instructions
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.fullInstructions"
+msgid "Full Instructions"
+msgstr "crwdns1115:0crwdne1115:0"
+
+#. [web3-provider.fullInstructionsForDemo]
+#. defaultMessage is:
+#. Full Instructions for Demo
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.fullInstructionsForDemo"
+msgid "Full Instructions for Demo"
+msgstr "crwdns1116:0crwdne1116:0"
+
+#. [schema.tickets.fundraisers]
+#. defaultMessage is:
+#. Fundraisers
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.fundraisers"
+msgid "Fundraisers"
+msgstr "crwdns1117:0crwdne1117:0"
+
+#. [transaction-progress.fundsWithdrawn]
+#. defaultMessage is:
+#. Funds Withdrawn
+#. [transaction-progress.fundsWithdrawn]
+#. defaultMessage is:
+#. Funds Withdrawn
+#: translations/messages/src/components/purchase-progress.json
+#: translations/messages/src/components/transaction-progress.json
+msgctxt "transaction-progress.fundsWithdrawn"
+msgid "Funds Withdrawn"
+msgstr "crwdns1118:0crwdne1118:0"
+
+#. [schema.forSale.furniture]
+#. defaultMessage is:
+#. Furniture
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.furniture"
+msgid "Furniture"
+msgstr "crwdns1119:0crwdne1119:0"
+
+#. [schema.forSale.garageMovingSales]
+#. defaultMessage is:
+#. Garage & Moving Sales
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.garageMovingSales"
+msgid "Garage & Moving Sales"
+msgstr "crwdns1120:0crwdne1120:0"
+
+#. [schema.announcements.general]
+#. defaultMessage is:
+#. General
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.general"
+msgid "General"
+msgstr "crwdns1121:0crwdne1121:0"
+
+#. [schema.forSale.generalForSale]
+#. defaultMessage is:
+#. General For Sale
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.generalForSale"
+msgid "General For Sale"
+msgstr "crwdns1122:0crwdne1122:0"
+
+#. [_countryOptions.germany]
+#. defaultMessage is:
+#. Germany
+#: translations/messages/src/pages/profile/_countryOptions.json
+msgctxt "_countryOptions.germany"
+msgid "Germany"
+msgstr "crwdns1123:0crwdne1123:0"
+
+#. [web3-provider.getMetaMask]
+#. defaultMessage is:
+#. Get MetaMask
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.getMetaMask"
+msgid "Get MetaMask"
+msgstr "crwdns1124:0crwdne1124:0"
+
+#. [footer.githubLink]
+#. defaultMessage is:
+#. Github
+#: translations/messages/src/components/footer.json
+msgctxt "footer.githubLink"
+msgid "Github"
+msgstr "crwdns1125:0crwdne1125:0"
+
+#. [listing-detail.goToPurchases]
+#. defaultMessage is:
+#. Go To Purchases
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.goToPurchases"
+msgid "Go To Purchases"
+msgstr "crwdns1126:0crwdne1126:0"
+
+#. [_Services.google]
+#. defaultMessage is:
+#. Google
+#: translations/messages/src/pages/profile/_Services.json
+msgctxt "_Services.google"
+msgid "Google"
+msgstr "crwdns1127:0crwdne1127:0"
+
+#. [schema.services.graphicDesign]
+#. defaultMessage is:
+#. Graphic Design
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.graphicDesign"
+msgid "Graphic Design"
+msgstr "crwdns1128:0crwdne1128:0"
+
+#. [schema.announcements.groups]
+#. defaultMessage is:
+#. Groups
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.groups"
+msgid "Groups"
+msgstr "crwdns1129:0crwdne1129:0"
+
+#. [schema.services.handyman]
+#. defaultMessage is:
+#. Handyman
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.handyman"
+msgid "Handyman"
+msgstr "crwdns1130:0crwdne1130:0"
+
+#. [schema.forSale.healthBeauty]
+#. defaultMessage is:
+#. Health & Beauty
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.healthBeauty"
+msgid "Health & Beauty"
+msgstr "crwdns1131:0crwdne1131:0"
+
+#. [schema.forSale.heavyEquipment]
+#. defaultMessage is:
+#. Heavy Equipment
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.heavyEquipment"
+msgid "Heavy Equipment"
+msgstr "crwdns1132:0crwdne1132:0"
+
+#. [schema.services.homeCleaning]
+#. defaultMessage is:
+#. Home Cleaning
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.homeCleaning"
+msgid "Home Cleaning"
+msgstr "crwdns1133:0crwdne1133:0"
+
+#. [schema.forSale.householdItems]
+#. defaultMessage is:
+#. Household Items
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.householdItems"
+msgid "Household Items"
+msgstr "crwdns1134:0crwdne1134:0"
+
+#. [listing-create.housingLabel]
+#. defaultMessage is:
+#. Housing
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.housingLabel"
+msgid "Housing"
+msgstr "crwdns1135:0crwdne1135:0"
+
+#. [schema.housing.housingSwap]
+#. defaultMessage is:
+#. Housing Swap
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.housingSwap"
+msgid "Housing Swap"
+msgstr "crwdns1136:0crwdne1136:0"
+
+#. [not-found.heading]
+#. defaultMessage is:
+#. How did I get here?
+#: translations/messages/src/components/not-found.json
+msgctxt "not-found.heading"
+msgid "How did I get here?"
+msgstr "crwdns1137:0crwdne1137:0"
+
+#. [listing-create.howItWorksHeading]
+#. defaultMessage is:
+#. How it works
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.howItWorksHeading"
+msgid "How it works"
+msgstr "crwdns1138:0crwdne1138:0"
+
+#. [listing-create.IPFS]
+#. defaultMessage is:
+#. IPFS
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.IPFS"
+msgid "IPFS"
+msgstr "crwdns1139:0crwdne1139:0"
+
+#. [connectivity.ipfsGateway]
+#. defaultMessage is:
+#. IPFS Gateway:
+#: translations/messages/src/components/dropdowns/connectivity.json
+msgctxt "connectivity.ipfsGateway"
+msgid "IPFS Gateway:"
+msgstr "crwdns1140:0crwdne1140:0"
+
+#. [listing-detail.IPFS]
+#. defaultMessage is:
+#. IPFS: {ipfsHash}
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.IPFS"
+msgid "IPFS: {ipfsHash}"
+msgstr "crwdns1141:0{ipfsHash}crwdne1141:0"
+
+#. [ConfirmUpload.ifYouExitNotice]
+#. defaultMessage is:
+#. If you exit without publishing you’ll lose all your changes.
+#: translations/messages/src/pages/profile/ConfirmUnload.json
+msgctxt "ConfirmUpload.ifYouExitNotice"
+msgid "If you exit without publishing you’ll lose all your changes."
+msgstr "crwdns1142:0crwdne1142:0"
+
+#. [Profile.unsavedChangesWarn]
+#. defaultMessage is:
+#. If you exit without publishing, you'll lose all your changes.
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.unsavedChangesWarn"
+msgid "If you exit without publishing, you'll lose all your changes."
+msgstr "crwdns1143:0crwdne1143:0"
+
+#. [web3-provider.intentRequiresMetaMask]
+#. defaultMessage is:
+#. In order to {web3Intent}, you must install MetaMask.
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.intentRequiresMetaMask"
+msgid "In order to {web3Intent}, you must install MetaMask."
+msgstr "crwdns1144:0{web3Intent}crwdne1144:0"
+
+#. [web3-provider.intentRequiresSignIn]
+#. defaultMessage is:
+#. In order to {web3Intent}, you must sign in to {currentProvider}.
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.intentRequiresSignIn"
+msgid "In order to {web3Intent}, you must sign in to {currentProvider}."
+msgstr "crwdns1145:0{web3Intent}crwdnd1145:0{currentProvider}crwdne1145:0"
+
+#. [web3-provider.intentRequiresEthereumEnabledBrowser]
+#. defaultMessage is:
+#. In order to {web3Intent}, you must use an Ethereum wallet-enabled browser.
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.intentRequiresEthereumEnabledBrowser"
+msgid "In order to {web3Intent}, you must use an Ethereum wallet-enabled browser."
+msgstr "crwdns1146:0{web3Intent}crwdne1146:0"
+
+#. [my-listings.inactive]
+#. defaultMessage is:
+#. Inactive
+#: translations/messages/src/components/my-listings.json
+msgctxt "my-listings.inactive"
+msgid "Inactive"
+msgstr "crwdns1147:0crwdne1147:0"
+
+#. [footer.instagramLink]
+#. defaultMessage is:
+#. Instagram
+#: translations/messages/src/components/footer.json
+msgctxt "footer.instagramLink"
+msgid "Instagram"
+msgstr "crwdns1148:0crwdne1148:0"
+
+#. [_countryOptions.italy]
+#. defaultMessage is:
+#. Italy
+#: translations/messages/src/pages/profile/_countryOptions.json
+msgctxt "_countryOptions.italy"
+msgid "Italy"
+msgstr "crwdns1149:0crwdne1149:0"
+
+#. [listing-create.jsonSchema]
+#. defaultMessage is:
+#. JSONSchema
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.jsonSchema"
+msgid "JSONSchema"
+msgstr "crwdns1150:0crwdne1150:0"
+
+#. [_countryOptions.japan]
+#. defaultMessage is:
+#. Japan
+#: translations/messages/src/pages/profile/_countryOptions.json
+msgctxt "_countryOptions.japan"
+msgid "Japan"
+msgstr "crwdns1151:0crwdne1151:0"
+
+#. [schema.forSale.jewelry]
+#. defaultMessage is:
+#. Jewelry
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.jewelry"
+msgid "Jewelry"
+msgstr "crwdns1152:0crwdne1152:0"
+
+#. [footer.hiringLink]
+#. defaultMessage is:
+#. Jobs (We're hiring!)
+#: translations/messages/src/components/footer.json
+msgctxt "footer.hiringLink"
+msgid "Jobs (We're hiring!)"
+msgstr "crwdns1153:0crwdne1153:0"
+
+#. [connectivity.kovanTestNetwork]
+#. defaultMessage is:
+#. Kovan Test Network
+#: translations/messages/src/components/dropdowns/connectivity.json
+msgctxt "connectivity.kovanTestNetwork"
+msgid "Kovan Test Network"
+msgstr "crwdns1154:0crwdne1154:0"
+
+#. [_ProvisionedChanges.lastName]
+#. defaultMessage is:
+#. Last Name
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.lastName"
+msgid "Last Name"
+msgstr "crwdns1155:0crwdne1155:0"
+
+#. [EditProfile.lastName]
+#. defaultMessage is:
+#. Last Name
+#: translations/messages/src/pages/profile/EditProfile.json
+msgctxt "EditProfile.lastName"
+msgid "Last Name"
+msgstr "crwdns1156:0crwdne1156:0"
+
+#. [Profile.lastPublished]
+#. defaultMessage is:
+#. Last published
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.lastPublished"
+msgid "Last published"
+msgstr "crwdns1157:0crwdne1157:0"
+
+#. [schema.services.legal]
+#. defaultMessage is:
+#. Legal
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.legal"
+msgid "Legal"
+msgstr "crwdns1158:0crwdne1158:0"
+
+#. [ConfirmPublish.letsDoIt]
+#. defaultMessage is:
+#. Let's do it!
+#: translations/messages/src/pages/profile/ConfirmPublish.json
+msgctxt "ConfirmPublish.letsDoIt"
+msgid "Let's do it!"
+msgstr "crwdns1159:0crwdne1159:0"
+
+#. [purchase-detail.listingDetails]
+#. defaultMessage is:
+#. Listing Details
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.listingDetails"
+msgid "Listing Details"
+msgstr "crwdns1160:0crwdne1160:0"
+
+#. [navbar.listings]
+#. defaultMessage is:
+#. Listings
+#: translations/messages/src/components/navbar.json
+msgctxt "navbar.listings"
+msgid "Listings"
+msgstr "crwdns1161:0crwdne1161:0"
+
+#. [listing-card-prices.loadingMessage]
+#. defaultMessage is:
+#. Loading...
+#: translations/messages/src/components/listing-card-prices.json
+msgctxt "listing-card-prices.loadingMessage"
+msgid "Loading..."
+msgstr "crwdns1162:0crwdne1162:0"
+
+#. [my-listings.loading]
+#. defaultMessage is:
+#. Loading...
+#: translations/messages/src/components/my-listings.json
+msgctxt "my-listings.loading"
+msgid "Loading..."
+msgstr "crwdns1163:0crwdne1163:0"
+
+#. [my-purchases.loading]
+#. defaultMessage is:
+#. Loading...
+#: translations/messages/src/components/my-purchases.json
+msgctxt "my-purchases.loading"
+msgid "Loading..."
+msgstr "crwdns1164:0crwdne1164:0"
+
+#. [my-sales.loading]
+#. defaultMessage is:
+#. Loading...
+#: translations/messages/src/components/my-sales.json
+msgctxt "my-sales.loading"
+msgid "Loading..."
+msgstr "crwdns1165:0crwdne1165:0"
+
+#. [schema.announcements.localNews]
+#. defaultMessage is:
+#. Local News
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.localNews"
+msgid "Local News"
+msgstr "crwdns1166:0crwdne1166:0"
+
+#. [connectivity.localhost]
+#. defaultMessage is:
+#. Localhost
+#: translations/messages/src/components/dropdowns/connectivity.json
+msgctxt "connectivity.localhost"
+msgid "Localhost"
+msgstr "crwdns1167:0crwdne1167:0"
+
+#. [schema.forSale.location]
+#. defaultMessage is:
+#. Location
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.location"
+msgid "Location"
+msgstr "crwdns1168:0crwdne1168:0"
+
+#. [schema.housing.location]
+#. defaultMessage is:
+#. Location
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.location"
+msgid "Location"
+msgstr "crwdns1169:0crwdne1169:0"
+
+#. [schema.services.location]
+#. defaultMessage is:
+#. Location
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.location"
+msgid "Location"
+msgstr "crwdns1170:0crwdne1170:0"
+
+#. [schema.transportation.location]
+#. defaultMessage is:
+#. Location
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.location"
+msgid "Location"
+msgstr "crwdns1171:0crwdne1171:0"
+
+#. [schema.announcements.lostFound]
+#. defaultMessage is:
+#. Lost & Found
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.lostFound"
+msgid "Lost & Found"
+msgstr "crwdns1172:0crwdne1172:0"
+
+#. [connectivity.mainEthereumNetwork]
+#. defaultMessage is:
+#. Main Ethereum Network
+#: translations/messages/src/components/dropdowns/connectivity.json
+msgctxt "connectivity.mainEthereumNetwork"
+msgid "Main Ethereum Network"
+msgstr "crwdns1173:0crwdne1173:0"
+
+#. [purchase-detail.markOrderSent]
+#. defaultMessage is:
+#. Mark Order as Sent
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.markOrderSent"
+msgid "Mark Order as Sent"
+msgstr "crwdns1174:0crwdne1174:0"
+
+#. [schema.forSale.materials]
+#. defaultMessage is:
+#. Materials
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.materials"
+msgid "Materials"
+msgstr "crwdns1175:0crwdne1175:0"
+
+#. [footer.mediumLink]
+#. defaultMessage is:
+#. Medium
+#: translations/messages/src/components/footer.json
+msgctxt "footer.mediumLink"
+msgid "Medium"
+msgstr "crwdns1176:0crwdne1176:0"
+
+#. [connectivity.mordenTestNetwork]
+#. defaultMessage is:
+#. Morden Test Network
+#: translations/messages/src/components/dropdowns/connectivity.json
+msgctxt "connectivity.mordenTestNetwork"
+msgid "Morden Test Network"
+msgstr "crwdns1177:0crwdne1177:0"
+
+#. [schema.forSale.motorcyclePartsAccessories]
+#. defaultMessage is:
+#. Motorcycle Parts & Accessories
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.motorcyclePartsAccessories"
+msgid "Motorcycle Parts & Accessories"
+msgstr "crwdns1178:0crwdne1178:0"
+
+#. [schema.forSale.motorcyclesScooters]
+#. defaultMessage is:
+#. Motorcycles & Scooters
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.motorcyclesScooters"
+msgid "Motorcycles & Scooters"
+msgstr "crwdns1179:0crwdne1179:0"
+
+#. [schema.services.movingHelp]
+#. defaultMessage is:
+#. Moving Help
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.movingHelp"
+msgid "Moving Help"
+msgstr "crwdns1180:0crwdne1180:0"
+
+#. [schema.tickets.music]
+#. defaultMessage is:
+#. Music
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.music"
+msgid "Music"
+msgstr "crwdns1181:0crwdne1181:0"
+
+#. [schema.forSale.musicalInstruments]
+#. defaultMessage is:
+#. Musical Instruments
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.musicalInstruments"
+msgid "Musical Instruments"
+msgstr "crwdns1182:0crwdne1182:0"
+
+#. [schema.announcements.musicians]
+#. defaultMessage is:
+#. Musicians
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.musicians"
+msgid "Musicians"
+msgstr "crwdns1183:0crwdne1183:0"
+
+#. [my-listings.myListingsHeading]
+#. defaultMessage is:
+#. My Listings
+#: translations/messages/src/components/my-listings.json
+msgctxt "my-listings.myListingsHeading"
+msgid "My Listings"
+msgstr "crwdns1184:0crwdne1184:0"
+
+#. [navbar.myListings]
+#. defaultMessage is:
+#. My Listings
+#: translations/messages/src/components/navbar.json
+msgctxt "navbar.myListings"
+msgid "My Listings"
+msgstr "crwdns1185:0crwdne1185:0"
+
+#. [my-purchases.myPurchasesHeading]
+#. defaultMessage is:
+#. My Purchases
+#: translations/messages/src/components/my-purchases.json
+msgctxt "my-purchases.myPurchasesHeading"
+msgid "My Purchases"
+msgstr "crwdns1186:0crwdne1186:0"
+
+#. [my-sales.mySalesHeading]
+#. defaultMessage is:
+#. My Sales
+#: translations/messages/src/components/my-sales.json
+msgctxt "my-sales.mySalesHeading"
+msgid "My Sales"
+msgstr "crwdns1187:0crwdne1187:0"
+
+#. [navbar.mySales]
+#. defaultMessage is:
+#. My Sales
+#: translations/messages/src/components/navbar.json
+msgctxt "navbar.mySales"
+msgid "My Sales"
+msgstr "crwdns1188:0crwdne1188:0"
+
+#. [listing-create.next]
+#. defaultMessage is:
+#. Next
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.next"
+msgid "Next"
+msgstr "crwdns1189:0crwdne1189:0"
+
+#. [purchase-detail.nextStep]
+#. defaultMessage is:
+#. Next Step:
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.nextStep"
+msgid "Next Step:"
+msgstr "crwdns1190:0crwdne1190:0"
+
+#. [user.noEthAccountConnected]
+#. defaultMessage is:
+#. No ETH Account Connected
+#: translations/messages/src/components/dropdowns/user.json
+msgctxt "user.noEthAccountConnected"
+msgid "No ETH Account Connected"
+msgstr "crwdns1191:0crwdne1191:0"
+
+#. [_Wallet.noEthAccountConnected]
+#. defaultMessage is:
+#. No ETH Account Connected
+#: translations/messages/src/pages/profile/_Wallet.json
+msgctxt "_Wallet.noEthAccountConnected"
+msgid "No ETH Account Connected"
+msgstr "crwdns1192:0crwdne1192:0"
+
+#. [schema.tickets.nonProfitEvent]
+#. defaultMessage is:
+#. Non-profit event
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.nonProfitEvent"
+msgid "Non-profit event"
+msgstr "crwdns1193:0crwdne1193:0"
+
+#. [ConfirmUpload.notRightNow]
+#. defaultMessage is:
+#. Not Right Now
+#: translations/messages/src/pages/profile/ConfirmUnload.json
+msgctxt "ConfirmUpload.notRightNow"
+msgid "Not Right Now"
+msgstr "crwdns1194:0crwdne1194:0"
+
+#. [_ProvisionedChanges.notVisibleOnBlockchain]
+#. defaultMessage is:
+#. Not visible on the blockchain
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.notVisibleOnBlockchain"
+msgid "Not visible on the blockchain"
+msgstr "crwdns1195:0crwdne1195:0"
+
+#. [purchase-detail.nothingToDo]
+#. defaultMessage is:
+#. Nothing for you to do at this time. Check back later
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.nothingToDo"
+msgid "Nothing for you to do at this time. Check back later"
+msgstr "crwdns1196:0crwdne1196:0"
+
+#. [notifications.notificationsHeading]
+#. defaultMessage is:
+#. Notifications
+#. [notifications.notificationsHeading]
+#. defaultMessage is:
+#. Notifications
+#: translations/messages/src/components/dropdowns/notifications.json
+#: translations/messages/src/components/notifications.json
+msgctxt "notifications.notificationsHeading"
+msgid "Notifications"
+msgstr "crwdns1197:0crwdne1197:0"
+
+#. [listing-create.OK]
+#. defaultMessage is:
+#. OK
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.OK"
+msgid "OK"
+msgstr "crwdns1198:0crwdne1198:0"
+
+#. [listing-detail.OK]
+#. defaultMessage is:
+#. OK
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.OK"
+msgid "OK"
+msgstr "crwdns1199:0crwdne1199:0"
+
+#. [Profile.ok]
+#. defaultMessage is:
+#. OK
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.ok"
+msgid "OK"
+msgstr "crwdns1200:0crwdne1200:0"
+
+#. [schema.housing.officeCommercial]
+#. defaultMessage is:
+#. Office & Commercial
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.officeCommercial"
+msgid "Office & Commercial"
+msgstr "crwdns1201:0crwdne1201:0"
+
+#. [ConfirmPublish.oopsNoWait]
+#. defaultMessage is:
+#. Oops, no wait...
+#: translations/messages/src/pages/profile/ConfirmPublish.json
+msgctxt "ConfirmPublish.oopsNoWait"
+msgid "Oops, no wait..."
+msgstr "crwdns1202:0crwdne1202:0"
+
+#. [transaction-progress.orderSent]
+#. defaultMessage is:
+#. Order Sent
+#. [transaction-progress.orderSent]
+#. defaultMessage is:
+#. Order Sent
+#: translations/messages/src/components/purchase-progress.json
+#: translations/messages/src/components/transaction-progress.json
+msgctxt "transaction-progress.orderSent"
+msgid "Order Sent"
+msgstr "crwdns1203:0crwdne1203:0"
+
+#. [footer.organizationHeading]
+#. defaultMessage is:
+#. Organization
+#: translations/messages/src/components/footer.json
+msgctxt "footer.organizationHeading"
+msgid "Organization"
+msgstr "crwdns1204:0crwdne1204:0"
+
+#. [footer.mission]
+#. defaultMessage is:
+#. Origin is building the sharing economy of tomorrow. Buyers and sellers will be able to transact without rent-seeking middlemen. We believe in lowering transaction fees, promoting free and transparent commerce, and giving early participants in the community a stake in the network.
+#: translations/messages/src/components/footer.json
+msgctxt "footer.mission"
+msgid "Origin is building the sharing economy of tomorrow. Buyers and sellers will be able to transact without rent-seeking middlemen. We believe in lowering transaction fees, promoting free and transparent commerce, and giving early participants in the community a stake in the network."
+msgstr "crwdns1205:0crwdne1205:0"
+
+#. [listing-create.howItWorksContentPart1]
+#. defaultMessage is:
+#. Origin uses a Mozilla project called {jsonSchemaLink}  to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer.
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.howItWorksContentPart1"
+msgid "Origin uses a Mozilla project called {jsonSchemaLink}  to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer."
+msgstr "crwdns1206:0{jsonSchemaLink}crwdne1206:0"
+
+#. [schema.tickets.other]
+#. defaultMessage is:
+#. Other
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.other"
+msgid "Other"
+msgstr "crwdns1207:0crwdne1207:0"
+
+#. [VerifyFacebook.accountNotPublic]
+#. defaultMessage is:
+#. Other users will know that you have a verified Facebook account, but your account details will not be published on the blockchain. We will never post on your behalf.
+#: translations/messages/src/pages/profile/VerifyFacebook.json
+msgctxt "VerifyFacebook.accountNotPublic"
+msgid "Other users will know that you have a verified Facebook account, but your account details will not be published on the blockchain. We will never post on your behalf."
+msgstr "crwdns1208:0crwdne1208:0"
+
+#. [VerifyTwitter.twitterNotPublic]
+#. defaultMessage is:
+#. Other users will know that you have a verified Twitter account. Your username will not be published on the blockchain. We will never tweet on your behalf.
+#: translations/messages/src/pages/profile/VerifyTwitter.json
+msgctxt "VerifyTwitter.twitterNotPublic"
+msgid "Other users will know that you have a verified Twitter account. Your username will not be published on the blockchain. We will never tweet on your behalf."
+msgstr "crwdns1209:0crwdne1209:0"
+
+#. [VerifyEmail.emailNotPublished]
+#. defaultMessage is:
+#. Other users will know that you have a verified email address. Your actual email address will not be published on the blockchain.
+#: translations/messages/src/pages/profile/VerifyEmail.json
+msgctxt "VerifyEmail.emailNotPublished"
+msgid "Other users will know that you have a verified email address. Your actual email address will not be published on the blockchain."
+msgstr "crwdns1210:0crwdne1210:0"
+
+#. [VerifyPhone.phoneNumberNotPublished]
+#. defaultMessage is:
+#. Other users will know that you have a verified phone number. Your actual phone number will not be published on the blockchain.
+#: translations/messages/src/pages/profile/VerifyPhone.json
+msgctxt "VerifyPhone.phoneNumberNotPublished"
+msgid "Other users will know that you have a verified phone number. Your actual phone number will not be published on the blockchain."
+msgstr "crwdns1211:0crwdne1211:0"
+
+#. [schema.services.painting]
+#. defaultMessage is:
+#. Painting
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.painting"
+msgid "Painting"
+msgstr "crwdns1212:0crwdne1212:0"
+
+#. [schema.housing.parkingStorage]
+#. defaultMessage is:
+#. Parking & Storage
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.parkingStorage"
+msgid "Parking & Storage"
+msgstr "crwdns1213:0crwdne1213:0"
+
+#. [footer.partnersLink]
+#. defaultMessage is:
+#. Partners
+#: translations/messages/src/components/footer.json
+msgctxt "footer.partnersLink"
+msgid "Partners"
+msgstr "crwdns1214:0crwdne1214:0"
+
+#. [my-purchases.pending]
+#. defaultMessage is:
+#. Pending
+#: translations/messages/src/components/my-purchases.json
+msgctxt "my-purchases.pending"
+msgid "Pending"
+msgstr "crwdns1215:0crwdne1215:0"
+
+#. [my-sales.pending]
+#. defaultMessage is:
+#. Pending
+#: translations/messages/src/components/my-sales.json
+msgctxt "my-sales.pending"
+msgid "Pending"
+msgstr "crwdns1216:0crwdne1216:0"
+
+#. [transactions.pendingTransactions]
+#. defaultMessage is:
+#. Pending Blockchain Transactions
+#: translations/messages/src/components/dropdowns/transactions.json
+msgctxt "transactions.pendingTransactions"
+msgid "Pending Blockchain Transactions"
+msgstr "crwdns1217:0crwdne1217:0"
+
+#. [schema.announcements.personals]
+#. defaultMessage is:
+#. Personals
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.personals"
+msgid "Personals"
+msgstr "crwdns1218:0crwdne1218:0"
+
+#. [schema.announcements.pets]
+#. defaultMessage is:
+#. Pets
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.pets"
+msgid "Pets"
+msgstr "crwdns1219:0crwdne1219:0"
+
+#. [_ProvisionedChanges.phone]
+#. defaultMessage is:
+#. Phone
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.phone"
+msgid "Phone"
+msgstr "crwdns1220:0crwdne1220:0"
+
+#. [_Services.phone]
+#. defaultMessage is:
+#. Phone
+#: translations/messages/src/pages/profile/_Services.json
+msgctxt "_Services.phone"
+msgid "Phone"
+msgstr "crwdns1221:0crwdne1221:0"
+
+#. [User.phone]
+#. defaultMessage is:
+#. Phone
+#: translations/messages/src/pages/user/User.json
+msgctxt "User.phone"
+msgid "Phone"
+msgstr "crwdns1222:0crwdne1222:0"
+
+#. [_ProvisionedChanges.phoneNumber]
+#. defaultMessage is:
+#. Phone Number
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.phoneNumber"
+msgid "Phone Number"
+msgstr "crwdns1223:0crwdne1223:0"
+
+#. [Profile.phoneVerified]
+#. defaultMessage is:
+#. Phone number verified!
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.phoneVerified"
+msgid "Phone number verified!"
+msgstr "crwdns1224:0crwdne1224:0"
+
+#. [schema.forSale.photoVideo]
+#. defaultMessage is:
+#. Photo & Video
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.photoVideo"
+msgid "Photo & Video"
+msgstr "crwdns1225:0crwdne1225:0"
+
+#. [schema.services.photography]
+#. defaultMessage is:
+#. Photography
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.photography"
+msgid "Photography"
+msgstr "crwdns1226:0crwdne1226:0"
+
+#. [_ProvisionedChanges.picture]
+#. defaultMessage is:
+#. Picture
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.picture"
+msgid "Picture"
+msgstr "crwdns1227:0crwdne1227:0"
+
+#. [web3-provider.useWalletEnabledBrowser]
+#. defaultMessage is:
+#. Please access this site through a wallet-enabled browser:
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.useWalletEnabledBrowser"
+msgid "Please access this site through a wallet-enabled browser:"
+msgstr "crwdns1228:0crwdne1228:0"
+
+#. [_Services.pleaseConnectAccounts]
+#. defaultMessage is:
+#. Please connect your accounts below to strengthen your identity on Origin.
+#: translations/messages/src/pages/profile/_Services.json
+msgctxt "_Services.pleaseConnectAccounts"
+msgid "Please connect your accounts below to strengthen your identity on Origin."
+msgstr "crwdns1229:0crwdne1229:0"
+
+#. [web3-provider.pleaseInstallMetaMask]
+#. defaultMessage is:
+#. Please install the MetaMask extension to access this site.
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.pleaseInstallMetaMask"
+msgid "Please install the MetaMask extension to access this site."
+msgstr "crwdns1230:0crwdne1230:0"
+
+#. [listing-create.whatHappensNextContent2]
+#. defaultMessage is:
+#. Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left.
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.whatHappensNextContent2"
+msgid "Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left."
+msgstr "crwdns1231:0crwdne1231:0"
+
+#. [listing-create.pleaseStandBy]
+#. defaultMessage is:
+#. Please stand by...
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.pleaseStandBy"
+msgid "Please stand by..."
+msgstr "crwdns1232:0crwdne1232:0"
+
+#. [listing-detail.pleaseStandBy]
+#. defaultMessage is:
+#. Please stand by...
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.pleaseStandBy"
+msgid "Please stand by..."
+msgstr "crwdns1233:0crwdne1233:0"
+
+#. [Profile.pleaseStandBy]
+#. defaultMessage is:
+#. Please stand by...
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.pleaseStandBy"
+msgid "Please stand by..."
+msgstr "crwdns1234:0crwdne1234:0"
+
+#. [schema.services.plumbing]
+#. defaultMessage is:
+#. Plumbing
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.plumbing"
+msgid "Plumbing"
+msgstr "crwdns1235:0crwdne1235:0"
+
+#. [schema.announcements.politics]
+#. defaultMessage is:
+#. Politics
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.politics"
+msgid "Politics"
+msgstr "crwdns1236:0crwdne1236:0"
+
+#. [web3-provider.popularEthereumWallets]
+#. defaultMessage is:
+#. Popular Ethereum Wallets
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.popularEthereumWallets"
+msgid "Popular Ethereum Wallets"
+msgstr "crwdns1237:0crwdne1237:0"
+
+#. [_Services.poweredBy]
+#. defaultMessage is:
+#. Powered by
+#: translations/messages/src/pages/profile/_Services.json
+msgctxt "_Services.poweredBy"
+msgid "Powered by"
+msgstr "crwdns1238:0crwdne1238:0"
+
+#. [footer.presaleLink]
+#. defaultMessage is:
+#. Presale
+#: translations/messages/src/components/footer.json
+msgctxt "footer.presaleLink"
+msgid "Presale"
+msgstr "crwdns1239:0crwdne1239:0"
+
+#. [Profile.pressSubmit]
+#. defaultMessage is:
+#. Press "Submit" in {currentProvider} window
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.pressSubmit"
+msgid "Press \"Submit\" in {currentProvider} window"
+msgstr "crwdns1240:0{currentProvider}crwdne1240:0"
+
+#. [listing-create.pressSubmitInMetaMask]
+#. defaultMessage is:
+#. Press {submit} in {currentProvider} window
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.pressSubmitInMetaMask"
+msgid "Press {submit} in {currentProvider} window"
+msgstr "crwdns1241:0{submit}crwdnd1241:0{currentProvider}crwdne1241:0"
+
+#. [listing-detail.pressSubmitInMetaMask]
+#. defaultMessage is:
+#. Press {submit} in {currentProvider} window
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.pressSubmitInMetaMask"
+msgid "Press {submit} in {currentProvider} window"
+msgstr "crwdns1242:0{submit}crwdnd1242:0{currentProvider}crwdne1242:0"
+
+#. [listing-create.previewListingHeading]
+#. defaultMessage is:
+#. Preview your listing
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.previewListingHeading"
+msgid "Preview your listing"
+msgstr "crwdns1243:0crwdne1243:0"
+
+#. [listing-detail.price]
+#. defaultMessage is:
+#. Price
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.price"
+msgid "Price"
+msgstr "crwdns1244:0crwdne1244:0"
+
+#. [purchase-detail.price]
+#. defaultMessage is:
+#. Price
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.price"
+msgid "Price"
+msgstr "crwdns1245:0crwdne1245:0"
+
+#. [schema.announcements.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.priceInETH"
+msgid "Price in ETH"
+msgstr "crwdns1246:0crwdne1246:0"
+
+#. [schema.forSale.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.priceInETH"
+msgid "Price in ETH"
+msgstr "crwdns1247:0crwdne1247:0"
+
+#. [schema.housing.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.priceInETH"
+msgid "Price in ETH"
+msgstr "crwdns1248:0crwdne1248:0"
+
+#. [schema.services.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.priceInETH"
+msgid "Price in ETH"
+msgstr "crwdns1249:0crwdne1249:0"
+
+#. [schema.tickets.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.priceInETH"
+msgid "Price in ETH"
+msgstr "crwdns1250:0crwdne1250:0"
+
+#. [schema.transportation.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.priceInETH"
+msgid "Price in ETH"
+msgstr "crwdns1251:0crwdne1251:0"
+
+#. [my-sale-card.price]
+#. defaultMessage is:
+#. Price: {price}
+#: translations/messages/src/components/my-sale-card.json
+msgctxt "my-sale-card.price"
+msgid "Price: {price}"
+msgstr "crwdns1252:0{price}crwdne1252:0"
+
+#. [listing-detail.processingPurchase]
+#. defaultMessage is:
+#. Processing your purchase
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.processingPurchase"
+msgid "Processing your purchase"
+msgstr "crwdns1253:0crwdne1253:0"
+
+#. [footer.productBriefLink]
+#. defaultMessage is:
+#. Product Brief
+#: translations/messages/src/components/footer.json
+msgctxt "footer.productBriefLink"
+msgid "Product Brief"
+msgstr "crwdns1254:0crwdne1254:0"
+
+#. [_ProvisionedChanges.profile]
+#. defaultMessage is:
+#. Profile
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.profile"
+msgid "Profile"
+msgstr "crwdns1255:0crwdne1255:0"
+
+#. [_Strength.profileStrength]
+#. defaultMessage is:
+#. Profile Strength
+#: translations/messages/src/pages/profile/_Strength.json
+msgctxt "_Strength.profileStrength"
+msgid "Profile Strength"
+msgstr "crwdns1256:0crwdne1256:0"
+
+#. [ConfirmUpload.publishNow]
+#. defaultMessage is:
+#. Publish Now
+#: translations/messages/src/pages/profile/ConfirmUnload.json
+msgctxt "ConfirmUpload.publishNow"
+msgid "Publish Now"
+msgstr "crwdns1257:0crwdne1257:0"
+
+#. [Profile.publishNow]
+#. defaultMessage is:
+#. Publish Now
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.publishNow"
+msgid "Publish Now"
+msgstr "crwdns1258:0crwdne1258:0"
+
+#. [AttestationSuccess.publishChangesNotice]
+#. defaultMessage is:
+#. Publishing to the blockchain lets other users know that you have a verified profile.
+#: translations/messages/src/pages/profile/AttestationSuccess.json
+msgctxt "AttestationSuccess.publishChangesNotice"
+msgid "Publishing to the blockchain lets other users know that you have a verified profile."
+msgstr "crwdns1259:0crwdne1259:0"
+
+#. [listing-detail.purchaseSuccessful]
+#. defaultMessage is:
+#. Purchase was successful.
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.purchaseSuccessful"
+msgid "Purchase was successful."
+msgstr "crwdns1260:0crwdne1260:0"
+
+#. [my-purchase-card.purchased]
+#. defaultMessage is:
+#. Purchased
+#: translations/messages/src/components/my-purchase-card.json
+msgctxt "my-purchase-card.purchased"
+msgid "Purchased"
+msgstr "crwdns1261:0crwdne1261:0"
+
+#. [transaction-progress.purchased]
+#. defaultMessage is:
+#. Purchased
+#. [transaction-progress.purchased]
+#. defaultMessage is:
+#. Purchased
+#: translations/messages/src/components/purchase-progress.json
+#: translations/messages/src/components/transaction-progress.json
+msgctxt "transaction-progress.purchased"
+msgid "Purchased"
+msgstr "crwdns1262:0crwdne1262:0"
+
+#. [purchase-detail.purchasedFrom]
+#. defaultMessage is:
+#. Purchased from {sellerLink}
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.purchasedFrom"
+msgid "Purchased from {sellerLink}"
+msgstr "crwdns1263:0{sellerLink}crwdne1263:0"
+
+#. [purchase-detail.purchasedFromOn]
+#. defaultMessage is:
+#. Purchased from {sellerName} on {date}
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.purchasedFromOn"
+msgid "Purchased from {sellerName} on {date}"
+msgstr "crwdns1264:0{sellerName}crwdnd1264:0{date}crwdne1264:0"
+
+#. [ConfirmPublish.readyToGoPublic]
+#. defaultMessage is:
+#. Ready to go public?
+#: translations/messages/src/pages/profile/ConfirmPublish.json
+msgctxt "ConfirmPublish.readyToGoPublic"
+msgid "Ready to go public?"
+msgstr "crwdns1265:0crwdne1265:0"
+
+#. [ConfirmUpload.readyToGoPublic]
+#. defaultMessage is:
+#. Ready to go public? After you publish your changes to the blockchain, other users will be able to see that you have verified the following:
+#: translations/messages/src/pages/profile/ConfirmUnload.json
+msgctxt "ConfirmUpload.readyToGoPublic"
+msgid "Ready to go public? After you publish your changes to the blockchain, other users will be able to see that you have verified the following:"
+msgstr "crwdns1266:0crwdne1266:0"
+
+#. [schema.housing.realEstate]
+#. defaultMessage is:
+#. Real Estate
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.realEstate"
+msgid "Real Estate"
+msgstr "crwdns1267:0crwdne1267:0"
+
+#. [schema.housing.realEstateWanted]
+#. defaultMessage is:
+#. Real Estate Wanted
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.realEstateWanted"
+msgid "Real Estate Wanted"
+msgstr "crwdns1268:0crwdne1268:0"
+
+#. [my-purchase-card.received]
+#. defaultMessage is:
+#. Received
+#: translations/messages/src/components/my-purchase-card.json
+msgctxt "my-purchase-card.received"
+msgid "Received"
+msgstr "crwdns1269:0crwdne1269:0"
+
+#. [transaction-progress.receivedByBuyer]
+#. defaultMessage is:
+#. Received by buyer
+#. [transaction-progress.receivedByBuyer]
+#. defaultMessage is:
+#. Received by buyer
+#: translations/messages/src/components/purchase-progress.json
+#: translations/messages/src/components/transaction-progress.json
+msgctxt "transaction-progress.receivedByBuyer"
+msgid "Received by buyer"
+msgstr "crwdns1270:0crwdne1270:0"
+
+#. [transaction-progress.receivedByMe]
+#. defaultMessage is:
+#. Received by me
+#. [transaction-progress.receivedByMe]
+#. defaultMessage is:
+#. Received by me
+#: translations/messages/src/components/purchase-progress.json
+#: translations/messages/src/components/transaction-progress.json
+msgctxt "transaction-progress.receivedByMe"
+msgid "Received by me"
+msgstr "crwdns1271:0crwdne1271:0"
+
+#. [schema.forSale.recreationalVehicles]
+#. defaultMessage is:
+#. Recreational Vehicles
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.recreationalVehicles"
+msgid "Recreational Vehicles"
+msgstr "crwdns1272:0crwdne1272:0"
+
+#. [schema.services.repairTechnicalSupport]
+#. defaultMessage is:
+#. Repair & Technical Support
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.repairTechnicalSupport"
+msgid "Repair & Technical Support"
+msgstr "crwdns1273:0crwdne1273:0"
+
+#. [schema.announcements.resumes]
+#. defaultMessage is:
+#. Resumes
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.resumes"
+msgid "Resumes"
+msgstr "crwdns1274:0crwdne1274:0"
+
+#. [purchase-detail.reviewLabel]
+#. defaultMessage is:
+#. Review
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.reviewLabel"
+msgid "Review"
+msgstr "crwdns1275:0crwdne1275:0"
+
+#. [listing-detail.reviews]
+#. defaultMessage is:
+#. Reviews
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.reviews"
+msgid "Reviews"
+msgstr "crwdns1276:0crwdne1276:0"
+
+#. [purchase-detail.reviewsHeading]
+#. defaultMessage is:
+#. Reviews
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.reviewsHeading"
+msgid "Reviews"
+msgstr "crwdns1277:0crwdne1277:0"
+
+#. [User.reviews]
+#. defaultMessage is:
+#. Reviews
+#: translations/messages/src/pages/user/User.json
+msgctxt "User.reviews"
+msgid "Reviews"
+msgstr "crwdns1278:0crwdne1278:0"
+
+#. [connectivity.rinkebyTestNetwork]
+#. defaultMessage is:
+#. Rinkeby Test Network
+#: translations/messages/src/components/dropdowns/connectivity.json
+msgctxt "connectivity.rinkebyTestNetwork"
+msgid "Rinkeby Test Network"
+msgstr "crwdns1279:0crwdne1279:0"
+
+#. [schema.housing.roomShareWanted]
+#. defaultMessage is:
+#. Room/Share Wanted
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.roomShareWanted"
+msgid "Room/Share Wanted"
+msgstr "crwdns1280:0crwdne1280:0"
+
+#. [schema.housing.roomsShares]
+#. defaultMessage is:
+#. Rooms & Shares
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.roomsShares"
+msgid "Rooms & Shares"
+msgstr "crwdns1281:0crwdne1281:0"
+
+#. [connectivity.ropstenTestNetwork]
+#. defaultMessage is:
+#. Ropsten Test Network
+#: translations/messages/src/components/dropdowns/connectivity.json
+msgctxt "connectivity.ropstenTestNetwork"
+msgid "Ropsten Test Network"
+msgstr "crwdns1282:0crwdne1282:0"
+
+#. [_countryOptions.russia]
+#. defaultMessage is:
+#. Russia
+#: translations/messages/src/pages/profile/_countryOptions.json
+msgctxt "_countryOptions.russia"
+msgid "Russia"
+msgstr "crwdns1283:0crwdne1283:0"
+
+#. [listing-create.stepNumberLabel]
+#. defaultMessage is:
+#. STEP {stepNumber}
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.stepNumberLabel"
+msgid "STEP {stepNumber}"
+msgstr "crwdns1284:0{stepNumber}crwdne1284:0"
+
+#. [listing-create.seeAllListings]
+#. defaultMessage is:
+#. See All Listings
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.seeAllListings"
+msgid "See All Listings"
+msgstr "crwdns1285:0crwdne1285:0"
+
+#. [Profile.seeConsole]
+#. defaultMessage is:
+#. See the console for more details
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.seeConsole"
+msgid "See the console for more details"
+msgstr "crwdns1286:0crwdne1286:0"
+
+#. [listing-create.error2]
+#. defaultMessage is:
+#. See the console for more details.
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.error2"
+msgid "See the console for more details."
+msgstr "crwdns1287:0crwdne1287:0"
+
+#. [listing-detail.seeConsoleForDetails]
+#. defaultMessage is:
+#. See the console for more details.
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.seeConsoleForDetails"
+msgid "See the console for more details."
+msgstr "crwdns1288:0crwdne1288:0"
+
+#. [schema.announcements.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.selectPhotos"
+msgid "Select photos"
+msgstr "crwdns1289:0crwdne1289:0"
+
+#. [schema.forSale.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.selectPhotos"
+msgid "Select photos"
+msgstr "crwdns1290:0crwdne1290:0"
+
+#. [schema.housing.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.selectPhotos"
+msgid "Select photos"
+msgstr "crwdns1291:0crwdne1291:0"
+
+#. [schema.services.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.selectPhotos"
+msgid "Select photos"
+msgstr "crwdns1292:0crwdne1292:0"
+
+#. [schema.tickets.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.selectPhotos"
+msgid "Select photos"
+msgstr "crwdns1293:0crwdne1293:0"
+
+#. [schema.transportation.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.selectPhotos"
+msgid "Select photos"
+msgstr "crwdns1294:0crwdne1294:0"
+
+#. [notifications.sell]
+#. defaultMessage is:
+#. Sell
+#: translations/messages/src/components/notifications.json
+msgctxt "notifications.sell"
+msgid "Sell"
+msgstr "crwdns1295:0crwdne1295:0"
+
+#. [purchase-detail.seller]
+#. defaultMessage is:
+#. Seller
+#. [purchase-detail.seller]
+#. defaultMessage is:
+#. Seller
+#: translations/messages/src/components/notification.json
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.seller"
+msgid "Seller"
+msgstr "crwdns1296:0crwdne1296:0"
+
+#. [listing-detail.seller]
+#. defaultMessage is:
+#. Seller: {sellerAddress}
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.seller"
+msgid "Seller: {sellerAddress}"
+msgstr "crwdns1297:0{sellerAddress}crwdne1297:0"
+
+#. [navbar.selling]
+#. defaultMessage is:
+#. Selling
+#: translations/messages/src/components/navbar.json
+msgctxt "navbar.selling"
+msgid "Selling"
+msgstr "crwdns1298:0crwdne1298:0"
+
+#. [purchase-detail.sendOrder]
+#. defaultMessage is:
+#. Send the order to buyer
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.sendOrder"
+msgid "Send the order to buyer"
+msgstr "crwdns1299:0crwdne1299:0"
+
+#. [my-purchase-card.sentBySeller]
+#. defaultMessage is:
+#. Sent by Seller
+#: translations/messages/src/components/my-purchase-card.json
+msgctxt "my-purchase-card.sentBySeller"
+msgid "Sent by Seller"
+msgstr "crwdns1300:0crwdne1300:0"
+
+#. [transaction-progress.sentBySeller]
+#. defaultMessage is:
+#. Sent by seller
+#. [transaction-progress.sentBySeller]
+#. defaultMessage is:
+#. Sent by seller
+#: translations/messages/src/components/purchase-progress.json
+#: translations/messages/src/components/transaction-progress.json
+msgctxt "transaction-progress.sentBySeller"
+msgid "Sent by seller"
+msgstr "crwdns1301:0crwdne1301:0"
+
+#. [listing-create.services]
+#. defaultMessage is:
+#. Services
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.services"
+msgid "Services"
+msgstr "crwdns1302:0crwdne1302:0"
+
+#. [schema.services.softwareDevelopement]
+#. defaultMessage is:
+#. Software Developement
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.softwareDevelopement"
+msgid "Software Developement"
+msgstr "crwdns1303:0crwdne1303:0"
+
+#. [listing-card-prices.sold]
+#. defaultMessage is:
+#. Sold
+#: translations/messages/src/components/listing-card-prices.json
+msgctxt "listing-card-prices.sold"
+msgid "Sold"
+msgstr "crwdns1304:0crwdne1304:0"
+
+#. [transaction-progress.sold]
+#. defaultMessage is:
+#. Sold
+#. [transaction-progress.sold]
+#. defaultMessage is:
+#. Sold
+#: translations/messages/src/components/purchase-progress.json
+#: translations/messages/src/components/transaction-progress.json
+msgctxt "transaction-progress.sold"
+msgid "Sold"
+msgstr "crwdns1305:0crwdne1305:0"
+
+#. [listing-detail.soldOut]
+#. defaultMessage is:
+#. Sold Out
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.soldOut"
+msgid "Sold Out"
+msgstr "crwdns1306:0crwdne1306:0"
+
+#. [my-listing-card.soldOut]
+#. defaultMessage is:
+#. Sold Out
+#: translations/messages/src/components/my-listing-card.json
+msgctxt "my-listing-card.soldOut"
+msgid "Sold Out"
+msgstr "crwdns1307:0crwdne1307:0"
+
+#. [purchase-detail.soldTo]
+#. defaultMessage is:
+#. Sold to {buyerLink}
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.soldTo"
+msgid "Sold to {buyerLink}"
+msgstr "crwdns1308:0{buyerLink}crwdne1308:0"
+
+#. [purchase-detail.soldToOn]
+#. defaultMessage is:
+#. Sold to {buyerName} on {date}
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.soldToOn"
+msgid "Sold to {buyerName} on {date}"
+msgstr "crwdns1309:0{buyerName}crwdnd1309:0{date}crwdne1309:0"
+
+#. [_countryOptions.southKorea]
+#. defaultMessage is:
+#. South Korea
+#: translations/messages/src/pages/profile/_countryOptions.json
+msgctxt "_countryOptions.southKorea"
+msgid "South Korea"
+msgstr "crwdns1310:0crwdne1310:0"
+
+#. [schema.forSale.sportingGoods]
+#. defaultMessage is:
+#. Sporting Goods
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.sportingGoods"
+msgid "Sporting Goods"
+msgstr "crwdns1311:0crwdne1311:0"
+
+#. [schema.tickets.sports]
+#. defaultMessage is:
+#. Sports
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.sports"
+msgid "Sports"
+msgstr "crwdns1312:0crwdne1312:0"
+
+#. [Profile.status]
+#. defaultMessage is:
+#. Status:
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.status"
+msgid "Status:"
+msgstr "crwdns1313:0crwdne1313:0"
+
+#. [schema.housing.subletTempWanted]
+#. defaultMessage is:
+#. Sublet/Temp Wanted
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.subletTempWanted"
+msgid "Sublet/Temp Wanted"
+msgstr "crwdns1314:0crwdne1314:0"
+
+#. [schema.housing.subletsTemporary]
+#. defaultMessage is:
+#. Sublets & Temporary
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.subletsTemporary"
+msgid "Sublets & Temporary"
+msgstr "crwdns1315:0crwdne1315:0"
+
+#. [purchase-detail.submitThisForm]
+#. defaultMessage is:
+#. Submit this form once you have reviewed shipment of your order.
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.submitThisForm"
+msgid "Submit this form once you have reviewed shipment of your order."
+msgstr "crwdns1316:0crwdne1316:0"
+
+#. [listing-create.successMessage]
+#. defaultMessage is:
+#. Success
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.successMessage"
+msgid "Success"
+msgstr "crwdns1317:0crwdne1317:0"
+
+#. [Profile.success]
+#. defaultMessage is:
+#. Success
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.success"
+msgid "Success"
+msgstr "crwdns1318:0crwdne1318:0"
+
+#. [schema.transportation.taxiService]
+#. defaultMessage is:
+#. Taxi Service
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.taxiService"
+msgid "Taxi Service"
+msgstr "crwdns1319:0crwdne1319:0"
+
+#. [footer.teamLink]
+#. defaultMessage is:
+#. Team
+#: translations/messages/src/components/footer.json
+msgctxt "footer.teamLink"
+msgid "Team"
+msgstr "crwdns1320:0crwdne1320:0"
+
+#. [footer.telegramLink]
+#. defaultMessage is:
+#. Telegram
+#: translations/messages/src/components/footer.json
+msgctxt "footer.telegramLink"
+msgid "Telegram"
+msgstr "crwdns1321:0crwdne1321:0"
+
+#. [listings-grid.originContractNotFound]
+#. defaultMessage is:
+#. The Origin Contract was not found on this network.
+#: translations/messages/src/components/listings-grid.json
+msgctxt "listings-grid.originContractNotFound"
+msgid "The Origin Contract was not found on this network."
+msgstr "crwdns1322:0crwdne1322:0"
+
+#. [not-found.content]
+#. defaultMessage is:
+#. The page you’re looking for is no longer here, maybe it was never here in the first place. In any case, we sincerely apologize if it’s us and we forgive you if it’s you :)
+#: translations/messages/src/components/not-found.json
+msgctxt "not-found.content"
+msgid "The page you’re looking for is no longer here, maybe it was never here in the first place. In any case, we sincerely apologize if it’s us and we forgive you if it’s you :)"
+msgstr "crwdns1323:0crwdne1323:0"
+
+#. [schema.tickets.theater]
+#. defaultMessage is:
+#. Theater
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.theater"
+msgid "Theater"
+msgstr "crwdns1324:0crwdne1324:0"
+
+#. [listing-create.error1]
+#. defaultMessage is:
+#. There was a problem creating this listing.
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.error1"
+msgid "There was a problem creating this listing."
+msgstr "crwdns1325:0crwdne1325:0"
+
+#. [listing-detail.errorPurchasingListing]
+#. defaultMessage is:
+#. There was a problem purchasing this listing.
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.errorPurchasingListing"
+msgid "There was a problem purchasing this listing."
+msgstr "crwdns1326:0crwdne1326:0"
+
+#. [listing-detail.loadingError]
+#. defaultMessage is:
+#. There was an error loading this listing.
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.loadingError"
+msgid "There was an error loading this listing."
+msgstr "crwdns1327:0crwdne1327:0"
+
+#. [EditProfile.publicDataNotice]
+#. defaultMessage is:
+#. This information will be published on the blockchain and will be visible to everyone.
+#: translations/messages/src/pages/profile/EditProfile.json
+msgctxt "EditProfile.publicDataNotice"
+msgid "This information will be published on the blockchain and will be visible to everyone."
+msgstr "crwdns1328:0crwdne1328:0"
+
+#. [purchase-detail.listingStatus]
+#. defaultMessage is:
+#. This listing is {status}
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.listingStatus"
+msgid "This listing is {status}"
+msgstr "crwdns1329:0{status}crwdne1329:0"
+
+#. [my-sale-card.orderComplete]
+#. defaultMessage is:
+#. This order is complete
+#: translations/messages/src/components/my-sale-card.json
+msgctxt "my-sale-card.orderComplete"
+msgid "This order is complete"
+msgstr "crwdns1330:0crwdne1330:0"
+
+#. [listing-create.tickets]
+#. defaultMessage is:
+#. Tickets
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.tickets"
+msgid "Tickets"
+msgstr "crwdns1331:0crwdne1331:0"
+
+#. [schema.forSale.tickets]
+#. defaultMessage is:
+#. Tickets
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.tickets"
+msgid "Tickets"
+msgstr "crwdns1332:0crwdne1332:0"
+
+#. [schema.announcements.title]
+#. defaultMessage is:
+#. Title
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.title"
+msgid "Title"
+msgstr "crwdns1333:0crwdne1333:0"
+
+#. [schema.forSale.title]
+#. defaultMessage is:
+#. Title
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.title"
+msgid "Title"
+msgstr "crwdns1334:0crwdne1334:0"
+
+#. [schema.housing.title]
+#. defaultMessage is:
+#. Title
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.title"
+msgid "Title"
+msgstr "crwdns1335:0crwdne1335:0"
+
+#. [schema.services.title]
+#. defaultMessage is:
+#. Title
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.title"
+msgid "Title"
+msgstr "crwdns1336:0crwdne1336:0"
+
+#. [schema.tickets.title]
+#. defaultMessage is:
+#. Title
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.title"
+msgid "Title"
+msgstr "crwdns1337:0crwdne1337:0"
+
+#. [schema.transportation.title]
+#. defaultMessage is:
+#. Title
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.title"
+msgid "Title"
+msgstr "crwdns1338:0crwdne1338:0"
+
+#. [transactions.to]
+#. defaultMessage is:
+#. To
+#: translations/messages/src/components/dropdowns/transactions.json
+msgctxt "transactions.to"
+msgid "To"
+msgstr "crwdns1339:0crwdne1339:0"
+
+#. [purchase-detail.to]
+#. defaultMessage is:
+#. To
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.to"
+msgid "To"
+msgstr "crwdns1340:0crwdne1340:0"
+
+#. [schema.forSale.tools]
+#. defaultMessage is:
+#. Tools
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.tools"
+msgid "Tools"
+msgstr "crwdns1341:0crwdne1341:0"
+
+#. [web3-provider.toshi]
+#. defaultMessage is:
+#. Toshi
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.toshi"
+msgid "Toshi"
+msgstr "crwdns1342:0crwdne1342:0"
+
+#. [my-listing-card.totalQuantity]
+#. defaultMessage is:
+#. Total Quantity : {quantity}
+#: translations/messages/src/components/my-listing-card.json
+msgctxt "my-listing-card.totalQuantity"
+msgid "Total Quantity : {quantity}"
+msgstr "crwdns1343:0{quantity}crwdne1343:0"
+
+#. [schema.forSale.toysGames]
+#. defaultMessage is:
+#. Toys & Games
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.toysGames"
+msgid "Toys & Games"
+msgstr "crwdns1344:0crwdne1344:0"
+
+#. [schema.tickets.tradeshow]
+#. defaultMessage is:
+#. Tradeshow
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.tradeshow"
+msgid "Tradeshow"
+msgstr "crwdns1345:0crwdne1345:0"
+
+#. [schema.forSale.trailers]
+#. defaultMessage is:
+#. Trailers
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.trailers"
+msgid "Trailers"
+msgstr "crwdns1346:0crwdne1346:0"
+
+#. [purchase-detail.transactionHistoryHeading]
+#. defaultMessage is:
+#. Transaction History
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.transactionHistoryHeading"
+msgid "Transaction History"
+msgstr "crwdns1347:0crwdne1347:0"
+
+#. [purchase-detail.transactionStatusHeading]
+#. defaultMessage is:
+#. Transaction Status
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.transactionStatusHeading"
+msgid "Transaction Status"
+msgstr "crwdns1348:0crwdne1348:0"
+
+#. [listing-create.transportation]
+#. defaultMessage is:
+#. Transportation
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.transportation"
+msgid "Transportation"
+msgstr "crwdns1349:0crwdne1349:0"
+
+#. [web3-provider.trust]
+#. defaultMessage is:
+#. Trust
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.trust"
+msgid "Trust"
+msgstr "crwdns1350:0crwdne1350:0"
+
+#. [web3-provider.trustWallet]
+#. defaultMessage is:
+#. Trust Wallet
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.trustWallet"
+msgid "Trust Wallet"
+msgstr "crwdns1351:0crwdne1351:0"
+
+#. [footer.twitterLink]
+#. defaultMessage is:
+#. Twitter
+#: translations/messages/src/components/footer.json
+msgctxt "footer.twitterLink"
+msgid "Twitter"
+msgstr "crwdns1352:0crwdne1352:0"
+
+#. [_ProvisionedChanges.twitter]
+#. defaultMessage is:
+#. Twitter
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.twitter"
+msgid "Twitter"
+msgstr "crwdns1353:0crwdne1353:0"
+
+#. [_Services.twitter]
+#. defaultMessage is:
+#. Twitter
+#: translations/messages/src/pages/profile/_Services.json
+msgctxt "_Services.twitter"
+msgid "Twitter"
+msgstr "crwdns1354:0crwdne1354:0"
+
+#. [User.twitter]
+#. defaultMessage is:
+#. Twitter
+#: translations/messages/src/pages/user/User.json
+msgctxt "User.twitter"
+msgid "Twitter"
+msgstr "crwdns1355:0crwdne1355:0"
+
+#. [_ProvisionedChanges.twitterAccount]
+#. defaultMessage is:
+#. Twitter account
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.twitterAccount"
+msgid "Twitter account"
+msgstr "crwdns1356:0crwdne1356:0"
+
+#. [Profile.twitterVerified]
+#. defaultMessage is:
+#. Twitter account verified!
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.twitterVerified"
+msgid "Twitter account verified!"
+msgstr "crwdns1357:0crwdne1357:0"
+
+#. [purchase-detail.txHash]
+#. defaultMessage is:
+#. TxHash
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.txHash"
+msgid "TxHash"
+msgstr "crwdns1358:0crwdne1358:0"
+
+#. [purchase-detail.txName]
+#. defaultMessage is:
+#. TxName
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.txName"
+msgid "TxName"
+msgstr "crwdns1359:0crwdne1359:0"
+
+#. [_countryOptions.unitedKingdom]
+#. defaultMessage is:
+#. United Kingdom
+#: translations/messages/src/pages/profile/_countryOptions.json
+msgctxt "_countryOptions.unitedKingdom"
+msgid "United Kingdom"
+msgstr "crwdns1360:0crwdne1360:0"
+
+#. [my-purchase-card.unknown]
+#. defaultMessage is:
+#. Unknown
+#: translations/messages/src/components/my-purchase-card.json
+msgctxt "my-purchase-card.unknown"
+msgid "Unknown"
+msgstr "crwdns1361:0crwdne1361:0"
+
+#. [my-sale-card.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+#: translations/messages/src/components/my-sale-card.json
+msgctxt "my-sale-card.unnamedUser"
+msgid "Unnamed User"
+msgstr "crwdns1362:0crwdne1362:0"
+
+#. [purchase-detail.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+#. [purchase-detail.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+#: translations/messages/src/components/purchase-detail.json
+#: translations/messages/src/reducers/Users.json
+msgctxt "purchase-detail.unnamedUser"
+msgid "Unnamed User"
+msgstr "crwdns1363:0crwdne1363:0"
+
+#. [review.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+#: translations/messages/src/components/review.json
+msgctxt "review.unnamedUser"
+msgid "Unnamed User"
+msgstr "crwdns1364:0crwdne1364:0"
+
+#. [user-card.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+#: translations/messages/src/components/user-card.json
+msgctxt "user-card.unnamedUser"
+msgid "Unnamed User"
+msgstr "crwdns1365:0crwdne1365:0"
+
+#. [Profile.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.unnamedUser"
+msgid "Unnamed User"
+msgstr "crwdns1366:0crwdne1366:0"
+
+#. [user.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+#: translations/messages/src/pages/user/User.json
+msgctxt "user.unnamedUser"
+msgid "Unnamed User"
+msgstr "crwdns1367:0crwdne1367:0"
+
+#. [notifications.unread]
+#. defaultMessage is:
+#. Unread
+#: translations/messages/src/components/notifications.json
+msgctxt "notifications.unread"
+msgid "Unread"
+msgstr "crwdns1368:0crwdne1368:0"
+
+#. [listing-create.uploadingYourListing]
+#. defaultMessage is:
+#. Uploading your listing
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.uploadingYourListing"
+msgid "Uploading your listing"
+msgstr "crwdns1369:0crwdne1369:0"
+
+#. [schema.housing.vacationRentals]
+#. defaultMessage is:
+#. Vacation Rentals
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.vacationRentals"
+msgid "Vacation Rentals"
+msgstr "crwdns1370:0crwdne1370:0"
+
+#. [VerifyEmail.validEmail]
+#. defaultMessage is:
+#. Valid email address
+#: translations/messages/src/pages/profile/VerifyEmail.json
+msgctxt "VerifyEmail.validEmail"
+msgid "Valid email address"
+msgstr "crwdns1371:0crwdne1371:0"
+
+#. [User.verifiedInto]
+#. defaultMessage is:
+#. Verified Info
+#: translations/messages/src/pages/user/User.json
+msgctxt "User.verifiedInto"
+msgid "Verified Info"
+msgstr "crwdns1372:0crwdne1372:0"
+
+#. [VerifyFacebook.verifyFBHeading]
+#. defaultMessage is:
+#. Verify Your Facebook Account
+#: translations/messages/src/pages/profile/VerifyFacebook.json
+msgctxt "VerifyFacebook.verifyFBHeading"
+msgid "Verify Your Facebook Account"
+msgstr "crwdns1373:0crwdne1373:0"
+
+#. [VerifyPhone.verifyPhoneHeading]
+#. defaultMessage is:
+#. Verify Your Phone Number
+#: translations/messages/src/pages/profile/VerifyPhone.json
+msgctxt "VerifyPhone.verifyPhoneHeading"
+msgid "Verify Your Phone Number"
+msgstr "crwdns1374:0crwdne1374:0"
+
+#. [VerifyTwitter.verifyTwitterHeading]
+#. defaultMessage is:
+#. Verify Your Twitter Account
+#: translations/messages/src/pages/profile/VerifyTwitter.json
+msgctxt "VerifyTwitter.verifyTwitterHeading"
+msgid "Verify Your Twitter Account"
+msgstr "crwdns1375:0crwdne1375:0"
+
+#. [Profile.verifyYourselfHeading]
+#. defaultMessage is:
+#. Verify yourself on Origin
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.verifyYourselfHeading"
+msgid "Verify yourself on Origin"
+msgstr "crwdns1376:0crwdne1376:0"
+
+#. [_Guidance.verifyingYourProfile]
+#. defaultMessage is:
+#. Verifying your profile
+#: translations/messages/src/pages/profile/_Guidance.json
+msgctxt "_Guidance.verifyingYourProfile"
+msgid "Verifying your profile"
+msgstr "crwdns1377:0crwdne1377:0"
+
+#. [schema.forSale.videoGaming]
+#. defaultMessage is:
+#. Video Gaming
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.videoGaming"
+msgid "Video Gaming"
+msgstr "crwdns1378:0crwdne1378:0"
+
+#. [notifications.viewAll]
+#. defaultMessage is:
+#. View All
+#: translations/messages/src/components/dropdowns/notifications.json
+msgctxt "notifications.viewAll"
+msgid "View All"
+msgstr "crwdns1379:0crwdne1379:0"
+
+#. [my-sale-card.viewDetails]
+#. defaultMessage is:
+#. View Details
+#: translations/messages/src/components/my-sale-card.json
+msgctxt "my-sale-card.viewDetails"
+msgid "View Details"
+msgstr "crwdns1380:0crwdne1380:0"
+
+#. [transaction-progress.viewProfile]
+#. defaultMessage is:
+#. View Profile
+#: translations/messages/src/components/user-card.json
+msgctxt "transaction-progress.viewProfile"
+msgid "View Profile"
+msgstr "crwdns1381:0crwdne1381:0"
+
+#. [listing-detail.viewOnIpfs]
+#. defaultMessage is:
+#. View on IPFS
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.viewOnIpfs"
+msgid "View on IPFS"
+msgstr "crwdns1382:0crwdne1382:0"
+
+#. [purchase-detail.viewOnIPFS]
+#. defaultMessage is:
+#. View on IPFS
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.viewOnIPFS"
+msgid "View on IPFS"
+msgstr "crwdns1383:0crwdne1383:0"
+
+#. [listing-create.viewSchemaLinkLabel]
+#. defaultMessage is:
+#. View the {schemaName} schema
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.viewSchemaLinkLabel"
+msgid "View the {schemaName} schema"
+msgstr "crwdns1384:0{schemaName}crwdne1384:0"
+
+#. [_ProvisionedChanges.visibleOnBlockchain]
+#. defaultMessage is:
+#. Visible on the blockchain
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.visibleOnBlockchain"
+msgid "Visible on the blockchain"
+msgstr "crwdns1385:0crwdne1385:0"
+
+#. [schema.announcements.volunteers]
+#. defaultMessage is:
+#. Volunteers
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.volunteers"
+msgid "Volunteers"
+msgstr "crwdns1386:0crwdne1386:0"
+
+#. [purchase-detail.waitForBuyer]
+#. defaultMessage is:
+#. Wait for the buyer to receive the order
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.waitForBuyer"
+msgid "Wait for the buyer to receive the order"
+msgstr "crwdns1387:0crwdne1387:0"
+
+#. [purchase-detail.awaitOrder]
+#. defaultMessage is:
+#. Wait for the seller to send the order
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.awaitOrder"
+msgid "Wait for the seller to send the order"
+msgstr "crwdns1388:0crwdne1388:0"
+
+#. [purchase-detail.awaitSellerWithdrawl]
+#. defaultMessage is:
+#. Wait for the seller to withdraw the funds
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.awaitSellerWithdrawl"
+msgid "Wait for the seller to withdraw the funds"
+msgstr "crwdns1389:0crwdne1389:0"
+
+#. [ConfirmUpload.waitNotice]
+#. defaultMessage is:
+#. Wait! You haven’t published yet.
+#: translations/messages/src/pages/profile/ConfirmUnload.json
+msgctxt "ConfirmUpload.waitNotice"
+msgid "Wait! You haven’t published yet."
+msgstr "crwdns1390:0crwdne1390:0"
+
+#. [schema.forSale.wanted]
+#. defaultMessage is:
+#. Wanted
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.wanted"
+msgid "Wanted"
+msgstr "crwdns1391:0crwdne1391:0"
+
+#. [schema.services.webDesign]
+#. defaultMessage is:
+#. Web Design
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.webDesign"
+msgid "Web Design"
+msgstr "crwdns1392:0crwdne1392:0"
+
+#. [listing-create.whatHappensNextHeading]
+#. defaultMessage is:
+#. What happens next?
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.whatHappensNextHeading"
+msgid "What happens next?"
+msgstr "crwdns1393:0crwdne1393:0"
+
+#. [listing-create.whatTypeOfListing]
+#. defaultMessage is:
+#. What type of listing do you want to create?
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.whatTypeOfListing"
+msgid "What type of listing do you want to create?"
+msgstr "crwdns1394:0crwdne1394:0"
+
+#. [schema.tickets.when]
+#. defaultMessage is:
+#. When
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.when"
+msgid "When"
+msgstr "crwdns1395:0crwdne1395:0"
+
+#. [listing-create.whatHappensNextContent1]
+#. defaultMessage is:
+#. When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network.
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.whatHappensNextContent1"
+msgid "When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network."
+msgstr "crwdns1396:0{ipfsLink}crwdne1396:0"
+
+#. [schema.tickets.where]
+#. defaultMessage is:
+#. Where
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.where"
+msgid "Where"
+msgstr "crwdns1397:0crwdne1397:0"
+
+#. [footer.whitepaperLink]
+#. defaultMessage is:
+#. Whitepaper
+#: translations/messages/src/components/footer.json
+msgctxt "footer.whitepaperLink"
+msgid "Whitepaper"
+msgstr "crwdns1398:0crwdne1398:0"
+
+#. [purchase-detail.withdrawAndReview]
+#. defaultMessage is:
+#. Withdraw and Review
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.withdrawAndReview"
+msgid "Withdraw and Review"
+msgstr "crwdns1399:0crwdne1399:0"
+
+#. [schema.services.writingTranslationTranscription]
+#. defaultMessage is:
+#. Writing, Translation & Transcription
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.writingTranslationTranscription"
+msgid "Writing, Translation & Transcription"
+msgstr "crwdns1400:0crwdne1400:0"
+
+#. [schema.transportation.yachtCharters]
+#. defaultMessage is:
+#. Yacht Charters
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.yachtCharters"
+msgid "Yacht Charters"
+msgstr "crwdns1401:0crwdne1401:0"
+
+#. [web3-provider.notSignedIntoMetaMask]
+#. defaultMessage is:
+#. You are not signed in to MetaMask.
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.notSignedIntoMetaMask"
+msgid "You are not signed in to MetaMask."
+msgstr "crwdns1402:0crwdne1402:0"
+
+#. [_ProvisionedChanges.youArePublishing]
+#. defaultMessage is:
+#. You are publishing:
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.youArePublishing"
+msgid "You are publishing:"
+msgstr "crwdns1403:0crwdne1403:0"
+
+#. [my-listings.noListingsMessage]
+#. defaultMessage is:
+#. You currently have no listings.
+#: translations/messages/src/components/my-listings.json
+msgctxt "my-listings.noListingsMessage"
+msgid "You currently have no listings."
+msgstr "crwdns1404:0crwdne1404:0"
+
+#. [my-purchases.noPurchases]
+#. defaultMessage is:
+#. You currently have no purchases.
+#: translations/messages/src/components/my-purchases.json
+msgctxt "my-purchases.noPurchases"
+msgid "You currently have no purchases."
+msgstr "crwdns1405:0crwdne1405:0"
+
+#. [my-sales.noSales]
+#. defaultMessage is:
+#. You currently have no sales.
+#: translations/messages/src/components/my-sales.json
+msgctxt "my-sales.noSales"
+msgid "You currently have no sales."
+msgstr "crwdns1406:0crwdne1406:0"
+
+#. [notification.purchaseCreated]
+#. defaultMessage is:
+#. You have a new purchase.
+#: translations/messages/src/components/notification-message.json
+msgctxt "notification.purchaseCreated"
+msgid "You have a new purchase."
+msgstr "crwdns1407:0crwdne1407:0"
+
+#. [notification.purchaseReceived]
+#. defaultMessage is:
+#. You have a new review.
+#: translations/messages/src/components/notification-message.json
+msgctxt "notification.purchaseReceived"
+msgid "You have a new review."
+msgstr "crwdns1408:0crwdne1408:0"
+
+#. [notification.purchaseComplete]
+#. defaultMessage is:
+#. You have a new review.
+#: translations/messages/src/components/notification-message.json
+msgctxt "notification.purchaseComplete"
+msgid "You have a new review."
+msgstr "crwdns1409:0crwdne1409:0"
+
+#. [listings-grid.changeNetworks]
+#. defaultMessage is:
+#. You may need to change networks, or deploy the contract.
+#: translations/messages/src/components/listings-grid.json
+msgctxt "listings-grid.changeNetworks"
+msgid "You may need to change networks, or deploy the contract."
+msgstr "crwdns1410:0crwdne1410:0"
+
+#. [listing-create.schemaExplainer]
+#. defaultMessage is:
+#. Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services.
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.schemaExplainer"
+msgid "Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services."
+msgstr "crwdns1411:0crwdne1411:0"
+
+#. [notification.purchaseSent]
+#. defaultMessage is:
+#. Your purchase has been shipped.
+#: translations/messages/src/components/notification-message.json
+msgctxt "notification.purchaseSent"
+msgid "Your purchase has been shipped."
+msgstr "crwdns1412:0crwdne1412:0"
+
+#. [purchase-detail.sellerReviewPlaceholder]
+#. defaultMessage is:
+#. Your review should inform others about your experience transacting with this buyer.
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.sellerReviewPlaceholder"
+msgid "Your review should inform others about your experience transacting with this buyer."
+msgstr "crwdns1413:0crwdne1413:0"
+
+#. [purchase-detail.buyerReviewPlaceholder]
+#. defaultMessage is:
+#. Your review should inform others about your experience transacting with this seller, not about the product itself.
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.buyerReviewPlaceholder"
+msgid "Your review should inform others about your experience transacting with this seller, not about the product itself."
+msgstr "crwdns1414:0crwdne1414:0"
+
+#. [Profile.manageYourProfile]
+#. defaultMessage is:
+#. manage your profile
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.manageYourProfile"
+msgid "manage your profile"
+msgstr "crwdns1415:0crwdne1415:0"
+
+#. [my-sale-card.buyerNameLink]
+#. defaultMessage is:
+#. sold to {linkToBuyer}
+#: translations/messages/src/components/my-sale-card.json
+msgctxt "my-sale-card.buyerNameLink"
+msgid "sold to {linkToBuyer}"
+msgstr "crwdns1416:0{linkToBuyer}crwdne1416:0"
+
+#. [_Wallet.ethBalance]
+#. defaultMessage is:
+#. {balance} ETH
+#: translations/messages/src/pages/profile/_Wallet.json
+msgctxt "_Wallet.ethBalance"
+msgid "{balance} ETH"
+msgstr "crwdns1417:0{balance}crwdne1417:0"
+
+#. [web3-provider.shouldBeOnRinkeby]
+#. defaultMessage is:
+#. {currentProvider} should be on Rinkeby Test Network
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.shouldBeOnRinkeby"
+msgid "{currentProvider} should be on Rinkeby Test Network"
+msgstr "crwdns1418:0{currentProvider}crwdne1418:0"
+
+#. [listings-grid.listingsCount]
+#. defaultMessage is:
+#. {listingIdsCount} Listings
+#: translations/messages/src/components/listings-grid.json
+msgctxt "listings-grid.listingsCount"
+msgid "{listingIdsCount} Listings"
+msgstr "crwdns1419:0{listingIdsCount}crwdne1419:0"
+
+#. [my-sale-card.nextStep1]
+#. defaultMessage is:
+#. {nextStep} Send the order to buyer
+#: translations/messages/src/components/my-sale-card.json
+msgctxt "my-sale-card.nextStep1"
+msgid "{nextStep} Send the order to buyer"
+msgstr "crwdns1420:0{nextStep}crwdne1420:0"
+
+#. [my-sale-card.nextStep2]
+#. defaultMessage is:
+#. {nextStep} Wait for buyer to receive order
+#: translations/messages/src/components/my-sale-card.json
+msgctxt "my-sale-card.nextStep2"
+msgid "{nextStep} Wait for buyer to receive order"
+msgstr "crwdns1421:0{nextStep}crwdne1421:0"
+
+#. [my-sale-card.nextStep3]
+#. defaultMessage is:
+#. {nextStep} Withdraw funds
+#: translations/messages/src/components/my-sale-card.json
+msgctxt "my-sale-card.nextStep3"
+msgid "{nextStep} Withdraw funds"
+msgstr "crwdns1422:0{nextStep}crwdne1422:0"
+
+#. [_Guidance.content]
+#. defaultMessage is:
+#. {verifyingYourProfile} allows other users to know that you are a real person and increases the chances of successful transactions on Origin.
+#: translations/messages/src/pages/profile/_Guidance.json
+msgctxt "_Guidance.content"
+msgid "{verifyingYourProfile} allows other users to know that you are a real person and increases the chances of successful transactions on Origin."
+msgstr "crwdns1423:0{verifyingYourProfile}crwdne1423:0"
+

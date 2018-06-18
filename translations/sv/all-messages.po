@@ -1,0 +1,3797 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2018-06-11T22:29:52.005Z\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"MIME-Version: 1.0\n"
+"X-Generator: crowdin.com\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: originprotocol\n"
+"X-Crowdin-Language: sv-SE\n"
+"X-Crowdin-File: /develop/translations/all-messages.po\n"
+"Project-Id-Version: originprotocol\n"
+"Last-Translator: OriginProtocol <coleman@originprotocol.com>\n"
+"Language-Team: Swedish\n"
+"Language: sv_SE\n"
+"PO-Revision-Date: 2018-06-13 18:24-0400\n"
+
+#. [user-card.heading]
+#. defaultMessage is:
+#. About the {title}
+#: translations/messages/src/components/user-card.json
+msgctxt "user-card.heading"
+msgid "About the {title}"
+msgstr ""
+
+#. [_Wallet.accountBalance]
+#. defaultMessage is:
+#. Account Balance:
+#: translations/messages/src/pages/profile/_Wallet.json
+msgctxt "_Wallet.accountBalance"
+msgid "Account Balance:"
+msgstr ""
+
+#. [my-listings.active]
+#. defaultMessage is:
+#. Active
+#: translations/messages/src/components/my-listings.json
+msgctxt "my-listings.active"
+msgid "Active"
+msgstr ""
+
+#. [schema.announcements.activities]
+#. defaultMessage is:
+#. Activities
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.activities"
+msgid "Activities"
+msgstr ""
+
+#. [navbar.addListing]
+#. defaultMessage is:
+#. Add a Listing
+#: translations/messages/src/components/navbar.json
+msgctxt "navbar.addListing"
+msgid "Add a Listing"
+msgstr ""
+
+#. [_Services.address]
+#. defaultMessage is:
+#. Address
+#: translations/messages/src/pages/profile/_Services.json
+msgctxt "_Services.address"
+msgid "Address"
+msgstr ""
+
+#. [ConfirmPublish.afterYouPublishNotice]
+#. defaultMessage is:
+#. After you publish your changes to the blockchain, other users will be able to see that you have verified the following:
+#: translations/messages/src/pages/profile/ConfirmPublish.json
+msgctxt "ConfirmPublish.afterYouPublishNotice"
+msgid "After you publish your changes to the blockchain, other users will be able to see that you have verified the following:"
+msgstr ""
+
+#. [schema.transportation.airplaneCharter]
+#. defaultMessage is:
+#. Airplane Charter
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.airplaneCharter"
+msgid "Airplane Charter"
+msgstr ""
+
+#. [my-listings.all]
+#. defaultMessage is:
+#. All
+#: translations/messages/src/components/my-listings.json
+msgctxt "my-listings.all"
+msgid "All"
+msgstr ""
+
+#. [my-purchases.all]
+#. defaultMessage is:
+#. All
+#: translations/messages/src/components/my-purchases.json
+msgctxt "my-purchases.all"
+msgid "All"
+msgstr ""
+
+#. [my-sales.all]
+#. defaultMessage is:
+#. All
+#: translations/messages/src/components/my-sales.json
+msgctxt "my-sales.all"
+msgid "All"
+msgstr ""
+
+#. [notifications.all]
+#. defaultMessage is:
+#. All
+#: translations/messages/src/components/notifications.json
+msgctxt "notifications.all"
+msgid "All"
+msgstr ""
+
+#. [Profile.noDescriptionUser]
+#. defaultMessage is:
+#. An Origin user without a description
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.noDescriptionUser"
+msgid "An Origin user without a description"
+msgstr ""
+
+#. [listing-create.announcements]
+#. defaultMessage is:
+#. Announcements
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.announcements"
+msgid "Announcements"
+msgstr ""
+
+#. [schema.forSale.antiques]
+#. defaultMessage is:
+#. Antiques
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.antiques"
+msgid "Antiques"
+msgstr ""
+
+#. [schema.forSale.appliances]
+#. defaultMessage is:
+#. Appliances
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.appliances"
+msgid "Appliances"
+msgstr ""
+
+#. [schema.housing.aptsWanted]
+#. defaultMessage is:
+#. Apts Wanted
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.aptsWanted"
+msgid "Apts Wanted"
+msgstr ""
+
+#. [schema.housing.aptsHousingForRent]
+#. defaultMessage is:
+#. Apts/Housing for Rent
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.aptsHousingForRent"
+msgid "Apts/Housing for Rent"
+msgstr ""
+
+#. [my-listing-card.confirmCloseListing]
+#. defaultMessage is:
+#. Are you sure that you want to permanently close this listing? This cannot be undone.
+#: translations/messages/src/components/my-listing-card.json
+msgctxt "my-listing-card.confirmCloseListing"
+msgid "Are you sure that you want to permanently close this listing? This cannot be undone."
+msgstr ""
+
+#. [schema.announcements.artists]
+#. defaultMessage is:
+#. Artists
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.artists"
+msgid "Artists"
+msgstr ""
+
+#. [schema.tickets.arts]
+#. defaultMessage is:
+#. Arts
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.arts"
+msgid "Arts"
+msgstr ""
+
+#. [schema.forSale.artsCrafts]
+#. defaultMessage is:
+#. Arts & Crafts
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.artsCrafts"
+msgid "Arts & Crafts"
+msgstr ""
+
+#. [schema.forSale.atvsUtvsSnowmobiles]
+#. defaultMessage is:
+#. Atvs, UTVs, Snowmobiles
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.atvsUtvsSnowmobiles"
+msgid "Atvs, UTVs, Snowmobiles"
+msgstr ""
+
+#. [schema.forSale.autoParts]
+#. defaultMessage is:
+#. Auto Parts
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.autoParts"
+msgid "Auto Parts"
+msgstr ""
+
+#. [schema.forSale.autoWheelsTires]
+#. defaultMessage is:
+#. Auto Wheels & Tires
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.autoWheelsTires"
+msgid "Auto Wheels & Tires"
+msgstr ""
+
+#. [schema.forSale.babyKidStuff]
+#. defaultMessage is:
+#. Baby & Kid Stuff
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.babyKidStuff"
+msgid "Baby & Kid Stuff"
+msgstr ""
+
+#. [backButtonLabel]
+#. defaultMessage is:
+#. Back
+#: translations/messages/src/components/listing-create.json
+msgctxt "backButtonLabel"
+msgid "Back"
+msgstr ""
+
+#. [listing-create.backButtonLabel]
+#. defaultMessage is:
+#. Back
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.backButtonLabel"
+msgid "Back"
+msgstr ""
+
+#. [schema.forSale.barter]
+#. defaultMessage is:
+#. Barter
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.barter"
+msgid "Barter"
+msgstr ""
+
+#. [listing-create.howItWorksContentPart2]
+#. defaultMessage is:
+#. Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.howItWorksContentPart2"
+msgid "Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering."
+msgstr ""
+
+#. [schema.forSale.bicycleParts]
+#. defaultMessage is:
+#. Bicycle Parts
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.bicycleParts"
+msgid "Bicycle Parts"
+msgstr ""
+
+#. [schema.forSale.bicycles]
+#. defaultMessage is:
+#. Bicycles
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.bicycles"
+msgid "Bicycles"
+msgstr ""
+
+#. [schema.transportation.bikeRentals]
+#. defaultMessage is:
+#. Bike Rentals
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.bikeRentals"
+msgid "Bike Rentals"
+msgstr ""
+
+#. [schema.forSale.boatPartsAccessories]
+#. defaultMessage is:
+#. Boat Parts & Accessories
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.boatPartsAccessories"
+msgid "Boat Parts & Accessories"
+msgstr ""
+
+#. [schema.transportation.boatRentals]
+#. defaultMessage is:
+#. Boat Rentals
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.boatRentals"
+msgid "Boat Rentals"
+msgstr ""
+
+#. [schema.forSale.boats]
+#. defaultMessage is:
+#. Boats
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.boats"
+msgid "Boats"
+msgstr ""
+
+#. [schema.forSale.booksMagazines]
+#. defaultMessage is:
+#. Books & Magazines
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.booksMagazines"
+msgid "Books & Magazines"
+msgstr ""
+
+#. [_countryOptions.brazil]
+#. defaultMessage is:
+#. Brazil
+#: translations/messages/src/pages/profile/_countryOptions.json
+msgctxt "_countryOptions.brazil"
+msgid "Brazil"
+msgstr ""
+
+#. [connectivity.bridgeServer]
+#. defaultMessage is:
+#. Bridge Server:
+#: translations/messages/src/components/dropdowns/connectivity.json
+msgctxt "connectivity.bridgeServer"
+msgid "Bridge Server:"
+msgstr ""
+
+#. [schema.forSale.business]
+#. defaultMessage is:
+#. Business
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.business"
+msgid "Business"
+msgstr ""
+
+#. [schema.services.businessServices]
+#. defaultMessage is:
+#. Business Services
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.businessServices"
+msgid "Business Services"
+msgstr ""
+
+#. [notifications.buy]
+#. defaultMessage is:
+#. Buy
+#: translations/messages/src/components/notifications.json
+msgctxt "notifications.buy"
+msgid "Buy"
+msgstr ""
+
+#. [listing-detail.buyNow]
+#. defaultMessage is:
+#. Buy Now
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.buyNow"
+msgid "Buy Now"
+msgstr ""
+
+#. [purchase-detail.buyer]
+#. defaultMessage is:
+#. Buyer
+#. [purchase-detail.buyer]
+#. defaultMessage is:
+#. Buyer
+#: translations/messages/src/components/notification.json
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.buyer"
+msgid "Buyer"
+msgstr ""
+
+#. [navbar.buying]
+#. defaultMessage is:
+#. Buying
+#: translations/messages/src/components/navbar.json
+msgctxt "navbar.buying"
+msgid "Buying"
+msgstr ""
+
+#. [schema.forSale.cdsDvdsVhs]
+#. defaultMessage is:
+#. CDs / DVDs / VHS
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.cdsDvdsVhs"
+msgid "CDs / DVDs / VHS"
+msgstr ""
+
+#. [EditProfile.cancel]
+#. defaultMessage is:
+#. Cancel
+#: translations/messages/src/pages/profile/EditProfile.json
+msgctxt "EditProfile.cancel"
+msgid "Cancel"
+msgstr ""
+
+#. [VerifyEmail.cancel]
+#. defaultMessage is:
+#. Cancel
+#: translations/messages/src/pages/profile/VerifyEmail.json
+msgctxt "VerifyEmail.cancel"
+msgid "Cancel"
+msgstr ""
+
+#. [VerifyFacebook.cancel]
+#. defaultMessage is:
+#. Cancel
+#: translations/messages/src/pages/profile/VerifyFacebook.json
+msgctxt "VerifyFacebook.cancel"
+msgid "Cancel"
+msgstr ""
+
+#. [VerifyPhone.cancel]
+#. defaultMessage is:
+#. Cancel
+#: translations/messages/src/pages/profile/VerifyPhone.json
+msgctxt "VerifyPhone.cancel"
+msgid "Cancel"
+msgstr ""
+
+#. [VerifyTwitter.cancel]
+#. defaultMessage is:
+#. Cancel
+#: translations/messages/src/pages/profile/VerifyTwitter.json
+msgctxt "VerifyTwitter.cancel"
+msgid "Cancel"
+msgstr ""
+
+#. [schema.transportation.carRentals]
+#. defaultMessage is:
+#. Car Rentals
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.carRentals"
+msgid "Car Rentals"
+msgstr ""
+
+#. [schema.forSale.carsTrucks]
+#. defaultMessage is:
+#. Cars & Trucks
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.carsTrucks"
+msgid "Cars & Trucks"
+msgstr ""
+
+#. [schema.announcements.category]
+#. defaultMessage is:
+#. Category
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.category"
+msgid "Category"
+msgstr ""
+
+#. [schema.forSale.category]
+#. defaultMessage is:
+#. Category
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.category"
+msgid "Category"
+msgstr ""
+
+#. [schema.housing.category]
+#. defaultMessage is:
+#. Category
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.category"
+msgid "Category"
+msgstr ""
+
+#. [schema.services.category]
+#. defaultMessage is:
+#. Category
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.category"
+msgid "Category"
+msgstr ""
+
+#. [schema.tickets.category]
+#. defaultMessage is:
+#. Category
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.category"
+msgid "Category"
+msgstr ""
+
+#. [schema.transportation.category]
+#. defaultMessage is:
+#. Category
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.category"
+msgid "Category"
+msgstr ""
+
+#. [schema.forSale.cellPhones]
+#. defaultMessage is:
+#. Cell Phones
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.cellPhones"
+msgid "Cell Phones"
+msgstr ""
+
+#. [schema.announcements.childcare]
+#. defaultMessage is:
+#. Childcare
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.childcare"
+msgid "Childcare"
+msgstr ""
+
+#. [_countryOptions.unitedStates]
+#. defaultMessage is:
+#. China
+#: translations/messages/src/pages/profile/_countryOptions.json
+msgctxt "_countryOptions.unitedStates"
+msgid "China"
+msgstr ""
+
+#. [_countryOptions.china]
+#. defaultMessage is:
+#. China
+#: translations/messages/src/pages/profile/_countryOptions.json
+msgctxt "_countryOptions.china"
+msgid "China"
+msgstr ""
+
+#. [listing-create.chooseSchema]
+#. defaultMessage is:
+#. Choose a schema for your product or service
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.chooseSchema"
+msgid "Choose a schema for your product or service"
+msgstr ""
+
+#. [web3-provider.cipher]
+#. defaultMessage is:
+#. Cipher
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.cipher"
+msgid "Cipher"
+msgstr ""
+
+#. [schema.announcements.classes]
+#. defaultMessage is:
+#. Classes
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.classes"
+msgid "Classes"
+msgstr ""
+
+#. [schema.tickets.classesWorkshops]
+#. defaultMessage is:
+#. Classes & Workshops
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.classesWorkshops"
+msgid "Classes & Workshops"
+msgstr ""
+
+#. [transactions.clear]
+#. defaultMessage is:
+#. Clear
+#: translations/messages/src/components/dropdowns/transactions.json
+msgctxt "transactions.clear"
+msgid "Clear"
+msgstr ""
+
+#. [purchase-detail.sendOrderInstruction]
+#. defaultMessage is:
+#. Click the button below once the order has shipped.
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.sendOrderInstruction"
+msgid "Click the button below once the order has shipped."
+msgstr ""
+
+#. [purchase-detail.clickToWithdraw]
+#. defaultMessage is:
+#. Click the button below to initiate the withdrawal
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.clickToWithdraw"
+msgid "Click the button below to initiate the withdrawal"
+msgstr ""
+
+#. [my-listing-card.closeListing]
+#. defaultMessage is:
+#. Close Listing
+#: translations/messages/src/components/my-listing-card.json
+msgctxt "my-listing-card.closeListing"
+msgid "Close Listing"
+msgstr ""
+
+#. [schema.forSale.clothingAccessories]
+#. defaultMessage is:
+#. Clothing & Accessories
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.clothingAccessories"
+msgid "Clothing & Accessories"
+msgstr ""
+
+#. [schema.forSale.collectibles]
+#. defaultMessage is:
+#. Collectibles
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.collectibles"
+msgid "Collectibles"
+msgstr ""
+
+#. [_Services.comingSoon]
+#. defaultMessage is:
+#. Coming {br} Soon
+#: translations/messages/src/pages/profile/_Services.json
+msgctxt "_Services.comingSoon"
+msgid "Coming {br} Soon"
+msgstr ""
+
+#. [footer.communityHeading]
+#. defaultMessage is:
+#. Community
+#: translations/messages/src/components/footer.json
+msgctxt "footer.communityHeading"
+msgid "Community"
+msgstr ""
+
+#. [my-purchases.complete]
+#. defaultMessage is:
+#. Complete
+#: translations/messages/src/components/my-purchases.json
+msgctxt "my-purchases.complete"
+msgid "Complete"
+msgstr ""
+
+#. [my-sales.complete]
+#. defaultMessage is:
+#. Complete
+#: translations/messages/src/components/my-sales.json
+msgctxt "my-sales.complete"
+msgid "Complete"
+msgstr ""
+
+#. [purchase-detail.completeByWithdrawing]
+#. defaultMessage is:
+#. Complete your transaction by withdrawing funds
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.completeByWithdrawing"
+msgid "Complete your transaction by withdrawing funds"
+msgstr ""
+
+#. [transactions.completed]
+#. defaultMessage is:
+#. Completed
+#: translations/messages/src/components/dropdowns/transactions.json
+msgctxt "transactions.completed"
+msgid "Completed"
+msgstr ""
+
+#. [schema.forSale.computerParts]
+#. defaultMessage is:
+#. Computer Parts
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.computerParts"
+msgid "Computer Parts"
+msgstr ""
+
+#. [schema.forSale.computers]
+#. defaultMessage is:
+#. Computers
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.computers"
+msgid "Computers"
+msgstr ""
+
+#. [schema.tickets.conference]
+#. defaultMessage is:
+#. Conference
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.conference"
+msgid "Conference"
+msgstr ""
+
+#. [purchase-detail.confirmAndReview]
+#. defaultMessage is:
+#. Confirm and Review
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.confirmAndReview"
+msgid "Confirm and Review"
+msgstr ""
+
+#. [purchase-detail.confirmReceiptOfOrder]
+#. defaultMessage is:
+#. Confirm receipt of the order and leave a review
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.confirmReceiptOfOrder"
+msgid "Confirm receipt of the order and leave a review"
+msgstr ""
+
+#. [listing-create.confirmTransaction]
+#. defaultMessage is:
+#. Confirm transaction
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.confirmTransaction"
+msgid "Confirm transaction"
+msgstr ""
+
+#. [listing-detail.confirmTransaction]
+#. defaultMessage is:
+#. Confirm transaction
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.confirmTransaction"
+msgid "Confirm transaction"
+msgstr ""
+
+#. [Profile.confirmTransaction]
+#. defaultMessage is:
+#. Confirm transaction
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.confirmTransaction"
+msgid "Confirm transaction"
+msgstr ""
+
+#. [web3-provider.connecting]
+#. defaultMessage is:
+#. Connecting to network...
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.connecting"
+msgid "Connecting to network..."
+msgstr ""
+
+#. [connectivity.connecting]
+#. defaultMessage is:
+#. Connecting...
+#: translations/messages/src/components/dropdowns/connectivity.json
+msgctxt "connectivity.connecting"
+msgid "Connecting..."
+msgstr ""
+
+#. [continueButtonLabel]
+#. defaultMessage is:
+#. Continue
+#: translations/messages/src/components/listing-create.json
+msgctxt "continueButtonLabel"
+msgid "Continue"
+msgstr ""
+
+#. [AttestationSuccess.continue]
+#. defaultMessage is:
+#. Continue
+#: translations/messages/src/pages/profile/AttestationSuccess.json
+msgctxt "AttestationSuccess.continue"
+msgid "Continue"
+msgstr ""
+
+#. [EditProfile.continue]
+#. defaultMessage is:
+#. Continue
+#: translations/messages/src/pages/profile/EditProfile.json
+msgctxt "EditProfile.continue"
+msgid "Continue"
+msgstr ""
+
+#. [Profile.continue]
+#. defaultMessage is:
+#. Continue
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.continue"
+msgid "Continue"
+msgstr ""
+
+#. [VerifyEmail.continue]
+#. defaultMessage is:
+#. Continue
+#: translations/messages/src/pages/profile/VerifyEmail.json
+msgctxt "VerifyEmail.continue"
+msgid "Continue"
+msgstr ""
+
+#. [VerifyFacebook.continue]
+#. defaultMessage is:
+#. Continue
+#: translations/messages/src/pages/profile/VerifyFacebook.json
+msgctxt "VerifyFacebook.continue"
+msgid "Continue"
+msgstr ""
+
+#. [VerifyPhone.continue]
+#. defaultMessage is:
+#. Continue
+#: translations/messages/src/pages/profile/VerifyPhone.json
+msgctxt "VerifyPhone.continue"
+msgid "Continue"
+msgstr ""
+
+#. [VerifyTwitter.continue]
+#. defaultMessage is:
+#. Continue
+#: translations/messages/src/pages/profile/VerifyTwitter.json
+msgctxt "VerifyTwitter.continue"
+msgid "Continue"
+msgstr ""
+
+#. [schema.services.counseling]
+#. defaultMessage is:
+#. Counseling
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.counseling"
+msgid "Counseling"
+msgstr ""
+
+#. [listing-create.createListingHeading]
+#. defaultMessage is:
+#. Create your listing
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.createListingHeading"
+msgid "Create your listing"
+msgstr ""
+
+#. [web3-provider.currentlyOnNetwork]
+#. defaultMessage is:
+#. Currently on {currentNetworkName}.
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.currentlyOnNetwork"
+msgid "Currently on {currentNetworkName}."
+msgstr ""
+
+#. [schema.services.deliveryService]
+#. defaultMessage is:
+#. Delivery Service
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.deliveryService"
+msgid "Delivery Service"
+msgstr ""
+
+#. [Profile.deployingIdentity]
+#. defaultMessage is:
+#. Deploying your identity
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.deployingIdentity"
+msgid "Deploying your identity"
+msgstr ""
+
+#. [_ProvisionedChanges.description]
+#. defaultMessage is:
+#. Description
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.description"
+msgid "Description"
+msgstr ""
+
+#. [EditProfile.description]
+#. defaultMessage is:
+#. Description
+#: translations/messages/src/pages/profile/EditProfile.json
+msgctxt "EditProfile.description"
+msgid "Description"
+msgstr ""
+
+#. [schema.announcements.description]
+#. defaultMessage is:
+#. Description
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.description"
+msgid "Description"
+msgstr ""
+
+#. [schema.forSale.description]
+#. defaultMessage is:
+#. Description
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.description"
+msgid "Description"
+msgstr ""
+
+#. [schema.housing.description]
+#. defaultMessage is:
+#. Description
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.description"
+msgid "Description"
+msgstr ""
+
+#. [schema.services.description]
+#. defaultMessage is:
+#. Description
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.description"
+msgid "Description"
+msgstr ""
+
+#. [schema.tickets.description]
+#. defaultMessage is:
+#. Description
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.description"
+msgid "Description"
+msgstr ""
+
+#. [schema.transportation.description]
+#. defaultMessage is:
+#. Description
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.description"
+msgid "Description"
+msgstr ""
+
+#. [footer.discordLink]
+#. defaultMessage is:
+#. Discord
+#: translations/messages/src/components/footer.json
+msgctxt "footer.discordLink"
+msgid "Discord"
+msgstr ""
+
+#. [schema.housing.schemaDescription]
+#. defaultMessage is:
+#. Distributed Airbnb
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.schemaDescription"
+msgid "Distributed Airbnb"
+msgstr ""
+
+#. [schema.forSale.schemaDescription]
+#. defaultMessage is:
+#. Distributed Craigslist/Ebay/Amazon
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.schemaDescription"
+msgid "Distributed Craigslist/Ebay/Amazon"
+msgstr ""
+
+#. [schema.services.schemaDescription]
+#. defaultMessage is:
+#. Distributed Elance/99 Designs/Postmates/Fiver/Handy/Thumbtack
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.schemaDescription"
+msgid "Distributed Elance/99 Designs/Postmates/Fiver/Handy/Thumbtack"
+msgstr ""
+
+#. [schema.transportation.schemaDescription]
+#. defaultMessage is:
+#. Distributed Getaround
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.schemaDescription"
+msgid "Distributed Getaround"
+msgstr ""
+
+#. [schema.announcements.schemaDescription]
+#. defaultMessage is:
+#. Distributed Nextdoor
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.schemaDescription"
+msgid "Distributed Nextdoor"
+msgstr ""
+
+#. [schema.tickets.schemaDescription]
+#. defaultMessage is:
+#. Distributed Ticketmaster/Eventbrite
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.schemaDescription"
+msgid "Distributed Ticketmaster/Eventbrite"
+msgstr ""
+
+#. [footer.docsLink]
+#. defaultMessage is:
+#. Docs
+#: translations/messages/src/components/footer.json
+msgctxt "footer.docsLink"
+msgid "Docs"
+msgstr ""
+
+#. [footer.documentationHeading]
+#. defaultMessage is:
+#. Documentation
+#: translations/messages/src/components/footer.json
+msgctxt "footer.documentationHeading"
+msgid "Documentation"
+msgstr ""
+
+#. [schema.services.dogWalking]
+#. defaultMessage is:
+#. Dog Walking
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.dogWalking"
+msgid "Dog Walking"
+msgstr ""
+
+#. [AttestationSuccess.publishChangesReminder]
+#. defaultMessage is:
+#. Don't forget to publish your changes.
+#: translations/messages/src/pages/profile/AttestationSuccess.json
+msgctxt "AttestationSuccess.publishChangesReminder"
+msgid "Don't forget to publish your changes."
+msgstr ""
+
+#. [listing-create.doneButtonLabel]
+#. defaultMessage is:
+#. Done
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.doneButtonLabel"
+msgid "Done"
+msgstr ""
+
+#. [listing-card-prices.ethereumCurrencyAbbrev]
+#. defaultMessage is:
+#. ETH
+#: translations/messages/src/components/listing-card-prices.json
+msgctxt "listing-card-prices.ethereumCurrencyAbbrev"
+msgid "ETH"
+msgstr ""
+
+#. [listing-detail.ethereumCurrencyAbbrev]
+#. defaultMessage is:
+#. ETH
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.ethereumCurrencyAbbrev"
+msgid "ETH"
+msgstr ""
+
+#. [my-listing-card.ethereumCurrencyAbbrev]
+#. defaultMessage is:
+#. ETH
+#: translations/messages/src/components/my-listing-card.json
+msgctxt "my-listing-card.ethereumCurrencyAbbrev"
+msgid "ETH"
+msgstr ""
+
+#. [my-purchase-card.ethereumCurrencyAbbrev]
+#. defaultMessage is:
+#. ETH
+#: translations/messages/src/components/my-purchase-card.json
+msgctxt "my-purchase-card.ethereumCurrencyAbbrev"
+msgid "ETH"
+msgstr ""
+
+#. [my-sale-card.ethereumCurrencyAbbrev]
+#. defaultMessage is:
+#. ETH
+#: translations/messages/src/components/my-sale-card.json
+msgctxt "my-sale-card.ethereumCurrencyAbbrev"
+msgid "ETH"
+msgstr ""
+
+#. [user.ethAddress]
+#. defaultMessage is:
+#. ETH Address:
+#: translations/messages/src/components/dropdowns/user.json
+msgctxt "user.ethAddress"
+msgid "ETH Address:"
+msgstr ""
+
+#. [transaction-progress.ethAddress]
+#. defaultMessage is:
+#. ETH Address:
+#: translations/messages/src/components/user-card.json
+msgctxt "transaction-progress.ethAddress"
+msgid "ETH Address:"
+msgstr ""
+
+#. [_Wallet.ethAddress]
+#. defaultMessage is:
+#. ETH Address:
+#: translations/messages/src/pages/profile/_Wallet.json
+msgctxt "_Wallet.ethAddress"
+msgid "ETH Address:"
+msgstr ""
+
+#. [EditProfile.editProfileHeading]
+#. defaultMessage is:
+#. Edit Profile
+#: translations/messages/src/pages/profile/EditProfile.json
+msgctxt "EditProfile.editProfileHeading"
+msgid "Edit Profile"
+msgstr ""
+
+#. [schema.services.electrical]
+#. defaultMessage is:
+#. Electrical
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.electrical"
+msgid "Electrical"
+msgstr ""
+
+#. [schema.forSale.electronics]
+#. defaultMessage is:
+#. Electronics
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.electronics"
+msgid "Electronics"
+msgstr ""
+
+#. [_ProvisionedChanges.email]
+#. defaultMessage is:
+#. Email
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.email"
+msgid "Email"
+msgstr ""
+
+#. [_Services.email]
+#. defaultMessage is:
+#. Email
+#: translations/messages/src/pages/profile/_Services.json
+msgctxt "_Services.email"
+msgid "Email"
+msgstr ""
+
+#. [User.email]
+#. defaultMessage is:
+#. Email
+#: translations/messages/src/pages/user/User.json
+msgctxt "User.email"
+msgid "Email"
+msgstr ""
+
+#. [_ProvisionedChanges.emailAddress]
+#. defaultMessage is:
+#. Email Address
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.emailAddress"
+msgid "Email Address"
+msgstr ""
+
+#. [Profile.emailVerified]
+#. defaultMessage is:
+#. Email address verified!
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.emailVerified"
+msgid "Email address verified!"
+msgstr ""
+
+#. [VerifyEmail.enterCode]
+#. defaultMessage is:
+#. Enter the code we sent you below
+#: translations/messages/src/pages/profile/VerifyEmail.json
+msgctxt "VerifyEmail.enterCode"
+msgid "Enter the code we sent you below"
+msgstr ""
+
+#. [VerifyPhone.enterCodeBelow]
+#. defaultMessage is:
+#. Enter the code we sent you below
+#: translations/messages/src/pages/profile/VerifyPhone.json
+msgctxt "VerifyPhone.enterCodeBelow"
+msgid "Enter the code we sent you below"
+msgstr ""
+
+#. [VerifyPhone.enterPhoneNumber]
+#. defaultMessage is:
+#. Enter your phone number below and {originId} will send you a verification code
+#: translations/messages/src/pages/profile/VerifyPhone.json
+msgctxt "VerifyPhone.enterPhoneNumber"
+msgid "Enter your phone number below and {originId} will send you a verification code"
+msgstr ""
+
+#. [Profile.error]
+#. defaultMessage is:
+#. Error
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.error"
+msgid "Error"
+msgstr ""
+
+#. [connectivity.ethereumNetwork]
+#. defaultMessage is:
+#. Ethereum Network:
+#: translations/messages/src/components/dropdowns/connectivity.json
+msgctxt "connectivity.ethereumNetwork"
+msgid "Ethereum Network:"
+msgstr ""
+
+#. [footer.facebookLink]
+#. defaultMessage is:
+#. Facebook
+#: translations/messages/src/components/footer.json
+msgctxt "footer.facebookLink"
+msgid "Facebook"
+msgstr ""
+
+#. [_ProvisionedChanges.facebook]
+#. defaultMessage is:
+#. Facebook
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.facebook"
+msgid "Facebook"
+msgstr ""
+
+#. [_Services.facebook]
+#. defaultMessage is:
+#. Facebook
+#: translations/messages/src/pages/profile/_Services.json
+msgctxt "_Services.facebook"
+msgid "Facebook"
+msgstr ""
+
+#. [User.facebook]
+#. defaultMessage is:
+#. Facebook
+#: translations/messages/src/pages/user/User.json
+msgctxt "User.facebook"
+msgid "Facebook"
+msgstr ""
+
+#. [_ProvisionedChanges.facebookAccount]
+#. defaultMessage is:
+#. Facebook account
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.facebookAccount"
+msgid "Facebook account"
+msgstr ""
+
+#. [Profile.facebookVerified]
+#. defaultMessage is:
+#. Facebook account verified!
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.facebookVerified"
+msgid "Facebook account verified!"
+msgstr ""
+
+#. [schema.forSale.farmGarden]
+#. defaultMessage is:
+#. Farm & Garden
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.farmGarden"
+msgid "Farm & Garden"
+msgstr ""
+
+#. [listing-card.featured]
+#. defaultMessage is:
+#. Featured
+#: translations/messages/src/components/listing-card.json
+msgctxt "listing-card.featured"
+msgid "Featured"
+msgstr ""
+
+#. [EditProfile.firstName]
+#. defaultMessage is:
+#. First Name
+#: translations/messages/src/pages/profile/EditProfile.json
+msgctxt "EditProfile.firstName"
+msgid "First Name"
+msgstr ""
+
+#. [_ProvisionedChanges.firstName]
+#. defaultMessage is:
+#. First name
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.firstName"
+msgid "First name"
+msgstr ""
+
+#. [listing-create.forSaleLabel]
+#. defaultMessage is:
+#. For Sale
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.forSaleLabel"
+msgid "For Sale"
+msgstr ""
+
+#. [_countryOptions.france]
+#. defaultMessage is:
+#. France
+#: translations/messages/src/pages/profile/_countryOptions.json
+msgctxt "_countryOptions.france"
+msgid "France"
+msgstr ""
+
+#. [schema.forSale.freeStuff]
+#. defaultMessage is:
+#. Free Stuff
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.freeStuff"
+msgid "Free Stuff"
+msgstr ""
+
+#. [transactions.from]
+#. defaultMessage is:
+#. From
+#: translations/messages/src/components/dropdowns/transactions.json
+msgctxt "transactions.from"
+msgid "From"
+msgstr ""
+
+#. [purchase-detail.from]
+#. defaultMessage is:
+#. From
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.from"
+msgid "From"
+msgstr ""
+
+#. [web3-provider.fullInstructions]
+#. defaultMessage is:
+#. Full Instructions
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.fullInstructions"
+msgid "Full Instructions"
+msgstr ""
+
+#. [web3-provider.fullInstructionsForDemo]
+#. defaultMessage is:
+#. Full Instructions for Demo
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.fullInstructionsForDemo"
+msgid "Full Instructions for Demo"
+msgstr ""
+
+#. [schema.tickets.fundraisers]
+#. defaultMessage is:
+#. Fundraisers
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.fundraisers"
+msgid "Fundraisers"
+msgstr ""
+
+#. [transaction-progress.fundsWithdrawn]
+#. defaultMessage is:
+#. Funds Withdrawn
+#. [transaction-progress.fundsWithdrawn]
+#. defaultMessage is:
+#. Funds Withdrawn
+#: translations/messages/src/components/purchase-progress.json
+#: translations/messages/src/components/transaction-progress.json
+msgctxt "transaction-progress.fundsWithdrawn"
+msgid "Funds Withdrawn"
+msgstr ""
+
+#. [schema.forSale.furniture]
+#. defaultMessage is:
+#. Furniture
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.furniture"
+msgid "Furniture"
+msgstr ""
+
+#. [schema.forSale.garageMovingSales]
+#. defaultMessage is:
+#. Garage & Moving Sales
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.garageMovingSales"
+msgid "Garage & Moving Sales"
+msgstr ""
+
+#. [schema.announcements.general]
+#. defaultMessage is:
+#. General
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.general"
+msgid "General"
+msgstr ""
+
+#. [schema.forSale.generalForSale]
+#. defaultMessage is:
+#. General For Sale
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.generalForSale"
+msgid "General For Sale"
+msgstr ""
+
+#. [_countryOptions.germany]
+#. defaultMessage is:
+#. Germany
+#: translations/messages/src/pages/profile/_countryOptions.json
+msgctxt "_countryOptions.germany"
+msgid "Germany"
+msgstr ""
+
+#. [web3-provider.getMetaMask]
+#. defaultMessage is:
+#. Get MetaMask
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.getMetaMask"
+msgid "Get MetaMask"
+msgstr ""
+
+#. [footer.githubLink]
+#. defaultMessage is:
+#. Github
+#: translations/messages/src/components/footer.json
+msgctxt "footer.githubLink"
+msgid "Github"
+msgstr ""
+
+#. [listing-detail.goToPurchases]
+#. defaultMessage is:
+#. Go To Purchases
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.goToPurchases"
+msgid "Go To Purchases"
+msgstr ""
+
+#. [_Services.google]
+#. defaultMessage is:
+#. Google
+#: translations/messages/src/pages/profile/_Services.json
+msgctxt "_Services.google"
+msgid "Google"
+msgstr ""
+
+#. [schema.services.graphicDesign]
+#. defaultMessage is:
+#. Graphic Design
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.graphicDesign"
+msgid "Graphic Design"
+msgstr ""
+
+#. [schema.announcements.groups]
+#. defaultMessage is:
+#. Groups
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.groups"
+msgid "Groups"
+msgstr ""
+
+#. [schema.services.handyman]
+#. defaultMessage is:
+#. Handyman
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.handyman"
+msgid "Handyman"
+msgstr ""
+
+#. [schema.forSale.healthBeauty]
+#. defaultMessage is:
+#. Health & Beauty
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.healthBeauty"
+msgid "Health & Beauty"
+msgstr ""
+
+#. [schema.forSale.heavyEquipment]
+#. defaultMessage is:
+#. Heavy Equipment
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.heavyEquipment"
+msgid "Heavy Equipment"
+msgstr ""
+
+#. [schema.services.homeCleaning]
+#. defaultMessage is:
+#. Home Cleaning
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.homeCleaning"
+msgid "Home Cleaning"
+msgstr ""
+
+#. [schema.forSale.householdItems]
+#. defaultMessage is:
+#. Household Items
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.householdItems"
+msgid "Household Items"
+msgstr ""
+
+#. [listing-create.housingLabel]
+#. defaultMessage is:
+#. Housing
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.housingLabel"
+msgid "Housing"
+msgstr ""
+
+#. [schema.housing.housingSwap]
+#. defaultMessage is:
+#. Housing Swap
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.housingSwap"
+msgid "Housing Swap"
+msgstr ""
+
+#. [not-found.heading]
+#. defaultMessage is:
+#. How did I get here?
+#: translations/messages/src/components/not-found.json
+msgctxt "not-found.heading"
+msgid "How did I get here?"
+msgstr ""
+
+#. [listing-create.howItWorksHeading]
+#. defaultMessage is:
+#. How it works
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.howItWorksHeading"
+msgid "How it works"
+msgstr ""
+
+#. [listing-create.IPFS]
+#. defaultMessage is:
+#. IPFS
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.IPFS"
+msgid "IPFS"
+msgstr ""
+
+#. [connectivity.ipfsGateway]
+#. defaultMessage is:
+#. IPFS Gateway:
+#: translations/messages/src/components/dropdowns/connectivity.json
+msgctxt "connectivity.ipfsGateway"
+msgid "IPFS Gateway:"
+msgstr ""
+
+#. [listing-detail.IPFS]
+#. defaultMessage is:
+#. IPFS: {ipfsHash}
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.IPFS"
+msgid "IPFS: {ipfsHash}"
+msgstr ""
+
+#. [ConfirmUpload.ifYouExitNotice]
+#. defaultMessage is:
+#. If you exit without publishing you’ll lose all your changes.
+#: translations/messages/src/pages/profile/ConfirmUnload.json
+msgctxt "ConfirmUpload.ifYouExitNotice"
+msgid "If you exit without publishing you’ll lose all your changes."
+msgstr ""
+
+#. [Profile.unsavedChangesWarn]
+#. defaultMessage is:
+#. If you exit without publishing, you'll lose all your changes.
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.unsavedChangesWarn"
+msgid "If you exit without publishing, you'll lose all your changes."
+msgstr ""
+
+#. [web3-provider.intentRequiresMetaMask]
+#. defaultMessage is:
+#. In order to {web3Intent}, you must install MetaMask.
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.intentRequiresMetaMask"
+msgid "In order to {web3Intent}, you must install MetaMask."
+msgstr ""
+
+#. [web3-provider.intentRequiresSignIn]
+#. defaultMessage is:
+#. In order to {web3Intent}, you must sign in to {currentProvider}.
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.intentRequiresSignIn"
+msgid "In order to {web3Intent}, you must sign in to {currentProvider}."
+msgstr ""
+
+#. [web3-provider.intentRequiresEthereumEnabledBrowser]
+#. defaultMessage is:
+#. In order to {web3Intent}, you must use an Ethereum wallet-enabled browser.
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.intentRequiresEthereumEnabledBrowser"
+msgid "In order to {web3Intent}, you must use an Ethereum wallet-enabled browser."
+msgstr ""
+
+#. [my-listings.inactive]
+#. defaultMessage is:
+#. Inactive
+#: translations/messages/src/components/my-listings.json
+msgctxt "my-listings.inactive"
+msgid "Inactive"
+msgstr ""
+
+#. [footer.instagramLink]
+#. defaultMessage is:
+#. Instagram
+#: translations/messages/src/components/footer.json
+msgctxt "footer.instagramLink"
+msgid "Instagram"
+msgstr ""
+
+#. [_countryOptions.italy]
+#. defaultMessage is:
+#. Italy
+#: translations/messages/src/pages/profile/_countryOptions.json
+msgctxt "_countryOptions.italy"
+msgid "Italy"
+msgstr ""
+
+#. [listing-create.jsonSchema]
+#. defaultMessage is:
+#. JSONSchema
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.jsonSchema"
+msgid "JSONSchema"
+msgstr ""
+
+#. [_countryOptions.japan]
+#. defaultMessage is:
+#. Japan
+#: translations/messages/src/pages/profile/_countryOptions.json
+msgctxt "_countryOptions.japan"
+msgid "Japan"
+msgstr ""
+
+#. [schema.forSale.jewelry]
+#. defaultMessage is:
+#. Jewelry
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.jewelry"
+msgid "Jewelry"
+msgstr ""
+
+#. [footer.hiringLink]
+#. defaultMessage is:
+#. Jobs (We're hiring!)
+#: translations/messages/src/components/footer.json
+msgctxt "footer.hiringLink"
+msgid "Jobs (We're hiring!)"
+msgstr ""
+
+#. [connectivity.kovanTestNetwork]
+#. defaultMessage is:
+#. Kovan Test Network
+#: translations/messages/src/components/dropdowns/connectivity.json
+msgctxt "connectivity.kovanTestNetwork"
+msgid "Kovan Test Network"
+msgstr ""
+
+#. [_ProvisionedChanges.lastName]
+#. defaultMessage is:
+#. Last Name
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.lastName"
+msgid "Last Name"
+msgstr ""
+
+#. [EditProfile.lastName]
+#. defaultMessage is:
+#. Last Name
+#: translations/messages/src/pages/profile/EditProfile.json
+msgctxt "EditProfile.lastName"
+msgid "Last Name"
+msgstr ""
+
+#. [Profile.lastPublished]
+#. defaultMessage is:
+#. Last published
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.lastPublished"
+msgid "Last published"
+msgstr ""
+
+#. [schema.services.legal]
+#. defaultMessage is:
+#. Legal
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.legal"
+msgid "Legal"
+msgstr ""
+
+#. [ConfirmPublish.letsDoIt]
+#. defaultMessage is:
+#. Let's do it!
+#: translations/messages/src/pages/profile/ConfirmPublish.json
+msgctxt "ConfirmPublish.letsDoIt"
+msgid "Let's do it!"
+msgstr ""
+
+#. [purchase-detail.listingDetails]
+#. defaultMessage is:
+#. Listing Details
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.listingDetails"
+msgid "Listing Details"
+msgstr ""
+
+#. [navbar.listings]
+#. defaultMessage is:
+#. Listings
+#: translations/messages/src/components/navbar.json
+msgctxt "navbar.listings"
+msgid "Listings"
+msgstr ""
+
+#. [listing-card-prices.loadingMessage]
+#. defaultMessage is:
+#. Loading...
+#: translations/messages/src/components/listing-card-prices.json
+msgctxt "listing-card-prices.loadingMessage"
+msgid "Loading..."
+msgstr ""
+
+#. [my-listings.loading]
+#. defaultMessage is:
+#. Loading...
+#: translations/messages/src/components/my-listings.json
+msgctxt "my-listings.loading"
+msgid "Loading..."
+msgstr ""
+
+#. [my-purchases.loading]
+#. defaultMessage is:
+#. Loading...
+#: translations/messages/src/components/my-purchases.json
+msgctxt "my-purchases.loading"
+msgid "Loading..."
+msgstr ""
+
+#. [my-sales.loading]
+#. defaultMessage is:
+#. Loading...
+#: translations/messages/src/components/my-sales.json
+msgctxt "my-sales.loading"
+msgid "Loading..."
+msgstr ""
+
+#. [schema.announcements.localNews]
+#. defaultMessage is:
+#. Local News
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.localNews"
+msgid "Local News"
+msgstr ""
+
+#. [connectivity.localhost]
+#. defaultMessage is:
+#. Localhost
+#: translations/messages/src/components/dropdowns/connectivity.json
+msgctxt "connectivity.localhost"
+msgid "Localhost"
+msgstr ""
+
+#. [schema.forSale.location]
+#. defaultMessage is:
+#. Location
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.location"
+msgid "Location"
+msgstr ""
+
+#. [schema.housing.location]
+#. defaultMessage is:
+#. Location
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.location"
+msgid "Location"
+msgstr ""
+
+#. [schema.services.location]
+#. defaultMessage is:
+#. Location
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.location"
+msgid "Location"
+msgstr ""
+
+#. [schema.transportation.location]
+#. defaultMessage is:
+#. Location
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.location"
+msgid "Location"
+msgstr ""
+
+#. [schema.announcements.lostFound]
+#. defaultMessage is:
+#. Lost & Found
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.lostFound"
+msgid "Lost & Found"
+msgstr ""
+
+#. [connectivity.mainEthereumNetwork]
+#. defaultMessage is:
+#. Main Ethereum Network
+#: translations/messages/src/components/dropdowns/connectivity.json
+msgctxt "connectivity.mainEthereumNetwork"
+msgid "Main Ethereum Network"
+msgstr ""
+
+#. [purchase-detail.markOrderSent]
+#. defaultMessage is:
+#. Mark Order as Sent
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.markOrderSent"
+msgid "Mark Order as Sent"
+msgstr ""
+
+#. [schema.forSale.materials]
+#. defaultMessage is:
+#. Materials
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.materials"
+msgid "Materials"
+msgstr ""
+
+#. [footer.mediumLink]
+#. defaultMessage is:
+#. Medium
+#: translations/messages/src/components/footer.json
+msgctxt "footer.mediumLink"
+msgid "Medium"
+msgstr ""
+
+#. [connectivity.mordenTestNetwork]
+#. defaultMessage is:
+#. Morden Test Network
+#: translations/messages/src/components/dropdowns/connectivity.json
+msgctxt "connectivity.mordenTestNetwork"
+msgid "Morden Test Network"
+msgstr ""
+
+#. [schema.forSale.motorcyclePartsAccessories]
+#. defaultMessage is:
+#. Motorcycle Parts & Accessories
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.motorcyclePartsAccessories"
+msgid "Motorcycle Parts & Accessories"
+msgstr ""
+
+#. [schema.forSale.motorcyclesScooters]
+#. defaultMessage is:
+#. Motorcycles & Scooters
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.motorcyclesScooters"
+msgid "Motorcycles & Scooters"
+msgstr ""
+
+#. [schema.services.movingHelp]
+#. defaultMessage is:
+#. Moving Help
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.movingHelp"
+msgid "Moving Help"
+msgstr ""
+
+#. [schema.tickets.music]
+#. defaultMessage is:
+#. Music
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.music"
+msgid "Music"
+msgstr ""
+
+#. [schema.forSale.musicalInstruments]
+#. defaultMessage is:
+#. Musical Instruments
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.musicalInstruments"
+msgid "Musical Instruments"
+msgstr ""
+
+#. [schema.announcements.musicians]
+#. defaultMessage is:
+#. Musicians
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.musicians"
+msgid "Musicians"
+msgstr ""
+
+#. [my-listings.myListingsHeading]
+#. defaultMessage is:
+#. My Listings
+#: translations/messages/src/components/my-listings.json
+msgctxt "my-listings.myListingsHeading"
+msgid "My Listings"
+msgstr ""
+
+#. [navbar.myListings]
+#. defaultMessage is:
+#. My Listings
+#: translations/messages/src/components/navbar.json
+msgctxt "navbar.myListings"
+msgid "My Listings"
+msgstr ""
+
+#. [my-purchases.myPurchasesHeading]
+#. defaultMessage is:
+#. My Purchases
+#: translations/messages/src/components/my-purchases.json
+msgctxt "my-purchases.myPurchasesHeading"
+msgid "My Purchases"
+msgstr ""
+
+#. [my-sales.mySalesHeading]
+#. defaultMessage is:
+#. My Sales
+#: translations/messages/src/components/my-sales.json
+msgctxt "my-sales.mySalesHeading"
+msgid "My Sales"
+msgstr ""
+
+#. [navbar.mySales]
+#. defaultMessage is:
+#. My Sales
+#: translations/messages/src/components/navbar.json
+msgctxt "navbar.mySales"
+msgid "My Sales"
+msgstr ""
+
+#. [listing-create.next]
+#. defaultMessage is:
+#. Next
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.next"
+msgid "Next"
+msgstr ""
+
+#. [purchase-detail.nextStep]
+#. defaultMessage is:
+#. Next Step:
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.nextStep"
+msgid "Next Step:"
+msgstr ""
+
+#. [user.noEthAccountConnected]
+#. defaultMessage is:
+#. No ETH Account Connected
+#: translations/messages/src/components/dropdowns/user.json
+msgctxt "user.noEthAccountConnected"
+msgid "No ETH Account Connected"
+msgstr ""
+
+#. [_Wallet.noEthAccountConnected]
+#. defaultMessage is:
+#. No ETH Account Connected
+#: translations/messages/src/pages/profile/_Wallet.json
+msgctxt "_Wallet.noEthAccountConnected"
+msgid "No ETH Account Connected"
+msgstr ""
+
+#. [schema.tickets.nonProfitEvent]
+#. defaultMessage is:
+#. Non-profit event
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.nonProfitEvent"
+msgid "Non-profit event"
+msgstr ""
+
+#. [ConfirmUpload.notRightNow]
+#. defaultMessage is:
+#. Not Right Now
+#: translations/messages/src/pages/profile/ConfirmUnload.json
+msgctxt "ConfirmUpload.notRightNow"
+msgid "Not Right Now"
+msgstr ""
+
+#. [_ProvisionedChanges.notVisibleOnBlockchain]
+#. defaultMessage is:
+#. Not visible on the blockchain
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.notVisibleOnBlockchain"
+msgid "Not visible on the blockchain"
+msgstr ""
+
+#. [purchase-detail.nothingToDo]
+#. defaultMessage is:
+#. Nothing for you to do at this time. Check back later
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.nothingToDo"
+msgid "Nothing for you to do at this time. Check back later"
+msgstr ""
+
+#. [notifications.notificationsHeading]
+#. defaultMessage is:
+#. Notifications
+#. [notifications.notificationsHeading]
+#. defaultMessage is:
+#. Notifications
+#: translations/messages/src/components/dropdowns/notifications.json
+#: translations/messages/src/components/notifications.json
+msgctxt "notifications.notificationsHeading"
+msgid "Notifications"
+msgstr ""
+
+#. [listing-create.OK]
+#. defaultMessage is:
+#. OK
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.OK"
+msgid "OK"
+msgstr ""
+
+#. [listing-detail.OK]
+#. defaultMessage is:
+#. OK
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.OK"
+msgid "OK"
+msgstr ""
+
+#. [Profile.ok]
+#. defaultMessage is:
+#. OK
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.ok"
+msgid "OK"
+msgstr ""
+
+#. [schema.housing.officeCommercial]
+#. defaultMessage is:
+#. Office & Commercial
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.officeCommercial"
+msgid "Office & Commercial"
+msgstr ""
+
+#. [ConfirmPublish.oopsNoWait]
+#. defaultMessage is:
+#. Oops, no wait...
+#: translations/messages/src/pages/profile/ConfirmPublish.json
+msgctxt "ConfirmPublish.oopsNoWait"
+msgid "Oops, no wait..."
+msgstr ""
+
+#. [transaction-progress.orderSent]
+#. defaultMessage is:
+#. Order Sent
+#. [transaction-progress.orderSent]
+#. defaultMessage is:
+#. Order Sent
+#: translations/messages/src/components/purchase-progress.json
+#: translations/messages/src/components/transaction-progress.json
+msgctxt "transaction-progress.orderSent"
+msgid "Order Sent"
+msgstr ""
+
+#. [footer.organizationHeading]
+#. defaultMessage is:
+#. Organization
+#: translations/messages/src/components/footer.json
+msgctxt "footer.organizationHeading"
+msgid "Organization"
+msgstr ""
+
+#. [footer.mission]
+#. defaultMessage is:
+#. Origin is building the sharing economy of tomorrow. Buyers and sellers will be able to transact without rent-seeking middlemen. We believe in lowering transaction fees, promoting free and transparent commerce, and giving early participants in the community a stake in the network.
+#: translations/messages/src/components/footer.json
+msgctxt "footer.mission"
+msgid "Origin is building the sharing economy of tomorrow. Buyers and sellers will be able to transact without rent-seeking middlemen. We believe in lowering transaction fees, promoting free and transparent commerce, and giving early participants in the community a stake in the network."
+msgstr ""
+
+#. [listing-create.howItWorksContentPart1]
+#. defaultMessage is:
+#. Origin uses a Mozilla project called {jsonSchemaLink}  to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer.
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.howItWorksContentPart1"
+msgid "Origin uses a Mozilla project called {jsonSchemaLink}  to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer."
+msgstr ""
+
+#. [schema.tickets.other]
+#. defaultMessage is:
+#. Other
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.other"
+msgid "Other"
+msgstr ""
+
+#. [VerifyFacebook.accountNotPublic]
+#. defaultMessage is:
+#. Other users will know that you have a verified Facebook account, but your account details will not be published on the blockchain. We will never post on your behalf.
+#: translations/messages/src/pages/profile/VerifyFacebook.json
+msgctxt "VerifyFacebook.accountNotPublic"
+msgid "Other users will know that you have a verified Facebook account, but your account details will not be published on the blockchain. We will never post on your behalf."
+msgstr ""
+
+#. [VerifyTwitter.twitterNotPublic]
+#. defaultMessage is:
+#. Other users will know that you have a verified Twitter account. Your username will not be published on the blockchain. We will never tweet on your behalf.
+#: translations/messages/src/pages/profile/VerifyTwitter.json
+msgctxt "VerifyTwitter.twitterNotPublic"
+msgid "Other users will know that you have a verified Twitter account. Your username will not be published on the blockchain. We will never tweet on your behalf."
+msgstr ""
+
+#. [VerifyEmail.emailNotPublished]
+#. defaultMessage is:
+#. Other users will know that you have a verified email address. Your actual email address will not be published on the blockchain.
+#: translations/messages/src/pages/profile/VerifyEmail.json
+msgctxt "VerifyEmail.emailNotPublished"
+msgid "Other users will know that you have a verified email address. Your actual email address will not be published on the blockchain."
+msgstr ""
+
+#. [VerifyPhone.phoneNumberNotPublished]
+#. defaultMessage is:
+#. Other users will know that you have a verified phone number. Your actual phone number will not be published on the blockchain.
+#: translations/messages/src/pages/profile/VerifyPhone.json
+msgctxt "VerifyPhone.phoneNumberNotPublished"
+msgid "Other users will know that you have a verified phone number. Your actual phone number will not be published on the blockchain."
+msgstr ""
+
+#. [schema.services.painting]
+#. defaultMessage is:
+#. Painting
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.painting"
+msgid "Painting"
+msgstr ""
+
+#. [schema.housing.parkingStorage]
+#. defaultMessage is:
+#. Parking & Storage
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.parkingStorage"
+msgid "Parking & Storage"
+msgstr ""
+
+#. [footer.partnersLink]
+#. defaultMessage is:
+#. Partners
+#: translations/messages/src/components/footer.json
+msgctxt "footer.partnersLink"
+msgid "Partners"
+msgstr ""
+
+#. [my-purchases.pending]
+#. defaultMessage is:
+#. Pending
+#: translations/messages/src/components/my-purchases.json
+msgctxt "my-purchases.pending"
+msgid "Pending"
+msgstr ""
+
+#. [my-sales.pending]
+#. defaultMessage is:
+#. Pending
+#: translations/messages/src/components/my-sales.json
+msgctxt "my-sales.pending"
+msgid "Pending"
+msgstr ""
+
+#. [transactions.pendingTransactions]
+#. defaultMessage is:
+#. Pending Blockchain Transactions
+#: translations/messages/src/components/dropdowns/transactions.json
+msgctxt "transactions.pendingTransactions"
+msgid "Pending Blockchain Transactions"
+msgstr ""
+
+#. [schema.announcements.personals]
+#. defaultMessage is:
+#. Personals
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.personals"
+msgid "Personals"
+msgstr ""
+
+#. [schema.announcements.pets]
+#. defaultMessage is:
+#. Pets
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.pets"
+msgid "Pets"
+msgstr ""
+
+#. [_ProvisionedChanges.phone]
+#. defaultMessage is:
+#. Phone
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.phone"
+msgid "Phone"
+msgstr ""
+
+#. [_Services.phone]
+#. defaultMessage is:
+#. Phone
+#: translations/messages/src/pages/profile/_Services.json
+msgctxt "_Services.phone"
+msgid "Phone"
+msgstr ""
+
+#. [User.phone]
+#. defaultMessage is:
+#. Phone
+#: translations/messages/src/pages/user/User.json
+msgctxt "User.phone"
+msgid "Phone"
+msgstr ""
+
+#. [_ProvisionedChanges.phoneNumber]
+#. defaultMessage is:
+#. Phone Number
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.phoneNumber"
+msgid "Phone Number"
+msgstr ""
+
+#. [Profile.phoneVerified]
+#. defaultMessage is:
+#. Phone number verified!
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.phoneVerified"
+msgid "Phone number verified!"
+msgstr ""
+
+#. [schema.forSale.photoVideo]
+#. defaultMessage is:
+#. Photo & Video
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.photoVideo"
+msgid "Photo & Video"
+msgstr ""
+
+#. [schema.services.photography]
+#. defaultMessage is:
+#. Photography
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.photography"
+msgid "Photography"
+msgstr ""
+
+#. [_ProvisionedChanges.picture]
+#. defaultMessage is:
+#. Picture
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.picture"
+msgid "Picture"
+msgstr ""
+
+#. [web3-provider.useWalletEnabledBrowser]
+#. defaultMessage is:
+#. Please access this site through a wallet-enabled browser:
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.useWalletEnabledBrowser"
+msgid "Please access this site through a wallet-enabled browser:"
+msgstr ""
+
+#. [_Services.pleaseConnectAccounts]
+#. defaultMessage is:
+#. Please connect your accounts below to strengthen your identity on Origin.
+#: translations/messages/src/pages/profile/_Services.json
+msgctxt "_Services.pleaseConnectAccounts"
+msgid "Please connect your accounts below to strengthen your identity on Origin."
+msgstr ""
+
+#. [web3-provider.pleaseInstallMetaMask]
+#. defaultMessage is:
+#. Please install the MetaMask extension to access this site.
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.pleaseInstallMetaMask"
+msgid "Please install the MetaMask extension to access this site."
+msgstr ""
+
+#. [listing-create.whatHappensNextContent2]
+#. defaultMessage is:
+#. Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left.
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.whatHappensNextContent2"
+msgid "Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left."
+msgstr ""
+
+#. [listing-create.pleaseStandBy]
+#. defaultMessage is:
+#. Please stand by...
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.pleaseStandBy"
+msgid "Please stand by..."
+msgstr ""
+
+#. [listing-detail.pleaseStandBy]
+#. defaultMessage is:
+#. Please stand by...
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.pleaseStandBy"
+msgid "Please stand by..."
+msgstr ""
+
+#. [Profile.pleaseStandBy]
+#. defaultMessage is:
+#. Please stand by...
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.pleaseStandBy"
+msgid "Please stand by..."
+msgstr ""
+
+#. [schema.services.plumbing]
+#. defaultMessage is:
+#. Plumbing
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.plumbing"
+msgid "Plumbing"
+msgstr ""
+
+#. [schema.announcements.politics]
+#. defaultMessage is:
+#. Politics
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.politics"
+msgid "Politics"
+msgstr ""
+
+#. [web3-provider.popularEthereumWallets]
+#. defaultMessage is:
+#. Popular Ethereum Wallets
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.popularEthereumWallets"
+msgid "Popular Ethereum Wallets"
+msgstr ""
+
+#. [_Services.poweredBy]
+#. defaultMessage is:
+#. Powered by
+#: translations/messages/src/pages/profile/_Services.json
+msgctxt "_Services.poweredBy"
+msgid "Powered by"
+msgstr ""
+
+#. [footer.presaleLink]
+#. defaultMessage is:
+#. Presale
+#: translations/messages/src/components/footer.json
+msgctxt "footer.presaleLink"
+msgid "Presale"
+msgstr ""
+
+#. [Profile.pressSubmit]
+#. defaultMessage is:
+#. Press "Submit" in {currentProvider} window
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.pressSubmit"
+msgid "Press \"Submit\" in {currentProvider} window"
+msgstr ""
+
+#. [listing-create.pressSubmitInMetaMask]
+#. defaultMessage is:
+#. Press {submit} in {currentProvider} window
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.pressSubmitInMetaMask"
+msgid "Press {submit} in {currentProvider} window"
+msgstr ""
+
+#. [listing-detail.pressSubmitInMetaMask]
+#. defaultMessage is:
+#. Press {submit} in {currentProvider} window
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.pressSubmitInMetaMask"
+msgid "Press {submit} in {currentProvider} window"
+msgstr ""
+
+#. [listing-create.previewListingHeading]
+#. defaultMessage is:
+#. Preview your listing
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.previewListingHeading"
+msgid "Preview your listing"
+msgstr ""
+
+#. [listing-detail.price]
+#. defaultMessage is:
+#. Price
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.price"
+msgid "Price"
+msgstr ""
+
+#. [purchase-detail.price]
+#. defaultMessage is:
+#. Price
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.price"
+msgid "Price"
+msgstr ""
+
+#. [schema.announcements.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.priceInETH"
+msgid "Price in ETH"
+msgstr ""
+
+#. [schema.forSale.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.priceInETH"
+msgid "Price in ETH"
+msgstr ""
+
+#. [schema.housing.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.priceInETH"
+msgid "Price in ETH"
+msgstr ""
+
+#. [schema.services.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.priceInETH"
+msgid "Price in ETH"
+msgstr ""
+
+#. [schema.tickets.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.priceInETH"
+msgid "Price in ETH"
+msgstr ""
+
+#. [schema.transportation.priceInETH]
+#. defaultMessage is:
+#. Price in ETH
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.priceInETH"
+msgid "Price in ETH"
+msgstr ""
+
+#. [my-sale-card.price]
+#. defaultMessage is:
+#. Price: {price}
+#: translations/messages/src/components/my-sale-card.json
+msgctxt "my-sale-card.price"
+msgid "Price: {price}"
+msgstr ""
+
+#. [listing-detail.processingPurchase]
+#. defaultMessage is:
+#. Processing your purchase
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.processingPurchase"
+msgid "Processing your purchase"
+msgstr ""
+
+#. [footer.productBriefLink]
+#. defaultMessage is:
+#. Product Brief
+#: translations/messages/src/components/footer.json
+msgctxt "footer.productBriefLink"
+msgid "Product Brief"
+msgstr ""
+
+#. [_ProvisionedChanges.profile]
+#. defaultMessage is:
+#. Profile
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.profile"
+msgid "Profile"
+msgstr ""
+
+#. [_Strength.profileStrength]
+#. defaultMessage is:
+#. Profile Strength
+#: translations/messages/src/pages/profile/_Strength.json
+msgctxt "_Strength.profileStrength"
+msgid "Profile Strength"
+msgstr ""
+
+#. [ConfirmUpload.publishNow]
+#. defaultMessage is:
+#. Publish Now
+#: translations/messages/src/pages/profile/ConfirmUnload.json
+msgctxt "ConfirmUpload.publishNow"
+msgid "Publish Now"
+msgstr ""
+
+#. [Profile.publishNow]
+#. defaultMessage is:
+#. Publish Now
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.publishNow"
+msgid "Publish Now"
+msgstr ""
+
+#. [AttestationSuccess.publishChangesNotice]
+#. defaultMessage is:
+#. Publishing to the blockchain lets other users know that you have a verified profile.
+#: translations/messages/src/pages/profile/AttestationSuccess.json
+msgctxt "AttestationSuccess.publishChangesNotice"
+msgid "Publishing to the blockchain lets other users know that you have a verified profile."
+msgstr ""
+
+#. [listing-detail.purchaseSuccessful]
+#. defaultMessage is:
+#. Purchase was successful.
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.purchaseSuccessful"
+msgid "Purchase was successful."
+msgstr ""
+
+#. [my-purchase-card.purchased]
+#. defaultMessage is:
+#. Purchased
+#: translations/messages/src/components/my-purchase-card.json
+msgctxt "my-purchase-card.purchased"
+msgid "Purchased"
+msgstr ""
+
+#. [transaction-progress.purchased]
+#. defaultMessage is:
+#. Purchased
+#. [transaction-progress.purchased]
+#. defaultMessage is:
+#. Purchased
+#: translations/messages/src/components/purchase-progress.json
+#: translations/messages/src/components/transaction-progress.json
+msgctxt "transaction-progress.purchased"
+msgid "Purchased"
+msgstr ""
+
+#. [purchase-detail.purchasedFrom]
+#. defaultMessage is:
+#. Purchased from {sellerLink}
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.purchasedFrom"
+msgid "Purchased from {sellerLink}"
+msgstr ""
+
+#. [purchase-detail.purchasedFromOn]
+#. defaultMessage is:
+#. Purchased from {sellerName} on {date}
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.purchasedFromOn"
+msgid "Purchased from {sellerName} on {date}"
+msgstr ""
+
+#. [ConfirmPublish.readyToGoPublic]
+#. defaultMessage is:
+#. Ready to go public?
+#: translations/messages/src/pages/profile/ConfirmPublish.json
+msgctxt "ConfirmPublish.readyToGoPublic"
+msgid "Ready to go public?"
+msgstr ""
+
+#. [ConfirmUpload.readyToGoPublic]
+#. defaultMessage is:
+#. Ready to go public? After you publish your changes to the blockchain, other users will be able to see that you have verified the following:
+#: translations/messages/src/pages/profile/ConfirmUnload.json
+msgctxt "ConfirmUpload.readyToGoPublic"
+msgid "Ready to go public? After you publish your changes to the blockchain, other users will be able to see that you have verified the following:"
+msgstr ""
+
+#. [schema.housing.realEstate]
+#. defaultMessage is:
+#. Real Estate
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.realEstate"
+msgid "Real Estate"
+msgstr ""
+
+#. [schema.housing.realEstateWanted]
+#. defaultMessage is:
+#. Real Estate Wanted
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.realEstateWanted"
+msgid "Real Estate Wanted"
+msgstr ""
+
+#. [my-purchase-card.received]
+#. defaultMessage is:
+#. Received
+#: translations/messages/src/components/my-purchase-card.json
+msgctxt "my-purchase-card.received"
+msgid "Received"
+msgstr ""
+
+#. [transaction-progress.receivedByBuyer]
+#. defaultMessage is:
+#. Received by buyer
+#. [transaction-progress.receivedByBuyer]
+#. defaultMessage is:
+#. Received by buyer
+#: translations/messages/src/components/purchase-progress.json
+#: translations/messages/src/components/transaction-progress.json
+msgctxt "transaction-progress.receivedByBuyer"
+msgid "Received by buyer"
+msgstr ""
+
+#. [transaction-progress.receivedByMe]
+#. defaultMessage is:
+#. Received by me
+#. [transaction-progress.receivedByMe]
+#. defaultMessage is:
+#. Received by me
+#: translations/messages/src/components/purchase-progress.json
+#: translations/messages/src/components/transaction-progress.json
+msgctxt "transaction-progress.receivedByMe"
+msgid "Received by me"
+msgstr ""
+
+#. [schema.forSale.recreationalVehicles]
+#. defaultMessage is:
+#. Recreational Vehicles
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.recreationalVehicles"
+msgid "Recreational Vehicles"
+msgstr ""
+
+#. [schema.services.repairTechnicalSupport]
+#. defaultMessage is:
+#. Repair & Technical Support
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.repairTechnicalSupport"
+msgid "Repair & Technical Support"
+msgstr ""
+
+#. [schema.announcements.resumes]
+#. defaultMessage is:
+#. Resumes
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.resumes"
+msgid "Resumes"
+msgstr ""
+
+#. [purchase-detail.reviewLabel]
+#. defaultMessage is:
+#. Review
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.reviewLabel"
+msgid "Review"
+msgstr ""
+
+#. [listing-detail.reviews]
+#. defaultMessage is:
+#. Reviews
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.reviews"
+msgid "Reviews"
+msgstr ""
+
+#. [purchase-detail.reviewsHeading]
+#. defaultMessage is:
+#. Reviews
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.reviewsHeading"
+msgid "Reviews"
+msgstr ""
+
+#. [User.reviews]
+#. defaultMessage is:
+#. Reviews
+#: translations/messages/src/pages/user/User.json
+msgctxt "User.reviews"
+msgid "Reviews"
+msgstr ""
+
+#. [connectivity.rinkebyTestNetwork]
+#. defaultMessage is:
+#. Rinkeby Test Network
+#: translations/messages/src/components/dropdowns/connectivity.json
+msgctxt "connectivity.rinkebyTestNetwork"
+msgid "Rinkeby Test Network"
+msgstr ""
+
+#. [schema.housing.roomShareWanted]
+#. defaultMessage is:
+#. Room/Share Wanted
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.roomShareWanted"
+msgid "Room/Share Wanted"
+msgstr ""
+
+#. [schema.housing.roomsShares]
+#. defaultMessage is:
+#. Rooms & Shares
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.roomsShares"
+msgid "Rooms & Shares"
+msgstr ""
+
+#. [connectivity.ropstenTestNetwork]
+#. defaultMessage is:
+#. Ropsten Test Network
+#: translations/messages/src/components/dropdowns/connectivity.json
+msgctxt "connectivity.ropstenTestNetwork"
+msgid "Ropsten Test Network"
+msgstr ""
+
+#. [_countryOptions.russia]
+#. defaultMessage is:
+#. Russia
+#: translations/messages/src/pages/profile/_countryOptions.json
+msgctxt "_countryOptions.russia"
+msgid "Russia"
+msgstr ""
+
+#. [listing-create.stepNumberLabel]
+#. defaultMessage is:
+#. STEP {stepNumber}
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.stepNumberLabel"
+msgid "STEP {stepNumber}"
+msgstr ""
+
+#. [listing-create.seeAllListings]
+#. defaultMessage is:
+#. See All Listings
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.seeAllListings"
+msgid "See All Listings"
+msgstr ""
+
+#. [Profile.seeConsole]
+#. defaultMessage is:
+#. See the console for more details
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.seeConsole"
+msgid "See the console for more details"
+msgstr ""
+
+#. [listing-create.error2]
+#. defaultMessage is:
+#. See the console for more details.
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.error2"
+msgid "See the console for more details."
+msgstr ""
+
+#. [listing-detail.seeConsoleForDetails]
+#. defaultMessage is:
+#. See the console for more details.
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.seeConsoleForDetails"
+msgid "See the console for more details."
+msgstr ""
+
+#. [schema.announcements.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.selectPhotos"
+msgid "Select photos"
+msgstr ""
+
+#. [schema.forSale.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.selectPhotos"
+msgid "Select photos"
+msgstr ""
+
+#. [schema.housing.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.selectPhotos"
+msgid "Select photos"
+msgstr ""
+
+#. [schema.services.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.selectPhotos"
+msgid "Select photos"
+msgstr ""
+
+#. [schema.tickets.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.selectPhotos"
+msgid "Select photos"
+msgstr ""
+
+#. [schema.transportation.selectPhotos]
+#. defaultMessage is:
+#. Select photos
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.selectPhotos"
+msgid "Select photos"
+msgstr ""
+
+#. [notifications.sell]
+#. defaultMessage is:
+#. Sell
+#: translations/messages/src/components/notifications.json
+msgctxt "notifications.sell"
+msgid "Sell"
+msgstr ""
+
+#. [purchase-detail.seller]
+#. defaultMessage is:
+#. Seller
+#. [purchase-detail.seller]
+#. defaultMessage is:
+#. Seller
+#: translations/messages/src/components/notification.json
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.seller"
+msgid "Seller"
+msgstr ""
+
+#. [listing-detail.seller]
+#. defaultMessage is:
+#. Seller: {sellerAddress}
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.seller"
+msgid "Seller: {sellerAddress}"
+msgstr ""
+
+#. [navbar.selling]
+#. defaultMessage is:
+#. Selling
+#: translations/messages/src/components/navbar.json
+msgctxt "navbar.selling"
+msgid "Selling"
+msgstr ""
+
+#. [purchase-detail.sendOrder]
+#. defaultMessage is:
+#. Send the order to buyer
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.sendOrder"
+msgid "Send the order to buyer"
+msgstr ""
+
+#. [my-purchase-card.sentBySeller]
+#. defaultMessage is:
+#. Sent by Seller
+#: translations/messages/src/components/my-purchase-card.json
+msgctxt "my-purchase-card.sentBySeller"
+msgid "Sent by Seller"
+msgstr ""
+
+#. [transaction-progress.sentBySeller]
+#. defaultMessage is:
+#. Sent by seller
+#. [transaction-progress.sentBySeller]
+#. defaultMessage is:
+#. Sent by seller
+#: translations/messages/src/components/purchase-progress.json
+#: translations/messages/src/components/transaction-progress.json
+msgctxt "transaction-progress.sentBySeller"
+msgid "Sent by seller"
+msgstr ""
+
+#. [listing-create.services]
+#. defaultMessage is:
+#. Services
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.services"
+msgid "Services"
+msgstr ""
+
+#. [schema.services.softwareDevelopement]
+#. defaultMessage is:
+#. Software Developement
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.softwareDevelopement"
+msgid "Software Developement"
+msgstr ""
+
+#. [listing-card-prices.sold]
+#. defaultMessage is:
+#. Sold
+#: translations/messages/src/components/listing-card-prices.json
+msgctxt "listing-card-prices.sold"
+msgid "Sold"
+msgstr ""
+
+#. [transaction-progress.sold]
+#. defaultMessage is:
+#. Sold
+#. [transaction-progress.sold]
+#. defaultMessage is:
+#. Sold
+#: translations/messages/src/components/purchase-progress.json
+#: translations/messages/src/components/transaction-progress.json
+msgctxt "transaction-progress.sold"
+msgid "Sold"
+msgstr ""
+
+#. [listing-detail.soldOut]
+#. defaultMessage is:
+#. Sold Out
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.soldOut"
+msgid "Sold Out"
+msgstr ""
+
+#. [my-listing-card.soldOut]
+#. defaultMessage is:
+#. Sold Out
+#: translations/messages/src/components/my-listing-card.json
+msgctxt "my-listing-card.soldOut"
+msgid "Sold Out"
+msgstr ""
+
+#. [purchase-detail.soldTo]
+#. defaultMessage is:
+#. Sold to {buyerLink}
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.soldTo"
+msgid "Sold to {buyerLink}"
+msgstr ""
+
+#. [purchase-detail.soldToOn]
+#. defaultMessage is:
+#. Sold to {buyerName} on {date}
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.soldToOn"
+msgid "Sold to {buyerName} on {date}"
+msgstr ""
+
+#. [_countryOptions.southKorea]
+#. defaultMessage is:
+#. South Korea
+#: translations/messages/src/pages/profile/_countryOptions.json
+msgctxt "_countryOptions.southKorea"
+msgid "South Korea"
+msgstr ""
+
+#. [schema.forSale.sportingGoods]
+#. defaultMessage is:
+#. Sporting Goods
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.sportingGoods"
+msgid "Sporting Goods"
+msgstr ""
+
+#. [schema.tickets.sports]
+#. defaultMessage is:
+#. Sports
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.sports"
+msgid "Sports"
+msgstr ""
+
+#. [Profile.status]
+#. defaultMessage is:
+#. Status:
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.status"
+msgid "Status:"
+msgstr ""
+
+#. [schema.housing.subletTempWanted]
+#. defaultMessage is:
+#. Sublet/Temp Wanted
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.subletTempWanted"
+msgid "Sublet/Temp Wanted"
+msgstr ""
+
+#. [schema.housing.subletsTemporary]
+#. defaultMessage is:
+#. Sublets & Temporary
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.subletsTemporary"
+msgid "Sublets & Temporary"
+msgstr ""
+
+#. [purchase-detail.submitThisForm]
+#. defaultMessage is:
+#. Submit this form once you have reviewed shipment of your order.
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.submitThisForm"
+msgid "Submit this form once you have reviewed shipment of your order."
+msgstr ""
+
+#. [listing-create.successMessage]
+#. defaultMessage is:
+#. Success
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.successMessage"
+msgid "Success"
+msgstr ""
+
+#. [Profile.success]
+#. defaultMessage is:
+#. Success
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.success"
+msgid "Success"
+msgstr ""
+
+#. [schema.transportation.taxiService]
+#. defaultMessage is:
+#. Taxi Service
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.taxiService"
+msgid "Taxi Service"
+msgstr ""
+
+#. [footer.teamLink]
+#. defaultMessage is:
+#. Team
+#: translations/messages/src/components/footer.json
+msgctxt "footer.teamLink"
+msgid "Team"
+msgstr ""
+
+#. [footer.telegramLink]
+#. defaultMessage is:
+#. Telegram
+#: translations/messages/src/components/footer.json
+msgctxt "footer.telegramLink"
+msgid "Telegram"
+msgstr ""
+
+#. [listings-grid.originContractNotFound]
+#. defaultMessage is:
+#. The Origin Contract was not found on this network.
+#: translations/messages/src/components/listings-grid.json
+msgctxt "listings-grid.originContractNotFound"
+msgid "The Origin Contract was not found on this network."
+msgstr ""
+
+#. [not-found.content]
+#. defaultMessage is:
+#. The page you’re looking for is no longer here, maybe it was never here in the first place. In any case, we sincerely apologize if it’s us and we forgive you if it’s you :)
+#: translations/messages/src/components/not-found.json
+msgctxt "not-found.content"
+msgid "The page you’re looking for is no longer here, maybe it was never here in the first place. In any case, we sincerely apologize if it’s us and we forgive you if it’s you :)"
+msgstr ""
+
+#. [schema.tickets.theater]
+#. defaultMessage is:
+#. Theater
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.theater"
+msgid "Theater"
+msgstr ""
+
+#. [listing-create.error1]
+#. defaultMessage is:
+#. There was a problem creating this listing.
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.error1"
+msgid "There was a problem creating this listing."
+msgstr ""
+
+#. [listing-detail.errorPurchasingListing]
+#. defaultMessage is:
+#. There was a problem purchasing this listing.
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.errorPurchasingListing"
+msgid "There was a problem purchasing this listing."
+msgstr ""
+
+#. [listing-detail.loadingError]
+#. defaultMessage is:
+#. There was an error loading this listing.
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.loadingError"
+msgid "There was an error loading this listing."
+msgstr ""
+
+#. [EditProfile.publicDataNotice]
+#. defaultMessage is:
+#. This information will be published on the blockchain and will be visible to everyone.
+#: translations/messages/src/pages/profile/EditProfile.json
+msgctxt "EditProfile.publicDataNotice"
+msgid "This information will be published on the blockchain and will be visible to everyone."
+msgstr ""
+
+#. [purchase-detail.listingStatus]
+#. defaultMessage is:
+#. This listing is {status}
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.listingStatus"
+msgid "This listing is {status}"
+msgstr ""
+
+#. [my-sale-card.orderComplete]
+#. defaultMessage is:
+#. This order is complete
+#: translations/messages/src/components/my-sale-card.json
+msgctxt "my-sale-card.orderComplete"
+msgid "This order is complete"
+msgstr ""
+
+#. [listing-create.tickets]
+#. defaultMessage is:
+#. Tickets
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.tickets"
+msgid "Tickets"
+msgstr ""
+
+#. [schema.forSale.tickets]
+#. defaultMessage is:
+#. Tickets
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.tickets"
+msgid "Tickets"
+msgstr ""
+
+#. [schema.announcements.title]
+#. defaultMessage is:
+#. Title
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.title"
+msgid "Title"
+msgstr ""
+
+#. [schema.forSale.title]
+#. defaultMessage is:
+#. Title
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.title"
+msgid "Title"
+msgstr ""
+
+#. [schema.housing.title]
+#. defaultMessage is:
+#. Title
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.title"
+msgid "Title"
+msgstr ""
+
+#. [schema.services.title]
+#. defaultMessage is:
+#. Title
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.title"
+msgid "Title"
+msgstr ""
+
+#. [schema.tickets.title]
+#. defaultMessage is:
+#. Title
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.title"
+msgid "Title"
+msgstr ""
+
+#. [schema.transportation.title]
+#. defaultMessage is:
+#. Title
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.title"
+msgid "Title"
+msgstr ""
+
+#. [transactions.to]
+#. defaultMessage is:
+#. To
+#: translations/messages/src/components/dropdowns/transactions.json
+msgctxt "transactions.to"
+msgid "To"
+msgstr ""
+
+#. [purchase-detail.to]
+#. defaultMessage is:
+#. To
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.to"
+msgid "To"
+msgstr ""
+
+#. [schema.forSale.tools]
+#. defaultMessage is:
+#. Tools
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.tools"
+msgid "Tools"
+msgstr ""
+
+#. [web3-provider.toshi]
+#. defaultMessage is:
+#. Toshi
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.toshi"
+msgid "Toshi"
+msgstr ""
+
+#. [my-listing-card.totalQuantity]
+#. defaultMessage is:
+#. Total Quantity : {quantity}
+#: translations/messages/src/components/my-listing-card.json
+msgctxt "my-listing-card.totalQuantity"
+msgid "Total Quantity : {quantity}"
+msgstr ""
+
+#. [schema.forSale.toysGames]
+#. defaultMessage is:
+#. Toys & Games
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.toysGames"
+msgid "Toys & Games"
+msgstr ""
+
+#. [schema.tickets.tradeshow]
+#. defaultMessage is:
+#. Tradeshow
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.tradeshow"
+msgid "Tradeshow"
+msgstr ""
+
+#. [schema.forSale.trailers]
+#. defaultMessage is:
+#. Trailers
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.trailers"
+msgid "Trailers"
+msgstr ""
+
+#. [purchase-detail.transactionHistoryHeading]
+#. defaultMessage is:
+#. Transaction History
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.transactionHistoryHeading"
+msgid "Transaction History"
+msgstr ""
+
+#. [purchase-detail.transactionStatusHeading]
+#. defaultMessage is:
+#. Transaction Status
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.transactionStatusHeading"
+msgid "Transaction Status"
+msgstr ""
+
+#. [listing-create.transportation]
+#. defaultMessage is:
+#. Transportation
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.transportation"
+msgid "Transportation"
+msgstr ""
+
+#. [web3-provider.trust]
+#. defaultMessage is:
+#. Trust
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.trust"
+msgid "Trust"
+msgstr ""
+
+#. [web3-provider.trustWallet]
+#. defaultMessage is:
+#. Trust Wallet
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.trustWallet"
+msgid "Trust Wallet"
+msgstr ""
+
+#. [footer.twitterLink]
+#. defaultMessage is:
+#. Twitter
+#: translations/messages/src/components/footer.json
+msgctxt "footer.twitterLink"
+msgid "Twitter"
+msgstr ""
+
+#. [_ProvisionedChanges.twitter]
+#. defaultMessage is:
+#. Twitter
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.twitter"
+msgid "Twitter"
+msgstr ""
+
+#. [_Services.twitter]
+#. defaultMessage is:
+#. Twitter
+#: translations/messages/src/pages/profile/_Services.json
+msgctxt "_Services.twitter"
+msgid "Twitter"
+msgstr ""
+
+#. [User.twitter]
+#. defaultMessage is:
+#. Twitter
+#: translations/messages/src/pages/user/User.json
+msgctxt "User.twitter"
+msgid "Twitter"
+msgstr ""
+
+#. [_ProvisionedChanges.twitterAccount]
+#. defaultMessage is:
+#. Twitter account
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.twitterAccount"
+msgid "Twitter account"
+msgstr ""
+
+#. [Profile.twitterVerified]
+#. defaultMessage is:
+#. Twitter account verified!
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.twitterVerified"
+msgid "Twitter account verified!"
+msgstr ""
+
+#. [purchase-detail.txHash]
+#. defaultMessage is:
+#. TxHash
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.txHash"
+msgid "TxHash"
+msgstr ""
+
+#. [purchase-detail.txName]
+#. defaultMessage is:
+#. TxName
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.txName"
+msgid "TxName"
+msgstr ""
+
+#. [_countryOptions.unitedKingdom]
+#. defaultMessage is:
+#. United Kingdom
+#: translations/messages/src/pages/profile/_countryOptions.json
+msgctxt "_countryOptions.unitedKingdom"
+msgid "United Kingdom"
+msgstr ""
+
+#. [my-purchase-card.unknown]
+#. defaultMessage is:
+#. Unknown
+#: translations/messages/src/components/my-purchase-card.json
+msgctxt "my-purchase-card.unknown"
+msgid "Unknown"
+msgstr ""
+
+#. [my-sale-card.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+#: translations/messages/src/components/my-sale-card.json
+msgctxt "my-sale-card.unnamedUser"
+msgid "Unnamed User"
+msgstr ""
+
+#. [purchase-detail.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+#. [purchase-detail.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+#: translations/messages/src/components/purchase-detail.json
+#: translations/messages/src/reducers/Users.json
+msgctxt "purchase-detail.unnamedUser"
+msgid "Unnamed User"
+msgstr ""
+
+#. [review.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+#: translations/messages/src/components/review.json
+msgctxt "review.unnamedUser"
+msgid "Unnamed User"
+msgstr ""
+
+#. [user-card.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+#: translations/messages/src/components/user-card.json
+msgctxt "user-card.unnamedUser"
+msgid "Unnamed User"
+msgstr ""
+
+#. [Profile.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.unnamedUser"
+msgid "Unnamed User"
+msgstr ""
+
+#. [user.unnamedUser]
+#. defaultMessage is:
+#. Unnamed User
+#: translations/messages/src/pages/user/User.json
+msgctxt "user.unnamedUser"
+msgid "Unnamed User"
+msgstr ""
+
+#. [notifications.unread]
+#. defaultMessage is:
+#. Unread
+#: translations/messages/src/components/notifications.json
+msgctxt "notifications.unread"
+msgid "Unread"
+msgstr ""
+
+#. [listing-create.uploadingYourListing]
+#. defaultMessage is:
+#. Uploading your listing
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.uploadingYourListing"
+msgid "Uploading your listing"
+msgstr ""
+
+#. [schema.housing.vacationRentals]
+#. defaultMessage is:
+#. Vacation Rentals
+#: translations/messages/src/schemaMessages/housing.json
+msgctxt "schema.housing.vacationRentals"
+msgid "Vacation Rentals"
+msgstr ""
+
+#. [VerifyEmail.validEmail]
+#. defaultMessage is:
+#. Valid email address
+#: translations/messages/src/pages/profile/VerifyEmail.json
+msgctxt "VerifyEmail.validEmail"
+msgid "Valid email address"
+msgstr ""
+
+#. [User.verifiedInto]
+#. defaultMessage is:
+#. Verified Info
+#: translations/messages/src/pages/user/User.json
+msgctxt "User.verifiedInto"
+msgid "Verified Info"
+msgstr ""
+
+#. [VerifyFacebook.verifyFBHeading]
+#. defaultMessage is:
+#. Verify Your Facebook Account
+#: translations/messages/src/pages/profile/VerifyFacebook.json
+msgctxt "VerifyFacebook.verifyFBHeading"
+msgid "Verify Your Facebook Account"
+msgstr ""
+
+#. [VerifyPhone.verifyPhoneHeading]
+#. defaultMessage is:
+#. Verify Your Phone Number
+#: translations/messages/src/pages/profile/VerifyPhone.json
+msgctxt "VerifyPhone.verifyPhoneHeading"
+msgid "Verify Your Phone Number"
+msgstr ""
+
+#. [VerifyTwitter.verifyTwitterHeading]
+#. defaultMessage is:
+#. Verify Your Twitter Account
+#: translations/messages/src/pages/profile/VerifyTwitter.json
+msgctxt "VerifyTwitter.verifyTwitterHeading"
+msgid "Verify Your Twitter Account"
+msgstr ""
+
+#. [Profile.verifyYourselfHeading]
+#. defaultMessage is:
+#. Verify yourself on Origin
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.verifyYourselfHeading"
+msgid "Verify yourself on Origin"
+msgstr ""
+
+#. [_Guidance.verifyingYourProfile]
+#. defaultMessage is:
+#. Verifying your profile
+#: translations/messages/src/pages/profile/_Guidance.json
+msgctxt "_Guidance.verifyingYourProfile"
+msgid "Verifying your profile"
+msgstr ""
+
+#. [schema.forSale.videoGaming]
+#. defaultMessage is:
+#. Video Gaming
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.videoGaming"
+msgid "Video Gaming"
+msgstr ""
+
+#. [notifications.viewAll]
+#. defaultMessage is:
+#. View All
+#: translations/messages/src/components/dropdowns/notifications.json
+msgctxt "notifications.viewAll"
+msgid "View All"
+msgstr ""
+
+#. [my-sale-card.viewDetails]
+#. defaultMessage is:
+#. View Details
+#: translations/messages/src/components/my-sale-card.json
+msgctxt "my-sale-card.viewDetails"
+msgid "View Details"
+msgstr ""
+
+#. [transaction-progress.viewProfile]
+#. defaultMessage is:
+#. View Profile
+#: translations/messages/src/components/user-card.json
+msgctxt "transaction-progress.viewProfile"
+msgid "View Profile"
+msgstr ""
+
+#. [listing-detail.viewOnIpfs]
+#. defaultMessage is:
+#. View on IPFS
+#: translations/messages/src/components/listing-detail.json
+msgctxt "listing-detail.viewOnIpfs"
+msgid "View on IPFS"
+msgstr ""
+
+#. [purchase-detail.viewOnIPFS]
+#. defaultMessage is:
+#. View on IPFS
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.viewOnIPFS"
+msgid "View on IPFS"
+msgstr ""
+
+#. [listing-create.viewSchemaLinkLabel]
+#. defaultMessage is:
+#. View the {schemaName} schema
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.viewSchemaLinkLabel"
+msgid "View the {schemaName} schema"
+msgstr ""
+
+#. [_ProvisionedChanges.visibleOnBlockchain]
+#. defaultMessage is:
+#. Visible on the blockchain
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.visibleOnBlockchain"
+msgid "Visible on the blockchain"
+msgstr ""
+
+#. [schema.announcements.volunteers]
+#. defaultMessage is:
+#. Volunteers
+#: translations/messages/src/schemaMessages/announcements.json
+msgctxt "schema.announcements.volunteers"
+msgid "Volunteers"
+msgstr ""
+
+#. [purchase-detail.waitForBuyer]
+#. defaultMessage is:
+#. Wait for the buyer to receive the order
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.waitForBuyer"
+msgid "Wait for the buyer to receive the order"
+msgstr ""
+
+#. [purchase-detail.awaitOrder]
+#. defaultMessage is:
+#. Wait for the seller to send the order
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.awaitOrder"
+msgid "Wait for the seller to send the order"
+msgstr ""
+
+#. [purchase-detail.awaitSellerWithdrawl]
+#. defaultMessage is:
+#. Wait for the seller to withdraw the funds
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.awaitSellerWithdrawl"
+msgid "Wait for the seller to withdraw the funds"
+msgstr ""
+
+#. [ConfirmUpload.waitNotice]
+#. defaultMessage is:
+#. Wait! You haven’t published yet.
+#: translations/messages/src/pages/profile/ConfirmUnload.json
+msgctxt "ConfirmUpload.waitNotice"
+msgid "Wait! You haven’t published yet."
+msgstr ""
+
+#. [schema.forSale.wanted]
+#. defaultMessage is:
+#. Wanted
+#: translations/messages/src/schemaMessages/for-sale.json
+msgctxt "schema.forSale.wanted"
+msgid "Wanted"
+msgstr ""
+
+#. [schema.services.webDesign]
+#. defaultMessage is:
+#. Web Design
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.webDesign"
+msgid "Web Design"
+msgstr ""
+
+#. [listing-create.whatHappensNextHeading]
+#. defaultMessage is:
+#. What happens next?
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.whatHappensNextHeading"
+msgid "What happens next?"
+msgstr ""
+
+#. [listing-create.whatTypeOfListing]
+#. defaultMessage is:
+#. What type of listing do you want to create?
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.whatTypeOfListing"
+msgid "What type of listing do you want to create?"
+msgstr ""
+
+#. [schema.tickets.when]
+#. defaultMessage is:
+#. When
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.when"
+msgid "When"
+msgstr ""
+
+#. [listing-create.whatHappensNextContent1]
+#. defaultMessage is:
+#. When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network.
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.whatHappensNextContent1"
+msgid "When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network."
+msgstr ""
+
+#. [schema.tickets.where]
+#. defaultMessage is:
+#. Where
+#: translations/messages/src/schemaMessages/tickets.json
+msgctxt "schema.tickets.where"
+msgid "Where"
+msgstr ""
+
+#. [footer.whitepaperLink]
+#. defaultMessage is:
+#. Whitepaper
+#: translations/messages/src/components/footer.json
+msgctxt "footer.whitepaperLink"
+msgid "Whitepaper"
+msgstr ""
+
+#. [purchase-detail.withdrawAndReview]
+#. defaultMessage is:
+#. Withdraw and Review
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.withdrawAndReview"
+msgid "Withdraw and Review"
+msgstr ""
+
+#. [schema.services.writingTranslationTranscription]
+#. defaultMessage is:
+#. Writing, Translation & Transcription
+#: translations/messages/src/schemaMessages/services.json
+msgctxt "schema.services.writingTranslationTranscription"
+msgid "Writing, Translation & Transcription"
+msgstr ""
+
+#. [schema.transportation.yachtCharters]
+#. defaultMessage is:
+#. Yacht Charters
+#: translations/messages/src/schemaMessages/transportation.json
+msgctxt "schema.transportation.yachtCharters"
+msgid "Yacht Charters"
+msgstr ""
+
+#. [web3-provider.notSignedIntoMetaMask]
+#. defaultMessage is:
+#. You are not signed in to MetaMask.
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.notSignedIntoMetaMask"
+msgid "You are not signed in to MetaMask."
+msgstr ""
+
+#. [_ProvisionedChanges.youArePublishing]
+#. defaultMessage is:
+#. You are publishing:
+#: translations/messages/src/pages/profile/_ProvisionedChanges.json
+msgctxt "_ProvisionedChanges.youArePublishing"
+msgid "You are publishing:"
+msgstr ""
+
+#. [my-listings.noListingsMessage]
+#. defaultMessage is:
+#. You currently have no listings.
+#: translations/messages/src/components/my-listings.json
+msgctxt "my-listings.noListingsMessage"
+msgid "You currently have no listings."
+msgstr ""
+
+#. [my-purchases.noPurchases]
+#. defaultMessage is:
+#. You currently have no purchases.
+#: translations/messages/src/components/my-purchases.json
+msgctxt "my-purchases.noPurchases"
+msgid "You currently have no purchases."
+msgstr ""
+
+#. [my-sales.noSales]
+#. defaultMessage is:
+#. You currently have no sales.
+#: translations/messages/src/components/my-sales.json
+msgctxt "my-sales.noSales"
+msgid "You currently have no sales."
+msgstr ""
+
+#. [notification.purchaseCreated]
+#. defaultMessage is:
+#. You have a new purchase.
+#: translations/messages/src/components/notification-message.json
+msgctxt "notification.purchaseCreated"
+msgid "You have a new purchase."
+msgstr ""
+
+#. [notification.purchaseReceived]
+#. defaultMessage is:
+#. You have a new review.
+#: translations/messages/src/components/notification-message.json
+msgctxt "notification.purchaseReceived"
+msgid "You have a new review."
+msgstr ""
+
+#. [notification.purchaseComplete]
+#. defaultMessage is:
+#. You have a new review.
+#: translations/messages/src/components/notification-message.json
+msgctxt "notification.purchaseComplete"
+msgid "You have a new review."
+msgstr ""
+
+#. [listings-grid.changeNetworks]
+#. defaultMessage is:
+#. You may need to change networks, or deploy the contract.
+#: translations/messages/src/components/listings-grid.json
+msgctxt "listings-grid.changeNetworks"
+msgid "You may need to change networks, or deploy the contract."
+msgstr ""
+
+#. [listing-create.schemaExplainer]
+#. defaultMessage is:
+#. Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services.
+#: translations/messages/src/components/listing-create.json
+msgctxt "listing-create.schemaExplainer"
+msgid "Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services."
+msgstr ""
+
+#. [notification.purchaseSent]
+#. defaultMessage is:
+#. Your purchase has been shipped.
+#: translations/messages/src/components/notification-message.json
+msgctxt "notification.purchaseSent"
+msgid "Your purchase has been shipped."
+msgstr ""
+
+#. [purchase-detail.sellerReviewPlaceholder]
+#. defaultMessage is:
+#. Your review should inform others about your experience transacting with this buyer.
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.sellerReviewPlaceholder"
+msgid "Your review should inform others about your experience transacting with this buyer."
+msgstr ""
+
+#. [purchase-detail.buyerReviewPlaceholder]
+#. defaultMessage is:
+#. Your review should inform others about your experience transacting with this seller, not about the product itself.
+#: translations/messages/src/components/purchase-detail.json
+msgctxt "purchase-detail.buyerReviewPlaceholder"
+msgid "Your review should inform others about your experience transacting with this seller, not about the product itself."
+msgstr ""
+
+#. [Profile.manageYourProfile]
+#. defaultMessage is:
+#. manage your profile
+#: translations/messages/src/pages/profile/Profile.json
+msgctxt "Profile.manageYourProfile"
+msgid "manage your profile"
+msgstr ""
+
+#. [my-sale-card.buyerNameLink]
+#. defaultMessage is:
+#. sold to {linkToBuyer}
+#: translations/messages/src/components/my-sale-card.json
+msgctxt "my-sale-card.buyerNameLink"
+msgid "sold to {linkToBuyer}"
+msgstr ""
+
+#. [_Wallet.ethBalance]
+#. defaultMessage is:
+#. {balance} ETH
+#: translations/messages/src/pages/profile/_Wallet.json
+msgctxt "_Wallet.ethBalance"
+msgid "{balance} ETH"
+msgstr ""
+
+#. [web3-provider.shouldBeOnRinkeby]
+#. defaultMessage is:
+#. {currentProvider} should be on Rinkeby Test Network
+#: translations/messages/src/components/web3-provider.json
+msgctxt "web3-provider.shouldBeOnRinkeby"
+msgid "{currentProvider} should be on Rinkeby Test Network"
+msgstr ""
+
+#. [listings-grid.listingsCount]
+#. defaultMessage is:
+#. {listingIdsCount} Listings
+#: translations/messages/src/components/listings-grid.json
+msgctxt "listings-grid.listingsCount"
+msgid "{listingIdsCount} Listings"
+msgstr ""
+
+#. [my-sale-card.nextStep1]
+#. defaultMessage is:
+#. {nextStep} Send the order to buyer
+#: translations/messages/src/components/my-sale-card.json
+msgctxt "my-sale-card.nextStep1"
+msgid "{nextStep} Send the order to buyer"
+msgstr ""
+
+#. [my-sale-card.nextStep2]
+#. defaultMessage is:
+#. {nextStep} Wait for buyer to receive order
+#: translations/messages/src/components/my-sale-card.json
+msgctxt "my-sale-card.nextStep2"
+msgid "{nextStep} Wait for buyer to receive order"
+msgstr ""
+
+#. [my-sale-card.nextStep3]
+#. defaultMessage is:
+#. {nextStep} Withdraw funds
+#: translations/messages/src/components/my-sale-card.json
+msgctxt "my-sale-card.nextStep3"
+msgid "{nextStep} Withdraw funds"
+msgstr ""
+
+#. [_Guidance.content]
+#. defaultMessage is:
+#. {verifyingYourProfile} allows other users to know that you are a real person and increases the chances of successful transactions on Origin.
+#: translations/messages/src/pages/profile/_Guidance.json
+msgctxt "_Guidance.content"
+msgid "{verifyingYourProfile} allows other users to know that you are a real person and increases the chances of successful transactions on Origin."
+msgstr ""
+
