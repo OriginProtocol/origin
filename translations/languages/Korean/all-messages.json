@@ -1,6 +1,6 @@
 {
   "connectivity.mainEthereumNetwork": "메인 이더리움 네트워크",
-  "connectivity.mordenTestNetwork": "Morden Test Network",
+  "connectivity.mordenTestNetwork": "Morden 테스트 네트워크",
   "connectivity.ropstenTestNetwork": "Ropsten Test Network",
   "connectivity.rinkebyTestNetwork": "Rinkeby Test Network",
   "connectivity.kovanTestNetwork": "Kovan Test Network",
