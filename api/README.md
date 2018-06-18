@@ -10,4 +10,4 @@ We are using [Flask Restless](https://flask-restless.readthedocs.io/en/stable/) 
 
 ## Attestation Service
 
-[Attestations Documentation](attestations)
+[Attestations Documentation](attestations.md)
