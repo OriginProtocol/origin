@@ -62,7 +62,13 @@ class SearchClient(Singleton):
         if res['result'] not in ('created', 'updated'):
             raise IndexingError("Failed indexing listing", doc_id, res)
 
-    def search_listings(self, query, category=None, location=None, num=100, offset=0):
+    def search_listings(
+            self,
+            query,
+            category=None,
+            location=None,
+            num=100,
+            offset=0):
         """
         Issues a search query against the listing data.
         """
@@ -86,10 +92,12 @@ class SearchClient(Singleton):
         filters = []
         filter_clause = ""
         if category:
-            cat_filter = '{{"match": {{"category": "{cat}"}}}}'.format(cat=category)
+            cat_filter = '{{"match": {{"category": "{cat}"}}}}'.format(
+                cat=category)
             filters.append(cat_filter)
         if location:
-            loc_filter = '{{"match": {{"location": "{loc}"}}}}'.format(loc=location)
+            loc_filter = '{{"match": {{"location": "{loc}"}}}}'.format(
+                loc=location)
             filters.append(loc_filter)
         if filters:
             filter_clause = ',"must": [' + ",".join(filters) + ']'
