@@ -43,28 +43,6 @@ describe('ContractService', function() {
     })
   })
 
-  describe('getListing', () => {
-    // Skipped because of https://github.com/OriginProtocol/platform/issues/27
-    it('should reject when listing cannot be found', done => {
-      contractService.getListing('foo').then(done.fail, error => {
-        expect(error).to.be.instanceof(Error)
-        done()
-      })
-    })
-
-    it('should get a listing object', async () => {
-      const listing = await contractService.getListing(0)
-      expect(listing).to.have.keys(
-        'address',
-        'index',
-        'lister',
-        'ipfsHash',
-        'price',
-        'unitsAvailable'
-      )
-    })
-  })
-
   describe('passing in contract addresses', () => {
     it('should allow contract addresses to be overridden', () => {
       const web3 = new Web3()

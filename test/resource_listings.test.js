@@ -102,6 +102,28 @@ describe('Listing Resource', function() {
     expect(listingAfter.unitsAvailable).to.equal(0)
   })
 
+  describe('getListing', () => {
+    // Skipped because of https://github.com/OriginProtocol/platform/issues/27
+    it('should reject when listing cannot be found', done => {
+      listings.getListing('foo').then(done.fail, error => {
+        expect(error).to.be.instanceof(Error)
+        done()
+      })
+    })
+
+    it('should get a listing object', async () => {
+      const listing = await listings.getListing(0)
+      expect(listing).to.have.keys(
+        'address',
+        'index',
+        'lister',
+        'ipfsHash',
+        'price',
+        'unitsAvailable'
+      )
+    })
+  })
+
   describe('Getting purchase addresses', async () => {
     let listing
     before(async () => {

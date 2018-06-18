@@ -76,7 +76,7 @@ class Listings extends ResourceBase {
 
   // This method is DEPRCIATED
   async getByIndex(listingIndex) {
-    const contractData = await this.contractService.getListing(listingIndex)
+    const contractData = await this.getListing(listingIndex)
     const ipfsData = await this.ipfsService.getFile(contractData.ipfsHash)
     // ipfsService should have already checked the contents match the hash,
     // and that the signature validates
@@ -176,6 +176,10 @@ class Listings extends ResourceBase {
     return await this.contractFn(address, 'getPurchase', [index])
   }
 
+  /*
+      private
+  */
+
   async submitListing(ipfsListing, ethPrice, units) {
     try {
       const account = await this.contractService.currentAccount()
@@ -191,6 +195,32 @@ class Listings extends ResourceBase {
       console.error('Error submitting to the Ethereum blockchain: ' + error)
       throw error
     }
+  }
+
+  async getListing(listingId) {
+    const instance = await this.contractService.deployed(this.contractService.listingsRegistryContract)
+
+    let listing
+    try {
+      listing = await instance.methods.getListing(listingId).call()
+    } catch (error) {
+      console.log('Error fetching listingId: ' + listingId)
+      throw error
+    }
+
+    // Listing is returned as array of properties.
+    // IPFS hash (as bytes32 hex string) is in results[2]
+    // Convert it to regular IPFS base-58 encoded hash
+    // Address of Listing contract is in: listing[0]
+    const listingObject = {
+      index: listingId,
+      address: listing[0],
+      lister: listing[1],
+      ipfsHash: this.contractService.getIpfsHashFromBytes32(listing[2]),
+      price: this.contractService.web3.utils.fromWei(listing[3], 'ether'),
+      unitsAvailable: listing[4]
+    }
+    return listingObject
   }
 }
 
