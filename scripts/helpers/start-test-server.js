@@ -6,7 +6,9 @@ const startTestServer = () => {
   const webpackDevServer = spawn('./node_modules/.bin/webpack-dev-server', [
     '--hot',
     '--config',
-    'test/webpack.config.js'
+    'test/webpack.config.js',
+    '--host',
+    '0.0.0.0'
   ])
   webpackDevServer.stderr.pipe(process.stderr)
 }
