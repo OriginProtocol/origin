@@ -10,7 +10,8 @@ from logic.attestation_service import CLAIM_TYPES
 from logic.service_utils import (PhoneVerificationError,
                                  EmailVerificationError,
                                  FacebookVerificationError,
-                                 TwitterVerificationError)
+                                 TwitterVerificationError,
+                                 AirbnbVerificationError)
 from tests.factories.attestation import VerificationCodeFactory
 from util.time_ import utcnow
 VC = db_models.VerificationCode
@@ -380,3 +381,54 @@ def test_verify_twitter_invalid_session(mock_session, mock_requests):
         VerificationService.verify_twitter(**args)
 
     assert str(service_err.value) == 'Session not found.'
+
+
+def test_generate_airbnb_verification_code():
+    resp = VerificationService.generate_airbnb_verification_code('0x112234455C3a32FD11230C42E7Bccd4A84e02010', '123456')
+    assert isinstance(resp, VerificationServiceResponse)
+
+    assert resp.data['code'] == "0x66dd6b0b"
+
+
+def test_generate_airbnb_verification_code_oncorrect_user_id_format():
+    with pytest.raises(AirbnbVerificationError) as service_err:
+        VerificationService.generate_airbnb_verification_code('0x112234455C3a32FD11230C42E7Bccd4A84e02010', '12a34')
+
+    assert str(service_err.value) == 'AirbnbUserId should be a number.'
+
+
+@mock.patch('logic.attestation_service.urllib.request')
+def test_verify_airbnb(mock_urllib_request):
+    urlopen = mock_urllib_request.urlopen.return_value
+    urlopen.read.return_value = "<html><div> Airbnb profile description Origin verification code: 0x66dd6b0b some more profile description</div></html>"
+    airbnbUserId = "123456"
+
+    resp = VerificationService.verify_airbnb('0x112234455C3a32FD11230C42E7Bccd4A84e02010', airbnbUserId)
+    assert isinstance(resp, VerificationServiceResponse)
+
+    resp_data = resp.data
+    assert len(resp_data['signature']) == SIGNATURE_LENGTH
+    assert resp_data['claim_type'] == CLAIM_TYPES['airbnb']
+    assert resp_data['data'] == airbnbUserId
+
+
+@mock.patch('logic.attestation_service.urllib.request')
+def test_verify_airbnb_verification_code_missing(mock_urllib_request):
+    urlopen = mock_urllib_request.urlopen.return_value
+    urlopen.read.return_value = "<html><div> Airbnb profile description some more profile description</div></html>"
+
+    with pytest.raises(AirbnbVerificationError) as service_err:
+        VerificationService.verify_airbnb('0x112234455C3a32FD11230C42E7Bccd4A84e02010', "123456")
+
+    assert str(service_err.value) == "Origin verification code: 0x66dd6b0b has not been found in user's Airbnb profile."
+
+
+@mock.patch('logic.attestation_service.urllib.request')
+def test_verify_airbnb_verification_code_incorrect(mock_urllib_request):
+    urlopen = mock_urllib_request.urlopen.return_value
+    urlopen.read.return_value = "<html><div> Airbnb profile description Origin verification code: 0x1234567 some more profile description</div></html>"
+
+    with pytest.raises(AirbnbVerificationError) as service_err:
+        VerificationService.verify_airbnb('0x112234455C3a32FD11230C42E7Bccd4A84e02010', "123456")
+
+    assert str(service_err.value) == "Origin verification code: 0x66dd6b0b has not been found in user's Airbnb profile."

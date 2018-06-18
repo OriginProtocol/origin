@@ -83,6 +83,18 @@ class VerifyTwitterResponse(StandardResponse):
     data = fields.Str()
 
 
+class AirbnbRequest(StandardRequest):
+    eth_address = fields.Str(required=True, data_key='identity')
+    airbnbProfileId = fields.Str(required=True)
+
+
+class AirbnbVerificationCodeResponse(StandardResponse):
+    pass
+
+class VerifyAirbnbResponse(StandardResponse):
+    pass
+
+
 class PhoneVerificationCode(Resource):
     def post(self):
         return handle_request(
@@ -155,6 +167,23 @@ class VerifyTwitter(Resource):
             response_schema=VerifyTwitterResponse)
 
 
+class AirbnbVerificationCode(Resource):
+    def post(self):
+        return handle_request(
+            data=request.json,
+            handler=VerificationService.generate_airbnb_verification_code,
+            request_schema=AirbnbRequest,
+            response_schema=AirbnbVerificationCodeResponse)
+
+class VerifyAirbnb(Resource):
+    def post(self):
+        return handle_request(
+            data=request.json,
+            handler=VerificationService.verify_airbnb,
+            request_schema=AirbnbRequest,
+            response_schema=VerifyAirbnbResponse)
+
+
 resources = {
     # 'hello-world-path': HelloWorldResource
     'phone/generate-code': PhoneVerificationCode,
@@ -164,5 +193,7 @@ resources = {
     'facebook/auth-url': FacebookAuthUrl,
     'facebook/verify': VerifyFacebook,
     'twitter/auth-url': TwitterAuthUrl,
-    'twitter/verify': VerifyTwitter
+    'twitter/verify': VerifyTwitter,
+    'airbnb/generate-code': AirbnbVerificationCode,
+    'airbnb/verify': VerifyAirbnb
 }
