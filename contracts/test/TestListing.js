@@ -1,4 +1,4 @@
-const Listing = artifacts.require('./Listing.sol')
+const Listing = artifacts.require('./UnitListing.sol')
 const Purchase = artifacts.require('./Purchase.sol')
 
 // Used to assert error cases

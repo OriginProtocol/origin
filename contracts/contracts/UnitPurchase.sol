@@ -2,10 +2,10 @@ pragma solidity 0.4.23;
 
 /// @title Purchase
 /// @dev An purchase Origin Listing representing a purchase/booking
-import "./Listing.sol";
+import "./UnitListing.sol";
 
 
-contract Purchase {
+contract UnitPurchase {
 
   /*
   * Events
@@ -39,7 +39,7 @@ contract Purchase {
 
   Stages private internalStage = Stages.AWAITING_PAYMENT;
 
-  Listing public listingContract; // listing that is being purchased
+  UnitListing public listingContract; // listing that is being purchased
   address public buyer; // User who is buying. Seller is derived from listing
   uint public created;
   uint public buyerTimeout;
@@ -74,7 +74,7 @@ contract Purchase {
   public
   {
     buyer = _buyer;
-    listingContract = Listing(_listingContractAddress);
+    listingContract = UnitListing(_listingContractAddress);
     created = now;
     emit PurchaseChange(internalStage);
   }
@@ -82,7 +82,7 @@ contract Purchase {
   function data()
   public
   view
-  returns (Stages _stage, Listing _listingContract, address _buyer, uint _created, uint _buyerTimeout) {
+  returns (Stages _stage, UnitListing _listingContract, address _buyer, uint _created, uint _buyerTimeout) {
       return (stage(), listingContract, buyer, created, buyerTimeout);
   }
 

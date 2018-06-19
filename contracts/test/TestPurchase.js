@@ -1,5 +1,5 @@
-const Purchase = artifacts.require('./Purchase.sol')
-const Listing = artifacts.require('./Listing.sol')
+const Purchase = artifacts.require('./UnitPurchase.sol')
+const Listing = artifacts.require('./UnitListing.sol')
 
 // Used to assert error cases
 const isEVMError = function(err) {

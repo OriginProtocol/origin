@@ -1,6 +1,6 @@
 var ListingsRegistry = artifacts.require("./ListingsRegistry.sol");
-var Listing = artifacts.require("./Listing.sol");
-var Purchase = artifacts.require("./Purchase.sol");
+var Listing = artifacts.require("./UnitListing.sol");
+var Purchase = artifacts.require("./UnitPurchase.sol");
 
 module.exports = function(deployer, network) {
   return deployer.then(() => {
