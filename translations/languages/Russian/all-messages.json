@@ -177,7 +177,7 @@
   "purchase-detail.nothingToDo": "В данный момент для Вас ничего нет. Проверьте позже",
   "purchase-detail.transactionHistoryHeading": "История транзакций",
   "purchase-detail.txName": "TxName",
-  "purchase-detail.txHash": "TxHash",
+  "purchase-detail.txHash": "Уникальный идентификационный номер транзакции (ID транзакции)",
   "purchase-detail.from": "От",
   "purchase-detail.to": "Кому",
   "purchase-detail.listingDetails": "Детали объявления",
