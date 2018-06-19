@@ -3,6 +3,8 @@ pragma solidity 0.4.23;
 /// @title Listing
 /// @dev An indiviual Origin Listing representing an offer for booking/purchase
 
+import "./Purchase.sol";
+
 
 contract Listing {
 
@@ -24,6 +26,7 @@ contract Listing {
     bytes32 public ipfsHash;
     uint public created;
     uint public expiration;
+    bool public needsSellerApproval;
 
   /*
     * Modifiers
@@ -43,6 +46,6 @@ contract Listing {
     * Abstract methods
   */
 
-  function isPaymentSufficient(uint256 balance) public view returns (bool);
+  function isApproved(Purchase _purchase) public view returns (bool);
 
 }

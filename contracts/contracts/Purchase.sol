@@ -96,8 +96,10 @@ contract Purchase {
   payable
   atStage(Stages.AWAITING_PAYMENT)
   {
-    if (listingContract.isPaymentSufficient(address(this).balance)) {
+    if (listingContract.needsSellerApproval()) {
       // Buyer (or their proxy) has paid enough to cover purchase
+      setStage(Stages.AWAITING_SELLER_APPROVAL);
+    } else if (listingContract.isApproved(this)) {
       setStage(Stages.IN_ESCROW);
     }
     // Possible that nothing happens, and contract just accumulates sent value

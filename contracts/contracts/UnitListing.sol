@@ -35,6 +35,7 @@ contract UnitListing is Listing {
     unitsAvailable = _unitsAvailable;
     created = now;
     expiration = created + 60 days;
+    needsSellerApproval = false;
   }
 
   /*
@@ -107,12 +108,12 @@ contract UnitListing is Listing {
     );
   }
 
-  function isPaymentSufficient(uint256 balance)
+  function isApproved(Purchase _purchase)
     public
     view
     returns (bool)
   {
-    return balance >= price;
+    return address(_purchase).balance >= price;
   }
 
 }
