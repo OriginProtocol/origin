@@ -2,47 +2,17 @@ pragma solidity 0.4.23;
 
 /// @title Purchase
 /// @dev An purchase Origin Listing representing a purchase/booking
+import "./Purchase.sol";
 import "./UnitListing.sol";
 
 
-contract UnitPurchase {
-
-  /*
-  * Events
-  */
-
-  event PurchaseChange(Stages stage);
-  event PurchaseReview(address reviewer, address reviewee, Roles revieweeRole, uint8 rating, bytes32 ipfsHash);
-
-  /*
-  * Enum
-  */
-
-  enum Stages {
-    AWAITING_PAYMENT, // Buyer hasn't paid full amount yet
-    SHIPPING_PENDING, // Waiting for the seller to ship
-    BUYER_PENDING, // Waiting for buyer to confirm receipt
-    SELLER_PENDING, // Waiting for seller to confirm all is good
-    IN_DISPUTE, // We are in a dispute
-    REVIEW_PERIOD, // Time for reviews (only when transaction did not go through)
-    COMPLETE // It's all over
-  }
-
-  enum Roles {
-    BUYER,
-    SELLER
-  }
+contract UnitPurchase is Purchase {
 
   /*
   * Storage
   */
 
-  Stages private internalStage = Stages.AWAITING_PAYMENT;
-
   UnitListing public listingContract; // listing that is being purchased
-  address public buyer; // User who is buying. Seller is derived from listing
-  uint public created;
-  uint public buyerTimeout;
 
   /*
   * Modifiers
@@ -55,11 +25,6 @@ contract UnitPurchase {
 
   modifier isBuyer() {
     require(msg.sender == buyer);
-    _;
-  }
-
-  modifier atStage(Stages _stage) {
-    require(stage() == _stage);
     _;
   }
 
@@ -99,19 +64,6 @@ contract UnitPurchase {
       setStage(Stages.SHIPPING_PENDING);
     }
     // Possible that nothing happens, and contract just accumulates sent value
-  }
-
-  function stage()
-  public
-  view
-  returns (Stages _stage)
-  {
-    if (internalStage == Stages.BUYER_PENDING) {
-      if (now > buyerTimeout) {
-        return Stages.SELLER_PENDING;
-      }
-    }
-    return internalStage;
   }
 
   function sellerConfirmShipped()
@@ -180,12 +132,5 @@ contract UnitPurchase {
 
     // TODO: Create a dispute contract?
     // Right now there's no way to exit this state.
-  }
-
-  function setStage(Stages _stage)
-  private
-  {
-    internalStage = _stage;
-    emit PurchaseChange(_stage);
   }
 }
