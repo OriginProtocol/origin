@@ -1,6 +1,6 @@
 import Origin from 'origin'
 import Web3 from 'web3'
-import {localfy} from './tools'
+import {localfy} from '../tools'
 import {PROVIDER_URL, BRIDGE_SERVER_PROTOCOL,  
   BRIDGE_SERVER_DOMAIN, BRIDGE_SERVER_PORT,
   IPFS_DOMAIN, IPFS_API_PORT, IPFS_GATEWAY_PORT, IPFS_GATEWAY_PROTOCOL} from 'react-native-dotenv'

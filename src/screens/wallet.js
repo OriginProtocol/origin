@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { Alert, Clipboard, StyleSheet, Text, View } from 'react-native'
+import { connect } from 'react-redux'
 
 import OriginButton from '../components/origin-button'
 
-export default class WalletScreen extends Component {
+class WalletScreen extends Component {
   static navigationOptions = {
     title: 'Wallet',
     headerTitleStyle: {
@@ -15,10 +16,11 @@ export default class WalletScreen extends Component {
 
   render() {
     // placeholders
-    const amountETH = 0
+    const amountETH = this.state.balance
     const amountUSD = 0
-    const address = '0x12Be343B94f860124dC4fEe278FDCBD38C101FOO'
-    const privateKey = '0x34Be343B94f860124dC4fEe278FDCBD38C102BAR'
+    const address = this.state.address
+    // really dangerous function
+    const privateKey = address ? web3.eth.accounts.wallet[0].privateKey : ""
 
     return (
       <View style={styles.container}>
@@ -50,6 +52,15 @@ export default class WalletScreen extends Component {
     )
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    balance: state.wallet.balance,
+    address: state.wallet.address,
+  }
+}
+
+export default connect(mapStateToProps)(WalletScreen)
 
 const styles = StyleSheet.create({
   address: {

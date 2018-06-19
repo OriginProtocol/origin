@@ -1,33 +1,12 @@
-import React, { Component } from 'react'
-import {Alert, StyleSheet, Text, View, PushNotificationIOS, TouchableOpacity, TextInput, Linking, Clipboard} from 'react-native'
+import {PushNotificationIOS,Linking, Clipboard} from 'react-native'
 import PushNotification from 'react-native-push-notification'
-import QRCodeScanner from 'react-native-qrcode-scanner'
-import './global'
 import {localfy, storeData, loadData} from './tools'
-import origin, {bridgeUrl, defaultProviderUrl} from './origin'
 import Web3 from 'web3'
 import fetch from 'cross-fetch'
+import keyMirror from 'utils/keyMirror'
 
-import {
-  createBottomTabNavigator,
-  createStackNavigator,
-} from 'react-navigation'
-import { FlatList, Image, Modal, SectionList, StatusBar, TouchableHighlight, YellowBox } from 'react-native'
+import origin, {bridgeUrl, defaultProviderUrl} from './services/origin'
 
-import ScanMarker from './src/components/scan-marker'
-
-import AlertsScreen from './src/screens/alerts'
-import DevicesScreen from './src/screens/devices'
-import HomeScreen from './src/screens/home'
-import SettingsScreen from './src/screens/settings'
-import WalletScreen from './src/screens/wallet'
-
-YellowBox.ignoreWarnings([
-  // https://github.com/facebook/react-native/issues/18868
-  'Warning: isMounted(...) is deprecated',
-  // https://github.com/facebook/react-native/issues/17504
-  'Module RCTImageLoader requires main queue setup'
-])
 
 const providerUrl = defaultProviderUrl
 
@@ -48,10 +27,14 @@ const TEST_PRIVATE_KEY = "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519
 const WALLET_PASSWORD = "TEST_PASS"
 const WALLET_STORE = "WALLET_STORE"
 
+Events = keyMirror({
+  PROMPT_LINK:null,
+  PROMPT_TRANSACTION:null,
+  NEW_ACCOUNT:null
+}, "WalletEvents")
 
-class ScanScreen extends Component {
-  constructor(props) {
-    super(props)
+class OriginWallet {
+  constructor() {
     this.state = {
       notifyTime: null,
       notifyMessage: null,
@@ -60,9 +43,11 @@ class ScanScreen extends Component {
       ethAddress: undefined,
       linkCode: undefined,
     }
+
     this.new_messages = true
     this.last_message_ids = {}
     this.check_messages_interval = setInterval(this.checkServerMessages.bind(this), 1000)
+    this.listeners = {}
 
     loadData(LAST_MESSAGE_IDS).then((ids) => { 
       if (ids) {
@@ -106,15 +91,30 @@ class ScanScreen extends Component {
         */
       requestPermissions: true,
     })
+
+    this.onQRScanned = this.onQRScanned.bind(this)
   }
 
-  static navigationOptions = {
-    title: 'Scan',
-    headerTitleStyle: {
-      fontFamily: 'Poppins',
-      fontSize: 17,
-      fontWeight: 'normal',
-    },
+  registerListener(event, callback)
+  {
+    this.listeners[event] = (this.listeners[event] || []).concat(callback)
+  }
+
+  unregisterListener(event, callback)
+  {
+    this.listeners[event] = (this.listeners[event] || []).filter(cb => cb != callback)
+  }
+
+  fireEvent(event, data) {
+    if (this.listeners[event])
+    {
+      this.listeners[event].forEach((callback) => 
+        callback(data));
+    }
+  }
+
+  getAccount() {
+    return this.state.ethAddress;
   }
 
   syncLastMessages() {
@@ -204,9 +204,8 @@ class ScanScreen extends Component {
     // TODO: Send the token to my server so it could send back push notifications...
     console.log("Device Token Received", deviceToken)
 
-    this.setState({deviceToken, notificationType:notification_type}, () => {
-      this.checkRegisterNotification()
-    })
+    Object.assign(this.state, {deviceToken, notificationType:notification_type})
+    this.checkRegisterNotification()
   }
 
   returnCall(wallet_token, call_id, session_token, result) {
@@ -226,6 +225,50 @@ class ScanScreen extends Component {
   async fetchListing(address) {
     let listing = await origin.listings.get(address)
     console.log("listing is:", listing)
+  }
+
+  doTransaction({action, meta, call_name, call_id, params, return_url, session_token}){
+    if (action == "sign")
+    {
+      web3.eth.signTransaction(params.txn_object).then(ret => {
+        this.returnCall(this.state.deviceToken, call_id, session_token, ret["raw"]).then(
+          (success) => {
+            if (return_url)
+            {
+              console.log("transaction approved returning to:", message.return_url)
+              alert("Please tap the return to safari button up top to complete transaction..")
+              //Linking.openURL(message.return_url)
+            }
+          })
+      })
+    }
+    else if (action == "send")
+    {
+      web3.eth.sendTransaction(params.txn_object).on('receipt', (receipt) => {
+        console.log("transaction sent:", receipt)
+      }).on('confirmation', (conf_number, receipt) => {
+        console.log("confirmation:", conf_number)
+        if (conf_number == 1)  // TODO: set this as a setting
+        {
+          // TODO: detect purchase assume it's all purchases for now.
+          let call = undefined
+          if (params.meta && params.meta.call)
+          {
+            call = params.meta.call
+          }
+          let transactionResult = {hash:receipt.transactionHash, call}
+          this.returnCall(this.state.deviceToken, call_id, session_token, transactionResult).then(
+            (success) => {
+              if (return_url)
+              {
+                console.log("transaction approved returning to:", return_url)
+                Linking.openURL(return_url)
+              }
+            }
+          )
+        }
+      }).on('error', console.error) // TODO: handle error and completion here!
+    }
   }
 
   processCall(meta, call_name, call_id, params, return_url, session_token, force_from = false) {
@@ -250,70 +293,14 @@ class ScanScreen extends Component {
     {
       if (params.txn_object.from.toLowerCase() == this.state.ethAddress.toLowerCase())
       {
-        Alert.alert(
-          title,
-          description,
-          [
-            {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-            {text: 'OK', onPress: () => { 
-              console.log(params)
-              web3.eth.signTransaction(params.txn_object).then(ret => {
-                this.returnCall(this.state.deviceToken, call_id, session_token, ret["raw"]).then(
-                  (success) => {
-                    if (return_url)
-                    {
-                      console.log("transaction approved returning to:", message.return_url)
-                      alert("Please tap the return to safari button up top to complete transaction..")
-                      //Linking.openURL(message.return_url)
-                    }
-                  })
-              })
-            }},
-          ],
-          { cancelable: false }
-        )
+        this.fireEvent(Events.PROMPT_TRANSACTION, {action:"sign", meta, call_name, call_id, params, return_url, session_token})
       }
     }
     else if (call_name == "processTransaction")
     {
       if (params.txn_object.from.toLowerCase() == this.state.ethAddress.toLowerCase())
       {
-
-        Alert.alert(
-          title,
-          description,
-          [
-            {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-            {text: 'Yes', onPress: () => { 
-              console.log(params)
-              web3.eth.sendTransaction(params.txn_object).on('receipt', (receipt) => {
-                console.log("transaction sent:", receipt)
-              }).on('confirmation', (conf_number, receipt) => {
-                console.log("confirmation:", conf_number)
-                if (conf_number == 1)  // TODO: set this as a setting
-                {
-                  // TODO: detect purchase assume it's all purchases for now.
-                  let call = undefined
-                  if (params.meta && params.meta.call)
-                  {
-                    call = params.meta.call
-                  }
-                  let transactionResult = {hash:receipt.transactionHash, call}
-                  this.returnCall(this.state.deviceToken, call_id, session_token, transactionResult).then(
-                    (success) => {
-                      if (return_url)
-                      {
-                        console.log("transaction approved returning to:", return_url)
-                        Linking.openURL(return_url)
-                      }
-                    }
-                  )
-                }
-              }).on('error', console.error) // TODO: handle error and completion here!
-            }},
-          ],
-          { cancelable: false }
-        )
+        this.fireEvent(Events.PROMPT_TRANSACTION, {action:"send", meta, call_name, call_id, params, return_url, session_token})
       }
     }
   }
@@ -357,14 +344,12 @@ class ScanScreen extends Component {
   }
 
   onNotification(notification) {
-    this.setState( previousState => {
-        previousState.notifyTime = new Date()
-        previousState.notifyMessage = notification.message
-        return previousState
-    }, ()=> {
-      console.log("checking server for messages..")
-      this.new_messages = true
+    Object.assign( this.state, {
+      notifyTime:new Date(),
+      notifyMessage:notification.message
     })
+    console.log("checking server for messages..")
+    this.new_messages = true
   }
 
   onQRScanned(scan) {
@@ -375,9 +360,8 @@ class ScanScreen extends Component {
       let ethAddress = scan.data.substr(ETHEREUM_QR_PREFIX.length)
       if (ethAddress != this.state.ethAddress)
       {
-        this.setState({ethAddress}, () => {
-          this.checkRegisterNotification()
-        })
+        Object.assign(this.state, {ethAddress})
+        this.checkRegisterNotification()
       }
     }
     else if (scan.data.startsWith(ORIGIN_QR_PREFIX))
@@ -413,28 +397,18 @@ class ScanScreen extends Component {
   setLinkCode(linkCode){
     if (linkCode != this.state.linkCode)
     {
-      this.setState({linkCode}, () => {
-        this.checkDoLink()
-      })
+      Object.assign(this.state, {linkCode})
+      this.checkDoLink()
     }
   }
+
 
   promptForLink(linkCode) {
     console.log("link code is:" + linkCode)
     if (this.linking_code != linkCode)
     {
       this.linking_code = linkCode
-      Alert.alert(
-        "Link Wallet",
-        "Do you wish to link against:"+ linkCode,
-        [
-          {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-          {text: 'OK', onPress: () => { 
-            this.setLinkCode(linkCode)
-          }},
-        ],
-        { cancelable: false }
-      )
+      this.fireEvent(Events.PROMPT_LINK, {linkCode})
     }
   }
 
@@ -455,43 +429,12 @@ class ScanScreen extends Component {
     this.checkClipboardLink()
   }
 
-  componentWillMount() {
-    this.initWallet()
-  }
 
 
-  componentDidMount() {
-    Linking.getInitialURL().then((url) => {
-      if (url) {
-        console.log('Initial url is: ' + url)
-        this.checkIncomingUrl(url)
-      }
-    }).catch(err => console.error('An error occurred', err))
-
-    //in case it's an initial install
-    this.checkClipboardLink()
-
-    this.handleOpenFromOut = this.handleOpenFromOut.bind(this)
-    Linking.addEventListener('url', this.handleOpenFromOut)
-  }
-
-  componentWillUnmount() {
+  closeWallet() {
     //store the wallet
     saveWallet()
     Linking.removeEventListener('url', this.handleOpenFromOut)
-  }
-
-  lastNotify() {
-    let state = this.state
-
-    if (state.notifyTime)
-    {
-      return <Text>Last Notification@{state.notifyTime.toLocaleString()}:{state.notifyMessage.title ? state.notifyMessage.title : state.notifyMessage}</Text>
-    }
-    else
-    {
-      return <Text>No notifications</Text>
-    }
   }
 
   saveWallet() {
@@ -499,7 +442,7 @@ class ScanScreen extends Component {
     storeData(WALLET_STORE, web3.accounts.wallet)
   }
 
-  initWallet() {
+  openWallet() {
     let state = this.state
     loadData(WALLET_STORE).then((wallet_data) => { 
       //set the provider here..
@@ -515,140 +458,33 @@ class ScanScreen extends Component {
       {
         //generate our wallet
         web3.eth.accounts.wallet.add(TEST_PRIVATE_KEY)
+        //web3.eth.accounts.wallet.create()
       }
 
       let ethAddress = web3.eth.accounts.wallet[0].address
       if (ethAddress != this.state.ethAddress)
       {
-        this.setState({ethAddress}, () => {
-          this.checkRegisterNotification()
-        })
+        this.fireEvent(Events.NEW_ACCOUNT, {address:ethAddress})
+        Object.assign(this.state, {ethAddress})
+        this.checkRegisterNotification()
       }
     })
-  }
 
-  render() {
-    return (
-      <View style={{ flex: 1 }}>
-        <QRCodeScanner
-          reactivate={true}
-          reactivateTimeout={5000}
-          onRead={this.onQRScanned.bind(this)}
-          showMarker={true}
-          customMarker={<ScanMarker />}
-          cameraStyle={{ height: '100%' }}
-        />
-      </View>
-    )
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        console.log('Initial url is: ' + url)
+        this.checkIncomingUrl(url)
+      }
+    }).catch(err => console.error('An error occurred', err))
+
+    //in case it's an initial install
+    this.checkClipboardLink()
+
+    this.handleOpenFromOut = this.handleOpenFromOut.bind(this)
+    Linking.addEventListener('url', this.handleOpenFromOut)
   }
 }
 
-const navigationOptions = ({ navigation }) => ({
-  headerStyle: {
-    backgroundColor: 'white',
-  },
-})
-
-const AlertsStack = createStackNavigator({
-  Alerts: AlertsScreen,
-}, {
-  navigationOptions,
-})
-
-const HomeStack = createStackNavigator({
-  Home: HomeScreen,
-}, {
-  navigationOptions,
-})
-
-const ScanStack = createStackNavigator({
-  Scan: ScanScreen,
-}, {
-  navigationOptions,
-})
-
-const SettingsStack = createStackNavigator({
-  Devices: DevicesScreen,
-  Settings: SettingsScreen,
-  Wallet: WalletScreen,
-}, {
-  initialRouteName: 'Settings',
-  navigationOptions,
-})
-
-export default createBottomTabNavigator({
-  Alerts: AlertsStack,
-  Home: HomeStack,
-  Scan: ScanStack,
-  Settings: SettingsStack,
-}, {
-  initialRouteName: 'Home',
-  order: ['Home', 'Alerts', 'Scan', 'Settings'],
-  navigationOptions: ({ navigation }) => ({
-    tabBarIcon: ({ focused, tintColor }) => {
-      const { routeName } = navigation.state
-
-      // require expects string literal :(
-      if (routeName === 'Alerts') {
-        return focused ?
-          <Image source={require('./assets/images/alerts-active.png')} /> :
-          <Image source={require('./assets/images/alerts-inactive.png')} />
-      } else if (routeName === 'Home') {
-        return focused ?
-          <Image source={require('./assets/images/home-active.png')} /> :
-          <Image source={require('./assets/images/home-inactive.png')} />
-      } else if (routeName === 'Scan') {
-        return focused ?
-          <Image source={require('./assets/images/scan-active.png')} /> :
-          <Image source={require('./assets/images/scan-inactive.png')} />
-      } else if (routeName === 'Settings') {
-        return focused ?
-          <Image source={require('./assets/images/settings-active.png')} /> :
-          <Image source={require('./assets/images/settings-inactive.png')} />
-      }
-    },
-  }),
-  tabBarOptions: {
-    activeTintColor: '#007fff',
-    inactiveTintColor: 'white',
-    style: {
-      backgroundColor: '#293f55',
-    },
-    iconStyle: {
-      marginTop: 10,
-    },
-    labelStyle: {
-      fontFamily: 'Lato',
-      fontSize: 10,
-      fontWeight: 'normal',
-    },
-    tabStyle: {
-      justifyContent: 'space-around',
-    }
-  },
-})
-
-const styles = StyleSheet.create({
-  centerText: {
-    fontSize: 18,
-    padding: 10,
-    textAlign:'center',
-  },
-  textBold: {
-    fontWeight: '500',
-  },
-  buttonText: {
-    color: 'rgb(0,122,255)',
-    fontSize: 21,
-  },
-  buttonTouchable: {
-    padding: 16,
-  },
-  input: {
-    borderColor: 'gray',
-    borderWidth: 1,
-    color: 'black',
-    height: 40,
-    margin: 15,
-  },
-})
+const wallet = new OriginWallet()
+export default wallet
+export { Events }

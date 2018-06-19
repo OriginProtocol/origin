@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import { FlatList, Image, StyleSheet, Text, View } from 'react-native'
+import { connect } from 'react-redux'
 
 import Identicon from '../components/identicon'
 import DeviceItem from '../components/device-item'
 import Separator from '../components/separator'
 import TransactionItem from '../components/transaction-item'
+import origin from '../services/origin'
 
-export default class HomeScreen extends Component {
+class HomeScreen extends Component {
   constructor(props) {
     super(props)
 
@@ -23,13 +25,13 @@ export default class HomeScreen extends Component {
   }
 
   render() {
-    const myAddress = '0x12Be343B94f860124dC4fEe278FDCBD38C101BAR'
-    const ethBalance = '0.717346'
+    const myAddress = this.props.address 
+    const ethBalance = this.props.balance
 
     return (
       <View style={styles.container}>
         <View style={styles.walletContainer}>
-          <Identicon address={myAddress} style={styles.identicon} />
+          {myAddress && <Identicon address={myAddress} style={styles.identicon} />}
           <Text style={styles.address}>{myAddress}</Text>
           <View style={styles.balance}>
             <Image source={require('../../assets/images/eth-icon.png')} style={styles.icon} />
@@ -95,6 +97,15 @@ export default class HomeScreen extends Component {
     )
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    balance: state.wallet.balance,
+    address: state.wallet.address,
+  }
+}
+
+export default connect(mapStateToProps)(HomeScreen)
 
 const styles = StyleSheet.create({
   address: {

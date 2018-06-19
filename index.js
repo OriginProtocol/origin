@@ -1,3 +1,4 @@
 import { AppRegistry } from 'react-native';
-import App from './App';
+import './global';
+import App from './src/App';
 AppRegistry.registerComponent('OriginCatcher', () => App);
