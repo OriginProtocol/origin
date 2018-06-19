@@ -1,6 +1,6 @@
 {
-  "connectivity.mainEthereumNetwork": "メインの Ethereum ネットワーク",
-  "connectivity.mordenTestNetwork": "Morden テストネットワーク",
+  "connectivity.mainEthereumNetwork": "メインイーサリアムネットワーク",
+  "connectivity.mordenTestNetwork": "モーデンテストネットワーク",
   "connectivity.ropstenTestNetwork": "Ropsten テストネットワーク",
   "connectivity.rinkebyTestNetwork": "Rinkeby テストネットワーク",
   "connectivity.kovanTestNetwork": "Kovan テストネットワーク",
@@ -29,7 +29,7 @@
   "footer.discordLink": "Discord",
   "footer.mediumLink": "Medium",
   "footer.twitterLink": "Twitter",
-  "footer.instagramLink": "Instagram",
+  "footer.instagramLink": "インスタグラム",
   "footer.facebookLink": "Facebook",
   "footer.organizationHeading": "組織",
   "footer.teamLink": "チーム",
