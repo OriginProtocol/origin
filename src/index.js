@@ -1,16 +1,13 @@
 import ContractService from './services/contract-service'
 import IpfsService from './services/ipfs-service'
 import { Attestations } from './resources/attestations'
+import Listings from './resources/listings'
 import Notifications from './resources/notifications'
+import Purchases from './resources/purchases'
+import Reviews from './resources/reviews'
+import Users from './resources/users'
 import fetch from 'cross-fetch'
 import store from 'store'
-
-const resources = {
-  listings: require('./resources/listings'),
-  purchases: require('./resources/purchases'),
-  reviews: require('./resources/reviews'),
-  users: require('./resources/users')
-}
 
 const defaultBridgeServer = 'https://bridge.originprotocol.com'
 const defaultIpfsDomain = 'gateway.originprotocol.com'
@@ -18,6 +15,7 @@ const defaultIpfsApiPort = '5002'
 const defaultIpfsGatewayPort = '443'
 const defaultIpfsGatewayProtocol = 'https'
 const defaultAttestationServerUrl = `${defaultBridgeServer}/api/attestations`
+const defaultIndexingServerUrl = `${defaultBridgeServer}/api`
 
 class Origin {
   constructor({
@@ -26,6 +24,7 @@ class Origin {
     ipfsGatewayPort = defaultIpfsGatewayPort,
     ipfsGatewayProtocol = defaultIpfsGatewayProtocol,
     attestationServerUrl = defaultAttestationServerUrl,
+    indexingServerUrl = defaultIndexingServerUrl,
     contractAddresses,
     web3
   } = {}) {
@@ -36,27 +35,40 @@ class Origin {
       ipfsGatewayPort,
       ipfsGatewayProtocol
     })
+
     this.attestations = new Attestations({
       serverUrl: attestationServerUrl,
       contractService: this.contractService,
       fetch
     })
 
-    // Instantiate each resource and give it access to contracts and IPFS
-    for (const resourceName in resources) {
-      const Resource = resources[resourceName]
-      // A `Resource` constructor always takes a contractService and ipfsService
-      this[resourceName] = new Resource({
-        contractService: this.contractService,
-        ipfsService: this.ipfsService
-      })
-    }
+    this.listings = new Listings({
+      contractService: this.contractService,
+      ipfsService: this.ipfsService,
+      indexingServerUrl,
+      fetch
+    })
+
+    this.purchases = new Purchases({
+      contractService: this.contractService,
+      ipfsService: this.ipfsService
+    })
 
     this.notifications = new Notifications({
       listings: this.listings,
       purchases: this.purchases,
       contractService: this.contractService,
       store
+    })
+
+    this.reviews = new Reviews({
+      contractService: this.contractService,
+      ipfsService: this.ipfsService
+    })
+
+    this.users = new Users({
+      contractService: this.contractService,
+      ipfsService: this.ipfsService
     })
   }
 }
