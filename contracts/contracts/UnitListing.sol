@@ -9,7 +9,7 @@ contract UnitListing is Listing {
    * Events
    */
 
-  event ListingPurchased(UnitPurchase _purchaseContract);
+  event ListingPurchased(Purchase _purchaseContract);
 
   /*
   * Storage
@@ -17,7 +17,7 @@ contract UnitListing is Listing {
 
   uint public price;
   uint public unitsAvailable;
-  UnitPurchase[] public purchases;
+  Purchase[] public purchases;
 
 
   constructor (
@@ -63,7 +63,7 @@ contract UnitListing is Listing {
     require(now < expiration);
 
     // Create purchase contract
-    UnitPurchase purchaseContract = UnitPurchaseLibrary.newPurchase(this, msg.sender);
+    Purchase purchaseContract = UnitPurchaseLibrary.newPurchase(this, msg.sender);
 
     // Count units as sold
     unitsAvailable -= _unitsToBuy;
@@ -100,7 +100,7 @@ contract UnitListing is Listing {
   function getPurchase(uint _index)
     public
     constant
-    returns (UnitPurchase)
+    returns (Purchase)
   {
     return (
       purchases[_index]

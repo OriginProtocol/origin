@@ -3,7 +3,7 @@ import ResourceBase from './_resource-base'
 class Reviews extends ResourceBase {
   constructor({ contractService, ipfsService }) {
     super({ contractService, ipfsService })
-    this.contractDefinition = this.contractService.unitPurchaseContract
+    this.contractDefinition = this.contractService.purchaseContract
   }
 
   async find(where = {}) {
@@ -16,7 +16,7 @@ class Reviews extends ResourceBase {
   async _find_by_purchase_id(address) {
     const self = this
     const web3 = this.contractService.web3
-    const purchaseDefinition = this.contractService.unitPurchaseContract
+    const purchaseDefinition = this.contractService.purchaseContract
     const purchaseContract = new web3.eth.Contract(
       purchaseDefinition.abi,
       address

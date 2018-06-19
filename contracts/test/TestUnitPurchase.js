@@ -1,4 +1,4 @@
-const UnitPurchase = artifacts.require('./UnitPurchase.sol')
+const Purchase = artifacts.require('./Purchase.sol')
 const UnitListing = artifacts.require('./UnitListing.sol')
 
 // Used to assert error cases
@@ -41,7 +41,7 @@ const ROLE_SELLER = 1
 
 const BUYER_TIMEOUT_SECONDS = 21 * 24 * 60 * 60
 
-contract('UnitPurchase', accounts => {
+contract('Purchase', accounts => {
   const buyer = accounts[0]
   const seller = accounts[1]
   let instance
@@ -57,7 +57,7 @@ contract('UnitPurchase', accounts => {
       { from: seller }
     )
 
-    instance = await UnitPurchase.new(listingInstance.address, buyer, {
+    instance = await Purchase.new(listingInstance.address, buyer, {
       from: buyer
     })
   })
@@ -175,7 +175,7 @@ contract('UnitPurchase', accounts => {
   })
 })
 
-contract('UnitPurchase', accounts => {
+contract('Purchase', accounts => {
   const buyer = accounts[0]
   const seller = accounts[1]
   let purchase
@@ -203,7 +203,7 @@ contract('UnitPurchase', accounts => {
       const listingPurchasedEvent = buyTransaction.logs.find(
         e => e.event == 'ListingPurchased'
       )
-      purchase = await UnitPurchase.at(listingPurchasedEvent.args._purchaseContract)
+      purchase = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
 
       assert.equal(await listing.getPurchase(0), purchase.address)
       assert.equal(await purchase.listingContract(), listing.address)
@@ -252,7 +252,7 @@ contract('UnitPurchase', accounts => {
       const listingPurchasedEvent = buyTransaction.logs.find(
         e => e.event == 'ListingPurchased'
       )
-      purchase = await UnitPurchase.at(listingPurchasedEvent.args._purchaseContract)
+      purchase = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
       assert.equal((await purchase.stage()).toNumber(), SHIPPING_PENDING)
       await purchase.sellerConfirmShipped({ from: seller })
       assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)
@@ -381,7 +381,7 @@ contract('UnitPurchase', accounts => {
       const listingPurchasedEvent = buyTransaction.logs.find(
         e => e.event == 'ListingPurchased'
       )
-      purchase = await UnitPurchase.at(listingPurchasedEvent.args._purchaseContract)
+      purchase = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
       await timetravel(60 * 60) // Some time passes before shipping purchase
       await purchase.sellerConfirmShipped({ from: seller })
       assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)

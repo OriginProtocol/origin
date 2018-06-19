@@ -1,5 +1,5 @@
 const UnitListing = artifacts.require('./UnitListing.sol')
-const UnitPurchase = artifacts.require('./Purchase.sol')
+const Purchase = artifacts.require('./Purchase.sol')
 
 // Used to assert error cases
 const isEVMError = function(err) {
@@ -131,7 +131,7 @@ contract('UnitListing', accounts => {
     const listingPurchasedEvent = buyTransaction.logs.find(
       e => e.event == 'ListingPurchased'
     )
-    const purchaseContract = await UnitPurchase.at(
+    const purchaseContract = await Purchase.at(
       listingPurchasedEvent.args._purchaseContract
     )
 

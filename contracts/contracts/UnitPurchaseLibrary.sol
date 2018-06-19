@@ -3,16 +3,16 @@ pragma solidity 0.4.23;
 /// @title PurchaseLibrary
 /// @dev An collection of helper tools for a purchase
 
-import "./UnitPurchase.sol";
+import "./Purchase.sol";
 import "./UnitListing.sol";
 
 library UnitPurchaseLibrary {
 
     function newPurchase(UnitListing listing, address _buyer)
     public
-    returns (UnitPurchase purchase)
+    returns (Purchase purchase)
     {
-        purchase = new UnitPurchase(listing, _buyer);
+        purchase = new Purchase(listing, _buyer);
     }
 
 }

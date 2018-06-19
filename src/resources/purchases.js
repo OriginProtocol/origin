@@ -18,7 +18,7 @@ class Purchases extends ResourceBase {
   constructor({ contractService, ipfsService }) {
     super({ contractService, ipfsService })
 
-    this.contractDefinition = this.contractService.unitPurchaseContract
+    this.contractDefinition = this.contractService.purchaseContract
 
     Object.entries(_STAGES_TO_NUMBER).forEach(([k, v]) => {
       _NUMBERS_TO_STAGE[v] = k
