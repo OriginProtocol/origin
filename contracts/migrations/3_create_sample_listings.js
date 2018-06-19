@@ -1,6 +1,6 @@
 var ListingsRegistry = artifacts.require("./ListingsRegistry.sol");
-var Listing = artifacts.require("./UnitListing.sol");
-var Purchase = artifacts.require("./UnitPurchase.sol");
+var UnitListing = artifacts.require("./UnitListing.sol");
+var UnitPurchase = artifacts.require("./UnitPurchase.sol");
 
 module.exports = function(deployer, network) {
   return deployer.then(() => {
@@ -29,14 +29,14 @@ async function deploy_sample_contracts(network) {
     const index = transaction.logs.find(x => x.event == "NewListing").args._index
     const info = await listingsRegistry.getListing(index)
     const address = info[0]
-    return Listing.at(address)
+    return UnitListing.at(address)
   }
 
   const buyListing = async (listing, qty, from) => {
     const price = await listing.price()
     const transaction = await listing.buyListing(qty, { from: from, value: price, gas: 4476768 })
     const address = transaction.logs.find(x => x.event == "ListingPurchased").args._purchaseContract
-    return Purchase.at(address)
+    return UnitPurchase.at(address)
   }
 
   console.log(`default_account:       ${default_account}`)

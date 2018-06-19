@@ -6,7 +6,7 @@ pragma solidity 0.4.23;
 import "./UnitPurchase.sol";
 import "./UnitListing.sol";
 
-library PurchaseLibrary {
+library UnitPurchaseLibrary {
 
     function newPurchase(UnitListing listing, address _buyer)
     public

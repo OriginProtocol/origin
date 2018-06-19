@@ -1,5 +1,5 @@
-const Purchase = artifacts.require('./UnitPurchase.sol')
-const Listing = artifacts.require('./UnitListing.sol')
+const UnitPurchase = artifacts.require('./UnitPurchase.sol')
+const UnitListing = artifacts.require('./UnitListing.sol')
 
 // Used to assert error cases
 const isEVMError = function(err) {
@@ -41,7 +41,7 @@ const ROLE_SELLER = 1
 
 const BUYER_TIMEOUT_SECONDS = 21 * 24 * 60 * 60
 
-contract('Purchase', accounts => {
+contract('UnitPurchase', accounts => {
   const buyer = accounts[0]
   const seller = accounts[1]
   let instance
@@ -49,7 +49,7 @@ contract('Purchase', accounts => {
 
   beforeEach(async function() {
     // Listing that we will be buying
-    listingInstance = await Listing.new(
+    listingInstance = await UnitListing.new(
       seller,
       ipfsHash,
       price,
@@ -57,7 +57,7 @@ contract('Purchase', accounts => {
       { from: seller }
     )
 
-    instance = await Purchase.new(listingInstance.address, buyer, {
+    instance = await UnitPurchase.new(listingInstance.address, buyer, {
       from: buyer
     })
   })
@@ -175,7 +175,7 @@ contract('Purchase', accounts => {
   })
 })
 
-contract('Purchase', accounts => {
+contract('UnitPurchase', accounts => {
   const buyer = accounts[0]
   const seller = accounts[1]
   let purchase
@@ -185,7 +185,7 @@ contract('Purchase', accounts => {
 
   describe('Success path flow', async () => {
     before(async () => {
-      listing = await Listing.new(
+      listing = await UnitListing.new(
         seller,
         ipfsHash,
         totalPrice,
@@ -203,7 +203,7 @@ contract('Purchase', accounts => {
       const listingPurchasedEvent = buyTransaction.logs.find(
         e => e.event == 'ListingPurchased'
       )
-      purchase = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
+      purchase = await UnitPurchase.at(listingPurchasedEvent.args._purchaseContract)
 
       assert.equal(await listing.getPurchase(0), purchase.address)
       assert.equal(await purchase.listingContract(), listing.address)
@@ -237,7 +237,7 @@ contract('Purchase', accounts => {
       '0x4443424131323334000000000000000000000000000000000000000000000000'
 
     beforeEach(async () => {
-      listing = await Listing.new(
+      listing = await UnitListing.new(
         seller,
         ipfsHash,
         totalPrice,
@@ -252,7 +252,7 @@ contract('Purchase', accounts => {
       const listingPurchasedEvent = buyTransaction.logs.find(
         e => e.event == 'ListingPurchased'
       )
-      purchase = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
+      purchase = await UnitPurchase.at(listingPurchasedEvent.args._purchaseContract)
       assert.equal((await purchase.stage()).toNumber(), SHIPPING_PENDING)
       await purchase.sellerConfirmShipped({ from: seller })
       assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)
@@ -367,7 +367,7 @@ contract('Purchase', accounts => {
 
   describe('Buyer timeout', async () => {
     beforeEach(async () => {
-      listing = await Listing.new(
+      listing = await UnitListing.new(
         seller,
         ipfsHash,
         totalPrice,
@@ -381,7 +381,7 @@ contract('Purchase', accounts => {
       const listingPurchasedEvent = buyTransaction.logs.find(
         e => e.event == 'ListingPurchased'
       )
-      purchase = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
+      purchase = await UnitPurchase.at(listingPurchasedEvent.args._purchaseContract)
       await timetravel(60 * 60) // Some time passes before shipping purchase
       await purchase.sellerConfirmShipped({ from: seller })
       assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)
@@ -399,7 +399,7 @@ contract('Purchase', accounts => {
   })
 
   it('should not allow purchase of listing by its seller', async () => {
-    listing = await Listing.new(seller, ipfsHash, totalPrice, unitsAvailable, {
+    listing = await UnitListing.new(seller, ipfsHash, totalPrice, unitsAvailable, {
       from: seller
     })
     try {

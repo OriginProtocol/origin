@@ -1,7 +1,7 @@
 pragma solidity 0.4.23;
 
 import "./Listing.sol";
-import "./PurchaseLibrary.sol";
+import "./UnitPurchaseLibrary.sol";
 
 contract UnitListing is Listing {
 
@@ -63,7 +63,7 @@ contract UnitListing is Listing {
     require(now < expiration);
 
     // Create purchase contract
-    UnitPurchase purchaseContract = PurchaseLibrary.newPurchase(this, msg.sender);
+    UnitPurchase purchaseContract = UnitPurchaseLibrary.newPurchase(this, msg.sender);
 
     // Count units as sold
     unitsAvailable -= _unitsToBuy;

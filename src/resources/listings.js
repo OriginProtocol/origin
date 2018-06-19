@@ -10,7 +10,7 @@ const appendSlash = url => {
 class Listings extends ResourceBase {
   constructor({ contractService, ipfsService, fetch, indexingServerUrl }) {
     super({ contractService, ipfsService })
-    this.contractDefinition = this.contractService.listingContract
+    this.contractDefinition = this.contractService.unitListingContract
     this.fetch = fetch
     this.indexingServerUrl = indexingServerUrl
   }

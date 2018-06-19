@@ -1,5 +1,5 @@
-const Listing = artifacts.require('./UnitListing.sol')
-const Purchase = artifacts.require('./Purchase.sol')
+const UnitListing = artifacts.require('./UnitListing.sol')
+const UnitPurchase = artifacts.require('./Purchase.sol')
 
 // Used to assert error cases
 const isEVMError = function(err) {
@@ -28,14 +28,14 @@ const price = 33
 const unitsAvailable = 42
 const LISTING_EXPIRATION_SECONDS = 60 * 24 * 60 * 60
 
-contract('Listing', accounts => {
+contract('UnitListing', accounts => {
   const seller = accounts[0]
   const buyer = accounts[1]
   const stranger = accounts[2]
   let listing
 
   beforeEach(async function() {
-    listing = await Listing.new(seller, ipfsHash, price, unitsAvailable, {
+    listing = await UnitListing.new(seller, ipfsHash, price, unitsAvailable, {
       from: seller
     })
   })
@@ -131,7 +131,7 @@ contract('Listing', accounts => {
     const listingPurchasedEvent = buyTransaction.logs.find(
       e => e.event == 'ListingPurchased'
     )
-    const purchaseContract = await Purchase.at(
+    const purchaseContract = await UnitPurchase.at(
       listingPurchasedEvent.args._purchaseContract
     )
 
