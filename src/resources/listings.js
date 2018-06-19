@@ -30,7 +30,9 @@ class Listings extends ResourceBase {
 
     let instance
     try {
-      instance = await this.contractService.deployed(this.contractService.listingsRegistryContract)
+      instance = await this.contractService.deployed(
+        this.contractService.listingsRegistryContract
+      )
     } catch (error) {
       console.log('Contract not deployed')
       throw error
@@ -42,7 +44,7 @@ class Listings extends ResourceBase {
       listingsLength = await instance.methods.listingsLength().call()
     } catch (error) {
       console.log(error)
-      console.log('Can\'t get number of listings.')
+      console.log("Can't get number of listings.")
       throw error
     }
 
@@ -198,13 +200,22 @@ class Listings extends ResourceBase {
   async submitListing(ipfsListing, ethPrice, units) {
     try {
       const account = await this.contractService.currentAccount()
-      const instance = await this.contractService.deployed(this.contractService.listingsRegistryContract)
+      const instance = await this.contractService.deployed(
+        this.contractService.listingsRegistryContract
+      )
 
-      const weiToGive = this.contractService.web3.utils.toWei(String(ethPrice), 'ether')
+      const weiToGive = this.contractService.web3.utils.toWei(
+        String(ethPrice),
+        'ether'
+      )
       // Note we cannot get the listingId returned by our contract.
       // See: https://forum.ethereum.org/discussion/comment/31529/#Comment_31529
       return instance.methods
-        .create(this.contractService.getBytes32FromIpfsHash(ipfsListing), weiToGive, units)
+        .create(
+          this.contractService.getBytes32FromIpfsHash(ipfsListing),
+          weiToGive,
+          units
+        )
         .send({ from: account, gas: 4476768 })
     } catch (error) {
       console.error('Error submitting to the Ethereum blockchain: ' + error)
@@ -213,7 +224,9 @@ class Listings extends ResourceBase {
   }
 
   async getListing(listingId) {
-    const instance = await this.contractService.deployed(this.contractService.listingsRegistryContract)
+    const instance = await this.contractService.deployed(
+      this.contractService.listingsRegistryContract
+    )
 
     let listing
     try {
@@ -242,7 +255,7 @@ class Listings extends ResourceBase {
     const url = appendSlash(this.indexingServerUrl) + 'listing'
     const response = await this.fetch(url, { method: 'GET' })
     const json = await response.json()
-    return json.objects.map((obj) => {
+    return json.objects.map(obj => {
       const ipfsData = obj['ipfs_data']
       return {
         address: obj['contract_address'],

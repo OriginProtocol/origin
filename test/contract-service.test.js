@@ -3,10 +3,7 @@ import ContractService from '../src/services/contract-service'
 import { ipfsHashes } from './fixtures'
 import Web3 from 'web3'
 
-const methodNames = [
-  'getBytes32FromIpfsHash',
-  'getIpfsHashFromBytes32'
-]
+const methodNames = ['getBytes32FromIpfsHash', 'getIpfsHashFromBytes32']
 
 describe('ContractService', function() {
   this.timeout(5000) // default is 2000
