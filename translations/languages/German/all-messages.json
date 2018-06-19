@@ -1,9 +1,9 @@
 {
   "connectivity.mainEthereumNetwork": "Hauptnetzwerk Ethereum",
-  "connectivity.mordenTestNetwork": "Morden Test Network",
-  "connectivity.ropstenTestNetwork": "Ropsten Test Network",
-  "connectivity.rinkebyTestNetwork": "Rinkeby Test Network",
-  "connectivity.kovanTestNetwork": "Kovan Test Network",
+  "connectivity.mordenTestNetwork": "Morden Test Netzwerk",
+  "connectivity.ropstenTestNetwork": "Ropsten Test Netzwerk",
+  "connectivity.rinkebyTestNetwork": "Rinkeby Test Netzwerk",
+  "connectivity.kovanTestNetwork": "Kovan Test Netzwerk",
   "connectivity.localhost": "Localhost",
   "connectivity.ethereumNetwork": "Ethereum Netzwerk:",
   "connectivity.connecting": "Connecting...",
