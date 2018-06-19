@@ -85,11 +85,11 @@ class VerifyTwitterResponse(StandardResponse):
 
 class AirbnbRequest(StandardRequest):
     eth_address = fields.Str(required=True, data_key='identity')
-    airbnbProfileId = fields.Str(required=True)
+    airbnbUserId = fields.Str(required=True)
 
 
 class AirbnbVerificationCodeResponse(StandardResponse):
-    pass
+    code = fields.Str()
 
 class VerifyAirbnbResponse(StandardResponse):
     pass
@@ -168,9 +168,9 @@ class VerifyTwitter(Resource):
 
 
 class AirbnbVerificationCode(Resource):
-    def post(self):
+    def get(self):
         return handle_request(
-            data=request.json,
+            data=request.values,
             handler=VerificationService.generate_airbnb_verification_code,
             request_schema=AirbnbRequest,
             response_schema=AirbnbVerificationCodeResponse)
