@@ -107,4 +107,12 @@ contract UnitListing is Listing {
     );
   }
 
+  function isPaymentSufficient(uint256 balance)
+    public
+    view
+    returns (bool)
+  {
+    return balance >= price;
+  }
+
 }

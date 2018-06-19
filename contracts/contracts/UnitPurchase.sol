@@ -3,7 +3,7 @@ pragma solidity 0.4.23;
 /// @title Purchase
 /// @dev An purchase Origin Listing representing a purchase/booking
 import "./Purchase.sol";
-import "./UnitListing.sol";
+import "./Listing.sol";
 
 
 contract UnitPurchase is Purchase {
@@ -12,7 +12,7 @@ contract UnitPurchase is Purchase {
   * Storage
   */
 
-  UnitListing public listingContract; // listing that is being purchased
+  Listing public listingContract; // listing that is being purchased
 
   /*
   * Modifiers
@@ -39,7 +39,7 @@ contract UnitPurchase is Purchase {
   public
   {
     buyer = _buyer;
-    listingContract = UnitListing(_listingContractAddress);
+    listingContract = Listing(_listingContractAddress);
     created = now;
     emit PurchaseChange(internalStage);
   }
@@ -47,7 +47,7 @@ contract UnitPurchase is Purchase {
   function data()
   public
   view
-  returns (Stages _stage, UnitListing _listingContract, address _buyer, uint _created, uint _buyerTimeout) {
+  returns (Stages _stage, Listing _listingContract, address _buyer, uint _created, uint _buyerTimeout) {
       return (stage(), listingContract, buyer, created, buyerTimeout);
   }
 
@@ -59,7 +59,7 @@ contract UnitPurchase is Purchase {
   payable
   atStage(Stages.AWAITING_PAYMENT)
   {
-    if (address(this).balance >= listingContract.price()) {
+    if (listingContract.isPaymentSufficient(address(this).balance)) {
       // Buyer (or their proxy) has paid enough to cover purchase
       setStage(Stages.SHIPPING_PENDING);
     }

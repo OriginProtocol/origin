@@ -39,4 +39,10 @@ contract Listing {
     _;
   }
 
+  /*
+    * Abstract methods
+  */
+
+  function isPaymentSufficient(uint256 balance) public view returns (bool);
+
 }
