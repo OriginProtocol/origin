@@ -70,6 +70,7 @@ ve
 
 #celery
 celerybeat-schedule
+celerybeat-schedule.db
 
 #pytest
 .pytest_cache

@@ -57,7 +57,7 @@ def event_listener(web3=None):
 
     # Create an event handler and attempt to fetch events from the network.
     handler = EventHandler(web3=web3)
-    ContractHelper().fetch_events(['NewListing(uint256)',
+    ContractHelper().fetch_events(['NewListing(uint256,address)',
                                    'ListingPurchased(address)',
                                    'ListingChange()',
                                    'PurchaseChange(uint8)',
