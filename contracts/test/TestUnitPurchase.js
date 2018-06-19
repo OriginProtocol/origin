@@ -29,12 +29,12 @@ const unitsAvailable = 42
 
 // Enum values
 const AWAITING_PAYMENT = 0 // Buyer hasn't paid full amount yet
-const SHIPPING_PENDING = 1 // Buyer hasn't paid full amount yet
-const BUYER_PENDING = 2 // Waiting for buyer to confirm receipt
-const SELLER_PENDING = 3 // Waiting for seller to confirm all is good
+const IN_ESCROW = 3 // Buyer hasn't paid full amount yet
+const BUYER_PENDING = 4 // Waiting for buyer to confirm receipt
+const SELLER_PENDING = 5 // Waiting for seller to confirm all is good
 // const IN_DISPUTE = 4 // We are in a dispute
 // const REVIEW_PERIOD = 5 // Time for reviews (only when transaction did not go through)
-const COMPLETE = 6 // It's all over
+const COMPLETE = 8 // It's all over
 
 const ROLE_BUYER = 0
 const ROLE_SELLER = 1
@@ -84,8 +84,8 @@ contract('Purchase', accounts => {
     const newStage = await instance.stage()
     assert.equal(
       newStage.toNumber(),
-      SHIPPING_PENDING,
-      'stage should be SHIPPING_PENDING'
+      IN_ESCROW,
+      'stage should be IN_ESCROW'
     )
   })
 
@@ -97,8 +97,8 @@ contract('Purchase', accounts => {
     const newStage = await instance.stage()
     assert.equal(
       newStage.toNumber(),
-      SHIPPING_PENDING,
-      'stage should be SHIPPING_PENDING'
+      IN_ESCROW,
+      'stage should be IN_ESCROW'
     )
   })
 
@@ -212,7 +212,7 @@ contract('Purchase', accounts => {
 
     it('should allow buyer to pay', async () => {
       await purchase.pay({ from: buyer, value: totalPrice - initialPayment })
-      assert.equal((await purchase.stage()).toNumber(), SHIPPING_PENDING)
+      assert.equal((await purchase.stage()).toNumber(), IN_ESCROW)
     })
 
     it('should allow seller to ship', async () => {
@@ -253,7 +253,7 @@ contract('Purchase', accounts => {
         e => e.event == 'ListingPurchased'
       )
       purchase = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
-      assert.equal((await purchase.stage()).toNumber(), SHIPPING_PENDING)
+      assert.equal((await purchase.stage()).toNumber(), IN_ESCROW)
       await purchase.sellerConfirmShipped({ from: seller })
       assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)
     })

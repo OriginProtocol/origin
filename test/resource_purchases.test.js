@@ -96,11 +96,11 @@ describe('Purchase Resource', function() {
         )
       })
       purchase = await purchases.get(purchase.address)
-      expectStage('shipping_pending')
+      expectStage('in_escrow')
     })
 
     it('should allow the seller to mark as shipped', async () => {
-      expectStage('shipping_pending')
+      expectStage('in_escrow')
       await purchases.sellerConfirmShipped(purchase.address)
       purchase = await purchases.get(purchase.address)
       expectStage('buyer_pending')
@@ -135,7 +135,7 @@ describe('Purchase Resource', function() {
     it('should list logs', async () => {
       const logs = await purchases.getLogs(purchase.address)
       expect(logs[0].stage).to.equal('awaiting_payment')
-      expect(logs[1].stage).to.equal('shipping_pending')
+      expect(logs[1].stage).to.equal('in_escrow')
       expect(logs[2].stage).to.equal('buyer_pending')
       expect(logs[3].stage).to.equal('seller_pending')
       expect(logs[4].stage).to.equal('complete')
