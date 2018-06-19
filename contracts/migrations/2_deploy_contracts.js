@@ -8,7 +8,7 @@ var ListingsRegistry = artifacts.require("./ListingsRegistry.sol")
 var ListingsRegistryStorage = artifacts.require("./ListingsRegistryStorage.sol")
 var UnitListing = artifacts.require("./UnitListing.sol")
 var UserRegistry = artifacts.require("./UserRegistry.sol")
-var UnitPurchaseLibrary = artifacts.require("./UnitPurchaseLibrary.sol")
+var PurchaseLibrary = artifacts.require("./PurchaseLibrary.sol")
 var OriginIdentity = artifacts.require("./OriginIdentity.sol")
 
 module.exports = function(deployer, network) {
@@ -18,9 +18,9 @@ module.exports = function(deployer, network) {
 }
 
 async function deployContracts(deployer) {
-  await deployer.deploy(UnitPurchaseLibrary)
-  await deployer.link(UnitPurchaseLibrary, ListingsRegistry)
-  await deployer.link(UnitPurchaseLibrary, UnitListing)
+  await deployer.deploy(PurchaseLibrary)
+  await deployer.link(PurchaseLibrary, ListingsRegistry)
+  await deployer.link(PurchaseLibrary, UnitListing)
   const listingsRegistryStorage = await deployer.deploy(ListingsRegistryStorage)
   const listingRegistry = await deployer.deploy(ListingsRegistry, listingsRegistryStorage.address)
   listingsRegistryStorage.setActiveRegistry(listingRegistry.address)

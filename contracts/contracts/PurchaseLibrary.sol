@@ -4,11 +4,11 @@ pragma solidity 0.4.23;
 /// @dev An collection of helper tools for a purchase
 
 import "./Purchase.sol";
-import "./UnitListing.sol";
+import "./Listing.sol";
 
-library UnitPurchaseLibrary {
+library PurchaseLibrary {
 
-    function newPurchase(UnitListing listing, address _buyer)
+    function newPurchase(Listing listing, address _buyer)
     public
     returns (Purchase purchase)
     {
