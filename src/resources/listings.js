@@ -177,7 +177,7 @@ class Listings extends ResourceBase {
     )
     return await this.contractFn(address, 'buyListing', [unitsToBuy], {
       value: value,
-      gas: 750000
+      gas: 850000
     })
   }
 

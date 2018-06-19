@@ -105,6 +105,22 @@ contract Purchase {
     // Possible that nothing happens, and contract just accumulates sent value
   }
 
+  function sellerApprove()
+  public
+  isSeller
+  atStage(Stages.AWAITING_SELLER_APPROVAL)
+  {
+    setStage(Stages.IN_ESCROW);
+  }
+
+  function sellerReject()
+  public
+  isSeller
+  atStage(Stages.AWAITING_SELLER_APPROVAL)
+  {
+    setStage(Stages.SELLER_REJECTED);
+  }
+
   function sellerConfirmShipped()
   public
   isSeller
