@@ -4,8 +4,9 @@ import Web3 from 'web3'
 const claimTypeMapping = {
   3: 'facebook',
   4: 'twitter',
+  5: 'airbnb',
   10: 'phone',
-  11: 'email'
+  11: 'email',
 }
 
 const appendSlash = url => {
@@ -92,7 +93,7 @@ class Attestations {
   }
 
   async facebookAuthUrl() {
-    return await this.get(`facebook/auth-url`, responseToUrl)
+    return await this.get(`facebook/auth-url`, {}, responseToUrl)
   }
 
   async facebookVerify({ wallet, code }) {
@@ -108,7 +109,7 @@ class Attestations {
   }
 
   async twitterAuthUrl() {
-    return await this.get(`twitter/auth-url`, responseToUrl)
+    return await this.get(`twitter/auth-url`, {}, responseToUrl)
   }
 
   async twitterVerify({ wallet, code }) {
@@ -121,6 +122,20 @@ class Attestations {
       },
       this.responseToAttestation
     )
+  }
+
+  async airbnbGenerateCode({ wallet, airbnbUserId }) {
+    const identity = await this.getIdentityAddress(wallet)
+
+    return await this.get(`airbnb/generate-code`, {
+      "identity": identity,
+      "airbnbUserId": airbnbUserId
+    })
+  }
+
+  async airbnbVerify({ wallet, airbnbUserId }) {
+    const identity = await this.getIdentityAddress(wallet)
+    return await this.post('airbnb/verify', { identity, airbnbUserId })
   }
 
   async http(baseUrl, url, body, successFn, method) {
@@ -141,8 +156,12 @@ class Attestations {
     return await this.http(this.serverUrl, url, body, successFn, 'POST')
   }
 
-  async get(url, successFn) {
-    return await this.http(this.serverUrl, url, undefined, successFn, 'GET')
+  async get(url, parameters, successFn) {
+    let objectKeys = Object.keys(parameters)
+    let stringParams = objectKeys.map(key => key + '=' + parameters[key]).join('&');
+    stringParams = (objectKeys.length === 0 ? '' : '?') + stringParams
+
+    return await this.http(this.serverUrl, url + stringParams, undefined, successFn, 'GET')
   }
 
   async predictIdentityAddress(wallet) {
