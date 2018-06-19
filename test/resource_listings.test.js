@@ -4,6 +4,7 @@ import ContractService from '../src/services/contract-service'
 import IpfsService from '../src/services/ipfs-service.js'
 import Web3 from 'web3'
 import asAccount from './helpers/as-account'
+import fetchMock from 'fetch-mock'
 
 describe('Listing Resource', function() {
   this.timeout(5000) // default is 2000
@@ -100,6 +101,51 @@ describe('Listing Resource', function() {
 
     const listingAfter = await listings.getByIndex(listingIndex)
     expect(listingAfter.unitsAvailable).to.equal(0)
+  })
+
+  describe('all', () => {
+    it('should get all listings', async () => {
+      const fetch = fetchMock.sandbox().mock(
+        (requestUrl, opts) => {
+          expect(opts.method).to.equal('GET')
+          expect(requestUrl).to.equal('http://hello.world/api/listing')
+          return true
+        },
+        {
+          body: JSON.stringify({
+            objects: [
+              {
+                contract_address: "0x4E205e04A1A8f230702fe51f3AfdCC38aafB0f3C",
+                created_at: null,
+                expires_at: null,
+                ipfs_hash: "QmfXRgtSbrGggApvaFCa88ofeNQP79G18DpWaSW1Wya1u8",
+                price: "0.30",
+                owner_address: "0x627306090abaB3A6e1400e9345bC60c78a8BEf57",
+                units: 23,
+                ipfs_data: {
+                  name: "Taylor Swift's Reputation Tour",
+                  category: "Music",
+                  description: "Taylor Swift's Reputation Stadium Tour is the fifth world concert tour by American singer-songwriter Taylor Swift, in support of her sixth studio album, Reputation.",
+                  location: "Sports Authority Field at Mile High, Denver, CO, USA"
+                }
+              }
+            ]
+          })
+        }
+      )
+      const listings = new Listings({
+        contractService,
+        ipfsService,
+        fetch,
+        indexingServerUrl: 'http://hello.world/api'
+      })
+      const all = await listings.all()
+      expect(all.length).to.equal(1)
+      const first = all[0]
+      expect(first.address).to.equal("0x4E205e04A1A8f230702fe51f3AfdCC38aafB0f3C")
+      expect(first.name).to.equal("Taylor Swift's Reputation Tour")
+      expect(first.price).to.equal("0.30")
+    })
   })
 
   describe('getListing', () => {
