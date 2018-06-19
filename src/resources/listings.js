@@ -3,10 +3,25 @@
 
 import ResourceBase from './_resource-base'
 
+const appendSlash = url => {
+  return url.substr(-1) === '/' ? url : url + '/'
+}
+
 class Listings extends ResourceBase {
-  constructor({ contractService, ipfsService }) {
+  constructor({ contractService, ipfsService, fetch, indexingServerUrl }) {
     super({ contractService, ipfsService })
     this.contractDefinition = this.contractService.listingContract
+    this.fetch = fetch
+    this.indexingServerUrl = indexingServerUrl
+  }
+
+  // fetches all listings (all data included)
+  async all({ noIndex = false } = {}) {
+    if (noIndex) {
+      // TODO: fetch directly from blockchain when noIndex is true
+    } else {
+      return await this.allIndexed()
+    }
   }
 
   async allIds() {
@@ -221,6 +236,30 @@ class Listings extends ResourceBase {
       unitsAvailable: listing[4]
     }
     return listingObject
+  }
+
+  async allIndexed() {
+    const url = appendSlash(this.indexingServerUrl) + 'listing'
+    const response = await this.fetch(url, { method: 'GET' })
+    const json = await response.json()
+    return json.objects.map((obj) => {
+      const ipfsData = obj['ipfs_data']
+      return {
+        address: obj['contract_address'],
+        ipfsHash: obj['ipfs_hash'],
+        sellerAddress: obj['owner_address'],
+        price: obj['price'],
+        unitsAvailable: obj['units'],
+        created: obj['created_at'],
+        expiration: obj['expires_at'],
+
+        name: ipfsData ? ipfsData['name'] : null,
+        category: ipfsData ? ipfsData['category'] : null,
+        description: ipfsData ? ipfsData['description'] : null,
+        location: ipfsData ? ipfsData['location'] : null,
+        pictures: ipfsData ? ipfsData['pictures'] : null
+      }
+    })
   }
 }
 
