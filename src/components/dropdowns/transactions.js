@@ -14,7 +14,6 @@ class TransactionsDropdown extends Component {
 
     this.handleClick = this.handleClick.bind(this)
     this.handleSimulation = this.handleSimulation.bind(this)
-    this.setCreatedAtTime = this.setCreatedAtTime.bind(this)
 
     this.state = {
       confirmations: [0, 2, 4, 6],
@@ -50,18 +49,6 @@ class TransactionsDropdown extends Component {
 
       this.setState({ simulationStarted: true })
     }
-  }
-
-  setCreatedAtTime(t, i) {
-    setInterval(() => {
-
-      const newTimeState = {}
-      newTimeState[i] = moment(t.createdAt).fromNow()
-
-      const stateToSet = Object.assign(this.state.createdAtTime, newTimeState)
-      this.setState(stateToSet)
-
-    }, 30000)
   }
 
   render() {
@@ -140,7 +127,7 @@ class TransactionsDropdown extends Component {
                             {t.message}
                           </div>
                           <div className="timelapse ml-auto">
-                            { this.state.createdAtTime[i] || this.setCreatedAtTime(t, i) }
+                            { moment(t.createdAt).fromNow() }
                           </div>
                         </div>
                         <div className="d-flex">

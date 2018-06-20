@@ -38,13 +38,9 @@ class MySaleCard extends Component {
   }
 
   setSoldAtTime(soldAt) {
-    setInterval(() => {
-
-      this.setState({
-        soldAtTime: moment(soldAt).fromNow()
-      })
-
-    }, 30000)
+    this.setState({
+      soldAtTime: moment(soldAt).fromNow()
+    })
   }
 
   render() {

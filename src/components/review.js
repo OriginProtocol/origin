@@ -29,13 +29,9 @@ class Review extends Component {
   }
 
   setCreatedAtTime(createdAt) {
-    setInterval(() => {
-
-      this.setState({
-        createdAtTime: moment(createdAt).fromNow()
-      })
-
-    }, 30000)
+    this.setState({
+      createdAtTime: moment(createdAt).fromNow()
+    })
   }
 
   render() {
