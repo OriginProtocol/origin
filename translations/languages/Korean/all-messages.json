@@ -309,7 +309,7 @@
   "VerifyEmail.cancel": "취소",
   "VerifyEmail.validEmail": "유효한 이메일 주소",
   "VerifyEmail.emailNotPublished": "Other users will know that you have a verified email address. Your actual email address will not be published on the blockchain.",
-  "VerifyEmail.enterCode": "Enter the code we sent you below",
+  "VerifyEmail.enterCode": "우리가 보낸 코드를 아래에 입력하십시오.",
   "VerifyFacebook.verifyFBHeading": "페이스북 계정을 확인합니다",
   "VerifyFacebook.accountNotPublic": "Other users will know that you have a verified Facebook account, but your account details will not be published on the blockchain. We will never post on your behalf.",
   "VerifyFacebook.continue": "계속",
