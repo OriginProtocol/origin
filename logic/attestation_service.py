@@ -254,6 +254,8 @@ class VerificationService:
 
         code = generate_airbnb_verification_code(eth_address, airbnbUserId)
 
+        # TODO: determine if this user agent is acceptable. 
+        # We need to set an user agent otherwise Airbnb returns 403
         request = Request(url='https://www.airbnb.com/users/show/' + airbnbUserId, headers={'User-Agent': 'Origin Protocol client-0.1.0'})
 
         try:
@@ -269,6 +271,7 @@ class VerificationService:
         if code not in response.read().decode('utf-8'):
             raise AirbnbVerificationError("Origin verification code: " + code + " has not been found in user's Airbnb profile.")
         
+        # TODO: determine the schema for claim data
         data = airbnbUserId
         signature = attestations.generate_signature(
             signing_key, eth_address, CLAIM_TYPES['airbnb'], data)
