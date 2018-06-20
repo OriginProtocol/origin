@@ -266,8 +266,7 @@ class VerificationService:
         except URLError as e:
             raise AirbnbVerificationError("Can not fetch user's Airbnb profile.")
 
-        # todo handle errors where Airbnb returns something weird or non 200 status code
-        if not re.compile('.*' + code + '.*').match(response.read().decode('utf-8')):
+        if code not in response.read().decode('utf-8'):
             raise AirbnbVerificationError("Origin verification code: " + code + " has not been found in user's Airbnb profile.")
         
         data = airbnbUserId
