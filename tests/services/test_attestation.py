@@ -2,6 +2,7 @@ import datetime
 import mock
 import pytest
 
+from urllib.request import HTTPError, URLError
 from tests.helpers.eth_utils import sample_eth_address, str_eth
 from database import db_models
 from logic.attestation_service import (VerificationService,
@@ -439,3 +440,19 @@ def test_verify_airbnb_verification_code_incorrect_user_id_format(mock_urllib_re
         VerificationService.verify_airbnb('0x112234455C3a32FD11230C42E7Bccd4A84e02010', "12a34")
 
     assert str(service_err.value) == 'AirbnbUserId should be a number.'
+
+
+@mock.patch('logic.attestation_service.urlopen', side_effect=HTTPError('https://www.airbnb.com/users/show/99999999999999999', 404, "User not found", {}, {}))
+def test_verify_airbnb_verification_code_non_existing_user(mock_urllib_request):
+    with pytest.raises(AirbnbVerificationError) as service_err:
+        VerificationService.verify_airbnb('0x112234455C3a32FD11230C42E7Bccd4A84e02010', "99999999999999999")
+
+    assert str(service_err.value) == 'Airbnb user id: 99999999999999999 not found.'
+
+
+@mock.patch('logic.attestation_service.urlopen', side_effect=HTTPError('https://www.airbnb.com/users/show/123', 500, "Internal server error", {}, {}))
+def test_verify_airbnb_verification_code_non_existing_user(mock_urllib_request):
+    with pytest.raises(AirbnbVerificationError) as service_err:
+        VerificationService.verify_airbnb('0x112234455C3a32FD11230C42E7Bccd4A84e02010', "123")
+
+    assert str(service_err.value) == "Can not fetch user's Airbnb profile."

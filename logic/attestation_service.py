@@ -7,7 +7,7 @@ import secrets
 import sendgrid
 import re
 
-from urllib.request import Request, urlopen
+from urllib.request import Request, urlopen, HTTPError, URLError
 from sendgrid.helpers.mail import Email, Content, Mail
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
@@ -256,10 +256,18 @@ class VerificationService:
 
         request = Request(url='https://www.airbnb.com/users/show/' + airbnbUserId, headers={'User-Agent': 'Origin Protocol client-0.1.0'})
 
-        response = urlopen(request)
+        try:
+            response = urlopen(request)
+        except HTTPError as e:
+            if e.code == 404:
+                raise AirbnbVerificationError('Airbnb user id: ' + airbnbUserId + ' not found.')
+            else:
+                raise AirbnbVerificationError("Can not fetch user's Airbnb profile.")
+        except URLError as e:
+            raise AirbnbVerificationError("Can not fetch user's Airbnb profile.")
 
         # todo handle errors where Airbnb returns something weird or non 200 status code
-        if not re.compile(".*" + code + ".*").match(response.read().decode('utf-8')):
+        if not re.compile('.*' + code + '.*').match(response.read().decode('utf-8')):
             raise AirbnbVerificationError("Origin verification code: " + code + " has not been found in user's Airbnb profile.")
         
         data = airbnbUserId
