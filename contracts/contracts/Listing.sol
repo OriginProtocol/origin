@@ -28,6 +28,8 @@ contract Listing {
     uint public expiration;
     bool public needsSellerApproval;
 
+    Purchase[] public purchases;
+
   /*
     * Modifiers
     */
@@ -40,6 +42,31 @@ contract Listing {
   modifier isNotSeller() {
     require(msg.sender != owner);
     _;
+  }
+
+  /*
+    * Public functions
+  */
+
+  /// @dev purchasesLength(): Return number of purchases for a given listing
+  function purchasesLength()
+    public
+    constant
+    returns (uint)
+  {
+      return purchases.length;
+  }
+
+  /// @dev getPurchase(): Return purchase info for a given listing
+  /// @param _index the index of the listing we want info about
+  function getPurchase(uint _index)
+    public
+    constant
+    returns (Purchase)
+  {
+    return (
+      purchases[_index]
+    );
   }
 
   /*

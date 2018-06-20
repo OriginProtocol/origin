@@ -17,7 +17,6 @@ contract UnitListing is Listing {
 
   uint public price;
   uint public unitsAvailable;
-  Purchase[] public purchases;
 
 
   constructor (
@@ -85,27 +84,6 @@ contract UnitListing is Listing {
   {
     unitsAvailable = 0;
     emit ListingChange();
-  }
-
-  /// @dev purchasesLength(): Return number of purchases for a given listing
-  function purchasesLength()
-    public
-    constant
-    returns (uint)
-  {
-      return purchases.length;
-  }
-
-  /// @dev getPurchase(): Return purchase info for a given listing
-  /// @param _index the index of the listing we want info about
-  function getPurchase(uint _index)
-    public
-    constant
-    returns (Purchase)
-  {
-    return (
-      purchases[_index]
-    );
   }
 
   function isApproved(Purchase _purchase)
