@@ -92,7 +92,9 @@ class AirbnbVerificationCodeResponse(StandardResponse):
     code = fields.Str()
 
 class VerifyAirbnbResponse(StandardResponse):
-    pass
+    signature = fields.Str()
+    claim_type = fields.Integer(data_key='claim-type')
+    data = fields.Str()
 
 
 class PhoneVerificationCode(Resource):
