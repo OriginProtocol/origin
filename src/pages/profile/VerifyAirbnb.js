@@ -7,7 +7,7 @@ import origin from '../../services/origin'
 class VerifyAirbnb extends Component {
   constructor() {
     super()
-    this.state = { mode: 'input-airbnb-profile', airbnbProfile: '' }
+    this.state = { mode: 'input-airbnb-profile', airbnbProfile: '', confirmationCode: ''}
   }
 
   render() {
@@ -32,14 +32,24 @@ class VerifyAirbnb extends Component {
           onSubmit={async e => {
             e.preventDefault()
             if (this.state.mode === 'input-airbnb-profile') {
-              this.setState({ mode: 'show-generated-code' })
+              this.setState({
+                mode: 'show-generated-code', 
+                confirmationCode: ''
+              })
+
+              origin.attestations.airbnbGenerateCode({
+                wallet: this.props.wallet,
+                airbnbUserId: this.getUserIdFromAirbnbProfile(this.state.airbnbProfile)
+              }).then(data => {
+                this.setState({confirmationCode: data.code});
+              })
             } else if (this.state.mode === 'show-generated-code') {
-              // let emailAttestation = await origin.attestations.emailVerify({
-              //   email: this.state.email,
-              //   code: this.state.code,
-              //   wallet: this.props.wallet
-              // })
-              // this.props.onSuccess(emailAttestation)
+              let airbnbAttestation = await origin.attestations.airbnbVerify({
+                wallet: this.props.wallet,
+                airbnbUserId: this.getUserIdFromAirbnbProfile(this.state.airbnbProfile)
+              })
+
+              this.props.onSuccess(airbnbAttestation)
             }
           }}
         >
@@ -82,10 +92,6 @@ class VerifyAirbnb extends Component {
 
 
   renderGeneratedCode() {
-    let airbnbUserId = this.getUserIdFromAirbnbProfile(this.state.airbnbProfile)
-
-    //TODO: should confirmation code generation be executed on sever side?
-    let confirmationCode = origin.contractService.web3.utils.keccak256(this.props.web3Account + airbnbUserId).substring(0,10);
     return (
       <div className="form-group">
         <label htmlFor="airbnbProfile">
@@ -99,7 +105,7 @@ class VerifyAirbnb extends Component {
           id="generated-code"
           readOnly="readOnly"
           style={{maxWidth: `340px`}} // Making wider input, so that the whole verification code can be viewed without trimming
-          value={"Origin verification code: " + confirmationCode}
+          value={this.state.confirmationCode == '' ? this.props.intl.formatMessage({ id: 'VerifyAirbnb.loadingConfirmationCode', defaultMessage: 'Loading...'}) : "Origin verification code: " + this.state.confirmationCode}
         />
         <div className="explanation">
           <FormattedMessage
@@ -130,9 +136,9 @@ class VerifyAirbnb extends Component {
           onChange={e =>
             this.setState({ airbnbProfile: e.currentTarget.value })
           }
-          placeholder={this.props.intl.formatMessage({ id: 'VerifyAirbnb.placeholderAirbnbProfileUrl', defaultMessage: 'https://www.airbnb.com/users/show/11111'})}
-          pattern="https?://www\.airbnb\.com/users/show/\d{7}"
-          title={this.props.intl.formatMessage({ id: 'VerifyAirbnb.airbnbProfileIncorrect', defaultMessage: 'Airbnb URL incorrect! Please paste exact URL of your Airbnb profile. Example: https://www.airbnb.com/users/show/11111'})}
+          placeholder={this.props.intl.formatMessage({ id: 'VerifyAirbnb.placeholderAirbnbProfileUrl', defaultMessage: 'https://www.airbnb.com/users/show/123'})}
+          pattern="^https?://www\.airbnb\.com/users/show/\d*$"
+          title={this.props.intl.formatMessage({ id: 'VerifyAirbnb.airbnbProfileIncorrect', defaultMessage: 'Airbnb URL incorrect! Please paste exact URL of your Airbnb profile. Example: https://www.airbnb.com/users/show/123'})}
           required
         />
         <div className="explanation">
@@ -146,7 +152,7 @@ class VerifyAirbnb extends Component {
   }
 
   getUserIdFromAirbnbProfile(airbnbProfileUrl){
-    var airbnbRegex = /https?\:\/\/www.airbnb.com\/users\/show\/(\d{7})/g;
+    var airbnbRegex = /https?\:\/\/www.airbnb.com\/users\/show\/(\d*)/g;
     var match = airbnbRegex.exec(airbnbProfileUrl);
 
     if (match.length == 0){
