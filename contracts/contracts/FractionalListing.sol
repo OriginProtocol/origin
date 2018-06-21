@@ -87,10 +87,8 @@ contract FractionalListing is Listing {
     public
     payable
     isNotSeller
+    hasNotExpired
   {
-    // Ensure that we are not past the expiration
-    require(now < expiration);
-
     // Create purchase contract
     Purchase purchaseContract = PurchaseLibrary.newPurchase(this, currentVersion(), msg.sender);
 

@@ -59,12 +59,10 @@ contract UnitListing is Listing {
     public
     payable
     isNotSeller
+    hasNotExpired
   {
     // Ensure that this is not trying to purchase more than is available.
     require(_unitsToBuy <= unitsAvailable);
-
-    // Ensure that we are not past the expiration
-    require(now < expiration);
 
     // Create purchase contract
     Purchase purchaseContract = PurchaseLibrary.newPurchase(this, currentVersion(), msg.sender);

@@ -40,6 +40,11 @@ contract Listing {
     _;
   }
 
+  modifier hasNotExpired() {
+    require(now < expiration);
+    _;
+  }
+
   /*
     * Public functions
   */
