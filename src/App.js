@@ -6,6 +6,7 @@ import NavigationService from './NavigationService'
 
 import { fetchProfile } from 'actions/Profile'
 import { getBalance } from 'actions/Wallet'
+import { newEvent, updateEvent, processedEvent } from 'actions/WalletEvents'
 
 import { connect, Provider } from 'react-redux'
 
@@ -172,7 +173,6 @@ const styles = StyleSheet.create({
 })
 
 // Origin Nav wrapper
-
 class OriginNavWrapper extends Component {
 
   render() {
@@ -183,22 +183,41 @@ class OriginNavWrapper extends Component {
 
   componentDidMount() {
     //register the service here
-    originWallet.registerListener(Events.PROMPT_LINK, (data => {
+    originWallet.registerListener(Events.PROMPT_LINK, (data, matcher) => {
+      this.props.newEvent(matcher, data)
       NavigationService.navigate("Alerts", data)
-    }).bind(this))
-    originWallet.registerListener(Events.PROMPT_TRANSACTION, (data => {
+    })
+    originWallet.registerListener(Events.PROMPT_TRANSACTION, (data, matcher) => {
+      this.props.newEvent(matcher, data)
       NavigationService.navigate("Alerts", data)
-    }).bind(this))
+    })
 
-    originWallet.registerListener(Events.NEW_ACCOUNT, (data => {
+    originWallet.registerListener(Events.NEW_ACCOUNT, (data, matcher) => {
       this.props.fetchProfile()
       this.props.getBalance()
-    }).bind(this))
+    })
+
+    originWallet.registerListener(Events.LINKED, (data, matcher) => {
+      this.props.processedEvent(matcher, {status:'linked'}, data)
+    })
+
+    originWallet.registerListener(Events.TRANSACTED, (data, matcher) => {
+      this.props.processedEvent(matcher, {status:'completed'}, data)
+    })
+
+    originWallet.registerListener(Events.UNLINKED, (data, matcher) => {
+      this.props.updateEvent(matcher, {status:'unlink'})
+    })
+
+    originWallet.registerListener(Events.REJECT, (data, matcher) => {
+      this.props.processedEvent(matcher, {status:'rejected'}, data)
+    })
 
     originWallet.openWallet()
   }
 
   componentWillUnmount() {
+    originWallet.purgeListeners()
     originWallet.closeWallet()
   }
 }
@@ -206,6 +225,9 @@ class OriginNavWrapper extends Component {
 const mapDispatchToProps = dispatch => ({
   fetchProfile: () => dispatch(fetchProfile()),
   getBalance: () => dispatch(getBalance()),
+  newEvent: (matcher, event) => dispatch(newEvent(matcher, event)),
+  updateEvent: (matcher, update) => dispatch(updateEvent(matcher, update)),
+  processedEvent: (matcher, update, new_event) => dispatch(processedEvent(matcher, update, new_event))
 })
 
 const OriginNavApp = connect(undefined, mapDispatchToProps)(OriginNavWrapper)

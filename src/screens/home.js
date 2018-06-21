@@ -6,14 +6,13 @@ import Identicon from '../components/identicon'
 import DeviceItem from '../components/device-item'
 import Separator from '../components/separator'
 import TransactionItem from '../components/transaction-item'
-import origin from '../services/origin'
 
 class HomeScreen extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      selectedItem: null,
+      recentItems:[]
     }
   }
 
@@ -39,45 +38,15 @@ class HomeScreen extends Component {
           </View>
         </View>
         <FlatList
-          data={[
-            {
-              key: 'foo',
-              actionName: 'Purchase',
-              listingName: 'Mamalahoa Estate',
-              listingPhoto: require('../../assets/images/listing-photo-1.jpeg'),
-              fromAddress: '0x12Be343B94f860124dC4fEe278FDCBD38C101BAR',
-              toAddress: '0x34Be343B94f860124dC4fEe278FDCBD38C102BAZ',
-            },
-            {
-              key: 'bar',
-              actionName: 'Purchase',
-              listingName: 'Zinc House',
-              listingPhoto: require('../../assets/images/listing-photo-2.jpeg'),
-              fromAddress: '0x12Be343B94f860124dC4fEe278FDCBD38C101BAR',
-              toAddress: '0x34Be343B94f860124dC4fEe278FDCBD38C102BAZ',
-            },
-            {
-              key: 'baz',
-              actionName: 'Link',
-              deviceId: 'JgC55UUqEs',
-              deviceType: 'Chrome',
-              timestamp: '2018-06-01T04:48-0700',
-            },
-            {
-              key: 'qux',
-              actionName: 'Link',
-              deviceId: 'GjF43HSuWf',
-              deviceType: 'Unknown',
-              timestamp: new Date(),
-            },
-          ]}
+          data={this.props.processed_events}
           renderItem={({item}) => {
-            switch(item.actionName) {
-              case 'Purchase':
+            switch(item.action) {
+              case 'purchase':
+              case 'list':
                 return (
                   <TransactionItem item={item} />
                 )
-              case 'Link':
+              case 'link':
                 return (
                   <DeviceItem item={item} />
                 )
@@ -85,6 +54,7 @@ class HomeScreen extends Component {
                 return null
             }
           }}
+          keyExtractor={(item, index) => item.event_id}
           ItemSeparatorComponent={() => (<Separator />)}
           ListHeaderComponent={() => (
             <View style={styles.header}>
@@ -102,6 +72,7 @@ const mapStateToProps = state => {
   return {
     balance: state.wallet.balance,
     address: state.wallet.address,
+    processed_events: state.wallet_events.processed_events
   }
 }
 

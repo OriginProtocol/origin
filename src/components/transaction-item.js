@@ -5,18 +5,18 @@ import OriginButton from './origin-button'
 
 export default class TransactionItem extends Component {
   render() {
-    const { item, handleApprove, handlePress, handleReject, style } = this.props
+    const { item, address, balance, handleApprove, handlePress, handleReject, style } = this.props
     // placeholders
-    const hasSufficientFunds = true
-    const myAddress = '0x12Be343B94f860124dC4fEe278FDCBD38C101BAR'
-    const counterpartyAddress = '0x34Be343B94f860124dC4fEe278FDCBD38C102BAZ'
+    const hasSufficientFunds = balance > item.cost
+    const myAddress = address
+    const counterpartyAddress = item.listing && item.listing.sellerAddress
 
     return (
       <TouchableHighlight onPress={handlePress}>
         <View style={[ styles.listItem, style ]}>
           <Image source={require('../../assets/images/avatar.png')} style={styles.avatar} />
           <View style={styles.content}>
-            <Text style={styles.imperative}>{item.actionName} <Text style={styles.subject}>{item.listingName}{item.listingName}</Text>?</Text>
+            <Text style={styles.imperative}>{item.action} <Text style={styles.subject}>{item.listingName}{item.listing.name}</Text>?</Text>
             <View style={styles.counterparties}>
               <Text style={styles.address}>{`${myAddress.slice(0, 4)}...${myAddress.slice(38)}`}</Text>
               <Image source={require('../../assets/images/arrow-forward-material.png')} style={styles.arrow} />

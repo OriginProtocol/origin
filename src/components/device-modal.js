@@ -3,14 +3,11 @@ import { Alert, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'r
 
 import OriginButton from './origin-button'
 
-export default class TransactionModal extends Component {
+export default class DeviceModal extends Component {
   render() {
-    const { item, myAddress, balance, handleApprove, handleReject, toggleModal } = this.props
-    const cost = item.cost
-    const { name, pictures } = item.listing || {}
+    const { item,  handleApprove, handleReject, toggleModal } = this.props
     // placeholders
-    const hasSufficientFunds = balance > cost
-    const counterpartyAddress = listing.sellerAddress
+    const { browser, platform, language } = item.link && item.link.app_info
 
     return (
       <Modal
@@ -29,54 +26,26 @@ export default class TransactionModal extends Component {
             </View>
           </TouchableOpacity>
           <View style={styles.imageContainer}>
-            <Image
-              style={styles.image}
-              source={pictures[0]}
-              resizeMethod={'resize'}
-              resizeMode={'cover'}
-            />
+            {browser == 'chrome' &&
+              <Image source={require('../../assets/images/chrome-icon.png')} />
+            }
+            {browser !== 'chrome' &&
+              <Image source={require('../../assets/images/app-icon.png')} />
+            }
+            <Image source={require('../../assets/images/link-icon.png')} style={styles.icon} />
           </View>
           <View style={styles.promptContainer}>
             <Text style={styles.question}>
-              Do you want to purchase this item?
+              Do you want to link to this platform?
             </Text>
             <Text style={styles.listingName}>
-              {name}
+              {platform} {browser}
             </Text>
           </View>
-          <View style={styles.counterparties}>
-            <TouchableOpacity onPress={() => Alert.alert('From ETH Address', myAddress)}>
-              <View style={styles.party}>
-                <Image source={require('../../assets/images/avatar.png')} style={styles.avatar} />
-                <Text style={styles.address}>{`${myAddress.slice(0, 4)}...${myAddress.slice(38)}`}</Text>
-              </View>
-            </TouchableOpacity>
-            <Image source={require('../../assets/images/arrow-forward-material.png')} style={styles.arrow} />
-            <TouchableOpacity onPress={() => Alert.alert('To ETH Address', counterpartyAddress)}>
-              <View style={styles.party}>
-                <Image source={require('../../assets/images/avatar.png')} style={styles.avatar} />
-                <Text style={styles.address}>{`${counterpartyAddress.slice(0, 4)}...${counterpartyAddress.slice(38)}`}</Text>
-              </View>
-            </TouchableOpacity>
+          <View style={{ marginBottom: 20 }}>
+              <OriginButton size="large" type="primary" title="Approve" onPress={handleApprove} />
           </View>
-          {!hasSufficientFunds &&
-            <View style={styles.fundingRequired}>
-              <Text style={styles.warning}>
-                You don’t have enough funds to complete this purchase. Please add funds to your wallet.
-              </Text>
-              <Text style={styles.wallet}>
-                {myAddress}
-              </Text>
-            </View>
-          }
-          {hasSufficientFunds &&
-            <View style={styles.fundingAvailable}>
-              <View style={{ marginBottom: 20 }}>
-                <OriginButton size="large" type="primary" title="Approve" onPress={handleApprove} />
-              </View>
-              <OriginButton size="large" type="danger" title="Reject" onPress={handleReject} />
-            </View>
-          }
+          <OriginButton size="large" type="danger" title="Reject" onPress={handleReject} />
         </View>
       </Modal>
     )

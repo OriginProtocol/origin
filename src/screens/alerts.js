@@ -1,12 +1,15 @@
 import React, { Component } from 'react'
 import { Alert, FlatList, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { connect } from 'react-redux'
+import originWallet from '../OriginWallet'
 
 import DeviceItem from '../components/device-item'
 import Separator from '../components/separator'
 import TransactionItem from '../components/transaction-item'
 import TransactionModal from '../components/transaction-modal'
 
-export default class AlertsScreen extends Component {
+
+class AlertsScreen extends Component {
   constructor(props) {
     super(props)
 
@@ -29,90 +32,107 @@ export default class AlertsScreen extends Component {
     this.setState({ selectedItem: null })
   }
 
+  componentDidMount() {
+    this.processFromNavParams()
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.navigation.state.params != prevProps.navigation.state.params)
+    {
+      this.processFromNavParams()
+    }
+  }
+
+  async processFromNavParams(){
+    const item = this.props.navigation.state.params
+    if (item)
+    {
+      this.setState(state => {
+        if (!state.selectedItem || originWallet.matchEvents(item, state.selectedItem)) {
+          state.selectedItem = item
+        }
+        return state
+      })
+    }
+  }
+
+  async acceptItem(item){
+    let done = await originWallet.handleEvent(item)
+    if (done)
+    {
+      this.toggleModal()
+    }
+  }
+
+  rejectItem(item){
+    originWallet.handleReject(item)
+    this.toggleModal()
+  }
+
   render() {
-    const hasSufficientFunds = true
-    const myAddress = '0x12Be343B94f860124dC4fEe278FDCBD38C101BAR'
+    const balance = this.props.balance
+    const myAddress = this.props.address
+    const selectedItem = this.state.selectedItem
 
     return (
       <View>
         <FlatList
-          data={[
-            {
-              key: 'foo',
-              actionName: 'Purchase',
-              listingName: 'Mamalahoa Estate',
-              listingPhoto: require('../../assets/images/listing-photo-1.jpeg'),
-              fromAddress: '0x12Be343B94f860124dC4fEe278FDCBD38C101BAR',
-              toAddress: '0x34Be343B94f860124dC4fEe278FDCBD38C102BAZ',
-            },
-            {
-              key: 'bar',
-              actionName: 'Purchase',
-              listingName: 'Zinc House',
-              listingPhoto: require('../../assets/images/listing-photo-2.jpeg'),
-              fromAddress: '0x12Be343B94f860124dC4fEe278FDCBD38C101BAR',
-              toAddress: '0x34Be343B94f860124dC4fEe278FDCBD38C102BAZ',
-            },
-            {
-              key: 'baz',
-              actionName: 'Link',
-              deviceId: 'JgC55UUquEs',
-              deviceType: 'Chrome',
-            }
-          ]}
+          data={this.props.events}
           renderItem={({item}) => {
-            switch(item.actionName) {
-              case 'Purchase':
+            switch(item.action) {
+              case 'purchase':
+              case 'list':
                 return (
                   <TransactionItem
                     item={item}
-                    handleApprove={() => Alert.alert('To Do', 'handle approve')}
+                    address ={myAddress}
+                    balance ={balance}
+                    handleApprove={() => originWallet.handleEvent(item) }
                     handlePress={() => this.setState({ selectedItem: item })}
-                    handleReject={() => Alert.alert('To Do', 'handle reject')}
+                    handleReject={() => originWallet.handleReject(item) }
                   />
                 )
-              case 'Link':
+              case 'link':
                 return (
                   <DeviceItem
                     item={item}
-                    handleLink={() => Alert.alert('To Do', 'handle link')}
-                    handleReject={() => Alert.alert('To Do', 'handle no thanks')}
+                    handleLink={() => originWallet.handleEvent(item)}
+                    handleReject={() => originWallet.handleReject(item)}
                   />
                 )
               default:
                 return null
             }
           }}
+          keyExtractor={(item, index) => item.event_id}
           ItemSeparatorComponent={() => (<Separator />)}
-          ListHeaderComponent={hasSufficientFunds ? null : () => (
-            <TouchableHighlight onPress={() => Alert.alert('To Do', 'handle funding')}>
-              <View style={styles.header}>
-                <View style={styles.iconContainer}>
-                  <Image source={require('../../assets/images/wallet.png')} style={styles.icon} />
-                </View>
-                <View style={styles.textContainer}>
-                  <Text style={[ styles.text, { fontWeight: '300', marginBottom: '5%' } ]}>
-                    You have no funds in your wallet. Add funds to complete purchases.
-                  </Text>
-                  <Text style={styles.text}>
-                    {myAddress}
-                  </Text>
-                </View>
-              </View>
-            </TouchableHighlight>
-          )}
           style={styles.list}
         />
-        <TransactionModal
-          item={this.state.selectedItem}
-          handleApprove={() => Alert.alert('To Do', 'handle approve')}
-          handleReject={() => Alert.alert('To Do', 'handle reject')}
-          toggleModal={this.toggleModal}
-        />
+        {selectedItem &&
+          selectedItem.listing &&
+          <TransactionModal
+            item={this.state.selectedItem}
+            address ={myAddress}
+            balance ={balance}
+            handleApprove={() => this.acceptItem(this.state.selectedItem)}
+            handleReject={() => this.rejectItem(this.state.selectedItem)}
+            toggleModal={this.toggleModal}
+          />}
       </View>
     )
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    balance: state.wallet.balance,
+    address: state.wallet.address,
+    events: state.wallet_events.events
+  }
+}
+
+export default connect(mapStateToProps)(AlertsScreen)
+
 
 const styles = StyleSheet.create({
   header: {

@@ -7,26 +7,23 @@ import OriginButton from './origin-button'
 export default class DeviceItem extends Component {
   render() {
     const { item, handleLink, handleReject, handleUnlink, style } = this.props
-    // placeholders
-    const hasSufficientFunds = true
-    const myAddress = '0x12Be343B94f860124dC4fEe278FDCBD38C101BAR'
-    const counterpartyAddress = '0x34Be343B94f860124dC4fEe278FDCBD38C102BAZ'
+    const { browser, platform, language } = item.link && item.link.app_info
 
     return (
       <View style={[ styles.listItem, style ]}>
         <View style={styles.iconsContainer}>
-          {item.deviceType === 'Chrome' &&
+          {browser == 'chrome' &&
             <Image source={require('../../assets/images/chrome-icon.png')} />
           }
-          {item.deviceType !== 'Chrome' &&
+          {browser !== 'chrome' &&
             <Image source={require('../../assets/images/app-icon.png')} />
           }
           <Image source={require('../../assets/images/link-icon.png')} style={styles.icon} />
         </View>
         {handleLink &&
           <View style={styles.content}>
-            <Text style={styles.identification}>Link <Text style={styles.vendor}>{item.deviceType}</Text>?</Text>
-            <Text style={styles.muted}>{item.deviceId}</Text>
+            <Text style={styles.identification}>Link <Text style={styles.vendor}>{browser} on {platform}</Text>?</Text>
+            <Text style={styles.muted}></Text>
             <View style={styles.actions}>
               <OriginButton size="small" type="primary" title="Link" onPress={handleLink} style={{ marginRight: 10 }} />
               <OriginButton size="small" type="danger" title="No Thanks" onPress={handleReject} />
@@ -35,7 +32,7 @@ export default class DeviceItem extends Component {
         }
         {!handleLink &&
           <View style={styles.content}>
-            <Text style={styles.identification}><Text style={styles.vendor}>{item.deviceType}</Text> {item.deviceId}</Text>
+            <Text style={styles.identification}><Text style={styles.vendor}>{platform} {browser}</Text>{item.link_id} </Text>
             <Text style={styles.muted}>Linked <Moment element={Text} format="MMMM D, YYYY @ h:mmA">{item.timestamp}</Moment></Text>
             <View style={styles.actions}>
               {handleUnlink && <OriginButton size="small" type="primary" title="Unlink" onPress={handleUnlink} />}
