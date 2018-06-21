@@ -1,5 +1,6 @@
 const Purchase = artifacts.require('./Purchase.sol')
 const UnitListing = artifacts.require('./UnitListing.sol')
+const FractionalListing = artifacts.require('./FractionalListing.sol')
 
 // Used to assert error cases
 const isEVMError = function(err) {
@@ -29,6 +30,7 @@ const unitsAvailable = 42
 
 // Enum values
 const AWAITING_PAYMENT = 0 // Buyer hasn't paid full amount yet
+const AWAITING_SELLER_APPROVAL = 1
 const IN_ESCROW = 3 // Buyer hasn't paid full amount yet
 const BUYER_PENDING = 4 // Waiting for buyer to confirm receipt
 const SELLER_PENDING = 5 // Waiting for seller to confirm all is good
@@ -180,10 +182,11 @@ contract('Purchase', accounts => {
   const seller = accounts[1]
   let purchase
   let listing
+  let fractionalListing
   const totalPrice = 48
   const initialPayment = 6
 
-  describe('Success path flow', async () => {
+  describe('Success path flow: unit listing', async () => {
     before(async () => {
       listing = await UnitListing.new(
         seller,
@@ -212,6 +215,49 @@ contract('Purchase', accounts => {
 
     it('should allow buyer to pay', async () => {
       await purchase.pay({ from: buyer, value: totalPrice - initialPayment })
+      assert.equal((await purchase.stage()).toNumber(), IN_ESCROW)
+    })
+
+    it('should allow seller to ship', async () => {
+      await purchase.sellerConfirmShipped({ from: seller })
+      assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)
+    })
+
+    it('should allow buyer to confirm reciept', async () => {
+      await purchase.buyerConfirmReceipt(5, 'IPFS', { from: buyer })
+      assert.equal((await purchase.stage()).toNumber(), SELLER_PENDING)
+    })
+
+    it('should allow seller to collect their money', async () => {
+      await purchase.sellerCollectPayout(1, 'IPFS_HASH_HERE', { from: seller })
+      assert.equal((await purchase.stage()).toNumber(), COMPLETE)
+    })
+  })
+
+  describe('Success path flow: fractional listing', async () => {
+    before(async () => {
+      fractionalListing = await FractionalListing.new(
+        seller,
+        ipfsHash,
+        { from: seller }
+      )
+    })
+
+    it('should create and link the new purchase', async () => {
+      const tx = await fractionalListing.request({
+        from: buyer,
+        value: initialPayment
+      })
+      const listingPurchasedEvent = tx.logs.find(
+        e => e.event == 'ListingPurchased'
+      )
+      purchase = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
+
+      assert.equal((await purchase.stage()).toNumber(), AWAITING_SELLER_APPROVAL)
+    })
+
+    it('should allow seller to approve', async () => {
+      await purchase.sellerApprove({ from: seller })
       assert.equal((await purchase.stage()).toNumber(), IN_ESCROW)
     })
 
