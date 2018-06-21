@@ -29,7 +29,7 @@ contract UnitListing is Listing {
   {
     owner = _owner;
     listingRegistry = msg.sender; // ListingRegistry(msg.sender);
-    ipfsHash = _ipfsHash;
+    ipfsHashes.push(_ipfsHash);
     price = _price;
     unitsAvailable = _unitsAvailable;
     created = now;
@@ -46,7 +46,7 @@ contract UnitListing is Listing {
     view
     returns (address _owner, bytes32 _ipfsHash, uint _price, uint _unitsAvailable, uint _created, uint _expiration)
   {
-    return (owner, ipfsHash, price, unitsAvailable, created, expiration);
+    return (owner, ipfsHash(), price, unitsAvailable, created, expiration);
   }
 
   /// @dev buyListing(): Buy a listing
