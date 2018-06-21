@@ -59,7 +59,7 @@ contract('Purchase', accounts => {
       { from: seller }
     )
 
-    instance = await Purchase.new(listingInstance.address, buyer, {
+    instance = await Purchase.new(listingInstance.address, 0, buyer, {
       from: buyer
     })
   })
@@ -254,6 +254,7 @@ contract('Purchase', accounts => {
       purchase = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
 
       assert.equal((await purchase.stage()).toNumber(), AWAITING_SELLER_APPROVAL)
+      assert.equal((await purchase.listingVersion()).toNumber(), 0)
     })
 
     it('should allow seller to approve', async () => {

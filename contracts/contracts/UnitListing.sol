@@ -67,7 +67,7 @@ contract UnitListing is Listing {
     require(now < expiration);
 
     // Create purchase contract
-    Purchase purchaseContract = PurchaseLibrary.newPurchase(this, msg.sender);
+    Purchase purchaseContract = PurchaseLibrary.newPurchase(this, currentVersion(), msg.sender);
 
     // Count units as sold
     unitsAvailable -= _unitsToBuy;
@@ -98,4 +98,12 @@ contract UnitListing is Listing {
     return address(_purchase).balance >= price;
   }
 
+  function currentVersion()
+    public
+    constant
+    returns (uint)
+  {
+    // hard-coded for now as we're not yet supporting edits for unit listings
+    return 0;
+  }
 }

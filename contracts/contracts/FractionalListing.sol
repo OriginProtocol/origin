@@ -92,7 +92,7 @@ contract FractionalListing is Listing {
     require(now < expiration);
 
     // Create purchase contract
-    Purchase purchaseContract = PurchaseLibrary.newPurchase(this, msg.sender);
+    Purchase purchaseContract = PurchaseLibrary.newPurchase(this, currentVersion(), msg.sender);
 
     purchases.push(purchaseContract);
 

@@ -45,6 +45,7 @@ contract Purchase {
   address public buyer; // User who is buying. Seller is derived from listing
   uint public created;
   uint public buyerTimeout;
+  uint public listingVersion;
 
   /*
   * Modifiers
@@ -71,12 +72,14 @@ contract Purchase {
 
   constructor(
     address _listingContractAddress,
+    uint _listingVersion,
     address _buyer
   )
   public
   {
     buyer = _buyer;
     listingContract = Listing(_listingContractAddress);
+    listingVersion = _listingVersion;
     created = now;
     emit PurchaseChange(internalStage);
   }

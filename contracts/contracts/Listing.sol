@@ -70,5 +70,6 @@ contract Listing {
   */
 
   function isApproved(Purchase _purchase) public view returns (bool);
+  function currentVersion() public constant returns (uint);
 
 }

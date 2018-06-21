@@ -57,6 +57,7 @@ contract('FractionalListing', accounts => {
       )
 
       assert.equal(await purchaseContract.buyer(), buyer)
+      assert.equal(await purchaseContract.listingVersion(), 0)
       assert.equal((await listing.purchasesLength()).toNumber(), 1)
       assert.equal(await listing.getPurchase(0), purchaseContract.address)
     })
