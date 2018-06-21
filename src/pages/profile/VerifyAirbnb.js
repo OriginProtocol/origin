@@ -104,7 +104,8 @@ class VerifyAirbnb extends Component {
           className="form-control"
           id="generated-code"
           readOnly="readOnly"
-          style={{maxWidth: `340px`}} // Making wider input, so that the whole verification code can be viewed without trimming
+          // Making input wider, so that the whole verification code can be viewed without trimming.
+          style={{maxWidth: '340px'}}
           value={this.state.confirmationCode == '' ? this.props.intl.formatMessage({ id: 'VerifyAirbnb.loadingConfirmationCode', defaultMessage: 'Loading...'}) : "Origin verification code: " + this.state.confirmationCode}
         />
         <div className="explanation">
