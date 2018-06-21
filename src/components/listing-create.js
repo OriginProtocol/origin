@@ -11,6 +11,7 @@ import { showAlert } from '../actions/Alert'
 import ListingDetail from './listing-detail'
 import Form from 'react-jsonschema-form'
 import Modal from './modal'
+import Calendar from './calendar'
 
 class ListingCreate extends Component {
 
@@ -259,6 +260,13 @@ class ListingCreate extends Component {
                     </div>
                     <div className="info-box-image"><img className="d-none d-md-block" src="images/features-graphic.svg" role="presentation" /></div>
                   </div>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <Calendar />
                 </div>
               <div className="col-md-5">
                 <label>

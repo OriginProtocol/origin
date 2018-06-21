@@ -19,6 +19,7 @@
     "popper.js": "^1.14.3",
     "react": "^16.3.2",
     "react-avatar-editor": "^11.0.2",
+    "react-big-calendar": "^0.19.1",
     "react-dom": "^16.3.2",
     "react-intl": "^2.4.0",
     "react-js-pagination": "^3.0.2",
