@@ -77,6 +77,16 @@ contract Listing {
     return ipfsHashes[ipfsHashes.length - 1];
   }
 
+  function updateIpfsHash(bytes32 _prevIpfsHash, bytes32 _ipfsHash)
+    public
+    isSeller
+  {
+    if (_prevIpfsHash == ipfsHash()) {
+      ipfsHashes.push(_ipfsHash);
+      emit ListingChange();
+    }
+  }
+
   /*
     * Abstract methods
   */
