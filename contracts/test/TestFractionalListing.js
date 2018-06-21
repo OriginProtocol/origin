@@ -13,13 +13,23 @@ contract('FractionalListing', accounts => {
     listing = await FractionalListing.new(seller, ipfsHash_1, { from: seller })
   })
 
-  describe('updateIpfs', () => {
+  describe('update', () => {
     it('should update the ipfs hash', async function() {
       const originalIpfsHash = await listing.ipfsHash()
-      await listing.updateIpfsHash(ipfsHash_1, ipfsHash_2, { from: seller })
+      await listing.update(0, ipfsHash_2, { from: seller })
       const newIpfsHash = await listing.ipfsHash()
       assert.equal(originalIpfsHash, ipfsHash_1)
       assert.equal(newIpfsHash, ipfsHash_2)
+    })
+  })
+
+  describe('version', () => {
+    it('should reflect the current version of the contract (0-indexed)', async function() {
+      const originalVersion = await listing.version()
+      await listing.update(0, ipfsHash_2, { from: seller })
+      const newVersion = await listing.version()
+      assert.equal(originalVersion, 0)
+      assert.equal(newVersion, 1)
     })
   })
 })

@@ -14,8 +14,13 @@ contract FractionalListing is Listing {
   * Storage
   */
 
+  struct Version {
+      uint timestamp;
+      bytes32 ipfsHash;
+  }
+
   Purchase[] public purchases;
-  bytes32[] public ipfsHashes;
+  Version[] public versions;
 
 
   constructor (
@@ -26,7 +31,7 @@ contract FractionalListing is Listing {
   {
     owner = _owner;
     listingRegistry = msg.sender; // ListingRegistry(msg.sender);
-    ipfsHashes.push(_ipfsHash);
+    versions.push(Version(now, _ipfsHash));
     created = now;
     expiration = created + 60 days;
     needsSellerApproval = true;
@@ -49,15 +54,23 @@ contract FractionalListing is Listing {
     constant
     returns (bytes32)
   {
-    return ipfsHashes[ipfsHashes.length - 1];
+    return versions[version()].ipfsHash;
   }
 
-  function updateIpfsHash(bytes32 _prevIpfsHash, bytes32 _ipfsHash)
+  function version()
+    public
+    constant
+    returns (uint)
+  {
+    return versions.length - 1;
+  }
+
+  function update(uint _currentVersion, bytes32 _ipfsHash)
     public
     isSeller
   {
-    if (_prevIpfsHash == ipfsHash()) {
-      ipfsHashes.push(_ipfsHash);
+    if (_currentVersion == version()) {
+      versions.push(Version(now, _ipfsHash));
       emit ListingChange();
     }
   }
