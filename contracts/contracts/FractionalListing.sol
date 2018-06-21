@@ -15,6 +15,7 @@ contract FractionalListing is Listing {
   */
 
   Purchase[] public purchases;
+  bytes32[] public ipfsHashes;
 
 
   constructor (
@@ -41,6 +42,24 @@ contract FractionalListing is Listing {
     returns (bool)
   {
     return false;
+  }
+
+  function ipfsHash()
+    public
+    constant
+    returns (bytes32)
+  {
+    return ipfsHashes[ipfsHashes.length - 1];
+  }
+
+  function updateIpfsHash(bytes32 _prevIpfsHash, bytes32 _ipfsHash)
+    public
+    isSeller
+  {
+    if (_prevIpfsHash == ipfsHash()) {
+      ipfsHashes.push(_ipfsHash);
+      emit ListingChange();
+    }
   }
 
 }

@@ -20,10 +20,6 @@ contract Listing {
 
     address public owner;
     address public listingRegistry; // TODO: Define interface for real ListingRegistry ?
-    // Assume IPFS defaults for hash: function:0x12=sha2, size:0x20=256 bits
-    // See: https://ethereum.stackexchange.com/a/17112/20332
-    // This assumption may have to change in future, but saves space now
-    bytes32[] public ipfsHashes;
     uint public created;
     uint public expiration;
     bool public needsSellerApproval;
@@ -67,24 +63,6 @@ contract Listing {
     return (
       purchases[_index]
     );
-  }
-
-  function ipfsHash()
-    public
-    constant
-    returns (bytes32)
-  {
-    return ipfsHashes[ipfsHashes.length - 1];
-  }
-
-  function updateIpfsHash(bytes32 _prevIpfsHash, bytes32 _ipfsHash)
-    public
-    isSeller
-  {
-    if (_prevIpfsHash == ipfsHash()) {
-      ipfsHashes.push(_ipfsHash);
-      emit ListingChange();
-    }
   }
 
   /*

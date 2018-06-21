@@ -17,6 +17,7 @@ contract UnitListing is Listing {
 
   uint public price;
   uint public unitsAvailable;
+  bytes32 public ipfsHash;
 
 
   constructor (
@@ -29,7 +30,10 @@ contract UnitListing is Listing {
   {
     owner = _owner;
     listingRegistry = msg.sender; // ListingRegistry(msg.sender);
-    ipfsHashes.push(_ipfsHash);
+    // Assume IPFS defaults for hash: function:0x12=sha2, size:0x20=256 bits
+    // See: https://ethereum.stackexchange.com/a/17112/20332
+    // This assumption may have to change in future, but saves space now
+    ipfsHash = _ipfsHash;
     price = _price;
     unitsAvailable = _unitsAvailable;
     created = now;
@@ -46,7 +50,7 @@ contract UnitListing is Listing {
     view
     returns (address _owner, bytes32 _ipfsHash, uint _price, uint _unitsAvailable, uint _created, uint _expiration)
   {
-    return (owner, ipfsHash(), price, unitsAvailable, created, expiration);
+    return (owner, ipfsHash, price, unitsAvailable, created, expiration);
   }
 
   /// @dev buyListing(): Buy a listing

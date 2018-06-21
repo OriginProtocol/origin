@@ -22,9 +22,8 @@ const timetravel = async function(seconds) {
   })
 }
 
-const ipfsHash_1 =
+const ipfsHash =
   '0x6b14cac30356789cd0c39fec0acc2176c3573abdb799f3b17ccc6972ab4d39ba'
-const ipfsHash_2 = '0xab92c0500ba26fa6f5244f8ba54746e15dd455a7c99a67f0e8f8868c8fab4a1a'
 const price = 33
 const unitsAvailable = 42
 const LISTING_EXPIRATION_SECONDS = 60 * 24 * 60 * 60
@@ -36,7 +35,7 @@ contract('UnitListing', accounts => {
   let listing
 
   beforeEach(async function() {
-    listing = await UnitListing.new(seller, ipfsHash_1, price, unitsAvailable, {
+    listing = await UnitListing.new(seller, ipfsHash, price, unitsAvailable, {
       from: seller
     })
   })
@@ -49,7 +48,7 @@ contract('UnitListing', accounts => {
   it('should allow getting listing information', async function() {
     const data = await listing.data()
     assert.equal(data[0], seller, 'owner')
-    assert.equal(data[1], ipfsHash_1, 'ipfsHash')
+    assert.equal(data[1], ipfsHash, 'ipfsHash')
     assert.equal(data[2], price, 'price')
     assert.equal(data[3], unitsAvailable, 'unitsAvailable')
     assert.equal(
@@ -152,15 +151,5 @@ contract('UnitListing', accounts => {
 
     // Check that we can fetch the purchase address
     assert.equal(await listing.getPurchase(0), purchaseContract.address)
-  })
-
-  describe('updateIpfs', () => {
-    it('should update the ipfs hash', async function() {
-      const originalIpfsHash = await listing.ipfsHash()
-      await listing.updateIpfsHash(ipfsHash_1, ipfsHash_2, { from: seller })
-      const newIpfsHash = await listing.ipfsHash()
-      assert.equal(originalIpfsHash, ipfsHash_1)
-      assert.equal(newIpfsHash, ipfsHash_2)
-    })
   })
 })
