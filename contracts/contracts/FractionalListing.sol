@@ -54,10 +54,10 @@ contract FractionalListing is Listing {
     constant
     returns (bytes32)
   {
-    return versions[version()].ipfsHash;
+    return versions[currentVersion()].ipfsHash;
   }
 
-  function version()
+  function currentVersion()
     public
     constant
     returns (uint)
@@ -65,11 +65,19 @@ contract FractionalListing is Listing {
     return versions.length - 1;
   }
 
+  function dataForVersion(uint _version)
+    public
+    constant
+    returns (uint timestamp, bytes32 _ipfsHash)
+  {
+    return (versions[_version].timestamp, versions[_version].ipfsHash);
+  }
+
   function update(uint _currentVersion, bytes32 _ipfsHash)
     public
     isSeller
   {
-    if (_currentVersion == version()) {
+    if (_currentVersion == currentVersion()) {
       versions.push(Version(now, _ipfsHash));
       emit ListingChange();
     }

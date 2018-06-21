@@ -23,13 +23,21 @@ contract('FractionalListing', accounts => {
     })
   })
 
-  describe('version', () => {
+  describe('currentVersion', () => {
     it('should reflect the current version of the contract (0-indexed)', async function() {
-      const originalVersion = await listing.version()
+      const originalVersion = await listing.currentVersion()
       await listing.update(0, ipfsHash_2, { from: seller })
-      const newVersion = await listing.version()
+      const newVersion = await listing.currentVersion()
       assert.equal(originalVersion, 0)
       assert.equal(newVersion, 1)
+    })
+  })
+
+  describe('dataForVersion', () => {
+    it('should return the data for the specified version', async function() {
+      const [_timestamp, _ipfsHash] = await listing.dataForVersion(0)
+      assert.isAbove(_timestamp, 0)
+      assert.equal(_ipfsHash, ipfsHash_1)
     })
   })
 })
