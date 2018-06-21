@@ -186,4 +186,36 @@ describe('Attestation Resource', function() {
       expectAttestation(response)
     })
   })
+
+  describe('airbnbGenerateCode', () => {
+    it('should process the request', async () => {
+      const attestations = setupWithServer({
+        expectedMethod: 'GET',
+        expectedPath: 'airbnb/generate-code',
+        expectedParams: ['identity', 'airbnbUserId'],
+        responseStub: {'code': '0x5tegfyty'}
+      })
+      const response = await attestations.airbnbGenerateCode({
+        identity: '0xB529f14AA8096f943177c09Ca294Ad66d2E08b1f',
+        airbnbUserId: '2049937'
+      })
+      expect(response).to.be.an('0x5tegfyty')
+    })
+  })
+
+  describe('airbnbVerify', () => {
+    it('should process the request', async () => {
+      const attestations = setupWithServer({
+        expectedMethod: 'POST',
+        expectedPath: 'airbnb/verify',
+        expectedParams: ['identity', 'airbnbUserId'],
+        responseStub: sampleAttestation
+      })
+      const response = await attestations.airbnbVerify({
+        identity: '0xB529f14AA8096f943177c09Ca294Ad66d2E08b1f',
+        airbnbUserId: '2049937'
+      })
+      expectAttestation(response)
+    })
+  })
 })

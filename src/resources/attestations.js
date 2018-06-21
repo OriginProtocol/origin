@@ -128,14 +128,21 @@ class Attestations {
     const identity = await this.getIdentityAddress(wallet)
 
     return await this.get(`airbnb/generate-code`, {
-      "identity": identity,
-      "airbnbUserId": airbnbUserId
+      'identity': identity,
+      'airbnbUserId': airbnbUserId
     })
   }
 
   async airbnbVerify({ wallet, airbnbUserId }) {
     const identity = await this.getIdentityAddress(wallet)
-    return await this.post('airbnb/verify', { identity, airbnbUserId })
+    return await this.post(
+      'airbnb/verify',
+      {
+        identity,
+        airbnbUserId
+      },
+      this.responseToAttestation
+    )
   }
 
   async http(baseUrl, url, body, successFn, method) {
@@ -157,8 +164,8 @@ class Attestations {
   }
 
   async get(url, parameters, successFn) {
-    let objectKeys = Object.keys(parameters)
-    let stringParams = objectKeys.map(key => key + '=' + parameters[key]).join('&');
+    const objectKeys = Object.keys(parameters)
+    let stringParams = objectKeys.map(key => key + '=' + parameters[key]).join('&')
     stringParams = (objectKeys.length === 0 ? '' : '?') + stringParams
 
     return await this.http(this.serverUrl, url + stringParams, undefined, successFn, 'GET')
