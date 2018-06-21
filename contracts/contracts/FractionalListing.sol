@@ -1,6 +1,7 @@
 pragma solidity 0.4.23;
 
 import "./Listing.sol";
+import "./PurchaseLibrary.sol";
 
 contract FractionalListing is Listing {
 
@@ -81,6 +82,26 @@ contract FractionalListing is Listing {
       versions.push(Version(now, _ipfsHash));
       emit ListingChange();
     }
+  }
+
+  function request()
+    public
+    payable
+    isNotSeller
+  {
+    // Ensure that we are not past the expiration
+    require(now < expiration);
+
+    // Create purchase contract
+    Purchase purchaseContract = PurchaseLibrary.newPurchase(this, msg.sender);
+
+    purchases.push(purchaseContract);
+
+    // TODO STAN: How to call function *AND* transfer value??
+    purchaseContract.pay.value(msg.value)();
+
+    emit ListingPurchased(purchaseContract);
+    emit ListingChange();
   }
 
 }

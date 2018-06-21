@@ -1,4 +1,5 @@
 const FractionalListing = artifacts.require('./FractionalListing.sol')
+const Purchase = artifacts.require('./Purchase.sol')
 
 const ipfsHash_1 =
   '0x6b14cac30356789cd0c39fec0acc2176c3573abdb799f3b17ccc6972ab4d39ba'
@@ -7,6 +8,7 @@ const ipfsHash_2 =
 
 contract('FractionalListing', accounts => {
   const seller = accounts[0]
+  const buyer = accounts[1]
   let listing
 
   beforeEach(async function() {
@@ -38,6 +40,25 @@ contract('FractionalListing', accounts => {
       const [_timestamp, _ipfsHash] = await listing.data(0)
       assert.isAbove(_timestamp, 0)
       assert.equal(_ipfsHash, ipfsHash_1)
+    })
+  })
+
+  describe('request', () => {
+    it('should create a purchase', async function() {
+      const tx = await listing.request({
+        from: buyer,
+        value: 6
+      })
+      const listingPurchasedEvent = tx.logs.find(
+        e => e.event == 'ListingPurchased'
+      )
+      const purchaseContract = await Purchase.at(
+        listingPurchasedEvent.args._purchaseContract
+      )
+
+      assert.equal(await purchaseContract.buyer(), buyer)
+      assert.equal((await listing.purchasesLength()).toNumber(), 1)
+      assert.equal(await listing.getPurchase(0), purchaseContract.address)
     })
   })
 })
