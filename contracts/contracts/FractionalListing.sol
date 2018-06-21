@@ -65,7 +65,7 @@ contract FractionalListing is Listing {
     return versions.length - 1;
   }
 
-  function dataForVersion(uint _version)
+  function data(uint _version)
     public
     constant
     returns (uint timestamp, bytes32 _ipfsHash)

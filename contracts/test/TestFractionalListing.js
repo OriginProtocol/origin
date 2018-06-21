@@ -33,9 +33,9 @@ contract('FractionalListing', accounts => {
     })
   })
 
-  describe('dataForVersion', () => {
+  describe('data', () => {
     it('should return the data for the specified version', async function() {
-      const [_timestamp, _ipfsHash] = await listing.dataForVersion(0)
+      const [_timestamp, _ipfsHash] = await listing.data(0)
       assert.isAbove(_timestamp, 0)
       assert.equal(_ipfsHash, ipfsHash_1)
     })
