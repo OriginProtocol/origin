@@ -108,23 +108,6 @@ class ContractService {
     })
   }
 
-  async submitListing(ipfsListing, ethPrice, units) {
-    try {
-      const account = await this.currentAccount()
-      const instance = await this.deployed(ListingsRegistryContract)
-
-      const weiToGive = this.web3.utils.toWei(String(ethPrice), 'ether')
-      // Note we cannot get the listingId returned by our contract.
-      // See: https://forum.ethereum.org/discussion/comment/31529/#Comment_31529
-      return instance.methods
-        .create(this.getBytes32FromIpfsHash(ipfsListing), weiToGive, units)
-        .send({ from: account, gas: 4476768 })
-    } catch (error) {
-      console.error('Error submitting to the Ethereum blockchain: ' + error)
-      throw error
-    }
-  }
-
   async deployed(contract, addrs) {
     const net = await this.web3.eth.net.getId()
     const storedAddress =
@@ -163,57 +146,6 @@ class ContractService {
         .on('error', err => reject(err))
     })
     return txReceipt
-  }
-
-  async getAllListingIds() {
-    const range = (start, count) =>
-      Array.apply(0, Array(count)).map((element, index) => index + start)
-
-    let instance
-    try {
-      instance = await this.deployed(ListingsRegistryContract)
-    } catch (error) {
-      console.log('Contract not deployed')
-      throw error
-    }
-
-    // Get total number of listings
-    let listingsLength
-    try {
-      listingsLength = await instance.methods.listingsLength().call()
-    } catch (error) {
-      console.log(error)
-      console.log('Can\'t get number of listings.')
-      throw error
-    }
-
-    return range(0, Number(listingsLength))
-  }
-
-  async getListing(listingId) {
-    const instance = await this.deployed(ListingsRegistryContract)
-
-    let listing
-    try {
-      listing = await instance.methods.getListing(listingId).call()
-    } catch (error) {
-      console.log('Error fetching listingId: ' + listingId)
-      throw error
-    }
-
-    // Listing is returned as array of properties.
-    // IPFS hash (as bytes32 hex string) is in results[2]
-    // Convert it to regular IPFS base-58 encoded hash
-    // Address of Listing contract is in: listing[0]
-    const listingObject = {
-      index: listingId,
-      address: listing[0],
-      lister: listing[1],
-      ipfsHash: this.getIpfsHashFromBytes32(listing[2]),
-      price: this.web3.utils.fromWei(listing[3], 'ether'),
-      unitsAvailable: listing[4]
-    }
-    return listingObject
   }
 
   async waitTransactionFinished(
