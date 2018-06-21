@@ -4,6 +4,7 @@ import ar from 'react-intl/locale-data/ar'
 import bn from 'react-intl/locale-data/bn'
 import bs from 'react-intl/locale-data/bs'
 import cs from 'react-intl/locale-data/cs'
+import da from 'react-intl/locale-data/da'
 import de from 'react-intl/locale-data/de'
 import el from 'react-intl/locale-data/el'
 import en from 'react-intl/locale-data/en'
@@ -13,6 +14,7 @@ import fr from 'react-intl/locale-data/fr'
 import fil from 'react-intl/locale-data/fil'
 import he from 'react-intl/locale-data/he'
 import hr from 'react-intl/locale-data/hr'
+import id from 'react-intl/locale-data/id'
 import it from 'react-intl/locale-data/it'
 import ja from 'react-intl/locale-data/ja'
 import ko from 'react-intl/locale-data/ko'
@@ -50,6 +52,7 @@ export function addLocales() {
       'intl/locale-data/jsonp/bn.js',
       'intl/locale-data/jsonp/bs.js',
       'intl/locale-data/jsonp/cs.js',
+      'intl/locale-data/jsonp/da.js',
       'intl/locale-data/jsonp/de.js',
       'intl/locale-data/jsonp/el.js',
       'intl/locale-data/jsonp/en.js',
@@ -59,6 +62,7 @@ export function addLocales() {
       'intl/locale-data/jsonp/fr.js',
       'intl/locale-data/jsonp/he.js',
       'intl/locale-data/jsonp/hr.js',
+      'intl/locale-data/jsonp/id.js',
       'intl/locale-data/jsonp/it.js',
       'intl/locale-data/jsonp/lo.js',
       'intl/locale-data/jsonp/ja.js',
@@ -86,6 +90,7 @@ export function addLocales() {
       require('intl/locale-data/jsonp/bn.js')
       require('intl/locale-data/jsonp/bs.js')
       require('intl/locale-data/jsonp/cs.js')
+      require('intl/locale-data/jsonp/da.js')
       require('intl/locale-data/jsonp/de.js')
       require('intl/locale-data/jsonp/el.js')
       require('intl/locale-data/jsonp/en.js')
@@ -95,6 +100,7 @@ export function addLocales() {
       require('intl/locale-data/jsonp/fr.js')
       require('intl/locale-data/jsonp/he.js')
       require('intl/locale-data/jsonp/hr.js')
+      require('intl/locale-data/jsonp/id.js')
       require('intl/locale-data/jsonp/it.js')
       require('intl/locale-data/jsonp/lo.js')
       require('intl/locale-data/jsonp/ja.js')
@@ -124,6 +130,7 @@ export function addLocales() {
     ...bn,
     ...bs,
     ...cs,
+    ...da,
     ...de,
     ...el,
     ...en,
@@ -133,6 +140,7 @@ export function addLocales() {
     ...fr,
     ...he,
     ...hr,
+    ...id,
     ...it,
     ...lo,
     ...ja,
