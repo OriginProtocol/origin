@@ -1,8 +1,9 @@
 import { Attestations } from '../src/resources/attestations.js'
 import ContractService from '../src/services/contract-service'
-import { expect } from 'chai'
+import chai, { expect } from 'chai'
 import Web3 from 'web3'
 import fetchMock from 'fetch-mock'
+chai.use(require('chai-string'))
 
 const sampleWallet = '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'
 const sampleAttestation = {
@@ -11,10 +12,17 @@ const sampleAttestation = {
   signature: '0x1a2b3c'
 }
 
-const expectParams = (requestBody, params) => {
+const expectPostParams = (requestBody, params) => {
   params.forEach(param => {
     expect(requestBody[param], `Param ${param} should be in the request`).to
       .exist
+  })
+}
+
+const expectGetParams = (requestUrl, params) => {
+  params.forEach(param => {
+    expect (requestUrl, `Param ${param}  should be present in request url`).to
+      .match(new RegExp('.*[\\?&]{1}' + param + '=.*'))
   })
 }
 
@@ -44,11 +52,23 @@ const setupWithServer = ({
   const fetch = fetchMock.sandbox().mock(
     (requestUrl, opts) => {
       expect(opts.method).to.equal(expectedMethod)
-      expect(requestUrl).to.equal(serverUrl + '/' + expectedPath)
-      if (expectedParams) {
-        const requestBody = JSON.parse(opts.body)
-        expectParams(requestBody, expectedParams)
+      const serverPath = serverUrl + '/' + expectedPath
+
+      if (expectedMethod.toLowerCase() == 'post') {
+        expect(requestUrl).to.equal(serverPath)
+
+        if (expectedParams) {
+          const requestBody = JSON.parse(opts.body)
+          expectPostParams(requestBody, expectedParams)
+        }
+      } else if (expectedMethod.toLowerCase() == 'get') {
+        expect(requestUrl).to.startsWith(serverPath)
+
+        if (expectedParams) {
+          expectGetParams(requestUrl, expectedParams)
+        }
       }
+
       return true
     },
     { body: JSON.stringify(responseStub) }
@@ -196,10 +216,11 @@ describe('Attestation Resource', function() {
         responseStub: {'code': '0x5tegfyty'}
       })
       const response = await attestations.airbnbGenerateCode({
-        identity: '0xB529f14AA8096f943177c09Ca294Ad66d2E08b1f',
+        wallet: '0xB529f14AA8096f943177c09Ca294Ad66d2E08b1f',
         airbnbUserId: '2049937'
       })
-      expect(response).to.be.an('0x5tegfyty')
+
+      expect(response).to.eql({'code': '0x5tegfyty'})
     })
   })
 
@@ -212,7 +233,7 @@ describe('Attestation Resource', function() {
         responseStub: sampleAttestation
       })
       const response = await attestations.airbnbVerify({
-        identity: '0xB529f14AA8096f943177c09Ca294Ad66d2E08b1f',
+        wallet: '0xB529f14AA8096f943177c09Ca294Ad66d2E08b1f',
         airbnbUserId: '2049937'
       })
       expectAttestation(response)
