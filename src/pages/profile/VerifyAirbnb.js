@@ -40,7 +40,8 @@ class VerifyAirbnb extends Component {
             <button className="btn btn-clear" data-modal="airbnb"
               onClick={e => {
                 e.preventDefault()
-
+                // reset state
+                this.setState({ mode: 'input-airbnb-profile', airbnbProfile: '', confirmationCode: '', error: ''})
                 this.props.handleToggle(e)
               }}>
               <FormattedMessage
@@ -55,42 +56,79 @@ class VerifyAirbnb extends Component {
 
   renderNormalFlow(){
     return(
+      this.state.mode === 'input-airbnb-profile' ? this.renderInputAirbnbProfile() : this.renderShowGeneratedCode()
+    )
+  }
+
+  renderInputAirbnbProfile(){
+    return(
+       <form
+        onSubmit={async e => {
+          e.preventDefault()
+
+          this.setState({ mode: 'show-generated-code', confirmationCode: '' })
+
+          origin.attestations.airbnbGenerateCode({
+            wallet: this.props.wallet,
+            airbnbUserId: this.getUserIdFromAirbnbProfile(this.state.airbnbProfile)
+          }).then(data => {
+            this.setState({confirmationCode: data.code});
+          })
+        }}>
+
+        {this.renderProfileLinkInputForm()}
+        <div className="button-container">
+          <button type="submit" className="btn btn-clear">
+            <FormattedMessage
+              id={ 'VerifyAirbnb.continue' }
+              defaultMessage={ 'Continue' }
+            />
+          </button>
+        </div>
+        <div className="link-container">
+          <a
+            href="#"
+            data-modal="airbnb"
+            onClick={e => {
+              e.preventDefault()
+              this.props.handleToggle(e)
+            }}
+          >
+            <FormattedMessage
+              id={ 'VerifyAirbnb.cancel' }
+              defaultMessage={ 'Cancel' }
+            />
+          </a>
+        </div>
+      </form>
+    )
+  }
+
+  renderShowGeneratedCode(){
+    return(
       <form
         onSubmit={async e => {
           e.preventDefault()
-          if (this.state.mode === 'input-airbnb-profile') {
-            this.setState({ mode: 'show-generated-code', confirmationCode: '' })
-
-            origin.attestations.airbnbGenerateCode({
+          try {
+            let airbnbAttestation = await origin.attestations.airbnbVerify({
               wallet: this.props.wallet,
               airbnbUserId: this.getUserIdFromAirbnbProfile(this.state.airbnbProfile)
-            }).then(data => {
-              this.setState({confirmationCode: data.code});
             })
-          } else if (this.state.mode === 'show-generated-code') {
-            try {
-              let airbnbAttestation = await origin.attestations.airbnbVerify({
-                wallet: this.props.wallet,
-                airbnbUserId: this.getUserIdFromAirbnbProfile(this.state.airbnbProfile)
-              })
 
-              this.props.onSuccess(airbnbAttestation)
-            } catch(e){
-              let unknownError = <FormattedMessage
-                id={ 'VerifyAirbnb.unknownError' }
-                defaultMessage={ 'An unknown error occurred' }
-              />
+            this.props.onSuccess(airbnbAttestation)
+          } catch(e){
+            let unknownError = <FormattedMessage
+              id={ 'VerifyAirbnb.unknownError' }
+              defaultMessage={ 'An unknown error occurred' }
+            />
 
-              let error = JSON.parse(e)
-              error = error.errors ? error.errors.join('</br>') : unknownError
-              this.setState({ error: error})
-            }
+            let error = JSON.parse(e)
+            error = error.errors ? error.errors.join('</br>') : unknownError
+            this.setState({ error: error})
           }
         }}
       >
-        {this.state.mode === 'input-airbnb-profile'
-          ? this.renderProfileLinkInputForm()
-          : this.renderGeneratedCode()}
+        {this.renderGeneratedCode()}
         <div className="button-container">
           <button type="submit" className="btn btn-clear">
             <FormattedMessage
@@ -107,9 +145,7 @@ class VerifyAirbnb extends Component {
               e.preventDefault()
 
               // if user cancels when generated code is shown he might want to input different airbnb profile
-              if (this.state.mode === 'show-generated-code') {
-                this.setState({ airbnbProfile: '', mode: 'input-airbnb-profile'})
-              }
+              this.setState({ airbnbProfile: '', mode: 'input-airbnb-profile'})
               this.props.handleToggle(e)
             }}
           >
@@ -197,6 +233,5 @@ class VerifyAirbnb extends Component {
     }
   }
 }
-
 
 export default VerifyAirbnb

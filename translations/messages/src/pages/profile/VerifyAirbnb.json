@@ -8,16 +8,16 @@
     "defaultMessage": "Ok"
   },
   {
-    "id": "VerifyAirbnb.unknownError",
-    "defaultMessage": "An unknown error occurred"
-  },
-  {
     "id": "VerifyAirbnb.continue",
     "defaultMessage": "Continue"
   },
   {
     "id": "VerifyAirbnb.cancel",
     "defaultMessage": "Cancel"
+  },
+  {
+    "id": "VerifyAirbnb.unknownError",
+    "defaultMessage": "An unknown error occurred"
   },
   {
     "id": "VerifyAirbnb.enterAirbnbProfileUrl",
