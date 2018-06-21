@@ -7,6 +7,7 @@ import cs from 'react-intl/locale-data/cs'
 import de from 'react-intl/locale-data/de'
 import el from 'react-intl/locale-data/el'
 import en from 'react-intl/locale-data/en'
+import eo from 'react-intl/locale-data/eo'
 import es from 'react-intl/locale-data/es'
 import fr from 'react-intl/locale-data/fr'
 import fil from 'react-intl/locale-data/fil'
@@ -52,6 +53,7 @@ export function addLocales() {
       'intl/locale-data/jsonp/de.js',
       'intl/locale-data/jsonp/el.js',
       'intl/locale-data/jsonp/en.js',
+      'intl/locale-data/jsonp/eo.js',
       'intl/locale-data/jsonp/es.js',
       'intl/locale-data/jsonp/fil.js',
       'intl/locale-data/jsonp/fr.js',
@@ -87,6 +89,7 @@ export function addLocales() {
       require('intl/locale-data/jsonp/de.js')
       require('intl/locale-data/jsonp/el.js')
       require('intl/locale-data/jsonp/en.js')
+      require('intl/locale-data/jsonp/eo.js')
       require('intl/locale-data/jsonp/es.js')
       require('intl/locale-data/jsonp/fil.js')
       require('intl/locale-data/jsonp/fr.js')
@@ -124,6 +127,7 @@ export function addLocales() {
     ...de,
     ...el,
     ...en,
+    ...eo,
     ...es,
     ...fil,
     ...fr,
