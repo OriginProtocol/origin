@@ -318,7 +318,7 @@
   "VerifyPhone.continue": "続く",
   "VerifyPhone.cancel": "キャンセル",
   "VerifyPhone.enterPhoneNumber": "{originId} からの認証コードを受け取るための、電話番号を記入ください。",
-  "VerifyPhone.phoneNumberNotPublished": "他のユーザーはあなたの電話番号が認証済みであるとわかりますが、あなたの電話番号そのものはブロックチェーン上に公開されません。",
+  "VerifyPhone.phoneNumberNotPublished": "他のユーザはあなたが認証済みの電話番号を持っていることを知ることが出来ます。電話番号自体がそのものブロックチェーン上に公開されません。",
   "VerifyPhone.enterCodeBelow": "送付されたコードを記入ください",
   "VerifyTwitter.verifyTwitterHeading": "Twitterアカウントを認証してください",
   "VerifyTwitter.twitterNotPublic": "他のユーザーはあなたが認証済みのTwitterアカウントを持っているとわかりますが、詳細なアカウント情報はブロックチェーン上には公開されません。わたしたちがあなたの情報をツイートする事はありません。",
