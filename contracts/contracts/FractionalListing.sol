@@ -20,7 +20,6 @@ contract FractionalListing is Listing {
       bytes32 ipfsHash;
   }
 
-  Purchase[] public purchases;
   Version[] public versions;
 
 
