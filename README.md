@@ -68,6 +68,7 @@ Currently we're using [pm2](http://pm2.keymetrics.io/) to automatically start an
 
 **\# pm2 list**
 
+```
 ┌────────────────────┬────┬──────┬─────┬────────┬─────────┬────────┬─────┬───────────┬──────┬──────────┐
 │ App name           │ id │ mode │ pid │ status │ restart │ uptime │ cpu │ mem       │ user │ watching │
 ├────────────────────┼────┼──────┼─────┼────────┼─────────┼────────┼─────┼───────────┼──────┼──────────┤
@@ -80,3 +81,4 @@ Currently we're using [pm2](http://pm2.keymetrics.io/) to automatically start an
 │ postgresql         │ 3  │ fork │ 44  │ online │ 0       │ 60s    │ 0%  │ 2.9 MB    │ root │ disabled │
 │ redis              │ 0  │ fork │ 32  │ online │ 0       │ 60s    │ 0%  │ 4.3 MB    │ root │ disabled │
 └────────────────────┴────┴──────┴─────┴────────┴─────────┴────────┴─────┴───────────┴──────┴──────────┘
+```
