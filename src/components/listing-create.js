@@ -260,13 +260,6 @@ class ListingCreate extends Component {
                     </div>
                     <div className="info-box-image"><img className="d-none d-md-block" src="images/features-graphic.svg" role="presentation" /></div>
                   </div>
-                  <br/>
-                  <br/>
-                  <br/>
-                  <br/>
-                  <br/>
-                  <br/>
-                  <Calendar />
                 </div>
               <div className="col-md-5">
                 <label>
@@ -469,6 +462,16 @@ class ListingCreate extends Component {
             </div>
           </div>
         }
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <Calendar 
+          listingId=""
+          type="sellerDaily"
+        />
       </div>
     )
   }
