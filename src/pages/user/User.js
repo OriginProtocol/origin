@@ -125,7 +125,7 @@ class User extends Component {
                   }
                   {attestations.find(a => a.service === 'email') &&
                     <div className="service d-flex">
-                      <img src="images/phone-icon-verified.svg" alt="email verified icon" />
+                      <img src="images/email-icon-verified.svg" alt="email verified icon" />
                       <div>
                         <FormattedMessage
                           id={ 'User.email' }
@@ -136,7 +136,7 @@ class User extends Component {
                   }
                   {attestations.find(a => a.service === 'facebook') &&
                     <div className="service d-flex">
-                      <img src="images/phone-icon-verified.svg" alt="Facebook verified icon" />
+                      <img src="images/facebook-icon-verified.svg" alt="Facebook verified icon" />
                       <div>
                         <FormattedMessage
                           id={ 'User.facebook' }
@@ -147,7 +147,7 @@ class User extends Component {
                   }
                   {attestations.find(a => a.service === 'twitter') &&
                     <div className="service d-flex">
-                      <img src="images/phone-icon-verified.svg" alt="Twitter verified icon" />
+                      <img src="images/twitter-icon-verified.svg" alt="Twitter verified icon" />
                       <div>
                         <FormattedMessage
                           id={ 'User.twitter' }
