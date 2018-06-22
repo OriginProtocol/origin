@@ -1065,12 +1065,17 @@ a:hover {
 
 .tooltip .tooltip-inner {
   padding: 1.2rem;
-  max-width: 250px;
+  max-width: 14.85rem;
 }
 
 .tooltip img {
   height: 0.66rem;
   margin-right: 0.25rem;
+}
+
+.wechat-qr {
+  width: 12.5rem;
+  height: 12.5rem !important;
 }
 
 /* Listings */
