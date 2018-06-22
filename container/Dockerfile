@@ -26,7 +26,7 @@ COPY files/config/pg_hba.conf /etc/postgresql/9.3/main/
 COPY files/config/postgresql.conf /etc/postgresql/9.3/main/
 RUN    /etc/init.d/postgresql start &&\
     psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';" &&\
-    psql --command 'CREATE DATABASE "bridge-server" OWNER docker;'
+    psql --command 'CREATE DATABASE "origin-bridge" OWNER docker;'
 USER root
 
 # Redis 4.0+
@@ -51,29 +51,29 @@ RUN pip3 install pip --upgrade
 # TODO: integrate envkey
 WORKDIR /opt
 RUN pip3 install virtualenv
-WORKDIR /opt/bridge-server
-RUN git clone https://github.com/OriginProtocol/bridge-server.git source
-WORKDIR /opt/bridge-server/source
+WORKDIR /opt/origin-bridge
+RUN git clone https://github.com/OriginProtocol/origin-bridge.git source
+WORKDIR /opt/origin-bridge/source
 RUN git checkout develop
-WORKDIR /opt/bridge-server
-RUN virtualenv bridge-server-venv && \
-	. bridge-server-venv/bin/activate
+WORKDIR /opt/origin-bridge
+RUN virtualenv origin-bridge-venv && \
+	. origin-bridge-venv/bin/activate
 # for compiling dependencies of bridge server... dependencies (on 16.04)
 RUN apt-get install -y pkg-config libffi-dev autoconf libtool libssl-dev
 # TODO: remove hacks
-WORKDIR /opt/bridge-server/source
+WORKDIR /opt/origin-bridge/source
 RUN sed -i '/pytest-*/d' requirements.txt
-RUN ../bridge-server-venv/bin/pip3.6 install -r requirements.txt
+RUN ../origin-bridge-venv/bin/pip3.6 install -r requirements.txt
 # needed by flask
 ENV LC_ALL=C.UTF-8 \
     LANG=C.UTF-8
 RUN /etc/init.d/postgresql start && \
-	. ../bridge-server-venv/bin/activate && \
-	DATABASE_URL=postgresql://docker:docker@localhost:5432/bridge-server FLASK_APP=main.py flask db upgrade
-# https://github.com/OriginProtocol/bridge-server/issues/71
-RUN ../bridge-server-venv/bin/pip3.6 install kombu==4.1
-# https://github.com/OriginProtocol/bridge-server/issues/74
-RUN sed -i '24s/.*/    return True\n    """/' /opt/bridge-server/bridge-server-venv/lib/python3.6/site-packages/ipfsapi/client.py
+	. ../origin-bridge-venv/bin/activate && \
+	DATABASE_URL=postgresql://docker:docker@localhost:5432/origin-bridge FLASK_APP=main.py flask db upgrade
+# https://github.com/OriginProtocol/origin-bridge/issues/71
+RUN ../origin-bridge-venv/bin/pip3.6 install kombu==4.1
+# https://github.com/OriginProtocol/origin-bridge/issues/74
+RUN sed -i '24s/.*/    return True\n    """/' /opt/origin-bridge/origin-bridge-venv/lib/python3.6/site-packages/ipfsapi/client.py
 
 # Copy start scripts for js and dapp
 COPY files/scripts/start-js.sh /opt/origin-js/scripts/start-js.sh
@@ -99,9 +99,9 @@ WORKDIR /opt/es
 # run everything with pm2 (thanks Gabo!)
 WORKDIR /opt
 RUN npm install -g pm2
-RUN mkdir /opt/bridge-server/scripts
-COPY files/scripts/start-bridge-server.sh /opt/bridge-server/scripts
-COPY files/scripts/start-celery.sh /opt/bridge-server/scripts
+RUN mkdir /opt/origin-bridge/scripts
+COPY files/scripts/start-bridge.sh /opt/origin-bridge/scripts
+COPY files/scripts/start-celery.sh /opt/origin-bridge/scripts
 COPY files/scripts/start-pg.sh /opt/pg
 COPY files/scripts/start-es.sh /opt/es
 COPY files/process.json /opt

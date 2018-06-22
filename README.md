@@ -12,9 +12,9 @@ Origin Box has several intended use cases:
 ## Supported Components
 
 Origin Box currently supports the following components:
-- [Dapp](https://github.com/OriginProtocol/demo-dapp)
+- [Dapp](https://github.com/OriginProtocol/origin-dapp)
 - [JS](https://github.com/OriginProtocol/origin-js)
-- [Bridge](https://github.com/OriginProtocol/bridge-server)
+- [Bridge](https://github.com/originprotocol/origin-bridge)
 
 ## System Requirements
 
@@ -40,7 +40,7 @@ However, non-git related actions should be performed from within the container. 
 
 ### Repo-specific instructions:
 
-- [bridge-server](bridge.md)
+- [origin-bridge](bridge.md)
 
 ### pm2
 
@@ -48,7 +48,7 @@ Currently we're using [pm2](http://pm2.keymetrics.io/) to automatically start an
 
 ## Connectivity tests from localhost
 - bridge server: curl http://127.0.0.1:5000
-- postgres:  psql -h 127.0.0.1 -p 5432 -d "bridge-server" -U docker --password <-- currently only working from within the container
+- postgres:  psql -h 127.0.0.1 -p 5432 -d "origin-bridge" -U docker --password <-- currently only working from within the container
 - redis: redis-cli <-- defaults to connecting to 127.0.0.1:6379
 - elasticsearch: curl http://127.0.0.1:9200
 - pm2 API (has stats for running applications): curl http://127.0.0.1:4000
@@ -68,13 +68,15 @@ Currently we're using [pm2](http://pm2.keymetrics.io/) to automatically start an
 
 **\# pm2 list**
 
-| App name           | id | mode | pid  | status | restart | uptime | cpu | mem        | user | watching |
-| ------------------ | -- | ----- | ---- | ------ | ------- | ------ | ---- | ---------- | ---- | -------- |
-| bridge server      | 3  | fork | x    | online | 0       | XXm    | 0%  | 1.8 MB    | root | disabled |
-| celery             | 4  | fork | x    | online | 1       | XXm    | 0%  | 1.6 MB    | root | disabled |
-|
-| elasticsearch      | 7  | fork | x    | online | 0       | XXs    | 0%  | 1.6 MB     | root | disabled |
-| origin-js          | 1  | fork | x    | online | 0       | XXm    | 0%  | 30.5 MB    | root | disabled |
-| pm2-http-interface | 6  | fork | x    | online | 0       | XXm    | 0%  | 29.0 MB    | root | disabled |
-| postgresql         | 6  | fork | x    | online | 0       | XXh    | 0%  | 1.5 MB     | root | disabled |
-| redis              | 0  | fork | x    | online | 0       | XXm    | 0%  | 3.2 MB     | root | disabled |
+┌────────────────────┬────┬──────┬─────┬────────┬─────────┬────────┬─────┬───────────┬──────┬──────────┐
+│ App name           │ id │ mode │ pid │ status │ restart │ uptime │ cpu │ mem       │ user │ watching │
+├────────────────────┼────┼──────┼─────┼────────┼─────────┼────────┼─────┼───────────┼──────┼──────────┤
+│ bridge             │ 1  │ fork │ 36  │ online │ 0       │ 60s    │ 0%  │ 3.0 MB    │ root │ disabled │
+│ celery             │ 2  │ fork │ 42  │ online │ 0       │ 60s    │ 0%  │ 3.1 MB    │ root │ disabled │
+│ dapp               │ 6  │ fork │ 51  │ online │ 0       │ 60s    │ 0%  │ 2.8 MB    │ root │ disabled │
+│ elasticsearch      │ 4  │ fork │ 48  │ online │ 0       │ 60s    │ 0%  │ 2.8 MB    │ root │ disabled │
+│ js                 │ 5  │ fork │ 50  │ online │ 0       │ 60s    │ 0%  │ 2.7 MB    │ root │ disabled │
+│ pm2-http-interface │ 7  │ fork │ 83  │ online │ 0       │ 59s    │ 0%  │ 41.0 MB   │ root │ disabled │
+│ postgresql         │ 3  │ fork │ 44  │ online │ 0       │ 60s    │ 0%  │ 2.9 MB    │ root │ disabled │
+│ redis              │ 0  │ fork │ 32  │ online │ 0       │ 60s    │ 0%  │ 4.3 MB    │ root │ disabled │
+└────────────────────┴────┴──────┴─────┴────────┴─────────┴────────┴─────┴───────────┴──────┴──────────┘
