@@ -14,6 +14,7 @@ import Layout from './layout'
 import Listings from './listings-grid'
 import ListingCreate from './listing-create'
 import ListingDetail from './listing-detail'
+import Messages from './messages'
 import MyListings from './my-listings'
 import MyPurchases from './my-purchases'
 import MySales from './my-sales'
@@ -105,6 +106,7 @@ class App extends Component {
                   />
                   <Route path="/my-purchases" component={MyPurchases} />
                   <Route path="/my-sales" component={MySales} />
+                  <Route path="/messages/:dialogueId?" component={Messages} />
                   <Route path="/notifications" component={Notifications} />
                   <Route path="/profile" component={Profile} />
                   <Route path="/users/:userAddress" component={UserPage} />

@@ -6,7 +6,7 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import { translateListingCategory } from '../utils/translationUtils'
 
-// import PurchaseProgress from './purchase-progress'
+import PurchaseProgress from './purchase-progress'
 import origin from '../services/origin'
 
 class MyPurchaseCard extends Component {
@@ -103,7 +103,7 @@ class MyPurchaseCard extends Component {
                 {/* Not Yet Relevant */}
                 {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
               </div>
-              {/*<PurchaseProgress currentStep={step} perspective="buyer" purchase={this.props.purchase} subdued={true} />*/}
+              <PurchaseProgress currentStep={step} perspective="buyer" purchase={this.props.purchase} subdued={true} />
               <div className="actions d-flex">
                 <div className="links-container">
                   {/*<a onClick={() => alert('To Do')}>Open a Dispute</a>*/}
