@@ -4,7 +4,7 @@ Want to hack on Origin? Awesome!
 
 Origin is an Open Source project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community.
 
-There are three main repositories that are considered as core components of the Origin platform:
+There are three main repositories that are considered core components of the Origin platform:
 
 - [Origin.js](https://github.com/OriginProtocol/origin-js) - solidity contracts and the Origin JS API
 - [Demo DApp](https://github.com/OriginProtocol/demo-dapp) - example react powered front end 
@@ -23,7 +23,7 @@ We have an open weekly engineering call on Google Hangouts every Wednesday at 1p
 
 Join the call here: [https://meet.google.com/pws-cgyd-tqp](https://meet.google.com/pws-cgyd-tqp)
 
-Every is welcome to join, even if you're just lurking. All we ask if that you  mute when not speaking to minimize background noise. All our meeting notes are public and can be reviewed here:
+Everyone is welcome to join, even if you're just lurking. All we ask is that you mute when not speaking to minimize background noise. All our meeting notes are public and can be reviewed here:
 
 - [Engineering Notes](https://docs.google.com/document/d/1aRcAk_rEjRgd1BppzxZJK9RXfDkbuwKKH8nPQk7FfaU)
 - [Product/Design Notes](https://docs.google.com/document/d/1tVx2O3qeplh9vawJpURTsJxZfUe1B0FrTHOMJbxKm-s)
@@ -42,7 +42,7 @@ Read our [development process](#contributing-email-development-process) and [com
 
 We follow the [GitFlow](http://nvie.com/posts/a-successful-git-branching-model/) branching model for development. The latest merged code generally lives in the `develop` branch of each repository. Your development flow should look like:
 
-1. Find an interesting issue and communicate! Please let the #engineering Discord channel know what you want to work on
+1. Find an interesting issue and communicate! Please let the `#engineering` [Discord](https://discord.gg/jyxpUSe) channel know what you want to work on
 1. Ping a [core team member](https://github.com/orgs/OriginProtocol/teams/contributors) member on Discord and ask to be added to our [contributors team](https://github.com/orgs/OriginProtocol/teams/contributors). Otherwise, you'll need to fork the relevant repository and push feature branches to your own fork.
 1. Add a comment to the issue or self-assign so we don't have multiple contributors unintentionally working on the same task
 1. Start with the `develop` branch and check out a new feature branch unless you're contributing to an existing feature
@@ -51,7 +51,7 @@ We follow the [GitFlow](http://nvie.com/posts/a-successful-git-branching-model/)
 1. Open a pull request to the `develop` branch, not `master`
 1. Please request a review in the PR by clicking on the gear icon next to "Reviewers" in the right column. 
 
-Both the `develop` and `master` branches are locked so that only members of the [core team](https://github.com/orgs/OriginProtocol/teams/core) are able to merge your pull requests. Pull requests that are peer reviewed by other trusted contributors will be fast-tracked and merged faster! Check in the #engineering Discord channel for appropriate reviewers.
+Both the `develop` and `master` branches are locked so that only members of the [core team](https://github.com/orgs/OriginProtocol/teams/core) are able to merge your pull requests. Pull requests that are peer reviewed by other trusted contributors will be fast-tracked and merged faster! Check in the `#engineering` Discord channel for appropriate reviewers.
 
 ### Coding Style
 
@@ -119,7 +119,7 @@ Origin is just as much about community as it is about our technology.
 
 We need constant help in improving our documentation, building new tools to interface with our platform, spreading the word to new users, helping new users getting setup and much more.
 
-Please get in touch if you would like to help out. Our `general` channel on [Discord](#discord) is a great place to share ideas and volunteer to help.
+Please get in touch if you would like to help out. Our `general` channel on [Discord](https://discord.gg/jyxpUSe) is a great place to share ideas and volunteer to help.
 
 ### Full Time Positions
 
@@ -127,4 +127,4 @@ Origin occasionally hires developers for part time or full time positions.
 
 We have a strong preference for hiring people who have already started contributing to the project. If you want a full time position on our team, your best shot is to engage with our team and start contributing code. It is very unlikely that we would offer you a full time position on our engineering team unless you've had at least a few pull requests merged.
 
-If you are interested, check out [the Origin Protocol job listings](https://angel.co/originprotocol/jobs). If you'd like to help in other ways, please propose your ideas in the [Origin Discord](#discord).
+If you are interested, check out [the Origin Protocol job listings](https://angel.co/originprotocol/jobs). If you'd like to help in other ways, please propose your ideas in the [Origin Discord](https://discord.gg/jyxpUSe).
