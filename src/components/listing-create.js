@@ -470,7 +470,8 @@ class ListingCreate extends Component {
         <br/>
         <Calendar 
           listingId=""
-          type="sellerDaily"
+          userType="seller"
+          viewType="daily"
         />
       </div>
     )

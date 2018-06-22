@@ -36,7 +36,7 @@ class Calendar extends Component {
   }
 
   setViewType() {
-    return /Daily/.test(this.props.type) ? ['month'] : ['week']
+    return this.props.viewType === 'daily' ? ['month'] : ['week']
   }
 
   onSelectSlot(slotInfo) {
@@ -99,7 +99,7 @@ class Calendar extends Component {
         <div className="row">
           <div className="col-md-8" style={{ height: '450px' }}>
             <BigCalendar
-              selectable={/seller/.test(this.props.type)}
+              selectable={this.props.userType === 'seller'}
               events={this.state.events}
               views={this.setViewType()}
               onSelectEvent={this.onSelectEvent}
