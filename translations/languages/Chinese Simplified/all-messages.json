@@ -5,7 +5,7 @@
   "connectivity.rinkebyTestNetwork": "林比克测试网络",
   "connectivity.kovanTestNetwork": "科万测试网络",
   "connectivity.localhost": "本地主机",
-  "connectivity.ethereumNetwork": "以太网络",
+  "connectivity.ethereumNetwork": "以太坊网络",
   "connectivity.connecting": "连接中...",
   "connectivity.ipfsGateway": "IPFS网关：",
   "connectivity.bridgeServer": "桥服务器",
