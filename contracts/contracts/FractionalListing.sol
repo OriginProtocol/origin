@@ -41,7 +41,7 @@ contract FractionalListing is Listing {
     * Public functions
   */
 
-  function isApproved(Purchase _purchase)
+  function isApproved(Purchase)
     public
     view
     returns (bool)
