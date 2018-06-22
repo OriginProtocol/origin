@@ -59,7 +59,7 @@ class Footer extends Component {
                       <a href="https://www.reddit.com/r/originprotocol/" target="_blank"><i class="fab fa-reddit"></i> Reddit</a>
                     </li>
                     <li>
-                      <span class="span-link" data-container="body" data-toggle="tooltip" data-html="true" title="<img class='wechat-qr' src='images/origin-wechat-qr.png' />"><i class="fab fa-weixin"></i> WeChat</span>
+                      <a class="span-link" data-container="body" data-toggle="tooltip" data-html="true" title="<img class='wechat-qr' src='images/origin-wechat-qr.png' />"><i class="fab fa-weixin"></i> WeChat</a>
                     </li>
                   </ul>
                 </div>

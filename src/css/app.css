@@ -1073,9 +1073,9 @@ a:hover {
   margin-right: 0.25rem;
 }
 
-.wechat-qr {
-  width: 12.5rem;
-  height: 12.5rem !important;
+.tooltip img.wechat-qr {
+  width: 200px;
+  height: 200px;
 }
 
 /* Listings */
@@ -2671,9 +2671,9 @@ footer .footer-links li a {
   min-height: 675px;
 }
 
-.span-link {
-   color: #ffffff;
-+  cursor: pointer; 
+a:not([href]):not([tabindex]).span-link {
+  color: #ffffff;
+  cursor: pointer; 
 }
 
 /* Error Page */
