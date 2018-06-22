@@ -69,7 +69,7 @@
   "listing-create.error2": "Δείτε την κονσόλα για περισσότερες λεπτομέρειες.",
   "listing-create.OK": "Εντάξει",
   "listing-create.previewListingHeading": "Προεπισκόπηση της καταχώρησής σας",
-  "listing-create.whatHappensNextHeading": "What happens next?",
+  "listing-create.whatHappensNextHeading": "Τι θα συμβεί στη συνέχεια;",
   "listing-create.whatHappensNextContent1": "When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network.",
   "listing-create.IPFS": "IPFS",
   "listing-create.whatHappensNextContent2": "Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left.",
