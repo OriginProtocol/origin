@@ -18,7 +18,7 @@ class Calendar extends Component {
     this.state = {
       events: [],
       selectedEvent: {
-        price: 0
+        title: 0
       }
     }
   }
