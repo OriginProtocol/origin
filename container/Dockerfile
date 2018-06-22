@@ -102,6 +102,8 @@ RUN npm install -g pm2
 RUN mkdir /opt/bridge-server/scripts
 COPY files/scripts/start-bridge-server.sh /opt/bridge-server/scripts
 COPY files/scripts/start-celery.sh /opt/bridge-server/scripts
+COPY files/scripts/run-tests.sh /opt/bridge-server/scripts
+RUN chmod +x /opt/bridge-server/scripts/run-tests.sh
 COPY files/scripts/start-pg.sh /opt/pg
 COPY files/scripts/start-es.sh /opt/es
 COPY files/process.json /opt
