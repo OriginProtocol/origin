@@ -8,7 +8,7 @@ function PrepareMessagesPlugin(options) {
 }
 
 PrepareMessagesPlugin.prototype.apply = function(compiler) {
-  compiler.plugin('done', function() {
+  compiler.plugin('done', function(stats) {
 
     // Aggregates the default messages that were extracted from the React components
     // via the React Intl Babel plugin. An error will be thrown if there
@@ -20,7 +20,7 @@ PrepareMessagesPlugin.prototype.apply = function(compiler) {
       .reduce((collection, descriptors) => {
         descriptors.forEach(({id, defaultMessage}) => {
           if (collection.hasOwnProperty(id)) {
-            throw new Error(`Duplicate message id: ${id}`);
+            stats.compilation.errors.push( new Error(`ERROR compiling react-intl messages: Duplicate message id: ${id}`) );
           }
           collection[id] = defaultMessage;
         });
@@ -28,8 +28,10 @@ PrepareMessagesPlugin.prototype.apply = function(compiler) {
         return collection;
       }, {});
 
-    // Write the messages to this directory
-    fs.writeFileSync(outputDir + 'all-messages.json', JSON.stringify(defaultMessages, null, 2));
+    if (!stats.compilation.errors.length) {
+      // Write the messages to /translations/all-messages.json
+      fs.writeFileSync(outputDir + 'all-messages.json', JSON.stringify(defaultMessages, null, 2));
+    }
 
   })
 }
