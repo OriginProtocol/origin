@@ -78,3 +78,6 @@ app/test_project.db
 
 # Flask Session files
 *flask_session/
+
+# Development contract directory
+contracts_dev

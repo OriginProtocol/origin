@@ -57,16 +57,18 @@ def event_listener(web3=None):
 
     # Create an event handler and attempt to fetch events from the network.
     handler = EventHandler(web3=web3)
-    ContractHelper().fetch_events(['NewListing(uint256,address)',
-                                   'ListingPurchased(address)',
-                                   'ListingChange()',
-                                   'PurchaseChange(uint8)',
-                                   'PurchaseReview(address,address,uint8,uint8,bytes32)'],
-                                  block_from=event_tracker.block_index,
-                                  block_to='latest',
-                                  callback=handler.process,
-                                  log_index=event_tracker.log_index,
-                                  transaction_index=event_tracker.transaction_index)
+    ContractHelper().fetch_events(
+        [
+            'NewListing(uint256,address)',
+            'ListingPurchased(address)',
+            'ListingChange()',
+            'PurchaseChange(uint8)',
+            'PurchaseReview(address,address,uint8,uint8,bytes32)'],
+        block_from=event_tracker.block_index,
+        block_to='latest',
+        callback=handler.process,
+        log_index=event_tracker.log_index,
+        transaction_index=event_tracker.transaction_index)
 
 
 @celery.on_after_configure.connect

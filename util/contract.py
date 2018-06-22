@@ -72,19 +72,19 @@ class ContractHelper:
 
     @classmethod
     def get_contract_abi(cls, contract_name):
-        with open("./contracts/{}.json".format(contract_name)) as f:
+        with open("./{}/{}.json".format(settings.CONTRACT_DIR, contract_name)) as f:
             contract_interface = json.loads(f.read())
         return contract_interface['abi']
 
     @classmethod
     def get_contract_bytecode(cls, contract_name):
-        with open("./contracts/{}.json".format(contract_name)) as f:
+        with open("./{}/{}.json".format(settings.CONTRACT_DIR, contract_name)) as f:
             contract_interface = json.loads(f.read())
         return contract_interface['bytecode']
 
     @classmethod
     def get_contract_enums(cls, contract_name, enum_name):
-        with open("./contracts/{}.json".format(contract_name)) as f:
+        with open("./{}/{}.json".format(settings.CONTRACT_DIR, contract_name)) as f:
             contract_interface = json.loads(f.read())
         for root_node in contract_interface['ast']['nodes']:
             if root_node.get("nodeType") == "ContractDefinition" and root_node.get(
