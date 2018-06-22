@@ -6,7 +6,7 @@ import NavigationService from './NavigationService'
 
 import { fetchProfile } from 'actions/Profile'
 import { getBalance } from 'actions/Wallet'
-import { newEvent, updateEvent, processedEvent } from 'actions/WalletEvents'
+import { newEvent, updateEvent, processedEvent, setActiveEvent } from 'actions/WalletEvents'
 
 import { connect, Provider } from 'react-redux'
 
@@ -185,11 +185,13 @@ class OriginNavWrapper extends Component {
     //register the service here
     originWallet.registerListener(Events.PROMPT_LINK, (data, matcher) => {
       this.props.newEvent(matcher, data)
-      NavigationService.navigate("Alerts", data)
+      this.props.setActiveEvent(data)
+      NavigationService.navigate("Alerts")
     })
     originWallet.registerListener(Events.PROMPT_TRANSACTION, (data, matcher) => {
       this.props.newEvent(matcher, data)
-      NavigationService.navigate("Alerts", data)
+      this.props.setActiveEvent(data)
+      NavigationService.navigate("Alerts")
     })
 
     originWallet.registerListener(Events.NEW_ACCOUNT, (data, matcher) => {
@@ -199,18 +201,22 @@ class OriginNavWrapper extends Component {
 
     originWallet.registerListener(Events.LINKED, (data, matcher) => {
       this.props.processedEvent(matcher, {status:'linked'}, data)
+      NavigationService.navigate("Home")
     })
 
     originWallet.registerListener(Events.TRANSACTED, (data, matcher) => {
       this.props.processedEvent(matcher, {status:'completed'}, data)
+      this.props.getBalance()
+      NavigationService.navigate("Home")
     })
 
     originWallet.registerListener(Events.UNLINKED, (data, matcher) => {
-      this.props.updateEvent(matcher, {status:'unlink'})
+      this.props.updateEvent(matcher, {status:'unlinked'})
     })
 
     originWallet.registerListener(Events.REJECT, (data, matcher) => {
       this.props.processedEvent(matcher, {status:'rejected'}, data)
+      NavigationService.navigate("Home")
     })
 
     originWallet.openWallet()
@@ -227,7 +233,8 @@ const mapDispatchToProps = dispatch => ({
   getBalance: () => dispatch(getBalance()),
   newEvent: (matcher, event) => dispatch(newEvent(matcher, event)),
   updateEvent: (matcher, update) => dispatch(updateEvent(matcher, update)),
-  processedEvent: (matcher, update, new_event) => dispatch(processedEvent(matcher, update, new_event))
+  processedEvent: (matcher, update, new_event) => dispatch(processedEvent(matcher, update, new_event)),
+  setActiveEvent:(event) => dispatch(setActiveEvent(event))
 })
 
 const OriginNavApp = connect(undefined, mapDispatchToProps)(OriginNavWrapper)

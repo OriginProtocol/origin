@@ -8,6 +8,7 @@ export default class DeviceItem extends Component {
   render() {
     const { item, handleLink, handleReject, handleUnlink, style } = this.props
     const { browser, platform, language } = item.link && item.link.app_info
+    const linked = (item.status == 'linked')
 
     return (
       <View style={[ styles.listItem, style ]}>
@@ -18,7 +19,7 @@ export default class DeviceItem extends Component {
           {browser !== 'chrome' &&
             <Image source={require('../../assets/images/app-icon.png')} />
           }
-          <Image source={require('../../assets/images/link-icon.png')} style={styles.icon} />
+        {linked && <Image source={require('../../assets/images/link-icon.png')} style={styles.icon} />}
         </View>
         {handleLink &&
           <View style={styles.content}>
@@ -30,7 +31,8 @@ export default class DeviceItem extends Component {
             </View>
           </View>
         }
-        {!handleLink &&
+        {linked &&
+         handleUnlink &&
           <View style={styles.content}>
             <Text style={styles.identification}><Text style={styles.vendor}>{platform} {browser}</Text>{item.link_id} </Text>
             <Text style={styles.muted}>Linked <Moment element={Text} format="MMMM D, YYYY @ h:mmA">{item.timestamp}</Moment></Text>

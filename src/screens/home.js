@@ -7,6 +7,8 @@ import DeviceItem from '../components/device-item'
 import Separator from '../components/separator'
 import TransactionItem from '../components/transaction-item'
 
+import originWallet from '../OriginWallet'
+
 class HomeScreen extends Component {
   constructor(props) {
     super(props)
@@ -44,11 +46,17 @@ class HomeScreen extends Component {
               case 'purchase':
               case 'list':
                 return (
-                  <TransactionItem item={item} />
+                  <TransactionItem item={item} 
+                    address ={myAddress}
+                    balance ={ethBalance}
+                  />
                 )
               case 'link':
                 return (
-                  <DeviceItem item={item} />
+                  <DeviceItem item={item}
+                    address ={myAddress}
+                    balance ={ethBalance}
+                  handleUnlink = {() => originWallet.handleUnlink(item)}/>
                 )
               default:
                 return null

@@ -5,12 +5,12 @@ import OriginButton from './origin-button'
 
 export default class TransactionModal extends Component {
   render() {
-    const { item, myAddress, balance, handleApprove, handleReject, toggleModal } = this.props
+    const { item, address, balance, handleApprove, handleReject, toggleModal } = this.props
     const cost = item.cost
-    const { name, pictures } = item.listing || {}
+    const { name, pictures} = item.listing || {}
     // placeholders
     const hasSufficientFunds = balance > cost
-    const counterpartyAddress = listing.sellerAddress
+    const counterpartyAddress = item.listing ? item.listing.sellerAddress : item.to
 
     return (
       <Modal
@@ -31,7 +31,7 @@ export default class TransactionModal extends Component {
           <View style={styles.imageContainer}>
             <Image
               style={styles.image}
-              source={pictures[0]}
+              source={{uri:pictures[0]}}
               resizeMethod={'resize'}
               resizeMode={'cover'}
             />
@@ -45,10 +45,10 @@ export default class TransactionModal extends Component {
             </Text>
           </View>
           <View style={styles.counterparties}>
-            <TouchableOpacity onPress={() => Alert.alert('From ETH Address', myAddress)}>
+            <TouchableOpacity onPress={() => Alert.alert('From ETH Address', address)}>
               <View style={styles.party}>
                 <Image source={require('../../assets/images/avatar.png')} style={styles.avatar} />
-                <Text style={styles.address}>{`${myAddress.slice(0, 4)}...${myAddress.slice(38)}`}</Text>
+                <Text style={styles.address}>{`${address.slice(0, 4)}...${address.slice(38)}`}</Text>
               </View>
             </TouchableOpacity>
             <Image source={require('../../assets/images/arrow-forward-material.png')} style={styles.arrow} />
@@ -65,7 +65,7 @@ export default class TransactionModal extends Component {
                 You don’t have enough funds to complete this purchase. Please add funds to your wallet.
               </Text>
               <Text style={styles.wallet}>
-                {myAddress}
+                {address}
               </Text>
             </View>
           }

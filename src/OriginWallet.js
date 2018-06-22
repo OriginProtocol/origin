@@ -6,7 +6,6 @@ import fetch from 'cross-fetch'
 import keyMirror from 'utils/keyMirror'
 
 import origin, {bridgeUrl, defaultProviderUrl} from './services/origin'
-import uuidv1 from 'uuid/v1'
 
 const providerUrl = defaultProviderUrl
 
@@ -38,6 +37,39 @@ Events = keyMirror({
   UNLINKED:null,
   REJECT:null
 }, "WalletEvents")
+
+const eventMatcherByLinkId = link_id => {
+  return event => event.link && event.link.link_id == link_id
+}
+
+const eventMatcherByCallId = call_id => {
+  return event => event.transaction && event.transaction.call_id == call_id
+}
+
+const getEventId = event => {
+  if (event.event_id)
+  {
+    return event.event_id
+  }
+  else if (event.link && event.link.link_id)
+  {
+    return event.link.link_id
+  }
+  else if(event.transaction && event.transaction.call_id)
+  {
+    return event.transaction.call_id
+  }
+}
+
+const matchEvents = (event1, event2) => {
+  let ekey = getEventId(event1)
+  return ekey && ekey == getEventId(event2)
+}
+
+const eventMatcherByEvent = event => {
+  return in_event => matchEvents(in_event, event)
+}
+
 
 class OriginWallet {
   constructor() {
@@ -116,15 +148,22 @@ class OriginWallet {
     this.listeners = {}
   }
 
-  async fireEvent(event_type, data, matcher) {
+  async fireEvent(event_type, event, matcher) {
+    let ts = new Date()
+
+    if (event && !event.event_id)
+    {
+      //make it a true event by filling it
+      event = await this.extractEventInfo(event)
+      event.event_id = getEventId(event)
+      event.timestamp = ts
+    }
+
+    // use a default event matcher
     if (!matcher)
     {
-      matcher = this.eventMatcherByEvent(data)
+      matcher = eventMatcherByEvent(event)
     }
-    let ts = new Date()
-    let event = await this.extractEventInfo(data)
-    event.event_id = uuidv1()
-    event.timestamp = ts
     if (this.listeners[event_type])
     {
       this.listeners[event_type].forEach((callback) => 
@@ -180,6 +219,13 @@ class OriginWallet {
     }).then((responseJson) => {
       let app_info = responseJson.app_info
       console.log("We are now linked to a remote wallet:", responseJson, " browser is:", app_info)
+
+      if (responseJson.link_id)
+      {
+        let link_id = responseJson.link_id
+        this.fireEvent(Events.LINKED, {link:{linked:true, link_id, return_url:responseJson.return_url, app_info:responseJson.app_info}})
+      }
+
       if (responseJson.pending_call)
       {
         let msg = responseJson.pending_call
@@ -198,11 +244,6 @@ class OriginWallet {
         }
       }
 
-      if (responseJson.link_id)
-      {
-        let link_id = responseJson.link_id
-        this.fireEvent(Events.LINKED, {link:{linked:true, link_id, return_url:responseJson.return_url, app_info:responseJson.app_info}})
-      }
       return true
     }).catch((error) => {
       console.error(error)
@@ -246,10 +287,10 @@ class OriginWallet {
 
 
   checkDoUnlink(link_id) {
-    if (state.deviceToken)
+    if (this.state.deviceToken)
     {
       console.log("Unlinking...")
-      return this.doUnlink(state.deviceToken, link_id)
+      return this.doUnlink(this.state.deviceToken, link_id)
     }
   }
 
@@ -261,7 +302,7 @@ class OriginWallet {
     this.checkRegisterNotification()
   }
 
-  returnCall(wallet_token, call_id, session_token, result) {
+  returnCall(wallet_token, call_id, session_token, result, fire_event) {
     return this.doFetch(API_WALLET_LINKER_RETURN_CALL, 'POST', {
       wallet_token,
         call_id,
@@ -269,7 +310,7 @@ class OriginWallet {
       result,
     }).then((responseJson) => {
       console.log("returnCall successful:", responseJson.success)
-      this.fireEvent(Events.TRANSACTED, {call_id}, eventMatcherByCallId(call_id))
+      this.fireEvent(fire_event, undefined, eventMatcherByCallId(call_id))
       return responseJson.success
     }).catch((error) => {
       console.error(error)
@@ -279,13 +320,12 @@ class OriginWallet {
   async extractEventInfo(event_data) {
     const transaction = event_data.transaction
     const link = event_data.link
-
     if (transaction)
     {
       const cost = transaction && this.extractTransactionValue(transaction)
       const listing = await this.extractListing(transaction)
       const to = this.extractTo(transaction)
-      const action = OriginWallet.extractAction(transaction)
+      const action = this.extractTransactionAction(transaction)
       return {...event_data, action, to, cost, listing}
     }
     else if (link)
@@ -297,25 +337,36 @@ class OriginWallet {
     return event_data
   }
 
-  extractAction({meta}) {
-    return meta && meta.action
+  extractTransactionAction({meta}) {
+    const dot_call = meta.contract + "." + meta.call
+    switch(dot_call)
+    {
+      case "Listing.buyListing":
+        return "purchase"
+      case "ListingsRegistry.create":
+        return "list"
+    }
+    return "unknown"
   }
 
   extractTo({params}) {
-    return params && params.tx_object && params.txn_object.to
+    return params && params.txn_object && params.txn_object.to
   }
 
 
   async extractListing({meta, params}) {
     if (params && params.txn_object && meta)
     {
-      if (meta.type == "Listing")
+      if (meta.contract == "Listing")
       {
         return origin.listings.get(params.txn_object.to)
       }
-      else if(meta.type == "preListing")
+      else if(meta.contract == "ListingsRegistry")
       {
-        return origin.ipfsService.getFile(meta.ipfs)
+        if (meta.call == "create")
+        {
+          return origin.ipfsService.getFile(meta._ipfsHash)
+        }
       }
     }
   }
@@ -323,63 +374,45 @@ class OriginWallet {
   extractTransactionValue({params}){
     if ( params && params.txn_object)
     {
-        return web3.utils.fromWei(params.txn_obj.value, "ether")
+        return web3.utils.fromWei(params.txn_object.value, "ether")
     }
   }
 
-  eventMatcherByLinkId(link_id) {
-    return event => event.link && event.link.link_id == link_id
-  }
-
-  eventMatcherByCallId(call_id) {
-    return event => event.transaction && event.transaction.call_id == call_id
-  }
-
-  eventMatcherByEvent(event) {
-    return in_event => this.matchEvents(in_event, event)
-  }
-
-  matchEvents(event1, event2) {
-    if (event1.link && event2.link)
-    {
-      return event1.link.link_id && event1.link.link_id == event2.link.link_id
-    }
-    else if(event1.transaction && event2.transaction)
-    {
-      return event1.transaction.call_id && event1.transaction.call_id == event2.transaction.call_id
-    }
-    return event1.event_id == event2.event_id
-  }
-
+ 
   async handleEvent(e) {
     if (e.link)
     {
-      return this.handleLink(e.link)
+      return this._handleLink(e.link)
     }
     else if (e.transaction)
     {
-      return this.handleTransaction(e.transaction)
+      return this._handleTransaction(e.transaction)
     }
   }
 
-  handleUnlink({link_id}){
-    checkDoUnlink(link_id)
+  handleUnlink(event){
+    let {link_id} = event.link
+    this.checkDoUnlink(link_id)
   }
 
   handleReject(event){
+    if (event.transaction)
+    {
+      return this._handleRejectTransaction(event.transaction)
+    }
     this.fireEvent(Events.REJECT, event)
   }
 
-  handleLink({linkCode}){
+  _handleLink({linkCode}){
     return this.setLinkCode(linkCode)
   }
 
-  handleTransaction({meta, call_name, call_id, params, return_url, session_token}){
+  _handleTransaction({meta, call_name, call_id, params, return_url, session_token}){
     return new Promise((resolve, reject) => {
       if (call_name == "signTransaction")
       {
         web3.eth.signTransaction(params.txn_object).then(ret => {
-          this.returnCall(this.state.deviceToken, call_id, session_token, ret["raw"]).then(
+          this.returnCall(this.state.deviceToken, call_id, session_token, ret["raw"], Events.TRANSACTED).then(
             (success) => {
               if (return_url)
               {
@@ -408,7 +441,7 @@ class OriginWallet {
               call = params.meta.call
             }
             let transactionResult = {hash:receipt.transactionHash, call}
-            this.returnCall(this.state.deviceToken, call_id, session_token, transactionResult).then(
+            this.returnCall(this.state.deviceToken, call_id, session_token, transactionResult, Events.TRANSACTED).then(
               (success) => {
                 if (return_url)
                 {
@@ -429,14 +462,16 @@ class OriginWallet {
     })
   }
 
+  _handleRejectTransaction({meta, call_name, call_id, params, session_token}){
+    //return empty result
+    return this.returnCall(this.state.deviceToken, call_id, session_token, {}, Events.REJECT)
+  }
+
   processCall(meta, call_name, call_id, params, return_url, session_token, force_from = false) {
     if (force_from && params.txn_object)
     {
       params.txn_object.from = this.state.ethAddress
     }
-    let info = meta.info
-    let title = "Transaction pending"
-    let description = "Do you approve of this transaction?"
     if (call_name == "signTransaction")
     {
       if (params.txn_object.from.toLowerCase() == this.state.ethAddress.toLowerCase())

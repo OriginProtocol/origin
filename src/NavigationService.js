@@ -1,3 +1,4 @@
+import { NavigationActions } from 'react-navigation'
 let _navigator;
 
 function setTopLevelNavigator(navigatorRef) {

@@ -2,11 +2,13 @@ import React, { Component } from 'react'
 import { Alert, FlatList, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 import originWallet from '../OriginWallet'
+import { setActiveEvent } from 'actions/WalletEvents'
 
 import DeviceItem from '../components/device-item'
 import Separator from '../components/separator'
 import TransactionItem from '../components/transaction-item'
 import TransactionModal from '../components/transaction-modal'
+import DeviceModal from '../components/device-modal'
 
 
 class AlertsScreen extends Component {
@@ -15,7 +17,6 @@ class AlertsScreen extends Component {
 
     this.toggleModal = this.toggleModal.bind(this)
     this.state = {
-      selectedItem: null,
     }
   }
 
@@ -29,31 +30,7 @@ class AlertsScreen extends Component {
   }
 
   toggleModal() {
-    this.setState({ selectedItem: null })
-  }
-
-  componentDidMount() {
-    this.processFromNavParams()
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.navigation.state.params != prevProps.navigation.state.params)
-    {
-      this.processFromNavParams()
-    }
-  }
-
-  async processFromNavParams(){
-    const item = this.props.navigation.state.params
-    if (item)
-    {
-      this.setState(state => {
-        if (!state.selectedItem || originWallet.matchEvents(item, state.selectedItem)) {
-          state.selectedItem = item
-        }
-        return state
-      })
-    }
+    this.props.setActiveEvent(null)
   }
 
   async acceptItem(item){
@@ -72,7 +49,7 @@ class AlertsScreen extends Component {
   render() {
     const balance = this.props.balance
     const myAddress = this.props.address
-    const selectedItem = this.state.selectedItem
+    const selectedItem = this.props.active_event
 
     return (
       <View>
@@ -88,7 +65,7 @@ class AlertsScreen extends Component {
                     address ={myAddress}
                     balance ={balance}
                     handleApprove={() => originWallet.handleEvent(item) }
-                    handlePress={() => this.setState({ selectedItem: item })}
+                    handlePress={() => this.props.setActiveEvent( item )}
                     handleReject={() => originWallet.handleReject(item) }
                   />
                 )
@@ -111,27 +88,41 @@ class AlertsScreen extends Component {
         {selectedItem &&
           selectedItem.listing &&
           <TransactionModal
-            item={this.state.selectedItem}
+            item={selectedItem}
             address ={myAddress}
             balance ={balance}
-            handleApprove={() => this.acceptItem(this.state.selectedItem)}
-            handleReject={() => this.rejectItem(this.state.selectedItem)}
+            handleApprove={() => this.acceptItem(selectedItem)}
+            handleReject={() => this.rejectItem(selectedItem)}
+            toggleModal={this.toggleModal}
+          />}
+        {selectedItem &&
+          selectedItem.link &&
+          <DeviceModal
+            item={selectedItem}
+            address ={myAddress}
+            balance ={balance}
+            handleApprove={() => this.acceptItem(selectedItem)}
+            handleReject={() => this.rejectItem(selectedItem)}
             toggleModal={this.toggleModal}
           />}
       </View>
     )
   }
 }
+const mapDispatchToProps = dispatch => ({
+  setActiveEvent:(event) => dispatch(setActiveEvent(event))
+})
 
 const mapStateToProps = state => {
   return {
     balance: state.wallet.balance,
     address: state.wallet.address,
-    events: state.wallet_events.events
+    events: state.wallet_events.events,
+    active_event: state.wallet_events.active_event
   }
 }
 
-export default connect(mapStateToProps)(AlertsScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(AlertsScreen)
 
 
 const styles = StyleSheet.create({
