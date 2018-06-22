@@ -185,8 +185,8 @@ class VerifyAirbnb extends Component {
         />
         <div className="explanation">
           <FormattedMessage
-            id={ 'VerifyAirbnb.airbnbProfileNotPublished' }
-            defaultMessage={ 'Other users will know that you have a verified Airbnb profile. The link to your actual profile will not be published on the blockchain.' }
+            id={ 'VerifyAirbnb.airbnbProfilePublished' }
+            defaultMessage={ 'Other users will know that you have a verified Airbnb profile.' }
           />
         </div>
       </div>
