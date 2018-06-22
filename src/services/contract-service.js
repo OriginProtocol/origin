@@ -3,7 +3,7 @@ import ClaimHolderPresignedContract from './../../contracts/build/contracts/Clai
 import ClaimHolderLibrary from './../../contracts/build/contracts/ClaimHolderLibrary.json'
 import KeyHolderLibrary from './../../contracts/build/contracts/KeyHolderLibrary.json'
 import ListingsRegistryContract from './../../contracts/build/contracts/ListingsRegistry.json'
-import ListingContract from './../../contracts/build/contracts/Listing.json'
+import UnitListingContract from './../../contracts/build/contracts/UnitListing.json'
 import PurchaseContract from './../../contracts/build/contracts/Purchase.json'
 import UserRegistryContract from './../../contracts/build/contracts/UserRegistry.json'
 import OriginIdentityContract from './../../contracts/build/contracts/OriginIdentity.json'
@@ -22,7 +22,7 @@ class ContractService {
 
     const contracts = {
       listingsRegistryContract: ListingsRegistryContract,
-      listingContract: ListingContract,
+      unitListingContract: UnitListingContract,
       purchaseContract: PurchaseContract,
       userRegistryContract: UserRegistryContract,
       claimHolderRegisteredContract: ClaimHolderRegisteredContract,

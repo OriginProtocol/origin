@@ -10,7 +10,7 @@ const appendSlash = url => {
 class Listings extends ResourceBase {
   constructor({ contractService, ipfsService, fetch, indexingServerUrl }) {
     super({ contractService, ipfsService })
-    this.contractDefinition = this.contractService.listingContract
+    this.contractDefinition = this.contractService.unitListingContract
     this.fetch = fetch
     this.indexingServerUrl = indexingServerUrl
   }
@@ -177,7 +177,7 @@ class Listings extends ResourceBase {
     )
     return await this.contractFn(address, 'buyListing', [unitsToBuy], {
       value: value,
-      gas: 750000
+      gas: 850000
     })
   }
 
