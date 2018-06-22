@@ -92,6 +92,12 @@ let updatedUser = await origin.users.get()
         data: "0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01",
         claimType: 4,
         service: "twitter"
+      },
+      {
+        signature: "0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c",
+        data: "0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01",
+        claimType: 5,
+        service: "airbnb"
       }
     ],
     identityAddress: "0x4E72770760c011647D4873f60A3CF6cDeA896CD8"
