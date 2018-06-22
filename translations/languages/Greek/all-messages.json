@@ -68,7 +68,7 @@
   "listing-create.error1": "Υπήρχε ένα πρόβλημα κατά τη δημιουργία αυτής της καταχώρησης.",
   "listing-create.error2": "Δείτε την κονσόλα για περισσότερες λεπτομέρειες.",
   "listing-create.OK": "Εντάξει",
-  "listing-create.previewListingHeading": "Preview your listing",
+  "listing-create.previewListingHeading": "Προεπισκόπηση της καταχώρησής σας",
   "listing-create.whatHappensNextHeading": "What happens next?",
   "listing-create.whatHappensNextContent1": "When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network.",
   "listing-create.IPFS": "IPFS",
