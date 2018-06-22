@@ -91,6 +91,7 @@ class AirbnbRequest(StandardRequest):
 class AirbnbVerificationCodeResponse(StandardResponse):
     code = fields.Str()
 
+
 class VerifyAirbnbResponse(StandardResponse):
     signature = fields.Str()
     claim_type = fields.Integer(data_key='claim-type')
@@ -176,6 +177,7 @@ class AirbnbVerificationCode(Resource):
             handler=VerificationService.generate_airbnb_verification_code,
             request_schema=AirbnbRequest,
             response_schema=AirbnbVerificationCodeResponse)
+
 
 class VerifyAirbnb(Resource):
     def post(self):

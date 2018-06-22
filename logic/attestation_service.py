@@ -243,20 +243,25 @@ class VerificationService:
         })
 
     def generate_airbnb_verification_code(eth_address, airbnbUserId):
-        if not re.compile("^\d*$").match(airbnbUserId):
+        if not re.compile(r"^\d*$").match(airbnbUserId):
             raise AirbnbVerificationError('AirbnbUserId should be a number.')
 
-        return VerificationServiceResponse({'code': generate_airbnb_verification_code(eth_address, airbnbUserId)})
+        return VerificationServiceResponse({
+            'code': generate_airbnb_verification_code(eth_address, airbnbUserId)
+        })
 
     def verify_airbnb(eth_address, airbnbUserId):
-        if not re.compile("^\d*$").match(airbnbUserId):
+        if not re.compile(r"^\d*$").match(airbnbUserId):
             raise AirbnbVerificationError('AirbnbUserId should be a number.')
 
         code = generate_airbnb_verification_code(eth_address, airbnbUserId)
 
-        # TODO: determine if this user agent is acceptable. 
+        # TODO: determine if this user agent is acceptable.
         # We need to set an user agent otherwise Airbnb returns 403
-        request = Request(url='https://www.airbnb.com/users/show/' + airbnbUserId, headers={'User-Agent': 'Origin Protocol client-0.1.0'})
+        request = Request(
+            url='https://www.airbnb.com/users/show/' + airbnbUserId,
+            headers={'User-Agent': 'Origin Protocol client-0.1.0'}
+        )
 
         try:
             response = urlopen(request)
@@ -269,8 +274,11 @@ class VerificationService:
             raise AirbnbVerificationError("Can not fetch user's Airbnb profile.")
 
         if code not in response.read().decode('utf-8'):
-            raise AirbnbVerificationError("Origin verification code: " + code + " has not been found in user's Airbnb profile.")
-        
+            raise AirbnbVerificationError(
+                "Origin verification code: " + code +
+                " has not been found in user's Airbnb profile."
+            )
+
         # TODO: determine the schema for claim data
         data = airbnbUserId
         signature = attestations.generate_signature(
