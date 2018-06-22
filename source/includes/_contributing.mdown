@@ -65,6 +65,8 @@ For Solidity, we use two space indents.
 
 * If you encounter errors while executing `npm install` for any of the Origin repositories, try running a recent LTS version of Node.js. [nvm](https://github.com/creationix/nvm) is a tool that can install specific versions of Node.js. After installing `nvm`, run `nvm install --lts`, remove your `node_modules` directory, and run `npm install` again.
 
+* If you are using `origin-box` Docker setup and are running OSX Sierra below 10.13.4 Docker volumes might randomly stop syncing. This results in problems where host machine source code updates do not get propagated to file system inside Docker. To resolve this issue update OSX Sierra to 10.13.4 or above. See [this thread](https://github.com/EugenMayer/docker-sync/issues/517) for more details. 
+
 ### Protocol Design
 
 When considering protocol or implementation design proposals, we are looking for:
