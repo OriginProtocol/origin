@@ -1065,6 +1065,7 @@ a:hover {
 
 .tooltip .tooltip-inner {
   padding: 1.2rem;
+  max-width: 250px;
 }
 
 .tooltip img {
@@ -2663,6 +2664,11 @@ footer .footer-links li a {
 
 .container.listing-wait-confirmation {
   min-height: 675px;
+}
+
+.span-link {
+   color: #ffffff;
++  cursor: pointer; 
 }
 
 /* Error Page */

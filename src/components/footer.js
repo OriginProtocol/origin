@@ -1,5 +1,6 @@
 import React from 'react'
 
+
 const Footer = (props) => {
   return (
     <footer className="dark-footer">
@@ -18,7 +19,7 @@ const Footer = (props) => {
           </div>
           <div className="col-12 col-md-6">
             <div className="row">
-              <div className="col-6 col-md-4">
+              <div className="col-6 col-md-3">
                 <div className="footer-header">
                   Documentation
                 </div>
@@ -37,32 +38,48 @@ const Footer = (props) => {
                   </li>
                 </ul>
               </div>
-              <div className="col-6 col-md-4">
+              <div className="col-4 col-md-3">
                 <div className="footer-header">
                   Community
                 </div>
                 <ul className="footer-links">
                   <li>
-                    <a href="https://t.me/originprotocol" target="_blank">Telegram</a>
+                    <a href="https://t.me/originprotocol" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
                   </li>
                   <li>
-                    <a href="https://discord.gg/jyxpUSe" target="_blank">Discord</a>
+                    <a href="https://discord.gg/jyxpUSe" target="_blank"><i class="fab fa-discord"></i> Discord</a>
                   </li>
                   <li>
-                    <a href="https://medium.com/originprotocol" target="_blank">Medium</a>
+                    <a href="https://medium.com/originprotocol" target="_blank"><i class="fab fa-medium"></i> Medium</a>
                   </li>
                   <li>
-                    <a href="https://twitter.com/originprotocol" target="_blank">Twitter</a>
+                    <a href="https://www.reddit.com/r/originprotocol/" target="_blank"><i class="fab fa-reddit"></i> Reddit</a>
                   </li>
                   <li>
-                    <a href="https://instagram.com/originprotocol" target="_blank">Instagram</a>
-                  </li>
-                  <li>
-                    <a href="https://www.facebook.com/originprotocol" target="_blank">Facebook</a>
+                    <span class="span-link" data-container="body" data-toggle="tooltip" title="<img src='images/origin-wechat-qr.png' />"><i class="fab fa-weixin"></i> WeChat</span>
                   </li>
                 </ul>
               </div>
-              <div className="col-6 col-md-4">
+              <div className="col-4 col-md-3">
+                <div className="footer-header">
+                  Social
+                </div>
+                <ul className="footer-links"> 
+                  <li>
+                    <a href="https://twitter.com/originprotocol" target="_blank"><i class="fab fa-twitter-square"></i> Twitter</a>
+                  </li>
+                  <li>
+                    <a href="https://instagram.com/originprotocol" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+                  </li>
+                  <li>
+                    <a href="https://www.facebook.com/originprotocol" target="_blank"><i class="fab fa-facebook-square"></i> Facebook</a>
+                  </li>
+                  <li>
+                    <a href="http://www.youtube.com/c/originprotocol" target="_blank"><i class="fab fa-youtube"></i> Youtube</a>
+                  </li>
+                </ul>
+              </div>
+              <div className="col-4 col-md-3">
                 <div className="footer-header">
                   Organization
                 </div>
