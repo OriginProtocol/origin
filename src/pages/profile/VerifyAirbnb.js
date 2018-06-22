@@ -76,7 +76,7 @@ class VerifyAirbnb extends Component {
           })
         }}>
 
-        {this.renderProfileLinkInputForm()}
+        {this.renderProfileInputForm()}
         <div className="button-container">
           <button type="submit" className="btn btn-clear">
             <FormattedMessage
@@ -159,7 +159,7 @@ class VerifyAirbnb extends Component {
     )
   }
 
-  renderProfileLinkInputForm() {
+  renderProfileInputForm() {
     return (
       <div className="form-group">
         <label htmlFor="airbnbProfile">
