@@ -70,7 +70,7 @@
   "listing-create.OK": "OK",
   "listing-create.previewListingHeading": "I-preview ang iyong mga listahan",
   "listing-create.whatHappensNextHeading": "Ano ang mangyayari sa susunod?",
-  "listing-create.whatHappensNextContent1": "When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network.",
+  "listing-create.whatHappensNextContent1": "Kapag iyong pinindot ang submit, isang JSON object na kumakatawan sa iyong listahan ay maii-publish sa {ipfsLink}  at nilalaman na content hash ay ilalathala sa isang listahan sa smart kontrata na tumatakbo sa Ethereum network.",
   "listing-create.IPFS": "IPFS",
   "listing-create.whatHappensNextContent2": "Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left.",
   "listing-create.backButtonLabel": "Back",
