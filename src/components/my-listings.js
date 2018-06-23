@@ -95,14 +95,50 @@ class MyListings extends Component {
       <div className="my-listings-wrapper">
         <div className="container">
           <div className="row">
-            <div className="col-12">
-              <h1>My Listings</h1>
+            <div className="col-12 text-center">
+              {loading && 
+                <div>
+                  <h1>Loading...</h1>
+                </div>
+              }
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-12 text-center">
+              {!loading && !listings.length &&
+                     <div>
+                  <img src="images/empty-listings-graphic.svg"></img>
+                  <h1>You don't have any listings yet.</h1>
+                  <p className="lead">Follow the steps below to create your first listing!</p>
+                  <br></br>
+                  <br></br>
+                  <div className="row">
+                    <div className="col-12 col-sm-4 col-xl-2 offset-xl-3 text-center">
+                      <div className="numberCircle"><h1 className="circle-text">1</h1></div>
+                      <p>Click the + button in the top right to get started</p>
+                    </div>
+                    <div className="col-12 col-sm-4 col-xl-2 text-center">
+                      <div className="numberCircle"><h1 className="circle-text">2</h1></div>
+                      <p>Write a name and a description and set a price for your listing</p>
+                    </div>
+                    <div className="col-12 col-sm-4 col-xl-2 text-center">
+                      <div className="numberCircle"><h1 className="circle-text">3</h1></div>
+                      <p>Upload photos to make your listings look professional and stand out</p>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-12 text-center">
+                      <br></br>
+                      <br></br>
+                      <a href="#/create" className="btn btn-lrg btn-primary btn-auto-width">Create Your First Listing</a>
+                    </div>
+                  </div> 
+                </div> 
+              }
             </div>
           </div>
           <div className="row">
             <div className="col-12 col-md-3">
-              {loading && 'Loading...'}
-              {!loading && !listings.length && 'You currently have no listings.'}
               {!loading && !!listings.length &&
                 <div className="filters list-group flex-row flex-md-column">
                   <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>All</a>

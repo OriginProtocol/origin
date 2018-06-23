@@ -123,14 +123,29 @@ class MySales extends Component {
       <div className="my-purchases-wrapper">
         <div className="container">
           <div className="row">
-            <div className="col-12">
-              <h1>My Sales</h1>
+            <div className="col-12 text-center">
+              {loading && 
+                <div>
+                  <h1 >Loading...</h1>
+                </div>
+              }
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-12 text-center">
+              {!loading && !purchases.length && 
+                <div>
+                  <img src="images/empty-listings-graphic.svg"></img>
+                  <h1>You don't have any sales yet.</h1>
+                  <p>Click below to view your listings.</p>
+                  <br></br>
+                  <a href="#/my-listings" className="btn btn-lrg btn-primary">My Listings</a>
+                </div>
+              }
             </div>
           </div>
           <div className="row">
             <div className="col-12 col-md-3">
-              {loading && 'Loading...'}
-              {!loading && !purchases.length && 'You currently have no sales.'}
               {!loading && !!purchases.length &&
                 <div className="filters list-group flex-row flex-md-column">
                   <a className={`list-group-item list-group-item-action${filter === 'pending' ? ' active' : ''}`}
