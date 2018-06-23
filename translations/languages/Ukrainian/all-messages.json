@@ -53,7 +53,7 @@
   "listing-create.next": "Далі",
   "listing-create.howItWorksHeading": "Як це працює",
   "listing-create.howItWorksContentPart1": "Origin використовує проект Mozilla під назвою {jsonSchemaLink} для перевірки вашого оголошення на відповідність стандартним правилам. Ця стандартизації є ключем, що дозволяє незалежним об'єктам читати і робити записи на тому самому рівні даних.",
-  "listing-create.jsonSchema": "JSON схема",
+  "listing-create.jsonSchema": "JSONSchema",
   "listing-create.howItWorksContentPart2": "Будьте впевнені, що Ви дали вашему оголошенню відповідну назву та опис, який буде інформувати інших про те, що ви пропонуєте.",
   "listing-create.viewSchemaLinkLabel": "Переглянути {schemaName} схему",
   "listing-create.createListingHeading": "Створити оголошення",
