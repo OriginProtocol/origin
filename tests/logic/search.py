@@ -22,7 +22,12 @@ class TestSearchClient():
         query = kwargs["body"]
         json.loads(query)
 
-        client.listings("bar", category="cat", location="earth", num=3, offset=4)
+        client.listings(
+            "bar",
+            category="cat",
+            location="earth",
+            num=3,
+            offset=4)
         backend_mock.search_listings.assert_called()
         _, kwargs = backend_mock.search_listings.call_args
         query = kwargs["body"]

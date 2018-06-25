@@ -7,7 +7,8 @@ class TestSearchIndexer():
 
     def test_create_or_update_listing(self):
         client_mock = MagicMock()
-        client_mock.index_listing = MagicMock(return_value={'result': 'created'})
+        client_mock.index_listing = MagicMock(
+            return_value={'result': 'created'})
         search_indexer = SearchIndexer(client_mock)
 
         listing_data = {
@@ -17,7 +18,7 @@ class TestSearchIndexer():
                 'category': 'cat',
                 'description': 'test listing',
                 'location': 'earth',
-                },
+            },
             'price': 123,
         }
 

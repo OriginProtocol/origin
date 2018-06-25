@@ -298,8 +298,13 @@ def listing_registry_contract(web3, wait_for_transaction, wait_for_block,
 
 
 @pytest.fixture()
-def listing_contract(web3, wait_for_transaction, wait_for_block,
-                     purchase_lib_contract, listing_registry_contract, eth_test_seller):
+def listing_contract(
+        web3,
+        wait_for_transaction,
+        wait_for_block,
+        purchase_lib_contract,
+        listing_registry_contract,
+        eth_test_seller):
     contract_name = 'Listing'
     with open("./contracts/{}.json".format(contract_name)) as f:
         contract_interface = json.loads(f.read())
@@ -341,10 +346,8 @@ def purchase_contract(web3, wait_for_transaction, wait_for_block,
     }
 
     contract = web3.eth.contract(**CONTRACT_META)
-    deploy_txn_hash = \
-        listing_contract.functions.buyListing(5
-                                              ).transact({'from': eth_test_buyer,
-                                                          'gas': 1000000})
+    deploy_txn_hash = listing_contract.functions.buyListing(
+        5).transact({'from': eth_test_buyer, 'gas': 1000000})
     deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
     assert deploy_receipt["gasUsed"] > 0
     # we better have created one of these

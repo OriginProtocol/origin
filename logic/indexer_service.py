@@ -72,6 +72,12 @@ class DatabaseIndexer():
         purchase_obj = Purchase.query .filter_by(
             contract_address=purchase_data['contract_address']).first()
 
+        listing_obj = Listing.query .filter_by(
+            contract_address=purchase_data['listing_address']).first()
+
+        if not listing_obj:
+            return None
+
         if not purchase_obj:
             purchase_obj = Purchase(**purchase_data)
             db.session.add(purchase_obj)
@@ -225,15 +231,17 @@ class EventHandler():
                                                         payload['data'])
             data = self._fetch_purchase_data(address)
             purchase_obj = self.db_indexer.create_or_update_purchase(data)
-            self.notifier.notify_purchased(purchase_obj)
-            self.search_indexer.create_or_update_purchase(data)
+            if purchase_obj is not None:
+                self.notifier.notify_purchased(purchase_obj)
+                self.search_indexer.create_or_update_purchase(data)
 
         elif event_type == EventType.PURCHASE_CHANGE:
             address = Web3.toChecksumAddress(payload['address'])
             data = self._fetch_purchase_data(address)
             purchase_obj = self.db_indexer.create_or_update_purchase(data)
-            self.notifier.notify_purchased(purchase_obj)
-            self.search_indexer.create_or_update_purchase(data)
+            if purchase_obj is not None:
+                self.notifier.notify_purchased(purchase_obj)
+                self.search_indexer.create_or_update_purchase(data)
 
         elif event_type == EventType.PURCHASE_REVIEW:
             data = self._get_review_data(payload)
