@@ -30,6 +30,8 @@ Example error responses (for `400` and `422` status codes):
 - [facebook/verify](#facebookverify)
 - [twitter/auth-url](#twitterauth-url)
 - [twitter/verify](#twitterverify)
+- [airbnb/generate-code](#airbnbgenerate-code)
+- [airbnb/verify](#airbnbverify)
 
 ### phone/generate-code
 
@@ -228,5 +230,63 @@ POST `/api/attestations/twitter/verify`
     "claim-type": 4,
     "signature": "0x67f184ca05b6607b72332c1aa8e8268eebe5a97f4b42da81a0040dfb92bb7dc9033233e93059bffa3f3f7de3f8d08fe0717c7603e6216226bb03a7ec4cf198901b",
     "data": "twitter verified"
+}
+```
+
+### airbnb/generate-code
+
+#### Request:
+
+POST `/api/attestations/airbnb/generate-code`
+
+- identity (string): address of ERC725 identity contract
+- airbnbUserId (string): user's id on Airbnb website
+
+```
+{
+    "identity": "0xC741715d55dE72BF12461760bAAf97e0468E7B8e",
+    "airbnbUserId": "12345"
+}
+```
+
+#### Response:
+
+- code (string): verification code to be inserted in user's description field on his Airbnb profile
+
+```
+{
+    "claim-type": 4,
+    "signature": "0x67f184ca05b6607b72332c1aa8e8268eebe5a97f4b42da81a0040dfb92bb7dc9033233e93059bffa3f3f7de3f8d08fe0717c7603e6216226bb03a7ec4cf198901b",
+    "code": "0x0deef6ef"
+}
+```
+
+### airbnb/verify
+
+#### Request:
+
+POST `/api/attestations/airbnb/verify`
+
+- identity (string): address of ERC725 identity contract
+- airbnbUserId (string): user's id on Airbnb website
+
+```
+{
+    "identity": "0xC741715d55dE72BF12461760bAAf97e0468E7B8e",
+    "airbnbUserId": "12345"
+}
+```
+
+#### Response:
+
+- claim type (integer): ERC725 claim type value used in signature
+- signature (string): signature for ERC725 attestation
+- data (string): ERC725 data value used in signature
+
+```
+{
+    "claim-type": 5,
+    "signature": "0x67f184ca05b6607b72332c1aa8e8268eebe5a97f4b42da81a0040dfb92bb7dc9033233e93059bffa3f3f7de3f8d08fe0717c7603e6216226bb03a7ec4cf198901b",
+    "data": "12345"
 }
 ```

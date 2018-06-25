@@ -5,7 +5,9 @@ import json
 import requests
 import secrets
 import sendgrid
+import re
 
+from urllib.request import Request, urlopen, HTTPError, URLError
 from sendgrid.helpers.mail import Email, Content, Mail
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
@@ -18,11 +20,13 @@ from logic.service_utils import (
     PhoneVerificationError,
     EmailVerificationError,
     FacebookVerificationError,
-    TwitterVerificationError
+    TwitterVerificationError,
+    AirbnbVerificationError
 )
 from requests_oauthlib import OAuth1
 from sqlalchemy import func
 from util import time_, attestations, urls
+from web3 import Web3
 
 signing_key = settings.ATTESTATION_SIGNING_KEY
 
@@ -40,7 +44,8 @@ CLAIM_TYPES = {
     'phone': 10,
     'email': 11,
     'facebook': 3,
-    'twitter': 4
+    'twitter': 4,
+    'airbnb': 5
 }
 
 
@@ -236,6 +241,59 @@ class VerificationService:
             'claim_type': CLAIM_TYPES['twitter'],
             'data': data
         })
+
+    def generate_airbnb_verification_code(eth_address, airbnbUserId):
+        if not re.compile(r"^\d*$").match(airbnbUserId):
+            raise AirbnbVerificationError('AirbnbUserId should be a number.')
+
+        return VerificationServiceResponse({
+            'code': generate_airbnb_verification_code(eth_address, airbnbUserId)
+        })
+
+    def verify_airbnb(eth_address, airbnbUserId):
+        if not re.compile(r"^\d*$").match(airbnbUserId):
+            raise AirbnbVerificationError('AirbnbUserId should be a number.')
+
+        code = generate_airbnb_verification_code(eth_address, airbnbUserId)
+
+        # TODO: determine if this user agent is acceptable.
+        # We need to set an user agent otherwise Airbnb returns 403
+        request = Request(
+            url='https://www.airbnb.com/users/show/' + airbnbUserId,
+            headers={'User-Agent': 'Origin Protocol client-0.1.0'}
+        )
+
+        try:
+            response = urlopen(request)
+        except HTTPError as e:
+            if e.code == 404:
+                raise AirbnbVerificationError('Airbnb user id: ' + airbnbUserId + ' not found.')
+            else:
+                raise AirbnbVerificationError("Can not fetch user's Airbnb profile.")
+        except URLError as e:
+            raise AirbnbVerificationError("Can not fetch user's Airbnb profile.")
+
+        if code not in response.read().decode('utf-8'):
+            raise AirbnbVerificationError(
+                "Origin verification code: " + code +
+                " has not been found in user's Airbnb profile."
+            )
+
+        # TODO: determine the schema for claim data
+        data = airbnbUserId
+        signature = attestations.generate_signature(
+            signing_key, eth_address, CLAIM_TYPES['airbnb'], data)
+
+        return VerificationServiceResponse({
+            'signature': signature,
+            'claim_type': CLAIM_TYPES['airbnb'],
+            'data': data
+        })
+
+
+def generate_airbnb_verification_code(eth_address, airbnbUserid):
+    # might make sense to add salt to this function, but on the other hand it is open source
+    return Web3.sha3(text=eth_address + airbnbUserid).hex()[:10]
 
 
 def normalize_number(phone):
