@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router-dom'
+import moment from 'moment'
 import $ from 'jquery'
 
-import Timelapse from '../timelapse'
 import data from '../../data'
 
 const CONFIRMATION_COMPLETION_COUNT = 6
@@ -14,10 +14,12 @@ class TransactionsDropdown extends Component {
 
     this.handleClick = this.handleClick.bind(this)
     this.handleSimulation = this.handleSimulation.bind(this)
+
     this.state = {
       confirmations: [0, 2, 4, 6],
       hideList: [],
       simulationStarted: false,
+      createdAtTime: {}
     }
   }
 
@@ -125,7 +127,7 @@ class TransactionsDropdown extends Component {
                             {t.message}
                           </div>
                           <div className="timelapse ml-auto">
-                            <Timelapse abbreviated={true} reactive={true} reference={t.createdAt} />
+                            { moment(t.createdAt).fromNow() }
                           </div>
                         </div>
                         <div className="d-flex">

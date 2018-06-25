@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
+import moment from 'moment'
 import $ from 'jquery'
 
 import { storeWeb3Intent } from 'actions/App'
@@ -14,7 +15,6 @@ import { getBalance } from 'actions/Wallet'
 
 import Avatar from 'components/avatar'
 import Modal from 'components/modal'
-import Timelapse from 'components/timelapse'
 
 import Services from './_Services'
 import Wallet from './_Wallet'
@@ -40,6 +40,9 @@ class Profile extends Component {
     this.handleToggle = this.handleToggle.bind(this)
     this.handleUnload = this.handleUnload.bind(this)
     this.setProgress = this.setProgress.bind(this)
+    this.setLastPublishTime = this.setLastPublishTime.bind(this)
+    this.startLastPublishTimeInterval = this.startLastPublishTimeInterval.bind(this)
+    this.profileDeploymentComplete = this.profileDeploymentComplete.bind(this)
     /*
       Three-ish Profile States
 
@@ -55,6 +58,7 @@ class Profile extends Component {
       lastPublish: null,
       address: props.address,
       userForm: { firstName, lastName, description },
+      lastPublishTime: null,
       modalsOpen: {
         attestationSuccess: false,
         email: false,
@@ -196,10 +200,30 @@ class Profile extends Component {
     this.setState({ progress })
   }
 
+  setLastPublishTime() {
+    this.setState({
+      lastPublishTime: moment(this.props.lastPublish).fromNow()
+    })
+  }
+
+  startLastPublishTimeInterval() {
+    this.createdAtInterval = setInterval(() => {
+      this.setLastPublishTime()
+    }, 60000)
+  }
+
+  profileDeploymentComplete() {
+    this.props.deployProfileReset()
+    this.setLastPublishTime()
+    this.startLastPublishTimeInterval()
+  }
+
   componentWillUnmount() {
     $('.profile-wrapper [data-toggle="tooltip"]').tooltip('dispose')
 
     window.removeEventListener('beforeunload', this.handleUnload)
+
+    clearInterval(this.createdAtInterval)
   }
 
   render() {
@@ -318,7 +342,7 @@ class Profile extends Component {
                           defaultMessage={ 'Last published' }
                         />
                         {' '}
-                        <Timelapse reactive={true} reference={lastPublish} />
+                        { this.state.lastPublishTime }
                       </span>
                     )}
                   </div>
@@ -493,7 +517,7 @@ class Profile extends Component {
             <div className="button-container">
               <button
                 className="btn btn-clear"
-                onClick={this.props.deployProfileReset}
+                onClick={this.profileDeploymentComplete}
               >
                 <FormattedMessage
                   id={ 'Profile.ok' }
@@ -521,7 +545,7 @@ class Profile extends Component {
             <div className="button-container">
               <button
                 className="btn btn-clear"
-                onClick={this.props.deployProfileReset}
+                onClick={this.profileDeploymentComplete}
               >
                 <FormattedMessage
                   id={ 'Profile.continue' }

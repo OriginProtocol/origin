@@ -1,4 +1,5 @@
 import store from 'store'
+import moment from 'moment'
 import keyMirror from '../utils/keyMirror'
 import translations from '../../translations/translated-messages.json'
 import { 
@@ -67,6 +68,12 @@ export function localizeApp() {
   }
 
   setGlobalIntlProvider(selectedLanguageAbbrev, messages)
+
+  // Set locale for moment.js
+  if (selectedLanguageAbbrev !== 'en') {
+    const momentLocale = selectedLanguageAbbrev === 'zh' ? 'zh-cn' : selectedLanguageAbbrev
+    moment.locale(momentLocale)
+  }
 
   return { 
     type: AppConstants.TRANSLATIONS,
