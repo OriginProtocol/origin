@@ -155,7 +155,7 @@ class EventHandler():
         Fetches a Listing contract's data based on its address.
         """
         contract_helper = ContractHelper(self.web3)
-        contract = contract_helper.get_instance('Listing', address)
+        contract = contract_helper.get_instance('UnitListing', address)
         listing_data = {
             "contract_address": address,
             "owner_address": contract.call().owner(),
