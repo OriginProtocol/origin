@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { IntlProvider } from 'react-intl'
@@ -85,7 +85,7 @@ class App extends Component {
 
   render() {
     return this.props.selectedLanguageAbbrev ? (
-      <IntlProvider locale={this.props.selectedLanguageAbbrev} messages={this.props.messages}>
+      <IntlProvider locale={this.props.selectedLanguageAbbrev} messages={this.props.messages} textComponent={Fragment}>
         <Router>
           <ScrollToTop>
             <Web3Provider>
