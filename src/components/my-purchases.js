@@ -112,29 +112,40 @@ class MyPurchases extends Component {
       <div className="my-purchases-wrapper">
         <div className="container">
           <div className="row">
-            <div className="col-12">
-              <h1>
-                <FormattedMessage
-                  id={ 'my-purchases.myPurchasesHeading' }
-                  defaultMessage={ 'My Purchases' }
-                />
-              </h1>
+            <div className="col-12 text-center">
+              {loading &&
+                <h1>
+                  <FormattedMessage
+                    id={ 'my-purchases.loading' }
+                    defaultMessage={ 'Loading...' }
+                  />
+                </h1>
+              }
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-12 text-center">
+              {!loading && !purchases.length &&
+                <div>
+                  <img src="images/empty-listings-graphic.svg"></img>
+                  <h1>
+                    <FormattedMessage id={ 'my-purchases.no-purchases' }
+                    defaultMessage={ 'You haven’t bought anything yet.'}
+                    />
+                  </h1>
+                  <p>
+                    <FormattedMessage id={ 'my-purchases.view-listings' }
+                    defaultMessage={ 'Click below to view all listings.' }
+                    />
+                  </p>
+                  <br></br>
+                  <a href="/" className="btn btn-lrg btn-primary">Browse Listings</a>
+                </div>
+              }
             </div>
           </div>
           <div className="row">
             <div className="col-12 col-md-3">
-              {loading && 
-                <FormattedMessage
-                  id={ 'my-purchases.loading' }
-                  defaultMessage={ 'Loading...' }
-                />
-              }
-              {!loading && !purchases.length &&
-                <FormattedMessage
-                  id={ 'my-purchases.noPurchases' }
-                  defaultMessage={ 'You currently have no purchases.' }
-                />
-              }
               {!loading && !!purchases.length &&
                 <div className="filters list-group flex-row flex-md-column">
                   <a className={`list-group-item list-group-item-action${filter === 'pending' ? ' active' : ''}`}
