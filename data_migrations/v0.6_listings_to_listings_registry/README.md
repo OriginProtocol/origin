@@ -1,3 +1,5 @@
+Script to migrate listings that are stored in the original listings contract to using a listings registry to store the listings
+
 **Operating manual**
 
 After filling out the configuration, execute the script in read mode:
