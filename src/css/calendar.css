@@ -1,0 +1,11 @@
+.calendar-event {
+
+}
+
+.calendar-event.available {
+  background: green;
+}
+
+.calendar-event.unavailable {
+  background: red;
+}

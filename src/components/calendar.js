@@ -14,13 +14,14 @@ class Calendar extends Component {
     this.onSelectEvent = this.onSelectEvent.bind(this)
     this.handlePriceChange = this.handlePriceChange.bind(this)
     this.saveEvent = this.saveEvent.bind(this)
+    this.cancelEvent = this.cancelEvent.bind(this)
     this.onAvailabilityChange = this.onAvailabilityChange.bind(this)
 
     this.state = {
       events: [],
       selectedEvent: {
         title: 0,
-        availability: true
+        isAvailable: true
       }
     }
   }
@@ -68,16 +69,13 @@ class Calendar extends Component {
   }
 
   onSelectEvent(selectedEvent) {
-console.log('============================ selectedEvent: ', selectedEvent)
     this.setState({ 
       selectedEvent: {
         ...selectedEvent,
         title: selectedEvent.title || '',
-        availability: (selectedEvent.availability !== undefined ? selectedEvent.availability : true)
+        isAvailable: (selectedEvent.isAvailable !== undefined ? selectedEvent.isAvailable : true)
       }
     })
-
-    console.log('======================= this.state: ', this.state)
   }
 
   handlePriceChange(event) {
@@ -97,13 +95,36 @@ console.log('============================ selectedEvent: ', selectedEvent)
     })
   }
 
+  cancelEvent() {
+    const allOtherEvents = this.state.events.filter((event) => event.id !== this.state.selectedEvent.id)
+
+    this.setState({
+      events: [...allOtherEvents],
+      selectedEvent: {
+        title: 0,
+        isAvailable: true
+      }
+    })
+  }
+
   onAvailabilityChange(event) {
     this.setState({
       selectedEvent: {
         ...this.state.selectedEvent,
-        availability: !!parseInt(event.target.value)
+        isAvailable: !!parseInt(!isNaN(event.target.value) && event.target.value)
       }
     })
+  }
+
+  eventComponent(data) {
+    const { title, event } = data
+    const { isAvailable } = event
+
+    return (
+      <div className={ `calendar-event ${isAvailable !== false ? 'available' : 'unavailable'}` }>
+        {title} ETH
+      </div>
+    )
   }
 
   render() {
@@ -114,11 +135,13 @@ console.log('============================ selectedEvent: ', selectedEvent)
         <div className="row">
           <div className="col-md-8" style={{ height: '450px' }}>
             <BigCalendar
+              components={ { event: this.eventComponent } }
               selectable={this.props.userType === 'seller'}
               events={this.state.events}
               views={this.setViewType()}
               onSelectEvent={this.onSelectEvent}
               onSelectSlot={this.onSelectSlot}
+              step={ this.props.step || 60 }
             />
           </div>
           <div className="col-md-4">
@@ -133,11 +156,11 @@ console.log('============================ selectedEvent: ', selectedEvent)
                   <input 
                     className="form-check-input"
                     type="radio"
-                    name="availability"
+                    name="isAvailable"
                     id="available"
                     value="1"
                     onChange={ this.onAvailabilityChange }
-                    checked={ this.state.selectedEvent.availability } />
+                    checked={ this.state.selectedEvent.isAvailable } />
                   <label className="form-check-label" htmlFor="available">
                     Availaible
                   </label>
@@ -146,11 +169,11 @@ console.log('============================ selectedEvent: ', selectedEvent)
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="availability"
+                    name="isAvailable"
                     id="unavailable"
                     value="0"
                     onChange={ this.onAvailabilityChange }
-                    checked={ !this.state.selectedEvent.availability } />
+                    checked={ !this.state.selectedEvent.isAvailable } />
                   <label className="form-check-label" htmlFor="unavailable">
                     Unavailable
                   </label>
@@ -163,7 +186,8 @@ console.log('============================ selectedEvent: ', selectedEvent)
                   value={selectedEvent.title} 
                   onChange={this.handlePriceChange} 
                 />
-                <button className="btn" onClick={this.saveEvent}>Save</button>
+                 <button className="btn btn-secondary" onClick={this.cancelEvent}>Cancel</button>
+                <button className="btn btn-primary" onClick={this.saveEvent}>Save</button>
               </div>
             }
           </div>
