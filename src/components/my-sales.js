@@ -129,8 +129,8 @@ class MySales extends Component {
               {loading &&
                 <h1>
                   <FormattedMessage
-                  id={ 'my-sales.loading' }
-                  defaultMessage={ 'Loading...' }
+                    id={ 'my-sales.loading' }
+                    defaultMessage={ 'Loading...' }
                   />
                 </h1>
               }
@@ -143,20 +143,21 @@ class MySales extends Component {
                   <img src="images/empty-listings-graphic.svg"></img>
                   <h1>
                     <FormattedMessage
-                    id={ 'my-sales.no-sales' }
-                    defaultMessage={ 'You don\'t have any sales yet.' }
+                      id={ 'my-sales.no-sales' }
+                      defaultMessage={ 'You don\'t have any sales yet.' }
                     />
                   </h1>
                   <p>
                     <FormattedMessage
-                    id={ 'my-sales.no-sales-text' }
-                    defaultMessage={ 'Click below to view your listings.' }
+                      id={ 'my-sales.no-sales-text' }
+                      defaultMessage={ 'Click below to view your listings.' }
                     />
                   </p>
                   <br></br>
                   <a href="#/my-listings" className="btn btn-lrg btn-primary">
-                    <FormattedMessage id={ 'my-sales.view-listings' }
-                    defaultMessage={ 'My Listings' }
+                    <FormattedMessage
+                      id={ 'my-sales.view-listings' }
+                      defaultMessage={ 'My Listings' }
                     />
                   </a>
                 </div>

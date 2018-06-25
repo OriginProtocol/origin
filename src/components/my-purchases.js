@@ -129,13 +129,15 @@ class MyPurchases extends Component {
                 <div>
                   <img src="images/empty-listings-graphic.svg"></img>
                   <h1>
-                    <FormattedMessage id={ 'my-purchases.no-purchases' }
-                    defaultMessage={ 'You haven’t bought anything yet.'}
+                    <FormattedMessage
+                      id={ 'my-purchases.no-purchases' }
+                      defaultMessage={ 'You haven’t bought anything yet.'}
                     />
                   </h1>
                   <p>
-                    <FormattedMessage id={ 'my-purchases.view-listings' }
-                    defaultMessage={ 'Click below to view all listings.' }
+                    <FormattedMessage
+                      id={ 'my-purchases.view-listings' }
+                      defaultMessage={ 'Click below to view all listings.' }
                     />
                   </p>
                   <br></br>

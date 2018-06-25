@@ -17,7 +17,7 @@
   },
   {
     "id": "my-listings.step-one",
-    "defaultMessage": "Click the + button in the top right to get started."
+    "defaultMessage": "Choose the right category for your listing."
   },
   {
     "id": "my-listings.number-two",
@@ -25,7 +25,7 @@
   },
   {
     "id": "my-listings.step-two",
-    "defaultMessage": "Write a name and a description and set a price for your listing."
+    "defaultMessage": "Give your listing a name, description, and price."
   },
   {
     "id": "my-listings.number-three",
@@ -33,7 +33,7 @@
   },
   {
     "id": "my-listings.step-three",
-    "defaultMessage": "Upload photos to make your listings look professional and stand out."
+    "defaultMessage": "Preview your listing and publish it to the blockchain."
   },
   {
     "id": "my-listings.create-listing",

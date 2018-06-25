@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import MyListingCard from './my-listing-card'
 import { FormattedMessage } from 'react-intl'
+
+import MyListingCard from './my-listing-card'
 
 import { storeWeb3Intent } from '../actions/App'
 import origin from '../services/origin'
@@ -100,8 +101,8 @@ class MyListings extends Component {
               {loading &&
                 <h1>
                   <FormattedMessage
-                  id={ 'my-listings.loading' }
-                  defaultMessage={ 'Loading...' }
+                    id={ 'my-listings.loading' }
+                    defaultMessage={ 'Loading...' }
                   />
                 </h1> 
               }
@@ -113,57 +114,65 @@ class MyListings extends Component {
                 <div>
                   <img src="images/empty-listings-graphic.svg"></img>
                   <h1>
-                    <FormattedMessage id={ 'my-listings.no-listings' }
-                    defaultMessage={ 'You don\'t have any listings yet.' }
+                    <FormattedMessage
+                      id={ 'my-listings.no-listings' }
+                      defaultMessage={ 'You don\'t have any listings yet.' }
                     />
                   </h1>
                   <p>
-                    <FormattedMessage id={ 'my-listings.no-listings-steps' }
-                    defaultMessage={ 'Follow the steps below to create your first listing!' }
+                    <FormattedMessage
+                      id={ 'my-listings.no-listings-steps' }
+                      defaultMessage={ 'Follow the steps below to create your first listing!' }
                     />
                   </p>
                   <br></br>
                   <br></br>
                   <div className="row">
-                    <div className="col-12 col-sm-4 text-center">
+                    <div className="col-12 col-sm-4 col-lg-2 offset-lg-3 text-center">
                       <div className="numberCircle">
                         <h1 className="circle-text">
-                          <FormattedMessage id={ 'my-listings.number-one' }
-                          defaultMessage={ '1' }
+                          <FormattedMessage
+                            id={ 'my-listings.number-one' }
+                            defaultMessage={ '1' }
                           />
                         </h1>
                       </div>
                       <p>
-                        <FormattedMessage id={ 'my-listings.step-one' }
-                        defaultMessage={ 'Click the + button in the top right to get started.' }
+                        <FormattedMessage
+                          id={ 'my-listings.step-one' }
+                          defaultMessage={ 'Choose the right category for your listing.' }
                         />
                       </p>
                     </div>
-                    <div className="col-12 col-sm-4 text-center">
+                    <div className="col-12 col-sm-4 col-lg-2 text-center">
                       <div className="numberCircle">
                         <h1 className="circle-text">
-                          <FormattedMessage id={ 'my-listings.number-two ' }
-                          defaultMessage={ '2' }
+                          <FormattedMessage
+                            id={ 'my-listings.number-two ' }
+                            defaultMessage={ '2' }
                           />
                         </h1>
                       </div>
                       <p>
-                        <FormattedMessage id={ 'my-listings.step-two ' }
-                        defaultMessage={ 'Write a name and a description and set a price for your listing.' }
+                        <FormattedMessage
+                          id={ 'my-listings.step-two ' }
+                          defaultMessage={ 'Give your listing a name, description, and price.' }
                         />
                       </p>
                     </div>
-                    <div className="col-12 col-sm-4 text-center">
+                    <div className="col-12 col-sm-4 col-lg-2 text-center">
                       <div className="numberCircle">
                         <h1 className="circle-text">
-                          <FormattedMessage id={ 'my-listings.number-three ' }
-                          defaultMessage={ '3' }
+                          <FormattedMessage
+                            id={ 'my-listings.number-three ' }
+                            defaultMessage={ '3' }
                           />
                         </h1>
                       </div>
                       <p>
-                        <FormattedMessage id={ 'my-listings.step-three ' }
-                        defaultMessage={ 'Upload photos to make your listings look professional and stand out.' }
+                        <FormattedMessage
+                          id={ 'my-listings.step-three ' }
+                          defaultMessage={ 'Preview your listing and publish it to the blockchain.' }
                         />
                       </p>
                     </div>
@@ -173,8 +182,9 @@ class MyListings extends Component {
                       <br></br>
                       <br></br>
                       <a href="#/create" className="btn btn-lrg btn-primary btn-auto-width">
-                        <FormattedMessage id={ 'my-listings.create-listing' }
-                        defaultMessage={ 'Create Your First Listing' }
+                        <FormattedMessage
+                          id={ 'my-listings.create-listing' }
+                          defaultMessage={ 'Create Your First Listing' }
                         />
                       </a>
                     </div>
@@ -188,7 +198,7 @@ class MyListings extends Component {
               {!loading && !!listings.length &&
                 <div className="filters list-group flex-row flex-md-column">
                   <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>
-                  <FormattedMessage
+                    <FormattedMessage
                       id={ 'my-listings.all' }
                       defaultMessage={ 'All' }
                     />
