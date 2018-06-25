@@ -305,7 +305,7 @@ def listing_contract(
         purchase_lib_contract,
         listing_registry_contract,
         eth_test_seller):
-    contract_name = 'Listing'
+    contract_name = 'UnitListing'
     with open("./contracts/{}.json".format(contract_name)) as f:
         contract_interface = json.loads(f.read())
     wait_for_block(web3)
