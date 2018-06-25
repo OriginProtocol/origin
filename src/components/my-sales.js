@@ -125,29 +125,46 @@ class MySales extends Component {
       <div className="my-purchases-wrapper">
         <div className="container">
           <div className="row">
-            <div className="col-12">
-              <h1>
-                <FormattedMessage
-                  id={ 'my-sales.mySalesHeading' }
-                  defaultMessage={ 'My Sales' }
-                />
-              </h1>
+            <div className="col-12 text-center">
+              {loading &&
+                <h1>
+                  <FormattedMessage
+                  id={ 'my-sales.loading' }
+                  defaultMessage={ 'Loading...' }
+                  />
+                </h1>
+              }
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-12 text-center">
+              {!loading && !purchases.length &&
+                <div>
+                  <img src="images/empty-listings-graphic.svg"></img>
+                  <h1>
+                    <FormattedMessage
+                    id={ 'my-sales.no-sales' }
+                    defaultMessage={ 'You don\'t have any sales yet.' }
+                    />
+                  </h1>
+                  <p>
+                    <FormattedMessage
+                    id={ 'my-sales.no-sales-text' }
+                    defaultMessage={ 'Click below to view your listings.' }
+                    />
+                  </p>
+                  <br></br>
+                  <a href="#/my-listings" className="btn btn-lrg btn-primary">
+                    <FormattedMessage id={ 'my-sales.view-listings' }
+                    defaultMessage={ 'My Listings' }
+                    />
+                  </a>
+                </div>
+              }
             </div>
           </div>
           <div className="row">
             <div className="col-12 col-md-3">
-              {loading &&
-                <FormattedMessage
-                  id={ 'my-sales.loading' }
-                  defaultMessage={ 'Loading...' }
-                />
-              }
-              {!loading && !purchases.length &&
-                <FormattedMessage
-                  id={ 'my-sales.noSales' }
-                  defaultMessage={ 'You currently have no sales.' }
-                />
-              }
               {!loading && !!purchases.length &&
                 <div className="filters list-group flex-row flex-md-column">
                   <a className={`list-group-item list-group-item-action${filter === 'pending' ? ' active' : ''}`}
