@@ -5,7 +5,7 @@ services:
     image: origin-image
     build: ./container
     volumes:
-      - ./bridge:/opt/bridge-server/source
+      - ./bridge:/opt/origin-bridge/source
       - ./js:/opt/origin-js/source
       - /opt/origin-js/source/node_modules
       - ./dapp:/opt/origin-dapp/source
