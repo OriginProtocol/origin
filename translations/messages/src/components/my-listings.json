@@ -1,15 +1,43 @@
 [
   {
-    "id": "my-listings.myListingsHeading",
-    "defaultMessage": "My Listings"
-  },
-  {
     "id": "my-listings.loading",
     "defaultMessage": "Loading..."
   },
   {
-    "id": "my-listings.noListingsMessage",
-    "defaultMessage": "You currently have no listings."
+    "id": "my-listings.no-listings",
+    "defaultMessage": "You don't have any listings yet."
+  },
+  {
+    "id": "my-listings.no-listings-steps",
+    "defaultMessage": "Follow the steps below to create your first listing!"
+  },
+  {
+    "id": "my-listings.number-one",
+    "defaultMessage": "1"
+  },
+  {
+    "id": "my-listings.step-one",
+    "defaultMessage": "Click the + button in the top right to get started."
+  },
+  {
+    "id": "my-listings.number-two",
+    "defaultMessage": "2"
+  },
+  {
+    "id": "my-listings.step-two",
+    "defaultMessage": "Write a name and a description and set a price for your listing."
+  },
+  {
+    "id": "my-listings.number-three",
+    "defaultMessage": "3"
+  },
+  {
+    "id": "my-listings.step-three",
+    "defaultMessage": "Upload photos to make your listings look professional and stand out."
+  },
+  {
+    "id": "my-listings.create-listing",
+    "defaultMessage": "Create Your First Listing"
   },
   {
     "id": "my-listings.all",

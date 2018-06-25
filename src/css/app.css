@@ -182,6 +182,24 @@ a:hover {
   padding: 3.5rem 0;
 }
 
+.numberCircle {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  /*padding: 50% 0;*/
+  border-radius: 50%;
+  background: var(--dusk);
+  color: #fff;
+  margin-bottom: 15px;
+}
+
+.circle-text {
+  font-size: 2.0rem;
+  font-weight: 800;
+  line-height: 1.9;
+}
+
 /* Identification */
 
 .identification {
@@ -988,6 +1006,10 @@ a:hover {
 .btn-primary {
   background-color: var(--clear-blue);
   color: white;
+}
+
+.btn-auto-width {
+  width: auto;
 }
 
 .btn-other {
