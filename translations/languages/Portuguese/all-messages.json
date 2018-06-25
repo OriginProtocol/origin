@@ -52,7 +52,7 @@
   "listing-create.whatTypeOfListing": "What type of listing do you want to create?",
   "listing-create.next": "Next",
   "listing-create.howItWorksHeading": "How it works",
-  "listing-create.howItWorksContentPart1": "Origin uses a Mozilla project called {jsonSchemaLink}  to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer.",
+  "listing-create.howItWorksContentPart1": "Origin usa um projeto Mozilla chamado {jsonSchemaLink}  para validar sua listagem de acordo com as regras padrão. Esta padronização é chave para permitir entidades não afiliadas a ler e escrever na mesma camada de dados.",
   "listing-create.jsonSchema": "JSONSchema",
   "listing-create.howItWorksContentPart2": "Não se esqueça de dar a sua listagem um título apropriado e uma descrição que informe aos outros o que está oferecendo.",
   "listing-create.viewSchemaLinkLabel": "View the {schemaName} schema",
