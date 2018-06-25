@@ -2,12 +2,14 @@ import ResourceBase from './_resource-base'
 
 const _STAGES_TO_NUMBER = {
   awaiting_payment: 0,
-  shipping_pending: 1,
-  buyer_pending: 2,
-  seller_pending: 3,
-  in_dispute: 4,
-  review_period: 5,
-  complete: 6
+  awaiting_seller_approal: 1,
+  seller_rejected: 2,
+  in_escrow: 3,
+  buyer_pending: 4,
+  seller_pending: 5,
+  in_dispute: 6,
+  review_period: 7,
+  complete: 8
 }
 const _NUMBERS_TO_STAGE = {}
 

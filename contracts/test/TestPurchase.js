@@ -1,5 +1,6 @@
 const Purchase = artifacts.require('./Purchase.sol')
-const Listing = artifacts.require('./Listing.sol')
+const UnitListing = artifacts.require('./UnitListing.sol')
+const FractionalListing = artifacts.require('./FractionalListing.sol')
 
 // Used to assert error cases
 const isEVMError = function(err) {
@@ -29,12 +30,13 @@ const unitsAvailable = 42
 
 // Enum values
 const AWAITING_PAYMENT = 0 // Buyer hasn't paid full amount yet
-const SHIPPING_PENDING = 1 // Buyer hasn't paid full amount yet
-const BUYER_PENDING = 2 // Waiting for buyer to confirm receipt
-const SELLER_PENDING = 3 // Waiting for seller to confirm all is good
+const AWAITING_SELLER_APPROVAL = 1
+const IN_ESCROW = 3 // Buyer hasn't paid full amount yet
+const BUYER_PENDING = 4 // Waiting for buyer to confirm receipt
+const SELLER_PENDING = 5 // Waiting for seller to confirm all is good
 // const IN_DISPUTE = 4 // We are in a dispute
 // const REVIEW_PERIOD = 5 // Time for reviews (only when transaction did not go through)
-const COMPLETE = 6 // It's all over
+const COMPLETE = 8 // It's all over
 
 const ROLE_BUYER = 0
 const ROLE_SELLER = 1
@@ -49,7 +51,7 @@ contract('Purchase', accounts => {
 
   beforeEach(async function() {
     // Listing that we will be buying
-    listingInstance = await Listing.new(
+    listingInstance = await UnitListing.new(
       seller,
       ipfsHash,
       price,
@@ -57,7 +59,7 @@ contract('Purchase', accounts => {
       { from: seller }
     )
 
-    instance = await Purchase.new(listingInstance.address, buyer, {
+    instance = await Purchase.new(listingInstance.address, 0, buyer, {
       from: buyer
     })
   })
@@ -84,8 +86,8 @@ contract('Purchase', accounts => {
     const newStage = await instance.stage()
     assert.equal(
       newStage.toNumber(),
-      SHIPPING_PENDING,
-      'stage should be SHIPPING_PENDING'
+      IN_ESCROW,
+      'stage should be IN_ESCROW'
     )
   })
 
@@ -97,8 +99,8 @@ contract('Purchase', accounts => {
     const newStage = await instance.stage()
     assert.equal(
       newStage.toNumber(),
-      SHIPPING_PENDING,
-      'stage should be SHIPPING_PENDING'
+      IN_ESCROW,
+      'stage should be IN_ESCROW'
     )
   })
 
@@ -180,12 +182,13 @@ contract('Purchase', accounts => {
   const seller = accounts[1]
   let purchase
   let listing
+  let fractionalListing
   const totalPrice = 48
   const initialPayment = 6
 
-  describe('Success path flow', async () => {
+  describe('Success path flow: unit listing', async () => {
     before(async () => {
-      listing = await Listing.new(
+      listing = await UnitListing.new(
         seller,
         ipfsHash,
         totalPrice,
@@ -212,7 +215,51 @@ contract('Purchase', accounts => {
 
     it('should allow buyer to pay', async () => {
       await purchase.pay({ from: buyer, value: totalPrice - initialPayment })
-      assert.equal((await purchase.stage()).toNumber(), SHIPPING_PENDING)
+      assert.equal((await purchase.stage()).toNumber(), IN_ESCROW)
+    })
+
+    it('should allow seller to ship', async () => {
+      await purchase.sellerConfirmShipped({ from: seller })
+      assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)
+    })
+
+    it('should allow buyer to confirm reciept', async () => {
+      await purchase.buyerConfirmReceipt(5, 'IPFS', { from: buyer })
+      assert.equal((await purchase.stage()).toNumber(), SELLER_PENDING)
+    })
+
+    it('should allow seller to collect their money', async () => {
+      await purchase.sellerCollectPayout(1, 'IPFS_HASH_HERE', { from: seller })
+      assert.equal((await purchase.stage()).toNumber(), COMPLETE)
+    })
+  })
+
+  describe('Success path flow: fractional listing', async () => {
+    before(async () => {
+      fractionalListing = await FractionalListing.new(
+        seller,
+        ipfsHash,
+        { from: seller }
+      )
+    })
+
+    it('should create and link the new purchase', async () => {
+      const tx = await fractionalListing.request({
+        from: buyer,
+        value: initialPayment
+      })
+      const listingPurchasedEvent = tx.logs.find(
+        e => e.event == 'ListingPurchased'
+      )
+      purchase = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
+
+      assert.equal((await purchase.stage()).toNumber(), AWAITING_SELLER_APPROVAL)
+      assert.equal((await purchase.listingVersion()).toNumber(), 0)
+    })
+
+    it('should allow seller to approve', async () => {
+      await purchase.sellerApprove({ from: seller })
+      assert.equal((await purchase.stage()).toNumber(), IN_ESCROW)
     })
 
     it('should allow seller to ship', async () => {
@@ -237,7 +284,7 @@ contract('Purchase', accounts => {
       '0x4443424131323334000000000000000000000000000000000000000000000000'
 
     beforeEach(async () => {
-      listing = await Listing.new(
+      listing = await UnitListing.new(
         seller,
         ipfsHash,
         totalPrice,
@@ -253,7 +300,7 @@ contract('Purchase', accounts => {
         e => e.event == 'ListingPurchased'
       )
       purchase = await Purchase.at(listingPurchasedEvent.args._purchaseContract)
-      assert.equal((await purchase.stage()).toNumber(), SHIPPING_PENDING)
+      assert.equal((await purchase.stage()).toNumber(), IN_ESCROW)
       await purchase.sellerConfirmShipped({ from: seller })
       assert.equal((await purchase.stage()).toNumber(), BUYER_PENDING)
     })
@@ -367,7 +414,7 @@ contract('Purchase', accounts => {
 
   describe('Buyer timeout', async () => {
     beforeEach(async () => {
-      listing = await Listing.new(
+      listing = await UnitListing.new(
         seller,
         ipfsHash,
         totalPrice,
@@ -399,7 +446,7 @@ contract('Purchase', accounts => {
   })
 
   it('should not allow purchase of listing by its seller', async () => {
-    listing = await Listing.new(seller, ipfsHash, totalPrice, unitsAvailable, {
+    listing = await UnitListing.new(seller, ipfsHash, totalPrice, unitsAvailable, {
       from: seller
     })
     try {

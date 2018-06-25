@@ -69,7 +69,7 @@ Code changes will trigger a live rebuild.
 
 ### 4. Use with local Demo DApp
 
-To interact with your local origin-js and local blockahin, see [the instructions in our Demo DApp](https://github.com/OriginProtocol/demo-dapp#developing-with-a-local-chain).
+To interact with your local origin-js and local blockahin, see [the instructions in our Demo DApp](https://github.com/OriginProtocol/origin-dapp#run-demo-dapp-with-local-origin-js-and-local-blockchain).
 
 
 ## Tests
