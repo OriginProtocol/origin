@@ -14,11 +14,13 @@ class Calendar extends Component {
     this.onSelectEvent = this.onSelectEvent.bind(this)
     this.handlePriceChange = this.handlePriceChange.bind(this)
     this.saveEvent = this.saveEvent.bind(this)
+    this.onAvailabilityChange = this.onAvailabilityChange.bind(this)
 
     this.state = {
       events: [],
       selectedEvent: {
-        title: 0
+        title: 0,
+        availability: true
       }
     }
   }
@@ -66,12 +68,16 @@ class Calendar extends Component {
   }
 
   onSelectEvent(selectedEvent) {
+console.log('============================ selectedEvent: ', selectedEvent)
     this.setState({ 
       selectedEvent: {
         ...selectedEvent,
         title: selectedEvent.title || '',
+        availability: (selectedEvent.availability !== undefined ? selectedEvent.availability : true)
       }
     })
+
+    console.log('======================= this.state: ', this.state)
   }
 
   handlePriceChange(event) {
@@ -88,6 +94,15 @@ class Calendar extends Component {
 
     this.setState({
       events: [...allOtherEvents, this.state.selectedEvent]
+    })
+  }
+
+  onAvailabilityChange(event) {
+    this.setState({
+      selectedEvent: {
+        ...this.state.selectedEvent,
+        availability: !!parseInt(event.target.value)
+      }
     })
   }
 
@@ -113,6 +128,33 @@ class Calendar extends Component {
                   {moment(selectedEvent.start).format('MM/DD/YY')} - 
                   {moment(selectedEvent.end).format('MM/DD/YY')}
                 </p>
+                <p>Availability</p>
+                <div className="form-check">
+                  <input 
+                    className="form-check-input"
+                    type="radio"
+                    name="availability"
+                    id="available"
+                    value="1"
+                    onChange={ this.onAvailabilityChange }
+                    checked={ this.state.selectedEvent.availability } />
+                  <label className="form-check-label" htmlFor="available">
+                    Availaible
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="availability"
+                    id="unavailable"
+                    value="0"
+                    onChange={ this.onAvailabilityChange }
+                    checked={ !this.state.selectedEvent.availability } />
+                  <label className="form-check-label" htmlFor="unavailable">
+                    Unavailable
+                  </label>
+                </div>
                 <input 
                   placeholder="Price"
                   name="price"
