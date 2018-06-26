@@ -18,6 +18,11 @@
     - `IPFS_GATEWAY_PROTOCOL=http`
     - `PROVIDER_URL=http://localhost:8545`
 
+## Tests
+
+Run these commands *inside the container*:
+- `cd /opt/origin-bridge/scripts/`
+- `./run-tests.sh`
 
 ## TODOS
 - envkey integration
