@@ -391,7 +391,7 @@ def test_generate_airbnb_verification_code():
     )
     assert isinstance(resp, VerificationServiceResponse)
 
-    assert resp.data['code'] == "0x66dd6b0b"
+    assert resp.data['code'] == "art brick aspect accident brass betray antenna"
 
 
 def test_generate_airbnb_verification_code_incorrect_user_id_format():
@@ -408,7 +408,7 @@ def test_generate_airbnb_verification_code_incorrect_user_id_format():
 def test_verify_airbnb(mock_urllib_request):
     mock_urllib_request.return_value.read.return_value = """
         <html><div>
-            Airbnb profile description Origin verification code: 0x66dd6b0b
+            Airbnb profile description Origin verification code: art brick aspect accident brass betray antenna
             some more profile description
         </div></html>""".encode('utf-8')
     airbnbUserId = "123456"
@@ -438,7 +438,7 @@ def test_verify_airbnb_verification_code_missing(mock_urllib_request):
             "123456"
         )
 
-    assert str(service_err.value) == "Origin verification code: 0x66dd6b0b has" \
+    assert str(service_err.value) == "Origin verification code: art brick aspect accident brass betray antenna has" \
         + " not been found in user's Airbnb profile."
 
 
@@ -455,7 +455,7 @@ def test_verify_airbnb_verification_code_incorrect(mock_urllib_request):
             "123456"
         )
 
-    assert str(service_err.value) == "Origin verification code: 0x66dd6b0b" \
+    assert str(service_err.value) == "Origin verification code: art brick aspect accident brass betray antenna" \
         + " has not been found in user's Airbnb profile."
 
 
@@ -463,7 +463,7 @@ def test_verify_airbnb_verification_code_incorrect(mock_urllib_request):
 def test_verify_airbnb_verification_code_incorrect_user_id_format(mock_urllib_request):
     mock_urllib_request.return_value.read.return_value = """
         <html><div>
-        Airbnb profile description Origin verification code: 0x1234567
+        Airbnb profile description Origin verification code: art brick aspect accident brass betray antenna
         some more profile description</div></html>""".encode('utf-8')
 
     with pytest.raises(AirbnbVerificationError) as service_err:

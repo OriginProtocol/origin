@@ -97,3 +97,5 @@ BIND_HOST = get_env_default("BIND_HOST")
 BONSAI_URL = get_env_default('BONSAI_URL')
 
 CONTRACT_DIR = get_env_default('CONTRACT_DIR') or 'contracts'
+
+RESOURCES_DIR = get_env_default('RESOURCES_DIR') or 'resources'

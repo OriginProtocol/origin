@@ -247,14 +247,14 @@ class VerificationService:
             raise AirbnbVerificationError('AirbnbUserId should be a number.')
 
         return VerificationServiceResponse({
-            'code': generate_airbnb_verification_code(eth_address, airbnbUserId)
+            'code': ' '.join(generate_airbnb_verification_code_list(eth_address, airbnbUserId))
         })
 
     def verify_airbnb(eth_address, airbnbUserId):
         if not re.compile(r"^\d*$").match(airbnbUserId):
             raise AirbnbVerificationError('AirbnbUserId should be a number.')
 
-        code = generate_airbnb_verification_code(eth_address, airbnbUserId)
+        code = ' '.join(generate_airbnb_verification_code_list(eth_address, airbnbUserId))
 
         # TODO: determine if this user agent is acceptable.
         # We need to set an user agent otherwise Airbnb returns 403
@@ -291,9 +291,14 @@ class VerificationService:
         })
 
 
-def generate_airbnb_verification_code(eth_address, airbnbUserid):
-    # might make sense to add salt to this function, but on the other hand it is open source
-    return Web3.sha3(text=eth_address + airbnbUserid).hex()[:10]
+def generate_airbnb_verification_code_list(eth_address, airbnbUserid):
+    # take the last 7 bytes of the hash
+    hashCode = Web3.sha3(text=eth_address + airbnbUserid)[:7]
+
+    with open("./{}/mnemonic_words_english.txt".format(settings.RESOURCES_DIR)) as f:
+        mnemonicWords = f.readlines()
+        # convert those bytes to mnemonic phrases
+        return list(map(lambda i: mnemonicWords[int(i)].rstrip(), hashCode))
 
 
 def normalize_number(phone):
