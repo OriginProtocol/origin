@@ -21,7 +21,7 @@ class Calendar extends Component {
     this.state = {
       events: [],
       selectedEvent: {
-        title: 0,
+        price: 0,
         isAvailable: true
       }
     }
@@ -73,7 +73,7 @@ class Calendar extends Component {
     this.setState({ 
       selectedEvent: {
         ...selectedEvent,
-        title: selectedEvent.title || '',
+        price: selectedEvent.price || '',
         isAvailable: (selectedEvent.isAvailable !== undefined ? selectedEvent.isAvailable : true)
       }
     })
@@ -83,7 +83,7 @@ class Calendar extends Component {
     this.setState({
       selectedEvent: {
         ...this.state.selectedEvent,
-        title: parseFloat(event.target.value)
+        price: parseFloat(event.target.value)
       }
     })
   }
@@ -105,7 +105,7 @@ class Calendar extends Component {
       this.setState({
         events: [...allOtherEvents],
         selectedEvent: {
-          title: 0,
+          price: 0,
           isAvailable: true
         }
       })
@@ -175,13 +175,13 @@ class Calendar extends Component {
   }
 
   eventComponent(data) {
-    const { title, event } = data
-    const { isAvailable } = event
+    const { event } = data
+    const { isAvailable, price } = event
 
     return (
       <div className={ `calendar-event ${isAvailable !== false ? 'available' : 'unavailable'}` }>
-        {title ?
-          `${title} ETH`
+        {price ?
+          `${price} ETH`
           :
           'New Event'
         }
@@ -275,7 +275,7 @@ class Calendar extends Component {
                   name="price"
                   type="number"
                   step="0.00001"
-                  value={selectedEvent.title} 
+                  value={selectedEvent.price} 
                   onChange={this.handlePriceChange} 
                 />
                  <button className="btn btn-secondary" onClick={this.cancelEvent}>Cancel</button>
