@@ -12,6 +12,10 @@
     "defaultMessage": "Click below to view all listings."
   },
   {
+    "id": "my-purchases.myPurchasesHeading",
+    "defaultMessage": "My Purchases"
+  },
+  {
     "id": "my-purchases.pending",
     "defaultMessage": "Pending"
   },

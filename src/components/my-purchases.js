@@ -147,38 +147,54 @@ class MyPurchases extends Component {
             </div>
           </div>
           <div className="row">
-            <div className="col-12 col-md-3">
+            <div className="col-12">
               {!loading && !!purchases.length &&
-                <div className="filters list-group flex-row flex-md-column">
-                  <a className={`list-group-item list-group-item-action${filter === 'pending' ? ' active' : ''}`}
-                    onClick={() => this.setState({ filter: 'pending' })}>
-                    <FormattedMessage
-                      id={ 'my-purchases.pending' }
-                      defaultMessage={ 'Pending' }
-                    />
-                  </a>
-                  <a className={`list-group-item list-group-item-action${filter === 'complete' ? ' active' : ''}`}
-                    onClick={() => this.setState({ filter: 'complete' })}>
-                    <FormattedMessage
-                      id={ 'my-purchases.complete' }
-                      defaultMessage={ 'Complete' }
-                    />
-                  </a>
-                  <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`}
-                    onClick={() => this.setState({ filter: 'all' })}>
-                    <FormattedMessage
-                      id={ 'my-purchases.all' }
-                      defaultMessage={ 'All' }
-                    />
-                  </a>
-                </div>
+                <div>
+                  <div className="row">
+                    <div className="col-12">
+                      <h1>
+                        <FormattedMessage
+                          id={ 'my-purchases.myPurchasesHeading' }
+                          defaultMessage={ 'My Purchases' }
+                        />
+                      </h1>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-12 col-md-3">  
+                      <div className="filters list-group flex-row flex-md-column">
+                        <a className={`list-group-item list-group-item-action${filter === 'pending' ? ' active' : ''}`}
+                          onClick={() => this.setState({ filter: 'pending' })}>
+                          <FormattedMessage
+                            id={ 'my-purchases.pending' }
+                            defaultMessage={ 'Pending' }
+                          />
+                        </a>
+                        <a className={`list-group-item list-group-item-action${filter === 'complete' ? ' active' : ''}`}
+                          onClick={() => this.setState({ filter: 'complete' })}>
+                          <FormattedMessage
+                            id={ 'my-purchases.complete' }
+                            defaultMessage={ 'Complete' }
+                          />
+                        </a>
+                        <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`}
+                          onClick={() => this.setState({ filter: 'all' })}>
+                          <FormattedMessage
+                            id={ 'my-purchases.all' }
+                            defaultMessage={ 'All' }
+                          />
+                        </a>
+                      </div>
+                    </div>
+                    <div className="col-12 col-md-9">
+                      <div className="my-listings-list">
+                        {filteredPurchases.map(p => <MyPurchaseCard key={`my-purchase-${p.address}`} purchase={p} />)}
+                      </div>
+                    </div>
+                  </div>
+                </div>  
               }
-            </div>
-            <div className="col-12 col-md-9">
-              <div className="my-listings-list">
-                {filteredPurchases.map(p => <MyPurchaseCard key={`my-purchase-${p.address}`} purchase={p} />)}
-              </div>
-            </div>
+            </div>  
           </div>
         </div>
       </div>

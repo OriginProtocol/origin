@@ -16,6 +16,10 @@
     "defaultMessage": "My Listings"
   },
   {
+    "id": "my-sales.mySalesHeading",
+    "defaultMessage": "My Sales"
+  },
+  {
     "id": "my-sales.pending",
     "defaultMessage": "Pending"
   },

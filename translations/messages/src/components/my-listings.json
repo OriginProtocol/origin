@@ -40,6 +40,10 @@
     "defaultMessage": "Create Your First Listing"
   },
   {
+    "id": "my-listings.myListingsHeading",
+    "defaultMessage": "My Listings"
+  },
+  {
     "id": "my-listings.all",
     "defaultMessage": "All"
   },
