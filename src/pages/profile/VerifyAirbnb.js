@@ -202,12 +202,12 @@ class VerifyAirbnb extends Component {
             defaultMessage={ 'Go to Airbnb website, edit your profile and paste the following text into profile description.' }
           /> }
         </label>
-        <input
+        <textarea
           className="form-control"
           id="generated-code"
           readOnly="readOnly"
           // Making input wider, so that the whole verification code can be viewed without trimming.
-          style={{maxWidth: '340px'}}
+          style={{maxWidth: '340px', height: '92px', resize: 'none'}}
           value={this.state.confirmationCode == '' ? this.props.intl.formatMessage({ id: 'VerifyAirbnb.loadingConfirmationCode', defaultMessage: 'Loading...'}) : "Origin verification code: " + this.state.confirmationCode}
         />
         <div className="explanation">
