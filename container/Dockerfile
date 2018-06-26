@@ -102,6 +102,8 @@ RUN npm install -g pm2
 RUN mkdir /opt/origin-bridge/scripts
 COPY files/scripts/start-bridge.sh /opt/origin-bridge/scripts
 COPY files/scripts/start-celery.sh /opt/origin-bridge/scripts
+COPY files/scripts/run-tests.sh /opt/origin-bridge/scripts
+RUN chmod +x /opt/origin-bridge/scripts/run-tests.sh
 COPY files/scripts/start-pg.sh /opt/pg
 COPY files/scripts/start-es.sh /opt/es
 COPY files/process.json /opt
