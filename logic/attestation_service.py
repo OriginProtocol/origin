@@ -280,7 +280,7 @@ class VerificationService:
             )
 
         # TODO: determine the schema for claim data
-        data = airbnbUserId
+        data = 'airbnbUserId:' + airbnbUserId
         signature = attestations.generate_signature(
             signing_key, eth_address, CLAIM_TYPES['airbnb'], data)
 

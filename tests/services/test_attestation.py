@@ -422,7 +422,7 @@ def test_verify_airbnb(mock_urllib_request):
     resp_data = resp.data
     assert len(resp_data['signature']) == SIGNATURE_LENGTH
     assert resp_data['claim_type'] == CLAIM_TYPES['airbnb']
-    assert resp_data['data'] == airbnbUserId
+    assert resp_data['data'] == 'airbnbUserId:' + airbnbUserId
 
 
 @mock.patch('logic.attestation_service.urlopen')
