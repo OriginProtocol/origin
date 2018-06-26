@@ -4,12 +4,12 @@
 
 - Activate the environment:
 
-  `$ source /opt/bridge-server/bridge-server-venv/bin/activate`
+  `$ source /opt/origin-bridge/origin-bridge-venv/bin/activate`
 
 ## Configuration
-- bridge server envionment variable file is located at `/opt/bridge-server/.env` within the container
-- database url: postgresql://docker:docker@localhost:5432/bridge-server
-- if running the demo-dapp locally alongside the container, use these settings for the environment variable (.env) file:
+- bridge server envionment variable file is located at `/opt/origin-bridge/.env` within the container
+- database url: postgresql://docker:docker@localhost:5432/origin-bridge
+- if running the origin-dapp locally alongside the container, use these settings for the environment variable (.env) file:
     - `BRIDGE_SERVER_PROTOCOL=http`
     - `BRIDGE_SERVER_DOMAIN=localhost:5000`
     - `IPFS_API_PORT=5002`

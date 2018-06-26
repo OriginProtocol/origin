@@ -1,5 +1,5 @@
 # Clone bridge server source
-git clone https://github.com/OriginProtocol/bridge-server.git bridge
+git clone https://github.com/OriginProtocol/origin-bridge.git bridge
 
 # Checkout bridge server develop branch
 cd bridge
@@ -15,7 +15,7 @@ git checkout develop
 cd ..
 
 # Clone dapp source
-git clone https://github.com/OriginProtocol/demo-dapp.git dapp
+git clone https://github.com/OriginProtocol/origin-dapp.git dapp
 
 # Checkout dapp develop branch
 cd dapp
@@ -23,7 +23,7 @@ git checkout develop
 cd ..
 
 # Copy .env file to source
-cp ./container/files/config/bridge_server_dev.env ./bridge/.env
+cp ./container/files/config/bridge_dev.env ./bridge/.env
 
 # Build bridge server image
 docker build ./container -t origin-image
