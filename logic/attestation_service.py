@@ -307,7 +307,6 @@ def get_airbnb_verification_code(eth_address, airbnbUserid):
         )
 
 
-
 def normalize_number(phone):
     try:
         lookup = get_twilio_client().lookups.phone_numbers(phone).fetch()
