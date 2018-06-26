@@ -16,6 +16,7 @@ class Calendar extends Component {
     this.saveEvent = this.saveEvent.bind(this)
     this.cancelEvent = this.cancelEvent.bind(this)
     this.onAvailabilityChange = this.onAvailabilityChange.bind(this)
+    this.onDateDropdownChange = this.onDateDropdownChange.bind(this)
 
     this.state = {
       events: [],
@@ -96,15 +97,19 @@ class Calendar extends Component {
   }
 
   cancelEvent() {
-    const allOtherEvents = this.state.events.filter((event) => event.id !== this.state.selectedEvent.id)
+    const confirmation = confirm('Are you sure you want to delete this event?')
 
-    this.setState({
-      events: [...allOtherEvents],
-      selectedEvent: {
-        title: 0,
-        isAvailable: true
-      }
-    })
+    if (confirmation) {
+      const allOtherEvents = this.state.events.filter((event) => event.id !== this.state.selectedEvent.id)
+
+      this.setState({
+        events: [...allOtherEvents],
+        selectedEvent: {
+          title: 0,
+          isAvailable: true
+        }
+      })
+    }
   }
 
   onAvailabilityChange(event) {
@@ -116,13 +121,70 @@ class Calendar extends Component {
     })
   }
 
+  onDateDropdownChange(event) {
+    const whichDropdown = event.target.name
+    const value = event.target.value
+
+    const getSlots = () => {
+      const startDate = whichDropdown === 'start' ? new Date(value) : new Date(this.state.selectedEvent.start)
+      const endDate = whichDropdown === 'end' ? new Date(value) : new Date(this.state.selectedEvent.end)
+      const slots = []
+      let slotDate = moment(value)
+
+      while (slotDate.toDate() >= startDate && slotDate.toDate() <= endDate) {
+
+        if (whichDropdown === 'start') {
+
+          slots.push(slotDate.toDate())
+          slotDate = slotDate.add(1, 'days')
+
+        } else {
+
+          slots.unshift(slotDate.toDate())
+          slotDate = slotDate.subtract(1, 'days')
+
+        }
+      }
+
+      return slots
+    }
+  
+    const allOtherEvents = this.state.events.filter((event) => event.id !== this.state.selectedEvent.id)
+
+    const updatedEvent = {
+      ...this.state.selectedEvent,
+      [whichDropdown]: new Date(value),
+      slots: getSlots()
+    }
+
+    this.setState({
+      events: [
+        ...allOtherEvents,
+        updatedEvent
+      ],
+      selectedEvent: updatedEvent
+    })
+  }
+
+  getDateDropdownOptions(date) {
+    return [
+      ...[...Array(10)].map((_, i) => moment(date).subtract(i + 1, 'days').toDate()).reverse(),
+      moment(date).toDate(),
+      ...[...Array(10)].map((_, i) => moment(date).add(i + 1, 'days').toDate())
+    ]
+  }
+
   eventComponent(data) {
     const { title, event } = data
     const { isAvailable } = event
 
     return (
       <div className={ `calendar-event ${isAvailable !== false ? 'available' : 'unavailable'}` }>
-        {title} ETH
+        {title ?
+          `${title} ETH`
+          :
+          'New Event'
+        }
       </div>
     )
   }
@@ -148,8 +210,38 @@ class Calendar extends Component {
             {selectedEvent && selectedEvent.start &&
               <div>
                 <p>
-                  {moment(selectedEvent.start).format('MM/DD/YY')} - 
-                  {moment(selectedEvent.end).format('MM/DD/YY')}
+                  <select
+                    name="start"
+                    className="form-control"
+                    onChange={ this.onDateDropdownChange }
+                    value={ selectedEvent.start.toString() }>
+                    { 
+                      this.getDateDropdownOptions(selectedEvent.start).map((date) => (
+                        date < selectedEvent.end &&
+                        <option
+                          key={date.toString()}
+                          value={date.toString()}>
+                          {moment(date).format('MM/DD/YY')}
+                        </option>
+                      ))
+                    }
+                  </select>
+                  <select
+                    name="end"
+                    className="form-control"
+                    onChange={ this.onDateDropdownChange }
+                    value={selectedEvent.end.toString()}>
+                    { 
+                      this.getDateDropdownOptions(selectedEvent.end).map((date) => (
+                        date > selectedEvent.start &&
+                        <option
+                          key={date.toString()}
+                          value={date.toString()}>
+                          {moment(date).format('MM/DD/YY')}
+                        </option>
+                      ))
+                    }
+                  </select>
                 </p>
                 <p>Availability</p>
                 <div className="form-check">

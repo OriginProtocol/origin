@@ -472,6 +472,7 @@ class ListingCreate extends Component {
           listingId=""
           userType="seller"
           viewType="daily"
+          step=""
         />
       </div>
     )
