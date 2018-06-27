@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import BigCalendar from 'react-big-calendar'
 import moment from 'moment'
 import uuid from 'uuid/v1'
@@ -17,14 +17,28 @@ class Calendar extends Component {
     this.cancelEvent = this.cancelEvent.bind(this)
     this.onAvailabilityChange = this.onAvailabilityChange.bind(this)
     this.onDateDropdownChange = this.onDateDropdownChange.bind(this)
+    this.onIsRecurringEventChange = this.onIsRecurringEventChange.bind(this)
+    this.onRecurringDaysChange = this.onRecurringDaysChange.bind(this)
 
     this.state = {
       events: [],
       selectedEvent: {
         price: 0,
-        isAvailable: true
+        isAvailable: true,
+        isRecurringEvent: false,
+        recurringDays: []
       }
     }
+
+    this.daysOfTheWeek = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday'
+    ]
   }
 
   componentWillMount() {
@@ -74,7 +88,9 @@ class Calendar extends Component {
       selectedEvent: {
         ...selectedEvent,
         price: selectedEvent.price || '',
-        isAvailable: (selectedEvent.isAvailable !== undefined ? selectedEvent.isAvailable : true)
+        isAvailable: (selectedEvent.isAvailable !== undefined ? selectedEvent.isAvailable : true),
+        isRecurringEvent: selectedEvent.isRecurringEvent || false,
+        recurringDays: selectedEvent.recurringDays || []
       }
     })
   }
@@ -83,7 +99,7 @@ class Calendar extends Component {
     this.setState({
       selectedEvent: {
         ...this.state.selectedEvent,
-        price: parseFloat(event.target.value)
+        price: (event.target.value && parseFloat(event.target.value))
       }
     })
   }
@@ -106,7 +122,9 @@ class Calendar extends Component {
         events: [...allOtherEvents],
         selectedEvent: {
           price: 0,
-          isAvailable: true
+          isAvailable: true,
+          isRecurringEvent: false,
+          recurringDays: []
         }
       })
     }
@@ -174,6 +192,39 @@ class Calendar extends Component {
     ]
   }
 
+  onIsRecurringEventChange(event) {
+    const isChecked = event.target.checked
+
+    const updatedEvent = {
+      ...this.state.selectedEvent,
+      isRecurringEvent: isChecked
+    }
+
+    if (!isChecked) {
+      updatedEvent.recurringDays = []
+    }
+
+    this.setState({
+      selectedEvent: updatedEvent
+    })
+  }
+
+  onRecurringDaysChange(event) {
+    const selectedEvent = this.state.selectedEvent
+    const thisDay = parseInt(event.target.id)
+    const isChecked = event.target.checked
+    const recurringDays = isChecked ?
+                            [...selectedEvent.recurringDays, thisDay] :
+                            selectedEvent.recurringDays.filter((day) => day !== thisDay )
+
+    this.setState({
+      selectedEvent: {
+        ...selectedEvent,
+        recurringDays
+      }
+    })
+  }
+
   eventComponent(data) {
     const { event } = data
     const { isAvailable, price } = event
@@ -209,7 +260,7 @@ class Calendar extends Component {
           <div className="col-md-4">
             {selectedEvent && selectedEvent.start &&
               <div>
-                <p>
+                <div>
                   <select
                     name="start"
                     className="form-control"
@@ -242,43 +293,76 @@ class Calendar extends Component {
                       ))
                     }
                   </select>
-                </p>
-                <p>Availability</p>
-                <div className="form-check">
+                </div>
+                <div>
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      id="isRecurringEvent"
+                      checked={ selectedEvent.isRecurringEvent }
+                      onChange={ this.onIsRecurringEventChange } />
+                    <label className="form-check-label" htmlFor="isRecurringEvent">
+                      This is a repeating event
+                    </label>
+                  </div>
+                  <div>
+                    {
+                      selectedEvent.isRecurringEvent &&
+                      this.daysOfTheWeek.map((day, i) => (
+                        <Fragment key={ i }>
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            id={ i }
+                            checked={ selectedEvent.recurringDays.includes(i) }
+                            onChange={ this.onRecurringDaysChange } />
+                          <label className="form-check-label" htmlFor={ i }>
+                            { day }
+                          </label>
+                        </Fragment>
+                      ))
+                    }
+                  </div>
+                </div>
+                <div>
+                  <p>Availability</p>
+                  <div className="form-check">
+                    <input 
+                      className="form-check-input"
+                      type="radio"
+                      name="isAvailable"
+                      id="available"
+                      value="1"
+                      onChange={ this.onAvailabilityChange }
+                      checked={ selectedEvent.isAvailable } />
+                    <label className="form-check-label" htmlFor="available">
+                      Availaible
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="isAvailable"
+                      id="unavailable"
+                      value="0"
+                      onChange={ this.onAvailabilityChange }
+                      checked={ !selectedEvent.isAvailable } />
+                    <label className="form-check-label" htmlFor="unavailable">
+                      Unavailable
+                    </label>
+                  </div>
                   <input 
-                    className="form-check-input"
-                    type="radio"
-                    name="isAvailable"
-                    id="available"
-                    value="1"
-                    onChange={ this.onAvailabilityChange }
-                    checked={ this.state.selectedEvent.isAvailable } />
-                  <label className="form-check-label" htmlFor="available">
-                    Availaible
-                  </label>
+                    placeholder="Price"
+                    name="price"
+                    type="number"
+                    step="0.00001"
+                    value={selectedEvent.price} 
+                    onChange={this.handlePriceChange} 
+                  />
                 </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    name="isAvailable"
-                    id="unavailable"
-                    value="0"
-                    onChange={ this.onAvailabilityChange }
-                    checked={ !this.state.selectedEvent.isAvailable } />
-                  <label className="form-check-label" htmlFor="unavailable">
-                    Unavailable
-                  </label>
-                </div>
-                <input 
-                  placeholder="Price"
-                  name="price"
-                  type="number"
-                  step="0.00001"
-                  value={selectedEvent.price} 
-                  onChange={this.handlePriceChange} 
-                />
-                 <button className="btn btn-secondary" onClick={this.cancelEvent}>Cancel</button>
+                <button className="btn btn-secondary" onClick={this.cancelEvent}>Cancel</button>
                 <button className="btn btn-primary" onClick={this.saveEvent}>Save</button>
               </div>
             }
