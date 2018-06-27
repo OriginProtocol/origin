@@ -136,34 +136,32 @@ class MySales extends Component {
               }
             </div>
           </div>
-          <div className="row">
-            <div className="col-12 text-center">
-              {!loading && !purchases.length &&
-                <div>
-                  <img src="images/empty-listings-graphic.svg"></img>
-                  <h1>
-                    <FormattedMessage
-                      id={ 'my-sales.no-sales' }
-                      defaultMessage={ 'You don\'t have any sales yet.' }
-                    />
-                  </h1>
-                  <p>
-                    <FormattedMessage
-                      id={ 'my-sales.no-sales-text' }
-                      defaultMessage={ 'Click below to view your listings.' }
-                    />
-                  </p>
-                  <br></br>
-                  <a href="#/my-listings" className="btn btn-lrg btn-primary">
-                    <FormattedMessage
-                      id={ 'my-sales.view-listings' }
-                      defaultMessage={ 'My Listings' }
-                    />
-                  </a>
-                </div>
-              }
+          {!loading && !purchases.length &&
+            <div className="row">
+              <div className="col-12 text-center">
+                <img src="images/empty-listings-graphic.svg"></img>
+                <h1>
+                  <FormattedMessage
+                    id={ 'my-sales.no-sales' }
+                    defaultMessage={ 'You don\'t have any sales yet.' }
+                  />
+                </h1>
+                <p>
+                  <FormattedMessage
+                    id={ 'my-sales.no-sales-text' }
+                    defaultMessage={ 'Click below to view your listings.' }
+                  />
+                </p>
+                <br></br>
+                <a href="#/my-listings" className="btn btn-lrg btn-primary">
+                  <FormattedMessage
+                    id={ 'my-sales.view-listings' }
+                    defaultMessage={ 'My Listings' }
+                  />
+                </a>
+              </div>
             </div>
-          </div>
+          }
           {!loading && !!purchases.length &&
             <div className="row">
               <div className="col-12">
