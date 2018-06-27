@@ -96,150 +96,146 @@ class MyListings extends Component {
     return (
       <div className="my-listings-wrapper">
         <div className="container">
-          <div className="row">
-            <div className="col-12 text-center">
-              {loading &&
+          {loading &&
+            <div className="row">
+              <div className="col-12 text-center">
                 <h1>
                   <FormattedMessage
                     id={ 'my-listings.loading' }
                     defaultMessage={ 'Loading...' }
                   />
                 </h1> 
-              }
+              </div>
             </div>
-          </div>
-          <div className="row">
-            <div className="col-12 text-center">
-              {!loading && !listings.length && 
-                <div>
-                  <img src="images/empty-listings-graphic.svg"></img>
-                  <h1>
-                    <FormattedMessage
-                      id={ 'my-listings.no-listings' }
-                      defaultMessage={ 'You don\'t have any listings yet.' }
-                    />
-                  </h1>
-                  <p>
-                    <FormattedMessage
-                      id={ 'my-listings.no-listings-steps' }
-                      defaultMessage={ 'Follow the steps below to create your first listing!' }
-                    />
-                  </p>
-                  <br></br>
-                  <br></br>
-                  <div className="row">
-                    <div className="col-12 col-sm-4 col-lg-2 offset-lg-3 text-center">
-                      <div className="numberCircle">
-                        <h1 className="circle-text">
-                          <FormattedMessage
-                            id={ 'my-listings.number-one' }
-                            defaultMessage={ '1' }
-                          />
-                        </h1>
-                      </div>
-                      <p>
+          }  
+          {!loading && !listings.length && 
+            <div className="row">
+              <div className="col-12 text-center">
+                <img src="images/empty-listings-graphic.svg"></img>
+                <h1>
+                  <FormattedMessage
+                    id={ 'my-listings.no-listings' }
+                    defaultMessage={ 'You don\'t have any listings yet.' }
+                  />
+                </h1>
+                <p>
+                  <FormattedMessage
+                    id={ 'my-listings.no-listings-steps' }
+                    defaultMessage={ 'Follow the steps below to create your first listing!' }
+                  />
+                </p>
+                <br />
+                <br />
+                <div className="row">
+                  <div className="col-12 col-sm-4 col-lg-2 offset-lg-3 text-center">
+                    <div className="numberCircle">
+                      <h1 className="circle-text">
                         <FormattedMessage
-                          id={ 'my-listings.step-one' }
-                          defaultMessage={ 'Choose the right category for your listing.' }
+                          id={ 'my-listings.number-one' }
+                          defaultMessage={ '1' }
                         />
-                      </p>
+                      </h1>
                     </div>
-                    <div className="col-12 col-sm-4 col-lg-2 text-center">
-                      <div className="numberCircle">
-                        <h1 className="circle-text">
-                          <FormattedMessage
-                            id={ 'my-listings.number-two ' }
-                            defaultMessage={ '2' }
-                          />
-                        </h1>
-                      </div>
-                      <p>
-                        <FormattedMessage
-                          id={ 'my-listings.step-two ' }
-                          defaultMessage={ 'Give your listing a name, description, and price.' }
-                        />
-                      </p>
-                    </div>
-                    <div className="col-12 col-sm-4 col-lg-2 text-center">
-                      <div className="numberCircle">
-                        <h1 className="circle-text">
-                          <FormattedMessage
-                            id={ 'my-listings.number-three ' }
-                            defaultMessage={ '3' }
-                          />
-                        </h1>
-                      </div>
-                      <p>
-                        <FormattedMessage
-                          id={ 'my-listings.step-three ' }
-                          defaultMessage={ 'Preview your listing and publish it to the blockchain.' }
-                        />
-                      </p>
-                    </div>
+                    <p>
+                      <FormattedMessage
+                        id={ 'my-listings.step-one' }
+                        defaultMessage={ 'Choose the right category for your listing.' }
+                      />
+                    </p>
                   </div>
-                  <div className="row">
-                    <div className="col-12 text-center">
-                      <br></br>
-                      <br></br>
-                      <a href="#/create" className="btn btn-lrg btn-primary btn-auto-width">
+                  <div className="col-12 col-sm-4 col-lg-2 text-center">
+                    <div className="numberCircle">
+                      <h1 className="circle-text">
                         <FormattedMessage
-                          id={ 'my-listings.create-listing' }
-                          defaultMessage={ 'Create Your First Listing' }
+                          id={ 'my-listings.number-two ' }
+                          defaultMessage={ '2' }
+                        />
+                      </h1>
+                    </div>
+                    <p>
+                      <FormattedMessage
+                        id={ 'my-listings.step-two ' }
+                        defaultMessage={ 'Give your listing a name, description, and price.' }
+                      />
+                    </p>
+                  </div>
+                  <div className="col-12 col-sm-4 col-lg-2 text-center">
+                    <div className="numberCircle">
+                      <h1 className="circle-text">
+                        <FormattedMessage
+                          id={ 'my-listings.number-three ' }
+                          defaultMessage={ '3' }
+                        />
+                      </h1>
+                    </div>
+                    <p>
+                      <FormattedMessage
+                        id={ 'my-listings.step-three ' }
+                        defaultMessage={ 'Preview your listing and publish it to the blockchain.' }
+                      />
+                    </p>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-12 text-center">
+                    <br />
+                    <br />
+                    <a href="#/create" className="btn btn-lrg btn-primary btn-auto-width">
+                      <FormattedMessage
+                        id={ 'my-listings.create-listing' }
+                        defaultMessage={ 'Create Your First Listing' }
+                      />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+          {!loading && !!listings.length &&
+            <div className="row">
+              <div className="col-12">
+                <div className="row">
+                  <div className="col-12">
+                    <h1>
+                      <FormattedMessage
+                        id={ 'my-listings.myListingsHeading' }
+                        defaultMessage={ 'My Listings' }
+                      />
+                    </h1>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-12 col-md-3"> 
+                    <div className="filters list-group flex-row flex-md-column">
+                      <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>
+                        <FormattedMessage
+                          id={ 'my-listings.all' }
+                          defaultMessage={ 'All' }
+                        />
+                      </a>
+                      <a className={`list-group-item list-group-item-action${filter === 'active' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'active' })}>
+                        <FormattedMessage
+                          id={ 'my-listings.active' }
+                          defaultMessage={ 'Active' }
+                        />
+                      </a>
+                      <a className={`list-group-item list-group-item-action${filter === 'inactive' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'inactive' })}>
+                        <FormattedMessage
+                          id={ 'my-listings.inactive' }
+                          defaultMessage={ 'Inactive' }
                         />
                       </a>
                     </div>
                   </div>
+                  <div className="col-12 col-md-9">
+                    <div className="my-listings-list">
+                      {filteredListings.map(l => <MyListingCard key={`my-listing-${l.address}`} listing={l} handleUpdate={this.handleUpdate} />)}
+                    </div>
+                  </div>
                 </div>
-              }
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-12">
-              {!loading && !!listings.length &&
-                <div>
-                  <div className="row">
-                    <div className="col-12">
-                      <h1>
-                        <FormattedMessage
-                          id={ 'my-listings.myListingsHeading' }
-                          defaultMessage={ 'My Listings' }
-                        />
-                      </h1>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-12 col-md-3"> 
-                      <div className="filters list-group flex-row flex-md-column">
-                        <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>
-                          <FormattedMessage
-                            id={ 'my-listings.all' }
-                            defaultMessage={ 'All' }
-                          />
-                        </a>
-                        <a className={`list-group-item list-group-item-action${filter === 'active' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'active' })}>
-                          <FormattedMessage
-                            id={ 'my-listings.active' }
-                            defaultMessage={ 'Active' }
-                          />
-                        </a>
-                        <a className={`list-group-item list-group-item-action${filter === 'inactive' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'inactive' })}>
-                          <FormattedMessage
-                            id={ 'my-listings.inactive' }
-                            defaultMessage={ 'Inactive' }
-                          />
-                        </a>
-                      </div>
-                    </div>
-                    <div className="col-12 col-md-9">
-                      <div className="my-listings-list">
-                        {filteredListings.map(l => <MyListingCard key={`my-listing-${l.address}`} listing={l} handleUpdate={this.handleUpdate} />)}
-                      </div>
-                    </div>
-                  </div>
-                </div>  
-              }
-            </div>
-          </div>
+              </div>  
+            </div>  
+          } 
         </div>
       </div>
     )

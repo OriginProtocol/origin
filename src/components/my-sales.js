@@ -124,18 +124,18 @@ class MySales extends Component {
     return (
       <div className="my-purchases-wrapper">
         <div className="container">
-          <div className="row">
-            <div className="col-12 text-center">
-              {loading &&
+          {loading &&
+            <div className="row">
+              <div className="col-12 text-center">
                 <h1>
                   <FormattedMessage
                     id={ 'my-sales.loading' }
                     defaultMessage={ 'Loading...' }
                   />
                 </h1>
-              }
+              </div>
             </div>
-          </div>
+          }
           {!loading && !purchases.length &&
             <div className="row">
               <div className="col-12 text-center">
@@ -152,7 +152,7 @@ class MySales extends Component {
                     defaultMessage={ 'Click below to view your listings.' }
                   />
                 </p>
-                <br></br>
+                <br />
                 <a href="#/my-listings" className="btn btn-lrg btn-primary">
                   <FormattedMessage
                     id={ 'my-sales.view-listings' }
