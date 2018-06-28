@@ -10,6 +10,7 @@ The following attestations are currently offered:
  - Phone
  - Facebook
  - Twitter
+ - Airbnb
 
 Currently, an attestation is simply a public *confirmation* that something has been verified by Origin.
 The information itself is not made public.
@@ -171,3 +172,40 @@ let twitterAttestation = await origin.attestations.twitterVerify({
 This will perform Twitter oauth verification on the specified `code`. If it is valid, an attestation object will be returned.
 
 Note that `code` is the code generated in `twitterAuthUrl`
+
+## airbnbGenerateCode
+
+> To generate verification code
+
+```javascript
+await origin.attestations.airbnbGenerateCode({
+  wallet: myWalletAddress,
+  airbnbUserId: // user's id on Airbnb website
+})
+// Returns (object)
+{
+  code: "0x0deef6ef"
+}
+```
+
+This will generate a unique code that should be inserted into user's Airbnb profile description.
+
+## airbnbVerify
+
+> To verify ownership of Airbnb profile
+
+```javascript
+let emailAttestation = await origin.attestations.airbnbVerify({
+  wallet: myWalletAddress,
+  airbnbUserId: // user's id on Airbnb website
+})
+// Returns (attestation object)
+{
+  signature: "0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c",
+  data: "0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01",
+  claimType: 5,
+  service: "airbnb"
+}
+```
+
+If user has inserted the correct `code` in his Airbnb profile, an attestation object will be returned.
