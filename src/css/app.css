@@ -34,7 +34,7 @@ hr {
 }
 
 hr.dark {
-  border-bottom: 1px solid #6f8294;
+  border-bottom: 1px solid var(--steel);
 }
 
 hr.sm {
@@ -113,7 +113,7 @@ a:hover {
 
 .btn-clear:hover {
   background-color: white;
-  color: #213040;
+  color: var(--dark-two);
 }
 
 .table {
@@ -780,7 +780,7 @@ a:hover {
 
 .notifications .dropdown-menu footer,
 .transactions .dropdown-menu footer {
-  background-color: #dfe6ea;
+  background-color: var(--pale-grey-two);
   border-radius: 0 0 var(--default-radius) var(--default-radius);
   padding: 12px;
   text-align: center;
@@ -945,7 +945,7 @@ a:hover {
 .navbar input:focus {
   background-color: transparent;
   border: none;
-  border-left: 1px solid #6f8294;
+  border-left: 1px solid var(--steel);
   border-radius: 0;
   box-shadow: none;
   color: var(--pale-grey);
@@ -1008,7 +1008,7 @@ a:hover {
 }
 
 .connectivity.show .indicator {
-  background-color: #dfe6ea;
+  background-color: var(--pale-grey-two);
 }
 
 .connectivity .indicator.connected {
@@ -1028,7 +1028,7 @@ a:hover {
 }
 
 .connectivity .actual-menu .indicator:not(.connected) {
-  background-color: #dfe6ea;
+  background-color: var(--pale-grey-two);
 }
 
 .connectivity .connection:not(:last-of-type) {
@@ -1114,7 +1114,7 @@ a:hover {
 
 .modal-content input,
 .modal-content textarea {
-  background-color: #213040;
+  background-color: var(--dark-two);
   border: none;
   color: white;
   font-size: 1.125rem;
@@ -1123,7 +1123,7 @@ a:hover {
 
 .modal-content input:focus,
 .modal-content textarea:focus {
-  background-color: #213040;
+  background-color: var(--dark-two);
   border: none;
   color: white;
 }
@@ -1233,7 +1233,7 @@ a:hover {
 }
 
 .listing-card .featured.badge {
-  background-color: #e5b13e;
+  background-color: var(--golden-rod);
   color: white;
   vertical-align: text-bottom;
 }
@@ -1324,11 +1324,11 @@ a:hover {
 }
 
 .loading .placehold {
-  background-color: #f6f7f8;
+  background-color: var(--pale-grey-three);
   border-radius: 3px;
   color: var(--light);
 
-  background: linear-gradient(90deg, #fafafa, #f6f7f8, #fafafa, #f6f7f8, #fafafa, #f6f7f8);
+  background: linear-gradient(90deg, var(--pale-grey-six), var(--pale-grey-three), var(--pale-grey-six), var(--pale-grey-three), var(--pale-grey-six), var(--pale-grey-three));
   background-size: 400% 400%;
 
   -webkit-animation: shimmer 2s linear infinite;
@@ -1370,7 +1370,7 @@ a:hover {
 }
 
 .loading .buy-box {
-  background-color: #f6f7f8;
+  background-color: var(--pale-grey-three);
 }
 
 .buy-box .btn {
@@ -1629,7 +1629,7 @@ label[for=root_pictures]:hover {
 }
 
 .status.inactive {
-  color: #ff1a1a;
+  color: var(--orange-red);
 }
 
 .purchase {
@@ -1764,7 +1764,7 @@ label[for=root_pictures]:hover {
 }
 
 .purchase .content-container .actions .links-container .warning {
-  color: #ff1a1a;
+  color: var(--orange-red);
 }
 
 .purchase .content-container .actions .button-container {
@@ -1942,7 +1942,7 @@ label[for=root_pictures]:hover {
 }
 
 .purchase-detail .summary .status.inactive {
-  color: #ff1a1a;
+  color: var(--orange-red);
 }
 
 .purchase-detail .carousel {
@@ -1969,7 +1969,7 @@ label[for=root_pictures]:hover {
 }
 
 .purchase-detail textarea::placeholder {
-  color: #98a7b4;
+  color: var(--bluey-grey);
 }
 
 form .stars {
@@ -2043,7 +2043,7 @@ form .stars img {
 }
 
 .reviews .review-count {
-  color: #98a7b4;
+  color: var(--bluey-grey);
 }
 
 .reviews form {
@@ -2080,7 +2080,7 @@ form .stars img {
 
 .transaction {
   align-items: center;
-  background-color: #f6f7f8;
+  background-color: var(--pale-grey-three);
   border-color: var(--light);
   padding: 15px;
 }
@@ -2091,13 +2091,13 @@ form .stars img {
 }
 
 .transaction .addresses {
-  color: #6f8294;
+  color: var(--steel);
   font-size: 0.75rem;
 }
 
 .transaction .timelapse,
 .transaction .confirmations-count {
-  color: #98a7b4;
+  color: var(--bluey-grey);
   font-size: 0.75rem;
 }
 
@@ -2149,7 +2149,7 @@ form .stars img {
 }
 
 .transaction .slice .crust {
-  background-color: #dfe6ea;
+  background-color: var(--pale-grey-two);
   border-radius: 32px;
   clip: rect(0px, 16px, 32px, 0px);
   height: 32px;
@@ -2165,7 +2165,7 @@ form .stars img {
 }
 
 .transaction .inner-circle {
-  background-color: #f6f7f8;
+  background-color: var(--pale-grey-three);
   border-radius: 50%;
   height: 24px;
   left: 4px;
@@ -2207,13 +2207,13 @@ form .stars img {
 
 .notification {
   align-items: center;
-  background-color: #f6f7f8;
+  background-color: var(--pale-grey-three);
   border-color: var(--light);
   padding: 15px;
 }
 
 .notification:hover {
-  background-color: #eaeef1;
+  background-color: var(--pale-grey-seven);
 }
 
 .notification div {
@@ -2296,7 +2296,7 @@ form .stars img {
 /* Profile */
 
 .profile-wrapper {
-  background-color: #fafbfc;
+  background-color: var(--pale-grey-four);
   flex-grow: 1;
   padding: 40px 0;
 }
@@ -2309,7 +2309,7 @@ form .stars img {
 .verifications-box {
   background-color: var(--pale-grey);
   border-radius: 20px;
-  color: #0c2033;
+  color: var(--dark-blue-grey);
   font-size: 0.825rem;
   margin-bottom: 1rem;
   padding: 1rem;
@@ -2405,7 +2405,7 @@ form .stars img {
 
 .services-container .credit {
   position: absolute;
-  color: #98a7b4;
+  color: var(--bluey-grey);
   font-size: 0.75rem;
   margin: 0 0 1rem;
   right: 10px;
@@ -2422,7 +2422,7 @@ form .stars img {
 }
 
 .services-container .service {
-  background-color: #fafbfc;
+  background-color: var(--pale-grey-four);
   border: dashed 1px var(--light);
   border-radius: var(--default-radius);
   margin: 0 0 10px 0;
@@ -2441,7 +2441,7 @@ form .stars img {
 }
 
 .services-container .service.published {
-  background-color: #f5fcfa;
+  background-color: var(--pale-greenblue);
   border: 1px solid var(--greenblue);
   color: var(--greenblue);
 }
@@ -2451,7 +2451,7 @@ form .stars img {
 }
 
 .services-container .service.verified {
-  background-color: #f5fafc;
+  background-color: var(--pale-clear-blue);
   border: 1px solid var(--clear-blue);
   color: var(--clear-blue);
 }
@@ -2482,7 +2482,7 @@ form .stars img {
 }
 
 .service-name {
-  color: #98a7b4;
+  color: var(--bluey-grey);
   font-size: 1.125rem;
   font-weight: normal;
   line-height: 36px;
@@ -2520,7 +2520,7 @@ form .stars img {
 
 .services-container .service .unavailable-message {
   position: absolute;
-  color: #f7f8f9;
+  color: var(--pale-grey-five);
   font-size: 7px;
   font-weight: 900;
   right: 5px;
@@ -2619,7 +2619,7 @@ sup {
 }
 
 .published-status .not-published {
-  color: #ff1a1a;
+  color: var(--orange-red);
   font-size: 0.625rem;
   font-weight: bold;
   text-transform: uppercase;
@@ -2672,7 +2672,7 @@ sup {
 
 .profile.modal .container .image-container .image-pair .avatar-container  {
   position: relative;
-  background-color: #213040;
+  background-color: var(--dark-two);
   border-radius: 20px;
   height: 170px;
   margin-bottom: 1rem;
@@ -2748,7 +2748,7 @@ sup {
 }
 
 .phone.modal .dropdown {
-  background-color: #213040;
+  background-color: var(--dark-two);
   border-radius: var(--default-radius);
   height: 46px;
   margin: 0 10px 10px auto;
@@ -2796,7 +2796,7 @@ sup {
 }
 
 .phone.modal .dropdown .dropdown-item:hover {
-  background-color: #213040;
+  background-color: var(--dark-two);
 }
 
 .phone.modal .dropdown .dropdown-item > :first-child {
@@ -3263,7 +3263,7 @@ footer .dropdown-menu li:hover {
   }
 
   .navbar .sell .dropdown-menu .actual-menu .dropdown-item:not(:last-of-type) {
-    border-bottom: 1px solid #dfe6ea;
+    border-bottom: 1px solid var(--pale-grey-two);
   }
 
   .navbar .sell .dropdown-menu a {
