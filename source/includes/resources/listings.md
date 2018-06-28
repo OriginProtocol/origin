@@ -16,7 +16,7 @@ const listing = await origin.listings.get(listingAddress)
   name: "Kettlebell For Sale",
   category: "Health and Beauty",
   description: "32kg gorilla kettlebell",
-  location: "San Fransisco, CA",
+  location: "San Francisco, CA",
   pictures: [],
   
   address: "0x061b8d5f9e432e6b23d79fac02e5792eb8746ce5",
@@ -32,6 +32,7 @@ const listing = await origin.listings.get(listingAddress)
 
 This will return information about the listing, combining information from IPFS and the blockchain. In the future, fields returned may differ based on the listing's schema.
 
+<p data-height="440" data-theme-id="dark" data-slug-hash="vrzqYo" data-default-tab="js,result" data-user="originprotocol" data-embed-version="2" data-pen-title="Origin.js: Get Listing" class="codepen">See the Pen <a href="https://codepen.io/originprotocol/pen/vrzqYo/">Origin.js: Get Listing</a> by Origin Protocol (<a href="https://codepen.io/originprotocol">@originprotocol</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 
 ## getByIndex
 
@@ -44,7 +45,7 @@ const listing = await origin.listings.getByIndex(1)
   name: "Kettlebell For Sale",
   category: "Health and Beauty",
   description: "32kg gorilla kettlebell",
-  location: "San Fransisco, CA",
+  location: "San Francisco, CA",
   pictures: [],
 
   address: "659cbb0e2411a44db63778987b1e22153c086a95eb6b18bdf89de078917abc63",
@@ -56,10 +57,11 @@ const listing = await origin.listings.getByIndex(1)
 }
 ```
 
-
 **This method is deprecated**, and will be removed soon.  Use `get` instead.
 
 This will return information about the listing, combining information from IPFS and the blockchain. In the future, fields returned may differ based on the listing's schema.
+
+<p data-height="420" data-theme-id="dark" data-slug-hash="VdGJwO" data-default-tab="js,result" data-user="originprotocol" data-embed-version="2" data-pen-title="Origin.js: Get Listing By Index" class="codepen">See the Pen <a href="https://codepen.io/originprotocol/pen/VdGJwO/">Origin.js: Get Listing By Index</a> by Origin Protocol (<a href="https://codepen.io/originprotocol">@originprotocol</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 
 ## create
 
@@ -69,7 +71,7 @@ This will return information about the listing, combining information from IPFS 
 const listingData = {
   name: "Kettlebell For Sale",
   category: "Health and Beauty",
-  location: "San Fransisco, CA",
+  location: "San Francisco, CA",
   description:
     "32kg gorilla kettlebell",
   pictures: [],
@@ -87,6 +89,8 @@ The fields used come from the listing schema definition used.
 The wallet used to create the listing is used as the seller.
 
 A listing will expire 60 days after its expiration date.
+
+<p data-height="780" data-theme-id="dark" data-slug-hash="oyPrNV" data-default-tab="js,result" data-user="originprotocol" data-embed-version="2" data-pen-title="Origin.js: Create Listing" class="codepen">See the Pen <a href="https://codepen.io/originprotocol/pen/oyPrNV/">Origin.js: Create Listing</a> by Origin Protocol (<a href="https://codepen.io/originprotocol">@originprotocol</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 
 ## buy
 
