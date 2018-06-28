@@ -28,6 +28,10 @@
     "defaultMessage": "Twitter account verified!"
   },
   {
+    "id": "Profile.airbnbVerified",
+    "defaultMessage": "Airbnb account verified!"
+  },
+  {
     "id": "Profile.unnamedUser",
     "defaultMessage": "Unnamed User"
   },

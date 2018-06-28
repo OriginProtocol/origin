@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
-import moment from 'moment'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import { translateListingCategory } from '../utils/translationUtils'

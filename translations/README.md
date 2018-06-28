@@ -4,22 +4,38 @@
 
 | Code | Language | Status |
 | ---- | -------- | ------ |
-| ar | Arabic |  |
-| de | German |  |
-| el | Greek  |  |
-| es | Spanish |  |
+| ar |  Arabic |   |
+| bn | Bengali |   |
+| bs | Bosnian |   |
+| cs | Czech |   |
+| de | German  |   |
+| el | Greek |   |
+| es | Spanish |   |
 | fr | French |   |
-| he | Hebrew | |
-| hr | Croatian |  |
+| fil | Filipino |   |
+| he | Hebrew |   |
+| hr | Croatian |   |
 | it | Italian |   |
-| ja | Japanese |  |
+| ja | Japanese |   |
 | ko | Korean |   |
-| nl | Dutch |  |
-| pt | Portugese |  |
-| ru | Russian |  |
-| th | Thai |  |
-| zh_Hans | Chinese (Simplified) |  |
-| zh_Hant | Chinese (Traditional) |  ||
+| lo | Lao |   |
+| ms | Malay |   |
+| nl | Dutch |   |
+| pt | Portugese |   |
+| pl | Polish |   |
+| ro | Romanian |   |
+| ru | Russian |   |
+| si | Sinhala |   |
+| sr | Serbian |   |
+| sk | Slovak |   |
+| te | Telugu |   |
+| th | Thai |   |
+| tr | Turkish |   |
+| ug | Uighur |   |
+| uk | Ukrainian |   |
+| ur | Urdu |   |
+| vi | Vietnamese |   |
+| zh | Chinese |   |
 
 ## Implementation
 
@@ -39,11 +55,13 @@ import { FormattedMessage } from 'react-intl'
 ```
 These are compiled automatically into JSON message files by `babel-plugin-react-intl` and a custom webpack plugin.
 
-The auto-generated file `translated-messges.json` is parsed by Crowdin each time it is pushed to a branch and new/edited messages are queued for translation.
+The auto-generated file `all-messges.json` is parsed by Crowdin each time it is pushed to a branch and new/edited messages are queued for translation.
 
 ## Updating translations in the DApp
 
-This process is currently being developed to work optimally with the new Crowdin platform. Stay tuned...
+Crowdin automatically creates a PR to this repo each time a translator finishes some translation work. 
+
+To utilize this translated text in the DApp, simply merge the PR from Crowdin and run `npm run translations`, then commit the resulting file called `translated-messges.json`.
 
 ## Adding/Editing strings in schemas
 

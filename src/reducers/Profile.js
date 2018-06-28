@@ -14,7 +14,8 @@ const initialState = {
     email: false,
     facebook: false,
     phone: false,
-    twitter: false
+    twitter: false,
+    airbnb: false
   },
   changes: [],
   lastPublish: null,
@@ -29,10 +30,11 @@ const progressPct = {
   firstName: 15,
   lastName: 15,
   description: 10,
-  email: 20,
-  phone: 20,
+  email: 15,
+  phone: 15,
   facebook: 10,
-  twitter: 10
+  twitter: 10,
+  airbnb:10
 }
 
 function changes(state) {
@@ -92,14 +94,17 @@ function unpackUser(state) {
     if (attestation.service === 'facebook') {
       state.provisional.facebook = state.published.facebook = true
     }
-    if (attestation.service === 'twitter') {
+    else if (attestation.service === 'twitter') {
       state.provisional.twitter = state.published.twitter = true
     }
-    if (attestation.service === 'email') {
+    else if (attestation.service === 'email') {
       state.provisional.email = state.published.email = true
     }
-    if (attestation.service === 'phone') {
+    else if (attestation.service === 'phone') {
       state.provisional.phone = state.published.phone = true
+    }
+    else if (attestation.service === 'airbnb') {
+      state.provisional.airbnb = state.published.airbnb = true
     }
   })
 
@@ -124,6 +129,8 @@ export default function Profile(state = initialState, action = {}) {
         toAdd.facebook = action.attestation
       } else if (action.attestation.claimType === 4) {
         toAdd.twitter = action.attestation
+      } else if (action.attestation.claimType === 5) {
+        toAdd.airbnb = action.attestation
       } else if (action.attestation.claimType === 11) {
         toAdd.email = action.attestation
       } else if (action.attestation.claimType === 10) {

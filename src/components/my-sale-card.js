@@ -2,14 +2,20 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
+import moment from 'moment'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { fetchUser } from 'actions/User'
-import Timelapse from './timelapse'
 import PurchaseProgress from './purchase-progress'
 
 class MySaleCard extends Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      soldAtTime: null
+    }
+
+    this.setSoldAtTime = this.setSoldAtTime.bind(this)
 
     this.intlMessages = defineMessages({
       ETH: {
@@ -29,6 +35,12 @@ class MySaleCard extends Component {
 
   componentDidMount() {
     $('[data-toggle="tooltip"]').tooltip()
+  }
+
+  setSoldAtTime(soldAt) {
+    this.setState({
+      soldAtTime: moment(soldAt).fromNow()
+    })
   }
 
   render() {
@@ -86,7 +98,7 @@ class MySaleCard extends Component {
               </div>
             </div>
             <div className="timestamp-container order-2 text-muted text-right">
-              <p className="timestamp"><Timelapse reactive={false} reference={soldAt} /></p>
+              <p className="timestamp">{ this.state.soldAtTime || this.setSoldAtTime(soldAt) }</p>
             </div>
             <div className="aspect-ratio order-1 order-lg-3">
               <div className={`${photo ? '' : 'placeholder '}image-container d-flex justify-content-center`}>
