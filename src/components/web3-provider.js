@@ -420,6 +420,7 @@ class Web3Provider extends Component {
 
       // force reload on account change
       prev !== null && window.location.reload()
+      origin.messaging.onAccount(curr)
     }
   }
 
