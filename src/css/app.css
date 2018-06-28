@@ -1108,6 +1108,10 @@ a:hover {
   max-width: 288px;
 }
 
+.modal-content .form-control:read-only {
+  background-color: #213040;
+}
+
 .modal-content input,
 .modal-content textarea {
   background-color: #213040;

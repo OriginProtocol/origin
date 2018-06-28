@@ -50,6 +50,10 @@ class ProvisionedChanges extends Component {
       twitterAccount: {
         id: '_ProvisionedChanges.twitterAccount',
         defaultMessage: 'Twitter account'
+      },
+      airbnbAccount: {
+        id: '_ProvisionedChanges.airbnbAccount',
+        defaultMessage: 'Airbnb account'
       }
     })
   }
@@ -196,6 +200,31 @@ class ProvisionedChanges extends Component {
               <FormattedMessage
                 id={ '_ProvisionedChanges.twitter' }
                 defaultMessage={ 'Twitter' }
+              />
+            </div>
+          </div>
+        }
+        {changes.find(c => c === 'airbnb') &&
+          <div className="change-icon"
+            data-toggle="tooltip"
+            data-placement="top"
+            data-html="true"
+            title={`
+              <div class="text-left">
+                You are verifying:<br />
+                <img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(this.intlMessages.airbnbAccount)}<br />
+                <br />
+                <img src="/images/eye-yes.svg" alt="visible icon" /> <strong>${this.props.intl.formatMessage(this.intlMessages.visibleOnBlockchain)}</strong>
+              </div>
+            `}
+          >
+            <div className="image-container">
+              <img src="/images/publish-airbnb-icon.svg" alt="Airbnb icon" />
+            </div>
+            <div className="text-center">
+              <FormattedMessage
+                id={ '_ProvisionedChanges.airbnb' }
+                defaultMessage={ 'Airbnb' }
               />
             </div>
           </div>

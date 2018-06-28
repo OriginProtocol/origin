@@ -156,6 +156,17 @@ class User extends Component {
                       </div>
                     </div>
                   }
+                  {attestations.find(a => a.service === 'airbnb') &&
+                    <div className="service d-flex">
+                      <img src="images/airbnb-icon-verified.svg" alt="Airbnb verified icon" />
+                      <div>
+                        <FormattedMessage
+                          id={ 'User.airbnb' }
+                          defaultMessage={ 'Airbnb' }
+                        />
+                      </div>
+                    </div>
+                  }
                 </div>
               }
             </div>

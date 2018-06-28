@@ -80,6 +80,11 @@ class UserDropdown extends Component {
                         <img src="images/twitter-icon-verified.svg" alt="Twitter verified icon" />
                       </Link>
                     }
+                    {profile.published.airbnb &&
+                      <Link to="/profile">
+                        <img src="images/airbnb-icon-verified.svg" alt="Airbnb verified icon" />
+                      </Link>
+                    }
                   </div>
                 </div>
               </div>
