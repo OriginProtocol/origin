@@ -2,9 +2,9 @@
 
 Script to migrate listings that are stored in ListingsRegistry to using ListingsRegistryStorage to store the listings. It can read listings to a local file, and then create new listings from that local file.
 
-## Configuration
+## Step 1: Configuration
 
-Edit the `conf-sample.json` configuration file or create new:
+Edit the `conf-sample.json` configuration file or create a new one that looks like this:
 
 ```
 {
@@ -20,7 +20,7 @@ Edit the `conf-sample.json` configuration file or create new:
 }
 ```
 
-## Read old Listings
+## Step 2: Store old ListingsRegistry in local file
 
 After filling out the configuration, execute the script in read mode, passing in the config file to use and a destination file.
 
@@ -34,14 +34,16 @@ Retrieved 85 listings from source contract.
 Wrote 85 listings to data file: ./ropsten-data.json
 ```
 
-We now have a json file backup of the listings.
+We now have a JSON file backup of the listings from the registry at `listingsRegistryAddress`.
 
-## Write Listings in new format
+## Step 3: Migrate data from local JSON file to new ListingsRegistry
 
 Next, execute the script in write mode:
 ```
 $ node migrate_listings_registry_to_storage.js -c ./conf-test-ropsten-local.json -d ./ropsten-data.json -a write`
 ```
+
+This will populate the `ListingsRegistry` at `newListingsRegistryAddress` with the listings from the JSON file generated in step 2.
 
 If there are duplicates the script will flag them:
 
