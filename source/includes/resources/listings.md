@@ -11,14 +11,14 @@ It is active until there are no more units available or its expiration date is r
 ```javascript
 const listingAddress = "0x061b8d5f9e432e6b23d79fac02e5792eb8746ce5"
 const listing = await origin.listings.get(listingAddress)
-// Returns 
+// Returns
 {
   name: "Kettlebell For Sale",
   category: "Health and Beauty",
   description: "32kg gorilla kettlebell",
   location: "San Francisco, CA",
   pictures: [],
-  
+
   address: "0x061b8d5f9e432e6b23d79fac02e5792eb8746ce5",
   ipfsHash: "QmWZDcDq4aYGx9XmkPcx4mnKaGW2jCxf5tknrCtbfpJJFf",
   sellerAddress: "0x627306090abab3a6e1400e9345bc60c78a8bef57",
@@ -32,7 +32,7 @@ const listing = await origin.listings.get(listingAddress)
 
 This will return information about the listing, combining information from IPFS and the blockchain. In the future, fields returned may differ based on the listing's schema.
 
-<p data-height="440" data-theme-id="dark" data-slug-hash="vrzqYo" data-default-tab="js,result" data-user="originprotocol" data-embed-version="2" data-pen-title="Origin.js: Get Listing" class="codepen">See the Pen <a href="https://codepen.io/originprotocol/pen/vrzqYo/">Origin.js: Get Listing</a> by Origin Protocol (<a href="https://codepen.io/originprotocol">@originprotocol</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+<p data-height="440" data-theme-id="33880" data-slug-hash="vrzqYo" data-default-tab="js,result" data-user="originprotocol" data-embed-version="2" data-pen-title="Origin.js: Get Listing" class="codepen">See the Pen <a href="https://codepen.io/originprotocol/pen/vrzqYo/">Origin.js: Get Listing</a> by Origin Protocol (<a href="https://codepen.io/originprotocol">@originprotocol</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 
 ## getByIndex
 
@@ -40,7 +40,7 @@ This will return information about the listing, combining information from IPFS 
 
 ```javascript
 const listing = await origin.listings.getByIndex(1)
-// Returns 
+// Returns
 {
   name: "Kettlebell For Sale",
   category: "Health and Beauty",
@@ -61,7 +61,7 @@ const listing = await origin.listings.getByIndex(1)
 
 This will return information about the listing, combining information from IPFS and the blockchain. In the future, fields returned may differ based on the listing's schema.
 
-<p data-height="420" data-theme-id="dark" data-slug-hash="VdGJwO" data-default-tab="js,result" data-user="originprotocol" data-embed-version="2" data-pen-title="Origin.js: Get Listing By Index" class="codepen">See the Pen <a href="https://codepen.io/originprotocol/pen/VdGJwO/">Origin.js: Get Listing By Index</a> by Origin Protocol (<a href="https://codepen.io/originprotocol">@originprotocol</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+<p data-height="420" data-theme-id="33880" data-slug-hash="VdGJwO" data-default-tab="js,result" data-user="originprotocol" data-embed-version="2" data-pen-title="Origin.js: Get Listing By Index" class="codepen">See the Pen <a href="https://codepen.io/originprotocol/pen/VdGJwO/">Origin.js: Get Listing By Index</a> by Origin Protocol (<a href="https://codepen.io/originprotocol">@originprotocol</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 
 ## create
 
@@ -80,7 +80,7 @@ const listingData = {
 const schema = "for-sale"
 const transaction = await origin.listings.create(listingData, schema)
 await origin.contractService.waitTransactionFinished(transaction.tx)
-``` 
+```
 
 When you create a listing, the API will create both the IPFS data and the Listing contract on the blockchain.
 
@@ -90,7 +90,7 @@ The wallet used to create the listing is used as the seller.
 
 A listing will expire 60 days after its expiration date.
 
-<p data-height="780" data-theme-id="dark" data-slug-hash="oyPrNV" data-default-tab="js,result" data-user="originprotocol" data-embed-version="2" data-pen-title="Origin.js: Create Listing" class="codepen">See the Pen <a href="https://codepen.io/originprotocol/pen/oyPrNV/">Origin.js: Create Listing</a> by Origin Protocol (<a href="https://codepen.io/originprotocol">@originprotocol</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+<p data-height="780" data-theme-id="33880" data-slug-hash="oyPrNV" data-default-tab="js,result" data-user="originprotocol" data-embed-version="2" data-pen-title="Origin.js: Create Listing" class="codepen">See the Pen <a href="https://codepen.io/originprotocol/pen/oyPrNV/">Origin.js: Create Listing</a> by Origin Protocol (<a href="https://codepen.io/originprotocol">@originprotocol</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 
 ## buy
 
@@ -130,7 +130,7 @@ Closing a transaction will set the unitsAvailable to zero. This will stop any fu
 
 ```javascript
 const indexes = await origin.listings.allIds()
-// Returns 
+// Returns
 [0,1,2,3,4,5,...]
 ```
 
@@ -143,7 +143,7 @@ You can get a simple list of all listing indexes in the registry, which will all
 ```javascript
 const listingAddress = "0xbe3a878bfc1e1527858756c062fbfe0db069c459"
 const length = await origin.listings.purchasesLength(listingAddress)
-// Returns 
+// Returns
 4
 ```
 
@@ -156,7 +156,7 @@ This will return the number of purchases that have occurred for a given listing 
 ```javascript
 const listingAddress = "0xbe3a878bfc1e1527858756c062fbfe0db069c459"
 await origin.listings.purchaseAddressByIndex(listingAddress, 0)
-// Returns 
+// Returns
 "0x9deee0195f88caf7dee2fa8a6777f8236d847ef8"
 ```
 
