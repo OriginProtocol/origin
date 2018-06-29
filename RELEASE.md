@@ -4,6 +4,17 @@ This file is the template for generating an issue for each release.
 
 NOTE: This checklist is generated from [RELEASE.md](https://github.com/OriginProtocol/origin-js/blob/develop/RELEASE.md) when beginning the release procedure.
 
+## Prepare a release candidate
+Release branches should be created well before a release is ready to be published. Sometime after a prior release has been merged and once all of a release's planned features have been merged to `develop`, a new branch should be created from `develop`:
+- [ ] _origin-dapp_: Create a release branch (if applicable)
+  - `git checkout -b release-0.3.0 develop`
+- [ ] _origin-js_: Create a release branch (if applicable)
+  - `git checkout -b release-0.7.0 develop`
+- [ ] _origin-bridge_: Create a release branch (if applicable)
+  - `git checkout -b release-0.2.0 develop`
+
+No additional features should be added to this release branch. Only bug fixes should be merged directly to the release branch, which itself should eventually be merged back to `develop` in the [Publish](#publish) step.
+
 ## Confirm readiness
 - [ ] _origin-js_: Confirm js tests passing
   - `git checkout develop`
