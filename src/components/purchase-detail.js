@@ -382,7 +382,7 @@ class PurchaseDetail extends Component {
     const soldAt = purchase.created * 1000 // convert seconds since epoch to ms
 
     // log events
-    const paymentEvent = logs.find(l => l.stage === 'shipping_pending')
+    const paymentEvent = logs.find(l => l.stage === 'in_escrow')
     const paidAt = paymentEvent ? paymentEvent.timestamp * 1000 : null
     const fulfillmentEvent = logs.find(l => l.stage === 'buyer_pending')
     const fulfilledAt = fulfillmentEvent ? fulfillmentEvent.timestamp * 1000 : null
@@ -405,7 +405,7 @@ class PurchaseDetail extends Component {
       step = 3
     } else if (purchase.stage === 'buyer_pending') {
       step = 2
-    } else if (purchase.stage === 'shipping_pending') {
+    } else if (purchase.stage === 'in_escrow') {
       step = 1
     } else {
       step = 0

@@ -70,7 +70,7 @@ class MyPurchaseCard extends Component {
         step = 2
         verb = this.props.intl.formatMessage(this.intlMessages.sentBySeller)
         break
-      case 'shipping_pending':
+      case 'in_escrow':
         step = 1
         verb = this.props.intl.formatMessage(this.intlMessages.purchased)
         break
