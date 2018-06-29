@@ -17,19 +17,19 @@ No additional features should be added to this release branch. Only bug fixes sh
 
 ## Confirm readiness
 - [ ] _origin-js_: Confirm js tests passing
-  - `git checkout develop`
+  - `git checkout release-0.7.0`
   - `git pull`
   - `npm run install:dev`
   - `npm test` (This will also test smart contracts)
   - `npm start`
-- [ ] _demo-dapp_: Confirm all tests passing
-- [ ] _demo-dapp_: Confirm it runs against remote (unlinked) origin-js
-  - `git checkout develop`
+- [ ] _origin-dapp_: Confirm all tests passing
+- [ ] _origin-dapp_: Confirm it runs against remote (unlinked) origin-js
+  - `git checkout release-0.3.0`
   - `git pull`
   - `npm install`
   - `npm start`
-- [ ] _demo-dapp_: Confirm it runs against local (linked) origin-js
-  - `git checkout develop`
+- [ ] _origin-dapp_: Confirm it runs against local (linked) origin-js
+  - `git checkout release-0.3.0`
   - `git pull`
   - `npm run install:dev`
   - `npm start`
