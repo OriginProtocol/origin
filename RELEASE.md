@@ -22,12 +22,11 @@
 - [ ] Confirm deployment accounts have eth for gas
   - `npm run deploy_checklist`
   - [ ] Rinkeby ([Faucet](https://faucet.rinkeby.io/)) 
-    - Public post for [0]: `https://plus.google.com/u/0/114203467826302852415/posts/F7sJZMGCbgg`
-    - [ ] account[0] `0x1a5c29c94d03c4c8f7414564cbd57295d61e898f`
-    - [ ] account[1] [`0x564aae0251d49d1f8d4d8d9e5da08f8cceff9ef2`](https://rinkeby.etherscan.io/address/0x564aae0251d49d1f8d4d8d9e5da08f8cceff9ef2)
+    - [ ] account[0] [`0xfF2BA846ab52EDBd724A5ef674AbF5A763849B61`](https://rinkeby.etherscan.io/address/0xfF2BA846ab52EDBd724A5ef674AbF5A763849B61)
+    - [ ] account[1] [`0x3003F9dCFDC17e63cfe7023130B804829b369882`](https://rinkeby.etherscan.io/address/0x3003F9dCFDC17e63cfe7023130B804829b369882)
   - [ ] Ropsten ([Faucet](https://faucet.metamask.io/))
-    - [ ] account[0] `0x1a5c29c94d03c4c8f7414564cbd57295d61e898f`
-    - [ ] account[1] `0x564aae0251d49d1f8d4d8d9e5da08f8cceff9ef2`
+    - [ ] account[0] [`0xfF2BA846ab52EDBd724A5ef674AbF5A763849B61`](https://ropsten.etherscan.io/address/0xfF2BA846ab52EDBd724A5ef674AbF5A763849B61)
+    - [ ] account[1] [`0x3003F9dCFDC17e63cfe7023130B804829b369882`](https://ropsten.etherscan.io/address/0x3003F9dCFDC17e63cfe7023130B804829b369882)
 
 ## Publish
 ### origin-js
