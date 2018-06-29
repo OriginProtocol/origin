@@ -2,7 +2,7 @@ import ResourceBase from './_resource-base'
 
 const _STAGES_TO_NUMBER = {
   awaiting_payment: 0,
-  awaiting_seller_approal: 1,
+  awaiting_seller_approval: 1,
   seller_rejected: 2,
   in_escrow: 3,
   buyer_pending: 4,
