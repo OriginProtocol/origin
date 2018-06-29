@@ -40,11 +40,11 @@ NOTE: This checklist is generated from [RELEASE.md](https://github.com/OriginPro
   - `cd contracts`
   - [ ] Deploy new smart contracts to Ropsten. Be sure addresses are listed in ABI files. 
     - `export ROPSTEN_MNEMONIC="<mnemonic>"`
-    - `npx truffle migrate --network ropsten | tee releases/0.6.1_ropsten.log`
+    - `npx truffle migrate --reset --network ropsten | tee releases/0.7.0_ropsten.log`
   - [ ] Deploy new smart contracts to Rinkeby.  Be sure addresses are listed in ABI files. 
     - `export RINKEBY_MNEMONIC=$ROPSTEN_MNEMONIC`
-    - `npx truffle migrate --network rinkeby | tee releases/0.6.1_rinkeby.log`
-  - [ ] [Migrate data from old contracts to new.](scripts/v0.1_migration)
+    - `npx truffle migrate --reset --network rinkeby | tee releases/0.7.0_rinkeby.log`
+  - [ ] Migrate data from old contracts to new. (Once we get around to writing migrations!)
   - [ ] _origin-js_: Build origin.js (in `dist/origin.js`) -- **Not redundant:** This will bake in the new contract addresses into the contract's `.json` files. 
     - `npm run install:dev`
 - [ ] _origin-js_: Merge `develop` into `master` and push
