@@ -23,7 +23,8 @@ NOTE: This checklist is generated from [RELEASE.md](https://github.com/OriginPro
   - `npm run install:dev`
   - `npm start`
   - Probably need to **Reset Account** on MetaMask. 
-- [ ] Confirm deployment accounts have eth for gas
+- [ ] Confirm deployment accounts have eth for gas. 
+  - Both accounts need gas, as test listings are created from second. 
   - `npm run deploy_checklist`
   - [ ] Rinkeby ([Faucet](https://faucet.rinkeby.io/)) 
     - [ ] account[0] [`0xfF2BA846ab52EDBd724A5ef674AbF5A763849B61`](https://rinkeby.etherscan.io/address/0xfF2BA846ab52EDBd724A5ef674AbF5A763849B61)
