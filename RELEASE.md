@@ -1,4 +1,8 @@
-# Release Checklist
+This file is the template for generating an issue for each release. 
+
+---
+
+NOTE: This checklist is generated from [RELEASE.md](https://github.com/OriginProtocol/origin-js/blob/develop/RELEASE.md) when beginning the release procedure.
 
 ## Confirm readiness
 - [ ] _origin-js_: Confirm js tests passing
