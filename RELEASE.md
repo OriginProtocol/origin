@@ -94,3 +94,8 @@ No additional features should be added to this release branch. Only bug fixes sh
 - [ ] _docs_: Review docs for needed updates. Confirm example code on playground site (jsfiddle?) still work.
 - [ ] Copy this to-do list into new issue for next sprint.
 - [ ] Post notice of new release on Discord
+
+## Troubleshooting
+
+- `Error: insufficient funds for gas * price + value`
+  - Not enough funds in primary or secondary account. Usually hits when I forget to put funds in second account and it trys to deploy sample listings. 
