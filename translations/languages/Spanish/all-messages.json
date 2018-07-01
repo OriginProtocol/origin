@@ -70,7 +70,7 @@
   "listing-create.OK": "OK",
   "listing-create.previewListingHeading": "Vista previa de su anuncio",
   "listing-create.whatHappensNextHeading": "¿Qué sucede a continuación?",
-  "listing-create.whatHappensNextContent1": "When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network.",
+  "listing-create.whatHappensNextContent1": "Cuando pulse enviar, un objeto JSON que representa su anuncio se publicará en {ipfsLink} y el contenido hash se publicará en un listado de contrato inteligente ejecutado en la red de Ethereum.",
   "listing-create.IPFS": "IPFS",
   "listing-create.whatHappensNextContent2": "Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left.",
   "listing-create.backButtonLabel": "Back",
