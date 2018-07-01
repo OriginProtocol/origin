@@ -1,6 +1,6 @@
 {
-  "connectivity.mainEthereumNetwork": "Main Ethereum Network",
-  "connectivity.mordenTestNetwork": "Morden Test Network",
+  "connectivity.mainEthereumNetwork": "Red Principal de Ethereum",
+  "connectivity.mordenTestNetwork": "Red de Pruebas Morden",
   "connectivity.ropstenTestNetwork": "Ropsten Test Network",
   "connectivity.rinkebyTestNetwork": "Rinkeby Test Network",
   "connectivity.kovanTestNetwork": "Kovan Test Network",
