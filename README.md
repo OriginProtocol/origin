@@ -1,6 +1,8 @@
 ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
 ![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)
 
+Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
+
 # Origin Protocol Docs
 
 These docs are a work in progress, but you can view them live at: [http://docs.originprotocol.com](http://docs.originprotocol.com)
