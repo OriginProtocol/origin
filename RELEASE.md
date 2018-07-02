@@ -9,7 +9,7 @@ Release branches should be created well before a release is ready to be publishe
 - [ ] _origin-dapp_: Create a release branch (if applicable)
   - `git checkout -b release-0.3.0 develop`
 - [ ] _origin-js_: Create a release branch (if applicable)
-  - `git checkout -b rerelease-0.7.0 develop`
+  - `git checkout -b release-0.7.0 develop`
 - [ ] _origin-bridge_: Create a release branch (if applicable)
   - `git checkout -b release-0.2.0 develop`
 
