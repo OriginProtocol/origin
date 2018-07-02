@@ -71,7 +71,10 @@ No additional features should be added to this release branch. Only bug fixes sh
   - _Manually_ [delete on GitHub](https://github.com/OriginProtocol/origin-js/branches)
 - [ ] _origin-js_: Create new [GitHub release](https://github.com/OriginProtocol/origin-js/releases) with origin.js code,
   - [ ] Version in form `v0.7.0` (This will add git tag on `master`)
-  - [ ] Include addresses of smart contracts in description
+  - [ ] Include output of Truffle logs (containing addresses of smart contracts) in description
+  - [ ] Include block number the contracts were deployed at
+    - `https://rinkeby.etherscan.io/address/<contract address>`
+    - ex. `https://rinkeby.etherscan.io/address/0x29d260c47411a0b9eeeb087925afa759914b0d2f`
 - [ ] _origin-js_: [Publish to npm](https://docs.npmjs.com/cli/publish). 
   - `npm publish`
 
