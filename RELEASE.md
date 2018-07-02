@@ -38,6 +38,7 @@ No additional features should be added to this release branch. Only bug fixes sh
   - Both accounts need gas, as test listings are created from second. 
   - `npm run deploy_checklist`
   - [ ] Rinkeby ([Faucet](https://faucet.rinkeby.io/)) 
+    - [ ] Social proof URL: `https://twitter.com/KeystonePaperCo/status/1012803664509952001`
     - [ ] account[0] [`0xfF2BA846ab52EDBd724A5ef674AbF5A763849B61`](https://rinkeby.etherscan.io/address/0xfF2BA846ab52EDBd724A5ef674AbF5A763849B61)
     - [ ] account[1] [`0x3003F9dCFDC17e63cfe7023130B804829b369882`](https://rinkeby.etherscan.io/address/0x3003F9dCFDC17e63cfe7023130B804829b369882)
   - [ ] Ropsten ([Faucet](https://faucet.metamask.io/))
