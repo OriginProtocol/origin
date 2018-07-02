@@ -1,3 +1,12 @@
+![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
+
+Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
+
+# Origin Mobile App
+
+More info coming here.
+
+# React Native 
 This project was bootstrapped with [Create React Native App](https://github.com/react-community/create-react-native-app).
 
 Below you'll find information about performing common tasks. The most recent version of this guide is available [here](https://github.com/react-community/create-react-native-app/blob/master/react-native-scripts/template/README.md).
