@@ -4,7 +4,7 @@ Head to https://www.originprotocol.com/developers to learn more about what we're
 
 # Origin Box
 
-Origin Box is a Docker container setup for running all core Origin components together in a single environment, preconfigured to work together.
+Origin Box is a [Docker](https://www.docker.com/) container setup for running all core Origin components together in a single environment, preconfigured to work together.
 
 ## Use Cases
 
