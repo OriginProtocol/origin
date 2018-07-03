@@ -22,8 +22,9 @@ cd dapp
 git checkout develop
 cd ..
 
-# Copy .env file to source
+# Copy .env files to source
 cp ./container/files/config/bridge_dev.env ./bridge/.env
+cp ./container/files/config/dapp_dev.env ./dapp/.env
 
 # Build bridge server image
 docker build ./container -t origin-image
