@@ -10,7 +10,7 @@ This is an example DApp (Decentralized Application) that shows how easy it is to
 
 To learn more about Origin Protocol, please read our [product brief](https://www.originprotocol.com/product-brief) and [whitepaper](https://www.originprotocol.com/whitepaper) for a high-level description of what we're building and why it matters. Our official website is [https://www.originprotocol.com](https://www.originprotocol.com).
 
-## Try Demo Dapp on the Rinkeby testnet
+## Try Demo DApp on the Rinkeby testnet
 
 This demo is currently running on the Rinkeby testnet. (Note that this demo is slightly behind the current state of this repo.) 
 - [Overview and step-by-step instructions](https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58)
