@@ -233,7 +233,7 @@
   "web3-provider.pleaseInstallMetaMask": "Παρακαλώ εγκαταστήστε την επέκταση MetaMask για να αποκτήσετε πρόσβαση σε αυτό το site.",
   "web3-provider.fullInstructionsForDemo": "Πλήρεις οδηγίες για το Demo",
   "web3-provider.useWalletEnabledBrowser": "Παρακαλούμε αποκτήσετε πρόσβαση σε αυτή την ιστοσελίδα μέσω ενός προγράμματος περιήγησης που υποστηρίζει wallet:",
-  "web3-provider.trustWallet": "Trust Wallet",
+  "web3-provider.trustWallet": "Έμπιστο Πορτοφόλι",
   "_countryOptions.unitedStates": "Κίνα",
   "_countryOptions.china": "Κίνα",
   "_countryOptions.japan": "Ιαπωνία",
