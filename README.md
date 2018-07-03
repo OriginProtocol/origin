@@ -4,7 +4,7 @@ Head to https://www.originprotocol.com/developers to learn more about what we're
 
 # Origin Box
 
-Origin Box is a container setup for running multiple Origin components simultaneously in a single environment.
+Origin Box is a Docker container setup for running all core Origin components together in a single environment, preconfigured to work together.
 
 ## Use Cases
 
@@ -16,9 +16,9 @@ Origin Box has several intended use cases:
 ## Supported Components
 
 Origin Box currently supports the following components:
-- [Dapp](https://github.com/OriginProtocol/origin-dapp)
-- [JS](https://github.com/OriginProtocol/origin-js)
-- [Bridge](https://github.com/originprotocol/origin-bridge)
+- [Demo DApp](https://github.com/OriginProtocol/origin-dapp)
+- [Origin.js](https://github.com/OriginProtocol/origin-js)
+- [Bridge Server](https://github.com/originprotocol/origin-bridge)
 
 ## System Requirements
 
