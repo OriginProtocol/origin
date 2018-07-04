@@ -6,6 +6,7 @@ import ContractService from '../src/services/contract-service'
 import IpfsService from '../src/services/ipfs-service.js'
 import Web3 from 'web3'
 import asAccount from './helpers/as-account'
+import fetchMock from 'fetch-mock'
 
 describe('Purchase Resource', function() {
   this.timeout(5000) // default is 2000
@@ -153,6 +154,46 @@ describe('Purchase Resource', function() {
         contractService.web3.utils.toWei('0.1', 'ether')
       )
       await transaction.whenFinished()
+    })
+  })
+
+  describe('all', () => {
+    it('should get all purchases', async () => {
+      const fetch = fetchMock.sandbox().mock(
+        (requestUrl, opts) => {
+          expect(opts.method).to.equal('GET')
+          expect(requestUrl).to.equal('http://hello.world/api/purchase')
+          return true
+        },
+        {
+          body: JSON.stringify({
+            objects: [
+              {
+                contract_address: '0xefb3fd7f9260874d8afd7cb4b42183babea0ca1b',
+                stage: 'in_escrow',
+                listing_address: '0x05a52d9a9e9e91c6932ec2af7bf0c127660fa181',
+                buyer_address: '0x627306090abab3a6e1400e9345bc60c78a8bef57',
+                created_at: 1524492517,
+                buyer_timeout: 0
+              }
+            ]
+          })
+        }
+      )
+      const purchases = new Purchase({
+        contractService,
+        ipfsService,
+        fetch,
+        indexingServerUrl: 'http://hello.world/api'
+      })
+      const all = await purchases.all()
+      expect(all.length).to.equal(1)
+      const first = all[0]
+      expect(first.address).to.equal(
+        '0xefb3fd7f9260874d8afd7cb4b42183babea0ca1b'
+      )
+      expect(first.stage).to.equal('in_escrow')
+      expect(first.created).to.equal(1524492517)
     })
   })
 })
