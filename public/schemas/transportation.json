@@ -2,7 +2,7 @@
   "$schema":"http://json-schema.org/draft-06/schema#",
   "description": "schema.transportation.schemaDescription",
   "type": "object",
-  "required": ["name","category","description","price"],
+  "required": ["name","category","description","priceWei"],
   "properties": {
     "name": {
       "type": "string",
@@ -33,7 +33,7 @@
       "type": "string",
       "title": "schema.transportation.location"
     },
-    "price": {
+    "priceWei": {
       "type": "number",
       "title": "schema.transportation.priceInETH"
     },

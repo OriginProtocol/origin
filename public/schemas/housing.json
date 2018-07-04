@@ -2,7 +2,7 @@
   "$schema":"http://json-schema.org/draft-06/schema#",
   "description": "schema.housing.schemaDescription",
   "type": "object",
-  "required": ["name","category","description","price"],
+  "required": ["name","category","description","priceWei"],
   "properties": {
     "name": {
       "type": "string",
@@ -39,7 +39,7 @@
       "type": "string",
       "title": "schema.housing.location"
     },
-    "price": {
+    "priceWei": {
       "type": "number",
       "title": "schema.housing.priceInETH"
     },

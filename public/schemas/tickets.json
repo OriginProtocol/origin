@@ -2,7 +2,7 @@
   "$schema":"http://json-schema.org/draft-06/schema#",
   "description": "schema.tickets.schemaDescription",
   "type": "object",
-  "required": ["name","category","description","price"],
+  "required": ["name","category","description","pricWei"],
   "properties": {
     "name": {
       "type": "string",
@@ -41,7 +41,7 @@
       "minLength": 10,
       "maxLength": 1024
     },
-    "price": {
+    "pricWei": {
       "type": "number",
       "title": "schema.tickets.priceInETH"
     },
