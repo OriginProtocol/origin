@@ -26,12 +26,18 @@ class ListingCreate extends Component {
     this.STEP = {
       PICK_SCHEMA: 1,
       DETAILS: 2,
-      PREVIEW: 3,
-      METAMASK: 4,
-      PROCESSING: 5,
-      SUCCESS: 6,
-      ERROR: 7
+      AVAILABILITY: 3,
+      PREVIEW: 4,
+      METAMASK: 5,
+      PROCESSING: 6,
+      SUCCESS: 7,
+      ERROR: 8
     }
+
+    this.fractionalSchemaTypes = [
+      'housing',
+      'services'
+    ]
 
     const schemaTypeLabels = defineMessages({
       forSale: {
@@ -74,16 +80,23 @@ class ListingCreate extends Component {
       selectedSchemaType: this.schemaList[0],
       selectedSchema: null,
       schemaFetched: false,
-      formListing: {formData: null},
+      formData: null,
+      isFractionalListing: false,
       currentProvider: getCurrentProvider(origin && origin.contractService && origin.contractService.web3)
     }
 
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
+    this.onAvailabilityEntered = this.onAvailabilityEntered.bind(this)
   }
 
   handleSchemaSelection() {
-    fetch(`schemas/${this.state.selectedSchemaType}.json`)
+    const { selectedSchemaType } = this.state
+    const isFractionalListing = this.fractionalSchemaTypes.includes(selectedSchemaType)
+
+    this.setState({ isFractionalListing })
+
+    fetch(`schemas/${selectedSchemaType}.json`)
     .then((response) => response.json())
     .then((schemaJson) => {
       this.setState({
@@ -96,6 +109,7 @@ class ListingCreate extends Component {
   }
 
   onDetailsEntered(formListing) {
+    const { formData } = formListing
     // Helper function to approximate size of object in bytes
     function roughSizeOfObject( object ) {
       var objectList = []
@@ -123,22 +137,47 @@ class ListingCreate extends Component {
       }
       return bytes
     }
-    if (roughSizeOfObject(formListing.formData) > this.MAX_UPLOAD_BYTES) {
+    if (roughSizeOfObject(formData) > this.MAX_UPLOAD_BYTES) {
       this.props.showAlert("Your listing is too large. Consider using fewer or smaller photos.")
     } else {
+
+      const [nextStep, listingType] = this.state.isFractionalListing ?
+                                        [this.STEP.AVAILABILITY, 'fractional'] :
+                                        [this.STEP.PREVIEW, 'unit']
+
+      formData.listingType = listingType
+
       this.setState({
-        formListing: formListing,
-        step: this.STEP.PREVIEW
+        formData,
+        step: nextStep
       })
+
       window.scrollTo(0, 0)
+
     }
   }
 
-  async onSubmitListing(formListing, selectedSchemaType) {
+  onAvailabilityEntered(slots) {
+    const { schemaType } = this.state
+
+    this.setState({
+      formData: {
+        ...this.state.formData,
+        timeIncrement: (schemaType === 'housing' ? 'daily' : 'hourly'),
+        slots
+      }
+    })
+
+    this.setState({
+      step: this.STEP.PREVIEW
+    })
+  }
+
+  async onSubmitListing(formData, selectedSchemaType) {
     try {
-      console.log(formListing)
+      console.log(formData)
       this.setState({ step: this.STEP.METAMASK })
-      const transactionReceipt = await origin.listings.create(formListing.formData, selectedSchemaType)
+      const transactionReceipt = await origin.listings.create(formData, selectedSchemaType)
       this.setState({ step: this.STEP.PROCESSING })
       // Submitted to blockchain, now wait for confirmation
       await origin.contractService.waitTransactionFinished(transactionReceipt.transactionHash)
@@ -155,7 +194,7 @@ class ListingCreate extends Component {
 
   render() {
     const { selectedSchema } = this.state
-    const enumeratedPrice = selectedSchema && selectedSchema.properties['price'].enum
+    const enumeratedPrice = selectedSchema && selectedSchema.properties['priceWei'].enum
     const priceHidden = enumeratedPrice && enumeratedPrice.length === 1 && enumeratedPrice[0] === 0
 
     return (
@@ -278,9 +317,9 @@ class ListingCreate extends Component {
                 <Form
                   schema={translateSchema(this.state.selectedSchema, this.state.selectedSchemaType)}
                   onSubmit={this.onDetailsEntered}
-                  formData={this.state.formListing.formData}
+                  formData={this.state.formData}
                   onError={(errors) => console.log(`react-jsonschema-form errors: ${errors.length}`)}
-                  uiSchema={priceHidden ? { price: { 'ui:widget': 'hidden' } } : undefined}
+                  uiSchema={priceHidden ? { priceWei: { 'ui:widget': 'hidden' } } : undefined}
                 >
                   <div className="btn-container">
                     <button type="button" className="btn btn-other" onClick={() => this.setState({step: this.STEP.PICK_SCHEMA})}>
@@ -302,6 +341,17 @@ class ListingCreate extends Component {
               <div className="col-md-6">
               </div>
             </div>
+          </div>
+        }
+        { this.state.step === this.STEP.AVAILABILITY &&
+          <div className="step-container listing-availability">
+            <Calendar 
+              listingId=""
+              userType="seller"
+              viewType="daily"
+              step=""
+              onComplete={ this.onAvailabilityEntered }
+            />
           </div>
         }
         { (this.state.step >= this.STEP.PREVIEW) &&
@@ -441,7 +491,7 @@ class ListingCreate extends Component {
               </div>
               <div className="col-md-7">
                 <div className="preview">
-                  <ListingDetail listingJson={this.state.formListing.formData} />
+                  <ListingDetail listingJson={this.state.formData} />
                 </div>
                 <div className="btn-container">
                   <button className="btn btn-other float-left" onClick={() => this.setState({step: this.STEP.DETAILS})}>
@@ -451,7 +501,7 @@ class ListingCreate extends Component {
                     />
                   </button>
                   <button className="btn btn-primary float-right"
-                    onClick={() => this.onSubmitListing(this.state.formListing, this.state.selectedSchemaType)}>
+                    onClick={() => this.onSubmitListing(this.state.formData, this.state.selectedSchemaType)}>
                     <FormattedMessage
                       id={ 'listing-create.doneButtonLabel' }
                       defaultMessage={ 'Done' }

@@ -19,6 +19,7 @@ class Calendar extends Component {
     this.onDateDropdownChange = this.onDateDropdownChange.bind(this)
     this.onIsRecurringEventChange = this.onIsRecurringEventChange.bind(this)
     this.onRecurringDaysChange = this.onRecurringDaysChange.bind(this)
+    this.saveData = this.saveData.bind(this)
 
     this.state = {
       events: [],
@@ -240,6 +241,18 @@ class Calendar extends Component {
     )
   }
 
+  saveData() {
+    const cleanEvents = this.state.events.length && this.state.events.map((event) => {
+      return {
+        startDate: event.start.toISOString(),
+        endDate: event.end.toISOString(),
+        isAvailable: event.isAvailable,
+        priceWei: event.price
+      }
+    })
+    this.props.onComplete && this.props.onComplete(cleanEvents)
+  }
+
   render() {
     const selectedEvent = this.state.selectedEvent
 
@@ -256,6 +269,7 @@ class Calendar extends Component {
               onSelectSlot={this.onSelectSlot}
               step={ this.props.step || 60 }
             />
+            <button className="btn btn-primary" onClick={this.saveData}>Next</button>
           </div>
           <div className="col-md-4">
             {selectedEvent && selectedEvent.start &&
