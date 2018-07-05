@@ -159,8 +159,9 @@ class Purchases extends ResourceBase {
       return {
         address: obj['contract_address'],
         buyerAddress: obj['buyer_address'],
-        buyerTimeout: obj['buyer_timeout'],
-        created: obj['created_at'],
+        // https://github.com/OriginProtocol/origin-bridge/issues/102
+        buyerTimeout: +new Date(obj['buyer_timeout']),
+        created: +new Date(obj['created_at']),
         listingAddress: obj['listing_address'],
         stage: obj['stage']
       }
