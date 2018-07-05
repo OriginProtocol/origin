@@ -49,12 +49,7 @@ const ipfsCreator = repo_key => {
   return new IPFS(ipfsOptions)
 }
 
-import Y from 'yjs'
-import yIpfsConnector from 'y-ipfs-connector'
-import yArray from 'y-array'
-import yMemory from 'y-memory'
-import yMap from 'y-map'
-Y.extend(yIpfsConnector, yArray, yMemory, yMap)
+import OrbitDB from 'orbit-db'
 
 const config = {
   ipfsDomain: process.env.IPFS_DOMAIN,
@@ -63,8 +58,7 @@ const config = {
   ipfsGatewayProtocol: process.env.IPFS_GATEWAY_PROTOCOL,
   attestationServerUrl,
   ipfsCreator,
-  Y,
-  web3,
+  OrbitDB,
   ecies
 }
 
