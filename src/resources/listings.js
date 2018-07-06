@@ -263,8 +263,12 @@ class Listings extends ResourceBase {
     const url = appendSlash(this.indexingServerUrl) + 'listing'
     const response = await this.fetch(url, { method: 'GET' })
     const json = await response.json()
-    return json.objects.map(obj => {
+    return Promise.all(json.objects.map(async obj => {
       const ipfsData = obj['ipfs_data']
+      // While we wait on https://github.com/OriginProtocol/origin-bridge/issues/18
+      // we get the fetcuh the array of image data strings for each listing
+      const indexedIpfsData = await this.ipfsService.getFile(obj['ipfs_hash'])
+      const pictures = ipfs_data.data.pictures
       return {
         address: obj['contract_address'],
         ipfsHash: obj['ipfs_hash'],
@@ -278,9 +282,9 @@ class Listings extends ResourceBase {
         category: ipfsData ? ipfsData['category'] : null,
         description: ipfsData ? ipfsData['description'] : null,
         location: ipfsData ? ipfsData['location'] : null,
-        pictures: ipfsData ? ipfsData['pictures'] : null
+        pictures
       }
-    })
+    }))
   }
 }
 
