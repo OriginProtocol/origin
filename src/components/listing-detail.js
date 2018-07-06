@@ -68,6 +68,10 @@ class ListingsDetail extends Component {
       // Listing json passed in directly
       this.setState(obj)
     }
+    const networkId = await web3.eth.net.getId()
+    this.setState({
+      etherscanDomain: etherscanDomains[networkId],
+    })
   }
 
   async loadListing() {
@@ -119,24 +123,6 @@ class ListingsDetail extends Component {
       console.error(error)
       console.error(`Error fetching reviews`)
     }
-  }
-
-  async componentWillMount() {
-    if (this.props.listingAddress) {
-      // Load from IPFS
-      await this.loadListing()
-      await this.loadPurchases()
-      this.loadReviews()
-    }
-    else if (this.props.listingJson) {
-      const obj = Object.assign({}, this.props.listingJson, { loading: false })
-      // Listing json passed in directly
-      this.setState(obj)
-    }
-    const networkId = await web3.eth.net.getId()
-    this.setState({
-      etherscanDomain: etherscanDomains[networkId],
-    })
   }
 
   async handleBuyClicked() {
