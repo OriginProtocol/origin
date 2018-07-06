@@ -2,13 +2,14 @@ import React, { Component } from 'react'
 import Moment from 'react-moment'
 import { Image, StyleSheet, Text, View } from 'react-native'
 
+import PropTypes from 'prop-types'
+
 import OriginButton from './origin-button'
 
 export default class DeviceItem extends Component {
   render() {
     const { item, handleLink, handleReject, handleUnlink, style } = this.props
     const { browser, platform, language } = item.link && item.link.app_info
-    const linked = (item.status == 'linked')
 
     return (
       <View style={[ styles.listItem, style ]}>
@@ -19,9 +20,9 @@ export default class DeviceItem extends Component {
           {browser !== 'chrome' &&
             <Image source={require('../../assets/images/app-icon.png')} />
           }
-        {linked && <Image source={require('../../assets/images/link-icon.png')} style={styles.icon} />}
+        {item.linked && <Image source={require('../../assets/images/link-icon.png')} style={styles.icon} />}
         </View>
-        {handleLink &&
+        {!item.linked &&
           <View style={styles.content}>
             <Text style={styles.identification}>Link <Text style={styles.vendor}>{browser} on {platform}</Text>?</Text>
             <Text style={styles.muted}></Text>
@@ -31,8 +32,7 @@ export default class DeviceItem extends Component {
             </View>
           </View>
         }
-        {linked &&
-         handleUnlink &&
+        {item.linked &&
           <View style={styles.content}>
             <Text style={styles.identification}><Text style={styles.vendor}>{platform} {browser}</Text>{item.link_id} </Text>
             <Text style={styles.muted}>Linked <Moment element={Text} format="MMMM D, YYYY @ h:mmA">{item.timestamp}</Moment></Text>
@@ -44,6 +44,18 @@ export default class DeviceItem extends Component {
       </View>
     )
   }
+}
+
+DeviceItem.propTypes = {
+  item: PropTypes.shape({
+    linked: PropTypes.bool.isRequired,
+    handleLink: (props, propName, componentName) => {
+      if (!props.linked && (props[propName] == undefined || typeof(props[propName] !== 'function'))) {
+        return new Error(`Prop item.handleLink of type 'function' is required for ${componentName} with prop item.linked: false`)
+      }
+    },
+    handleUnlink: PropTypes.function,
+  }),
 }
 
 const styles = StyleSheet.create({

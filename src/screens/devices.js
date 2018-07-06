@@ -17,17 +17,33 @@ export default class DevicesScreen extends Component {
     return (
       <FlatList
         data={[
+          // objects here should all be linked: true
           {
             key: 'foo',
             deviceId: 'JgC55UUqEs',
-            deviceType: 'Chrome',
             timestamp: '2018-06-01T04:48-0700',
+            linked: true,
+            link: {
+              app_info: {
+                browser: 'chrome',
+                platform: 'desktop',
+                language: 'en',
+              },
+            },
           },
           {
             key: 'bar',
             deviceId: 'GjF43HSuWf',
-            deviceType: 'Unknown',
             timestamp: new Date(),
+            linked: true,
+            link: {
+              app_info: {
+                'user-agent': 'some-user-agent?',
+                browser: 'unknown',
+                platform: 'mobile',
+                language: 'ko',
+              },
+            },
           },
         ]}
         renderItem={({item}) => (

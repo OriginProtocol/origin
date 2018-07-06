@@ -27,6 +27,7 @@
     "moment": "^2.22.2",
     "node-libs-browser": "^2.1.0",
     "origin": "0.6.1",
+    "prop-types": "^15.6.2",
     "react": "16.3.1",
     "react-moment": "^0.7.5",
     "react-native": "^0.55.3",
