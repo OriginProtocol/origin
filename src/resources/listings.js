@@ -52,7 +52,7 @@ class Listings extends ResourceBase {
       listingsLength = await instance.methods.listingsLength().call()
     } catch (error) {
       console.log(error)
-      console.log("Can't get number of listings.")
+      console.log('Cannot get number of listings')
       throw error
     }
 

@@ -51,7 +51,9 @@ class Origin {
 
     this.purchases = new Purchases({
       contractService: this.contractService,
-      ipfsService: this.ipfsService
+      ipfsService: this.ipfsService,
+      indexingServerUrl,
+      fetch
     })
 
     this.notifications = new Notifications({

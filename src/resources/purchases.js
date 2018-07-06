@@ -1,5 +1,9 @@
 import ResourceBase from './_resource-base'
 
+const appendSlash = url => {
+  return url.substr(-1) === '/' ? url : url + '/'
+}
+
 const _STAGES_TO_NUMBER = {
   awaiting_payment: 0,
   awaiting_seller_approval: 1,
@@ -17,14 +21,27 @@ const EMPTY_IPFS =
   '0x0000000000000000000000000000000000000000000000000000000000000000'
 
 class Purchases extends ResourceBase {
-  constructor({ contractService, ipfsService }) {
+  constructor({ contractService, ipfsService, fetch, indexingServerUrl }) {
     super({ contractService, ipfsService })
 
     this.contractDefinition = this.contractService.purchaseContract
+    this.fetch = fetch
+    this.indexingServerUrl = indexingServerUrl
 
     Object.entries(_STAGES_TO_NUMBER).forEach(([k, v]) => {
       _NUMBERS_TO_STAGE[v] = k
     })
+  }
+
+  // fetches all purchases (all data included)
+  async all() {
+    try {
+      return await this.allIndexed()
+    } catch (error) {
+      console.error(error)
+      console.log('Cannot get all purchases')
+      throw error
+    }
   }
 
   async get(address) {
@@ -127,6 +144,27 @@ class Purchases extends ResourceBase {
             .catch(error => reject(error))
         }
       )
+    })
+  }
+
+  /*
+      private
+  */
+
+  async allIndexed() {
+    const url = appendSlash(this.indexingServerUrl) + 'purchase'
+    const response = await this.fetch(url, { method: 'GET' })
+    const json = await response.json()
+    return json.objects.map(obj => {
+      return {
+        address: obj['contract_address'],
+        buyerAddress: obj['buyer_address'],
+        // https://github.com/OriginProtocol/origin-bridge/issues/102
+        buyerTimeout: +new Date(obj['buyer_timeout']),
+        created: +new Date(obj['created_at']),
+        listingAddress: obj['listing_address'],
+        stage: obj['stage']
+      }
     })
   }
 }
