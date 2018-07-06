@@ -15,10 +15,10 @@ class WalletScreen extends Component {
   }
 
   render() {
+    const { address, balance } = this.props
     // placeholders
-    const amountETH = this.state.balance
+    const amountETH = balance
     const amountUSD = 0
-    const address = this.state.address
     // really dangerous function
     const privateKey = address ? web3.eth.accounts.wallet[0].privateKey : ""
 
