@@ -10,6 +10,7 @@ import { translateListingCategory } from '../utils/translationUtils'
 import Modal from './modal'
 import Review from './review'
 import UserCard from './user-card'
+import Calendar from './calendar'
 
 // temporary - we should be getting an origin instance from our app,
 // not using a global singleton
@@ -54,6 +55,7 @@ class ListingsDetail extends Component {
     })
 
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
+    this.reserveSlots = this.reserveSlots.bind(this)
   }
 
   async componentWillMount() {
@@ -148,6 +150,10 @@ class ListingsDetail extends Component {
 
   resetToStepOne() {
     this.setState({step: this.STEP.VIEW})
+  }
+
+  reserveSlots(slotsToReserve) {
+    console.log(slotsToReserve)
   }
 
   render() {
@@ -289,6 +295,17 @@ class ListingsDetail extends Component {
                   </a>
                 </div>
               */}
+              { this.state.listingType === 'fractional' &&
+                <div className="step-container listing-availability">
+                  <Calendar 
+                    slots={ this.state.slots }
+                    userType="buyer"
+                    viewType="daily"
+                    step=""
+                    onComplete={ this.reserveSlots }
+                  />
+                </div>
+              }
               <div className="debug">
                 <li>
                   <FormattedMessage
