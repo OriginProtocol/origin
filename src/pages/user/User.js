@@ -18,7 +18,7 @@ class User extends Component {
         id: 'user.unnamedUser',
         defaultMessage: 'Unnamed User'
       }
-    });
+    })
   }
 
   async mapPurchaseLengths(listing) {

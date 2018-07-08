@@ -7,7 +7,7 @@ import origin from '../../services/origin'
 class VerifyAirbnb extends Component {
   constructor() {
     super()
-    this.state = { mode: 'input-airbnb-profile', airbnbProfile: '', confirmationCode: '', error: ''}
+    this.state = { mode: 'input-airbnb-profile', airbnbProfile: '', confirmationCode: '', error: '' }
   }
 
   render() {
@@ -41,7 +41,7 @@ class VerifyAirbnb extends Component {
               onClick={e => {
                 e.preventDefault()
                 // reset state
-                this.setState({ mode: 'input-airbnb-profile', airbnbProfile: '', confirmationCode: '', error: ''})
+                this.setState({ mode: 'input-airbnb-profile', airbnbProfile: '', confirmationCode: '', error: '' })
                 this.props.handleToggle(e)
               }}>
               <FormattedMessage
@@ -72,7 +72,7 @@ class VerifyAirbnb extends Component {
             wallet: this.props.wallet,
             airbnbUserId: this.getUserIdFromAirbnbProfile(this.state.airbnbProfile)
           }).then(data => {
-            this.setState({confirmationCode: data.code});
+            this.setState({ confirmationCode: data.code })
           })
         }}>
 
@@ -124,7 +124,7 @@ class VerifyAirbnb extends Component {
 
             let error = JSON.parse(e)
             error = error.errors ? error.errors.join('</br>') : unknownError
-            this.setState({ error: error})
+            this.setState({ error: error })
           }
         }}
       >
@@ -145,7 +145,7 @@ class VerifyAirbnb extends Component {
               e.preventDefault()
 
               // if user cancels when generated code is shown he might want to input different airbnb profile
-              this.setState({ airbnbProfile: '', mode: 'input-airbnb-profile'})
+              this.setState({ airbnbProfile: '', mode: 'input-airbnb-profile' })
               this.props.handleToggle(e)
             }}
           >
@@ -173,14 +173,25 @@ class VerifyAirbnb extends Component {
           className="form-control"
           id="airbnbProfile"
           name="airbnbProfile"
-          style={{maxWidth: `400px`}} // Making wider input, so that the whole profile placeholder can be viewed without trimming
+          // Making wider input, so that the whole profile placeholder can be viewed without trimming
+          style={{ maxWidth: `400px` }}
           value={this.state.airbnbProfile}
           onChange={e =>
             this.setState({ airbnbProfile: e.currentTarget.value })
           }
-          placeholder={this.props.intl.formatMessage({ id: 'VerifyAirbnb.placeholderAirbnbProfileUrl', defaultMessage: 'https://www.airbnb.com/users/show/123'})}
+          placeholder={
+            this.props.intl.formatMessage({
+              id: 'VerifyAirbnb.placeholderAirbnbProfileUrl',
+              defaultMessage: 'https://www.airbnb.com/users/show/123',
+            })
+          }
           pattern="^https?://www\.airbnb\.com/users/show/\d*$"
-          title={this.props.intl.formatMessage({ id: 'VerifyAirbnb.airbnbProfileIncorrect', defaultMessage: 'Airbnb URL incorrect! Please paste exact URL of your Airbnb profile. Example: https://www.airbnb.com/users/show/123'})}
+          title={
+            this.props.intl.formatMessage({
+              id: 'VerifyAirbnb.airbnbProfileIncorrect',
+              defaultMessage: 'Airbnb URL incorrect! Please paste exact URL of your Airbnb profile. Example: https://www.airbnb.com/users/show/123',
+            })
+          }
           required
         />
         <div className="explanation">
@@ -207,8 +218,15 @@ class VerifyAirbnb extends Component {
           id="generated-code"
           readOnly="readOnly"
           // Making input wider, so that the whole verification code can be viewed without trimming.
-          style={{maxWidth: '340px', height: '92px', resize: 'none'}}
-          value={this.state.confirmationCode == '' ? this.props.intl.formatMessage({ id: 'VerifyAirbnb.loadingConfirmationCode', defaultMessage: 'Loading...'}) : "Origin verification code: " + this.state.confirmationCode}
+          style={{ maxWidth: '340px', height: '92px', resize: 'none' }}
+          value={
+            this.state.confirmationCode == '' ?
+            this.props.intl.formatMessage({
+              id: 'VerifyAirbnb.loadingConfirmationCode',
+              defaultMessage: 'Loading...',
+            }) :
+            "Origin verification code: " + this.state.confirmationCode
+          }
         />
         <div className="explanation">
           <FormattedMessage
@@ -221,15 +239,15 @@ class VerifyAirbnb extends Component {
   }
 
 
-  getUserIdFromAirbnbProfile(airbnbProfileUrl){
-    var airbnbRegex = /https?\:\/\/www.airbnb.com\/users\/show\/(\d*)/g;
-    var match = airbnbRegex.exec(airbnbProfileUrl);
+  getUserIdFromAirbnbProfile(airbnbProfileUrl) {
+    const airbnbRegex = /https?\:\/\/www.airbnb.com\/users\/show\/(\d*)/g
+    const match = airbnbRegex.exec(airbnbProfileUrl)
 
-    if (match.length == 0){
+    if (match.length == 0) {
       // this should not happen since previous modal step's input validation checks for correct airbnb profile format
-      return "";
+      return ''
     } else {
-      return match[1];
+      return match[1]
     }
   }
 }

@@ -114,7 +114,7 @@ class Profile extends Component {
         id: 'Profile.airbnbVerified',
         defaultMessage: 'Airbnb account verified!'
       }
-    });
+    })
   }
 
   componentDidMount() {

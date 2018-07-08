@@ -49,7 +49,7 @@ class CountryOptions extends Component {
         id: '_countryOptions.southKorea',
         defaultMessage: 'South Korea'
       }
-    });
+    })
 
     this.countryOptions = [
       {
