@@ -20,6 +20,7 @@
   position: absolute;
 }
 
+/* TODO: put this image in /public/images */
 .rbc-day-bg.unavailable {
   background:url(http://i.piccy.info/i7/c7a432fe0beb98a3a66f5b423b430423/1-5-1789/1066503/lol.png);
   background-size:100% 100%;
