@@ -13,7 +13,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["startDate", "isAvailable"],
+            "required": ["startDate", "endDate", "isAvailable"],
             "properties": {
               "startDate": {
                 "type": "string",
