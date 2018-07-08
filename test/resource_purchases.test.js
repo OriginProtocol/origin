@@ -41,7 +41,7 @@ describe('Purchase Resource', function() {
   // Helpers
   // -----
 
-  const resetListingAndPurchase = async () => {
+  const resetUnitListingAndPurchase = async () => {
     // Create a new listing and a new purchase for the tests to use.
     const listingData = {
       name: 'Australorp Rooser',
@@ -70,6 +70,42 @@ describe('Purchase Resource', function() {
     purchase = await purchases.get(purchaseEvent.returnValues._purchaseContract)
   }
 
+  const resetFractionalListingAndPurchase = async () => {
+    // Create a new listing and a new purchase for the tests to use.
+    const listingData = {
+      name: 'Australorp Rooser',
+      category: 'For Rent',
+      location: 'Atlanta, GA',
+      description:
+        'Peaceful and dignified, Australorps are an absolutely delightful bird which we highly recommend to anyone who wants a pet chicken that lays dependably.',
+      pictures: undefined,
+      priceWei: 2000,
+      listingType: 'fractional'
+    }
+    const listingTransaction = await listings.create(listingData)
+
+    const listingEvent = listingTransaction.events.NewListing
+    listing = await listings.getByIndex(listingEvent.returnValues._index)
+
+    // Buy listing to create a purchase
+    const purchaseData = {
+      slot: {}
+    }
+    const purchaseTransaction = await asAccount(
+      contractService.web3,
+      buyer,
+      async () => {
+        return await listings.request(listing.address, purchaseData, 1)
+      }
+    )
+    const purchaseEvent = purchaseTransaction.events.ListingPurchased
+    purchase = await purchases.get(purchaseEvent.returnValues._purchaseContract)
+  }
+
+  const reloadPurchase = async function() {
+    purchase = await purchases.get(purchase.address)
+  }
+
   const expectStage = function(expectedStage) {
     expect(purchase.stage).to.equal(expectedStage)
   }
@@ -77,9 +113,9 @@ describe('Purchase Resource', function() {
   // Tests
   // -----
 
-  describe('simple purchase flow', async () => {
+  describe('simple purchase flow: unit listing', async () => {
     before(async () => {
-      await resetListingAndPurchase()
+      await resetUnitListingAndPurchase()
     })
 
     it('should get a purchase', async () => {
@@ -96,14 +132,14 @@ describe('Purchase Resource', function() {
           contractService.web3.utils.toWei('0.1', 'ether')
         )
       })
-      purchase = await purchases.get(purchase.address)
+      await reloadPurchase()
       expectStage('in_escrow')
     })
 
     it('should allow the seller to mark as shipped', async () => {
       expectStage('in_escrow')
       await purchases.sellerConfirmShipped(purchase.address)
-      purchase = await purchases.get(purchase.address)
+      await reloadPurchase()
       expectStage('buyer_pending')
     })
 
@@ -112,7 +148,7 @@ describe('Purchase Resource', function() {
       await asAccount(contractService.web3, buyer, async () => {
         await purchases.buyerConfirmReceipt(purchase.address, { rating: 3 })
       })
-      purchase = await purchases.get(purchase.address)
+      await reloadPurchase()
       expectStage('seller_pending')
     })
 
@@ -123,7 +159,7 @@ describe('Purchase Resource', function() {
         rating: 4,
         reviewText: reviewText
       })
-      purchase = await purchases.get(purchase.address)
+      await reloadPurchase()
       expectStage('complete')
       const purchaseReviews = await reviews.find({
         purchaseAddress: purchase.address
@@ -143,9 +179,61 @@ describe('Purchase Resource', function() {
     })
   })
 
+  describe('simple purchase flow: fractional listing', async () => {
+    before(async () => {
+      await resetFractionalListingAndPurchase()
+    })
+
+    it('should get a purchase', async () => {
+      expect(purchase.listingAddress).to.equal(listing.address)
+      expect(purchase.buyerAddress).to.equal(buyer)
+      expectStage('awaiting_seller_approval')
+    })
+
+    it('should allow the seller to approve', async () => {
+      await purchases.sellerApprove(purchase.address)
+      await reloadPurchase()
+      expectStage('buyer_pending')
+    })
+
+    it('should allow the buyer to mark a purchase received', async () => {
+      await asAccount(contractService.web3, buyer, async () => {
+        await purchases.buyerConfirmReceipt(purchase.address, { rating: 3 })
+      })
+      await reloadPurchase()
+      expectStage('seller_pending')
+    })
+
+    it('should allow the seller to collect money', async () => {
+      expectStage('seller_pending')
+      const reviewText = 'Some delay before marking purchase recieved'
+      await purchases.sellerGetPayout(purchase.address, {
+        rating: 4,
+        reviewText: reviewText
+      })
+      await reloadPurchase()
+      expectStage('complete')
+      const purchaseReviews = await reviews.find({
+        purchaseAddress: purchase.address
+      })
+      expect(purchaseReviews[1].rating).to.equal(4)
+      expect(purchaseReviews[1].revieweeAddress).to.equal(purchase.buyerAddress)
+      expect(purchaseReviews[1].revieweeRole).to.equal('BUYER')
+    })
+
+    it('should list logs', async () => {
+      const logs = await purchases.getLogs(purchase.address)
+      expect(logs[0].stage).to.equal('awaiting_payment')
+      expect(logs[1].stage).to.equal('awaiting_seller_approval')
+      expect(logs[2].stage).to.equal('buyer_pending')
+      expect(logs[3].stage).to.equal('seller_pending')
+      expect(logs[4].stage).to.equal('complete')
+    })
+  })
+
   describe('transactions have a whenMined promise', async () => {
     before(async () => {
-      await resetListingAndPurchase()
+      await resetUnitListingAndPurchase()
     })
 
     it('should allow us to wait for a transaction to be mined', async () => {

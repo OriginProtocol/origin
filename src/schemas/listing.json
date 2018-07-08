@@ -1,0 +1,34 @@
+{
+  "title": "Listing",
+  "$id": "listing.json",
+  "type": "object",
+  "properties": {
+    "priceWei": {
+      "type": "number"
+    },
+    "name": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "pictures": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "listingType": {
+      "type": "string"
+    }
+  }
+}

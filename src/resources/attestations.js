@@ -6,7 +6,7 @@ const claimTypeMapping = {
   4: 'twitter',
   5: 'airbnb',
   10: 'phone',
-  11: 'email',
+  11: 'email'
 }
 
 const appendSlash = url => {
@@ -128,8 +128,8 @@ class Attestations {
     const identity = await this.getIdentityAddress(wallet)
 
     return await this.get(`airbnb/generate-code`, {
-      'identity': identity,
-      'airbnbUserId': airbnbUserId
+      identity: identity,
+      airbnbUserId: airbnbUserId
     })
   }
 
@@ -165,10 +165,18 @@ class Attestations {
 
   async get(url, parameters, successFn) {
     const objectKeys = Object.keys(parameters)
-    let stringParams = objectKeys.map(key => key + '=' + parameters[key]).join('&')
+    let stringParams = objectKeys
+      .map(key => key + '=' + parameters[key])
+      .join('&')
     stringParams = (objectKeys.length === 0 ? '' : '?') + stringParams
 
-    return await this.http(this.serverUrl, url + stringParams, undefined, successFn, 'GET')
+    return await this.http(
+      this.serverUrl,
+      url + stringParams,
+      undefined,
+      successFn,
+      'GET'
+    )
   }
 
   async predictIdentityAddress(wallet) {

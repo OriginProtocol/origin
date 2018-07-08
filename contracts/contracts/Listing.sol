@@ -74,6 +74,7 @@ contract Listing {
     * Abstract methods
   */
 
+  function ipfsHash() public view returns (bytes32 _ipfsHash);
   function isApproved(Purchase _purchase) public view returns (bool);
   function currentVersion() public constant returns (uint);
 

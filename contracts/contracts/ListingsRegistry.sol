@@ -5,6 +5,7 @@ pragma solidity 0.4.23;
 /// @author Matt Liu <matt@originprotocol.com>, Josh Fraser <josh@originprotocol.com>, Stan James <stan@originprotocol.com>
 
 import "./UnitListing.sol";
+import "./FractionalListing.sol";
 import "./ListingsRegistryStorage.sol";
 
 contract ListingsRegistry {
@@ -44,26 +45,14 @@ contract ListingsRegistry {
       return listingStorage.length();
   }
 
-  /// @dev getListing(): Return listing info for a given listing
-  /// @param _index the index of the listing we want info about
-  function getListing(uint _index)
+  /// @dev getListingAddress(): Return listing address
+  /// @param _index the index of the listing
+  function getListingAddress(uint _index)
     public
     constant
-    returns (UnitListing, address, bytes32, uint, uint)
+    returns (address)
   {
-    // Test in truffle deelop:
-    // ListingsRegistry.deployed().then(function(instance){ return instance.getListing.call(0) })
-
-    // TODO (Stan): Determine if less gas to do one array lookup into var, and
-    // return var struct parts
-    UnitListing listing = UnitListing(listingStorage.listings(_index));
-    return (
-      listing,
-      listing.owner(),
-      listing.ipfsHash(),
-      listing.price(),
-      listing.unitsAvailable()
-    );
+    return listingStorage.listings(_index);
   }
 
   /// @dev create(): Create a new listing
@@ -82,6 +71,20 @@ contract ListingsRegistry {
     returns (uint)
   {
     Listing newListing = new UnitListing(msg.sender, _ipfsHash, _price, _unitsAvailable);
+    listingStorage.add(newListing);
+    emit NewListing((listingStorage.length())-1, address(newListing));
+    return listingStorage.length();
+  }
+
+  /// @dev createFractional(): Create a new fractional listing
+  /// @param _ipfsHash Hash of data on ipfsHash
+  function createFractional(
+    bytes32 _ipfsHash
+  )
+    public
+    returns (uint)
+  {
+    Listing newListing = new FractionalListing(msg.sender, _ipfsHash);
     listingStorage.add(newListing);
     emit NewListing((listingStorage.length())-1, address(newListing));
     return listingStorage.length();

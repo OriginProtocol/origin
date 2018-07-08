@@ -60,6 +60,18 @@ class Purchases extends ResourceBase {
     return await this.contractFn(address, 'pay', [], { value: amountWei })
   }
 
+  async sellerApprove(address) {
+    return await this.contractFn(address, 'sellerApprove', [], {
+      gas: 80000
+    })
+  }
+
+  async sellerReject(address) {
+    return await this.contractFn(address, 'sellerReject', [], {
+      gas: 80000
+    })
+  }
+
   async sellerConfirmShipped(address) {
     return await this.contractFn(address, 'sellerConfirmShipped', [], {
       gas: 80000

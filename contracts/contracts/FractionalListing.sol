@@ -83,14 +83,14 @@ contract FractionalListing is Listing {
     }
   }
 
-  function request()
+  function request(bytes32 _ipfsHash)
     public
     payable
     isNotSeller
     hasNotExpired
   {
     // Create purchase contract
-    Purchase purchaseContract = PurchaseLibrary.newPurchase(this, currentVersion(), msg.sender);
+    Purchase purchaseContract = PurchaseLibrary.newPurchase(this, currentVersion(), _ipfsHash, msg.sender);
 
     purchases.push(purchaseContract);
 

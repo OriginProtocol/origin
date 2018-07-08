@@ -45,7 +45,7 @@ contract('FractionalListing', accounts => {
 
   describe('request', () => {
     it('should create a purchase', async function() {
-      const tx = await listing.request({
+      const tx = await listing.request(ipfsHash_1, {
         from: buyer,
         value: 6
       })
@@ -58,6 +58,7 @@ contract('FractionalListing', accounts => {
 
       assert.equal(await purchaseContract.buyer(), buyer)
       assert.equal(await purchaseContract.listingVersion(), 0)
+      assert.equal(await purchaseContract.ipfsHash(), ipfsHash_1)
       assert.equal((await listing.purchasesLength()).toNumber(), 1)
       assert.equal(await listing.getPurchase(0), purchaseContract.address)
     })

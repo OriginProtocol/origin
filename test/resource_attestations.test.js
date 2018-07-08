@@ -21,8 +21,10 @@ const expectPostParams = (requestBody, params) => {
 
 const expectGetParams = (requestUrl, params) => {
   params.forEach(param => {
-    expect (requestUrl, `Param ${param}  should be present in request url`).to
-      .match(new RegExp('.*[\\?&]{1}' + param + '=.*'))
+    expect(
+      requestUrl,
+      `Param ${param}  should be present in request url`
+    ).to.match(new RegExp('.*[\\?&]{1}' + param + '=.*'))
   })
 }
 
@@ -213,14 +215,14 @@ describe('Attestation Resource', function() {
         expectedMethod: 'GET',
         expectedPath: 'airbnb/generate-code',
         expectedParams: ['identity', 'airbnbUserId'],
-        responseStub: {'code': '0x5tegfyty'}
+        responseStub: { code: '0x5tegfyty' }
       })
       const response = await attestations.airbnbGenerateCode({
         wallet: '0xB529f14AA8096f943177c09Ca294Ad66d2E08b1f',
         airbnbUserId: '2049937'
       })
 
-      expect(response).to.eql({'code': '0x5tegfyty'})
+      expect(response).to.eql({ code: '0x5tegfyty' })
     })
   })
 

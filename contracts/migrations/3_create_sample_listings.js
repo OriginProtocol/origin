@@ -27,8 +27,7 @@ async function deploy_sample_contracts(network) {
 
   const getListingContract = async transaction => {
     const index = transaction.logs.find(x => x.event == "NewListing").args._index
-    const info = await listingsRegistry.getListing(index)
-    const address = info[0]
+    const address = await listingsRegistry.getListingAddress(index)
     return UnitListing.at(address)
   }
 
