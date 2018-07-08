@@ -98,7 +98,7 @@ class PurchaseDetail extends Component {
       },
     });
 
-    /* Transaction stages: no disputes and no seller review of buyer/transaction
+    /* Transaction stages: no disputes/arbitration
      *  - step 0 was creating the listing
      *  - nextSteps[0] equates to step 1, etc
      *  - even-numbered steps are seller's resposibility
@@ -400,7 +400,7 @@ class PurchaseDetail extends Component {
     let decimal, left, step
 
     if (purchase.stage === 'complete') {
-      step = maxStep
+      step = 4
     } else if (purchase.stage === 'seller_pending') {
       step = 3
     } else if (purchase.stage === 'buyer_pending') {
