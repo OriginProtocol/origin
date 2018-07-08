@@ -512,18 +512,6 @@ class ListingCreate extends Component {
             </div>
           </div>
         }
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <Calendar 
-          listingId=""
-          userType="seller"
-          viewType="daily"
-          step=""
-        />
       </div>
     )
   }
