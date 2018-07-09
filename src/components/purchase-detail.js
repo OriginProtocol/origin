@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { FormattedMessage, FormattedDate, defineMessages, injectIntl } from 'react-intl'
 import $ from 'jquery'
 import Avatar from './avatar'
+import Modal from './modal'
 import Review from './review'
 import TransactionEvent from '../pages/purchases/transaction-event'
 import PurchaseProgress from './purchase-progress'
@@ -22,6 +23,7 @@ const defaultState = {
   },
   listing: {},
   logs: [],
+  processing: false,
   purchase: {},
   reviews: [],
   seller: {}
@@ -290,13 +292,17 @@ class PurchaseDetail extends Component {
         rating,
         reviewText: reviewText.trim(),
       })
+      this.setState({ processing: true })
       await transaction.whenFinished()
       // why is this delay often required???
       setTimeout(() => {
+        this.setState({ processing: false })
         this.loadPurchase()
         this.loadReviews(this.state.listing.address)
       }, 1000)
     } catch(error) {
+      this.setState({ processing: false })
+      
       console.error('Error marking purchase received by buyer')
       console.error(error)
     }
@@ -307,12 +313,16 @@ class PurchaseDetail extends Component {
 
     try {
       const transaction = await origin.purchases.sellerConfirmShipped(purchaseAddress)
+      this.setState({ processing: true })
       await transaction.whenFinished()
       // why is this delay often required???
       setTimeout(() => {
+        this.setState({ processing: false })
         this.loadPurchase()
       }, 1000)
     } catch(error) {
+      this.setState({ processing: false })
+      
       console.error('Error marking purchase shipped by seller')
       console.error(error)
     }
@@ -327,12 +337,16 @@ class PurchaseDetail extends Component {
         rating,
         reviewText: reviewText.trim(),
       })
+      this.setState({ processing: true })
       await transaction.whenFinished()
       // why is this delay often required???
       setTimeout(() => {
+        this.setState({ processing: false })
         this.loadPurchase()
       }, 1000)
     } catch(error) {
+      this.setState({ processing: false })
+
       console.error('Error withdrawing funds for seller')
       console.error(error)
     }
@@ -359,7 +373,7 @@ class PurchaseDetail extends Component {
   render() {
     const { web3Account } = this.props
 
-    const { buyer, form, listing, logs, purchase, reviews, seller } = this.state
+    const { buyer, form, listing, logs, processing, purchase, reviews, seller } = this.state
     const translatedListing = translateListingCategory(listing)
     const { rating, reviewText } = form
     const buyersReviews = reviews.filter(r => r.revieweeRole === 'SELLER')
@@ -748,6 +762,22 @@ class PurchaseDetail extends Component {
             </div>
           </div>
         </div>
+        {processing &&
+          <Modal backdrop="static" isOpen={true}>
+            <div className="image-container">
+              <img src="images/spinner-animation.svg" role="presentation"/>
+            </div>
+            <FormattedMessage
+              id={ 'purchase-detail.processingUpdate' }
+              defaultMessage={ 'Processing your update' }
+            />
+            <br />
+            <FormattedMessage
+              id={ 'purchase-detail.pleaseStandBy' }
+              defaultMessage={ 'Please stand by...' }
+            />
+          </Modal>
+        }
       </div>
     )
   }
