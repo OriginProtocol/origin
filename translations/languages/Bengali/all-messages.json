@@ -198,6 +198,8 @@
   "purchase-detail.soldToOn": "Sold to {buyerName} on {date}",
   "purchase-detail.price": "Price",
   "purchase-detail.listingStatus": "This listing is {status}",
+  "purchase-detail.processingUpdate": "Processing your update",
+  "purchase-detail.pleaseStandBy": "Please stand by...",
   "purchase-progress.purchased": "Purchased",
   "purchase-progress.sentBySeller": "Sent by seller",
   "purchase-progress.receivedByMe": "Received by me",
