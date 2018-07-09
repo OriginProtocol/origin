@@ -198,6 +198,8 @@
   "purchase-detail.soldToOn": "Nabenta kay {buyerName} sa {date}",
   "purchase-detail.price": "Presyo",
   "purchase-detail.listingStatus": "Ang listahan ay {status}",
+  "purchase-detail.processingUpdate": "Processing your update",
+  "purchase-detail.pleaseStandBy": "Please stand by...",
   "purchase-progress.purchased": "Mga Binili",
   "purchase-progress.sentBySeller": "Pinadala ng nagbebenta",
   "purchase-progress.receivedByMe": "Natanggap ko",
