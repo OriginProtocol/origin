@@ -198,6 +198,8 @@
   "purchase-detail.soldToOn": "Verkocht aan {buyerName} op {date}",
   "purchase-detail.price": "Prijs",
   "purchase-detail.listingStatus": "Deze advertentie is {status}",
+  "purchase-detail.processingUpdate": "Processing your update",
+  "purchase-detail.pleaseStandBy": "Please stand by...",
   "purchase-progress.purchased": "Gekocht",
   "purchase-progress.sentBySeller": "Verzonden door verkoper",
   "purchase-progress.receivedByMe": "Ontvangen door mij",
