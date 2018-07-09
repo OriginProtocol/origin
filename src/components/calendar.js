@@ -22,6 +22,9 @@ class Calendar extends Component {
     this.unselectSlots = this.unselectSlots.bind(this)
     this.getDateAvailabilityAndPrice = this.getDateAvailabilityAndPrice.bind(this)
     this.dateCellWrapper = this.dateCellWrapper.bind(this)
+    this.monthHeader = this.monthHeader.bind(this)
+    this.buyerPrevMonth = this.buyerPrevMonth.bind(this)
+    this.buyerNextMonth = this.buyerNextMonth.bind(this)
 
     this.state = {
       events: [],
@@ -30,7 +33,8 @@ class Calendar extends Component {
         isAvailable: true,
         isRecurringEvent: false
       },
-      buyerSelectedSlotData: null
+      buyerSelectedSlotData: null,
+      defaultDate: new Date()
     }
   }
 
@@ -278,7 +282,7 @@ class Calendar extends Component {
     return (
       <Fragment>
         {this.props.userType === 'buyer' ?
-          <div className={`rbc-day-bg ${dateInfo.isAvailable ? 'available' : 'unavailable'}`}>
+          <div className={`rbc-day-bg ${dateInfo.isAvailable ? 'available' : 'unavailable'}${moment(value).isBefore(moment().subtract(1, 'day')) ? ' past-date' : ''}`}>
             {dateInfo.isAvailable &&
               <span>{dateInfo.price} ETH</span>
             }
@@ -288,6 +292,10 @@ class Calendar extends Component {
         }
       </Fragment>
     )
+  }
+
+  monthHeader(data) {
+    return <div className="rbc-header">{`${this.props.userType === 'buyer' ? data.label[0] : data.label}`}</div>
   }
 
   saveData() {
@@ -321,25 +329,71 @@ class Calendar extends Component {
     })
   }
 
+  buyerPrevMonth() {
+    this.setState({
+      defaultDate: moment(this.state.defaultDate).subtract(1, this.setViewType()).toDate()
+    })
+  }
+
+  buyerNextMonth() {
+    this.setState({
+      defaultDate: moment(this.state.defaultDate).add(1, this.setViewType()).toDate()
+    })
+  }
+
   render() {
     const selectedEvent = this.state.selectedEvent
 
     return (
       <div>
         <div className="row">
-          <div className="col-md-8" style={{ height: '450px' }}>
+          <div className="col-md-8 calendar-container" style={{ height: '450px' }}>
+            {
+              this.props.userType === 'buyer' &&
+              <div className="buyer-month-nav">
+                <img onClick={this.buyerPrevMonth} className="prev-month" src="/images/carat-dark.svg" />
+                <img onClick={this.buyerNextMonth} className="next-month" src="/images/carat-dark.svg" />
+              </div>
+            }
             <BigCalendar
               components={{
                 event: this.eventComponent,
-                dateCellWrapper: this.dateCellWrapper
+                dateCellWrapper: this.dateCellWrapper,
+                month: {
+                  header: this.monthHeader
+                }
               }}
-              selectable={true}
+              selectable={this.props.userType === 'seller'}
               events={(this.props.userType === 'seller' && this.state.events) || []}
               views={this.setViewType()}
               onSelectEvent={this.onSelectEvent}
               onSelectSlot={this.onSelectSlot}
               step={ this.props.step || 60 }
+              date={this.state.defaultDate}
+              onNavigate={() => {}}
+              className={`${this.props.userType === 'buyer' ? 'buyer-view' : ''}`}
             />
+            {
+              this.props.userType === 'buyer' &&
+              <BigCalendar
+                components={{
+                  event: this.eventComponent,
+                  dateCellWrapper: this.dateCellWrapper,
+                  month: {
+                    header: this.monthHeader
+                  }
+                }}
+                selectable={false}
+                events={[]}
+                views={this.setViewType()}
+                onSelectEvent={this.onSelectEvent}
+                onSelectSlot={this.onSelectSlot}
+                step={ this.props.step || 60 }
+                date={moment(this.state.defaultDate).add(1, 'month').toDate()}
+                onNavigate={() => {}}
+                className="buyer-view"
+              />
+            }
             {
               this.props.userType === 'seller' &&
               <button className="btn btn-primary" onClick={this.saveData}>Next</button>

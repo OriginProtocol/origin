@@ -1,5 +1,8 @@
-.calendar-event {
-
+.calendar-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  position: relative;
 }
 
 .calendar-event.available {
@@ -8,6 +11,16 @@
 
 .calendar-event.unavailable {
   background: red;
+}
+
+.rbc-calendar.buyer-view {
+  width: 48%;
+  height: 235px;
+  cursor: default;
+}
+
+.rbc-calendar.buyer-view .rbc-btn-group {
+  display: none;
 }
 
 .rbc-day-bg {
@@ -20,13 +33,46 @@
   position: absolute;
 }
 
+.rbc-day-bg.past-date {
+  background: var(--pale-grey) !important;
+}
+
+.rbc-calendar.buyer-view .rbc-day-bg {
+  font-size: 7px;
+}
+
 .rbc-day-bg.unavailable {
   background: url(/images/diagonal-line.png);
   background-size: 100% 100%;
-  cursor: default;
 }
 
 .rbc-date-cell {
   padding-left: 5px;
   text-align: left;
+  vertical-align: top;
+}
+
+.rbc-calendar.buyer-view .rbc-date-cell {
+  cursor: default;
+  font-size: 10px;
+}
+
+.buyer-month-nav {
+  position: absolute;
+  top: 6px;
+  left: 16px;
+  right: 16px;
+}
+
+.buyer-month-nav .prev-month {
+  position: absolute;
+  left: 0;
+  transform: rotate(180deg);
+  cursor: pointer;
+}
+
+.buyer-month-nav .next-month {
+  position: absolute;
+  right: 0;
+  cursor: pointer;
 }

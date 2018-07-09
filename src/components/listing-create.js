@@ -158,12 +158,18 @@ class ListingCreate extends Component {
   }
 
   onAvailabilityEntered(slots) {
-    const { schemaType } = this.state
+    const { selectedSchemaType } = this.state
+
+    slots.forEach((slot) => {
+      if (typeof slot.priceWei !== 'number') {
+        delete slot.priceWei
+      }
+    })
 
     this.setState({
       formData: {
         ...this.state.formData,
-        timeIncrement: (schemaType === 'housing' ? 'daily' : 'hourly'),
+        timeIncrement: (selectedSchemaType === 'housing' ? 'daily' : 'hourly'),
         slots
       }
     })
@@ -194,7 +200,9 @@ class ListingCreate extends Component {
 
   render() {
     const { selectedSchema } = this.state
-    const enumeratedPrice = selectedSchema && selectedSchema.properties['priceWei'].enum
+    const enumeratedPrice = selectedSchema &&
+                            selectedSchema.properties['priceWei'] &&
+                            selectedSchema.properties['priceWei'].enum
     const priceHidden = enumeratedPrice && enumeratedPrice.length === 1 && enumeratedPrice[0] === 0
 
     return (
@@ -343,7 +351,7 @@ class ListingCreate extends Component {
             </div>
           </div>
         }
-        { this.state.step === this.STEP.AVAILABILITY &&
+        { (this.state.step === this.STEP.AVAILABILITY) &&
           <div className="step-container listing-availability">
             <Calendar 
               listingId=""
@@ -512,6 +520,18 @@ class ListingCreate extends Component {
             </div>
           </div>
         }
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <Calendar 
+          listingId=""
+          userType="seller"
+          viewType="daily"
+          step=""
+        />
       </div>
     )
   }
