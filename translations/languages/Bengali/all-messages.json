@@ -4,7 +4,7 @@
   "connectivity.ropstenTestNetwork": "Ropsten টেস্ট নেটওয়ার্ক",
   "connectivity.rinkebyTestNetwork": "Rinkeby টেস্ট নেটওয়ার্ক",
   "connectivity.kovanTestNetwork": "Kovan টেস্ট নেটওয়ার্ক",
-  "connectivity.localhost": "Localhost",
+  "connectivity.localhost": "লোকাল হোষ্ট",
   "connectivity.ethereumNetwork": "Ethereum Network:",
   "connectivity.connecting": "সংযোগ হচ্ছে...",
   "connectivity.ipfsGateway": "IPFS Gateway:",
