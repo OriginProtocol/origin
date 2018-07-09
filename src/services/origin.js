@@ -64,7 +64,8 @@ const config = {
   attestationServerUrl,
   ipfsCreator,
   OrbitDB,
-  ecies
+  ecies,
+  web3,
 }
 
 try {
