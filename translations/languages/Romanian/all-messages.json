@@ -198,6 +198,8 @@
   "purchase-detail.soldToOn": "Vândut la {buyerName} {date}",
   "purchase-detail.price": "Preț",
   "purchase-detail.listingStatus": "Acest anunț este {status}",
+  "purchase-detail.processingUpdate": "Processing your update",
+  "purchase-detail.pleaseStandBy": "Please stand by...",
   "purchase-progress.purchased": "Achiziţionat",
   "purchase-progress.sentBySeller": "Trimis de vânzător",
   "purchase-progress.receivedByMe": "Primit de mine",
