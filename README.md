@@ -1,10 +1,20 @@
 ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
- 	 
+
 Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
 
 # Origin Box
 
 Origin Box is a [Docker](https://www.docker.com/) container setup for running all core Origin components together in a single environment, preconfigured to work together.
+
+Origin Box currently supports the following components:
+- [Demo DApp](https://github.com/OriginProtocol/origin-dapp)
+- [Origin.js](https://github.com/OriginProtocol/origin-js)
+- [Bridge Server](https://github.com/originprotocol/origin-bridge)
+
+Each repo is symlinked from the container to a local directory. You may edit the source code using your favorite editor. The repo directories just normal git repositories, so you can treat them as you would any other git repository. You can make changes, commit them, and change branches—and the container will be automatically kept in sync.
+
+However, non-git related actions should be performed from within the container. For example, running any sort of npm command (e.g. `npm test`) should be done from within the container cli. The same applies for python commands.
+
 
 ## Use Cases
 
@@ -13,12 +23,6 @@ Origin Box has several intended use cases:
 - Development: While we do our best to keep our components as independent as possible, ultimately they are all designed to function together as one unit. For development we do try to stub external components as much as possible, but this has its practical limits. It is often beneficial to be able to do development in an environment where all of the components are running. It can be tricky to get all of the various components synchronized on your local machine. Origin Box manages this complexity.
 - End-to-end Testing: Currently we do not have any automated end-to-end tests. We rely heavily on manual testing. Having one environment where all of our components are running together will hopefully make it easier for us to set up end-to-end testing when we are ready to do that.
 
-## Supported Components
-
-Origin Box currently supports the following components:
-- [Demo DApp](https://github.com/OriginProtocol/origin-dapp)
-- [Origin.js](https://github.com/OriginProtocol/origin-js)
-- [Bridge Server](https://github.com/originprotocol/origin-bridge)
 
 ## System Requirements
 
@@ -28,19 +32,36 @@ Origin Box currently supports the following components:
 `git --version`
 - Unix-based system (OSX or Linux) needed to run the bash scripts
 
-## Usage
+## Getting started
 
-1. Run the setup script (from origin-box root directory):
-`./scripts/setup.sh`
+1. Clone this repo:
+```
+git clone git@github.com:OriginProtocol/origin-box.git && cd origin-box
+```
 
-1. Run the start script: `./scripts/start.sh`
+2. Run the setup script:
+```
+./scripts/setup.sh
+```
 
-1. Access the CLI:
-`./scripts/cli.sh`
+This will clone the latest `develop` branches of `origin-js`, `origin-dapp`, and `origin-bridge` in the `origin-box` directory.
 
-You may now edit the source code using your favorite editor in the ignored directories (currently `dapp`, `js`, and `bridge`). These are just normal git repositories that get cloned as part of the `scripts/setup.sh` script, so you can treat them as you would any other git repository. You can make changes, commit them, and change branches - and the container will be automatically kept in sync.
+**Note:** Currently these are cloned with custom directory names of `js`, `dapp`, and `bridge`.
 
-However, non-git related actions should be performed from within the container. For example, running any sort of npm command (e.g. `npm test`) should be done from within the container cli. The same applies for python commands.
+If desired, you may `cd` into these directores and checkout different branches.
+
+3. From a different tab, run the start script:
+```
+./scripts/start.sh
+```
+
+This will take a few minutes to run. You can tell all components are running when you see a steady stream of lines sayins `beat: Waking up in 9.99 seconds.`. 
+
+You can then access the Demo DApp, local blockchain, and Bridge Server in the usual way on the usual ports, from your host machine. For example, the Demo Dapp will be at http://localhost:3000/#/, and a sample IPFS listing can be loaded from http://localhost:8080/ipfs/QmTfozaMrUBZdYBzPgxuSC15zBRgLCEfQmWFZwmDHYGY1e
+
+4. Access the CLI:
+
+    ./scripts/cli.sh
 
 ### Repo-specific instructions:
 
@@ -51,6 +72,7 @@ However, non-git related actions should be performed from within the container. 
 Currently we're using [pm2](http://pm2.keymetrics.io/) to automatically start and manage core processes for all of the components. You can run `pm2 list` from within the container cli to see all currently running processes.
 
 ## Connectivity tests from localhost
+
 - bridge server: curl http://127.0.0.1:5000
 - postgres:  psql -h 127.0.0.1 -p 5432 -d "origin-bridge" -U docker --password <-- currently only working from within the container
 - redis: redis-cli <-- defaults to connecting to 127.0.0.1:6379
