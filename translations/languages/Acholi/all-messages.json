@@ -198,6 +198,8 @@
   "purchase-detail.soldToOn": "crwdns1609:0{buyerName}crwdnd1609:0{date}crwdne1609:0",
   "purchase-detail.price": "crwdns1610:0crwdne1610:0",
   "purchase-detail.listingStatus": "crwdns1611:0{status}crwdne1611:0",
+  "purchase-detail.processingUpdate": "crwdns2149:0crwdne2149:0",
+  "purchase-detail.pleaseStandBy": "crwdns2150:0crwdne2150:0",
   "purchase-progress.purchased": "crwdns1612:0crwdne1612:0",
   "purchase-progress.sentBySeller": "crwdns1613:0crwdne1613:0",
   "purchase-progress.receivedByMe": "crwdns1614:0crwdne1614:0",
