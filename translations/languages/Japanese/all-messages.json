@@ -198,6 +198,8 @@
   "purchase-detail.soldToOn": "{buyerName} さんに {date} 日に販売",
   "purchase-detail.price": "価格：",
   "purchase-detail.listingStatus": "この掲載情報は {status} です",
+  "purchase-detail.processingUpdate": "Processing your update",
+  "purchase-detail.pleaseStandBy": "Please stand by...",
   "purchase-progress.purchased": "購入済み",
   "purchase-progress.sentBySeller": "売り手により送付",
   "purchase-progress.receivedByMe": "受け取り済み",
