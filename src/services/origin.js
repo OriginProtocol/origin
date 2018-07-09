@@ -28,6 +28,11 @@ const web3 = new Web3(
 )
 
 const ipfsCreator = repo_key => {
+  let boots = []
+  if (process.env.IPFS_SWARM)
+  {
+    boots = [process.env.IPFS_SWARM]
+  }
   const ipfsOptions = {
     repo: 'ipfs' + repo_key,
     EXPERIMENTAL: {
@@ -40,9 +45,9 @@ const ipfsCreator = repo_key => {
       }
     },
     config: {
-      Bootstrap: [process.env.IPFS_SWARM],
+      Bootstrap: boots,
       Addresses: {
-        Swarm: ['/dns4/wrtc-star.discovery.libp2p.io/tcp/443/wss/p2p-webrtc-star']
+       Swarm: ['/dns4/wrtc-star.discovery.libp2p.io/tcp/443/wss/p2p-webrtc-star']
       }
     }
   }
