@@ -5,7 +5,7 @@
   },
   {
     "id": "footer.documentationHeading",
-    "defaultMessage": "Documentation"
+    "defaultMessage": "Resources"
   },
   {
     "id": "footer.productBriefLink",
@@ -40,6 +40,18 @@
     "defaultMessage": "Medium"
   },
   {
+    "id": "footer.redditLink",
+    "defaultMessage": "Reddit"
+  },
+  {
+    "id": "footer.wechatLink",
+    "defaultMessage": "WeChat"
+  },
+  {
+    "id": "footer.socialHeading",
+    "defaultMessage": "Social"
+  },
+  {
     "id": "footer.twitterLink",
     "defaultMessage": "Twitter"
   },
@@ -50,6 +62,10 @@
   {
     "id": "footer.facebookLink",
     "defaultMessage": "Facebook"
+  },
+  {
+    "id": "footer.youtubeLink",
+    "defaultMessage": "Youtube"
   },
   {
     "id": "footer.organizationHeading",
@@ -69,6 +85,6 @@
   },
   {
     "id": "footer.hiringLink",
-    "defaultMessage": "Jobs (We're hiring!)"
+    "defaultMessage": "Jobs"
   }
 ]

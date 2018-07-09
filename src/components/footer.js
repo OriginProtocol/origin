@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import store from 'store'
+import $ from 'jquery'
 
 class Footer extends Component {
 
@@ -18,6 +19,9 @@ class Footer extends Component {
 
   componentDidMount() {
     this.localizeWhitepaperUrl()
+    $('[data-toggle="tooltip"]').tooltip({
+      html: true
+    });
   }
 
   localizeApp(langAbbrev) {
@@ -39,7 +43,7 @@ class Footer extends Component {
       <footer className="dark-footer">
         <div className="container">
           <div className="row">
-            <div className="col-12 col-md-6">
+            <div className="col-12 col-md-5 col-lg-6">
               <div className="logo-container">
                 <img src="images/origin-logo.svg" className="origin-logo" alt="Origin Protocol"/>
               </div>
@@ -77,13 +81,13 @@ class Footer extends Component {
                 </div>
               </div>
             </div>
-            <div className="col-12 col-md-6">
+            <div className="col-12 col-md-7 col-lg-6">
               <div className="row">
-                <div className="col-6 col-md-4">
+                <div className="col-6 col-lg-3">
                   <div className="footer-header">
                     <FormattedMessage
                       id={ 'footer.documentationHeading' }
-                      defaultMessage={ 'Documentation' }
+                      defaultMessage={ 'Resources' }
                     />
                   </div>
                   <ul className="footer-links">
@@ -121,7 +125,7 @@ class Footer extends Component {
                     </li>
                   </ul>
                 </div>
-                <div className="col-6 col-md-4">
+                <div className="col-6 col-lg-3">
                   <div className="footer-header">
                     <FormattedMessage
                       id={ 'footer.communityHeading' }
@@ -154,6 +158,32 @@ class Footer extends Component {
                       </a>
                     </li>
                     <li>
+                      <a href="https://www.reddit.com/r/originprotocol/" target="_blank">
+                        <FormattedMessage
+                          id={ 'footer.redditLink' }
+                          defaultMessage={ 'Reddit' }
+                        />
+                      </a>
+                    </li>
+                    <li>
+                      <a class="span-link" data-container="body" data-toggle="tooltip" title="<img class='weChat' src='/images/origin-wechat-qr.png' />">
+                        <FormattedMessage
+                          id={ 'footer.wechatLink' }
+                          defaultMessage={ 'WeChat' }
+                        />
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div className="col-6 col-lg-3">
+                  <div className="footer-header">
+                    <FormattedMessage
+                      id={ 'footer.socialHeading' }
+                      defaultMessage={ 'Social' }
+                    />
+                  </div>
+                  <ul className="footer-links">
+                    <li>
                       <a href="https://twitter.com/originprotocol" target="_blank">
                         <FormattedMessage
                           id={ 'footer.twitterLink' }
@@ -177,9 +207,17 @@ class Footer extends Component {
                         />
                       </a>
                     </li>
+                    <li>
+                      <a href="http://www.youtube.com/c/originprotocol" target="_blank">
+                        <FormattedMessage
+                          id={ 'footer.youtubeLink' }
+                          defaultMessage={ 'Youtube' }
+                        />
+                      </a>
+                    </li>
                   </ul>
                 </div>
-                <div className="col-6 col-md-4">
+                <div className="col-6 col-lg-3">
                   <div className="footer-header">
                     <FormattedMessage
                       id={ 'footer.organizationHeading' }
@@ -215,13 +253,8 @@ class Footer extends Component {
                       <a href="https://angel.co/originprotocol/jobs">
                         <FormattedMessage
                           id={ 'footer.hiringLink' }
-                          defaultMessage={ 'Jobs (We\'re hiring!)' }
+                          defaultMessage={ 'Jobs' }
                         />
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://www.google.com/maps/place/845+Market+St+%23450a,+San+Francisco,+CA+94103">
-                        845 Market St, &#35;450A<br />San Francisco, CA 94103
                       </a>
                     </li>
                     <li>
@@ -239,6 +272,7 @@ class Footer extends Component {
     )
   }
 }
+
 
 const mapStateToProps = state => ({
   selectedLanguageAbbrev: state.app.translations.selectedLanguageAbbrev,
