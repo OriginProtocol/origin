@@ -42,7 +42,7 @@ const ipfsCreator = repo_key => {
     config: {
       Bootstrap: [process.env.IPFS_SWARM],
       Addresses: {
-        //Swarm: []
+        Swarm: ['/dns4/wrtc-star.discovery.libp2p.io/tcp/443/wss/p2p-webrtc-star']
       }
     }
   }
