@@ -198,6 +198,8 @@
   "purchase-detail.soldToOn": "在 {date} 上销售到 {buyerName}",
   "purchase-detail.price": "价格",
   "purchase-detail.listingStatus": "此列表为 {status}",
+  "purchase-detail.processingUpdate": "Processing your update",
+  "purchase-detail.pleaseStandBy": "Please stand by...",
   "purchase-progress.purchased": "已购买",
   "purchase-progress.sentBySeller": "由卖方发送",
   "purchase-progress.receivedByMe": "我所收到的",
