@@ -198,6 +198,8 @@
   "purchase-detail.soldToOn": "{date} 에 {buyerName} 에게 판매",
   "purchase-detail.price": "가격",
   "purchase-detail.listingStatus": "이 목록은 {status} 입니다.",
+  "purchase-detail.processingUpdate": "Processing your update",
+  "purchase-detail.pleaseStandBy": "Please stand by...",
   "purchase-progress.purchased": "구매됨",
   "purchase-progress.sentBySeller": "판매자가 보냄",
   "purchase-progress.receivedByMe": "받음",
