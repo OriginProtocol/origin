@@ -198,6 +198,8 @@
   "purchase-detail.soldToOn": "Продано {buyerName} {date}",
   "purchase-detail.price": "Ціна",
   "purchase-detail.listingStatus": "Це оголошення є {status}",
+  "purchase-detail.processingUpdate": "Processing your update",
+  "purchase-detail.pleaseStandBy": "Please stand by...",
   "purchase-progress.purchased": "Придбано",
   "purchase-progress.sentBySeller": "Відправлено продавцем",
   "purchase-progress.receivedByMe": "Отримано мною",
