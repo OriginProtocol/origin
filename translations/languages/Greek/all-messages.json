@@ -198,6 +198,8 @@
   "purchase-detail.soldToOn": "Πωλήθηκε στον {buyerName} στις {date}",
   "purchase-detail.price": "Τιμή",
   "purchase-detail.listingStatus": "Η καταχώρηση είναι {status}",
+  "purchase-detail.processingUpdate": "Processing your update",
+  "purchase-detail.pleaseStandBy": "Please stand by...",
   "purchase-progress.purchased": "Αγορασμένα",
   "purchase-progress.sentBySeller": "Απεσταλμένα από πωλητή",
   "purchase-progress.receivedByMe": "Ληφθέντα από εμένα",
