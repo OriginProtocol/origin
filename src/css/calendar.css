@@ -1,4 +1,4 @@
-.calendar-container {
+.calendar-container.buyer-view {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -13,13 +13,13 @@
   background: red;
 }
 
-.rbc-calendar.buyer-view {
+.calendar-container.buyer-view .rbc-calendar {
   width: 48%;
   height: 235px;
   cursor: default;
 }
 
-.rbc-calendar.buyer-view .rbc-btn-group {
+.calendar-container.buyer-view .rbc-calendar .rbc-btn-group {
   display: none;
 }
 
@@ -37,7 +37,7 @@
   background: var(--pale-grey) !important;
 }
 
-.rbc-calendar.buyer-view .rbc-day-bg {
+.calendar-container.buyer-view .rbc-calendar .rbc-day-bg {
   font-size: 7px;
 }
 
@@ -52,7 +52,7 @@
   vertical-align: top;
 }
 
-.rbc-calendar.buyer-view .rbc-date-cell {
+.calendar-container.buyer-view .rbc-calendar .rbc-date-cell {
   cursor: default;
   font-size: 10px;
 }

@@ -347,7 +347,7 @@ class Calendar extends Component {
     return (
       <div>
         <div className="row">
-          <div className="col-md-8 calendar-container" style={{ height: '450px' }}>
+          <div className={`col-md-8 calendar-container${this.props.userType === 'buyer' ? ' buyer-view' : ''}`} style={{ height: '450px' }}>
             {
               this.props.userType === 'buyer' &&
               <div className="buyer-month-nav">
@@ -370,8 +370,7 @@ class Calendar extends Component {
               onSelectSlot={this.onSelectSlot}
               step={ this.props.step || 60 }
               date={this.state.defaultDate}
-              onNavigate={() => {}}
-              className={`${this.props.userType === 'buyer' ? 'buyer-view' : ''}`}
+              onNavigate={(date) => { this.setState({ defaultDate: date }) }}
             />
             {
               this.props.userType === 'buyer' &&
@@ -383,15 +382,14 @@ class Calendar extends Component {
                     header: this.monthHeader
                   }
                 }}
-                selectable={false}
+                selectable={true}
                 events={[]}
                 views={this.setViewType()}
                 onSelectEvent={this.onSelectEvent}
                 onSelectSlot={this.onSelectSlot}
                 step={ this.props.step || 60 }
                 date={moment(this.state.defaultDate).add(1, 'month').toDate()}
-                onNavigate={() => {}}
-                className="buyer-view"
+                onNavigate={(date) => { this.setState({ defaultDate: date }) }}
               />
             }
             {
