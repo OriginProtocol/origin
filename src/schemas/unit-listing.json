@@ -4,7 +4,7 @@
   "$merge": {
     "source": { "$ref": "listing.json" },
     "with": {
-      "required": ["name", "priceWei"],
+      "required": ["name"],
       "properties": {
         "priceWei": {
           "type": "number"
