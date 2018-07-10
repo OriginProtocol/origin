@@ -26,6 +26,9 @@
     },
     "listingType": {
       "type": "string"
+    },
+    "schemaType": {
+      "type: string"
     }
   }
 }

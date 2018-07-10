@@ -425,7 +425,8 @@ class Listings extends ResourceBase {
       description: ipfsData.description,
       location: ipfsData.location,
       pictures: ipfsData.pictures,
-      listingType: ipfsData.listingType
+      listingType: ipfsData.listingType,
+      schemaType: ipfsData.schemaType
     }
   }
 
@@ -439,6 +440,7 @@ class Listings extends ResourceBase {
       location: ipfsData.location,
       pictures: ipfsData.pictures,
       listingType: ipfsData.listingType,
+      schemaType: ipfsData.schemaType,
       slots: ipfsData.slots
     }
   }
