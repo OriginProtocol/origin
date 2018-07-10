@@ -250,9 +250,10 @@ class Listings extends ResourceBase {
 
     // For now, accept price in either wei or eth for backwards compatibility
     // `price` is now deprecated. `priceWei` should be used instead.
-    const priceEth = Number(formListing.formData.price)
-    const weiFromEth = this.contractService.web3.utils.toWei(priceEth, 'ether')
-    const priceWei = String(formListing.formData.priceWei) || weiFromEth
+    const priceEth = String(formListing.formData.price)
+    const priceWei = formListing.formData.priceWei
+      ? String(formListing.formData.priceWei)
+      : this.contractService.web3.utils.toWei(priceEth, 'ether')
 
     // Submit to ETH contract
     const units = 1 // TODO: Allow users to set number of units in form
