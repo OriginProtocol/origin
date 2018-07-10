@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
 
 import ConnectivityDropdown from 'components/dropdowns/connectivity'
+import MessagesDropdown from 'components/dropdowns/messages'
 import NotificationsDropdown from 'components/dropdowns/notifications'
 import TransactionsDropdown from 'components/dropdowns/transactions'
 import UserDropdown from 'components/dropdowns/user'
@@ -109,6 +110,7 @@ class NavBar extends Component {
           <div className="static navbar-nav order-1 order-lg-2">
             <ConnectivityDropdown />
             <TransactionsDropdown />
+            <MessagesDropdown />
             <NotificationsDropdown />
             <UserDropdown />
           </div>

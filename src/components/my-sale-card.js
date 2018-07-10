@@ -94,7 +94,7 @@ class MySaleCard extends Component {
               </div>
             </div>
           </div>
-          <PurchaseProgress currentStep={step} purchase={purchase} perspective="seller" subdued="true" />
+          <PurchaseProgress currentStep={step} purchase={purchase} perspective="seller" subdued={true} />
           <div className="d-flex justify-content-between actions">
             {step === 1 && 
               <p>
