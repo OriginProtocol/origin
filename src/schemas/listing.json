@@ -28,7 +28,7 @@
       "type": "string"
     },
     "schemaType": {
-      "type: string"
+      "type": "string"
     }
   }
 }
