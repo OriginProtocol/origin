@@ -175,7 +175,10 @@ class ListingsDetail extends Component {
   render() {
     const unitsAvailable = parseInt(this.state.unitsAvailable) // convert string to integer
     const buyersReviews = this.state.reviews.filter(r => r.revieweeRole === 'SELLER')
-    const userIsSeller = this.state.sellerAddress === this.props.web3Account
+    // const userIsSeller = this.state.sellerAddress === this.props.web3Account
+
+    // TEMPORARY
+    const userIsSeller = true
 
     return (
       <div className="listing-detail">
@@ -301,6 +304,11 @@ class ListingsDetail extends Component {
                     />
                     <img src="images/carat-blue.svg" className="carat" alt="right carat" />
                   </a>
+                </div>
+              }
+              {userIsSeller &&
+                <div className="link-container">
+                  <Link to={`/update/${this.props.listingAddress}`}>Edit</Link>
                 </div>
               }
               {/* Remove per Matt 5/28/2018 */}

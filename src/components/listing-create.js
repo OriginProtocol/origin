@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import moment from 'moment'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { translateSchema } from '../utils/translationUtils'
 import origin from '../services/origin'
@@ -12,6 +13,29 @@ import ListingDetail from './listing-detail'
 import Form from 'react-jsonschema-form'
 import Modal from './modal'
 import Calendar from './calendar'
+
+const generateCalendarSlots = (events) => {
+  for (let i = 0, eventsLen = events.length; i < eventsLen; i++) {
+    const event = events[i]
+    const startDate = new Date(event.startDate)
+    const endDate = new Date(event.endDate)
+    let eventDate = moment(event.startDate)
+    const slots = []
+
+    // convert start and end date strings in to date objects
+    event.startDate = startDate
+    event.endDate = endDate
+
+    while (eventDate.toDate() >= startDate && eventDate.toDate() <= endDate) {
+        slots.push(eventDate.toDate())
+        eventDate = eventDate.add(1, 'days')
+    }
+
+    event.slots = slots
+  }
+
+  return events
+}
 
 class ListingCreate extends Component {
 
@@ -82,7 +106,8 @@ class ListingCreate extends Component {
       schemaFetched: false,
       formData: null,
       isFractionalListing: false,
-      currentProvider: getCurrentProvider(origin && origin.contractService && origin.contractService.web3)
+      currentProvider: getCurrentProvider(origin && origin.contractService && origin.contractService.web3),
+      isEditMode: false
     }
 
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
@@ -90,13 +115,36 @@ class ListingCreate extends Component {
     this.onAvailabilityEntered = this.onAvailabilityEntered.bind(this)
   }
 
-  handleSchemaSelection() {
+  async componentDidMount() {
+    if (this.props.listingAddress) {
+      try {
+        const listing = await origin.listings.get(this.props.listingAddress)
+
+        this.setState({ selectedSchemaType: listing.schemaType })
+
+        await this.handleSchemaSelection()
+
+        listing.slots = generateCalendarSlots(listing.slots)
+
+        this.setState({
+          formData: listing,
+          step: this.STEP.DETAILS,
+          isEditMode: true
+        })
+      } catch (error) {
+        console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingAddress}`)
+        console.error(error)
+      }
+    }
+  }
+
+  async handleSchemaSelection() {
     const { selectedSchemaType } = this.state
     const isFractionalListing = this.fractionalSchemaTypes.includes(selectedSchemaType)
 
     this.setState({ isFractionalListing })
 
-    fetch(`schemas/${selectedSchemaType}.json`)
+    await fetch(`schemas/${selectedSchemaType}.json`)
     .then((response) => response.json())
     .then((schemaJson) => {
       this.setState({
@@ -146,6 +194,7 @@ class ListingCreate extends Component {
                                         [this.STEP.PREVIEW, 'unit']
 
       formData.listingType = listingType
+      formData.schemaType = this.state.selectedSchemaType
 
       this.setState({
         formData,
@@ -183,7 +232,15 @@ class ListingCreate extends Component {
     try {
       console.log(formData)
       this.setState({ step: this.STEP.METAMASK })
-      const transactionReceipt = await origin.listings.create(formData, selectedSchemaType)
+
+      let transactionReceipt
+
+      if (this.state.isEditMode) {
+        transactionReceipt = await origin.listings.update(this.props.listingAddress, formData)
+      } else {
+        transactionReceipt = await origin.listings.create(formData, selectedSchemaType)
+      }
+      
       this.setState({ step: this.STEP.PROCESSING })
       // Submitted to blockchain, now wait for confirmation
       await origin.contractService.waitTransactionFinished(transactionReceipt.transactionHash)
@@ -300,7 +357,7 @@ class ListingCreate extends Component {
                           id={ 'listing-create.viewSchemaLinkLabel' }
                           defaultMessage={ 'View the {schemaName} schema' }
                           values={{ 
-                            schemaName: <code>{this.state.selectedSchema.name}</code>
+                            schemaName: <code>{this.state.selectedSchema && this.state.selectedSchema.name}</code>
                           }}
                         />
                       </a>
@@ -353,7 +410,8 @@ class ListingCreate extends Component {
         }
         { (this.state.step === this.STEP.AVAILABILITY) &&
           <div className="step-container listing-availability">
-            <Calendar 
+            <Calendar
+              slots={ this.state.formData && this.state.formData.slots }
               listingId=""
               userType="seller"
               viewType="daily"
@@ -520,18 +578,6 @@ class ListingCreate extends Component {
             </div>
           </div>
         }
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <Calendar 
-          listingId=""
-          userType="seller"
-          viewType="daily"
-          step=""
-        />
       </div>
     )
   }

@@ -47,7 +47,8 @@ class Calendar extends Component {
         start: slot.startDate,
         end: slot.endDate,
         price: slot.priceWei,
-        isAvailable: slot.isAvailable
+        isAvailable: slot.isAvailable,
+        slots: slot.slots
       }
     })
 
