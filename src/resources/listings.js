@@ -248,13 +248,19 @@ class Listings extends ResourceBase {
     console.log(`IPFS file created with hash: ${ipfsHash} for data:`)
     console.log(jsonBlob)
 
+    // For now, accept price in either wei or eth for backwards compatibility
+    // `price` is now deprecated. `priceWei` should be used instead.
+    const priceEth = String(formListing.formData.price)
+    const weiFromEth = this.contractService.web3.utils.toWei(priceEth, 'ether')
+    const priceWei = String(formListing.formData.priceWei) || weiFromEth
+
     // Submit to ETH contract
     const units = 1 // TODO: Allow users to set number of units in form
     let transactionReceipt
     try {
       transactionReceipt = await this.submitUnitListing(
         ipfsHash,
-        formListing.formData.price,
+        priceWei,
         units
       )
     } catch (error) {
@@ -333,23 +339,19 @@ class Listings extends ResourceBase {
     return transactionReceipt
   }
 
-  async submitUnitListing(ipfsListing, ethPrice, units) {
+  async submitUnitListing(ipfsListing, priceWei, units) {
     try {
       const account = await this.contractService.currentAccount()
       const instance = await this.contractService.deployed(
         this.contractService.listingsRegistryContract
       )
 
-      const weiToGive = this.contractService.web3.utils.toWei(
-        String(ethPrice),
-        'ether'
-      )
       // Note we cannot get the listingId returned by our contract.
       // See: https://forum.ethereum.org/discussion/comment/31529/#Comment_31529
       return instance.methods
         .create(
           this.contractService.getBytes32FromIpfsHash(ipfsListing),
-          weiToGive,
+          priceWei,
           units
         )
         .send({ from: account, gas: 4476768 })
