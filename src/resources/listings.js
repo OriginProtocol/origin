@@ -37,7 +37,13 @@ function validate(validateFn, data, schema) {
 }
 
 class Listings extends ResourceBase {
-  constructor({ contractService, ipfsService, fetch, indexingServerUrl, purchases }) {
+  constructor({
+    contractService,
+    ipfsService,
+    fetch,
+    indexingServerUrl,
+    purchases
+  }) {
     super({ contractService, ipfsService })
     this.contractDefinition = this.contractService.listingContract
     this.fetch = fetch
@@ -216,19 +222,21 @@ class Listings extends ResourceBase {
 
   async getPurchases(address) {
     const purchasesLength = await this.purchasesLength(address)
-    let indices = []
-    for(let i = 0; i < purchasesLength; i++) {
+    const indices = []
+    for (let i = 0; i < purchasesLength; i++) {
       indices.push(i)
     }
-    return await Promise.all(indices.map(async (index) => {
-      const purchaseAddress = await this.contractService.contractFn(
-        this.contractService.listingContract,
-        address,
-        'getPurchase',
-        [index]
-      )
-      return this.purchases.get(purchaseAddress)
-    }))
+    return await Promise.all(
+      indices.map(async index => {
+        const purchaseAddress = await this.contractService.contractFn(
+          this.contractService.listingContract,
+          address,
+          'getPurchase',
+          [index]
+        )
+        return this.purchases.get(purchaseAddress)
+      })
+    )
   }
 
   async purchaseAddressByIndex(address, index) {
@@ -400,29 +408,31 @@ class Listings extends ResourceBase {
     const url = appendSlash(this.indexingServerUrl) + 'listing'
     const response = await this.fetch(url, { method: 'GET' })
     const json = await response.json()
-    return Promise.all(json.objects.map(async obj => {
-      const ipfsData = obj['ipfs_data']
-      // While we wait on https://github.com/OriginProtocol/origin-bridge/issues/18
-      // we fetch the array of image data strings for each listing
-      const indexedIpfsData = await this.ipfsService.getFile(obj['ipfs_hash'])
-      const pictures = indexedIpfsData.data.pictures
-      return {
-        address: obj['contract_address'],
-        ipfsHash: obj['ipfs_hash'],
-        sellerAddress: obj['owner_address'],
-        price: Number(obj['price']),
-        unitsAvailable: Number(obj['units']),
-        created: obj['created_at'],
-        expiration: obj['expires_at'],
+    return Promise.all(
+      json.objects.map(async obj => {
+        const ipfsData = obj['ipfs_data']
+        // While we wait on https://github.com/OriginProtocol/origin-bridge/issues/18
+        // we fetch the array of image data strings for each listing
+        const indexedIpfsData = await this.ipfsService.getFile(obj['ipfs_hash'])
+        const pictures = indexedIpfsData.data.pictures
+        return {
+          address: obj['contract_address'],
+          ipfsHash: obj['ipfs_hash'],
+          sellerAddress: obj['owner_address'],
+          price: Number(obj['price']),
+          unitsAvailable: Number(obj['units']),
+          created: obj['created_at'],
+          expiration: obj['expires_at'],
 
-        name: ipfsData ? ipfsData['name'] : null,
-        category: ipfsData ? ipfsData['category'] : null,
-        description: ipfsData ? ipfsData['description'] : null,
-        location: ipfsData ? ipfsData['location'] : null,
-        listingType: ipfsData ? ipfsData['listingType'] : unitListingType,
-        pictures
-      }
-    }))
+          name: ipfsData ? ipfsData['name'] : null,
+          category: ipfsData ? ipfsData['category'] : null,
+          description: ipfsData ? ipfsData['description'] : null,
+          location: ipfsData ? ipfsData['location'] : null,
+          listingType: ipfsData ? ipfsData['listingType'] : unitListingType,
+          pictures
+        }
+      })
+    )
   }
 
   async getUnitListing(listingAddress, ipfsData, ipfsHash) {
