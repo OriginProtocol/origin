@@ -37,11 +37,12 @@ function validate(validateFn, data, schema) {
 }
 
 class Listings extends ResourceBase {
-  constructor({ contractService, ipfsService, fetch, indexingServerUrl }) {
+  constructor({ contractService, ipfsService, fetch, indexingServerUrl, purchases }) {
     super({ contractService, ipfsService })
     this.contractDefinition = this.contractService.listingContract
     this.fetch = fetch
     this.indexingServerUrl = indexingServerUrl
+    this.purchases = purchases
   }
 
   /*
@@ -211,6 +212,23 @@ class Listings extends ResourceBase {
         'purchasesLength'
       )
     )
+  }
+
+  async getPurchases(address) {
+    const purchasesLength = await this.purchasesLength(address)
+    let indices = []
+    for(let i = 0; i < purchasesLength; i++) {
+      indices.push(i)
+    }
+    return await Promise.all(indices.map(async (index) => {
+      const purchaseAddress = await this.contractService.contractFn(
+        this.contractService.listingContract,
+        address,
+        'getPurchase',
+        [index]
+      )
+      return this.purchases.get(purchaseAddress)
+    }))
   }
 
   async purchaseAddressByIndex(address, index) {

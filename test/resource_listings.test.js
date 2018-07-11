@@ -1,5 +1,6 @@
 import { expect } from 'chai'
 import Listings from '../src/resources/listings.js'
+import Purchases from '../src/resources/purchases.js'
 import ContractService from '../src/services/contract-service'
 import IpfsService from '../src/services/ipfs-service.js'
 import Web3 from 'web3'
@@ -24,7 +25,8 @@ describe('Listing Resource', function() {
       ipfsGatewayPort: '8080',
       ipfsGatewayProtocol: 'http'
     })
-    listings = new Listings({ contractService, ipfsService })
+    const purchases = new Purchases({ contractService, ipfsService })
+    listings = new Listings({ contractService, ipfsService, purchases })
     const accounts = await web3.eth.getAccounts()
     buyer = accounts[1]
 
@@ -199,6 +201,30 @@ describe('Listing Resource', function() {
       })
       const updatedListing = await listings.get(listingAddress)
       expect(updatedListing.name).to.equal('foo bar')
+    })
+  })
+
+  describe('getPurchases', async () => {
+    let listing
+    before(async () => {
+      await listings.create({
+        name: 'My Listing',
+        priceWei: 1,
+        listingType: 'fractional'
+      })
+      const listingIds = await listings.allIds()
+      listing = await listings.getByIndex(listingIds[listingIds.length - 1])
+      await asAccount(contractService.web3, buyer, async () => {
+        await listings.request(listing.address, { foo: "bar" }, 1)
+      })
+    })
+
+    it('should get purchases', async () => {
+      const listingPurchases = await listings.getPurchases(listing.address)
+      expect(listingPurchases.length).to.equal(1)
+      expect(listingPurchases[0].stage).to.equal('awaiting_seller_approval')
+      expect(JSON.stringify(listingPurchases[0].ipfsData))
+        .to.equal(JSON.stringify({ foo: 'bar' }))
     })
   })
 })

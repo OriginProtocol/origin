@@ -42,14 +42,15 @@ class Origin {
       fetch
     })
 
-    this.listings = new Listings({
+    this.purchases = new Purchases({
       contractService: this.contractService,
       ipfsService: this.ipfsService,
       indexingServerUrl,
       fetch
     })
 
-    this.purchases = new Purchases({
+    this.listings = new Listings({
+      purchases: this.purchases,
       contractService: this.contractService,
       ipfsService: this.ipfsService,
       indexingServerUrl,
