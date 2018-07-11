@@ -1,0 +1,10 @@
+[
+  {
+    "id": "messagesDropdown.messagesHeading",
+    "defaultMessage": "Unread Messages"
+  },
+  {
+    "id": "messagesDropdown.viewAll",
+    "defaultMessage": "View All"
+  }
+]

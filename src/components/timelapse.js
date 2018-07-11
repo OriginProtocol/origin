@@ -48,7 +48,7 @@ class Timelapse extends Component {
     }
 
     if (seconds < (c.props.delay || 4000) / 1000) {
-      timelapse = abbreviated ? '' : 'a few seconds ago'
+      timelapse = abbreviated ? 'now' : 'a few seconds ago'
     } else if (seconds < minute) {
       timelapse = abbreviated ? `${seconds}s` : `${seconds} seconds ago`
     } else if (seconds < hour) {
