@@ -1,7 +1,6 @@
 import Notifications from '../src/resources/notifications.js'
 import Listings from '../src/resources/listings.js'
 import Purchases from '../src/resources/purchases.js'
-import ContractService from '../src/services/contract-service'
 import IpfsService from '../src/services/ipfs-service.js'
 import { expect } from 'chai'
 import Web3 from 'web3'
