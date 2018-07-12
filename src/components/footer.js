@@ -166,7 +166,7 @@ class Footer extends Component {
                       </a>
                     </li>
                     <li>
-                      <a class="span-link" data-container="body" data-toggle="tooltip" title="<img class='weChat' src='/images/origin-wechat-qr.png' />">
+                      <a className="span-link" data-container="body" data-toggle="tooltip" title="<img class='weChat' src='/images/origin-wechat-qr.png' />">
                         <FormattedMessage
                           id={ 'footer.wechatLink' }
                           defaultMessage={ 'WeChat' }

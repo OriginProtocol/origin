@@ -2900,7 +2900,7 @@ sup {
 
 .dark-footer {
   background-color: var(--dark-grey-blue);
-  padding: 80px 0;
+  padding: 78px 0 258px;
   min-height: 522px;
 }
 
