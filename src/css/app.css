@@ -1183,11 +1183,17 @@ a:hover {
 
 .tooltip .tooltip-inner {
   padding: 1.2rem;
+  max-width: 250px;
 }
 
 .tooltip img {
   height: 0.66rem;
   margin-right: 0.25rem;
+}
+
+.tooltip img.weChat {
+  width: 200px;
+  height: 200px;
 }
 
 /* Listings */
@@ -2894,7 +2900,7 @@ sup {
 
 .dark-footer {
   background-color: var(--dark-grey-blue);
-  padding: 80px 0;
+  padding: 78px 0 258px;
   min-height: 522px;
 }
 
@@ -2948,6 +2954,11 @@ footer .dropdown-menu li:hover {
 
 .container.listing-wait-confirmation {
   min-height: 675px;
+}
+
+a:not([href]):not([tabindex]).span-link {
+  color: #ffffff;
+  cursor: pointer; 
 }
 
 /* Error Page */
