@@ -315,7 +315,7 @@
   "Profile.verifyYourselfHeading": "Верифицируйте себя на Origin",
   "Profile.publishNow": "Опубликовать сейчас",
   "Profile.status": "Статус:",
-  "Profile.lastPublished": "Последние опубликованные",
+  "Profile.lastPublished": "Последние публикации",
   "Profile.confirmTransaction": "Подтвердить транзакцию",
   "Profile.pressSubmit": "Нажмите кнопку «Отправить» в окне {currentProvider}",
   "Profile.deployingIdentity": "Унификация подтверждения личности",
