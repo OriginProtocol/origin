@@ -25,9 +25,19 @@ class StoreMock {
 describe('Notification Resource', function() {
   this.timeout(10000) // default is 2000
 
-  let notifications, accounts, storeMock, seller, buyer, listings,
-    contractService, createListing, buyListing, sellerConfirmShipped,
-    buyerConfirmReceipt, sellerGetPayout, purchases
+  let notifications,
+    accounts,
+    storeMock,
+    seller,
+    buyer,
+    listings,
+    contractService,
+    createListing,
+    buyListing,
+    sellerConfirmShipped,
+    buyerConfirmReceipt,
+    sellerGetPayout,
+    purchases
 
   beforeEach(async () => {
     const ipfsService = new IpfsService({
@@ -57,28 +67,31 @@ describe('Notification Resource', function() {
     })
 
     createListing = async () => {
-      const tx = await listings.create({ name: 'Sample Listing 1', price: 1 }, '')
+      const tx = await listings.create(
+        { name: 'Sample Listing 1', price: 1 },
+        ''
+      )
       return tx.events.NewListing.returnValues._address
     }
 
-    buyListing = async (listingAddress) => {
+    buyListing = async listingAddress => {
       return await asAccount(contractService.web3, buyer, async () => {
         const tx = await listings.buy(listingAddress, 1, 1)
         return tx.events.ListingPurchased.returnValues._purchaseContract
       })
     }
 
-    sellerConfirmShipped = async (purchaseAddress) => {
+    sellerConfirmShipped = async purchaseAddress => {
       await purchases.sellerConfirmShipped(purchaseAddress)
     }
 
-    buyerConfirmReceipt = async (purchaseAddress) => {
+    buyerConfirmReceipt = async purchaseAddress => {
       await asAccount(contractService.web3, buyer, async () => {
         await purchases.buyerConfirmReceipt(purchaseAddress)
       })
     }
 
-    sellerGetPayout = async (purchaseAddress) => {
+    sellerGetPayout = async purchaseAddress => {
       await purchases.sellerGetPayout(purchaseAddress)
     }
   })
