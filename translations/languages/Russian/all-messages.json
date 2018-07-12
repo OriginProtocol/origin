@@ -172,7 +172,7 @@
   "purchase-detail.sendOrderInstruction": "Нажать кнопку внизу, как только заказ будет отправлен.",
   "purchase-detail.markOrderSent": "Пометить Заказ как Отправленный",
   "purchase-detail.confirmReceiptOfOrder": "Подтвердить получение заказа и оставить отзыв",
-  "purchase-detail.submitThisForm": "Отправьте эту форму, как только Вы проверите отгрузку заказа.",
+  "purchase-detail.submitThisForm": "Отправьте эту форму, как только Вы проверите отправку вашего заказа.",
   "purchase-detail.confirmAndReview": "Подтверждение и Отзыв",
   "purchase-detail.buyerReviewPlaceholder": "Ваш отзыв должен информировать других о Вашем опыте сделок с этим продавцом, а не о самом продукте.",
   "purchase-detail.waitForBuyer": "Подождать, пока покупатель получит заказ",
