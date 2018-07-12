@@ -116,4 +116,4 @@ Currently we're using [pm2](http://pm2.keymetrics.io/) to automatically start an
 ```
 Error starting userland proxy: Bind for 0.0.0.0:5000 failed: port is already allocated
 ```
-This indicates that you have a process using a port needed by origin-box. This often happens if you are running origin-website, or running the origin-dapp outside the box. Use `ps` or Activity Monitor to search for `node`, `python`, or any process that might be using ports 5000, 5002, 6379, 8080, 9200, 5432, 4000, 4002.
+This indicates that you have a process using a port needed by origin-box. This often happens if you are running origin-website, or running the origin-dapp outside the box. Use `ps` or Activity Monitor to search for `node`, `python`, or any process that might be using ports 5000, 5002, 6379, 8080, 9200, 5432, 4000, 4002, and kill the process. 
