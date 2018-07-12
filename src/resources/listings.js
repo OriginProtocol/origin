@@ -128,7 +128,7 @@ class Listings extends ResourceBase {
     if (ipfsData.listingType === unitListingType) {
       return await this.getUnitListing(address, ipfsData, ipfsHash)
     } else if (ipfsData.listingType === fractionalListingType) {
-      return this.getFractionalListing(address, ipfsData, ipfsHash)
+      return await this.getFractionalListing(address, ipfsData, ipfsHash)
     } else {
       throw new Error('Invalid listing type:', ipfsData.listingType)
     }
