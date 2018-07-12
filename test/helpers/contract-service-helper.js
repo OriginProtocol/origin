@@ -3,6 +3,12 @@ import ListingsRegistryStorageContract from '../../contracts/build/contracts/Lis
 import ContractService from '../../src/services/contract-service'
 import Web3 from 'web3'
 
+/*
+  Returns a contract service instance with a clean listings registry
+
+  This creates a clean environment for testing without side effects.
+*/
+
 export default async function contractServiceHelper(web3) {
   const accounts = await web3.eth.getAccounts()
   const dummyContractService = new ContractService({ web3 })
