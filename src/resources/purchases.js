@@ -49,7 +49,7 @@ class Purchases extends ResourceBase {
 
     const ipfsHashBytes32 = contractData[5]
     let ipfsData = {}
-    if (ipfsHashBytes32) {
+    if (ipfsHashBytes32 && (ipfsHashBytes32 !== EMPTY_IPFS)) {
       const ipfsHash = this.contractService.getIpfsHashFromBytes32(
         ipfsHashBytes32
       )
