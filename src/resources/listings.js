@@ -472,7 +472,8 @@ class Listings extends ResourceBase {
       pictures: ipfsData.pictures,
       listingType: ipfsData.listingType,
       schemaType: ipfsData.schemaType,
-      slots: ipfsData.slots
+      slots: ipfsData.slots,
+      calendarStep: ipfsData.calendarStep
     }
   }
 }

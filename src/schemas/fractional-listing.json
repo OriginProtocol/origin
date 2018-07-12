@@ -9,6 +9,9 @@
         "timeIncrement": {
             "type": "string"
         },
+        "calendarStep": {
+          "type": "string"
+        },
         "slots": {
           "type": "array",
           "items": {
