@@ -4,6 +4,7 @@ import {localfy, storeData, loadData} from './tools'
 import Web3 from 'web3'
 import fetch from 'cross-fetch'
 import keyMirror from 'utils/keyMirror'
+import EventEmitter from 'events'
 
 import origin, {bridgeUrl, defaultProviderUrl} from './services/origin'
 
@@ -16,6 +17,7 @@ const API_WALLET_LINKER_UNLINK = API_WALLET_LINKER + "/unlink-wallet"
 const API_WALLET_LINKER_MESSAGES = API_WALLET_LINKER + "/wallet-messages"
 const API_WALLET_LINK_INFO = API_WALLET_LINKER + "/link-info"
 const API_WALLET_LINKER_RETURN_CALL = API_WALLET_LINKER + "/wallet-called"
+const API_WALLET_GET_LINKS = API_WALLET_LINKER + "/wallet-links/"
 const APN_NOTIFICATION_TYPE = "APN"
 const ETHEREUM_QR_PREFIX = "ethereum:"
 const ORIGIN_QR_PREFIX = "orgw:"
@@ -35,7 +37,8 @@ Events = keyMirror({
   LINKED:null,
   TRANSACTED:null,
   UNLINKED:null,
-  REJECT:null
+  REJECT:null,
+  LINKS:null
 }, "WalletEvents")
 
 const eventMatcherByLinkId = link_id => {
@@ -85,7 +88,6 @@ class OriginWallet {
     this.new_messages = true
     this.last_message_ids = {}
     this.check_messages_interval = setInterval(this.checkServerMessages.bind(this), 1000)
-    this.listeners = {}
 
     loadData(LAST_MESSAGE_IDS).then((ids) => { 
       if (ids) {
@@ -130,45 +132,30 @@ class OriginWallet {
       requestPermissions: true,
     })
 
+    this.events = new EventEmitter()
     this.onQRScanned = this.onQRScanned.bind(this)
   }
 
-  registerListener(event_type, callback)
-  {
-    this.listeners[event_type] = (this.listeners[event_type] || []).concat(callback)
-  }
-
-  unregisterListener(event_type, callback)
-  {
-    this.listeners[event_type] = (this.listeners[event_type] || []).filter(cb => cb != callback)
-  }
-
-  purgeListeners()
-  {
-    this.listeners = {}
-  }
 
   async fireEvent(event_type, event, matcher) {
-    let ts = new Date()
+    if (typeof(event) == 'object')
+    {
+      const ts = new Date()
+      if(!event.event_id)
+      {
+        //make it a true event by filling it
+        event = await this.extractEventInfo(event)
+        event.event_id = getEventId(event)
+        event.timestamp = ts
+      }
 
-    if (event && !event.event_id)
-    {
-      //make it a true event by filling it
-      event = await this.extractEventInfo(event)
-      event.event_id = getEventId(event)
-      event.timestamp = ts
+      // use a default event matcher
+      if (!matcher)
+      {
+        matcher = eventMatcherByEvent(event)
+      }
     }
-
-    // use a default event matcher
-    if (!matcher)
-    {
-      matcher = eventMatcherByEvent(event)
-    }
-    if (this.listeners[event_type])
-    {
-      this.listeners[event_type].forEach((callback) => 
-        callback(event, matcher));
-    }
+    this.events.emit(event_type, event, matcher)
   }
 
   getAccount() {
@@ -208,8 +195,6 @@ class OriginWallet {
     })
   }
 
-  
-
   doLink(wallet_token, code, current_rpc, current_accounts) {
     return this.doFetch(API_WALLET_LINKER_LINK, 'POST', {
       wallet_token,
@@ -217,13 +202,13 @@ class OriginWallet {
       current_rpc,
       current_accounts
     }).then((responseJson) => {
-      let app_info = responseJson.app_info
+      const app_info = responseJson.app_info
       console.log("We are now linked to a remote wallet:", responseJson, " browser is:", app_info)
 
       if (responseJson.link_id)
       {
         let link_id = responseJson.link_id
-        this.fireEvent(Events.LINKED, {link:{linked:true, link_id, return_url:responseJson.return_url, app_info:responseJson.app_info}})
+        this.fireEvent(Events.LINKED, {linked:true, link:{link_id, return_url:responseJson.return_url, app_info:responseJson.app_info, linked_at:new Date(responseJson.linked_at)}})
       }
 
       if (responseJson.pending_call)
@@ -258,12 +243,29 @@ class OriginWallet {
       console.log("We are now unlinked from remote wallet:", link_id)
       if (responseJson.success)
       {
-        this.fireEvent(Events.UNLINKED, {link_id}, eventMatcherByLinkId(link_id))
+        this.fireEvent(Events.UNLINKED, {link_id, unlinked_at:new Date()}, eventMatcherByLinkId(link_id))
       }
       return true
     }).catch((error) => {
       console.error(error)
     })
+  }
+
+
+  doGetLinkedDevices(wallet_token) {
+    return this.doFetch(API_WALLET_GET_LINKS + wallet_token, "GET").then((responseJson) => {
+      let devices = []
+      for(const l of responseJson){
+        devices.push({event_id:l.link_id, linked:l.linked, link:{app_info:l.app_info, link_id:l.link_id, linked_at:new Date(l.linked_at)}})
+      }
+      this.fireEvent(Events.LINKS, devices)
+    }).catch((error) => {
+      console.error(error)
+    })
+  }
+
+  getDevices() {
+    this.doGetLinkedDevices(this.state.deviceToken)
   }
 
 
@@ -594,7 +596,7 @@ class OriginWallet {
       this.doFetch(API_WALLET_LINK_INFO, 'POST',
         {code:linkCode}).then(responseJson => {
           //get info about the link
-          this.fireEvent(Events.PROMPT_LINK, {link:{linkCode, link_id:responseJson.link_id, return_url:responseJson.return_url, app_info:responseJson.app_info}})
+          this.fireEvent(Events.PROMPT_LINK, {linked:false, link:{linkCode, link_id:responseJson.link_id, return_url:responseJson.return_url, app_info:responseJson.app_info, expires_at:new Date(responseJson.expires_at)}})
         })
     }
   }

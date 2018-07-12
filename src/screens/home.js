@@ -42,6 +42,7 @@ class HomeScreen extends Component {
         <FlatList
           data={this.props.processed_events}
           renderItem={({item}) => {
+            console.log("Event item:", item)
             switch(item.action) {
               case 'purchase':
               case 'list':
@@ -56,7 +57,7 @@ class HomeScreen extends Component {
                   <DeviceItem item={item}
                     address ={myAddress}
                     balance ={ethBalance}
-                  handleUnlink = {() => originWallet.handleUnlink(item)}/>
+                    handleUnlink = {() => originWallet.handleUnlink(item)}/>
                 )
               default:
                 return null

@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { Alert, FlatList, StyleSheet, View } from 'react-native'
+import { connect } from 'react-redux'
 
 import DeviceItem from '../components/device-item'
+import originWallet from '../OriginWallet'
 
-export default class DevicesScreen extends Component {
+class DevicesScreen extends Component {
   static navigationOptions = {
     title: 'Devices',
     headerTitleStyle: {
@@ -13,45 +15,25 @@ export default class DevicesScreen extends Component {
     },
   }
 
+  componentDidMount(){
+    this.refreshList()
+  }
+
+  refreshList(){
+    originWallet.getDevices()
+  }
+
   render() {
     return (
       <FlatList
-        data={[
-          // objects here should all be linked: true
-          {
-            key: 'foo',
-            deviceId: 'JgC55UUqEs',
-            timestamp: '2018-06-01T04:48-0700',
-            linked: true,
-            link: {
-              app_info: {
-                browser: 'chrome',
-                platform: 'desktop',
-                language: 'en',
-              },
-            },
-          },
-          {
-            key: 'bar',
-            deviceId: 'GjF43HSuWf',
-            timestamp: new Date(),
-            linked: true,
-            link: {
-              app_info: {
-                'user-agent': 'some-user-agent?',
-                browser: 'unknown',
-                platform: 'mobile',
-                language: 'ko',
-              },
-            },
-          },
-        ]}
+        data={this.props.devices}
         renderItem={({item}) => (
           <DeviceItem
             item={item}
-            handleUnlink={() => Alert.alert('To Do', 'handle unlink')}
+            handleUnlink={() => {originWallet.handleUnlink(item); this.refreshList()}}
           />
         )}
+        keyExtractor={(item, index) => item.event_id}
         ItemSeparatorComponent={({highlighted}) => (
           <View style={styles.separator} />
         )}
@@ -60,6 +42,14 @@ export default class DevicesScreen extends Component {
     )
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    devices: state.devices.devices
+  }
+}
+
+export default connect(mapStateToProps)(DevicesScreen)
 
 const styles = StyleSheet.create({
   list: {

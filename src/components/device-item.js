@@ -22,9 +22,10 @@ export default class DeviceItem extends Component {
           }
         {item.linked && <Image source={require('../../assets/images/link-icon.png')} style={styles.icon} />}
         </View>
-        {!item.linked &&
+        {!item.linked && handleLink &&
           <View style={styles.content}>
             <Text style={styles.identification}>Link <Text style={styles.vendor}>{browser} on {platform}</Text>?</Text>
+            <Text style={styles.muted}>Expires on <Moment element={Text} format="MMMM D, YYYY @ h:mmA">{item.link.expires_at}</Moment></Text>
             <Text style={styles.muted}></Text>
             <View style={styles.actions}>
               <OriginButton size="small" type="primary" title="Link" onPress={handleLink} style={{ marginRight: 10 }} />
@@ -32,10 +33,17 @@ export default class DeviceItem extends Component {
             </View>
           </View>
         }
+        {!item.linked && !handleLink &&
+         <View style={styles.content}>
+            <Text style={styles.identification}>You had been linked to <Text style={styles.vendor}>{browser} on {platform}</Text></Text>
+            <Text style={styles.muted}>Unlinked on <Moment element={Text} format="MMMM D, YYYY @ h:mmA">{item.link.unlinked_at}</Moment></Text>
+            <Text style={styles.muted}></Text>
+        </View>
+        }
         {item.linked &&
           <View style={styles.content}>
             <Text style={styles.identification}><Text style={styles.vendor}>{platform} {browser}</Text>{item.link_id} </Text>
-            <Text style={styles.muted}>Linked <Moment element={Text} format="MMMM D, YYYY @ h:mmA">{item.timestamp}</Moment></Text>
+            <Text style={styles.muted}>Linked at <Moment element={Text} format="MMMM D, YYYY @ h:mmA">{item.link.linked_at}</Moment></Text>
             <View style={styles.actions}>
               {handleUnlink && <OriginButton size="small" type="primary" title="Unlink" onPress={handleUnlink} />}
             </View>
@@ -49,12 +57,6 @@ export default class DeviceItem extends Component {
 DeviceItem.propTypes = {
   item: PropTypes.shape({
     linked: PropTypes.bool.isRequired,
-    handleLink: (props, propName, componentName) => {
-      if (!props.linked && (props[propName] == undefined || typeof(props[propName] !== 'function'))) {
-        return new Error(`Prop item.handleLink of type 'function' is required for ${componentName} with prop item.linked: false`)
-      }
-    },
-    handleUnlink: PropTypes.function,
   }),
 }
 

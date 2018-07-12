@@ -7,6 +7,7 @@ import NavigationService from './NavigationService'
 import { fetchProfile } from 'actions/Profile'
 import { getBalance } from 'actions/Wallet'
 import { newEvent, updateEvent, processedEvent, setActiveEvent } from 'actions/WalletEvents'
+import { setDevices } from 'actions/Devices'
 
 import { connect, Provider } from 'react-redux'
 
@@ -183,40 +184,44 @@ class OriginNavWrapper extends Component {
 
   componentDidMount() {
     //register the service here
-    originWallet.registerListener(Events.PROMPT_LINK, (data, matcher) => {
+    originWallet.events.on(Events.PROMPT_LINK, (data, matcher) => {
       this.props.newEvent(matcher, data)
       this.props.setActiveEvent(data)
       NavigationService.navigate("Alerts")
     })
-    originWallet.registerListener(Events.PROMPT_TRANSACTION, (data, matcher) => {
+    originWallet.events.on(Events.PROMPT_TRANSACTION, (data, matcher) => {
       this.props.newEvent(matcher, data)
       this.props.setActiveEvent(data)
       NavigationService.navigate("Alerts")
     })
 
-    originWallet.registerListener(Events.NEW_ACCOUNT, (data, matcher) => {
+    originWallet.events.on(Events.NEW_ACCOUNT, (data, matcher) => {
       this.props.fetchProfile()
       this.props.getBalance()
     })
 
-    originWallet.registerListener(Events.LINKED, (data, matcher) => {
-      this.props.processedEvent(matcher, {status:'linked'}, data)
+    originWallet.events.on(Events.LINKED, (data, matcher) => {
+      this.props.processedEvent(matcher, {}, data)
       NavigationService.navigate("Home")
     })
 
-    originWallet.registerListener(Events.TRANSACTED, (data, matcher) => {
+    originWallet.events.on(Events.TRANSACTED, (data, matcher) => {
       this.props.processedEvent(matcher, {status:'completed'}, data)
       this.props.getBalance()
       NavigationService.navigate("Home")
     })
 
-    originWallet.registerListener(Events.UNLINKED, (data, matcher) => {
-      this.props.updateEvent(matcher, {status:'unlinked'})
+    originWallet.events.on(Events.UNLINKED, (data, matcher) => {
+      this.props.updateEvent(matcher, {linked:false})
     })
 
-    originWallet.registerListener(Events.REJECT, (data, matcher) => {
+    originWallet.events.on(Events.REJECT, (data, matcher) => {
       this.props.processedEvent(matcher, {status:'rejected'}, data)
       NavigationService.navigate("Home")
+    })
+
+    originWallet.events.on(Events.LINKS, (devices) => {
+      this.props.setDevices(devices)
     })
 
     originWallet.openWallet()
@@ -234,7 +239,8 @@ const mapDispatchToProps = dispatch => ({
   newEvent: (matcher, event) => dispatch(newEvent(matcher, event)),
   updateEvent: (matcher, update) => dispatch(updateEvent(matcher, update)),
   processedEvent: (matcher, update, new_event) => dispatch(processedEvent(matcher, update, new_event)),
-  setActiveEvent:(event) => dispatch(setActiveEvent(event))
+  setActiveEvent:(event) => dispatch(setActiveEvent(event)),
+  setDevices:(devices) => dispatch(setDevices(devices))
 })
 
 const OriginNavApp = connect(undefined, mapDispatchToProps)(OriginNavWrapper)
