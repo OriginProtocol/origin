@@ -5,10 +5,10 @@ services:
     image: origin-image
     build: ./container
     volumes:
-      - ./bridge:/opt/origin-bridge/source
-      - ./js:/opt/origin-js/source
+      - ./origin-bridge:/opt/origin-bridge/source
+      - ./origin-js:/opt/origin-js/source
       - /opt/origin-js/source/node_modules
-      - ./dapp:/opt/origin-dapp/source
+      - ./origin-dapp:/opt/origin-dapp/source
       - /opt/origin-dapp/source/node_modules
     ports:
       - "3000:3000"

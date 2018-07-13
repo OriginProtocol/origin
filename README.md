@@ -7,9 +7,9 @@ Head to https://www.originprotocol.com/developers to learn more about what we're
 Origin Box is a [Docker](https://www.docker.com/) container setup for running all core Origin components together in a single environment, preconfigured to work together.
 
 Origin Box currently supports the following components:
-- [Demo DApp](https://github.com/OriginProtocol/origin-dapp)
-- [Origin.js](https://github.com/OriginProtocol/origin-js)
-- [Bridge Server](https://github.com/originprotocol/origin-bridge)
+- [origin-dapp](https://github.com/OriginProtocol/origin-dapp)
+- [origin-js](https://github.com/OriginProtocol/origin-js)
+- [origin-bridge](https://github.com/originprotocol/origin-bridge)
 
 Each repo is symlinked from the container to a local directory. You may edit the source code using your favorite editor. The repo directories just normal git repositories, so you can treat them as you would any other git repository. You can make changes, commit them, and change branches—and the container will be automatically kept in sync.
 
@@ -55,7 +55,7 @@ If desired, you may `cd` into these directores and checkout different branches.
 ./scripts/start.sh
 ```
 
-This will take a few minutes to run. You can tell all components are running when you see a steady stream of lines sayins `beat: Waking up in 9.99 seconds.`. 
+This will take a few minutes to run. You can tell all components are running when you see a steady stream of lines sayins `beat: Waking up in 9.99 seconds.`.
 
 You can then access the Demo DApp, local blockchain, and Bridge Server in the usual way on the usual ports, from your host machine. For example, the Demo Dapp will be at http://localhost:3000/#/, and a sample IPFS listing can be loaded from http://localhost:8080/ipfs/QmTfozaMrUBZdYBzPgxuSC15zBRgLCEfQmWFZwmDHYGY1e
 
@@ -65,7 +65,7 @@ You can then access the Demo DApp, local blockchain, and Bridge Server in the us
 
 ### Repo-specific instructions:
 
-- [origin-bridge](bridge.md)
+- [origin-bridge](origin-bridge.md)
 
 ### pm2
 
@@ -116,4 +116,4 @@ Currently we're using [pm2](http://pm2.keymetrics.io/) to automatically start an
 ```
 Error starting userland proxy: Bind for 0.0.0.0:5000 failed: port is already allocated
 ```
-This indicates that you have a process using a port needed by origin-box. This often happens if you are running origin-website, or running the origin-dapp outside the box. Use `ps` or Activity Monitor to search for `node`, `python`, or any process that might be using ports 5000, 5002, 6379, 8080, 9200, 5432, 4000, 4002, and kill the process. 
+This indicates that you have a process using a port needed by origin-box. This often happens if you are running origin-website, or running the origin-dapp outside the box. Use `ps` or Activity Monitor to search for `node`, `python`, or any process that might be using ports 5000, 5002, 6379, 8080, 9200, 5432, 4000, 4002, and kill the process.

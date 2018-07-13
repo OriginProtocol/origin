@@ -1,24 +1,24 @@
 # Clone bridge server source
-git clone https://github.com/OriginProtocol/origin-bridge.git bridge
+git clone https://github.com/OriginProtocol/origin-bridge.git
 
 # Checkout bridge server develop branch
-cd bridge
+cd origin-bridge
 git checkout develop
 cd ..
 
 # Clone js source
-git clone https://github.com/OriginProtocol/origin-js.git js
+git clone https://github.com/OriginProtocol/origin-js.git
 
 # Checkout js develop branch
-cd js
+cd origin-js
 git checkout develop
 cd ..
 
 # Clone dapp source
-git clone https://github.com/OriginProtocol/origin-dapp.git dapp
+git clone https://github.com/OriginProtocol/origin-dapp.git
 
 # Checkout dapp develop branch
-cd dapp
+cd origin-dapp
 git checkout develop
 cd ..
 
