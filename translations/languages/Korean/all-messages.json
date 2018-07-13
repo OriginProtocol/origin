@@ -333,7 +333,7 @@
   "VerifyAirbnb.enterAirbnbProfileUrl": "아래에 Airbnb 프로필 Url을 입력하세요.",
   "VerifyAirbnb.airbnbProfilePublished": "다른 사용자가 당신이 확인된 Airbnb 프로필을 가지고 있음을 알 수 있습니다.",
   "VerifyAirbnb.enterCodeIntoAirbnb": "Airbnb 웹사이트로 이동하여 프로필 수정하기에서 다음의 문구를 프로필 설명란에 붙여넣기 하십시오.",
-  "VerifyAirbnb.continueToConfirmationCodeCheck": "Continue once the confirmation code is entered in your Airbnb profile.",
+  "VerifyAirbnb.continueToConfirmationCodeCheck": "당신의 Airbnb 프로필에 확인 코드를 입력한 후 계속합니다.",
   "VerifyEmail.continue": "계속",
   "VerifyEmail.cancel": "취소",
   "VerifyEmail.validEmail": "유효한 이메일 주소",
