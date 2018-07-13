@@ -9,34 +9,16 @@ import Avatar from './avatar'
 import DialogueListItem from './dialogue-list-item'
 import PurchaseProgress from './purchase-progress'
 
-import data from '../data'
+import groupByArray from 'utils/groupByArray'
+
 import origin from '../services/origin'
-
-// may not be necessary when using real data
-const groupByArray = (xs, key) => {
-  return xs.reduce((rv, x) => {
-    let v = key instanceof Function ? key(x) : x[key]
-    let el = rv.find((r) => r && r.key === v)
-
-    if (el) {
-      el.values.push(x)
-    } else {
-      rv.push({ key: v, values: [x] })
-    }
-
-    return rv
-  }, [])
-}
 
 class Messages extends Component {
   constructor(props) {
     super(props)
 
-    const dialogues = groupByArray(data.messages, 'dialogueId')
-
     this.state = {
       counterparty: {},
-      dialogues,
       listing: null,
       purchase: null,
       selectedDialogueId: '',
@@ -64,7 +46,7 @@ class Messages extends Component {
   }
 
   detectSelectedDialogue() {
-    const selectedDialogueId = this.props.match.params.dialogueId || (this.state.dialogues[0] || {}).key
+    const selectedDialogueId = this.props.match.params.dialogueId || (this.props.dialogues[0] || {}).address
 
     this.setState({ selectedDialogueId })
   }
@@ -87,29 +69,30 @@ class Messages extends Component {
   }
 
   identifyCounterparty() {
-    const web3Account = this.props
-    const { dialogues, selectedDialogueId } = this.state
+    const { dialogues, web3Account } = this.props
+    const { selectedDialogueId } = this.state
     const dialogue = dialogues.find(d => d.key === selectedDialogueId)
-    const { fromAddress, fromName, toAddress, toName } = dialogue.values[0]
-    const counterpartyRole = fromAddress === web3Account ? 'recipient' : 'sender'
+    const { fromName, recipients, senderAddress, toName } = dialogue.values[0]
+    const counterpartyRole = senderAddress === web3Account ? 'recipient' : 'sender'
 
     this.setState({
       counterparty: counterpartyRole === 'recipient' ? {
-        address: toAddress,
+        address: recipients().find(addr => addr !== senderAddress),
         name: toName,
       } : {
-        address: fromAddress,
+        address: senderAddress,
         name: fromName,
       },
     })
   }
 
   async loadListing() {
-    const { dialogues, selectedDialogueId } = this.state
+    const { dialogues } = this.props
+    const { selectedDialogueId } = this.state
     // find the most recent listing context or set empty value
     const { listingId } = dialogues.find(d => d.key === selectedDialogueId)
                           .values
-                          .sort((a, b) => a.createdAt < b.createdAt ? -1 : 1)
+                          .sort((a, b) => a.created < b.created ? -1 : 1)
                           .find(m => m.listingId) || {}
 
     const listing = listingId ? (await origin.listings.get(listingId)) : null
@@ -126,9 +109,8 @@ class Messages extends Component {
   }
 
   render() {
-    const { web3Account } = this.props
-    const { counterparty, dialogues, listing, purchase, selectedDialogueId } = this.state
-    const { messages } = data
+    const { dialogues, messages, web3Account } = this.props
+    const { counterparty, listing, purchase, selectedDialogueId } = this.state
     const { address, name, pictures } = listing || {}
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
     const perspective = purchase ? (purchase.buyerAddress === web3Account ? 'buyer' : 'seller') : null
@@ -203,21 +185,21 @@ class Messages extends Component {
               }
               <div className="dialogue">
                 {messages.filter(m => m.dialogueId === selectedDialogueId)
-                  .sort((a, b) => a.createdAt < b.createdAt ? -1 : 1)
+                  .sort((a, b) => a.index < b.index ? -1 : 1)
                   .map(m => {
                     return (
-                      <div key={`${m.createdAt.toISOString()}:${m.fromAddress}:${m.toAddress}`} className="d-flex message">
+                      <div key={m.hash} className="d-flex message">
                         <Avatar placeholderStyle="blue" />
                         <div className="content-container">
                           <div className="sender">
-                            {m.fromName || m.fromAddress}
+                            {m.senderAddress/* || m.fromName*/}
                           </div>
                           <div className="message">
                             {m.content}
                           </div>
                         </div>
                         <div className="timestamp text-right">
-                          {moment(m.createdAt).format('MMM Do h:mm a')}
+                          {moment(m.created).format('MMM Do h:mm a')}
                         </div>
                       </div>
                     )
@@ -234,6 +216,8 @@ class Messages extends Component {
 
 const mapStateToProps = state => {
   return {
+    dialogues: groupByArray(state.messages, 'dialogueId'),
+    messages: state.messages,
     web3Account: state.app.web3.account,
   }
 }

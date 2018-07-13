@@ -3,7 +3,10 @@ import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { IntlProvider } from 'react-intl'
 
+import origin from '../services/origin'
+
 import { setMobile, localizeApp } from 'actions/App'
+import { addMessage } from 'actions/Message'
 import { fetchProfile } from 'actions/Profile'
 import { init as initWallet } from 'actions/Wallet'
 
@@ -59,6 +62,15 @@ class App extends Component {
 
   componentWillMount() {
     this.props.localizeApp()
+
+    origin.messaging.events.on('msg', obj => {
+      this.props.addMessage(obj)
+    })
+
+    // To Do: handle incoming messages when no Origin Messaging Private Key is available
+    origin.messaging.events.on('emsg', obj => {
+      console.error('A message has arrived that could not be decrypted:', obj)
+    })
   }
 
   componentDidMount() {
@@ -128,6 +140,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+  addMessage: (obj) => dispatch(addMessage(obj)),
   fetchProfile: () => dispatch(fetchProfile()),
   initWallet: () => dispatch(initWallet()),
   setMobile: device => dispatch(setMobile(device)),

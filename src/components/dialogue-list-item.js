@@ -4,17 +4,19 @@ import { connect } from 'react-redux'
 import Avatar from './avatar'
 import Timelapse from './timelapse'
 
+import origin from '../services/origin'
+
 class DialogueListItem extends Component {
   render() {
     const { active, dialogue, handleDialogueSelect, key, web3Account } = this.props
-    const lastMessage = dialogue.values.sort((a, b) => a.createdAt < b.createdAt ? -1 : 1)[dialogue.values.length - 1]
-    const { content, createdAt, fromAddress, fromName, toAddress, toName } = lastMessage
-    const role = fromAddress === web3Account ? 'sender' : 'recipient'
+    const lastMessage = dialogue.values.sort((a, b) => a.created < b.created ? -1 : 1)[dialogue.values.length - 1]
+    const { content, created, fromName, recipients, senderAddress, toName } = lastMessage
+    const role = senderAddress === web3Account ? 'sender' : 'recipient'
     const counterparty = role === 'sender' ? {
-      address: toAddress,
+      address: recipients.find(addr => addr !== senderAddress),
       name: toName,
     } : {
-      address: fromAddress,
+      address: senderAddress,
       name: fromName,
     }
     const unreadCount = dialogue.values.filter(m => !m.readAt).length
@@ -35,7 +37,7 @@ class DialogueListItem extends Component {
         </div>
         <div className="meta-container text-right">
           <div className="time-reference text-right">
-            <Timelapse abbreviated={true} reactive={false} reference={createdAt} />
+            <Timelapse abbreviated={true} reactive={false} reference={created} />
           </div>
           {!!unreadCount &&
             <div className="unread count text-right">

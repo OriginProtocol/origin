@@ -1,41 +1,20 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 
+import groupByArray from 'utils/groupByArray'
+
 import DialogueListItem from '../dialogue-list-item'
-
-import data from '../../data'
-
-// may not be necessary when using real data
-const groupByArray = (xs, key) => {
-  return xs.reduce((rv, x) => {
-    let v = key instanceof Function ? key(x) : x[key]
-    let el = rv.find((r) => r && r.key === v)
-
-    if (el) {
-      el.values.push(x)
-    } else {
-      rv.push({ key: v, values: [x] })
-    }
-
-    return rv
-  }, [])
-}
 
 class MessagesDropdown extends Component {
   constructor(props) {
     super(props)
-
-    const dialogues = groupByArray(data.messages, 'dialogueId')
-    const mostRecent = dialogues[0] || {}
-
-    this.state = { dialogues }
   }
 
   render() {
-    const { history } = this.props
-    const { dialogues } = this.state
+    const { dialogues, history } = this.props
 
     return (
       <div className="nav-item messages dropdown">
@@ -59,11 +38,7 @@ class MessagesDropdown extends Component {
               </h3>
             </header>
             <div className="messages-list">
-              {dialogues.map(d => {
-                return (
-                  <DialogueListItem key={d.key} dialogue={d} active={false} handleDialogueSelect={() => history.push(`/messages/${d.key}`)} />
-                )
-              })}
+              {dialogues.map(d => <DialogueListItem key={d.key} dialogue={d} active={false} handleDialogueSelect={() => history.push(`/messages/${d.key}`)} />)}
             </div>
             <footer>
               <Link to="/messages">
@@ -80,4 +55,10 @@ class MessagesDropdown extends Component {
   }
 }
 
-export default withRouter(MessagesDropdown)
+const mapStateToProps = state => {
+  return {
+    dialogues: groupByArray(state.messages, 'dialogueId'),
+  }
+}
+
+export default withRouter(connect(mapStateToProps)(MessagesDropdown))
