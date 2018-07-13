@@ -2352,6 +2352,10 @@ form .stars img {
   height: 114px;
 }
 
+.conversation {
+  margin-bottom: auto;
+}
+
 .conversation .message:not(:last-of-type) {
   margin-bottom: 20px;
 }
@@ -2377,6 +2381,23 @@ form .stars img {
   font-size: 0.75rem;
   margin-left: auto;
   padding-top: 8px;
+}
+
+.new-message {
+  width: 100%;
+}
+
+.new-message input {
+  border: 0;
+  border-top: 1px solid var(--pale-grey);
+  margin-left: -20px;
+  margin-right: -20px;
+  padding: 20px;
+  width: calc(100% + 20px + 20px);
+}
+
+.new-message input:focus {
+  outline: none;
 }
 
 /* Notifications */

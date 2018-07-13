@@ -17,9 +17,12 @@ class Messages extends Component {
   constructor(props) {
     super(props)
 
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
     this.state = {
       counterparty: {},
       listing: null,
+      newMessage: '',
       purchase: null,
       selectedConversationId: '',
     }
@@ -77,13 +80,38 @@ class Messages extends Component {
 
     this.setState({
       counterparty: counterpartyRole === 'recipient' ? {
-        address: recipients().find(addr => addr !== senderAddress),
+        address: recipients.find(addr => addr !== senderAddress),
         name: toName,
       } : {
         address: senderAddress,
         name: fromName,
       },
     })
+  }
+
+  handleChange(e) {
+    const newMessage = e.target.value
+
+    this.setState({ newMessage })
+  }
+
+  async handleSubmit(e) {
+    e.preventDefault()
+
+    const { web3Account } = this.props
+    const { counterparty, newMessage } = this.state
+
+    try {
+      await originTest.messaging.sendConvMessage(
+        counterparty.address,
+        newMessage
+      )
+
+      this.setState({ newMessage: '' })
+    } catch(err) {
+      console.error(err)
+    }
+
   }
 
   async loadListing() {
@@ -110,7 +138,7 @@ class Messages extends Component {
 
   render() {
     const { conversations, messages, web3Account } = this.props
-    const { counterparty, listing, purchase, selectedConversationId } = this.state
+    const { counterparty, listing, newMessage, purchase, selectedConversationId } = this.state
     const { address, name, pictures } = listing || {}
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
     const perspective = purchase ? (purchase.buyerAddress === web3Account ? 'buyer' : 'seller') : null
@@ -127,7 +155,7 @@ class Messages extends Component {
                 )
               })}
             </div>
-            <div className="conversation-col col-12 col-sm-8 col-lg-9">
+            <div className="conversation-col col-12 col-sm-8 col-lg-9 d-flex flex-column">
               {listing &&
                 <div className="listing-summary d-flex">
                   <div className="aspect-ratio">
@@ -190,8 +218,8 @@ class Messages extends Component {
                     return (
                       <div key={m.hash} className="d-flex message">
                         <Avatar placeholderStyle="blue" />
-                        <div className="content-container">
-                          <div className="sender">
+                        <div className="content-container text-truncate">
+                          <div className="sender text-truncate">
                             {m.senderAddress/* || m.fromName*/}
                           </div>
                           <div className="message">
@@ -206,6 +234,11 @@ class Messages extends Component {
                   })
                 }
               </div>
+              {selectedConversationId &&
+                <form className="new-message" onSubmit={this.handleSubmit}>
+                  <input type="text" value={newMessage} onChange={this.handleChange} />
+                </form>
+              }
             </div>
           </div>
         </div>
