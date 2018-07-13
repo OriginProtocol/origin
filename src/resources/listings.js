@@ -220,24 +220,23 @@ class Listings extends ResourceBase {
     )
   }
 
-  async getPurchases(listingAddr, buyerAddr) {
-    const purchasesLength = await this.purchasesLength(listingAddr)
+  async getPurchases(address) {
+    const purchasesLength = await this.purchasesLength(address)
     const indices = []
     for (let i = 0; i < purchasesLength; i++) {
       indices.push(i)
     }
-    const purchases = await Promise.all(
+    return await Promise.all(
       indices.map(async index => {
         const purchaseAddress = await this.contractService.contractFn(
           this.contractService.listingContract,
-          listingAddr,
+          address,
           'getPurchase',
           [index]
         )
         return this.purchases.get(purchaseAddress)
       })
     )
-    return buyerAddr ? purchases.filter(purchase => purchase.buyerAddress === buyerAddr) : purchases
   }
 
   async purchaseAddressByIndex(address, index) {
