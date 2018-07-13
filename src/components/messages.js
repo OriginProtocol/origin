@@ -1,12 +1,11 @@
-import moment from 'moment'
 import React, { Component } from 'react'
 import { FormattedDate, FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 
-import Avatar from './avatar'
 import ConversationListItem from './conversation-list-item'
+import Message from './message'
 import PurchaseProgress from './purchase-progress'
 
 import groupByArray from 'utils/groupByArray'
@@ -33,8 +32,9 @@ class Messages extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { conversationId } = this.props.match.params
+    const { conversations, match } = this.props
     const { selectedConversationId } = this.state
+    const { conversationId } = match.params
 
     // on route change
     if (conversationId && conversationId !== prevProps.match.params.conversationId) {
@@ -45,6 +45,11 @@ class Messages extends Component {
     if (selectedConversationId && selectedConversationId !== prevState.selectedConversationId) {
       this.identifyCounterparty()
       this.loadListing()
+    }
+
+    // autoselect a conversation
+    if (!selectedConversationId && conversations.length) {
+      this.setState({ selectedConversationId: conversations[0].key })
     }
   }
 
@@ -214,24 +219,7 @@ class Messages extends Component {
               <div className="conversation">
                 {messages.filter(m => m.conversationId === selectedConversationId)
                   .sort((a, b) => a.index < b.index ? -1 : 1)
-                  .map(m => {
-                    return (
-                      <div key={m.hash} className="d-flex message">
-                        <Avatar placeholderStyle="blue" />
-                        <div className="content-container text-truncate">
-                          <div className="sender text-truncate">
-                            {m.senderAddress/* || m.fromName*/}
-                          </div>
-                          <div className="message">
-                            {m.content}
-                          </div>
-                        </div>
-                        <div className="timestamp text-right">
-                          {moment(m.created).format('MMM Do h:mm a')}
-                        </div>
-                      </div>
-                    )
-                  })
+                  .map(m => <Message key={m.hash} message={m} />)
                 }
               </div>
               {selectedConversationId &&

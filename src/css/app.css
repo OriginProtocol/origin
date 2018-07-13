@@ -2279,7 +2279,6 @@ form .stars img {
 
 .conversation-list-item .content-container {
   font-weight: normal;
-  margin-right: 5px;
 }
 
 .conversation-list-item .message {
@@ -2314,6 +2313,12 @@ form .stars img {
 .messages-wrapper .sender {
   font-size: 1rem;
   font-weight: bold;
+  vertical-align: top;
+}
+
+.messages-wrapper .timestamp {
+  line-height: 2;
+  vertical-align: top;
 }
 
 .messages-wrapper .listing-summary {
@@ -2354,6 +2359,7 @@ form .stars img {
 
 .conversation {
   margin-bottom: auto;
+  padding-bottom: 20px;
 }
 
 .conversation .message:not(:last-of-type) {
@@ -2363,6 +2369,15 @@ form .stars img {
 .conversation .avatar-container {
   height: 60px;
   width: 60px;
+}
+
+.conversation .content-container {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.conversation .meta-container {
+  flex-wrap: wrap;
 }
 
 .conversation .content {
@@ -2379,7 +2394,6 @@ form .stars img {
   color: #98a7b4;
   flex-shrink: 0;
   font-size: 0.75rem;
-  margin-left: auto;
   padding-top: 8px;
 }
 
