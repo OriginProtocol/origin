@@ -228,7 +228,6 @@ class OriginNavWrapper extends Component {
   }
 
   componentWillUnmount() {
-    originWallet.purgeListeners()
     originWallet.closeWallet()
   }
 }
