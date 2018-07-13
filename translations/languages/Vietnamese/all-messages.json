@@ -1,5 +1,5 @@
 {
-  "connectivity.mainEthereumNetwork": "Các bản thử nghiệm Ethereum chính",
+  "connectivity.mainEthereumNetwork": "Mạng lưới Ethereum chính thức",
   "connectivity.mordenTestNetwork": "Bản thử nghiệm Morden",
   "connectivity.ropstenTestNetwork": "Bản thử nghiệm Ropsten",
   "connectivity.rinkebyTestNetwork": "Bản thử nghiệm Rinkeby",
