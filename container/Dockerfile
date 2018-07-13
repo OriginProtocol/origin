@@ -75,6 +75,10 @@ RUN ../origin-bridge-venv/bin/pip3.6 install kombu==4.1
 # https://github.com/OriginProtocol/origin-bridge/issues/74
 RUN sed -i '24s/.*/    return True\n    """/' /opt/origin-bridge/origin-bridge-venv/lib/python3.6/site-packages/ipfsapi/client.py
 
+# Copy wait for script for startup dependencies
+COPY files/scripts/wait-for.sh /usr/local/bin
+RUN chmod +x /usr/local/bin/wait-for.sh
+
 # Copy start scripts for js and dapp
 COPY files/scripts/start-js.sh /opt/origin-js/scripts/start-js.sh
 COPY files/scripts/start-dapp.sh /opt/origin-dapp/scripts/start-dapp.sh
