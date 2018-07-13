@@ -37,11 +37,18 @@ function validate(validateFn, data, schema) {
 }
 
 class Listings extends ResourceBase {
-  constructor({ contractService, ipfsService, fetch, indexingServerUrl }) {
+  constructor({
+    contractService,
+    ipfsService,
+    fetch,
+    indexingServerUrl,
+    purchases
+  }) {
     super({ contractService, ipfsService })
     this.contractDefinition = this.contractService.listingContract
     this.fetch = fetch
     this.indexingServerUrl = indexingServerUrl
+    this.purchases = purchases
   }
 
   /*
@@ -121,7 +128,7 @@ class Listings extends ResourceBase {
     if (ipfsData.listingType === unitListingType) {
       return await this.getUnitListing(address, ipfsData, ipfsHash)
     } else if (ipfsData.listingType === fractionalListingType) {
-      return this.getFractionalListing(address, ipfsData, ipfsHash)
+      return await this.getFractionalListing(address, ipfsData, ipfsHash)
     } else {
       throw new Error('Invalid listing type:', ipfsData.listingType)
     }
@@ -213,6 +220,25 @@ class Listings extends ResourceBase {
     )
   }
 
+  async getPurchases(address) {
+    const purchasesLength = await this.purchasesLength(address)
+    const indices = []
+    for (let i = 0; i < purchasesLength; i++) {
+      indices.push(i)
+    }
+    return await Promise.all(
+      indices.map(async index => {
+        const purchaseAddress = await this.contractService.contractFn(
+          this.contractService.listingContract,
+          address,
+          'getPurchase',
+          [index]
+        )
+        return this.purchases.get(purchaseAddress)
+      })
+    )
+  }
+
   async purchaseAddressByIndex(address, index) {
     return await this.contractService.contractFn(
       this.contractService.unitListingContract,
@@ -248,13 +274,20 @@ class Listings extends ResourceBase {
     console.log(`IPFS file created with hash: ${ipfsHash} for data:`)
     console.log(jsonBlob)
 
+    // For now, accept price in either wei or eth for backwards compatibility
+    // `price` is now deprecated. `priceWei` should be used instead.
+    const priceEth = String(formListing.formData.price)
+    const priceWei = formListing.formData.priceWei
+      ? String(formListing.formData.priceWei)
+      : this.contractService.web3.utils.toWei(priceEth, 'ether')
+
     // Submit to ETH contract
     const units = 1 // TODO: Allow users to set number of units in form
     let transactionReceipt
     try {
       transactionReceipt = await this.submitUnitListing(
         ipfsHash,
-        formListing.formData.price,
+        priceWei,
         units
       )
     } catch (error) {
@@ -333,23 +366,19 @@ class Listings extends ResourceBase {
     return transactionReceipt
   }
 
-  async submitUnitListing(ipfsListing, ethPrice, units) {
+  async submitUnitListing(ipfsListing, priceWei, units) {
     try {
       const account = await this.contractService.currentAccount()
       const instance = await this.contractService.deployed(
         this.contractService.listingsRegistryContract
       )
 
-      const weiToGive = this.contractService.web3.utils.toWei(
-        String(ethPrice),
-        'ether'
-      )
       // Note we cannot get the listingId returned by our contract.
       // See: https://forum.ethereum.org/discussion/comment/31529/#Comment_31529
       return instance.methods
         .create(
           this.contractService.getBytes32FromIpfsHash(ipfsListing),
-          weiToGive,
+          priceWei,
           units
         )
         .send({ from: account, gas: 4476768 })
@@ -379,29 +408,31 @@ class Listings extends ResourceBase {
     const url = appendSlash(this.indexingServerUrl) + 'listing'
     const response = await this.fetch(url, { method: 'GET' })
     const json = await response.json()
-    return Promise.all(json.objects.map(async obj => {
-      const ipfsData = obj['ipfs_data']
-      // While we wait on https://github.com/OriginProtocol/origin-bridge/issues/18
-      // we fetch the array of image data strings for each listing
-      const indexedIpfsData = await this.ipfsService.getFile(obj['ipfs_hash'])
-      const pictures = indexedIpfsData.data.pictures
-      return {
-        address: obj['contract_address'],
-        ipfsHash: obj['ipfs_hash'],
-        sellerAddress: obj['owner_address'],
-        price: Number(obj['price']),
-        unitsAvailable: Number(obj['units']),
-        created: obj['created_at'],
-        expiration: obj['expires_at'],
+    return Promise.all(
+      json.objects.map(async obj => {
+        const ipfsData = obj['ipfs_data']
+        // While we wait on https://github.com/OriginProtocol/origin-bridge/issues/18
+        // we fetch the array of image data strings for each listing
+        const indexedIpfsData = await this.ipfsService.getFile(obj['ipfs_hash'])
+        const pictures = indexedIpfsData.data.pictures
+        return {
+          address: obj['contract_address'],
+          ipfsHash: obj['ipfs_hash'],
+          sellerAddress: obj['owner_address'],
+          price: Number(obj['price']),
+          unitsAvailable: Number(obj['units']),
+          created: obj['created_at'],
+          expiration: obj['expires_at'],
 
-        name: ipfsData ? ipfsData['name'] : null,
-        category: ipfsData ? ipfsData['category'] : null,
-        description: ipfsData ? ipfsData['description'] : null,
-        location: ipfsData ? ipfsData['location'] : null,
-        listingType: ipfsData ? ipfsData['listingType'] : unitListingType,
-        pictures
-      }
-    }))
+          name: ipfsData ? ipfsData['name'] : null,
+          category: ipfsData ? ipfsData['category'] : null,
+          description: ipfsData ? ipfsData['description'] : null,
+          location: ipfsData ? ipfsData['location'] : null,
+          listingType: ipfsData ? ipfsData['listingType'] : unitListingType,
+          pictures
+        }
+      })
+    )
   }
 
   async getUnitListing(listingAddress, ipfsData, ipfsHash) {
@@ -425,7 +456,8 @@ class Listings extends ResourceBase {
       description: ipfsData.description,
       location: ipfsData.location,
       pictures: ipfsData.pictures,
-      listingType: ipfsData.listingType
+      listingType: ipfsData.listingType,
+      schemaType: ipfsData.schemaType
     }
   }
 
@@ -439,7 +471,9 @@ class Listings extends ResourceBase {
       location: ipfsData.location,
       pictures: ipfsData.pictures,
       listingType: ipfsData.listingType,
-      slots: ipfsData.slots
+      schemaType: ipfsData.schemaType,
+      slots: ipfsData.slots,
+      calendarStep: ipfsData.calendarStep
     }
   }
 }

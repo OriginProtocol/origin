@@ -46,13 +46,24 @@ class Purchases extends ResourceBase {
 
   async get(address) {
     const contractData = await this.contractFn(address, 'data')
+
+    const ipfsHashBytes32 = contractData[5]
+    let ipfsData = {}
+    if (ipfsHashBytes32 && (ipfsHashBytes32 !== EMPTY_IPFS)) {
+      const ipfsHash = this.contractService.getIpfsHashFromBytes32(
+        ipfsHashBytes32
+      )
+      ipfsData = await this.ipfsService.getFile(ipfsHash)
+    }
+
     return {
       address: address,
       stage: _NUMBERS_TO_STAGE[contractData[0]],
       listingAddress: contractData[1],
       buyerAddress: contractData[2],
       created: Number(contractData[3]),
-      buyerTimeout: Number(contractData[4])
+      buyerTimeout: Number(contractData[4]),
+      ipfsData
     }
   }
 

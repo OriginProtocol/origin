@@ -3,9 +3,6 @@
   "$id": "listing.json",
   "type": "object",
   "properties": {
-    "priceWei": {
-      "type": "number"
-    },
     "name": {
       "type": "string"
     },
@@ -28,6 +25,9 @@
       }
     },
     "listingType": {
+      "type": "string"
+    },
+    "schemaType": {
       "type": "string"
     }
   }

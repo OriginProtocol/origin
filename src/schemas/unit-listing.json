@@ -4,9 +4,9 @@
   "$merge": {
     "source": { "$ref": "listing.json" },
     "with": {
-      "required": ["name", "price"],
+      "required": ["name"],
       "properties": {
-        "price": {
+        "priceWei": {
           "type": "number"
         },
         "unitsAvailable": {

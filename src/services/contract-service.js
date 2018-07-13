@@ -2,7 +2,9 @@ import ClaimHolderRegisteredContract from './../../contracts/build/contracts/Cla
 import ClaimHolderPresignedContract from './../../contracts/build/contracts/ClaimHolderPresigned.json'
 import ClaimHolderLibrary from './../../contracts/build/contracts/ClaimHolderLibrary.json'
 import KeyHolderLibrary from './../../contracts/build/contracts/KeyHolderLibrary.json'
+import PurchaseLibrary from './../../contracts/build/contracts/PurchaseLibrary.json'
 import ListingsRegistryContract from './../../contracts/build/contracts/ListingsRegistry.json'
+import ListingsRegistryStorageContract from './../../contracts/build/contracts/ListingsRegistryStorage.json'
 import ListingContract from './../../contracts/build/contracts/Listing.json'
 import UnitListingContract from './../../contracts/build/contracts/UnitListing.json'
 import FractionalListingContract from './../../contracts/build/contracts/FractionalListing.json'
@@ -25,6 +27,7 @@ class ContractService {
     const contracts = {
       listingContract: ListingContract,
       listingsRegistryContract: ListingsRegistryContract,
+      listingsRegistryStorageContract: ListingsRegistryStorageContract,
       unitListingContract: UnitListingContract,
       fractionalListingContract: FractionalListingContract,
       purchaseContract: PurchaseContract,
@@ -36,6 +39,7 @@ class ContractService {
     this.libraries = {}
     this.libraries.ClaimHolderLibrary = ClaimHolderLibrary
     this.libraries.KeyHolderLibrary = KeyHolderLibrary
+    this.libraries.PurchaseLibrary = PurchaseLibrary
     for (const name in contracts) {
       this[name] = contracts[name]
       try {

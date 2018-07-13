@@ -90,8 +90,8 @@ contract Purchase {
   function data()
   public
   view
-  returns (Stages _stage, Listing _listingContract, address _buyer, uint _created, uint _buyerTimeout) {
-      return (stage(), listingContract, buyer, created, buyerTimeout);
+  returns (Stages _stage, Listing _listingContract, address _buyer, uint _created, uint _buyerTimeout, bytes32 _ipfsHash) {
+      return (stage(), listingContract, buyer, created, buyerTimeout, ipfsHash);
   }
 
   // Pay for listing
