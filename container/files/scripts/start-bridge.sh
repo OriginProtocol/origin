@@ -6,4 +6,5 @@ ln -sfn /opt/origin-js/source/contracts/build/contracts /opt/origin-bridge/sourc
 cd $BRIDGE_SERVER_PATH
 source $BRIDGE_SERVER_ENV_PATH/bin/activate
 main.py flask db migrate
-python main.py
+
+wait-for.sh -t 0 -q localhost:8545 -- wait-for.sh -t 0 -q localhost:8080 -- echo 'origin-js is available, starting origin-bridge...' && python main.py
