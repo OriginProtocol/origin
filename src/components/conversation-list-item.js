@@ -6,10 +6,10 @@ import Timelapse from './timelapse'
 
 import origin from '../services/origin'
 
-class DialogueListItem extends Component {
+class ConversationListItem extends Component {
   render() {
-    const { active, dialogue, handleDialogueSelect, key, web3Account } = this.props
-    const lastMessage = dialogue.values.sort((a, b) => a.created < b.created ? -1 : 1)[dialogue.values.length - 1]
+    const { active, conversation, handleConversationSelect, key, web3Account } = this.props
+    const lastMessage = conversation.values.sort((a, b) => a.created < b.created ? -1 : 1)[conversation.values.length - 1]
     const { content, created, fromName, recipients, senderAddress, toName } = lastMessage
     const role = senderAddress === web3Account ? 'sender' : 'recipient'
     const counterparty = role === 'sender' ? {
@@ -19,12 +19,12 @@ class DialogueListItem extends Component {
       address: senderAddress,
       name: fromName,
     }
-    const unreadCount = dialogue.values.filter(m => !m.readAt).length
+    const unreadCount = conversation.values.filter(m => !m.readAt).length
 
     return (
       <div
-        onClick={handleDialogueSelect}
-        className={`d-flex dialogue-list-item${active ? ' active' : ''}`}
+        onClick={handleConversationSelect}
+        className={`d-flex conversation-list-item${active ? ' active' : ''}`}
       >
         <Avatar placeholderStyle="blue" />
         <div className="content-container text-truncate">
@@ -56,4 +56,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(DialogueListItem)
+export default connect(mapStateToProps)(ConversationListItem)

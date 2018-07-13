@@ -118,7 +118,7 @@ class App extends Component {
                   />
                   <Route path="/my-purchases" component={MyPurchases} />
                   <Route path="/my-sales" component={MySales} />
-                  <Route path="/messages/:dialogueId?" component={Messages} />
+                  <Route path="/messages/:conversationId?" component={Messages} />
                   <Route path="/notifications" component={Notifications} />
                   <Route path="/profile" component={Profile} />
                   <Route path="/users/:userAddress" component={UserPage} />

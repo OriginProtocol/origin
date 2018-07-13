@@ -15,7 +15,7 @@ export default function Messages(state = [], action = {}) {
       }
 
       return [...state, {
-        dialogueId: roomId,
+        conversationId: roomId,
         readAt: undefined,
         senderAddress,
         recipients,

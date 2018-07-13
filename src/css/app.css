@@ -445,12 +445,12 @@ a:hover {
   right: 12px;
 }
 
-.navbar .dialogue-list-item {
+.navbar .conversation-list-item {
   background-color: #f6f7f8;
   border-top: 1px solid #98a7b4;
 }
 
-.navbar .dialogue-list-item:hover {
+.navbar .conversation-list-item:hover {
   background-color: #eaeef1;
 }
 
@@ -2254,57 +2254,57 @@ form .stars img {
 
 /* Messages */
 
-.dialogues-list-col {
+.conversations-list-col {
   background-color: var(--pale-grey);
 }
 
-.no-gutters .dialogue-col {
+.no-gutters .conversation-col {
   background-color: white;
   padding: 20px;
 }
 
-.dialogue-list-item {
+.conversation-list-item {
   height: 60px;
   padding: 10px;
 }
 
-.dialogue-list-item {
+.conversation-list-item {
   cursor: pointer;
 }
 
-.dialogue-list-item.active {
+.conversation-list-item.active {
   background-color: var(--clear-blue);
   color: white;
 }
 
-.dialogue-list-item .content-container {
+.conversation-list-item .content-container {
   font-weight: normal;
   margin-right: 5px;
 }
 
-.dialogue-list-item .message {
+.conversation-list-item .message {
   font-size: 0.75rem;
 }
 
-.dialogue-list-item .meta-container {
+.conversation-list-item .meta-container {
   font-weight: normal;
   margin-left: auto;
 }
 
-.dialogue-list-item .time-reference {
+.conversation-list-item .time-reference {
   color: #98a7b4;
   font-size: 0.75rem;
 }
 
-.dialogue-list-item.active .time-reference {
+.conversation-list-item.active .time-reference {
   color: white;
 }
 
-.dialogue-list-item .unread {
+.conversation-list-item .unread {
   font-weight: bold;
 }
 
-.dialogue-list-item .count div {
+.conversation-list-item .count div {
   border-radius: 8px;
   font-size: 12px;
   height: 18px;
@@ -2352,26 +2352,26 @@ form .stars img {
   height: 114px;
 }
 
-.dialogue .message:not(:last-of-type) {
+.conversation .message:not(:last-of-type) {
   margin-bottom: 20px;
 }
 
-.dialogue .avatar-container {
+.conversation .avatar-container {
   height: 60px;
   width: 60px;
 }
 
-.dialogue .content {
+.conversation .content {
   font-size: 1.125rem;
   font-weight: normal;
   margin-right: 10px;
 }
 
-.dialogue .sender {
+.conversation .sender {
   padding-top: 8px;
 }
 
-.dialogue .timestamp {
+.conversation .timestamp {
   color: #98a7b4;
   flex-shrink: 0;
   font-size: 0.75rem;

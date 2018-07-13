@@ -6,7 +6,7 @@ import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 
 import Avatar from './avatar'
-import DialogueListItem from './dialogue-list-item'
+import ConversationListItem from './conversation-list-item'
 import PurchaseProgress from './purchase-progress'
 
 import groupByArray from 'utils/groupByArray'
@@ -21,34 +21,34 @@ class Messages extends Component {
       counterparty: {},
       listing: null,
       purchase: null,
-      selectedDialogueId: '',
+      selectedConversationId: '',
     }
   }
 
   componentDidMount() {
-    this.detectSelectedDialogue()
+    this.detectSelectedConversation()
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { dialogueId } = this.props.match.params
-    const { selectedDialogueId } = this.state
+    const { conversationId } = this.props.match.params
+    const { selectedConversationId } = this.state
 
     // on route change
-    if (dialogueId && dialogueId !== prevProps.match.params.dialogueId) {
-      this.detectSelectedDialogue()
+    if (conversationId && conversationId !== prevProps.match.params.conversationId) {
+      this.detectSelectedConversation()
     }
 
-    // on dialogue selection
-    if (selectedDialogueId && selectedDialogueId !== prevState.selectedDialogueId) {
+    // on conversation selection
+    if (selectedConversationId && selectedConversationId !== prevState.selectedConversationId) {
       this.identifyCounterparty()
       this.loadListing()
     }
   }
 
-  detectSelectedDialogue() {
-    const selectedDialogueId = this.props.match.params.dialogueId || (this.props.dialogues[0] || {}).address
+  detectSelectedConversation() {
+    const selectedConversationId = this.props.match.params.conversationId || (this.props.conversations[0] || {}).address
 
-    this.setState({ selectedDialogueId })
+    this.setState({ selectedConversationId })
   }
 
   async findPurchase() {
@@ -69,10 +69,10 @@ class Messages extends Component {
   }
 
   identifyCounterparty() {
-    const { dialogues, web3Account } = this.props
-    const { selectedDialogueId } = this.state
-    const dialogue = dialogues.find(d => d.key === selectedDialogueId)
-    const { fromName, recipients, senderAddress, toName } = dialogue.values[0]
+    const { conversations, web3Account } = this.props
+    const { selectedConversationId } = this.state
+    const conversation = conversations.find(c => c.key === selectedConversationId)
+    const { fromName, recipients, senderAddress, toName } = conversation.values[0]
     const counterpartyRole = senderAddress === web3Account ? 'recipient' : 'sender'
 
     this.setState({
@@ -87,10 +87,10 @@ class Messages extends Component {
   }
 
   async loadListing() {
-    const { dialogues } = this.props
-    const { selectedDialogueId } = this.state
+    const { conversations } = this.props
+    const { selectedConversationId } = this.state
     // find the most recent listing context or set empty value
-    const { listingId } = dialogues.find(d => d.key === selectedDialogueId)
+    const { listingId } = conversations.find(c => c.key === selectedConversationId)
                           .values
                           .sort((a, b) => a.created < b.created ? -1 : 1)
                           .find(m => m.listingId) || {}
@@ -104,13 +104,13 @@ class Messages extends Component {
     }
   }
 
-  handleDialogueSelect(selectedDialogueId) {
-    this.setState({ selectedDialogueId })
+  handleConversationSelect(selectedConversationId) {
+    this.setState({ selectedConversationId })
   }
 
   render() {
-    const { dialogues, messages, web3Account } = this.props
-    const { counterparty, listing, purchase, selectedDialogueId } = this.state
+    const { conversations, messages, web3Account } = this.props
+    const { counterparty, listing, purchase, selectedConversationId } = this.state
     const { address, name, pictures } = listing || {}
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
     const perspective = purchase ? (purchase.buyerAddress === web3Account ? 'buyer' : 'seller') : null
@@ -120,14 +120,14 @@ class Messages extends Component {
       <div className="d-flex messages-wrapper">
         <div className="container">
           <div className="row no-gutters">
-            <div className="dialogues-list-col col-12 col-sm-4 col-lg-3">
-              {dialogues.map(d => {
+            <div className="conversations-list-col col-12 col-sm-4 col-lg-3">
+              {conversations.map(c => {
                 return (
-                  <DialogueListItem key={d.key} dialogue={d} active={selectedDialogueId === d.key} handleDialogueSelect={() => this.handleDialogueSelect(d.key)} />
+                  <ConversationListItem key={c.key} conversation={c} active={selectedConversationId === c.key} handleConversationSelect={() => this.handleConversationSelect(c.key)} />
                 )
               })}
             </div>
-            <div className="dialogue-col col-12 col-sm-8 col-lg-9">
+            <div className="conversation-col col-12 col-sm-8 col-lg-9">
               {listing &&
                 <div className="listing-summary d-flex">
                   <div className="aspect-ratio">
@@ -183,8 +183,8 @@ class Messages extends Component {
                   </div>
                 </div>
               }
-              <div className="dialogue">
-                {messages.filter(m => m.dialogueId === selectedDialogueId)
+              <div className="conversation">
+                {messages.filter(m => m.conversationId === selectedConversationId)
                   .sort((a, b) => a.index < b.index ? -1 : 1)
                   .map(m => {
                     return (
@@ -216,7 +216,7 @@ class Messages extends Component {
 
 const mapStateToProps = state => {
   return {
-    dialogues: groupByArray(state.messages, 'dialogueId'),
+    conversations: groupByArray(state.messages, 'conversationId'),
     messages: state.messages,
     web3Account: state.app.web3.account,
   }

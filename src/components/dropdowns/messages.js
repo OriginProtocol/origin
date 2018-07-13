@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 
 import groupByArray from 'utils/groupByArray'
 
-import DialogueListItem from '../dialogue-list-item'
+import ConversationListItem from '../conversation-list-item'
 
 class MessagesDropdown extends Component {
   constructor(props) {
@@ -14,7 +14,7 @@ class MessagesDropdown extends Component {
   }
 
   render() {
-    const { dialogues, history } = this.props
+    const { conversations, history } = this.props
 
     return (
       <div className="nav-item messages dropdown">
@@ -38,7 +38,7 @@ class MessagesDropdown extends Component {
               </h3>
             </header>
             <div className="messages-list">
-              {dialogues.map(d => <DialogueListItem key={d.key} dialogue={d} active={false} handleDialogueSelect={() => history.push(`/messages/${d.key}`)} />)}
+              {conversations.map(c => <ConversationListItem key={c.key} conversation={c} active={false} handleConversationSelect={() => history.push(`/messages/${c.key}`)} />)}
             </div>
             <footer>
               <Link to="/messages">
@@ -57,7 +57,7 @@ class MessagesDropdown extends Component {
 
 const mapStateToProps = state => {
   return {
-    dialogues: groupByArray(state.messages, 'dialogueId'),
+    conversations: groupByArray(state.messages, 'conversationId'),
   }
 }
 
