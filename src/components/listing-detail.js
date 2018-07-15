@@ -2,8 +2,13 @@ import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'react-intl'
+
 import { showAlert } from '../actions/Alert'
 import { storeWeb3Intent } from '../actions/App'
+import {
+  update as updateTransaction,
+  upsert as upsertTransaction,
+} from '../actions/Transaction'
 import getCurrentProvider from '../utils/getCurrentProvider'
 import { translateListingCategory } from '../utils/translationUtils'
 
@@ -143,19 +148,18 @@ class ListingsDetail extends Component {
     this.props.storeWeb3Intent('buy this listing')
 
     if (web3.givenProvider && this.props.web3Account) {
+      this.setState({ step: this.STEP.METAMASK })
       const unitsToBuy = 1
       const totalPrice = (unitsToBuy * this.state.price)
-      this.setState({step: this.STEP.METAMASK})
       try {
-        const transactionReceipt = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice)
-        console.log('Purchase request sent.')
-        this.setState({step: this.STEP.PROCESSING})
-        await origin.contractService.waitTransactionFinished(transactionReceipt.transactionHash)
-        this.setState({step: this.STEP.PURCHASED})
+        this.setState({ step: this.STEP.PROCESSING })
+        const transaction = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice)
+        this.props.upsertTransaction(transaction)
+        this.setState({ step: this.STEP.PURCHASED })
+        transaction.whenFinished(6, this.props.updateTransaction)
       } catch (error) {
-        window.err = error
         console.error(error)
-        this.setState({step: this.STEP.ERROR})
+        this.setState({ step: this.STEP.ERROR })
       }
     }
   }
@@ -455,6 +459,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   showAlert: (msg) => dispatch(showAlert(msg)),
   storeWeb3Intent: (intent) => dispatch(storeWeb3Intent(intent)),
+  updateTransaction: (hash, confirmationCount) => dispatch(updateTransaction(hash, confirmationCount)),
+  upsertTransaction: (transaction) => dispatch(upsertTransaction(transaction)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(ListingsDetail))

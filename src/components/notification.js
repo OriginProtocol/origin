@@ -64,7 +64,6 @@ class Notification extends Component {
             </div>
             <div className="content-container d-flex flex-column justify-content-between">
               <NotificationMessage
-                listing={listing}
                 type={notification.type}
                 className={`text-truncate${counterpartyAddress ? '' : ' no-counterparty'}`}
               />

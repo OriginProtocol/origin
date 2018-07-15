@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import moment from 'moment'
 import $ from 'jquery'
 
-import data from '../../data'
+import Transaction from '../transaction'
 
 const CONFIRMATION_COMPLETION_COUNT = 6
 
@@ -13,13 +13,9 @@ class TransactionsDropdown extends Component {
     super(props)
 
     this.handleClick = this.handleClick.bind(this)
-    this.handleSimulation = this.handleSimulation.bind(this)
 
     this.state = {
-      confirmations: [0, 2, 4, 6],
       hideList: [],
-      simulationStarted: false,
-      createdAtTime: {}
     }
   }
 
@@ -29,33 +25,24 @@ class TransactionsDropdown extends Component {
     })
   }
 
-  handleClick(e) {
-    this.setState({ hideList: this.state.confirmations.map((int, i) => int > (CONFIRMATION_COMPLETION_COUNT - 1) ? i : false) })
+  componentDidUpdate() {
+    console.log(this.props.transactions)
   }
 
-  handleSimulation() {
-    if (!this.state.simulationStarted) {
-      // simulate blockchain confirmation progress
-      setInterval(() => {
-        const i = Math.floor(Math.random() * (data.transactions.length - 1))
-        let confirmations = [...this.state.confirmations]
-
-        if (confirmations[i] < CONFIRMATION_COMPLETION_COUNT) {
-          confirmations[i] += 1
-
-          this.setState({ confirmations })
-        }
-      }, 1000)
-
-      this.setState({ simulationStarted: true })
-    }
+  handleClick(e) {
+    this.setState({
+      hideList: this.props.transactions.map(({ confirmationCount, transactionHash }) => {
+        return confirmationCount >= CONFIRMATION_COMPLETION_COUNT ? transactionHash : false
+      }),
+    })
   }
 
   render() {
-    const { confirmations, hideList } = this.state
-    const notHiddenTransactions = data.transactions.filter((t, i) => !hideList.includes(i))
-    const notCompletedTransactions = confirmations.filter(int => int < CONFIRMATION_COMPLETION_COUNT)
-    const transactionsCanBeCleared = !!notHiddenTransactions.length
+    const { transactions } = this.props
+    const { hideList } = this.state
+    const transactionsNotHidden = transactions.filter((t, i) => !hideList.includes(t.transactionHash))
+    const transactionsNotCompleted = transactions.filter(t => t.confirmationCount < CONFIRMATION_COMPLETION_COUNT)
+    const transactionsCanBeCleared = !!transactionsNotHidden.length
 
     return (
       <div className="nav-item transactions dropdown">
@@ -65,11 +52,10 @@ class TransactionsDropdown extends Component {
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
-          onClick={this.handleSimulation}
         >
           <img src="images/arrows-light.svg" className="transactions" alt="Blockchain transactions" />
           <img src="images/arrows-dark.svg" className="transactions selected" alt="Blockchain transactions" />
-          {confirmations.filter(int => int > (CONFIRMATION_COMPLETION_COUNT - 1)).length < confirmations.length &&
+          {!!transactions.filter(({ confirmationCount }) => !confirmationCount || confirmationCount < CONFIRMATION_COMPLETION_COUNT).length &&
             <div className="arrows-container">
               <img src="images/blue-circle-arrows.svg" className="rotating-arrows" alt="rotating circular arrows" />
             </div>
@@ -80,7 +66,7 @@ class TransactionsDropdown extends Component {
           <div className="actual-menu">
             <header className="d-flex">
               <div className="count">
-                <div className="d-inline-block">{notCompletedTransactions.length}</div>
+                <div className="d-inline-block">{transactionsNotCompleted.length}</div>
               </div>
               <h3 className="mr-auto">
                 <span className="d-none d-md-inline">
@@ -112,72 +98,13 @@ class TransactionsDropdown extends Component {
             </header>
             <div className="transactions-list">
               <ul className="list-group">
-                {notHiddenTransactions.map((t, i) => {
-                  const confirmationsCount = confirmations[i]
-                  const truncatedFrom = `${t.from.slice(0, 4)}...${t.from.slice(38)}`
-                  const truncatedTo = `${t.to.slice(0, 4)}...${t.to.slice(38)}`
-                  const completed = confirmationsCount > (CONFIRMATION_COMPLETION_COUNT - 1)
-                  const percentage = `${(confirmationsCount / CONFIRMATION_COMPLETION_COUNT * 100).toFixed()}%`
-
-                  return (
-                    <li key={`transaction-${+t.createdAt}`} className="list-group-item d-flex align-items-stretch transaction">
-                      <div className="text-container">
-                        <div className="d-flex">
-                          <div className="message">
-                            {t.message}
-                          </div>
-                          <div className="timelapse ml-auto">
-                            { moment(t.createdAt).fromNow() }
-                          </div>
-                        </div>
-                        <div className="d-flex">
-                          <div className="addresses">
-                            <FormattedMessage
-                              id={ 'transactions.from' }
-                              defaultMessage={ 'From' }
-                            />
-                            &nbsp;
-                            {truncatedFrom}
-                            &nbsp;
-                            <img src="images/arrow-dark.svg" />
-                            &nbsp;
-                            <FormattedMessage
-                              id={ 'transactions.to' }
-                              defaultMessage={ 'To' }
-                            />
-                            &nbsp;
-                            {truncatedTo}
-                          </div>
-                          <div className="confirmations-count ml-auto">
-                            {percentage}
-                            &nbsp;
-                            <FormattedMessage
-                              id={ 'transactions.completed' }
-                              defaultMessage={ 'Completed' }
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="graphic-container">
-                        {!completed &&
-                          <div className="outer-circle">
-                            {Array(CONFIRMATION_COMPLETION_COUNT).fill().map((e, i) => (
-                              <div key={`slice-${i}`} className={`slice${confirmationsCount > i ? ' confirmed' : ''}`}>
-                                <div className="crust"></div>
-                              </div>
-                            ))}
-                            <div className="inner-circle">
-                              <img src="images/blue-circle-arrows.svg" className="rotating-arrows" alt="rotating circular arrows" />
-                            </div>
-                          </div>
-                        }
-                        {completed &&
-                          <div className="completed-circle"></div>
-                        }
-                      </div>
-                    </li>
-                  )
-                })}
+                {transactionsNotHidden.map((transaction, i) => (
+                  <Transaction
+                    key={transaction.transactionHash}
+                    transaction={transaction}
+                    confirmationCompletionCount={CONFIRMATION_COMPLETION_COUNT}
+                  />
+                ))}
               </ul>
             </div>
           </div>
@@ -187,4 +114,10 @@ class TransactionsDropdown extends Component {
   }
 }
 
-export default TransactionsDropdown
+const mapStateToProps = state => {
+  return {
+    transactions: state.transactions,
+  }
+}
+
+export default connect(mapStateToProps)(TransactionsDropdown)
