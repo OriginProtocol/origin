@@ -224,6 +224,10 @@ class OriginNavWrapper extends Component {
       this.props.setDevices(devices)
     })
 
+    originWallet.events.on(Events.UPDATE, () => {
+      this.props.getBalance()
+    })
+
     originWallet.openWallet()
   }
 

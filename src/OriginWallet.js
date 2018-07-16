@@ -38,7 +38,8 @@ Events = keyMirror({
   TRANSACTED:null,
   UNLINKED:null,
   REJECT:null,
-  LINKS:null
+  LINKS:null,
+  UPDATE:null
 }, "WalletEvents")
 
 const eventMatcherByLinkId = link_id => {
@@ -628,7 +629,39 @@ class OriginWallet {
 
   saveWallet() {
     //save the freaking wallet
-    storeData(WALLET_STORE, web3.accounts.wallet)
+    storeData(WALLET_STORE, web3.eth.accounts.wallet.encrypt(WALLET_PASSWORD))
+  }
+
+
+
+  async giveMeEth (eth_value) {
+    if (this.state.ethAddress)
+    {
+      const netId = this.state.netId
+      if (netId == 999)
+      {
+        const value = web3.utils.toWei(eth_value, 'ether')
+        const sig = await web3.eth.accounts.signTransaction({
+            gas: 4000000,
+            to: this.state.ethAddress,
+            value }, TEST_PRIVATE_KEY)
+        const send_result = await web3.eth.sendSignedTransaction(sig.rawTransaction)
+        console.log("Funding result:", send_result)
+        this.events.emit(Events.UPDATE)
+      }
+      else
+      {
+        console.log("Unknown netId:", netId)
+      }
+    }
+  }
+
+  async setNetId() {
+    this.state.netId = await web3.eth.net.getId()
+  }
+
+  isTestNet() {
+    return this.state.netId == 999
   }
 
   openWallet() {
@@ -646,8 +679,8 @@ class OriginWallet {
       if(!web3.eth.accounts.wallet.length)
       {
         //generate our wallet
-        web3.eth.accounts.wallet.add(TEST_PRIVATE_KEY)
-        //web3.eth.accounts.wallet.create()
+        //web3.eth.accounts.wallet.add(TEST_PRIVATE_KEY)
+        web3.eth.accounts.wallet.create(1)
       }
 
       let ethAddress = web3.eth.accounts.wallet[0].address
@@ -656,7 +689,9 @@ class OriginWallet {
         this.fireEvent(Events.NEW_ACCOUNT, {address:ethAddress})
         Object.assign(this.state, {ethAddress})
         this.checkRegisterNotification()
+        this.saveWallet()
       }
+      this.setNetId()
     })
 
     Linking.getInitialURL().then((url) => {

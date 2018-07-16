@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Alert, Clipboard, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 
+import originWallet from '../OriginWallet'
 import OriginButton from '../components/origin-button'
 
 class WalletScreen extends Component {
@@ -21,6 +22,7 @@ class WalletScreen extends Component {
     const amountUSD = 0
     // really dangerous function
     const privateKey = address ? web3.eth.accounts.wallet[0].privateKey : ""
+    const isTestNet = originWallet.isTestNet()
 
     return (
       <View style={styles.container}>
@@ -46,6 +48,12 @@ class WalletScreen extends Component {
                 Alert.alert('Copied to clipboard!')
               }}
             />
+            {isTestNet && <OriginButton
+              type="primary"
+              title="Give Me Eth"
+              style={[styles.button, {marginTop:10}]}
+              onPress={() => originWallet.giveMeEth("1.0")}
+              />}
           </View>
         </View>
       </View>
