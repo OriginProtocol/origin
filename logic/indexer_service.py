@@ -94,8 +94,12 @@ class DatabaseIndexer():
         Not sure if we would have updates on Review, sticking to classmethod
         naming covention for now.
         """
+        # Load IPFS data. Note: we filter out pictures since those should
+        # not get persisted in the database.
         review_data['ipfs_data'] = \
-            IPFSHelper().file_from_hash(review_data['ipfs_hash'])
+            IPFSHelper().file_from_hash(review_data['ipfs_hash'],
+                                        root_attr='data',
+                                        exclude_fields=['pictures'])
         review_obj = Review(**review_data)
         db.session.add(review_obj)
         db.session.commit()
