@@ -107,12 +107,14 @@ class ListingCreate extends Component {
       formData: null,
       isFractionalListing: false,
       currentProvider: getCurrentProvider(origin && origin.contractService && origin.contractService.web3),
-      isEditMode: false
+      isEditMode: false,
+      fractionalTimeIncrement: null
     }
 
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
     this.onAvailabilityEntered = this.onAvailabilityEntered.bind(this)
+    this.getCalendarStep = this.getCalendarStep.bind(this)
   }
 
   async componentDidMount() {
@@ -150,7 +152,8 @@ class ListingCreate extends Component {
       this.setState({
         selectedSchema: schemaJson,
         schemaFetched: true,
-        step: this.STEP.DETAILS
+        step: this.STEP.DETAILS,
+        fractionalTimeIncrement: (selectedSchemaType === 'housing' ? 'daily' : 'hourly')
       })
       window.scrollTo(0, 0)
     })
@@ -207,8 +210,6 @@ class ListingCreate extends Component {
   }
 
   onAvailabilityEntered(slots) {
-    const { selectedSchemaType } = this.state
-
     slots.forEach((slot) => {
       if (typeof slot.priceWei !== 'number') {
         delete slot.priceWei
@@ -218,7 +219,7 @@ class ListingCreate extends Component {
     this.setState({
       formData: {
         ...this.state.formData,
-        timeIncrement: (selectedSchemaType === 'housing' ? 'daily' : 'hourly'),
+        timeIncrement: this.state.fractionalTimeIncrement,
         slots
       }
     })
@@ -253,6 +254,11 @@ class ListingCreate extends Component {
 
   resetToPreview() {
     this.setState({ step: this.STEP.PREVIEW })
+  }
+
+  getCalendarStep() {
+    const stepValue = this.state.formData.calendarStep && this.state.formData.calendarStep.slice(-2)
+    return parseInt(stepValue || 60)
   }
 
   render() {
@@ -412,10 +418,9 @@ class ListingCreate extends Component {
           <div className="step-container listing-availability">
             <Calendar
               slots={ this.state.formData && this.state.formData.slots }
-              listingId=""
               userType="seller"
-              viewType="daily"
-              step=""
+              viewType={ this.state.fractionalTimeIncrement }
+              step={ this.getCalendarStep() }
               onComplete={ this.onAvailabilityEntered }
             />
           </div>

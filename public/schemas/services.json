@@ -2,7 +2,7 @@
   "$schema":"http://json-schema.org/draft-06/schema#",
   "description": "schema.services.schemaDescription",
   "type": "object",
-  "required": ["name","category","description","priceWei"],
+  "required": ["name","category","description","calendarStep"],
   "properties": {
     "name": {
       "type": "string",
@@ -34,6 +34,15 @@
       ],
       "default":"schema.services.homeCleaning"
     },
+    "calendarStep": {
+      "type": "string",
+      "title": "schema.services.calendarStep",
+      "enum": [
+        "schema.services.30",
+        "schema.services.60"
+      ],
+      "default":"schema.services.60"
+    },
     "description": {
       "type": "string",
       "title": "schema.services.description",
@@ -43,10 +52,6 @@
     "location": {
       "type": "string",
       "title": "schema.services.location"
-    },
-    "priceWei": {
-      "type": "number",
-      "title": "schema.services.priceInETH"
     },
     "pictures": {
       "type": "array",

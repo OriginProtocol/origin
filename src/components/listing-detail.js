@@ -56,6 +56,7 @@ class ListingsDetail extends Component {
 
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
     this.reserveSlots = this.reserveSlots.bind(this)
+    this.getCalendarStep = this.getCalendarStep.bind(this)
   }
 
   async componentWillMount() {
@@ -99,7 +100,6 @@ class ListingsDetail extends Component {
       for (let i = 0; i < length; i++) {
         let purchaseAddress = await origin.listings.purchaseAddressByIndex(listingAddress, i)
         let purchase = await origin.purchases.get(purchaseAddress)
-        console.log('Purchase:', purchase)
 
         this.setState((prevState) => {
           return { purchases: [...prevState.purchases, purchase] }
@@ -172,13 +172,15 @@ class ListingsDetail extends Component {
     }
   }
 
+  getCalendarStep() {
+    const stepValue = this.state.calendarStep && this.state.calendarStep.slice(-2)
+    return parseInt(stepValue || 60)
+  }
+
   render() {
     const unitsAvailable = parseInt(this.state.unitsAvailable) // convert string to integer
     const buyersReviews = this.state.reviews.filter(r => r.revieweeRole === 'SELLER')
-    // const userIsSeller = this.state.sellerAddress === this.props.web3Account
-
-    // TEMPORARY
-    const userIsSeller = true
+    const userIsSeller = this.state.sellerAddress === this.props.web3Account
 
     return (
       <div className="listing-detail">
@@ -319,14 +321,15 @@ class ListingsDetail extends Component {
                   </a>
                 </div>
               */}
-              { this.state.listingType === 'fractional' &&
+              { !this.state.loading && this.state.listingType === 'fractional' && !userIsSeller &&
                 <div className="step-container listing-availability">
                   <Calendar 
                     slots={ this.state.slots }
+                    purchases={ this.state.purchases }
                     userType="buyer"
-                    viewType="daily"
-                    step=""
+                    viewType={ this.state.schemaType === 'housing' ? 'daily' : 'hourly' }
                     onComplete={ this.reserveSlots }
+                    step={ this.getCalendarStep() }
                   />
                 </div>
               }

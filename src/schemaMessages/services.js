@@ -13,6 +13,10 @@ export default defineMessages({
     id: 'schema.services.category',
     defaultMessage: 'Category'
   },
+  'schema.services.calendarStep': {
+    id: 'schema.services.calendarStep',
+    defaultMessage: 'Time Increment'
+  },
   'schema.services.description': {
     id: 'schema.services.description',
     defaultMessage: 'Description'
@@ -96,5 +100,13 @@ export default defineMessages({
   'schema.services.writingTranslationTranscription': {
     id: 'schema.services.writingTranslationTranscription',
     defaultMessage: 'Writing, Translation & Transcription'
+  },
+  'schema.services.30': {
+    id: 'schema.services.30',
+    defaultMessage: '30'
+  },
+  'schema.services.60': {
+    id: 'schema.services.60',
+    defaultMessage: '60'
   }
 })

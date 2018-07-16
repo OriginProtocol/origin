@@ -12,6 +12,10 @@
     "defaultMessage": "Category"
   },
   {
+    "id": "schema.services.calendarStep",
+    "defaultMessage": "Time Increment"
+  },
+  {
     "id": "schema.services.description",
     "defaultMessage": "Description"
   },
@@ -94,5 +98,13 @@
   {
     "id": "schema.services.writingTranslationTranscription",
     "defaultMessage": "Writing, Translation & Transcription"
+  },
+  {
+    "id": "schema.services.30",
+    "defaultMessage": "30"
+  },
+  {
+    "id": "schema.services.60",
+    "defaultMessage": "60"
   }
 ]

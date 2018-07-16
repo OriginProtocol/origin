@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import BigCalendar from 'react-big-calendar'
+import { injectIntl } from 'react-intl'
 import moment from 'moment'
 import uuid from 'uuid/v1'
 
@@ -25,6 +26,7 @@ class Calendar extends Component {
     this.monthHeader = this.monthHeader.bind(this)
     this.buyerPrevMonth = this.buyerPrevMonth.bind(this)
     this.buyerNextMonth = this.buyerNextMonth.bind(this)
+    this.slotPropGetter = this.slotPropGetter.bind(this)
 
     this.state = {
       events: [],
@@ -58,7 +60,7 @@ class Calendar extends Component {
   }
 
   setViewType() {
-    return this.props.viewType === 'daily' ? ['month'] : ['week']
+    return this.props.viewType === 'daily' ? 'month' : 'week'
   }
 
   onSelectSlot(slotInfo) {
@@ -71,10 +73,15 @@ class Calendar extends Component {
 
       if (!existingEventInSlot.length) {
 
+        const endDate = this.props.viewType === 'daily' ?
+                        moment(slotInfo.end).add(1, 'day').subtract(1, 'second').toDate() :
+                        slotInfo.end
+
         newEvent = {
           ...slotInfo,
           id: uuid(),
-          end: moment(slotInfo.end).add(1, 'day').subtract(1, 'second').toDate()
+          end: endDate,
+          allDay: false
         }
 
         this.setState({
@@ -93,15 +100,23 @@ class Calendar extends Component {
       let hasUnavailableSlot = false
 
       while (slotToTest.toDate() >= slotInfo.start && slotToTest.toDate() <= slotInfo.end) {
-        const slotInfo = this.getDateAvailabilityAndPrice(slotToTest)
+        const slotAvailData = this.getDateAvailabilityAndPrice(slotToTest)
 
-        if(!slotInfo.isAvailable){
+        if(!slotAvailData.isAvailable || moment(slotInfo.end).isBefore(moment())){
           hasUnavailableSlot = true
         }
 
-        selectionData.push(slotInfo)
+        selectionData.push({
+          ...slotInfo,
+          price: slotAvailData.price,
+          isAvailable: slotAvailData.isAvailable
+        })
 
-        slotToTest = slotToTest.add(1, 'days')
+        if (this.props.viewType === 'daily') {
+          slotToTest = slotToTest.add(1, 'days')
+        } else {
+          slotToTest = slotToTest.add(this.props.step || 60, 'minutes').add(1, 'second')
+        }
       }
 
       if (hasUnavailableSlot) {
@@ -204,21 +219,11 @@ class Calendar extends Component {
 
       return slots
     }
-  
-    const allOtherEvents = this.state.events.filter((event) => event.id !== this.state.selectedEvent.id)
 
-    const updatedEvent = {
+    this.onSelectSlot({
       ...this.state.selectedEvent,
-      [whichDropdown]: new Date(value),
-      slots: getSlots()
-    }
-
-    this.setState({
-      events: [
-        ...allOtherEvents,
-        updatedEvent
-      ],
-      selectedEvent: updatedEvent
+      slots: getSlots(),
+      [whichDropdown]: new Date(value)
     })
   }
 
@@ -252,6 +257,18 @@ class Calendar extends Component {
     )
   }
 
+  isDateBooked(date) {
+    let bookingsMatchingDate = []
+    this.props.purchases && this.props.purchases.map((purchase) => {
+      const bookingsForThisPurchase = purchase.ipfsData.filter(slot => 
+        moment(date).isBetween(moment(slot.startDate).subtract(1, 'second'), moment(slot.endDate).add(1, 'second'))
+      )
+      bookingsMatchingDate = [...bookingsMatchingDate, ...bookingsForThisPurchase]
+    })
+
+    return !!bookingsMatchingDate.length
+  }
+
   getDateAvailabilityAndPrice(date) {
     const events = this.state.events
     let toReturn = {
@@ -262,9 +279,13 @@ class Calendar extends Component {
     if (events && events.length) {
       for (let i = 0, len = events.length; i < len; i++) {
         const event = events[i]
-        if (moment(date).isBetween(moment(event.start).subtract(1, 'day'), event.end)) {
+        if (  
+              event.isAvailable &&
+              moment(date).isBetween(moment(event.start).subtract(1, 'second'), moment(event.end).add(1, 'second')) &&
+              !moment(date).isBefore(moment())
+            ) {
           toReturn = {
-            isAvailable: true,
+            isAvailable: !this.isDateBooked(date),
             price: event.price,
             start: event.start,
             end: event.end
@@ -279,11 +300,21 @@ class Calendar extends Component {
   dateCellWrapper(data) {
     const { value } = data
     const dateInfo = this.getDateAvailabilityAndPrice(value)
+    const availability = dateInfo.isAvailable ? 'available' : 'unavailable'
+    const isPastDate = moment(value).isBefore(moment().subtract(1, 'day')) ? ' past-date' : ''
+    const selectedSlotsMatchingDate = 
+      this.state.buyerSelectedSlotData &&
+      this.state.buyerSelectedSlotData.filter((slot) => 
+        moment(value).isBetween(moment(slot.start).subtract(1, 'second'), moment(slot.end).add(1, 'second'))
+      )
+    const isSelected = (selectedSlotsMatchingDate && selectedSlotsMatchingDate.length) ? ' selected' : ''
 
     return (
       <Fragment>
         {this.props.userType === 'buyer' ?
-          <div className={`rbc-day-bg ${dateInfo.isAvailable ? 'available' : 'unavailable'}${moment(value).isBefore(moment().subtract(1, 'day')) ? ' past-date' : ''}`}>
+          <div className={
+              `rbc-day-bg ${availability}${isPastDate}${isSelected}`
+            }>
             {dateInfo.isAvailable &&
               <span>{dateInfo.price} ETH</span>
             }
@@ -297,6 +328,18 @@ class Calendar extends Component {
 
   monthHeader(data) {
     return <div className="rbc-header">{`${this.props.userType === 'buyer' ? data.label[0] : data.label}`}</div>
+  }
+
+  slotPropGetter(date) {
+    const slotData = this.getDateAvailabilityAndPrice(date)
+    const isAvailable = slotData.isAvailable ? 'available' : 'unavailable'
+    const selectedSlotsMatchingDate = 
+      this.state.buyerSelectedSlotData &&
+      this.state.buyerSelectedSlotData.filter((slot) => 
+        moment(date).isBetween(moment(slot.start).subtract(1, 'second'), moment(slot.end))
+      )
+    const isSelected = (selectedSlotsMatchingDate && selectedSlotsMatchingDate.length) ? ' selected' : '' 
+    return { className: `${isAvailable}${isSelected}` }
   }
 
   saveData() {
@@ -320,7 +363,6 @@ class Calendar extends Component {
                                 priceWei: slot.price
                               }
                             })
-
     this.props.onComplete && this.props.onComplete(slotsToReserve)
   }
 
@@ -348,7 +390,7 @@ class Calendar extends Component {
     return (
       <div>
         <div className="row">
-          <div className={`col-md-8 calendar-container${this.props.userType === 'buyer' ? ' buyer-view' : ''}`} style={{ height: '450px' }}>
+          <div className={`col-md-8 calendar-container${this.props.userType === 'buyer' ? ' buyer-view' : ''}`}>
             {
               this.props.userType === 'buyer' &&
               <div className="buyer-month-nav">
@@ -364,35 +406,17 @@ class Calendar extends Component {
                   header: this.monthHeader
                 }
               }}
-              selectable={this.props.userType === 'seller'}
-              events={(this.props.userType === 'seller' && this.state.events) || []}
-              views={this.setViewType()}
-              onSelectEvent={this.onSelectEvent}
-              onSelectSlot={this.onSelectSlot}
+              selectable={ true }
+              events={ (this.props.userType === 'seller' && this.state.events) || [] }
+              defaultView={ BigCalendar.Views[this.setViewType().toUpperCase()] }
+              onSelectEvent={ this.onSelectEvent }
+              onSelectSlot={ this.onSelectSlot }
               step={ this.props.step || 60 }
-              date={this.state.defaultDate}
-              onNavigate={(date) => { this.setState({ defaultDate: date }) }}
+              timeslots={ 1 }
+              date={ this.state.defaultDate }
+              onNavigate={ (date) => { this.setState({ defaultDate: date }) } }
+              slotPropGetter={ this.slotPropGetter }
             />
-            {
-              this.props.userType === 'buyer' &&
-              <BigCalendar
-                components={{
-                  event: this.eventComponent,
-                  dateCellWrapper: this.dateCellWrapper,
-                  month: {
-                    header: this.monthHeader
-                  }
-                }}
-                selectable={true}
-                events={[]}
-                views={this.setViewType()}
-                onSelectEvent={this.onSelectEvent}
-                onSelectSlot={this.onSelectSlot}
-                step={ this.props.step || 60 }
-                date={moment(this.state.defaultDate).add(1, 'month').toDate()}
-                onNavigate={(date) => { this.setState({ defaultDate: date }) }}
-              />
-            }
             {
               this.props.userType === 'seller' &&
               <button className="btn btn-primary" onClick={this.saveData}>Next</button>
@@ -402,38 +426,42 @@ class Calendar extends Component {
             {selectedEvent && selectedEvent.start &&
               <Fragment>
                 <div>
-                  <select
-                    name="start"
-                    className="form-control"
-                    onChange={ this.onDateDropdownChange }
-                    value={ selectedEvent.start.toString() }>
-                    { 
-                      this.getDateDropdownOptions(selectedEvent.start).map((date) => (
-                        date <= selectedEvent.end &&
-                        <option
-                          key={date.toString()}
-                          value={date.toString()}>
-                          {moment(date).format('MM/DD/YY')}
-                        </option>
-                      ))
-                    }
-                  </select>
-                  <select
-                    name="end"
-                    className="form-control"
-                    onChange={ this.onDateDropdownChange }
-                    value={selectedEvent.end.toString()}>
-                    { 
-                      this.getDateDropdownOptions(selectedEvent.end).map((date) => (
-                        date >= selectedEvent.start &&
-                        <option
-                          key={date.toString()}
-                          value={date.toString()}>
-                          {moment(date).format('MM/DD/YY')}
-                        </option>
-                      ))
-                    }
-                  </select>
+                  {this.props.viewType === 'daily' &&
+                    <Fragment>
+                      <select
+                        name="start"
+                        className="form-control"
+                        onChange={ this.onDateDropdownChange }
+                        value={ selectedEvent.start.toString() }>
+                        { 
+                          this.getDateDropdownOptions(selectedEvent.start).map((date) => (
+                            date <= selectedEvent.end &&
+                            <option
+                              key={date.toString()}
+                              value={date.toString()}>
+                              {moment(date).format('MM/DD/YY')}
+                            </option>
+                          ))
+                        }
+                      </select>
+                      <select
+                        name="end"
+                        className="form-control"
+                        onChange={ this.onDateDropdownChange }
+                        value={selectedEvent.end.toString()}>
+                        { 
+                          this.getDateDropdownOptions(selectedEvent.end).map((date) => (
+                            date >= selectedEvent.start &&
+                            <option
+                              key={date.toString()}
+                              value={date.toString()}>
+                              {moment(date).format('MM/DD/YY')}
+                            </option>
+                          ))
+                        }
+                      </select>
+                    </Fragment>
+                  }
                 </div>
                 {this.props.userType === 'seller' &&
                   <Fragment>
@@ -485,6 +513,13 @@ class Calendar extends Component {
                         value={selectedEvent.price} 
                         onChange={this.handlePriceChange} 
                       />
+                      {
+                        this.props.viewType === 'hourly' &&
+                        this.props.step &&
+                        <span className="price-per-time-label">
+                          per {this.props.intl.formatNumber(this.props.step)} minutes
+                        </span>
+                      }
                     </div>
                     <button className="btn btn-secondary" onClick={this.cancelEvent}>Cancel</button>
                     <button className="btn btn-primary" onClick={this.saveEvent}>Save</button>
@@ -512,4 +547,4 @@ class Calendar extends Component {
 
 }
 
-export default Calendar
+export default injectIntl(Calendar)

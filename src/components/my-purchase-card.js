@@ -14,7 +14,11 @@ class MyPurchaseCard extends Component {
     super(props)
 
     this.loadListing = this.loadListing.bind(this)
-    this.state = { listing: {}, loading: true }
+    this.state = {
+      listing: {},
+      purchasedSlots: [],
+      loading: true 
+    }
 
     this.intlMessages = defineMessages({
       received: {
@@ -38,15 +42,21 @@ class MyPurchaseCard extends Component {
         defaultMessage: 'ETH'
       }
     })
+
+    this.getPrice = this.getPrice.bind(this)
   }
 
-  async loadListing(addr) {
+  async loadListing(listingAddr) {
     try {
-      const listing = await origin.listings.get(addr)
+      const listing = await origin.listings.get(listingAddr)
 
-      this.setState({ listing, loading: false })
+      this.setState({
+        listing,
+        purchasedSlots: this.props.purchase.ipfsData,
+        loading: false,
+      })
     } catch(error) {
-      console.error(`Error fetching contract or IPFS info for listing: ${addr}`)
+      console.error(`Error fetching contract or IPFS info for listing: ${listingAddr}`)
     }
   }
 
@@ -56,9 +66,29 @@ class MyPurchaseCard extends Component {
     $('[data-toggle="tooltip"]').tooltip()
   }
 
+  getPrice() {
+    let price
+
+    if (this.state.listing.listingType === 'fractional') {
+      price = this.state.purchasedSlots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.priceWei, 0)
+    } else {
+      price = Number(this.state.listing.price).toLocaleString(undefined, { minimumFractionDigits: 3 })
+    }
+
+    return price
+  }
+
+  getBookingDates(whichDate) {
+    const { purchasedSlots, listing } = this.state
+    const timeFormat = listing.schemaType === 'housing' ? 'LL' : 'l LT'
+    const index = whichDate === 'startDate' ? 0 : purchasedSlots.length - 1
+
+    return moment(purchasedSlots[index][whichDate]).format(timeFormat)
+  }
+
   render() {
     const { address, created, stage } = this.props.purchase
-    const { category, name, pictures, price } = translateListingCategory(this.state.listing)
+    const { category, name, pictures } = translateListingCategory(this.state.listing)
     const soldAt = created * 1000 // convert seconds since epoch to ms
     let step, verb
 
@@ -98,11 +128,16 @@ class MyPurchaseCard extends Component {
               <p className="category">{category}</p>
               <h2 className="title text-truncate"><Link to={`/purchases/${address}`}>{name}</Link></h2>
               <p className="timestamp">{timestamp}</p>
+              {this.state.listing.listingType === 'fractional' &&
+                <div className="d-flex">
+                  <p className="booking-dates">{ `${this.getBookingDates('startDate')} - ${this.getBookingDates('endDate')}`}</p>
+                </div>
+              }
               <div className="d-flex">
-                <p className="price">{`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ${this.props.intl.formatMessage(this.intlMessages.ETH)}`}</p>
+                <p className="price">{`${this.getPrice()} ${this.props.intl.formatMessage(this.intlMessages.ETH)}`}</p>
+              </div>
                 {/* Not Yet Relevant */}
                 {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
-              </div>
               {/*<PurchaseProgress currentStep={step} perspective="buyer" purchase={this.props.purchase} subdued={true} />*/}
               <div className="actions d-flex">
                 <div className="links-container">
