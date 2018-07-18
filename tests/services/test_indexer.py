@@ -1,7 +1,14 @@
+import hexbytes
+import pytest
+
 from mock import MagicMock
 
 from database.db_models import EventTracker, Listing, Purchase
-from logic.indexer_service import DatabaseIndexer, EventHandler
+from logic.indexer_service import (
+    DatabaseIndexer,
+    EventHandler,
+    EmptyIPFSHashError,
+)
 from util.contract import ContractHelper
 
 
@@ -70,6 +77,26 @@ class TestEventHandler():
             transaction_index=event_tracker.transaction_index)
         self._assert_listing_and_purchase_mock_calls(
             mock_db_indexer, mock_notifier, mock_search_indexer)
+
+    def test_empty_ipfs_hash(self, web3):
+        # Payload for a malformed PurchaseReview event with a blank IPFS hash.
+        payload = {
+            'address': '0xa58dB075717Ca8C9EA73D5425669727911f18CD6',
+            'topics': [hexbytes.HexBytes('0x8c0b60a2085201dd932be0d3d6a63ccc'
+                                         'fb7d8ba44b923a03d2ff02aaa6dfcfcc')],
+            'data': '0x000000000000000000000000aa9ba0760b9147017b18a6fc211d7'
+                    'e17ad4d462d000000000000000000000000ad8a33b71f2941144c9e'
+                    'd4b3421d041cf6f9c9dc00000000000000000000000000000000000'
+                    '0000000000000000000000000000100000000000000000000000000'
+                    '0000000000000000000000000000000000000500000000000000000'
+                    '00000000000000000000000000000000000000000000000'
+        }
+        handler = EventHandler(db_indexer=MagicMock(),
+                               notifier=MagicMock(),
+                               search_indexer=MagicMock(),
+                               web3=web3)
+        with pytest.raises(EmptyIPFSHashError):
+            handler._get_review_data(payload)
 
 
 class TestDBIndexer():

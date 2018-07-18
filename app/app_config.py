@@ -52,18 +52,19 @@ def init_prod_app(app):
     app.config.from_object(__name__ + '.AppConfig')
     init_app(app)
     init_api(app)
-    log_formatter = logging.Formatter(
-        '%(asctime)s %(levelname)s [in %(pathname)s:%(lineno)d]: %(message)s')
-    log_level = logging.WARNING
+
+    # Setup logging.
     if not settings.DEBUG:
-        # This logs to stdout which is appropriate for Heroku, which saves
-        # stdout to a file,
-        # but may not be appropriate in other environments. Use a log file
-        # instead.
+        # This logs to stdout which is appropriate for Heroku,
+        # which saves stdout to a file, but may not be appropriate in
+        # other environments. Use a log file instead.
+        log_formatter = logging.Formatter(
+            '%(asctime)s %(levelname)s [in %(pathname)s:%(lineno)d]: %(message)s')
         handler = logging.StreamHandler(sys.stdout)
-        handler.setLevel(log_level)
+        handler.setLevel(logging.INFO)
         handler.setFormatter(log_formatter)
         app.logger.addHandler(handler)
     else:
         logging.config.fileConfig('debug.logging.ini')
+
     return app

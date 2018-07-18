@@ -398,8 +398,9 @@ def purchase_stage_buyer_pending(web3, wait_for_transaction, wait_for_block,
     purchase_contract = purchase_stage_shipping_pending
     # confirm receipt to move the stage forward, this is the Stage
     # where the review event would be emitted
+    ipfs_hash = base58_to_hex("QmZtQDL4UjQWryQLjsS5JUsbdbn2B27Tmvz2gvLkw7wmmb")
     deploy_txn_hash = \
-        purchase_contract.functions.buyerConfirmReceipt(2, "0x")\
+        purchase_contract.functions.buyerConfirmReceipt(2, ipfs_hash)\
         .transact({'from': eth_test_buyer, 'gas': 1000000})
     deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
     assert deploy_receipt["gasUsed"] > 0

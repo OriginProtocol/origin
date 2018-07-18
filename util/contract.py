@@ -1,3 +1,4 @@
+import logging
 import json
 import hexbytes
 from web3 import Web3, HTTPProvider, WebsocketProvider
@@ -36,6 +37,9 @@ class ContractHelper:
             event_names(list[str]): List of event names.
             callback(function(event)): Callback function
         """
+        logging.info("Fetching events from block %s to block %s" %
+                     (block_from, block_to))
+
         event_name_hashes = []
         for name in event_names:
             event_name_hashes.append(self.web3.sha3(text=name).hex())
@@ -45,8 +49,11 @@ class ContractHelper:
             "toBlock": block_to
         })
 
-        process_events = False
+        num_events_fetched = len(self.event_filter.get_all_entries())
+        logging.info("Fetched %d events" % num_events_fetched)
 
+        process_events = False
+        num_events_processed = 0
         for event in self.event_filter.get_all_entries():
             if block_from == event['blockNumber']:
                 if transaction_index == event['transactionIndex']\
@@ -61,6 +68,9 @@ class ContractHelper:
 
             if process_events:
                 callback(event)
+                num_events_processed += 1
+
+        logging.info("Processed %d events", num_events_processed)
 
     def get_instance(self, contract_name, address):
         abi = self.get_contract_abi(contract_name)
