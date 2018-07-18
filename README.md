@@ -45,8 +45,8 @@ brew install automake autoconf libtool
 ### Set Up A Virtual Environment
 
 ```bash
-git clone https://github.com/OriginProtocol/bridge-server.git
-cd bridge-server
+git clone https://github.com/OriginProtocol/origin-bridge.git
+cd origin-bridge
 
 python3 -m venv ve
 
@@ -230,7 +230,7 @@ To deploy a development copy of the site on Heroku, just choose which branch you
 
 | `Master` branch <br>(stable) | `Develop` branch<br> (active development) |
 |---------|----------|
-| [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/OriginProtocol/bridge-server/tree/master) | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/OriginProtocol/bridge-server/tree/develop) |
+| [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/OriginProtocol/origin-bridge/tree/master) | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/OriginProtocol/bridge-server/tree/develop) |
 
 Heroku will prompt you to set config variables. At a minium, you must set these three:
 
