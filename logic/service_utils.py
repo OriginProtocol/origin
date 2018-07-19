@@ -1,5 +1,13 @@
 class ServiceError(Exception):
-    pass
+    """Base exception for custom errors."""
+
+    def __init__(self, message, status_code=422):
+        Exception.__init__(self)
+        self.message = message
+        self.status_code = status_code
+
+    def __str__(self):
+        return self.message
 
 
 class AccountNotFoundError(ServiceError):

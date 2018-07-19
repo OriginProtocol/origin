@@ -68,6 +68,7 @@ def test_generate_phone_verification_code_twilio_exception(
         VerificationService.generate_phone_verification_code(phone)
 
     assert str(service_err.value) == 'Could not send verification code.'
+    assert service_err.value.status_code == 503
     db_code = VC.query.filter(VC.phone == phone).first()
     assert db_code is None
 
@@ -152,6 +153,7 @@ def test_generate_phone_verification_rate_limit_exceeded(
         VerificationService.generate_phone_verification_code(phone)
     assert str(service_err.value) == ('Please wait briefly before requesting a'
                                       ' new verification code.')
+    assert service_err.value.status_code == 429
 
 
 @mock.patch('python_http_client.client.Client')

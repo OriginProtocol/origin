@@ -1,4 +1,5 @@
-from marshmallow import Schema, fields, ValidationError
+from flask import jsonify
+from marshmallow import Schema, ValidationError
 from logic.service_utils import ServiceError
 
 
@@ -7,7 +8,7 @@ class StandardRequest(Schema):
 
 
 class StandardResponse(Schema):
-    errors = fields.List(fields.Str)
+    pass
 
 
 class SafeResponse(object):
@@ -28,21 +29,19 @@ def safe_handler(call):
 def handle_request(data, handler, request_schema, response_schema):
     try:
         req = request_schema().load(data)
-    # Handle validation errors
-    except ValidationError as validation_err:
-        errors = []
-        for attr, msg in validation_err.messages.items():
-            errors.append("%s: %s" % (attr, " ".join(msg).lower()))
-        resp = {
-            'errors': errors
-        }
-        return response_schema().dump(resp), 422
-    try:
         resp = handler(**req)
         return response_schema().dump(resp.data), 200
-    # Handle custom errors we have explicitly thrown from our services
+    except ValidationError as validation_err:
+        # Handle validation errors
+        response = jsonify({
+            'errors': validation_err.normalized_messages()
+        })
+        response.status_code = 400
+        return response
     except ServiceError as service_err:
-        resp = {
+        # Handle custom errors we have explicitly thrown from our services
+        response = jsonify({
             'errors': [str(service_err)]
-        }
-        return response_schema().dump(resp), 422
+        })
+        response.status_code = service_err.status_code
+        return response
