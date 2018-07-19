@@ -5,6 +5,7 @@ export const MessageConstants = keyMirror(
   {
     ADD: null,
     ERROR: null,
+    UPDATE: null,
   },
   'MESSAGE'
 )
@@ -16,8 +17,23 @@ export function addMessage(obj) {
         type: MessageConstants.ADD,
         obj,
       })
-    } catch(error) {
-      dispatch({ type: MessageConstants.ERROR, error })
+    } catch(err) {
+      dispatch({ type: MessageConstants.ERROR, err })
+    }
+  }
+}
+
+export function updateMessage(obj) {
+  return function(dispatch) {
+    try {
+      origin.messaging.set(obj)
+      
+      dispatch({
+        type: MessageConstants.UPDATE,
+        obj,
+      })
+    } catch(err) {
+      dispatch({ type: MessageConstants.ERROR, err })
     }
   }
 }

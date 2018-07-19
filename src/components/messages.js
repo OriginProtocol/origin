@@ -77,21 +77,17 @@ class Messages extends Component {
   }
 
   identifyCounterparty() {
-    const { conversations, web3Account } = this.props
+    const { conversations, users, web3Account } = this.props
     const { selectedConversationId } = this.state
     const conversation = conversations.find(c => c.key === selectedConversationId)
-    const { fromName, recipients, senderAddress, toName } = conversation.values[0]
+    const { recipients, senderAddress } = conversation.values[0]
     const counterpartyRole = senderAddress === web3Account ? 'recipient' : 'sender'
+    const address = counterpartyRole === 'recipient' ?
+      recipients.find(addr => addr !== senderAddress) :
+      senderAddress
+    const counterparty = users.find(u => u.address === address) || {}
 
-    this.setState({
-      counterparty: counterpartyRole === 'recipient' ? {
-        address: recipients.find(addr => addr !== senderAddress),
-        name: toName,
-      } : {
-        address: senderAddress,
-        name: fromName,
-      },
-    })
+    this.setState({ counterparty })
   }
 
   handleChange(e) {
@@ -104,11 +100,11 @@ class Messages extends Component {
     e.preventDefault()
 
     const { web3Account } = this.props
-    const { counterparty, newMessage } = this.state
+    const { newMessage, selectedConversationId } = this.state
 
     try {
       await originTest.messaging.sendConvMessage(
-        counterparty.address,
+        selectedConversationId,
         newMessage
       )
 
@@ -175,14 +171,14 @@ class Messages extends Component {
                           <FormattedMessage
                             id={ 'purchase-summary.purchasedFrom' }
                             defaultMessage={ 'Purchased from {sellerLink}' }
-                            values={{ sellerLink: <Link to={`/users/${counterparty.address}`}>{counterparty.name}</Link> }}
+                            values={{ sellerLink: <Link to={`/users/${counterparty.address}`}>{counterparty.fullName}</Link> }}
                           />
                         }
                         {perspective === 'seller' &&
                           <FormattedMessage
                             id={ 'purchase-summary.soldTo' }
                             defaultMessage={ 'Sold to {buyerLink}' }
-                            values={{ buyerLink: <Link to={`/users/${counterparty.address}`}>{counterparty.name}</Link> }}
+                            values={{ buyerLink: <Link to={`/users/${counterparty.address}`}>{counterparty.fullName}</Link> }}
                           />
                         }
                       </div>
@@ -194,14 +190,14 @@ class Messages extends Component {
                           <FormattedMessage
                             id={ 'purchase-summary.purchasedFromOn' }
                             defaultMessage={ 'Purchased from {sellerName} on {date}' }
-                            values={{ sellerName: counterparty.name, date: <FormattedDate value={soldAt} /> }}
+                            values={{ sellerName: counterparty.fullName, date: <FormattedDate value={soldAt} /> }}
                           />
                         }
                         {perspective === 'seller' &&
                           <FormattedMessage
                             id={ 'purchase-summary.soldToOn' }
                             defaultMessage={ 'Sold to {buyerName} on {date}' }
-                            values={{ buyerName: counterparty.name, date: <FormattedDate value={soldAt} /> }}
+                            values={{ buyerName: counterparty.fullName, date: <FormattedDate value={soldAt} /> }}
                           />
                         }
                       </div>
@@ -239,6 +235,7 @@ const mapStateToProps = state => {
   return {
     conversations: groupByArray(state.messages, 'conversationId'),
     messages: state.messages,
+    users: state.users,
     web3Account: state.app.web3.account,
   }
 }

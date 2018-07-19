@@ -14,12 +14,15 @@ class MessagesDropdown extends Component {
   }
 
   render() {
-    const { conversations, history } = this.props
+    const { history, messages } = this.props
+    const conversations = groupByArray(messages, 'conversationId')
 
     return (
       <div className="nav-item messages dropdown">
         <a className="nav-link active dropdown-toggle" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <div className="unread-indicator"></div>
+          {!!conversations.length &&
+            <div className="unread-indicator"></div>
+          }
           <img src="images/messages-icon.svg" className="messages" alt="Messages" />
           <img src="images/messages-icon-selected.svg" className="messages selected" alt="Messages" />
         </a>
@@ -28,7 +31,9 @@ class MessagesDropdown extends Component {
           <div className="actual-menu">
             <header className="d-flex">
               <div className="count">
-                <div className="d-inline-block">0</div>
+                <div className="d-inline-block">
+                  {messages.length}
+                </div>
               </div>
               <h3>
                 <FormattedMessage
@@ -57,7 +62,9 @@ class MessagesDropdown extends Component {
 
 const mapStateToProps = state => {
   return {
-    conversations: groupByArray(state.messages, 'conversationId'),
+    messages: state.messages.filter(({ senderAddress, status }) => {
+      return status === 'unread' && senderAddress !== state.app.web3.account
+    }),
   }
 }
 

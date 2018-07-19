@@ -1,13 +1,20 @@
 import moment from 'moment'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
-import { fetchUser } from 'actions/User'
+import { updateMessage } from 'actions/Message'
 
 import Avatar from './avatar'
 
 class Message extends Component {
   render() {
-    const { content, created, senderAddress, senderName } = this.props.message
+    const { message, user } = this.props
+    const { content, created, status } = message
+    const { address, fullName } = user
+
+    if (status === 'unread') {
+      this.props.updateMessage({ ...message, status: 'read' })
+    }
 
     return (
       <div className="d-flex message">
@@ -15,7 +22,7 @@ class Message extends Component {
         <div className="content-container">
           <div className="meta-container d-flex text-truncate">
             <div className="sender text-truncate">
-              {senderName || senderAddress}
+              {fullName || address}
             </div>
             <div className="timestamp text-right ml-auto">
               {moment(created).format('MMM Do h:mm a')}
@@ -30,4 +37,14 @@ class Message extends Component {
   }
 }
 
-export default Message
+const mapStateToProps = (state, ownProps) => {
+  return {
+    user: state.users.find(u => u.address === ownProps.message.senderAddress) || {},
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  updateMessage: (obj) => dispatch(updateMessage(obj)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Message)
