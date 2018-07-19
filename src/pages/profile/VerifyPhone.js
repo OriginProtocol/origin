@@ -15,7 +15,8 @@ class VerifyPhone extends Component {
       countryCallingCode: '1',
       phone: '',
       verificationCode: '',
-      verificationMethod: 'sms'
+      verificationMethod: 'sms',
+      errors: {}
     }
 
     this.intlMessages = defineMessages({
@@ -36,6 +37,7 @@ class VerifyPhone extends Component {
 
   async handleSubmit(e) {
     e.preventDefault()
+    this.setState({errors: {}}) // clear errors
 
     const { countryCallingCode, mode, phone, verificationCode, verificationMethod } = this.state
 
@@ -45,12 +47,16 @@ class VerifyPhone extends Component {
     }
 
     if (mode === 'phone') {
-      await origin.attestations.phoneGenerateCode({
-        ...phoneObj,
-        method: verificationMethod,
-      })
-      // Update mode to display verification code input form
-      this.setState({ mode: 'code' })
+      try {
+        await origin.attestations.phoneGenerateCode({
+          ...phoneObj,
+          method: verificationMethod,
+        })
+        // Update mode to display verification code input form
+        this.setState({ mode: 'code' })
+      } catch (exception) {
+        this.setState({ errors: JSON.parse(exception).errors })
+      }  
     } else if (mode === 'code') {
       const phoneAttestation = await origin.attestations.phoneVerify({
         ...phoneObj,
@@ -126,6 +132,7 @@ class VerifyPhone extends Component {
   }
 
   renderPhoneForm() {
+    const phoneErrors = this.state.errors.phone
     return (
       <div className="form-group">
         <label htmlFor="phoneNumber">
@@ -184,20 +191,23 @@ class VerifyPhone extends Component {
               <CountryOptions setSelectedCountry={ this.setSelectedCountry } />
             </div>
           </div>
-          <input
-            type="phone"
-            className="form-control"
-            id="phoneNumber"
-            name="phone-number"
-            value={this.state.phone}
-            onChange={e => {
-              this.setState({ phone: e.target.value })
-            }}
-            placeholder={this.props.intl.formatMessage(this.intlMessages.phoneVerificationNumberPlaceholder)}
-            pattern="\d+"
-            title="Numbers only"
-            required
-          />
+          <div className={`form-control-wrap ${phoneErrors ? 'error' : ''}`}>
+            <input
+              type="phone"
+              className="form-control"
+              id="phoneNumber"
+              name="phone-number"
+              value={this.state.phone}
+              onChange={e => {
+                this.setState({ phone: e.target.value })
+              }}
+              placeholder={this.props.intl.formatMessage(this.intlMessages.phoneVerificationNumberPlaceholder)}
+              pattern="\d+"
+              title="Numbers only"
+              required
+            />
+            <div className="error_message">{phoneErrors ? phoneErrors.join(' ') : ''}</div>
+          </div>
         </div>
         <div className="explanation">
            <FormattedMessage

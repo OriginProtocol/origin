@@ -1212,6 +1212,23 @@ a:hover {
   max-width: 288px;
 }
 
+.modal-content .form-control-wrap {
+  width: 100%;
+  max-width: 288px;
+  margin-right: auto;
+}
+
+.modal-content .form-control-wrap.error input{
+  border: 1px solid var(--red);
+  background: var(--dark-red);
+}
+
+.modal-content .form-control-wrap.error .error_message{
+  color: var(--orange-red);
+  margin-top: -1rem;
+  font-size: 1rem;
+}
+
 .modal-content .form-control:read-only {
   background-color: #213040;
 }
@@ -3119,7 +3136,7 @@ sup {
   padding-left: 14px;
 }
 
-.phone.modal #phoneNumber {
+.phone.modal .form-control-wrap {
   margin: 0 auto 10px 0;
 }
 
