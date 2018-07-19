@@ -15,7 +15,8 @@ class VerifyPhone extends Component {
       number: '',
       code: '',
       prefix: '1',
-      errors: {}
+      formErrors: {},
+      generalErrors: []
     }
 
     this.setSelectedCountry = this.setSelectedCountry.bind(this)
@@ -50,6 +51,7 @@ class VerifyPhone extends Component {
           </h2>
           {this.state.mode === 'phone' && this.renderPhoneForm()}
           {this.state.mode === 'code' && this.renderCodeForm()}
+          <div className="general-error">{this.state.generalErrors.length > 0 ? this.state.generalErrors.join(' ') : ''}</div>
           <div className="button-container">
             <button type="submit" className="btn btn-clear">
               <FormattedMessage
@@ -62,7 +64,7 @@ class VerifyPhone extends Component {
             <a
               href="#"
               data-modal="phone"
-              onClick={this.props.handleToggle}
+              onClick={event => this.onCancel(event)}
             >
               <FormattedMessage
                 id={ 'VerifyPhone.cancel' }
@@ -75,29 +77,49 @@ class VerifyPhone extends Component {
     )
   }
 
+  clearErrors() {
+    // clear errors
+    this.setState({formErrors: {}})
+    this.setState({generalErrors:[]})
+  }
+
+  onCancel(event) {
+    event.preventDefault()
+    this.clearErrors()
+    this.setState({ mode: 'phone' })
+
+    this.props.handleToggle(event)
+  }
+
   async onSubmit(event) {
     event.preventDefault()
-    this.setState({errors: {}}) // clear errors
+    this.clearErrors()
 
     const phone = `+${this.state.prefix}${this.state.number}`
 
-    if (this.state.mode === 'phone') {
-      try {
+    try {
+      if (this.state.mode === 'phone') {
         await origin.attestations.phoneGenerateCode({ phone })
         this.setState({ mode: 'code' })
-      } catch (exception) {
-        this.setState({ errors: JSON.parse(exception).errors })
+      } else if (this.state.mode === 'code') {
+        let phoneAttestation = await origin.attestations.phoneVerify({
+          phone, code: this.state.code
+        })
+        this.props.onSuccess(phoneAttestation)
       }
-    } else if (this.state.mode === 'code') {
-      let phoneAttestation = await origin.attestations.phoneVerify({
-        phone, code: this.state.code
-      })
-      this.props.onSuccess(phoneAttestation)
+    } catch (exception) {
+      const errorsJson = JSON.parse(exception).errors
+        
+      if (Array.isArray(errorsJson)) // Service exceptions
+        this.setState({ generalErrors: errorsJson })
+      else // Form exception
+        this.setState({ formErrors: errorsJson })
     }
   }
 
   renderPhoneForm() {
-    const phoneErrors = this.state.errors.phone
+    const phoneErrors = this.state.formErrors.phone
+
     return (
       <div className="form-group">
         <label htmlFor="phoneNumber">

@@ -1172,6 +1172,21 @@ a:hover {
   color: var(--dusk);
 }
 
+.modal-content .general-error:empty {
+  display:none;
+}
+
+.modal-content .general-error {
+  background: var(--dark-red);
+  width: 100%;
+  border-radius: 0.25rem;
+  padding: 0.3rem 0rem;
+  margin: 1rem 0px 0px 0px;
+  padding: 0.3em;
+  font-size: 0.9em;
+  color: var(--light-red);
+}
+
 .modal-content .button-container {
   margin: 0 -20px -20px 0;
   padding-top: 20px;
