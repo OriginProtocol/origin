@@ -56,6 +56,7 @@ PROJECTPATH = get_env_default('PROJECTPATH') or os.getcwd()
 FLASK_SECRET_KEY = get_env_default('FLASK_SECRET_KEY')
 
 DATABASE_URL = get_env_default('DATABASE_URL')
+TEST_DATABASE_URL = get_env_default('TEST_DATABASE_URL')
 
 TEMPLATE_ROOT = os.path.join(PROJECTPATH, 'templates')
 STATIC_ROOT = os.path.join(PROJECTPATH, 'static')

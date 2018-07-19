@@ -1,6 +1,7 @@
 import pytest
 import time
 import json
+from contextlib import contextmanager
 
 from web3.providers.eth_tester import (
     EthereumTesterProvider,
@@ -55,6 +56,7 @@ class PollDelayCounter:
 class TestConfig(object):
     SECRET_KEY = settings.FLASK_SECRET_KEY
 
+    SQLALCHEMY_DATABASE_URI = settings.TEST_DATABASE_URL
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
 
@@ -66,13 +68,29 @@ class TestConfig(object):
     JSONIFY_PRETTYPRINT_REGULAR = False
 
 
+@contextmanager
+def test_db(app):
+    """Context manager to provide a URL for the test database. If one is
+    configured, then that is used. Otherwise one is created using
+    testing.postgresql."""
+    test_db_url = app.config.get('SQLALCHEMY_DATABASE_URI', None)
+    if test_db_url:
+        # Test database configured manually, use that
+        yield test_db_url
+    else:
+        # No test database configured, create one using testing.postgresql
+        with Postgresql() as postgresql:
+            yield postgresql.url()
+
+
 @pytest.yield_fixture(scope='session')
 def app():
     _app = flask_app
     _app.config.from_object(__name__ + '.TestConfig')
     init_api(_app)
-    with Postgresql() as postgresql:
-        _app.config['SQLALCHEMY_DATABASE_URI'] = postgresql.url()
+
+    with test_db(_app) as test_db_url:
+        _app.config['SQLALCHEMY_DATABASE_URI'] = test_db_url
         ctx = _app.app_context()
         ctx.push()
 
