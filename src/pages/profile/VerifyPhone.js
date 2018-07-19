@@ -14,7 +14,8 @@ class VerifyPhone extends Component {
       countryCode: 'us',
       number: '',
       code: '',
-      prefix: '1'
+      prefix: '1',
+      errors: {}
     }
 
     this.setSelectedCountry = this.setSelectedCountry.bind(this)
@@ -40,21 +41,7 @@ class VerifyPhone extends Component {
         <div className="image-container d-flex align-items-center">
           <img src="images/phone-icon-dark.svg" role="presentation" />
         </div>
-        <form
-          onSubmit={async e => {
-            e.preventDefault()
-            var phone = `+${this.state.prefix}${this.state.number}`
-            if (this.state.mode === 'phone') {
-              await origin.attestations.phoneGenerateCode({ phone })
-              this.setState({ mode: 'code' })
-            } else if (this.state.mode === 'code') {
-              let phoneAttestation = await origin.attestations.phoneVerify({
-                phone, code: this.state.code
-              })
-              this.props.onSuccess(phoneAttestation)
-            }
-          }}
-        >
+        <form onSubmit={(event) => this.onSubmit(event)}>
           <h2>
             <FormattedMessage
               id={ 'VerifyPhone.verifyPhoneHeading' }
@@ -88,7 +75,29 @@ class VerifyPhone extends Component {
     )
   }
 
+  async onSubmit(event) {
+    event.preventDefault()
+    this.setState({errors: {}}) // clear errors
+
+    const phone = `+${this.state.prefix}${this.state.number}`
+
+    if (this.state.mode === 'phone') {
+      try {
+        await origin.attestations.phoneGenerateCode({ phone })
+        this.setState({ mode: 'code' })
+      } catch (exception) {
+        this.setState({ errors: JSON.parse(exception).errors })
+      }
+    } else if (this.state.mode === 'code') {
+      let phoneAttestation = await origin.attestations.phoneVerify({
+        phone, code: this.state.code
+      })
+      this.props.onSuccess(phoneAttestation)
+    }
+  }
+
   renderPhoneForm() {
+    const phoneErrors = this.state.errors.phone
     return (
       <div className="form-group">
         <label htmlFor="phoneNumber">
@@ -118,20 +127,23 @@ class VerifyPhone extends Component {
               <CountryOptions setSelectedCountry={ this.setSelectedCountry } />
             </div>
           </div>
-          <input
-            type="phone"
-            className="form-control"
-            id="phoneNumber"
-            name="phone-number"
-            value={this.state.number}
-            onChange={e => {
-              this.setState({ number: e.target.value })
-            }}
-            placeholder="Area code and phone number"
-            pattern="\d+"
-            title="Numbers only"
-            required
-          />
+          <div className={`form-control-wrap ${phoneErrors ? 'error' : ''}`}>
+            <input
+              type="phone"
+              className="form-control"
+              id="phoneNumber"
+              name="phone-number"
+              value={this.state.number}
+              onChange={e => {
+                this.setState({ number: e.target.value })
+              }}
+              placeholder="Area code and phone number"
+              pattern="\d+"
+              title="Numbers only"
+              required
+            />
+            <div className="error_message">{phoneErrors ? phoneErrors.join(' ') : ''}</div>
+          </div>
         </div>
         <div className="explanation">
            <FormattedMessage
