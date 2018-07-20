@@ -96,7 +96,7 @@ Enviroment keys for Indexing server:
 - RPC_SERVER: Set this to RPC server URL, you want the indexing server to listen to events on.
 - RPC_PROTOCOL: Different connection protocols for RPC server. Options are `https` or `wss`
 
-  example configurations:
+  Example configurations:
     - Rinkeby:
       RPC_SERVER: `wss://rinkeby.infura.io/_ws`
       RPC_PROTOCOL: `wss`
@@ -105,8 +105,17 @@ Enviroment keys for Indexing server:
       RPC_SERVER: `http://127.0.0.1:8545/`
       RPC_PROTOCOL: `https`
 
-- IPFS_DOMAIN: Set this to domain of an IPFS daemon. for example `127.0.0.1` or `gateway.originprotocol.com`
+- IPFS_DOMAIN: Set this to the domain of an IPFS daemon.
 - IPFS_PORT: port on which the IPFS daemon is listening.
+
+  Example configurations:
+    - Origin IPFS gateway:
+      IPFS_DOMAIN: `gateway.originprotocol.com`
+      IPFS_PORT: 8080
+    - Local IPFS server:
+      IPFS_DOMAIN: `127.0.0.1`
+      IPFS_PORT: 5002
+
 - REDIS_URL: Set this to point to your local Redis server. For example `redis://127.0.0.1:6379/0`
 
 If you wish to setup push notification for your mobile apps
