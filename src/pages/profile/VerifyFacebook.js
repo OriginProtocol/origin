@@ -61,7 +61,11 @@ class VerifyFacebook extends Component {
           <a
             href="#"
             data-modal="facebook"
-            onClick={this.props.handleToggle}
+            onClick={ event => {
+              event.preventDefault()
+              this.props.handleToggle(event)
+              this.clearErrors()
+            }}
           >
             <FormattedMessage
               id={ 'VerifyFacebook.cancel' }
@@ -73,7 +77,12 @@ class VerifyFacebook extends Component {
     )
   }
 
+  clearErrors() {
+    this.setState({generalErrors:[]})
+  }
+
   onCertify() {
+    this.clearErrors()
     var fbWindow = window.open(this.state.url, '', 'width=650,height=500')
 
     const finish = async e => {
