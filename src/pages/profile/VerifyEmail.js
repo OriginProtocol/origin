@@ -46,7 +46,7 @@ class VerifyEmail extends Component {
             <a
               href="#"
               data-modal="email"
-              onClick={this.props.handleToggle}
+              onClick={event => this.onCancel(event)}
             >
               <FormattedMessage
                 id={ 'VerifyEmail.cancel' }
@@ -57,6 +57,13 @@ class VerifyEmail extends Component {
         </form>
       </Modal>
     )
+  }
+
+  onCancel(event) {
+    event.preventDefault()
+    this.clearErrors()
+    this.setState({ mode: 'email' })
+    this.props.handleToggle(event)
   }
 
   async onSubmit(event) {
