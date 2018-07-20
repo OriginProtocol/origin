@@ -98,7 +98,10 @@ describe('Attestation Resource', function() {
         responseStub: {}
       })
       const response = await attestations.phoneGenerateCode({
-        phone: '555-555-5555'
+        country_calling_code: '1',
+        phone: '555-555-5555',
+        method: 'sms',
+        locale: 'en'
       })
       expect(response).to.be.an('object')
     })
@@ -109,11 +112,12 @@ describe('Attestation Resource', function() {
       const attestations = setupWithServer({
         expectedMethod: 'POST',
         expectedPath: 'phone/verify',
-        expectedParams: ['identity', 'phone', 'code'],
+        expectedParams: ['identity', 'country_calling_code', 'phone', 'code'],
         responseStub: sampleAttestation
       })
       const response = await attestations.phoneVerify({
         wallet: sampleWallet,
+        country_calling_code: '1',
         phone: '555-555-5555',
         code: '12345'
       })
