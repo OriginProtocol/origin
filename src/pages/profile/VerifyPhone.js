@@ -12,19 +12,31 @@ class VerifyPhone extends Component {
     this.state = {
       mode: 'phone',
       countryCode: 'us',
-      number: '',
-      code: '',
-      prefix: '1'
+      countryCallingCode: '1',
+      phone: '',
+      verificationCode: '',
+      verificationMethod: 'sms'
     }
 
     this.setSelectedCountry = this.setSelectedCountry.bind(this)
+    this.toggleVerificationMethod = this.toggleVerificationMethod.bind(this)
   }
 
   setSelectedCountry(country) {
     this.setState({
       countryCode: country.code,
-      prefix: country.prefix
+      countryCallingCode: country.prefix
     })
+  }
+
+  toggleVerificationMethod (event) {
+    // Toggle between SMS and call verification
+    event.preventDefault()
+    if (this.state.verificationMethod === 'sms') {
+      this.setState({ verificationMethod: 'call' })
+    } else if (this.state.verificationMethod === 'call') {
+      this.setState({ verificationMethod: 'sms' })
+    }
   }
 
   render() {
@@ -43,13 +55,21 @@ class VerifyPhone extends Component {
         <form
           onSubmit={async e => {
             e.preventDefault()
-            var phone = `+${this.state.prefix}${this.state.number}`
+            let phoneObj = {
+                country_calling_code: this.state.countryCallingCode,
+                phone: String(this.state.phone),
+            }
             if (this.state.mode === 'phone') {
-              await origin.attestations.phoneGenerateCode({ phone })
+              await origin.attestations.phoneGenerateCode({
+                ...phoneObj,
+                method: this.state.verificationMethod
+              })
+              // Update mode to display verification code input form
               this.setState({ mode: 'code' })
             } else if (this.state.mode === 'code') {
               let phoneAttestation = await origin.attestations.phoneVerify({
-                phone, code: this.state.code
+                ...phoneObj,
+                code: this.state.verificationCode
               })
               this.props.onSuccess(phoneAttestation)
             }
@@ -92,11 +112,40 @@ class VerifyPhone extends Component {
     return (
       <div className="form-group">
         <label htmlFor="phoneNumber">
-          <FormattedMessage
-            id={ 'VerifyPhone.enterPhoneNumber' }
-            defaultMessage={ 'Enter your phone number below and {originId} will send you a verification code' }
-            values={{ originId: <span>Origin<sup>ID</sup></span> }}
-          />
+          {this.state.verificationMethod === 'sms' &&
+            <div>
+              <FormattedMessage
+                id={ 'VerifyPhone.enterPhoneNumberSms' }
+                defaultMessage={ 'Enter your phone number below and {originId} will send you a verification code via SMS.' }
+                values={{ originId: <span>Origin<sup>ID</sup></span> }}
+              />
+              <div>
+                <a href="#" onClick={ this.toggleVerificationMethod }>
+                  <FormattedMessage
+                    id={ 'VerifyPhone.callOption' }
+                    defaultMessage={ 'Prefer a call?' }
+                  />
+                </a>
+              </div>
+            </div>
+          }
+          { this.state.verificationMethod === 'call' &&
+            <div>
+              <FormattedMessage
+                id={ 'VerifyPhone.enterPhoneNumberCall' }
+                defaultMessage={ 'Enter your phone number below and {originId} will call you with a verification code.' }
+                values={{ originId: <span>Origin<sup>ID</sup></span> }}
+              />
+              <div>
+                <a href="#" onClick={ this.toggleVerificationMethod }>
+                  <FormattedMessage
+                    id={ 'VerifyPhone.smsOption' }
+                    defaultMessage={ 'Prefer a SMS?' }
+                  />
+                </a>
+              </div>
+            </div>
+          }
         </label>
         <div className="d-flex">
           <div className="country-code dropdown">
@@ -123,9 +172,9 @@ class VerifyPhone extends Component {
             className="form-control"
             id="phoneNumber"
             name="phone-number"
-            value={this.state.number}
+            value={this.state.phone}
             onChange={e => {
-              this.setState({ number: e.target.value })
+              this.setState({ phone: e.target.value })
             }}
             placeholder="Area code and phone number"
             pattern="\d+"
@@ -156,9 +205,9 @@ class VerifyPhone extends Component {
           className="form-control"
           id="phoneVerificationCode"
           name="phone-verification-code"
-          value={this.state.code}
+          value={this.state.verificationCode}
           onChange={e => {
-            this.setState({ code: e.target.value })
+            this.setState({ verificationCode: e.target.value })
           }}
           placeholder="Verification code"
           pattern="[a-zA-Z0-9]{6}"

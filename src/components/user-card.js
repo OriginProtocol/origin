@@ -81,6 +81,11 @@ class UserCard extends Component {
                       <img src="images/twitter-icon-verified.svg" alt="Twitter verified icon" />
                     </Link>
                   }
+                  {attestations.find(a => a.service === 'airbnb') &&
+                    <Link to={`/users/${userAddress}`}>
+                      <img src="images/airbnb-icon-verified.svg" alt="Airbnb verified icon" />
+                    </Link>
+                  }
                 </div>
               }
             </div>

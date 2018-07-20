@@ -70,22 +70,24 @@ class VerifierServices extends Component {
             </button>
           </div>
           <div className="col-12 col-sm-6 col-md-4">
-            <button className="service d-flex disabled" disabled>
+            <button
+              data-modal="airbnb"
+              className={`service d-flex${
+                published.airbnb
+                  ? ' published'
+                  : provisional.airbnb
+                    ? ' verified'
+                    : ''
+              }`}
+              onClick={handleToggle}
+            >
               <span className="image-container d-flex align-items-center justify-content-center">
-                <img src="images/address-icon.svg" alt="address icon" />
-              </span>
-              <span className="unavailable-bg" />
-              <span className="unavailable-message">
-                <FormattedMessage
-                  id={ '_Services.comingSoon' }
-                  defaultMessage={ 'Coming {br} Soon' }
-                  values={{ br: <br /> }}
-                />
+                <img src="images/airbnb-icon-light.svg" alt="Airbnb icon" />
               </span>
               <span className="service-name">
                 <FormattedMessage
-                  id={ '_Services.address' }
-                  defaultMessage={ 'Address' }
+                  id={ '_Services.airbnb' }
+                  defaultMessage={ 'Airbnb' }
                 />
               </span>
             </button>

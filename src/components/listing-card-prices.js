@@ -35,18 +35,41 @@ class ListingCardPrices extends Component {
     }
   }
 
-  retrieveConversion(currencyCode){
-    let targetCurrencyCode = currencyCode ? currencyCode : this.state.currencyCode
+  doFetch(){
     let exchangeURL = this.state.exchangeBaseURL;
     exchangeURL += baseCurrencyCode.toLowerCase();
     exchangeURL += "-";
     exchangeURL += this.state.currencyCode.toLowerCase();
-
     return new Promise((resolve, reject) => {
       fetch(exchangeURL).then(res => res.json()).then(json => {
-        resolve(this.setState({ exchangeRate: json.ticker.price }));
+        let exchangeRateFromAPI = json.ticker.price;
+        if (typeof(Storage) !== "undefined") {
+          var object = { value: exchangeRateFromAPI, timestamp: new Date()}
+          localStorage.setItem("origin.exchangeRate", JSON.stringify(object));
+        }
+        resolve(this.setState({ exchangeRate: exchangeRateFromAPI }));
       }).catch(console.error)
     });
+  }
+
+  retrieveConversion(){
+    if (typeof(Storage) !== "undefined") {
+      let cachedRate = localStorage.getItem("origin.exchangeRate");
+      if (cachedRate) {
+        let HALF_HOUR = 30 * 60 * 1000;
+        let cachedTime = new Date(JSON.parse(cachedRate).timestamp);
+        if ( ((new Date) - cachedTime) < HALF_HOUR) {
+          this.setState({ exchangeRate: JSON.parse(cachedRate).value });
+        } else {
+          localStorage.removeItem("origin.exchangeRate");
+          this.doFetch(); // cache is invalid
+        }
+      } else {
+        this.doFetch(); // isn't cached to begin with
+      }
+    } else {
+      this.doFetch(); // localStorage not available
+    }
   }
 
   formatApproxPrice(){

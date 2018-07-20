@@ -1,15 +1,23 @@
 [
   {
-    "id": "my-sales.mySalesHeading",
-    "defaultMessage": "My Sales"
-  },
-  {
     "id": "my-sales.loading",
     "defaultMessage": "Loading..."
   },
   {
-    "id": "my-sales.noSales",
-    "defaultMessage": "You currently have no sales."
+    "id": "my-sales.no-sales",
+    "defaultMessage": "You don't have any sales yet."
+  },
+  {
+    "id": "my-sales.no-sales-text",
+    "defaultMessage": "Click below to view your listings."
+  },
+  {
+    "id": "my-sales.view-listings",
+    "defaultMessage": "My Listings"
+  },
+  {
+    "id": "my-sales.mySalesHeading",
+    "defaultMessage": "My Sales"
   },
   {
     "id": "my-sales.pending",

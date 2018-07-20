@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { FormattedMessage, FormattedDate, defineMessages, injectIntl } from 'react-intl'
 import $ from 'jquery'
-import moment from 'moment'
 import Avatar from './avatar'
+import Modal from './modal'
 import Review from './review'
 import TransactionEvent from '../pages/purchases/transaction-event'
 import PurchaseProgress from './purchase-progress'
@@ -23,6 +23,7 @@ const defaultState = {
   },
   listing: {},
   logs: [],
+  processing: false,
   purchase: {},
   reviews: [],
   seller: {}
@@ -99,7 +100,7 @@ class PurchaseDetail extends Component {
       },
     });
 
-    /* Transaction stages: no disputes and no seller review of buyer/transaction
+    /* Transaction stages: no disputes/arbitration
      *  - step 0 was creating the listing
      *  - nextSteps[0] equates to step 1, etc
      *  - even-numbered steps are seller's resposibility
@@ -291,13 +292,17 @@ class PurchaseDetail extends Component {
         rating,
         reviewText: reviewText.trim(),
       })
+      this.setState({ processing: true })
       await transaction.whenFinished()
       // why is this delay often required???
       setTimeout(() => {
+        this.setState({ processing: false })
         this.loadPurchase()
         this.loadReviews(this.state.listing.address)
       }, 1000)
     } catch(error) {
+      this.setState({ processing: false })
+      
       console.error('Error marking purchase received by buyer')
       console.error(error)
     }
@@ -308,12 +313,16 @@ class PurchaseDetail extends Component {
 
     try {
       const transaction = await origin.purchases.sellerConfirmShipped(purchaseAddress)
+      this.setState({ processing: true })
       await transaction.whenFinished()
       // why is this delay often required???
       setTimeout(() => {
+        this.setState({ processing: false })
         this.loadPurchase()
       }, 1000)
     } catch(error) {
+      this.setState({ processing: false })
+      
       console.error('Error marking purchase shipped by seller')
       console.error(error)
     }
@@ -328,12 +337,16 @@ class PurchaseDetail extends Component {
         rating,
         reviewText: reviewText.trim(),
       })
+      this.setState({ processing: true })
       await transaction.whenFinished()
       // why is this delay often required???
       setTimeout(() => {
+        this.setState({ processing: false })
         this.loadPurchase()
       }, 1000)
     } catch(error) {
+      this.setState({ processing: false })
+
       console.error('Error withdrawing funds for seller')
       console.error(error)
     }
@@ -360,7 +373,7 @@ class PurchaseDetail extends Component {
   render() {
     const { web3Account } = this.props
 
-    const { buyer, form, listing, logs, purchase, reviews, seller } = this.state
+    const { buyer, form, listing, logs, processing, purchase, reviews, seller } = this.state
     const translatedListing = translateListingCategory(listing)
     const { rating, reviewText } = form
     const buyersReviews = reviews.filter(r => r.revieweeRole === 'SELLER')
@@ -383,7 +396,7 @@ class PurchaseDetail extends Component {
     const soldAt = purchase.created * 1000 // convert seconds since epoch to ms
 
     // log events
-    const paymentEvent = logs.find(l => l.stage === 'shipping_pending')
+    const paymentEvent = logs.find(l => l.stage === 'in_escrow')
     const paidAt = paymentEvent ? paymentEvent.timestamp * 1000 : null
     const fulfillmentEvent = logs.find(l => l.stage === 'buyer_pending')
     const fulfilledAt = fulfillmentEvent ? fulfillmentEvent.timestamp * 1000 : null
@@ -401,12 +414,12 @@ class PurchaseDetail extends Component {
     let decimal, left, step
 
     if (purchase.stage === 'complete') {
-      step = maxStep
+      step = 4
     } else if (purchase.stage === 'seller_pending') {
       step = 3
     } else if (purchase.stage === 'buyer_pending') {
       step = 2
-    } else if (purchase.stage === 'shipping_pending') {
+    } else if (purchase.stage === 'in_escrow') {
       step = 1
     } else {
       step = 0
@@ -749,6 +762,22 @@ class PurchaseDetail extends Component {
             </div>
           </div>
         </div>
+        {processing &&
+          <Modal backdrop="static" isOpen={true}>
+            <div className="image-container">
+              <img src="images/spinner-animation.svg" role="presentation"/>
+            </div>
+            <FormattedMessage
+              id={ 'purchase-detail.processingUpdate' }
+              defaultMessage={ 'Processing your update' }
+            />
+            <br />
+            <FormattedMessage
+              id={ 'purchase-detail.pleaseStandBy' }
+              defaultMessage={ 'Please stand by...' }
+            />
+          </Modal>
+        }
       </div>
     )
   }

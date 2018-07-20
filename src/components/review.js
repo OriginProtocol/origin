@@ -1,14 +1,20 @@
 import React, { Component } from 'react'
+import moment from 'moment'
 import { defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { fetchUser } from 'actions/User'
 import Avatar from './avatar'
-import Timelapse from './timelapse'
 
 class Review extends Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      createdAtTime: null
+    }
+
+    this.setCreatedAtTime = this.setCreatedAtTime.bind(this)
 
     this.intlMessages = defineMessages({
       unnamedUser: {
@@ -20,6 +26,12 @@ class Review extends Component {
 
   componentWillMount() {
     this.props.fetchUser(this.props.review.reviewerAddress, this.props.intl.formatMessage(this.intlMessages.unnamedUser))
+  }
+
+  setCreatedAtTime(createdAt) {
+    this.setState({
+      createdAtTime: moment(createdAt).fromNow()
+    })
   }
 
   render() {
@@ -47,7 +59,7 @@ class Review extends Component {
                   />
                 )
               })}</div>
-              <div className="age text-muted"><Timelapse reactive={false} reference={new Date(createdAt)} /></div>
+              <div className="age text-muted">{ this.state.createdAtTime || this.setCreatedAtTime(createdAt) }</div>
             </div>
           </div>
         </Link>

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
-import moment from 'moment'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import { translateListingCategory } from '../utils/translationUtils'
@@ -71,7 +70,7 @@ class MyPurchaseCard extends Component {
         step = 2
         verb = this.props.intl.formatMessage(this.intlMessages.sentBySeller)
         break
-      case 'shipping_pending':
+      case 'in_escrow':
         step = 1
         verb = this.props.intl.formatMessage(this.intlMessages.purchased)
         break

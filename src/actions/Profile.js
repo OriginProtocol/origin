@@ -41,7 +41,6 @@ export function addAttestation(attestation) {
 
 export function deployProfile() {
   return async function(dispatch, getState) {
-
     dispatch({ type: ProfileConstants.DEPLOY })
 
     const {
@@ -72,6 +71,10 @@ export function deployProfile() {
 
     if (!published.phone && provisional.phone) {
       userData.attestations.push(provisional.phone)
+    }
+
+    if (!published.airbnb && provisional.airbnb) {
+      userData.attestations.push(provisional.airbnb)
     }
 
     try {
