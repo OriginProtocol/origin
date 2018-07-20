@@ -27,11 +27,20 @@ Once an attestation object has been created, it needs to be added to a user obje
 
 ```javascript
 await origin.attestations.phoneGenerateCode({
-  phone: "555-555-5555"
+  country_calling_code: "1",
+  phone: "555-555-5555",
+  method: "sms",
+  locale: "en"
 })
 ```
 
-This will send a text message to the given phone number containing a verification code.
+This will perform a phone verification by calling or sending a SMS to a phone number.
+
+The phone number that will receive the call or SMS is the `country_calling_code` combined with the `phone`. The `phone` should therefore be provided in the national format.
+
+The `method` can either by "call" or "sms".
+
+The `locale` parameter is optional and it defines the language of the call or the SMS. If not provided a sensible default is used based on the country of the phone number. Supported languages are af, ar, ca, zh, zh-CN, zh-HK, hr, cs, da, nl, en, fi, fr, de, el, he, hi, hu, id, it, ja, ko, ms, nb, pl, pt-BR, pt, ro, ru, es, sv, tl, th, tr, vi.
 
 ## phoneVerify
 
@@ -40,6 +49,7 @@ This will send a text message to the given phone number containing a verificatio
 ```javascript
 let phoneAttestation = await origin.attestations.phoneVerify({
   wallet: myWalletAddress,
+  country_calling_code: "1",
   phone: "555-555-5555",
   code: "123456"
 })
@@ -53,6 +63,8 @@ let phoneAttestation = await origin.attestations.phoneVerify({
 ```
 
 This will verify that the `code` submitted in the request is the one that was sent to the phone number in the `phoneGenerateCode` call. If it is valid, an attestation object will be returned.
+
+Note that the `country_calling_code` and `phone` must have the same values as the values used in the `phoneGenerateCode` call.
 
 ## emailGenerateCode
 
