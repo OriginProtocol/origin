@@ -21,16 +21,8 @@
       "value": "app-name.herokuapp.com",
       "required": true
     },
-    "TWILIO_ACCOUNT_SID": {
-      "description": "Account SID which acts as a username",
-      "required": false
-    },
-    "TWILIO_AUTH_TOKEN": {
-      "description": "Auth token which acts as a password",
-      "required": false
-    },
-    "TWILIO_NUMBER": {
-      "description": "Twilio number",
+    "TWILIO_VERIFY_API_KEY": {
+      "description": "Twilio Verify API key",
       "required": false
     },
     "RPC_SERVER": {

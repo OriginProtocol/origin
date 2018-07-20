@@ -7,18 +7,17 @@ One of the following HTTP status codes will be returned:
 - `400` (request failed validation; will be accompanied by errors array, see below)
 - `422` (error processing request; will be accompanied by errors array, see below)
 - `500` (unexpected server error)
+- `503` (service unavailable)
 
 Example error responses (for `400` and `422` status codes):
 
 ```
 {
-    "errors": ["Invalid phone number."]
-}
-```
-
-```
-{
-    "errors": ["code: not a valid string.", "identity: not a valid string."]
+  "errors": {
+    "phone": [
+      "Phone number is invalid."
+    ]
+  }
 }
 ```
 
@@ -39,11 +38,17 @@ Example error responses (for `400` and `422` status codes):
 
 POST `/api/attestations/phone/generate-code`
 
+- country_calling_code (string): country calling code of the phone number
 - phone (string): phone number to send code
+- method (string): the method of verification, one of `call` or `sms`
+- locale (string, optional): language to be used in verification, a list of supported options is available [here](https://www.twilio.com/docs/verify/supported-languages)
 
 ```
 {
-    "phone": "5555555555"
+    "country_calling_code": "1",
+    "phone": "5555555555",
+    "method": "sms",
+    "locale": "en"
 }
 ```
 
@@ -60,12 +65,14 @@ POST `/api/attestations/phone/generate-code`
 POST `/api/attestations/phone/verify`
 
 - identity (string): address of ERC725 identity contract
+- country_calling_code (string): country calling code of the phone number
 - phone (string): phone number where code was sent
 - code (string): code sent to phone number
 
 ```
 {
     "identity": "0xc741715D55De72bF12461760BaAF97E0468e7b86",
+    "country_calling_code": "1",
     "phone": "5555555555",
     "code": "964622"
 }

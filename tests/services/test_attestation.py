@@ -2,6 +2,7 @@ import datetime
 import mock
 import pytest
 
+import responses
 from urllib.request import HTTPError
 from tests.helpers.eth_utils import sample_eth_address, str_eth
 from database import db_models
@@ -13,6 +14,7 @@ from logic.service_utils import (PhoneVerificationError,
                                  FacebookVerificationError,
                                  TwitterVerificationError,
                                  AirbnbVerificationError)
+from marshmallow.exceptions import ValidationError
 from tests.factories.attestation import VerificationCodeFactory
 from util.time_ import utcnow
 VC = db_models.VerificationCode
@@ -20,140 +22,157 @@ VC = db_models.VerificationCode
 SIGNATURE_LENGTH = 132
 
 
-def test_generate_phone_verification_code_new_phone(
-        mock_send_sms, mock_normalize_number):
-    phone = '5551231212'
-    resp = VerificationService.generate_phone_verification_code(phone)
-    assert isinstance(resp, VerificationServiceResponse)
+@responses.activate
+def test_send_phone_verification_success():
+    responses.add(
+        responses.POST,
+        'https://api.authy.com/protected/json/phones/verification/start',
+        status=200
+    )
 
-    db_code = VC.query.filter(VC.phone == phone).first()
-    assert db_code is not None
-    assert db_code.code is not None
-    assert len(db_code.code) == 6
-    assert db_code.expires_at is not None
-    assert db_code.created_at is not None
-    assert db_code.updated_at is not None
-
-
-def test_generate_phone_verification_code_phone_already_in_db(
-        mock_send_sms, session, mock_normalize_number):
-    vc_obj = VerificationCodeFactory.build()
-    expires_at = vc_obj.expires_at
-    vc_obj.created_at = utcnow() - datetime.timedelta(seconds=10)
-    vc_obj.updated_at = utcnow() - datetime.timedelta(seconds=10)
-    session.add(vc_obj)
-    session.commit()
-
-    phone = vc_obj.phone
-    resp = VerificationService.generate_phone_verification_code(phone)
-    assert isinstance(resp, VerificationServiceResponse)
-
-    assert VC.query.filter(VC.phone == phone).count() == 1
-
-    db_code = VC.query.filter(VC.phone == phone).first()
-    assert db_code is not None
-    assert db_code.code is not None
-    assert len(db_code.code) == 6
-    assert db_code.expires_at is not None
-    assert db_code.created_at is not None
-    assert db_code.updated_at is not None
-    assert db_code.updated_at >= db_code.created_at
-    assert db_code.expires_at > expires_at
+    args = {
+        'country_calling_code': '1',
+        'phone': '12341234',
+        'method': 'sms',
+        'locale': None
+    }
+    response = VerificationService.send_phone_verification(**args)
+    assert isinstance(response, VerificationServiceResponse)
 
 
-def test_generate_phone_verification_code_twilio_exception(
-        mock_send_sms_exception, session, mock_normalize_number):
-    phone = '5551231212'
+@responses.activate
+def test_send_phone_verification_invalid_number():
+    responses.add(
+        responses.POST,
+        'https://api.authy.com/protected/json/phones/verification/start',
+        json={'error_code': '60033'},
+        status=400
+    )
+
+    args = {
+        'country_calling_code': '1',
+        'phone': '1234',
+        'method': 'sms',
+        'locale': None
+    }
+    with pytest.raises(ValidationError) as validation_err:
+        VerificationService.send_phone_verification(**args)
+
+    assert(validation_err.value.messages[0]) == 'Phone number is invalid.'
+    assert(validation_err.value.field_names[0]) == 'phone'
+
+
+@responses.activate
+def test_send_phone_verification_cant_sms_landline():
+    responses.add(
+        responses.POST,
+        'https://api.authy.com/protected/json/phones/verification/start',
+        json={'error_code': '60082'},
+        status=403
+    )
+
+    args = {
+        'country_calling_code': '1',
+        'phone': '1234',
+        'method': 'sms',
+        'locale': None
+    }
+    with pytest.raises(ValidationError) as validation_err:
+        VerificationService.send_phone_verification(**args)
+
+    assert(validation_err.value.messages[0]) == 'Cannot send SMS to landline.'
+    assert(validation_err.value.field_names[0]) == 'phone'
+
+
+@responses.activate
+def test_send_phone_verification_twilio_error():
+    responses.add(
+        responses.POST,
+        'https://api.authy.com/protected/json/phones/verification/start',
+        json={'error_code': '60060'},  # Account is suspended
+        status=503
+    )
+
+    args = {
+        'country_calling_code': '1',
+        'phone': '1234',
+        'method': 'sms',
+        'locale': None
+    }
     with pytest.raises(PhoneVerificationError) as service_err:
-        VerificationService.generate_phone_verification_code(phone)
+        VerificationService.send_phone_verification(**args)
 
-    assert str(service_err.value) == 'Could not send verification code.'
-    assert service_err.value.status_code == 503
-    db_code = VC.query.filter(VC.phone == phone).first()
-    assert db_code is None
+    assert(str(service_err.value)) == \
+        'Could not send verification code. Please try again shortly.'
 
 
-def test_verify_phone_valid_code(session, mock_normalize_number):
-    vc_obj = VerificationCodeFactory.build()
-    session.add(vc_obj)
-    session.commit()
+@responses.activate
+def test_verify_phone_valid_code():
+    responses.add(
+        responses.GET,
+        'https://api.authy.com/protected/json/phones/verification/status',
+        json={
+            'message': 'Verification code is correct.',
+            'success': True
+        }
+    )
 
     args = {
         'eth_address': str_eth(sample_eth_address),
-        'phone': vc_obj.phone,
-        'code': vc_obj.code
+        'country_calling_code': '1',
+        'phone': '12341234',
+        'code': '123456'
     }
-    resp = VerificationService.verify_phone(**args)
-    assert isinstance(resp, VerificationServiceResponse)
-    resp_data = resp.data
+    response = VerificationService.verify_phone(**args)
+    assert isinstance(response, VerificationServiceResponse)
 
-    assert len(resp_data['signature']) == SIGNATURE_LENGTH
-    assert resp_data['claim_type'] == CLAIM_TYPES['phone']
-    assert resp_data['data'] == 'phone verified'
+    assert len(response.data['signature']) == SIGNATURE_LENGTH
+    assert response.data['claim_type'] == CLAIM_TYPES['phone']
+    assert response.data['data'] == 'phone verified'
 
 
-def test_verify_phone_expired_code(session, mock_normalize_number):
-    vc_obj = VerificationCodeFactory.build()
-    vc_obj.expires_at = utcnow() - datetime.timedelta(days=1)
-    session.add(vc_obj)
-    session.commit()
+@responses.activate
+def test_verify_phone_expired_code():
+    responses.add(
+        responses.GET,
+        'https://api.authy.com/protected/json/phones/verification/status',
+        json={'error_code': '60023'},   # No pending verification
+        status=404
+    )
 
     args = {
         'eth_address': str_eth(sample_eth_address),
-        'phone': vc_obj.phone,
-        'code': vc_obj.code
+        'country_calling_code': '1',
+        'phone': '12341234',
+        'code': '123456'
     }
-    with pytest.raises(PhoneVerificationError) as service_err:
+    with pytest.raises(ValidationError) as validation_err:
         VerificationService.verify_phone(**args)
 
-    assert str(service_err.value) == 'The code you provided has expired.'
+    assert(validation_err.value.messages[0]) == 'Verification code has expired.'
+    assert(validation_err.value.field_names[0]) == 'code'
 
 
-def test_verify_phone_wrong_code(session, mock_normalize_number):
-    vc_obj = VerificationCodeFactory.build()
-    session.add(vc_obj)
-    session.commit()
+@responses.activate
+def test_verify_phone_invalid_code():
+    responses.add(
+        responses.GET,
+        'https://api.authy.com/protected/json/phones/verification/status',
+        json={'error_code': '60022'},   # No pending verification
+        status=401
+    )
 
     args = {
         'eth_address': str_eth(sample_eth_address),
-        'phone': vc_obj.phone,
+        'country_calling_code': '1',
+        'phone': '12341234',
         'code': 'garbage'
     }
-    with pytest.raises(PhoneVerificationError) as service_err:
+    with pytest.raises(ValidationError) as validation_err:
         VerificationService.verify_phone(**args)
 
-    assert str(service_err.value) == 'The code you provided is invalid.'
-
-
-def test_verify_phone_phone_not_found(session, mock_normalize_number):
-    vc_obj = VerificationCodeFactory.build()
-    session.add(vc_obj)
-    session.commit()
-
-    args = {
-        'eth_address': str_eth(sample_eth_address),
-        'phone': 'garbage',
-        'code': vc_obj.code
-    }
-    with pytest.raises(PhoneVerificationError) as service_err:
-        VerificationService.verify_phone(**args)
-
-    assert str(service_err.value) == 'The given phone number was not found.'
-
-
-def test_generate_phone_verification_rate_limit_exceeded(
-        session, mock_normalize_number):
-    vc_obj = VerificationCodeFactory.build()
-    vc_obj.updated_at = utcnow() + datetime.timedelta(seconds=9)
-    session.add(vc_obj)
-    session.commit()
-
-    phone = vc_obj.phone
-    with pytest.raises(PhoneVerificationError) as service_err:
-        VerificationService.generate_phone_verification_code(phone)
-    assert str(service_err.value) == ('Please wait briefly before requesting a'
-                                      ' new verification code.')
-    assert service_err.value.status_code == 429
+    assert(validation_err.value.messages[0]) == 'Verification code is incorrect.'
+    assert(validation_err.value.field_names[0]) == 'code'
 
 
 @mock.patch('python_http_client.client.Client')

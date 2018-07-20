@@ -72,9 +72,7 @@ You'll need to set a few API keys:
   - SENDGRID_API_KEY
   - SENDGRID_FROM_EMAIL
 - [Twilio](https://www.twilio.com/docs/usage/your-request-to-twilio)
-  - TWILIO_ACCOUNT_SID
-  - TWILIO_AUTH_TOKEN
-  - TWILIO_NUMBER (Can be added on [this page](https://www.twilio.com/user/account/phone-numbers/))
+  - TWILIO_VERIFY_API_KEY (Can be generated from your [Twilio account](https://www.twilio.com/console/verify/applications))
 - [Twitter](https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens)
   - TWITTER_CONSUMER_KEY
   - TWITTER_CONSUMER_SECRET

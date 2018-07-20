@@ -1,5 +1,6 @@
 from views import web_views  # noqa
 import mock
+import responses
 
 from tests.helpers.rest_utils import post_json, json_of_response
 from tests.helpers.eth_utils import sample_eth_address, str_eth
@@ -14,26 +15,50 @@ def test_index(client):
     assert resp.status_code == 200
 
 
-def test_phone_verify(client, mock_send_sms, mock_normalize_number):
-    phone = "6666666666"
-    resp = post_json(client,
-                     "/api/attestations/phone/generate-code",
-                     {"phone": phone})
-    assert resp.status_code == 200
-    assert json_of_response(resp) == {}
+def test_request_phone_verify(client):
+    with responses.RequestsMock() as rsps:
+        rsps.add(
+            responses.POST,
+            'https://api.authy.com/protected/json/phones/verification/start',
+            status=200
+        )
 
-    db_code = VC.query.filter(VC.phone == phone).first()
-    assert db_code.code is not None
+        args = {
+            'country_calling_code': '1',
+            'phone': '12341234',
+            'method': 'sms'
+        }
+        response = post_json(client, '/api/attestations/phone/generate-code',
+                             args)
 
-    resp = post_json(client,
-                     "/api/attestations/phone/verify",
-                     {"phone": phone,
-                      "identity": str_eth(sample_eth_address),
-                      'code': db_code.code})
-    resp_json = json_of_response(resp)
-    assert resp.status_code == 200
-    assert len(resp_json['signature']) == 132
-    assert resp_json['data'] == 'phone verified'
+        assert response.status_code == 200
+        assert json_of_response(response) == {}
+
+
+@responses.activate
+def test_verify_phone(client):
+    with responses.RequestsMock() as rsps:
+        rsps.add(
+            responses.GET,
+            'https://api.authy.com/protected/json/phones/verification/status',
+            json={
+                'message': 'Verification code is correct.',
+                'success': True
+            }
+        )
+
+        args = {
+            'country_calling_code': '1',
+            'phone': '12341234',
+            'code': '123456',
+            'identity': str_eth(sample_eth_address)
+        }
+        response = post_json(client, '/api/attestations/phone/verify', args)
+
+        assert response.status_code == 200
+        response_json = json_of_response(response)
+        assert len(response_json['signature']) == 132
+        assert response_json['data'] == 'phone verified'
 
 
 @mock.patch('python_http_client.client.Client')

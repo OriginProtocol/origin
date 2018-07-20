@@ -7,10 +7,9 @@ import secrets
 import sendgrid
 import re
 
+from marshmallow.exceptions import ValidationError
 from urllib.request import Request, urlopen, HTTPError, URLError
 from sendgrid.helpers.mail import Email, Content, Mail
-from twilio.rest import Client
-from twilio.base.exceptions import TwilioRestException
 
 from config import settings
 from database import db
@@ -55,63 +54,126 @@ class VerificationServiceResponse():
 
 
 class VerificationService:
-    def generate_phone_verification_code(phone):
-        phone = normalize_number(phone)
 
-        db_code = VC.query \
-            .filter(VC.phone == phone) \
-            .first()
-        if db_code is None:
-            db_code = db_models.VerificationCode()
-            db.session.add(db_code)
-        elif (time_.utcnow() - db_code.updated_at).total_seconds() < 10:
-            # If the client has requested a verification code already within
-            # the last 10 seconds,
-            # throw a rate limit error, so they can't just keep creating codes
-            # and guessing them
-            # rapidly.
-            raise PhoneVerificationError(
-                'Please wait briefly before requesting'
-                ' a new verification code.', status_code=429)
-        db_code.phone = phone
-        db_code.code = random_numeric_token()
-        db_code.expires_at = time_.utcnow(
-        ) + datetime.timedelta(minutes=CODE_EXPIRATION_TIME_MINUTES)
-        db.session.commit()
+    def send_phone_verification(country_calling_code, phone, method, locale):
+        """Request a phone number verification using the Twilio Verify API.
+
+        Args:
+            country_calling_code (str): Dialling prefix for the country.
+            phone (str): Phone number in national format.
+            method (str): Method of verification, 'sms' or 'call'.
+            locale (str): Language of the verification.
+
+        Returns:
+            VerificationServiceResponse
+
+        Raises:
+            ValidationError: Verification request failed due to invalid arguments
+            PhoneVerificationError: Verification request failed for a reason not
+                related to the arguments
+        """
+        params = {
+            'country_code': country_calling_code,
+            'phone_number': phone,
+            'via': method,
+            'code_length': 6
+        }
+        if locale:
+            # Locale is provided explicitly
+            # If a locale is not set Twilio will use a sensible default based on
+            # the country of the telephone number
+            params['locale'] = locale
+
+        headers = {
+            'X-Authy-API-Key': settings.TWILIO_VERIFY_API_KEY
+        }
+
+        url = 'https://api.authy.com/protected/json/phones/verification/start'
+        response = requests.post(url, params=params, headers=headers)
+
         try:
-            send_code_via_sms(phone, db_code.code)
-        except TwilioRestException as e:
-            db.session.rollback()
-            raise PhoneVerificationError(
-                'Could not send'
-                ' verification code.', status_code=503)
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as exc:
+            if response.json()['error_code'] == "60033":
+                raise ValidationError('Phone number is invalid.',
+                                      field_names=['phone'])
+            elif response.json()['error_code'] == "60082":
+                raise ValidationError('Cannot send SMS to landline.',
+                                      field_names=['phone'])
+            else:
+                # Remaining error codes are due to Twilio account issues or
+                # configuration of API key.
+                # See https://www.twilio.com/docs/verify/return-and-error-codes
+                raise PhoneVerificationError(
+                    'Could not send verification code. Please try again shortly.'
+                )
+
         return VerificationServiceResponse()
 
-    def verify_phone(phone, code, eth_address):
-        phone = normalize_number(phone)
+    def verify_phone(country_calling_code, phone, code, eth_address):
+        """Check a phone verification code against the Twilio Verify API for a
+        phone number.
 
-        db_code = VC.query \
-            .filter(VC.phone == phone) \
-            .first()
-        if db_code is None:
-            raise PhoneVerificationError(
-                'The given phone number was not found.')
-        if code != db_code.code:
-            raise PhoneVerificationError('The code you provided'
-                                         ' is invalid.')
-        if time_.utcnow() > db_code.expires_at:
-            raise PhoneVerificationError('The code you provided'
-                                         ' has expired.')
-        # TODO: determine what the text should be
-        data = 'phone verified'
-        # TODO: determine claim type integer code for phone verification
-        signature = attestations.generate_signature(
-            signing_key, eth_address, CLAIM_TYPES['phone'], data)
-        return VerificationServiceResponse({
-            'signature': signature,
-            'claim_type': CLAIM_TYPES['phone'],
-            'data': data
-        })
+        Args:
+            country_calling_code (str): Dialling prefix for the country.
+            phone (str): Phone number in national format.
+            code (int): Verification code for the country_calling_code and phone
+                combination
+
+        Returns:
+            VerificationServiceResponse
+
+        Raises:
+            ValidationError: Verification request failed due to invalid arguments
+            PhoneVerificationError: Verification request failed for a reason not
+                related to the arguments
+        """
+        params = {
+            'country_code': country_calling_code,
+            'phone_number': phone,
+            'verification_code': code
+        }
+
+        headers = {
+            'X-Authy-API-Key': settings.TWILIO_VERIFY_API_KEY
+        }
+
+        url = 'https://api.authy.com/protected/json/phones/verification/status'
+        response = requests.get(url, params=params, headers=headers)
+
+        try:
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as exc:
+            if response.json()['error_code'] == '60023':
+                # This error code could also mean that no phone verification was ever
+                # created for that country calling code and phone number
+                raise ValidationError('Verification code has expired.',
+                                      field_names=['code'])
+            elif response.json()['error_code'] == '60022':
+                raise ValidationError('Verification code is incorrect.',
+                                      field_names=['code'])
+            else:
+                raise PhoneVerificationError(
+                    'Could not verify code. Please try again shortly.'
+                )
+
+        if response.json()['success'] is True:
+            # This may be unnecessary because the response has a 200 status code
+            # but it a good precaution to handle any inconsistency between the
+            # success field and the status code
+            data = 'phone verified'
+            # TODO: determine claim type integer code for phone verification
+            signature = attestations.generate_signature(
+                signing_key, eth_address, CLAIM_TYPES['phone'], data)
+            return VerificationServiceResponse({
+                'signature': signature,
+                'claim_type': CLAIM_TYPES['phone'],
+                'data': data
+            })
+
+        raise PhoneVerificationError(
+            'Could not verify code. Please try again shortly.'
+        )
 
     def generate_email_verification_code(email):
         db_code = VC.query \
@@ -307,14 +369,6 @@ def get_airbnb_verification_code(eth_address, airbnbUserid):
         )
 
 
-def normalize_number(phone):
-    try:
-        lookup = get_twilio_client().lookups.phone_numbers(phone).fetch()
-        return lookup.national_format
-    except TwilioRestException as e:
-        raise PhoneVerificationError('Invalid phone number.')
-
-
 def numeric_eth(str_eth_address):
     return int(str_eth_address, 16)
 
@@ -324,17 +378,6 @@ def random_numeric_token():
     # Don't use tokens that are close to 0 that will look stupid to users.
     rand = secrets.randbelow(1000000 - 1000)
     return '{0:06d}'.format(rand + 1000)
-
-
-def send_code_via_sms(phone, code):
-    try:
-        get_twilio_client().messages.create(
-            to=phone,
-            from_=settings.TWILIO_NUMBER,
-            body=('Your Origin verification code is {}.'
-                  ' It will expire in 30 minutes.').format(code))
-    except TwilioRestException as e:
-        raise e
 
 
 def send_code_via_email(address, code):
@@ -347,8 +390,3 @@ def send_code_via_email(address, code):
          ' It will expire in 30 minutes.').format(code))
     mail = Mail(from_email, subject, to_email, content)
     sg.client.mail.send.post(request_body=mail.get())
-
-
-# proxy function so that we can do caching on this later on if we want to
-def get_twilio_client():
-    return Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)

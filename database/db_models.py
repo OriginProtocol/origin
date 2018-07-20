@@ -5,7 +5,6 @@ from .notification_models import *  # NOQA
 
 
 class VerificationCode(db.Model):
-    phone = db.Column(db.String(20), index=True)
     email = db.Column(db.String(256), index=True)
     code = db.Column(db.String(10), primary_key=True)
     expires_at = db.Column(db.DateTime(timezone=True))
