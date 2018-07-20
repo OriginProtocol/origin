@@ -42,16 +42,16 @@ class VerifyPhone extends Component {
         <div className="image-container d-flex align-items-center">
           <img src="images/phone-icon-dark.svg" role="presentation" />
         </div>
-        <form onSubmit={(event) => this.onSubmit(event)}>
+        <form onSubmit={ event => this.onSubmit(event)}>
           <h2>
             <FormattedMessage
               id={ 'VerifyPhone.verifyPhoneHeading' }
               defaultMessage={ 'Verify Your Phone Number' }
             />
           </h2>
+          <div className="general-error">{this.state.generalErrors.length > 0 ? this.state.generalErrors.join(' ') : ''}</div>
           {this.state.mode === 'phone' && this.renderPhoneForm()}
           {this.state.mode === 'code' && this.renderCodeForm()}
-          <div className="general-error">{this.state.generalErrors.length > 0 ? this.state.generalErrors.join(' ') : ''}</div>
           <div className="button-container">
             <button type="submit" className="btn btn-clear">
               <FormattedMessage
