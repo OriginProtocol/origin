@@ -102,7 +102,7 @@ class VerifyPhone extends Component {
         await origin.attestations.phoneGenerateCode({ phone })
         this.setState({ mode: 'code' })
       } else if (this.state.mode === 'code') {
-        let phoneAttestation = await origin.attestations.phoneVerify({
+        const phoneAttestation = await origin.attestations.phoneVerify({
           phone, code: this.state.code
         })
         this.props.onSuccess(phoneAttestation)
