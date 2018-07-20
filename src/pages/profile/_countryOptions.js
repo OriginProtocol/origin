@@ -48,6 +48,10 @@ class CountryOptions extends Component {
       southKorea: {
         id: '_countryOptions.southKorea',
         defaultMessage: 'South Korea'
+      },
+      newZealand: {
+        id: '_countryOptions.newZealand',
+        defaultMessage: 'New Zealand'
       }
     });
 
@@ -102,6 +106,11 @@ class CountryOptions extends Component {
         name: this.props.intl.formatMessage(this.intlMessages.southKorea),
         prefix: '82',
       },
+      {
+        code: 'nz',
+        name: this.props.intl.formatMessage(this.intlMessages.newZealand),
+        prefix: '64'
+      }
     ]
   }
 

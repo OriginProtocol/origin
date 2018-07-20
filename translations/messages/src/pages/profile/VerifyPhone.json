@@ -12,8 +12,20 @@
     "defaultMessage": "Cancel"
   },
   {
-    "id": "VerifyPhone.enterPhoneNumber",
-    "defaultMessage": "Enter your phone number below and {originId} will send you a verification code"
+    "id": "VerifyPhone.enterPhoneNumberSms",
+    "defaultMessage": "Enter your phone number below and {originId} will send you a verification code via SMS."
+  },
+  {
+    "id": "VerifyPhone.callOption",
+    "defaultMessage": "Prefer a call?"
+  },
+  {
+    "id": "VerifyPhone.enterPhoneNumberCall",
+    "defaultMessage": "Enter your phone number below and {originId} will call you with a verification code."
+  },
+  {
+    "id": "VerifyPhone.smsOption",
+    "defaultMessage": "Prefer a SMS?"
   },
   {
     "id": "VerifyPhone.phoneNumberNotPublished",
