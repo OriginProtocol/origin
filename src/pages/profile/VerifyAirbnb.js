@@ -134,7 +134,7 @@ class VerifyAirbnb extends Component {
           await this.catchPossibleErrors(async event => {
             this.clearErrors()
 
-            let airbnbAttestation = await origin.attestations.airbnbVerify({
+            const airbnbAttestation = await origin.attestations.airbnbVerify({
               wallet: this.props.wallet,
               airbnbUserId: this.getUserIdFromAirbnbProfile(this.state.airbnbProfile)
             })
@@ -215,7 +215,6 @@ class VerifyAirbnb extends Component {
     try {
       await callback(event)
     } catch (exception) {
-      console.log(exception)
       const errorsJson = JSON.parse(exception).errors
         
       if (Array.isArray(errorsJson)) // Service exceptions
