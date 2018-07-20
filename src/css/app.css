@@ -1130,6 +1130,24 @@ a:hover {
   max-width: 288px;
 }
 
+.modal-content .form-control-wrap {
+  width: 100%;
+  max-width: 288px;
+  margin-right: auto;
+  display: inline-block;
+}
+
+.modal-content .form-control-wrap.error input{
+  border: 1px solid var(--red);
+  background: var(--dark-red);
+}
+
+.modal-content .form-control-wrap.error .error_message{
+  color: var(--orange-red);
+  margin-top: -0.5rem;
+  font-size: 1rem;
+}
+
 .modal-content .form-control:read-only {
   background-color: #213040;
 }
@@ -1153,6 +1171,21 @@ a:hover {
 .modal-content input::placeholder,
 .modal-content textarea::placeholder {
   color: var(--dusk);
+}
+
+.modal-content .general-error:empty {
+  display:none;
+}
+
+.modal-content .general-error {
+  background: var(--dark-red);
+  width: 100%;
+  border-radius: 0.25rem;
+  padding: 0.3rem 0rem;
+  margin: 1rem 0px;
+  padding: 0.3em;
+  font-size: 0.9em;
+  color: var(--light-red);
 }
 
 .modal-content .button-container {

@@ -14,7 +14,9 @@ class VerifyPhone extends Component {
       countryCode: 'us',
       number: '',
       code: '',
-      prefix: '1'
+      prefix: '1',
+      formErrors: {},
+      generalErrors: []
     }
 
     this.setSelectedCountry = this.setSelectedCountry.bind(this)
@@ -40,27 +42,14 @@ class VerifyPhone extends Component {
         <div className="image-container d-flex align-items-center">
           <img src="images/phone-icon-dark.svg" role="presentation" />
         </div>
-        <form
-          onSubmit={async e => {
-            e.preventDefault()
-            var phone = `+${this.state.prefix}${this.state.number}`
-            if (this.state.mode === 'phone') {
-              await origin.attestations.phoneGenerateCode({ phone })
-              this.setState({ mode: 'code' })
-            } else if (this.state.mode === 'code') {
-              let phoneAttestation = await origin.attestations.phoneVerify({
-                phone, code: this.state.code
-              })
-              this.props.onSuccess(phoneAttestation)
-            }
-          }}
-        >
+        <form onSubmit={ event => this.onSubmit(event)}>
           <h2>
             <FormattedMessage
               id={ 'VerifyPhone.verifyPhoneHeading' }
               defaultMessage={ 'Verify Your Phone Number' }
             />
           </h2>
+          <div className="general-error">{this.state.generalErrors.length > 0 ? this.state.generalErrors.join(' ') : ''}</div>
           {this.state.mode === 'phone' && this.renderPhoneForm()}
           {this.state.mode === 'code' && this.renderCodeForm()}
           <div className="button-container">
@@ -75,7 +64,7 @@ class VerifyPhone extends Component {
             <a
               href="#"
               data-modal="phone"
-              onClick={this.props.handleToggle}
+              onClick={event => this.onCancel(event)}
             >
               <FormattedMessage
                 id={ 'VerifyPhone.cancel' }
@@ -88,7 +77,49 @@ class VerifyPhone extends Component {
     )
   }
 
+  clearErrors() {
+    // clear errors
+    this.setState({formErrors: {}})
+    this.setState({generalErrors:[]})
+  }
+
+  onCancel(event) {
+    event.preventDefault()
+    this.clearErrors()
+    this.setState({ mode: 'phone' })
+
+    this.props.handleToggle(event)
+  }
+
+  async onSubmit(event) {
+    event.preventDefault()
+    this.clearErrors()
+
+    const phone = `+${this.state.prefix}${this.state.number}`
+
+    try {
+      if (this.state.mode === 'phone') {
+        await origin.attestations.phoneGenerateCode({ phone })
+        this.setState({ mode: 'code' })
+      } else if (this.state.mode === 'code') {
+        const phoneAttestation = await origin.attestations.phoneVerify({
+          phone, code: this.state.code
+        })
+        this.props.onSuccess(phoneAttestation)
+      }
+    } catch (exception) {
+      const errorsJson = JSON.parse(exception).errors
+        
+      if (Array.isArray(errorsJson)) // Service exceptions
+        this.setState({ generalErrors: errorsJson })
+      else // Form exception
+        this.setState({ formErrors: errorsJson })
+    }
+  }
+
   renderPhoneForm() {
+    const phoneErrors = this.state.formErrors.phone
+
     return (
       <div className="form-group">
         <label htmlFor="phoneNumber">
@@ -118,20 +149,23 @@ class VerifyPhone extends Component {
               <CountryOptions setSelectedCountry={ this.setSelectedCountry } />
             </div>
           </div>
-          <input
-            type="phone"
-            className="form-control"
-            id="phoneNumber"
-            name="phone-number"
-            value={this.state.number}
-            onChange={e => {
-              this.setState({ number: e.target.value })
-            }}
-            placeholder="Area code and phone number"
-            pattern="\d+"
-            title="Numbers only"
-            required
-          />
+          <div className={`form-control-wrap ${phoneErrors ? 'error' : ''}`}>
+            <input
+              type="phone"
+              className="form-control"
+              id="phoneNumber"
+              name="phone-number"
+              value={this.state.number}
+              onChange={e => {
+                this.setState({ number: e.target.value })
+              }}
+              placeholder="Area code and phone number"
+              pattern="\d+"
+              title="Numbers only"
+              required
+            />
+            <div className="error_message">{phoneErrors ? phoneErrors.join(' ') : ''}</div>
+          </div>
         </div>
         <div className="explanation">
            <FormattedMessage

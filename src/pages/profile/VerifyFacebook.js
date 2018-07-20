@@ -7,7 +7,9 @@ import origin from '../../services/origin'
 class VerifyFacebook extends Component {
   constructor() {
     super()
-    this.state = {}
+    this.state = {
+      generalErrors: []
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -35,6 +37,7 @@ class VerifyFacebook extends Component {
             defaultMessage={ 'Verify Your Facebook Account' }
           />
         </h2>
+        <div className="general-error">{this.state.generalErrors.length > 0 ? this.state.generalErrors.join(' ') : ''}</div>
         <div className="explanation">
           <FormattedMessage
             id={ 'VerifyFacebook.accountNotPublic' }
@@ -70,21 +73,29 @@ class VerifyFacebook extends Component {
   }
 
   onCertify() {
-    var w = window.open(this.state.url, '', 'width=650,height=500')
+    var fbWindow = window.open(this.state.url, '', 'width=650,height=500')
 
-    const finish = e => {
-      var data = String(e.data)
+    const finish = async e => {
+      const data = String(e.data)
       if (!data.match(/^origin-code:/)) {
         return
       }
       window.removeEventListener('message', finish, false)
-      if (!w.closed) {
-        w.close()
+      if (!fbWindow.closed) {
+        fbWindow.close()
       }
 
-      origin.attestations
-        .facebookVerify({ code: data.split(':')[1] })
-        .then(result => this.props.onSuccess(result))
+      try {
+        const facebookAttestation = await origin.attestations
+          .facebookVerify({ code: data.split(':')[1] })
+
+        this.props.onSuccess(facebookAttestation)
+      } catch (exception) {
+        const errorsJson = JSON.parse(exception).errors
+          
+        if (Array.isArray(errorsJson)) // Service exceptions
+          this.setState({ generalErrors: errorsJson })
+      }
     }
 
     window.addEventListener('message', finish, false)
