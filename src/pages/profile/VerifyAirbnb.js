@@ -7,7 +7,13 @@ import origin from '../../services/origin'
 class VerifyAirbnb extends Component {
   constructor() {
     super()
-    this.state = { mode: 'input-airbnb-profile', airbnbProfile: '', confirmationCode: '', error: ''}
+    this.state = { 
+      mode: 'input-airbnb-profile',
+      airbnbProfile: '',
+      confirmationCode: '',
+      formErrors: {},
+      generalErrors: []
+    }
   }
 
   render() {
@@ -27,56 +33,65 @@ class VerifyAirbnb extends Component {
             defaultMessage={ 'Verify your Airbnb account' }
           />
         </h2>
-        { this.state.error == '' ? this.renderNormalFlow() : this.renderErrorMessage(this.state.error) }
+        <div className="general-error">{this.state.generalErrors.length > 0 ? this.state.generalErrors.join(' ') : ''}</div>
+        { this.state.mode === 'input-airbnb-profile' ? this.renderInputAirbnbProfile() : this.renderShowGeneratedCode() }
       </Modal>
     )
   }
 
-  renderErrorMessage(error) {
-    return (
-      <div className="form-group">
-        <div className="explanation">{error}</div>
-        <div className="button-container">
-            <button className="btn btn-clear" data-modal="airbnb"
-              onClick={e => {
-                e.preventDefault()
-                // reset state
-                this.setState({ mode: 'input-airbnb-profile', airbnbProfile: '', confirmationCode: '', error: ''})
-                this.props.handleToggle(e)
-              }}>
-              <FormattedMessage
-                id={ 'VerifyAirbnb.ok' }
-                defaultMessage={ 'Ok' }
-              />
-            </button>
-          </div>
-      </div>
-    )
-  }
-
-  renderNormalFlow(){
-    return(
-      this.state.mode === 'input-airbnb-profile' ? this.renderInputAirbnbProfile() : this.renderShowGeneratedCode()
-    )
-  }
-
   renderInputAirbnbProfile(){
+    const airbnbUserIdError = this.state.formErrors.airbnbUserId
     return(
        <form
-        onSubmit={async e => {
-          e.preventDefault()
+        onSubmit={async event => {
+          await this.catchPossibleErrors(async event => {
+            event.preventDefault()
+            this.clearErrors()
 
-          this.setState({ mode: 'show-generated-code', confirmationCode: '' })
+            const data = await origin.attestations.airbnbGenerateCode({
+              wallet: this.props.wallet,
+              airbnbUserId: this.getUserIdFromAirbnbProfile(this.state.airbnbProfile)
+            })
 
-          origin.attestations.airbnbGenerateCode({
-            wallet: this.props.wallet,
-            airbnbUserId: this.getUserIdFromAirbnbProfile(this.state.airbnbProfile)
-          }).then(data => {
-            this.setState({confirmationCode: data.code});
-          })
+            this.setState({ mode: 'show-generated-code', confirmationCode: data.code })
+          }, event)
         }}>
 
-        {this.renderProfileInputForm()}
+        <div className="form-group">
+          <label htmlFor="airbnbProfile">
+            { <FormattedMessage
+              id={ 'VerifyAirbnb.enterAirbnbProfileUrl' }
+              defaultMessage={ 'Enter Airbnb profile Url below' }
+            /> }
+          </label>
+          <div 
+            className={`form-control-wrap ${airbnbUserIdError ? 'error' : ''}`} 
+            style={{'maxWidth': `400px`}}
+          >
+            <input
+              type="url"
+              className="form-control"
+              id="airbnbProfile"
+              name="airbnbProfile"
+              style={{maxWidth: `400px`}} // Making wider input, so that the whole profile placeholder can be viewed without trimming
+              value={this.state.airbnbProfile}
+              onChange={e =>
+                this.setState({ airbnbProfile: e.currentTarget.value })
+              }
+              placeholder={this.props.intl.formatMessage({ id: 'VerifyAirbnb.placeholderAirbnbProfileUrl', defaultMessage: 'https://www.airbnb.com/users/show/123'})}
+              pattern="^https?://www\.airbnb\.com/users/show/\d*$"
+              title={this.props.intl.formatMessage({ id: 'VerifyAirbnb.airbnbProfileIncorrect', defaultMessage: 'Airbnb URL incorrect! Please paste exact URL of your Airbnb profile. Example: https://www.airbnb.com/users/show/123'})}
+              required
+            />
+            <div className="error_message">{airbnbUserIdError ? airbnbUserIdError.join(' ') : ''}</div>
+            </div>
+          <div className="explanation">
+            <FormattedMessage
+              id={ 'VerifyAirbnb.airbnbProfilePublished' }
+              defaultMessage={ 'Other users will know that you have a verified Airbnb profile.' }
+            />
+          </div>
+        </div>
         <div className="button-container">
           <button type="submit" className="btn btn-clear">
             <FormattedMessage
@@ -89,10 +104,7 @@ class VerifyAirbnb extends Component {
           <a
             href="#"
             data-modal="airbnb"
-            onClick={e => {
-              e.preventDefault()
-              this.props.handleToggle(e)
-            }}
+            onClick={event => this.onCancel(event)}
           >
             <FormattedMessage
               id={ 'VerifyAirbnb.cancel' }
@@ -107,28 +119,41 @@ class VerifyAirbnb extends Component {
   renderShowGeneratedCode(){
     return(
       <form
-        onSubmit={async e => {
-          e.preventDefault()
-          try {
+        onSubmit={async event => {
+          await this.catchPossibleErrors(async event => {
+            this.clearErrors()
+
             let airbnbAttestation = await origin.attestations.airbnbVerify({
               wallet: this.props.wallet,
               airbnbUserId: this.getUserIdFromAirbnbProfile(this.state.airbnbProfile)
             })
 
             this.props.onSuccess(airbnbAttestation)
-          } catch(e){
-            let unknownError = <FormattedMessage
-              id={ 'VerifyAirbnb.unknownError' }
-              defaultMessage={ 'An unknown error occurred' }
-            />
-
-            let error = JSON.parse(e)
-            error = error.errors ? error.errors.join('</br>') : unknownError
-            this.setState({ error: error})
-          }
+          })
         }}
       >
-        {this.renderGeneratedCode()}
+        <div className="form-group">
+          <label htmlFor="airbnbProfile">
+            { <FormattedMessage
+              id={ 'VerifyAirbnb.enterCodeIntoAirbnb' }
+              defaultMessage={ 'Go to Airbnb website, edit your profile and paste the following text into profile description.' }
+            /> }
+          </label>
+          <textarea
+            className="form-control"
+            id="generated-code"
+            readOnly="readOnly"
+            // Making input wider, so that the whole verification code can be viewed without trimming.
+            style={{maxWidth: '340px', height: '92px', resize: 'none'}}
+            value={this.state.confirmationCode == '' ? this.props.intl.formatMessage({ id: 'VerifyAirbnb.loadingConfirmationCode', defaultMessage: 'Loading...'}) : "Origin verification code: " + this.state.confirmationCode}
+          />
+          <div className="explanation">
+            <FormattedMessage
+              id={ 'VerifyAirbnb.continueToConfirmationCodeCheck' }
+              defaultMessage={ 'Continue once the confirmation code is entered in your Airbnb profile.' }
+            />
+          </div>
+        </div>
         <div className="button-container">
           <button type="submit" className="btn btn-clear">
             <FormattedMessage
@@ -141,13 +166,7 @@ class VerifyAirbnb extends Component {
           <a
             href="#"
             data-modal="airbnb"
-            onClick={e => {
-              e.preventDefault()
-
-              // if user cancels when generated code is shown he might want to input different airbnb profile
-              this.setState({ airbnbProfile: '', mode: 'input-airbnb-profile'})
-              this.props.handleToggle(e)
-            }}
+            onClick={event => this.onCancel(event)}
           >
             <FormattedMessage
               id={ 'VerifyAirbnb.cancel' }
@@ -159,67 +178,34 @@ class VerifyAirbnb extends Component {
     )
   }
 
-  renderProfileInputForm() {
-    return (
-      <div className="form-group">
-        <label htmlFor="airbnbProfile">
-          { <FormattedMessage
-            id={ 'VerifyAirbnb.enterAirbnbProfileUrl' }
-            defaultMessage={ 'Enter Airbnb profile Url below' }
-          /> }
-        </label>
-        <input
-          type="url"
-          className="form-control"
-          id="airbnbProfile"
-          name="airbnbProfile"
-          style={{maxWidth: `400px`}} // Making wider input, so that the whole profile placeholder can be viewed without trimming
-          value={this.state.airbnbProfile}
-          onChange={e =>
-            this.setState({ airbnbProfile: e.currentTarget.value })
-          }
-          placeholder={this.props.intl.formatMessage({ id: 'VerifyAirbnb.placeholderAirbnbProfileUrl', defaultMessage: 'https://www.airbnb.com/users/show/123'})}
-          pattern="^https?://www\.airbnb\.com/users/show/\d*$"
-          title={this.props.intl.formatMessage({ id: 'VerifyAirbnb.airbnbProfileIncorrect', defaultMessage: 'Airbnb URL incorrect! Please paste exact URL of your Airbnb profile. Example: https://www.airbnb.com/users/show/123'})}
-          required
-        />
-        <div className="explanation">
-          <FormattedMessage
-            id={ 'VerifyAirbnb.airbnbProfilePublished' }
-            defaultMessage={ 'Other users will know that you have a verified Airbnb profile.' }
-          />
-        </div>
-      </div>
-    )
+  onCancel(event) {
+    event.preventDefault()
+    this.clearErrors()
+
+    // if user cancels when generated code is shown he might want to input different airbnb profile
+    this.setState({ airbnbProfile: '', mode: 'input-airbnb-profile'})
+    this.props.handleToggle(event)
   }
 
-  renderGeneratedCode() {
-    return (
-      <div className="form-group">
-        <label htmlFor="airbnbProfile">
-          { <FormattedMessage
-            id={ 'VerifyAirbnb.enterCodeIntoAirbnb' }
-            defaultMessage={ 'Go to Airbnb website, edit your profile and paste the following text into profile description.' }
-          /> }
-        </label>
-        <textarea
-          className="form-control"
-          id="generated-code"
-          readOnly="readOnly"
-          // Making input wider, so that the whole verification code can be viewed without trimming.
-          style={{maxWidth: '340px', height: '92px', resize: 'none'}}
-          value={this.state.confirmationCode == '' ? this.props.intl.formatMessage({ id: 'VerifyAirbnb.loadingConfirmationCode', defaultMessage: 'Loading...'}) : "Origin verification code: " + this.state.confirmationCode}
-        />
-        <div className="explanation">
-          <FormattedMessage
-            id={ 'VerifyAirbnb.continueToConfirmationCodeCheck' }
-            defaultMessage={ 'Continue once the confirmation code is entered in your Airbnb profile.' }
-          />
-        </div>
-      </div>
-    )
+  clearErrors() {
+    // clear errors
+    this.setState({formErrors: {}})
+    this.setState({generalErrors:[]})
   }
 
+  async catchPossibleErrors(callback, event) {
+    try {
+      await callback(event)
+    } catch (exception) {
+      console.log(exception)
+      const errorsJson = JSON.parse(exception).errors
+        
+      if (Array.isArray(errorsJson)) // Service exceptions
+        this.setState({ generalErrors: errorsJson })
+      else // Form exception
+        this.setState({ formErrors: errorsJson })
+    }
+  }
 
   getUserIdFromAirbnbProfile(airbnbProfileUrl){
     var airbnbRegex = /https?\:\/\/www.airbnb.com\/users\/show\/(\d*)/g;
