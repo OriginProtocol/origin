@@ -102,8 +102,7 @@ class VerifyTwitter extends Component {
 
     const finish = async event => {
       await this.catchPossibleErrors(async event => {
-        //const data = String(event.data)
-        const data = "origin-code:1234356"
+        const data = String(event.data)
 
         if (!data.match(/^origin-code:/)) {
           return
