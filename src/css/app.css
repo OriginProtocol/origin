@@ -998,6 +998,22 @@ a:hover {
   color: var(--clear-blue);
 }
 
+.btn-dark {
+  border: solid 1px white;
+  background-color: var(--dark);
+  color: white;
+}
+
+.btn-dark:hover {
+  border: solid 1px white;
+}
+
+.btn-light {
+  border: solid 1px var(--dark);
+  background-color: white;
+  color: var(--dark);
+}
+
 .connectivity .indicators {
   height: 30px;
 }

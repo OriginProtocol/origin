@@ -19,6 +19,7 @@ class Calendar extends Component {
     this.onDateDropdownChange = this.onDateDropdownChange.bind(this)
     this.onIsRecurringEventChange = this.onIsRecurringEventChange.bind(this)
     this.saveData = this.saveData.bind(this)
+    this.goBack = this.goBack.bind(this)
     this.reserveSlots = this.reserveSlots.bind(this)
     this.unselectSlots = this.unselectSlots.bind(this)
     this.getDateAvailabilityAndPrice = this.getDateAvailabilityAndPrice.bind(this)
@@ -27,6 +28,7 @@ class Calendar extends Component {
     this.buyerPrevMonth = this.buyerPrevMonth.bind(this)
     this.buyerNextMonth = this.buyerNextMonth.bind(this)
     this.slotPropGetter = this.slotPropGetter.bind(this)
+    this.eventComponent = this.eventComponent.bind(this)
 
     this.state = {
       events: [],
@@ -245,13 +247,16 @@ class Calendar extends Component {
   eventComponent(data) {
     const { event } = data
     const { isAvailable, price } = event
+    const stepAbbrev = this.props.step === 60 ? 'hr' : `${this.props.step} min.`
+    const perTimePeriod = this.props.viewType === 'hourly' ? ` /${stepAbbrev}` : ''
 
     return (
       <div className={ `calendar-event ${isAvailable !== false ? 'available' : 'unavailable'}` }>
-        {price ?
-          `${price} ETH`
-          :
-          'New Event'
+        {isAvailable !== false &&
+          <span>{ price ? `${price} ETH${perTimePeriod}` : '0 ETH' }</span>
+        }
+        {isAvailable === false &&
+          <span>Unavailable</span>
         }
       </div>
     )
@@ -312,11 +317,12 @@ class Calendar extends Component {
     return (
       <Fragment>
         {this.props.userType === 'buyer' ?
-          <div className={
-              `rbc-day-bg ${availability}${isPastDate}${isSelected}`
-            }>
+          <div className={`rbc-day-bg ${availability}${isPastDate}${isSelected}`}>
             {dateInfo.isAvailable &&
-              <span>{dateInfo.price} ETH</span>
+              <span>{dateInfo.price ? `${dateInfo.price} ETH` : `0 ETH`}</span>
+            }
+            {!dateInfo.isAvailable &&
+              <span>Unavailable</span>
             }
           </div>
           :
@@ -352,6 +358,10 @@ class Calendar extends Component {
       }
     })
     this.props.onComplete && this.props.onComplete(cleanEvents)
+  }
+
+  goBack() {
+    this.props.onGoBack && this.props.onGoBack()
   }
 
   reserveSlots() {
@@ -390,7 +400,10 @@ class Calendar extends Component {
     return (
       <div>
         <div className="row">
-          <div className={`col-md-8 calendar-container${this.props.userType === 'buyer' ? ' buyer-view' : ''}`}>
+          <div className={`col-md-8 
+                           calendar-container
+                           ${this.props.userType === 'buyer' ? ' buyer-view' : ''}
+                           ${this.props.viewType === 'daily' ? ' daily-view' : ' hourly-view'}`}>
             {
               this.props.userType === 'buyer' &&
               <div className="buyer-month-nav">
@@ -419,47 +432,60 @@ class Calendar extends Component {
             />
             {
               this.props.userType === 'seller' &&
-              <button className="btn btn-primary" onClick={this.saveData}>Next</button>
+              <div className="btn-container">
+                <button className="btn btn-other" onClick={this.goBack}>Back</button>
+                <button className="btn btn-primary" onClick={this.saveData}>Next</button>
+              </div>
             }
           </div>
           <div className="col-md-4">
             {selectedEvent && selectedEvent.start &&
-              <Fragment>
+              <div className="calendar-cta">
+                <p className="font-weight-bold">Selected { this.props.viewType === 'daily' ? 'dates' : 'times' }</p>
                 <div>
                   {this.props.viewType === 'daily' &&
+                    <div className="row">
+                      <div className="col-md-6">
+                        <select
+                          name="start"
+                          className="form-control"
+                          onChange={ this.onDateDropdownChange }
+                          value={ selectedEvent.start.toString() }>
+                          { 
+                            this.getDateDropdownOptions(selectedEvent.start).map((date) => (
+                              date <= selectedEvent.end &&
+                              <option
+                                key={date.toString()}
+                                value={date.toString()}>
+                                {moment(date).format('MM/DD/YY')}
+                              </option>
+                            ))
+                          }
+                        </select>
+                      </div>
+                      <div className="col-md-6">
+                        <select
+                          name="end"
+                          className="form-control"
+                          onChange={ this.onDateDropdownChange }
+                          value={selectedEvent.end.toString()}>
+                          { 
+                            this.getDateDropdownOptions(selectedEvent.end).map((date) => (
+                              date >= selectedEvent.start &&
+                              <option
+                                key={date.toString()}
+                                value={date.toString()}>
+                                {moment(date).format('MM/DD/YY')}
+                              </option>
+                            ))
+                          }
+                        </select>
+                      </div>
+                    </div>
+                  }
+                  {this.props.viewType === 'hourly' &&
                     <Fragment>
-                      <select
-                        name="start"
-                        className="form-control"
-                        onChange={ this.onDateDropdownChange }
-                        value={ selectedEvent.start.toString() }>
-                        { 
-                          this.getDateDropdownOptions(selectedEvent.start).map((date) => (
-                            date <= selectedEvent.end &&
-                            <option
-                              key={date.toString()}
-                              value={date.toString()}>
-                              {moment(date).format('MM/DD/YY')}
-                            </option>
-                          ))
-                        }
-                      </select>
-                      <select
-                        name="end"
-                        className="form-control"
-                        onChange={ this.onDateDropdownChange }
-                        value={selectedEvent.end.toString()}>
-                        { 
-                          this.getDateDropdownOptions(selectedEvent.end).map((date) => (
-                            date >= selectedEvent.start &&
-                            <option
-                              key={date.toString()}
-                              value={date.toString()}>
-                              {moment(date).format('MM/DD/YY')}
-                            </option>
-                          ))
-                        }
-                      </select>
+                      <p>{moment(selectedEvent.start).format('LT')} - {moment(selectedEvent.end).format('LT')}</p>
                     </Fragment>
                   }
                 </div>
@@ -478,61 +504,79 @@ class Calendar extends Component {
                       </label>
                     </div> */}
                     <div>
-                      <p>Availability</p>
-                      <div className="form-check">
+                      <p className="font-weight-bold">Availability</p>
+                      <div>
+                        <label htmlFor="available">
+                          Availaible
+                        </label>
                         <input 
-                          className="form-check-input"
                           type="radio"
                           name="isAvailable"
                           id="available"
                           value="1"
                           onChange={ this.onAvailabilityChange }
                           checked={ selectedEvent.isAvailable } />
-                        <label className="form-check-label" htmlFor="available">
-                          Availaible
-                        </label>
                       </div>
-                      <div className="form-check">
+                      <div>
+                        <label className="form-check-label" htmlFor="unavailable">
+                          Unavailable
+                        </label>
                         <input
-                          className="form-check-input"
                           type="radio"
                           name="isAvailable"
                           id="unavailable"
                           value="0"
                           onChange={ this.onAvailabilityChange }
                           checked={ !selectedEvent.isAvailable } />
-                        <label className="form-check-label" htmlFor="unavailable">
-                          Unavailable
-                        </label>
                       </div>
-                      <input 
-                        placeholder="Price"
-                        name="price"
-                        type="number"
-                        step="0.00001"
-                        value={selectedEvent.price} 
-                        onChange={this.handlePriceChange} 
-                      />
-                      {
-                        this.props.viewType === 'hourly' &&
-                        this.props.step &&
-                        <span className="price-per-time-label">
-                          per {this.props.intl.formatNumber(this.props.step)} minutes
-                        </span>
+                      {selectedEvent.isAvailable &&
+                        <Fragment>
+                          <p className="font-weight-bold">Pricing</p>
+                          <input 
+                            placeholder="Price"
+                            name="price"
+                            type="number"
+                            step="0.00001"
+                            value={selectedEvent.price} 
+                            onChange={this.handlePriceChange} 
+                          />
+                          {
+                            this.props.viewType === 'hourly' &&
+                            this.props.step &&
+                            <span className="price-label">
+                              &nbsp;ETH per {this.props.intl.formatNumber(this.props.step)} min.
+                            </span>
+                          }
+                          {this.props.viewType === 'daily' &&
+                            <span className="price-label">&nbsp;ETH</span>
+                          }
+                        </Fragment>
                       }
                     </div>
-                    <button className="btn btn-secondary" onClick={this.cancelEvent}>Cancel</button>
-                    <button className="btn btn-primary" onClick={this.saveEvent}>Save</button>
+                    <div className="cta-btns row">
+                      <div className="col-md-6">
+                        <button className="btn btn-dark" onClick={this.cancelEvent}>Cancel</button>
+                      </div>
+                      <div className="col-md-6">
+                        <button className="btn btn-light" onClick={this.saveEvent}>Save</button>
+                      </div>
+                    </div>
                   </Fragment>
                 }
                 {this.props.userType === 'buyer' &&
                   <div>
                     <p><strong>Price: </strong>{selectedEvent.price} ETH</p>
-                    <button className="btn btn-secondary" onClick={this.unselectSlots}>Cancel</button>
-                    <button className="btn btn-primary" onClick={this.reserveSlots}>Reserve Time Slots</button>
+                    <div className="cta-btns row">
+                      <div className="col-md-6">
+                        <button className="btn btn-dark" onClick={this.unselectSlots}>Cancel</button>
+                      </div>
+                      <div className="col-md-6">
+                        <button className="btn btn-light" onClick={this.reserveSlots}>Reserve Time Slots</button>
+                      </div>
+                    </div>
                   </div>
                 }
-              </Fragment>
+              </div>
             }
             {this.state.selectionUnavailable &&
               <div>
