@@ -106,6 +106,7 @@
   "MessageNew.encryptionNotice": "Your message will be encrypted. It will only be visible to you, the recipient, and an arbitrator in the event that a dispute arises.",
   "MessageNew.send": "Send",
   "MessageNew.cancel": "Cancel",
+  "Messages.newMessagePlaceholder": "Type something...",
   "purchase-summary.purchasedFrom": "Purchased from {sellerLink}",
   "purchase-summary.soldTo": "Sold to {buyerLink}",
   "purchase-summary.purchasedFromOn": "Purchased from {sellerName} on {date}",

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FormattedDate, FormattedMessage } from 'react-intl'
+import { FormattedDate, FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
@@ -15,6 +15,13 @@ import origin from '../services/origin'
 class Messages extends Component {
   constructor(props) {
     super(props)
+
+    this.intlMessages = defineMessages({
+      newMessagePlaceholder: {
+        id: 'Messages.newMessagePlaceholder',
+        defaultMessage: 'Type something...',
+      },
+    })
 
     this.handleKeyDown = this.handleKeyDown.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -163,7 +170,7 @@ class Messages extends Component {
   }
 
   render() {
-    const { conversations, web3Account } = this.props
+    const { conversations, intl, web3Account } = this.props
     const { counterparty, listing, messages, purchase, selectedConversationId } = this.state
     const { address, name, pictures } = listing || {}
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
@@ -245,7 +252,7 @@ class Messages extends Component {
                   <textarea
                     ref={this.textarea}
                     rows="4"
-                    placeholder={'Type something...'}
+                    placeholder={intl.formatMessage(this.intlMessages.newMessagePlaceholder)}
                     onKeyDown={this.handleKeyDown}
                     tabIndex="0"
                     autoFocus>
@@ -269,4 +276,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withRouter(connect(mapStateToProps)(Messages))
+export default withRouter(connect(mapStateToProps)(injectIntl(Messages)))

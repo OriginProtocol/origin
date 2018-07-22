@@ -1,5 +1,9 @@
 [
   {
+    "id": "Messages.newMessagePlaceholder",
+    "defaultMessage": "Type something..."
+  },
+  {
     "id": "purchase-summary.purchasedFrom",
     "defaultMessage": "Purchased from {sellerLink}"
   },
