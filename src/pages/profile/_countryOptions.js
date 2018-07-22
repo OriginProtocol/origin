@@ -53,7 +53,7 @@ class CountryOptions extends Component {
         id: '_countryOptions.newZealand',
         defaultMessage: 'New Zealand'
       }
-    });
+    })
 
     this.countryOptions = [
       {

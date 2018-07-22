@@ -48,7 +48,7 @@ class ConnectivityDropdown extends Component {
         id: 'connectivity.localhost',
         defaultMessage: 'Localhost'
       }
-    });
+    })
 
     this.networkNames = {
       1: this.props.intl.formatMessage(this.intlMessages.mainEthereumNetwork),

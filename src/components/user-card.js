@@ -15,7 +15,7 @@ class UserCard extends Component {
         id: 'user-card.unnamedUser',
         defaultMessage: 'Unnamed User'
       }
-    });
+    })
   }
 
   componentWillMount() {

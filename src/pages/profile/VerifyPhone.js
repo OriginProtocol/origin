@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import origin from '../../services/origin'
 
@@ -17,6 +17,17 @@ class VerifyPhone extends Component {
       verificationCode: '',
       verificationMethod: 'sms'
     }
+
+    this.intlMessages = defineMessages({
+      phoneVerificationCodePlaceholder: {
+        id: 'VerifyPhone.phoneVerificationCodePlaceholder',
+        defaultMessage: 'Verification code',
+      },
+      phoneVerificationNumberPlaceholder: {
+        id: 'VerifyPhone.phoneVerificationNumberPlaceholder',
+        defaultMessage: 'Area code and phone number',
+      },
+    })
 
     this.setSelectedCountry = this.setSelectedCountry.bind(this)
     this.toggleVerificationMethod = this.toggleVerificationMethod.bind(this)
@@ -176,7 +187,7 @@ class VerifyPhone extends Component {
             onChange={e => {
               this.setState({ phone: e.target.value })
             }}
-            placeholder="Area code and phone number"
+            placeholder={this.props.intl.formatMessage(this.intlMessages.phoneVerificationNumberPlaceholder)}
             pattern="\d+"
             title="Numbers only"
             required
@@ -209,7 +220,7 @@ class VerifyPhone extends Component {
           onChange={e => {
             this.setState({ verificationCode: e.target.value })
           }}
-          placeholder="Verification code"
+          placeholder={this.props.intl.formatMessage(this.intlMessages.phoneVerificationCodePlaceholder)}
           pattern="[a-zA-Z0-9]{6}"
           title="6-Character Verification Code"
           required
@@ -219,4 +230,4 @@ class VerifyPhone extends Component {
   }
 }
 
-export default VerifyPhone
+export default injectIntl(VerifyPhone)

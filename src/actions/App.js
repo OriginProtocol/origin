@@ -32,8 +32,8 @@ export function storeWeb3Intent(intent) {
 }
 
 export function localizeApp() {
-  let messages;
-  let selectedLanguageAbbrev;
+  let messages
+  let selectedLanguageAbbrev
 
   // Add locale data to react-intl
   addLocales()
