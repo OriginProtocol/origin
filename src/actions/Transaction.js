@@ -8,11 +8,11 @@ export const TransactionConstants = keyMirror(
   'TRANSACTION'
 )
 
-export function update(transactionHash, confirmationCount) {
+export function update(confirmationCount, transactionReceipt) {
   return {
     type: TransactionConstants.UPDATE,
-    transactionHash,
     confirmationCount,
+    transactionReceipt,
   }
 }
 

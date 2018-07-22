@@ -6,7 +6,7 @@ import $ from 'jquery'
 
 import Transaction from '../transaction'
 
-const CONFIRMATION_COMPLETION_COUNT = 6
+const CONFIRMATION_COMPLETION_COUNT = 12
 
 class TransactionsDropdown extends Component {
   constructor(props) {

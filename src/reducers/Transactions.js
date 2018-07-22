@@ -6,10 +6,10 @@ export default function Transactions(state = initialState, action = {}) {
     switch (action.type) {
 
       case TransactionConstants.UPDATE:
-        const { confirmationCount } = action
+        const { confirmationCount, transactionReceipt } = action
         
         return state.map(t => {
-          if (t.transactionHash !== action.transactionHash) {
+          if (t.transactionHash !== transactionReceipt.transactionHash) {
             return t
           }
 

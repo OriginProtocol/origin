@@ -153,10 +153,9 @@ class ListingsDetail extends Component {
       const totalPrice = (unitsToBuy * this.state.price)
       try {
         this.setState({ step: this.STEP.PROCESSING })
-        const transaction = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice)
+        const transaction = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice, this.props.updateTransaction)
         this.props.upsertTransaction(transaction)
         this.setState({ step: this.STEP.PURCHASED })
-        transaction.whenFinished(6, this.props.updateTransaction)
       } catch (error) {
         console.error(error)
         this.setState({ step: this.STEP.ERROR })
@@ -459,7 +458,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   showAlert: (msg) => dispatch(showAlert(msg)),
   storeWeb3Intent: (intent) => dispatch(storeWeb3Intent(intent)),
-  updateTransaction: (hash, confirmationCount) => dispatch(updateTransaction(hash, confirmationCount)),
+  updateTransaction: (confirmationCount, transactionReceipt) => dispatch(updateTransaction(confirmationCount, transactionReceipt)),
   upsertTransaction: (transaction) => dispatch(upsertTransaction(transaction)),
 })
 

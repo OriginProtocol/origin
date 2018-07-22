@@ -44,7 +44,9 @@ class Transaction extends Component {
     const truncatedFrom = `${fromAddress.slice(0, 4)}...${fromAddress.slice(38)}`
     const truncatedTo = `${toAddress.slice(0, 4)}...${toAddress.slice(38)}`
     const completed = confirmationCount >= confirmationCompletionCount
-    const percentage = `${(confirmationCount / confirmationCompletionCount * 100).toFixed()}%`
+    const decimal = confirmationCount / confirmationCompletionCount
+    const percentage = Math.min(100, (decimal * 100).toFixed())
+    const degreeIncrement = 360 / confirmationCompletionCount
 
     return (
       <li key={transactionHash} className="list-group-item d-flex align-items-stretch transaction">
@@ -79,7 +81,7 @@ class Transaction extends Component {
               {truncatedTo}
             </div>
             <div className="confirmations-count ml-auto">
-              {percentage}
+              {percentage}%
               &nbsp;
               <FormattedMessage
                 id={ 'transactions.completed' }
@@ -89,21 +91,21 @@ class Transaction extends Component {
           </div>
         </div>
         <div className="graphic-container">
-          {!completed &&
             <div className="outer-circle">
-              {Array(confirmationCompletionCount).fill().map((e, i) => (
-                <div key={`slice-${i}`} className={`slice${confirmationCount > i ? ' confirmed' : ''}`}>
-                  <div className="crust"></div>
-                </div>
-              ))}
+              {Array(confirmationCompletionCount).fill().map((e, i) => {
+                const confirmed = confirmationCount > i
+                const degrees = degreeIncrement * i
+
+                return (
+                  <div key={`slice-${i}`} className={`slice${confirmed ? ' confirmed' : ''}`} style={{ transform: `rotate(${degrees}deg)` }}>
+                    <div className="crust" style={{ transform: `rotate(${degreeIncrement}deg)` }}></div>
+                  </div>
+                )
+              })}
               <div className="inner-circle">
                 <img src="images/blue-circle-arrows.svg" className="rotating-arrows" alt="rotating circular arrows" />
               </div>
             </div>
-          }
-          {completed &&
-            <div className="completed-circle"></div>
-          }
         </div>
       </li>
     )
