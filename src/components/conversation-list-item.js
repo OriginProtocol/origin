@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { defineMessages, injectIntl } from 'react-intl'
 
 import { fetchUser } from 'actions/User'
 
-import Avatar from './avatar'
-import Timelapse from './timelapse'
+import Avatar from 'components/avatar'
 
 import origin from '../services/origin'
 
@@ -13,6 +13,13 @@ class ConversationListItem extends Component {
     super(props)
 
     this.preFetchUsers = this.preFetchUsers.bind(this)
+
+    this.intlMessages = defineMessages({
+      unnamedUser: {
+        id: 'conversation-list-item.unnamedUser',
+        defaultMessage: 'Unnamed User'
+      }
+    })
   }
 
   componentDidMount() {
@@ -24,7 +31,7 @@ class ConversationListItem extends Component {
   }
 
   preFetchUsers() {
-    const { conversation, users } = this.props
+    const { conversation, fetchUser, intl, users } = this.props
     const { recipients, senderAddress } = conversation.values[0]
     const addresses = [ ...recipients, senderAddress ]
 
@@ -33,7 +40,7 @@ class ConversationListItem extends Component {
         return address === addr
       })
     }).forEach(addr => {
-      this.props.fetchUser(addr)
+      fetchUser(addr, intl.formatMessage(this.intlMessages.unnamedUser))
     })
   }
 
@@ -65,9 +72,6 @@ class ConversationListItem extends Component {
           </div>
         </div>
         <div className="meta-container text-right">
-          <div className="time-reference text-right">
-            <Timelapse abbreviated={true} reactive={false} reference={created} />
-          </div>
           {!!unreadCount &&
             <div className="unread count text-right">
               <div className="d-inline-block">{unreadCount}</div>
@@ -87,7 +91,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: address => dispatch(fetchUser(address))
+  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ConversationListItem)
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(ConversationListItem))

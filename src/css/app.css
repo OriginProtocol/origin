@@ -382,7 +382,7 @@ a:hover {
   color: white;
 }
 
-.user-card .btn {
+.user-card .view-profile {
   background-color: var(--dark-grey-blue);
   border-radius: 0 0 var(--default-radius) var(--default-radius);
   color: white;
@@ -390,7 +390,7 @@ a:hover {
   width: 100%;
 }
 
-.user-card .btn:hover {
+.user-card .view-profile:hover {
   background-color: var(--dark-clear-blue);
 }
 
@@ -463,6 +463,21 @@ a:hover {
   right: 12px;
 }
 
+.navbar .disabled-indicator {
+  background-color: red;
+  border: 2px solid var(--dusk);
+  border-radius: 50%;
+  height: 12px;
+  position: absolute;
+  right: 17px;
+  top: 2px;
+  width: 12px;
+}
+
+.navbar .messages .disabled-indicator {
+  right: 12px;
+}
+
 .navbar .conversation-list-item {
   background-color: #f6f7f8;
   border-top: 1px solid #98a7b4;
@@ -514,6 +529,10 @@ a:hover {
 }
 
 .dropdown.show .unread-indicator {
+  border-color: white;
+}
+
+.dropdown.show .disabled-indicator {
   border-color: white;
 }
 
@@ -2292,7 +2311,8 @@ form .stars img {
 
 .no-gutters .conversation-col {
   background-color: white;
-  padding: 20px;
+  height: calc(100vh - 60px);
+  padding: 0 10px 0;
 }
 
 .conversation-list-item {
@@ -2340,6 +2360,10 @@ form .stars img {
   font-size: 12px;
   height: 18px;
   padding: 0 6px;
+}
+
+.messages-wrapper .container {
+  padding: 0;
 }
 
 .messages-wrapper .sender {
@@ -2391,11 +2415,15 @@ form .stars img {
 
 .conversation {
   margin-bottom: auto;
-  padding-bottom: 20px;
+  overflow: scroll;
 }
 
-.conversation .message:not(:last-of-type) {
+.conversation .message {
   margin-bottom: 20px;
+}
+
+.conversation .message:first-of-type {
+  margin-top: 20px;
 }
 
 .conversation .avatar-container {
@@ -2433,7 +2461,7 @@ form .stars img {
   width: 100%;
 }
 
-.new-message input {
+.new-message textarea {
   border: 0;
   border-top: 1px solid var(--pale-grey);
   margin-left: -20px;
@@ -2442,8 +2470,9 @@ form .stars img {
   width: calc(100% + 20px + 20px);
 }
 
-.new-message input:focus {
+.new-message textarea:focus {
   outline: none;
+  resize: none;
 }
 
 /* Notifications */
@@ -3323,6 +3352,14 @@ a:not([href]):not([tabindex]).span-link {
 
   .messages-wrapper > .container > .row {
     height: 100%;
+  }
+
+  .conversation {
+    padding-bottom: 20px;
+  }
+
+  .no-gutters .conversation-col {
+    padding: 0 20px 0;
   }
 }
 

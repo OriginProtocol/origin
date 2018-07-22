@@ -4,9 +4,9 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 
-import ConversationListItem from './conversation-list-item'
-import Message from './message'
-import PurchaseProgress from './purchase-progress'
+import ConversationListItem from 'components/conversation-list-item'
+import Message from 'components/message'
+import PurchaseProgress from 'components/purchase-progress'
 
 import groupByArray from 'utils/groupByArray'
 
@@ -16,12 +16,14 @@ class Messages extends Component {
   constructor(props) {
     super(props)
 
-    this.handleChange = this.handleChange.bind(this)
+    this.handleKeyDown = this.handleKeyDown.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.conversationDiv = React.createRef()
+    this.textarea = React.createRef()
     this.state = {
       counterparty: {},
       listing: null,
-      newMessage: '',
+      messages: [],
       purchase: null,
       selectedConversationId: '',
     }
@@ -32,24 +34,43 @@ class Messages extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { conversations, match } = this.props
+    const { conversations, match, messages } = this.props
     const { selectedConversationId } = this.state
     const { conversationId } = match.params
+    const conversationSelected = selectedConversationId && selectedConversationId !== prevState.selectedConversationId
+
+    // on conversation selection
+    if (conversationSelected) {
+      this.identifyCounterparty()
+      this.loadListing()
+    }
 
     // on route change
     if (conversationId && conversationId !== prevProps.match.params.conversationId) {
       this.detectSelectedConversation()
     }
 
-    // on conversation selection
-    if (selectedConversationId && selectedConversationId !== prevState.selectedConversationId) {
-      this.identifyCounterparty()
-      this.loadListing()
-    }
-
     // autoselect a conversation
     if (!selectedConversationId && conversations.length) {
       this.setState({ selectedConversationId: conversations[0].key })
+    }
+
+    // move filtered and sorted messages to state
+    const messagesFiltered = messages.filter(m => m.conversationId === selectedConversationId)
+    const messagesFilteredPreviously = prevProps.messages.filter(m => m.conversationId === selectedConversationId)
+
+    if (
+      conversationSelected ||
+      messagesFiltered.map(({ hash }) => hash).join() !== messagesFilteredPreviously.map(({ hash }) => hash).join()
+    ) {
+      this.setState({ messages: messagesFiltered.sort((a, b) => a.index < b.index ? -1 : 1) })
+    }
+
+    // auto-scroll to most recent message
+    const el = this.conversationDiv.current
+
+    if (el) {
+      el.scrollTop = el.scrollHeight
     }
   }
 
@@ -90,25 +111,29 @@ class Messages extends Component {
     this.setState({ counterparty })
   }
 
-  handleChange(e) {
-    const newMessage = e.target.value
+  handleKeyDown(e) {
+    const { key, shiftKey } = e
 
-    this.setState({ newMessage })
+    if (!shiftKey && key === 'Enter') {
+      this.handleSubmit(e)
+    }
   }
 
   async handleSubmit(e) {
     e.preventDefault()
 
     const { web3Account } = this.props
-    const { newMessage, selectedConversationId } = this.state
+    const { selectedConversationId } = this.state
+    const el = this.textarea.current
+    const newMessage = el.value
 
     try {
       await originTest.messaging.sendConvMessage(
         selectedConversationId,
-        newMessage
+        newMessage.trim()
       )
 
-      this.setState({ newMessage: '' })
+      el.value = ''
     } catch(err) {
       console.error(err)
     }
@@ -138,8 +163,8 @@ class Messages extends Component {
   }
 
   render() {
-    const { conversations, messages, web3Account } = this.props
-    const { counterparty, listing, newMessage, purchase, selectedConversationId } = this.state
+    const { conversations, web3Account } = this.props
+    const { counterparty, listing, messages, purchase, selectedConversationId } = this.state
     const { address, name, pictures } = listing || {}
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
     const perspective = purchase ? (purchase.buyerAddress === web3Account ? 'buyer' : 'seller') : null
@@ -149,7 +174,7 @@ class Messages extends Component {
       <div className="d-flex messages-wrapper">
         <div className="container">
           <div className="row no-gutters">
-            <div className="conversations-list-col col-12 col-sm-4 col-lg-3">
+            <div className="conversations-list-col col-12 col-sm-4 col-lg-3 d-flex flex-sm-column">
               {conversations.map(c => {
                 return (
                   <ConversationListItem key={c.key} conversation={c} active={selectedConversationId === c.key} handleConversationSelect={() => this.handleConversationSelect(c.key)} />
@@ -212,15 +237,19 @@ class Messages extends Component {
                   </div>
                 </div>
               }
-              <div className="conversation">
-                {messages.filter(m => m.conversationId === selectedConversationId)
-                  .sort((a, b) => a.index < b.index ? -1 : 1)
-                  .map(m => <Message key={m.hash} message={m} />)
-                }
+              <div ref={this.conversationDiv} className="conversation">
+                {messages.map(m => <Message key={m.hash} message={m} />)}
               </div>
               {selectedConversationId &&
                 <form className="new-message" onSubmit={this.handleSubmit}>
-                  <input type="text" value={newMessage} onChange={this.handleChange} />
+                  <textarea
+                    ref={this.textarea}
+                    rows="4"
+                    placeholder={'Type something...'}
+                    onKeyDown={this.handleKeyDown}
+                    tabIndex="0"
+                    autoFocus>
+                  </textarea>
                 </form>
               }
             </div>

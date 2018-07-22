@@ -1,0 +1,14 @@
+[
+  {
+    "id": "MessageNew.encryptionNotice",
+    "defaultMessage": "Your message will be encrypted. It will only be visible to you, the recipient, and an arbitrator in the event that a dispute arises."
+  },
+  {
+    "id": "MessageNew.send",
+    "defaultMessage": "Send"
+  },
+  {
+    "id": "MessageNew.cancel",
+    "defaultMessage": "Cancel"
+  }
+]

@@ -1,4 +1,5 @@
 {
+  "conversation-list-item.unnamedUser": "Unnamed User",
   "connectivity.mainEthereumNetwork": "Main Ethereum Network",
   "connectivity.mordenTestNetwork": "Morden Test Network",
   "connectivity.ropstenTestNetwork": "Ropsten Test Network",
@@ -102,6 +103,9 @@
   "listings-grid.originContractNotFound": "The Origin Contract was not found on this network.",
   "listings-grid.changeNetworks": "You may need to change networks, or deploy the contract.",
   "listings-grid.listingsCount": "{listingIdsCount} Listings",
+  "MessageNew.encryptionNotice": "Your message will be encrypted. It will only be visible to you, the recipient, and an arbitrator in the event that a dispute arises.",
+  "MessageNew.send": "Send",
+  "MessageNew.cancel": "Cancel",
   "purchase-summary.purchasedFrom": "Purchased from {sellerLink}",
   "purchase-summary.soldTo": "Sold to {buyerLink}",
   "purchase-summary.purchasedFromOn": "Purchased from {sellerName} on {date}",
@@ -166,6 +170,7 @@
   "notification.purchaseSent": "Your purchase has been shipped.",
   "notification.purchaseReceived": "You have a new review.",
   "notification.purchaseComplete": "You have a new review.",
+  "notification.unnamedUser": "Unnamed User",
   "notification.buyer": "Buyer",
   "notification.seller": "Seller",
   "notificationsComponent.notificationsHeading": "Notifications",
