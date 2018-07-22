@@ -7,7 +7,7 @@ import { translateListingCategory } from '../utils/translationUtils'
 // not using a global singleton
 import origin from '../services/origin'
 
-import ListingCardPrices from './listing-card-prices.js';
+import ListingCardPrices from './listing-card-prices.js'
 
 class ListingCard extends Component {
 

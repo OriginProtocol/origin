@@ -25,7 +25,7 @@ class NotificationMessage extends Component {
         id: 'notification.purchaseComplete',
         defaultMessage: 'You have a new review.',
       },
-    });
+    })
   }
 
   render() {

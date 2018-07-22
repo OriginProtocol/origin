@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import Modal from 'components/modal'
 
@@ -9,6 +9,17 @@ class VerifyEmail extends Component {
   constructor() {
     super()
     this.state = { mode: 'email', email: '', code: '' }
+
+    this.intlMessages = defineMessages({
+      emailVerificationAddressPlaceholder: {
+        id: 'VerifyEmail.emailVerificationAddressPlaceholder',
+        defaultMessage: 'Verify email address',
+      },
+      emailVerificationCodePlaceholder: {
+        id: 'VerifyEmail.emailVerificationCodePlaceholder',
+        defaultMessage: 'Verification code',
+      },
+    })
   }
 
   render() {
@@ -86,10 +97,7 @@ class VerifyEmail extends Component {
           onChange={e =>
             this.setState({ email: e.currentTarget.value })
           }
-          placeholder={ <FormattedMessage
-                          id={ 'VerifyEmail.validEmail' }
-                          defaultMessage={ 'Valid email address' }
-                        /> }
+          placeholder={this.props.intl.formatMessage(this.intlMessages.emailVerificationAddressPlaceholder)}
           required
         />
         <div className="explanation">
@@ -117,7 +125,7 @@ class VerifyEmail extends Component {
           name="email-verification-code"
           value={this.state.code}
           onChange={e => this.setState({ code: e.currentTarget.value })}
-          placeholder="Verification code"
+          placeholder={this.props.intl.formatMessage(this.intlMessages.emailVerificationCodePlaceholder)}
           pattern="[a-zA-Z0-9]{6}"
           title="6-Character Verification Code"
           required
@@ -127,4 +135,4 @@ class VerifyEmail extends Component {
   }
 }
 
-export default VerifyEmail
+export default injectIntl(VerifyEmail)

@@ -1,5 +1,13 @@
 [
   {
+    "id": "VerifyPhone.phoneVerificationCodePlaceholder",
+    "defaultMessage": "Verification code"
+  },
+  {
+    "id": "VerifyPhone.phoneVerificationNumberPlaceholder",
+    "defaultMessage": "Area code and phone number"
+  },
+  {
     "id": "VerifyPhone.verifyPhoneHeading",
     "defaultMessage": "Verify Your Phone Number"
   },

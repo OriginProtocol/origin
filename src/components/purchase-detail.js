@@ -98,7 +98,7 @@ class PurchaseDetail extends Component {
         id: 'purchase-detail.sellerReviewPlaceholder',
         defaultMessage: 'Your review should inform others about your experience transacting with this buyer.'
       },
-    });
+    })
 
     /* Transaction stages: no disputes/arbitration
      *  - step 0 was creating the listing

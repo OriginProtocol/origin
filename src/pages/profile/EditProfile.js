@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import AvatarEditor from 'react-avatar-editor'
-import readAndCompressImage from 'browser-image-resizer';
+import readAndCompressImage from 'browser-image-resizer'
 
 import Modal from 'components/modal'
 
@@ -17,6 +17,21 @@ class EditProfile extends Component {
       lastName,
       description
     }
+
+    this.intlMessages = defineMessages({
+      descriptionPlaceholder: {
+        id: 'EditProfile.descriptionPlaceholder',
+        defaultMessage: 'Tell us a little something about yourself',
+      },
+      firstNamePlaceholder: {
+        id: 'EditProfile.firstNamePlaceholder',
+        defaultMessage: 'Your First Name',
+      },
+      lastNamePlaceholder: {
+        id: 'EditProfile.lastNamePlaceholder',
+        defaultMessage: 'Your Last Name',
+      },
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -36,7 +51,7 @@ class EditProfile extends Component {
   }
 
   render() {
-    const { open, handleToggle } = this.props
+    const { intl, open, handleToggle } = this.props
 
     return (
       <Modal isOpen={open} data-modal="profile" handleToggle={handleToggle}>
@@ -121,7 +136,7 @@ class EditProfile extends Component {
                     onChange={e =>
                       this.setState({ firstName: e.currentTarget.value })
                     }
-                    placeholder="Your First Name"
+                    placeholder={intl.formatMessage(this.intlMessages.firstNamePlaceholder)}
                   />
                 </div>
                 <div className="form-group">
@@ -140,7 +155,7 @@ class EditProfile extends Component {
                     onChange={e =>
                       this.setState({ lastName: e.currentTarget.value })
                     }
-                    placeholder="Your Last Name"
+                    placeholder={intl.formatMessage(this.intlMessages.lastNamePlaceholder)}
                   />
                 </div>
               </div>
@@ -161,11 +176,7 @@ class EditProfile extends Component {
                     onChange={e =>
                       this.setState({ description: e.currentTarget.value })
                     }
-                    placeholder={ <FormattedMessage 
-                                    id={ 'EditProfile.descriptionPlaceholder' } 
-                                    defaultMesssage={ 'Tell us a little something about yourself' } 
-                                  />
-                                }
+                    placeholder={intl.formatMessage(this.intlMessages.descriptionPlaceholder)}
                   />
                 </div>
               </div>
@@ -215,4 +226,4 @@ EditProfile.getDerivedStateFromProps = (nextProps, prevState) => {
   return newState
 }
 
-export default EditProfile
+export default injectIntl(EditProfile)
