@@ -38,5 +38,9 @@
   {
     "id": "_countryOptions.southKorea",
     "defaultMessage": "South Korea"
+  },
+  {
+    "id": "_countryOptions.newZealand",
+    "defaultMessage": "New Zealand"
   }
 ]

@@ -21,7 +21,7 @@ class Review extends Component {
         id: 'review.unnamedUser',
         defaultMessage: 'Unnamed User'
       }
-    });
+    })
   }
 
   componentWillMount() {

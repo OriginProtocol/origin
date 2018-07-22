@@ -26,7 +26,7 @@ class MySaleCard extends Component {
         id: 'my-sale-card.unnamedUser',
         defaultMessage: 'Unnamed User'
       }
-    });
+    })
   }
 
   componentWillMount() {
