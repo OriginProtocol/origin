@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
-import { translateListingCategory } from '../utils/translationUtils'
+import PurchaseProgress from 'components/purchase-progress'
 
-import PurchaseProgress from './purchase-progress'
+import { translateListingCategory } from 'utils/translationUtils'
+
 import origin from '../services/origin'
 
 class MyPurchaseCard extends Component {

@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
+
 import { fetchUser } from 'actions/User'
+
 import Avatar from 'components/avatar'
 import Review from 'components/review'
 
@@ -198,7 +200,7 @@ const mapStateToProps = (state, { userAddress }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: address => dispatch(fetchUser(address))
+  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(User))

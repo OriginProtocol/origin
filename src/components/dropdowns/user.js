@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Link } from 'react-router-dom'
-
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import Avatar from 'components/avatar'
 import Identicon from 'components/Identicon'

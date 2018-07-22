@@ -3,15 +3,19 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { FormattedMessage, FormattedDate, defineMessages, injectIntl } from 'react-intl'
 import $ from 'jquery'
-import Avatar from './avatar'
-import Modal from './modal'
-import Review from './review'
-import TransactionEvent from '../pages/purchases/transaction-event'
-import PurchaseProgress from './purchase-progress'
-import UserCard from './user-card'
+import moment from 'moment'
+
+import Avatar from 'components/avatar'
+import Modal from 'components/modal'
+import PurchaseProgress from 'components/purchase-progress'
+import Review from 'components/review'
+import UserCard from 'components/user-card'
+
+import TransactionEvent from 'pages/purchases/transaction-event'
+
+import { translateListingCategory } from 'utils/translationUtils'
 
 import origin from '../services/origin'
-import { translateListingCategory } from '../utils/translationUtils'
 
 const web3 = origin.contractService.web3
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 
-import Notification from './notification'
+import Notification from 'components/notification'
 
 import origin from '../services/origin'
 

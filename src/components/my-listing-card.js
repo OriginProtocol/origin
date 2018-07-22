@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'react-intl'
 
-import { translateListingCategory } from '../utils/translationUtils'
+import { translateListingCategory } from 'utils/translationUtils'
 
 import origin from '../services/origin'
 

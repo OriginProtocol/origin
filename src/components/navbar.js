@@ -3,13 +3,14 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
 
+import { storeWeb3Intent } from 'actions/App'
+
 import ConnectivityDropdown from 'components/dropdowns/connectivity'
 import MessagesDropdown from 'components/dropdowns/messages'
 import NotificationsDropdown from 'components/dropdowns/notifications'
 import TransactionsDropdown from 'components/dropdowns/transactions'
 import UserDropdown from 'components/dropdowns/user'
-import Modal from './modal'
-import { storeWeb3Intent } from '../actions/App'
+import Modal from 'components/modal'
 
 class NavBar extends Component {
   constructor(props) {

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 
+import EtherscanLink from 'components/etherscan-link'
 import Identicon from 'components/Identicon'
-import EtherscanLink from '../../components/etherscan-link'
 
 class Wallet extends Component {
   render() {

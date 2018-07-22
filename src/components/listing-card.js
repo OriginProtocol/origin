@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
-import { translateListingCategory } from '../utils/translationUtils'
 
-// temporary - we should be getting an origin instance from our app,
-// not using a global singleton
+import ListingCardPrices from 'components/listing-card-prices'
+
+import { translateListingCategory } from 'utils/translationUtils'
+
 import origin from '../services/origin'
-
-import ListingCardPrices from './listing-card-prices.js'
 
 class ListingCard extends Component {
 

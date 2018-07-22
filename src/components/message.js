@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import { updateMessage } from 'actions/Message'
 
-import Avatar from './avatar'
+import Avatar from 'components/avatar'
 
 class Message extends Component {
   render() {
@@ -28,7 +28,7 @@ class Message extends Component {
               {moment(created).format('MMM Do h:mm a')}
             </div>
           </div>
-          <div className="message">
+          <div className="message-content">
             {content}
           </div>
         </div>

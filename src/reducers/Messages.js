@@ -1,4 +1,4 @@
-import { MessageConstants } from '../actions/Message'
+import { MessageConstants } from 'actions/Message'
 
 export default function Messages(state = [], action = {}) {
   switch (action.type) {

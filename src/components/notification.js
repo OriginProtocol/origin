@@ -1,11 +1,11 @@
 import React, { Component, Fragment } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import { fetchUser } from 'actions/User'
 
-import NotificationMessage from './notification-message'
+import NotificationMessage from 'components/notification-message'
 
 import origin from '../services/origin'
 
@@ -17,6 +17,13 @@ class Notification extends Component {
     const { listing, purchase } = notification.resources
     const counterpartyAddress = [listing.sellerAddress, purchase.buyerAddress].find(addr => addr !== web3Account)
 
+    this.intlMessages = defineMessages({
+      unnamedUser: {
+        id: 'notification.unnamedUser',
+        defaultMessage: 'Unnamed User'
+      }
+    })
+
     this.handleClick = this.handleClick.bind(this)
     this.state = {
       counterpartyAddress,
@@ -27,7 +34,7 @@ class Notification extends Component {
   }
 
   componentWillMount() {
-    this.props.fetchUser(this.state.counterpartyAddress)
+    this.props.fetchUser(this.state.counterpartyAddress, this.props.intl.formatMessage(this.intlMessages.unnamedUser))
   }
 
   componentDidUpdate() {
@@ -115,7 +122,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: address => dispatch(fetchUser(address))
+  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Notification)
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Notification))

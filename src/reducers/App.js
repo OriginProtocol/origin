@@ -1,6 +1,7 @@
-import { AppConstants } from '../actions/App'
+import { AppConstants } from 'actions/App'
 
 const initialState = {
+  messagingEnabled: false,
   onMobile: null,
   web3: {
     account: null,
@@ -17,8 +18,10 @@ const initialState = {
 export default function App(state = initialState, action = {}) {
   switch (action.type) {
 
-    case AppConstants.ON_MOBILE:
+    case AppConstants.MESSAGING_ENABLED:
+      return { ...state, messagingEnabled: action.messagingEnabled }
 
+    case AppConstants.ON_MOBILE:
       return { ...state, onMobile: action.device }
 
     case AppConstants.WEB3_ACCOUNT:
