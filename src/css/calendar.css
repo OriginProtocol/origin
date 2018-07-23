@@ -2,6 +2,10 @@
   height: 320px;
 }
 
+.selection-unavailable {
+  margin-top: 65px;
+}
+
 .calendar-container.buyer-view {
   display: flex;
   flex-wrap: wrap;
@@ -88,10 +92,11 @@
 
 .calendar-container.buyer-view .rbc-day-bg.selected,
 .calendar-container.buyer-view .rbc-time-slot.selected {
-  background: var(--greenblue) !important;
+  background: var(--dusk) !important;
+  color: white;
 }
 
-.calendar-container.buyer-view .rbc-calendar .rbc-day-bg {
+.calendar-container.buyer-view.hourly-view .rbc-calendar .rbc-day-bg {
   font-size: 7px;
 }
 
@@ -104,9 +109,10 @@
   padding-left: 5px;
   text-align: left;
   vertical-align: top;
+  color: #999999;
 }
 
-.calendar-container.buyer-view .rbc-calendar .rbc-date-cell {
+.calendar-container.buyer-view.hourly-view .rbc-calendar .rbc-date-cell {
   cursor: default;
   font-size: 10px;
 }
@@ -166,12 +172,16 @@
   font-size: 18px;
 }
 
-.calendar-cta select {
+.calendar-cta select,
+.calendar-cta select:focus,
+.calendar-cta select:active {
   background: var(--dark);
   color: white;
   border: none;
   height: 34px;
 }
+
+
 
 .calendar-cta .btn {
   display: inline-block;

@@ -321,9 +321,6 @@ class Calendar extends Component {
             {dateInfo.isAvailable &&
               <span>{dateInfo.price ? `${dateInfo.price} ETH` : `0 ETH`}</span>
             }
-            {!dateInfo.isAvailable &&
-              <span>Unavailable</span>
-            }
           </div>
           :
           <div className="rbc-day-bg"></div>
@@ -565,13 +562,14 @@ class Calendar extends Component {
                 }
                 {this.props.userType === 'buyer' &&
                   <div>
-                    <p><strong>Price: </strong>{selectedEvent.price} ETH</p>
+                    <p className="font-weight-bold">Price</p>
+                    <p>{selectedEvent.price} ETH</p>
                     <div className="cta-btns row">
                       <div className="col-md-6">
                         <button className="btn btn-dark" onClick={this.unselectSlots}>Cancel</button>
                       </div>
                       <div className="col-md-6">
-                        <button className="btn btn-light" onClick={this.reserveSlots}>Reserve Time Slots</button>
+                        <button className="btn btn-light" onClick={this.reserveSlots}>Reserve</button>
                       </div>
                     </div>
                   </div>
@@ -579,9 +577,9 @@ class Calendar extends Component {
               </div>
             }
             {this.state.selectionUnavailable &&
-              <div>
+              <p className="selection-unavailable font-weight-bold">
                 Your selection contains one or more unavailable time slots.
-              </div>
+              </p>
             }
           </div>
         </div>

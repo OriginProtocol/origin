@@ -114,6 +114,7 @@ class ListingCreate extends Component {
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
     this.onAvailabilityEntered = this.onAvailabilityEntered.bind(this)
+    this.onGoBack = this.onGoBack.bind(this)
     this.getCalendarStep = this.getCalendarStep.bind(this)
   }
 
@@ -227,6 +228,10 @@ class ListingCreate extends Component {
     this.setState({
       step: this.STEP.PREVIEW
     })
+  }
+
+  onGoBack() {
+    this.setState({ step: this.STEP.DETAILS })
   }
 
   async onSubmitListing(formData, selectedSchemaType) {
@@ -422,7 +427,7 @@ class ListingCreate extends Component {
               viewType={ this.state.fractionalTimeIncrement }
               step={ this.getCalendarStep() }
               onComplete={ this.onAvailabilityEntered }
-              onGoBack={ this.setState({ step: this.STEP.DETAILS }) }
+              onGoBack={ this.onGoBack }
             />
           </div>
         }
@@ -584,17 +589,6 @@ class ListingCreate extends Component {
             </div>
           </div>
         }
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <Calendar
-          slots={ this.state.formData && this.state.formData.slots }
-          userType="seller"
-          viewType={ 'hourly' }
-          step={ 60 }
-          onComplete={ this.onAvailabilityEntered }
-        />
       </div>
     )
   }

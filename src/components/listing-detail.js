@@ -321,18 +321,6 @@ class ListingsDetail extends Component {
                   </a>
                 </div>
               */}
-              { !this.state.loading && this.state.listingType === 'fractional' && !userIsSeller &&
-                <div className="step-container listing-availability">
-                  <Calendar 
-                    slots={ this.state.slots }
-                    purchases={ this.state.purchases }
-                    userType="buyer"
-                    viewType={ this.state.schemaType === 'housing' ? 'daily' : 'hourly' }
-                    onComplete={ this.reserveSlots }
-                    step={ this.getCalendarStep() }
-                  />
-                </div>
-              }
               <div className="debug">
                 <li>
                   <FormattedMessage
@@ -445,6 +433,18 @@ class ListingsDetail extends Component {
               }
               {this.state.sellerAddress && <UserCard title="seller" userAddress={this.state.sellerAddress} />}
             </div>
+            { !this.state.loading && this.state.listingType === 'fractional' && !userIsSeller &&
+              <div className="col-12">
+                <Calendar 
+                  slots={ this.state.slots }
+                  purchases={ this.state.purchases }
+                  userType="buyer"
+                  viewType={ this.state.schemaType === 'housing' ? 'daily' : 'hourly' }
+                  onComplete={ this.reserveSlots }
+                  step={ this.getCalendarStep() }
+                />
+              </div>
+            }
           </div>
           {this.props.withReviews &&
             <div className="row">
