@@ -122,11 +122,8 @@ class ListingCreate extends Component {
     if (this.props.listingAddress) {
       try {
         const listing = await origin.listings.get(this.props.listingAddress)
-
         this.setState({ selectedSchemaType: listing.schemaType })
-
         await this.handleSchemaSelection()
-
         listing.slots = generateCalendarSlots(listing.slots)
 
         this.setState({
