@@ -154,7 +154,7 @@ class ListingsDetail extends Component {
       try {
         this.setState({ step: this.STEP.PROCESSING })
         const transaction = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice, this.props.updateTransaction)
-        this.props.upsertTransaction(transaction)
+        this.props.upsertTransaction({ ...transaction, transactionTypeKey: 'buyListing' })
         this.setState({ step: this.STEP.PURCHASED })
       } catch (error) {
         console.error(error)

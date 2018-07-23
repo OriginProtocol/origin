@@ -2,31 +2,39 @@ import React, { Component, Fragment } from 'react'
 import { defineMessages, injectIntl } from 'react-intl'
 
 // support uncategorized transactions
-const NON_PURCHASE_RELATED_MESSAGE = 'A transaction is awaiting confirmation'
+const UNCATEGORIZED_MESSAGE = 'A transaction is awaiting confirmation'
 
 class TransactionMessage extends Component {
   constructor(props){
     super(props)
 
     this.intlMessages = defineMessages({
-      purchased: {
-        id: 'transaction.purchased',
+      buyListing: {
+        id: 'transaction.buyListing',
         defaultMessage: 'You made a purchase.',
+      },
+      closeListing: {
+        id: 'transaction.closeListing',
+        defaultMessage: 'You closed a listing',
+      },
+      confirmReceipt: {
+        id: 'transaction.confirmReceipt',
+        defaultMessage: 'You left a review and confirmed receipt.',
+      },
+      confirmShipped: {
+        id: 'transaction.confirmShipped',
+        defaultMessage: 'You marked a purchase as shipped.',
+      },
+      getPayout: {
+        id: 'transaction.getPayout',
+        defaultMessage: 'You left a review and withdrew funds.',
       },
     });
   }
 
   render() {
-    const { className, listing, type } = this.props
-    let message
-
-    switch(type) {
-      case 'purchased':
-        message = this.props.intl.formatMessage(this.intlMessages.purchased)
-        break
-      default:
-        return <p className={className || ''}>{NON_PURCHASE_RELATED_MESSAGE}</p>
-    }
+    const { className, type } = this.props
+    const message = type ? this.props.intl.formatMessage(this.intlMessages[type]) : UNCATEGORIZED_MESSAGE
 
     return (
       <div className={`message${className ? ` ${className}` : ''}`}>{message}</div>

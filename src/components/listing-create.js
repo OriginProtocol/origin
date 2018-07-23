@@ -142,10 +142,9 @@ class ListingCreate extends Component {
       this.setState({ step: this.STEP.METAMASK })
       console.log(formListing)
       this.setState({ step: this.STEP.PROCESSING })
-      const transaction = await origin.listings.create(formListing.formData, selectedSchemaType)
+      const transaction = await origin.listings.create(formListing.formData, selectedSchemaType, this.props.updateTransaction)
       this.props.upsertTransaction(transaction)
       this.setState({ step: this.STEP.SUCCESS })
-      transaction.whenFinished(6, this.props.updateTransaction)
     } catch (error) {
       console.error(error)
       this.setState({ step: this.STEP.ERROR })

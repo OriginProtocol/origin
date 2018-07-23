@@ -54,5 +54,13 @@
   {
     "id": "my-listings.inactive",
     "defaultMessage": "Inactive"
+  },
+  {
+    "id": "my-listings.processingUpdate",
+    "defaultMessage": "Closing your listing"
+  },
+  {
+    "id": "my-listings.pleaseStandBy",
+    "defaultMessage": "Please stand by..."
   }
 ]
