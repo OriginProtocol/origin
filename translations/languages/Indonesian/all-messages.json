@@ -355,7 +355,7 @@
   "VerifyPhone.cancel": "Batalkan",
   "VerifyPhone.enterPhoneNumberSms": "Masukkan nomor telepon Anda di bawah ini dan {originId} akan mengirimi Anda kode verifikasi melalui SMS.",
   "VerifyPhone.callOption": "Pilih panggilan?",
-  "VerifyPhone.enterPhoneNumberCall": "Enter your phone number below and {originId} will call you with a verification code.",
+  "VerifyPhone.enterPhoneNumberCall": "Masukkan nomor telepon Anda di bawah ini dan {originId} akan menelepon Anda dengan kode verifikasi.",
   "VerifyPhone.smsOption": "Pilih SMS?",
   "VerifyPhone.phoneNumberNotPublished": "Other users will know that you have a verified phone number. Your actual phone number will not be published on the blockchain.",
   "VerifyPhone.enterCodeBelow": "Masukkan kode yang kami kirimkan di bawah ini",
