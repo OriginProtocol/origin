@@ -96,6 +96,13 @@
   color: white;
 }
 
+.calendar-container.buyer-view .rbc-time-slot {
+  font-size: 15px;
+  display: flex;
+  align-items: flex-end;
+  padding: 2px 3px;
+}
+
 .calendar-container.buyer-view.hourly-view .rbc-calendar .rbc-day-bg {
   font-size: 7px;
 }

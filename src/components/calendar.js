@@ -61,6 +61,30 @@ class Calendar extends Component {
     })
   }
 
+  componentDidMount() {
+    // This is a hackky way of showing the price in hourly time slots
+    // since React Big Calendar doesn't give us full control over the content of those slots
+    // Possible future optimization would be to create a PR to React Big Calendar to support custom slot content.
+    if (this.props.viewType &&
+        this.props.viewType === 'hourly' &&
+        this.props.userType &&
+        this.props.userType === 'buyer') {
+      const slots = document.querySelectorAll('.rbc-time-slot')
+
+      for (let i = 0, slotsLen = slots.length; i < slotsLen; i++) {
+        const slot = slots[i]
+        const classes = slot.className
+        const priceIdx = classes.indexOf('priceEth-')
+
+        if (priceIdx > -1) {
+          const price = classes.substring(priceIdx + 9, classes.length)
+          const priceNode = document.createTextNode(`${price} ETH`)
+          slot.appendChild(priceNode)
+        }
+      }
+    }
+  }
+
   setViewType() {
     return this.props.viewType === 'daily' ? 'month' : 'week'
   }
@@ -341,8 +365,9 @@ class Calendar extends Component {
       this.state.buyerSelectedSlotData.filter((slot) => 
         moment(date).isBetween(moment(slot.start).subtract(1, 'second'), moment(slot.end))
       )
-    const isSelected = (selectedSlotsMatchingDate && selectedSlotsMatchingDate.length) ? ' selected' : '' 
-    return { className: `${isAvailable}${isSelected}` }
+    const isSelected = (selectedSlotsMatchingDate && selectedSlotsMatchingDate.length) ? ' selected' : ''
+    const price = slotData.price ? ` priceEth-${slotData.price}` : ''
+    return { className: `${isAvailable}${isSelected}${price}` }
   }
 
   saveData() {
