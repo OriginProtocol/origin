@@ -296,12 +296,16 @@ class PurchaseDetail extends Component {
     try {
       this.setState({ processing: true })
 
-      const transaction = await origin.purchases.buyerConfirmReceipt(purchaseAddress, {
+      const { created, transactionReceipt } = await origin.purchases.buyerConfirmReceipt(purchaseAddress, {
         rating,
         reviewText: reviewText.trim(),
       }, this.props.updateTransaction)
 
-      this.props.upsertTransaction({ ...transaction, transactionTypeKey: 'confirmReceipt' })
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        created,
+        transactionTypeKey: 'confirmReceipt',
+      })
 
       // why is this delay often required???
       setTimeout(() => {
@@ -323,9 +327,13 @@ class PurchaseDetail extends Component {
     try {
       this.setState({ processing: true })
 
-      const transaction = await origin.purchases.sellerConfirmShipped(purchaseAddress, this.props.updateTransaction)
+      const { created, transactionReceipt } = await origin.purchases.sellerConfirmShipped(purchaseAddress, this.props.updateTransaction)
 
-      this.props.upsertTransaction({ ...transaction, transactionTypeKey: 'confirmShipped' })
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        created,
+        transactionTypeKey: 'confirmShipped',
+      })
 
       // why is this delay often required???
       setTimeout(() => {
@@ -347,12 +355,16 @@ class PurchaseDetail extends Component {
     try {
       this.setState({ processing: true })
 
-      const transaction = await origin.purchases.sellerGetPayout(purchaseAddress, {
+      const { created, transactionReceipt } = await origin.purchases.sellerGetPayout(purchaseAddress, {
         rating,
         reviewText: reviewText.trim(),
       }, this.props.updateTransaction)
 
-      this.props.upsertTransaction({ ...transaction, transactionTypeKey: 'getPayout' })
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        created,
+        transactionTypeKey: 'getPayout',
+      })
 
       // why is this delay often required???
       setTimeout(() => {

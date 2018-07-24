@@ -3,6 +3,7 @@ const transactionTypeMap = {
   closeListing: 'ListingChange',
   confirmReceipt: 'PurchaseChange',
   confirmShipped: 'PurchaseChange',
+  createListing: 'NewListing',
   getPayout: 'PurchaseChange',
 }
 

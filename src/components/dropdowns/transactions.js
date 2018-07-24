@@ -42,7 +42,7 @@ class TransactionsDropdown extends Component {
     const { hideList } = this.state
     const transactionsNotHidden = transactions.filter((t, i) => !hideList.includes(t.transactionHash))
     const transactionsNotCompleted = transactions.filter(t => t.confirmationCount < CONFIRMATION_COMPLETION_COUNT)
-    const transactionsCanBeCleared = !!transactionsNotHidden.length
+    const transactionsCanBeCleared = !!transactionsNotHidden.filter(t => t.confirmationCount >= CONFIRMATION_COMPLETION_COUNT).length
 
     return (
       <div className="nav-item transactions dropdown">
@@ -71,10 +71,21 @@ class TransactionsDropdown extends Component {
               <h3 className="mr-auto">
                 <span className="d-none d-md-inline">
                   <FormattedMessage
-                    id={ 'transactions.pendingTransactions' }
+                    id={ 'transactions.pendingBlockchainTransactionsHeading' }
                     defaultMessage={ 'Pending Blockchain Transactions' }
                   />
-                  &nbsp;
+                </span>
+                <span className="d-none d-sm-inline d-md-none">
+                  <FormattedMessage
+                    id={ 'transactions.blockchainTransactionsHeading' }
+                    defaultMessage={ 'Blockchain Transactions' }
+                  />
+                </span>
+                <span className="d-inline d-sm-none">
+                  <FormattedMessage
+                    id={ 'transactions.transactionsHeading' }
+                    defaultMessage={ 'Transactions' }
+                  />
                 </span>
               </h3>
               <div className="button-container">

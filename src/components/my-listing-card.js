@@ -47,9 +47,13 @@ class MyListingCard extends Component {
     try {
       handleProcessing(true)
 
-      const transaction = await origin.listings.close(address, updateTransaction)
+      const { created, transactionReceipt } = await origin.listings.close(address, updateTransaction)
 
-      this.props.upsertTransaction({ ...transaction, transactionTypeKey: 'closeListing' })
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        created,
+        transactionTypeKey: 'closeListing',
+      })
 
       // why is this delay often required???
       setTimeout(() => {

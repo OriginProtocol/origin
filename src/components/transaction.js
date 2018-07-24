@@ -28,7 +28,9 @@ class Transaction extends Component {
         purchase = await origin.purchases.get(events[transactionType].returnValues[0])
         listing = await origin.listings.get(purchase.listingAddress)
       } else if (transactionTypeKey === 'closeListing') {
-        listing = await origin.listings.get(events[transactionType].address)
+        listing = await origin.listings.get(events[transactionType].returnValues._address)
+      } else if (transactionTypeKey === 'createListing') {
+        listing = await origin.listings.get(events[transactionType].returnValues._address)
       } else if (['confirmReceipt', 'confirmShipped', 'getPayout'].includes(transactionTypeKey)) {
         purchase = await origin.purchases.get(events[transactionType].address)
         listing = await origin.listings.get(purchase.listingAddress)
@@ -64,6 +66,9 @@ class Transaction extends Component {
         break
       case 'confirmShipped':
         toAddress = purchase.buyerAddress
+        fromAddress = listing.sellerAddress
+        break
+      case 'createListing':
         fromAddress = listing.sellerAddress
         break
       case 'getPayout':
@@ -102,7 +107,7 @@ class Transaction extends Component {
                   defaultMessage={ 'From' }
                 />
                 &nbsp;
-                {fromAddress}
+                {truncatedFrom}
               </div>
             }
             {toAddress &&

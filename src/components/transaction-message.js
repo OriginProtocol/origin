@@ -25,6 +25,10 @@ class TransactionMessage extends Component {
         id: 'transaction.confirmShipped',
         defaultMessage: 'You marked a purchase as shipped.',
       },
+      createListing: {
+        id: 'transaction.createListing',
+        defaultMessage: 'You created a listing',
+      },
       getPayout: {
         id: 'transaction.getPayout',
         defaultMessage: 'You left a review and withdrew funds.',
