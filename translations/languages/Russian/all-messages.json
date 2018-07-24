@@ -259,7 +259,7 @@
   "_ProvisionedChanges.description": "Описание",
   "_ProvisionedChanges.picture": "Картинка",
   "_ProvisionedChanges.visibleOnBlockchain": "Видимые в блокчейне",
-  "_ProvisionedChanges.notVisibleOnBlockchain": "Не видимые в блокчейне",
+  "_ProvisionedChanges.notVisibleOnBlockchain": "Невидимые в блокчейне",
   "_ProvisionedChanges.phoneNumber": "Номер телефона",
   "_ProvisionedChanges.emailAddress": "Адрес электронной почты",
   "_ProvisionedChanges.facebookAccount": "Аккаунт Facebook",
