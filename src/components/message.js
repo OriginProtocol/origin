@@ -18,11 +18,11 @@ class Message extends Component {
   render() {
     const { message, user } = this.props
     const { content, created } = message
-    const { address, fullName } = user
+    const { address, fullName, profile } = user
 
     return (
       <div className="d-flex message">
-        <Avatar placeholderStyle="blue" />
+        <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
         <div className="content-container">
           <div className="meta-container d-flex text-truncate">
             <div className="sender text-truncate">
