@@ -112,6 +112,12 @@ class Calendar extends Component {
 
   onSelectSlot(slotInfo, shouldOverrideExistingEvent) {
     if (this.props.userType === 'seller') {
+      // remove last slot time for hourly calendars - not sure why React Big Calendar includes
+      // the next slot after the last selected time slot - seems like a bug.
+      if (this.props.viewType === 'hourly') {
+        slotInfo.slots && slotInfo.slots.length && slotInfo.slots.splice(-1)
+      }
+
       // if slot doesn't already contain an event, create an event
       const existingEventInSlot = this.checkSlotsForExistingEvent(slotInfo)
 
@@ -276,7 +282,12 @@ class Calendar extends Component {
 
       while (slotDate.toDate() >= startDate && slotDate.toDate() <= endDate) {
 
-        const slotDateObj = slotDate.startOf('day').toDate()
+        const timePeriod = this.props.viewType === 'daily'
+                           ? 'day'
+                           : this.props.step === '60'
+                             ? 'hour'
+                             : null
+        const slotDateObj = timePeriod ? slotDate.startOf(timePeriod).toDate() : slotDate.toDate()
 
         if (whichDropdown === 'start') {
           slots.push(slotDateObj)
