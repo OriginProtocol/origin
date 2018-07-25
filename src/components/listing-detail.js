@@ -413,7 +413,7 @@ class ListingsDetail extends Component {
                   }
                 </div>
               }
-              {this.state.sellerAddress && <UserCard title="seller" userAddress={this.state.sellerAddress} />}
+              {this.state.sellerAddress && <UserCard title="seller" listingAddress={this.props.listingAddress} userAddress={this.state.sellerAddress} />}
             </div>
           </div>
           {this.props.withReviews &&

@@ -4,7 +4,7 @@ export default function Messages(state = [], action = {}) {
   switch (action.type) {
 
     case MessageConstants.ADD:
-      const { content, created, hash, index, recipients, roomId, senderAddress, status } = action.obj
+      const { content, created, hash, index, listingAddress, purchaseAddress, recipients, roomId, senderAddress, status } = action.obj
 
       // prevent addition of duplicate messages
       if (state.find(m => m.hash === hash)) {
@@ -13,6 +13,8 @@ export default function Messages(state = [], action = {}) {
 
       return [...state, {
         conversationId: roomId,
+        purchaseAddress,
+        listingAddress,
         senderAddress,
         recipients,
         content,

@@ -24,10 +24,14 @@ class MessageNew extends Component {
   async handleSubmit(e) {
     e.preventDefault()
 
-    const { history, recipientAddress } = this.props
+    const { history, listingAddress, purchaseAddress, recipientAddress } = this.props
 
     try {
-      const roomId = await origin.messaging.sendConvMessage(recipientAddress, this.state.content)
+      const roomId = await origin.messaging.sendConvMessage(recipientAddress, {
+        content: this.state.content,
+        ...(listingAddress && { listingAddress }),
+        ...(purchaseAddress && { purchaseAddress }),
+      })
 
       history.push(`/messages/${roomId}`)
     } catch(err) {

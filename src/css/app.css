@@ -2380,6 +2380,7 @@ form .stars img {
 .messages-wrapper .listing-summary {
   border-bottom: 1px solid #c2cbd3;
   margin-bottom: 20px;
+  padding-top: 20px;
 }
 
 .messages-wrapper .brdcrmb {
@@ -2411,6 +2412,10 @@ form .stars img {
 
 .messages-wrapper .aspect-ratio img {
   height: 114px;
+}
+
+.messages-wrapper .progress-container {
+  margin-bottom: 20px;
 }
 
 .conversation {

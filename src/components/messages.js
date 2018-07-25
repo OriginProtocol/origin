@@ -28,10 +28,11 @@ class Messages extends Component {
     this.conversationDiv = React.createRef()
     this.textarea = React.createRef()
     this.state = {
+      conversation: {},
       counterparty: {},
-      listing: null,
+      listing: {},
       messages: [],
-      purchase: null,
+      purchase: {},
       selectedConversationId: '',
     }
   }
@@ -42,15 +43,9 @@ class Messages extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { conversations, match, messages } = this.props
-    const { selectedConversationId } = this.state
+    const { conversation, selectedConversationId } = this.state
     const { conversationId } = match.params
-    const conversationSelected = selectedConversationId && selectedConversationId !== prevState.selectedConversationId
-
-    // on conversation selection
-    if (conversationSelected) {
-      this.identifyCounterparty()
-      this.loadListing()
-    }
+    const changedSelectedConversationId = selectedConversationId !== prevState.selectedConversationId
 
     // on route change
     if (conversationId && conversationId !== prevProps.match.params.conversationId) {
@@ -62,12 +57,30 @@ class Messages extends Component {
       this.setState({ selectedConversationId: conversations[0].key })
     }
 
+    const selectedConversation = conversations.find(({ key }) => key === selectedConversationId) || {}
+
+    // on presence of selected conversation
+    if (selectedConversation.key && selectedConversation.key !== conversation.key) {
+      this.setState({ conversation: selectedConversation })
+    }
+
+    // on state conversation change
+    if (conversation.key && conversation.key !== prevState.conversation.key) {
+      this.loadListing()
+      this.identifyCounterparty()
+    }
+
+    // on messages
+    if (messages.length !== prevProps.messages.length && conversation.key) {
+      this.loadListing()
+    }
+
     // move filtered and sorted messages to state
     const messagesFiltered = messages.filter(m => m.conversationId === selectedConversationId)
     const messagesFilteredPreviously = prevProps.messages.filter(m => m.conversationId === selectedConversationId)
 
     if (
-      conversationSelected ||
+      changedSelectedConversationId ||
       messagesFiltered.map(({ hash }) => hash).join() !== messagesFilteredPreviously.map(({ hash }) => hash).join()
     ) {
       this.setState({ messages: messagesFiltered.sort((a, b) => a.index < b.index ? -1 : 1) })
@@ -89,7 +102,7 @@ class Messages extends Component {
 
   async findPurchase() {
     const { web3Account } = this.props
-    const { counterparty, listing } = this.state
+    const { counterparty, listing, purchase } = this.state
     const { address, sellerAddress } = listing
     const len = await origin.listings.purchasesLength(address)
     const purchaseAddresses = await Promise.all([...Array(len).keys()].map(async i => {
@@ -99,15 +112,16 @@ class Messages extends Component {
       return await origin.purchases.get(addr)
     }))
     const involvingCounterparty = purchases.filter(p => p.buyerAddress === counterparty.address || p.buyerAddress === web3Account)
-    const mostRecent = involvingCounterparty.sort((a, b) => a.created > b.created ? -1 : 1)[0]
+    const mostRecent = involvingCounterparty.sort((a, b) => a.created > b.created ? -1 : 1)[0] || {}
     
-    this.setState({ purchase: mostRecent })
+    if (mostRecent.address !== purchase.address) {
+      this.setState({ purchase: mostRecent })
+    }
   }
 
   identifyCounterparty() {
     const { conversations, users, web3Account } = this.props
-    const { selectedConversationId } = this.state
-    const conversation = conversations.find(c => c.key === selectedConversationId)
+    const { conversation, selectedConversationId } = this.state
     const { recipients, senderAddress } = conversation.values[0]
     const counterpartyRole = senderAddress === web3Account ? 'recipient' : 'sender'
     const address = counterpartyRole === 'recipient' ?
@@ -148,19 +162,16 @@ class Messages extends Component {
   }
 
   async loadListing() {
-    const { conversations } = this.props
-    const { selectedConversationId } = this.state
+    const { conversation, selectedConversationId } = this.state
     // find the most recent listing context or set empty value
-    const { listingId } = conversations.find(c => c.key === selectedConversationId)
-                          .values
-                          .sort((a, b) => a.created < b.created ? -1 : 1)
-                          .find(m => m.listingId) || {}
+    const { listingAddress } = conversation.values
+                               .sort((a, b) => a.created < b.created ? -1 : 1)
+                               .find(m => m.listingAddress) || {}
 
-    const listing = listingId ? (await origin.listings.get(listingId)) : null
+    const listing = listingAddress ? (await origin.listings.get(listingAddress)) : {}
 
-    this.setState({ listing })
-
-    if (listing) {
+    if (listing.address && listing.address !== this.state.listing.address) {
+      this.setState({ listing })
       this.findPurchase()
     }
   }
@@ -172,10 +183,11 @@ class Messages extends Component {
   render() {
     const { conversations, intl, web3Account } = this.props
     const { counterparty, listing, messages, purchase, selectedConversationId } = this.state
-    const { address, name, pictures } = listing || {}
+    const { address, name, pictures } = listing
+    const { buyerAddress, created } = purchase
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
-    const perspective = purchase ? (purchase.buyerAddress === web3Account ? 'buyer' : 'seller') : null
-    const soldAt = purchase ? purchase.created * 1000 /* convert seconds since epoch to ms */ : null
+    const perspective = buyerAddress ? (buyerAddress === web3Account ? 'buyer' : 'seller') : null
+    const soldAt = created ? created * 1000 /* convert seconds since epoch to ms */ : null
 
     return (
       <div className="d-flex messages-wrapper">
@@ -189,7 +201,7 @@ class Messages extends Component {
               })}
             </div>
             <div className="conversation-col col-12 col-sm-8 col-lg-9 d-flex flex-column">
-              {listing &&
+              {address &&
                 <div className="listing-summary d-flex">
                   <div className="aspect-ratio">
                     <div className={`${photo ? '' : 'placeholder '}image-container d-flex justify-content-center`}>
@@ -197,7 +209,7 @@ class Messages extends Component {
                     </div>
                   </div>
                   <div className="content-container d-flex flex-column">
-                    {purchase &&
+                    {buyerAddress &&
                       <div className="brdcrmb">
                         {perspective === 'buyer' &&
                           <FormattedMessage
@@ -216,7 +228,7 @@ class Messages extends Component {
                       </div>
                     }
                     <h1>{name}</h1>
-                    {purchase &&
+                    {buyerAddress &&
                       <div className="state">
                         {perspective === 'buyer' &&
                           <FormattedMessage
@@ -234,7 +246,7 @@ class Messages extends Component {
                         }
                       </div>
                     }
-                    {purchase &&
+                    {buyerAddress &&
                       <PurchaseProgress
                         purchase={purchase}
                         perspective={perspective}

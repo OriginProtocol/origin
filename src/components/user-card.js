@@ -35,7 +35,7 @@ class UserCard extends Component {
   }
 
   render() {
-    const { title, user, userAddress } = this.props
+    const { listingAddress, purchaseAddress, title, user, userAddress } = this.props
     const { fullName, profile, attestations } = user
 
     return (
@@ -114,7 +114,13 @@ class UserCard extends Component {
             defaultMessage={ 'View Profile' }
           />
         </Link>
-        <MessageNew open={this.state.modalOpen} recipientAddress={userAddress} handleToggle={this.handleToggle} />
+        <MessageNew
+          open={this.state.modalOpen}
+          recipientAddress={userAddress}
+          listingAddress={listingAddress}
+          purchaseAddress={purchaseAddress}
+          handleToggle={this.handleToggle}
+        />
       </div>
     )
   }
