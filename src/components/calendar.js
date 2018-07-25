@@ -29,6 +29,7 @@ class Calendar extends Component {
     this.buyerNextMonth = this.buyerNextMonth.bind(this)
     this.slotPropGetter = this.slotPropGetter.bind(this)
     this.eventComponent = this.eventComponent.bind(this)
+    this.checkSlotsForExistingEvent = this.checkSlotsForExistingEvent.bind(this)
 
     this.state = {
       events: [],
@@ -89,14 +90,32 @@ class Calendar extends Component {
     return this.props.viewType === 'daily' ? 'month' : 'week'
   }
 
-  onSelectSlot(slotInfo) {
+  checkSlotsForExistingEvent(slotInfo) {
+    return this.state.events.filter((event) => {
+      let isEventInSlot = false
+
+      for (let i = 0, existSlotsLen = event.slots.length; i < existSlotsLen; i++) {
+        const existSlot = event.slots[i]
+
+        for (let j = 0, newSlotsLen = slotInfo.slots.length; j < newSlotsLen; j++) {
+          const newSlot = slotInfo.slots[j]
+
+          if (existSlot.toString() === newSlot.toString()) {
+            isEventInSlot = true
+          }
+        }
+      }
+
+      return isEventInSlot
+    })
+  }
+
+  onSelectSlot(slotInfo, shouldOverrideExistingEvent) {
     if (this.props.userType === 'seller') {
       // if slot doesn't already contain an event, create an event
-      let newEvent
-      const existingEventInSlot = this.state.events.filter((event) => 
-        event.slots[0].toString() === slotInfo.slots[0].toString()
-      )
+      const existingEventInSlot = this.checkSlotsForExistingEvent(slotInfo)
 
+      let newEvent
       if (!existingEventInSlot.length) {
 
         const endDate = this.props.viewType === 'daily' ?
@@ -118,7 +137,26 @@ class Calendar extends Component {
         })
       }
 
-      this.onSelectEvent(existingEventInSlot[0] || newEvent)
+      let updatedExistingEvent
+
+      if (shouldOverrideExistingEvent && existingEventInSlot.length === 1) {
+        updatedExistingEvent = existingEventInSlot[0] && {
+          ...existingEventInSlot[0],
+          start: slotInfo.start,
+          end: slotInfo.end,
+          slots: slotInfo.slots
+        }
+      }
+
+      if (existingEventInSlot.length > 1) {
+        this.setState({ showOverlappingEventsErrorMsg: true })
+      } else {
+        this.setState({ showOverlappingEventsErrorMsg: false })
+      }
+
+      if (updatedExistingEvent || newEvent) {
+        this.onSelectEvent(updatedExistingEvent || newEvent, true)
+      }
     } else {
       // user is a buyer
       const selectionData = []
@@ -164,15 +202,22 @@ class Calendar extends Component {
     }
   }
 
-  onSelectEvent(selectedEvent) {
+  onSelectEvent(selectedEvent, shouldSaveEvent) {
+    const event = {
+      ...selectedEvent,
+      price: selectedEvent.price || '',
+      isAvailable: (selectedEvent.isAvailable !== undefined ? selectedEvent.isAvailable : true),
+      isRecurringEvent: selectedEvent.isRecurringEvent || false
+    }
+
     this.setState({ 
-      selectedEvent: {
-        ...selectedEvent,
-        price: selectedEvent.price || '',
-        isAvailable: (selectedEvent.isAvailable !== undefined ? selectedEvent.isAvailable : true),
-        isRecurringEvent: selectedEvent.isRecurringEvent || false
-      }
+      selectedEvent: event,
+      showOverlappingEventsErrorMsg: false
     })
+
+    if (shouldSaveEvent) {
+      this.saveEvent(event)
+    }
   }
 
   handlePriceChange(event) {
@@ -184,11 +229,12 @@ class Calendar extends Component {
     })
   }
 
-  saveEvent() {
-    const allOtherEvents = this.state.events.filter((event) => event.id !== this.state.selectedEvent.id)
+  saveEvent(selectedEvent) {
+    const thisEvent = (selectedEvent && selectedEvent.id ? selectedEvent : false) || this.state.selectedEvent
+    const allOtherEvents = this.state.events.filter((event) => event.id !== thisEvent.id)
 
     this.setState({
-      events: [...allOtherEvents, this.state.selectedEvent]
+      events: [...allOtherEvents, thisEvent]
     })
   }
 
@@ -230,16 +276,14 @@ class Calendar extends Component {
 
       while (slotDate.toDate() >= startDate && slotDate.toDate() <= endDate) {
 
+        const slotDateObj = slotDate.startOf('day').toDate()
+
         if (whichDropdown === 'start') {
-
-          slots.push(slotDate.toDate())
+          slots.push(slotDateObj)
           slotDate = slotDate.add(1, 'days')
-
         } else {
-
-          slots.unshift(slotDate.toDate())
+          slots.unshift(slotDateObj)
           slotDate = slotDate.subtract(1, 'days')
-
         }
       }
 
@@ -250,7 +294,8 @@ class Calendar extends Component {
       ...this.state.selectedEvent,
       slots: getSlots(),
       [whichDropdown]: new Date(value)
-    })
+    },
+    true)
   }
 
   getDateDropdownOptions(date) {
@@ -461,7 +506,10 @@ class Calendar extends Component {
             }
           </div>
           <div className="col-md-4">
-            {selectedEvent && selectedEvent.start &&
+            {this.state.showOverlappingEventsErrorMsg &&
+              <p className="calendar-error-msg">Only one price can be set for each time slot.</p>
+            }
+            {selectedEvent && selectedEvent.start && !this.state.showOverlappingEventsErrorMsg &&
               <div className="calendar-cta">
                 <p className="font-weight-bold">Selected { this.props.viewType === 'daily' ? 'dates' : 'times' }</p>
                 <div>

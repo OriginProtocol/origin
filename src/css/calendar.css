@@ -6,6 +6,11 @@
   margin-top: 65px;
 }
 
+.calendar-error-msg {
+  margin-top: 90px;
+  font-weight: bold;
+}
+
 .calendar-container.buyer-view {
   display: flex;
   flex-wrap: wrap;

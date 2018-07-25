@@ -586,6 +586,17 @@ class ListingCreate extends Component {
             </div>
           </div>
         }
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <Calendar
+          slots={ this.state.formData && this.state.formData.slots }
+          userType="seller"
+          viewType={ 'daily' }
+          step={ 60 }
+          onComplete={ this.onAvailabilityEntered }
+        />
       </div>
     )
   }
