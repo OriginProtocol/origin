@@ -59,6 +59,8 @@ class TestConfig(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
 
+    CONTRACTS_DIR = settings.CONTRACT_DIR
+
     TESTING = True
     SERVER_NAME = 'localhost'
     CREATE_DEFAULT_APP_CONTEXT = True
@@ -251,50 +253,136 @@ def web3(eth_tester_provider):
     return _web3
 
 
+def get_compiled_contract(contract_name):
+    """
+    Loads a contract's compiled JSON definition.
+
+    Args:
+        contract_name(str): name of the contract. Ex: 'UnitListing'
+
+    Returns:
+        The contract's JSON.
+    """
+    filename = "./{}/{}.json".format(TestConfig.CONTRACTS_DIR, contract_name)
+    with open(filename) as f:
+        contract_interface = json.loads(f.read())
+    return contract_interface
+
+
+def get_contract_class(web3, contract_name, linked_contracts=[]):
+    """
+    Returns a contract class. The class can then be used to instantiate
+    an object, provided its address.
+
+    Args:
+        web3(Web3): web3 object.
+        contract_name(str): name of the contract. Ex: 'UnitListing'.
+        linked_contract([(str, str)]): Optional. Pair of
+            contract's name and address for contract(s) that are linked.
+
+    Returns:
+         A web3.eth.contract class.
+    """
+    compiled_contract = get_compiled_contract(contract_name)
+
+    # If there are any linked contracts, replace the name reference in the
+    # contract's bytecode with linked contract's address.
+    bytecode = compiled_contract['bytecode']
+    for (linked_contract_name, linked_contract_address) in linked_contracts:
+        bytecode = bytecode.replace(
+            get_contract_internal_name(linked_contract_name),
+            linked_contract_address[2:]
+        )
+
+    CONTRACT_META = {
+        "abi": compiled_contract['abi'],
+        "bytecode": bytecode,
+    }
+    contract_class = web3.eth.contract(**CONTRACT_META)
+    return contract_class
+
+
 @pytest.fixture()
 def purchase_lib_contract(web3, wait_for_transaction, wait_for_block):
-    contract_name = 'PurchaseLibrary'
-    with open("./contracts/{}.json".format(contract_name)) as f:
-        contract_interface = json.loads(f.read())
+    """
+    Deploys the PurchaseLibrary contract.
+
+    Returns:
+        A web3.eth.contract PurchaseLibrary object.
+    """
+    # Wait for first block to be mined to ensure blockchain back-end is up.
     wait_for_block(web3)
 
-    CONTRACT_META = {
-        "abi": contract_interface['abi'],
-        "bytecode": contract_interface['bytecode']
-    }
+    contract_class = get_contract_class(web3, 'PurchaseLibrary')
 
-    contract = web3.eth.contract(**CONTRACT_META)
-    deploy_txn_hash = contract\
-        .constructor().transact({'from': web3.eth.coinbase,
-                                 'gas': 1000000})
+    deploy_txn_hash = contract_class\
+        .constructor().transact({'from': web3.eth.coinbase})
     deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
+
     contract_address = deploy_receipt['contractAddress']
-    return contract(address=contract_address)
+    return contract_class(address=contract_address)
 
 
 @pytest.fixture()
-def listing_registry_contract(web3, wait_for_transaction, wait_for_block,
-                              purchase_lib_contract):
-    contract_name = 'ListingsRegistry'
-    linked_contract = 'PurchaseLibrary'
-    with open("./contracts/{}.json".format(contract_name)) as f:
-        contract_interface = json.loads(f.read())
+def listings_registry_storage_contract(
+        web3,
+        wait_for_transaction,
+        wait_for_block):
+    """
+    Deploys the ListingsRegistryStorage contract.
+
+    Returns:
+        A web3.eth.contract ListingsRegistryStorage object.
+    """
+    # Wait for first block to be mined to ensure blockchain back-end is up.
     wait_for_block(web3)
 
-    CONTRACT_META = {
-        "abi": contract_interface['abi'],
-        "bytecode": contract_interface['bytecode'].replace(
-            get_contract_internal_name(linked_contract),
-            purchase_lib_contract.address[2:]
-        )
-    }
+    contract_class = get_contract_class(web3, 'ListingsRegistryStorage')
 
-    contract = web3.eth.contract(**CONTRACT_META)
-    deploy_txn_hash = contract.constructor()\
-        .transact({'from': web3.eth.coinbase, 'gas': 1000000})
+    deploy_txn_hash = contract_class\
+        .constructor().transact({'from': web3.eth.coinbase})
+    deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
+
+    contract_address = deploy_receipt['contractAddress']
+    return contract_class(address=contract_address)
+
+
+@pytest.fixture()
+def listing_registry_contract(
+        web3,
+        wait_for_transaction,
+        wait_for_block,
+        purchase_lib_contract,
+        listings_registry_storage_contract):
+    """
+    Deploys the ListingRegistry contract.
+
+    Returns:
+        A web3.eth.contract ListingRegistry object.
+    """
+    # Wait for first block to be mined to ensure blockchain back-end is up.
+    wait_for_block(web3)
+
+    contract_class = get_contract_class(
+        web3,
+        'ListingsRegistry',
+        linked_contracts=[('PurchaseLibrary', purchase_lib_contract.address)],
+    )
+
+    # Deply the contract.
+    deploy_txn_hash = contract_class\
+        .constructor(listings_registry_storage_contract.address)\
+        .transact({'from': web3.eth.coinbase})
     deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
     contract_address = deploy_receipt['contractAddress']
-    return contract(address=contract_address)
+
+    # Set the active registry.
+    txn_hash = listings_registry_storage_contract.functions\
+        .setActiveRegistry(contract_address)\
+        .transact({'from': web3.eth.coinbase})
+    wait_for_transaction(web3, txn_hash)
+
+    return contract_class(address=contract_address)
 
 
 @pytest.fixture()
@@ -305,58 +393,65 @@ def listing_contract(
         purchase_lib_contract,
         listing_registry_contract,
         eth_test_seller):
-    contract_name = 'UnitListing'
-    with open("./contracts/{}.json".format(contract_name)) as f:
-        contract_interface = json.loads(f.read())
-    wait_for_block(web3)
+    """
+    Records a new UnitListing.
 
-    CONTRACT_META = {
-        "abi": contract_interface['abi']
-    }
-
-    contract = web3.eth.contract(**CONTRACT_META)
+    Returns:
+        A web3.eth.contract UnitListing object.
+    """
+    # Call the ListingRegistry to add a new UnitListing.
     ipfs_hash = "QmZtQDL4UjQWryQLjsS5JUsbdbn2B27Tmvz2gvLkw7wmmb"
     deploy_txn_hash = \
         listing_registry_contract.functions.create(
             base58_to_hex(ipfs_hash),
-            3, 25).transact({'from': eth_test_seller,
-                             'gas': 1000000})
+            3, 25).transact({'from': eth_test_seller, 'gas': 1000000})
     deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
     assert deploy_receipt["gasUsed"] > 0
-    # we better have created one of these
-    listings_length = listing_registry_contract.functions.listingsLength().call()
+
+    # Check the listing got added to the registry.
+    listings_length = listing_registry_contract.\
+        functions.listingsLength().call()
     assert listings_length > 0
-    # get the last listing created
-    contract_address = listing_registry_contract.functions.getListing(
-        listings_length - 1).call()[0]
-    return contract(address=contract_address)
+
+    # Create a UnitListing contract object based on address from the registry.
+    contract_address = listing_registry_contract.functions.getListingAddress(
+        listings_length - 1).call()
+
+    contract_class = get_contract_class(
+        web3,
+        'UnitListing',
+        # Note: this UnitListing contract won't get used for deployment so it
+        # is unnecessary to dereference linked contracts in the bytecode.
+        # Doing it mainly for consistency with the rest of the code.
+        linked_contracts=[('PurchaseLibrary', purchase_lib_contract.address)],
+    )
+    return contract_class(address=contract_address)
 
 
 @pytest.fixture()
 def purchase_contract(web3, wait_for_transaction, wait_for_block,
                       listing_contract, eth_test_buyer):
-    contract_name = 'Purchase'
-    with open("./contracts/{}.json".format(contract_name)) as f:
-        contract_interface = json.loads(f.read())
-    wait_for_block(web3)
+    """
+    Records a purchase.
 
-    CONTRACT_META = {
-        "abi": contract_interface['abi'],
-        # "bytecode": contract_interface['bytecode']
-    }
+    Returns:
+        A Pruchase web3.eth.contract object
+    """
+    contract_class = get_contract_class(web3, 'Purchase')
 
-    contract = web3.eth.contract(**CONTRACT_META)
     deploy_txn_hash = listing_contract.functions.buyListing(
-        5).transact({'from': eth_test_buyer, 'gas': 1000000})
+        5).transact({'from': eth_test_buyer})
     deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
     assert deploy_receipt["gasUsed"] > 0
-    # we better have created one of these
+
+    # Check the purchase we recorded.
     purchases_length = listing_contract.functions.purchasesLength().call()
     assert purchases_length > 0
-    # get the last listing created
+
+    # Get the last listing created and return it.
     contract_address = listing_contract.functions.getPurchase(
         purchases_length - 1).call()
-    return contract(address=contract_address)
+    return contract_class(address=contract_address)
 
 
 @pytest.fixture()
@@ -367,7 +462,6 @@ def purchase_stage_awaiting_payment(web3, wait_for_transaction,
     # add payment to the purchase to move the stage forward
     deploy_txn_hash = \
         purchase_contract.functions.pay().transact({'from': eth_test_buyer,
-                                                    'gas': 1000000,
                                                     'value': 25})
     deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
     assert deploy_receipt["gasUsed"] > 0
@@ -383,7 +477,7 @@ def purchase_stage_shipping_pending(web3, wait_for_transaction, wait_for_block,
     # confirm shipping to move the stage forward
     deploy_txn_hash = \
         purchase_contract.functions.sellerConfirmShipped()\
-        .transact({'from': eth_test_seller, 'gas': 1000000})
+        .transact({'from': eth_test_seller})
     deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
     assert deploy_receipt["gasUsed"] > 0
 
@@ -401,7 +495,7 @@ def purchase_stage_buyer_pending(web3, wait_for_transaction, wait_for_block,
     ipfs_hash = base58_to_hex("QmZtQDL4UjQWryQLjsS5JUsbdbn2B27Tmvz2gvLkw7wmmb")
     deploy_txn_hash = \
         purchase_contract.functions.buyerConfirmReceipt(2, ipfs_hash)\
-        .transact({'from': eth_test_buyer, 'gas': 1000000})
+        .transact({'from': eth_test_buyer})
     deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
     assert deploy_receipt["gasUsed"] > 0
 

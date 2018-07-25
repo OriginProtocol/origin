@@ -26,16 +26,14 @@ class Notification(Enum):
     UPDATED = 4
     PENDING_PAYMENT = 5
     PENDING_PAY = 6
-    PENDING_SHIP = 7
-    PENDING_SHIPMENT = 8
-    PENDING_BUYER_CONFIRMATION = 9
-    PENDING_BUY_CONFIRM = 10
-    PENDING_SELLER_CONFIRM = 11
-    PENDING_SELLER_CONFIRMATION = 12
-    SELLER_DISPUTE = 13
-    BUYER_DISPUTE = 14
-    SELLER_REVIEW = 15
-    BUYER_REVIEW = 16
+    PENDING_BUYER_CONFIRMATION = 7
+    PENDING_BUY_CONFIRM = 8
+    PENDING_SELLER_CONFIRM = 9
+    PENDING_SELLER_CONFIRMATION = 10
+    SELLER_DISPUTE = 11
+    BUYER_DISPUTE = 12
+    SELLER_REVIEW = 13
+    BUYER_REVIEW = 14
 
 
 notification_messages = {
@@ -45,8 +43,6 @@ notification_messages = {
     Notification.UPDATED: "Your listing, {name} has been updated",
     Notification.PENDING_PAYMENT: "Waiting for buyer payment",
     Notification.PENDING_PAY: "Payment required",
-    Notification.PENDING_SHIP: "Waiting on shipment",
-    Notification.PENDING_SHIPMENT: "Item is being shipped",
     Notification.PENDING_BUYER_CONFIRMATION: "Waiting for buyer confirmation",
     Notification.PENDING_BUY_CONFIRM: "Please confirm purchase",
     Notification.PENDING_SELLER_CONFIRM: "Please confirm sale",
@@ -149,21 +145,23 @@ class Notifier():
             PurchaseStages.COMPLETE: (
                 Notification.SOLD,
                 Notification.PURCHASED),
+
             PurchaseStages.AWAITING_PAYMENT: (
                 Notification.PENDING_PAYMENT,
                 Notification.PENDING_PAY),
-            PurchaseStages.SHIPPING_PENDING: (
-                Notification.PENDING_SHIP,
-                Notification.PENDING_SHIPMENT),
+
             PurchaseStages.BUYER_PENDING: (
                 Notification.PENDING_BUYER_CONFIRMATION,
                 Notification.PENDING_BUY_CONFIRM),
+
             PurchaseStages.SELLER_PENDING: (
                 Notification.PENDING_SELLER_CONFIRM,
                 Notification.PENDING_SELLER_CONFIRMATION),
+
             PurchaseStages.IN_DISPUTE: (
                 Notification.SELLER_DISPUTE,
                 Notification.BUYER_DISPUTE),
+
             PurchaseStages.REVIEW_PERIOD: (
                 Notification.SELLER_REVIEW,
                 Notification.BUYER_REVIEW)
