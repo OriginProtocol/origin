@@ -30,7 +30,9 @@ class UserCard extends Component {
     this.props.fetchUser(this.props.userAddress, this.props.intl.formatMessage(this.intlMessages.unnamedUser))
   }
 
-  handleToggle() {
+  handleToggle(e) {
+    e.preventDefault()
+
     this.setState({ modalOpen: !this.state.modalOpen })
   }
 

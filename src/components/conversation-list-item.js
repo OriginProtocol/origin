@@ -18,7 +18,7 @@ class ConversationListItem extends Component {
       unnamedUser: {
         id: 'conversation-list-item.unnamedUser',
         defaultMessage: 'Unnamed User'
-      }
+      },
     })
   }
 

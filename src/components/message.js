@@ -7,14 +7,18 @@ import { updateMessage } from 'actions/Message'
 import Avatar from 'components/avatar'
 
 class Message extends Component {
-  render() {
-    const { message, user } = this.props
-    const { content, created, status } = message
-    const { address, fullName } = user
+  componentDidMount() {
+    const { message } = this.props
 
-    if (status === 'unread') {
+    if (message.status === 'unread') {
       this.props.updateMessage({ ...message, status: 'read' })
     }
+  }
+
+  render() {
+    const { message, user } = this.props
+    const { content, created } = message
+    const { address, fullName } = user
 
     return (
       <div className="d-flex message">
