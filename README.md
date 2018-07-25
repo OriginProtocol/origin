@@ -66,9 +66,9 @@ If you want hack on origin-js code, or if you just want to use a private local b
 ### 2. Set up the DApp for local development
 
 Leave origin-js running and create a new terminal window. Then run the following:
-```
+```bash
 git clone https://github.com/OriginProtocol/demo-dapp origin-demo-dapp && cd origin-demo-dapp
-cp .env.dev .env  # Use development env vars
+cp dev.env .env  # Use development env vars
 npm run install:dev
 npm run start
 ```
