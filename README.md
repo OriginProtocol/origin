@@ -97,6 +97,40 @@ This is the default seed phrase used by [Truffle](https://github.com/trufflesuit
 
 - You should see your first test account now has 100 ETH and the address `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`. Additional generated accounts will also have this amount.
 
+## Browser & Wallet Compatibility 
+Browsers with wallets for both desktop and mobile that you can use with the Origin Demo DApp.  
+
+### Desktop
+
+| OS | Application | Status |
+| ---- | -------- | ------ |
+| Mac | Brave with Metamask | ✅ |
+| Mac | Chrome + Metamask extension | ✅ |
+| Mac | Firefox + Metamask extension | ✅  |
+|  | |  |
+| PC | Brave with Metamask | ⚪️ not tested |
+| PC | Chrome + Metamask extension | ⚪️ not tested |
+| PC | Firefox + Metamask extension | ⚪️ not tested |
+
+
+### iOS 
+
+| Application | Status |
+| ---- |  ------ |
+| Trust Wallet | ✅  |
+| Toshi  |  🚫  |
+| Toshi Developer  |  🚫  |
+| Cipher  | 🚫  |
+
+### Android
+
+| Application | Status |
+| ---- |  ------ |
+| Trust Wallet | ⚪️ not tested |
+| Toshi Developer  |  ⚪️ not tested |
+| Cipher  |  ⚪️ not tested |
+
+
 ## Contributing
 
 Origin is an 100% open-source and community-driven project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community. 
