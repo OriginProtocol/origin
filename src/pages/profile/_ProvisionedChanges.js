@@ -137,7 +137,7 @@ class ProvisionedChanges extends Component {
             title={`
               <div class="text-left">
                 You are verifying:<br />
-                <img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(this.intlMessages.email)}<br />
+                <img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(this.intlMessages.emailAddress)}<br />
                 <br />
                 <img src="/images/eye-no.svg" alt="not-visible icon" /> <strong>${this.props.intl.formatMessage(this.intlMessages.notVisibleOnBlockchain)}</strong>
               </div>
