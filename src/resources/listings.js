@@ -145,13 +145,13 @@ class Listings extends ResourceBase {
     return await this.get(listingAddress)
   }
 
-  async create(data, schemaType) {
+  async create(data, schemaType, confirmationCallback) {
     const listingType = data.listingType || unitListingType
     data.listingType = listingType // in case it wasn't set
     if (listingType === unitListingType) {
-      return await this.createUnit(data, schemaType)
+      return await this.createUnit(data, schemaType, confirmationCallback)
     } else if (listingType === fractionalListingType) {
-      return await this.createFractional(data)
+      return await this.createFractional(data, confirmationCallback)
     }
   }
 
@@ -164,7 +164,7 @@ class Listings extends ResourceBase {
     return await this.updateFractional(address, data)
   }
 
-  async buy(address, unitsToBuy, ethToPay) {
+  async buy(address, unitsToBuy, ethToPay, confirmationCallback) {
     // TODO: ethToPay should really be replaced by something that takes Wei.
     const value = this.contractService.web3.utils.toWei(
       String(ethToPay),
@@ -178,7 +178,8 @@ class Listings extends ResourceBase {
       {
         value: value,
         gas: 850000
-      }
+      },
+      confirmationCallback
     )
   }
 
@@ -202,11 +203,14 @@ class Listings extends ResourceBase {
     )
   }
 
-  async close(address) {
+  async close(address, confirmationCallback) {
     return await this.contractService.contractFn(
       this.contractService.unitListingContract,
       address,
-      'close'
+      'close',
+      [],
+      {},
+      confirmationCallback
     )
   }
 
@@ -252,7 +256,7 @@ class Listings extends ResourceBase {
       Private methods
   */
 
-  async createUnit(data, schemaType) {
+  async createUnit(data, schemaType, confirmationCallback) {
     validate(validateUnitListing, data, unitListingSchema)
 
     const formListing = { formData: data }
@@ -288,7 +292,8 @@ class Listings extends ResourceBase {
       transactionReceipt = await this.submitUnitListing(
         ipfsHash,
         priceWei,
-        units
+        units,
+        confirmationCallback
       )
     } catch (error) {
       console.error(error)
@@ -304,7 +309,7 @@ class Listings extends ResourceBase {
     return transactionReceipt
   }
 
-  async createFractional(data) {
+  async createFractional(data, confirmationCallback) {
     validate(validateFractionalListing, data, fractionalListingSchema)
     const json = { data }
 
@@ -319,7 +324,7 @@ class Listings extends ResourceBase {
     // Submit to ETH contract
     let transactionReceipt
     try {
-      transactionReceipt = await this.submitFractionalListing(ipfsHash)
+      transactionReceipt = await this.submitFractionalListing(ipfsHash, confirmationCallback)
     } catch (error) {
       console.error(error)
       throw new Error(`ETH Failure: ${error}`)
@@ -366,29 +371,31 @@ class Listings extends ResourceBase {
     return transactionReceipt
   }
 
-  async submitUnitListing(ipfsListing, priceWei, units) {
+  async submitUnitListing(ipfsListing, priceWei, units, confirmationCallback) {
     try {
       const account = await this.contractService.currentAccount()
-      const instance = await this.contractService.deployed(
-        this.contractService.listingsRegistryContract
-      )
-
-      // Note we cannot get the listingId returned by our contract.
-      // See: https://forum.ethereum.org/discussion/comment/31529/#Comment_31529
-      return instance.methods
-        .create(
+      return await this.contractService.contractFn(
+        this.contractService.listingsRegistryContract,
+        null,
+        'create',
+        [
           this.contractService.getBytes32FromIpfsHash(ipfsListing),
           priceWei,
           units
-        )
-        .send({ from: account, gas: 4476768 })
+        ],
+        {
+          gas: 4476768,
+          from: account
+        },
+        confirmationCallback
+      )
     } catch (error) {
       console.error('Error submitting to the Ethereum blockchain: ' + error)
       throw error
     }
   }
 
-  async submitFractionalListing(ipfsListing) {
+  async submitFractionalListing(ipfsListing, confirmationCallback) {
     try {
       const account = await this.contractService.currentAccount()
       return await this.contractService.contractFn(
@@ -396,7 +403,8 @@ class Listings extends ResourceBase {
         null,
         'createFractional',
         [this.contractService.getBytes32FromIpfsHash(ipfsListing)],
-        { from: account, gas: 4476768 }
+        { from: account, gas: 4476768 },
+        confirmationCallback
       )
     } catch (error) {
       console.error('Error submitting to the Ethereum blockchain: ' + error)

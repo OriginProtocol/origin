@@ -66,17 +66,17 @@ describe('Notification Resource', function() {
     })
 
     createListing = async () => {
-      const tx = await listings.create(
+      const txObj = await listings.create(
         { name: 'Sample Listing 1', price: 1 },
         ''
       )
-      return tx.events.NewListing.returnValues._address
+      return txObj.transactionReceipt.events.NewListing.returnValues._address
     }
 
     buyListing = async listingAddress => {
       return await asAccount(contractService.web3, buyer, async () => {
-        const tx = await listings.buy(listingAddress, 1, 1)
-        return tx.events.ListingPurchased.returnValues._purchaseContract
+        const listingTransactionObj = await listings.buy(listingAddress, 1, 1)
+        return listingTransactionObj.transactionReceipt.events.ListingPurchased.returnValues._purchaseContract
       })
     }
 

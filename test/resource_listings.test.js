@@ -189,12 +189,12 @@ describe('Listing Resource', function() {
 
   describe('update', () => {
     it('should be able to update a fractional listing', async () => {
-      const tx = await listings.create({
+      const listingTransactionObj = await listings.create({
         name: 'Sample Listing 1',
         priceWei: 1000,
         listingType: 'fractional'
       })
-      const listingAddress = tx.events.NewListing.returnValues._address
+      const listingAddress = listingTransactionObj.transactionReceipt.events.NewListing.returnValues._address
       const initialListing = await listings.get(listingAddress)
       expect(initialListing.name).to.equal('Sample Listing 1')
 

@@ -53,20 +53,20 @@ describe('Purchase Resource', function() {
       price: 0.2
     }
     const schema = 'for-sale'
-    const listingTransaction = await listings.create(listingData, schema)
+    const listingTransactionObj = await listings.create(listingData, schema)
 
-    const listingEvent = listingTransaction.events.NewListing
+    const listingEvent = listingTransactionObj.transactionReceipt.events.NewListing
     listing = await listings.getByIndex(listingEvent.returnValues._index)
 
     // Buy listing to create a purchase
-    const purchaseTransaction = await asAccount(
+    const purchaseTransactionObj = await asAccount(
       contractService.web3,
       buyer,
       async () => {
         return await listings.buy(listing.address, 1, listing.price - 0.1)
       }
     )
-    const purchaseEvent = purchaseTransaction.events.ListingPurchased
+    const purchaseEvent = purchaseTransactionObj.transactionReceipt.events.ListingPurchased
     purchase = await purchases.get(purchaseEvent.returnValues._purchaseContract)
   }
 
@@ -82,23 +82,23 @@ describe('Purchase Resource', function() {
       priceWei: 2000,
       listingType: 'fractional'
     }
-    const listingTransaction = await listings.create(listingData)
+    const listingTransactionObj = await listings.create(listingData)
 
-    const listingEvent = listingTransaction.events.NewListing
+    const listingEvent = listingTransactionObj.transactionReceipt.events.NewListing
     listing = await listings.getByIndex(listingEvent.returnValues._index)
 
     // Buy listing to create a purchase
     const purchaseData = {
       slot: {}
     }
-    const purchaseTransaction = await asAccount(
+    const purchaseTransactionObj = await asAccount(
       contractService.web3,
       buyer,
       async () => {
         return await listings.request(listing.address, purchaseData, 1)
       }
     )
-    const purchaseEvent = purchaseTransaction.events.ListingPurchased
+    const purchaseEvent = purchaseTransactionObj.transactionReceipt.events.ListingPurchased
     purchase = await purchases.get(purchaseEvent.returnValues._purchaseContract)
   }
 
@@ -231,17 +231,18 @@ describe('Purchase Resource', function() {
     })
   })
 
-  describe('transactions have a whenMined promise', async () => {
+  describe('transactions return an object containing a timestamp and transaction receipt', async () => {
     before(async () => {
       await resetUnitListingAndPurchase()
     })
 
-    it('should allow us to wait for a transaction to be mined', async () => {
-      const transaction = await purchases.pay(
+    it('should include the transaction hash', async () => {
+      const purchaseTransactionObj = await purchases.pay(
         purchase.address,
         contractService.web3.utils.toWei('0.1', 'ether')
       )
-      await transaction.whenFinished()
+      expect(purchaseTransactionObj.created).to.match(/^[0-9]{10}$/)
+      expect(purchaseTransactionObj.transactionReceipt.transactionHash).to.match(/^0x([A-Fa-f0-9]{64})$/)
     })
   })
 
