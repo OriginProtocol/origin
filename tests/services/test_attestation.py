@@ -1,23 +1,24 @@
 import datetime
 import mock
 import pytest
-
-import responses
 from urllib.request import HTTPError
-from tests.helpers.eth_utils import sample_eth_address, str_eth
-from database import db_models
+
+from marshmallow.exceptions import ValidationError
+import responses
+from werkzeug.security import generate_password_hash, check_password_hash
+
 from logic.attestation_service import (VerificationService,
                                        VerificationServiceResponse)
 from logic.attestation_service import CLAIM_TYPES
-from logic.service_utils import (PhoneVerificationError,
-                                 EmailVerificationError,
-                                 FacebookVerificationError,
-                                 TwitterVerificationError,
-                                 AirbnbVerificationError)
-from marshmallow.exceptions import ValidationError
-from tests.factories.attestation import VerificationCodeFactory
-from util.time_ import utcnow
-VC = db_models.VerificationCode
+from logic.service_utils import (
+    AirbnbVerificationError,
+    EmailVerificationError,
+    FacebookVerificationError,
+    PhoneVerificationError,
+    TwitterVerificationError,
+)
+from tests.helpers.eth_utils import sample_eth_address, str_eth
+
 
 SIGNATURE_LENGTH = 132
 
@@ -149,7 +150,8 @@ def test_verify_phone_expired_code():
     with pytest.raises(ValidationError) as validation_err:
         VerificationService.verify_phone(**args)
 
-    assert(validation_err.value.messages[0]) == 'Verification code has expired.'
+    assert(validation_err.value.messages[0]
+           ) == 'Verification code has expired.'
     assert(validation_err.value.field_names[0]) == 'code'
 
 
@@ -171,122 +173,161 @@ def test_verify_phone_invalid_code():
     with pytest.raises(ValidationError) as validation_err:
         VerificationService.verify_phone(**args)
 
-    assert(validation_err.value.messages[0]) == 'Verification code is incorrect.'
+    assert(validation_err.value.messages[0]
+           ) == 'Verification code is incorrect.'
     assert(validation_err.value.field_names[0]) == 'code'
 
 
-@mock.patch('python_http_client.client.Client')
-def test_generate_email_verification_code_new_phone(MockHttpClient):
-    email = 'hello@world.foo'
-    resp = VerificationService.generate_email_verification_code(email)
-    assert isinstance(resp, VerificationServiceResponse)
+@mock.patch('logic.attestation_service._send_email_using_sendgrid')
+@mock.patch('logic.attestation_service.datetime')
+def test_send_email_verification(
+        mock_datetime,
+        mock_send_email_using_sendgrid):
+    mock_send_email_using_sendgrid.return_value = True
 
-    db_code = VC.query.filter(VC.email == email).first()
-    assert db_code is not None
-    assert db_code.code is not None
-    assert 6 == len(db_code.code)
-    assert db_code.expires_at is not None
-    assert db_code.created_at is not None
-    assert db_code.updated_at is not None
+    now = datetime.datetime.utcnow()
+    expire_in = datetime.timedelta(minutes=30)
+    mock_datetime.datetime.utcnow.return_value = now
+    mock_datetime.timedelta.return_value = expire_in
 
-
-@mock.patch('python_http_client.client.Client')
-def test_generate_email_verification_code_email_already_in_db(
-        MockHttpClient, session):
-    vc_obj = VerificationCodeFactory.build()
-    expires_at = vc_obj.expires_at
-    vc_obj.created_at = utcnow() - datetime.timedelta(seconds=10)
-    vc_obj.updated_at = utcnow() - datetime.timedelta(seconds=10)
-    session.add(vc_obj)
-    session.commit()
-
-    email = vc_obj.email
-    resp = VerificationService.generate_email_verification_code(email)
-    assert isinstance(resp, VerificationServiceResponse)
-
-    assert VC.query.filter(VC.email == email).count() == 1
-    db_code = VC.query.filter(VC.email == email).first()
-    assert db_code is not None
-    assert db_code.code is not None
-    assert len(db_code.code) == 6
-    assert db_code.expires_at is not None
-    assert db_code.created_at is not None
-    assert db_code.updated_at is not None
-    assert db_code.updated_at >= db_code.created_at
-    assert db_code.expires_at > expires_at
+    email = 'origin@protocol.foo'
+    with mock.patch('logic.attestation_service.session', dict()) as session:
+        response = VerificationService.send_email_verification(email)
+        assert isinstance(response, VerificationServiceResponse)
+        assert 'email_attestation' in session
+        assert len(session['email_attestation']['code']) == 6
+        assert session['email_attestation']['expiry'] == now + expire_in
+        assert check_password_hash(
+            session['email_attestation']['email'], email
+        )
 
 
-@mock.patch('util.time_.utcnow')
-def test_verify_email_valid_code(mock_now, session):
-    vc_obj = VerificationCodeFactory.build()
-    session.add(vc_obj)
-    session.commit()
+@mock.patch('logic.attestation_service._send_email_using_sendgrid')
+def test_send_email_verification_sendgrid_error(
+        mock_send_email_using_sendgrid):
+    mock_send_email_using_sendgrid.side_effect = AttributeError
 
-    req = {
-        'eth_address': str_eth(sample_eth_address),
-        'email': vc_obj.email.upper(),
-        'code': vc_obj.code
+    with mock.patch('logic.attestation_service.session', dict()):
+        with pytest.raises(EmailVerificationError) as service_err:
+            VerificationService.send_email_verification('origin@protocol.foo')
+
+    assert(str(service_err.value)) == \
+        'Could not send verification code. Please try again shortly.'
+
+
+@mock.patch('logic.attestation_service.session')
+def test_verify_email_valid_code(mock_session):
+    session_dict = {
+        'email_attestation': {
+            'email': generate_password_hash('origin@protocol.foo'),
+            'code': '12345',
+            'expiry': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+        }
     }
-    mock_now.return_value = vc_obj.expires_at - datetime.timedelta(minutes=1)
-    resp = VerificationService.verify_email(**req)
-    resp_data = resp.data
-    assert len(resp_data['signature']) == SIGNATURE_LENGTH
-    assert resp_data['claim_type'] == CLAIM_TYPES['email']
-    assert resp_data['data'] == 'email verified'
-
-
-@mock.patch('util.time_.utcnow')
-def test_verify_email_expired_code(mock_now, session):
-    vc_obj = VerificationCodeFactory.build()
-    session.add(vc_obj)
-    session.commit()
-
-    req = {
-        'eth_address': str_eth(sample_eth_address),
-        'email': vc_obj.email,
-        'code': vc_obj.code
-    }
-    mock_now.return_value = vc_obj.expires_at + datetime.timedelta(minutes=1)
-    with pytest.raises(EmailVerificationError) as service_err:
-        VerificationService.verify_email(**req)
-
-    assert str(service_err.value) == 'The code you provided has expired.'
-
-
-@mock.patch('util.time_.utcnow')
-def test_verify_email_wrong_code(mock_now, session):
-    vc_obj = VerificationCodeFactory.build()
-    session.add(vc_obj)
-    session.commit()
-
-    req = {
-        'eth_address': str_eth(sample_eth_address),
-        'email': vc_obj.email,
-        'code': 'garbage'
-    }
-    mock_now.return_value = vc_obj.expires_at - datetime.timedelta(minutes=1)
-    with pytest.raises(EmailVerificationError) as service_err:
-        VerificationService.verify_email(**req)
-
-    assert str(service_err.value) == 'The code you provided is invalid.'
-
-
-@mock.patch('util.time_.utcnow')
-def test_verify_email_email_not_found(mock_now, session):
-    vc_obj = VerificationCodeFactory.build()
-    session.add(vc_obj)
-    session.commit()
 
     args = {
         'eth_address': str_eth(sample_eth_address),
-        'email': 'garbage',
-        'code': vc_obj.code
+        'email': 'origin@protocol.foo',
+        'code': '12345'
     }
-    mock_now.return_value = vc_obj.expires_at - datetime.timedelta(minutes=1)
-    with pytest.raises(EmailVerificationError) as service_err:
-        VerificationService.verify_email(**args)
 
-    assert str(service_err.value) == 'The given email was not found.'
+    with mock.patch('logic.attestation_service.session', session_dict):
+        response = VerificationService.verify_email(**args)
+
+    assert isinstance(response, VerificationServiceResponse)
+
+    assert len(response.data['signature']) == SIGNATURE_LENGTH
+    assert response.data['claim_type'] == CLAIM_TYPES['email']
+    assert response.data['data'] == 'email verified'
+
+
+def test_verify_email_expired_code():
+    # Mock a session object with an expiry time in the past
+    session_dict = {
+        'email_attestation': {
+            'email': generate_password_hash('origin@protocol.foo'),
+            'code': '12345',
+            'expiry': datetime.datetime.utcnow() - datetime.timedelta(minutes=30)
+        }
+    }
+
+    args = {
+        'email': 'origin@protocol.foo',
+        'code': '12345',
+        'eth_address': str_eth(sample_eth_address)
+    }
+
+    with mock.patch('logic.attestation_service.session', session_dict):
+        with pytest.raises(ValidationError) as validation_err:
+            VerificationService.verify_email(**args)
+
+    assert(validation_err.value.messages[0]
+           ) == 'Verification code has expired.'
+    assert(validation_err.value.field_names[0]) == 'code'
+
+
+@mock.patch('logic.attestation_service.session')
+def test_verify_email_invalid_code(mock_session):
+    session_dict = {
+        'email_attestation': {
+            'email': generate_password_hash('origin@protocol.foo'),
+            'code': '12345',
+            'expiry': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+        }
+    }
+
+    args = {
+        'eth_address': str_eth(sample_eth_address),
+        'email': 'origin@protocol.foo',
+        'code': '54321'
+    }
+
+    with mock.patch('logic.attestation_service.session', session_dict):
+        with pytest.raises(ValidationError) as validation_err:
+            VerificationService.verify_email(**args)
+
+    assert(validation_err.value.messages[0]
+           ) == 'Verification code is incorrect.'
+    assert(validation_err.value.field_names[0]) == 'code'
+
+
+def test_verify_email_no_verification_sent():
+    args = {
+        'eth_address': str_eth(sample_eth_address),
+        'email': 'origin@protocol.foo',
+        'code': '54321'
+    }
+
+    with mock.patch('logic.attestation_service.session', dict()):
+        with pytest.raises(ValidationError) as validation_err:
+            VerificationService.verify_email(**args)
+
+    assert(validation_err.value.messages[0]) == \
+        'No verification code was found.'
+
+
+def test_verify_email_invalid_email():
+    session_dict = {
+        'email_attestation': {
+            'email': generate_password_hash('not_origin@protocol.foo'),
+            'code': '12345',
+            'expiry': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+        }
+    }
+
+    args = {
+        'eth_address': str_eth(sample_eth_address),
+        'email': 'origin@protocol.foo',
+        'code': '54321'
+    }
+
+    with mock.patch('logic.attestation_service.session', session_dict):
+        with pytest.raises(ValidationError) as validation_err:
+            VerificationService.verify_email(**args)
+
+    assert(validation_err.value.messages[0]) == \
+        'No verification code was found for that email.'
+    assert(validation_err.value.field_names[0]) == 'email'
 
 
 def test_facebook_auth_url():
@@ -484,7 +525,8 @@ def test_verify_airbnb_verification_code_incorrect(mock_urllib_request):
 
 
 @mock.patch('logic.attestation_service.urlopen')
-def test_verify_airbnb_verification_code_incorrect_user_id_format(mock_urllib_request):
+def test_verify_airbnb_verification_code_incorrect_user_id_format(
+        mock_urllib_request):
     mock_urllib_request.return_value.read.return_value = """
         <html><div>
         Airbnb profile description
@@ -508,14 +550,16 @@ def test_verify_airbnb_verification_code_incorrect_user_id_format(mock_urllib_re
     {},
     {}
 ))
-def test_verify_airbnb_verification_code_non_existing_user(mock_urllib_request):
+def test_verify_airbnb_verification_code_non_existing_user(
+        mock_urllib_request):
     with pytest.raises(AirbnbVerificationError) as service_err:
         VerificationService.verify_airbnb(
             '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
             "99999999999999999"
         )
 
-    assert str(service_err.value) == 'Airbnb user id: 99999999999999999 not found.'
+    assert str(
+        service_err.value) == 'Airbnb user id: 99999999999999999 not found.'
 
 
 @mock.patch('logic.attestation_service.urlopen', side_effect=HTTPError(
@@ -525,7 +569,8 @@ def test_verify_airbnb_verification_code_non_existing_user(mock_urllib_request):
     {},
     {}
 ))
-def test_verify_airbnb_verification_code_internal_server_error(mock_urllib_request):
+def test_verify_airbnb_verification_code_internal_server_error(
+        mock_urllib_request):
     with pytest.raises(AirbnbVerificationError) as service_err:
         VerificationService.verify_airbnb(
             '0x112234455C3a32FD11230C42E7Bccd4A84e02010',

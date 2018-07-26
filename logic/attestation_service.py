@@ -3,41 +3,33 @@ import datetime
 import http.client
 import json
 import requests
-import secrets
 import sendgrid
 import re
+from random import randint
 
 from marshmallow.exceptions import ValidationError
 from urllib.request import Request, urlopen, HTTPError, URLError
 from sendgrid.helpers.mail import Email, Content, Mail
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from config import settings
-from database import db
-from database import db_models
 from flask import session
 from logic.service_utils import (
-    PhoneVerificationError,
+    AirbnbVerificationError,
     EmailVerificationError,
     FacebookVerificationError,
+    PhoneVerificationError,
     TwitterVerificationError,
-    AirbnbVerificationError
 )
 from requests_oauthlib import OAuth1
-from sqlalchemy import func
-from util import time_, attestations, urls
+from util import attestations, urls
 from web3 import Web3
 
 signing_key = settings.ATTESTATION_SIGNING_KEY
 
-VC = db_models.VerificationCode
-
-sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
-
 twitter_request_token_url = 'https://api.twitter.com/oauth/request_token'
 twitter_authenticate_url = 'https://api.twitter.com/oauth/authenticate'
 twitter_access_token_url = 'https://api.twitter.com/oauth/access_token'
-
-CODE_EXPIRATION_TIME_MINUTES = 30
 
 CLAIM_TYPES = {
     'phone': 10,
@@ -119,6 +111,7 @@ class VerificationService:
             phone (str): Phone number in national format.
             code (int): Verification code for the country_calling_code and phone
                 combination
+            eth_address (str): Address of ERC725 identity token for claim
 
         Returns:
             VerificationServiceResponse
@@ -175,41 +168,80 @@ class VerificationService:
             'Could not verify code. Please try again shortly.'
         )
 
-    def generate_email_verification_code(email):
-        db_code = VC.query \
-            .filter(func.lower(VC.email) == func.lower(email)) \
-            .first()
-        if db_code is None:
-            db_code = db_models.VerificationCode()
-            db.session.add(db_code)
-        elif (time_.utcnow() - db_code.updated_at).total_seconds() < 10:
-            # If the client has requested a verification code already within
-            # the last 10 seconds, throw a rate limit error, so they can't just
-            # keep creating codes and guessing them rapidly.
+    def send_email_verification(email):
+        """Send a verification code to an email address using the SendGrid API.
+        The verification code and the expiry are stored in a server side session
+        to compare against user input.
+
+        Args:
+            email (str): Email address to send the verification to
+
+        Raises:
+            ValidationError: Verification request failed due to invalid arguments
+            EmailVerificationError: Verification request failed for a reason not
+                related to the arguments
+        """
+
+        verification_code = str(randint(100000, 999999))
+        # Save the verification code and expiry in a server side session
+        session['email_attestation'] = {
+            'email': generate_password_hash(email),
+            'code': verification_code,
+            'expiry': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+        }
+
+        # Build the email containing the verification code
+        from_email = Email(settings.SENDGRID_FROM_EMAIL)
+        to_email = Email(email)
+        subject = 'Your Origin Verification Code'
+        message = 'Your Origin verification code is {}.'.format(
+            verification_code)
+        message += ' It will expire in 30 minutes.'
+        content = Content('text/plain', message)
+        mail = Mail(from_email, subject, to_email, content)
+
+        try:
+            _send_email_using_sendgrid(mail)
+        except Exception as exc:
+            # SendGrid does not have its own error types but might in the future
+            # See https://github.com/sendgrid/sendgrid-python/issues/315
             raise EmailVerificationError(
-                'Please wait briefly before requesting'
-                ' a new verification code.', status_code=429)
-        db_code.email = email
-        db_code.code = random_numeric_token()
-        db_code.expires_at = time_.utcnow() + datetime.timedelta(
-            minutes=CODE_EXPIRATION_TIME_MINUTES)
-        db.session.commit()
-        send_code_via_email(email, db_code.code)
+                'Could not send verification code. Please try again shortly.'
+            )
+
         return VerificationServiceResponse()
 
     def verify_email(email, code, eth_address):
-        db_code = VC.query \
-            .filter(func.lower(VC.email) == func.lower(email)) \
-            .first()
-        if db_code is None:
-            raise EmailVerificationError('The given email was'
-                                         ' not found.')
-        if code != db_code.code:
-            raise EmailVerificationError('The code you provided'
-                                         ' is invalid.')
-        if time_.utcnow() > db_code.expires_at:
-            raise EmailVerificationError('The code you provided'
-                                         ' has expired.')
+        """Check a email verification code against the verification code stored
+        in the session for that email.
+
+        Args:
+            email (str): Email address being verified
+            code (int): Verification code for the email address
+            eth_address (str): Address of ERC725 identity token for claim
+
+        Returns:
+            VerificationServiceResponse
+
+        Raises:
+            ValidationError: Verification request failed due to invalid arguments
+        """
+        verification_obj = session.get('email_attestation', None)
+        if not verification_obj:
+            raise ValidationError('No verification code was found.')
+
+        if not check_password_hash(verification_obj['email'], email):
+            raise ValidationError(
+                'No verification code was found for that email.', 'email'
+            )
+
+        if verification_obj['expiry'] < datetime.datetime.utcnow():
+            raise ValidationError('Verification code has expired.', 'code')
+
+        if verification_obj['code'] != code:
+            raise ValidationError('Verification code is incorrect.', 'code')
+
+        session.pop('email_attestation')
 
         # TODO: determine what the text should be
         data = 'email verified'
@@ -329,11 +361,14 @@ class VerificationService:
             response = urlopen(request)
         except HTTPError as e:
             if e.code == 404:
-                raise AirbnbVerificationError('Airbnb user id: ' + airbnbUserId + ' not found.')
+                raise AirbnbVerificationError(
+                    'Airbnb user id: ' + airbnbUserId + ' not found.')
             else:
-                raise AirbnbVerificationError("Can not fetch user's Airbnb profile.")
+                raise AirbnbVerificationError(
+                    "Can not fetch user's Airbnb profile.")
         except URLError as e:
-            raise AirbnbVerificationError("Can not fetch user's Airbnb profile.")
+            raise AirbnbVerificationError(
+                "Can not fetch user's Airbnb profile.")
 
         if code not in response.read().decode('utf-8'):
             raise AirbnbVerificationError(
@@ -373,20 +408,14 @@ def numeric_eth(str_eth_address):
     return int(str_eth_address, 16)
 
 
-# Generates a six-digit numeric token.
-def random_numeric_token():
-    # Don't use tokens that are close to 0 that will look stupid to users.
-    rand = secrets.randbelow(1000000 - 1000)
-    return '{0:06d}'.format(rand + 1000)
+def _send_email_using_sendgrid(mail):
+    """Send a SendGrid mail object using the SendGrid API.
 
+    This functionality is in a separate function so it can be mocked during
+    tests.
 
-def send_code_via_email(address, code):
-    from_email = Email(settings.SENDGRID_FROM_EMAIL)
-    to_email = Email(address)
-    subject = 'Your Origin Verification Code'
-    content = Content(
-        'text/plain',
-        ('Your Origin verification code is {}.'
-         ' It will expire in 30 minutes.').format(code))
-    mail = Mail(from_email, subject, to_email, content)
+    Args:
+        mail (sendgrid.helpers.mail.mail.Mail) - mail to be sent
+    """
+    sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
     sg.client.mail.send.post(request_body=mail.get())

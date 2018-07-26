@@ -124,7 +124,7 @@ class EmailVerificationCode(Resource):
     def post(self):
         return handle_request(
             data=request.json,
-            handler=VerificationService.generate_email_verification_code,
+            handler=VerificationService.send_email_verification,
             request_schema=EmailVerificationCodeRequest,
             response_schema=EmailVerificationCodeResponse)
 
