@@ -1,10 +1,11 @@
+import $ from 'jquery'
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 
-import { enableMessaging } from 'actions/App'
+import { dismissMessaging, enableMessaging } from 'actions/App'
 
 import ConversationListItem from 'components/conversation-list-item'
 
@@ -12,9 +13,21 @@ import groupByArray from 'utils/groupByArray'
 
 import origin from '../../services/origin'
 
+const ONE_SECOND = 1000
+
 class MessagesDropdown extends Component {
   constructor(props) {
     super(props)
+  }
+
+  componentDidUpdate() {
+    const { history, messages, messagingDismissed } = this.props
+    const isOnMessagingRoute = history.location.pathname.match(/^\/messages/)
+    const hasNewUnreadMessage = messages.find(m => m.created > messagingDismissed)
+
+    if (!isOnMessagingRoute && hasNewUnreadMessage) {
+      $('#messagesDropdown').dropdown('toggle')
+    }
   }
 
   render() {
@@ -83,6 +96,7 @@ class MessagesDropdown extends Component {
 
 const mapStateToProps = state => {
   return {
+    messagingDismissed: state.app.messagingDismissed,
     messagingEnabled: state.app.messagingEnabled,
     messages: state.messages.filter(({ senderAddress, status }) => {
       return status === 'unread' && senderAddress !== state.app.web3.account
@@ -91,7 +105,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  enableMessaging: () => dispatch(enableMessaging())
+  dismissMessaging: () => dispatch(dismissMessaging()),
+  enableMessaging: () => dispatch(enableMessaging()),
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MessagesDropdown))

@@ -17,6 +17,7 @@ import translations from '../../translations/translated-messages.json'
 
 export const AppConstants = keyMirror(
   {
+    MESSAGING_DISMISSED: null,
     MESSAGING_ENABLED: null,
     ON_MOBILE: null,
     WEB3_ACCOUNT: null,
@@ -25,6 +26,13 @@ export const AppConstants = keyMirror(
   },
   'APP'
 )
+
+export function dismissMessaging() {
+  return {
+    type: AppConstants.MESSAGING_DISMISSED,
+    closedAt: new Date(),
+  }
+}
 
 export function enableMessaging() {
   return function(dispatch) {

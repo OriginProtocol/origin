@@ -1,6 +1,9 @@
 import { AppConstants } from 'actions/App'
 
 const initialState = {
+  // a timestamp for when the dropdown was last closed
+  messagingDismissed: null,
+  // whether or not a public key has been added to the global registry
   messagingEnabled: false,
   onMobile: null,
   web3: {
@@ -17,6 +20,9 @@ const initialState = {
 
 export default function App(state = initialState, action = {}) {
   switch (action.type) {
+
+    case AppConstants.MESSAGING_DISMISSED:
+      return { ...state, messagingDismissed: action.closedAt }
 
     case AppConstants.MESSAGING_ENABLED:
       return { ...state, messagingEnabled: action.messagingEnabled }
