@@ -2461,21 +2461,24 @@ form .stars img {
 }
 
 .new-message {
+  border-top: 1px solid var(--pale-grey);
   width: 100%;
+}
+
+.new-message button {
+  margin: auto 0 auto 10px;
+  width: auto;
 }
 
 .new-message textarea {
   border: 0;
-  border-top: 1px solid var(--pale-grey);
-  margin-left: -20px;
-  margin-right: -20px;
-  padding: 20px;
-  width: calc(100% + 20px + 20px);
+  padding: 10px 0 0;
+  flex-grow: 1;
+  resize: none;
 }
 
 .new-message textarea:focus {
   outline: none;
-  resize: none;
 }
 
 /* Notifications */

@@ -260,15 +260,15 @@ class Messages extends Component {
                 {messages.map(m => <Message key={m.hash} message={m} />)}
               </div>
               {selectedConversationId &&
-                <form className="new-message" onSubmit={this.handleSubmit}>
+                <form className="new-message d-flex" onSubmit={this.handleSubmit}>
                   <textarea
                     ref={this.textarea}
-                    rows="4"
                     placeholder={intl.formatMessage(this.intlMessages.newMessagePlaceholder)}
                     onKeyDown={this.handleKeyDown}
                     tabIndex="0"
                     autoFocus>
                   </textarea>
+                  <button type="submit" className="btn btn-sm btn-primary">Send</button>
                 </form>
               }
             </div>
