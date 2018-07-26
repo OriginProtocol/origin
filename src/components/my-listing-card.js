@@ -1,7 +1,13 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'react-intl'
+
+import {
+  update as updateTransaction,
+  upsert as upsertTransaction,
+} from 'actions/Transaction'
 
 import { translateListingCategory } from '../utils/translationUtils'
 
@@ -30,23 +36,34 @@ class MyListingCard extends Component {
   }
 
   async closeListing() {
-    const { address } = this.props.listing
-    const prompt = confirm(this.props.intl.formatMessage(this.intlMessages.confirmCloseListing))
+    const{ intl, listing, handleProcessing, handleUpdate, updateTransaction } = this.props
+    const { address } = listing
+    const prompt = confirm(intl.formatMessage(this.intlMessages.confirmCloseListing))
 
     if (!prompt) {
       return null
     }
 
     try {
-      const transaction = await origin.listings.close(address)
-      console.log(transaction)
-      await transaction.whenFinished()
+      handleProcessing(true)
+
+      const { created, transactionReceipt } = await origin.listings.close(address, updateTransaction)
+
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        created,
+        transactionTypeKey: 'closeListing',
+      })
+
       // why is this delay often required???
       setTimeout(() => {
-        this.props.handleUpdate(address)
+        handleProcessing(false)
+        handleUpdate(address)
       }, 1000)
     } catch(error) {
+      handleProcessing(false)
       console.error(`Error closing listing ${address}`)
+      console.error(error)
     }
   }
 
@@ -124,4 +141,9 @@ class MyListingCard extends Component {
   }
 }
 
-export default injectIntl(MyListingCard)
+const mapDispatchToProps = dispatch => ({
+  updateTransaction: (confirmationCount, transactionReceipt) => dispatch(updateTransaction(confirmationCount, transactionReceipt)),
+  upsertTransaction: (transaction) => dispatch(upsertTransaction(transaction)),
+})
+
+export default connect(undefined, mapDispatchToProps)(injectIntl(MyListingCard))

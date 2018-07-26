@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 
+import Modal from 'components/modal'
 import MyListingCard from './my-listing-card'
 
 import { storeWeb3Intent } from '../actions/App'
@@ -11,12 +12,14 @@ class MyListings extends Component {
   constructor(props) {
     super(props)
 
+    this.handleProcessing = this.handleProcessing.bind(this)
     this.handleUpdate = this.handleUpdate.bind(this)
     this.loadListing = this.loadListing.bind(this)
     this.state = {
       filter: 'all',
       listings: [],
       loading: true,
+      processing: false,
     }
   }
 
@@ -66,6 +69,10 @@ class MyListings extends Component {
     this.setState({ loading: false })
   }
 
+  handleProcessing(processing) {
+    this.setState({ processing })
+  }
+
   async handleUpdate(address) {
     try {
       const listing = await origin.listings.get(address)
@@ -81,7 +88,7 @@ class MyListings extends Component {
   }
 
   render() {
-    const { filter, listings, loading } = this.state
+    const { filter, listings, loading, processing } = this.state
     const filteredListings = (() => {
       switch(filter) {
         case 'active':
@@ -229,7 +236,14 @@ class MyListings extends Component {
                   </div>
                   <div className="col-12 col-md-9">
                     <div className="my-listings-list">
-                      {filteredListings.map(l => <MyListingCard key={`my-listing-${l.address}`} listing={l} handleUpdate={this.handleUpdate} />)}
+                      {filteredListings.map(l => (
+                        <MyListingCard
+                          key={`my-listing-${l.address}`}
+                          listing={l}
+                          handleProcessing={this.handleProcessing}
+                          handleUpdate={this.handleUpdate}
+                        />
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -237,6 +251,22 @@ class MyListings extends Component {
             </div>  
           } 
         </div>
+        {processing &&
+          <Modal backdrop="static" isOpen={true}>
+            <div className="image-container">
+              <img src="images/spinner-animation.svg" role="presentation"/>
+            </div>
+            <FormattedMessage
+              id={ 'my-listings.processingUpdate' }
+              defaultMessage={ 'Closing your listing' }
+            />
+            <br />
+            <FormattedMessage
+              id={ 'my-listings.pleaseStandBy' }
+              defaultMessage={ 'Please stand by...' }
+            />
+          </Modal>
+        }
       </div>
     )
   }

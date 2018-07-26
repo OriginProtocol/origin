@@ -3,6 +3,12 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { FormattedMessage, FormattedDate, defineMessages, injectIntl } from 'react-intl'
 import $ from 'jquery'
+
+import {
+  update as updateTransaction,
+  upsert as upsertTransaction,
+} from 'actions/Transaction'
+
 import Avatar from './avatar'
 import Modal from './modal'
 import Review from './review'
@@ -288,12 +294,19 @@ class PurchaseDetail extends Component {
     const { rating, reviewText } = this.state.form
 
     try {
-      const transaction = await origin.purchases.buyerConfirmReceipt(purchaseAddress, {
+      this.setState({ processing: true })
+
+      const { created, transactionReceipt } = await origin.purchases.buyerConfirmReceipt(purchaseAddress, {
         rating,
         reviewText: reviewText.trim(),
+      }, this.props.updateTransaction)
+
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        created,
+        transactionTypeKey: 'confirmReceipt',
       })
-      this.setState({ processing: true })
-      await transaction.whenFinished()
+
       // why is this delay often required???
       setTimeout(() => {
         this.setState({ processing: false })
@@ -312,9 +325,16 @@ class PurchaseDetail extends Component {
     const { purchaseAddress } = this.props
 
     try {
-      const transaction = await origin.purchases.sellerConfirmShipped(purchaseAddress)
       this.setState({ processing: true })
-      await transaction.whenFinished()
+
+      const { created, transactionReceipt } = await origin.purchases.sellerConfirmShipped(purchaseAddress, this.props.updateTransaction)
+
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        created,
+        transactionTypeKey: 'confirmShipped',
+      })
+
       // why is this delay often required???
       setTimeout(() => {
         this.setState({ processing: false })
@@ -333,12 +353,19 @@ class PurchaseDetail extends Component {
     const { rating, reviewText } = this.state.form
 
     try {
-      const transaction = await origin.purchases.sellerGetPayout(purchaseAddress, {
+      this.setState({ processing: true })
+
+      const { created, transactionReceipt } = await origin.purchases.sellerGetPayout(purchaseAddress, {
         rating,
         reviewText: reviewText.trim(),
+      }, this.props.updateTransaction)
+
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        created,
+        transactionTypeKey: 'getPayout',
       })
-      this.setState({ processing: true })
-      await transaction.whenFinished()
+
       // why is this delay often required???
       setTimeout(() => {
         this.setState({ processing: false })
@@ -789,4 +816,9 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(injectIntl(PurchaseDetail))
+const mapDispatchToProps = dispatch => ({
+  updateTransaction: (confirmationCount, transactionReceipt) => dispatch(updateTransaction(confirmationCount, transactionReceipt)),
+  upsertTransaction: (transaction) => dispatch(upsertTransaction(transaction)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(PurchaseDetail))

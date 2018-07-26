@@ -29,7 +29,7 @@ class NotificationMessage extends Component {
   }
 
   render() {
-    const { className, listing, type } = this.props
+    const { className, type } = this.props
     let message
 
     switch(type) {
