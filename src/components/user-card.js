@@ -39,6 +39,7 @@ class UserCard extends Component {
   render() {
     const { listingAddress, purchaseAddress, title, user, userAddress } = this.props
     const { fullName, profile, attestations } = user
+    const canMessageUser = origin.messaging.canConverse(userAddress)
 
     return (
       <div className="user-card placehold">
@@ -49,11 +50,6 @@ class UserCard extends Component {
               defaultMessage={ 'About the {title}' }
               values={{ title }}
             />
-            {userAddress && origin.messaging.canConverse(userAddress) &&
-              <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', float: 'right', padding: 0 }} onClick={this.handleToggle}>
-                <img src="images/messages-icon.svg" className="messages" alt="Contact" />
-              </button>
-            }
           </h3>
           <div className="d-flex">
             <div className="image-container">
@@ -71,6 +67,9 @@ class UserCard extends Component {
                 />
               </div>
               <div className="address">{userAddress && <EtherscanLink hash={userAddress} />}</div>
+              {userAddress && canMessageUser &&
+                <a href="#" className="contact" onClick={this.handleToggle}>Contact</a>
+              }
             </div>
           </div>
           <hr className="dark sm" />
@@ -116,13 +115,15 @@ class UserCard extends Component {
             defaultMessage={ 'View Profile' }
           />
         </Link>
-        <MessageNew
-          open={this.state.modalOpen}
-          recipientAddress={userAddress}
-          listingAddress={listingAddress}
-          purchaseAddress={purchaseAddress}
-          handleToggle={this.handleToggle}
-        />
+        {canMessageUser &&
+          <MessageNew
+            open={this.state.modalOpen}
+            recipientAddress={userAddress}
+            listingAddress={listingAddress}
+            purchaseAddress={purchaseAddress}
+            handleToggle={this.handleToggle}
+          />
+        }
       </div>
     )
   }

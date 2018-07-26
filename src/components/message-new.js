@@ -49,7 +49,7 @@ class MessageNew extends Component {
           New Message<br />
           <span className="address" style={{ fontSize: '0.8rem' }}>{recipientAddress}</span>
         </h2>
-        <form onSubmit={this.handleSubmit}>
+        <form className="new-message" onSubmit={this.handleSubmit}>
           <div className="container">
             <div className="row">
               <div className="col-12">

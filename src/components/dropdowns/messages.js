@@ -24,8 +24,9 @@ class MessagesDropdown extends Component {
     const { history, messages, messagingDismissed } = this.props
     const isOnMessagingRoute = history.location.pathname.match(/^\/messages/)
     const hasNewUnreadMessage = messages.find(m => m.created > messagingDismissed)
+    const dropdownHidden = !$('.messages.dropdown').hasClass('show')
 
-    if (!isOnMessagingRoute && hasNewUnreadMessage) {
+    if (!isOnMessagingRoute && hasNewUnreadMessage && dropdownHidden) {
       $('#messagesDropdown').dropdown('toggle')
     }
   }

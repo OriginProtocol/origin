@@ -260,7 +260,7 @@ class Messages extends Component {
                 {messages.map(m => <Message key={m.hash} message={m} />)}
               </div>
               {selectedConversationId &&
-                <form className="new-message d-flex" onSubmit={this.handleSubmit}>
+                <form className="add-message d-flex" onSubmit={this.handleSubmit}>
                   <textarea
                     ref={this.textarea}
                     placeholder={intl.formatMessage(this.intlMessages.newMessagePlaceholder)}

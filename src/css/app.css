@@ -404,6 +404,11 @@ a:hover {
   word-wrap: break-word;
 }
 
+.user-card .contact {
+  font-size: 0.875rem;
+  font-weight: bold;
+}
+
 .user-card .identity .d-flex div:last-of-type {
   flex-grow: 1;
   overflow: auto;
@@ -2468,25 +2473,29 @@ form .stars img {
   margin-right: 0.5rem;
 }
 
-.new-message {
+.add-message {
   border-top: 1px solid var(--pale-grey);
   width: 100%;
 }
 
-.new-message button {
+.add-message button {
   margin: auto 0 auto 10px;
   width: auto;
 }
 
-.new-message textarea {
+.add-message textarea {
   border: 0;
   padding: 10px 0 0;
   flex-grow: 1;
   resize: none;
 }
 
-.new-message textarea:focus {
+.add-message textarea:focus {
   outline: none;
+}
+
+.new-message .explanation {
+  font-size: 0.875rem;
 }
 
 /* Notifications */
