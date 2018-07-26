@@ -24,9 +24,10 @@ class Message extends Component {
       <div className="d-flex message">
         <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
         <div className="content-container">
-          <div className="meta-container d-flex text-truncate">
+          <div className="meta-container d-flex">
             <div className="sender text-truncate">
-              {fullName || address}
+              {fullName && <span className="name">{fullName}</span>}
+              <span className="address text-muted">{address}</span>
             </div>
             <div className="timestamp text-right ml-auto">
               {moment(created).format('MMM Do h:mm a')}

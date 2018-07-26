@@ -2450,6 +2450,8 @@ form .stars img {
 }
 
 .conversation .sender {
+  font-weight: 300;
+  font-size: 0.75rem;
   padding-top: 8px;
 }
 
@@ -2458,6 +2460,12 @@ form .stars img {
   flex-shrink: 0;
   font-size: 0.75rem;
   padding-top: 8px;
+}
+
+.conversation .name {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-right: 0.5rem;
 }
 
 .new-message {
