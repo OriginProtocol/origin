@@ -1,23 +1,144 @@
-version: '3'
+version: "3"
+
+networks:
+  origin-develop:
+
+volumes:
+  contracts:  # Compiled contracts
+  origin_js_node_modules:
+  flask_session: # Flask session persistence
+  pg_data:
+
 services:
-  origin:
-    container_name: "origin-container"
-    image: origin-image
-    build: ./container
+  postgres:
+    container_name: postgres
+    restart: always
+    image: postgres:10.0
+    # Data persistence, comment out the following two lines to disable
     volumes:
-      - ./origin-bridge:/opt/origin-bridge/source
-      - ./origin-js:/opt/origin-js/source
-      - /opt/origin-js/source/node_modules
-      - ./origin-dapp:/opt/origin-dapp/source
-      - /opt/origin-dapp/source/node_modules
+      - pg_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=origin
+      - POSTGRES_PASSWORD=origin
+      - POSTGRES_DB=origin_bridge
+    networks:
+      - origin-develop
+
+  redis:
+    container_name: redis
+    restart: always
+    image: redis
+    networks:
+      - origin-develop
+
+# elasticsearch:
+#   image: docker.elastic.co/elasticsearch/elasticsearch:6.3.1
+#   container_name: elasticsearch
+#   ports:
+#     - "9200:9200"
+#   environment:
+#     ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+#   ports:
+#     - "9200:9200"
+#   networks:
+#     - origin-develop
+
+  origin-js:
+    container_name: origin-js
+    image: origin-js
+    build:
+      context: .
+      dockerfile: dockerfiles/origin-js
+    volumes:
+      - ./origin-js:/app
+      - origin_js_node_modules:/app/node_modules
+      - contracts:/app/contracts/build/contracts
+    ports:
+      - "5002:5002" # API
+      - "8080:8080" # IPFS gateway
+      - "8081:8081" # Tests
+      - "8545:8545" # Blockchain
+    command: npm start
+    networks:
+      - origin-develop
+
+  origin-bridge:
+    container_name: origin-bridge
+    build:
+      context: .
+      dockerfile: dockerfiles/origin-bridge
+    image: origin-bridge
+    volumes:
+      - ./origin-bridge:/app
+      # Set the envfile from the local envfile
+      - ./envfiles/origin-bridge.env:/app/.env
+      - flask_session:/app/flask_session
+      # Contracts volume mounted so origin-bridge uses the contracts compiled
+      # by origin-js
+      - contracts:/app/contracts
+    depends_on:
+      - postgres
+      - redis
+      - origin-js
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_APP=/app/main.py
+      - FLASK_DEBUG=1
+    command:
+      # Waits for origin-js to start, 8081 is the tests server which is
+      # the last component of origin-js to start
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q origin-js:8081 --
+      echo 'origin-js is available, starting origin-bridge...' &&
+      flask run --host=0.0.0.0"
+    networks:
+      - origin-develop
+
+  origin-bridge-celery:
+    container_name: origin-bridge-celery
+    image: origin-bridge
+    volumes:
+      - ./origin-bridge:/app
+      # Set the envfile from the local envfile
+      - ./envfiles/origin-bridge.env:/app/.env
+      - contracts:/app/contracts
+    depends_on:
+      - origin-bridge
+    command:
+      # Celery beat is currently disabled because of incompatibilities between
+      # the develop branches of origin-bridge and origin-js, add " -B" to the
+      # celery command to enable
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q origin-bridge:5000 --
+      echo 'origin-bridge is available, starting origin-bridge celery...' &&
+      watchmedo auto-restart -d . -p '*.py' -i '*.pyc' --recursive --
+      celery -A util.tasks worker -l info -c=1 -E"
+    networks:
+      - origin-develop
+
+  origin-dapp:
+    container_name: origin-dapp
+    build:
+      context: .
+      dockerfile: dockerfiles/origin-dapp
+    volumes:
+      - ./origin-dapp:/app
+      # Don't overwrite the installed node_modules
+      - /app/node_modules
+      # Set the envfile from the local envfile
+      - ./envfiles/origin-dapp.env:/app/.env
+      - ./origin-js:/app/node_modules/origin
+      - origin_js_node_modules:/app/node_modules/origin/node_modules
+    depends_on:
+      - origin-bridge
     ports:
       - "3000:3000"
-      - "4000:4000"
-      - "5000:5000"
-      - "5002:5002"
-      - "5432:5432"
-      - "6379:6379"
-      - "8080:8080"
-      - "8081:8081"
-      - "8545:8545"
-      - "9200:9200"
+    command:
+      # Waits for origin-bridge to start
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q origin-bridge:5000 --
+      echo 'origin-bridge is available, starting origin-dapp' &&
+      node_modules/.bin/webpack-dev-server --port 3000 --host 0.0.0.0"
+    networks:
+      - origin-develop
