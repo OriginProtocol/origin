@@ -593,7 +593,7 @@ class ListingCreate extends Component {
         <Calendar
           slots={ this.state.formData && this.state.formData.slots }
           userType="seller"
-          viewType={ 'hourly' }
+          viewType={ 'daily' }
           step={ 60 }
           onComplete={ this.onAvailabilityEntered }
         />

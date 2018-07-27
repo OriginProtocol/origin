@@ -30,6 +30,7 @@ class Calendar extends Component {
     this.slotPropGetter = this.slotPropGetter.bind(this)
     this.eventComponent = this.eventComponent.bind(this)
     this.checkSlotsForExistingEvent = this.checkSlotsForExistingEvent.bind(this)
+    this.onNavigate = this.onNavigate.bind(this)
 
     this.state = {
       events: [],
@@ -39,7 +40,8 @@ class Calendar extends Component {
         isRecurringEvent: false
       },
       buyerSelectedSlotData: null,
-      defaultDate: new Date()
+      defaultDate: new Date(),
+      renderedPeriods: [this.props.isDaily ? moment().startOf('month').toString() : moment().startOf('week').toString()]
     }
   }
 
@@ -281,12 +283,7 @@ class Calendar extends Component {
       let slotDate = moment(value)
 
       while (slotDate.toDate() >= startDate && slotDate.toDate() <= endDate) {
-
-        const timePeriod = this.props.viewType === 'daily'
-                           ? 'day'
-                           : this.props.step === '60'
-                             ? 'hour'
-                             : null
+        const timePeriod = this.props.viewType === 'daily' ? 'day' : 'hour'
         const slotDateObj = timePeriod ? slotDate.startOf(timePeriod).toDate() : slotDate.toDate()
 
         if (whichDropdown === 'start') {
@@ -319,8 +316,10 @@ class Calendar extends Component {
 
   onIsRecurringEventChange(event) {
     this.setState({
-      ...this.state.selectedEvent,
-      isRecurringEvent: event.target.checked
+      selectedEvent: {
+        ...this.state.selectedEvent,
+        isRecurringEvent: event.target.checked
+      }
     })
   }
 
@@ -472,6 +471,74 @@ class Calendar extends Component {
     })
   }
 
+  onNavigate(date) {
+    const dateMoment = moment(date)
+    const isDaily = this.props.viewType === 'daily'
+    const firstVisibleDate = isDaily ? moment(dateMoment.startOf('month')) : moment(dateMoment.startOf('week'))
+    const lastVisibleDate = isDaily ? moment(dateMoment.endOf('month')) : moment(dateMoment.endOf('week'))
+    const newEvents = []
+
+    // Don't re-create repeating events the current week/month has already been rendered
+    if (this.state.renderedPeriods.includes(firstVisibleDate.toString())) {
+      return this.setState({ defaultDate: date })
+    }
+
+    const getSlots = (startDate, endDate) => {
+      const slots = []
+      let slotDate = moment(startDate)
+
+      while (slotDate.toDate() >= startDate && slotDate.toDate() <= endDate) {
+        const timePeriod = this.props.viewType === 'daily' ? 'day' : 'hour'
+        const slotDateObj = timePeriod ? slotDate.startOf(timePeriod).toDate() : slotDate.toDate()
+
+        slots.push(slotDateObj)
+        slotDate = slotDate.add(1, timePeriod)
+      }
+
+      return slots
+    }
+
+    // render recurring events on the currently visible day they recur on
+    this.state.events && this.state.events.map((event) => {
+      if (event.isRecurringEvent && !event.isClonedRecurringEvent) {
+        const slotToTest = moment(firstVisibleDate)
+
+        while (slotToTest.isBefore(lastVisibleDate)) {
+          const slotDayOfWeekIdx = slotToTest.day()
+          const eventDayOfWeekIdx = moment(event.start).day()
+
+          if (slotDayOfWeekIdx === eventDayOfWeekIdx) {
+            const newEvent = JSON.parse(JSON.stringify(event))
+            const setterConfig = {
+              date: slotToTest.date(),
+              month: slotToTest.month(),
+              year: slotToTest.year()
+            }
+            newEvent.id = uuid()
+            newEvent.isClonedRecurringEvent = true
+            newEvent.start = moment(newEvent.start).set(setterConfig).toDate()
+            newEvent.end = moment(newEvent.end).set(setterConfig).toDate()
+            newEvent.slots = getSlots(newEvent.start, newEvent.end)
+            newEvents.push(newEvent)
+          }
+
+          slotToTest.add(1, 'day')
+        }
+      }
+    })
+
+    const stateToSet = {
+      defaultDate: date,
+      renderedPeriods: [...this.state.renderedPeriods, firstVisibleDate.toString()]
+    }
+
+    if (newEvents.length) {
+      stateToSet.events = [...this.state.events, ...newEvents]
+    }
+
+    this.setState(stateToSet)
+  }
+
   render() {
     const selectedEvent = this.state.selectedEvent
 
@@ -505,7 +572,7 @@ class Calendar extends Component {
               step={ this.props.step || 60 }
               timeslots={ 1 }
               date={ this.state.defaultDate }
-              onNavigate={ (date) => { this.setState({ defaultDate: date }) } }
+              onNavigate={ this.onNavigate }
               slotPropGetter={ this.slotPropGetter }
             />
             {
@@ -572,7 +639,6 @@ class Calendar extends Component {
                 </div>
                 {this.props.userType === 'seller' &&
                   <Fragment>
-                    {/* Commenting out until we implement recurring events completely
                     <div className="form-check">
                       <input
                         className="form-check-input"
@@ -583,7 +649,7 @@ class Calendar extends Component {
                       <label className="form-check-label" htmlFor="isRecurringEvent">
                         This is a repeating event
                       </label>
-                    </div> */}
+                    </div>
                     <div>
                       <p className="font-weight-bold">Availability</p>
                       <div>
