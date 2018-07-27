@@ -64,14 +64,14 @@ class NotificationsDropdown extends Component {
                 {filteredNotifications.map(n => <Notification key={`dropdown-notification:${n.id}`} notification={n} />)}
               </ul>
             </div>
-            <footer>
-              <Link to="/notifications">
+            <Link to="/notifications">
+              <footer>
                 <FormattedMessage
                   id={ 'notificationsDropdown.viewAll' }
                   defaultMessage={ 'View All' }
                 />
-              </Link>
-            </footer>
+              </footer>
+            </Link>
           </div>
         </div>
       </div>

@@ -79,14 +79,14 @@ class MessagesDropdown extends Component {
               <div className="messages-list">
                 {conversations.map(c => <ConversationListItem key={c.key} conversation={c} active={false} handleConversationSelect={() => history.push(`/messages/${c.key}`)} />)}
               </div>
-              <footer>
-                <Link to="/messages">
+              <Link to="/messages">
+                <footer>
                   <FormattedMessage
                     id={ 'messagesDropdown.viewAll' }
                     defaultMessage={ 'View All' }
                   />
-                </Link>
-              </footer>
+                </footer>
+              </Link>
             </div>
           }
         </div>

@@ -391,7 +391,7 @@ a:hover {
 }
 
 .user-card .view-profile:hover {
-  background-color: var(--dark-clear-blue);
+  background-color: #202e3e;
 }
 
 .user-card .identity {
@@ -875,8 +875,13 @@ a:hover {
   text-align: center;
 }
 
-.dropdown-menu footer a {
+.dropdown-menu a footer {
   color: var(--clear-blue);
+}
+
+.dropdown-menu a:hover footer {
+  background-color: #c3d0d7;
+  color: var(--dark-clear-blue);
 }
 
 .messages .dropdown-menu .notification,
