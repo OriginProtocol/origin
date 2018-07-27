@@ -58,22 +58,22 @@ class Attestations {
     }
   }
 
-  async phoneGenerateCode({ country_calling_code, phone, method, locale }) {
+  async phoneGenerateCode({ countryCallingCode, phone, method, locale }) {
     return await this.post('phone/generate-code', {
-      country_calling_code,
+      country_calling_code: countryCallingCode,
       phone,
       method,
       locale
     })
   }
 
-  async phoneVerify({ wallet, country_calling_code, phone, code }) {
+  async phoneVerify({ wallet, countryCallingCode, phone, code }) {
     const identity = await this.getIdentityAddress(wallet)
     return await this.post(
       'phone/verify',
       {
         identity,
-        country_calling_code,
+        country_calling_code: countryCallingCode,
         phone,
         code
       },

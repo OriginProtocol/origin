@@ -98,7 +98,7 @@ describe('Attestation Resource', function() {
         responseStub: {}
       })
       const response = await attestations.phoneGenerateCode({
-        country_calling_code: '1',
+        countryCallingCode: '1',
         phone: '555-555-5555',
         method: 'sms',
         locale: 'en'
@@ -117,7 +117,7 @@ describe('Attestation Resource', function() {
       })
       const response = await attestations.phoneVerify({
         wallet: sampleWallet,
-        country_calling_code: '1',
+        countryCallingCode: '1',
         phone: '555-555-5555',
         code: '12345'
       })
