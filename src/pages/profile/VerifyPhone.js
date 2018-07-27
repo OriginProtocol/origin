@@ -37,7 +37,7 @@ class VerifyPhone extends Component {
   async handleSubmit(e) {
     e.preventDefault()
 
-    const { countryCallingCode, mode, phone, verificationMethod } = this.state
+    const { countryCallingCode, mode, phone, verificationCode, verificationMethod } = this.state
 
     const phoneObj = {
       countryCallingCode,
