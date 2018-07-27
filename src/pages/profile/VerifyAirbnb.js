@@ -15,7 +15,7 @@ class VerifyAirbnb extends Component {
       <Modal
         isOpen={this.props.open}
         data-modal="airbnb"
-        className="identity"
+        className="attestation"
         handleToggle={this.props.handleToggle}
       >
         <div className="image-container d-flex align-items-center">
