@@ -24,7 +24,7 @@ class VerifyTwitter extends Component {
       <Modal
         isOpen={this.props.open}
         data-modal="twitter"
-        className="identity"
+        className="attestation"
         handleToggle={this.props.handleToggle}
       >
         <div className="image-container d-flex align-items-center">

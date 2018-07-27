@@ -1,6 +1,7 @@
 import thunkMiddleware from 'redux-thunk'
 import { createStore, applyMiddleware, combineReducers } from 'redux'
 
+import transactions from 'reducers/Transactions'
 import listings from 'reducers/Listings'
 import messages from 'reducers/Messages'
 import profile from 'reducers/Profile'
@@ -18,6 +19,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const store = createStore(
   combineReducers({
+    transactions,
     listings,
     messages,
     profile,

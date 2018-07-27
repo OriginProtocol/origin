@@ -1,22 +1,18 @@
 [
   {
-    "id": "transactions.pendingTransactions",
+    "id": "transactions.pendingBlockchainTransactionsHeading",
     "defaultMessage": "Pending Blockchain Transactions"
+  },
+  {
+    "id": "transactions.blockchainTransactionsHeading",
+    "defaultMessage": "Blockchain Transactions"
+  },
+  {
+    "id": "transactions.transactionsHeading",
+    "defaultMessage": "Transactions"
   },
   {
     "id": "transactions.clear",
     "defaultMessage": "Clear"
-  },
-  {
-    "id": "transactions.from",
-    "defaultMessage": "From"
-  },
-  {
-    "id": "transactions.to",
-    "defaultMessage": "To"
-  },
-  {
-    "id": "transactions.completed",
-    "defaultMessage": "Completed"
   }
 ]

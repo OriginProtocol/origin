@@ -29,8 +29,36 @@ class VerifyPhone extends Component {
       },
     })
 
+    this.handleSubmit = this.handleSubmit.bind(this)
     this.setSelectedCountry = this.setSelectedCountry.bind(this)
     this.toggleVerificationMethod = this.toggleVerificationMethod.bind(this)
+  }
+
+  async handleSubmit(e) {
+    e.preventDefault()
+
+    const { countryCallingCode, mode, phone, verificationCode, verificationMethod } = this.state
+
+    const phoneObj = {
+      countryCallingCode,
+      phone: String(phone),
+    }
+
+    if (mode === 'phone') {
+      await origin.attestations.phoneGenerateCode({
+        ...phoneObj,
+        method: verificationMethod,
+      })
+      // Update mode to display verification code input form
+      this.setState({ mode: 'code' })
+    } else if (mode === 'code') {
+      const phoneAttestation = await origin.attestations.phoneVerify({
+        ...phoneObj,
+        code: verificationCode,
+      })
+
+      this.props.onSuccess(phoneAttestation)
+    }
   }
 
   setSelectedCountry(country) {
@@ -40,7 +68,7 @@ class VerifyPhone extends Component {
     })
   }
 
-  toggleVerificationMethod (event) {
+  toggleVerificationMethod(event) {
     // Toggle between SMS and call verification
     event.preventDefault()
     if (this.state.verificationMethod === 'sms') {
@@ -57,35 +85,13 @@ class VerifyPhone extends Component {
       <Modal
         isOpen={open}
         data-modal="phone"
-        className="identity"
+        className="attestation"
         handleToggle={handleToggle}
       >
         <div className="image-container d-flex align-items-center">
           <img src="images/phone-icon-dark.svg" role="presentation" />
         </div>
-        <form
-          onSubmit={async e => {
-            e.preventDefault()
-            let phoneObj = {
-                country_calling_code: this.state.countryCallingCode,
-                phone: String(this.state.phone),
-            }
-            if (this.state.mode === 'phone') {
-              await origin.attestations.phoneGenerateCode({
-                ...phoneObj,
-                method: this.state.verificationMethod
-              })
-              // Update mode to display verification code input form
-              this.setState({ mode: 'code' })
-            } else if (this.state.mode === 'code') {
-              let phoneAttestation = await origin.attestations.phoneVerify({
-                ...phoneObj,
-                code: this.state.verificationCode
-              })
-              this.props.onSuccess(phoneAttestation)
-            }
-          }}
-        >
+        <form onSubmit={this.handleSubmit}>
           <h2>
             <FormattedMessage
               id={ 'VerifyPhone.verifyPhoneHeading' }

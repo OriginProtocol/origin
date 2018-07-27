@@ -2229,30 +2229,6 @@ form .stars img {
   clip: rect(0px, 32px, 32px, 16px);
 }
 
-.transaction .slice:nth-of-type(1) {
-  transform: rotate(0deg);
-}
-
-.transaction .slice:nth-of-type(2) {
-  transform: rotate(60deg);
-}
-
-.transaction .slice:nth-of-type(3) {
-  transform: rotate(120deg);
-}
-
-.transaction .slice:nth-of-type(4) {
-  transform: rotate(180deg);
-}
-
-.transaction .slice:nth-of-type(5) {
-  transform: rotate(240deg);
-}
-
-.transaction .slice:nth-of-type(6) {
-  transform: rotate(300deg);
-}
-
 .transaction .slice .crust {
   background-color: var(--pale-grey-two);
   border-radius: 32px;
@@ -2261,7 +2237,6 @@ form .stars img {
   left: 0px;
   position: absolute;
   top: 0px;
-  transform: rotate(60deg);
   width: 32px;
 }
 
@@ -3008,7 +2983,7 @@ sup {
   height: unset;
 }
 
-.identity.modal .image-container {
+.attestation.modal .image-container {
   background-image: url(images/verification-shape-grey.svg);
   background-position: 0;
   background-size: 110px 116px;
@@ -3017,17 +2992,17 @@ sup {
   width: 110px;
 }
 
-.identity.modal .image-container img {
+.attestation.modal .image-container img {
   margin: 0 auto 0;
 }
 
-.identity.modal label {
+.attestation.modal label {
   color: var(--pale-grey);
   font-size: 1rem;
   margin-bottom: 1rem;
 }
 
-.identity.modal input {
+.attestation.modal input {
   margin-bottom: 1rem;
 }
 

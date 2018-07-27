@@ -1,0 +1,26 @@
+[
+  {
+    "id": "transaction.buyListing",
+    "defaultMessage": "You made a purchase."
+  },
+  {
+    "id": "transaction.closeListing",
+    "defaultMessage": "You closed a listing"
+  },
+  {
+    "id": "transaction.confirmReceipt",
+    "defaultMessage": "You left a review and confirmed receipt."
+  },
+  {
+    "id": "transaction.confirmShipped",
+    "defaultMessage": "You marked a purchase as shipped."
+  },
+  {
+    "id": "transaction.createListing",
+    "defaultMessage": "You created a listing"
+  },
+  {
+    "id": "transaction.getPayout",
+    "defaultMessage": "You left a review and withdrew funds."
+  }
+]

@@ -27,7 +27,7 @@ class VerifyEmail extends Component {
       <Modal
         isOpen={this.props.open}
         data-modal="email"
-        className="identity"
+        className="attestation"
         handleToggle={this.props.handleToggle}
       >
         <div className="image-container d-flex align-items-center">
