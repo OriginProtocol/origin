@@ -2741,7 +2741,7 @@ sup {
   height: unset;
 }
 
-.identity.modal .image-container {
+.attestation.modal .image-container {
   background-image: url(images/verification-shape-grey.svg);
   background-position: 0;
   background-size: 110px 116px;
@@ -2750,17 +2750,17 @@ sup {
   width: 110px;
 }
 
-.identity.modal .image-container img {
+.attestation.modal .image-container img {
   margin: 0 auto 0;
 }
 
-.identity.modal label {
+.attestation.modal label {
   color: var(--pale-grey);
   font-size: 1rem;
   margin-bottom: 1rem;
 }
 
-.identity.modal input {
+.attestation.modal input {
   margin-bottom: 1rem;
 }
 

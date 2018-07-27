@@ -85,7 +85,7 @@ class VerifyPhone extends Component {
       <Modal
         isOpen={open}
         data-modal="phone"
-        className="identity"
+        className="attestation"
         handleToggle={handleToggle}
       >
         <div className="image-container d-flex align-items-center">
