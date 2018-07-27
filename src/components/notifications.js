@@ -13,7 +13,7 @@ class Notifications extends Component {
     this.state = { filter: 'all', notifications: [] }
   }
 
-  async componentWillMount() {
+  async componentDidUpdate() {
     try {
       const notifications = await origin.notifications.all()
 

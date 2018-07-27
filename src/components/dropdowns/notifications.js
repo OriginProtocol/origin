@@ -14,7 +14,7 @@ class NotificationsDropdown extends Component {
     this.state = { notifications: [] }
   }
 
-  async componentWillMount() {
+  async componentDidUpdate() {
     try {
       const notifications = await origin.notifications.all()
 
