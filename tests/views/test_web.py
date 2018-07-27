@@ -38,7 +38,7 @@ def test_verify_phone(client):
     with responses.RequestsMock() as rsps:
         rsps.add(
             responses.GET,
-            'https://api.authy.com/protected/json/phones/verification/status',
+            'https://api.authy.com/protected/json/phones/verification/check',
             json={
                 'message': 'Verification code is correct.',
                 'success': True

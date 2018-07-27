@@ -131,7 +131,7 @@ class VerificationService:
             'X-Authy-API-Key': settings.TWILIO_VERIFY_API_KEY
         }
 
-        url = 'https://api.authy.com/protected/json/phones/verification/status'
+        url = 'https://api.authy.com/protected/json/phones/verification/check'
         response = requests.get(url, params=params, headers=headers)
 
         try:

@@ -111,7 +111,7 @@ def test_send_phone_verification_twilio_error():
 def test_verify_phone_valid_code():
     responses.add(
         responses.GET,
-        'https://api.authy.com/protected/json/phones/verification/status',
+        'https://api.authy.com/protected/json/phones/verification/check',
         json={
             'message': 'Verification code is correct.',
             'success': True
@@ -136,7 +136,7 @@ def test_verify_phone_valid_code():
 def test_verify_phone_expired_code():
     responses.add(
         responses.GET,
-        'https://api.authy.com/protected/json/phones/verification/status',
+        'https://api.authy.com/protected/json/phones/verification/check',
         json={'error_code': '60023'},   # No pending verification
         status=404
     )
@@ -159,7 +159,7 @@ def test_verify_phone_expired_code():
 def test_verify_phone_invalid_code():
     responses.add(
         responses.GET,
-        'https://api.authy.com/protected/json/phones/verification/status',
+        'https://api.authy.com/protected/json/phones/verification/check',
         json={'error_code': '60022'},   # No pending verification
         status=401
     )
