@@ -128,6 +128,7 @@ Browsers with wallets for both desktop and mobile that you can use with the Orig
 | ---- |  ------ |
 | Trust Wallet | ⚪️ not tested |
 | Toshi Developer  |  ⚪️ not tested |
+| Toshi Developer  |  ⚪️ not tested |
 | Cipher  |  ⚪️ not tested |
 
 
