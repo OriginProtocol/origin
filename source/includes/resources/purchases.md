@@ -22,7 +22,7 @@ const purchase = await origin.purchases.get(purchaseAddress)
   listingAddress: "0x05a52d9a9e9e91c6932ec2af7bf0c127660fa181",
   buyerAddress: "0x627306090abab3a6e1400e9345bc60c78a8bef57",
   created: 1524492517,
-  buyerTimout: 0
+  buyerTimeout: 0
 }
 ```
 
