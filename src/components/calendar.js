@@ -40,8 +40,7 @@ class Calendar extends Component {
         isRecurringEvent: false
       },
       buyerSelectedSlotData: null,
-      defaultDate: new Date(),
-      renderedPeriods: [this.props.isDaily ? moment().startOf('month').toString() : moment().startOf('week').toString()]
+      defaultDate: new Date()
     }
   }
 
@@ -243,6 +242,11 @@ class Calendar extends Component {
 
     this.setState({
       events: [...allOtherEvents, thisEvent]
+    })
+
+    // wait for state to update, then render recurring events on monthly calendar if recurring events checkbox is checked
+    setTimeout(() => {
+      this.onNavigate(this.state.defaultDate)
     })
   }
 
@@ -474,14 +478,13 @@ class Calendar extends Component {
   onNavigate(date) {
     const dateMoment = moment(date)
     const isDaily = this.props.viewType === 'daily'
-    const firstVisibleDate = isDaily ? moment(dateMoment.startOf('month')) : moment(dateMoment.startOf('week'))
-    const lastVisibleDate = isDaily ? moment(dateMoment.endOf('month')) : moment(dateMoment.endOf('week'))
-    const newEvents = []
-
-    // Don't re-create repeating events the current week/month has already been rendered
-    if (this.state.renderedPeriods.includes(firstVisibleDate.toString())) {
-      return this.setState({ defaultDate: date })
-    }
+    const firstVisibleDate = isDaily ?
+                              moment(dateMoment.startOf('month')).subtract(1, 'week') :
+                              moment(dateMoment.startOf('week'))
+    const lastVisibleDate = isDaily ?
+                              moment(dateMoment.endOf('month')).add(1, 'week') :
+                              moment(dateMoment.endOf('week'))
+    const events = []
 
     const getSlots = (startDate, endDate) => {
       const slots = []
@@ -500,43 +503,58 @@ class Calendar extends Component {
 
     // render recurring events on the currently visible day they recur on
     this.state.events && this.state.events.map((event) => {
-      if (event.isRecurringEvent && !event.isClonedRecurringEvent) {
-        const slotToTest = moment(firstVisibleDate)
+      if (event.isRecurringEvent) {
+        if (!event.isClonedRecurringEvent) {
+          const slotToTest = moment(firstVisibleDate)
 
-        while (slotToTest.isBefore(lastVisibleDate)) {
-          const slotDayOfWeekIdx = slotToTest.day()
-          const eventDayOfWeekIdx = moment(event.start).day()
+          // put the original event in the output "events" array
+          const originalEventStartDate = event.start
+          events.push(event)
 
-          if (slotDayOfWeekIdx === eventDayOfWeekIdx) {
-            const newEvent = JSON.parse(JSON.stringify(event))
-            const setterConfig = {
-              date: slotToTest.date(),
-              month: slotToTest.month(),
-              year: slotToTest.year()
+          while (slotToTest.isBefore(lastVisibleDate)) {
+            const slotDayOfWeekIdx = slotToTest.day()
+            const eventDayOfWeekIdx = moment(event.start).day()
+
+            if (slotDayOfWeekIdx === eventDayOfWeekIdx) {
+              const clonedEvent = JSON.parse(JSON.stringify(event))
+              const diffBtwStartAndEnd = moment(clonedEvent.start).diff(clonedEvent.end, 'days')
+              const clonedEndMoment = moment(clonedEvent.end)
+              const setterConfig = {
+                date: slotToTest.date(),
+                month: slotToTest.month(),
+                year: slotToTest.year()
+              }
+              clonedEvent.id = uuid()
+              clonedEvent.isClonedRecurringEvent = true
+              clonedEvent.start = moment(clonedEvent.start).set(setterConfig).toDate()
+              clonedEvent.end = moment(clonedEvent.start)
+                                  .add(diffBtwStartAndEnd, 'days')
+                                  .set({
+                                    hour: clonedEndMoment.hour(),
+                                    minute: clonedEndMoment.minute(),
+                                    second: clonedEndMoment.second()
+                                  })
+                                  .toDate()
+              clonedEvent.slots = getSlots(clonedEvent.start, clonedEvent.end)
+
+              // put the cloned "recurring" instances of the event in the output "events" array
+              if (clonedEvent.start.toString() !== originalEventStartDate.toString())
+                events.push(clonedEvent)
             }
-            newEvent.id = uuid()
-            newEvent.isClonedRecurringEvent = true
-            newEvent.start = moment(newEvent.start).set(setterConfig).toDate()
-            newEvent.end = moment(newEvent.end).set(setterConfig).toDate()
-            newEvent.slots = getSlots(newEvent.start, newEvent.end)
-            newEvents.push(newEvent)
-          }
 
-          slotToTest.add(1, 'day')
+            slotToTest.add(1, 'day')
+          }
         }
+      } else {
+        // put the non-recurring events in the output "events" array
+        events.push(event)
       }
     })
 
-    const stateToSet = {
+    this.setState({
       defaultDate: date,
-      renderedPeriods: [...this.state.renderedPeriods, firstVisibleDate.toString()]
-    }
-
-    if (newEvents.length) {
-      stateToSet.events = [...this.state.events, ...newEvents]
-    }
-
-    this.setState(stateToSet)
+      events
+    })
   }
 
   render() {
