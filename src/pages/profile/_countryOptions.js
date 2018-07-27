@@ -11,7 +11,7 @@ class CountryOptions extends Component {
     this.intlMessages = defineMessages({
       unitedStates: {
         id: '_countryOptions.unitedStates',
-        defaultMessage: 'China'
+        defaultMessage: 'United States'
       },
       china: {
         id: '_countryOptions.china',
