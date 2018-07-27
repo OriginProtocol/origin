@@ -148,6 +148,10 @@ class Messages extends Component {
     const el = this.textarea.current
     const newMessage = el.value
 
+    if (!newMessage.length) {
+      return alert('Please add a message to send')
+    }
+
     try {
       await originTest.messaging.sendConvMessage(
         selectedConversationId,

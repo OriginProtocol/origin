@@ -2474,8 +2474,44 @@ form .stars img {
   outline: none;
 }
 
-.new-message .explanation {
-  font-size: 0.875rem;
+.modal-content .eth-container {
+  background-color: var(--dusk);
+  border-radius: 10px 10px 0 0;
+  padding: 20px 20%;
+}
+
+.modal-content .eth-container img {
+  margin-bottom: 20px;
+}
+
+.message .modal-content h2 {
+  margin-bottom: 0;
+}
+
+.message .modal-content .address {
+  font-size: 1.5rem;
+  font-weight: normal;
+  word-break: break-all;
+}
+
+.new-message {
+  padding: 20px;
+  text-align: left;
+}
+
+.new-message .button-container {
+  padding-top: 0;
+}
+
+.modal-content .new-message .form-control {
+  height: auto;
+  margin-bottom: 0;
+  max-width: unset;
+  resize: none;
+}
+
+.message .modal-content {
+  padding: 0;
 }
 
 /* Notifications */
@@ -3015,11 +3051,10 @@ sup {
   margin-bottom: 0;
 }
 
-.profile-wrapper .modal .explanation {
+.modal .explanation {
   color: var(--pale-grey);
   font-size: 0.875rem;
   padding-top: 1rem;
-  margin-bottom: 0.5rem;
 }
 
 .phone.modal .dropdown {
