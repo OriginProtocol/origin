@@ -54,7 +54,8 @@ class Calendar extends Component {
         end: slot.endDate,
         price: slot.priceWei,
         isAvailable: slot.isAvailable,
-        slots: slot.slots
+        slots: slot.slots,
+        isRecurringEvent: (slot.recurs === 'weekly')
       }
     })
 
@@ -431,12 +432,18 @@ class Calendar extends Component {
 
   saveData() {
     const cleanEvents = this.state.events.length && this.state.events.map((event) => {
-      return {
+
+      const toReturn = {
         startDate: event.start.toISOString(),
         endDate: event.end.toISOString(),
         isAvailable: event.isAvailable,
         priceWei: event.price
       }
+
+      if (event.isRecurringEvent) {
+        toReturn.recurs = 'weekly'
+      }
+      return toReturn
     })
     this.props.onComplete && this.props.onComplete(cleanEvents)
   }
@@ -448,11 +455,17 @@ class Calendar extends Component {
   reserveSlots() {
     const slotsToReserve = this.state.buyerSelectedSlotData &&
                             this.state.buyerSelectedSlotData.map((slot) => {
-                              return {
+                              const toReturn = {
                                 startDate: slot.start,
                                 endDate: slot.end,
-                                priceWei: slot.price
+                                priceWei: slot.price,
                               }
+
+                              if (slot.isRecurringEvent) {
+                                toReturn.recurs = 'weekly'
+                              }
+
+                              return toReturn
                             })
     this.props.onComplete && this.props.onComplete(slotsToReserve)
   }
@@ -464,14 +477,22 @@ class Calendar extends Component {
   }
 
   buyerPrevMonth() {
+    const date = moment(this.state.defaultDate).subtract(1, this.setViewType()).toDate()
+
+    this.onNavigate(date)
+
     this.setState({
-      defaultDate: moment(this.state.defaultDate).subtract(1, this.setViewType()).toDate()
+      defaultDate: date
     })
   }
 
   buyerNextMonth() {
+    const date = moment(this.state.defaultDate).add(1, this.setViewType()).toDate()
+
+    this.onNavigate(date)
+
     this.setState({
-      defaultDate: moment(this.state.defaultDate).add(1, this.setViewType()).toDate()
+      defaultDate: date
     })
   }
 
