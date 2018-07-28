@@ -498,7 +498,8 @@ class Calendar extends Component {
         slotDate = slotDate.add(1, timePeriod)
       }
 
-      return slots
+      // remove the last slot to prevent blocking the slot after the event
+      return slots.pop()
     }
 
     // render recurring events on the currently visible day they recur on
@@ -517,7 +518,7 @@ class Calendar extends Component {
 
             if (slotDayOfWeekIdx === eventDayOfWeekIdx) {
               const clonedEvent = JSON.parse(JSON.stringify(event))
-              const diffBtwStartAndEnd = moment(clonedEvent.start).diff(clonedEvent.end, 'days')
+              const diffBtwStartAndEnd = moment(clonedEvent.end).diff(moment(clonedEvent.start), 'days')
               const clonedEndMoment = moment(clonedEvent.end)
               const setterConfig = {
                 date: slotToTest.date(),
