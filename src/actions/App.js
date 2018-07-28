@@ -19,6 +19,7 @@ export const AppConstants = keyMirror(
   {
     MESSAGING_DISMISSED: null,
     MESSAGING_ENABLED: null,
+    NOTIFICATIONS_DISMISSED: null,
     ON_MOBILE: null,
     WEB3_ACCOUNT: null,
     WEB3_INTENT: null,
@@ -31,6 +32,13 @@ export function dismissMessaging() {
   return {
     type: AppConstants.MESSAGING_DISMISSED,
     closedAt: new Date(),
+  }
+}
+
+export function dismissNotifications(ids) {
+  return {
+    type: AppConstants.NOTIFICATIONS_DISMISSED,
+    ids,
   }
 }
 

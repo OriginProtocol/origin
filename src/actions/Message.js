@@ -12,7 +12,7 @@ export const MessageConstants = keyMirror(
 )
 
 export function addMessage(obj) {
-  return async function(dispatch) {
+  return function(dispatch) {
     try {
       dispatch({
         type: MessageConstants.ADD,

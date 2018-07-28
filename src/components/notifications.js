@@ -10,22 +10,12 @@ class Notifications extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { filter: 'all', notifications: [] }
-  }
-
-  async componentDidUpdate() {
-    try {
-      const notifications = await origin.notifications.all()
-
-      this.setState({ notifications })
-    } catch(e) {
-      console.error(e)
-    }
+    this.state = { filter: 'all' }
   }
 
   render() {
-    const { web3Account } = this.props
-    const { filter, notifications } = this.state
+    const { notifications, web3Account } = this.props
+    const { filter } = this.state
     const notificationsWithPerspective = notifications.map(n => {
       const { sellerAddress } = n.resources.listing
 
@@ -95,6 +85,7 @@ class Notifications extends Component {
 
 const mapStateToProps = state => {
   return {
+    notifications: state.notifications,
     web3Account: state.app.web3.account,
   }
 }

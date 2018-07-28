@@ -5,6 +5,7 @@ import { IntlProvider } from 'react-intl'
 
 import { setMobile, localizeApp, setMessagingEnabled } from 'actions/App'
 import { addMessage } from 'actions/Message'
+import { fetchNotifications } from 'actions/Notification'
 import { fetchProfile } from 'actions/Profile'
 import { init as initWallet } from 'actions/Wallet'
 
@@ -37,6 +38,8 @@ import '../css/app.css'
 
 import origin from '../services/origin'
 
+const ONE_SECOND = 1000
+
 const HomePage = () => (
   <div className="container">
     <Listings />
@@ -65,10 +68,12 @@ class App extends Component {
   componentWillMount() {
     this.props.localizeApp()
 
+    // detect existing messaging account
     origin.messaging.events.on('ready', accountKey => {
       this.props.setMessagingEnabled(!!accountKey)
     })
 
+    // detect net decrypted messages
     origin.messaging.events.on('msg', obj => {
       this.props.addMessage(obj)
     })
@@ -77,6 +82,11 @@ class App extends Component {
     origin.messaging.events.on('emsg', obj => {
       console.error('A message has arrived that could not be decrypted:', obj)
     })
+
+    // poll for notifications
+    setInterval(() => {
+      this.props.fetchNotifications()
+    }, 10 * ONE_SECOND)
   }
 
   componentDidMount() {
@@ -147,6 +157,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addMessage: (obj) => dispatch(addMessage(obj)),
+  fetchNotifications: () => dispatch(fetchNotifications()),
   fetchProfile: () => dispatch(fetchProfile()),
   initWallet: () => dispatch(initWallet()),
   setMessagingEnabled: (bool) => dispatch(setMessagingEnabled(bool)),

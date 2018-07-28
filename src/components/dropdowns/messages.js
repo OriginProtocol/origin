@@ -16,13 +16,13 @@ import origin from '../../services/origin'
 const ONE_SECOND = 1000
 
 class MessagesDropdown extends Component {
-  constructor(props) {
-    super(props)
+  componentDidMount() {
+    $('.messages.dropdown').on('hide.bs.dropdown', this.props.dismissMessaging)
   }
 
   componentDidUpdate() {
     const { history, messages, messagingDismissed } = this.props
-    const isOnMessagingRoute = history.location.pathname.match(/^\/messages/)
+    const isOnMessagingRoute = !!history.location.pathname.match(/^\/messages/)
     const hasNewUnreadMessage = messages.find(m => m.created > messagingDismissed)
     const dropdownHidden = !$('.messages.dropdown').hasClass('show')
 
