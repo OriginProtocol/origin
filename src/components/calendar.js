@@ -41,7 +41,8 @@ class Calendar extends Component {
         isRecurringEvent: false
       },
       buyerSelectedSlotData: null,
-      defaultDate: new Date()
+      defaultDate: new Date(),
+      showSellerActionBtns: false
     }
   }
 
@@ -241,7 +242,8 @@ class Calendar extends Component {
       selectedEvent: {
         ...this.state.selectedEvent,
         price: (event.target.value && parseFloat(event.target.value))
-      }
+      },
+      showSellerActionBtns: true
     })
   }
 
@@ -250,7 +252,8 @@ class Calendar extends Component {
     const allOtherEvents = this.state.events.filter((event) => event.id !== thisEvent.id)
 
     this.setState({
-      events: [...allOtherEvents, thisEvent]
+      events: [...allOtherEvents, thisEvent],
+      showSellerActionBtns: false
     })
 
     // wait for state to update, then render recurring events on monthly calendar if recurring events checkbox is checked
@@ -282,7 +285,8 @@ class Calendar extends Component {
           price: 0,
           isAvailable: true,
           isRecurringEvent: false
-        }
+        },
+        showSellerActionBtns: false
       })
 
       setTimeout(() => {
@@ -296,7 +300,8 @@ class Calendar extends Component {
       selectedEvent: {
         ...this.state.selectedEvent,
         isAvailable: !!parseInt(!isNaN(event.target.value) && event.target.value)
-      }
+      },
+      showSellerActionBtns: true
     })
   }
 
@@ -347,7 +352,8 @@ class Calendar extends Component {
       selectedEvent: {
         ...this.state.selectedEvent,
         isRecurringEvent: event.target.checked
-      }
+      },
+      showSellerActionBtns: true
     })
   }
 
@@ -768,14 +774,16 @@ class Calendar extends Component {
                         </Fragment>
                       }
                     </div>
-                    <div className="cta-btns row">
-                      <div className="col-md-6">
-                        <button className="btn btn-dark" onClick={this.cancelEvent}>Cancel</button>
+                    {this.state.showSellerActionBtns &&
+                      <div className="cta-btns row">
+                        <div className="col-md-6">
+                          <button className="btn btn-dark" onClick={this.cancelEvent}>Cancel</button>
+                        </div>
+                        <div className="col-md-6">
+                          <button className="btn btn-light" onClick={this.saveEvent}>Save</button>
+                        </div>
                       </div>
-                      <div className="col-md-6">
-                        <button className="btn btn-light" onClick={this.saveEvent}>Save</button>
-                      </div>
-                    </div>
+                    }
                   </Fragment>
                 }
                 {this.props.userType === 'buyer' &&
