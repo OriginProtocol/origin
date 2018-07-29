@@ -227,7 +227,7 @@ class Calendar extends Component {
       isRecurringEvent: selectedEvent.isRecurringEvent || false
     }
 
-    this.setState({ 
+    this.setState({
       selectedEvent: event,
       showOverlappingEventsErrorMsg: false
     })
@@ -348,13 +348,25 @@ class Calendar extends Component {
   }
 
   onIsRecurringEventChange(event) {
-    this.setState({
+    const { selectedEvent, events } = this.state
+    const stateToSet = {
       selectedEvent: {
-        ...this.state.selectedEvent,
+        ...selectedEvent,
         isRecurringEvent: event.target.checked
       },
       showSellerActionBtns: true
-    })
+    }
+
+    if (selectedEvent.isClonedRecurringEvent) {
+      stateToSet.events = events.map((eventObj) => {
+        if (eventObj.id === selectedEvent.originalEventId) {
+          eventObj.isRecurringEvent = event.target.checked
+        }
+        return eventObj
+      })
+    }
+
+    this.setState(stateToSet)
   }
 
   eventComponent(data) {
@@ -597,7 +609,7 @@ class Calendar extends Component {
             slotToTest.add(1, 'day')
           }
         }
-      } else {
+      } else if (!event.isClonedRecurringEvent) {
         // put the non-recurring events in the output "events" array
         events.push(event)
       }
@@ -648,6 +660,7 @@ class Calendar extends Component {
               date={ this.state.defaultDate }
               onNavigate={ this.onNavigate }
               slotPropGetter={ this.slotPropGetter }
+              scrollToTime={ moment(this.state.defaultDate).hour(8).toDate() }
             />
             {
               this.props.userType === 'seller' &&
