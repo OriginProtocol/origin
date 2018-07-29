@@ -261,9 +261,20 @@ class Calendar extends Component {
 
   cancelEvent() {
     const confirmation = confirm('Are you sure you want to delete this event?')
+    const { selectedEvent, events } = this.state
 
     if (confirmation) {
-      const allOtherEvents = this.state.events.filter((event) => event.id !== this.state.selectedEvent.id)
+      let allOtherEvents
+
+      if (selectedEvent.isRecurringEvent) {
+        allOtherEvents = events.filter((event) => 
+          event.id !== selectedEvent.id &&
+          event.originalEventId !== selectedEvent.id &&
+          event.id !== selectedEvent.originalEventId
+        )
+      } else {
+        allOtherEvents = events.filter((event) => event.id !== selectedEvent.id)
+      }
 
       this.setState({
         events: [...allOtherEvents],
@@ -272,6 +283,10 @@ class Calendar extends Component {
           isAvailable: true,
           isRecurringEvent: false
         }
+      })
+
+      setTimeout(() => {
+        this.onNavigate(this.state.defaultDate)
       })
     }
   }
@@ -554,6 +569,7 @@ class Calendar extends Component {
                 month: slotToTest.month(),
                 year: slotToTest.year()
               }
+              clonedEvent.originalEventId = event.id
               clonedEvent.id = uuid()
               clonedEvent.isClonedRecurringEvent = true
               clonedEvent.start = moment(clonedEvent.start).set(setterConfig).toDate()
