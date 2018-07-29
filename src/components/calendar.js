@@ -31,6 +31,7 @@ class Calendar extends Component {
     this.eventComponent = this.eventComponent.bind(this)
     this.checkSlotsForExistingEvent = this.checkSlotsForExistingEvent.bind(this)
     this.onNavigate = this.onNavigate.bind(this)
+    this.renderHourlyPrices = this.renderHourlyPrices.bind(this)
 
     this.state = {
       events: [],
@@ -51,7 +52,7 @@ class Calendar extends Component {
       return { 
         id: uuid(),
         start: slot.startDate,
-        end: slot.endDate,
+        end: moment(slot.endDate).subtract(1, 'second').toISOString(),
         price: slot.priceWei,
         isAvailable: slot.isAvailable,
         slots: slot.slots,
@@ -65,6 +66,10 @@ class Calendar extends Component {
   }
 
   componentDidMount() {
+    this.renderHourlyPrices()
+  }
+
+  renderHourlyPrices() {
     // This is a hackky way of showing the price in hourly time slots
     // since React Big Calendar doesn't give us full control over the content of those slots
     // Possible future optimization would be to create a PR to React Big Calendar to support custom slot content.
@@ -77,9 +82,12 @@ class Calendar extends Component {
       for (let i = 0, slotsLen = slots.length; i < slotsLen; i++) {
         const slot = slots[i]
         const classes = slot.className
+        const isAvailable = classes.indexOf('unavailable') === -1
         const priceIdx = classes.indexOf('priceEth-')
 
-        if (priceIdx > -1) {
+        slot.innerHTML = ''
+
+        if (priceIdx > -1 && isAvailable) {
           const price = classes.substring(priceIdx + 9, classes.length)
           const priceNode = document.createTextNode(`${price} ETH`)
           slot.appendChild(priceNode)
@@ -576,6 +584,10 @@ class Calendar extends Component {
     this.setState({
       defaultDate: date,
       events
+    })
+
+    setTimeout(() => {
+      this.renderHourlyPrices()
     })
   }
 
