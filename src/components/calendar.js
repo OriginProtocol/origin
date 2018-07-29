@@ -32,6 +32,7 @@ class Calendar extends Component {
     this.checkSlotsForExistingEvent = this.checkSlotsForExistingEvent.bind(this)
     this.onNavigate = this.onNavigate.bind(this)
     this.renderHourlyPrices = this.renderHourlyPrices.bind(this)
+    this.getDateDropdownOptions = this.getDateDropdownOptions.bind(this)
 
     this.state = {
       events: [],
@@ -321,10 +322,10 @@ class Calendar extends Component {
 
         if (whichDropdown === 'start') {
           slots.push(slotDateObj)
-          slotDate = slotDate.add(1, 'days')
+          slotDate = slotDate.add(1, timePeriod)
         } else {
           slots.unshift(slotDateObj)
-          slotDate = slotDate.subtract(1, 'days')
+          slotDate = slotDate.subtract(1, timePeriod)
         }
       }
 
@@ -340,10 +341,12 @@ class Calendar extends Component {
   }
 
   getDateDropdownOptions(date) {
+    const timeToAdd = this.props.viewType === 'daily' ? 'days' : 'hours'
+
     return [
-      ...[...Array(10)].map((_, i) => moment(date).subtract(i + 1, 'days').toDate()).reverse(),
+      ...[...Array(10)].map((_, i) => moment(date).subtract(i + 1, timeToAdd).toDate()).reverse(),
       moment(date).toDate(),
-      ...[...Array(10)].map((_, i) => moment(date).add(i + 1, 'days').toDate())
+      ...[...Array(10)].map((_, i) => moment(date).add(i + 1, timeToAdd).toDate())
     ]
   }
 
@@ -627,16 +630,17 @@ class Calendar extends Component {
 
   render() {
     const selectedEvent = this.state.selectedEvent
+    const { viewType, userType } = this.props
 
     return (
       <div>
         <div className="row">
           <div className={`col-md-8 
                            calendar-container
-                           ${this.props.userType === 'buyer' ? ' buyer-view' : ''}
-                           ${this.props.viewType === 'daily' ? ' daily-view' : ' hourly-view'}`}>
+                           ${userType === 'buyer' ? ' buyer-view' : ''}
+                           ${viewType === 'daily' ? ' daily-view' : ' hourly-view'}`}>
             {
-              this.props.userType === 'buyer' &&
+              userType === 'buyer' &&
               <div className="buyer-month-nav">
                 <img onClick={this.buyerPrevMonth} className="prev-month" src="/images/carat-dark.svg" />
                 <img onClick={this.buyerNextMonth} className="next-month" src="/images/carat-dark.svg" />
@@ -651,7 +655,7 @@ class Calendar extends Component {
                 }
               }}
               selectable={ true }
-              events={ (this.props.userType === 'seller' && this.state.events) || [] }
+              events={ (userType === 'seller' && this.state.events) || [] }
               defaultView={ BigCalendar.Views[this.setViewType().toUpperCase()] }
               onSelectEvent={ this.onSelectEvent }
               onSelectSlot={ this.onSelectSlot }
@@ -663,7 +667,7 @@ class Calendar extends Component {
               scrollToTime={ moment(this.state.defaultDate).hour(8).toDate() }
             />
             {
-              this.props.userType === 'seller' &&
+              userType === 'seller' &&
               <div className="btn-container">
                 <button className="btn btn-other" onClick={this.goBack}>Back</button>
                 <button className="btn btn-primary" onClick={this.saveData}>Next</button>
@@ -676,55 +680,55 @@ class Calendar extends Component {
             }
             {selectedEvent && selectedEvent.start && !this.state.showOverlappingEventsErrorMsg &&
               <div className="calendar-cta">
-                <p className="font-weight-bold">Selected { this.props.viewType === 'daily' ? 'dates' : 'times' }</p>
+                <p className="font-weight-bold">Selected { viewType === 'daily' ? 'dates' : 'times' }</p>
                 <div>
-                  {this.props.viewType === 'daily' &&
-                    <div className="row">
-                      <div className="col-md-6">
-                        <select
-                          name="start"
-                          className="form-control"
-                          onChange={ this.onDateDropdownChange }
-                          value={ selectedEvent.start.toString() }>
-                          { 
-                            this.getDateDropdownOptions(selectedEvent.start).map((date) => (
-                              date <= selectedEvent.end &&
-                              <option
-                                key={date.toString()}
-                                value={date.toString()}>
-                                {moment(date).format('MM/DD/YY')}
-                              </option>
-                            ))
-                          }
-                        </select>
-                      </div>
-                      <div className="col-md-6">
-                        <select
-                          name="end"
-                          className="form-control"
-                          onChange={ this.onDateDropdownChange }
-                          value={selectedEvent.end.toString()}>
-                          { 
-                            this.getDateDropdownOptions(selectedEvent.end).map((date) => (
-                              date >= selectedEvent.start &&
-                              <option
-                                key={date.toString()}
-                                value={date.toString()}>
-                                {moment(date).format('MM/DD/YY')}
-                              </option>
-                            ))
-                          }
-                        </select>
-                      </div>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <select
+                        name="start"
+                        className="form-control"
+                        onChange={ this.onDateDropdownChange }
+                        value={ selectedEvent.start.toString() }>
+                        { 
+                          this.getDateDropdownOptions(selectedEvent.start).map((date) => (
+                            ((viewType === 'daily' && date <= selectedEvent.end) ||
+                            (viewType === 'hourly' && date < selectedEvent.end)) &&
+                            <option
+                              key={date.toString()}
+                              value={date.toString()}>
+                              {moment(date).format(viewType === 'daily' ? 'MM/DD/YY' : 'LT')}
+                            </option>
+                          ))
+                        }
+                      </select>
                     </div>
-                  }
-                  {this.props.viewType === 'hourly' &&
+                    <div className="col-md-6">
+                      <select
+                        name="end"
+                        className="form-control"
+                        onChange={ this.onDateDropdownChange }
+                        value={selectedEvent.end.toString()}>
+                        { 
+                          this.getDateDropdownOptions(selectedEvent.end).map((date) => (
+                            ((viewType === 'daily' && date >= selectedEvent.start) ||
+                            (viewType === 'hourly' && date > selectedEvent.start)) &&
+                            <option
+                              key={date.toString()}
+                              value={date.toString()}>
+                              {moment(date).format(viewType === 'daily' ? 'MM/DD/YY' : 'LT')}
+                            </option>
+                          ))
+                        }
+                      </select>
+                    </div>
+                  </div>
+                  {viewType === 'hourly' &&
                     <Fragment>
                       <p>{moment(selectedEvent.start).format('LT')} - {moment(selectedEvent.end).format('LT')}</p>
                     </Fragment>
                   }
                 </div>
-                {this.props.userType === 'seller' &&
+                {userType === 'seller' &&
                   <Fragment>
                     <div className="form-check">
                       <input
@@ -775,13 +779,13 @@ class Calendar extends Component {
                             onChange={this.handlePriceChange} 
                           />
                           {
-                            this.props.viewType === 'hourly' &&
+                            viewType === 'hourly' &&
                             this.props.step &&
                             <span className="price-label">
                               &nbsp;ETH per {this.props.intl.formatNumber(this.props.step)} min.
                             </span>
                           }
-                          {this.props.viewType === 'daily' &&
+                          {viewType === 'daily' &&
                             <span className="price-label">&nbsp;ETH</span>
                           }
                         </Fragment>
@@ -799,7 +803,7 @@ class Calendar extends Component {
                     }
                   </Fragment>
                 }
-                {this.props.userType === 'buyer' &&
+                {userType === 'buyer' &&
                   <div>
                     <p className="font-weight-bold">Price</p>
                     <p>{selectedEvent.price} ETH</p>
