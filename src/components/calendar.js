@@ -499,20 +499,26 @@ class Calendar extends Component {
   }
 
   saveData() {
-    const cleanEvents = this.state.events.length && this.state.events.map((event) => {
+    const cleanEvents = this.state.events.length &&
+                        this.state.events
+                        .filter((event) => 
+                          !event.isClonedRecurringEvent
+                        )
+                        .map((event) => {
 
-      const toReturn = {
-        startDate: event.start.toISOString(),
-        endDate: event.end.toISOString(),
-        isAvailable: event.isAvailable,
-        priceWei: event.price
-      }
+                          const toReturn = {
+                            startDate: event.start.toISOString(),
+                            endDate: event.end.toISOString(),
+                            isAvailable: event.isAvailable,
+                            priceWei: event.price
+                          }
 
-      if (event.isRecurringEvent) {
-        toReturn.recurs = 'weekly'
-      }
-      return toReturn
-    })
+                          if (event.isRecurringEvent) {
+                            toReturn.recurs = 'weekly'
+                          }
+                          return toReturn
+                        })
+    console.log('=================== cleanEvents: ', cleanEvents)
     this.props.onComplete && this.props.onComplete(cleanEvents)
   }
 
