@@ -6,6 +6,7 @@ import Notifications from './resources/notifications'
 import Purchases from './resources/purchases'
 import Reviews from './resources/reviews'
 import Users from './resources/users'
+import Messaging from './resources/messaging'
 import fetch from 'cross-fetch'
 import store from 'store'
 
@@ -26,7 +27,10 @@ class Origin {
     attestationServerUrl = defaultAttestationServerUrl,
     indexingServerUrl = defaultIndexingServerUrl,
     contractAddresses,
-    web3
+    web3,
+    ipfsCreator,
+    OrbitDB,
+    ecies
   } = {}) {
     this.contractService = new ContractService({ contractAddresses, web3 })
     this.ipfsService = new IpfsService({
@@ -72,6 +76,13 @@ class Origin {
     this.users = new Users({
       contractService: this.contractService,
       ipfsService: this.ipfsService
+    })
+
+    this.messaging = new Messaging({
+      contractService: this.contractService,
+      ipfsCreator,
+      OrbitDB,
+      ecies
     })
   }
 }
