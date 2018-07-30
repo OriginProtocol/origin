@@ -9,15 +9,17 @@ import {
   upsert as upsertTransaction,
 } from 'actions/Transaction'
 
-import Avatar from './avatar'
-import Modal from './modal'
-import Review from './review'
-import TransactionEvent from '../pages/purchases/transaction-event'
-import PurchaseProgress from './purchase-progress'
-import UserCard from './user-card'
+import Avatar from 'components/avatar'
+import Modal from 'components/modal'
+import PurchaseProgress from 'components/purchase-progress'
+import Review from 'components/review'
+import UserCard from 'components/user-card'
+
+import TransactionEvent from 'pages/purchases/transaction-event'
+
+import { translateListingCategory } from 'utils/translationUtils'
 
 import origin from '../services/origin'
-import { translateListingCategory } from '../utils/translationUtils'
 
 const web3 = origin.contractService.web3
 
@@ -687,7 +689,7 @@ class PurchaseDetail extends Component {
               <hr />
             </div>
             <div className="col-12 col-lg-4">
-              {counterpartyUser.address && <UserCard title={counterparty} userAddress={counterpartyUser.address} />}
+              {counterpartyUser.address && <UserCard title={counterparty} listingAddress={listing.address} purchaseAddress={purchase.address} userAddress={counterpartyUser.address} />}
             </div>
           </div>
           <div className="row">

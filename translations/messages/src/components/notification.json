@@ -1,5 +1,9 @@
 [
   {
+    "id": "notification.unnamedUser",
+    "defaultMessage": "Unnamed User"
+  },
+  {
     "id": "notification.buyer",
     "defaultMessage": "Buyer"
   },

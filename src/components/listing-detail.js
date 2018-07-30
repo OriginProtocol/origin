@@ -3,21 +3,20 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'react-intl'
 
-import { showAlert } from '../actions/Alert'
-import { storeWeb3Intent } from '../actions/App'
+import { showAlert } from 'actions/Alert'
+import { storeWeb3Intent } from 'actions/App'
 import {
   update as updateTransaction,
   upsert as upsertTransaction,
-} from '../actions/Transaction'
-import getCurrentProvider from '../utils/getCurrentProvider'
-import { translateListingCategory } from '../utils/translationUtils'
+} from 'actions/Transaction'
 
-import Modal from './modal'
-import Review from './review'
-import UserCard from './user-card'
+import Modal from 'components/modal'
+import Review from 'components/review'
+import UserCard from 'components/user-card'
 
-// temporary - we should be getting an origin instance from our app,
-// not using a global singleton
+import getCurrentProvider from 'utils/getCurrentProvider'
+import { translateListingCategory } from 'utils/translationUtils'
+
 import origin from '../services/origin'
 
 /* linking to contract Etherscan requires knowledge of which network we're on */
@@ -420,7 +419,7 @@ class ListingsDetail extends Component {
                   }
                 </div>
               }
-              {this.state.sellerAddress && <UserCard title="seller" userAddress={this.state.sellerAddress} />}
+              {this.state.sellerAddress && <UserCard title="seller" listingAddress={this.props.listingAddress} userAddress={this.state.sellerAddress} />}
             </div>
           </div>
           {this.props.withReviews &&

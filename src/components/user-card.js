@@ -2,9 +2,14 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { Link } from 'react-router-dom'
+
 import { fetchUser } from 'actions/User'
-import Avatar from './avatar'
-import EtherscanLink from './etherscan-link'
+
+import Avatar from 'components/avatar'
+import EtherscanLink from 'components/etherscan-link'
+import MessageNew from 'components/message-new'
+
+import origin from '../services/origin'
 
 class UserCard extends Component {
   constructor(props) {
@@ -16,15 +21,25 @@ class UserCard extends Component {
         defaultMessage: 'Unnamed User'
       }
     })
+
+    this.handleToggle = this.handleToggle.bind(this)
+    this.state = { modalOpen: false }
   }
 
   componentWillMount() {
     this.props.fetchUser(this.props.userAddress, this.props.intl.formatMessage(this.intlMessages.unnamedUser))
   }
 
+  handleToggle(e) {
+    e.preventDefault()
+
+    this.setState({ modalOpen: !this.state.modalOpen })
+  }
+
   render() {
-    const { title, user, userAddress } = this.props
+    const { listingAddress, purchaseAddress, title, user, userAddress } = this.props
     const { fullName, profile, attestations } = user
+    const canMessageUser = origin.messaging.canConverse(userAddress)
 
     return (
       <div className="user-card placehold">
@@ -52,6 +67,9 @@ class UserCard extends Component {
                 />
               </div>
               <div className="address">{userAddress && <EtherscanLink hash={userAddress} />}</div>
+              {userAddress && canMessageUser &&
+                <a href="#" className="contact" onClick={this.handleToggle}>Contact</a>
+              }
             </div>
           </div>
           <hr className="dark sm" />
@@ -91,12 +109,21 @@ class UserCard extends Component {
             </div>
           </div>
         </div>
-        <Link to={`/users/${userAddress}`} className="btn placehold">
+        <Link to={`/users/${userAddress}`} className="btn view-profile placehold">
           <FormattedMessage
             id={ 'transaction-progress.viewProfile' }
             defaultMessage={ 'View Profile' }
           />
         </Link>
+        {canMessageUser &&
+          <MessageNew
+            open={this.state.modalOpen}
+            recipientAddress={userAddress}
+            listingAddress={listingAddress}
+            purchaseAddress={purchaseAddress}
+            handleToggle={this.handleToggle}
+          />
+        }
       </div>
     )
   }
@@ -104,12 +131,13 @@ class UserCard extends Component {
 
 const mapStateToProps = (state, { userAddress }) => {
   return {
+    messagingEnabled: state.app.messagingEnabled,
     user: state.users.find(u => u.address === userAddress) || {},
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: address => dispatch(fetchUser(address))
+  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(UserCard))

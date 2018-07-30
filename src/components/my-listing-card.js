@@ -9,7 +9,7 @@ import {
   upsert as upsertTransaction,
 } from 'actions/Transaction'
 
-import { translateListingCategory } from '../utils/translationUtils'
+import { translateListingCategory } from 'utils/translationUtils'
 
 import origin from '../services/origin'
 

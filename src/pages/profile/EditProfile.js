@@ -216,14 +216,4 @@ class EditProfile extends Component {
   }
 }
 
-EditProfile.getDerivedStateFromProps = (nextProps, prevState) => {
-  var newState = {}
-  var { firstName, lastName, description } = prevState
-  var curData = JSON.stringify({ firstName, lastName, description })
-  if (JSON.stringify(nextProps.data) !== curData) {
-    newState = { ...newState, ...nextProps.data }
-  }
-  return newState
-}
-
 export default injectIntl(EditProfile)

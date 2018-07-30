@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import MyPurchaseCard from './my-purchase-card'
 import { FormattedMessage } from 'react-intl'
 
-import { storeWeb3Intent } from '../actions/App'
+import { storeWeb3Intent } from 'actions/App'
+
+import MyPurchaseCard from 'components/my-purchase-card'
+
 import origin from '../services/origin'
 
 class MyPurchases extends Component {

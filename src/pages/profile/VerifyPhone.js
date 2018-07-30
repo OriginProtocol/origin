@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
-import origin from '../../services/origin'
-
 import Modal from 'components/modal'
 import CountryOptions from './_countryOptions'
+
+import origin from '../../services/origin'
 
 class VerifyPhone extends Component {
   constructor() {

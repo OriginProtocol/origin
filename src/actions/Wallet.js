@@ -1,4 +1,5 @@
 import keyMirror from 'utils/keyMirror'
+
 import origin from '../services/origin'
 
 export const WalletConstants = keyMirror(

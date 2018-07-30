@@ -3,13 +3,14 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 
-import Modal from './modal'
+import { showAlert } from 'actions/Alert'
+import { storeWeb3Account, storeWeb3Intent } from 'actions/App'
+
+import Modal from 'components/modal'
+
+import getCurrentProvider from 'utils/getCurrentProvider'
 
 import origin from '../services/origin'
-import Store from '../Store'
-import { showAlert } from '../actions/Alert'
-import { storeWeb3Account, storeWeb3Intent } from '../actions/App'
-import getCurrentProvider from '../utils/getCurrentProvider'
 
 const web3 = origin.contractService.web3
 const productionHostname = process.env.PRODUCTION_DOMAIN || 'demo.originprotocol.com'
@@ -420,6 +421,7 @@ class Web3Provider extends Component {
 
       // force reload on account change
       prev !== null && window.location.reload()
+      origin.messaging.onAccount(curr)
     }
   }
 

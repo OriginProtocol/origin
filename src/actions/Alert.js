@@ -1,4 +1,4 @@
-import keyMirror from '../utils/keyMirror'
+import keyMirror from 'utils/keyMirror'
 
 export const AlertConstants = keyMirror(
   {

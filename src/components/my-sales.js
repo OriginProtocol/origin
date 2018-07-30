@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 
-import MySaleCard from './my-sale-card'
+import { storeWeb3Intent } from 'actions/App'
 
-import { storeWeb3Intent } from '../actions/App'
+import MySaleCard from 'components/my-sale-card'
+
 import origin from '../services/origin'
 
 class MySales extends Component {

@@ -2,19 +2,21 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
-import { translateSchema } from '../utils/translationUtils'
-import origin from '../services/origin'
-import getCurrentProvider from '../utils/getCurrentProvider'
+import Form from 'react-jsonschema-form'
 
-import { showAlert } from '../actions/Alert'
+import { showAlert } from 'actions/Alert'
 import {
   update as updateTransaction,
   upsert as upsertTransaction,
 } from '../actions/Transaction'
 
-import ListingDetail from './listing-detail'
-import Form from 'react-jsonschema-form'
-import Modal from './modal'
+import ListingDetail from 'components/listing-detail'
+import Modal from 'components/modal'
+
+import getCurrentProvider from 'utils/getCurrentProvider'
+import { translateSchema } from 'utils/translationUtils'
+
+import origin from '../services/origin'
 
 class ListingCreate extends Component {
 

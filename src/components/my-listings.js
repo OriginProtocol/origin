@@ -2,10 +2,11 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 
-import Modal from 'components/modal'
-import MyListingCard from './my-listing-card'
+import { storeWeb3Intent } from 'actions/App'
 
-import { storeWeb3Intent } from '../actions/App'
+import MyListingCard from 'components/my-listing-card'
+import Modal from 'components/modal'
+
 import origin from '../services/origin'
 
 class MyListings extends Component {

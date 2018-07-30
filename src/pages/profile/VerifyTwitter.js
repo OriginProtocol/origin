@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
+
 import Modal from 'components/modal'
 
 import origin from '../../services/origin'
