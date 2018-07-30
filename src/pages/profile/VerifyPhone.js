@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { FormattedMessage } from 'react-intl'
-
-import origin from '../../services/origin'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import Modal from 'components/modal'
 import CountryOptions from './_countryOptions'
+
+import origin from '../../services/origin'
 
 class VerifyPhone extends Component {
   constructor() {
@@ -12,19 +12,70 @@ class VerifyPhone extends Component {
     this.state = {
       mode: 'phone',
       countryCode: 'us',
-      number: '',
-      code: '',
-      prefix: '1'
+      countryCallingCode: '1',
+      phone: '',
+      verificationCode: '',
+      verificationMethod: 'sms'
     }
 
+    this.intlMessages = defineMessages({
+      phoneVerificationCodePlaceholder: {
+        id: 'VerifyPhone.phoneVerificationCodePlaceholder',
+        defaultMessage: 'Verification code',
+      },
+      phoneVerificationNumberPlaceholder: {
+        id: 'VerifyPhone.phoneVerificationNumberPlaceholder',
+        defaultMessage: 'Area code and phone number',
+      },
+    })
+
+    this.handleSubmit = this.handleSubmit.bind(this)
     this.setSelectedCountry = this.setSelectedCountry.bind(this)
+    this.toggleVerificationMethod = this.toggleVerificationMethod.bind(this)
+  }
+
+  async handleSubmit(e) {
+    e.preventDefault()
+
+    const { countryCallingCode, mode, phone, verificationCode, verificationMethod } = this.state
+
+    const phoneObj = {
+      countryCallingCode,
+      phone: String(phone),
+    }
+
+    if (mode === 'phone') {
+      await origin.attestations.phoneGenerateCode({
+        ...phoneObj,
+        method: verificationMethod,
+      })
+      // Update mode to display verification code input form
+      this.setState({ mode: 'code' })
+    } else if (mode === 'code') {
+      const phoneAttestation = await origin.attestations.phoneVerify({
+        ...phoneObj,
+        code: verificationCode,
+      })
+
+      this.props.onSuccess(phoneAttestation)
+    }
   }
 
   setSelectedCountry(country) {
     this.setState({
       countryCode: country.code,
-      prefix: country.prefix
+      countryCallingCode: country.prefix
     })
+  }
+
+  toggleVerificationMethod(event) {
+    // Toggle between SMS and call verification
+    event.preventDefault()
+    if (this.state.verificationMethod === 'sms') {
+      this.setState({ verificationMethod: 'call' })
+    } else if (this.state.verificationMethod === 'call') {
+      this.setState({ verificationMethod: 'sms' })
+    }
   }
 
   render() {
@@ -34,27 +85,13 @@ class VerifyPhone extends Component {
       <Modal
         isOpen={open}
         data-modal="phone"
-        className="identity"
+        className="attestation"
         handleToggle={handleToggle}
       >
         <div className="image-container d-flex align-items-center">
           <img src="images/phone-icon-dark.svg" role="presentation" />
         </div>
-        <form
-          onSubmit={async e => {
-            e.preventDefault()
-            var phone = `+${this.state.prefix}${this.state.number}`
-            if (this.state.mode === 'phone') {
-              await origin.attestations.phoneGenerateCode({ phone })
-              this.setState({ mode: 'code' })
-            } else if (this.state.mode === 'code') {
-              let phoneAttestation = await origin.attestations.phoneVerify({
-                phone, code: this.state.code
-              })
-              this.props.onSuccess(phoneAttestation)
-            }
-          }}
-        >
+        <form onSubmit={this.handleSubmit}>
           <h2>
             <FormattedMessage
               id={ 'VerifyPhone.verifyPhoneHeading' }
@@ -92,11 +129,40 @@ class VerifyPhone extends Component {
     return (
       <div className="form-group">
         <label htmlFor="phoneNumber">
-          <FormattedMessage
-            id={ 'VerifyPhone.enterPhoneNumber' }
-            defaultMessage={ 'Enter your phone number below and {originId} will send you a verification code' }
-            values={{ originId: <span>Origin<sup>ID</sup></span> }}
-          />
+          {this.state.verificationMethod === 'sms' &&
+            <div>
+              <FormattedMessage
+                id={ 'VerifyPhone.enterPhoneNumberSms' }
+                defaultMessage={ 'Enter your phone number below and {originId} will send you a verification code via SMS.' }
+                values={{ originId: <span>Origin<sup>ID</sup></span> }}
+              />
+              <div>
+                <a href="#" onClick={ this.toggleVerificationMethod }>
+                  <FormattedMessage
+                    id={ 'VerifyPhone.callOption' }
+                    defaultMessage={ 'Prefer a call?' }
+                  />
+                </a>
+              </div>
+            </div>
+          }
+          { this.state.verificationMethod === 'call' &&
+            <div>
+              <FormattedMessage
+                id={ 'VerifyPhone.enterPhoneNumberCall' }
+                defaultMessage={ 'Enter your phone number below and {originId} will call you with a verification code.' }
+                values={{ originId: <span>Origin<sup>ID</sup></span> }}
+              />
+              <div>
+                <a href="#" onClick={ this.toggleVerificationMethod }>
+                  <FormattedMessage
+                    id={ 'VerifyPhone.smsOption' }
+                    defaultMessage={ 'Prefer a SMS?' }
+                  />
+                </a>
+              </div>
+            </div>
+          }
         </label>
         <div className="d-flex">
           <div className="country-code dropdown">
@@ -123,11 +189,11 @@ class VerifyPhone extends Component {
             className="form-control"
             id="phoneNumber"
             name="phone-number"
-            value={this.state.number}
+            value={this.state.phone}
             onChange={e => {
-              this.setState({ number: e.target.value })
+              this.setState({ phone: e.target.value })
             }}
-            placeholder="Area code and phone number"
+            placeholder={this.props.intl.formatMessage(this.intlMessages.phoneVerificationNumberPlaceholder)}
             pattern="\d+"
             title="Numbers only"
             required
@@ -156,11 +222,11 @@ class VerifyPhone extends Component {
           className="form-control"
           id="phoneVerificationCode"
           name="phone-verification-code"
-          value={this.state.code}
+          value={this.state.verificationCode}
           onChange={e => {
-            this.setState({ code: e.target.value })
+            this.setState({ verificationCode: e.target.value })
           }}
-          placeholder="Verification code"
+          placeholder={this.props.intl.formatMessage(this.intlMessages.phoneVerificationCodePlaceholder)}
           pattern="[a-zA-Z0-9]{6}"
           title="6-Character Verification Code"
           required
@@ -170,4 +236,4 @@ class VerifyPhone extends Component {
   }
 }
 
-export default VerifyPhone
+export default injectIntl(VerifyPhone)

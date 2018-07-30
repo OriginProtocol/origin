@@ -3,16 +3,22 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
-import { translateSchema } from '../utils/translationUtils'
-import origin from '../services/origin'
-import getCurrentProvider from '../utils/getCurrentProvider'
-
-import { showAlert } from '../actions/Alert'
-
-import ListingDetail from './listing-detail'
 import Form from 'react-jsonschema-form'
-import Modal from './modal'
+
+import { showAlert } from 'actions/Alert'
+import {
+  update as updateTransaction,
+  upsert as upsertTransaction,
+} from '../actions/Transaction'
+
+import ListingDetail from 'components/listing-detail'
+import Modal from 'components/modal'
 import Calendar from './calendar'
+
+import getCurrentProvider from 'utils/getCurrentProvider'
+import { translateSchema } from 'utils/translationUtils'
+
+import origin from '../services/origin'
 
 const generateCalendarSlots = (events) => {
   for (let i = 0, eventsLen = events.length; i < eventsLen; i++) {
@@ -242,10 +248,14 @@ class ListingCreate extends Component {
       } else {
         transactionReceipt = await origin.listings.create(formData, selectedSchemaType)
       }
-      
+
       this.setState({ step: this.STEP.PROCESSING })
-      // Submitted to blockchain, now wait for confirmation
-      await origin.contractService.waitTransactionFinished(transactionReceipt.transactionHash)
+      const { created, transactionReceipt } = await origin.listings.create(formListing.formData, selectedSchemaType, this.props.updateTransaction)
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        created,
+        transactionTypeKey: 'createListing',
+      })
       this.setState({ step: this.STEP.SUCCESS })
     } catch (error) {
       console.error(error)
@@ -586,7 +596,9 @@ class ListingCreate extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  showAlert: (msg) => dispatch(showAlert(msg))
+  showAlert: (msg) => dispatch(showAlert(msg)),
+  updateTransaction: (hash, confirmationCount) => dispatch(updateTransaction(hash, confirmationCount)),
+  upsertTransaction: (transaction) => dispatch(upsertTransaction(transaction)),
 })
 
 export default connect(undefined, mapDispatchToProps)(injectIntl(ListingCreate))

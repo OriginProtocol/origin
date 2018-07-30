@@ -1,28 +1,33 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { IntlProvider } from 'react-intl'
 
-import { setMobile, localizeApp } from 'actions/App'
+import { setMobile, localizeApp, setMessagingEnabled } from 'actions/App'
+import { addMessage } from 'actions/Message'
+import { fetchNotifications } from 'actions/Notification'
 import { fetchProfile } from 'actions/Profile'
 import { init as initWallet } from 'actions/Wallet'
 
 // Components
-import Alert from './alert'
-import ScrollToTop from './scroll-to-top'
-import Layout from './layout'
-import Listings from './listings-grid'
-import ListingCreate from './listing-create'
-import ListingDetail from './listing-detail'
-import MyListings from './my-listings'
-import MyPurchases from './my-purchases'
-import MySales from './my-sales'
-import Notifications from './notifications'
-import Profile from '../pages/profile/Profile'
-import User from '../pages/user/User'
-import PurchaseDetail from './purchase-detail'
-import Web3Provider from './web3-provider'
-import NotFound from './not-found'
+import Alert from 'components/alert'
+import Layout from 'components/layout'
+import ListingCreate from 'components/listing-create'
+import ListingDetail from 'components/listing-detail'
+import Listings from 'components/listings-grid'
+import Messages from 'components/messages'
+import MyListings from 'components/my-listings'
+import MyPurchases from 'components/my-purchases'
+import MySales from 'components/my-sales'
+import NotFound from 'components/not-found'
+import Notifications from 'components/notifications'
+import PurchaseDetail from 'components/purchase-detail'
+import ScrollToTop from 'components/scroll-to-top'
+import Web3Provider from 'components/web3-provider'
+
+import Profile from 'pages/profile/Profile'
+import User from 'pages/user/User'
+
 import 'bootstrap/dist/js/bootstrap'
 
 // CSS
@@ -30,6 +35,10 @@ import 'bootstrap/dist/css/bootstrap.css'
 import '../css/lato-web.css'
 import '../css/poppins.css'
 import '../css/app.css'
+
+import origin from '../services/origin'
+
+const ONE_SECOND = 1000
 
 const HomePage = () => (
   <div className="container">
@@ -58,6 +67,26 @@ class App extends Component {
 
   componentWillMount() {
     this.props.localizeApp()
+
+    // detect existing messaging account
+    origin.messaging.events.on('ready', accountKey => {
+      this.props.setMessagingEnabled(!!accountKey)
+    })
+
+    // detect net decrypted messages
+    origin.messaging.events.on('msg', obj => {
+      this.props.addMessage(obj)
+    })
+
+    // To Do: handle incoming messages when no Origin Messaging Private Key is available
+    origin.messaging.events.on('emsg', obj => {
+      console.error('A message has arrived that could not be decrypted:', obj)
+    })
+
+    // poll for notifications
+    setInterval(() => {
+      this.props.fetchNotifications()
+    }, 10 * ONE_SECOND)
   }
 
   componentDidMount() {
@@ -85,7 +114,7 @@ class App extends Component {
 
   render() {
     return this.props.selectedLanguageAbbrev ? (
-      <IntlProvider locale={this.props.selectedLanguageAbbrev} messages={this.props.messages}>
+      <IntlProvider locale={this.props.selectedLanguageAbbrev} messages={this.props.messages} textComponent={Fragment}>
         <Router>
           <ScrollToTop>
             <Web3Provider>
@@ -106,6 +135,7 @@ class App extends Component {
                   />
                   <Route path="/my-purchases" component={MyPurchases} />
                   <Route path="/my-sales" component={MySales} />
+                  <Route path="/messages/:conversationId?" component={Messages} />
                   <Route path="/notifications" component={Notifications} />
                   <Route path="/profile" component={Profile} />
                   <Route path="/users/:userAddress" component={UserPage} />
@@ -127,8 +157,11 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+  addMessage: (obj) => dispatch(addMessage(obj)),
+  fetchNotifications: () => dispatch(fetchNotifications()),
   fetchProfile: () => dispatch(fetchProfile()),
   initWallet: () => dispatch(initWallet()),
+  setMessagingEnabled: (bool) => dispatch(setMessagingEnabled(bool)),
   setMobile: device => dispatch(setMobile(device)),
   localizeApp: () => dispatch(localizeApp())
 })

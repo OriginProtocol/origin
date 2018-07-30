@@ -25,11 +25,11 @@ class NotificationMessage extends Component {
         id: 'notification.purchaseComplete',
         defaultMessage: 'You have a new review.',
       },
-    });
+    })
   }
 
   render() {
-    const { className, listing, type } = this.props
+    const { className, type } = this.props
     let message
 
     switch(type) {

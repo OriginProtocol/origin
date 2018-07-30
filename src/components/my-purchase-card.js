@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
-import moment from 'moment'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
-import { translateListingCategory } from '../utils/translationUtils'
+import PurchaseProgress from 'components/purchase-progress'
 
-// import PurchaseProgress from './purchase-progress'
+import { translateListingCategory } from 'utils/translationUtils'
+
 import origin from '../services/origin'
 
 class MyPurchaseCard extends Component {
@@ -101,7 +101,7 @@ class MyPurchaseCard extends Component {
         step = 2
         verb = this.props.intl.formatMessage(this.intlMessages.sentBySeller)
         break
-      case 'shipping_pending':
+      case 'in_escrow':
         step = 1
         verb = this.props.intl.formatMessage(this.intlMessages.purchased)
         break
@@ -138,7 +138,8 @@ class MyPurchaseCard extends Component {
               </div>
                 {/* Not Yet Relevant */}
                 {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
-              {/*<PurchaseProgress currentStep={step} perspective="buyer" purchase={this.props.purchase} subdued={true} />*/}
+              </div>
+              <PurchaseProgress currentStep={step} perspective="buyer" purchase={this.props.purchase} subdued={true} />
               <div className="actions d-flex">
                 <div className="links-container">
                   {/*<a onClick={() => alert('To Do')}>Open a Dispute</a>*/}

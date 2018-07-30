@@ -3,15 +3,23 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { FormattedMessage, FormattedDate, defineMessages, injectIntl } from 'react-intl'
 import $ from 'jquery'
-import moment from 'moment'
-import Avatar from './avatar'
-import Review from './review'
-import TransactionEvent from '../pages/purchases/transaction-event'
-import PurchaseProgress from './purchase-progress'
-import UserCard from './user-card'
+
+import {
+  update as updateTransaction,
+  upsert as upsertTransaction,
+} from 'actions/Transaction'
+
+import Avatar from 'components/avatar'
+import Modal from 'components/modal'
+import PurchaseProgress from 'components/purchase-progress'
+import Review from 'components/review'
+import UserCard from 'components/user-card'
+
+import TransactionEvent from 'pages/purchases/transaction-event'
+
+import { translateListingCategory } from 'utils/translationUtils'
 
 import origin from '../services/origin'
-import { translateListingCategory } from '../utils/translationUtils'
 
 const web3 = origin.contractService.web3
 
@@ -23,6 +31,7 @@ const defaultState = {
   },
   listing: {},
   logs: [],
+  processing: false,
   purchase: {},
   reviews: [],
   seller: {}
@@ -97,9 +106,9 @@ class PurchaseDetail extends Component {
         id: 'purchase-detail.sellerReviewPlaceholder',
         defaultMessage: 'Your review should inform others about your experience transacting with this buyer.'
       },
-    });
+    })
 
-    /* Transaction stages: no disputes and no seller review of buyer/transaction
+    /* Transaction stages: no disputes/arbitration
      *  - step 0 was creating the listing
      *  - nextSteps[0] equates to step 1, etc
      *  - even-numbered steps are seller's resposibility
@@ -287,17 +296,28 @@ class PurchaseDetail extends Component {
     const { rating, reviewText } = this.state.form
 
     try {
-      const transaction = await origin.purchases.buyerConfirmReceipt(purchaseAddress, {
+      this.setState({ processing: true })
+
+      const { created, transactionReceipt } = await origin.purchases.buyerConfirmReceipt(purchaseAddress, {
         rating,
         reviewText: reviewText.trim(),
+      }, this.props.updateTransaction)
+
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        created,
+        transactionTypeKey: 'confirmReceipt',
       })
-      await transaction.whenFinished()
+
       // why is this delay often required???
       setTimeout(() => {
+        this.setState({ processing: false })
         this.loadPurchase()
         this.loadReviews(this.state.listing.address)
       }, 1000)
     } catch(error) {
+      this.setState({ processing: false })
+      
       console.error('Error marking purchase received by buyer')
       console.error(error)
     }
@@ -307,13 +327,24 @@ class PurchaseDetail extends Component {
     const { purchaseAddress } = this.props
 
     try {
-      const transaction = await origin.purchases.sellerConfirmShipped(purchaseAddress)
-      await transaction.whenFinished()
+      this.setState({ processing: true })
+
+      const { created, transactionReceipt } = await origin.purchases.sellerConfirmShipped(purchaseAddress, this.props.updateTransaction)
+
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        created,
+        transactionTypeKey: 'confirmShipped',
+      })
+
       // why is this delay often required???
       setTimeout(() => {
+        this.setState({ processing: false })
         this.loadPurchase()
       }, 1000)
     } catch(error) {
+      this.setState({ processing: false })
+      
       console.error('Error marking purchase shipped by seller')
       console.error(error)
     }
@@ -324,16 +355,27 @@ class PurchaseDetail extends Component {
     const { rating, reviewText } = this.state.form
 
     try {
-      const transaction = await origin.purchases.sellerGetPayout(purchaseAddress, {
+      this.setState({ processing: true })
+
+      const { created, transactionReceipt } = await origin.purchases.sellerGetPayout(purchaseAddress, {
         rating,
         reviewText: reviewText.trim(),
+      }, this.props.updateTransaction)
+
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        created,
+        transactionTypeKey: 'getPayout',
       })
-      await transaction.whenFinished()
+
       // why is this delay often required???
       setTimeout(() => {
+        this.setState({ processing: false })
         this.loadPurchase()
       }, 1000)
     } catch(error) {
+      this.setState({ processing: false })
+
       console.error('Error withdrawing funds for seller')
       console.error(error)
     }
@@ -360,7 +402,7 @@ class PurchaseDetail extends Component {
   render() {
     const { web3Account } = this.props
 
-    const { buyer, form, listing, logs, purchase, reviews, seller } = this.state
+    const { buyer, form, listing, logs, processing, purchase, reviews, seller } = this.state
     const translatedListing = translateListingCategory(listing)
     const { rating, reviewText } = form
     const buyersReviews = reviews.filter(r => r.revieweeRole === 'SELLER')
@@ -383,7 +425,7 @@ class PurchaseDetail extends Component {
     const soldAt = purchase.created * 1000 // convert seconds since epoch to ms
 
     // log events
-    const paymentEvent = logs.find(l => l.stage === 'shipping_pending')
+    const paymentEvent = logs.find(l => l.stage === 'in_escrow')
     const paidAt = paymentEvent ? paymentEvent.timestamp * 1000 : null
     const fulfillmentEvent = logs.find(l => l.stage === 'buyer_pending')
     const fulfilledAt = fulfillmentEvent ? fulfillmentEvent.timestamp * 1000 : null
@@ -401,12 +443,12 @@ class PurchaseDetail extends Component {
     let decimal, left, step
 
     if (purchase.stage === 'complete') {
-      step = maxStep
+      step = 4
     } else if (purchase.stage === 'seller_pending') {
       step = 3
     } else if (purchase.stage === 'buyer_pending') {
       step = 2
-    } else if (purchase.stage === 'shipping_pending') {
+    } else if (purchase.stage === 'in_escrow') {
       step = 1
     } else {
       step = 0
@@ -647,7 +689,7 @@ class PurchaseDetail extends Component {
               <hr />
             </div>
             <div className="col-12 col-lg-4">
-              {counterpartyUser.address && <UserCard title={counterparty} userAddress={counterpartyUser.address} />}
+              {counterpartyUser.address && <UserCard title={counterparty} listingAddress={listing.address} purchaseAddress={purchase.address} userAddress={counterpartyUser.address} />}
             </div>
           </div>
           <div className="row">
@@ -749,6 +791,22 @@ class PurchaseDetail extends Component {
             </div>
           </div>
         </div>
+        {processing &&
+          <Modal backdrop="static" isOpen={true}>
+            <div className="image-container">
+              <img src="images/spinner-animation.svg" role="presentation"/>
+            </div>
+            <FormattedMessage
+              id={ 'purchase-detail.processingUpdate' }
+              defaultMessage={ 'Processing your update' }
+            />
+            <br />
+            <FormattedMessage
+              id={ 'purchase-detail.pleaseStandBy' }
+              defaultMessage={ 'Please stand by...' }
+            />
+          </Modal>
+        }
       </div>
     )
   }
@@ -760,4 +818,9 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(injectIntl(PurchaseDetail))
+const mapDispatchToProps = dispatch => ({
+  updateTransaction: (confirmationCount, transactionReceipt) => dispatch(updateTransaction(confirmationCount, transactionReceipt)),
+  upsertTransaction: (transaction) => dispatch(upsertTransaction(transaction)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(PurchaseDetail))

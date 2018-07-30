@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 
-const baseCurrencyCode = 'ETH';
+const baseCurrencyCode = 'ETH'
 
 class ListingCardPrices extends Component {
 
@@ -18,12 +18,13 @@ class ListingCardPrices extends Component {
   }
 
   getPrecision(n) {
-    let asString = n.toString();
-    let scientificMatch = asString.match(/e-(\d+)/);
+    let asString = n.toString()
+    let scientificMatch = asString.match(/e-(\d+)/)
+
     if (scientificMatch && scientificMatch.length > 0) {
-      return scientificMatch[1];
+      return scientificMatch[1]
     } else {
-      return asString.indexOf('.') + 1;
+      return asString.indexOf('.') + 1
     }
   }
 
@@ -35,22 +36,46 @@ class ListingCardPrices extends Component {
     }
   }
 
-  retrieveConversion(currencyCode){
-    let targetCurrencyCode = currencyCode ? currencyCode : this.state.currencyCode
-    let exchangeURL = this.state.exchangeBaseURL;
-    exchangeURL += baseCurrencyCode.toLowerCase();
-    exchangeURL += "-";
-    exchangeURL += this.state.currencyCode.toLowerCase();
+  doFetch(){
+    let exchangeURL = this.state.exchangeBaseURL
+    exchangeURL += baseCurrencyCode.toLowerCase()
+    exchangeURL += '-'
+    exchangeURL += this.state.currencyCode.toLowerCase()
 
     return new Promise((resolve, reject) => {
       fetch(exchangeURL).then(res => res.json()).then(json => {
-        resolve(this.setState({ exchangeRate: json.ticker.price }));
+        let exchangeRateFromAPI = json.ticker.price
+        if (typeof(Storage) !== "undefined") {
+          var object = { value: exchangeRateFromAPI, timestamp: new Date()}
+          localStorage.setItem("origin.exchangeRate", JSON.stringify(object))
+        }
+        resolve(this.setState({ exchangeRate: exchangeRateFromAPI }))
       }).catch(console.error)
-    });
+    })
+  }
+
+  retrieveConversion(){
+    if (typeof(Storage) !== "undefined") {
+      let cachedRate = localStorage.getItem("origin.exchangeRate")
+      if (cachedRate) {
+        let HALF_HOUR = 30 * 60 * 1000
+        let cachedTime = new Date(JSON.parse(cachedRate).timestamp)
+        if ( ((new Date) - cachedTime) < HALF_HOUR) {
+          this.setState({ exchangeRate: JSON.parse(cachedRate).value })
+        } else {
+          localStorage.removeItem("origin.exchangeRate")
+          this.doFetch() // cache is invalid
+        }
+      } else {
+        this.doFetch() // isn't cached to begin with
+      }
+    } else {
+      this.doFetch() // localStorage not available
+    }
   }
 
   formatApproxPrice(){
-    return Number(this.state.price * this.state.exchangeRate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    return Number(this.state.price * this.state.exchangeRate).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
   }
 
   render() {

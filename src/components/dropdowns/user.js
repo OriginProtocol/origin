@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Link } from 'react-router-dom'
-
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import Avatar from 'components/avatar'
 import Identicon from 'components/Identicon'
@@ -78,6 +77,11 @@ class UserDropdown extends Component {
                     {profile.published.twitter &&
                       <Link to="/profile">
                         <img src="images/twitter-icon-verified.svg" alt="Twitter verified icon" />
+                      </Link>
+                    }
+                    {profile.published.airbnb &&
+                      <Link to="/profile">
+                        <img src="images/airbnb-icon-verified.svg" alt="Airbnb verified icon" />
                       </Link>
                     }
                   </div>

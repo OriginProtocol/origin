@@ -2,14 +2,22 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
+import moment from 'moment'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
+
 import { fetchUser } from 'actions/User'
-import Timelapse from './timelapse'
-import PurchaseProgress from './purchase-progress'
+
+import PurchaseProgress from 'components/purchase-progress'
 
 class MySaleCard extends Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      soldAtTime: null
+    }
+
+    this.setSoldAtTime = this.setSoldAtTime.bind(this)
 
     this.intlMessages = defineMessages({
       ETH: {
@@ -20,7 +28,7 @@ class MySaleCard extends Component {
         id: 'my-sale-card.unnamedUser',
         defaultMessage: 'Unnamed User'
       }
-    });
+    })
   }
 
   componentWillMount() {
@@ -29,6 +37,12 @@ class MySaleCard extends Component {
 
   componentDidMount() {
     $('[data-toggle="tooltip"]').tooltip()
+  }
+
+  setSoldAtTime(soldAt) {
+    this.setState({
+      soldAtTime: moment(soldAt).fromNow()
+    })
   }
 
   render() {
@@ -53,7 +67,7 @@ class MySaleCard extends Component {
       step = 3
     } else if (purchase.stage === 'buyer_pending') {
       step = 2
-    } else if (purchase.stage === 'shipping_pending') {
+    } else if (purchase.stage === 'in_escrow') {
       step = 1
     } else {
       step = 0
@@ -86,7 +100,7 @@ class MySaleCard extends Component {
               </div>
             </div>
             <div className="timestamp-container order-2 text-muted text-right">
-              <p className="timestamp"><Timelapse reactive={false} reference={soldAt} /></p>
+              <p className="timestamp">{ this.state.soldAtTime || this.setSoldAtTime(soldAt) }</p>
             </div>
             <div className="aspect-ratio order-1 order-lg-3">
               <div className={`${photo ? '' : 'placeholder '}image-container d-flex justify-content-center`}>
@@ -94,7 +108,7 @@ class MySaleCard extends Component {
               </div>
             </div>
           </div>
-          <PurchaseProgress currentStep={step} purchase={purchase} perspective="seller" subdued="true" />
+          <PurchaseProgress currentStep={step} purchase={purchase} perspective="seller" subdued={true} />
           <div className="d-flex justify-content-between actions">
             {step === 1 && 
               <p>
@@ -153,7 +167,7 @@ const mapStateToProps = (state, { purchase }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: address => dispatch(fetchUser(address))
+  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(MySaleCard))

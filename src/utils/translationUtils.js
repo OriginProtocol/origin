@@ -1,21 +1,40 @@
 import { addLocaleData, IntlProvider } from 'react-intl'
 import translations from '../../translations/translated-messages.json'
 import ar from 'react-intl/locale-data/ar'
+import bn from 'react-intl/locale-data/bn'
+import bs from 'react-intl/locale-data/bs'
+import cs from 'react-intl/locale-data/cs'
+import da from 'react-intl/locale-data/da'
 import de from 'react-intl/locale-data/de'
 import el from 'react-intl/locale-data/el'
 import en from 'react-intl/locale-data/en'
+import eo from 'react-intl/locale-data/eo'
 import es from 'react-intl/locale-data/es'
 import fr from 'react-intl/locale-data/fr'
+import fil from 'react-intl/locale-data/fil'
 import he from 'react-intl/locale-data/he'
 import hr from 'react-intl/locale-data/hr'
+import id from 'react-intl/locale-data/id'
 import it from 'react-intl/locale-data/it'
 import ja from 'react-intl/locale-data/ja'
 import ko from 'react-intl/locale-data/ko'
+import lo from 'react-intl/locale-data/lo'
+import ms from 'react-intl/locale-data/ms'
 import nl from 'react-intl/locale-data/nl'
 import pt from 'react-intl/locale-data/pt'
+import pl from 'react-intl/locale-data/pl'
+import ro from 'react-intl/locale-data/ro'
 import ru from 'react-intl/locale-data/ru'
+import si from 'react-intl/locale-data/si'
+import sr from 'react-intl/locale-data/sr'
+import sk from 'react-intl/locale-data/sk'
+import te from 'react-intl/locale-data/te'
 import th from 'react-intl/locale-data/th'
 import tr from 'react-intl/locale-data/tr'
+import ug from 'react-intl/locale-data/ug'
+import uk from 'react-intl/locale-data/uk'
+import ur from 'react-intl/locale-data/ur'
+import vi from 'react-intl/locale-data/vi'
 import zh from 'react-intl/locale-data/zh'
 import schemaMessages from '../schemaMessages/index'
 import languageNames from './languageNames.json'
@@ -30,61 +49,118 @@ export function addLocales() {
     require.ensure([
       'intl',
       'intl/locale-data/jsonp/ar.js',
+      'intl/locale-data/jsonp/bn.js',
+      'intl/locale-data/jsonp/bs.js',
+      'intl/locale-data/jsonp/cs.js',
+      'intl/locale-data/jsonp/da.js',
       'intl/locale-data/jsonp/de.js',
       'intl/locale-data/jsonp/el.js',
       'intl/locale-data/jsonp/en.js',
+      'intl/locale-data/jsonp/eo.js',
       'intl/locale-data/jsonp/es.js',
+      'intl/locale-data/jsonp/fil.js',
       'intl/locale-data/jsonp/fr.js',
       'intl/locale-data/jsonp/he.js',
       'intl/locale-data/jsonp/hr.js',
+      'intl/locale-data/jsonp/id.js',
       'intl/locale-data/jsonp/it.js',
+      'intl/locale-data/jsonp/lo.js',
       'intl/locale-data/jsonp/ja.js',
       'intl/locale-data/jsonp/ko.js',
+      'intl/locale-data/jsonp/ms.js',
       'intl/locale-data/jsonp/nl.js',
+      'intl/locale-data/jsonp/pl.js',
       'intl/locale-data/jsonp/pt.js',
+      'intl/locale-data/jsonp/ro.js',
       'intl/locale-data/jsonp/ru.js',
+      'intl/locale-data/jsonp/si.js',
+      'intl/locale-data/jsonp/sr.js',
+      'intl/locale-data/jsonp/sk.js',
+      'intl/locale-data/jsonp/te.js',
       'intl/locale-data/jsonp/th.js',
       'intl/locale-data/jsonp/tr.js',
+      'intl/locale-data/jsonp/ug.js',
+      'intl/locale-data/jsonp/uk.js',
+      'intl/locale-data/jsonp/ur.js',
+      'intl/locale-data/jsonp/vi.js',
       'intl/locale-data/jsonp/zh.js'
     ], (require) => {
       require('intl')
       require('intl/locale-data/jsonp/ar.js')
+      require('intl/locale-data/jsonp/bn.js')
+      require('intl/locale-data/jsonp/bs.js')
+      require('intl/locale-data/jsonp/cs.js')
+      require('intl/locale-data/jsonp/da.js')
       require('intl/locale-data/jsonp/de.js')
       require('intl/locale-data/jsonp/el.js')
       require('intl/locale-data/jsonp/en.js')
+      require('intl/locale-data/jsonp/eo.js')
       require('intl/locale-data/jsonp/es.js')
+      require('intl/locale-data/jsonp/fil.js')
       require('intl/locale-data/jsonp/fr.js')
       require('intl/locale-data/jsonp/he.js')
       require('intl/locale-data/jsonp/hr.js')
+      require('intl/locale-data/jsonp/id.js')
       require('intl/locale-data/jsonp/it.js')
+      require('intl/locale-data/jsonp/lo.js')
       require('intl/locale-data/jsonp/ja.js')
       require('intl/locale-data/jsonp/ko.js')
+      require('intl/locale-data/jsonp/ms.js')
       require('intl/locale-data/jsonp/nl.js')
+      require('intl/locale-data/jsonp/pl.js')
       require('intl/locale-data/jsonp/pt.js')
+      require('intl/locale-data/jsonp/ro.js')
       require('intl/locale-data/jsonp/ru.js')
+      require('intl/locale-data/jsonp/si.js')
+      require('intl/locale-data/jsonp/sr.js')
+      require('intl/locale-data/jsonp/sk.js')
+      require('intl/locale-data/jsonp/te.js')
       require('intl/locale-data/jsonp/th.js')
       require('intl/locale-data/jsonp/tr.js')
+      require('intl/locale-data/jsonp/ug.js')
+      require('intl/locale-data/jsonp/uk.js')
+      require('intl/locale-data/jsonp/ur.js')
+      require('intl/locale-data/jsonp/vi.js')
       require('intl/locale-data/jsonp/zh.js')
     })
   }
 
   addLocaleData([
     ...ar,
+    ...bn,
+    ...bs,
+    ...cs,
+    ...da,
     ...de,
     ...el,
     ...en,
+    ...eo,
     ...es,
+    ...fil,
     ...fr,
     ...he,
     ...hr,
+    ...id,
     ...it,
+    ...lo,
     ...ja,
     ...ko,
+    ...ms,
     ...nl,
+    ...pl,
     ...pt,
+    ...ro,
     ...ru,
+    ...si,
+    ...sr,
+    ...sk,
+    ...te,
     ...th,
     ...tr,
+    ...ug,
+    ...uk,
+    ...ur,
+    ...vi,
     ...zh])
 }
 
@@ -95,7 +171,7 @@ export function getLangFullName(langAbbrev) {
 
 export function getAvailableLanguages() {
   if (!translations || typeof translations !== 'object') {
-    return [];
+    return []
   }
 
   const availableLangs = []

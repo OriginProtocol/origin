@@ -4,22 +4,38 @@
 
 | Code | Language | Status |
 | ---- | -------- | ------ |
-| ar | Arabic |  |
-| de | German |  |
-| el | Greek  |  |
-| es | Spanish |  |
+| ar |  Arabic |   |
+| bn | Bengali |   |
+| bs | Bosnian |   |
+| cs | Czech |   |
+| de | German  |   |
+| el | Greek |   |
+| es | Spanish |   |
 | fr | French |   |
-| he | Hebrew | |
-| hr | Croatian |  |
+| fil | Filipino |   |
+| he | Hebrew |   |
+| hr | Croatian |   |
 | it | Italian |   |
-| ja | Japanese |  |
+| ja | Japanese |   |
 | ko | Korean |   |
-| nl | Dutch |  |
-| pt | Portugese |  |
-| ru | Russian |  |
-| th | Thai |  |
-| zh_Hans | Chinese (Simplified) |  |
-| zh_Hant | Chinese (Traditional) |  ||
+| lo | Lao |   |
+| ms | Malay |   |
+| nl | Dutch |   |
+| pt | Portugese |   |
+| pl | Polish |   |
+| ro | Romanian |   |
+| ru | Russian |   |
+| si | Sinhala |   |
+| sr | Serbian |   |
+| sk | Slovak |   |
+| te | Telugu |   |
+| th | Thai |   |
+| tr | Turkish |   |
+| ug | Uighur |   |
+| uk | Ukrainian |   |
+| ur | Urdu |   |
+| vi | Vietnamese |   |
+| zh | Chinese |   |
 
 ## Implementation
 

@@ -1,7 +1,7 @@
 [
   {
     "id": "_countryOptions.unitedStates",
-    "defaultMessage": "China"
+    "defaultMessage": "United States"
   },
   {
     "id": "_countryOptions.china",
@@ -38,5 +38,9 @@
   {
     "id": "_countryOptions.southKorea",
     "defaultMessage": "South Korea"
+  },
+  {
+    "id": "_countryOptions.newZealand",
+    "defaultMessage": "New Zealand"
   }
 ]

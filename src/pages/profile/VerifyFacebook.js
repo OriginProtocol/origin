@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
+
 import Modal from 'components/modal'
 
 import origin from '../../services/origin'
@@ -23,7 +24,7 @@ class VerifyFacebook extends Component {
       <Modal
         isOpen={this.props.open}
         data-modal="facebook"
-        className="identity"
+        className="attestation"
         handleToggle={this.props.handleToggle}
       >
         <div className="image-container d-flex align-items-center">

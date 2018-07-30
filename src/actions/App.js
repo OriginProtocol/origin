@@ -1,15 +1,25 @@
+import moment from 'moment'
 import store from 'store'
-import keyMirror from '../utils/keyMirror'
-import translations from '../../translations/translated-messages.json'
-import { 
+
+import { showAlert } from 'actions/Alert'
+
+import keyMirror from 'utils/keyMirror'
+import {
   addLocales,
   getLangFullName,
   getAvailableLanguages,
   setGlobalIntlProvider
-} from '../utils/translationUtils'
+} from 'utils/translationUtils'
+
+import origin from '../services/origin'
+
+import translations from '../../translations/translated-messages.json'
 
 export const AppConstants = keyMirror(
   {
+    MESSAGING_DISMISSED: null,
+    MESSAGING_ENABLED: null,
+    NOTIFICATIONS_DISMISSED: null,
     ON_MOBILE: null,
     WEB3_ACCOUNT: null,
     WEB3_INTENT: null,
@@ -17,6 +27,37 @@ export const AppConstants = keyMirror(
   },
   'APP'
 )
+
+export function dismissMessaging() {
+  return {
+    type: AppConstants.MESSAGING_DISMISSED,
+    closedAt: new Date(),
+  }
+}
+
+export function dismissNotifications(ids) {
+  return {
+    type: AppConstants.NOTIFICATIONS_DISMISSED,
+    ids,
+  }
+}
+
+export function enableMessaging() {
+  return function(dispatch) {
+    try {
+      origin.messaging.startConversing()
+    } catch (error) {
+      dispatch(showAlert(error.message))
+    }
+  }
+}
+
+export function setMessagingEnabled(messagingEnabled) {
+  return {
+    type: AppConstants.MESSAGING_ENABLED,
+    messagingEnabled
+  }
+}
 
 export function setMobile(device) {
   return { type: AppConstants.ON_MOBILE, device }
@@ -31,8 +72,8 @@ export function storeWeb3Intent(intent) {
 }
 
 export function localizeApp() {
-  let messages;
-  let selectedLanguageAbbrev;
+  let messages
+  let selectedLanguageAbbrev
 
   // Add locale data to react-intl
   addLocales()
@@ -67,6 +108,12 @@ export function localizeApp() {
   }
 
   setGlobalIntlProvider(selectedLanguageAbbrev, messages)
+
+  // Set locale for moment.js
+  if (selectedLanguageAbbrev !== 'en') {
+    const momentLocale = selectedLanguageAbbrev === 'zh' ? 'zh-cn' : selectedLanguageAbbrev
+    moment.locale(momentLocale)
+  }
 
   return { 
     type: AppConstants.TRANSLATIONS,

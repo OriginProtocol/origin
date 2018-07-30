@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
+import moment from 'moment'
 import $ from 'jquery'
 
 import { storeWeb3Intent } from 'actions/App'
@@ -14,7 +15,6 @@ import { getBalance } from 'actions/Wallet'
 
 import Avatar from 'components/avatar'
 import Modal from 'components/modal'
-import Timelapse from 'components/timelapse'
 
 import Services from './_Services'
 import Wallet from './_Wallet'
@@ -26,11 +26,13 @@ import VerifyPhone from './VerifyPhone'
 import VerifyEmail from './VerifyEmail'
 import VerifyFacebook from './VerifyFacebook'
 import VerifyTwitter from './VerifyTwitter'
+import VerifyAirbnb from './VerifyAirbnb'
 import ConfirmPublish from './ConfirmPublish'
 import ConfirmUnload from './ConfirmUnload'
 import AttestationSuccess from './AttestationSuccess'
 
-import getCurrentProvider from '../../utils/getCurrentProvider'
+import getCurrentProvider from 'utils/getCurrentProvider'
+
 import origin from '../../services/origin'
 
 class Profile extends Component {
@@ -40,6 +42,9 @@ class Profile extends Component {
     this.handleToggle = this.handleToggle.bind(this)
     this.handleUnload = this.handleUnload.bind(this)
     this.setProgress = this.setProgress.bind(this)
+    this.setLastPublishTime = this.setLastPublishTime.bind(this)
+    this.startLastPublishTimeInterval = this.startLastPublishTimeInterval.bind(this)
+    this.profileDeploymentComplete = this.profileDeploymentComplete.bind(this)
     /*
       Three-ish Profile States
 
@@ -55,12 +60,14 @@ class Profile extends Component {
       lastPublish: null,
       address: props.address,
       userForm: { firstName, lastName, description },
+      lastPublishTime: null,
       modalsOpen: {
         attestationSuccess: false,
         email: false,
         facebook: false,
         phone: false,
         profile: false,
+        airbnb: false,
         publish: false,
         twitter: false,
         unload: false,
@@ -103,8 +110,12 @@ class Profile extends Component {
       twitterVerified: {
         id: 'Profile.twitterVerified',
         defaultMessage: 'Twitter account verified!'
+      },
+      airbnbVerified: {
+        id: 'Profile.airbnbVerified',
+        defaultMessage: 'Airbnb account verified!'
       }
-    });
+    })
   }
 
   componentDidMount() {
@@ -196,10 +207,30 @@ class Profile extends Component {
     this.setState({ progress })
   }
 
+  setLastPublishTime() {
+    this.setState({
+      lastPublishTime: moment(this.props.lastPublish).fromNow()
+    })
+  }
+
+  startLastPublishTimeInterval() {
+    this.createdAtInterval = setInterval(() => {
+      this.setLastPublishTime()
+    }, 60000)
+  }
+
+  profileDeploymentComplete() {
+    this.props.deployProfileReset()
+    this.setLastPublishTime()
+    this.startLastPublishTimeInterval()
+  }
+
   componentWillUnmount() {
     $('.profile-wrapper [data-toggle="tooltip"]').tooltip('dispose')
 
     window.removeEventListener('beforeunload', this.handleUnload)
+
+    clearInterval(this.createdAtInterval)
   }
 
   render() {
@@ -318,7 +349,7 @@ class Profile extends Component {
                           defaultMessage={ 'Last published' }
                         />
                         {' '}
-                        <Timelapse reactive={true} reference={lastPublish} />
+                        { this.state.lastPublishTime }
                       </span>
                     )}
                   </div>
@@ -394,6 +425,20 @@ class Profile extends Component {
             this.setState({
               successMessage: this.props.intl.formatMessage(this.intlMessages.twitterVerified),
               modalsOpen: { ...modalsOpen, twitter: false, attestationSuccess: true }
+            })
+          }}
+        />
+
+        <VerifyAirbnb
+          open={modalsOpen.airbnb}
+          handleToggle={this.handleToggle}
+          intl={this.props.intl}
+          web3Account = {this.props.web3Account}
+          onSuccess={data => {
+            this.props.addAttestation(data)
+            this.setState({
+              successMessage: this.props.intl.formatMessage(this.intlMessages.airbnbVerified),
+              modalsOpen: { ...modalsOpen, airbnb: false, attestationSuccess: true }
             })
           }}
         />
@@ -493,7 +538,7 @@ class Profile extends Component {
             <div className="button-container">
               <button
                 className="btn btn-clear"
-                onClick={this.props.deployProfileReset}
+                onClick={this.profileDeploymentComplete}
               >
                 <FormattedMessage
                   id={ 'Profile.ok' }
@@ -521,7 +566,7 @@ class Profile extends Component {
             <div className="button-container">
               <button
                 className="btn btn-clear"
-                onClick={this.props.deployProfileReset}
+                onClick={this.profileDeploymentComplete}
               >
                 <FormattedMessage
                   id={ 'Profile.continue' }

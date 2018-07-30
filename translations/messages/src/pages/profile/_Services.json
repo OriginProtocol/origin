@@ -16,12 +16,8 @@
     "defaultMessage": "Email"
   },
   {
-    "id": "_Services.comingSoon",
-    "defaultMessage": "Coming {br} Soon"
-  },
-  {
-    "id": "_Services.address",
-    "defaultMessage": "Address"
+    "id": "_Services.airbnb",
+    "defaultMessage": "Airbnb"
   },
   {
     "id": "_Services.facebook",
@@ -30,6 +26,10 @@
   {
     "id": "_Services.twitter",
     "defaultMessage": "Twitter"
+  },
+  {
+    "id": "_Services.comingSoon",
+    "defaultMessage": "Coming {br} Soon"
   },
   {
     "id": "_Services.google",
