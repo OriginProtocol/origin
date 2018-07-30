@@ -56,7 +56,6 @@ class ListingsDetail extends Component {
 
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
     this.reserveSlots = this.reserveSlots.bind(this)
-    this.getCalendarStep = this.getCalendarStep.bind(this)
   }
 
   async componentWillMount() {
@@ -170,11 +169,6 @@ class ListingsDetail extends Component {
         this.setState({step: this.STEP.ERROR})
       }
     }
-  }
-
-  getCalendarStep() {
-    const stepValue = this.state.calendarStep && this.state.calendarStep.slice(-2)
-    return parseInt(stepValue || 60)
   }
 
   render() {
@@ -441,7 +435,7 @@ class ListingsDetail extends Component {
                   userType="buyer"
                   viewType={ this.state.schemaType === 'housing' ? 'daily' : 'hourly' }
                   onComplete={ this.reserveSlots }
-                  step={ this.getCalendarStep() }
+                  step={ 60 }
                 />
               </div>
             }

@@ -115,7 +115,6 @@ class ListingCreate extends Component {
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
     this.onAvailabilityEntered = this.onAvailabilityEntered.bind(this)
     this.onGoBack = this.onGoBack.bind(this)
-    this.getCalendarStep = this.getCalendarStep.bind(this)
   }
 
   async componentDidMount() {
@@ -256,11 +255,6 @@ class ListingCreate extends Component {
 
   resetToPreview() {
     this.setState({ step: this.STEP.PREVIEW })
-  }
-
-  getCalendarStep() {
-    const stepValue = this.state.formData.calendarStep && this.state.formData.calendarStep.slice(-2)
-    return parseInt(stepValue || 60)
   }
 
   render() {
@@ -422,7 +416,7 @@ class ListingCreate extends Component {
               slots={ this.state.formData && this.state.formData.slots }
               userType="seller"
               viewType={ this.state.fractionalTimeIncrement }
-              step={ this.getCalendarStep() }
+              step={ 60 }
               onComplete={ this.onAvailabilityEntered }
               onGoBack={ this.onGoBack }
             />

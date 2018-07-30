@@ -13,10 +13,6 @@ export default defineMessages({
     id: 'schema.services.category',
     defaultMessage: 'Category'
   },
-  'schema.services.calendarStep': {
-    id: 'schema.services.calendarStep',
-    defaultMessage: 'Time Increment'
-  },
   'schema.services.description': {
     id: 'schema.services.description',
     defaultMessage: 'Description'

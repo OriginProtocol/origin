@@ -12,10 +12,6 @@
     "defaultMessage": "Category"
   },
   {
-    "id": "schema.services.calendarStep",
-    "defaultMessage": "Time Increment"
-  },
-  {
     "id": "schema.services.description",
     "defaultMessage": "Description"
   },
