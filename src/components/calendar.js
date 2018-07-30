@@ -518,7 +518,6 @@ class Calendar extends Component {
                           }
                           return toReturn
                         })
-    console.log('=================== cleanEvents: ', cleanEvents)
     this.props.onComplete && this.props.onComplete(cleanEvents)
   }
 
@@ -546,7 +545,8 @@ class Calendar extends Component {
 
   unselectSlots() {
     this.setState({
-      selectedEvent: {}
+      selectedEvent: {},
+      buyerSelectedSlotData: null
     })
   }
 
