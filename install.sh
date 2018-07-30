@@ -30,8 +30,8 @@ function print_bye() {
   echo
   echo -e " Origin-js blockchain is running at \033[94mhttp://localhost:8545\033[0m"
   echo -e " Origin-js tests are running at \033[94mhttp://localhost:8081\033[0m"
-  echo -e " Origin-bridge is running at \033[94mhttp://localhost:3000\033[0m"
-  echo -e " Origin-dapp is running at \033[94mhttp://localhost:5000\033[0m"
+  echo -e " Origin-bridge is running at \033[94mhttp://localhost:5000\033[0m"
+  echo -e " Origin-dapp is running at \033[94mhttp://localhost:3000\033[0m"
   echo -e " For more help \033[97mdocker-compose -h\033[0m"
   echo -e " To follow the logs run \033[97mdocker-compose logs -f\033[0m"
   echo

@@ -60,9 +60,13 @@ Packages are installed during the Docker build process. If you modify the packag
 
 E.g. to rebuild the origin-js container:
 
-	docker-compose build origin-js --no-cache
+	docker-compose build --no-cache origin-js
 
 ## Handy commands
+
+Spawn a shell in a container:
+
+	docker exec -ti <container_name> /bin/bash
 
 Connect to the origin_bridge postgresql database:
 
