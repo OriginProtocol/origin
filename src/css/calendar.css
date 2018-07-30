@@ -23,11 +23,32 @@
 }
 
 .rbc-event,
+.rbc-event-content {
+  border: none !important;
+  padding: 0;
+}
+
+.rbc-event,
 .rbc-event-content,
 .calendar-event {
   background-color: var(--dusk) !important;
   border: 1px solid var(--dusk) !important;
+  border-radius: 0;
+}
+
+.calendar-event {
   font-size: 12px;
+  padding: 0 5px;
+}
+
+.calendar-event.recurring {
+  background-color: var(--dusk) !important;
+  border: 1px solid var(--dusk) !important;
+}
+
+.calendar-event.non-recurring {
+  background-color: var(--dark-grey) !important;
+  border: 1px solid var(--dark-grey) !important;
 }
 
 .calendar-container.daily-view .calendar-event {
@@ -35,8 +56,6 @@
   font-weight: bold;
 }
 
-.rbc-event.rbc-selected,
-.rbc-event.rbc-selected .rbc-event-content,
 .rbc-event.rbc-selected .calendar-event {
   background-color: var(--dark-grey) !important;
   border: 1px solid var(--dark-grey) !important;

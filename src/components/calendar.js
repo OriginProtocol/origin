@@ -30,9 +30,9 @@ class Calendar extends Component {
     this.slotPropGetter = this.slotPropGetter.bind(this)
     this.eventComponent = this.eventComponent.bind(this)
     this.checkSlotsForExistingEvent = this.checkSlotsForExistingEvent.bind(this)
-    this.onNavigate = this.onNavigate.bind(this)
     this.renderHourlyPrices = this.renderHourlyPrices.bind(this)
     this.getDateDropdownOptions = this.getDateDropdownOptions.bind(this)
+    this.renderRecurringEvents = this.renderRecurringEvents.bind(this)
 
     this.state = {
       events: [],
@@ -43,7 +43,8 @@ class Calendar extends Component {
       },
       buyerSelectedSlotData: null,
       defaultDate: new Date(),
-      showSellerActionBtns: false
+      showSellerActionBtns: false,
+      hideRecurringEventCheckbox: false
     }
   }
 
@@ -133,13 +134,19 @@ class Calendar extends Component {
       // if slot doesn't already contain an event, create an event
       const existingEventInSlot = this.checkSlotsForExistingEvent(slotInfo)
 
+      if (existingEventInSlot.length > 1) {
+        return this.setState({ showOverlappingEventsErrorMsg: true })
+      } else {
+        this.setState({ showOverlappingEventsErrorMsg: false })
+      }
+
       let newEvent
-      if (!existingEventInSlot.length) {
+      if (!existingEventInSlot.length || 
+          (existingEventInSlot.length === 1 && existingEventInSlot[0].isClonedRecurringEvent)) {
 
         const endDate = this.props.viewType === 'daily' ?
                         moment(slotInfo.end).add(1, 'day').subtract(1, 'second').toDate() :
                         slotInfo.end
-
         newEvent = {
           ...slotInfo,
           id: uuid(),
@@ -155,8 +162,8 @@ class Calendar extends Component {
         })
       }
 
+      // For handling changes in date dropdowns
       let updatedExistingEvent
-
       if (shouldOverrideExistingEvent && existingEventInSlot.length === 1) {
         updatedExistingEvent = existingEventInSlot[0] && {
           ...existingEventInSlot[0],
@@ -164,12 +171,6 @@ class Calendar extends Component {
           end: slotInfo.end,
           slots: slotInfo.slots
         }
-      }
-
-      if (existingEventInSlot.length > 1) {
-        this.setState({ showOverlappingEventsErrorMsg: true })
-      } else {
-        this.setState({ showOverlappingEventsErrorMsg: false })
       }
 
       if (updatedExistingEvent || newEvent) {
@@ -228,10 +229,23 @@ class Calendar extends Component {
       isRecurringEvent: selectedEvent.isRecurringEvent || false
     }
 
-    this.setState({
+    const stateToSet = {
       selectedEvent: event,
       showOverlappingEventsErrorMsg: false
-    })
+    }
+
+    const existingEventInSlot = this.checkSlotsForExistingEvent(selectedEvent)
+    if (existingEventInSlot.length && existingEventInSlot.length > 1) {
+      if (!selectedEvent.isRecurringEvent) {
+        stateToSet.hideRecurringEventCheckbox = true
+      } else {
+        stateToSet.hideRecurringEventCheckbox = false
+      }
+    } else {
+      stateToSet.hideRecurringEventCheckbox = false
+    }
+
+    this.setState(stateToSet)
 
     if (shouldSaveEvent) {
       this.saveEvent(event)
@@ -259,7 +273,7 @@ class Calendar extends Component {
 
     // wait for state to update, then render recurring events on monthly calendar if recurring events checkbox is checked
     setTimeout(() => {
-      this.onNavigate(this.state.defaultDate)
+      this.renderRecurringEvents(this.state.defaultDate)
     })
   }
 
@@ -291,7 +305,7 @@ class Calendar extends Component {
       })
 
       setTimeout(() => {
-        this.onNavigate(this.state.defaultDate)
+        this.renderRecurringEvents(this.state.defaultDate)
       })
     }
   }
@@ -374,12 +388,14 @@ class Calendar extends Component {
 
   eventComponent(data) {
     const { event } = data
-    const { isAvailable, price } = event
+    const { isAvailable, price, isRecurringEvent } = event
     const stepAbbrev = this.props.step === 60 ? 'hr' : `${this.props.step} min.`
     const perTimePeriod = this.props.viewType === 'hourly' ? ` /${stepAbbrev}` : ''
+    const availClass = isAvailable !== false ? 'available' : 'unavailable'
+    const recurringClass = isRecurringEvent ? 'recurring' : 'non-recurring'
 
     return (
-      <div className={ `calendar-event ${isAvailable !== false ? 'available' : 'unavailable'}` }>
+      <div className={ `calendar-event ${availClass} ${recurringClass}` }>
         {isAvailable !== false &&
           <span>{ price ? `${price} ETH${perTimePeriod}` : '0 ETH' }</span>
         }
@@ -403,7 +419,8 @@ class Calendar extends Component {
   }
 
   getDateAvailabilityAndPrice(date) {
-    const events = this.state.events
+    const { events } = this.state
+    const eventsInSlot = []
     let toReturn = {
       isAvailable: false,
       price: 0
@@ -417,13 +434,20 @@ class Calendar extends Component {
               moment(date).isBetween(moment(event.start).subtract(1, 'second'), moment(event.end).add(1, 'second')) &&
               !moment(date).isBefore(moment())
             ) {
-          toReturn = {
-            isAvailable: !this.isDateBooked(date),
-            price: event.price,
-            start: event.start,
-            end: event.end
-          }
+
+          event.isAvailable = !this.isDateBooked(date)
+          eventsInSlot.push(event)
         }
+      }
+    }
+
+    if (eventsInSlot.length) {
+      const nonRecurringEvents = eventsInSlot.filter((event) => !event.isRecurringEvent)
+
+      if (nonRecurringEvents.length) {
+        toReturn = nonRecurringEvents[0]
+      } else {
+        toReturn = eventsInSlot[0]
       }
     }
 
@@ -523,7 +547,7 @@ class Calendar extends Component {
   buyerPrevMonth() {
     const date = moment(this.state.defaultDate).subtract(1, this.setViewType()).toDate()
 
-    this.onNavigate(date)
+    this.renderRecurringEvents(date)
 
     this.setState({
       defaultDate: date
@@ -533,14 +557,14 @@ class Calendar extends Component {
   buyerNextMonth() {
     const date = moment(this.state.defaultDate).add(1, this.setViewType()).toDate()
 
-    this.onNavigate(date)
+    this.renderRecurringEvents(date)
 
     this.setState({
       defaultDate: date
     })
   }
 
-  onNavigate(date) {
+  renderRecurringEvents(date) {
     const dateMoment = moment(date)
     const isDaily = this.props.viewType === 'daily'
     const firstVisibleDate = isDaily ?
@@ -564,7 +588,11 @@ class Calendar extends Component {
       }
 
       // remove the last slot to prevent blocking the slot after the event
-      return slots.pop()
+      if (!isDaily) {
+        slots.pop()
+      }
+
+      return slots
     }
 
     // render recurring events on the currently visible day they recur on
@@ -662,7 +690,7 @@ class Calendar extends Component {
               step={ this.props.step || 60 }
               timeslots={ 1 }
               date={ this.state.defaultDate }
-              onNavigate={ this.onNavigate }
+              onNavigate={ this.renderRecurringEvents }
               slotPropGetter={ this.slotPropGetter }
               scrollToTime={ moment(this.state.defaultDate).hour(8).toDate() }
             />
@@ -676,7 +704,7 @@ class Calendar extends Component {
           </div>
           <div className="col-md-4">
             {this.state.showOverlappingEventsErrorMsg &&
-              <p className="calendar-error-msg">Only one price can be set for each time slot.</p>
+              <p className="calendar-error-msg">Only one recurring price and one non-recurring price can be set for each time slot.</p>
             }
             {selectedEvent && selectedEvent.start && !this.state.showOverlappingEventsErrorMsg &&
               <div className="calendar-cta">
@@ -730,17 +758,19 @@ class Calendar extends Component {
                 </div>
                 {userType === 'seller' &&
                   <Fragment>
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        id="isRecurringEvent"
-                        checked={ selectedEvent.isRecurringEvent }
-                        onChange={ this.onIsRecurringEventChange } />
-                      <label className="form-check-label" htmlFor="isRecurringEvent">
-                        This is a repeating event
-                      </label>
-                    </div>
+                    {!this.state.hideRecurringEventCheckbox &&
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="isRecurringEvent"
+                          checked={ selectedEvent.isRecurringEvent }
+                          onChange={ this.onIsRecurringEventChange } />
+                        <label className="form-check-label" htmlFor="isRecurringEvent">
+                          This is a repeating event
+                        </label>
+                      </div>
+                    }
                     <div>
                       <p className="font-weight-bold">Availability</p>
                       <div>
