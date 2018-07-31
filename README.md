@@ -99,6 +99,33 @@ This is the default seed phrase used by [Truffle](https://github.com/trufflesuit
 
 - You should see your first test account now has 100 ETH and the address `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`. Additional generated accounts will also have this amount.
 
+## Browser & Wallet Compatibility 
+Browsers with wallets for both desktop and mobile that you can use with the Origin Demo DApp.  
+
+
+| OS | Application | Status | Notes |
+| ---- | -------- | ------ | ------ |
+| Mac | Chrome + Metamask extension | ✅ | Operational |
+| Mac | Firefox + Metamask extension | ✅  | Operational |
+| Mac | Brave with Metamask | ✅ | Operational |
+|  | |  |
+| PC | Chrome + Metamask extension | ⚪️ | Not tested |
+| PC | Firefox + Metamask extension | ⚪️ | Not tested |
+| PC | Brave with Metamask | ⚪️  | Not tested |
+|  |  |  |
+| iOS | Trust Wallet | ✅  | Operational |
+| iOS | Toshi  |  🚫  | Main Toshi app does not currently work with test nets |
+| iOS | Toshi Developer  |  🚫  |  [DApp hangs on Toshi client #327](https://github.com/OriginProtocol/origin-dapp/issues/327) |
+| iOS | Cipher  | ⛔️  | Acquired by Coinbase. Not in development. |
+|   |  |  |
+| Android | Trust Wallet | ⚪️ | Not tested |
+| Android | Toshi Developer  |  ⚪️  |  Not tested |
+| Android | Toshi Developer  |  ⚪️  | Not tested 
+| Android | Cipher  |  ⛔️  | Not in development |
+
+<sup>Tests for http://demo.originprotocol.com</sup>
+
+
 ## Contributing
 
 Origin is an 100% open-source and community-driven project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community. 
