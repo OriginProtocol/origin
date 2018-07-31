@@ -6,6 +6,8 @@
 
 Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
 
+Just getting started with Origin? We recommend using [Origin Box](https://github.com/OriginProtocol/origin-box) for development and testing on your local machine.
+
 # origin-js
 
 origin-js is a library of javascript code and Ethereum smart contracts which allow anyone to create decentralized marketplaces, including for fractional usage. It is an open source project created by [Origin Protocol](https://www.originprotocol.com/).
