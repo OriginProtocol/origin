@@ -53,7 +53,7 @@
   "listing-create.services": "Dịch vụ",
   "listing-create.announcements": "Thông báo",
   "listing-create.chooseSchema": "Chọn một lược đồ cho sản phẩm hoặc dịch vụ của bạn",
-  "listing-create.schemaExplainer": "Sản phẩm hoặc dịch vụ của bạn sẽ sử dụng một sơ đồ để miêu tả các đặc tính của nó như tên, mô tả và giá cả. Origin đã có sẵn nhiều lược đồ dẫn tới tới các danh mục của các danh sách nổi tiếng như nhà ở, ô tô và dịch vụ.",
+  "listing-create.schemaExplainer": "Sản phẩm hoặc dịch vụ của bạn sẽ sử dụng một sơ đồ để miêu tả các đặc tính của nó như tên, mô tả và giá cả. Origin đã có sẵn nhiều lược đồ dẫn tới tới các danh mục của các danh sách phổ biến như nhà ở, ô tô và dịch vụ.",
   "listing-create.stepNumberLabel": "BƯỚC {stepNumber}",
   "listing-create.whatTypeOfListing": "Bạn muốn tạo loại danh sách nào?",
   "listing-create.next": "Tiếp theo",
