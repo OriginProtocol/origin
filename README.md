@@ -2,6 +2,8 @@
 
 Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
 
+Just getting started with Origin? We recommend using [Origin Box](https://github.com/OriginProtocol/origin-box) for development and testing on your local machine.
+
 # bridge-server
 
 The Origin Bridge Server connects the old world to the new.
