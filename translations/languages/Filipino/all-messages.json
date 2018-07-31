@@ -103,7 +103,7 @@
   "listings-grid.changeNetworks": "Kailangan mong baguhin ang network o ideploy ang kontrata.",
   "listings-grid.listingsCount": "mga listahan {listingIdsCount}",
   "MessageNew.send": "Ipadala",
-  "MessageNew.encryptionNotice": "Your message will be encrypted. It will only be visible to you, the recipient, and an arbitrator in the event that a dispute arises.",
+  "MessageNew.encryptionNotice": "Ang mensahe mo ay magiging encrypted. Ikaw lamang ang makakakita nito, ang pinadalhan, at tagapamagitan kung sakaling magkaroon ng alitan.",
   "MessageNew.cancel": "Kanselahin",
   "Messages.newMessagePlaceholder": "Mag-type ng isang bagay...",
   "purchase-summary.purchasedFrom": "Binili mula kay {sellerLink}",
