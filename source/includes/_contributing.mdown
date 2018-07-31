@@ -6,13 +6,14 @@ Origin is an Open Source project and we welcome contributions of all sorts. Ther
 
 There are three main repositories that are considered core components of the Origin platform:
 
-- [Origin.js](https://github.com/OriginProtocol/origin-js) - solidity contracts and the Origin JS API
-- [Demo DApp](https://github.com/OriginProtocol/demo-dapp) - example react powered front end 
-- [Bridge Server](https://github.com/OriginProtocol/bridge-server) - python indexing and search server
+- [Origin.js](https://github.com/OriginProtocol/origin-js) - Solidity contracts and JavaScript API
+- [Origin DApp](https://github.com/OriginProtocol/origin-dapp) - example React-powered decentralized application
+- [Origin Bridge Server](https://github.com/OriginProtocol/origin-bridge) - Python and JavaScript for indexing, attestations, and messaging
 
 We also actively work on these repositories:
 
-- [Company Website](https://github.com/OriginProtocol/company-website) - code for originprotocol.com
+- [Origin Box](https://github.com/OriginProtocol/origin-box) - Docker container for simplifying local development
+- [Origin Website](https://github.com/OriginProtocol/origin-website) - Python/Flask for originprotocol.com
 - [Identity Playground](https://github.com/OriginProtocol/identity-playground) - implementation of ERC 725/735 for blockchain identity
 
 ### Weekly Engineering Call
@@ -39,6 +40,8 @@ We use two week development sprints and you can see what we're currently priorit
 Read our [development process](#contributing-email-development-process) and [community guidelines](#contributing-email-community-guidelines) first and have fun!
 
 ### Development Process
+
+Getting your local environment running is easy with [Origin Box](https://github.com/OriginProtocol/origin-box). We recommend using this Docker container for any development or testing that involves running a local blockchain.
 
 We follow the [GitFlow](http://nvie.com/posts/a-successful-git-branching-model/) branching model for development. The latest merged code generally lives in the `develop` branch of each repository. Your development flow should look like:
 
