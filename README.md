@@ -100,34 +100,28 @@ This is the default seed phrase used by [Truffle](https://github.com/trufflesuit
 ## Browser & Wallet Compatibility 
 Browsers with wallets for both desktop and mobile that you can use with the Origin Demo DApp.  
 
-### Desktop
 
 | OS | Application | Status | Notes |
 | ---- | -------- | ------ | ------ |
-| Mac | Brave with Metamask | ✅ |
-| Mac | Chrome + Metamask extension | ✅ |
-| Mac | Firefox + Metamask extension | ✅  |
+| Mac | Chrome + Metamask extension | ✅ | Operational |
+| Mac | Firefox + Metamask extension | ✅  | Operational |
+| Mac | Brave with Metamask | ✅ | Operational |
 |  | |  |
-| PC | Brave with Metamask | ⚪️ not tested |
-| PC | Chrome + Metamask extension | ⚪️ not tested |
-| PC | Firefox + Metamask extension | ⚪️ not tested |
+| PC | Chrome + Metamask extension | ⚪️ | Not tested |
+| PC | Firefox + Metamask extension | ⚪️ | Not tested |
+| PC | Brave with Metamask | ⚪️  | Not tested |
+|  |  |  |
+| iOS | Trust Wallet | ✅  | Operational |
+| iOS | Toshi  |  🚫  | Main Toshi app does not currently work with test nets |
+| iOS | Toshi Developer  |  🚫  |  [DApp hangs on Toshi client #327](https://github.com/OriginProtocol/origin-dapp/issues/327) |
+| iOS | Cipher  | ⛔️  | Acquired by Coinbase. Not in development. |
+|   |  |  |
+| Android | Trust Wallet | ⚪️ | Not tested |
+| Android | Toshi Developer  |  ⚪️  |  Not tested |
+| Android | Toshi Developer  |  ⚪️  | Not tested 
+| Android | Cipher  |  ⛔️  | Not in development |
 
-
-### Mobile 
-
-| OS | Application | Status | Notes |
-| ---- | -------- | ------ | ------ |
-| iOS | Trust Wallet | ✅  |
-| iOS | Toshi  |  🚫  |
-| iOS | Toshi Developer  |  🚫  |
-| iOS | Cipher  | 🚫  |
-|  | |  |
-| Android | Trust Wallet | ⚪️ not tested |
-| Android | Toshi Developer  |  ⚪️ not tested |
-| Android | Toshi Developer  |  ⚪️ not tested |
-| Android | Cipher  |  ⚪️ not tested |
-
-
+<sub><sup>Tests for http://Demo.OriginProtocol.com </sup></sub>
 
 
 ## Contributing
