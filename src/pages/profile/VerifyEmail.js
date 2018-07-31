@@ -148,6 +148,7 @@ class VerifyEmail extends Component {
   }
 
   renderCodeForm() {
+    const codeErrors = this.state.formErrors.code
     return (
       <div className="form-group">
         <label htmlFor="emailVerificationCode">
@@ -156,17 +157,20 @@ class VerifyEmail extends Component {
             defaultMessage={ 'Enter the code we sent you below' }
           />
         </label>
-        <input
-          className="form-control"
-          id="emailVerificationCode"
-          name="email-verification-code"
-          value={this.state.code}
-          onChange={e => this.setState({ code: e.currentTarget.value })}
-          placeholder={this.props.intl.formatMessage(this.intlMessages.emailVerificationCodePlaceholder)}
-          pattern="[a-zA-Z0-9]{6}"
-          title="6-Character Verification Code"
-          required
-        />
+        <div className={`form-control-wrap ${codeErrors ? 'error' : ''}`}>
+          <input
+            className="form-control"
+            id="emailVerificationCode"
+            name="email-verification-code"
+            value={this.state.code}
+            onChange={e => this.setState({ code: e.currentTarget.value })}
+            placeholder={this.props.intl.formatMessage(this.intlMessages.emailVerificationCodePlaceholder)}
+            pattern="[a-zA-Z0-9]{6}"
+            title="6-Character Verification Code"
+            required
+          />
+          <div className="error_message">{codeErrors ? codeErrors.join(' ') : ''}</div>
+        </div>
       </div>
     )
   }
