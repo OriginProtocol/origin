@@ -9,9 +9,6 @@
         "timeIncrement": {
             "type": "string"
         },
-        "calendarStep": {
-          "type": "string"
-        },
         "slots": {
           "type": "array",
           "items": {
@@ -31,6 +28,9 @@
               },
               "priceWei": {
                 "type": "number"
+              },
+              "recurs": {
+                "type": "string"
               }
             }
           }
