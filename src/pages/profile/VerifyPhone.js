@@ -39,7 +39,7 @@ class VerifyPhone extends Component {
 
   async handleSubmit(e) {
     e.preventDefault()
-    this.setState({errors: {}}) // clear errors
+    this.clearErrors()
 
     const { countryCallingCode, mode, phone, verificationCode, verificationMethod } = this.state
 
