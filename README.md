@@ -121,7 +121,7 @@ Browsers with wallets for both desktop and mobile that you can use with the Orig
 | Android | Toshi Developer  |  ⚪️  | Not tested 
 | Android | Cipher  |  ⛔️  | Not in development |
 
-<sub><sup>Tests for http://Demo.OriginProtocol.com </sup></sub>
+<sup>Tests for http://demo.originprotocol.com</sup>
 
 
 ## Contributing
