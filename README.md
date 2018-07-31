@@ -4,11 +4,13 @@
 [![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)](https://github.com/OriginProtocol/origin-js/blob/master/LICENSE)
 [![origin_travis_banner](https://img.shields.io/travis/OriginProtocol/origin-js/master.svg?style=flat-square&colorA=111d28)](https://travis-ci.org/OriginProtocol/origin-js)
 
+Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
+
+Just getting started with Origin? We recommend using [Origin Box](https://github.com/OriginProtocol/origin-box) for development and testing on your local machine.
+
 # origin-js
 
 origin-js is a library of javascript code and Ethereum smart contracts which allow anyone to create decentralized marketplaces, including for fractional usage. It is an open source project created by [Origin Protocol](https://www.originprotocol.com/).
-
-To learn more about Origin Protocol, please read our [product brief](https://www.originprotocol.com/product-brief) and [whitepaper](https://www.originprotocol.com/whitepaper) for a high-level description of what we're building and why it matters. Our official website is [https://www.originprotocol.com](https://www.originprotocol.com).
 
 ⚠️ This is an alpha version which is not suitable for production environments.
 
@@ -38,7 +40,7 @@ yarn add origin
 
 A browser-compatible plain javascript file `origin.js` is available in the [Releases section](https://github.com/OriginProtocol/origin-js/releases). A hosted version can be directly included in your html as:
 ```html
-<script src="https://code.originprotocol.com/origin-js/origin-v0.5.10.js"></script>
+<script src="https://code.originprotocol.com/origin-js/origin-v0.6.1.js"></script>
 ```
 
 `npm build` will generate this file and save it to `dist/origin.js`.
