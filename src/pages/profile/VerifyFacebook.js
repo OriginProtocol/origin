@@ -103,8 +103,20 @@ class VerifyFacebook extends Component {
       } catch (exception) {
         const errorsJson = JSON.parse(exception).errors
           
-        if (Array.isArray(errorsJson)) // Service exceptions
-          this.setState({ generalErrors: errorsJson })
+        // Service exceptions --> general error
+        if (Array.isArray(errorsJson))
+          this.setState({generalErrors: errorsJson})
+        // Form field error. Since no fields are displayed in the DAPP convert form field errors to general errors
+        else
+          this.setState({
+            generalErrors: Object.keys(errorsJson)
+              // Prepend the error with the field that is causing the error
+              .map(field =>
+                field + ": " +
+                // Join all the errors into a single string
+                errorsJson[field].join(' ')
+              )
+          })
       }
     }
 
