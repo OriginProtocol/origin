@@ -1,50 +1,75 @@
-# Origin Develop
+![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
 
-Development stack for Origin Protocol. You can read more about Origin Protocol at https://www.originprotocol.com/. This is not an official part of the Origin Protocol codebase, it is an alternative to [origin-box](https://github.com/OriginProtocol/origin-box) that uses separate containers.
+Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
+
+# Origin Box
+
+Origin Box is a [Docker](https://www.docker.com/) container setup for running all core Origin components together in a single environment, preconfigured to work together.
+
+Origin Box currently supports the following components:
+- [origin-dapp](https://github.com/OriginProtocol/origin-dapp)
+- [origin-js](https://github.com/OriginProtocol/origin-js)
+- [origin-bridge](https://github.com/originprotocol/origin-bridge)
+- [origin-website](https://github.com/originprotocol/origin-website)
+
+Each repo is symlinked from the container to a local directory. You may edit the source code using your favorite editor. The repo directories just normal git repositories, so you can treat them as you would any other git repository. You can make changes, commit them, and change branches—and the container will be automatically kept in sync.
+
+## Use Cases
+
+Origin Box has several intended use cases:
+- Demonstration: We want to make it as easy as possible for people to spin up their own Origin environment, emphasizing that this platform is truly open and decentralized.
+- Development: While we do our best to keep our components as independent as possible, ultimately they are all designed to function together as one unit. For development we do try to stub external components as much as possible, but this has its practical limits. It is often beneficial to be able to do development in an environment where all of the components are running. It can be tricky to get all of the various components synchronized on your local machine. Origin Box manages this complexity.
+- End-to-end Testing: Currently we do not have any automated end-to-end tests. We rely heavily on manual testing. Having one environment where all of our components are running together will hopefully make it easier for us to set up end-to-end testing when we are ready to do that.
+
+## System Requirements
+
+- Docker **version 18 or greater**:
+`docker --version`
+- Git:
+`git --version`
+- Unix-based system (OSX or Linux) needed to run the bash scripts
 
 ## Getting started
 
+Origin-box supports two separate development stacks. One is the standard Origin Protocl stack consisting of origin-js, origin-bridge, and origin-dapp repositories, and the other is the the Origin website (https://originprotocol.com) stack consisting of the origin-website repository.
+
 1. Clone this repository
 
-2. Run `./install.sh`
+2. Run `./install.sh -e origin` for the standard stack, or `./install.sh -e origin-website` for the website stack.
 
-You should now have a functioning development stack. The origin-dapp example application will be available if you point your browser to http://localhost:3000.
-
-The install script will clone the origin repositories into subdirectories and checkout the develop branch. You can then develop and use them as normal git repositories.
-
-If the install script doesn't complete the most likely reason is you don't have the [required ports](#port-errors) open. You can run `./install.sh -v` to see the output of the build process to diagnose the error.
+The install script will clone the origin repositories into subdirectories and checkout the develop branch. You can then develop and use them as normal git repositories. If the install script doesn't complete the most likely reason is you don't have the [required ports](#port-errors) open.
 
 ![install.sh](https://github.com/tomlinton/origin-develop/raw/master/screenshot.png)
 
 ## Configuration
 
-Configuration files reside in the `envfiles` directory. They are mounted into the relevant docker container when it is started. Modifications to these files will require a container restart (if the container was running).
+Configuration files reside in the `envfiles` directory. They are mounted into the relevant docker container when it is started. Modifications to these files will require a container restart (if the container was running). The configuration should work out of the box. Certain components may require additional API keys for certain things to work. For example, origin-bridge needs some API keys for attestation services to work.
 
-The configuration should work out of the box. Certain components may require additional API keys for certain things to work. For example, origin-bridge needs some API keys for attestation services to work.
+## Usage
 
-## Running tests
+Management of the containers is handled by [docker-compose](https://docs.docker.com/compose/). There are three docker-compose files included:
 
-Test configurations are included in docker-compose-test.yml.
+- `docker-compose.yml` runs the standard stack
+- `docker-compose-test.yml` runs tests for the standard stack
+- `docker-compose-web.yml` runs the website stack
 
-To test run tests for origin-js then use:
+To bring up/down the standard stack use `docker-compose up` or `docker-compose down`. To bring up/down the website stack you need to pass the docker-compose file explicitly: `docker-compose -f docker-compose-web.yml up` and `docker-compose -f docker-compose-web.yml down`.
 
-	docker-compose -f docker-compose-test.yml up origin-js-test
+### Handy commands
 
-and similarly for origin-bridge:
+Spawn a shell in a container:
 
-	docker-compose -f docker-compose-test.yml up origin-bridge-test
+	docker exec -ti <container_name> /bin/bash
 
-## Data persistence
+Connect to the origin_bridge postgresql database:
 
-PostgreSQL data will persist through bringing the containers down and up again through the use of a mounted volume. To disable this comment out the volume lines in docker-compose.yml under the `postgres` service.
+	docker exec -ti postgres /bin/bash -c "psql -h localhost -U origin origin_bridge"
 
-No persistence is in place for Redis data.
+Connect to redis:
 
-## Developer responsibilities
+	docker exec -ti redis /bin/bash -c "redis-cli"
 
-The environment purposefully doesn't include too much magic. We leave certain things to the developer.
-
-### Database migrations
+### Performing database migrations
 
 Database migrations are not run automatically. To create a migration:
 
@@ -62,19 +87,19 @@ E.g. to rebuild the origin-js container:
 
 	docker-compose build --no-cache origin-js
 
-## Handy commands
+### Data persistence
 
-Spawn a shell in a container:
+PostgreSQL data will persist through bringing the containers down and up again through the use of a mounted volume. To disable this comment out the volume lines in docker-compose.yml under the `postgres` service. No persistence is in place for Redis data.
 
-	docker exec -ti <container_name> /bin/bash
+## Running tests
 
-Connect to the origin_bridge postgresql database:
+Test configurations are included in `docker-compose-test.yml`. To test run tests for origin-js then use:
 
-	docker exec -ti postgres /bin/bash -c "psql -h localhost -U origin origin_bridge"
+	docker-compose -f docker-compose-test.yml up origin-js-test
 
-Connect to redis:
+and similarly for origin-bridge:
 
-	docker exec -ti redis /bin/bash -c "redis-cli"
+	docker-compose -f docker-compose-test.yml up origin-bridge-test
 
 ## Troubleshooting
 
