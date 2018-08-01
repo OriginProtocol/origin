@@ -123,7 +123,7 @@ Browsers with wallets for both desktop and mobile that you can use with the Orig
 | Android | Toshi Developer  |  ⚪️  | [Not tested #332](https://github.com/OriginProtocol/origin-dapp/issues/332) | 
 | Android | Cipher  |  ⛔️  | Not in development |
 
-<sup>Tests for http://demo.originprotocol.com</sup>
+<sup>Test done on http://demo.originprotocol.com</sup>
 
 
 ## Contributing
