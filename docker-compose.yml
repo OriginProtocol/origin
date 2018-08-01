@@ -28,6 +28,8 @@ services:
     container_name: redis
     restart: always
     image: redis
+    sysctls:
+      - net.core.somaxconn=4096
     networks:
       - origin-develop
 
@@ -98,6 +100,7 @@ services:
   origin-bridge-celery:
     container_name: origin-bridge-celery
     image: origin-bridge
+    user: nobody
     volumes:
       - ./origin-bridge:/app
       # Set the envfile from the local envfile
