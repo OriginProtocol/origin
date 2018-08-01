@@ -26,6 +26,9 @@ class VerifyEmail extends Component {
         defaultMessage: 'Verification code',
       },
     })
+
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleCancel = this.handleCancel.bind(this)
   }
 
   render() {
@@ -39,7 +42,7 @@ class VerifyEmail extends Component {
         <div className="image-container d-flex align-items-center">
           <img src="images/email-icon-dark.svg" role="presentation" />
         </div>
-        <form onSubmit={ event => this.onSubmit(event)}>
+        <form onSubmit={this.handleSubmit}>
           <h2>Verify Your Email Address</h2>
           <div className="general-error">{this.state.generalErrors.length > 0 ? this.state.generalErrors.join(' ') : ''}</div>
           {this.state.mode === 'email'
@@ -57,7 +60,7 @@ class VerifyEmail extends Component {
             <a
               href="#"
               data-modal="email"
-              onClick={event => this.onCancel(event)}
+              onClick={this.handleCancel}
             >
               <FormattedMessage
                 id={ 'VerifyEmail.cancel' }
@@ -70,14 +73,14 @@ class VerifyEmail extends Component {
     )
   }
 
-  onCancel(event) {
+  handleCancel(event) {
     event.preventDefault()
     this.clearErrors()
     this.setState({ mode: 'email' })
     this.props.handleToggle(event)
   }
 
-  async onSubmit(event) {
+  async handleSubmit(event) {
     event.preventDefault()
     this.clearErrors()
 
@@ -86,7 +89,6 @@ class VerifyEmail extends Component {
         await origin.attestations.emailGenerateCode({
           email: this.state.email
         })
-
         this.setState({ mode: 'code' })
       } else if (this.state.mode === 'code') {
         let emailAttestation = await origin.attestations.emailVerify({
