@@ -3,6 +3,8 @@ import _ from 'lodash'
 import Web3 from 'web3'
 import url from 'url'
 
+const Log = require('ipfs-log')
+
 import OrbitDB from 'orbit-db'
 import Keystore from 'orbit-db-keystore'
 
@@ -72,7 +74,7 @@ class InsertOnlyKeystore {
 
   verify(signature, key, data) {
     try{
-      const message = JSON.parse(data.toString('utf8'))
+      const message = JSON.parse(data)
       console.log("we got a message to verify:", message, " sig:", signature)
       const obj = this.getSignVerify(message.id)
       if (obj && obj.verifyFunc)
@@ -85,6 +87,7 @@ class InsertOnlyKeystore {
             if (obj.postFunc){
               obj.postFunc(message)
             }
+            pinIPFS(message, signature, key)
             return Promise.resolve(true)
           }
         }
@@ -193,7 +196,8 @@ async function startRoom(room_db, room_id, store_type, writers, share_func) {
     messagingRoomsMap[key] = room
     rebroadcastOnReplicate(room_db, room)
     //for persistence replace drop with below
-    room.load()
+    //room.load()
+    startSnapshotDB(room)
   }
 }
 
@@ -225,7 +229,82 @@ function rebroadcastOnReplicate(DB, db){
   db.events.on('replicated', (dbname) => {
     //rebroadcast
     DB._pubsub.publish(db.id,  db._oplog.heads)
+    snapshotDB(db)
+    //console.log("replicated db.id", db.id, " Hashes:", db._oplog.values.map(e => e.hash))
   })
+}
+
+async function pinIPFS(entry, signature, key) {
+  if (ipfs.pin && ipfs.pin.add)
+  {
+    const hash = await saveToIpfs(ipfs, entry, signature, key)
+    if (hash)
+    {
+      console.log("Pinning hash:", hash)
+      try {
+        //pin the damn thing
+        return await ipfs.pin.add(hash)
+      } catch (err) {
+        console.error("Cannot pin verified entry hash:", hash)
+      }
+    }
+  }
+}
+
+async function saveToIpfs(ipfs, entry, signature, key) {
+  if (!entry) {
+    console.warn("Warning: Given input entry was 'null'.")
+    return null
+  }
+
+  const logEntry = Object.assign({}, entry)
+  logEntry.hash = null
+  if (signature)
+  {
+    logEntry.sig = signature
+  }
+  if (key)
+  {
+    logEntry.key = key
+  }
+  return ipfs.object.put(Buffer.from(JSON.stringify(logEntry)))
+    .then((dagObj) => dagObj.toJSON().multihash)
+    .then(hash => {
+      // We need to make sure that the head message's hash actually
+      // matches the hash given by IPFS in order to verify that the
+      // message contents are authentic
+      console.warn('hash:', hash, ' from', logEntry)
+      return hash
+    })
+}
+
+async function snapshotDB(db)
+{
+  const unfinished = db._replicator.getQueue()
+  const snapshotData = db._oplog.toSnapshot()
+
+  await db._cache.set('queue', unfinished)
+  await db._cache.set('raw_snapshot', snapshotData)
+  console.log("Saved snapshot:", snapshotData.id, " queue:", unfinished.length)
+}
+
+async function loadSnapshotDB(db)
+{
+  const queue = await db._cache.get('queue')
+  db.sync(queue || [])
+  const snapshotData = await db._cache.get('raw_snapshot')
+  if (snapshotData) {
+    const log = new Log(db._ipfs, snapshotData.id, snapshotData.values, snapshotData.heads, null, db._key, db.access.write)
+    await db._oplog.join(log)
+    await db._updateIndex()
+    db.events.emit('replicated', db.address.toString())
+  }
+  db.events.emit('ready', db.address.toString(), db._oplog.heads)
+}
+
+async function startSnapshotDB(db)
+{
+  await loadSnapshotDB(db)
 }
 
 ipfs.id().then(async (peer_id) => {
@@ -254,6 +333,7 @@ ipfs.id().then(async (peer_id) => {
       })
 
     // testing it's best to drop this for now
-    global_registry.load()
+    //global_registry.load()
+    startSnapshotDB(global_registry)
 })
 
