@@ -1,0 +1,70 @@
+version: "3"
+
+networks:
+  origin-develop:
+
+volumes:
+  pg_data:
+
+services:
+  postgres:
+    container_name: postgres
+    restart: always
+    image: postgres:10.0
+    # Data persistence, comment out the following two lines to disable
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=origin
+      - POSTGRES_PASSWORD=origin
+      - POSTGRES_DB=origin_website
+    networks:
+      - origin-develop
+
+  redis:
+    container_name: redis
+    restart: always
+    image: redis
+    sysctls:
+      - net.core.somaxconn=4096
+    networks:
+      - origin-develop
+
+  origin-website:
+    container_name: origin-website
+    build:
+      context: .
+      dockerfile: dockerfiles/origin-website
+    image: origin-website
+    volumes:
+      - ./origin-website:/app
+      # Set the envfile from the local envfile
+      - ./envfiles/origin-website.env:/app/.env
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_APP=/app/main.py
+    command: "python /app/main.py"
+    networks:
+      - origin-develop
+
+  origin-website-celery:
+    container_name: origin-website-celery
+    image: origin-website
+    user: nobody
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./origin-website:/app
+      # Set the envfile from the local envfile
+      - ./envfiles/origin-website.env:/app/.env
+    environment:
+      - FLASK_APP=/app/main.py
+    command: "watchmedo auto-restart -d . -p '*.py' -i '*.pyc' --recursive --
+      celery -A util.tasks worker --loglevel=INFO"
+    networks:
+      - origin-develop

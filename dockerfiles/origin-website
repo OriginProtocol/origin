@@ -1,0 +1,9 @@
+FROM python:2.7
+
+# Install watchdog for celery auto restart on code changes
+RUN pip install watchdog
+#
+# Install requirements
+WORKDIR /app
+COPY ./origin-website/requirements.txt /app
+RUN pip install -r requirements.txt
