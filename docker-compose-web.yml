@@ -1,7 +1,7 @@
 version: "3"
 
 networks:
-  origin-develop:
+  origin-website-develop:
 
 volumes:
   pg_data:
@@ -19,7 +19,7 @@ services:
       - POSTGRES_PASSWORD=origin
       - POSTGRES_DB=origin_website
     networks:
-      - origin-develop
+      - origin-website-develop
 
   redis:
     container_name: redis
@@ -28,7 +28,7 @@ services:
     sysctls:
       - net.core.somaxconn=4096
     networks:
-      - origin-develop
+      - origin-website-develop
 
   origin-website:
     container_name: origin-website
@@ -49,7 +49,7 @@ services:
       - FLASK_APP=/app/main.py
     command: "python /app/main.py"
     networks:
-      - origin-develop
+      - origin-website-develop
 
   origin-website-celery:
     container_name: origin-website-celery
@@ -67,4 +67,4 @@ services:
     command: "watchmedo auto-restart -d . -p '*.py' -i '*.pyc' --recursive --
       celery -A util.tasks worker --loglevel=INFO"
     networks:
-      - origin-develop
+      - origin-website-develop
