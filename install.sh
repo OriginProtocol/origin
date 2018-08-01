@@ -20,42 +20,38 @@ function usage() {
 }
 
 function print_origin_start() {
-  echo
-  echo -e "\033[94m Setting up your Origin Protocol development environment. This will take a few minutes... \033[0m"
+  echo -e "\033[94mSetting up your Origin Protocol development environment. This will take a few minutes... \033[0m"
   echo
 }
 
 function print_origin_finish() {
   echo
-  echo -e "\033[97m All set! Get building... \033[0m"
+  echo -e "\033[97mAll set! Get building... \033[0m"
   echo
-  echo -e " Origin-js blockchain is running at \033[94mhttp://localhost:8545\033[0m"
-  echo -e " Origin-js tests are running at \033[94mhttp://localhost:8081\033[0m"
-  echo -e " Origin-bridge is running at \033[94mhttp://localhost:5000\033[0m"
-  echo -e " Origin-dapp is running at \033[94mhttp://localhost:3000\033[0m"
-  echo -e " For more help \033[97mdocker-compose -h\033[0m"
-  echo -e " To follow the logs run \033[97mdocker-compose logs -f\033[0m"
-  echo
+  echo -e "Origin-js blockchain is running at \033[94mhttp://localhost:8545\033[0m"
+  echo -e "Origin-js tests are running at \033[94mhttp://localhost:8081\033[0m"
+  echo -e "Origin-bridge is running at \033[94mhttp://localhost:5000\033[0m"
+  echo -e "Origin-dapp is running at \033[94mhttp://localhost:3000\033[0m"
+  echo -e "For more help \033[97mdocker-compose -h\033[0m"
+  echo -e "To follow the logs run \033[97mdocker-compose logs -f\033[0m"
 }
 
 function print_website_start() {
-  echo
-  echo -e "\033[94m Setting up your Origin Protocol website development environment. This will take a few minutes... \033[0m"
+  echo -e "\033[94mSetting up your Origin Protocol website development environment. This will take a few minutes... \033[0m"
   echo
 }
 
 function print_website_finish() {
   echo
-  echo -e "\033[97m All set! Get building... \033[0m"
+  echo -e "\033[97mAll set! Get building... \033[0m"
   echo
-  echo -e " Origin-website is running at \033[94mhttp://localhost:5000\033[0m"
-  echo -e " For more help \033[97mdocker-compose -h\033[0m"
-  echo -e " To follow the logs run \033[97mdocker-compose logs -f\033[0m"
-  echo
+  echo -e "Origin-website is running at \033[94mhttp://localhost:5000\033[0m"
+  echo -e "For more help \033[97mdocker-compose -h\033[0m"
+  echo -e "To follow the logs run \033[97mdocker-compose logs -f\033[0m"
 }
 
 function run_step() {
-  printf " \033[97m%-24s\033[0m" "$1"
+  printf "\033[97m%-24s\033[0m" "$1"
   shift
 
   [ $QUIET -eq 1 ] && out="> /dev/null 2>&1"
@@ -76,27 +72,26 @@ function run_step() {
 function install_origin_environment() {
 	print_origin_start
 
-	run_step "Cloning origin-js" &&
-	test -d origin-js || git clone https://github.com/OriginProtocol/origin-js.git --branch develop &&
+	run_step "Cloning origin-js" \
+		test -d origin-js || git clone https://github.com/OriginProtocol/origin-js.git --branch develop
 
-	run_step "Cloning origin-bridge" &&
-	test -d origin-bridge || git clone https://github.com/OriginProtocol/origin-bridge.git --branch develop &&
+	run_step "Cloning origin-bridge" \
+		test -d origin-bridge || git clone https://github.com/OriginProtocol/origin-bridge.git --branch develop
 
-	run_step "Cloning origin-dapp" &&
-	test -d origin-dapp || git clone https://github.com/OriginProtocol/origin-dapp.git --branch develop
+	run_step "Cloning origin-dapp" \
+		test -d origin-dapp || git clone https://github.com/OriginProtocol/origin-dapp.git --branch develop
 
 	run_step "Building containers" \
-	docker-compose build
+		docker-compose build
 
 	run_step "Bringing up stack" \
-	docker-compose up -d &&
-	# Wait for origin-js to bring up tests server to ensure contracts are compiled
-	# This can't be checked against localhost because Docker exposes the ports
-	# before the service is running
-	docker-compose exec origin-bridge wait-for.sh -t 0 -q origin-js:8081
+		docker-compose up -d &&
+
+	run_step "Waiting for contract compilation" \
+		docker-compose exec origin-bridge wait-for.sh -t 0 -q origin-js:8081
 
 	run_step "Configuring database" \
-	docker-compose exec origin-bridge flask db upgrade
+		docker-compose exec origin-bridge flask db upgrade
 
 	print_origin_finish
 }
@@ -105,11 +100,11 @@ function install_origin_environment() {
 function install_website_environment() {
 	print_website_start
 
-	run_step "Cloning origin-website" &&
+	run_step "Cloning origin-website" \
 		test -d origin-website || git clone https://github.com/OriginProtocol/origin-website.git --branch develop
 
 	run_step "Building containers" \
-	  docker-compose -f docker-compose-web.yml build --no-cache
+	  docker-compose -f docker-compose-web.yml build
 
 	run_step "Bringing up stack" \
 	  docker-compose -f docker-compose-web.yml up -d
@@ -124,7 +119,6 @@ while getopts "e:vdh" opt; do
   case $opt in
     e)
       ENV=$OPTARG
-      echo $ENV
       ;;
     q)
       QUIET=1
