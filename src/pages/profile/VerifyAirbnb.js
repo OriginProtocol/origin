@@ -132,6 +132,7 @@ class VerifyAirbnb extends Component {
       <form
         onSubmit={async event => {
           await this.catchPossibleErrors(async event => {
+            event.preventDefault()
             this.clearErrors()
 
             const airbnbAttestation = await origin.attestations.airbnbVerify({
@@ -140,7 +141,7 @@ class VerifyAirbnb extends Component {
             })
 
             this.props.onSuccess(airbnbAttestation)
-          })
+          }, event)
         }}
       >
         <div className="form-group">
