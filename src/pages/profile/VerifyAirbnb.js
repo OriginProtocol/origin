@@ -34,13 +34,14 @@ class VerifyAirbnb extends Component {
           />
         </h2>
         <div className="general-error">{this.state.generalErrors.length > 0 ? this.state.generalErrors.join(' ') : ''}</div>
-        { this.state.mode === 'input-airbnb-profile' ? this.renderInputAirbnbProfile() : this.renderShowGeneratedCode() }
+        {this.state.mode === 'input-airbnb-profile' ? this.renderInputAirbnbProfile() : this.renderShowGeneratedCode()}
       </Modal>
     )
   }
 
-  renderInputAirbnbProfile(){
+  renderInputAirbnbProfile() {
     const airbnbUserIdError = this.state.formErrors.airbnbUserId
+
     return(
        <form
         onSubmit={async event => {
@@ -53,7 +54,7 @@ class VerifyAirbnb extends Component {
               airbnbUserId: this.getUserIdFromAirbnbProfile(this.state.airbnbProfile)
             })
 
-            this.setState({mode: 'show-generated-code', confirmationCode: data.code})
+            this.setState({ mode: 'show-generated-code', confirmationCode: data.code })
           }, event)
         }}>
 
@@ -66,7 +67,7 @@ class VerifyAirbnb extends Component {
           </label>
           <div 
             className={`form-control-wrap ${airbnbUserIdError ? 'error' : ''}`} 
-            style={{'maxWidth': `400px`}}
+            style={{ 'maxWidth': `400px` }}
           >
             <input
               type="url"
@@ -74,10 +75,10 @@ class VerifyAirbnb extends Component {
               id="airbnbProfile"
               name="airbnbProfile"
               // Making wider input, so that the whole profile placeholder can be viewed without trimming
-              style={{maxWidth: `400px`}}
+              style={{ maxWidth: `400px` }}
               value={this.state.airbnbProfile}
               onChange={e =>
-                this.setState({airbnbProfile: e.currentTarget.value})
+                this.setState({ airbnbProfile: e.currentTarget.value })
               }
               placeholder={
                 this.props.intl.formatMessage({
@@ -115,7 +116,7 @@ class VerifyAirbnb extends Component {
           <a
             href="#"
             data-modal="airbnb"
-            onClick={event => this.onCancel(event)}
+            onClick={this.onCancel}
           >
             <FormattedMessage
               id={ 'VerifyAirbnb.cancel' }
@@ -127,7 +128,7 @@ class VerifyAirbnb extends Component {
     )
   }
 
-  renderShowGeneratedCode(){
+  renderShowGeneratedCode() {
     return(
       <form
         onSubmit={async event => {
@@ -156,14 +157,14 @@ class VerifyAirbnb extends Component {
             id="generated-code"
             readOnly="readOnly"
             // Making input wider, so that the whole verification code can be viewed without trimming.
-            style={{maxWidth: '340px', height: '92px', resize: 'none'}}
+            style={{ maxWidth: '340px', height: '92px', resize: 'none' }}
             value={
               this.state.confirmationCode == '' ?
                 this.props.intl.formatMessage({
                   id: 'VerifyAirbnb.loadingConfirmationCode',
                   defaultMessage: 'Loading...'
                 }) :
-                "Origin verification code: " + this.state.confirmationCode
+                `Origin verification code: ${this.state.confirmationCode}`
             }
           />
           <div className="explanation">
@@ -185,7 +186,7 @@ class VerifyAirbnb extends Component {
           <a
             href="#"
             data-modal="airbnb"
-            onClick={event => this.onCancel(event)}
+            onClick={this.onCancel}
           >
             <FormattedMessage
               id={ 'VerifyAirbnb.cancel' }
@@ -202,14 +203,14 @@ class VerifyAirbnb extends Component {
     this.clearErrors()
 
     // if user cancels when generated code is shown he might want to input different airbnb profile
-    this.setState({airbnbProfile: '', mode: 'input-airbnb-profile'})
+    this.setState({ airbnbProfile: '', mode: 'input-airbnb-profile' })
     this.props.handleToggle(event)
   }
 
   clearErrors() {
     // clear errors
-    this.setState({formErrors: {}})
-    this.setState({generalErrors:[]})
+    this.setState({ formErrors: {} })
+    this.setState({ generalErrors: [] })
   }
 
   async catchPossibleErrors(callback, event) {
@@ -219,19 +220,19 @@ class VerifyAirbnb extends Component {
       const errorsJson = JSON.parse(exception).errors
         
       if (Array.isArray(errorsJson)) // Service exceptions
-        this.setState({generalErrors: errorsJson})
+        this.setState({ generalErrors: errorsJson })
       else // Form exception
-        this.setState({formErrors: errorsJson})
+        this.setState({ formErrors: errorsJson })
     }
   }
 
   getUserIdFromAirbnbProfile(airbnbProfileUrl) {
-    const airbnbRegex = /https?\:\/\/www.airbnb.com\/users\/show\/(\d*)/g;
-    const match = airbnbRegex.exec(airbnbProfileUrl);
+    const airbnbRegex = /https?\:\/\/www.airbnb.com\/users\/show\/(\d*)/g
+    const match = airbnbRegex.exec(airbnbProfileUrl)
 
-    if (match.length == 0){
+    if (!match.length) {
       // this should not happen since previous modal step's input validation checks for correct airbnb profile format
-      return '';
+      return ''
     } else {
       return match[1]
     }

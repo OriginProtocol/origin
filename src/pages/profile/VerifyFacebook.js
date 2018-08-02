@@ -78,12 +78,12 @@ class VerifyFacebook extends Component {
   }
 
   clearErrors() {
-    this.setState({generalErrors:[]})
+    this.setState({ generalErrors: [] })
   }
 
   onCertify() {
     this.clearErrors()
-    var fbWindow = window.open(this.state.url, '', 'width=650,height=500')
+    const fbWindow = window.open(this.state.url, '', 'width=650,height=500')
 
     const finish = async e => {
       const data = String(e.data)
@@ -105,7 +105,7 @@ class VerifyFacebook extends Component {
           
         // Service exceptions --> general error
         if (Array.isArray(errorsJson))
-          this.setState({generalErrors: errorsJson})
+          this.setState({ generalErrors: errorsJson })
         // Form field error. Since no fields are displayed in the DAPP convert form field errors to general errors
         else
           this.setState({

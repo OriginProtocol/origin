@@ -1219,19 +1219,19 @@ a:hover {
   display: inline-block;
 }
 
-.modal-content .form-control-wrap.error input{
+.modal-content .form-control-wrap.error input {
   border: 1px solid var(--red);
   background: var(--dark-red);
 }
 
-.modal-content .form-control-wrap.error .error_message{
+.modal-content .form-control-wrap.error .error_message {
   color: var(--orange-red);
   margin-top: -0.5rem;
   font-size: 1rem;
 }
 
 .modal-content .form-control:read-only {
-  background-color: #213040;
+  background-color: var(--dark-two);
 }
 
 .modal-content input,
