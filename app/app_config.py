@@ -38,13 +38,16 @@ def init_api(app):
     # default. Allowed HTTP methods can be specified as well.
     manager.create_api(db_models.Listing, methods=['GET'],
                        primary_key='contract_address',
-                       results_per_page=10,)
+                       results_per_page=10,
+                       max_results_per_page=100)
     manager.create_api(db_models.Purchase, methods=['GET'],
                        primary_key='contract_address',
-                       results_per_page=10,)
+                       results_per_page=10,
+                       max_results_per_page=100)
     manager.create_api(db_models.Review, methods=['GET'],
                        primary_key='contract_address',
-                       results_per_page=10,)
+                       results_per_page=10,
+                       max_results_per_page=100)
 
 
 # App initialization only appropriate for dev/production but not tests.
