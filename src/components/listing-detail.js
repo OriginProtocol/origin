@@ -367,7 +367,7 @@ class ListingsDetail extends Component {
                       />
                     </div>
                     <div className="text-right">
-                      {Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})}
+                      {Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 5, maximumFractionDigits: 5})}
                       &nbsp;
                       <FormattedMessage
                         id={ 'listing-detail.ethereumCurrencyAbbrev' }
@@ -385,7 +385,7 @@ class ListingsDetail extends Component {
                                   <div className="total-price d-flex justify-content-between">
                                     <div>Total Price</div>
                                     <div className="price text-right">
-                                      {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
+                                      {Number(price).toLocaleString(undefined, {minimumFractionDigits: 5})} ETH
                                     </div>
                                   </div> */}
                   {!this.state.loading && this.state.address &&
