@@ -39,7 +39,7 @@ Origin-box supports two separate development stacks. One is the standard Origin 
 
 The install script will clone the origin repositories into subdirectories and checkout the develop branch. You can then develop and use them as normal git repositories. If the install script doesn't complete the most likely reason is you don't have the [required ports](#port-errors) open.
 
-![install.sh](https://github.com/tomlinton/origin-develop/raw/master/screenshot.png)
+![install.sh](https://raw.githubusercontent.com/OriginProtocol/origin-box/compose/screenshot.png)
 
 ## Configuration
 
