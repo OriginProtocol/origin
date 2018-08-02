@@ -138,7 +138,6 @@ class MyPurchaseCard extends Component {
               </div>
                 {/* Not Yet Relevant */}
                 {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
-              </div>
               <PurchaseProgress currentStep={step} perspective="buyer" purchase={this.props.purchase} subdued={true} />
               <div className="actions d-flex">
                 <div className="links-container">

@@ -54,8 +54,8 @@ class Calendar extends Component {
     const events = this.props.slots && this.props.slots.map((slot) =>  {
       return { 
         id: uuid(),
-        start: slot.startDate,
-        end: moment(slot.endDate).subtract(1, 'second').toISOString(),
+        start: moment(slot.startDate).toDate(),
+        end: moment(slot.endDate).subtract(1, 'second').toDate(),
         price: slot.priceWei,
         isAvailable: slot.isAvailable,
         slots: slot.slots,
@@ -70,6 +70,7 @@ class Calendar extends Component {
 
   componentDidMount() {
     this.renderHourlyPrices()
+    this.renderRecurringEvents(this.state.defaultDate)
   }
 
   renderHourlyPrices() {
@@ -756,11 +757,6 @@ class Calendar extends Component {
                       </select>
                     </div>
                   </div>
-                  {viewType === 'hourly' &&
-                    <Fragment>
-                      <p>{moment(selectedEvent.start).format('LT')} - {moment(selectedEvent.end).format('LT')}</p>
-                    </Fragment>
-                  }
                 </div>
                 {userType === 'seller' &&
                   <Fragment>
@@ -818,7 +814,7 @@ class Calendar extends Component {
                             viewType === 'hourly' &&
                             this.props.step &&
                             <span className="price-label">
-                              &nbsp;ETH per {this.props.intl.formatNumber(this.props.step)} min.
+                              &nbsp;ETH per hour
                             </span>
                           }
                           {viewType === 'daily' &&

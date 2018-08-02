@@ -239,18 +239,18 @@ class ListingCreate extends Component {
   async onSubmitListing(formData, selectedSchemaType) {
     try {
       console.log(formData)
-      this.setState({ step: this.STEP.METAMASK })
+      this.setState({ step: this.STEP.PROCESSING })
 
-      let transactionReceipt
+      let response
 
       if (this.state.isEditMode) {
-        transactionReceipt = await origin.listings.update(this.props.listingAddress, formData)
+        response = await origin.listings.update(this.props.listingAddress, formData)
       } else {
-        transactionReceipt = await origin.listings.create(formData, selectedSchemaType)
+        response = await origin.listings.create(formData, selectedSchemaType, this.props.updateTransaction)
       }
 
-      this.setState({ step: this.STEP.PROCESSING })
-      const { created, transactionReceipt } = await origin.listings.create(formListing.formData, selectedSchemaType, this.props.updateTransaction)
+      const { created, transactionReceipt } = response
+
       this.props.upsertTransaction({
         ...transactionReceipt,
         created,
