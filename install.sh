@@ -47,7 +47,7 @@ function print_website_finish() {
   echo
   echo -e "Origin-website is running at \033[94mhttp://localhost:5000\033[0m"
   echo -e "For more help \033[97mdocker-compose -h\033[0m"
-  echo -e "To follow the logs run \033[97mdocker-compose logs -f\033[0m"
+  echo -e "To follow the logs run \033[97mdocker-compose -f docker-compose-web.yml logs -f\033[0m"
 }
 
 function run_step() {
@@ -64,6 +64,7 @@ function run_step() {
   eval "$dry $@ $out"
   wait
 
+  # Only display a tick if in quiet mode
   if [ $QUIET -eq 1 ] ; then
     echo -e "\033[97m ✓\033[0m"
   fi
@@ -73,13 +74,13 @@ function install_origin_environment() {
 	print_origin_start
 
 	run_step "Cloning origin-js" \
-		test -d origin-js || git clone https://github.com/OriginProtocol/origin-js.git --branch develop
+		git clone https://github.com/OriginProtocol/origin-js.git --branch develop || true
 
 	run_step "Cloning origin-bridge" \
-		test -d origin-bridge || git clone https://github.com/OriginProtocol/origin-bridge.git --branch develop
+		git clone https://github.com/OriginProtocol/origin-bridge.git --branch develop || true
 
 	run_step "Cloning origin-dapp" \
-		test -d origin-dapp || git clone https://github.com/OriginProtocol/origin-dapp.git --branch develop
+		git clone https://github.com/OriginProtocol/origin-dapp.git --branch develop || true
 
 	run_step "Building containers" \
 		docker-compose build
@@ -87,7 +88,7 @@ function install_origin_environment() {
 	run_step "Bringing up stack" \
 		docker-compose up -d &&
 
-	run_step "Waiting for contract compilation" \
+	run_step "Compiling contracts" \
 		docker-compose exec origin-bridge wait-for.sh -t 0 -q origin-js:8081
 
 	run_step "Configuring database" \
@@ -101,7 +102,7 @@ function install_website_environment() {
 	print_website_start
 
 	run_step "Cloning origin-website" \
-		test -d origin-website || git clone https://github.com/OriginProtocol/origin-website.git --branch develop
+		git clone https://github.com/OriginProtocol/origin-website.git --branch develop || true
 
 	run_step "Building containers" \
 	  docker-compose -f docker-compose-web.yml build
@@ -115,7 +116,7 @@ function install_website_environment() {
 	print_website_finish
 }
 
-while getopts "e:vdh" opt; do
+	while getopts "e:qdh" opt; do
   case $opt in
     e)
       ENV=$OPTARG
