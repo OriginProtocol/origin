@@ -64,7 +64,7 @@ class MyListingCard extends Component {
             <h2 className="title text-truncate"><Link to={`/listing/${address}`}>{name}</Link></h2>
             {/*<p className="timestamp">{timestamp}</p>*/}
             <p className="price">
-              {`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ETH`}
+              {`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 5 })} ETH`}
               {!parseInt(unitsAvailable) /*<= quantity*/ && <span className="badge badge-info">Sold Out</span>}
             </p>
             <div className="d-flex counts">

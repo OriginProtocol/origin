@@ -72,7 +72,7 @@ class MyPurchaseCard extends Component {
               <h2 className="title text-truncate"><Link to={`/purchases/${address}`}>{name}</Link></h2>
               <p className="timestamp">{timestamp}</p>
               <div className="d-flex">
-                <p className="price">{`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ETH`}</p>
+                <p className="price">{`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 5 })} ETH`}</p>
                 {/* Not Yet Relevant */}
                 {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
               </div>

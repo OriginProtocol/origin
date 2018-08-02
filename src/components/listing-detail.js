@@ -281,7 +281,7 @@ class ListingsDetail extends Component {
                   <div className="price d-flex justify-content-between">
                     <div>Price</div>
                     <div className="text-right">
-                      {Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
+                      {Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 5})} ETH
                     </div>
                   </div>
                   {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
@@ -294,7 +294,7 @@ class ListingsDetail extends Component {
                                   <div className="total-price d-flex justify-content-between">
                                     <div>Total Price</div>
                                     <div className="price text-right">
-                                      {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
+                                      {Number(price).toLocaleString(undefined, {minimumFractionDigits: 5})} ETH
                                     </div>
                                   </div> */}
                   {!this.state.loading && this.state.address &&

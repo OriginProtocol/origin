@@ -321,7 +321,7 @@ class PurchaseDetail extends Component {
     const withdrawalEvent = logs.find(l => l.stage === 'complete')
     const withdrawnAt = withdrawalEvent ? withdrawalEvent.timestamp * 1000 : null
     const reviewedAt = null
-    const price = `${Number(listing.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH` // change to priceEth
+    const price = `${Number(listing.price).toLocaleString(undefined, {minimumFractionDigits: 5})} ETH` // change to priceEth
 
     const counterparty = ['buyer', 'seller'].find(str => str !== perspective)
     const counterpartyUser = counterparty === 'buyer' ? buyer : seller

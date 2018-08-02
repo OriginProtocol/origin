@@ -26,7 +26,7 @@ class MySaleCard extends Component {
     const { name, pictures } = listing
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
     const buyerName = (user && user.profile && `${user.profile.firstName} ${user.profile.lastName}`) || 'Unnamed User'
-    const price = `${Number(listing.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH` // change to priceEth
+    const price = `${Number(listing.price).toLocaleString(undefined, {minimumFractionDigits: 5})} ETH` // change to priceEth
     const soldAt = purchase.created * 1000 // convert seconds since epoch to ms
 
     let step
