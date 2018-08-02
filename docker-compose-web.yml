@@ -63,6 +63,10 @@ services:
       # Set the envfile from the local envfile
       - ./envfiles/origin-website.env:/app/.env
     environment:
+      # TODO this should be read from the .env file in origin-website
+      - CELERY_DEBUG=False
+      # TODO same as above
+      - REDIS_URL=redis://redis:6379/1
       - FLASK_APP=/app/main.py
     command: "watchmedo auto-restart -d . -p '*.py' -i '*.pyc' --recursive --
       celery -A util.tasks worker --loglevel=INFO"
