@@ -124,7 +124,7 @@ class Calendar extends Component {
     })
   }
 
-  onSelectSlot(slotInfo, shouldOverrideExistingEvent) {
+  onSelectSlot(slotInfo) {
     if (this.props.userType === 'seller') {
       // remove last slot time for hourly calendars - not sure why React Big Calendar includes
       // the next slot after the last selected time slot - seems like a bug.
@@ -163,19 +163,8 @@ class Calendar extends Component {
         })
       }
 
-      // For handling changes in date dropdowns
-      let updatedExistingEvent
-      if (shouldOverrideExistingEvent && existingEventInSlot.length === 1) {
-        updatedExistingEvent = existingEventInSlot[0] && {
-          ...existingEventInSlot[0],
-          start: slotInfo.start,
-          end: slotInfo.end,
-          slots: slotInfo.slots
-        }
-      }
-
-      if (updatedExistingEvent || newEvent) {
-        this.onSelectEvent(updatedExistingEvent || newEvent, true)
+      if (newEvent) {
+        this.onSelectEvent(newEvent, true)
       }
     } else {
       // user is a buyer
@@ -248,7 +237,9 @@ class Calendar extends Component {
 
     this.setState(stateToSet)
 
-    if (shouldSaveEvent) {
+    // needs strict check for bool true value b/c the event gets passed in as a second param 
+    // when this method gets called by the calendar prop
+    if (shouldSaveEvent === true) {
       this.saveEvent(event)
     }
   }
@@ -266,11 +257,28 @@ class Calendar extends Component {
   saveEvent(selectedEvent) {
     const thisEvent = (selectedEvent && selectedEvent.id ? selectedEvent : false) || this.state.selectedEvent
     const allOtherEvents = this.state.events.filter((event) => event.id !== thisEvent.id)
-
-    this.setState({
+    const stateToSet = {
       events: [...allOtherEvents, thisEvent],
       showSellerActionBtns: false
-    })
+    }
+
+    if (thisEvent.isClonedRecurringEvent) {
+      stateToSet.events = this.state.events.map((eventObj) => {
+        if (eventObj.id === thisEvent.originalEventId) {
+          const { start, end, isAvailable, price, isRecurringEvent } = thisEvent
+          Object.assign(eventObj, {
+            start,
+            end,
+            isAvailable,
+            price,
+            isRecurringEvent
+          })
+        }
+        return eventObj
+      })
+    }
+
+    this.setState(stateToSet)
 
     // wait for state to update, then render recurring events on monthly calendar if recurring events checkbox is checked
     setTimeout(() => {
@@ -347,12 +355,14 @@ class Calendar extends Component {
       return slots
     }
 
-    this.onSelectSlot({
-      ...this.state.selectedEvent,
-      slots: getSlots(),
-      [whichDropdown]: new Date(value)
-    },
-    true)
+    this.setState({
+      selectedEvent: {
+        ...this.state.selectedEvent,
+        slots: getSlots(),
+        [whichDropdown]: new Date(value)
+      },
+      showSellerActionBtns: true
+    })
   }
 
   getDateDropdownOptions(date) {
@@ -366,25 +376,13 @@ class Calendar extends Component {
   }
 
   onIsRecurringEventChange(event) {
-    const { selectedEvent, events } = this.state
-    const stateToSet = {
+    this.setState({
       selectedEvent: {
-        ...selectedEvent,
+        ...this.state.selectedEvent,
         isRecurringEvent: event.target.checked
       },
       showSellerActionBtns: true
-    }
-
-    if (selectedEvent.isClonedRecurringEvent) {
-      stateToSet.events = events.map((eventObj) => {
-        if (eventObj.id === selectedEvent.originalEventId) {
-          eventObj.isRecurringEvent = event.target.checked
-        }
-        return eventObj
-      })
-    }
-
-    this.setState(stateToSet)
+    })
   }
 
   eventComponent(data) {
