@@ -38,7 +38,7 @@ class VerifyFacebook extends Component {
             defaultMessage={ 'Verify Your Facebook Account' }
           />
         </h2>
-        <div className="general-error">{this.state.generalErrors.length > 0 ? this.state.generalErrors.join(' ') : ''}</div>
+        {this.state.generalErrors.length > 0 ? <div className="general-error">{this.state.generalErrors.join(' ')}</div> : ''}
         <div className="explanation">
           <FormattedMessage
             id={ 'VerifyFacebook.accountNotPublic' }

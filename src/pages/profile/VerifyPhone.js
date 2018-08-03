@@ -111,7 +111,7 @@ class VerifyPhone extends Component {
               defaultMessage={ 'Verify Your Phone Number' }
             />
           </h2>
-          <div className="general-error">{this.state.generalErrors.length > 0 ? this.state.generalErrors.join(' ') : ''}</div>
+          {this.state.generalErrors.length > 0 ? <div className="general-error">{this.state.generalErrors.join(' ')}</div> : ''}
           {this.state.mode === 'phone' && this.renderPhoneForm()}
           {this.state.mode === 'code' && this.renderCodeForm()}
           <div className="button-container">

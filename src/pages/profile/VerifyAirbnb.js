@@ -14,6 +14,8 @@ class VerifyAirbnb extends Component {
       formErrors: {},
       generalErrors: []
     }
+
+    this.onCancel = this.onCancel.bind(this)
   }
 
   render() {
@@ -33,7 +35,7 @@ class VerifyAirbnb extends Component {
             defaultMessage={ 'Verify your Airbnb account' }
           />
         </h2>
-        <div className="general-error">{this.state.generalErrors.length > 0 ? this.state.generalErrors.join(' ') : ''}</div>
+        {this.state.generalErrors.length > 0 ? <div className="general-error">{this.state.generalErrors.join(' ')}</div> : ''}
         {this.state.mode === 'input-airbnb-profile' ? this.renderInputAirbnbProfile() : this.renderShowGeneratedCode()}
       </Modal>
     )
@@ -95,7 +97,7 @@ class VerifyAirbnb extends Component {
               }
               required
             />
-            <div className="error_message">{airbnbUserIdError ? airbnbUserIdError.join(' ') : ''}</div>
+            {airbnbUserIdError ? <div className="error_message"> {airbnbUserIdError.join(' ')} </div> : ''}
             </div>
           <div className="explanation">
             <FormattedMessage

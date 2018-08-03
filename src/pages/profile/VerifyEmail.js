@@ -44,7 +44,7 @@ class VerifyEmail extends Component {
         </div>
         <form onSubmit={this.handleSubmit}>
           <h2>Verify Your Email Address</h2>
-          <div className="general-error">{this.state.generalErrors.length > 0 ? this.state.generalErrors.join(' ') : ''}</div>
+          {this.state.generalErrors.length > 0 ? <div className="general-error">{this.state.generalErrors.join(' ')}</div> : ''}
           {this.state.mode === 'email'
             ? this.renderEmailForm()
             : this.renderCodeForm()}
