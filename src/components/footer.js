@@ -19,9 +19,10 @@ class Footer extends Component {
 
   componentDidMount() {
     this.localizeWhitepaperUrl()
+    
     $('[data-toggle="tooltip"]').tooltip({
       html: true
-    });
+    })
   }
 
   localizeApp(langAbbrev) {

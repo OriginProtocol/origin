@@ -141,8 +141,8 @@ class VerifyPhone extends Component {
 
   clearErrors() {
     // clear errors
-    this.setState({formErrors: {}})
-    this.setState({generalErrors:[]})
+    this.setState({ formErrors: {} })
+    this.setState({ generalErrors:[] })
   }
 
   onCancel(event) {
