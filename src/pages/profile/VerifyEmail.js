@@ -125,20 +125,20 @@ class VerifyEmail extends Component {
           {' will send you a verification code'}
         </label>
         <div className={`form-control-wrap ${emailErrors ? 'error' : ''}`}>
-            <input
-              type="email"
-              className="form-control"
-              id="email"
-              name="email"
-              value={this.state.email}
-              onChange={e =>
-                this.setState({ email: e.currentTarget.value })
-              }
-              placeholder={this.props.intl.formatMessage(this.intlMessages.emailVerificationAddressPlaceholder)}
-              required
-            />
-            {emailErrors ? <div className="error_message">{emailErrors.join(' ')}</div>: ''}
-          </div>
+          <input
+            type="email"
+            className="form-control"
+            id="email"
+            name="email"
+            value={this.state.email}
+            onChange={e =>
+              this.setState({ email: e.currentTarget.value })
+            }
+            placeholder={this.props.intl.formatMessage(this.intlMessages.emailVerificationAddressPlaceholder)}
+            required
+          />
+          {emailErrors ? <div className="error_message">{emailErrors.join(' ')}</div>: ''}
+        </div>
         <div className="explanation">
           <FormattedMessage
             id={ 'VerifyEmail.emailNotPublished' }

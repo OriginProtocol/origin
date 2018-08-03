@@ -243,6 +243,7 @@ class VerifyPhone extends Component {
   }
 
   renderCodeForm() {
+    const codeError = this.state.formErrors.code
     return (
       <div className="form-group">
         <label htmlFor="phoneVerificationCode">
@@ -251,19 +252,22 @@ class VerifyPhone extends Component {
             defaultMessage={ 'Enter the code we sent you below' }
           />
         </label>
-        <input
-          className="form-control"
-          id="phoneVerificationCode"
-          name="phone-verification-code"
-          value={this.state.verificationCode}
-          onChange={e => {
-            this.setState({ verificationCode: e.target.value })
-          }}
-          placeholder={this.props.intl.formatMessage(this.intlMessages.phoneVerificationCodePlaceholder)}
-          pattern="[a-zA-Z0-9]{6}"
-          title="6-Character Verification Code"
-          required
-        />
+        <div className={`form-control-wrap wide-control ${codeError ? 'error' : ''}`}>
+          <input
+            className="form-control"
+            id="phoneVerificationCode"
+            name="phone-verification-code"
+            value={this.state.verificationCode}
+            onChange={e => {
+              this.setState({ verificationCode: e.target.value })
+            }}
+            placeholder={this.props.intl.formatMessage(this.intlMessages.phoneVerificationCodePlaceholder)}
+            pattern="[a-zA-Z0-9]{6}"
+            title="6-Character Verification Code"
+            required
+          />
+        {codeError ? <div className="error_message"> {codeError.join(' ')} </div> : ''}
+        </div>
       </div>
     )
   }

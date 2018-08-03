@@ -67,9 +67,7 @@ class VerifyAirbnb extends Component {
               defaultMessage={ 'Enter Airbnb profile Url below' }
             /> }
           </label>
-          <div 
-            className={`form-control-wrap wide-control ${airbnbUserIdError ? 'error' : ''}`}
-          >
+          <div className={`form-control-wrap wide-control ${airbnbUserIdError ? 'error' : ''}`}>
             <input
               type="url"
               className="form-control"
@@ -94,8 +92,8 @@ class VerifyAirbnb extends Component {
               }
               required
             />
-            {airbnbUserIdError ? <div className="error_message"> {airbnbUserIdError.join(' ')} </div> : ''}
-            </div>
+          {airbnbUserIdError ? <div className="error_message"> {airbnbUserIdError.join(' ')} </div> : ''}
+          </div>
           <div className="explanation">
             <FormattedMessage
               id={ 'VerifyAirbnb.airbnbProfilePublished' }
