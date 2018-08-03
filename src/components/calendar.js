@@ -14,6 +14,7 @@ class Calendar extends Component {
     this.onSelectEvent = this.onSelectEvent.bind(this)
     this.handlePriceChange = this.handlePriceChange.bind(this)
     this.saveEvent = this.saveEvent.bind(this)
+    this.deleteEvent = this.deleteEvent.bind(this)
     this.cancelEvent = this.cancelEvent.bind(this)
     this.onAvailabilityChange = this.onAvailabilityChange.bind(this)
     this.onDateDropdownChange = this.onDateDropdownChange.bind(this)
@@ -286,7 +287,7 @@ class Calendar extends Component {
     })
   }
 
-  cancelEvent() {
+  deleteEvent() {
     const confirmation = confirm('Are you sure you want to delete this event?')
     const { selectedEvent, events } = this.state
 
@@ -317,6 +318,14 @@ class Calendar extends Component {
         this.renderRecurringEvents(this.state.defaultDate)
       })
     }
+  }
+
+  cancelEvent() {
+    const unChangedEvent = this.state.events.filter((event) => event.id === this.state.selectedEvent.id)
+    this.setState({
+      selectedEvent: unChangedEvent[0],
+      showSellerActionBtns: false
+    })
   }
 
   onAvailabilityChange(event) {
@@ -713,6 +722,7 @@ class Calendar extends Component {
             }
             {selectedEvent && selectedEvent.start && !this.state.showOverlappingEventsErrorMsg &&
               <div className="calendar-cta">
+                <span className="delete-btn" onClick={this.deleteEvent}>delete</span>
                 <p className="font-weight-bold">Selected { viewType === 'daily' ? 'dates' : 'times' }</p>
                 <div>
                   <div className="row">
