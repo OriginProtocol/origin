@@ -111,7 +111,11 @@ class VerifyPhone extends Component {
               defaultMessage={ 'Verify Your Phone Number' }
             />
           </h2>
-          {this.state.generalErrors.length > 0 ? <div className="general-error">{this.state.generalErrors.join(' ')}</div> : ''}
+          {this.state.generalErrors.length > 0 &&
+            <div className="general-error">
+              {this.state.generalErrors.join(' ')}
+            </div>
+          }
           {this.state.mode === 'phone' && this.renderPhoneForm()}
           {this.state.mode === 'code' && this.renderCodeForm()}
           <div className="button-container">
@@ -142,7 +146,7 @@ class VerifyPhone extends Component {
   clearErrors() {
     // clear errors
     this.setState({ formErrors: {} })
-    this.setState({ generalErrors:[] })
+    this.setState({ generalErrors: [] })
   }
 
   onCancel(event) {
@@ -229,7 +233,11 @@ class VerifyPhone extends Component {
               title="Numbers only"
               required
             />
-            {phoneErrors ? <div className="error_message">{phoneErrors.join(' ')}</div> : ''}
+            {phoneErrors &&
+              <div className="error_message">
+                {phoneErrors.join(' ')}
+              </div>
+            }
           </div>
         </div>
         <div className="explanation">
@@ -244,6 +252,7 @@ class VerifyPhone extends Component {
 
   renderCodeForm() {
     const codeError = this.state.formErrors.code
+
     return (
       <div className="form-group">
         <label htmlFor="phoneVerificationCode">
@@ -266,7 +275,11 @@ class VerifyPhone extends Component {
             title="6-Character Verification Code"
             required
           />
-        {codeError ? <div className="error_message"> {codeError.join(' ')} </div> : ''}
+        {codeError &&
+          <div className="error_message">
+            {codeError.join(' ')}
+          </div>
+        }
         </div>
       </div>
     )

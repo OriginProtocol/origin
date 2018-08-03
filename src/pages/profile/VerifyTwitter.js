@@ -39,7 +39,11 @@ class VerifyTwitter extends Component {
             defaultMessage={ 'Verify Your Twitter Account' }
           />
         </h2>
-        {this.state.generalErrors.length > 0 ? <div className="general-error">{this.state.generalErrors.join(' ')}</div> : ''}
+        {this.state.generalErrors.length > 0 &&
+          <div className="general-error">
+            {this.state.generalErrors.join(' ')}
+          </div>
+        }
         <div className="explanation">
           <FormattedMessage
             id={ 'VerifyTwitter.twitterNotPublic' }
@@ -79,7 +83,7 @@ class VerifyTwitter extends Component {
   }
 
   clearErrors() {
-    this.setState({generalErrors:[]})
+    this.setState({ generalErrors: [] })
   }
 
   async catchPossibleErrors(callback, event) {

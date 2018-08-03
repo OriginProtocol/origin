@@ -35,7 +35,11 @@ class VerifyAirbnb extends Component {
             defaultMessage={ 'Verify your Airbnb account' }
           />
         </h2>
-        {this.state.generalErrors.length > 0 ? <div className="general-error">{this.state.generalErrors.join(' ')}</div> : ''}
+        {this.state.generalErrors.length > 0 &&
+          <div className="general-error">
+            {this.state.generalErrors.join(' ')}
+          </div>
+        }
         {this.state.mode === 'input-airbnb-profile' ? this.renderInputAirbnbProfile() : this.renderShowGeneratedCode()}
       </Modal>
     )
@@ -92,7 +96,11 @@ class VerifyAirbnb extends Component {
               }
               required
             />
-          {airbnbUserIdError ? <div className="error_message"> {airbnbUserIdError.join(' ')} </div> : ''}
+            {airbnbUserIdError &&
+              <div className="error_message">
+                {airbnbUserIdError.join(' ')}
+              </div>
+            }
           </div>
           <div className="explanation">
             <FormattedMessage
