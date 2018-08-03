@@ -137,7 +137,7 @@ class VerifyEmail extends Component {
               placeholder={this.props.intl.formatMessage(this.intlMessages.emailVerificationAddressPlaceholder)}
               required
             />
-            <div className="error_message">{emailErrors ? emailErrors.join(' ') : ''}</div>
+            {emailErrors ? <div className="error_message">{emailErrors.join(' ')}</div>: ''}
           </div>
         <div className="explanation">
           <FormattedMessage
@@ -171,7 +171,7 @@ class VerifyEmail extends Component {
             title="6-Character Verification Code"
             required
           />
-          <div className="error_message">{codeErrors ? codeErrors.join(' ') : ''}</div>
+          {codeErrors ? <div className="error_message">{codeErrors.join(' ')}</div> : ''}
         </div>
       </div>
     )

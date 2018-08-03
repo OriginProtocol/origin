@@ -111,11 +111,7 @@ class VerifyFacebook extends Component {
           this.setState({
             generalErrors: Object.keys(errorsJson)
               // Prepend the error with the field that is causing the error
-              .map(field =>
-                field + ": " +
-                // Join all the errors into a single string
-                errorsJson[field].join(' ')
-              )
+              .map(field => `${field} : ${errorsJson[field].join(' ')}`)
           })
       }
     }

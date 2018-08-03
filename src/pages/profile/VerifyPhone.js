@@ -229,7 +229,7 @@ class VerifyPhone extends Component {
               title="Numbers only"
               required
             />
-            <div className="error_message">{phoneErrors ? phoneErrors.join(' ') : ''}</div>
+            {phoneErrors ? <div className="error_message">{phoneErrors.join(' ')}</div> : ''}
           </div>
         </div>
         <div className="explanation">
