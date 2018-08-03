@@ -301,7 +301,14 @@ class PurchaseDetail extends Component {
       const { created, transactionReceipt } = await origin.purchases.buyerConfirmReceipt(purchaseAddress, {
         rating,
         reviewText: reviewText.trim(),
-      }, this.props.updateTransaction)
+      }, (confirmationCount, transactionReceipt) => {
+        // Having a transaction receipt doesn't guarantee that the purchase state will have changed.
+        // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
+        this.loadPurchase()
+        this.loadReviews(this.state.listing.address)
+
+        this.props.updateTransaction(confirmationCount, transactionReceipt)
+      })
 
       this.props.upsertTransaction({
         ...transactionReceipt,
@@ -309,12 +316,7 @@ class PurchaseDetail extends Component {
         transactionTypeKey: 'confirmReceipt',
       })
 
-      // why is this delay often required???
-      setTimeout(() => {
-        this.setState({ processing: false })
-        this.loadPurchase()
-        this.loadReviews(this.state.listing.address)
-      }, 1000)
+      this.setState({ processing: false })
     } catch(error) {
       this.setState({ processing: false })
       
@@ -329,7 +331,16 @@ class PurchaseDetail extends Component {
     try {
       this.setState({ processing: true })
 
-      const { created, transactionReceipt } = await origin.purchases.sellerConfirmShipped(purchaseAddress, this.props.updateTransaction)
+      const { created, transactionReceipt } = await origin.purchases.sellerConfirmShipped(
+        purchaseAddress,
+        (confirmationCount, transactionReceipt) => {
+          // Having a transaction receipt doesn't guarantee that the purchase state will have changed.
+          // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
+          this.loadPurchase()
+
+          this.props.updateTransaction(confirmationCount, transactionReceipt)
+        }
+      )
 
       this.props.upsertTransaction({
         ...transactionReceipt,
@@ -337,11 +348,7 @@ class PurchaseDetail extends Component {
         transactionTypeKey: 'confirmShipped',
       })
 
-      // why is this delay often required???
-      setTimeout(() => {
-        this.setState({ processing: false })
-        this.loadPurchase()
-      }, 1000)
+      this.setState({ processing: false })
     } catch(error) {
       this.setState({ processing: false })
       
@@ -360,7 +367,14 @@ class PurchaseDetail extends Component {
       const { created, transactionReceipt } = await origin.purchases.sellerGetPayout(purchaseAddress, {
         rating,
         reviewText: reviewText.trim(),
-      }, this.props.updateTransaction)
+      }, (confirmationCount, transactionReceipt) => {
+        // Having a transaction receipt doesn't guarantee that the purchase state will have changed.
+        // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
+        this.loadPurchase()
+        this.loadReviews(this.state.listing.address)
+
+        this.props.updateTransaction(confirmationCount, transactionReceipt)
+      })
 
       this.props.upsertTransaction({
         ...transactionReceipt,
@@ -368,11 +382,7 @@ class PurchaseDetail extends Component {
         transactionTypeKey: 'getPayout',
       })
 
-      // why is this delay often required???
-      setTimeout(() => {
-        this.setState({ processing: false })
-        this.loadPurchase()
-      }, 1000)
+      this.setState({ processing: false })
     } catch(error) {
       this.setState({ processing: false })
 
