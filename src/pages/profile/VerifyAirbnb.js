@@ -68,16 +68,13 @@ class VerifyAirbnb extends Component {
             /> }
           </label>
           <div 
-            className={`form-control-wrap ${airbnbUserIdError ? 'error' : ''}`} 
-            style={{ 'maxWidth': `400px` }}
+            className={`form-control-wrap wide-control ${airbnbUserIdError ? 'error' : ''}`}
           >
             <input
               type="url"
               className="form-control"
               id="airbnbProfile"
               name="airbnbProfile"
-              // Making wider input, so that the whole profile placeholder can be viewed without trimming
-              style={{ maxWidth: `400px` }}
               value={this.state.airbnbProfile}
               onChange={e =>
                 this.setState({ airbnbProfile: e.currentTarget.value })
@@ -156,10 +153,8 @@ class VerifyAirbnb extends Component {
           </label>
           <textarea
             className="form-control"
-            id="generated-code"
+            id="airbnb-generated-code"
             readOnly="readOnly"
-            // Making input wider, so that the whole verification code can be viewed without trimming.
-            style={{ maxWidth: '340px', height: '92px', resize: 'none' }}
             value={
               this.state.confirmationCode == '' ?
                 this.props.intl.formatMessage({

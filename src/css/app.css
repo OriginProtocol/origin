@@ -1212,11 +1212,25 @@ a:hover {
   max-width: 288px;
 }
 
+.form-control-wrap .form-control {
+  max-width: none;
+}
+
+.form-control#airbnb-generated-code {
+  max-width: 340px;
+  height: 92px;
+  resize: none;
+}
+
 .form-control-wrap {
   width: 100%;
   max-width: 288px;
   margin-right: auto;
   display: inline-block;
+}
+
+.form-control-wrap.wide-control {
+  max-width: 400px;
 }
 
 .form-control-wrap.error input {
