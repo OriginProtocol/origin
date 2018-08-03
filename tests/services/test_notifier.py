@@ -1,7 +1,7 @@
 from mock import MagicMock
 
 from database.db_models import EthNotificationEndpoint, EthNotificationTypes, EventTracker
-from logic.indexer_service import EventHandler
+from logic.event_handler import EventHandler
 from logic.notifier_service import register_eth_notification, notification_messages, Notification
 from tests.helpers.eth_utils import sample_eth_address, str_eth
 from util.contract import ContractHelper

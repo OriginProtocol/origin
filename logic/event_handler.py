@@ -4,11 +4,12 @@ from enum import Enum
 from web3 import Web3
 
 from database import db
-from database.db_models import Listing, EventTracker, Purchase, Review
+from database.db_models import EventTracker, Review
+from logic.db_indexer_service import DatabaseIndexer
 from logic.notifier_service import Notifier
-from logic.search_service import SearchIndexer
+from logic.search_indexer_service import SearchIndexer
 from util.contract import ContractHelper
-from util.ipfs import hex_to_base58, IPFSHelper
+from util.ipfs import hex_to_base58
 from util.time_ import unix_to_datetime
 
 
@@ -36,79 +37,6 @@ class EmptyIPFSHashError(Exception):
 
 NULL_BYTES32 = b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
     b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-
-
-class DatabaseIndexer():
-    """
-    DatabaseIndexer persists events in a relational database.
-    """
-    @classmethod
-    def create_or_update_listing(cls, listing_data):
-        """
-        Creates a new or updates an existing Listing row in the database.
-        """
-        listing_obj = Listing.query .filter_by(
-            contract_address=listing_data['contract_address']).first()
-
-        # Load IPFS data. Note: we filter out pictures since those should
-        # not get persisted in the database.
-        listing_data['ipfs_data'] = \
-            IPFSHelper().file_from_hash(listing_data['ipfs_hash'],
-                                        root_attr='data',
-                                        exclude_fields=['pictures'])
-
-        if not listing_obj:
-            # No existing Listing in the DB.
-            # Download content from IPFS then insert new row in the DB.
-            listing_obj = Listing(**listing_data)
-            db.session.add(listing_obj)
-        else:
-            # Update existing Listing in the DB.
-            if listing_obj.ipfs_hash != listing_data['ipfs_hash']:
-                listing_obj.ipfs_hash = listing_data['ipfs_hash']
-                listing_obj.ipfs_data = listing_data['ipfs_data']
-            listing_obj.price = listing_data['price']
-            listing_obj.units = listing_data['units']
-        db.session.commit()
-        return listing_obj
-
-    @classmethod
-    def create_or_update_purchase(cls, purchase_data):
-        """
-        Creates a new or updates an existing Purchase row in the database.
-        """
-        purchase_obj = Purchase.query .filter_by(
-            contract_address=purchase_data['contract_address']).first()
-
-        listing_obj = Listing.query .filter_by(
-            contract_address=purchase_data['listing_address']).first()
-
-        if not listing_obj:
-            return None
-
-        if not purchase_obj:
-            purchase_obj = Purchase(**purchase_data)
-            db.session.add(purchase_obj)
-        else:
-            if purchase_obj.stage != purchase_data['stage']:
-                purchase_obj.stage = purchase_data['stage']
-        db.session.commit()
-        return purchase_obj
-
-    @classmethod
-    def create_or_update_review(cls, review_data):
-        """
-        Creates a new Review row in the database.
-        Not sure if we would have updates on Review, sticking to classmethod
-        naming covention for now.
-        """
-        # Load review data (which includes review text) from IPFS.
-        review_data['ipfs_data'] = \
-            IPFSHelper().file_from_hash(review_data['ipfs_hash'])
-        review_obj = Review(**review_data)
-        db.session.add(review_obj)
-        db.session.commit()
-        return review_obj
 
 
 class EventHandler():

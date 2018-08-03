@@ -6,7 +6,7 @@ from flask import Flask
 from database import db
 from database import db_models
 from .contract import ContractHelper
-from logic.indexer_service import EventHandler
+from logic.event_handler import EventHandler
 
 logger = get_task_logger(__name__)
 

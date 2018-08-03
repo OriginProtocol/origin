@@ -3,7 +3,7 @@
 import argparse
 import logging
 
-from logic.indexer_service import EventHandler
+from logic.event_handler import EventHandler
 from tools import db_utils
 from util import patches
 from util.contract import ContractHelper

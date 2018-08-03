@@ -98,3 +98,5 @@ BONSAI_URL = get_env_default('BONSAI_URL')
 CONTRACT_DIR = get_env_default('CONTRACT_DIR') or 'contracts'
 
 RESOURCES_DIR = get_env_default('RESOURCES_DIR') or 'resources'
+
+INTERNAL_API_TOKEN = get_env_default('INTERNAL_API_TOKEN')

@@ -1,5 +1,7 @@
-from flask import jsonify
+from flask import jsonify, request
 from marshmallow import Schema, ValidationError
+
+from config import settings
 from logic.service_utils import ServiceError
 
 
@@ -45,3 +47,23 @@ def handle_request(data, handler, request_schema, response_schema):
         })
         response.status_code = service_err.status_code
         return response
+
+
+def internal_api(method):
+    """
+    Decorator for internal API routes.
+    Checks for presence of the internal API token.
+
+    Raises:
+        ValidationError
+    """
+    def check_token(*args, **kwargs):
+        """
+        Checks the header contains the expected internal API token.
+        """
+        token = request.headers.get('X-Internal-API-Token')
+        if token is None or token != settings.INTERNAL_API_TOKEN:
+            raise ValidationError("Invalid token")
+        return method(*args, **kwargs)
+
+    return check_token
