@@ -228,11 +228,11 @@ class VerificationService:
         """
         verification_obj = session.get('email_attestation', None)
         if not verification_obj:
-            raise ValidationError('No verification code was found.')
+            raise EmailVerificationError('No verification code was found.')
 
         if not check_password_hash(verification_obj['email'], email):
-            raise ValidationError(
-                'No verification code was found for that email.', 'email'
+            raise EmailVerificationError(
+                'No verification code was found for that email.'
             )
 
         if verification_obj['expiry'] < datetime.datetime.utcnow():
@@ -337,16 +337,14 @@ class VerificationService:
         })
 
     def generate_airbnb_verification_code(eth_address, airbnbUserId):
-        if not re.compile(r"^\d*$").match(airbnbUserId):
-            raise AirbnbVerificationError('AirbnbUserId should be a number.')
+        validate_airbnb_user_id(airbnbUserId)
 
         return VerificationServiceResponse({
             'code': get_airbnb_verification_code(eth_address, airbnbUserId)
         })
 
     def verify_airbnb(eth_address, airbnbUserId):
-        if not re.compile(r"^\d*$").match(airbnbUserId):
-            raise AirbnbVerificationError('AirbnbUserId should be a number.')
+        validate_airbnb_user_id(airbnbUserId)
 
         code = get_airbnb_verification_code(eth_address, airbnbUserId)
 
@@ -402,6 +400,13 @@ def get_airbnb_verification_code(eth_address, airbnbUserid):
                 )
             )
         )
+
+
+def validate_airbnb_user_id(airbnbUserId):
+    if not re.compile(r"^\d*$").match(airbnbUserId):
+        raise ValidationError(
+            'AirbnbUserId should be a number.',
+            'airbnbUserId')
 
 
 def numeric_eth(str_eth_address):
