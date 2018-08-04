@@ -5,7 +5,7 @@
   "connectivity.ropstenTestNetwork": "Тестовая сеть Ropsten",
   "connectivity.rinkebyTestNetwork": "Тестовая сеть Rinkeby",
   "connectivity.kovanTestNetwork": "Тестовая сеть Kovan",
-  "connectivity.localhost": "Локальный хост",
+  "connectivity.localhost": "Локальный сервер",
   "connectivity.ethereumNetwork": "Сеть Ethereum:",
   "connectivity.connecting": "Соединение...",
   "connectivity.ipfsGateway": "IPFS шлюз:",
