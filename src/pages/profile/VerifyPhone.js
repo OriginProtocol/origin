@@ -15,7 +15,9 @@ class VerifyPhone extends Component {
       countryCallingCode: '1',
       phone: '',
       verificationCode: '',
-      verificationMethod: 'sms'
+      verificationMethod: 'sms',
+      formErrors: {},
+      generalErrors: []
     }
 
     this.intlMessages = defineMessages({
@@ -32,10 +34,12 @@ class VerifyPhone extends Component {
     this.handleSubmit = this.handleSubmit.bind(this)
     this.setSelectedCountry = this.setSelectedCountry.bind(this)
     this.toggleVerificationMethod = this.toggleVerificationMethod.bind(this)
+    this.onCancel = this.onCancel.bind(this)
   }
 
   async handleSubmit(e) {
     e.preventDefault()
+    this.clearErrors()
 
     const { countryCallingCode, mode, phone, verificationCode, verificationMethod } = this.state
 
@@ -44,21 +48,30 @@ class VerifyPhone extends Component {
       phone: String(phone),
     }
 
-    if (mode === 'phone') {
-      await origin.attestations.phoneGenerateCode({
-        ...phoneObj,
-        method: verificationMethod,
-      })
-      // Update mode to display verification code input form
-      this.setState({ mode: 'code' })
-    } else if (mode === 'code') {
-      const phoneAttestation = await origin.attestations.phoneVerify({
-        ...phoneObj,
-        code: verificationCode,
-      })
+    try {
+      if (mode === 'phone') {
+        await origin.attestations.phoneGenerateCode({
+          ...phoneObj,
+          method: verificationMethod,
+        })
+        // Update mode to display verification code input form
+        this.setState({ mode: 'code' })
+      } else if (mode === 'code') {
+        const phoneAttestation = await origin.attestations.phoneVerify({
+          ...phoneObj,
+          code: verificationCode,
+        })
 
-      this.props.onSuccess(phoneAttestation)
-    }
+        this.props.onSuccess(phoneAttestation)
+      }
+    } catch (exception) {
+      const errorsJson = JSON.parse(exception).errors
+        
+      if (Array.isArray(errorsJson)) // Service exceptions
+        this.setState({ generalErrors: errorsJson })
+      else // Form exception
+        this.setState({ formErrors: errorsJson })
+    }  
   }
 
   setSelectedCountry(country) {
@@ -98,6 +111,11 @@ class VerifyPhone extends Component {
               defaultMessage={ 'Verify Your Phone Number' }
             />
           </h2>
+          {this.state.generalErrors.length > 0 &&
+            <div className="general-error">
+              {this.state.generalErrors.join(' ')}
+            </div>
+          }
           {this.state.mode === 'phone' && this.renderPhoneForm()}
           {this.state.mode === 'code' && this.renderCodeForm()}
           <div className="button-container">
@@ -112,7 +130,7 @@ class VerifyPhone extends Component {
             <a
               href="#"
               data-modal="phone"
-              onClick={this.props.handleToggle}
+              onClick={this.onCancel}
             >
               <FormattedMessage
                 id={ 'VerifyPhone.cancel' }
@@ -125,7 +143,23 @@ class VerifyPhone extends Component {
     )
   }
 
+  clearErrors() {
+    // clear errors
+    this.setState({ formErrors: {} })
+    this.setState({ generalErrors: [] })
+  }
+
+  onCancel(event) {
+    event.preventDefault()
+    this.clearErrors()
+    this.setState({ mode: 'phone' })
+
+    this.props.handleToggle(event)
+  }
+
   renderPhoneForm() {
+    const phoneErrors = this.state.formErrors.phone
+
     return (
       <div className="form-group">
         <label htmlFor="phoneNumber">
@@ -184,20 +218,27 @@ class VerifyPhone extends Component {
               <CountryOptions setSelectedCountry={ this.setSelectedCountry } />
             </div>
           </div>
-          <input
-            type="phone"
-            className="form-control"
-            id="phoneNumber"
-            name="phone-number"
-            value={this.state.phone}
-            onChange={e => {
-              this.setState({ phone: e.target.value })
-            }}
-            placeholder={this.props.intl.formatMessage(this.intlMessages.phoneVerificationNumberPlaceholder)}
-            pattern="\d+"
-            title="Numbers only"
-            required
-          />
+          <div className={`form-control-wrap ${phoneErrors ? 'error' : ''}`}>
+            <input
+              type="phone"
+              className="form-control"
+              id="phoneNumber"
+              name="phone-number"
+              value={this.state.phone}
+              onChange={e => {
+                this.setState({ phone: e.target.value })
+              }}
+              placeholder={this.props.intl.formatMessage(this.intlMessages.phoneVerificationNumberPlaceholder)}
+              pattern="\d+"
+              title="Numbers only"
+              required
+            />
+            {phoneErrors &&
+              <div className="error_message">
+                {phoneErrors.join(' ')}
+              </div>
+            }
+          </div>
         </div>
         <div className="explanation">
            <FormattedMessage
@@ -210,6 +251,8 @@ class VerifyPhone extends Component {
   }
 
   renderCodeForm() {
+    const codeError = this.state.formErrors.code
+
     return (
       <div className="form-group">
         <label htmlFor="phoneVerificationCode">
@@ -218,19 +261,26 @@ class VerifyPhone extends Component {
             defaultMessage={ 'Enter the code we sent you below' }
           />
         </label>
-        <input
-          className="form-control"
-          id="phoneVerificationCode"
-          name="phone-verification-code"
-          value={this.state.verificationCode}
-          onChange={e => {
-            this.setState({ verificationCode: e.target.value })
-          }}
-          placeholder={this.props.intl.formatMessage(this.intlMessages.phoneVerificationCodePlaceholder)}
-          pattern="[a-zA-Z0-9]{6}"
-          title="6-Character Verification Code"
-          required
-        />
+        <div className={`form-control-wrap wide-control ${codeError ? 'error' : ''}`}>
+          <input
+            className="form-control"
+            id="phoneVerificationCode"
+            name="phone-verification-code"
+            value={this.state.verificationCode}
+            onChange={e => {
+              this.setState({ verificationCode: e.target.value })
+            }}
+            placeholder={this.props.intl.formatMessage(this.intlMessages.phoneVerificationCodePlaceholder)}
+            pattern="[a-zA-Z0-9]{6}"
+            title="6-Character Verification Code"
+            required
+          />
+        {codeError &&
+          <div className="error_message">
+            {codeError.join(' ')}
+          </div>
+        }
+        </div>
       </div>
     )
   }
