@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'react-intl'
@@ -60,23 +60,10 @@ class ListingsDetail extends Component {
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
   }
 
-  async componentWillMount() {
-    if (this.props.listingAddress) {
-      // Load from IPFS
-      await this.loadListing()
-      await this.loadPurchases()
-      this.loadReviews()
-    }
-    else if (this.props.listingJson) {
-      const obj = Object.assign({}, this.props.listingJson, { loading: false })
-      // Listing json passed in directly
-      this.setState(obj)
-    }
-  }
-
   async loadListing() {
     try {
-      const listing = await origin.listings.get(this.props.listingAddress)
+      const rawListing = await origin.marketplace.getListing(this.props.listingAddress)
+      const listing = rawListing.ipfsData.data
       const translatedListing = translateListingCategory(listing)
       const obj = Object.assign({}, translatedListing, { loading: false })
       this.setState(obj)
@@ -129,8 +116,8 @@ class ListingsDetail extends Component {
     if (this.props.listingAddress) {
       // Load from IPFS
       await this.loadListing()
-      await this.loadPurchases()
-      this.loadReviews()
+      // await this.loadPurchases()
+      // this.loadReviews()
     }
     else if (this.props.listingJson) {
       const obj = Object.assign({}, this.props.listingJson, { loading: false })
@@ -152,12 +139,15 @@ class ListingsDetail extends Component {
       const totalPrice = (unitsToBuy * this.state.price)
       try {
         this.setState({ step: this.STEP.PROCESSING })
-        const { created, transactionReceipt } = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice, this.props.updateTransaction)
-        this.props.upsertTransaction({
-          ...transactionReceipt,
-          created,
-          transactionTypeKey: 'buyListing',
+        await origin.marketplace.makeOffer(this.props.listingAddress, {
+          price: totalPrice
         })
+        // const { created, transactionReceipt } = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice, this.props.updateTransaction)
+        // this.props.upsertTransaction({
+        //   ...transactionReceipt,
+        //   created,
+        //   transactionTypeKey: 'buyListing',
+        // })
         this.setState({ step: this.STEP.PURCHASED })
       } catch (error) {
         console.error(error)
@@ -171,7 +161,7 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    const unitsAvailable = parseInt(this.state.unitsAvailable) // convert string to integer
+    const unitsAvailable = 1 //parseInt(this.state.unitsAvailable) // convert string to integer
     const buyersReviews = this.state.reviews.filter(r => r.revieweeRole === 'SELLER')
     const userIsSeller = this.state.sellerAddress === this.props.web3Account
 
@@ -388,13 +378,13 @@ class ListingsDetail extends Component {
                                       {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
                                     </div>
                                   </div> */}
-                  {!this.state.loading && this.state.address &&
+                  {!this.state.loading &&
                     <div className="btn-container">
                       {!!unitsAvailable && !userIsSeller &&
                         <button
                           className="btn btn-primary"
                           onClick={this.handleBuyClicked}
-                          disabled={!this.state.address}
+                          // disabled={!this.state.address}
                           onMouseDown={e => e.preventDefault()}
                         >
                           <FormattedMessage

@@ -78,7 +78,7 @@ class MyPurchases extends Component {
   async loadPurchase(addr) {
     try {
       const purchase = await origin.purchases.get(addr)
-      
+
       if (purchase.buyerAddress === this.props.web3Account) {
         const purchases = [...this.state.purchases, purchase]
 
@@ -92,8 +92,10 @@ class MyPurchases extends Component {
   }
 
   async componentWillMount() {
-    await this.getListingIds()
-
+    // await this.getListingIds()
+    const purchasesFor = await origin.contractService.currentAccount()
+    var ids = await origin.marketplace.getListings({ purchasesFor })
+    console.log(ids)
     this.setState({ loading: false })
   }
 
@@ -124,7 +126,7 @@ class MyPurchases extends Component {
                 </h1>
               </div>
             </div>
-          }  
+          }
           {!loading && !purchases.length &&
             <div className="row">
               <div className="col-12 text-center">
@@ -160,7 +162,7 @@ class MyPurchases extends Component {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-12 col-md-3">  
+                  <div className="col-12 col-md-3">
                     <div className="filters list-group flex-row flex-md-column">
                       <a className={`list-group-item list-group-item-action${filter === 'pending' ? ' active' : ''}`}
                         onClick={() => this.setState({ filter: 'pending' })}>
@@ -192,8 +194,8 @@ class MyPurchases extends Component {
                   </div>
                 </div>
               </div>
-            </div>  
-          } 
+            </div>
+          }
         </div>
       </div>
     )

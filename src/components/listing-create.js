@@ -144,12 +144,14 @@ class ListingCreate extends Component {
       this.setState({ step: this.STEP.METAMASK })
       console.log(formListing)
       this.setState({ step: this.STEP.PROCESSING })
-      const { created, transactionReceipt } = await origin.listings.create(formListing.formData, selectedSchemaType, this.props.updateTransaction)
-      this.props.upsertTransaction({
-        ...transactionReceipt,
-        created,
-        transactionTypeKey: 'createListing',
-      })
+      console.log(formListing.formData, selectedSchemaType)
+      await origin.marketplace.createListing(formListing.formData)
+      // const { created, transactionReceipt } = await origin.listings.create(formListing.formData, selectedSchemaType, this.props.updateTransaction)
+      // this.props.upsertTransaction({
+      //   ...transactionReceipt,
+      //   created,
+      //   transactionTypeKey: 'createListing',
+      // })
       this.setState({ step: this.STEP.SUCCESS })
     } catch (error) {
       console.error(error)
@@ -244,7 +246,7 @@ class ListingCreate extends Component {
                       <FormattedMessage
                         id={ 'listing-create.howItWorksContentPart1' }
                         defaultMessage={ 'Origin uses a Mozilla project called {jsonSchemaLink}  to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer.' }
-                        values={{ 
+                        values={{
                           jsonSchemaLink: <FormattedMessage id={ 'listing-create.jsonSchema' } defaultMessage={ 'JSONSchema' } />
                         }}
                       />
@@ -252,7 +254,7 @@ class ListingCreate extends Component {
                       <FormattedMessage
                         id={ 'listing-create.howItWorksContentPart2' }
                         defaultMessage={ 'Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.' }
-                        values={{ 
+                        values={{
                           jsonSchemaLink: <FormattedMessage id={ 'listing-create.jsonSchema' } defaultMessage={ 'JSONSchema' } />
                         }}
                       />
@@ -260,7 +262,7 @@ class ListingCreate extends Component {
                         <FormattedMessage
                           id={ 'listing-create.viewSchemaLinkLabel' }
                           defaultMessage={ 'View the {schemaName} schema' }
-                          values={{ 
+                          values={{
                             schemaName: <code>{this.state.selectedSchema.name}</code>
                           }}
                         />
@@ -429,13 +431,13 @@ class ListingCreate extends Component {
                     <FormattedMessage
                       id={ 'listing-create.whatHappensNextContent1' }
                       defaultMessage={ 'When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network.' }
-                      values={{ 
+                      values={{
                         ipfsLink: <a target="_blank" rel="noopener noreferrer" href="https://ipfs.io">
                           <FormattedMessage
                             id={ 'listing-create.IPFS' }
                             defaultMessage={ 'IPFS' }
                           />
-                        </a> 
+                        </a>
                       }}
                     />
                     <br/>
