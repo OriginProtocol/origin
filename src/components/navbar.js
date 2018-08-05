@@ -11,6 +11,10 @@ import NotificationsDropdown from 'components/dropdowns/notifications'
 import TransactionsDropdown from 'components/dropdowns/transactions'
 import UserDropdown from 'components/dropdowns/user'
 import Modal from 'components/modal'
+import {ListingConstants} from "../actions/Listing";
+
+import { searchListings } from 'actions/Listing'
+
 
 class NavBar extends Component {
   constructor(props) {
@@ -28,6 +32,8 @@ class NavBar extends Component {
 
   handleChange(e) {
     this.setState({ searchQuery: e.target.value })
+    console.log("SEARCH BAR=", e.target.value)
+    this.props.searchListings(e.target.value)
   }
 
   handleLink(e) {
@@ -51,10 +57,9 @@ class NavBar extends Component {
             </div>
           </Link>
           <div className="collapse navbar-collapse order-2 order-lg-1" id="navbarSupportedContent">
-            {/* Hidden for current deployment */}
-            {/* <form className="form-inline my-2 my-lg-0">
+            <form className="form-inline my-2 my-lg-0">
               <input className="form-control mr-sm-2" type="search" placeholder="Search Listings" aria-label="Search" onChange={this.handleChange} value={this.state.searchQuery} />
-            </form> */}
+            </form>
             <div className="navbar-nav justify-content-end">
               <Link to="/" className="d-lg-none nav-item nav-link">
                 <FormattedMessage
@@ -131,6 +136,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   storeWeb3Intent: (intent) => dispatch(storeWeb3Intent(intent)),
+  searchListings: (query) => dispatch(searchListings(query))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(NavBar)

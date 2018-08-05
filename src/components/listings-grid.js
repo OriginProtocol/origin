@@ -4,7 +4,7 @@ import { FormattedMessage, FormattedNumber } from 'react-intl'
 import Pagination from 'react-js-pagination'
 import { withRouter } from 'react-router'
 
-import { getListingIds } from 'actions/Listing'
+import { getListingIds, oldGetListingIds } from 'actions/Listing'
 
 import ListingCard from 'components/listing-card'
 
@@ -14,16 +14,23 @@ class ListingsGrid extends Component {
     this.state = {
       listingsPerPage: 12
     }
+    console.log("CONSTRUCTING ListingsGrid - props = ", props)
   }
 
   componentWillMount() {
+    console.log("####### In componentWillMount")
+    console.log("this.props=", this.props)
+    console.log("this.state=", this.state)
     this.props.getListingIds()
   }
 
   render() {
+    console.log("IN ListingGrids render")
+    console.log("this.props=", this.props)
+    console.log("this.state=", this.state)
     const { listingsPerPage } = this.state
     const { contractFound, listingIds, hideList } = this.props
-    const pinnedListingIds = [0, 1, 2, 3, 4]
+    const pinnedListingIds = [ ]
     const activePage = this.props.match.params.activePage || 1
     const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
     // Calc listings to show for given page
@@ -85,11 +92,13 @@ class ListingsGrid extends Component {
 const mapStateToProps = state => ({
   listingIds: state.listings.ids,
   hideList: state.listings.hideList,
-  contractFound: state.listings.contractFound
+  contractFound: state.listings.contractFound,
+  toto: "salut ma poule"
 })
 
 const mapDispatchToProps = dispatch => ({
-  getListingIds: () => dispatch(getListingIds())
+  getListingIds: () => dispatch(getListingIds()),
+  bingo: "eureka"
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ListingsGrid))

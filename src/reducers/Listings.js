@@ -7,6 +7,8 @@ const initialState = {
 }
 
 export default function Listings(state = initialState, action = {}) {
+    console.log("===> Calling Listings reducer with state=", state)
+    console.log("                                   action.type=", action.type)
     switch (action.type) {
 
       case ListingConstants.FETCH_IDS_ERROR:
