@@ -58,7 +58,7 @@ class Notification extends Component {
     const { notification } = this.props
     const { counterpartyAddress, counterpartyName, listing, purchase } = this.state
     const { pictures } = listing
-    const listingImageURL = pictures && pictures.length && (new URL(pictures[0])).protocol === "data:" && pictures[0]
+    const listingImageURL = pictures && pictures.length && pictures[0]
 
     return (
       <li className="list-group-item notification">
