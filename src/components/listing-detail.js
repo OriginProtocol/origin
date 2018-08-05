@@ -164,10 +164,10 @@ class ListingsDetail extends Component {
       const totalPrice = slotsToReserve.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.priceWei, 0)
       this.setState({step: this.STEP.METAMASK})
       try {
-        const transactionReceipt = await origin.listings.request(this.state.address, slotsToReserve, totalPrice)
+        const listingRequest = await origin.listings.request(this.state.address, slotsToReserve, totalPrice)
         console.log('Reservation request sent.')
         this.setState({step: this.STEP.PROCESSING})
-        await origin.contractService.waitTransactionFinished(transactionReceipt.transactionHash)
+        await origin.contractService.waitTransactionFinished(listingRequest.transactionReceipt.transactionHash)
         this.setState({step: this.STEP.PURCHASED})
       } catch (error) {
         window.err = error
