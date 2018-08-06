@@ -114,7 +114,11 @@ class App extends Component {
 
   render() {
     return this.props.selectedLanguageAbbrev ? (
-      <IntlProvider locale={this.props.selectedLanguageAbbrev} messages={this.props.messages} textComponent={Fragment}>
+      <IntlProvider 
+        locale={this.props.selectedLanguageAbbrev}
+        defaultLocale="en-US"
+        messages={this.props.messages}
+        textComponent={Fragment}>
         <Router>
           <ScrollToTop>
             <Web3Provider>

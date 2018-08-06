@@ -83,25 +83,27 @@ export function localizeApp() {
   // Check for a user-selected language from the dropdown menu (stored in local storage)
   const userSelectedLangAbbrev = store.get('preferredLang')
 
-  if (userSelectedLangAbbrev) {
+  // English is our default - to prevent errors, we set to undefined for English
+  if (userSelectedLangAbbrev && userSelectedLangAbbrev !== 'en-US') {
 
+    messages = translations[userSelectedLangAbbrev]
     selectedLanguageAbbrev = userSelectedLangAbbrev
-
-    // English is our default - to prevent errors, we set to undefined for English
-    if (selectedLanguageAbbrev !== 'en-US') {
-      messages = translations[userSelectedLangAbbrev]
-    }
 
   } else {
 
     // Detect user's preferred settings
-    selectedLanguageAbbrev = (navigator.languages && navigator.languages[0]) ||
+    const browserDefaultLang = (navigator.languages && navigator.languages[0]) ||
                              navigator.language ||
                              navigator.userLanguage
 
-    if (selectedLanguageAbbrev !== 'en-US') {
+    if (browserDefaultLang && browserDefaultLang !== 'en-US') {
       messages = translations[selectedLanguageAbbrev] || translations[selectedLanguageAbbrev]
+      selectedLanguageAbbrev = browserDefaultLang
     }
+  }
+
+  if (!selectedLanguageAbbrev) {
+    selectedLanguageAbbrev = 'en-US'
   }
 
   setGlobalIntlProvider(selectedLanguageAbbrev, messages)
