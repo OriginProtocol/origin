@@ -10,8 +10,6 @@ import MessagesDropdown from 'components/dropdowns/messages'
 import NotificationsDropdown from 'components/dropdowns/notifications'
 import TransactionsDropdown from 'components/dropdowns/transactions'
 import UserDropdown from 'components/dropdowns/user'
-import Modal from 'components/modal'
-import {ListingConstants} from "../actions/Listing";
 
 import { searchListings } from 'actions/Listing'
 
@@ -32,7 +30,6 @@ class NavBar extends Component {
 
   handleChange(e) {
     this.setState({ searchQuery: e.target.value })
-    console.log("SEARCH BAR=", e.target.value)
     this.props.searchListings(e.target.value)
   }
 

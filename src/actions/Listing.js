@@ -8,15 +8,16 @@ export const ListingConstants = keyMirror(
   {
     FETCH_IDS: null,
     FETCH_IDS_SUCCESS: null,
-    FETCH_IDS_ERROR: null
+    FETCH_IDS_ERROR: null,
+    // Whether user is browsing all listings or searching.
+    BROWSE_MODE: null,
+    SEARCH_MODE: null,
   },
   'LISTING'
 )
 
-async function fetchListingIds(dispatch, fetcher) {
+async function fetchListingIds(dispatch, mode, fetcher) {
   dispatch({ type: ListingConstants.FETCH_IDS })
-
-  console.log("origin.contractService=", origin.contractService)
 
   let hideList = []
   const { web3, listingsRegistryContract } = origin.contractService
@@ -25,8 +26,6 @@ async function fetchListingIds(dispatch, fetcher) {
 
   try {
     let networkId = await web3.eth.net.getId()
-    console.log("networkId=", networkId)
-    console.log("networks=", listingsRegistryContract.networks)
     let contractFound = listingsRegistryContract.networks[networkId]
     if (!contractFound) {
       dispatch({
@@ -50,6 +49,7 @@ async function fetchListingIds(dispatch, fetcher) {
 
     dispatch({
       type: ListingConstants.FETCH_IDS_SUCCESS,
+      mode: mode,
       ids: showIds.reverse(),
       hideList
     })
@@ -64,19 +64,15 @@ async function fetchListingIds(dispatch, fetcher) {
 
 export function searchListings(query) {
   return async function(dispatch) {
-    console.log("############# Function searchListings query=", query)
-
     let fetcher = () => { return origin.listings.search(query) }
-    await fetchListingIds(dispatch, fetcher)
+    await fetchListingIds(dispatch, 'search', fetcher)
   }
 }
 
 export function getListingIds() {
   return async function(dispatch) {
-    console.log("############# Function getListingIds")
-
     let fetcher = () => { return origin.listings.allIds() }
-    await fetchListingIds(dispatch, fetcher)
+    await fetchListingIds(dispatch, 'browse', fetcher)
   }
 }
 
