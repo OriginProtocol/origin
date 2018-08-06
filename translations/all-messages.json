@@ -226,6 +226,7 @@
   "purchase-progress.fundsWithdrawn": "Funds Withdrawn",
   "review.unnamedUser": "Unnamed User",
   "transaction.buyListing": "You made a purchase.",
+  "transaction.reserveListing": "You reserved a listing.",
   "transaction.closeListing": "You closed a listing",
   "transaction.confirmReceipt": "You left a review and confirmed receipt.",
   "transaction.confirmShipped": "You marked a purchase as shipped.",

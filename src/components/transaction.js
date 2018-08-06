@@ -24,12 +24,10 @@ class Transaction extends Component {
       const transactionType = transactionTypeMap[transactionTypeKey]
       let listing, purchase
 
-      if (transactionTypeKey === 'buyListing') {
+      if (transactionTypeKey === 'buyListing' || transactionTypeKey === 'reserveListing') {
         purchase = await origin.purchases.get(events[transactionType].returnValues[0])
         listing = await origin.listings.get(purchase.listingAddress)
-      } else if (transactionTypeKey === 'closeListing') {
-        listing = await origin.listings.get(events[transactionType].returnValues._address)
-      } else if (transactionTypeKey === 'createListing') {
+      } else if (transactionTypeKey === 'closeListing' || transactionTypeKey === 'createListing') {
         listing = await origin.listings.get(events[transactionType].returnValues._address)
       } else if (['confirmReceipt', 'confirmShipped', 'getPayout'].includes(transactionTypeKey)) {
         purchase = await origin.purchases.get(events[transactionType].address)
@@ -54,6 +52,10 @@ class Transaction extends Component {
 
     switch(transactionTypeKey) {
       case 'buyListing':
+        fromAddress = purchase.buyerAddress
+        toAddress = listing.sellerAddress
+        break
+      case 'reserveListing':
         fromAddress = purchase.buyerAddress
         toAddress = listing.sellerAddress
         break
