@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
+import localeCode from 'locale-code'
 import store from 'store'
 import $ from 'jquery'
 
@@ -34,7 +35,18 @@ class Footer extends Component {
 
   localizeWhitepaperUrl() {
     const { selectedLanguageAbbrev: langAbbrev } = this.props
-    const companyWebsiteLanguageAbbrev = langAbbrev === 'zh-CN' ? `${langAbbrev}_Hans` : langAbbrev
+    let companyWebsiteLanguageAbbrev
+
+    switch(langAbbrev) {
+      case 'zh-CN':
+        companyWebsiteLanguageAbbrev = 'zh_Hans'
+        break
+      case 'zh-TW':
+        companyWebsiteLanguageAbbrev = 'zh_Hant'
+        break
+      default:
+        companyWebsiteLanguageAbbrev = localeCode.getLanguageCode(langAbbrev)
+    }
 
     this.setState({ companyWebsiteLanguageAbbrev })
   }

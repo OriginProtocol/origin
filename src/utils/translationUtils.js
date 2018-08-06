@@ -191,9 +191,9 @@ export function getLanguageNativeName(langAbbrev) {
   let selectedLanguageFull
   if (/zh/.test(langAbbrev)) {
     if (langAbbrev === 'zh-CN') {
-      selectedLanguageFull = '繁體中文'
-    } else if (langAbbrev === 'zh-TW') {
       selectedLanguageFull = '简体中文'
+    } else if (langAbbrev === 'zh-TW') {
+      selectedLanguageFull = '繁體中文'
     }
   } else {
     selectedLanguageFull = localeCode.getLanguageNativeName(langAbbrev)

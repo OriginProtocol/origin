@@ -1,6 +1,5 @@
 import moment from 'moment'
 import store from 'store'
-import localeCode from 'locale-code'
 
 import { showAlert } from 'actions/Alert'
 
