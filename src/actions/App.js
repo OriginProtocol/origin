@@ -8,7 +8,8 @@ import keyMirror from 'utils/keyMirror'
 import {
   addLocales,
   getAvailableLanguages,
-  setGlobalIntlProvider
+  setGlobalIntlProvider,
+  getLanguageNativeName
 } from 'utils/translationUtils'
 
 import origin from '../services/origin'
@@ -117,7 +118,7 @@ export function localizeApp() {
   return { 
     type: AppConstants.TRANSLATIONS,
     selectedLanguageAbbrev: selectedLanguageAbbrev,
-    selectedLanguageFull: localeCode.getLanguageNativeName(selectedLanguageAbbrev),
+    selectedLanguageFull: getLanguageNativeName(selectedLanguageAbbrev),
     availableLanguages: getAvailableLanguages(),
     messages 
   }

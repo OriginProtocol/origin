@@ -178,13 +178,28 @@ export function getAvailableLanguages() {
 
       availableLangs.push({
         selectedLanguageAbbrev: languageAbbrev,
-        selectedLanguageFull: localeCode.getLanguageNativeName(languageAbbrev)
+        selectedLanguageFull: getLanguageNativeName(languageAbbrev)
       })
 
     }
   }
 
   return availableLangs
+}
+
+export function getLanguageNativeName(langAbbrev) {
+  let selectedLanguageFull
+  if (/zh/.test(langAbbrev)) {
+    if (langAbbrev === 'zh-CN') {
+      selectedLanguageFull = '繁體中文'
+    } else if (langAbbrev === 'zh-TW') {
+      selectedLanguageFull = '简体中文'
+    }
+  } else {
+    selectedLanguageFull = localeCode.getLanguageNativeName(langAbbrev)
+  }
+
+  return selectedLanguageFull
 }
 
 export function setGlobalIntlProvider(language, messages) {
