@@ -1,7 +1,15 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'react-intl'
+
+import {
+  update as updateTransaction,
+  upsert as upsertTransaction,
+} from 'actions/Transaction'
+
+import { translateListingCategory } from 'utils/translationUtils'
 
 import origin from '../services/origin'
 
@@ -28,28 +36,39 @@ class MyListingCard extends Component {
   }
 
   async closeListing() {
-    const { address } = this.props.listing
-    const prompt = confirm(this.props.intl.formatMessage(this.intlMessages.confirmCloseListing))
+    const{ intl, listing, handleProcessing, handleUpdate, updateTransaction } = this.props
+    const { address } = listing
+    const prompt = confirm(intl.formatMessage(this.intlMessages.confirmCloseListing))
 
     if (!prompt) {
       return null
     }
 
     try {
-      const transaction = await origin.listings.close(address)
-      console.log(transaction)
-      await transaction.whenFinished()
+      handleProcessing(true)
+
+      const { created, transactionReceipt } = await origin.listings.close(address, updateTransaction)
+
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        created,
+        transactionTypeKey: 'closeListing',
+      })
+
       // why is this delay often required???
       setTimeout(() => {
-        this.props.handleUpdate(address)
+        handleProcessing(false)
+        handleUpdate(address)
       }, 1000)
     } catch(error) {
+      handleProcessing(false)
       console.error(`Error closing listing ${address}`)
+      console.error(error)
     }
   }
 
   render() {
-    const { address, category, /*createdAt, */name, pictures, price, unitsAvailable } = this.props.listing
+    const { address, category, /*createdAt, */name, pictures, price, unitsAvailable } = translateListingCategory(this.props.listing)
     /*
      *  Micah 4/23/2018
      *  ~~~~~~~~~~~~~~~
@@ -63,7 +82,7 @@ class MyListingCard extends Component {
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
 
     return (
-      <div className="transaction card">
+      <div className="purchase card">
         <div className="card-body d-flex flex-column flex-lg-row">
           <div className="aspect-ratio">
             <div className={`${photo ? '' : 'placeholder '}image-container d-flex justify-content-center`}>
@@ -122,4 +141,9 @@ class MyListingCard extends Component {
   }
 }
 
-export default injectIntl(MyListingCard)
+const mapDispatchToProps = dispatch => ({
+  updateTransaction: (confirmationCount, transactionReceipt) => dispatch(updateTransaction(confirmationCount, transactionReceipt)),
+  upsertTransaction: (transaction) => dispatch(upsertTransaction(transaction)),
+})
+
+export default connect(undefined, mapDispatchToProps)(injectIntl(MyListingCard))

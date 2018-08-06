@@ -66,9 +66,9 @@ If you want hack on origin-js code, or if you just want to use a private local b
 ### 2. Set up the DApp for local development
 
 Leave origin-js running and create a new terminal window. Then run the following:
-```
+```bash
 git clone https://github.com/OriginProtocol/demo-dapp origin-demo-dapp && cd origin-demo-dapp
-cp .env.dev .env  # Use development env vars
+cp dev.env .env  # Use development env vars
 npm run install:dev
 npm run start
 ```
@@ -106,7 +106,7 @@ To deploy a development copy of the site on Heroku, choose which branch you woul
 |---------|----------|
 | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/originprotocol/demo-dapp/tree/master) | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/originprotocol/demo-dapp/tree/develop) | 
 
-Heroku will prompt you to set some config variables. You will likely want to stick with the defaults which use [Origin's IPFS Gateway](https://gateway.originprotocol.com) and [Bridge Server](https://github.com/originprotocol/bridge-server). We also recommend using [Infura](https://infura.io/) for connecting to Ethereum even when visitors don't have web3-enabled browsers.
+Heroku will prompt you to set some config variables. You will likely want to stick with the defaults which use [Origin's IPFS Gateway](https://gateway.originprotocol.com) and [Bridge Server](https://github.com/originprotocol/origin-bridge). We also recommend using [Infura](https://infura.io/) for connecting to Ethereum even when visitors don't have web3-enabled browsers.
 
 Since this app is just a bunch of HTML and JavaScript, you can also deploy and use it directly from IPFS. Just run:
 

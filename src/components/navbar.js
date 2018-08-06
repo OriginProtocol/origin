@@ -4,12 +4,14 @@ import { Link } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
 import origin from '../services/origin'
 
+import { storeWeb3Intent } from 'actions/App'
+
 import ConnectivityDropdown from 'components/dropdowns/connectivity'
-// Hidden for current deployment
-// import NotificationsDropdown from 'components/dropdowns/notifications'
+import MessagesDropdown from 'components/dropdowns/messages'
+import NotificationsDropdown from 'components/dropdowns/notifications'
+import TransactionsDropdown from 'components/dropdowns/transactions'
 import UserDropdown from 'components/dropdowns/user'
-import Modal from './modal'
-import { storeWeb3Intent } from '../actions/App'
+import Modal from 'components/modal'
 
 class NavBar extends Component {
   constructor(props) {
@@ -63,15 +65,15 @@ class NavBar extends Component {
               </Link>
               <Link to="/my-purchases" className="nav-item nav-link">
                 <FormattedMessage
-                  id={ 'navbar.buy' }
-                  defaultMessage={ 'Buy' }
+                  id={ 'navbar.buying' }
+                  defaultMessage={ 'Buying' }
                 />
               </Link>
               <div className="sell dropdown">
                 <a className="dropdown-toggle nav-item nav-link" id="sellDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <FormattedMessage
-                    id={ 'navbar.sell' }
-                    defaultMessage={ 'Sell' }
+                    id={ 'navbar.selling' }
+                    defaultMessage={ 'Selling' }
                   />
                 </a>
                 <div className="dropdown-menu dropdown-menu-right" aria-labelledby="sellDropdown">
@@ -109,8 +111,9 @@ class NavBar extends Component {
           </div>
           <div className="static navbar-nav order-1 order-lg-2">
             <ConnectivityDropdown />
-            {/* Hidden for current deployment */}
-            {/* <NotificationsDropdown /> */}
+            <TransactionsDropdown />
+            <MessagesDropdown />
+            <NotificationsDropdown />
             <UserDropdown />
           </div>
         </div>

@@ -1,7 +1,8 @@
-import keyMirror from 'utils/keyMirror'
-import origin from '../services/origin'
+import { showAlert } from 'actions/Alert'
 
-import { showAlert } from './Alert'
+import keyMirror from 'utils/keyMirror'
+
+import origin from '../services/origin'
 
 export const ListingConstants = keyMirror(
   {

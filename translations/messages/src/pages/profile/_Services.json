@@ -1,0 +1,38 @@
+[
+  {
+    "id": "_Services.poweredBy",
+    "defaultMessage": "Powered by"
+  },
+  {
+    "id": "_Services.pleaseConnectAccounts",
+    "defaultMessage": "Please connect your accounts below to strengthen your identity on Origin."
+  },
+  {
+    "id": "_Services.phone",
+    "defaultMessage": "Phone"
+  },
+  {
+    "id": "_Services.email",
+    "defaultMessage": "Email"
+  },
+  {
+    "id": "_Services.airbnb",
+    "defaultMessage": "Airbnb"
+  },
+  {
+    "id": "_Services.facebook",
+    "defaultMessage": "Facebook"
+  },
+  {
+    "id": "_Services.twitter",
+    "defaultMessage": "Twitter"
+  },
+  {
+    "id": "_Services.comingSoon",
+    "defaultMessage": "Coming {br} Soon"
+  },
+  {
+    "id": "_Services.google",
+    "defaultMessage": "Google"
+  }
+]

@@ -2,19 +2,20 @@ import { FormattedMessage } from 'react-intl'
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
+import clipboard from 'clipboard-polyfill'
+import QRCode from 'qrcode.react'
+
+import { showAlert } from 'actions/Alert'
+import { storeWeb3Account, storeWeb3Intent } from 'actions/App'
 import { fetchProfile } from 'actions/Profile'
 import { getBalance } from 'actions/Wallet'
 
-import QRCode from 'qrcode.react'
-import Modal from './modal'
+import Modal from 'components/modal'
+
 import detectMobile from 'utils/detectMobile'
-import clipboard from 'clipboard-polyfill'
+import getCurrentProvider from 'utils/getCurrentProvider'
 
 import origin from '../services/origin'
-import Store from '../Store'
-import { showAlert } from '../actions/Alert'
-import { storeWeb3Account, storeWeb3Intent } from '../actions/App'
-import getCurrentProvider from '../utils/getCurrentProvider'
 
 const web3 = origin.contractService.web3
 const productionHostname = process.env.PRODUCTION_DOMAIN || 'demo.originprotocol.com'
@@ -46,17 +47,31 @@ const NotWeb3EnabledDesktop = props => (
     >
       <span aria-hidden="true">&times;</span>
     </a>
-    <div>In order to {props.web3Intent}, you must install MetaMask.</div>
+    <div>
+      <FormattedMessage
+        id={ 'web3-provider.intentRequiresMetaMask' }
+        defaultMessage={ 'In order to {web3Intent}, you must install MetaMask.' }
+        values={{ web3Intent: props.web3Intent }}
+      />
+    </div>
     <div className="button-container d-flex">
       <a href="https://metamask.io/"
         target="_blank"
+        rel="noopener noreferrer"
         className="btn btn-clear">
-        Get MetaMask
+        <FormattedMessage
+          id={ 'web3-provider.getMetaMask' }
+          defaultMessage={ 'Get MetaMask' }
+        />
       </a>
       <a href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58"
         target="_blank"
+        rel="noopener noreferrer"
         className="btn btn-clear">
-        Full Instructions
+        <FormattedMessage
+          id={ 'web3-provider.fullInstructions' }
+          defaultMessage={ 'Full Instructions' }
+        />
       </a>
     </div>
     <FormattedMessage
@@ -109,28 +124,53 @@ const NotWeb3EnabledMobile = props => (
     >
       <span aria-hidden="true">&times;</span>
     </a>
-    <div>In order to {props.web3Intent}, you must use an Ethereum wallet-enabled browser.</div>
+    <div>
+      <FormattedMessage
+        id={ 'web3-provider.intentRequiresEthereumEnabledBrowser' }
+        defaultMessage={ 'In order to {web3Intent}, you must use an Ethereum wallet-enabled browser.' }
+        values={{ web3Intent: props.web3Intent }}
+      />
+    </div>
     <br />
-    <div><strong>Popular Ethereum Wallets</strong></div>
+    <div>
+      <strong>
+        <FormattedMessage
+          id={ 'web3-provider.popularEthereumWallets' }
+          defaultMessage={ 'Popular Ethereum Wallets' }
+        />
+      </strong>
+    </div>
     <div className="button-container">
       <a href="https://trustwalletapp.com/"
         target="_blank"
+        rel="noopener noreferrer"
         className="btn btn-clear">
-        Trust
+        <FormattedMessage
+          id={ 'web3-provider.trust' }
+          defaultMessage={ 'Trust' }
+        />
       </a>
     </div>
     <div className="button-container">
       <a href="https://www.cipherbrowser.com/"
         target="_blank"
+        rel="noopener noreferrer"
         className="btn btn-clear">
-        Cipher
+        <FormattedMessage
+          id={ 'web3-provider.cipher' }
+          defaultMessage={ 'Cipher' }
+        />
       </a>
     </div>
     <div className="button-container">
       <a href="https://www.toshi.org/"
         target="_blank"
+        rel="noopener noreferrer"
         className="btn btn-clear">
-        Toshi
+        <FormattedMessage
+          id={ 'web3-provider.toshi' }
+          defaultMessage={ 'Toshi' }
+        />
       </a>
     </div>
   </Modal>
@@ -144,11 +184,17 @@ const NoWeb3Account = ({ currentProvider, storeWeb3Intent, web3Intent }) => (
     <a
       className="close"
       aria-label="Close"
-      onClick={() => props.storeWeb3Intent(null)}
+      onClick={() => storeWeb3Intent(null)}
     >
       <span aria-hidden="true">&times;</span>
     </a>
-    <div>In order to {web3Intent}, you must sign in to {currentProvider}.</div>
+    <div>
+      <FormattedMessage
+        id={ 'web3-provider.intentRequiresSignIn' }
+        defaultMessage={ 'In order to {web3Intent}, you must sign in to {currentProvider}.' }
+        values={{ web3Intent, currentProvider }}
+      />
+    </div>
     <div className="button-container">
       <button
         className="btn btn-clear"
@@ -178,10 +224,17 @@ const UnsupportedNetwork = props => (
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
     <p>
-      <span className="line">{props.currentProvider} should be on&nbsp;</span>
-      <span className="line"><strong>Rinkeby Test Network</strong></span>
+      <FormattedMessage
+        id={ 'web3-provider.shouldBeOnRinkeby' }
+        defaultMessage={ '{currentProvider} should be on Rinkeby Test Network' }
+        values={{ currentProvider: props.currentProvider }}
+      />
     </p>
-    Currently on {props.currentNetworkName}.
+    <FormattedMessage
+      id={ 'web3-provider.currentlyOnNetwork' }
+      defaultMessage={ 'Currently on {currentNetworkName}.' }
+      values={{ currentNetworkName: props.currentNetworkName }}
+    />
   </Modal>
 )
 
@@ -191,18 +244,62 @@ const Web3Unavailable = props => (
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
     {(!props.onMobile || (props.onMobile === "Android")) &&
-      <div>Please install the MetaMask extension<br />to access this site.<br />
-        <a target="_blank" href="https://metamask.io/">Get MetaMask</a><br />
-        <a target="_blank" href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58">
-          Full Instructions for Demo
+      <div>
+        <FormattedMessage
+          id={ 'web3-provider.pleaseInstallMetaMask' }
+          defaultMessage={ 'Please install the MetaMask extension to access this site.' }
+        />
+        <br />
+        <a target="_blank"
+          rel="noopener noreferrer"
+          href="https://metamask.io/">
+          <FormattedMessage
+            id={ 'web3-provider.getMetaMask' }
+            defaultMessage={ 'Get MetaMask' }
+          />
+        </a>
+        <br />
+        <a target="_blank" 
+          rel="noopener noreferrer"
+          href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58">
+          <FormattedMessage
+            id={ 'web3-provider.fullInstructionsForDemo' }
+            defaultMessage={ 'Full Instructions for Demo' }
+          />
         </a>
       </div>
     }
     {(props.onMobile && (props.onMobile !== "Android")) &&
-      <div>Please access this site through <br />a wallet-enabled browser:<br />
-        <a target="_blank" href="https://itunes.apple.com/us/app/toshi-ethereum/id1278383455">Toshi</a>&nbsp;&nbsp;|&nbsp;
-        <a target="_blank" href="https://itunes.apple.com/us/app/cipher-browser-ethereum/id1294572970">Cipher</a>&nbsp;&nbsp;|&nbsp;
-        <a target="_blank" href="https://itunes.apple.com/ae/app/trust-ethereum-wallet/id1288339409">Trust Wallet</a>
+      <div>
+        <FormattedMessage
+          id={ 'web3-provider.useWalletEnabledBrowser' }
+          defaultMessage={ 'Please access this site through a wallet-enabled browser:' }
+        />
+        <br />
+        <a target="_blank"
+          rel="noopener noreferrer"
+          href="https://itunes.apple.com/us/app/toshi-ethereum/id1278383455">
+          <FormattedMessage
+            id={ 'web3-provider.toshi' }
+            defaultMessage={ 'Toshi' }
+          />
+        </a>&nbsp;&nbsp;|&nbsp;
+        <a target="_blank"
+          rel="noopener noreferrer"
+          href="https://itunes.apple.com/us/app/cipher-browser-ethereum/id1294572970">
+          <FormattedMessage
+            id={ 'web3-provider.cipher' }
+            defaultMessage={ 'Cipher' }
+          />
+        </a>&nbsp;&nbsp;|&nbsp;
+        <a target="_blank"
+          rel="noopener noreferrer"
+          href="https://itunes.apple.com/ae/app/trust-ethereum-wallet/id1288339409">
+          <FormattedMessage
+            id={ 'web3-provider.trustWallet' }
+            defaultMessage={ 'Trust Wallet' }
+          />
+        </a>
       </div>
     }
   </Modal>
@@ -303,22 +400,19 @@ class Web3Provider extends Component {
       }
     })
 
-    if (web3.currentProvider != this.state.provider)
-    {
-      //got a real provider now
+    if (web3.currentProvider !== this.state.provider) {
+      // got a real provider now
       this.setState({ provider: web3.currentProvider })
     }
 
     // skip walletLink if browser is web3-enabled
-    if (web3.givenProvider)
-    {
+    if (web3.givenProvider) {
       return
     }
 
     let code = origin.contractService.getMobileWalletLink()
-    if (this.state.linkerCode != code)
-    {
-      //let's set the linker code
+    if (this.state.linkerCode != code) {
+      // let's set the linker code
       this.setState({ linkerCode: code })
     }
   }
@@ -381,31 +475,23 @@ class Web3Provider extends Component {
     let curr = accounts[0]
     let prev = this.props.web3Account
 
+    // on account detection
     if (curr !== prev) {
+      // update global state
       this.props.storeWeb3Account(curr)
 
       // TODO: fix this with some route magic!
-      if(["/my-listings", "/my-purchases","/my-sales"].includes(this.props.location.pathname))
-      {
-        if (prev !== null && (!curr) )
-        {
-          setTimeout(() =>{ window.location.reload()}, 1000)
-        }
-        else
-        {
-          if (prev !== null)
-          {
-            setTimeout(() =>{ window.location.reload()}, 1000)
-          }
-        }
-      }
-      else
-      {
-        // force reload on account change
+      if(["/my-listings", "/my-purchases","/my-sales"].includes(this.props.location.pathname)) {
+        // reload if changed from a prior account
+        prev !== null && window.location.reload()
+      } else {
+        // load data on account change
         this.props.fetchProfile()
         this.props.getBalance()
       }
-        
+
+      // trigger messaging service
+      origin.messaging.onAccount(curr)
     }
   }
 

@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import { FormattedMessage } from 'react-intl'
 
-// temporary - we should be getting an origin instance from our app,
-// not using a global singleton
+import ListingCardPrices from 'components/listing-card-prices'
+
+import { translateListingCategory } from 'utils/translationUtils'
+
 import origin from '../services/origin'
-
-import ListingCardPrices from './listing-card-prices.js';
 
 class ListingCard extends Component {
 
@@ -20,8 +21,9 @@ class ListingCard extends Component {
   async componentDidMount() {
     try {
       const listing = await origin.listings.getByIndex(this.props.listingId)
-      if (!this.props.hideList.includes(listing.address)) {
-        const obj = Object.assign({}, listing, { loading: false })
+      const translatedListing = translateListingCategory(listing)
+      if (!this.props.hideList.includes(translatedListing.address)) {
+        const obj = Object.assign({}, translatedListing, { loading: false })
 
         this.setState(obj)
       } else {
@@ -51,7 +53,18 @@ class ListingCard extends Component {
           }
           <div className="category placehold d-flex justify-content-between">
             <div>{category}</div>
-            {!loading && <div>{this.props.listingId < 5 && <span className="featured badge">Featured</span>}</div>}
+            {!loading &&
+              <div>
+                {this.props.listingId < 5 &&
+                  <span className="featured badge">
+                    <FormattedMessage
+                      id={ 'listing-card.featured' }
+                      defaultMessage={ 'Featured' }
+                    />
+                  </span>
+                }
+              </div>
+            }
           </div>
           <h2 className="title placehold text-truncate">{name}</h2>
           {price > 0 && <ListingCardPrices price={price} unitsAvailable={unitsAvailable} />}

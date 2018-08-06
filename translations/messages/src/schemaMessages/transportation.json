@@ -1,0 +1,54 @@
+[
+  {
+    "id": "schema.transportation.schemaDescription",
+    "defaultMessage": "Distributed Getaround"
+  },
+  {
+    "id": "schema.transportation.title",
+    "defaultMessage": "Title"
+  },
+  {
+    "id": "schema.transportation.category",
+    "defaultMessage": "Category"
+  },
+  {
+    "id": "schema.transportation.description",
+    "defaultMessage": "Description"
+  },
+  {
+    "id": "schema.transportation.location",
+    "defaultMessage": "Location"
+  },
+  {
+    "id": "schema.transportation.priceInETH",
+    "defaultMessage": "Price in ETH"
+  },
+  {
+    "id": "schema.transportation.selectPhotos",
+    "defaultMessage": "Select photos"
+  },
+  {
+    "id": "schema.transportation.airplaneCharter",
+    "defaultMessage": "Airplane Charter"
+  },
+  {
+    "id": "schema.transportation.bikeRentals",
+    "defaultMessage": "Bike Rentals"
+  },
+  {
+    "id": "schema.transportation.boatRentals",
+    "defaultMessage": "Boat Rentals"
+  },
+  {
+    "id": "schema.transportation.carRentals",
+    "defaultMessage": "Car Rentals"
+  },
+  {
+    "id": "schema.transportation.taxiService",
+    "defaultMessage": "Taxi Service"
+  },
+  {
+    "id": "schema.transportation.yachtCharters",
+    "defaultMessage": "Yacht Charters"
+  }
+]

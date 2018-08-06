@@ -1,11 +1,12 @@
 import React, { Component, Fragment } from 'react'
-import { Link } from 'react-router-dom'
-
+import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
-import origin from '../../services/origin'
+import { Link } from 'react-router-dom'
 
 import Avatar from 'components/avatar'
 import Identicon from 'components/Identicon'
+
+import origin from '../../services/origin'
 
 class UserDropdown extends Component {
   constructor(props) {
@@ -32,8 +33,24 @@ class UserDropdown extends Component {
                   </Link>
                 </div>
                 <div className="eth d-flex flex-column justify-content-between">
-                  {wallet.address && <div>ETH Address:</div>}
-                  <Link to="/profile"><strong>{wallet.address || 'No ETH Account Connected'}</strong></Link>
+                  {wallet.address && 
+                    <div>
+                      <FormattedMessage
+                        id={ 'user.ethAddress' }
+                        defaultMessage={ 'ETH Address:' }
+                      />
+                    </div>
+                  }
+                  <Link to="/profile">
+                    <strong>
+                      {wallet.address ||
+                        <FormattedMessage
+                          id={ 'user.noEthAccountConnected' }
+                          defaultMessage={ 'No ETH Account Connected' }
+                        />
+                      }
+                    </strong>
+                  </Link>
                 </div>
               </div>
               <hr className="dark sm" />
@@ -64,14 +81,23 @@ class UserDropdown extends Component {
                         <img src="images/twitter-icon-verified.svg" alt="Twitter verified icon" />
                       </Link>
                     }
+                    {profile.published.airbnb &&
+                      <Link to="/profile">
+                        <img src="images/airbnb-icon-verified.svg" alt="Airbnb verified icon" />
+                      </Link>
+                    }
                   </div>
                 </div>
               </div>
               {
                 origin.contractService.walletLinker &&
                 origin.contractService.walletLinker.linked &&
-                <Fragment><hr className="dark sm" />
-                  <button className="btn btn-primary" onClick={() => origin.contractService.walletLinker.unlink()}>Unlink Mobile</button>
+                <Fragment>
+                  <hr className="dark sm" />
+                  <button
+                    className="btn btn-primary"
+                    onClick={origin.contractService.walletLinker.unlink}
+                  >Unlink Mobile</button>
                 </Fragment>
               }
 

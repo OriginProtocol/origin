@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
-import moment from 'moment'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
+
+import PurchaseProgress from 'components/purchase-progress'
+
+import { translateListingCategory } from 'utils/translationUtils'
 
 import origin from '../services/origin'
 
@@ -55,7 +58,7 @@ class MyPurchaseCard extends Component {
 
   render() {
     const { address, created, stage } = this.props.purchase
-    const { category, name, pictures, price } = this.state.listing
+    const { category, name, pictures, price } = translateListingCategory(this.state.listing)
     const soldAt = created * 1000 // convert seconds since epoch to ms
     let step, verb
 
@@ -68,7 +71,7 @@ class MyPurchaseCard extends Component {
         step = 2
         verb = this.props.intl.formatMessage(this.intlMessages.sentBySeller)
         break
-      case 'shipping_pending':
+      case 'in_escrow':
         step = 1
         verb = this.props.intl.formatMessage(this.intlMessages.purchased)
         break
@@ -81,7 +84,7 @@ class MyPurchaseCard extends Component {
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
 
     return (
-      <div className={`transaction card${this.state.loading ? ' loading' : ''}`}>
+      <div className={`purchase card${this.state.loading ? ' loading' : ''}`}>
         <div className="card-body d-flex flex-column flex-lg-row">
           <div className="aspect-ratio">
             <Link to={`/purchases/${address}`}>
@@ -100,7 +103,7 @@ class MyPurchaseCard extends Component {
                 {/* Not Yet Relevant */}
                 {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
               </div>
-              {/*<TransactionProgress currentStep={step} perspective="buyer" purchase={this.props.purchase} subdued={true} />*/}
+              <PurchaseProgress currentStep={step} perspective="buyer" purchase={this.props.purchase} subdued={true} />
               <div className="actions d-flex">
                 <div className="links-container">
                   {/*<a onClick={() => alert('To Do')}>Open a Dispute</a>*/}

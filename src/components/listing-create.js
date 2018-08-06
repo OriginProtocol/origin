@@ -2,14 +2,21 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
-import origin from '../services/origin'
-import getCurrentProvider from '../utils/getCurrentProvider'
-
-import { showAlert } from '../actions/Alert'
-
-import ListingDetail from './listing-detail'
 import Form from 'react-jsonschema-form'
-import Modal from './modal'
+
+import { showAlert } from 'actions/Alert'
+import {
+  update as updateTransaction,
+  upsert as upsertTransaction,
+} from '../actions/Transaction'
+
+import ListingDetail from 'components/listing-detail'
+import Modal from 'components/modal'
+
+import getCurrentProvider from 'utils/getCurrentProvider'
+import { translateSchema } from 'utils/translationUtils'
+
+import origin from '../services/origin'
 
 class ListingCreate extends Component {
 
@@ -134,12 +141,15 @@ class ListingCreate extends Component {
 
   async onSubmitListing(formListing, selectedSchemaType) {
     try {
-      console.log(formListing)
       this.setState({ step: this.STEP.METAMASK })
-      const transactionReceipt = await origin.listings.create(formListing.formData, selectedSchemaType)
+      console.log(formListing)
       this.setState({ step: this.STEP.PROCESSING })
-      // Submitted to blockchain, now wait for confirmation
-      await origin.contractService.waitTransactionFinished(transactionReceipt.transactionHash)
+      const { created, transactionReceipt } = await origin.listings.create(formListing.formData, selectedSchemaType, this.props.updateTransaction)
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        created,
+        transactionTypeKey: 'createListing',
+      })
       this.setState({ step: this.STEP.SUCCESS })
     } catch (error) {
       console.error(error)
@@ -274,7 +284,7 @@ class ListingCreate extends Component {
                   />
                 </h2>
                 <Form
-                  schema={this.state.selectedSchema}
+                  schema={translateSchema(this.state.selectedSchema, this.state.selectedSchemaType)}
                   onSubmit={this.onDetailsEntered}
                   formData={this.state.formListing.formData}
                   onError={(errors) => console.log(`react-jsonschema-form errors: ${errors.length}`)}
@@ -466,7 +476,9 @@ class ListingCreate extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  showAlert: (msg) => dispatch(showAlert(msg))
+  showAlert: (msg) => dispatch(showAlert(msg)),
+  updateTransaction: (hash, confirmationCount) => dispatch(updateTransaction(hash, confirmationCount)),
+  upsertTransaction: (transaction) => dispatch(upsertTransaction(transaction)),
 })
 
 export default connect(undefined, mapDispatchToProps)(injectIntl(ListingCreate))
