@@ -60,20 +60,6 @@ class ListingsDetail extends Component {
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
   }
 
-  async componentWillMount() {
-    if (this.props.listingAddress) {
-      // Load from IPFS
-      await this.loadListing()
-      await this.loadPurchases()
-      this.loadReviews()
-    }
-    else if (this.props.listingJson) {
-      const obj = Object.assign({}, this.props.listingJson, { loading: false })
-      // Listing json passed in directly
-      this.setState(obj)
-    }
-  }
-
   async loadListing() {
     try {
       const listing = await origin.listings.get(this.props.listingAddress)
