@@ -10,11 +10,9 @@ Origin Box currently supports the following components:
 - [origin-dapp](https://github.com/OriginProtocol/origin-dapp)
 - [origin-js](https://github.com/OriginProtocol/origin-js)
 - [origin-bridge](https://github.com/originprotocol/origin-bridge)
+- [origin-website](https://github.com/originprotocol/origin-website)
 
 Each repo is symlinked from the container to a local directory. You may edit the source code using your favorite editor. The repo directories just normal git repositories, so you can treat them as you would any other git repository. You can make changes, commit them, and change branches—and the container will be automatically kept in sync.
-
-However, non-git related actions should be performed from within the container. For example, running any sort of npm command (e.g. `npm test`) should be done from within the container cli. The same applies for python commands.
-
 
 ## Use Cases
 
@@ -22,7 +20,6 @@ Origin Box has several intended use cases:
 - Demonstration: We want to make it as easy as possible for people to spin up their own Origin environment, emphasizing that this platform is truly open and decentralized.
 - Development: While we do our best to keep our components as independent as possible, ultimately they are all designed to function together as one unit. For development we do try to stub external components as much as possible, but this has its practical limits. It is often beneficial to be able to do development in an environment where all of the components are running. It can be tricky to get all of the various components synchronized on your local machine. Origin Box manages this complexity.
 - End-to-end Testing: Currently we do not have any automated end-to-end tests. We rely heavily on manual testing. Having one environment where all of our components are running together will hopefully make it easier for us to set up end-to-end testing when we are ready to do that.
-
 
 ## System Requirements
 
@@ -34,86 +31,82 @@ Origin Box has several intended use cases:
 
 ## Getting started
 
-1. Clone this repo:
-```
-git clone git@github.com:OriginProtocol/origin-box.git && cd origin-box
-```
+Origin-box supports two separate development stacks. One is the standard Origin Protocl stack consisting of origin-js, origin-bridge, and origin-dapp repositories, and the other is the the Origin website (https://originprotocol.com) stack consisting of the origin-website repository.
 
-2. Run the setup script:
-```
-./scripts/setup.sh
-```
+1. Clone this repository
 
-This will clone the latest `develop` branches of `origin-js`, `origin-dapp`, and `origin-bridge` in the `origin-box` directory.
+2. Run `./install.sh -e origin` for the standard stack, or `./install.sh -e origin-website` for the website stack.
 
-**Note:** Currently these are cloned with custom directory names of `js`, `dapp`, and `bridge`.
+The install script will clone the origin repositories into subdirectories and checkout the develop branch. You can then develop and use them as normal git repositories. If the install script doesn't complete the most likely reason is you don't have the [required ports](#port-errors) open.
 
-If desired, you may `cd` into these directores and checkout different branches.
+![install.sh](https://raw.githubusercontent.com/OriginProtocol/origin-box/compose/screenshot.png)
 
-3. From a different tab, run the start script:
-```
-./scripts/start.sh
-```
+## Configuration
 
-This will take a few minutes to run. You can tell all components are running when you see a steady stream of lines sayins `beat: Waking up in 9.99 seconds.`.
+Configuration files reside in the `envfiles` directory. They are mounted into the relevant docker container when it is started. Modifications to these files will require a container restart (if the container was running). The configuration should work out of the box. Certain components may require additional API keys for certain things to work. For example, origin-bridge needs some API keys for attestation services to work.
 
-You can then access the Demo DApp, local blockchain, and Bridge Server in the usual way on the usual ports, from your host machine. For example, the Demo Dapp will be at http://localhost:3000/#/, and a sample IPFS listing can be loaded from http://localhost:8080/ipfs/QmTfozaMrUBZdYBzPgxuSC15zBRgLCEfQmWFZwmDHYGY1e
+## Usage
 
-4. Access the CLI:
+Management of the containers is handled by [docker-compose](https://docs.docker.com/compose/). There are three docker-compose files included:
 
-    ./scripts/cli.sh
+- `docker-compose.yml` runs the standard stack
+- `docker-compose-test.yml` runs tests for the standard stack
+- `docker-compose-web.yml` runs the website stack
 
-### Repo-specific instructions:
+To bring up/down the standard stack use `docker-compose up` or `docker-compose down`. To bring up/down the website stack you need to pass the docker-compose file explicitly: `docker-compose -f docker-compose-web.yml up` and `docker-compose -f docker-compose-web.yml down`.
 
-- [origin-bridge](origin-bridge.md)
+### Handy commands
 
-### pm2
+Spawn a shell in a container:
 
-Currently we're using [pm2](http://pm2.keymetrics.io/) to automatically start and manage core processes for all of the components. You can run `pm2 list` from within the container cli to see all currently running processes.
+	docker exec -ti <container_name> /bin/bash
 
-## Connectivity tests from localhost
+Connect to the origin_bridge postgresql database:
 
-- bridge server: curl http://127.0.0.1:5000
-- postgres:  psql -h 127.0.0.1 -p 5432 -d "origin-bridge" -U docker --password <-- currently only working from within the container
-- redis: redis-cli <-- defaults to connecting to 127.0.0.1:6379
-- elasticsearch: curl http://127.0.0.1:9200
-- pm2 API (has stats for running applications): curl http://127.0.0.1:4000
+	docker exec -ti postgres /bin/bash -c "psql -h localhost -U origin origin_bridge"
 
-**\# netstat -nlt** (truncated)
+Connect to redis:
 
-|Proto  | Recv-Q |Send-Q |Local Address     |      Foreign Address      |   State      |
-| ----- | ------ | ----- | ---------------- | ------------------------- | ------------ |
-|tcp    |    0   |   0   | 127.0.0.1:5000   |       0.0.0.0:*           |    LISTEN    |
-|tcp    |    0   |   0   | 0.0.0.0:5002     |       0.0.0.0:*           |    LISTEN    |
-|tcp    |    0   |   0   | 0.0.0.0:6379     |       0.0.0.0:*           |    LISTEN    |
-|tcp    |    0   |   0   | 0.0.0.0:8080     |       0.0.0.0:*           |    LISTEN    |
-|tcp    |    0   |   0   | 0.0.0.0:9200     |       0.0.0.0:*           |    LISTEN    |
-|tcp    |    0   |   0   | 0.0.0.0:5432     |       0.0.0.0:*           |    LISTEN    |
-|tcp    |    0   |   0   | 0.0.0.0:4000     |       0.0.0.0:*           |    LISTEN    |
-|tcp    |    0   |   0   | 0.0.0.0:4002     |       0.0.0.0:*           |    LISTEN    |
+	docker exec -ti redis /bin/bash -c "redis-cli"
 
-**\# pm2 list**
+### Performing database migrations
 
-```
-┌────────────────────┬────┬──────┬─────┬────────┬─────────┬────────┬─────┬───────────┬──────┬──────────┐
-│ App name           │ id │ mode │ pid │ status │ restart │ uptime │ cpu │ mem       │ user │ watching │
-├────────────────────┼────┼──────┼─────┼────────┼─────────┼────────┼─────┼───────────┼──────┼──────────┤
-│ bridge             │ 1  │ fork │ 36  │ online │ 0       │ 60s    │ 0%  │ 3.0 MB    │ root │ disabled │
-│ celery             │ 2  │ fork │ 42  │ online │ 0       │ 60s    │ 0%  │ 3.1 MB    │ root │ disabled │
-│ dapp               │ 6  │ fork │ 51  │ online │ 0       │ 60s    │ 0%  │ 2.8 MB    │ root │ disabled │
-│ elasticsearch      │ 4  │ fork │ 48  │ online │ 0       │ 60s    │ 0%  │ 2.8 MB    │ root │ disabled │
-│ js                 │ 5  │ fork │ 50  │ online │ 0       │ 60s    │ 0%  │ 2.7 MB    │ root │ disabled │
-│ pm2-http-interface │ 7  │ fork │ 83  │ online │ 0       │ 59s    │ 0%  │ 41.0 MB   │ root │ disabled │
-│ postgresql         │ 3  │ fork │ 44  │ online │ 0       │ 60s    │ 0%  │ 2.9 MB    │ root │ disabled │
-│ redis              │ 0  │ fork │ 32  │ online │ 0       │ 60s    │ 0%  │ 4.3 MB    │ root │ disabled │
-└────────────────────┴────┴──────┴─────┴────────┴─────────┴────────┴─────┴───────────┴──────┴──────────┘
-```
+Database migrations are not run automatically. To create a migration:
 
+	docker exec -ti origin-bridge /bin/bash -c "flask db migrate"
+
+and to upgrade versions:
+
+	docker exec -ti origin-bridge /bin/bash -c "flask db upgrade"
+
+### Package management
+
+Packages are installed during the Docker build process. If you modify the packages for a project (i.e. anything that results in a change to package.json or requirements.txt) you may need to add any missing packages to the container. The best way to do this is to rebuild the container.
+
+E.g. to rebuild the origin-js container:
+
+	docker-compose build --no-cache origin-js
+
+### Data persistence
+
+PostgreSQL data will persist through bringing the containers down and up again through the use of a mounted volume. To disable this comment out the volume lines in docker-compose.yml under the `postgres` service. No persistence is in place for Redis data.
+
+## Running tests
+
+Test configurations are included in `docker-compose-test.yml`. To test run tests for origin-js then use:
+
+	docker-compose -f docker-compose-test.yml up origin-js-test
+
+and similarly for origin-bridge:
+
+	docker-compose -f docker-compose-test.yml up origin-bridge-test
 
 ## Troubleshooting
 
-### "port is already allocated"
-```
-Error starting userland proxy: Bind for 0.0.0.0:5000 failed: port is already allocated
-```
-This indicates that you have a process using a port needed by origin-box. This often happens if you are running origin-website, or running the origin-dapp outside the box. Use `ps` or Activity Monitor to search for `node`, `python`, or any process that might be using ports 5000, 5002, 6379, 8080, 9200, 5432, 4000, 4002, and kill the process.
+### Port errors
+
+The environment requires a number of ports to be free on your machine (3000, 5000, 5002, 8080, 8081 and 8545). If one of these ports isn't available spinning up the development environment may fail.
+
+### Metamask errors
+
+Somethings Metamask gets confused on private networks. If you see errors generated by Metamask in your console while developing then opening Settings > Reset Account in Metamask should resolve the issue.
