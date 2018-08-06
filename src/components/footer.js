@@ -10,7 +10,7 @@ class Footer extends Component {
     super(props)
 
     this.state = {
-      companyWebsiteLanguageAbbrev: 'en'
+      companyWebsiteLanguageAbbrev: 'en-US'
     }
 
     this.localizeApp = this.localizeApp.bind(this)
@@ -34,7 +34,7 @@ class Footer extends Component {
 
   localizeWhitepaperUrl() {
     const { selectedLanguageAbbrev: langAbbrev } = this.props
-    const companyWebsiteLanguageAbbrev = langAbbrev === 'zh' ? `${langAbbrev}_Hans` : langAbbrev
+    const companyWebsiteLanguageAbbrev = langAbbrev === 'zh-CN' ? `${langAbbrev}_Hans` : langAbbrev
 
     this.setState({ companyWebsiteLanguageAbbrev })
   }
@@ -66,7 +66,7 @@ class Footer extends Component {
                   <div className="actual-menu">
                     <div className="connectivity-list">
                       <ul className="list-group">
-                        <li className="connection d-flex flex-wrap" onClick={ () => { this.localizeApp('en') } } >
+                        <li className="connection d-flex flex-wrap" onClick={ () => { this.localizeApp('en-US') } } >
                           English
                         </li>
                         {this.props.availableLanguages && this.props.availableLanguages.map(langObj => (

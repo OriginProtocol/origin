@@ -37,7 +37,7 @@ import ur from 'react-intl/locale-data/ur'
 import vi from 'react-intl/locale-data/vi'
 import zh from 'react-intl/locale-data/zh'
 import schemaMessages from '../schemaMessages/index'
-import languageNames from './languageNames.json'
+import localeCode from 'locale-code'
 
 let globalIntlProvider
 
@@ -164,11 +164,6 @@ export function addLocales() {
     ...zh])
 }
 
-export function getLangFullName(langAbbrev) {
-  const langNameObj = languageNames.filter((lang) => lang.code === langAbbrev)
-  return langNameObj[0] && langNameObj[0].nativeName
-}
-
 export function getAvailableLanguages() {
   if (!translations || typeof translations !== 'object') {
     return []
@@ -179,11 +174,11 @@ export function getAvailableLanguages() {
   for (let languageAbbrev in translations) {
 
     // Don't include English b/c we hard-code it in the footer dropdown to make sure it's always available
-    if (languageAbbrev !== 'en') {
+    if (languageAbbrev !== 'en-US') {
 
       availableLangs.push({
         selectedLanguageAbbrev: languageAbbrev,
-        selectedLanguageFull: getLangFullName(languageAbbrev)
+        selectedLanguageFull: localeCode.getLanguageNativeName(languageAbbrev)
       })
 
     }

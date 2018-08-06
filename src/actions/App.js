@@ -1,12 +1,12 @@
 import moment from 'moment'
 import store from 'store'
+import localeCode from 'locale-code'
 
 import { showAlert } from 'actions/Alert'
 
 import keyMirror from 'utils/keyMirror'
 import {
   addLocales,
-  getLangFullName,
   getAvailableLanguages,
   setGlobalIntlProvider
 } from 'utils/translationUtils'
@@ -88,37 +88,34 @@ export function localizeApp() {
     selectedLanguageAbbrev = userSelectedLangAbbrev
 
     // English is our default - to prevent errors, we set to undefined for English
-    if (selectedLanguageAbbrev !== 'en') {
+    if (selectedLanguageAbbrev !== 'en-US') {
       messages = translations[userSelectedLangAbbrev]
     }
 
   } else {
 
     // Detect user's preferred settings
-    const detectedLanguage = (navigator.languages && navigator.languages[0]) ||
+    selectedLanguageAbbrev = (navigator.languages && navigator.languages[0]) ||
                              navigator.language ||
                              navigator.userLanguage
 
-    // Split locales with a region code
-    selectedLanguageAbbrev = detectedLanguage.toLowerCase().split(/[_-]+/)[0]
-
-    if (selectedLanguageAbbrev !== 'en') {
-      messages = translations[selectedLanguageAbbrev] || translations[detectedLanguage]
+    if (selectedLanguageAbbrev !== 'en-US') {
+      messages = translations[selectedLanguageAbbrev] || translations[selectedLanguageAbbrev]
     }
   }
 
   setGlobalIntlProvider(selectedLanguageAbbrev, messages)
 
   // Set locale for moment.js
-  if (selectedLanguageAbbrev !== 'en') {
-    const momentLocale = selectedLanguageAbbrev === 'zh' ? 'zh-cn' : selectedLanguageAbbrev
+  if (selectedLanguageAbbrev !== 'en-US') {
+    const momentLocale = selectedLanguageAbbrev
     moment.locale(momentLocale)
   }
 
   return { 
     type: AppConstants.TRANSLATIONS,
     selectedLanguageAbbrev: selectedLanguageAbbrev,
-    selectedLanguageFull: getLangFullName(selectedLanguageAbbrev),
+    selectedLanguageFull: localeCode.getLanguageNativeName(selectedLanguageAbbrev),
     availableLanguages: getAvailableLanguages(),
     messages 
   }
