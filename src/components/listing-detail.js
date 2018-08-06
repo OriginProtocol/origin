@@ -2,17 +2,21 @@ import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'react-intl'
-import { showAlert } from '../actions/Alert'
-import { storeWeb3Intent } from '../actions/App'
-import getCurrentProvider from '../utils/getCurrentProvider'
-import { translateListingCategory } from '../utils/translationUtils'
 
-import Modal from './modal'
-import Review from './review'
-import UserCard from './user-card'
+import { showAlert } from 'actions/Alert'
+import { storeWeb3Intent } from 'actions/App'
+import {
+  update as updateTransaction,
+  upsert as upsertTransaction,
+} from 'actions/Transaction'
 
-// temporary - we should be getting an origin instance from our app,
-// not using a global singleton
+import Modal from 'components/modal'
+import Review from 'components/review'
+import UserCard from 'components/user-card'
+
+import getCurrentProvider from 'utils/getCurrentProvider'
+import { translateListingCategory } from 'utils/translationUtils'
+
 import origin from '../services/origin'
 
 /* linking to contract Etherscan requires knowledge of which network we're on */
@@ -143,19 +147,21 @@ class ListingsDetail extends Component {
     this.props.storeWeb3Intent('buy this listing')
 
     if (web3.givenProvider && this.props.web3Account) {
+      this.setState({ step: this.STEP.METAMASK })
       const unitsToBuy = 1
       const totalPrice = (unitsToBuy * this.state.price)
-      this.setState({step: this.STEP.METAMASK})
       try {
-        const transactionReceipt = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice)
-        console.log('Purchase request sent.')
-        this.setState({step: this.STEP.PROCESSING})
-        await origin.contractService.waitTransactionFinished(transactionReceipt.transactionHash)
-        this.setState({step: this.STEP.PURCHASED})
+        this.setState({ step: this.STEP.PROCESSING })
+        const { created, transactionReceipt } = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice, this.props.updateTransaction)
+        this.props.upsertTransaction({
+          ...transactionReceipt,
+          created,
+          transactionTypeKey: 'buyListing',
+        })
+        this.setState({ step: this.STEP.PURCHASED })
       } catch (error) {
-        window.err = error
         console.error(error)
-        this.setState({step: this.STEP.ERROR})
+        this.setState({ step: this.STEP.ERROR })
       }
     }
   }
@@ -413,7 +419,7 @@ class ListingsDetail extends Component {
                   }
                 </div>
               }
-              {this.state.sellerAddress && <UserCard title="seller" userAddress={this.state.sellerAddress} />}
+              {this.state.sellerAddress && <UserCard title="seller" listingAddress={this.props.listingAddress} userAddress={this.state.sellerAddress} />}
             </div>
           </div>
           {this.props.withReviews &&
@@ -455,6 +461,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   showAlert: (msg) => dispatch(showAlert(msg)),
   storeWeb3Intent: (intent) => dispatch(storeWeb3Intent(intent)),
+  updateTransaction: (confirmationCount, transactionReceipt) => dispatch(updateTransaction(confirmationCount, transactionReceipt)),
+  upsertTransaction: (transaction) => dispatch(upsertTransaction(transaction)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(ListingsDetail))

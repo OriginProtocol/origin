@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
-
-import { getListingIds } from '../actions/Listing'
-
 import Pagination from 'react-js-pagination'
 import { withRouter } from 'react-router'
 
-import ListingCard from './listing-card'
+import { getListingIds } from 'actions/Listing'
+
+import ListingCard from 'components/listing-card'
 
 class ListingsGrid extends Component {
   constructor(props) {

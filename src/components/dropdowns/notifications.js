@@ -1,47 +1,47 @@
+import $ from 'jquery'
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
+
+import { dismissNotifications } from 'actions/App'
 
 import Notification from 'components/notification'
 
 import origin from '../../services/origin'
 
 class NotificationsDropdown extends Component {
-  constructor(props) {
-    super(props)
+  componentDidMount() {
+    $('.notifications.dropdown').on('hide.bs.dropdown', () => {
+      const notificationsIds = this.props.notifications.map(n => n.id)
 
-    this.state = { notifications: [] }
+      this.props.dismissNotifications(notificationsIds)
+    })
   }
 
-  async componentWillMount() {
-    try {
-      const notifications = await origin.notifications.all()
+  componentDidUpdate() {
+    const { history, notifications, notificationsDismissed } = this.props
+    const isOnNotificationsRoute = !!history.location.pathname.match(/^\/notifications/)
+    const hasNewUnreadNotification = notifications.find(n => !notificationsDismissed.includes(n.id))
+    const dropdownHidden = !$('.notifications.dropdown').hasClass('show')
 
-      this.setState({ notifications })
-    } catch(e) {
-      console.error(e)
+    if (!isOnNotificationsRoute && hasNewUnreadNotification && dropdownHidden) {
+      $('#notificationsDropdown').dropdown('toggle')
     }
   }
 
   render() {
-    const { web3Account } = this.props
-    const { notifications } = this.state
-    const notificationsWithPerspective = notifications.map(n => {
-      const { sellerAddress } = n.resources.listing
-
-      return { ...n, perspective: web3Account === sellerAddress ? 'seller' : 'buyer' }
-    })
-    const filteredNotifications = notificationsWithPerspective.filter(n => n.status === 'unread')
+    const { notifications } = this.props
     // avoid integers greater than two digits
-    const notificationCount = filteredNotifications.length < 100 ?
-                              Number(filteredNotifications.length).toLocaleString() :
+    const notificationCount = notifications.length < 100 ?
+                              Number(notifications.length).toLocaleString() :
                               `${Number(99).toLocaleString()}+`
 
     return (
       <div className="nav-item notifications dropdown">
         <a className="nav-link active dropdown-toggle" id="notificationsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {!!filteredNotifications.length && <div className="unread-indicator"></div>}
+          {!!notifications.length && <div className="unread-indicator"></div>}
           <img src="images/alerts-icon.svg" className="notifications" alt="Notifications" />
           <img src="images/alerts-icon-selected.svg" className="notifications selected" alt="Notifications" />
         </a>
@@ -61,17 +61,17 @@ class NotificationsDropdown extends Component {
             </header>
             <div className="notifications-list">
               <ul className="list-group">
-                {filteredNotifications.map(n => <Notification key={`dropdown-notification:${n.id}`} notification={n} />)}
+                {notifications.map(n => <Notification key={`dropdown-notification:${n.id}`} notification={n} />)}
               </ul>
             </div>
-            <footer>
-              <Link to="/notifications">
+            <Link to="/notifications">
+              <footer>
                 <FormattedMessage
                   id={ 'notificationsDropdown.viewAll' }
                   defaultMessage={ 'View All' }
                 />
-              </Link>
-            </footer>
+              </footer>
+            </Link>
           </div>
         </div>
       </div>
@@ -79,10 +79,20 @@ class NotificationsDropdown extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ app, notifications }) => {
   return {
-    web3Account: state.app.web3.account,
+    // add perspective and filter
+    notifications: notifications.map(n => {
+      const { sellerAddress } = n.resources.listing
+
+      return { ...n, perspective: app.web3.account === sellerAddress ? 'seller' : 'buyer' }
+    }).filter(n => n.status === 'unread'),
+    notificationsDismissed: app.notificationsDismissed,
   }
 }
 
-export default connect(mapStateToProps)(NotificationsDropdown)
+const mapDispatchToProps = dispatch => ({
+  dismissNotifications: ids => dispatch(dismissNotifications(ids)),
+})
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NotificationsDropdown))

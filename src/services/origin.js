@@ -1,9 +1,11 @@
 import Origin from 'origin'
+import IPFS from 'ipfs'
 import Web3 from 'web3'
+import ecies from 'eth-ecies'
 
 /*
  * It may be preferential to use websocket provider 
- * WebsocketProvider("wss://rinkeby.infura.io/ws")
+ * WebsocketProvider("ss://rinkeby.infura.io/ws")
  * But Micah couldn't get it to connect ¯\_(ツ)_/¯
  */
 const defaultProviderUrl = process.env.PROVIDER_URL
@@ -25,12 +27,44 @@ const web3 = new Web3(
   new Web3.providers.HttpProvider(defaultProviderUrl, 20000)
 )
 
+const ipfsCreator = repo_key => {
+  let boots = []
+  if (process.env.IPFS_SWARM)
+  {
+    boots = [process.env.IPFS_SWARM]
+  }
+  const ipfsOptions = {
+    repo: 'ipfs' + repo_key,
+    EXPERIMENTAL: {
+      pubsub: true,
+      relay: {
+        enabled: true, // enable relay dialer/listener (STOP)
+        hop: {
+          enabled: true // make this node a relay (HOP)
+        }
+      }
+    },
+    config: {
+      Bootstrap: boots,
+      Addresses: {
+       Swarm: ['/dns4/wrtc-star.discovery.libp2p.io/tcp/443/wss/p2p-webrtc-star']
+      }
+    }
+  }
+  return new IPFS(ipfsOptions)
+}
+
+import OrbitDB from 'orbit-db'
+
 const config = {
   ipfsDomain: process.env.IPFS_DOMAIN,
   ipfsApiPort: process.env.IPFS_API_PORT,
   ipfsGatewayPort: process.env.IPFS_GATEWAY_PORT,
   ipfsGatewayProtocol: process.env.IPFS_GATEWAY_PROTOCOL,
   attestationServerUrl,
+  ipfsCreator,
+  OrbitDB,
+  ecies,
   web3,
 }
 
@@ -43,5 +77,6 @@ try {
 const origin = new Origin(config)
 // Replace global web3 with Origin.js-constructed instance
 window.web3 = origin.contractService.web3
-
+// global Origin for others to access
+window.originTest = origin
 export default origin

@@ -31,7 +31,8 @@ import ConfirmPublish from './ConfirmPublish'
 import ConfirmUnload from './ConfirmUnload'
 import AttestationSuccess from './AttestationSuccess'
 
-import getCurrentProvider from '../../utils/getCurrentProvider'
+import getCurrentProvider from 'utils/getCurrentProvider'
+
 import origin from '../../services/origin'
 
 class Profile extends Component {
@@ -114,7 +115,7 @@ class Profile extends Component {
         id: 'Profile.airbnbVerified',
         defaultMessage: 'Airbnb account verified!'
       }
-    });
+    })
   }
 
   componentDidMount() {

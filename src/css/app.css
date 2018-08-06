@@ -34,7 +34,7 @@ hr {
 }
 
 hr.dark {
-  border-bottom: 1px solid #6f8294;
+  border-bottom: 1px solid var(--steel);
 }
 
 hr.sm {
@@ -113,7 +113,7 @@ a:hover {
 
 .btn-clear:hover {
   background-color: white;
-  color: #213040;
+  color: var(--dark-two);
 }
 
 .table {
@@ -182,6 +182,24 @@ a:hover {
   padding: 3.5rem 0;
 }
 
+.numberCircle {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  /*padding: 50% 0;*/
+  border-radius: 50%;
+  background: var(--dusk);
+  color: #fff;
+  margin-bottom: 15px;
+}
+
+.circle-text {
+  font-size: 2.0rem;
+  font-weight: 800;
+  line-height: 1.9;
+}
+
 /* Identification */
 
 .identification {
@@ -228,6 +246,7 @@ a:hover {
 /* Avatar */
 
 .avatar-container {
+  flex-shrink: 0;
   position: relative;
   background-color: var(--dark-grey-blue);
   border-radius: var(--default-radius);
@@ -363,7 +382,7 @@ a:hover {
   color: white;
 }
 
-.user-card .btn {
+.user-card .view-profile {
   background-color: var(--dark-grey-blue);
   border-radius: 0 0 var(--default-radius) var(--default-radius);
   color: white;
@@ -371,8 +390,8 @@ a:hover {
   width: 100%;
 }
 
-.user-card .btn:hover {
-  background-color: var(--dark-clear-blue);
+.user-card .view-profile:hover {
+  background-color: #202e3e;
 }
 
 .user-card .identity {
@@ -383,6 +402,11 @@ a:hover {
   font-weight: bold;
   margin: 0;
   word-wrap: break-word;
+}
+
+.user-card .contact {
+  font-size: 0.875rem;
+  font-weight: bold;
 }
 
 .user-card .identity .d-flex div:last-of-type {
@@ -440,6 +464,34 @@ a:hover {
   width: 12px;
 }
 
+.navbar .messages .unread-indicator {
+  right: 12px;
+}
+
+.navbar .disabled-indicator {
+  background-color: red;
+  border: 2px solid var(--dusk);
+  border-radius: 50%;
+  height: 12px;
+  position: absolute;
+  right: 17px;
+  top: 2px;
+  width: 12px;
+}
+
+.navbar .messages .disabled-indicator {
+  right: 12px;
+}
+
+.navbar .conversation-list-item {
+  background-color: #f6f7f8;
+  border-top: 1px solid #98a7b4;
+}
+
+.navbar .conversation-list-item:hover {
+  background-color: #eaeef1;
+}
+
 .navbar .transaction .dropdown-toggle {
   position: relative;
 }
@@ -485,8 +537,13 @@ a:hover {
   border-color: white;
 }
 
+.dropdown.show .disabled-indicator {
+  border-color: white;
+}
+
 .connectivity .dropdown-menu,
 .identity .dropdown-menu,
+.messages .dropdown-menu,
 .notifications .dropdown-menu,
 .transactions .dropdown-menu {
   position: absolute;
@@ -519,7 +576,7 @@ a:hover {
   position: absolute;
   content: '';
   height: 18px;
-  right: 190px;
+  right: 250px;
   top: 0;
   width: 36px;
   z-index: 999;
@@ -541,6 +598,19 @@ a:hover {
   clip-path: polygon(100% 0, 0 100%, 100% 100%);
 }
 
+.messages .dropdown-menu::after {
+  position: absolute;
+  content: '';
+  height: 18px;
+  right: 130px;
+  top: 0;
+  width: 36px;
+  z-index: 999;
+
+  -webkit-clip-path: polygon(50% 0, 0 100%, 100% 100%);
+  clip-path: polygon(50% 0, 0 100%, 100% 100%);
+}
+
 .notifications .dropdown-menu::after {
   position: absolute;
   content: '';
@@ -558,7 +628,7 @@ a:hover {
   position: absolute;
   content: '';
   height: 18px;
-  right: 130px;
+  right: 190px;
   top: 0;
   width: 36px;
   z-index: 999;
@@ -575,11 +645,9 @@ a:hover {
   background-color: var(--dark);
 }
 
-.notifications .dropdown-menu::after{
-  background-color: white;
-}
-
-.transactions .dropdown-menu::after{
+.messages .dropdown-menu::after,
+.notifications .dropdown-menu::after,
+.transactions .dropdown-menu::after {
   background-color: white;
 }
 
@@ -589,7 +657,7 @@ a:hover {
 }
 
 .connectivity .triangle {
-  margin-right: 190px;
+  margin-right: 250px;
   width: 36px;
 
   -webkit-clip-path: polygon(50% 0, 0 100%, 100% 100%);
@@ -601,6 +669,14 @@ a:hover {
   clip-path: polygon(100% 0, 0 100%, 100% 100%);
 }
 
+.messages .triangle {
+  margin-right: 130px;
+  width: 36px;
+
+  -webkit-clip-path: polygon(50% 0, 0 100%, 100% 100%);
+  clip-path: polygon(50% 0, 0 100%, 100% 100%);
+}
+
 .notifications .triangle {
   margin-right: 70px;
   width: 36px;
@@ -610,7 +686,7 @@ a:hover {
 }
 
 .transactions .triangle {
-  margin-right: 130px;
+  margin-right: 190px;
   width: 36px;
 
   -webkit-clip-path: polygon(50% 0, 0 100%, 100% 100%);
@@ -627,6 +703,7 @@ a:hover {
 }
 
 .connectivity .triangle,
+.messages .triangle,
 .notifications .triangle,
 .sell .triangle,
 .transactions .triangle {
@@ -643,11 +720,8 @@ a:hover {
   filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.25));
 }
 
-.notifications .triangle-container {
-  -webkit-filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
-  filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
-}
-
+.messages .triangle-container,
+.notifications .triangle-container,
 .transactions .triangle-container {
   -webkit-filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
   filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
@@ -658,24 +732,28 @@ a:hover {
 }
 
 .nav-item.connectivity.dropdown.show,
+.nav-item.messages.dropdown.show,
 .nav-item.notifications.dropdown.show,
 .nav-item.transactions.dropdown.show {
   background-color: white;
 }
 
 .nav-item.connectivity.dropdown .connectivity.selected,
+.nav-item.messages.dropdown .messages.selected,
 .nav-item.notifications.dropdown .notifications.selected,
 .nav-item.transactions.dropdown .transactions.selected {
   display: none;
 }
 
 .nav-item.connectivity.dropdown.show .connectivity,
+.nav-item.messages.dropdown.show .messages,
 .nav-item.notifications.dropdown.show .notifications,
 .nav-item.transactions.dropdown.show .transactions {
   display: none;
 }
 
 .nav-item.connectivity.dropdown.show .connectivity.selected,
+.nav-item.messages.dropdown.show .messages.selected,
 .nav-item.notifications.dropdown.show .notifications.selected,
 .nav-item.transactions.dropdown.show .transactions.selected {
   display: inline;
@@ -683,6 +761,7 @@ a:hover {
 
 .connectivity .dropdown-menu,
 .identity .dropdown-menu,
+.messages .dropdown-menu,
 .notifications .dropdown-menu,
 .transactions .dropdown-menu {
   background-color: transparent;
@@ -694,6 +773,7 @@ a:hover {
 
 .connectivity .dropdown-menu .actual-menu,
 .identity .dropdown-menu .actual-menu,
+.messages .dropdown-menu .actual-menu,
 .notifications .dropdown-menu .actual-menu,
 .transactions .dropdown-menu .actual-menu {
   border-radius: var(--default-radius);
@@ -708,6 +788,7 @@ a:hover {
 }
 
 .connectivity .dropdown-menu .actual-menu,
+.messages .dropdown-menu .actual-menu,
 .notifications .dropdown-menu .actual-menu,
 .transactions .dropdown-menu .actual-menu {
   background-color: white;
@@ -729,21 +810,25 @@ a:hover {
   border-radius: 0 0 var(--default-radius) var(--default-radius);
 }
 
+.messages .dropdown-menu,
 .notifications .dropdown-menu,
 .transactions .dropdown-menu {
   width: calc(100% - 15px - 15px);
 }
 
+.messages .dropdown-menu a
 .notifications .dropdown-menu a {
   color: var(--clear-blue);
 }
 
+.messages .dropdown-menu header,
 .notifications .dropdown-menu header,
 .transactions .dropdown-menu header {
   align-items: center;
   height: 48px;
 }
 
+.messages .dropdown-menu h3,
 .notifications .dropdown-menu h3,
 .transactions .dropdown-menu h3 {
   font-size: 1.125rem;
@@ -751,18 +836,19 @@ a:hover {
   margin-bottom: 0;
 }
 
+.messages .dropdown-menu h3,
 .notifications .dropdown-menu h3 {
   margin: 0 22px 0 0;
 }
 
-.notifications .dropdown-menu .count,
-.transactions .dropdown-menu .count {
+.messages .count,
+.notifications .count,
+.transactions .count {
   text-align: center;
   width: 68px;
 }
 
-.notifications .dropdown-menu .count div,
-.transactions .dropdown-menu .count div {
+.count div {
   border-radius: 12px;
   color: white;
   font-size: 16px;
@@ -770,22 +856,35 @@ a:hover {
   padding: 0 8px;
 }
 
-.notifications .dropdown-menu .count div {
+.messages .count div,
+.notifications .count div {
   background-color: var(--greenblue);
 }
 
-.transactions .dropdown-menu .count div {
+.messages-wrapper .count div,
+.transactions .count div {
   background-color: var(--clear-blue);
 }
 
+.messages .dropdown-menu footer,
 .notifications .dropdown-menu footer,
 .transactions .dropdown-menu footer {
-  background-color: #dfe6ea;
+  background-color: var(--pale-grey-two);
   border-radius: 0 0 var(--default-radius) var(--default-radius);
   padding: 12px;
   text-align: center;
 }
 
+.dropdown-menu a footer {
+  color: var(--clear-blue);
+}
+
+.dropdown-menu a:hover footer {
+  background-color: #c3d0d7;
+  color: var(--dark-clear-blue);
+}
+
+.messages .dropdown-menu .notification,
 .notifications .dropdown-menu .notification,
 .transactions .dropdown-menu .transaction {
   border-left-width: 0;
@@ -793,6 +892,7 @@ a:hover {
   border-right-width: 0;
 }
 
+.messages .dropdown-menu .message,
 .notifications .dropdown-menu .notification {
   border-radius: 0;
 }
@@ -945,7 +1045,7 @@ a:hover {
 .navbar input:focus {
   background-color: transparent;
   border: none;
-  border-left: 1px solid #6f8294;
+  border-left: 1px solid var(--steel);
   border-radius: 0;
   box-shadow: none;
   color: var(--pale-grey);
@@ -990,6 +1090,10 @@ a:hover {
   color: white;
 }
 
+.btn-auto-width {
+  width: auto;
+}
+
 .btn-other {
   border: solid 1px var(--light);
   background-color: white;
@@ -1008,7 +1112,7 @@ a:hover {
 }
 
 .connectivity.show .indicator {
-  background-color: #dfe6ea;
+  background-color: var(--pale-grey-two);
 }
 
 .connectivity .indicator.connected {
@@ -1028,7 +1132,7 @@ a:hover {
 }
 
 .connectivity .actual-menu .indicator:not(.connected) {
-  background-color: #dfe6ea;
+  background-color: var(--pale-grey-two);
 }
 
 .connectivity .connection:not(:last-of-type) {
@@ -1103,18 +1207,50 @@ a:hover {
   height: 108px;
 }
 
-.modal-content .form-control {
+.form-control {
   text-align: center;
   max-width: 288px;
 }
 
+.form-control-wrap .form-control {
+  max-width: none;
+}
+
+.form-control#airbnb-generated-code {
+  max-width: 340px;
+  height: 92px;
+  resize: none;
+}
+
+.form-control-wrap {
+  width: 100%;
+  max-width: 288px;
+  margin-right: auto;
+  display: inline-block;
+}
+
+.form-control-wrap.wide-control {
+  max-width: 400px;
+}
+
+.form-control-wrap.error input {
+  border: 1px solid var(--red);
+  background: var(--dark-red);
+}
+
+.modal-content .form-control-wrap.error .error_message {
+  color: var(--orange-red);
+  margin-top: -0.5rem;
+  font-size: 1rem;
+}
+
 .modal-content .form-control:read-only {
-  background-color: #213040;
+  background-color: var(--dark-two);
 }
 
 .modal-content input,
 .modal-content textarea {
-  background-color: #213040;
+  background-color: var(--dark-two);
   border: none;
   color: white;
   font-size: 1.125rem;
@@ -1123,7 +1259,7 @@ a:hover {
 
 .modal-content input:focus,
 .modal-content textarea:focus {
-  background-color: #213040;
+  background-color: var(--dark-two);
   border: none;
   color: white;
 }
@@ -1131,6 +1267,21 @@ a:hover {
 .modal-content input::placeholder,
 .modal-content textarea::placeholder {
   color: var(--dusk);
+}
+
+.modal-content .general-error:empty {
+  display:none;
+}
+
+.modal-content .general-error {
+  background: var(--dark-red);
+  width: 100%;
+  border-radius: 0.25rem;
+  padding: 0.3rem 0rem;
+  margin: 1rem 0px;
+  padding: 0.3em;
+  font-size: 0.9em;
+  color: var(--light-red);
 }
 
 .modal-content .button-container {
@@ -1161,11 +1312,17 @@ a:hover {
 
 .tooltip .tooltip-inner {
   padding: 1.2rem;
+  max-width: 250px;
 }
 
 .tooltip img {
   height: 0.66rem;
   margin-right: 0.25rem;
+}
+
+.tooltip img.weChat {
+  width: 200px;
+  height: 200px;
 }
 
 /* Listings */
@@ -1233,7 +1390,7 @@ a:hover {
 }
 
 .listing-card .featured.badge {
-  background-color: #e5b13e;
+  background-color: var(--golden-rod);
   color: white;
   vertical-align: text-bottom;
 }
@@ -1324,11 +1481,11 @@ a:hover {
 }
 
 .loading .placehold {
-  background-color: #f6f7f8;
+  background-color: var(--pale-grey-three);
   border-radius: 3px;
   color: var(--light);
 
-  background: linear-gradient(90deg, #fafafa, #f6f7f8, #fafafa, #f6f7f8, #fafafa, #f6f7f8);
+  background: linear-gradient(90deg, var(--pale-grey-six), var(--pale-grey-three), var(--pale-grey-six), var(--pale-grey-three), var(--pale-grey-six), var(--pale-grey-three));
   background-size: 400% 400%;
 
   -webkit-animation: shimmer 2s linear infinite;
@@ -1370,7 +1527,7 @@ a:hover {
 }
 
 .loading .buy-box {
-  background-color: #f6f7f8;
+  background-color: var(--pale-grey-three);
 }
 
 .buy-box .btn {
@@ -1629,7 +1786,7 @@ label[for=root_pictures]:hover {
 }
 
 .status.inactive {
-  color: #ff1a1a;
+  color: var(--orange-red);
 }
 
 .purchase {
@@ -1764,7 +1921,7 @@ label[for=root_pictures]:hover {
 }
 
 .purchase .content-container .actions .links-container .warning {
-  color: #ff1a1a;
+  color: var(--orange-red);
 }
 
 .purchase .content-container .actions .button-container {
@@ -1942,7 +2099,7 @@ label[for=root_pictures]:hover {
 }
 
 .purchase-detail .summary .status.inactive {
-  color: #ff1a1a;
+  color: var(--orange-red);
 }
 
 .purchase-detail .carousel {
@@ -1969,7 +2126,7 @@ label[for=root_pictures]:hover {
 }
 
 .purchase-detail textarea::placeholder {
-  color: #98a7b4;
+  color: var(--bluey-grey);
 }
 
 form .stars {
@@ -2043,7 +2200,7 @@ form .stars img {
 }
 
 .reviews .review-count {
-  color: #98a7b4;
+  color: var(--bluey-grey);
 }
 
 .reviews form {
@@ -2080,7 +2237,7 @@ form .stars img {
 
 .transaction {
   align-items: center;
-  background-color: #f6f7f8;
+  background-color: var(--pale-grey-three);
   border-color: var(--light);
   padding: 15px;
 }
@@ -2091,13 +2248,13 @@ form .stars img {
 }
 
 .transaction .addresses {
-  color: #6f8294;
+  color: var(--steel);
   font-size: 0.75rem;
 }
 
 .transaction .timelapse,
 .transaction .confirmations-count {
-  color: #98a7b4;
+  color: var(--bluey-grey);
   font-size: 0.75rem;
 }
 
@@ -2124,39 +2281,14 @@ form .stars img {
   clip: rect(0px, 32px, 32px, 16px);
 }
 
-.transaction .slice:nth-of-type(1) {
-  transform: rotate(0deg);
-}
-
-.transaction .slice:nth-of-type(2) {
-  transform: rotate(60deg);
-}
-
-.transaction .slice:nth-of-type(3) {
-  transform: rotate(120deg);
-}
-
-.transaction .slice:nth-of-type(4) {
-  transform: rotate(180deg);
-}
-
-.transaction .slice:nth-of-type(5) {
-  transform: rotate(240deg);
-}
-
-.transaction .slice:nth-of-type(6) {
-  transform: rotate(300deg);
-}
-
 .transaction .slice .crust {
-  background-color: #dfe6ea;
+  background-color: var(--pale-grey-two);
   border-radius: 32px;
   clip: rect(0px, 16px, 32px, 0px);
   height: 32px;
   left: 0px;
   position: absolute;
   top: 0px;
-  transform: rotate(60deg);
   width: 32px;
 }
 
@@ -2165,7 +2297,7 @@ form .stars img {
 }
 
 .transaction .inner-circle {
-  background-color: #f6f7f8;
+  background-color: var(--pale-grey-three);
   border-radius: 50%;
   height: 24px;
   left: 4px;
@@ -2203,17 +2335,243 @@ form .stars img {
   vertical-align: baseline;
 }
 
+/* Messages */
+
+.conversations-list-col {
+  background-color: var(--pale-grey);
+}
+
+.no-gutters .conversation-col {
+  background-color: white;
+  height: calc(100vh - 60px);
+  padding: 0 10px 0;
+}
+
+.conversation-list-item {
+  height: 60px;
+  padding: 10px;
+}
+
+.conversation-list-item {
+  cursor: pointer;
+}
+
+.conversation-list-item.active {
+  background-color: var(--clear-blue);
+  color: white;
+}
+
+.conversation-list-item .content-container {
+  font-weight: normal;
+}
+
+.conversation-list-item .message {
+  font-size: 0.75rem;
+}
+
+.conversation-list-item .meta-container {
+  font-weight: normal;
+  margin-left: auto;
+}
+
+.conversation-list-item .time-reference {
+  color: #98a7b4;
+  font-size: 0.75rem;
+}
+
+.conversation-list-item.active .time-reference {
+  color: white;
+}
+
+.conversation-list-item .unread {
+  font-weight: bold;
+}
+
+.conversation-list-item .count div {
+  border-radius: 8px;
+  font-size: 12px;
+  height: 18px;
+  padding: 0 6px;
+}
+
+.messages-wrapper .container {
+  padding: 0;
+}
+
+.messages-wrapper .sender {
+  font-size: 1rem;
+  font-weight: bold;
+  vertical-align: top;
+}
+
+.messages-wrapper .timestamp {
+  line-height: 2;
+  vertical-align: top;
+}
+
+.messages-wrapper .listing-summary {
+  border-bottom: 1px solid #c2cbd3;
+  padding: 20px 0;
+}
+
+.messages-wrapper .brdcrmb {
+  color: var(--dusk);
+  font-size: 0.875rem;
+  font-weight: normal;
+  text-transform: uppercase;
+}
+
+.messages-wrapper .listing-summary h1 {
+  color: var(--dark);
+  font-size: 1.5rem;
+  margin-bottom: 0;
+}
+
+.messages-wrapper .state {
+  color: var(--dusk);
+  font-size: 0.875rem;
+}
+
+.messages-wrapper .aspect-ratio {
+  position: relative;
+  flex-basis: 130px;
+  margin-right: 20px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.messages-wrapper .aspect-ratio img {
+  height: 114px;
+}
+
+.messages-wrapper .progress-container {
+  margin-bottom: 20px;
+}
+
+.conversation {
+  margin-bottom: auto;
+  overflow: scroll;
+}
+
+.conversation .message {
+  margin-bottom: 20px;
+}
+
+.conversation .message:first-of-type {
+  margin-top: 20px;
+}
+
+.conversation .avatar-container {
+  height: 60px;
+  width: 60px;
+}
+
+.conversation .content-container {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.conversation .meta-container {
+  flex-wrap: wrap;
+}
+
+.conversation .content {
+  font-size: 1.125rem;
+  font-weight: normal;
+  margin-right: 10px;
+}
+
+.conversation .sender {
+  font-weight: 300;
+  font-size: 0.75rem;
+  padding-top: 8px;
+}
+
+.conversation .timestamp {
+  color: #98a7b4;
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  padding-top: 8px;
+}
+
+.conversation .name {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.add-message {
+  border-top: 1px solid var(--pale-grey);
+  width: 100%;
+}
+
+.add-message button {
+  margin: auto 0 auto 10px;
+  width: auto;
+}
+
+.add-message textarea {
+  border: 0;
+  padding: 10px 0 0;
+  flex-grow: 1;
+  resize: none;
+}
+
+.add-message textarea:focus {
+  outline: none;
+}
+
+.modal-content .eth-container {
+  background-color: var(--dusk);
+  border-radius: 10px 10px 0 0;
+  padding: 20px 20%;
+}
+
+.modal-content .eth-container img {
+  margin-bottom: 20px;
+}
+
+.message .modal-content h2 {
+  margin-bottom: 0;
+}
+
+.message .modal-content .address {
+  font-size: 1.5rem;
+  font-weight: normal;
+  word-break: break-all;
+}
+
+.new-message {
+  padding: 20px;
+  text-align: left;
+}
+
+.new-message .button-container {
+  padding-top: 0;
+}
+
+.modal-content .new-message .form-control {
+  height: auto;
+  margin-bottom: 0;
+  max-width: unset;
+  resize: none;
+}
+
+.message .modal-content {
+  padding: 0;
+}
+
 /* Notifications */
 
 .notification {
   align-items: center;
-  background-color: #f6f7f8;
+  background-color: var(--pale-grey-three);
   border-color: var(--light);
   padding: 15px;
 }
 
 .notification:hover {
-  background-color: #eaeef1;
+  background-color: var(--pale-grey-seven);
 }
 
 .notification div {
@@ -2296,7 +2654,7 @@ form .stars img {
 /* Profile */
 
 .profile-wrapper {
-  background-color: #fafbfc;
+  background-color: var(--pale-grey-four);
   flex-grow: 1;
   padding: 40px 0;
 }
@@ -2309,7 +2667,7 @@ form .stars img {
 .verifications-box {
   background-color: var(--pale-grey);
   border-radius: 20px;
-  color: #0c2033;
+  color: var(--dark-blue-grey);
   font-size: 0.825rem;
   margin-bottom: 1rem;
   padding: 1rem;
@@ -2405,7 +2763,7 @@ form .stars img {
 
 .services-container .credit {
   position: absolute;
-  color: #98a7b4;
+  color: var(--bluey-grey);
   font-size: 0.75rem;
   margin: 0 0 1rem;
   right: 10px;
@@ -2422,7 +2780,7 @@ form .stars img {
 }
 
 .services-container .service {
-  background-color: #fafbfc;
+  background-color: var(--pale-grey-four);
   border: dashed 1px var(--light);
   border-radius: var(--default-radius);
   margin: 0 0 10px 0;
@@ -2441,7 +2799,7 @@ form .stars img {
 }
 
 .services-container .service.published {
-  background-color: #f5fcfa;
+  background-color: var(--pale-greenblue);
   border: 1px solid var(--greenblue);
   color: var(--greenblue);
 }
@@ -2451,7 +2809,7 @@ form .stars img {
 }
 
 .services-container .service.verified {
-  background-color: #f5fafc;
+  background-color: var(--pale-clear-blue);
   border: 1px solid var(--clear-blue);
   color: var(--clear-blue);
 }
@@ -2482,7 +2840,7 @@ form .stars img {
 }
 
 .service-name {
-  color: #98a7b4;
+  color: var(--bluey-grey);
   font-size: 1.125rem;
   font-weight: normal;
   line-height: 36px;
@@ -2520,7 +2878,7 @@ form .stars img {
 
 .services-container .service .unavailable-message {
   position: absolute;
-  color: #f7f8f9;
+  color: var(--pale-grey-five);
   font-size: 7px;
   font-weight: 900;
   right: 5px;
@@ -2619,7 +2977,7 @@ sup {
 }
 
 .published-status .not-published {
-  color: #ff1a1a;
+  color: var(--orange-red);
   font-size: 0.625rem;
   font-weight: bold;
   text-transform: uppercase;
@@ -2672,7 +3030,7 @@ sup {
 
 .profile.modal .container .image-container .image-pair .avatar-container  {
   position: relative;
-  background-color: #213040;
+  background-color: var(--dark-two);
   border-radius: 20px;
   height: 170px;
   margin-bottom: 1rem;
@@ -2713,7 +3071,7 @@ sup {
   height: unset;
 }
 
-.identity.modal .image-container {
+.attestation.modal .image-container {
   background-image: url(images/verification-shape-grey.svg);
   background-position: 0;
   background-size: 110px 116px;
@@ -2722,17 +3080,17 @@ sup {
   width: 110px;
 }
 
-.identity.modal .image-container img {
+.attestation.modal .image-container img {
   margin: 0 auto 0;
 }
 
-.identity.modal label {
+.attestation.modal label {
   color: var(--pale-grey);
   font-size: 1rem;
   margin-bottom: 1rem;
 }
 
-.identity.modal input {
+.attestation.modal input {
   margin-bottom: 1rem;
 }
 
@@ -2740,15 +3098,14 @@ sup {
   margin-bottom: 0;
 }
 
-.profile-wrapper .modal .explanation {
+.modal .explanation {
   color: var(--pale-grey);
   font-size: 0.875rem;
   padding-top: 1rem;
-  margin-bottom: 0.5rem;
 }
 
 .phone.modal .dropdown {
-  background-color: #213040;
+  background-color: var(--dark-two);
   border-radius: var(--default-radius);
   height: 46px;
   margin: 0 10px 10px auto;
@@ -2796,7 +3153,7 @@ sup {
 }
 
 .phone.modal .dropdown .dropdown-item:hover {
-  background-color: #213040;
+  background-color: var(--dark-two);
 }
 
 .phone.modal .dropdown .dropdown-item > :first-child {
@@ -2872,7 +3229,7 @@ sup {
 
 .dark-footer {
   background-color: var(--dark-grey-blue);
-  padding: 80px 0;
+  padding: 78px 0 258px;
   min-height: 522px;
 }
 
@@ -2926,6 +3283,11 @@ footer .dropdown-menu li:hover {
 
 .container.listing-wait-confirmation {
   min-height: 675px;
+}
+
+a:not([href]):not([tabindex]).span-link {
+  color: #ffffff;
+  cursor: pointer; 
 }
 
 /* Error Page */
@@ -2997,48 +3359,36 @@ footer .dropdown-menu li:hover {
   }
 
   .navbar .connectivity .triangle {
-    margin-right: 205px;
+    margin-right: calc((100% - 540px) / 2 + 10px + 60px + 60px + 60px + 60px);
   }
 
   .connectivity .dropdown-menu::after {
-    right: 205px;
-  }
-
-  .navbar .identity .triangle {
-    -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
-    clip-path: polygon(100% 0, 0 100%, 100% 100%);
-  }
-
-  .navbar .notifications .triangle {
-    margin-right: 0;
-    width: 18px;
-
-    -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
-    clip-path: polygon(100% 0, 0 100%, 100% 100%);
-  }
-
-  .navbar .notifications .dropdown-menu::after {
-    right: 0;
-    width: 18px;
-
-    -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
-    clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    right: calc((100% - 540px) / 2 + 10px + 60px + 60px + 60px + 60px);
   }
 
   .navbar .transactions .triangle {
-    margin-right: 0;
-    width: 18px;
+    margin-right: calc((100% - 540px) / 2 + 10px + 60px + 60px + 60px);
+  }
 
+  .transactions .dropdown-menu::after {
+    right: calc((100% - 540px) / 2 + 10px + 60px + 60px + 60px);
+  }
+
+  .navbar .identity .triangle,
+  .navbar .messages .triangle,
+  .navbar .notifications .triangle {
     -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
     clip-path: polygon(100% 0, 0 100%, 100% 100%);
   }
-
-  .navbar .transactions .dropdown-menu {
-    right: calc(((100% - 540px) / 2) + 60px + 60px);
-    width: calc(540px - 60px - 60px);
+ 
+  .navbar .messages .triangle,
+  .navbar .notifications .triangle {
+    margin-right: 0;
+    width: 18px;
   }
 
-  .navbar .transactions .dropdown-menu::after {
+  .navbar .messages .dropdown-menu::after,
+  .navbar .notifications .dropdown-menu::after {
     right: 0;
     width: 18px;
 
@@ -3050,13 +3400,18 @@ footer .dropdown-menu li:hover {
     min-width: 384px;
   }
 
-  .notifications .dropdown-menu .actual-menu,
-  .transactions .dropdown-menu .actual-menu {
+  .messages .dropdown-menu .actual-menu,
+  .notifications .dropdown-menu .actual-menu {
     border-radius: var(--default-radius) 0 var(--default-radius) var(--default-radius);
   }
 
   .navbar .identity .dropdown-menu {
     right: calc((100% - 540px) / 2);
+  }
+
+  .navbar .messages .dropdown-menu {
+    right: calc(((100% - 540px) / 2) + 60px + 60px);
+    width: calc(540px - 60px - 60px);
   }
 
   .navbar .notifications .dropdown-menu {
@@ -3069,6 +3424,24 @@ footer .dropdown-menu li:hover {
     max-height: 183px;
     max-width: 183px;
   }
+
+  /* apply different background colors outside of the container */
+  .messages-wrapper {
+    background: linear-gradient(to right, var(--pale-grey) 25%, white 25%);
+    flex: 1;
+  }
+
+  .messages-wrapper > .container {
+    flex: 1;
+  }
+
+  .messages-wrapper > .container > .row {
+    height: 100%;
+  }
+
+  .no-gutters .conversation-col {
+    padding: 0 20px 0;
+  }
 }
 
 /* md + */
@@ -3077,16 +3450,13 @@ footer .dropdown-menu li:hover {
     padding: 40px;
   }
 
-  .navbar .connectivity .dropdown-menu {
-    right: calc(((100% - 720px) / 2) + 60px + 60px + 60px);
-    width: 520px;
-  }
-
-  .connectivity .dropdown-menu .actual-menu {
+  .connectivity .dropdown-menu .actual-menu,
+  .transactions .dropdown-menu .actual-menu {
     border-radius: var(--default-radius) 0 var(--default-radius) var(--default-radius);
   }
 
-  .navbar .connectivity .triangle {
+  .navbar .connectivity .triangle,
+  .navbar .transactions .triangle {
     margin-right: 0;
     width: 18px;
 
@@ -3094,7 +3464,8 @@ footer .dropdown-menu li:hover {
     clip-path: polygon(100% 0, 0 100%, 100% 100%);
   }
 
-  .navbar .connectivity .dropdown-menu::after {
+  .navbar .connectivity .dropdown-menu::after,
+  .navbar .transactions .dropdown-menu::after {
     right: 0;
     width: 18px;
 
@@ -3106,14 +3477,27 @@ footer .dropdown-menu li:hover {
     right: calc((100% - 720px) / 2);
   }
 
-  .navbar .notifications .dropdown-menu {
-    right: calc(((100% - 720px) / 2) + 60px);
+  .navbar .connectivity .dropdown-menu,
+  .navbar .messages .dropdown-menu,
+  .navbar .notifications .dropdown-menu,
+  .navbar .transactions .dropdown-menu {
     width: 520px;
   }
 
-  .navbar .transactions .dropdown-menu {
+  .navbar .connectivity .dropdown-menu {
+    right: calc(((100% - 720px) / 2) + 60px + 60px + 60px + 60px);
+  }
+
+  .navbar .messages .dropdown-menu {
     right: calc(((100% - 720px) / 2) + 60px + 60px);
-    width: 520px;
+  }
+
+  .navbar .notifications .dropdown-menu {
+    right: calc(((100% - 720px) / 2) + 60px);
+  }
+
+  .navbar .transactions .dropdown-menu {
+    right: calc(((100% - 720px) / 2) + 60px + 60px + 60px);
   }
 
   .listing-container .seller {
@@ -3193,11 +3577,15 @@ footer .dropdown-menu li:hover {
   }
 
   .navbar .connectivity .dropdown-menu {
-    right: calc(((100% - 960px) / 2) + 60px + 60px + 60px + 15px);
+    right: calc(((100% - 960px) / 2) + 60px + 60px + 60px + 60px + 15px);
   }
 
   .navbar .identity .dropdown-menu {
     right: calc(((100% - 960px) / 2) + 15px);
+  }
+
+  .navbar .messages .dropdown-menu {
+    right: calc(((100% - 960px) / 2) + 60px + 60px + 15px);
   }
 
   .navbar .notifications .dropdown-menu {
@@ -3205,7 +3593,7 @@ footer .dropdown-menu li:hover {
   }
 
   .navbar .transactions .dropdown-menu {
-    right: calc(((100% - 960px) / 2) + 60px + 60px + 15px);
+    right: calc(((100% - 960px) / 2) + 60px + 60px + 60px + 15px);
   }
 
   .navbar .collapse .navbar-nav.show .sell {
@@ -3234,7 +3622,7 @@ footer .dropdown-menu li:hover {
   .navbar .sell .dropdown-menu {
     position: absolute;
     left: auto;
-    right: calc(((100% - 960px) / 2) + 60px + 60px + 60px + 60px + 30px + 15px + 120px + 10px);
+    right: calc(((100% - 960px) / 2) + 60px + 60px + 60px + 60px + 60px + 30px + 15px + 120px + 10px);
   }
 
   .navbar .sell .dropdown-menu .actual-menu {
@@ -3263,7 +3651,7 @@ footer .dropdown-menu li:hover {
   }
 
   .navbar .sell .dropdown-menu .actual-menu .dropdown-item:not(:last-of-type) {
-    border-bottom: 1px solid #dfe6ea;
+    border-bottom: 1px solid var(--pale-grey-two);
   }
 
   .navbar .sell .dropdown-menu a {
@@ -3324,11 +3712,15 @@ footer .dropdown-menu li:hover {
 /* xl + */
 @media (min-width: 1200px) {
   .navbar .connectivity .dropdown-menu {
-    right: calc(((100% - 1140px) / 2) + 60px + 60px + 60px + 15px);
+    right: calc(((100% - 1140px) / 2) + 60px + 60px + 60px + 60px + 15px);
   }
 
   .navbar .identity .dropdown-menu {
     right: calc(((100% - 1140px) / 2) + 15px);
+  }
+
+  .navbar .messages .dropdown-menu {
+    right: calc(((100% - 1140px) / 2) + 60px + 60px + 15px);
   }
 
   .navbar .notifications .dropdown-menu {
@@ -3336,10 +3728,10 @@ footer .dropdown-menu li:hover {
   }
 
   .navbar .sell .dropdown-menu {
-    right: calc(((100% - 1140px) / 2) + 60px + 60px + 60px + 60px + 30px + 15px + 120px + 10px);
+    right: calc(((100% - 1140px) / 2) + 60px + 60px + 60px + 60px + 60px + 30px + 15px + 120px + 10px);
   }
 
   .navbar .transactions .dropdown-menu {
-    right: calc(((100% - 1140px) / 2) + 60px + 60px + 15px);
+    right: calc(((100% - 1140px) / 2) + 60px + 60px + 60px + 15px);
   }
 }

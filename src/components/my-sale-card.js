@@ -4,8 +4,10 @@ import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import moment from 'moment'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
+
 import { fetchUser } from 'actions/User'
-import PurchaseProgress from './purchase-progress'
+
+import PurchaseProgress from 'components/purchase-progress'
 
 class MySaleCard extends Component {
   constructor(props) {
@@ -26,7 +28,7 @@ class MySaleCard extends Component {
         id: 'my-sale-card.unnamedUser',
         defaultMessage: 'Unnamed User'
       }
-    });
+    })
   }
 
   componentWillMount() {
@@ -65,7 +67,7 @@ class MySaleCard extends Component {
       step = 3
     } else if (purchase.stage === 'buyer_pending') {
       step = 2
-    } else if (purchase.stage === 'shipping_pending') {
+    } else if (purchase.stage === 'in_escrow') {
       step = 1
     } else {
       step = 0
@@ -106,7 +108,7 @@ class MySaleCard extends Component {
               </div>
             </div>
           </div>
-          <PurchaseProgress currentStep={step} purchase={purchase} perspective="seller" subdued="true" />
+          <PurchaseProgress currentStep={step} purchase={purchase} perspective="seller" subdued={true} />
           <div className="d-flex justify-content-between actions">
             {step === 1 && 
               <p>
@@ -165,7 +167,7 @@ const mapStateToProps = (state, { purchase }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: address => dispatch(fetchUser(address))
+  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(MySaleCard))

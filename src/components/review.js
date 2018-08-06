@@ -3,8 +3,10 @@ import moment from 'moment'
 import { defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+
 import { fetchUser } from 'actions/User'
-import Avatar from './avatar'
+
+import Avatar from 'components/avatar'
 
 class Review extends Component {
   constructor(props) {
@@ -21,7 +23,7 @@ class Review extends Component {
         id: 'review.unnamedUser',
         defaultMessage: 'Unnamed User'
       }
-    });
+    })
   }
 
   componentWillMount() {
@@ -76,7 +78,7 @@ const mapStateToProps = (state, { review }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: address => dispatch(fetchUser(address))
+  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Review))

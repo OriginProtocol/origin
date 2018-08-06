@@ -4,8 +4,12 @@
     "defaultMessage": "Verify your Airbnb account"
   },
   {
-    "id": "VerifyAirbnb.ok",
-    "defaultMessage": "Ok"
+    "id": "VerifyAirbnb.enterAirbnbProfileUrl",
+    "defaultMessage": "Enter Airbnb profile Url below"
+  },
+  {
+    "id": "VerifyAirbnb.airbnbProfilePublished",
+    "defaultMessage": "Other users will know that you have a verified Airbnb profile."
   },
   {
     "id": "VerifyAirbnb.continue",
@@ -14,18 +18,6 @@
   {
     "id": "VerifyAirbnb.cancel",
     "defaultMessage": "Cancel"
-  },
-  {
-    "id": "VerifyAirbnb.unknownError",
-    "defaultMessage": "An unknown error occurred"
-  },
-  {
-    "id": "VerifyAirbnb.enterAirbnbProfileUrl",
-    "defaultMessage": "Enter Airbnb profile Url below"
-  },
-  {
-    "id": "VerifyAirbnb.airbnbProfilePublished",
-    "defaultMessage": "Other users will know that you have a verified Airbnb profile."
   },
   {
     "id": "VerifyAirbnb.enterCodeIntoAirbnb",

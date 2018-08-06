@@ -1,15 +1,19 @@
 [
   {
-    "id": "my-purchases.myPurchasesHeading",
-    "defaultMessage": "My Purchases"
-  },
-  {
     "id": "my-purchases.loading",
     "defaultMessage": "Loading..."
   },
   {
-    "id": "my-purchases.noPurchases",
-    "defaultMessage": "You currently have no purchases."
+    "id": "my-purchases.no-purchases",
+    "defaultMessage": "You haven’t bought anything yet."
+  },
+  {
+    "id": "my-purchases.view-listings",
+    "defaultMessage": "Click below to view all listings."
+  },
+  {
+    "id": "my-purchases.myPurchasesHeading",
+    "defaultMessage": "My Purchases"
   },
   {
     "id": "my-purchases.pending",

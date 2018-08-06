@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
+
 import Modal from 'components/modal'
 
 import origin from '../../services/origin'
@@ -7,7 +8,9 @@ import origin from '../../services/origin'
 class VerifyFacebook extends Component {
   constructor() {
     super()
-    this.state = {}
+    this.state = {
+      generalErrors: []
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -23,7 +26,7 @@ class VerifyFacebook extends Component {
       <Modal
         isOpen={this.props.open}
         data-modal="facebook"
-        className="identity"
+        className="attestation"
         handleToggle={this.props.handleToggle}
       >
         <div className="image-container d-flex align-items-center">
@@ -35,6 +38,11 @@ class VerifyFacebook extends Component {
             defaultMessage={ 'Verify Your Facebook Account' }
           />
         </h2>
+        {this.state.generalErrors.length > 0 &&
+          <div className="general-error">
+            {this.state.generalErrors.join(' ')}
+          </div>
+        }
         <div className="explanation">
           <FormattedMessage
             id={ 'VerifyFacebook.accountNotPublic' }
@@ -57,7 +65,11 @@ class VerifyFacebook extends Component {
           <a
             href="#"
             data-modal="facebook"
-            onClick={this.props.handleToggle}
+            onClick={ event => {
+              event.preventDefault()
+              this.props.handleToggle(event)
+              this.clearErrors()
+            }}
           >
             <FormattedMessage
               id={ 'VerifyFacebook.cancel' }
@@ -69,22 +81,43 @@ class VerifyFacebook extends Component {
     )
   }
 
-  onCertify() {
-    var w = window.open(this.state.url, '', 'width=650,height=500')
+  clearErrors() {
+    this.setState({ generalErrors: [] })
+  }
 
-    const finish = e => {
-      var data = String(e.data)
+  onCertify() {
+    this.clearErrors()
+    const fbWindow = window.open(this.state.url, '', 'width=650,height=500')
+
+    const finish = async e => {
+      const data = String(e.data)
       if (!data.match(/^origin-code:/)) {
         return
       }
       window.removeEventListener('message', finish, false)
-      if (!w.closed) {
-        w.close()
+      if (!fbWindow.closed) {
+        fbWindow.close()
       }
 
-      origin.attestations
-        .facebookVerify({ code: data.split(':')[1] })
-        .then(result => this.props.onSuccess(result))
+      try {
+        const facebookAttestation = await origin.attestations
+          .facebookVerify({ code: data.split(':')[1] })
+
+        this.props.onSuccess(facebookAttestation)
+      } catch (exception) {
+        const errorsJson = JSON.parse(exception).errors
+          
+        // Service exceptions --> general error
+        if (Array.isArray(errorsJson))
+          this.setState({ generalErrors: errorsJson })
+        // Form field error. Since no fields are displayed in the DAPP convert form field errors to general errors
+        else
+          this.setState({
+            generalErrors: Object.keys(errorsJson)
+              // Prepend the error with the field that is causing the error
+              .map(field => `${field} : ${errorsJson[field].join(' ')}`)
+          })
+      }
     }
 
     window.addEventListener('message', finish, false)

@@ -11,7 +11,7 @@ class CountryOptions extends Component {
     this.intlMessages = defineMessages({
       unitedStates: {
         id: '_countryOptions.unitedStates',
-        defaultMessage: 'China'
+        defaultMessage: 'United States'
       },
       china: {
         id: '_countryOptions.china',
@@ -48,8 +48,12 @@ class CountryOptions extends Component {
       southKorea: {
         id: '_countryOptions.southKorea',
         defaultMessage: 'South Korea'
+      },
+      newZealand: {
+        id: '_countryOptions.newZealand',
+        defaultMessage: 'New Zealand'
       }
-    });
+    })
 
     this.countryOptions = [
       {
@@ -102,6 +106,11 @@ class CountryOptions extends Component {
         name: this.props.intl.formatMessage(this.intlMessages.southKorea),
         prefix: '82',
       },
+      {
+        code: 'nz',
+        name: this.props.intl.formatMessage(this.intlMessages.newZealand),
+        prefix: '64'
+      }
     ]
   }
 

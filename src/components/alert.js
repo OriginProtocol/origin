@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { hideAlert } from '../actions/Alert'
+import { hideAlert } from 'actions/Alert'
 
 class Alert extends Component {
   constructor(props) {

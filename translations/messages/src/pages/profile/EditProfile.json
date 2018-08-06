@@ -1,5 +1,17 @@
 [
   {
+    "id": "EditProfile.descriptionPlaceholder",
+    "defaultMessage": "Tell us a little something about yourself"
+  },
+  {
+    "id": "EditProfile.firstNamePlaceholder",
+    "defaultMessage": "Your First Name"
+  },
+  {
+    "id": "EditProfile.lastNamePlaceholder",
+    "defaultMessage": "Your Last Name"
+  },
+  {
     "id": "EditProfile.editProfileHeading",
     "defaultMessage": "Edit Profile"
   },

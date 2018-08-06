@@ -1,4 +1,4 @@
-import { AlertConstants } from '../actions/Alert'
+import { AlertConstants } from 'actions/Alert'
 
 const initialState = {
   message: ''

@@ -1,15 +1,19 @@
 [
   {
+    "id": "VerifyEmail.emailVerificationAddressPlaceholder",
+    "defaultMessage": "Verify email address"
+  },
+  {
+    "id": "VerifyEmail.emailVerificationCodePlaceholder",
+    "defaultMessage": "Verification code"
+  },
+  {
     "id": "VerifyEmail.continue",
     "defaultMessage": "Continue"
   },
   {
     "id": "VerifyEmail.cancel",
     "defaultMessage": "Cancel"
-  },
-  {
-    "id": "VerifyEmail.validEmail",
-    "defaultMessage": "Valid email address"
   },
   {
     "id": "VerifyEmail.emailNotPublished",

@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
+
 import { fetchUser } from 'actions/User'
+
 import Avatar from 'components/avatar'
 import Review from 'components/review'
+
+import Wallet from 'pages/profile/_Wallet'
 
 import origin from '../../services/origin'
 
@@ -18,7 +22,7 @@ class User extends Component {
         id: 'user.unnamedUser',
         defaultMessage: 'Unnamed User'
       }
-    });
+    })
   }
 
   async mapPurchaseLengths(listing) {
@@ -93,16 +97,19 @@ class User extends Component {
       <div className="public-user profile-wrapper">
         <div className="container">
           <div className="row">
-            <div className="col-12 col-sm-4 col-md-3 col-lg-2">
+            <div className="col-12 col-md-4 col-lg-4 order-md-3">
+              <Wallet address={address} />
+            </div>
+            <div className="col-12 col-sm-4 col-md-3 col-lg-2 order-md-1">
               <Avatar image={profile && profile.avatar} className="primary" placeholderStyle="purple" />
             </div>
-            <div className="col-12 col-sm-8 col-md-9 col-lg-10">
+            <div className="col-12 col-sm-8 col-md-5 col-lg-6 order-md-2">
               <div className="name d-flex">
                 <h1>{fullName}</h1>
               </div>
               <p>{description}</p>
             </div>
-            <div className="col-12 col-sm-4 col-md-3 col-lg-2">
+            <div className="col-12 col-sm-4 col-md-3 col-lg-2 order-md-4">
               {attestations && !!attestations.length &&
                 <div className="verifications-box">
                   <h3>
@@ -170,7 +177,7 @@ class User extends Component {
                 </div>
               }
             </div>
-            <div className="col-12 col-sm-8 col-md-9 col-lg-10">
+            <div className="col-12 col-sm-8 col-md-9 col-lg-10 order-md-5">
               <div className="reviews">
                 <h2>
                   <FormattedMessage
@@ -198,7 +205,7 @@ const mapStateToProps = (state, { userAddress }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: address => dispatch(fetchUser(address))
+  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(User))

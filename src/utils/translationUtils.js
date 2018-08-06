@@ -171,7 +171,7 @@ export function getLangFullName(langAbbrev) {
 
 export function getAvailableLanguages() {
   if (!translations || typeof translations !== 'object') {
-    return [];
+    return []
   }
 
   const availableLangs = []
