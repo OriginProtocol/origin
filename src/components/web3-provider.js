@@ -343,23 +343,6 @@ class Web3Provider extends Component {
       })
   }
 
-  handleAccounts(accounts) {
-    let next = accounts[0]
-    let curr = this.state.accounts[0]
-    next = next && next.toLowerCase()
-    curr = curr && curr.toLowerCase()
-
-    if (curr !== next) {
-      this.setState({
-        accountsError: null,
-        accounts
-      })
-
-      // force reload instead of showing alert
-      curr && window.location.reload()
-    }
-  }
-
   /**
    * Get the network and update state accordingly.
    * @return {void}
@@ -416,11 +399,13 @@ class Web3Provider extends Component {
     let curr = accounts[0]
     let prev = this.props.web3Account
 
+    // on account detection
     if (curr !== prev) {
-      this.props.storeWeb3Account(curr)
-
-      // force reload on account change
+      // start over if changed
       prev !== null && window.location.reload()
+      // update global state
+      this.props.storeWeb3Account(curr)
+      // trigger messaging service
       origin.messaging.onAccount(curr)
     }
   }
