@@ -27,8 +27,8 @@ async function fetchListingIds(dispatch, mode, fetcher) {
     window.location.hostname === 'demo.originprotocol.com'
 
   try {
-    let networkId = await web3.eth.net.getId()
-    let contractFound = listingsRegistryContract.networks[networkId]
+    const networkId = await web3.eth.net.getId()
+    const contractFound = listingsRegistryContract.networks[networkId]
     if (!contractFound) {
       dispatch({
         type: ListingConstants.FETCH_IDS_ERROR,
@@ -38,7 +38,7 @@ async function fetchListingIds(dispatch, mode, fetcher) {
     }
 
     if (inProductionEnv && networkId < 10) {
-      let response = await fetch(
+      const response = await fetch(
         `https://raw.githubusercontent.com/OriginProtocol/demo-dapp/hide_list/hidelist_${networkId}.json`
       )
       if (response.status === 200) {
@@ -66,15 +66,15 @@ async function fetchListingIds(dispatch, mode, fetcher) {
 
 export function searchListings(rawQuery) {
   return async function(dispatch) {
-    let query = new SearchQuery({rawQuery: rawQuery })
-    let fetcher = () => { return origin.listings.search(query) }
+    const query = new SearchQuery({rawQuery: rawQuery })
+    const fetcher = () => { return origin.listings.search(query) }
     await fetchListingIds(dispatch, ListingConstants.SEARCH_MODE, fetcher)
   }
 }
 
 export function getListingIds() {
   return async function(dispatch) {
-    let fetcher = () => { return origin.listings.allIds() }
+    const fetcher = () => { return origin.listings.allIds() }
     await fetchListingIds(dispatch, ListingConstants.BROWSE_MODE, fetcher)
   }
 }
