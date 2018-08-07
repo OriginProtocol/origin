@@ -665,11 +665,21 @@ class Messaging extends ResourceBase {
     }
   }
 
-  canConverse(remote_eth_address) {
-    if (remote_eth_address != this.account_key) {
-      return this.global_keys && this.global_keys.get(remote_eth_address)
-    }
-    return false
+  canReceiveMessages(remote_eth_address) {
+    const { account_key, global_keys } = this
+
+    return remote_eth_address !== account_key &&
+           global_keys &&
+           global_keys.get(remote_eth_address)
+  }
+
+  canSendMessages(remote_eth_address) {
+    const { account, account_key, global_keys } = this
+
+    return account &&
+           account_key &&
+           account_key !== remote_eth_address &&
+           global_keys && (!remote_eth_address || global_keys.get(remote_eth_address))
   }
 
   async startConv(remote_eth_address) {
