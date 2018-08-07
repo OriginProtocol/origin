@@ -3,7 +3,7 @@ import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { IntlProvider } from 'react-intl'
 
-import { setMobile, localizeApp, setMessagingEnabled } from 'actions/App'
+import { setMobile, localizeApp, setMessagingEnabled, setMessagingInitialized } from 'actions/App'
 import { addMessage } from 'actions/Message'
 import { fetchNotifications } from 'actions/Notification'
 import { fetchProfile } from 'actions/Profile'
@@ -67,6 +67,11 @@ class App extends Component {
 
   componentWillMount() {
     this.props.localizeApp()
+
+    // detect loading of global keys database
+    origin.messaging.events.on('initialized', accountKey => {
+      this.props.setMessagingInitialized(!!accountKey)
+    })
 
     // detect existing messaging account
     origin.messaging.events.on('ready', accountKey => {
@@ -160,7 +165,8 @@ const mapDispatchToProps = dispatch => ({
   fetchNotifications: () => dispatch(fetchNotifications()),
   fetchProfile: () => dispatch(fetchProfile()),
   initWallet: () => dispatch(initWallet()),
-  setMessagingEnabled: (bool) => dispatch(setMessagingEnabled(bool)),
+  setMessagingEnabled: bool => dispatch(setMessagingEnabled(bool)),
+  setMessagingInitialized: bool => dispatch(setMessagingInitialized(bool)),
   setMobile: device => dispatch(setMobile(device)),
   localizeApp: () => dispatch(localizeApp())
 })
