@@ -13,8 +13,7 @@ class MyPurchaseCard extends Component {
   constructor(props) {
     super(props)
 
-    this.loadListing = this.loadListing.bind(this)
-    this.state = { listing: {}, loading: true }
+    this.state = { listing: {}, loading: false }
 
     this.intlMessages = defineMessages({
       received: {
@@ -40,43 +39,29 @@ class MyPurchaseCard extends Component {
     })
   }
 
-  async loadListing(addr) {
-    try {
-      const listing = await origin.listings.get(addr)
-
-      this.setState({ listing, loading: false })
-    } catch(error) {
-      console.error(`Error fetching contract or IPFS info for listing: ${addr}`)
-    }
-  }
-
   componentDidMount() {
-    this.loadListing(this.props.purchase.listingAddress)
-
     $('[data-toggle="tooltip"]').tooltip()
   }
 
   render() {
-    const { address, created, stage } = this.props.purchase
-    const { category, name, pictures, price } = translateListingCategory(this.state.listing)
+    const { listing, offer, offerId } = this.props
+    const created = Number(offer.createdAt)
     const soldAt = created * 1000 // convert seconds since epoch to ms
-    let step, verb
+    const { category, name, pictures, price } = translateListingCategory(listing.ipfsData.data)
+    const step = Number(offer.status)
+    let verb
 
-    switch(stage) {
-      case 'seller_pending':
-        step = 3
+    switch(step) {
+      case 3:
         verb = this.props.intl.formatMessage(this.intlMessages.received)
         break
-      case 'buyer_pending':
-        step = 2
+      case 2:
         verb = this.props.intl.formatMessage(this.intlMessages.sentBySeller)
         break
-      case 'in_escrow':
-        step = 1
+      case 1:
         verb = this.props.intl.formatMessage(this.intlMessages.purchased)
         break
       default:
-        step = 0
         verb = this.props.intl.formatMessage(this.intlMessages.unknown)
     }
 
@@ -87,7 +72,7 @@ class MyPurchaseCard extends Component {
       <div className={`purchase card${this.state.loading ? ' loading' : ''}`}>
         <div className="card-body d-flex flex-column flex-lg-row">
           <div className="aspect-ratio">
-            <Link to={`/purchases/${address}`}>
+            <Link to={`/purchases/${offerId}`}>
               <div className={`${photo ? '' : 'placeholder '}image-container d-flex justify-content-center`}>
                 <img src={photo || 'images/default-image.svg'} role="presentation" />
               </div>
@@ -96,14 +81,14 @@ class MyPurchaseCard extends Component {
           {!this.state.loading &&
             <div className="content-container d-flex flex-column">
               <p className="category">{category}</p>
-              <h2 className="title text-truncate"><Link to={`/purchases/${address}`}>{name}</Link></h2>
+              <h2 className="title text-truncate"><Link to={`/purchases/${offerId}`}>{name}</Link></h2>
               <p className="timestamp">{timestamp}</p>
               <div className="d-flex">
                 <p className="price">{`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ${this.props.intl.formatMessage(this.intlMessages.ETH)}`}</p>
                 {/* Not Yet Relevant */}
                 {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
               </div>
-              <PurchaseProgress currentStep={step} perspective="buyer" purchase={this.props.purchase} subdued={true} />
+              <PurchaseProgress currentStep={step} perspective="buyer" subdued={true} />
               <div className="actions d-flex">
                 <div className="links-container">
                   {/*<a onClick={() => alert('To Do')}>Open a Dispute</a>*/}
