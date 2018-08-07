@@ -116,5 +116,4 @@ if (isProduction) {
   config.plugins.push(new ExtractTextPlugin('[name].[hash:8].css'))
 }
 
-
 module.exports = config
