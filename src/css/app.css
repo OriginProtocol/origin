@@ -2457,6 +2457,10 @@ form .stars img {
   margin-bottom: 20px;
 }
 
+.conversation .messages {
+  padding-left: 5px;
+}
+
 .conversation .message:first-of-type {
   margin-top: 20px;
 }
@@ -3287,7 +3291,7 @@ footer .dropdown-menu li:hover {
 
 a:not([href]):not([tabindex]).span-link {
   color: #ffffff;
-  cursor: pointer; 
+  cursor: pointer;
 }
 
 /* Error Page */
@@ -3380,7 +3384,7 @@ a:not([href]):not([tabindex]).span-link {
     -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
     clip-path: polygon(100% 0, 0 100%, 100% 100%);
   }
- 
+
   .navbar .messages .triangle,
   .navbar .notifications .triangle {
     margin-right: 0;

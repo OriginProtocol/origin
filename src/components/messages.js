@@ -184,6 +184,19 @@ class Messages extends Component {
     this.setState({ selectedConversationId })
   }
 
+  preparedMessages() {
+    const { messages=[] } = this.state
+    return messages.map((m, i) => {
+      const previousMessage = i == 0 ? {} : messages[i-1]
+      const sameSender = m.senderAddress != previousMessage.senderAddress
+
+      if (sameSender) {
+        return <Message key={m.hash} message={m} />
+      }
+      return <div key={i}>{ m.content }</div>
+    })
+  }
+
   render() {
     const { conversations, intl, web3Account } = this.props
     const { counterparty, listing, messages, purchase, selectedConversationId } = this.state
@@ -192,9 +205,7 @@ class Messages extends Component {
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
     const perspective = buyerAddress ? (buyerAddress === web3Account ? 'buyer' : 'seller') : null
     const soldAt = created ? created * 1000 /* convert seconds since epoch to ms */ : null
-    const initialMessage = messages.length > 1 && messages[0]
-    const remainingMessages = [...messages]
-    remainingMessages.splice(0, 1)
+    const preparedMessages = this.preparedMessages()
 
     return (
       <div className="d-flex messages-wrapper">
@@ -264,10 +275,7 @@ class Messages extends Component {
                 </div>
               }
               <div ref={this.conversationDiv} className="conversation">
-                { initialMessage && <Message key={initialMessage.hash} message={initialMessage} /> }
-                <div style={{marginLeft: '75px'}}>
-                  {remainingMessages.map((m, i) => <p key={i}>{ m.content }</p>)}
-                </div>
+                {preparedMessages}
               </div>
               {selectedConversationId &&
                 <form className="add-message d-flex" onSubmit={this.handleSubmit}>
