@@ -4,6 +4,8 @@ import keyMirror from 'utils/keyMirror'
 
 import origin from '../services/origin'
 
+import { SearchQuery } from 'origin'
+
 export const ListingConstants = keyMirror(
   {
     FETCH_IDS: null,
@@ -62,17 +64,18 @@ async function fetchListingIds(dispatch, mode, fetcher) {
   }
 }
 
-export function searchListings(query) {
+export function searchListings(rawQuery) {
   return async function(dispatch) {
+    let query = new SearchQuery({rawQuery: rawQuery })
     let fetcher = () => { return origin.listings.search(query) }
-    await fetchListingIds(dispatch, 'search', fetcher)
+    await fetchListingIds(dispatch, ListingConstants.SEARCH_MODE, fetcher)
   }
 }
 
 export function getListingIds() {
   return async function(dispatch) {
     let fetcher = () => { return origin.listings.allIds() }
-    await fetchListingIds(dispatch, 'browse', fetcher)
+    await fetchListingIds(dispatch, ListingConstants.BROWSE_MODE, fetcher)
   }
 }
 

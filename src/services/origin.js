@@ -1,4 +1,4 @@
-import Origin from 'origin'
+import { Origin } from 'origin'
 import IPFS from 'ipfs'
 import Web3 from 'web3'
 import ecies from 'eth-ecies'
