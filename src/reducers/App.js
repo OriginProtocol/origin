@@ -5,6 +5,8 @@ const initialState = {
   messagingDismissed: null,
   // whether or not a public key has been added to the global registry
   messagingEnabled: false,
+  // whether or not the global keys have loaded
+  messagingInitialized: false,
   // a list of ids that were present last time the notifications dropdown was closed
   notificationsDismissed: [],
   onMobile: null,
@@ -29,6 +31,9 @@ export default function App(state = initialState, action = {}) {
     case AppConstants.MESSAGING_ENABLED:
       return { ...state, messagingEnabled: action.messagingEnabled }
 
+    case AppConstants.MESSAGING_INITIALIZED:
+      return { ...state, messagingInitialized: action.messagingInitialized }
+      
     case AppConstants.NOTIFICATIONS_DISMISSED:
       return { ...state, notificationsDismissed: action.ids }
 

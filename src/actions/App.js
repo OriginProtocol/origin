@@ -19,6 +19,7 @@ export const AppConstants = keyMirror(
   {
     MESSAGING_DISMISSED: null,
     MESSAGING_ENABLED: null,
+    MESSAGING_INITIALIZED: null,
     NOTIFICATIONS_DISMISSED: null,
     ON_MOBILE: null,
     WEB3_ACCOUNT: null,
@@ -55,7 +56,14 @@ export function enableMessaging() {
 export function setMessagingEnabled(messagingEnabled) {
   return {
     type: AppConstants.MESSAGING_ENABLED,
-    messagingEnabled
+    messagingEnabled,
+  }
+}
+
+export function setMessagingInitialized(messagingInitialized) {
+  return {
+    type: AppConstants.MESSAGING_INITIALIZED,
+    messagingInitialized,
   }
 }
 
