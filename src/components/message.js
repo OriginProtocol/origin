@@ -33,7 +33,7 @@ class Message extends Component {
               {moment(created).format('MMM Do h:mm a')}
             </div>
           </div>
-          <div className="message-content">
+          <div>
             {content}
           </div>
         </div>
