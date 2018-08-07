@@ -17,7 +17,7 @@ const env = {
 
 var config = {
   entry: { app: './src/index.js' },
-  devtool: isProduction ? false : 'cheap-module-source-map',
+  devtool: isProduction ? false : 'inline-cheap-module-source-map',
   output: {
     path: path.resolve(__dirname, 'build'),
     pathinfo: true,
@@ -76,7 +76,13 @@ var config = {
       },
       {
         test: /\.js$/,
-        use: ["source-map-loader"],
+        use: "source-map-loader",
+        exclude: [
+          // Don't load source maps from anything in node_modules except for the
+          // origin-js directory
+          /node_modules([\\]+|\/)+(?!origin)/,
+          /\origin([\\]+|\/)node_modules/
+        ],
         enforce: "pre"
       }
     ]
@@ -95,6 +101,7 @@ var config = {
   },
   watchOptions: {
     ignored: [
+      // Ignore node_modules in watch except for the origin-js directory
       /node_modules([\\]+|\/)+(?!origin)/,
       /\origin([\\]+|\/)node_modules/
     ]
