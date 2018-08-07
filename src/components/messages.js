@@ -113,7 +113,7 @@ class Messages extends Component {
     }))
     const involvingCounterparty = purchases.filter(p => p.buyerAddress === counterparty.address || p.buyerAddress === web3Account)
     const mostRecent = involvingCounterparty.sort((a, b) => a.created > b.created ? -1 : 1)[0] || {}
-    
+
     if (mostRecent.address !== purchase.address) {
       this.setState({ purchase: mostRecent })
     }
@@ -192,6 +192,9 @@ class Messages extends Component {
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
     const perspective = buyerAddress ? (buyerAddress === web3Account ? 'buyer' : 'seller') : null
     const soldAt = created ? created * 1000 /* convert seconds since epoch to ms */ : null
+    const initialMessage = messages.length > 1 && messages[0]
+    const remainingMessages = [...messages]
+    remainingMessages.splice(0, 1)
 
     return (
       <div className="d-flex messages-wrapper">
@@ -261,7 +264,10 @@ class Messages extends Component {
                 </div>
               }
               <div ref={this.conversationDiv} className="conversation">
-                {messages.map(m => <Message key={m.hash} message={m} />)}
+                { initialMessage && <Message key={initialMessage.hash} message={initialMessage} /> }
+                <div style={{marginLeft: '75px'}}>
+                  {remainingMessages.map((m, i) => <p key={i}>{ m.content }</p>)}
+                </div>
               </div>
               {selectedConversationId &&
                 <form className="add-message d-flex" onSubmit={this.handleSubmit}>
