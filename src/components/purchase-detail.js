@@ -427,19 +427,8 @@ class PurchaseDetail extends Component {
     const counterpartyUser = counterparty === 'buyer' ? buyer : seller
     const status = active ? 'active' : 'inactive'
     const maxStep = perspective === 'seller' ? 4 : 3
-    let decimal, left, step
-
-    if (purchase.stage === 'complete') {
-      step = 4
-    } else if (purchase.stage === 'seller_pending') {
-      step = 3
-    } else if (purchase.stage === 'buyer_pending') {
-      step = 2
-    } else if (purchase.stage === 'in_escrow') {
-      step = 1
-    } else {
-      step = 0
-    }
+    const step = Number(purchase.status)
+    let decimal, left
 
     if (!step) {
       left = '28px'
