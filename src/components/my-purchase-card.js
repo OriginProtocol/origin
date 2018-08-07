@@ -44,10 +44,9 @@ class MyPurchaseCard extends Component {
   }
 
   render() {
-    const created = Date.now() // TODO use actual date
-    const soldAt = created
-    // const soldAt = created * 1000 // convert seconds since epoch to ms
     const { listing, offer, offerId } = this.props
+    const created = Number(offer.createdAt)
+    const soldAt = created * 1000 // convert seconds since epoch to ms
     const { category, name, pictures, price } = translateListingCategory(listing.ipfsData.data)
     const step = Number(offer.status)
     let verb
