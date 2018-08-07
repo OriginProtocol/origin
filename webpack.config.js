@@ -79,9 +79,20 @@ var config = {
   devServer: {
     contentBase: './public',
     port: 3000,
+    host: '0.0.0.0',
     headers: {
       'Access-Control-Allow-Origin': '*'
+    },
+    overlay: {
+      warnings: true,
+      errors: true
     }
+  },
+  watchOptions: {
+    ignored: [
+      /node_modules([\\]+|\/)+(?!origin)/,
+      /\origin([\\]+|\/)node_modules/
+    ]
   },
   mode: isProduction ? 'production' : 'development',
   plugins: [
@@ -104,5 +115,6 @@ var config = {
 if (isProduction) {
   config.plugins.push(new ExtractTextPlugin('[name].[hash:8].css'))
 }
+
 
 module.exports = config
