@@ -344,7 +344,7 @@ class OriginWallet {
     const dot_call = meta.contract + "." + meta.call
     switch(dot_call)
     {
-      case "Listing.buyListing":
+      case "UnitListing.buyListing":
         return "purchase"
       case "ListingsRegistry.create":
         return "list"
@@ -360,7 +360,7 @@ class OriginWallet {
   async extractListing({meta, params}) {
     if (params && params.txn_object && meta)
     {
-      if (meta.contract == "Listing")
+      if (meta.contract == "UnitListing")
       {
         return origin.listings.get(params.txn_object.to)
       }
