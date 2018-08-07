@@ -175,80 +175,57 @@ class PurchaseDetail extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { address, buyerAddress, listingAddress } = this.state.purchase
-    const { sellerAddress } = this.state.listing
-
-    if (prevState.purchase.listingAddress !== listingAddress) {
-      this.loadListing(listingAddress)
-      this.loadBuyer(buyerAddress)
-      this.loadReviews(listingAddress)
-    }
-
-    if (prevState.listing.sellerAddress !== sellerAddress) {
-      this.loadSeller(sellerAddress)
-    }
-
-    // detect route param change and reload data
-    if (address && address !== this.props.purchaseAddress) {
-      this.setState(defaultState)
-
-      this.loadPurchase()
-    }
+    // const { id, buyer, listingId } = this.state.purchase
+    // const { sellerAddress } = this.state.listing
+    //
+    // if (prevState.purchase.listingId !== listingId) {
+    //   this.loadListing(listingId)
+    //   this.loadBuyer(buyer)
+    //   this.loadReviews(listingId)
+    // }
+    //
+    // if (prevState.listing.sellerAddress !== sellerAddress) {
+    //   this.loadSeller(sellerAddress)
+    // }
+    //
+    // // detect route param change and reload data
+    // if (id && id !== this.props.offerId) {
+    //   this.setState(defaultState)
+    //
+    //   this.loadPurchase()
+    // }
   }
 
-  async loadListing(addr) {
+  async loadListing(id) {
     try {
-      const listing = await origin.listings.get(addr)
+      const listing = await origin.marketplace.getListing(id)
       this.setState({ listing })
-      console.log('Listing: ', listing)
     } catch(error) {
-      console.error(`Error loading listing ${addr}`)
+      console.error(`Error loading listing ${id}`)
       console.error(error)
     }
   }
 
   async loadPurchase() {
-    const { purchaseAddress } = this.props
+    const { offerId } = this.props
 
     try {
-      const purchase = await origin.purchases.get(purchaseAddress)
-      console.log(purchase)
-      this.setState({ purchase })
-      console.log('Purchase: ', purchase)
-
-      const logs = await origin.purchases.getLogs(purchaseAddress)
-      this.setState({ logs })
-      console.log('Logs: ', logs)
-
-      return purchase
+      const purchase = await origin.marketplace.getOffer(offerId)
+      const listing = await origin.marketplace.getListing(purchase.listingId)
+      this.setState({ purchase, listing })
+      await this.loadSeller(listing.seller)
+      await this.loadBuyer(purchase.buyer)
     } catch(error) {
-      console.error(`Error loading purchase ${purchaseAddress}`)
+      console.error(`Error loading purchase ${offerId}`)
       console.error(error)
     }
   }
 
-  async getPurchaseAddress(addr, i) {
+  async loadPurchases(listingId) {
     try {
-      return await origin.listings.purchaseAddressByIndex(addr, i)
+      return await origin.marketplace.getOffers(listingId, {})
     } catch(error) {
-      console.error(`Error fetching purchase address at: ${i}`)
-    }
-  }
-
-  async loadPurchases(listingAddress) {
-    try {
-      const length = await origin.listings.purchasesLength(listingAddress)
-      console.log('Purchase count:', length)
-
-      const purchaseAddresses = await Promise.all(
-        [...Array(length).keys()].map(i => this.getPurchaseAddress(listingAddress, i))
-      )
-
-      return await Promise.all(
-        purchaseAddresses.map(addr => origin.purchases.get(addr))
-      )
-    } catch(error) {
-      console.error(`Error fetching purchases for listing: ${listingAddress}`)
+      console.error(`Error fetching purchases for listing: ${listingId}`)
       console.error(error)
     }
   }
@@ -319,7 +296,7 @@ class PurchaseDetail extends Component {
       this.setState({ processing: false })
     } catch(error) {
       this.setState({ processing: false })
-      
+
       console.error('Error marking purchase received by buyer')
       console.error(error)
     }
@@ -351,7 +328,7 @@ class PurchaseDetail extends Component {
       this.setState({ processing: false })
     } catch(error) {
       this.setState({ processing: false })
-      
+
       console.error('Error marking purchase shipped by seller')
       console.error(error)
     }
@@ -417,15 +394,15 @@ class PurchaseDetail extends Component {
     const { rating, reviewText } = form
     const buyersReviews = reviews.filter(r => r.revieweeRole === 'SELLER')
 
-    if (!purchase.address || !listing.address ){
+    if (!purchase.ipfsData || !listing.ipfsData ){
       return null
     }
 
     let perspective
     // may potentially be neither buyer nor seller
-    if (web3Account === purchase.buyerAddress) {
+    if (web3Account === purchase.buyer) {
       perspective = 'buyer'
-    } else if (web3Account === listing.sellerAddress) {
+    } else if (web3Account === listing.seller) {
       perspective = 'seller'
     }
 
@@ -794,7 +771,7 @@ class PurchaseDetail extends Component {
                       defaultMessage={ 'This listing is {status}' }
                       values={{ status }}
                     />
-                    
+
                   </div>
                 </div>
               }
