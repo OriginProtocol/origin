@@ -73,6 +73,11 @@ var config = {
             }
           }
         ]
+      },
+      {
+        test: /\.js$/,
+        use: ["source-map-loader"],
+        enforce: "pre"
       }
     ]
   },
