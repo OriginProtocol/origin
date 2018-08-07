@@ -30,7 +30,7 @@ export function getBalance() {
   return async function(dispatch) {
     const { web3 } = origin.contractService
     const account = await origin.contractService.currentAccount()
-    const balance = await web3.eth.getBalance(account)
+    const balance = account ? await web3.eth.getBalance(account) : "0"
 
     dispatch({
       type: WalletConstants.BALANCE_SUCCESS,

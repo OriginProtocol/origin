@@ -96,7 +96,7 @@ class UserDropdown extends Component {
                   <hr className="dark sm" />
                   <button
                     className="btn btn-primary"
-                    onClick={origin.contractService.walletLinker.unlink}
+                    onClick={()=>origin.contractService.walletLinker.unlink()}
                   >Unlink Mobile</button>
                 </Fragment>
               }
