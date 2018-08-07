@@ -305,13 +305,14 @@ class PurchaseDetail extends Component {
   }
 
   async confirmShipped() {
-    const { purchaseAddress } = this.props
+    const { offerId } = this.props
 
     try {
       this.setState({ processing: true })
 
-      const { created, transactionReceipt } = await origin.purchases.sellerConfirmShipped(
-        purchaseAddress,
+      const { created, transactionReceipt } = await origin.marketplace.acceptOffer(
+        offerId,
+        {},
         (confirmationCount, transactionReceipt) => {
           // Having a transaction receipt doesn't guarantee that the purchase state will have changed.
           // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
