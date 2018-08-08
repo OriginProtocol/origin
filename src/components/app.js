@@ -113,9 +113,9 @@ class App extends Component {
   }
 
   render() {
-    return this.props.selectedLanguageAbbrev ? (
+    return this.props.selectedLanguageCode ? (
       <IntlProvider 
-        locale={this.props.selectedLanguageAbbrev}
+        locale={this.props.selectedLanguageCode}
         defaultLocale="en-US"
         messages={this.props.messages}
         textComponent={Fragment}>
@@ -156,7 +156,7 @@ class App extends Component {
 
 const mapStateToProps = state => ({
   messages: state.app.translations.messages,
-  selectedLanguageAbbrev: state.app.translations.selectedLanguageAbbrev
+  selectedLanguageCode: state.app.translations.selectedLanguageCode
 })
 
 const mapDispatchToProps = dispatch => ({

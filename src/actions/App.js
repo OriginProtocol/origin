@@ -73,7 +73,7 @@ export function storeWeb3Intent(intent) {
 
 export function localizeApp() {
   let messages
-  let selectedLanguageAbbrev
+  let selectedLanguageCode
 
   // Add locale data to react-intl
   addLocales()
@@ -81,13 +81,13 @@ export function localizeApp() {
   // English is our default - to prevent errors, we set to undefined for English
   // https://github.com/yahoo/react-intl/issues/619#issuecomment-242765427
   // Check for a user-selected language from the dropdown menu (stored in local storage)
-  const userSelectedLangAbbrev = store.get('preferredLang')
+  const userSelectedLangCode = store.get('preferredLang')
 
   // English is our default - to prevent errors, we set to undefined for English
-  if (userSelectedLangAbbrev && userSelectedLangAbbrev !== 'en-US') {
+  if (userSelectedLangCode && userSelectedLangCode !== 'en-US') {
 
-    messages = translations[userSelectedLangAbbrev]
-    selectedLanguageAbbrev = userSelectedLangAbbrev
+    messages = translations[userSelectedLangCode]
+    selectedLanguageCode = userSelectedLangCode
 
   } else {
 
@@ -98,26 +98,26 @@ export function localizeApp() {
 
     if (browserDefaultLang && browserDefaultLang !== 'en-US') {
       messages = translations[browserDefaultLang]
-      selectedLanguageAbbrev = browserDefaultLang
+      selectedLanguageCode = browserDefaultLang
     }
   }
 
-  if (!selectedLanguageAbbrev || !messages || !messages.length) {
-    selectedLanguageAbbrev = 'en-US'
+  if (!selectedLanguageCode || !messages) {
+    selectedLanguageCode = 'en-US'
   }
 
-  setGlobalIntlProvider(selectedLanguageAbbrev, messages)
+  setGlobalIntlProvider(selectedLanguageCode, messages)
 
   // Set locale for moment.js
-  if (selectedLanguageAbbrev !== 'en-US') {
-    const momentLocale = selectedLanguageAbbrev
+  if (selectedLanguageCode !== 'en-US') {
+    const momentLocale = selectedLanguageCode
     moment.locale(momentLocale)
   }
 
   return { 
     type: AppConstants.TRANSLATIONS,
-    selectedLanguageAbbrev: selectedLanguageAbbrev,
-    selectedLanguageFull: getLanguageNativeName(selectedLanguageAbbrev),
+    selectedLanguageCode: selectedLanguageCode,
+    selectedLanguageFull: getLanguageNativeName(selectedLanguageCode),
     availableLanguages: getAvailableLanguages(),
     messages 
   }

@@ -11,7 +11,7 @@ class Footer extends Component {
     super(props)
 
     this.state = {
-      companyWebsiteLanguageAbbrev: 'en-US'
+      companyWebsiteLanguageCode: 'en-US'
     }
 
     this.localizeApp = this.localizeApp.bind(this)
@@ -26,29 +26,29 @@ class Footer extends Component {
     })
   }
 
-  localizeApp(langAbbrev) {
-    if (langAbbrev !== this.props.selectedLanguageAbbrev) {
-      store.set('preferredLang', langAbbrev)
+  localizeApp(langCode) {
+    if (langCode !== this.props.selectedLanguageCode) {
+      store.set('preferredLang', langCode)
       window.location.reload()
     }
   }
 
   localizeWhitepaperUrl() {
-    const { selectedLanguageAbbrev: langAbbrev } = this.props
-    let companyWebsiteLanguageAbbrev
+    const { selectedLanguageCode: langCode } = this.props
+    let companyWebsiteLanguageCode
 
-    switch(langAbbrev) {
+    switch(langCode) {
       case 'zh-CN':
-        companyWebsiteLanguageAbbrev = 'zh_Hans'
+        companyWebsiteLanguageCode = 'zh_Hans'
         break
       case 'zh-TW':
-        companyWebsiteLanguageAbbrev = 'zh_Hant'
+        companyWebsiteLanguageCode = 'zh_Hant'
         break
       default:
-        companyWebsiteLanguageAbbrev = localeCode.getLanguageCode(langAbbrev)
+        companyWebsiteLanguageCode = localeCode.getLanguageCode(langCode)
     }
 
-    this.setState({ companyWebsiteLanguageAbbrev })
+    this.setState({ companyWebsiteLanguageCode })
   }
 
   render() {
@@ -83,8 +83,8 @@ class Footer extends Component {
                         </li>
                         {this.props.availableLanguages && this.props.availableLanguages.map(langObj => (
                           <li className="language d-flex flex-wrap"
-                              key={ langObj.selectedLanguageAbbrev }
-                              onClick={ () => { this.localizeApp(langObj.selectedLanguageAbbrev) } }>
+                              key={ langObj.selectedLanguageCode }
+                              onClick={ () => { this.localizeApp(langObj.selectedLanguageCode) } }>
                             { langObj.selectedLanguageFull }
                           </li>
                         ))}
@@ -105,7 +105,7 @@ class Footer extends Component {
                   </div>
                   <ul className="footer-links">
                     <li>
-                      <a href={ `https://www.originprotocol.com/${this.state.companyWebsiteLanguageAbbrev}/product-brief` }>
+                      <a href={ `https://www.originprotocol.com/${this.state.companyWebsiteLanguageCode}/product-brief` }>
                         <FormattedMessage
                           id={ 'footer.productBriefLink' }
                           defaultMessage={ 'Product Brief' }
@@ -113,7 +113,7 @@ class Footer extends Component {
                       </a>
                     </li>
                     <li>
-                      <a href={ `https://www.originprotocol.com/${this.state.companyWebsiteLanguageAbbrev}/whitepaper` }>
+                      <a href={ `https://www.originprotocol.com/${this.state.companyWebsiteLanguageCode}/whitepaper` }>
                         <FormattedMessage
                           id={ 'footer.whitepaperLink' }
                           defaultMessage={ 'Whitepaper' }
@@ -288,7 +288,7 @@ class Footer extends Component {
 
 
 const mapStateToProps = state => ({
-  selectedLanguageAbbrev: state.app.translations.selectedLanguageAbbrev,
+  selectedLanguageCode: state.app.translations.selectedLanguageCode,
   selectedLanguageFull: state.app.translations.selectedLanguageFull,
   availableLanguages: state.app.translations.availableLanguages
 })

@@ -171,14 +171,14 @@ export function getAvailableLanguages() {
 
   const availableLangs = []
 
-  for (let languageAbbrev in translations) {
+  for (let languageCode in translations) {
 
     // Don't include English b/c we hard-code it in the footer dropdown to make sure it's always available
-    if (languageAbbrev !== 'en-US') {
+    if (languageCode !== 'en-US') {
 
       availableLangs.push({
-        selectedLanguageAbbrev: languageAbbrev,
-        selectedLanguageFull: getLanguageNativeName(languageAbbrev)
+        selectedLanguageCode: languageCode,
+        selectedLanguageFull: getLanguageNativeName(languageCode)
       })
 
     }
@@ -187,16 +187,16 @@ export function getAvailableLanguages() {
   return availableLangs
 }
 
-export function getLanguageNativeName(langAbbrev) {
+export function getLanguageNativeName(langCode) {
   let selectedLanguageFull
-  if (/zh/.test(langAbbrev)) {
-    if (langAbbrev === 'zh-CN') {
+  if (/zh/.test(langCode)) {
+    if (langCode === 'zh-CN') {
       selectedLanguageFull = '简体中文'
-    } else if (langAbbrev === 'zh-TW') {
+    } else if (langCode === 'zh-TW') {
       selectedLanguageFull = '繁體中文'
     }
   } else {
-    selectedLanguageFull = localeCode.getLanguageNativeName(langAbbrev)
+    selectedLanguageFull = localeCode.getLanguageNativeName(langCode)
   }
 
   return selectedLanguageFull
