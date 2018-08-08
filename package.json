@@ -8,10 +8,6 @@
   "main": "./dist/index.js",
   "scripts": {
     "build": "node scripts/build.js",
-    "bridge:bash": "docker exec -it origin-bridge-container /bin/bash",
-    "bridge:build": "docker build ./bridge-container -t origin-bridge-image",
-    "bridge:start": "docker run -d -p 4000:4000 -p 5000:5000 -p 5432:5432 -p 6379:6379 -p 9200:9200 --name origin-bridge-container origin-bridge-image",
-    "bridge:stop": "docker stop origin-bridge-container && docker rm origin-bridge-container",
     "format": "npx prettier-eslint --write 'src/**/*.js' 'test/**/*test.js' 'contracts/test/**/*.js' 'scripts/**/*.js'",
     "install:dev": "npm install && npm link",
     "prepare": "npm run build",
