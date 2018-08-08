@@ -215,8 +215,8 @@ class PurchaseDetail extends Component {
       this.setState({ purchase, listing })
       await this.loadSeller(listing.seller)
       await this.loadBuyer(purchase.buyer)
-      const offerLogs = await origin.marketplace.getOfferLogs(offerId)
-      this.setState({ logs: offerLogs })
+      const logs = purchase.events
+      this.setState({ logs })
     } catch(error) {
       console.error(`Error loading purchase ${offerId}`)
       console.error(error)
@@ -415,14 +415,14 @@ class PurchaseDetail extends Component {
     const soldAt = purchase.created * 1000 // convert seconds since epoch to ms
 
     // log events
-    const paymentEvent = logs.find(l => l.log.event === 'OfferCreated')
-    const paidAt = paymentEvent ? paymentEvent.createdAt * 1000 : null
-    const fulfillmentEvent = logs.find(l => l.log.event === 'OfferAccepted') // TODO this is not the equivalent step. Fix later
-    const fulfilledAt = fulfillmentEvent ? fulfillmentEvent.createdAt * 1000 : null
-    const receiptEvent = logs.find(l => l.log.event === 'OfferFinalized')
-    const receivedAt = receiptEvent ? receiptEvent.createdAt * 1000 : null
-    const withdrawalEvent = logs.find(l => l.log.event === 'OfferWithdrawn')
-    const withdrawnAt = withdrawalEvent ? withdrawalEvent.createdAt * 1000 : null
+    const paymentEvent = logs.find(l => l.event === 'OfferCreated')
+    const paidAt = paymentEvent ? paymentEvent.timestamp * 1000 : null
+    const fulfillmentEvent = logs.find(l => l.event === 'OfferAccepted') // TODO this is not the equivalent step. Fix later
+    const fulfilledAt = fulfillmentEvent ? fulfillmentEvent.timestamp * 1000 : null
+    const receiptEvent = logs.find(l => l.event === 'OfferFinalized')
+    const receivedAt = receiptEvent ? receiptEvent.timestamp * 1000 : null
+    const withdrawalEvent = logs.find(l => l.event === 'OfferWithdrawn')
+    const withdrawnAt = withdrawalEvent ? withdrawalEvent.timestamp * 1000 : null
     const reviewedAt = null
     const price = `${Number(listing.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH` // change to priceEth
 
@@ -648,19 +648,19 @@ class PurchaseDetail extends Component {
                 <tbody>
 
                   {paidAt &&
-                    <TransactionEvent timestamp={paidAt} eventName="Payment received" transaction={paymentEvent.log} buyer={buyer} seller={seller} />
+                    <TransactionEvent timestamp={paidAt} eventName="Payment received" transaction={paymentEvent} buyer={buyer} seller={seller} />
                   }
 
                   {fulfilledAt &&
-                    <TransactionEvent timestamp={fulfilledAt} eventName="Sent by seller" transaction={fulfillmentEvent.log} buyer={buyer} seller={seller} />
+                    <TransactionEvent timestamp={fulfilledAt} eventName="Sent by seller" transaction={fulfillmentEvent} buyer={buyer} seller={seller} />
                   }
 
                   {receivedAt &&
-                    <TransactionEvent timestamp={receivedAt} eventName="Received by buyer" transaction={receiptEvent.log} buyer={buyer} seller={seller} />
+                    <TransactionEvent timestamp={receivedAt} eventName="Received by buyer" transaction={receiptEvent} buyer={buyer} seller={seller} />
                   }
 
                   {withdrawnAt &&
-                    <TransactionEvent timestamp={withdrawnAt} eventName="Funds withdrawn" transaction={withdrawalEvent.log} buyer={buyer} seller={seller} />
+                    <TransactionEvent timestamp={withdrawnAt} eventName="Funds withdrawn" transaction={withdrawalEvent} buyer={buyer} seller={seller} />
                   }
 
                 </tbody>
