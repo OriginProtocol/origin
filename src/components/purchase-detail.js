@@ -338,13 +338,13 @@ class PurchaseDetail extends Component {
   }
 
   async withdrawFunds() {
-    const { purchaseAddress } = this.props
+    const { offerId } = this.props
     const { rating, reviewText } = this.state.form
 
     try {
       this.setState({ processing: true })
 
-      const { created, transactionReceipt } = await origin.purchases.sellerGetPayout(purchaseAddress, {
+      const { created, transactionReceipt } = await origin.marketplace.addData(null, offerId, {
         rating,
         reviewText: reviewText.trim(),
       }, (confirmationCount, transactionReceipt) => {
