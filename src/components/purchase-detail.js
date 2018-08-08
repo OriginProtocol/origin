@@ -273,11 +273,13 @@ class PurchaseDetail extends Component {
   async confirmReceipt() {
     const { offerId } = this.props
     const { rating, reviewText } = this.state.form
+    const { purchase, listing } = this.state
+    const offer = purchase
 
     try {
       this.setState({ processing: true })
 
-      const { created, transactionReceipt } = await origin.marketplace.finalizeOffer(offerId, {
+      const transactionReceipt = await origin.marketplace.finalizeOffer(offerId, {
         rating,
         reviewText: reviewText.trim(),
       }, (confirmationCount, transactionReceipt) => {
@@ -291,7 +293,8 @@ class PurchaseDetail extends Component {
 
       this.props.upsertTransaction({
         ...transactionReceipt,
-        created,
+        offer,
+        listing,
         transactionTypeKey: 'confirmReceipt',
       })
 
@@ -306,11 +309,13 @@ class PurchaseDetail extends Component {
 
   async confirmShipped() {
     const { offerId } = this.props
+    const { purchase, listing } = this.state
+    const offer = purchase
 
     try {
       this.setState({ processing: true })
 
-      const { created, transactionReceipt } = await origin.marketplace.acceptOffer(
+      const transactionReceipt = await origin.marketplace.acceptOffer(
         offerId,
         {},
         (confirmationCount, transactionReceipt) => {
@@ -324,8 +329,9 @@ class PurchaseDetail extends Component {
 
       this.props.upsertTransaction({
         ...transactionReceipt,
-        created,
         transactionTypeKey: 'confirmShipped',
+        offer,
+        listing
       })
 
       this.setState({ processing: false })
@@ -340,11 +346,13 @@ class PurchaseDetail extends Component {
   async withdrawFunds() {
     const { offerId } = this.props
     const { rating, reviewText } = this.state.form
+    const { purchase, listing } = this.state
+    const offer = purchase
 
     try {
       this.setState({ processing: true })
 
-      const { created, transactionReceipt } = await origin.marketplace.addData(null, offerId, {
+      const transactionReceipt = await origin.marketplace.addData(null, offerId, {
         rating,
         reviewText: reviewText.trim(),
       }, (confirmationCount, transactionReceipt) => {
@@ -358,7 +366,8 @@ class PurchaseDetail extends Component {
 
       this.props.upsertTransaction({
         ...transactionReceipt,
-        created,
+        offer,
+        listing,
         transactionTypeKey: 'getPayout',
       })
 
