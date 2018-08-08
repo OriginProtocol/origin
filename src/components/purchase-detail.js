@@ -271,13 +271,13 @@ class PurchaseDetail extends Component {
   }
 
   async confirmReceipt() {
-    const { purchaseAddress } = this.props
+    const { offerId } = this.props
     const { rating, reviewText } = this.state.form
 
     try {
       this.setState({ processing: true })
 
-      const { created, transactionReceipt } = await origin.purchases.buyerConfirmReceipt(purchaseAddress, {
+      const { created, transactionReceipt } = await origin.marketplace.finalizeOffer(offerId, {
         rating,
         reviewText: reviewText.trim(),
       }, (confirmationCount, transactionReceipt) => {
