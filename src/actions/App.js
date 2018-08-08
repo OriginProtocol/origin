@@ -97,12 +97,12 @@ export function localizeApp() {
                              navigator.userLanguage
 
     if (browserDefaultLang && browserDefaultLang !== 'en-US') {
-      messages = translations[selectedLanguageAbbrev] || translations[selectedLanguageAbbrev]
+      messages = translations[browserDefaultLang]
       selectedLanguageAbbrev = browserDefaultLang
     }
   }
 
-  if (!selectedLanguageAbbrev) {
+  if (!selectedLanguageAbbrev || !messages || !messages.length) {
     selectedLanguageAbbrev = 'en-US'
   }
 
