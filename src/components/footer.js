@@ -76,13 +76,13 @@ class Footer extends Component {
                 <div className="dropdown-menu dropdown-menu-left" aria-labelledby="languageDropdown">
                   <div className="triangle-container d-flex justify-content-end"><div className="triangle"></div></div>
                   <div className="actual-menu">
-                    <div className="connectivity-list">
+                    <div className="language-list">
                       <ul className="list-group">
-                        <li className="connection d-flex flex-wrap" onClick={ () => { this.localizeApp('en-US') } } >
+                        <li className="language d-flex flex-wrap" onClick={ () => { this.localizeApp('en-US') } } >
                           English
                         </li>
                         {this.props.availableLanguages && this.props.availableLanguages.map(langObj => (
-                          <li className="connection d-flex flex-wrap"
+                          <li className="language d-flex flex-wrap"
                               key={ langObj.selectedLanguageAbbrev }
                               onClick={ () => { this.localizeApp(langObj.selectedLanguageAbbrev) } }>
                             { langObj.selectedLanguageFull }
