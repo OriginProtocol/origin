@@ -184,16 +184,23 @@ class Messages extends Component {
     this.setState({ selectedConversationId })
   }
 
+  getElapsedTime(recentTime, previousTime) {
+    const toMinutes = (1000*60)
+
+    return recentTime - previousTime / toMinutes
+  }
+
   preparedMessages() {
     const { messages=[] } = this.state
     return messages.map((m, i) => {
       const previousMessage = i == 0 ? {} : messages[i-1]
       const sameSender = m.senderAddress != previousMessage.senderAddress
+      const timeElapsed = this.getElapsedTime(m.created, previousMessage.created)
 
-      if (sameSender) {
+      if ((timeElapsed > 10) || sameSender) {
         return <Message key={m.hash} message={m} />
       }
-      return <div key={i}>{ m.content }</div>
+      return <div className="col-xs-offset-1" key={i}>{ m.content }</div>
     })
   }
 
