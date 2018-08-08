@@ -3,7 +3,8 @@ import { ListingConstants } from 'actions/Listing'
 const initialState = {
   ids: [],
   hideList: [],
-  contractFound: true
+  contractFound: true,
+  mode: ListingConstants.BROWSE_MODE
 }
 
 export default function Listings(state = initialState, action = {}) {

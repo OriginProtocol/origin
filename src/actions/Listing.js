@@ -66,7 +66,7 @@ async function fetchListingIds(dispatch, mode, fetcher) {
 
 export function searchListings(rawQuery) {
   return async function(dispatch) {
-    const query = new SearchQuery({rawQuery: rawQuery })
+    const query = new SearchQuery({rawQuery: rawQuery})
     const fetcher = () => { return origin.listings.search(query) }
     await fetchListingIds(dispatch, ListingConstants.SEARCH_MODE, fetcher)
   }
