@@ -104,7 +104,7 @@
   "listings-grid.listingsCount": "{listingIdsCount} Annonces",
   "MessageNew.cannotReceiveMessages": "Cet utilisateur n’a pas activé Origin Messagerie.",
   "MessageNew.cancel": "Annuler",
-  "MessageNew.cannotSendMessages": "You need to enable Origin Messaging.",
+  "MessageNew.cannotSendMessages": "Vous devez activer Origin Messagerie.",
   "MessageNew.send": "Envoyer",
   "MessageNew.encryptionNotice": "Votre message sera chiffré. Il sera uniquement visible par vous, le destinataire, et un modérateur dans l'éventualité d'un conflit.",
   "Messages.newMessagePlaceholder": "Ecrivez quelque chose...",
