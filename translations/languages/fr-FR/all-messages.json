@@ -102,7 +102,7 @@
   "listings-grid.originContractNotFound": "Le Contrat Origin n'a pas été trouvé sur ce réseau.",
   "listings-grid.changeNetworks": "Vous devez sûrement changer de réseau, ou déployer le contrat.",
   "listings-grid.listingsCount": "{listingIdsCount} Annonces",
-  "MessageNew.cannotReceiveMessages": "This user has not enabled Origin Messaging.",
+  "MessageNew.cannotReceiveMessages": "Cet utilisateur n’a pas activé Origin Messagerie.",
   "MessageNew.cancel": "Annuler",
   "MessageNew.cannotSendMessages": "You need to enable Origin Messaging.",
   "MessageNew.send": "Envoyer",
