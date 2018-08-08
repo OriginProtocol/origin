@@ -175,80 +175,59 @@ class PurchaseDetail extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { address, buyerAddress, listingAddress } = this.state.purchase
-    const { sellerAddress } = this.state.listing
-
-    if (prevState.purchase.listingAddress !== listingAddress) {
-      this.loadListing(listingAddress)
-      this.loadBuyer(buyerAddress)
-      this.loadReviews(listingAddress)
-    }
-
-    if (prevState.listing.sellerAddress !== sellerAddress) {
-      this.loadSeller(sellerAddress)
-    }
-
-    // detect route param change and reload data
-    if (address && address !== this.props.purchaseAddress) {
-      this.setState(defaultState)
-
-      this.loadPurchase()
-    }
+    // const { id, buyer, listingId } = this.state.purchase
+    // const { sellerAddress } = this.state.listing
+    //
+    // if (prevState.purchase.listingId !== listingId) {
+    //   this.loadListing(listingId)
+    //   this.loadBuyer(buyer)
+    //   this.loadReviews(listingId)
+    // }
+    //
+    // if (prevState.listing.sellerAddress !== sellerAddress) {
+    //   this.loadSeller(sellerAddress)
+    // }
+    //
+    // // detect route param change and reload data
+    // if (id && id !== this.props.offerId) {
+    //   this.setState(defaultState)
+    //
+    //   this.loadPurchase()
+    // }
   }
 
-  async loadListing(addr) {
+  async loadListing(id) {
     try {
-      const listing = await origin.listings.get(addr)
+      const listing = await origin.marketplace.getListing(id)
       this.setState({ listing })
-      console.log('Listing: ', listing)
     } catch(error) {
-      console.error(`Error loading listing ${addr}`)
+      console.error(`Error loading listing ${id}`)
       console.error(error)
     }
   }
 
   async loadPurchase() {
-    const { purchaseAddress } = this.props
+    const { offerId } = this.props
 
     try {
-      const purchase = await origin.purchases.get(purchaseAddress)
-      console.log(purchase)
-      this.setState({ purchase })
-      console.log('Purchase: ', purchase)
-
-      const logs = await origin.purchases.getLogs(purchaseAddress)
-      this.setState({ logs })
-      console.log('Logs: ', logs)
-
-      return purchase
+      const purchase = await origin.marketplace.getOffer(offerId)
+      const listing = await origin.marketplace.getListing(purchase.listingId)
+      this.setState({ purchase, listing })
+      await this.loadSeller(listing.seller)
+      await this.loadBuyer(purchase.buyer)
+      const offerLogs = await origin.marketplace.getOfferLogs(offerId)
+      this.setState({ logs: offerLogs })
     } catch(error) {
-      console.error(`Error loading purchase ${purchaseAddress}`)
+      console.error(`Error loading purchase ${offerId}`)
       console.error(error)
     }
   }
 
-  async getPurchaseAddress(addr, i) {
+  async loadPurchases(listingId) {
     try {
-      return await origin.listings.purchaseAddressByIndex(addr, i)
+      return await origin.marketplace.getOffers(listingId, {})
     } catch(error) {
-      console.error(`Error fetching purchase address at: ${i}`)
-    }
-  }
-
-  async loadPurchases(listingAddress) {
-    try {
-      const length = await origin.listings.purchasesLength(listingAddress)
-      console.log('Purchase count:', length)
-
-      const purchaseAddresses = await Promise.all(
-        [...Array(length).keys()].map(i => this.getPurchaseAddress(listingAddress, i))
-      )
-
-      return await Promise.all(
-        purchaseAddresses.map(addr => origin.purchases.get(addr))
-      )
-    } catch(error) {
-      console.error(`Error fetching purchases for listing: ${listingAddress}`)
+      console.error(`Error fetching purchases for listing: ${listingId}`)
       console.error(error)
     }
   }
@@ -319,20 +298,21 @@ class PurchaseDetail extends Component {
       this.setState({ processing: false })
     } catch(error) {
       this.setState({ processing: false })
-      
+
       console.error('Error marking purchase received by buyer')
       console.error(error)
     }
   }
 
   async confirmShipped() {
-    const { purchaseAddress } = this.props
+    const { offerId } = this.props
 
     try {
       this.setState({ processing: true })
 
-      const { created, transactionReceipt } = await origin.purchases.sellerConfirmShipped(
-        purchaseAddress,
+      const { created, transactionReceipt } = await origin.marketplace.acceptOffer(
+        offerId,
+        {},
         (confirmationCount, transactionReceipt) => {
           // Having a transaction receipt doesn't guarantee that the purchase state will have changed.
           // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
@@ -351,7 +331,7 @@ class PurchaseDetail extends Component {
       this.setState({ processing: false })
     } catch(error) {
       this.setState({ processing: false })
-      
+
       console.error('Error marking purchase shipped by seller')
       console.error(error)
     }
@@ -417,15 +397,15 @@ class PurchaseDetail extends Component {
     const { rating, reviewText } = form
     const buyersReviews = reviews.filter(r => r.revieweeRole === 'SELLER')
 
-    if (!purchase.address || !listing.address ){
+    if (!purchase.ipfsData || !listing.ipfsData ){
       return null
     }
 
     let perspective
     // may potentially be neither buyer nor seller
-    if (web3Account === purchase.buyerAddress) {
+    if (web3Account === purchase.buyer) {
       perspective = 'buyer'
-    } else if (web3Account === listing.sellerAddress) {
+    } else if (web3Account === listing.seller) {
       perspective = 'seller'
     }
 
@@ -435,14 +415,14 @@ class PurchaseDetail extends Component {
     const soldAt = purchase.created * 1000 // convert seconds since epoch to ms
 
     // log events
-    const paymentEvent = logs.find(l => l.stage === 'in_escrow')
-    const paidAt = paymentEvent ? paymentEvent.timestamp * 1000 : null
-    const fulfillmentEvent = logs.find(l => l.stage === 'buyer_pending')
-    const fulfilledAt = fulfillmentEvent ? fulfillmentEvent.timestamp * 1000 : null
-    const receiptEvent = logs.find(l => l.stage === 'seller_pending')
-    const receivedAt = receiptEvent ? receiptEvent.timestamp * 1000 : null
-    const withdrawalEvent = logs.find(l => l.stage === 'complete')
-    const withdrawnAt = withdrawalEvent ? withdrawalEvent.timestamp * 1000 : null
+    const paymentEvent = logs.find(l => l.log.event === 'OfferCreated')
+    const paidAt = paymentEvent ? paymentEvent.createdAt * 1000 : null
+    const fulfillmentEvent = logs.find(l => l.log.event === 'OfferAccepted') // TODO this is not the equivalent step. Fix later
+    const fulfilledAt = fulfillmentEvent ? fulfillmentEvent.createdAt * 1000 : null
+    const receiptEvent = logs.find(l => l.log.event === 'OfferFinalized')
+    const receivedAt = receiptEvent ? receiptEvent.createdAt * 1000 : null
+    const withdrawalEvent = logs.find(l => l.log.event === 'OfferWithdrawn')
+    const withdrawnAt = withdrawalEvent ? withdrawalEvent.createdAt * 1000 : null
     const reviewedAt = null
     const price = `${Number(listing.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH` // change to priceEth
 
@@ -450,19 +430,8 @@ class PurchaseDetail extends Component {
     const counterpartyUser = counterparty === 'buyer' ? buyer : seller
     const status = active ? 'active' : 'inactive'
     const maxStep = perspective === 'seller' ? 4 : 3
-    let decimal, left, step
-
-    if (purchase.stage === 'complete') {
-      step = 4
-    } else if (purchase.stage === 'seller_pending') {
-      step = 3
-    } else if (purchase.stage === 'buyer_pending') {
-      step = 2
-    } else if (purchase.stage === 'in_escrow') {
-      step = 1
-    } else {
-      step = 0
-    }
+    const step = Number(purchase.status)
+    let decimal, left
 
     if (!step) {
       left = '28px'
@@ -679,19 +648,19 @@ class PurchaseDetail extends Component {
                 <tbody>
 
                   {paidAt &&
-                    <TransactionEvent timestamp={paidAt} eventName="Payment received" transaction={paymentEvent} buyer={buyer} seller={seller} />
+                    <TransactionEvent timestamp={paidAt} eventName="Payment received" transaction={paymentEvent.log} buyer={buyer} seller={seller} />
                   }
 
                   {fulfilledAt &&
-                    <TransactionEvent timestamp={fulfilledAt} eventName="Sent by seller" transaction={fulfillmentEvent} buyer={buyer} seller={seller} />
+                    <TransactionEvent timestamp={fulfilledAt} eventName="Sent by seller" transaction={fulfillmentEvent.log} buyer={buyer} seller={seller} />
                   }
 
                   {receivedAt &&
-                    <TransactionEvent timestamp={receivedAt} eventName="Received by buyer" transaction={receiptEvent} buyer={buyer} seller={seller} />
+                    <TransactionEvent timestamp={receivedAt} eventName="Received by buyer" transaction={receiptEvent.log} buyer={buyer} seller={seller} />
                   }
 
                   {withdrawnAt &&
-                    <TransactionEvent timestamp={withdrawnAt} eventName="Funds withdrawn" transaction={withdrawalEvent} buyer={buyer} seller={seller} />
+                    <TransactionEvent timestamp={withdrawnAt} eventName="Funds withdrawn" transaction={withdrawalEvent.log} buyer={buyer} seller={seller} />
                   }
 
                 </tbody>
@@ -794,7 +763,7 @@ class PurchaseDetail extends Component {
                       defaultMessage={ 'This listing is {status}' }
                       values={{ status }}
                     />
-                    
+
                   </div>
                 </div>
               }

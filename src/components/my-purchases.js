@@ -30,25 +30,21 @@ class MyPurchases extends Component {
       })
     })
     const withListings = await Promise.all(listingPromises)
-    const offerIdPromises = await withListings.map(obj => {
+    const offerPromises = await withListings.map(obj => {
       return new Promise(async resolve => {
-        const offerIds = await origin.marketplace.getOffers(obj.listingId, { for: purchasesFor })
-        resolve(Object.assign(obj, { offerIds }))
+        const offers = await origin.marketplace.getOffers(
+          obj.listingId,
+          { for: purchasesFor }
+        )
+        resolve(Object.assign(obj, { offers }))
       })
     })
-    const withOfferIds = await Promise.all(offerIdPromises)
-    const offersByListing = withOfferIds.map(obj => {
-      return obj.offerIds.map(offerId => Object.assign(obj, { offerId }))
+    const withOffers = await Promise.all(offerPromises)
+    const offersByListing = withOffers.map(obj => {
+      return obj.offers.map(offer => Object.assign(obj, { offer }))
     })
-    const offerIdsFlattened = [].concat(...offersByListing)
-    const withOffersPromise = offerIdsFlattened.map(obj => {
-      return new Promise(async resolve => {
-        const offer = await origin.marketplace.getOffer(obj.offerId)
-        resolve(Object.assign(obj, { offer }))
-      })
-    })
-    const withOffers = await Promise.all(withOffersPromise)
-    this.setState({ loading: false, purchases: withOffers })
+    const offersFlattened = [].concat(...offersByListing)
+    this.setState({ loading: false, purchases: offersFlattened })
   }
 
   render() {
@@ -131,7 +127,7 @@ class MyPurchases extends Component {
                   </div>
                   <div className="col-12 col-md-9">
                     <div className="my-listings-list">
-                      {purchases.map(p => <MyPurchaseCard key={p.offerId} offerId={p.offerId} offer={p.offer} listing={p.listing} />)}
+                      {purchases.map(p => <MyPurchaseCard key={p.offer.id} offerId={p.offer.id} offer={p.offer} listing={p.listing} />)}
                     </div>
                   </div>
                 </div>
