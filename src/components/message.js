@@ -43,10 +43,10 @@ class Message extends Component {
           {!messagingEnabled && hash === 'origin-welcome-message' &&
             <div className="button-container">
               <button className="btn btn-sm btn-primary" onClick={enableMessaging}>
-                  <FormattedMessage
-                    id={ 'message.enable' }
-                    defaultMessage={ "Let's do it!" }
-                  />
+                <FormattedMessage
+                  id={ 'message.enable' }
+                  defaultMessage={ 'Enable Messaging' }
+                />
               </button>
             </div>
           }

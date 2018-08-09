@@ -98,7 +98,12 @@ class MessageNew extends Component {
               <button
                 className="btn btn-sm btn-primary"
                 onClick={this.props.enableMessaging}
-              >Yes, Please</button>
+              >
+                <FormattedMessage
+                  id={ 'MessageNew.enable' }
+                  defaultMessage={ 'Start Messaging' }
+                />
+              </button>
             </div>
             <div className="link-container text-center">
               <a
