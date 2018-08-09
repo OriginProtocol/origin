@@ -55,11 +55,7 @@ class MyListingCard extends Component {
         transactionTypeKey: 'closeListing',
       })
 
-      // why is this delay often required???
-      setTimeout(() => {
-        handleProcessing(false)
-        handleUpdate(address)
-      }, 1000)
+      handleProcessing(false)
     } catch(error) {
       handleProcessing(false)
       console.error(`Error closing listing ${address}`)

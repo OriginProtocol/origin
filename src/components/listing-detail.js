@@ -180,8 +180,14 @@ class ListingsDetail extends Component {
             </div>
             <FormattedMessage
               id={ 'listing-detail.purchaseSuccessful' }
-              defaultMessage={ 'Purchase was successful.' }
+              defaultMessage={ 'Success!' }
             />
+            <div className="disclaimer">
+              <FormattedMessage
+                id={ 'listing-detail.successDisclaimer' }
+                defaultMessage={ 'Your purchase will be visible within a few seconds.' }
+              />
+            </div>
             <div className="button-container">
               <Link to="/my-purchases" className="btn btn-clear">
                 <FormattedMessage
