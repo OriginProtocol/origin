@@ -2456,6 +2456,14 @@ form .stars img {
   margin-bottom: 20px;
 }
 
+.messages-wrapper .message-content {
+  white-space: pre-wrap;
+}
+
+.messages-wrapper .button-container {
+  padding-top: 20px;
+}
+
 .conversation {
   margin-bottom: auto;
   overflow: scroll;
