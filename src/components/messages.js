@@ -113,7 +113,7 @@ class Messages extends Component {
     }))
     const involvingCounterparty = purchases.filter(p => p.buyerAddress === counterparty.address || p.buyerAddress === web3Account)
     const mostRecent = involvingCounterparty.sort((a, b) => a.created > b.created ? -1 : 1)[0] || {}
-    
+
     if (mostRecent.address !== purchase.address) {
       this.setState({ purchase: mostRecent })
     }

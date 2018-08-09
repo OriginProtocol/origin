@@ -97,15 +97,9 @@ class ListingsDetail extends Component {
   }
 
   async loadReviews() {
-    const { purchases } = this.state
-
     try {
-      const reviews = await Promise.all(
-        purchases.map(p => origin.reviews.find({ purchaseAddress: p.address }))
-      )
-      const flattened = [].concat(...reviews)
-      console.log('Reviews:', flattened)
-      this.setState({ reviews: flattened })
+      const reviews = await origin.marketplace.getListingReviews(this.props.listingAddress)
+      this.setState({ reviews })
     } catch(error) {
       console.error(error)
       console.error(`Error fetching reviews`)
@@ -116,8 +110,7 @@ class ListingsDetail extends Component {
     if (this.props.listingAddress) {
       // Load from IPFS
       await this.loadListing()
-      // await this.loadPurchases()
-      // this.loadReviews()
+      await this.loadReviews()
     }
     else if (this.props.listingJson) {
       const obj = Object.assign({}, this.props.listingJson, { loading: false })
@@ -162,7 +155,7 @@ class ListingsDetail extends Component {
 
   render() {
     const unitsAvailable = 1 //parseInt(this.state.unitsAvailable) // convert string to integer
-    const buyersReviews = this.state.reviews.filter(r => r.revieweeRole === 'SELLER')
+    const buyersReviews = this.state.reviews
     const userIsSeller = this.state.sellerAddress === this.props.web3Account
 
     return (

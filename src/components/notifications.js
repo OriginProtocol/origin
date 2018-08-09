@@ -4,8 +4,6 @@ import { connect } from 'react-redux'
 
 import Notification from 'components/notification'
 
-import origin from '../services/origin'
-
 class Notifications extends Component {
   constructor(props) {
     super(props)
@@ -21,7 +19,7 @@ class Notifications extends Component {
 
       return {...n, perspective: web3Account === sellerAddress ? 'seller' : 'buyer' }
     })
-    const filteredNotifications = filter === 'all' ? 
+    const filteredNotifications = filter === 'all' ?
                                   notificationsWithPerspective :
                                   notificationsWithPerspective.filter(n => {
                                     return filter === 'unread' ? n.status === 'unread' : (n.perspective === filter)

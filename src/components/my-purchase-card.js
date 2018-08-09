@@ -7,8 +7,6 @@ import PurchaseProgress from 'components/purchase-progress'
 
 import { translateListingCategory } from 'utils/translationUtils'
 
-import origin from '../services/origin'
-
 class MyPurchaseCard extends Component {
   constructor(props) {
     super(props)

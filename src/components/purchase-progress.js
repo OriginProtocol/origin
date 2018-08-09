@@ -7,7 +7,6 @@ class PurchaseProgress extends Component {
     super(props)
 
     this.calculateProgress = this.calculateProgress.bind(this)
-    console.log('current step', props.currentStep)
     this.state = {
       currentStep: props.currentStep,
       maxStep: props.maxStep || (props.perspective === 'seller' ? 4 : 3),
@@ -36,7 +35,7 @@ class PurchaseProgress extends Component {
   }
 
   render() {
-    const { perspective, purchase, subdued } = this.props
+    const { perspective, subdued } = this.props
     const { currentStep, maxStep, progressCalculated, progressWidth } = this.state
 
     // timestamps not yet available

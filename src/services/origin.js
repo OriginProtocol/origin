@@ -4,7 +4,7 @@ import Web3 from 'web3'
 import ecies from 'eth-ecies'
 
 /*
- * It may be preferential to use websocket provider 
+ * It may be preferential to use websocket provider
  * WebsocketProvider("ss://rinkeby.infura.io/ws")
  * But Micah couldn't get it to connect ¯\_(ツ)_/¯
  */
