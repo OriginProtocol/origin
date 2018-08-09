@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 
 import ConversationListItem from 'components/conversation-list-item'
 import Message from 'components/message'
+import GroupedMessages from 'components/grouped_messages'
 import PurchaseProgress from 'components/purchase-progress'
 
 import groupByArray from 'utils/groupByArray'
@@ -184,27 +185,6 @@ class Messages extends Component {
     this.setState({ selectedConversationId })
   }
 
-  getElapsedTime(recentTime, previousTime) {
-    const toMinutes = (1000*60)
-    const elapsedTime = (recentTime - previousTime) / toMinutes
-
-    return isNaN(elapsedTime) ? 0 : elapsedTime
-  }
-
-  preparedMessages() {
-    const { messages=[] } = this.state
-    return messages.map((m, i) => {
-      const previousMessage = i == 0 ? {} : messages[i-1]
-      const sameSender = m.senderAddress !== previousMessage.senderAddress
-      const timeElapsed = this.getElapsedTime(m.created, previousMessage.created)
-
-      if ((timeElapsed >= 10) || sameSender) {
-        return <Message key={m.hash} message={m} />
-      }
-      return <div className="pl-4 ml-5" key={i}>{ m.content }</div>
-    })
-  }
-
   render() {
     const { conversations, intl, web3Account } = this.props
     const { counterparty, listing, messages, purchase, selectedConversationId } = this.state
@@ -213,7 +193,6 @@ class Messages extends Component {
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
     const perspective = buyerAddress ? (buyerAddress === web3Account ? 'buyer' : 'seller') : null
     const soldAt = created ? created * 1000 /* convert seconds since epoch to ms */ : null
-    const preparedMessages = this.preparedMessages()
 
     return (
       <div className="d-flex messages-wrapper">
@@ -283,7 +262,7 @@ class Messages extends Component {
                 </div>
               }
               <div ref={this.conversationDiv} className="conversation">
-                {preparedMessages}
+                <GroupedMessages messages={messages}/>
               </div>
               {selectedConversationId &&
                 <form className="add-message d-flex" onSubmit={this.handleSubmit}>
