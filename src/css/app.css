@@ -1168,6 +1168,11 @@ a:hover {
   top: 15px;
 }
 
+.modal-content .disclaimer {
+  font-size: 0.875rem;
+  padding-top: 15px;
+}
+
 .modal-content h1,
 .modal-content h2,
 .modal-content h3,
