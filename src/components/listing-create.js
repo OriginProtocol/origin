@@ -145,12 +145,16 @@ class ListingCreate extends Component {
       console.log(formListing)
       this.setState({ step: this.STEP.PROCESSING })
       console.log(formListing.formData, selectedSchemaType)
-      await origin.marketplace.createListing(formListing.formData)
-      // this.props.upsertTransaction({
-      //   ...transactionReceipt,
-      //   created,
-      //   transactionTypeKey: 'createListing',
-      // })
+      const transactionReceipt = await origin.marketplace.createListing(
+        formListing.formData,
+        (confirmationCount, transactionReceipt) => {
+          this.props.updateTransaction(confirmationCount, transactionReceipt)
+        }
+      )
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        transactionTypeKey: 'createListing',
+      })
       this.setState({ step: this.STEP.SUCCESS })
     } catch (error) {
       console.error(error)
