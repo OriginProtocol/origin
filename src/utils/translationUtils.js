@@ -165,13 +165,16 @@ export function addLocales() {
 }
 
 export function getBestAvailableLanguage(langCode) {
+  // Fall back to english if no better choice is found
   let toReturn = 'en-US'
+  // If we have an exact match for the user's lang code, use it
   if (translations && translations[langCode]) {
     toReturn = langCode
   } else {
     const userBaseLang = langCode.indexOf('-') > -1 ? langCode.substring(0, langCode.indexOf('-')) : langCode
     const baseLangMatch = translations[userBaseLang]
 
+    // If we can't match the exact lang code, try to match the base - for example the "zh" in "zh-AA"
     if (baseLangMatch) {
       toReturn = userBaseLang
     } else {
