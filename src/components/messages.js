@@ -70,8 +70,15 @@ class Messages extends Component {
       this.identifyCounterparty()
     }
 
+    // on new conversation values
+    if (prevState.conversation.values && conversation.values.length > prevState.conversation.values.length) {
+      this.loadListing()
+    }
+
     // on messages
     if (messages.length !== prevProps.messages.length && conversation.key) {
+      // update conversation with new potentially values
+      this.setState({ conversation: selectedConversation })
       this.loadListing()
     }
 
@@ -112,7 +119,7 @@ class Messages extends Component {
       return await origin.purchases.get(addr)
     }))
     const involvingCounterparty = purchases.filter(p => p.buyerAddress === counterparty.address || p.buyerAddress === web3Account)
-    const mostRecent = involvingCounterparty.sort((a, b) => a.created > b.created ? -1 : 1)[0] || {}
+    const mostRecent = involvingCounterparty.sort((a, b) => a.index > b.index ? -1 : 1)[0] || {}
 
     if (mostRecent.address !== purchase.address) {
       this.setState({ purchase: mostRecent })
@@ -169,7 +176,7 @@ class Messages extends Component {
     const { conversation, selectedConversationId } = this.state
     // find the most recent listing context or set empty value
     const { listingAddress } = conversation.values
-                               .sort((a, b) => a.created < b.created ? -1 : 1)
+                               .sort((a, b) => a.index > b.index ? -1 : 1)
                                .find(m => m.listingAddress) || {}
 
     const listing = listingAddress ? (await origin.listings.get(listingAddress)) : {}
