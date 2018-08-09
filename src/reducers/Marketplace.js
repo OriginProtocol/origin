@@ -12,7 +12,7 @@ export default function Listings(state = initialState, action = {}) {
         return { ...state, ids: [], contractFound: action.contractFound }
 
       case ListingConstants.FETCH_IDS_SUCCESS:
-        return { ...state, ids: action.newIds, hideList: action.hideList }
+        return { ...state, ids: action.ids, hideList: action.hideList }
 
       default:
         return state

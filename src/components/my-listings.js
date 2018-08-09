@@ -40,7 +40,6 @@ class MyListings extends Component {
   async loadListings() {
     try {
       const ids = await origin.marketplace.getListings({ listingsFor: this.props.web3Account })
-      console.log('ids', ids)
       const listings = await Promise.all(ids.map(id => {
         return origin.marketplace.getListing(id)
       }))
@@ -70,7 +69,7 @@ class MyListings extends Component {
 
       this.setState({ listings })
     } catch(error) {
-      console.error(`Error handling update for listing: ${address}`)
+      console.error(`Error handling update for listing: ${id}`)
     }
   }
 
@@ -79,11 +78,9 @@ class MyListings extends Component {
     const filteredListings = (() => {
       switch(filter) {
         case 'active':
-          // return listings.filter(l => l.unitsAvailable)
-          return listings
+          return listings.filter(l => l.status === 'active')
         case 'inactive':
-          // return listings.filter(l => !l.unitsAvailable)
-          return []
+          return listings.filter(l => l.status === 'inactive')
         default:
           return listings
       }

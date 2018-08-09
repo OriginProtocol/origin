@@ -74,28 +74,6 @@ class ListingsDetail extends Component {
     }
   }
 
-  async loadPurchases() {
-    const { listingAddress } = this.props
-
-    try {
-      const length = await origin.listings.purchasesLength(listingAddress)
-      console.log('Purchase count:', length)
-
-      for (let i = 0; i < length; i++) {
-        let purchaseAddress = await origin.listings.purchaseAddressByIndex(listingAddress, i)
-        let purchase = await origin.purchases.get(purchaseAddress)
-        console.log('Purchase:', purchase)
-
-        this.setState((prevState) => {
-          return { purchases: [...prevState.purchases, purchase] }
-        })
-      }
-    } catch(error) {
-      console.error(`Error fetching purchases for listing: ${listingAddress}`)
-      console.error(error)
-    }
-  }
-
   async loadReviews() {
     try {
       const reviews = await origin.marketplace.getListingReviews(this.props.listingAddress)
@@ -135,7 +113,6 @@ class ListingsDetail extends Component {
         await origin.marketplace.makeOffer(this.props.listingAddress, {
           price: totalPrice
         })
-        // const { created, transactionReceipt } = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice, this.props.updateTransaction)
         // this.props.upsertTransaction({
         //   ...transactionReceipt,
         //   created,

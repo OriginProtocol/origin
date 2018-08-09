@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
-import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import {
   update as updateTransaction,
@@ -47,7 +47,7 @@ class MyListingCard extends Component {
     try {
       handleProcessing(true)
 
-      const { created, transactionReceipt } = await origin.listings.close(address, updateTransaction)
+      const { created, transactionReceipt } = await origin.marketplace.withdrawListing(this.props.listing.id, {}, updateTransaction)
 
       this.props.upsertTransaction({
         ...transactionReceipt,
@@ -69,7 +69,7 @@ class MyListingCard extends Component {
 
   render() {
     const { listing } = this.props
-    const { category, /*createdAt, */name, pictures, price, unitsAvailable } = translateListingCategory(listing.ipfsData.data)
+    const { category, name, pictures } = translateListingCategory(listing.ipfsData.data)
     /*
      *  Micah 4/23/2018
      *  ~~~~~~~~~~~~~~~
@@ -79,7 +79,7 @@ class MyListingCard extends Component {
      *  There are no denormalized "transaction completed" or "transaction in progress" counts.
      */
     // const status = parseInt(unitsAvailable) > 0 ? 'active' : 'inactive'
-    const status = 'active'
+    const status = listing.status
     // const timestamp = `Created on ${moment(createdAt).format('MMMM D, YYYY')}`
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
 
@@ -126,7 +126,7 @@ class MyListingCard extends Component {
                 {/*<a onClick={() => alert('To Do')}>Edit</a>*/}
                 {/*!active && <a onClick={() => alert('To Do')}>Enable</a>*/}
                 {/*active && <a onClick={() => alert('To Do')}>Disable</a>*/}
-                {!!parseInt(unitsAvailable) &&
+                {status === 'inactive' ? null :
                   <a className="warning" onClick={this.closeListing}>
                     <FormattedMessage
                       id={ 'my-listing-card.closeListing' }
