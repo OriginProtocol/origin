@@ -20,7 +20,10 @@ class Transaction extends Component {
 
   async componentDidMount() {
     try {
-      const { offer, listing } = this.props.transaction
+      let { offer, listing } = this.props.transaction
+      const { offerId, listingId } = this.props.transaction
+      offer = offer || await origin.marketplace.getOffer(offerId)
+      listing = listing || await origin.marketplace.getListing(listingId)
       const purchase = offer
       this.setState({ listing, purchase })
     } catch(e) {
