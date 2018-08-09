@@ -12,6 +12,10 @@
     "defaultMessage": "You need to enable Origin Messaging."
   },
   {
+    "id": "MessageNew.enable",
+    "defaultMessage": "Start Messaging"
+  },
+  {
     "id": "MessageNew.send",
     "defaultMessage": "Send"
   },

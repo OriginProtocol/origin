@@ -865,6 +865,11 @@ a:hover {
   background-color: var(--greenblue);
 }
 
+.messages header button {
+  font-size: 0.875rem;
+  margin-right: 15px;
+}
+
 .messages-wrapper .count div,
 .transactions .count div {
   background-color: var(--clear-blue);
