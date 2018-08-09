@@ -1207,7 +1207,7 @@ a:hover {
   height: 108px;
 }
 
-.form-control {
+.modal-content .form-control {
   text-align: center;
   max-width: 288px;
 }
@@ -1216,17 +1216,20 @@ a:hover {
   max-width: none;
 }
 
+.form-control-wrap {
+  width: 100%;
+  margin-right: auto;
+  display: inline-block;
+}
+
 .form-control#airbnb-generated-code {
   max-width: 340px;
   height: 92px;
   resize: none;
 }
 
-.form-control-wrap {
-  width: 100%;
+.modal-content .form-control-wrap {
   max-width: 288px;
-  margin-right: auto;
-  display: inline-block;
 }
 
 .form-control-wrap.wide-control {
@@ -1238,7 +1241,7 @@ a:hover {
   background: var(--dark-red);
 }
 
-.modal-content .form-control-wrap.error .error_message {
+.form-control-wrap.error .error_message {
   color: var(--orange-red);
   margin-top: -0.5rem;
   font-size: 1rem;
