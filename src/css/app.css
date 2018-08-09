@@ -865,6 +865,11 @@ a:hover {
   background-color: var(--greenblue);
 }
 
+.messages header button {
+  font-size: 0.875rem;
+  margin-right: 15px;
+}
+
 .messages-wrapper .count div,
 .transactions .count div {
   background-color: var(--clear-blue);
@@ -2458,6 +2463,14 @@ form .stars img {
 
 .messages-wrapper .progress-container {
   margin-bottom: 20px;
+}
+
+.messages-wrapper .message-content {
+  white-space: pre-wrap;
+}
+
+.messages-wrapper .button-container {
+  padding-top: 20px;
 }
 
 .conversation {
