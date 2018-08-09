@@ -45,11 +45,15 @@ class Purchases extends ResourceBase {
   }
 
   async get(address) {
-    const contractData = await this.contractService.contractFn(this.contractDefinition, address, 'data')
+    const contractData = await this.contractService.contractFn(
+      this.contractDefinition,
+      address,
+      'data'
+    )
 
     const ipfsHashBytes32 = contractData[5]
     let ipfsData = {}
-    if (ipfsHashBytes32 && (ipfsHashBytes32 !== EMPTY_IPFS)) {
+    if (ipfsHashBytes32 && ipfsHashBytes32 !== EMPTY_IPFS) {
       const ipfsHash = this.contractService.getIpfsHashFromBytes32(
         ipfsHashBytes32
       )
@@ -68,43 +72,85 @@ class Purchases extends ResourceBase {
   }
 
   async pay(address, amountWei, confirmationCallback) {
-    return await this.contractService.contractFn(this.contractDefinition, address, 'pay', [], {
-      value: amountWei
-    }, confirmationCallback)
+    return await this.contractService.contractFn(
+      this.contractDefinition,
+      address,
+      'pay',
+      [],
+      {
+        value: amountWei
+      },
+      confirmationCallback
+    )
   }
 
   async sellerApprove(address, confirmationCallback) {
-    return await this.contractService.contractFn(this.contractDefinition, address, 'sellerApprove', [], {
-      gas: 80000
-    }, confirmationCallback)
+    return await this.contractService.contractFn(
+      this.contractDefinition,
+      address,
+      'sellerApprove',
+      [],
+      {
+        gas: 80000
+      },
+      confirmationCallback
+    )
   }
 
   async sellerReject(address, confirmationCallback) {
-    return await this.contractService.contractFn(this.contractDefinition, address, 'sellerReject', [], {
-      gas: 80000
-    }, confirmationCallback)
+    return await this.contractService.contractFn(
+      this.contractDefinition,
+      address,
+      'sellerReject',
+      [],
+      {
+        gas: 80000
+      },
+      confirmationCallback
+    )
   }
 
   async sellerConfirmShipped(address, confirmationCallback) {
-    return await this.contractService.contractFn(this.contractDefinition, address, 'sellerConfirmShipped', [], {
-      gas: 80000
-    }, confirmationCallback)
+    return await this.contractService.contractFn(
+      this.contractDefinition,
+      address,
+      'sellerConfirmShipped',
+      [],
+      {
+        gas: 80000
+      },
+      confirmationCallback
+    )
   }
 
   async buyerConfirmReceipt(address, data = {}, confirmationCallback) {
     const review = await this._buildReview(data)
     const args = [review.rating, review.ipfsHashBytes]
-    return await this.contractService.contractFn(this.contractDefinition, address, 'buyerConfirmReceipt', args, {
-      gas: 100000
-    }, confirmationCallback)
+    return await this.contractService.contractFn(
+      this.contractDefinition,
+      address,
+      'buyerConfirmReceipt',
+      args,
+      {
+        gas: 100000
+      },
+      confirmationCallback
+    )
   }
 
   async sellerGetPayout(address, data = {}, confirmationCallback) {
     const review = await this._buildReview(data)
     const args = [review.rating, review.ipfsHashBytes]
-    return await this.contractService.contractFn(this.contractDefinition, address, 'sellerCollectPayout', args, {
-      gas: 100000
-    }, confirmationCallback)
+    return await this.contractService.contractFn(
+      this.contractDefinition,
+      address,
+      'sellerCollectPayout',
+      args,
+      {
+        gas: 100000
+      },
+      confirmationCallback
+    )
   }
 
   async _buildReview(data = {}) {

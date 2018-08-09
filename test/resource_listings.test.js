@@ -194,7 +194,9 @@ describe('Listing Resource', function() {
         priceWei: 1000,
         listingType: 'fractional'
       })
-      const listingAddress = listingTransactionObj.transactionReceipt.events.NewListing.returnValues._address
+      const listingAddress =
+        listingTransactionObj.transactionReceipt.events.NewListing.returnValues
+          ._address
       const initialListing = await listings.get(listingAddress)
       expect(initialListing.name).to.equal('Sample Listing 1')
 

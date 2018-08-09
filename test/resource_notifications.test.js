@@ -76,7 +76,8 @@ describe('Notification Resource', function() {
     buyListing = async listingAddress => {
       return await asAccount(contractService.web3, buyer, async () => {
         const listingTransactionObj = await listings.buy(listingAddress, 1, 1)
-        return listingTransactionObj.transactionReceipt.events.ListingPurchased.returnValues._purchaseContract
+        return listingTransactionObj.transactionReceipt.events.ListingPurchased
+          .returnValues._purchaseContract
       })
     }
 

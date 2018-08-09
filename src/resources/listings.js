@@ -325,7 +325,10 @@ class Listings extends ResourceBase {
     // Submit to ETH contract
     let transactionReceipt
     try {
-      transactionReceipt = await this.submitFractionalListing(ipfsHash, confirmationCallback)
+      transactionReceipt = await this.submitFractionalListing(
+        ipfsHash,
+        confirmationCallback
+      )
     } catch (error) {
       console.error(error)
       throw new Error(`ETH Failure: ${error}`)
