@@ -41,7 +41,7 @@ class MyPurchases extends Component {
     })
     const withOffers = await Promise.all(offerPromises)
     const offersByListing = withOffers.map(obj => {
-      return obj.offers.map(offer => Object.assign(obj, { offer }))
+      return obj.offers.map(offer => Object.assign({}, obj, { offer }))
     })
     const offersFlattened = [].concat(...offersByListing)
     this.setState({ loading: false, purchases: offersFlattened })
