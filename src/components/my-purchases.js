@@ -49,6 +49,16 @@ class MyPurchases extends Component {
 
   render() {
     const { filter, loading, purchases } = this.state
+    const filteredPurchases = purchases.filter(obj => {
+      const step = Number(obj.offer.status)
+      if (filter === 'pending') {
+        return step < 4
+      } else if (filter === 'complete') {
+        return step >= 4
+      } else {
+        return true
+      }
+    })
 
     return (
       <div className="my-purchases-wrapper">
@@ -127,7 +137,7 @@ class MyPurchases extends Component {
                   </div>
                   <div className="col-12 col-md-9">
                     <div className="my-listings-list">
-                      {purchases.map(p => <MyPurchaseCard key={p.offer.id} offerId={p.offer.id} offer={p.offer} listing={p.listing} />)}
+                      {filteredPurchases.map(p => <MyPurchaseCard key={p.offer.id} offerId={p.offer.id} offer={p.offer} listing={p.listing} />)}
                     </div>
                   </div>
                 </div>
