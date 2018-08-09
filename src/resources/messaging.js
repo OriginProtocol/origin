@@ -122,7 +122,6 @@ class Messaging extends ResourceBase {
     this.convs = {}
     this.ecies = ecies
     this.events = new EventEmitter()
-    this.unreadStatus = UNREAD_STATUS
   }
 
   onAccount(account_key) {
@@ -774,6 +773,24 @@ class Messaging extends ResourceBase {
     ])
     this._sending_message = false
     return room_id
+  }
+
+  // messages supplied by the 'msg' event have status included
+  // this is a convenience method for tracking status on spoofed messages
+  getStatus({ created, hash }) {
+    const messageStatuses = JSON.parse(
+      localStorage.getItem(`${storeKeys.messageStatuses}:${this.account_key}`)
+    )
+    // convert stored timestamp string to date
+    const subscriptionStart = new Date(
+      +localStorage.getItem(`${storeKeys.messageSubscriptionStart}:${this.account_key}`)
+    )
+    const isWatched = created > subscriptionStart
+    const status =
+      isWatched && messageStatuses && messageStatuses[hash] === READ_STATUS
+        ? READ_STATUS
+        : UNREAD_STATUS
+    return status
   }
 
   // we allow the entire message to be passed in (for consistency with other resources + convenience)
