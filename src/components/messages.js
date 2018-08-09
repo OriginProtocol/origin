@@ -186,21 +186,22 @@ class Messages extends Component {
 
   getElapsedTime(recentTime, previousTime) {
     const toMinutes = (1000*60)
+    const elapsedTime = (recentTime - previousTime) / toMinutes
 
-    return recentTime - previousTime / toMinutes
+    return isNaN(elapsedTime) ? 0 : elapsedTime
   }
 
   preparedMessages() {
     const { messages=[] } = this.state
     return messages.map((m, i) => {
       const previousMessage = i == 0 ? {} : messages[i-1]
-      const sameSender = m.senderAddress != previousMessage.senderAddress
+      const sameSender = m.senderAddress !== previousMessage.senderAddress
       const timeElapsed = this.getElapsedTime(m.created, previousMessage.created)
 
-      if ((timeElapsed > 10) || sameSender) {
+      if ((timeElapsed >= 10) || sameSender) {
         return <Message key={m.hash} message={m} />
       }
-      return <div className="col-xs-offset-1" key={i}>{ m.content }</div>
+      return <div className="pl-4 ml-5" key={i}>{ m.content }</div>
     })
   }
 
