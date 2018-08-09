@@ -74,13 +74,13 @@ function install_origin_environment() {
 	print_origin_start
 
 	run_step "Cloning origin-js" \
-		git clone https://github.com/OriginProtocol/origin-js.git --branch develop || true
+		git clone git@github.com:OriginProtocol/origin-js.git --branch develop || true
 
 	run_step "Cloning origin-bridge" \
-		git clone https://github.com/OriginProtocol/origin-bridge.git --branch develop || true
+		git clone git@github.com:OriginProtocol/origin-bridge.git --branch develop || true
 
 	run_step "Cloning origin-dapp" \
-		git clone https://github.com/OriginProtocol/origin-dapp.git --branch develop || true
+		git clone git@github.com:OriginProtocol/origin-dapp.git --branch develop || true
 
 	run_step "Building containers" \
 		docker-compose build --no-cache
@@ -102,7 +102,7 @@ function install_website_environment() {
 	print_website_start
 
 	run_step "Cloning origin-website" \
-		git clone https://github.com/OriginProtocol/origin-website.git --branch develop || true
+		git clone git@github.com:OriginProtocol/origin-website.git --branch develop || true
 
 	run_step "Building containers" \
 	  docker-compose -f docker-compose-web.yml build --no-cache
