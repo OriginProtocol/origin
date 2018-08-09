@@ -110,14 +110,17 @@ class ListingsDetail extends Component {
       const totalPrice = (unitsToBuy * this.state.price)
       try {
         this.setState({ step: this.STEP.PROCESSING })
-        await origin.marketplace.makeOffer(this.props.listingAddress, {
-          price: totalPrice
+        const transactionReceipt = await origin.marketplace.makeOffer(
+          this.props.listingAddress,
+          { price: totalPrice },
+          (confirmationCount, transactionReceipt) => {
+            this.props.updateTransaction(confirmationCount, transactionReceipt)
+          }
+        )
+        this.props.upsertTransaction({
+          ...transactionReceipt,
+          transactionTypeKey: 'buyListing'
         })
-        // this.props.upsertTransaction({
-        //   ...transactionReceipt,
-        //   created,
-        //   transactionTypeKey: 'buyListing',
-        // })
         this.setState({ step: this.STEP.PURCHASED })
       } catch (error) {
         console.error(error)
