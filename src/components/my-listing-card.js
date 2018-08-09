@@ -68,7 +68,8 @@ class MyListingCard extends Component {
   }
 
   render() {
-    const { address, category, /*createdAt, */name, pictures, price, unitsAvailable } = translateListingCategory(this.props.listing)
+    const { listing } = this.props
+    const { category, /*createdAt, */name, pictures, price, unitsAvailable } = translateListingCategory(listing.ipfsData.data)
     /*
      *  Micah 4/23/2018
      *  ~~~~~~~~~~~~~~~
@@ -77,7 +78,8 @@ class MyListingCard extends Component {
      *  These states should be considered as editing is explored.
      *  There are no denormalized "transaction completed" or "transaction in progress" counts.
      */
-    const status = parseInt(unitsAvailable) > 0 ? 'active' : 'inactive'
+    // const status = parseInt(unitsAvailable) > 0 ? 'active' : 'inactive'
+    const status = 'active'
     // const timestamp = `Created on ${moment(createdAt).format('MMMM D, YYYY')}`
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
 
@@ -92,11 +94,11 @@ class MyListingCard extends Component {
           <div className="content-container d-flex flex-column">
             <span className={`status ${status}`}>{status}</span>
             <p className="category">{category}</p>
-            <h2 className="title text-truncate"><Link to={`/listing/${address}`}>{name}</Link></h2>
+            <h2 className="title text-truncate"><Link to={`/listing/${listing.id}`}>{name}</Link></h2>
             {/*<p className="timestamp">{timestamp}</p>*/}
-            <p className="price">
+            {/*<p className="price">
               {`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ETH`}
-              {!parseInt(unitsAvailable) /*<= quantity*/ && 
+              {!parseInt(unitsAvailable) &&
                 <span className="badge badge-info">
                   <FormattedMessage
                     id={ 'my-listing-card.soldOut' }
@@ -104,15 +106,15 @@ class MyListingCard extends Component {
                   />
                 </span>
               }
-            </p>
+            </p>*/}
             <div className="d-flex counts">
-              <p>
+              {/*<p>
                 <FormattedMessage
                   id={ 'my-listing-card.totalQuantity' }
                   defaultMessage={ 'Total Quantity : {quantity}' }
                   values={{ quantity: <FormattedNumber value={unitsAvailable} /> }}
                 />
-              </p>
+              </p>*/}
               {/*<p>Total Remaining: {(unitsAvailable - quantity).toLocaleString()}</p>*/}
             </div>
             <div className="d-flex counts">
@@ -124,7 +126,7 @@ class MyListingCard extends Component {
                 {/*<a onClick={() => alert('To Do')}>Edit</a>*/}
                 {/*!active && <a onClick={() => alert('To Do')}>Enable</a>*/}
                 {/*active && <a onClick={() => alert('To Do')}>Disable</a>*/}
-                {!!parseInt(unitsAvailable) && 
+                {!!parseInt(unitsAvailable) &&
                   <a className="warning" onClick={this.closeListing}>
                     <FormattedMessage
                       id={ 'my-listing-card.closeListing' }
