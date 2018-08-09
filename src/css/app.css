@@ -702,6 +702,10 @@ a:hover {
   background-color: var(--dark);
 }
 
+.language-list li {
+  text-transform: capitalize;
+}
+
 .connectivity .triangle,
 .messages .triangle,
 .notifications .triangle,

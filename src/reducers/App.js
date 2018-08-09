@@ -15,7 +15,7 @@ const initialState = {
     intent: null,
   },
   translations: {
-    selectedLanguageAbbrev: null,
+    selectedLanguageCode: null,
     selectedLanguageFull: null,
     availableLanguages: null,
     messages: null,
@@ -50,7 +50,7 @@ export default function App(state = initialState, action = {}) {
       return { 
         ...state, 
         translations: { 
-          selectedLanguageAbbrev: action.selectedLanguageAbbrev,
+          selectedLanguageCode: action.selectedLanguageCode, 
           selectedLanguageFull: action.selectedLanguageFull,
           availableLanguages: action.availableLanguages,
           messages: action.messages,

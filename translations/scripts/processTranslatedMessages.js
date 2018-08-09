@@ -1,6 +1,5 @@
 const fs = require('fs');
 const glob = require('glob')
-const languageNames = require('../../src/utils/languageNames')
 const translatedMessages = {}
 
 glob.sync('./translations/languages/**/*.json')
@@ -8,15 +7,13 @@ glob.sync('./translations/languages/**/*.json')
 
     const file = fs.readFileSync(filePath, 'utf8')
     const contents = JSON.parse(file)
-    const languageName = filePath.substring( filePath.indexOf('/languages/') + 11, filePath.lastIndexOf('/') )
-    const langNameObj = languageNames.filter((lang) => lang.name.toLowerCase() === languageName.toLowerCase())
-    const langAbbrev = langNameObj[0] && langNameObj[0].code
+    const locale = filePath.substring( filePath.indexOf('/languages/') + 11, filePath.lastIndexOf('/') )
 
-    if(langAbbrev && contents) {
-      translatedMessages[langAbbrev] = contents
-      console.info(`✔ ${languageName}`)
+    if(locale && contents) {
+      translatedMessages[locale] = contents
+      console.info(`✔ ${locale}`)
     } else {
-      console.info(`❌ Error processing translations for ${languageName}`)
+      console.info(`❌ Error processing translations for ${locale}`)
     }
     
   })
