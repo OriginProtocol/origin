@@ -22,8 +22,8 @@ class Transaction extends Component {
     try {
       let { offer, listing } = this.props.transaction
       const { offerId, listingId } = this.props.transaction
-      offer = offer || await origin.marketplace.getOffer(offerId)
-      listing = listing || await origin.marketplace.getListing(listingId)
+      offer = offer || (offerId ? await origin.marketplace.getOffer(offerId) : null)
+      listing = listing || (listingId ? await origin.marketplace.getListing(listingId) : null)
       const purchase = offer
       this.setState({ listing, purchase })
     } catch(e) {
