@@ -8,11 +8,11 @@ import "./Listing.sol";
 
 library PurchaseLibrary {
 
-    function newPurchase(Listing listing, address _buyer)
+    function newPurchase(Listing _listing, uint _listingVersion, bytes32 _ipfsHash, address _buyer)
     public
     returns (Purchase purchase)
     {
-        purchase = new Purchase(listing, _buyer);
+        purchase = new Purchase(_listing, _listingVersion, _ipfsHash, _buyer);
     }
 
 }

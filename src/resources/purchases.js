@@ -1,13 +1,19 @@
 import ResourceBase from './_resource-base'
 
+const appendSlash = url => {
+  return url.substr(-1) === '/' ? url : url + '/'
+}
+
 const _STAGES_TO_NUMBER = {
   awaiting_payment: 0,
-  shipping_pending: 1,
-  buyer_pending: 2,
-  seller_pending: 3,
-  in_dispute: 4,
-  review_period: 5,
-  complete: 6
+  awaiting_seller_approval: 1,
+  seller_rejected: 2,
+  in_escrow: 3,
+  buyer_pending: 4,
+  seller_pending: 5,
+  in_dispute: 6,
+  review_period: 7,
+  complete: 8
 }
 const _NUMBERS_TO_STAGE = {}
 
@@ -15,50 +21,136 @@ const EMPTY_IPFS =
   '0x0000000000000000000000000000000000000000000000000000000000000000'
 
 class Purchases extends ResourceBase {
-  constructor({ contractService, ipfsService }) {
+  constructor({ contractService, ipfsService, fetch, indexingServerUrl }) {
     super({ contractService, ipfsService })
 
     this.contractDefinition = this.contractService.purchaseContract
+    this.fetch = fetch
+    this.indexingServerUrl = indexingServerUrl
 
     Object.entries(_STAGES_TO_NUMBER).forEach(([k, v]) => {
       _NUMBERS_TO_STAGE[v] = k
     })
   }
 
+  // fetches all purchases (all data included)
+  async all() {
+    try {
+      return await this.allIndexed()
+    } catch (error) {
+      console.error(error)
+      console.log('Cannot get all purchases')
+      throw error
+    }
+  }
+
   async get(address) {
-    const contractData = await this.contractFn(address, 'data')
+    const contractData = await this.contractService.contractFn(
+      this.contractDefinition,
+      address,
+      'data'
+    )
+
+    const ipfsHashBytes32 = contractData[5]
+    let ipfsData = {}
+    if (ipfsHashBytes32 && ipfsHashBytes32 !== EMPTY_IPFS) {
+      const ipfsHash = this.contractService.getIpfsHashFromBytes32(
+        ipfsHashBytes32
+      )
+      ipfsData = await this.ipfsService.getFile(ipfsHash)
+    }
+
     return {
       address: address,
       stage: _NUMBERS_TO_STAGE[contractData[0]],
       listingAddress: contractData[1],
       buyerAddress: contractData[2],
       created: Number(contractData[3]),
-      buyerTimeout: Number(contractData[4])
+      buyerTimeout: Number(contractData[4]),
+      ipfsData
     }
   }
 
-  async pay(address, amountWei) {
-    return await this.contractFn(address, 'pay', [], { value: amountWei })
+  async pay(address, amountWei, confirmationCallback) {
+    return await this.contractService.contractFn(
+      this.contractDefinition,
+      address,
+      'pay',
+      [],
+      {
+        value: amountWei
+      },
+      confirmationCallback
+    )
   }
 
-  async sellerConfirmShipped(address) {
-    return await this.contractFn(address, 'sellerConfirmShipped', [], {
-      gas: 80000
-    })
+  async sellerApprove(address, confirmationCallback) {
+    return await this.contractService.contractFn(
+      this.contractDefinition,
+      address,
+      'sellerApprove',
+      [],
+      {
+        gas: 80000
+      },
+      confirmationCallback
+    )
   }
 
-  async buyerConfirmReceipt(address, data = {}) {
+  async sellerReject(address, confirmationCallback) {
+    return await this.contractService.contractFn(
+      this.contractDefinition,
+      address,
+      'sellerReject',
+      [],
+      {
+        gas: 80000
+      },
+      confirmationCallback
+    )
+  }
+
+  async sellerConfirmShipped(address, confirmationCallback) {
+    return await this.contractService.contractFn(
+      this.contractDefinition,
+      address,
+      'sellerConfirmShipped',
+      [],
+      {
+        gas: 80000
+      },
+      confirmationCallback
+    )
+  }
+
+  async buyerConfirmReceipt(address, data = {}, confirmationCallback) {
     const review = await this._buildReview(data)
     const args = [review.rating, review.ipfsHashBytes]
-    return await this.contractFn(address, 'buyerConfirmReceipt', args)
+    return await this.contractService.contractFn(
+      this.contractDefinition,
+      address,
+      'buyerConfirmReceipt',
+      args,
+      {
+        gas: 100000
+      },
+      confirmationCallback
+    )
   }
 
-  async sellerGetPayout(address, data = {}) {
+  async sellerGetPayout(address, data = {}, confirmationCallback) {
     const review = await this._buildReview(data)
     const args = [review.rating, review.ipfsHashBytes]
-    return await this.contractFn(address, 'sellerCollectPayout', args, {
-      gas: 100000
-    })
+    return await this.contractService.contractFn(
+      this.contractDefinition,
+      address,
+      'sellerCollectPayout',
+      args,
+      {
+        gas: 100000
+      },
+      confirmationCallback
+    )
   }
 
   async _buildReview(data = {}) {
@@ -125,6 +217,27 @@ class Purchases extends ResourceBase {
             .catch(error => reject(error))
         }
       )
+    })
+  }
+
+  /*
+      private
+  */
+
+  async allIndexed() {
+    const url = appendSlash(this.indexingServerUrl) + 'purchase'
+    const response = await this.fetch(url, { method: 'GET' })
+    const json = await response.json()
+    return json.objects.map(obj => {
+      return {
+        address: obj['contract_address'],
+        buyerAddress: obj['buyer_address'],
+        // https://github.com/OriginProtocol/origin-bridge/issues/102
+        buyerTimeout: +new Date(obj['buyer_timeout']),
+        created: +new Date(obj['created_at']),
+        listingAddress: obj['listing_address'],
+        stage: obj['stage']
+      }
     })
   }
 }

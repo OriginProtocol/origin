@@ -4,6 +4,7 @@ import Web3 from 'web3'
 const claimTypeMapping = {
   3: 'facebook',
   4: 'twitter',
+  5: 'airbnb',
   10: 'phone',
   11: 'email'
 }
@@ -57,16 +58,22 @@ class Attestations {
     }
   }
 
-  async phoneGenerateCode({ phone }) {
-    return await this.post('phone/generate-code', { phone })
+  async phoneGenerateCode({ countryCallingCode, phone, method, locale }) {
+    return await this.post('phone/generate-code', {
+      country_calling_code: countryCallingCode,
+      phone,
+      method,
+      locale
+    })
   }
 
-  async phoneVerify({ wallet, phone, code }) {
+  async phoneVerify({ wallet, countryCallingCode, phone, code }) {
     const identity = await this.getIdentityAddress(wallet)
     return await this.post(
       'phone/verify',
       {
         identity,
+        country_calling_code: countryCallingCode,
         phone,
         code
       },
@@ -92,7 +99,7 @@ class Attestations {
   }
 
   async facebookAuthUrl() {
-    return await this.get(`facebook/auth-url`, responseToUrl)
+    return await this.get(`facebook/auth-url`, {}, responseToUrl)
   }
 
   async facebookVerify({ wallet, code }) {
@@ -108,7 +115,7 @@ class Attestations {
   }
 
   async twitterAuthUrl() {
-    return await this.get(`twitter/auth-url`, responseToUrl)
+    return await this.get(`twitter/auth-url`, {}, responseToUrl)
   }
 
   async twitterVerify({ wallet, code }) {
@@ -118,6 +125,27 @@ class Attestations {
       {
         identity,
         'oauth-verifier': code
+      },
+      this.responseToAttestation
+    )
+  }
+
+  async airbnbGenerateCode({ wallet, airbnbUserId }) {
+    const identity = await this.getIdentityAddress(wallet)
+
+    return await this.get(`airbnb/generate-code`, {
+      identity: identity,
+      airbnbUserId: airbnbUserId
+    })
+  }
+
+  async airbnbVerify({ wallet, airbnbUserId }) {
+    const identity = await this.getIdentityAddress(wallet)
+    return await this.post(
+      'airbnb/verify',
+      {
+        identity,
+        airbnbUserId
       },
       this.responseToAttestation
     )
@@ -141,8 +169,20 @@ class Attestations {
     return await this.http(this.serverUrl, url, body, successFn, 'POST')
   }
 
-  async get(url, successFn) {
-    return await this.http(this.serverUrl, url, undefined, successFn, 'GET')
+  async get(url, parameters, successFn) {
+    const objectKeys = Object.keys(parameters)
+    let stringParams = objectKeys
+      .map(key => key + '=' + parameters[key])
+      .join('&')
+    stringParams = (objectKeys.length === 0 ? '' : '?') + stringParams
+
+    return await this.http(
+      this.serverUrl,
+      url + stringParams,
+      undefined,
+      successFn,
+      'GET'
+    )
   }
 
   async predictIdentityAddress(wallet) {

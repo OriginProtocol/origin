@@ -9,7 +9,7 @@ const readStatus = 'read'
 const notificationTypes = {
   sellerListingPurchased: {
     name: 'seller_listing_purchased',
-    purchaseStage: 'shipping_pending'
+    purchaseStage: 'in_escrow'
   },
   sellerReviewReceived: {
     name: 'seller_review_received',

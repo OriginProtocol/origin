@@ -20,7 +20,9 @@ contract Purchase {
 
   enum Stages {
     AWAITING_PAYMENT, // Buyer hasn't paid full amount yet
-    SHIPPING_PENDING, // Waiting for the seller to ship
+    AWAITING_SELLER_APPROVAL, // Waiting on seller to approve purchase
+    SELLER_REJECTED, // Seller has rejected purchase
+    IN_ESCROW, // Payment has been received but not distributed to seller
     BUYER_PENDING, // Waiting for buyer to confirm receipt
     SELLER_PENDING, // Waiting for seller to confirm all is good
     IN_DISPUTE, // We are in a dispute
@@ -37,12 +39,14 @@ contract Purchase {
   * Storage
   */
 
-  Stages private internalStage = Stages.AWAITING_PAYMENT;
+  Stages internal internalStage = Stages.AWAITING_PAYMENT;
 
   Listing public listingContract; // listing that is being purchased
   address public buyer; // User who is buying. Seller is derived from listing
   uint public created;
   uint public buyerTimeout;
+  uint public listingVersion;
+  bytes32 public ipfsHash;
 
   /*
   * Modifiers
@@ -69,12 +73,16 @@ contract Purchase {
 
   constructor(
     address _listingContractAddress,
+    uint _listingVersion,
+    bytes32 _ipfsHash,
     address _buyer
   )
   public
   {
     buyer = _buyer;
     listingContract = Listing(_listingContractAddress);
+    listingVersion = _listingVersion;
+    ipfsHash = _ipfsHash;
     created = now;
     emit PurchaseChange(internalStage);
   }
@@ -82,8 +90,8 @@ contract Purchase {
   function data()
   public
   view
-  returns (Stages _stage, Listing _listingContract, address _buyer, uint _created, uint _buyerTimeout) {
-      return (stage(), listingContract, buyer, created, buyerTimeout);
+  returns (Stages _stage, Listing _listingContract, address _buyer, uint _created, uint _buyerTimeout, bytes32 _ipfsHash) {
+      return (stage(), listingContract, buyer, created, buyerTimeout, ipfsHash);
   }
 
   // Pay for listing
@@ -94,30 +102,41 @@ contract Purchase {
   payable
   atStage(Stages.AWAITING_PAYMENT)
   {
-    if (address(this).balance >= listingContract.price()) {
+    if (listingContract.needsSellerApproval()) {
       // Buyer (or their proxy) has paid enough to cover purchase
-      setStage(Stages.SHIPPING_PENDING);
+      setStage(Stages.AWAITING_SELLER_APPROVAL);
+    } else if (listingContract.isApproved(this)) {
+      setStage(Stages.IN_ESCROW);
     }
     // Possible that nothing happens, and contract just accumulates sent value
   }
 
-  function stage()
+  function sellerApprove()
   public
-  view
-  returns (Stages _stage)
+  isSeller
+  atStage(Stages.AWAITING_SELLER_APPROVAL)
   {
-    if (internalStage == Stages.BUYER_PENDING) {
-      if (now > buyerTimeout) {
-        return Stages.SELLER_PENDING;
-      }
-    }
-    return internalStage;
+    /*
+      TODO: consider fractional usage timeout scenarios
+        We probably want to allow timeout period to be passed into constructor
+    */
+    buyerTimeout = now + 21 days;
+    setStage(Stages.BUYER_PENDING);
+  }
+
+  function sellerReject()
+  public
+  isSeller
+  atStage(Stages.AWAITING_SELLER_APPROVAL)
+  {
+    /* TODO: return the buyer's money! */
+    setStage(Stages.SELLER_REJECTED);
   }
 
   function sellerConfirmShipped()
   public
   isSeller
-  atStage(Stages.SHIPPING_PENDING)
+  atStage(Stages.IN_ESCROW)
   {
       buyerTimeout = now + 21 days;
       setStage(Stages.BUYER_PENDING);
@@ -182,8 +201,21 @@ contract Purchase {
     // Right now there's no way to exit this state.
   }
 
+  function stage()
+  public
+  view
+  returns (Stages _stage)
+  {
+    if (internalStage == Stages.BUYER_PENDING) {
+      if (now > buyerTimeout) {
+        return Stages.SELLER_PENDING;
+      }
+    }
+    return internalStage;
+  }
+
   function setStage(Stages _stage)
-  private
+  internal
   {
     internalStage = _stage;
     emit PurchaseChange(_stage);

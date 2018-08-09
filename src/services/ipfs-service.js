@@ -62,7 +62,7 @@ class IpfsService {
     }
     try {
       const response = await fetch(this.gatewayUrlForHash(ipfsHashStr))
-      const ipfsData = await response.json()  
+      const ipfsData = await response.json()
       this.mapCache.set(ipfsHashStr, ipfsData)
       return ipfsData
     } catch (error) {

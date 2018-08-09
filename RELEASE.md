@@ -25,6 +25,7 @@ No additional features should be added to this release branch. Only bug fixes sh
 - [ ] _origin-dapp_: Confirm all tests passing
 - [ ] _origin-dapp_: Confirm it runs against remote (unlinked) origin-js
   - `git checkout release-0.3.0`
+
   - `git pull`
   - `npm install`
   - `npm start`
@@ -47,7 +48,7 @@ No additional features should be added to this release branch. Only bug fixes sh
 
 ## Publish
 ### origin-js
-- [ ] _origin-js_ : In `package.json`, confirm version is `0.7.0` 
+- [ ] _origin-js_ : In `package.json`, confirm version is `0.7.0`
 - [ ] If contracts have changed:
   - Show diff with: `git diff master..develop contracts/contracts/`  
   - `cd contracts`
@@ -71,7 +72,7 @@ No additional features should be added to this release branch. Only bug fixes sh
   - `git branch -D rerelease-0.7.0`
   - _Manually_ [delete on GitHub](https://github.com/OriginProtocol/origin-js/branches)
 - [ ] _origin-js_: Create new [GitHub release](https://github.com/OriginProtocol/origin-js/releases) with origin.js code,
-  - [ ] Version in form `v0.7.0` (This will add git tag on `master`)
+  - [ ] Version in form `v0.7.0` (This will add git tag on `master`)<<<<<<< HEAD
   - [ ] Include output of Truffle logs (containing addresses of smart contracts) in description
   - [ ] Include block number the contracts were deployed at
     - `https://rinkeby.etherscan.io/address/<contract address>`
@@ -79,8 +80,8 @@ No additional features should be added to this release branch. Only bug fixes sh
 - [ ] _origin-js_: [Publish to npm](https://docs.npmjs.com/cli/publish). 
   - `npm publish`
 
-### demo-dapp
-- [ ] _demo-dapp_: Build against npm version. This will update `package-lock.json`
+### origin-dapp
+- [ ] _origin-dapp_: Build against npm version. This will update `package-lock.json`
   - `npm unlink --no-save origin && npm install && npm run build`
 - [ ] `git add package.json && git commit -m "0.3.0 release"`
 - [ ] _origin-dapp_: Merge and push branches
@@ -93,14 +94,14 @@ No additional features should be added to this release branch. Only bug fixes sh
 - [ ] _origin-js_: Delete release branch
   - `git branch -D release-0.3.0`
   - _Manually_ [delete on GitHub](https://github.com/OriginProtocol/origin-dapp/branches)
-- [ ] _demo-dapp_: Confirm that demo-dapp works when run alone again NPM. 
-- [ ] _demo-dapp_: Test deploy dapp to heroku
-  - `git clone https://github.com/OriginProtocol/demo-dapp && cd demo-dapp`
+- [ ] _origin-dapp_: Confirm that origin-dapp works when run alone again NPM. 
+- [ ] _origin-dapp_: Test deploy dapp to heroku
+  - `git clone https://github.com/OriginProtocol/origin-dapp && cd origin-dapp`
   - `heroku create && git push heroku master`
-- [ ] _demo-dapp_: Add git tag to `master` to match origin-js.
+- [ ] _origin-dapp_: Add git tag to `master` to match origin-js.
   - `git tag -a v0.3.0 -m "New release"`
 
-### bridge-server
+### origin-bridge
 - [ ] _origin-dapp_: Merge and push branches
   - `git checkout develop`
   - `git merge --no-ff release-0.2.0`
@@ -111,14 +112,14 @@ No additional features should be added to this release branch. Only bug fixes sh
 - [ ] _origin-js_: Delete release branch
   - `git branch -D release-0.2.0`
   - _Manually_ [delete on GitHub](https://github.com/OriginProtocol/origin-bridge/branches)
-- [ ] _bridge-server_: Add git tag to `master` to match origin-js.
+- [ ] _origin-bridge_: Add git tag to `master` to match origin-js.
   - `git tag -a v0.2.0 -m "New release"`
 
 ## Follow-up
 - [ ] Confirm published `origin.js` file is accessible via `code.originprotocol.com` redirect
   - https://code.originprotocol.com/origin-js/origin-v0.7.0.js
-- [ ] _demo-dapp_ `npm unlink --no-save origin`
-- [ ] _demo-dapp_: Confirm that "one-line setup & run" command works on `master` branch shown by default
+- [ ] _origin-dapp_ `npm unlink --no-save origin`
+- [ ] _origin-dapp_: Confirm that "one-line setup & run" command works on `master` branch shown by default
 - [ ] _origin-js_: Increment version number to  on `develop` to for next release
   - `git checkout develop`
   - `subl package.json`

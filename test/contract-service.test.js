@@ -3,11 +3,7 @@ import ContractService from '../src/services/contract-service'
 import { ipfsHashes } from './fixtures'
 import Web3 from 'web3'
 
-const methodNames = [
-  'submitListing',
-  'getBytes32FromIpfsHash',
-  'getIpfsHashFromBytes32'
-]
+const methodNames = ['getBytes32FromIpfsHash', 'getIpfsHashFromBytes32']
 
 describe('ContractService', function() {
   this.timeout(5000) // default is 2000
@@ -18,13 +14,6 @@ describe('ContractService', function() {
     const provider = new Web3.providers.HttpProvider('http://localhost:8545')
     const web3 = new Web3(provider)
     contractService = new ContractService({ web3 })
-
-    // Ensure that there is at least 1 sample listing
-    await contractService.submitListing(
-      'Qmbjig3cZbUUufWqCEFzyCppqdnmQj3RoDjJWomnqYGy1f',
-      '0.00001',
-      1
-    )
   })
 
   methodNames.forEach(methodName => {
@@ -48,51 +37,6 @@ describe('ContractService', function() {
         const result = contractService.getIpfsHashFromBytes32(bytes32)
         expect(result).to.equal(ipfsHash)
       })
-    })
-  })
-
-  describe('submitListing', () => {
-    // Skipped by default because it pops up MetaMask confirmation dialogue every time you make a
-    // change which slows down dev. Should add alternate tests that mock MetaMask and only enable
-    // this one as part of manual testing before releases to ensure library works with MetaMask.
-    it('should successfully submit listing', async () => {
-      await contractService.submitListing(
-        'Qmbjig3cZbUUufWqCEFzyCppqdnmQj3RoDjJWomnqYGy1f',
-        '0.00001',
-        1
-      )
-    })
-  })
-
-  describe('getAllListingIds', () => {
-    it('should get an array of numbers', async () => {
-      const result = await contractService.getAllListingIds()
-      expect(result).to.be.an('array')
-      result.forEach(id => expect(id).to.be.a('number'))
-    })
-  })
-
-  describe('getListing', () => {
-    // Skipped because of https://github.com/OriginProtocol/platform/issues/27
-    it('should reject when listing cannot be found', done => {
-      contractService.getListing('foo').then(done.fail, error => {
-        expect(error).to.be.instanceof(Error) 
-        done()
-      })
-    })
-
-    it('should get a listing object', async () => {
-      const ids = await contractService.getAllListingIds()
-      expect(ids.length).to.be.greaterThan(0)
-      const listing = await contractService.getListing(ids[0])
-      expect(listing).to.have.keys(
-        'address',
-        'index',
-        'lister',
-        'ipfsHash',
-        'price',
-        'unitsAvailable'
-      )
     })
   })
 

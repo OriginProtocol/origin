@@ -1,0 +1,41 @@
+{
+  "$id":"fractional-listing.json",
+  "title": "FractionalListing",
+  "type": "object",
+  "$merge": {
+    "source": { "$ref": "listing.json" },
+    "with": {
+      "properties": {
+        "timeIncrement": {
+            "type": "string"
+        },
+        "slots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["startDate", "endDate", "isAvailable"],
+            "properties": {
+              "startDate": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "endDate": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "isAvailable": {
+                "type": "boolean"
+              },
+              "priceWei": {
+                "type": "number"
+              },
+              "recurs": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

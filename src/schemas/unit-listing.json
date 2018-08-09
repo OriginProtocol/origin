@@ -1,0 +1,18 @@
+{
+  "$id":"unit-listing.json",
+  "title": "UnitListing",
+  "$merge": {
+    "source": { "$ref": "listing.json" },
+    "with": {
+      "required": ["name"],
+      "properties": {
+        "priceWei": {
+          "type": "number"
+        },
+        "unitsAvailable": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}
