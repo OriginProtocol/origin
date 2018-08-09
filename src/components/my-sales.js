@@ -46,6 +46,16 @@ class MySales extends Component {
 
   render() {
     const { filter, loading, purchases } = this.state
+    const filteredPurchases = purchases.filter(obj => {
+      const step = Number(obj.offer.status)
+      if (filter === 'pending') {
+        return step < 4
+      } else if (filter === 'complete') {
+        return step >= 4
+      } else {
+        return true
+      }
+    })
 
     return (
       <div className="my-purchases-wrapper">
@@ -129,7 +139,7 @@ class MySales extends Component {
                   </div>
                   <div className="col-12 col-md-9">
                     <div className="my-listings-list">
-                      {purchases.map(p => (
+                      {filteredPurchases.map(p => (
                         <MySaleCard key={p.offer.id}
                           listing={p.listing}
                           purchase={p.offer} />
