@@ -70,15 +70,6 @@ class MyListingCard extends Component {
   render() {
     const { listing } = this.props
     const { category, name, pictures } = translateListingCategory(listing.ipfsData.data)
-    /*
-     *  Micah 4/23/2018
-     *  ~~~~~~~~~~~~~~~
-     *  origin.listings.close sets unitsAvailable to 0.
-     *  There is no distinction between active/inactive, sold out, or closed.
-     *  These states should be considered as editing is explored.
-     *  There are no denormalized "transaction completed" or "transaction in progress" counts.
-     */
-    // const status = parseInt(unitsAvailable) > 0 ? 'active' : 'inactive'
     const status = listing.status
     // const timestamp = `Created on ${moment(createdAt).format('MMMM D, YYYY')}`
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
