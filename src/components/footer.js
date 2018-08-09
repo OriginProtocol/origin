@@ -78,13 +78,17 @@ class Footer extends Component {
                   <div className="actual-menu">
                     <div className="language-list">
                       <ul className="list-group">
-                        <li className="language d-flex flex-wrap" onClick={ () => { this.localizeApp('en-US') } } >
+                        <li
+                          className="language d-flex flex-wrap"
+                          onClick={ () => { this.localizeApp('en-US') } }
+                          data-locale="en-US">
                           English
                         </li>
                         {this.props.availableLanguages && this.props.availableLanguages.map(langObj => (
                           <li className="language d-flex flex-wrap"
                               key={ langObj.selectedLanguageCode }
-                              onClick={ () => { this.localizeApp(langObj.selectedLanguageCode) } }>
+                              onClick={ () => { this.localizeApp(langObj.selectedLanguageCode) } }
+                              data-locale={ langObj.selectedLanguageCode }>
                             { langObj.selectedLanguageFull }
                           </li>
                         ))}
