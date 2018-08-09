@@ -11,15 +11,7 @@ import origin from '../services/origin'
 class MySales extends Component {
   constructor(props) {
     super(props)
-
-    this.loadListing = this.loadListing.bind(this)
-    this.loadPurchase = this.loadPurchase.bind(this)
-    this.state = {
-      filter: 'pending',
-      listings: [],
-      loading: true,
-      purchases: [],
-    }
+    this.state = { filter: 'pending', purchases: [], loading: true }
   }
 
   componentDidMount() {
@@ -28,99 +20,32 @@ class MySales extends Component {
     }
   }
 
-  /*
-  * WARNING: These functions don't actually return what they might imply.
-  * They use return statements to chain together async calls. Oops.
-  *
-  * For now, we mock a getBySellerAddress request by fetching all
-  * listings individually, filtering each by sellerAddress
-  * and then getting the related purchases individually.
-  */
-
-  async getListingIds() {
-    try {
-      const ids = await origin.listings.allIds()
-
-      return await Promise.all(ids.map(this.loadListing))
-    } catch(error) {
-      console.error('Error fetching listing ids')
-    }
-  }
-
-  async getPurchaseAddress(addr, i) {
-    try {
-      const purchAddr = await origin.listings.purchaseAddressByIndex(addr, i)
-
-      return this.loadPurchase(purchAddr)
-    } catch(error) {
-      console.error(`Error fetching purchase address at: ${i}`)
-    }
-  }
-
-  async getPurchasesLength(addr) {
-    try {
-      const len = await origin.listings.purchasesLength(addr)
-
-      if (!len) {
-        return len
-      }
-
-      return await Promise.all([...Array(len).keys()].map(i => this.getPurchaseAddress(addr, i)))
-    } catch(error) {
-      console.error(`Error fetching purchases length for listing: ${addr}`)
-    }
-  }
-
-  async loadListing(id) {
-    try {
-      const listing = await origin.listings.getByIndex(id)
-
-      // only save to state and get purchases for current user's listings
-      if (listing.sellerAddress === this.props.web3Account) {
-        const listings = [...this.state.listings, listing]
-
-        this.setState({ listings })
-
-        return this.getPurchasesLength(listing.address)
-      }
-
-      return listing
-    } catch(error) {
-      console.error(`Error fetching contract or IPFS info for listingId: ${id}`)
-    }
-  }
-
-  async loadPurchase(addr) {
-    try {
-      const purchase = await origin.purchases.get(addr)
-      const purchases = [...this.state.purchases, purchase]
-
-      this.setState({ purchases })
-
-      return purchase
-    } catch(error) {
-      console.error(`Error fetching purchase: ${addr}`)
-    }
-  }
-
   async componentWillMount() {
-    await this.getListingIds()
-
-    this.setState({ loading: false })
+    const listingsFor = await origin.contractService.currentAccount()
+    var listingIds = await origin.marketplace.getListings({ listingsFor })
+    const listingPromises = listingIds.map(listingId => {
+      return new Promise(async resolve => {
+        const listing = await origin.marketplace.getListing(listingId)
+        resolve({ listingId, listing })
+      })
+    })
+    const withListings = await Promise.all(listingPromises)
+    const offerPromises = await withListings.map(obj => {
+      return new Promise(async resolve => {
+        const offers = await origin.marketplace.getOffers(obj.listingId)
+        resolve(Object.assign(obj, { offers }))
+      })
+    })
+    const withOffers = await Promise.all(offerPromises)
+    const offersByListing = withOffers.map(obj => {
+      return obj.offers.map(offer => Object.assign({}, obj, { offer }))
+    })
+    const offersFlattened = [].concat(...offersByListing)
+    this.setState({ loading: false, purchases: offersFlattened })
   }
 
   render() {
-    const { filter, listings, loading, purchases } = this.state
-    const filteredPurchases = (() => {
-      switch(filter) {
-        case 'pending':
-          return purchases.filter(p => p.stage !== 'complete')
-        case 'complete':
-          return purchases.filter(p => p.stage === 'complete')
-        default:
-          return purchases
-      }
-    })()
+    const { filter, loading, purchases } = this.state
 
     return (
       <div className="my-purchases-wrapper">
@@ -204,10 +129,10 @@ class MySales extends Component {
                   </div>
                   <div className="col-12 col-md-9">
                     <div className="my-listings-list">
-                      {filteredPurchases.map(p => (
-                        <MySaleCard key={`my-purchase-${p.address}`}
-                          listing={listings.find(l => l.address === p.listingAddress)}
-                          purchase={p} />
+                      {purchases.map(p => (
+                        <MySaleCard key={p.offer.id}
+                          listing={p.listing}
+                          purchase={p.offer} />
                       ))}
                     </div>
                   </div>
