@@ -8,7 +8,8 @@ import {
   addLocales,
   getAvailableLanguages,
   setGlobalIntlProvider,
-  getLanguageNativeName
+  getLanguageNativeName,
+  getBestAvailableLanguage
 } from 'utils/translationUtils'
 
 import origin from '../services/origin'
@@ -72,8 +73,7 @@ export function storeWeb3Intent(intent) {
 }
 
 export function localizeApp() {
-  let messages
-  let selectedLanguageCode
+  let bestAvailableLanguage
 
   // Add locale data to react-intl
   addLocales()
@@ -85,22 +85,19 @@ export function localizeApp() {
 
   // English is our default - to prevent errors, we set to undefined for English
   if (userSelectedLangCode && userSelectedLangCode !== 'en-US') {
-
-    messages = translations[userSelectedLangCode]
-    selectedLanguageCode = userSelectedLangCode
-
+    bestAvailableLanguage = getBestAvailableLanguage(userSelectedLangCode)
   } else {
-
     // Detect user's preferred settings
     const browserDefaultLang = (navigator.languages && navigator.languages[0]) ||
                              navigator.language ||
                              navigator.userLanguage
-
     if (browserDefaultLang && browserDefaultLang !== 'en-US') {
-      messages = translations[browserDefaultLang]
-      selectedLanguageCode = browserDefaultLang
+      bestAvailableLanguage = getBestAvailableLanguage(browserDefaultLang)
     }
   }
+
+  const messages = translations[bestAvailableLanguage]
+  let selectedLanguageCode = bestAvailableLanguage
 
   if (!selectedLanguageCode || !messages) {
     selectedLanguageCode = 'en-US'

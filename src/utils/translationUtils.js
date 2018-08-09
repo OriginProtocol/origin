@@ -164,6 +164,37 @@ export function addLocales() {
     ...zh])
 }
 
+export function getBestAvailableLanguage(langCode) {
+  let toReturn = 'en-US'
+  if (translations && translations[langCode]) {
+    toReturn = langCode
+  } else {
+    const userBaseLang = langCode.indexOf('-') > -1 ? langCode.substring(0, langCode.indexOf('-')) : langCode
+    const baseLangMatch = translations[userBaseLang]
+
+    if (baseLangMatch) {
+      toReturn = userBaseLang
+    } else {
+
+      for (let locale in translations) {
+
+        let localeToCheck
+        if (locale.indexOf('-') > -1) {
+          localeToCheck = locale.substring(0, locale.indexOf('-'))
+        } else {
+          localeToCheck = locale
+        }
+
+        if (localeToCheck === userBaseLang) {
+          toReturn = locale
+        }
+      }
+    }
+  }
+
+  return toReturn
+}
+
 export function getAvailableLanguages() {
   if (!translations || typeof translations !== 'object') {
     return []
