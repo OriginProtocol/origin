@@ -65,7 +65,7 @@ class ListingsDetail extends Component {
       const rawListing = await origin.marketplace.getListing(this.props.listingAddress)
       const listing = rawListing.ipfsData.data
       const translatedListing = translateListingCategory(listing)
-      const obj = Object.assign({}, translatedListing, { loading: false })
+      const obj = Object.assign({}, translatedListing, { loading: false, status: rawListing.status })
       this.setState(obj)
     } catch (error) {
       this.props.showAlert(this.props.formatMessage(this.intlMessages.loadingError))
@@ -134,7 +134,7 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    const unitsAvailable = 1 //parseInt(this.state.unitsAvailable) // convert string to integer
+    const isActive = this.state.status === 'active'
     const buyersReviews = this.state.reviews
     const userIsSeller = this.state.sellerAddress === this.props.web3Account
 
@@ -359,7 +359,7 @@ class ListingsDetail extends Component {
                                   </div> */}
                   {!this.state.loading &&
                     <div className="btn-container">
-                      {!!unitsAvailable && !userIsSeller &&
+                      {isActive && !userIsSeller &&
                         <button
                           className="btn btn-primary"
                           onClick={this.handleBuyClicked}
@@ -372,10 +372,10 @@ class ListingsDetail extends Component {
                           />
                         </button>
                       }
-                      {!!unitsAvailable && userIsSeller &&
+                      {isActive && userIsSeller &&
                         <Link to="/my-listings" className="btn">My Listings</Link>
                       }
-                      {!unitsAvailable &&
+                      {!isActive &&
                         <div className="sold-banner">
                           <img src="images/sold-tag.svg" role="presentation" />
                           <FormattedMessage
