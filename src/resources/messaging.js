@@ -122,6 +122,7 @@ class Messaging extends ResourceBase {
     this.convs = {}
     this.ecies = ecies
     this.events = new EventEmitter()
+    this.unreadStatus = UNREAD_STATUS
   }
 
   onAccount(account_key) {
@@ -665,21 +666,25 @@ class Messaging extends ResourceBase {
     }
   }
 
-  canReceiveMessages(remote_eth_address) {
+  canConverseWith(remote_eth_address) {
     const { account_key, global_keys } = this
 
-    return remote_eth_address !== account_key &&
-           global_keys &&
+    return this.canSendMessages() &&
+           account_key !== remote_eth_address &&
+           global_keys && global_keys.get(remote_eth_address)
+  }
+
+  canReceiveMessages(remote_eth_address) {
+    const { global_keys } = this
+
+    return global_keys &&
            global_keys.get(remote_eth_address)
   }
 
-  canSendMessages(remote_eth_address) {
-    const { account, account_key, global_keys } = this
+  canSendMessages() {
+    const { account, account_key } = this
 
-    return account &&
-           account_key &&
-           account_key !== remote_eth_address &&
-           global_keys && (!remote_eth_address || global_keys.get(remote_eth_address))
+    return account && account_key
   }
 
   async startConv(remote_eth_address) {
