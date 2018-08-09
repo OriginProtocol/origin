@@ -352,7 +352,7 @@ class PurchaseDetail extends Component {
     }
 
     const pictures = listing.pictures || []
-    const active = listing.unitsAvailable > 0 // Todo, move to origin.js, take into account listing expiration
+    const active = listing.status === 'active' // Todo, move to origin.js, take into account listing expiration
     const soldAt = purchase.createdAt * 1000 // convert seconds since epoch to ms
 
     const paymentEvent = purchase.events.find(l => l.event === 'OfferCreated')
