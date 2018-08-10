@@ -119,7 +119,7 @@
   "purchase-summary.soldTo": "Bán cho {buyerLink}",
   "purchase-summary.purchasedFromOn": "Đã được mua từ {sellerName} vào ngày{date}",
   "purchase-summary.soldToOn": "Đã bán cho {buyerName} vào ngày{date}",
-  "messaging-provider.congrats": "Congratulations! You can now message other users across the Origin Platform ecosystem! Why not start by taking a look around and telling us what you think about our DApp?",
+  "messaging-provider.congrats": "Xin chúc mừng! Bây giờ bạn có thể nhắn tin cho những người dùng khác trên toàn hệ thống của Origin! Hãy khám phá và để lại suy nghĩ của mình về ứng dụng của chúng tôi?",
   "messaging-provider.welcome": "Welcome to the Origin Protocol Demo DApp! Our innovative messaging platform allows you to communicate with other Origin users in a secure and decentralized way. All of your messages will be encrypted and stored on IPFS. Messages can only be read by you, the recipient, and potentially a third-party arbitrator if either of you initiates a dispute and grants access to a cryptographically-generated, shared, private key.\n\nIn order to enable messaging you will need to use your Ethereum wallet to sign two statements. This will not cost any ETH, Origin Token, or gas.",
   "my-listing-card.confirmCloseListing": "Bạn có chắc rằng bạn muốn vĩnh viễn đóng danh sách này? Điều này bắt buộc phải hoàn thành.",
   "my-listing-card.ethereumCurrencyAbbrev": "ETH",
