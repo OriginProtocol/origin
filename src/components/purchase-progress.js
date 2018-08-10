@@ -22,16 +22,16 @@ class PurchaseProgress extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.currentStep !== this.state.currentStep) {
+    if (prevProps.currentStep !== this.props.currentStep) {
       this.calculateProgress()
     }
   }
 
   calculateProgress() {
-    const { currentStep, maxStep } = this.state
+    const { currentStep, maxStep } = this.props
     const progressWidth = currentStep > 1 ? `${(currentStep - 1) / (maxStep - 1) * 100}%` : `${currentStep * 10}px`
 
-    this.setState({ progressCalculated: true, progressWidth })
+    this.setState({ progressCalculated: true, progressWidth, currentStep })
   }
 
   render() {
