@@ -2473,6 +2473,10 @@ form .stars img {
   padding-top: 20px;
 }
 
+.messages-wrapper .button-container button {
+  width: auto;
+}
+
 .conversation {
   margin-bottom: auto;
   overflow: scroll;
@@ -2480,6 +2484,10 @@ form .stars img {
 
 .conversation .message {
   margin-bottom: 20px;
+}
+
+.conversation .compact-message {
+  margin: -20px 0 20px 75px;
 }
 
 .conversation .message:first-of-type {
@@ -3316,7 +3324,7 @@ footer .dropdown-menu li:hover {
 
 a:not([href]):not([tabindex]).span-link {
   color: #ffffff;
-  cursor: pointer; 
+  cursor: pointer;
 }
 
 /* Error Page */
@@ -3409,7 +3417,7 @@ a:not([href]):not([tabindex]).span-link {
     -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
     clip-path: polygon(100% 0, 0 100%, 100% 100%);
   }
- 
+
   .navbar .messages .triangle,
   .navbar .notifications .triangle {
     margin-right: 0;

@@ -20,9 +20,18 @@ class Message extends Component {
   }
 
   render() {
-    const { enableMessaging, message, messagingEnabled, user } = this.props
+    const { enableMessaging, message, messagingEnabled, user, contentOnly } = this.props
     const { content, created, hash } = message
     const { address, fullName, profile } = user
+    const contentWithLineBreak = `${content}\n`
+
+    if (contentOnly) {
+      return (
+        <div className="d-flex compact-message">
+          {contentWithLineBreak}
+        </div>
+      )
+    }
 
     return (
       <div className="d-flex message">
@@ -38,7 +47,7 @@ class Message extends Component {
             </div>
           </div>
           <div className="message-content">
-            {content}
+            {contentWithLineBreak}
           </div>
           {!messagingEnabled && hash === 'origin-welcome-message' &&
             <div className="button-container">

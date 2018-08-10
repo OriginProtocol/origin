@@ -5,7 +5,7 @@ import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 
 import ConversationListItem from 'components/conversation-list-item'
-import Message from 'components/message'
+import CompactMessages from 'components/compact-messages'
 import PurchaseProgress from 'components/purchase-progress'
 
 import groupByArray from 'utils/groupByArray'
@@ -121,7 +121,7 @@ class Messages extends Component {
     }))
     const involvingCounterparty = purchases.filter(p => p.buyerAddress === counterparty.address || p.buyerAddress === web3Account)
     const mostRecent = involvingCounterparty.sort((a, b) => a.index > b.index ? -1 : 1)[0] || {}
-    
+
     if (mostRecent.address !== purchase.address) {
       this.setState({ purchase: mostRecent })
     }
@@ -270,7 +270,7 @@ class Messages extends Component {
                 </div>
               }
               <div ref={this.conversationDiv} className="conversation">
-                {messages.map(m => <Message key={m.hash} message={m} />)}
+                <CompactMessages messages={messages}/>
               </div>
               {canDeliverMessage && selectedConversationId &&
                 <form className="add-message d-flex" onSubmit={this.handleSubmit}>
