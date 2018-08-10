@@ -69,7 +69,7 @@ const config = {
   ipfsCreator,
   OrbitDB,
   ecies,
-  web3,
+  web3
 }
 
 try {
