@@ -7,7 +7,7 @@
       "required": ["name"],
       "properties": {
         "priceWei": {
-          "type": "number"
+          "type": "string"
         },
         "unitsAvailable": {
           "type": "number"

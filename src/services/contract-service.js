@@ -11,6 +11,11 @@ import FractionalListingContract from './../../contracts/build/contracts/Fractio
 import PurchaseContract from './../../contracts/build/contracts/Purchase.json'
 import UserRegistryContract from './../../contracts/build/contracts/UserRegistry.json'
 import OriginIdentityContract from './../../contracts/build/contracts/OriginIdentity.json'
+import OriginTokenContract from './../../contracts/build/contracts/Token.json'
+
+import V00_MarketplaceContract from './../../contracts/build/contracts/V00_Marketplace.json'
+import V01_MarketplaceContract from './../../contracts/build/contracts/V01_Marketplace.json'
+
 import bs58 from 'bs58'
 import Web3 from 'web3'
 
@@ -34,7 +39,10 @@ class ContractService {
       userRegistryContract: UserRegistryContract,
       claimHolderRegisteredContract: ClaimHolderRegisteredContract,
       claimHolderPresignedContract: ClaimHolderPresignedContract,
-      originIdentityContract: OriginIdentityContract
+      originIdentityContract: OriginIdentityContract,
+      originTokenContract: OriginTokenContract,
+      v00_MarketplaceContract: V00_MarketplaceContract,
+      v01_MarketplaceContract: V01_MarketplaceContract
     }
     this.libraries = {}
     this.libraries.ClaimHolderLibrary = ClaimHolderLibrary
@@ -101,6 +109,11 @@ class ContractService {
         }
       })
     })
+  }
+
+  async getTimestamp(event) {
+    const { timestamp } = await this.getBlock(event.blockHash)
+    return timestamp
   }
 
   // async convenience method for getting transaction details

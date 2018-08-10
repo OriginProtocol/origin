@@ -1,0 +1,13 @@
+{
+  "$id": "review.json",
+  "title": "Review",
+  "required": ["rating", "description"],
+  "properties": {
+    "rating": {
+      "type": "number"
+    },
+    "description": {
+      "type": "string"
+    }
+  }
+}
