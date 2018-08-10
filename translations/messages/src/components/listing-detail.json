@@ -21,7 +21,7 @@
   },
   {
     "id": "listing-detail.purchaseSuccessful",
-    "defaultMessage": "Purchase was successful!"
+    "defaultMessage": "Success!"
   },
   {
     "id": "listing-detail.successDisclaimer",

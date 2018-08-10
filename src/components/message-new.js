@@ -50,10 +50,10 @@ class MessageNew extends Component {
   }
 
   render() {
-    const { open, recipientAddress, handleToggle } = this.props
+    const { messagingEnabled, open, recipientAddress, handleToggle } = this.props
     const { content } = this.state
     const canReceiveMessages = origin.messaging.canReceiveMessages(recipientAddress)
-    const canSendMessages = origin.messaging.canSendMessages(recipientAddress)
+    const canDeliverMessage = origin.messaging.canConverseWith(recipientAddress)
 
     return (
       <Modal isOpen={open} data-modal="message" handleToggle={handleToggle}>
@@ -88,7 +88,7 @@ class MessageNew extends Component {
           </div>
         }
         {/* Current user needs to enable messaging. */}
-        {canReceiveMessages && !canSendMessages &&
+        {canReceiveMessages && !messagingEnabled &&
           <div className="roadblock">
             <FormattedMessage
               id={ 'MessageNew.cannotSendMessages' }
@@ -98,7 +98,12 @@ class MessageNew extends Component {
               <button
                 className="btn btn-sm btn-primary"
                 onClick={this.props.enableMessaging}
-              >Yes, Please</button>
+              >
+                <FormattedMessage
+                  id={ 'MessageNew.enable' }
+                  defaultMessage={ 'Start Messaging' }
+                />
+              </button>
             </div>
             <div className="link-container text-center">
               <a
@@ -115,7 +120,7 @@ class MessageNew extends Component {
           </div>
         }
         {/* Both users have enabled messaging. */}
-        {canReceiveMessages && canSendMessages &&
+        {canDeliverMessage &&
           <form className="new-message" onSubmit={this.handleSubmit}>
             <div className="form-group">
               <textarea

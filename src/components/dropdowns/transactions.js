@@ -20,7 +20,7 @@ class TransactionsDropdown extends Component {
   }
 
   componentDidMount() {
-    $(document).on('click', '.transactions .dropdown-menu', function(e) {
+    $(document).on('click', '.transactions .dropdown-menu', e => {
       e.stopPropagation()
     })
   }

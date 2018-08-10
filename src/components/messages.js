@@ -73,11 +73,12 @@ class Messages extends Component {
     // on new conversation values
     if (prevState.conversation.values && conversation.values.length > prevState.conversation.values.length) {
       this.loadListing()
+      this.identifyCounterparty()
     }
 
     // on messages
     if (messages.length !== prevProps.messages.length && conversation.key) {
-      // update conversation with new potentially values
+      // update conversation with potentially new values
       this.setState({ conversation: selectedConversation })
       this.loadListing()
     }
@@ -181,7 +182,7 @@ class Messages extends Component {
 
     const listing = listingAddress ? (await origin.listings.get(listingAddress)) : {}
 
-    if (listing.address && listing.address !== this.state.listing.address) {
+    if (listing.address !== this.state.listing.address) {
       this.setState({ listing })
       this.findPurchase()
     }
@@ -199,6 +200,7 @@ class Messages extends Component {
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
     const perspective = buyerAddress ? (buyerAddress === web3Account ? 'buyer' : 'seller') : null
     const soldAt = created ? created * 1000 /* convert seconds since epoch to ms */ : null
+    const canDeliverMessage = origin.messaging.canConverseWith(counterparty.address)
 
     return (
       <div className="d-flex messages-wrapper">
@@ -270,7 +272,7 @@ class Messages extends Component {
               <div ref={this.conversationDiv} className="conversation">
                 {messages.map(m => <Message key={m.hash} message={m} />)}
               </div>
-              {selectedConversationId &&
+              {canDeliverMessage && selectedConversationId &&
                 <form className="add-message d-flex" onSubmit={this.handleSubmit}>
                   <textarea
                     ref={this.textarea}
@@ -294,6 +296,7 @@ const mapStateToProps = state => {
   return {
     conversations: groupByArray(state.messages, 'conversationId'),
     messages: state.messages,
+    messagingEnabled: state.app.messagingEnabled,
     users: state.users,
     web3Account: state.app.web3.account,
   }
