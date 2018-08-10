@@ -1,4 +1,4 @@
-import Origin from 'origin'
+import { Origin } from 'origin'
 import IPFS from 'ipfs'
 import Web3 from 'web3'
 import ecies from 'eth-ecies'
@@ -63,6 +63,7 @@ const config = {
   ipfsApiPort: process.env.IPFS_API_PORT,
   ipfsGatewayPort: process.env.IPFS_GATEWAY_PORT,
   ipfsGatewayProtocol: process.env.IPFS_GATEWAY_PROTOCOL,
+  indexingServerUrl: bridgeUrl,
   attestationServerUrl,
   ipfsCreator,
   OrbitDB,

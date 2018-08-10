@@ -4,7 +4,7 @@ import { FormattedMessage, FormattedNumber } from 'react-intl'
 import Pagination from 'react-js-pagination'
 import { withRouter } from 'react-router'
 
-import { getListingIds } from 'actions/Listing'
+import { getListingIds, ListingConstants } from 'actions/Listing'
 
 import ListingCard from 'components/listing-card'
 
@@ -23,7 +23,8 @@ class ListingsGrid extends Component {
   render() {
     const { listingsPerPage } = this.state
     const { contractFound, listingIds, hideList } = this.props
-    const pinnedListingIds = [0, 1, 2, 3, 4]
+    // Pin some listings to the top in order to feature them. This only applies to browse mode.
+    const pinnedListingIds = this.props.mode == ListingConstants.BROWSE_MODE ? [0, 1, 2, 3, 4] : []
     const activePage = this.props.match.params.activePage || 1
     const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
     // Calc listings to show for given page
@@ -85,11 +86,12 @@ class ListingsGrid extends Component {
 const mapStateToProps = state => ({
   listingIds: state.listings.ids,
   hideList: state.listings.hideList,
-  contractFound: state.listings.contractFound
+  contractFound: state.listings.contractFound,
+  mode: state.listings.mode,
 })
 
 const mapDispatchToProps = dispatch => ({
-  getListingIds: () => dispatch(getListingIds())
+  getListingIds: () => dispatch(getListingIds()),
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ListingsGrid))
