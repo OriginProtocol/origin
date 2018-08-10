@@ -123,8 +123,6 @@
   "messaging-provider.welcome": "Welcome to the Origin Protocol Demo DApp! Our innovative messaging platform allows you to communicate with other Origin users in a secure and decentralized way. All of your messages will be encrypted and stored on IPFS. Messages can only be read by you, the recipient, and potentially a third-party arbitrator if either of you initiates a dispute and grants access to a cryptographically-generated, shared, private key.\n\nIn order to enable messaging you will need to use your Ethereum wallet to sign two statements. This will not cost any ETH, Origin Token, or gas.",
   "my-listing-card.confirmCloseListing": "您確定要永久關閉此列登嗎？ 這不能被撤消。",
   "my-listing-card.ethereumCurrencyAbbrev": "ETH",
-  "my-listing-card.soldOut": "已出售",
-  "my-listing-card.totalQuantity": "總共數量: {quantity}",
   "my-listing-card.closeListing": "關閉刊登",
   "my-listings.loading": "等待中...",
   "my-listings.no-listings": "你還沒有任何刊登。",
