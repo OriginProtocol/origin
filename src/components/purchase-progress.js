@@ -6,64 +6,18 @@ class PurchaseProgress extends Component {
   constructor(props) {
     super(props)
 
-    this.calculateProgress = this.calculateProgress.bind(this)
     this.state = {
       currentStep: props.currentStep,
-      maxStep: props.maxStep || (props.perspective === 'seller' ? 4 : 3),
-      progressCalculated: false,
+      maxStep: props.maxStep,
+      progressCalculated: true,
       progressWidth: '0%',
     }
   }
 
-  componentDidMount() {
-    setTimeout(() => {
-      this.calculateProgress()
-      this.deriveCurrentStep()
-    }, 400)
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.currentStep !== this.state.currentStep) {
-      this.calculateProgress()
-      this.deriveCurrentStep()
-    }
-  }
-
-  calculateProgress() {
-    const { currentStep, maxStep } = this.state
-    const progressWidth = currentStep > 1 ? `${(currentStep - 1) / (maxStep - 1) * 100}%` : `${currentStep * 10}px`
-
-    this.setState({ progressCalculated: true, progressWidth })
-  }
-
-  // calculate current step if not provided as a prop
-  deriveCurrentStep() {
-    const { currentStep, perspective, purchase } = this.props
-
-    if (typeof currentStep !== Number) {
-      let step
-
-      if (purchase.stage === 'complete') {
-        step = this.state.maxStep
-      } else if (purchase.stage === 'seller_pending') {
-        step = 3
-      } else if (purchase.stage === 'buyer_pending') {
-        step = 2
-      } else if (purchase.stage === 'in_escrow') {
-        step = 1
-      } else {
-        step = 0
-      }
-
-      if (this.state.currentStep !== step) {
-        this.setState({ currentStep: step })
-      }
-    }
-  }
-  
   render() {
-    const { perspective, purchase, subdued } = this.props
-    const { currentStep, maxStep, progressCalculated, progressWidth } = this.state
+    const { perspective, subdued, currentStep, maxStep } = this.props
+    const { progressCalculated } = this.state
+    const progressWidth = currentStep > 1 ? `${(currentStep - 1) / (maxStep - 1) * 100}%` : `${currentStep * 10}px`
 
     // timestamps not yet available
     const soldAt = !!currentStep

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
-import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import {
   update as updateTransaction,
@@ -47,7 +47,7 @@ class MyListingCard extends Component {
     try {
       handleProcessing(true)
 
-      const { created, transactionReceipt } = await origin.listings.close(address, updateTransaction)
+      const { created, transactionReceipt } = await origin.marketplace.withdrawListing(this.props.listing.id, {}, updateTransaction)
 
       this.props.upsertTransaction({
         ...transactionReceipt,
@@ -55,11 +55,7 @@ class MyListingCard extends Component {
         transactionTypeKey: 'closeListing',
       })
 
-      // why is this delay often required???
-      setTimeout(() => {
-        handleProcessing(false)
-        handleUpdate(address)
-      }, 1000)
+      handleProcessing(false)
     } catch(error) {
       handleProcessing(false)
       console.error(`Error closing listing ${address}`)
@@ -68,16 +64,9 @@ class MyListingCard extends Component {
   }
 
   render() {
-    const { address, category, /*createdAt, */name, pictures, price, unitsAvailable } = translateListingCategory(this.props.listing)
-    /*
-     *  Micah 4/23/2018
-     *  ~~~~~~~~~~~~~~~
-     *  origin.listings.close sets unitsAvailable to 0.
-     *  There is no distinction between active/inactive, sold out, or closed.
-     *  These states should be considered as editing is explored.
-     *  There are no denormalized "transaction completed" or "transaction in progress" counts.
-     */
-    const status = parseInt(unitsAvailable) > 0 ? 'active' : 'inactive'
+    const { listing } = this.props
+    const { category, name, pictures } = translateListingCategory(listing.ipfsData.data)
+    const status = listing.status
     // const timestamp = `Created on ${moment(createdAt).format('MMMM D, YYYY')}`
     const photo = pictures && pictures.length > 0 && pictures[0]
 
@@ -92,11 +81,11 @@ class MyListingCard extends Component {
           <div className="content-container d-flex flex-column">
             <span className={`status ${status}`}>{status}</span>
             <p className="category">{category}</p>
-            <h2 className="title text-truncate"><Link to={`/listing/${address}`}>{name}</Link></h2>
+            <h2 className="title text-truncate"><Link to={`/listing/${listing.id}`}>{name}</Link></h2>
             {/*<p className="timestamp">{timestamp}</p>*/}
-            <p className="price">
+            {/*<p className="price">
               {`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ETH`}
-              {!parseInt(unitsAvailable) /*<= quantity*/ && 
+              {!parseInt(unitsAvailable) &&
                 <span className="badge badge-info">
                   <FormattedMessage
                     id={ 'my-listing-card.soldOut' }
@@ -104,15 +93,15 @@ class MyListingCard extends Component {
                   />
                 </span>
               }
-            </p>
+            </p>*/}
             <div className="d-flex counts">
-              <p>
+              {/*<p>
                 <FormattedMessage
                   id={ 'my-listing-card.totalQuantity' }
                   defaultMessage={ 'Total Quantity : {quantity}' }
                   values={{ quantity: <FormattedNumber value={unitsAvailable} /> }}
                 />
-              </p>
+              </p>*/}
               {/*<p>Total Remaining: {(unitsAvailable - quantity).toLocaleString()}</p>*/}
             </div>
             <div className="d-flex counts">
@@ -124,7 +113,7 @@ class MyListingCard extends Component {
                 {/*<a onClick={() => alert('To Do')}>Edit</a>*/}
                 {/*!active && <a onClick={() => alert('To Do')}>Enable</a>*/}
                 {/*active && <a onClick={() => alert('To Do')}>Disable</a>*/}
-                {!!parseInt(unitsAvailable) && 
+                {status === 'inactive' ? null :
                   <a className="warning" onClick={this.closeListing}>
                     <FormattedMessage
                       id={ 'my-listing-card.closeListing' }

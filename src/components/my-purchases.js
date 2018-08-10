@@ -11,9 +11,6 @@ import origin from '../services/origin'
 class MyPurchases extends Component {
   constructor(props) {
     super(props)
-
-    this.loadListing = this.loadListing.bind(this)
-    this.loadPurchase = this.loadPurchase.bind(this)
     this.state = { filter: 'pending', purchases: [], loading: true }
   }
 
@@ -23,92 +20,45 @@ class MyPurchases extends Component {
     }
   }
 
-  /*
-  * WARNING: These functions don't actually return what they might imply.
-  * They use return statements to chain together async calls. Oops.
-  *
-  * For now, we mock a getByPurchaserAddress request by fetching all
-  * listings individually and fetching all related purchases individually.
-  */
-
-  async getListingIds() {
-    try {
-      const ids = await origin.listings.allIds()
-
-      return await Promise.all(ids.map(this.loadListing))
-    } catch(error) {
-      console.error('Error fetching listing ids')
-    }
-  }
-
-  async getPurchaseAddress(addr, i) {
-    try {
-      const purchAddr = await origin.listings.purchaseAddressByIndex(addr, i)
-
-      return this.loadPurchase(purchAddr)
-    } catch(error) {
-      console.error(`Error fetching purchase address at: ${i}`)
-    }
-  }
-
-  async getPurchasesLength(addr) {
-    try {
-      const len = await origin.listings.purchasesLength(addr)
-
-      if (!len) {
-        return len
-      }
-
-      return await Promise.all([...Array(len).keys()].map(i => this.getPurchaseAddress(addr, i)))
-    } catch(error) {
-      console.error(`Error fetching purchases length for listing: ${addr}`)
-    }
-  }
-
-  async loadListing(id) {
-    try {
-      const listing = await origin.listings.getByIndex(id)
-
-      return this.getPurchasesLength(listing.address)
-    } catch(error) {
-      console.error(`Error fetching contract or IPFS info for listingId: ${id}`)
-    }
-  }
-
-  async loadPurchase(addr) {
-    try {
-      const purchase = await origin.purchases.get(addr)
-      
-      if (purchase.buyerAddress === this.props.web3Account) {
-        const purchases = [...this.state.purchases, purchase]
-
-        this.setState({ purchases })
-      }
-
-      return purchase
-    } catch(error) {
-      console.error(`Error fetching purchase: ${addr}`, error)
-    }
-  }
-
   async componentWillMount() {
-    await this.getListingIds()
-
-    this.setState({ loading: false })
+    const purchasesFor = await origin.contractService.currentAccount()
+    var listingIds = await origin.marketplace.getListings({ purchasesFor })
+    const listingPromises = listingIds.map(listingId => {
+      return new Promise(async resolve => {
+        const listing = await origin.marketplace.getListing(listingId)
+        resolve({ listingId, listing })
+      })
+    })
+    const withListings = await Promise.all(listingPromises)
+    const offerPromises = await withListings.map(obj => {
+      return new Promise(async resolve => {
+        const offers = await origin.marketplace.getOffers(
+          obj.listingId,
+          { for: purchasesFor }
+        )
+        resolve(Object.assign(obj, { offers }))
+      })
+    })
+    const withOffers = await Promise.all(offerPromises)
+    const offersByListing = withOffers.map(obj => {
+      return obj.offers.map(offer => Object.assign({}, obj, { offer }))
+    })
+    const offersFlattened = [].concat(...offersByListing)
+    this.setState({ loading: false, purchases: offersFlattened })
   }
 
   render() {
     const { filter, loading, purchases } = this.state
-    const filteredPurchases = (() => {
-      switch(filter) {
-        case 'pending':
-          return purchases.filter(p => p.stage !== 'complete')
-        case 'complete':
-          return purchases.filter(p => p.stage === 'complete')
-        default:
-          return purchases
+    const filteredPurchases = purchases.filter(obj => {
+      const step = Number(obj.offer.status)
+      if (filter === 'pending') {
+        return step < 4
+      } else if (filter === 'complete') {
+        return step >= 4
+      } else {
+        return true
       }
-    })()
+    })
 
     return (
       <div className="my-purchases-wrapper">
@@ -124,7 +74,7 @@ class MyPurchases extends Component {
                 </h1>
               </div>
             </div>
-          }  
+          }
           {!loading && !purchases.length &&
             <div className="row">
               <div className="col-12 text-center">
@@ -142,7 +92,12 @@ class MyPurchases extends Component {
                   />
                 </p>
                 <br />
-                <a href="/" className="btn btn-lrg btn-primary">Browse Listings</a>
+                <a href="/" className="btn btn-lrg btn-primary">
+                  <FormattedMessage
+                    id={ 'my-purchases.browse-listings' }
+                    defaultMessage={ 'Browse Listings' }
+                  />
+                </a>
               </div>
             </div>
           }
@@ -160,7 +115,7 @@ class MyPurchases extends Component {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-12 col-md-3">  
+                  <div className="col-12 col-md-3">
                     <div className="filters list-group flex-row flex-md-column">
                       <a className={`list-group-item list-group-item-action${filter === 'pending' ? ' active' : ''}`}
                         onClick={() => this.setState({ filter: 'pending' })}>
@@ -187,13 +142,13 @@ class MyPurchases extends Component {
                   </div>
                   <div className="col-12 col-md-9">
                     <div className="my-listings-list">
-                      {filteredPurchases.map(p => <MyPurchaseCard key={`my-purchase-${p.address}`} purchase={p} />)}
+                      {filteredPurchases.map(p => <MyPurchaseCard key={p.offer.id} offerId={p.offer.id} offer={p.offer} listing={p.listing} />)}
                     </div>
                   </div>
                 </div>
               </div>
-            </div>  
-          } 
+            </div>
+          }
         </div>
       </div>
     )

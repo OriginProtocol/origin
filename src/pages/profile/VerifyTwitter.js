@@ -8,15 +8,18 @@ import origin from '../../services/origin'
 class VerifyTwitter extends Component {
   constructor() {
     super()
-    this.state = {}
+    this.state = {
+      generalErrors: []
+    }
   }
 
-  componentDidUpdate(prevProps) {
-    if (!prevProps.open && this.props.open && !this.state.url) {
-      origin.attestations.twitterAuthUrl().then(url => {
+  async componentDidUpdate(prevProps) {
+    await this.catchPossibleErrors(async () => {
+      if (!prevProps.open && this.props.open && !this.state.url) {
+        const url = await origin.attestations.twitterAuthUrl()
         this.setState({ url })
-      })
-    }
+      }
+    })
   }
 
   render() {
@@ -36,6 +39,11 @@ class VerifyTwitter extends Component {
             defaultMessage={ 'Verify Your Twitter Account' }
           />
         </h2>
+        {this.state.generalErrors.length > 0 &&
+          <div className="general-error">
+            {this.state.generalErrors.join(' ')}
+          </div>
+        }
         <div className="explanation">
           <FormattedMessage
             id={ 'VerifyTwitter.twitterNotPublic' }
@@ -58,7 +66,11 @@ class VerifyTwitter extends Component {
           <a
             href="#"
             data-modal="twitter"
-            onClick={this.props.handleToggle}
+            onClick={ event => {
+              event.preventDefault()
+              this.props.handleToggle(event)
+              this.clearErrors()
+            }}
           >
             <FormattedMessage
               id={ 'VerifyTwitter.cancel' }
@@ -70,22 +82,45 @@ class VerifyTwitter extends Component {
     )
   }
 
+  clearErrors() {
+    this.setState({ generalErrors: [] })
+  }
+
+  async catchPossibleErrors(callback, event) {
+    try {
+      if (event == undefined)
+        await callback()
+      else
+        await callback(event)
+    } catch (exception) {
+      const errorsJson = JSON.parse(exception).errors
+      
+      if (Array.isArray(errorsJson)) // Service exceptions
+        this.setState({ generalErrors: errorsJson })
+    }
+  }
+
   onCertify() {
-    var w = window.open(this.state.url, '', 'width=650,height=500')
+    this.clearErrors()
+    var twitterWindow = window.open(this.state.url, '', 'width=650,height=500')
 
-    const finish = e => {
-      var data = String(e.data)
-      if (!data.match(/^origin-code:/)) {
-        return
-      }
-      window.removeEventListener('message', finish, false)
-      if (!w.closed) {
-        w.close()
-      }
+    const finish = async event => {
+      await this.catchPossibleErrors(async event => {
+        const data = String(event.data)
 
-      origin.attestations
-        .twitterVerify({ code: data.split(':')[1] })
-        .then(result => this.props.onSuccess(result))
+        if (!data.match(/^origin-code:/)) {
+          return
+        }
+        window.removeEventListener('message', finish, false)
+        if (!twitterWindow.closed) {
+          twitterWindow.close()
+        }
+
+        const twitterAttestation = await origin.attestations
+          .twitterVerify({ code: data.split(':')[1] })
+
+        this.props.onSuccess(twitterAttestation)
+      }, event)
     }
 
     window.addEventListener('message', finish, false)

@@ -13,7 +13,7 @@ export const NotificationConstants = keyMirror(
 export function fetchNotifications() {
   return async function(dispatch) {
     try {
-      const notifications = await origin.notifications.all()
+      const notifications = await origin.marketplace.getNotifications()
 
       dispatch({
         type: NotificationConstants.FETCH,

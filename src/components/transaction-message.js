@@ -33,7 +33,7 @@ class TransactionMessage extends Component {
         id: 'transaction.getPayout',
         defaultMessage: 'You left a review and withdrew funds.',
       },
-    });
+    })
   }
 
   render() {

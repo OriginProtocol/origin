@@ -15,7 +15,6 @@ class MyListings extends Component {
 
     this.handleProcessing = this.handleProcessing.bind(this)
     this.handleUpdate = this.handleUpdate.bind(this)
-    this.loadListing = this.loadListing.bind(this)
     this.state = {
       filter: 'all',
       listings: [],
@@ -38,34 +37,20 @@ class MyListings extends Component {
   * listings individually, filtering each by sellerAddress.
   */
 
-  async getListingIds() {
+  async loadListings() {
     try {
-      const ids = await origin.listings.allIds()
-
-      return await Promise.all(ids.map(this.loadListing))
+      const ids = await origin.marketplace.getListings({ listingsFor: this.props.web3Account })
+      const listings = await Promise.all(ids.map(id => {
+        return origin.marketplace.getListing(id)
+      }))
+      this.setState({ listings })
     } catch(error) {
       console.error('Error fetching listing ids')
     }
   }
 
-  async loadListing(id) {
-    try {
-      const listing = await origin.listings.getByIndex(id)
-
-      if (listing.sellerAddress === this.props.web3Account) {
-        const listings = [...this.state.listings, listing]
-
-        this.setState({ listings })
-      }
-
-      return listing
-    } catch(error) {
-      console.error(`Error fetching contract or IPFS info for listingId: ${id}`)
-    }
-  }
-
   async componentWillMount() {
-    await this.getListingIds()
+    await this.loadListings()
 
     this.setState({ loading: false })
   }
@@ -74,17 +59,17 @@ class MyListings extends Component {
     this.setState({ processing })
   }
 
-  async handleUpdate(address) {
+  async handleUpdate(id) {
     try {
-      const listing = await origin.listings.get(address)
+      const listing = await origin.marketplace.getListing(id)
       const listings = [...this.state.listings]
-      const index = listings.findIndex(l => l.address === address)
+      const index = listings.findIndex(l => l.id === id)
 
       listings[index] = listing
 
       this.setState({ listings })
     } catch(error) {
-      console.error(`Error handling update for listing: ${address}`)
+      console.error(`Error handling update for listing: ${id}`)
     }
   }
 
@@ -93,9 +78,9 @@ class MyListings extends Component {
     const filteredListings = (() => {
       switch(filter) {
         case 'active':
-          return listings.filter(l => l.unitsAvailable)
+          return listings.filter(l => l.status === 'active')
         case 'inactive':
-          return listings.filter(l => !l.unitsAvailable)
+          return listings.filter(l => l.status === 'inactive')
         default:
           return listings
       }
@@ -112,11 +97,11 @@ class MyListings extends Component {
                     id={ 'my-listings.loading' }
                     defaultMessage={ 'Loading...' }
                   />
-                </h1> 
+                </h1>
               </div>
             </div>
-          }  
-          {!loading && !listings.length && 
+          }
+          {!loading && !listings.length &&
             <div className="row">
               <div className="col-12 text-center">
                 <img src="images/empty-listings-graphic.svg"></img>
@@ -213,7 +198,7 @@ class MyListings extends Component {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-12 col-md-3"> 
+                  <div className="col-12 col-md-3">
                     <div className="filters list-group flex-row flex-md-column">
                       <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>
                         <FormattedMessage
@@ -239,7 +224,7 @@ class MyListings extends Component {
                     <div className="my-listings-list">
                       {filteredListings.map(l => (
                         <MyListingCard
-                          key={`my-listing-${l.address}`}
+                          key={`my-listing-${l.id}`}
                           listing={l}
                           handleProcessing={this.handleProcessing}
                           handleUpdate={this.handleUpdate}
@@ -248,9 +233,9 @@ class MyListings extends Component {
                     </div>
                   </div>
                 </div>
-              </div>  
-            </div>  
-          } 
+              </div>
+            </div>
+          }
         </div>
         {processing &&
           <Modal backdrop="static" isOpen={true}>

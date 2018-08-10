@@ -20,9 +20,10 @@ class ListingCard extends Component {
 
   async componentDidMount() {
     try {
-      const listing = await origin.listings.getByIndex(this.props.listingId)
+      const rawListing = await origin.marketplace.getListing(this.props.listingId)
+      const listing = rawListing.ipfsData.data
       const translatedListing = translateListingCategory(listing)
-      if (!this.props.hideList.includes(translatedListing.address)) {
+      if (!this.props.hideList.includes(this.props.listingId)) {
         const obj = Object.assign({}, translatedListing, { loading: false })
 
         this.setState(obj)
@@ -35,14 +36,14 @@ class ListingCard extends Component {
   }
 
   render() {
-    const { address, category, loading, name, pictures, price, unitsAvailable, shouldRender } = this.state
+    const { category, loading, name, pictures, price, unitsAvailable, shouldRender } = this.state
     const photo = pictures && pictures.length && pictures[0]
 
     if (!shouldRender) return false
 
     return (
       <div className={`col-12 col-md-6 col-lg-4 listing-card${loading ? ' loading' : ''}`}>
-        <Link to={`/listing/${address}`}>
+        <Link to={`/listing/${this.props.listingId}`}>
           {!!photo &&
             <div className="photo" style={{ backgroundImage: `url("${photo}")` }}></div>
           }

@@ -1,7 +1,7 @@
-import $ from 'jquery'
 import React, { Component } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { Link } from 'react-router-dom'
+import $ from 'jquery'
 
 import origin from '../../services/origin'
 
@@ -61,6 +61,10 @@ class ConnectivityDropdown extends Component {
   }
 
   async componentDidMount() {
+    $(document).on('click', '.connectivity .dropdown-menu', e => {
+      e.stopPropagation()
+    })
+
     !web3.givenProvider && $('#connectivityDropdown').dropdown('toggle') && setTimeout(() => {
       if ($('.connectivity.dropdown').hasClass('show')) {
         $('#connectivityDropdown').dropdown('toggle')
