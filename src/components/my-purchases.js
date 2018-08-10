@@ -142,7 +142,12 @@ class MyPurchases extends Component {
                   />
                 </p>
                 <br />
-                <a href="/" className="btn btn-lrg btn-primary">Browse Listings</a>
+                <a href="/" className="btn btn-lrg btn-primary">
+                  <FormattedMessage
+                    id={ 'my-purchases.browse-listings' }
+                    defaultMessage={ 'Browse Listings' }
+                  />
+                </a>
               </div>
             </div>
           }
