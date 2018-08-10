@@ -236,6 +236,7 @@
   "purchase-progress.receivedByBuyer": "Received by buyer",
   "purchase-progress.fundsWithdrawn": "Funds Withdrawn",
   "review.unnamedUser": "Unnamed User",
+  "searchbar.search": "Search",
   "transaction.buyListing": "You made a purchase.",
   "transaction.closeListing": "You closed a listing",
   "transaction.confirmReceipt": "You left a review and confirmed receipt.",

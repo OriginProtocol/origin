@@ -437,6 +437,41 @@ a:hover {
   width: 20px;
 }
 
+/* SearchBar */
+.searchbar {
+  padding: 10px;
+  background-color: var(--pale-grey);
+  border-bottom:;
+}
+
+.searchbar .search-bar-append{
+  border-radius: 0.35rem;
+  background-color: var(--dusk);
+  width: 40px;
+  height: 40px;
+}
+
+.searchbar .navbar-nav{
+  flex-direction: row;
+}
+
+.searchbar .search-input{
+  height: 40px;
+  text-align: left;
+}
+
+.searchbar .search-bar-prepend{
+  border-radius: 0.35rem;
+  border: 1px solid var(--light);
+  font-size: 0.875rem;
+  font-weight: normal;
+  background-color: var(--pale-grey);
+  padding-left: 15px;
+  padding-right: 15px;
+  height: 40px;
+  width: auto;
+}
+
 /* Navbar */
 
 .navbar {
