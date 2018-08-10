@@ -123,8 +123,6 @@
   "messaging-provider.welcome": "crwdns2388:0crwdne2388:0",
   "my-listing-card.confirmCloseListing": "crwdns1521:0crwdne1521:0",
   "my-listing-card.ethereumCurrencyAbbrev": "crwdns1522:0crwdne1522:0",
-  "my-listing-card.soldOut": "crwdns1523:0crwdne1523:0",
-  "my-listing-card.totalQuantity": "crwdns1524:0{quantity}crwdne1524:0",
   "my-listing-card.closeListing": "crwdns1525:0crwdne1525:0",
   "my-listings.loading": "crwdns1527:0crwdne1527:0",
   "my-listings.no-listings": "crwdns2135:0crwdne2135:0",
