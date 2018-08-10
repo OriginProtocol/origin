@@ -5,7 +5,8 @@ const Identicon = ({ address, size = 30 }) => {
   let data = null
   if (!address) {
     // base64 encoded 1x1 blank white pixel when address is not defined
-    data = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII='
+    data =
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII='
   } else {
     data = new IdenticonJS(address, size).toString()
   }
@@ -15,7 +16,7 @@ const Identicon = ({ address, size = 30 }) => {
       width={size}
       height={size}
       className="identicon"
-      style={{ borderRadius: size/2 }}
+      style={{ borderRadius: size / 2 }}
       alt="Wallet icon"
       src={`data:image/png;base64, ${data}`}
     />

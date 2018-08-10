@@ -1,5 +1,5 @@
 export default function(obj, namespace) {
-  var ret = {},
+  let ret = {},
     key
 
   for (key in obj) {

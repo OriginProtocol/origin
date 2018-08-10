@@ -8,10 +8,10 @@ import origin from '../../services/origin'
 class VerifyEmail extends Component {
   constructor() {
     super()
-    this.state = { 
+    this.state = {
       mode: 'email',
       email: '',
-      code: '' ,
+      code: '',
       formErrors: {},
       generalErrors: []
     }
@@ -19,12 +19,12 @@ class VerifyEmail extends Component {
     this.intlMessages = defineMessages({
       emailVerificationAddressPlaceholder: {
         id: 'VerifyEmail.emailVerificationAddressPlaceholder',
-        defaultMessage: 'Verify email address',
+        defaultMessage: 'Verify email address'
       },
       emailVerificationCodePlaceholder: {
         id: 'VerifyEmail.emailVerificationCodePlaceholder',
-        defaultMessage: 'Verification code',
-      },
+        defaultMessage: 'Verification code'
+      }
     })
 
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -44,31 +44,27 @@ class VerifyEmail extends Component {
         </div>
         <form onSubmit={this.handleSubmit}>
           <h2>Verify Your Email Address</h2>
-          {this.state.generalErrors.length > 0 &&
+          {this.state.generalErrors.length > 0 && (
             <div className="general-error">
               {this.state.generalErrors.join(' ')}
             </div>
-          }
+          )}
           {this.state.mode === 'email'
             ? this.renderEmailForm()
             : this.renderCodeForm()}
           <div className="button-container">
             <button type="submit" className="btn btn-clear">
               <FormattedMessage
-                id={ 'VerifyEmail.continue' }
-                defaultMessage={ 'Continue' }
+                id={'VerifyEmail.continue'}
+                defaultMessage={'Continue'}
               />
             </button>
           </div>
           <div className="link-container">
-            <a
-              href="#"
-              data-modal="email"
-              onClick={this.handleCancel}
-            >
+            <a href="#" data-modal="email" onClick={this.handleCancel}>
               <FormattedMessage
-                id={ 'VerifyEmail.cancel' }
-                defaultMessage={ 'Cancel' }
+                id={'VerifyEmail.cancel'}
+                defaultMessage={'Cancel'}
               />
             </a>
           </div>
@@ -88,14 +84,14 @@ class VerifyEmail extends Component {
     event.preventDefault()
     this.clearErrors()
 
-    try{
+    try {
       if (this.state.mode === 'email') {
         await origin.attestations.emailGenerateCode({
           email: this.state.email
         })
         this.setState({ mode: 'code' })
       } else if (this.state.mode === 'code') {
-        let emailAttestation = await origin.attestations.emailVerify({
+        const emailAttestation = await origin.attestations.emailVerify({
           email: this.state.email,
           code: this.state.code,
           wallet: this.props.wallet
@@ -104,13 +100,13 @@ class VerifyEmail extends Component {
       }
     } catch (exception) {
       const errorsJson = JSON.parse(exception).errors
-        
-      if (Array.isArray(errorsJson)) // Service exceptions
-        this.setState({ generalErrors: errorsJson })
-      else // Form exception
-        this.setState({ formErrors: errorsJson })
-    }
 
+      if (Array.isArray(errorsJson))
+        // Service exceptions
+        this.setState({ generalErrors: errorsJson })
+      // Form exception
+      else this.setState({ formErrors: errorsJson })
+    }
   }
 
   clearErrors() {
@@ -135,18 +131,24 @@ class VerifyEmail extends Component {
             id="email"
             name="email"
             value={this.state.email}
-            onChange={e =>
-              this.setState({ email: e.currentTarget.value })
-            }
-            placeholder={this.props.intl.formatMessage(this.intlMessages.emailVerificationAddressPlaceholder)}
+            onChange={e => this.setState({ email: e.currentTarget.value })}
+            placeholder={this.props.intl.formatMessage(
+              this.intlMessages.emailVerificationAddressPlaceholder
+            )}
             required
           />
-          {emailErrors ? <div className="error_message">{emailErrors.join(' ')}</div>: ''}
+          {emailErrors ? (
+            <div className="error_message">{emailErrors.join(' ')}</div>
+          ) : (
+            ''
+          )}
         </div>
         <div className="explanation">
           <FormattedMessage
-            id={ 'VerifyEmail.emailNotPublished' }
-            defaultMessage={ 'Other users will know that you have a verified email address. Your actual email address will not be published on the blockchain.' }
+            id={'VerifyEmail.emailNotPublished'}
+            defaultMessage={
+              'Other users will know that you have a verified email address. Your actual email address will not be published on the blockchain.'
+            }
           />
         </div>
       </div>
@@ -159,8 +161,8 @@ class VerifyEmail extends Component {
       <div className="form-group">
         <label htmlFor="emailVerificationCode">
           <FormattedMessage
-            id={ 'VerifyEmail.enterCode' }
-            defaultMessage={ 'Enter the code we sent you below' }
+            id={'VerifyEmail.enterCode'}
+            defaultMessage={'Enter the code we sent you below'}
           />
         </label>
         <div className={`form-control-wrap ${codeErrors ? 'error' : ''}`}>
@@ -170,12 +172,18 @@ class VerifyEmail extends Component {
             name="email-verification-code"
             value={this.state.code}
             onChange={e => this.setState({ code: e.currentTarget.value })}
-            placeholder={this.props.intl.formatMessage(this.intlMessages.emailVerificationCodePlaceholder)}
+            placeholder={this.props.intl.formatMessage(
+              this.intlMessages.emailVerificationCodePlaceholder
+            )}
             pattern="[a-zA-Z0-9]{6}"
             title="6-Character Verification Code"
             required
           />
-          {codeErrors ? <div className="error_message">{codeErrors.join(' ')}</div> : ''}
+          {codeErrors ? (
+            <div className="error_message">{codeErrors.join(' ')}</div>
+          ) : (
+            ''
+          )}
         </div>
       </div>
     )

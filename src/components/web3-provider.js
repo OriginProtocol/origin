@@ -13,7 +13,8 @@ import getCurrentProvider from 'utils/getCurrentProvider'
 import origin from '../services/origin'
 
 const web3 = origin.contractService.web3
-const productionHostname = process.env.PRODUCTION_DOMAIN || 'demo.originprotocol.com'
+const productionHostname =
+  process.env.PRODUCTION_DOMAIN || 'demo.originprotocol.com'
 
 const networkNames = {
   1: 'Main Ethereum Network',
@@ -21,7 +22,7 @@ const networkNames = {
   3: 'Ropsten Test Network',
   4: 'Rinkeby Test Network',
   42: 'Kovan Test Network',
-  999: 'Localhost',
+  999: 'Localhost'
 }
 const supportedNetworkIds = [3, 4]
 const ONE_SECOND = 1000
@@ -44,34 +45,38 @@ const NotWeb3EnabledDesktop = props => (
     </a>
     <div>
       <FormattedMessage
-        id={ 'web3-provider.intentRequiresMetaMask' }
-        defaultMessage={ 'In order to {web3Intent}, you must install MetaMask.' }
+        id={'web3-provider.intentRequiresMetaMask'}
+        defaultMessage={'In order to {web3Intent}, you must install MetaMask.'}
         values={{ web3Intent: props.web3Intent }}
       />
     </div>
     <div className="button-container d-flex">
-      <a href="https://metamask.io/"
+      <a
+        href="https://metamask.io/"
         target="_blank"
         rel="noopener noreferrer"
-        className="btn btn-clear">
+        className="btn btn-clear"
+      >
         <FormattedMessage
-          id={ 'web3-provider.getMetaMask' }
-          defaultMessage={ 'Get MetaMask' }
+          id={'web3-provider.getMetaMask'}
+          defaultMessage={'Get MetaMask'}
         />
       </a>
-      <a href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58"
+      <a
+        href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58"
         target="_blank"
         rel="noopener noreferrer"
-        className="btn btn-clear">
+        className="btn btn-clear"
+      >
         <FormattedMessage
-          id={ 'web3-provider.fullInstructions' }
-          defaultMessage={ 'Full Instructions' }
+          id={'web3-provider.fullInstructions'}
+          defaultMessage={'Full Instructions'}
         />
       </a>
     </div>
     <FormattedMessage
-      id={ 'web3-provider.notSignedIntoMetaMask' }
-      defaultMessage={ 'You are not signed in to MetaMask.' }
+      id={'web3-provider.notSignedIntoMetaMask'}
+      defaultMessage={'You are not signed in to MetaMask.'}
     />
     <br />
   </Modal>
@@ -91,8 +96,10 @@ const NotWeb3EnabledMobile = props => (
     </a>
     <div>
       <FormattedMessage
-        id={ 'web3-provider.intentRequiresEthereumEnabledBrowser' }
-        defaultMessage={ 'In order to {web3Intent}, you must use an Ethereum wallet-enabled browser.' }
+        id={'web3-provider.intentRequiresEthereumEnabledBrowser'}
+        defaultMessage={
+          'In order to {web3Intent}, you must use an Ethereum wallet-enabled browser.'
+        }
         values={{ web3Intent: props.web3Intent }}
       />
     </div>
@@ -100,42 +107,42 @@ const NotWeb3EnabledMobile = props => (
     <div>
       <strong>
         <FormattedMessage
-          id={ 'web3-provider.popularEthereumWallets' }
-          defaultMessage={ 'Popular Ethereum Wallets' }
+          id={'web3-provider.popularEthereumWallets'}
+          defaultMessage={'Popular Ethereum Wallets'}
         />
       </strong>
     </div>
     <div className="button-container">
-      <a href="https://trustwalletapp.com/"
+      <a
+        href="https://trustwalletapp.com/"
         target="_blank"
         rel="noopener noreferrer"
-        className="btn btn-clear">
+        className="btn btn-clear"
+      >
+        <FormattedMessage id={'web3-provider.trust'} defaultMessage={'Trust'} />
+      </a>
+    </div>
+    <div className="button-container">
+      <a
+        href="https://www.cipherbrowser.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="btn btn-clear"
+      >
         <FormattedMessage
-          id={ 'web3-provider.trust' }
-          defaultMessage={ 'Trust' }
+          id={'web3-provider.cipher'}
+          defaultMessage={'Cipher'}
         />
       </a>
     </div>
     <div className="button-container">
-      <a href="https://www.cipherbrowser.com/"
+      <a
+        href="https://www.toshi.org/"
         target="_blank"
         rel="noopener noreferrer"
-        className="btn btn-clear">
-        <FormattedMessage
-          id={ 'web3-provider.cipher' }
-          defaultMessage={ 'Cipher' }
-        />
-      </a>
-    </div>
-    <div className="button-container">
-      <a href="https://www.toshi.org/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="btn btn-clear">
-        <FormattedMessage
-          id={ 'web3-provider.toshi' }
-          defaultMessage={ 'Toshi' }
-        />
+        className="btn btn-clear"
+      >
+        <FormattedMessage id={'web3-provider.toshi'} defaultMessage={'Toshi'} />
       </a>
     </div>
   </Modal>
@@ -144,7 +151,12 @@ const NotWeb3EnabledMobile = props => (
 const NoWeb3Account = ({ currentProvider, storeWeb3Intent, web3Intent }) => (
   <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
     <div className="image-container">
-      <img src={`images/${currentProvider === 'MetaMask' ? 'metamask' : 'ethereum'}.png`} role="presentation" />
+      <img
+        src={`images/${
+          currentProvider === 'MetaMask' ? 'metamask' : 'ethereum'
+        }.png`}
+        role="presentation"
+      />
     </div>
     <a
       className="close"
@@ -155,16 +167,15 @@ const NoWeb3Account = ({ currentProvider, storeWeb3Intent, web3Intent }) => (
     </a>
     <div>
       <FormattedMessage
-        id={ 'web3-provider.intentRequiresSignIn' }
-        defaultMessage={ 'In order to {web3Intent}, you must sign in to {currentProvider}.' }
+        id={'web3-provider.intentRequiresSignIn'}
+        defaultMessage={
+          'In order to {web3Intent}, you must sign in to {currentProvider}.'
+        }
         values={{ web3Intent, currentProvider }}
       />
     </div>
     <div className="button-container">
-      <button
-        className="btn btn-clear"
-        onClick={() => storeWeb3Intent(null)}
-      >
+      <button className="btn btn-clear" onClick={() => storeWeb3Intent(null)}>
         OK
       </button>
     </div>
@@ -177,8 +188,8 @@ const UnconnectedNetwork = () => (
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
     <FormattedMessage
-      id={ 'web3-provider.connecting' }
-      defaultMessage={ 'Connecting to network...' }
+      id={'web3-provider.connecting'}
+      defaultMessage={'Connecting to network...'}
     />
   </Modal>
 )
@@ -190,14 +201,14 @@ const UnsupportedNetwork = props => (
     </div>
     <p>
       <FormattedMessage
-        id={ 'web3-provider.shouldBeOnRinkeby' }
-        defaultMessage={ '{currentProvider} should be on Rinkeby Test Network' }
+        id={'web3-provider.shouldBeOnRinkeby'}
+        defaultMessage={'{currentProvider} should be on Rinkeby Test Network'}
         values={{ currentProvider: props.currentProvider }}
       />
     </p>
     <FormattedMessage
-      id={ 'web3-provider.currentlyOnNetwork' }
-      defaultMessage={ 'Currently on {currentNetworkName}.' }
+      id={'web3-provider.currentlyOnNetwork'}
+      defaultMessage={'Currently on {currentNetworkName}.'}
       values={{ currentNetworkName: props.currentNetworkName }}
     />
   </Modal>
@@ -208,65 +219,80 @@ const Web3Unavailable = props => (
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
-    {(!props.onMobile || (props.onMobile === "Android")) &&
+    {(!props.onMobile || props.onMobile === 'Android') && (
       <div>
         <FormattedMessage
-          id={ 'web3-provider.pleaseInstallMetaMask' }
-          defaultMessage={ 'Please install the MetaMask extension to access this site.' }
+          id={'web3-provider.pleaseInstallMetaMask'}
+          defaultMessage={
+            'Please install the MetaMask extension to access this site.'
+          }
         />
         <br />
-        <a target="_blank"
+        <a
+          target="_blank"
           rel="noopener noreferrer"
-          href="https://metamask.io/">
+          href="https://metamask.io/"
+        >
           <FormattedMessage
-            id={ 'web3-provider.getMetaMask' }
-            defaultMessage={ 'Get MetaMask' }
+            id={'web3-provider.getMetaMask'}
+            defaultMessage={'Get MetaMask'}
           />
         </a>
         <br />
-        <a target="_blank" 
+        <a
+          target="_blank"
           rel="noopener noreferrer"
-          href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58">
+          href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58"
+        >
           <FormattedMessage
-            id={ 'web3-provider.fullInstructionsForDemo' }
-            defaultMessage={ 'Full Instructions for Demo' }
+            id={'web3-provider.fullInstructionsForDemo'}
+            defaultMessage={'Full Instructions for Demo'}
           />
         </a>
       </div>
-    }
-    {(props.onMobile && (props.onMobile !== "Android")) &&
+    )}
+    {props.onMobile &&
+      props.onMobile !== 'Android' && (
       <div>
         <FormattedMessage
-          id={ 'web3-provider.useWalletEnabledBrowser' }
-          defaultMessage={ 'Please access this site through a wallet-enabled browser:' }
+          id={'web3-provider.useWalletEnabledBrowser'}
+          defaultMessage={
+            'Please access this site through a wallet-enabled browser:'
+          }
         />
         <br />
-        <a target="_blank"
+        <a
+          target="_blank"
           rel="noopener noreferrer"
-          href="https://itunes.apple.com/us/app/toshi-ethereum/id1278383455">
+          href="https://itunes.apple.com/us/app/toshi-ethereum/id1278383455"
+        >
           <FormattedMessage
-            id={ 'web3-provider.toshi' }
-            defaultMessage={ 'Toshi' }
+            id={'web3-provider.toshi'}
+            defaultMessage={'Toshi'}
           />
         </a>&nbsp;&nbsp;|&nbsp;
-        <a target="_blank"
+        <a
+          target="_blank"
           rel="noopener noreferrer"
-          href="https://itunes.apple.com/us/app/cipher-browser-ethereum/id1294572970">
+          href="https://itunes.apple.com/us/app/cipher-browser-ethereum/id1294572970"
+        >
           <FormattedMessage
-            id={ 'web3-provider.cipher' }
-            defaultMessage={ 'Cipher' }
+            id={'web3-provider.cipher'}
+            defaultMessage={'Cipher'}
           />
         </a>&nbsp;&nbsp;|&nbsp;
-        <a target="_blank"
+        <a
+          target="_blank"
           rel="noopener noreferrer"
-          href="https://itunes.apple.com/ae/app/trust-ethereum-wallet/id1288339409">
+          href="https://itunes.apple.com/ae/app/trust-ethereum-wallet/id1288339409"
+        >
           <FormattedMessage
-            id={ 'web3-provider.trustWallet' }
-            defaultMessage={ 'Trust Wallet' }
+            id={'web3-provider.trustWallet'}
+            defaultMessage={'Trust Wallet'}
           />
         </a>
       </div>
-    }
+    )}
   </Modal>
 )
 
@@ -350,10 +376,10 @@ class Web3Provider extends Component {
   fetchNetwork() {
     let called = false
     const providerExists = web3.currentProvider
-    const networkConnected = web3.currentProvider.connected || (
-                                  typeof web3.currentProvider.isConnected === 'function' &&
-                                  web3.currentProvider.isConnected()
-                                )
+    const networkConnected =
+      web3.currentProvider.connected ||
+      (typeof web3.currentProvider.isConnected === 'function' &&
+        web3.currentProvider.isConnected())
 
     if (networkConnected !== this.state.networkConnected) {
       if (this.state.networkConnected !== null) {
@@ -396,8 +422,8 @@ class Web3Provider extends Component {
   }
 
   handleAccounts(accounts) {
-    let curr = accounts[0]
-    let prev = this.props.web3Account
+    const curr = accounts[0]
+    const prev = this.props.web3Account
 
     // on account detection
     if (curr !== prev) {
@@ -421,49 +447,55 @@ class Web3Provider extends Component {
 
     return (
       <Fragment>
+        {/* currentProvider should always be present */
+          !currentProvider && <Web3Unavailable onMobile={onMobile} />}
 
-        { /* currentProvider should always be present */
-          !currentProvider &&
-          <Web3Unavailable onMobile={onMobile} />
-        }
+        {/* networkConnected initial state is null */
+          currentProvider && networkConnected === false && <UnconnectedNetwork />}
 
-        { /* networkConnected initial state is null */
-          currentProvider &&
-          networkConnected === false &&
-          <UnconnectedNetwork />
-        }
-
-        { /* production  */
+        {/* production  */
           currentProvider &&
           networkId &&
           inProductionEnv &&
-          networkNotSupported &&
-          <UnsupportedNetwork currentNetworkName={currentNetworkName} currentProvider={currentProvider} />
-        }
+          networkNotSupported && (
+            <UnsupportedNetwork
+              currentNetworkName={currentNetworkName}
+              currentProvider={currentProvider}
+            />
+          )}
 
-        { /* attempting to use web3 in unsupported mobile browser */
+        {/* attempting to use web3 in unsupported mobile browser */
           web3Intent &&
           !web3.givenProvider &&
-          onMobile &&
-          <NotWeb3EnabledMobile web3Intent={web3Intent} storeWeb3Intent={storeWeb3Intent} />
-        }
+          onMobile && (
+            <NotWeb3EnabledMobile
+              web3Intent={web3Intent}
+              storeWeb3Intent={storeWeb3Intent}
+            />
+          )}
 
-        { /* attempting to use web3 in unsupported desktop browser */
+        {/* attempting to use web3 in unsupported desktop browser */
           web3Intent &&
           !web3.givenProvider &&
-          !onMobile &&
-          <NotWeb3EnabledDesktop web3Intent={web3Intent} storeWeb3Intent={storeWeb3Intent} />
-        }
+          !onMobile && (
+            <NotWeb3EnabledDesktop
+              web3Intent={web3Intent}
+              storeWeb3Intent={storeWeb3Intent}
+            />
+          )}
 
-        { /* attempting to use web3 without being signed in */
+        {/* attempting to use web3 without being signed in */
           web3Intent &&
           web3.givenProvider &&
-          web3Account === undefined &&
-          <NoWeb3Account web3Intent={web3Intent} storeWeb3Intent={storeWeb3Intent} currentProvider={currentProvider} />
-        }
+          web3Account === undefined && (
+            <NoWeb3Account
+              web3Intent={web3Intent}
+              storeWeb3Intent={storeWeb3Intent}
+              currentProvider={currentProvider}
+            />
+          )}
 
         {this.props.children}
-
       </Fragment>
     )
   }
@@ -473,13 +505,18 @@ const mapStateToProps = state => {
   return {
     web3Account: state.app.web3.account,
     web3Intent: state.app.web3.intent,
-    onMobile: state.app.onMobile,
+    onMobile: state.app.onMobile
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   storeWeb3Account: addr => dispatch(storeWeb3Account(addr)),
-  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
 })
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Web3Provider))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Web3Provider)
+)

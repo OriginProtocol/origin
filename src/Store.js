@@ -12,7 +12,7 @@ import alert from 'reducers/Alert'
 import users from 'reducers/Users'
 import app from 'reducers/App'
 
-let middlewares = [thunkMiddleware]
+const middlewares = [thunkMiddleware]
 
 if (process.env.NODE_ENV !== 'production') {
   const { logger } = require(`redux-logger`)
@@ -30,7 +30,7 @@ const store = createStore(
     wallet,
     alert,
     users,
-    app,
+    app
   }),
   applyMiddleware(...middlewares)
 )

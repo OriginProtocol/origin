@@ -23,8 +23,8 @@ export function getListingIds() {
       window.location.hostname === 'demo.originprotocol.com'
 
     try {
-      let networkId = await web3.eth.net.getId()
-      let contractFound = listingsRegistryContract.networks[networkId]
+      const networkId = await web3.eth.net.getId()
+      const contractFound = listingsRegistryContract.networks[networkId]
       if (!contractFound) {
         dispatch({
           type: ListingConstants.FETCH_IDS_ERROR,
@@ -34,7 +34,7 @@ export function getListingIds() {
       }
 
       if (inProductionEnv && networkId < 10) {
-        let response = await fetch(
+        const response = await fetch(
           `https://raw.githubusercontent.com/OriginProtocol/demo-dapp/hide_list/hidelist_${networkId}.json`
         )
         if (response.status === 200) {

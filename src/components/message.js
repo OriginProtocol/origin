@@ -20,16 +20,20 @@ class Message extends Component {
   }
 
   render() {
-    const { enableMessaging, message, messagingEnabled, user, contentOnly } = this.props
+    const {
+      enableMessaging,
+      message,
+      messagingEnabled,
+      user,
+      contentOnly
+    } = this.props
     const { content, created, hash } = message
     const { address, fullName, profile } = user
     const contentWithLineBreak = `${content}\n`
 
     if (contentOnly) {
       return (
-        <div className="d-flex compact-message">
-          {contentWithLineBreak}
-        </div>
+        <div className="d-flex compact-message">{contentWithLineBreak}</div>
       )
     }
 
@@ -46,19 +50,21 @@ class Message extends Component {
               {moment(created).format('MMM Do h:mm a')}
             </div>
           </div>
-          <div className="message-content">
-            {contentWithLineBreak}
-          </div>
-          {!messagingEnabled && hash === 'origin-welcome-message' &&
+          <div className="message-content">{contentWithLineBreak}</div>
+          {!messagingEnabled &&
+            hash === 'origin-welcome-message' && (
             <div className="button-container">
-              <button className="btn btn-sm btn-primary" onClick={enableMessaging}>
+              <button
+                className="btn btn-sm btn-primary"
+                onClick={enableMessaging}
+              >
                 <FormattedMessage
-                  id={ 'message.enable' }
-                  defaultMessage={ 'Enable Messaging' }
+                  id={'message.enable'}
+                  defaultMessage={'Enable Messaging'}
                 />
               </button>
             </div>
-          }
+          )}
         </div>
       </div>
     )
@@ -68,13 +74,17 @@ class Message extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     messagingEnabled: state.app.messagingEnabled,
-    user: state.users.find(u => u.address === ownProps.message.senderAddress) || {},
+    user:
+      state.users.find(u => u.address === ownProps.message.senderAddress) || {}
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   enableMessaging: () => dispatch(enableMessaging()),
-  updateMessage: (obj) => dispatch(updateMessage(obj)),
+  updateMessage: obj => dispatch(updateMessage(obj))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Message)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Message)

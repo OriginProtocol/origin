@@ -45,22 +45,24 @@ class MyPurchaseCard extends Component {
     const { listing, offer, offerId } = this.props
     const created = Number(offer.createdAt)
     const soldAt = created * 1000 // convert seconds since epoch to ms
-    const { category, name, pictures, price } = translateListingCategory(listing.ipfsData.data)
+    const { category, name, pictures, price } = translateListingCategory(
+      listing.ipfsData.data
+    )
     const step = Number(offer.status)
     let verb
 
-    switch(step) {
-      case 3:
-        verb = this.props.intl.formatMessage(this.intlMessages.received)
-        break
-      case 2:
-        verb = this.props.intl.formatMessage(this.intlMessages.sentBySeller)
-        break
-      case 1:
-        verb = this.props.intl.formatMessage(this.intlMessages.purchased)
-        break
-      default:
-        verb = this.props.intl.formatMessage(this.intlMessages.unknown)
+    switch (step) {
+    case 3:
+      verb = this.props.intl.formatMessage(this.intlMessages.received)
+      break
+    case 2:
+      verb = this.props.intl.formatMessage(this.intlMessages.sentBySeller)
+      break
+    case 1:
+      verb = this.props.intl.formatMessage(this.intlMessages.purchased)
+      break
+    default:
+      verb = this.props.intl.formatMessage(this.intlMessages.unknown)
     }
 
     const timestamp = `${verb} on ${this.props.intl.formatDate(soldAt)}`
@@ -71,22 +73,38 @@ class MyPurchaseCard extends Component {
         <div className="card-body d-flex flex-column flex-lg-row">
           <div className="aspect-ratio">
             <Link to={`/purchases/${offerId}`}>
-              <div className={`${photo ? '' : 'placeholder '}image-container d-flex justify-content-center`}>
-                <img src={photo || 'images/default-image.svg'} role="presentation" />
+              <div
+                className={`${
+                  photo ? '' : 'placeholder '
+                }image-container d-flex justify-content-center`}
+              >
+                <img
+                  src={photo || 'images/default-image.svg'}
+                  role="presentation"
+                />
               </div>
             </Link>
           </div>
-          {!this.state.loading &&
+          {!this.state.loading && (
             <div className="content-container d-flex flex-column">
               <p className="category">{category}</p>
-              <h2 className="title text-truncate"><Link to={`/purchases/${offerId}`}>{name}</Link></h2>
+              <h2 className="title text-truncate">
+                <Link to={`/purchases/${offerId}`}>{name}</Link>
+              </h2>
               <p className="timestamp">{timestamp}</p>
               <div className="d-flex">
-                <p className="price">{`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ${this.props.intl.formatMessage(this.intlMessages.ETH)}`}</p>
+                <p className="price">{`${Number(price).toLocaleString(
+                  undefined,
+                  { minimumFractionDigits: 3 }
+                )} ${this.props.intl.formatMessage(this.intlMessages.ETH)}`}</p>
                 {/* Not Yet Relevant */}
                 {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
               </div>
-              <PurchaseProgress currentStep={step} perspective="buyer" subdued={true} />
+              <PurchaseProgress
+                currentStep={step}
+                perspective="buyer"
+                subdued={true}
+              />
               <div className="actions d-flex">
                 <div className="links-container">
                   {/*<a onClick={() => alert('To Do')}>Open a Dispute</a>*/}
@@ -104,7 +122,7 @@ class MyPurchaseCard extends Component {
                 </div>
               </div>
             </div>
-          }
+          )}
         </div>
       </div>
     )

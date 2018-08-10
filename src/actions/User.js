@@ -6,7 +6,7 @@ export const UserConstants = keyMirror(
   {
     FETCH: null,
     FETCH_SUCCESS: null,
-    FETCH_ERROR: null,
+    FETCH_ERROR: null
   },
   'USER'
 )
@@ -21,7 +21,7 @@ export function fetchUser(address, unnamedUserMessage) {
         user,
         unnamedUserMessage
       })
-    } catch(error) {
+    } catch (error) {
       dispatch({ type: UserConstants.FETCH_ERROR, error })
     }
   }
