@@ -15,40 +15,39 @@ class ConfirmUnload extends Component {
         </div>
         <h2>
           <FormattedMessage
-            id={ 'ConfirmUpload.waitNotice' }
-            defaultMessage={ 'Wait! You haven’t published yet.' }
+            id={'ConfirmUpload.waitNotice'}
+            defaultMessage={'Wait! You haven’t published yet.'}
           />
         </h2>
         <p>
           <FormattedMessage
-            id={ 'ConfirmUpload.ifYouExitNotice' }
-            defaultMessage={ 'If you exit without publishing you’ll lose all your changes.' }
+            id={'ConfirmUpload.ifYouExitNotice'}
+            defaultMessage={
+              'If you exit without publishing you’ll lose all your changes.'
+            }
           />
         </p>
         <p>
           <FormattedMessage
-            id={ 'ConfirmUpload.readyToGoPublic' }
-            defaultMessage={ 'Ready to go public? After you publish your changes to the blockchain, other users will be able to see that you have verified the following:' }
+            id={'ConfirmUpload.readyToGoPublic'}
+            defaultMessage={
+              'Ready to go public? After you publish your changes to the blockchain, other users will be able to see that you have verified the following:'
+            }
           />
         </p>
-        {!!changes.length &&
-          <ProvisionedChanges changes={changes} />
-        }
+        {!!changes.length && <ProvisionedChanges changes={changes} />}
         <div className="button-container">
-          <button
-            className="btn btn-clear"
-            onClick={onConfirm}
-          >
-          <FormattedMessage
-            id={ 'ConfirmUpload.publishNow' }
-            defaultMessage={ 'Publish Now' }
-          />
+          <button className="btn btn-clear" onClick={onConfirm}>
+            <FormattedMessage
+              id={'ConfirmUpload.publishNow'}
+              defaultMessage={'Publish Now'}
+            />
           </button>
         </div>
         <a data-modal="unload" onClick={handleToggle}>
           <FormattedMessage
-            id={ 'ConfirmUpload.notRightNow' }
-            defaultMessage={ 'Not Right Now' }
+            id={'ConfirmUpload.notRightNow'}
+            defaultMessage={'Not Right Now'}
           />
         </a>
       </Modal>

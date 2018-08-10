@@ -15,35 +15,31 @@ class ConfirmPublish extends Component {
         </div>
         <h2>
           <FormattedMessage
-            id={ 'ConfirmPublish.readyToGoPublic' }
-            defaultMessage={ 'Ready to go public?' }
+            id={'ConfirmPublish.readyToGoPublic'}
+            defaultMessage={'Ready to go public?'}
           />
         </h2>
         <p>
           <FormattedMessage
-            id={ 'ConfirmPublish.afterYouPublishNotice' }
-            defaultMessage={ 'After you publish your changes to the blockchain, other users will be able to see that you have verified the following:' }
+            id={'ConfirmPublish.afterYouPublishNotice'}
+            defaultMessage={
+              'After you publish your changes to the blockchain, other users will be able to see that you have verified the following:'
+            }
           />
         </p>
-        {!!changes.length &&
-          <ProvisionedChanges changes={changes} />
-        }
+        {!!changes.length && <ProvisionedChanges changes={changes} />}
         <div className="button-container">
-          <button
-            type="submit"
-            className="btn btn-clear"
-            onClick={onConfirm}
-          >
+          <button type="submit" className="btn btn-clear" onClick={onConfirm}>
             <FormattedMessage
-              id={ 'ConfirmPublish.letsDoIt' }
-              defaultMessage={ 'Let\'s do it!' }
+              id={'ConfirmPublish.letsDoIt'}
+              defaultMessage={"Let's do it!"}
             />
           </button>
         </div>
         <a data-modal="publish" onClick={handleToggle}>
           <FormattedMessage
-            id={ 'ConfirmPublish.oopsNoWait' }
-            defaultMessage={ 'Oops, no wait...' }
+            id={'ConfirmPublish.oopsNoWait'}
+            defaultMessage={'Oops, no wait...'}
           />
         </a>
       </Modal>

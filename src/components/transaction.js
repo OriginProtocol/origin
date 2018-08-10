@@ -1,20 +1,18 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
 
 import TransactionMessage from 'components/transaction-message'
 
-import transactionTypeMap from 'utils/transactionTypeMap'
-
 import origin from '../services/origin'
 
 class Transaction extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
 
     this.state = {
       listing: null,
-      purchase: null,
+      purchase: null
     }
   }
 
@@ -22,11 +20,14 @@ class Transaction extends Component {
     try {
       let { offer, listing } = this.props.transaction
       const { offerId, listingId } = this.props.transaction
-      offer = offer || (offerId ? await origin.marketplace.getOffer(offerId) : null)
-      listing = listing || (listingId ? await origin.marketplace.getListing(listingId) : null)
+      offer =
+        offer || (offerId ? await origin.marketplace.getOffer(offerId) : null)
+      listing =
+        listing ||
+        (listingId ? await origin.marketplace.getListing(listingId) : null)
       const purchase = offer
       this.setState({ listing, purchase })
-    } catch(e) {
+    } catch (e) {
       console.error(e)
     }
   }
@@ -34,7 +35,12 @@ class Transaction extends Component {
   render() {
     const { confirmationCompletionCount, transaction } = this.props
     const { listing, purchase } = this.state
-    const { confirmationCount, timestamp, transactionHash, transactionTypeKey } = transaction
+    const {
+      confirmationCount,
+      timestamp,
+      transactionHash,
+      transactionTypeKey
+    } = transaction
     const created = timestamp
     let fromAddress, toAddress
 
@@ -42,33 +48,37 @@ class Transaction extends Component {
       return null
     }
 
-    switch(transactionTypeKey) {
-      case 'buyListing':
-        fromAddress = purchase.buyer
-        toAddress = listing.seller
-        break
-      case 'closeListing':
-        fromAddress = listing.seller
-        break
-      case 'confirmReceipt':
-        fromAddress = purchase.buyer
-        toAddress = listing.seller
-        break
-      case 'confirmShipped':
-        toAddress = purchase.buyer
-        fromAddress = listing.seller
-        break
-      case 'createListing':
-        fromAddress = listing.seller
-        break
-      case 'getPayout':
-        toAddress = purchase.buyer
-        fromAddress = listing.seller
-        break
+    switch (transactionTypeKey) {
+    case 'buyListing':
+      fromAddress = purchase.buyer
+      toAddress = listing.seller
+      break
+    case 'closeListing':
+      fromAddress = listing.seller
+      break
+    case 'confirmReceipt':
+      fromAddress = purchase.buyer
+      toAddress = listing.seller
+      break
+    case 'confirmShipped':
+      toAddress = purchase.buyer
+      fromAddress = listing.seller
+      break
+    case 'createListing':
+      fromAddress = listing.seller
+      break
+    case 'getPayout':
+      toAddress = purchase.buyer
+      fromAddress = listing.seller
+      break
     }
 
-    const truncatedFrom = fromAddress ? `${fromAddress.slice(0, 4)}...${fromAddress.slice(38)}` : null
-    const truncatedTo = toAddress ? `${toAddress.slice(0, 4)}...${toAddress.slice(38)}` : null
+    const truncatedFrom = fromAddress
+      ? `${fromAddress.slice(0, 4)}...${fromAddress.slice(38)}`
+      : null
+    const truncatedTo = toAddress
+      ? `${toAddress.slice(0, 4)}...${toAddress.slice(38)}`
+      : null
 
     const completed = confirmationCount >= confirmationCompletionCount
     const decimal = confirmationCount / confirmationCompletionCount
@@ -78,7 +88,10 @@ class Transaction extends Component {
     const timeReference = Math.min(created * 1000, Date.now())
 
     return (
-      <li key={transactionHash} className="list-group-item d-flex align-items-stretch transaction">
+      <li
+        key={transactionHash}
+        className="list-group-item d-flex align-items-stretch transaction"
+      >
         <div className="text-container">
           <div className="d-flex">
             <div className="message">
@@ -88,25 +101,25 @@ class Transaction extends Component {
               />
             </div>
             <div className="timelapse ml-auto">
-              { moment(timeReference).fromNow() }
+              {moment(timeReference).fromNow()}
             </div>
           </div>
           <div className="d-flex">
-            {!toAddress &&
+            {!toAddress && (
               <div className="addresses">
                 <FormattedMessage
-                  id={ 'transactions.from' }
-                  defaultMessage={ 'From' }
+                  id={'transactions.from'}
+                  defaultMessage={'From'}
                 />
                 &nbsp;
                 {truncatedFrom}
               </div>
-            }
-            {toAddress &&
+            )}
+            {toAddress && (
               <div className="addresses">
                 <FormattedMessage
-                  id={ 'transactions.from' }
-                  defaultMessage={ 'From' }
+                  id={'transactions.from'}
+                  defaultMessage={'From'}
                 />
                 &nbsp;
                 {truncatedFrom}
@@ -114,44 +127,54 @@ class Transaction extends Component {
                 <img src="images/arrow-dark.svg" />
                 &nbsp;
                 <FormattedMessage
-                  id={ 'transactions.to' }
-                  defaultMessage={ 'To' }
+                  id={'transactions.to'}
+                  defaultMessage={'To'}
                 />
                 &nbsp;
                 {truncatedTo}
               </div>
-            }
+            )}
             <div className="confirmations-count ml-auto">
-              {percentage}%
-              &nbsp;
+              {percentage}% &nbsp;
               <FormattedMessage
-                id={ 'transactions.completed' }
-                defaultMessage={ 'Completed' }
+                id={'transactions.completed'}
+                defaultMessage={'Completed'}
               />
             </div>
           </div>
         </div>
         <div className="graphic-container">
-          {!completed &&
+          {!completed && (
             <div className="outer-circle">
-              {Array(confirmationCompletionCount).fill().map((e, i) => {
-                const confirmed = confirmationCount > i
-                const degrees = degreeIncrement * i
+              {Array(confirmationCompletionCount)
+                .fill()
+                .map((e, i) => {
+                  const confirmed = confirmationCount > i
+                  const degrees = degreeIncrement * i
 
-                return (
-                  <div key={`slice-${i}`} className={`slice${confirmed ? ' confirmed' : ''}`} style={{ transform: `rotate(${degrees}deg)` }}>
-                    <div className="crust" style={{ transform: `rotate(${degreeIncrement}deg)` }}></div>
-                  </div>
-                )
-              })}
+                  return (
+                    <div
+                      key={`slice-${i}`}
+                      className={`slice${confirmed ? ' confirmed' : ''}`}
+                      style={{ transform: `rotate(${degrees}deg)` }}
+                    >
+                      <div
+                        className="crust"
+                        style={{ transform: `rotate(${degreeIncrement}deg)` }}
+                      />
+                    </div>
+                  )
+                })}
               <div className="inner-circle">
-                <img src="images/blue-circle-arrows.svg" className="rotating-arrows" alt="rotating circular arrows" />
+                <img
+                  src="images/blue-circle-arrows.svg"
+                  className="rotating-arrows"
+                  alt="rotating circular arrows"
+                />
               </div>
             </div>
-          }
-          {completed &&
-            <div className="completed-circle"></div>
-          }
+          )}
+          {completed && <div className="completed-circle" />}
         </div>
       </li>
     )

@@ -5,7 +5,7 @@ import origin from '../services/origin'
 export const NotificationConstants = keyMirror(
   {
     ERROR: null,
-    FETCH: null,
+    FETCH: null
   },
   'NOTIFICATION'
 )
@@ -17,9 +17,9 @@ export function fetchNotifications() {
 
       dispatch({
         type: NotificationConstants.FETCH,
-        notifications,
+        notifications
       })
-    } catch(err) {
+    } catch (err) {
       dispatch({ type: NotificationConstants.ERROR, err })
     }
   }
