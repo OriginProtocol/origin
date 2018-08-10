@@ -7,6 +7,7 @@ import PurchaseProgress from 'components/purchase-progress'
 
 import { translateListingCategory } from 'utils/translationUtils'
 
+import moment from 'moment'
 import origin from '../services/origin'
 
 class MyPurchaseCard extends Component {

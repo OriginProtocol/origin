@@ -13,6 +13,10 @@ class TransactionMessage extends Component {
         id: 'transaction.buyListing',
         defaultMessage: 'You made a purchase.',
       },
+      reserveListing: {
+        id: 'transaction.reserveListing',
+        defaultMessage: 'You reserved a listing.',
+      },
       closeListing: {
         id: 'transaction.closeListing',
         defaultMessage: 'You closed a listing',
