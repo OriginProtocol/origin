@@ -8,14 +8,6 @@
     "defaultMessage": "ETH"
   },
   {
-    "id": "my-listing-card.soldOut",
-    "defaultMessage": "Sold Out"
-  },
-  {
-    "id": "my-listing-card.totalQuantity",
-    "defaultMessage": "Total Quantity : {quantity}"
-  },
-  {
     "id": "my-listing-card.closeListing",
     "defaultMessage": "Close Listing"
   }

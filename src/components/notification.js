@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -62,7 +62,7 @@ class Notification extends Component {
 
     return (
       <li className="list-group-item notification">
-        <Link to={`/purchases/${purchase.address}`} onClick={this.handleClick}>
+        <Link to={`/purchases/${purchase.id}`} onClick={this.handleClick}>
           <div className="d-flex align-items-stretch">
             <div className="image-container d-flex align-items-center justify-content-center">
               {!listing.address && <img src="images/origin-icon-white.svg" alt="Origin zero" />}

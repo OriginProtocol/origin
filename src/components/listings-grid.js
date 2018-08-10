@@ -23,9 +23,10 @@ class ListingsGrid extends Component {
   render() {
     const { listingsPerPage } = this.state
     const { contractFound, listingIds, hideList } = this.props
-    const pinnedListingIds = [0, 1, 2, 3, 4]
+    // const pinnedListingIds = [0, 1, 2, 3, 4]
+    // const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
+    const arrangedListingIds = listingIds
     const activePage = this.props.match.params.activePage || 1
-    const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
     // Calc listings to show for given page
     const showListingsIds = arrangedListingIds.slice(
       listingsPerPage * (activePage - 1),
@@ -51,7 +52,7 @@ class ListingsGrid extends Component {
         )}
         {contractFound && (
           <div className="listings-grid">
-            {listingIds.length > 0 && 
+            {listingIds.length > 0 &&
               <h1>
                 <FormattedMessage
                   id={ 'listings-grid.listingsCount' }
@@ -83,7 +84,7 @@ class ListingsGrid extends Component {
 }
 
 const mapStateToProps = state => ({
-  listingIds: state.listings.ids,
+  listingIds: state.marketplace.ids,
   hideList: state.listings.hideList,
   contractFound: state.listings.contractFound
 })

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'react-intl'
@@ -60,25 +60,12 @@ class ListingsDetail extends Component {
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
   }
 
-  async componentWillMount() {
-    if (this.props.listingAddress) {
-      // Load from IPFS
-      await this.loadListing()
-      await this.loadPurchases()
-      this.loadReviews()
-    }
-    else if (this.props.listingJson) {
-      const obj = Object.assign({}, this.props.listingJson, { loading: false })
-      // Listing json passed in directly
-      this.setState(obj)
-    }
-  }
-
   async loadListing() {
     try {
-      const listing = await origin.listings.get(this.props.listingAddress)
+      const rawListing = await origin.marketplace.getListing(this.props.listingAddress)
+      const listing = rawListing.ipfsData.data
       const translatedListing = translateListingCategory(listing)
-      const obj = Object.assign({}, translatedListing, { loading: false })
+      const obj = Object.assign({}, translatedListing, { loading: false, status: rawListing.status })
       this.setState(obj)
     } catch (error) {
       this.props.showAlert(this.props.formatMessage(this.intlMessages.loadingError))
@@ -87,38 +74,10 @@ class ListingsDetail extends Component {
     }
   }
 
-  async loadPurchases() {
-    const { listingAddress } = this.props
-
-    try {
-      const length = await origin.listings.purchasesLength(listingAddress)
-      console.log('Purchase count:', length)
-
-      for (let i = 0; i < length; i++) {
-        let purchaseAddress = await origin.listings.purchaseAddressByIndex(listingAddress, i)
-        let purchase = await origin.purchases.get(purchaseAddress)
-        console.log('Purchase:', purchase)
-
-        this.setState((prevState) => {
-          return { purchases: [...prevState.purchases, purchase] }
-        })
-      }
-    } catch(error) {
-      console.error(`Error fetching purchases for listing: ${listingAddress}`)
-      console.error(error)
-    }
-  }
-
   async loadReviews() {
-    const { purchases } = this.state
-
     try {
-      const reviews = await Promise.all(
-        purchases.map(p => origin.reviews.find({ purchaseAddress: p.address }))
-      )
-      const flattened = [].concat(...reviews)
-      console.log('Reviews:', flattened)
-      this.setState({ reviews: flattened })
+      const reviews = await origin.marketplace.getListingReviews(this.props.listingAddress)
+      this.setState({ reviews })
     } catch(error) {
       console.error(error)
       console.error(`Error fetching reviews`)
@@ -129,8 +88,7 @@ class ListingsDetail extends Component {
     if (this.props.listingAddress) {
       // Load from IPFS
       await this.loadListing()
-      await this.loadPurchases()
-      this.loadReviews()
+      await this.loadReviews()
     }
     else if (this.props.listingJson) {
       const obj = Object.assign({}, this.props.listingJson, { loading: false })
@@ -152,11 +110,16 @@ class ListingsDetail extends Component {
       const totalPrice = (unitsToBuy * this.state.price)
       try {
         this.setState({ step: this.STEP.PROCESSING })
-        const { created, transactionReceipt } = await origin.listings.buy(this.state.address, unitsToBuy, totalPrice, this.props.updateTransaction)
+        const transactionReceipt = await origin.marketplace.makeOffer(
+          this.props.listingAddress,
+          { price: totalPrice },
+          (confirmationCount, transactionReceipt) => {
+            this.props.updateTransaction(confirmationCount, transactionReceipt)
+          }
+        )
         this.props.upsertTransaction({
           ...transactionReceipt,
-          created,
-          transactionTypeKey: 'buyListing',
+          transactionTypeKey: 'buyListing'
         })
         this.setState({ step: this.STEP.PURCHASED })
       } catch (error) {
@@ -171,8 +134,8 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    const unitsAvailable = parseInt(this.state.unitsAvailable) // convert string to integer
-    const buyersReviews = this.state.reviews.filter(r => r.revieweeRole === 'SELLER')
+    const isActive = this.state.status === 'active'
+    const buyersReviews = this.state.reviews
     const userIsSeller = this.state.sellerAddress === this.props.web3Account
 
     return (
@@ -394,13 +357,13 @@ class ListingsDetail extends Component {
                                       {Number(price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH
                                     </div>
                                   </div> */}
-                  {!this.state.loading && this.state.address &&
+                  {!this.state.loading &&
                     <div className="btn-container">
-                      {!!unitsAvailable && !userIsSeller &&
+                      {isActive && !userIsSeller &&
                         <button
                           className="btn btn-primary"
                           onClick={this.handleBuyClicked}
-                          disabled={!this.state.address}
+                          // disabled={!this.state.address}
                           onMouseDown={e => e.preventDefault()}
                         >
                           <FormattedMessage
@@ -409,10 +372,10 @@ class ListingsDetail extends Component {
                           />
                         </button>
                       }
-                      {!!unitsAvailable && userIsSeller &&
+                      {isActive && userIsSeller &&
                         <Link to="/my-listings" className="btn">My Listings</Link>
                       }
-                      {!unitsAvailable &&
+                      {!isActive &&
                         <div className="sold-banner">
                           <img src="images/sold-tag.svg" role="presentation" />
                           <FormattedMessage

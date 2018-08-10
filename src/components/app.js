@@ -52,7 +52,7 @@ const CreateListingPage = () => (
 )
 
 const PurchaseDetailPage = props => (
-  <PurchaseDetail purchaseAddress={props.match.params.purchaseAddress} />
+  <PurchaseDetail offerId={props.match.params.offerId} />
 )
 
 const UserPage = props => <User userAddress={props.match.params.userAddress} />
@@ -92,7 +92,7 @@ class App extends Component {
 
   render() {
     return this.props.selectedLanguageCode ? (
-      <IntlProvider 
+      <IntlProvider
         locale={this.props.selectedLanguageCode}
         defaultLocale="en-US"
         messages={this.props.messages}
@@ -112,7 +112,7 @@ class App extends Component {
                     <Route path="/create" component={CreateListingPage} />
                     <Route path="/my-listings" component={MyListings} />
                     <Route
-                      path="/purchases/:purchaseAddress"
+                      path="/purchases/:offerId"
                       component={PurchaseDetailPage}
                     />
                     <Route path="/my-purchases" component={MyPurchases} />

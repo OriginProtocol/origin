@@ -9,6 +9,8 @@ import { fetchUser } from 'actions/User'
 
 import PurchaseProgress from 'components/purchase-progress'
 
+import { translateListingCategory } from 'utils/translationUtils'
+
 class MySaleCard extends Component {
   constructor(props) {
     super(props)
@@ -49,36 +51,22 @@ class MySaleCard extends Component {
     const { listing, purchase, user } = this.props
 
     if (!listing) {
-      console.error(`Listing not found for purchase ${purchase.address}`)
+      console.error(`Listing not found for purchase ${purchase.id}`)
       return null
     }
 
-    const { name, pictures } = listing
-    const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
+    const { name, pictures, price } = translateListingCategory(listing.ipfsData.data)
     const buyerName = (user && user.profile && `${user.profile.firstName} ${user.profile.lastName}`) || this.props.intl.formatMessage(this.intlMessages.unnamedUser)
-    const price = `${Number(listing.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ${this.props.intl.formatMessage(this.intlMessages.ETH)}` // change to priceEth
-    const soldAt = purchase.created * 1000 // convert seconds since epoch to ms
-
-    let step
-
-    if (purchase.stage === 'complete') {
-      step = 4
-    } else if (purchase.stage === 'seller_pending') {
-      step = 3
-    } else if (purchase.stage === 'buyer_pending') {
-      step = 2
-    } else if (purchase.stage === 'in_escrow') {
-      step = 1
-    } else {
-      step = 0
-    }
+    const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
+    const soldAt = Number(purchase.createdAt) * 1000 // convert seconds since epoch to ms
+    const step = Number(purchase.status)
 
     return (
       <div className="sale card">
         <div className="card-body">
           <div className="d-flex flex-column flex-lg-row">
             <div className="purchase order-3 order-lg-1">
-              <h2 className="title"><Link to={`/purchases/${purchase.address}`}>{name}</Link></h2>
+              <h2 className="title"><Link to={`/purchases/${purchase.id}`}>{name}</Link></h2>
               <h2 className="title">
                 <FormattedMessage
                   id={ 'my-sale-card.buyerNameLink' }
@@ -110,7 +98,7 @@ class MySaleCard extends Component {
           </div>
           <PurchaseProgress currentStep={step} purchase={purchase} perspective="seller" subdued={true} />
           <div className="d-flex justify-content-between actions">
-            {step === 1 && 
+            {step === 1 &&
               <p>
                 <FormattedMessage
                   id={ 'my-sale-card.nextStep1' }
@@ -119,7 +107,7 @@ class MySaleCard extends Component {
                 />
               </p>
             }
-            {step === 2 && 
+            {step === 2 &&
               <p>
                 <FormattedMessage
                   id={ 'my-sale-card.nextStep2' }
@@ -127,7 +115,7 @@ class MySaleCard extends Component {
                   values={{ nextStep: <strong>Next Step:</strong> }}
                 />
             </p>}
-            {step === 3 && 
+            {step === 3 &&
               <p>
                 <FormattedMessage
                   id={ 'my-sale-card.nextStep3' }
@@ -136,7 +124,7 @@ class MySaleCard extends Component {
                 />
               </p>
             }
-            {step === 4 && 
+            {step === 4 &&
               <p>
                 <FormattedMessage
                   id={ 'my-sale-card.orderComplete' }
@@ -145,7 +133,7 @@ class MySaleCard extends Component {
               </p>
             }
             <p className="link-container">
-              <Link to={`/purchases/${purchase.address}`}>
+              <Link to={`/purchases/${purchase.id}`}>
                 <FormattedMessage
                   id={ 'my-sale-card.viewDetails' }
                   defaultMessage={ 'View Details' }

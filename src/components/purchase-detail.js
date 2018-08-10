@@ -21,8 +21,6 @@ import { translateListingCategory } from 'utils/translationUtils'
 
 import origin from '../services/origin'
 
-const web3 = origin.contractService.web3
-
 const defaultState = {
   buyer: {},
   form: {
@@ -30,7 +28,6 @@ const defaultState = {
     reviewText: '',
   },
   listing: {},
-  logs: [],
   processing: false,
   purchase: {},
   reviews: [],
@@ -174,98 +171,19 @@ class PurchaseDetail extends Component {
     $('[data-toggle="tooltip"]').tooltip()
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { address, buyerAddress, listingAddress } = this.state.purchase
-    const { sellerAddress } = this.state.listing
-
-    if (prevState.purchase.listingAddress !== listingAddress) {
-      this.loadListing(listingAddress)
-      this.loadBuyer(buyerAddress)
-      this.loadReviews(listingAddress)
-    }
-
-    if (prevState.listing.sellerAddress !== sellerAddress) {
-      this.loadSeller(sellerAddress)
-    }
-
-    // detect route param change and reload data
-    if (address && address !== this.props.purchaseAddress) {
-      this.setState(defaultState)
-
-      this.loadPurchase()
-    }
-  }
-
-  async loadListing(addr) {
-    try {
-      const listing = await origin.listings.get(addr)
-      this.setState({ listing })
-      console.log('Listing: ', listing)
-    } catch(error) {
-      console.error(`Error loading listing ${addr}`)
-      console.error(error)
-    }
-  }
-
   async loadPurchase() {
-    const { purchaseAddress } = this.props
+    const { offerId } = this.props
 
     try {
-      const purchase = await origin.purchases.get(purchaseAddress)
-      console.log(purchase)
-      this.setState({ purchase })
-      console.log('Purchase: ', purchase)
-
-      const logs = await origin.purchases.getLogs(purchaseAddress)
-      this.setState({ logs })
-      console.log('Logs: ', logs)
-
-      return purchase
+      const purchase = await origin.marketplace.getOffer(offerId)
+      const listing = await origin.marketplace.getListing(purchase.listingId)
+      const reviews = await origin.marketplace.getListingReviews(offerId)
+      this.setState({ purchase, listing, reviews })
+      await this.loadSeller(listing.seller)
+      await this.loadBuyer(purchase.buyer)
     } catch(error) {
-      console.error(`Error loading purchase ${purchaseAddress}`)
+      console.error(`Error loading purchase ${offerId}`)
       console.error(error)
-    }
-  }
-
-  async getPurchaseAddress(addr, i) {
-    try {
-      return await origin.listings.purchaseAddressByIndex(addr, i)
-    } catch(error) {
-      console.error(`Error fetching purchase address at: ${i}`)
-    }
-  }
-
-  async loadPurchases(listingAddress) {
-    try {
-      const length = await origin.listings.purchasesLength(listingAddress)
-      console.log('Purchase count:', length)
-
-      const purchaseAddresses = await Promise.all(
-        [...Array(length).keys()].map(i => this.getPurchaseAddress(listingAddress, i))
-      )
-
-      return await Promise.all(
-        purchaseAddresses.map(addr => origin.purchases.get(addr))
-      )
-    } catch(error) {
-      console.error(`Error fetching purchases for listing: ${listingAddress}`)
-      console.error(error)
-    }
-  }
-
-  async loadReviews(listingAddress) {
-    try {
-      const purchases = await this.loadPurchases(listingAddress)
-      console.log('PURCHASES', purchases)
-      const reviews = await Promise.all(
-        purchases.map(p => origin.reviews.find({ purchaseAddress: p.address }))
-      )
-      const flattened = [].concat(...reviews)
-      console.log('Reviews:', flattened)
-      this.setState({ reviews: flattened })
-    } catch(error) {
-      console.error(error)
-      console.error(`Error fetching reviews`)
     }
   }
 
@@ -273,7 +191,7 @@ class PurchaseDetail extends Component {
     try {
       const user = await origin.users.get(addr)
       this.setState({ buyer: { ...user, address: addr } })
-      console.log('Buyer: ', this.state.buyer)
+      // console.log('Buyer: ', this.state.buyer)
     } catch(error) {
       console.error(`Error loading buyer ${addr}`)
       console.error(error)
@@ -284,7 +202,7 @@ class PurchaseDetail extends Component {
     try {
       const user = await origin.users.get(addr)
       this.setState({ seller: { ...user, address: addr } })
-      console.log('Seller: ', this.state.seller)
+      // console.log('Seller: ', this.state.seller)
     } catch(error) {
       console.error(`Error loading seller ${addr}`)
       console.error(error)
@@ -292,47 +210,52 @@ class PurchaseDetail extends Component {
   }
 
   async confirmReceipt() {
-    const { purchaseAddress } = this.props
+    const { offerId } = this.props
     const { rating, reviewText } = this.state.form
+    const { purchase, listing } = this.state
+    const offer = purchase
 
     try {
       this.setState({ processing: true })
 
-      const { created, transactionReceipt } = await origin.purchases.buyerConfirmReceipt(purchaseAddress, {
+      const transactionReceipt = await origin.marketplace.finalizeOffer(offerId, {
         rating,
         reviewText: reviewText.trim(),
       }, (confirmationCount, transactionReceipt) => {
         // Having a transaction receipt doesn't guarantee that the purchase state will have changed.
         // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
         this.loadPurchase()
-        this.loadReviews(this.state.listing.address)
 
         this.props.updateTransaction(confirmationCount, transactionReceipt)
       })
 
       this.props.upsertTransaction({
         ...transactionReceipt,
-        created,
+        offer,
+        listing,
         transactionTypeKey: 'confirmReceipt',
       })
 
       this.setState({ processing: false })
     } catch(error) {
       this.setState({ processing: false })
-      
+
       console.error('Error marking purchase received by buyer')
       console.error(error)
     }
   }
 
   async confirmShipped() {
-    const { purchaseAddress } = this.props
+    const { offerId } = this.props
+    const { purchase, listing } = this.state
+    const offer = purchase
 
     try {
       this.setState({ processing: true })
 
-      const { created, transactionReceipt } = await origin.purchases.sellerConfirmShipped(
-        purchaseAddress,
+      const transactionReceipt = await origin.marketplace.acceptOffer(
+        offerId,
+        {},
         (confirmationCount, transactionReceipt) => {
           // Having a transaction receipt doesn't guarantee that the purchase state will have changed.
           // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
@@ -344,41 +267,44 @@ class PurchaseDetail extends Component {
 
       this.props.upsertTransaction({
         ...transactionReceipt,
-        created,
         transactionTypeKey: 'confirmShipped',
+        offer,
+        listing
       })
 
       this.setState({ processing: false })
     } catch(error) {
       this.setState({ processing: false })
-      
+
       console.error('Error marking purchase shipped by seller')
       console.error(error)
     }
   }
 
   async withdrawFunds() {
-    const { purchaseAddress } = this.props
+    const { offerId } = this.props
     const { rating, reviewText } = this.state.form
+    const { purchase, listing } = this.state
+    const offer = purchase
 
     try {
       this.setState({ processing: true })
 
-      const { created, transactionReceipt } = await origin.purchases.sellerGetPayout(purchaseAddress, {
+      const transactionReceipt = await origin.marketplace.addData(null, offerId, {
         rating,
         reviewText: reviewText.trim(),
       }, (confirmationCount, transactionReceipt) => {
         // Having a transaction receipt doesn't guarantee that the purchase state will have changed.
         // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
         this.loadPurchase()
-        this.loadReviews(this.state.listing.address)
 
         this.props.updateTransaction(confirmationCount, transactionReceipt)
       })
 
       this.props.upsertTransaction({
         ...transactionReceipt,
-        created,
+        offer,
+        listing,
         transactionTypeKey: 'getPayout',
       })
 
@@ -391,15 +317,12 @@ class PurchaseDetail extends Component {
     }
   }
 
-  /*
-  * rating: 1 <= integer <= 5
-  */
+  // rating: 1 <= integer <= 5
   handleRating(rating) {
     this.setState(prevState => {
       return { form: { ...prevState.form, rating } }
     })
   }
-
 
   handleReviewText(e) {
     const { value } = e.target
@@ -412,82 +335,50 @@ class PurchaseDetail extends Component {
   render() {
     const { web3Account } = this.props
 
-    const { buyer, form, listing, logs, processing, purchase, reviews, seller } = this.state
+    const { buyer, form, listing, processing, purchase, reviews, seller } = this.state
     const translatedListing = translateListingCategory(listing)
     const { rating, reviewText } = form
-    const buyersReviews = reviews.filter(r => r.revieweeRole === 'SELLER')
 
-    if (!purchase.address || !listing.address ){
+    if (!purchase.ipfsData || !listing.ipfsData ){
       return null
     }
 
     let perspective
     // may potentially be neither buyer nor seller
-    if (web3Account === purchase.buyerAddress) {
+    if (web3Account === purchase.buyer) {
       perspective = 'buyer'
-    } else if (web3Account === listing.sellerAddress) {
+    } else if (web3Account === listing.seller) {
       perspective = 'seller'
     }
 
     const pictures = listing.pictures || []
-    const category = translatedListing.category || ""
-    const active = listing.unitsAvailable > 0 // Todo, move to origin.js, take into account listing expiration
-    const soldAt = purchase.created * 1000 // convert seconds since epoch to ms
+    const active = listing.status === 'active' // Todo, move to origin.js, take into account listing expiration
+    const soldAt = purchase.createdAt * 1000 // convert seconds since epoch to ms
 
-    // log events
-    const paymentEvent = logs.find(l => l.stage === 'in_escrow')
-    const paidAt = paymentEvent ? paymentEvent.timestamp * 1000 : null
-    const fulfillmentEvent = logs.find(l => l.stage === 'buyer_pending')
-    const fulfilledAt = fulfillmentEvent ? fulfillmentEvent.timestamp * 1000 : null
-    const receiptEvent = logs.find(l => l.stage === 'seller_pending')
-    const receivedAt = receiptEvent ? receiptEvent.timestamp * 1000 : null
-    const withdrawalEvent = logs.find(l => l.stage === 'complete')
-    const withdrawnAt = withdrawalEvent ? withdrawalEvent.timestamp * 1000 : null
-    const reviewedAt = null
-    const price = `${Number(listing.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH` // change to priceEth
+    const paymentEvent = purchase.events.find(l => l.event === 'OfferCreated')
+    const fulfillmentEvent = purchase.events.find(l => l.event === 'OfferAccepted') // TODO this is not the equivalent step. Fix later
+    const receiptEvent = purchase.events.find(l => l.event === 'OfferFinalized')
+    const withdrawalEvent = purchase.events.find(l => l.event === 'OfferData' && l.returnValues.party === listing.seller) // TODO assumes OfferData event is seller review
+
+    const priceEth = origin.contractService.web3.utils.fromWei(purchase.value || purchase.ipfsData.data.price, 'ether')
+    const price = `${Number(priceEth).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH` // change to priceEth
 
     const counterparty = ['buyer', 'seller'].find(str => str !== perspective)
     const counterpartyUser = counterparty === 'buyer' ? buyer : seller
     const status = active ? 'active' : 'inactive'
     const maxStep = perspective === 'seller' ? 4 : 3
-    let decimal, left, step
-
-    if (purchase.stage === 'complete') {
-      step = 4
-    } else if (purchase.stage === 'seller_pending') {
-      step = 3
-    } else if (purchase.stage === 'buyer_pending') {
-      step = 2
-    } else if (purchase.stage === 'in_escrow') {
-      step = 1
-    } else {
-      step = 0
-    }
-
-    if (!step) {
-      left = '28px'
-    } else if (step === 1) {
-      if (perspective === 'buyer') {
-        left = '28px'
-      } else {
-        decimal = step / (maxStep - 1)
-        left = `calc(${decimal * 100}% + ${decimal * 28}px)`
-      }
-    } else if (step >= maxStep - 1) {
-      left = 'calc(100% - 28px)'
-    } else {
-      decimal = (step - 1) / (maxStep - 1)
-      left = `calc(${decimal * 100}% + ${decimal * 28}px)`
-    }
+    const step = Number(purchase.status)
+    const left = progressTriangleOffset(step, maxStep, perspective)
 
     const nextStep = perspective && this.nextSteps[step]
     const { buttonText, functionName, instruction, placeholderText, prompt, reviewable } = nextStep ? nextStep[perspective] : {}
-    const buyerName = (buyer.profile && `${buyer.profile.firstName} ${buyer.profile.lastName}`) ||
+
+    const buyerName = buyer.profile ? `${buyer.profile.firstName} ${buyer.profile.lastName}` :
             <FormattedMessage
               id={ 'purchase-detail.unnamedUser' }
               defaultMessage={ 'Unnamed User' }
             />
-    const sellerName = (seller.profile && `${seller.profile.firstName} ${seller.profile.lastName}`) ||
+    const sellerName = seller.profile ? `${seller.profile.firstName} ${seller.profile.lastName}` :
             <FormattedMessage
               id={ 'purchase-detail.unnamedUser' }
               defaultMessage={ 'Unnamed User' }
@@ -576,8 +467,8 @@ class PurchaseDetail extends Component {
                 {nextStep &&
                   <div className="col-12">
                     <div className="guidance text-center">
-                      <div className="triangle" style={{ left }}></div>
-                      <div className="triangle" style={{ left }}></div>
+                      <div className="triangle" style={{ left }} />
+                      <div className="triangle" style={{ left }} />
                       <div className="prompt">
                         <strong>
                           <FormattedMessage
@@ -677,23 +568,10 @@ class PurchaseDetail extends Component {
                   </tr>
                 </thead>
                 <tbody>
-
-                  {paidAt &&
-                    <TransactionEvent timestamp={paidAt} eventName="Payment received" transaction={paymentEvent} buyer={buyer} seller={seller} />
-                  }
-
-                  {fulfilledAt &&
-                    <TransactionEvent timestamp={fulfilledAt} eventName="Sent by seller" transaction={fulfillmentEvent} buyer={buyer} seller={seller} />
-                  }
-
-                  {receivedAt &&
-                    <TransactionEvent timestamp={receivedAt} eventName="Received by buyer" transaction={receiptEvent} buyer={buyer} seller={seller} />
-                  }
-
-                  {withdrawnAt &&
-                    <TransactionEvent timestamp={withdrawnAt} eventName="Funds withdrawn" transaction={withdrawalEvent} buyer={buyer} seller={seller} />
-                  }
-
+                  <TransactionEvent eventName="Payment received" transaction={paymentEvent} buyer={buyer} seller={seller} />
+                  <TransactionEvent eventName="Sent by seller" transaction={fulfillmentEvent} buyer={buyer} seller={seller} />
+                  <TransactionEvent eventName="Received by buyer" transaction={receiptEvent} buyer={buyer} seller={seller} />
+                  <TransactionEvent eventName="Seller reviewed" transaction={withdrawalEvent} buyer={buyer} seller={seller} />
                 </tbody>
               </table>
               <hr />
@@ -749,9 +627,9 @@ class PurchaseDetail extends Component {
                     id={ 'purchase-detail.reviewsHeading' }
                     defaultMessage={ 'Reviews' }
                   />
-                  &nbsp;<span className="review-count">{Number(buyersReviews.length).toLocaleString()}</span>
+                  &nbsp;<span className="review-count">{Number(reviews.length).toLocaleString()}</span>
                 </h2>
-                {buyersReviews.map(r => <Review key={r.transactionHash} review={r} />)}
+                {reviews.map(r => <Review key={r.transactionHash} review={r} />)}
                 {/* To Do: pagination */}
                 {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
               </div>
@@ -794,7 +672,6 @@ class PurchaseDetail extends Component {
                       defaultMessage={ 'This listing is {status}' }
                       values={{ status }}
                     />
-                    
                   </div>
                 </div>
               }
@@ -820,6 +697,28 @@ class PurchaseDetail extends Component {
       </div>
     )
   }
+}
+
+function progressTriangleOffset(step, maxStep, perspective) {
+  let decimal, left
+
+  if (!step) {
+    left = '28px'
+  } else if (step === 1) {
+    if (perspective === 'buyer') {
+      left = '28px'
+    } else {
+      decimal = step / (maxStep - 1)
+      left = `calc(${decimal * 100}% + ${decimal * 28}px)`
+    }
+  } else if (step >= maxStep - 1) {
+    left = 'calc(100% - 28px)'
+  } else {
+    decimal = (step - 1) / (maxStep - 1)
+    left = `calc(${decimal * 100}% + ${decimal * 28}px)`
+  }
+
+  return left
 }
 
 const mapStateToProps = state => {

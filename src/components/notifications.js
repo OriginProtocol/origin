@@ -4,12 +4,9 @@ import { connect } from 'react-redux'
 
 import Notification from 'components/notification'
 
-import origin from '../services/origin'
-
 class Notifications extends Component {
   constructor(props) {
     super(props)
-
     this.state = { filter: 'all' }
   }
 
@@ -18,14 +15,19 @@ class Notifications extends Component {
     const { filter } = this.state
     const notificationsWithPerspective = notifications.map(n => {
       const { sellerAddress } = n.resources.listing
-
-      return {...n, perspective: web3Account === sellerAddress ? 'seller' : 'buyer' }
+      return {
+        ...n,
+        perspective: web3Account === sellerAddress ? 'seller' : 'buyer'
+      }
     })
-    const filteredNotifications = filter === 'all' ? 
-                                  notificationsWithPerspective :
-                                  notificationsWithPerspective.filter(n => {
-                                    return filter === 'unread' ? n.status === 'unread' : (n.perspective === filter)
-                                  })
+    const filteredNotifications =
+      filter === 'all'
+        ? notificationsWithPerspective
+        : notificationsWithPerspective.filter(n => {
+            return filter === 'unread'
+              ? n.status === 'unread'
+              : n.perspective === filter
+          })
 
     return (
       <div className="notifications-wrapper">
