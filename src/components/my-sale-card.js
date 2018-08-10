@@ -57,7 +57,7 @@ class MySaleCard extends Component {
 
     const { name, pictures, price } = translateListingCategory(listing.ipfsData.data)
     const buyerName = (user && user.profile && `${user.profile.firstName} ${user.profile.lastName}`) || this.props.intl.formatMessage(this.intlMessages.unnamedUser)
-    const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
+    const photo = pictures && pictures.length > 0 && pictures[0]
     const soldAt = Number(purchase.createdAt) * 1000 // convert seconds since epoch to ms
     const step = Number(purchase.status)
 

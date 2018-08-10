@@ -37,7 +37,7 @@ class ListingCard extends Component {
 
   render() {
     const { category, loading, name, pictures, price, unitsAvailable, shouldRender } = this.state
-    const photo = pictures && pictures.length && (new URL(pictures[0])).protocol === "data:" && pictures[0]
+    const photo = pictures && pictures.length && pictures[0]
 
     if (!shouldRender) return false
 

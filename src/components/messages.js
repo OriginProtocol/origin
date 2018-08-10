@@ -197,7 +197,7 @@ class Messages extends Component {
     const { counterparty, listing, messages, purchase, selectedConversationId } = this.state
     const { address, name, pictures } = listing
     const { buyerAddress, created } = purchase
-    const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
+    const photo = pictures && pictures.length > 0 && pictures[0]
     const perspective = buyerAddress ? (buyerAddress === web3Account ? 'buyer' : 'seller') : null
     const soldAt = created ? created * 1000 /* convert seconds since epoch to ms */ : null
     const canDeliverMessage = origin.messaging.canConverseWith(counterparty.address)

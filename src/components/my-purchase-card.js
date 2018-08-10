@@ -64,7 +64,7 @@ class MyPurchaseCard extends Component {
     }
 
     const timestamp = `${verb} on ${this.props.intl.formatDate(soldAt)}`
-    const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
+    const photo = pictures && pictures.length > 0 && pictures[0]
 
     return (
       <div className={`purchase card${this.state.loading ? ' loading' : ''}`}>

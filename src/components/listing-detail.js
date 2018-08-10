@@ -235,9 +235,7 @@ class ListingsDetail extends Component {
           <div className="carousel">
             {this.state.pictures.map(pictureUrl => (
               <div className="photo" key={pictureUrl}>
-                {(new URL(pictureUrl).protocol === "data:") &&
-                  <img src={pictureUrl} role='presentation' />
-                }
+                <img src={pictureUrl} role='presentation' />
               </div>
             ))}
           </div>

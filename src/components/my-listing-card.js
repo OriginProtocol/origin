@@ -68,7 +68,7 @@ class MyListingCard extends Component {
     const { category, name, pictures } = translateListingCategory(listing.ipfsData.data)
     const status = listing.status
     // const timestamp = `Created on ${moment(createdAt).format('MMMM D, YYYY')}`
-    const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
+    const photo = pictures && pictures.length > 0 && pictures[0]
 
     return (
       <div className="purchase card">
