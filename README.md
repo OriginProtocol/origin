@@ -1,4 +1,5 @@
 ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
+![origin_travis_banner](https://travis-ci.org/OriginProtocol/origin-dapp.svg?branch=master)
 
 # Origin Demo DApp
 This is an example DApp (Decentralized Application) that shows how easy it is to create a truly peer to peer marketplace on the Ethereum blockchain with **origin-js**. Using only javascript, you can create and purchase listings, leave reviews, check identity, and more.
@@ -10,7 +11,7 @@ To learn more about Origin Protocol, please read our [product brief](https://www
 
 ## Try Demo Dapp on the Rinkeby testnet
 
-This demo is currently running on the Rinkeby testnet. (Note that this demo is slightly behind the current state of this repo.) 
+This demo is currently running on the Rinkeby testnet. (Note that this demo is slightly behind the current state of this repo.)
 - [Overview and step-by-step instructions](https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58)
 - [Live Demo](http://demo.originprotocol.com)
 
@@ -24,7 +25,7 @@ Make sure you have `node` version 8.5.0 or greater
 node --version
 ```
 
-### 2. Set up DApp 
+### 2. Set up DApp
 
 In a new tab:
 ```
@@ -73,7 +74,7 @@ npm run install:dev
 npm run start
 ```
 
-The `install:dev` script performs the regular install and then links to your local origin-js from step 1. Changes made to origin-js code will then immediately reflected in Demo DApp without requiring `npm install`. 
+The `install:dev` script performs the regular install and then links to your local origin-js from step 1. Changes made to origin-js code will then immediately reflected in Demo DApp without requiring `npm install`.
 
 Your browser will open to [http://localhost:3000](http://localhost:3000) and display the DApp.
 
@@ -96,15 +97,15 @@ This is the default seed phrase used by [Truffle](https://github.com/trufflesuit
 - You should see your first test account now has 100 ETH and the address `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`. Additional generated accounts will also have this amount.
 
 ## Localization
-See [translations](translations) directory. 
+See [translations](translations) directory.
 
 ## Deploy on Heroku or IPFS
 
-To deploy a development copy of the site on Heroku, choose which branch you would like to use and follow the instructions: 
+To deploy a development copy of the site on Heroku, choose which branch you would like to use and follow the instructions:
 
-| `Master` branch <br>(stable) | `Develop` branch<br> (active development) | 
+| `Master` branch <br>(stable) | `Develop` branch<br> (active development) |
 |---------|----------|
-| [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/originprotocol/demo-dapp/tree/master) | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/originprotocol/demo-dapp/tree/develop) | 
+| [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/originprotocol/demo-dapp/tree/master) | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/originprotocol/demo-dapp/tree/develop) |
 
 Heroku will prompt you to set some config variables. You will likely want to stick with the defaults which use [Origin's IPFS Gateway](https://gateway.originprotocol.com) and [Bridge Server](https://github.com/originprotocol/origin-bridge). We also recommend using [Infura](https://infura.io/) for connecting to Ethereum even when visitors don't have web3-enabled browsers.
 
@@ -114,6 +115,6 @@ Since this app is just a bunch of HTML and JavaScript, you can also deploy and u
 
 ## Contributing
 
-Origin is an 100% open-source and community-driven project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community. 
+Origin is an 100% open-source and community-driven project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community.
 
 To get involved, please join our [Discord channel](https://discord.gg/jyxpUSe) and review our [guide to contributing](https://docs.originprotocol.com/#contributing).
