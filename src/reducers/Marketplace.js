@@ -2,7 +2,6 @@ import { ListingConstants } from 'actions/Listing'
 
 const initialState = {
   ids: [],
-  hideList: [],
   contractFound: true
 }
 
