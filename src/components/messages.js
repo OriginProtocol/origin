@@ -5,8 +5,7 @@ import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 
 import ConversationListItem from 'components/conversation-list-item'
-import Message from 'components/message'
-import GroupedMessages from 'components/grouped_messages'
+import CompactMessages from 'components/compact_messages'
 import PurchaseProgress from 'components/purchase-progress'
 
 import groupByArray from 'utils/groupByArray'
@@ -262,7 +261,7 @@ class Messages extends Component {
                 </div>
               }
               <div ref={this.conversationDiv} className="conversation">
-                <GroupedMessages messages={messages}/>
+                <CompactMessages messages={messages}/>
               </div>
               {selectedConversationId &&
                 <form className="add-message d-flex" onSubmit={this.handleSubmit}>

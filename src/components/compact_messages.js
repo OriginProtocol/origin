@@ -10,9 +10,9 @@ function getElapsedTime(recentTime, previousTime) {
   return isNaN(elapsedTime) ? 0 : elapsedTime
 }
 
-const GroupedMessages = ({ messages=[] }) => (
+const CompactMessages = ({ messages=[] }) => (
   messages.map((message, i) => {
-    const { senderAddress, created, hash, content } = message;
+    const { senderAddress, created, hash, content } = message
     const previousMessage = i == 0 ? {} : messages[i-1]
     const differentSender = senderAddress !== previousMessage.senderAddress
     const timeElapsed = getElapsedTime(created, previousMessage.created)
@@ -20,9 +20,10 @@ const GroupedMessages = ({ messages=[] }) => (
     if ((timeElapsed >= MAX_MINUTES) || differentSender) {
       return <Message key={hash} message={message} />
     }
+
     return (
-      <div className="d-flex" key={hash}>
-        <div className="pl-4 ml-5">
+      <div className="d-flex compact-message" key={hash}>
+        <div className="pl-5">
           {content}
         </div>
       </div>
@@ -30,4 +31,4 @@ const GroupedMessages = ({ messages=[] }) => (
   })
 )
 
-export default GroupedMessages
+export default CompactMessages
