@@ -159,6 +159,7 @@ class Footer extends Component {
                       <a
                         href="https://github.com/OriginProtocol"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <FormattedMessage
                           id={'footer.githubLink'}
@@ -167,7 +168,11 @@ class Footer extends Component {
                       </a>
                     </li>
                     <li>
-                      <a href="http://docs.originprotocol.com/" target="_blank">
+                      <a
+                        href="http://docs.originprotocol.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         <FormattedMessage
                           id={'footer.docsLink'}
                           defaultMessage={'Docs'}
@@ -185,7 +190,11 @@ class Footer extends Component {
                   </div>
                   <ul className="footer-links">
                     <li>
-                      <a href="https://t.me/originprotocol" target="_blank">
+                      <a
+                        href="https://t.me/originprotocol"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         <FormattedMessage
                           id={'footer.telegramLink'}
                           defaultMessage={'Telegram'}
@@ -193,7 +202,11 @@ class Footer extends Component {
                       </a>
                     </li>
                     <li>
-                      <a href="https://discord.gg/jyxpUSe" target="_blank">
+                      <a
+                        href="https://discord.gg/jyxpUSe"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         <FormattedMessage
                           id={'footer.discordLink'}
                           defaultMessage={'Discord'}
@@ -204,6 +217,7 @@ class Footer extends Component {
                       <a
                         href="https://medium.com/originprotocol"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <FormattedMessage
                           id={'footer.mediumLink'}
@@ -215,6 +229,7 @@ class Footer extends Component {
                       <a
                         href="https://www.reddit.com/r/originprotocol/"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <FormattedMessage
                           id={'footer.redditLink'}
@@ -249,6 +264,7 @@ class Footer extends Component {
                       <a
                         href="https://twitter.com/originprotocol"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <FormattedMessage
                           id={'footer.twitterLink'}
@@ -260,6 +276,7 @@ class Footer extends Component {
                       <a
                         href="https://instagram.com/originprotocol"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <FormattedMessage
                           id={'footer.instagramLink'}
@@ -271,6 +288,7 @@ class Footer extends Component {
                       <a
                         href="https://www.facebook.com/originprotocol"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <FormattedMessage
                           id={'footer.facebookLink'}
@@ -282,6 +300,7 @@ class Footer extends Component {
                       <a
                         href="http://www.youtube.com/c/originprotocol"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <FormattedMessage
                           id={'footer.youtubeLink'}
