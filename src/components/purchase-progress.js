@@ -6,47 +6,18 @@ class PurchaseProgress extends Component {
   constructor(props) {
     super(props)
 
-    this.calculateProgress = this.calculateProgress.bind(this)
     this.state = {
       currentStep: props.currentStep,
       maxStep: props.maxStep,
-      progressCalculated: false,
+      progressCalculated: true,
       progressWidth: '0%',
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    this.deriveCurrentStep()
-    this.deriveMaxStep()
-    this.calculateProgress()
-  }
-
-  calculateProgress() {
-    const { currentStep, maxStep } = this.props
-    const progressWidth = currentStep > 1 ? `${(currentStep - 1) / (maxStep - 1) * 100}%` : `${currentStep * 10}px`
-
-    if (this.state.progressWidth !== progressWidth) {
-      this.setState({ progressCalculated: true, progressWidth })
-    }
-  }
-
-  deriveMaxStep() {
-    const { maxStep, perspective } = this.props
-    let step = typeof maxStep === 'number' ? maxStep : perspective === 'seller' ? 4 : 3
-
-    if (this.state.maxStep !== step) {
-      this.setState({ maxStep: step })
-    }
-  }
-
-  deriveCurrentStep() {
-    const { currentStep } = this.props
-    this.setState({ currentStep })
-  }
-
   render() {
-    const { perspective, subdued } = this.props
-    const { currentStep, maxStep, progressCalculated, progressWidth } = this.state
+    const { perspective, subdued, currentStep, maxStep } = this.props
+    const { progressCalculated } = this.state
+    const progressWidth = currentStep > 1 ? `${(currentStep - 1) / (maxStep - 1) * 100}%` : `${currentStep * 10}px`
 
     // timestamps not yet available
     const soldAt = !!currentStep
