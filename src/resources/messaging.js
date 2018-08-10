@@ -90,25 +90,25 @@ class InsertOnlyKeystore {
     }
   }
 
-  verify(signature, key, data) {
+  async verify(signature, key, data) {
     try {
       const message = JSON.parse(data)
       const obj = this.getSignVerify(message.id)
       if (obj && obj.verifyFunc) {
         if (message.payload.op == 'PUT' || message.payload.op == 'ADD') {
           // verify all for now
-          if (obj.verifyFunc(signature, key, message, data)) {
+          if (await obj.verifyFunc(signature, key, message, data)) {
             if (obj.postFunc) {
               obj.postFunc(message)
             }
-            return Promise.resolve(true)
+            return true
           }
         }
       }
     } catch (error) {
       console.error(error)
     }
-    return Promise.reject(false)
+    throw new Error('Cannot verify signature')
   }
 }
 
@@ -239,7 +239,6 @@ class Messaging extends ResourceBase {
 
   async initRemote() {
     this.ipfs = this.ipfsCreator(this.account_key)
-    console.log('CREATING IPFS NOW!')
 
     return new Promise((resolve, reject) => {
       this.ipfs
@@ -263,10 +262,10 @@ class Messaging extends ResourceBase {
           main_keystore.registerSignVerify(
             this.GLOBAL_KEYS,
             this.signRegistry.bind(this),
-            this.verifyRegistrySignature.bind(this)
+            this.verifyRegistrySignature.bind(this),
+            this.postVerifyRegistry.bind(this)
           )
 
-          console.log('CREATING GLOBAL ORBIT DB NOW!')
           // took a hint from peerpad
           this.global_keys = await this.main_orbit.kvstore(
             this.GLOBAL_KEYS,
@@ -298,14 +297,34 @@ class Messaging extends ResourceBase {
     return this.account.sign(data).signature
   }
 
-  verifySignature() {
+  async verifySignature() {
     return (/* signature, key, data */) => {
       // pass through for now
       return true
     }
   }
 
-  verifyRegistrySignature(signature, key, message) {
+  postVerifyRegistry(message) {
+    const set_key = message.payload.key
+    this.events.emit('registered-' + set_key, message.payload.value)
+  }
+
+  async getRegisteredKey(key) {
+    const entry = this.global_keys.get(key)
+    if (entry) {
+      return entry
+    } else {
+      return new Promise(resolve => {
+        //resolve to nothing after a second
+        setTimeout(resolve, 5000)
+        this.events.on('registered-' + key, entry => {
+          resolve(entry)
+        })
+      })
+    }
+  }
+
+  async verifyRegistrySignature(signature, key, message) {
     const value = message.payload.value
     const set_key = message.payload.key
     const verify_address = web3.eth.accounts.recover(value.msg, signature)
@@ -320,12 +339,12 @@ class Messaging extends ResourceBase {
     return false
   }
 
-  verifyMessageSignature(signature, key, message, buffer) {
+  async verifyMessageSignature(signature, key, message, buffer) {
     const verify_address = web3.eth.accounts.recover(
       buffer.toString('utf8'),
       signature
     )
-    const entry = this.global_keys.get(key)
+    const entry = await this.getRegisteredKey(key)
     // only two addresses should have write access to here
     if (entry && entry.address == verify_address) {
       return true
@@ -333,7 +352,7 @@ class Messaging extends ResourceBase {
     return false
   }
 
-  verifyConversationSignature(signature, key, message, buffer) {
+  async verifyConversationSignature(signature, key, message, buffer) {
     const verify_address = web3.eth.accounts.recover(
       buffer.toString('utf8'),
       signature
@@ -341,7 +360,7 @@ class Messaging extends ResourceBase {
     const eth_address = message.id.substr(-42) //hopefully the last 42 is the eth address
     if (key == message.payload.key || key == eth_address) {
       // only one of the two conversers can set this parameter
-      const entry = this.global_keys.get(key)
+      const entry = await this.getRegisteredKey(key)
       if (entry.address == verify_address) {
         return true
       }
@@ -430,7 +449,7 @@ class Messaging extends ResourceBase {
     }
     if (this.sharedRooms[key]) {
       if (this.sharedRooms[key] == 'wait') {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
           this.events.on('SharedRoom.' + key, room => {
             console.log('Returning shared room:', key)
             resolve(room)
@@ -440,7 +459,6 @@ class Messaging extends ResourceBase {
         return this.sharedRooms[key]
       }
     } else {
-      console.log('CREATING SHARED DB:', key)
       this.sharedRooms[key] = 'wait'
       const r = await this.main_orbit[db_type](
         room_id,
@@ -661,6 +679,7 @@ class Messaging extends ResourceBase {
           this.processMessage(room_id, room)
         })
         room.events.on('replicated', (/* dbname */) => {
+          console.log('process Message from replicated')
           this.processMessage(room_id, room)
         })
       }
@@ -707,17 +726,18 @@ class Messaging extends ResourceBase {
   canConverseWith(remote_eth_address) {
     const { account_key, global_keys } = this
 
-    return this.canSendMessages() &&
-           account_key !== remote_eth_address &&
-           global_keys &&
-           global_keys.get(remote_eth_address)
+    return (
+      this.canSendMessages() &&
+      account_key !== remote_eth_address &&
+      global_keys &&
+      global_keys.get(remote_eth_address)
+    )
   }
 
   canReceiveMessages(remote_eth_address) {
     const { global_keys } = this
 
-    return global_keys &&
-           global_keys.get(remote_eth_address)
+    return global_keys && global_keys.get(remote_eth_address)
   }
 
   canSendMessages() {
@@ -823,7 +843,9 @@ class Messaging extends ResourceBase {
     )
     // convert stored timestamp string to date
     const subscriptionStart = new Date(
-      +localStorage.getItem(`${storeKeys.messageSubscriptionStart}:${this.account_key}`)
+      +localStorage.getItem(
+        `${storeKeys.messageSubscriptionStart}:${this.account_key}`
+      )
     )
     const isWatched = created > subscriptionStart
     const status =
