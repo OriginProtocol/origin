@@ -2483,7 +2483,7 @@ form .stars img {
 }
 
 .conversation .compact-message {
-  margin: -20px auto 20px 25px
+  margin: -20px auto 20px 25px;
 }
 
 .conversation .message:first-of-type {
