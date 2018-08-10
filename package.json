@@ -23,7 +23,7 @@
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "dotenv": "^6.0.0",
-    "ipfs-api": "^22.2.1",
+    "ipfs": "^0.31.4",
     "libp2p-switch": "^0.40.4",
     "lodash": "^4.17.10",
     "orbit-db": "^0.19.8",
