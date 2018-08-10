@@ -16,6 +16,12 @@ import origin from '../../services/origin'
 const ONE_SECOND = 1000
 
 class MessagesDropdown extends Component {
+  constructor(props) {
+    super(props)
+
+    this.handleClick = this.handleClick.bind(this)
+  }
+
   componentDidMount() {
     $(document).on('click', '.messages .dropdown-menu', e => {
       e.stopPropagation()
@@ -33,6 +39,10 @@ class MessagesDropdown extends Component {
     if (!isOnMessagingRoute && hasNewUnreadMessage && dropdownHidden) {
       $('#messagesDropdown').dropdown('toggle')
     }
+  }
+
+  handleClick(e) {
+    $('#messagesDropdown').dropdown('toggle')
   }
 
   render() {
@@ -88,7 +98,7 @@ class MessagesDropdown extends Component {
             <div className="messages-list">
               {conversations.map(c => <ConversationListItem key={c.key} conversation={c} active={false} handleConversationSelect={() => history.push(`/messages/${c.key}`)} />)}
             </div>
-            <Link to="/messages">
+            <Link to="/messages" onClick={this.handleClick}>
               <footer>
                 <FormattedMessage
                   id={ 'messagesDropdown.viewAll' }

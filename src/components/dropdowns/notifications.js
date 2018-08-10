@@ -12,6 +12,12 @@ import Notification from 'components/notification'
 import origin from '../../services/origin'
 
 class NotificationsDropdown extends Component {
+  constructor(props) {
+    super(props)
+
+    this.handleClick = this.handleClick.bind(this)
+  }
+
   componentDidMount() {
     $(document).on('click', '.notifications .dropdown-menu', e => {
       e.stopPropagation()
@@ -33,6 +39,10 @@ class NotificationsDropdown extends Component {
     if (!isOnNotificationsRoute && hasNewUnreadNotification && dropdownHidden) {
       $('#notificationsDropdown').dropdown('toggle')
     }
+  }
+
+  handleClick(e) {
+    $('#notificationsDropdown').dropdown('toggle')
   }
 
   render() {
@@ -76,7 +86,7 @@ class NotificationsDropdown extends Component {
                 {notifications.map(n => <Notification key={`dropdown-notification:${n.id}`} notification={n} />)}
               </ul>
             </div>
-            <Link to="/notifications">
+            <Link to="/notifications" onClick={this.handleClick}>
               <footer>
                 <FormattedMessage
                   id={ 'notificationsDropdown.viewAll' }

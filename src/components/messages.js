@@ -42,7 +42,7 @@ class Messages extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { conversations, match, messages } = this.props
+    const { conversations, match, messages, users } = this.props
     const { conversation, selectedConversationId } = this.state
     const { conversationId } = match.params
     const changedSelectedConversationId = selectedConversationId !== prevState.selectedConversationId
@@ -94,6 +94,10 @@ class Messages extends Component {
       this.setState({ messages: messagesFiltered.sort((a, b) => a.index < b.index ? -1 : 1) })
     }
 
+    if (users.length > prevProps.users.length) {
+      this.identifyCounterparty()
+    }
+
     // auto-scroll to most recent message
     const el = this.conversationDiv.current
 
@@ -136,7 +140,7 @@ class Messages extends Component {
       recipients.find(addr => addr !== senderAddress) :
       senderAddress
     const counterparty = users.find(u => u.address === address) || {}
-
+console.log('users', users.length)
     this.setState({ counterparty })
   }
 
