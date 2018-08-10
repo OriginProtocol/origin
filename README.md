@@ -1,4 +1,5 @@
 ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
+![origin_travis_banner](https://travis-ci.org/OriginProtocol/origin-dapp.svg?branch=master)
 
 # Origin Demo DApp
 This is an example DApp (Decentralized Application) that shows how easy it is to create a truly peer to peer marketplace on the Ethereum blockchain with **origin-js**. Using only javascript, you can create and purchase listings, leave reviews, check identity, and more.
