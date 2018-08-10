@@ -27,9 +27,7 @@ class Message extends Component {
     if (contentOnly) {
       return (
         <div className="d-flex compact-message">
-          <div className="pl-5">
-            {content}
-          </div>
+          {content}
         </div>
       )
     }
