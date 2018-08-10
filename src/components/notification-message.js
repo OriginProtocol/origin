@@ -11,7 +11,7 @@ class NotificationMessage extends Component {
     this.intlMessages = defineMessages({
       shippingPending: {
         id: 'notification.purchaseCreated',
-        defaultMessage: 'You have a new purchase.',
+        defaultMessage: 'You have a new sale.',
       },
       buyerPending: {
         id: 'notification.purchaseSent',

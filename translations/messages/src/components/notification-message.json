@@ -1,7 +1,7 @@
 [
   {
     "id": "notification.purchaseCreated",
-    "defaultMessage": "You have a new purchase."
+    "defaultMessage": "You have a new sale."
   },
   {
     "id": "notification.purchaseSent",
