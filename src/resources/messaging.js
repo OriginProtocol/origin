@@ -10,9 +10,9 @@ const PROMPT_PUB_KEY = 'My public messaging key is: '
 const MESSAGING_KEY = 'MK_'
 const PUB_MESSAGING_SIG = 'PMS_'
 const PUB_MESSAGING = 'KEY_'
-const GLOBAL_KEYS = 'global'
-const CONV_INIT_PREFIX = 'convo-init-'
-const CONV = 'conv'
+const PRE_GLOBAL_KEYS = ':global'
+const PRE_CONV_INIT_PREFIX = ':convo-init-'
+const PRE_CONV = ':conv'
 const UNREAD_STATUS = 'unread'
 const READ_STATUS = 'read'
 
@@ -90,30 +90,36 @@ class InsertOnlyKeystore {
     }
   }
 
-  verify(signature, key, data) {
+  async verify(signature, key, data) {
     try {
       const message = JSON.parse(data)
       const obj = this.getSignVerify(message.id)
       if (obj && obj.verifyFunc) {
         if (message.payload.op == 'PUT' || message.payload.op == 'ADD') {
           // verify all for now
-          if (obj.verifyFunc(signature, key, message, data)) {
+          if (await obj.verifyFunc(signature, key, message, data)) {
             if (obj.postFunc) {
               obj.postFunc(message)
             }
-            return Promise.resolve(true)
+            return true
           }
         }
       }
     } catch (error) {
       console.error(error)
     }
-    return Promise.reject(false)
+    throw new Error('Cannot verify signature')
   }
 }
 
 class Messaging extends ResourceBase {
-  constructor({ contractService, ipfsCreator, OrbitDB, ecies }) {
+  constructor({
+    contractService,
+    ipfsCreator,
+    OrbitDB,
+    ecies,
+    messagingNamespace
+  }) {
     super({ contractService })
     this.web3 = this.contractService.web3
     this.ipfsCreator = ipfsCreator
@@ -122,6 +128,9 @@ class Messaging extends ResourceBase {
     this.convs = {}
     this.ecies = ecies
     this.events = new EventEmitter()
+    this.GLOBAL_KEYS = messagingNamespace + PRE_GLOBAL_KEYS
+    this.CONV = messagingNamespace + PRE_CONV
+    this.CONV_INIT_PREFIX = messagingNamespace + PRE_CONV_INIT_PREFIX
   }
 
   onAccount(account_key) {
@@ -158,22 +167,29 @@ class Messaging extends ResourceBase {
     this.events.emit('new', this.account_key)
     // just start it up here
     if (await this.initRemote()) {
-      this.pub_sig = localStorage.getItem(`${PUB_MESSAGING_SIG}:${this.account_key}`)
-      this.pub_msg = localStorage.getItem(`${PUB_MESSAGING}:${this.account_key}`)
+      this.pub_sig = localStorage.getItem(
+        `${PUB_MESSAGING_SIG}:${this.account_key}`
+      )
+      this.pub_msg = localStorage.getItem(
+        `${PUB_MESSAGING}:${this.account_key}`
+      )
 
       this.initConvs()
       this.events.emit('initialized', this.account_key)
       if (this.convs_enabled || this.getMessagingKey()) {
         this.initKeys()
       }
-    } 
-    // bootstrap read status
-    const scopedSubStartKeyName = `${storeKeys.messageSubscriptionStart}:${this.account_key}`
-    if (!localStorage.getItem(scopedSubStartKeyName)) {
-      localStorage.setItem(scopedSubStartKeyName, JSON.stringify(Date.now())
-      )
     }
-    const scopedStatusesKeyName = `${storeKeys.messageStatuses}:${this.account_key}`
+    // bootstrap read status
+    const scopedSubStartKeyName = `${storeKeys.messageSubscriptionStart}:${
+      this.account_key
+    }`
+    if (!localStorage.getItem(scopedSubStartKeyName)) {
+      localStorage.setItem(scopedSubStartKeyName, JSON.stringify(Date.now()))
+    }
+    const scopedStatusesKeyName = `${storeKeys.messageStatuses}:${
+      this.account_key
+    }`
     if (!localStorage.getItem(scopedStatusesKeyName)) {
       localStorage.setItem(scopedStatusesKeyName, JSON.stringify({}))
     }
@@ -183,17 +199,18 @@ class Messaging extends ResourceBase {
     this.ipfs.swarm.peers().then(peers => {
       const peer_ids = peers.map(x => x.peer._idB58String)
       if (
-        peer_ids && !this.last_peers ||
-        peer_ids && peer_ids.sort().join() !== this.last_peers.sort().join()
+        (peer_ids && !this.last_peers) ||
+        (peer_ids && peer_ids.sort().join() !== this.last_peers.sort().join())
       ) {
         this.last_peers = peer_ids
+        console.log('New peers:', this.last_peers)
       }
     })
   }
 
   initConvs() {
     this.main_orbit.keystore.registerSignVerify(
-      CONV_INIT_PREFIX,
+      this.CONV_INIT_PREFIX,
       this.signInitPair.bind(this),
       this.verifyConversationSignature.bind(this),
       message => {
@@ -202,12 +219,13 @@ class Messaging extends ResourceBase {
           this.events.emit('pending_conv', message.payload.key)
           const remote_address = message.payload.key
           this.startConvoRoom(remote_address)
-          this.getConvo(remote_address)
+          // this is probably not needed
+          // this.getConvo(remote_address)
         }
       }
     )
     this.main_orbit.keystore.registerSignVerify(
-      CONV,
+      this.CONV,
       this.signInitPair.bind(this),
       this.verifyMessageSignature.bind(this)
     )
@@ -242,14 +260,15 @@ class Messaging extends ResourceBase {
           )
 
           main_keystore.registerSignVerify(
-            GLOBAL_KEYS,
+            this.GLOBAL_KEYS,
             this.signRegistry.bind(this),
-            this.verifyRegistrySignature.bind(this)
+            this.verifyRegistrySignature.bind(this),
+            this.postVerifyRegistry.bind(this)
           )
 
           // took a hint from peerpad
           this.global_keys = await this.main_orbit.kvstore(
-            GLOBAL_KEYS,
+            this.GLOBAL_KEYS,
             this.orbitStoreOptions({ write: ['*'] })
           )
 
@@ -278,19 +297,40 @@ class Messaging extends ResourceBase {
     return this.account.sign(data).signature
   }
 
-  verifySignature() {
+  async verifySignature() {
     return (/* signature, key, data */) => {
       // pass through for now
       return true
     }
   }
 
-  verifyRegistrySignature(signature, key, message) {
+  postVerifyRegistry(message) {
+    const set_key = message.payload.key
+    this.events.emit('registered-' + set_key, message.payload.value)
+  }
+
+  async getRegisteredKey(key) {
+    const entry = this.global_keys.get(key)
+    if (entry) {
+      return entry
+    } else {
+      return new Promise(resolve => {
+        //resolve to nothing after a second
+        setTimeout(resolve, 5000)
+        this.events.on('registered-' + key, entry => {
+          resolve(entry)
+        })
+      })
+    }
+  }
+
+  async verifyRegistrySignature(signature, key, message) {
     const value = message.payload.value
     const set_key = message.payload.key
     const verify_address = web3.eth.accounts.recover(value.msg, signature)
     if (verify_address == set_key && value.msg.includes(value.address)) {
-      const extracted_address = '0x' + web3.utils.sha3(value.pub_key).substr(-40)
+      const extracted_address =
+        '0x' + web3.utils.sha3(value.pub_key).substr(-40)
       if (extracted_address == value.address.toLowerCase()) {
         const verify_ph_address = web3.eth.accounts.recover(value.ph, value.phs)
         return verify_ph_address == value.address
@@ -299,12 +339,12 @@ class Messaging extends ResourceBase {
     return false
   }
 
-  verifyMessageSignature(signature, key, message, buffer) {
+  async verifyMessageSignature(signature, key, message, buffer) {
     const verify_address = web3.eth.accounts.recover(
       buffer.toString('utf8'),
       signature
     )
-    const entry = this.global_keys.get(key)
+    const entry = await this.getRegisteredKey(key)
     // only two addresses should have write access to here
     if (entry && entry.address == verify_address) {
       return true
@@ -312,7 +352,7 @@ class Messaging extends ResourceBase {
     return false
   }
 
-  verifyConversationSignature(signature, key, message, buffer) {
+  async verifyConversationSignature(signature, key, message, buffer) {
     const verify_address = web3.eth.accounts.recover(
       buffer.toString('utf8'),
       signature
@@ -320,7 +360,7 @@ class Messaging extends ResourceBase {
     const eth_address = message.id.substr(-42) //hopefully the last 42 is the eth address
     if (key == message.payload.key || key == eth_address) {
       // only one of the two conversers can set this parameter
-      const entry = this.global_keys.get(key)
+      const entry = await this.getRegisteredKey(key)
       if (entry.address == verify_address) {
         return true
       }
@@ -408,14 +448,24 @@ class Messaging extends ResourceBase {
       key = room_id + '-' + writers.join('-')
     }
     if (this.sharedRooms[key]) {
-      return this.sharedRooms[key]
+      if (this.sharedRooms[key] == 'wait') {
+        return new Promise(resolve => {
+          this.events.on('SharedRoom.' + key, room => {
+            console.log('Returning shared room:', key)
+            resolve(room)
+          })
+        })
+      } else {
+        return this.sharedRooms[key]
+      }
     } else {
+      this.sharedRooms[key] = 'wait'
       const r = await this.main_orbit[db_type](
         room_id,
         this.orbitStoreOptions({ write: writers })
       )
       this.sharedRooms[key] = r
-
+      this.events.emit('SharedRoom.' + key, r)
       if (onShare) {
         onShare(r)
       }
@@ -440,7 +490,7 @@ class Messaging extends ResourceBase {
   }
 
   getConvo(eth_address) {
-    const room = CONV_INIT_PREFIX + eth_address
+    const room = this.CONV_INIT_PREFIX + eth_address
     return this.getShareRoom(room, 'kvstore', ['*'])
   }
 
@@ -517,7 +567,9 @@ class Messaging extends ResourceBase {
     )
     // convert stored timestamp string to date
     const subscriptionStart = new Date(
-      +localStorage.getItem(`${storeKeys.messageSubscriptionStart}:${this.account_key}`)
+      +localStorage.getItem(
+        `${storeKeys.messageSubscriptionStart}:${this.account_key}`
+      )
     )
 
     ops.forEach((entry, index) => {
@@ -564,7 +616,7 @@ class Messaging extends ResourceBase {
     const conv_obj = this.convs[room_id]
 
     if (conv_obj) {
-      const room = this.sharedRooms[CONV + '-' + room_id]
+      const room = this.sharedRooms[this.CONV + '-' + room_id]
       const ops = room._index.get()
       const messages = []
       ops.forEach((entry, index) => {
@@ -581,7 +633,7 @@ class Messaging extends ResourceBase {
     const conv_obj = this.convs[room_id]
 
     if (conv_obj) {
-      const room = this.sharedRooms[CONV + '-' + room_id]
+      const room = this.sharedRooms[this.CONV + '-' + room_id]
       const ops = room._index.get()
       const messages = []
       ops.forEach(entry => {
@@ -598,7 +650,7 @@ class Messaging extends ResourceBase {
     const conv_obj = this.convs[room_id]
 
     if (conv_obj) {
-      const room = this.sharedRooms[CONV + '-' + room_id]
+      const room = this.sharedRooms[this.CONV + '-' + room_id]
       const ops = room._index.get()
       let messages_count = 0
       ops.forEach(entry => {
@@ -615,17 +667,23 @@ class Messaging extends ResourceBase {
   async startConvoRoom(remote_eth_address) {
     const writers = [this.account_key, remote_eth_address].sort()
     const room_id = this.generateRoomId(...writers)
-    const room = await this.getShareRoom(CONV, 'eventlog', writers, room => {
-      room.events.on('write', (/* dbname, entry, items */) => {
-        this.processMessage(room_id, room)
-      })
-      room.events.on('ready', (/* dbname, entry, items */) => {
-        this.processMessage(room_id, room)
-      })
-      room.events.on('replicated', (/* dbname */) => {
-        this.processMessage(room_id, room)
-      })
-    })
+    const room = await this.getShareRoom(
+      this.CONV,
+      'eventlog',
+      writers,
+      room => {
+        room.events.on('write', (/* dbname, entry, items */) => {
+          this.processMessage(room_id, room)
+        })
+        room.events.on('ready', (/* dbname, entry, items */) => {
+          this.processMessage(room_id, room)
+        })
+        room.events.on('replicated', (/* dbname */) => {
+          console.log('process Message from replicated')
+          this.processMessage(room_id, room)
+        })
+      }
+    )
     return room
   }
 
@@ -665,11 +723,27 @@ class Messaging extends ResourceBase {
     }
   }
 
-  canConverse(remote_eth_address) {
-    if (remote_eth_address != this.account_key) {
-      return this.global_keys && this.global_keys.get(remote_eth_address)
-    }
-    return false
+  canConverseWith(remote_eth_address) {
+    const { account_key, global_keys } = this
+
+    return (
+      this.canSendMessages() &&
+      account_key !== remote_eth_address &&
+      global_keys &&
+      global_keys.get(remote_eth_address)
+    )
+  }
+
+  canReceiveMessages(remote_eth_address) {
+    const { global_keys } = this
+
+    return global_keys && global_keys.get(remote_eth_address)
+  }
+
+  canSendMessages() {
+    const { account, account_key } = this
+
+    return account && account_key
   }
 
   async startConv(remote_eth_address) {
@@ -761,10 +835,32 @@ class Messaging extends ResourceBase {
     return room_id
   }
 
+  // messages supplied by the 'msg' event have status included
+  // this is a convenience method for tracking status on spoofed messages
+  getStatus({ created, hash }) {
+    const messageStatuses = JSON.parse(
+      localStorage.getItem(`${storeKeys.messageStatuses}:${this.account_key}`)
+    )
+    // convert stored timestamp string to date
+    const subscriptionStart = new Date(
+      +localStorage.getItem(
+        `${storeKeys.messageSubscriptionStart}:${this.account_key}`
+      )
+    )
+    const isWatched = created > subscriptionStart
+    const status =
+      isWatched && messageStatuses && messageStatuses[hash] === READ_STATUS
+        ? READ_STATUS
+        : UNREAD_STATUS
+    return status
+  }
+
   // we allow the entire message to be passed in (for consistency with other resources + convenience)
   // however all we are updating is the status
   set({ hash, status }) {
-    const scopedStatusesKeyName = `${storeKeys.messageStatuses}:${this.account_key}`
+    const scopedStatusesKeyName = `${storeKeys.messageStatuses}:${
+      this.account_key
+    }`
     const messageStatuses = JSON.parse(
       localStorage.getItem(scopedStatusesKeyName)
     )

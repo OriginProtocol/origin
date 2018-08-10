@@ -1,0 +1,14 @@
+{
+  "$id":"unit-purchase.json",
+  "title": "UnitPurchase",
+  "type": "object",
+  "required": ["units"],
+  "properties": {
+    "units": {
+      "type": "number"
+    },
+    "purchaseType": {
+      "type": "string"
+    }
+  }
+}

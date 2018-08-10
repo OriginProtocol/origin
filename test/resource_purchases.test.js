@@ -55,7 +55,8 @@ describe('Purchase Resource', function() {
     const schema = 'for-sale'
     const listingTransactionObj = await listings.create(listingData, schema)
 
-    const listingEvent = listingTransactionObj.transactionReceipt.events.NewListing
+    const listingEvent =
+      listingTransactionObj.transactionReceipt.events.NewListing
     listing = await listings.getByIndex(listingEvent.returnValues._index)
 
     // Buy listing to create a purchase
@@ -66,7 +67,8 @@ describe('Purchase Resource', function() {
         return await listings.buy(listing.address, 1, listing.price - 0.1)
       }
     )
-    const purchaseEvent = purchaseTransactionObj.transactionReceipt.events.ListingPurchased
+    const purchaseEvent =
+      purchaseTransactionObj.transactionReceipt.events.ListingPurchased
     purchase = await purchases.get(purchaseEvent.returnValues._purchaseContract)
   }
 
@@ -84,7 +86,8 @@ describe('Purchase Resource', function() {
     }
     const listingTransactionObj = await listings.create(listingData)
 
-    const listingEvent = listingTransactionObj.transactionReceipt.events.NewListing
+    const listingEvent =
+      listingTransactionObj.transactionReceipt.events.NewListing
     listing = await listings.getByIndex(listingEvent.returnValues._index)
 
     // Buy listing to create a purchase
@@ -98,7 +101,8 @@ describe('Purchase Resource', function() {
         return await listings.request(listing.address, purchaseData, 1)
       }
     )
-    const purchaseEvent = purchaseTransactionObj.transactionReceipt.events.ListingPurchased
+    const purchaseEvent =
+      purchaseTransactionObj.transactionReceipt.events.ListingPurchased
     purchase = await purchases.get(purchaseEvent.returnValues._purchaseContract)
   }
 
@@ -242,7 +246,9 @@ describe('Purchase Resource', function() {
         contractService.web3.utils.toWei('0.1', 'ether')
       )
       expect(purchaseTransactionObj.created).to.match(/^[0-9]{10}$/)
-      expect(purchaseTransactionObj.transactionReceipt.transactionHash).to.match(/^0x([A-Fa-f0-9]{64})$/)
+      expect(
+        purchaseTransactionObj.transactionReceipt.transactionHash
+      ).to.match(/^0x([A-Fa-f0-9]{64})$/)
     })
   })
 
