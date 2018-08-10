@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import moment from 'moment'
 import { FormattedMessage } from 'react-intl'
 
 class PurchaseProgress extends Component {

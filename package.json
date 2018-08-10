@@ -116,7 +116,8 @@
       }
     },
     "globals": {
-      "web3": true
+      "web3": true,
+      "originTest": true
     },
     "env": {
       "browser": true,

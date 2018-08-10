@@ -1,7 +1,7 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 
-const NotFound = props => {
+const NotFound = () => {
   return (
     <div className="container">
       <div className="row">

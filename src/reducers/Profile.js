@@ -73,7 +73,7 @@ function changes(state) {
 }
 
 function unpackUser(state) {
-  let user = state.user || {},
+  const user = state.user || {},
     profile = user.profile || {},
     attestations = user.attestations || [],
     firstName = profile.firstName,
@@ -123,7 +123,7 @@ export default function Profile(state = initialState, action = {}) {
     return unpackUser({ ...state, user: action.user })
 
   case ProfileConstants.ADD_ATTESTATION:
-    var toAdd = {}
+    const toAdd = {}
     if (action.attestation.claimType === 3) {
       toAdd.facebook = action.attestation
     } else if (action.attestation.claimType === 4) {

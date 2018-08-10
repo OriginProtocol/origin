@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 import $ from 'jquery'
 
 import Transaction from '../transaction'
@@ -35,7 +34,7 @@ class TransactionsDropdown extends Component {
     }
   }
 
-  handleClick(e) {
+  handleClick() {
     this.setState({
       hideList: this.props.transactions.map(
         ({ confirmationCount, transactionHash }) => {
@@ -51,7 +50,7 @@ class TransactionsDropdown extends Component {
     const { transactions } = this.props
     const { hideList } = this.state
     const transactionsNotHidden = transactions.filter(
-      (t, i) => !hideList.includes(t.transactionHash)
+      (t) => !hideList.includes(t.transactionHash)
     )
     const transactionsNotCompleted = transactions.filter(
       t => t.confirmationCount < CONFIRMATION_COMPLETION_COUNT
@@ -153,7 +152,7 @@ class TransactionsDropdown extends Component {
             </header>
             <div className="transactions-list">
               <ul className="list-group">
-                {transactionsNotHidden.map((transaction, i) => (
+                {transactionsNotHidden.map((transaction) => (
                   <Transaction
                     key={transaction.transactionHash}
                     transaction={transaction}

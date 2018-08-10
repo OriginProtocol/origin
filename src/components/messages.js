@@ -136,7 +136,7 @@ class Messages extends Component {
   async findPurchase() {
     const { web3Account } = this.props
     const { counterparty, listing, purchase } = this.state
-    const { address, sellerAddress } = listing
+    const { address } = listing
     const len = await origin.listings.purchasesLength(address)
     const purchaseAddresses = await Promise.all(
       [...Array(len).keys()].map(async i => {
@@ -163,8 +163,8 @@ class Messages extends Component {
   }
 
   identifyCounterparty() {
-    const { conversations, users, web3Account } = this.props
-    const { conversation, selectedConversationId } = this.state
+    const { users, web3Account } = this.props
+    const { conversation } = this.state
     const { recipients, senderAddress } = conversation.values[0]
     const counterpartyRole =
       senderAddress === web3Account ? 'recipient' : 'sender'
@@ -188,7 +188,6 @@ class Messages extends Component {
   async handleSubmit(e) {
     e.preventDefault()
 
-    const { web3Account } = this.props
     const { selectedConversationId } = this.state
     const el = this.textarea.current
     const newMessage = el.value
@@ -210,7 +209,7 @@ class Messages extends Component {
   }
 
   async loadListing() {
-    const { conversation, selectedConversationId } = this.state
+    const { conversation } = this.state
     // find the most recent listing context or set empty value
     const { listingAddress } =
       conversation.values

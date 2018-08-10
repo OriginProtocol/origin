@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { defineMessages, injectIntl } from 'react-intl'
 
 // support other derived notifications in the future

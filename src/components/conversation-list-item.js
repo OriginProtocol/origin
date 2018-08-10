@@ -6,8 +6,6 @@ import { fetchUser } from 'actions/User'
 
 import Avatar from 'components/avatar'
 
-import origin from '../services/origin'
-
 class ConversationListItem extends Component {
   constructor(props) {
     super(props)
@@ -51,14 +49,13 @@ class ConversationListItem extends Component {
       active,
       conversation,
       handleConversationSelect,
-      key,
       users,
       web3Account
     } = this.props
     const lastMessage = conversation.values.sort(
       (a, b) => (a.created < b.created ? -1 : 1)
     )[conversation.values.length - 1]
-    const { content, created, recipients, senderAddress } = lastMessage
+    const { content, recipients, senderAddress } = lastMessage
     const role = senderAddress === web3Account ? 'sender' : 'recipient'
     const counterpartyAddress =
       role === 'sender'
@@ -69,7 +66,7 @@ class ConversationListItem extends Component {
     const unreadCount = conversation.values.filter(msg => {
       return msg.status === 'unread' && msg.senderAddress !== web3Account
     }).length
-    const { fullName, profile } = counterparty
+    const { profile } = counterparty
 
     return (
       <div

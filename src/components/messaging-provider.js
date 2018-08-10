@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component } from 'react'
 import { defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'

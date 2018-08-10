@@ -41,7 +41,6 @@ class MyListingCard extends Component {
       intl,
       listing,
       handleProcessing,
-      handleUpdate,
       updateTransaction
     } = this.props
     const { address } = listing

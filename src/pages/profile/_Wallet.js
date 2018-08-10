@@ -23,7 +23,7 @@ class Wallet extends Component {
   }
 
   render() {
-    const { address, balance, identityAddress } = this.props
+    const { address, balance } = this.props
     const userCanReceiveMessages = origin.messaging.canReceiveMessages(address)
 
     return (

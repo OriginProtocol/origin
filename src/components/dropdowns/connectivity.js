@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
-import { Link } from 'react-router-dom'
 import $ from 'jquery'
 
 import origin from '../../services/origin'

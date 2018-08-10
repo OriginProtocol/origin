@@ -10,7 +10,6 @@ import MessagesDropdown from 'components/dropdowns/messages'
 import NotificationsDropdown from 'components/dropdowns/notifications'
 import TransactionsDropdown from 'components/dropdowns/transactions'
 import UserDropdown from 'components/dropdowns/user'
-import Modal from 'components/modal'
 
 class NavBar extends Component {
   constructor(props) {

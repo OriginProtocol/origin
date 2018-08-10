@@ -1,10 +1,8 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
 
 import TransactionMessage from 'components/transaction-message'
-
-import transactionTypeMap from 'utils/transactionTypeMap'
 
 import origin from '../services/origin'
 

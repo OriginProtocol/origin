@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
+import { defineMessages, injectIntl } from 'react-intl'
 
 import PurchaseProgress from 'components/purchase-progress'
 

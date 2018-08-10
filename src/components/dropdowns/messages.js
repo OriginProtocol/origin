@@ -11,10 +11,6 @@ import ConversationListItem from 'components/conversation-list-item'
 
 import groupByArray from 'utils/groupByArray'
 
-import origin from '../../services/origin'
-
-const ONE_SECOND = 1000
-
 class MessagesDropdown extends Component {
   componentDidMount() {
     $(document).on('click', '.messages .dropdown-menu', e => {

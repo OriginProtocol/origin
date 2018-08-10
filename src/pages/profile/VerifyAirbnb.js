@@ -241,7 +241,7 @@ class VerifyAirbnb extends Component {
   }
 
   getUserIdFromAirbnbProfile(airbnbProfileUrl) {
-    const airbnbRegex = /https?\:\/\/www.airbnb.com\/users\/show\/(\d*)/g
+    const airbnbRegex = /https?:\/\/www.airbnb.com\/users\/show\/(\d*)/g
     const match = airbnbRegex.exec(airbnbProfileUrl)
 
     if (!match.length) {

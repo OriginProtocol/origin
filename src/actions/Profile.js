@@ -21,7 +21,7 @@ export const ProfileConstants = keyMirror(
 
 export function fetchProfile() {
   return async function(dispatch) {
-    let user = await origin.users.get(),
+    const user = await origin.users.get(),
       wallet = await origin.contractService.currentAccount()
 
     dispatch({

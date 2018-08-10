@@ -3,7 +3,6 @@ import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 
-import { showAlert } from 'actions/Alert'
 import { storeWeb3Account, storeWeb3Intent } from 'actions/App'
 
 import Modal from 'components/modal'
@@ -29,7 +28,6 @@ const ONE_SECOND = 1000
 const ONE_MINUTE = ONE_SECOND * 60
 
 // TODO (micah): potentially add a loading indicator
-const Loading = () => null
 
 const NotWeb3EnabledDesktop = props => (
   <Modal backdrop="static" className="not-web3-enabled" isOpen={true}>
@@ -374,7 +372,6 @@ class Web3Provider extends Component {
    * @return {void}
    */
   fetchNetwork() {
-    let called = false
     const providerExists = web3.currentProvider
     const networkConnected =
       web3.currentProvider.connected ||
@@ -396,8 +393,6 @@ class Web3Provider extends Component {
       networkConnected &&
       web3.version &&
       web3.eth.net.getId((err, netId) => {
-        called = true
-
         const networkId = parseInt(netId, 10)
 
         if (err) {

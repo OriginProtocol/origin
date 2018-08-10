@@ -9,8 +9,6 @@ import { dismissNotifications } from 'actions/App'
 
 import Notification from 'components/notification'
 
-import origin from '../../services/origin'
-
 class NotificationsDropdown extends Component {
   componentDidMount() {
     $(document).on('click', '.notifications .dropdown-menu', e => {

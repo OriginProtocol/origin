@@ -8,8 +8,6 @@ import { updateMessage } from 'actions/Message'
 
 import Avatar from 'components/avatar'
 
-import origin from '../services/origin'
-
 class Message extends Component {
   componentDidMount() {
     const { message } = this.props
