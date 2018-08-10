@@ -20,9 +20,19 @@ class Message extends Component {
   }
 
   render() {
-    const { enableMessaging, message, messagingEnabled, user } = this.props
+    const { enableMessaging, message, messagingEnabled, user, contentOnly } = this.props
     const { content, created, hash } = message
     const { address, fullName, profile } = user
+
+    if (contentOnly) {
+      return (
+        <div className="d-flex compact-message" key={hash}>
+          <div className="pl-5">
+            {content}
+          </div>
+        </div>
+      )
+    }
 
     return (
       <div className="d-flex message">

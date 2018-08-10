@@ -20,14 +20,7 @@ const CompactMessages = ({ messages=[] }) => (
     if ((timeElapsed >= MAX_MINUTES) || differentSender) {
       return <Message key={hash} message={message} />
     }
-
-    return (
-      <div className="d-flex compact-message" key={hash}>
-        <div className="pl-5">
-          {content}
-        </div>
-      </div>
-    )
+    return <Message key={hash} contentOnly={true} message={message} />
   })
 )
 
