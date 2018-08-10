@@ -5,7 +5,7 @@ import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 
 import ConversationListItem from 'components/conversation-list-item'
-import Message from 'components/message'
+import CompactMessages from 'components/compact-messages'
 import PurchaseProgress from 'components/purchase-progress'
 
 import groupByArray from 'utils/groupByArray'
@@ -70,8 +70,16 @@ class Messages extends Component {
       this.identifyCounterparty()
     }
 
+    // on new conversation values
+    if (prevState.conversation.values && conversation.values.length > prevState.conversation.values.length) {
+      this.loadListing()
+      this.identifyCounterparty()
+    }
+
     // on messages
     if (messages.length !== prevProps.messages.length && conversation.key) {
+      // update conversation with potentially new values
+      this.setState({ conversation: selectedConversation })
       this.loadListing()
     }
 
@@ -112,8 +120,8 @@ class Messages extends Component {
       return await origin.purchases.get(addr)
     }))
     const involvingCounterparty = purchases.filter(p => p.buyerAddress === counterparty.address || p.buyerAddress === web3Account)
-    const mostRecent = involvingCounterparty.sort((a, b) => a.created > b.created ? -1 : 1)[0] || {}
-    
+    const mostRecent = involvingCounterparty.sort((a, b) => a.index > b.index ? -1 : 1)[0] || {}
+
     if (mostRecent.address !== purchase.address) {
       this.setState({ purchase: mostRecent })
     }
@@ -169,12 +177,12 @@ class Messages extends Component {
     const { conversation, selectedConversationId } = this.state
     // find the most recent listing context or set empty value
     const { listingAddress } = conversation.values
-                               .sort((a, b) => a.created < b.created ? -1 : 1)
+                               .sort((a, b) => a.index > b.index ? -1 : 1)
                                .find(m => m.listingAddress) || {}
 
     const listing = listingAddress ? (await origin.listings.get(listingAddress)) : {}
 
-    if (listing.address && listing.address !== this.state.listing.address) {
+    if (listing.address !== this.state.listing.address) {
       this.setState({ listing })
       this.findPurchase()
     }
@@ -189,9 +197,10 @@ class Messages extends Component {
     const { counterparty, listing, messages, purchase, selectedConversationId } = this.state
     const { address, name, pictures } = listing
     const { buyerAddress, created } = purchase
-    const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
+    const photo = pictures && pictures.length > 0 && pictures[0]
     const perspective = buyerAddress ? (buyerAddress === web3Account ? 'buyer' : 'seller') : null
     const soldAt = created ? created * 1000 /* convert seconds since epoch to ms */ : null
+    const canDeliverMessage = origin.messaging.canConverseWith(counterparty.address)
 
     return (
       <div className="d-flex messages-wrapper">
@@ -261,9 +270,9 @@ class Messages extends Component {
                 </div>
               }
               <div ref={this.conversationDiv} className="conversation">
-                {messages.map(m => <Message key={m.hash} message={m} />)}
+                <CompactMessages messages={messages}/>
               </div>
-              {selectedConversationId &&
+              {canDeliverMessage && selectedConversationId &&
                 <form className="add-message d-flex" onSubmit={this.handleSubmit}>
                   <textarea
                     ref={this.textarea}
@@ -287,6 +296,7 @@ const mapStateToProps = state => {
   return {
     conversations: groupByArray(state.messages, 'conversationId'),
     messages: state.messages,
+    messagingEnabled: state.app.messagingEnabled,
     users: state.users,
     web3Account: state.app.web3.account,
   }

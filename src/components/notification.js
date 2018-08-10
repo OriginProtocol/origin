@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -58,11 +58,11 @@ class Notification extends Component {
     const { notification } = this.props
     const { counterpartyAddress, counterpartyName, listing, purchase } = this.state
     const { pictures } = listing
-    const listingImageURL = pictures && pictures.length && (new URL(pictures[0])).protocol === "data:" && pictures[0]
+    const listingImageURL = pictures && pictures.length && pictures[0]
 
     return (
       <li className="list-group-item notification">
-        <Link to={`/purchases/${purchase.address}`} onClick={this.handleClick}>
+        <Link to={`/purchases/${purchase.id}`} onClick={this.handleClick}>
           <div className="d-flex align-items-stretch">
             <div className="image-container d-flex align-items-center justify-content-center">
               {!listing.address && <img src="images/origin-icon-white.svg" alt="Origin zero" />}

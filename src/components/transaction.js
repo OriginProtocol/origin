@@ -20,22 +20,11 @@ class Transaction extends Component {
 
   async componentDidMount() {
     try {
-      const { events, transactionTypeKey } = this.props.transaction
-      const transactionType = transactionTypeMap[transactionTypeKey]
-      let listing, purchase
-
-      if (transactionTypeKey === 'buyListing') {
-        purchase = await origin.purchases.get(events[transactionType].returnValues[0])
-        listing = await origin.listings.get(purchase.listingAddress)
-      } else if (transactionTypeKey === 'closeListing') {
-        listing = await origin.listings.get(events[transactionType].returnValues._address)
-      } else if (transactionTypeKey === 'createListing') {
-        listing = await origin.listings.get(events[transactionType].returnValues._address)
-      } else if (['confirmReceipt', 'confirmShipped', 'getPayout'].includes(transactionTypeKey)) {
-        purchase = await origin.purchases.get(events[transactionType].address)
-        listing = await origin.listings.get(purchase.listingAddress)
-      }
-
+      let { offer, listing } = this.props.transaction
+      const { offerId, listingId } = this.props.transaction
+      offer = offer || (offerId ? await origin.marketplace.getOffer(offerId) : null)
+      listing = listing || (listingId ? await origin.marketplace.getListing(listingId) : null)
+      const purchase = offer
       this.setState({ listing, purchase })
     } catch(e) {
       console.error(e)
@@ -45,7 +34,8 @@ class Transaction extends Component {
   render() {
     const { confirmationCompletionCount, transaction } = this.props
     const { listing, purchase } = this.state
-    const { confirmationCount, created, transactionHash, transactionTypeKey } = transaction
+    const { confirmationCount, timestamp, transactionHash, transactionTypeKey } = transaction
+    const created = timestamp
     let fromAddress, toAddress
 
     if (!listing) {
@@ -54,26 +44,26 @@ class Transaction extends Component {
 
     switch(transactionTypeKey) {
       case 'buyListing':
-        fromAddress = purchase.buyerAddress
-        toAddress = listing.sellerAddress
+        fromAddress = purchase.buyer
+        toAddress = listing.seller
         break
       case 'closeListing':
-        fromAddress = listing.sellerAddress
+        fromAddress = listing.seller
         break
       case 'confirmReceipt':
-        fromAddress = purchase.buyerAddress
-        toAddress = listing.sellerAddress
+        fromAddress = purchase.buyer
+        toAddress = listing.seller
         break
       case 'confirmShipped':
-        toAddress = purchase.buyerAddress
-        fromAddress = listing.sellerAddress
+        toAddress = purchase.buyer
+        fromAddress = listing.seller
         break
       case 'createListing':
-        fromAddress = listing.sellerAddress
+        fromAddress = listing.seller
         break
       case 'getPayout':
-        toAddress = purchase.buyerAddress
-        fromAddress = listing.sellerAddress
+        toAddress = purchase.buyer
+        fromAddress = listing.seller
         break
     }
 
@@ -84,6 +74,8 @@ class Transaction extends Component {
     const decimal = confirmationCount / confirmationCompletionCount
     const percentage = Math.min(100, (decimal * 100).toFixed())
     const degreeIncrement = 360 / confirmationCompletionCount
+    // The block timestamp is somehow in the future when testing locally. - Micah
+    const timeReference = Math.min(created * 1000, Date.now())
 
     return (
       <li key={transactionHash} className="list-group-item d-flex align-items-stretch transaction">
@@ -96,7 +88,7 @@ class Transaction extends Component {
               />
             </div>
             <div className="timelapse ml-auto">
-              { moment(created * 1000).fromNow() }
+              { moment(timeReference).fromNow() }
             </div>
           </div>
           <div className="d-flex">

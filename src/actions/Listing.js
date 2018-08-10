@@ -42,12 +42,11 @@ export function getListingIds() {
         }
       }
 
-      const ids = await origin.listings.allIds()
-      const showIds = ids ? ids.filter(i => hideList.indexOf(i) < 0) : []
+      const ids = await origin.marketplace.getListings({ idsOnly: true })
 
       dispatch({
         type: ListingConstants.FETCH_IDS_SUCCESS,
-        ids: showIds.reverse(),
+        ids,
         hideList
       })
     } catch (error) {

@@ -1,0 +1,10 @@
+[
+  {
+    "id": "messaging-provider.congrats",
+    "defaultMessage": "Congratulations! You can now message other users across the Origin Platform ecosystem! Why not start by taking a look around and telling us what you think about our DApp?"
+  },
+  {
+    "id": "messaging-provider.welcome",
+    "defaultMessage": "Welcome to the Origin Protocol Demo DApp! Our innovative messaging platform allows you to communicate with other Origin users in a secure and decentralized way. All of your messages will be encrypted and stored on IPFS. Messages can only be read by you, the recipient, and potentially a third-party arbitrator if either of you initiates a dispute and grants access to a cryptographically-generated, shared, private key.\n\nIn order to enable messaging you will need to use your Ethereum wallet to sign two statements. This will not cost any ETH, Origin Token, or gas."
+  }
+]

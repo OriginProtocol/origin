@@ -1,9 +1,9 @@
-import $ from 'jquery'
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
+import $ from 'jquery'
 
 import { dismissNotifications } from 'actions/App'
 
@@ -13,6 +13,10 @@ import origin from '../../services/origin'
 
 class NotificationsDropdown extends Component {
   componentDidMount() {
+    $(document).on('click', '.notifications .dropdown-menu', e => {
+      e.stopPropagation()
+    })
+
     $('.notifications.dropdown').on('hide.bs.dropdown', () => {
       const notificationsIds = this.props.notifications.map(n => n.id)
 
@@ -53,10 +57,18 @@ class NotificationsDropdown extends Component {
                 <div className="d-inline-block">{notificationCount}</div>
               </div>
               <h3>
-                <FormattedMessage
-                  id={ 'notificationsDropdown.notificationsHeading' }
-                  defaultMessage={ 'Unread Notifications' }
-                />
+                {notificationCount === 1 &&
+                  <FormattedMessage
+                    id={ 'notificationsDropdown.notificationHeading' }
+                    defaultMessage={ 'Unread Notification' }
+                  />
+                }
+                {notificationCount !== 1 &&
+                  <FormattedMessage
+                    id={ 'notificationsDropdown.notificationsHeading' }
+                    defaultMessage={ 'Unread Notifications' }
+                  />
+                }
               </h3>
             </header>
             <div className="notifications-list">

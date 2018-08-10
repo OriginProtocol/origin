@@ -39,7 +39,7 @@ class UserCard extends Component {
   render() {
     const { listingAddress, purchaseAddress, title, user, userAddress } = this.props
     const { fullName, profile, attestations } = user
-    const canMessageUser = origin.messaging.canConverse(userAddress)
+    const userCanReceiveMessages = origin.messaging.canReceiveMessages(userAddress)
 
     return (
       <div className="user-card placehold">
@@ -67,7 +67,7 @@ class UserCard extends Component {
                 />
               </div>
               <div className="address">{userAddress && <EtherscanLink hash={userAddress} />}</div>
-              {userAddress && canMessageUser &&
+              {userAddress && userCanReceiveMessages &&
                 <a href="#" className="contact" onClick={this.handleToggle}>Contact</a>
               }
             </div>
@@ -115,7 +115,7 @@ class UserCard extends Component {
             defaultMessage={ 'View Profile' }
           />
         </Link>
-        {canMessageUser &&
+        {userCanReceiveMessages &&
           <MessageNew
             open={this.state.modalOpen}
             recipientAddress={userAddress}
@@ -131,7 +131,10 @@ class UserCard extends Component {
 
 const mapStateToProps = (state, { userAddress }) => {
   return {
+    // for reactivity
     messagingEnabled: state.app.messagingEnabled,
+    // for reactivity
+    messagingInitialized: state.app.messagingInitialized,
     user: state.users.find(u => u.address === userAddress) || {},
   }
 }
