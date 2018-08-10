@@ -20,13 +20,19 @@ class TransactionsDropdown extends Component {
   }
 
   componentDidMount() {
-    $(document).on('click', '.transactions .dropdown-menu', function(e) {
+    $(document).on('click', '.transactions .dropdown-menu', e => {
       e.stopPropagation()
     })
   }
 
-  componentDidUpdate() {
-    console.log(this.props.transactions)
+  componentDidUpdate(prevProps) {
+    const { transactions } = this.props
+    const dropdownHidden = !$('.transactions.dropdown').hasClass('show')
+
+    // intrusively open the dropdown when a new transaction is being confirmed
+    if (transactions.length > prevProps.transactions.length && dropdownHidden) {
+      $('#transactionsDropdown').dropdown('toggle')
+    }
   }
 
   handleClick(e) {

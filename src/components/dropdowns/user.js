@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import $ from 'jquery'
 
 import Avatar from 'components/avatar'
 import Identicon from 'components/Identicon'
@@ -9,6 +10,12 @@ import Identicon from 'components/Identicon'
 class UserDropdown extends Component {
   constructor(props) {
     super(props)
+  }
+
+  componentDidMount() {
+    $(document).on('click', '.identity .dropdown-menu', e => {
+      e.stopPropagation()
+    })
   }
 
   render() {

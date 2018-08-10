@@ -16,7 +16,9 @@
     "intl": "^1.2.5",
     "ipfs": "^0.30.1",
     "jquery": "^3.3.1",
+    "locale-code": "^2.0.1",
     "moment": "^2.22.1",
+    "orbit-db": "^0.19.8",
     "origin": "0.6.1",
     "popper.js": "^1.14.3",
     "react": "^16.3.2",
@@ -35,8 +37,7 @@
     "serve": "^6.5.6",
     "store": "^2.0.12",
     "uuid": "^3.2.1",
-    "web3": "^1.0.0-beta.34",
-    "orbit-db": "^0.19.8"
+    "web3": "^1.0.0-beta.34"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.46",
@@ -58,6 +59,7 @@
     "glob": "^7.1.2",
     "html-webpack-plugin": "3.2.0",
     "identicon.js": "^2.3.2",
+    "source-map-loader": "^0.2.3",
     "style-loader": "0.21.0",
     "webpack": "4.8.1",
     "webpack-cli": "^2.1.3",

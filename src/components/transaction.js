@@ -86,6 +86,8 @@ class Transaction extends Component {
     const decimal = confirmationCount / confirmationCompletionCount
     const percentage = Math.min(100, (decimal * 100).toFixed())
     const degreeIncrement = 360 / confirmationCompletionCount
+    // The block timestamp is somehow in the future when testing locally. - Micah
+    const timeReference = Math.min(created * 1000, Date.now())
 
     return (
       <li key={transactionHash} className="list-group-item d-flex align-items-stretch transaction">
@@ -98,7 +100,7 @@ class Transaction extends Component {
               />
             </div>
             <div className="timelapse ml-auto">
-              { moment(created * 1000).fromNow() }
+              { moment(timeReference).fromNow() }
             </div>
           </div>
           <div className="d-flex">

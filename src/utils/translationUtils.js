@@ -37,7 +37,7 @@ import ur from 'react-intl/locale-data/ur'
 import vi from 'react-intl/locale-data/vi'
 import zh from 'react-intl/locale-data/zh'
 import schemaMessages from '../schemaMessages/index'
-import languageNames from './languageNames.json'
+import localeCode from 'locale-code'
 
 let globalIntlProvider
 
@@ -164,9 +164,38 @@ export function addLocales() {
     ...zh])
 }
 
-export function getLangFullName(langAbbrev) {
-  const langNameObj = languageNames.filter((lang) => lang.code === langAbbrev)
-  return langNameObj[0] && langNameObj[0].nativeName
+export function getBestAvailableLanguage(langCode) {
+  // Fall back to english if no better choice is found
+  let toReturn = 'en-US'
+  // If we have an exact match for the user's lang code, use it
+  if (translations && translations[langCode]) {
+    toReturn = langCode
+  } else {
+    const userBaseLang = langCode.indexOf('-') > -1 ? langCode.substring(0, langCode.indexOf('-')) : langCode
+    const baseLangMatch = translations[userBaseLang]
+
+    // If we can't match the exact lang code, try to match the base - for example the "zh" in "zh-AA"
+    if (baseLangMatch) {
+      toReturn = userBaseLang
+    } else {
+
+      for (let locale in translations) {
+
+        let localeToCheck
+        if (locale.indexOf('-') > -1) {
+          localeToCheck = locale.substring(0, locale.indexOf('-'))
+        } else {
+          localeToCheck = locale
+        }
+
+        if (localeToCheck === userBaseLang) {
+          toReturn = locale
+        }
+      }
+    }
+  }
+
+  return toReturn
 }
 
 export function getAvailableLanguages() {
@@ -176,20 +205,35 @@ export function getAvailableLanguages() {
 
   const availableLangs = []
 
-  for (let languageAbbrev in translations) {
+  for (let languageCode in translations) {
 
     // Don't include English b/c we hard-code it in the footer dropdown to make sure it's always available
-    if (languageAbbrev !== 'en') {
+    if (languageCode !== 'en-US') {
 
       availableLangs.push({
-        selectedLanguageAbbrev: languageAbbrev,
-        selectedLanguageFull: getLangFullName(languageAbbrev)
+        selectedLanguageCode: languageCode,
+        selectedLanguageFull: getLanguageNativeName(languageCode)
       })
 
     }
   }
 
   return availableLangs
+}
+
+export function getLanguageNativeName(langCode) {
+  let selectedLanguageFull
+  if (/zh/.test(langCode)) {
+    if (langCode === 'zh-CN') {
+      selectedLanguageFull = '简体中文'
+    } else if (langCode === 'zh-TW') {
+      selectedLanguageFull = '繁體中文'
+    }
+  } else {
+    selectedLanguageFull = localeCode.getLanguageNativeName(langCode)
+  }
+
+  return selectedLanguageFull
 }
 
 export function setGlobalIntlProvider(language, messages) {

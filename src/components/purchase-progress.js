@@ -9,55 +9,62 @@ class PurchaseProgress extends Component {
     this.calculateProgress = this.calculateProgress.bind(this)
     this.state = {
       currentStep: props.currentStep,
-      maxStep: props.maxStep || (props.perspective === 'seller' ? 4 : 3),
+      maxStep: props.maxStep,
       progressCalculated: false,
       progressWidth: '0%',
     }
   }
 
-  componentDidMount() {
-    setTimeout(() => {
-      this.calculateProgress()
-      this.deriveCurrentStep()
-    }, 400)
-  }
-
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.currentStep !== this.state.currentStep) {
-      this.calculateProgress()
-      this.deriveCurrentStep()
-    }
+    this.deriveCurrentStep()
+    this.deriveMaxStep()
+    this.calculateProgress()
   }
 
   calculateProgress() {
     const { currentStep, maxStep } = this.state
     const progressWidth = currentStep > 1 ? `${(currentStep - 1) / (maxStep - 1) * 100}%` : `${currentStep * 10}px`
 
-    this.setState({ progressCalculated: true, progressWidth })
+    if (this.state.progressWidth !== progressWidth) {
+      this.setState({ progressCalculated: true, progressWidth })
+    }
   }
 
-  // calculate current step if not provided as a prop
+  deriveMaxStep() {
+    const { maxStep, perspective } = this.props
+    let step = typeof maxStep === 'number' ? maxStep : perspective === 'seller' ? 4 : 3
+
+    if (this.state.maxStep !== step) {
+      this.setState({ maxStep: step })
+    }
+  }
+
   deriveCurrentStep() {
     const { currentStep, perspective, purchase } = this.props
 
-    if (typeof currentStep !== Number) {
-      let step
+    if (
+      typeof currentStep === Number &&
+      currentStep !== this.state.currentStep
+    ) {
+      return this.setState({ currentStep })
+    }
 
-      if (purchase.stage === 'complete') {
-        step = this.state.maxStep
-      } else if (purchase.stage === 'seller_pending') {
-        step = 3
-      } else if (purchase.stage === 'buyer_pending') {
-        step = 2
-      } else if (purchase.stage === 'in_escrow') {
-        step = 1
-      } else {
-        step = 0
-      }
+    let step
 
-      if (this.state.currentStep !== step) {
-        this.setState({ currentStep: step })
-      }
+    if (purchase.stage === 'complete') {
+      step = this.state.maxStep
+    } else if (purchase.stage === 'seller_pending') {
+      step = 3
+    } else if (purchase.stage === 'buyer_pending') {
+      step = 2
+    } else if (purchase.stage === 'in_escrow') {
+      step = 1
+    } else {
+      step = 0
+    }
+
+    if (this.state.currentStep !== step) {
+      this.setState({ currentStep: step })
     }
   }
   

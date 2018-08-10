@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
+import localeCode from 'locale-code'
 import store from 'store'
 import $ from 'jquery'
 
@@ -10,7 +11,7 @@ class Footer extends Component {
     super(props)
 
     this.state = {
-      companyWebsiteLanguageAbbrev: 'en'
+      companyWebsiteLanguageCode: 'en-US'
     }
 
     this.localizeApp = this.localizeApp.bind(this)
@@ -19,23 +20,35 @@ class Footer extends Component {
 
   componentDidMount() {
     this.localizeWhitepaperUrl()
+    
     $('[data-toggle="tooltip"]').tooltip({
       html: true
-    });
+    })
   }
 
-  localizeApp(langAbbrev) {
-    if (langAbbrev !== this.props.selectedLanguageAbbrev) {
-      store.set('preferredLang', langAbbrev)
+  localizeApp(langCode) {
+    if (langCode !== this.props.selectedLanguageCode) {
+      store.set('preferredLang', langCode)
       window.location.reload()
     }
   }
 
   localizeWhitepaperUrl() {
-    const { selectedLanguageAbbrev: langAbbrev } = this.props
-    const companyWebsiteLanguageAbbrev = langAbbrev === 'zh' ? `${langAbbrev}_Hans` : langAbbrev
+    const { selectedLanguageCode: langCode } = this.props
+    let companyWebsiteLanguageCode
 
-    this.setState({ companyWebsiteLanguageAbbrev })
+    switch(langCode) {
+      case 'zh-CN':
+        companyWebsiteLanguageCode = 'zh_Hans'
+        break
+      case 'zh-TW':
+        companyWebsiteLanguageCode = 'zh_Hant'
+        break
+      default:
+        companyWebsiteLanguageCode = localeCode.getLanguageCode(langCode)
+    }
+
+    this.setState({ companyWebsiteLanguageCode })
   }
 
   render() {
@@ -63,15 +76,19 @@ class Footer extends Component {
                 <div className="dropdown-menu dropdown-menu-left" aria-labelledby="languageDropdown">
                   <div className="triangle-container d-flex justify-content-end"><div className="triangle"></div></div>
                   <div className="actual-menu">
-                    <div className="connectivity-list">
+                    <div className="language-list">
                       <ul className="list-group">
-                        <li className="connection d-flex flex-wrap" onClick={ () => { this.localizeApp('en') } } >
+                        <li
+                          className="language d-flex flex-wrap"
+                          onClick={ () => { this.localizeApp('en-US') } }
+                          data-locale="en-US">
                           English
                         </li>
                         {this.props.availableLanguages && this.props.availableLanguages.map(langObj => (
-                          <li className="connection d-flex flex-wrap"
-                              key={ langObj.selectedLanguageAbbrev }
-                              onClick={ () => { this.localizeApp(langObj.selectedLanguageAbbrev) } }>
+                          <li className="language d-flex flex-wrap"
+                              key={ langObj.selectedLanguageCode }
+                              onClick={ () => { this.localizeApp(langObj.selectedLanguageCode) } }
+                              data-locale={ langObj.selectedLanguageCode }>
                             { langObj.selectedLanguageFull }
                           </li>
                         ))}
@@ -92,7 +109,7 @@ class Footer extends Component {
                   </div>
                   <ul className="footer-links">
                     <li>
-                      <a href={ `https://www.originprotocol.com/${this.state.companyWebsiteLanguageAbbrev}/product-brief` }>
+                      <a href={ `https://www.originprotocol.com/${this.state.companyWebsiteLanguageCode}/product-brief` }>
                         <FormattedMessage
                           id={ 'footer.productBriefLink' }
                           defaultMessage={ 'Product Brief' }
@@ -100,7 +117,7 @@ class Footer extends Component {
                       </a>
                     </li>
                     <li>
-                      <a href={ `https://www.originprotocol.com/${this.state.companyWebsiteLanguageAbbrev}/whitepaper` }>
+                      <a href={ `https://www.originprotocol.com/${this.state.companyWebsiteLanguageCode}/whitepaper` }>
                         <FormattedMessage
                           id={ 'footer.whitepaperLink' }
                           defaultMessage={ 'Whitepaper' }
@@ -275,7 +292,7 @@ class Footer extends Component {
 
 
 const mapStateToProps = state => ({
-  selectedLanguageAbbrev: state.app.translations.selectedLanguageAbbrev,
+  selectedLanguageCode: state.app.translations.selectedLanguageCode,
   selectedLanguageFull: state.app.translations.selectedLanguageFull,
   availableLanguages: state.app.translations.availableLanguages
 })
