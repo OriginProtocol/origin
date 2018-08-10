@@ -93,7 +93,11 @@
   },
   {
     "id": "listing-create.successMessage",
-    "defaultMessage": "Success"
+    "defaultMessage": "Success!"
+  },
+  {
+    "id": "listing-create.successDisclaimer",
+    "defaultMessage": "Your listing will be visible within a few seconds."
   },
   {
     "id": "listing-create.seeAllListings",

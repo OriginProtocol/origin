@@ -1,5 +1,9 @@
 [
   {
+    "id": "notificationsDropdown.notificationHeading",
+    "defaultMessage": "Unread Notification"
+  },
+  {
     "id": "notificationsDropdown.notificationsHeading",
     "defaultMessage": "Unread Notifications"
   },

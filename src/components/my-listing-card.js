@@ -47,7 +47,13 @@ class MyListingCard extends Component {
     try {
       handleProcessing(true)
 
-      const { created, transactionReceipt } = await origin.listings.close(address, updateTransaction)
+      const { created, transactionReceipt } = await origin.listings.close(address, (confirmationCount, transactionReceipt) => {
+        // Having a transaction receipt doesn't guarantee that the listing state will have changed.
+        // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
+        handleUpdate(address)
+
+        this.props.updateTransaction(confirmationCount, transactionReceipt)
+      })
 
       this.props.upsertTransaction({
         ...transactionReceipt,
@@ -55,11 +61,7 @@ class MyListingCard extends Component {
         transactionTypeKey: 'closeListing',
       })
 
-      // why is this delay often required???
-      setTimeout(() => {
-        handleProcessing(false)
-        handleUpdate(address)
-      }, 1000)
+      handleProcessing(false)
     } catch(error) {
       handleProcessing(false)
       console.error(`Error closing listing ${address}`)
