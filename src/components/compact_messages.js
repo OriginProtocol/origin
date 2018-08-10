@@ -4,7 +4,7 @@ import Message from 'components/message'
 const MAX_MINUTES = 10
 
 function getElapsedTime(recentTime, previousTime) {
-  const toMinutes = 1000*60
+  const toMinutes = 1000 * 60
   const elapsedTime = (recentTime - previousTime) / toMinutes
 
   return isNaN(elapsedTime) ? 0 : elapsedTime

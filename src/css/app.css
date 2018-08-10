@@ -2461,10 +2461,6 @@ form .stars img {
   margin: -20px auto 20px 25px
 }
 
-.conversation .messages {
-  padding-left: 5px;
-}
-
 .conversation .message:first-of-type {
   margin-top: 20px;
 }
