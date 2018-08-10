@@ -72,6 +72,10 @@ Spawn a shell (command line) in a container:
 
 	docker exec -ti <container_name> /bin/bash
 
+Restart DApp (needed after changing branches):
+
+	docker-compose restart origin-dapp
+
 Connect to the origin_bridge postgresql database:
 
 	docker exec -ti postgres /bin/bash -c "psql -h localhost -U origin origin_bridge"
@@ -113,6 +117,17 @@ and similarly for origin-bridge:
 	docker-compose -f docker-compose-test.yml up origin-bridge-test
 
 ## Troubleshooting
+
+### Packages not found
+
+There is a known issue with `docker-compose`. [Temporary workaround instructions are in this issue](https://github.com/OriginProtocol/origin-box/issues/34).
+
+To remove all docker containers and volumes and start from scratch:
+
+1. `docker-compose down`
+2. `docker system prune -a`
+3. `docker volume prune`
+4. `./install.sh -e origin`
 
 ### Port errors
 
