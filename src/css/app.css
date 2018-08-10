@@ -2544,6 +2544,7 @@ form .stars img {
 }
 
 .add-message textarea {
+  background-color: transparent;
   border: 0;
   padding: 10px 0 0;
   flex-grow: 1;

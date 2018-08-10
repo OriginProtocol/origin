@@ -140,7 +140,7 @@ class Messages extends Component {
       recipients.find(addr => addr !== senderAddress) :
       senderAddress
     const counterparty = users.find(u => u.address === address) || {}
-console.log('users', users.length)
+
     this.setState({ counterparty })
   }
 
@@ -205,6 +205,7 @@ console.log('users', users.length)
     const perspective = buyerAddress ? (buyerAddress === web3Account ? 'buyer' : 'seller') : null
     const soldAt = created ? created * 1000 /* convert seconds since epoch to ms */ : null
     const canDeliverMessage = origin.messaging.canConverseWith(counterparty.address)
+    const shouldEnableForm = canDeliverMessage && selectedConversationId
 
     return (
       <div className="d-flex messages-wrapper">
@@ -276,7 +277,13 @@ console.log('users', users.length)
               <div ref={this.conversationDiv} className="conversation">
                 <CompactMessages messages={messages}/>
               </div>
-              {canDeliverMessage && selectedConversationId &&
+              {!shouldEnableForm &&
+                <form className="add-message d-flex">
+                  <textarea tabIndex="0" disabled></textarea>
+                  <button type="submit" className="btn btn-sm btn-primary" disabled>Send</button>
+                </form>
+              }
+              {shouldEnableForm &&
                 <form className="add-message d-flex" onSubmit={this.handleSubmit}>
                   <textarea
                     ref={this.textarea}
