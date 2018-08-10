@@ -2473,6 +2473,10 @@ form .stars img {
   padding-top: 20px;
 }
 
+.messages-wrapper .button-container button {
+  width: auto;
+}
+
 .conversation {
   margin-bottom: auto;
   overflow: scroll;
@@ -2483,7 +2487,7 @@ form .stars img {
 }
 
 .conversation .compact-message {
-  margin-left: 75px;
+  margin: -20px 0 20px 75px;
 }
 
 .conversation .message:first-of-type {
