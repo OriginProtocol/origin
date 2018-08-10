@@ -146,6 +146,9 @@
       "key-spacing": [
         "error"
       ],
+      "no-case-declarations": [
+        "off"
+      ],
       "no-console": [
         "off"
       ],
