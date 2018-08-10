@@ -40,32 +40,8 @@ class PurchaseProgress extends Component {
   }
 
   deriveCurrentStep() {
-    const { currentStep, perspective, purchase } = this.props
-
-    if (
-      typeof currentStep === Number &&
-      currentStep !== this.state.currentStep
-    ) {
-      return this.setState({ currentStep })
-    }
-
-    let step
-
-    if (purchase.stage === 'complete') {
-      step = this.state.maxStep
-    } else if (purchase.stage === 'seller_pending') {
-      step = 3
-    } else if (purchase.stage === 'buyer_pending') {
-      step = 2
-    } else if (purchase.stage === 'in_escrow') {
-      step = 1
-    } else {
-      step = 0
-    }
-
-    if (this.state.currentStep !== step) {
-      this.setState({ currentStep: step })
-    }
+    const { currentStep } = this.props
+    this.setState({ currentStep })
   }
 
   render() {
