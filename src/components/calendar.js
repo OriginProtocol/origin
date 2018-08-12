@@ -438,12 +438,11 @@ class Calendar extends Component {
       for (let i = 0, len = events.length; i < len; i++) {
         const event = events[i]
         if (  
-              event.isAvailable &&
               moment(date).isBetween(moment(event.start).subtract(1, 'second'), moment(event.end).add(1, 'second')) &&
               !moment(date).isBefore(moment())
             ) {
 
-          event.isAvailable = !this.isDateBooked(date)
+          event.isAvailable = event.isAvailable ? !this.isDateBooked(date) : false
           eventsInSlot.push(event)
         }
       }
