@@ -111,7 +111,7 @@ Browsers with wallets for both desktop and mobile that you can use with the Orig
 |  | |  |
 | PC | Chrome + Metamask extension | ✅ | Operational |
 | PC | Firefox + Metamask extension | ✅ | Operational |
-| PC | Brave with Metamask | ⚪️  | Not tested |
+| PC | Brave with Metamask | ✅ | Operational |
 |  |  |  |
 | iOS | Trust Wallet | ✅  | Operational |
 | iOS | Toshi  |  🚫  | Main Toshi app does not currently work with test nets |
