@@ -268,7 +268,7 @@ class ListingCreate extends Component {
   }
 
   render() {
-    const { selectedSchema } = this.state
+    const { selectedSchema, selectedSchemaType, step, formData, currentProvider } = this.state
     const enumeratedPrice = selectedSchema &&
                             selectedSchema.properties['priceWei'] &&
                             selectedSchema.properties['priceWei'].enum
@@ -276,7 +276,7 @@ class ListingCreate extends Component {
 
     return (
       <div className="container listing-form">
-        { this.state.step === this.STEP.PICK_SCHEMA &&
+        { step === this.STEP.PICK_SCHEMA &&
           <div className="step-container pick-schema">
             <div className="row flex-sm-row-reverse">
              <div className="col-md-5 offset-md-2">
@@ -302,7 +302,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={ 'listing-create.stepNumberLabel' }
                     defaultMessage={ 'STEP {stepNumber}' }
-                    values={{ stepNumber: Number(this.state.step) }}
+                    values={{ stepNumber: Number(step) }}
                   />
                 </label>
                 <h2>
@@ -315,7 +315,7 @@ class ListingCreate extends Component {
                   {this.schemaList.map(schema => (
                     <div
                       className={
-                        this.state.selectedSchemaType === schema.type ?
+                        selectedSchemaType === schema.type ?
                         'schema-selection selected' : 'schema-selection'
                       }
                       key={schema.type}
@@ -337,7 +337,7 @@ class ListingCreate extends Component {
             </div>
           </div>
         }
-        { this.state.step === this.STEP.DETAILS &&
+        { step === this.STEP.DETAILS &&
           <div className="step-container schema-details">
             <div className="row flex-sm-row-reverse">
                <div className="col-md-5 offset-md-2">
@@ -364,12 +364,12 @@ class ListingCreate extends Component {
                           jsonSchemaLink: <FormattedMessage id={ 'listing-create.jsonSchema' } defaultMessage={ 'JSONSchema' } />
                         }}
                       />
-                      <a href={`schemas/${this.state.selectedSchemaType}.json`} target="_blank">
+                      <a href={`schemas/${selectedSchemaType}.json`} target="_blank">
                         <FormattedMessage
                           id={ 'listing-create.viewSchemaLinkLabel' }
                           defaultMessage={ 'View the {schemaName} schema' }
                           values={{ 
-                            schemaName: <code>{this.state.selectedSchema && this.state.selectedSchema.name}</code>
+                            schemaName: <code>{selectedSchema && selectedSchema.name}</code>
                           }}
                         />
                       </a>
@@ -382,7 +382,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={ 'listing-create.stepNumberLabel' }
                     defaultMessage={ 'STEP {stepNumber}' }
-                    values={{ stepNumber: Number(this.state.step) }}
+                    values={{ stepNumber: Number(step) }}
                   />
                 </label>
                 <h2>
@@ -392,9 +392,9 @@ class ListingCreate extends Component {
                   />
                 </h2>
                 <Form
-                  schema={translateSchema(this.state.selectedSchema, this.state.selectedSchemaType)}
+                  schema={translateSchema(selectedSchema, selectedSchemaType)}
                   onSubmit={this.onDetailsEntered}
-                  formData={this.state.formData}
+                  formData={formData}
                   onError={(errors) => console.log(`react-jsonschema-form errors: ${errors.length}`)}
                   uiSchema={priceHidden ? { priceWei: { 'ui:widget': 'hidden' } } : undefined}
                 >
@@ -420,10 +420,10 @@ class ListingCreate extends Component {
             </div>
           </div>
         }
-        { (this.state.step === this.STEP.AVAILABILITY) &&
+        { (step === this.STEP.AVAILABILITY) &&
           <div className="step-container listing-availability">
             <Calendar
-              slots={ this.state.formData && this.state.formData.slots }
+              slots={ formData && formData.slots }
               userType="seller"
               viewType={ this.state.fractionalTimeIncrement }
               step={ 60 }
@@ -432,9 +432,9 @@ class ListingCreate extends Component {
             />
           </div>
         }
-        { (this.state.step >= this.STEP.PREVIEW) &&
+        { (step >= this.STEP.PREVIEW) &&
           <div className="step-container listing-preview">
-            {this.state.step === this.STEP.METAMASK &&
+            {step === this.STEP.METAMASK &&
               <Modal backdrop="static" isOpen={true}>
                 <div className="image-container">
                   <img src="images/spinner-animation.svg" role="presentation"/>
@@ -448,13 +448,13 @@ class ListingCreate extends Component {
                   id={ 'listing-create.pressSubmitInMetaMask' }
                   defaultMessage={ 'Press {submit} in {currentProvider} window' }
                   values={{
-                    currentProvider: this.state.currentProvider,
+                    currentProvider,
                     submit: <span>&ldquo;Submit&rdquo;</span>,
                   }}
                 />
               </Modal>
             }
-            {this.state.step === this.STEP.PROCESSING &&
+            {step === this.STEP.PROCESSING &&
               <Modal backdrop="static" isOpen={true}>
                 <div className="image-container">
                   <img src="images/spinner-animation.svg" role="presentation"/>
@@ -470,7 +470,7 @@ class ListingCreate extends Component {
                 />
               </Modal>
             }
-            {this.state.step === this.STEP.SUCCESS &&
+            {step === this.STEP.SUCCESS &&
               <Modal backdrop="static" isOpen={true}>
                 <div className="image-container">
                   <img src="images/circular-check-button.svg" role="presentation"/>
@@ -495,7 +495,7 @@ class ListingCreate extends Component {
                 </div>
               </Modal>
             }
-            {this.state.step === this.STEP.ERROR && (
+            {step === this.STEP.ERROR && (
               <Modal backdrop="static" isOpen={true}>
                 <div className="image-container">
                   <img src="images/flat_cross_icon.svg" role="presentation" />
@@ -531,7 +531,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={ 'listing-create.stepNumberLabel' }
                     defaultMessage={ 'STEP {stepNumber}' }
-                    values={{ stepNumber: Number(this.state.step) }}
+                    values={{ stepNumber: Number(step) }}
                   />
                 </label>
                 <h2>
@@ -575,7 +575,7 @@ class ListingCreate extends Component {
               </div>
               <div className="col-md-7">
                 <div className="preview">
-                  <ListingDetail listingJson={this.state.formData} />
+                  <ListingDetail listingJson={ formData } />
                 </div>
                 <div className="btn-container">
                   <button className="btn btn-other float-left" onClick={() => this.setState({step: this.STEP.DETAILS})}>
@@ -585,7 +585,7 @@ class ListingCreate extends Component {
                     />
                   </button>
                   <button className="btn btn-primary float-right"
-                    onClick={() => this.onSubmitListing(this.state.formData, this.state.selectedSchemaType)}>
+                    onClick={() => this.onSubmitListing(formData, selectedSchemaType)}>
                     <FormattedMessage
                       id={ 'listing-create.doneButtonLabel' }
                       defaultMessage={ 'Done' }
