@@ -28,6 +28,7 @@
   "license": "MIT",
   "dependencies": {
     "ajv": "^6.5.0",
+    "ajv-merge-patch": "^4.1.0",
     "babel-polyfill": "^6.26.0",
     "bs58": "^4.0.1",
     "cross-fetch": "^2.1.1",
@@ -39,7 +40,6 @@
     "web3": "^1.0.0-beta.34"
   },
   "devDependencies": {
-    "ajv-merge-patch": "^4.1.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
