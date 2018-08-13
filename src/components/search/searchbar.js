@@ -6,12 +6,6 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { storeWeb3Intent } from 'actions/App'
 import listingSchema from 'utils/listingSchema.js'
 
-// import ConnectivityDropdown from 'components/dropdowns/connectivity'
-// import MessagesDropdown from 'components/dropdowns/messages'
-// import NotificationsDropdown from 'components/dropdowns/notifications'
-// import TransactionsDropdown from 'components/dropdowns/transactions'
-// import UserDropdown from 'components/dropdowns/user'
-// import Modal from 'components/modal'
 
 class SearchBar extends Component {
   constructor(props) {
@@ -23,7 +17,8 @@ class SearchBar extends Component {
     })
 
     this.state = {
-      selectedListingType: this.listingTypes[0]
+      selectedListingType: this.listingTypes[0],
+      searchQuery: ''
     }
 
     this.intlMessages = defineMessages({
@@ -32,10 +27,17 @@ class SearchBar extends Component {
         defaultMessage: 'Search',
       },
     })
+
+    this.handleChange = this.handleChange.bind(this)
+    this.handleOnSearch = this.handleOnSearch.bind(this)
   }
 
   handleChange(e) {
     this.setState({ searchQuery: e.target.value })
+  }
+
+  handleOnSearch(e) {
+    document.location.href = `#/search/${this.state.searchQuery}`
   }
 
   render() {
@@ -48,12 +50,33 @@ class SearchBar extends Component {
                 {this.state.selectedListingType.name}
               </button>
               <div className="dropdown-menu">
-                {this.listingTypes.map(listingType => <a className="dropdown-item" href="#">{listingType.name}</a>)}
+                {this.listingTypes.map(listingType =>
+                  <a
+                    className="dropdown-item"
+                    key={listingType.type}
+                    onClick={e =>
+                      this.setState({ selectedListingType: listingType })
+                    }
+                  >{listingType.name}</a>)
+                }
               </div>
             </div>
-            <input type="text" className="form-control search-input" placeholder={this.props.intl.formatMessage(this.intlMessages.searchPlaceholder)} aria-label="Search"/>
+            <input
+              type="text"
+              className="form-control search-input"
+              placeholder={this.props.intl.formatMessage(this.intlMessages.searchPlaceholder)}
+              aria-label="Search"
+              onChange={this.handleChange}
+            />
             <div className="input-group-append">
-              <button className="search-bar-append" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button 
+                className="search-bar-append"
+                type="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                onClick={this.handleOnSearch}
+              >
                 <img src="images/searchbar/magnifying-glass.svg" alt="Search Listings" />
               </button>
             </div>
