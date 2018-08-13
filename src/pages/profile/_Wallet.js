@@ -23,8 +23,9 @@ class Wallet extends Component {
   }
 
   render() {
-    const { address, balance, identityAddress } = this.props
-    const canMessageUser = origin.messaging.canConverse(address)
+    const { address, balance, identityAddress, web3Account } = this.props
+    const userCanReceiveMessages = address !== web3Account &&
+                                   origin.messaging.canReceiveMessages(address)
 
     return (
       <div className="wallet">
@@ -50,7 +51,7 @@ class Wallet extends Component {
                 />
               }
             </div>
-            {canMessageUser &&
+            {userCanReceiveMessages &&
               <a href="#" className="contact" onClick={this.handleToggle}>Contact</a>
             }
           </div>
@@ -88,7 +89,7 @@ class Wallet extends Component {
             <a href={`https://erc725.originprotocol.com/#/identity/${identityAddress}`} target="_blank">Identity Contract Detail</a>
           </div>
         */}
-        {canMessageUser &&
+        {userCanReceiveMessages &&
           <MessageNew
             open={this.state.modalOpen}
             recipientAddress={address}
@@ -104,6 +105,9 @@ const mapStateToProps = state => {
   return {
     // for reactivity
     messagingEnabled: state.app.messagingEnabled,
+    // for reactivity
+    messagingInitialized: state.app.messagingInitialized,
+    web3Account: state.app.web3.account,
   }
 }
 

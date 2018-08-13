@@ -3,9 +3,7 @@ import { HashRouter as Router, Link, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { IntlProvider } from 'react-intl'
 
-import { setMobile, localizeApp, setMessagingEnabled } from 'actions/App'
-import { addMessage } from 'actions/Message'
-import { fetchNotifications } from 'actions/Notification'
+import { localizeApp, setMobile } from 'actions/App'
 import { fetchProfile } from 'actions/Profile'
 import { init as initWallet } from 'actions/Wallet'
 
@@ -16,6 +14,7 @@ import ListingCreate from 'components/listing-create'
 import ListingDetail from 'components/listing-detail'
 import Listings from 'components/listings-grid'
 import Messages from 'components/messages'
+import MessagingProvider from 'components/messaging-provider'
 import MyListings from 'components/my-listings'
 import MyPurchases from 'components/my-purchases'
 import MySales from 'components/my-sales'
@@ -35,10 +34,6 @@ import 'bootstrap/dist/css/bootstrap.css'
 import '../css/lato-web.css'
 import '../css/poppins.css'
 import '../css/app.css'
-
-import origin from '../services/origin'
-
-const ONE_SECOND = 1000
 
 const HomePage = () => (
   <div className="container">
@@ -64,29 +59,12 @@ const UserPage = props => <User userAddress={props.match.params.userAddress} />
 
 // Top level component
 class App extends Component {
+  constructor(props){
+    super(props)
+  }
 
   componentWillMount() {
     this.props.localizeApp()
-
-    // detect existing messaging account
-    origin.messaging.events.on('ready', accountKey => {
-      this.props.setMessagingEnabled(!!accountKey)
-    })
-
-    // detect net decrypted messages
-    origin.messaging.events.on('msg', obj => {
-      this.props.addMessage(obj)
-    })
-
-    // To Do: handle incoming messages when no Origin Messaging Private Key is available
-    origin.messaging.events.on('emsg', obj => {
-      console.error('A message has arrived that could not be decrypted:', obj)
-    })
-
-    // poll for notifications
-    setInterval(() => {
-      this.props.fetchNotifications()
-    }, 10 * ONE_SECOND)
   }
 
   componentDidMount() {
@@ -113,35 +91,41 @@ class App extends Component {
   }
 
   render() {
-    return this.props.selectedLanguageAbbrev ? (
-      <IntlProvider locale={this.props.selectedLanguageAbbrev} messages={this.props.messages} textComponent={Fragment}>
+    return this.props.selectedLanguageCode ? (
+      <IntlProvider 
+        locale={this.props.selectedLanguageCode}
+        defaultLocale="en-US"
+        messages={this.props.messages}
+        textComponent={Fragment}>
         <Router>
           <ScrollToTop>
             <Web3Provider>
-              <Layout>
-                <Switch>
-                  <Route exact path="/" component={HomePage} />
-                  <Route path="/page/:activePage" component={HomePage} />
-                  <Route
-                    path="/listing/:listingAddress"
-                    component={ListingDetailPage}
-                  />
-                  <Route path="/create" component={CreateListingPage} />
-                  <Route path="/my-listings" component={MyListings} />
-                  <Route
-                    path="/purchases/:purchaseAddress"
-                    component={PurchaseDetailPage}
-                  />
-                  <Route path="/my-purchases" component={MyPurchases} />
-                  <Route path="/my-sales" component={MySales} />
-                  <Route path="/messages/:conversationId?" component={Messages} />
-                  <Route path="/notifications" component={Notifications} />
-                  <Route path="/profile" component={Profile} />
-                  <Route path="/users/:userAddress" component={UserPage} />
-                  <Route component={NotFound} />
-                </Switch>
-              </Layout>
-              <Alert />
+              <MessagingProvider>
+                <Layout>
+                  <Switch>
+                    <Route exact path="/" component={HomePage} />
+                    <Route path="/page/:activePage" component={HomePage} />
+                    <Route
+                      path="/listing/:listingAddress"
+                      component={ListingDetailPage}
+                    />
+                    <Route path="/create" component={CreateListingPage} />
+                    <Route path="/my-listings" component={MyListings} />
+                    <Route
+                      path="/purchases/:purchaseAddress"
+                      component={PurchaseDetailPage}
+                    />
+                    <Route path="/my-purchases" component={MyPurchases} />
+                    <Route path="/my-sales" component={MySales} />
+                    <Route path="/messages/:conversationId?" component={Messages} />
+                    <Route path="/notifications" component={Notifications} />
+                    <Route path="/profile" component={Profile} />
+                    <Route path="/users/:userAddress" component={UserPage} />
+                    <Route component={NotFound} />
+                  </Switch>
+                </Layout>
+                <Alert />
+              </MessagingProvider>
             </Web3Provider>
           </ScrollToTop>
         </Router>
@@ -152,15 +136,12 @@ class App extends Component {
 
 const mapStateToProps = state => ({
   messages: state.app.translations.messages,
-  selectedLanguageAbbrev: state.app.translations.selectedLanguageAbbrev
+  selectedLanguageCode: state.app.translations.selectedLanguageCode
 })
 
 const mapDispatchToProps = dispatch => ({
-  addMessage: (obj) => dispatch(addMessage(obj)),
-  fetchNotifications: () => dispatch(fetchNotifications()),
   fetchProfile: () => dispatch(fetchProfile()),
   initWallet: () => dispatch(initWallet()),
-  setMessagingEnabled: (bool) => dispatch(setMessagingEnabled(bool)),
   setMobile: device => dispatch(setMobile(device)),
   localizeApp: () => dispatch(localizeApp())
 })

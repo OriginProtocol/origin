@@ -56,13 +56,14 @@ class ConversationListItem extends Component {
     const unreadCount = conversation.values.filter(msg => {
       return msg.status === 'unread' && msg.senderAddress !== web3Account
     }).length
+    const { fullName, profile } = counterparty
 
     return (
       <div
         onClick={handleConversationSelect}
         className={`d-flex conversation-list-item${active ? ' active' : ''}`}
       >
-        <Avatar placeholderStyle="blue" />
+        <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
         <div className="content-container text-truncate">
           <div className="sender text-truncate">
             {counterparty.fullName || counterpartyAddress}

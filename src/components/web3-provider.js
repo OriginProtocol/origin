@@ -1,5 +1,5 @@
-import { FormattedMessage } from 'react-intl'
 import React, { Component, Fragment } from 'react'
+import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import clipboard from 'clipboard-polyfill'

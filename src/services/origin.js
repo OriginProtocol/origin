@@ -2,6 +2,7 @@ import Origin from 'origin'
 import IPFS from 'ipfs'
 import Web3 from 'web3'
 import ecies from 'eth-ecies'
+import OrbitDB from 'orbit-db'
 
 import detectMobile from 'utils/detectMobile'
 
@@ -18,7 +19,7 @@ const mobilize = (str) => {
 
 /*
  * It may be preferential to use websocket provider 
- * WebsocketProvider("ss://rinkeby.infura.io/ws")
+ * WebsocketProvider("wss://rinkeby.infura.io/ws")
  * But Micah couldn't get it to connect ¯\_(ツ)_/¯
  */
 const defaultProviderUrl = mobilize(process.env.PROVIDER_URL)
@@ -42,11 +43,6 @@ const web3 = new Web3(
 )
 
 const ipfsCreator = repo_key => {
-  let boots = []
-  if (process.env.IPFS_SWARM)
-  {
-    boots = [process.env.IPFS_SWARM]
-  }
   const ipfsOptions = {
     repo: 'ipfs' + repo_key,
     EXPERIMENTAL: {
@@ -59,28 +55,36 @@ const ipfsCreator = repo_key => {
       }
     },
     config: {
-      Bootstrap: boots,
+      Bootstrap: [], // it's ok to connect to more peers than this, but currently leaving it out due to noise.
       Addresses: {
        //Swarm: ['/dns4/wrtc-star.discovery.libp2p.io/tcp/443/wss/p2p-webrtc-star']
       }
     }
   }
-  return new IPFS(ipfsOptions)
-}
 
-import OrbitDB from 'orbit-db'
+  const ipfs = new IPFS(ipfsOptions)
+
+  if (process.env.IPFS_SWARM) {
+    ipfs.on("start", async ()=> {
+      await ipfs.swarm.connect(process.env.IPFS_SWARM)
+    })
+  }
+
+  return ipfs
+}
 
 const config = {
   ipfsDomain: mobilize(process.env.IPFS_DOMAIN),
   ipfsApiPort: process.env.IPFS_API_PORT,
   ipfsGatewayPort: process.env.IPFS_GATEWAY_PORT,
   ipfsGatewayProtocol: process.env.IPFS_GATEWAY_PROTOCOL,
+  messagingNamespace: process.env.MESSAGING_NAMESPACE,
   attestationServerUrl,
   walletLinkerUrl,
   ipfsCreator,
   OrbitDB,
   ecies,
-  web3,
+  web3
 }
 
 try {
@@ -94,4 +98,5 @@ const origin = new Origin(config)
 window.web3 = origin.contractService.web3
 // global Origin for others to access
 window.originTest = origin
+
 export default origin

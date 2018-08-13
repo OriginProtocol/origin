@@ -357,8 +357,14 @@ class ListingCreate extends Component {
                 </div>
                 <FormattedMessage
                   id={ 'listing-create.successMessage' }
-                  defaultMessage={ 'Success' }
+                  defaultMessage={ 'Success!' }
                 />
+                <div className="disclaimer">
+                  <FormattedMessage
+                    id={ 'listing-create.successDisclaimer' }
+                    defaultMessage={ 'Your listing will be visible within a few seconds.' }
+                  />
+                </div>
                 <div className="button-container">
                   <Link to="/" className="btn btn-clear">
                     <FormattedMessage
