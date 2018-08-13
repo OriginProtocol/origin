@@ -12,6 +12,7 @@ import {
 
 import ListingDetail from 'components/listing-detail'
 import Modal from 'components/modal'
+import listingSchema from 'utils/listingSchema.js'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
 import { translateSchema } from 'utils/translationUtils'
@@ -36,66 +37,18 @@ class ListingCreate extends Component {
       SUCCESS: 6,
       ERROR: 7
     }
-
-    const schemaTypeLabels = defineMessages({
-      forSale: {
-        id: 'listing-create.forSaleLabel',
-        defaultMessage: 'For Sale'
-      },
-      housing: {
-        id: 'listing-create.housingLabel',
-        defaultMessage: 'Housing'
-      },
-      transportation: {
-        id: 'listing-create.transportation',
-        defaultMessage: 'Transportation'
-      },
-      tickets: {
-        id: 'listing-create.tickets',
-        defaultMessage: 'Tickets'
-      },
-      services: {
-        id: 'listing-create.services',
-        defaultMessage: 'Services'
-      },
-      announcements: {
-        id: 'listing-create.announcements',
-        defaultMessage: 'Announcements'
+    
+    this.schemaList = Object.keys(listingSchema.listingTypes).map( listingTypeKey => {
+      const listingObject = listingSchema.listingTypes[listingTypeKey];
+      return {
+        type: listingObject.type,
+        name: props.intl.formatMessage(listingObject.translationName),
+        img: listingObject.img
       }
     })
 
-    this.schemaList = [
-      {
-        type: 'for-sale',
-        name: props.intl.formatMessage(schemaTypeLabels.forSale),
-        img: 'for-sale.jpg'
-      },
-      {
-        type: 'housing',
-        name: props.intl.formatMessage(schemaTypeLabels.housing),
-        img: 'housing.jpg'
-      },
-      {
-        type: 'transportation',
-        name: props.intl.formatMessage(schemaTypeLabels.transportation),
-        img: 'transportation.jpg'
-      },
-      {
-        type: 'tickets',
-        name: props.intl.formatMessage(schemaTypeLabels.tickets),
-        img: 'tickets.jpg'
-      },
-      {
-        type: 'services',
-        name: props.intl.formatMessage(schemaTypeLabels.services),
-        img: 'services.jpg'
-      },
-      {
-        type: 'announcements',
-        name: props.intl.formatMessage(schemaTypeLabels.announcements),
-        img: 'announcements.jpg'
-      }
-    ]
+    console.log(this.schemaList1)
+    console.log(this.schemaList)
 
     this.state = {
       step: this.STEP.PICK_SCHEMA,
