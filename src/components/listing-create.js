@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import moment from 'moment'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import Form from 'react-jsonschema-form'
 
@@ -17,31 +16,9 @@ import Calendar from './calendar'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
 import { translateSchema } from 'utils/translationUtils'
+import { generateCalendarSlots } from 'utils/calendarHelpers'
 
 import origin from '../services/origin'
-
-const generateCalendarSlots = (events) => {
-  for (let i = 0, eventsLen = events.length; i < eventsLen; i++) {
-    const event = events[i]
-    const startDate = new Date(event.startDate)
-    const endDate = new Date(event.endDate)
-    let eventDate = moment(event.startDate)
-    const slots = []
-
-    // convert start and end date strings in to date objects
-    event.startDate = startDate
-    event.endDate = endDate
-
-    while (eventDate.toDate() >= startDate && eventDate.toDate() <= endDate) {
-        slots.push(eventDate.toDate())
-        eventDate = eventDate.add(1, 'days')
-    }
-
-    event.slots = slots
-  }
-
-  return events
-}
 
 class ListingCreate extends Component {
 
@@ -120,7 +97,8 @@ class ListingCreate extends Component {
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
     this.onAvailabilityEntered = this.onAvailabilityEntered.bind(this)
-    this.onGoBack = this.onGoBack.bind(this)
+    this.onGoBackToDetails = this.onGoBackToDetails.bind(this)
+    this.backFromReviewStep = this.backFromReviewStep.bind(this)
   }
 
   async componentDidMount() {
@@ -232,8 +210,13 @@ class ListingCreate extends Component {
     })
   }
 
-  onGoBack() {
+  onGoBackToDetails() {
     this.setState({ step: this.STEP.DETAILS })
+  }
+
+  backFromReviewStep() {
+    const previousStep = this.state.isFractionalListing ? this.STEP.AVAILABILITY : this.STEP.DETAILS
+    this.setState({step: previousStep})
   }
 
   async onSubmitListing(formData, selectedSchemaType) {
@@ -428,7 +411,7 @@ class ListingCreate extends Component {
               viewType={ this.state.fractionalTimeIncrement }
               step={ 60 }
               onComplete={ this.onAvailabilityEntered }
-              onGoBack={ this.onGoBack }
+              onGoBack={ this.onGoBackToDetails }
             />
           </div>
         }
@@ -578,7 +561,7 @@ class ListingCreate extends Component {
                   <ListingDetail listingJson={ formData } />
                 </div>
                 <div className="btn-container">
-                  <button className="btn btn-other float-left" onClick={() => this.setState({step: this.STEP.DETAILS})}>
+                  <button className="btn btn-other float-left" onClick={ this.backFromReviewStep }>
                     <FormattedMessage
                       id={ 'listing-create.backButtonLabel' }
                       defaultMessage={ 'Back' }

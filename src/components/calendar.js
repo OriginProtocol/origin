@@ -3,6 +3,7 @@ import BigCalendar from 'react-big-calendar'
 import { injectIntl } from 'react-intl'
 import moment from 'moment'
 import uuid from 'uuid/v1'
+import { generateCalendarSlots } from 'utils/calendarHelpers'
 
 class Calendar extends Component {
 
@@ -52,21 +53,23 @@ class Calendar extends Component {
   componentWillMount() {
     BigCalendar.momentLocalizer(moment);
     
-    const events = this.props.slots && this.props.slots.map((slot) =>  {
-      return { 
-        id: uuid(),
-        start: moment(slot.startDate).toDate(),
-        end: moment(slot.endDate).subtract(1, 'second').toDate(),
-        price: slot.priceWei,
-        isAvailable: slot.isAvailable,
-        slots: slot.slots,
-        isRecurringEvent: (slot.recurs === 'weekly')
-      }
-    })
+    if (this.props.slots) {
+      const events = generateCalendarSlots(this.props.slots).map((slot) =>  {
+        return { 
+          id: uuid(),
+          start: moment(slot.startDate).toDate(),
+          end: moment(slot.endDate).subtract(1, 'second').toDate(),
+          price: slot.priceWei,
+          isAvailable: slot.isAvailable,
+          slots: slot.slots,
+          isRecurringEvent: (slot.recurs === 'weekly')
+        }
+      })
 
-    this.setState({
-      events: (events || [])
-    })
+      this.setState({
+        events
+      })
+    }
   }
 
   componentDidMount() {
