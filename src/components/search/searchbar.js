@@ -32,40 +32,58 @@ class SearchBar extends Component {
   }
 
   render() {
+    //TODO: successfuly renamed the navbar thing!
     return (
-      <nav className="searchbar saerchbar-dark">
-       <div className="container d-flex flex-row">
-          <div className="input-group mr-auto" id="search">
-            <div className="input-group-prepend">
-              <button className="btn btn-outline-secondary dropdown-toggle search-bar-prepend" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</button>
-              <div className="dropdown-menu">
-                <a className="dropdown-item" href="#">Action</a>
-                <a className="dropdown-item" href="#">Another action</a>
-                <a className="dropdown-item" href="#">Something else here</a>
-                <a className="dropdown-item" href="#">Separated link</a>
-              </div>
-            </div>
-            <input type="text" className="form-control search-input" placeholder={this.props.intl.formatMessage(this.intlMessages.searchPlaceholder)} aria-label="Search"/>
-            <div className="input-group-append">
-              <span className="input-group-text search-bar-append">
-                <img src="images/searchbar/magnifying-glass.svg" alt="Search Listings" />
-              </span>
-            </div>
-          </div>
+             <nav className="navbar searchbar navbar-expand-md">
+               <div className="container d-flex flex-row">
+                  <div className="input-group mr-auto" id="search">
+                    <div className="input-group-prepend">
+                      <button className="btn btn-outline-secondary dropdown-toggle search-bar-prepend" type="button" data-toggle="listingType" aria-haspopup="true" aria-expanded="false">
+                        Housing
+                      </button>
+                      <div className="dropdown-menu">
+                        <a className="dropdown-item" href="#">Action</a>
+                        <a className="dropdown-item" href="#">Another action</a>
+                        <a className="dropdown-item" href="#">Something else here</a>
+                        <a className="dropdown-item" href="#">Separated link</a>
+                      </div>
+                    </div>
+                    <input type="text" className="form-control search-input" placeholder={this.props.intl.formatMessage(this.intlMessages.searchPlaceholder)} aria-label="Search"/>
+                    <div className="input-group-append">
+                      <button className="search-bar-append" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="images/searchbar/magnifying-glass.svg" alt="Search Listings" />
+                      </button>
+                    </div>
+                  </div>
 
-          <ul className="navbar-nav">
-            <li className="nav-item active">
-              <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">Link</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link disabled" href="#">Disabled</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
+                  <ul className="navbar-nav collapse navbar-collapse">
+                    <li className="nav-item active">
+                      <a className="nav-link" href="#">
+                        <FormattedMessage
+                          id={ 'searchbar.forsale' }
+                          defaultMessage={ 'For Sale' }
+                        />
+                      </a>
+                    </li>
+                    <li className="nav-item">
+                      <a className="nav-link" href="#">
+                        <FormattedMessage
+                          id={ 'searchbar.newListings' }
+                          defaultMessage={ 'New Listings' }
+                        />
+                      </a>
+                    </li>
+                    <li className="nav-item">
+                      <a className="nav-link" href="#">
+                        <FormattedMessage
+                          id={ 'searchbar.delasNearMe' }
+                          defaultMessage={ 'Deals Near Me' }
+                        />
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </nav>
     )
   }
 }

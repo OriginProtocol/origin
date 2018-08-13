@@ -2,5 +2,17 @@
   {
     "id": "searchbar.search",
     "defaultMessage": "Search"
+  },
+  {
+    "id": "searchbar.forsale",
+    "defaultMessage": "For Sale"
+  },
+  {
+    "id": "searchbar.newListings",
+    "defaultMessage": "New Listings"
+  },
+  {
+    "id": "searchbar.delasNearMe",
+    "defaultMessage": "Deals Near Me"
   }
 ]

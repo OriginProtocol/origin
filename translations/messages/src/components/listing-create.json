@@ -1,29 +1,5 @@
 [
   {
-    "id": "listing-create.forSaleLabel",
-    "defaultMessage": "For Sale"
-  },
-  {
-    "id": "listing-create.housingLabel",
-    "defaultMessage": "Housing"
-  },
-  {
-    "id": "listing-create.transportation",
-    "defaultMessage": "Transportation"
-  },
-  {
-    "id": "listing-create.tickets",
-    "defaultMessage": "Tickets"
-  },
-  {
-    "id": "listing-create.services",
-    "defaultMessage": "Services"
-  },
-  {
-    "id": "listing-create.announcements",
-    "defaultMessage": "Announcements"
-  },
-  {
     "id": "listing-create.chooseSchema",
     "defaultMessage": "Choose a schema for your product or service"
   },
