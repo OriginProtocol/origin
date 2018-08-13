@@ -459,12 +459,14 @@ a:hover {
 
 .searchbar .search-input {
   height: 40px;
+  max-width: 288px;
   text-align: left;
 }
 
 .searchbar .search-bar-prepend {
   border-radius: 0.35rem;
   border: 1px solid var(--light);
+  color: var(--dusk);
   font-size: 0.875rem;
   font-weight: normal;
   background-color: var(--pale-grey);
@@ -472,6 +474,11 @@ a:hover {
   padding-right: 15px;
   height: 40px;
   width: auto;
+}
+
+.searchbar .search-bar-prepend:hover {
+  color: var(--dusk);
+  background-color: var(--pale-grey-two);
 }
 
 .searchbar .navbar-nav .nav-item a {

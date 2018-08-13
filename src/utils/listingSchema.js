@@ -1,6 +1,6 @@
 const listingSchema = {
-	listingTypes: {
-		forSale: {
+	listingTypes: [
+		{
 			type: 'for-sale',
 			translationName: {
         id: 'listing-create.forSaleLabel',
@@ -8,7 +8,7 @@ const listingSchema = {
       },
       img: 'for-sale.jpg'
 		},
-		housing: {
+		{
 			type: 'housing',
 			translationName: {
         id: 'listing-create.housingLabel',
@@ -16,7 +16,7 @@ const listingSchema = {
       },
       img: 'housing.jpg'
 		},
-		transportation: {
+		{
 			type: 'transportation',
 			translationName: {
         id: 'listing-create.transportation',
@@ -24,7 +24,7 @@ const listingSchema = {
       },
       img: 'transportation.jpg'
 		},
-		tickets: {
+		{
 			type: 'tickets',
 			translationName: {
         id: 'listing-create.tickets',
@@ -32,7 +32,7 @@ const listingSchema = {
       },
       img: 'tickets.jpg'
 		},
-		services: {
+		{
 			type: 'services',
 			translationName: {
         id: 'listing-create.services',
@@ -40,7 +40,7 @@ const listingSchema = {
       },
       img: 'services.jpg'
 		},
-		announcements: {
+		{
 			type: 'announcements',
 			translationName: {
         id: 'listing-create.announcements',
@@ -48,7 +48,7 @@ const listingSchema = {
       },
       img: 'announcements.jpg'
 		}
-	}
+	]
 }
 
 export default listingSchema

@@ -38,13 +38,9 @@ class ListingCreate extends Component {
       ERROR: 7
     }
     
-    this.schemaList = Object.keys(listingSchema.listingTypes).map( listingTypeKey => {
-      const listingObject = listingSchema.listingTypes[listingTypeKey];
-      return {
-        type: listingObject.type,
-        name: props.intl.formatMessage(listingObject.translationName),
-        img: listingObject.img
-      }
+    this.schemaList = listingSchema.listingTypes.map(listingType => {
+      listingType.name = props.intl.formatMessage(listingType.translationName)
+      return listingType
     })
 
     console.log(this.schemaList1)
