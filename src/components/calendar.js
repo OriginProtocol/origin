@@ -3,7 +3,7 @@ import BigCalendar from 'react-big-calendar'
 import { injectIntl } from 'react-intl'
 import moment from 'moment'
 import uuid from 'uuid/v1'
-import { generateCalendarSlots } from 'utils/calendarHelpers'
+import { generateCalendarSlots, checkSlotsForExistingEvent } from 'utils/calendarHelpers'
 
 class Calendar extends Component {
 
@@ -31,7 +31,6 @@ class Calendar extends Component {
     this.nextPeriod = this.nextPeriod.bind(this)
     this.slotPropGetter = this.slotPropGetter.bind(this)
     this.eventComponent = this.eventComponent.bind(this)
-    this.checkSlotsForExistingEvent = this.checkSlotsForExistingEvent.bind(this)
     this.renderHourlyPrices = this.renderHourlyPrices.bind(this)
     this.getDateDropdownOptions = this.getDateDropdownOptions.bind(this)
     this.renderRecurringEvents = this.renderRecurringEvents.bind(this)
@@ -108,26 +107,6 @@ class Calendar extends Component {
     return this.props.viewType === 'daily' ? 'month' : 'week'
   }
 
-  checkSlotsForExistingEvent(slotInfo) {
-    return this.state.events.filter((event) => {
-      let isEventInSlot = false
-
-      for (let i = 0, existSlotsLen = event.slots.length; i < existSlotsLen; i++) {
-        const existSlot = event.slots[i]
-
-        for (let j = 0, newSlotsLen = slotInfo.slots.length; j < newSlotsLen; j++) {
-          const newSlot = slotInfo.slots[j]
-
-          if (existSlot.toString() === newSlot.toString()) {
-            isEventInSlot = true
-          }
-        }
-      }
-
-      return isEventInSlot
-    })
-  }
-
   onSelectSlot(slotInfo) {
     if (this.props.userType === 'seller') {
       // remove last slot time for hourly calendars - not sure why React Big Calendar includes
@@ -137,7 +116,7 @@ class Calendar extends Component {
       }
 
       // if slot doesn't already contain an event, create an event
-      const existingEventInSlot = this.checkSlotsForExistingEvent(slotInfo)
+      const existingEventInSlot = checkSlotsForExistingEvent(slotInfo, this.state.events)
 
       if (existingEventInSlot.length > 1) {
         return this.setState({ showOverlappingEventsErrorMsg: true })
@@ -147,7 +126,7 @@ class Calendar extends Component {
 
       let newEvent
       if (!existingEventInSlot.length || 
-          (existingEventInSlot.length === 1 && existingEventInSlot[0].isClonedRecurringEvent)) {
+          (existingEventInSlot.length === 1 && existingEventInSlot[0].isRecurringEvent)) {
 
         const endDate = this.props.viewType === 'daily' ?
                         moment(slotInfo.end).add(1, 'day').subtract(1, 'second').toDate() :
@@ -228,7 +207,7 @@ class Calendar extends Component {
       showOverlappingEventsErrorMsg: false
     }
 
-    const existingEventInSlot = this.checkSlotsForExistingEvent(selectedEvent)
+    const existingEventInSlot = checkSlotsForExistingEvent(selectedEvent, this.state.events)
     if (existingEventInSlot.length && existingEventInSlot.length > 1) {
       if (!selectedEvent.isRecurringEvent) {
         stateToSet.hideRecurringEventCheckbox = true
