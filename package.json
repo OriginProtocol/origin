@@ -36,6 +36,7 @@
     "map-cache": "^0.2.2",
     "openzeppelin-solidity": "1.10.0",
     "rlp": "^2.0.0",
+    "url-parse": "^1.4.0",
     "store": "^2.0.12",
     "web3": "^1.0.0-beta.34"
   },

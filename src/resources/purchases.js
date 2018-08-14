@@ -57,7 +57,7 @@ class Purchases extends ResourceBase {
       const ipfsHash = this.contractService.getIpfsHashFromBytes32(
         ipfsHashBytes32
       )
-      ipfsData = await this.ipfsService.getFile(ipfsHash)
+      ipfsData = await this.ipfsService.loadObjFromFile(ipfsHash)
     }
 
     return {
@@ -164,7 +164,7 @@ class Purchases extends ResourceBase {
     const reviewText = data.reviewText
     if (reviewText && typeof reviewText == 'string' && reviewText.length > 2) {
       const ipfsData = { version: 1, reviewText: reviewText }
-      const ipfsHash = await this.ipfsService.submitFile(ipfsData)
+      const ipfsHash = await this.ipfsService.saveObjAsFile(ipfsData)
       ipfsHashBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
     }
     // Return review data

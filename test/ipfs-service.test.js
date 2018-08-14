@@ -7,7 +7,14 @@ const clearCache = ipfsService => {
   Object.keys(mapCache.__data__).forEach(key => mapCache.del(key))
 }
 
-const methodNames = ['submitFile', 'getFile', 'gatewayUrlForHash']
+const methodNames = [
+  'saveObjAsFile',
+  'saveDataURIAsFile',
+  'saveFile',
+  'loadObjFromFile',
+  'loadFile',
+  'gatewayUrlForHash'
+]
 
 describe('IpfsService', () => {
   let ipfsService
@@ -27,28 +34,28 @@ describe('IpfsService', () => {
     })
   })
 
-  describe('submitFile', () => {
+  describe('saveObjAsFile', () => {
     listings.forEach(({ data, ipfsHash }) => {
       it('should successfully submit file', async () => {
-        const submittedHash = await ipfsService.submitFile(data)
+        const submittedHash = await ipfsService.saveObjAsFile(data)
         expect(submittedHash).to.equal(ipfsHash)
 
-        const cachedData = await ipfsService.getFile(submittedHash)
+        const cachedData = await ipfsService.loadObjFromFile(submittedHash)
         expect(cachedData).to.deep.eql(data)
 
         clearCache(ipfsService)
 
-        const submittedData = await ipfsService.getFile(ipfsHash)
+        const submittedData = await ipfsService.loadObjFromFile(ipfsHash)
         expect(submittedData).to.deep.eql(data)
       })
     })
   })
 
-  describe('getFile', () => {
+  describe('loadFile', () => {
     // Skipped because of https://github.com/OriginProtocol/platform/issues/27
     xit('should reject when listing cannot be found', done => {
       ipfsService
-        .getFile('QmWHyrPWQnsz1wxHR219ooJDYTvxJPyZuDUPSDpdsAovN5')
+        .loadFile('QmWHyrPWQnsz1wxHR219ooJDYTvxJPyZuDUPSDpdsAovN5')
         .then(done.fail, error => {
           expect(error).to.be.instanceof(Error)
           done()

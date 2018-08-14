@@ -76,7 +76,7 @@ class Users extends ResourceBase {
 
   async profileAttestation(profile) {
     // Submit to IPFS
-    const ipfsHash = await this.ipfsService.submitFile(profile)
+    const ipfsHash = await this.ipfsService.saveObjAsFile(profile)
     const asBytes32 = this.contractService.getBytes32FromIpfsHash(ipfsHash)
     // For now we'll ignore issuer & signature for self attestations
     // If it's a self-attestation, then no validation is necessary
@@ -205,7 +205,7 @@ class Users extends ResourceBase {
     if (profileClaims.length) {
       const bytes32 = profileClaims[profileClaims.length - 1].data
       const ipfsHash = this.contractService.getIpfsHashFromBytes32(bytes32)
-      profile = await this.ipfsService.getFile(ipfsHash)
+      profile = await this.ipfsService.loadObjFromFile(ipfsHash)
     }
     const validAttestations = await this.validAttestations(
       identityAddress,

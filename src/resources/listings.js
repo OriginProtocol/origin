@@ -4,6 +4,7 @@
 import ResourceBase from './_resource-base'
 import Ajv from 'ajv'
 import ajvEnableMerge from 'ajv-merge-patch/keywords/merge'
+import URL from 'url-parse'
 import listingSchema from '../schemas/listing.json'
 import unitListingSchema from '../schemas/unit-listing.json'
 import fractionalListingSchema from '../schemas/fractional-listing.json'
@@ -52,7 +53,7 @@ class Listings extends ResourceBase {
   }
 
   /*
-      Public mehods
+      Public methods
   */
 
   // fetches all listings (all data included)
@@ -120,7 +121,7 @@ class Listings extends ResourceBase {
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(
       ipfsHashBytes32
     )
-    const ipfsJson = await this.ipfsService.getFile(ipfsHash)
+    const ipfsJson = await this.ipfsService.loadObjFromFile(ipfsHash)
     const ipfsData = ipfsJson ? ipfsJson.data : {}
 
     ipfsData.listingType = ipfsData.listingType || unitListingType
@@ -148,6 +149,25 @@ class Listings extends ResourceBase {
   async create(data, schemaType, confirmationCallback) {
     const listingType = data.listingType || unitListingType
     data.listingType = listingType // in case it wasn't set
+
+    if (data.pictures) {
+      // Filter picture URLs and upload data: URLs to ipfs
+      const pictures = this.filterPictureUrls(data.pictures).map(async (url) => {
+        if (url.startsWith('data:')) {
+          // Upload data: URLs to IPFS and replace with IPFS URL
+          const ipfsHash = await this.ipfsService.saveDataURIAsFile(url)
+          return this.ipfsService.gatewayUrlForHash(ipfsHash)
+        }
+        // Leave other URLs untouched
+        return url
+      })
+
+      // Replace data.pictures with filtered/ipfs
+      await Promise.all(pictures).then((results) => {
+        data.pictures = results
+      })
+    }
+
     if (listingType === unitListingType) {
       return await this.createUnit(data, schemaType, confirmationCallback)
     } else if (listingType === fractionalListingType) {
@@ -189,7 +209,7 @@ class Listings extends ResourceBase {
       String(ethToPay),
       'ether'
     )
-    const ipfsHash = await this.ipfsService.submitFile(ifpsData)
+    const ipfsHash = await this.ipfsService.saveObjAsFile(ifpsData)
     const ipfsBytes32 = this.contractService.getBytes32FromIpfsHash(ipfsHash)
     return await this.contractService.contractFn(
       this.contractService.fractionalListingContract,
@@ -263,7 +283,7 @@ class Listings extends ResourceBase {
     const formListing = { formData: data }
 
     // TODO: Why can't we take schematype from the formListing object?
-    const jsonBlob = {
+    const listingObj = {
       schema: `http://localhost:3000/schemas/${schemaType}.json`,
       data: formListing.formData
     }
@@ -271,13 +291,13 @@ class Listings extends ResourceBase {
     let ipfsHash
     try {
       // Submit to IPFS
-      ipfsHash = await this.ipfsService.submitFile(jsonBlob)
+      ipfsHash = await this.ipfsService.saveObjAsFile(listingObj)
     } catch (error) {
       throw new Error(`IPFS Failure: ${error}`)
     }
 
     console.log(`IPFS file created with hash: ${ipfsHash} for data:`)
-    console.log(jsonBlob)
+    console.log(listingObj)
 
     // For now, accept price in either wei or eth for backwards compatibility
     // `price` is now deprecated. `priceWei` should be used instead.
@@ -312,12 +332,13 @@ class Listings extends ResourceBase {
 
   async createFractional(data, confirmationCallback) {
     validate(validateFractionalListing, data, fractionalListingSchema)
-    const json = { data }
+
+    const listingObj = { data }
 
     // Submit to IPFS
     let ipfsHash
     try {
-      ipfsHash = await this.ipfsService.submitFile(json)
+      ipfsHash = await this.ipfsService.saveObjAsFile(listingObj)
     } catch (error) {
       throw new Error(`IPFS Failure: ${error}`)
     }
@@ -339,12 +360,13 @@ class Listings extends ResourceBase {
 
   async updateFractional(address, data) {
     validate(validateFractionalListing, data, fractionalListingSchema)
-    const json = { data }
+
+    const listingObj = { data }
 
     // Submit to IPFS
     let ipfsHash
     try {
-      ipfsHash = await this.ipfsService.submitFile(json)
+      ipfsHash = await this.ipfsService.saveObjAsFile(listingObj)
     } catch (error) {
       throw new Error(`IPFS Failure: ${error}`)
     }
@@ -423,10 +445,8 @@ class Listings extends ResourceBase {
     return Promise.all(
       json.objects.map(async obj => {
         const ipfsData = obj['ipfs_data']
-        // While we wait on https://github.com/OriginProtocol/origin-bridge/issues/18
-        // we fetch the array of image data strings for each listing
-        const indexedIpfsData = await this.ipfsService.getFile(obj['ipfs_hash'])
-        const pictures = indexedIpfsData.data.pictures
+        const indexedIpfsData = await this.ipfsService.loadObjFromFile(obj['ipfs_hash'])
+        const pictures = this.rewritePictureUrls(indexedIpfsData.data.pictures)
         return {
           address: obj['contract_address'],
           ipfsHash: obj['ipfs_hash'],
@@ -467,7 +487,7 @@ class Listings extends ResourceBase {
       category: ipfsData.category,
       description: ipfsData.description,
       location: ipfsData.location,
-      pictures: ipfsData.pictures,
+      pictures: this.rewritePictureUrls(ipfsData.pictures),
       listingType: ipfsData.listingType,
       schemaType: ipfsData.schemaType
     }
@@ -481,11 +501,55 @@ class Listings extends ResourceBase {
       category: ipfsData.category,
       description: ipfsData.description,
       location: ipfsData.location,
-      pictures: ipfsData.pictures,
+      pictures: this.rewritePictureUrls(ipfsData.pictures),
       listingType: ipfsData.listingType,
       schemaType: ipfsData.schemaType,
       slots: ipfsData.slots
     }
+  }
+
+  /**
+   * Filters an array of image URLs to remove unsafe protocols.
+   *
+   * Allowed protocols are dweb:, ipfs: and data:.
+   *
+   * @param {array} pictureUrls - URLs to be filtered
+   */
+  filterPictureUrls(pictureUrls) {
+    if (!pictureUrls) return pictureUrls
+
+    return pictureUrls.filter((url) => {
+      try {
+        // Only allow data:, dweb:, and ipfs: URLs
+        return ['data:', 'dweb:', 'ipfs:'].includes((new URL(url).protocol))
+      } catch (error) {
+        // Invalid URL, filter it out
+        return false
+      }
+    })
+  }
+
+  /**
+   * Rewrites image URLs to use the configured IPFS gateway.
+   *
+   * @param {array} pictureUrls - URLs to be rewritten
+   */
+  rewritePictureUrls(pictureUrls) {
+    if (!pictureUrls) return pictureUrls
+
+    return pictureUrls.map((url) => {
+      if (url.startsWith('ipfs://')) {
+        // Rewrite ipfs: URLs
+        const ipfsHash = url.replace('ipfs://', '')
+        return this.ipfsService.gatewayUrlForHash(ipfsHash)
+      } else if (url.startsWith('dweb://ipfs/')) {
+        // Rewrite dweb: URLs
+        const ipfsHash = url.replace('dweb://ipfs/', '')
+        return this.ipfsService.gatewayUrlForHash(ipfsHash)
+      }
+      // Leave data: URLs untouched
+      return url
+    })
   }
 }
 

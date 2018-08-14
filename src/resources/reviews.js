@@ -59,7 +59,7 @@ class Reviews extends ResourceBase {
           if (event.ipfsHash == undefined) {
             return
           }
-          const data = await self.ipfsService.getFile(event.ipfsHash)
+          const data = await self.ipfsService.loadObjFromFile(event.ipfsHash)
           event.reviewText = data.reviewText
         }
         const addTimestampFn = async event => {

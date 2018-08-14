@@ -1,3 +1,5 @@
+import URL from 'url-parse'
+
 import { generateListingId, generateOfferId } from '../utils/id'
 import { validateListing } from '../utils/schemaValidators'
 
@@ -48,7 +50,14 @@ class Marketplace extends Adaptable {
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(
       listing.ipfsHash
     )
-    const ipfsJson = await this.ipfsService.getFile(ipfsHash)
+    const ipfsJson = await this.ipfsService.loadObjFromFile(ipfsHash)
+
+    // Rewrite IPFS image URLs to use the configured IPFS gateway
+    if (ipfsJson && ipfsJson.data) {
+      ipfsJson.data.pictures = ipfsJson.data.pictures.map((url) => {
+        return this.ipfsService.rewriteUrl(url)
+      })
+    }
 
     return Object.assign({}, listing, {
       id: listingId,
@@ -87,7 +96,7 @@ class Marketplace extends Adaptable {
     const offer = await adapter.getOffer(listingIndex, offerIndex)
 
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(offer.ipfsHash)
-    const ipfsJson = await this.ipfsService.getFile(ipfsHash)
+    const ipfsJson = await this.ipfsService.loadObjFromFile(ipfsHash)
     const listingId = generateListingId({ version, network, listingIndex })
 
     // Use data from IPFS is offer no longer in active blockchain state
@@ -109,7 +118,34 @@ class Marketplace extends Adaptable {
   async createListing(ipfsData, confirmationCallback) {
     validateListing(ipfsData, this.contractService)
 
-    const ipfsHash = await this.ipfsService.submitFile({ data: ipfsData })
+    // Apply filtering to pictures and uploaded any data: URLs to IPFS
+    if (ipfsData.pictures) {
+      const pictures = ipfsData.pictures.filter((url) => {
+        try {
+          // Only allow data:, dweb:, and ipfs: URLs
+          return ['data:', 'dweb:', 'ipfs:'].includes((new URL(url).protocol))
+        } catch (error) {
+          // Invalid URL, filter it out
+          return false
+        }
+      }).map(async (url) => {
+        // Upload any data: URLs to IPFS
+        // TODO possible removal and only accept dweb: and ipfs: URLS from dapps
+        if (url.startsWith('data:')) {
+          const ipfsHash = await this.ipfsService.saveDataURIAsFile(url)
+          return this.ipfsService.gatewayUrlForHash(ipfsHash)
+        }
+        // Leave other URLs untouched
+        return url
+      })
+
+      // Replace data.pictures
+      await Promise.all(pictures).then((results) => {
+        ipfsData.pictures = results
+      })
+    }
+
+    const ipfsHash = await this.ipfsService.saveObjAsFile({ data: ipfsData })
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     const transactionReceipt = await this.currentAdapter.createListing(ipfsBytes, ipfsData, confirmationCallback)
@@ -124,7 +160,7 @@ class Marketplace extends Adaptable {
 
   async withdrawListing(listingId, ipfsData, confirmationCallback) {
     const { adapter, listingIndex } = this.parseListingId(listingId)
-    const ipfsHash = await this.ipfsService.submitFile({ data: ipfsData })
+    const ipfsHash = await this.ipfsService.saveObjAsFile({ data: ipfsData })
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     return await adapter.withdrawListing(listingIndex, ipfsBytes, confirmationCallback)
@@ -140,7 +176,7 @@ class Marketplace extends Adaptable {
     )
     data.buyer = buyer
 
-    const ipfsHash = await this.ipfsService.submitFile({ data })
+    const ipfsHash = await this.ipfsService.saveObjAsFile({ data })
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     const transactionReceipt = await adapter.makeOffer(listingIndex, ipfsBytes, data, confirmationCallback)
@@ -155,7 +191,7 @@ class Marketplace extends Adaptable {
   async acceptOffer(id, data, confirmationCallback) {
     const { adapter, listingIndex, offerIndex } = this.parseOfferId(id)
 
-    const ipfsHash = await this.ipfsService.submitFile({ data })
+    const ipfsHash = await this.ipfsService.saveObjAsFile({ data })
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     return await adapter.acceptOffer(
@@ -169,7 +205,7 @@ class Marketplace extends Adaptable {
   async finalizeOffer(id, data, confirmationCallback) {
     const { adapter, listingIndex, offerIndex } = this.parseOfferId(id)
 
-    const ipfsHash = await this.ipfsService.submitFile({ data })
+    const ipfsHash = await this.ipfsService.saveObjAsFile({ data })
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     return await adapter.finalizeOffer(
@@ -187,7 +223,7 @@ class Marketplace extends Adaptable {
   // manageListingDeposit(listingId, data) {}
 
   async addData(listingId, offerId, data, confirmationCallback) {
-    const ipfsHash = await this.ipfsService.submitFile({ data })
+    const ipfsHash = await this.ipfsService.saveObjAsFile({ data })
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     if (offerId) {
@@ -222,7 +258,7 @@ class Marketplace extends Adaptable {
       const ipfsHash = this.contractService.getIpfsHashFromBytes32(
         event.returnValues.ipfsHash
       )
-      const ipfsJson = await this.ipfsService.getFile(ipfsHash)
+      const ipfsJson = await this.ipfsService.loadObjFromFile(ipfsHash)
       const timestamp = await this.contractService.getTimestamp(event)
       reviews.push({
         transactionHash: event.transactionHash,
