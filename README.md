@@ -129,6 +129,14 @@ To remove all docker containers and volumes and start from scratch:
 3. `docker volume prune`
 4. `./install.sh -e origin`
 
+### Elasticsearch fails to start with virtual memory error
+
+The development stack includes an Elasticsearch container which may require an increase in the mmap counts for your OS. On Linux this can be achieved by running:
+
+	sysctl -w vm.max_map_count=262144
+
+For more information, see this [link.](https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html)
+
 ### Port errors
 
 The environment requires a number of ports to be free on your machine (3000, 5000, 5002, 8080, 8081 and 8545). If one of these ports isn't available spinning up the development environment may fail.

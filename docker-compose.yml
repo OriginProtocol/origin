@@ -34,17 +34,21 @@ services:
     networks:
       - origin-develop
 
-# elasticsearch:
-#   image: docker.elastic.co/elasticsearch/elasticsearch:6.3.1
-#   container_name: elasticsearch
-#   ports:
-#     - "9200:9200"
-#   environment:
-#     ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-#   ports:
-#     - "9200:9200"
-#   networks:
-#     - origin-develop
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch
+    build:
+      context: .
+      dockerfile: dockerfiles/elasticsearch
+    ports:
+      - "9200:9200"
+    environment:
+      network.bind_host: 0
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+    ports:
+      - "9200:9200"
+    networks:
+      - origin-develop
 
   origin-js:
     container_name: origin-js
