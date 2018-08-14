@@ -246,7 +246,7 @@ class VerifyAirbnb extends Component {
             id: 'VerifyAirbnb.generalServiceError',
             defaultMessage: 'Could not verify Airbnb. Please try again shortly.'
           })
-        ]})
+        ] })
       }
     }
   }
