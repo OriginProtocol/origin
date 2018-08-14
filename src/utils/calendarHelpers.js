@@ -219,3 +219,89 @@ export function getRecurringEvents(date, existingEvents, viewType) {
 
   return events
 }
+
+// When buyer is ready to reserve slots, prepares data to be saved to IPFS
+export function getSlotsToReserve(buyerSelectedSlotData) {
+  return buyerSelectedSlotData &&
+         buyerSelectedSlotData.map((slot) => {
+    const toReturn = {
+      startDate: slot.start,
+      endDate: slot.end,
+      priceWei: slot.price,
+    }
+
+    if (slot.isRecurringEvent) {
+      toReturn.recurs = 'weekly'
+    }
+
+    return toReturn
+  })
+}
+
+// Removes cloned events and prepares data for saving to IPFS
+export function getCleanEvents(events) {
+  return events.length && events
+          .filter((event) => 
+            !event.isClonedRecurringEvent
+          )
+          .map((event) => {
+
+            const toReturn = {
+              startDate: event.start.toISOString(),
+              endDate: event.end.toISOString(),
+              isAvailable: event.isAvailable,
+              priceWei: event.price
+            }
+
+            if (event.isRecurringEvent) {
+              toReturn.recurs = 'weekly'
+            }
+            return toReturn
+          })
+}
+
+export function getDateAvailabilityAndPrice(date, events, purchases) {
+  const isDateBooked = function(date) {
+    let bookingsMatchingDate = []
+    purchases && purchases.map((purchase) => {
+      const bookingsForThisPurchase = purchase.ipfsData.filter(slot => 
+        moment(date).isBetween(moment(slot.startDate).subtract(1, 'second'), moment(slot.endDate).add(1, 'second'))
+      )
+      bookingsMatchingDate = [...bookingsMatchingDate, ...bookingsForThisPurchase]
+    })
+
+    return !!bookingsMatchingDate.length
+  }
+
+  const eventsInSlot = []
+  let toReturn = {
+    isAvailable: false,
+    price: 0
+  }
+
+  if (events && events.length) {
+    for (let i = 0, len = events.length; i < len; i++) {
+      const event = events[i]
+      if (  
+            moment(date).isBetween(moment(event.start).subtract(1, 'second'), moment(event.end).add(1, 'second')) &&
+            !moment(date).isBefore(moment())
+          ) {
+
+        event.isAvailable = event.isAvailable ? !isDateBooked(date) : false
+        eventsInSlot.push(event)
+      }
+    }
+  }
+
+  if (eventsInSlot.length) {
+    const nonRecurringEvents = eventsInSlot.filter((event) => !event.isRecurringEvent)
+
+    if (nonRecurringEvents.length) {
+      toReturn = nonRecurringEvents[0]
+    } else {
+      toReturn = eventsInSlot[0]
+    }
+  }
+
+  return toReturn
+}

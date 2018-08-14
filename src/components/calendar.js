@@ -11,7 +11,10 @@ import {
   updateOriginalEvent,
   getSlotsForDateChange,
   getDateDropdownOptions,
-  getRecurringEvents
+  getRecurringEvents,
+  getSlotsToReserve,
+  getCleanEvents,
+  getDateAvailabilityAndPrice
 } from 'utils/calendarHelpers'
 
 class Calendar extends Component {
@@ -33,7 +36,6 @@ class Calendar extends Component {
     this.goBack = this.goBack.bind(this)
     this.reserveSlots = this.reserveSlots.bind(this)
     this.unselectSlots = this.unselectSlots.bind(this)
-    this.getDateAvailabilityAndPrice = this.getDateAvailabilityAndPrice.bind(this)
     this.dateCellWrapper = this.dateCellWrapper.bind(this)
     this.monthHeader = this.monthHeader.bind(this)
     this.prevPeriod = this.prevPeriod.bind(this)
@@ -131,7 +133,7 @@ class Calendar extends Component {
       let hasUnavailableSlot = false
 
       while (slotToTest.toDate() >= slotInfo.start && slotToTest.toDate() <= slotInfo.end) {
-        const slotAvailData = this.getDateAvailabilityAndPrice(slotToTest)
+        const slotAvailData = getDateAvailabilityAndPrice(slotToTest, this.state.events)
 
         if(!slotAvailData.isAvailable || moment(slotInfo.end).isBefore(moment())){
           hasUnavailableSlot = true
@@ -327,56 +329,9 @@ class Calendar extends Component {
     )
   }
 
-  isDateBooked(date) {
-    let bookingsMatchingDate = []
-    this.props.purchases && this.props.purchases.map((purchase) => {
-      const bookingsForThisPurchase = purchase.ipfsData.filter(slot => 
-        moment(date).isBetween(moment(slot.startDate).subtract(1, 'second'), moment(slot.endDate).add(1, 'second'))
-      )
-      bookingsMatchingDate = [...bookingsMatchingDate, ...bookingsForThisPurchase]
-    })
-
-    return !!bookingsMatchingDate.length
-  }
-
-  getDateAvailabilityAndPrice(date) {
-    const { events } = this.state
-    const eventsInSlot = []
-    let toReturn = {
-      isAvailable: false,
-      price: 0
-    }
-
-    if (events && events.length) {
-      for (let i = 0, len = events.length; i < len; i++) {
-        const event = events[i]
-        if (  
-              moment(date).isBetween(moment(event.start).subtract(1, 'second'), moment(event.end).add(1, 'second')) &&
-              !moment(date).isBefore(moment())
-            ) {
-
-          event.isAvailable = event.isAvailable ? !this.isDateBooked(date) : false
-          eventsInSlot.push(event)
-        }
-      }
-    }
-
-    if (eventsInSlot.length) {
-      const nonRecurringEvents = eventsInSlot.filter((event) => !event.isRecurringEvent)
-
-      if (nonRecurringEvents.length) {
-        toReturn = nonRecurringEvents[0]
-      } else {
-        toReturn = eventsInSlot[0]
-      }
-    }
-
-    return toReturn
-  }
-
   dateCellWrapper(data) {
     const { value } = data
-    const dateInfo = this.getDateAvailabilityAndPrice(value)
+    const dateInfo = getDateAvailabilityAndPrice(value, this.state.events, this.props.purchases)
     const availability = dateInfo.isAvailable ? 'available' : 'unavailable'
     const isPastDate = moment(value).isBefore(moment().subtract(1, 'day')) ? ' past-date' : ''
     const selectedSlotsMatchingDate = 
@@ -406,7 +361,7 @@ class Calendar extends Component {
   }
 
   slotPropGetter(date) {
-    const slotData = this.getDateAvailabilityAndPrice(date)
+    const slotData = getDateAvailabilityAndPrice(date, this.state.events)
     const isAvailable = slotData.isAvailable ? 'available' : 'unavailable'
     const selectedSlotsMatchingDate = 
       this.state.buyerSelectedSlotData &&
@@ -419,25 +374,7 @@ class Calendar extends Component {
   }
 
   saveData() {
-    const cleanEvents = this.state.events.length &&
-                        this.state.events
-                        .filter((event) => 
-                          !event.isClonedRecurringEvent
-                        )
-                        .map((event) => {
-
-                          const toReturn = {
-                            startDate: event.start.toISOString(),
-                            endDate: event.end.toISOString(),
-                            isAvailable: event.isAvailable,
-                            priceWei: event.price
-                          }
-
-                          if (event.isRecurringEvent) {
-                            toReturn.recurs = 'weekly'
-                          }
-                          return toReturn
-                        })
+    const cleanEvents = getCleanEvents(this.state.events)
     this.props.onComplete && this.props.onComplete(cleanEvents)
   }
 
@@ -446,20 +383,7 @@ class Calendar extends Component {
   }
 
   reserveSlots() {
-    const slotsToReserve = this.state.buyerSelectedSlotData &&
-                            this.state.buyerSelectedSlotData.map((slot) => {
-                              const toReturn = {
-                                startDate: slot.start,
-                                endDate: slot.end,
-                                priceWei: slot.price,
-                              }
-
-                              if (slot.isRecurringEvent) {
-                                toReturn.recurs = 'weekly'
-                              }
-
-                              return toReturn
-                            })
+    const slotsToReserve = getSlotsToReserve(this.state.buyerSelectedSlotData)
     this.props.onComplete && this.props.onComplete(slotsToReserve)
   }
 
