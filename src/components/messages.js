@@ -92,17 +92,16 @@ class Messages extends Component {
       messagesFiltered.map(({ hash }) => hash).join() !== messagesFilteredPreviously.map(({ hash }) => hash).join()
     ) {
       this.setState({ messages: messagesFiltered.sort((a, b) => a.index < b.index ? -1 : 1) })
+      // auto-scroll to most recent message
+      const el = this.conversationDiv.current
+
+      if (el) {
+        el.scrollTop = el.scrollHeight
+      }
     }
 
     if (users.length > prevProps.users.length) {
       this.identifyCounterparty()
-    }
-
-    // auto-scroll to most recent message
-    const el = this.conversationDiv.current
-
-    if (el) {
-      el.scrollTop = el.scrollHeight
     }
   }
 
