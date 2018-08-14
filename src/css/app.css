@@ -178,7 +178,8 @@ a:hover {
 
 .my-listings-wrapper,
 .my-purchases-wrapper,
-.notifications-wrapper {
+.notifications-wrapper,
+.about-token-wrapper {
   padding: 3.5rem 0;
 }
 
@@ -3388,6 +3389,15 @@ a:not([href]):not([tabindex]).span-link {
 .indented {
   border-left: 1px solid var(--pale-grey);
   padding-left: 20px;
+}
+
+/* About Tokens Page */
+
+.video-placeholder {
+  width: auto;
+  height: 225px;
+  background-color: #dfe6ea;
+  background-color: var(--pale-grey-two);
 }
 
 /* Media queries */

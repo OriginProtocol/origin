@@ -23,6 +23,7 @@ import Notifications from 'components/notifications'
 import PurchaseDetail from 'components/purchase-detail'
 import ScrollToTop from 'components/scroll-to-top'
 import Web3Provider from 'components/web3-provider'
+import AboutToken from 'components/about-token'
 
 import Profile from 'pages/profile/Profile'
 import User from 'pages/user/User'
@@ -143,6 +144,7 @@ class App extends Component {
                     <Route path="/notifications" component={Notifications} />
                     <Route path="/profile" component={Profile} />
                     <Route path="/users/:userAddress" component={UserPage} />
+                    <Route path="/about-token" component={AboutToken} />
                     <Route component={NotFound} />
                   </Switch>
                 </Layout>
