@@ -230,13 +230,19 @@ class VerifyAirbnb extends Component {
     try {
       await callback(event)
     } catch (exception) {
-      const errorsJson = JSON.parse(exception).errors
+      try {
+        const errorsJson = JSON.parse(exception).errors
 
-      if (Array.isArray(errorsJson))
-        // Service exceptions
-        this.setState({ generalErrors: errorsJson })
-      // Form exception
-      else this.setState({ formErrors: errorsJson })
+        if (Array.isArray(errorsJson))
+          // Service exceptions
+          this.setState({ generalErrors: errorsJson })
+        else
+          // Form exception
+          this.setState({ formErrors: errorsJson })
+      } catch (exception) {
+        // Result wasn't a JSON. Could be a 404 or 500 or any other error
+        this.setState({ generalErrors: ['Could not verify Airbnb. Please try again shortly.'] })
+      }
     }
   }
 
