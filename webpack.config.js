@@ -11,8 +11,11 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 const env = {
   CONTRACT_ADDRESSES: '{}',
+  IPFS_SWARM: '',
+  MESSAGING_ACCOUNT: '',
+  MESSAGING_NAMESPACE: '',
   PRODUCTION_DOMAIN: '',
-  PROVIDER_URL: '',
+  PROVIDER_URL: ''
 }
 
 var config = {
