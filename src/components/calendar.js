@@ -10,7 +10,7 @@ class Calendar extends Component {
   constructor(props) {
     super(props)
 
-    this.setViewType = this.setViewType.bind(this)
+    this.getViewType = this.getViewType.bind(this)
     this.onSelectSlot = this.onSelectSlot.bind(this)
     this.onSelectEvent = this.onSelectEvent.bind(this)
     this.handlePriceChange = this.handlePriceChange.bind(this)
@@ -27,8 +27,8 @@ class Calendar extends Component {
     this.getDateAvailabilityAndPrice = this.getDateAvailabilityAndPrice.bind(this)
     this.dateCellWrapper = this.dateCellWrapper.bind(this)
     this.monthHeader = this.monthHeader.bind(this)
-    this.buyerPrevMonth = this.buyerPrevMonth.bind(this)
-    this.buyerNextMonth = this.buyerNextMonth.bind(this)
+    this.prevPeriod = this.prevPeriod.bind(this)
+    this.nextPeriod = this.nextPeriod.bind(this)
     this.slotPropGetter = this.slotPropGetter.bind(this)
     this.eventComponent = this.eventComponent.bind(this)
     this.checkSlotsForExistingEvent = this.checkSlotsForExistingEvent.bind(this)
@@ -104,7 +104,7 @@ class Calendar extends Component {
     }
   }
 
-  setViewType() {
+  getViewType() {
     return this.props.viewType === 'daily' ? 'month' : 'week'
   }
 
@@ -560,8 +560,8 @@ class Calendar extends Component {
     })
   }
 
-  buyerPrevMonth() {
-    const date = moment(this.state.defaultDate).subtract(1, this.setViewType()).toDate()
+  prevPeriod() {
+    const date = moment(this.state.defaultDate).subtract(1, this.getViewType()).toDate()
 
     this.renderRecurringEvents(date)
 
@@ -570,8 +570,8 @@ class Calendar extends Component {
     })
   }
 
-  buyerNextMonth() {
-    const date = moment(this.state.defaultDate).add(1, this.setViewType()).toDate()
+  nextPeriod() {
+    const date = moment(this.state.defaultDate).add(1, this.getViewType()).toDate()
 
     this.renderRecurringEvents(date)
 
@@ -683,13 +683,10 @@ class Calendar extends Component {
                            calendar-container
                            ${userType === 'buyer' ? ' buyer-view' : ''}
                            ${viewType === 'daily' ? ' daily-view' : ' hourly-view'}`}>
-            {
-              userType === 'buyer' &&
-              <div className="buyer-month-nav">
-                <img onClick={this.buyerPrevMonth} className="prev-month" src="/images/carat-dark.svg" />
-                <img onClick={this.buyerNextMonth} className="next-month" src="/images/carat-dark.svg" />
-              </div>
-            }
+            <div className="calendar-nav">
+              <img onClick={this.prevPeriod} className="prev-period" src="/images/carat-dark.svg" />
+              <img onClick={this.nextPeriod} className="next-period" src="/images/carat-dark.svg" />
+            </div>
             <BigCalendar
               components={{
                 event: this.eventComponent,
@@ -700,7 +697,7 @@ class Calendar extends Component {
               }}
               selectable={ true }
               events={ (userType === 'seller' && this.state.events) || [] }
-              defaultView={ BigCalendar.Views[this.setViewType().toUpperCase()] }
+              defaultView={ BigCalendar.Views[this.getViewType().toUpperCase()] }
               onSelectEvent={ this.onSelectEvent }
               onSelectSlot={ this.onSelectSlot }
               step={ this.props.step || 60 }

@@ -91,7 +91,7 @@
   width: 100%;
 }
 
-.calendar-container.buyer-view .rbc-calendar .rbc-btn-group {
+.calendar-container .rbc-calendar .rbc-btn-group {
   display: none;
 }
 
@@ -148,21 +148,25 @@
   font-size: 10px;
 }
 
-.buyer-month-nav {
+.calendar-nav {
   position: absolute;
   top: 6px;
   left: 16px;
   right: 16px;
 }
 
-.buyer-month-nav .prev-month {
+.calendar-nav img {
+  height: 17px;
+}
+
+.calendar-nav .prev-period {
   position: absolute;
   left: 0;
   transform: rotate(180deg);
   cursor: pointer;
 }
 
-.buyer-month-nav .next-month {
+.calendar-nav .next-period {
   position: absolute;
   right: 0;
   cursor: pointer;
