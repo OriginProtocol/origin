@@ -123,6 +123,7 @@ const AboutToken = () => {
           <div className="col-md-6">
             <br />
             <br />
+            <br />
             <div className="video-placeholder"></div>
           </div>
         </div>
