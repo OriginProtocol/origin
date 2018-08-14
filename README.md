@@ -72,7 +72,7 @@ Spawn a shell (command line) in a container:
 
 	docker exec -ti <container_name> /bin/bash
 
-Restart DApp (needed after changing branches):
+Restart DApp (needed after changing branches). In a new terminal window:
 
 	docker-compose restart origin-dapp
 
