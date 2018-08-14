@@ -1,8 +1,10 @@
-const process = require('process')
 const http = require('http')
 const urllib = require('url')
-const Origin = require('../../dist/index') // Will eventualy be the origin npm package
 const Web3 = require('web3')
+
+const Origin = require('../../dist/index') // FIXME: replace with origin-js package
+const search = require ('../lib/search.js')
+const db = require('../lib//db.js')
 
 const web3Provider = new Web3.providers.HttpProvider('http://localhost:8545')
 const web3 = new Web3(web3Provider)
@@ -110,6 +112,7 @@ async function liveTracking(config) {
     start = new Date()
     const currentBlockNumber = await web3.eth.getBlockNumber()
     if (currentBlockNumber == lastCheckedBlock) {
+      console.log('No new block.')
       return scheduleNextCheck()
     }
     console.log('New block: ' + currentBlockNumber)
@@ -147,6 +150,10 @@ async function runBatch(opts, context) {
     topics: [eventTopics]
   })
 
+  if (logs.length > 0) {
+    console.log('' + logs.length + ' logs found')
+  }
+
   for (const log of logs) {
     const contractVersion = context.addressToVersion[log.address]
     if (contractVersion == undefined) {
@@ -161,14 +168,12 @@ async function runBatch(opts, context) {
     // Process it
     await handleLog(log, rule, contractVersion, context)
   }
-  if (logs.length > 0) {
-    console.log('' + logs.length + ' logs found')
-  }
   return lastLogBlock
 }
 
 // handleLog - annotates, runs rule, and ouputs a particular log
 async function handleLog(log, rule, contractVersion, context) {
+  console.log(`Processing log blockNumber=${log.blockNumber} transactionIndex=${log.transactionIndex}`)
   log.decoded = web3.eth.abi.decodeLog(
     rule.eventAbi.inputs,
     log.data,
@@ -185,13 +190,26 @@ async function handleLog(log, rule, contractVersion, context) {
   }
 
   const json = JSON.stringify(output, null, 2)
+  if (context.config.verbose) {
+    console.log(json)
+    console.log('\n----\n')
+  }
+
+  //TODO(franck): remove binary data from pictures in a proper way.
+  let listing = output.related.listing
+  delete listing.ipfsData.data.pictures
+
+  if (context.config.elasticsearch) {
+    await search.Listing.index(listing.id, listing.ipfsData.data)
+  }
+
+  if (context.config.db) {
+    await db.Listing.insert(listing.id, listing.ipfsData.data)
+  }
 
   if (context.config.webhook) {
-    process.stdout.write('\n-- WEBHOOK to ' + context.config.webhook + ' --\n')
+    console.log('\n-- WEBHOOK to ' + context.config.webhook + ' --\n')
     await postToWebhook(context.config.webhook, json)
-  } else {
-    process.stdout.write(json)
-    process.stdout.write('\n----\n')
   }
 }
 
@@ -294,10 +312,18 @@ async function buildVersionList() {
 const args = {}
 process.argv.forEach(arg => {
   const t = arg.split('=')
-  args[t[0]] = t[1]
+  const argVal = (t.length > 1) ? t[1] : true
+  args[t[0]] = argVal
 })
 
 const config = {
-  webhook: args['--webhook']
+  // Call webhook to process event.
+  webhook: args['--webhook'],
+  // Index events in the search index.
+  elasticsearch: args['--elasticsearch'],
+  // Index events in the database.
+  db: args['--db'],
+  // Verbose mode, includes dumping events on the console.
+  verbose: args['--verbose'],
 }
 liveTracking(config)

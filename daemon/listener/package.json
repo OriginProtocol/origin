@@ -1,0 +1,13 @@
+{
+  "name": "origin-listener",
+  "description": "Event listener for Origin marketplace contracts.",
+  "version": "0.1.0",
+  "dependencies": {
+    "elasticsearch": "^15.1.1",
+    "http": "0.0.0",
+    "pg": "^7.4.3",
+    "url": "^0.11.0",
+    "web3": "^1.0.0-beta.35"
+  },
+  "devDependencies": {}
+}
