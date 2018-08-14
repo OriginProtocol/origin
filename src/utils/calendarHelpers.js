@@ -1,4 +1,5 @@
 import moment from 'moment'
+import uuid from 'uuid/v1'
 
 export function generateCalendarSlots(events) {
 
@@ -27,24 +28,194 @@ export function generateCalendarSlots(events) {
 }
 
 export function checkSlotsForExistingEvent(slotInfo, events) {
-    return events.filter((event) => {
-      let isEventInSlot = false
+  return events.filter((event) => {
+    let isEventInSlot = false
 
-      // loop over event's slots and check to see if any of them
-      // match any of the selected slot's time periods
-      for (let i = 0, existSlotsLen = event.slots.length; i < existSlotsLen; i++) {
-        const existSlot = event.slots[i]
+    // loop over event's slots and check to see if any of them
+    // match any of the selected slot's time periods
+    for (let i = 0, existSlotsLen = event.slots.length; i < existSlotsLen; i++) {
+      const existSlot = event.slots[i]
 
-        // loop over the time periods included in selected slot
-        for (let j = 0, newSlotsLen = slotInfo.slots.length; j < newSlotsLen; j++) {
-          const newSlot = slotInfo.slots[j]
+      // loop over the time periods included in selected slot
+      for (let j = 0, newSlotsLen = slotInfo.slots.length; j < newSlotsLen; j++) {
+        const newSlot = slotInfo.slots[j]
 
-          if (existSlot.toString() === newSlot.toString()) {
-            isEventInSlot = true
-          }
+        if (existSlot.toString() === newSlot.toString()) {
+          isEventInSlot = true
         }
       }
+    }
 
-      return isEventInSlot
-    })
+    return isEventInSlot
+  })
+}
+
+// Returns true if all passed-in events are recurring events and false if not
+export function doAllEventsRecur(events) {
+  const recurringEvents = events.filter((event) => event.isRecurringEvent )
+  return recurringEvents.length === events.length
+}
+
+// This is a hackky way of showing the price in hourly time slots
+// since React Big Calendar doesn't give us full control over the content of those slots
+// Possible future optimization would be to create a PR to React Big Calendar to support custom slot content.
+export function renderHourlyPrices(viewType, userType) {
+  if (viewType &&
+      viewType === 'hourly' &&
+      userType &&
+      userType === 'buyer') {
+    const slots = document.querySelectorAll('.rbc-time-slot')
+
+    for (let i = 0, slotsLen = slots.length; i < slotsLen; i++) {
+      const slot = slots[i]
+      const classes = slot.className
+      const isAvailable = classes.indexOf('unavailable') === -1
+      const priceIdx = classes.indexOf('priceEth-')
+
+      slot.innerHTML = ''
+
+      if (priceIdx > -1 && isAvailable) {
+        const price = classes.substring(priceIdx + 9, classes.length)
+        const priceNode = document.createTextNode(`${price} ETH`)
+        slot.appendChild(priceNode)
+      }
+    }
   }
+}
+
+// Moves user's event edits from a cloned recurring event to the original event
+// in preparation to save the original event
+export function updateOriginalEvent(selectedEvent, events) {
+  return events.map((eventObj) => {
+    if (eventObj.id === selectedEvent.originalEventId) {
+      const { start, end, isAvailable, price, isRecurringEvent } = selectedEvent
+      Object.assign(eventObj, {
+        start,
+        end,
+        isAvailable,
+        price,
+        isRecurringEvent
+      })
+    }
+    return eventObj
+  })
+}
+
+// Re-calculates slots after the date is changed via the dropdown menus
+export function getSlotsForDateChange(selectedEvent, whichDropdown, value, viewType) {
+  const startDate = whichDropdown === 'start' ? new Date(value) : new Date(selectedEvent.start)
+  const endDate = whichDropdown === 'end' ? new Date(value) : new Date(selectedEvent.end)
+  const slots = []
+  let slotDate = moment(value)
+
+  while (slotDate.toDate() >= startDate && slotDate.toDate() <= endDate) {
+    const timePeriod = viewType === 'daily' ? 'day' : 'hour'
+    const slotDateObj = timePeriod ? slotDate.startOf(timePeriod).toDate() : slotDate.toDate()
+
+    if (whichDropdown === 'start') {
+      slots.push(slotDateObj)
+      slotDate = slotDate.add(1, timePeriod)
+    } else {
+      slots.unshift(slotDateObj)
+      slotDate = slotDate.subtract(1, timePeriod)
+    }
+  }
+
+  return slots
+}
+
+export function getDateDropdownOptions(date, viewType) {
+  const timeToAdd = viewType === 'daily' ? 'days' : 'hours'
+
+  return [
+    ...[...Array(10)].map((_, i) => moment(date).subtract(i + 1, timeToAdd).toDate()).reverse(),
+    moment(date).toDate(),
+    ...[...Array(10)].map((_, i) => moment(date).add(i + 1, timeToAdd).toDate())
+  ]
+}
+
+export function getRecurringEvents(date, existingEvents, viewType) {
+
+  const dateMoment = moment(date)
+  const isDaily = viewType === 'daily'
+  const firstVisibleDate = isDaily ?
+                            moment(dateMoment.startOf('month')).subtract(1, 'week') :
+                            moment(dateMoment.startOf('week'))
+  const lastVisibleDate = isDaily ?
+                            moment(dateMoment.endOf('month')).add(1, 'week') :
+                            moment(dateMoment.endOf('week'))
+  const events = []
+
+  const getSlots = (startDate, endDate) => {
+    const slots = []
+    let slotDate = moment(startDate)
+
+    while (slotDate.toDate() >= startDate && slotDate.toDate() <= endDate) {
+      const timePeriod = viewType === 'daily' ? 'day' : 'hour'
+      const slotDateObj = timePeriod ? slotDate.startOf(timePeriod).toDate() : slotDate.toDate()
+
+      slots.push(slotDateObj)
+      slotDate = slotDate.add(1, timePeriod)
+    }
+
+    // remove the last slot to prevent blocking the slot after the event
+    if (!isDaily) {
+      slots.pop()
+    }
+
+    return slots
+  }
+
+  // render recurring events on the currently visible day they recur on
+  existingEvents && existingEvents.map((event) => {
+    if (event.isRecurringEvent) {
+      if (!event.isClonedRecurringEvent) {
+        const slotToTest = moment(firstVisibleDate)
+
+        // put the original event in the output "events" array
+        const originalEventStartDate = event.start
+        events.push(event)
+
+        while (slotToTest.isBefore(lastVisibleDate)) {
+          const slotDayOfWeekIdx = slotToTest.day()
+          const eventDayOfWeekIdx = moment(event.start).day()
+
+          if (slotDayOfWeekIdx === eventDayOfWeekIdx) {
+            const clonedEvent = JSON.parse(JSON.stringify(event))
+            const diffBtwStartAndEnd = moment(clonedEvent.end).diff(moment(clonedEvent.start), 'days')
+            const clonedEndMoment = moment(clonedEvent.end)
+            const setterConfig = {
+              date: slotToTest.date(),
+              month: slotToTest.month(),
+              year: slotToTest.year()
+            }
+            clonedEvent.originalEventId = event.id
+            clonedEvent.id = uuid()
+            clonedEvent.isClonedRecurringEvent = true
+            clonedEvent.start = moment(clonedEvent.start).set(setterConfig).toDate()
+            clonedEvent.end = moment(clonedEvent.start)
+                                .add(diffBtwStartAndEnd, 'days')
+                                .set({
+                                  hour: clonedEndMoment.hour(),
+                                  minute: clonedEndMoment.minute(),
+                                  second: clonedEndMoment.second()
+                                })
+                                .toDate()
+            clonedEvent.slots = getSlots(clonedEvent.start, clonedEvent.end)
+
+            // put the cloned "recurring" instances of the event in the output "events" array
+            if (clonedEvent.start.toString() !== originalEventStartDate.toString())
+              events.push(clonedEvent)
+          }
+
+          slotToTest.add(1, 'day')
+        }
+      }
+    } else if (!event.isClonedRecurringEvent) {
+      // put the non-recurring events in the output "events" array
+      events.push(event)
+    }
+  })
+
+  return events
+}

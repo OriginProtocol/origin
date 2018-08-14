@@ -3,7 +3,16 @@ import BigCalendar from 'react-big-calendar'
 import { injectIntl } from 'react-intl'
 import moment from 'moment'
 import uuid from 'uuid/v1'
-import { generateCalendarSlots, checkSlotsForExistingEvent } from 'utils/calendarHelpers'
+import { 
+  generateCalendarSlots,
+  checkSlotsForExistingEvent,
+  doAllEventsRecur,
+  renderHourlyPrices,
+  updateOriginalEvent,
+  getSlotsForDateChange,
+  getDateDropdownOptions,
+  getRecurringEvents
+} from 'utils/calendarHelpers'
 
 class Calendar extends Component {
 
@@ -31,8 +40,6 @@ class Calendar extends Component {
     this.nextPeriod = this.nextPeriod.bind(this)
     this.slotPropGetter = this.slotPropGetter.bind(this)
     this.eventComponent = this.eventComponent.bind(this)
-    this.renderHourlyPrices = this.renderHourlyPrices.bind(this)
-    this.getDateDropdownOptions = this.getDateDropdownOptions.bind(this)
     this.renderRecurringEvents = this.renderRecurringEvents.bind(this)
 
     this.state = {
@@ -72,35 +79,8 @@ class Calendar extends Component {
   }
 
   componentDidMount() {
-    this.renderHourlyPrices()
+    renderHourlyPrices(this.props.viewType, this.props.userType)
     this.renderRecurringEvents(this.state.defaultDate)
-  }
-
-  renderHourlyPrices() {
-    // This is a hackky way of showing the price in hourly time slots
-    // since React Big Calendar doesn't give us full control over the content of those slots
-    // Possible future optimization would be to create a PR to React Big Calendar to support custom slot content.
-    if (this.props.viewType &&
-        this.props.viewType === 'hourly' &&
-        this.props.userType &&
-        this.props.userType === 'buyer') {
-      const slots = document.querySelectorAll('.rbc-time-slot')
-
-      for (let i = 0, slotsLen = slots.length; i < slotsLen; i++) {
-        const slot = slots[i]
-        const classes = slot.className
-        const isAvailable = classes.indexOf('unavailable') === -1
-        const priceIdx = classes.indexOf('priceEth-')
-
-        slot.innerHTML = ''
-
-        if (priceIdx > -1 && isAvailable) {
-          const price = classes.substring(priceIdx + 9, classes.length)
-          const priceNode = document.createTextNode(`${price} ETH`)
-          slot.appendChild(priceNode)
-        }
-      }
-    }
   }
 
   getViewType() {
@@ -118,16 +98,9 @@ class Calendar extends Component {
       // if slot doesn't already contain an event, create an event
       const existingEventInSlot = checkSlotsForExistingEvent(slotInfo, this.state.events)
 
-      if (existingEventInSlot.length > 1) {
-        return this.setState({ showOverlappingEventsErrorMsg: true })
-      } else {
-        this.setState({ showOverlappingEventsErrorMsg: false })
-      }
+      if (!existingEventInSlot.length || doAllEventsRecur(existingEventInSlot)) {
 
-      let newEvent
-      if (!existingEventInSlot.length || 
-          (existingEventInSlot.length === 1 && existingEventInSlot[0].isRecurringEvent)) {
-
+        let newEvent
         const endDate = this.props.viewType === 'daily' ?
                         moment(slotInfo.end).add(1, 'day').subtract(1, 'second').toDate() :
                         slotInfo.end
@@ -143,11 +116,13 @@ class Calendar extends Component {
             ...this.state.events,
             newEvent
           ],
+          showOverlappingEventsErrorMsg: false
         })
-      }
 
-      if (newEvent) {
         this.onSelectEvent(newEvent, true)
+
+      } else {
+        return this.setState({ showOverlappingEventsErrorMsg: true })
       }
     } else {
       // user is a buyer
@@ -246,19 +221,7 @@ class Calendar extends Component {
     }
 
     if (thisEvent.isClonedRecurringEvent) {
-      stateToSet.events = this.state.events.map((eventObj) => {
-        if (eventObj.id === thisEvent.originalEventId) {
-          const { start, end, isAvailable, price, isRecurringEvent } = thisEvent
-          Object.assign(eventObj, {
-            start,
-            end,
-            isAvailable,
-            price,
-            isRecurringEvent
-          })
-        }
-        return eventObj
-      })
+      stateToSet.events = updateOriginalEvent(thisEvent, this.state.events)
     }
 
     this.setState(stateToSet)
@@ -324,46 +287,14 @@ class Calendar extends Component {
     const whichDropdown = event.target.name
     const value = event.target.value
 
-    const getSlots = () => {
-      const startDate = whichDropdown === 'start' ? new Date(value) : new Date(this.state.selectedEvent.start)
-      const endDate = whichDropdown === 'end' ? new Date(value) : new Date(this.state.selectedEvent.end)
-      const slots = []
-      let slotDate = moment(value)
-
-      while (slotDate.toDate() >= startDate && slotDate.toDate() <= endDate) {
-        const timePeriod = this.props.viewType === 'daily' ? 'day' : 'hour'
-        const slotDateObj = timePeriod ? slotDate.startOf(timePeriod).toDate() : slotDate.toDate()
-
-        if (whichDropdown === 'start') {
-          slots.push(slotDateObj)
-          slotDate = slotDate.add(1, timePeriod)
-        } else {
-          slots.unshift(slotDateObj)
-          slotDate = slotDate.subtract(1, timePeriod)
-        }
-      }
-
-      return slots
-    }
-
     this.setState({
       selectedEvent: {
         ...this.state.selectedEvent,
-        slots: getSlots(),
+        slots: getSlotsForDateChange(this.state.selectedEvent, whichDropdown, value, this.props.viewType),
         [whichDropdown]: new Date(value)
       },
       showSellerActionBtns: true
     })
-  }
-
-  getDateDropdownOptions(date) {
-    const timeToAdd = this.props.viewType === 'daily' ? 'days' : 'hours'
-
-    return [
-      ...[...Array(10)].map((_, i) => moment(date).subtract(i + 1, timeToAdd).toDate()).reverse(),
-      moment(date).toDate(),
-      ...[...Array(10)].map((_, i) => moment(date).add(i + 1, timeToAdd).toDate())
-    ]
   }
 
   onIsRecurringEventChange(event) {
@@ -560,94 +491,13 @@ class Calendar extends Component {
   }
 
   renderRecurringEvents(date) {
-    const dateMoment = moment(date)
-    const isDaily = this.props.viewType === 'daily'
-    const firstVisibleDate = isDaily ?
-                              moment(dateMoment.startOf('month')).subtract(1, 'week') :
-                              moment(dateMoment.startOf('week'))
-    const lastVisibleDate = isDaily ?
-                              moment(dateMoment.endOf('month')).add(1, 'week') :
-                              moment(dateMoment.endOf('week'))
-    const events = []
-
-    const getSlots = (startDate, endDate) => {
-      const slots = []
-      let slotDate = moment(startDate)
-
-      while (slotDate.toDate() >= startDate && slotDate.toDate() <= endDate) {
-        const timePeriod = this.props.viewType === 'daily' ? 'day' : 'hour'
-        const slotDateObj = timePeriod ? slotDate.startOf(timePeriod).toDate() : slotDate.toDate()
-
-        slots.push(slotDateObj)
-        slotDate = slotDate.add(1, timePeriod)
-      }
-
-      // remove the last slot to prevent blocking the slot after the event
-      if (!isDaily) {
-        slots.pop()
-      }
-
-      return slots
-    }
-
-    // render recurring events on the currently visible day they recur on
-    this.state.events && this.state.events.map((event) => {
-      if (event.isRecurringEvent) {
-        if (!event.isClonedRecurringEvent) {
-          const slotToTest = moment(firstVisibleDate)
-
-          // put the original event in the output "events" array
-          const originalEventStartDate = event.start
-          events.push(event)
-
-          while (slotToTest.isBefore(lastVisibleDate)) {
-            const slotDayOfWeekIdx = slotToTest.day()
-            const eventDayOfWeekIdx = moment(event.start).day()
-
-            if (slotDayOfWeekIdx === eventDayOfWeekIdx) {
-              const clonedEvent = JSON.parse(JSON.stringify(event))
-              const diffBtwStartAndEnd = moment(clonedEvent.end).diff(moment(clonedEvent.start), 'days')
-              const clonedEndMoment = moment(clonedEvent.end)
-              const setterConfig = {
-                date: slotToTest.date(),
-                month: slotToTest.month(),
-                year: slotToTest.year()
-              }
-              clonedEvent.originalEventId = event.id
-              clonedEvent.id = uuid()
-              clonedEvent.isClonedRecurringEvent = true
-              clonedEvent.start = moment(clonedEvent.start).set(setterConfig).toDate()
-              clonedEvent.end = moment(clonedEvent.start)
-                                  .add(diffBtwStartAndEnd, 'days')
-                                  .set({
-                                    hour: clonedEndMoment.hour(),
-                                    minute: clonedEndMoment.minute(),
-                                    second: clonedEndMoment.second()
-                                  })
-                                  .toDate()
-              clonedEvent.slots = getSlots(clonedEvent.start, clonedEvent.end)
-
-              // put the cloned "recurring" instances of the event in the output "events" array
-              if (clonedEvent.start.toString() !== originalEventStartDate.toString())
-                events.push(clonedEvent)
-            }
-
-            slotToTest.add(1, 'day')
-          }
-        }
-      } else if (!event.isClonedRecurringEvent) {
-        // put the non-recurring events in the output "events" array
-        events.push(event)
-      }
-    })
-
     this.setState({
       defaultDate: date,
-      events
+      events: getRecurringEvents(date, this.state.events, this.props.viewType)
     })
 
     setTimeout(() => {
-      this.renderHourlyPrices()
+      renderHourlyPrices()
     })
   }
 
@@ -711,7 +561,7 @@ class Calendar extends Component {
                         onChange={ this.onDateDropdownChange }
                         value={ selectedEvent.start.toString() }>
                         { 
-                          this.getDateDropdownOptions(selectedEvent.start).map((date) => (
+                          getDateDropdownOptions(selectedEvent.start, viewType).map((date) => (
                             ((viewType === 'daily' && date <= selectedEvent.end) ||
                             (viewType === 'hourly' && date < selectedEvent.end)) &&
                             <option
@@ -730,7 +580,7 @@ class Calendar extends Component {
                         onChange={ this.onDateDropdownChange }
                         value={selectedEvent.end.toString()}>
                         { 
-                          this.getDateDropdownOptions(selectedEvent.end).map((date) => (
+                          getDateDropdownOptions(selectedEvent.end, viewType).map((date) => (
                             ((viewType === 'daily' && date >= selectedEvent.start) ||
                             (viewType === 'hourly' && date > selectedEvent.start)) &&
                             <option
