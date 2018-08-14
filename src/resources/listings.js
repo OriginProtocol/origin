@@ -300,13 +300,6 @@ class Listings extends ResourceBase {
       console.error(error)
       throw new Error(`ETH Failure: ${error}`)
     }
-
-    // Success!
-    console.log(
-      `Submitted to ETH blockchain with transactionReceipt.tx: ${
-        transactionReceipt.tx
-      }`
-    )
     return transactionReceipt
   }
 
