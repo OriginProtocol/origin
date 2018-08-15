@@ -12,7 +12,7 @@ import Alert from 'components/alert'
 import Layout from 'components/layout'
 import ListingCreate from 'components/listing-create'
 import ListingDetail from 'components/listing-detail'
-import Listings from 'components/listings-grid'
+import ListingsGrid from 'components/listings-grid'
 import Messages from 'components/messages'
 import MessagingProvider from 'components/messaging-provider'
 import MyListings from 'components/my-listings'
@@ -39,7 +39,7 @@ const httpsRequired = process.env.FORCE_HTTPS
 
 const HomePage = () => (
   <div className="container">
-    <Listings />
+    <ListingsGrid />
   </div>
 )
 
