@@ -2,13 +2,18 @@ const http = require('http')
 const urllib = require('url')
 const Web3 = require('web3')
 
-const Origin = require('../../dist/index') // FIXME: replace with origin-js package
+const Origin = require('../../../dist/index') // FIXME: replace with origin-js package
 const search = require ('../lib/search.js')
 const db = require('../lib//db.js')
 
 const web3Provider = new Web3.providers.HttpProvider('http://localhost:8545')
 const web3 = new Web3(web3Provider)
-const o = new Origin({ web3 })
+const o = new Origin({
+  ipfsDomain: 'origin-js',
+  ipfsGatewayProtocol: 'http',
+  ipfsGatewayPort: 8080,
+  web3,
+})
 
 // Origin Listener
 // ---------------
@@ -49,9 +54,15 @@ const generateOfferId = log => {
   ].join('-')
 }
 const getListingDetails = async log => {
+  const listingId = generateListingId(log)
+  console.log("CALLING getListing for ID ", listingId)
+  const listing = await o.marketplace.getListing(listingId)
   return {
-    listing: await o.marketplace.getListing(generateListingId(log))
+    listing: listing,
   }
+  //return {
+  //  listing: await o.marketplace.getListing(generateListingId(log))
+  //}
 }
 const getOfferDetails = async log => {
   return {
@@ -174,6 +185,8 @@ async function runBatch(opts, context) {
 // handleLog - annotates, runs rule, and ouputs a particular log
 async function handleLog(log, rule, contractVersion, context) {
   console.log(`Processing log blockNumber=${log.blockNumber} transactionIndex=${log.transactionIndex}`)
+  console.log("LOG=", log)
+
   log.decoded = web3.eth.abi.decodeLog(
     rule.eventAbi.inputs,
     log.data,

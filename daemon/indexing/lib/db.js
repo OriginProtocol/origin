@@ -4,15 +4,13 @@ const { Pool } = require('pg')
   Module to interface with Postgres database.
  */
 
-const dbName = 'graphql'
-
 // TODO(franck): dynamically configure client.
 const pool = new Pool(
   {
-    host: 'localhost',
-    database: dbName,
-    //user: 'franck',
-    //password: 'franck',
+    host: 'postgres',
+    database: 'indexing',
+    user: 'origin',
+    password: 'origin',
   })
 
 
@@ -36,7 +34,17 @@ class Listing {
    */
   static async all() {
     const res = await pool.query(`SELECT * FROM ${Listing.table}`, [])
-    return res.rows
+    // Match the format of the data coming from elasticsearch
+    const results = res.rows.map((row)=>{
+      const json = JSON.parse(row.data)
+      return {
+        id: row.id,
+        name: json.name,
+        description: json.description,
+        price: json.price
+      }
+    })
+    return results
   }
 
   /*
@@ -47,8 +55,10 @@ class Listing {
    * @returns The listingId indexed.
    */
   static async insert(listingId, listing) {
+    // TODO: Check that we are not replacing new data with old
     const res = await pool.query(
-      `INSERT INTO ${Listing.table}(id, data) VALUES($1, $2)`, [listingId, listing])
+      `INSERT INTO ${Listing.table}(id, data) VALUES($1, $2)
+      ON CONFLICT (id) DO UPDATE SET data = excluded.data`, [listingId, listing])
     console.log(`Added row ${listingId} to listing table.`)
     return listingId
   }
