@@ -1,4 +1,4 @@
-This file is the template for generating an issue for each release. 
+This file is the template for generating an issue for each release.
 
 ---
 
@@ -16,29 +16,24 @@ Release branches should be created well before a release is ready to be publishe
 No additional features should be added to this release branch. Only bug fixes should be merged directly to the release branch, which itself should eventually be merged back to `develop` in the [Publish](#publish) step.
 
 ## Confirm readiness
+- [ ] _origin-js_ : In `package.json`, confirm version is `0.7.0`
 - [ ] _origin-js_: Confirm js tests passing
-  - `git checkout rerelease-0.7.0`
-  - `git pull`
-  - `npm run install:dev`
-  - `npm test` (This will also test smart contracts)
-  - `npm start`
-- [ ] _origin-dapp_: Confirm all tests passing
-- [ ] _origin-dapp_: Confirm it runs against remote (unlinked) origin-js
-  - `git checkout release-0.3.0`
-
-  - `git pull`
-  - `npm install`
-  - `npm start`
+  - `docker-compose -f docker-compose-test.yml up origin-js-test`
 - [ ] _origin-dapp_: Confirm it runs against local (linked) origin-js
-  - `git checkout release-0.3.0`
-  - `git pull`
-  - `npm run install:dev`
-  - `npm start`
-  - Probably need to **Reset Account** on MetaMask. 
-- [ ] Confirm deployment accounts have eth for gas. 
-  - Both accounts need gas, as test listings are created from second. 
-  - `npm run deploy_checklist`
-  - [ ] Rinkeby ([Faucet](https://faucet.rinkeby.io/)) 
+  - `docker-compose up`
+  - `open http://localhost:3000/`
+  - Note: Probably need to **Reset Account** on MetaMask.
+- [ ] Build DApp in production mode locally
+  - `npm run build`
+  - This will generate build directory.
+  - `cd build && python -m SimpleHTTPServer 8000`
+- [ ] Confirm deployment accounts have eth for gas.
+  - Both accounts [0] and [1] need gas, as test listings are created from [1].
+  - Set mnemonic
+    - `export RINKEBY_MNEMONIC="_____"`
+    - `export ROPSTEN_MNEMONIC=$RINKEBY_MNEMONIC`
+  - `npm run scripts/deploy_checklist.js`
+  - [ ] Rinkeby ([Faucet](https://faucet.rinkeby.io/))
     - [ ] Social proof URL: `https://twitter.com/KeystonePaperCo/status/1012803664509952001`
     - [ ] account[0] [`0xfF2BA846ab52EDBd724A5ef674AbF5A763849B61`](https://rinkeby.etherscan.io/address/0xfF2BA846ab52EDBd724A5ef674AbF5A763849B61)
     - [ ] account[1] [`0x3003F9dCFDC17e63cfe7023130B804829b369882`](https://rinkeby.etherscan.io/address/0x3003F9dCFDC17e63cfe7023130B804829b369882)
@@ -48,18 +43,16 @@ No additional features should be added to this release branch. Only bug fixes sh
 
 ## Publish
 ### origin-js
-- [ ] _origin-js_ : In `package.json`, confirm version is `0.7.0`
 - [ ] If contracts have changed:
-  - Show diff with: `git diff master..develop contracts/contracts/`  
+  - Show diff with: `git diff master..develop contracts/contracts/`
   - `cd contracts`
-  - [ ] Deploy new smart contracts to Ropsten. Be sure addresses are listed in ABI files. 
-    - `export ROPSTEN_MNEMONIC="<mnemonic>"`
+  - [ ] Deploy new smart contracts to Ropsten. Be sure addresses are listed in ABI files.
     - `npx truffle migrate --reset --network ropsten | tee releases/0.7.0_ropsten.log`
-  - [ ] Deploy new smart contracts to Rinkeby.  Be sure addresses are listed in ABI files. 
-    - `export RINKEBY_MNEMONIC=$ROPSTEN_MNEMONIC`
+  - [ ] Deploy new smart contracts to Rinkeby.  Be sure addresses are listed in ABI files.
     - `npx truffle migrate --reset --network rinkeby | tee releases/0.7.0_rinkeby.log`
   - [ ] Migrate data from old contracts to new. (Once we get around to writing migrations!)
-  - [ ] _origin-js_: Build origin.js (in `dist/origin.js`) -- **Not redundant:** This will bake in the new contract addresses into the contract's `.json` files. 
+  - [ ] _origin-js_: Build `origin.js` file (in `dist/origin.js`) using `npm run build` -- **Not redundant:** This will bake in the new contract addresses into `./node_modules/origin/dist/origin.js`
+  (Note: I think we can actually do this after `npm publish`, as that does an inplicity `npm run build` as part of publishing... But then, we need to be able to test...)
     - `npm run install:dev`
 - [ ] _origin-js_: Merge and push branches
   - `git checkout develop`
@@ -77,7 +70,7 @@ No additional features should be added to this release branch. Only bug fixes sh
   - [ ] Include block number the contracts were deployed at
     - `https://rinkeby.etherscan.io/address/<contract address>`
     - ex. `https://rinkeby.etherscan.io/address/0x29d260c47411a0b9eeeb087925afa759914b0d2f`
-- [ ] _origin-js_: [Publish to npm](https://docs.npmjs.com/cli/publish). 
+- [ ] _origin-js_: [Publish to npm](https://docs.npmjs.com/cli/publish).
   - `npm publish`
 
 ### origin-dapp
@@ -94,7 +87,7 @@ No additional features should be added to this release branch. Only bug fixes sh
 - [ ] _origin-js_: Delete release branch
   - `git branch -D release-0.3.0`
   - _Manually_ [delete on GitHub](https://github.com/OriginProtocol/origin-dapp/branches)
-- [ ] _origin-dapp_: Confirm that origin-dapp works when run alone again NPM. 
+- [ ] _origin-dapp_: Confirm that origin-dapp works when run alone again NPM.
 - [ ] _origin-dapp_: Test deploy dapp to heroku
   - `git clone https://github.com/OriginProtocol/origin-dapp && cd origin-dapp`
   - `heroku create && git push heroku master`
@@ -131,4 +124,4 @@ No additional features should be added to this release branch. Only bug fixes sh
 ## Troubleshooting
 
 - `Error: insufficient funds for gas * price + value`
-  - Not enough funds in primary or secondary account. Usually hits when I forget to put funds in second account and it trys to deploy sample listings. 
+  - Not enough funds in primary or secondary account. Usually hits when I forget to put funds in second account and it trys to deploy sample listings.
