@@ -23,6 +23,7 @@ import Notifications from 'components/notifications'
 import PurchaseDetail from 'components/purchase-detail'
 import ScrollToTop from 'components/scroll-to-top'
 import Web3Provider from 'components/web3-provider'
+import SearchResult from 'components/search/search-result'
 
 import Profile from 'pages/profile/Profile'
 import User from 'pages/user/User'
@@ -39,7 +40,7 @@ const httpsRequired = process.env.FORCE_HTTPS
 
 const HomePage = () => (
   <div className="container">
-    <ListingsGrid />
+    <ListingsGrid renderMode='home-page' />
   </div>
 )
 

@@ -22,6 +22,8 @@ class ListingsGrid extends Component {
 
   render() {
     const { listingsPerPage } = this.state
+
+
     const { contractFound, listingIds, hideList } = this.props
     // const pinnedListingIds = [0, 1, 2, 3, 4]
     // const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]

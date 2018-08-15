@@ -499,6 +499,33 @@ a:hover {
   cursor: pointer;
 }
 
+/* SearchResult */
+
+.search-filters ul {
+  padding-top: 4px;
+  padding-bottom: 14px;
+}
+
+.search-filters .container .navbar-nav {
+  border-bottom: 1px solid var(--light);
+}
+
+.search-filters .navbar-nav .nav-item a {
+  font-size: 0.875rem;
+  color: var(--dark);
+  padding: 0.09rem 0.40rem;
+  margin: 0.12rem 0.30rem;
+  font-weight: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.search-filters .navbar-nav .nav-item a:hover {
+  border: 0.06rem solid var(--dusk);
+  padding: 0.03rem 0.34rem;
+}
+
 /* Navbar */
 
 .navbar.navigation-bar {

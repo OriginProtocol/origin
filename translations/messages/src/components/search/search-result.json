@@ -1,0 +1,14 @@
+[
+  {
+    "id": "search-result.categoryType",
+    "defaultMessage": "Category Type"
+  },
+  {
+    "id": "search-result.dates",
+    "defaultMessage": "Dates"
+  },
+  {
+    "id": "search-result.guests",
+    "defaultMessage": "Guests"
+  }
+]

@@ -11,7 +11,13 @@ class SearchBar extends Component {
   constructor(props) {
     super(props)
 
-    this.listingTypes = listingSchema.listingTypes.map(listingType => {
+    this.listingTypes = [ {
+      type: 'all',
+      translationName: {
+        id: 'searchbar.all',
+        defaultMessage: 'All'
+      }
+    }, ...listingSchema.listingTypes ].map(listingType => {
       listingType.name = props.intl.formatMessage(listingType.translationName)
       return listingType
     })
@@ -28,8 +34,17 @@ class SearchBar extends Component {
       },
     })
 
+    //this.searchSchema = {}
+
     this.handleChange = this.handleChange.bind(this)
     this.handleOnSearch = this.handleOnSearch.bind(this)
+    this.handleKeyPress = this.handleKeyPress.bind(this)
+  }
+
+  handleKeyPress(e) {
+    if (e.key === 'Enter') {
+      this.handleOnSearch(e)
+    }
   }
 
   handleChange(e) {
@@ -37,6 +52,7 @@ class SearchBar extends Component {
   }
 
   handleOnSearch(e) {
+    console.log("HANDLE ON SEARCH")
     document.location.href = `#/search/${this.state.searchQuery}`
   }
 
@@ -67,14 +83,12 @@ class SearchBar extends Component {
               placeholder={this.props.intl.formatMessage(this.intlMessages.searchPlaceholder)}
               aria-label="Search"
               onChange={this.handleChange}
+              onKeyPress={this.handleKeyPress}
             />
             <div className="input-group-append">
               <button 
                 className="search-bar-append"
                 type="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
                 onClick={this.handleOnSearch}
               >
                 <img src="images/searchbar/magnifying-glass.svg" alt="Search Listings" />
@@ -109,7 +123,7 @@ class SearchBar extends Component {
             </li>
           </ul>
         </div>
-</nav>
+      </nav>
     )
   }
 }
