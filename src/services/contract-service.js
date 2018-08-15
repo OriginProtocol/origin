@@ -200,9 +200,10 @@ class ContractService {
         .on('confirmation', confirmationCallback)
         .on('error', reject)
     })
+    const block = await this.web3.eth.getBlock(transactionReceipt.blockNumber)
     return {
-      created: (await this.web3.eth.getBlock(transactionReceipt.blockNumber))
-        .timestamp,
+      // return current time in seconds if block is not found
+      created: block ? block.timestamp : Math.floor(Date.now() / 1000),
       transactionReceipt
     }
   }
