@@ -447,7 +447,6 @@ class Profile extends Component {
           open={modalsOpen.publish}
           changes={changes}
           handleToggle={this.handleToggle}
-          handlePublish={this.handlePublish}
           onConfirm={() => {
             this.setState({
               modalsOpen: { ...modalsOpen, publish: false },
@@ -464,7 +463,6 @@ class Profile extends Component {
           open={modalsOpen.unload}
           changes={changes}
           handleToggle={this.handleToggle}
-          handlePublish={this.handlePublish}
           onConfirm={() => {
             this.setState({
               modalsOpen: { ...modalsOpen, unload: false },
