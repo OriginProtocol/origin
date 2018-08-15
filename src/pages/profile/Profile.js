@@ -125,6 +125,10 @@ class Profile extends Component {
 
   componentDidMount() {
     this.props.getBalance()
+    this.setProgress({
+      provisional: this.props.provisionalProgress,
+      published: this.props.publishedProgress
+    })
   }
 
   componentDidUpdate(prevProps) {
