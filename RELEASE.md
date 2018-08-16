@@ -95,18 +95,40 @@ No additional features should be added to this release branch. Only bug fixes sh
   - `git tag -a v0.3.0 -m "New release"`
 
 ### origin-bridge
-- [ ] _origin-dapp_: Merge and push branches
+Pre-requesites:
+ - Install the [Heroku cli](https://devcenter.heroku.com/articles/heroku-cli) on your local host.
+
+Publish steps:
+- [ ] Merge and push branches.
   - `git checkout develop`
-  - `git merge --no-ff release-0.2.0`
+  - `git merge --no-ff release-X.Y.Z`
   - `git push`
   - `git checkout master`
-  - `git merge --no-ff release-0.2.0`
+  - `git merge --no-ff release-X.Y.Z`
   - `git push`
-- [ ] _origin-js_: Delete release branch
-  - `git branch -D release-0.2.0`
+- [ ] Delete release branch.
+  - `git branch -D release-X.Y.Z`
   - _Manually_ [delete on GitHub](https://github.com/OriginProtocol/origin-bridge/branches)
-- [ ] _origin-bridge_: Add git tag to `master` to match origin-js.
-  - `git tag -a v0.2.0 -m "New release"`
+- [ ] Add git tag to `master` to match origin-js.
+  - `git checkout master`
+  - `git tag -a vX.Y.Z -m "New release"`
+  - `git push`
+- [ ] Push to Heroku.
+  - Clone Heroku git repo.
+    - `heroku git:clone -a bridge-originprotocol-com`
+    - `cd bridge-originprotocol-com/`
+  - Pull Origin's master into Heroku's master.
+   - `git remote add origin https://github.com/OriginProtocol/origin-bridge.git`
+   - `git pull origin master`
+  - Push to heroku's git repo. This will also trigger Heroku to rebuild the packages, run DB migration(s) and deploy the new code.
+   - `git push heroku master`
+- [ ] Check the Heroku deployment succeeded.
+  - Check the web process is up.
+   - `heroku ps -a bridge-originprotocol-com`
+  - Tail the logs for errors.
+   - `heroku logs -a bridge-originprotocol-com --tail`
+  - Verify the home page loads.
+   - `http://bridge.originprotocol.com`
 
 ## Follow-up
 - [ ] Confirm published `origin.js` file is accessible via `code.originprotocol.com` redirect
