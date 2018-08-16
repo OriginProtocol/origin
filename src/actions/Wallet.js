@@ -10,7 +10,7 @@ export const WalletConstants = keyMirror(
 
     BALANCE: null,
     BALANCE_SUCCESS: null,
-    BALANCE_ERROR: null,
+    BALANCE_ERROR: null
   },
   'WALLET'
 )

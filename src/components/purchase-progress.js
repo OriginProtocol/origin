@@ -1,69 +1,25 @@
 import React, { Component } from 'react'
-import moment from 'moment'
 import { FormattedMessage } from 'react-intl'
 
 class PurchaseProgress extends Component {
   constructor(props) {
     super(props)
 
-    this.calculateProgress = this.calculateProgress.bind(this)
     this.state = {
       currentStep: props.currentStep,
-      maxStep: props.maxStep || (props.perspective === 'seller' ? 4 : 3),
-      progressCalculated: false,
-      progressWidth: '0%',
+      maxStep: props.maxStep,
+      progressCalculated: true,
+      progressWidth: '0%'
     }
   }
 
-  componentDidMount() {
-    setTimeout(() => {
-      this.calculateProgress()
-      this.deriveCurrentStep()
-    }, 400)
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.currentStep !== this.state.currentStep) {
-      this.calculateProgress()
-      this.deriveCurrentStep()
-    }
-  }
-
-  calculateProgress() {
-    const { currentStep, maxStep } = this.state
-    const progressWidth = currentStep > 1 ? `${(currentStep - 1) / (maxStep - 1) * 100}%` : `${currentStep * 10}px`
-
-    this.setState({ progressCalculated: true, progressWidth })
-  }
-
-  // calculate current step if not provided as a prop
-  deriveCurrentStep() {
-    const { currentStep, perspective, purchase } = this.props
-
-    if (typeof currentStep !== Number) {
-      let step
-
-      if (purchase.stage === 'complete') {
-        step = this.state.maxStep
-      } else if (purchase.stage === 'seller_pending') {
-        step = 3
-      } else if (purchase.stage === 'buyer_pending') {
-        step = 2
-      } else if (purchase.stage === 'in_escrow') {
-        step = 1
-      } else {
-        step = 0
-      }
-
-      if (this.state.currentStep !== step) {
-        this.setState({ currentStep: step })
-      }
-    }
-  }
-  
   render() {
-    const { perspective, purchase, subdued } = this.props
-    const { currentStep, maxStep, progressCalculated, progressWidth } = this.state
+    const { perspective, subdued, currentStep, maxStep } = this.props
+    const { progressCalculated } = this.state
+    const progressWidth =
+      currentStep > 1
+        ? `${((currentStep - 1) / (maxStep - 1)) * 100}%`
+        : `${currentStep * 10}px`
 
     // timestamps not yet available
     const soldAt = !!currentStep
@@ -72,112 +28,139 @@ class PurchaseProgress extends Component {
     const withdrawnAt = currentStep > 3
 
     return (
-      <div className={`progress-container${progressCalculated ? ' ready' : ''}${subdued ? ' subdued' : ''}`}>
+      <div
+        className={`progress-container${progressCalculated ? ' ready' : ''}${
+          subdued ? ' subdued' : ''
+        }`}
+      >
         <div className="progress">
-          <div className="progress-bar" role="progressbar" style={{ width: progressWidth }} aria-valuenow={Math.max(maxStep, currentStep)} aria-valuemin="0" aria-valuemax={maxStep}></div>
+          <div
+            className="progress-bar"
+            role="progressbar"
+            style={{ width: progressWidth }}
+            aria-valuenow={Math.max(maxStep, currentStep)}
+            aria-valuemin="0"
+            aria-valuemax={maxStep}
+          />
         </div>
         <div className="circles d-flex justify-content-between">
-          {!soldAt && <span className="progress-circle"></span>}
-          {soldAt &&
-            <span className="progress-circle checked"
+          {!soldAt && <span className="progress-circle" />}
+          {soldAt && (
+            <span
+              className="progress-circle checked"
               data-toggle="tooltip"
               data-placement="top"
               data-html="true"
-              title={null/*`Sold on<br /><strong>${moment(soldAt).format('MMM D, YYYY')}</strong>`*/}>
-            </span>
-          }
-          {!fulfilledAt && <span className="progress-circle"></span>}
-          {fulfilledAt &&
-            <span className="progress-circle checked"
+              title={
+                null /*`Sold on<br /><strong>${moment(soldAt).format('MMM D, YYYY')}</strong>`*/
+              }
+            />
+          )}
+          {!fulfilledAt && <span className="progress-circle" />}
+          {fulfilledAt && (
+            <span
+              className="progress-circle checked"
               data-toggle="tooltip"
               data-placement="top"
               data-html="true"
-              title={null/*`Sent by seller on<br /><strong>${moment(fulfilledAt).format('MMM D, YYYY')}</strong>`*/}>
-            </span>
-          }
-          {!receivedAt && <span className="progress-circle"></span>}
-          {receivedAt &&
-            <span className="progress-circle checked"
+              title={
+                null /*`Sent by seller on<br /><strong>${moment(fulfilledAt).format('MMM D, YYYY')}</strong>`*/
+              }
+            />
+          )}
+          {!receivedAt && <span className="progress-circle" />}
+          {receivedAt && (
+            <span
+              className="progress-circle checked"
               data-toggle="tooltip"
               data-placement="top"
               data-html="true"
-              title={null/*`Received by buyer on<br /><strong>${moment(receivedAt).format('MMM D, YYYY')}</strong>`*/}>
-            </span>
-          }
-          {perspective === 'seller' && !withdrawnAt && <span className="progress-circle"></span>}
-          {perspective === 'seller' && withdrawnAt &&
-            <span className="progress-circle checked"
+              title={
+                null /*`Received by buyer on<br /><strong>${moment(receivedAt).format('MMM D, YYYY')}</strong>`*/
+              }
+            />
+          )}
+          {perspective === 'seller' &&
+            !withdrawnAt && <span className="progress-circle" />}
+          {perspective === 'seller' &&
+            withdrawnAt && (
+            <span
+              className="progress-circle checked"
               data-toggle="tooltip"
               data-placement="top"
               data-html="true"
-              title={null/*`Funds withdrawn on<br /><strong>${moment(withdrawnAt).format('MMM D, YYYY')}</strong>`*/}>
-            </span>
-          }
+              title={
+                null /*`Funds withdrawn on<br /><strong>${moment(withdrawnAt).format('MMM D, YYYY')}</strong>`*/
+              }
+            />
+          )}
         </div>
-        {!subdued && perspective === 'buyer' &&
+        {!subdued &&
+          perspective === 'buyer' && (
           <div className="labels d-flex justify-content-between text-center">
             <div className="stage-container">
               <div className="stage">
                 <FormattedMessage
-                  id={ 'purchase-progress.purchased' }
-                  defaultMessage={ 'Purchased' }
+                  id={'purchase-progress.purchased'}
+                  defaultMessage={'Purchased'}
                 />
               </div>
             </div>
             <div className="stage-container">
               <div className="stage">
                 <FormattedMessage
-                  id={ 'purchase-progress.sentBySeller' }
-                  defaultMessage={ 'Sent by seller' }
+                  id={'purchase-progress.sentBySeller'}
+                  defaultMessage={'Sent by seller'}
                 />
               </div>
             </div>
             <div className="stage-container">
               <div className="stage">
                 <FormattedMessage
-                  id={ 'purchase-progress.receivedByMe' }
-                  defaultMessage={ 'Received by me' }
+                  id={'purchase-progress.receivedByMe'}
+                  defaultMessage={'Received by me'}
                 />
               </div>
             </div>
           </div>
-        }
-        {!subdued && perspective === 'seller' &&
+        )}
+        {!subdued &&
+          perspective === 'seller' && (
           <div className="labels d-flex justify-content-between text-center">
             <div className="stage-container">
               <div className="stage">
                 <FormattedMessage
-                  id={ 'purchase-progress.sold' }
-                  defaultMessage={ 'Sold' }
+                  id={'purchase-progress.sold'}
+                  defaultMessage={'Sold'}
                 />
               </div>
             </div>
             <div className="stage-container">
               <div className="stage">
                 <FormattedMessage
-                  id={ 'purchase-progress.orderSent' }
-                  defaultMessage={ 'Order Sent' }
+                  id={'purchase-progress.orderSent'}
+                  defaultMessage={'Order Sent'}
                 />
               </div>
             </div>
             <div className="stage-container">
               <div className="stage">
                 <FormattedMessage
-                  id={ 'purchase-progress.receivedByBuyer' }
-                  defaultMessage={ 'Received by buyer' }
+                  id={'purchase-progress.receivedByBuyer'}
+                  defaultMessage={'Received by buyer'}
                 />
               </div>
             </div>
             <div className="stage-container">
               <div className="stage">
                 <FormattedMessage
-                  id={ 'purchase-progress.fundsWithdrawn' }
-                  defaultMessage={ 'Funds Withdrawn' }
+                  id={'purchase-progress.fundsWithdrawn'}
+                  defaultMessage={'Funds Withdrawn'}
                 />
               </div>
             </div>
           </div>
-        }
+        )}
       </div>
     )
   }

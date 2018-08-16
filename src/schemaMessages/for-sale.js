@@ -23,7 +23,7 @@ export default defineMessages({
   },
   'schema.forSale.priceInETH': {
     id: 'schema.forSale.priceInETH',
-    defaultMessage: 'Price in ETH',
+    defaultMessage: 'Price in ETH'
   },
   'schema.forSale.selectPhotos': {
     id: 'schema.forSale.selectPhotos',

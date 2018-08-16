@@ -3,7 +3,8 @@ import { defineMessages } from 'react-intl'
 export default defineMessages({
   'schema.services.schemaDescription': {
     id: 'schema.services.schemaDescription',
-    defaultMessage: 'Distributed Elance/99 Designs/Postmates/Fiver/Handy/Thumbtack'
+    defaultMessage:
+      'Distributed Elance/99 Designs/Postmates/Fiver/Handy/Thumbtack'
   },
   'schema.services.title': {
     id: 'schema.services.title',
@@ -23,7 +24,7 @@ export default defineMessages({
   },
   'schema.services.priceInETH': {
     id: 'schema.services.priceInETH',
-    defaultMessage: 'Price in ETH',
+    defaultMessage: 'Price in ETH'
   },
   'schema.services.selectPhotos': {
     id: 'schema.services.selectPhotos',

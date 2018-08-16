@@ -23,9 +23,10 @@ class ListingsGrid extends Component {
   render() {
     const { listingsPerPage } = this.state
     const { contractFound, listingIds, hideList } = this.props
-    const pinnedListingIds = [0, 1, 2, 3, 4]
+    // const pinnedListingIds = [0, 1, 2, 3, 4]
+    // const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
+    const arrangedListingIds = listingIds
     const activePage = this.props.match.params.activePage || 1
-    const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
     // Calc listings to show for given page
     const showListingsIds = arrangedListingIds.slice(
       listingsPerPage * (activePage - 1),
@@ -38,31 +39,43 @@ class ListingsGrid extends Component {
           <div className="listings-grid">
             <div className="alert alert-warning" role="alert">
               <FormattedMessage
-                id={ 'listings-grid.originContractNotFound' }
-                defaultMessage={ 'The Origin Contract was not found on this network.' }
+                id={'listings-grid.originContractNotFound'}
+                defaultMessage={
+                  'The Origin Contract was not found on this network.'
+                }
               />
               <br />
               <FormattedMessage
-                id={ 'listings-grid.changeNetworks' }
-                defaultMessage={ 'You may need to change networks, or deploy the contract.' }
+                id={'listings-grid.changeNetworks'}
+                defaultMessage={
+                  'You may need to change networks, or deploy the contract.'
+                }
               />
             </div>
           </div>
         )}
         {contractFound && (
           <div className="listings-grid">
-            {listingIds.length > 0 && 
+            {listingIds.length > 0 && (
               <h1>
                 <FormattedMessage
-                  id={ 'listings-grid.listingsCount' }
-                  defaultMessage={ '{listingIdsCount} Listings' }
-                  values={{ listingIdsCount: <FormattedNumber value={ listingIds.length } /> }}
+                  id={'listings-grid.listingsCount'}
+                  defaultMessage={'{listingIdsCount} Listings'}
+                  values={{
+                    listingIdsCount: (
+                      <FormattedNumber value={listingIds.length} />
+                    )
+                  }}
                 />
               </h1>
-            }
+            )}
             <div className="row">
               {showListingsIds.map(listingId => (
-                <ListingCard listingId={listingId} key={listingId} hideList={hideList} />
+                <ListingCard
+                  listingId={listingId}
+                  key={listingId}
+                  hideList={hideList}
+                />
               ))}
             </div>
             <Pagination
@@ -83,7 +96,7 @@ class ListingsGrid extends Component {
 }
 
 const mapStateToProps = state => ({
-  listingIds: state.listings.ids,
+  listingIds: state.marketplace.ids,
   hideList: state.listings.hideList,
   contractFound: state.listings.contractFound
 })
@@ -92,4 +105,9 @@ const mapDispatchToProps = dispatch => ({
   getListingIds: () => dispatch(getListingIds())
 })
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ListingsGrid))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(ListingsGrid)
+)

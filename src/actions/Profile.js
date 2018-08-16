@@ -21,8 +21,8 @@ export const ProfileConstants = keyMirror(
 
 export function fetchProfile() {
   return async function(dispatch) {
-    var user = await origin.users.get(),
-        wallet = await origin.contractService.currentAccount()
+    const user = await origin.users.get(),
+      wallet = await origin.contractService.currentAccount()
 
     dispatch({
       type: ProfileConstants.FETCH_SUCCESS,
@@ -48,7 +48,7 @@ export function deployProfile() {
       profile: { provisional, published }
     } = getState()
 
-    let userData = {
+    const userData = {
       profile: {
         firstName: provisional.firstName,
         lastName: provisional.lastName,
@@ -79,9 +79,9 @@ export function deployProfile() {
     }
 
     try {
-      var user = await origin.users.set(userData)
+      const user = await origin.users.set(userData)
       dispatch({ type: ProfileConstants.DEPLOY_SUCCESS, user })
-    } catch(error) {
+    } catch (error) {
       dispatch({ type: ProfileConstants.DEPLOY_ERROR, error })
     }
   }

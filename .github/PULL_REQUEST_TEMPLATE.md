@@ -4,6 +4,7 @@ First pull request? Read our [guide to contributing](http://docs.originprotocol.
 
 - [ ] Test your work and double check you didn't break anything
 - [ ] Update any relevant READMEs and [docs](https://github.com/OriginProtocol/docs)
+- [ ] Wrap any new text/strings for translation
 
 ### Description:
 

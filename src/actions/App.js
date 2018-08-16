@@ -6,9 +6,10 @@ import { showAlert } from 'actions/Alert'
 import keyMirror from 'utils/keyMirror'
 import {
   addLocales,
-  getLangFullName,
   getAvailableLanguages,
-  setGlobalIntlProvider
+  setGlobalIntlProvider,
+  getLanguageNativeName,
+  getBestAvailableLanguage
 } from 'utils/translationUtils'
 
 import origin from '../services/origin'
@@ -19,11 +20,12 @@ export const AppConstants = keyMirror(
   {
     MESSAGING_DISMISSED: null,
     MESSAGING_ENABLED: null,
+    MESSAGING_INITIALIZED: null,
     NOTIFICATIONS_DISMISSED: null,
     ON_MOBILE: null,
     WEB3_ACCOUNT: null,
     WEB3_INTENT: null,
-    TRANSLATIONS: null,
+    TRANSLATIONS: null
   },
   'APP'
 )
@@ -31,14 +33,14 @@ export const AppConstants = keyMirror(
 export function dismissMessaging() {
   return {
     type: AppConstants.MESSAGING_DISMISSED,
-    closedAt: new Date(),
+    closedAt: new Date()
   }
 }
 
 export function dismissNotifications(ids) {
   return {
     type: AppConstants.NOTIFICATIONS_DISMISSED,
-    ids,
+    ids
   }
 }
 
@@ -59,6 +61,13 @@ export function setMessagingEnabled(messagingEnabled) {
   }
 }
 
+export function setMessagingInitialized(messagingInitialized) {
+  return {
+    type: AppConstants.MESSAGING_INITIALIZED,
+    messagingInitialized
+  }
+}
+
 export function setMobile(device) {
   return { type: AppConstants.ON_MOBILE, device }
 }
@@ -72,8 +81,7 @@ export function storeWeb3Intent(intent) {
 }
 
 export function localizeApp() {
-  let messages
-  let selectedLanguageAbbrev
+  let bestAvailableLanguage
 
   // Add locale data to react-intl
   addLocales()
@@ -81,45 +89,42 @@ export function localizeApp() {
   // English is our default - to prevent errors, we set to undefined for English
   // https://github.com/yahoo/react-intl/issues/619#issuecomment-242765427
   // Check for a user-selected language from the dropdown menu (stored in local storage)
-  const userSelectedLangAbbrev = store.get('preferredLang')
+  const userSelectedLangCode = store.get('preferredLang')
 
-  if (userSelectedLangAbbrev) {
-
-    selectedLanguageAbbrev = userSelectedLangAbbrev
-
-    // English is our default - to prevent errors, we set to undefined for English
-    if (selectedLanguageAbbrev !== 'en') {
-      messages = translations[userSelectedLangAbbrev]
-    }
-
+  // English is our default - to prevent errors, we set to undefined for English
+  if (userSelectedLangCode && userSelectedLangCode !== 'en-US') {
+    bestAvailableLanguage = getBestAvailableLanguage(userSelectedLangCode)
   } else {
-
     // Detect user's preferred settings
-    const detectedLanguage = (navigator.languages && navigator.languages[0]) ||
-                             navigator.language ||
-                             navigator.userLanguage
-
-    // Split locales with a region code
-    selectedLanguageAbbrev = detectedLanguage.toLowerCase().split(/[_-]+/)[0]
-
-    if (selectedLanguageAbbrev !== 'en') {
-      messages = translations[selectedLanguageAbbrev] || translations[detectedLanguage]
+    const browserDefaultLang =
+      (navigator.languages && navigator.languages[0]) ||
+      navigator.language ||
+      navigator.userLanguage
+    if (browserDefaultLang && browserDefaultLang !== 'en-US') {
+      bestAvailableLanguage = getBestAvailableLanguage(browserDefaultLang)
     }
   }
 
-  setGlobalIntlProvider(selectedLanguageAbbrev, messages)
+  const messages = translations[bestAvailableLanguage]
+  let selectedLanguageCode = bestAvailableLanguage
+
+  if (!selectedLanguageCode || !messages) {
+    selectedLanguageCode = 'en-US'
+  }
+
+  setGlobalIntlProvider(selectedLanguageCode, messages)
 
   // Set locale for moment.js
-  if (selectedLanguageAbbrev !== 'en') {
-    const momentLocale = selectedLanguageAbbrev === 'zh' ? 'zh-cn' : selectedLanguageAbbrev
+  if (selectedLanguageCode !== 'en-US') {
+    const momentLocale = selectedLanguageCode
     moment.locale(momentLocale)
   }
 
-  return { 
+  return {
     type: AppConstants.TRANSLATIONS,
-    selectedLanguageAbbrev: selectedLanguageAbbrev,
-    selectedLanguageFull: getLangFullName(selectedLanguageAbbrev),
+    selectedLanguageCode: selectedLanguageCode,
+    selectedLanguageFull: getLanguageNativeName(selectedLanguageCode),
     availableLanguages: getAvailableLanguages(),
-    messages 
+    messages
   }
 }
