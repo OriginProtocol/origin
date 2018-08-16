@@ -110,7 +110,7 @@ class MyListingCard extends Component {
             </h2>
             {/*<p className="timestamp">{timestamp}</p>*/}
             {/*<p className="price">
-              {`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ETH`}
+              {`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 5 })} ETH`}
               {!parseInt(unitsAvailable) &&
                 <span className="badge badge-info">
                   <FormattedMessage
