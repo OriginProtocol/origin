@@ -71,7 +71,9 @@ docker-compose -f docker-compose-web.yml down
 Spawn a shell (command line) in a container:
 
 	docker exec -ti <container_name> /bin/bash
-
+	docker exec -ti origin-dapp /bin/bash
+	docker exec -ti origin-js /bin/bash
+	
 Restart DApp (needed after changing branches). In a new terminal window:
 
 	docker-compose restart origin-dapp
