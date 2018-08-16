@@ -211,7 +211,7 @@ contract V01_Marketplace {
   function finalize(uint listingID, uint offerID, bytes32 _ipfsHash) public {
     Listing storage listing = listings[listingID];
     Offer storage offer = offers[listingID][offerID];
-    if (now <= offer.finalizes) { // Only buyer can finalize before finalization window
+    if (now <= offer.finalizes) { // Only buyer can finalize before end of finalization window
       require(msg.sender == offer.buyer);
     } else { // Allow both seller and buyer to finalize if finalization window has passed
       require(msg.sender == offer.buyer || msg.sender == listing.seller);
