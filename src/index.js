@@ -18,6 +18,7 @@ const defaultIpfsGatewayPort = '443'
 const defaultIpfsGatewayProtocol = 'https'
 const defaultAttestationServerUrl = `${defaultBridgeServer}/api/attestations`
 const defaultIndexingServerUrl = `${defaultBridgeServer}/api`
+const VERSION = require('.././package.json').version
 
 class Origin {
   constructor({
@@ -34,6 +35,8 @@ class Origin {
     ecies,
     messagingNamespace
   } = {}) {
+    this.version = VERSION
+
     this.contractService = new ContractService({ contractAddresses, web3 })
     this.ipfsService = new IpfsService({
       ipfsDomain,
