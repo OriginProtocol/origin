@@ -95,7 +95,7 @@ No additional features should be added to this release branch. Only bug fixes sh
   - `git tag -a v0.3.0 -m "New release"`
 
 ### origin-bridge
-Pre-requesites:
+Prerequesites:
  - Install the [Heroku cli](https://devcenter.heroku.com/articles/heroku-cli) on your local host.
 
 Publish steps:
@@ -118,17 +118,16 @@ Publish steps:
     - `heroku git:clone -a bridge-originprotocol-com`
     - `cd bridge-originprotocol-com/`
   - Pull Origin's master into Heroku's master.
-   - `git remote add origin https://github.com/OriginProtocol/origin-bridge.git`
-   - `git pull origin master`
+    - `git remote add origin https://github.com/OriginProtocol/origin-bridge.git`
+    - `git pull origin master`
   - Push to heroku's git repo. This will also trigger Heroku to rebuild the packages, run DB migration(s) and deploy the new code.
-   - `git push heroku master`
+    - `git push heroku master`
 - [ ] Check the Heroku deployment succeeded.
   - Check the web process is up.
-   - `heroku ps -a bridge-originprotocol-com`
+    - `heroku ps -a bridge-originprotocol-com`
   - Tail the logs for errors.
-   - `heroku logs -a bridge-originprotocol-com --tail`
-  - Verify the home page loads.
-   - `http://bridge.originprotocol.com`
+    - `heroku logs -a bridge-originprotocol-com --tail`
+  - Verify the [home page](https://bridge.originprotocol.com) loads.
 
 ## Follow-up
 - [ ] Confirm published `origin.js` file is accessible via `code.originprotocol.com` redirect
