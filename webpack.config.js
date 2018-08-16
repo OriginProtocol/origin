@@ -94,7 +94,7 @@ var config = {
     headers: {
       'Access-Control-Allow-Origin': '*'
     },
-    disableHostCheck: true
+    disableHostCheck: true,
     overlay: {
       warnings: true,
       errors: true

@@ -5,7 +5,7 @@ import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 
-import { dismissMessaging, enableMessaging } from 'actions/App'
+import { dismissMessaging, enableMessaging, storeWeb3Intent } from 'actions/App'
 
 import ConversationListItem from 'components/conversation-list-item'
 
@@ -87,7 +87,13 @@ class MessagesDropdown extends Component {
                 }
               </h3>
               {!messagingEnabled &&
-                <button className="btn btn-sm btn-primary d-none d-md-block ml-auto" onClick={enableMessaging}>
+                <button className="btn btn-sm btn-primary d-md-block ml-auto" onClick={() => {
+                  enableMessaging()
+                  if(!this.props.web3Account) {
+                    this.props.storeWeb3Intent('Enable messaging.')
+                    origin.contractService.showLinkPopUp()
+                  }
+                }}>
                   <FormattedMessage
                     id={ 'messages.enable' }
                     defaultMessage={ 'Enable Messaging' }
@@ -120,12 +126,15 @@ const mapStateToProps = state => {
     messages: state.messages.filter(({ senderAddress, status }) => {
       return status === 'unread' && senderAddress !== state.app.web3.account
     }),
+    web3Account: state.app.web3.account,
+    web3Intent: state.app.web3.intent,
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   dismissMessaging: () => dispatch(dismissMessaging()),
   enableMessaging: () => dispatch(enableMessaging()),
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MessagesDropdown))

@@ -9,7 +9,7 @@ import detectMobile from 'utils/detectMobile'
 const mobilize = (str) => {
   if (detectMobile() && process.env.MOBILE_LOCALHOST_IP)
   {
-    return str.replace("localhost", process.env.MOBILE_LOCALHOST_IP)
+    return str.replace("localhost", process.env.MOBILE_LOCALHOST_IP).replace("127.0.0.1", process.env.MOBILE_LOCALHOST_IP)
   }
   else
   {
@@ -65,9 +65,12 @@ const ipfsCreator = repo_key => {
   const ipfs = new IPFS(ipfsOptions)
 
   if (process.env.IPFS_SWARM) {
+    const ipfs_swarm = mobilize(process.env.IPFS_SWARM)
     ipfs.on("start", async ()=> {
-      await ipfs.swarm.connect(process.env.IPFS_SWARM)
+      await ipfs.swarm.connect(ipfs_swarm)
     })
+    ipfs.__reconnect_peers = {}
+    ipfs.__reconnect_peers[process.env.IPFS_SWARM.split('/').pop()] = ipfs_swarm
   }
 
   return ipfs

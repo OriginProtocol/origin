@@ -2368,6 +2368,12 @@ form .stars img {
   padding: 0 10px 0;
 }
 
+@media (max-width: 800px) {
+  .conversations-list-col .conversation-list-item {
+    width: 200px;
+  }
+}
+
 .conversation-list-item {
   height: 60px;
   padding: 10px;
