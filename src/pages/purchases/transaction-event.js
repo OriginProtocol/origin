@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import EtherscanLink from '../../components/etherscan-link'
 import moment from 'moment'
+
+import EtherscanLink from 'components/etherscan-link'
 
 class TransactionEvent extends Component {
 

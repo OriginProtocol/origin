@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
+import moment from 'moment'
 import $ from 'jquery'
 
 import { storeWeb3Intent } from 'actions/App'
@@ -13,7 +15,6 @@ import { getBalance } from 'actions/Wallet'
 
 import Avatar from 'components/avatar'
 import Modal from 'components/modal'
-import Timelapse from 'components/timelapse'
 
 import Services from './_Services'
 import Wallet from './_Wallet'
@@ -25,9 +26,14 @@ import VerifyPhone from './VerifyPhone'
 import VerifyEmail from './VerifyEmail'
 import VerifyFacebook from './VerifyFacebook'
 import VerifyTwitter from './VerifyTwitter'
+import VerifyAirbnb from './VerifyAirbnb'
 import ConfirmPublish from './ConfirmPublish'
 import ConfirmUnload from './ConfirmUnload'
 import AttestationSuccess from './AttestationSuccess'
+
+import getCurrentProvider from 'utils/getCurrentProvider'
+
+import origin from '../../services/origin'
 
 class Profile extends Component {
   constructor(props) {
@@ -36,6 +42,9 @@ class Profile extends Component {
     this.handleToggle = this.handleToggle.bind(this)
     this.handleUnload = this.handleUnload.bind(this)
     this.setProgress = this.setProgress.bind(this)
+    this.setLastPublishTime = this.setLastPublishTime.bind(this)
+    this.startLastPublishTimeInterval = this.startLastPublishTimeInterval.bind(this)
+    this.profileDeploymentComplete = this.profileDeploymentComplete.bind(this)
     /*
       Three-ish Profile States
 
@@ -51,12 +60,14 @@ class Profile extends Component {
       lastPublish: null,
       address: props.address,
       userForm: { firstName, lastName, description },
+      lastPublishTime: null,
       modalsOpen: {
         attestationSuccess: false,
         email: false,
         facebook: false,
         phone: false,
         profile: false,
+        airbnb: false,
         publish: false,
         twitter: false,
         unload: false,
@@ -67,8 +78,44 @@ class Profile extends Component {
         published: 0,
       },
       provisional: props.provisional,
-      successMessage: '',
+      currentProvider: getCurrentProvider(origin && origin.contractService && origin.contractService.web3),
+      successMessage: ''
     }
+
+    this.intlMessages = defineMessages({
+      manageYourProfile: {
+        id: 'Profile.manageYourProfile',
+        defaultMessage: 'manage your profile'
+      },
+      unsavedChangesWarn: {
+        id: 'Profile.unsavedChangesWarn',
+        defaultMessage: 'If you exit without publishing, you\'ll lose all your changes.'
+      },
+      noDescriptionUser: {
+        id: 'Profile.noDescriptionUser',
+        defaultMessage: 'An Origin user without a description'
+      },
+      phoneVerified: {
+        id: 'Profile.phoneVerified',
+        defaultMessage: 'Phone number verified!'
+      },
+      emailVerified: {
+        id: 'Profile.emailVerified',
+        defaultMessage: 'Email address verified!'
+      },
+      facebookVerified: {
+        id: 'Profile.facebookVerified',
+        defaultMessage: 'Facebook account verified!'
+      },
+      twitterVerified: {
+        id: 'Profile.twitterVerified',
+        defaultMessage: 'Twitter account verified!'
+      },
+      airbnbVerified: {
+        id: 'Profile.airbnbVerified',
+        defaultMessage: 'Airbnb account verified!'
+      }
+    })
   }
 
   componentDidMount() {
@@ -100,7 +147,7 @@ class Profile extends Component {
   handleToggle(e) {
     e.preventDefault()
 
-    this.props.storeWeb3Intent('manage your profile')
+    this.props.storeWeb3Intent(this.props.intl.formatMessage(this.intlMessages.manageYourProfile))
 
     if (web3.givenProvider && this.props.web3Account) {
       const { modal } = e.currentTarget.dataset
@@ -128,8 +175,7 @@ class Profile extends Component {
 
   // warning message will be ignored by the native dialog in Chrome and Firefox
   handleUnload(e) {
-    const message =
-      "If you exit without publishing, you'll lose all your changes."
+    const message = this.props.intl.formatMessage(this.intlMessages.unsavedChangesWarn)
     const modalsOpen = Object.assign({}, this.state.modalsOpen, {
       unload: true
     })
@@ -161,10 +207,30 @@ class Profile extends Component {
     this.setState({ progress })
   }
 
+  setLastPublishTime() {
+    this.setState({
+      lastPublishTime: moment(this.props.lastPublish).fromNow()
+    })
+  }
+
+  startLastPublishTimeInterval() {
+    this.createdAtInterval = setInterval(() => {
+      this.setLastPublishTime()
+    }, 60000)
+  }
+
+  profileDeploymentComplete() {
+    this.props.deployProfileReset()
+    this.setLastPublishTime()
+    this.startLastPublishTimeInterval()
+  }
+
   componentWillUnmount() {
     $('.profile-wrapper [data-toggle="tooltip"]').tooltip('dispose')
 
     window.removeEventListener('beforeunload', this.handleUnload)
+
+    clearInterval(this.createdAtInterval)
   }
 
   render() {
@@ -174,7 +240,7 @@ class Profile extends Component {
 
     const fullName = `${provisional.firstName} ${provisional.lastName}`.trim()
     const hasChanges = !!changes.length
-    const description = provisional.description || 'An Origin user without a description'
+    const description = provisional.description || this.props.intl.formatMessage(this.intlMessages.noDescriptionUser)
 
     let statusClassMap = {
       unpublished: 'not-published'
@@ -204,7 +270,13 @@ class Profile extends Component {
                 </div>
                 <div className="col-8 col-md-9">
                   <div className="name d-flex">
-                    <h1>{fullName.length ? fullName : 'Unnamed User'}</h1>
+                    <h1>{fullName.length ? fullName :
+                          <FormattedMessage
+                            id={ 'Profile.unnamedUser' }
+                            defaultMessage={ 'Unnamed User' }
+                          />
+                        }
+                    </h1>
                     <div className="icon-container">
                       <button
                         className="edit-profile"
@@ -219,7 +291,12 @@ class Profile extends Component {
                 </div>
               </div>
 
-              <h2>Verify yourself on Origin</h2>
+              <h2>
+                <FormattedMessage
+                  id={ 'Profile.verifyYourselfHeading' }
+                  defaultMessage={ 'Verify yourself on Origin' }
+                />
+              </h2>
               <Services
                 published={published}
                 provisional={provisional}
@@ -233,7 +310,10 @@ class Profile extends Component {
                     className="publish btn btn-sm btn-primary d-block"
                     disabled
                   >
-                    Publish Now
+                    <FormattedMessage
+                      id={ 'Profile.publishNow' }
+                      defaultMessage={ 'Publish Now' }
+                    />
                   </button>
                 )}
                 {hasChanges && (
@@ -245,20 +325,31 @@ class Profile extends Component {
                       })
                     }}
                   >
-                    Publish Now
+                    <FormattedMessage
+                      id={ 'Profile.publishNow' }
+                      defaultMessage={ 'Publish Now' }
+                    />
                   </button>
                 )}
                 {publishStatus && (
                   <div className="published-status text-center">
-                    <span>Status:</span>
+                    <span>
+                      <FormattedMessage
+                        id={ 'Profile.status' }
+                        defaultMessage={ 'Status:' }
+                      />
+                    </span>
                     <span className={statusClass}>
                       {statusText}
                     </span>
                     {hasPublishedAllChanges && (
                       <span>
-                        Last published
+                        <FormattedMessage
+                          id={ 'Profile.lastPublished' }
+                          defaultMessage={ 'Last published' }
+                        />
                         {' '}
-                        <Timelapse reactive={true} reference={lastPublish} />
+                        { this.state.lastPublishTime }
                       </span>
                     )}
                   </div>
@@ -294,7 +385,7 @@ class Profile extends Component {
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
-              successMessage: 'Phone number verified!',
+              successMessage: this.props.intl.formatMessage(this.intlMessages.phoneVerified),
               modalsOpen: { ...modalsOpen, phone: false, attestationSuccess: true }
             })
           }}
@@ -307,7 +398,7 @@ class Profile extends Component {
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
-              successMessage: 'Email address verified!',
+              successMessage: this.props.intl.formatMessage(this.intlMessages.emailVerified),
               modalsOpen: { ...modalsOpen, email: false, attestationSuccess: true }
             })
           }}
@@ -320,7 +411,7 @@ class Profile extends Component {
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
-              successMessage: 'Facebook account verified!',
+              successMessage: this.props.intl.formatMessage(this.intlMessages.facebookVerified),
               modalsOpen: { ...modalsOpen, facebook: false, attestationSuccess: true }
             })
           }}
@@ -332,8 +423,22 @@ class Profile extends Component {
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
-              successMessage: 'Twitter account verified!',
+              successMessage: this.props.intl.formatMessage(this.intlMessages.twitterVerified),
               modalsOpen: { ...modalsOpen, twitter: false, attestationSuccess: true }
+            })
+          }}
+        />
+
+        <VerifyAirbnb
+          open={modalsOpen.airbnb}
+          handleToggle={this.handleToggle}
+          intl={this.props.intl}
+          web3Account = {this.props.web3Account}
+          onSuccess={data => {
+            this.props.addAttestation(data)
+            this.setState({
+              successMessage: this.props.intl.formatMessage(this.intlMessages.airbnbVerified),
+              modalsOpen: { ...modalsOpen, airbnb: false, attestationSuccess: true }
             })
           }}
         />
@@ -342,7 +447,6 @@ class Profile extends Component {
           open={modalsOpen.publish}
           changes={changes}
           handleToggle={this.handleToggle}
-          handlePublish={this.handlePublish}
           onConfirm={() => {
             this.setState({
               modalsOpen: { ...modalsOpen, publish: false },
@@ -359,7 +463,6 @@ class Profile extends Component {
           open={modalsOpen.unload}
           changes={changes}
           handleToggle={this.handleToggle}
-          handlePublish={this.handlePublish}
           onConfirm={() => {
             this.setState({
               modalsOpen: { ...modalsOpen, unload: false },
@@ -383,8 +486,16 @@ class Profile extends Component {
             <div className="image-container">
               <img src="images/spinner-animation.svg" role="presentation" />
             </div>
-            Confirm transaction<br />
-            Press &ldquo;Submit&rdquo; in MetaMask window
+            <FormattedMessage
+              id={ 'Profile.confirmTransaction' }
+              defaultMessage={ 'Confirm transaction' }
+            />
+            <br />
+            <FormattedMessage
+              id={ 'Profile.pressSubmit' }
+              defaultMessage={ 'Press "Submit" in {currentProvider} window' }
+              values={{ currentProvider: this.state.currentProvider }}
+            />
           </Modal>
         )}
 
@@ -393,8 +504,15 @@ class Profile extends Component {
             <div className="image-container">
               <img src="images/spinner-animation.svg" role="presentation" />
             </div>
-            Deploying your identity<br />
-            Please stand by...
+            <FormattedMessage
+              id={ 'Profile.deployingIdentity' }
+              defaultMessage={ 'Deploying your identity' }
+            />
+            <br />
+            <FormattedMessage
+              id={ 'Profile.pleaseStandBy' }
+              defaultMessage={ 'Please stand by...' }
+            />
           </Modal>
         )}
 
@@ -403,14 +521,27 @@ class Profile extends Component {
             <div className="image-container">
               <img src="images/flat_cross_icon.svg" role="presentation" />
             </div>
-            <h2>Error</h2>
-            <div>See the console for more details</div>
+            <h2>
+              <FormattedMessage
+                id={ 'Profile.error' }
+                defaultMessage={ 'Error' }
+              />
+            </h2>
+            <div>
+              <FormattedMessage
+                id={ 'Profile.seeConsole' }
+                defaultMessage={ 'See the console for more details' }
+              />
+            </div>
             <div className="button-container">
               <button
                 className="btn btn-clear"
-                onClick={this.props.deployProfileReset}
+                onClick={this.profileDeploymentComplete}
               >
-                OK
+                <FormattedMessage
+                  id={ 'Profile.ok' }
+                  defaultMessage={ 'OK' }
+                />
               </button>
             </div>
           </Modal>
@@ -424,13 +555,22 @@ class Profile extends Component {
                 role="presentation"
               />
             </div>
-            <h2>Success</h2>
+            <h2>
+              <FormattedMessage
+                id={ 'Profile.success' }
+                defaultMessage={ 'Success' }
+              />
+            </h2>
             <div className="button-container">
               <button
                 className="btn btn-clear"
-                onClick={this.props.deployProfileReset}
+                onClick={this.profileDeploymentComplete}
               >
-                Continue
+                <FormattedMessage
+                  id={ 'Profile.continue' }
+                  defaultMessage={ 'Continue' }
+                />
+                
               </button>
             </div>
           </Modal>
@@ -486,4 +626,4 @@ const mapDispatchToProps = dispatch => ({
   storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Profile)
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Profile))

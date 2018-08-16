@@ -1,0 +1,18 @@
+[
+  {
+    "id": "user-card.unnamedUser",
+    "defaultMessage": "Unnamed User"
+  },
+  {
+    "id": "user-card.heading",
+    "defaultMessage": "About the {title}"
+  },
+  {
+    "id": "transaction-progress.ethAddress",
+    "defaultMessage": "ETH Address:"
+  },
+  {
+    "id": "transaction-progress.viewProfile",
+    "defaultMessage": "View Profile"
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "my-sale-card.ethereumCurrencyAbbrev",
+    "defaultMessage": "ETH"
+  },
+  {
+    "id": "my-sale-card.unnamedUser",
+    "defaultMessage": "Unnamed User"
+  },
+  {
+    "id": "my-sale-card.buyerNameLink",
+    "defaultMessage": "sold to {linkToBuyer}"
+  },
+  {
+    "id": "my-sale-card.price",
+    "defaultMessage": "Price: {price}"
+  },
+  {
+    "id": "my-sale-card.nextStep1",
+    "defaultMessage": "{nextStep} Send the order to buyer"
+  },
+  {
+    "id": "my-sale-card.nextStep2",
+    "defaultMessage": "{nextStep} Wait for buyer to receive order"
+  },
+  {
+    "id": "my-sale-card.nextStep3",
+    "defaultMessage": "{nextStep} Withdraw funds"
+  },
+  {
+    "id": "my-sale-card.orderComplete",
+    "defaultMessage": "This order is complete"
+  },
+  {
+    "id": "my-sale-card.viewDetails",
+    "defaultMessage": "View Details"
+  }
+]

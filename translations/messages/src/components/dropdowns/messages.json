@@ -1,0 +1,18 @@
+[
+  {
+    "id": "messagesDropdown.messageHeading",
+    "defaultMessage": "Unread Message"
+  },
+  {
+    "id": "messagesDropdown.messagesHeading",
+    "defaultMessage": "Unread Messages"
+  },
+  {
+    "id": "messages.enable",
+    "defaultMessage": "Enable Messaging"
+  },
+  {
+    "id": "messagesDropdown.viewAll",
+    "defaultMessage": "View All"
+  }
+]

@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
+import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
-import MySaleCard from './my-sale-card'
 
-import { storeWeb3Intent } from '../actions/App'
+import { storeWeb3Intent } from 'actions/App'
+
+import MySaleCard from 'components/my-sale-card'
+
 import origin from '../services/origin'
 
 class MySales extends Component {
@@ -122,36 +125,96 @@ class MySales extends Component {
     return (
       <div className="my-purchases-wrapper">
         <div className="container">
-          <div className="row">
-            <div className="col-12">
-              <h1>My Sales</h1>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-12 col-md-3">
-              {loading && 'Loading...'}
-              {!loading && !purchases.length && 'You currently have no sales.'}
-              {!loading && !!purchases.length &&
-                <div className="filters list-group flex-row flex-md-column">
-                  <a className={`list-group-item list-group-item-action${filter === 'pending' ? ' active' : ''}`}
-                    onClick={() => this.setState({ filter: 'pending' })}>Pending</a>
-                  <a className={`list-group-item list-group-item-action${filter === 'complete' ? ' active' : ''}`}
-                    onClick={() => this.setState({ filter: 'complete' })}>Complete</a>
-                  <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`}
-                    onClick={() => this.setState({ filter: 'all' })}>All</a>
-                </div>
-              }
-            </div>
-            <div className="col-12 col-md-9">
-              <div className="my-listings-list">
-                {filteredPurchases.map(p => (
-                  <MySaleCard key={`my-purchase-${p.address}`}
-                    listing={listings.find(l => l.address === p.listingAddress)}
-                    purchase={p} />
-                ))}
+          {loading &&
+            <div className="row">
+              <div className="col-12 text-center">
+                <h1>
+                  <FormattedMessage
+                    id={ 'my-sales.loading' }
+                    defaultMessage={ 'Loading...' }
+                  />
+                </h1>
               </div>
             </div>
-          </div>
+          }
+          {!loading && !purchases.length &&
+            <div className="row">
+              <div className="col-12 text-center">
+                <img src="images/empty-listings-graphic.svg"></img>
+                <h1>
+                  <FormattedMessage
+                    id={ 'my-sales.no-sales' }
+                    defaultMessage={ 'You don\'t have any sales yet.' }
+                  />
+                </h1>
+                <p>
+                  <FormattedMessage
+                    id={ 'my-sales.no-sales-text' }
+                    defaultMessage={ 'Click below to view your listings.' }
+                  />
+                </p>
+                <br />
+                <a href="#/my-listings" className="btn btn-lrg btn-primary">
+                  <FormattedMessage
+                    id={ 'my-sales.view-listings' }
+                    defaultMessage={ 'My Listings' }
+                  />
+                </a>
+              </div>
+            </div>
+          }
+          {!loading && !!purchases.length &&
+            <div className="row">
+              <div className="col-12">
+                <div className="row">
+                  <div className="col-12">
+                    <h1>
+                      <FormattedMessage
+                        id={ 'my-sales.mySalesHeading' }
+                        defaultMessage={ 'My Sales' }
+                      />
+                    </h1>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-12 col-md-3">
+                    <div className="filters list-group flex-row flex-md-column">
+                      <a className={`list-group-item list-group-item-action${filter === 'pending' ? ' active' : ''}`}
+                        onClick={() => this.setState({ filter: 'pending' })}>
+                        <FormattedMessage
+                          id={ 'my-sales.pending' }
+                          defaultMessage={ 'Pending' }
+                        />
+                      </a>
+                      <a className={`list-group-item list-group-item-action${filter === 'complete' ? ' active' : ''}`}
+                        onClick={() => this.setState({ filter: 'complete' })}>
+                        <FormattedMessage
+                          id={ 'my-sales.complete' }
+                          defaultMessage={ 'Complete' }
+                        />
+                      </a>
+                      <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`}
+                        onClick={() => this.setState({ filter: 'all' })}>
+                        <FormattedMessage
+                          id={ 'my-sales.all' }
+                          defaultMessage={ 'All' }
+                        />
+                      </a>
+                    </div>
+                  </div>
+                  <div className="col-12 col-md-9">
+                    <div className="my-listings-list">
+                      {filteredPurchases.map(p => (
+                        <MySaleCard key={`my-purchase-${p.address}`}
+                          listing={listings.find(l => l.address === p.listingAddress)}
+                          purchase={p} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
         </div>
       </div>
     )

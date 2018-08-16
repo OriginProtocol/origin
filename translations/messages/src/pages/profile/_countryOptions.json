@@ -1,0 +1,46 @@
+[
+  {
+    "id": "_countryOptions.unitedStates",
+    "defaultMessage": "United States"
+  },
+  {
+    "id": "_countryOptions.china",
+    "defaultMessage": "China"
+  },
+  {
+    "id": "_countryOptions.japan",
+    "defaultMessage": "Japan"
+  },
+  {
+    "id": "_countryOptions.germany",
+    "defaultMessage": "Germany"
+  },
+  {
+    "id": "_countryOptions.france",
+    "defaultMessage": "France"
+  },
+  {
+    "id": "_countryOptions.russia",
+    "defaultMessage": "Russia"
+  },
+  {
+    "id": "_countryOptions.brazil",
+    "defaultMessage": "Brazil"
+  },
+  {
+    "id": "_countryOptions.italy",
+    "defaultMessage": "Italy"
+  },
+  {
+    "id": "_countryOptions.unitedKingdom",
+    "defaultMessage": "United Kingdom"
+  },
+  {
+    "id": "_countryOptions.southKorea",
+    "defaultMessage": "South Korea"
+  },
+  {
+    "id": "_countryOptions.newZealand",
+    "defaultMessage": "New Zealand"
+  }
+]

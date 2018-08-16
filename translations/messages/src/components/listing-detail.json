@@ -1,0 +1,78 @@
+[
+  {
+    "id": "listing-detail.loadingError",
+    "defaultMessage": "There was an error loading this listing."
+  },
+  {
+    "id": "listing-detail.confirmTransaction",
+    "defaultMessage": "Confirm transaction"
+  },
+  {
+    "id": "listing-detail.pressSubmitInMetaMask",
+    "defaultMessage": "Press {submit} in {currentProvider} window"
+  },
+  {
+    "id": "listing-detail.processingPurchase",
+    "defaultMessage": "Processing your purchase"
+  },
+  {
+    "id": "listing-detail.pleaseStandBy",
+    "defaultMessage": "Please stand by..."
+  },
+  {
+    "id": "listing-detail.purchaseSuccessful",
+    "defaultMessage": "Success!"
+  },
+  {
+    "id": "listing-detail.successDisclaimer",
+    "defaultMessage": "Your purchase will be visible within a few seconds."
+  },
+  {
+    "id": "listing-detail.goToPurchases",
+    "defaultMessage": "Go To Purchases"
+  },
+  {
+    "id": "listing-detail.errorPurchasingListing",
+    "defaultMessage": "There was a problem purchasing this listing."
+  },
+  {
+    "id": "listing-detail.seeConsoleForDetails",
+    "defaultMessage": "See the console for more details."
+  },
+  {
+    "id": "listing-detail.OK",
+    "defaultMessage": "OK"
+  },
+  {
+    "id": "listing-detail.viewOnIpfs",
+    "defaultMessage": "View on IPFS"
+  },
+  {
+    "id": "listing-detail.IPFS",
+    "defaultMessage": "IPFS: {ipfsHash}"
+  },
+  {
+    "id": "listing-detail.seller",
+    "defaultMessage": "Seller: {sellerAddress}"
+  },
+  {
+    "id": "listing-detail.price",
+    "defaultMessage": "Price"
+  },
+  {
+    "id": "listing-detail.ethereumCurrencyAbbrev",
+    "defaultMessage": "ETH"
+  },
+  {
+    "id": "listing-detail.buyNow",
+    "defaultMessage": "Buy Now"
+  },
+  {
+    "id": "listing-detail.soldOut",
+    "defaultMessage": "Sold Out"
+  },
+  {
+    "id": "listing-detail.reviews",
+    "defaultMessage": "Reviews"
+  }
+]

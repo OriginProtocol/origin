@@ -1,12 +1,32 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
+import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'react-intl'
+
+import {
+  update as updateTransaction,
+  upsert as upsertTransaction,
+} from 'actions/Transaction'
+
+import { translateListingCategory } from 'utils/translationUtils'
 
 import origin from '../services/origin'
 
 class MyListingCard extends Component {
   constructor(props) {
     super(props)
+
+    this.intlMessages = defineMessages({
+      confirmCloseListing: {
+        id: 'my-listing-card.confirmCloseListing',
+        defaultMessage: 'Are you sure that you want to permanently close this listing? This cannot be undone.'
+      },
+      ETH: {
+        id: 'my-listing-card.ethereumCurrencyAbbrev',
+        defaultMessage: 'ETH'
+      }
+    })
 
     this.closeListing = this.closeListing.bind(this)
   }
@@ -16,28 +36,41 @@ class MyListingCard extends Component {
   }
 
   async closeListing() {
-    const { address } = this.props.listing
-    const prompt = confirm('Are you sure that you want to permanently close this listing? This cannot be undone.')
+    const{ intl, listing, handleProcessing, handleUpdate, updateTransaction } = this.props
+    const { address } = listing
+    const prompt = confirm(intl.formatMessage(this.intlMessages.confirmCloseListing))
 
     if (!prompt) {
       return null
     }
 
     try {
-      const transaction = await origin.listings.close(address)
-      console.log(transaction)
-      await transaction.whenFinished()
-      // why is this delay often required???
-      setTimeout(() => {
-        this.props.handleUpdate(address)
-      }, 1000)
+      handleProcessing(true)
+
+      const { created, transactionReceipt } = await origin.listings.close(address, (confirmationCount, transactionReceipt) => {
+        // Having a transaction receipt doesn't guarantee that the listing state will have changed.
+        // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
+        handleUpdate(address)
+
+        this.props.updateTransaction(confirmationCount, transactionReceipt)
+      })
+
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        created,
+        transactionTypeKey: 'closeListing',
+      })
+
+      handleProcessing(false)
     } catch(error) {
+      handleProcessing(false)
       console.error(`Error closing listing ${address}`)
+      console.error(error)
     }
   }
 
   render() {
-    const { address, category, /*createdAt, */name, pictures, price, unitsAvailable } = this.props.listing
+    const { address, category, /*createdAt, */name, pictures, price, unitsAvailable } = translateListingCategory(this.props.listing)
     /*
      *  Micah 4/23/2018
      *  ~~~~~~~~~~~~~~~
@@ -51,7 +84,7 @@ class MyListingCard extends Component {
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
 
     return (
-      <div className="transaction card">
+      <div className="purchase card">
         <div className="card-body d-flex flex-column flex-lg-row">
           <div className="aspect-ratio">
             <div className={`${photo ? '' : 'placeholder '}image-container d-flex justify-content-center`}>
@@ -65,10 +98,23 @@ class MyListingCard extends Component {
             {/*<p className="timestamp">{timestamp}</p>*/}
             <p className="price">
               {`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ETH`}
-              {!parseInt(unitsAvailable) /*<= quantity*/ && <span className="badge badge-info">Sold Out</span>}
+              {!parseInt(unitsAvailable) /*<= quantity*/ && 
+                <span className="badge badge-info">
+                  <FormattedMessage
+                    id={ 'my-listing-card.soldOut' }
+                    defaultMessage={ 'Sold Out' }
+                  />
+                </span>
+              }
             </p>
             <div className="d-flex counts">
-              <p>Total Quantity: {parseInt(unitsAvailable).toLocaleString()}</p>
+              <p>
+                <FormattedMessage
+                  id={ 'my-listing-card.totalQuantity' }
+                  defaultMessage={ 'Total Quantity : {quantity}' }
+                  values={{ quantity: <FormattedNumber value={unitsAvailable} /> }}
+                />
+              </p>
               {/*<p>Total Remaining: {(unitsAvailable - quantity).toLocaleString()}</p>*/}
             </div>
             <div className="d-flex counts">
@@ -80,7 +126,14 @@ class MyListingCard extends Component {
                 {/*<a onClick={() => alert('To Do')}>Edit</a>*/}
                 {/*!active && <a onClick={() => alert('To Do')}>Enable</a>*/}
                 {/*active && <a onClick={() => alert('To Do')}>Disable</a>*/}
-                {!!parseInt(unitsAvailable) && <a className="warning" onClick={this.closeListing}>Close Listing</a>}
+                {!!parseInt(unitsAvailable) && 
+                  <a className="warning" onClick={this.closeListing}>
+                    <FormattedMessage
+                      id={ 'my-listing-card.closeListing' }
+                      defaultMessage={ 'Close Listing' }
+                    />
+                  </a>
+                }
               </div>
             </div>
           </div>
@@ -90,4 +143,9 @@ class MyListingCard extends Component {
   }
 }
 
-export default MyListingCard
+const mapDispatchToProps = dispatch => ({
+  updateTransaction: (confirmationCount, transactionReceipt) => dispatch(updateTransaction(confirmationCount, transactionReceipt)),
+  upsertTransaction: (transaction) => dispatch(upsertTransaction(transaction)),
+})
+
+export default connect(undefined, mapDispatchToProps)(injectIntl(MyListingCard))

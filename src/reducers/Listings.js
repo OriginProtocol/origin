@@ -1,4 +1,4 @@
-import { ListingConstants } from '../actions/Listing'
+import { ListingConstants } from 'actions/Listing'
 
 const initialState = {
   ids: [],

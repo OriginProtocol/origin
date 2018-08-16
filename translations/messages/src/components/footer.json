@@ -1,0 +1,90 @@
+[
+  {
+    "id": "footer.mission",
+    "defaultMessage": "Origin is building the sharing economy of tomorrow. Buyers and sellers will be able to transact without rent-seeking middlemen. We believe in lowering transaction fees, promoting free and transparent commerce, and giving early participants in the community a stake in the network."
+  },
+  {
+    "id": "footer.documentationHeading",
+    "defaultMessage": "Resources"
+  },
+  {
+    "id": "footer.productBriefLink",
+    "defaultMessage": "Product Brief"
+  },
+  {
+    "id": "footer.whitepaperLink",
+    "defaultMessage": "Whitepaper"
+  },
+  {
+    "id": "footer.githubLink",
+    "defaultMessage": "Github"
+  },
+  {
+    "id": "footer.docsLink",
+    "defaultMessage": "Docs"
+  },
+  {
+    "id": "footer.communityHeading",
+    "defaultMessage": "Community"
+  },
+  {
+    "id": "footer.telegramLink",
+    "defaultMessage": "Telegram"
+  },
+  {
+    "id": "footer.discordLink",
+    "defaultMessage": "Discord"
+  },
+  {
+    "id": "footer.mediumLink",
+    "defaultMessage": "Medium"
+  },
+  {
+    "id": "footer.redditLink",
+    "defaultMessage": "Reddit"
+  },
+  {
+    "id": "footer.wechatLink",
+    "defaultMessage": "WeChat"
+  },
+  {
+    "id": "footer.socialHeading",
+    "defaultMessage": "Social"
+  },
+  {
+    "id": "footer.twitterLink",
+    "defaultMessage": "Twitter"
+  },
+  {
+    "id": "footer.instagramLink",
+    "defaultMessage": "Instagram"
+  },
+  {
+    "id": "footer.facebookLink",
+    "defaultMessage": "Facebook"
+  },
+  {
+    "id": "footer.youtubeLink",
+    "defaultMessage": "Youtube"
+  },
+  {
+    "id": "footer.organizationHeading",
+    "defaultMessage": "Organization"
+  },
+  {
+    "id": "footer.teamLink",
+    "defaultMessage": "Team"
+  },
+  {
+    "id": "footer.presaleLink",
+    "defaultMessage": "Presale"
+  },
+  {
+    "id": "footer.partnersLink",
+    "defaultMessage": "Partners"
+  },
+  {
+    "id": "footer.hiringLink",
+    "defaultMessage": "Jobs"
+  }
+]

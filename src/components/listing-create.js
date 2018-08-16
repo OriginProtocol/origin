@@ -1,13 +1,22 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import origin from '../services/origin'
-
-import { showAlert } from '../actions/Alert'
-
-import ListingDetail from './listing-detail'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import Form from 'react-jsonschema-form'
-import Modal from './modal'
+
+import { showAlert } from 'actions/Alert'
+import {
+  update as updateTransaction,
+  upsert as upsertTransaction,
+} from '../actions/Transaction'
+
+import ListingDetail from 'components/listing-detail'
+import Modal from 'components/modal'
+
+import getCurrentProvider from 'utils/getCurrentProvider'
+import { translateSchema } from 'utils/translationUtils'
+
+import origin from '../services/origin'
 
 class ListingCreate extends Component {
 
@@ -29,13 +38,40 @@ class ListingCreate extends Component {
       ERROR: 7
     }
 
+    const schemaTypeLabels = defineMessages({
+      forSale: {
+        id: 'listing-create.forSaleLabel',
+        defaultMessage: 'For Sale'
+      },
+      housing: {
+        id: 'listing-create.housingLabel',
+        defaultMessage: 'Housing'
+      },
+      transportation: {
+        id: 'listing-create.transportation',
+        defaultMessage: 'Transportation'
+      },
+      tickets: {
+        id: 'listing-create.tickets',
+        defaultMessage: 'Tickets'
+      },
+      services: {
+        id: 'listing-create.services',
+        defaultMessage: 'Services'
+      },
+      announcements: {
+        id: 'listing-create.announcements',
+        defaultMessage: 'Announcements'
+      }
+    })
+
     this.schemaList = [
-      {type: 'for-sale', name: 'For Sale', 'img': 'for-sale.jpg'},
-      {type: 'housing', name: 'Housing', 'img': 'housing.jpg'},
-      {type: 'transportation', name: 'Transportation', 'img': 'transportation.jpg'},
-      {type: 'tickets', name: 'Tickets', 'img': 'tickets.jpg'},
-      {type: 'services', name: 'Services', 'img': 'services.jpg'},
-      {type: 'announcements', name: 'Announcements', 'img': 'announcements.jpg'},
+      {type: 'for-sale', name: props.intl.formatMessage(schemaTypeLabels.forSale), 'img': 'for-sale.jpg'},
+      {type: 'housing', name: props.intl.formatMessage(schemaTypeLabels.housing), 'img': 'housing.jpg'},
+      {type: 'transportation', name: props.intl.formatMessage(schemaTypeLabels.transportation), 'img': 'transportation.jpg'},
+      {type: 'tickets', name: props.intl.formatMessage(schemaTypeLabels.tickets), 'img': 'tickets.jpg'},
+      {type: 'services', name: props.intl.formatMessage(schemaTypeLabels.services), 'img': 'services.jpg'},
+      {type: 'announcements', name: props.intl.formatMessage(schemaTypeLabels.announcements), 'img': 'announcements.jpg'},
     ]
 
     this.state = {
@@ -43,7 +79,8 @@ class ListingCreate extends Component {
       selectedSchemaType: this.schemaList[0],
       selectedSchema: null,
       schemaFetched: false,
-      formListing: {formData: null}
+      formListing: {formData: null},
+      currentProvider: getCurrentProvider(origin && origin.contractService && origin.contractService.web3)
     }
 
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
@@ -104,12 +141,15 @@ class ListingCreate extends Component {
 
   async onSubmitListing(formListing, selectedSchemaType) {
     try {
-      console.log(formListing)
       this.setState({ step: this.STEP.METAMASK })
-      const transactionReceipt = await origin.listings.create(formListing.formData, selectedSchemaType)
+      console.log(formListing)
       this.setState({ step: this.STEP.PROCESSING })
-      // Submitted to blockchain, now wait for confirmation
-      await origin.contractService.waitTransactionFinished(transactionReceipt.transactionHash)
+      const { created, transactionReceipt } = await origin.listings.create(formListing.formData, selectedSchemaType, this.props.updateTransaction)
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        created,
+        transactionTypeKey: 'createListing',
+      })
       this.setState({ step: this.STEP.SUCCESS })
     } catch (error) {
       console.error(error)
@@ -133,15 +173,36 @@ class ListingCreate extends Component {
             <div className="row flex-sm-row-reverse">
              <div className="col-md-5 offset-md-2">
                 <div className="info-box">
-                  <h2>Choose a schema for your product or service</h2>
-                  <p>Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services.</p>
+                  <h2>
+                    <FormattedMessage
+                      id={ 'listing-create.chooseSchema' }
+                      defaultMessage={ 'Choose a schema for your product or service' }
+                    />
+                  </h2>
+                  <p>
+                    <FormattedMessage
+                      id={ 'listing-create.schemaExplainer' }
+                      defaultMessage={ 'Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services.' }
+                    />
+                  </p>
                   <div className="info-box-image"><img className="d-none d-md-block" src="images/features-graphic.svg" role="presentation" /></div>
                 </div>
               </div>
 
               <div className="col-md-5">
-                <label>STEP {Number(this.state.step)}</label>
-                <h2>What type of listing do you want to create?</h2>
+                <label>
+                  <FormattedMessage
+                    id={ 'listing-create.stepNumberLabel' }
+                    defaultMessage={ 'STEP {stepNumber}' }
+                    values={{ stepNumber: Number(this.state.step) }}
+                  />
+                </label>
+                <h2>
+                  <FormattedMessage
+                    id={ 'listing-create.whatTypeOfListing' }
+                    defaultMessage={ 'What type of listing do you want to create?' }
+                  />
+                </h2>
                 <div className="schema-options">
                   {this.schemaList.map(schema => (
                     <div
@@ -158,7 +219,10 @@ class ListingCreate extends Component {
                 </div>
                 <div className="btn-container">
                   <button className="float-right btn btn-primary" onClick={() => this.handleSchemaSelection()}>
-                    Next
+                    <FormattedMessage
+                      id={ 'listing-create.next' }
+                      defaultMessage={ 'Next' }
+                    />
                   </button>
                 </div>
               </div>
@@ -170,15 +234,57 @@ class ListingCreate extends Component {
             <div className="row flex-sm-row-reverse">
                <div className="col-md-5 offset-md-2">
                   <div className="info-box">
-                    <div><h2>How it works</h2>Origin uses a Mozilla project called <a href="http://json-schema.org/" rel="noopener noreferrer" target="_blank">JSONSchema</a> to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer.<br/><br/>Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.<br/><br/><a href={`schemas/${this.state.selectedSchemaType}.json`} target="_blank">View the <code>{this.state.selectedSchema.name}</code> schema</a></div>
+                    <div>
+                      <h2>
+                        <FormattedMessage
+                          id={ 'listing-create.howItWorksHeading' }
+                          defaultMessage={ 'How it works' }
+                        />
+                      </h2>
+                      <FormattedMessage
+                        id={ 'listing-create.howItWorksContentPart1' }
+                        defaultMessage={ 'Origin uses a Mozilla project called {jsonSchemaLink}  to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer.' }
+                        values={{ 
+                          jsonSchemaLink: <FormattedMessage id={ 'listing-create.jsonSchema' } defaultMessage={ 'JSONSchema' } />
+                        }}
+                      />
+                      <br/><br/>
+                      <FormattedMessage
+                        id={ 'listing-create.howItWorksContentPart2' }
+                        defaultMessage={ 'Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.' }
+                        values={{ 
+                          jsonSchemaLink: <FormattedMessage id={ 'listing-create.jsonSchema' } defaultMessage={ 'JSONSchema' } />
+                        }}
+                      />
+                      <a href={`schemas/${this.state.selectedSchemaType}.json`} target="_blank">
+                        <FormattedMessage
+                          id={ 'listing-create.viewSchemaLinkLabel' }
+                          defaultMessage={ 'View the {schemaName} schema' }
+                          values={{ 
+                            schemaName: <code>{this.state.selectedSchema.name}</code>
+                          }}
+                        />
+                      </a>
+                    </div>
                     <div className="info-box-image"><img className="d-none d-md-block" src="images/features-graphic.svg" role="presentation" /></div>
                   </div>
                 </div>
               <div className="col-md-5">
-                <label>STEP {Number(this.state.step)}</label>
-                <h2>Create your listing</h2>
+                <label>
+                  <FormattedMessage
+                    id={ 'listing-create.stepNumberLabel' }
+                    defaultMessage={ 'STEP {stepNumber}' }
+                    values={{ stepNumber: Number(this.state.step) }}
+                  />
+                </label>
+                <h2>
+                  <FormattedMessage
+                    id={ 'listing-create.createListingHeading' }
+                    defaultMessage={ 'Create your listing' }
+                  />
+                </h2>
                 <Form
-                  schema={this.state.selectedSchema}
+                  schema={translateSchema(this.state.selectedSchema, this.state.selectedSchemaType)}
                   onSubmit={this.onDetailsEntered}
                   formData={this.state.formListing.formData}
                   onError={(errors) => console.log(`react-jsonschema-form errors: ${errors.length}`)}
@@ -186,9 +292,17 @@ class ListingCreate extends Component {
                 >
                   <div className="btn-container">
                     <button type="button" className="btn btn-other" onClick={() => this.setState({step: this.STEP.PICK_SCHEMA})}>
-                      Back
+                      <FormattedMessage
+                        id={ 'backButtonLabel' }
+                        defaultMessage={ 'Back' }
+                      />
                     </button>
-                    <button type="submit" className="float-right btn btn-primary">Continue</button>
+                    <button type="submit" className="float-right btn btn-primary">
+                      <FormattedMessage
+                        id={ 'continueButtonLabel' }
+                        defaultMessage={ 'Continue' }
+                      />
+                    </button>
                   </div>
                 </Form>
 
@@ -205,8 +319,19 @@ class ListingCreate extends Component {
                 <div className="image-container">
                   <img src="images/spinner-animation.svg" role="presentation"/>
                 </div>
-                Confirm transaction<br />
-                Press &ldquo;Submit&rdquo; in MetaMask window
+                <FormattedMessage
+                  id={ 'listing-create.confirmTransaction' }
+                  defaultMessage={ 'Confirm transaction' }
+                />
+                <br />
+                <FormattedMessage
+                  id={ 'listing-create.pressSubmitInMetaMask' }
+                  defaultMessage={ 'Press {submit} in {currentProvider} window' }
+                  values={{
+                    currentProvider: this.state.currentProvider,
+                    submit: <span>&ldquo;Submit&rdquo;</span>,
+                  }}
+                />
               </Modal>
             }
             {this.state.step === this.STEP.PROCESSING &&
@@ -214,8 +339,15 @@ class ListingCreate extends Component {
                 <div className="image-container">
                   <img src="images/spinner-animation.svg" role="presentation"/>
                 </div>
-                Uploading your listing<br />
-                Please stand by...
+                <FormattedMessage
+                  id={ 'listing-create.uploadingYourListing' }
+                  defaultMessage={ 'Uploading your listing' }
+                />
+                <br />
+                <FormattedMessage
+                  id={ 'listing-create.pleaseStandBy' }
+                  defaultMessage={ 'Please stand by...' }
+                />
               </Modal>
             }
             {this.state.step === this.STEP.SUCCESS &&
@@ -223,9 +355,23 @@ class ListingCreate extends Component {
                 <div className="image-container">
                   <img src="images/circular-check-button.svg" role="presentation"/>
                 </div>
-                Success
+                <FormattedMessage
+                  id={ 'listing-create.successMessage' }
+                  defaultMessage={ 'Success!' }
+                />
+                <div className="disclaimer">
+                  <FormattedMessage
+                    id={ 'listing-create.successDisclaimer' }
+                    defaultMessage={ 'Your listing will be visible within a few seconds.' }
+                  />
+                </div>
                 <div className="button-container">
-                  <Link to="/" className="btn btn-clear">See All Listings</Link>
+                  <Link to="/" className="btn btn-clear">
+                    <FormattedMessage
+                      id={ 'listing-create.seeAllListings' }
+                      defaultMessage={ 'See All Listings' }
+                    />
+                  </Link>
                 </div>
               </Modal>
             }
@@ -234,7 +380,15 @@ class ListingCreate extends Component {
                 <div className="image-container">
                   <img src="images/flat_cross_icon.svg" role="presentation" />
                 </div>
-                There was a problem creating this listing.<br />See the console for more details.
+                <FormattedMessage
+                  id={ 'listing-create.error1' }
+                  defaultMessage={ 'There was a problem creating this listing.' }
+                />
+                <br />
+                <FormattedMessage
+                  id={ 'listing-create.error2' }
+                  defaultMessage={ 'See the console for more details.' }
+                />
                 <div className="button-container">
                   <a
                     className="btn btn-clear"
@@ -243,21 +397,60 @@ class ListingCreate extends Component {
                       this.resetToPreview()
                     }}
                   >
-                    OK
+                    <FormattedMessage
+                      id={ 'listing-create.OK' }
+                      defaultMessage={ 'OK' }
+                    />
                   </a>
                 </div>
               </Modal>
             )}
             <div className="row">
               <div className="col-md-7">
-                <label className="create-step">STEP {Number(this.state.step)}</label>
-                <h2>Preview your listing</h2>
+                <label className="create-step">
+                  <FormattedMessage
+                    id={ 'listing-create.stepNumberLabel' }
+                    defaultMessage={ 'STEP {stepNumber}' }
+                    values={{ stepNumber: Number(this.state.step) }}
+                  />
+                </label>
+                <h2>
+                  <FormattedMessage
+                    id={ 'listing-create.previewListingHeading' }
+                    defaultMessage={ 'Preview your listing' }
+                  />
+                </h2>
               </div>
             </div>
             <div className="row flex-sm-row-reverse">
               <div className="col-md-5">
                 <div className="info-box">
-                  <div><h2>What happens next?</h2>When you hit submit, a JSON object representing your listing will be published to <a target="_blank" rel="noopener noreferrer" href="https://ipfs.io">IPFS</a> and the content hash will be published to a listing smart contract running on the Ethereum network.<br/><br/>Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left.</div>
+                  <div>
+                    <h2>
+                      <FormattedMessage
+                        id={ 'listing-create.whatHappensNextHeading' }
+                        defaultMessage={ 'What happens next?' }
+                      />
+                    </h2>
+                    <FormattedMessage
+                      id={ 'listing-create.whatHappensNextContent1' }
+                      defaultMessage={ 'When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network.' }
+                      values={{ 
+                        ipfsLink: <a target="_blank" rel="noopener noreferrer" href="https://ipfs.io">
+                          <FormattedMessage
+                            id={ 'listing-create.IPFS' }
+                            defaultMessage={ 'IPFS' }
+                          />
+                        </a> 
+                      }}
+                    />
+                    <br/>
+                    <br/>
+                    <FormattedMessage
+                      id={ 'listing-create.whatHappensNextContent2' }
+                      defaultMessage={ 'Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left.' }
+                    />
+                  </div>
                 </div>
               </div>
               <div className="col-md-7">
@@ -266,11 +459,17 @@ class ListingCreate extends Component {
                 </div>
                 <div className="btn-container">
                   <button className="btn btn-other float-left" onClick={() => this.setState({step: this.STEP.DETAILS})}>
-                    Back
+                    <FormattedMessage
+                      id={ 'listing-create.backButtonLabel' }
+                      defaultMessage={ 'Back' }
+                    />
                   </button>
                   <button className="btn btn-primary float-right"
                     onClick={() => this.onSubmitListing(this.state.formListing, this.state.selectedSchemaType)}>
-                    Done
+                    <FormattedMessage
+                      id={ 'listing-create.doneButtonLabel' }
+                      defaultMessage={ 'Done' }
+                    />
                   </button>
                 </div>
               </div>
@@ -283,7 +482,9 @@ class ListingCreate extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  showAlert: (msg) => dispatch(showAlert(msg))
+  showAlert: (msg) => dispatch(showAlert(msg)),
+  updateTransaction: (hash, confirmationCount) => dispatch(updateTransaction(hash, confirmationCount)),
+  upsertTransaction: (transaction) => dispatch(upsertTransaction(transaction)),
 })
 
-export default connect(undefined, mapDispatchToProps)(ListingCreate)
+export default connect(undefined, mapDispatchToProps)(injectIntl(ListingCreate))

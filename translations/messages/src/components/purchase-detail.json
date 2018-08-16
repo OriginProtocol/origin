@@ -1,0 +1,150 @@
+[
+  {
+    "id": "purchase-detail.awaitOrder",
+    "defaultMessage": "Wait for the seller to send the order"
+  },
+  {
+    "id": "purchase-detail.sendOrder",
+    "defaultMessage": "Send the order to buyer"
+  },
+  {
+    "id": "purchase-detail.sendOrderInstruction",
+    "defaultMessage": "Click the button below once the order has shipped."
+  },
+  {
+    "id": "purchase-detail.markOrderSent",
+    "defaultMessage": "Mark Order as Sent"
+  },
+  {
+    "id": "purchase-detail.confirmReceiptOfOrder",
+    "defaultMessage": "Confirm receipt of the order and leave a review"
+  },
+  {
+    "id": "purchase-detail.submitThisForm",
+    "defaultMessage": "Submit this form once you have reviewed shipment of your order."
+  },
+  {
+    "id": "purchase-detail.confirmAndReview",
+    "defaultMessage": "Confirm and Review"
+  },
+  {
+    "id": "purchase-detail.buyerReviewPlaceholder",
+    "defaultMessage": "Your review should inform others about your experience transacting with this seller, not about the product itself."
+  },
+  {
+    "id": "purchase-detail.waitForBuyer",
+    "defaultMessage": "Wait for the buyer to receive the order"
+  },
+  {
+    "id": "purchase-detail.awaitSellerWithdrawl",
+    "defaultMessage": "Wait for the seller to withdraw the funds"
+  },
+  {
+    "id": "purchase-detail.completeByWithdrawing",
+    "defaultMessage": "Complete your transaction by withdrawing funds"
+  },
+  {
+    "id": "purchase-detail.clickToWithdraw",
+    "defaultMessage": "Click the button below to initiate the withdrawal"
+  },
+  {
+    "id": "purchase-detail.withdrawAndReview",
+    "defaultMessage": "Withdraw and Review"
+  },
+  {
+    "id": "purchase-detail.sellerReviewPlaceholder",
+    "defaultMessage": "Your review should inform others about your experience transacting with this buyer."
+  },
+  {
+    "id": "purchase-detail.unnamedUser",
+    "defaultMessage": "Unnamed User"
+  },
+  {
+    "id": "purchase-detail.purchasedFrom",
+    "defaultMessage": "Purchased from {sellerLink}"
+  },
+  {
+    "id": "purchase-detail.soldTo",
+    "defaultMessage": "Sold to {buyerLink}"
+  },
+  {
+    "id": "purchase-detail.transactionStatusHeading",
+    "defaultMessage": "Transaction Status"
+  },
+  {
+    "id": "purchase-detail.seller",
+    "defaultMessage": "Seller"
+  },
+  {
+    "id": "purchase-detail.buyer",
+    "defaultMessage": "Buyer"
+  },
+  {
+    "id": "purchase-detail.nextStep",
+    "defaultMessage": "Next Step:"
+  },
+  {
+    "id": "purchase-detail.reviewLabel",
+    "defaultMessage": "Review"
+  },
+  {
+    "id": "purchase-detail.nothingToDo",
+    "defaultMessage": "Nothing for you to do at this time. Check back later"
+  },
+  {
+    "id": "purchase-detail.transactionHistoryHeading",
+    "defaultMessage": "Transaction History"
+  },
+  {
+    "id": "purchase-detail.txName",
+    "defaultMessage": "TxName"
+  },
+  {
+    "id": "purchase-detail.txHash",
+    "defaultMessage": "TxHash"
+  },
+  {
+    "id": "purchase-detail.from",
+    "defaultMessage": "From"
+  },
+  {
+    "id": "purchase-detail.to",
+    "defaultMessage": "To"
+  },
+  {
+    "id": "purchase-detail.listingDetails",
+    "defaultMessage": "Listing Details"
+  },
+  {
+    "id": "purchase-detail.viewOnIPFS",
+    "defaultMessage": "View on IPFS"
+  },
+  {
+    "id": "purchase-detail.reviewsHeading",
+    "defaultMessage": "Reviews"
+  },
+  {
+    "id": "purchase-detail.purchasedFromOn",
+    "defaultMessage": "Purchased from {sellerName} on {date}"
+  },
+  {
+    "id": "purchase-detail.soldToOn",
+    "defaultMessage": "Sold to {buyerName} on {date}"
+  },
+  {
+    "id": "purchase-detail.price",
+    "defaultMessage": "Price"
+  },
+  {
+    "id": "purchase-detail.listingStatus",
+    "defaultMessage": "This listing is {status}"
+  },
+  {
+    "id": "purchase-detail.processingUpdate",
+    "defaultMessage": "Processing your update"
+  },
+  {
+    "id": "purchase-detail.pleaseStandBy",
+    "defaultMessage": "Please stand by..."
+  }
+]

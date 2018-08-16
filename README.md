@@ -14,7 +14,7 @@ To learn more about Origin Protocol, please read our [product brief](https://www
 
 ## Try Demo DApp on the Rinkeby testnet
 
-This demo is currently running on the Rinkeby testnet. (Note that this demo is slightly behind the current state of this repo.) 
+This demo is currently running on the Rinkeby testnet. (Note that this demo is slightly behind the current state of this repo.)
 - [Overview and step-by-step instructions](https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58)
 - [Live Demo](http://demo.originprotocol.com)
 
@@ -28,7 +28,7 @@ Make sure you have `node` version 8.5.0 or greater
 node --version
 ```
 
-### 2. Set up DApp 
+### 2. Set up DApp
 
 In a new tab:
 ```
@@ -70,14 +70,14 @@ If you want hack on origin-js code, or if you just want to use a private local b
 ### 2. Set up the DApp for local development
 
 Leave origin-js running and create a new terminal window. Then run the following:
-```
+```bash
 git clone https://github.com/OriginProtocol/demo-dapp origin-demo-dapp && cd origin-demo-dapp
-cp .env.dev .env  # Use development env vars
+cp dev.env .env  # Use development env vars
 npm run install:dev
 npm run start
 ```
 
-The `install:dev` script performs the regular install and then links to your local origin-js from step 1. Changes made to origin-js code will then immediately reflected in Demo DApp without requiring `npm install`. 
+The `install:dev` script performs the regular install and then links to your local origin-js from step 1. Changes made to origin-js code will then immediately reflected in Demo DApp without requiring `npm install`.
 
 Your browser will open to [http://localhost:3000](http://localhost:3000) and display the DApp.
 
@@ -99,8 +99,8 @@ This is the default seed phrase used by [Truffle](https://github.com/trufflesuit
 
 - You should see your first test account now has 100 ETH and the address `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`. Additional generated accounts will also have this amount.
 
-## Browser & Wallet Compatibility 
-Browsers with wallets for both desktop and mobile that you can use with the Origin Demo DApp.  
+## Browser & Wallet Compatibility
+Browsers with wallets for both desktop and mobile that you can use with the Origin Demo DApp.
 
 
 | OS | Application | Status | Notes |
@@ -120,14 +120,30 @@ Browsers with wallets for both desktop and mobile that you can use with the Orig
 |   |  |  |
 | Android | Trust Wallet | ⚪️ | Not tested |
 | Android | Toshi Developer  |  ⚪️  |  Not tested |
-| Android | Toshi Developer  |  ⚪️  | Not tested 
+| Android | Toshi Developer  |  ⚪️  | Not tested
 | Android | Cipher  |  ⛔️  | Not in development |
 
 <sup>Tests for http://demo.originprotocol.com</sup>
 
+## Localization
+See [translations](translations) directory.
+
+## Deploy on Heroku or IPFS
+
+To deploy a development copy of the site on Heroku, choose which branch you would like to use and follow the instructions:
+
+| `Master` branch <br>(stable) | `Develop` branch<br> (active development) |
+|---------|----------|
+| [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/originprotocol/demo-dapp/tree/master) | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/originprotocol/demo-dapp/tree/develop) |
+
+Heroku will prompt you to set some config variables. You will likely want to stick with the defaults which use [Origin's IPFS Gateway](https://gateway.originprotocol.com) and [Bridge Server](https://github.com/originprotocol/origin-bridge). We also recommend using [Infura](https://infura.io/) for connecting to Ethereum even when visitors don't have web3-enabled browsers.
+
+Since this app is just a bunch of HTML and JavaScript, you can also deploy and use it directly from IPFS. Just run:
+
+`./scripts/deploy.sh`
 
 ## Contributing
 
-Origin is an 100% open-source and community-driven project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community. 
+Origin is an 100% open-source and community-driven project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community.
 
 To get involved, please join our [Discord channel](https://discord.gg/jyxpUSe) and review our [guide to contributing](https://docs.originprotocol.com/#contributing).

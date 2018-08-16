@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
-import moment from 'moment'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
+
+import PurchaseProgress from 'components/purchase-progress'
+
+import { translateListingCategory } from 'utils/translationUtils'
 
 import origin from '../services/origin'
 
@@ -11,6 +15,29 @@ class MyPurchaseCard extends Component {
 
     this.loadListing = this.loadListing.bind(this)
     this.state = { listing: {}, loading: true }
+
+    this.intlMessages = defineMessages({
+      received: {
+        id: 'my-purchase-card.received',
+        defaultMessage: 'Received'
+      },
+      sentBySeller: {
+        id: 'my-purchase-card.sentBySeller',
+        defaultMessage: 'Sent by Seller'
+      },
+      purchased: {
+        id: 'my-purchase-card.purchased',
+        defaultMessage: 'Purchased'
+      },
+      unknown: {
+        id: 'my-purchase-card.unknown',
+        defaultMessage: 'Unknown'
+      },
+      ETH: {
+        id: 'my-purchase-card.ethereumCurrencyAbbrev',
+        defaultMessage: 'ETH'
+      }
+    })
   }
 
   async loadListing(addr) {
@@ -31,33 +58,33 @@ class MyPurchaseCard extends Component {
 
   render() {
     const { address, created, stage } = this.props.purchase
-    const { category, name, pictures, price } = this.state.listing
+    const { category, name, pictures, price } = translateListingCategory(this.state.listing)
     const soldAt = created * 1000 // convert seconds since epoch to ms
     let step, verb
 
     switch(stage) {
       case 'seller_pending':
         step = 3
-        verb = 'Received'
+        verb = this.props.intl.formatMessage(this.intlMessages.received)
         break
       case 'buyer_pending':
         step = 2
-        verb = 'Sent by seller'
+        verb = this.props.intl.formatMessage(this.intlMessages.sentBySeller)
         break
-      case 'shipping_pending':
+      case 'in_escrow':
         step = 1
-        verb = 'Purchased'
+        verb = this.props.intl.formatMessage(this.intlMessages.purchased)
         break
       default:
         step = 0
-        verb = 'Unknown'
+        verb = this.props.intl.formatMessage(this.intlMessages.unknown)
     }
 
-    const timestamp = `${verb} on ${moment(soldAt).format('MMMM D, YYYY')}`
+    const timestamp = `${verb} on ${this.props.intl.formatDate(soldAt)}`
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
 
     return (
-      <div className={`transaction card${this.state.loading ? ' loading' : ''}`}>
+      <div className={`purchase card${this.state.loading ? ' loading' : ''}`}>
         <div className="card-body d-flex flex-column flex-lg-row">
           <div className="aspect-ratio">
             <Link to={`/purchases/${address}`}>
@@ -72,11 +99,11 @@ class MyPurchaseCard extends Component {
               <h2 className="title text-truncate"><Link to={`/purchases/${address}`}>{name}</Link></h2>
               <p className="timestamp">{timestamp}</p>
               <div className="d-flex">
-                <p className="price">{`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ETH`}</p>
+                <p className="price">{`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ${this.props.intl.formatMessage(this.intlMessages.ETH)}`}</p>
                 {/* Not Yet Relevant */}
                 {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
               </div>
-              {/*<TransactionProgress currentStep={step} perspective="buyer" purchase={this.props.purchase} subdued={true} />*/}
+              <PurchaseProgress currentStep={step} perspective="buyer" purchase={this.props.purchase} subdued={true} />
               <div className="actions d-flex">
                 <div className="links-container">
                   {/*<a onClick={() => alert('To Do')}>Open a Dispute</a>*/}
@@ -84,7 +111,12 @@ class MyPurchaseCard extends Component {
                 <div className="button-container">
                   {/* Hidden for current deployment */}
                   {/* stage === 'buyer_pending' &&
-                    <a className="btn btn-primary btn-sm" onClick={() => alert('To Do')}>I&apos;ve Received the Order</a>
+                    <a className="btn btn-primary btn-sm" onClick={() => alert('To Do')}>
+                      <FormattedMessage
+                        id={ 'my-purchase-card.iReceivedTheOrder' }
+                        defaultMessage={ 'I\'ve Received the Order' }
+                      />
+                    </a>
                   */}
                 </div>
               </div>
@@ -96,4 +128,4 @@ class MyPurchaseCard extends Component {
   }
 }
 
-export default MyPurchaseCard
+export default injectIntl(MyPurchaseCard)

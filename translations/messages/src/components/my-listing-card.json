@@ -1,0 +1,22 @@
+[
+  {
+    "id": "my-listing-card.confirmCloseListing",
+    "defaultMessage": "Are you sure that you want to permanently close this listing? This cannot be undone."
+  },
+  {
+    "id": "my-listing-card.ethereumCurrencyAbbrev",
+    "defaultMessage": "ETH"
+  },
+  {
+    "id": "my-listing-card.soldOut",
+    "defaultMessage": "Sold Out"
+  },
+  {
+    "id": "my-listing-card.totalQuantity",
+    "defaultMessage": "Total Quantity : {quantity}"
+  },
+  {
+    "id": "my-listing-card.closeListing",
+    "defaultMessage": "Close Listing"
+  }
+]

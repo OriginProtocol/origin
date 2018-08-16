@@ -1,17 +1,39 @@
 import React, { Component } from 'react'
+import moment from 'moment'
+import { defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+
 import { fetchUser } from 'actions/User'
-import Avatar from './avatar'
-import Timelapse from './timelapse'
+
+import Avatar from 'components/avatar'
 
 class Review extends Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      createdAtTime: null
+    }
+
+    this.setCreatedAtTime = this.setCreatedAtTime.bind(this)
+
+    this.intlMessages = defineMessages({
+      unnamedUser: {
+        id: 'review.unnamedUser',
+        defaultMessage: 'Unnamed User'
+      }
+    })
   }
 
   componentWillMount() {
-    this.props.fetchUser(this.props.review.reviewerAddress)
+    this.props.fetchUser(this.props.review.reviewerAddress, this.props.intl.formatMessage(this.intlMessages.unnamedUser))
+  }
+
+  setCreatedAtTime(createdAt) {
+    this.setState({
+      createdAtTime: moment(createdAt).fromNow()
+    })
   }
 
   render() {
@@ -39,7 +61,7 @@ class Review extends Component {
                   />
                 )
               })}</div>
-              <div className="age text-muted"><Timelapse reactive={false} reference={new Date(createdAt)} /></div>
+              <div className="age text-muted">{ this.state.createdAtTime || this.setCreatedAtTime(createdAt) }</div>
             </div>
           </div>
         </Link>
@@ -56,7 +78,7 @@ const mapStateToProps = (state, { review }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: address => dispatch(fetchUser(address))
+  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Review)
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Review))

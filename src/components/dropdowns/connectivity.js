@@ -1,20 +1,13 @@
-import $ from 'jquery'
 import React, { Component } from 'react'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { Link } from 'react-router-dom'
+import $ from 'jquery'
 
 import origin from '../../services/origin'
 
 const ipfsGateway = process.env.IPFS_DOMAIN || 'gateway.originprotocol.com'
 const bridgeServerDomain = process.env.BRIDGE_SERVER_DOMAIN || 'bridge.originprotocol.com'
 const web3 = origin.contractService.web3
-const networkNames = {
-  1: 'Main Ethereum Network',
-  2: 'Morden Test Network',
-  3: 'Ropsten Test Network',
-  4: 'Rinkeby Test Network',
-  42: 'Kovan Test Network',
-  999: 'Localhost',
-}
 const ONE_SECOND = 1000
 
 class ConnectivityDropdown extends Component {
@@ -29,9 +22,49 @@ class ConnectivityDropdown extends Component {
       },
       networkName: null,
     }
+
+    this.intlMessages = defineMessages({
+      mainEthereumNetwork: {
+        id: 'connectivity.mainEthereumNetwork',
+        defaultMessage: 'Main Ethereum Network'
+      },
+      mordenTestNetwork: {
+        id: 'connectivity.mordenTestNetwork',
+        defaultMessage: 'Morden Test Network'
+      },
+      ropstenTestNetwork: {
+        id: 'connectivity.ropstenTestNetwork',
+        defaultMessage: 'Ropsten Test Network'
+      },
+      rinkebyTestNetwork: {
+        id: 'connectivity.rinkebyTestNetwork',
+        defaultMessage: 'Rinkeby Test Network'
+      },
+      kovanTestNetwork: {
+        id: 'connectivity.kovanTestNetwork',
+        defaultMessage: 'Kovan Test Network'
+      },
+      localhost: {
+        id: 'connectivity.localhost',
+        defaultMessage: 'Localhost'
+      }
+    })
+
+    this.networkNames = {
+      1: this.props.intl.formatMessage(this.intlMessages.mainEthereumNetwork),
+      2: this.props.intl.formatMessage(this.intlMessages.mordenTestNetwork),
+      3: this.props.intl.formatMessage(this.intlMessages.ropstenTestNetwork),
+      4: this.props.intl.formatMessage(this.intlMessages.rinkebyTestNetwork),
+      42: this.props.intl.formatMessage(this.intlMessages.kovanTestNetwork),
+      999: this.props.intl.formatMessage(this.intlMessages.localhost),
+    }
   }
 
   async componentDidMount() {
+    $(document).on('click', '.connectivity .dropdown-menu', e => {
+      e.stopPropagation()
+    })
+
     !web3.givenProvider && $('#connectivityDropdown').dropdown('toggle') && setTimeout(() => {
       if ($('.connectivity.dropdown').hasClass('show')) {
         $('#connectivityDropdown').dropdown('toggle')
@@ -42,7 +75,7 @@ class ConnectivityDropdown extends Component {
       const networkId = await web3.eth.net.getId()
 
       this.setState({
-        networkName: networkNames[networkId],
+        networkName: this.networkNames[networkId],
         ipfsGateway,
         bridgeServerDomain,
       })
@@ -84,18 +117,60 @@ class ConnectivityDropdown extends Component {
               <ul className="list-group">
                 <li className="connection d-flex flex-wrap">
                   <div className={`indicator${connectedStatus.network ? ' connected' : ''}`}></div>
-                  <div className="name"><strong>Ethereum Network:</strong></div>
-                  <div className="ml-auto">{connectedStatus.network ? networkName : 'Connecting...'}</div>
+                  <div className="name">
+                    <strong>
+                      <FormattedMessage
+                        id={ 'connectivity.ethereumNetwork' }
+                        defaultMessage={ 'Ethereum Network:' }
+                      />
+                    </strong>
+                  </div>
+                  <div className="ml-auto">
+                    {connectedStatus.network ? networkName :
+                      <FormattedMessage
+                        id={ 'connectivity.connecting' }
+                        defaultMessage={ 'Connecting...' }
+                      />
+                    }
+                  </div>
                 </li>
                 <li className="connection d-flex flex-wrap">
                   <div className={`indicator${connectedStatus.ipfsGateway ? ' connected' : ''}`}></div>
-                  <div className="name"><strong>IPFS Gateway:</strong></div>
-                  <div className="ml-auto">{connectedStatus.ipfsGateway ? ipfsGateway : 'Connecting...'}</div>
+                  <div className="name">
+                    <strong>
+                      <FormattedMessage
+                        id={ 'connectivity.ipfsGateway' }
+                        defaultMessage={ 'IPFS Gateway:' }
+                      />
+                    </strong>
+                  </div>
+                  <div className="ml-auto">
+                    {connectedStatus.ipfsGateway ? ipfsGateway :
+                      <FormattedMessage
+                        id={ 'connectivity.connecting' }
+                        defaultMessage={ 'Connecting...' }
+                      />
+                    }
+                  </div>
                 </li>
                 <li className="connection d-flex flex-wrap">
                   <div className={`indicator${connectedStatus.bridgeServer ? ' connected' : ''}`}></div>
-                  <div className="name"><strong>Bridge Server:</strong></div>
-                  <div className="ml-auto">{connectedStatus.bridgeServer ? bridgeServerDomain : 'Connecting...'}</div>
+                  <div className="name">
+                    <strong>
+                      <FormattedMessage
+                        id={ 'connectivity.bridgeServer' }
+                        defaultMessage={ 'Bridge Server:' }
+                      />
+                    </strong>
+                  </div>
+                  <div className="ml-auto">
+                    {connectedStatus.bridgeServer ? bridgeServerDomain :
+                      <FormattedMessage
+                        id={ 'connectivity.connecting' }
+                        defaultMessage={ 'Connecting...' }
+                      />
+                    }
+                  </div>
                 </li>
               </ul>
             </div>
@@ -106,4 +181,4 @@ class ConnectivityDropdown extends Component {
   }
 }
 
-export default ConnectivityDropdown
+export default injectIntl(ConnectivityDropdown)

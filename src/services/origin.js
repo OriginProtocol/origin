@@ -1,5 +1,8 @@
 import Origin from 'origin'
+import IPFS from 'ipfs'
 import Web3 from 'web3'
+import ecies from 'eth-ecies'
+import OrbitDB from 'orbit-db'
 
 /*
  * It may be preferential to use websocket provider 
@@ -22,16 +25,54 @@ const web3 = new Web3(
   // Use wallet-enabled browser provider
   Web3.givenProvider ||
   // Create a provider with Infura node
-  new Web3.providers.HttpProvider(defaultProviderUrl)
+  new Web3.providers.HttpProvider(defaultProviderUrl, 20000)
 )
+
+const ipfsCreator = repo_key => {
+  const ipfsOptions = {
+    repo: 'ipfs' + repo_key,
+    EXPERIMENTAL: {
+      pubsub: true,
+      relay: {
+        enabled: true, // enable relay dialer/listener (STOP)
+        hop: {
+          enabled: true // make this node a relay (HOP)
+        }
+      }
+    },
+    config: {
+      Bootstrap: [], // it's ok to connect to more peers than this, but currently leaving it out due to noise.
+      Addresses: {
+        // Swarm: ['/dns4/wrtc-star.discovery.libp2p.io/tcp/443/wss/p2p-webrtc-star']
+      }
+    }
+  }
+
+  const ipfs = new IPFS(ipfsOptions)
+
+  if (process.env.IPFS_SWARM) {
+    const ipfs_swarm = process.env.IPFS_SWARM
+    ipfs.on("start", async ()=> {
+      await ipfs.swarm.connect(ipfs_swarm)
+    })
+    ipfs.__reconnect_peers = {}
+    ipfs.__reconnect_peers[process.env.IPFS_SWARM.split('/').pop()] = ipfs_swarm
+  }
+
+  return ipfs
+}
 
 const config = {
   ipfsDomain: process.env.IPFS_DOMAIN,
   ipfsApiPort: process.env.IPFS_API_PORT,
   ipfsGatewayPort: process.env.IPFS_GATEWAY_PORT,
   ipfsGatewayProtocol: process.env.IPFS_GATEWAY_PROTOCOL,
+  messagingNamespace: process.env.MESSAGING_NAMESPACE,
   attestationServerUrl,
-  web3,
+  ipfsCreator,
+  OrbitDB,
+  ecies,
+  web3
 }
 
 try {
@@ -43,5 +84,7 @@ try {
 const origin = new Origin(config)
 // Replace global web3 with Origin.js-constructed instance
 window.web3 = origin.contractService.web3
+// global Origin for others to access
+window.originTest = origin
 
 export default origin

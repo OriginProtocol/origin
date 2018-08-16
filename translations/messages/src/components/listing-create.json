@@ -1,0 +1,146 @@
+[
+  {
+    "id": "listing-create.forSaleLabel",
+    "defaultMessage": "For Sale"
+  },
+  {
+    "id": "listing-create.housingLabel",
+    "defaultMessage": "Housing"
+  },
+  {
+    "id": "listing-create.transportation",
+    "defaultMessage": "Transportation"
+  },
+  {
+    "id": "listing-create.tickets",
+    "defaultMessage": "Tickets"
+  },
+  {
+    "id": "listing-create.services",
+    "defaultMessage": "Services"
+  },
+  {
+    "id": "listing-create.announcements",
+    "defaultMessage": "Announcements"
+  },
+  {
+    "id": "listing-create.chooseSchema",
+    "defaultMessage": "Choose a schema for your product or service"
+  },
+  {
+    "id": "listing-create.schemaExplainer",
+    "defaultMessage": "Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services."
+  },
+  {
+    "id": "listing-create.stepNumberLabel",
+    "defaultMessage": "STEP {stepNumber}"
+  },
+  {
+    "id": "listing-create.whatTypeOfListing",
+    "defaultMessage": "What type of listing do you want to create?"
+  },
+  {
+    "id": "listing-create.next",
+    "defaultMessage": "Next"
+  },
+  {
+    "id": "listing-create.howItWorksHeading",
+    "defaultMessage": "How it works"
+  },
+  {
+    "id": "listing-create.howItWorksContentPart1",
+    "defaultMessage": "Origin uses a Mozilla project called {jsonSchemaLink}  to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer."
+  },
+  {
+    "id": "listing-create.jsonSchema",
+    "defaultMessage": "JSONSchema"
+  },
+  {
+    "id": "listing-create.howItWorksContentPart2",
+    "defaultMessage": "Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering."
+  },
+  {
+    "id": "listing-create.viewSchemaLinkLabel",
+    "defaultMessage": "View the {schemaName} schema"
+  },
+  {
+    "id": "listing-create.createListingHeading",
+    "defaultMessage": "Create your listing"
+  },
+  {
+    "id": "backButtonLabel",
+    "defaultMessage": "Back"
+  },
+  {
+    "id": "continueButtonLabel",
+    "defaultMessage": "Continue"
+  },
+  {
+    "id": "listing-create.confirmTransaction",
+    "defaultMessage": "Confirm transaction"
+  },
+  {
+    "id": "listing-create.pressSubmitInMetaMask",
+    "defaultMessage": "Press {submit} in {currentProvider} window"
+  },
+  {
+    "id": "listing-create.uploadingYourListing",
+    "defaultMessage": "Uploading your listing"
+  },
+  {
+    "id": "listing-create.pleaseStandBy",
+    "defaultMessage": "Please stand by..."
+  },
+  {
+    "id": "listing-create.successMessage",
+    "defaultMessage": "Success!"
+  },
+  {
+    "id": "listing-create.successDisclaimer",
+    "defaultMessage": "Your listing will be visible within a few seconds."
+  },
+  {
+    "id": "listing-create.seeAllListings",
+    "defaultMessage": "See All Listings"
+  },
+  {
+    "id": "listing-create.error1",
+    "defaultMessage": "There was a problem creating this listing."
+  },
+  {
+    "id": "listing-create.error2",
+    "defaultMessage": "See the console for more details."
+  },
+  {
+    "id": "listing-create.OK",
+    "defaultMessage": "OK"
+  },
+  {
+    "id": "listing-create.previewListingHeading",
+    "defaultMessage": "Preview your listing"
+  },
+  {
+    "id": "listing-create.whatHappensNextHeading",
+    "defaultMessage": "What happens next?"
+  },
+  {
+    "id": "listing-create.whatHappensNextContent1",
+    "defaultMessage": "When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network."
+  },
+  {
+    "id": "listing-create.IPFS",
+    "defaultMessage": "IPFS"
+  },
+  {
+    "id": "listing-create.whatHappensNextContent2",
+    "defaultMessage": "Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left."
+  },
+  {
+    "id": "listing-create.backButtonLabel",
+    "defaultMessage": "Back"
+  },
+  {
+    "id": "listing-create.doneButtonLabel",
+    "defaultMessage": "Done"
+  }
+]

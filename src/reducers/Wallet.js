@@ -1,5 +1,5 @@
-import { WalletConstants } from '../actions/Wallet'
-import { ProfileConstants } from '../actions/Profile'
+import { ProfileConstants } from 'actions/Profile'
+import { WalletConstants } from 'actions/Wallet'
 
 const initialState = {
   address: undefined,
