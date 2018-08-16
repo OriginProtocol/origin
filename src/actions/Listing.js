@@ -19,6 +19,8 @@ export function getListingIds() {
 
     let hideList = []
     const { web3, listingsRegistryContract } = origin.contractService
+    const inProductionEnv =
+      window.location.hostname === 'demo.originprotocol.com'
 
     try {
       let networkId = await web3.eth.net.getId()
@@ -31,7 +33,7 @@ export function getListingIds() {
         return
       }
 
-      if (networkId < 10) { // Networks >9 are local test networks
+      if (inProductionEnv && networkId < 10) {
         let response = await fetch(
           `https://raw.githubusercontent.com/OriginProtocol/demo-dapp/hide_list/hidelist_${networkId}.json`
         )
@@ -45,7 +47,8 @@ export function getListingIds() {
 
       dispatch({
         type: ListingConstants.FETCH_IDS_SUCCESS,
-        ids: showIds.reverse()
+        ids: showIds.reverse(),
+        hideList
       })
     } catch (error) {
       dispatch(showAlert(error.message))
