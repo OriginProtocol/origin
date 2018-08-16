@@ -373,7 +373,7 @@ class ListingsDetail extends Component {
                     <div className="text-right">
                       {Number(this.state.price).toLocaleString(undefined, {
                         maximumFractionDigits: 5,
-                        minimumFractionDigits: 3
+                        minimumFractionDigits: 5
                       })}
                       &nbsp;
                       <FormattedMessage
