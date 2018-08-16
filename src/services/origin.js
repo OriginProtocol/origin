@@ -51,9 +51,12 @@ const ipfsCreator = repo_key => {
   const ipfs = new IPFS(ipfsOptions)
 
   if (process.env.IPFS_SWARM) {
+    const ipfs_swarm = process.env.IPFS_SWARM
     ipfs.on("start", async ()=> {
-      await ipfs.swarm.connect(process.env.IPFS_SWARM)
+      await ipfs.swarm.connect(ipfs_swarm)
     })
+    ipfs.__reconnect_peers = {}
+    ipfs.__reconnect_peers[process.env.IPFS_SWARM.split('/').pop()] = ipfs_swarm
   }
 
   return ipfs
