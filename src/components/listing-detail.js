@@ -385,7 +385,7 @@ class ListingsDetail extends Component {
                                   <div className="total-price d-flex justify-content-between">
                                     <div>Total Price</div>
                                     <div className="price text-right">
-                                      {Number(price).toLocaleString(undefined, {minimumFractionDigits: 5})} ETH
+                                      {Number(price).toLocaleString(undefined, {minimumFractionDigits: 5, maximumFractionDigits: 5})} ETH
                                     </div>
                                   </div> */}
                   {!this.state.loading && this.state.address &&
