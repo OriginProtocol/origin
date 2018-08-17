@@ -32,6 +32,8 @@ NOTE: We will update this checklist from [RELEASE.md](https://github.com/OriginP
 ## Publish
 ### origin-js
 - [ ] _origin-js_ : In `package.json`, confirm version is `0.7.0`
+- [ ] _origin_js Update README.md example code to new version.
+  - `<script src="https://code.originprotocol.com/origin-js/origin-v0.7.0.js"></script>`
 - [ ] If contracts have changed:
   - Show diff with: `git diff master..develop contracts/contracts/`  
   - `cd contracts`
@@ -64,6 +66,8 @@ NOTE: We will update this checklist from [RELEASE.md](https://github.com/OriginP
   - `heroku create && git push heroku master`
 - [ ] _origin-dapp_: Add git tag to `master` to match origin-js.
   - `git tag -a v0.7.0 -m "New release"`
+- Create IFPFS deploy of DApp
+  - `scripts/deploy.sh` (See usage notes in file)
 
 ### origin-bridge
 - [ ] Copy contract ABIs from `origin-js` (located in `contracts/build/contracts`) to `origin-bridge` (located in `contracts`)
