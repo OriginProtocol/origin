@@ -13,28 +13,29 @@ contract OriginToken is BurnableToken, MintableToken, PausableToken {
   string public constant symbol = "OGN"; // solium-disable-line uppercase
   uint8 public constant decimals = 18; // solium-disable-line uppercase
 
-  uint256 public constant INITIAL_SUPPLY = 1e9 * 10**uint256(decimals);
-
   // @dev Constructor that gives msg.sender all initial tokens.
-  constructor() public {
+  constructor(uint256 initialSupply) public {
     owner = msg.sender;
-    totalSupply_ = INITIAL_SUPPLY;
-    balances[msg.sender] = INITIAL_SUPPLY;
-    emit Transfer(address(0), msg.sender, INITIAL_SUPPLY);
+    mint(owner, initialSupply);
+  }
+
+  // @dev Returns the initial supply of tokens for the mainnet launch
+  function mainnetInitialSupply() public pure returns (uint256) {
+    return 1e9 * 10**uint256(decimals); // 1 billion tokens
   }
 
   //
   // Burn methods
   //
-  
+
   // @dev Burns tokens belonging to the sender
   // @param _value Amount of token to be burned
   function burn(uint256 _value) public onlyOwner {
     // TODO: add a function & modifier to enable for all accounts without doing
     // a contract migration?
-    _burn(msg.sender, _value);
+    super.burn(_value);
   }
-  
+
   // @dev Burns tokens belonging to the specified address
   // @param _who The account whose tokens we're burning
   // @param _value Amount of token to be burned

@@ -11,7 +11,7 @@ import FractionalListingContract from './../../contracts/build/contracts/Fractio
 import PurchaseContract from './../../contracts/build/contracts/Purchase.json'
 import UserRegistryContract from './../../contracts/build/contracts/UserRegistry.json'
 import OriginIdentityContract from './../../contracts/build/contracts/OriginIdentity.json'
-import OriginTokenContract from './../../contracts/build/contracts/Token.json'
+import OriginTokenContract from './../../contracts/build/contracts/OriginToken.json'
 
 import V00_MarketplaceContract from './../../contracts/build/contracts/V00_Marketplace.json'
 import V01_MarketplaceContract from './../../contracts/build/contracts/V01_Marketplace.json'
