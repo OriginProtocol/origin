@@ -1,4 +1,4 @@
-const OriginToken = artifacts.require('./Token.sol')
+const OriginToken = artifacts.require('./token/OriginToken.sol')
 const V00_Marketplace = artifacts.require('./V00_Marketplace.sol')
 const V01_Marketplace = artifacts.require('./V01_Marketplace.sol')
 
@@ -25,7 +25,7 @@ async function deployContracts(deployer) {
   // const default_account = accounts[0]
   const Seller = accounts[1]
 
-  await deployer.deploy(OriginToken, 'Origin', 'OGN', '18', '100000')
+  await deployer.deploy(OriginToken, '100000')
   await deployer.deploy(V00_Marketplace, OriginToken.address)
   await deployer.deploy(V01_Marketplace, OriginToken.address)
 
