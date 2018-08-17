@@ -43,21 +43,17 @@ class Conversation extends Component {
     if (id !== prevProps.id) {
       // textarea is an uncontrolled component and might maintain internal state
       (this.textarea.current || {}).value = ''
-      // refresh the listing/purchase context
-      this.loadListing()
       // refresh the counterparty
       this.identifyCounterparty()
+      // refresh the listing/purchase context
+      this.loadListing()
     }
 
     // on new message
     if (messages.length > prevProps.messages.length) {
       this.loadListing()
       // auto-scroll to most recent message
-      const el = this.conversationDiv.current
-
-      if (el) {
-        el.scrollTop = el.scrollHeight
-      }
+      this.scrollToBottom()
     }
 
     // on user found
@@ -114,6 +110,7 @@ class Conversation extends Component {
     if (listing.address !== this.state.listing.address) {
       this.setState({ listing })
       this.loadPurchase()
+      this.scrollToBottom()
     }
   }
 
@@ -141,6 +138,18 @@ class Conversation extends Component {
       mostRecent.stage !== purchase.stage
     ) {
       this.setState({ purchase: mostRecent })
+      this.scrollToBottom()
+    }
+  }
+
+  scrollToBottom() {
+    const el = this.conversationDiv.current
+
+    if (el) {
+      // delay allows for listing summary to change conversation height
+      setTimeout(() => {
+        el.scrollTop = el.scrollHeight
+      }, 400)
     }
   }
 
