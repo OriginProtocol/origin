@@ -1,23 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { defineMessages, injectIntl } from 'react-intl'
 
 import Avatar from 'components/avatar'
 
 import origin from '../services/origin'
 
 class ConversationListItem extends Component {
-  constructor(props) {
-    super(props)
-
-    this.intlMessages = defineMessages({
-      unnamedUser: {
-        id: 'conversation-list-item.unnamedUser',
-        defaultMessage: 'Unnamed User'
-      },
-    })
-  }
-
   render() {
     const { active, conversation, handleConversationSelect, key, users, web3Account } = this.props
     const lastMessage = conversation.values.sort((a, b) => a.created < b.created ? -1 : 1)[conversation.values.length - 1]
@@ -65,4 +53,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(injectIntl(ConversationListItem))
+export default connect(mapStateToProps)(ConversationListItem)
