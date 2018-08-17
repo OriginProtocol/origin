@@ -64,4 +64,9 @@ if (process.env.ROPSTEN_MNEMONIC) {
   }
 }
 
+// These are needed to use ES2015+ syntax, such as import. The token tests
+// imported from OpenZeppelin need these.
+require('babel-register')
+require('babel-polyfill')
+
 module.exports = truffleSetup
