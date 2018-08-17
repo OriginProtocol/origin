@@ -19,6 +19,9 @@ const web3 = new Web3(process.env.RPC_SERVER)
 
 const IPFS_WS_ADDRESS = process.env.MESSAGING_IPFS_WS_ADDRESS
 
+//default to 2048 connections
+const MAX_IPFS_CONNECTIONS = process.env.MAX_IPFS_CONNECTIONS ? Number(process.env.MAX_IPFS_CONNECTIONS) : 2048
+
 const ipfs = new IPFS({
     repo:"./ipfsrepo",
     EXPERIMENTAL: {
@@ -347,6 +350,7 @@ ipfs.on("ready", async () => {
   // remap the peer connected to ours which will wait before exchanging heads with the same peer
   const orbit_global = new OrbitDB(ipfs, "odb/Main", {keystore:new InsertOnlyKeystore()})
   orbit_global._onPeerConnected = _onPeerConnected
+  ipfs.setMaxListeners(MAX_IPFS_CONNECTIONS)
 
   orbit_global.keystore.registerSignVerify(GLOBAL_KEYS, undefined, verifyRegistrySignature, message => {
     handleGlobalRegistryWrite(orbit_global, message.payload)
