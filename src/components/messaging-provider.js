@@ -6,6 +6,9 @@ import { withRouter } from 'react-router'
 import { setMessagingEnabled, setMessagingInitialized } from 'actions/App'
 import { addMessage } from 'actions/Message'
 import { fetchNotifications } from 'actions/Notification'
+import { fetchUser } from 'actions/User'
+
+import scopedDebounce from 'utils/scopedDebounce'
 
 import origin from '../services/origin'
 
@@ -26,6 +29,10 @@ class MessagingProvider extends Component {
         defaultMessage: 'Congratulations! You can now message other users across the Origin Platform ecosystem! ' +
                         'Why not start by taking a look around and telling us what you think about our DApp?'
       },
+      unnamedUser: {
+        id: 'messaging-provider.unnamedUser',
+        defaultMessage: 'Unnamed User'
+      },
       welcomeMessage: {
         id: 'messaging-provider.welcome',
         defaultMessage: 'Welcome to the Origin Protocol Demo DApp! ' +
@@ -40,6 +47,8 @@ class MessagingProvider extends Component {
                         'This will not cost any ETH, Origin Token, or gas.'
       },
     })
+    // ? consider using https://www.npmjs.com/package/redux-debounced
+    this.debouncedFetchUser = scopedDebounce(addr => this.props.fetchUser(addr, this.props.intl.formatMessage(this.intlMessages.unnamedUser)), ONE_SECOND)
   }
 
   componentDidMount() {
@@ -56,6 +65,8 @@ class MessagingProvider extends Component {
     // detect net decrypted messages
     origin.messaging.events.on('msg', obj => {
       this.props.addMessage(obj)
+
+      this.debouncedFetchUser(obj.senderAddress)
     })
 
     // To Do: handle incoming messages when no Origin Messaging Private Key is available
@@ -87,6 +98,8 @@ class MessagingProvider extends Component {
     const recipients = origin.messaging.getRecipients(roomId)
 
     if (!messages.find(({ hash }) => hash === 'origin-welcome-message')) {
+      this.debouncedFetchUser(ETH_ADDRESS)
+
       const scopedWelcomeMessageKeyName = `${storeKeys.messageWelcomeTimestamp}:${web3Account}`
       const welcomeTimestampString = localStorage.getItem(scopedWelcomeMessageKeyName)
       const welcomeTimestamp = welcomeTimestampString ?
@@ -111,6 +124,8 @@ class MessagingProvider extends Component {
     }
     // on messaging enabled
     if (messagingEnabled !== prevProps.messagingEnabled) {
+      this.debouncedFetchUser(ETH_ADDRESS)
+
       const scopedCongratsMessageKeyName = `${storeKeys.messageCongratsTimestamp}:${web3Account}`
       const congratsTimestampString = localStorage.getItem(scopedCongratsMessageKeyName)
       const congratsTimestamp = congratsTimestampString ?
@@ -150,6 +165,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   addMessage: (obj) => dispatch(addMessage(obj)),
   fetchNotifications: () => dispatch(fetchNotifications()),
+  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg)),
   setMessagingEnabled: bool => dispatch(setMessagingEnabled(bool)),
   setMessagingInitialized: bool => dispatch(setMessagingInitialized(bool)),
 })
