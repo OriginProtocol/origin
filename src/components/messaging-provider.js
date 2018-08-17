@@ -62,7 +62,7 @@ class MessagingProvider extends Component {
       this.props.setMessagingEnabled(!!accountKey)
     })
 
-    // detect net decrypted messages
+    // detect new decrypted messages
     origin.messaging.events.on('msg', obj => {
       this.props.addMessage(obj)
 

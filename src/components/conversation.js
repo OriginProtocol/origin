@@ -110,7 +110,7 @@ class Conversation extends Component {
     const { listingAddress } = messages.reverse().find(m => m.listingAddress) || {}
     // get the listing
     const listing = listingAddress ? (await origin.listings.get(listingAddress)) : {}
-    // if listing is found, store in state and check for a purchase
+    // if listing does not match state, store and check for a purchase
     if (listing.address !== this.state.listing.address) {
       this.setState({ listing })
       this.loadPurchase()
@@ -133,7 +133,7 @@ class Conversation extends Component {
     if (!mostRecent) {
       return
     }
-    // compare against existing state
+    // compare with existing state
     if (
       // purchase is different
       mostRecent.address !== purchase.address ||
