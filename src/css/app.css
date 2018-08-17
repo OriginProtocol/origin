@@ -2428,6 +2428,7 @@ form .stars img {
 
 .messages-wrapper .listing-summary {
   border-bottom: 1px solid #c2cbd3;
+  min-height: 140px;
   padding: 20px 0;
 }
 

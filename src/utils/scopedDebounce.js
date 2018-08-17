@@ -1,5 +1,6 @@
-const scopedDebounce = (func, wait = 250, immediate) => {
-  let timeouts = { unscoped: undefined }
+const scopedDebounce = (callback, wait = 250, immediate) => {
+  // without an argumet in the callback function, scope will be undefined
+  let timeouts = { undefined }
 
   return function() {
     const context = this, args = arguments
@@ -7,7 +8,7 @@ const scopedDebounce = (func, wait = 250, immediate) => {
     const later = function() {
       timeouts[scope] = null
 
-      if (!immediate) func.apply(context, args)
+      if (!immediate) callback.apply(context, args)
     }
 
     const callNow = immediate && !timeouts[scope]
@@ -16,7 +17,7 @@ const scopedDebounce = (func, wait = 250, immediate) => {
 
     timeouts[scope] = setTimeout(later, wait)
 
-    if (callNow) func.apply(context, args)
+    if (callNow) callback.apply(context, args)
   }
 }
 
