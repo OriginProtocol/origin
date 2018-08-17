@@ -118,6 +118,12 @@ class Conversation extends Component {
     const { web3Account } = this.props
     const { counterparty, listing, purchase } = this.state
     const { address, sellerAddress } = listing
+
+    // listing may not be found
+    if (!address) {
+      return
+    }
+
     const len = await origin.listings.purchasesLength(address)
     const purchaseAddresses = await Promise.all([...Array(len).keys()].map(async i => {
       return await origin.listings.purchaseAddressByIndex(address, i)
@@ -127,6 +133,7 @@ class Conversation extends Component {
     }))
     const involvingCounterparty = purchases.filter(p => p.buyerAddress === counterparty.address || p.buyerAddress === web3Account)
     const mostRecent = involvingCounterparty.sort((a, b) => a.index > b.index ? -1 : 1)[0]
+    // purchase may not be found
     if (!mostRecent) {
       return
     }
