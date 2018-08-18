@@ -2,8 +2,9 @@
 
 set -e
 
-QUIET=0
+CLEAN=0
 DRY=0
+QUIET=0
 
 function usage() {
   echo "Installs Origin Protocol development environments."
@@ -12,10 +13,11 @@ function usage() {
   echo "  $0 -e [env] [-h] [-v] [-d]"
   echo
   echo "Options:"
+  echo -e "  -c \t Clean - clean up all containers and volumes first'"
+  echo -e "  -d \t Dry run mode - show the commands that would be executed."
   echo -e "  -e \t The environment to install, origin or origin-website."
   echo -e "  -h \t Show this help."
   echo -e "  -q \t Quiet mode - hide output of all commands."
-  echo -e "  -d \t Dry run mode - show the commands that would be executed."
   echo
 }
 
@@ -86,10 +88,10 @@ function install_origin_environment() {
 		docker-compose build --no-cache
 
 	run_step "Bringing up stack" \
-		docker-compose up -d &&
+		docker-compose up -d
 
-	run_step "Compiling contracts" \
-		docker-compose exec origin-bridge wait-for.sh -t 0 -q origin-js:8081
+	run_step "Waiting for contracts" \
+		docker-compose exec origin-bridge wait-for.sh -t 0 -q origin-js:8080
 
 	run_step "Configuring database" \
 		docker-compose exec origin-bridge flask db upgrade
@@ -116,10 +118,13 @@ function install_website_environment() {
 	print_website_finish
 }
 
-	while getopts "e:qdh" opt; do
+	while getopts "e:cqdh" opt; do
   case $opt in
     e)
       ENV=$OPTARG
+      ;;
+    c)
+      CLEAN=1
       ;;
     q)
       QUIET=1
@@ -141,6 +146,16 @@ function install_website_environment() {
       ;;
   esac
 done
+
+if [ "$CLEAN" = 1 ]; then
+    echo -e "\033[31mDoing cleanup... \033[0m"
+    echo
+    if [ "$DRY" = 0 ]; then
+        docker kill $(docker ps -aq) >/dev/null 2>&1 || true
+        docker system prune --all --volumes
+    fi
+    echo
+fi
 
 if [ "$ENV" = "origin" ]; then
  	install_origin_environment

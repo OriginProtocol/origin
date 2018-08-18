@@ -120,16 +120,17 @@ and similarly for origin-bridge:
 
 ## Troubleshooting
 
-### Packages not found
+### Module not found errors
 
-There is a known issue with `docker-compose`. [Temporary workaround instructions are in this issue](https://github.com/OriginProtocol/origin-box/issues/34).
+There is a known issue with `docker-compose` and the use of volumes for handling dependencies. For more information refer to the [issue on this repository.](https://github.com/OriginProtocol/origin-box/issues/34)
 
-To remove all docker containers and volumes and start from scratch:
+If you encounter a `Module not found` error from `origin-dapp` running the following should resolve the issue:
 
-1. `docker-compose down`
-2. `docker system prune -a`
-3. `docker volume prune`
-4. `./install.sh -e origin`
+	docker-compose down; docker-compose build origin-dapp; docker-compose up
+
+If this does not resolve the issue, or the error is from `origin-js`, removing all docker containers and volumes and starting from scratch will resolve it:
+
+	./install.sh -e origin -c
 
 ### Elasticsearch fails to start with virtual memory error
 
