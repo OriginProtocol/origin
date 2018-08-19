@@ -1,0 +1,9 @@
+FROM node:9
+
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY ./origin-bridge/package*.json /app/
+ENV NODE_ENV development
+
+RUN npm install --quiet --no-progress

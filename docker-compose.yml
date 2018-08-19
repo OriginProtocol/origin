@@ -71,6 +71,24 @@ services:
     networks:
       - origin-develop
 
+  orbit-db:
+    container_name: orbit-db
+    build:
+      context: .
+      dockerfile: dockerfiles/orbit-db
+    image: orbit-db
+    volumes:
+      - ./origin-bridge/js/messaging:/app/messaging
+      - ./ipfs/repo:/app/ipfsrepo
+    command: node_modules/.bin/babel-node messaging/orbit_server.js --presets es2015
+    ports:
+      - "9012:9012"
+    environment:
+      - MESSAGING_IPFS_WS_ADDRESS=/ip4/0.0.0.0/tcp/9012/ws
+      - MESSAGING_NAMESPACE=dev
+    networks:
+      - origin-develop
+
   origin-bridge:
     container_name: origin-bridge
     build:
@@ -89,6 +107,7 @@ services:
       - postgres
       - redis
       - origin-js
+      - orbit-db
     ports:
       - "5000:5000"
     environment:
@@ -146,15 +165,27 @@ services:
       # Mount compiled origin-js inside node modules
       - ./origin-js/dist:/app/node_modules/origin/dist
       - origin_js_node_modules:/app/node_modules/origin/node_modules
+      - ./ipfs/repo:/app/ipfsrepo
     depends_on:
+      - orbit-db
       - origin-bridge
+    environment:
+      - MESSAGING_NAMESPACE=dev
+      - MESSAGING_ACCOUNT=
     ports:
       - "3000:3000"
     command:
-      # Waits for origin-bridge to start
+      # Waits for origin-bridge to start then uses a script to read the orbit-db
+      # container peer id and write the configuration key/pair to the .env file.
+      #
+      # The copying is necessary because the .env file is mounted as a volume
+      # and the inode is not allowed to change.
       >
       /bin/bash -c "wait-for.sh -t 0 -q origin-bridge:5000 --
       echo 'origin-bridge is available, starting origin-dapp' &&
+      cp /app/.env /tmp/.env.new &&
+      set-ipfs-swarm.sh /app/ipfsrepo/config /tmp/.env.new &&
+      cp /tmp/.env.new /app/.env &&
       node_modules/.bin/webpack-dev-server --host 0.0.0.0 --watch-poll 500"
     networks:
       - origin-develop
