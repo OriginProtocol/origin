@@ -27,6 +27,7 @@ import SearchResult from 'components/search/search-result'
 
 import Profile from 'pages/profile/Profile'
 import User from 'pages/user/User'
+import SearchBar from 'components/search/searchbar'
 
 import 'bootstrap/dist/js/bootstrap'
 
@@ -39,8 +40,11 @@ import '../css/app.css'
 const httpsRequired = process.env.FORCE_HTTPS
 
 const HomePage = () => (
-  <div className="container">
-    <ListingsGrid renderMode='home-page' />
+  <div>
+    <SearchBar />
+    <div className="container">
+      <ListingsGrid renderMode='home-page' />
+    </div>
   </div>
 )
 
