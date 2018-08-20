@@ -5,6 +5,8 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import { storeWeb3Intent } from 'actions/App'
 import listingSchema from 'utils/listingSchema.js'
+import { searchListings } from 'actions/Listing'
+import { generalSearch } from 'actions/Search'
 
 
 class SearchBar extends Component {
@@ -24,7 +26,7 @@ class SearchBar extends Component {
 
     this.state = {
       selectedListingType: this.listingTypes[0],
-      searchQuery: ''
+      searchQuery: null
     }
 
     this.intlMessages = defineMessages({
@@ -33,8 +35,6 @@ class SearchBar extends Component {
         defaultMessage: 'Search',
       },
     })
-
-    //this.searchSchema = {}
 
     this.handleChange = this.handleChange.bind(this)
     this.handleOnSearch = this.handleOnSearch.bind(this)
@@ -52,8 +52,9 @@ class SearchBar extends Component {
   }
 
   handleOnSearch(e) {
-    console.log("HANDLE ON SEARCH")
     document.location.href = `#/search/${this.state.searchQuery}`
+    this.props.searchListings(this.state.searchQuery)
+    this.props.generalSearch(this.state.searchQuery, this.state.selectedListingType.type)
   }
 
   render() {
@@ -134,7 +135,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  
+  searchListings: (query) => dispatch(searchListings(query)),
+  generalSearch: (query, selectedListingType) => dispatch(generalSearch(query, selectedListingType))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(SearchBar))

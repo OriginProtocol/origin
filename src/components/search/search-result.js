@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
+import { searchListings } from 'actions/Listing'
 
 import ListingsGrid from 'components/listings-grid'
 
@@ -9,43 +11,123 @@ class SearchResult extends Component {
     this.state = {
     }
 
+    this.listingSearchSchema = [
+      {
+        title: 'schema.all.title',
+        type: 'all',
+        filters: [
+          // {
+          //   "title": "schema.forSale.category",
+          //   "type": "null"
+          // }
+          {
+            "title": "Category"
+          },
+          {
+            "title": "Price"
+          }
+        ]
+      },
+      {
+        type: 'for-sale',
+        filters: [
+          {
+            "title": "Category"
+          },
+          {
+            "title": "Price"
+          }
+        ]
+      },
+      {
+        type: 'housing',
+        filters: [
+          {
+            "title": "Category"
+          },
+          {
+            "title": "Price"
+          },
+          {
+            "title": "Guests"
+          },
+          {
+            "title": "Rooms"
+          },
+          {
+            "title": "Home Type"
+          }
+        ]
+      },
+      {
+        type: 'transportation',
+        filters: [
+          {
+            "title": "Category"
+          },
+          {
+            "title": "Price"
+          }
+        ]
+      },
+      {
+        type: 'tickets',
+        filters: [
+          {
+            "title": "Category"
+          },
+          {
+            "title": "Price"
+          }
+        ]
+      },
+      {
+        type: 'services',
+        filters: [
+          {
+            "title": "Category"
+          },
+          {
+            "title": "Price"
+          }
+        ]
+      },
+      {
+        type: 'announcements',
+        filters: [
+          {
+            "title": "Category"
+          },
+          {
+            "title": "Price"
+          }
+        ]
+      }
+    ]
   }
 
   componentDidUpdate(prevProps) {
-    // trigger another search result
+    //this.props.searchListings(this.state.searchQuery)
   }
 
   render() {
-
     return (
       <div>
         <nav className="navbar search-filters navbar-expand-sm">
          <div className="container d-flex flex-row">
             <ul className="navbar-nav collapse navbar-collapse">
-              <li className="nav-item active">
-                <a className="nav-link" href="#">
-                  <FormattedMessage
-                    id={ 'search-result.categoryType' }
-                    defaultMessage={ 'Category Type' }
-                  />
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  <FormattedMessage
-                    id={ 'search-result.dates' }
-                    defaultMessage={ 'Dates' }
-                  />
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  <FormattedMessage
-                    id={ 'search-result.guests' }
-                    defaultMessage={ 'Guests' }
-                  />
-                </a>
-              </li>
+              {
+                this.listingSearchSchema
+                  .find(listingItem => listingItem.type === this.props.listingType)
+                  .filters
+                  .map(filter => 
+                    <li className="nav-item">
+                      <a className="nav-link" href="#">
+                        {filter.title}
+                      </a>
+                    </li>
+                  )
+              }
             </ul>
           </div>
         </nav>
@@ -57,4 +139,12 @@ class SearchResult extends Component {
   }
 }
 
-export default SearchResult
+const mapStateToProps = state => ({
+  listingType: state.search.listingType
+})
+
+const mapDispatchToProps = dispatch => ({
+  searchListings: (query) => dispatch(searchListings(query))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchResult)

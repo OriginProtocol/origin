@@ -8,16 +8,16 @@ export const ListingConstants = keyMirror(
   {
     FETCH_IDS: null,
     FETCH_IDS_SUCCESS: null,
-    FETCH_IDS_ERROR: null
+    FETCH_IDS_ERROR: null,
   },
   'LISTING'
 )
 
-export function getListingIds() {
-  return async function(dispatch) {
+async function fetchListingIds(dispatch) {
+  return async function(dispatch, fetcher) {
     dispatch({ type: ListingConstants.FETCH_IDS })
 
-    let hideList = []
+    let hostnameideList = []
     const { web3, listingsRegistryContract } = origin.contractService
     const inProductionEnv =
       window.location.hostname === 'demo.originprotocol.com'
@@ -42,7 +42,7 @@ export function getListingIds() {
         }
       }
 
-      const ids = await origin.marketplace.getListings({ idsOnly: true })
+      const ids = await fetcher()
 
       dispatch({
         type: ListingConstants.FETCH_IDS_SUCCESS,
@@ -56,5 +56,19 @@ export function getListingIds() {
         error: error.message
       })
     }
+  }
+}
+
+export function searchListings(rawQuery) {
+  return async function(dispatch) {
+    const fetcher = () => { return await origin.marketplace.getListings(rawQuery) }
+    await fetchListingIds(dispatch, fetcher)
+  }
+}
+
+export function getListingIds() {
+  return async function(dispatch) {
+    const fetcher = () => { await origin.marketplace.getListings({ idsOnly: true }) }
+    await fetchListingIds(dispatch, fetcher)
   }
 }
