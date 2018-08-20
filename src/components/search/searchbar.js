@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import { storeWeb3Intent } from 'actions/App'
-import listingSchema from 'utils/listingSchema.js'
+import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
 import { searchListings } from 'actions/Listing'
 import { generalSearch } from 'actions/Search'
 
@@ -19,7 +19,7 @@ class SearchBar extends Component {
         id: 'searchbar.all',
         defaultMessage: 'All'
       }
-    }, ...listingSchema.listingTypes ].map(listingType => {
+    }, ...listingSchemaMetadata.listingTypes ].map(listingType => {
       listingType.name = props.intl.formatMessage(listingType.translationName)
       return listingType
     })

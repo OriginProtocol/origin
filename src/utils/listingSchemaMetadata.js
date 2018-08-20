@@ -1,4 +1,4 @@
-const listingSchema = {
+const listingSchemaMetadata = {
   listingTypes: [
     {
       type: 'for-sale',
@@ -51,4 +51,4 @@ const listingSchema = {
   ]
 }
 
-export default listingSchema
+export default listingSchemaMetadata

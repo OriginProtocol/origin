@@ -12,7 +12,7 @@ import {
 
 import ListingDetail from 'components/listing-detail'
 import Modal from 'components/modal'
-import listingSchema from 'utils/listingSchema.js'
+import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
 import { translateSchema } from 'utils/translationUtils'
@@ -38,7 +38,7 @@ class ListingCreate extends Component {
       ERROR: 7
     }
     
-    this.schemaList = listingSchema.listingTypes.map(listingType => {
+    this.schemaList = listingSchemaMetadata.listingTypes.map(listingType => {
       listingType.name = props.intl.formatMessage(listingType.translationName)
       return listingType
     })
