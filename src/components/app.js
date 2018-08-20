@@ -35,6 +35,8 @@ import '../css/lato-web.css'
 import '../css/poppins.css'
 import '../css/app.css'
 
+const httpsRequired = process.env.FORCE_HTTPS
+
 const HomePage = () => (
   <div className="container">
     <Listings />
@@ -64,6 +66,10 @@ class App extends Component {
   }
 
   componentWillMount() {
+    if (httpsRequired) {
+      this.forceHTTPS()
+    }
+
     this.props.localizeApp()
   }
 
@@ -87,6 +93,12 @@ class App extends Component {
       this.props.setMobile('iOS')
     } else {
       this.props.setMobile(null)
+    }
+  }
+
+  forceHTTPS() {
+    if (!window.location.protocol.match('https')) {
+      window.location.href = window.location.href.replace(/^http(?!s)/, 'https');
     }
   }
 
