@@ -125,7 +125,7 @@
   "my-listing-card.confirmCloseListing": "Êtes-vous sûr de vouloir fermer définitivement cette annonce ? Cela ne peut pas être annulé.",
   "my-listing-card.ethereumCurrencyAbbrev": "ETH",
   "my-listing-card.soldOut": "Épuisé",
-  "my-listing-card.totalQuantity": "Total Quantity : {quantity}",
+  "my-listing-card.totalQuantity": "Quantité totale : {quantity}",
   "my-listing-card.closeListing": "Enlever l'annonce",
   "my-listings.loading": "Chargement...",
   "my-listings.no-listings": "Vous n'avez pas encore d'annonces.",
