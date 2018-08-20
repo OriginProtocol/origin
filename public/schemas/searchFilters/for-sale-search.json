@@ -1,0 +1,33 @@
+{
+  "title": "schema.for-sale-search.title",
+  "type": "filterCreationSchema",
+  "listingType": "for-sale",
+  "items": [
+    {
+      "title": "schema.forSale.price",
+      "type": "filterGroup",
+      "items": [
+        {
+          "type": "price",
+          "listingPropertyName": "homeTypes",
+          "searchParameterName": "homeTypes",
+          "multipleSelection": true
+        }
+      ],
+      "actions": ["Clear", "Apply"]
+    },
+    {
+      "title": "schema.forSale.category",
+      "type": "filterGroup",
+      "items": [
+        {
+          "type": "multipleSelectionFilter",
+          "listingPropertyName": "homeTypes",
+          "searchParameterName": "homeTypes",
+          "multipleSelection": true
+        }
+      ],
+      "actions": ["Clear", "Apply"]
+    }
+  ]
+}

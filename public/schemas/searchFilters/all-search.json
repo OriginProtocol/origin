@@ -1,0 +1,20 @@
+{
+  "title": "schema.all-search.title",
+  "type": "filterCreationSchema",
+  "listingType": "all",
+  "items": [
+    {
+      "title": "schema.forSale.price",
+      "type": "filterGroup",
+      "items": [
+        {
+          "type": "price",
+          "listingPropertyName": "homeTypes",
+          "searchParameterName": "homeTypes",
+          "multipleSelection": true
+        }
+      ],
+      "actions": ["Clear", "Apply"]
+    }
+  ]
+}

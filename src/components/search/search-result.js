@@ -1,134 +1,67 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { searchListings } from 'actions/Listing'
 
 import ListingsGrid from 'components/listings-grid'
+import SearchBar from 'components/search/searchbar'
 
 class SearchResult extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      filterSchema: undefined
     }
-
-    this.listingSearchSchema = [
-      {
-        title: 'schema.all.title',
-        type: 'all',
-        filters: [
-          // {
-          //   "title": "schema.forSale.category",
-          //   "type": "null"
-          // }
-          {
-            "title": "Category"
-          },
-          {
-            "title": "Price"
-          }
-        ]
-      },
-      {
-        type: 'for-sale',
-        filters: [
-          {
-            "title": "Category"
-          },
-          {
-            "title": "Price"
-          }
-        ]
-      },
-      {
-        type: 'housing',
-        filters: [
-          {
-            "title": "Category"
-          },
-          {
-            "title": "Price"
-          },
-          {
-            "title": "Guests"
-          },
-          {
-            "title": "Rooms"
-          },
-          {
-            "title": "Home Type"
-          }
-        ]
-      },
-      {
-        type: 'transportation',
-        filters: [
-          {
-            "title": "Category"
-          },
-          {
-            "title": "Price"
-          }
-        ]
-      },
-      {
-        type: 'tickets',
-        filters: [
-          {
-            "title": "Category"
-          },
-          {
-            "title": "Price"
-          }
-        ]
-      },
-      {
-        type: 'services',
-        filters: [
-          {
-            "title": "Category"
-          },
-          {
-            "title": "Price"
-          }
-        ]
-      },
-      {
-        type: 'announcements',
-        filters: [
-          {
-            "title": "Category"
-          },
-          {
-            "title": "Price"
-          }
-        ]
-      }
-    ]
   }
 
   componentDidUpdate(prevProps) {
-    //this.props.searchListings(this.state.searchQuery)
+    // exit if query parameters have not changed
+    if (
+      prevProps.listingType == this.props.listingType &&
+      prevProps.query == this.props.query
+    )
+      return
+
+    this.setState({ filterSchema: undefined })
+
+    fetch(`schemas/searchFilters/${this.props.listingType}-search.json`)
+      .then((response) => response.json())
+      .then((schemaJson) => {
+        console.log("JSON RESULT: ", schemaJson)
+        this.setState({ filterSchema: schemaJson })
+        window.scrollTo(0, 0)
+      })
   }
 
   render() {
+    if (this.state.filterSchema != undefined){
+      this.state.filterSchema
+        .items
+        .map(filterGroup =>
+          console.log(filterGroup.title)
+        )
+    }
+
     return (
       <div>
+        <SearchBar />
         <nav className="navbar search-filters navbar-expand-sm">
          <div className="container d-flex flex-row">
-            <ul className="navbar-nav collapse navbar-collapse">
-              {
-                this.listingSearchSchema
-                  .find(listingItem => listingItem.type === this.props.listingType)
-                  .filters
-                  .map(filter => 
-                    <li className="nav-item">
-                      <a className="nav-link" href="#">
-                        {filter.title}
-                      </a>
-                    </li>
-                  )
-              }
-            </ul>
+            { this.state.filterSchema ?
+              <ul className="navbar-nav collapse navbar-collapse">
+                {
+                  this.state.filterSchema
+                    .items
+                    .map(filterGroup =>
+                      <li className="nav-item" key={this.props.intl.formatMessage(filterGroup.title)}>
+                        <a className="nav-link" href="#">
+                          {this.props.intl.formatMessage(filterGroup.title)}
+                        </a>
+                      </li>
+                    )
+                }
+              </ul>
+            : ''}
           </div>
         </nav>
         <div className="container">
@@ -140,11 +73,12 @@ class SearchResult extends Component {
 }
 
 const mapStateToProps = state => ({
-  listingType: state.search.listingType
+  listingType: state.search.listingType,
+  query: state.search.query
 })
 
 const mapDispatchToProps = dispatch => ({
   searchListings: (query) => dispatch(searchListings(query))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchResult)
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(SearchResult))
