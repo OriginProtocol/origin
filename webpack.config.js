@@ -11,6 +11,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 const env = {
   CONTRACT_ADDRESSES: '{}',
+  FORCE_HTTPS: false,
   IPFS_SWARM: '',
   MESSAGING_ACCOUNT: '',
   MESSAGING_NAMESPACE: '',
