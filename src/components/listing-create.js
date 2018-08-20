@@ -124,6 +124,7 @@ class ListingCreate extends Component {
     this.onAvailabilityEntered = this.onAvailabilityEntered.bind(this)
     this.onGoBackToDetails = this.onGoBackToDetails.bind(this)
     this.backFromReviewStep = this.backFromReviewStep.bind(this)
+    this.onBackToPickSchema = this.onBackToPickSchema.bind(this)
   }
 
   async componentDidMount() {
@@ -166,7 +167,8 @@ class ListingCreate extends Component {
     window.scrollTo(0, 0)
   }
 
-  onDetailsEntered(formData) {
+  onDetailsEntered(formListing) {
+    const { formData } = formListing
     // Helper function to approximate size of object in bytes
     function roughSizeOfObject(object) {
       const objectList = []
@@ -207,6 +209,9 @@ class ListingCreate extends Component {
 
       formData.listingType = listingType
       formData.schemaType = this.state.selectedSchemaType
+      if (typeof formData.priceWei === 'number') {
+        formData.priceWei = formData.priceWei.toString()
+      }
 
       this.setState({
         formData,
@@ -235,6 +240,15 @@ class ListingCreate extends Component {
 
     this.setState({
       step: this.STEP.PREVIEW
+    })
+  }
+
+  onBackToPickSchema() {
+    this.setState({
+      step: this.STEP.PICK_SCHEMA,
+      selectedSchema: null,
+      schemaFetched: false,
+      formData: null
     })
   }
 
@@ -468,7 +482,7 @@ class ListingCreate extends Component {
                       type="button"
                       className="btn btn-other"
                       onClick={() =>
-                        this.setState({ step: this.STEP.PICK_SCHEMA })
+                        this.onBackToPickSchema()
                       }
                     >
                       <FormattedMessage
