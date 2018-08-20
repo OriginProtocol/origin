@@ -5,7 +5,7 @@ const transactionTypeMap = {
   confirmReceipt: 'PurchaseChange',
   confirmShipped: 'PurchaseChange',
   createListing: 'NewListing',
-  getPayout: 'PurchaseChange',
+  getPayout: 'PurchaseChange'
 }
 
 export default transactionTypeMap

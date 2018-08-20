@@ -57,4 +57,7 @@ const mapDispatchToProps = dispatch => ({
   hideAlert: () => dispatch(hideAlert())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Alert)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Alert)

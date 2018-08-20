@@ -64,30 +64,43 @@ class ProvisionedChanges extends Component {
 
   render() {
     const { changes } = this.props
-    let profileTooltip = `<div class="text-left">${this.props.intl.formatMessage(this.intlMessages.youArePublishing)}<br />`
+    let profileTooltip = `<div class="text-left">${this.props.intl.formatMessage(
+      this.intlMessages.youArePublishing
+    )}<br />`
 
     if (changes.find(c => c === 'firstName')) {
-      profileTooltip += `<img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(this.intlMessages.firstName)}<br />`
+      profileTooltip += `<img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(
+        this.intlMessages.firstName
+      )}<br />`
     }
 
     if (changes.find(c => c === 'lastName')) {
-      profileTooltip += `<img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(this.intlMessages.lastName)}<br />`
+      profileTooltip += `<img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(
+        this.intlMessages.lastName
+      )}<br />`
     }
 
     if (changes.find(c => c === 'description')) {
-      profileTooltip += `<img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(this.intlMessages.description)}<br />`
+      profileTooltip += `<img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(
+        this.intlMessages.description
+      )}<br />`
     }
 
     if (changes.find(c => c === 'pic')) {
-      profileTooltip += `<img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(this.intlMessages.picture)}<br />`
+      profileTooltip += `<img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(
+        this.intlMessages.picture
+      )}<br />`
     }
 
-    profileTooltip += `<br /><img src="/images/eye-yes.svg" alt="visible icon" /> <strong>${this.props.intl.formatMessage(this.intlMessages.visibleOnBlockchain)}</strong></div>`
+    profileTooltip += `<br /><img src="/images/eye-yes.svg" alt="visible icon" /> <strong>${this.props.intl.formatMessage(
+      this.intlMessages.visibleOnBlockchain
+    )}</strong></div>`
 
     return (
       <div className="d-flex change-icons justify-content-center">
-        {changes.find(c => c.match(/name|desc|pic/i)) &&
-          <div className="change-icon"
+        {changes.find(c => c.match(/name|desc|pic/i)) && (
+          <div
+            className="change-icon"
             data-toggle="tooltip"
             data-placement="top"
             data-html="true"
@@ -98,23 +111,28 @@ class ProvisionedChanges extends Component {
             </div>
             <div className="text-center">
               <FormattedMessage
-                id={ '_ProvisionedChanges.profile' }
-                defaultMessage={ 'Profile' }
+                id={'_ProvisionedChanges.profile'}
+                defaultMessage={'Profile'}
               />
             </div>
           </div>
-        }
-        {changes.find(c => c === 'phone') &&
-          <div className="change-icon"
+        )}
+        {changes.find(c => c === 'phone') && (
+          <div
+            className="change-icon"
             data-toggle="tooltip"
             data-placement="top"
             data-html="true"
             title={`
               <div class="text-left">
                 You are verifying:<br />
-                <img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(this.intlMessages.phoneNumber)}<br />
+                <img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(
+            this.intlMessages.phoneNumber
+          )}<br />
                 <br />
-                <img src="/images/eye-no.svg" alt="not-visible icon" /> <strong>${this.props.intl.formatMessage(this.intlMessages.notVisibleOnBlockchain)}</strong>
+                <img src="/images/eye-no.svg" alt="not-visible icon" /> <strong>${this.props.intl.formatMessage(
+            this.intlMessages.notVisibleOnBlockchain
+          )}</strong>
               </div>
             `}
           >
@@ -123,23 +141,28 @@ class ProvisionedChanges extends Component {
             </div>
             <div className="text-center">
               <FormattedMessage
-                id={ '_ProvisionedChanges.phone' }
-                defaultMessage={ 'Phone' }
+                id={'_ProvisionedChanges.phone'}
+                defaultMessage={'Phone'}
               />
             </div>
           </div>
-        }
-        {changes.find(c => c === 'email') &&
-          <div className="change-icon"
+        )}
+        {changes.find(c => c === 'email') && (
+          <div
+            className="change-icon"
             data-toggle="tooltip"
             data-placement="top"
             data-html="true"
             title={`
               <div class="text-left">
                 You are verifying:<br />
-                <img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(this.intlMessages.emailAddress)}<br />
+                <img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(
+            this.intlMessages.emailAddress
+          )}<br />
                 <br />
-                <img src="/images/eye-no.svg" alt="not-visible icon" /> <strong>${this.props.intl.formatMessage(this.intlMessages.notVisibleOnBlockchain)}</strong>
+                <img src="/images/eye-no.svg" alt="not-visible icon" /> <strong>${this.props.intl.formatMessage(
+            this.intlMessages.notVisibleOnBlockchain
+          )}</strong>
               </div>
             `}
           >
@@ -148,48 +171,61 @@ class ProvisionedChanges extends Component {
             </div>
             <div className="text-center">
               <FormattedMessage
-                id={ '_ProvisionedChanges.email' }
-                defaultMessage={ 'Email' }
+                id={'_ProvisionedChanges.email'}
+                defaultMessage={'Email'}
               />
             </div>
           </div>
-        }
-        {changes.find(c => c === 'facebook') &&
-          <div className="change-icon"
+        )}
+        {changes.find(c => c === 'facebook') && (
+          <div
+            className="change-icon"
             data-toggle="tooltip"
             data-placement="top"
             data-html="true"
             title={`
               <div class="text-left">
                 You are verifying:<br />
-                <img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(this.intlMessages.facebookAccount)}<br />
+                <img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(
+            this.intlMessages.facebookAccount
+          )}<br />
                 <br />
-                <img src="/images/eye-no.svg" alt="not-visible icon" /> <strong>${this.props.intl.formatMessage(this.intlMessages.notVisibleOnBlockchain)}</strong>
+                <img src="/images/eye-no.svg" alt="not-visible icon" /> <strong>${this.props.intl.formatMessage(
+            this.intlMessages.notVisibleOnBlockchain
+          )}</strong>
               </div>
             `}
           >
             <div className="image-container">
-              <img src="/images/publish-facebook-icon.svg" alt="Facebook icon" />
+              <img
+                src="/images/publish-facebook-icon.svg"
+                alt="Facebook icon"
+              />
             </div>
             <div className="text-center">
               <FormattedMessage
-                id={ '_ProvisionedChanges.facebook' }
-                defaultMessage={ 'Facebook' }
+                id={'_ProvisionedChanges.facebook'}
+                defaultMessage={'Facebook'}
               />
             </div>
           </div>
-        }
-        {changes.find(c => c === 'twitter') &&
-          <div className="change-icon"
+        )}
+        {changes.find(c => c === 'twitter') && (
+          <div
+            className="change-icon"
             data-toggle="tooltip"
             data-placement="top"
             data-html="true"
             title={`
               <div class="text-left">
                 You are verifying:<br />
-                <img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(this.intlMessages.twitterAccount)}<br />
+                <img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(
+            this.intlMessages.twitterAccount
+          )}<br />
                 <br />
-                <img src="/images/eye-no.svg" alt="not-visible icon" /> <strong>${this.props.intl.formatMessage(this.intlMessages.notVisibleOnBlockchain)}</strong>
+                <img src="/images/eye-no.svg" alt="not-visible icon" /> <strong>${this.props.intl.formatMessage(
+            this.intlMessages.notVisibleOnBlockchain
+          )}</strong>
               </div>
             `}
           >
@@ -198,23 +234,28 @@ class ProvisionedChanges extends Component {
             </div>
             <div className="text-center">
               <FormattedMessage
-                id={ '_ProvisionedChanges.twitter' }
-                defaultMessage={ 'Twitter' }
+                id={'_ProvisionedChanges.twitter'}
+                defaultMessage={'Twitter'}
               />
             </div>
           </div>
-        }
-        {changes.find(c => c === 'airbnb') &&
-          <div className="change-icon"
+        )}
+        {changes.find(c => c === 'airbnb') && (
+          <div
+            className="change-icon"
             data-toggle="tooltip"
             data-placement="top"
             data-html="true"
             title={`
               <div class="text-left">
                 You are verifying:<br />
-                <img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(this.intlMessages.airbnbAccount)}<br />
+                <img src="/images/checkmark-green.svg" alt="checkmark icon" /> ${this.props.intl.formatMessage(
+            this.intlMessages.airbnbAccount
+          )}<br />
                 <br />
-                <img src="/images/eye-yes.svg" alt="visible icon" /> <strong>${this.props.intl.formatMessage(this.intlMessages.visibleOnBlockchain)}</strong>
+                <img src="/images/eye-yes.svg" alt="visible icon" /> <strong>${this.props.intl.formatMessage(
+            this.intlMessages.visibleOnBlockchain
+          )}</strong>
               </div>
             `}
           >
@@ -223,12 +264,12 @@ class ProvisionedChanges extends Component {
             </div>
             <div className="text-center">
               <FormattedMessage
-                id={ '_ProvisionedChanges.airbnb' }
-                defaultMessage={ 'Airbnb' }
+                id={'_ProvisionedChanges.airbnb'}
+                defaultMessage={'Airbnb'}
               />
             </div>
           </div>
-        }
+        )}
       </div>
     )
   }
