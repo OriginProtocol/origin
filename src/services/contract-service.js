@@ -34,7 +34,6 @@ class ContractService {
     this.libraries = {}
     this.libraries.ClaimHolderLibrary = ClaimHolderLibrary
     this.libraries.KeyHolderLibrary = KeyHolderLibrary
-    this.libraries.PurchaseLibrary = PurchaseLibrary
     for (const name in contracts) {
       this[name] = contracts[name]
       try {
