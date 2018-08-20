@@ -37,9 +37,26 @@ Origin Box has several intended use cases:
 
 2. Run `./install.sh -e origin` for the standard stack, or `./install.sh -e origin-website` for the website stack.
 
-The install script will clone the origin repositories into subdirectories and checkout the develop branch. You can then develop and use them as normal git repositories. If the install script doesn't complete the most likely reason is you don't have the [required ports](#port-errors) open.
-
 ![install.sh](https://raw.githubusercontent.com/OriginProtocol/origin-box/master/screenshot.png)
+
+The install script will clone the origin repositories into subdirectories and checkout the stable branches. You can then `cd` into any one of them and run `git` commands as you would in any other cloned repository. For example, if you would like to run the bleeding-edge versions that are under active development, you would need to checkout the master branch in each repository:
+
+```
+# to explore active development
+cd origin-dapp
+git checkout --track origin/master
+cd ../origin-js
+git checkout --track origin/master
+cd ../origin-bridge
+git checkout --track origin/master
+```
+or
+```
+cd origin-website
+git checkout --track origin/master
+```
+
+If the install script doesn't complete the most likely reason is you don't have the [required ports](#port-errors) open.
 
 ## Configuration
 
