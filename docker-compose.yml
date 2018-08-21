@@ -64,6 +64,7 @@ services:
       - "8080:8080" # IPFS gateway
       - "8081:8081" # Tests
       - "8545:8545" # Blockchain
+      - "4000:4000" # Apollo server 
     # Run npm install on every container start to avoid volumes issue
     # https://github.com/docker/compose/issues/4337
     command: >
