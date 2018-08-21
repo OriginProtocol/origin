@@ -59,11 +59,13 @@ class Listing {
   /*
    * Indexes a listing.
    * @params {string} listingId - The unique ID of the listing.
-   * @params {object} listing - Listing to index.
+   * @params {string} buyerAddress - ETH address of the buyer.
+   * @params {string} ipfsHash - 32 bytes IPFS hash, in hexa (not base58 encoded).
+   * @params {object} listing - JSON listing data.
    * @throws Throws an error if indexing operation failed.
    * @returns The listingId indexed.
    */
-  static async index(listingId, listing) {
+  static async index(listingId, buyerAddress, ipfsHash, listing) {
     const resp = await client.index({
       index: indexName,
       id: listingId,

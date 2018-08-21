@@ -185,7 +185,6 @@ async function runBatch(opts, context) {
 // handleLog - annotates, runs rule, and ouputs a particular log
 async function handleLog(log, rule, contractVersion, context) {
   console.log(`Processing log blockNumber=${log.blockNumber} transactionIndex=${log.transactionIndex}`)
-  console.log("LOG=", log)
 
   log.decoded = web3.eth.abi.decodeLog(
     rule.eventAbi.inputs,
@@ -208,16 +207,29 @@ async function handleLog(log, rule, contractVersion, context) {
     console.log('\n----\n')
   }
 
-  //TODO(franck): remove binary data from pictures in a proper way.
+  const userAddress = log.decoded.party
+  const ipfsHash = log.decoded.ipfsHash
+
+  //TODO: remove binary data from pictures in a proper way.
   let listing = output.related.listing
   delete listing.ipfsData.data.pictures
+  const listingId = listing.id
+
+  // Data consistency: check  listingId from the JSON stored in IPFS
+  // matches with listingID emitted in the event.
+  // TODO: use method utils/id.js:parseListingId
+  const ipfsListingId = listingId.split('-')[2]
+  if (ipfsListingId !== log.decoded.listingID) {
+    throw error(`ListingId mismatch: ${ipfsListingId} !== ${log.decoded.listingID}`)
+  }
 
   if (context.config.elasticsearch) {
-    await search.Listing.index(listing.id, listing.ipfsData.data)
+    console.log("INDEXING ", listingId)
+    await search.Listing.index(listingId, userAddress, ipfsHash, listing.ipfsData.data)
   }
 
   if (context.config.db) {
-    await db.Listing.insert(listing.id, listing.ipfsData.data)
+    await db.Listing.insert(listingId, userAddress, ipfsHash, listing.ipfsData.data)
   }
 
   if (context.config.webhook) {
