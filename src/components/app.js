@@ -63,11 +63,15 @@ const UserPage = props => <User userAddress={props.match.params.userAddress} />
 class App extends Component {
   constructor(props){
     super(props)
+
+    this.state = {
+      redirect: httpsRequired && !window.location.protocol.match('https')
+    }
   }
 
   componentWillMount() {
-    if (httpsRequired) {
-      this.forceHTTPS()
+    if (this.state.redirect) {
+      window.location.href = window.location.href.replace(/^http(?!s)/, 'https')
     }
 
     this.props.localizeApp()
@@ -96,13 +100,12 @@ class App extends Component {
     }
   }
 
-  forceHTTPS() {
-    if (!window.location.protocol.match('https')) {
-      window.location.href = window.location.href.replace(/^http(?!s)/, 'https');
-    }
-  }
-
   render() {
+    // prevent flickering
+    if (this.state.redirect) {
+      return null
+    }
+
     return this.props.selectedLanguageCode ? (
       <IntlProvider 
         locale={this.props.selectedLanguageCode}
