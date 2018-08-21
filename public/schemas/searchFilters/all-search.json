@@ -1,10 +1,12 @@
 {
-  "title": "schema.all-search.title",
   "type": "filterCreationSchema",
   "listingType": "all",
   "items": [
     {
-      "title": "schema.forSale.price",
+      "title": {
+        "id": "schema.forSale.price",
+        "defaultMessage": "Price"
+      },
       "type": "filterGroup",
       "items": [
         {

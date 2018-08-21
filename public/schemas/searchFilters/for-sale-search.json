@@ -1,10 +1,12 @@
 {
-  "title": "schema.for-sale-search.title",
   "type": "filterCreationSchema",
   "listingType": "for-sale",
   "items": [
     {
-      "title": "schema.forSale.price",
+      "title": {
+        "id": "schema.forSale.price",
+        "defaultMessage": "Price"
+      },
       "type": "filterGroup",
       "items": [
         {
@@ -17,7 +19,10 @@
       "actions": ["Clear", "Apply"]
     },
     {
-      "title": "schema.forSale.category",
+      "title": {
+        "id": "schema.forSale.category",
+        "defaultMessage": "Category"
+      },
       "type": "filterGroup",
       "items": [
         {

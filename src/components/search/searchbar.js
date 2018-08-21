@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
+import { withRouter } from 'react-router'
+import queryString from 'query-string'
 
 import { storeWeb3Intent } from 'actions/App'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
@@ -24,9 +26,19 @@ class SearchBar extends Component {
       return listingType
     })
 
+    const getParams = queryString.parse(this.props.location.search)
+
+    let listingType = this.listingTypes[0]
+    if (getParams.listing_type != undefined){
+      listingType = this
+        .listingTypes
+        .find(listingTypeItem => listingTypeItem.type === getParams.listing_type) 
+      || listingType
+    }
+
     this.state = {
-      selectedListingType: this.listingTypes[0],
-      searchQuery: null
+      selectedListingType:listingType,
+      searchQuery: getParams.search_query || ''
     }
 
     this.intlMessages = defineMessages({
@@ -52,7 +64,7 @@ class SearchBar extends Component {
   }
 
   handleOnSearch(e) {
-    document.location.href = `#/search/${this.state.searchQuery}`
+    document.location.href = `#/search?search_query=${this.state.searchQuery}&listing_type=${this.state.selectedListingType.type}`
     this.props.searchListings(this.state.searchQuery)
     this.props.generalSearch(this.state.searchQuery, this.state.selectedListingType.type)
   }
@@ -85,6 +97,7 @@ class SearchBar extends Component {
               aria-label="Search"
               onChange={this.handleChange}
               onKeyPress={this.handleKeyPress}
+              value={this.state.searchQuery}
             />
             <div className="input-group-append">
               <button 
@@ -139,5 +152,5 @@ const mapDispatchToProps = dispatch => ({
   generalSearch: (query, selectedListingType) => dispatch(generalSearch(query, selectedListingType))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(SearchBar))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withRouter(SearchBar)))
 

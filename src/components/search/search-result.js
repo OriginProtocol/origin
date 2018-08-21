@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { searchListings } from 'actions/Listing'
+import queryString from 'query-string'
 
 import ListingsGrid from 'components/listings-grid'
 import SearchBar from 'components/search/searchbar'
@@ -12,9 +13,17 @@ class SearchResult extends Component {
     this.state = {
       filterSchema: undefined
     }
+
+    this.parseUrlParamsToState()
+  }
+
+  parseUrlParamsToState() {
+    const params = queryString.parse(this.props.location.search)
+    console.log(params, this.props.location.search)
   }
 
   componentDidUpdate(prevProps) {
+    console.log("COMPONENT DID UPDATE")
     // exit if query parameters have not changed
     if (
       prevProps.listingType == this.props.listingType &&
@@ -27,7 +36,6 @@ class SearchResult extends Component {
     fetch(`schemas/searchFilters/${this.props.listingType}-search.json`)
       .then((response) => response.json())
       .then((schemaJson) => {
-        console.log("JSON RESULT: ", schemaJson)
         this.setState({ filterSchema: schemaJson })
         window.scrollTo(0, 0)
       })
