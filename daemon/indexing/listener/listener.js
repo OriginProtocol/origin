@@ -3,8 +3,20 @@ const urllib = require('url')
 const Web3 = require('web3')
 
 const Origin = require('../../../dist/index') // FIXME: replace with origin-js package
-const search = require ('../lib/search.js')
+const search = require('../lib/search.js')
 const db = require('../lib//db.js')
+
+// Origin Listener
+// ---------------
+
+// Todo
+// - Allow configuring web3 endpoint and IPFS endpoint
+// - When catching up, work in smaller batches
+// - Persist starting point
+// - Handle blockchain splits/winners
+// - Include current-as-of block numbers in POSTs
+// - Perhaps send related data as it was at the time of the event, not crawl time
+// - Possible configurable log levels
 
 const web3Provider = new Web3.providers.HttpProvider('http://localhost:8545')
 const web3 = new Web3(web3Provider)
@@ -12,28 +24,11 @@ const o = new Origin({
   ipfsDomain: 'origin-js',
   ipfsGatewayProtocol: 'http',
   ipfsGatewayPort: 8080,
-  web3,
+  web3
 })
 
-// Origin Listener
-// ---------------
-// An at-least-once event listener for origin events (May deliver an event more than once).
-// Make sure your webhook endpoint is idempotent!
-// Sends events along with all the related data.
-// Designed to be infura compatible - API calls only, no subscriptions.
-//
-// To use:
-// - Run `npm start run` to setup a local IPFS and blockchain, and run tests
-// - In another terminal run `node scripts/listener.js`
-// - Or `node scripts/listener.js --webhook=http://localhost/originevents/`
-//
-// Todo
-// - Allow configuring web3 endpoint and IPFS endpoint
-// - Handle errors
-// - Persist starting point
-// - Handle blockchain splits/winners
-// - Include current-as-of block numbers in POSTs
-// - Perhaps send related data as it was at the time of the event, not crawl time
+MAX_RETRYS = 10
+MAX_RETRY_WAIT_MS = 2 * 60 * 1000
 
 // -----------------------------
 // Section 1: Follow rules
@@ -55,10 +50,9 @@ const generateOfferId = log => {
 }
 const getListingDetails = async log => {
   const listingId = generateListingId(log)
-  console.log("CALLING getListing for ID ", listingId)
   const listing = await o.marketplace.getListing(listingId)
   return {
-    listing: listing,
+    listing: listing
   }
   //return {
   //  listing: await o.marketplace.getListing(generateListingId(log))
@@ -120,20 +114,22 @@ async function liveTracking(config) {
   let start
 
   const check = async () => {
-    start = new Date()
-    const currentBlockNumber = await web3.eth.getBlockNumber()
-    if (currentBlockNumber == lastCheckedBlock) {
-      console.log('No new block.')
+    await withRetrys(async () => {
+      start = new Date()
+      const currentBlockNumber = await web3.eth.getBlockNumber()
+      if (currentBlockNumber == lastCheckedBlock) {
+        console.log('No new block.')
+        return scheduleNextCheck()
+      }
+      console.log('New block: ' + currentBlockNumber)
+      const opts = { fromBlock: lastLogBlock + 1 }
+      const batchLastLogBlock = await runBatch(opts, context)
+      if (batchLastLogBlock != undefined) {
+        lastLogBlock = batchLastLogBlock
+      }
+      lastCheckedBlock = currentBlockNumber
       return scheduleNextCheck()
-    }
-    console.log('New block: ' + currentBlockNumber)
-    const opts = { fromBlock: lastLogBlock + 1 }
-    const batchLastLogBlock = await runBatch(opts, context)
-    if (batchLastLogBlock != undefined) {
-      lastLogBlock = batchLastLogBlock
-    }
-    lastCheckedBlock = currentBlockNumber
-    return scheduleNextCheck()
+    })
   }
   const scheduleNextCheck = async () => {
     const elapsed = new Date() - start
@@ -182,9 +178,40 @@ async function runBatch(opts, context) {
   return lastLogBlock
 }
 
+// Retrys up to 10 times, with exponential backoff, then exits the process
+async function withRetrys(fn) {
+  let tryCount = 0
+  while (true) {
+    try {
+      return await fn() // Do our action.
+    } catch (e) {
+      // Roughly double wait time each failure
+      let waitTime = Math.pow(100, 1 + tryCount / 6)
+      // Randomly jiggle wait time by 20% either way. No thundering herd.
+      waitTime = Math.floor(waitTime * (1.2 - Math.random() * 0.4))
+      // Max out at two minutes
+      waitTime = Math.min(waitTime, MAX_RETRY_WAIT_MS)
+      console.log('ERROR', e)
+      console.log(`will retry in ${waitTime / 1000} seconds`)
+      tryCount += 1
+      await new Promise(resolve => setTimeout(resolve, waitTime))
+    }
+    if (tryCount >= MAX_RETRYS) {
+      console.log('Exiting. Maximum number of retrys reached.')
+      // Now it's up to our enviroment to restart us.
+      // Hopefuly with a clean start, things will work better
+      process.exit(1)
+    }
+  }
+}
+
 // handleLog - annotates, runs rule, and ouputs a particular log
 async function handleLog(log, rule, contractVersion, context) {
-  console.log(`Processing log blockNumber=${log.blockNumber} transactionIndex=${log.transactionIndex}`)
+  console.log(
+    `Processing log blockNumber=${log.blockNumber} transactionIndex=${
+      log.transactionIndex
+    }`
+  )
 
   log.decoded = web3.eth.abi.decodeLog(
     rule.eventAbi.inputs,
@@ -196,9 +223,21 @@ async function handleLog(log, rule, contractVersion, context) {
   log.contractVersionKey = contractVersion.versionKey
   log.networkId = context.networkId
 
+  let ruleResults = undefined
+  // If for any reason, origin-js can't read the listings, then we don't index that listing
+  try {
+    ruleResults = await rule.ruleFn(log)
+  } catch (e) {
+    console.log(
+      "Error: could not get information for",
+      `${log.contractName} ${log.eventName}`
+    )
+    console.log(e)
+    return
+  }
   const output = {
     log: log,
-    related: await rule.ruleFn(log)
+    related: ruleResults
   }
 
   const json = JSON.stringify(output, null, 2)
@@ -211,30 +250,48 @@ async function handleLog(log, rule, contractVersion, context) {
   const ipfsHash = log.decoded.ipfsHash
 
   //TODO: remove binary data from pictures in a proper way.
-  let listing = output.related.listing
+  const listing = output.related.listing
   delete listing.ipfsData.data.pictures
   const listingId = listing.id
 
   // Data consistency: check  listingId from the JSON stored in IPFS
   // matches with listingID emitted in the event.
   // TODO: use method utils/id.js:parseListingId
+  // DVF: this should really be handled in origin js - origin.js should throw
+  // an error if this happens.
   const ipfsListingId = listingId.split('-')[2]
   if (ipfsListingId !== log.decoded.listingID) {
-    throw error(`ListingId mismatch: ${ipfsListingId} !== ${log.decoded.listingID}`)
+    throw `ListingId mismatch: ${ipfsListingId} !== ${log.decoded.listingID}`
   }
 
   if (context.config.elasticsearch) {
-    console.log("INDEXING ", listingId)
-    await search.Listing.index(listingId, userAddress, ipfsHash, listing.ipfsData.data)
+    console.log('INDEXING ', listingId)
+    await withRetrys(async () => {
+      await search.Listing.index(
+        listingId,
+        userAddress,
+        ipfsHash,
+        listing.ipfsData.data
+      )
+    })
   }
 
   if (context.config.db) {
-    await db.Listing.insert(listingId, userAddress, ipfsHash, listing.ipfsData.data)
+    await withRetrys(async () => {
+      await db.Listing.insert(
+        listingId,
+        userAddress,
+        ipfsHash,
+        listing.ipfsData.data
+      )
+    })
   }
 
   if (context.config.webhook) {
     console.log('\n-- WEBHOOK to ' + context.config.webhook + ' --\n')
-    await postToWebhook(context.config.webhook, json)
+    await withRetrys(async () => {
+      await postToWebhook(context.config.webhook, json)
+    })
   }
 }
 
@@ -252,7 +309,7 @@ async function postToWebhook(urlString, json) {
   }
   return new Promise((resolve, reject) => {
     const req = http.request(postOptions, res => {
-      if(res.statusCode == 200){
+      if (res.statusCode === 200) {
         resolve()
       } else {
         reject()
@@ -291,8 +348,8 @@ function buildSignatureLookup() {
   for (const contractName in LISTEN_RULES) {
     const eventRules = LISTEN_RULES[contractName]
     const contract = o.contractService[contractName]
-    if(contract == undefined){
-      throw "Can't find contract "+contractName
+    if (contract == undefined) {
+      throw "Can't find contract " + contractName
     }
     contract.abi.filter(x => x.type == 'event').forEach(eventAbi => {
       const ruleFn = eventRules[eventAbi.name]
@@ -337,7 +394,7 @@ async function buildVersionList() {
 const args = {}
 process.argv.forEach(arg => {
   const t = arg.split('=')
-  const argVal = (t.length > 1) ? t[1] : true
+  const argVal = t.length > 1 ? t[1] : true
   args[t[0]] = argVal
 })
 
@@ -349,6 +406,6 @@ const config = {
   // Index events in the database.
   db: args['--db'],
   // Verbose mode, includes dumping events on the console.
-  verbose: args['--verbose'],
+  verbose: args['--verbose']
 }
 liveTracking(config)
