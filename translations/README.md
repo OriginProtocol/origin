@@ -1,41 +1,39 @@
 # Localization
 
-## Status 2018-05-29
+## Status 2018-08-21
 
 | Code | Language | Status |
 | ---- | -------- | ------ |
-| ar |  Arabic |   |
-| bn | Bengali |   |
-| bs | Bosnian |   |
-| cs | Czech |   |
-| de | German  |   |
-| el | Greek |   |
-| es | Spanish |   |
-| fr | French |   |
-| fil | Filipino |   |
-| he | Hebrew |   |
-| hr | Croatian |   |
-| it | Italian |   |
-| ja | Japanese |   |
-| ko | Korean |   |
-| lo | Lao |   |
-| ms | Malay |   |
-| nl | Dutch |   |
-| pt | Portugese |   |
-| pl | Polish |   |
-| ro | Romanian |   |
-| ru | Russian |   |
-| si | Sinhala |   |
-| sr | Serbian |   |
-| sk | Slovak |   |
-| te | Telugu |   |
-| th | Thai |   |
-| tr | Turkish |   |
-| ug | Uighur |   |
-| uk | Ukrainian |   |
-| ur | Urdu |   |
-| vi | Vietnamese |   |
-| zh | Chinese |   |
+| ar |  Arabic | 0% |
+| bn | Bengali | 3% |
+| bs | Bosnian | 0% |
+| cs | Czech | 0% |
+| de | German  | 100% |
+| el | Greek | 100% |
+| es | Spanish | 100% |
+| fr | French | 100% |
+| fil | Filipino | 100% |
+| he | Hebrew | 0% |
+| hr | Croatian | 100% |
+| it | Italian | 100% |
+| ja | Japanese | 100% |
+| ko | Korean | 100% |
+| lo | Lao | 100% |
+| ms | Malay | 7% |
+| nl | Dutch | 100% |
+| pt | Portuguese | 100% |
+| pl | Polish | 0% |
+| ro | Romanian | 100% |
+| ru | Russian | 100% |
+| sr | Serbian | 0% |
+| sk | Slovak | 0% |
+| te | Telugu | 0% |
+| th | Thai | 100% |
+| tr | Turkish | 100% |
+| uk | Ukrainian | 100% |
+| ur | Urdu | 0% |
+| vi | Vietnamese | 100% |
+| zh | Chinese | 100% |
 
 ## Implementation
 
