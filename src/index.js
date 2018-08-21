@@ -1,15 +1,10 @@
 import ContractService from './services/contract-service'
 import IpfsService from './services/ipfs-service'
 import { Attestations } from './resources/attestations'
-import Listings from './resources/listings'
 import Marketplace from './resources/marketplace'
-import Notifications from './resources/notifications'
-import Purchases from './resources/purchases'
-import Reviews from './resources/reviews'
 import Users from './resources/users'
 import Messaging from './resources/messaging'
 import fetch from 'cross-fetch'
-import store from 'store'
 
 const defaultBridgeServer = 'https://bridge.originprotocol.com'
 const defaultIpfsDomain = 'gateway.originprotocol.com'
@@ -51,38 +46,11 @@ class Origin {
       fetch
     })
 
-    this.purchases = new Purchases({
-      contractService: this.contractService,
-      ipfsService: this.ipfsService,
-      indexingServerUrl,
-      fetch
-    })
-
-    this.listings = new Listings({
-      purchases: this.purchases,
-      contractService: this.contractService,
-      ipfsService: this.ipfsService,
-      indexingServerUrl,
-      fetch
-    })
-
     this.marketplace = new Marketplace({
       contractService: this.contractService,
       ipfsService: this.ipfsService,
       indexingServerUrl,
       fetch
-    })
-
-    this.notifications = new Notifications({
-      listings: this.listings,
-      purchases: this.purchases,
-      contractService: this.contractService,
-      store
-    })
-
-    this.reviews = new Reviews({
-      contractService: this.contractService,
-      ipfsService: this.ipfsService
     })
 
     this.users = new Users({
