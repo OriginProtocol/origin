@@ -153,10 +153,7 @@ class Conversation extends Component {
     const el = this.conversationDiv.current
 
     if (el) {
-      // delay allows for listing summary to change conversation height
-      setTimeout(() => {
-        el.scrollTop = el.scrollHeight
-      }, 400)
+      el.scrollTop = el.scrollHeight
     }
   }
 
