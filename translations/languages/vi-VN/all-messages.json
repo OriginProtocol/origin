@@ -125,7 +125,7 @@
   "my-listing-card.confirmCloseListing": "Bạn có chắc rằng bạn muốn vĩnh viễn đóng danh sách này? Điều này bắt buộc phải hoàn thành.",
   "my-listing-card.ethereumCurrencyAbbrev": "ETH",
   "my-listing-card.soldOut": "Bán ra",
-  "my-listing-card.totalQuantity": "Total Quantity : {quantity}",
+  "my-listing-card.totalQuantity": "Tổng số lượng: {quantity}",
   "my-listing-card.closeListing": "Đóng danh sách",
   "my-listings.loading": "Đang tải...",
   "my-listings.no-listings": "Bạn chưa có bất kỳ danh sách nào.",
