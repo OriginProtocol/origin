@@ -124,8 +124,6 @@
   "messaging-provider.welcome": "Selamat datang di Demo Dapp Origin Protocol! Platform perpesanan inovatif kami memungkinkan Anda untuk berkomunikasi dengan pengguna Origin lainnya dengan cara yang aman dan terdesentralisasi. Semua pesan Anda akan dienkripsi dan disimpan di IPFS. Pesan hanya dapat dibaca oleh Anda, penerima, dan berpotensi arbitrator pihak ketiga jika salah satu dari Anda memulai perselisihan dan memberikan akses ke kunci pribadi yang dihasilkan secara kriptografi dan dibagikan.\n\nUntuk mengaktifkan perpesanan, Anda perlu menggunakan dompet Ethereum Anda untuk menandatangani dua pernyataan. Ini tidak akan dikenakan biaya ETH, Origin Token, atau gas.",
   "my-listing-card.confirmCloseListing": "Apakah Anda yakin ingin menutup listing ini secara permanen? Hal ini tidak dapat dibatalkan.",
   "my-listing-card.ethereumCurrencyAbbrev": "ETH",
-  "my-listing-card.soldOut": "Terjual habis",
-  "my-listing-card.totalQuantity": "Total Quantity : {quantity}",
   "my-listing-card.closeListing": "Tutup Listing",
   "my-listings.loading": "Memuat...",
   "my-listings.no-listings": "Anda belum mempunyai listing apapun.",
