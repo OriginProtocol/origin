@@ -43,18 +43,22 @@ Read our [development process](#contributing-email-development-process) and [com
 
 Getting your local environment running is easy with [Origin Box](https://github.com/OriginProtocol/origin-box). We recommend using this Docker container for any development or testing that involves running a local blockchain.
 
-We follow the [GitFlow](http://nvie.com/posts/a-successful-git-branching-model/) branching model for development. The latest merged code generally lives in the `develop` branch of each repository. Your development flow should look like:
+Our branching strategy is similar to [GitFlow](http://nvie.com/posts/a-successful-git-branching-model/), but we do all of our development in the `master` branch and have a `stable` branch for code that has been released.
 
-1. Find an interesting issue and communicate! Please let the `#engineering` [Discord](https://discord.gg/jyxpUSe) channel know what you want to work on
+![origin git branching model](https://user-images.githubusercontent.com/273937/44440088-78243780-a57b-11e8-9ecf-ec6c9490b302.jpeg)
+
+Your development flow should look like:
+
+1. Find an interesting issue and communicate! Please let the `#engineering` [Discord](https://discord.gg/jyxpUSe) channel know what you want to work on.
 1. Ping a [core team member](https://github.com/orgs/OriginProtocol/teams/contributors) member on Discord and ask to be added to our [contributors team](https://github.com/orgs/OriginProtocol/teams/contributors). Otherwise, you'll need to fork the relevant repository and push feature branches to your own fork.
-1. Add a comment to the issue or self-assign so we don't have multiple contributors unintentionally working on the same task
-1. Start with the `develop` branch and check out a new feature branch unless you're contributing to an existing feature
-1. Follow the appropriate [coding style](#contributing-email-coding-style) and write some awesome code
-1. Push your branch to the upstream repository (i.e. https://github.com/OriginProtocol/[repo]) so other contributors can easily work off of it if necessary
-1. Open a pull request to the `develop` branch, not `master`
-1. Please request a review in the PR by clicking on the gear icon next to "Reviewers" in the right column. 
+1. Add a comment to the issue or self-assign so we don't have multiple contributors unintentionally working on the same task.
+1. Start with the `master` branch and check out a new feature branch unless you're contributing to an existing feature.
+1. Follow the appropriate [coding style](#contributing-email-coding-style) and write some awesome code.
+1. Pull the latest commits from `master` and confirm that your code works with any other work that has been merged since you started.
+1. Push your branch to the upstream repository (i.e. https://github.com/OriginProtocol/[repo]) so that other contributors can easily work off of it if necessary.
+1. Please request a review in the PR by clicking on the gear icon next to "Reviewers" in the right column.
 
-Both the `develop` and `master` branches are locked so that only members of the [core team](https://github.com/orgs/OriginProtocol/teams/core) are able to merge your pull requests. Pull requests that are peer reviewed by other trusted contributors will be fast-tracked and merged faster! Check in the `#engineering` Discord channel for appropriate reviewers.
+Both the `master` and `stable` branches are locked so that only members of the [core team](https://github.com/orgs/OriginProtocol/teams/core) are able to merge your pull requests. Pull requests that are peer reviewed by other trusted contributors will be fast-tracked and merged faster! Check in the `#engineering` Discord channel for appropriate reviewers.
 
 ### Coding Style
 
