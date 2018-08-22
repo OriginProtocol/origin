@@ -124,8 +124,6 @@
   "messaging-provider.welcome": "ຍິນດີຕ້ອນຮັບກັບ Origin Demo Protocol Demo! ແພລະຕະຟອມຂໍ້ຄວາມໃຫມ່ຂອງພວກເຮົາອະນຸຍາດໃຫ້ທ່ານຕິດຕໍ່ສື່ສານກັບຜູ້ໃຊ້ຕົ້ນສະບັບອື່ນໃນວິທີທີ່ປອດໄພແລະຖືກແບ່ງປັນ. ທັງຫມົດຂອງຂໍ້ຄວາມຂອງທ່ານຈະຖືກເຂົ້າລະຫັດແລະເກັບໄວ້ໃນ IPFS. ຂໍ້ຄວາມສາມາດອ່ານໄດ້ໂດຍທ່ານຜູ້ຮັບແລະຜູ້ໄກ່ເກ່ຍຂອງຜູ້ອື່ນເທົ່ານັ້ນຖ້າຫາກວ່າທ່ານໃດກໍ່ເລີ່ມຂັດແຍ້ງແລະໃຫ້ເຂົ້າເຖິງລະຫັດລັບທີ່ຖືກສ້າງໂດຍລະຫັດລັບ, ທີ່ຖືກແບ່ງປັນ.\n\nເພື່ອໃຫ້ສາມາດສົ່ງຂໍ້ຄວາມໄດ້ທ່ານຈະຕ້ອງໃຊ້ຖົງ Ethereum ຂອງທ່ານເພື່ອເຊັນສອງຄໍາສັ່ງ. ນີ້ຈະບໍ່ມີລາຄາແພງ ETH, Origin Token, ຫຼືກ໊າຊ.",
   "my-listing-card.confirmCloseListing": "ທ່ານແນ່ໃຈວ່າທ່ານຕ້ອງການປິດລາຍຊື່ນີ້ຢ່າງຖາວອນ? ນີ້​ບໍ່​ສາ​ມາດ​ຍົກ​ເລີກ​ໄດ້.",
   "my-listing-card.ethereumCurrencyAbbrev": "ETH",
-  "my-listing-card.soldOut": "ຂາຍຫມົດ",
-  "my-listing-card.totalQuantity": "Total Quantity : {quantity}",
   "my-listing-card.closeListing": "Close Listing",
   "my-listings.loading": "ກໍາລັງໂຫລດ",
   "my-listings.no-listings": "ທ່ານບໍ່ມີລາຍຊື່ໃດໆເທື່ອ.",
