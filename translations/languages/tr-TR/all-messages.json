@@ -124,8 +124,6 @@
   "messaging-provider.welcome": "Origin Protokolü Demo DApp'a Hoş Geldiniz! Yenilikçi mesajlaşma platformumuz, diğer Origin kullanıcılarıyla güvenli ve merkezi olmayan bir şekilde iletişim kurmanızı sağlar. Tüm mesajlarınız IPFS'de şifrelenecek ve saklanacaktır. İletiler yalnızca sizin tarafınızdan, alıcı ve olası bir üçüncü taraf hakem tarafından bir anlaşmazlık başlatır ve kriptografik olarak oluşturulmuş, paylaşımlı, özel bir anahtara erişim izni verirse okunabilir.\n\nMesajlaşmayı etkinleştirmek için, iki ifadeyi imzalamak için Ethereum cüzdanınızı kullanmanız gerekecektir. Bu herhangi bir ETH, Origin Jetonu veya gaza mal olmayacaktır.",
   "my-listing-card.confirmCloseListing": "Bu girişi kalıcı olarak kapatmak istediğinizden emin misiniz? Bu geri alınamaz.",
   "my-listing-card.ethereumCurrencyAbbrev": "ETH",
-  "my-listing-card.soldOut": "Satıldı",
-  "my-listing-card.totalQuantity": "Total Quantity : {quantity}",
   "my-listing-card.closeListing": "İlanı Kapat",
   "my-listings.loading": "Yükleniyor...",
   "my-listings.no-listings": "Henüz bir ilanınız yok.",
