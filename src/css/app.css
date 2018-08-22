@@ -2358,9 +2358,12 @@ form .stars img {
   background-color: var(--pale-grey);
 }
 
+.messages-wrapper .no-gutters {
+  height: calc(100vh - 60px);
+}
+
 .no-gutters .conversation-col {
   background-color: white;
-  height: calc(100vh - 60px);
   padding: 0 10px 0;
 }
 
@@ -3473,10 +3476,6 @@ a:not([href]):not([tabindex]).span-link {
 
   .messages-wrapper > .container {
     flex: 1;
-  }
-
-  .messages-wrapper > .container > .row {
-    height: 100%;
   }
 
   .no-gutters .conversation-col {
