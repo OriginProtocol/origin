@@ -23,13 +23,20 @@ export function getListingIds() {
 
     try {
       const networkId = await origin.contractService.web3.eth.net.getId()
-      const someContractsPresent = await origin.contractService.marketplaceContractsFound()
+      const { allContractsPresent, someContractsPresent } = await origin.contractService.marketplaceContractsFound()
+
       if (!someContractsPresent) {
         dispatch({
           type: ListingConstants.FETCH_IDS_ERROR,
           contractFound: false
         })
         return
+      }
+
+      if (!allContractsPresent) {
+        const message = 'Not all listing contracts were found.'
+        dispatch(showAlert(message))
+        console.error(message)
       }
 
       if (inProductionEnv && networkId < 10) {
@@ -52,6 +59,7 @@ export function getListingIds() {
       dispatch(showAlert(error.message))
       dispatch({
         type: ListingConstants.FETCH_IDS_ERROR,
+        // (micah) I don't think we currently handle this property
         error: error.message
       })
     }
