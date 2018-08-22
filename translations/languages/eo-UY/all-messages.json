@@ -124,8 +124,6 @@
   "messaging-provider.welcome": "Bonvenon al la Originala Protokolo Demo DApp! Nia pionira platformo de mesaĝoj permesas komuniki vin kun aliaj Originaj uzantoj en sekura kaj malcentralizita maniero. Ĉiuj viaj mesaĝoj estos koditaj kaj konservitaj en IPFS. Mesaĝoj nur povas esti legataj de vi, la ricevanto kaj eble potenca arbitraciisto, se iu el vi komencos disputon kaj donas aliron al kripta generita, dividita privata ŝlosilo.\n\nPor ebligi mesaĝadon vi devos uzi vian Ethereum-monujon por subskribi du deklarojn. Ĉi tio ne kostos neniun ETH, Origin Token aŭ gason.",
   "my-listing-card.confirmCloseListing": "Ĉu vi certas, ke vi volas konstante fermi ĉi tiun liston? Ĉi tio ne povas malŝpari.",
   "my-listing-card.ethereumCurrencyAbbrev": "ETH",
-  "my-listing-card.soldOut": "Elvendita",
-  "my-listing-card.totalQuantity": "Total Quantity : {quantity}",
   "my-listing-card.closeListing": "Fermi Listo",
   "my-listings.loading": "Ŝarĝante ...",
   "my-listings.no-listings": "Vi ankoraŭ ne havas listojn.",
