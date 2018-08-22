@@ -124,8 +124,6 @@
   "messaging-provider.welcome": "Vítejte v demo protokolu DApp! Naše nová platforma pro zasílání zpráv vám umožňuje bezpečně a decentralizovaně komunikovat s dalšími uživateli původu. Všechny vaše zprávy budou šifrovány a uloženy na IPFS. Zprávy mohou číst pouze vy, příjemce a případně rozhodce třetí strany, pokud některý z vás iniciuje spor a udělí přístup ke kryptograficky generovanému, sdílenému soukromému klíči.\n\nChcete-li povolit zasílání zpráv, budete potřebovat použít svou peněženku Ethereum k podepisování dvou příkazů. To nebude stát žádný ETH, token původu nebo plyn.",
   "my-listing-card.confirmCloseListing": "Opravdu chcete tento zápis trvale ukončit? To nelze vrátit zpět.",
   "my-listing-card.ethereumCurrencyAbbrev": "ETH",
-  "my-listing-card.soldOut": "Vyprodáno",
-  "my-listing-card.totalQuantity": "Total Quantity : {quantity}",
   "my-listing-card.closeListing": "Zavřít záznam",
   "my-listings.loading": "Načítání...",
   "my-listings.no-listings": "Nemáte dosud žádné záznamy.",
