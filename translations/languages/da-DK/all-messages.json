@@ -124,8 +124,6 @@
   "messaging-provider.welcome": "Velkommen til Origin Protocol Demo DApp! Vores innovative messaging platform giver dig mulighed for at kommunikere med andre Origin brugere på en sikker og decentral måde. Alle dine meddelelser bliver krypteret og gemt på IPFS. Meddelelser kan kun læses af dig, modtageren og eventuelt en tredjeparts voldgiftsmand, hvis en af ​​jer indleder en tvist og giver adgang til en kryptografisk genereret, delt privat nøgle.\n\nFor at aktivere messaging skal du bruge din Ethereum-tegnebog til at underskrive to udsagn. Dette vil ikke koste nogen ETH, Origin Token eller gas.",
   "my-listing-card.confirmCloseListing": "Er du sikker på at du vil lukke denne fortegnelse permanent? Dette kan ikke fortrydes.",
   "my-listing-card.ethereumCurrencyAbbrev": "ETH",
-  "my-listing-card.soldOut": "Udsolgt",
-  "my-listing-card.totalQuantity": "Total Quantity : {quantity}",
   "my-listing-card.closeListing": "Luk liste",
   "my-listings.loading": "Indlæser...",
   "my-listings.no-listings": "Du har ingen annoncer endnu.",
