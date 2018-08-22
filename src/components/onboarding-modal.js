@@ -35,13 +35,36 @@ class OnboardingModal extends Component {
   }
 
   changeStep(currentStep) {
-    this.setState({ currentStep });
+    this.setState({ currentStep })
+  }
+
+  nextStep() {
+    const { currentStep, steps } = this.state
+    const firstIncompleteStep = steps.find((step) => !step.complete)
+
+    if (!firstIncompleteStep) return
+
+    const updateSteps = (step) => {
+      if (step === firstIncompleteStep) {
+        return {...step, complete: true}
+      }
+      return step
+    }
+
+    this.setState((state) => ({
+      ...state,
+      steps: steps.map(updateSteps)
+    }))
   }
 
   render() {
-    const { currentStep } = this.state;
+    const { currentStep, steps } = this.state
 
-    const selected = (p) => p === currentStep ? 'selected' : '';
+    const selected = (name) => {
+      const firstIncompleteStep = steps.find((step) => !step.complete)
+      if (!firstIncompleteStep) return
+      return firstIncompleteStep.name === name && 'selected'
+    }
 
     return (
       <div
@@ -56,10 +79,7 @@ class OnboardingModal extends Component {
             <div className="row">
               <div className="flex-column col-4 text-left left-panel">
                 { steps.map(({name, description}, i) => (
-                  <div key={name}
-                    className={`content ${selected(i)}`}
-                    onClick={() => this.changeStep(i)}
-                  >
+                  <div key={name} className={`content ${selected(name)}`}>
                     <div className="oval rounded-circle"> </div>
                     <span>{name}</span>
                     <p className="text-muted">{description}</p>
@@ -81,7 +101,7 @@ class OnboardingModal extends Component {
                     Payment for goods and services on the Origin DApp are always
                     made in ETH
                   </p>
-                  <button className='btn btn-primary'>Connect a Wallet</button>
+                  <button className='btn btn-primary' onClick={() => this.nextStep()}>Connect a Wallet</button>
                 </div>
               </div>
             </div>
