@@ -78,7 +78,7 @@ class OnboardingModal extends Component {
                     Payment for goods and services on the Origin DApp are always
                     made in ETH
                   </p>
-                  <button className='btn'>Connect a Wallet</button>
+                  <button className='btn btn-primary'>Connect a Wallet</button>
                 </div>
               </div>
             </div>
