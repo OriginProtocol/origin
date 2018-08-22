@@ -124,8 +124,6 @@
   "messaging-provider.welcome": "Benvenuti nel protocollo di origine Demo DApp! La nostra innovativa piattaforma di messaggistica ti consente di comunicare con altri utenti Origin in modo sicuro e decentralizzato. Tutti i tuoi messaggi saranno crittografati e archiviati su IPFS. I messaggi possono essere letti solo da te, dal destinatario e potenzialmente da un arbitro di terze parti se uno di voi avvia una controversia e concede l'accesso a una chiave privata, condivisa e crittografata.\n\nPer abilitare la messaggistica è necessario utilizzare il proprio portafoglio Ethereum per firmare due dichiarazioni. Questo non costerà alcun ETH, Token di origine o gas.",
   "my-listing-card.confirmCloseListing": "Sei sicuro di voler chiudere definitivamente questo annuncio? Questo non può essere annullato.",
   "my-listing-card.ethereumCurrencyAbbrev": "ETH",
-  "my-listing-card.soldOut": "Sold Out",
-  "my-listing-card.totalQuantity": "Total Quantity : {quantity}",
   "my-listing-card.closeListing": "Chiudi l'annuncio",
   "my-listings.loading": "Caricamento...",
   "my-listings.no-listings": "Non hai ancora inserzioni.",
