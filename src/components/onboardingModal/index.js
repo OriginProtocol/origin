@@ -88,7 +88,10 @@ class OnboardingModal extends Component {
                   </div>
                 ))}
               </div>
-              <RightPanel displayNextStep={this.displayNextStep} currentStep={currentStep}/>
+              <RightPanel
+                displayNextStep={this.displayNextStep}
+                currentStep={currentStep}
+              />
             </div>
           </div>
         </div>

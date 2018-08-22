@@ -6,7 +6,7 @@ export default class RightPanel extends Component {
     const {img, heading, content, name} = currentStep
     const overviewButton = <button className='btn btn-primary' onClick={displayNextStep}>Connect a Wallet</button>
     const buttons = {
-      Overview: [<button key={name} className='btn btn-primary' onClick={displayNextStep}>Connect a Wallet</button>]
+      Overview: [<button key={'first-btn'} className='btn btn-primary' onClick={displayNextStep}>Connect a Wallet</button>]
     }
 
     return(
