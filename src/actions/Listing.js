@@ -18,14 +18,13 @@ export function getListingIds() {
     dispatch({ type: ListingConstants.FETCH_IDS })
 
     let hideList = []
-    const { web3, listingsRegistryContract } = origin.contractService
     const inProductionEnv =
       window.location.hostname === 'demo.originprotocol.com'
 
     try {
-      const networkId = await web3.eth.net.getId()
-      const contractFound = listingsRegistryContract.networks[networkId]
-      if (!contractFound) {
+      const networkId = await origin.contractService.web3.eth.net.getId()
+      const {allContractsPresent, someContractsPresent} = await origin.contractService.marketplaceContractsFound()
+      if (!someContractsPresent) {
         dispatch({
           type: ListingConstants.FETCH_IDS_ERROR,
           contractFound: false
