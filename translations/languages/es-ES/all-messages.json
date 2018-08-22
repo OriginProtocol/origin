@@ -124,8 +124,6 @@
   "messaging-provider.welcome": "Bienvenido a la aplicación de demostración del protocolo de origen. Nuestra innovadora plataforma de mensajería le permite comunicarse con otros usuarios de Origin de una manera segura y descentralizada. Todos sus mensajes serán encriptados y almacenados en IPFS. Los mensajes solo pueden ser leídos por usted, el destinatario y potencialmente un tercero árbitro si alguno de ustedes inicia una disputa y concede acceso a una clave privada compartida y criptográficamente compartida.\n\nPara habilitar la mensajería, deberá usar su billetera Ethereum para firmar dos estados. Esto no le costará ETH, Token de origen o gas.",
   "my-listing-card.confirmCloseListing": "¿Está seguro que desea cerrar permanentemente el listado? Esta acción no se puede deshacer.",
   "my-listing-card.ethereumCurrencyAbbrev": "ETH",
-  "my-listing-card.soldOut": "Agotado",
-  "my-listing-card.totalQuantity": "Total Quantity : {quantity}",
   "my-listing-card.closeListing": "Cerrar Listado",
   "my-listings.loading": "Cargando...",
   "my-listings.no-listings": "Todavía no tienes ningun anuncio.",
