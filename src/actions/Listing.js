@@ -23,7 +23,7 @@ export function getListingIds() {
 
     try {
       const networkId = await origin.contractService.web3.eth.net.getId()
-      const { allContractsPresent, someContractsPresent } = await origin.contractService.marketplaceContractsFound()
+      const someContractsPresent = await origin.contractService.marketplaceContractsFound()
       if (!someContractsPresent) {
         dispatch({
           type: ListingConstants.FETCH_IDS_ERROR,
