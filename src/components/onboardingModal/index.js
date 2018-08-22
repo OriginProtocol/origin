@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
 import $ from 'jquery'
 
-const steps = [
-  {name: 'Overview', description: 'How to start selling on the Origin DApp', complete: false},
-  {name: 'Connect Wallet', description: 'Connect your wallet to start selling', complete: false},
-  {name: 'Get Origin Tokens', description: 'Connect your wallet to start selling', complete: false}
-]
+import RightPanel from './right-panel'
+import steps from './steps'
 
 class OnboardingModal extends Component {
   constructor(props) {
     super(props)
-    this.state = {steps, currentStep: 0}
+    this.state = {steps, currentStep: steps[0]}
+
+    this.displayNextStep = this.displayNextStep.bind(this)
   }
 
   componentDidMount() {
@@ -38,12 +37,14 @@ class OnboardingModal extends Component {
     this.setState({ currentStep })
   }
 
-  nextStep() {
-    const { currentStep, steps } = this.state
+  displayNextStep() {
+    const { currentStep, steps=[] } = this.state
     const firstIncompleteStep = steps.find((step) => !step.complete)
 
     if (!firstIncompleteStep) return
 
+    const currentIndex = steps.indexOf(currentStep)
+    const displayNextStep = steps[currentIndex+1]
     const updateSteps = (step) => {
       if (step === firstIncompleteStep) {
         return {...step, complete: true}
@@ -53,7 +54,8 @@ class OnboardingModal extends Component {
 
     this.setState((state) => ({
       ...state,
-      steps: steps.map(updateSteps)
+      steps: steps.map(updateSteps),
+      currentStep: displayNextStep
     }))
   }
 
@@ -78,7 +80,7 @@ class OnboardingModal extends Component {
           <div className="modal-content d-flex">
             <div className="row">
               <div className="flex-column col-4 text-left left-panel">
-                { steps.map(({name, description}, i) => (
+                { steps && steps.map(({name, description}, i) => (
                   <div key={name} className={`content ${selected(name)}`}>
                     <div className="oval rounded-circle"> </div>
                     <span>{name}</span>
@@ -86,24 +88,7 @@ class OnboardingModal extends Component {
                   </div>
                 ))}
               </div>
-              <div className="flex-column col-8 right-panel">
-                <div className="text-right">
-                  <img src="/images/close-icon.svg" alt="close-icon" />
-                </div>
-                <img src="/images/eth-tokens.svg" alt="eth-tokens" />
-                <div>
-                  <h3>Selling on the Origin DApp</h3>
-                  <p>
-                    In order to sell on the Origin DApp, you will need to connect
-                    a wallet in order to accept payment in ETH
-                  </p>
-                  <p>
-                    Payment for goods and services on the Origin DApp are always
-                    made in ETH
-                  </p>
-                  <button className='btn btn-primary' onClick={() => this.nextStep()}>Connect a Wallet</button>
-                </div>
-              </div>
+              <RightPanel displayNextStep={this.displayNextStep} currentStep={currentStep}/>
             </div>
           </div>
         </div>
