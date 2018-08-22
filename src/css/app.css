@@ -1337,8 +1337,9 @@ a:hover {
   padding: 10px;
 }
 
-.onboarding-modal .left-panel div .selected {
-  background-color: var(--dark-grey-blue);
+.onboarding-modal .selected,
+.onboarding-modal .right-panel {
+  background-color: #2e3f53;
 }
 
 .onboarding-modal .oval {
