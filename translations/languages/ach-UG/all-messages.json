@@ -124,8 +124,6 @@
   "messaging-provider.welcome": "crwdns2513:0crwdne2513:0",
   "my-listing-card.confirmCloseListing": "crwdns2514:0crwdne2514:0",
   "my-listing-card.ethereumCurrencyAbbrev": "crwdns2515:0crwdne2515:0",
-  "my-listing-card.soldOut": "crwdns2516:0crwdne2516:0",
-  "my-listing-card.totalQuantity": "crwdns2517:0{quantity}crwdne2517:0",
   "my-listing-card.closeListing": "crwdns2518:0crwdne2518:0",
   "my-listings.loading": "crwdns2519:0crwdne2519:0",
   "my-listings.no-listings": "crwdns2520:0crwdne2520:0",
