@@ -21,16 +21,16 @@ class EditProfile extends Component {
     this.intlMessages = defineMessages({
       descriptionPlaceholder: {
         id: 'EditProfile.descriptionPlaceholder',
-        defaultMessage: 'Tell us a little something about yourself',
+        defaultMessage: 'Tell us a little something about yourself'
       },
       firstNamePlaceholder: {
         id: 'EditProfile.firstNamePlaceholder',
-        defaultMessage: 'Your First Name',
+        defaultMessage: 'Your First Name'
       },
       lastNamePlaceholder: {
         id: 'EditProfile.lastNamePlaceholder',
-        defaultMessage: 'Your Last Name',
-      },
+        defaultMessage: 'Your Last Name'
+      }
     })
   }
 
@@ -43,9 +43,11 @@ class EditProfile extends Component {
   }
 
   blobToDataURL(blob) {
-    return new Promise((resolve) => {
-      let a = new FileReader()
-      a.onload = function(e) {resolve(e.target.result)}
+    return new Promise(resolve => {
+      const a = new FileReader()
+      a.onload = function(e) {
+        resolve(e.target.result)
+      }
       a.readAsDataURL(blob)
     })
   }
@@ -57,23 +59,23 @@ class EditProfile extends Component {
       <Modal isOpen={open} data-modal="profile" handleToggle={handleToggle}>
         <h2>
           <FormattedMessage
-            id={ 'EditProfile.editProfileHeading' }
-            defaultMessage={ 'Edit Profile' }
+            id={'EditProfile.editProfileHeading'}
+            defaultMessage={'Edit Profile'}
           />
         </h2>
         <form
           onSubmit={async e => {
             e.preventDefault()
-            var data = {
+            const data = {
               firstName: this.state.firstName,
               lastName: this.state.lastName,
               description: this.state.description
             }
             if (this.state.picChanged) {
-              let canvas = this.imageEditor.getImage().toDataURL()
-              let res = await fetch(canvas)
-              let blob = await res.blob()
-              let resized = await readAndCompressImage(blob, {
+              const canvas = this.imageEditor.getImage().toDataURL()
+              const res = await fetch(canvas)
+              const blob = await res.blob()
+              const resized = await readAndCompressImage(blob, {
                 quality: 1,
                 maxWidth: 500,
                 maxHeight: 500
@@ -91,7 +93,7 @@ class EditProfile extends Component {
                     <div className="avatar-container">
                       <AvatarEditor
                         ref={r => (this.imageEditor = r)}
-                        image={this.state.pic || "images/avatar-unnamed.svg"}
+                        image={this.state.pic || 'images/avatar-unnamed.svg'}
                         width={140}
                         height={140}
                         border={20}
@@ -123,8 +125,8 @@ class EditProfile extends Component {
                 <div className="form-group">
                   <label htmlFor="first-name">
                     <FormattedMessage
-                      id={ 'EditProfile.firstName' }
-                      defaultMessage={ 'First Name' }
+                      id={'EditProfile.firstName'}
+                      defaultMessage={'First Name'}
                     />
                   </label>
                   <input
@@ -136,14 +138,16 @@ class EditProfile extends Component {
                     onChange={e =>
                       this.setState({ firstName: e.currentTarget.value })
                     }
-                    placeholder={intl.formatMessage(this.intlMessages.firstNamePlaceholder)}
+                    placeholder={intl.formatMessage(
+                      this.intlMessages.firstNamePlaceholder
+                    )}
                   />
                 </div>
                 <div className="form-group">
                   <label htmlFor="last-name">
                     <FormattedMessage
-                      id={ 'EditProfile.lastName' }
-                      defaultMessage={ 'Last Name' }
+                      id={'EditProfile.lastName'}
+                      defaultMessage={'Last Name'}
                     />
                   </label>
                   <input
@@ -155,7 +159,9 @@ class EditProfile extends Component {
                     onChange={e =>
                       this.setState({ lastName: e.currentTarget.value })
                     }
-                    placeholder={intl.formatMessage(this.intlMessages.lastNamePlaceholder)}
+                    placeholder={intl.formatMessage(
+                      this.intlMessages.lastNamePlaceholder
+                    )}
                   />
                 </div>
               </div>
@@ -163,8 +169,8 @@ class EditProfile extends Component {
                 <div className="form-group">
                   <label htmlFor="description">
                     <FormattedMessage
-                      id={ 'EditProfile.description' }
-                      defaultMessage={ 'Description' }
+                      id={'EditProfile.description'}
+                      defaultMessage={'Description'}
                     />
                   </label>
                   <textarea
@@ -176,34 +182,34 @@ class EditProfile extends Component {
                     onChange={e =>
                       this.setState({ description: e.currentTarget.value })
                     }
-                    placeholder={intl.formatMessage(this.intlMessages.descriptionPlaceholder)}
+                    placeholder={intl.formatMessage(
+                      this.intlMessages.descriptionPlaceholder
+                    )}
                   />
                 </div>
               </div>
               <div className="col-12">
                 <div className="explanation text-center">
                   <FormattedMessage
-                    id={ 'EditProfile.publicDataNotice' }
-                    defaultMessage={ 'This information will be published on the blockchain and will be visible to everyone.' }
+                    id={'EditProfile.publicDataNotice'}
+                    defaultMessage={
+                      'This information will be published on the blockchain and will be visible to everyone.'
+                    }
                   />
                 </div>
                 <div className="button-container d-flex justify-content-center">
                   <button type="submit" className="btn btn-clear">
                     <FormattedMessage
-                      id={ 'EditProfile.continue' }
-                      defaultMessage={ 'Continue' }
+                      id={'EditProfile.continue'}
+                      defaultMessage={'Continue'}
                     />
                   </button>
                 </div>
                 <div className="link-container text-center">
-                  <a
-                    href="#"
-                    data-modal="profile"
-                    onClick={handleToggle}
-                  >
+                  <a href="#" data-modal="profile" onClick={handleToggle}>
                     <FormattedMessage
-                      id={ 'EditProfile.cancel' }
-                      defaultMessage={ 'Cancel' }
+                      id={'EditProfile.cancel'}
+                      defaultMessage={'Cancel'}
                     />
                   </a>
                 </div>

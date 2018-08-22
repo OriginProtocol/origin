@@ -1,15 +1,15 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 
-const NotFound = (props) => {
+const NotFound = () => {
   return (
     <div className="container">
       <div className="row">
         <div className="col-12">
           <h1 className="error-page-header">
             <FormattedMessage
-              id={ 'not-found.heading' }
-              defaultMessage={ 'How did I get here?' }
+              id={'not-found.heading'}
+              defaultMessage={'How did I get here?'}
             />
           </h1>
         </div>
@@ -18,8 +18,10 @@ const NotFound = (props) => {
         <div className="col-12 col-md-6">
           <div className="indented">
             <FormattedMessage
-              id={ 'not-found.content' }
-              defaultMessage={ 'The page you’re looking for is no longer here, maybe it was never here in the first place. In any case, we sincerely apologize if it’s us and we forgive you if it’s you :)' }
+              id={'not-found.content'}
+              defaultMessage={
+                'The page you’re looking for is no longer here, maybe it was never here in the first place. In any case, we sincerely apologize if it’s us and we forgive you if it’s you :)'
+              }
             />
           </div>
         </div>

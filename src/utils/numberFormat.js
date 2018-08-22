@@ -4,7 +4,7 @@ export default function numberFormat(number, dec, dsep, tsep) {
   number = number.toFixed(~~dec)
   tsep = typeof tsep == 'string' ? tsep : ','
 
-  var parts = number.split('.'),
+  const parts = number.split('.'),
     fnums = parts[0],
     decimals = parts[1] ? (dsep || '.') + parts[1] : ''
 

@@ -11,10 +11,6 @@ import ConversationListItem from 'components/conversation-list-item'
 
 import groupByArray from 'utils/groupByArray'
 
-import origin from '../../services/origin'
-
-const ONE_SECOND = 1000
-
 class MessagesDropdown extends Component {
   constructor(props) {
     super(props)
@@ -33,7 +29,9 @@ class MessagesDropdown extends Component {
   componentDidUpdate() {
     const { history, messages, messagingDismissed } = this.props
     const isOnMessagingRoute = !!history.location.pathname.match(/^\/messages/)
-    const hasNewUnreadMessage = messages.find(m => m.created > messagingDismissed)
+    const hasNewUnreadMessage = messages.find(
+      m => m.created > messagingDismissed
+    )
     const dropdownHidden = !$('.messages.dropdown').hasClass('show')
 
     if (!isOnMessagingRoute && hasNewUnreadMessage && dropdownHidden) {
@@ -51,58 +49,82 @@ class MessagesDropdown extends Component {
 
     return (
       <div className="nav-item messages dropdown">
-        <a className="nav-link active dropdown-toggle" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {!!conversations.length &&
-            <div className="unread-indicator"></div>
-          }
-          {!messagingEnabled &&
-            <div className="disabled-indicator"></div>
-          }
-          <img src="images/messages-icon.svg" className="messages" alt="Messages" />
-          <img src="images/messages-icon-selected.svg" className="messages selected" alt="Messages" />
+        <a
+          className="nav-link active dropdown-toggle"
+          id="messagesDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          {!!conversations.length && <div className="unread-indicator" />}
+          {!messagingEnabled && <div className="disabled-indicator" />}
+          <img
+            src="images/messages-icon.svg"
+            className="messages"
+            alt="Messages"
+          />
+          <img
+            src="images/messages-icon-selected.svg"
+            className="messages selected"
+            alt="Messages"
+          />
         </a>
-        <div className="dropdown-menu dropdown-menu-right" aria-labelledby="messagesDropdown">
+        <div
+          className="dropdown-menu dropdown-menu-right"
+          aria-labelledby="messagesDropdown"
+        >
           <div className="triangle-container d-flex justify-content-end">
-            <div className="triangle"></div>
+            <div className="triangle" />
           </div>
           <div className="actual-menu">
             <header className="d-flex">
               <div className="count">
-                <div className="d-inline-block">
-                  {messages.length}
-                </div>
+                <div className="d-inline-block">{messages.length}</div>
               </div>
               <h3>
-                {messages.length === 1 &&
+                {messages.length === 1 && (
                   <FormattedMessage
-                    id={ 'messagesDropdown.messageHeading' }
-                    defaultMessage={ 'Unread Message' }
+                    id={'messagesDropdown.messageHeading'}
+                    defaultMessage={'Unread Message'}
                   />
-                }
-                {messages.length !== 1 &&
+                )}
+                {messages.length !== 1 && (
                   <FormattedMessage
-                    id={ 'messagesDropdown.messagesHeading' }
-                    defaultMessage={ 'Unread Messages' }
+                    id={'messagesDropdown.messagesHeading'}
+                    defaultMessage={'Unread Messages'}
                   />
-                }
+                )}
               </h3>
-              {!messagingEnabled &&
-                <button className="btn btn-sm btn-primary d-none d-md-block ml-auto" onClick={enableMessaging}>
+              {!messagingEnabled && (
+                <button
+                  className="btn btn-sm btn-primary d-none d-md-block ml-auto"
+                  onClick={enableMessaging}
+                >
                   <FormattedMessage
-                    id={ 'messages.enable' }
-                    defaultMessage={ 'Enable Messaging' }
+                    id={'messages.enable'}
+                    defaultMessage={'Enable Messaging'}
                   />
                 </button>
-              }
+              )}
             </header>
             <div className="messages-list">
-              {conversations.map(c => <ConversationListItem key={c.key} conversation={c} active={false} handleConversationSelect={() => history.push(`/messages/${c.key}`)} />)}
+              {conversations.map(c => (
+                <ConversationListItem
+                  key={c.key}
+                  conversation={c}
+                  active={false}
+                  handleConversationSelect={() =>
+                    history.push(`/messages/${c.key}`)
+                  }
+                />
+              ))}
             </div>
             <Link to="/messages" onClick={this.handleClick}>
               <footer>
                 <FormattedMessage
-                  id={ 'messagesDropdown.viewAll' }
-                  defaultMessage={ 'View All' }
+                  id={'messagesDropdown.viewAll'}
+                  defaultMessage={'View All'}
                 />
               </footer>
             </Link>
@@ -119,13 +141,18 @@ const mapStateToProps = state => {
     messagingEnabled: state.app.messagingEnabled,
     messages: state.messages.filter(({ senderAddress, status }) => {
       return status === 'unread' && senderAddress !== state.app.web3.account
-    }),
+    })
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   dismissMessaging: () => dispatch(dismissMessaging()),
-  enableMessaging: () => dispatch(enableMessaging()),
+  enableMessaging: () => dispatch(enableMessaging())
 })
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MessagesDropdown))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(MessagesDropdown)
+)

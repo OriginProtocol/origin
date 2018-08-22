@@ -23,12 +23,12 @@ class VerifyPhone extends Component {
     this.intlMessages = defineMessages({
       phoneVerificationCodePlaceholder: {
         id: 'VerifyPhone.phoneVerificationCodePlaceholder',
-        defaultMessage: 'Verification code',
+        defaultMessage: 'Verification code'
       },
       phoneVerificationNumberPlaceholder: {
         id: 'VerifyPhone.phoneVerificationNumberPlaceholder',
-        defaultMessage: 'Area code and phone number',
-      },
+        defaultMessage: 'Area code and phone number'
+      }
     })
 
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -41,37 +41,44 @@ class VerifyPhone extends Component {
     e.preventDefault()
     this.clearErrors()
 
-    const { countryCallingCode, mode, phone, verificationCode, verificationMethod } = this.state
+    const {
+      countryCallingCode,
+      mode,
+      phone,
+      verificationCode,
+      verificationMethod
+    } = this.state
 
     const phoneObj = {
       countryCallingCode,
-      phone: String(phone),
+      phone: String(phone)
     }
 
     try {
       if (mode === 'phone') {
         await origin.attestations.phoneGenerateCode({
           ...phoneObj,
-          method: verificationMethod,
+          method: verificationMethod
         })
         // Update mode to display verification code input form
         this.setState({ mode: 'code' })
       } else if (mode === 'code') {
         const phoneAttestation = await origin.attestations.phoneVerify({
           ...phoneObj,
-          code: verificationCode,
+          code: verificationCode
         })
 
         this.props.onSuccess(phoneAttestation)
       }
     } catch (exception) {
       const errorsJson = JSON.parse(exception).errors
-        
-      if (Array.isArray(errorsJson)) // Service exceptions
+
+      if (Array.isArray(errorsJson))
+        // Service exceptions
         this.setState({ generalErrors: errorsJson })
-      else // Form exception
-        this.setState({ formErrors: errorsJson })
-    }  
+      // Form exception
+      else this.setState({ formErrors: errorsJson })
+    }
   }
 
   setSelectedCountry(country) {
@@ -107,34 +114,30 @@ class VerifyPhone extends Component {
         <form onSubmit={this.handleSubmit}>
           <h2>
             <FormattedMessage
-              id={ 'VerifyPhone.verifyPhoneHeading' }
-              defaultMessage={ 'Verify Your Phone Number' }
+              id={'VerifyPhone.verifyPhoneHeading'}
+              defaultMessage={'Verify Your Phone Number'}
             />
           </h2>
-          {this.state.generalErrors.length > 0 &&
+          {this.state.generalErrors.length > 0 && (
             <div className="general-error">
               {this.state.generalErrors.join(' ')}
             </div>
-          }
+          )}
           {this.state.mode === 'phone' && this.renderPhoneForm()}
           {this.state.mode === 'code' && this.renderCodeForm()}
           <div className="button-container">
             <button type="submit" className="btn btn-clear">
               <FormattedMessage
-                id={ 'VerifyPhone.continue' }
-                defaultMessage={ 'Continue' }
+                id={'VerifyPhone.continue'}
+                defaultMessage={'Continue'}
               />
             </button>
           </div>
           <div className="link-container">
-            <a
-              href="#"
-              data-modal="phone"
-              onClick={this.onCancel}
-            >
+            <a href="#" data-modal="phone" onClick={this.onCancel}>
               <FormattedMessage
-                id={ 'VerifyPhone.cancel' }
-                defaultMessage={ 'Cancel' }
+                id={'VerifyPhone.cancel'}
+                defaultMessage={'Cancel'}
               />
             </a>
           </div>
@@ -163,40 +166,56 @@ class VerifyPhone extends Component {
     return (
       <div className="form-group">
         <label htmlFor="phoneNumber">
-          {this.state.verificationMethod === 'sms' &&
+          {this.state.verificationMethod === 'sms' && (
             <div>
               <FormattedMessage
-                id={ 'VerifyPhone.enterPhoneNumberSms' }
-                defaultMessage={ 'Enter your phone number below and {originId} will send you a verification code via SMS.' }
-                values={{ originId: <span>Origin<sup>ID</sup></span> }}
+                id={'VerifyPhone.enterPhoneNumberSms'}
+                defaultMessage={
+                  'Enter your phone number below and {originId} will send you a verification code via SMS.'
+                }
+                values={{
+                  originId: (
+                    <span>
+                      Origin<sup>ID</sup>
+                    </span>
+                  )
+                }}
               />
               <div>
-                <a href="#" onClick={ this.toggleVerificationMethod }>
+                <a href="#" onClick={this.toggleVerificationMethod}>
                   <FormattedMessage
-                    id={ 'VerifyPhone.callOption' }
-                    defaultMessage={ 'Prefer a call?' }
+                    id={'VerifyPhone.callOption'}
+                    defaultMessage={'Prefer a call?'}
                   />
                 </a>
               </div>
             </div>
-          }
-          { this.state.verificationMethod === 'call' &&
+          )}
+          {this.state.verificationMethod === 'call' && (
             <div>
               <FormattedMessage
-                id={ 'VerifyPhone.enterPhoneNumberCall' }
-                defaultMessage={ 'Enter your phone number below and {originId} will call you with a verification code.' }
-                values={{ originId: <span>Origin<sup>ID</sup></span> }}
+                id={'VerifyPhone.enterPhoneNumberCall'}
+                defaultMessage={
+                  'Enter your phone number below and {originId} will call you with a verification code.'
+                }
+                values={{
+                  originId: (
+                    <span>
+                      Origin<sup>ID</sup>
+                    </span>
+                  )
+                }}
               />
               <div>
-                <a href="#" onClick={ this.toggleVerificationMethod }>
+                <a href="#" onClick={this.toggleVerificationMethod}>
                   <FormattedMessage
-                    id={ 'VerifyPhone.smsOption' }
-                    defaultMessage={ 'Prefer a SMS?' }
+                    id={'VerifyPhone.smsOption'}
+                    defaultMessage={'Prefer a SMS?'}
                   />
                 </a>
               </div>
             </div>
-          }
+          )}
         </label>
         <div className="d-flex">
           <div className="country-code dropdown">
@@ -215,7 +234,7 @@ class VerifyPhone extends Component {
               />
             </div>
             <div className="dropdown-menu">
-              <CountryOptions setSelectedCountry={ this.setSelectedCountry } />
+              <CountryOptions setSelectedCountry={this.setSelectedCountry} />
             </div>
           </div>
           <div className={`form-control-wrap ${phoneErrors ? 'error' : ''}`}>
@@ -228,22 +247,24 @@ class VerifyPhone extends Component {
               onChange={e => {
                 this.setState({ phone: e.target.value })
               }}
-              placeholder={this.props.intl.formatMessage(this.intlMessages.phoneVerificationNumberPlaceholder)}
+              placeholder={this.props.intl.formatMessage(
+                this.intlMessages.phoneVerificationNumberPlaceholder
+              )}
               pattern="\d+"
               title="Numbers only"
               required
             />
-            {phoneErrors &&
-              <div className="error_message">
-                {phoneErrors.join(' ')}
-              </div>
-            }
+            {phoneErrors && (
+              <div className="error_message">{phoneErrors.join(' ')}</div>
+            )}
           </div>
         </div>
         <div className="explanation">
-           <FormattedMessage
-            id={ 'VerifyPhone.phoneNumberNotPublished' }
-            defaultMessage={ 'Other users will know that you have a verified phone number. Your actual phone number will not be published on the blockchain.' }
+          <FormattedMessage
+            id={'VerifyPhone.phoneNumberNotPublished'}
+            defaultMessage={
+              'Other users will know that you have a verified phone number. Your actual phone number will not be published on the blockchain.'
+            }
           />
         </div>
       </div>
@@ -257,11 +278,15 @@ class VerifyPhone extends Component {
       <div className="form-group">
         <label htmlFor="phoneVerificationCode">
           <FormattedMessage
-            id={ 'VerifyPhone.enterCodeBelow' }
-            defaultMessage={ 'Enter the code we sent you below' }
+            id={'VerifyPhone.enterCodeBelow'}
+            defaultMessage={'Enter the code we sent you below'}
           />
         </label>
-        <div className={`form-control-wrap wide-control ${codeError ? 'error' : ''}`}>
+        <div
+          className={`form-control-wrap wide-control ${
+            codeError ? 'error' : ''
+          }`}
+        >
           <input
             className="form-control"
             id="phoneVerificationCode"
@@ -270,16 +295,16 @@ class VerifyPhone extends Component {
             onChange={e => {
               this.setState({ verificationCode: e.target.value })
             }}
-            placeholder={this.props.intl.formatMessage(this.intlMessages.phoneVerificationCodePlaceholder)}
+            placeholder={this.props.intl.formatMessage(
+              this.intlMessages.phoneVerificationCodePlaceholder
+            )}
             pattern="[a-zA-Z0-9]{6}"
             title="6-Character Verification Code"
             required
           />
-        {codeError &&
-          <div className="error_message">
-            {codeError.join(' ')}
-          </div>
-        }
+          {codeError && (
+            <div className="error_message">{codeError.join(' ')}</div>
+          )}
         </div>
       </div>
     )

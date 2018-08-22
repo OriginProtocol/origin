@@ -25,10 +25,14 @@ class Messages extends Component {
     const { conversations, match, messages } = this.props
     const { selectedConversationId } = this.state
     const { conversationId } = match.params
-    const changedSelectedConversationId = selectedConversationId !== prevState.selectedConversationId
+    const changedSelectedConversationId =
+      selectedConversationId !== prevState.selectedConversationId
 
     // on route change
-    if (conversationId && conversationId !== prevProps.match.params.conversationId) {
+    if (
+      conversationId &&
+      conversationId !== prevProps.match.params.conversationId
+    ) {
       this.detectSelectedConversation()
     }
 

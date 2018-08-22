@@ -34,19 +34,21 @@ class VerifyFacebook extends Component {
         </div>
         <h2>
           <FormattedMessage
-            id={ 'VerifyFacebook.verifyFBHeading' }
-            defaultMessage={ 'Verify Your Facebook Account' }
+            id={'VerifyFacebook.verifyFBHeading'}
+            defaultMessage={'Verify Your Facebook Account'}
           />
         </h2>
-        {this.state.generalErrors.length > 0 &&
+        {this.state.generalErrors.length > 0 && (
           <div className="general-error">
             {this.state.generalErrors.join(' ')}
           </div>
-        }
+        )}
         <div className="explanation">
           <FormattedMessage
-            id={ 'VerifyFacebook.accountNotPublic' }
-            defaultMessage={ 'Other users will know that you have a verified Facebook account, but your account details will not be published on the blockchain. We will never post on your behalf.' }
+            id={'VerifyFacebook.accountNotPublic'}
+            defaultMessage={
+              'Other users will know that you have a verified Facebook account, but your account details will not be published on the blockchain. We will never post on your behalf.'
+            }
           />
         </div>
         <div className="button-container">
@@ -56,8 +58,8 @@ class VerifyFacebook extends Component {
             onClick={() => this.onCertify()}
           >
             <FormattedMessage
-              id={ 'VerifyFacebook.continue' }
-              defaultMessage={ 'Continue' }
+              id={'VerifyFacebook.continue'}
+              defaultMessage={'Continue'}
             />
           </button>
         </div>
@@ -65,15 +67,15 @@ class VerifyFacebook extends Component {
           <a
             href="#"
             data-modal="facebook"
-            onClick={ event => {
+            onClick={event => {
               event.preventDefault()
               this.props.handleToggle(event)
               this.clearErrors()
             }}
           >
             <FormattedMessage
-              id={ 'VerifyFacebook.cancel' }
-              defaultMessage={ 'Cancel' }
+              id={'VerifyFacebook.cancel'}
+              defaultMessage={'Cancel'}
             />
           </a>
         </div>
@@ -100,13 +102,14 @@ class VerifyFacebook extends Component {
       }
 
       try {
-        const facebookAttestation = await origin.attestations
-          .facebookVerify({ code: data.split(':')[1] })
+        const facebookAttestation = await origin.attestations.facebookVerify({
+          code: data.split(':')[1]
+        })
 
         this.props.onSuccess(facebookAttestation)
       } catch (exception) {
         const errorsJson = JSON.parse(exception).errors
-          
+
         // Service exceptions --> general error
         if (Array.isArray(errorsJson))
           this.setState({ generalErrors: errorsJson })

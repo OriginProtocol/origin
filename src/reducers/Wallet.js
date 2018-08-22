@@ -3,19 +3,19 @@ import { WalletConstants } from 'actions/Wallet'
 
 const initialState = {
   address: undefined,
-  balance: '0',
+  balance: '0'
 }
 
 export default function Wallet(state = initialState, action = {}) {
   switch (action.type) {
-    case WalletConstants.INIT_SUCCESS:
-      return { ...state, address: action.wallet }
+  case WalletConstants.INIT_SUCCESS:
+    return { ...state, address: action.wallet }
 
-    case WalletConstants.BALANCE_SUCCESS:
-      return { ...state, balance: action.balance }
+  case WalletConstants.BALANCE_SUCCESS:
+    return { ...state, balance: action.balance }
 
-    case ProfileConstants.FETCH_SUCCESS:
-      return { ...state, address: action.wallet }
+  case ProfileConstants.FETCH_SUCCESS:
+    return { ...state, address: action.wallet }
   }
 
   return state

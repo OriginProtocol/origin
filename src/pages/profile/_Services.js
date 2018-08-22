@@ -8,18 +8,19 @@ class VerifierServices extends Component {
       <div className="services-container">
         <p className="credit">
           <FormattedMessage
-            id={ '_Services.poweredBy' }
-            defaultMessage={ 'Powered by' }
-          />
-          {' '}
+            id={'_Services.poweredBy'}
+            defaultMessage={'Powered by'}
+          />{' '}
           <span className="logo">
             Origin<sup>ID</sup>
           </span>
         </p>
         <p className="directive">
           <FormattedMessage
-            id={ '_Services.pleaseConnectAccounts' }
-            defaultMessage={ 'Please connect your accounts below to strengthen your identity on Origin.' }
+            id={'_Services.pleaseConnectAccounts'}
+            defaultMessage={
+              'Please connect your accounts below to strengthen your identity on Origin.'
+            }
           />
         </p>
         <div className="row no-gutters">
@@ -40,8 +41,8 @@ class VerifierServices extends Component {
               </span>
               <span className="service-name">
                 <FormattedMessage
-                  id={ '_Services.phone' }
-                  defaultMessage={ 'Phone' }
+                  id={'_Services.phone'}
+                  defaultMessage={'Phone'}
                 />
               </span>
             </button>
@@ -63,8 +64,8 @@ class VerifierServices extends Component {
               </span>
               <span className="service-name">
                 <FormattedMessage
-                  id={ '_Services.email' }
-                  defaultMessage={ 'Email' }
+                  id={'_Services.email'}
+                  defaultMessage={'Email'}
                 />
               </span>
             </button>
@@ -86,8 +87,8 @@ class VerifierServices extends Component {
               </span>
               <span className="service-name">
                 <FormattedMessage
-                  id={ '_Services.airbnb' }
-                  defaultMessage={ 'Airbnb' }
+                  id={'_Services.airbnb'}
+                  defaultMessage={'Airbnb'}
                 />
               </span>
             </button>
@@ -105,15 +106,12 @@ class VerifierServices extends Component {
               onClick={handleToggle}
             >
               <span className="image-container d-flex align-items-center justify-content-center">
-                <img
-                  src="images/facebook-icon-light.svg"
-                  alt="Facebook icon"
-                />
+                <img src="images/facebook-icon-light.svg" alt="Facebook icon" />
               </span>
               <span className="service-name">
                 <FormattedMessage
-                  id={ '_Services.facebook' }
-                  defaultMessage={ 'Facebook' }
+                  id={'_Services.facebook'}
+                  defaultMessage={'Facebook'}
                 />
               </span>
             </button>
@@ -135,8 +133,8 @@ class VerifierServices extends Component {
               </span>
               <span className="service-name">
                 <FormattedMessage
-                  id={ '_Services.twitter' }
-                  defaultMessage={ 'Twitter' }
+                  id={'_Services.twitter'}
+                  defaultMessage={'Twitter'}
                 />
               </span>
             </button>
@@ -149,15 +147,15 @@ class VerifierServices extends Component {
               <span className="unavailable-bg" />
               <span className="unavailable-message">
                 <FormattedMessage
-                  id={ '_Services.comingSoon' }
-                  defaultMessage={ 'Coming {br} Soon' }
+                  id={'_Services.comingSoon'}
+                  defaultMessage={'Coming {br} Soon'}
                   values={{ br: <br /> }}
                 />
               </span>
               <span className="service-name">
                 <FormattedMessage
-                  id={ '_Services.google' }
-                  defaultMessage={ 'Google' }
+                  id={'_Services.google'}
+                  defaultMessage={'Google'}
                 />
               </span>
             </button>

@@ -1,7 +1,7 @@
 export default function(xs, key) {
   return xs.reduce((rv, x) => {
-    let v = key instanceof Function ? key(x) : x[key]
-    let el = rv.find((r) => r && r.key === v)
+    const v = key instanceof Function ? key(x) : x[key]
+    const el = rv.find(r => r && r.key === v)
 
     if (el) {
       el.values.push(x)

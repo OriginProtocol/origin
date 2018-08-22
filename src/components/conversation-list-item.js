@@ -3,22 +3,30 @@ import { connect } from 'react-redux'
 
 import Avatar from 'components/avatar'
 
-import origin from '../services/origin'
-
 class ConversationListItem extends Component {
   render() {
-    const { active, conversation, handleConversationSelect, key, users, web3Account } = this.props
-    const lastMessage = conversation.values.sort((a, b) => a.created < b.created ? -1 : 1)[conversation.values.length - 1]
-    const { content, created, recipients, senderAddress } = lastMessage
+    const {
+      active,
+      conversation,
+      handleConversationSelect,
+      users,
+      web3Account
+    } = this.props
+    const lastMessage = conversation.values.sort(
+      (a, b) => (a.created < b.created ? -1 : 1)
+    )[conversation.values.length - 1]
+    const { content, recipients, senderAddress } = lastMessage
     const role = senderAddress === web3Account ? 'sender' : 'recipient'
-    const counterpartyAddress = role === 'sender' ? 
-      recipients.find(addr => addr !== senderAddress) :
-      senderAddress
-    const counterparty = users.find(u => u.address === counterpartyAddress) || {}
+    const counterpartyAddress =
+      role === 'sender'
+        ? recipients.find(addr => addr !== senderAddress)
+        : senderAddress
+    const counterparty =
+      users.find(u => u.address === counterpartyAddress) || {}
     const unreadCount = conversation.values.filter(msg => {
       return msg.status === 'unread' && msg.senderAddress !== web3Account
     }).length
-    const { fullName, profile } = counterparty
+    const { profile } = counterparty
 
     return (
       <div
@@ -30,16 +38,14 @@ class ConversationListItem extends Component {
           <div className="sender text-truncate">
             {counterparty.fullName || counterpartyAddress}
           </div>
-          <div className="message text-truncate">
-            {content}
-          </div>
+          <div className="message text-truncate">{content}</div>
         </div>
         <div className="meta-container text-right">
-          {!!unreadCount &&
+          {!!unreadCount && (
             <div className="unread count text-right">
               <div className="d-inline-block">{unreadCount}</div>
             </div>
-          }
+          )}
         </div>
       </div>
     )
@@ -49,7 +55,7 @@ class ConversationListItem extends Component {
 const mapStateToProps = state => {
   return {
     users: state.users,
-    web3Account: state.app.web3.account,
+    web3Account: state.app.web3.account
   }
 }
 

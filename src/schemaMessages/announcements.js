@@ -19,7 +19,7 @@ export default defineMessages({
   },
   'schema.announcements.priceInETH': {
     id: 'schema.announcements.priceInETH',
-    defaultMessage: 'Price in ETH',
+    defaultMessage: 'Price in ETH'
   },
   'schema.announcements.selectPhotos': {
     id: 'schema.announcements.selectPhotos',

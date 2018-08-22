@@ -4,7 +4,6 @@ import { defineMessages, injectIntl } from 'react-intl'
 
 // sample list of available countries for phone number prefix
 class CountryOptions extends Component {
-
   constructor(props) {
     super(props)
 
@@ -59,52 +58,52 @@ class CountryOptions extends Component {
       {
         code: 'us',
         name: this.props.intl.formatMessage(this.intlMessages.unitedStates),
-        prefix: '1',
+        prefix: '1'
       },
       {
         code: 'cn',
         name: this.props.intl.formatMessage(this.intlMessages.china),
-        prefix: '86',
+        prefix: '86'
       },
       {
         code: 'jp',
         name: this.props.intl.formatMessage(this.intlMessages.japan),
-        prefix: '81',
+        prefix: '81'
       },
       {
         code: 'de',
         name: this.props.intl.formatMessage(this.intlMessages.germany),
-        prefix: '49',
+        prefix: '49'
       },
       {
         code: 'fr',
         name: this.props.intl.formatMessage(this.intlMessages.france),
-        prefix: '33',
+        prefix: '33'
       },
       {
         code: 'ru',
         name: this.props.intl.formatMessage(this.intlMessages.russia),
-        prefix: '7',
+        prefix: '7'
       },
       {
         code: 'br',
         name: this.props.intl.formatMessage(this.intlMessages.brazil),
-        prefix: '55',
+        prefix: '55'
       },
       {
         code: 'it',
         name: this.props.intl.formatMessage(this.intlMessages.italy),
-        prefix: '39',
+        prefix: '39'
       },
       {
         code: 'gb',
         name: this.props.intl.formatMessage(this.intlMessages.unitedKingdom),
-        prefix: '44',
+        prefix: '44'
       },
       {
         code: 'kr',
         name: this.props.intl.formatMessage(this.intlMessages.southKorea),
-        prefix: '82',
+        prefix: '82'
       },
       {
         code: 'nz',
@@ -115,28 +114,27 @@ class CountryOptions extends Component {
   }
 
   render() {
-
     return (
       <div>
-        {
-          this.countryOptions.map(c => (
-            <div
-              key={c.prefix}
-              className="dropdown-item d-flex"
-              onClick={() => { this.props.setSelectedCountry(c) }}
-            >
-              <div>
-                <img
-                  src={`images/flags/${c.code}.svg`}
-                  role="presentation"
-                  alt={`${c.code.toUpperCase()} flag`}
-                />
-              </div>
-              <div>{c.name}</div>
-              <div>+{c.prefix}</div>
+        {this.countryOptions.map(c => (
+          <div
+            key={c.prefix}
+            className="dropdown-item d-flex"
+            onClick={() => {
+              this.props.setSelectedCountry(c)
+            }}
+          >
+            <div>
+              <img
+                src={`images/flags/${c.code}.svg`}
+                role="presentation"
+                alt={`${c.code.toUpperCase()} flag`}
+              />
             </div>
-          ))
-        }
+            <div>{c.name}</div>
+            <div>+{c.prefix}</div>
+          </div>
+        ))}
       </div>
     )
   }
