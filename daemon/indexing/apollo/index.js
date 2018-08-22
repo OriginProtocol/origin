@@ -56,8 +56,9 @@ const typeDefs = gql`
   }
 
   type OfferPage implements OutputPage {
-    totalCount: Int!
-    more: Boolean!
+    num: Int!
+    size: Int!
+    total: Int!
     offers: [Offer]
   }
 
@@ -69,8 +70,9 @@ const typeDefs = gql`
   }
 
   type ReviewPage implements OutputPage {
-    totalCount: Int!
-    more: Boolean!
+    num: Int!
+    size: Int!
+    total: Int!
     reviews: [Review]
   }
 
@@ -89,8 +91,9 @@ const typeDefs = gql`
   }
 
   type ListingPage implements OutputPage {
-    totalCount: Int!
-    more: Boolean!
+    num: Int!
+    size: Int!
+    total: Int!
     listings: [Listing]
   }
 
@@ -204,8 +207,9 @@ const resolvers = {
         listings = await db.Listing.all()
       }
       return {
-        totalCount: listings.length,
-        more: false,
+        num: 1,
+        size: listings.length,
+        total: 1,
         listings: listings,
       }
     },
@@ -236,8 +240,9 @@ const resolvers = {
     offers(listing, args) {
       // TODO: handle pagination (including enforcing MaxResultsPerPage), filters, order.
       return {
-        totalCount: 1,
-        more: false,
+        num: 1,
+        size: 1,
+        total: 1,
         offers: [{
           id: '123', ipfsHash: 'IPFS_H', listingId: listing.id,
           buyer: {walletAddress: 'B_WADDR',}, status: 'ACCEPTED',
@@ -247,8 +252,9 @@ const resolvers = {
     reviews(listing, args) {
       // TODO: handle pagination (including enforcing MaxResultsPerPage), filters, order.
       return {
-        totalCount: 1,
-        more: false,
+        num: 1,
+        size: 1,
+        total: 1,
         reviews: [{
           ipfsHash: 'IPFS_H', reviewer: {walletAddress: 'R_WADDR'},
           text: 'Great product. Great seller.', rating: 5,
