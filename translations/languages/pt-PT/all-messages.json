@@ -124,8 +124,6 @@
   "messaging-provider.welcome": "Bem-vindo ao DAP de demonstração do protocolo de origem! Nossa inovadora plataforma de mensagens permite que você se comunique com outros usuários do Origin de maneira segura e descentralizada. Todas as suas mensagens serão criptografadas e armazenadas no IPFS. As mensagens só podem ser lidas por você, pelo destinatário e, potencialmente, por um árbitro de terceiros se qualquer um de vocês iniciar uma disputa e conceder acesso a uma chave privada compartilhada gerada por criptografia.\n\nPara ativar as mensagens, você precisará usar sua carteira Ethereum para assinar duas declarações. Isso não custará nenhum ETH, token de origem ou gás.",
   "my-listing-card.confirmCloseListing": "Tem certeza que deseja fechar permanentemente este anúncio? Isto não pode ser desfeito.",
   "my-listing-card.ethereumCurrencyAbbrev": "ETH",
-  "my-listing-card.soldOut": "Esgotado",
-  "my-listing-card.totalQuantity": "Total Quantity : {quantity}",
   "my-listing-card.closeListing": "Fechar anúncio",
   "my-listings.loading": "Carregando...",
   "my-listings.no-listings": "Você ainda não tem nenhum anúncio.",
