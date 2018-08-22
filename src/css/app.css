@@ -1319,6 +1319,41 @@ a:hover {
   padding-top: 20px;
 }
 
+.onboarding-modal {
+  max-width: 770px;
+  max-width: 530px;
+  border-radius: 10px;
+}
+
+.onboarding-modal .modal-content {
+  background-color: var(--dark);
+}
+
+.onboarding-modal .modal-content {
+  padding: 5px;
+}
+
+.onboarding-modal .left-panel .content {
+  padding: 10px;
+}
+
+.onboarding-modal .left-panel div .selected {
+  background-color: var(--dark-grey-blue);
+}
+
+.onboarding-modal .oval {
+  display: inline-block;
+  width: 34px;
+  height: 34px;
+  border: solid 3px var(--greenblue);
+}
+
+.onboarding-modal span,
+.onboarding-modal p {
+  font-size: 14px;
+  vertical-align: super;
+}
+
 /* Tooltip */
 
 .tooltip {
