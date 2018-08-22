@@ -124,8 +124,6 @@
   "messaging-provider.welcome": "Dobrodošli u Origin Protocol Demo DApp! Naša inovativna platforma za razmenu poruka vam omogućava da komunicirate sa drugim izvornim korisnicima na siguran i decentralizovan način. Sve vaše poruke će biti šifrovane i čuvane na IPFS-u. Poruke mogu pročitati samo vi, primaoca i potencijalno arbitražer treće strane, ako bilo koji od vas inicira spor i odobri pristup kriptografski generisanom, dijeljenom, privatnom ključu.\n\nDa biste omogućili razmenu poruka, potrebno je da koristite svoj Ethereum novčanik da biste potpisali dve izjave. To neće koštati bilo koji ETH, Originalni Token ili gas.",
   "my-listing-card.confirmCloseListing": "Da li ste sigurni da želite trajno zatvoriti ovaj unos? Ovo se ne može poništiti.",
   "my-listing-card.ethereumCurrencyAbbrev": "ETH",
-  "my-listing-card.soldOut": "Rasprodato",
-  "my-listing-card.totalQuantity": "Total Quantity : {quantity}",
   "my-listing-card.closeListing": "Zatvori oglas",
   "my-listings.loading": "Učitavanje...",
   "my-listings.no-listings": "Još nemate ništa.",
