@@ -22,15 +22,19 @@ class ContractService {
     }
     this.web3 = new Web3(externalWeb3.currentProvider)
 
-    const contracts = {
+    this.marketplaceContracts = {
+      v00_MarketplaceContract: V00_MarketplaceContract,
+      v01_MarketplaceContract: V01_MarketplaceContract
+    }
+
+    const contracts = Object.assign({
       userRegistryContract: UserRegistryContract,
       claimHolderRegisteredContract: ClaimHolderRegisteredContract,
       claimHolderPresignedContract: ClaimHolderPresignedContract,
       originIdentityContract: OriginIdentityContract,
-      originTokenContract: OriginTokenContract,
-      v00_MarketplaceContract: V00_MarketplaceContract,
-      v01_MarketplaceContract: V01_MarketplaceContract
-    }
+      originTokenContract: OriginTokenContract
+    }, this.marketplaceContracts)
+
     this.libraries = {}
     this.libraries.ClaimHolderLibrary = ClaimHolderLibrary
     this.libraries.KeyHolderLibrary = KeyHolderLibrary
@@ -45,6 +49,22 @@ class ContractService {
       } catch (e) {
         /* Ignore */
       }
+    }
+  }
+
+  // Returns an object that describes how many marketplace
+  // contracts are available.
+  async marketplaceContractsFound() {
+    const networkId = await web3.eth.net.getId()
+
+    const contractCount = Object.keys(this.marketplaceContracts).length
+    const contractsFound = Object.keys(this.marketplaceContracts)
+      .filter(contractName => this.marketplaceContracts[contractName].networks[networkId])
+      .length
+
+    return {
+      allContractsPresent: contractCount === contractsFound,
+      someContractsPresent: contractsFound > 0
     }
   }
 
