@@ -61,14 +61,14 @@ async function fetchListingIds(dispatch) {
 
 export function searchListings(rawQuery) {
   return async function(dispatch) {
-    const fetcher = () => { return await origin.marketplace.getListings(rawQuery) }
+    const fetcher = () => { return origin.marketplace.getListings(rawQuery) }
     await fetchListingIds(dispatch, fetcher)
   }
 }
 
 export function getListingIds() {
   return async function(dispatch) {
-    const fetcher = () => { await origin.marketplace.getListings({ idsOnly: true }) }
+    const fetcher = () => { return origin.marketplace.getListings({ idsOnly: true }) }
     await fetchListingIds(dispatch, fetcher)
   }
 }
