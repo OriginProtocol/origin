@@ -8,7 +8,7 @@ The listener will let you know one or more times about an event. Make sure your 
 
 To allow the listener to be compatible with [infura.io](https://infura.io/), it does not use subscriptions, only API queries.
 
-## Running
+# Running
 
 First you'll need a blockchain network to listen to. To get a local network work, you can start up the origin box, or you can run `npm start run` from the origin.js directory.
 
@@ -16,7 +16,9 @@ A simple way to see the listener in action:
 
     node daemon/indexing/listener/listener.js
 
-### Command line options
+## Command line options
+
+Output:
 
 `--verbose` Output json for all event information to stdout
 
@@ -26,8 +28,12 @@ A simple way to see the listener in action:
 
 `--db` Experimental support for recording listings directly into postgres (see instructions for setting up the db [here](../README.md))
 
+Events:
 
-## How the listener works
+`--continue-file=path` Will start following events at the block number defined in the file, and will keep this file updated as it listens to events. The continue file is JSON, in the format `{"lastLogBlock":222, "version":1}`.
+
+
+# How the listener works
 
 The listener checks every few seconds for a new block number. If it sees one, it requests all origin related events from the last block it saw an event on, to the new block.
 

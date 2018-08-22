@@ -1,3 +1,4 @@
+const fs = require('fs')
 const http = require('http')
 const urllib = require('url')
 const Web3 = require('web3')
@@ -10,11 +11,12 @@ const db = require('../lib//db.js')
 // ---------------
 
 // Todo
-// - Allow configuring web3 endpoint and IPFS endpoint
+// - Allow configuring web3 endpoint, network, and IPFS endpoint
 // - When catching up, work in smaller batches
-// - Persist starting point
 // - Handle blockchain splits/winners
+// - Possibly switch lastLogBlock to be closer to last found block
 // - Include current-as-of block numbers in POSTs
+// - Persist starting point in DB
 // - Perhaps send related data as it was at the time of the event, not crawl time
 // - Possible configurable log levels
 
@@ -108,7 +110,7 @@ const LISTEN_RULES = {
 async function liveTracking(config) {
   const context = await new Context(config).init()
 
-  let lastLogBlock = 0
+  let lastLogBlock = getLastBlock(config)
   let lastCheckedBlock = 0
   const checkIntervalSeconds = 5
   let start
@@ -126,6 +128,7 @@ async function liveTracking(config) {
       const batchLastLogBlock = await runBatch(opts, context)
       if (batchLastLogBlock != undefined) {
         lastLogBlock = batchLastLogBlock
+        setLastBlock(config, lastLogBlock)
       }
       lastCheckedBlock = currentBlockNumber
       return scheduleNextCheck()
@@ -138,6 +141,26 @@ async function liveTracking(config) {
   }
 
   check()
+}
+
+function getLastBlock(config) {
+  if (config.continueFile == undefined || !fs.existsSync(config.continueFile)) {
+    return 0
+  }
+  const json = fs.readFileSync(config.continueFile, { encoding: 'utf8' })
+  const data = JSON.parse(json)
+  if (data.lastLogBlock) {
+    return data.lastLogBlock
+  }
+  return 0
+}
+
+function setLastBlock(config, blockNumber) {
+  if (config.continueFile == undefined) {
+    return
+  }
+  const json = JSON.stringify({ lastLogBlock: blockNumber, version: 1 })
+  fs.writeFileSync(config.continueFile, json, { encoding: 'utf8' })
 }
 
 // runBatch - gets and processes logs for a range of blocks
@@ -229,7 +252,7 @@ async function handleLog(log, rule, contractVersion, context) {
     ruleResults = await rule.ruleFn(log)
   } catch (e) {
     console.log(
-      "Error: could not get information for",
+      'Error: could not get information for',
       `${log.contractName} ${log.eventName}`
     )
     console.log(e)
@@ -406,6 +429,8 @@ const config = {
   // Index events in the database.
   db: args['--db'],
   // Verbose mode, includes dumping events on the console.
-  verbose: args['--verbose']
+  verbose: args['--verbose'],
+  // File to use for picking which block number to restart from
+  continueFile: args['--continue-file']
 }
 liveTracking(config)
