@@ -124,8 +124,6 @@
   "messaging-provider.welcome": "Origin Protocol Demo DApp에 오신 것을 환영합니다! 우리의 혁신적인 메시징 플랫폼을 사용하면 다른 Origin 사용자와 안전하고 분산화된 방식의 소통을 할 수 있습니다. 당신의 모든 메시지는 암호화되어 IPFS에 저장될 것입니다. 메시지들은 당신, 수신자, 제 3 자인 중재자(당신이 대화를 시작한 경우, 혹은 암호학적으로 생성, 공유된 프라이빗 키 권한을 가지고 있는 경우) 만이 읽을 수 있습니다.\n\n메시지를 사용하기 위해 두가지 서명이 필요하며 이는 본인의 Ethereum 지갑을 사용해야 합니다. 이 행위는 어떠한 ETH나 Origin 토큰, 또는 가스 비용이 들지 않습니다.",
   "my-listing-card.confirmCloseListing": "정말로 이 목록을 영구 종료시키겠습니까? 종료시킨 후에는 되돌릴 수 없습니다.",
   "my-listing-card.ethereumCurrencyAbbrev": "ETH",
-  "my-listing-card.soldOut": "매진",
-  "my-listing-card.totalQuantity": "Total Quantity : {quantity}",
   "my-listing-card.closeListing": "목록 닫기",
   "my-listings.loading": "로딩중...",
   "my-listings.no-listings": "당신은 아직 목록이 없습니다.",
