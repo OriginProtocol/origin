@@ -124,8 +124,6 @@
   "messaging-provider.welcome": "欢迎来到Origin Protocol演示DApp！我们的创新消息传递平台允许您以安全和分散的方式与其他Origin用户进行通信。您的所有邮件都将被加密并存储在IPFS上。如果您中的任何一方发起争议并授予对加密生成的共享私钥的访问权限，则您只能由收件人和可能的第三方仲裁员读取邮件。\n\n为了启用消息传递，您需要使用以太坊钱包来签署两个语句。这不会花费任何ETH，Origin Token或gas。",
   "my-listing-card.confirmCloseListing": "您是否确认要永久关闭此列表？这不可撤消。",
   "my-listing-card.ethereumCurrencyAbbrev": "ETH",
-  "my-listing-card.soldOut": "已售出",
-  "my-listing-card.totalQuantity": "Total Quantity : {quantity}",
   "my-listing-card.closeListing": "关闭列表",
   "my-listings.loading": "加载中...",
   "my-listings.no-listings": "你还没有任何列表",
