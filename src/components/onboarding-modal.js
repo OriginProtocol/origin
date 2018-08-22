@@ -67,7 +67,10 @@ class OnboardingModal extends Component {
                 ))}
               </div>
               <div className="flex-column col-8 right-panel">
-              <img src="/images/eth-tokens.svg" alt="eth-tokens" />
+                <div className="text-right">
+                  <img src="/images/close-icon.svg" alt="close-icon" />
+                </div>
+                <img src="/images/eth-tokens.svg" alt="eth-tokens" />
                 <div>
                   <h3>Selling on the Origin DApp</h3>
                   <p>
