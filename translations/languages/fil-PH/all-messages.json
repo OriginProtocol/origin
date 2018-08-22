@@ -124,8 +124,6 @@
   "messaging-provider.welcome": "Maligayang Pagdating sa Origin Protocol Demo DApp! Pinapayagan ka ng aming makabagong messaging platform na makipag-ugnayan sa iba pang mga gumagamit ng Origin sa isang ligtas at desentralisadong paraan. Ang lahat ng iyong mga mensahe ay naka-encrypt at naka-imbak sa IPFS. Ang mga mensahe ay maaari lamang mabasa mo, ang tatanggap, at potensyal na isang arbitrador ng third-party kung alinman sa iyo ay nagsimula ng isang pagtatalo at nagbibigay ng access sa isang cryptographically-generated, shared, private key.\n\nUpang paganahin ang pagmemensahe kailangan mong gamitin ang iyong Ethereum wallet upang mag-sign ng dalawang statements. Hindi ito babayaran ng anumang ETH, Origin Token, o gas.",
   "my-listing-card.confirmCloseListing": "Sigurado ka bang gusto mong tuluyang isara itong listing? Ito ay hindi na maaring mabawi.",
   "my-listing-card.ethereumCurrencyAbbrev": "ETH",
-  "my-listing-card.soldOut": "Ubos Na",
-  "my-listing-card.totalQuantity": "Total Quantity : {quantity}",
   "my-listing-card.closeListing": "Isara ang mga listahan",
   "my-listings.loading": "Naglo-load...",
   "my-listings.no-listings": "Wala ka pang anumang listahan sa ngayon.",
