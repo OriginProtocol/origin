@@ -124,8 +124,6 @@
   "messaging-provider.welcome": "Witamy w Origin Protocol Demo DApp! Nasza innowacyjna platforma komunikacyjna umożliwia komunikowanie się z innymi użytkownikami Origin w bezpieczny i zdecentralizowany sposób. Wszystkie twoje wiadomości będą szyfrowane i przechowywane na IPFS. Wiadomości mogą być odczytywane tylko przez ciebie, odbiorcę i potencjalnego arbitra strony trzeciej, jeśli któryś z was zainicjuje spór i przyzna dostęp do klucza prywatnego, udostępnionego kryptograficznie.\n\nAby włączyć powiadamianie, będziesz musiał użyć portfela Ethereum, aby podpisać dwie wypowiedzi. Nie będzie to kosztować żadnego ETH, tokenu Origin lub gazu.",
   "my-listing-card.confirmCloseListing": "Czy na pewno chcesz trwale zamknąć tę wizytówkę? Tego nie da się cofnąć.",
   "my-listing-card.ethereumCurrencyAbbrev": "ETH",
-  "my-listing-card.soldOut": "Wyprzedane",
-  "my-listing-card.totalQuantity": "Total Quantity : {quantity}",
   "my-listing-card.closeListing": "Zamknij listę",
   "my-listings.loading": "Ładuję...",
   "my-listings.no-listings": "Nie masz jeszcze żadnych ofert.",
