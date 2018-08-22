@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import $ from 'jquery'
 
-const leftPanelInfo = [
-  { title: 'Overview', description: 'How to start selling on the Origin DApp' },
-  { title: 'Connect Wallet', description: 'Connect your wallet to start selling' },
-  { title: 'Get Origin Tokens', description: 'Connect your wallet to start selling' }
+const steps = [
+  {name: 'Overview', description: 'How to start selling on the Origin DApp', complete: false},
+  {name: 'Connect Wallet', description: 'Connect your wallet to start selling', complete: false},
+  {name: 'Get Origin Tokens', description: 'Connect your wallet to start selling', complete: false}
 ]
 
 class OnboardingModal extends Component {
   constructor(props) {
     super(props)
-    this.state = { currentPosition: 0 }
+    this.state = {steps, currentStep: 0}
   }
 
   componentDidMount() {
@@ -34,14 +34,14 @@ class OnboardingModal extends Component {
     this.$el.modal('hide')
   }
 
-  changePosition(currentPosition) {
-    this.setState({ currentPosition });
+  changeStep(currentStep) {
+    this.setState({ currentStep });
   }
 
   render() {
-    const { currentPosition } = this.state;
+    const { currentStep } = this.state;
 
-    const selected = (p) => p === currentPosition ? 'selected' : '';
+    const selected = (p) => p === currentStep ? 'selected' : '';
 
     return (
       <div
@@ -55,13 +55,13 @@ class OnboardingModal extends Component {
           <div className="modal-content d-flex">
             <div className="row">
               <div className="flex-column col-4 text-left left-panel">
-                { leftPanelInfo.map(({title, description}, i) => (
-                  <div key={title}
+                { steps.map(({name, description}, i) => (
+                  <div key={name}
                     className={`content ${selected(i)}`}
-                    onClick={() => this.changePosition(i)}
+                    onClick={() => this.changeStep(i)}
                   >
                     <div className="oval rounded-circle"> </div>
-                    <span>{title}</span>
+                    <span>{name}</span>
                     <p className="text-muted">{description}</p>
                   </div>
                 ))}
