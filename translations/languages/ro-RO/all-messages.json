@@ -124,8 +124,6 @@
   "messaging-provider.welcome": "Bine ați venit la DApp! Platforma noastră de mesagerie inovatoare vă permite să comunicați cu alți utilizatori de origine într-un mod securizat și descentralizat. Toate mesajele dvs. vor fi criptate și stocate pe IPFS. Mesajele pot fi citite numai de dvs., de destinatar și, eventual, de un arbitru terț, dacă oricare dintre dvs. inițiază o litigiu și acordă acces la o cheie privată generată de o criptografie.\n\nPentru a permite mesajele, va trebui să utilizați portofelul Ethereum pentru a semna două declarații. Acest lucru nu va costa nici un ETH, Origine Token sau gaz.",
   "my-listing-card.confirmCloseListing": "Sunteţi sigur că doriţi să închideți permanent acest anunț? Acest lucru nu poate fi anulat.",
   "my-listing-card.ethereumCurrencyAbbrev": "ETH",
-  "my-listing-card.soldOut": "Vândut",
-  "my-listing-card.totalQuantity": "Total Quantity : {quantity}",
   "my-listing-card.closeListing": "Închide listarea",
   "my-listings.loading": "Se încarcă...",
   "my-listings.no-listings": "Momentan nu aveți nici un anunț.",
