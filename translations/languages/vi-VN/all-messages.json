@@ -124,8 +124,6 @@
   "messaging-provider.welcome": "Chào mừng đến với ứng dụng Demo của Origin! Nền tảng nhắn tin của chúng tôi cho phép bạn kết nối với những người dùng khác trên Origin một cách an toàn và phi tập trung. Tất cả những tin nhắn của bạn sẽ được mã hóa và lưu trên IPFS. Tin nhắn chỉ được xem bởi bạn, người nhận hoặc bên thứ ba trong trường hợp có tranh chấp và chỉ cấp quyền truy cập cho một mật mã duy nhất được tạo ra.\n\nĐể bật tính năng nhắn tin bạn cần sử dụng ví của Ethereum để kí hai xác nhận. Điều này sẽ không tốn phí.",
   "my-listing-card.confirmCloseListing": "Bạn có chắc rằng bạn muốn vĩnh viễn đóng danh sách này? Điều này bắt buộc phải hoàn thành.",
   "my-listing-card.ethereumCurrencyAbbrev": "ETH",
-  "my-listing-card.soldOut": "Bán ra",
-  "my-listing-card.totalQuantity": "Tổng số lượng: {quantity}",
   "my-listing-card.closeListing": "Đóng danh sách",
   "my-listings.loading": "Đang tải...",
   "my-listings.no-listings": "Bạn chưa có bất kỳ danh sách nào.",
