@@ -36,7 +36,9 @@
     "ethereumjs-util": "^5.2.0",
     "form-data": "^2.3.2",
     "map-cache": "^0.2.2",
+    "openzeppelin-solidity": "1.10.0",
     "rlp": "^2.0.0",
+    "url-parse": "^1.4.0",
     "store": "^2.0.12",
     "web3": "^1.0.0-beta.34"
   },
@@ -51,6 +53,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "chai": "^4.1.2",
+    "chai-bignumber": "^2.0.2",
     "chai-string": "1.4.0",
     "chalk": "^2.4.1",
     "eth-gas-reporter": "^0.1.2",
