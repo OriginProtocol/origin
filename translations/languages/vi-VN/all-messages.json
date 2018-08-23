@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "Mua ngay",
   "listing-detail.soldOut": "Bán ra",
   "listing-detail.reviews": "Đánh giá",
-  "listings-grid.originContractNotFound": "Không tìm thấy hợp đồng Origin trên mạng này.",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "Bạn có thể cần phải thay đổi nguồn mạng, hoặc triển khai các hợp đồng.",
   "listings-grid.listingsCount": "Danh sách {listingIdsCount}",
   "MessageNew.cannotReceiveMessages": "Người dùng này chưa bật tính năng nhắn tin trên Origin.",
