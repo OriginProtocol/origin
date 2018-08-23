@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "Jetzt Kaufen",
   "listing-detail.soldOut": "Verkaufen",
   "listing-detail.reviews": "Rezensionen",
-  "listings-grid.originContractNotFound": "Der Origin Vertrag wurde in diesem Netzwerk nicht gefunden.",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "Möglicherweise müssen Sie das Netzwerk wechseln oder den Vertrag bereitstellen.",
   "listings-grid.listingsCount": "{listingIdsCount} Inserate",
   "MessageNew.cannotReceiveMessages": "Dieser Benutzer hat Origin Messaging nicht aktiviert.",
