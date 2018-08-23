@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "Kup nyní",
   "listing-detail.soldOut": "Vyprodáno",
   "listing-detail.reviews": "Recenze",
-  "listings-grid.originContractNotFound": "Smlouva o původu nebyla v této síti nalezena.",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "Možná budete muset změnit sítě nebo zavést smlouvu.",
   "listings-grid.listingsCount": "{listingIdsCount} Výpisy",
   "MessageNew.cannotReceiveMessages": "Tento uživatel nepovolil Zprávy o původu.",
