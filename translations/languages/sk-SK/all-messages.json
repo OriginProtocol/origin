@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "Kúpte teraz",
   "listing-detail.soldOut": "Vypredané",
   "listing-detail.reviews": "recenzia",
-  "listings-grid.originContractNotFound": "Zmluva o pôvode sa v tejto sieti nenašla.",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "Možno budete musieť zmeniť sieť alebo zaviesť zmluvu.",
   "listings-grid.listingsCount": "{listingIdsCount} Výpisy",
   "MessageNew.cannotReceiveMessages": "Tento používateľ nepovolil Správy s pôvodom.",
