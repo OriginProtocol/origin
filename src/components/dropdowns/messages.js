@@ -12,6 +12,12 @@ import ConversationListItem from 'components/conversation-list-item'
 import groupByArray from 'utils/groupByArray'
 
 class MessagesDropdown extends Component {
+  constructor(props) {
+    super(props)
+
+    this.handleClick = this.handleClick.bind(this)
+  }
+
   componentDidMount() {
     $(document).on('click', '.messages .dropdown-menu', e => {
       e.stopPropagation()
@@ -31,6 +37,10 @@ class MessagesDropdown extends Component {
     if (!isOnMessagingRoute && hasNewUnreadMessage && dropdownHidden) {
       $('#messagesDropdown').dropdown('toggle')
     }
+  }
+
+  handleClick(e) {
+    $('#messagesDropdown').dropdown('toggle')
   }
 
   render() {
@@ -110,7 +120,7 @@ class MessagesDropdown extends Component {
                 />
               ))}
             </div>
-            <Link to="/messages">
+            <Link to="/messages" onClick={this.handleClick}>
               <footer>
                 <FormattedMessage
                   id={'messagesDropdown.viewAll'}

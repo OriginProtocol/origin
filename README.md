@@ -1,6 +1,10 @@
 ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
 ![origin_travis_banner](https://travis-ci.org/OriginProtocol/origin-dapp.svg?branch=master)
 
+Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
+
+Just getting started with Origin? We recommend using [Origin Box](https://github.com/OriginProtocol/origin-box) for development and testing on your local machine.
+
 # Origin Demo DApp
 This is an example DApp (Decentralized Application) that shows how easy it is to create a truly peer to peer marketplace on the Ethereum blockchain with **origin-js**. Using only javascript, you can create and purchase listings, leave reviews, check identity, and more.
 
@@ -9,7 +13,7 @@ This is an example DApp (Decentralized Application) that shows how easy it is to
 
 To learn more about Origin Protocol, please read our [product brief](https://www.originprotocol.com/product-brief) and [whitepaper](https://www.originprotocol.com/whitepaper) for a high-level description of what we're building and why it matters. Our official website is [https://www.originprotocol.com](https://www.originprotocol.com).
 
-## Try Demo Dapp on the Rinkeby testnet
+## Try Demo DApp on the Rinkeby testnet
 
 This demo is currently running on the Rinkeby testnet. (Note that this demo is slightly behind the current state of this repo.)
 - [Overview and step-by-step instructions](https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58)
@@ -95,6 +99,32 @@ This is the default seed phrase used by [Truffle](https://github.com/trufflesuit
 - Click where it says "Ethereum Main Network" and select "Localhost 8545". Click the back arrow to return to your account.
 
 - You should see your first test account now has 100 ETH and the address `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`. Additional generated accounts will also have this amount.
+
+## Browser & Wallet Compatibility
+Browsers with wallets for both desktop and mobile that you can use with the Origin Demo DApp.
+
+
+| OS | Application | Status | Notes |
+| ---- | -------- | ------ | ------ |
+| Mac | Chrome + Metamask extension | ✅ | Operational |
+| Mac | Firefox + Metamask extension | ✅  | Operational |
+| Mac | Brave with Metamask | ✅ | Operational |
+|  | |  |
+| PC | Chrome + Metamask extension | ✅ | Operational |
+| PC | Firefox + Metamask extension | ✅ | Operational |
+| PC | Brave with Metamask | ⚪️  | Not tested |
+|  |  |  |
+| iOS | Trust Wallet | ✅  | Operational |
+| iOS | Toshi  |  🚫  | Main Toshi app does not currently work with test nets |
+| iOS | Toshi Developer  |  🚫  |  [DApp hangs on Toshi client #327](https://github.com/OriginProtocol/origin-dapp/issues/327) |
+| iOS | Cipher  | ⛔️  | Acquired by Coinbase. Not in development. |
+|   |  |  |
+| Android | Trust Wallet | ⚪️ | Not tested |
+| Android | Toshi Developer  |  ⚪️  |  Not tested |
+| Android | Toshi Developer  |  ⚪️  | Not tested
+| Android | Cipher  |  ⛔️  | Not in development |
+
+<sup>Tests for http://demo.originprotocol.com</sup>
 
 ## Localization
 See [translations](translations) directory.

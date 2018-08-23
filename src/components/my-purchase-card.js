@@ -127,7 +127,7 @@ class MyPurchaseCard extends Component {
               <div className="d-flex">
                 <p className="price">{`${this.getPrice().toLocaleString(
                   undefined,
-                  { minimumFractionDigits: 3 }
+                  { minimumFractionDigits: 5, maximumFractionDigits: 5 }
                 )} ${this.props.intl.formatMessage(this.intlMessages.ETH)}`}</p>
                 {/* Not Yet Relevant */}
                 {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}

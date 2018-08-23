@@ -35,6 +35,8 @@ import '../css/lato-web.css'
 import '../css/poppins.css'
 import '../css/app.css'
 
+const httpsRequired = process.env.FORCE_HTTPS
+
 const HomePage = () => (
   <div className="container">
     <Listings />
@@ -64,9 +66,17 @@ const UserPage = props => <User userAddress={props.match.params.userAddress} />
 class App extends Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      redirect: httpsRequired && !window.location.protocol.match('https')
+    }
   }
 
   componentWillMount() {
+    if (this.state.redirect) {
+      window.location.href = window.location.href.replace(/^http(?!s)/, 'https')
+    }
+
     this.props.localizeApp()
   }
 
@@ -94,6 +104,11 @@ class App extends Component {
   }
 
   render() {
+    // prevent flickering
+    if (this.state.redirect) {
+      return null
+    }
+
     return this.props.selectedLanguageCode ? (
       <IntlProvider
         locale={this.props.selectedLanguageCode}

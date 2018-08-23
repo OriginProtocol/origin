@@ -416,7 +416,7 @@ class PurchaseDetail extends Component {
       'ether'
     )
     const price = `${Number(priceEth).toLocaleString(undefined, {
-      minimumFractionDigits: 3
+      minimumFractionDigits: 5, maximumFractionDigits: 5
     })} ETH` // change to priceEth
 
     const counterparty = ['buyer', 'seller'].find(str => str !== perspective)

@@ -125,6 +125,10 @@ class Profile extends Component {
 
   componentDidMount() {
     this.props.getBalance()
+    this.setProgress({
+      provisional: this.props.provisionalProgress,
+      published: this.props.publishedProgress
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -493,7 +497,6 @@ class Profile extends Component {
           open={modalsOpen.publish}
           changes={changes}
           handleToggle={this.handleToggle}
-          handlePublish={this.handlePublish}
           onConfirm={() => {
             this.setState({
               modalsOpen: { ...modalsOpen, publish: false },
@@ -510,7 +513,6 @@ class Profile extends Component {
           open={modalsOpen.unload}
           changes={changes}
           handleToggle={this.handleToggle}
-          handlePublish={this.handlePublish}
           onConfirm={() => {
             this.setState({
               modalsOpen: { ...modalsOpen, unload: false },

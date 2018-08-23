@@ -101,7 +101,7 @@ class ListingCardPrices extends Component {
                 &nbsp;|{' '}
                 {`${Number(this.state.price).toLocaleString(undefined, {
                   minimumFractionDigits: 5,
-                  maximumFractionDigits: 9
+                  maximumFractionDigits: 5
                 })}`}&nbsp;
                 <FormattedMessage
                   id={'listing-card-prices.ethereumCurrencyAbbrev'}

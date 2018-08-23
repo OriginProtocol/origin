@@ -45,12 +45,12 @@ class UserCard extends Component {
       purchaseAddress,
       title,
       user,
-      userAddress
+      userAddress,
+      web3Account
     } = this.props
     const { fullName, profile, attestations } = user
-    const userCanReceiveMessages = origin.messaging.canReceiveMessages(
-      userAddress
-    )
+    const userCanReceiveMessages = userAddress !== web3Account &&
+                                   origin.messaging.canReceiveMessages(userAddress)
 
     return (
       <div className="user-card placehold">
@@ -174,7 +174,8 @@ const mapStateToProps = (state, { userAddress }) => {
     messagingEnabled: state.app.messagingEnabled,
     // for reactivity
     messagingInitialized: state.app.messagingInitialized,
-    user: state.users.find(u => u.address === userAddress) || {}
+    user: state.users.find(u => u.address === userAddress) || {},
+    web3Account: state.app.web3.account
   }
 }
 
