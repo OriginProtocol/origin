@@ -1,7 +1,7 @@
 [
   {
     "id": "listings-grid.originContractNotFound",
-    "defaultMessage": "The Origin Contract was not found on this network."
+    "defaultMessage": "No Origin listing contracts were found on this network."
   },
   {
     "id": "listings-grid.changeNetworks",
