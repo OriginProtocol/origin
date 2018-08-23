@@ -59,7 +59,7 @@ class Messages extends Component {
       <div className="d-flex messages-wrapper">
         <div className="container">
           <div className="row no-gutters">
-            <div className="conversations-list-col col-12 col-sm-4 col-lg-3 d-flex flex-sm-column">
+            <div className="conversations-list-col col-12 col-sm-4 col-lg-3 d-flex d-sm-block">
               {conversations.map(c => {
                 return (
                   <ConversationListItem

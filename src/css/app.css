@@ -2356,6 +2356,8 @@ form .stars img {
 
 .conversations-list-col {
   background-color: var(--pale-grey);
+  height: 60px;
+  overflow-x: scroll;
 }
 
 .messages-wrapper .no-gutters {
@@ -2364,6 +2366,7 @@ form .stars img {
 
 .no-gutters .conversation-col {
   background-color: white;
+  height: calc(100vh - 60px);
   padding: 0 10px 0;
 }
 
@@ -3470,7 +3473,7 @@ a:not([href]):not([tabindex]).span-link {
 
   /* apply different background colors outside of the container */
   .messages-wrapper {
-    background: linear-gradient(to right, var(--pale-grey) 25%, white 25%);
+    background: linear-gradient(to right, var(--pale-grey) 50%, white 50%);
     flex: 1;
   }
 
@@ -3480,6 +3483,11 @@ a:not([href]):not([tabindex]).span-link {
 
   .no-gutters .conversation-col {
     padding: 0 20px 0;
+  }
+
+  .conversations-list-col {
+    height: auto;
+    overflow-y: scroll;
   }
 }
 
