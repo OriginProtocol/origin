@@ -21,12 +21,10 @@ class Messages extends Component {
     this.detectSelectedConversation()
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { conversations, match, messages } = this.props
+  componentDidUpdate(prevProps) {
+    const { conversations, match } = this.props
     const { selectedConversationId } = this.state
     const { conversationId } = match.params
-    const changedSelectedConversationId =
-      selectedConversationId !== prevState.selectedConversationId
 
     // on route change
     if (
@@ -56,8 +54,8 @@ class Messages extends Component {
     const { conversations, messages } = this.props
     const { selectedConversationId } = this.state
     const filteredAndSorted = messages
-                              .filter(m => m.conversationId === selectedConversationId)
-                              .sort((a, b) => (a.index < b.index ? -1 : 1))
+      .filter(m => m.conversationId === selectedConversationId)
+      .sort((a, b) => (a.index < b.index ? -1 : 1))
 
     return (
       <div className="d-flex messages-wrapper">
