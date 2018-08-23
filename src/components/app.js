@@ -148,6 +148,7 @@ class App extends Component {
                     <Route path="/notifications" component={Notifications} />
                     <Route path="/profile" component={Profile} />
                     <Route path="/users/:userAddress" component={UserPage} />
+                    <Route path="/search" component={SearchResult} />
                     <Route component={NotFound} />
                   </Switch>
                 </Layout>
