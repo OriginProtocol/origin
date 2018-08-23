@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "ఇప్పుడే కొనండి",
   "listing-detail.soldOut": "అమ్ముడుపోయాయి",
   "listing-detail.reviews": "సమీక్షలు",
-  "listings-grid.originContractNotFound": "ఈ నెట్వర్క్లో ఆరిజిన్ కాంట్రాక్ట్ కనుగొనబడలేదు.",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "మీరు నెట్వర్క్లను మార్చాలి లేదా కాంట్రాక్టుని అమలు చేయాలి.",
   "listings-grid.listingsCount": "{listingIdsCount} జాబితాలు",
   "MessageNew.cannotReceiveMessages": "ఈ యూజర్ ఆరంభ సందేశ సేవని ప్రారంభించలేదు.",
