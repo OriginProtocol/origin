@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "Cumpără acum",
   "listing-detail.soldOut": "Vândut",
   "listing-detail.reviews": "Reviewuri",
-  "listings-grid.originContractNotFound": "Contractul Origin nu a fost găsit în această rețea.",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "S-ar putea să trebuiască să schimbați rețeaua sau să lansați contractul.",
   "listings-grid.listingsCount": "{listingIdsCount} anunțuri",
   "MessageNew.cannotReceiveMessages": "Acest utilizator nu a activat mesajul Origin Messaging.",
