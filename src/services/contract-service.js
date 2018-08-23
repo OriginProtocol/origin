@@ -2,13 +2,6 @@ import ClaimHolderRegisteredContract from './../../contracts/build/contracts/Cla
 import ClaimHolderPresignedContract from './../../contracts/build/contracts/ClaimHolderPresigned.json'
 import ClaimHolderLibrary from './../../contracts/build/contracts/ClaimHolderLibrary.json'
 import KeyHolderLibrary from './../../contracts/build/contracts/KeyHolderLibrary.json'
-import PurchaseLibrary from './../../contracts/build/contracts/PurchaseLibrary.json'
-import ListingsRegistryContract from './../../contracts/build/contracts/ListingsRegistry.json'
-import ListingsRegistryStorageContract from './../../contracts/build/contracts/ListingsRegistryStorage.json'
-import ListingContract from './../../contracts/build/contracts/Listing.json'
-import UnitListingContract from './../../contracts/build/contracts/UnitListing.json'
-import FractionalListingContract from './../../contracts/build/contracts/FractionalListing.json'
-import PurchaseContract from './../../contracts/build/contracts/Purchase.json'
 import UserRegistryContract from './../../contracts/build/contracts/UserRegistry.json'
 import OriginIdentityContract from './../../contracts/build/contracts/OriginIdentity.json'
 import OriginTokenContract from './../../contracts/build/contracts/OriginToken.json'
@@ -29,25 +22,22 @@ class ContractService {
     }
     this.web3 = new Web3(externalWeb3.currentProvider)
 
-    const contracts = {
-      listingContract: ListingContract,
-      listingsRegistryContract: ListingsRegistryContract,
-      listingsRegistryStorageContract: ListingsRegistryStorageContract,
-      unitListingContract: UnitListingContract,
-      fractionalListingContract: FractionalListingContract,
-      purchaseContract: PurchaseContract,
+    this.marketplaceContracts = {
+      v00_MarketplaceContract: V00_MarketplaceContract,
+      v01_MarketplaceContract: V01_MarketplaceContract
+    }
+
+    const contracts = Object.assign({
       userRegistryContract: UserRegistryContract,
       claimHolderRegisteredContract: ClaimHolderRegisteredContract,
       claimHolderPresignedContract: ClaimHolderPresignedContract,
       originIdentityContract: OriginIdentityContract,
-      originTokenContract: OriginTokenContract,
-      v00_MarketplaceContract: V00_MarketplaceContract,
-      v01_MarketplaceContract: V01_MarketplaceContract
-    }
+      originTokenContract: OriginTokenContract
+    }, this.marketplaceContracts)
+
     this.libraries = {}
     this.libraries.ClaimHolderLibrary = ClaimHolderLibrary
     this.libraries.KeyHolderLibrary = KeyHolderLibrary
-    this.libraries.PurchaseLibrary = PurchaseLibrary
     for (const name in contracts) {
       this[name] = contracts[name]
       try {
@@ -59,6 +49,22 @@ class ContractService {
       } catch (e) {
         /* Ignore */
       }
+    }
+  }
+
+  // Returns an object that describes how many marketplace
+  // contracts are available.
+  async marketplaceContractsFound() {
+    const networkId = await web3.eth.net.getId()
+
+    const contractCount = Object.keys(this.marketplaceContracts).length
+    const contractsFound = Object.keys(this.marketplaceContracts)
+      .filter(contractName => this.marketplaceContracts[contractName].networks[networkId])
+      .length
+
+    return {
+      allContractsPresent: contractCount === contractsFound,
+      someContractsPresent: contractsFound > 0
     }
   }
 
@@ -213,9 +219,10 @@ class ContractService {
         .on('confirmation', confirmationCallback)
         .on('error', reject)
     })
+    const block = await this.web3.eth.getBlock(transactionReceipt.blockNumber)
     return {
-      created: (await this.web3.eth.getBlock(transactionReceipt.blockNumber))
-        .timestamp,
+      // return current time in seconds if block is not found
+      created: block ? block.timestamp : Math.floor(Date.now() / 1000),
       transactionReceipt
     }
   }

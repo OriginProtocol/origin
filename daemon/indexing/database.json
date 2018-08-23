@@ -12,6 +12,6 @@
     "user": "origin",
     "password": "origin",
     "host": "postgres",
-    "database": "indexing"
+    "database": "origin-indexing"
   }
 }

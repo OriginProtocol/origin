@@ -6,8 +6,6 @@
 
 Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
 
-Just getting started with Origin? We recommend using [Origin Box](https://github.com/OriginProtocol/origin-box) for development and testing on your local machine.
-
 # origin-js
 
 origin-js is a library of javascript code and Ethereum smart contracts which allow anyone to create decentralized marketplaces, including for fractional usage. It is an open source project created by [Origin Protocol](https://www.originprotocol.com/).
@@ -40,38 +38,29 @@ yarn add origin
 
 A browser-compatible plain javascript file `origin.js` is available in the [Releases section](https://github.com/OriginProtocol/origin-js/releases). A hosted version can be directly included in your html as:
 ```html
-<script src="https://code.originprotocol.com/origin-js/origin-v0.6.1.js"></script>
+<script src="https://code.originprotocol.com/origin-js/origin-v0.7.1.js"></script>
 ```
 
 `npm build` will generate this file and save it to `dist/origin.js`.
 
 ## Local development
 
-### 1. Clone this repo.
+### Fully integrated with [origin-dapp](https://github.com/OriginProtocol/origin-dapp) and [origin-bridge](https://github.com/OriginProtocol/origin-bridge)
+
+We recommend using [Origin Box](https://github.com/OriginProtocol/origin-box) for development and testing on your local machine. This saves you the headache of spinning up several environments and running multiple, different processes.
+
+### Without [origin-bridge](https://github.com/OriginProtocol/origin-bridge)
+
+1.  Clone this repo.
 ```
 git clone https://github.com/OriginProtocol/origin-js.git && cd origin-js
 ```
 
-If you would like to submit pull requests, you should instead fork this repo and then clone your fork. Note pull requests should always be made to the `develop` branch, which always has the latest commits.
+1.  Install dependencies and link by running `npm run install:dev`. This script is a shortcut for `npm install && npm link`. Linking means that changes to `origin-js` code are immediately available to local DApps without an `npm install`.
 
-### 2. Install dependencies and link
-```
-npm run install:dev
-```
+1.  Start the local blockchain and build origin-js by running `npm start`. Code changes will trigger a live rebuild.
 
-`install:dev` is shortcut for `npm install && npm link`. Linking means that changes to `origin-js` code are immediately available to local DApps without an `npm install`.
-
-### 3. Start the local blockchain and build origin-js
-
-```
-npm start
-```
-
-Code changes will trigger a live rebuild.
-
-### 4. Use with local Demo DApp
-
-To interact with your local origin-js and local blockahin, see [the instructions in our Demo DApp](https://github.com/OriginProtocol/origin-dapp#run-demo-dapp-with-local-origin-js-and-local-blockchain).
+1.  To interact with your local origin-js and local blockahin, see [the instructions in our Demo DApp](https://github.com/OriginProtocol/origin-dapp#run-demo-dapp-with-local-origin-js-and-local-blockchain).
 
 
 ## Tests

@@ -15,7 +15,7 @@ If you want to index data in Postgres:
     docker-compose up postgres  # start the postgres container.
 
     # create the postgres DB schema:
-    docker exec -ti -w /app/daemon/indexing origin-js node node_modules/db-migrate/bin/db-migrate -e origin-box-genesis db:create indexing
+    docker exec -ti -w /app/daemon/indexing origin-js node node_modules/db-migrate/bin/db-migrate -e origin-box-genesis db:create origin-indexing
     docker exec -ti -w /app/daemon/indexing origin-js node node_modules/db-migrate/bin/db-migrate up
 
 If you want to index data in Elasticsearch, start the elasticsearch container.
@@ -24,7 +24,7 @@ If you want to index data in Elasticsearch, start the elasticsearch container.
 
 Start the listener in the the origin-js container. Use --elasticsearch and/or --db options to pick the indexer(s).
 
-    docker exec -ti origin-js node daemon/indexing/listener/listener.js --elasticsearch --db
+    docker exec -w /app/daemon/indexing origin-js node listener/listener.js --elasticsearch --db
 
 You should see messages in the console indicating events are being indexed.
 
@@ -40,7 +40,7 @@ Use origin-box to start an origin-js container.
 
 Start the Apollo server in the origin-js container
 
-    docker exec -ti origin-js node daemon/indexing/apollo/index.js
+    docker exec -w /app/daemon/indexing origin-js node apollo/index.js
 
  The server should start and you can point your browser to http://localhost:4000 to access the GraphQL playground.
 
