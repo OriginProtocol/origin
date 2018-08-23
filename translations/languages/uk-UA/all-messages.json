@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "Купити зараз",
   "listing-detail.soldOut": "Розпродано",
   "listing-detail.reviews": "Відгуки",
-  "listings-grid.originContractNotFound": "Контракт Origin не знайдено у цій мережі.",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "Може знадобитися змінити мережу або задіяти контракт.",
   "listings-grid.listingsCount": "{listingIdsCount} Оголошення",
   "MessageNew.cannotReceiveMessages": "Цей користувач не ввімкнув Origin Messaging.",
