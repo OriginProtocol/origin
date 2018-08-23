@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "Şimdi satın al",
   "listing-detail.soldOut": "Satıldı",
   "listing-detail.reviews": "yorumlar",
-  "listings-grid.originContractNotFound": "Bu ağda Origin Sözleşmesi bulunamadı.",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "Ağları değiştirmeniz veya sözleşmeyi dağıtmanız gerekebilir.",
   "listings-grid.listingsCount": "{listingIdsCount} İlan",
   "MessageNew.cannotReceiveMessages": "Bu kullanıcı Origin Messaging'i etkinleştirmedi.",
