@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "Kupi sada",
   "listing-detail.soldOut": "Rasprodato",
   "listing-detail.reviews": "Recenzije",
-  "listings-grid.originContractNotFound": "Ugovor o porijeklu nije pronađen na ovoj mreži.",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "Možda ćete morati promijeniti mrežu ili rasporediti ugovor.",
   "listings-grid.listingsCount": "{listingIdsCount} Listings",
   "MessageNew.cannotReceiveMessages": "Ovaj korisnik nije omogućio originalne poruke.",
