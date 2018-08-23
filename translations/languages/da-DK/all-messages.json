@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "Køb nu",
   "listing-detail.soldOut": "Udsolgt",
   "listing-detail.reviews": "Anmeldelser",
-  "listings-grid.originContractNotFound": "Oprindelsesaftalen blev ikke fundet på dette netværk.",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "Du skal muligvis ændre netværk eller implementere kontrakten.",
   "listings-grid.listingsCount": "{listingIdsCount} lister",
   "MessageNew.cannotReceiveMessages": "Denne bruger har ikke aktiveret Oprindelsesbeskeder.",
