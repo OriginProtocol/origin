@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "Aĉetu nun",
   "listing-detail.soldOut": "Elvendita",
   "listing-detail.reviews": "Recenzoj",
-  "listings-grid.originContractNotFound": "La Originara Kontrakto ne estis trovita en ĉi tiu reto.",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "Vi eble bezonos ŝanĝi retojn aŭ disdoni la kontrakton.",
   "listings-grid.listingsCount": "{listingIdsCount} Listings",
   "MessageNew.cannotReceiveMessages": "Ĉi tiu uzanto ne ebligis Originan Mesaĝon.",
