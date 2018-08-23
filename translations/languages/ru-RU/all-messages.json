@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "Купить сейчас",
   "listing-detail.soldOut": "Продано",
   "listing-detail.reviews": "Обзоры",
-  "listings-grid.originContractNotFound": "Контракт Origin не найден в этой сети.",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "Вам может понадобиться изменить сети или задействовать контракт.",
   "listings-grid.listingsCount": "{listingIdsCount} Объявления",
   "MessageNew.cannotReceiveMessages": "Этот пользователь не включил Origin Messaging.",
