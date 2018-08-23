@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "立即购买",
   "listing-detail.soldOut": "已售出",
   "listing-detail.reviews": "回评",
-  "listings-grid.originContractNotFound": "在这个网络上找不到起源合同。\n起源合同不在这个网络上。",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "您可能需要更改网络或部署合同。",
   "listings-grid.listingsCount": "{listingIdsCount} 列表",
   "MessageNew.cannotReceiveMessages": "此用户尚未启用Origin Messaging。",
