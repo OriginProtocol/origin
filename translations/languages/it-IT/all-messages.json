@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "Acquista adesso",
   "listing-detail.soldOut": "Sold Out",
   "listing-detail.reviews": "Recensioni",
-  "listings-grid.originContractNotFound": "Il Contratto Origin non è stato trovato su questa rete.",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "Potrebbe essere necessario modificare le reti, o distribuire il contratto.",
   "listings-grid.listingsCount": "{listingIdsCount} Annunci",
   "MessageNew.cannotReceiveMessages": "Questo utente non ha abilitato la messaggistica originale.",
