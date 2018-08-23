@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "Αγοράστε Τώρα",
   "listing-detail.soldOut": "Sold Out",
   "listing-detail.reviews": "Κριτικές",
-  "listings-grid.originContractNotFound": "Το Συμβόλαιο Origin δεν βρέθηκε σε αυτό το δίκτυο.",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "Ίσως χρειαστεί να αλλάξετε δίκτυα ή να εκτελέσετε τη σύμβαση.",
   "listings-grid.listingsCount": "{listingIdsCount} Καταχωρήσεις",
   "MessageNew.cannotReceiveMessages": "Αυτός ο χρήστης δεν έχει ενεργοποιήσει το Origin Messaging.",
