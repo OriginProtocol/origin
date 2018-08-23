@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "अभी खरीदें",
   "listing-detail.soldOut": "बिक गया",
   "listing-detail.reviews": "समीक्षा",
-  "listings-grid.originContractNotFound": "मूल अनुबंध इस नेटवर्क पर नहीं मिला था।",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "आपको नेटवर्क बदलने या अनुबंध को तैनात करने की आवश्यकता हो सकती है।",
   "listings-grid.listingsCount": "{listingIdsCount} लिस्टिंग",
   "MessageNew.cannotReceiveMessages": "इस उपयोगकर्ता ने मूल संदेश सक्षम नहीं किया है।",
