@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "ຊື້​ດຽວ​ນີ້",
   "listing-detail.soldOut": "ຂາຍຫມົດ",
   "listing-detail.reviews": "ຄວາມຄິດເຫັນ",
-  "listings-grid.originContractNotFound": "ສັນຍາຕົ້ນກໍາເນີດບໍ່ພົບໃນເຄືອຂ່າຍນີ້.",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "ທ່ານອາດຈະຕ້ອງການປ່ຽນເຄືອຂ່າຍ, ຫຼືໃຊ້ສັນຍາ.",
   "listings-grid.listingsCount": "{listingIdsCount} ລາຍການ",
   "MessageNew.cannotReceiveMessages": "ຜູ້ໃຊ້ນີ້ບໍ່ໄດ້ເປີດໃຊ້ການສົ່ງຂໍ້ມູນຕົ້ນກໍາເນີດ.",
