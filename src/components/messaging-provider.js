@@ -75,7 +75,7 @@ class MessagingProvider extends Component {
     })
 
     // poll for notifications
-    setInterval(() => {
+    this.props.web3Account && setInterval(() => {
       this.props.fetchNotifications()
     }, 10 * ONE_SECOND)
   }
