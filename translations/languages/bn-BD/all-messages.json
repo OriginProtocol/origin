@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "এখন কেন",
   "listing-detail.soldOut": "বিক্রি শেষ",
   "listing-detail.reviews": "পর্যালোচনা",
-  "listings-grid.originContractNotFound": "মূল নেটওয়ার্কটি এই নেটওয়ার্কে পাওয়া যায়নি।",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "আপনাকে নেটওয়ার্কের পরিবর্তন করতে হবে, অথবা চুক্তিটি স্থাপন করতে হবে।",
   "listings-grid.listingsCount": "{listingIdsCount} তালিকা",
   "MessageNew.cannotReceiveMessages": "এই ব্যবহারকারীর মূল মেসেজিং সক্ষম করা হয়নি।",
