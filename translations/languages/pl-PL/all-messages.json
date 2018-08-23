@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "Kup Teraz",
   "listing-detail.soldOut": "Wyprzedane",
   "listing-detail.reviews": "Opinie",
-  "listings-grid.originContractNotFound": "Umowa Origin nie została znaleziona w tej sieci.",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "Może być konieczna zmiana sieci lub wdrożenie umowy.",
   "listings-grid.listingsCount": "{listingIdsCount} ofert",
   "MessageNew.cannotReceiveMessages": "Ten użytkownik nie włączył funkcji przesyłania wiadomości Origin.",
