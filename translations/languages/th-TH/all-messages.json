@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "ซื้อเลย",
   "listing-detail.soldOut": "ขายหมดแล้ว",
   "listing-detail.reviews": "ความคิดเห็น",
-  "listings-grid.originContractNotFound": "ไม่พบสัญญาต้นทางในเครือข่ายนี้",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "คุณอาจต้องเปลี่ยนเครือข่ายหรือปรับใช้สัญญา",
   "listings-grid.listingsCount": "{listingIdsCount} รายชื่อ",
   "MessageNew.cannotReceiveMessages": "ผู้ใช้รายนี้ไม่ได้เปิดใช้ Messaging ต้นทาง",
