@@ -73,7 +73,6 @@ class Conversation extends Component {
   async handleSubmit(e) {
     e.preventDefault()
 
-    const { id, web3Account } = this.props
     const el = this.textarea.current
     const newMessage = el.value
 
@@ -82,7 +81,7 @@ class Conversation extends Component {
     }
 
     try {
-      await originTest.messaging.sendConvMessage(id, newMessage.trim())
+      await originTest.messaging.sendConvMessage(this.props.id, newMessage.trim())
 
       el.value = ''
     } catch(err) {
@@ -117,7 +116,7 @@ class Conversation extends Component {
   async loadPurchase() {
     const { web3Account } = this.props
     const { counterparty, listing, purchase } = this.state
-    const { address, sellerAddress } = listing
+    const { address } = listing
 
     // listing may not be found
     if (!address) {
@@ -158,13 +157,13 @@ class Conversation extends Component {
   }
 
   render() {
-    const { activeForm, id, intl, messages, web3Account } = this.props
+    const { id, intl, messages, web3Account } = this.props
     const { counterparty, listing, purchase } = this.state
     const { address, name, pictures } = listing
     const { buyerAddress, created } = purchase
     const perspective = buyerAddress ? (buyerAddress === web3Account ? 'buyer' : 'seller') : null
     const soldAt = created ? created * 1000 /* convert seconds since epoch to ms */ : null
-    const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
+    const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === 'data:' && pictures[0]
     const canDeliverMessage = origin.messaging.canConverseWith(counterparty.address)
     const shouldEnableForm = canDeliverMessage && id
 

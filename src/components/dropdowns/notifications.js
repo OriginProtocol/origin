@@ -43,7 +43,7 @@ class NotificationsDropdown extends Component {
     }
   }
 
-  handleClick(e) {
+  handleClick() {
     $('#notificationsDropdown').dropdown('toggle')
   }
 
