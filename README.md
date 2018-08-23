@@ -108,10 +108,12 @@ Browsers with wallets for both desktop and mobile that you can use with the Orig
 | ---- | -------- | ------ | ------ |
 | Mac | Chrome + Metamask extension | ✅ | Operational |
 | Mac | Firefox + Metamask extension | ✅  | Operational |
+| Mac | Opera with Metamask | ⚪️ | Not tested |
 | Mac | Brave with Metamask | ✅ | Operational |
 |  | |  |
 | PC | Chrome + Metamask extension | ✅ | Operational |
 | PC | Firefox + Metamask extension | ✅ | Operational |
+| PC | Opera with Metamask | ✅  | Operational |
 | PC | Brave with Metamask | ⚪️  | Not tested |
 |  |  |  |
 | iOS | Trust Wallet | ✅  | Operational |
