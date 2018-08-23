@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "Koop nu",
   "listing-detail.soldOut": "Uitverkocht",
   "listing-detail.reviews": "Beoordelingen",
-  "listings-grid.originContractNotFound": "Het Origin Contract is niet gevonden op dit netwerk.",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "Wellicht moet u het netwerk wijzigen of het contract implementeren.",
   "listings-grid.listingsCount": "{listingIdsCount} Advertenties",
   "MessageNew.cannotReceiveMessages": "Deze gebruiker heeft Origin Messaging niet ingeschakeld.",
