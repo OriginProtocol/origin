@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "Bumili na ngayon",
   "listing-detail.soldOut": "Ubos Na",
   "listing-detail.reviews": "Mga Review",
-  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
+  "listings-grid.originContractNotFound": "Walang Origin listing contracts ang nakita sa network na ito.",
   "listings-grid.changeNetworks": "Kailangan mong baguhin ang network o ideploy ang kontrata.",
   "listings-grid.listingsCount": "mga listahan {listingIdsCount}",
   "MessageNew.cannotReceiveMessages": "Hindi pa pinapagana ng user na ito ang Origin Messaging.",
