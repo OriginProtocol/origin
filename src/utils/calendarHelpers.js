@@ -17,8 +17,8 @@ export function generateCalendarSlots(events) {
     event.endDate = endDate
 
     while (eventDate.toDate() >= startDate && eventDate.toDate() <= endDate) {
-        slots.push(eventDate.toDate())
-        eventDate = eventDate.add(1, 'days')
+      slots.push(eventDate.toDate())
+      eventDate = eventDate.add(1, 'days')
     }
 
     event.slots = slots
@@ -124,13 +124,65 @@ export function getSlotsForDateChange(selectedEvent, whichDropdown, value, viewT
   return slots
 }
 
-export function getDateDropdownOptions(date, viewType) {
+export function getDateDropdownOptions(date, viewType, selectedEvent, allEvents) {
+  const numDatesToShow = 10
   const timeToAdd = viewType === 'daily' ? 'days' : 'hours'
+  let beforeSelectedConflict
+  let afterSelectedConflict
+  const eventsWithoutSelected = allEvents &&
+    allEvents.length &&
+    allEvents.filter((event) => event.id !== selectedEvent.id)
+
+  const isSlotAvailable = (date) => {
+    if (!eventsWithoutSelected || !eventsWithoutSelected.length) {
+      return true
+    }
+    const slotInfo = { slots: [date] }
+    const existingEventInSlot = checkSlotsForExistingEvent(slotInfo, eventsWithoutSelected)
+    return !existingEventInSlot.length || doAllEventsRecur(existingEventInSlot)
+  }
+
+  const selectedTime = moment(date).toDate()
+
+  const beforeSelected = [...Array(numDatesToShow)]
+    .map((_, i) => {
+      const thisDate = moment(date).subtract(i + 1, timeToAdd).toDate()
+      if (!beforeSelectedConflict) {
+        const isAvailable = isSlotAvailable(thisDate)
+        if (isAvailable) {
+          return thisDate
+        } else {
+          beforeSelectedConflict = true
+          return null
+        }
+      } else {
+        return null
+      }
+    })
+    .filter((d) => d)
+    .reverse()
+
+  const afterSelected = [...Array(numDatesToShow)]
+    .map((_, i) => {
+      const thisDate = moment(date).add(i + 1, timeToAdd).toDate()
+      if (!afterSelectedConflict) {
+        const isAvailable = isSlotAvailable(thisDate)
+        if (isAvailable) {
+          return thisDate
+        } else {
+          afterSelectedConflict = true
+          return null
+        }
+      } else {
+        return null
+      }
+    })
+    .filter((d) => d)
 
   return [
-    ...[...Array(10)].map((_, i) => moment(date).subtract(i + 1, timeToAdd).toDate()).reverse(),
-    moment(date).toDate(),
-    ...[...Array(10)].map((_, i) => moment(date).add(i + 1, timeToAdd).toDate())
+    ...beforeSelected,
+    selectedTime,
+    ...afterSelected
   ]
 }
 
@@ -139,11 +191,11 @@ export function getRecurringEvents(date, existingEvents, viewType) {
   const dateMoment = moment(date)
   const isDaily = viewType === 'daily'
   const firstVisibleDate = isDaily ?
-                            moment(dateMoment.startOf('month')).subtract(1, 'week') :
-                            moment(dateMoment.startOf('week'))
+    moment(dateMoment.startOf('month')).subtract(1, 'week') :
+    moment(dateMoment.startOf('week'))
   const lastVisibleDate = isDaily ?
-                            moment(dateMoment.endOf('month')).add(1, 'week') :
-                            moment(dateMoment.endOf('week'))
+    moment(dateMoment.endOf('month')).add(1, 'week') :
+    moment(dateMoment.endOf('week'))
   const events = []
 
   const getSlots = (startDate, endDate) => {
@@ -194,13 +246,13 @@ export function getRecurringEvents(date, existingEvents, viewType) {
             clonedEvent.isClonedRecurringEvent = true
             clonedEvent.start = moment(clonedEvent.start).set(setterConfig).toDate()
             clonedEvent.end = moment(clonedEvent.start)
-                                .add(diffBtwStartAndEnd, 'days')
-                                .set({
-                                  hour: clonedEndMoment.hour(),
-                                  minute: clonedEndMoment.minute(),
-                                  second: clonedEndMoment.second()
-                                })
-                                .toDate()
+              .add(diffBtwStartAndEnd, 'days')
+              .set({
+                hour: clonedEndMoment.hour(),
+                minute: clonedEndMoment.minute(),
+                second: clonedEndMoment.second()
+              })
+              .toDate()
             clonedEvent.slots = getSlots(clonedEvent.start, clonedEvent.end)
 
             // put the cloned "recurring" instances of the event in the output "events" array
@@ -222,42 +274,42 @@ export function getRecurringEvents(date, existingEvents, viewType) {
 
 // When buyer is ready to reserve slots, prepares data to be saved to IPFS
 export function getSlotsToReserve(buyerSelectedSlotData) {
-  return buyerSelectedSlotData &&
-         buyerSelectedSlotData.map((slot) => {
-    const toReturn = {
-      startDate: slot.start,
-      endDate: slot.end,
-      priceWei: slot.price,
-    }
+  return  buyerSelectedSlotData &&
+          buyerSelectedSlotData.map((slot) => {
+            const toReturn = {
+              startDate: slot.start,
+              endDate: slot.end,
+              priceWei: slot.price,
+            }
 
-    if (slot.isRecurringEvent) {
-      toReturn.recurs = 'weekly'
-    }
+            if (slot.isRecurringEvent) {
+              toReturn.recurs = 'weekly'
+            }
 
-    return toReturn
-  })
+            return toReturn
+          })
 }
 
 // Removes cloned events and prepares data for saving to IPFS
 export function getCleanEvents(events) {
   return events.length && events
-          .filter((event) => 
-            !event.isClonedRecurringEvent
-          )
-          .map((event) => {
+    .filter((event) => 
+      !event.isClonedRecurringEvent
+    )
+    .map((event) => {
 
-            const toReturn = {
-              startDate: event.start.toISOString(),
-              endDate: event.end.toISOString(),
-              isAvailable: event.isAvailable,
-              priceWei: event.price
-            }
+      const toReturn = {
+        startDate: event.start.toISOString(),
+        endDate: event.end.toISOString(),
+        isAvailable: event.isAvailable,
+        priceWei: event.price
+      }
 
-            if (event.isRecurringEvent) {
-              toReturn.recurs = 'weekly'
-            }
-            return toReturn
-          })
+      if (event.isRecurringEvent) {
+        toReturn.recurs = 'weekly'
+      }
+      return toReturn
+    })
 }
 
 export function getDateAvailabilityAndPrice(date, events, purchases) {
@@ -283,9 +335,9 @@ export function getDateAvailabilityAndPrice(date, events, purchases) {
     for (let i = 0, len = events.length; i < len; i++) {
       const event = events[i]
       if (  
-            moment(date).isBetween(moment(event.start).subtract(1, 'second'), moment(event.end).add(1, 'second')) &&
-            !moment(date).isBefore(moment())
-          ) {
+        moment(date).isBetween(moment(event.start).subtract(1, 'second'), moment(event.end).add(1, 'second')) &&
+        !moment(date).isBefore(moment())
+      ) {
 
         event.isAvailable = event.isAvailable ? !isDateBooked(date) : false
         eventsInSlot.push(event)

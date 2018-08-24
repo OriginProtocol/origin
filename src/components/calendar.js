@@ -59,7 +59,7 @@ class Calendar extends Component {
   }
 
   componentWillMount() {
-    BigCalendar.momentLocalizer(moment);
+    BigCalendar.momentLocalizer(moment)
     
     if (this.props.slots) {
       const events = generateCalendarSlots(this.props.slots).map((slot) =>  {
@@ -431,6 +431,7 @@ class Calendar extends Component {
   render() {
     const selectedEvent = this.state.selectedEvent
     const { viewType, userType } = this.props
+    const { events } = this.state
 
     return (
       <div>
@@ -488,7 +489,7 @@ class Calendar extends Component {
                         onChange={ this.onDateDropdownChange }
                         value={ selectedEvent.start.toString() }>
                         { 
-                          getDateDropdownOptions(selectedEvent.start, viewType).map((date) => (
+                          getDateDropdownOptions(selectedEvent.start, viewType, selectedEvent, events).map((date) => (
                             ((viewType === 'daily' && date <= selectedEvent.end) ||
                             (viewType === 'hourly' && date < selectedEvent.end)) &&
                             <option
@@ -507,7 +508,7 @@ class Calendar extends Component {
                         onChange={ this.onDateDropdownChange }
                         value={selectedEvent.end.toString()}>
                         { 
-                          getDateDropdownOptions(selectedEvent.end, viewType).map((date) => (
+                          getDateDropdownOptions(selectedEvent.end, viewType, selectedEvent, events).map((date) => (
                             ((viewType === 'daily' && date >= selectedEvent.start) ||
                             (viewType === 'hourly' && date > selectedEvent.start)) &&
                             <option
