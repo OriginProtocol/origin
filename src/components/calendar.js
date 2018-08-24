@@ -102,11 +102,11 @@ class Calendar extends Component {
 
       if (!existingEventInSlot.length || doAllEventsRecur(existingEventInSlot)) {
 
-        let newEvent
         const endDate = this.props.viewType === 'daily' ?
-                        moment(slotInfo.end).add(1, 'day').subtract(1, 'second').toDate() :
-                        slotInfo.end
-        newEvent = {
+          moment(slotInfo.end).add(1, 'day').subtract(1, 'second').toDate() :
+          slotInfo.end
+
+        const newEvent = {
           ...slotInfo,
           id: uuid(),
           end: endDate,
@@ -294,8 +294,11 @@ class Calendar extends Component {
         ...this.state.selectedEvent,
         slots: getSlotsForDateChange(this.state.selectedEvent, whichDropdown, value, this.props.viewType),
         [whichDropdown]: new Date(value)
-      },
-      showSellerActionBtns: true
+      }
+    })
+
+    setTimeout(() => {
+      this.saveEvent(this.state.selectedEvent)
     })
   }
 
