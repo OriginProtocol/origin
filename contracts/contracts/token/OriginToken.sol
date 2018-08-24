@@ -2,13 +2,14 @@ pragma solidity ^0.4.23;
 
 import "../../../node_modules/openzeppelin-solidity/contracts/token/ERC20/BurnableToken.sol";
 import "../../../node_modules/openzeppelin-solidity/contracts/token/ERC20/MintableToken.sol";
-import "../../../node_modules/openzeppelin-solidity/contracts/token/ERC20/PausableToken.sol";
+
+import "./WhitelistedPausableToken.sol";
 
 /**
  * @title Origin token
  * @dev Token that allows minting, burning, and pausing by contract owner
  */
-contract OriginToken is BurnableToken, MintableToken, PausableToken {
+contract OriginToken is BurnableToken, MintableToken, WhitelistedPausableToken {
   string public constant name = "OriginToken"; // solium-disable-line uppercase
   string public constant symbol = "OGN"; // solium-disable-line uppercase
   uint8 public constant decimals = 18; // solium-disable-line uppercase
