@@ -137,6 +137,9 @@ export function getDateDropdownOptions(date, viewType, selectedEvent, allEvents)
     if (!eventsWithoutSelected || !eventsWithoutSelected.length) {
       return true
     }
+    if (viewType === 'daily') {
+      date = moment(date).startOf('day').toDate()
+    }
     const slotInfo = { slots: [date] }
     const existingEventInSlot = checkSlotsForExistingEvent(slotInfo, eventsWithoutSelected)
     return !existingEventInSlot.length || doAllEventsRecur(existingEventInSlot)
@@ -162,6 +165,13 @@ export function getDateDropdownOptions(date, viewType, selectedEvent, allEvents)
     .filter((d) => d)
     .reverse()
 
+  if (viewType === 'hourly') {
+    const isNextSlotAvailable = isSlotAvailable(date)
+    if (!isNextSlotAvailable) {
+      afterSelectedConflict = true
+    }
+  }
+
   const afterSelected = [...Array(numDatesToShow)]
     .map((_, i) => {
       const thisDate = moment(date).add(i + 1, timeToAdd).toDate()
@@ -171,7 +181,11 @@ export function getDateDropdownOptions(date, viewType, selectedEvent, allEvents)
           return thisDate
         } else {
           afterSelectedConflict = true
-          return null
+          if (viewType === 'hourly') {
+            return thisDate
+          } else {
+            return null
+          }
         }
       } else {
         return null
