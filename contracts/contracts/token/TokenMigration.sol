@@ -13,7 +13,7 @@ import "./OriginToken.sol";
 contract TokenMigration is Ownable {
   OriginToken public fromToken;
   OriginToken public toToken;
-  mapping (address => bool) migrated;
+  mapping (address => bool) public migrated;
   bool public finished;
 
   event Migrated(address indexed account, uint256 balance);
