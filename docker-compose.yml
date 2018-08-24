@@ -24,15 +24,6 @@ services:
     networks:
       - origin-develop
 
-  redis:
-    container_name: redis
-    restart: always
-    image: redis
-    sysctls:
-      - net.core.somaxconn=4096
-    networks:
-      - origin-develop
-
   elasticsearch:
     container_name: elasticsearch
     image: elasticsearch
@@ -101,49 +92,14 @@ services:
       # Set the envfile from the local envfile
       - ./envfiles/origin-bridge.env:/app/.env
       - flask_session:/app/flask_session
-      # Contracts volume mounted so origin-bridge uses the contracts compiled
-      # by origin-js
-      - contracts:/app/contracts
     depends_on:
       - postgres
-      - redis
-      - origin-js
-      - orbit-db
     ports:
       - "5000:5000"
     environment:
       - FLASK_APP=/app/main.py
       - FLASK_DEBUG=1
-    command:
-      # Waits for origin-js to start, 8080 is the IPFS server which starts
-      # after the contracts have been compiled
-      >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-js:8080 --
-      echo 'origin-js is available, starting origin-bridge...' &&
-      flask run --host=0.0.0.0"
-    networks:
-      - origin-develop
-
-  origin-bridge-celery:
-    container_name: origin-bridge-celery
-    image: origin-bridge
-    user: nobody
-    volumes:
-      - ./origin-bridge:/app
-      # Set the envfile from the local envfile
-      - ./envfiles/origin-bridge.env:/app/.env
-      - contracts:/app/contracts
-    depends_on:
-      - origin-bridge
-    command:
-      # Celery beat is currently disabled because of incompatibilities between
-      # the develop branches of origin-bridge and origin-js, add " -B" to the
-      # celery command to enable
-      >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-bridge:5000 --
-      echo 'origin-bridge is available, starting origin-bridge celery...' &&
-      watchmedo auto-restart -d . -p '*.py' -i '*.pyc' --recursive --
-      celery -A util.tasks worker -l info -c=1 -E"
+    command: flask run --host=0.0.0.0
     networks:
       - origin-develop
 

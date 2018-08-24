@@ -90,9 +90,6 @@ function install_origin_environment() {
 	run_step "Bringing up stack" \
 		docker-compose up -d
 
-	run_step "Waiting for contracts" \
-		docker-compose exec origin-bridge wait-for.sh -t 0 -q origin-js:8080
-
 	run_step "Configuring database" \
 		docker-compose exec origin-bridge flask db upgrade
 
