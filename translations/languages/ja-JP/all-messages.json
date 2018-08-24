@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "今すぐ購入",
   "listing-detail.soldOut": "完売",
   "listing-detail.reviews": "レビュー",
-  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
+  "listings-grid.originContractNotFound": "このネットワークではOriginとの掲載契約がみつかりませんでした。",
   "listings-grid.changeNetworks": "ネットワークを変更するか、コントラクトを配置してください。",
   "listings-grid.listingsCount": "{listingIdsCount} 掲載情報",
   "MessageNew.cannotReceiveMessages": "このユーザーは、Origin Messagingを有効にしていません。",
