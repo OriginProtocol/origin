@@ -17,17 +17,18 @@ class ListingsGrid extends Component {
   }
 
   componentWillMount() {
-    this.props.getListingIds()
+    if (this.props.renderMode != 'home-page')
+      this.props.getListingIds()
   }
 
   render() {
     const { listingsPerPage } = this.state
 
 
-    const { contractFound, listingIds, hideList } = this.props
+    const { contractFound, listingIds, hideList, searchListingIds } = this.props
     // const pinnedListingIds = [0, 1, 2, 3, 4]
     // const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
-    const arrangedListingIds = listingIds
+    const arrangedListingIds = this.props.renderMode == 'home-page' ? listingIds : searchListingIds
     const activePage = this.props.match.params.activePage || 1
     // Calc listings to show for given page
     const showListingsIds = arrangedListingIds.slice(

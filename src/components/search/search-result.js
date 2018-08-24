@@ -1,55 +1,79 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import { withRouter } from 'react-router'
 import { searchListings } from 'actions/Listing'
 import queryString from 'query-string'
 
+import { showAlert } from 'actions/Alert'
 import ListingsGrid from 'components/listings-grid'
 import SearchBar from 'components/search/searchbar'
+import { generalSearch } from 'actions/Search'
+import origin from '../../services/origin'
 
 class SearchResult extends Component {
   constructor(props) {
     super(props)
+
+    const getParams = queryString.parse(this.props.location.search)
+
     this.state = {
-      filterSchema: undefined
+      filterSchema: undefined,
+      listingIds:[]
     }
 
-    this.parseUrlParamsToState()
+    // set default prop values for search_query and listing_type
+    this.props.generalSearch(getParams.search_query || '', getParams.listing_type || 'all')
   }
 
-  parseUrlParamsToState() {
-    const params = queryString.parse(this.props.location.search)
-    console.log(params, this.props.location.search)
-  }
-
-  componentDidUpdate(prevProps) {
-    console.log("COMPONENT DID UPDATE")
+  componentDidUpdate(previousProps) {
     // exit if query parameters have not changed
+    // TODO: also filter states need to be checked here
     if (
-      prevProps.listingType == this.props.listingType &&
-      prevProps.query == this.props.query
+      previousProps.listingType === this.props.listingType &&
+      previousProps.query === this.props.query
     )
       return
 
-    this.setState({ filterSchema: undefined })
+    this.setState({
+      filterSchema: undefined
+    })
 
-    fetch(`schemas/searchFilters/${this.props.listingType}-search.json`)
-      .then((response) => response.json())
-      .then((schemaJson) => {
-        this.setState({ filterSchema: schemaJson })
-        window.scrollTo(0, 0)
+    this.searchRequest(this.props.query, this.props.listingType)
+
+    if (this.props.listingType !== previousProps.listingType || this.state.filterSchema == undefined) {
+      fetch(`schemas/searchFilters/${this.props.listingType}-search.json`)
+        .then((response) => response.json())
+        .then((schemaJson) => {
+          this.setState({ filterSchema: schemaJson })
+          window.scrollTo(0, 0)
+        })
+    }
+  }
+
+  async searchRequest(query, listingType) {
+    try {
+      const searchResponse = await origin.marketplace.search(query)
+      if (searchResponse.status !== 200)
+        throw 'Unexpected result received from search engine'
+
+      const json = await searchResponse.json()
+      this.setState({
+        listingIds: json.data.Listings.listings.map(listing => listing.id)
       })
+
+    } catch (e) {
+      this.props.showAlert(
+        this.props.intl.formatMessage({
+          id: 'searchResult.canNotReachIndexingServer',
+          defaultMessage: 'Can not reach search engine server'
+        })
+      )
+    }
+
   }
 
   render() {
-    if (this.state.filterSchema != undefined){
-      this.state.filterSchema
-        .items
-        .map(filterGroup =>
-          console.log(filterGroup.title)
-        )
-    }
-
     return (
       <div>
         <SearchBar />
@@ -73,7 +97,10 @@ class SearchResult extends Component {
           </div>
         </nav>
         <div className="container">
-          <ListingsGrid renderMode='search' />
+          <ListingsGrid
+            renderMode='search'
+            searchListingIds={this.state.listingIds}
+          />
         </div>
       </div>
     )
@@ -86,7 +113,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  searchListings: (query) => dispatch(searchListings(query))
+  generalSearch: (query, selectedListingType) => dispatch(generalSearch(query, selectedListingType)),
+  showAlert: (error) => dispatch(showAlert(error))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(SearchResult))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withRouter(SearchResult)))
