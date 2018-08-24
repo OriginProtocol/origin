@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { withRouter } from 'react-router'
 import queryString from 'query-string'
 
-import { storeWeb3Intent } from 'actions/App'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
 import { searchListings } from 'actions/Listing'
 import { generalSearch } from 'actions/Search'
@@ -30,14 +28,14 @@ class SearchBar extends Component {
 
     let listingType = this.listingTypes[0]
     if (getParams.listing_type != undefined){
-      listingType = this
+      listingType = (this
         .listingTypes
-        .find(listingTypeItem => listingTypeItem.type === getParams.listing_type) 
-      || listingType
+        .find(listingTypeItem => listingTypeItem.type === getParams.listing_type)
+      )||listingType
     }
 
     this.state = {
-      selectedListingType:listingType,
+      selectedListingType: listingType,
       searchQuery: getParams.search_query || ''
     }
 
@@ -63,7 +61,7 @@ class SearchBar extends Component {
     this.setState({ searchQuery: e.target.value })
   }
 
-  handleOnSearch(e) {
+  handleOnSearch() {
     document.location.href = `#/search?search_query=${this.state.searchQuery}&listing_type=${this.state.selectedListingType.type}`
     this.props.searchListings(this.state.searchQuery)
     this.props.generalSearch(this.state.searchQuery, this.state.selectedListingType.type)
@@ -72,7 +70,7 @@ class SearchBar extends Component {
   render() {
     return (
       <nav className="navbar searchbar navbar-expand-sm">
-       <div className="container d-flex flex-row">
+        <div className="container d-flex flex-row">
           <div className="input-group mr-auto" id="search">
             <div className="input-group-prepend">
               <button className="btn btn-outline-secondary dropdown-toggle search-bar-prepend" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -83,7 +81,7 @@ class SearchBar extends Component {
                   <a
                     className="dropdown-item"
                     key={listingType.type}
-                    onClick={e =>
+                    onClick={() =>
                       this.setState({ selectedListingType: listingType })
                     }
                   >{listingType.name}</a>)
@@ -142,7 +140,7 @@ class SearchBar extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = () => {
   return {
   }
 }

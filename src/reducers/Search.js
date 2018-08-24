@@ -5,19 +5,18 @@ const initialState = {
 }
 
 export default function Transactions(state = initialState, action = {}) {
-    switch (action.type) {
+  switch (action.type) {
 
-      case SearchConstants.SEARCH_QUERY:
-        const { query, listingType } = action
-        
-        return {
-          ...state,
-          query,
-          listingType
-        }
-
-      default:
-        return state
+  case SearchConstants.SEARCH_QUERY:
+    const { query, listingType } = action
+    
+    return {
+      ...state,
+      query,
+      listingType
     }
 
+  default:
+    return state
+  }
 }

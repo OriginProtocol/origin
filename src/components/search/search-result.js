@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router'
-import { searchListings } from 'actions/Listing'
 import queryString from 'query-string'
 
 import { showAlert } from 'actions/Alert'
@@ -19,7 +18,7 @@ class SearchResult extends Component {
 
     this.state = {
       filterSchema: undefined,
-      listingIds:[]
+      listingIds: []
     }
 
     // set default prop values for search_query and listing_type
@@ -78,7 +77,7 @@ class SearchResult extends Component {
       <div>
         <SearchBar />
         <nav className="navbar search-filters navbar-expand-sm">
-         <div className="container d-flex flex-row">
+          <div className="container d-flex flex-row">
             { this.state.filterSchema ?
               <ul className="navbar-nav collapse navbar-collapse">
                 {
@@ -93,12 +92,12 @@ class SearchResult extends Component {
                     )
                 }
               </ul>
-            : ''}
+              : ''}
           </div>
         </nav>
         <div className="container">
           <ListingsGrid
-            renderMode='search'
+            renderMode="search"
             searchListingIds={this.state.listingIds}
           />
         </div>
