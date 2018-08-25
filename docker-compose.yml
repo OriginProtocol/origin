@@ -50,16 +50,19 @@ services:
       - ./origin-js:/app
       - origin_js_node_modules:/app/node_modules
       - contracts:/app/contracts/build/contracts
+    environment:
+      - NODE_ENV=development
     ports:
       - "5002:5002" # API
       - "8080:8080" # IPFS gateway
       - "8081:8081" # Tests
       - "8545:8545" # Blockchain
-      - "4000:4000" # Apollo server 
+      - "4000:4000" # Apollo server
     # Run npm install on every container start to avoid volumes issue
     # https://github.com/docker/compose/issues/4337
     command: >
-      /bin/bash -c "npm install && node scripts/build.js serve"
+      /bin/bash -c "npm install --quiet --no-progress &&
+      node scripts/build.js serve"
     networks:
       - origin-develop
 
@@ -72,12 +75,12 @@ services:
     volumes:
       - ./origin-bridge/js/messaging:/app/messaging
       - ./ipfs/repo:/app/ipfsrepo
-    command: node_modules/.bin/babel-node messaging/orbit_server.js --presets es2015
     ports:
       - "9012:9012"
     environment:
       - MESSAGING_IPFS_WS_ADDRESS=/ip4/0.0.0.0/tcp/9012/ws
       - MESSAGING_NAMESPACE=dev
+    command: node_modules/.bin/babel-node messaging/orbit_server.js --presets es2015
     networks:
       - origin-develop
 
@@ -109,40 +112,35 @@ services:
       context: .
       dockerfile: dockerfiles/origin-dapp
     volumes:
-      # Mount each directory of origin-dapp separately so that the
-      # node_modules doesn't require the volume trick which introduces
-      # an issue with package.json dependencies not being updated on
-      # container rebuild
-      - ./origin-dapp/src:/app/src
-      - ./origin-dapp/translations:/app/translations
-      - ./origin-dapp/public:/app/public
-      - ./origin-dapp/webpack.config.js:/app/webpack.config.js
+      # Mount origin-dapp inside the container
+      - ./origin-dapp:/app
       # Set the envfile from the local envfile
       - ./envfiles/origin-dapp.env:/app/.env
       # Mount compiled origin-js inside node modules
-      - ./origin-js/dist:/app/node_modules/origin/dist
-      - origin_js_node_modules:/app/node_modules/origin/node_modules
+      - ./origin-js:/usr/local/lib/node_modules/origin
+      - origin_js_node_modules:/usr/local/lib/node_modules/origin/node_modules
       - ./ipfs/repo:/app/ipfsrepo
     depends_on:
       - orbit-db
       - origin-bridge
     environment:
-      - MESSAGING_NAMESPACE=dev
-      - MESSAGING_ACCOUNT=
+      - NODE_ENV=development
     ports:
       - "3000:3000"
     command:
-      # Waits for origin-bridge to start then uses a script to read the orbit-db
-      # container peer id and write the configuration key/pair to the .env file.
+      # Waits for origin-js and orbit-db to start then uses a script to read the
+      # orbit-db container peer id and write the configuration key/pair to the
+      # .env file.
       #
       # The copying is necessary because the .env file is mounted as a volume
       # and the inode is not allowed to change.
       >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-bridge:5000 --
-      echo 'origin-bridge is available, starting origin-dapp' &&
+      /bin/bash -c "wait-for.sh -t 0 -q origin-js:8081 --
       cp /app/.env /tmp/.env.new &&
       set-ipfs-swarm.sh /app/ipfsrepo/config /tmp/.env.new &&
       cp /tmp/.env.new /app/.env &&
+      npm install --quiet --no-progress &&
+      npm link origin &&
       node_modules/.bin/webpack-dev-server --host 0.0.0.0 --watch-poll 500"
     networks:
       - origin-develop

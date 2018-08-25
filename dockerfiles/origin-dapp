@@ -6,14 +6,3 @@ COPY ./scripts/wait-for.sh /usr/local/bin
 COPY ./scripts/set-ipfs-swarm.sh /usr/local/bin
 
 WORKDIR /app
-
-# Copy package.json and package-lock.json
-COPY ./origin-dapp/package*.json /app/
-
-# Make wait-for.sh available
-COPY ./scripts/wait-for.sh /usr/local/bin
-
-ENV NODE_ENV development
-
-# Use --quiet and --no-progress to speed up npm install
-RUN npm install --quiet --no-progress
