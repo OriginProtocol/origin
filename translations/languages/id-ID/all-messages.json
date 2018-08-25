@@ -109,7 +109,7 @@
   "listing-detail.buyNow": "Beli sekarang",
   "listing-detail.soldOut": "Terjual habis",
   "listing-detail.reviews": "Ulasan",
-  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
+  "listings-grid.originContractNotFound": "Tidak ada kontrak listing Origin yang ditemukan di jaringan ini.",
   "listings-grid.changeNetworks": "Anda mungkin perlu mengubah jaringan anda, atau sebarkan kontrak.",
   "listings-grid.listingsCount": "{listingIdsCount} Listing",
   "MessageNew.cannotReceiveMessages": "Pengguna ini belum mengaktifkan Origin Messaging.",
