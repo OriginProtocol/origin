@@ -14,8 +14,7 @@ export default class PanelButtons extends Component {
     console.log("Navigate to Learn About")
   }
   render() {
-    const { displayNextStep, currentStep } = this.props
-    const { name, complete, subStep, lastStep, subStepComplete } = currentStep
+    const { displayNextStep, step } = this.props
     const buttons = {
       'Overview': <button key={'first-btn'} className='btn btn-primary' onClick={displayNextStep}>Connect a Wallet</button>,
       'Connect Wallet': [
@@ -26,11 +25,9 @@ export default class PanelButtons extends Component {
       'Get Origin Tokens': <button key={'first-btn'} className='btn btn-primary' onClick={this.learnAbout}>Learn about Origin Tokens</button>
     }
 
-    const currentButtons = complete ? buttons[subStep.name] : buttons[name]
-
     return(
       <div>
-        {currentButtons}
+        {buttons[step.name]}
       </div>
     )
   }

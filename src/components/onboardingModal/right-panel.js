@@ -3,24 +3,7 @@ import PanelButtons from './panel-buttons'
 
 export default class RightPanel extends Component {
   render() {
-    const { currentStep={}, displayNextStep } = this.props
-    const {img, heading, content, name, subStep} = currentStep
-
-    if (currentStep.complete && subStep) {
-      return(
-        <div className="flex-column col-8 right-panel">
-          <div className="text-right">
-            <img src="/images/close-icon.svg" alt="close-icon" />
-          </div>
-          {subStep.img}
-          <div>
-            {subStep.heading}
-            {subStep.content}
-            <PanelButtons {...this.props}/>
-          </div>
-        </div>
-      )
-    }
+    const {img, heading, content, name} = this.props.step
 
     return(
       <div className="flex-column col-8 right-panel">

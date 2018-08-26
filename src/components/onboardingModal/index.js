@@ -33,20 +33,26 @@ class OnboardingModal extends Component {
     this.$el.modal('hide')
   }
 
-  displayNextStep() {
-    const { steps=[] } = this.state
-    const firstIncompleteStep = steps.find(({subStep, complete, subStepComplete}) => {
+  firstIncompleteStep() {
+    const { steps } = this.state
+
+    return steps.find(({subStep, complete, subStepComplete}) => {
       return (!complete || complete && subStepComplete === false)
     })
+  }
+
+  displayNextStep() {
+    const { steps=[] } = this.state
+    const firstIncompleteStep = this.firstIncompleteStep()
     if (!firstIncompleteStep) return
 
     const currentIndex = steps.indexOf(firstIncompleteStep)
-    const displayNextStep = steps[currentIndex+1]
+    const nextStep = steps[currentIndex+1]
 
-    const anotherStep = () => {
-      const { complete, subStep, subStepComplete } = firstIncompleteStep
+    const setCurrentStep = () => {
+      const { complete, subStep } = firstIncompleteStep
       if (!complete && subStep) return {...firstIncompleteStep, complete: true}
-      return displayNextStep
+      return nextStep
     }
 
     const updateSteps = (step) => {
@@ -60,20 +66,21 @@ class OnboardingModal extends Component {
     this.setState((state) => ({
       ...state,
       steps: steps.map(updateSteps),
-      currentStep: anotherStep()
+      currentStep: setCurrentStep()
     }))
   }
 
   render() {
     const { currentStep, steps } = this.state
+    const { complete, subStep } = currentStep
     const selected = (name) => {
-      const firstIncompleteStep = steps.find(({subStep, complete, subStepComplete}) => {
-        return (!complete || complete && subStepComplete === false)
-      })
+      const firstIncompleteStep = this.firstIncompleteStep()
+      const matchingStep = firstIncompleteStep.name === name
 
-      if (!firstIncompleteStep) return
-      return firstIncompleteStep.name === name && 'selected'
+      return matchingStep ? 'selected' : ''
     }
+
+    const step = complete && subStep ? subStep : currentStep
 
     return (
       <div
@@ -97,7 +104,7 @@ class OnboardingModal extends Component {
               </div>
               <RightPanel
                 displayNextStep={this.displayNextStep}
-                currentStep={currentStep}
+                step={step}
               />
             </div>
           </div>
