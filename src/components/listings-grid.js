@@ -7,7 +7,7 @@ import { withRouter } from 'react-router'
 import { getListingIds } from 'actions/Listing'
 
 import ListingCard from 'components/listing-card'
-import OnboardingModal from 'components/onboardingModal'
+import OnboardingModal from 'components/onboardingModal/split-panel'
 
 class ListingsGrid extends Component {
   constructor(props) {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import $ from 'jquery'
 
+import LeftPanel from './left-panel'
 import RightPanel from './right-panel'
 import steps from './steps'
 
@@ -73,14 +74,8 @@ class OnboardingModal extends Component {
   render() {
     const { currentStep, steps } = this.state
     const { complete, subStep } = currentStep
-    const selected = (name) => {
-      const firstIncompleteStep = this.firstIncompleteStep()
-      const matchingStep = firstIncompleteStep.name === name
-
-      return matchingStep ? 'selected' : ''
-    }
-
     const step = complete && subStep ? subStep : currentStep
+    const firstIncompleteStep = this.firstIncompleteStep()
 
     return (
       <div
@@ -93,15 +88,10 @@ class OnboardingModal extends Component {
         <div className="modal-dialog onboarding-modal">
           <div className="modal-content d-flex">
             <div className="row">
-              <div className="flex-column col-4 text-left left-panel">
-                { steps && steps.map(({name, description}, i) => (
-                  <div key={name} className={`content ${selected(name)}`}>
-                    <div className="oval rounded-circle"> </div>
-                    <span>{name}</span>
-                    <p className="text-muted">{description}</p>
-                  </div>
-                ))}
-              </div>
+              <LeftPanel
+                steps={steps}
+                firstIncompleteStep={firstIncompleteStep}
+              />
               <RightPanel
                 displayNextStep={this.displayNextStep}
                 step={step}
