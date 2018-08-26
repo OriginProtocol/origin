@@ -1,18 +1,16 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 export default class PanelButtons extends Component {
   constructor(props) {
     super(props)
 
     this.connectMetaMask = this.connectMetaMask.bind(this)
-    this.learnAbout = this.learnAbout.bind(this)
   }
   connectMetaMask() {
     this.props.displayNextStep()
   }
-  learnAbout() {
-    console.log("Navigate to Learn About")
-  }
+
   render() {
     const { displayNextStep, step } = this.props
     const buttons = {
@@ -22,7 +20,7 @@ export default class PanelButtons extends Component {
           <button key={'sec-btn'} className='btn btn-primary' disabled={true}>Download Mobile Wallet</button>
       ],
       'Connected': <button key={'first-btn'} className='btn btn-primary' onClick={displayNextStep}>Learn more</button>,
-      'Get Origin Tokens': <button key={'first-btn'} className='btn btn-primary' onClick={this.learnAbout}>Learn about Origin Tokens</button>
+      'Get Origin Tokens': <Link to="/about-origin"><button key={'first-btn'} className='btn btn-primary' onClick={this.aboutOrigin}>Learn about Origin Tokens</button></Link>
     }
 
     return(
