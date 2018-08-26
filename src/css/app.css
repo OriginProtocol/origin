@@ -1337,16 +1337,23 @@ a:hover {
   padding: 10px;
 }
 
+.onboarding-modal .left-panel .rounded-circle {
+  display: inline-block;
+  width: 34px;
+  height: 34px;
+}
+
 .onboarding-modal .selected,
 .onboarding-modal .right-panel {
   background-color: #2e3f53;
 }
 
-.onboarding-modal .oval {
-  display: inline-block;
-  width: 34px;
-  height: 34px;
+.onboarding-modal .incomplete {
   border: solid 3px var(--greenblue);
+}
+
+.onboarding-modal .complete {
+  background-color: var(--greenblue);
 }
 
 .onboarding-modal span,
