@@ -26,12 +26,35 @@ export default [
     name: 'Connect Wallet',
     description: 'Connect your wallet to start selling',
     complete: false,
-    Component: ''
+    heading: (
+      <h3>Connect your Wallet</h3>
+    ),
+    img: <img src="/images/eth-tokens.svg" alt="eth-tokens" />,
+    content: (
+      <div>
+        <p>
+          You will need a wallet to withdraw/deposit on the Origin DApp. Use a
+          metamask wallet or Origin&#39;s Mobile Wallet App.
+        </p>
+      </div>
+    )
   },
   {
     name: 'Get Origin Tokens',
     description: 'Connect your wallet to start selling',
     complete: false,
-    Component: ''
+    heading: (
+      <h3>Metamask is connected</h3>
+    ),
+    img: <img src="/images/eth-tokens.svg" alt="eth-tokens" />,
+    content: (
+      <div>
+        <p>We&#39;ve detected a Metamask wallet.</p>
+        <p>
+          You&#39;re one step closer to selling on the Origin DApp. Click the
+          button below to learn about Origin Tokens and boosting your listings.
+        </p>
+      </div>
+    )
   }
 ]
