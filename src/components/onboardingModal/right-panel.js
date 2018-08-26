@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PanelButtons from './panel-buttons'
 
 export default class RightPanel extends Component {
   render() {
@@ -18,7 +19,7 @@ export default class RightPanel extends Component {
         <div>
           {heading}
           {content}
-          {buttons[name]}
+          <PanelButtons {...this.props}/>
         </div>
       </div>
     )
