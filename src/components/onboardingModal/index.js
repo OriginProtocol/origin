@@ -33,37 +33,44 @@ class OnboardingModal extends Component {
     this.$el.modal('hide')
   }
 
-  changeStep(currentStep) {
-    this.setState({ currentStep })
-  }
-
   displayNextStep() {
-    const { currentStep, steps=[] } = this.state
-    const firstIncompleteStep = steps.find((step) => !step.complete)
-
+    const { steps=[] } = this.state
+    const firstIncompleteStep = steps.find(({subStep, complete, subStepComplete}) => {
+      return (!complete || complete && subStepComplete === false)
+    })
     if (!firstIncompleteStep) return
 
-    const currentIndex = steps.indexOf(currentStep)
+    const currentIndex = steps.indexOf(firstIncompleteStep)
     const displayNextStep = steps[currentIndex+1]
+
+    const anotherStep = () => {
+      const { complete, subStep, subStepComplete } = firstIncompleteStep
+      if (!complete && subStep) return {...firstIncompleteStep, complete: true}
+      return displayNextStep
+    }
+
     const updateSteps = (step) => {
+      const { complete, subStep, subStepComplete } = step
       if (step === firstIncompleteStep) {
+        if (step.complete) return {...step, subStepComplete: true}
         return {...step, complete: true}
       }
       return step
     }
-
     this.setState((state) => ({
       ...state,
       steps: steps.map(updateSteps),
-      currentStep: displayNextStep
+      currentStep: anotherStep()
     }))
   }
 
   render() {
     const { currentStep, steps } = this.state
-
     const selected = (name) => {
-      const firstIncompleteStep = steps.find((step) => !step.complete)
+      const firstIncompleteStep = steps.find(({subStep, complete, subStepComplete}) => {
+        return (!complete || complete && subStepComplete === false)
+      })
+
       if (!firstIncompleteStep) return
       return firstIncompleteStep.name === name && 'selected'
     }
