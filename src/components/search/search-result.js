@@ -72,6 +72,38 @@ class SearchResult extends Component {
 
   }
 
+  renderMultipleSelectionForm() {
+    return (
+      <div className="form-check">
+        <input type="checkbox" className="form-check-input" id="dropdownCheck2"/>
+        <label className="form-check-label" htmlFor="dropdownCheck2">
+          Remember me
+        </label>
+      </div>
+    )
+  }
+
+  renderFilterGroup(filterGroup, renderFormCallback) {
+    return (
+      <li className="nav-item" key={this.props.intl.formatMessage(filterGroup.title)}>
+        <a className="nav-link" data-toggle="dropdown" data-parent="#searchbar">
+          {this.props.intl.formatMessage(filterGroup.title)}
+        </a>
+        <form className="dropdown-menu">
+          <div className="d-flex flex-column">
+            <div className="dropdown-form">
+            {renderFormCallback()}
+            </div>
+            <div className="d-flex flex-row button-container">
+              <a className="dropdown-button dropdown-button-left align-middle align-self-center">Submit</a>
+              <a className="dropdown-button dropdown-button-right align-middle">Clear</a>
+            </div>
+          </div>
+        </form>
+      </li>
+    )
+  }
+
   render() {
     return (
       <div>
@@ -83,32 +115,10 @@ class SearchResult extends Component {
                 {
                   this.state.filterSchema
                     .items
-                    .map(filterGroup =>
-                      <li className="nav-item" key={this.props.intl.formatMessage(filterGroup.title)}>
-                        <a className="nav-link" data-toggle="dropdown" data-parent="#searchbar">
-                          {this.props.intl.formatMessage(filterGroup.title)}
-                        </a>
-                        <div className="dropdown-menu">
-                          <div className="d-flex flex-column">
-                            <div className="dropdown-form">
-                              placeholder for filter form<br/>
-                              placeholder for filter form<br/>
-                              placeholder for filter form<br/>
-                              placeholder for filter form<br/>
-                              placeholder for filter form<br/>
-                              placeholder for filter form<br/>
-                            </div>
-                            {/*<div className="d-flex flex-row button-container">
-                              <a className="dropdown-button dropdown-button-left align-middle align-self-center">Submit</a>
-                              <a className="dropdown-button dropdown-button-right align-middle">Clear</a>
-                            </div>
-                            */}
-                            {/*<a className="dropdown-button align-middle ">submit</a>*/}
-                            <a className="dropdown-button align-middle ">submit</a>
-                          </div>
-                        </div>
-                      </li>
-                    )
+                    .map(filterGroup => {
+                      
+                      return this.renderFilterGroup(filterGroup, this.renderMultipleSelectionForm)  
+                    })
                 }
               </ul>
               : ''}

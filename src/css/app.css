@@ -543,7 +543,7 @@ a:hover {
 }
 
 .search-filters .dropdown-menu .dropdown-form {
-  padding: 0.5rem 0;
+  padding: 1rem 1.5rem;
   margin: 0.125rem 0 0;
   background-color: #fff;
   border-left: 1px solid rgba(0, 0, 0, 0.15);
@@ -551,11 +551,25 @@ a:hover {
   border-right: 1px solid rgba(0, 0, 0, 0.15);
   border-top-right-radius: 0.25rem;
   border-top-left-radius: 0.25rem;
+  min-width: 260px;
+}
+
+.search-filters .dropdown-form label {
+  font-size: 1.2rem;
+  font-weight: normal;
+}
+
+.search-filters .dropdown-form .form-check-input{
+  margin-top: 0.4rem;
+  margin-left: -1.4rem;
+}
+
+.search-filters .dropdown-form input[type="checkbox"] {
+  transform: scale(1.2);
 }
 
 .search-filters a.dropdown-button {
   width: 100%;
-  min-width: 260px;
   background-color: var(--pale-grey-two);
   text-align: center;
   color: var(--clear-blue);
@@ -578,7 +592,6 @@ a:hover {
   border-left: 1px solid rgba(0, 0, 0, 0.15);
   border-bottom-right-radius: 0px;
   border-right: 1px solid rgba(0, 0, 0, 0.15);
-  min-width: 130px;
 }
 
 .search-filters a.dropdown-button-right {
@@ -586,7 +599,6 @@ a:hover {
   border-right: 1px solid rgba(0, 0, 0, 0.15);
   border-bottom-left-radius: 0px;
   border-left: 0px;
-  min-width: 130px;
 }
 
 /* Navbar */
