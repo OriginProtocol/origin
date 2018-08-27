@@ -34,6 +34,11 @@ class ListingCard extends Component {
     const { address, category, loading, name, pictures, price, unitsAvailable } = this.state
     const photo = pictures && pictures.length && (new URL(pictures[0])).protocol === "data:" && pictures[0]
 
+    // Temporary fix to allow admins to see listing index for an address
+    if (address && this.props.listingId) {
+      console.log(`listing index for address ${address}:`, this.props.listingId)
+    }
+
     return (
       <div className={`col-12 col-md-6 col-lg-4 listing-card${loading ? ' loading' : ''}`}>
         <Link to={`/listing/${address}`}>
