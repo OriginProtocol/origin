@@ -76,7 +76,7 @@ class SearchResult extends Component {
     return (
       <div>
         <SearchBar />
-        <nav className="navbar search-filters navbar-expand-sm">
+        <nav id="searchbar" className="navbar search-filters navbar-expand-sm">
           <div className="container d-flex flex-row">
             { this.state.filterSchema ?
               <ul className="navbar-nav collapse navbar-collapse">
@@ -85,9 +85,28 @@ class SearchResult extends Component {
                     .items
                     .map(filterGroup =>
                       <li className="nav-item" key={this.props.intl.formatMessage(filterGroup.title)}>
-                        <a className="nav-link" href="#">
+                        <a className="nav-link" data-toggle="dropdown" data-parent="#searchbar">
                           {this.props.intl.formatMessage(filterGroup.title)}
                         </a>
+                        <div className="dropdown-menu">
+                          <div className="d-flex flex-column">
+                            <div className="dropdown-form">
+                              placeholder for filter form<br/>
+                              placeholder for filter form<br/>
+                              placeholder for filter form<br/>
+                              placeholder for filter form<br/>
+                              placeholder for filter form<br/>
+                              placeholder for filter form<br/>
+                            </div>
+                            {/*<div className="d-flex flex-row button-container">
+                              <a className="dropdown-button dropdown-button-left align-middle align-self-center">Submit</a>
+                              <a className="dropdown-button dropdown-button-right align-middle">Clear</a>
+                            </div>
+                            */}
+                            {/*<a className="dropdown-button align-middle ">submit</a>*/}
+                            <a className="dropdown-button align-middle ">submit</a>
+                          </div>
+                        </div>
                       </li>
                     )
                 }

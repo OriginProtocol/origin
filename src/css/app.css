@@ -510,7 +510,7 @@ a:hover {
   border-bottom: 1px solid var(--light);
 }
 
-.search-filters .navbar-nav .nav-item a {
+.search-filters .navbar-nav .nav-item > a {
   font-size: 0.875rem;
   color: var(--dark);
   padding: 0.09rem 0.40rem;
@@ -521,9 +521,72 @@ a:hover {
   border-radius: 4px;
 }
 
-.search-filters .navbar-nav .nav-item a:hover {
+.search-filters .navbar-nav .nav-item > a:hover {
+  background-color: var(--pale-grey-three);
+  cursor: pointer;
+}
+
+.search-filters .navbar-nav .nav-item.show > a {
   border: 0.06rem solid var(--dusk);
   padding: 0.03rem 0.34rem;
+}
+
+.search-filters .dropdown-menu {
+  left: auto;
+  padding: 0px;
+  margin: auto;
+  border: 0px;
+  top: auto;
+  background-color: transparent;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+  border-radius: 0.25rem;
+}
+
+.search-filters .dropdown-menu .dropdown-form {
+  padding: 0.5rem 0;
+  margin: 0.125rem 0 0;
+  background-color: #fff;
+  border-left: 1px solid rgba(0, 0, 0, 0.15);
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  border-right: 1px solid rgba(0, 0, 0, 0.15);
+  border-top-right-radius: 0.25rem;
+  border-top-left-radius: 0.25rem;
+}
+
+.search-filters a.dropdown-button {
+  width: 100%;
+  min-width: 260px;
+  background-color: var(--pale-grey-two);
+  text-align: center;
+  color: var(--clear-blue);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-bottom-right-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+  line-height: 50px;
+  font-weight: normal;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.search-filters a.dropdown-button:hover {
+  background-color: var(--pale-grey-two-darker);
+  color: var(--clear-blue);
+}
+
+.search-filters a.dropdown-button-left {
+  width: 50%;
+  border-left: 1px solid rgba(0, 0, 0, 0.15);
+  border-bottom-right-radius: 0px;
+  border-right: 1px solid rgba(0, 0, 0, 0.15);
+  min-width: 130px;
+}
+
+.search-filters a.dropdown-button-right {
+  width: 50%;
+  border-right: 1px solid rgba(0, 0, 0, 0.15);
+  border-bottom-left-radius: 0px;
+  border-left: 0px;
+  min-width: 130px;
 }
 
 /* Navbar */
