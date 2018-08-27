@@ -19,11 +19,13 @@ const AboutToken = () => {
                 defaultMessage={'What are Origin Tokens used for?'}
               />
             </h3>
-            <h6><strong>
-              <FormattedMessage
-                id={'about-token.incentives'}
-                defaultMessage={'Incentives'}
-              /></strong>
+            <h6>
+              <strong>
+                <FormattedMessage
+                  id={'about-token.incentives'}
+                  defaultMessage={'Incentives'}
+                />
+              </strong>
             </h6>
             <p>
               <FormattedMessage
@@ -31,11 +33,13 @@ const AboutToken = () => {
                 defaultMessage={'Vivamus faucibus tortor ultrices arcu consectetur convallis. Fusce eget fringilla velit, vitae dignissim ipsum. Curabitur hendrerit, massa sit amet molestie tincidunt, lacus purus aliquam urna, at venenatis nibh dui sit amet nunc. Nunc tortor leo, pretium id convallis et, sollicitudin in ex.'}
               />
   	        </p>
-            <h6><strong>
-              <FormattedMessage
-                id={'about-token.governance'}
-                defaultMessage={'Governance'}
-              /></strong>
+            <h6>
+              <strong>
+                <FormattedMessage
+                  id={'about-token.governance'}
+                  defaultMessage={'Governance'}
+                />
+              </strong>
             </h6>
             <p>
               <FormattedMessage
@@ -50,11 +54,13 @@ const AboutToken = () => {
                 defaultMessage={'Where can I buy Origin Tokens?'}
               />
             </h3>
-            <h6><strong>
-              <FormattedMessage
-                id={'about-token.exchanges'}
-                defaultMessage={'List of Approved Exchanges'}
-              /></strong>
+            <h6>
+              <strong>
+                <FormattedMessage
+                  id={'about-token.exchanges'}
+                  defaultMessage={'List of Approved Exchanges'}
+                />
+              </strong>
             </h6>
             <p>
               <FormattedMessage
@@ -87,11 +93,13 @@ const AboutToken = () => {
                 defaultMessage={'Can I earn Origin Tokens?'}
               />
             </h3>
-            <h6><strong>
-              <FormattedMessage
-                id={'about-token.earning'}
-                defaultMessage={'Earning Origin Tokens'}
-              /></strong>
+            <h6>
+              <strong>
+                <FormattedMessage
+                  id={'about-token.earning'}
+                  defaultMessage={'Earning Origin Tokens'}
+                />
+              </strong>
             </h6>
             <p>
               <FormattedMessage
@@ -121,9 +129,6 @@ const AboutToken = () => {
             </ul>
           </div>
           <div className="col-md-6">
-            <br />
-            <br />
-            <br />
             <div className="video-placeholder"></div>
           </div>
         </div>

@@ -3398,6 +3398,7 @@ a:not([href]):not([tabindex]).span-link {
   height: 225px;
   background-color: #dfe6ea;
   background-color: var(--pale-grey-two);
+  margin-top: 50px;
 }
 
 /* Media queries */
