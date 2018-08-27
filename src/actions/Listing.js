@@ -31,9 +31,9 @@ export function getListingIds() {
         return
       }
 
-      if (networkId < 10) { // Networks >9 are local test networks
+      if (networkId < 10) { // Networks > 9 are local development
         let response = await fetch(
-          `https://raw.githubusercontent.com/OriginProtocol/demo-dapp/hide_list/hidelist_${networkId}.json`
+          `https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hide_list/hidelist_${networkId}.json`
         )
         if (response.status === 200) {
           hideList = await response.json()

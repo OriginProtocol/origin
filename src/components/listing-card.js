@@ -22,9 +22,8 @@ class ListingCard extends Component {
       const listing = await origin.listings.getByIndex(this.props.listingId)
 
       const translatedListing = translateListingCategory(listing)
-      const obj = Object.assign({}, translatedListing, { loading: false })
 
-      this.setState(obj)
+      this.setState({ ...translatedListing, loading: false })
     } catch (error) {
       console.error(`Error fetching contract or IPFS info for listingId: ${this.props.listingId}`)
     }
