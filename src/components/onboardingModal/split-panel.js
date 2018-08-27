@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import $ from 'jquery'
 
 import LeftPanel from './left-panel'
 import RightPanel from './right-panel'
@@ -10,28 +9,22 @@ class OnboardingModal extends Component {
     super(props)
     this.state = {steps, currentStep: steps[0]}
 
+    this.externalModalClose = this.externalModalClose.bind(this)
     this.displayNextStep = this.displayNextStep.bind(this)
   }
 
   componentDidMount() {
-    this.$el = $(this.el)
-
-    this.$el.modal({
-      backdrop: this.props.backdrop || true,
-      show: this.props.isOpen || true
-    })
-  }
-
-  componentDidUpdate(prevProps) {
-    const { isOpen=true } = this.props
-
-    if (prevProps.isOpen !== isOpen) {
-      this.$el.modal(isOpen ? 'show' : 'hide')
-    }
+    document.addEventListener('mousedown', this.externalModalClose);
   }
 
   componentWillUnmount() {
-    this.$el.modal('hide')
+    document.removeEventListener('mousedown', this.externalModalClose);
+  }
+
+  externalModalClose(event) {
+    if (this.node && !this.node.contains(event.target)) {
+      this.props.closeModal()
+    }
   }
 
   firstIncompleteStep() {
@@ -59,11 +52,12 @@ class OnboardingModal extends Component {
     const updateSteps = (step) => {
       const { complete, subStep, subStepComplete } = step
       if (step === firstIncompleteStep) {
-        if (step.complete) return {...step, subStepComplete: true}
+        if (complete) return {...step, subStepComplete: true}
         return {...step, complete: true}
       }
       return step
     }
+
     this.setState((state) => ({
       ...state,
       steps: steps.map(updateSteps),
@@ -73,32 +67,30 @@ class OnboardingModal extends Component {
 
   render() {
     const { currentStep, steps } = this.state
+    const { isOpen, closeModal } = this.props
     const { complete, subStep } = currentStep
     const step = complete && subStep ? subStep : currentStep
     const firstIncompleteStep = this.firstIncompleteStep()
 
     return (
-      <div
-        ref={el => (this.el = el)}
-        className={`modal fade`}
-        tabIndex="-1"
-        role="dialog"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog onboarding-modal">
-          <div className="modal-content d-flex">
-            <div className="row">
-              <LeftPanel
-                steps={steps}
-                firstIncompleteStep={firstIncompleteStep}
-              />
-              <RightPanel
-                displayNextStep={this.displayNextStep}
-                step={step}
-              />
+      <div>
+        { isOpen && (
+          <div ref={node => (this.node = node)} className="modal-dialog onboarding-modal">
+            <div className="modal-content d-flex">
+              <div className="row">
+                <LeftPanel
+                  steps={steps}
+                  firstIncompleteStep={firstIncompleteStep}
+                />
+                <RightPanel
+                  displayNextStep={this.displayNextStep}
+                  step={step}
+                  closeModal={closeModal}
+                />
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     )
   }

@@ -7,6 +7,7 @@ export default class PanelButtons extends Component {
 
     this.connectMetaMask = this.connectMetaMask.bind(this)
   }
+
   connectMetaMask() {
     this.props.displayNextStep()
   }
@@ -14,13 +15,23 @@ export default class PanelButtons extends Component {
   render() {
     const { displayNextStep, step } = this.props
     const buttons = {
-      'Overview': <button key={'first-btn'} className='btn btn-primary' onClick={displayNextStep}>Connect a Wallet</button>,
+      'Overview': (
+        <button key={'first-btn'} className='btn btn-primary' onClick={displayNextStep}>Connect a Wallet</button>
+      ),
       'Connect Wallet': [
           <button key={'first-btn'} className='btn btn-primary' onClick={this.connectMetaMask}>Connect Metamask</button>,
           <button key={'sec-btn'} className='btn btn-primary' disabled={true}>Download Mobile Wallet</button>
       ],
-      'Connected': <button key={'first-btn'} className='btn btn-primary' onClick={displayNextStep}>Learn more</button>,
-      'Get Origin Tokens': <Link to="/about-origin"><button key={'first-btn'} className='btn btn-primary' onClick={this.aboutOrigin}>Learn about Origin Tokens</button></Link>
+      'Connected': (
+        <button key={'first-btn'} className='btn btn-primary' onClick={displayNextStep}>Learn more</button>
+      ),
+      'Get Origin Tokens': (
+        <Link to="/about-origin">
+          <button key={'first-btn'} className='btn btn-primary' onClick={this.aboutOrigin}>
+            Learn about Origin Tokens
+          </button>
+        </Link>
+      )
     }
 
     return(

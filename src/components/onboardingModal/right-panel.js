@@ -3,12 +3,13 @@ import PanelButtons from './panel-buttons'
 
 export default class RightPanel extends Component {
   render() {
-    const {img, heading, content, name} = this.props.step
+    const { step, closeModal } = this.props
+    const {img, heading, content, name} = step
 
     return(
       <div className="flex-column col-8 right-panel">
         <div className="text-right">
-          <img src="/images/close-icon.svg" alt="close-icon" />
+          <img src="/images/close-icon.svg" alt="close-icon" onClick={closeModal}/>
         </div>
         {img}
         <div>
