@@ -13,7 +13,7 @@ const fetchRate = async (fiatCurrencyCode) => {
     fetch(exchangeURL)
       .then(res => res.json())
       .then(json => {
-        const exchangeRateFromAPI = json.ticker.price
+        const exchangeRateFromAPI = parseFloat(json.ticker.price)
         if (typeof Storage !== 'undefined') {
           const object = { value: exchangeRateFromAPI, timestamp: new Date() }
           localStorage.setItem('origin.exchangeRate', JSON.stringify(object))
@@ -31,7 +31,7 @@ async function getFiatExchangeRate(fiatCurrencyCode) {
       const HALF_HOUR = 30 * 60 * 1000
       const cachedTime = new Date(JSON.parse(cachedRate).timestamp)
       if (new Date() - cachedTime < HALF_HOUR) {
-        return JSON.parse(cachedRate).value
+        return parseFloat(JSON.parse(cachedRate).value)
       } else {
         localStorage.removeItem('origin.exchangeRate')
         return await fetchRate(fiatCurrencyCode) // cache is invalid
@@ -45,11 +45,12 @@ async function getFiatExchangeRate(fiatCurrencyCode) {
 }
 
 export async function getFiatPrice(priceEth, fiatCurrencyCode) {
+  if (!priceEth) {
+    priceEth = 0
+  }
   const exchangeRate = await getFiatExchangeRate(fiatCurrencyCode)
-  return priceEth ?
-    Number(priceEth * exchangeRate).toLocaleString(
-      undefined,
-      { minimumFractionDigits: 2, maximumFractionDigits: 2 }
-    )
-    : 0
+  return Number(priceEth * exchangeRate).toLocaleString(
+    undefined,
+    { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+  )
 }

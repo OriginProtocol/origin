@@ -6,6 +6,7 @@ class PriceField extends Component {
     super(props)
     this.state = {
       price: props.formData || '',
+      priceUsd: '0.00',
       currencyCode: props.currencyCode || 'USD'
     }
 
@@ -57,14 +58,12 @@ class PriceField extends Component {
             value={ this.state.price }
             onChange={ this.onChange() }
             required={ this.props.required } />
-          { this.state.priceUsd &&
             <Fragment>
               <p className="help-block">{ this.state.priceUsd }{this.state.currencyCode}</p>
               <p className="help-block">
                 The cost to buy this listing. Price is always in <a href="https://en.wikipedia.org/wiki/Ethereum" target="_blank" rel="noopener noreferrer">ETH</a>, USD is an estimate.
               </p>
             </Fragment>
-          }
         </Fragment>
     )
   }
