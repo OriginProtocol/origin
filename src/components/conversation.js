@@ -103,7 +103,7 @@ class Conversation extends Component {
   async loadListing() {
     const { messages } = this.props
     // find the most recent listing context or set empty value
-    const { listingAddress } = messages.reverse().find(m => m.listingAddress) || {}
+    const { listingAddress } = [...messages].reverse().find(m => m.listingAddress) || {}
     // get the listing
     const listing = listingAddress ? (await origin.listings.get(listingAddress)) : {}
     // if listing does not match state, store and check for a purchase
