@@ -1398,6 +1398,24 @@ a:hover {
   padding: 3.5rem 0;
 }
 
+.modal.getting-started {
+  top: auto;
+  left: auto;
+  margin-right: 1.75rem;
+}
+
+.getting-started .modal-content{
+  background-color: var(--pale-grey);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.4);
+  color: var(--dark);
+  padding-top: 30px;
+}
+
+.getting-started .text-right img {
+  position: absolute;
+  top: 15px;
+}
+
 .listing-card {
   margin-bottom: 5rem;
 }

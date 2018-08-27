@@ -16,28 +16,28 @@ class ListingsGrid extends Component {
     this.state = {
       listingsPerPage: 12,
       learnMore: true,
-      openOnBoardingModal: false
+      onBoardingModal: false
     }
 
-    this.toggleOnBoardingModal = this.toggleOnBoardingModal.bind(this)
+    this.closeModal = this.closeModal.bind(this)
   }
 
   componentWillMount() {
     this.props.getListingIds()
   }
 
-  closeLearnMoreModal() {
-    this.setState({ learnMore: false })
+  closeModal(name='onBoardingModal') {
+    return () => {
+      this.setState({ [name]: false })
+    }
   }
 
-  toggleOnBoardingModal() {
-    const { openOnBoardingModal } = this.state;
-
-    this.setState({ learnMore: false, openOnBoardingModal: !openOnBoardingModal })
+  openOnBoardingModal() {
+    this.setState({ learnMore: false, onBoardingModal: true })
   }
 
   render() {
-    const { listingsPerPage, openOnBoardingModal, learnMore } = this.state
+    const { listingsPerPage, onBoardingModal, learnMore } = this.state
     const { contractFound, listingIds, hideList } = this.props
     // const pinnedListingIds = [0, 1, 2, 3, 4]
     // const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
@@ -52,18 +52,18 @@ class ListingsGrid extends Component {
     const learnMoreContent = (
       <div>
         <div className="text-right">
-          <img src="/images/close-icon.svg" alt="close-icon" onClick={() => this.closeLearnMoreModal()}/>
+          <img src="/images/close-icon.svg" alt="close-icon" onClick={this.closeModal('learnMore')}/>
         </div>
         <img src="/images/eth-tokens.svg" alt="eth-tokens" />
         <h3>Get Started Selling on Origin!</h3>
         <p>Learn how to sell on our DApp today.</p>
-        <button className='btn btn-primary' onClick={this.toggleOnBoardingModal}>Learn more</button>
+        <button className='btn btn-primary' onClick={() => this.openOnBoardingModal()}>Learn more</button>
       </div>
     )
 
     return (
       <div className="listings-wrapper">
-        <OnboardingModal isOpen={openOnBoardingModal} closeModal={this.toggleOnBoardingModal}/>
+        <OnboardingModal isOpen={onBoardingModal} closeModal={this.closeModal('onBoardingModal')}/>
         {contractFound === false && (
           <div className="listings-grid">
             <div className="alert alert-warning" role="alert">
@@ -119,7 +119,7 @@ class ListingsGrid extends Component {
             />
           </div>
         )}
-        <Modal isOpen={learnMore} children={learnMoreContent}/>
+        <Modal className={'getting-started'} isOpen={learnMore} children={learnMoreContent}/>
       </div>
     )
   }
