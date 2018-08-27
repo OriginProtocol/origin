@@ -58,12 +58,10 @@ class PriceField extends Component {
             value={ this.state.price }
             onChange={ this.onChange() }
             required={ this.props.required } />
-            <Fragment>
-              <p className="help-block">{ this.state.priceUsd }{this.state.currencyCode}</p>
-              <p className="help-block">
-                The cost to buy this listing. Price is always in <a href="https://en.wikipedia.org/wiki/Ethereum" target="_blank" rel="noopener noreferrer">ETH</a>, USD is an estimate.
-              </p>
-            </Fragment>
+          <p className="help-block">{ this.state.priceUsd }{this.state.currencyCode}</p>
+          <p className="help-block">
+            The cost to buy this listing. Price is always in <a href="https://en.wikipedia.org/wiki/Ethereum" target="_blank" rel="noopener noreferrer">ETH</a>, USD is an estimate.
+          </p>
         </Fragment>
     )
   }
