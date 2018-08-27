@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
-
-const baseCurrencyCode = 'ETH'
+import { getConversionRate } from 'utils/priceUtils'
 
 class ListingCardPrices extends Component {
   constructor(props) {
@@ -11,8 +10,7 @@ class ListingCardPrices extends Component {
       exchangeRate: null,
       approxPrice: 'Loading...',
       currencyCode: 'USD',
-      defaultDecimalPlaces: this.getPrecision(props.price),
-      exchangeBaseURL: 'https://api.cryptonator.com/api/ticker/'
+      defaultDecimalPlaces: this.getPrecision(props.price)
     }
   }
 
@@ -27,52 +25,12 @@ class ListingCardPrices extends Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     try {
-      this.retrieveConversion()
+      const exchangeRate = await getConversionRate(this.state.currencyCode)
+      this.setState({ exchangeRate })
     } catch (error) {
       console.error(error)
-    }
-  }
-
-  doFetch() {
-    let exchangeURL = this.state.exchangeBaseURL
-    exchangeURL += baseCurrencyCode.toLowerCase()
-    exchangeURL += '-'
-    exchangeURL += this.state.currencyCode.toLowerCase()
-
-    return new Promise((resolve) => {
-      fetch(exchangeURL)
-        .then(res => res.json())
-        .then(json => {
-          const exchangeRateFromAPI = json.ticker.price
-          if (typeof Storage !== 'undefined') {
-            const object = { value: exchangeRateFromAPI, timestamp: new Date() }
-            localStorage.setItem('origin.exchangeRate', JSON.stringify(object))
-          }
-          resolve(this.setState({ exchangeRate: exchangeRateFromAPI }))
-        })
-        .catch(console.error)
-    })
-  }
-
-  retrieveConversion() {
-    if (typeof Storage !== 'undefined') {
-      const cachedRate = localStorage.getItem('origin.exchangeRate')
-      if (cachedRate) {
-        const HALF_HOUR = 30 * 60 * 1000
-        const cachedTime = new Date(JSON.parse(cachedRate).timestamp)
-        if (new Date() - cachedTime < HALF_HOUR) {
-          this.setState({ exchangeRate: JSON.parse(cachedRate).value })
-        } else {
-          localStorage.removeItem('origin.exchangeRate')
-          this.doFetch() // cache is invalid
-        }
-      } else {
-        this.doFetch() // isn't cached to begin with
-      }
-    } else {
-      this.doFetch() // localStorage not available
     }
   }
 
