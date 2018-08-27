@@ -27,7 +27,7 @@
       "items": [
         {
           "type": "multipleSelectionFilter",
-          "listingPropertyName": "homeTypes",
+          "listingPropertyName": "properties.category.enum",
           "searchParameterName": "homeTypes",
           "multipleSelection": true
         }

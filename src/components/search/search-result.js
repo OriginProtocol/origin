@@ -4,6 +4,7 @@ import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router'
 import queryString from 'query-string'
 
+import schemaMessages from '../../schemaMessages/index'
 import { showAlert } from 'actions/Alert'
 import ListingsGrid from 'components/listings-grid'
 import SearchBar from 'components/search/searchbar'
@@ -18,6 +19,7 @@ class SearchResult extends Component {
 
     this.state = {
       filterSchema: undefined,
+      listingSchema: undefined,
       listingIds: []
     }
 
@@ -45,7 +47,11 @@ class SearchResult extends Component {
         .then((response) => response.json())
         .then((schemaJson) => {
           this.setState({ filterSchema: schemaJson })
-          window.scrollTo(0, 0)
+        })
+      fetch(`schemas/${this.props.listingType}.json`)
+        .then((response) => response.json())
+        .then((schemaJson) => {
+          this.setState({ listingSchema: schemaJson })
         })
     }
   }
@@ -72,7 +78,25 @@ class SearchResult extends Component {
 
   }
 
-  renderMultipleSelectionForm() {
+  resolveFromListingSchema(path) {
+    var properties = Array.isArray(path) ? path : path.split('.')
+    return properties.reduce((prev, curr) => prev && prev[curr], this.state.listingSchema)
+  }
+
+  renderMultipleSelectionFilter(multipleSelectionValues) {
+    return multipleSelectionValues.map(multipleSelectionValue =>
+      <div className="form-check">
+        <input type="checkbox" className="form-check-input" id="dropdownCheck2"/>
+        <label className="form-check-label" htmlFor="dropdownCheck2">
+          {
+            this.props.intl.formatMessage(schemaMessages[_.camelCase(this.props.listingType)][multipleSelectionValue])
+          }
+        </label>
+      </div>
+    )    
+  }
+
+  renderPriceFilter() {
     return (
       <div className="form-check">
         <input type="checkbox" className="form-check-input" id="dropdownCheck2"/>
@@ -83,7 +107,17 @@ class SearchResult extends Component {
     )
   }
 
-  renderFilterGroup(filterGroup, renderFormCallback) {
+  renderFilter(filter) {
+    if (filter.type == 'multipleSelectionFilter') {
+      return this.renderMultipleSelectionFilter(this.resolveFromListingSchema(filter.listingPropertyName))
+    } else if (filter.type == 'price') {
+      return this.renderPriceFilter()
+    } else {
+      throw `Unrecognised filter type "${filter.type}".`
+    }
+  }
+
+  renderFilterGroup(filterGroup) {
     return (
       <li className="nav-item" key={this.props.intl.formatMessage(filterGroup.title)}>
         <a className="nav-link" data-toggle="dropdown" data-parent="#searchbar">
@@ -92,7 +126,7 @@ class SearchResult extends Component {
         <form className="dropdown-menu">
           <div className="d-flex flex-column">
             <div className="dropdown-form">
-            {renderFormCallback()}
+            {filterGroup.items.map(filter => this.renderFilter(filter))}
             </div>
             <div className="d-flex flex-row button-container">
               <a className="dropdown-button dropdown-button-left align-middle align-self-center">Submit</a>
@@ -110,14 +144,14 @@ class SearchResult extends Component {
         <SearchBar />
         <nav id="searchbar" className="navbar search-filters navbar-expand-sm">
           <div className="container d-flex flex-row">
-            { this.state.filterSchema ?
+            { this.state.filterSchema && this.state.listingSchema ?
               <ul className="navbar-nav collapse navbar-collapse">
                 {
                   this.state.filterSchema
                     .items
                     .map(filterGroup => {
-                      
-                      return this.renderFilterGroup(filterGroup, this.renderMultipleSelectionForm)  
+
+                      return this.renderFilterGroup(filterGroup)  
                     })
                 }
               </ul>
