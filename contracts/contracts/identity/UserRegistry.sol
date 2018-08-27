@@ -1,6 +1,6 @@
-pragma solidity 0.4.23;
+pragma solidity ^0.4.23;
 
-import './identity/ClaimHolderPresigned.sol';
+import './ClaimHolderPresigned.sol';
 
 /// @title UserRegistry
 /// @dev Used to keep registry of user identifies
