@@ -1720,6 +1720,15 @@ label[for=root_pictures]:hover {
   border: solid 1px var(--light);
 }
 
+.help-block {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.help-block a {
+  color: var(--bluish-purple);
+}
+
 /* Sales */
 
 .sale.card {

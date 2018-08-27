@@ -1,17 +1,23 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { getConversionRate } from 'utils/priceUtils'
+import { getFiatPrice } from 'utils/priceUtils'
 
 class ListingCardPrices extends Component {
   constructor(props) {
     super(props)
     this.state = {
       price: props.price,
-      exchangeRate: null,
+      fiatPrice: null,
       approxPrice: 'Loading...',
       currencyCode: 'USD',
       defaultDecimalPlaces: this.getPrecision(props.price)
     }
+  }
+
+  async componentDidMount() {
+    const { price, currencyCode } = this.state
+    const fiatPrice = await getFiatPrice(price, currencyCode)
+    this.setState({ fiatPrice })
   }
 
   getPrecision(n) {
@@ -25,36 +31,20 @@ class ListingCardPrices extends Component {
     }
   }
 
-  async componentDidMount() {
-    try {
-      const exchangeRate = await getConversionRate(this.state.currencyCode)
-      this.setState({ exchangeRate })
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  formatApproxPrice() {
-    return Number(this.state.price * this.state.exchangeRate).toLocaleString(
-      undefined,
-      { minimumFractionDigits: 2, maximumFractionDigits: 2 }
-    )
-  }
-
   render() {
     return (
       <div>
         <div className="d-flex align-items-center price-container">
           <div>
             <div className="d-inline-block price placehold">
-              {this.state.exchangeRate == null && (
+              {this.state.fiatPrice == null && (
                 <FormattedMessage
                   id={'listing-card-prices.loadingMessage'}
                   defaultMessage={'Loading...'}
                 />
               )}
-              {this.state.exchangeRate != null &&
-                this.formatApproxPrice() + ' ' + this.state.currencyCode}
+              {this.state.fiatPrice &&
+                this.state.fiatPrice + ' ' + this.state.currencyCode}
               <span className="alternate-price text-muted">
                 &nbsp;|{' '}
                 {`${Number(this.state.price).toLocaleString(undefined, {

@@ -1,10 +1,12 @@
 import React, { Component, Fragment } from 'react'
+import { getFiatPrice } from 'utils/priceUtils'
 
 class PriceField extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      price: props.formData || ''
+      price: props.formData || '',
+      currencyCode: props.currencyCode || 'USD'
     }
 
     const { options } = props
@@ -16,12 +18,23 @@ class PriceField extends Component {
       enumeratedPrice[0] === 0
   }
 
+  async componentDidMount() {
+    const { price, currencyCode } = this.state
+    if (this.props.formData) {
+      const priceUsd = await getFiatPrice(price, currencyCode)
+      this.setState({
+        priceUsd
+      })
+    }
+  }
+
   onChange() {
-    return (event) => {
+    return async (event) => {
       const value = parseFloat(event.target.value)
+      const priceUsd = await getFiatPrice(value, this.state.currencyCode)
       this.setState({
         price: value,
-        priceUsd: value * 72
+        priceUsd
       }, () => this.props.onChange(value))
     }
   }
@@ -46,9 +59,9 @@ class PriceField extends Component {
             required={ this.props.required } />
           { this.state.priceUsd &&
             <Fragment>
-              <p className="help-block">{ this.state.priceUsd }USD</p>
+              <p className="help-block">{ this.state.priceUsd }{this.state.currencyCode}</p>
               <p className="help-block">
-                The cost to buy this listing. Price is always in <a href="https://en.wikipedia.org/wiki/Ethereum">ETH</a>, USD is an estimate.
+                The cost to buy this listing. Price is always in <a href="https://en.wikipedia.org/wiki/Ethereum" target="_blank" rel="noopener noreferrer">ETH</a>, USD is an estimate.
               </p>
             </Fragment>
           }
