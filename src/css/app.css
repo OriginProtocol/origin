@@ -1324,6 +1324,90 @@ a:hover {
   padding-top: 20px;
 }
 
+.onboarding-modal .modal-lg {
+  max-width: 770px !important;
+}
+
+.onboarding-modal .left-panel,
+.onboarding-modal .right-panel {
+  border-radius: 0 10px 10px 0;
+}
+
+.onboarding-modal .left-panel .content:first-child {
+  border-top-left-radius: 10px;
+}
+
+.onboarding-modal .left-panel .content:last-child {
+  border-bottom-left-radius: 10px;
+}
+
+.onboarding-modal .step-text,
+.onboarding-modal .eth {
+  margin: auto 60px;
+  padding-bottom: 15px;
+  font-family: 'Lato', 'Helvetica Neue', 'Arial', sans-serif;
+  font-weight: 300;
+  font-size: 1.125rem;
+}
+
+.onboarding-modal .eth {
+  font-weight: 400;
+  color: var(--dark-purple);
+  margin: 0;
+  background: none;
+}
+
+.onboarding-modal.show {
+  display: block;
+}
+
+.onboarding-modal .modal-content {
+  background-color: var(--dark);
+}
+
+.onboarding-modal .modal-content {
+  padding: 5px;
+}
+
+.onboarding-modal .left-panel .content {
+  padding: 10px;
+  flex: 1 0 auto;
+}
+
+.onboarding-modal .left-panel .rounded-circle {
+  display: inline-block;
+  width: 34px;
+  height: 34px;
+}
+
+.onboarding-modal .selected,
+.onboarding-modal .right-panel {
+  background-color: var(--dark-grey-blue);
+}
+
+.onboarding-modal .right-panel h3 {
+  font-size: 1.5rem;
+  margin: 1.125rem;
+}
+
+.onboarding-modal .btn-lg {
+  width: 90%;
+}
+
+.onboarding-modal .incomplete {
+  border: solid 3px var(--greenblue);
+}
+
+.onboarding-modal .complete {
+  background-color: var(--greenblue);
+}
+
+.onboarding-modal span,
+.onboarding-modal p {
+  font-size: 14px;
+  vertical-align: super;
+}
+
 /* Tooltip */
 
 .tooltip {
@@ -1358,6 +1442,24 @@ a:hover {
 
 .listings-grid {
   padding: 3.5rem 0;
+}
+
+.modal.getting-started {
+  top: auto;
+  left: auto;
+}
+
+.getting-started .modal-content{
+  background-color: var(--pale-grey);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.4);
+  color: var(--dark);
+  padding-top: 15px;
+}
+
+.getting-started .text-right img {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 
 .listing-card {

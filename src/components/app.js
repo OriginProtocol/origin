@@ -16,6 +16,7 @@ import Listings from 'components/listings-grid'
 import Messages from 'components/messages'
 import MessagingProvider from 'components/messaging-provider'
 import MyListings from 'components/my-listings'
+import AboutOrigin from 'components/about-origin'
 import MyPurchases from 'components/my-purchases'
 import MySales from 'components/my-sales'
 import NotFound from 'components/not-found'
@@ -130,6 +131,7 @@ class App extends Component {
                     />
                     <Route path="/create" component={CreateListingPage} />
                     <Route path="/my-listings" component={MyListings} />
+                    <Route path="/about-origin" component={AboutOrigin} />
                     <Route
                       path="/purchases/:offerId"
                       component={PurchaseDetailPage}
