@@ -1380,6 +1380,11 @@ a:hover {
   background-color: var(--dark-grey-blue);
 }
 
+.onboarding-modal .right-panel h3 {
+  font-size: 1.5rem;
+  margin: 1.125rem;
+}
+
 .onboarding-modal .btn-lg {
   width: 90%;
 }

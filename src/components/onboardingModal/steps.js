@@ -32,7 +32,7 @@ export default [
     img: <img src="/images/eth-tokens.svg" alt="eth-tokens" />,
     content: (
       <div>
-        <p>
+        <p className="step-text">
           You will need a wallet to withdraw/deposit on the Origin DApp. Use a
           metamask wallet or Origin&#39;s Mobile Wallet App.
         </p>
@@ -44,8 +44,10 @@ export default [
       img: <img src="/images/eth-tokens.svg" alt="eth-tokens" />,
       content: (
         <div>
-          <p>We&#39;ve detected a Metamask wallet.</p>
-          <p>
+          <p className="step-text">
+            We&#39;ve detected a Metamask wallet.
+          </p>
+          <p className="step-text">
             You&#39;re one step closer to selling on the Origin DApp. Click the
             button below to learn about Origin Tokens and boosting your listings.
           </p>
@@ -64,10 +66,10 @@ export default [
     img: <img src="/images/eth-tokens.svg" alt="eth-tokens" />,
     content: (
       <div>
-        <p>
+        <p className="step-text">
           Origin Tokens (Symbol: OGN) are used on the Origin DApp to boost your listings.
         </p>
-        <p>
+        <p className="step-text">
           Boosting will give your listing more visibility and also works as a
           guarantee from the seller if something goes wrong with the transaction.
         </p>
