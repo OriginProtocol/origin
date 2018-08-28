@@ -24,8 +24,8 @@ class Wallet extends Component {
 
   render() {
     const { address, balance, web3Account } = this.props
-    const userCanReceiveMessages = address !== web3Account &&
-                                   origin.messaging.canReceiveMessages(address)
+    const userCanReceiveMessages =
+      address !== web3Account && origin.messaging.canReceiveMessages(address)
 
     return (
       <div className="wallet">
@@ -110,7 +110,7 @@ const mapStateToProps = state => {
     messagingEnabled: state.app.messagingEnabled,
     // for reactivity
     messagingInitialized: state.app.messagingInitialized,
-    web3Account: state.app.web3.account,
+    web3Account: state.app.web3.account
   }
 }
 

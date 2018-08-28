@@ -15,10 +15,9 @@ class Notification extends Component {
 
     const { notification, web3Account } = this.props
     const { listing, purchase } = notification.resources
-    const counterpartyAddress = [
-      listing.seller,
-      purchase.buyer
-    ].find(addr => addr !== web3Account)
+    const counterpartyAddress = [listing.seller, purchase.buyer].find(
+      addr => addr !== web3Account
+    )
 
     this.intlMessages = defineMessages({
       unnamedUser: {
