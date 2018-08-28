@@ -50,7 +50,14 @@ class MessagingProvider extends Component {
       }
     })
     // ? consider using https://www.npmjs.com/package/redux-debounced
-    this.debouncedFetchUser = scopedDebounce(addr => this.props.fetchUser(addr, this.props.intl.formatMessage(this.intlMessages.unnamedUser)), ONE_SECOND)
+    this.debouncedFetchUser = scopedDebounce(
+      addr =>
+        this.props.fetchUser(
+          addr,
+          this.props.intl.formatMessage(this.intlMessages.unnamedUser)
+        ),
+      ONE_SECOND
+    )
   }
 
   componentDidMount() {
@@ -77,9 +84,10 @@ class MessagingProvider extends Component {
     })
 
     // poll for notifications
-    this.props.web3Account && setInterval(() => {
-      this.props.fetchNotifications()
-    }, 10 * ONE_SECOND)
+    this.props.web3Account &&
+      setInterval(() => {
+        this.props.fetchNotifications()
+      }, 10 * ONE_SECOND)
   }
 
   componentDidUpdate(prevProps) {

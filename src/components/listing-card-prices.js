@@ -41,7 +41,7 @@ class ListingCardPrices extends Component {
     exchangeURL += '-'
     exchangeURL += this.state.currencyCode.toLowerCase()
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       fetch(exchangeURL)
         .then(res => res.json())
         .then(json => {

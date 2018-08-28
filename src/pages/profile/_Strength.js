@@ -2,7 +2,7 @@ import React from 'react'
 import { FormattedMessage } from 'react-intl'
 
 const ProfileStrength = ({ progress, strength }) => (
-  <>'   '<div className="d-flex justify-content-between">
+  <>'    \' '<div className="d-flex justify-content-between">
     <h2>
       <FormattedMessage
         id={'_Strength.profileStrength'}
@@ -10,7 +10,7 @@ const ProfileStrength = ({ progress, strength }) => (
       />
     </h2>
     <h2>{strength}%</h2>
-  </div>'   '<div className="progress">
+  </div>' '<div className="progress">
     <div
       className="progress-bar"
       role="progressbar"
@@ -27,7 +27,8 @@ const ProfileStrength = ({ progress, strength }) => (
       aria-valuemin="0"
       aria-valuemax="100"
     />
-  </div>' '</>
+  </div>' '
+  </>
 )
 
 export default ProfileStrength

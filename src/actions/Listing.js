@@ -21,7 +21,10 @@ export function getListingIds() {
 
     try {
       const networkId = await origin.contractService.web3.eth.net.getId()
-      const { allContractsPresent, someContractsPresent } = await origin.contractService.marketplaceContractsFound()
+      const {
+        allContractsPresent,
+        someContractsPresent
+      } = await origin.contractService.marketplaceContractsFound()
 
       if (!someContractsPresent) {
         dispatch({
@@ -37,7 +40,8 @@ export function getListingIds() {
         console.error(message)
       }
 
-      if (networkId < 10) { // Networks > 9 are local development
+      if (networkId < 10) {
+        // Networks > 9 are local development
         const response = await fetch(
           `https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hide_list/hidelist_${networkId}.json`
         )

@@ -41,7 +41,9 @@ class Messages extends Component {
   }
 
   detectSelectedConversation() {
-    const selectedConversationId = this.props.match.params.conversationId || (this.props.conversations[0] || {}).key
+    const selectedConversationId =
+      this.props.match.params.conversationId ||
+      (this.props.conversations[0] || {}).key
 
     selectedConversationId && this.setState({ selectedConversationId })
   }
@@ -68,7 +70,9 @@ class Messages extends Component {
                     key={c.key}
                     conversation={c}
                     active={selectedConversationId === c.key}
-                    handleConversationSelect={() => this.handleConversationSelect(c.key)}
+                    handleConversationSelect={() =>
+                      this.handleConversationSelect(c.key)
+                    }
                   />
                 )
               })}

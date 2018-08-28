@@ -103,7 +103,11 @@ class VerifyTwitter extends Component {
 
   onCertify() {
     this.clearErrors()
-    const twitterWindow = window.open(this.state.url, '', 'width=650,height=500')
+    const twitterWindow = window.open(
+      this.state.url,
+      '',
+      'width=650,height=500'
+    )
 
     const finish = async event => {
       await this.catchPossibleErrors(async event => {

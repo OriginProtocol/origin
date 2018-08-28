@@ -71,10 +71,7 @@ class ListingsGrid extends Component {
             )}
             <div className="row">
               {showListingsIds.map(listingId => (
-                <ListingCard
-                  listingId={listingId}
-                  key={listingId}
-                />
+                <ListingCard listingId={listingId} key={listingId} />
               ))}
             </div>
             <Pagination
