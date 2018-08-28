@@ -51,13 +51,19 @@ class PriceField extends Component {
               <span className="required">*</span>
             }
           </label>
-          <input
-            type="number"
-            id="root_price"
-            className="price-field form-control"
-            value={ this.state.price }
-            onChange={ this.onChange() }
-            required={ this.props.required } />
+          <div className="price-field-container">
+            <input
+              type="number"
+              id="root_price"
+              className="price-field form-control"
+              value={ this.state.price }
+              onChange={ this.onChange() }
+              required={ this.props.required } />
+            <span>
+              <img src="images/eth-icon.svg" role="presentation" />
+              ETH
+            </span>
+          </div>
           <p className="help-block">{ this.state.priceUsd }{this.state.currencyCode}</p>
           <p className="help-block">
             The cost to buy this listing. Price is always in <a href="https://en.wikipedia.org/wiki/Ethereum" target="_blank" rel="noopener noreferrer">ETH</a>, USD is an estimate.

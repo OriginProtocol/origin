@@ -1720,6 +1720,30 @@ label[for=root_pictures]:hover {
   border: solid 1px var(--light);
 }
 
+.price-field-container {
+  position: relative;
+}
+
+.price-field-container span {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 2px 9px;
+  border-radius: 12px;
+  background-color: var(--pale-grey);
+  color: var(--bluish-purple);
+  font-weight: bold;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.price-field-container span img {
+  height: 14px;
+  margin-top: -2px;
+  padding-right: 5px;
+}
+
 .help-block {
   font-size: 14px;
   margin-bottom: 8px;
