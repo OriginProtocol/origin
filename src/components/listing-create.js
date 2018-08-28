@@ -12,6 +12,8 @@ import {
 
 import ListingDetail from 'components/listing-detail'
 import Modal from 'components/modal'
+import PriceField from 'components/form-widgets/price-field'
+import PhotoPicker from 'components/form-widgets/photo-picker'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
 import { translateSchema } from 'utils/translationUtils'
@@ -116,6 +118,25 @@ class ListingCreate extends Component {
     fetch(`schemas/${this.state.selectedSchemaType}.json`)
       .then(response => response.json())
       .then(schemaJson => {
+        PriceField.defaultProps = {
+          options: {
+            selectedSchema: schemaJson
+          }
+        }
+        this.uiSchema = {
+          price: {
+            'ui:field': PriceField,
+          },
+          description: {
+            'ui:widget': 'textarea',
+            'ui:options': {
+              rows: 4
+            }
+          },
+          pictures: {
+            'ui:widget': PhotoPicker
+          }
+        }
         this.setState({
           selectedSchema: schemaJson,
           schemaFetched: true,
@@ -194,14 +215,6 @@ class ListingCreate extends Component {
   }
 
   render() {
-    const { selectedSchema } = this.state
-    const enumeratedPrice =
-      selectedSchema && selectedSchema.properties['price'].enum
-    const priceHidden =
-      enumeratedPrice &&
-      enumeratedPrice.length === 1 &&
-      enumeratedPrice[0] === 0
-
     return (
       <div className="container listing-form">
         {this.state.step === this.STEP.PICK_SCHEMA && (
@@ -375,11 +388,7 @@ class ListingCreate extends Component {
                       `react-jsonschema-form errors: ${errors.length}`
                     )
                   }
-                  uiSchema={
-                    priceHidden
-                      ? { price: { 'ui:widget': 'hidden' } }
-                      : undefined
-                  }
+                  uiSchema={ this.uiSchema }
                 >
                   <div className="btn-container">
                     <button
