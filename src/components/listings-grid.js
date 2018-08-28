@@ -22,7 +22,7 @@ class ListingsGrid extends Component {
 
   render() {
     const { listingsPerPage } = this.state
-    const { contractFound, listingIds, hideList } = this.props
+    const { contractFound, listingIds } = this.props
     // const pinnedListingIds = [0, 1, 2, 3, 4]
     // const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
     const arrangedListingIds = listingIds
@@ -74,7 +74,6 @@ class ListingsGrid extends Component {
                 <ListingCard
                   listingId={listingId}
                   key={listingId}
-                  hideList={hideList}
                 />
               ))}
             </div>
@@ -97,7 +96,6 @@ class ListingsGrid extends Component {
 
 const mapStateToProps = state => ({
   listingIds: state.marketplace.ids,
-  hideList: state.listings.hideList,
   contractFound: state.listings.contractFound
 })
 
