@@ -1,6 +1,6 @@
 const chalk = require('chalk')
 const startGanache = require('./helpers/start-ganache')
-const testContracts = require('./helpers/test-contracts')
+const testTruffle = require('./helpers/test-truffle')
 const buildContracts = require('./helpers/build-contracts')
 const startIpfs = require('./helpers/start-ipfs')
 const watch = require('node-watch')
@@ -14,7 +14,7 @@ const runTests = async () => {
     console.log(chalk`\n{bold.hex('#6e3bea') ⬢  Compiling Smart Contracts }\n`)
     await buildContracts()
     console.log(chalk`\n{bold.hex('#1a82ff') ⬢  Testing Smart Contracts }\n`)
-    await testContracts()
+    await testTruffle()
     isRunning = false
     if (isEnqueued) {
       isEnqueued = false

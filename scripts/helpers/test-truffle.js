@@ -24,7 +24,7 @@ const testContracts = () => {
       if (code === 0) {
         resolve()
       } else {
-        reject('Contract tests failed')
+        reject('Truffle contract tests failed')
       }
     })
   })
