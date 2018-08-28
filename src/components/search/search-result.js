@@ -15,16 +15,29 @@ class SearchResult extends Component {
   constructor(props) {
     super(props)
 
-    const getParams = queryString.parse(this.props.location.search)
-
     this.state = {
       filterSchema: undefined,
       listingSchema: undefined,
-      listingIds: []
+      listingType: undefined,
+      listingIds: [],
+      searchError: undefined
     }
 
     // set default prop values for search_query and listing_type
+    const getParams = queryString.parse(this.props.location.search)
     this.props.generalSearch(getParams.search_query || '', getParams.listing_type || 'all')
+  }
+
+  shouldFetchListingSchema() {
+    return this.props.listingType !== 'all'
+  }
+
+  componentDidMount() {
+    /* this force update is required after component initializes. In cases where user returns to the 
+     * search-result page. Then no props change from previous to current and for that reason search and
+     * schema loading do not get triggered.
+     */
+    this.handleComponentUpdate(undefined)
   }
 
   componentDidUpdate(previousProps) {
@@ -36,29 +49,41 @@ class SearchResult extends Component {
     )
       return
 
-    this.setState({
-      filterSchema: undefined
-    })
+    this.handleComponentUpdate(previousProps)
+  }
 
-    this.searchRequest(this.props.query, this.props.listingType)
+  handleComponentUpdate(previousProps) {
 
-    if (this.props.listingType !== previousProps.listingType || this.state.filterSchema == undefined) {
+    if (previousProps == undefined || this.props.listingType !== previousProps.listingType) {
+      this.searchRequest(this.props.query, this.props.listingType)
+
+      this.setState({
+        listingType: this.props.listingType,
+        filterSchema: undefined,
+        listingSchema: undefined
+      })
+
       fetch(`schemas/searchFilters/${this.props.listingType}-search.json`)
         .then((response) => response.json())
         .then((schemaJson) => {
           this.setState({ filterSchema: schemaJson })
         })
-      fetch(`schemas/${this.props.listingType}.json`)
-        .then((response) => response.json())
-        .then((schemaJson) => {
-          this.setState({ listingSchema: schemaJson })
-        })
+
+      if (this.shouldFetchListingSchema()) {
+        fetch(`schemas/${this.props.listingType}.json`)
+          .then((response) => response.json())
+          .then((schemaJson) => {
+            this.setState({ listingSchema: schemaJson })
+          })
+      }
     }
   }
 
   async searchRequest(query, listingType) {
     try {
+      this.setState({ searchError: undefined })
       const searchResponse = await origin.marketplace.search(query)
+
       if (searchResponse.status !== 200)
         throw 'Unexpected result received from search engine'
 
@@ -68,12 +93,13 @@ class SearchResult extends Component {
       })
 
     } catch (e) {
-      this.props.showAlert(
-        this.props.intl.formatMessage({
-          id: 'searchResult.canNotReachIndexingServer',
-          defaultMessage: 'Can not reach search engine server'
-        })
-      )
+      const errorMessage = this.props.intl.formatMessage({
+        id: 'searchResult.canNotReachIndexingServer',
+        defaultMessage: 'We are experiencing some problems. Please try again later'
+      })
+
+      this.props.showAlert(errorMessage)
+      this.setState({ searchError: errorMessage })
     }
 
   }
@@ -85,20 +111,20 @@ class SearchResult extends Component {
 
   renderMultipleSelectionFilter(multipleSelectionValues) {
     return multipleSelectionValues.map(multipleSelectionValue =>
-      <div className="form-check">
-        <input type="checkbox" className="form-check-input" id="dropdownCheck2"/>
-        <label className="form-check-label" htmlFor="dropdownCheck2">
+      <div className="form-check" key={multipleSelectionValue}>
+        <input type="checkbox" className="form-check-input" id={multipleSelectionValue}/>
+        <label className="form-check-label" htmlFor={multipleSelectionValue}>
           {
-            this.props.intl.formatMessage(schemaMessages[_.camelCase(this.props.listingType)][multipleSelectionValue])
+            this.props.intl.formatMessage(schemaMessages[_.camelCase(this.state.listingType)][multipleSelectionValue])
           }
         </label>
       </div>
     )    
   }
 
-  renderPriceFilter() {
+  renderPriceFilter(filter) {
     return (
-      <div className="form-check">
+      <div className="form-check" key={filter.listingPropertyName}>
         <input type="checkbox" className="form-check-input" id="dropdownCheck2"/>
         <label className="form-check-label" htmlFor="dropdownCheck2">
           Remember me
@@ -111,7 +137,7 @@ class SearchResult extends Component {
     if (filter.type == 'multipleSelectionFilter') {
       return this.renderMultipleSelectionFilter(this.resolveFromListingSchema(filter.listingPropertyName))
     } else if (filter.type == 'price') {
-      return this.renderPriceFilter()
+      return this.renderPriceFilter(filter)
     } else {
       throw `Unrecognised filter type "${filter.type}".`
     }
@@ -120,7 +146,7 @@ class SearchResult extends Component {
   renderFilterGroup(filterGroup) {
     return (
       <li className="nav-item" key={this.props.intl.formatMessage(filterGroup.title)}>
-        <a className="nav-link" data-toggle="dropdown" data-parent="#searchbar">
+        <a className="nav-link" data-toggle="dropdown" data-parent="#search-filters-bar">
           {this.props.intl.formatMessage(filterGroup.title)}
         </a>
         <form className="dropdown-menu">
@@ -139,12 +165,15 @@ class SearchResult extends Component {
   }
 
   render() {
+    console.log("Render with listing types: ", this.state.listingType, this.props.listingType)
     return (
       <div>
         <SearchBar />
-        <nav id="searchbar" className="navbar search-filters navbar-expand-sm">
+        <nav id="search-filters-bar" className="navbar search-filters navbar-expand-sm">
           <div className="container d-flex flex-row">
-            { this.state.filterSchema && this.state.listingSchema ?
+            {
+              this.state.filterSchema && this.state.listingType &&
+              (this.state.listingSchema || !this.shouldFetchListingSchema()) ?
               <ul className="navbar-nav collapse navbar-collapse">
                 {
                   this.state.filterSchema
