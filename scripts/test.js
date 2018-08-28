@@ -1,4 +1,5 @@
 const chalk = require('chalk')
+const testContracts = require('./helpers/test-contracts')
 const startGanache = require('./helpers/start-ganache')
 const deployContracts = require('./helpers/deploy-contracts')
 const testTruffle = require('./helpers/test-truffle')
@@ -10,6 +11,8 @@ const start = async () => {
   try {
     console.log(chalk`\n{bold.hex('#6e3bea') ⬢  Testing Formatting }\n`)
     await testFormat()
+    console.log(chalk`\n{bold.hex('#1a82ff') ⬢  Testing Smart Contracts }\n`)
+    await testContracts()
     console.log(chalk`\n{bold.hex('#26d198') ⬢  Starting Local Blockchain }\n`)
     await startGanache()
     console.log(chalk`\n{bold.hex('#1a82ff') ⬢  Testing Smart Contracts using Truffle }\n`)
