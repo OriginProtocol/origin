@@ -24,7 +24,7 @@ const fetchRate = async (fiatCurrencyCode) => {
   })
 }
 
-async function getFiatExchangeRate(fiatCurrencyCode) {
+const getFiatExchangeRate = async (fiatCurrencyCode) => {
   if (typeof Storage !== 'undefined') {
     const cachedRate = localStorage.getItem('origin.exchangeRate')
     if (cachedRate) {
@@ -44,7 +44,7 @@ async function getFiatExchangeRate(fiatCurrencyCode) {
   }
 }
 
-export async function getFiatPrice(priceEth, fiatCurrencyCode) {
+export const getFiatPrice = async (priceEth, fiatCurrencyCode) => {
   if (!priceEth) {
     priceEth = 0
   }
