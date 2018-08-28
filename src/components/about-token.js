@@ -47,7 +47,6 @@ const AboutToken = () => {
                 defaultMessage={'Vivamus faucibuss tortor ultrices arcu consectetur convallis. Fusce eget fringilla velit, vitae dignissim ipsum. Curabitur hendrerit, massa sit amet molestie tincidunt, lacus purus aliquam urna, at venenatis nibh dui sit amet nunc. Nunc tortor leo, pretium id convallis et, sollicitudin in ex.'}
               />
             </p>
-            {/* <br /> */}
             <h3 className="lead lead-text">
               <FormattedMessage
                 id={'about-token.buying-tokens'}
@@ -92,8 +91,7 @@ const AboutToken = () => {
                 />
               </a>
             </p>
-            {/* <br /> */}
-            <h3 className="lead lead-text">
+\            <h3 className="lead lead-text">
               <FormattedMessage
                 id={'about-token.earn'}
                 defaultMessage={'Can I earn Origin Tokens?'}
