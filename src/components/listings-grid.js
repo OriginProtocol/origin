@@ -7,7 +7,7 @@ import { withRouter } from 'react-router'
 import { getListingIds } from 'actions/Listing'
 
 import ListingCard from 'components/listing-card'
-import OnboardingModal from 'components/onboardingModal/split-panel'
+import OnboardingModal from 'components/onboardingModal'
 import Modal from 'components/modal'
 
 class ListingsGrid extends Component {
@@ -20,6 +20,7 @@ class ListingsGrid extends Component {
     }
 
     this.closeModal = this.closeModal.bind(this)
+    this.openOnBoardingModal = this.openOnBoardingModal.bind(this)
   }
 
   componentWillMount() {
@@ -33,7 +34,9 @@ class ListingsGrid extends Component {
   }
 
   openOnBoardingModal() {
-    this.setState({ learnMore: false, onBoardingModal: true })
+    this.setState({ learnMore: false, onBoardingModal: true }, () => {
+      window.setTimeout(() => { document.body.classList.add('modal-open'); }, 500);
+    })
   }
 
   render() {
@@ -49,21 +52,8 @@ class ListingsGrid extends Component {
       listingsPerPage * activePage
     )
 
-    const learnMoreContent = (
-      <div>
-        <div className="text-right">
-          <img src="/images/close-icon.svg" alt="close-icon" onClick={this.closeModal('learnMore')}/>
-        </div>
-        <img src="/images/eth-tokens.svg" alt="eth-tokens" />
-        <h3>Get Started Selling on Origin!</h3>
-        <p>Learn how to sell on our DApp today.</p>
-        <button className='btn btn-primary' onClick={() => this.openOnBoardingModal()}>Learn more</button>
-      </div>
-    )
-
     return (
       <div className="listings-wrapper">
-        <OnboardingModal isOpen={onBoardingModal} closeModal={this.closeModal('onBoardingModal')}/>
         {contractFound === false && (
           <div className="listings-grid">
             <div className="alert alert-warning" role="alert">
@@ -119,7 +109,12 @@ class ListingsGrid extends Component {
             />
           </div>
         )}
-        <Modal className={'getting-started'} isOpen={learnMore} children={learnMoreContent}/>
+        <OnboardingModal
+          learnMore={learnMore}
+          isOpen={onBoardingModal}
+          closeModal={this.closeModal}
+          openOnBoardingModal={this.openOnBoardingModal}
+        />
       </div>
     )
   }
