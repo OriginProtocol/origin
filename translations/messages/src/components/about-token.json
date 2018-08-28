@@ -1,26 +1,26 @@
 [
   {
     "id": "about-token.about",
-    "defaultMessage": "About Origin Tokens"
+    "defaultMessage": "About Origin Tokens & Boosting Listings"
   },
   {
     "id": "about-token.use",
     "defaultMessage": "What are Origin Tokens used for?"
   },
   {
-    "id": "about-token.incentives",
-    "defaultMessage": "Incentives"
+    "id": "about-token.boosting",
+    "defaultMessage": "Boosting"
   },
   {
-    "id": "about-token.incentive-text",
+    "id": "about-token.boosting-text",
     "defaultMessage": "Vivamus faucibus tortor ultrices arcu consectetur convallis. Fusce eget fringilla velit, vitae dignissim ipsum. Curabitur hendrerit, massa sit amet molestie tincidunt, lacus purus aliquam urna, at venenatis nibh dui sit amet nunc. Nunc tortor leo, pretium id convallis et, sollicitudin in ex."
   },
   {
-    "id": "about-token.governance",
-    "defaultMessage": "Governance"
+    "id": "about-token.arbitration",
+    "defaultMessage": "Arbitration"
   },
   {
-    "id": "about-token.governance-text",
+    "id": "about-token.arbitration-text",
     "defaultMessage": "Vivamus faucibuss tortor ultrices arcu consectetur convallis. Fusce eget fringilla velit, vitae dignissim ipsum. Curabitur hendrerit, massa sit amet molestie tincidunt, lacus purus aliquam urna, at venenatis nibh dui sit amet nunc. Nunc tortor leo, pretium id convallis et, sollicitudin in ex."
   },
   {

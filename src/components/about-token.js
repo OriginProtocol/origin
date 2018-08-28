@@ -10,7 +10,7 @@ const AboutToken = () => {
             <h1>
               <FormattedMessage
                 id={'about-token.about'}
-                defaultMessage={'About Origin Tokens'}
+                defaultMessage={'About Origin Tokens & Boosting Listings'}
               />
             </h1>
             <h3 className="lead">
@@ -22,33 +22,33 @@ const AboutToken = () => {
             <h6>
               <strong>
                 <FormattedMessage
-                  id={'about-token.incentives'}
-                  defaultMessage={'Incentives'}
+                  id={'about-token.boosting'}
+                  defaultMessage={'Boosting'}
                 />
               </strong>
             </h6>
             <p>
               <FormattedMessage
-                id={'about-token.incentive-text'}
+                id={'about-token.boosting-text'}
                 defaultMessage={'Vivamus faucibus tortor ultrices arcu consectetur convallis. Fusce eget fringilla velit, vitae dignissim ipsum. Curabitur hendrerit, massa sit amet molestie tincidunt, lacus purus aliquam urna, at venenatis nibh dui sit amet nunc. Nunc tortor leo, pretium id convallis et, sollicitudin in ex.'}
               />
   	        </p>
             <h6>
               <strong>
                 <FormattedMessage
-                  id={'about-token.governance'}
-                  defaultMessage={'Governance'}
+                  id={'about-token.arbitration'}
+                  defaultMessage={'Arbitration'}
                 />
               </strong>
             </h6>
             <p>
               <FormattedMessage
-                id={'about-token.governance-text'}
+                id={'about-token.arbitration-text'}
                 defaultMessage={'Vivamus faucibuss tortor ultrices arcu consectetur convallis. Fusce eget fringilla velit, vitae dignissim ipsum. Curabitur hendrerit, massa sit amet molestie tincidunt, lacus purus aliquam urna, at venenatis nibh dui sit amet nunc. Nunc tortor leo, pretium id convallis et, sollicitudin in ex.'}
               />
             </p>
-            <br />
-            <h3 className="lead">
+            {/* <br /> */}
+            <h3 className="lead lead-text">
               <FormattedMessage
                 id={'about-token.buying-tokens'}
                 defaultMessage={'Where can I buy Origin Tokens?'}
@@ -92,8 +92,8 @@ const AboutToken = () => {
                 />
               </a>
             </p>
-            <br />
-            <h3 className="lead">
+            {/* <br /> */}
+            <h3 className="lead lead-text">
               <FormattedMessage
                 id={'about-token.earn'}
                 defaultMessage={'Can I earn Origin Tokens?'}
