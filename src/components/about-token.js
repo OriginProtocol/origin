@@ -68,23 +68,29 @@ const AboutToken = () => {
                 defaultMessage={'The following are the only approved exchanges where you can buy Origin Tokens. Never attempt to buy anywhere else.'}
               />
             </p>
-            <p><a href="#">
-              <FormattedMessage
-                id={'about-token.exchange-1'}
-                defaultMessage={'Exchange Name >'}
-              /></a>
+            <p>
+              <a href="#">
+                <FormattedMessage
+                  id={'about-token.exchange-1'}
+                  defaultMessage={'Exchange Name >'}
+                />
+              </a>
             </p>
-            <p><a href="#">
-              <FormattedMessage
-                id={'about-token.exchange-2'}
-                defaultMessage={'Exchange Name >'}
-              /></a>
+            <p>
+              <a href="#">
+                <FormattedMessage
+                  id={'about-token.exchange-2'}
+                  defaultMessage={'Exchange Name >'}
+                />
+              </a>
             </p>
-            <p><a href="#">
-              <FormattedMessage
-                id={'about-token.exchange-3'}
-                defaultMessage={'Exchange Name >'}
-              /></a>
+            <p>
+              <a href="#">
+                <FormattedMessage
+                  id={'about-token.exchange-3'}
+                  defaultMessage={'Exchange Name >'}
+                />
+              </a>
             </p>
             <br />
             <h3 className="lead">
