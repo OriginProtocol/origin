@@ -20,7 +20,6 @@ export function getListingIds() {
     // let hideList = []
 
     try {
-      const networkId = await origin.contractService.web3.eth.net.getId()
       const {
         allContractsPresent,
         someContractsPresent
