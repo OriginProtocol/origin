@@ -44,7 +44,7 @@ class ListingsGrid extends Component {
               <FormattedMessage
                 id={'listings-grid.originContractNotFound'}
                 defaultMessage={
-                  'The Origin Contract was not found on this network.'
+                  'No Origin listing contracts were found on this network.'
                 }
               />
               <br />

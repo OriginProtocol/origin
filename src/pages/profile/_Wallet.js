@@ -23,7 +23,7 @@ class Wallet extends Component {
   }
 
   render() {
-    const { address, balance, identityAddress, web3Account } = this.props
+    const { address, balance, web3Account } = this.props
     const userCanReceiveMessages = address !== web3Account &&
                                    origin.messaging.canReceiveMessages(address)
 

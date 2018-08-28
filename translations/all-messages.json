@@ -103,7 +103,7 @@
   "listing-detail.buyNow": "Buy Now",
   "listing-detail.soldOut": "Sold Out",
   "listing-detail.reviews": "Reviews",
-  "listings-grid.originContractNotFound": "The Origin Contract was not found on this network.",
+  "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "You may need to change networks, or deploy the contract.",
   "listings-grid.listingsCount": "{listingIdsCount} Listings",
   "MessageNew.cannotReceiveMessages": "This user has not enabled Origin Messaging.",
