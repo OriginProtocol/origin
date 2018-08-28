@@ -32,9 +32,11 @@ class PriceField extends Component {
   onChange() {
     return async (event) => {
       const value = parseFloat(event.target.value)
+      this.setState({
+        price: value
+      })
       const priceUsd = await getFiatPrice(value, this.state.currencyCode)
       this.setState({
-        price: value,
         priceUsd
       }, () => this.props.onChange(value))
     }
