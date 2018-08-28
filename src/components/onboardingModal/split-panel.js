@@ -84,8 +84,8 @@ class OnboardingModal extends Component {
         { isOpen && (
           <div className="modal-dialog modal-lg">
             <div className="modal-content d-flex p-0">
-              <div class="modal-body p-0">
-                <div class="container-fluid pl-1">
+              <div className="modal-body p-0">
+                <div className="container-fluid pl-1">
                   <div className="row">
                     <LeftPanel
                       steps={steps}

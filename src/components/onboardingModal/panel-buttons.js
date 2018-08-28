@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 
 export default class PanelButtons extends Component {
@@ -16,18 +16,40 @@ export default class PanelButtons extends Component {
     const { displayNextStep, step } = this.props
     const buttons = {
       'Overview': (
-        <button key={'first-btn'} className='btn btn-primary' onClick={displayNextStep}>Connect a Wallet</button>
+        <button
+          className='btn btn-primary'
+          onClick={displayNextStep}
+        >
+          Connect a Wallet
+        </button>
       ),
-      'Connect Wallet': [
-          <button key={'first-btn'} className='btn btn-primary' onClick={this.connectMetaMask}>Connect Metamask</button>,
-          <button key={'sec-btn'} className='btn btn-primary' disabled={true}>Download Mobile Wallet</button>
-      ],
+      'Connect Wallet': (
+        <Fragment>
+          <button key={'first-btn'}
+            className='btn btn-primary btn-lg mb-3'
+            onClick={this.connectMetaMask}
+          >
+            Connect Metamask
+          </button>
+          <button key={'sec-btn'}
+            className='btn btn-primary btn-lg'
+            disabled
+          >
+            Download Mobile Wallet
+          </button>
+        </Fragment>
+      ),
       'Connected': (
-        <button key={'first-btn'} className='btn btn-primary' onClick={displayNextStep}>Learn more</button>
+        <button
+          className='btn btn-primary'
+          onClick={displayNextStep}
+        >
+          Learn more
+        </button>
       ),
       'Get Origin Tokens': (
         <Link to="/about-origin">
-          <button key={'first-btn'} className='btn btn-primary' onClick={this.aboutOrigin}>
+          <button key={'first-btn'} className='btn btn-primary btn-lg' onClick={this.aboutOrigin}>
             Learn about Origin Tokens
           </button>
         </Link>
@@ -35,7 +57,7 @@ export default class PanelButtons extends Component {
     }
 
     return(
-      <div>
+      <div className="m-5" >
         {buttons[step.name]}
       </div>
     )
