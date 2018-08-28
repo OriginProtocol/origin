@@ -2,7 +2,7 @@ import React from 'react'
 import { FormattedMessage } from 'react-intl'
 
 const ProfileStrength = ({ progress, strength }) => (
-  <>'    \' '<div className="d-flex justify-content-between">
+  <>'    \' \' '<div className="d-flex justify-content-between">
     <h2>
       <FormattedMessage
         id={'_Strength.profileStrength'}
