@@ -13,6 +13,7 @@ import {
 import ListingDetail from 'components/listing-detail'
 import Modal from 'components/modal'
 import PriceField from 'components/form-widgets/price-field'
+import PhotoPicker from 'components/form-widgets/photo-picker'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
 import { translateSchema } from 'utils/translationUtils'
@@ -130,8 +131,10 @@ class ListingCreate extends Component {
             'ui:widget': 'textarea',
             'ui:options': {
               rows: 4
-            },
-
+            }
+          },
+          pictures: {
+            'ui:widget': PhotoPicker
           }
         }
         this.setState({
