@@ -130,7 +130,7 @@ class Conversation extends Component {
     const purchases = await Promise.all(purchaseAddresses.map(async addr => {
       return await origin.purchases.get(addr)
     }))
-    const involvingCounterparty = purchases.filter(p => p.buyerAddress === counterparty.address || p.buyerAddress === web3Account)
+    const involvingCounterparty = purchases.filter(p => p.buyer === counterparty.address || p.buyer === web3Account)
     const mostRecent = involvingCounterparty.sort((a, b) => a.index > b.index ? -1 : 1)[0]
     // purchase may not be found
     if (!mostRecent) {
@@ -160,8 +160,8 @@ class Conversation extends Component {
     const { id, intl, messages, web3Account } = this.props
     const { counterparty, listing, purchase } = this.state
     const { address, name, pictures } = listing
-    const { buyerAddress, created } = purchase
-    const perspective = buyerAddress ? (buyerAddress === web3Account ? 'buyer' : 'seller') : null
+    const { buyer, created } = purchase
+    const perspective = buyer ? (buyer === web3Account ? 'buyer' : 'seller') : null
     const soldAt = created ? created * 1000 /* convert seconds since epoch to ms */ : null
     const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === 'data:' && pictures[0]
     const canDeliverMessage = origin.messaging.canConverseWith(counterparty.address)
@@ -177,7 +177,7 @@ class Conversation extends Component {
               </div>
             </div>
             <div className="content-container d-flex flex-column">
-              {buyerAddress &&
+              {buyer &&
                 <div className="brdcrmb">
                   {perspective === 'buyer' &&
                     <FormattedMessage
@@ -196,7 +196,7 @@ class Conversation extends Component {
                 </div>
               }
               <h1>{name}</h1>
-              {buyerAddress &&
+              {buyer &&
                 <div className="state">
                   {perspective === 'buyer' &&
                     <FormattedMessage
@@ -214,7 +214,7 @@ class Conversation extends Component {
                   }
                 </div>
               }
-              {buyerAddress &&
+              {buyer &&
                 <PurchaseProgress
                   purchase={purchase}
                   perspective={perspective}

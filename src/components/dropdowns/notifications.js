@@ -134,11 +134,11 @@ const mapStateToProps = ({ app, notifications }) => {
     // add perspective and filter
     notifications: notifications
       .map(n => {
-        const { sellerAddress } = n.resources.listing
+        const { seller } = n.resources.listing
 
         return {
           ...n,
-          perspective: app.web3.account === sellerAddress ? 'seller' : 'buyer'
+          perspective: app.web3.account === seller ? 'seller' : 'buyer'
         }
       })
       .filter(n => n.status === 'unread'),
