@@ -17,6 +17,7 @@ class PhotoPicker extends Component {
       reader.onloadend = () => {
         const { result } = reader
         const simicolonIdx = result.indexOf(';') + 1
+        // react-jsonschema-form requires the name in the URI for an unknown reason
         const uriWithFileName = 
           `${result.substring(0, simicolonIdx)}name=${file.name};${result.substring(simicolonIdx, result.length)}`
         resolve(uriWithFileName)
@@ -51,22 +52,22 @@ class PhotoPicker extends Component {
     return(
       <div className="photo-picker">
         <label className="photo-picker-container" htmlFor="photo-picker-input">
-          <img src="images/camera-icon.svg" role="presentation" />
-          {this.props.schema.title}
-          {this.props.required &&
-            <span className="required">*</span>
-          }
+          <img className="camera-icon" src="images/camera-icon.svg" role="presentation" />
+          <br/>
+          <span>{this.props.schema.title}</span>
+          <br/>
+          {this.state.pictures.map((dataUri, idx) => 
+            <img className="preview-thumbnail" src={ dataUri } key={ idx } />
+          )}
         </label>
         <input
           id="photo-picker-input"
           type="file"
           accept="image/jpeg,image/gif,image/png"
+          visibility="hidden"
           onChange={ this.onChange() }
           required={ this.props.required }
           multiple />
-        {this.state.pictures.map((dataUri, idx) => 
-          <img src={ dataUri } key={ idx } />
-        )}
       </div>
     )
   }

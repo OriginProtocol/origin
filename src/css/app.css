@@ -1644,24 +1644,27 @@ select.form-control:not([size]):not([multiple]) {
   z-index: -1;
 }
 
-label[for=root_pictures] {
-  margin-top: 10px;
-  border-radius: var(--default-radius);
-  border: solid 1px var(--light);
-  margin-bottom: 0;
-  padding: 10px 10px 10px 35px;
-  width: 100%;
-  color: var(--dusk);
-  background-image: url(images/camera-icon.svg);
-  background-repeat: no-repeat;
-  background-position: 10px 50%;
-  background-size: 18px 15px;
-  font-weight: normal;
+.photo-picker label {
+  border: 1px dashed var(--light);
+  padding: 35px 65px;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
 }
 
-label[for=root_pictures]:hover {
-  cursor: pointer;
-  border: solid 1px var(--clear-blue);
+.photo-picker label img.camera-icon {
+  width: 35px;
+  margin-bottom: 5px;
+}
+
+.photo-picker label img.preview-thumbnail {
+  max-width: 150px;
+  max-height: 150px;
+  padding: 10px;
+}
+
+.photo-picker input {
+  opacity: 0;
 }
 
 .file-info {
