@@ -37,7 +37,7 @@ class ListingCardPrices extends Component {
         <div className="d-flex align-items-center price-container">
           <div>
             <div className="d-inline-block price placehold">
-              {this.state.fiatPrice == null && (
+              {this.state.fiatPrice === null && (
                 <FormattedMessage
                   id={'listing-card-prices.loadingMessage'}
                   defaultMessage={'Loading...'}
