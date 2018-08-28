@@ -5,25 +5,22 @@ const { spawn } = require('child_process')
 // contract test to run. That path is relative to 'contracts/test'.
 const testContracts = () => {
   return new Promise((resolve, reject) => {
-    const testFile = process.argv[2]
-    let truffleArgs
-    if (testFile === undefined) {
-      truffleArgs = ['test', '--compile-all']
-    }
-    else {
-      console.log('running ' + testFile)
-      truffleArgs = ['test', 'test/'+testFile, '--compile-all']
-    }
-    const truffleTest = spawn(
-      '../node_modules/.bin/truffle',
-      truffleArgs,
-      { cwd: './contracts' }
-    )
-    truffleTest.stdout.pipe(process.stdout)
-    truffleTest.stderr.on('data', data => {
+    const args = [
+      '-r',
+      'babel-register',
+      '-r',
+      'babel-polyfill',
+      '-t',
+      '10000',
+      '--exit',
+      'contracts/test-alt/'
+    ]
+    const contractTest = spawn('./node_modules/.bin/mocha', args)
+    contractTest.stdout.pipe(process.stdout)
+    contractTest.stderr.on('data', data => {
       reject(String(data))
     })
-    truffleTest.on('exit', code => {
+    contractTest.on('exit', code => {
       if (code === 0) {
         resolve()
       } else {

@@ -54,7 +54,7 @@ class Marketplace extends Adaptable {
 
     // Rewrite IPFS image URLs to use the configured IPFS gateway
     if (ipfsJson && ipfsJson.data && ipfsJson.data.pictures) {
-      ipfsJson.data.pictures = ipfsJson.data.pictures.map((url) => {
+      ipfsJson.data.pictures = ipfsJson.data.pictures.map(url => {
         return this.ipfsService.rewriteUrl(url)
       })
     }
@@ -120,27 +120,29 @@ class Marketplace extends Adaptable {
 
     // Apply filtering to pictures and uploaded any data: URLs to IPFS
     if (ipfsData.pictures) {
-      const pictures = ipfsData.pictures.filter((url) => {
-        try {
-          // Only allow data:, dweb:, and ipfs: URLs
-          return ['data:', 'dweb:', 'ipfs:'].includes((new URL(url).protocol))
-        } catch (error) {
-          // Invalid URL, filter it out
-          return false
-        }
-      }).map(async (url) => {
-        // Upload any data: URLs to IPFS
-        // TODO possible removal and only accept dweb: and ipfs: URLS from dapps
-        if (url.startsWith('data:')) {
-          const ipfsHash = await this.ipfsService.saveDataURIAsFile(url)
-          return this.ipfsService.gatewayUrlForHash(ipfsHash)
-        }
-        // Leave other URLs untouched
-        return url
-      })
+      const pictures = ipfsData.pictures
+        .filter(url => {
+          try {
+            // Only allow data:, dweb:, and ipfs: URLs
+            return ['data:', 'dweb:', 'ipfs:'].includes(new URL(url).protocol)
+          } catch (error) {
+            // Invalid URL, filter it out
+            return false
+          }
+        })
+        .map(async url => {
+          // Upload any data: URLs to IPFS
+          // TODO possible removal and only accept dweb: and ipfs: URLS from dapps
+          if (url.startsWith('data:')) {
+            const ipfsHash = await this.ipfsService.saveDataURIAsFile(url)
+            return this.ipfsService.gatewayUrlForHash(ipfsHash)
+          }
+          // Leave other URLs untouched
+          return url
+        })
 
       // Replace data.pictures
-      await Promise.all(pictures).then((results) => {
+      await Promise.all(pictures).then(results => {
         ipfsData.pictures = results
       })
     }
@@ -148,7 +150,11 @@ class Marketplace extends Adaptable {
     const ipfsHash = await this.ipfsService.saveObjAsFile({ data: ipfsData })
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
-    const transactionReceipt = await this.currentAdapter.createListing(ipfsBytes, ipfsData, confirmationCallback)
+    const transactionReceipt = await this.currentAdapter.createListing(
+      ipfsBytes,
+      ipfsData,
+      confirmationCallback
+    )
     const version = this.currentVersion
     const network = await this.contractService.web3.eth.net.getId()
     const { listingIndex } = transactionReceipt
@@ -163,11 +169,17 @@ class Marketplace extends Adaptable {
     const ipfsHash = await this.ipfsService.saveObjAsFile({ data: ipfsData })
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
-    return await adapter.withdrawListing(listingIndex, ipfsBytes, confirmationCallback)
+    return await adapter.withdrawListing(
+      listingIndex,
+      ipfsBytes,
+      confirmationCallback
+    )
   }
 
   async makeOffer(listingId, data, confirmationCallback) {
-    const { adapter, listingIndex, version, network } = this.parseListingId(listingId)
+    const { adapter, listingIndex, version, network } = this.parseListingId(
+      listingId
+    )
     const buyer = await this.contractService.currentAccount()
 
     data.price = this.contractService.web3.utils.toWei(
@@ -179,9 +191,19 @@ class Marketplace extends Adaptable {
     const ipfsHash = await this.ipfsService.saveObjAsFile({ data })
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
-    const transactionReceipt = await adapter.makeOffer(listingIndex, ipfsBytes, data, confirmationCallback)
+    const transactionReceipt = await adapter.makeOffer(
+      listingIndex,
+      ipfsBytes,
+      data,
+      confirmationCallback
+    )
     const { offerIndex } = transactionReceipt
-    const offerId = generateOfferId({ network, version, listingIndex, offerIndex })
+    const offerId = generateOfferId({
+      network,
+      version,
+      listingIndex,
+      offerIndex
+    })
     return Object.assign({ listingId, offerId }, transactionReceipt)
   }
 

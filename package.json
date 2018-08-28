@@ -14,10 +14,10 @@
     "start": "node scripts/build.js serve",
     "start:no-ganache": "node scripts/build.js serve no-ganache",
     "test": "node scripts/test.js",
-    "test:contracts": "node scripts/test-contracts.js",
+    "test:truffle": "node scripts/test-truffle.js",
     "test:js": "mocha --compilers js:babel-core/register --require babel-polyfill",
-    "test:contracts-alt": "mocha -r babel-register -r babel-polyfill -t 10000 contracts/test-alt/",
-    "test:contracts-altw": "mocha -r babel-register -r babel-polyfill -t 10000 -w --watch-extensions sol contracts/test-alt/"
+    "test:contracts": "mocha -r babel-register -r babel-polyfill -t 10000 --exit contracts/test-alt/",
+    "test:contractsw": "mocha -r babel-register -r babel-polyfill -t 10000 -w --watch-extensions sol contracts/test-alt/"
   },
   "files": [
     "dist"
