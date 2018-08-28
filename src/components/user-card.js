@@ -49,8 +49,9 @@ class UserCard extends Component {
       web3Account
     } = this.props
     const { fullName, profile, attestations } = user
-    const userCanReceiveMessages = userAddress !== web3Account &&
-                                   origin.messaging.canReceiveMessages(userAddress)
+    const userCanReceiveMessages =
+      userAddress !== web3Account &&
+      origin.messaging.canReceiveMessages(userAddress)
 
     return (
       <div className="user-card placehold">

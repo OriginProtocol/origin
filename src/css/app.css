@@ -18,6 +18,11 @@ body {
   line-height: 1.5;
 }
 
+.loading-clock {
+  height: 100vh;
+  width: 100vw;
+}
+
 /* sticky footer sibling */
 main {
   flex: 1 0 auto;
@@ -2392,6 +2397,12 @@ form .stars img {
 
 .conversations-list-col {
   background-color: var(--pale-grey);
+  height: 60px;
+  overflow-x: scroll;
+}
+
+.messages-wrapper .no-gutters {
+  height: calc(100vh - 60px);
 }
 
 .no-gutters .conversation-col {
@@ -3503,7 +3514,7 @@ a:not([href]):not([tabindex]).span-link {
 
   /* apply different background colors outside of the container */
   .messages-wrapper {
-    background: linear-gradient(to right, var(--pale-grey) 25%, white 25%);
+    background: linear-gradient(to right, var(--pale-grey) 50%, white 50%);
     flex: 1;
   }
 
@@ -3511,12 +3522,13 @@ a:not([href]):not([tabindex]).span-link {
     flex: 1;
   }
 
-  .messages-wrapper > .container > .row {
-    height: 100%;
-  }
-
   .no-gutters .conversation-col {
     padding: 0 20px 0;
+  }
+
+  .conversations-list-col {
+    height: auto;
+    overflow-y: scroll;
   }
 }
 

@@ -375,7 +375,7 @@ class ListingsDetail extends Component {
                         maximumFractionDigits: 5,
                         minimumFractionDigits: 5
                       })}
-                      &nbsp;
+                        &nbsp;
                       <FormattedMessage
                         id={'listing-detail.ethereumCurrencyAbbrev'}
                         defaultMessage={'ETH'}

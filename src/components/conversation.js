@@ -1,5 +1,10 @@
 import React, { Component } from 'react'
-import { FormattedDate, FormattedMessage, defineMessages, injectIntl } from 'react-intl'
+import {
+  FormattedDate,
+  FormattedMessage,
+  defineMessages,
+  injectIntl
+} from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
@@ -15,8 +20,8 @@ class Conversation extends Component {
     this.intlMessages = defineMessages({
       newMessagePlaceholder: {
         id: 'Messages.newMessagePlaceholder',
-        defaultMessage: 'Type something...',
-      },
+        defaultMessage: 'Type something...'
+      }
     })
 
     this.handleKeyDown = this.handleKeyDown.bind(this)
@@ -81,10 +86,13 @@ class Conversation extends Component {
     }
 
     try {
-      await originTest.messaging.sendConvMessage(this.props.id, newMessage.trim())
+      await originTest.messaging.sendConvMessage(
+        this.props.id,
+        newMessage.trim()
+      )
 
       el.value = ''
-    } catch(err) {
+    } catch (err) {
       console.error(err)
     }
   }
@@ -102,9 +110,12 @@ class Conversation extends Component {
   async loadListing() {
     const { messages } = this.props
     // find the most recent listing context or set empty value
-    const { listingAddress } = messages.reverse().find(m => m.listingAddress) || {}
+    const { listingAddress } =
+      [...messages].reverse().find(m => m.listingAddress) || {}
     // get the listing
-    const listing = listingAddress ? (await origin.listings.get(listingAddress)) : {}
+    const listing = listingAddress
+      ? await origin.listings.get(listingAddress)
+      : {}
     // if listing does not match state, store and check for a purchase
     if (listing.address !== this.state.listing.address) {
       this.setState({ listing })
@@ -124,14 +135,22 @@ class Conversation extends Component {
     }
 
     const len = await origin.listings.purchasesLength(address)
-    const purchaseAddresses = await Promise.all([...Array(len).keys()].map(async i => {
-      return await origin.listings.purchaseAddressByIndex(address, i)
-    }))
-    const purchases = await Promise.all(purchaseAddresses.map(async addr => {
-      return await origin.purchases.get(addr)
-    }))
-    const involvingCounterparty = purchases.filter(p => p.buyer === counterparty.address || p.buyer === web3Account)
-    const mostRecent = involvingCounterparty.sort((a, b) => a.index > b.index ? -1 : 1)[0]
+    const purchaseAddresses = await Promise.all(
+      [...Array(len).keys()].map(async i => {
+        return await origin.listings.purchaseAddressByIndex(address, i)
+      })
+    )
+    const purchases = await Promise.all(
+      purchaseAddresses.map(async addr => {
+        return await origin.purchases.get(addr)
+      })
+    )
+    const involvingCounterparty = purchases.filter(
+      p => p.buyer === counterparty.address || p.buyer === web3Account
+    )
+    const mostRecent = involvingCounterparty.sort(
+      (a, b) => (a.index > b.index ? -1 : 1)
+    )[0]
     // purchase may not be found
     if (!mostRecent) {
       return
@@ -161,90 +180,133 @@ class Conversation extends Component {
     const { counterparty, listing, purchase } = this.state
     const { address, name, pictures } = listing
     const { buyer, created } = purchase
-    const perspective = buyer ? (buyer === web3Account ? 'buyer' : 'seller') : null
-    const soldAt = created ? created * 1000 /* convert seconds since epoch to ms */ : null
-    const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === 'data:' && pictures[0]
-    const canDeliverMessage = origin.messaging.canConverseWith(counterparty.address)
+    const perspective = buyer
+      ? buyer === web3Account
+        ? 'buyer'
+        : 'seller'
+      : null
+    const soldAt = created
+      ? created * 1000 /* convert seconds since epoch to ms */
+      : null
+    const photo =
+      pictures &&
+      pictures.length > 0 &&
+      new URL(pictures[0]).protocol === 'data:' &&
+      pictures[0]
+    const canDeliverMessage = origin.messaging.canConverseWith(
+      counterparty.address
+    )
     const shouldEnableForm = canDeliverMessage && id
 
     return (
       <div className="conversation-col col-12 col-sm-8 col-lg-9 d-flex flex-column">
-        {address &&
+        {address && (
           <div className="listing-summary d-flex">
             <div className="aspect-ratio">
-              <div className={`${photo ? '' : 'placeholder '}image-container d-flex justify-content-center`}>
-                <img src={photo || 'images/default-image.svg'} role="presentation" />
+              <div
+                className={`${
+                  photo ? '' : 'placeholder '
+                }image-container d-flex justify-content-center`}
+              >
+                <img
+                  src={photo || 'images/default-image.svg'}
+                  role="presentation"
+                />
               </div>
             </div>
             <div className="content-container d-flex flex-column">
-              {buyer &&
+              {buyer && (
                 <div className="brdcrmb">
-                  {perspective === 'buyer' &&
+                  {perspective === 'buyer' && (
                     <FormattedMessage
-                      id={ 'purchase-summary.purchasedFrom' }
-                      defaultMessage={ 'Purchased from {sellerLink}' }
-                      values={{ sellerLink: <Link to={`/users/${counterparty.address}`}>{counterparty.fullName}</Link> }}
+                      id={'purchase-summary.purchasedFrom'}
+                      defaultMessage={'Purchased from {sellerLink}'}
+                      values={{
+                        sellerLink: (
+                          <Link to={`/users/${counterparty.address}`}>
+                            {counterparty.fullName}
+                          </Link>
+                        )
+                      }}
                     />
-                  }
-                  {perspective === 'seller' &&
+                  )}
+                  {perspective === 'seller' && (
                     <FormattedMessage
-                      id={ 'purchase-summary.soldTo' }
-                      defaultMessage={ 'Sold to {buyerLink}' }
-                      values={{ buyerLink: <Link to={`/users/${counterparty.address}`}>{counterparty.fullName}</Link> }}
+                      id={'purchase-summary.soldTo'}
+                      defaultMessage={'Sold to {buyerLink}'}
+                      values={{
+                        buyerLink: (
+                          <Link to={`/users/${counterparty.address}`}>
+                            {counterparty.fullName}
+                          </Link>
+                        )
+                      }}
                     />
-                  }
+                  )}
                 </div>
-              }
+              )}
               <h1>{name}</h1>
-              {buyer &&
+              {buyer && (
                 <div className="state">
-                  {perspective === 'buyer' &&
+                  {perspective === 'buyer' && (
                     <FormattedMessage
-                      id={ 'purchase-summary.purchasedFromOn' }
-                      defaultMessage={ 'Purchased from {sellerName} on {date}' }
-                      values={{ sellerName: counterparty.fullName, date: <FormattedDate value={soldAt} /> }}
+                      id={'purchase-summary.purchasedFromOn'}
+                      defaultMessage={'Purchased from {sellerName} on {date}'}
+                      values={{
+                        sellerName: counterparty.fullName,
+                        date: <FormattedDate value={soldAt} />
+                      }}
                     />
-                  }
-                  {perspective === 'seller' &&
+                  )}
+                  {perspective === 'seller' && (
                     <FormattedMessage
-                      id={ 'purchase-summary.soldToOn' }
-                      defaultMessage={ 'Sold to {buyerName} on {date}' }
-                      values={{ buyerName: counterparty.fullName, date: <FormattedDate value={soldAt} /> }}
+                      id={'purchase-summary.soldToOn'}
+                      defaultMessage={'Sold to {buyerName} on {date}'}
+                      values={{
+                        buyerName: counterparty.fullName,
+                        date: <FormattedDate value={soldAt} />
+                      }}
                     />
-                  }
+                  )}
                 </div>
-              }
-              {buyer &&
+              )}
+              {buyer && (
                 <PurchaseProgress
                   purchase={purchase}
                   perspective={perspective}
                   subdued={true}
                 />
-              }
+              )}
             </div>
           </div>
-        }
+        )}
         <div ref={this.conversationDiv} className="conversation">
-          <CompactMessages messages={messages}/>
+          <CompactMessages messages={messages} />
         </div>
-        {!shouldEnableForm &&
+        {!shouldEnableForm && (
           <form className="add-message d-flex">
-            <textarea tabIndex="0" disabled></textarea>
-            <button type="submit" className="btn btn-sm btn-primary" disabled>Send</button>
+            <textarea tabIndex="0" disabled />
+            <button type="submit" className="btn btn-sm btn-primary" disabled>
+              Send
+            </button>
           </form>
-        }
-        {shouldEnableForm &&
+        )}
+        {shouldEnableForm && (
           <form className="add-message d-flex" onSubmit={this.handleSubmit}>
             <textarea
               ref={this.textarea}
-              placeholder={intl.formatMessage(this.intlMessages.newMessagePlaceholder)}
+              placeholder={intl.formatMessage(
+                this.intlMessages.newMessagePlaceholder
+              )}
               onKeyDown={this.handleKeyDown}
               tabIndex="0"
-              autoFocus>
-            </textarea>
-            <button type="submit" className="btn btn-sm btn-primary">Send</button>
+              autoFocus
+            />
+            <button type="submit" className="btn btn-sm btn-primary">
+              Send
+            </button>
           </form>
-        }
+        )}
       </div>
     )
   }
