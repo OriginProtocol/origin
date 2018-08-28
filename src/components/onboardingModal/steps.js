@@ -11,13 +11,12 @@ export default [
     img: <img src="/images/eth-tokens.svg" alt="eth-tokens" />,
     content: (
       <div>
-        <p>
+        <p className="step-text">
           In order to sell on the Origin DApp, you will need to connect
-          a wallet in order to accept payment in ETH
+          a wallet in order to accept payment in <mark className="eth">ETH</mark>
         </p>
-        <p>
-          Payment for goods and services on the Origin DApp are always
-          made in ETH
+        <p className="step-text">
+          Payment for goods and services on the Origin DApp are always made in <mark className="eth">ETH</mark>
         </p>
       </div>
     )

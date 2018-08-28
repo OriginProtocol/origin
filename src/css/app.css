@@ -1336,6 +1336,22 @@ a:hover {
   border-bottom-left-radius: 10px;
 }
 
+.onboarding-modal .step-text,
+.onboarding-modal .eth {
+  margin: auto 60px;
+  padding-bottom: 15px;
+  font-family: 'Lato', 'Helvetica Neue', 'Arial', sans-serif;
+  font-weight: 300;
+  font-size: 1.125rem;
+}
+
+.onboarding-modal .eth {
+  font-weight: 400;
+  color: var(--dark-purple);
+  margin: 0;
+  background: none;
+}
+
 .onboarding-modal.show {
   display: block;
 }
@@ -1361,7 +1377,7 @@ a:hover {
 
 .onboarding-modal .selected,
 .onboarding-modal .right-panel {
-  background-color: #2e3f53;
+  background-color: var(--dark-grey-blue);
 }
 
 .onboarding-modal .btn-lg {

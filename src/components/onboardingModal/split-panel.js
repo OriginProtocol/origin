@@ -9,22 +9,7 @@ class OnboardingModal extends Component {
     super(props)
     this.state = {steps, currentStep: steps[0]}
 
-    this.externalModalClose = this.externalModalClose.bind(this)
     this.displayNextStep = this.displayNextStep.bind(this)
-  }
-
-  componentDidMount() {
-    document.addEventListener('mousedown', this.externalModalClose);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.externalModalClose);
-  }
-
-  externalModalClose(event) {
-    if (this.node && !this.node.contains(event.target)) {
-      this.props.closeModal()
-    }
   }
 
   firstIncompleteStep() {
@@ -75,7 +60,6 @@ class OnboardingModal extends Component {
 
     return (
       <div
-        ref={node => (this.node = node)}
         className={`modal fade onboarding-modal ${show}`}
         tabIndex="-1"
         role="dialog"
