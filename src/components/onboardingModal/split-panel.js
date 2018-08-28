@@ -82,18 +82,22 @@ class OnboardingModal extends Component {
         aria-hidden="true"
       >
         { isOpen && (
-          <div className="modal-dialog">
-            <div className="modal-content d-flex">
-              <div className="row">
-                <LeftPanel
-                  steps={steps}
-                  firstIncompleteStep={firstIncompleteStep}
-                />
-                <RightPanel
-                  displayNextStep={this.displayNextStep}
-                  step={step}
-                  closeModal={closeModal}
-                />
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content d-flex p-0">
+              <div class="modal-body p-0">
+                <div class="container-fluid pl-1">
+                  <div className="row">
+                    <LeftPanel
+                      steps={steps}
+                      firstIncompleteStep={firstIncompleteStep}
+                    />
+                    <RightPanel
+                      displayNextStep={this.displayNextStep}
+                      step={step}
+                      closeModal={closeModal}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
