@@ -27,13 +27,16 @@ class ContractService {
       v01_MarketplaceContract: V01_MarketplaceContract
     }
 
-    const contracts = Object.assign({
-      userRegistryContract: UserRegistryContract,
-      claimHolderRegisteredContract: ClaimHolderRegisteredContract,
-      claimHolderPresignedContract: ClaimHolderPresignedContract,
-      originIdentityContract: OriginIdentityContract,
-      originTokenContract: OriginTokenContract
-    }, this.marketplaceContracts)
+    const contracts = Object.assign(
+      {
+        userRegistryContract: UserRegistryContract,
+        claimHolderRegisteredContract: ClaimHolderRegisteredContract,
+        claimHolderPresignedContract: ClaimHolderPresignedContract,
+        originIdentityContract: OriginIdentityContract,
+        originTokenContract: OriginTokenContract
+      },
+      this.marketplaceContracts
+    )
 
     this.libraries = {}
     this.libraries.ClaimHolderLibrary = ClaimHolderLibrary
@@ -58,9 +61,10 @@ class ContractService {
     const networkId = await web3.eth.net.getId()
 
     const contractCount = Object.keys(this.marketplaceContracts).length
-    const contractsFound = Object.keys(this.marketplaceContracts)
-      .filter(contractName => this.marketplaceContracts[contractName].networks[networkId])
-      .length
+    const contractsFound = Object.keys(this.marketplaceContracts).filter(
+      contractName =>
+        this.marketplaceContracts[contractName].networks[networkId]
+    ).length
 
     return {
       allContractsPresent: contractCount === contractsFound,

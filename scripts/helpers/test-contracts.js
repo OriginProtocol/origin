@@ -9,16 +9,13 @@ const testContracts = () => {
     let truffleArgs
     if (testFile === undefined) {
       truffleArgs = ['test', '--compile-all']
-    }
-    else {
+    } else {
       console.log('running ' + testFile)
-      truffleArgs = ['test', 'test/'+testFile, '--compile-all']
+      truffleArgs = ['test', 'test/' + testFile, '--compile-all']
     }
-    const truffleTest = spawn(
-      '../node_modules/.bin/truffle',
-      truffleArgs,
-      { cwd: './contracts' }
-    )
+    const truffleTest = spawn('../node_modules/.bin/truffle', truffleArgs, {
+      cwd: './contracts'
+    })
     truffleTest.stdout.pipe(process.stdout)
     truffleTest.stderr.on('data', data => {
       reject(String(data))

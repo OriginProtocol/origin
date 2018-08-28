@@ -45,7 +45,7 @@ const populateIpfs = async () => {
     // Only process directories in the fixtures directory
     if (stat.isDirectory()) {
       // Grab the schema filename
-      const schemaFilename = fs.readdirSync(listingDirectory).find((file) => {
+      const schemaFilename = fs.readdirSync(listingDirectory).find(file => {
         return file.endsWith('json')
       })
       if (!schemaFilename) {
@@ -54,11 +54,14 @@ const populateIpfs = async () => {
       }
 
       // Get all the images from the listing directory
-      const imagePaths = fs.readdirSync(listingDirectory).filter((file) => {
-        return file.endsWith('jpg') || file.endsWith('png')
-      }).map((imageFilename) => {
-        return listingDirectory + '/' + imageFilename
-      })
+      const imagePaths = fs
+        .readdirSync(listingDirectory)
+        .filter(file => {
+          return file.endsWith('jpg') || file.endsWith('png')
+        })
+        .map(imageFilename => {
+          return listingDirectory + '/' + imageFilename
+        })
 
       // Read the listing data
       const dataJson = fs.readFileSync(listingDirectory + '/' + schemaFilename)
@@ -71,7 +74,7 @@ const populateIpfs = async () => {
       }
 
       // Update listing data to IPFS
-      const stream = new ReadableStream
+      const stream = new ReadableStream()
       stream.push(JSON.stringify(data))
       stream.push(null)
       await ipfs.add(stream)
