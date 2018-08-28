@@ -32,9 +32,6 @@ class MyListings extends Component {
   /*
   * WARNING: These functions don't actually return what they might imply.
   * They use return statements to chain together async calls. Oops.
-  *
-  * For now, we mock a getBySellerAddress request by fetching all
-  * listings individually, filtering each by sellerAddress.
   */
 
   async loadListings() {

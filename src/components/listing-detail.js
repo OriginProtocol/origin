@@ -154,7 +154,7 @@ class ListingsDetail extends Component {
   render() {
     const isActive = this.state.status === 'active'
     const buyersReviews = this.state.reviews
-    const userIsSeller = this.state.sellerAddress === this.props.web3Account
+    const userIsSeller = this.state.seller === this.props.web3Account
 
     return (
       <div className="listing-detail">
@@ -324,7 +324,7 @@ class ListingsDetail extends Component {
                   <FormattedMessage
                     id={'listing-detail.seller'}
                     defaultMessage={'Seller: {sellerAddress}'}
-                    values={{ sellerAddress: this.state.sellerAddress }}
+                    values={{ sellerAddress: this.state.seller }}
                   />
                 </li>
                 <li>
@@ -433,11 +433,11 @@ class ListingsDetail extends Component {
                   )}
                 </div>
               )}
-              {this.state.sellerAddress && (
+              {this.state.seller && (
                 <UserCard
                   title="seller"
                   listingAddress={this.props.listingAddress}
-                  userAddress={this.state.sellerAddress}
+                  userAddress={this.state.seller}
                 />
               )}
             </div>
