@@ -1321,8 +1321,12 @@ a:hover {
 
 .onboarding-modal {
   max-width: 770px;
-  max-width: 530px;
+  max-height: 530px;
   border-radius: 10px;
+}
+
+.onboarding-modal.show {
+  display: block;
 }
 
 .onboarding-modal .modal-content {

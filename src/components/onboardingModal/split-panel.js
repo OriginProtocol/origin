@@ -71,11 +71,18 @@ class OnboardingModal extends Component {
     const { complete, subStep } = currentStep
     const step = complete && subStep ? subStep : currentStep
     const firstIncompleteStep = this.firstIncompleteStep()
+    const show = isOpen && 'show'
 
     return (
-      <div>
+      <div
+        ref={node => (this.node = node)}
+        className={`modal fade onboarding-modal ${show}`}
+        tabIndex="-1"
+        role="dialog"
+        aria-hidden="true"
+      >
         { isOpen && (
-          <div ref={node => (this.node = node)} className="modal-dialog onboarding-modal">
+          <div className="modal-dialog">
             <div className="modal-content d-flex">
               <div className="row">
                 <LeftPanel
