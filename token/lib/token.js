@@ -34,6 +34,15 @@ class Token {
   }
 
   /*
+   * Returns the token contract's address.
+   * @params {string} networkId - Test network Id.
+   * @return {string} - Address contract was deployed to.
+   */
+  contractAddress(networkId) {
+    return TokenContract.networks[networkId].address
+  }
+
+  /*
    * Returns token contract object for the specified network.
    * @params {string} networkId - Test network Id.
    * @throws Throws an error if the operation failed.
@@ -44,12 +53,12 @@ class Token {
     let web3 = new Web3(provider)
 
     // Create a token contract objects based on its ABI and address on the network.
-    const tokenAddress = TokenContract.networks[networkId].address
-    return new web3.eth.Contract(TokenContract.abi, tokenAddress)
+    const contractAddress = this.contractAddress(networkId)
+    return new web3.eth.Contract(TokenContract.abi, contractAddress)
   }
 
   /*
-   * Credits OGN tokens to a wallet.
+   * Credits tokens to a wallet.
    * @params {string} networkId - Test network Id.
    * @params {string} wallet - Address of the recipient wallet.
    * @params {int} value - Value to credit, in natural unit.
@@ -80,6 +89,8 @@ class Token {
    */
   async balance(networkId, wallet) {
     const contract = this.contract(networkId)
+    console.log("CONTRAC=", contract)
+
     const balance = await contract.methods.balanceOf(wallet).call()
     return BigNumber(balance)
   }

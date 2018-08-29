@@ -22,8 +22,14 @@ async function run(config) {
     console.log(`Credited 100 OGN tokens to wallet. New balance (natural unit) = ${newBalance}`)
     break
   }
+  case 'address': {
+    // Get the address the token contract was deployed to.
+    const address = token.contractAddress(config.networkId)
+    console.log(`Token contract address = ${address}`)
+    break
+  }
   default:
-    throw `unsupported action ${config.action}`
+    throw `Unsupported action ${config.action}`
   }
 }
 
@@ -51,4 +57,6 @@ try {
   process.exit(-1)
 }
 
-run(config).then(() => {process.exit(0)})
+run(config)
+  .then(() => {process.exit(0)})
+  .catch((err) => {console.log(`Error: ${err}`); process.exit(-1)})
