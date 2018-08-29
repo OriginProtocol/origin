@@ -1842,6 +1842,10 @@ select.form-control:not([size]):not([multiple]) {
   background-color: red;
 }
 
+.listing-form textarea {
+  height: 120px;
+}
+
 .listing-form .info-box {
   background-color: var(--pale-grey);
   border-radius: var(--default-radius);
