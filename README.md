@@ -16,9 +16,6 @@ You can connect to and use our hosted Bridge Server at [bridge.originprotocol.co
 
 DApps can connect to the Bridge Server of their choosing in order to enable the following functionality which is either impossible or impractical to do directly onchain, including:
 
-### Indexing
-
-Searching, browsing or filtering results is impractical to do either onchain or in the browser. DApps can connect to a bridge-server to solve this problem. The bridge server will index the blockchain and related JSON content that is stored on IPFS into a quickly queriable format to make searching and filtering results possible from DApps.
 
 ### Identity
 
@@ -37,8 +34,6 @@ See the [README for the API](api)
 ### Prerequisites
 - Python 3.5 or higher required
 - Postgresql 9.3 or higher required
-- Redis 4.0+ recommended
-- ElasticSearch 5.X
 
 #### Mac OS specifics
 Install build tools packages:
@@ -76,66 +71,6 @@ is a perfectly reasonable way to generate a secret key.
 
 #### Database
 Set up your ```DATABASE_URL``` to point to where you local database is or will be.
-
-#### Indexing server
-Enviroment keys for Indexing server:
-
-*Contracts*
-
-- `CONTRACT_DIR`: Set this to the directory where the Solidity contracts have been compiled. Example configurations:
-
-    - Local deployment:
-       `CONTRACT_DIR=contracts`
-    - Origin-box deployment:
-       ```CONTRACT_DIR=contracts_dev```
-
-*Redis*
-
-- `REDIS_URL`: Set this to point to your local Redis server.
-For example `REDIS_URL=redis://127.0.0.1:6379/0`
-
-*Web3*
-
-- `RPC_SERVER`: Set this to RPC server URL, you want the indexing server
-to listen to events on.
-- `RPC_PROTOCOL`: Connection protocols for RPC server.
-Options are `https` or `wss`
-
-  Example configurations:
-    - To connect to Rinkeby Testnet:
-
-      ```
-      RPC_SERVER=wss://rinkeby.infura.io/_ws
-      RPC_PROTOCOL=wss
-      ```
-
-    - To connect to a local RPC server:
-
-      ```
-      RPC_SERVER=http://127.0.0.1:8545/
-      RPC_PROTOCOL=https
-      ```
-
-*IPFS*
-
-- `IPFS_DOMAIN`: Set this to the domain of an IPFS daemon.
-- `IPFS_PORT`: port on which the IPFS daemon is listening.
-
-  Example configurations:
-
-    - To connect to the Origin IPFS gateway:
-
-      ```
-      IPFS_DOMAIN=gateway.originprotocol.com
-      IPFS_PORT=8080
-      ```
-
-    - To connect to a local IPFS server:
-
-      ```
-      IPFS_DOMAIN=127.0.0.1
-      IPFS_PORT=5002
-      ```
 
 #### Identity attestation
 This is optional - only define these environment keys if you want to use your
@@ -216,16 +151,6 @@ python main.py
 ```
 
 This starts a development server on ```localhost:5000``` by default.
-
-### Run the Celery worker
-
-```bash
-# Run these in the virtual environment you set up above.
-celery -A util.tasks worker -c=1
-celery -A util.tasks beat
-```
-
-This starts a celery beat to issue periodic tasks and a celery worker to process the tasks.
 
 
 ### Run the Tests

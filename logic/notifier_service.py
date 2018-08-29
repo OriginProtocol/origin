@@ -1,6 +1,5 @@
 from database import db
-from database.db_models import EthNotificationEndpoint, EthNotificationTypes, Listing
-from util.contract import ContractHelper
+from database.db_models import EthNotificationEndpoint, EthNotificationTypes
 from util.ipfs import IPFSHelper
 from config import settings
 from enum import Enum
@@ -16,7 +15,9 @@ from pyfcm import FCMNotification
 apns_client = None
 fcm_client = None
 
-PurchaseStages = ContractHelper.get_contract_enums("Purchase", "Stages")
+
+# TODO: Update stages based on marketplace contracts.
+# PurchaseStages = ContractHelper.get_contract_enums("Purchase", "Stages")
 
 
 class Notification(Enum):
@@ -132,68 +133,71 @@ def listing_info(listing_obj):
                 pictures=get_listing_picture(listing_obj))
 
 
-class Notifier():
-    """
-    Notifier sends mobile notifications.
-    """
-    @classmethod
-    def notify_purchased(cls, purchase_obj):
-        if not purchase_obj.listing_address:
-            return
+# TODO: rewrite Notifier based on marketplace contracts.
 
-        seller_notification, buyer_notification = {
-            PurchaseStages.COMPLETE: (
-                Notification.SOLD,
-                Notification.PURCHASED),
-
-            PurchaseStages.AWAITING_PAYMENT: (
-                Notification.PENDING_PAYMENT,
-                Notification.PENDING_PAY),
-
-            PurchaseStages.BUYER_PENDING: (
-                Notification.PENDING_BUYER_CONFIRMATION,
-                Notification.PENDING_BUY_CONFIRM),
-
-            PurchaseStages.SELLER_PENDING: (
-                Notification.PENDING_SELLER_CONFIRM,
-                Notification.PENDING_SELLER_CONFIRMATION),
-
-            PurchaseStages.IN_DISPUTE: (
-                Notification.SELLER_DISPUTE,
-                Notification.BUYER_DISPUTE),
-
-            PurchaseStages.REVIEW_PERIOD: (
-                Notification.SELLER_REVIEW,
-                Notification.BUYER_REVIEW)
-        }.get(PurchaseStages(int(purchase_obj.stage)), (None, None))
-
-        if seller_notification or buyer_notification:
-            listing_obj = Listing.query.filter_by(
-                contract_address=purchase_obj.listing_address).first()
-            if listing_obj:
-                listing_params = listing_info(listing_obj)
-                seller_notification and send_notification(
-                    listing_obj.owner_address, seller_notification, **listing_params)
-                buyer_notification and send_notification(
-                    purchase_obj.buyer_address, buyer_notification, **listing_params)
-
-    @classmethod
-    def notify_listing(cls, listing_obj):
-        listing_params = listing_info(listing_obj)
-        send_notification(
-            listing_obj.owner_address,
-            Notification.LIST,
-            **listing_params)
-
-    @classmethod
-    def notify_listing_update(cls, listing_obj):
-        listing_params = listing_info(listing_obj)
-        send_notification(
-            listing_obj.owner_address,
-            Notification.UPDATED,
-            **listing_params)
-
-    @classmethod
-    def notify_review(cls, review_obj):
-        # TODO(gagan): implement
-        pass
+# class Notifier():
+#     """
+#     Notifier sends mobile notifications.
+#
+#     """
+#     @classmethod
+#     def notify_purchased(cls, purchase_obj):
+#         if not purchase_obj.listing_address:
+#             return
+#
+#         seller_notification, buyer_notification = {
+#             PurchaseStages.COMPLETE: (
+#                 Notification.SOLD,
+#                 Notification.PURCHASED),
+#
+#             PurchaseStages.AWAITING_PAYMENT: (
+#                 Notification.PENDING_PAYMENT,
+#                 Notification.PENDING_PAY),
+#
+#             PurchaseStages.BUYER_PENDING: (
+#                 Notification.PENDING_BUYER_CONFIRMATION,
+#                 Notification.PENDING_BUY_CONFIRM),
+#
+#             PurchaseStages.SELLER_PENDING: (
+#                 Notification.PENDING_SELLER_CONFIRM,
+#                 Notification.PENDING_SELLER_CONFIRMATION),
+#
+#             PurchaseStages.IN_DISPUTE: (
+#                 Notification.SELLER_DISPUTE,
+#                 Notification.BUYER_DISPUTE),
+#
+#             PurchaseStages.REVIEW_PERIOD: (
+#                 Notification.SELLER_REVIEW,
+#                 Notification.BUYER_REVIEW)
+#         }.get(PurchaseStages(int(purchase_obj.stage)), (None, None))
+#
+#         if seller_notification or buyer_notification:
+#             listing_obj = Listing.query.filter_by(
+#                 contract_address=purchase_obj.listing_address).first()
+#             if listing_obj:
+#                 listing_params = listing_info(listing_obj)
+#                 seller_notification and send_notification(
+#                     listing_obj.owner_address, seller_notification, **listing_params)
+#                 buyer_notification and send_notification(
+#                     purchase_obj.buyer_address, buyer_notification, **listing_params)
+#
+#     @classmethod
+#     def notify_listing(cls, listing_obj):
+#         listing_params = listing_info(listing_obj)
+#         send_notification(
+#             listing_obj.owner_address,
+#             Notification.LIST,
+#             **listing_params)
+#
+#     @classmethod
+#     def notify_listing_update(cls, listing_obj):
+#         listing_params = listing_info(listing_obj)
+#         send_notification(
+#             listing_obj.owner_address,
+#             Notification.UPDATED,
+#             **listing_params)
+#
+#     @classmethod
+#     def notify_review(cls, review_obj):
+#         # TODO(gagan): implement
+#         pass

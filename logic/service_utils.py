@@ -18,19 +18,11 @@ class AirbnbVerificationError(ServiceError):
     pass
 
 
-class DatabaseIndexingError(ServiceError):
-    pass
-
-
 class EmailVerificationError(ServiceError):
     pass
 
 
 class FacebookVerificationError(ServiceError):
-    pass
-
-
-class SearchIndexingError(ServiceError):
     pass
 
 

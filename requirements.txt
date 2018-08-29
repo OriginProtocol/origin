@@ -4,14 +4,12 @@ asn1crypto==0.24.0
 autopep8==1.3.5
 base58==0.2.5
 bidict==0.15.0
-celery==4.1.0
 certifi==2018.1.18
 cffi==1.11.5
 chardet==3.0.4
 click==6.7
 cryptography==2.2.2
 decorator==4.2.1
-elasticsearch>=5.0.0,<6.0.0
 eth-tester[pyethereum21]==0.1.0b26
 factory-boy==2.10.0
 fixture==1.5.11
@@ -59,7 +57,6 @@ python-dateutil==2.7.2
 python-dotenv==0.8.2
 python-editor==1.0.3
 pytz==2018.3
-redis==2.10.6
 requests==2.18.4
 requests-oauthlib==0.8.0
 responses==0.9.0

@@ -70,19 +70,10 @@ SENDGRID_API_KEY = get_env_default('SENDGRID_API_KEY')
 
 TWILIO_VERIFY_API_KEY = get_env_default('TWILIO_VERIFY_API_KEY')
 
-RPC_SERVER = get_env_default('RPC_SERVER')
-RPC_PROTOCOL = get_env_default('RPC_PROTOCOL')
-
-IPFS_DOMAIN = get_env_default('IPFS_DOMAIN')
-IPFS_PORT = get_env_default('IPFS_PORT')
-
 TWITTER_CONSUMER_KEY = get_env_default('TWITTER_CONSUMER_KEY')
 TWITTER_CONSUMER_SECRET = get_env_default('TWITTER_CONSUMER_SECRET')
 
 ATTESTATION_SIGNING_KEY = get_env_default('ATTESTATION_SIGNING_KEY')
-
-REDIS_URL = get_env_default('REDIS_URL')
-CELERY_DEBUG = parse_bool(get_env_default('CELERY_DEBUG'))
 
 APNS_CERT_FILE = get_env_default('APNS_CERT_FILE')
 APNS_CERT_PASSWORD = get_env_default('APNS_CERT_PASSWORD')
@@ -92,8 +83,6 @@ FCM_API_KEY = get_env_default('FCM_API_KEY')
 FCM_TITLE = get_env_default('FCM_TITLE')
 
 BIND_HOST = get_env_default("BIND_HOST")
-
-BONSAI_URL = get_env_default('BONSAI_URL')
 
 CONTRACT_DIR = get_env_default('CONTRACT_DIR') or 'contracts'
 

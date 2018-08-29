@@ -1,11 +1,8 @@
 import logging
 import json
-import hexbytes
 from web3 import Web3, HTTPProvider, WebsocketProvider
 from web3.contract import Contract
 from web3.middleware import geth_poa_middleware
-from eth_abi import decode_single, decode_abi
-from eth_utils import to_checksum_address
 
 from config import settings
 from enum import Enum
@@ -106,20 +103,6 @@ class ContractHelper:
                         if members and isinstance(members, list):
                             return Enum(enum_name, " ".join(
                                 e["name"] for e in members), start=0)
-
-    @classmethod
-    def convert_event_data(cls, event_type, data):
-        if event_type == 'NewListing':
-            return decode_abi(['uint256', 'address'], hexbytes.HexBytes(data))
-        elif event_type == 'ListingPurchased':
-            addr = decode_single('address',
-                                 hexbytes.HexBytes(data))
-            return to_checksum_address(addr)
-        elif event_type == 'PurchaseChange':
-            return int(data, 0)
-        elif event_type == 'PurchaseReview':
-            return decode_abi(['address', 'address', 'uint8',
-                               'uint8', 'bytes32'], hexbytes.HexBytes(data))
 
     @staticmethod
     def numeric_eth(str_eth_address):

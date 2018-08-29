@@ -1,13 +1,10 @@
-import logging
 import logging.config
 import sys
 
 import flask_migrate
-import flask_restless
 
 from config import settings
 from database import db
-from database import db_models
 from flask_session import Session
 from api import start_restful_api
 
@@ -22,32 +19,15 @@ class AppConfig(object):
     SQLALCHEMY_ECHO = False
 
 
+def init_api(app):
+    start_restful_api(app)
+
+
 def init_app(app):
     sess = Session()
     sess.init_app(app)
     db.init_app(app)
     flask_migrate.Migrate(app, db, directory='database/migrations')
-
-
-def init_api(app):
-    start_restful_api(app)
-
-    # Create the Flask-Restless API manager.
-    manager = flask_restless.APIManager(app, flask_sqlalchemy_db=db)
-    # Create API endpoints, which will be available at /api/<tablename> by
-    # default. Allowed HTTP methods can be specified as well.
-    manager.create_api(db_models.Listing, methods=['GET'],
-                       primary_key='contract_address',
-                       results_per_page=10,
-                       max_results_per_page=100)
-    manager.create_api(db_models.Purchase, methods=['GET'],
-                       primary_key='contract_address',
-                       results_per_page=10,
-                       max_results_per_page=100)
-    manager.create_api(db_models.Review, methods=['GET'],
-                       primary_key='contract_address',
-                       results_per_page=10,
-                       max_results_per_page=100)
 
 
 # App initialization only appropriate for dev/production but not tests.
