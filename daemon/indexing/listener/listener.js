@@ -11,26 +11,18 @@ const db = require('../lib//db.js')
 // ---------------
 
 // Todo
-// - Allow configuring web3 endpoint, network, and IPFS endpoint
-// - When catching up, work in smaller batches
 // - Handle blockchain splits/winners
-// - Possibly switch lastLogBlock to be closer to last found block
 // - Include current-as-of block numbers in POSTs
 // - Persist starting point in DB
-// - Perhaps send related data as it was at the time of the event, not crawl time
+// - Perhaps send related data as it was at the time of the event, not as of crawl time
 // - Possible configurable log levels
 
-const web3Provider = new Web3.providers.HttpProvider('http://localhost:8545')
-const web3 = new Web3(web3Provider)
-const o = new Origin({
-  ipfsDomain: 'origin-js',
-  ipfsGatewayProtocol: 'http',
-  ipfsGatewayPort: 8080,
-  web3
-})
+let web3
+let o
 
 MAX_RETRYS = 10
 MAX_RETRY_WAIT_MS = 2 * 60 * 1000
+MAX_BATCH_BLOCKS = 3000 // Adjust as needed as Origin gets more popular
 
 // -----------------------------
 // Section 1: Follow rules
@@ -104,10 +96,28 @@ const LISTEN_RULES = {
 // Section 2: The following engine
 // -------------------------------
 
+function setupOriginJS(config){
+  const web3Provider = new Web3.providers.HttpProvider(config.web3Url)
+  // global
+  web3 = new Web3(web3Provider)
+  console.log(`Web3 URL: ${config.web3Url}`)
+
+  const ipfsUrl = urllib.parse(config.ipfsUrl)
+  // global
+  o = new Origin({
+    ipfsDomain: ipfsUrl.hostname,
+    ipfsGatewayProtocol: ipfsUrl.protocol.replace(':',''),
+    ipfsGatewayPort: ipfsUrl.port,
+    web3
+  })
+  console.log(`IPFS URL: ${config.ipfsUrl}`)
+}
+
 // liveTracking
 // - checks for a new block every checkIntervalSeconds
 // - if new block appeared, look for all events after the last found event
 async function liveTracking(config) {
+  setupOriginJS(config)
   const context = await new Context(config).init()
 
   let lastLogBlock = getLastBlock(config)
@@ -124,12 +134,11 @@ async function liveTracking(config) {
         return scheduleNextCheck()
       }
       console.log('New block: ' + currentBlockNumber)
-      const opts = { fromBlock: lastLogBlock + 1 }
-      const batchLastLogBlock = await runBatch(opts, context)
-      if (batchLastLogBlock != undefined) {
-        lastLogBlock = batchLastLogBlock
-        setLastBlock(config, lastLogBlock)
-      }
+      const toBlock = Math.min(lastLogBlock+MAX_BATCH_BLOCKS, currentBlockNumber)
+      const opts = { fromBlock: lastLogBlock + 1, toBlock: toBlock }
+      await runBatch(opts, context)
+      lastLogBlock = toBlock
+      setLastBlock(config, toBlock)
       lastCheckedBlock = currentBlockNumber
       return scheduleNextCheck()
     })
@@ -175,8 +184,8 @@ async function runBatch(opts, context) {
 
   const eventTopics = Object.keys(context.signatureToRules)
   const logs = await web3.eth.getPastLogs({
-    fromBlock: fromBlock,
-    toBlock: toBlock,
+    fromBlock: web3.utils.toHex(fromBlock), // Hex required for infura
+    toBlock: toBlock ? web3.utils.toHex(toBlock) : "latest",  // Hex required for infura
     topics: [eventTopics]
   })
 
@@ -359,14 +368,14 @@ class Context {
   }
 
   async init() {
-    this.signatureToRules = buildSignatureLookup()
+    this.signatureToRules = buildSignatureToRules()
     this.addressToVersion = await buildVersionList()
     this.networkId = await web3.eth.net.getId()
     return this
   }
 }
 
-function buildSignatureLookup() {
+function buildSignatureToRules() {
   const signatureLookup = {}
   for (const contractName in LISTEN_RULES) {
     const eventRules = LISTEN_RULES[contractName]
@@ -431,6 +440,10 @@ const config = {
   // Verbose mode, includes dumping events on the console.
   verbose: args['--verbose'],
   // File to use for picking which block number to restart from
-  continueFile: args['--continue-file']
+  continueFile: args['--continue-file'],
+  // web3 provider url
+  web3Url: args['--web3-url'] || 'http://localhost:8545',
+  // ipfs url
+  ipfsUrl: args['--ipfs-url'] || 'http://origin-js:8080',
 }
 liveTracking(config)

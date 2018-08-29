@@ -57,9 +57,14 @@ class IpfsService {
    */
   async saveDataURIAsFile(dataURI) {
     // Extract the mime type
-    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+    const mimeString = dataURI
+      .split(',')[0]
+      .split(':')[1]
+      .split(';')[0]
     // Decode b64 encoded component
-    const binary = new Buffer(dataURI.split(',')[1], 'base64').toString('binary')
+    const binary = new Buffer(dataURI.split(',')[1], 'base64').toString(
+      'binary'
+    )
 
     const buffer = new Uint8Array(binary.length)
     for (let i = 0; i < binary.length; i++) {
