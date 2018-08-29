@@ -1341,6 +1341,18 @@ a:hover {
   border-bottom-left-radius: 10px;
 }
 
+.onboarding-modal .left-panel .content div {
+  margin-top: 40px;
+}
+
+.onboarding-modal .left-panel .panel-text {
+  margin-left: 10px;
+}
+
+.onboarding-modal .left-panel .panel-text p {
+  font-weight: 300;
+}
+
 .onboarding-modal .step-text,
 .onboarding-modal .eth {
   margin: auto 60px;
