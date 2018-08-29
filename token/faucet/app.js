@@ -16,6 +16,7 @@ function runApp(config) {
   const app = express()
   const token = new Token(config)
 
+  // Route /tokens is for crediting tokens.
   app.get('/tokens', async function (req, res, next) {
     const networkId = req.query.network_id
     const wallet = req.query.wallet
@@ -43,7 +44,7 @@ function runApp(config) {
     }
   })
 
-  app.use(express.static('public'))
+  app.use(express.static(__dirname + '/public'))
   app.listen(
     config.port || DEFAULT_SERVER_PORT,
     () => console.log(`Origin faucet app listening on port ${config.port}!`))

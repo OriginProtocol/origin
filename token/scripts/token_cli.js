@@ -10,19 +10,22 @@ async function run(config) {
   const token = new Token(config)
 
   switch (config.action) {
-  case 'balance':
+  case 'balance': {
     // Check wallet balance.
     const balance = await token.balance(config.networkId, config.wallet)
     console.log(`Balance (natural unit)=${balance}`)
     break
-  case 'credit':
+  }
+  case 'credit': {
     // Credit 100 OGN.
     const newBalance = await token.transfer(config.networkId, config.wallet, token.toNaturalUnit(100))
     console.log(`Credited 100 OGN tokens to wallet. New balance (natural unit) = ${newBalance}`)
     break
+  }
   default:
     throw `unsupported action ${config.action}`
   }
+  process.exit(0)
 }
 
 //
@@ -50,4 +53,3 @@ try {
 }
 
 run(config)
-process.exit(0)

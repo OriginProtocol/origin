@@ -35,32 +35,32 @@ function createProviders(networkIds) {
     let providerUrl
 
     switch (networkId) {
-      case ROPSTEN_NETWORK_ID:
-        if (!process.env.ROPSTEN_MNEMONIC) {
-          throw 'Missing ROPSTEN_MNEMONIC env var'
-        }
-        if (!process.env.INFURA_ACCESS_TOKEN) {
-          throw 'Missing INFURA_ACCESS_TOKEN env var'
-        }
-        mnemonic = process.env.ROPSTEN_MNEMONIC
-        providerUrl = `https://rinkeby.infura.io/${process.env.INFURA_ACCESS_TOKEN}`
-        break
-      case RINKEBY_NETWORK_ID:
-        if (!process.env.RINKEBY_MNEMONIC) {
-          throw 'Missing RINKEBY_MNEMONIC env var'
-        }
-        if (!process.env.INFURA_ACCESS_TOKEN) {
-          throw 'Missing INFURA_ACCESS_TOKEN env var'
-        }
-        mnemonic = process.env.RINKEBY_MNEMONIC
-        providerUrl = `https://rinkeby.infura.io/${process.env.INFURA_ACCESS_TOKEN}`
-        break
-      case LOCAL_NETWORK_ID:
-        mnemonic = process.env.LOCAL_MNEMONIC || DEFAULT_MNEMONIC
-        providerUrl = 'http://localhost:8545'
-        break
-      default:
-        throw `Unsupported network id ${networkId}`
+    case ROPSTEN_NETWORK_ID:
+      if (!process.env.ROPSTEN_MNEMONIC) {
+        throw 'Missing ROPSTEN_MNEMONIC env var'
+      }
+      if (!process.env.INFURA_ACCESS_TOKEN) {
+        throw 'Missing INFURA_ACCESS_TOKEN env var'
+      }
+      mnemonic = process.env.ROPSTEN_MNEMONIC
+      providerUrl = `https://rinkeby.infura.io/${process.env.INFURA_ACCESS_TOKEN}`
+      break
+    case RINKEBY_NETWORK_ID:
+      if (!process.env.RINKEBY_MNEMONIC) {
+        throw 'Missing RINKEBY_MNEMONIC env var'
+      }
+      if (!process.env.INFURA_ACCESS_TOKEN) {
+        throw 'Missing INFURA_ACCESS_TOKEN env var'
+      }
+      mnemonic = process.env.RINKEBY_MNEMONIC
+      providerUrl = `https://rinkeby.infura.io/${process.env.INFURA_ACCESS_TOKEN}`
+      break
+    case LOCAL_NETWORK_ID:
+      mnemonic = process.env.LOCAL_MNEMONIC || DEFAULT_MNEMONIC
+      providerUrl = 'http://localhost:8545'
+      break
+    default:
+      throw `Unsupported network id ${networkId}`
     }
     console.log(`Network=${networkId} Url=${providerUrl} Mnemonic=${mnemonic}`)
     providers[networkId] = new HDWalletProvider(mnemonic, providerUrl)
