@@ -8,7 +8,7 @@ pragma solidity ^0.4.23;
  */
 
 contract IArbitrator {
-  function createDispute(uint listingID, uint offerID) external returns (uint);
+  function createDispute(uint listingID, uint offerID, uint refund) external returns (uint);
 }
 
 contract ERC20 {
@@ -49,7 +49,7 @@ contract V00_Marketplace {
     address buyer;      // Buyer wallet / identity contract / other contract
     address affiliate;  // Address to send any commission
     address arbitrator; // Address of arbitration contract
-    uint32 finalizes;   // Timestamp offer finalizes
+    uint finalizes;     // Timestamp offer finalizes
     uint8 status;       // 0: Undefined, 1: Created, 2: Accepted, 3: Disputed
   }
 
@@ -126,12 +126,12 @@ contract V00_Marketplace {
   function makeOffer(
     uint listingID,
     bytes32 _ipfsHash,   // IPFS hash containing offer data
-    uint32 _finalizes,   // Timestamp an accepted offer will finalize
+    uint _finalizes,     // Timestamp an accepted offer will finalize
     address _affiliate,  // Address to send any required commission to
     uint256 _commission, // Amount of commission to send in Origin Token if offer finalizes
     uint _value,         // Offer amount in ERC20 or Eth
-    ERC20 _currency,
-    address _arbitrator
+    ERC20 _currency,     // ERC20 token address or 0x0 for Eth
+    address _arbitrator  // Escrow arbitrator
   )
     public
     payable
@@ -162,7 +162,7 @@ contract V00_Marketplace {
   function makeOffer(
     uint listingID,
     bytes32 _ipfsHash,
-    uint32 _finalizes,
+    uint _finalizes,
     address _affiliate,
     uint256 _commission,
     uint _value,
@@ -184,6 +184,9 @@ contract V00_Marketplace {
     require(msg.sender == listing.seller);
     require(offer.status == 1); // Offer must be in state 'Created'
     require(listing.deposit >= offer.commission);
+    if (offer.finalizes < 1000000000) { // Relative finalization window
+      offer.finalizes = now + offer.finalizes;
+    }
     listing.deposit -= offer.commission; // Accepting an offer puts Origin Token into escrow
     offer.status = 2; // Set offer to 'Accepted'
     emit OfferAccepted(msg.sender, listingID, offerID, _ipfsHash);
@@ -202,7 +205,7 @@ contract V00_Marketplace {
     } else {
       require(offer.status == 1); // Offer must be in state 'Created'
     }
-    refund(listingID, offerID);
+    refundBuyer(listingID, offerID);
     emit OfferWithdrawn(msg.sender, listingID, offerID, _ipfsHash);
     delete offers[listingID][offerID];
   }
@@ -211,7 +214,7 @@ contract V00_Marketplace {
   function finalize(uint listingID, uint offerID, bytes32 _ipfsHash) public {
     Listing storage listing = listings[listingID];
     Offer storage offer = offers[listingID][offerID];
-    if (now <= offer.finalizes) { // Only buyer can finalize before end of finalization window
+    if (now <= offer.finalizes) { // Only buyer can finalize before finalization window
       require(msg.sender == offer.buyer);
     } else { // Allow both seller and buyer to finalize if finalization window has passed
       require(msg.sender == offer.buyer || msg.sender == listing.seller);
@@ -226,28 +229,33 @@ contract V00_Marketplace {
   }
 
   // @dev Buyer can dispute transaction during finalization window
-  function dispute(uint listingID, uint offerID, bytes32 _ipfsHash) public {
+  function dispute(uint listingID, uint offerID, bytes32 _ipfsHash, uint _refund) public {
     Offer storage offer = offers[listingID][offerID];
     require(msg.sender == offer.buyer);
     require(offer.status == 2); // Offer must be in 'Accepted' state
     require(now <= offer.finalizes); // Must be before agreed finalization window
     offer.status = 3; // Set status to "Disputed"
-    uint disputeID = IArbitrator(offer.arbitrator).createDispute(listingID, offerID);
+    uint disputeID = IArbitrator(offer.arbitrator).createDispute(listingID, offerID, _refund);
     emit OfferDisputed(msg.sender, listingID, offerID, _ipfsHash, disputeID);
   }
 
-  // @dev Called from arbitration contract
-  function executeRuling(uint listingID, uint offerID, uint _ruling) public {
+  // @dev Called from arbitration contract. 0: Seller, 1: Buyer, 2: Com + Seller, 3: Com + Buyer
+  function executeRuling(uint listingID, uint offerID, uint _ruling, uint _refund) public {
     Offer storage offer = offers[listingID][offerID];
     Listing storage listing = listings[listingID];
     require(msg.sender == offer.arbitrator);
     require(offer.status == 3); // Offer must be 'disputed'
-    if (_ruling == 0 || listing.seller == 0x0) { // If seller withdrew listing, buyer wins by default
-      refund(listingID, offerID);
-      payCommission(listingID, offerID); // Pay commission to affiliate
-    } else {
+    require(_refund <= offer.value); // Cannot refund more than value of listing
+    offer.refund = _refund;
+    if (_ruling & 1 == 1 || listing.seller == 0x0) {
+      refundBuyer(listingID, offerID);
+    } else  {
       paySeller(listingID, offerID);
-      listings[listingID].deposit += offer.commission; // Refund commission to seller
+    }
+    if (_ruling & 2 == 2) {
+      payCommission(listingID, offerID);
+    } else  { // Refund commission to seller
+      listings[listingID].deposit += offer.commission;
     }
     emit OfferRuling(offer.arbitrator, listingID, offerID, 0x0, _ruling);
     delete offers[listingID][offerID];
@@ -265,7 +273,7 @@ contract V00_Marketplace {
   }
 
   // @dev Refunds buyer in ETH or ERC20
-  function refund(uint listingID, uint offerID) private {
+  function refundBuyer(uint listingID, uint offerID) private {
     Offer storage offer = offers[listingID][offerID];
     if (address(offer.currency) == 0x0) {
       require(offer.buyer.send(offer.value));
