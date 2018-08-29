@@ -20,7 +20,7 @@
     "locale-code": "^2.0.1",
     "moment": "^2.22.1",
     "orbit-db": "^0.19.8",
-    "origin": "0.6.1",
+    "origin": "~0.7.0",
     "popper.js": "^1.14.3",
     "qrcode.react": "^0.8.0",
     "react": "^16.3.2",
@@ -59,6 +59,7 @@
     "glob": "^7.1.2",
     "html-webpack-plugin": "3.2.0",
     "identicon.js": "^2.3.2",
+    "prettier-eslint-cli": "^4.7.1",
     "source-map-loader": "^0.2.3",
     "style-loader": "0.21.0",
     "webpack": "4.8.1",
@@ -74,7 +75,8 @@
     "deploy:ipfs": "./scripts/deploy.sh",
     "build": "NODE_ENV=production webpack --progress --display errors-only",
     "translations": "node translations/scripts/processTranslatedMessages.js",
-    "test": "node scripts/test.js --env=jsdom"
+    "test": "node scripts/test.js --env=jsdom",
+    "format": "npx prettier-eslint --write 'src/**/*.js' 'scripts/**/*.js'"
   },
   "babel": {
     "presets": [
@@ -105,6 +107,7 @@
     ]
   },
   "eslintConfig": {
+    "root": true,
     "parser": "babel-eslint",
     "parserOptions": {
       "ecmaVersion": 6,
@@ -115,7 +118,8 @@
       }
     },
     "globals": {
-      "web3": true
+      "web3": true,
+      "originTest": true
     },
     "env": {
       "browser": true,
@@ -131,9 +135,49 @@
       "plugin:react/recommended"
     ],
     "rules": {
-      "react/prop-types": "off",
+      "computed-property-spacing": [
+        "error"
+      ],
+      "indent": [
+        "error",
+        2
+      ],
+      "jsx-quotes": [
+        "error"
+      ],
+      "key-spacing": [
+        "error"
+      ],
+      "no-case-declarations": [
+        "off"
+      ],
+      "no-console": [
+        "off"
+      ],
+      "no-var": [
+        "error"
+      ],
+      "object-curly-spacing": [
+        "error",
+        "always"
+      ],
+      "prefer-const": [
+        "error"
+      ],
+      "quotes": [
+        "error",
+        "single",
+        {
+          "avoidEscape": true,
+          "allowTemplateLiterals": true
+        }
+      ],
       "react/no-children-prop": "off",
-      "no-console": "off"
+      "react/prop-types": "off",
+      "semi": [
+        "error",
+        "never"
+      ]
     }
   }
 }

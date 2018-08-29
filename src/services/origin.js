@@ -23,7 +23,7 @@ const mobilize = (str) => {
  * But Micah couldn't get it to connect ¯\_(ツ)_/¯
  */
 const defaultProviderUrl = mobilize(process.env.PROVIDER_URL)
-const defaultBridgeUrl = "https://bridge.originprotocol.com"
+const defaultBridgeUrl = 'https://bridge.originprotocol.com'
 const bridgeProtocol = process.env.BRIDGE_SERVER_PROTOCOL
 const bridgeDomain = mobilize(process.env.BRIDGE_SERVER_DOMAIN)
 const customBridgeUrl = `${bridgeProtocol}://${bridgeDomain}`
@@ -31,15 +31,16 @@ const hasCustomBridge = bridgeProtocol && bridgeDomain
 const bridgeUrl = hasCustomBridge ? customBridgeUrl : defaultBridgeUrl
 const attestationServerUrl = `${bridgeUrl}/api/attestations`
 const walletLinkerUrl = `${bridgeUrl}/api/wallet-linker`
+const ipfsSwarm = process.env.IPFS_SWARM
 const web3 = new Web3(
   // Detect MetaMask using global window object
-  window.web3 ?
-  // Use MetaMask provider
-  window.web3.currentProvider :
-  // Use wallet-enabled browser provider
-  Web3.givenProvider ||
-  // Create a provider with Infura node
-  new Web3.providers.HttpProvider(defaultProviderUrl, 20000)
+  window.web3
+    ? // Use MetaMask provider
+    window.web3.currentProvider
+    : // Use wallet-enabled browser provider
+    Web3.givenProvider ||
+      // Create a provider with Infura node
+      new Web3.providers.HttpProvider(defaultProviderUrl, 20000)
 )
 
 const ipfsCreator = repo_key => {
@@ -64,13 +65,12 @@ const ipfsCreator = repo_key => {
 
   const ipfs = new IPFS(ipfsOptions)
 
-  if (process.env.IPFS_SWARM) {
-    const ipfs_swarm = mobilize(process.env.IPFS_SWARM)
-    ipfs.on("start", async ()=> {
-      await ipfs.swarm.connect(ipfs_swarm)
+  if (ipfsSwarm) {
+    ipfs.on('start', async () => {
+      await ipfs.swarm.connect(ipfsSwarm)
     })
     ipfs.__reconnect_peers = {}
-    ipfs.__reconnect_peers[process.env.IPFS_SWARM.split('/').pop()] = ipfs_swarm
+    ipfs.__reconnect_peers[ipfsSwarm.split('/').pop()] = ipfsSwarm
   }
 
   return ipfs

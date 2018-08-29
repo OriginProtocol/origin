@@ -1,62 +1,32 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { defineMessages, injectIntl } from 'react-intl'
-
-import { fetchUser } from 'actions/User'
 
 import Avatar from 'components/avatar'
 
-import origin from '../services/origin'
-
 class ConversationListItem extends Component {
-  constructor(props) {
-    super(props)
-
-    this.preFetchUsers = this.preFetchUsers.bind(this)
-
-    this.intlMessages = defineMessages({
-      unnamedUser: {
-        id: 'conversation-list-item.unnamedUser',
-        defaultMessage: 'Unnamed User'
-      },
-    })
-  }
-
-  componentDidMount() {
-    this.preFetchUsers()
-  }
-
-  componentDidUpdate() {
-    this.preFetchUsers()
-  }
-
-  preFetchUsers() {
-    const { conversation, fetchUser, intl, users } = this.props
-    const { recipients, senderAddress } = conversation.values[0]
-    const addresses = [ ...recipients, senderAddress ]
-
-    addresses.filter(addr => {
-      return !users.find(({ address }) => {
-        return address === addr
-      })
-    }).forEach(addr => {
-      fetchUser(addr, intl.formatMessage(this.intlMessages.unnamedUser))
-    })
-  }
-
   render() {
-    const { active, conversation, handleConversationSelect, key, users, web3Account } = this.props
-    const lastMessage = conversation.values.sort((a, b) => a.created < b.created ? -1 : 1)[conversation.values.length - 1]
-    const { content, created, recipients, senderAddress } = lastMessage
+    const {
+      active,
+      conversation,
+      handleConversationSelect,
+      users,
+      web3Account
+    } = this.props
+    const lastMessage = conversation.values.sort(
+      (a, b) => (a.created < b.created ? -1 : 1)
+    )[conversation.values.length - 1]
+    const { content, recipients, senderAddress } = lastMessage
     const role = senderAddress === web3Account ? 'sender' : 'recipient'
-    const counterpartyAddress = role === 'sender' ? 
-      recipients.find(addr => addr !== senderAddress) :
-      senderAddress
-    const counterparty = users.find(u => u.address === counterpartyAddress) || {}
+    const counterpartyAddress =
+      role === 'sender'
+        ? recipients.find(addr => addr !== senderAddress)
+        : senderAddress
+    const counterparty =
+      users.find(u => u.address === counterpartyAddress) || {}
     const unreadCount = conversation.values.filter(msg => {
       return msg.status === 'unread' && msg.senderAddress !== web3Account
     }).length
-    const { fullName, profile } = counterparty
+    const { profile } = counterparty
 
     return (
       <div
@@ -68,16 +38,14 @@ class ConversationListItem extends Component {
           <div className="sender text-truncate">
             {counterparty.fullName || counterpartyAddress}
           </div>
-          <div className="message text-truncate">
-            {content}
-          </div>
+          <div className="message text-truncate">{content}</div>
         </div>
         <div className="meta-container text-right">
-          {!!unreadCount &&
+          {!!unreadCount && (
             <div className="unread count text-right">
               <div className="d-inline-block">{unreadCount}</div>
             </div>
-          }
+          )}
         </div>
       </div>
     )
@@ -87,12 +55,8 @@ class ConversationListItem extends Component {
 const mapStateToProps = state => {
   return {
     users: state.users,
-    web3Account: state.app.web3.account,
+    web3Account: state.app.web3.account
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(ConversationListItem))
+export default connect(mapStateToProps)(ConversationListItem)

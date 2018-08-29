@@ -1,6 +1,6 @@
 export default function(obj, namespace) {
-  var ret = {},
-    key
+  const ret = {}
+  let key
 
   for (key in obj) {
     if (namespace) {

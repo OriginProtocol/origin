@@ -35,6 +35,8 @@ import '../css/lato-web.css'
 import '../css/poppins.css'
 import '../css/app.css'
 
+const httpsRequired = process.env.FORCE_HTTPS
+
 const HomePage = () => (
   <div className="container">
     <Listings />
@@ -42,7 +44,10 @@ const HomePage = () => (
 )
 
 const ListingDetailPage = props => (
-  <ListingDetail listingAddress={props.match.params.listingAddress} withReviews={true} />
+  <ListingDetail
+    listingAddress={props.match.params.listingAddress}
+    withReviews={true}
+  />
 )
 
 const CreateListingPage = () => (
@@ -52,18 +57,26 @@ const CreateListingPage = () => (
 )
 
 const PurchaseDetailPage = props => (
-  <PurchaseDetail purchaseAddress={props.match.params.purchaseAddress} />
+  <PurchaseDetail offerId={props.match.params.offerId} />
 )
 
 const UserPage = props => <User userAddress={props.match.params.userAddress} />
 
 // Top level component
 class App extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
+
+    this.state = {
+      redirect: httpsRequired && !window.location.protocol.match('https')
+    }
   }
 
   componentWillMount() {
+    if (this.state.redirect) {
+      window.location.href = window.location.href.replace(/^http(?!s)/, 'https')
+    }
+
     this.props.localizeApp()
   }
 
@@ -79,7 +92,7 @@ class App extends Component {
    * @return {void}
    */
   detectMobile() {
-    let userAgent = navigator.userAgent || navigator.vendor || window.opera
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera
 
     if (/android/i.test(userAgent)) {
       this.props.setMobile('Android')
@@ -91,12 +104,18 @@ class App extends Component {
   }
 
   render() {
+    // prevent flickering
+    if (this.state.redirect) {
+      return null
+    }
+
     return this.props.selectedLanguageCode ? (
-      <IntlProvider 
+      <IntlProvider
         locale={this.props.selectedLanguageCode}
         defaultLocale="en-US"
         messages={this.props.messages}
-        textComponent={Fragment}>
+        textComponent={Fragment}
+      >
         <Router>
           <ScrollToTop>
             <Web3Provider>
@@ -112,12 +131,15 @@ class App extends Component {
                     <Route path="/create" component={CreateListingPage} />
                     <Route path="/my-listings" component={MyListings} />
                     <Route
-                      path="/purchases/:purchaseAddress"
+                      path="/purchases/:offerId"
                       component={PurchaseDetailPage}
                     />
                     <Route path="/my-purchases" component={MyPurchases} />
                     <Route path="/my-sales" component={MySales} />
-                    <Route path="/messages/:conversationId?" component={Messages} />
+                    <Route
+                      path="/messages/:conversationId?"
+                      component={Messages}
+                    />
                     <Route path="/notifications" component={Notifications} />
                     <Route path="/profile" component={Profile} />
                     <Route path="/users/:userAddress" component={UserPage} />
@@ -146,4 +168,7 @@ const mapDispatchToProps = dispatch => ({
   localizeApp: () => dispatch(localizeApp())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App)

@@ -7,16 +7,14 @@ const initialState = {
 }
 
 export default function Listings(state = initialState, action = {}) {
-    switch (action.type) {
+  switch (action.type) {
+  case ListingConstants.FETCH_IDS_ERROR:
+    return { ...state, ids: [], contractFound: action.contractFound }
 
-      case ListingConstants.FETCH_IDS_ERROR:
-        return { ...state, ids: [], contractFound: action.contractFound }
+  case ListingConstants.FETCH_IDS_SUCCESS:
+    return { ...state, ids: action.ids, hideList: action.hideList }
 
-      case ListingConstants.FETCH_IDS_SUCCESS:
-        return { ...state, ids: action.ids, hideList: action.hideList }
-
-      default:
-        return state
-    }
-
+  default:
+    return state
+  }
 }

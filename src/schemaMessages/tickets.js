@@ -27,7 +27,7 @@ export default defineMessages({
   },
   'schema.tickets.priceInETH': {
     id: 'schema.tickets.priceInETH',
-    defaultMessage: 'Price in ETH',
+    defaultMessage: 'Price in ETH'
   },
   'schema.tickets.selectPhotos': {
     id: 'schema.tickets.selectPhotos',

@@ -26,11 +26,23 @@ class UserDropdown extends Component {
 
     return (
       <div className="nav-item identity dropdown">
-        <a className="nav-link active dropdown-toggle" id="identityDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a
+          className="nav-link active dropdown-toggle"
+          id="identityDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
           <Identicon address={wallet.address} />
         </a>
-        <div className="dropdown-menu dropdown-menu-right" aria-labelledby="identityDropdown">
-          <div className="triangle-container d-flex justify-content-end"><div className="triangle"></div></div>
+        <div
+          className="dropdown-menu dropdown-menu-right"
+          aria-labelledby="identityDropdown"
+        >
+          <div className="triangle-container d-flex justify-content-end">
+            <div className="triangle" />
+          </div>
           <div className="actual-menu">
             <div className="wallet">
               <div className="d-flex">
@@ -40,22 +52,22 @@ class UserDropdown extends Component {
                   </Link>
                 </div>
                 <div className="eth d-flex flex-column justify-content-between">
-                  {wallet.address && 
+                  {wallet.address && (
                     <div>
                       <FormattedMessage
-                        id={ 'user.ethAddress' }
-                        defaultMessage={ 'ETH Address:' }
+                        id={'user.ethAddress'}
+                        defaultMessage={'ETH Address:'}
                       />
                     </div>
-                  }
+                  )}
                   <Link to="/profile">
                     <strong>
-                      {wallet.address ||
+                      {wallet.address || (
                         <FormattedMessage
-                          id={ 'user.noEthAccountConnected' }
-                          defaultMessage={ 'No ETH Account Connected' }
+                          id={'user.noEthAccountConnected'}
+                          defaultMessage={'No ETH Account Connected'}
                         />
-                      }
+                      )}
                     </strong>
                   </Link>
                 </div>
@@ -63,36 +75,56 @@ class UserDropdown extends Component {
               <hr className="dark sm" />
               <div className="d-flex">
                 <Link to="/profile">
-                  <Avatar image={user && user.profile && user.profile.avatar} placeholderStyle="blue" />
+                  <Avatar
+                    image={user && user.profile && user.profile.avatar}
+                    placeholderStyle="blue"
+                  />
                 </Link>
                 <div className="identification d-flex flex-column justify-content-between">
-                  <div><Link to="/profile">{profile.name}</Link></div>
                   <div>
-                    {profile.published.phone &&
+                    <Link to="/profile">{profile.name}</Link>
+                  </div>
+                  <div>
+                    {profile.published.phone && (
                       <Link to="/profile">
-                        <img src="images/phone-icon-verified.svg" alt="phone verified icon" />
+                        <img
+                          src="images/phone-icon-verified.svg"
+                          alt="phone verified icon"
+                        />
                       </Link>
-                    }
-                    {profile.published.email &&
+                    )}
+                    {profile.published.email && (
                       <Link to="/profile">
-                        <img src="images/email-icon-verified.svg" alt="email verified icon" />
+                        <img
+                          src="images/email-icon-verified.svg"
+                          alt="email verified icon"
+                        />
                       </Link>
-                    }
-                    {profile.published.facebook &&
+                    )}
+                    {profile.published.facebook && (
                       <Link to="/profile">
-                        <img src="images/facebook-icon-verified.svg" alt="Facebook verified icon" />
+                        <img
+                          src="images/facebook-icon-verified.svg"
+                          alt="Facebook verified icon"
+                        />
                       </Link>
-                    }
-                    {profile.published.twitter &&
+                    )}
+                    {profile.published.twitter && (
                       <Link to="/profile">
-                        <img src="images/twitter-icon-verified.svg" alt="Twitter verified icon" />
+                        <img
+                          src="images/twitter-icon-verified.svg"
+                          alt="Twitter verified icon"
+                        />
                       </Link>
-                    }
-                    {profile.published.airbnb &&
+                    )}
+                    {profile.published.airbnb && (
                       <Link to="/profile">
-                        <img src="images/airbnb-icon-verified.svg" alt="Airbnb verified icon" />
+                        <img
+                          src="images/airbnb-icon-verified.svg"
+                          alt="Airbnb verified icon"
+                        />
                       </Link>
-                    }
+                    )}
                   </div>
                 </div>
               </div>
@@ -119,7 +151,7 @@ class UserDropdown extends Component {
 const mapStateToProps = state => {
   return {
     wallet: state.wallet,
-    profile: state.profile,
+    profile: state.profile
   }
 }
 

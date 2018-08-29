@@ -2438,6 +2438,7 @@ form .stars img {
 
 .messages-wrapper .listing-summary {
   border-bottom: 1px solid #c2cbd3;
+  min-height: 140px;
   padding: 20px 0;
 }
 
@@ -2545,6 +2546,7 @@ form .stars img {
 
 .add-message {
   border-top: 1px solid var(--pale-grey);
+  min-height: 58px;
   width: 100%;
 }
 

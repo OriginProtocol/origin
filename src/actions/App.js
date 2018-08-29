@@ -25,7 +25,7 @@ export const AppConstants = keyMirror(
     ON_MOBILE: null,
     WEB3_ACCOUNT: null,
     WEB3_INTENT: null,
-    TRANSLATIONS: null,
+    TRANSLATIONS: null
   },
   'APP'
 )
@@ -33,14 +33,14 @@ export const AppConstants = keyMirror(
 export function dismissMessaging() {
   return {
     type: AppConstants.MESSAGING_DISMISSED,
-    closedAt: new Date(),
+    closedAt: new Date()
   }
 }
 
 export function dismissNotifications(ids) {
   return {
     type: AppConstants.NOTIFICATIONS_DISMISSED,
-    ids,
+    ids
   }
 }
 
@@ -57,14 +57,14 @@ export function enableMessaging() {
 export function setMessagingEnabled(messagingEnabled) {
   return {
     type: AppConstants.MESSAGING_ENABLED,
-    messagingEnabled,
+    messagingEnabled
   }
 }
 
 export function setMessagingInitialized(messagingInitialized) {
   return {
     type: AppConstants.MESSAGING_INITIALIZED,
-    messagingInitialized,
+    messagingInitialized
   }
 }
 
@@ -96,9 +96,10 @@ export function localizeApp() {
     bestAvailableLanguage = getBestAvailableLanguage(userSelectedLangCode)
   } else {
     // Detect user's preferred settings
-    const browserDefaultLang = (navigator.languages && navigator.languages[0]) ||
-                             navigator.language ||
-                             navigator.userLanguage
+    const browserDefaultLang =
+      (navigator.languages && navigator.languages[0]) ||
+      navigator.language ||
+      navigator.userLanguage
     if (browserDefaultLang && browserDefaultLang !== 'en-US') {
       bestAvailableLanguage = getBestAvailableLanguage(browserDefaultLang)
     }
@@ -119,11 +120,11 @@ export function localizeApp() {
     moment.locale(momentLocale)
   }
 
-  return { 
+  return {
     type: AppConstants.TRANSLATIONS,
     selectedLanguageCode: selectedLanguageCode,
     selectedLanguageFull: getLanguageNativeName(selectedLanguageCode),
     availableLanguages: getAvailableLanguages(),
-    messages 
+    messages
   }
 }
