@@ -3,6 +3,9 @@ import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router'
 import queryString from 'query-string'
+import Slider, { Range } from 'rc-slider'
+import $ from 'jquery'
+import 'rc-slider/assets/index.css'
 
 import schemaMessages from '../../schemaMessages/index'
 import { showAlert } from 'actions/Alert'
@@ -38,6 +41,11 @@ class SearchResult extends Component {
      * schema loading do not get triggered.
      */
     this.handleComponentUpdate(undefined)
+
+    $(document).on('click', '#search-filters-bar .dropdown-menu', e => {
+      // Keep dropdown opened when user clicks on any element in the dropdownw
+      e.stopPropagation()
+    })
   }
 
   componentDidUpdate(previousProps) {
@@ -123,12 +131,18 @@ class SearchResult extends Component {
   }
 
   renderPriceFilter(filter) {
+    const min = 0
+    const max = 500
     return (
       <div className="form-check" key={filter.listingPropertyName}>
-        <input type="checkbox" className="form-check-input" id="dropdownCheck2"/>
-        <label className="form-check-label" htmlFor="dropdownCheck2">
-          Remember me
-        </label>
+        <Range 
+          min={min}
+          max={max}
+          defaultValue={[min, max]}
+          count={2}
+          pushable={(max-min)/20}
+          tipFormatter={value => `${value}$`}
+        />
       </div>
     )
   }
@@ -144,12 +158,14 @@ class SearchResult extends Component {
   }
 
   renderFilterGroup(filterGroup) {
+    const title = this.props.intl.formatMessage(filterGroup.title)
+    const formId = `filter-group-${title}`
     return (
-      <li className="nav-item" key={this.props.intl.formatMessage(filterGroup.title)}>
+      <li className="nav-item" key={title}>
         <a className="nav-link" data-toggle="dropdown" data-parent="#search-filters-bar">
           {this.props.intl.formatMessage(filterGroup.title)}
         </a>
-        <form className="dropdown-menu">
+        <form className="dropdown-menu" id={formId}>
           <div className="d-flex flex-column">
             <div className="dropdown-form">
             {filterGroup.items.map(filter => this.renderFilter(filter))}
@@ -165,7 +181,6 @@ class SearchResult extends Component {
   }
 
   render() {
-    console.log("Render with listing types: ", this.state.listingType, this.props.listingType)
     return (
       <div>
         <SearchBar />
