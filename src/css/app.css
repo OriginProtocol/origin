@@ -1392,6 +1392,28 @@ a:hover {
   height: 34px;
 }
 
+.onboarding-modal .left-panel .complete {
+  flex-basis: 16%;
+}
+
+.onboarding-modal .left-panel .complete.rounded-circle:after {
+  content: " ";
+  display: inline-block;
+  width: 8px;
+  height: 16px;
+  border: solid var(--dark-grey-blue);
+  border-width: 0 0.2em 0.2em 0;
+  position: absolute;
+  left: 13px;
+  top: 12px;
+  margin-top: -0.2em;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+
 .onboarding-modal .selected,
 .onboarding-modal .right-panel {
   background-color: var(--dark-grey-blue);
