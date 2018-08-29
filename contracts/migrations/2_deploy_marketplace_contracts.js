@@ -21,7 +21,7 @@ async function deployContracts(deployer) {
 
   const Seller = accounts[1]
 
-  await deployer.deploy(OriginToken, '100000')
+  await deployer.deploy(OriginToken, '100000000000000000000000')
   await deployer.deploy(V00_Marketplace, OriginToken.address)
   await deployer.deploy(V01_Marketplace, OriginToken.address)
 }
