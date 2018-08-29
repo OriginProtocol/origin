@@ -73,7 +73,7 @@ class ListingsDetail extends Component {
       )
       const listing = rawListing.ipfsData.data
       const translatedListing = translateListingCategory(listing)
-      const obj = Object.assign({}, translatedListing, {
+      const obj = Object.assign({}, rawListing, translatedListing, {
         loading: false,
         status: rawListing.status
       })
@@ -304,14 +304,6 @@ class ListingsDetail extends Component {
                   </a>
                 </div>
               )}
-              {/* Remove per Matt 5/28/2018 */}
-              {/* this.state.address && this.state.etherscanDomain &&
-                <div className="etherscan link-container">
-                  <a href={`https://${(this.state.etherscanDomain)}/address/${(this.state.address)}#internaltx`} target="_blank">
-                    View on Etherscan<img src="images/carat-blue.svg" className="carat" alt="right carat" />
-                  </a>
-                </div>
-              */}
               <div className="debug">
                 <li>
                   <FormattedMessage
@@ -335,29 +327,6 @@ class ListingsDetail extends Component {
                   />
                 </li>
               </div>
-              {/* Hidden for current deployment */}
-              {/*!this.state.loading && this.state.purchases.length > 0 &&
-                <Fragment>
-                  <hr />
-                  <h2>Purchases</h2>
-                  <table className="table table-striped">
-                    <thead>
-                      <tr>
-                        <th scope="col" style={{ width: '200px' }}>Status</th>
-                        <th scope="col">TxHash</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {this.state.purchases.map(({ address, stage }) =>
-                        <tr key={address}>
-                          <td>{stage.replace("_"," ")}</td>
-                          <td className="text-truncate"><Link to={`/purchases/${address}`}>{address}</Link></td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </Fragment>
-              */}
             </div>
             <div className="col-12 col-md-4">
               {!!this.state.price &&
