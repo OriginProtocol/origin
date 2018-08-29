@@ -73,7 +73,7 @@ class ListingsDetail extends Component {
       )
       const listing = rawListing.ipfsData.data
       const translatedListing = translateListingCategory(listing)
-      const obj = Object.assign({}, translatedListing, {
+      const obj = Object.assign({}, rawListing, translatedListing, {
         loading: false,
         status: rawListing.status
       })
