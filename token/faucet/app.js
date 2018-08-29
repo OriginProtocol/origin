@@ -30,14 +30,16 @@ function runApp(config) {
     try {
       // Transfer NUM_TOKENS to specified wallet.
       const value = token.toNaturalUnit(NUM_TOKENS)
+      const contractAddress = token.contractAddress(networkId)
       const balanceUnit = await token.credit(networkId, wallet, value)
       const balanceToken = token.toTokenUnit(balanceUnit)
       console.log(`${NUM_TOKENS} OGN -> ${wallet} (${balanceUnit})`)
 
       // Send response back to client.
-      const resp = `Credited ${NUM_TOKENS} OGN tokens to wallet <br>` +
+      const resp = `Credited ${NUM_TOKENS} OGN tokens to wallet<br>` +
                   `New balance (natural unit) = ${balanceUnit}<br>` +
-                  `New balance (token unit) = ${balanceToken}`
+                  `New balance (token unit) = ${balanceToken}<br>` +
+                  `OGN token contract address = ${contractAddress}`
       res.send(resp)
     } catch (err) {
       next(err) // Errors will be passed to Express.

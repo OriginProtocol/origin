@@ -89,8 +89,6 @@ class Token {
    */
   async balance(networkId, wallet) {
     const contract = this.contract(networkId)
-    console.log("CONTRAC=", contract)
-
     const balance = await contract.methods.balanceOf(wallet).call()
     return BigNumber(balance)
   }
