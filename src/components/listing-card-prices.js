@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { getFiatPrice } from 'utils/priceUtils'
 
@@ -32,30 +32,39 @@ class ListingCardPrices extends Component {
   }
 
   render() {
+    const { currencyCode, fiatPrice } = this.state
+
     return (
       <div>
         <div className="d-flex align-items-center price-container">
-          <div>
+          <Fragment>
             <div className="d-inline-block price placehold">
-              {this.state.fiatPrice === null && (
+              {fiatPrice === null && (
                 <FormattedMessage
                   id={'listing-card-prices.loadingMessage'}
                   defaultMessage={'Loading...'}
                 />
               )}
-              {this.state.fiatPrice &&
-                this.state.fiatPrice + ' ' + this.state.currencyCode}
-              <span className="alternate-price text-muted">
-                &nbsp;|{' '}
-                {`${Number(this.state.price).toLocaleString(undefined, {
-                  minimumFractionDigits: 5,
-                  maximumFractionDigits: 5
-                })}`}&nbsp;
-                <FormattedMessage
-                  id={'listing-card-prices.ethereumCurrencyAbbrev'}
-                  defaultMessage={'ETH'}
-                />
-              </span>
+              <div className="d-flex">
+                <img src="images/eth-icon.svg" role="presentation" className="eth-icon" />
+                <div className="values">
+                  <div className="eth">
+                    {`${Number(this.state.price).toLocaleString(undefined, {
+                      minimumFractionDigits: 5,
+                      maximumFractionDigits: 5
+                    })}`}&nbsp;
+                    <FormattedMessage
+                      id={'listing-card-prices.ethereumCurrencyAbbrev'}
+                      defaultMessage={'ETH'}
+                    />
+                  </div>
+                  <div className="fiat">
+                    {fiatPrice === null && 'Loading'}
+                    {fiatPrice}
+                    {fiatPrice && ` ${currencyCode}`}
+                  </div>
+                </div>
+              </div>
             </div>
             {this.props.unitsAvailable === 0 && (
               <span className="sold-banner">
@@ -65,7 +74,7 @@ class ListingCardPrices extends Component {
                 />
               </span>
             )}
-          </div>
+          </Fragment>
         </div>
       </div>
     )

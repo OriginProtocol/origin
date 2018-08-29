@@ -1505,12 +1505,28 @@ a:hover {
   margin-bottom: 1rem;
 }
 
-.price-container .currency {
-  font-size: 0.875rem;
+.price-container {
+  font-weight: normal;
+  text-transform: uppercase;
 }
 
-.price-container .alternate-price  {
-  font-size: 0.875rem;
+.price-container .eth-icon {
+  margin-right: 6px;
+}
+
+.price-container .eth-icon {
+  height: 1.375rem;
+}
+
+.price-container .eth {
+  color: var(--bluish-purple);
+  font-size: 1.125rem;
+  line-height: 1.375rem;
+}
+
+.price-container .fiat  {
+  color: var(--steel);
+  font-size: 0.625rem;
 }
 
 .listing-card .featured.badge {
