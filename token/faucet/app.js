@@ -30,7 +30,7 @@ function runApp(config) {
     try {
       // Transfer NUM_TOKENS to specified wallet.
       const value = token.toNaturalUnit(NUM_TOKENS)
-      const balanceUnit = await token.transfer(networkId, wallet, value)
+      const balanceUnit = await token.credit(networkId, wallet, value)
       const balanceToken = token.toTokenUnit(balanceUnit)
       console.log(`${NUM_TOKENS} OGN -> ${wallet} (${balanceUnit})`)
 

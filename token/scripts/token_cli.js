@@ -18,14 +18,13 @@ async function run(config) {
   }
   case 'credit': {
     // Credit 100 OGN.
-    const newBalance = await token.transfer(config.networkId, config.wallet, token.toNaturalUnit(100))
+    const newBalance = await token.credit(config.networkId, config.wallet, token.toNaturalUnit(100))
     console.log(`Credited 100 OGN tokens to wallet. New balance (natural unit) = ${newBalance}`)
     break
   }
   default:
     throw `unsupported action ${config.action}`
   }
-  process.exit(0)
 }
 
 //
@@ -52,4 +51,4 @@ try {
   process.exit(-1)
 }
 
-run(config)
+run(config).then(() => {process.exit(0)})

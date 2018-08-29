@@ -21,8 +21,8 @@ This directory contains code for interacting with Origin tokens on TestNets.
   ==============  
   Example 1 - get the balance of an account:
 
-      docker exec -w /app/token origin-js node scripts/token_cli.js --network_id=999 --wallet=0xf17f52151ebef6c7334fad080c5704d77216b732 --action=balance
+      docker exec -w /app/token origin-js node scripts/token_cli.js  --action=balance --wallet=0xf17f52151ebef6c7334fad080c5704d77216b732
 
-  Example 2 - credit the account with extra tokens:
+  Example 2 - credit an account with tokens:
 
-      docker exec -w /app/token origin-js node scripts/token_cli.js --network_id=999 --wallet=0xf17f52151ebef6c7334fad080c5704d77216b732 --action=credit
+      docker exec -w /app/token origin-js node scripts/token_cli.js --action=credit --wallet=0xf17f52151ebef6c7334fad080c5704d77216b732

@@ -52,11 +52,11 @@ class Token {
    * Credits OGN tokens to a wallet.
    * @params {string} networkId - Test network Id.
    * @params {string} wallet - Address of the recipient wallet.
-   * @params {int} value - Value to transfer, in natural unit.
+   * @params {int} value - Value to credit, in natural unit.
    * @throws Throws an error if the operation failed.
    * @returns {BigNumber} - Token balance of the wallet, in natural unit.
    */
-  async transfer(networkId, wallet, value) {
+  async credit(networkId, wallet, value) {
     const contract = this.contract(networkId)
 
     // At token contract deployment, the entire initial supply of tokens is assigned to
