@@ -535,6 +535,7 @@ a:hover {
   left: auto;
   padding: 0px;
   margin: auto;
+  margin-top: 0.125rem;
   border: 0px;
   top: auto;
   background-color: transparent;
@@ -544,11 +545,7 @@ a:hover {
 
 .search-filters .dropdown-menu .dropdown-form {
   padding: 1rem 1.5rem;
-  margin: 0.125rem 0 0;
-  background-color: #fff;
-  border-left: 1px solid rgba(0, 0, 0, 0.15);
-  border-top: 1px solid rgba(0, 0, 0, 0.15);
-  border-right: 1px solid rgba(0, 0, 0, 0.15);
+  background-color: var(--pale-grey-three);
   border-top-right-radius: 0.25rem;
   border-top-left-radius: 0.25rem;
   min-width: 260px;
@@ -559,9 +556,55 @@ a:hover {
   font-weight: normal;
 }
 
-.search-filters .dropdown-form .form-check-input{
+.search-filters .dropdown-form .form-check-input {
   margin-top: 0.4rem;
   margin-left: -1.4rem;
+}
+
+.search-filters .price-filter {
+  margin-left: -0.4rem;
+  margin-right: -0.4rem;
+  padding-bottom: 0.5rem;
+  min-width: 300px;
+}
+
+.search-filters .price-filter-amount {
+  font-weight: normal;
+  font-size: 1.1rem;
+  width: 70px;
+  height: 40px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+  text-align: center;
+  line-height: 2.5rem;
+}
+
+.search-filters .price-filter-dash {
+  text-align: center;
+  line-height: 2.5rem;
+}
+
+.search-filters .price-filter-currency {
+  font-weight: normal;
+  font-size: 0.875rem;
+  color: var(--dusk);
+  width: 65px;
+  height: 40px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  border-right: 1px solid rgba(0, 0, 0, 0.15);
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+  background-color: var(--pale-grey-two);
+  text-align: center;
+  line-height: 2.5rem;
+}
+
+.search-filters .price-slider-amount {
+  font-size: 0.875rem;
+  color: #000f;
+  font-weight: normal;
 }
 
 .search-filters .dropdown-form input[type="checkbox"] {
@@ -573,7 +616,6 @@ a:hover {
   background-color: var(--pale-grey-two);
   text-align: center;
   color: var(--clear-blue);
-  border: 1px solid rgba(0, 0, 0, 0.15);
   border-bottom-right-radius: 0.25rem;
   border-bottom-left-radius: 0.25rem;
   line-height: 50px;
@@ -589,16 +631,37 @@ a:hover {
 
 .search-filters a.dropdown-button-left {
   width: 50%;
-  border-left: 1px solid rgba(0, 0, 0, 0.15);
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
   border-bottom-right-radius: 0px;
   border-right: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 .search-filters a.dropdown-button-right {
   width: 50%;
-  border-right: 1px solid rgba(0, 0, 0, 0.15);
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
   border-bottom-left-radius: 0px;
-  border-left: 0px;
+}
+
+.search-filters .rc-slider-rail {
+  height: 15px;
+  border-radius: 10px;
+  background-color: var(--light);
+  margin-left: -5px;
+  margin-right: -5px;
+  width: 104%;
+}
+
+.search-filters .rc-slider-handle {
+  margin-top: auto;
+  border: 0px;
+  width: 15px;
+  height: 15px;
+}
+
+.search-filters .rc-slider-track {
+  height: 15px;
+  border-radius: 0px;
+  background-color: var(--steel);
 }
 
 /* Navbar */

@@ -1,14 +1,10 @@
 [
   {
-    "id": "search-result.categoryType",
-    "defaultMessage": "Category Type"
+    "id": "SearchResults.searchFiltersClear",
+    "defaultMessage": "Clear"
   },
   {
-    "id": "search-result.dates",
-    "defaultMessage": "Dates"
-  },
-  {
-    "id": "search-result.guests",
-    "defaultMessage": "Guests"
+    "id": "SearchResults.searchFiltersApply",
+    "defaultMessage": "Apply"
   }
 ]

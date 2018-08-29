@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { injectIntl } from 'react-intl'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import { withRouter } from 'react-router'
 import queryString from 'query-string'
-import Slider, { Range } from 'rc-slider'
+import { Range } from 'rc-slider'
 import $ from 'jquery'
 import 'rc-slider/assets/index.css'
 
@@ -26,6 +26,8 @@ class SearchResult extends Component {
       searchError: undefined
     }
 
+    this.handlePriceChange = this.handlePriceChange.bind(this)
+
     // set default prop values for search_query and listing_type
     const getParams = queryString.parse(this.props.location.search)
     this.props.generalSearch(getParams.search_query || '', getParams.listing_type || 'all')
@@ -42,8 +44,8 @@ class SearchResult extends Component {
      */
     this.handleComponentUpdate(undefined)
 
+    // Keep dropdown opened when user clicks on any element in the dropdownw
     $(document).on('click', '#search-filters-bar .dropdown-menu', e => {
-      // Keep dropdown opened when user clicks on any element in the dropdownw
       e.stopPropagation()
     })
   }
@@ -61,10 +63,9 @@ class SearchResult extends Component {
   }
 
   handleComponentUpdate(previousProps) {
+    this.searchRequest(this.props.query, this.props.listingType)
 
     if (previousProps == undefined || this.props.listingType !== previousProps.listingType) {
-      this.searchRequest(this.props.query, this.props.listingType)
-
       this.setState({
         listingType: this.props.listingType,
         filterSchema: undefined,
@@ -118,31 +119,58 @@ class SearchResult extends Component {
   }
 
   renderMultipleSelectionFilter(multipleSelectionValues) {
-    return multipleSelectionValues.map(multipleSelectionValue =>
-      <div className="form-check" key={multipleSelectionValue}>
-        <input type="checkbox" className="form-check-input" id={multipleSelectionValue}/>
-        <label className="form-check-label" htmlFor={multipleSelectionValue}>
-          {
-            this.props.intl.formatMessage(schemaMessages[_.camelCase(this.state.listingType)][multipleSelectionValue])
-          }
-        </label>
+    return (
+      <div className="f-flex-column flex-wrap">
+      {multipleSelectionValues.map(multipleSelectionValue =>
+        <div className="form-check" key={multipleSelectionValue}>
+          <input type="checkbox" className="form-check-input" id={multipleSelectionValue}/>
+          <label className="form-check-label" htmlFor={multipleSelectionValue}>
+            {
+              this.props.intl.formatMessage(schemaMessages[_.camelCase(this.state.listingType)][multipleSelectionValue])
+            }
+          </label>
+        </div>
+      )}
       </div>
-    )    
+    )
+  }
+
+  handlePriceChange([bottomAmount, topAmount]) {
+    $('#price-amount-from').text(`${bottomAmount}$`)
+    $('#price-amount-to').text(`${topAmount}$`)
+    $('#price-amount-display-from').text(`${bottomAmount}$`)
+    $('#price-amount-display-to').text(`${topAmount}$`)
   }
 
   renderPriceFilter(filter) {
     const min = 0
     const max = 500
     return (
-      <div className="form-check" key={filter.listingPropertyName}>
-        <Range 
+      <div className="d-flex flex-column" key={filter.listingPropertyName}>
+        <div className="d-flex flex-row price-filter">
+          <div id="price-amount-from" className="mr-auto price-slider-amount">{min}$</div>
+          <div id="price-amount-to" className="price-slider-amount">{max}$</div>
+        </div>
+        <Range
           min={min}
           max={max}
           defaultValue={[min, max]}
           count={2}
           pushable={(max-min)/20}
           tipFormatter={value => `${value}$`}
+          onChange={this.handlePriceChange}
         />
+        <div className="d-flex flex-row justify-content-between mt-4 price-filter">
+          <div className="d-flex flex-row">
+            <div id="price-amount-display-from" className="price-filter-amount">{min}</div>
+            <div className="price-filter-currency">$/night</div>
+          </div>
+          <div className="price-filter-dash">-</div>
+          <div className="d-flex flex-row">
+            <div id="price-amount-display-to" className="price-filter-amount">{max}</div>
+            <div className="price-filter-currency">$/night</div>
+          </div>
+        </div>
       </div>
     )
   }
@@ -171,8 +199,18 @@ class SearchResult extends Component {
             {filterGroup.items.map(filter => this.renderFilter(filter))}
             </div>
             <div className="d-flex flex-row button-container">
-              <a className="dropdown-button dropdown-button-left align-middle align-self-center">Submit</a>
-              <a className="dropdown-button dropdown-button-right align-middle">Clear</a>
+              <a className="dropdown-button dropdown-button-left align-middle">
+                <FormattedMessage
+                  id={'SearchResults.searchFiltersClear'}
+                  defaultMessage={'Clear'}
+                />
+              </a>
+              <a className="dropdown-button dropdown-button-right align-middle align-self-center">
+                <FormattedMessage
+                  id={'SearchResults.searchFiltersApply'}
+                  defaultMessage={'Apply'}
+                />
+              </a>
             </div>
           </div>
         </form>
