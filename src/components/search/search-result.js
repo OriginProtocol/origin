@@ -120,7 +120,7 @@ class SearchResult extends Component {
 
   renderMultipleSelectionFilter(multipleSelectionValues) {
     return (
-      <div className="f-flex-column flex-wrap">
+      <div className="f-flex-column flex-wrap" key="multipleSelectionFilter">
       {multipleSelectionValues.map(multipleSelectionValue =>
         <div className="form-check" key={multipleSelectionValue}>
           <input type="checkbox" className="form-check-input" id={multipleSelectionValue}/>
