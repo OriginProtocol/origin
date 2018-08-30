@@ -1723,6 +1723,53 @@ select.form-control:not([size]):not([multiple]) {
   border: solid 1px var(--light);
 }
 
+.listing-form .select-boost .info-box {
+  background: var(--golden-rod-light);
+  border: 1px solid var(--golden-rod);
+  text-align: center;
+  padding: 30px 30px 15px;
+}
+
+.listing-form .select-boost h2 {
+  margin-bottom: 30px;
+}
+
+.listing-form .select-boost .info-box img {
+  position: initial;
+  margin-bottom: 15px;
+}
+
+.listing-form .select-boost .info-box .text-bold {
+  font-weight: bold;
+}
+
+.listing-form .select-boost .info-box .text-bold a {
+  color: var(--clear-blue);
+}
+
+.listing-form .select-boost .info-box p {
+  font-size: 18px;
+}
+
+.listing-form .select-boost .info-box .expand-btn {
+  font-weight: bold;
+  color: var(--clear-blue);
+  cursor: pointer;
+}
+
+.listing-form .select-boost .info-box .expand-btn span {
+  margin-left: 5px;
+}
+
+.listing-form .select-boost .info-box .expand-btn span.rotate-up {
+  display: inline-block;
+  transform: rotate(180deg);
+}
+
+.listing-form .select-boost .info-box hr {
+  padding: 16px 0 0;
+}
+
 .price-field-container {
   position: relative;
 }
