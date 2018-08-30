@@ -10,7 +10,7 @@ pragma solidity ^0.4.24;
 import './arbitration/Arbitrable.sol';
 
 contract Marketplace {
-  function executeRuling(uint listingID, uint offerID, uint _ruling) public;
+  function executeRuling(uint listingID, uint offerID, uint _ruling, uint _refund) public;
 }
 
 contract OriginArbitrator is Arbitrable {
@@ -18,6 +18,7 @@ contract OriginArbitrator is Arbitrable {
   struct DisputeMap {
     uint listingID;
     uint offerID;
+    uint refund;
     address marketplace;
   } // Maps back from disputeID to listing + offer
   mapping(uint => DisputeMap) public disputes; // disputeID => DisputeMap
@@ -28,13 +29,14 @@ contract OriginArbitrator is Arbitrable {
     arbitrator = Arbitrator(_arbitrator);
   }
 
-  function createDispute(uint listingID, uint offerID) public returns (uint) {
-    uint disputeID = arbitrator.createDispute(1, '0x00');
+  function createDispute(uint listingID, uint offerID, uint refund) public returns (uint) {
+    uint disputeID = arbitrator.createDispute(3, '0x00'); // 4 choices
 
     disputes[disputeID] = DisputeMap({
       listingID: listingID,
       offerID: offerID,
-      marketplace: msg.sender
+      marketplace: msg.sender,
+      refund: refund
     });
     emit Dispute(arbitrator, disputeID, "Buyer wins;Seller wins");
     return disputeID;
@@ -48,7 +50,8 @@ contract OriginArbitrator is Arbitrable {
     marketplace.executeRuling(
       dispute.listingID,
       dispute.offerID,
-      _ruling
+      _ruling,
+      dispute.refund
     );
 
     delete disputes[_disputeID]; // Save some gas by deleting dispute
