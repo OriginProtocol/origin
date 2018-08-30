@@ -14,6 +14,7 @@ import ListingDetail from 'components/listing-detail'
 import Modal from 'components/modal'
 import PriceField from 'components/form-widgets/price-field'
 import PhotoPicker from 'components/form-widgets/photo-picker'
+import BoostSlider from 'components/boost-slider'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
 import { translateSchema } from 'utils/translationUtils'
@@ -101,6 +102,8 @@ class ListingCreate extends Component {
     ]
 
     this.state = {
+      // TODO:John - remove these temp vars
+      ognBalance: 1,
       step: this.STEP.BOOST,
       // step: this.STEP.PICK_SCHEMA,
       selectedSchemaType: this.schemaList[0],
@@ -442,7 +445,7 @@ class ListingCreate extends Component {
           <div className="step-container select-boost">
             <div className="row flex-sm-row-reverse">
               <div className="col-md-5 offset-md-2">
-                
+                {/* Wallet info and info boxes go here */}
               </div>
               <div className="col-md-5">
                 <label>
@@ -453,30 +456,35 @@ class ListingCreate extends Component {
                   />
                 </label>
                 <h2>Boost your listing</h2>
-                <div className="info-box">
-                  <img src="images/ogn-icon-horiz.svg" role="presentation" />
-                  <p className="text-bold">You have 0 <a href="#" arget="_blank" rel="noopener noreferrer">OGN</a> in your wallet.</p>
-                  <p>Once you acquire some OGN you will be able to boost your listing.</p>
-                  <p className="expand-btn" onClick={ this.toggleBoostBox }>
-                    What is a boost? <span className={ this.state.isBoostExpanded ? 'rotate-up' : '' }>&#x25be;</span>
-                  </p>
-                  {this.state.isBoostExpanded &&
-                    <div className="info-box-bottom">
-                      <hr/>
-                      <img src="images/boost-icon.svg" role="presentation" />
-                      <p className="text-bold">Boosting a listing on the Origin DApp</p>
-                      <p>
-                        Selling on the Origin DApp requires you, as the seller, to give a guarantee to the buyer in case there’s a problem with the product or service you’re offering. This is accomplished by giving your listing a “boost”.
-                      </p>
-                      <p>
-                        In addition to this, “boosting” your listing will allow it to have more visibility and appear higher in the list of available listings.
-                      </p>
-                      <p>
-                        Boosting on the Origin DApp is done using <a href="#" arget="_blank" rel="noopener noreferrer">Origin Tokens (OGN).</a>
-                      </p>
-                    </div>
-                  }
-                </div>
+                {!this.state.ognBalance &&
+                  <div className="info-box">
+                    <img src="images/ogn-icon-horiz.svg" role="presentation" />
+                    <p className="text-bold">You have 0 <a href="#" arget="_blank" rel="noopener noreferrer">OGN</a> in your wallet.</p>
+                    <p>Once you acquire some OGN you will be able to boost your listing.</p>
+                    <p className="expand-btn" onClick={ this.toggleBoostBox }>
+                      What is a boost? <span className={ this.state.isBoostExpanded ? 'rotate-up' : '' }>&#x25be;</span>
+                    </p>
+                    {this.state.isBoostExpanded &&
+                      <div className="info-box-bottom">
+                        <hr/>
+                        <img src="images/boost-icon.svg" role="presentation" />
+                        <p className="text-bold">Boosting a listing on the Origin DApp</p>
+                        <p>
+                          Selling on the Origin DApp requires you, as the seller, to give a guarantee to the buyer in case there’s a problem with the product or service you’re offering. This is accomplished by giving your listing a “boost”.
+                        </p>
+                        <p>
+                          In addition to this, “boosting” your listing will allow it to have more visibility and appear higher in the list of available listings.
+                        </p>
+                        <p>
+                          Boosting on the Origin DApp is done using <a href="#" arget="_blank" rel="noopener noreferrer">Origin Tokens (OGN).</a>
+                        </p>
+                      </div>
+                    }
+                  </div>
+                }
+                {this.state.ognBalance > 0 &&
+                  <BoostSlider ognBalance={ this.state.ognBalance } min={ 1 } max={ 100 } />
+                }
                 <div className="btn-container">
                   <button
                     type="button"
