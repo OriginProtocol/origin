@@ -1,4 +1,5 @@
 const express = require('express')
+const { RateLimiterMemory } = require('rate-limiter-flexible')
 const Web3 = require('web3')
 
 const Config = require('../lib/config.js')
@@ -16,7 +17,33 @@ function runApp(config) {
   const app = express()
   const token = new Token(config)
 
-  // Route /tokens is for crediting tokens.
+  // Configure rate limiting. Allow at most 1 request per IP every 5 sec.
+  const opts = {
+    points: 1,   // Point budget.
+    duration: 5, // Reset points consumption every 5 sec.
+  }
+  const rateLimiter = new RateLimiterMemory(opts)
+  const rateLimiterMiddleware = (req, res, next) => {
+    rateLimiter.consume(req.connection.remoteAddress)
+      .then(() => {
+        // Allow request and consume 1 point.
+        console.log(`allow request from ${req.connection.remoteAddress}`)
+        next()
+      })
+      .catch((err) => {
+        // Not enough points. Block the request.
+        console.log('BLOCKING')
+        res.status(429).send('Too Many Requests')
+      })
+  }
+  // Note: register rate limiting middleware *before* all routes
+  // so that it gets executed first.
+  app.use(rateLimiterMiddleware)
+
+  // Configure directory for public assets.
+  app.use(express.static(__dirname + '/public'))
+
+  // Register the /tokens route for crediting tokens.
   app.get('/tokens', async function (req, res, next) {
     const networkId = req.query.network_id
     const wallet = req.query.wallet
@@ -30,21 +57,23 @@ function runApp(config) {
     try {
       // Transfer NUM_TOKENS to specified wallet.
       const value = token.toNaturalUnit(NUM_TOKENS)
+      const contractAddress = token.contractAddress(networkId)
       const balanceUnit = await token.credit(networkId, wallet, value)
       const balanceToken = token.toTokenUnit(balanceUnit)
       console.log(`${NUM_TOKENS} OGN -> ${wallet} (${balanceUnit})`)
 
       // Send response back to client.
-      const resp = `Credited ${NUM_TOKENS} OGN tokens to wallet <br>` +
+      const resp = `Credited ${NUM_TOKENS} OGN tokens to wallet<br>` +
                   `New balance (natural unit) = ${balanceUnit}<br>` +
-                  `New balance (token unit) = ${balanceToken}`
+                  `New balance (token unit) = ${balanceToken}<br>` +
+                  `OGN token contract address = ${contractAddress}`
       res.send(resp)
     } catch (err) {
       next(err) // Errors will be passed to Express.
     }
   })
 
-  app.use(express.static(__dirname + '/public'))
+  // Start the server.
   app.listen(
     config.port || DEFAULT_SERVER_PORT,
     () => console.log(`Origin faucet app listening on port ${config.port}!`))
