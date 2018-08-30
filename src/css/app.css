@@ -653,7 +653,7 @@ a:hover {
 
 .search-filters .rc-slider-handle {
   margin-top: auto;
-  border: 0px;
+  border: 1px solid var(--steel);
   width: 15px;
   height: 15px;
 }
