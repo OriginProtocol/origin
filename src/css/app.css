@@ -85,7 +85,8 @@ fieldset {
 
 label {
   color: var(--dusk);
-  font-size: 0.875rem;
+  font-size: 1rem;
+  font-weight: normal;
 }
 
 a:hover {
@@ -1558,7 +1559,7 @@ a:hover {
   line-height: 1.375rem;
 }
 
-.price-container .fiat  {
+.price-container .fiat {
   color: var(--steel);
   font-size: 0.625rem;
 }
@@ -1814,10 +1815,16 @@ select.form-control:not([size]):not([multiple]) {
   margin-bottom: 5px;
 }
 
-.photo-picker label img.preview-thumbnail {
-  max-width: 150px;
-  max-height: 150px;
-  padding: 10px;
+.schema-details .pictures {
+  flex-wrap: wrap;
+}
+
+.schema-details .image-container {
+  padding: 0 10px 10px 0;
+}
+
+.schema-details .preview-thumbnail {
+  max-width: 100%;
 }
 
 .photo-picker input {
@@ -1915,6 +1922,12 @@ select.form-control:not([size]):not([multiple]) {
 
 .help-block a {
   color: var(--bluish-purple);
+}
+
+.help-block.fiat {
+  font-weight: normal;
+  color: var(--steel);
+  font-size: 0.75rem;
 }
 
 /* Sales */

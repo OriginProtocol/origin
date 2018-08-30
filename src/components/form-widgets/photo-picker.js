@@ -56,9 +56,6 @@ class PhotoPicker extends Component {
           <br/>
           <span>{this.props.schema.title}</span>
           <br/>
-          {this.state.pictures.map((dataUri, idx) => 
-            <img className="preview-thumbnail" src={ dataUri } key={ idx } />
-          )}
         </label>
         <input
           id="photo-picker-input"
@@ -68,6 +65,13 @@ class PhotoPicker extends Component {
           onChange={ this.onChange() }
           required={ this.props.required }
           multiple />
+        <div className="d-flex pictures">
+          {this.state.pictures.map((dataUri, idx) =>
+            <div className="image-container" key={ idx }>
+              <img className="preview-thumbnail" src={ dataUri } />
+            </div>
+          )}
+        </div>
       </div>
     )
   }

@@ -65,7 +65,7 @@ class PriceField extends Component {
             ETH
           </span>
         </div>
-        <p className="help-block">{ this.state.priceUsd }{this.state.currencyCode}</p>
+        <p className="help-block fiat">{ this.state.priceUsd }{this.state.currencyCode}</p>
         <p className="help-block">
           The cost to buy this listing. Price is always in <a href="https://en.wikipedia.org/wiki/Ethereum" target="_blank" rel="noopener noreferrer">ETH</a>, USD is an estimate.
         </p>
