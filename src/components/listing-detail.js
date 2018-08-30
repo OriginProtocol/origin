@@ -73,7 +73,7 @@ class ListingsDetail extends Component {
       )
       const listing = rawListing.ipfsData.data
       const translatedListing = translateListingCategory(listing)
-      const obj = Object.assign({}, translatedListing, {
+      const obj = Object.assign({}, rawListing, translatedListing, {
         loading: false,
         status: rawListing.status
       })
@@ -153,7 +153,7 @@ class ListingsDetail extends Component {
   render() {
     const isActive = this.state.status === 'active'
     const buyersReviews = this.state.reviews
-    const userIsSeller = this.state.sellerAddress === this.props.web3Account
+    const userIsSeller = this.state.seller === this.props.web3Account
 
     return (
       <div className="listing-detail">
@@ -303,14 +303,6 @@ class ListingsDetail extends Component {
                   </a>
                 </div>
               )}
-              {/* Remove per Matt 5/28/2018 */}
-              {/* this.state.address && this.state.etherscanDomain &&
-                <div className="etherscan link-container">
-                  <a href={`https://${(this.state.etherscanDomain)}/address/${(this.state.address)}#internaltx`} target="_blank">
-                    View on Etherscan<img src="images/carat-blue.svg" className="carat" alt="right carat" />
-                  </a>
-                </div>
-              */}
               <div className="debug">
                 <li>
                   <FormattedMessage
@@ -323,7 +315,7 @@ class ListingsDetail extends Component {
                   <FormattedMessage
                     id={'listing-detail.seller'}
                     defaultMessage={'Seller: {sellerAddress}'}
-                    values={{ sellerAddress: this.state.sellerAddress }}
+                    values={{ sellerAddress: this.state.seller }}
                   />
                 </li>
                 <li>
@@ -334,29 +326,6 @@ class ListingsDetail extends Component {
                   />
                 </li>
               </div>
-              {/* Hidden for current deployment */}
-              {/*!this.state.loading && this.state.purchases.length > 0 &&
-                <Fragment>
-                  <hr />
-                  <h2>Purchases</h2>
-                  <table className="table table-striped">
-                    <thead>
-                      <tr>
-                        <th scope="col" style={{ width: '200px' }}>Status</th>
-                        <th scope="col">TxHash</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {this.state.purchases.map(({ address, stage }) =>
-                        <tr key={address}>
-                          <td>{stage.replace("_"," ")}</td>
-                          <td className="text-truncate"><Link to={`/purchases/${address}`}>{address}</Link></td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </Fragment>
-              */}
             </div>
             <div className="col-12 col-md-4">
               {!!this.state.price &&
@@ -374,7 +343,7 @@ class ListingsDetail extends Component {
                         maximumFractionDigits: 5,
                         minimumFractionDigits: 5
                       })}
-                      &nbsp;
+                        &nbsp;
                       <FormattedMessage
                         id={'listing-detail.ethereumCurrencyAbbrev'}
                         defaultMessage={'ETH'}
@@ -432,11 +401,11 @@ class ListingsDetail extends Component {
                   )}
                 </div>
               )}
-              {this.state.sellerAddress && (
+              {this.state.seller && (
                 <UserCard
                   title="seller"
                   listingAddress={this.props.listingAddress}
-                  userAddress={this.state.sellerAddress}
+                  userAddress={this.state.seller}
                 />
               )}
             </div>

@@ -15,10 +15,9 @@ class Notification extends Component {
 
     const { notification, web3Account } = this.props
     const { listing, purchase } = notification.resources
-    const counterpartyAddress = [
-      listing.sellerAddress,
-      purchase.buyerAddress
-    ].find(addr => addr !== web3Account)
+    const counterpartyAddress = [listing.seller, purchase.buyer].find(
+      addr => addr !== web3Account
+    )
 
     this.intlMessages = defineMessages({
       unnamedUser: {
@@ -73,7 +72,7 @@ class Notification extends Component {
       listing,
       purchase
     } = this.state
-    const { pictures } = listing
+    const { pictures } = listing.ipfsData.data
     const listingImageURL = pictures && pictures.length && pictures[0]
 
     return (
@@ -81,14 +80,14 @@ class Notification extends Component {
         <Link to={`/purchases/${purchase.id}`} onClick={this.handleClick}>
           <div className="d-flex align-items-stretch">
             <div className="image-container d-flex align-items-center justify-content-center">
-              {!listing.address && (
+              {!listing.id && (
                 <img src="images/origin-icon-white.svg" alt="Origin zero" />
               )}
-              {listing.address &&
+              {listing.id &&
                 !listingImageURL && (
                 <img src="images/origin-icon-white.svg" alt="Origin zero" />
               )}
-              {listing.address &&
+              {listing.id &&
                 listingImageURL && (
                 <img
                   src={listingImageURL}

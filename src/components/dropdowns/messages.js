@@ -39,7 +39,7 @@ class MessagesDropdown extends Component {
     }
   }
 
-  handleClick(e) {
+  handleClick() {
     $('#messagesDropdown').dropdown('toggle')
   }
 

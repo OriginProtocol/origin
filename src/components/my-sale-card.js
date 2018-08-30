@@ -35,7 +35,7 @@ class MySaleCard extends Component {
 
   componentWillMount() {
     this.props.fetchUser(
-      this.props.purchase.buyerAddress,
+      this.props.purchase.buyer,
       this.props.intl.formatMessage(this.intlMessages.unnamedUser)
     )
   }
@@ -184,7 +184,7 @@ class MySaleCard extends Component {
 
 const mapStateToProps = (state, { purchase }) => {
   return {
-    user: state.users.find(u => u.address === purchase.buyerAddress) || {}
+    user: state.users.find(u => u.address === purchase.buyer) || {}
   }
 }
 
