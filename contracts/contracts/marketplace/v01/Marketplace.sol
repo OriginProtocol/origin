@@ -1,5 +1,7 @@
 pragma solidity ^0.4.23;
 
+import "../../../../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
+
 /**
  * @title A Marketplace contract for managing listings, offers, payments, escrow and arbitration
  * @author Nick Poulden <nick@poulden.com>
@@ -16,7 +18,7 @@ contract ERC20 {
   function transferFrom(address _from, address _to, uint256 _value) external returns (bool);
 }
 
-contract V01_Marketplace {
+contract V01_Marketplace is Ownable {
 
   /**
    * @notice All events have the same indexed signature offsets for easy filtering
@@ -56,10 +58,11 @@ contract V01_Marketplace {
   Listing[] public listings;
   mapping(uint => Offer[]) public offers; // listingID => Offers
 
-  ERC20 private tokenAddr; // Origin Token address
+  ERC20 public tokenAddr; // Origin Token address
 
   constructor(address _tokenAddr) public {
-    tokenAddr = ERC20(_tokenAddr); // Origin Token contract
+    owner = msg.sender;
+    setTokenAddr(_tokenAddr); // Origin Token contract
   }
 
   // @dev Return the total number of listings
@@ -326,5 +329,10 @@ contract V01_Marketplace {
     listing.deposit -= value;
     require(tokenAddr.transfer(target, value));
     emit ListingArbitrated(target, listingID, ipfsHash);
+  }
+
+  // @dev Set the address of the Origin token contract
+  function setTokenAddr(address _tokenAddr) public onlyOwner {
+    tokenAddr = ERC20(_tokenAddr);
   }
 }

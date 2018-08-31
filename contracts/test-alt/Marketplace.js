@@ -28,12 +28,15 @@ Withdraw Listing
 `.split('\n')
 
 describe('Marketplace.sol', async function() {
+  const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+
   let accounts, deploy, web3
   let Marketplace,
     OriginToken,
     DaiStableCoin,
     Buyer,
     // BuyerIdentity,
+    Owner,
     Seller,
     SellerIdentity,
     Arbitrator,
@@ -45,6 +48,7 @@ describe('Marketplace.sol', async function() {
   before(async function() {
     ({ deploy, accounts, web3 } = await helper(`${__dirname}/..`))
 
+    Owner = accounts[0]
     Seller = accounts[1]
     Buyer = accounts[2]
     ArbitratorAddr = accounts[3]
@@ -53,13 +57,13 @@ describe('Marketplace.sol', async function() {
     gasEstimate = web3.utils.toBN(gasPrice).mul(web3.utils.toBN('4000000'))
 
     OriginToken = await deploy('OriginToken', {
-      from: accounts[0],
+      from: Owner,
       path: `${__dirname}/../contracts/token/`,
       args: [12000]
     })
 
     DaiStableCoin = await deploy('Token', {
-      from: accounts[0],
+      from: Owner,
       path: `${__dirname}/contracts/`,
       args: ['Dai', 'DAI', 2, 12000]
       // args: [12000]
@@ -78,7 +82,7 @@ describe('Marketplace.sol', async function() {
     })
 
     Marketplace = await deploy('V00_Marketplace', {
-      from: accounts[0],
+      from: Owner,
       // path: `${__dirname}/contracts/`,
       path: `${__dirname}/../contracts/marketplace/v00`,
       file: 'Marketplace.sol',
@@ -507,5 +511,32 @@ describe('Marketplace.sol', async function() {
     //     Number(balanceBefore) + Number(web3.utils.toWei('0.1', 'ether'))
     //   )
     // })
+  })
+
+  describe('Ownership', function() {
+    it('should allow the contract owner to set the token address', async function() {
+      try {
+        await Marketplace.methods.setTokenAddr(ZERO_ADDRESS).send()
+        assert.equal(
+          await Marketplace.methods.tokenAddr().call(),
+          ZERO_ADDRESS)
+      } finally {
+        await Marketplace.methods.setTokenAddr(OriginToken._address).send()
+        assert.equal(
+          await Marketplace.methods.tokenAddr().call(),
+          OriginToken._address)
+      }
+    })
+
+    it('should not allow non-owners to set the token address', async function() {
+      try {
+        await Marketplace.methods.setTokenAddr(ZERO_ADDRESS).send({
+          from: Buyer
+        })
+        assert(false)
+      } catch (e) {
+        assert(e.message.match(/revert/))
+      }
+    })
   })
 })
