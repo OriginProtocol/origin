@@ -194,6 +194,11 @@ class OriginNavWrapper extends Component {
       this.props.setActiveEvent(data)
       NavigationService.navigate("Alerts")
     })
+    originWallet.events.on(Events.PROMPT_SIGN, (data, matcher) => {
+      this.props.newEvent(matcher, data)
+      this.props.setActiveEvent(data)
+      NavigationService.navigate("Alerts")
+    })
 
     originWallet.events.on(Events.NEW_ACCOUNT, (data, matcher) => {
       this.props.fetchProfile()

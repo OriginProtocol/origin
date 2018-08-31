@@ -8,6 +8,8 @@ import DeviceItem from '../components/device-item'
 import Separator from '../components/separator'
 import TransactionItem from '../components/transaction-item'
 import TransactionModal from '../components/transaction-modal'
+import SignItem from '../components/sign-item'
+import SignModal from '../components/sign-modal'
 import DeviceModal from '../components/device-modal'
 
 
@@ -59,6 +61,7 @@ class AlertsScreen extends Component {
             switch(item.action) {
               case 'purchase':
               case 'list':
+              case 'unknown':
                 return (
                   <TransactionItem
                     item={item}
@@ -77,6 +80,17 @@ class AlertsScreen extends Component {
                     handleReject={() => originWallet.handleReject(item)}
                   />
                 )
+              case 'sign':
+                return (
+                  <SignItem
+                  item={item}
+                  address ={myAddress}
+                  balance ={balance}
+                  handleApprove={() => originWallet.handleEvent(item) }
+                  handlePress={() => this.props.setActiveEvent( item )}
+                  handleReject={() => originWallet.handleReject(item) }
+                  />
+                )
               default:
                 return null
             }
@@ -86,7 +100,8 @@ class AlertsScreen extends Component {
           style={styles.list}
         />
         {selectedItem &&
-          selectedItem.listing &&
+          selectedItem.transaction &&
+          myAddress &&
           <TransactionModal
             item={selectedItem}
             address ={myAddress}
@@ -96,7 +111,19 @@ class AlertsScreen extends Component {
             toggleModal={this.toggleModal}
           />}
         {selectedItem &&
+          selectedItem.sign &&
+          myAddress &&
+          <SignModal
+            item={selectedItem}
+            address ={myAddress}
+            balance ={balance}
+            handleApprove={() => this.acceptItem(selectedItem)}
+            handleReject={() => this.rejectItem(selectedItem)}
+            toggleModal={this.toggleModal}
+          />}
+        {selectedItem &&
           selectedItem.link &&
+          myAddress &&
           <DeviceModal
             item={selectedItem}
             address ={myAddress}

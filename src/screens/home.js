@@ -6,6 +6,7 @@ import Identicon from '../components/identicon'
 import DeviceItem from '../components/device-item'
 import Separator from '../components/separator'
 import TransactionItem from '../components/transaction-item'
+import SignItem from '../components/sign-item'
 
 import originWallet from '../OriginWallet'
 
@@ -27,7 +28,8 @@ class HomeScreen extends Component {
 
   render() {
     const myAddress = this.props.address 
-    const ethBalance = this.props.balance
+    const ethBalance = web3.utils.fromWei(this.props.balance, 'ether')
+    const balance = this.props.balance
 
     return (
       <View style={styles.container}>
@@ -46,17 +48,25 @@ class HomeScreen extends Component {
             switch(item.action) {
               case 'purchase':
               case 'list':
+              case 'unknown':
                 return (
                   <TransactionItem item={item} 
                     address ={myAddress}
-                    balance ={ethBalance}
+                    balance ={balance}
+                  />
+                )
+              case 'sign':
+                return (
+                  <SignItem item={item} 
+                    address ={myAddress}
+                    balance ={balance}
                   />
                 )
               case 'link':
                 return (
                   <DeviceItem item={item}
                     address ={myAddress}
-                    balance ={ethBalance}
+                    balance ={balance}
                     handleUnlink = {() => originWallet.handleUnlink(item)}/>
                 )
               default:

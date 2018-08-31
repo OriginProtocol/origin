@@ -36,7 +36,7 @@ function _updateAndMove(matcher, update, new_event, events_from, events_to) {
     return events_from, events_to
   }
   event = {...event, ...update}
-  let new_events_from = events_from.filter(i => !matcher(i))
+  const new_events_from = events_from.filter(i => !matcher(i))
   return [new_events_from, _addToEvents(matcher, event, events_to)]
 }
 
@@ -50,7 +50,7 @@ export default function WalletEvents(state = initialState, action = {}) {
                 processed_events: state.processed_events.map(_matchUpdate(action.matcher, action.update))}
 
     case WalletEventsConstants.PROCESSED_EVENT:
-      let [events, processed_events] = _updateAndMove(action.matcher, action.update, action.new_event, state.events, state.processed_events)
+      const [events, processed_events] = _updateAndMove(action.matcher, action.update, action.new_event, state.events, state.processed_events)
       return { ...state, events, processed_events}
 
     case WalletEventsConstants.SET_ACTIVE_EVENT:

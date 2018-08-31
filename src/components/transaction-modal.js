@@ -8,8 +8,9 @@ export default class TransactionModal extends Component {
     const { item, address, balance, handleApprove, handleReject, toggleModal } = this.props
     const cost = item.cost
     const { name, pictures} = item.listing || {}
+    const meta = item.transaction.meta
     // placeholders
-    const hasSufficientFunds = balance > cost
+    const hasSufficientFunds = !cost || web3.utils.toBN(balance).gt(web3.utils.toBN(cost))
     const counterpartyAddress = item.listing ? item.listing.sellerAddress : item.to
 
     return (
@@ -28,22 +29,28 @@ export default class TransactionModal extends Component {
               <Image source={require('../../assets/images/arrow-down.png')} />
             </View>
           </TouchableOpacity>
-          <View style={styles.imageContainer}>
+        {pictures && pictures.length && <View style={styles.imageContainer}>
             <Image
               style={styles.image}
               source={{uri:pictures[0]}}
               resizeMethod={'resize'}
               resizeMode={'cover'}
             />
-          </View>
-          <View style={styles.promptContainer}>
+          </View>}
+        {name && <View style={styles.promptContainer}>
             <Text style={styles.question}>
               Do you want to purchase this item?
             </Text>
             <Text style={styles.listingName}>
               {name}
             </Text>
-          </View>
+          </View>}
+        {!name && meta && 
+          <View style={styles.promptContainer}>
+            <Text style={styles.question}>
+              Do you want call {meta.contract}.{meta.call}?
+            </Text>
+          </View>}
           <View style={styles.counterparties}>
             <TouchableOpacity onPress={() => Alert.alert('From ETH Address', address)}>
               <View style={styles.party}>
@@ -52,17 +59,17 @@ export default class TransactionModal extends Component {
               </View>
             </TouchableOpacity>
             <Image source={require('../../assets/images/arrow-forward-material.png')} style={styles.arrow} />
-            <TouchableOpacity onPress={() => Alert.alert('To ETH Address', counterpartyAddress)}>
+            {counterpartyAddress && <TouchableOpacity onPress={() => Alert.alert('To ETH Address', counterpartyAddress)}>
               <View style={styles.party}>
                 <Image source={require('../../assets/images/avatar.png')} style={styles.avatar} />
                 <Text style={styles.address}>{`${counterpartyAddress.slice(0, 4)}...${counterpartyAddress.slice(38)}`}</Text>
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity>}
           </View>
           {!hasSufficientFunds &&
             <View style={styles.fundingRequired}>
               <Text style={styles.warning}>
-                You don’t have enough funds to complete this purchase. Please add funds to your wallet.
+                You don’t have enough funds to complete this transaction. Please add funds to your wallet.
               </Text>
               <Text style={styles.wallet}>
                 {address}

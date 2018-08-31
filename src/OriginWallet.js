@@ -6,7 +6,7 @@ import fetch from 'cross-fetch'
 import keyMirror from 'utils/keyMirror'
 import EventEmitter from 'events'
 
-import origin, {bridgeUrl, defaultProviderUrl} from './services/origin'
+import origin, {bridgeUrl, defaultProviderUrl, messageOpenUrl} from './services/origin'
 
 const providerUrl = defaultProviderUrl
 
@@ -33,6 +33,7 @@ const WALLET_STORE = "WALLET_STORE"
 Events = keyMirror({
   PROMPT_LINK:null,
   PROMPT_TRANSACTION:null,
+  PROMPT_SIGN:null,
   NEW_ACCOUNT:null,
   LINKED:null,
   TRANSACTED:null,
@@ -46,8 +47,8 @@ const eventMatcherByLinkId = link_id => {
   return event => event.link && event.link.link_id == link_id
 }
 
-const eventMatcherByCallId = call_id => {
-  return event => event.transaction && event.transaction.call_id == call_id
+const eventMatcherByEventId = event_id => {
+  return event => event.event_id == event_id
 }
 
 const getEventId = event => {
@@ -62,6 +63,10 @@ const getEventId = event => {
   else if(event.transaction && event.transaction.call_id)
   {
     return event.transaction.call_id
+  }
+  else if (event.sign && event.sign.session_token)
+  {
+    return event.sign.session_token + ":" + event.sign.call_id
   }
 }
 
@@ -305,15 +310,15 @@ class OriginWallet {
     this.checkRegisterNotification()
   }
 
-  returnCall(wallet_token, call_id, session_token, result, fire_event) {
+  returnCall(event_id, wallet_token, call_id, session_token, result, fire_event) {
     return this.doFetch(API_WALLET_LINKER_RETURN_CALL, 'POST', {
       wallet_token,
-        call_id,
+      call_id,
       session_token,
       result,
     }).then((responseJson) => {
       console.log("returnCall successful:", responseJson.success)
-      this.fireEvent(fire_event, undefined, eventMatcherByCallId(call_id))
+      this.fireEvent(fire_event, undefined, eventMatcherByEventId(event_id))
       return responseJson.success
     }).catch((error) => {
       console.error(error)
@@ -334,6 +339,11 @@ class OriginWallet {
     else if (link)
     {
       const action = "link"
+      return {...event_data, action}
+    }
+    else if (event_data.sign)
+    {
+      const action = "sign"
       return {...event_data, action}
     }
     //this is the bare event
@@ -375,9 +385,9 @@ class OriginWallet {
   }
 
   extractTransactionValue({params}){
-    if ( params && params.txn_object)
+    if (params && params.txn_object && params.txn_object.value)
     {
-        return web3.utils.fromWei(params.txn_object.value, "ether")
+        return params.txn_object.value
     }
   }
 
@@ -389,7 +399,11 @@ class OriginWallet {
     }
     else if (e.transaction)
     {
-      return this._handleTransaction(e.transaction)
+      return this._handleTransaction(e.event_id, e.transaction)
+    }
+    else if (e.sign)
+    {
+      return this._handleSign(e.event_id, e.sign)
     }
   }
 
@@ -401,7 +415,12 @@ class OriginWallet {
   handleReject(event){
     if (event.transaction)
     {
-      return this._handleRejectTransaction(event.transaction)
+      return this._handleRejectTransaction(event.event_id, event.transaction)
+    }
+    else if (event.sign)
+    {
+      //treat it like a transactions
+      return this._handleRejectTransaction(event.event_id, event.sign)
     }
     this.fireEvent(Events.REJECT, event)
   }
@@ -410,19 +429,18 @@ class OriginWallet {
     return this.setLinkCode(linkCode)
   }
 
-  _handleTransaction({meta, call_name, call_id, params, return_url, session_token}){
+  _handleTransaction(event_id, {meta, call_name, call_id, params, return_url, session_token}){
     return new Promise((resolve, reject) => {
       if (call_name == "signTransaction")
       {
         web3.eth.signTransaction(params.txn_object).then(ret => {
-          this.returnCall(this.state.deviceToken, call_id, session_token, ret["raw"], Events.TRANSACTED).then(
+          this.returnCall(event_id, this.state.deviceToken, call_id, session_token, ret["raw"], Events.TRANSACTED).then(
             (success) => {
               if (return_url)
               {
-                console.log("transaction approved returning to:", message.return_url)
-                Linking.openURL(message.return_url)
-                resolve(true)
+                Linking.openURL(return_url)
               }
+              resolve(true)
             })
         }).catch(err)
         {
@@ -439,12 +457,12 @@ class OriginWallet {
           {
             // TODO: detect purchase assume it's all purchases for now.
             let call = undefined
-            if (params.meta && params.meta.call)
+            if (meta && meta.call)
             {
-              call = params.meta.call
+              call = meta.call
             }
             let transactionResult = {hash:receipt.transactionHash, call}
-            this.returnCall(this.state.deviceToken, call_id, session_token, transactionResult, Events.TRANSACTED).then(
+            this.returnCall(event_id, this.state.deviceToken, call_id, session_token, transactionResult, Events.TRANSACTED).then(
               (success) => {
                 if (return_url)
                 {
@@ -465,9 +483,44 @@ class OriginWallet {
     })
   }
 
-  _handleRejectTransaction({meta, call_name, call_id, params, session_token}){
+  _handleSign(event_id, {meta, call_name, call_id, params, return_url, session_token}){
+    return new Promise((resolve, reject) => {
+      if (call_name == "signMessage")
+      {
+        const msg = params.msg
+        const post_phrase_prefix = params.post_phrase_prefix
+        console.log("signing message:", msg)
+        const signature = web3.eth.accounts.wallet[0].sign(msg).signature
+        const ret = {msg, signature, account:this.state.ethAddress}
+
+        if (post_phrase_prefix)
+        {
+          const sig_key = signature.substring(0, 66)
+          const temp_account = web3.eth.accounts.privateKeyToAccount(sig_key)
+
+          const post_phrase = post_phrase_prefix + temp_account.address
+          const post_signature = web3.eth.accounts.wallet[0].sign(post_phrase).signature
+          ret.post_phrase = post_phrase
+          ret.post_signature = post_signature
+        }
+        console.log("Signing result:", ret)
+
+        this.returnCall(event_id, this.state.deviceToken, call_id, session_token, ret, Events.TRANSACTED).then(
+            (success) => {
+              if (return_url)
+              {
+                console.log("transaction approved returning to:", return_url)
+                Linking.openURL(return_url)
+              }
+              resolve(success)
+            })
+      }
+    })
+  }
+
+  _handleRejectTransaction(event_id, {meta, call_name, call_id, params, session_token}){
     //return empty result
-    return this.returnCall(this.state.deviceToken, call_id, session_token, {}, Events.REJECT)
+    return this.returnCall(event_id, this.state.deviceToken, call_id, session_token, {}, Events.REJECT)
   }
 
   processCall(meta, call_name, call_id, params, return_url, session_token, force_from = false) {
@@ -488,6 +541,10 @@ class OriginWallet {
       {
         this.fireEvent(Events.PROMPT_TRANSACTION, {transaction:{meta, call_name, call_id, params, return_url, session_token}})
       }
+    }
+    else if (call_name == "signMessage")
+    {
+      this.fireEvent(Events.PROMPT_SIGN, {sign:{meta, call_name, call_id, params, return_url, session_token}})
     }
   }
 
@@ -534,7 +591,11 @@ class OriginWallet {
       notifyTime:new Date(),
       notifyMessage:notification.message
     })
-    console.log("checking server for messages..")
+    console.log("notification.message:", notification.message)
+    if (notification.message == "You've received a new message")
+    {
+      Linking.openURL(messageOpenUrl)
+    }
     this.new_messages = true
   }
 
@@ -620,7 +681,6 @@ class OriginWallet {
   }
 
 
-
   closeWallet() {
     //store the wallet
     this.saveWallet()
@@ -671,6 +731,7 @@ class OriginWallet {
       //this should probably also come from the data block
       //in case when we want to let people change providers...
       web3.setProvider(new Web3.providers.HttpProvider(localfy(providerUrl), 20000))
+
       if (wallet_data)
       {
         web3.eth.accounts.wallet.decrypt(wallet_data, WALLET_PASSWORD)
@@ -682,7 +743,6 @@ class OriginWallet {
         //web3.eth.accounts.wallet.add(TEST_PRIVATE_KEY)
         web3.eth.accounts.wallet.create(1)
       }
-
       let ethAddress = web3.eth.accounts.wallet[0].address
       if (ethAddress != this.state.ethAddress)
       {

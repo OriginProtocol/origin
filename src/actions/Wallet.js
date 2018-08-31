@@ -33,7 +33,7 @@ export function getBalance() {
 
     dispatch({
       type: WalletConstants.BALANCE_SUCCESS,
-      balance: web3.utils.fromWei(balance, 'ether')
+      balance: balance
     })
   }
 }

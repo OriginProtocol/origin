@@ -18,7 +18,7 @@ class WalletScreen extends Component {
   render() {
     const { address, balance } = this.props
     // placeholders
-    const amountETH = balance
+    const amountETH = web3.utils.fromWei(balance, "ether")
     const amountUSD = 0
     // really dangerous function
     const privateKey = address ? web3.eth.accounts.wallet[0].privateKey : ""
