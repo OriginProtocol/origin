@@ -1,6 +1,7 @@
 @import 'alertify.css';
 @import 'variables.css';
 @import 'bootstrap.css';
+@import '../../node_modules/rc-slider/assets/index.css';
 
 html {
   font-size: 16px;

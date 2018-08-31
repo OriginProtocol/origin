@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
-import { injectIntl, FormattedMessage } from 'react-intl'
-
-import schemaMessages from '../../schemaMessages/index'
+import { injectIntl } from 'react-intl'
 
 class CounterFilter extends Component {
   constructor(props) {
