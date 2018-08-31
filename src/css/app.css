@@ -3405,6 +3405,19 @@ a:not([href]):not([tabindex]).span-link {
   padding: 30px 0 5px 0;
 }
 
+.about-token-wrapper ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.about-token-wrapper li:before {
+  content: "•";
+  color: var(--clear-blue);
+  display: inline-block;
+  margin-left: -1rem;
+  width: 1rem;
+}
+
 /* Media queries */
 
 /* sm + */

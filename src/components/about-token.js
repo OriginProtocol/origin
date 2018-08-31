@@ -91,7 +91,7 @@ const AboutToken = () => {
                 />
               </a>
             </p>
-\            <h3 className="lead lead-text">
+            <h3 className="lead lead-text">
               <FormattedMessage
                 id={'about-token.earn'}
                 defaultMessage={'Can I earn Origin Tokens?'}
