@@ -1,74 +1,74 @@
 [
   {
-    "id": "about-token.about",
+    "id": "about-tokens.about",
     "defaultMessage": "About Origin Tokens & Boosting Listings"
   },
   {
-    "id": "about-token.use",
+    "id": "about-tokens.use",
     "defaultMessage": "What are Origin Tokens used for?"
   },
   {
-    "id": "about-token.boosting",
+    "id": "about-tokens.boosting",
     "defaultMessage": "Boosting"
   },
   {
-    "id": "about-token.boosting-text",
+    "id": "about-tokens.boosting-text",
     "defaultMessage": "Vivamus faucibus tortor ultrices arcu consectetur convallis. Fusce eget fringilla velit, vitae dignissim ipsum. Curabitur hendrerit, massa sit amet molestie tincidunt, lacus purus aliquam urna, at venenatis nibh dui sit amet nunc. Nunc tortor leo, pretium id convallis et, sollicitudin in ex."
   },
   {
-    "id": "about-token.arbitration",
+    "id": "about-tokens.arbitration",
     "defaultMessage": "Arbitration"
   },
   {
-    "id": "about-token.arbitration-text",
+    "id": "about-tokens.arbitration-text",
     "defaultMessage": "Vivamus faucibuss tortor ultrices arcu consectetur convallis. Fusce eget fringilla velit, vitae dignissim ipsum. Curabitur hendrerit, massa sit amet molestie tincidunt, lacus purus aliquam urna, at venenatis nibh dui sit amet nunc. Nunc tortor leo, pretium id convallis et, sollicitudin in ex."
   },
   {
-    "id": "about-token.buying-tokens",
+    "id": "about-tokens.buying-tokens",
     "defaultMessage": "Where can I buy Origin Tokens?"
   },
   {
-    "id": "about-token.exchanges",
+    "id": "about-tokens.exchanges",
     "defaultMessage": "List of Approved Exchanges"
   },
   {
-    "id": "about-token.exchanges-text",
+    "id": "about-tokens.exchanges-text",
     "defaultMessage": "The following are the only approved exchanges where you can buy Origin Tokens. Never attempt to buy anywhere else."
   },
   {
-    "id": "about-token.exchange-1",
+    "id": "about-tokens.exchange-1",
     "defaultMessage": "Exchange Name >"
   },
   {
-    "id": "about-token.exchange-2",
+    "id": "about-tokens.exchange-2",
     "defaultMessage": "Exchange Name >"
   },
   {
-    "id": "about-token.exchange-3",
+    "id": "about-tokens.exchange-3",
     "defaultMessage": "Exchange Name >"
   },
   {
-    "id": "about-token.earn",
+    "id": "about-tokens.earn",
     "defaultMessage": "Can I earn Origin Tokens?"
   },
   {
-    "id": "about-token.earning",
+    "id": "about-tokens.earning",
     "defaultMessage": "Earning Origin Tokens"
   },
   {
-    "id": "about-token.earning-text",
+    "id": "about-tokens.earning-text",
     "defaultMessage": "You can earn Origin Tokens by following any of the steps below:"
   },
   {
-    "id": "about-token.earn-step-1",
+    "id": "about-tokens.earn-step-1",
     "defaultMessage": "Do this to earn tokens"
   },
   {
-    "id": "about-token.earn-step-2",
+    "id": "about-tokens.earn-step-2",
     "defaultMessage": "Do this to earn tokens"
   },
   {
-    "id": "about-token.earn-step-3",
+    "id": "about-tokens.earn-step-3",
     "defaultMessage": "Do this to earn tokens"
   }
 ]

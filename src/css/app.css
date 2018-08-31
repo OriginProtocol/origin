@@ -179,7 +179,7 @@ a:hover {
 .my-listings-wrapper,
 .my-purchases-wrapper,
 .notifications-wrapper,
-.about-token-wrapper {
+.about-tokens-wrapper {
   padding: 3.5rem 0;
 }
 
@@ -3405,12 +3405,16 @@ a:not([href]):not([tabindex]).span-link {
   padding: 30px 0 5px 0;
 }
 
-.about-token-wrapper ul {
+.about-tokens-wrapper a {
+  font-weight: normal;
+}
+
+.about-tokens-wrapper ul {
   list-style: none;
   padding-left: 0;
 }
 
-.about-token-wrapper li:before {
+.about-tokens-wrapper li:before {
   content: "•";
   color: var(--clear-blue);
   display: inline-block;
