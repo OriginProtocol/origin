@@ -1,6 +1,7 @@
 @import 'alertify.css';
 @import 'variables.css';
 @import 'bootstrap.css';
+@import '../../node_modules/rc-slider/assets/index.css';
 
 html {
   font-size: 16px;
@@ -1327,9 +1328,14 @@ a:hover {
   font-family: 'Lato', 'Helvetica Neue', 'Arial', sans-serif;
 }
 
+.tooltip.show {
+  opacity: 1;
+}
+
 .tooltip .tooltip-inner {
   padding: 1.2rem;
   max-width: 250px;
+  background: var(--dark-grey-blue);
 }
 
 .tooltip img {
@@ -1768,6 +1774,61 @@ select.form-control:not([size]):not([multiple]) {
 
 .listing-form .select-boost .info-box hr {
   padding: 16px 0 0;
+}
+
+.listing-form .select-boost .info-icon {
+  cursor: pointer;
+}
+
+.listing-form .select-boost .rc-slider-rail {
+  height: 15px;
+  border-radius: 10px;
+  background-color: var(--light);
+  margin-left: -5px;
+  margin-right: -5px;
+  width: 104%;
+}
+ .listing-form .select-boost .rc-slider-handle {
+  margin-top: auto;
+  border: 0px;
+  width: 15px;
+  height: 15px;
+}
+ .listing-form .select-boost .rc-slider-track {
+  height: 15px;
+  border-radius: 0px;
+  background-color: var(--steel);
+}
+
+.listing-form .select-boost .rc-slider.boost-level-Low .rc-slider-track {
+  background-color: var(--pale-yellow);
+}
+
+.listing-form .select-boost .rc-slider.boost-level-Medium .rc-slider-track {
+  background-color: var(--mustard);
+}
+
+.listing-form .select-boost .rc-slider.boost-level-High .rc-slider-track {
+  background-color: var(--gold);
+}
+
+.listing-form .select-boost .rc-slider.boost-level-Premium .rc-slider-track {
+  background-color: var(--golden-rod);
+}
+
+.boost-tooltip {
+  text-align: left;
+}
+
+.boost-tooltip p {
+  color: white;
+  font-size: 14px;
+  text-align: left;
+}
+
+.boost-tooltip a {
+  font-size: 14px;
+  color: var(--clear-blue);
 }
 
 .price-field-container {

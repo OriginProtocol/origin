@@ -483,7 +483,7 @@ class ListingCreate extends Component {
                   </div>
                 }
                 {this.state.ognBalance > 0 &&
-                  <BoostSlider ognBalance={ this.state.ognBalance } min={ 1 } max={ 100 } />
+                  <BoostSlider ognBalance={ this.state.ognBalance } min={ 0 } max={ 100 } defaultValue={ 50 } />
                 }
                 <div className="btn-container">
                   <button
