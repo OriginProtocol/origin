@@ -55,11 +55,7 @@ class BoostSlider extends Component {
   }
 
   async componentDidMount() {
-    const { defaultValue } = this.props
-    const selectedBoostAmountUsd = 
-      defaultValue ?
-        await getFiatPrice( defaultValue / 2, 'USD' )
-        : 0
+    const selectedBoostAmountUsd = await getFiatPrice( this.state.selectedBoostAmount, 'USD' )
     this.setState({
       selectedBoostAmountUsd
     })
