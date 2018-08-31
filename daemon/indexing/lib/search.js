@@ -56,6 +56,16 @@ class Listing {
     return resp.count
   }
 
+  static async get(id) {
+    const resp = await client.get({id: id, index: indexName, type: listingsType})
+    if(!resp.found){
+      throw "Listing not found"
+    }
+    const listing = resp._source
+    listing.id = id
+    return resp._source
+  }
+
   /*
    * Indexes a listing.
    * @params {string} listingId - The unique ID of the listing.
