@@ -66,13 +66,12 @@ class Marketplace extends Adaptable {
       : 1 // default value
 
     const unitsSold = Object.keys(offers).reduce((acc, offerId) => {
-      const val = offers[offerId]
       if (offers[offerId].status === 'created') {
         return acc + 1
       }
       // TODO: we need to subtract 1 for every offer that is canceled
       return acc
-    }, 0);
+    }, 0)
 
     // units available is derived from units for sale and offers created.
     // should never be negative
