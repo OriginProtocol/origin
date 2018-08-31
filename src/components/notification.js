@@ -3,6 +3,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
+import { updateNotification } from 'actions/Notification'
 import { fetchUser } from 'actions/User'
 
 import NotificationMessage from 'components/notification-message'
@@ -53,15 +54,8 @@ class Notification extends Component {
     }
   }
 
-  async handleClick() {
-    try {
-      await origin.notifications.set({
-        id: this.props.notification.id,
-        status: 'read'
-      })
-    } catch (e) {
-      console.error(e)
-    }
+  handleClick() {
+    this.props.updateNotification(this.props.notification.id, 'read')
   }
 
   render() {
@@ -155,7 +149,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg))
+  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg)),
+  updateNotification: (id, status) => dispatch(updateNotification(id, status))
 })
 
 export default connect(
