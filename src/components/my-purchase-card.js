@@ -48,7 +48,7 @@ class MyPurchaseCard extends Component {
     const { category, name, pictures, price } = translateListingCategory(
       listing.ipfsData.data
     )
-    const step = Number(offer.status)
+    const step = parseInt(offer.status)
     let verb
 
     switch (step) {
@@ -102,6 +102,7 @@ class MyPurchaseCard extends Component {
               </div>
               <PurchaseProgress
                 currentStep={step}
+                maxStep={3}
                 perspective="buyer"
                 subdued={true}
               />
