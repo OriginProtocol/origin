@@ -1,8 +1,9 @@
-const cryptoCurrencyCode = 'ETH'
-
-const fetchRate = async (fiatCurrencyCode) => {
+const fetchRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
   if (!fiatCurrencyCode) {
     fiatCurrencyCode = 'USD'
+  }
+  if (!cryptoCurrencyCode) {
+    cryptoCurrencyCode = 'ETH'
   }
   let exchangeURL = 'https://api.cryptonator.com/api/ticker/'
   exchangeURL += cryptoCurrencyCode.toLowerCase()
@@ -24,7 +25,7 @@ const fetchRate = async (fiatCurrencyCode) => {
   })
 }
 
-const getFiatExchangeRate = async (fiatCurrencyCode) => {
+const getFiatExchangeRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
   if (typeof Storage !== 'undefined') {
     const cachedRate = localStorage.getItem('origin.exchangeRate')
     if (cachedRate) {
@@ -34,21 +35,21 @@ const getFiatExchangeRate = async (fiatCurrencyCode) => {
         return parseFloat(JSON.parse(cachedRate).value)
       } else {
         localStorage.removeItem('origin.exchangeRate')
-        return await fetchRate(fiatCurrencyCode) // cache is invalid
+        return await fetchRate(fiatCurrencyCode, cryptoCurrencyCode) // cache is invalid
       }
     } else {
-      return await fetchRate(fiatCurrencyCode) // isn't cached to begin with
+      return await fetchRate(fiatCurrencyCode, cryptoCurrencyCode) // isn't cached to begin with
     }
   } else {
-    return await fetchRate(fiatCurrencyCode) // localStorage not available
+    return await fetchRate(fiatCurrencyCode, cryptoCurrencyCode) // localStorage not available
   }
 }
 
-export const getFiatPrice = async (priceEth, fiatCurrencyCode) => {
+export const getFiatPrice = async (priceEth, fiatCurrencyCode, cryptoCurrencyCode) => {
   if (!priceEth) {
     priceEth = 0
   }
-  const exchangeRate = await getFiatExchangeRate(fiatCurrencyCode)
+  const exchangeRate = await getFiatExchangeRate(fiatCurrencyCode, cryptoCurrencyCode)
   return Number(priceEth * exchangeRate).toLocaleString(
     undefined,
     { minimumFractionDigits: 2, maximumFractionDigits: 2 }

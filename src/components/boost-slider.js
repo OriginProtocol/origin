@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+// TODO:John - pass a third arg of 'OGN' into getFiatPrice() once OGN prices are available in cryptonator API
 import { getFiatPrice } from 'utils/priceUtils'
 import Slider from 'rc-slider'
 import $ from 'jquery'
