@@ -184,7 +184,8 @@ a:hover {
 
 .my-listings-wrapper,
 .my-purchases-wrapper,
-.notifications-wrapper {
+.notifications-wrapper,
+.about-tokens-wrapper {
   padding: 3.5rem 0;
 }
 
@@ -3604,6 +3605,37 @@ a:not([href]):not([tabindex]).span-link {
 .indented {
   border-left: 1px solid var(--pale-grey);
   padding-left: 20px;
+}
+
+/* About Tokens Page */
+
+.video-placeholder {
+  width: auto;
+  height: 225px;
+  background-color: #dfe6ea;
+  background-color: var(--pale-grey-two);
+  margin-top: 100px;
+}
+
+.lead-text {
+  padding: 30px 0 5px 0;
+}
+
+.about-tokens-wrapper a {
+  font-weight: normal;
+}
+
+.about-tokens-wrapper ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.about-tokens-wrapper li:before {
+  content: "•";
+  color: var(--clear-blue);
+  display: inline-block;
+  margin-left: -1rem;
+  width: 1rem;
 }
 
 /* Media queries */
