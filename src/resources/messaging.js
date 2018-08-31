@@ -866,9 +866,9 @@ class Messaging extends ResourceBase {
     )
     const isWatched = created > subscriptionStart
     const status =
-      isWatched && messageStatuses && messageStatuses[hash] === READ_STATUS
-        ? READ_STATUS
-        : UNREAD_STATUS
+      isWatched && messageStatuses && messageStatuses[hash] !== READ_STATUS
+        ? UNREAD_STATUS
+        : READ_STATUS
     return status
   }
 
