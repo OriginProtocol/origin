@@ -34,13 +34,13 @@ export function updateNotification(id, status) {
     try {
       await origin.marketplace.setNotification({
         id,
-        status,
+        status
       })
 
       dispatch({
         type: NotificationConstants.UPDATE,
         id,
-        status,
+        status
       })
     } catch (error) {
       dispatch(showAlert(error.message))
