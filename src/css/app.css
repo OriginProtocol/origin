@@ -1888,14 +1888,64 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .listing-form .preview {
-  zoom: 0.6;
-  pointer-events: none;
-  margin-bottom: 30px;
+  padding: 15px 20px 0;
+  border: 1px solid var(--light);
+  border-radius: 5px;
+}
+
+.listing-form p.label {
+  color: var(--dusk);
+}
+
+.listing-form .preview .row {
+  margin-bottom: 15px;
+}
+
+.listing-form .preview .photo-row {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  max-width: 100%;
+  white-space: nowrap;
+  margin-bottom: 15px;
+}
+
+.listing-form .preview img {
+  display: inline-block;
+  margin-right: 15px;
+}
+
+.listing-form .preview .eth-abbrev {
+  color: var(--bluish-purple);
+}
+
+.listing-form .preview .eth-abbrev,
+.listing-form .preview .ogn-abbrev {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.listing-form .preview .eth-icon,
+.listing-form .preview .ogn-icon {
+  margin-top: -5px;
+  margin-right: 5px;
+}
+
+.listing-form .preview .text-uppercase {
+  text-transform: uppercase;
+}
+
+.listing-form .preview .text-bold {
+  font-weight: bold;
+}
+
+.listing-form .preview .boost-level {
+  margin-bottom: 5px;
+}
+
+.listing-form .bottom-cta {
+  margin-top: 15px;
+  margin-bottom: 20px;
   display: block;
-  width: 100%;
-  min-height: 720px;
-  border-radius: var(--default-radius);
-  border: solid 1px var(--light);
 }
 
 .listing-form .select-boost .info-box {

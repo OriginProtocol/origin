@@ -116,8 +116,8 @@
     "defaultMessage": "OK"
   },
   {
-    "id": "listing-create.previewListingHeading",
-    "defaultMessage": "Preview your listing"
+    "id": "listing-create.reviewListingHeading",
+    "defaultMessage": "Review your listing"
   },
   {
     "id": "listing-create.whatHappensNextHeading",
