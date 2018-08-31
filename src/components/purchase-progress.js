@@ -5,21 +5,37 @@ class PurchaseProgress extends Component {
   constructor(props) {
     super(props)
 
+    this.calculateProgress = this.calculateProgress.bind(this)
+
     this.state = {
-      currentStep: props.currentStep,
-      maxStep: props.maxStep,
-      progressCalculated: true,
+      progressCalculated: false,
       progressWidth: '0%'
     }
   }
 
+  componentDidMount() {
+    // delay calculation to support CSS transition
+    setTimeout(() => {
+      this.calculateProgress()
+    })
+  }
+
+  componentDidUpdate() {
+    this.calculateProgress()
+  }
+
+  calculateProgress() {
+    const { currentStep, maxStep } = this.props
+    const progressWidth = currentStep > 1 ? `${Math.min((currentStep - 1) / (maxStep - 1), 1) * 100}%` : `${currentStep * 10}px`
+
+    if (this.state.progressWidth !== progressWidth) {
+      this.setState({ progressCalculated: true, progressWidth })
+    }
+  }
+
   render() {
-    const { perspective, subdued, currentStep, maxStep } = this.props
-    const { progressCalculated } = this.state
-    const progressWidth =
-      currentStep > 1
-        ? `${((currentStep - 1) / (maxStep - 1)) * 100}%`
-        : `${currentStep * 10}px`
+    const { currentStep, maxStep, perspective, subdued } = this.props
+    const { progressCalculated, progressWidth } = this.state
 
     // timestamps not yet available
     const soldAt = !!currentStep

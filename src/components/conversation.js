@@ -11,6 +11,8 @@ import { Link } from 'react-router-dom'
 import CompactMessages from 'components/compact-messages'
 import PurchaseProgress from 'components/purchase-progress'
 
+import { translateListingCategory } from 'utils/translationUtils'
+
 import origin from '../services/origin'
 
 class Conversation extends Component {
@@ -110,14 +112,24 @@ class Conversation extends Component {
   async loadListing() {
     const { messages } = this.props
     // find the most recent listing context or set empty value
-    const { listingAddress } =
-      [...messages].reverse().find(m => m.listingAddress) || {}
+    const { listingId } =
+      [...messages].reverse().find(m => m.listingId) || {}
     // get the listing
-    const listing = listingAddress
-      ? await origin.listings.get(listingAddress)
+    let listing = listingId
+      ? await origin.marketplace.getListing(listingId)
       : {}
     // if listing does not match state, store and check for a purchase
-    if (listing.address !== this.state.listing.address) {
+    if (listing.id !== this.state.listing.id) {
+      if (listing.id) {
+        const listingData = listing.ipfsData.data
+        const translatedListing = translateListingCategory(listingData)
+
+        listing = {
+          ...listing,
+          ...translatedListing
+        }
+      }
+
       this.setState({ listing })
       this.loadPurchase()
       this.scrollToBottom()
@@ -127,40 +139,32 @@ class Conversation extends Component {
   async loadPurchase() {
     const { web3Account } = this.props
     const { counterparty, listing, purchase } = this.state
-    const { address } = listing
 
     // listing may not be found
-    if (!address) {
-      return
+    if (!listing.id) {
+      return this.setState({ purchase: {} })
     }
 
-    const len = await origin.listings.purchasesLength(address)
-    const purchaseAddresses = await Promise.all(
-      [...Array(len).keys()].map(async i => {
-        return await origin.listings.purchaseAddressByIndex(address, i)
-      })
-    )
-    const purchases = await Promise.all(
-      purchaseAddresses.map(async addr => {
-        return await origin.purchases.get(addr)
-      })
-    )
-    const involvingCounterparty = purchases.filter(
-      p => p.buyer === counterparty.address || p.buyer === web3Account
+    const offers = await origin.marketplace.getOffers(listing.id)
+    const flattenedOffers = offers.map(o => {
+      return { ...o, ...o.ipfsData.data }
+    })
+    const involvingCounterparty = flattenedOffers.filter(
+      o => o.buyer === counterparty.address || o.buyer === web3Account
     )
     const mostRecent = involvingCounterparty.sort(
-      (a, b) => (a.index > b.index ? -1 : 1)
+      (a, b) => (a.createdAt > b.createdAt ? -1 : 1)
     )[0]
     // purchase may not be found
     if (!mostRecent) {
-      return
+      return this.setState({ purchase: {} })
     }
     // compare with existing state
     if (
       // purchase is different
-      mostRecent.address !== purchase.address ||
+      mostRecent.id !== purchase.id ||
       // stage has changed
-      mostRecent.stage !== purchase.stage
+      mostRecent.status !== purchase.status
     ) {
       this.setState({ purchase: mostRecent })
       this.scrollToBottom()
@@ -178,8 +182,8 @@ class Conversation extends Component {
   render() {
     const { id, intl, messages, web3Account } = this.props
     const { counterparty, listing, purchase } = this.state
-    const { address, name, pictures } = listing
-    const { buyer, created } = purchase
+    const { name, pictures } = listing
+    const { buyer, created, status } = purchase
     const perspective = buyer
       ? buyer === web3Account
         ? 'buyer'
@@ -191,7 +195,6 @@ class Conversation extends Component {
     const photo =
       pictures &&
       pictures.length > 0 &&
-      new URL(pictures[0]).protocol === 'data:' &&
       pictures[0]
     const canDeliverMessage = origin.messaging.canConverseWith(
       counterparty.address
@@ -200,7 +203,7 @@ class Conversation extends Component {
 
     return (
       <div className="conversation-col col-12 col-sm-8 col-lg-9 d-flex flex-column">
-        {address && (
+        {listing.id && (
           <div className="listing-summary d-flex">
             <div className="aspect-ratio">
               <div
@@ -275,6 +278,8 @@ class Conversation extends Component {
                   purchase={purchase}
                   perspective={perspective}
                   subdued={true}
+                  currentStep={parseInt(status)}
+                  maxStep={perspective === 'buyer' ? 3 : 4}
                 />
               )}
             </div>

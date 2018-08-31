@@ -424,7 +424,7 @@ class PurchaseDetail extends Component {
     const counterpartyUser = counterparty === 'buyer' ? buyer : seller
     const status = active ? 'active' : 'inactive'
     const maxStep = perspective === 'seller' ? 4 : 3
-    const step = Number(purchase.status)
+    const step = parseInt(purchase.status)
     const left = progressTriangleOffset(step, maxStep, perspective)
 
     const nextStep = perspective && this.nextSteps[step]
@@ -711,8 +711,8 @@ class PurchaseDetail extends Component {
               {counterpartyUser.address && (
                 <UserCard
                   title={counterparty}
-                  listingAddress={listing.address}
-                  purchaseAddress={purchase.address}
+                  listingId={listing.id}
+                  purchaseId={purchase.id}
                   userAddress={counterpartyUser.address}
                 />
               )}
@@ -720,7 +720,7 @@ class PurchaseDetail extends Component {
           </div>
           <div className="row">
             <div className="col-12 col-lg-8">
-              {listing.address && (
+              {listing.id && (
                 <Fragment>
                   <h2>
                     <FormattedMessage

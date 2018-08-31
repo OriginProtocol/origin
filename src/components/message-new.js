@@ -31,8 +31,8 @@ class MessageNew extends Component {
     const { content } = this.state
     const {
       history,
-      listingAddress,
-      purchaseAddress,
+      listingId,
+      purchaseId,
       recipientAddress
     } = this.props
     const newMessage = content.trim()
@@ -44,8 +44,8 @@ class MessageNew extends Component {
     try {
       const roomId = await origin.messaging.sendConvMessage(recipientAddress, {
         content: newMessage,
-        ...(listingAddress && { listingAddress }),
-        ...(purchaseAddress && { purchaseAddress })
+        ...(listingId && { listingId }),
+        ...(purchaseId && { purchaseId })
       })
 
       history.push(`/messages/${roomId}`)
