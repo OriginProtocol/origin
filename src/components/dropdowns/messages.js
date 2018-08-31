@@ -109,7 +109,7 @@ class MessagesDropdown extends Component {
                     defaultMessage={'Enable Messaging'}
                   />
                 </button>
-              )}
+              }
             </header>
             <div className="messages-list">
               {conversations.map(c => (
