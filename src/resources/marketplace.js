@@ -1,17 +1,41 @@
 import URL from 'url-parse'
 
-import { generateListingId, generateOfferId } from '../utils/id'
+import { generateListingId, generateOfferId, generateNotificationId } from '../utils/id'
 import { validateListing } from '../utils/schemaValidators'
 
 import Adaptable from './adaptable'
 
+const unreadStatus = 'unread'
+const readStatus = 'read'
+const notificationStatuses = [unreadStatus, readStatus]
+
+const storeKeys = {
+  notificationSubscriptionStart: 'notification_subscription_start',
+  notificationStatuses: 'notification_statuses'
+}
+
 class Marketplace extends Adaptable {
-  constructor({ contractService, ipfsService, fetch, indexingServerUrl }) {
+  constructor({
+    contractService,
+    ipfsService,
+    fetch,
+    indexingServerUrl,
+    store
+  }) {
     super(...arguments)
     this.contractService = contractService
     this.ipfsService = ipfsService
     this.indexingServerUrl = indexingServerUrl
     this.fetch = fetch
+
+    // initialize notifications
+    if (!store.get(storeKeys.notificationSubscriptionStart)) {
+      store.set(storeKeys.notificationSubscriptionStart, Date.now())
+    }
+    if (!store.get(storeKeys.notificationStatuses)) {
+      store.set(storeKeys.notificationStatuses, {})
+    }
+    this.store = store
   }
 
   async getListingsCount() {
@@ -322,6 +346,23 @@ class Marketplace extends Adaptable {
       )
 
       for (const notification of rawNotifications) {
+        notification.id = generateNotificationId({
+          network,
+          version,
+          transactionHash: notification.event.transactionHash
+        })
+        const timestamp = await this.contractService.getTimestamp(notification.event)
+        const timestampInMilli = timestamp * 1000
+        const isWatched =
+          timestampInMilli >
+          this.store.get(storeKeys.notificationSubscriptionStart)
+        const notificationStatuses = this.store.get(
+          storeKeys.notificationStatuses
+        )
+        notification.status =
+          isWatched && notificationStatuses[notification.id] !== readStatus
+            ? unreadStatus
+            : readStatus
         if (notification.resources.listingId) {
           notification.resources.listing = await this.getListing(
             `${network}-${version}-${notification.resources.listingId}`
@@ -339,6 +380,15 @@ class Marketplace extends Adaptable {
       notifications = notifications.concat(rawNotifications)
     }
     return notifications
+  }
+
+  async setNotification({ id, status }) {
+    if (!notificationStatuses.includes(status)) {
+      throw new Error(`invalid notification status: ${status}`)
+    }
+    const notifications = this.store.get(storeKeys.notificationStatuses)
+    notifications[id] = status
+    this.store.set(storeKeys.notificationStatuses, notifications)
   }
 }
 

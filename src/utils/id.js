@@ -32,9 +32,27 @@ function generateOfferId({ version, network, listingIndex, offerIndex }) {
   return [network, version, listingIndex, offerIndex].join(separator)
 }
 
+function parseNotificationId(notificationId) {
+  if (typeof notificationId !== 'string') {
+    throw new Error(`Notification id ${notificationId} must be a string`)
+  }
+  const exploded = notificationId.split(separator)
+  if (exploded.length < 3) {
+    throw new Error(`Invalid notification id: ${notificationId}`)
+  }
+  const [network, version, transactionHash] = exploded
+  return { network, version, transactionHash }
+}
+
+function generateNotificationId({ version, network, transactionHash }) {
+  return [network, version, transactionHash].join(separator)
+}
+
 module.exports = {
   parseListingId,
   generateListingId,
   parseOfferId,
-  generateOfferId
+  generateOfferId,
+  parseNotificationId,
+  generateNotificationId
 }

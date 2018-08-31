@@ -320,17 +320,15 @@ class MarkeplaceAdapter {
         const offer = listing.offers[offerId]
         if (offer.status === 'created') {
           notifications.push({
-            id: offer.event.transactionHash,
+            event: offer.event,
             type: 'seller_listing_purchased',
-            status: 'unread',
             resources: { listingId, offerId }
           })
         }
         if (offer.status === 'finalized') {
           notifications.push({
-            id: offer.event.transactionHash,
+            event: offer.event,
             type: 'seller_review_received',
-            status: 'unread',
             resources: { listingId, offerId }
           })
         }
@@ -342,9 +340,8 @@ class MarkeplaceAdapter {
       const offer = listing.offers[offerId]
       if (offer.status === 'accepted') {
         notifications.push({
-          id: offer.event.transactionHash,
+          event: offer.event,
           type: 'buyer_listing_shipped',
-          status: 'unread',
           resources: { listingId, offerId }
         })
       }
