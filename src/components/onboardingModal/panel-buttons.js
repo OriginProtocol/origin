@@ -48,8 +48,8 @@ export default class PanelButtons extends Component {
         </button>
       ),
       'Get Origin Tokens': (
-        <Link to="/about-origin">
-          <button key={'first-btn'} className='btn btn-primary btn-lg' onClick={this.aboutOrigin}>
+        <Link to="/about-tokens">
+          <button key={'first-btn'} className='btn btn-primary btn-lg'>
             Learn about Origin Tokens
           </button>
         </Link>
