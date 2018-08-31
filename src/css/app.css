@@ -1776,10 +1776,6 @@ select.form-control:not([size]):not([multiple]) {
   padding: 16px 0 0;
 }
 
-.listing-form .select-boost .info-icon {
-  cursor: pointer;
-}
-
 .listing-form .select-boost .rc-slider-rail {
   height: 15px;
   border-radius: 10px;
@@ -1814,6 +1810,71 @@ select.form-control:not([size]):not([multiple]) {
 
 .listing-form .select-boost .rc-slider.boost-level-Premium .rc-slider-track {
   background-color: var(--golden-rod);
+}
+
+.boost-slider {
+  position: relative;
+}
+
+.boost-slider p {
+  margin-bottom: 0;
+}
+
+.boost-slider .help-block {
+  font-size: 14px;
+  color: var(--bluey-grey);
+}
+
+.boost-slider .help-block a {
+  color: var(--clear-blue);
+}
+
+.boost-slider .info-icon {
+  cursor: pointer;
+  position: absolute;
+  top: 5px;
+  right: 0;
+}
+
+.boost-slider .level-container {
+  padding-top: 30px;
+  padding-bottom: 15px;
+}
+
+.boost-slider .level-container img {
+  margin-right: 6px;
+  height: 18px;
+  margin-top: -3px;
+}
+
+.boost-slider .amount-container {
+  float: right;
+}
+
+.boost-slider .amount-container span,
+.boost-slider .amount-container a {
+  font-size: 14px;
+}
+
+.boost-slider .amount-container a {
+  font-weight: bold;
+}
+
+.boost-slider .text-italics {
+  font-style: italic;
+  text-align: center;
+  padding: 30px 60px 0;
+}
+
+.boost-slider .rc-slider-track {
+  margin-left: -5px;
+  border-top-left-radius: 10px !important;
+  border-bottom-left-radius: 10px !important;
+}
+
+.boost-slider .bottom-explainer {
+  text-align: center;
+  padding: 15px;
 }
 
 .boost-tooltip {

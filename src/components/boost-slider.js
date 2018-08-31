@@ -1,6 +1,7 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { getFiatPrice } from 'utils/priceUtils'
 import Slider from 'rc-slider'
+import $ from 'jquery'
 
 class BoostSlider extends Component {
   constructor(props) {
@@ -55,6 +56,11 @@ class BoostSlider extends Component {
     this.setState({
       selectedBoostAmountUsd
     })
+    $('[data-toggle="tooltip"]').tooltip()
+  }
+
+  componentWillUnmount() {
+    $('[data-toggle="tooltip"]').tooltip('dispose')
   }
 
   getBoostLevel(value) {
@@ -96,12 +102,17 @@ class BoostSlider extends Component {
               <a href="#" target="_blank" rel="noopener noreferrer">Learn More</a>
             </div>`
           } />
-        <img src={ `images/boost-icon-${this.state.boostLevel}.svg` } role="presentation" />
-        { this.state.boostLevel }
-        <div>
-          <img src="images/ogn-icon.svg" role="presentation" />
-          { this.state.selectedBoostAmount } <a href="#" arget="_blank" rel="noopener noreferrer">OGN</a>
-          <span> | { this.state.selectedBoostAmountUsd } USD</span>
+        <div className="level-container">
+          <img src={ `images/boost-icon-${this.state.boostLevel}.svg` } role="presentation" />
+          { this.state.boostLevel }
+          <div className="amount-container">
+            <p>
+              <img src="images/ogn-icon.svg" role="presentation" />
+              { this.state.selectedBoostAmount }&nbsp;
+              <a href="#" arget="_blank" rel="noopener noreferrer">OGN</a>
+              <span className="help-block"> | { this.state.selectedBoostAmountUsd } USD</span>
+            </p>
+          </div>
         </div>
         <Slider
           className={ `boost-level-${this.state.boostLevel}` }
@@ -110,6 +121,12 @@ class BoostSlider extends Component {
           min={ this.props.min }
           max={ this.props.max } />
         <p className="text-italics">{ this.boostLevels[this.state.boostLevel].desc }</p>
+        <p className="help-block bottom-explainer">
+          Boosts are always calculated and charged in&nbsp;
+          <a href="#" arget="_blank" rel="noopener noreferrer">OGN</a>.&nbsp;
+          If there’s a problem with your listing, you forfeit this amount.&nbsp;
+          <a href="#" arget="_blank" rel="noopener noreferrer">Learn more &#x25b8;</a>
+        </p>
       </div>
     )
   }
