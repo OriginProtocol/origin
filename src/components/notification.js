@@ -8,8 +8,6 @@ import { fetchUser } from 'actions/User'
 
 import NotificationMessage from 'components/notification-message'
 
-import origin from '../services/origin'
-
 class Notification extends Component {
   constructor(props) {
     super(props)
