@@ -46,22 +46,42 @@ class Marketplace extends Adaptable {
   async getListing(listingId) {
     const { adapter, listingIndex } = this.parseListingId(listingId)
     const listing = await adapter.getListing(listingIndex)
+    const { offers } = listing
 
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(
       listing.ipfsHash
     )
     const ipfsJson = await this.ipfsService.loadObjFromFile(ipfsHash)
+    const ipfsData = ipfsJson && ipfsJson.data
 
     // Rewrite IPFS image URLs to use the configured IPFS gateway
-    if (ipfsJson && ipfsJson.data && ipfsJson.data.pictures) {
-      ipfsJson.data.pictures = ipfsJson.data.pictures.map(url => {
+    if (ipfsData && ipfsData.pictures) {
+      ipfsData.pictures = ipfsData.pictures.map(url => {
         return this.ipfsService.rewriteUrl(url)
       })
     }
 
+    const unitsForSale = (ipfsData && (typeof ipfsData.units !== 'undefined'))
+      ? ipfsData.units
+      : 1 // default value
+
+    const unitsSold = Object.keys(offers).reduce((acc, offerId) => {
+      const val = offers[offerId]
+      if (offers[offerId].status === 'created') {
+        return acc + 1
+      }
+      // TODO: we need to subtract 1 for every offer that is canceled
+      return acc
+    }, 0);
+
+    // units available is derived from units for sale and offers created.
+    // should never be negative
+    const unitsAvailable = Math.max(unitsForSale - unitsSold, 0)
+
     return Object.assign({}, listing, {
       id: listingId,
-      ipfsData: ipfsJson || {}
+      ipfsData: ipfsJson || {},
+      unitsAvailable
     })
   }
 
