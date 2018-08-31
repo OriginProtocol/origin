@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { withRouter } from 'react-router'
 import queryString from 'query-string'
-import { Range } from 'rc-slider'
 import $ from 'jquery'
 import 'rc-slider/assets/index.css'
 
@@ -13,6 +12,9 @@ import ListingsGrid from 'components/listings-grid'
 import SearchBar from 'components/search/searchbar'
 import { generalSearch } from 'actions/Search'
 import origin from '../../services/origin'
+import MultipleSelectionFilter from 'components/search/multiple-selection-filter'
+import PriceFilter from 'components/search/price-filter'
+import CounterFilter from 'components/search/counter-filter'
 
 class SearchResult extends Component {
   constructor(props) {
@@ -25,8 +27,6 @@ class SearchResult extends Component {
       listingIds: [],
       searchError: undefined
     }
-
-    this.handlePriceChange = this.handlePriceChange.bind(this)
 
     // set default prop values for search_query and listing_type
     const getParams = queryString.parse(this.props.location.search)
@@ -72,10 +72,16 @@ class SearchResult extends Component {
         listingSchema: undefined
       })
 
-      fetch(`schemas/searchFilters/${this.props.listingType}-search.json`)
+      const schemaPath = `schemas/searchFilters/${this.props.listingType}-search.json`
+
+      fetch(schemaPath)
         .then((response) => response.json())
         .then((schemaJson) => {
           this.setState({ filterSchema: schemaJson })
+        })
+        .catch(function(e) {
+          console.error(`Error reading schema ${schemaPath}: ${e}`)
+          throw e
         })
 
       if (this.shouldFetchListingSchema()) {
@@ -118,85 +124,45 @@ class SearchResult extends Component {
     return properties.reduce((prev, curr) => prev && prev[curr], this.state.listingSchema)
   }
 
-  renderMultipleSelectionFilter(multipleSelectionValues) {
-    return (
-      <div className="f-flex-column flex-wrap" key="multipleSelectionFilter">
-      {multipleSelectionValues.map(multipleSelectionValue =>
-        <div className="form-check" key={multipleSelectionValue}>
-          <input type="checkbox" className="form-check-input" id={multipleSelectionValue}/>
-          <label className="form-check-label" htmlFor={multipleSelectionValue}>
-            {
-              this.props.intl.formatMessage(schemaMessages[_.camelCase(this.state.listingType)][multipleSelectionValue])
-            }
-          </label>
-        </div>
-      )}
-      </div>
-    )
-  }
-
-  handlePriceChange([bottomAmount, topAmount]) {
-    $('#price-amount-from').text(`${bottomAmount}$`)
-    $('#price-amount-to').text(`${topAmount}$`)
-    $('#price-amount-display-from').text(`${bottomAmount}$`)
-    $('#price-amount-display-to').text(`${topAmount}$`)
-  }
-
-  renderPriceFilter(filter) {
-    const min = 0
-    const max = 500
-    return (
-      <div className="d-flex flex-column" key={filter.listingPropertyName}>
-        <div className="d-flex flex-row price-filter">
-          <div id="price-amount-from" className="mr-auto price-slider-amount">{min}$</div>
-          <div id="price-amount-to" className="price-slider-amount">{max}$</div>
-        </div>
-        <Range
-          min={min}
-          max={max}
-          defaultValue={[min, max]}
-          count={2}
-          pushable={(max-min)/20}
-          tipFormatter={value => `${value}$`}
-          onChange={this.handlePriceChange}
-        />
-        <div className="d-flex flex-row justify-content-between mt-4 price-filter">
-          <div className="d-flex flex-row">
-            <div id="price-amount-display-from" className="price-filter-amount">{min}</div>
-            <div className="price-filter-currency">$/night</div>
-          </div>
-          <div className="price-filter-dash">-</div>
-          <div className="d-flex flex-row">
-            <div id="price-amount-display-to" className="price-filter-amount">{max}</div>
-            <div className="price-filter-currency">$/night</div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  renderFilter(filter) {
+  renderFilter(filter, title) {
     if (filter.type == 'multipleSelectionFilter') {
-      return this.renderMultipleSelectionFilter(this.resolveFromListingSchema(filter.listingPropertyName))
+      return(
+        <MultipleSelectionFilter
+          filter={filter}
+          multipleSelectionValues={this.resolveFromListingSchema(filter.listingPropertyName)}
+          listingType={this.state.listingType}
+          title={title}
+        />
+      )
     } else if (filter.type == 'price') {
-      return this.renderPriceFilter(filter)
+      return (
+        <PriceFilter
+          filter={filter}
+        />
+      )
+    } else if (filter.type == 'counter') {
+      return(
+        <CounterFilter
+          filter={filter}
+        />
+      )
     } else {
       throw `Unrecognised filter type "${filter.type}".`
     }
   }
 
-  renderFilterGroup(filterGroup) {
+  renderFilterGroup(filterGroup, index) {
     const title = this.props.intl.formatMessage(filterGroup.title)
     const formId = `filter-group-${title}`
     return (
-      <li className="nav-item" key={title}>
+      <li className="nav-item" key={index}>
         <a className="nav-link" data-toggle="dropdown" data-parent="#search-filters-bar">
           {this.props.intl.formatMessage(filterGroup.title)}
         </a>
         <form className="dropdown-menu" id={formId}>
           <div className="d-flex flex-column">
             <div className="dropdown-form">
-            {filterGroup.items.map(filter => this.renderFilter(filter))}
+            {filterGroup.items.map(filter => this.renderFilter(filter, title))}
             </div>
             <div className="d-flex flex-row button-container">
               <a className="dropdown-button dropdown-button-left align-middle">
@@ -231,9 +197,9 @@ class SearchResult extends Component {
                 {
                   this.state.filterSchema
                     .items
-                    .map(filterGroup => {
+                    .map((filterGroup, index) => {
 
-                      return this.renderFilterGroup(filterGroup)  
+                      return this.renderFilterGroup(filterGroup, index)
                     })
                 }
               </ul>

@@ -11,9 +11,8 @@
       "items": [
         {
           "type": "price",
-          "listingPropertyName": "homeTypes",
-          "searchParameterName": "homeTypes",
-          "multipleSelection": true
+          "listingPropertyName": "properties.price.enum",
+          "searchParameterName": "price"
         }
       ],
       "actions": ["Clear", "Apply"]

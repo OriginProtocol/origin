@@ -551,9 +551,11 @@ a:hover {
   min-width: 260px;
 }
 
-.search-filters .dropdown-form label {
+.search-filters .dropdown-form label,
+.search-filters .dropdown-form .label {
   font-size: 1.2rem;
   font-weight: normal;
+  color: black;
 }
 
 .search-filters .dropdown-form .form-check-input {
