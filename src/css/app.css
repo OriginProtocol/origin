@@ -1753,7 +1753,8 @@ select.form-control:not([size]):not([multiple]) {
   color: var(--clear-blue);
 }
 
-.listing-form .select-boost .info-box p {
+.listing-form .select-boost .info-box p,
+.boost-slider .info-box p {
   font-size: 18px;
 }
 
@@ -1875,6 +1876,21 @@ select.form-control:not([size]):not([multiple]) {
 .boost-slider .bottom-explainer {
   text-align: center;
   padding: 15px;
+}
+
+.listing-form .select-boost .boost-slider .info-box {
+  padding: 10px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.boost-slider .info-box.warn {
+  background-color: var(--orange-red-light);
+  border: 1px solid var(--orange-red);
+}
+
+.boost-slider .info-box.warn p {
+  color: var(--orange-red);
 }
 
 .boost-tooltip {

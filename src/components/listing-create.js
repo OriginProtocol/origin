@@ -102,10 +102,10 @@ class ListingCreate extends Component {
     ]
 
     this.state = {
-      // TODO:John - remove these temp vars
-      ognBalance: 1,
-      step: this.STEP.BOOST,
-      // step: this.STEP.PICK_SCHEMA,
+      // TODO:John - wire up ognBalance and isFirstListing when ready
+      ognBalance: 0,
+      isFirstListing: true,
+      step: this.STEP.PICK_SCHEMA,
       selectedSchemaType: this.schemaList[0],
       selectedSchema: null,
       schemaFetched: false,
@@ -456,7 +456,7 @@ class ListingCreate extends Component {
                   />
                 </label>
                 <h2>Boost your listing</h2>
-                {!this.state.ognBalance &&
+                {this.state.isFirstListing &&
                   <div className="info-box">
                     <img src="images/ogn-icon-horiz.svg" role="presentation" />
                     <p className="text-bold">You have 0 <a href="#" arget="_blank" rel="noopener noreferrer">OGN</a> in your wallet.</p>
@@ -482,7 +482,7 @@ class ListingCreate extends Component {
                     }
                   </div>
                 }
-                {this.state.ognBalance > 0 &&
+                {!this.state.isFirstListing &&
                   <BoostSlider ognBalance={ this.state.ognBalance } min={ 0 } max={ 100 } defaultValue={ 50 } />
                 }
                 <div className="btn-container">

@@ -7,8 +7,14 @@ import $ from 'jquery'
 class BoostSlider extends Component {
   constructor(props) {
     super(props)
-    const { min, max, defaultValue } = this.props
+    const { min, max, defaultValue, ognBalance } = this.props
     const range = max - min
+    let defaultVal = defaultValue || 0
+    if (ognBalance === 0) {
+      defaultVal = 0
+    } else if (defaultValue > ognBalance) {
+      defaultVal = ognBalance
+    }
 
     this.boostLevels = {
       None: {
@@ -42,8 +48,8 @@ class BoostSlider extends Component {
     this.getBoostLevel = this.getBoostLevel.bind(this)
 
     this.state = {
-      selectedBoostAmount: defaultValue || 0,
-      boostLevel: this.getBoostLevel(defaultValue) || 0,
+      selectedBoostAmount: defaultVal,
+      boostLevel: this.getBoostLevel(defaultVal) || 0,
       selectedBoostAmountUsd: 0
     }
   }
@@ -122,6 +128,16 @@ class BoostSlider extends Component {
           min={ this.props.min }
           max={ this.props.max } />
         <p className="text-italics">{ this.boostLevels[this.state.boostLevel].desc }</p>
+        {this.props.ognBalance === 0 &&
+          <div className="info-box">
+            <p>You have 0 <a href="#" arget="_blank" rel="noopener noreferrer">OGN</a> in your wallet and cannot boost.</p>
+          </div>
+        }
+        {this.props.ognBalance < this.state.selectedBoostAmount &&
+          <div className="info-box warn">
+            <p>You don’t have enough OGN in your wallet.</p>
+          </div>
+        }
         <p className="help-block bottom-explainer">
           Boosts are always calculated and charged in&nbsp;
           <a href="#" arget="_blank" rel="noopener noreferrer">OGN</a>.&nbsp;
