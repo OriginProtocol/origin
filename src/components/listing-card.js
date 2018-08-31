@@ -24,7 +24,11 @@ class ListingCard extends Component {
       const listing = rawListing.ipfsData.data
       const translatedListing = translateListingCategory(listing)
 
-      this.setState({ ...translatedListing, loading: false })
+      this.setState({
+        ...rawListing,
+        ...translatedListing,
+        loading: false
+      })
     } catch (error) {
       console.error(
         `Error fetching contract or IPFS info for listingId: ${

@@ -2585,7 +2585,7 @@ form .stars img {
 .message .modal-content .address {
   font-size: 1.5rem;
   font-weight: normal;
-  word-break: break-all;
+  word-wrap: break-word;
 }
 
 .new-message {
