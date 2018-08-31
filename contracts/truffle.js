@@ -1,4 +1,4 @@
-var HDWalletProvider = require("truffle-hdwallet-provider");
+const HDWalletProvider = require("truffle-hdwallet-provider")
 
 // How many addresses in wallet should we unlock?
 // (For deploying test data, we use other addresses as buyers and sellers)
@@ -20,6 +20,13 @@ truffleSetup = {
       port: 8545,
       network_id: "*" // Match any network id
     },
+  },
+  coverage: {
+    host: "localhost",
+    network_id: "*",
+    port: 8555,         // <-- If you change this, also set the port option in .solcover.js.
+    gas: 0xfffffffffff, // <-- Use this high gas value
+    gasPrice: 0x01      // <-- Use this low gas price
   },
   solc: { optimizer: { enabled: true, runs: 200 } }
 }

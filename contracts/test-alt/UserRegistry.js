@@ -1,5 +1,5 @@
 import assert from 'assert'
-import helper from './_helper'
+import helper, { contractPath } from './_helper'
 
 describe('UserRegistry', async function() {
   let deploy, accounts, userRegistry
@@ -14,7 +14,7 @@ describe('UserRegistry', async function() {
   it('should be able to register a user', async function() {
     userRegistry = await deploy('UserRegistry', {
       from: accounts[0],
-      path: `${__dirname}/../contracts/identity/`
+      path: `${contractPath}/identity/`
     })
 
     const register = await userRegistry.methods.registerUser().send({ from: accounts[1] })

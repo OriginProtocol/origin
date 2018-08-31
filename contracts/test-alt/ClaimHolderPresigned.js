@@ -1,5 +1,5 @@
 import assert from 'assert'
-import helper from './_helper'
+import helper, { contractPath } from './_helper'
 
 const signature_1 =
   '0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c'
@@ -43,11 +43,11 @@ describe('ClaimHolderPresigned', async function() {
 
     userRegistry = await deploy('UserRegistry', {
       from: accounts[3],
-      path: `${__dirname}/../contracts/identity/`
+      path: `${contractPath}/identity/`
     })
     claimHolderPresigned = await deploy('ClaimHolderPresigned', {
       from: accounts[0],
-      path: `${__dirname}/../contracts/identity/`,
+      path: `${contractPath}/identity/`,
       args: [
         userRegistry._address,
         [attestation_1.claimType, attestation_2.claimType],

@@ -1,5 +1,5 @@
 import assert from 'assert'
-import helper from './_helper'
+import helper, { contractPath } from './_helper'
 
 describe('ClaimVerifier.sol', async function() {
   let web3, accounts, deploy, prvSigner, pubSigner
@@ -13,16 +13,16 @@ describe('ClaimVerifier.sol', async function() {
 
     UserIdentity = await deploy('ClaimHolder', {
       from: accounts[0],
-      path: `${__dirname}/../contracts/identity/`
+      path: `${contractPath}/identity/`
     })
     ClaimIssuer = await deploy('ClaimHolder', {
       from: accounts[1],
-      path: `${__dirname}/../contracts/identity/`
+      path: `${contractPath}/identity/`
     })
     ClaimVerifier = await deploy('ClaimVerifier', {
       from: accounts[2],
       args: [ClaimIssuer._address],
-      path: `${__dirname}/../contracts/identity/`
+      path: `${contractPath}/identity/`
     })
   })
 

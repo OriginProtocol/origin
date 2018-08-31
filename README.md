@@ -85,6 +85,18 @@ Our Solidity tests (which use [Truffle](http://truffleframework.com/docs/getting
 
 Note: you should *not* have the server running at this time, as these tests start their own local blockchain instance.
 
+To run contract tests and automatically re-run when files change:
+
+```
+npm run test:contractsw
+```
+
+To run contract tests and measure test coverage of Solidity code:
+
+```
+npm run test:contracts-coverage
+```
+
 ### Browser Tests
 
 A subset of our tests can be run from the browser. These tests are automatically served at `http://localhost:8081` when you run `npm start`. These tests are automatically rerun when source or test code is changed.

@@ -16,8 +16,17 @@ const solcOpts = {
   }
 }
 
+const solidityCoverage = (process.env['SOLIDITY_COVERAGE'] !== undefined)
+// Use solidity-coverage's forked testrpc if this is a coverage run
+const defaultProvider = solidityCoverage
+  ? 'ws://localhost:8555'
+  : 'ws://localhost:7545'
+export const contractPath = solidityCoverage
+  ? `${__dirname}/../../coverageEnv/contracts`
+  : `${__dirname}/../contracts`
+
 // Instantiate a web3 instance. Start a node if one is not already running.
-export async function web3Helper(provider = 'ws://localhost:7545') {
+export async function web3Helper(provider = defaultProvider) {
   const web3 = new Web3(provider)
   const instance = await server(web3, provider)
   return { web3, server: instance }
@@ -83,9 +92,10 @@ export default async function testHelper(contracts, provider) {
       }
 
       const LibContract = new web3.eth.Contract(libObj.abi)
+      const gas = solidityCoverage ? 3000000 * 3 : 3000000
       const libContract = await LibContract.deploy({
         data: libObj.evm.bytecode.object
-      }).send({ from, gas: 3000000 })
+      }).send({ from, gas: gas })
       const libs = { [`${linkedFile}:${linkedLib}`]: libContract._address }
       return linker.linkBytecode(bytecode.object, libs)
     }
@@ -135,7 +145,7 @@ export default async function testHelper(contracts, provider) {
           data,
           from,
           value: 0,
-          gas: 4612388,
+          gas: solidityCoverage ? 4612388 * 5 : 4612388,
           chainId
         })
         .once('transactionHash', hash => {

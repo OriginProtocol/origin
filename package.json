@@ -17,7 +17,8 @@
     "test:truffle": "node scripts/test-truffle.js",
     "test:js": "mocha --compilers js:babel-core/register --require babel-polyfill",
     "test:contracts": "mocha -r babel-register -r babel-polyfill -t 10000 --exit contracts/test-alt/",
-    "test:contractsw": "mocha -r babel-register -r babel-polyfill -t 10000 -w --watch-extensions sol contracts/test-alt/"
+    "test:contractsw": "mocha -r babel-register -r babel-polyfill -t 10000 -w --watch-extensions sol contracts/test-alt/",
+    "test:contracts-coverage": "SOLIDITY_COVERAGE=1 npx solidity-coverage"
   },
   "files": [
     "dist"
@@ -71,6 +72,7 @@
     "prettier-eslint-cli": "^4.7.1",
     "sinon": "^5.0.7",
     "solc": "^0.4.24",
+    "solidity-coverage": "^0.5.10",
     "truffle": "^4.1.8",
     "truffle-contract": "^3.0.5",
     "truffle-hdwallet-provider": "0.0.5",

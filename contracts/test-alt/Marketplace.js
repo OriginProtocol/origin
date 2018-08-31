@@ -1,5 +1,5 @@
 import assert from 'assert'
-import helper from './_helper'
+import helper, { contractPath } from './_helper'
 import marketplaceHelpers, { IpfsHash } from './_marketplaceHelpers'
 import Table from 'cli-table'
 import GasPriceInDollars from './_gasPriceInDollars'
@@ -58,7 +58,7 @@ describe('Marketplace.sol', async function() {
 
     OriginToken = await deploy('OriginToken', {
       from: Owner,
-      path: `${__dirname}/../contracts/token/`,
+      path: `${contractPath}/token/`,
       args: [12000]
     })
 
@@ -84,19 +84,19 @@ describe('Marketplace.sol', async function() {
     Marketplace = await deploy('V00_Marketplace', {
       from: Owner,
       // path: `${__dirname}/contracts/`,
-      path: `${__dirname}/../contracts/marketplace/v00`,
+      path: `${contractPath}/marketplace/v00`,
       file: 'Marketplace.sol',
       args: [OriginToken._address]
     })
 
     SellerIdentity = await deploy('ClaimHolder', {
       from: Seller,
-      path: `${__dirname}/../contracts/identity/`
+      path: `${contractPath}/identity/`
     })
 
     // BuyerIdentity = await deploy('ClaimHolder', {
     //   from: Buyer,
-    //   path: `${__dirname}/../contracts/identity`
+    //   path: `${contractPath}/identity`
     // })
 
     await OriginToken.methods.transfer(Seller, 400).send()
