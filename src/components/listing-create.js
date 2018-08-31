@@ -14,6 +14,7 @@ import ListingDetail from 'components/listing-detail'
 import Modal from 'components/modal'
 import PriceField from 'components/form-widgets/price-field'
 import PhotoPicker from 'components/form-widgets/photo-picker'
+import BoostSlider from 'components/boost-slider'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
 import { translateSchema } from 'utils/translationUtils'
@@ -32,11 +33,12 @@ class ListingCreate extends Component {
     this.STEP = {
       PICK_SCHEMA: 1,
       DETAILS: 2,
-      PREVIEW: 3,
-      METAMASK: 4,
-      PROCESSING: 5,
-      SUCCESS: 6,
-      ERROR: 7
+      BOOST: 3,
+      PREVIEW: 4,
+      METAMASK: 5,
+      PROCESSING: 6,
+      SUCCESS: 7,
+      ERROR: 8
     }
 
     const schemaTypeLabels = defineMessages({
@@ -100,6 +102,9 @@ class ListingCreate extends Component {
     ]
 
     this.state = {
+      // TODO:John - wire up ognBalance and isFirstListing when ready
+      ognBalance: 0,
+      isFirstListing: true,
       step: this.STEP.PICK_SCHEMA,
       selectedSchemaType: this.schemaList[0],
       selectedSchema: null,
@@ -107,11 +112,14 @@ class ListingCreate extends Component {
       formListing: { formData: null },
       currentProvider: getCurrentProvider(
         origin && origin.contractService && origin.contractService.web3
-      )
+      ),
+      isBoostExpanded: false
     }
 
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
+    this.onBoostSelected = this.onBoostSelected.bind(this)
+    this.toggleBoostBox = this.toggleBoostBox.bind(this)
   }
 
   handleSchemaSelection() {
@@ -181,10 +189,18 @@ class ListingCreate extends Component {
     } else {
       this.setState({
         formListing: formListing,
-        step: this.STEP.PREVIEW
+        step: this.STEP.BOOST
       })
       window.scrollTo(0, 0)
     }
+  }
+
+  onBoostSelected(amount) {
+    console.log(amount)
+    this.setState({
+      step: this.STEP.PREVIEW
+    })
+    window.scrollTo(0, 0)
   }
 
   async onSubmitListing(formListing, selectedSchemaType) {
@@ -212,6 +228,12 @@ class ListingCreate extends Component {
 
   resetToPreview() {
     this.setState({ step: this.STEP.PREVIEW })
+  }
+
+  toggleBoostBox() {
+    this.setState({
+      isBoostExpanded: !this.state.isBoostExpanded
+    })
   }
 
   render() {
@@ -419,6 +441,74 @@ class ListingCreate extends Component {
             </div>
           </div>
         )}
+        {this.state.step === this.STEP.BOOST && (
+          <div className="step-container select-boost">
+            <div className="row flex-sm-row-reverse">
+              <div className="col-md-5 offset-md-2">
+                {/* Wallet info and info boxes go here */}
+              </div>
+              <div className="col-md-5">
+                <label>
+                  <FormattedMessage
+                    id={'listing-create.stepNumberLabel'}
+                    defaultMessage={'STEP {stepNumber}'}
+                    values={{ stepNumber: Number(this.state.step) }}
+                  />
+                </label>
+                <h2>Boost your listing</h2>
+                {this.state.isFirstListing &&
+                  <div className="info-box">
+                    <img src="images/ogn-icon-horiz.svg" role="presentation" />
+                    <p className="text-bold">You have 0 <a href="#" arget="_blank" rel="noopener noreferrer">OGN</a> in your wallet.</p>
+                    <p>Once you acquire some OGN you will be able to boost your listing.</p>
+                    <p className="expand-btn" onClick={ this.toggleBoostBox }>
+                      What is a boost? <span className={ this.state.isBoostExpanded ? 'rotate-up' : '' }>&#x25be;</span>
+                    </p>
+                    {this.state.isBoostExpanded &&
+                      <div className="info-box-bottom">
+                        <hr/>
+                        <img src="images/boost-icon.svg" role="presentation" />
+                        <p className="text-bold">Boosting a listing on the Origin DApp</p>
+                        <p>
+                          Selling on the Origin DApp requires you, as the seller, to give a guarantee to the buyer in case there’s a problem with the product or service you’re offering. This is accomplished by giving your listing a “boost”.
+                        </p>
+                        <p>
+                          In addition to this, “boosting” your listing will allow it to have more visibility and appear higher in the list of available listings.
+                        </p>
+                        <p>
+                          Boosting on the Origin DApp is done using <a href="#" arget="_blank" rel="noopener noreferrer">Origin Tokens (OGN).</a>
+                        </p>
+                      </div>
+                    }
+                  </div>
+                }
+                {!this.state.isFirstListing &&
+                  <BoostSlider ognBalance={ this.state.ognBalance } min={ 0 } max={ 100 } defaultValue={ 50 } />
+                }
+                <div className="btn-container">
+                  <button
+                    type="button"
+                    className="btn btn-other"
+                    onClick={() =>
+                      this.setState({ step: this.STEP.DETAILS })
+                    }
+                  >
+                    <FormattedMessage
+                      id={'backButtonLabel'}
+                      defaultMessage={'Back'}
+                    />
+                  </button>
+                  <button
+                    className="float-right btn btn-primary"
+                    onClick={() => this.onBoostSelected()}
+                  >
+                    Review
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         {this.state.step >= this.STEP.PREVIEW && (
           <div className="step-container listing-preview">
             {this.state.step === this.STEP.METAMASK && (
@@ -584,7 +674,7 @@ class ListingCreate extends Component {
                 <div className="btn-container">
                   <button
                     className="btn btn-other float-left"
-                    onClick={() => this.setState({ step: this.STEP.DETAILS })}
+                    onClick={() => this.setState({ step: this.STEP.BOOST })}
                   >
                     <FormattedMessage
                       id={'listing-create.backButtonLabel'}
