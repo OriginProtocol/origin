@@ -16,6 +16,10 @@ export default class OnboardingModal extends Component {
     }
   }
 
+  componentWillUnmount() {
+    document.body.classList.remove('modal-open')
+  }
+
   render() {
     const { closeModal, openOnBoardingModal, learnMore, isOpen } = this.props
     const learnMoreContent = (
