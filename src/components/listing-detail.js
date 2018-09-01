@@ -69,22 +69,23 @@ class ListingsDetail extends Component {
   async loadListing() {
     try {
       const rawListing = await origin.marketplace.getListing(
-        this.props.listingAddress
+        this.props.listingId
       )
       const listing = rawListing.ipfsData.data
       const translatedListing = translateListingCategory(listing)
-      const obj = Object.assign({}, rawListing, translatedListing, {
-        loading: false,
-        status: rawListing.status
+
+      this.setState({
+        ...rawListing,
+        ...translatedListing,
+        loading: false
       })
-      this.setState(obj)
     } catch (error) {
       this.props.showAlert(
         this.props.formatMessage(this.intlMessages.loadingError)
       )
       console.error(
         `Error fetching contract or IPFS info for listing: ${
-          this.props.listingAddress
+          this.props.listingId
         }`
       )
       console.error(error)
@@ -94,7 +95,7 @@ class ListingsDetail extends Component {
   async loadReviews() {
     try {
       const reviews = await origin.marketplace.getListingReviews(
-        this.props.listingAddress
+        this.props.listingId
       )
       this.setState({ reviews })
     } catch (error) {
@@ -104,7 +105,7 @@ class ListingsDetail extends Component {
   }
 
   async componentWillMount() {
-    if (this.props.listingAddress) {
+    if (this.props.listingId) {
       // Load from IPFS
       await this.loadListing()
       await this.loadReviews()
@@ -129,7 +130,7 @@ class ListingsDetail extends Component {
       try {
         this.setState({ step: this.STEP.PROCESSING })
         const transactionReceipt = await origin.marketplace.makeOffer(
-          this.props.listingAddress,
+          this.props.listingId,
           { price: totalPrice },
           (confirmationCount, transactionReceipt) => {
             this.props.updateTransaction(confirmationCount, transactionReceipt)
@@ -152,7 +153,7 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    const isActive = this.state.status === 'active'
+    const isActive = !!this.state.unitsAvailable
     const buyersReviews = this.state.reviews
     const userIsSeller = this.state.seller === this.props.web3Account
 
@@ -405,7 +406,7 @@ class ListingsDetail extends Component {
               {this.state.seller && (
                 <UserCard
                   title="seller"
-                  listingAddress={this.props.listingAddress}
+                  listingId={this.props.listingId}
                   userAddress={this.state.seller}
                 />
               )}

@@ -41,8 +41,8 @@ class UserCard extends Component {
 
   render() {
     const {
-      listingAddress,
-      purchaseAddress,
+      listingId,
+      purchaseId,
       title,
       user,
       userAddress,
@@ -159,8 +159,8 @@ class UserCard extends Component {
           <MessageNew
             open={this.state.modalOpen}
             recipientAddress={userAddress}
-            listingAddress={listingAddress}
-            purchaseAddress={purchaseAddress}
+            listingId={listingId}
+            purchaseId={purchaseId}
             handleToggle={this.handleToggle}
           />
         )}
