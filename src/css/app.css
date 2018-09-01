@@ -1328,6 +1328,11 @@ a:hover {
   padding-top: 20px;
 }
 
+.onboarding .btn {
+  width: auto;
+  height: 50px;
+}
+
 .onboarding-modal {
   position: absolute;
   top: 75px;
@@ -1340,14 +1345,13 @@ a:hover {
 .onboarding-modal .left-panel,
 .onboarding-modal .right-panel {
   border-radius: 0 10px 10px 0;
-  min-height: 540px;
+  min-height: 520px;
 }
 
 .onboarding-modal .left-panel {
   padding: 4px;
   padding-left: 15px;
 }
-
 
 .onboarding-modal .left-panel .content:first-child {
   border-top-left-radius: 10px;
@@ -1440,13 +1444,17 @@ a:hover {
   background-color: var(--dark-grey-blue);
 }
 
+.onboarding-modal .right-panel .content {
+  padding-bottom: 2rem;
+}
+
+.onboarding-modal .right-panel .panel-buttons {
+  padding-bottom: 3rem;
+}
+
 .onboarding-modal .right-panel h3 {
   font-size: 1.5rem;
   margin: 1.125rem;
-}
-
-.onboarding-modal .btn-lg {
-  width: 70%;
 }
 
 .onboarding-modal .incomplete {

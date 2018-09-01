@@ -17,14 +17,14 @@ export default class PanelButtons extends Component {
     const buttons = {
       'Overview': (
         <button
-          className='btn btn-primary'
+          className='btn btn-primary btn-lg'
           onClick={displayNextStep}
         >
           Connect a Wallet
         </button>
       ),
       'Connect Wallet': (
-        <Fragment>
+        <div className="col-auto">
           <button key={'first-btn'}
             className='btn btn-primary btn-lg mb-3'
             onClick={this.connectMetaMask}
@@ -37,25 +37,27 @@ export default class PanelButtons extends Component {
           >
             Download Mobile Wallet
           </button>
-        </Fragment>
+        </div>
       ),
       'Connected': (
         <button
-          className='btn btn-primary'
+          className='btn btn-primary btn-lg'
           onClick={displayNextStep}
         >
-          Learn more
+          Learn about Origin Tokens
         </button>
       ),
       'Get Origin Tokens': (
-        <Link to="/about-tokens">
-          <button key={'first-btn'} className='btn btn-primary btn-lg'>
-            Learn about Origin Tokens
-          </button>
-        </Link>
+        <div className="col-auto">
+          <Link to="/about-tokens">
+            <button key={'first-btn'} className='btn btn-primary btn-lg'>
+              Learn more
+            </button>
+          </Link>
+        </div>
       )
     }
 
-    return <div className="m-5" > {buttons[step.name]} </div>
+    return <div className="panel-buttons"> {buttons[step.name]} </div>
   }
 }

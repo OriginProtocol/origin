@@ -43,12 +43,12 @@ export default class OnboardingModal extends Component {
         <img src="/images/eth-tokens.svg" alt="eth-tokens" />
         <h3>Get Started Selling on Origin!</h3>
         <p>Learn how to sell on our DApp today.</p>
-        <button className='btn btn-primary' onClick={() => openOnBoardingModal()}>Learn more</button>
+        <button className='btn btn-primary btn-lg' onClick={() => openOnBoardingModal()}>Learn more</button>
       </div>
     )
 
     return (
-      <div>
+      <div className="onboarding">
         {learnMore && (
           <Modal
             className={'getting-started'}

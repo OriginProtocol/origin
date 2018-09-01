@@ -7,14 +7,14 @@ export default class RightPanel extends Component {
     const {img, heading, content, name} = step
 
     return (
-      <div className="flex-column col-8 right-panel">
+      <div className="flex-column col-xs-12 col-sm-8 right-panel">
         <div className="text-right mt-2">
           <img src="/images/close-icon.svg" alt="close-icon" onClick={closeModal}/>
         </div>
         {img}
         <div>
           {heading}
-          {content}
+          <div className="content">{content}</div>
           <PanelButtons {...this.props}/>
         </div>
       </div>
