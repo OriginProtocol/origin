@@ -4,29 +4,33 @@ import Modal from 'components/modal'
 
 export default class OnboardingModal extends Component {
   componentDidMount() {
-    this.modalWillHide()
+    this.removeModalClasses()
   }
 
   componentDidUpdate() {
-    if (this.props.isOpen) {
-      this.modalWillShow()
-    }
-    this.modalWillHide()
+    if (this.props.isOpen) this.addModalClass()
+
+    this.removeModalClasses()
   }
 
   componentWillUnmount() {
-    this.modalWillHide()
+    this.removeModalClasses()
   }
 
-  modalWillShow() {
+  addModalClass() {
     window.scrollTo(0, 0)
     window.setTimeout(() => {
       document.body.classList.add('modal-open')
     }, 500);
   }
 
-  modalWillHide() {
-    document.body.classList.remove('modal-open')
+  removeModalClasses() {
+    if (!this.props.isOpen) {
+      document.body.classList.remove('modal-open')
+      const backdrop = document.getElementsByClassName('modal-backdrop')
+
+      backdrop.length && backdrop[0].classList.remove('modal-backdrop')
+    }
   }
 
   render() {
@@ -45,7 +49,14 @@ export default class OnboardingModal extends Component {
 
     return (
       <div>
-        {learnMore && <Modal className={'getting-started'} isOpen={learnMore} children={learnMoreContent}/>}
+        {learnMore && (
+          <Modal
+            className={'getting-started'}
+            isOpen={learnMore}
+            children={learnMoreContent}
+            backdrop={'noop'}
+          />
+        )}
         {isOpen && (
           <Fragment>
             <SplitPanel isOpen={isOpen} closeModal={closeModal('onBoardingModal')}/>
