@@ -4,24 +4,25 @@ import LeftPanel from './left-panel'
 import RightPanel from './right-panel'
 import steps from './steps'
 
-class OnboardingModal extends Component {
+class SplitPanel extends Component {
   constructor(props) {
     super(props)
-    this.state = {steps, currentStep: steps[0]}
 
     this.displayNextStep = this.displayNextStep.bind(this)
+
+    this.state = { steps, currentStep: steps[0] }
   }
 
   firstIncompleteStep() {
     const { steps } = this.state
 
-    return steps.find(({subStep, complete, subStepComplete}) => {
+    return steps.find(({ subStep, complete, subStepComplete }) => {
       return (!complete || complete && subStepComplete === false)
     })
   }
 
   displayNextStep() {
-    const { steps=[] } = this.state
+    const { steps = [] } = this.state
     const firstIncompleteStep = this.firstIncompleteStep()
     if (!firstIncompleteStep) return
 
@@ -59,7 +60,7 @@ class OnboardingModal extends Component {
 
     return (
       <div
-        className={`modal fade onboarding-modal ${isOpen && 'show'}`}
+        className={`modal fade onboarding-modal${isOpen ? ' show' : ''}`}
         tabIndex="-1"
         role="dialog"
         aria-hidden="true"
@@ -90,4 +91,4 @@ class OnboardingModal extends Component {
   }
 }
 
-export default OnboardingModal
+export default SplitPanel

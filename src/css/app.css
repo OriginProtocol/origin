@@ -1505,10 +1505,14 @@ a:hover {
 .modal.getting-started {
   top: auto;
   left: auto;
-  right: 40px;
+  right: 20px;
 }
 
-.getting-started .modal-content{
+.getting-started .modal-dialog {
+  padding: 20px;
+}
+
+.getting-started .modal-content {
   background-color: var(--pale-grey);
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.4);
   color: var(--dark);

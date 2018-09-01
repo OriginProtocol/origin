@@ -7,8 +7,8 @@ import { withRouter } from 'react-router'
 import { getListingIds } from 'actions/Listing'
 
 import ListingCard from 'components/listing-card'
-import OnboardingModal from 'components/onboardingModal'
 import Modal from 'components/modal'
+import OnboardingModal from 'components/onboarding-modal'
 
 class ListingsGrid extends Component {
   constructor(props) {
@@ -27,7 +27,7 @@ class ListingsGrid extends Component {
     this.props.getListingIds()
   }
 
-  closeModal(name='onBoardingModal') {
+  closeModal(name = 'onBoardingModal') {
     return () => {
       this.setState({ [name]: false })
     }
