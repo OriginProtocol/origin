@@ -7,8 +7,8 @@ export default class OnboardingModal extends Component {
     document.body.classList.remove('modal-open')
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.isOpen) {
+  componentDidUpdate() {
+    if (this.props.isOpen) {
       window.scrollTo(0, 0)
       window.setTimeout(() => {
         document.body.classList.add('modal-open')
