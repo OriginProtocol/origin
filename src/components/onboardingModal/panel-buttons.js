@@ -56,10 +56,6 @@ export default class PanelButtons extends Component {
       )
     }
 
-    return(
-      <div className="m-5" >
-        {buttons[step.name]}
-      </div>
-    )
+    return <div className="m-5" > {buttons[step.name]} </div>
   }
 }

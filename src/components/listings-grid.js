@@ -34,9 +34,7 @@ class ListingsGrid extends Component {
   }
 
   openOnBoardingModal() {
-    this.setState({ learnMore: false, onBoardingModal: true }, () => {
-      window.setTimeout(() => { document.body.classList.add('modal-open'); }, 500);
-    })
+    this.setState({ learnMore: false, onBoardingModal: true })
   }
 
   render() {

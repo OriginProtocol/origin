@@ -1327,6 +1327,11 @@ a:hover {
   padding-top: 20px;
 }
 
+.onboarding-modal {
+  position: absolute;
+  top: 153px;
+}
+
 .onboarding-modal .modal-lg {
   max-width: 770px !important;
 }
@@ -1335,6 +1340,12 @@ a:hover {
 .onboarding-modal .right-panel {
   border-radius: 0 10px 10px 0;
 }
+
+.onboarding-modal .left-panel {
+  padding-right: 0.25rem;
+  padding-top: 0.25rem;
+}
+
 
 .onboarding-modal .left-panel .content:first-child {
   border-top-left-radius: 10px;
@@ -1380,8 +1391,13 @@ a:hover {
   background-color: var(--dark);
 }
 
-.onboarding-modal .modal-content {
-  padding: 5px;
+.onboarding-modal .modal-content,
+.onboarding-modal .modal-body {
+  padding: 0;
+}
+
+.onboarding-modal .modal-body .container-fluid {
+  padding-left: 0.25rem;
 }
 
 .onboarding-modal .left-panel .content {
@@ -1428,7 +1444,7 @@ a:hover {
 }
 
 .onboarding-modal .btn-lg {
-  width: 90%;
+  width: 70%;
 }
 
 .onboarding-modal .incomplete {
@@ -1489,6 +1505,7 @@ a:hover {
 .modal.getting-started {
   top: auto;
   left: auto;
+  right: 40px;
 }
 
 .getting-started .modal-content{
