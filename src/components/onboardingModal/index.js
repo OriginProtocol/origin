@@ -4,19 +4,28 @@ import Modal from 'components/modal'
 
 export default class OnboardingModal extends Component {
   componentDidMount() {
-    document.body.classList.remove('modal-open')
+    this.modalWillHide()
   }
 
   componentDidUpdate() {
     if (this.props.isOpen) {
-      window.scrollTo(0, 0)
-      window.setTimeout(() => {
-        document.body.classList.add('modal-open')
-      }, 500);
+      this.modalWillShow()
     }
+    this.modalWillHide()
   }
 
   componentWillUnmount() {
+    this.modalWillHide()
+  }
+
+  modalWillShow() {
+    window.scrollTo(0, 0)
+    window.setTimeout(() => {
+      document.body.classList.add('modal-open')
+    }, 500);
+  }
+
+  modalWillHide() {
     document.body.classList.remove('modal-open')
   }
 
