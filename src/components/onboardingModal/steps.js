@@ -29,7 +29,7 @@ export default [
     heading: (
       <h3>Connect your Wallet</h3>
     ),
-    img: <img src="/images/eth-tokens.svg" alt="eth-tokens" />,
+    img: <img src="/images/metamask-mobile.svg" alt="eth-tokens" />,
     content: (
       <div>
         <p className="step-text">
@@ -41,7 +41,7 @@ export default [
     subStep: {
       name: 'Connected',
       heading: <h3>Metamask is connected</h3>,
-      img: <img src="/images/eth-tokens.svg" alt="eth-tokens" />,
+      img: <img src="/images/metamask.svg" alt="eth-tokens" />,
       content: (
         <div>
           <p className="step-text">
@@ -63,7 +63,7 @@ export default [
     heading: (
       <h3>Origin Tokens and Boosting</h3>
     ),
-    img: <img src="/images/eth-tokens.svg" alt="eth-tokens" />,
+    img: <img src="/images/ogn-token.svg" alt="eth-tokens" />,
     content: (
       <div>
         <p className="step-text">
