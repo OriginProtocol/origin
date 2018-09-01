@@ -94,7 +94,7 @@ const typeDefs = gql`
     num: Int!
     size: Int!
     total: Int!
-    listings: [Listing]
+    nodes: [Listing]
   }
 
   ######################
@@ -210,7 +210,7 @@ const resolvers = {
         num: 1,
         size: listings.length,
         total: 1,
-        listings: listings,
+        nodes: listings,
       }
     },
     listing(root, args, context, info) {
