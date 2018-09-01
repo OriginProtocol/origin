@@ -1339,11 +1339,12 @@ a:hover {
 .onboarding-modal .left-panel,
 .onboarding-modal .right-panel {
   border-radius: 0 10px 10px 0;
+  min-height: 540px;
 }
 
 .onboarding-modal .left-panel {
-  padding-right: 0.25rem;
-  padding-top: 0.25rem;
+  padding: 4px;
+  padding-left: 15px;
 }
 
 
