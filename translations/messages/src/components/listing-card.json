@@ -1,6 +1,6 @@
 [
   {
-    "id": "listing-card.featured",
-    "defaultMessage": "Featured"
+    "id": "listing-card.sold",
+    "defaultMessage": "Sold Out"
   }
 ]

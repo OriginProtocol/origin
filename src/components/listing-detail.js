@@ -75,6 +75,7 @@ class ListingsDetail extends Component {
       const translatedListing = translateListingCategory(listing)
 
       this.setState({
+        boostLevelIsPastSomeThreshold: !!Math.round(Math.random()),
         ...rawListing,
         ...translatedListing,
         loading: false
@@ -153,13 +154,13 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    const isActive = !!this.state.unitsAvailable
-    const buyersReviews = this.state.reviews
-    const userIsSeller = this.state.seller === this.props.web3Account
+    const { boostLevelIsPastSomeThreshold, category, currentProvider, description, ipfsHash, loading, name, pictures, price, reviews, seller, step, unitsAvailable } = this.state
+    const isActive = !!unitsAvailable
+    const userIsSeller = seller === this.props.web3Account
 
     return (
       <div className="listing-detail">
-        {this.state.step === this.STEP.METAMASK && (
+        {step === this.STEP.METAMASK && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img src="images/spinner-animation.svg" role="presentation" />
@@ -173,13 +174,13 @@ class ListingsDetail extends Component {
               id={'listing-detail.pressSubmitInMetaMask'}
               defaultMessage={'Press {submit} in {currentProvider} window'}
               values={{
-                currentProvider: this.state.currentProvider,
+                currentProvider,
                 submit: <span>&ldquo;Submit&rdquo;</span>
               }}
             />
           </Modal>
         )}
-        {this.state.step === this.STEP.PROCESSING && (
+        {step === this.STEP.PROCESSING && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img src="images/spinner-animation.svg" role="presentation" />
@@ -195,7 +196,7 @@ class ListingsDetail extends Component {
             />
           </Modal>
         )}
-        {this.state.step === this.STEP.PURCHASED && (
+        {step === this.STEP.PURCHASED && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img src="images/circular-check-button.svg" role="presentation" />
@@ -222,7 +223,7 @@ class ListingsDetail extends Component {
             </div>
           </Modal>
         )}
-        {this.state.step === this.STEP.ERROR && (
+        {step === this.STEP.ERROR && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img src="images/flat_cross_icon.svg" role="presentation" />
@@ -252,10 +253,10 @@ class ListingsDetail extends Component {
             </div>
           </Modal>
         )}
-        {(this.state.loading ||
-          (this.state.pictures && !!this.state.pictures.length)) && (
+        {(loading ||
+          (pictures && !!pictures.length)) && (
           <div className="carousel">
-            {this.state.pictures.map(pictureUrl => (
+            {pictures.map(pictureUrl => (
               <div className="photo" key={pictureUrl}>
                 <img src={pictureUrl} role="presentation" />
               </div>
@@ -263,34 +264,33 @@ class ListingsDetail extends Component {
           </div>
         )}
 
-        <div
-          className={`container listing-container${
-            this.state.loading ? ' loading' : ''
-          }`}
-        >
+        <div className={`container listing-container${loading ? ' loading' : ''}`}>
           <div className="row">
             <div className="col-12 col-md-8 detail-info-box">
-              <div className="category placehold">{this.state.category}</div>
+              <div className="category placehold d-flex">
+                <div>{category}</div>
+                {!loading && boostLevelIsPastSomeThreshold &&
+                  <span className="boosted badge">Boosted</span>
+                }
+              </div>
               <h1 className="title text-truncate placehold">
-                {this.state.name}
+                {name}
               </h1>
-              <p className="description placehold">{this.state.description}</p>
+              <p className="description placehold">{description}</p>
               {/* Via Stan 5/25/2018: Hide until contracts allow for unitsAvailable > 1 */}
               {/*!!unitsAvailable && unitsAvailable < 5 &&
                 <div className="units-available text-danger">
                   <FormattedMessage
                     id={ 'listing-detail.unitsAvailable' }
                     defaultMessage={ 'Just {unitsAvailable} left!' }
-                    values={{ unitsAvailable: <FormattedNumber value={ this.state.unitsAvailable } /> }}
+                    values={{ unitsAvailable: <FormattedNumber value={ unitsAvailable } /> }}
                   />
                 </div>
               */}
-              {this.state.ipfsHash && (
+              {ipfsHash && (
                 <div className="ipfs link-container">
                   <a
-                    href={origin.ipfsService.gatewayUrlForHash(
-                      this.state.ipfsHash
-                    )}
+                    href={origin.ipfsService.gatewayUrlForHash(ipfsHash)}
                     target="_blank"
                   >
                     <FormattedMessage
@@ -310,28 +310,28 @@ class ListingsDetail extends Component {
                   <FormattedMessage
                     id={'listing-detail.IPFS'}
                     defaultMessage={'IPFS: {ipfsHash}'}
-                    values={{ ipfsHash: this.state.ipfsHash }}
+                    values={{ ipfsHash }}
                   />
                 </li>
                 <li>
                   <FormattedMessage
                     id={'listing-detail.seller'}
                     defaultMessage={'Seller: {sellerAddress}'}
-                    values={{ sellerAddress: this.state.seller }}
+                    values={{ sellerAddress: seller }}
                   />
                 </li>
                 <li>
                   <FormattedMessage
                     id={'listing-detail.IPFS'}
                     defaultMessage={'IPFS: {ipfsHash}'}
-                    values={{ ipfsHash: this.state.ipfsHash }}
+                    values={{ ipfsHash }}
                   />
                 </li>
               </div>
             </div>
             <div className="col-12 col-md-4">
-              {!!this.state.price &&
-                !!parseFloat(this.state.price) && (
+              {!!price &&
+                !!parseFloat(price) && (
                 <div className="buy-box placehold">
                   <div className="price d-flex justify-content-between">
                     <div>
@@ -341,7 +341,7 @@ class ListingsDetail extends Component {
                       />
                     </div>
                     <div className="text-right">
-                      {Number(this.state.price).toLocaleString(undefined, {
+                      {Number(price).toLocaleString(undefined, {
                         maximumFractionDigits: 5,
                         minimumFractionDigits: 5
                       })}
@@ -365,14 +365,13 @@ class ListingsDetail extends Component {
                                       {Number(price).toLocaleString(undefined, {minimumFractionDigits: 5, maximumFractionDigits: 5})} ETH
                                     </div>
                                   </div> */}
-                  {!this.state.loading && (
+                  {!loading && (
                     <div className="btn-container">
                       {isActive &&
                           !userIsSeller && (
                         <button
                           className="btn btn-primary"
                           onClick={this.handleBuyClicked}
-                          // disabled={!this.state.address}
                           onMouseDown={e => e.preventDefault()}
                         >
                           <FormattedMessage
@@ -387,29 +386,25 @@ class ListingsDetail extends Component {
                               My Listings
                         </Link>
                       )}
-                      {!isActive && (
-                        <div className="sold-banner">
-                          <img
-                            src="images/sold-tag.svg"
-                            role="presentation"
-                          />
+                      {!isActive &&
+                        <span className="sold badge">
                           <FormattedMessage
                             id={'listing-detail.soldOut'}
                             defaultMessage={'Sold Out'}
                           />
-                        </div>
-                      )}
+                        </span>
+                      }
                     </div>
                   )}
                 </div>
               )}
-              {this.state.seller && (
+              {seller &&
                 <UserCard
                   title="seller"
                   listingId={this.props.listingId}
-                  userAddress={this.state.seller}
+                  userAddress={seller}
                 />
-              )}
+              }
             </div>
           </div>
           {this.props.withReviews && (
@@ -424,10 +419,10 @@ class ListingsDetail extends Component {
                     />
                     &nbsp;
                     <span className="review-count">
-                      <FormattedNumber value={buyersReviews.length} />
+                      <FormattedNumber value={reviews.length} />
                     </span>
                   </h2>
-                  {buyersReviews.map(r => (
+                  {reviews.map(r => (
                     <Review key={r.transactionHash} review={r} />
                   ))}
                   {/* To Do: pagination */}
