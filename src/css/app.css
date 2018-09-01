@@ -99,6 +99,7 @@ a:hover {
 }
 
 .badge {
+  font-size: 0.75rem;
   padding: 0.4em 0.5em;
 }
 
@@ -1474,10 +1475,23 @@ a:hover {
   opacity: 1;
 }
 
+.tooltip .arrow::before {
+  border-top-color: var(--dark-grey-blue);
+}
+
 .tooltip .tooltip-inner {
-  padding: 1.2rem;
-  max-width: 250px;
   background: var(--dark-grey-blue);
+  font-weight: normal;
+  max-width: 250px;
+  padding: 1.2rem;
+}
+
+.tooltip .tooltip-inner a {
+  color: var(--golden-rod);
+}
+
+.tooltip .tooltip-inner a:hover {
+  color: var(--mustard);
 }
 
 .tooltip img {
@@ -1532,6 +1546,10 @@ a:hover {
 
 .listing-card a {
   color: var(--dark);
+}
+
+.listing-card .category :first-child {
+  margin-right: auto;
 }
 
 .listing-card.loading .category {
@@ -1593,25 +1611,16 @@ a:hover {
   font-size: 0.625rem;
 }
 
-.listing-card .featured.badge {
-  background-color: var(--golden-rod);
+.sold.badge {
+  background-color: var(--dark);
   color: white;
-  vertical-align: text-bottom;
+  margin-bottom: auto;
 }
 
-.listing-card .sold-banner {
-  display: inline-block;
-  width: 70px;
-  height: 22px;
-  line-height: 22px;
-  background-image: url(images/card-sold-tag.svg);
-  background-repeat: no-repeat;
-  background-position: left;
-  background-size: 58px 20px;
-  font-weight: 600;
-  font-size: 12px;
+.boosted.badge {
+  background-color: var(--golden-rod);
   color: white;
-  padding: 0.8px 8px 5px 20px;
+  margin: 0 0 auto 10px;
 }
 
 .listing.image-container {
@@ -1710,6 +1719,10 @@ a:hover {
 .loading p {
   min-height: 124px;
   width: 100%;
+}
+
+.listing-container .boosted {
+  margin-left: auto;
 }
 
 .listing-container.loading .buy-box {

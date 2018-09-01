@@ -66,14 +66,6 @@ class ListingCardPrices extends Component {
                 </div>
               </div>
             </div>
-            {this.props.unitsAvailable === 0 && (
-              <span className="sold-banner">
-                <FormattedMessage
-                  id={'listing-card-prices.sold'}
-                  defaultMessage={'Sold'}
-                />
-              </span>
-            )}
           </Fragment>
         </div>
       </div>
