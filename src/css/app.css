@@ -1534,10 +1534,16 @@ a:hover {
   padding-top: 15px;
 }
 
-.getting-started .text-right img {
+.getting-started .text-right span {
   position: absolute;
-  top: 10px;
+  top: 0;
   right: 10px;
+}
+
+.getting-started .close-icon {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--steel);
 }
 
 .listing-card {

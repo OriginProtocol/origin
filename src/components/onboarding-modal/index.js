@@ -38,7 +38,7 @@ export default class OnboardingModal extends Component {
     const learnMoreContent = (
       <div>
         <div className="text-right">
-          <img src="/images/close-icon.svg" alt="close-icon" onClick={closeModal('learnMore')}/>
+          <span className="close-icon" alt="close-icon" onClick={closeModal('learnMore')}>&#215;</span>
         </div>
         <img src="/images/eth-tokens.svg" alt="eth-tokens" />
         <h3>Get Started Selling on Origin!</h3>
