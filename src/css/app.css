@@ -1695,6 +1695,7 @@ a:hover {
 
 .buy-box .boost-level .help-block {
   color: var(--steel);
+  display: block;
 }
 
 .carousel {

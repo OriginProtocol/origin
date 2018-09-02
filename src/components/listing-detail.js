@@ -408,7 +408,7 @@ class ListingsDetail extends Component {
                             <img src="images/ogn-icon.svg" role="presentation" />
                             <span className="font-bold">{ boostAmount }</span>&nbsp;
                             <span className="font-blue font-bold">OGN</span>
-                            <p className="help-block">1.00 USD</p>
+                            <span className="help-block">1.00 USD</span>
                           </p>
                         </div>
                       </div>
