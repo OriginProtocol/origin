@@ -15,10 +15,10 @@ import { getBalance } from 'actions/Wallet'
 
 import Avatar from 'components/avatar'
 import Modal from 'components/modal'
+import Wallet from 'components/wallet'
 
-import Services from './_Services'
-import Wallet from './_Wallet'
 import Guidance from './_Guidance'
+import Services from './_Services'
 import Strength from './_Strength'
 
 import EditProfile from './EditProfile'
@@ -381,6 +381,8 @@ class Profile extends Component {
                 balance={this.props.balance}
                 address={this.props.address}
                 identityAddress={this.props.identityAddress}
+                withMenus={true}
+                withProfile={false}
               />
               <Guidance />
             </div>

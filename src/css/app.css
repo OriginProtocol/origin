@@ -3675,8 +3675,86 @@ sup {
   word-wrap: break-word;
 }
 
-.wallet .eth {
+.wallet .address {
   overflow: auto;
+}
+
+.wallet .balances > .d-flex {
+  line-height: 1;
+  padding-top: 1rem;
+}
+
+.wallet .balances > .d-flex > img {
+  margin-right: 8px;
+}
+
+.wallet .balances {
+  color: var(--light);
+}
+
+.wallet .balances .eth,
+.wallet .balances .ogn {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.wallet .amounts {
+  flex-grow: 1;
+}
+
+.wallet .amounts .symbol {
+  font-size: 0.625rem;
+  margin-left: 8px;
+}
+
+.wallet .eth .symbol {
+  color: var(--bluish-purple);
+}
+
+.wallet .ogn .symbol {
+  color: var(--clear-blue);
+}
+
+.wallet .amounts .usd {
+  color: var(--steel);
+  font-size: 0.625rem;
+  padding-top: 8px;
+}
+
+.wallet .dropdown {
+  height: 22px;
+  padding: 3px 0;
+}
+
+.wallet .dropdown button {
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  height: 16px;
+  padding: 0 10px;
+}
+
+.wallet .dropdown .dot {
+  background-color: var(--steel);
+  border-radius: 50%;
+  height: 4px;
+  width: 4px;
+}
+
+.wallet .dropdown-menu {
+  background-color: var(--dark-grey-blue);
+  margin-top: 8px;
+}
+
+.wallet .dropdown-item {
+  color: white;
+  font-weight: normal;
+  padding: 0.5rem 1.5rem;
+}
+
+.wallet .dropdown-item:hover {
+  background-color: var(--dark-grey-blue);
 }
 
 .publish {
@@ -3709,9 +3787,7 @@ sup {
 }
 
 .profile-wrapper .wallet img.identicon {
-  height: 30px;
   margin-right: 10px;
-  width: 30px;
 }
 
 .wallet .detail:not(:last-of-type) {
