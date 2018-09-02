@@ -12,7 +12,7 @@ Origin Box currently supports the following components:
 - [origin-bridge](https://github.com/originprotocol/origin-bridge)
 - [origin-website](https://github.com/originprotocol/origin-website)
 
-Each repo is symlinked from the container to a local directory. You may edit the source code using your favorite editor. The repo directories just normal git repositories, so you can treat them as you would any other git repository. You can make changes, commit them, and change branches—and the container will be automatically kept in sync.
+Each repo is symlinked from the container to a local directory. You may edit the source code using your favorite editor. The repo directories are just normal git repositories, so you can treat them as you would any other git repository. You can make changes, commit them, and change branches — and the container will be automatically kept in sync.
 
 Note that origin-box supports two separate development stacks: One is the standard Origin Protocol stack consisting of origin-js, origin-bridge, and origin-dapp repositories, and the other is the the Origin website (https://originprotocol.com) stack consisting of the origin-website repository.
 
@@ -25,9 +25,9 @@ Origin Box has several intended use cases:
 
 ## System Requirements
 
-- Docker **version 18 or greater**:
+- [Docker](https://docs.docker.com/install/overview/) **version 18 or greater**:
 `docker --version`
-- Git:
+- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git):
 `git --version`
 - Unix-based system (OSX or Linux) needed to run the bash scripts
 
