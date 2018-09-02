@@ -68,7 +68,7 @@ class PriceField extends Component {
               </span>
             </div>
           </div>
-          <div className="col-sm-6">
+          <div className="col-sm-6 no-left-padding">
             <div className="price-field-fiat">
               { this.state.priceUsd }&nbsp;
               <span className="currency-badge text-grey">

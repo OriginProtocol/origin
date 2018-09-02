@@ -2180,6 +2180,10 @@ select.form-control:not([size]):not([multiple]) {
   padding-top: 10px;
 }
 
+.price-field .no-left-padding {
+  padding-left: 0;
+}
+
 .price-field-container {
   position: relative;
 }
