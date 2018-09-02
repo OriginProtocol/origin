@@ -121,7 +121,6 @@
   "listing-detail.viewOnIpfs": "View on IPFS",
   "listing-detail.IPFS": "IPFS: {ipfsHash}",
   "listing-detail.seller": "Seller: {sellerAddress}",
-  "listing-detail.price": "Price",
   "listing-detail.ethereumCurrencyAbbrev": "ETH",
   "listing-detail.buyNow": "Buy Now",
   "listing-detail.soldOut": "Sold Out",

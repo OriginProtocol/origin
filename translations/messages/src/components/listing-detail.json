@@ -56,10 +56,6 @@
     "defaultMessage": "Seller: {sellerAddress}"
   },
   {
-    "id": "listing-detail.price",
-    "defaultMessage": "Price"
-  },
-  {
     "id": "listing-detail.ethereumCurrencyAbbrev",
     "defaultMessage": "ETH"
   },

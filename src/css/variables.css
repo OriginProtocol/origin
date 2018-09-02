@@ -39,4 +39,10 @@
   --dark-purple: #a27cff;
 
   --default-radius: 5px;
+
+  /* Boost Colors */
+  --boost-low: var(--pale-yellow);
+  --boost-medium: var(--mustard);
+  --boost-high: var(--gold);
+  boost-premium: var(--golden-rod);
 }

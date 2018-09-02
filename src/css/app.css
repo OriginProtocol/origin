@@ -1632,9 +1632,13 @@ a:hover {
 }
 
 .boosted.badge {
-  background-color: var(--golden-rod);
   color: white;
   margin: 0 0 auto 10px;
+  text-transform: uppercase;
+}
+
+.boosted.badge span {
+  padding-right: 5px;
 }
 
 .listing.image-container {
@@ -1649,8 +1653,48 @@ a:hover {
   margin-bottom: 1rem;
 }
 
+.buy-box .price {
+  font-size: 2rem;
+}
+
+.buy-box .price img {
+  height: 1.8rem;
+  margin-right: 10px;
+  margin-top: -5px;
+}
+
 .buy-box .text-right {
+  text-align: right;
+}
+
+.buy-box hr {
+  color: var(--dusk);
+}
+
+.buy-box .font-bold {
   font-weight: bold;
+}
+
+.buy-box .font-blue {
+  color: var(--clear-blue);
+}
+
+.buy-box .boost-level p {
+  color: white;
+  margin-bottom: 0;
+}
+
+.buy-box .boost-level a {
+  font-size: 14px;
+}
+
+.buy-box .boost-level img {
+  margin-right: 5px;
+  margin-top: -5px;
+}
+
+.buy-box .boost-level .help-block {
+  color: var(--steel);
 }
 
 .carousel {
@@ -2066,19 +2110,35 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .listing-form .select-boost .rc-slider.boost-level-Low .rc-slider-track {
-  background-color: var(--pale-yellow);
+  background-color: var(--boost-low);
 }
 
 .listing-form .select-boost .rc-slider.boost-level-Medium .rc-slider-track {
-  background-color: var(--mustard);
+  background-color: var(--boost-medium);
 }
 
 .listing-form .select-boost .rc-slider.boost-level-High .rc-slider-track {
-  background-color: var(--gold);
+  background-color: var(--boost-high);
 }
 
 .listing-form .select-boost .rc-slider.boost-level-Premium .rc-slider-track {
-  background-color: var(--golden-rod);
+  background-color: var(--boost-premium);
+}
+
+.boost-Low {
+  background: var(--boost-low);
+}
+
+.boost-Medium {
+  background: var(--boost-medium);
+}
+
+.boost-High {
+  background: var(--boost-high);
+}
+
+.boost-Premium {
+  background: var(--boost-premium);
 }
 
 .boost-slider {

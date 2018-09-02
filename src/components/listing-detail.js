@@ -53,7 +53,10 @@ class ListingsDetail extends Component {
       step: this.STEP.VIEW,
       currentProvider: getCurrentProvider(
         origin && origin.contractService && origin.contractService.web3
-      )
+      ),
+      // TODO:John - wire up boost level & boost amount to actual data
+      boostLevel: 'Medium',
+      boostAmount: 10
     }
 
     this.intlMessages = defineMessages({
@@ -75,7 +78,6 @@ class ListingsDetail extends Component {
       const translatedListing = translateListingCategory(listing)
 
       this.setState({
-        boostLevelIsPastSomeThreshold: !!Math.round(Math.random()),
         ...rawListing,
         ...translatedListing,
         loading: false
@@ -154,7 +156,7 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    const { boostLevelIsPastSomeThreshold, category, currentProvider, description, ipfsHash, loading, name, pictures, price, reviews, seller, step, unitsAvailable } = this.state
+    const { boostLevel, boostAmount, category, currentProvider, description, ipfsHash, loading, name, pictures, price, reviews, seller, step, unitsAvailable } = this.state
     const isActive = !!unitsAvailable
     const userIsSeller = seller === this.props.web3Account
 
@@ -269,8 +271,11 @@ class ListingsDetail extends Component {
             <div className="col-12 col-md-8 detail-info-box">
               <div className="category placehold d-flex">
                 <div>{category}</div>
-                {!loading && boostLevelIsPastSomeThreshold &&
-                  <span className="boosted badge">Boosted</span>
+                {!loading && boostLevel &&
+                  <span className={ `boosted badge boost-${boostLevel}` }>
+                    <span>&#x2197;</span>
+                    { boostLevel }
+                  </span>
                 }
               </div>
               <h1 className="title text-truncate placehold">
@@ -333,24 +338,17 @@ class ListingsDetail extends Component {
               {!!price &&
                 !!parseFloat(price) && (
                 <div className="buy-box placehold">
-                  <div className="price d-flex justify-content-between">
-                    <div>
-                      <FormattedMessage
-                        id={'listing-detail.price'}
-                        defaultMessage={'Price'}
-                      />
-                    </div>
-                    <div className="text-right">
-                      {Number(price).toLocaleString(undefined, {
-                        maximumFractionDigits: 5,
-                        minimumFractionDigits: 5
-                      })}
-                        &nbsp;
-                      <FormattedMessage
-                        id={'listing-detail.ethereumCurrencyAbbrev'}
-                        defaultMessage={'ETH'}
-                      />
-                    </div>
+                  <div className="price">
+                    <img src="images/eth-icon.svg" role="presentation" />
+                    {Number(price).toLocaleString(undefined, {
+                      maximumFractionDigits: 5,
+                      minimumFractionDigits: 5
+                    })}
+                      &nbsp;
+                    <FormattedMessage
+                      id={'listing-detail.ethereumCurrencyAbbrev'}
+                      defaultMessage={'ETH'}
+                    />
                   </div>
                   {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
                   {/* <div className="quantity d-flex justify-content-between">
@@ -396,6 +394,26 @@ class ListingsDetail extends Component {
                       }
                     </div>
                   )}
+                  {boostLevel &&
+                    <div className="boost-level">
+                      <hr/>
+                      <div className="row">
+                        <div className="col-sm-6">
+                          <p>Boost Level</p>
+                          <a href="#" target="_blank" rel="noopener noreferrer">What is this?</a>
+                        </div>
+                        <div className="col-sm-6 text-right">
+                          <p>{ boostLevel }</p>
+                          <p>
+                            <img src="images/ogn-icon.svg" role="presentation" />
+                            <span className="font-bold">{ boostAmount }</span>&nbsp;
+                            <span className="font-blue font-bold">OGN</span>
+                            <p className="help-block">1.00 USD</p>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  }
                 </div>
               )}
               {seller &&
