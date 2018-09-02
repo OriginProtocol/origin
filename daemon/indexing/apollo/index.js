@@ -201,11 +201,7 @@ const resolvers = {
     async listings(root, args, context, info) {
       // TODO: handle pagination (including enforcing MaxResultsPerPage), filters, order.
       let listings = []
-      if (args.searchQuery) {
-        listings = await search.Listing.search(args.searchQuery)
-      }  else {
-        listings = await db.Listing.all()
-      }
+      listings = await search.Listing.search(args.searchQuery)
       return {
         num: 1,
         size: listings.length,

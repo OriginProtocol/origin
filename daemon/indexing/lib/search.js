@@ -93,14 +93,18 @@ class Listing {
    * @returns A list of listings (can be empty).
    */
   static async search(query) {
+    const esQuery = {}
+    if (query !== undefined){
+      esQuery.match = {'description': query}
+    } else {
+      esQuery.match_all = {}
+    }
     const resp = await client.search({
       index: indexName,
       type: listingsType,
       // TODO(franck): update query to search against other fields than just description.
       body: {
-        query: {
-          match: {'description': query}
-        },
+        query: esQuery,
       }
     })
     const listings = []
