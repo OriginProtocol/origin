@@ -1578,7 +1578,7 @@ a:hover {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.4);
   color: var(--dark);
   padding-top: 15px;
-  min-width: 370px;
+  max-width: 370px;
 }
 
 .getting-started .text-right span {
