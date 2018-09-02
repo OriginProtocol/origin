@@ -100,7 +100,7 @@
   "listing-create.error1": "There was a problem creating this listing.",
   "listing-create.error2": "See the console for more details.",
   "listing-create.OK": "OK",
-  "listing-create.previewListingHeading": "Preview your listing",
+  "listing-create.reviewListingHeading": "Review your listing",
   "listing-create.whatHappensNextHeading": "What happens next?",
   "listing-create.whatHappensNextContent1": "When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network.",
   "listing-create.IPFS": "IPFS",

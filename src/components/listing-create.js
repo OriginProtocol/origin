@@ -10,14 +10,14 @@ import {
   upsert as upsertTransaction
 } from '../actions/Transaction'
 
-import ListingDetail from 'components/listing-detail'
 import Modal from 'components/modal'
 import PriceField from 'components/form-widgets/price-field'
 import PhotoPicker from 'components/form-widgets/photo-picker'
 import BoostSlider from 'components/boost-slider'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
-import { translateSchema } from 'utils/translationUtils'
+import { translateSchema, translateListingCategory } from 'utils/translationUtils'
+import { getFiatPrice } from 'utils/priceUtils'
 
 import origin from '../services/origin'
 
@@ -113,13 +113,22 @@ class ListingCreate extends Component {
       currentProvider: getCurrentProvider(
         origin && origin.contractService && origin.contractService.web3
       ),
-      isBoostExpanded: false
+      isBoostExpanded: false,
+      usdListingPrice: 0
     }
 
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
     this.onBoostSelected = this.onBoostSelected.bind(this)
     this.toggleBoostBox = this.toggleBoostBox.bind(this)
+    this.updateUsdPrice = this.updateUsdPrice.bind(this)
+  }
+
+  async updateUsdPrice() {
+    const usdListingPrice = await getFiatPrice(this.state.formListing.formData.price, 'USD')
+    this.setState({
+      usdListingPrice
+    })
   }
 
   handleSchemaSelection() {
@@ -201,6 +210,7 @@ class ListingCreate extends Component {
       step: this.STEP.PREVIEW
     })
     window.scrollTo(0, 0)
+    this.updateUsdPrice()
   }
 
   async onSubmitListing(formListing, selectedSchemaType) {
@@ -237,6 +247,8 @@ class ListingCreate extends Component {
   }
 
   render() {
+    const { formData } = this.state.formListing
+    const translatedFormData = (formData && formData.category && translateListingCategory(formData)) || {}
     return (
       <div className="container listing-form">
         {this.state.step === this.STEP.PICK_SCHEMA && (
@@ -618,8 +630,8 @@ class ListingCreate extends Component {
                 </label>
                 <h2>
                   <FormattedMessage
-                    id={'listing-create.previewListingHeading'}
-                    defaultMessage={'Preview your listing'}
+                    id={'listing-create.reviewListingHeading'}
+                    defaultMessage={'Review your listing'}
                   />
                 </h2>
               </div>
@@ -667,10 +679,86 @@ class ListingCreate extends Component {
               </div>
               <div className="col-md-7">
                 <div className="preview">
-                  <ListingDetail
-                    listingJson={this.state.formListing.formData}
-                  />
+                  <div className="row">
+                    <div className="col-md-3">
+                      <p className="label">Title</p>
+                    </div>
+                    <div className="col-md-9">
+                      <p>{ translatedFormData.name }</p>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-3">
+                      <p className="label">Category</p>
+                    </div>
+                    <div className="col-md-9">
+                      <p>{ translatedFormData.category }</p>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-3">
+                      <p className="label">Description</p>
+                    </div>
+                    <div className="col-md-9">
+                      <p>{ translatedFormData.description }</p>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-3">
+                      <p className="label">Location</p>
+                    </div>
+                    <div className="col-md-9">
+                      <p>{ translatedFormData.location }</p>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-3">
+                      <p className="label">Photos</p>
+                    </div>
+                    <div className="col-md-9 photo-row">
+                      {
+                        translatedFormData.pictures &&
+                        translatedFormData.pictures.map((dataUri, idx) => 
+                          <img src={ dataUri } role="presentation" key={ idx } />
+                        )
+                      }
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-3">
+                      <p className="label">Listing Price</p>
+                    </div>
+                    <div className="col-md-9">
+                      <p>
+                        <img className="eth-icon" src="images/eth-icon.svg" role="presentation" />
+                        <span className="text-bold">{ translatedFormData.price }</span>&nbsp;
+                        <a className="eth-abbrev" href="#" target="_blank" rel="noopener noreferrer">ETH</a>
+                        <span className="help-block">
+                          &nbsp;| { this.state.usdListingPrice } USD&nbsp;
+                          <span className="text-uppercase">(Approximate Value)</span>
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-3">
+                      <p className="label">Boost Level</p>
+                    </div>
+                    <div className="col-md-9">
+                      <p className="boost-level">Medium</p>
+                      <p>
+                        <img className="ogn-icon" src="images/ogn-icon.svg" role="presentation" />
+                        <span className="text-bold">20</span>&nbsp;
+                        <a className="ogn-abbrev" href="#" target="_blank" rel="noopener noreferrer">OGN</a>
+                        <span className="help-block">
+                          &nbsp;| 2.50 USD&nbsp;
+                          <span className="text-uppercase">(Approximate Value)</span>
+                        </span>
+                      </p>
+                    </div>
+                  </div>
                 </div>
+                <a className="bottom-cta" href="#" target="_blank" rel="noopener noreferrer">Preview in browser</a>
                 <div className="btn-container">
                   <button
                     className="btn btn-other float-left"

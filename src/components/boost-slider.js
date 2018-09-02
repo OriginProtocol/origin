@@ -112,7 +112,7 @@ class BoostSlider extends Component {
             <p>
               <img src="images/ogn-icon.svg" role="presentation" />
               { this.state.selectedBoostAmount }&nbsp;
-              <a href="#" arget="_blank" rel="noopener noreferrer">OGN</a>
+              <a href="#" target="_blank" rel="noopener noreferrer">OGN</a>
               <span className="help-block"> | { this.state.selectedBoostAmountUsd } USD</span>
             </p>
           </div>
@@ -126,7 +126,7 @@ class BoostSlider extends Component {
         <p className="text-italics">{ this.boostLevels[this.state.boostLevel].desc }</p>
         {this.props.ognBalance === 0 &&
           <div className="info-box">
-            <p>You have 0 <a href="#" arget="_blank" rel="noopener noreferrer">OGN</a> in your wallet and cannot boost.</p>
+            <p>You have 0 <a href="#" target="_blank" rel="noopener noreferrer">OGN</a> in your wallet and cannot boost.</p>
           </div>
         }
         {this.props.ognBalance < this.state.selectedBoostAmount &&
@@ -136,9 +136,9 @@ class BoostSlider extends Component {
         }
         <p className="help-block bottom-explainer">
           Boosts are always calculated and charged in&nbsp;
-          <a href="#" arget="_blank" rel="noopener noreferrer">OGN</a>.&nbsp;
+          <a href="#" target="_blank" rel="noopener noreferrer">OGN</a>.&nbsp;
           If there’s a problem with your listing, you forfeit this amount.&nbsp;
-          <a href="#" arget="_blank" rel="noopener noreferrer">Learn more &#x25b8;</a>
+          <a href="#" target="_blank" rel="noopener noreferrer">Learn more &#x25b8;</a>
         </p>
       </div>
     )
