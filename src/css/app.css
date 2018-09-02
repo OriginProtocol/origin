@@ -1339,13 +1339,14 @@ a:hover {
 }
 
 .onboarding-modal .modal-lg {
-  max-width: 770px !important;
+  max-width: 770px;
 }
 
 .onboarding-modal .left-panel,
 .onboarding-modal .right-panel {
   border-radius: 0 10px 10px 0;
-  min-height: 520px;
+  height: 530px;
+  overflow-x: auto;
 }
 
 .onboarding-modal .left-panel {
@@ -1452,6 +1453,11 @@ a:hover {
   padding-bottom: 3rem;
 }
 
+.onboarding-modal .right-panel .btn-lg {
+  min-width: 270px;
+  max-width: 333px;
+}
+
 .onboarding-modal .right-panel h3 {
   font-size: 1.5rem;
   margin: 1.125rem;
@@ -1531,6 +1537,26 @@ a:hover {
   right: 20px;
 }
 
+.getting-started img {
+  margin-bottom: 25px;
+}
+
+.getting-started .title,
+.getting-started .content {
+  white-space: nowrap;
+}
+
+.getting-started .title {
+  font-weight: bold;
+  font-size: 1.25rem;
+  margin-bottom: 5px;
+}
+
+.getting-started .content {
+  font-size: 1rem;
+  margin-bottom: 25px;
+}
+
 .getting-started .modal-dialog {
   padding: 20px;
 }
@@ -1540,12 +1566,17 @@ a:hover {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.4);
   color: var(--dark);
   padding-top: 15px;
+  min-width: 370px;
 }
 
 .getting-started .text-right span {
   position: absolute;
   top: 0;
   right: 10px;
+}
+
+.getting-started button.btn-lg {
+  width: 80%;
 }
 
 .getting-started .close-icon {
@@ -2289,8 +2320,8 @@ select.form-control:not([size]):not([multiple]) {
   left: -8px;
   top: 50%;
   transform: translateY(-50%);
-  width: 0; 
-  height: 0; 
+  width: 0;
+  height: 0;
   border-top: 7px solid transparent;
   border-right: 7px solid var(--light);
   border-bottom: 7px solid transparent;
@@ -2303,8 +2334,8 @@ select.form-control:not([size]):not([multiple]) {
   left: -6px;
   top: 50%;
   transform: translateY(-50%);
-  width: 0; 
-  height: 0; 
+  width: 0;
+  height: 0;
   border-top: 9px solid transparent;
   border-right: 9px solid var(--pale-grey-eight);
   border-bottom: 9px solid transparent;

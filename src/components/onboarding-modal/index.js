@@ -41,9 +41,12 @@ export default class OnboardingModal extends Component {
           <span className="close-icon" alt="close-icon" onClick={closeModal('learnMore')}>&#215;</span>
         </div>
         <img src="/images/eth-tokens.svg" alt="eth-tokens" />
-        <h3>Get Started Selling on Origin!</h3>
-        <p>Learn how to sell on our DApp today.</p>
-        <button className='btn btn-primary btn-lg' onClick={() => openOnBoardingModal()}>Learn more</button>
+        <p className="title">Get Started Selling on Origin!</p>
+        <p className="content">Learn how to sell on our DApp today.</p>
+
+        <div className="col-auto">
+          <button className='btn btn-primary btn-lg' onClick={() => openOnBoardingModal()}>Learn more</button>
+        </div>
       </div>
     )
 

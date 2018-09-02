@@ -17,14 +17,14 @@ export default class PanelButtons extends Component {
     const buttons = {
       'Overview': (
         <button
-          className='btn btn-primary btn-lg'
+          className='btn btn-primary'
           onClick={displayNextStep}
         >
           Connect a Wallet
         </button>
       ),
       'Connect Wallet': (
-        <div className="col-auto">
+        <div className="d-flex flex-column align-items-center">
           <button key={'first-btn'}
             className='btn btn-primary btn-lg mb-3'
             onClick={this.connectMetaMask}
@@ -41,7 +41,7 @@ export default class PanelButtons extends Component {
       ),
       'Connected': (
         <button
-          className='btn btn-primary btn-lg'
+          className='btn btn-primary'
           onClick={displayNextStep}
         >
           Learn about Origin Tokens
@@ -50,7 +50,7 @@ export default class PanelButtons extends Component {
       'Get Origin Tokens': (
         <div className="col-auto">
           <Link to="/about-tokens">
-            <button key={'first-btn'} className='btn btn-primary btn-lg'>
+            <button key={'first-btn'} className='btn btn-primary'>
               Learn more
             </button>
           </Link>
