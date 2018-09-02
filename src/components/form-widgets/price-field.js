@@ -45,31 +45,44 @@ class PriceField extends Component {
   render() {
     return(
       !this.priceHidden &&
-      <Fragment>
+      <div className="price-field">
         <label className="control-label" htmlFor="root_price">
           {this.props.schema.title}
           {this.props.required &&
             <span className="required">*</span>
           }
         </label>
-        <div className="price-field-container">
-          <input
-            type="number"
-            id="root_price"
-            className="price-field form-control"
-            value={ this.state.price }
-            onChange={ this.onChange() }
-            required={ this.props.required } />
-          <span>
-            <img src="images/eth-icon.svg" role="presentation" />
-            ETH
-          </span>
+        <div className="row">
+          <div className="col-sm-6">
+            <div className="price-field-container">
+              <input
+                type="number"
+                id="root_price"
+                className="price-field form-control"
+                value={ this.state.price }
+                onChange={ this.onChange() }
+                required={ this.props.required } />
+              <span className="currency-badge">
+                <img src="images/eth-icon.svg" role="presentation" />
+                ETH
+              </span>
+            </div>
+          </div>
+          <div className="col-sm-6">
+            <div className="price-field-fiat">
+              { this.state.priceUsd }&nbsp;
+              <span className="currency-badge text-grey">
+                {/* TODO:John - use correct dollar-sign icon here when available */}
+                <img src="images/eth-icon.svg" role="presentation" />
+                {this.state.currencyCode}
+              </span>
+            </div>
+          </div>
         </div>
-        <p className="help-block fiat">{ this.state.priceUsd }{this.state.currencyCode}</p>
         <p className="help-block">
-          The cost to buy this listing. Price is always in <a href="https://en.wikipedia.org/wiki/Ethereum" target="_blank" rel="noopener noreferrer">ETH</a>, USD is an estimate.
+          The cost to buy this listing. Price is always in <a href="https://en.wikipedia.org/wiki/Ethereum" target="_blank" rel="noopener noreferrer">ETH</a>, <span className="text-bold">USD is an estimate.</span>
         </p>
-      </Fragment>
+      </div>
     )
   }
 }

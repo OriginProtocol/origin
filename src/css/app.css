@@ -2176,11 +2176,15 @@ select.form-control:not([size]):not([multiple]) {
   color: var(--clear-blue);
 }
 
+.price-field .help-block {
+  padding-top: 10px;
+}
+
 .price-field-container {
   position: relative;
 }
 
-.price-field-container span {
+.currency-badge {
   position: absolute;
   right: 10px;
   top: 50%;
@@ -2194,10 +2198,51 @@ select.form-control:not([size]):not([multiple]) {
   font-weight: bold;
 }
 
-.price-field-container span img {
+.currency-badge img {
   height: 14px;
   margin-top: -2px;
   padding-right: 5px;
+}
+
+.currency-badge.text-grey {
+  color: var(--steel);
+}
+
+.price-field-fiat {
+  background: var(--pale-grey-eight);
+  border: 1px solid var(--light);
+  color: var(--steel);
+  padding: 8px 12px 0;
+  position: relative;
+  height: 100%;
+  border-radius: 5px;
+}
+
+.price-field-fiat::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0; 
+  height: 0; 
+  border-top: 7px solid transparent;
+  border-right: 7px solid var(--light);
+  border-bottom: 7px solid transparent;
+  border-right-color: rgba(0, 0, 0, 0.2);
+}
+
+.price-field-fiat::after {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0; 
+  height: 0; 
+  border-top: 9px solid transparent;
+  border-right: 9px solid var(--pale-grey-eight);
+  border-bottom: 9px solid transparent;
 }
 
 .help-block {
@@ -2209,10 +2254,8 @@ select.form-control:not([size]):not([multiple]) {
   color: var(--bluish-purple);
 }
 
-.help-block.fiat {
-  font-weight: normal;
-  color: var(--steel);
-  font-size: 0.75rem;
+.text-bold {
+  font-weight: bold;
 }
 
 /* Sales */
