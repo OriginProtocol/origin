@@ -1675,6 +1675,7 @@ a:hover {
 }
 
 .boosted.badge {
+  background-color: var(--golden-rod);
   color: white;
   margin: 0 0 auto 10px;
   text-transform: uppercase;

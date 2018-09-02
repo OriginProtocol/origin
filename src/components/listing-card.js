@@ -95,7 +95,7 @@ class ListingCard extends Component {
                 className="boosted badge"
                 data-toggle="tooltip"
                 title="Tell me <a href='https://originprotocol.com' target='_blank'>More</a> about what this means."
-              >Boosted</span>
+              >&#x2197;</span>
             }
           </div>
           <h2 className="title placehold text-truncate">{name}</h2>
