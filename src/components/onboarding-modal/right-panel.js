@@ -14,7 +14,7 @@ export default class RightPanel extends Component {
         {img}
         <div>
           {heading}
-          <div className="content">{content}</div>
+          <div className="content text-left">{content}</div>
           <PanelButtons {...this.props}/>
         </div>
       </div>

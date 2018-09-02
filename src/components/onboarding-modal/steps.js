@@ -43,11 +43,9 @@ export default [
       heading: <h3>Metamask is connected</h3>,
       img: <img src="/images/metamask.svg" alt="eth-tokens" />,
       content: (
-        <div>
+        <div className="connected">
           <p className="step-text">
-            We&#39;ve detected a Metamask wallet.
-          </p>
-          <p className="step-text">
+            We&#39;ve detected a Metamask wallet. <br />
             You&#39;re one step closer to selling on the Origin DApp. Click the
             button below to learn about Origin Tokens and boosting your listings.
           </p>
@@ -67,7 +65,7 @@ export default [
     content: (
       <div>
         <p className="step-text">
-          Origin Tokens (Symbol: OGN) are used on the Origin DApp to boost your listings.
+          Origin Tokens (Symbol: <mark className="ogn">OGN</mark>) are used on the Origin DApp to boost your listings.
         </p>
         <p className="step-text">
           Boosting will give your listing more visibility and also works as a
