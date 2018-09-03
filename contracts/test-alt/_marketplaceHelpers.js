@@ -7,7 +7,6 @@ export default function({
   Seller,
   OriginToken,
   MarketArbitrator,
-  Arbitrator,
   ArbitratorAddr,
   trackGas
 }) {
@@ -61,7 +60,7 @@ export default function({
       2, // Commission
       value,
       '0x0',
-      MarketArbitrator._address
+      ArbitratorAddr
     ]
     if (withdraw !== undefined) {
       args.push(withdraw)
@@ -82,20 +81,18 @@ export default function({
     return { listingID, offerID }
   }
 
-  async function disputedOffer({ party = Buyer, refund = '0' }) {
+  async function disputedOffer({ party = Buyer }) {
     const { listingID, offerID } = await listingWithAcceptedOffer()
 
-    const dispute = await Marketplace.methods
-      .dispute(listingID, offerID, IpfsHash, refund)
+    await Marketplace.methods
+      .dispute(listingID, offerID, IpfsHash)
       .send({ from: Buyer })
       .once('receipt', trackGas('Dispute Offer'))
-
-    const { disputeID } = dispute.events.OfferDisputed.returnValues
 
     const eth = await web3.eth.getBalance(party)
     const ogn = await OriginToken.methods.balanceOf(Buyer).call()
 
-    return { listingID, offerID, disputeID, balance: {
+    return { listingID, offerID, balance: {
       eth: new web3.utils.BN(eth),
       ogn: new web3.utils.BN(ogn)
     } }
@@ -108,9 +105,9 @@ export default function({
       .once('receipt', trackGas('Accept Offer'))
   }
 
-  async function giveRuling({ disputeID, ruling, party = Buyer }) {
-    await Arbitrator.methods
-      .giveRuling(disputeID, ruling)
+  async function giveRuling({ listingID, offerID, ruling, refund = 0, party = Buyer }) {
+    await Marketplace.methods
+      .executeRuling(listingID, offerID, IpfsHash, ruling, refund)
       .send({ from: ArbitratorAddr })
 
     const eth = await web3.eth.getBalance(party)
