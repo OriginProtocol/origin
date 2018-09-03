@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Range } from 'rc-slider'
+import $ from 'jquery'
 
 import schemaMessages from '../../schemaMessages/index'
 
@@ -10,6 +11,7 @@ class PriceFilter extends Component {
 
     this.handlePriceChange = this.handlePriceChange.bind(this)
   }
+  
   handlePriceChange([bottomAmount, topAmount]) {
     $('#price-amount-from').text(`${bottomAmount}$`)
     $('#price-amount-to').text(`${topAmount}$`)

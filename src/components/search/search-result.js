@@ -15,6 +15,7 @@ import origin from '../../services/origin'
 import MultipleSelectionFilter from 'components/search/multiple-selection-filter'
 import PriceFilter from 'components/search/price-filter'
 import CounterFilter from 'components/search/counter-filter'
+import DateFilterGroup from 'components/search/date-filter'
 
 class SearchResult extends Component {
   constructor(props) {
@@ -27,6 +28,8 @@ class SearchResult extends Component {
       listingIds: [],
       searchError: undefined
     }
+
+    this.dateFilters = []
 
     // set default prop values for search_query and listing_type
     const getParams = queryString.parse(this.props.location.search)
@@ -146,6 +149,20 @@ class SearchResult extends Component {
           filter={filter}
         />
       )
+    } else if (filter.type == 'date') {
+      return(
+        <DateFilterGroup
+          filter={filter}
+          onChildMounted={child => {
+            this.dateFilters.push(child)
+          }}
+          onChildUnMounted={child => {
+            const index = this.dateFilters.indexOf(child)
+            if (index !== -1)
+              this.dateFilters.splice(index, 1)
+          }}
+        />
+      )
     } else {
       throw `Unrecognised filter type "${filter.type}".`
     }
@@ -154,9 +171,20 @@ class SearchResult extends Component {
   renderFilterGroup(filterGroup, index) {
     const title = this.props.intl.formatMessage(filterGroup.title)
     const formId = `filter-group-${title}`
+    const containsDateFilter = filterGroup.items.some(filter => filter.type == 'date')
+
     return (
       <li className="nav-item" key={index}>
-        <a className="nav-link" data-toggle="dropdown" data-parent="#search-filters-bar">
+        <a onClick={() => {
+            if (!containsDateFilter)
+              return
+
+            this.dateFilters.forEach(dateFilter => dateFilter.onOpen())
+          }}
+          className="nav-link"
+          data-toggle="dropdown"
+          data-parent="#search-filters-bar"
+        >
           {this.props.intl.formatMessage(filterGroup.title)}
         </a>
         <form className="dropdown-menu" id={formId}>
@@ -197,9 +225,8 @@ class SearchResult extends Component {
                 {
                   this.state.filterSchema
                     .items
-                    .map((filterGroup, index) => {
-
-                      return this.renderFilterGroup(filterGroup, index)
+                    .map((topLevelFilter, index) => {
+                      return this.renderFilterGroup(topLevelFilter, index)
                     })
                 }
               </ul>

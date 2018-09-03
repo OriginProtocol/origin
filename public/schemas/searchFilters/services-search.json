@@ -46,6 +46,18 @@
         }
       ],
       "actions": ["Clear", "Apply"]
+    },
+    {
+      "title": {
+        "id": "schema.services.date",
+        "defaultMessage": "Date"
+      },
+      "type": "filterGroup",
+      "items": [{
+        "type": "date",
+        "searchParameterName": "date"
+      }],
+      "actions": ["Clear", "Apply"]
     }
   ]
 }

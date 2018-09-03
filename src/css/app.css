@@ -2,6 +2,7 @@
 @import 'variables.css';
 @import 'bootstrap.css';
 @import '../../node_modules/rc-slider/assets/index.css';
+@import '../../node_modules/react-dates/lib/css/_datepicker.css';
 
 html {
   font-size: 16px;
@@ -500,7 +501,7 @@ a:hover {
   cursor: pointer;
 }
 
-/* SearchResult */
+/* SearchResult / Search Filters */
 
 .search-filters ul {
   padding-top: 4px;
@@ -665,6 +666,54 @@ a:hover {
   height: 15px;
   border-radius: 0px;
   background-color: var(--steel);
+}
+
+.search-filters .date-readonly-input {
+  color: var(--bluey-grey);
+  font-size: 1rem;
+  background-color: var(--pale-grey-four);
+  border: solid 1px var(--light);
+  border-radius: 5px;
+  max-width: 130px;
+  padding: 0.6rem 0.7rem;
+}
+
+.search-filters .CalendarMonth_caption,
+.search-filters .CalendarDay__default {
+  color: var(--dark);
+  font-weight: normal;
+}
+
+.search-filters .DayPickerNavigation_button__horizontalDefault {
+  border-radius: 5px;
+}
+
+.search-filters .DayPicker_transitionContainer {
+  border-radius: 5px;
+  border: 1px solid --var(--light);
+}
+
+.search-filters .CalendarDay__selected,
+.search-filters .CalendarDay__selected:active,
+.search-filters .CalendarDay__selected:hover {
+  background-color: var(--dusk);
+  border: 1px solid var(--dusk);
+}
+
+.CalendarDay__selected_span:active,
+.CalendarDay__selected_span:hover {
+  border-color: var(--light-dusk);
+}
+
+.search-filters .CalendarDay__hovered_span,
+.search-filters .CalendarDay__hovered_span:hover {
+  border: 1px solid var(--dusk);
+  background-color: var(--light-dusk);
+}
+
+.search-filters .CalendarDay__selected_span {
+  background-color: var(--light-dusk);
+  border: 1px solid var(--dusk);
 }
 
 /* Navbar */
