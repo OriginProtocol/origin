@@ -141,12 +141,11 @@ class Users extends ResourceBase {
 
       if (identityAddress) {
         // batch add claims to existing identity
-        return await this.contractService.contractFn(
-          this.contractService.claimHolderRegisteredContract,
-          identityAddress,
+        return await this.contractService.call(
+          'ClaimHolderRegistered',
           'addClaims',
           [claimTypes, issuers, sigs, data, dataOffsets],
-          { from: account, gas: 4000000 }
+          { from: account, gas: 4000000, contractAddress: identityAddress }
         )
       } else {
         // create identity with presigned claims
