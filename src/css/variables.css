@@ -44,5 +44,5 @@
   --boost-low: var(--pale-yellow);
   --boost-medium: var(--mustard);
   --boost-high: var(--gold);
-  boost-premium: var(--golden-rod);
+  --boost-premium: var(--golden-rod);
 }

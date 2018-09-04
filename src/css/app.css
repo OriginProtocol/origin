@@ -2256,6 +2256,11 @@ select.form-control:not([size]):not([multiple]) {
   font-weight: bold;
 }
 
+.boost-slider .amount-container img {
+  margin-right: 5px;
+  margin-top: -5px;
+}
+
 .boost-slider .text-italics {
   font-style: italic;
   text-align: center;
