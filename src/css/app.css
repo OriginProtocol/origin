@@ -2140,7 +2140,7 @@ select.form-control:not([size]):not([multiple]) {
   background-color: var(--light);
   margin-left: -5px;
   margin-right: -5px;
-  width: 104%;
+  width: 103%;
 }
  .listing-form .select-boost .rc-slider-handle {
   margin-top: auto;
