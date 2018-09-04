@@ -45,7 +45,7 @@ const HomePage = () => (
 
 const ListingDetailPage = props => (
   <ListingDetail
-    listingAddress={props.match.params.listingAddress}
+    listingId={props.match.params.listingId}
     withReviews={true}
   />
 )
@@ -125,7 +125,7 @@ class App extends Component {
                     <Route exact path="/" component={HomePage} />
                     <Route path="/page/:activePage" component={HomePage} />
                     <Route
-                      path="/listing/:listingAddress"
+                      path="/listing/:listingId"
                       component={ListingDetailPage}
                     />
                     <Route path="/create" component={CreateListingPage} />

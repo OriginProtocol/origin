@@ -12,8 +12,7 @@ class ListingCard extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: true,
-      shouldRender: true
+      loading: true
     }
   }
 
@@ -24,13 +23,12 @@ class ListingCard extends Component {
       )
       const listing = rawListing.ipfsData.data
       const translatedListing = translateListingCategory(listing)
-      if (!this.props.hideList.includes(this.props.listingId)) {
-        const obj = Object.assign({}, translatedListing, { loading: false })
 
-        this.setState(obj)
-      } else {
-        this.setState({ shouldRender: false })
-      }
+      this.setState({
+        ...rawListing,
+        ...translatedListing,
+        loading: false
+      })
     } catch (error) {
       console.error(
         `Error fetching contract or IPFS info for listingId: ${
@@ -47,12 +45,9 @@ class ListingCard extends Component {
       name,
       pictures,
       price,
-      unitsAvailable,
-      shouldRender
+      unitsAvailable
     } = this.state
     const photo = pictures && pictures.length && pictures[0]
-
-    if (!shouldRender) return false
 
     return (
       <div

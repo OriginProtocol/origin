@@ -35,7 +35,7 @@ class MySaleCard extends Component {
 
   componentWillMount() {
     this.props.fetchUser(
-      this.props.purchase.buyerAddress,
+      this.props.purchase.buyer,
       this.props.intl.formatMessage(this.intlMessages.unnamedUser)
     )
   }
@@ -68,7 +68,7 @@ class MySaleCard extends Component {
       this.props.intl.formatMessage(this.intlMessages.unnamedUser)
     const photo = pictures && pictures.length > 0 && pictures[0]
     const soldAt = Number(purchase.createdAt) * 1000 // convert seconds since epoch to ms
-    const step = Number(purchase.status)
+    const step = parseInt(purchase.status)
 
     return (
       <div className="sale card">
@@ -121,8 +121,8 @@ class MySaleCard extends Component {
             </div>
           </div>
           <PurchaseProgress
+            maxStep={4}
             currentStep={step}
-            purchase={purchase}
             perspective="seller"
             subdued={true}
           />
@@ -184,7 +184,7 @@ class MySaleCard extends Component {
 
 const mapStateToProps = (state, { purchase }) => {
   return {
-    user: state.users.find(u => u.address === purchase.buyerAddress) || {}
+    user: state.users.find(u => u.address === purchase.buyer) || {}
   }
 }
 
