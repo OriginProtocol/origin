@@ -49,7 +49,7 @@ export default class PanelButtons extends Component {
       ),
       'Get Origin Tokens': (
         <div className="col-auto">
-          <Link to="/about-tokens">
+          <Link to="/about-tokens" target="_blank">
             <button key={'first-btn'} className='btn btn-primary'>
               Learn more
             </button>

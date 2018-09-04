@@ -15,7 +15,7 @@ class ListingsGrid extends Component {
     super(props)
     this.state = {
       listingsPerPage: 12,
-      learnMore: true,
+      learnMore: false,
       onBoardingModal: false
     }
 
@@ -24,7 +24,12 @@ class ListingsGrid extends Component {
   }
 
   componentWillMount() {
-    this.props.getListingIds()
+    const { getListingIds, wallet } = this.props
+
+    getListingIds()
+    if (!wallet.address) {
+      this.setState({ learnMore: true })
+    }
   }
 
   closeModal(name = 'onBoardingModal') {
@@ -116,7 +121,8 @@ class ListingsGrid extends Component {
 
 const mapStateToProps = state => ({
   listingIds: state.marketplace.ids,
-  contractFound: state.listings.contractFound
+  contractFound: state.listings.contractFound,
+  wallet: state.wallet
 })
 
 const mapDispatchToProps = dispatch => ({

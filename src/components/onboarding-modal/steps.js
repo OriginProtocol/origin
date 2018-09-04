@@ -16,7 +16,8 @@ export default [
           a wallet in order to accept payment in <mark className="eth">ETH</mark>
         </p>
         <p className="step-text">
-          Payment for goods and services on the Origin DApp are always made in <mark className="eth">ETH</mark>
+          Payment for goods and services on the Origin DApp are always made in
+          <mark className="eth">ETH</mark>
         </p>
       </div>
     )
@@ -57,7 +58,6 @@ export default [
     name: 'Get Origin Tokens',
     description: 'Connect your wallet to start selling',
     complete: false,
-    lastStep: true,
     heading: (
       <h3>Origin Tokens and Boosting</h3>
     ),
@@ -65,7 +65,8 @@ export default [
     content: (
       <div>
         <p className="step-text">
-          Origin Tokens (Symbol: <mark className="ogn">OGN</mark>) are used on the Origin DApp to boost your listings.
+          Origin Tokens (Symbol: <mark className="ogn">OGN</mark>) are used on
+          the Origin DApp to boost your listings.
         </p>
         <p className="step-text">
           Boosting will give your listing more visibility and also works as a

@@ -4,7 +4,7 @@ export default function({ steps, firstIncompleteStep }) {
   const selected = (name) => {
     const matchingStep = firstIncompleteStep.name === name
 
-    return matchingStep ? 'selected' : ''
+    return matchingStep && 'selected'
   }
   const completed = (complete=false) => complete ? 'complete' : 'incomplete'
 
