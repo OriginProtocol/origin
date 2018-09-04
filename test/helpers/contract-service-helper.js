@@ -24,12 +24,15 @@ export default async function contractServiceHelper(web3) {
     [ listingsRegistryStorage.contractAddress ],
     { from: accounts[0], gas: 4000000 }
   )
-  await dummyContractService.contractFn(
-    dummyContractService.listingsRegistryStorageContract,
-    listingsRegistryStorage.contractAddress,
+  await dummyContractService.call(
+    'ListingsRegistryStorage',
     'setActiveRegistry',
     [ listingsRegistry.contractAddress ],
-    { from: accounts[0], gas: 4000000 }
+    {
+      from: accounts[0],
+      gas: 4000000,
+      contractAddress: listingsRegistryStorage.contractAddress
+    }
   )
 
   return new ContractService({
