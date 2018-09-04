@@ -46,7 +46,7 @@ class Attestations {
     const currentAccount = await this.contractService.currentAccount()
     wallet = wallet || currentAccount
     const userRegistry = await this.contractService.deployed(
-      this.contractService.userRegistryContract
+      this.contractService.contracts.UserRegistry
     )
     const identityAddress = await userRegistry.methods.users(wallet).call()
     const hasRegisteredIdentity =

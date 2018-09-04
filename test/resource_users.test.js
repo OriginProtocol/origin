@@ -42,7 +42,7 @@ describe('User Resource', function() {
     const web3 = new Web3(provider)
     const accounts = await web3.eth.getAccounts()
     const contractService = new ContractService({ web3 })
-    await contractService.deployed(contractService.originIdentityContract)
+    await contractService.deployed(contractService.contracts.OriginIdentity)
     const ipfsService = new IpfsService({
       ipfsDomain: '127.0.0.1',
       ipfsApiPort: '5002',
@@ -55,7 +55,7 @@ describe('User Resource', function() {
     // clear user before each test because blockchain persists between tests
     // sort of a hack to force clean state at beginning of each test
     const userRegistry = await contractService.deployed(
-      contractService.userRegistryContract
+      contractService.contracts.UserRegistry
     )
     await userRegistry.methods.clearUser().send({ from: accounts[0] })
 

@@ -50,7 +50,7 @@ describe('ContractService', function() {
 
       const contSrv = new ContractService({ web3, contractAddresses })
 
-      expect(contSrv.userRegistryContract.networks[4].address).to.equal(
+      expect(contSrv.contracts.UserRegistry.networks[4].address).to.equal(
         userAddress
       )
     })
