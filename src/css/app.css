@@ -209,6 +209,10 @@ a:hover {
   line-height: 1.9;
 }
 
+[data-toggle="dropdown"] {
+  cursor: pointer;
+}
+
 /* Identification */
 
 .identification {
