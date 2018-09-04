@@ -201,6 +201,10 @@ class PurchaseDetail extends Component {
     $('[data-toggle="tooltip"]').tooltip()
   }
 
+  componentWillUnmount() {
+    $('[data-toggle="tooltip"]').tooltip('dispose')
+  }
+
   async loadPurchase() {
     const { offerId } = this.props
 

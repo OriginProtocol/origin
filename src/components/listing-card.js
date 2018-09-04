@@ -50,6 +50,10 @@ class ListingCard extends Component {
     }
   }
 
+  componentWillUnmount() {
+    $('[data-toggle="tooltip"]').tooltip('dispose')
+  }
+
   render() {
     const {
       boostLevelIsPastSomeThreshold,

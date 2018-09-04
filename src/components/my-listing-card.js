@@ -73,6 +73,10 @@ class MyListingCard extends Component {
     }
   }
 
+  componentWillUnmount() {
+    $('[data-toggle="tooltip"]').tooltip('dispose')
+  }
+
   render() {
     const { listing } = this.props
     const { category, name, pictures } = translateListingCategory(
