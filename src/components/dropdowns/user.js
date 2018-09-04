@@ -3,6 +3,8 @@ import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import $ from 'jquery'
 
+import { getBalance } from 'actions/Wallet'
+
 import Avatar from 'components/avatar'
 import Identicon from 'components/identicon'
 import Wallet from 'components/wallet'
@@ -13,13 +15,14 @@ class UserDropdown extends Component {
   }
 
   componentDidMount() {
+    this.props.getBalance()
     $(document).on('click', '.identity .dropdown-menu', e => {
       e.stopPropagation()
     })
   }
 
   render() {
-    const { address } = this.props.wallet
+    const { address, balance } = this.props.wallet
 
     return (
       <div className="nav-item identity dropdown">
@@ -41,7 +44,7 @@ class UserDropdown extends Component {
             <div className="triangle" />
           </div>
           <div className="actual-menu">
-            <Wallet address={address} withMenus={false} withProfile={true} />
+            <Wallet address={address} balance={balance} withMenus={false} withProfile={true} />
           </div>
         </div>
       </div>
@@ -55,4 +58,8 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(UserDropdown)
+const matchDispatchToProps = dispatch => ({
+  getBalance: () => dispatch(getBalance())
+})
+
+export default connect(mapStateToProps, matchDispatchToProps)(UserDropdown)
