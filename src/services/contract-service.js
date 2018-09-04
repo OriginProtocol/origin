@@ -202,14 +202,14 @@ class ContractService {
     contractName,
     functionName,
     args = [],
-    { contractAddress, from, gas, confirmationCallback } = {}
+    { contractAddress, from, gas, value, confirmationCallback } = {}
   ) {
     const contractDefinition = this.contracts[contractName]
     if (typeof contractDefinition === 'undefined') {
       throw new Error(`Contract not defined on contract service: ${contractName}`)
     }
     // Setup options
-    const opts = { from, gas }
+    const opts = { from, gas, value }
     opts.from = opts.from || (await this.currentAccount())
     // Get contract and run trasaction
     const contract = await this.deployed(contractDefinition)
