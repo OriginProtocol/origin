@@ -1,5 +1,5 @@
-class MarkeplaceAdapter {
-  constructor({ contractService, contractName }) {
+class V00_MarkeplaceAdapter {
+  constructor({ contractService }) {
     this.web3 = contractService.web3
     this.contractService = contractService
     this.contractName = 'V00_Marketplace'
@@ -291,4 +291,4 @@ class MarkeplaceAdapter {
   }
 }
 
-export default MarkeplaceAdapter
+export default V00_MarkeplaceAdapter
