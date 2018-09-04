@@ -10,6 +10,33 @@ class PhotoPicker extends Component {
     this.onChange = this.onChange.bind(this)
   }
 
+  componentDidMount() {
+    this.setHelpText()
+  }
+
+  setHelpText() {
+    const userAgent = window.navigator.userAgent
+    const platform = window.navigator.platform
+    const macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K']
+    const windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE']
+    const iosPlatforms = ['iPhone', 'iPad', 'iPod']
+    let helpText = ''
+
+    if (macosPlatforms.indexOf(platform) !== -1) {
+      helpText = 'Hold down "command" (⌘) to select multiple images'
+    } else if (iosPlatforms.indexOf(platform) !== -1) {
+      helpText = 'Select multiple images to upload them all at once'
+    } else if (windowsPlatforms.indexOf(platform) !== -1) {
+      helpText = 'Hold down "Ctrl" to select multiple images'
+    } else if (/Android/.test(userAgent)) {
+      helpText = 'Select multiple images to upload them all at once'
+    } else if (!helpText && /Linux/.test(platform)) {
+      helpText = 'Hold down "Ctrl" to select multiple images'
+    }
+
+    this.setState({ helpText })
+  }
+
   async getDataUri(file) {
     const reader = new FileReader()
 
@@ -65,6 +92,9 @@ class PhotoPicker extends Component {
           onChange={ this.onChange() }
           required={ this.props.required }
           multiple />
+        {this.state.helpText &&
+          <p className="help-block">{ this.state.helpText }</p>
+        }
         <div className="d-flex pictures">
           {this.state.pictures.map((dataUri, idx) =>
             <div className="image-container" key={ idx }>

@@ -2006,7 +2006,7 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .photo-picker input {
-  opacity: 0;
+  display: none;
 }
 
 .file-info {
