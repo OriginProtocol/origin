@@ -141,7 +141,45 @@ describe('User Resource', function() {
       expect(user.profile.claims.name).to.equal('Batman')
     })
 
-    it('should be able to deploy new identity with presigned claims', async () => {
+    it('should be able to deploy new identity with 2 presigned claims', async () => {
+      // This is actually 2 claims because profile info is 1 claim
+      await users.set({
+        profile: { claims: { name: 'Black Widow' } },
+        attestations: [ phoneAttestation ]
+      })
+      const user = await users.get()
+
+      expect(user.attestations.length).to.equal(1)
+      expect(user.profile.claims.name).to.equal('Black Widow')
+    })
+
+    it('should be able to deploy new identity with 3 presigned claims', async () => {
+      await users.set({
+        profile: { claims: { name: 'Black Widow' } },
+        attestations: [ phoneAttestation, emailAttestation ]
+      })
+      const user = await users.get()
+
+      expect(user.attestations.length).to.equal(2)
+      expect(user.profile.claims.name).to.equal('Black Widow')
+    })
+
+    it('should be able to deploy new identity with 4 presigned claims', async () => {
+      await users.set({
+        profile: { claims: { name: 'Black Widow' } },
+        attestations: [
+          phoneAttestation,
+          emailAttestation,
+          facebookAttestation
+        ]
+      })
+      const user = await users.get()
+
+      expect(user.attestations.length).to.equal(3)
+      expect(user.profile.claims.name).to.equal('Black Widow')
+    })
+
+    it('should be able to deploy new identity with 5 presigned claims', async () => {
       await users.set({
         profile: { claims: { name: 'Black Widow' } },
         attestations: [
@@ -149,7 +187,7 @@ describe('User Resource', function() {
           emailAttestation,
           facebookAttestation,
           twitterAttestation
-          // TODO support additional attestations. Currently can't handle more than 4
+          // TODO support additional attestations. Currently can't handle more than 5
         ]
       })
       const user = await users.get()
