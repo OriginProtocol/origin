@@ -13,7 +13,7 @@ export default class PanelButtons extends Component {
   }
 
   render() {
-    const { displayNextStep, step } = this.props
+    const { displayNextStep, step, closeModal } = this.props
     const buttons = {
       'Overview': (
         <button
@@ -49,7 +49,7 @@ export default class PanelButtons extends Component {
       ),
       'Get Origin Tokens': (
         <div className="col-auto">
-          <Link to="/about-tokens" target="_blank">
+          <Link to="/about-tokens" target="_blank" onClick={closeModal}>
             <button key={'first-btn'} className="btn btn-primary">
               Learn more
             </button>
