@@ -80,7 +80,10 @@ class SearchResult extends Component {
       fetch(schemaPath)
         .then((response) => response.json())
         .then((schemaJson) => {
-          this.setState({ filterSchema: schemaJson })
+          // if schemas are fetched twice very close together, set schema only
+          // when it matches the currently set listingType
+          if (this.state.listingType === schemaJson.listingType)
+            this.setState({ filterSchema: schemaJson })
         })
         .catch(function(e) {
           console.error(`Error reading schema ${schemaPath}: ${e}`)
