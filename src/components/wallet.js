@@ -111,7 +111,15 @@ class Wallet extends Component {
               <div className="d-flex align-items-start">
                 <img src="images/eth-icon.svg" role="presentation" />
                 <div className="amounts">
-                  <div className="eth">{balance || 0}<span className="symbol">ETH</span></div>
+                  <div className="eth">
+                    {
+                      `${Number(balance).toLocaleString(undefined, {
+                        minimumFractionDigits: 5,
+                        maximumFractionDigits: 5
+                      })}`
+                      || 0
+                    }&nbsp;
+                    <span className="symbol">ETH</span></div>
                   <div className="usd">{this.state.usdBalance} USD</div>
                 </div>
                 {withMenus &&
