@@ -367,7 +367,7 @@ describe('Marketplace.sol', async function() {
   })
 
   describe('Arbitration', function() {
-    let disputeID, balanceBefore, balanceAfter
+    let listingID, offerID, balanceBefore, balanceAfter
 
     // When comparing Eth, take into account gas price
     function assertBN(before, expr, after) {
@@ -381,26 +381,26 @@ describe('Marketplace.sol', async function() {
 
     describe('dispute without refund (Eth)', function() {
       it('should resolve in favor of buyer (no commission)', async function() {
-        ({ disputeID, balance: balanceBefore } = await helpers.disputedOffer({}));
-        ({ balance: balanceAfter } = await helpers.giveRuling({ disputeID, ruling: 1 }))
+        ({ listingID, offerID, balance: balanceBefore } = await helpers.disputedOffer({}));
+        ({ balance: balanceAfter } = await helpers.giveRuling({ listingID, offerID, ruling: 1 }))
         assertBN(balanceBefore.eth, 'add 0.1 ether', balanceAfter.eth)
         assert(balanceAfter.ogn.eq(balanceBefore.ogn))
       })
       it('should resolve in favor of buyer (pay commission)', async function() {
-        ({ disputeID, balance: balanceBefore } = await helpers.disputedOffer({}));
-        ({ balance: balanceAfter } = await helpers.giveRuling({ disputeID, ruling: 3 }))
+        ({ listingID, offerID, balance: balanceBefore } = await helpers.disputedOffer({}));
+        ({ balance: balanceAfter } = await helpers.giveRuling({ listingID, offerID, ruling: 3 }))
         assertBN(balanceBefore.eth, 'add 0.1 ether', balanceAfter.eth)
         assert(balanceAfter.ogn.eq(balanceBefore.ogn.add(new web3.utils.BN('2'))))
       })
       it('should resolve in favor of seller (no commission)', async function() {
-        ({ disputeID, balance: balanceBefore } = await helpers.disputedOffer({ party: Seller }));
-        ({ balance: balanceAfter } = await helpers.giveRuling({ disputeID, ruling: 0, party: Seller }))
+        ({ listingID, offerID, balance: balanceBefore } = await helpers.disputedOffer({ party: Seller }));
+        ({ balance: balanceAfter } = await helpers.giveRuling({ listingID, offerID, ruling: 0, party: Seller }))
         assertBN(balanceBefore.eth, 'add 0.1 ether', balanceAfter.eth)
         assert(balanceAfter.ogn.eq(balanceBefore.ogn))
       })
       it('should resolve in favor of seller (pay commission)', async function() {
-        ({ disputeID, balance: balanceBefore } = await helpers.disputedOffer({ party: Seller }));
-        ({ balance: balanceAfter } = await helpers.giveRuling({ disputeID, ruling: 2, party: Seller }))
+        ({ listingID, offerID, balance: balanceBefore } = await helpers.disputedOffer({ party: Seller }));
+        ({ balance: balanceAfter } = await helpers.giveRuling({ listingID, offerID, ruling: 2, party: Seller }))
         assertBN(balanceBefore.eth, 'add 0.1 ether', balanceAfter.eth)
         assert(balanceAfter.ogn.eq(balanceBefore.ogn.add(new web3.utils.BN('2'))))
       })
