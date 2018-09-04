@@ -1668,6 +1668,7 @@ a:hover {
   font-size: 0.625rem;
 }
 
+.pending.badge,
 .sold.badge {
   background-color: var(--dark);
   color: white;
@@ -1691,10 +1692,37 @@ a:hover {
 
 /* Listing Detail */
 
+.listing-detail .badges {
+  margin-left: auto;
+}
+
+.listing-detail .boosted {
+  margin-left: 5px;
+}
+
 .buy-box {
   color: white;
   font-weight: normal;
   margin-bottom: 1rem;
+}
+
+.buy-box.unavailable strong {
+  display: block;
+  font-family: var(--heading-font);
+  font-size: 2rem;
+  font-weight: 300;
+}
+
+.buy-box .reason {
+  margin-bottom: 20px;
+}
+
+.buy-box .suggestion {
+  margin-bottom: 20px;
+}
+
+.buy-box.unavailable a {
+  font-weight: bold;
 }
 
 .buy-box .price {
@@ -1822,10 +1850,6 @@ a:hover {
 .loading p {
   min-height: 124px;
   width: 100%;
-}
-
-.listing-container .boosted {
-  margin-left: auto;
 }
 
 .listing-container.loading .buy-box {

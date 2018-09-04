@@ -44,6 +44,14 @@
     "defaultMessage": "OK"
   },
   {
+    "id": "listing-detail.pending",
+    "defaultMessage": "Pending"
+  },
+  {
+    "id": "listing-detail.soldOut",
+    "defaultMessage": "Sold Out"
+  },
+  {
     "id": "listing-detail.viewOnIpfs",
     "defaultMessage": "View on IPFS"
   },
@@ -64,8 +72,20 @@
     "defaultMessage": "Buy Now"
   },
   {
-    "id": "listing-detail.soldOut",
-    "defaultMessage": "Sold Out"
+    "id": "listing-detail.reasonPending",
+    "defaultMessage": "This listing is {pending}"
+  },
+  {
+    "id": "listing-detail.reasonSold",
+    "defaultMessage": "This listing is {soldOut}"
+  },
+  {
+    "id": "listing-detail.suggestion",
+    "defaultMessage": "Try visiting the listings page and searching for something similar."
+  },
+  {
+    "id": "listing-detail.allListings",
+    "defaultMessage": "See All Listings"
   },
   {
     "id": "listing-detail.reviews",
