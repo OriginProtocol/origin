@@ -4,6 +4,7 @@ export default [
   {
     name: 'Overview',
     description: 'How to start selling on the Origin DApp',
+    position: 1,
     complete: false,
     heading: (
       <h3>Selling on the Origin DApp</h3>
@@ -25,6 +26,7 @@ export default [
   {
     name: 'Connect Wallet',
     description: 'Connect your wallet to start selling',
+    position: 2,
     complete: false,
     subStepComplete: false,
     heading: (
@@ -57,6 +59,7 @@ export default [
   {
     name: 'Get Origin Tokens',
     description: 'Connect your wallet to start selling',
+    position: 3,
     complete: false,
     heading: (
       <h3>Origin Tokens and Boosting</h3>

@@ -1,6 +1,8 @@
 import React from 'react'
+import { withRouter } from 'react-router'
+import { connect } from 'react-redux'
 
-export default function({ steps, firstIncompleteStep }) {
+function LeftPanel({ steps, firstIncompleteStep }) {
   const selected = (name) => {
     const matchingStep = firstIncompleteStep.name === name
 
@@ -22,3 +24,7 @@ export default function({ steps, firstIncompleteStep }) {
     </div>
   )
 }
+
+const mapStateToProps = ({ onboarding: { steps } }) => ({ steps })
+
+export default withRouter(connect(mapStateToProps)(LeftPanel))

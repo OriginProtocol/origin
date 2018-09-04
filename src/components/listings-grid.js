@@ -14,12 +14,8 @@ class ListingsGrid extends Component {
     super(props)
     this.state = {
       listingsPerPage: 12,
-      learnMore: false,
-      onBoardingModal: false
+      initialAlert: false
     }
-
-    this.closeModal = this.closeModal.bind(this)
-    this.openOnBoardingModal = this.openOnBoardingModal.bind(this)
   }
 
   componentWillMount() {
@@ -27,22 +23,12 @@ class ListingsGrid extends Component {
 
     getListingIds()
     if (!wallet.address) {
-      this.setState({ learnMore: true })
+      this.setState({ initialAlert: true })
     }
-  }
-
-  closeModal(name = 'onBoardingModal') {
-    return () => {
-      this.setState({ [name]: false })
-    }
-  }
-
-  openOnBoardingModal() {
-    this.setState({ learnMore: false, onBoardingModal: true })
   }
 
   render() {
-    const { listingsPerPage, onBoardingModal, learnMore } = this.state
+    const { listingsPerPage, initialAlert } = this.state
     const { contractFound, listingIds } = this.props
     // const pinnedListingIds = [0, 1, 2, 3, 4]
     // const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
@@ -107,12 +93,7 @@ class ListingsGrid extends Component {
             />
           </div>
         )}
-        <OnboardingModal
-          learnMore={learnMore}
-          isOpen={onBoardingModal}
-          closeModal={this.closeModal}
-          openOnBoardingModal={this.openOnBoardingModal}
-        />
+        <OnboardingModal initialAlert={initialAlert} />
       </div>
     )
   }

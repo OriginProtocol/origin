@@ -6,45 +6,27 @@ import RightPanel from './right-panel'
 class SplitPanel extends Component {
   constructor(props) {
     super(props)
-    const { onboarding: { currentStep, steps } } = this.props
     this.displayNextStep = this.displayNextStep.bind(this)
-    this.state = { steps, currentStep }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.onboarding != this.props.onboarding) {
-      this.setState({ ...this.props.onboarding })
-    }
   }
 
   firstIncompleteStep() {
-    const { steps } = this.state
+    const { steps } = this.props
 
     return steps.find(({ complete, subStepComplete }) => {
       return (!complete || complete && subStepComplete === false)
     })
   }
 
-  storeCurrentStep(incompleteStep) {
-    const { updateSteps } = this.props
-
-    updateSteps(incompleteStep)
-  }
-
   displayNextStep() {
-    const { steps = [] } = this.state
-    const firstIncompleteStep = this.firstIncompleteStep()
-    if (!firstIncompleteStep) return
+    const { updateSteps, currentStep } = this.props
 
-    this.storeCurrentStep(firstIncompleteStep)
+    updateSteps(currentStep)
   }
 
   render() {
-    const { currentStep, steps } = this.state
-    const { isOpen, closeModal } = this.props
+    const { isOpen, closeModal, currentStep } = this.props
     const { complete, subStep } = currentStep
     const step = complete && subStep ? subStep : currentStep
-    const firstIncompleteStep = this.firstIncompleteStep()
 
     return (
       <div
@@ -60,8 +42,7 @@ class SplitPanel extends Component {
                 <div className="container-fluid">
                   <div className="row">
                     <LeftPanel
-                      steps={steps}
-                      firstIncompleteStep={firstIncompleteStep}
+                      firstIncompleteStep={step}
                     />
                     <RightPanel
                       displayNextStep={this.displayNextStep}

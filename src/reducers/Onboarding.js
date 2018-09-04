@@ -1,13 +1,11 @@
 import { OnboardingConstants } from 'actions/Onboarding'
 import steps from 'components/onboarding-modal/steps'
 
-const hasKeys = (obj) => obj && Object.keys(obj).length
-
 function getCurrentStep() {
   try {
     return localStorage.getItem('onboarding.currentStep')
   } catch(e) {
-    console.log("IT DID NOT GET", e)
+    console.log('IT DID NOT GET', e)
     return ''
   }
 }
@@ -16,21 +14,20 @@ const getStoredStep = ({ steps }) => {
 
   return steps.find((step) => step.name === currentStep)
 }
-function setCurrentStep(step) {
+function setCurrentStep(currentStep) {
   //maybe store the whole object
   try {
-    localStorage.setItem('onboarding.currentStep', step.name)
+    // const onboarding = { currentStep,  }
+    localStorage.setItem('onboarding.currentStep', JSON.stringify(currentStep))
   } catch(e) {
-    console.log("IT WAS NOT SET", e)
+    console.log('IT WAS NOT SET', e)
   }
 
-  return step
+  return currentStep
 }
 
 const updateStep = (incompleteStep, fetch=false) => (step) => {
-  const incompleteName = hasKeys(incompleteStep) ? incompleteStep.name : incompleteStep
-
-  if (step.name == incompleteName && !fetch) {
+  if (step.name == incompleteStep.name && !fetch) {
     if (step.complete) return { ...step, subStepComplete: true }
     return { ...step, complete: true }
   }
@@ -42,8 +39,8 @@ const updateAllSteps = (incompleteStep, steps, fetch) => steps.map(updateStep(in
 
 const updateCurrentStep = (incompleteStep, steps) => {
   const { complete, subStep } = incompleteStep
-  const currentIndex = steps.indexOf(incompleteStep)
-  const nextStep = steps[currentIndex+1]
+  const nextStep = steps.find((step) => step.position === incompleteStep.position+1)
+
   if (!complete && subStep) {
     return setCurrentStep({ ...incompleteStep, complete: true })
   }
@@ -53,20 +50,34 @@ const updateCurrentStep = (incompleteStep, steps) => {
 
 const initialState = {
   currentStep: steps[0],
-  steps
+  steps,
+  progress: false,
+  learnMore: false,
+  splitPanel: false
 }
 
 export default function Onboarding(state = initialState, action = {}) {
   switch (action.type) {
-    case OnboardingConstants.UPDATE_STEPS:
-      return {
-        ...state,
-        currentStep: updateCurrentStep(action.incompleteStep, state.steps),
-        steps: updateAllSteps(action.incompleteStep, state.steps)
-      }
-    case OnboardingConstants.FETCH_STEPS:
-      const fetchedStep = getStoredStep(state) || steps[0]
-      return { ...state, currentStep: fetchedStep, steps: updateAllSteps(fetchedStep, state.steps, true) }
+  case OnboardingConstants.UPDATE_STEPS:
+    return {
+      ...state,
+      currentStep: updateCurrentStep(action.incompleteStep, state.steps),
+      steps: updateAllSteps(action.incompleteStep, state.steps),
+      progress: true
+    }
+  case OnboardingConstants.FETCH_STEPS:
+    const fetchedStep = getStoredStep(state) || steps[0]
+    const progress = fetchedStep !== steps[0]
+    return {
+      ...state,
+      currentStep: fetchedStep,
+      steps: updateAllSteps(fetchedStep, state.steps, true),
+      progress
+    }
+  case OnboardingConstants.SPLIT_PANEL:
+    return { ...state, progress: true, learnMore: false, splitPanel: action.show }
+  case OnboardingConstants.LEARN_MORE:
+    return { ...state, learnMore: action.show, splitPanel: false }
   default:
     return state
   }
