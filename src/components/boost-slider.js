@@ -106,7 +106,9 @@ class BoostSlider extends Component {
             </div>`
           } />
         <div className="level-container">
-          <span className={`boosted badge ${this.state.boostLevel.toLowerCase()}`}>&#x2197;</span>
+          <span className={`boosted badge ${this.state.boostLevel.toLowerCase()}`}>
+            <img src="images/boost-icon-arrow.svg" role="presentation" />
+          </span>
           { this.state.boostLevel }
           { this.state.boostLevel.match(/medium/i) && ' (recommended)'}
           <div className="amount-container">

@@ -104,7 +104,7 @@ class ListingCreate extends Component {
     this.state = {
       // TODO:John - wire up ognBalance and isFirstListing when ready
       ognBalance: 0,
-      isFirstListing: true,
+      isFirstListing: false,
       step: this.STEP.PICK_SCHEMA,
       selectedSchemaType: this.schemaList[0],
       selectedSchema: null,

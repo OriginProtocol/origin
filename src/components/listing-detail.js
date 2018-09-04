@@ -273,8 +273,7 @@ class ListingsDetail extends Component {
                 <div>{category}</div>
                 {!loading && boostLevel &&
                   <span className={ `boosted badge boost-${boostLevel}` }>
-                    <span>&#x2197;</span>
-                    { boostLevel }
+                    <img src="images/boost-icon-arrow.svg" role="presentation" />
                   </span>
                 }
               </div>

@@ -2216,15 +2216,12 @@ select.form-control:not([size]):not([multiple]) {
   padding-bottom: 15px;
 }
 
-.boost-slider .level-container img {
-  height: 18px;
-  margin-right: 6px;
-  margin-top: -3px;
-}
-
 .boost-slider .boosted.badge {
   margin: 0 5px 0 0;
   vertical-align: text-bottom;
+  /* fix dimensions so that border does not expand element in .none */
+  height: 22px;
+  width: 22px;
 }
 
 .boost-slider .boosted.badge.none {
@@ -2236,17 +2233,14 @@ select.form-control:not([size]):not([multiple]) {
 
 .boost-slider .boosted.badge.low {
   background-color: var(--bluey-grey);
-  border: 1px solid var(--bluey-grey);
 }
 
 .boost-slider .boosted.badge.medium {
   background-color: var(--steel);
-  border: 1px solid var(--steel);
 }
 
 .boost-slider .boosted.badge.high {
   background-color: var(--dusk);
-  border: 1px solid var(--dusk);
 }
 
 .boost-slider .amount-container {
