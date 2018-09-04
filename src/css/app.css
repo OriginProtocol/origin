@@ -1577,7 +1577,7 @@ a:hover {
   background-color: var(--pale-grey);
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.4);
   color: var(--dark);
-  padding-top: 15px;
+  padding: 30px;
   max-width: 370px;
 }
 
@@ -1592,9 +1592,10 @@ a:hover {
 }
 
 .getting-started .close-icon {
+  color: var(--steel);
+  cursor: pointer;
   font-size: 24px;
   font-weight: 900;
-  color: var(--steel);
 }
 
 .listing-card {
