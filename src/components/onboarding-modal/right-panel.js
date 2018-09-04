@@ -4,7 +4,7 @@ import PanelButtons from './panel-buttons'
 export default class RightPanel extends Component {
   render() {
     const { step, closeModal } = this.props
-    const {img, heading, content, name} = step
+    const { img, heading, content } = step
 
     return (
       <div className="flex-column col-xs-12 col-sm-8 right-panel">

@@ -16,7 +16,7 @@ class SplitPanel extends Component {
   firstIncompleteStep() {
     const { steps } = this.state
 
-    return steps.find(({ subStep, complete, subStepComplete }) => {
+    return steps.find(({ complete, subStepComplete }) => {
       return (!complete || complete && subStepComplete === false)
     })
   }
@@ -31,15 +31,14 @@ class SplitPanel extends Component {
 
     const setCurrentStep = () => {
       const { complete, subStep } = firstIncompleteStep
-      if (!complete && subStep) return {...firstIncompleteStep, complete: true}
+      if (!complete && subStep) return { ...firstIncompleteStep, complete: true }
       return nextStep
     }
 
     const updateSteps = (step) => {
-      const { complete, subStep, subStepComplete } = step
       if (step === firstIncompleteStep) {
-        if (complete) return {...step, subStepComplete: true}
-        return {...step, complete: true}
+        if (step.complete) return { ...step, subStepComplete: true }
+        return { ...step, complete: true }
       }
       return step
     }

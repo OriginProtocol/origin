@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 export default class PanelButtons extends Component {
@@ -17,7 +17,7 @@ export default class PanelButtons extends Component {
     const buttons = {
       'Overview': (
         <button
-          className='btn btn-primary'
+          className="btn btn-primary"
           onClick={displayNextStep}
         >
           Connect a Wallet
@@ -26,13 +26,13 @@ export default class PanelButtons extends Component {
       'Connect Wallet': (
         <div className="d-flex flex-column align-items-center">
           <button key={'first-btn'}
-            className='btn btn-primary btn-lg mb-3'
+            className="btn btn-primary btn-lg mb-3"
             onClick={this.connectMetaMask}
           >
             Connect Metamask
           </button>
           <button key={'sec-btn'}
-            className='btn btn-primary btn-lg'
+            className="btn btn-primary btn-lg"
             disabled
           >
             Download Mobile Wallet
@@ -41,7 +41,7 @@ export default class PanelButtons extends Component {
       ),
       'Connected': (
         <button
-          className='btn btn-primary'
+          className="btn btn-primary"
           onClick={displayNextStep}
         >
           Learn about Origin Tokens
@@ -50,7 +50,7 @@ export default class PanelButtons extends Component {
       'Get Origin Tokens': (
         <div className="col-auto">
           <Link to="/about-tokens" target="_blank">
-            <button key={'first-btn'} className='btn btn-primary'>
+            <button key={'first-btn'} className="btn btn-primary">
               Learn more
             </button>
           </Link>

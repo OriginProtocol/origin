@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 
 export default function({ steps, firstIncompleteStep }) {
   const selected = (name) => {
@@ -10,7 +10,7 @@ export default function({ steps, firstIncompleteStep }) {
 
   return (
     <div className="d-none d-sm-block d-sm-flex flex-column col-4 text-left left-panel">
-      { steps && steps.map(({name, description, complete}, i) => (
+      { steps && steps.map(({ name, description, complete }) => (
         <div key={name} className={`content d-flex ${selected(name)}`}>
           <div className={`${completed(complete)} rounded-circle col`}></div>
           <div className="panel-text d-flex flex-column">

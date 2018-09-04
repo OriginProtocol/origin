@@ -7,7 +7,6 @@ import { withRouter } from 'react-router'
 import { getListingIds } from 'actions/Listing'
 
 import ListingCard from 'components/listing-card'
-import Modal from 'components/modal'
 import OnboardingModal from 'components/onboarding-modal'
 
 class ListingsGrid extends Component {

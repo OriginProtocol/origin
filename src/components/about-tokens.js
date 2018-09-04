@@ -32,7 +32,7 @@ const AboutTokens = () => {
                 id={'about-tokens.boosting-text'}
                 defaultMessage={'Vivamus faucibus tortor ultrices arcu consectetur convallis. Fusce eget fringilla velit, vitae dignissim ipsum. Curabitur hendrerit, massa sit amet molestie tincidunt, lacus purus aliquam urna, at venenatis nibh dui sit amet nunc. Nunc tortor leo, pretium id convallis et, sollicitudin in ex.'}
               />
-  	        </p>
+            </p>
             <h6>
               <strong>
                 <FormattedMessage

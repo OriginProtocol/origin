@@ -21,7 +21,7 @@ export default class OnboardingModal extends Component {
     window.scrollTo(0, 0)
     window.setTimeout(() => {
       document.body.classList.add('modal-open')
-    }, 500);
+    }, 500)
   }
 
   removeModalClasses() {
@@ -45,7 +45,7 @@ export default class OnboardingModal extends Component {
         <p className="content">Learn how to sell on our DApp today.</p>
 
         <div className="col-auto">
-          <button className='btn btn-primary btn-lg' onClick={() => openOnBoardingModal()}>Learn more</button>
+          <button className="btn btn-primary btn-lg" onClick={() => openOnBoardingModal()}>Learn more</button>
         </div>
       </div>
     )
