@@ -145,7 +145,7 @@ class Users extends ResourceBase {
           'ClaimHolderRegistered',
           'addClaims',
           [claimTypes, issuers, sigs, data, dataOffsets],
-          { from: account, gas: 4000000, contractAddress: identityAddress }
+          { from: account, gas: 400000, contractAddress: identityAddress }
         )
       } else {
         // create identity with presigned claims
@@ -167,7 +167,7 @@ class Users extends ResourceBase {
       return await this.contractService.deploy(
         this.contractService.contracts.ClaimHolderRegistered,
         [userRegistry.options.address],
-        { from: account, gas: 4000000 }
+        { from: account, gas: 1700000 }
       )
     }
   }
