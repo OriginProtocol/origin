@@ -149,6 +149,7 @@ class Users extends ResourceBase {
         )
       } else {
         // create identity with presigned claims
+        const gas = 1440000 + (attestations.length * 230000)
         return await this.contractService.deploy(
           this.contractService.contracts.ClaimHolderPresigned,
           [
@@ -159,7 +160,7 @@ class Users extends ResourceBase {
             data,
             dataOffsets
           ],
-          { from: account, gas: 4000000 }
+          { from: account, gas }
         )
       }
     } else if (!identityAddress) {
