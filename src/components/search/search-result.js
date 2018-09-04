@@ -26,7 +26,8 @@ class SearchResult extends Component {
       listingSchema: undefined,
       listingType: undefined,
       listingIds: [],
-      searchError: undefined
+      searchError: undefined,
+      filterMap: {}
     }
 
     this.dateFilters = []
@@ -75,18 +76,19 @@ class SearchResult extends Component {
         listingSchema: undefined
       })
 
-      const schemaPath = `schemas/searchFilters/${this.props.listingType}-search.json`
+      const filterSchemaPath = `schemas/searchFilters/${this.props.listingType}-search.json`
 
-      fetch(schemaPath)
+      fetch(filterSchemaPath)
         .then((response) => response.json())
         .then((schemaJson) => {
+          this.validateFilterSchema(schemaJson)
           // if schemas are fetched twice very close together, set schema only
           // when it matches the currently set listingType
           if (this.state.listingType === schemaJson.listingType)
             this.setState({ filterSchema: schemaJson })
         })
         .catch(function(e) {
-          console.error(`Error reading schema ${schemaPath}: ${e}`)
+          console.error(`Error reading schema ${filterSchemaPath}: ${e}`)
           throw e
         })
 
@@ -100,9 +102,41 @@ class SearchResult extends Component {
     }
   }
 
+  // Basic schema validation
+  validateFilterSchema(filterSchemaJson) {
+    filterSchemaJson
+      .items
+      .map(filterGroup => {
+        if (filterGroup.type !== 'filterGroup')
+          throw `Only filterGroup objects are allowed inside items array. Malformed object: ${JSON.stringify(filterGroup)}`
+        else if (!filterGroup.hasOwnProperty("title") || !filterGroup.title.hasOwnProperty("id") || !filterGroup.title.hasOwnProperty("defaultMessage"))
+          throw `Each filterGroup object should have a title object which should consist of "id" and "defaultMessage" properties. Malformed object: ${JSON.stringify(filterGroup)}`
+        else if (!filterGroup.hasOwnProperty("items"))
+          throw `Each filterGroup object should have an "items" member whose value is an array. Malformed object: ${JSON.stringify(filterGroup)}`
+
+        filterGroup
+          .items
+          .map(filter => {
+            if (!filter.hasOwnProperty("type"))
+              throw `Each filter should have a "type" property. Malformed object: ${JSON.stringify(filter)}`
+            else if (!filter.hasOwnProperty("searchParameterName"))
+              throw `Each filter should have a "searchParameterName" property. Malformed object: ${JSON.stringify(filter)}`
+            else if (!/^[a-zA-Z]+$/g.test(filter.searchParameterName))
+              throw `"searchParameterName" property should only consist of english letters. Received: ${filter.searchParameterName}`
+          })
+
+      })
+  }
+
+  formatFiltersToUrl() {
+
+    //document.location.href = `#/search?search_query=${this.state.searchQuery}&listing_type=${this.state.selectedListingType.type}`
+  }
+
   async searchRequest(query, listingType) {
     try {
       this.setState({ searchError: undefined })
+      this.formatFiltersToUrl()
       const searchResponse = await origin.marketplace.search(query)
 
       if (searchResponse.status !== 200)
@@ -119,6 +153,7 @@ class SearchResult extends Component {
         defaultMessage: 'We are experiencing some problems. Please try again later'
       })
 
+      console.error(e)
       this.props.showAlert(errorMessage)
       this.setState({ searchError: errorMessage })
     }
@@ -228,8 +263,8 @@ class SearchResult extends Component {
                 {
                   this.state.filterSchema
                     .items
-                    .map((topLevelFilter, index) => {
-                      return this.renderFilterGroup(topLevelFilter, index)
+                    .map((filterGroup, index) => {
+                      return this.renderFilterGroup(filterGroup, index)
                     })
                 }
               </ul>

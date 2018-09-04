@@ -5,7 +5,6 @@ import { withRouter } from 'react-router'
 import queryString from 'query-string'
 
 import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
-import { searchListings } from 'actions/Listing'
 import { generalSearch } from 'actions/Search'
 
 
@@ -63,7 +62,6 @@ class SearchBar extends Component {
 
   handleOnSearch() {
     document.location.href = `#/search?search_query=${this.state.searchQuery}&listing_type=${this.state.selectedListingType.type}`
-    this.props.searchListings(this.state.searchQuery)
     this.props.generalSearch(this.state.searchQuery, this.state.selectedListingType.type)
   }
 
