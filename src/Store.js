@@ -4,6 +4,7 @@ import { createStore, applyMiddleware, combineReducers } from 'redux'
 import notifications from 'reducers/Notifications'
 import transactions from 'reducers/Transactions'
 import marketplace from 'reducers/Marketplace'
+import onboarding from 'reducers/Onboarding'
 import listings from 'reducers/Listings'
 import messages from 'reducers/Messages'
 import profile from 'reducers/Profile'
@@ -24,6 +25,7 @@ const store = createStore(
     notifications,
     transactions,
     marketplace,
+    onboarding,
     listings,
     messages,
     profile,

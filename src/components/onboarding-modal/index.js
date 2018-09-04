@@ -1,10 +1,25 @@
 import React, { Component, Fragment } from 'react'
+import { withRouter } from 'react-router'
+import { connect } from 'react-redux'
+
+import { updateSteps, fetchSteps } from 'actions/Onboarding'
 import SplitPanel from './split-panel'
 import Modal from 'components/modal'
+import steps from './steps'
 
-export default class OnboardingModal extends Component {
+const hasKeys = (obj) => !!Object.keys(obj).length
+
+class OnboardingModal extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = { learnMore: false, isOpen: false }
+  }
+
   componentDidMount() {
+    this.props.fetchSteps()
     this.removeModalClasses()
+    this.userProgress()
   }
 
   componentDidUpdate() {
@@ -33,8 +48,22 @@ export default class OnboardingModal extends Component {
     }
   }
 
+  userProgress() {
+    const { learnMore, onboarding: { currentStep } } = this.props
+
+    if (learnMore) {
+      if (hasKeys(currentStep)) {
+        this.addModalClass()
+        this.setState({ isOpen: true })
+      } else {
+        this.setState({ learnMore: true })
+      }
+    }
+  }
+
   render() {
-    const { closeModal, openOnBoardingModal, learnMore, isOpen } = this.props
+    const { closeModal, openOnBoardingModal, onboarding, updateSteps } = this.props
+    const { learnMore, isOpen } = this.state
     const learnMoreContent = (
       <div>
         <div className="text-right">
@@ -62,7 +91,12 @@ export default class OnboardingModal extends Component {
         )}
         {isOpen && (
           <Fragment>
-            <SplitPanel isOpen={isOpen} closeModal={closeModal('onBoardingModal')}/>
+            <SplitPanel
+              isOpen={isOpen}
+              onboarding={onboarding}
+              updateSteps={updateSteps}
+              closeModal={closeModal('onBoardingModal')}
+            />
             <div
               className={'modal-backdrop fade show'}
               role="presentation"
@@ -73,3 +107,19 @@ export default class OnboardingModal extends Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  onboarding: state.onboarding
+})
+
+const mapDispatchToProps = dispatch => ({
+  updateSteps: (currentStep) => dispatch(updateSteps(currentStep)),
+  fetchSteps: () => dispatch(fetchSteps())
+})
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(OnboardingModal)
+)

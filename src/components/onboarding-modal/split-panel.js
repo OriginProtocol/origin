@@ -2,15 +2,19 @@ import React, { Component } from 'react'
 
 import LeftPanel from './left-panel'
 import RightPanel from './right-panel'
-import steps from './steps'
 
 class SplitPanel extends Component {
   constructor(props) {
     super(props)
-
+    const { onboarding: { currentStep, steps } } = this.props
     this.displayNextStep = this.displayNextStep.bind(this)
+    this.state = { steps, currentStep }
+  }
 
-    this.state = { steps, currentStep: steps[0] }
+  componentDidUpdate(prevProps) {
+    if (prevProps.onboarding != this.props.onboarding) {
+      this.setState({ ...this.props.onboarding })
+    }
   }
 
   firstIncompleteStep() {
@@ -21,33 +25,18 @@ class SplitPanel extends Component {
     })
   }
 
+  storeCurrentStep(incompleteStep) {
+    const { updateSteps } = this.props
+
+    updateSteps(incompleteStep)
+  }
+
   displayNextStep() {
     const { steps = [] } = this.state
     const firstIncompleteStep = this.firstIncompleteStep()
     if (!firstIncompleteStep) return
 
-    const currentIndex = steps.indexOf(firstIncompleteStep)
-    const nextStep = steps[currentIndex+1]
-
-    const setCurrentStep = () => {
-      const { complete, subStep } = firstIncompleteStep
-      if (!complete && subStep) return { ...firstIncompleteStep, complete: true }
-      return nextStep
-    }
-
-    const updateSteps = (step) => {
-      if (step === firstIncompleteStep) {
-        if (step.complete) return { ...step, subStepComplete: true }
-        return { ...step, complete: true }
-      }
-      return step
-    }
-
-    this.setState((state) => ({
-      ...state,
-      steps: steps.map(updateSteps),
-      currentStep: setCurrentStep()
-    }))
+    this.storeCurrentStep(firstIncompleteStep)
   }
 
   render() {
