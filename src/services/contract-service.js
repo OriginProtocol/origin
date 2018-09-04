@@ -211,7 +211,6 @@ class ContractService {
     // Setup options
     const opts = { from, gas }
     opts.from = opts.from || (await this.currentAccount())
-    opts.gas = opts.gas || 50000 // Default gas
     // Get contract and run trasaction
     const contract = await this.deployed(contractDefinition)
     contract.options.address = contractAddress || contract.options.address
@@ -219,6 +218,8 @@ class ContractService {
     if (method._method.constant) {
       return await method.call(opts)
     }
+    // set gas
+    opts.gas = opts.gas || await method.estimateGas({ from })
     const transactionReceipt = await new Promise((resolve, reject) => {
       method
         .send(opts)
