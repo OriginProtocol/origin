@@ -9,7 +9,7 @@ export default class RightPanel extends Component {
     return (
       <div className="flex-column col-xs-12 col-sm-8 right-panel">
         <div className="text-right mt-2">
-          <img src="/images/close-icon.svg" alt="close-icon" onClick={closeModal}/>
+          <img className="close-icon" src="/images/close-icon.svg" alt="close-icon" onClick={closeModal}/>
         </div>
         {img}
         <div>
