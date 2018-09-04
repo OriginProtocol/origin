@@ -36,6 +36,9 @@ describe('User Resource', function() {
   let users
   let phoneAttestation
   let emailAttestation
+  let facebookAttestation
+  let twitterAttestation
+  // let airbnbAttestation
 
   beforeEach(async () => {
     const provider = new Web3.providers.HttpProvider('http://localhost:8545')
@@ -72,12 +75,24 @@ describe('User Resource', function() {
       claimType: 11,
       data: 'email verified'
     })
-    return await generateAttestation({
+    facebookAttestation = await generateAttestation({
       identityAddress,
       web3,
       claimType: 3,
       data: 'facebook verified'
     })
+    twitterAttestation = await generateAttestation({
+      identityAddress,
+      web3,
+      claimType: 4,
+      data: 'twitter verified'
+    })
+    // airbnbAttestation = await generateAttestation({
+    //   identityAddress,
+    //   web3,
+    //   claimType: 5,
+    //   data: 'airbnb verified'
+    // })
   })
 
   describe('set', () => {
@@ -129,11 +144,17 @@ describe('User Resource', function() {
     it('should be able to deploy new identity with presigned claims', async () => {
       await users.set({
         profile: { claims: { name: 'Black Widow' } },
-        attestations: [phoneAttestation, emailAttestation]
+        attestations: [
+          phoneAttestation,
+          emailAttestation,
+          facebookAttestation,
+          twitterAttestation
+          // TODO support additional attestations. Currently can't handle more than 4
+        ]
       })
       const user = await users.get()
 
-      expect(user.attestations.length).to.equal(2)
+      expect(user.attestations.length).to.equal(4)
       expect(user.profile.claims.name).to.equal('Black Widow')
     })
 
