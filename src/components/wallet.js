@@ -7,6 +7,7 @@ import Avatar from 'components/avatar'
 import EtherscanLink from 'components/etherscan-link'
 import Identicon from 'components/identicon'
 import MessageNew from 'components/message-new'
+import { getFiatPrice } from 'utils/priceUtils'
 
 import origin from '../services/origin'
 
@@ -15,7 +16,31 @@ class Wallet extends Component {
     super(props)
 
     this.handleToggle = this.handleToggle.bind(this)
-    this.state = { modalOpen: false }
+    this.state = {
+      modalOpen: false,
+      ethBalance: this.props.balance,
+      usdBalance: 0
+    }
+  }
+
+  async convertEthToUsd() {
+    const usdBalance = await getFiatPrice( this.props.balance, 'USD' )
+    this.setState({
+      usdBalance
+    })
+  }
+
+  componentDidMount() {
+    this.convertEthToUsd()
+  }
+
+  componentDidUpdate() {
+    if (this.props.balance !== this.state.ethBalance) {
+      this.convertEthToUsd()
+      this.setState({
+        ethBalance: this.props.balance
+      })
+    }
   }
 
   handleToggle(e) {
@@ -86,19 +111,19 @@ class Wallet extends Component {
               <div className="d-flex align-items-start">
                 <img src="images/eth-icon.svg" role="presentation" />
                 <div className="amounts">
-                  <div className="eth">27.42866<span className="symbol">ETH</span></div>
-                  <div className="usd">11,467.04 USD</div>
+                  <div className="eth">{balance}<span className="symbol">ETH</span></div>
+                  <div className="usd">{this.state.usdBalance} USD</div>
                 </div>
                 {withMenus &&
-                  <div class="dropdown">
+                  <div className="dropdown">
                     <button type="button" id="ethMenuButton" className="d-flex flex-column justify-content-between" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <div className="dot"></div>
                       <div className="dot"></div>
                       <div className="dot"></div>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="ethMenuButton">
-                      <a class="dropdown-item" href="#">Transaction History</a>
-                      <a class="dropdown-item" href="#">Add Tokens</a>
+                    <div className="dropdown-menu dropdown-menu-right" aria-labelledby="ethMenuButton">
+                      <a className="dropdown-item" href="#">Transaction History</a>
+                      <a className="dropdown-item" href="#">Add Tokens</a>
                     </div>
                   </div>
                 }
@@ -110,15 +135,15 @@ class Wallet extends Component {
                   <div className="usd">0.00 USD</div>
                 </div>
                 {withMenus &&
-                  <div class="dropdown">
+                  <div className="dropdown">
                     <button type="button" id="ognMenuButton" className="d-flex flex-column justify-content-between" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <div className="dot"></div>
                       <div className="dot"></div>
                       <div className="dot"></div>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="ognMenuButton">
-                      <a class="dropdown-item" href="#">Transaction History</a>
-                      <a class="dropdown-item" href="#">Add Tokens</a>
+                    <div className="dropdown-menu dropdown-menu-right" aria-labelledby="ognMenuButton">
+                      <a className="dropdown-item" href="#">Transaction History</a>
+                      <a className="dropdown-item" href="#">Add Tokens</a>
                     </div>
                   </div>
                 }
