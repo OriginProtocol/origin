@@ -565,6 +565,22 @@ a:hover {
   margin-left: -1.4rem;
 }
 
+.search-filters .two-column-container {
+  width: 660px;
+}
+
+.search-filters .three-column-container {
+  width: 990px;
+}
+
+.search-filters .limit-checkbox-two-columns {
+  width: 50%;
+}
+
+.search-filters .limit-checkbox-three-columns {
+  width: 33%;
+}
+
 .search-filters .price-filter {
   margin-left: -0.4rem;
   margin-right: -0.4rem;
