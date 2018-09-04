@@ -157,7 +157,9 @@ class ListingsDetail extends Component {
 
   render() {
     const { boostLevel, boostAmount, category, currentProvider, description, ipfsHash, loading, name, pictures, price, reviews, seller, step, unitsAvailable } = this.state
-    const isActive = !!unitsAvailable
+    const isPending = false // will be handled by offer status
+    const isSold = !unitsAvailable
+    const isAvailable = !isPending && !isSold
     const userIsSeller = seller === this.props.web3Account
 
     return (
@@ -271,11 +273,30 @@ class ListingsDetail extends Component {
             <div className="col-12 col-md-8 detail-info-box">
               <div className="category placehold d-flex">
                 <div>{category}</div>
-                {!loading && boostLevel &&
-                  <span className={ `boosted badge boost-${boostLevel}` }>
-                    <span>&#x2197;</span>
-                    { boostLevel }
-                  </span>
+                {!loading &&
+                  <div className="badges">
+                    {isPending &&
+                      <span className="pending badge">
+                        <FormattedMessage
+                          id={'listing-detail.pending'}
+                          defaultMessage={'Pending'}
+                        />
+                      </span>
+                    }
+                    {isSold &&
+                      <span className="sold badge">
+                        <FormattedMessage
+                          id={'listing-detail.soldOut'}
+                          defaultMessage={'Sold Out'}
+                        />
+                      </span>
+                    }
+                    {boostLevel &&
+                      <span className={ `boosted badge boost-${boostLevel}` }>
+                        <img src="images/boost-icon-arrow.svg" role="presentation" />
+                      </span>
+                    }
+                  </div>
                 }
               </div>
               <h1 className="title text-truncate placehold">
@@ -335,8 +356,7 @@ class ListingsDetail extends Component {
               </div>
             </div>
             <div className="col-12 col-md-4">
-              {!!price &&
-                !!parseFloat(price) && (
+              {isAvailable && !!price && !!parseFloat(price) &&
                 <div className="buy-box placehold">
                   <div className="price">
                     <img src="images/eth-icon.svg" role="presentation" />
@@ -363,10 +383,9 @@ class ListingsDetail extends Component {
                                       {Number(price).toLocaleString(undefined, {minimumFractionDigits: 5, maximumFractionDigits: 5})} ETH
                                     </div>
                                   </div> */}
-                  {!loading && (
+                  {!loading &&
                     <div className="btn-container">
-                      {isActive &&
-                          !userIsSeller && (
+                      {!userIsSeller && (
                         <button
                           className="btn btn-primary"
                           onClick={this.handleBuyClicked}
@@ -378,23 +397,14 @@ class ListingsDetail extends Component {
                           />
                         </button>
                       )}
-                      {isActive &&
-                          userIsSeller && (
+                      {userIsSeller && (
                         <Link to="/my-listings" className="btn">
                               My Listings
                         </Link>
                       )}
-                      {!isActive &&
-                        <span className="sold badge">
-                          <FormattedMessage
-                            id={'listing-detail.soldOut'}
-                            defaultMessage={'Sold Out'}
-                          />
-                        </span>
-                      }
                     </div>
-                  )}
-                  {boostLevel &&
+                  }
+                  {!loading && boostLevel &&
                     <div className="boost-level">
                       <hr/>
                       <div className="row">
@@ -415,7 +425,43 @@ class ListingsDetail extends Component {
                     </div>
                   }
                 </div>
-              )}
+              }
+              {!isAvailable &&
+                <div className="buy-box placehold unavailable text-center">
+                  <div className="reason">
+                    {isPending &&
+                      <FormattedMessage
+                        id={'listing-detail.reasonPending'}
+                        defaultMessage={'This listing is {pending}'}
+                        values={{
+                          pending: <strong>Pending</strong>
+                        }}
+                      />
+                    }
+                    {isSold &&
+                      <FormattedMessage
+                        id={'listing-detail.reasonSold'}
+                        defaultMessage={'This listing is {soldOut}'}
+                        values={{
+                          soldOut: <strong>Sold Out</strong>
+                        }}
+                      />
+                    }
+                  </div>
+                  <div className="suggestion">
+                    <FormattedMessage
+                      id={'listing-detail.suggestion'}
+                      defaultMessage={'Try visiting the listings page and searching for something similar.'}
+                    />
+                  </div>
+                  <Link to="/">
+                    <FormattedMessage
+                      id={'listing-detail.allListings'}
+                      defaultMessage={'See All Listings'}
+                    />
+                  </Link>
+                </div>
+              }
               {seller &&
                 <UserCard
                   title="seller"

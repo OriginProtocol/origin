@@ -209,6 +209,10 @@ a:hover {
   line-height: 1.9;
 }
 
+[data-toggle="dropdown"] {
+  cursor: pointer;
+}
+
 /* Identification */
 
 .identification {
@@ -1581,7 +1585,7 @@ a:hover {
   background-color: var(--pale-grey);
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.4);
   color: var(--dark);
-  padding-top: 15px;
+  padding: 30px;
   max-width: 370px;
 }
 
@@ -1596,9 +1600,10 @@ a:hover {
 }
 
 .getting-started .close-icon {
+  color: var(--steel);
+  cursor: pointer;
   font-size: 24px;
   font-weight: 900;
-  color: var(--steel);
 }
 
 .listing-card {
@@ -1672,6 +1677,7 @@ a:hover {
   font-size: 0.625rem;
 }
 
+.pending.badge,
 .sold.badge {
   background-color: var(--dark);
   color: white;
@@ -1679,6 +1685,7 @@ a:hover {
 }
 
 .boosted.badge {
+  background-color: var(--golden-rod);
   color: white;
   margin: 0 0 auto 10px;
   text-transform: uppercase;
@@ -1694,10 +1701,37 @@ a:hover {
 
 /* Listing Detail */
 
+.listing-detail .badges {
+  margin-left: auto;
+}
+
+.listing-detail .boosted {
+  margin-left: 5px;
+}
+
 .buy-box {
   color: white;
   font-weight: normal;
   margin-bottom: 1rem;
+}
+
+.buy-box.unavailable strong {
+  display: block;
+  font-family: var(--heading-font);
+  font-size: 2rem;
+  font-weight: 300;
+}
+
+.buy-box .reason {
+  margin-bottom: 20px;
+}
+
+.buy-box .suggestion {
+  margin-bottom: 20px;
+}
+
+.buy-box.unavailable a {
+  font-weight: bold;
 }
 
 .buy-box .price {
@@ -1825,10 +1859,6 @@ a:hover {
 .loading p {
   min-height: 124px;
   width: 100%;
-}
-
-.listing-container .boosted {
-  margin-left: auto;
 }
 
 .listing-container.loading .buy-box {
@@ -2143,11 +2173,11 @@ select.form-control:not([size]):not([multiple]) {
   background-color: var(--light);
   margin-left: -5px;
   margin-right: -5px;
-  width: 104%;
+  width: 103%;
 }
  .listing-form .select-boost .rc-slider-handle {
   margin-top: auto;
-  border: 0px;
+  border: 1px solid var(--steel);
   width: 15px;
   height: 15px;
 }
@@ -2214,14 +2244,36 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .boost-slider .level-container {
+  font-weight: normal;
   padding-top: 30px;
   padding-bottom: 15px;
 }
 
-.boost-slider .level-container img {
-  margin-right: 6px;
-  height: 18px;
-  margin-top: -3px;
+.boost-slider .boosted.badge {
+  margin: 0 5px 0 0;
+  vertical-align: text-bottom;
+  /* fix dimensions so that border does not expand element in .none */
+  height: 22px;
+  width: 22px;
+}
+
+.boost-slider .boosted.badge.none {
+  background-color: white;
+  border: 1px dashed var(--bluey-grey);
+}
+
+/* borders result in consistent element size */
+
+.boost-slider .boosted.badge.low {
+  background-color: var(--bluey-grey);
+}
+
+.boost-slider .boosted.badge.medium {
+  background-color: var(--steel);
+}
+
+.boost-slider .boosted.badge.high {
+  background-color: var(--dusk);
 }
 
 .boost-slider .amount-container {
@@ -2235,6 +2287,11 @@ select.form-control:not([size]):not([multiple]) {
 
 .boost-slider .amount-container a {
   font-weight: bold;
+}
+
+.boost-slider .amount-container img {
+  margin-right: 5px;
+  margin-top: -5px;
 }
 
 .boost-slider .text-italics {
@@ -3650,8 +3707,86 @@ sup {
   word-wrap: break-word;
 }
 
-.wallet .eth {
+.wallet .address {
   overflow: auto;
+}
+
+.wallet .balances > .d-flex {
+  line-height: 1;
+  padding-top: 1rem;
+}
+
+.wallet .balances > .d-flex > img {
+  margin-right: 8px;
+}
+
+.wallet .balances {
+  color: var(--light);
+}
+
+.wallet .balances .eth,
+.wallet .balances .ogn {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.wallet .amounts {
+  flex-grow: 1;
+}
+
+.wallet .amounts .symbol {
+  font-size: 0.625rem;
+  margin-left: 8px;
+}
+
+.wallet .eth .symbol {
+  color: var(--bluish-purple);
+}
+
+.wallet .ogn .symbol {
+  color: var(--clear-blue);
+}
+
+.wallet .amounts .usd {
+  color: var(--steel);
+  font-size: 0.625rem;
+  padding-top: 8px;
+}
+
+.wallet .dropdown {
+  height: 22px;
+  padding: 3px 0;
+}
+
+.wallet .dropdown button {
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  height: 16px;
+  padding: 0 10px;
+}
+
+.wallet .dropdown .dot {
+  background-color: var(--steel);
+  border-radius: 50%;
+  height: 4px;
+  width: 4px;
+}
+
+.wallet .dropdown-menu {
+  background-color: var(--dark-grey-blue);
+  margin-top: 8px;
+}
+
+.wallet .dropdown-item {
+  color: white;
+  font-weight: normal;
+  padding: 0.5rem 1.5rem;
+}
+
+.wallet .dropdown-item:hover {
+  background-color: var(--dark-grey-blue);
 }
 
 .publish {
@@ -3684,9 +3819,7 @@ sup {
 }
 
 .profile-wrapper .wallet img.identicon {
-  height: 30px;
   margin-right: 10px;
-  width: 30px;
 }
 
 .wallet .detail:not(:last-of-type) {

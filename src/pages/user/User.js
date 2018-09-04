@@ -6,8 +6,7 @@ import { fetchUser } from 'actions/User'
 
 import Avatar from 'components/avatar'
 import Review from 'components/review'
-
-import Wallet from 'pages/profile/_Wallet'
+import Wallet from 'components/wallet'
 
 class User extends Component {
   constructor(props) {
@@ -44,7 +43,7 @@ class User extends Component {
         <div className="container">
           <div className="row">
             <div className="col-12 col-md-4 col-lg-4 order-md-3">
-              <Wallet address={address} />
+              <Wallet address={address} withProfile={false} />
             </div>
             <div className="col-12 col-sm-4 col-md-3 col-lg-2 order-md-1">
               <Avatar

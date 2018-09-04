@@ -50,6 +50,10 @@ class ListingCard extends Component {
     }
   }
 
+  componentWillUnmount() {
+    $('[data-toggle="tooltip"]').tooltip('dispose')
+  }
+
   render() {
     const {
       boostLevelIsPastSomeThreshold,
@@ -61,6 +65,8 @@ class ListingCard extends Component {
       unitsAvailable
     } = this.state
     const photo = pictures && pictures.length && pictures[0]
+    const isPending = false // will be handled by offer status
+    const isSold = !unitsAvailable
 
     return (
       <div
@@ -82,7 +88,15 @@ class ListingCard extends Component {
           }
           <div className="category placehold d-flex justify-content-between">
             <div>{category}</div>
-            {!loading && unitsAvailable === 0 &&
+            {!loading && isPending &&
+              <span className="pending badge">
+                <FormattedMessage
+                  id={'listing-card.pending'}
+                  defaultMessage={'Pending'}
+                />
+              </span>
+            }
+            {!loading && isSold &&
               <span className="sold badge">
                 <FormattedMessage
                   id={'listing-card.sold'}
@@ -95,7 +109,7 @@ class ListingCard extends Component {
                 className="boosted badge"
                 data-toggle="tooltip"
                 title="Tell me <a href='https://originprotocol.com' target='_blank'>More</a> about what this means."
-              >Boosted</span>
+              ><img src="images/boost-icon-arrow.svg" role="presentation" /></span>
             }
           </div>
           <h2 className="title placehold text-truncate">{name}</h2>

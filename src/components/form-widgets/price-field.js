@@ -72,8 +72,7 @@ class PriceField extends Component {
             <div className="price-field-fiat">
               { this.state.priceUsd }&nbsp;
               <span className="currency-badge text-grey">
-                {/* TODO:John - use correct dollar-sign icon here when available */}
-                <img src="images/eth-icon.svg" role="presentation" />
+                <img src="images/usd-icon.svg" role="presentation" />
                 {this.state.currencyCode}
               </span>
             </div>
