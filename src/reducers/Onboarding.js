@@ -53,8 +53,11 @@ const initialState = {
   steps,
   progress: false,
   learnMore: false,
-  splitPanel: false
+  splitPanel: false,
+  completed: false
 }
+
+const stepsComplete = (steps) => !!steps.find((step) => !step.complete)
 
 export default function Onboarding(state = initialState, action = {}) {
   switch (action.type) {
@@ -63,7 +66,8 @@ export default function Onboarding(state = initialState, action = {}) {
       ...state,
       currentStep: updateCurrentStep(action.incompleteStep, state.steps),
       steps: updateAllSteps(action.incompleteStep, state.steps),
-      progress: true
+      progress: true,
+      completed: stepsComplete(state.steps)
     }
   case OnboardingConstants.FETCH_STEPS:
     const fetchedStep = getStoredStep(state) || steps[0]

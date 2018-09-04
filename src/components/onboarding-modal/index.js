@@ -58,12 +58,12 @@ class OnboardingModal extends Component {
   }
 
   userProgress() {
-    const { onboarding: { progress  }, toggleLearnMore, toggleSplitPanel, initialAlert } = this.props
+    const { onboarding: { progress, completed }, toggleLearnMore, toggleSplitPanel, initialAlert } = this.props
     if (initialAlert) {
       if (!progress) {
         // this.addModalClass()
         return toggleLearnMore(true)
-      } else if (progress) {
+      } else if (!completed && progress) {
         return toggleSplitPanel(true)
       }
     }
