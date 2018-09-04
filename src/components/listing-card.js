@@ -61,6 +61,8 @@ class ListingCard extends Component {
       unitsAvailable
     } = this.state
     const photo = pictures && pictures.length && pictures[0]
+    const isPending = false // will be handled by offer status
+    const isSold = !unitsAvailable
 
     return (
       <div
@@ -82,7 +84,15 @@ class ListingCard extends Component {
           }
           <div className="category placehold d-flex justify-content-between">
             <div>{category}</div>
-            {!loading && unitsAvailable === 0 &&
+            {!loading && isPending &&
+              <span className="pending badge">
+                <FormattedMessage
+                  id={'listing-card.pending'}
+                  defaultMessage={'Pending'}
+                />
+              </span>
+            }
+            {!loading && isSold &&
               <span className="sold badge">
                 <FormattedMessage
                   id={'listing-card.sold'}

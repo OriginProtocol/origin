@@ -1,5 +1,9 @@
 [
   {
+    "id": "listing-card.pending",
+    "defaultMessage": "Pending"
+  },
+  {
     "id": "listing-card.sold",
     "defaultMessage": "Sold Out"
   }
