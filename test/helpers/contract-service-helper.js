@@ -38,7 +38,7 @@ export default async function contractServiceHelper(web3) {
   return new ContractService({
     web3,
     contractAddresses: {
-      listingsRegistryContract: {
+      ListingsRegistry: {
         999: { address: listingsRegistry.contractAddress }
       }
     }
