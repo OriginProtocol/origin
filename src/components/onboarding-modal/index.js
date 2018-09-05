@@ -15,18 +15,22 @@ class OnboardingModal extends Component {
   }
 
   async componentWillMount() {
-    const { fetchSteps, onboarding } = this.props
+    const { fetchSteps, onboarding, wallet } = this.props
     await fetchSteps()
 
-    if (!onboarding.stepsCompleted) {
+    if (!onboarding.stepsCompleted && !wallet.address) {
       this.userProgress()
     }
   }
 
-  componentDidUpdate() {
-    const { onboarding } = this.props
+  componentDidMount() {
+    this.removeModalClasses()
+  }
 
-    if (!onboarding.stepsCompleted && onboarding.progress) this.addModalClass()
+  componentDidUpdate(prevProps) {
+    const { onboarding: { splitPanel } } = this.props
+
+    if (splitPanel) this.addModalClass()
     this.removeModalClasses()
   }
 
@@ -45,26 +49,30 @@ class OnboardingModal extends Component {
     window.scrollTo(0, 0)
     window.setTimeout(() => {
       document.body.classList.add('modal-open')
-    }, 500)
+    }, 200)
   }
 
   removeModalClasses() {
-    const { onboarding } = this.props
+    const { onboarding, wallet } = this.props
 
-    if (!onboarding.stepsCompleted && onboarding.progres) {
+    if (!wallet.address) {
       document.body.classList.remove('modal-open')
-      const backdrop = document.getElementsByClassName('modal-backdrop')
 
-      backdrop.length && backdrop[0].classList.remove('modal-backdrop')
+      if (!onboarding.splitPanel) {
+        const backdrop = document.getElementsByClassName('modal-backdrop')
+        backdrop.length && backdrop[0].classList.remove('modal-backdrop')
+      }
     }
   }
 
   userProgress() {
-    const { onboarding: { progress, stepsCompleted }, toggleLearnMore, toggleSplitPanel, initialAlert } = this.props
-    if (initialAlert) {
-      if (!stepsCompleted || !progress) {
+    const { onboarding: { progress, stepsCompleted }, toggleLearnMore, toggleSplitPanel, wallet } = this.props
+
+    if (!wallet.address) {
+      if (!progress) {
         return toggleLearnMore(true)
       } else if (!stepsCompleted && progress) {
+        this.addModalClass()
         return toggleSplitPanel(true)
       }
     }
@@ -88,7 +96,7 @@ class OnboardingModal extends Component {
         </div>
       </div>
     )
-
+    console.log("SPLIT PANEL", splitPanel)
     return (
       <div className="onboarding">
         {learnMore && (
@@ -96,7 +104,6 @@ class OnboardingModal extends Component {
             className={'getting-started'}
             isOpen={learnMore}
             children={learnMoreContent}
-            backdrop={'noop'}
           />
         )}
         {splitPanel && (
@@ -119,7 +126,7 @@ class OnboardingModal extends Component {
   }
 }
 
-const mapStateToProps = ({ onboarding }) => ({ onboarding })
+const mapStateToProps = ({ onboarding, wallet }) => ({ onboarding, wallet })
 
 const mapDispatchToProps = dispatch => ({
   updateSteps: ({ incompleteStep, stepsCompleted }) => dispatch(updateSteps({ incompleteStep, stepsCompleted })),

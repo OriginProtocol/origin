@@ -14,7 +14,6 @@ class ListingsGrid extends Component {
     super(props)
     this.state = {
       listingsPerPage: 12,
-      initialAlert: false
     }
   }
 
@@ -22,10 +21,6 @@ class ListingsGrid extends Component {
     const { getListingIds, wallet } = this.props
 
     getListingIds()
-
-    if (!wallet.address) {
-      this.setState({ initialAlert: true })
-    }
   }
 
   render() {
@@ -94,7 +89,7 @@ class ListingsGrid extends Component {
             />
           </div>
         )}
-        <OnboardingModal initialAlert={initialAlert} />
+        <OnboardingModal />
       </div>
     )
   }
