@@ -230,6 +230,8 @@
   "purchase-progress.receivedByBuyer": "Received by buyer",
   "purchase-progress.fundsWithdrawn": "Funds Withdrawn",
   "review.unnamedUser": "Unnamed User",
+  "SearchResults.filterGroup.searchFiltersClear": "Clear",
+  "SearchResults.filterGroup.searchFiltersApply": "Apply",
   "SearchResults.searchFiltersClear": "Clear",
   "SearchResults.searchFiltersApply": "Apply",
   "searchbar.search": "Search",

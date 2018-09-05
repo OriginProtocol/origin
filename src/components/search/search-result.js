@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { injectIntl, FormattedMessage } from 'react-intl'
+import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router'
 import queryString from 'query-string'
 import $ from 'jquery'
@@ -12,10 +12,7 @@ import ListingsGrid from 'components/listings-grid'
 import SearchBar from 'components/search/searchbar'
 import { generalSearch } from 'actions/Search'
 import origin from '../../services/origin'
-import MultipleSelectionFilter from 'components/search/multiple-selection-filter'
-import PriceFilter from 'components/search/price-filter'
-import CounterFilter from 'components/search/counter-filter'
-import DateFilterGroup from 'components/search/date-filter'
+import FilterGroup from 'components/search/filter-group'
 
 class SearchResult extends Component {
   constructor(props) {
@@ -27,10 +24,8 @@ class SearchResult extends Component {
       listingType: undefined,
       listingIds: [],
       searchError: undefined,
-      filterMap: {}
+      filters: {}
     }
-
-    this.dateFilters = []
 
     // set default prop values for search_query and listing_type
     const getParams = queryString.parse(this.props.location.search)
@@ -63,6 +58,7 @@ class SearchResult extends Component {
     )
       return
 
+    this.setState({ filters: []})
     this.handleComponentUpdate(previousProps)
   }
 
@@ -144,7 +140,7 @@ class SearchResult extends Component {
 
       const json = await searchResponse.json()
       this.setState({
-        listingIds: json.data.Listings.listings.map(listing => listing.id)
+        listingIds: json.data.listings.nodes.map(listing => listing.id)
       })
 
     } catch (e) {
@@ -158,96 +154,6 @@ class SearchResult extends Component {
       this.setState({ searchError: errorMessage })
     }
 
-  }
-
-  resolveFromListingSchema(path) {
-    var properties = Array.isArray(path) ? path : path.split('.')
-    return properties.reduce((prev, curr) => prev && prev[curr], this.state.listingSchema)
-  }
-
-  renderFilter(filter, title) {
-    if (filter.type == 'multipleSelectionFilter') {
-      return(
-        <MultipleSelectionFilter
-          filter={filter}
-          multipleSelectionValues={this.resolveFromListingSchema(filter.listingPropertyName)}
-          listingType={this.state.listingType}
-          title={title}
-        />
-      )
-    } else if (filter.type == 'price') {
-      return (
-        <PriceFilter
-          filter={filter}
-        />
-      )
-    } else if (filter.type == 'counter') {
-      return(
-        <CounterFilter
-          filter={filter}
-        />
-      )
-    } else if (filter.type == 'date') {
-      return(
-        <DateFilterGroup
-          filter={filter}
-          onChildMounted={child => {
-            this.dateFilters.push(child)
-          }}
-          onChildUnMounted={child => {
-            const index = this.dateFilters.indexOf(child)
-            if (index !== -1)
-              this.dateFilters.splice(index, 1)
-          }}
-        />
-      )
-    } else {
-      throw `Unrecognised filter type "${filter.type}".`
-    }
-  }
-
-  renderFilterGroup(filterGroup, index) {
-    const title = this.props.intl.formatMessage(filterGroup.title)
-    const formId = `filter-group-${title}`
-    const containsDateFilter = filterGroup.items.some(filter => filter.type == 'date')
-
-    return (
-      <li className="nav-item" key={index}>
-        <a onClick={() => {
-            if (!containsDateFilter)
-              return
-
-            this.dateFilters.forEach(dateFilter => dateFilter.onOpen())
-          }}
-          className="nav-link"
-          data-toggle="dropdown"
-          data-parent="#search-filters-bar"
-        >
-          {this.props.intl.formatMessage(filterGroup.title)}
-        </a>
-        <form className="dropdown-menu" id={formId}>
-          <div className="d-flex flex-column">
-            <div className="dropdown-form">
-            {filterGroup.items.map(filter => this.renderFilter(filter, title))}
-            </div>
-            <div className="d-flex flex-row button-container">
-              <a className="dropdown-button dropdown-button-left align-middle">
-                <FormattedMessage
-                  id={'SearchResults.searchFiltersClear'}
-                  defaultMessage={'Clear'}
-                />
-              </a>
-              <a className="dropdown-button dropdown-button-right align-middle align-self-center">
-                <FormattedMessage
-                  id={'SearchResults.searchFiltersApply'}
-                  defaultMessage={'Apply'}
-                />
-              </a>
-            </div>
-          </div>
-        </form>
-      </li>
-    )
   }
 
   render() {
@@ -264,7 +170,12 @@ class SearchResult extends Component {
                   this.state.filterSchema
                     .items
                     .map((filterGroup, index) => {
-                      return this.renderFilterGroup(filterGroup, index)
+                      return <FilterGroup
+                        filterGroup={filterGroup}
+                        index={index}
+                        listingSchema={this.state.listingSchema}
+                        listingType={this.state.listingType}
+                      />
                     })
                 }
               </ul>
