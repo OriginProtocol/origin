@@ -24,7 +24,8 @@ class Wallet extends Component {
   }
 
   async convertEthToUsd() {
-    const usdBalance = await getFiatPrice( this.props.balance, 'USD' )
+    const ethToUsdBalance = await getFiatPrice( this.props.balance, 'USD' )
+    
     this.setState({
       ethToUsdBalance
     })

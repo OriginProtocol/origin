@@ -10,14 +10,15 @@ import {
   upsert as upsertTransaction
 } from '../actions/Transaction'
 
-import Modal from 'components/modal'
-import PriceField from 'components/form-widgets/price-field'
-import PhotoPicker from 'components/form-widgets/photo-picker'
 import BoostSlider from 'components/boost-slider'
+import PhotoPicker from 'components/form-widgets/photo-picker'
+import PriceField from 'components/form-widgets/price-field'
+import Modal from 'components/modal'
+import Wallet from 'components/wallet'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
-import { translateSchema, translateListingCategory } from 'utils/translationUtils'
 import { getFiatPrice } from 'utils/priceUtils'
+import { translateSchema, translateListingCategory } from 'utils/translationUtils'
 
 import origin from '../services/origin'
 
@@ -254,7 +255,13 @@ class ListingCreate extends Component {
         {this.state.step === this.STEP.PICK_SCHEMA && (
           <div className="step-container pick-schema">
             <div className="row flex-sm-row-reverse">
-              <div className="col-md-5 offset-md-2">
+              <div className="col-md-4 offset-md-3">
+                <Wallet
+                  balance={this.props.balance}
+                  address={this.props.address}
+                  withMenus={true}
+                  withProfile={false}
+                />
                 <div className="info-box">
                   <h2>
                     <FormattedMessage
@@ -333,7 +340,13 @@ class ListingCreate extends Component {
         {this.state.step === this.STEP.DETAILS && (
           <div className="step-container schema-details">
             <div className="row flex-sm-row-reverse">
-              <div className="col-md-5 offset-md-2">
+              <div className="col-md-4 offset-md-3">
+                <Wallet
+                  balance={this.props.balance}
+                  address={this.props.address}
+                  withMenus={true}
+                  withProfile={false}
+                />
                 <div className="info-box">
                   <div>
                     <h2>
@@ -456,8 +469,13 @@ class ListingCreate extends Component {
         {this.state.step === this.STEP.BOOST && (
           <div className="step-container select-boost">
             <div className="row flex-sm-row-reverse">
-              <div className="col-md-5 offset-md-2">
-                {/* Wallet info and info boxes go here */}
+              <div className="col-md-4 offset-md-3">
+                <Wallet
+                  balance={this.props.balance}
+                  address={this.props.address}
+                  withMenus={true}
+                  withProfile={false}
+                />
               </div>
               <div className="col-md-5">
                 <label>
@@ -793,6 +811,13 @@ class ListingCreate extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    address: state.wallet.address,
+    balance: state.wallet.balance
+  }
+}
+
 const mapDispatchToProps = dispatch => ({
   showAlert: msg => dispatch(showAlert(msg)),
   updateTransaction: (hash, confirmationCount) =>
@@ -801,6 +826,6 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 )(injectIntl(ListingCreate))

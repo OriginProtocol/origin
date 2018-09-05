@@ -948,10 +948,6 @@ a:hover {
   width: 50px;
 }
 
-.navbar .wallet .image-container {
-  margin-right: 10px;
-}
-
 .navbar .wallet .image-container img {
   height: 50px;
   width: 50px;
@@ -1997,7 +1993,7 @@ select.form-control:not([size]):not([multiple]) {
   flex-wrap: wrap;
 }
 
-.schema-details .image-container {
+.schema-details .pictures .image-container {
   padding: 0 10px 10px 0;
 }
 
@@ -2029,6 +2025,10 @@ select.form-control:not([size]):not([multiple]) {
 
 .listing-form textarea {
   height: 120px;
+}
+
+.listing-form .wallet {
+  margin-bottom: 20px;
 }
 
 .listing-form .info-box {
@@ -3784,11 +3784,11 @@ sup {
   text-transform: uppercase;
 }
 
-.profile-wrapper .wallet {
+.wallet {
   margin-bottom: 20px;
 }
 
-.profile-wrapper .wallet img.identicon {
+.wallet img.identicon {
   margin-right: 10px;
 }
 
