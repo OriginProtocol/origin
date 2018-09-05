@@ -13,6 +13,7 @@ import {
 import ListingDetail from 'components/listing-detail'
 import Modal from 'components/modal'
 
+import { dappFormDataToOriginListing } from 'utils/listing'
 import getCurrentProvider from 'utils/getCurrentProvider'
 import { translateSchema } from 'utils/translationUtils'
 
@@ -172,8 +173,9 @@ class ListingCreate extends Component {
       console.log(formListing)
       this.setState({ step: this.STEP.PROCESSING })
       console.log(formListing.formData, selectedSchemaType)
+      const listing = dappFormDataToOriginListing(formListing.formData)
       const transactionReceipt = await origin.marketplace.createListing(
-        formListing.formData,
+        listing,
         (confirmationCount, transactionReceipt) => {
           this.props.updateTransaction(confirmationCount, transactionReceipt)
         }

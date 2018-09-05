@@ -6,6 +6,7 @@ import { storeWeb3Intent } from 'actions/App'
 
 import MyListingCard from 'components/my-listing-card'
 import Modal from 'components/modal'
+import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
 
@@ -41,7 +42,7 @@ class MyListings extends Component {
       })
       const listings = await Promise.all(
         ids.map(id => {
-          return origin.marketplace.getListing(id)
+          return getListing(id)
         })
       )
       this.setState({ listings })
@@ -62,7 +63,7 @@ class MyListings extends Component {
 
   async handleUpdate(id) {
     try {
-      const listing = await origin.marketplace.getListing(id)
+      const listing = await getListing(id)
       const listings = [...this.state.listings]
       const index = listings.findIndex(l => l.id === id)
 

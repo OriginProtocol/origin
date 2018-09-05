@@ -20,7 +20,7 @@ import Review from 'components/review'
 import UserCard from 'components/user-card'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
-import { translateListingCategory } from 'utils/translationUtils'
+import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
 
@@ -68,15 +68,9 @@ class ListingsDetail extends Component {
 
   async loadListing() {
     try {
-      const rawListing = await origin.marketplace.getListing(
-        this.props.listingId
-      )
-      const listing = rawListing.ipfsData.data
-      const translatedListing = translateListingCategory(listing)
-
+      const listing = await getListing(this.props.listingId, true)
       this.setState({
-        ...rawListing,
-        ...translatedListing,
+        ...listing,
         loading: false
       })
     } catch (error) {

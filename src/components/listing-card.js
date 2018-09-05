@@ -4,9 +4,7 @@ import { FormattedMessage } from 'react-intl'
 
 import ListingCardPrices from 'components/listing-card-prices'
 
-import { translateListingCategory } from 'utils/translationUtils'
-
-import origin from '../services/origin'
+import { getListing } from 'utils/listing'
 
 class ListingCard extends Component {
   constructor(props) {
@@ -18,22 +16,15 @@ class ListingCard extends Component {
 
   async componentDidMount() {
     try {
-      const rawListing = await origin.marketplace.getListing(
-        this.props.listingId
-      )
-      const listing = rawListing.ipfsData.data
-      const translatedListing = translateListingCategory(listing)
+      const listing = await getListing(this.props.listingId, true)
 
       this.setState({
-        ...rawListing,
-        ...translatedListing,
+        ...listing,
         loading: false
       })
     } catch (error) {
       console.error(
-        `Error fetching contract or IPFS info for listingId: ${
-          this.props.listingId
-        }`
+        `Error fetching contract or IPFS data for listing ${this.props.listingId}: ${error}`
       )
     }
   }

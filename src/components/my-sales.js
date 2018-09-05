@@ -6,6 +6,8 @@ import { storeWeb3Intent } from 'actions/App'
 
 import MySaleCard from 'components/my-sale-card'
 
+import { getListing } from 'utils/listing'
+
 import origin from '../services/origin'
 
 class MySales extends Component {
@@ -25,7 +27,7 @@ class MySales extends Component {
     const listingIds = await origin.marketplace.getListings({ listingsFor })
     const listingPromises = listingIds.map(listingId => {
       return new Promise(async resolve => {
-        const listing = await origin.marketplace.getListing(listingId)
+        const listing = await getListing(listingId)
         resolve({ listingId, listing })
       })
     })

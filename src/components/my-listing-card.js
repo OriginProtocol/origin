@@ -9,8 +9,6 @@ import {
   upsert as upsertTransaction
 } from 'actions/Transaction'
 
-import { translateListingCategory } from 'utils/translationUtils'
-
 import origin from '../services/origin'
 
 class MyListingCard extends Component {
@@ -75,9 +73,7 @@ class MyListingCard extends Component {
 
   render() {
     const { listing } = this.props
-    const { category, name, pictures } = translateListingCategory(
-      listing.ipfsData.data
-    )
+    const { category, name, pictures } = listing
     const status = listing.status
     // const timestamp = `Created on ${moment(createdAt).format('MMMM D, YYYY')}`
     const photo = pictures && pictures.length > 0 && pictures[0]

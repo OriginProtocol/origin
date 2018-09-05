@@ -22,7 +22,7 @@ import UserCard from 'components/user-card'
 
 import TransactionEvent from 'pages/purchases/transaction-event'
 
-import { translateListingCategory } from 'utils/translationUtils'
+import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
 
@@ -206,7 +206,7 @@ class PurchaseDetail extends Component {
 
     try {
       const purchase = await origin.marketplace.getOffer(offerId)
-      const listing = await origin.marketplace.getListing(purchase.listingId)
+      const listing = await getListing(purchase.listingId)
       const reviews = await origin.marketplace.getListingReviews(offerId)
       this.setState({ purchase, listing, reviews })
       await this.loadSeller(listing.seller)
@@ -386,7 +386,8 @@ class PurchaseDetail extends Component {
     const translatedListing = translateListingCategory(listing)
     const { rating, reviewText } = form
 
-    if (!purchase.ipfsData || !listing.ipfsData) {
+    // Data not loaded yet.
+    if (!purchase.ipfsData || !listing.status) {
       return null
     }
 
