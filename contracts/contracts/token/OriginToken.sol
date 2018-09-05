@@ -20,11 +20,6 @@ contract OriginToken is BurnableToken, MintableToken, WhitelistedPausableToken {
     mint(owner, initialSupply);
   }
 
-  // @dev Returns the initial supply of tokens for the mainnet launch
-  function mainnetInitialSupply() public pure returns (uint256) {
-    return 1e9 * 10**uint256(decimals); // 1 billion tokens
-  }
-
   //
   // Burn methods
   //

@@ -19,11 +19,11 @@ const typeDefs = gql`
   ######################
 
   # When querying a set of items, the output is a page.
-  interface OutputPage {
-    num: Int!      # Current page number
-    size: Int!     # Size of pages.
-    total: Int!    # Total number of pages available.
-  }
+  #interface OutputPage {
+    # num: Int!      # Current page number
+    # size: Int!     # Size of pages.
+    # total: Int!    # Total number of pages available.
+  #}
 
   type Price {
     currency: String!
@@ -32,49 +32,48 @@ const typeDefs = gql`
 
   type User {
     walletAddress: ID!   # Ethereum wallet address
-    identityAddress: ID  # ERC 725 identity address.
-    listings(page: Page, order: ListingOrder, filter: ListingFilter): ListingPage
-    offers(page: Page, order: OfferOrder, filter: OfferFilter): OfferPage
-    reviews(page: Page, order: ReviewOrder, filter: ReviewFilter): ReviewPage
+    # identityAddress: ID  # ERC 725 identity address.
+    # listings(page: Page, order: ListingOrder, filter: ListingFilter): ListingPage
+    # offers(page: Page, order: OfferOrder, filter: OfferFilter): OfferConnection
+    # reviews(page: Page, order: ReviewOrder, filter: ReviewFilter): ReviewPage
   }
 
   enum OfferStatus {
-    CREATED
-    ACCEPTED
-    DISPUTED
-    # Note: There is no "Finalized" status stored on the Offer contract on-chain.
-    #       This is computed by the indexing server.
-    FINALIZED
+    created
+    accepted
+    finalized
+    buyerReviewed
+    disputed
   }
 
   type Offer {
     id: ID!
     ipfsHash: ID!
-    listingId: ID!
     buyer: User!
+    seller: User!
     status: OfferStatus!
+    affiliate: ID,
+    price: Price! 
+    listing: Listing!
   }
 
-  type OfferPage implements OutputPage {
-    num: Int!
-    size: Int!
-    total: Int!
-    offers: [Offer]
+  type OfferConnection {
+    nodes: [Offer]!
   }
 
-  type Review {
-    ipfsHash: ID!
-    reviewer: User!
-    text: String!
-    rating: Int!
-  }
+  # type Review {
+  #   ipfsHash: ID!
+  #   reviewer: User!
+  #   text: String!
+  #   rating: Int!
+  # }
 
-  type ReviewPage implements OutputPage {
-    num: Int!
-    size: Int!
-    total: Int!
-    reviews: [Review]
-  }
+  # type ReviewPage implements OutputPage {
+  #   num: Int!
+  #   size: Int!
+  #   total: Int!
+  #   reviews: [Review]
+  # }
 
   # TODO: Add a status indicating if Listing is sold out.
   type Listing {
@@ -86,14 +85,14 @@ const typeDefs = gql`
     category: String!
     subCategory: String!
     price: Price!
-    offers(page: Page, order: OfferOrder, filter: OfferFilter): OfferPage
-    reviews(page: Page, order: ReviewOrder, filter: ReviewFilter): ReviewPage
+    offers: OfferConnection
+    # reviews(page: Page, order: ReviewOrder, filter: ReviewFilter): ReviewPage
   }
 
-  type ListingPage implements OutputPage {
-    num: Int!
-    size: Int!
-    total: Int!
+  type ListingPage { # implements OutputPage
+    # num: Int!
+    # size: Int!
+    # total: Int!
     nodes: [Listing]
   }
 
@@ -183,10 +182,13 @@ const typeDefs = gql`
 
   # The "Query" type is the root of all GraphQL queries.
   type Query {
-    listings(searchQuery: String, page: Page, order: ListingOrder, filter: ListingFilter): ListingPage,
+    listings(searchQuery: String): ListingPage, # (page: Page, order: ListingOrder, filter: ListingFilter)
     listing(id: ID!): Listing,
+
+    offers(buyerAddress: ID, listingId: ID): OfferConnection,
+    offer(id: ID!): Offer,
     
-    user(walletAddress: ID!): User
+    #user(walletAddress: ID!): User
   }
 `
 
@@ -209,13 +211,23 @@ const resolvers = {
         nodes: listings,
       }
     },
-    listing(root, args, context, info) {
+    async listing(root, args, context, info) {
       return search.Listing.get(args.id)
     },
-    user(root, args, context, info) {
-      // TODO: implement me !
-      return {}
-    }
+    async offers(root, args, context, info){
+      const opts = {}
+      opts.buyerAddress = args.buyerAddress
+      opts.listingId = args.listingId
+      const offers = search.Offer.search(opts)
+      return {nodes: offers}
+    },
+    async offer(root, args, context, info){
+      return search.Offer.get(args.id)
+    },
+    // user(root, args, context, info) {
+    //   // TODO: implement me !
+    //   return {}
+    // }
   },
   Listing: {
     seller(listing) {
@@ -231,51 +243,63 @@ const resolvers = {
       return listing.category
     },
     price(listing) {
-      return {currency: 'ETH', amount: listing.price.toString()}
+      return {currency: 'ETH', amount: listing.priceEth}
     },
     offers(listing, args) {
-      // TODO: handle pagination (including enforcing MaxResultsPerPage), filters, order.
-      return {
-        num: 1,
-        size: 1,
-        total: 1,
-        offers: [{
-          id: '123', ipfsHash: 'IPFS_H', listingId: listing.id,
-          buyer: {walletAddress: 'B_WADDR',}, status: 'ACCEPTED',
-        }]
-      }
+      const offers = search.Offer.search({listingId:listing.id})
+      return {nodes: offers}
     },
-    reviews(listing, args) {
-      // TODO: handle pagination (including enforcing MaxResultsPerPage), filters, order.
-      return {
-        num: 1,
-        size: 1,
-        total: 1,
-        reviews: [{
-          ipfsHash: 'IPFS_H', reviewer: {walletAddress: 'R_WADDR'},
-          text: 'Great product. Great seller.', rating: 5,
-        }]
-      }
-    },
+    // reviews(listing, args) {
+    //   // TODO: handle pagination (including enforcing MaxResultsPerPage), filters, order.
+    //   return {
+    //     num: 1,
+    //     size: 1,
+    //     total: 1,
+    //     reviews: [{
+    //       ipfsHash: 'IPFS_H', reviewer: {walletAddress: 'R_WADDR'},
+    //       text: 'Great product. Great seller.', rating: 5,
+    //     }]
+    //   }
+    // },
   },
-  User: {
-    identityAddress(user) {
-      // TODO fetch identify based on user.walletAddress
-      return `I_${user.walletAddress}`
+  Offer: {
+    seller(offer){
+      return {walletAddress: offer.seller}
     },
-    listings(user, args) {
-      // TODO: load listings for the user, handle pagination, filters, order.
-      return {}
+    buyer(offer){
+      return {walletAddress: offer.buyer}
     },
-    offers(user, args) {
-      // TODO: load offers for the user, handle pagination, filters, order.
-      return {}
+    price(offer) {
+      return {currency: 'ETH', amount: offer.priceEth}
     },
-    reviews(user, args) {
-      // TODO: load reviews for the user, handle pagination, filters, order.
-      return {}
+    listing(offer, args, context, info) {
+      const requestedSubFields = info.fieldNodes[0].selectionSet.selections 
+      const isIdOnly = requestedSubFields.filter(x=>x.name.value !== "id").length === 0
+      if(isIdOnly){
+        return {id: offer.listingId}
+      } else {
+        return search.Listing.get(offer.listingId)
+      }
     }
   },
+  // User: {
+  //   identityAddress(user) {
+  //     // TODO fetch identify based on user.walletAddress
+  //     return `I_${user.walletAddress}`
+  //   },
+  //   listings(user, args) {
+  //     // TODO: load listings for the user, handle pagination, filters, order.
+  //     return {}
+  //   },
+  //   offers(user, args) {
+  //     // TODO: load offers for the user, handle pagination, filters, order.
+  //     return {}
+  //   },
+  //   reviews(user, args) {
+  //     // TODO: load reviews for the user, handle pagination, filters, order.
+  //     return {}
+  //   }
+  // },
 }
 
 // Start ApolloServer by passing type definitions (typeDefs) and the resolvers

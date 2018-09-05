@@ -1,3 +1,4 @@
+import assert from 'assert'
 import fs from 'fs'
 import solc from 'solc'
 import linker from 'solc/linker'
@@ -193,7 +194,37 @@ export default async function testHelper(contracts, provider) {
     return web3.eth.abi.decodeLog(ruling.inputs, data, topics)
   }
 
-  return { web3, accounts, deploy, server, decodeEvent }
+  async function blockTimestamp() {
+    const block = await web3.eth.getBlock('latest')
+    return block.timestamp
+  }
+
+  async function evmIncreaseTime(secs) {
+    await web3.currentProvider.send({
+      jsonrpc: '2.0',
+      method: 'evm_increaseTime',
+      params: [secs],
+      id: new Date().getTime(),
+    }, () => {})
+
+    // Mine a block to get the time change to occur
+    await web3.currentProvider.send({
+      jsonrpc: '2.0',
+      method: 'evm_mine',
+      params: [],
+      id: new Date().getTime(),
+    }, () => { })
+  }
+
+  return {
+    web3,
+    accounts,
+    deploy,
+    server,
+    decodeEvent,
+    blockTimestamp,
+    evmIncreaseTime,
+  }
 }
 
 // Start the server if it hasn't been already...
@@ -215,4 +246,17 @@ async function server(web3, provider) {
   const server = Ganache.server()
   await server.listen(port)
   return server
+}
+
+// Asserts unless the given promise leads to an EVM revert.
+// Ported from OpenZeppelin.
+export async function assertRevert(promise) {
+  try {
+    await promise
+  } catch (error) {
+    const revertFound = error.message.search('revert') >= 0
+    assert(revertFound, `Expected "revert", got ${error} instead`)
+    return
+  }
+  assert.fail('Expected revert not received')
 }

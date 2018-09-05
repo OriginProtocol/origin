@@ -4,6 +4,7 @@ import { Attestations } from './resources/attestations'
 import Marketplace from './resources/marketplace'
 import Users from './resources/users'
 import Messaging from './resources/messaging'
+import Token from './resources/token'
 import fetch from 'cross-fetch'
 import store from 'store'
 
@@ -66,6 +67,12 @@ class Origin {
       OrbitDB,
       ecies,
       messagingNamespace
+    })
+
+    this.token = new Token({
+      contractService: this.contractService,
+      ipfsService: this.ipfsService,
+      marketplace: this.marketplace
     })
   }
 }

@@ -1,3 +1,5 @@
+const OFFER_STATUS = ['error','created', 'accepted', 'disputed', 'finalized', 'buyerReviewed']
+
 class V00_MarkeplaceAdapter {
   constructor({ contractService }) {
     this.web3 = contractService.web3
@@ -220,12 +222,14 @@ class V00_MarkeplaceAdapter {
       }
       // Override status if offer was deleted from blockchain state
       if (e.event === 'OfferFinalized') {
-        rawOffer.status = '3'
+        rawOffer.status = '4'
       }
       // TODO: Assumes OfferData event is a seller review
       if (e.event === 'OfferData') {
-        rawOffer.status = '4'
+        rawOffer.status = '5'
       }
+      // Translate status number to string
+      rawOffer.status = OFFER_STATUS[rawOffer.status]
       e.timestamp = timestamp
     }
 
@@ -302,6 +306,11 @@ class V00_MarkeplaceAdapter {
     }
 
     return notifications
+  }
+
+  async getTokenAddress() {
+    await this.getContract()
+    return await this.contract.methods.tokenAddr().call()
   }
 
   padTopic(id) {
