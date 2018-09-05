@@ -1,6 +1,5 @@
 const HDWalletProvider = require('truffle-hdwallet-provider')
 
-
 const ROPSTEN_NETWORK_ID = '3'
 const RINKEBY_NETWORK_ID = '4'
 const LOCAL_NETWORK_ID = '999'

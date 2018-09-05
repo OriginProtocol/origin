@@ -19,7 +19,7 @@ function runApp(config) {
 
   // Configure rate limiting. Allow at most 1 request per IP every 5 sec.
   const opts = {
-    points: 1,   // Point budget.
+    points: 90,   // Point budget.
     duration: 5, // Reset points consumption every 5 sec.
   }
   const rateLimiter = new RateLimiterMemory(opts)
@@ -33,7 +33,7 @@ function runApp(config) {
       .catch((err) => {
         // Not enough points. Block the request.
         console.log('BLOCKING')
-        res.status(429).send('Too Many Requests')
+        res.status(429).send('<h2>Too Many Requests</h2>')
       })
   }
   // Note: register rate limiting middleware *before* all routes
@@ -48,9 +48,9 @@ function runApp(config) {
     const networkId = req.query.network_id
     const wallet = req.query.wallet
     if (!req.query.wallet) {
-      res.send('Error: A wallet address must be supplied.')
+      res.send('<h2>Error: A wallet address must be supplied.</h2>')
     } else if (!Web3.utils.isAddress(wallet)) {
-      res.send(`Error: ${wallet} is a malformed wallet address.`)
+      res.send(`<h2>Error: ${wallet} is a malformed wallet address.</h2>`)
       return
     }
 
@@ -82,8 +82,8 @@ function runApp(config) {
 //
 // Main
 //
-let args = Config.parseArgv()
-let config = {
+const args = Config.parseArgv()
+const config = {
   // Port server listens on.
   port: args['--port'] || DEFAULT_SERVER_PORT,
   // Network ids, comma separated.
