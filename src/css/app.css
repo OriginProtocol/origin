@@ -1350,7 +1350,6 @@ a:hover {
 .onboarding-modal .right-panel {
   border-radius: 0 10px 10px 0;
   height: 530px;
-  overflow-x: auto;
 }
 
 .onboarding-modal .left-panel {

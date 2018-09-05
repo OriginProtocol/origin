@@ -23,15 +23,14 @@ class OnboardingModal extends Component {
     }
   }
 
-  componentDidMount() {
-    this.removeModalClasses()
-  }
+  componentWillUpdate(nextProps) {
+    const { onboarding: { splitPanel } } = nextProps
 
-  componentDidUpdate() {
-    const { onboarding: { splitPanel } } = this.props
-
-    if (splitPanel) this.addModalClass()
-    this.removeModalClasses()
+    if (splitPanel) {
+      this.addModalClass()
+    } else {
+      this.removeModalClasses()
+    }
   }
 
   componentWillUnmount() {
@@ -49,7 +48,7 @@ class OnboardingModal extends Component {
     window.scrollTo(0, 0)
     window.setTimeout(() => {
       document.body.classList.add('modal-open')
-    }, 200)
+    }, 500)
   }
 
   removeModalClasses() {
@@ -70,12 +69,14 @@ class OnboardingModal extends Component {
 
     if (!wallet.address) {
       if (!progress) {
+        this.removeModalClasses()
         return toggleLearnMore(true)
       } else if (!stepsCompleted && progress) {
         this.addModalClass()
         return toggleSplitPanel(true)
       }
     }
+    this.removeModalClasses()
     this.props.toggleLearnMore(false)
   }
 
