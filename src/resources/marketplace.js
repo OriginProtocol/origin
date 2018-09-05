@@ -390,6 +390,10 @@ class Marketplace extends Adaptable {
     notifications[id] = status
     this.store.set(storeKeys.notificationStatuses, notifications)
   }
+
+  async getTokenAddress() {
+    return await this.currentAdapter.getTokenAddress()
+  }
 }
 
 module.exports = Marketplace

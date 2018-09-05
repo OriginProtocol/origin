@@ -75,7 +75,21 @@ npm run test
 
  Note: you should *not* have the server running at this time, as these tests start their own local blockchain instance.
 
- ### Command Line (Only Solidity Tests)
+### Command Line (Non-Solidity Tests)
+
+To run non-contract tests (`test/**.js`):
+
+```
+npm run test:js
+```
+
+To run non-contract tests and automatically re-run when files change:
+```
+npm run test:jsw
+```
+
+
+### Command Line (Only Solidity Tests)
 
 Our Solidity tests (which use [Truffle](http://truffleframework.com/docs/getting_started/javascript-tests)) are located at `contracts/test`.
 
