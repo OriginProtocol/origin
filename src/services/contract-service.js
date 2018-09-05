@@ -23,17 +23,17 @@ class ContractService {
     this.web3 = new Web3(externalWeb3.currentProvider)
 
     this.marketplaceContracts = {
-      v00_MarketplaceContract: V00_MarketplaceContract,
-      v01_MarketplaceContract: V01_MarketplaceContract
+      V00_Marketplace: V00_MarketplaceContract,
+      V01_Marketplace: V01_MarketplaceContract
     }
 
     const contracts = Object.assign(
       {
-        userRegistryContract: UserRegistryContract,
-        claimHolderRegisteredContract: ClaimHolderRegisteredContract,
-        claimHolderPresignedContract: ClaimHolderPresignedContract,
-        originIdentityContract: OriginIdentityContract,
-        originTokenContract: OriginTokenContract
+        UserRegistry: UserRegistryContract,
+        ClaimHolderRegistered: ClaimHolderRegisteredContract,
+        ClaimHolderPresigned: ClaimHolderPresignedContract,
+        OriginIdentity: OriginIdentityContract,
+        OriginToken: OriginTokenContract
       },
       this.marketplaceContracts
     )
@@ -41,12 +41,13 @@ class ContractService {
     this.libraries = {}
     this.libraries.ClaimHolderLibrary = ClaimHolderLibrary
     this.libraries.KeyHolderLibrary = KeyHolderLibrary
+    this.contracts = {}
     for (const name in contracts) {
-      this[name] = contracts[name]
+      this.contracts[name] = contracts[name]
       try {
-        this[name].networks = Object.assign(
+        this.contracts[name].networks = Object.assign(
           {},
-          this[name].networks,
+          this.contracts[name].networks,
           options.contractAddresses[name]
         )
       } catch (e) {
@@ -197,25 +198,28 @@ class ContractService {
    * @param {{gas: number, value:(number | BigNumber)}} options - transaction options for w3
    * @param {function} confirmationCallback - an optional function that will be called on each block confirmation
    */
-  async contractFn(
-    contractDefinition,
-    address,
+  async call(
+    contractName,
     functionName,
     args = [],
-    options = {},
-    confirmationCallback
+    { contractAddress, from, gas, value, confirmationCallback } = {}
   ) {
+    const contractDefinition = this.contracts[contractName]
+    if (typeof contractDefinition === 'undefined') {
+      throw new Error(`Contract not defined on contract service: ${contractName}`)
+    }
     // Setup options
-    const opts = Object.assign(options, {}) // clone options
+    const opts = { from, gas, value }
     opts.from = opts.from || (await this.currentAccount())
-    opts.gas = options.gas || 50000 // Default gas
     // Get contract and run trasaction
     const contract = await this.deployed(contractDefinition)
-    contract.options.address = address || contract.options.address
+    contract.options.address = contractAddress || contract.options.address
     const method = contract.methods[functionName].apply(contract, args)
     if (method._method.constant) {
       return await method.call(opts)
     }
+    // set gas
+    opts.gas = opts.gas || await method.estimateGas(opts)
     const transactionReceipt = await new Promise((resolve, reject) => {
       method
         .send(opts)
@@ -226,7 +230,7 @@ class ContractService {
     const block = await this.web3.eth.getBlock(transactionReceipt.blockNumber)
     return {
       // return current time in seconds if block is not found
-      created: block ? block.timestamp : Math.floor(Date.now() / 1000),
+      timestamp: block ? block.timestamp : Math.floor(Date.now() / 1000),
       transactionReceipt
     }
   }

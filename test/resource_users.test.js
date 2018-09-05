@@ -36,13 +36,16 @@ describe('User Resource', function() {
   let users
   let phoneAttestation
   let emailAttestation
+  let facebookAttestation
+  let twitterAttestation
+  // let airbnbAttestation
 
   beforeEach(async () => {
     const provider = new Web3.providers.HttpProvider('http://localhost:8545')
     const web3 = new Web3(provider)
     const accounts = await web3.eth.getAccounts()
     const contractService = new ContractService({ web3 })
-    await contractService.deployed(contractService.originIdentityContract)
+    await contractService.deployed(contractService.contracts.OriginIdentity)
     const ipfsService = new IpfsService({
       ipfsDomain: '127.0.0.1',
       ipfsApiPort: '5002',
@@ -55,7 +58,7 @@ describe('User Resource', function() {
     // clear user before each test because blockchain persists between tests
     // sort of a hack to force clean state at beginning of each test
     const userRegistry = await contractService.deployed(
-      contractService.userRegistryContract
+      contractService.contracts.UserRegistry
     )
     await userRegistry.methods.clearUser().send({ from: accounts[0] })
 
@@ -72,12 +75,24 @@ describe('User Resource', function() {
       claimType: 11,
       data: 'email verified'
     })
-    return await generateAttestation({
+    facebookAttestation = await generateAttestation({
       identityAddress,
       web3,
       claimType: 3,
       data: 'facebook verified'
     })
+    twitterAttestation = await generateAttestation({
+      identityAddress,
+      web3,
+      claimType: 4,
+      data: 'twitter verified'
+    })
+    // airbnbAttestation = await generateAttestation({
+    //   identityAddress,
+    //   web3,
+    //   claimType: 5,
+    //   data: 'airbnb verified'
+    // })
   })
 
   describe('set', () => {
@@ -126,14 +141,58 @@ describe('User Resource', function() {
       expect(user.profile.claims.name).to.equal('Batman')
     })
 
-    it('should be able to deploy new identity with presigned claims', async () => {
+    it('should be able to deploy new identity with 2 presigned claims', async () => {
+      // This is actually 2 claims because profile info is 1 claim
       await users.set({
         profile: { claims: { name: 'Black Widow' } },
-        attestations: [phoneAttestation, emailAttestation]
+        attestations: [ phoneAttestation ]
+      })
+      const user = await users.get()
+
+      expect(user.attestations.length).to.equal(1)
+      expect(user.profile.claims.name).to.equal('Black Widow')
+    })
+
+    it('should be able to deploy new identity with 3 presigned claims', async () => {
+      await users.set({
+        profile: { claims: { name: 'Black Widow' } },
+        attestations: [ phoneAttestation, emailAttestation ]
       })
       const user = await users.get()
 
       expect(user.attestations.length).to.equal(2)
+      expect(user.profile.claims.name).to.equal('Black Widow')
+    })
+
+    it('should be able to deploy new identity with 4 presigned claims', async () => {
+      await users.set({
+        profile: { claims: { name: 'Black Widow' } },
+        attestations: [
+          phoneAttestation,
+          emailAttestation,
+          facebookAttestation
+        ]
+      })
+      const user = await users.get()
+
+      expect(user.attestations.length).to.equal(3)
+      expect(user.profile.claims.name).to.equal('Black Widow')
+    })
+
+    it('should be able to deploy new identity with 5 presigned claims', async () => {
+      await users.set({
+        profile: { claims: { name: 'Black Widow' } },
+        attestations: [
+          phoneAttestation,
+          emailAttestation,
+          facebookAttestation,
+          twitterAttestation
+          // TODO support additional attestations. Currently can't handle more than 5
+        ]
+      })
+      const user = await users.get()
+
+      expect(user.attestations.length).to.equal(4)
       expect(user.profile.claims.name).to.equal('Black Widow')
     })
 

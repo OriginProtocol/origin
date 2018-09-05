@@ -33,7 +33,7 @@ describe('Origin Token Resource', function() {
 
     const contractService = new ContractService({ web3 })
     const deployReceipt = await contractService.deploy(
-      contractService.originTokenContract,
+      contractService.contracts['OriginToken'],
       [initialSupply],
       {from: owner, gas: 4000000}
     )

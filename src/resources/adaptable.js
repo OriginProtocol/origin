@@ -1,15 +1,12 @@
-import v00MarketplaceAdapter from '../adapters/v00/marketplace_adapter'
+import V00_MarkeplaceAdapter from '../adapters/v00/marketplace_adapter'
+import V01_MarkeplaceAdapter from '../adapters/v01/marketplace_adapter'
 import { parseListingId, parseOfferId } from '../utils/id'
 
 class Adaptable {
   constructor(args) {
     this.adapters = {
-      '000': new v00MarketplaceAdapter(
-        Object.assign({}, args, { contractName: 'v00_MarketplaceContract' })
-      ),
-      '001': new v00MarketplaceAdapter(
-        Object.assign({}, args, { contractName: 'v01_MarketplaceContract' })
-      )
+      '000': new V00_MarkeplaceAdapter(args),
+      '001': new V01_MarkeplaceAdapter(args)
     }
     this.versions = ['000', '001']
     this.currentVersion = this.versions[this.versions.length - 1]

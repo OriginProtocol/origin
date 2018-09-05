@@ -63,7 +63,7 @@ class Users extends ResourceBase {
   async identityAddress(address) {
     const account = await this.contractService.currentAccount()
     const userRegistry = await this.contractService.deployed(
-      this.contractService.userRegistryContract
+      this.contractService.contracts.UserRegistry
     )
     address = address || account
     const result = await userRegistry.methods.users(address).call()
@@ -116,7 +116,7 @@ class Users extends ResourceBase {
   async addAttestations(attestations) {
     const account = await this.contractService.currentAccount()
     const userRegistry = await this.contractService.deployed(
-      this.contractService.userRegistryContract
+      this.contractService.contracts.UserRegistry
     )
     const identityAddress = await this.identityAddress()
     if (attestations.length) {
@@ -141,17 +141,17 @@ class Users extends ResourceBase {
 
       if (identityAddress) {
         // batch add claims to existing identity
-        return await this.contractService.contractFn(
-          this.contractService.claimHolderRegisteredContract,
-          identityAddress,
+        return await this.contractService.call(
+          'ClaimHolderRegistered',
           'addClaims',
           [claimTypes, issuers, sigs, data, dataOffsets],
-          { from: account, gas: 4000000 }
+          { from: account, gas: 400000, contractAddress: identityAddress }
         )
       } else {
         // create identity with presigned claims
+        const gas = 1440000 + (attestations.length * 230000)
         return await this.contractService.deploy(
-          this.contractService.claimHolderPresignedContract,
+          this.contractService.contracts.ClaimHolderPresigned,
           [
             userRegistry.options.address,
             claimTypes,
@@ -160,22 +160,22 @@ class Users extends ResourceBase {
             data,
             dataOffsets
           ],
-          { from: account, gas: 4000000 }
+          { from: account, gas }
         )
       }
     } else if (!identityAddress) {
       // create identity
       return await this.contractService.deploy(
-        this.contractService.claimHolderRegisteredContract,
+        this.contractService.contracts.ClaimHolderRegistered,
         [userRegistry.options.address],
-        { from: account, gas: 4000000 }
+        { from: account, gas: 1700000 }
       )
     }
   }
 
   async getClaims(identityAddress) {
     const identity = await this.contractService.deployed(
-      this.contractService.claimHolderRegisteredContract,
+      this.contractService.contracts.ClaimHolderRegistered,
       identityAddress
     )
     const allEvents = await identity.getPastEvents('allEvents', {
@@ -219,7 +219,7 @@ class Users extends ResourceBase {
 
   async isValidAttestation({ claimType, data, signature }, identityAddress) {
     const originIdentity = await this.contractService.deployed(
-      this.contractService.originIdentityContract
+      this.contractService.contracts.OriginIdentity
     )
     const msg = Web3.utils.soliditySha3(identityAddress, claimType, data)
     const prefixedMsg = this.web3EthAccounts.hashMessage(msg)
