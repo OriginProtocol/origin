@@ -104,7 +104,7 @@ class ListingCreate extends Component {
     this.state = {
       // TODO:John - wire up ognBalance and isFirstListing when ready
       ognBalance: 0,
-      isFirstListing: true,
+      isFirstListing: false,
       step: this.STEP.PICK_SCHEMA,
       selectedSchemaType: null,
       selectedSchema: null,
@@ -143,6 +143,9 @@ class ListingCreate extends Component {
           }
         }
         this.uiSchema = {
+          examples: {
+            'ui:widget': 'hidden'
+          },
           price: {
             'ui:field': PriceField,
           },
