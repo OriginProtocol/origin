@@ -1910,6 +1910,10 @@ a:hover {
   white-space: pre;
 }
 
+.info-box .link-container a {
+  font-weight: bold;
+}
+
 .detail-info-box .link-container a {
   font-weight: normal;
 }
@@ -2069,11 +2073,15 @@ select.form-control:not([size]):not([multiple]) {
   font-size: 1.05rem;
 }
 
+.about-ogn .image-container {
+  margin-bottom: 20px;
+}
+
 .info-box .info-box-image {
   position: absolute;
 }
 
-.listing-form .info-box img {
+.listing-form .info-box-image img {
   position: relative;
   top: -50px;
   left: -110px;

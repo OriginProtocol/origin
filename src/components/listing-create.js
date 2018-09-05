@@ -263,7 +263,9 @@ class ListingCreate extends Component {
     }
   }
 
-  resetToPreview() {
+  resetToPreview(e) {
+    e.preventDefault()
+
     this.setState({ step: this.STEP.PREVIEW })
   }
 
@@ -274,54 +276,22 @@ class ListingCreate extends Component {
   }
 
   render() {
-    const { formListing, selectedSchemaType, schemaExamples, translatedSchema } = this.state
+    const { address, balance } = this.props
+    const { currentProvider, formListing, isBoostExpanded, isFirstListing, ognBalance, selectedSchema, selectedSchemaType, schemaExamples, step, translatedSchema, usdListingPrice } = this.state
     const { formData } = formListing
     const translatedFormData = (formData && formData.category && translateListingCategory(formData)) || {}
+
     return (
       <div className="container listing-form">
-        {this.state.step === this.STEP.PICK_SCHEMA && (
-          <div className="step-container pick-schema">
-            <div className="row flex-sm-row-reverse">
-              <div className="col-md-4 offset-md-3">
-                <Wallet
-                  balance={this.props.balance}
-                  address={this.props.address}
-                  withMenus={true}
-                  withProfile={false}
-                />
-                <div className="info-box">
-                  <h2>
-                    <FormattedMessage
-                      id={'listing-create.chooseSchema'}
-                      defaultMessage={
-                        'Choose a schema for your product or service'
-                      }
-                    />
-                  </h2>
-                  <p>
-                    <FormattedMessage
-                      id={'listing-create.schemaExplainer'}
-                      defaultMessage={
-                        'Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services.'
-                      }
-                    />
-                  </p>
-                  <div className="info-box-image">
-                    <img
-                      className="d-none d-md-block"
-                      src="images/features-graphic.svg"
-                      role="presentation"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-md-5">
+        <div className="step-container">
+          <div className="row">
+            {step === this.STEP.PICK_SCHEMA &&
+              <div className="col-md-5 pick-schema">
                 <label>
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: Number(this.state.step) }}
+                    values={{ stepNumber: Number(step) }}
                   />
                 </label>
                 <h2>
@@ -363,87 +333,14 @@ class ListingCreate extends Component {
                   </button>
                 </div>
               </div>
-            </div>
-          </div>
-        )}
-        {this.state.step === this.STEP.DETAILS && (
-          <div className="step-container schema-details">
-            <div className="row flex-sm-row-reverse">
-              <div className="col-md-4 offset-md-3">
-                <Wallet
-                  balance={this.props.balance}
-                  address={this.props.address}
-                  withMenus={true}
-                  withProfile={false}
-                />
-                <div className="info-box">
-                  <div>
-                    <h2>
-                      <FormattedMessage
-                        id={'listing-create.howItWorksHeading'}
-                        defaultMessage={'How it works'}
-                      />
-                    </h2>
-                    <FormattedMessage
-                      id={'listing-create.howItWorksContentPart1'}
-                      defaultMessage={
-                        'Origin uses a Mozilla project called {jsonSchemaLink}  to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer.'
-                      }
-                      values={{
-                        jsonSchemaLink: (
-                          <FormattedMessage
-                            id={'listing-create.jsonSchema'}
-                            defaultMessage={'JSONSchema'}
-                          />
-                        )
-                      }}
-                    />
-                    <br />
-                    <br />
-                    <FormattedMessage
-                      id={'listing-create.howItWorksContentPart2'}
-                      defaultMessage={
-                        'Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.'
-                      }
-                      values={{
-                        jsonSchemaLink: (
-                          <FormattedMessage
-                            id={'listing-create.jsonSchema'}
-                            defaultMessage={'JSONSchema'}
-                          />
-                        )
-                      }}
-                    />
-                    <a
-                      href={`schemas/${selectedSchemaType}.json`}
-                      target="_blank"
-                    >
-                      <FormattedMessage
-                        id={'listing-create.viewSchemaLinkLabel'}
-                        defaultMessage={'View the {schemaName} schema'}
-                        values={{
-                          schemaName: (
-                            <code>{this.state.selectedSchema.name}</code>
-                          )
-                        }}
-                      />
-                    </a>
-                  </div>
-                  <div className="info-box-image">
-                    <img
-                      className="d-none d-md-block"
-                      src="images/features-graphic.svg"
-                      role="presentation"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-5">
+            }
+            {step === this.STEP.DETAILS &&
+              <div className="col-md-5 schema-details">
                 <label>
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: Number(this.state.step) }}
+                    values={{ stepNumber: Number(step) }}
                   />
                 </label>
                 <h2>
@@ -455,7 +352,7 @@ class ListingCreate extends Component {
                 <Form
                   schema={translatedSchema}
                   onSubmit={this.onDetailsEntered}
-                  formData={this.state.formListing.formData}
+                  formData={formListing.formData}
                   onError={errors =>
                     console.log(
                       `react-jsonschema-form errors: ${errors.length}`
@@ -488,41 +385,28 @@ class ListingCreate extends Component {
                   </div>
                 </Form>
               </div>
-              <div className="col-md-6" />
-            </div>
-          </div>
-        )}
-        {this.state.step === this.STEP.BOOST && (
-          <div className="step-container select-boost">
-            <div className="row flex-sm-row-reverse">
-              <div className="col-md-4 offset-md-3">
-                <Wallet
-                  balance={this.props.balance}
-                  address={this.props.address}
-                  withMenus={true}
-                  withProfile={false}
-                />
-              </div>
-              <div className="col-md-5">
+            }
+            {step === this.STEP.BOOST &&
+              <div className="col-md-5 select-boost">
                 <label>
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: Number(this.state.step) }}
+                    values={{ stepNumber: Number(step) }}
                   />
                 </label>
                 <h2>Boost your listing</h2>
-                {this.state.isFirstListing &&
+                {isFirstListing &&
                   <div className="info-box">
                     <img src="images/ogn-icon-horiz.svg" role="presentation" />
                     <p className="text-bold">You have 0 <a href="#" arget="_blank" rel="noopener noreferrer">OGN</a> in your wallet.</p>
                     <p>Once you acquire some OGN you will be able to boost your listing.</p>
                     <p className="expand-btn" onClick={ this.toggleBoostBox }>
-                      What is a boost? <span className={ this.state.isBoostExpanded ? 'rotate-up' : '' }>&#x25be;</span>
+                      What is a boost? <span className={ isBoostExpanded ? 'rotate-up' : '' }>&#x25be;</span>
                     </p>
-                    {this.state.isBoostExpanded &&
+                    {isBoostExpanded &&
                       <div className="info-box-bottom">
-                        <hr/>
+                        <hr />
                         <img src="images/boost-icon.svg" role="presentation" />
                         <p className="text-bold">Boosting a listing on the Origin DApp</p>
                         <p>
@@ -538,8 +422,8 @@ class ListingCreate extends Component {
                     }
                   </div>
                 }
-                {!this.state.isFirstListing &&
-                  <BoostSlider ognBalance={ this.state.ognBalance } min={ 0 } max={ 100 } defaultValue={ 50 } />
+                {!isFirstListing &&
+                  <BoostSlider ognBalance={ ognBalance } min={ 0 } max={ 100 } defaultValue={ 50 } />
                 }
                 <div className="btn-container">
                   <button
@@ -562,114 +446,14 @@ class ListingCreate extends Component {
                   </button>
                 </div>
               </div>
-            </div>
-          </div>
-        )}
-        {this.state.step >= this.STEP.PREVIEW && (
-          <div className="step-container listing-preview">
-            {this.state.step === this.STEP.METAMASK && (
-              <Modal backdrop="static" isOpen={true}>
-                <div className="image-container">
-                  <img src="images/spinner-animation.svg" role="presentation" />
-                </div>
-                <FormattedMessage
-                  id={'listing-create.confirmTransaction'}
-                  defaultMessage={'Confirm transaction'}
-                />
-                <br />
-                <FormattedMessage
-                  id={'listing-create.pressSubmitInMetaMask'}
-                  defaultMessage={'Press {submit} in {currentProvider} window'}
-                  values={{
-                    currentProvider: this.state.currentProvider,
-                    submit: <span>&ldquo;Submit&rdquo;</span>
-                  }}
-                />
-              </Modal>
-            )}
-            {this.state.step === this.STEP.PROCESSING && (
-              <Modal backdrop="static" isOpen={true}>
-                <div className="image-container">
-                  <img src="images/spinner-animation.svg" role="presentation" />
-                </div>
-                <FormattedMessage
-                  id={'listing-create.uploadingYourListing'}
-                  defaultMessage={'Uploading your listing'}
-                />
-                <br />
-                <FormattedMessage
-                  id={'listing-create.pleaseStandBy'}
-                  defaultMessage={'Please stand by...'}
-                />
-              </Modal>
-            )}
-            {this.state.step === this.STEP.SUCCESS && (
-              <Modal backdrop="static" isOpen={true}>
-                <div className="image-container">
-                  <img
-                    src="images/circular-check-button.svg"
-                    role="presentation"
-                  />
-                </div>
-                <FormattedMessage
-                  id={'listing-create.successMessage'}
-                  defaultMessage={'Success!'}
-                />
-                <div className="disclaimer">
-                  <FormattedMessage
-                    id={'listing-create.successDisclaimer'}
-                    defaultMessage={
-                      'Your listing will be visible within a few seconds.'
-                    }
-                  />
-                </div>
-                <div className="button-container">
-                  <Link to="/" className="btn btn-clear">
-                    <FormattedMessage
-                      id={'listing-create.seeAllListings'}
-                      defaultMessage={'See All Listings'}
-                    />
-                  </Link>
-                </div>
-              </Modal>
-            )}
-            {this.state.step === this.STEP.ERROR && (
-              <Modal backdrop="static" isOpen={true}>
-                <div className="image-container">
-                  <img src="images/flat_cross_icon.svg" role="presentation" />
-                </div>
-                <FormattedMessage
-                  id={'listing-create.error1'}
-                  defaultMessage={'There was a problem creating this listing.'}
-                />
-                <br />
-                <FormattedMessage
-                  id={'listing-create.error2'}
-                  defaultMessage={'See the console for more details.'}
-                />
-                <div className="button-container">
-                  <a
-                    className="btn btn-clear"
-                    onClick={e => {
-                      e.preventDefault()
-                      this.resetToPreview()
-                    }}
-                  >
-                    <FormattedMessage
-                      id={'listing-create.OK'}
-                      defaultMessage={'OK'}
-                    />
-                  </a>
-                </div>
-              </Modal>
-            )}
-            <div className="row">
-              <div className="col-md-7">
+            }
+            {step >= this.STEP.PREVIEW && (
+              <div className="col-md-5 listing-preview">
                 <label className="create-step">
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: Number(this.state.step) }}
+                    values={{ stepNumber: Number(step) }}
                   />
                 </label>
                 <h2>
@@ -678,50 +462,6 @@ class ListingCreate extends Component {
                     defaultMessage={'Review your listing'}
                   />
                 </h2>
-              </div>
-            </div>
-            <div className="row flex-sm-row-reverse">
-              <div className="col-md-5">
-                <div className="info-box">
-                  <div>
-                    <h2>
-                      <FormattedMessage
-                        id={'listing-create.whatHappensNextHeading'}
-                        defaultMessage={'What happens next?'}
-                      />
-                    </h2>
-                    <FormattedMessage
-                      id={'listing-create.whatHappensNextContent1'}
-                      defaultMessage={
-                        'When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network.'
-                      }
-                      values={{
-                        ipfsLink: (
-                          <a
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            href="https://ipfs.io"
-                          >
-                            <FormattedMessage
-                              id={'listing-create.IPFS'}
-                              defaultMessage={'IPFS'}
-                            />
-                          </a>
-                        )
-                      }}
-                    />
-                    <br />
-                    <br />
-                    <FormattedMessage
-                      id={'listing-create.whatHappensNextContent2'}
-                      defaultMessage={
-                        'Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left.'
-                      }
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-7">
                 <div className="preview">
                   <div className="row">
                     <div className="col-md-3">
@@ -778,7 +518,7 @@ class ListingCreate extends Component {
                         <span className="text-bold">{ translatedFormData.price }</span>&nbsp;
                         <a className="eth-abbrev" href="#" target="_blank" rel="noopener noreferrer">ETH</a>
                         <span className="help-block">
-                          &nbsp;| { this.state.usdListingPrice } USD&nbsp;
+                          &nbsp;| { usdListingPrice } USD&nbsp;
                           <span className="text-uppercase">(Approximate Value)</span>
                         </span>
                       </p>
@@ -817,8 +557,8 @@ class ListingCreate extends Component {
                     className="btn btn-primary float-right"
                     onClick={() =>
                       this.onSubmitListing(
-                        this.state.formListing,
-                        this.state.selectedSchemaType
+                        formListing,
+                        selectedSchemaType
                       )
                     }
                   >
@@ -829,9 +569,271 @@ class ListingCreate extends Component {
                   </button>
                 </div>
               </div>
+            )}
+            <div className="col-md-4 offset-md-3">
+              <Wallet
+                address={address}
+                balance={balance}
+                withMenus={true}
+                withProfile={false}
+              />
+              {step === this.STEP.PICK_SCHEMA &&
+                <Fragment>
+                  <div className="info-box">
+                    <h2>Creating a listing on the Origin Protocol DApp</h2>
+                    <p>Lorem ipsum dolor sit amet consectetuer adsplicing nonummy pellentesque curabitur lorem ipsum dolor sit amet.</p>
+                  </div>
+                  <div className="about-ogn info-box">
+                    <div className="image-container text-center">
+                      <img src="images/ogn-icon-horiz.svg" role="presentation" />
+                    </div>
+                    <h2>About Origin Tokens</h2>
+                    <p>Lorem ipsum dolor sit amet consectetuer adsplicing nonummy pellentesque curabitur.</p>
+                    <div className="link-container">
+                      <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">Learn more</a>
+                    </div>
+                  </div>
+                  <div className="info-box">
+                    <h2>
+                      <FormattedMessage
+                        id={'listing-create.chooseSchema'}
+                        defaultMessage={
+                          'Choose a schema for your product or service'
+                        }
+                      />
+                    </h2>
+                    <p>
+                      <FormattedMessage
+                        id={'listing-create.schemaExplainer'}
+                        defaultMessage={
+                          'Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services.'
+                        }
+                      />
+                    </p>
+                    <div className="info-box-image">
+                      <img
+                        className="d-none d-md-block"
+                        src="images/features-graphic.svg"
+                        role="presentation"
+                      />
+                    </div>
+                  </div>
+                </Fragment>
+              }
+              {step === this.STEP.DETAILS &&
+                <Fragment>
+                  <div className="info-box">
+                    <p>
+                      Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.<br />
+                      If you’re listing is only offered in a specific geographic location, please be sure to indicate that.<br />
+                      Finally, adding some photos of your listing will go a long way to helping potential buyers decide if they want to make the purchase.
+                    </p>
+                  </div>
+                  <div className="info-box">
+                    <div>
+                      <h2>
+                        <FormattedMessage
+                          id={'listing-create.howItWorksHeading'}
+                          defaultMessage={'How it works'}
+                        />
+                      </h2>
+                      <FormattedMessage
+                        id={'listing-create.howItWorksContentPart1'}
+                        defaultMessage={
+                          'Origin uses a Mozilla project called {jsonSchemaLink}  to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer.'
+                        }
+                        values={{
+                          jsonSchemaLink: (
+                            <FormattedMessage
+                              id={'listing-create.jsonSchema'}
+                              defaultMessage={'JSONSchema'}
+                            />
+                          )
+                        }}
+                      />
+                      <br />
+                      <br />
+                      <FormattedMessage
+                        id={'listing-create.howItWorksContentPart2'}
+                        defaultMessage={
+                          'Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.'
+                        }
+                        values={{
+                          jsonSchemaLink: (
+                            <FormattedMessage
+                              id={'listing-create.jsonSchema'}
+                              defaultMessage={'JSONSchema'}
+                            />
+                          )
+                        }}
+                      />
+                      <a
+                        href={`schemas/${selectedSchemaType}.json`}
+                        target="_blank"
+                      >
+                        <FormattedMessage
+                          id={'listing-create.viewSchemaLinkLabel'}
+                          defaultMessage={'View the {schemaName} schema'}
+                          values={{
+                            schemaName: (
+                              <code>{selectedSchema.name}</code>
+                            )
+                          }}
+                        />
+                      </a>
+                    </div>
+                    <div className="info-box-image">
+                      <img
+                        className="d-none d-md-block"
+                        src="images/features-graphic.svg"
+                        role="presentation"
+                      />
+                    </div>
+                  </div>
+                </Fragment>
+              }
+              {step === this.STEP.BOOST &&
+                <div className="info-box">
+                  <h2>About Visibility</h2>
+                  <p>Lorem ipsum dolor sit amet consectetuer adsplicing nonummy pellentesque curabitur.</p>
+                </div>
+              }
+              {step >= this.STEP.PREVIEW &&
+                <div className="info-box">
+                  <div>
+                    <h2>
+                      <FormattedMessage
+                        id={'listing-create.whatHappensNextHeading'}
+                        defaultMessage={'What happens next?'}
+                      />
+                    </h2>
+                    <FormattedMessage
+                      id={'listing-create.whatHappensNextContent1'}
+                      defaultMessage={
+                        'When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network.'
+                      }
+                      values={{
+                        ipfsLink: (
+                          <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href="https://ipfs.io"
+                          >
+                            <FormattedMessage
+                              id={'listing-create.IPFS'}
+                              defaultMessage={'IPFS'}
+                            />
+                          </a>
+                        )
+                      }}
+                    />
+                    <br />
+                    <br />
+                    <FormattedMessage
+                      id={'listing-create.whatHappensNextContent2'}
+                      defaultMessage={
+                        'Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left.'
+                      }
+                    />
+                  </div>
+                </div>
+              }
             </div>
+            {step === this.STEP.METAMASK && (
+              <Modal backdrop="static" isOpen={true}>
+                <div className="image-container">
+                  <img src="images/spinner-animation.svg" role="presentation" />
+                </div>
+                <FormattedMessage
+                  id={'listing-create.confirmTransaction'}
+                  defaultMessage={'Confirm transaction'}
+                />
+                <br />
+                <FormattedMessage
+                  id={'listing-create.pressSubmitInMetaMask'}
+                  defaultMessage={'Press {submit} in {currentProvider} window'}
+                  values={{
+                    currentProvider,
+                    submit: <span>&ldquo;Submit&rdquo;</span>
+                  }}
+                />
+              </Modal>
+            )}
+            {step === this.STEP.PROCESSING && (
+              <Modal backdrop="static" isOpen={true}>
+                <div className="image-container">
+                  <img src="images/spinner-animation.svg" role="presentation" />
+                </div>
+                <FormattedMessage
+                  id={'listing-create.uploadingYourListing'}
+                  defaultMessage={'Uploading your listing'}
+                />
+                <br />
+                <FormattedMessage
+                  id={'listing-create.pleaseStandBy'}
+                  defaultMessage={'Please stand by...'}
+                />
+              </Modal>
+            )}
+            {step === this.STEP.SUCCESS && (
+              <Modal backdrop="static" isOpen={true}>
+                <div className="image-container">
+                  <img
+                    src="images/circular-check-button.svg"
+                    role="presentation"
+                  />
+                </div>
+                <FormattedMessage
+                  id={'listing-create.successMessage'}
+                  defaultMessage={'Success!'}
+                />
+                <div className="disclaimer">
+                  <FormattedMessage
+                    id={'listing-create.successDisclaimer'}
+                    defaultMessage={
+                      'Your listing will be visible within a few seconds.'
+                    }
+                  />
+                </div>
+                <div className="button-container">
+                  <Link to="/" className="btn btn-clear">
+                    <FormattedMessage
+                      id={'listing-create.seeAllListings'}
+                      defaultMessage={'See All Listings'}
+                    />
+                  </Link>
+                </div>
+              </Modal>
+            )}
+            {step === this.STEP.ERROR && (
+              <Modal backdrop="static" isOpen={true}>
+                <div className="image-container">
+                  <img src="images/flat_cross_icon.svg" role="presentation" />
+                </div>
+                <FormattedMessage
+                  id={'listing-create.error1'}
+                  defaultMessage={'There was a problem creating this listing.'}
+                />
+                <br />
+                <FormattedMessage
+                  id={'listing-create.error2'}
+                  defaultMessage={'See the console for more details.'}
+                />
+                <div className="button-container">
+                  <a
+                    className="btn btn-clear"
+                    onClick={this.resetToPreview}
+                  >
+                    <FormattedMessage
+                      id={'listing-create.OK'}
+                      defaultMessage={'OK'}
+                    />
+                  </a>
+                </div>
+              </Modal>
+            )}
           </div>
-        )}
+        </div>
       </div>
     )
   }
