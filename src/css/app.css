@@ -1950,15 +1950,19 @@ a:hover {
   color: var(--dusk);
   font-weight: normal;
   overflow: hidden;
+  max-height: 50px;
 }
 
 .schema-selection.selected {
   border: solid 1px black;
   padding: 10px 10px 0;
+  max-height: 500px;
 }
 
 .schema-examples {
   background: var(--pale-grey-eight);
+  margin: 10px -10px 0;
+  padding: 10px;
   height: auto;
   max-height: 0;
   overflow: hidden;
@@ -1966,8 +1970,6 @@ a:hover {
 }
 
 .schema-examples.selected {
-  margin: 10px -10px 0;
-  padding: 10px;
   max-height: 500px;
 }
 
