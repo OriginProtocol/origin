@@ -1,3 +1,5 @@
+const OFFER_STATUS = ['error','created', 'accepted', 'disputed', 'finalized', 'buyerReviewed']
+
 class MarketplaceAdapter {
   constructor({ contractService, contractName }) {
     this.web3 = contractService.web3
@@ -259,12 +261,14 @@ class MarketplaceAdapter {
       }
       // Override status if offer was deleted from blockchain state
       if (e.event === 'OfferFinalized') {
-        rawOffer.status = '3'
+        rawOffer.status = '4'
       }
       // TODO: Assumes OfferData event is a seller review
       if (e.event === 'OfferData') {
-        rawOffer.status = '4'
+        rawOffer.status = '5'
       }
+      // Translate status number to string
+      rawOffer.status = OFFER_STATUS[rawOffer.status]
       e.timestamp = timestamp
     }
 

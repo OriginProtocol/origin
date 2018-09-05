@@ -68,7 +68,7 @@ const LISTEN_RULES = {
     ListingWithdrawn: getListingDetails,
     ListingData: getListingDetails,
     ListingArbitrated: getListingDetails,
-    OfferCreated: getListingDetails,
+    OfferCreated: getOfferDetails,
     OfferWithdrawn: getOfferDetails,
     OfferAccepted: getOfferDetails,
     OfferDisputed: getOfferDetails,
@@ -82,7 +82,7 @@ const LISTEN_RULES = {
     ListingWithdrawn: getListingDetails,
     ListingData: getListingDetails,
     ListingArbitrated: getListingDetails,
-    OfferCreated: getListingDetails,
+    OfferCreated: getOfferDetails,
     OfferWithdrawn: getOfferDetails,
     OfferAccepted: getOfferDetails,
     OfferDisputed: getOfferDetails,
@@ -296,16 +296,30 @@ async function handleLog(log, rule, contractVersion, context) {
     throw `ListingId mismatch: ${ipfsListingId} !== ${log.decoded.listingID}`
   }
 
+  // TODO: This kind of verification logic should live in origin.js
+  if(output.related.listing.ipfsData.data.price === undefined){
+    return
+  }
+
   if (context.config.elasticsearch) {
     console.log('INDEXING ', listingId)
+    const listingData = listing.ipfsData.data
+    listingData.priceEth = listingData.price
     await withRetrys(async () => {
       await search.Listing.index(
         listingId,
         userAddress,
         ipfsHash,
-        listing.ipfsData.data
+        listingData
       )
     })
+    if (output.related.offer !== undefined) {
+      const offer = output.related.offer
+      offer.priceEth = web3.utils.fromWei(offer.ipfsData.data.price, 'ether')
+      await withRetrys(async () => {
+        await search.Offer.index(offer, listing)
+      })
+    }
   }
 
   if (context.config.db) {

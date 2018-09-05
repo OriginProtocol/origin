@@ -12,83 +12,70 @@ var client = new elasticsearch.Client({
   ]
 })
 
-// Name of the index used for storing Origin data.
-const indexName = 'origin'
-
-// Name of the index type used for storing listings data.
-const listingsType = 'listing'
+// Elasticsearch index and type names for our data
+// Elasticsearch is depreciating storing different types in the same index.
+// (and forbids it unless you enable a special flag)
+const LISTINGS_INDEX = 'listings'
+const LISTINGS_TYPE = 'listing'
+const OFFER_INDEX = 'offers'
+const OFFER_TYPE = 'offer'
 
 
 class Cluster {
-  /*
+  /**
    * Gets cluster health and prints it.
    */
   static async health() {
     const resp = await client.cluster.health({})
     console.log('-- Search cluster health --\n', resp)
   }
-
-  /*
-   * Creates the Origin index.
-   */
-  static async createIndex() {
-    await client.indices.create({index: indexName})
-    console.log(`Created search index ${indexName}`)
-  }
-
-  /*
-   * Deletes the Origin index.
-   */
-  static async deleteIndex() {
-    await client.indices.delete({index: indexName})
-  }
 }
 
 
 class Listing {
-  /*
+  /**
    * Counts number of listings indexed.
    * @returns The number of listings indexed.
    */
   static async count() {
-    const resp = await client.count({index: indexName, type: listingsType})
+    const resp = await client.count({index: LISTINGS_INDEX, type: LISTINGS_TYPE})
     console.log(`Counted ${resp.count} listings in the search index.`)
     return resp.count
   }
 
   static async get(id) {
-    const resp = await client.get({id: id, index: indexName, type: listingsType})
+    const resp = await client.get({id: id, index: LISTINGS_INDEX, type: LISTINGS_TYPE})
     if(!resp.found){
-      throw "Listing not found"
+      throw Error("Listing not found")
     }
     const listing = resp._source
     listing.id = id
     return resp._source
   }
 
-  /*
+  /**
    * Indexes a listing.
-   * @params {string} listingId - The unique ID of the listing.
-   * @params {string} buyerAddress - ETH address of the buyer.
-   * @params {string} ipfsHash - 32 bytes IPFS hash, in hexa (not base58 encoded).
-   * @params {object} listing - JSON listing data.
+   * @param {string} listingId - The unique ID of the listing.
+   * @param {string} buyerAddress - ETH address of the buyer.
+   * @param {string} ipfsHash - 32 bytes IPFS hash, in hexa (not base58 encoded).
+   * @param {object} listing - JSON listing data.
    * @throws Throws an error if indexing operation failed.
    * @returns The listingId indexed.
    */
   static async index(listingId, buyerAddress, ipfsHash, listing) {
     const resp = await client.index({
-      index: indexName,
+      index: LISTINGS_INDEX,
       id: listingId,
-      type: listingsType,
+      type: LISTINGS_TYPE,
       body: listing
     })
     console.log(`Indexed listing ${listingId} in search index.`)
     return listingId
   }
 
-  /*
+  /**
    * Searches for listings.
-   * @params {string} query - The search query.
+   * @param {string} query - The search query.
    * @throws Throws an error if the search operation failed.
    * @returns A list of listings (can be empty).
    */
@@ -100,8 +87,8 @@ class Listing {
       esQuery.match_all = {}
     }
     const resp = await client.search({
-      index: indexName,
-      type: listingsType,
+      index: LISTINGS_INDEX,
+      type: LISTINGS_TYPE,
       // TODO(franck): update query to search against other fields than just description.
       body: {
         query: esQuery,
@@ -113,7 +100,7 @@ class Listing {
         id: hit._id,
         name: hit._source.name,
         description: hit._source.description,
-        price: hit._source.price,
+        priceEth: hit._source.priceEth,
       }
       listings.push(listing)
     })
@@ -121,8 +108,66 @@ class Listing {
   }
 }
 
+class Offer {
+  /**
+   * Indexes an Offerr
+   * @param {object} offer - JSON offer data from origin.js
+   * @throws Throws an error if indexing operation failed. 
+   */
+  static async index(offer, listing){
+    const resp = await client.index({
+      index: OFFER_INDEX,
+      type: OFFER_TYPE,
+      id: offer.id,
+      body: {
+        id: offer.id,
+        listingId: offer.listingId,
+        buyer: offer.buyer,
+        seller: listing.seller,
+        affiliate: offer.affiliate,
+        priceEth: offer.priceEth,
+        status: offer.status
+      }
+    })
+  }
+
+  static async get(id) {
+    const resp = await client.get({id: id, index: OFFER_INDEX, type: OFFER_TYPE})
+    if(!resp.found){
+      throw Error("Offer not found")
+    }
+    return resp._source
+  }
+
+  static async search(opts) {
+    let mustQueries = []
+    if (opts.buyerAddress !== undefined) {
+      mustQueries.push({term: {'buyer.keyword': opts.buyerAddress}})
+    }
+    if (opts.listingId !== undefined) {
+      mustQueries.push({term: {'listingId.keyword': opts.listingId}})
+    }
+    let query
+    if (mustQueries.length > 0){
+      query = {bool: {must: mustQueries}}
+    } else{
+      query = {match_all: {}}
+    }
+
+    const resp = await client.search({
+      index: OFFER_INDEX,
+      type: OFFER_TYPE,
+      body: {
+        query,
+      }
+    })
+    return resp.hits.hits.map(x=>x._source)
+  }
+}
+
 
 module.exports = {
   Cluster,
   Listing,
+  Offer
 }
