@@ -5,6 +5,14 @@ class V00_MarkeplaceAdapter {
     this.contractName = 'V00_Marketplace'
   }
 
+  async getContract() {
+    if (!this.contract) {
+      this.contract = await this.contractService.deployed(
+        this.contractService.contracts[this.contractName]
+      )
+    }
+  }
+
   async call(methodName, args, opts) {
     return await this.contractService.call(
       this.contractName,
@@ -105,6 +113,8 @@ class V00_MarkeplaceAdapter {
   }
 
   async getListing(listingId) {
+    await this.getContract()
+
     // Get the raw listing data from the contract
     const rawListing = await this.call('listings', [listingId])
 
@@ -142,6 +152,8 @@ class V00_MarkeplaceAdapter {
   }
 
   async getListings(opts) {
+    await this.getContract()
+
     if (opts.purchasesFor) {
       const events = await this.contract.getPastEvents('OfferCreated', {
         filter: { party: opts.purchasesFor },
@@ -168,6 +180,8 @@ class V00_MarkeplaceAdapter {
   }
 
   async getOffers(listingIndex, opts) {
+    await this.getContract()
+
     let filter = {}
     if (listingIndex) {
       filter = Object.assign(filter, { listingID: listingIndex })
@@ -183,6 +197,8 @@ class V00_MarkeplaceAdapter {
   }
 
   async getOffer(listingIndex, offerIndex) {
+    await this.getContract()
+
     // Get the raw listing data from the contract
     const rawOffer = await this.call('offers', [listingIndex, offerIndex])
 
@@ -227,6 +243,8 @@ class V00_MarkeplaceAdapter {
   }
 
   async getNotifications(party) {
+    await this.getContract()
+
     const notifications = []
 
     const partyListingIds = []
