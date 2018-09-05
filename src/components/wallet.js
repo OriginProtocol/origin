@@ -19,14 +19,14 @@ class Wallet extends Component {
     this.state = {
       modalOpen: false,
       ethBalance: this.props.balance,
-      usdBalance: 0
+      ethToUsdBalance: 0
     }
   }
 
   async convertEthToUsd() {
     const usdBalance = await getFiatPrice( this.props.balance, 'USD' )
     this.setState({
-      usdBalance
+      ethToUsdBalance
     })
   }
 
@@ -120,7 +120,7 @@ class Wallet extends Component {
                       || 0
                     }&nbsp;
                     <span className="symbol">ETH</span></div>
-                  <div className="usd">{this.state.usdBalance} USD</div>
+                  <div className="usd">{this.state.ethToUsdBalance} USD</div>
                 </div>
                 {withMenus &&
                   <div className="dropdown">
@@ -140,7 +140,8 @@ class Wallet extends Component {
                 <img src="images/ogn-icon.svg" role="presentation" />
                 <div className="amounts">
                   <div className="ogn">0<span className="symbol">OGN</span></div>
-                  <div className="usd">0.00 USD</div>
+                  {/* Via Matt 9/4/2018: Not necessary until we have a liquid conversion rate */}
+                  {/* <div className="usd">0.00 USD</div> */}
                 </div>
                 {withMenus &&
                   <div className="dropdown">
