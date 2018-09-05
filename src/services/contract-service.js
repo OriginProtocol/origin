@@ -219,7 +219,7 @@ class ContractService {
       return await method.call(opts)
     }
     // set gas
-    opts.gas = opts.gas || await method.estimateGas({ from })
+    opts.gas = opts.gas || await method.estimateGas(opts)
     const transactionReceipt = await new Promise((resolve, reject) => {
       method
         .send(opts)
