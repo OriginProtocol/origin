@@ -344,7 +344,7 @@ class ListingCreate extends Component {
                         <p>{ schema.name } listings may include:</p>
                         <ul>
                           {schemaExamples && schemaExamples.map((example) =>
-                            <li key="example">{ example }</li>
+                            <li key={ `${schema.name}-${example}` }>{ example }</li>
                           )}
                         </ul>
                       </div>
