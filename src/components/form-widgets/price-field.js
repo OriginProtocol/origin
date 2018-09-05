@@ -32,6 +32,7 @@ class PriceField extends Component {
   onChange() {
     return async (event) => {
       const value = parseFloat(event.target.value)
+      if (value < 0) { return }
       this.setState({
         price: value
       })

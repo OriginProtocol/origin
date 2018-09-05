@@ -948,10 +948,6 @@ a:hover {
   width: 50px;
 }
 
-.navbar .wallet .image-container {
-  margin-right: 10px;
-}
-
 .navbar .wallet .image-container img {
   height: 50px;
   width: 50px;
@@ -1914,6 +1910,10 @@ a:hover {
   white-space: pre;
 }
 
+.info-box .link-container a {
+  font-weight: bold;
+}
+
 .detail-info-box .link-container a {
   font-weight: normal;
 }
@@ -1950,16 +1950,37 @@ a:hover {
   width: 100%;
   color: var(--dusk);
   font-weight: normal;
+  overflow: hidden;
 }
 
 .schema-selection.selected {
-  border: solid 1px var(--dark-grey-blue);
-  background-color: var(--dark-grey-blue);
-  color: white;
-  background-image: url(images/checkmark-green.svg);
-  background-repeat: no-repeat;
-  background-position: 97% 50%;
-  background-size: 18px 18px;
+  border: solid 1px black;
+  padding: 10px 10px 0;
+}
+
+.schema-examples {
+  background: var(--pale-grey-eight);
+  height: auto;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+
+.schema-examples.selected {
+  margin: 10px -10px 0;
+  padding: 10px;
+  max-height: 500px;
+}
+
+.schema-examples ul {
+  margin-bottom: 0;
+  padding-left: 20px;
+}
+
+.schema-examples p,
+.schema-examples li {
+  font-size: 14px;
+  margin-bottom: 4px;
 }
 
 .field-description {
@@ -1997,7 +2018,7 @@ select.form-control:not([size]):not([multiple]) {
   flex-wrap: wrap;
 }
 
-.schema-details .image-container {
+.schema-details .pictures .image-container {
   padding: 0 10px 10px 0;
 }
 
@@ -2031,6 +2052,10 @@ select.form-control:not([size]):not([multiple]) {
   height: 120px;
 }
 
+.listing-form .wallet {
+  margin-bottom: 20px;
+}
+
 .listing-form .info-box {
   background-color: var(--pale-grey);
   border-radius: var(--default-radius);
@@ -2048,11 +2073,15 @@ select.form-control:not([size]):not([multiple]) {
   font-size: 1.05rem;
 }
 
+.about-ogn .image-container {
+  margin-bottom: 20px;
+}
+
 .info-box .info-box-image {
   position: absolute;
 }
 
-.listing-form .info-box img {
+.listing-form .info-box-image img {
   position: relative;
   top: -50px;
   left: -110px;
@@ -3784,11 +3813,11 @@ sup {
   text-transform: uppercase;
 }
 
-.profile-wrapper .wallet {
+.wallet {
   margin-bottom: 20px;
 }
 
-.profile-wrapper .wallet img.identicon {
+.wallet img.identicon {
   margin-right: 10px;
 }
 

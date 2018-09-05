@@ -10,6 +10,15 @@
       "minLength": 3,
       "maxLength": 100
     },
+    "examples": {
+      "type": "string",
+      "title": "schema.housing.examples",
+      "enum": [
+        "schema.housing.aptsHousingForRent",
+        "schema.housing.roomsShares",
+        "schema.housing.vacationRentals"
+      ]
+    },
     "category": {
       "type": "string",
       "title": "schema.housing.category",

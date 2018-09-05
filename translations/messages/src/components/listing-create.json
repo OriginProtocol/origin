@@ -24,14 +24,6 @@
     "defaultMessage": "Announcements"
   },
   {
-    "id": "listing-create.chooseSchema",
-    "defaultMessage": "Choose a schema for your product or service"
-  },
-  {
-    "id": "listing-create.schemaExplainer",
-    "defaultMessage": "Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services."
-  },
-  {
     "id": "listing-create.stepNumberLabel",
     "defaultMessage": "STEP {stepNumber}"
   },
@@ -42,6 +34,38 @@
   {
     "id": "listing-create.next",
     "defaultMessage": "Next"
+  },
+  {
+    "id": "listing-create.createListingHeading",
+    "defaultMessage": "Create your listing"
+  },
+  {
+    "id": "backButtonLabel",
+    "defaultMessage": "Back"
+  },
+  {
+    "id": "continueButtonLabel",
+    "defaultMessage": "Continue"
+  },
+  {
+    "id": "listing-create.reviewListingHeading",
+    "defaultMessage": "Review your listing"
+  },
+  {
+    "id": "listing-create.backButtonLabel",
+    "defaultMessage": "Back"
+  },
+  {
+    "id": "listing-create.doneButtonLabel",
+    "defaultMessage": "Done"
+  },
+  {
+    "id": "listing-create.chooseSchema",
+    "defaultMessage": "Choose a schema for your product or service"
+  },
+  {
+    "id": "listing-create.schemaExplainer",
+    "defaultMessage": "Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services."
   },
   {
     "id": "listing-create.howItWorksHeading",
@@ -64,16 +88,20 @@
     "defaultMessage": "View the {schemaName} schema"
   },
   {
-    "id": "listing-create.createListingHeading",
-    "defaultMessage": "Create your listing"
+    "id": "listing-create.whatHappensNextHeading",
+    "defaultMessage": "What happens next?"
   },
   {
-    "id": "backButtonLabel",
-    "defaultMessage": "Back"
+    "id": "listing-create.whatHappensNextContent1",
+    "defaultMessage": "When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network."
   },
   {
-    "id": "continueButtonLabel",
-    "defaultMessage": "Continue"
+    "id": "listing-create.IPFS",
+    "defaultMessage": "IPFS"
+  },
+  {
+    "id": "listing-create.whatHappensNextContent2",
+    "defaultMessage": "Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left."
   },
   {
     "id": "listing-create.confirmTransaction",
@@ -114,33 +142,5 @@
   {
     "id": "listing-create.OK",
     "defaultMessage": "OK"
-  },
-  {
-    "id": "listing-create.reviewListingHeading",
-    "defaultMessage": "Review your listing"
-  },
-  {
-    "id": "listing-create.whatHappensNextHeading",
-    "defaultMessage": "What happens next?"
-  },
-  {
-    "id": "listing-create.whatHappensNextContent1",
-    "defaultMessage": "When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network."
-  },
-  {
-    "id": "listing-create.IPFS",
-    "defaultMessage": "IPFS"
-  },
-  {
-    "id": "listing-create.whatHappensNextContent2",
-    "defaultMessage": "Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left."
-  },
-  {
-    "id": "listing-create.backButtonLabel",
-    "defaultMessage": "Back"
-  },
-  {
-    "id": "listing-create.doneButtonLabel",
-    "defaultMessage": "Done"
   }
 ]
