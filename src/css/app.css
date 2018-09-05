@@ -2700,6 +2700,11 @@ select.form-control:not([size]):not([multiple]) {
   vertical-align: 2px;
 }
 
+.purchase-detail h1 .badge {
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
 .purchase-detail .avatar-container {
   flex-shrink: 0;
   height: 60px;
@@ -2767,14 +2772,10 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .purchase-detail .summary {
-  background-color: var(--dark);
+  border: 1px solid var(--light);
   border-radius: var(--default-radius);
-  margin-top: 20px;
-}
-
-.purchase-detail .summary {
-  color: white;
   margin-bottom: 30px;
+  margin-top: 20px;
   padding: 20px;
 }
 
@@ -2782,39 +2783,6 @@ select.form-control:not([size]):not([multiple]) {
   color: white;
   font-size: 1.125rem;
   margin: 0;
-}
-
-.purchase-detail .tag {
-  display: inline-block;
-  background-repeat: no-repeat;
-  height: 58px;
-  margin: 10px auto 20px;
-}
-
-.purchase-detail .tag.purchased {
-  background-image: url(images/tag-green.svg);
-  width: 176px;
-}
-
-.purchase-detail .tag.sold {
-  background-image: url(images/tag-purple.svg);
-  width: 136px;
-}
-
-.purchase-detail .tag div {
-  font-size: 24px;
-  font-weight: normal;
-  line-height: 58px;
-  margin-bottom: 27px;
-  margin-left: 26px;
-}
-
-.purchase-detail .tag.purchased div {
-  width: 150px;
-}
-
-.purchase-detail .tag.sold div {
-  width: 110px;
 }
 
 .purchase-detail .summary .d-flex div {
@@ -2836,7 +2804,8 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .purchase-detail .summary .recap {
-  font-size: 0.875rem;
+  font-size: 1.125rem;
+  font-weight: bold;
 }
 
 .purchase-detail .summary .status.active {
@@ -3202,6 +3171,7 @@ form .stars img {
 
 .messages-wrapper .message-content {
   white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .messages-wrapper .button-container {
