@@ -13,14 +13,12 @@ class ListingsGrid extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      listingsPerPage: 12,
+      listingsPerPage: 12
     }
   }
 
   componentWillMount() {
-    const { getListingIds } = this.props
-
-    getListingIds()
+    this.props.getListingIds()
   }
 
   render() {
