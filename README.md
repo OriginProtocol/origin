@@ -57,7 +57,7 @@ A browser will open to http://localhost:3000. If you don't have the MetaMask ext
 - Get Rinkeby ether from the [Rinkeby faucet](https://faucet.rinkeby.io/).
 - Get Ropsten ether from the [Ropsten faucet](https://faucet.metamask.io/).
 
-### 4. Try it!
+### 5. Try it!
 Create a listing and post it to IPFS and Ethereum.
 
 ## Run Demo DApp with local origin-js and local blockchain
