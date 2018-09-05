@@ -3181,6 +3181,7 @@ form .stars img {
 
 .messages-wrapper .message-content {
   white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .messages-wrapper .button-container {
