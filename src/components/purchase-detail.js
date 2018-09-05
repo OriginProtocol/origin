@@ -212,7 +212,16 @@ class PurchaseDetail extends Component {
       const purchase = await origin.marketplace.getOffer(offerId)
       const listing = await origin.marketplace.getListing(purchase.listingId)
       const reviews = await origin.marketplace.getListingReviews(offerId)
-      this.setState({ purchase, listing, reviews })
+      this.setState({
+        purchase,
+        listing: {
+          ...listing,
+          boostAmount: 10,
+          boostLevel: 'Medium',
+          boostLevelIsPastSomeThreshold: !!Math.round(Math.random())
+        },
+        reviews
+      })
       await this.loadSeller(listing.seller)
       await this.loadBuyer(purchase.buyer)
     } catch (error) {
@@ -385,8 +394,11 @@ class PurchaseDetail extends Component {
       processing,
       purchase,
       reviews,
-      seller
+      seller,
+      unitsAvailable
     } = this.state
+    const isPending = false // will be handled by offer status
+    const isSold = !unitsAvailable
     const translatedListing = translateListingCategory(listing)
     const { rating, reviewText } = form
 
@@ -491,7 +503,22 @@ class PurchaseDetail extends Component {
                   />
                 )}
               </div>
-              <h1>{translatedListing.name}</h1>
+              <h1>
+                {translatedListing.name || 'Larry the Chicken'}
+                {isSold &&
+                  <span className="sold badge">
+                    <FormattedMessage
+                      id={'purchase-detail.soldOut'}
+                      defaultMessage={'Sold Out'}
+                    />
+                  </span>
+                }
+                {listing.boostLevel &&
+                  <span className={ `boosted badge boost-${listing.boostLevel}` }>
+                    <img src="images/boost-icon-arrow.svg" role="presentation" />
+                  </span>
+                }
+              </h1>
             </div>
           </div>
           <div className="purchase-status row">
@@ -798,16 +825,6 @@ class PurchaseDetail extends Component {
             <div className="col-12 col-lg-4">
               {soldAt && (
                 <div className="summary text-center">
-                  {perspective === 'buyer' && (
-                    <div className="purchased tag">
-                      <div>Purchased</div>
-                    </div>
-                  )}
-                  {perspective === 'seller' && (
-                    <div className="sold tag">
-                      <div>Sold</div>
-                    </div>
-                  )}
                   <div className="recap">
                     {perspective === 'buyer' && (
                       <FormattedMessage
