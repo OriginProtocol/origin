@@ -1,67 +1,30 @@
 import { OnboardingConstants } from 'actions/Onboarding'
 import steps from 'components/onboarding-modal/steps'
 
-function getCurrentStep() {
+function getStorageItem(name, defaultValue) {
   try {
-    return JSON.parse(localStorage.getItem('onboarding.currentStep')) || {}
+    return JSON.parse(localStorage.getItem(`onboarding${name}`))
   } catch(e) {
-    console.log('IT DID NOT GET CURRENT STEP', e)
-    return {}
+    return defaultValue
   }
 }
+
+function saveStorageItem(name, item, defaultValue) {
+  try {
+    localStorage.setItem(`onboarding${name}`, JSON.stringify(item))
+  } catch(e) {
+    return defaultValue || item
+  }
+  return item
+}
+
 const getStoredStep = (steps) => {
-  const currentStep = getCurrentStep()
+  const currentStep = getStorageItem('.currentStep', {})
 
-  return steps.find((step) => step.name === currentStep.name)
+  return steps.find((step) => (step && step.name) === (currentStep && currentStep.name))
 }
 
-const getStepsCompleted = () => {
-  try {
-    return JSON.parse(localStorage.getItem('onboarding.stepsCompleted')) || false
-  } catch(e) {
-    console.log('IT DID NOT GET STEPS COMPLETED', e)
-    return false
-  }
-}
-
-function getSteps(steps=[]) {
-  try {
-    localStorage.setItem('onboarding.steps', JSON.stringify(steps))
-  } catch(e) {
-    return console.log('IT WAS NOT SET', e)
-  }
-}
-
-function saveSteps(steps=[]) {
-  try {
-    localStorage.setItem('onboarding.steps', JSON.stringify(steps))
-  } catch(e) {
-    return console.log('IT WAS NOT SET', e)
-  }
-}
-
-function setCurrentStep(currentStep={}) {
-  try {
-    localStorage.setItem('onboarding.currentStep', JSON.stringify(currentStep))
-  } catch(e) {
-    return console.log('IT WAS NOT SET', e)
-  }
-
-  return currentStep
-}
-
-
-function saveStepsCompleted(stepsCompleted=false) {
-  try {
-    localStorage.setItem('onboarding.stepsCompleted', stepsCompleted)
-  } catch(e) {
-    return console.log('IT WAS NOT SET', e)
-  }
-
-  return stepsCompleted
-}
-
-const updateStep = (incompleteStep, fetch=false) => (step, i) => {
+const updateStep = (incompleteStep, steps, fetch=false) => (step, i) => {
   const completedStep = { ...step, complete: true }
   if (step.name == incompleteStep.name && !fetch) {
     if (step.complete) return { ...step, subStepComplete: true }
@@ -75,27 +38,30 @@ const updateStep = (incompleteStep, fetch=false) => (step, i) => {
     return completedStep
   }
 
-  if (i === steps.indexOf(incompleteStep)) {
-    if (step.subStep) {
+  const incompleteIndex = steps.indexOf(incompleteStep)
+  if (i === incompleteIndex) {
+    if (step.subStep && steps[incompleteIndex].complete) {
       return completedStep
     }
+    return step
   }
 
   return step
 }
 
-const updateAllSteps = (incompleteStep, steps, fetch) => steps && steps.map(updateStep(incompleteStep, fetch))
-
+const updateAllSteps = (incompleteStep, steps, fetch) => {
+  return steps && steps.map(updateStep(incompleteStep, steps, fetch))
+}
 
 const updateCurrentStep = (incompleteStep, steps) => {
   const { complete, subStep } = incompleteStep
   const nextStep = steps.find((step) => step.position === incompleteStep.position+1)
 
-  if (!nextStep) setCurrentStep({ ...incompleteStep, complete: true })
+  if (!nextStep) saveStorageItem('.currentStep', { ...incompleteStep, complete: true })
   if (!complete && subStep) {
-    return setCurrentStep({ ...incompleteStep, complete: true })
+    return saveStorageItem('.currentStep', { ...incompleteStep, complete: true })
   }
-  return setCurrentStep(nextStep)
+  return saveStorageItem('.currentStep', nextStep)
 }
 
 const initialState = {
@@ -111,26 +77,26 @@ export default function Onboarding(state = initialState, action = {}) {
   switch (action.type) {
   case OnboardingConstants.UPDATE_STEPS:
     const updatedSteps = updateAllSteps(action.incompleteStep, state.steps)
-    saveSteps(updatedSteps)
-    return {
-      ...state,
-      currentStep: updateCurrentStep(action.incompleteStep, state.steps),
-      steps: updatedSteps,
-      progress: true,
-      stepsCompleted: saveStepsCompleted(action.stepsCompleted)
-    }
-  case OnboardingConstants.FETCH_STEPS:
-    const fetchedSteps = getSteps() || state.steps
-    const fetchedStep = getStoredStep(state.steps) || steps[0]
-    const progress = fetchedStep !== steps[0]
-    const newSteps = updateAllSteps(fetchedStep, fetchedSteps, true)
+    saveStorageItem('.steps', updatedSteps)
 
     return {
       ...state,
-      steps: updateAllSteps(fetchedStep, fetchedSteps, true),
+      currentStep: updateCurrentStep(action.incompleteStep, updatedSteps),
+      steps: updatedSteps,
+      progress: true,
+      stepsCompleted: saveStorageItem('.stepsCompleted', action.stepsCompleted)
+    }
+  case OnboardingConstants.FETCH_STEPS:
+    const fetchedStep = getStoredStep(state.steps) || steps[0]
+    const progress = fetchedStep !== steps[0]
+    const newSteps = updateAllSteps(fetchedStep, state.steps, true)
+
+    return {
+      ...state,
+      steps: updateAllSteps(fetchedStep, state.steps, true),
       currentStep: newSteps.find((step) => step.name === fetchedStep.name),
       progress,
-      stepsCompleted: getStepsCompleted()
+      stepsCompleted: getStorageItem('.stepsCompleted', false)
     }
   case OnboardingConstants.SPLIT_PANEL:
     return { ...state, progress: true, learnMore: false, splitPanel: action.show }
