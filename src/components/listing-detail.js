@@ -156,7 +156,7 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    const { boostLevel, boostAmount, category, currentProvider, description, ipfsHash, loading, name, pictures, price, reviews, seller, step, unitsAvailable } = this.state
+    const { boostLevel, category, currentProvider, description, ipfsHash, loading, name, pictures, price, reviews, seller, step, unitsAvailable } = this.state
     const isPending = false // will be handled by offer status
     const isSold = !unitsAvailable
     const isAvailable = !isPending && !isSold
