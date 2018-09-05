@@ -1349,7 +1349,7 @@ a:hover {
 .onboarding-modal .left-panel,
 .onboarding-modal .right-panel {
   border-radius: 0 10px 10px 0;
-  height: 530px;
+  min-height: 530px;
 }
 
 .onboarding-modal .left-panel {
@@ -4209,6 +4209,22 @@ a:not([href]):not([tabindex]).span-link {
 }
 
 /* Media queries */
+/* xs */
+@media (max-width: 576px) {
+  .onboarding .modal-dialog {
+    margin: 1rem;
+  }
+  .onboarding-modal .row {
+    margin-left: -4px;
+  }
+  .onboarding-modal .step-text {
+    margin: auto 20px;
+  }
+  .modal.getting-started {
+    left: -17px;
+    right: -14px;
+  }
+}
 
 /* sm + */
 @media (min-width: 576px) {
