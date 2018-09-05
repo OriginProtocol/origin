@@ -36,7 +36,8 @@ const defaultState = {
   processing: false,
   purchase: {},
   reviews: [],
-  seller: {}
+  seller: {},
+  arbitrationKeyShared: false
 }
 
 class PurchaseDetail extends Component {
@@ -47,6 +48,7 @@ class PurchaseDetail extends Component {
     this.confirmShipped = this.confirmShipped.bind(this)
     this.handleRating = this.handleRating.bind(this)
     this.handleReviewText = this.handleReviewText.bind(this)
+    this.initiateDispute = this.initiateDispute.bind(this)
     this.loadPurchase = this.loadPurchase.bind(this)
     this.withdrawFunds = this.withdrawFunds.bind(this)
     this.state = defaultState
@@ -369,6 +371,34 @@ class PurchaseDetail extends Component {
     this.setState(prevState => {
       return { form: { ...prevState.form, reviewText: value } }
     })
+  }
+
+  async initiateDispute() {
+    const arbitratorAddress = '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2'
+    const { web3Account } = this.props
+    const { listing, purchase } = this.state
+    const counterpartyAddress = web3Account === purchase.buyer ? listing.seller : purchase.buyer
+    const roomId = origin.messaging.generateRoomId(web3Account, counterpartyAddress)
+    const conv = origin.messaging.convs[roomId]
+    const prompt = confirm(`You want to share conversation key ${conv.keys[0]} with The Arbitrator (${arbitratorAddress})?`)
+
+    if (prompt) {
+      try {
+        const roomId = await origin.messaging.sendConvMessage(arbitratorAddress, {
+          content: `This message should not be shown in the conversation UI. It only serves to share the following key[s] for a conversation between ${web3Account} and ${counterpartyAddress}: ${conv.keys.join(', ')}`,
+          arbitration: {
+            sharedKeys: conv.keys,
+            roomId
+          }
+        })
+
+        // in the future can be detected by the presence of the message containing an arbitration object (the one just sent)
+        this.setState({ arbitrationKeyShared: true })
+      } catch(e) {
+        console.error(e)
+        throw e
+      }
+    }
   }
 
   render() {
@@ -716,6 +746,14 @@ class PurchaseDetail extends Component {
                   userAddress={counterpartyUser.address}
                 />
               )}
+              <div className="help-container text-center" style={{ paddingTop: '30px' }}>
+                {!this.state.arbitrationKeyShared &&
+                  <button className="btn btn-danger" onClick={this.initiateDispute}>HELP</button>
+                }
+                {this.state.arbitrationKeyShared &&
+                  <h3>Help is on the way! 🚑</h3>
+                }
+              </div>
             </div>
           </div>
           <div className="row">
