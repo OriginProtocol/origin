@@ -22,6 +22,7 @@ class ListingsGrid extends Component {
     const { getListingIds, wallet } = this.props
 
     getListingIds()
+
     if (!wallet.address) {
       this.setState({ initialAlert: true })
     }

@@ -17,14 +17,14 @@ class SplitPanel extends Component {
     })
   }
 
-  displayNextStep() {
+  displayNextStep(stepsCompleted=false) {
     const { updateSteps, currentStep } = this.props
 
-    updateSteps(currentStep)
+    updateSteps({ incompleteStep: currentStep, stepsCompleted })
   }
 
   render() {
-    const { isOpen, closeModal, currentStep } = this.props
+    const { isOpen, closeModal, currentStep = {} } = this.props
     const { complete, subStep } = currentStep
     const step = complete && subStep ? subStep : currentStep
 
@@ -41,9 +41,7 @@ class SplitPanel extends Component {
               <div className="modal-body">
                 <div className="container-fluid">
                   <div className="row">
-                    <LeftPanel
-                      firstIncompleteStep={step}
-                    />
+                    <LeftPanel firstIncompleteStep={step}/>
                     <RightPanel
                       displayNextStep={this.displayNextStep}
                       step={step}

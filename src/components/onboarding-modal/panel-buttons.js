@@ -6,14 +6,23 @@ export default class PanelButtons extends Component {
     super(props)
 
     this.connectMetaMask = this.connectMetaMask.bind(this)
+    this.completeOnboarding = this.completeOnboarding.bind(this)
   }
 
   connectMetaMask() {
     this.props.displayNextStep()
   }
 
-  render() {
+  completeOnboarding() {
     const { displayNextStep, step, closeModal } = this.props
+    const stepsCompleted = true
+
+    displayNextStep(stepsCompleted)
+    closeModal()
+  }
+
+  render() {
+    const { displayNextStep, step } = this.props
     const buttons = {
       'Overview': (
         <button
@@ -49,7 +58,7 @@ export default class PanelButtons extends Component {
       ),
       'Get Origin Tokens': (
         <div className="col-auto">
-          <Link to="/about-tokens" target="_blank" onClick={closeModal}>
+          <Link to="/about-tokens" target="_blank" onClick={this.completeOnboarding}>
             <button key={'first-btn'} className="btn btn-primary">
               Learn more
             </button>

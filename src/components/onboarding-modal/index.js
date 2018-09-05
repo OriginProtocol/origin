@@ -14,19 +14,20 @@ class OnboardingModal extends Component {
     this.closeModal = this.closeModal.bind(this)
   }
 
-  componentDidMount() {
-    this.props.fetchSteps()
-    this.removeModalClasses()
-    this.userProgress()
+  async componentWillMount() {
+    const { fetchSteps, onboarding } = this.props
+    await fetchSteps()
+
+    if (!onboarding.stepsCompleted) {
+      this.userProgress()
+    }
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.isOpen) this.addModalClass()
-    if (prevProps.onboarding.learnMore !== this.props.onboarding.learnMore) {
-      // this.setState({ ...this.props.onboarding })
-      this.userProgress()
-    }
+    const { onboarding } = this.props
 
+    if (!onboarding.stepsCompleted && onboarding.progress) this.addModalClass()
+    //need to update user progress here
     this.removeModalClasses()
   }
 
@@ -49,7 +50,9 @@ class OnboardingModal extends Component {
   }
 
   removeModalClasses() {
-    if (!this.props.isOpen) {
+    const { onboarding } = this.props
+
+    if (!onboarding.stepsCompleted && onboarding.progres) {
       document.body.classList.remove('modal-open')
       const backdrop = document.getElementsByClassName('modal-backdrop')
 
@@ -58,12 +61,11 @@ class OnboardingModal extends Component {
   }
 
   userProgress() {
-    const { onboarding: { progress, completed }, toggleLearnMore, toggleSplitPanel, initialAlert } = this.props
+    const { onboarding: { progress, stepsCompleted }, toggleLearnMore, toggleSplitPanel, initialAlert } = this.props
     if (initialAlert) {
-      if (!progress) {
-        // this.addModalClass()
+      if (!stepsCompleted || !progress) {
         return toggleLearnMore(true)
-      } else if (!completed && progress) {
+      } else if (!stepsCompleted && progress) {
         return toggleSplitPanel(true)
       }
     }
@@ -121,7 +123,7 @@ class OnboardingModal extends Component {
 const mapStateToProps = ({ onboarding }) => ({ onboarding })
 
 const mapDispatchToProps = dispatch => ({
-  updateSteps: (currentStep) => dispatch(updateSteps(currentStep)),
+  updateSteps: ({ incompleteStep, stepsCompleted }) => dispatch(updateSteps({ incompleteStep, stepsCompleted })),
   fetchSteps: () => dispatch(fetchSteps()),
   toggleSplitPanel: (show) => dispatch(toggleSplitPanel(show)),
   toggleLearnMore: (show) => dispatch(toggleLearnMore(show))

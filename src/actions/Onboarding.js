@@ -10,10 +10,11 @@ export const OnboardingConstants = keyMirror(
   'ONBOARDING'
 )
 
-export function updateSteps(incompleteStep) {
+export function updateSteps({ incompleteStep, stepsCompleted=false }) {
   return {
     type: OnboardingConstants.UPDATE_STEPS,
-    incompleteStep
+    incompleteStep,
+    stepsCompleted
   }
 }
 
