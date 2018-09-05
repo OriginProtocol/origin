@@ -206,7 +206,7 @@ class PurchaseDetail extends Component {
 
     try {
       const purchase = await origin.marketplace.getOffer(offerId)
-      const listing = await getListing(purchase.listingId)
+      const listing = await getListing(purchase.listingId, true)
       const reviews = await origin.marketplace.getListingReviews(offerId)
       this.setState({ purchase, listing, reviews })
       await this.loadSeller(listing.seller)
@@ -383,7 +383,6 @@ class PurchaseDetail extends Component {
       reviews,
       seller
     } = this.state
-    const translatedListing = translateListingCategory(listing)
     const { rating, reviewText } = form
 
     // Data not loaded yet.
@@ -488,7 +487,7 @@ class PurchaseDetail extends Component {
                   />
                 )}
               </div>
-              <h1>{translatedListing.name}</h1>
+              <h1>{listing.name}</h1>
             </div>
           </div>
           <div className="purchase-status row">
@@ -740,13 +739,13 @@ class PurchaseDetail extends Component {
                   )}
                   <div className="detail-info-box">
                     <h2 className="category placehold">
-                      {translatedListing.category}
+                      {listing.category}
                     </h2>
                     <h1 className="title text-truncate placehold">
-                      {translatedListing.name}
+                      {listing.name}
                     </h1>
                     <p className="description placehold">
-                      {translatedListing.description}
+                      {listing.description}
                     </p>
                     {/*!!listing.unitsRemaining && listing.unitsRemaining < 5 &&
                       <div className="units-available text-danger">Just {listing.unitsRemaining.toLocaleString()} left!</div>

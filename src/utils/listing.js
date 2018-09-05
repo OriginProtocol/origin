@@ -11,7 +11,7 @@ import origin from '../services/origin'
  */
 export function dappFormDataToOriginListing(formData) {
   // formData.category data format is "schema.<category>.<subCategory>".
-  const [ unused, category, subCategory ] = formData.category.split('.')
+  const [ category, subCategory ] = formData.category.split('.').slice(1)
 
   const listingData = {
     schemaVersion: '1.0.0',
@@ -53,14 +53,15 @@ export function dappFormDataToOriginListing(formData) {
  */
 export function originToDAppListing(originListing) {
   return {
-    id:             originListing.id,
-    seller:         originListing.seller,
-    status:         originListing.status,
-    category:       originListing.subCategory,
-    name:           originListing.title,
-    pictures:       originListing.media ? originListing.media.map(medium => medium.url) : [],
-    price:          originListing.price.amount,
-    unitsRemaining: originListing.unitsRemaining
+    id: originListing.id,
+    seller: originListing.seller,
+    status: originListing.status,
+    category: originListing.subCategory,
+    name: originListing.title,
+    pictures: originListing.media ? originListing.media.map(medium => medium.url) : [],
+    price: originListing.price.amount,
+    unitsRemaining: originListing.unitsRemaining,
+    ipfsHash: originListing.ipfs.hash
   }
 }
 
