@@ -15,8 +15,7 @@
           "searchParameterName": "homeTypes",
           "multipleSelection": true
         }
-      ],
-      "actions": ["Clear", "Apply"]
+      ]
     }
   ]
 }

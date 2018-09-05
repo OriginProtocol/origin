@@ -14,8 +14,7 @@
           "listingPropertyName": "properties.price.enum",
           "searchParameterName": "price"
         }
-      ],
-      "actions": ["Clear", "Apply"]
+      ]
     },
     {
       "title": {
@@ -30,8 +29,7 @@
           "searchParameterName": "homeTypes",
           "multipleSelection": true
         }
-      ],
-      "actions": ["Clear", "Apply"]
+      ]
     }
   ]
 }

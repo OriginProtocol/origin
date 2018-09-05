@@ -11,8 +11,7 @@
         "type": "price",
         "listingPropertyName": "properties.price.enum",
         "searchParameterName": "price"
-      }],
-      "actions": ["Clear", "Apply"]
+      }]
     },
     {
       "title": {
@@ -44,8 +43,7 @@
           },
           "searchParameterName": "bathrooms"
         }
-      ],
-      "actions": ["Clear", "Apply"]
+      ]
     },
     {
       "title": {
@@ -56,8 +54,7 @@
       "items": [{
         "type": "date",
         "searchParameterName": "date"
-      }],
-      "actions": ["Clear", "Apply"]
+      }]
     }
   ]
 }
