@@ -39,6 +39,7 @@ class OnboardingModal extends Component {
 
   closeModal(name = 'toggleSplitPanel') {
     return () => {
+      if (name === 'toggleSplitPanel') document.body.classList.remove('modal-open')
       this.props[name](false)
     }
   }
