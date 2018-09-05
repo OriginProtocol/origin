@@ -68,6 +68,10 @@
     "defaultMessage": "Sold to {buyerLink}"
   },
   {
+    "id": "purchase-detail.soldOut",
+    "defaultMessage": "Sold Out"
+  },
+  {
     "id": "purchase-detail.transactionStatusHeading",
     "defaultMessage": "Transaction Status"
   },

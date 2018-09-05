@@ -371,18 +371,20 @@ class ListingsDetail extends Component {
                     />
                   </div>
                   {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
-                  {/* <div className="quantity d-flex justify-content-between">
-                                    <div>Quantity</div>
-                                    <div className="text-right">
-                                      {Number(1).toLocaleString()}
-                                    </div>
-                                  </div>
-                                  <div className="total-price d-flex justify-content-between">
-                                    <div>Total Price</div>
-                                    <div className="price text-right">
-                                      {Number(price).toLocaleString(undefined, {minimumFractionDigits: 5, maximumFractionDigits: 5})} ETH
-                                    </div>
-                                  </div> */}
+                  {/*
+                    <div className="quantity d-flex justify-content-between">
+                      <div>Quantity</div>
+                      <div className="text-right">
+                        {Number(1).toLocaleString()}
+                      </div>
+                    </div>
+                    <div className="total-price d-flex justify-content-between">
+                      <div>Total Price</div>
+                      <div className="price text-right">
+                        {Number(price).toLocaleString(undefined, {minimumFractionDigits: 5, maximumFractionDigits: 5})} ETH
+                      </div>
+                    </div>
+                  */}
                   {!loading &&
                     <div className="btn-container">
                       {!userIsSeller && (
@@ -404,7 +406,8 @@ class ListingsDetail extends Component {
                       )}
                     </div>
                   }
-                  {!loading && boostLevel &&
+                  {/* Via Matt 9/4/2018: Not necessary until we have staking */}
+                  {/*
                     <div className="boost-level">
                       <hr/>
                       <div className="row">
@@ -423,43 +426,49 @@ class ListingsDetail extends Component {
                         </div>
                       </div>
                     </div>
-                  }
+                  */}
                 </div>
               }
               {!isAvailable &&
                 <div className="buy-box placehold unavailable text-center">
-                  <div className="reason">
-                    {isPending &&
+                  {!loading &&
+                    <div className="reason">
+                      {isPending &&
+                        <FormattedMessage
+                          id={'listing-detail.reasonPending'}
+                          defaultMessage={'This listing is {pending}'}
+                          values={{
+                            pending: <strong>Pending</strong>
+                          }}
+                        />
+                      }
+                      {isSold &&
+                        <FormattedMessage
+                          id={'listing-detail.reasonSold'}
+                          defaultMessage={'This listing is {soldOut}'}
+                          values={{
+                            soldOut: <strong>Sold Out</strong>
+                          }}
+                        />
+                      }
+                    </div>
+                  }
+                  {!loading &&
+                    <div className="suggestion">
                       <FormattedMessage
-                        id={'listing-detail.reasonPending'}
-                        defaultMessage={'This listing is {pending}'}
-                        values={{
-                          pending: <strong>Pending</strong>
-                        }}
+                        id={'listing-detail.suggestion'}
+                        defaultMessage={'Try visiting the listings page and searching for something similar.'}
                       />
-                    }
-                    {isSold &&
+                    </div>
+                  }
+                  {!loading &&
+                    <Link to="/">
                       <FormattedMessage
-                        id={'listing-detail.reasonSold'}
-                        defaultMessage={'This listing is {soldOut}'}
-                        values={{
-                          soldOut: <strong>Sold Out</strong>
-                        }}
+                        id={'listing-detail.allListings'}
+                        defaultMessage={'See All Listings'}
                       />
-                    }
-                  </div>
-                  <div className="suggestion">
-                    <FormattedMessage
-                      id={'listing-detail.suggestion'}
-                      defaultMessage={'Try visiting the listings page and searching for something similar.'}
-                    />
-                  </div>
-                  <Link to="/">
-                    <FormattedMessage
-                      id={'listing-detail.allListings'}
-                      defaultMessage={'See All Listings'}
-                    />
-                  </Link>
+                    </Link>
+                  }
                 </div>
               }
               {seller &&
