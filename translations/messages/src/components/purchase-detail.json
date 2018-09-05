@@ -68,6 +68,10 @@
     "defaultMessage": "Sold to {buyerLink}"
   },
   {
+    "id": "purchase-detail.pending",
+    "defaultMessage": "Pending"
+  },
+  {
     "id": "purchase-detail.soldOut",
     "defaultMessage": "Sold Out"
   },

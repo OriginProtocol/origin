@@ -212,6 +212,7 @@
   "purchase-detail.unnamedUser": "Unnamed User",
   "purchase-detail.purchasedFrom": "Purchased from {sellerLink}",
   "purchase-detail.soldTo": "Sold to {buyerLink}",
+  "purchase-detail.pending": "Pending",
   "purchase-detail.soldOut": "Sold Out",
   "purchase-detail.transactionStatusHeading": "Transaction Status",
   "purchase-detail.seller": "Seller",

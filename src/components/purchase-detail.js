@@ -397,6 +397,7 @@ class PurchaseDetail extends Component {
       seller,
       unitsAvailable
     } = this.state
+    const isPending = false // will be handled by offer status
     const isSold = !unitsAvailable
     const translatedListing = translateListingCategory(listing)
     const { rating, reviewText } = form
@@ -504,6 +505,14 @@ class PurchaseDetail extends Component {
               </div>
               <h1>
                 {translatedListing.name || 'Larry the Chicken'}
+                {isPending &&
+                  <span className="pending badge">
+                    <FormattedMessage
+                      id={'purchase-detail.pending'}
+                      defaultMessage={'Pending'}
+                    />
+                  </span>
+                }
                 {isSold &&
                   <span className="sold badge">
                     <FormattedMessage
