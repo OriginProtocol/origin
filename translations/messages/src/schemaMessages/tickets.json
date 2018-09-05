@@ -8,6 +8,10 @@
     "defaultMessage": "Title"
   },
   {
+    "id": "schema.tickets.examples",
+    "defaultMessage": "Examples"
+  },
+  {
     "id": "schema.tickets.category",
     "defaultMessage": "Category"
   },
