@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
-import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import $ from 'jquery'
 
 import { getBalance } from 'actions/Wallet'
 
-import Avatar from 'components/avatar'
 import Identicon from 'components/identicon'
 import Wallet from 'components/wallet'
 

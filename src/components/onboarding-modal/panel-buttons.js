@@ -14,7 +14,7 @@ export default class PanelButtons extends Component {
   }
 
   completeOnboarding() {
-    const { displayNextStep, step, closeModal } = this.props
+    const { displayNextStep, closeModal } = this.props
     const stepsCompleted = true
 
     displayNextStep(stepsCompleted)

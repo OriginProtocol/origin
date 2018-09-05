@@ -23,11 +23,10 @@ class OnboardingModal extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     const { onboarding } = this.props
 
     if (!onboarding.stepsCompleted && onboarding.progress) this.addModalClass()
-    //need to update user progress here
     this.removeModalClasses()
   }
 

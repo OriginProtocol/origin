@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { FormattedMessage, FormattedNumber } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
@@ -25,7 +25,7 @@ class Wallet extends Component {
 
   async convertEthToUsd() {
     const ethToUsdBalance = await getFiatPrice( this.props.balance, 'USD' )
-    
+
     this.setState({
       ethToUsdBalance
     })
