@@ -157,6 +157,27 @@ class Footer extends Component {
                     </li>
                     <li>
                       <a
+                        href="https://demo.originprotocol.com/"
+                      >
+                        <FormattedMessage
+                          id={'footer.dapp'}
+                          defaultMessage={'Demp Dapp'}
+                        />
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://originprotocol.com/developers"
+                        target="_blank"
+                      >
+                        <FormattedMessage
+                          id={'footer.developers'}
+                          defaultMessage={'Developers'}
+                        />
+                      </a>
+                    </li>
+                    <li>
+                      <a
                         href="https://github.com/OriginProtocol"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -215,18 +236,6 @@ class Footer extends Component {
                     </li>
                     <li>
                       <a
-                        href="https://medium.com/originprotocol"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <FormattedMessage
-                          id={'footer.mediumLink'}
-                          defaultMessage={'Medium'}
-                        />
-                      </a>
-                    </li>
-                    <li>
-                      <a
                         href="https://www.reddit.com/r/originprotocol/"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -247,6 +256,31 @@ class Footer extends Component {
                         <FormattedMessage
                           id={'footer.wechatLink'}
                           defaultMessage={'WeChat'}
+                        />
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        className="span-link"
+                        data-container="body"
+                        data-toggle="tooltip"
+                        title="<img class='weChat' src='/images/origin-weibo-qr.png' />"
+                      >
+                        <FormattedMessage
+                          id={'footer.weiboLink'}
+                          defaultMessage={'Weibo'}
+                        />
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://open.kakao.com/o/ganyghS"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FormattedMessage
+                          id={'footer.kakaoLink'}
+                          defaultMessage={'Kakao Talk'}
                         />
                       </a>
                     </li>
@@ -298,6 +332,18 @@ class Footer extends Component {
                     </li>
                     <li>
                       <a
+                        href="https://medium.com/originprotocol"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FormattedMessage
+                          id={'footer.mediumLink'}
+                          defaultMessage={'Medium'}
+                        />
+                      </a>
+                    </li>
+                    <li>
+                      <a
                         href="http://www.youtube.com/c/originprotocol"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -343,16 +389,19 @@ class Footer extends Component {
                       </a>
                     </li>
                     <li>
+                      <a href="https://www.eventbrite.com/o/origin-protocol-17702006678">
+                        <FormattedMessage
+                          id={'footer.meetupsLink'}
+                          defaultMessage={'Meetups'}
+                        />
+                      </a>
+                    </li>
+                    <li>
                       <a href="https://angel.co/originprotocol/jobs">
                         <FormattedMessage
                           id={'footer.hiringLink'}
                           defaultMessage={'Jobs'}
                         />
-                      </a>
-                    </li>
-                    <li>
-                      <a href="mailto:info@originprotocol.com">
-                        info@originprotocol.com
                       </a>
                     </li>
                   </ul>
