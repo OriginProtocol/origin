@@ -4,6 +4,14 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import schemaMessages from '../../schemaMessages/index'
 
 class MultipleSelectionFilter extends Component {
+  componentWillUnmount() {
+    this.props.onChildUnMounted(this)
+  }
+
+  componentDidMount() {
+    this.props.onChildMounted(this)
+  }
+
   render() {
     let containerClass = 'd-flex flex-column'
     let itemClass = 'form-check'

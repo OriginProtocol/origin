@@ -19,6 +19,14 @@ class PriceFilter extends Component {
     $('#price-amount-display-to').text(`${topAmount}$`)
   }
 
+  componentWillUnmount() {
+    this.props.onChildUnMounted(this)
+  }
+
+  componentDidMount() {
+    this.props.onChildMounted(this)
+  }
+
   render() {
     const min = 0
     const max = 500

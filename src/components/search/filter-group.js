@@ -13,12 +13,25 @@ class FilterGroup extends Component {
     /* Because of a workaround in `react-dates` module we need to message the DateFilter
      * when it gets shown - when dropdown containing date filter is opened
      */
-    this.dateFilters = []
+    this.childFilters = []
+
+    this.handleFilterMounted = this.handleFilterMounted.bind(this)
+    this.handleFilterUnMounted = this.handleFilterUnMounted.bind(this)
   }
 
   resolveFromListingSchema(path) {
     var properties = Array.isArray(path) ? path : path.split('.')
     return properties.reduce((prev, curr) => prev && prev[curr], this.props.listingSchema)
+  }
+
+  handleFilterMounted(filter) {
+    this.childFilters.push(filter)
+  }
+
+  handleFilterUnMounted(filter) {
+    const index = this.childFilters.indexOf(filter)
+    if (index !== -1)
+      this.childFilters.splice(index, 1)
   }
 
   renderFilter(filter, title) {
@@ -29,32 +42,32 @@ class FilterGroup extends Component {
           multipleSelectionValues={this.resolveFromListingSchema(filter.listingPropertyName)}
           listingType={this.props.listingType}
           title={title}
+          onChildMounted={this.handleFilterMounted}
+          onChildUnMounted={this.handleFilterUnMounted}
         />
       )
     } else if (filter.type == 'price') {
       return (
         <PriceFilter
           filter={filter}
+          onChildMounted={this.handleFilterMounted}
+          onChildUnMounted={this.handleFilterUnMounted}
         />
       )
     } else if (filter.type == 'counter') {
       return(
         <CounterFilter
           filter={filter}
+          onChildMounted={this.handleFilterMounted}
+          onChildUnMounted={this.handleFilterUnMounted}
         />
       )
     } else if (filter.type == 'date') {
       return(
         <DateFilter
           filter={filter}
-          onChildMounted={child => {
-            this.dateFilters.push(child)
-          }}
-          onChildUnMounted={child => {
-            const index = this.dateFilters.indexOf(child)
-            if (index !== -1)
-              this.dateFilters.splice(index, 1)
-          }}
+          onChildMounted={this.handleFilterMounted}
+          onChildUnMounted={this.handleFilterUnMounted}
         />
       )
     } else {
@@ -73,7 +86,9 @@ class FilterGroup extends Component {
             if (!containsDateFilter)
               return
 
-            this.dateFilters.forEach(dateFilter => dateFilter.onOpen())
+            this.childFilters
+              .filter(filter => filter.props.filter.type == 'date')
+              .forEach(dateFilter => dateFilter.onOpen())
           }}
           className="nav-link"
           data-toggle="dropdown"

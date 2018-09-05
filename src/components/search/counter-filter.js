@@ -21,6 +21,14 @@ class CounterFilter extends Component {
     this.setState({counter: Math.max(this.state.counter - 1, 0)})
   }
 
+  componentWillUnmount() {
+    this.props.onChildUnMounted(this)
+  }
+
+  componentDidMount() {
+    this.props.onChildMounted(this)
+  }
+
   render() {
     const title = this.props.intl.formatMessage(this.props.filter.title)
 
