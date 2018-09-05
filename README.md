@@ -62,7 +62,7 @@ Create a listing and post it to IPFS and Ethereum.
 
 ## Run Demo DApp with local origin-js and local blockchain
 
-If you want hack on origin-js code, or if you just want to use a private local blockchain, follow these instructions.
+If you want to hack on origin-js code, or if you just want to use a private local blockchain, follow these instructions.
 
 ### 1. Set up and run origin-js locally
 
