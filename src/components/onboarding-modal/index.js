@@ -37,7 +37,6 @@ class OnboardingModal extends Component {
     this.removeModalClasses()
   }
 
-
   closeModal(name = 'toggleSplitPanel') {
     return () => {
       this.props[name](false)
