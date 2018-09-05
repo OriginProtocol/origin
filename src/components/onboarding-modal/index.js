@@ -27,7 +27,7 @@ class OnboardingModal extends Component {
     this.removeModalClasses()
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     const { onboarding: { splitPanel } } = this.props
 
     if (splitPanel) this.addModalClass()
@@ -96,7 +96,7 @@ class OnboardingModal extends Component {
         </div>
       </div>
     )
-    console.log("SPLIT PANEL", splitPanel)
+
     return (
       <div className="onboarding">
         {learnMore && (

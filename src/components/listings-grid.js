@@ -18,13 +18,13 @@ class ListingsGrid extends Component {
   }
 
   componentWillMount() {
-    const { getListingIds, wallet } = this.props
+    const { getListingIds } = this.props
 
     getListingIds()
   }
 
   render() {
-    const { listingsPerPage, initialAlert } = this.state
+    const { listingsPerPage } = this.state
     const { contractFound, listingIds } = this.props
     // const pinnedListingIds = [0, 1, 2, 3, 4]
     // const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
@@ -97,8 +97,7 @@ class ListingsGrid extends Component {
 
 const mapStateToProps = state => ({
   listingIds: state.marketplace.ids,
-  contractFound: state.listings.contractFound,
-  wallet: state.wallet
+  contractFound: state.listings.contractFound
 })
 
 const mapDispatchToProps = dispatch => ({
