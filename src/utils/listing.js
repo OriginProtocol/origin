@@ -21,7 +21,7 @@ export function dappFormDataToOriginListing(formData) {
     title: formData.name,
     description: formData.description,
     listingType: 'unit',
-    unitsForSale: 1,
+    unitsTotal: 1, // Note: for V1 we only support single unit listings.
     price: {
       amount: formData.price.toString(),
       currency: 'ETH'
@@ -48,7 +48,7 @@ export function dappFormDataToOriginListing(formData) {
  * TODO: Eliminate this transform by updating the DApp code to manipulate
  *       directly origin-js listing objects.
  *
- * @param {origin-js.Listing} originListing
+ * @param {Listing} originListing - Listing object returned by origin-js.
  * @return {object} DApp compatible listing object.
  */
 export function originToDAppListing(originListing) {
@@ -60,7 +60,7 @@ export function originToDAppListing(originListing) {
     name:           originListing.title,
     pictures:       originListing.media ? originListing.media.map(medium => medium.url) : [],
     price:          originListing.price.amount,
-    unitsAvailable: originListing.unitsAvailable
+    unitsRemaining: originListing.unitsRemaining
   }
 }
 

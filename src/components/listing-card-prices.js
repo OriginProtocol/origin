@@ -109,7 +109,7 @@ class ListingCardPrices extends Component {
                 />
               </span>
             </div>
-            {this.props.unitsAvailable === 0 && (
+            {this.props.unitsRemaining === 0 && (
               <span className="sold-banner">
                 <FormattedMessage
                   id={'listing-card-prices.sold'}

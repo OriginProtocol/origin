@@ -748,8 +748,8 @@ class PurchaseDetail extends Component {
                     <p className="description placehold">
                       {translatedListing.description}
                     </p>
-                    {/*!!listing.unitsAvailable && listing.unitsAvailable < 5 &&
-                      <div className="units-available text-danger">Just {listing.unitsAvailable.toLocaleString()} left!</div>
+                    {/*!!listing.unitsRemaining && listing.unitsRemaining < 5 &&
+                      <div className="units-available text-danger">Just {listing.unitsRemaining.toLocaleString()} left!</div>
                     */}
                     {listing.ipfsHash && (
                       <div className="link-container">

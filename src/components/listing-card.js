@@ -36,7 +36,7 @@ class ListingCard extends Component {
       name,
       pictures,
       price,
-      unitsAvailable
+      unitsRemaining
     } = this.state
     const photo = pictures && pictures.length && pictures[0]
 
@@ -75,7 +75,7 @@ class ListingCard extends Component {
           </div>
           <h2 className="title placehold text-truncate">{name}</h2>
           {price > 0 && (
-            <ListingCardPrices price={price} unitsAvailable={unitsAvailable} />
+            <ListingCardPrices price={price} unitsRemaining={unitsRemaining} />
           )}
         </Link>
       </div>

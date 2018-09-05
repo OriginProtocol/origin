@@ -102,7 +102,7 @@ class MyListingCard extends Component {
             {/*<p className="timestamp">{timestamp}</p>*/}
             {/*<p className="price">
               {`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 5 })} ETH`}
-              {!parseInt(unitsAvailable) &&
+              {!parseInt(unitsRemaining) &&
                 <span className="badge badge-info">
                   <FormattedMessage
                     id={ 'my-listing-card.soldOut' }
@@ -116,10 +116,10 @@ class MyListingCard extends Component {
                 <FormattedMessage
                   id={ 'my-listing-card.totalQuantity' }
                   defaultMessage={ 'Total Quantity : {quantity}' }
-                  values={{ quantity: <FormattedNumber value={unitsAvailable} /> }}
+                  values={{ quantity: <FormattedNumber value={unitsRemaining} /> }}
                 />
               </p>*/}
-              {/*<p>Total Remaining: {(unitsAvailable - quantity).toLocaleString()}</p>*/}
+              {/*<p>Total Remaining: {(unitsRemaining - quantity).toLocaleString()}</p>*/}
             </div>
             <div className="d-flex counts">
               {/*<p>{Number(2).toLocaleString()} Pending Transactions</p>*/}

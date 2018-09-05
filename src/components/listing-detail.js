@@ -147,7 +147,7 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    const isActive = !!this.state.unitsAvailable
+    const isActive = !!this.state.unitsRemaining
     const buyersReviews = this.state.reviews
     const userIsSeller = this.state.seller === this.props.web3Account
 
@@ -269,13 +269,13 @@ class ListingsDetail extends Component {
                 {this.state.name}
               </h1>
               <p className="description placehold">{this.state.description}</p>
-              {/* Via Stan 5/25/2018: Hide until contracts allow for unitsAvailable > 1 */}
-              {/*!!unitsAvailable && unitsAvailable < 5 &&
+              {/* Via Stan 5/25/2018: Hide until contracts allow for unitsRemaining > 1 */}
+              {/*!!unitsRemaining && unitsRemaining < 5 &&
                 <div className="units-available text-danger">
                   <FormattedMessage
-                    id={ 'listing-detail.unitsAvailable' }
-                    defaultMessage={ 'Just {unitsAvailable} left!' }
-                    values={{ unitsAvailable: <FormattedNumber value={ this.state.unitsAvailable } /> }}
+                    id={ 'listing-detail.unitsRemaining' }
+                    defaultMessage={ 'Just {unitsRemaining} left!' }
+                    values={{ unitsRemaining: <FormattedNumber value={ this.state.unitsRemaining } /> }}
                   />
                 </div>
               */}
