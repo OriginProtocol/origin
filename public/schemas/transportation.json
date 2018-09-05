@@ -10,6 +10,15 @@
       "minLength": 3,
       "maxLength": 100
     },
+    "examples": {
+      "type": "string",
+      "title": "schema.transportation.examples",
+      "enum": [
+        "schema.transportation.bikeRentals",
+        "schema.transportation.carRentals",
+        "schema.transportation.taxiService"
+      ]
+    },
     "category": {
       "type": "string",
       "title": "schema.transportation.category",

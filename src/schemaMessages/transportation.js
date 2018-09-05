@@ -9,6 +9,10 @@ export default defineMessages({
     id: 'schema.transportation.title',
     defaultMessage: 'Title'
   },
+  'schema.transportation.examples': {
+    id: 'schema.transportation.examples',
+    defaultMessage: 'Examples'
+  },
   'schema.transportation.category': {
     id: 'schema.transportation.category',
     defaultMessage: 'Category'

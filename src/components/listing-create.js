@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
@@ -105,10 +105,12 @@ class ListingCreate extends Component {
     this.state = {
       // TODO:John - wire up ognBalance and isFirstListing when ready
       ognBalance: 0,
-      isFirstListing: true,
+      isFirstListing: false,
       step: this.STEP.PICK_SCHEMA,
-      selectedSchemaType: this.schemaList[0],
+      selectedSchemaType: null,
       selectedSchema: null,
+      translatedSchema: null,
+      schemaExamples: null,
       schemaFetched: false,
       formListing: { formData: null },
       currentProvider: getCurrentProvider(
@@ -132,8 +134,8 @@ class ListingCreate extends Component {
     })
   }
 
-  handleSchemaSelection() {
-    fetch(`schemas/${this.state.selectedSchemaType}.json`)
+  handleSchemaSelection(selectedSchemaType) {
+    fetch(`schemas/${selectedSchemaType}.json`)
       .then(response => response.json())
       .then(schemaJson => {
         PriceField.defaultProps = {
@@ -142,6 +144,9 @@ class ListingCreate extends Component {
           }
         }
         this.uiSchema = {
+          examples: {
+            'ui:widget': 'hidden'
+          },
           price: {
             'ui:field': PriceField,
           },
@@ -155,13 +160,34 @@ class ListingCreate extends Component {
             'ui:widget': PhotoPicker
           }
         }
+
+        const translatedSchema = translateSchema(
+          schemaJson,
+          selectedSchemaType
+        )
+
         this.setState({
+          selectedSchemaType,
           selectedSchema: schemaJson,
           schemaFetched: true,
-          step: this.STEP.DETAILS
+          translatedSchema,
+          schemaExamples: translatedSchema &&
+                          translatedSchema.properties &&
+                          translatedSchema.properties.examples &&
+                          translatedSchema.properties.examples.enumNames
         })
-        window.scrollTo(0, 0)
       })
+  }
+
+  goToDetailsStep() {
+    if (this.state.schemaFetched) {
+      this.setState({
+        step: this.STEP.DETAILS
+      })
+      window.scrollTo(0, 0)
+    } else {
+      console.error('Error fetching schema JSON')
+    }
   }
 
   onDetailsEntered(formListing) {
@@ -248,7 +274,8 @@ class ListingCreate extends Component {
   }
 
   render() {
-    const { formData } = this.state.formListing
+    const { formListing, selectedSchemaType, schemaExamples, translatedSchema } = this.state
+    const { formData } = formListing
     const translatedFormData = (formData && formData.category && translateListingCategory(formData)) || {}
     return (
       <div className="container listing-form">
@@ -308,24 +335,26 @@ class ListingCreate extends Component {
                 <div className="schema-options">
                   {this.schemaList.map(schema => (
                     <div
-                      className={
-                        this.state.selectedSchemaType === schema.type
-                          ? 'schema-selection selected'
-                          : 'schema-selection'
-                      }
+                      className={ `schema-selection ${selectedSchemaType === schema.type ? ' selected' : ''}`}
                       key={schema.type}
-                      onClick={() =>
-                        this.setState({ selectedSchemaType: schema.type })
-                      }
+                      onClick={() => this.handleSchemaSelection(schema.type)}
                     >
                       {schema.name}
+                      <div className={ `schema-examples ${selectedSchemaType === schema.type ? ' selected' : ''}` }>
+                        <p>{ schema.name } listings may include:</p>
+                        <ul>
+                          {schemaExamples && schemaExamples.map((example) =>
+                            <li key="example">{ example }</li>
+                          )}
+                        </ul>
+                      </div>
                     </div>
                   ))}
                 </div>
                 <div className="btn-container">
                   <button
                     className="float-right btn btn-primary"
-                    onClick={() => this.handleSchemaSelection()}
+                    onClick={() => this.goToDetailsStep()}
                   >
                     <FormattedMessage
                       id={'listing-create.next'}
@@ -386,7 +415,7 @@ class ListingCreate extends Component {
                       }}
                     />
                     <a
-                      href={`schemas/${this.state.selectedSchemaType}.json`}
+                      href={`schemas/${selectedSchemaType}.json`}
                       target="_blank"
                     >
                       <FormattedMessage
@@ -424,10 +453,7 @@ class ListingCreate extends Component {
                   />
                 </h2>
                 <Form
-                  schema={translateSchema(
-                    this.state.selectedSchema,
-                    this.state.selectedSchemaType
-                  )}
+                  schema={translatedSchema}
                   onSubmit={this.onDetailsEntered}
                   formData={this.state.formListing.formData}
                   onError={errors =>
