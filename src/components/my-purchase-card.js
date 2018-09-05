@@ -5,8 +5,6 @@ import { defineMessages, injectIntl } from 'react-intl'
 
 import PurchaseProgress from 'components/purchase-progress'
 
-import { translateListingCategory } from 'utils/translationUtils'
-
 class MyPurchaseCard extends Component {
   constructor(props) {
     super(props)
@@ -45,9 +43,8 @@ class MyPurchaseCard extends Component {
     const { listing, offer, offerId } = this.props
     const created = Number(offer.createdAt)
     const soldAt = created * 1000 // convert seconds since epoch to ms
-    const { category, name, pictures, price } = translateListingCategory(
-      listing.ipfsData.data
-    )
+    const { category, name, pictures, price } = listing
+
     const step = parseInt(offer.status)
     let verb
 
