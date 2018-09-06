@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 
 library KeyHolderLibrary {
   event KeyAdded(bytes32 indexed key, uint256 indexed purpose, uint256 indexed keyType);
