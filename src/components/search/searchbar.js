@@ -63,7 +63,7 @@ class SearchBar extends Component {
   handleOnSearch() {
     document.location.href = `#/search?search_query=${this.state.searchQuery}&listing_type=${this.state.selectedListingType.type}`
     //this.props.clearFilters()
-    this.props.generalSearch(this.state.searchQuery, this.state.selectedListingType.type, true)
+    this.props.generalSearch(this.state.searchQuery, this.state.selectedListingType.type, true, true)
   }
 
   render() {
@@ -146,7 +146,7 @@ const mapStateToProps = () => {
 
 const mapDispatchToProps = dispatch => ({
   searchListings: (query) => dispatch(searchListings(query)),
-  generalSearch: (query, selectedListingType, resetSearchFilters) => dispatch(generalSearch(query, selectedListingType, resetSearchFilters)),
+  generalSearch: (query, selectedListingType, resetSearchFilters, forceIssueOfGeneralSearch) => dispatch(generalSearch(query, selectedListingType, resetSearchFilters, forceIssueOfGeneralSearch)),
   clearFilters: () => dispatch(clearFilters())
 })
 

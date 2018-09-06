@@ -2,14 +2,15 @@ import { SearchConstants } from '../actions/Search'
 
 const initialState = {
   listingType: 'all',
-  filters: {}
+  filters: {},
+  generalSearchId: 0 // required for forcefully triggering general search even when search parameters don't change
 }
 
 export default function Transactions(state = initialState, action = {}) {
   switch (action.type) {
 
   case SearchConstants.SEARCH_QUERY:
-    const { query, listingType, resetSearchFilters } = action
+    const { query, listingType, resetSearchFilters, forceIssueOfGeneralSearch } = action
     const objectToMerge = {}
     if (resetSearchFilters)
       objectToMerge.filters = {}
@@ -18,7 +19,8 @@ export default function Transactions(state = initialState, action = {}) {
       ...state,
       ...objectToMerge,
       query,
-      listingType
+      listingType,
+      generalSearchId: state.generalSearchId + (forceIssueOfGeneralSearch ? 1 : 0)
     }
 
   case SearchConstants.UPDATE_FILTERS:

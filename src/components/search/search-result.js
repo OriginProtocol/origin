@@ -30,7 +30,7 @@ class SearchResult extends Component {
 
     // set default prop values for search_query and listing_type
     const getParams = queryString.parse(this.props.location.search)
-    this.props.generalSearch(getParams.search_query || '', getParams.listing_type || 'all', false)
+    this.props.generalSearch(getParams.search_query || '', getParams.listing_type || 'all', false, false)
   }
 
   shouldFetchListingSchema() {
@@ -56,7 +56,12 @@ class SearchResult extends Component {
     if (
       previousProps.listingType === this.props.listingType &&
       previousProps.query === this.props.query &&
-      deepEqual(previousProps.filters, this.props.filters)
+      deepEqual(previousProps.filters, this.props.filters) &&
+      /* when user clicks on search, the generalSearchId increments by 1
+       * this way a new search request is triggered to the backend even
+       * if query parameters do not change
+       */
+      previousProps.generalSearchId === this.props.generalSearchId
     )
       return;
 
@@ -202,11 +207,12 @@ class SearchResult extends Component {
 const mapStateToProps = state => ({
   listingType: state.search.listingType,
   query: state.search.query,
-  filters: state.search.filters
+  filters: state.search.filters,
+  generalSearchId: state.search.generalSearchId
 })
 
 const mapDispatchToProps = dispatch => ({
-  generalSearch: (query, selectedListingType, resetSearchFilters) => dispatch(generalSearch(query, selectedListingType, resetSearchFilters)),
+  generalSearch: (query, selectedListingType, resetSearchFilters, forceIssueOfGeneralSearch) => dispatch(generalSearch(query, selectedListingType, resetSearchFilters, forceIssueOfGeneralSearch)),
   showAlert: (error) => dispatch(showAlert(error))
 })
 
