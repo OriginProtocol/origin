@@ -6,7 +6,7 @@ import { storeWeb3Intent } from 'actions/App'
 
 import MySaleCard from 'components/my-sale-card'
 
-import { offerStatusToStep} from '../utils/offer'
+import { offerStatusToStep } from '../utils/offer'
 
 import origin from '../services/origin'
 
