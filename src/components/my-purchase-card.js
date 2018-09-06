@@ -5,7 +5,6 @@ import { defineMessages, injectIntl } from 'react-intl'
 
 import PurchaseProgress from 'components/purchase-progress'
 
-import { translateListingCategory } from 'utils/translationUtils'
 import { offerStatusToStep } from 'utils/offer'
 
 class MyPurchaseCard extends Component {
@@ -50,12 +49,10 @@ class MyPurchaseCard extends Component {
     const { listing, offer, offerId } = this.props
     const created = Number(offer.createdAt)
     const soldAt = created * 1000 // convert seconds since epoch to ms
-    const { category, name, pictures, price } = translateListingCategory(
-      listing.ipfsData.data
-    )
+    const { category, name, pictures, price } = listing
     const step = offerStatusToStep(offer.status)
-    let verb
 
+    let verb
     switch (step) {
     case 3:
       verb = this.props.intl.formatMessage(this.intlMessages.received)

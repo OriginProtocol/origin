@@ -3,12 +3,12 @@ import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 
 import { storeWeb3Intent } from 'actions/App'
-
 import MyPurchaseCard from 'components/my-purchase-card'
-
+import { getListing } from 'utils/listing'
 import { offerStatusToStep } from 'utils/offer'
 
 import origin from '../services/origin'
+
 
 class MyPurchases extends Component {
   constructor(props) {
@@ -27,7 +27,7 @@ class MyPurchases extends Component {
     const listingIds = await origin.marketplace.getListings({ purchasesFor })
     const listingPromises = listingIds.map(listingId => {
       return new Promise(async resolve => {
-        const listing = await origin.marketplace.getListing(listingId)
+        const listing = await getListing(listingId)
         resolve({ listingId, listing })
       })
     })

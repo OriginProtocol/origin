@@ -22,7 +22,7 @@ import UserCard from 'components/user-card'
 
 import TransactionEvent from 'pages/purchases/transaction-event'
 
-import { translateListingCategory } from 'utils/translationUtils'
+import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
 
@@ -210,7 +210,7 @@ class PurchaseDetail extends Component {
 
     try {
       const purchase = await origin.marketplace.getOffer(offerId)
-      const listing = await origin.marketplace.getListing(purchase.listingId)
+      const listing = await getListing(purchase.listingId, true)
       const reviews = await origin.marketplace.getListingReviews(offerId)
       this.setState({
         purchase,
@@ -397,12 +397,13 @@ class PurchaseDetail extends Component {
       seller,
       unitsAvailable
     } = this.state
+
     const isPending = false // will be handled by offer status
     const isSold = !unitsAvailable
-    const translatedListing = translateListingCategory(listing)
     const { rating, reviewText } = form
 
-    if (!purchase.ipfsData || !listing.ipfsData) {
+    // Data not loaded yet.
+    if (!purchase.ipfsData || !listing.status) {
       return null
     }
 
@@ -504,7 +505,7 @@ class PurchaseDetail extends Component {
                 )}
               </div>
               <h1>
-                {translatedListing.name || 'Larry the Chicken'}
+                {listing.name || 'Larry the Chicken'}
                 {isPending &&
                   <span className="pending badge">
                     <FormattedMessage
@@ -778,16 +779,16 @@ class PurchaseDetail extends Component {
                   )}
                   <div className="detail-info-box">
                     <h2 className="category placehold">
-                      {translatedListing.category}
+                      {listing.category}
                     </h2>
                     <h1 className="title text-truncate placehold">
-                      {translatedListing.name}
+                      {listing.name}
                     </h1>
                     <p className="description placehold">
-                      {translatedListing.description}
+                      {listing.description}
                     </p>
-                    {/*!!listing.unitsAvailable && listing.unitsAvailable < 5 &&
-                      <div className="units-available text-danger">Just {listing.unitsAvailable.toLocaleString()} left!</div>
+                    {/*!!listing.unitsRemaining && listing.unitsRemaining < 5 &&
+                      <div className="units-available text-danger">Just {listing.unitsRemaining.toLocaleString()} left!</div>
                     */}
                     {listing.ipfsHash && (
                       <div className="link-container">

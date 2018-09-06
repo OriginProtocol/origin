@@ -20,7 +20,7 @@ import Review from 'components/review'
 import UserCard from 'components/user-card'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
-import { translateListingCategory } from 'utils/translationUtils'
+import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
 
@@ -71,15 +71,9 @@ class ListingsDetail extends Component {
 
   async loadListing() {
     try {
-      const rawListing = await origin.marketplace.getListing(
-        this.props.listingId
-      )
-      const listing = rawListing.ipfsData.data
-      const translatedListing = translateListingCategory(listing)
-
+      const listing = await getListing(this.props.listingId, true)
       this.setState({
-        ...rawListing,
-        ...translatedListing,
+        ...listing,
         loading: false
       })
     } catch (error) {
@@ -156,9 +150,9 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    const { boostLevel, category, currentProvider, description, ipfsHash, loading, name, pictures, price, reviews, seller, step, unitsAvailable } = this.state
+    const { boostLevel, category, currentProvider, description, ipfsHash, loading, name, pictures, price, reviews, seller, step, unitsRemaining } = this.state
     const isPending = false // will be handled by offer status
-    const isSold = !unitsAvailable
+    const isSold = !unitsRemaining
     const isAvailable = !isPending && !isSold
     const userIsSeller = seller === this.props.web3Account
 
@@ -303,13 +297,13 @@ class ListingsDetail extends Component {
                 {name}
               </h1>
               <p className="description placehold">{description}</p>
-              {/* Via Stan 5/25/2018: Hide until contracts allow for unitsAvailable > 1 */}
-              {/*!!unitsAvailable && unitsAvailable < 5 &&
-                <div className="units-available text-danger">
+              {/* Via Stan 5/25/2018: Hide until contracts allow for unitsRemaining > 1 */}
+              {/*!!unitsRemaining && unitsRemaining < 5 &&
+                <div className="units-remaining text-danger">
                   <FormattedMessage
-                    id={ 'listing-detail.unitsAvailable' }
+                    id={ 'listing-detail.unitsRemaining' }
                     defaultMessage={ 'Just {unitsAvailable} left!' }
-                    values={{ unitsAvailable: <FormattedNumber value={ unitsAvailable } /> }}
+                    values={{ unitsRemaining: <FormattedNumber value={ unitsRemaining } /> }}
                   />
                 </div>
               */}
