@@ -4,6 +4,16 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import schemaMessages from '../../schemaMessages/index'
 
 class MultipleSelectionFilter extends Component {
+  constructor(props){
+    super(props)
+
+    this.state = {
+      checkboxValue:{}
+    }
+
+    this.onHandleClick = this.onHandleClick.bind(this)
+  }
+
   componentWillUnmount() {
     this.props.onChildUnMounted(this)
   }
@@ -14,7 +24,14 @@ class MultipleSelectionFilter extends Component {
 
   // Called by filter-group
   onClear() {
+    this.setState({ checkboxValue:{} })
+  }
 
+  onHandleClick(event) {
+    let stateObject = this.state
+    stateObject.checkboxValue[event.target.getAttribute("id")] = true
+
+    this.setState(stateObject)
   }
 
   render() {
@@ -39,7 +56,13 @@ class MultipleSelectionFilter extends Component {
       <div className={containerClass} key={this.props.title}>
       {this.props.multipleSelectionValues.map(multipleSelectionValue =>
         <div className={itemClass} key={multipleSelectionValue}>
-          <input type="checkbox" className="form-check-input" id={multipleSelectionValue}/>
+          <input
+            type="checkbox"
+            className="form-check-input"
+            id={multipleSelectionValue}
+            onClick={this.onHandleClick}
+            checked={this.state.checkboxValue[multipleSelectionValue] ? this.state.checkboxValue[multipleSelectionValue] : false}
+          />
           <label htmlFor={multipleSelectionValue}>
             {
               this.props.intl.formatMessage(schemaMessages[_.camelCase(this.props.listingType)][multipleSelectionValue])
