@@ -395,11 +395,10 @@ class PurchaseDetail extends Component {
       purchase,
       reviews,
       seller,
-      unitsAvailable
     } = this.state
 
     const isPending = false // will be handled by offer status
-    const isSold = !unitsAvailable
+    const isSold = !listing.unitsRemaining
     const { rating, reviewText } = form
 
     // Data not loaded yet.
@@ -788,7 +787,7 @@ class PurchaseDetail extends Component {
                       {listing.description}
                     </p>
                     {/*!!listing.unitsRemaining && listing.unitsRemaining < 5 &&
-                      <div className="units-available text-danger">Just {listing.unitsRemaining.toLocaleString()} left!</div>
+                      <div className="units-remaining text-danger">Just {listing.unitsRemaining.toLocaleString()} left!</div>
                     */}
                     {listing.ipfsHash && (
                       <div className="link-container">
