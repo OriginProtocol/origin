@@ -11,7 +11,7 @@ import {
   updateProfile,
   addAttestation
 } from 'actions/Profile'
-import { getBalance } from 'actions/Wallet'
+import { getEthBalance } from 'actions/Wallet'
 
 import Avatar from 'components/avatar'
 import Modal from 'components/modal'
@@ -124,7 +124,7 @@ class Profile extends Component {
   }
 
   componentDidMount() {
-    this.props.getBalance()
+    this.props.getEthBalance()
     this.setProgress({
       provisional: this.props.provisionalProgress,
       published: this.props.publishedProgress
@@ -378,7 +378,7 @@ class Profile extends Component {
             </div>
             <div className="col-12 col-lg-4">
               <Wallet
-                balance={this.props.balance}
+                ethBalance={this.props.ethBalance}
                 address={this.props.address}
                 identityAddress={this.props.identityAddress}
                 withMenus={true}
@@ -651,7 +651,7 @@ const mapStateToProps = state => {
     provisionalProgress: state.profile.provisionalProgress,
     publishedProgress: state.profile.publishedProgress,
     profile: state.profile,
-    balance: state.wallet.balance,
+    ethBalance: state.wallet.ethBalance,
     identityAddress: state.profile.user.identityAddress,
     onMobile: state.app.onMobile,
     web3Account: state.app.web3.account,
@@ -664,7 +664,7 @@ const mapDispatchToProps = dispatch => ({
   deployProfileReset: () => dispatch(deployProfileReset()),
   updateProfile: data => dispatch(updateProfile(data)),
   addAttestation: data => dispatch(addAttestation(data)),
-  getBalance: () => dispatch(getBalance()),
+  getEthBalance: () => dispatch(getEthBalance()),
   storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
 })
 

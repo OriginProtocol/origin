@@ -18,13 +18,13 @@ class Wallet extends Component {
     this.handleToggle = this.handleToggle.bind(this)
     this.state = {
       modalOpen: false,
-      ethBalance: this.props.balance,
+      ethBalance: this.props.ethBalance,
       ethToUsdBalance: 0
     }
   }
 
   async convertEthToUsd() {
-    const ethToUsdBalance = await getFiatPrice( this.props.balance, 'USD' )
+    const ethToUsdBalance = await getFiatPrice( this.props.ethBalance, 'USD' )
 
     this.setState({
       ethToUsdBalance
@@ -36,10 +36,10 @@ class Wallet extends Component {
   }
 
   componentDidUpdate() {
-    if (this.props.balance !== this.state.ethBalance) {
+    if (this.props.ethBalance !== this.state.ethBalance) {
       this.convertEthToUsd()
       this.setState({
-        ethBalance: this.props.balance
+        ethBalance: this.props.ethBalance
       })
     }
   }
@@ -51,7 +51,7 @@ class Wallet extends Component {
   }
 
   render() {
-    const { address, balance, profile, web3Account, withMenus, withProfile } = this.props
+    const { address, ethBalance, profile, web3Account, withMenus, withProfile } = this.props
     const { user } = profile
     const userCanReceiveMessages =
       address !== web3Account && origin.messaging.canReceiveMessages(address)
@@ -114,7 +114,7 @@ class Wallet extends Component {
                 <div className="amounts">
                   <div className="eth">
                     {
-                      `${Number(balance).toLocaleString(undefined, {
+                      `${Number(ethBalance).toLocaleString(undefined, {
                         minimumFractionDigits: 5,
                         maximumFractionDigits: 5
                       })}`

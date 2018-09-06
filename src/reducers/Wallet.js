@@ -3,7 +3,7 @@ import { WalletConstants } from 'actions/Wallet'
 
 const initialState = {
   address: undefined,
-  balance: '0'
+  ethBalance: '0'
 }
 
 export default function Wallet(state = initialState, action = {}) {
@@ -11,8 +11,8 @@ export default function Wallet(state = initialState, action = {}) {
   case WalletConstants.INIT_SUCCESS:
     return { ...state, address: action.wallet }
 
-  case WalletConstants.BALANCE_SUCCESS:
-    return { ...state, balance: action.balance }
+  case WalletConstants.ETH_BALANCE_SUCCESS:
+    return { ...state, ethBalance: action.ethBalance }
 
   case ProfileConstants.FETCH_SUCCESS:
     return { ...state, address: action.wallet }
