@@ -31,15 +31,20 @@ class PriceField extends Component {
 
   onChange() {
     return async (event) => {
-      const value = parseFloat(event.target.value)
-      if (value < 0) { return }
+      const value = event.target.value
+      const isNan = value === '' || isNaN(value)
+      const valueNum = isNan ? value : parseFloat(value)
+      if (valueNum < 0) { return }
       this.setState({
-        price: value
+        price: valueNum
       })
-      const priceUsd = await getFiatPrice(value, this.state.currencyCode)
-      this.setState({
-        priceUsd
-      }, () => this.props.onChange(value))
+
+      if (!isNan) {
+        const priceUsd = await getFiatPrice(valueNum, this.state.currencyCode)
+        this.setState({
+          priceUsd
+        }, () => this.props.onChange(valueNum))
+      }
     }
   }
 
