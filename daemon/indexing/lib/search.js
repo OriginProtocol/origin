@@ -19,6 +19,8 @@ const LISTINGS_INDEX = 'listings'
 const LISTINGS_TYPE = 'listing'
 const OFFER_INDEX = 'offers'
 const OFFER_TYPE = 'offer'
+const USER_INDEX = 'users'
+const USER_TYPE = 'user'
 
 
 class Cluster {
@@ -110,7 +112,7 @@ class Listing {
 
 class Offer {
   /**
-   * Indexes an Offerr
+   * Indexes an Offer
    * @param {object} offer - JSON offer data from origin.js
    * @throws Throws an error if indexing operation failed. 
    */
@@ -166,8 +168,40 @@ class Offer {
 }
 
 
+class User {
+  /**
+   * Indexes a user
+   * @param {object} user - JSON user data from origin.js 
+   */
+  static async index(user){
+    const profile = user.profile || {}
+    const resp = await client.index({
+      index: USER_INDEX,
+      type: USER_TYPE,
+      id: user.address,
+      body: {
+        walletAddress: user.address,
+        identityAddress: user.identityAddress,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        description: profile.description,
+      }
+    })
+  }
+
+  static async get(walletAddress) {
+    const resp = await client.get({id: walletAddress, index: USER_INDEX, type: USER_TYPE})
+    if(!resp.found){
+      throw Error("User not found")
+    }
+    return resp._source
+  }
+}
+
+
 module.exports = {
   Cluster,
   Listing,
-  Offer
+  Offer,
+  User
 }

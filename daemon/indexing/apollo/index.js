@@ -32,9 +32,12 @@ const typeDefs = gql`
 
   type User {
     walletAddress: ID!   # Ethereum wallet address
-    # identityAddress: ID  # ERC 725 identity address.
+    identityAddress: ID  # ERC 725 identity address.
+    firstName: String
+    lastName: String
+    description: String
     # listings(page: Page, order: ListingOrder, filter: ListingFilter): ListingPage
-    # offers(page: Page, order: OfferOrder, filter: OfferFilter): OfferConnection
+    offers: OfferConnection
     # reviews(page: Page, order: ReviewOrder, filter: ReviewFilter): ReviewPage
   }
 
@@ -188,7 +191,7 @@ const typeDefs = gql`
     offers(buyerAddress: ID, listingId: ID): OfferConnection,
     offer(id: ID!): Offer,
     
-    #user(walletAddress: ID!): User
+    user(walletAddress: ID!): User
   }
 `
 
@@ -224,10 +227,9 @@ const resolvers = {
     async offer(root, args, context, info){
       return search.Offer.get(args.id)
     },
-    // user(root, args, context, info) {
-    //   // TODO: implement me !
-    //   return {}
-    // }
+    user(root, args, context, info) {
+      return search.User.get(args.walletAddress)
+    }
   },
   Listing: {
     seller(listing) {
@@ -282,7 +284,12 @@ const resolvers = {
       }
     }
   },
-  // User: {
+  User: {
+    offers(user, args) {
+      const offers = search.Offer.search({buyer: user.walletAddress})
+      return {nodes: offers}
+    },
+  }
   //   identityAddress(user) {
   //     // TODO fetch identify based on user.walletAddress
   //     return `I_${user.walletAddress}`

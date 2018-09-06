@@ -45,17 +45,43 @@ const generateOfferId = log => {
 const getListingDetails = async log => {
   const listingId = generateListingId(log)
   const listing = await o.marketplace.getListing(listingId)
+  let seller = undefined
+  try {
+    seller = await o.users.get(listing.seller)
+  } catch(e) {
+    console.log("Failed to fetch seller", e)
+    // If fetching the seller fails, we still want to index the listing
+  }
   return {
-    listing: listing
+    listing: listing,
+    seller: seller
   }
   //return {
   //  listing: await o.marketplace.getListing(generateListingId(log))
   //}
 }
 const getOfferDetails = async log => {
+  const listing = await o.marketplace.getListing(generateListingId(log))
+  const offer = await o.marketplace.getOffer(generateOfferId(log))
+  let seller = undefined
+  let buyer = undefined
+  try {
+    seller = await o.users.get(listing.seller)
+  } catch(e) {
+    // If fetching the seller fails, we still want to index the listing/offer
+    console.log("Failed to fetch seller", e)
+  }
+  try {
+    buyer = await o.users.get(offer.buyer)
+  } catch(e) {
+    // If fetching the buyer fails, we still want to index the listing/offer
+    console.log("Failed to fetch buyer", e)
+  }
   return {
-    listing: await o.marketplace.getListing(generateListingId(log)),
-    offer: await o.marketplace.getOffer(generateOfferId(log))
+    listing: listing,
+    offer: offer,
+    seller: seller, 
+    buyer: buyer
   }
 }
 
@@ -318,6 +344,16 @@ async function handleLog(log, rule, contractVersion, context) {
       offer.priceEth = web3.utils.fromWei(offer.ipfsData.data.price, 'ether')
       await withRetrys(async () => {
         await search.Offer.index(offer, listing)
+      })
+    }
+    if (output.related.seller !== undefined) {
+      await withRetrys(async () => {
+        await search.User.index(output.related.seller)
+      })
+    }
+    if (output.related.buyer !== undefined) {
+      await withRetrys(async () => {
+        await search.User.index(output.related.buyer)
       })
     }
   }
