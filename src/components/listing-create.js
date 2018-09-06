@@ -14,7 +14,7 @@ import BoostSlider from 'components/boost-slider'
 import PhotoPicker from 'components/form-widgets/photo-picker'
 import PriceField from 'components/form-widgets/price-field'
 import Modal from 'components/modal'
-import Wallet from 'components/wallet'
+import WalletCard from 'components/wallet-card'
 
 import { dappFormDataToOriginListing } from 'utils/listing'
 import getCurrentProvider from 'utils/getCurrentProvider'
@@ -278,7 +278,7 @@ class ListingCreate extends Component {
   }
 
   render() {
-    const { address, balance } = this.props
+    const { wallet } = this.props
     const { currentProvider, formListing, isBoostExpanded, isFirstListing, ognBalance, selectedSchema, selectedSchemaType, schemaExamples, step, translatedSchema, usdListingPrice } = this.state
     const { formData } = formListing
     const translatedFormData = (formData && formData.category && translateListingCategory(formData)) || {}
@@ -573,9 +573,8 @@ class ListingCreate extends Component {
               </div>
             )}
             <div className={ `col-md-4${step === this.STEP.PREVIEW ? '' : ' offset-md-3'}` }>
-              <Wallet
-                address={address}
-                balance={balance}
+              <WalletCard
+                wallet={wallet}
                 withMenus={true}
                 withProfile={false}
               />
@@ -843,8 +842,7 @@ class ListingCreate extends Component {
 
 const mapStateToProps = state => {
   return {
-    address: state.wallet.address,
-    balance: state.wallet.balance
+    wallet: state.wallet
   }
 }
 
