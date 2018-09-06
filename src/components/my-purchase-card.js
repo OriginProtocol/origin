@@ -6,6 +6,7 @@ import { defineMessages, injectIntl } from 'react-intl'
 import PurchaseProgress from 'components/purchase-progress'
 
 import { translateListingCategory } from 'utils/translationUtils'
+import { offerStatusToStep } from 'utils/offer'
 
 class MyPurchaseCard extends Component {
   constructor(props) {
@@ -52,7 +53,7 @@ class MyPurchaseCard extends Component {
     const { category, name, pictures, price } = translateListingCategory(
       listing.ipfsData.data
     )
-    const step = parseInt(offer.status)
+    const step = offerStatusToStep(offer.status)
     let verb
 
     switch (step) {

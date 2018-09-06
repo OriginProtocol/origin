@@ -6,6 +6,8 @@ import { storeWeb3Intent } from 'actions/App'
 
 import MySaleCard from 'components/my-sale-card'
 
+import { offerStatusToStep} from '../utils/offer'
+
 import origin from '../services/origin'
 
 class MySales extends Component {
@@ -47,7 +49,7 @@ class MySales extends Component {
   render() {
     const { filter, loading, purchases } = this.state
     const filteredPurchases = purchases.filter(obj => {
-      const step = Number(obj.offer.status)
+      const step = offerStatusToStep(obj.offer.status)
       if (filter === 'pending') {
         return step < 4
       } else if (filter === 'complete') {
