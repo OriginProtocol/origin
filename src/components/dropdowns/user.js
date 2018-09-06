@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import $ from 'jquery'
 
-import { getEthBalance } from 'actions/Wallet'
+import { getEthBalance, getOgnBalance } from 'actions/Wallet'
 
 import Identicon from 'components/identicon'
 import Wallet from 'components/wallet'
@@ -14,13 +14,14 @@ class UserDropdown extends Component {
 
   componentDidMount() {
     this.props.getEthBalance()
+    this.props.getOgnBalance()
     $(document).on('click', '.identity .dropdown-menu', e => {
       e.stopPropagation()
     })
   }
 
   render() {
-    const { address, ethBalance } = this.props.wallet
+    const { address, ethBalance, ognBalance } = this.props.wallet
 
     return (
       <div className="nav-item identity dropdown">
@@ -42,7 +43,7 @@ class UserDropdown extends Component {
             <div className="triangle" />
           </div>
           <div className="actual-menu">
-            <Wallet address={address} ethBalance={ethBalance} withMenus={false} withProfile={true} />
+            <Wallet address={address} ethBalance={ethBalance} ognBalance={ognBalance} withMenus={false} withProfile={true} />
           </div>
         </div>
       </div>
@@ -57,7 +58,8 @@ const mapStateToProps = state => {
 }
 
 const matchDispatchToProps = dispatch => ({
-  getEthBalance: () => dispatch(getEthBalance())
+  getEthBalance: () => dispatch(getEthBalance()),
+  getOgnBalance: () => dispatch(getOgnBalance())
 })
 
 export default connect(mapStateToProps, matchDispatchToProps)(UserDropdown)

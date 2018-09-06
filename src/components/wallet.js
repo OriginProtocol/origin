@@ -19,7 +19,8 @@ class Wallet extends Component {
     this.state = {
       modalOpen: false,
       ethBalance: this.props.ethBalance,
-      ethToUsdBalance: 0
+      ethToUsdBalance: 0,
+      ognBalance: this.props.ognBalance
     }
   }
 
@@ -42,6 +43,12 @@ class Wallet extends Component {
         ethBalance: this.props.ethBalance
       })
     }
+
+    if (this.props.ognBalance !== this.state.ognBalance) {
+      this.setState({
+        ognBalance: this.props.ognBalance
+      })
+    }
   }
 
   handleToggle(e) {
@@ -51,7 +58,7 @@ class Wallet extends Component {
   }
 
   render() {
-    const { address, ethBalance, profile, web3Account, withMenus, withProfile } = this.props
+    const { address, ethBalance, ognBalance, profile, web3Account, withMenus, withProfile } = this.props
     const { user } = profile
     const userCanReceiveMessages =
       address !== web3Account && origin.messaging.canReceiveMessages(address)
@@ -140,7 +147,13 @@ class Wallet extends Component {
               <div className="d-flex align-items-start">
                 <img src="images/ogn-icon.svg" role="presentation" />
                 <div className="amounts">
-                  <div className="ogn">0<span className="symbol">OGN</span></div>
+                  <div className="ogn">
+                    {
+                      `${Number(ognBalance).toLocaleString(undefined)}`
+                      || 0
+                    }&nbsp;
+                    <span className="symbol">OGN</span>
+                  </div>
                   {/* Via Matt 9/4/2018: Not necessary until we have a liquid conversion rate */}
                   {/* <div className="usd">0.00 USD</div> */}
                 </div>
