@@ -141,6 +141,6 @@ services:
       cp /tmp/.env.new /app/.env &&
       npm install --quiet --no-progress &&
       npm link origin &&
-      node_modules/.bin/webpack-dev-server --host 0.0.0.0 --watch-poll 500"
+      node node_modules/webpack-dev-server/bin/webpack-dev-server.js --host 0.0.0.0 --watch-poll 500"
     networks:
       - origin-develop
