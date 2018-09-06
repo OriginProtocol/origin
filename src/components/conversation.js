@@ -186,7 +186,7 @@ class Conversation extends Component {
     const canDeliverMessage = origin.messaging.canConverseWith(
       counterparty.address
     )
-    const shouldEnableForm = canDeliverMessage && id
+    const shouldEnableForm = origin.messaging.getRecipients(id).includes(web3Account) && canDeliverMessage && id
 
     return (
       <div className="conversation-col col-12 col-sm-8 col-lg-9 d-flex flex-column">

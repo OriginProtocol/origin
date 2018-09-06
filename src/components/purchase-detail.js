@@ -397,7 +397,7 @@ class PurchaseDetail extends Component {
 
     if (prompt) {
       try {
-        const roomId = await origin.messaging.sendConvMessage(arbitratorAddress, {
+        await origin.messaging.sendConvMessage(arbitratorAddress, {
           content: `This message should not be shown in the conversation UI. It only serves to share the following key[s] for a conversation between ${web3Account} and ${counterpartyAddress}: ${conv.keys.join(', ')}`,
           arbitration: {
             sharedKeys: conv.keys,

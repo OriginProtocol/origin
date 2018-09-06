@@ -75,7 +75,11 @@ class MessagingProvider extends Component {
 
     // detect new decrypted messages
     origin.messaging.events.on('msg', obj => {
-      this.props.addMessage(obj)
+      if (obj.arbitration) {
+        obj.arbitration.roomId && origin.messaging.joinConvoRoom(obj.arbitration.roomId, obj.arbitration.sharedKeys)
+      } else {
+        this.props.addMessage(obj)
+      }
 
       this.debouncedFetchUser(obj.senderAddress)
     })
