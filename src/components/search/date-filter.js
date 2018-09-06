@@ -57,7 +57,10 @@ class DateFilterGroup extends Component {
 
   // Called by filter-group
   onClear() {
-
+    this.setState({
+      startDate: null,
+      endDate: null,
+    })
   }
 
 

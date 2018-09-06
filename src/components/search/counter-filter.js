@@ -5,8 +5,9 @@ class CounterFilter extends Component {
   constructor(props) {
     super(props)
 
+    this.defaultValue = this.props.defaultValue ? this.props.defaultValue : 1
     this.state = {
-      counter: this.props.defaultValue ? this.props.defaultValue : 1
+      counter: this.defaultValue
     }
 
     this.handleOnClickAdd = this.handleOnClickAdd.bind(this)
@@ -31,7 +32,7 @@ class CounterFilter extends Component {
 
   // Called by filter-group
   onClear() {
-
+    this.setState({ counter: this.defaultValue })
   }
 
   render() {
