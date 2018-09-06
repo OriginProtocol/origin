@@ -10,13 +10,13 @@ class FilterGroup extends Component {
   constructor(props) {
     super(props)
 
-    /* Because of a workaround in `react-dates` module we need to message the DateFilter
-     * when it gets shown - when dropdown containing date filter is opened
-     */
     this.childFilters = []
 
     this.handleFilterMounted = this.handleFilterMounted.bind(this)
     this.handleFilterUnMounted = this.handleFilterUnMounted.bind(this)
+    this.handleApplyClick = this.handleApplyClick.bind(this)
+    this.handleClearClick = this.handleClearClick.bind(this)
+    this.handleOpenDropdown = this.handleOpenDropdown.bind(this)
   }
 
   resolveFromListingSchema(path) {
@@ -32,6 +32,30 @@ class FilterGroup extends Component {
     const index = this.childFilters.indexOf(filter)
     if (index !== -1)
       this.childFilters.splice(index, 1)
+  }
+
+  handleApplyClick(event) {
+    event.preventDefault()
+  }
+
+  handleClearClick(event) {
+    event.preventDefault()
+
+    this.childFilters
+      .forEach(childFilter => childFilter.onClear())
+  }
+
+  handleOpenDropdown(event) {
+    const containsDateFilter = this.props.filterGroup.items.some(filter => filter.type == 'date')
+    if (!containsDateFilter)
+      return
+
+    /* Because of a workaround in `react-dates` module we need to message the DateFilter
+     * when it gets shown - when dropdown containing date filter is opened
+     */
+    this.childFilters
+      .filter(filter => filter.props.filter.type == 'date')
+      .forEach(dateFilter => dateFilter.onOpen())
   }
 
   renderFilter(filter, title) {
@@ -78,18 +102,10 @@ class FilterGroup extends Component {
   render() {
     const title = this.props.intl.formatMessage(this.props.filterGroup.title)
     const formId = `filter-group-${title}`
-    const containsDateFilter = this.props.filterGroup.items.some(filter => filter.type == 'date')
 
     return (
       <li className="nav-item" key={this.props.index}>
-        <a onClick={() => {
-            if (!containsDateFilter)
-              return
-
-            this.childFilters
-              .filter(filter => filter.props.filter.type == 'date')
-              .forEach(dateFilter => dateFilter.onOpen())
-          }}
+        <a onClick={this.handleOpenDropdown}
           className="nav-link"
           data-toggle="dropdown"
           data-parent="#search-filters-bar"
@@ -102,13 +118,13 @@ class FilterGroup extends Component {
             {this.props.filterGroup.items.map(filter => this.renderFilter(filter, title))}
             </div>
             <div className="d-flex flex-row button-container">
-              <a className="dropdown-button dropdown-button-left align-middle">
+              <a onClick={this.handleClearClick} className="dropdown-button dropdown-button-left align-middle">
                 <FormattedMessage
                   id={'SearchResults.filterGroup.searchFiltersClear'}
                   defaultMessage={'Clear'}
                 />
               </a>
-              <a className="dropdown-button dropdown-button-right align-middle align-self-center">
+              <a onClick={this.handleApplyClick} className="dropdown-button dropdown-button-right align-middle align-self-center">
                 <FormattedMessage
                   id={'SearchResults.filterGroup.searchFiltersApply'}
                   defaultMessage={'Apply'}

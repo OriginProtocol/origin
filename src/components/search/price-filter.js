@@ -8,6 +8,12 @@ import schemaMessages from '../../schemaMessages/index'
 class PriceFilter extends Component {
   constructor(props){
     super(props)
+    this.defaultMinimum = 0
+    this.defaultMaximum = 500
+
+    this.state = {
+      value:[this.defaultMinimum, this.defaultMaximum]
+    }
 
     this.handlePriceChange = this.handlePriceChange.bind(this)
   }
@@ -17,6 +23,8 @@ class PriceFilter extends Component {
     $('#price-amount-to').text(`${topAmount}$`)
     $('#price-amount-display-from').text(`${bottomAmount}$`)
     $('#price-amount-display-to').text(`${topAmount}$`)
+
+    this.setState({ value: [bottomAmount, topAmount] })
   }
 
   componentWillUnmount() {
@@ -27,32 +35,36 @@ class PriceFilter extends Component {
     this.props.onChildMounted(this)
   }
 
+  // Called by filter-group
+  onClear() {
+    this.setState({ value: [this.defaultMinimum, this.defaultMaximum] })
+  }
+
   render() {
-    const min = 0
-    const max = 500
     return (
       <div className="d-flex flex-column" key={this.props.filter.listingPropertyName}>
         <div className="d-flex flex-row price-filter">
-          <div id="price-amount-from" className="mr-auto price-slider-amount">{min}$</div>
-          <div id="price-amount-to" className="price-slider-amount">{max}$</div>
+          <div id="price-amount-from" className="mr-auto price-slider-amount">{this.defaultMinimum}$</div>
+          <div id="price-amount-to" className="price-slider-amount">{this.defaultMaximum}$</div>
         </div>
         <Range
-          min={min}
-          max={max}
-          defaultValue={[min, max]}
+          value={this.state.value}
+          min={this.defaultMinimum}
+          max={this.defaultMaximum}
+          defaultValue={[this.defaultMinimum, this.defaultMaximum]}
           count={2}
-          pushable={(max-min)/20}
+          pushable={(this.defaultMaximum - this.defaultMinimum)/20}
           tipFormatter={value => `${value}$`}
           onChange={this.handlePriceChange}
         />
         <div className="d-flex flex-row justify-content-between mt-4 price-filter">
           <div className="d-flex flex-row">
-            <div id="price-amount-display-from" className="price-filter-amount">{min}</div>
+            <div id="price-amount-display-from" className="price-filter-amount">{this.defaultMinimum}</div>
             <div className="price-filter-currency">$/night</div>
           </div>
           <div className="price-filter-dash">-</div>
           <div className="d-flex flex-row">
-            <div id="price-amount-display-to" className="price-filter-amount">{max}</div>
+            <div id="price-amount-display-to" className="price-filter-amount">{this.defaultMaximum}</div>
             <div className="price-filter-currency">$/night</div>
           </div>
         </div>

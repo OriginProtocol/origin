@@ -55,6 +55,11 @@ class DateFilterGroup extends Component {
     })
   }
 
+  // Called by filter-group
+  onClear() {
+
+  }
+
 
   render() {
     const { focusedInput, startDate, endDate } = this.state;

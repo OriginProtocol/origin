@@ -29,6 +29,11 @@ class CounterFilter extends Component {
     this.props.onChildMounted(this)
   }
 
+  // Called by filter-group
+  onClear() {
+
+  }
+
   render() {
     const title = this.props.intl.formatMessage(this.props.filter.title)
 

@@ -12,6 +12,11 @@ class MultipleSelectionFilter extends Component {
     this.props.onChildMounted(this)
   }
 
+  // Called by filter-group
+  onClear() {
+
+  }
+
   render() {
     let containerClass = 'd-flex flex-column'
     let itemClass = 'form-check'
