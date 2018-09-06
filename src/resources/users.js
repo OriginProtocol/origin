@@ -14,7 +14,7 @@ const Ajv = require('ajv')
 const ajv = new Ajv()
 
 const selfAttestationClaimType = 13 // TODO: use the correct number here
-const zeroAddress = '0x0000000000000000000000000000000000000000'
+const emptyAddress = '0x0000000000000000000000000000000000000000'
 
 const validateUser = data => {
   const validate = ajv.compile(userSchema)
@@ -67,7 +67,7 @@ class Users extends ResourceBase {
     )
     address = address || account
     const result = await userRegistry.methods.users(address).call()
-    if (String(result) === zeroAddress) {
+    if (String(result) === emptyAddress) {
       return false
     } else {
       return result
@@ -84,7 +84,7 @@ class Users extends ResourceBase {
     return new AttestationObject({
       claimType: selfAttestationClaimType,
       data: asBytes32,
-      issuer: '0x0000000000000000000000000000000000000000',
+      issuer: emptyAddress,
       signature:
         '0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
     })
@@ -122,7 +122,7 @@ class Users extends ResourceBase {
     if (attestations.length) {
       // format params for solidity methods to batch add claims
       const claimTypes = attestations.map(({ claimType }) => claimType)
-      const issuers = attestations.map(({ issuer }) => issuer)
+      const issuers = attestations.map(({ issuer }) => issuer || emptyAddress)
       const sigs =
         '0x' +
         attestations
