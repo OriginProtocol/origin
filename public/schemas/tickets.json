@@ -10,6 +10,15 @@
       "minLength": 3,
       "maxLength": 100
     },
+    "examples": {
+      "type": "string",
+      "title": "schema.tickets.examples",
+      "enum": [
+        "schema.tickets.music",
+        "schema.tickets.sports",
+        "schema.tickets.theater"
+      ]
+    },
     "category": {
       "type": "string",
       "title": "schema.tickets.category",

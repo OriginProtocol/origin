@@ -5,6 +5,8 @@ import { FormattedMessage } from 'react-intl'
 import { storeWeb3Intent } from 'actions/App'
 import MyPurchaseCard from 'components/my-purchase-card'
 import { getListing } from 'utils/listing'
+import { offerStatusToStep } from 'utils/offer'
+
 import origin from '../services/origin'
 
 
@@ -49,7 +51,7 @@ class MyPurchases extends Component {
   render() {
     const { filter, loading, purchases } = this.state
     const filteredPurchases = purchases.filter(obj => {
-      const step = Number(obj.offer.status)
+      const step = offerStatusToStep(obj.offer.status)
       if (filter === 'pending') {
         return step < 4
       } else if (filter === 'complete') {

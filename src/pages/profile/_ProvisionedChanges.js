@@ -62,6 +62,10 @@ class ProvisionedChanges extends Component {
     $('[data-toggle="tooltip"]').tooltip()
   }
 
+  componentWillUnmount() {
+    $('[data-toggle="tooltip"]').tooltip('dispose')
+  }
+
   render() {
     const { changes } = this.props
     let profileTooltip = `<div class="text-left">${this.props.intl.formatMessage(

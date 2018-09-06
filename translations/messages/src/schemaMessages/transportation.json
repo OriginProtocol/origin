@@ -8,6 +8,10 @@
     "defaultMessage": "Title"
   },
   {
+    "id": "schema.transportation.examples",
+    "defaultMessage": "Examples"
+  },
+  {
     "id": "schema.transportation.category",
     "defaultMessage": "Category"
   },

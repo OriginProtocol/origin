@@ -48,6 +48,10 @@ class MySaleCard extends Component {
     })
   }
 
+  componentWillUnmount() {
+    $('[data-toggle="tooltip"]').tooltip('dispose')
+  }
+
   render() {
     const { listing, purchase, user } = this.props
 

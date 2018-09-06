@@ -5,7 +5,7 @@ import { withRouter } from 'react-router'
 
 import { enableMessaging } from 'actions/App'
 
-import Identicon from 'components/Identicon'
+import Identicon from 'components/identicon'
 import Modal from 'components/modal'
 
 import origin from '../services/origin'
