@@ -1,4 +1,5 @@
 const OFFER_STATUS = ['error','created', 'accepted', 'disputed', 'finalized', 'buyerReviewed']
+const emptyAddress = '0x0000000000000000000000000000000000000000'
 
 class V00_MarkeplaceAdapter {
   constructor({ contractService }) {
@@ -70,11 +71,11 @@ class V00_MarkeplaceAdapter {
       listingId,
       ipfsBytes,
       finalizes || Math.round(+new Date() / 1000) + 60 * 60 * 24, // 24 hrs
-      affiliate || '0x0',
+      affiliate || emptyAddress,
       commission || '0',
       price,
-      currencyAddr || '0x0',
-      arbitrator || '0x0'
+      currencyAddr || emptyAddress,
+      arbitrator || emptyAddress
     ]
     const opts = { confirmationCallback }
     if (!currencyAddr) {

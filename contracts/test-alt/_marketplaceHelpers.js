@@ -59,7 +59,7 @@ export default function({
       Buyer, // Affiliate
       2, // Commission
       value,
-      '0x0',
+      '0x0000000000000000000000000000000000000000',
       ArbitratorAddr
     ]
     if (withdraw !== undefined) {

@@ -180,24 +180,6 @@ class ContractService {
     return txReceipt
   }
 
-  /**
-   * Runs a call or transaction on a this resource's smart contract.
-   *
-   * This handles getting the contract, using the correct account,
-   * and building our own response for origin transactions.
-   *
-   * If doing a blockchain call, this returns the data returned by
-   * the contract function.
-   *
-   * If running a transaction, this returns an object containing the block timestamp and the transaction receipt.
-   *
-   * @param {object} contractDefinition - JSON representation of the contract
-   * @param {string} address - address of the contract
-   * @param {string} functionName - contract function to be run
-   * @param {*[]} args - args for the transaction or call.
-   * @param {{gas: number, value:(number | BigNumber)}} options - transaction options for w3
-   * @param {function} confirmationCallback - an optional function that will be called on each block confirmation
-   */
   async call(
     contractName,
     functionName,

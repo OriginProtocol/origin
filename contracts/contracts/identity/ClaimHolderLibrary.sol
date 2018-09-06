@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 
 import './KeyHolderLibrary.sol';
 
@@ -34,10 +34,10 @@ library ClaimHolderLibrary {
       returns (bytes32 claimRequestId)
   {
       if (msg.sender != address(this)) {
-        require(KeyHolderLibrary.keyHasPurpose(_keyHolderData, keccak256(msg.sender), 3), "Sender does not have claim signer key");
+        require(KeyHolderLibrary.keyHasPurpose( _keyHolderData, keccak256(abi.encodePacked(msg.sender)), 3), "Sender does not have claim signer key");
       }
 
-      bytes32 claimId = keccak256(_issuer, _claimType);
+      bytes32 claimId = keccak256(abi.encodePacked(_issuer, _claimType));
 
       if (_claims.byId[claimId].issuer != _issuer) {
           _claims.byType[_claimType].push(claimId);
@@ -99,7 +99,7 @@ library ClaimHolderLibrary {
       returns (bool success)
   {
       if (msg.sender != address(this)) {
-        require(KeyHolderLibrary.keyHasPurpose(_keyHolderData, keccak256(msg.sender), 1), "Sender does not have management key");
+        require(KeyHolderLibrary.keyHasPurpose(_keyHolderData, keccak256(abi.encodePacked(msg.sender)), 1), "Sender does not have management key");
       }
 
       emit ClaimRemoved(

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 
 import './ERC725.sol';
 import './KeyHolderLibrary.sol';
