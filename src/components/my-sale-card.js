@@ -9,8 +9,6 @@ import { fetchUser } from 'actions/User'
 
 import PurchaseProgress from 'components/purchase-progress'
 
-import { translateListingCategory } from 'utils/translationUtils'
-
 class MySaleCard extends Component {
   constructor(props) {
     super(props)
@@ -50,6 +48,10 @@ class MySaleCard extends Component {
     })
   }
 
+  componentWillUnmount() {
+    $('[data-toggle="tooltip"]').tooltip('dispose')
+  }
+
   render() {
     const { listing, purchase, user } = this.props
 
@@ -58,9 +60,7 @@ class MySaleCard extends Component {
       return null
     }
 
-    const { name, pictures, price } = translateListingCategory(
-      listing.ipfsData.data
-    )
+    const { name, pictures, price } = { listing }
     const buyerName =
       (user &&
         user.profile &&

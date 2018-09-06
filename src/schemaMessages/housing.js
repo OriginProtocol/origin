@@ -9,6 +9,10 @@ export default defineMessages({
     id: 'schema.housing.title',
     defaultMessage: 'Title'
   },
+  'schema.housing.examples': {
+    id: 'schema.housing.examples',
+    defaultMessage: 'Examples'
+  },
   'schema.housing.category': {
     id: 'schema.housing.category',
     defaultMessage: 'Category'

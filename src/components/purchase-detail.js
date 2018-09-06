@@ -22,7 +22,7 @@ import UserCard from 'components/user-card'
 
 import TransactionEvent from 'pages/purchases/transaction-event'
 
-import { translateListingCategory } from 'utils/translationUtils'
+import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
 
@@ -203,14 +203,27 @@ class PurchaseDetail extends Component {
     $('[data-toggle="tooltip"]').tooltip()
   }
 
+  componentWillUnmount() {
+    $('[data-toggle="tooltip"]').tooltip('dispose')
+  }
+
   async loadPurchase() {
     const { offerId } = this.props
 
     try {
       const purchase = await origin.marketplace.getOffer(offerId)
-      const listing = await origin.marketplace.getListing(purchase.listingId)
+      const listing = await getListing(purchase.listingId, true)
       const reviews = await origin.marketplace.getListingReviews(offerId)
-      this.setState({ purchase, listing, reviews })
+      this.setState({
+        purchase,
+        listing: {
+          ...listing,
+          boostAmount: 10,
+          boostLevel: 'Medium',
+          boostLevelIsPastSomeThreshold: !!Math.round(Math.random())
+        },
+        reviews
+      })
       await this.loadSeller(listing.seller)
       await this.loadBuyer(purchase.buyer)
     } catch (error) {
@@ -411,12 +424,15 @@ class PurchaseDetail extends Component {
       processing,
       purchase,
       reviews,
-      seller
+      seller,
     } = this.state
-    const translatedListing = translateListingCategory(listing)
+
+    const isPending = false // will be handled by offer status
+    const isSold = !listing.unitsRemaining
     const { rating, reviewText } = form
 
-    if (!purchase.ipfsData || !listing.ipfsData) {
+    // Data not loaded yet.
+    if (!purchase.ipfsData || !listing.status) {
       return null
     }
 
@@ -517,7 +533,30 @@ class PurchaseDetail extends Component {
                   />
                 )}
               </div>
-              <h1>{translatedListing.name}</h1>
+              <h1>
+                {listing.name || 'Larry the Chicken'}
+                {isPending &&
+                  <span className="pending badge">
+                    <FormattedMessage
+                      id={'purchase-detail.pending'}
+                      defaultMessage={'Pending'}
+                    />
+                  </span>
+                }
+                {isSold &&
+                  <span className="sold badge">
+                    <FormattedMessage
+                      id={'purchase-detail.soldOut'}
+                      defaultMessage={'Sold Out'}
+                    />
+                  </span>
+                }
+                {listing.boostLevel &&
+                  <span className={ `boosted badge boost-${listing.boostLevel}` }>
+                    <img src="images/boost-icon-arrow.svg" role="presentation" />
+                  </span>
+                }
+              </h1>
             </div>
           </div>
           <div className="purchase-status row">
@@ -777,16 +816,16 @@ class PurchaseDetail extends Component {
                   )}
                   <div className="detail-info-box">
                     <h2 className="category placehold">
-                      {translatedListing.category}
+                      {listing.category}
                     </h2>
                     <h1 className="title text-truncate placehold">
-                      {translatedListing.name}
+                      {listing.name}
                     </h1>
                     <p className="description placehold">
-                      {translatedListing.description}
+                      {listing.description}
                     </p>
-                    {/*!!listing.unitsAvailable && listing.unitsAvailable < 5 &&
-                      <div className="units-available text-danger">Just {listing.unitsAvailable.toLocaleString()} left!</div>
+                    {/*!!listing.unitsRemaining && listing.unitsRemaining < 5 &&
+                      <div className="units-remaining text-danger">Just {listing.unitsRemaining.toLocaleString()} left!</div>
                     */}
                     {listing.ipfsHash && (
                       <div className="link-container">
@@ -832,16 +871,6 @@ class PurchaseDetail extends Component {
             <div className="col-12 col-lg-4">
               {soldAt && (
                 <div className="summary text-center">
-                  {perspective === 'buyer' && (
-                    <div className="purchased tag">
-                      <div>Purchased</div>
-                    </div>
-                  )}
-                  {perspective === 'seller' && (
-                    <div className="sold tag">
-                      <div>Sold</div>
-                    </div>
-                  )}
                   <div className="recap">
                     {perspective === 'buyer' && (
                       <FormattedMessage

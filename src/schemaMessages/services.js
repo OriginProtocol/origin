@@ -10,6 +10,10 @@ export default defineMessages({
     id: 'schema.services.title',
     defaultMessage: 'Title'
   },
+  'schema.services.examples': {
+    id: 'schema.services.examples',
+    defaultMessage: 'Examples'
+  },
   'schema.services.category': {
     id: 'schema.services.category',
     defaultMessage: 'Category'

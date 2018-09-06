@@ -21,6 +21,7 @@
     "orbit-db": "^0.19.8",
     "origin": "~0.7.0",
     "popper.js": "^1.14.3",
+    "rc-slider": "^8.6.1",
     "react": "^16.3.2",
     "react-avatar-editor": "^11.0.2",
     "react-dom": "^16.3.2",

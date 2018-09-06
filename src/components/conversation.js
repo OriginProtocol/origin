@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom'
 import CompactMessages from 'components/compact-messages'
 import PurchaseProgress from 'components/purchase-progress'
 
-import { translateListingCategory } from 'utils/translationUtils'
+import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
 
@@ -111,25 +111,12 @@ class Conversation extends Component {
 
   async loadListing() {
     const { messages } = this.props
-    // find the most recent listing context or set empty value
-    const { listingId } =
-      [...messages].reverse().find(m => m.listingId) || {}
-    // get the listing
-    let listing = listingId
-      ? await origin.marketplace.getListing(listingId)
-      : {}
-    // if listing does not match state, store and check for a purchase
-    if (listing.id !== this.state.listing.id) {
-      if (listing.id) {
-        const listingData = listing.ipfsData.data
-        const translatedListing = translateListingCategory(listingData)
+    // Find the most recent listing context or set empty value.
+    const { listingId } = [...messages].reverse().find(m => m.listingId) || {}
 
-        listing = {
-          ...listing,
-          ...translatedListing
-        }
-      }
-
+    // If listingId does not match state, store and check for a purchase.
+    if (listingId && listingId !== this.state.listing.id) {
+      const listing = listingId ? await getListing(listingId, true) : {}
       this.setState({ listing })
       this.loadPurchase()
       this.scrollToBottom()
