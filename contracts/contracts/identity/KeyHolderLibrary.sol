@@ -32,7 +32,7 @@ library KeyHolderLibrary {
   function init(KeyHolderData storage _keyHolderData)
       public
   {
-      bytes32 _key = keccak256(msg.sender);
+      bytes32 _key = keccak256(abi.encodePacked(msg.sender));
       _keyHolderData.keys[_key].key = _key;
       _keyHolderData.keys[_key].purpose = 1;
       _keyHolderData.keys[_key].keyType = 1;
@@ -74,7 +74,7 @@ library KeyHolderLibrary {
   {
       require(_keyHolderData.keys[_key].key != _key, "Key already exists"); // Key should not already exist
       if (msg.sender != address(this)) {
-        require(keyHasPurpose(_keyHolderData, keccak256(msg.sender), 1), "Sender does not have management key"); // Sender has MANAGEMENT_KEY
+        require(keyHasPurpose(_keyHolderData, keccak256(abi.encodePacked(msg.sender)), 1), "Sender does not have management key"); // Sender has MANAGEMENT_KEY
       }
 
       _keyHolderData.keys[_key].key = _key;
@@ -92,7 +92,7 @@ library KeyHolderLibrary {
       public
       returns (bool success)
   {
-      require(keyHasPurpose(_keyHolderData, keccak256(msg.sender), 2), "Sender does not have action key");
+      require(keyHasPurpose(_keyHolderData, keccak256(abi.encodePacked(msg.sender)), 2), "Sender does not have action key");
       require(!_keyHolderData.executions[_id].executed, "Already executed");
 
       emit Approved(_id, _approve);
@@ -135,7 +135,7 @@ library KeyHolderLibrary {
 
       emit ExecutionRequested(_keyHolderData.executionNonce, _to, _value, _data);
 
-      if (keyHasPurpose(_keyHolderData, keccak256(msg.sender),1) || keyHasPurpose(_keyHolderData, keccak256(msg.sender),2)) {
+      if (keyHasPurpose(_keyHolderData, keccak256(abi.encodePacked(msg.sender)),1) || keyHasPurpose(_keyHolderData, keccak256(abi.encodePacked(msg.sender)),2)) {
           approve(_keyHolderData, _keyHolderData.executionNonce, true);
       }
 
