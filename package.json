@@ -10,6 +10,7 @@
     "babel-loader": "^8.0.0-beta.2",
     "bootstrap": "^4.1.1",
     "browser-image-resizer": "^1.1.4",
+    "deep-equal": "^1.0.1",
     "dotenv-webpack": "^1.5.5",
     "eth-ecies": "^1.0.3",
     "fetch": "^1.1.0",

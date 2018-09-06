@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router'
 import queryString from 'query-string'
+import deepEqual from 'deep-equal'
 import $ from 'jquery'
 import 'rc-slider/assets/index.css'
 
@@ -54,7 +55,8 @@ class SearchResult extends Component {
     // TODO: also filter states need to be checked here
     if (
       previousProps.listingType === this.props.listingType &&
-      previousProps.query === this.props.query
+      previousProps.query === this.props.query &&
+      deepEqual(previousProps.filters, this.props.filters)
     )
       return;
 
@@ -62,7 +64,7 @@ class SearchResult extends Component {
   }
 
   handleComponentUpdate(previousProps) {
-    this.searchRequest(this.props.query, this.props.listingType)
+    this.searchRequest()
 
     if (previousProps == undefined || this.props.listingType !== previousProps.listingType) {
       this.setState({
@@ -128,11 +130,16 @@ class SearchResult extends Component {
     //document.location.href = `#/search?search_query=${this.state.searchQuery}&listing_type=${this.state.selectedListingType.type}`
   }
 
-  async searchRequest(query, listingType) {
+  async searchRequest() {
     try {
       this.setState({ searchError: undefined })
       this.formatFiltersToUrl()
-      const searchResponse = await origin.marketplace.search(query)
+
+      const searchResponse = await origin.marketplace.search(
+        this.props.query,
+        this.props.listingType,
+        Object.values(this.props.filters).flatMap(arrayOfFilters => arrayOfFilters)
+      )
 
       if (searchResponse.status !== 200)
         throw 'Unexpected result received from search engine'
