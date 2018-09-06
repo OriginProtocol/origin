@@ -88,7 +88,7 @@ const getOfferDetails = async log => {
 // Rules for acting on events
 // Adding a rule here makes the listener listen for the event.
 const LISTEN_RULES = {
-  v00_MarketplaceContract: {
+  V00_Marketplace: {
     ListingCreated: getListingDetails,
     ListingUpdated: getListingDetails,
     ListingWithdrawn: getListingDetails,
@@ -102,7 +102,7 @@ const LISTEN_RULES = {
     OfferFinalized: getOfferDetails,
     OfferData: getOfferDetails
   },
-  v01_MarketplaceContract: {
+  V01_Marketplace: {
     ListingCreated: getListingDetails,
     ListingUpdated: getListingDetails,
     ListingWithdrawn: getListingDetails,
@@ -429,9 +429,9 @@ function buildSignatureToRules() {
   const signatureLookup = {}
   for (const contractName in LISTEN_RULES) {
     const eventRules = LISTEN_RULES[contractName]
-    const contract = o.contractService[contractName]
+    const contract = o.contractService.contracts[contractName]
     if (contract == undefined) {
-      throw "Can't find contract " + contractName
+      throw Error("Can't find contract " + contractName)
     }
     contract.abi.filter(x => x.type == 'event').forEach(eventAbi => {
       const ruleFn = eventRules[eventAbi.name]
