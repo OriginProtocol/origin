@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { injectIntl } from 'react-intl'
+import { connect } from 'react-redux'
 import { VALUE_TYPE_FLOAT, FILTER_OPERATOR_GREATER_OR_EQUAL } from 'components/search/constants'
 
 class CounterFilter extends Component {
@@ -29,6 +30,13 @@ class CounterFilter extends Component {
 
   componentDidMount() {
     this.props.onChildMounted(this)
+  }
+
+  componentDidUpdate(previousProps) {
+    // When new search is triggered, search filters get reset, so component should reset their state
+    if (Object.keys(previousProps.filters).length !== 0 &&
+      Object.keys(this.props.filters).length === 0)
+      this.onClear()
   }
 
   // Called by filter-group
@@ -78,4 +86,10 @@ class CounterFilter extends Component {
   }
 }
 
-export default injectIntl(CounterFilter)
+const mapStateToProps = state => ({
+  filters: state.search.filters
+})
+
+const mapDispatchToProps = dispatch => ({ })
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(CounterFilter))

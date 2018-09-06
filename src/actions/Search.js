@@ -8,11 +8,12 @@ export const SearchConstants = keyMirror(
   'SEARCH'
 )
 
-export function generalSearch(query, listingType) {
+export function generalSearch(query, listingType, resetSearchFilters) {
   return {
     type: SearchConstants.SEARCH_QUERY,
     query,
-    listingType
+    listingType,
+    resetSearchFilters
   }
 }
 

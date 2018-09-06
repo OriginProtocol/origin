@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Range } from 'rc-slider'
+import { connect } from 'react-redux'
 import $ from 'jquery'
 
 import schemaMessages from '../../schemaMessages/index'
@@ -54,9 +55,16 @@ class PriceFilter extends Component {
     ]
   }
 
+  componentDidUpdate(previousProps) {
+    // When new search is triggered, search filters get reset, so component should reset their state
+    if (Object.keys(previousProps.filters).length !== 0 &&
+      Object.keys(this.props.filters).length === 0)
+      this.onClear()
+  }
+
   // Called by filter-group
   onClear() {
-    this.setState({ value: [this.defaultMinimum, this.defaultMaximum] })
+    this.handlePriceChange([this.defaultMinimum, this.defaultMaximum])
   }
 
   render() {
@@ -92,4 +100,10 @@ class PriceFilter extends Component {
   }
 }
 
-export default injectIntl(PriceFilter)
+const mapStateToProps = state => ({
+  filters: state.search.filters
+})
+
+const mapDispatchToProps = dispatch => ({ })
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(PriceFilter))

@@ -29,7 +29,7 @@ class SearchResult extends Component {
 
     // set default prop values for search_query and listing_type
     const getParams = queryString.parse(this.props.location.search)
-    this.props.generalSearch(getParams.search_query || '', getParams.listing_type || 'all')
+    this.props.generalSearch(getParams.search_query || '', getParams.listing_type || 'all', false)
   }
 
   shouldFetchListingSchema() {
@@ -56,9 +56,8 @@ class SearchResult extends Component {
       previousProps.listingType === this.props.listingType &&
       previousProps.query === this.props.query
     )
-      return
+      return;
 
-    this.setState({ filters: []})
     this.handleComponentUpdate(previousProps)
   }
 
@@ -125,7 +124,7 @@ class SearchResult extends Component {
   }
 
   formatFiltersToUrl() {
-
+    //TODO: implement this
     //document.location.href = `#/search?search_query=${this.state.searchQuery}&listing_type=${this.state.selectedListingType.type}`
   }
 
@@ -200,7 +199,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  generalSearch: (query, selectedListingType) => dispatch(generalSearch(query, selectedListingType)),
+  generalSearch: (query, selectedListingType, resetSearchFilters) => dispatch(generalSearch(query, selectedListingType, resetSearchFilters)),
   showAlert: (error) => dispatch(showAlert(error))
 })
 

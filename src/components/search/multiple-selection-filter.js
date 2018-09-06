@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
 import { FILTER_OPERATOR_CONTAINS, VALUE_TYPE_ARRAY_STRING } from 'components/search/constants'
 
 import schemaMessages from '../../schemaMessages/index'
@@ -33,6 +34,13 @@ class MultipleSelectionFilter extends Component {
         operator: FILTER_OPERATOR_CONTAINS,
       },
     ]
+  }
+
+  componentDidUpdate(previousProps) {
+    // When new search is triggered, search filters get reset, so component should reset their state
+    if (Object.keys(previousProps.filters).length !== 0 &&
+      Object.keys(this.props.filters).length === 0)
+      this.onClear()
   }
 
   // Called by filter-group
@@ -88,4 +96,10 @@ class MultipleSelectionFilter extends Component {
   }
 }
 
-export default injectIntl(MultipleSelectionFilter)
+const mapStateToProps = state => ({
+  filters: state.search.filters
+})
+
+const mapDispatchToProps = dispatch => ({ })
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(MultipleSelectionFilter))

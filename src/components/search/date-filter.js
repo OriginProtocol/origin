@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import { injectIntl } from 'react-intl'
+import { connect } from 'react-redux'
 import 'react-dates/initialize'
-import { START_DATE, END_DATE } from 'react-dates/src/constants'
 import { VALUE_TYPE_DATE, FILTER_OPERATOR_GREATER_OR_EQUAL, FILTER_OPERATOR_LESSER_OR_EQUAL } from 'components/search/constants'
 import { DateRangePicker, SingleDatePicker, DayPickerRangeController, DayPickerRangeControllerWrapper } from 'react-dates'
 import $ from 'jquery'
+
+import { START_DATE, END_DATE } from 'react-dates/src/constants'
 
 class DateFilterGroup extends Component {
   constructor(props) {
@@ -54,6 +56,13 @@ class DateFilterGroup extends Component {
       // Force the focusedInput to always be truthy so that dates are always selectable
       focusedInput: !focusedInput ? START_DATE : focusedInput,
     })
+  }
+
+  componentDidUpdate(previousProps) {
+    // When new search is triggered, search filters get reset, so component should reset their state
+    if (Object.keys(previousProps.filters).length !== 0 &&
+      Object.keys(this.props.filters).length === 0)
+      this.onClear()
   }
 
   // Called by filter-group
@@ -118,4 +127,10 @@ class DateFilterGroup extends Component {
   }
 }
 
-export default injectIntl(DateFilterGroup)
+const mapStateToProps = state => ({
+  filters: state.search.filters
+})
+
+const mapDispatchToProps = dispatch => ({ })
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(DateFilterGroup))
