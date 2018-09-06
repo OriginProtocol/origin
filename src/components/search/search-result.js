@@ -169,7 +169,7 @@ class SearchResult extends Component {
         <nav id="search-filters-bar" className="navbar search-filters navbar-expand-sm">
           <div className="container d-flex flex-row">
             {
-              this.state.filterSchema && this.state.listingType &&
+              this.state.filterSchema && this.state.listingType && this.state.filterSchema.items.length > 0 &&
               (this.state.listingSchema || !this.shouldFetchListingSchema()) ?
               <ul className="navbar-nav collapse navbar-collapse">
                 {

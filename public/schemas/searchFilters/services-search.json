@@ -1,60 +1,6 @@
 {
   "type": "filterCreationSchema",
   "listingType": "services",
-  "items": [{
-      "title": {
-        "id": "schema.services.price",
-        "defaultMessage": "Price"
-      },
-      "type": "filterGroup",
-      "items": [{
-        "type": "price",
-        "listingPropertyName": "properties.price.enum",
-        "searchParameterName": "price"
-      }]
-    },
-    {
-      "title": {
-        "id": "schema.forSale.rooms",
-        "defaultMessage": "Rooms"
-      },
-      "type": "filterGroup",
-      "items": [{
-          "type": "counter",
-          "title": {
-            "id": "schema.services.bedrooms",
-            "defaultMessage": "Bedrooms"
-          },
-          "searchParameterName": "bedrooms"
-        },
-        {
-          "type": "counter",
-          "title": {
-            "id": "schema.services.beds",
-            "defaultMessage": "Beds"
-          },
-          "searchParameterName": "beds"
-        },
-        {
-          "type": "counter",
-          "title": {
-            "id": "schema.services.bathrooms",
-            "defaultMessage": "Bathrooms"
-          },
-          "searchParameterName": "bathrooms"
-        }
-      ]
-    },
-    {
-      "title": {
-        "id": "schema.services.date",
-        "defaultMessage": "Date"
-      },
-      "type": "filterGroup",
-      "items": [{
-        "type": "date",
-        "searchParameterName": "date"
-      }]
-    }
+  "items": [
   ]
 }

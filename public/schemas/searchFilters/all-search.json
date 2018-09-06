@@ -2,20 +2,6 @@
   "type": "filterCreationSchema",
   "listingType": "all",
   "items": [
-    {
-      "title": {
-        "id": "schema.forSale.price",
-        "defaultMessage": "Price"
-      },
-      "type": "filterGroup",
-      "items": [
-        {
-          "type": "price",
-          "listingPropertyName": "homeTypes",
-          "searchParameterName": "homeTypes",
-          "multipleSelection": true
-        }
-      ]
-    }
+    
   ]
 }

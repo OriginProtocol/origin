@@ -2,34 +2,5 @@
   "type": "filterCreationSchema",
   "listingType": "for-sale",
   "items": [
-    {
-      "title": {
-        "id": "schema.forSale.price",
-        "defaultMessage": "Price"
-      },
-      "type": "filterGroup",
-      "items": [
-        {
-          "type": "price",
-          "listingPropertyName": "properties.price.enum",
-          "searchParameterName": "price"
-        }
-      ]
-    },
-    {
-      "title": {
-        "id": "schema.forSale.category",
-        "defaultMessage": "Category"
-      },
-      "type": "filterGroup",
-      "items": [
-        {
-          "type": "multipleSelectionFilter",
-          "listingPropertyName": "properties.category.enum",
-          "searchParameterName": "homeTypes",
-          "multipleSelection": true
-        }
-      ]
-    }
   ]
 }
