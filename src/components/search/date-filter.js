@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { injectIntl } from 'react-intl'
 import 'react-dates/initialize'
 import { START_DATE, END_DATE } from 'react-dates/src/constants'
+import { VALUE_TYPE_DATE, FILTER_OPERATOR_GREATER_OR_EQUAL, FILTER_OPERATOR_LESSER_OR_EQUAL } from 'components/search/constants'
 import { DateRangePicker, SingleDatePicker, DayPickerRangeController, DayPickerRangeControllerWrapper } from 'react-dates'
 import $ from 'jquery'
 
@@ -53,6 +54,24 @@ class DateFilterGroup extends Component {
       // Force the focusedInput to always be truthy so that dates are always selectable
       focusedInput: !focusedInput ? START_DATE : focusedInput,
     })
+  }
+
+  // Called by filter-group
+  getFilters() {
+    return [
+      {
+        name: this.props.filter.searchParameterName,
+        value: this.state.startDate,
+        valueType: VALUE_TYPE_DATE,
+        operator: FILTER_OPERATOR_GREATER_OR_EQUAL,
+      },
+      {
+        name: this.props.filter.searchParameterName,
+        value: this.state.endDate,
+        valueType: VALUE_TYPE_DATE,
+        operator: FILTER_OPERATOR_LESSER_OR_EQUAL,
+      }
+    ]
   }
 
   // Called by filter-group

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
+import { FILTER_OPERATOR_CONTAINS, VALUE_TYPE_ARRAY_STRING } from 'components/search/constants'
 
 import schemaMessages from '../../schemaMessages/index'
 
@@ -20,6 +21,18 @@ class MultipleSelectionFilter extends Component {
 
   componentDidMount() {
     this.props.onChildMounted(this)
+  }
+
+  // Called by filter-group
+  getFilters() {
+    return [
+      {
+        name: this.props.filter.searchParameterName,
+        value: Object.keys(this.state.checkboxValue),
+        valueType: VALUE_TYPE_ARRAY_STRING,
+        operator: FILTER_OPERATOR_CONTAINS,
+      },
+    ]
   }
 
   // Called by filter-group

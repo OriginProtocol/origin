@@ -1,7 +1,8 @@
 import { SearchConstants } from '../actions/Search'
 
 const initialState = {
-  listingType: 'all'
+  listingType: 'all',
+  filters: {}
 }
 
 export default function Transactions(state = initialState, action = {}) {
@@ -14,6 +15,16 @@ export default function Transactions(state = initialState, action = {}) {
       ...state,
       query,
       listingType
+    }
+
+  case SearchConstants.UPDATE_FILTERS:
+    const { filterGroupId, filters } = action
+    const objectToMerge = {}
+    objectToMerge[filterGroupId] = filters
+
+    return {
+      ...state,
+      filters: {...state.filters, ...objectToMerge},
     }
 
   default:

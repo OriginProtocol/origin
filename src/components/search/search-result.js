@@ -195,7 +195,8 @@ class SearchResult extends Component {
 
 const mapStateToProps = state => ({
   listingType: state.search.listingType,
-  query: state.search.query
+  query: state.search.query,
+  filters: state.search.filters
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -4,6 +4,7 @@ import { Range } from 'rc-slider'
 import $ from 'jquery'
 
 import schemaMessages from '../../schemaMessages/index'
+import { VALUE_TYPE_FLOAT, FILTER_OPERATOR_GREATER_OR_EQUAL, FILTER_OPERATOR_LESSER_OR_EQUAL } from 'components/search/constants'
 
 class PriceFilter extends Component {
   constructor(props){
@@ -33,6 +34,24 @@ class PriceFilter extends Component {
 
   componentDidMount() {
     this.props.onChildMounted(this)
+  }
+
+  // Called by filter-group
+  getFilters() {
+    return [
+      {
+        name: this.props.filter.searchParameterName,
+        value: this.state.value[0],
+        valueType: VALUE_TYPE_FLOAT,
+        operator: FILTER_OPERATOR_GREATER_OR_EQUAL
+      },
+      {
+        name: this.props.filter.searchParameterName,
+        value: this.state.value[1],
+        valueType: VALUE_TYPE_FLOAT,
+        operator: FILTER_OPERATOR_LESSER_OR_EQUAL
+      }
+    ]
   }
 
   // Called by filter-group

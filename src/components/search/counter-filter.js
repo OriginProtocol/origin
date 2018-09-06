@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { injectIntl } from 'react-intl'
+import { VALUE_TYPE_FLOAT, FILTER_OPERATOR_GREATER_OR_EQUAL } from 'components/search/constants'
 
 class CounterFilter extends Component {
   constructor(props) {
@@ -28,6 +29,18 @@ class CounterFilter extends Component {
 
   componentDidMount() {
     this.props.onChildMounted(this)
+  }
+
+  // Called by filter-group
+  getFilters() {
+    return [
+      {
+        name: this.props.filter.searchParameterName,
+        value: this.state.counter,
+        valueType: VALUE_TYPE_FLOAT,
+        operator: FILTER_OPERATOR_GREATER_OR_EQUAL
+      }
+    ]
   }
 
   // Called by filter-group

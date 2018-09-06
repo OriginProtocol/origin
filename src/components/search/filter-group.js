@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import MultipleSelectionFilter from 'components/search/multiple-selection-filter'
 import PriceFilter from 'components/search/price-filter'
 import CounterFilter from 'components/search/counter-filter'
 import DateFilter from 'components/search/date-filter'
+import { updateFilters } from 'actions/Search'
 
 class FilterGroup extends Component {
   constructor(props) {
@@ -12,6 +14,7 @@ class FilterGroup extends Component {
 
     this.childFilters = []
 
+    this.title = this.props.intl.formatMessage(this.props.filterGroup.title)
     this.handleFilterMounted = this.handleFilterMounted.bind(this)
     this.handleFilterUnMounted = this.handleFilterUnMounted.bind(this)
     this.handleApplyClick = this.handleApplyClick.bind(this)
@@ -36,6 +39,11 @@ class FilterGroup extends Component {
 
   handleApplyClick(event) {
     event.preventDefault()
+
+    const filters = this.childFilters
+      .flatMap(childFilter => childFilter.getFilters())
+
+    this.props.updateFilters(this.title, filters)
   }
 
   handleClearClick(event) {
@@ -100,8 +108,7 @@ class FilterGroup extends Component {
   }
 
   render() {
-    const title = this.props.intl.formatMessage(this.props.filterGroup.title)
-    const formId = `filter-group-${title}`
+    const formId = `filter-group-${this.title}`
 
     return (
       <li className="nav-item" key={this.props.index}>
@@ -115,7 +122,7 @@ class FilterGroup extends Component {
         <form className="dropdown-menu" id={formId}>
           <div className="d-flex flex-column">
             <div className="dropdown-form">
-            {this.props.filterGroup.items.map(filter => this.renderFilter(filter, title))}
+            {this.props.filterGroup.items.map(filter => this.renderFilter(filter, this.title))}
             </div>
             <div className="d-flex flex-row button-container">
               <a onClick={this.handleClearClick} className="dropdown-button dropdown-button-left align-middle">
@@ -138,4 +145,10 @@ class FilterGroup extends Component {
   }
 }
 
-export default injectIntl(FilterGroup)
+const mapStateToProps = state => ({})
+
+const mapDispatchToProps = dispatch => ({
+  updateFilters: (filterGroupId, filters) => dispatch(updateFilters(filterGroupId, filters)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(FilterGroup))
