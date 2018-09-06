@@ -3,29 +3,30 @@ import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
+import { getEthBalance, getOgnBalance } from 'actions/Wallet'
+
 import Avatar from 'components/avatar'
 import EtherscanLink from 'components/etherscan-link'
 import Identicon from 'components/identicon'
 import MessageNew from 'components/message-new'
+
 import { getFiatPrice } from 'utils/priceUtils'
 
 import origin from '../services/origin'
 
-class Wallet extends Component {
+class WalletCard extends Component {
   constructor(props) {
     super(props)
 
     this.handleToggle = this.handleToggle.bind(this)
     this.state = {
       modalOpen: false,
-      ethBalance: this.props.ethBalance,
-      ethToUsdBalance: 0,
-      ognBalance: this.props.ognBalance
+      ethToUsdBalance: 0
     }
   }
 
   async convertEthToUsd() {
-    const ethToUsdBalance = await getFiatPrice( this.props.ethBalance, 'USD' )
+    const ethToUsdBalance = await getFiatPrice( this.props.wallet.ethBalance, 'USD' )
 
     this.setState({
       ethToUsdBalance
@@ -33,21 +34,17 @@ class Wallet extends Component {
   }
 
   componentDidMount() {
+    this.props.getEthBalance()
+    this.props.getOgnBalance()
+
     this.convertEthToUsd()
   }
 
-  componentDidUpdate() {
-    if (this.props.ethBalance !== this.state.ethBalance) {
-      this.convertEthToUsd()
-      this.setState({
-        ethBalance: this.props.ethBalance
-      })
-    }
+  componentDidUpdate(prevProps) {
+    const { ethBalance } = this.props.wallet
 
-    if (this.props.ognBalance !== this.state.ognBalance) {
-      this.setState({
-        ognBalance: this.props.ognBalance
-      })
+    if (ethBalance !== prevProps.wallet.ethBalance) {
+      this.convertEthToUsd()
     }
   }
 
@@ -58,7 +55,8 @@ class Wallet extends Component {
   }
 
   render() {
-    const { address, ethBalance, ognBalance, profile, web3Account, withMenus, withProfile } = this.props
+    const { profile, wallet, web3Account, withMenus, withProfile } = this.props
+    const { address, ethBalance, ognBalance } = wallet
     const { user } = profile
     const userCanReceiveMessages =
       address !== web3Account && origin.messaging.canReceiveMessages(address)
@@ -73,7 +71,7 @@ class Wallet extends Component {
             {address && (
               <div>
                 <FormattedMessage
-                  id={'wallet.ethAddress'}
+                  id={'wallet-card.ethAddress'}
                   defaultMessage={'ETH Address:'}
                 />
               </div>
@@ -83,7 +81,7 @@ class Wallet extends Component {
                 <EtherscanLink hash={address} />
               ) : (
                 <FormattedMessage
-                  id={'wallet.noEthAccountConnected'}
+                  id={'wallet-card.noEthAccountConnected'}
                   defaultMessage={'No ETH Account Connected'}
                 />
               )}
@@ -113,7 +111,7 @@ class Wallet extends Component {
             <hr className="dark sm" />
             <div className="balances">
               <FormattedMessage
-                id={'wallet.accountBalances'}
+                id={'wallet-card.accountBalances'}
                 defaultMessage={'Account Balances'}
               />
               <div className="d-flex align-items-start">
@@ -250,4 +248,9 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(Wallet)
+const matchDispatchToProps = dispatch => ({
+  getEthBalance: () => dispatch(getEthBalance()),
+  getOgnBalance: () => dispatch(getOgnBalance())
+})
+
+export default connect(mapStateToProps, matchDispatchToProps)(WalletCard)
