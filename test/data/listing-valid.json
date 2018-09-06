@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0.0",
+  "listingType": "unit",
+  "category": "ForSale",
+  "subCategory": "Mushrooms",
+  "language": "en-US",
+  "title": "my listing",
+  "description": "my description",
+  "expiry": "1996-12-19T16:39:57-08:00",
+  "media": [
+    {
+      "url": "ipfs://ddfsfsdsdsddf",
+      "contentType": "image/png",
+      "dimension": {
+        "height": 300,
+        "width": 600
+      }
+    },
+    {
+      "url": "ipfs://ddfsfsdsdsddf",
+      "contentType": "image/jpeg",
+      "dimension": {
+        "height": 300,
+        "width": 600
+      }
+    }
+  ],
+  "unitsTotal": 1,
+  "price": {
+    "currency": "ETH",
+    "amount": "200"
+  },
+  "commission": {
+    "currency": "OGN",
+    "amount": "10"
+  },
+  "securityDeposit": {
+    "currency": "ETH",
+    "amount": "100"
+  }
+}

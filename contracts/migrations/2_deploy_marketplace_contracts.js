@@ -10,17 +10,6 @@ module.exports = function(deployer) {
 
 async function deployContracts(deployer) {
 
-  const accounts = await new Promise((resolve, reject) => {
-    web3.eth.getAccounts((error, result) => {
-      if (error) {
-        reject(error)
-      }
-      resolve(result)
-    })
-  })
-
-  const Seller = accounts[1]
-
   // Initial supply of 1B tokens, in natural units.
   await deployer.deploy(OriginToken, '1000000000000000000000000000')
 

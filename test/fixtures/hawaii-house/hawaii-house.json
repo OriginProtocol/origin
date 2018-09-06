@@ -1,1 +1,22 @@
-{"schema":"http://localhost:3000/schemas/housing.json","data":{"name":"MAMALAHOA ESTATE","category":"Vacation Rentals","description":"Built on the slopes of Hualalai Mountain in Kailua, Hawaii, the Mamalahoa Estate knows how to make a first impression. You enter the property through a grove of citrus and macadamia trees. A floating walkway takes you across a koi pond, surrounded by lush greenery and a waterfall. Once inside, the 5,391-square-foot home is comprised of a master and two guest suites, each with a private staircase leading down to the garden courtyard. A chef's kitchen with koa cabinetry looks onto a double-height living area. Flanked by sliding doors, the room opens to a veranda that overlooks two swimming pools and the Kona coastline. Consisting of 90 acres, the grounds also feature a driving range, tennis court, bocce courts, and a three-car garage.","location":"Kailua, Hawaii, US","pictures":[],"price":8.5},"signed_by":"https://keybase.io/joshfraser","signature":"-----BEGIN PGP SIGNATURE-----\n  Version: Keybase OpenPGP v2.0.73\n  Comment: https://keybase.io/crypto\n\n  wsBcBAABCgAGBQJZlhmAAAoJEKTjGE37cmbxy38IALSQxXAE4wVc8d4rP0v8TaBE\n  MolxVoyev2MXUz0wdclXS2mmKMSVObiFOqjrCxqBTvzQRYbquuSQUTzO4t/C1WPp\n  AEodUf7KSBH7fGnuYVixIRvrvtF2MMGlFm/U1MpY1CtY5G+UYhzdoLWvOGf5b1yw\n  BiTAwczR7KqtFOYYdmNuIIqsUvLlV6fQjCihItIgc2521iZYxNUBSBjhINEtCUvV\n  L6tE1lR1dMcKOa7JMTqQsbGloiD5t2IsEdzxbzgWlheTjcqoN6id+QzPC1DK9mjX\n  b7Qf9nchgZZhJdOBSoSRqf47nxdUx1bqY1DIR+hOyF+p6j2nYVMcDD5Z3uB/tns=\n  =A9r6\n  -----END PGP SIGNATURE-----"}
+{
+  "schemaVersion": "1.0.0",
+  "listingType": "unit",
+  "category": "Housing",
+  "subCategory": "Vacation Rentals",
+  "language": "en-US",
+  "title": "MAMALAHOA ESTATE",
+  "description": "Built on the slopes of Hualalai Mountain in Kailua, Hawaii, the Mamalahoa Estate knows how to make a first impression. You enter the property through a grove of citrus and macadamia trees. A floating walkway takes you across a koi pond, surrounded by lush greenery and a waterfall. Once inside, the 5,391-square-foot home is comprised of a master and two guest suites, each with a private staircase leading down to the garden courtyard. A chef's kitchen with koa cabinetry looks onto a double-height living area. Flanked by sliding doors, the room opens to a veranda that overlooks two swimming pools and the Kona coastline. Consisting of 90 acres, the grounds also feature a driving range, tennis court, bocce courts, and a three-car garage.",
+  "unitsTotal": 1,
+  "price": {
+    "currency": "ETH",
+    "amount": "8.5"
+  },
+  "commission": {
+    "currency": "OGN",
+    "amount": "10"
+  },
+  "securityDeposit": {
+    "currency": "ETH",
+    "amount": "10"
+  }
+}

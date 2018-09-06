@@ -32,7 +32,6 @@
   "license": "MIT",
   "dependencies": {
     "ajv": "^6.5.0",
-    "ajv-merge-patch": "^4.1.0",
     "babel-polyfill": "^6.26.0",
     "bs58": "^4.0.1",
     "cross-fetch": "^2.1.1",
@@ -42,8 +41,8 @@
     "map-cache": "^0.2.2",
     "openzeppelin-solidity": "1.10.0",
     "rlp": "^2.0.0",
-    "url-parse": "^1.4.0",
     "store": "^2.0.12",
+    "url-parse": "^1.4.0",
     "web3": "^1.0.0-beta.34"
   },
   "devDependencies": {
@@ -57,6 +56,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
     "chai-bignumber": "^2.0.2",
     "chai-string": "1.4.0",
     "chalk": "^2.4.1",
@@ -71,7 +71,7 @@
     "mocha-loader": "^1.1.3",
     "node-watch": "^0.5.8",
     "prettier-eslint-cli": "^4.7.1",
-    "sinon": "^5.0.7",
+    "sinon": "^5.1.1",
     "solc": "^0.4.24",
     "solidity-coverage": "^0.5.10",
     "truffle": "^4.1.8",

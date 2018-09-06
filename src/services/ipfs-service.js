@@ -99,7 +99,7 @@ class IpfsService {
   /**
    * Load a file from IPFS and parse the contents into an object.
    *
-   * Used in conjuction with saveObjAsFile to save and retrive objects into IPFS.
+   * Used in conjuction with saveObjAsFile to save and retrieve objects into IPFS.
    *
    * ipfsHash {string} - hash of the ipfs file containing the object to load
    */

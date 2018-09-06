@@ -1,3 +1,4 @@
+const bs58 = require('bs58')
 const fs = require('fs')
 const ipfsAPI = require('ipfs-api')
 const HttpIPFS = require('ipfs/src/http')
@@ -68,16 +69,30 @@ const populateIpfs = async () => {
       const data = JSON.parse(dataJson)
       // Preserve order of uploaded images to maintain IPFS hash
       // This is necessary because the hashes are hardcoded in contract migrations
+      data.media = []
       for (const imagePath of imagePaths) {
         const imageUpload = await ipfs.util.addFromFs(imagePath)
-        data['data']['pictures'].push(`ipfs://${imageUpload[0]['hash']}`)
+        const contentType = imagePath.endsWith('jpg') ? 'image/jpeg' : 'image/png'
+        const medium = {
+          url: `ipfs://${imageUpload[0]['hash']}`,
+          contentType: contentType
+        }
+        data.media.push(medium)
       }
 
       // Update listing data to IPFS
       const stream = new ReadableStream()
       stream.push(JSON.stringify(data))
       stream.push(null)
-      await ipfs.add(stream)
+      const resp = await ipfs.add(stream)
+
+      // Log some data.
+      // TODO(franck): re-use ContractService.getBytes32FromIpfsHash
+      const ipfsHash = resp[0].hash
+      const bytes32 = '0x' + bs58.decode(ipfsHash).slice(2).toString('hex')
+      console.log(`Uploaded fixture listing ${listingDirectoryName} to IPFS`)
+      console.log(`  IPFS Hash=${ipfsHash}`)
+      console.log(`  Bytes32  =${bytes32}`)
     }
   }
 }

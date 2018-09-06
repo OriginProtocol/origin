@@ -1,4 +1,3 @@
-const OriginToken = artifacts.require('./token/OriginToken.sol')
 const V00_Marketplace = artifacts.require('./V00_Marketplace.sol')
 const V01_Marketplace = artifacts.require('./V01_Marketplace.sol')
 
@@ -28,23 +27,18 @@ async function deployContracts(deployer) {
   const marketplace1 = await V00_Marketplace.deployed()
   const marketplace2 = await V01_Marketplace.deployed()
   await createListing(marketplace1,
-    '0x036f2436e88d1a49fd41ed843bd531ee2ea234b247ad826c602c730aaf5dca7c', Seller
+    '0x70c3479b0249dd1f868da071acfdf8abb4ef2342a71f49a796ff780866457a13', Seller
   )
   await createListing(marketplace1,
-    "0x8c95c2b29113de838c6e68f552e5c31797c98d6eee55681fffeb26193a7577e6", Seller
+    '0x509b9a40dd2059647486985751b394d1a51be9be861d054e51b32b6d35c8bd5c', Seller
   )
   await createListing(marketplace1,
-    "0xeef630a340410c4ca88cfeeb105fcb1e7720d44f9c1b0e9c8e0998ccfecffcbb", Seller
+    '0xf9013246c5635f1716b3287b7c87c724ac319510725525597fb8db1d3fc682fa', Seller
   )
   await createListing(marketplace2,
-    "0x67c16c669097b9b091af42979a58859ba160a5b8861dc8cb62345375deabbe11", Seller
+    '0x7e8bfc4fb480d0da8afcbeba6e4b695f2734707524bb94a1e6bf57788f66c536', Seller
   )
   await createListing(marketplace2,
-    "0xbae479bb1f26346c313fda2fd91cc8a5dfe0286c3240fddf68b1b049cbb980ce", Seller
+    '0xf8e9278942da49f74dd61b2c3792f63fe27deda2c770f82ecf20f434cd9edc76', Seller
   )
-
-  // console.log(marketplace)
-  //
-  // await token.transfer(Seller, 400).send({ from: default_account })
-  // await token.approve(marketplace._address, 400).send({ from: Seller })
 }

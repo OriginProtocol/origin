@@ -1,9 +1,8 @@
-import URL from 'url-parse'
-
 import { generateListingId, generateOfferId, generateNotificationId } from '../utils/id'
-import { validateListing } from '../utils/schemaValidators'
 
 import Adaptable from './adaptable'
+import { Listing } from '../models/listing'
+import { ListingIpfsStore } from '../services/listing-service'
 
 const unreadStatus = 'unread'
 const readStatus = 'read'
@@ -27,6 +26,7 @@ class Marketplace extends Adaptable {
     this.ipfsService = ipfsService
     this.indexingServerUrl = indexingServerUrl
     this.fetch = fetch
+    this.listingIpfsStore = new ListingIpfsStore(this.ipfsService)
 
     // initialize notifications
     if (!store.get(storeKeys.notificationSubscriptionStart)) {
@@ -49,7 +49,7 @@ class Marketplace extends Adaptable {
   async getListings(opts = {}) {
     const network = await this.contractService.web3.eth.net.getId()
     const listingIds = []
-    console.log(opts)
+
     for (const version of this.versions) {
       const listingIndexes = await this.adapters[version].getListings(opts)
       listingIndexes.forEach(listingIndex => {
@@ -67,45 +67,23 @@ class Marketplace extends Adaptable {
     return listingIds
   }
 
+  /**
+   * Returns a Listing object based in its id.
+   * @param listingId
+   * @returns {Promise<Listing>}
+   * @throws {Error}
+   */
   async getListing(listingId) {
+    // Get the on-chain listing data.
     const { adapter, listingIndex } = this.parseListingId(listingId)
-    const listing = await adapter.getListing(listingIndex)
-    const { offers } = listing
+    const chainListing = await adapter.getListing(listingIndex)
 
-    const ipfsHash = this.contractService.getIpfsHashFromBytes32(
-      listing.ipfsHash
-    )
-    const ipfsJson = await this.ipfsService.loadObjFromFile(ipfsHash)
-    const ipfsData = ipfsJson && ipfsJson.data
+    // Get the off-chain listing data from IPFS.
+    const ipfsHash = this.contractService.getIpfsHashFromBytes32(chainListing.ipfsHash)
+    const ipfsListing = await this.listingIpfsStore.load(ipfsHash)
 
-    // Rewrite IPFS image URLs to use the configured IPFS gateway
-    if (ipfsData && ipfsData.pictures) {
-      ipfsData.pictures = ipfsData.pictures.map(url => {
-        return this.ipfsService.rewriteUrl(url)
-      })
-    }
-
-    const unitsForSale = (ipfsData && (typeof ipfsData.units !== 'undefined'))
-      ? ipfsData.units
-      : 1 // default value
-
-    const unitsSold = Object.keys(offers).reduce((acc, offerId) => {
-      if (offers[offerId].status === 'created') {
-        return acc + 1
-      }
-      // TODO: we need to subtract 1 for every offer that is canceled
-      return acc
-    }, 0)
-
-    // units available is derived from units for sale and offers created.
-    // should never be negative
-    const unitsAvailable = Math.max(unitsForSale - unitsSold, 0)
-
-    return Object.assign({}, listing, {
-      id: listingId,
-      ipfsData: ipfsJson || {},
-      unitsAvailable
-    })
+    // Create and return a Listing from on-chain and off-chain data .
+    return new Listing(listingId, chainListing, ipfsListing)
   }
 
   // async getOffersCount(listingId) {}
@@ -158,39 +136,15 @@ class Marketplace extends Adaptable {
     })
   }
 
+  /**
+   * Creates a new listing in the system. Data is recorded both on-chain and off-chain in IPFS.
+   * @param {object} ipfsData - Listing data to store in IPFS
+   * @param {func(confirmationCount, transactionReceipt)} confirmationCallback - Called upon blocks confirmation.
+   * @returns {Promise<object>} - Object with listingId and transactionReceipt fields.
+   */
   async createListing(ipfsData, confirmationCallback) {
-    validateListing(ipfsData, this.contractService)
-
-    // Apply filtering to pictures and uploaded any data: URLs to IPFS
-    if (ipfsData.pictures) {
-      const pictures = ipfsData.pictures
-        .filter(url => {
-          try {
-            // Only allow data:, dweb:, and ipfs: URLs
-            return ['data:', 'dweb:', 'ipfs:'].includes(new URL(url).protocol)
-          } catch (error) {
-            // Invalid URL, filter it out
-            return false
-          }
-        })
-        .map(async url => {
-          // Upload any data: URLs to IPFS
-          // TODO possible removal and only accept dweb: and ipfs: URLS from dapps
-          if (url.startsWith('data:')) {
-            const ipfsHash = await this.ipfsService.saveDataURIAsFile(url)
-            return this.ipfsService.gatewayUrlForHash(ipfsHash)
-          }
-          // Leave other URLs untouched
-          return url
-        })
-
-      // Replace data.pictures
-      await Promise.all(pictures).then(results => {
-        ipfsData.pictures = results
-      })
-    }
-
-    const ipfsHash = await this.ipfsService.saveObjAsFile({ data: ipfsData })
+    // Validate and save the data to IPFS.
+    const ipfsHash = await this.listingIpfsStore.save(ipfsData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     const transactionReceipt = await this.currentAdapter.createListing(
@@ -202,6 +156,7 @@ class Marketplace extends Adaptable {
     const network = await this.contractService.web3.eth.net.getId()
     const { listingIndex } = transactionReceipt
     const listingId = generateOfferId({ network, version, listingIndex })
+
     return Object.assign({ listingId }, transactionReceipt)
   }
 
