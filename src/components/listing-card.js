@@ -57,7 +57,7 @@ class ListingCard extends Component {
     } = this.state
     const photo = pictures && pictures.length && pictures[0]
     const isPending = false // will be handled by offer status
-    const isSold = !unitsAvailable
+    const isSold = !unitsRemaining
 
     return (
       <div
