@@ -10,6 +10,15 @@
       "minLength": 3,
       "maxLength": 100
     },
+    "examples": {
+      "type": "string",
+      "title": "schema.services.examples",
+      "enum": [
+        "schema.services.deliveryService",
+        "schema.services.dogWalking",
+        "schema.services.homeCleaning"
+      ]
+    },
     "category": {
       "type": "string",
       "title": "schema.services.category",

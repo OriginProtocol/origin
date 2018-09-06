@@ -41,6 +41,10 @@ class MyPurchaseCard extends Component {
     $('[data-toggle="tooltip"]').tooltip()
   }
 
+  componentWillUnmount() {
+    $('[data-toggle="tooltip"]').tooltip('dispose')
+  }
+
   render() {
     const { listing, offer, offerId } = this.props
     const created = Number(offer.createdAt)

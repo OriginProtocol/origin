@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 import $ from 'jquery'
 
-import Avatar from 'components/avatar'
-import Identicon from 'components/Identicon'
+import { getBalance } from 'actions/Wallet'
+
+import Identicon from 'components/identicon'
+import Wallet from 'components/wallet'
 
 class UserDropdown extends Component {
   constructor(props) {
@@ -13,14 +13,14 @@ class UserDropdown extends Component {
   }
 
   componentDidMount() {
+    this.props.getBalance()
     $(document).on('click', '.identity .dropdown-menu', e => {
       e.stopPropagation()
     })
   }
 
   render() {
-    const { profile, wallet } = this.props
-    const { user } = profile
+    const { address, balance } = this.props.wallet
 
     return (
       <div className="nav-item identity dropdown">
@@ -32,7 +32,7 @@ class UserDropdown extends Component {
           aria-haspopup="true"
           aria-expanded="false"
         >
-          <Identicon address={wallet.address} />
+          <Identicon address={address} />
         </a>
         <div
           className="dropdown-menu dropdown-menu-right"
@@ -42,91 +42,7 @@ class UserDropdown extends Component {
             <div className="triangle" />
           </div>
           <div className="actual-menu">
-            <div className="wallet">
-              <div className="d-flex">
-                <div className="image-container">
-                  <Link to="/profile">
-                    <Identicon address={wallet.address} size={50} />
-                  </Link>
-                </div>
-                <div className="eth d-flex flex-column justify-content-between">
-                  {wallet.address && (
-                    <div>
-                      <FormattedMessage
-                        id={'user.ethAddress'}
-                        defaultMessage={'ETH Address:'}
-                      />
-                    </div>
-                  )}
-                  <Link to="/profile">
-                    <strong>
-                      {wallet.address || (
-                        <FormattedMessage
-                          id={'user.noEthAccountConnected'}
-                          defaultMessage={'No ETH Account Connected'}
-                        />
-                      )}
-                    </strong>
-                  </Link>
-                </div>
-              </div>
-              <hr className="dark sm" />
-              <div className="d-flex">
-                <Link to="/profile">
-                  <Avatar
-                    image={user && user.profile && user.profile.avatar}
-                    placeholderStyle="blue"
-                  />
-                </Link>
-                <div className="identification d-flex flex-column justify-content-between">
-                  <div>
-                    <Link to="/profile">{profile.name}</Link>
-                  </div>
-                  <div>
-                    {profile.published.phone && (
-                      <Link to="/profile">
-                        <img
-                          src="images/phone-icon-verified.svg"
-                          alt="phone verified icon"
-                        />
-                      </Link>
-                    )}
-                    {profile.published.email && (
-                      <Link to="/profile">
-                        <img
-                          src="images/email-icon-verified.svg"
-                          alt="email verified icon"
-                        />
-                      </Link>
-                    )}
-                    {profile.published.facebook && (
-                      <Link to="/profile">
-                        <img
-                          src="images/facebook-icon-verified.svg"
-                          alt="Facebook verified icon"
-                        />
-                      </Link>
-                    )}
-                    {profile.published.twitter && (
-                      <Link to="/profile">
-                        <img
-                          src="images/twitter-icon-verified.svg"
-                          alt="Twitter verified icon"
-                        />
-                      </Link>
-                    )}
-                    {profile.published.airbnb && (
-                      <Link to="/profile">
-                        <img
-                          src="images/airbnb-icon-verified.svg"
-                          alt="Airbnb verified icon"
-                        />
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Wallet address={address} balance={balance} withMenus={false} withProfile={true} />
           </div>
         </div>
       </div>
@@ -137,8 +53,11 @@ class UserDropdown extends Component {
 const mapStateToProps = state => {
   return {
     wallet: state.wallet,
-    profile: state.profile
   }
 }
 
-export default connect(mapStateToProps)(UserDropdown)
+const matchDispatchToProps = dispatch => ({
+  getBalance: () => dispatch(getBalance())
+})
+
+export default connect(mapStateToProps, matchDispatchToProps)(UserDropdown)

@@ -8,6 +8,10 @@
     "defaultMessage": "Title"
   },
   {
+    "id": "schema.housing.examples",
+    "defaultMessage": "Examples"
+  },
+  {
     "id": "schema.housing.category",
     "defaultMessage": "Category"
   },

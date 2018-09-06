@@ -53,7 +53,10 @@ class ListingsDetail extends Component {
       step: this.STEP.VIEW,
       currentProvider: getCurrentProvider(
         origin && origin.contractService && origin.contractService.web3
-      )
+      ),
+      // TODO:John - wire up boost level & boost amount to actual data
+      boostLevel: 'Medium',
+      boostAmount: 10
     }
 
     this.intlMessages = defineMessages({
@@ -153,13 +156,15 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    const isActive = !!this.state.unitsAvailable
-    const buyersReviews = this.state.reviews
-    const userIsSeller = this.state.seller === this.props.web3Account
+    const { boostLevel, category, currentProvider, description, ipfsHash, loading, name, pictures, price, reviews, seller, step, unitsAvailable } = this.state
+    const isPending = false // will be handled by offer status
+    const isSold = !unitsAvailable
+    const isAvailable = !isPending && !isSold
+    const userIsSeller = seller === this.props.web3Account
 
     return (
       <div className="listing-detail">
-        {this.state.step === this.STEP.METAMASK && (
+        {step === this.STEP.METAMASK && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img src="images/spinner-animation.svg" role="presentation" />
@@ -173,13 +178,13 @@ class ListingsDetail extends Component {
               id={'listing-detail.pressSubmitInMetaMask'}
               defaultMessage={'Press {submit} in {currentProvider} window'}
               values={{
-                currentProvider: this.state.currentProvider,
+                currentProvider,
                 submit: <span>&ldquo;Submit&rdquo;</span>
               }}
             />
           </Modal>
         )}
-        {this.state.step === this.STEP.PROCESSING && (
+        {step === this.STEP.PROCESSING && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img src="images/spinner-animation.svg" role="presentation" />
@@ -195,7 +200,7 @@ class ListingsDetail extends Component {
             />
           </Modal>
         )}
-        {this.state.step === this.STEP.PURCHASED && (
+        {step === this.STEP.PURCHASED && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img src="images/circular-check-button.svg" role="presentation" />
@@ -222,7 +227,7 @@ class ListingsDetail extends Component {
             </div>
           </Modal>
         )}
-        {this.state.step === this.STEP.ERROR && (
+        {step === this.STEP.ERROR && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img src="images/flat_cross_icon.svg" role="presentation" />
@@ -252,10 +257,10 @@ class ListingsDetail extends Component {
             </div>
           </Modal>
         )}
-        {(this.state.loading ||
-          (this.state.pictures && !!this.state.pictures.length)) && (
+        {(loading ||
+          (pictures && !!pictures.length)) && (
           <div className="carousel">
-            {this.state.pictures.map(pictureUrl => (
+            {pictures.map(pictureUrl => (
               <div className="photo" key={pictureUrl}>
                 <img src={pictureUrl} role="presentation" />
               </div>
@@ -263,34 +268,55 @@ class ListingsDetail extends Component {
           </div>
         )}
 
-        <div
-          className={`container listing-container${
-            this.state.loading ? ' loading' : ''
-          }`}
-        >
+        <div className={`container listing-container${loading ? ' loading' : ''}`}>
           <div className="row">
             <div className="col-12 col-md-8 detail-info-box">
-              <div className="category placehold">{this.state.category}</div>
+              <div className="category placehold d-flex">
+                <div>{category}</div>
+                {!loading &&
+                  <div className="badges">
+                    {isPending &&
+                      <span className="pending badge">
+                        <FormattedMessage
+                          id={'listing-detail.pending'}
+                          defaultMessage={'Pending'}
+                        />
+                      </span>
+                    }
+                    {isSold &&
+                      <span className="sold badge">
+                        <FormattedMessage
+                          id={'listing-detail.soldOut'}
+                          defaultMessage={'Sold Out'}
+                        />
+                      </span>
+                    }
+                    {boostLevel &&
+                      <span className={ `boosted badge boost-${boostLevel}` }>
+                        <img src="images/boost-icon-arrow.svg" role="presentation" />
+                      </span>
+                    }
+                  </div>
+                }
+              </div>
               <h1 className="title text-truncate placehold">
-                {this.state.name}
+                {name}
               </h1>
-              <p className="description placehold">{this.state.description}</p>
+              <p className="description placehold">{description}</p>
               {/* Via Stan 5/25/2018: Hide until contracts allow for unitsAvailable > 1 */}
               {/*!!unitsAvailable && unitsAvailable < 5 &&
                 <div className="units-available text-danger">
                   <FormattedMessage
                     id={ 'listing-detail.unitsAvailable' }
                     defaultMessage={ 'Just {unitsAvailable} left!' }
-                    values={{ unitsAvailable: <FormattedNumber value={ this.state.unitsAvailable } /> }}
+                    values={{ unitsAvailable: <FormattedNumber value={ unitsAvailable } /> }}
                   />
                 </div>
               */}
-              {this.state.ipfsHash && (
+              {ipfsHash && (
                 <div className="ipfs link-container">
                   <a
-                    href={origin.ipfsService.gatewayUrlForHash(
-                      this.state.ipfsHash
-                    )}
+                    href={origin.ipfsService.gatewayUrlForHash(ipfsHash)}
                     target="_blank"
                   >
                     <FormattedMessage
@@ -310,69 +336,61 @@ class ListingsDetail extends Component {
                   <FormattedMessage
                     id={'listing-detail.IPFS'}
                     defaultMessage={'IPFS: {ipfsHash}'}
-                    values={{ ipfsHash: this.state.ipfsHash }}
+                    values={{ ipfsHash }}
                   />
                 </li>
                 <li>
                   <FormattedMessage
                     id={'listing-detail.seller'}
                     defaultMessage={'Seller: {sellerAddress}'}
-                    values={{ sellerAddress: this.state.seller }}
+                    values={{ sellerAddress: seller }}
                   />
                 </li>
                 <li>
                   <FormattedMessage
                     id={'listing-detail.IPFS'}
                     defaultMessage={'IPFS: {ipfsHash}'}
-                    values={{ ipfsHash: this.state.ipfsHash }}
+                    values={{ ipfsHash }}
                   />
                 </li>
               </div>
             </div>
             <div className="col-12 col-md-4">
-              {!!this.state.price &&
-                !!parseFloat(this.state.price) && (
+              {isAvailable && !!price && !!parseFloat(price) &&
                 <div className="buy-box placehold">
-                  <div className="price d-flex justify-content-between">
-                    <div>
-                      <FormattedMessage
-                        id={'listing-detail.price'}
-                        defaultMessage={'Price'}
-                      />
-                    </div>
-                    <div className="text-right">
-                      {Number(this.state.price).toLocaleString(undefined, {
-                        maximumFractionDigits: 5,
-                        minimumFractionDigits: 5
-                      })}
-                        &nbsp;
-                      <FormattedMessage
-                        id={'listing-detail.ethereumCurrencyAbbrev'}
-                        defaultMessage={'ETH'}
-                      />
-                    </div>
+                  <div className="price">
+                    <img src="images/eth-icon.svg" role="presentation" />
+                    {Number(price).toLocaleString(undefined, {
+                      maximumFractionDigits: 5,
+                      minimumFractionDigits: 5
+                    })}
+                      &nbsp;
+                    <FormattedMessage
+                      id={'listing-detail.ethereumCurrencyAbbrev'}
+                      defaultMessage={'ETH'}
+                    />
                   </div>
                   {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
-                  {/* <div className="quantity d-flex justify-content-between">
-                                    <div>Quantity</div>
-                                    <div className="text-right">
-                                      {Number(1).toLocaleString()}
-                                    </div>
-                                  </div>
-                                  <div className="total-price d-flex justify-content-between">
-                                    <div>Total Price</div>
-                                    <div className="price text-right">
-                                      {Number(price).toLocaleString(undefined, {minimumFractionDigits: 5, maximumFractionDigits: 5})} ETH
-                                    </div>
-                                  </div> */}
-                  {!this.state.loading && (
+                  {/*
+                    <div className="quantity d-flex justify-content-between">
+                      <div>Quantity</div>
+                      <div className="text-right">
+                        {Number(1).toLocaleString()}
+                      </div>
+                    </div>
+                    <div className="total-price d-flex justify-content-between">
+                      <div>Total Price</div>
+                      <div className="price text-right">
+                        {Number(price).toLocaleString(undefined, {minimumFractionDigits: 5, maximumFractionDigits: 5})} ETH
+                      </div>
+                    </div>
+                  */}
+                  {!loading &&
                     <div className="btn-container">
-                      {isActive &&
-                          !userIsSeller && (
+                      {!userIsSeller && (
                         <button
                           className="btn btn-primary"
                           onClick={this.handleBuyClicked}
-                          // disabled={!this.state.address}
                           onMouseDown={e => e.preventDefault()}
                         >
                           <FormattedMessage
@@ -381,35 +399,85 @@ class ListingsDetail extends Component {
                           />
                         </button>
                       )}
-                      {isActive &&
-                          userIsSeller && (
+                      {userIsSeller && (
                         <Link to="/my-listings" className="btn">
                               My Listings
                         </Link>
                       )}
-                      {!isActive && (
-                        <div className="sold-banner">
-                          <img
-                            src="images/sold-tag.svg"
-                            role="presentation"
-                          />
-                          <FormattedMessage
-                            id={'listing-detail.soldOut'}
-                            defaultMessage={'Sold Out'}
-                          />
-                        </div>
-                      )}
                     </div>
-                  )}
+                  }
+                  {/* Via Matt 9/4/2018: Not necessary until we have staking */}
+                  {/*
+                    <div className="boost-level">
+                      <hr/>
+                      <div className="row">
+                        <div className="col-sm-6">
+                          <p>Boost Level</p>
+                          <a href="#" target="_blank" rel="noopener noreferrer">What is this?</a>
+                        </div>
+                        <div className="col-sm-6 text-right">
+                          <p>{ boostLevel }</p>
+                          <p>
+                            <img src="images/ogn-icon.svg" role="presentation" />
+                            <span className="font-bold">{ boostAmount }</span>&nbsp;
+                            <span className="font-blue font-bold">OGN</span>
+                            <span className="help-block">1.00 USD</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  */}
                 </div>
-              )}
-              {this.state.seller && (
+              }
+              {!isAvailable &&
+                <div className="buy-box placehold unavailable text-center">
+                  {!loading &&
+                    <div className="reason">
+                      {isPending &&
+                        <FormattedMessage
+                          id={'listing-detail.reasonPending'}
+                          defaultMessage={'This listing is {pending}'}
+                          values={{
+                            pending: <strong>Pending</strong>
+                          }}
+                        />
+                      }
+                      {isSold &&
+                        <FormattedMessage
+                          id={'listing-detail.reasonSold'}
+                          defaultMessage={'This listing is {soldOut}'}
+                          values={{
+                            soldOut: <strong>Sold Out</strong>
+                          }}
+                        />
+                      }
+                    </div>
+                  }
+                  {!loading &&
+                    <div className="suggestion">
+                      <FormattedMessage
+                        id={'listing-detail.suggestion'}
+                        defaultMessage={'Try visiting the listings page and searching for something similar.'}
+                      />
+                    </div>
+                  }
+                  {!loading &&
+                    <Link to="/">
+                      <FormattedMessage
+                        id={'listing-detail.allListings'}
+                        defaultMessage={'See All Listings'}
+                      />
+                    </Link>
+                  }
+                </div>
+              }
+              {seller &&
                 <UserCard
                   title="seller"
                   listingId={this.props.listingId}
-                  userAddress={this.state.seller}
+                  userAddress={seller}
                 />
-              )}
+              }
             </div>
           </div>
           {this.props.withReviews && (
@@ -424,10 +492,10 @@ class ListingsDetail extends Component {
                     />
                     &nbsp;
                     <span className="review-count">
-                      <FormattedNumber value={buyersReviews.length} />
+                      <FormattedNumber value={reviews.length} />
                     </span>
                   </h2>
-                  {buyersReviews.map(r => (
+                  {reviews.map(r => (
                     <Review key={r.transactionHash} review={r} />
                   ))}
                   {/* To Do: pagination */}

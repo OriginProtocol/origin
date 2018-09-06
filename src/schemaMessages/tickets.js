@@ -9,6 +9,10 @@ export default defineMessages({
     id: 'schema.tickets.title',
     defaultMessage: 'Title'
   },
+  'schema.tickets.examples': {
+    id: 'schema.tickets.examples',
+    defaultMessage: 'Examples'
+  },
   'schema.tickets.category': {
     id: 'schema.tickets.category',
     defaultMessage: 'Category'

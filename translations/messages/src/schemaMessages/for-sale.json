@@ -8,6 +8,10 @@
     "defaultMessage": "Title"
   },
   {
+    "id": "schema.forSale.examples",
+    "defaultMessage": "Examples"
+  },
+  {
     "id": "schema.forSale.category",
     "defaultMessage": "Category"
   },
