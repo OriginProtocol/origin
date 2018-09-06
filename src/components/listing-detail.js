@@ -302,7 +302,7 @@ class ListingsDetail extends Component {
                 <div className="units-remaining text-danger">
                   <FormattedMessage
                     id={ 'listing-detail.unitsRemaining' }
-                    defaultMessage={ 'Just {unitsAvailable} left!' }
+                    defaultMessage={ 'Just {unitsRemaining} left!' }
                     values={{ unitsRemaining: <FormattedNumber value={ unitsRemaining } /> }}
                   />
                 </div>
