@@ -39,7 +39,7 @@ export const boostLevels = {
  * @return {string} - the name of the boost level (Low, Medium, Premium, etc.)
  */
 
-export const getBoostLevel = (value) => {
+export function getBoostLevel(value) {
   if (!value) {
     value = 0
   }
