@@ -8,27 +8,27 @@ export const boostLevels = {
   None: {
     min: 0,
     max: 0,
-    desc: 'Your listing will get very low visibility and no seller guarantee'
+    desc: 'Your listing will get very low visibility.'
   },
   Low: {
     min: min + 1,
     max: (range / 4),
-    desc: 'Your listing will get below average visibility and low seller guarantee'
+    desc: 'Your listing will get below-average visibility.'
   },
   Medium: {
     min: range / 4 + 1,
     max: (range / 2),
-    desc: 'Your listing will get average visibility and good seller guarantee'
+    desc: 'Your listing will get average visibility.'
   },
   High: {
     min: range / 2 + 1,
     max: ((range / 4) * 3),
-    desc: 'Your listing will get above average visibility and excellent seller guarantee'
+    desc: 'Your listing will get above-average visibility.'
   },
   Premium: {
     min: (range / 4) * 3 + 1,
     max: max,
-    desc: 'Your listing will get the best visibility and highest seller guarantee'
+    desc: 'Your listing will get the best visibility.'
   }
 }
 
