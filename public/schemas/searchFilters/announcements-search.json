@@ -4,14 +4,13 @@
   "items": [
     {
       "title": {
-        "id": "schema.announcements.price",
+        "id": "schema.announcements.priceInETH",
         "defaultMessage": "Price"
       },
       "type": "filterGroup",
       "items": [
         {
           "type": "price",
-          "listingPropertyName": "properties.price.enum",
           "searchParameterName": "price"
         }
       ]
