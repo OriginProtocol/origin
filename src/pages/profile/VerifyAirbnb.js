@@ -236,17 +236,19 @@ class VerifyAirbnb extends Component {
         if (Array.isArray(errorsJson))
           // Service exceptions
           this.setState({ generalErrors: errorsJson })
-        else
-          // Form exception
-          this.setState({ formErrors: errorsJson })
+        // Form exception
+        else this.setState({ formErrors: errorsJson })
       } catch (exception) {
         // Result wasn't a JSON. Could be a 404 or 500 or any other error
-        this.setState({ generalErrors: [
-          this.props.intl.formatMessage({
-            id: 'VerifyAirbnb.generalServiceError',
-            defaultMessage: 'Could not verify Airbnb. Please try again shortly.'
-          })
-        ] })
+        this.setState({
+          generalErrors: [
+            this.props.intl.formatMessage({
+              id: 'VerifyAirbnb.generalServiceError',
+              defaultMessage:
+                'Could not verify Airbnb. Please try again shortly.'
+            })
+          ]
+        })
       }
     }
   }

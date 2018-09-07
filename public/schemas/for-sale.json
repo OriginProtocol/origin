@@ -10,6 +10,16 @@
       "minLength": 3,
       "maxLength": 100
     },
+    "examples": {
+      "type": "string",
+      "title": "schema.forSale.examples",
+      "enum": [
+        "schema.forSale.bicycles",
+        "schema.forSale.carsTrucks",
+        "schema.forSale.electronics",
+        "schema.forSale.tickets"
+      ]
+    },
     "category": {
       "type": "string",
       "title": "schema.forSale.category",

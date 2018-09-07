@@ -14,10 +14,10 @@ class Notifications extends Component {
     const { notifications, web3Account } = this.props
     const { filter } = this.state
     const notificationsWithPerspective = notifications.map(n => {
-      const { sellerAddress } = n.resources.listing
+      const { seller } = n.resources.listing
       return {
         ...n,
-        perspective: web3Account === sellerAddress ? 'seller' : 'buyer'
+        perspective: web3Account === seller ? 'seller' : 'buyer'
       }
     })
     const filteredNotifications =
