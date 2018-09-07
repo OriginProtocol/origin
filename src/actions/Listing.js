@@ -13,7 +13,7 @@ export const ListingConstants = keyMirror(
   'LISTING'
 )
 
-async function fetchListingIds(dispatch) {
+async function fetchListingIds() {
   return async function(dispatch, fetcher) {
     dispatch({ type: ListingConstants.FETCH_IDS })
 

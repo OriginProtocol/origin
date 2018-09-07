@@ -17,11 +17,11 @@ class CounterFilter extends Component {
   }
 
   handleOnClickAdd() {
-    this.setState({counter: this.state.counter + 1})
+    this.setState({ counter: this.state.counter + 1 })
   }
 
   handleOnClickSubtract() {
-    this.setState({counter: Math.max(this.state.counter - 1, 0)})
+    this.setState({ counter: Math.max(this.state.counter - 1, 0) })
   }
 
   componentWillUnmount() {
@@ -90,6 +90,6 @@ const mapStateToProps = state => ({
   filters: state.search.filters
 })
 
-const mapDispatchToProps = dispatch => ({ })
+const mapDispatchToProps = () => ({ })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(CounterFilter))

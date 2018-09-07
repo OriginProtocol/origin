@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
+import { defineMessages, injectIntl } from 'react-intl'
 import { withRouter } from 'react-router'
 import queryString from 'query-string'
 
@@ -62,7 +62,6 @@ class SearchBar extends Component {
 
   handleOnSearch() {
     document.location.href = `#/search?search_query=${this.state.searchQuery}&listing_type=${this.state.selectedListingType.type}`
-    //this.props.clearFilters()
     this.props.generalSearch(this.state.searchQuery, this.state.selectedListingType.type, true, true)
   }
 
@@ -146,9 +145,7 @@ const mapStateToProps = () => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  searchListings: (query) => dispatch(searchListings(query)),
-  generalSearch: (query, selectedListingType, resetSearchFilters, forceIssueOfGeneralSearch) => dispatch(generalSearch(query, selectedListingType, resetSearchFilters, forceIssueOfGeneralSearch)),
-  clearFilters: () => dispatch(clearFilters())
+  generalSearch: (query, selectedListingType, resetSearchFilters, forceIssueOfGeneralSearch) => dispatch(generalSearch(query, selectedListingType, resetSearchFilters, forceIssueOfGeneralSearch))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withRouter(SearchBar)))

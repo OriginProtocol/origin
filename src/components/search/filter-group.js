@@ -24,7 +24,7 @@ class FilterGroup extends Component {
   }
 
   resolveFromListingSchema(path) {
-    var properties = Array.isArray(path) ? path : path.split('.')
+    const properties = Array.isArray(path) ? path : path.split('.')
     return properties.reduce((prev, curr) => prev && prev[curr], this.props.listingSchema)
   }
 
@@ -47,7 +47,7 @@ class FilterGroup extends Component {
     this.props.updateFilters(this.title, filters)
 
     // close the dropdown menu. Handles the css clases and aria-expanded attribute
-    $("body").trigger("click")
+    $('body').trigger('click')
   }
 
   handleClearClick(event) {
@@ -57,7 +57,7 @@ class FilterGroup extends Component {
       .forEach(childFilter => childFilter.onClear())
   }
 
-  handleOpenDropdown(event) {
+  handleOpenDropdown() {
     const containsDateFilter = this.props.filterGroup.items.some(filter => filter.type === 'date')
     if (!containsDateFilter)
       return
@@ -70,7 +70,7 @@ class FilterGroup extends Component {
       .forEach(dateFilter => dateFilter.onOpen())
   }
 
-  renderFilter(filter, title) {
+  renderFilter(filter, title, index) {
     if (filter.type === 'multipleSelectionFilter') {
       return(
         <MultipleSelectionFilter
@@ -80,6 +80,7 @@ class FilterGroup extends Component {
           title={title}
           onChildMounted={this.handleFilterMounted}
           onChildUnMounted={this.handleFilterUnMounted}
+          key={index}
         />
       )
     } else if (filter.type === 'price') {
@@ -88,6 +89,7 @@ class FilterGroup extends Component {
           filter={filter}
           onChildMounted={this.handleFilterMounted}
           onChildUnMounted={this.handleFilterUnMounted}
+          key={index}
         />
       )
     } else if (filter.type === 'counter') {
@@ -96,6 +98,7 @@ class FilterGroup extends Component {
           filter={filter}
           onChildMounted={this.handleFilterMounted}
           onChildUnMounted={this.handleFilterUnMounted}
+          key={index}
         />
       )
     } else if (filter.type === 'date') {
@@ -104,6 +107,7 @@ class FilterGroup extends Component {
           filter={filter}
           onChildMounted={this.handleFilterMounted}
           onChildUnMounted={this.handleFilterUnMounted}
+          key={index}
         />
       )
     } else {
@@ -115,7 +119,7 @@ class FilterGroup extends Component {
     const formId = `filter-group-${this.title}`
 
     return (
-      <li className="nav-item" key={this.props.index}>
+      <li className="nav-item">
         <a onClick={this.handleOpenDropdown}
           className="nav-link"
           data-toggle="dropdown"
@@ -126,7 +130,7 @@ class FilterGroup extends Component {
         <form className="dropdown-menu" id={formId}>
           <div className="d-flex flex-column">
             <div className="dropdown-form">
-            {this.props.filterGroup.items.map(filter => this.renderFilter(filter, this.title))}
+              {this.props.filterGroup.items.map((filter, index) => this.renderFilter(filter, this.title, index))}
             </div>
             <div className="d-flex flex-row button-container">
               <a onClick={this.handleClearClick} className="dropdown-button dropdown-button-left align-middle">
@@ -149,7 +153,7 @@ class FilterGroup extends Component {
   }
 }
 
-const mapStateToProps = state => ({})
+const mapStateToProps = () => ({})
 
 const mapDispatchToProps = dispatch => ({
   updateFilters: (filterGroupId, filters) => dispatch(updateFilters(filterGroupId, filters)),

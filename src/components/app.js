@@ -44,7 +44,7 @@ const HomePage = () => (
   <div>
     <SearchBar />
     <div className="container">
-      <ListingsGrid renderMode='home-page' />
+      <ListingsGrid renderMode="home-page" />
     </div>
   </div>
 )

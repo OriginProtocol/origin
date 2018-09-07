@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import { injectIntl, FormattedMessage } from 'react-intl'
+import { injectIntl } from 'react-intl'
 import { Range } from 'rc-slider'
 import { connect } from 'react-redux'
 import $ from 'jquery'
 
-import schemaMessages from '../../schemaMessages/index'
 import { VALUE_TYPE_FLOAT, FILTER_OPERATOR_GREATER_OR_EQUAL, FILTER_OPERATOR_LESSER_OR_EQUAL } from 'components/search/constants'
 
 class PriceFilter extends Component {
@@ -14,7 +13,7 @@ class PriceFilter extends Component {
     this.defaultMaximum = 500
 
     this.state = {
-      value:[this.defaultMinimum, this.defaultMaximum]
+      value: [this.defaultMinimum, this.defaultMaximum]
     }
 
     this.handlePriceChange = this.handlePriceChange.bind(this)
@@ -104,6 +103,6 @@ const mapStateToProps = state => ({
   filters: state.search.filters
 })
 
-const mapDispatchToProps = dispatch => ({ })
+const mapDispatchToProps = () => ({ })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(PriceFilter))

@@ -30,7 +30,7 @@ export default function Transactions(state = initialState, action = {}) {
 
     return {
       ...state,
-      filters: {...state.filters, ...objectToMerge1},
+      filters: { ...state.filters, ...objectToMerge1 },
     }
 
   case SearchConstants.CLEAR_FILTERS:

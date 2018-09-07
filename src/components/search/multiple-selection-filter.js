@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { injectIntl, FormattedMessage } from 'react-intl'
+import { injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { FILTER_OPERATOR_CONTAINS, VALUE_TYPE_ARRAY_STRING } from 'components/search/constants'
 
@@ -10,7 +10,7 @@ class MultipleSelectionFilter extends Component {
     super(props)
 
     this.state = {
-      checkboxValue:{}
+      checkboxValue: {}
     }
 
     this.onHandleClick = this.onHandleClick.bind(this)
@@ -45,14 +45,20 @@ class MultipleSelectionFilter extends Component {
 
   // Called by filter-group
   onClear() {
-    this.setState({ checkboxValue:{} })
+    this.setState({ checkboxValue: {} })
   }
 
   onHandleClick(event) {
-    let stateObject = this.state
-    stateObject.checkboxValue[event.target.getAttribute("id")] = true
+    const stateObject = this.state
+    stateObject.checkboxValue[event.target.getAttribute('id')] = true
 
     this.setState(stateObject)
+  }
+
+  toCamelCase(string) {
+    return string.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
+      return index == 0 ? letter.toLowerCase() : letter.toUpperCase()
+    }).replace(/-+/g, '')
   }
 
   render() {
@@ -71,26 +77,24 @@ class MultipleSelectionFilter extends Component {
       itemClass = 'form-check limit-checkbox-two-columns'
     }
 
-    const renderElementsIn2Rows = this.props.multipleSelectionValues.length > 9
-
     return (
       <div className={containerClass} key={this.props.title}>
-      {this.props.multipleSelectionValues.map(multipleSelectionValue =>
-        <div className={itemClass} key={multipleSelectionValue}>
-          <input
-            type="checkbox"
-            className="form-check-input"
-            id={multipleSelectionValue}
-            onClick={this.onHandleClick}
-            checked={this.state.checkboxValue[multipleSelectionValue] ? this.state.checkboxValue[multipleSelectionValue] : false}
-          />
-          <label htmlFor={multipleSelectionValue}>
-            {
-              this.props.intl.formatMessage(schemaMessages[_.camelCase(this.props.listingType)][multipleSelectionValue])
-            }
-          </label>
-        </div>
-      )}
+        {this.props.multipleSelectionValues.map(multipleSelectionValue =>
+          <div className={itemClass} key={multipleSelectionValue}>
+            <input
+              type="checkbox"
+              className="form-check-input"
+              id={multipleSelectionValue}
+              onClick={this.onHandleClick}
+              checked={this.state.checkboxValue[multipleSelectionValue] ? this.state.checkboxValue[multipleSelectionValue] : false}
+            />
+            <label htmlFor={multipleSelectionValue}>
+              {
+                this.props.intl.formatMessage(schemaMessages[this.toCamelCase(this.props.listingType)][multipleSelectionValue])
+              }
+            </label>
+          </div>
+        )}
       </div>
     )
   }
@@ -100,6 +104,6 @@ const mapStateToProps = state => ({
   filters: state.search.filters
 })
 
-const mapDispatchToProps = dispatch => ({ })
+const mapDispatchToProps = () => ({ })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(MultipleSelectionFilter))

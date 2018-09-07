@@ -7,7 +7,6 @@ import deepEqual from 'deep-equal'
 import $ from 'jquery'
 import 'rc-slider/assets/index.css'
 
-import schemaMessages from '../../schemaMessages/index'
 import { showAlert } from 'actions/Alert'
 import ListingsGrid from 'components/listings-grid'
 import SearchBar from 'components/search/searchbar'
@@ -63,7 +62,7 @@ class SearchResult extends Component {
        */
       previousProps.generalSearchId === this.props.generalSearchId
     )
-      return;
+      return
 
     this.handleComponentUpdate(previousProps)
   }
@@ -111,20 +110,20 @@ class SearchResult extends Component {
       .map(filterGroup => {
         if (filterGroup.type !== 'filterGroup')
           throw `Only filterGroup objects are allowed inside items array. Malformed object: ${JSON.stringify(filterGroup)}`
-        else if (!filterGroup.hasOwnProperty("title") || !filterGroup.title.hasOwnProperty("id") || !filterGroup.title.hasOwnProperty("defaultMessage"))
-          throw `Each filterGroup object should have a title object which should consist of "id" and "defaultMessage" properties. Malformed object: ${JSON.stringify(filterGroup)}`
-        else if (!filterGroup.hasOwnProperty("items"))
-          throw `Each filterGroup object should have an "items" member whose value is an array. Malformed object: ${JSON.stringify(filterGroup)}`
+        else if (!filterGroup.hasOwnProperty('title') || !filterGroup.title.hasOwnProperty('id') || !filterGroup.title.hasOwnProperty('defaultMessage'))
+          throw `Each filterGroup object should have a title object which should consist of 'id' and 'defaultMessage' properties. Malformed object: ${JSON.stringify(filterGroup)}`
+        else if (!filterGroup.hasOwnProperty('items'))
+          throw `Each filterGroup object should have an 'items' member whose value is an array. Malformed object: ${JSON.stringify(filterGroup)}`
 
         filterGroup
           .items
           .map(filter => {
-            if (!filter.hasOwnProperty("type"))
-              throw `Each filter should have a "type" property. Malformed object: ${JSON.stringify(filter)}`
-            else if (!filter.hasOwnProperty("searchParameterName"))
-              throw `Each filter should have a "searchParameterName" property. Malformed object: ${JSON.stringify(filter)}`
+            if (!filter.hasOwnProperty('type'))
+              throw `Each filter should have a 'type' property. Malformed object: ${JSON.stringify(filter)}`
+            else if (!filter.hasOwnProperty('searchParameterName'))
+              throw `Each filter should have a 'searchParameterName' property. Malformed object: ${JSON.stringify(filter)}`
             else if (!/^[a-zA-Z]+$/g.test(filter.searchParameterName))
-              throw `"searchParameterName" property should only consist of english letters. Received: ${filter.searchParameterName}`
+              throw `'searchParameterName' property should only consist of english letters. Received: ${filter.searchParameterName}`
           })
 
       })
@@ -176,21 +175,21 @@ class SearchResult extends Component {
             {
               this.state.filterSchema && this.state.listingType && this.state.filterSchema.items.length > 0 &&
               (this.state.listingSchema || !this.shouldFetchListingSchema()) ?
-              <ul className="navbar-nav collapse navbar-collapse">
-                {
-                  this.state.filterSchema
-                    .items
-                    .map((filterGroup, index) => {
-                      return <FilterGroup
-                        filterGroup={filterGroup}
-                        index={index}
-                        listingSchema={this.state.listingSchema}
-                        listingType={this.state.listingType}
-                      />
-                    })
-                }
-              </ul>
-              : ''}
+                <ul className="navbar-nav collapse navbar-collapse">
+                  {
+                    this.state.filterSchema
+                      .items
+                      .map((filterGroup, index) => {
+                        return <FilterGroup
+                          filterGroup={filterGroup}
+                          key={index}
+                          listingSchema={this.state.listingSchema}
+                          listingType={this.state.listingType}
+                        />
+                      })
+                  }
+                </ul>
+                : ''}
           </div>
         </nav>
         <div className="container">

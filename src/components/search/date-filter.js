@@ -3,10 +3,10 @@ import { injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import 'react-dates/initialize'
 import { VALUE_TYPE_DATE, FILTER_OPERATOR_GREATER_OR_EQUAL, FILTER_OPERATOR_LESSER_OR_EQUAL } from 'components/search/constants'
-import { DateRangePicker, SingleDatePicker, DayPickerRangeController, DayPickerRangeControllerWrapper } from 'react-dates'
+import { DayPickerRangeController } from 'react-dates'
 import $ from 'jquery'
 
-import { START_DATE, END_DATE } from 'react-dates/src/constants'
+import { START_DATE } from 'react-dates/src/constants'
 
 class DateFilterGroup extends Component {
   constructor(props) {
@@ -93,7 +93,7 @@ class DateFilterGroup extends Component {
 
 
   render() {
-    const { focusedInput, startDate, endDate } = this.state;
+    const { focusedInput, startDate, endDate } = this.state
     const startDateString = startDate ? startDate.format('l') :
       this.props.intl.formatMessage({
         id: 'dateFilter.startDate',
@@ -131,6 +131,6 @@ const mapStateToProps = state => ({
   filters: state.search.filters
 })
 
-const mapDispatchToProps = dispatch => ({ })
+const mapDispatchToProps = () => ({ })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(DateFilterGroup))
