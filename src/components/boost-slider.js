@@ -73,7 +73,7 @@ class BoostSlider extends Component {
               <img src="images/ogn-icon.svg" role="presentation" />
               { this.state.selectedBoostAmount }&nbsp;
               <a href="#" target="_blank" rel="noopener noreferrer">OGN</a>
-              <span className="help-block"> | { this.state.selectedBoostAmountUsd } USD</span>
+              {/* <span className="help-block"> | { this.state.selectedBoostAmountUsd } USD</span> */}
             </p>
           </div>
         </div>

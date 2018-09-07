@@ -567,10 +567,12 @@ class ListingCreate extends Component {
                         <img className="ogn-icon" src="images/ogn-icon.svg" role="presentation" />
                         <span className="text-bold">{ translatedFormData.boostValue }</span>&nbsp;
                         <a className="ogn-abbrev" href="#" target="_blank" rel="noopener noreferrer">OGN</a>
+                        {/*
                         <span className="help-block">
                           &nbsp;| x.xx USD&nbsp;
                           <span className="text-uppercase">(Approximate Value)</span>
                         </span>
+                        */}
                       </p>
                     </div>
                   </div>
