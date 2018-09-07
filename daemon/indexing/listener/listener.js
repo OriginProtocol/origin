@@ -309,7 +309,7 @@ async function handleLog(log, rule, contractVersion, context) {
 
   //TODO: remove binary data from pictures in a proper way.
   const listing = output.related.listing
-  delete listing.ipfsData.data.pictures
+  delete listing.ipfs.data.pictures
   const listingId = listing.id
 
   // Data consistency: check  listingId from the JSON stored in IPFS
@@ -323,13 +323,13 @@ async function handleLog(log, rule, contractVersion, context) {
   }
 
   // TODO: This kind of verification logic should live in origin.js
-  if(output.related.listing.ipfsData.data.price === undefined){
+  if(output.related.listing.ipfs.data.price === undefined){
     return
   }
 
   if (context.config.elasticsearch) {
     console.log('INDEXING ', listingId)
-    const listingData = listing.ipfsData.data
+    const listingData = listing.ipfs.data
     listingData.priceEth = listingData.price
     await withRetrys(async () => {
       await search.Listing.index(
@@ -341,7 +341,7 @@ async function handleLog(log, rule, contractVersion, context) {
     })
     if (output.related.offer !== undefined) {
       const offer = output.related.offer
-      offer.priceEth = web3.utils.fromWei(offer.ipfsData.data.price, 'ether')
+      offer.priceEth = web3.utils.fromWei(offer.ipfs.data.price, 'ether')
       await withRetrys(async () => {
         await search.Offer.index(offer, listing)
       })
@@ -364,7 +364,7 @@ async function handleLog(log, rule, contractVersion, context) {
         listingId,
         userAddress,
         ipfsHash,
-        listing.ipfsData.data
+        listing.ipfs.data
       )
     })
   }
