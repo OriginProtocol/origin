@@ -3,53 +3,18 @@ import Slider from 'rc-slider'
 import $ from 'jquery'
 // TODO:John - pass a third arg of 'OGN' into getFiatPrice() once OGN prices are available in cryptonator API
 import { getFiatPrice } from 'utils/priceUtils'
+import { boostLevels, getBoostLevel } from 'utils/boostUtils'
 
 class BoostSlider extends Component {
   constructor(props) {
     super(props)
-    const { min, max, defaultValue, ognBalance } = this.props
-    const range = max - min
-    let defaultVal = defaultValue || 0
-    if (ognBalance === 0) {
-      defaultVal = 0
-    } else if (defaultValue > ognBalance) {
-      defaultVal = ognBalance
-    }
-
-    this.boostLevels = {
-      None: {
-        min: 0,
-        max: 0,
-        desc: 'Your listing will get very low visibility and no seller guarantee'
-      },
-      Low: {
-        min: min + 1,
-        max: (range / 4),
-        desc: 'Your listing will get below average visibility and low seller guarantee'
-      },
-      Medium: {
-        min: range / 4 + 1,
-        max: (range / 2),
-        desc: 'Your listing will get average visibility and good seller guarantee'
-      },
-      High: {
-        min: range / 2 + 1,
-        max: ((range / 4) * 3),
-        desc: 'Your listing will get above average visibility and excellent seller guarantee'
-      },
-      Premium: {
-        min: (range / 4) * 3 + 1,
-        max: max,
-        desc: 'Your listing will get the best visibility and highest seller guarantee'
-      }
-    }
+    const { defaultValue, ognBalance } = this.props
 
     this.onChange = this.onChange.bind(this)
-    this.getBoostLevel = this.getBoostLevel.bind(this)
 
     this.state = {
-      selectedBoostAmount: defaultVal,
-      boostLevel: this.getBoostLevel(defaultVal) || 0,
+      selectedBoostAmount: defaultValue,
+      boostLevel: getBoostLevel(defaultValue) || 0,
       selectedBoostAmountUsd: 0
     }
   }
@@ -66,21 +31,13 @@ class BoostSlider extends Component {
     $('[data-toggle="tooltip"]').tooltip('dispose')
   }
 
-  getBoostLevel(value) {
-    const { boostLevels } = this
-    for (const levelName in boostLevels) {
-      const thisLevel = boostLevels[levelName]
-      if (value >= thisLevel.min && value <= thisLevel.max) {
-        return levelName.toString()
-      }
-    }
-  }
-
   async onChange(value) {
+    const boostLevel = getBoostLevel(value)
     this.setState({
       selectedBoostAmount: value,
-      boostLevel: this.getBoostLevel(value)
+      boostLevel
     })
+    this.props.onChange(value, boostLevel)
     const selectedBoostAmountUsd = await getFiatPrice(value, 'USD')
     this.setState({
       selectedBoostAmountUsd
@@ -126,7 +83,7 @@ class BoostSlider extends Component {
           defaultValue={ this.state.selectedBoostAmount }
           min={ this.props.min }
           max={ this.props.max } />
-        <p className="text-italics">{ this.boostLevels[this.state.boostLevel].desc }</p>
+        <p className="text-italics">{ boostLevels[this.state.boostLevel].desc }</p>
         {this.props.ognBalance === 0 &&
           <div className="info-box">
             <p>You have 0 <a href="#" target="_blank" rel="noopener noreferrer">OGN</a> in your wallet and cannot boost.</p>

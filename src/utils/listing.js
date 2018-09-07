@@ -1,4 +1,5 @@
 import { translateListingCategory } from 'utils/translationUtils'
+import { getBoostLevel } from 'utils/boostUtils'
 import origin from '../services/origin'
 
 
@@ -25,6 +26,10 @@ export function dappFormDataToOriginListing(formData) {
     price: {
       amount: formData.price.toString(),
       currency: 'ETH'
+    },
+    commission: {
+      amount: formData.boostValue.toString(),
+      currency: 'OGN'
     }
   }
 
@@ -60,6 +65,8 @@ export function originToDAppListing(originListing) {
     name: originListing.title,
     pictures: originListing.media ? originListing.media.map(medium => medium.url) : [],
     price: originListing.price.amount,
+    boostValue: originListing.commission && originListing.commission.amount,
+    boostLevel: getBoostLevel(originListing.commission && originListing.commission.amount),
     unitsRemaining: originListing.unitsRemaining,
     ipfsHash: originListing.ipfs.hash
   }

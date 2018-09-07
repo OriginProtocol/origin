@@ -19,6 +19,7 @@ import WalletCard from 'components/wallet-card'
 import { dappFormDataToOriginListing } from 'utils/listing'
 import getCurrentProvider from 'utils/getCurrentProvider'
 import { getFiatPrice } from 'utils/priceUtils'
+import { getBoostLevel, defaultBoostValue } from 'utils/boostUtils'
 import { translateSchema, translateListingCategory } from 'utils/translationUtils'
 
 import origin from '../services/origin'
@@ -113,7 +114,12 @@ class ListingCreate extends Component {
       translatedSchema: null,
       schemaExamples: null,
       schemaFetched: false,
-      formListing: { formData: null },
+      formListing: {
+        formData: {
+          boostValue: defaultBoostValue,
+          boostLevel: getBoostLevel(defaultBoostValue)
+        }
+      },
       currentProvider: getCurrentProvider(
         origin && origin.contractService && origin.contractService.web3
       ),
@@ -126,6 +132,7 @@ class ListingCreate extends Component {
     this.onBoostSelected = this.onBoostSelected.bind(this)
     this.toggleBoostBox = this.toggleBoostBox.bind(this)
     this.updateUsdPrice = this.updateUsdPrice.bind(this)
+    this.onBoostSliderChange = this.onBoostSliderChange.bind(this)
   }
 
   async updateUsdPrice() {
@@ -225,7 +232,14 @@ class ListingCreate extends Component {
       )
     } else {
       this.setState({
-        formListing: formListing,
+        formListing: {
+          ...this.state.formListing,
+          ...formListing,
+          formData: {
+            ...this.state.formListing.formData,
+            ...formListing.formData
+          }
+        },
         step: this.STEP.BOOST
       })
       window.scrollTo(0, 0)
@@ -239,6 +253,19 @@ class ListingCreate extends Component {
     })
     window.scrollTo(0, 0)
     this.updateUsdPrice()
+  }
+
+  onBoostSliderChange(boostValue, boostLevel) {
+    this.setState({
+      formListing: {
+        ...this.state.formListing,
+        formData: {
+          ...this.state.formListing.formData,
+          boostValue,
+          boostLevel
+        }
+      }
+    })
   }
 
   async onSubmitListing(formListing, selectedSchemaType) {
@@ -425,7 +452,11 @@ class ListingCreate extends Component {
                   </div>
                 }
                 {!isFirstListing &&
-                  <BoostSlider ognBalance={ ognBalance } min={ 0 } max={ 100 } defaultValue={ 50 } />
+                  <BoostSlider
+                    onChange={ this.onBoostSliderChange }
+                    ognBalance={ ognBalance }
+                    defaultValue={ (formData && formData.boostValue) || defaultBoostValue } 
+                  />
                 }
                 <div className="btn-container">
                   <button
@@ -531,13 +562,13 @@ class ListingCreate extends Component {
                       <p className="label">Boost Level</p>
                     </div>
                     <div className="col-md-9">
-                      <p className="boost-level">Medium</p>
+                      <p className="boost-level">{ translatedFormData.boostLevel }</p>
                       <p>
                         <img className="ogn-icon" src="images/ogn-icon.svg" role="presentation" />
-                        <span className="text-bold">20</span>&nbsp;
+                        <span className="text-bold">{ translatedFormData.boostValue }</span>&nbsp;
                         <a className="ogn-abbrev" href="#" target="_blank" rel="noopener noreferrer">OGN</a>
                         <span className="help-block">
-                          &nbsp;| 2.50 USD&nbsp;
+                          &nbsp;| x.xx USD&nbsp;
                           <span className="text-uppercase">(Approximate Value)</span>
                         </span>
                       </p>
