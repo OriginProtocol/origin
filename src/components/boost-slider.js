@@ -8,8 +8,7 @@ import { boostLevels, getBoostLevel, defaultBoostValue, minBoostValue, maxBoostV
 class BoostSlider extends Component {
   constructor(props) {
     super(props)
-    const { ognBalance } = this.props
-
+    
     this.onChange = this.onChange.bind(this)
 
     this.state = {
