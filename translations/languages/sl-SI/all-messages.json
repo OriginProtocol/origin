@@ -264,7 +264,7 @@
   "transaction-progress.viewProfile": "Poglej profil",
   "wallet-card.ethAddress": "ETH naslov:",
   "wallet-card.noEthAccountConnected": "ETH račun ni vklopljen",
-  "wallet-card.accountBalances": "Account Balances",
+  "wallet-card.accountBalances": "Stanje računa",
   "web3-provider.intentRequiresMetaMask": "Če želite {web3Intent}, morate namestiti MetaMask.",
   "web3-provider.getMetaMask": "Get MetaMask",
   "web3-provider.fullInstructions": "Celotna navodila",
