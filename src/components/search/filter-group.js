@@ -58,7 +58,7 @@ class FilterGroup extends Component {
   }
 
   handleOpenDropdown(event) {
-    const containsDateFilter = this.props.filterGroup.items.some(filter => filter.type == 'date')
+    const containsDateFilter = this.props.filterGroup.items.some(filter => filter.type === 'date')
     if (!containsDateFilter)
       return
 
@@ -66,12 +66,12 @@ class FilterGroup extends Component {
      * when it gets shown - when dropdown containing date filter is opened
      */
     this.childFilters
-      .filter(filter => filter.props.filter.type == 'date')
+      .filter(filter => filter.props.filter.type === 'date')
       .forEach(dateFilter => dateFilter.onOpen())
   }
 
   renderFilter(filter, title) {
-    if (filter.type == 'multipleSelectionFilter') {
+    if (filter.type === 'multipleSelectionFilter') {
       return(
         <MultipleSelectionFilter
           filter={filter}
@@ -82,7 +82,7 @@ class FilterGroup extends Component {
           onChildUnMounted={this.handleFilterUnMounted}
         />
       )
-    } else if (filter.type == 'price') {
+    } else if (filter.type === 'price') {
       return (
         <PriceFilter
           filter={filter}
@@ -90,7 +90,7 @@ class FilterGroup extends Component {
           onChildUnMounted={this.handleFilterUnMounted}
         />
       )
-    } else if (filter.type == 'counter') {
+    } else if (filter.type === 'counter') {
       return(
         <CounterFilter
           filter={filter}
@@ -98,7 +98,7 @@ class FilterGroup extends Component {
           onChildUnMounted={this.handleFilterUnMounted}
         />
       )
-    } else if (filter.type == 'date') {
+    } else if (filter.type === 'date') {
       return(
         <DateFilter
           filter={filter}
