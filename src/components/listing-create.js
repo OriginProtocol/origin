@@ -43,9 +43,6 @@ class ListingCreate extends Component {
       return listingType
     })
 
-    console.log(this.schemaList1)
-    console.log(this.schemaList)
-
     this.state = {
       step: this.STEP.PICK_SCHEMA,
       selectedSchemaType: this.schemaList[0],
