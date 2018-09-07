@@ -4,7 +4,7 @@
   "items": [
     {
       "title": {
-        "id": "schema.forSale.price",
+        "id": "schema.announcements.price",
         "defaultMessage": "Price"
       },
       "type": "filterGroup",
@@ -18,7 +18,7 @@
     },
     {
       "title": {
-        "id": "schema.forSale.category",
+        "id": "schema.announcements.category",
         "defaultMessage": "Category"
       },
       "type": "filterGroup",
@@ -26,46 +26,38 @@
         {
           "type": "multipleSelectionFilter",
           "listingPropertyName": "properties.category.enum",
-          "searchParameterName": "homeTypes",
+          "searchParameterName": "category",
           "multipleSelection": true
         }
       ]
     },
     {
       "title": {
-        "id": "schema.forSale.rooms",
-        "defaultMessage": "Rooms"
+        "id": "schema.announcements.rooms",
+        "defaultMessage": "Announcement Details"
       },
       "type": "filterGroup",
       "items": [{
           "type": "counter",
           "title": {
-            "id": "schema.services.bedrooms",
-            "defaultMessage": "Bedrooms"
+            "id": "schema.announcements.coolness",
+            "defaultMessage": "Coolness"
           },
-          "searchParameterName": "bedrooms"
+          "searchParameterName": "coolness"
         },
         {
           "type": "counter",
           "title": {
-            "id": "schema.services.beds",
-            "defaultMessage": "Beds"
+            "id": "schema.announcements.virality",
+            "defaultMessage": "Virality"
           },
-          "searchParameterName": "beds"
-        },
-        {
-          "type": "counter",
-          "title": {
-            "id": "schema.services.bathrooms",
-            "defaultMessage": "Bathrooms"
-          },
-          "searchParameterName": "bathrooms"
+          "searchParameterName": "virality"
         }
       ]
     },
     {
       "title": {
-        "id": "schema.services.date",
+        "id": "schema.announcements.date",
         "defaultMessage": "Date"
       },
       "type": "filterGroup",
