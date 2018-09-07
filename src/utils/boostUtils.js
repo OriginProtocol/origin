@@ -1,5 +1,5 @@
 const min = 0
-const max = 100
+const max = 1000
 const range = max - min
 
 export const defaultBoostValue = 50

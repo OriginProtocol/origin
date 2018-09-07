@@ -105,9 +105,8 @@ class ListingCreate extends Component {
     ]
 
     this.state = {
-      // TODO:John - wire up ognBalance and isFirstListing when ready
-      ognBalance: 0,
-      isFirstListing: false,
+      // TODO:John - wire up isFirstListing when ready
+      isFirstListing: true,
       step: this.STEP.PICK_SCHEMA,
       selectedSchemaType: null,
       selectedSchema: null,
@@ -306,9 +305,10 @@ class ListingCreate extends Component {
 
   render() {
     const { wallet } = this.props
-    const { currentProvider, formListing, isBoostExpanded, isFirstListing, ognBalance, selectedSchema, selectedSchemaType, schemaExamples, step, translatedSchema, usdListingPrice } = this.state
+    const { currentProvider, formListing, isBoostExpanded, isFirstListing, selectedSchema, selectedSchemaType, schemaExamples, step, translatedSchema, usdListingPrice } = this.state
     const { formData } = formListing
     const translatedFormData = (formData && formData.category && translateListingCategory(formData)) || {}
+    const needsBoostTutorial = isFirstListing && !wallet.ognBalance
 
     return (
       <div className="container listing-form">
@@ -425,7 +425,7 @@ class ListingCreate extends Component {
                   />
                 </label>
                 <h2>Boost your listing</h2>
-                {isFirstListing &&
+                {needsBoostTutorial &&
                   <div className="info-box">
                     <img src="images/ogn-icon-horiz.svg" role="presentation" />
                     <p className="text-bold">You have 0 <a href="#" arget="_blank" rel="noopener noreferrer">OGN</a> in your wallet.</p>
@@ -451,11 +451,12 @@ class ListingCreate extends Component {
                     }
                   </div>
                 }
-                {!isFirstListing &&
+                {!needsBoostTutorial &&
                   <BoostSlider
                     onChange={ this.onBoostSliderChange }
-                    ognBalance={ ognBalance }
-                    defaultValue={ (formData && formData.boostValue) || defaultBoostValue } 
+                    ognBalance={ wallet.ognBalance }
+                    defaultValue={ (formData && formData.boostValue) || defaultBoostValue }
+                    max={1000}
                   />
                 }
                 <div className="btn-container">
