@@ -13,14 +13,14 @@ class CounterFilter extends Component {
     }
 
     this.handleOnClickAdd = this.handleOnClickAdd.bind(this)
-    this.handleOnClickSubstract = this.handleOnClickSubstract.bind(this)
+    this.handleOnClickSubtract = this.handleOnClickSubtract.bind(this)
   }
 
   handleOnClickAdd() {
     this.setState({counter: this.state.counter + 1})
   }
 
-  handleOnClickSubstract() {
+  handleOnClickSubtract() {
     this.setState({counter: Math.max(this.state.counter - 1, 0)})
   }
 
@@ -63,12 +63,12 @@ class CounterFilter extends Component {
       <div className="d-flex flex-row" key={title}>
         <div className="label mr-auto">{title}</div>
         <img
-          src="images/search-filter-substract-icon.svg"
-          onMouseDown={event => event.target.setAttribute('src', 'images/search-filter-substract-icon.svg')}
-          onMouseUp={event => event.target.setAttribute('src', 'images/search-filter-substract-icon.svg')}
-          onMouseOver={event => event.target.setAttribute('src', 'images/search-filter-substract-icon.svg')}
-          onMouseOut={event => event.target.setAttribute('src', 'images/search-filter-substract-icon.svg')}
-          onClick={this.handleOnClickSubstract}
+          src="images/search-filter-subtract-icon.svg"
+          onMouseDown={event => event.target.setAttribute('src', 'images/search-filter-subtract-icon.svg')}
+          onMouseUp={event => event.target.setAttribute('src', 'images/search-filter-subtract-icon.svg')}
+          onMouseOver={event => event.target.setAttribute('src', 'images/search-filter-subtract-icon.svg')}
+          onMouseOut={event => event.target.setAttribute('src', 'images/search-filter-subtract-icon.svg')}
+          onClick={this.handleOnClickSubtract}
           className="p-2"
         />
         <div className="label">{this.state.counter}</div>
