@@ -64,8 +64,8 @@ class Notification extends Component {
       listing,
       purchase
     } = this.state
-    const { pictures } = listing.ipfsData.data
-    const listingImageURL = pictures && pictures.length && pictures[0]
+
+    const listingImageURL = listing.pictures && listing.pictures.length && listing.pictures[0]
 
     return (
       <li className="list-group-item notification">

@@ -5,7 +5,7 @@ import { defineMessages, injectIntl } from 'react-intl'
 
 import PurchaseProgress from 'components/purchase-progress'
 
-import { translateListingCategory } from 'utils/translationUtils'
+import { offerStatusToStep } from 'utils/offer'
 
 class MyPurchaseCard extends Component {
   constructor(props) {
@@ -41,16 +41,18 @@ class MyPurchaseCard extends Component {
     $('[data-toggle="tooltip"]').tooltip()
   }
 
+  componentWillUnmount() {
+    $('[data-toggle="tooltip"]').tooltip('dispose')
+  }
+
   render() {
     const { listing, offer, offerId } = this.props
     const created = Number(offer.createdAt)
     const soldAt = created * 1000 // convert seconds since epoch to ms
-    const { category, name, pictures, price } = translateListingCategory(
-      listing.ipfsData.data
-    )
-    const step = Number(offer.status)
-    let verb
+    const { category, name, pictures, price } = listing
+    const step = offerStatusToStep(offer.status)
 
+    let verb
     switch (step) {
     case 3:
       verb = this.props.intl.formatMessage(this.intlMessages.received)
@@ -102,6 +104,7 @@ class MyPurchaseCard extends Component {
               </div>
               <PurchaseProgress
                 currentStep={step}
+                maxStep={3}
                 perspective="buyer"
                 subdued={true}
               />

@@ -9,8 +9,6 @@ import {
   upsert as upsertTransaction
 } from 'actions/Transaction'
 
-import { translateListingCategory } from 'utils/translationUtils'
-
 import origin from '../services/origin'
 
 class MyListingCard extends Component {
@@ -73,11 +71,13 @@ class MyListingCard extends Component {
     }
   }
 
+  componentWillUnmount() {
+    $('[data-toggle="tooltip"]').tooltip('dispose')
+  }
+
   render() {
     const { listing } = this.props
-    const { category, name, pictures } = translateListingCategory(
-      listing.ipfsData.data
-    )
+    const { category, name, pictures } = listing
     const status = listing.status
     // const timestamp = `Created on ${moment(createdAt).format('MMMM D, YYYY')}`
     const photo = pictures && pictures.length > 0 && pictures[0]
@@ -106,7 +106,7 @@ class MyListingCard extends Component {
             {/*<p className="timestamp">{timestamp}</p>*/}
             {/*<p className="price">
               {`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 5 })} ETH`}
-              {!parseInt(unitsAvailable) &&
+              {!parseInt(unitsRemaining) &&
                 <span className="badge badge-info">
                   <FormattedMessage
                     id={ 'my-listing-card.soldOut' }
@@ -120,10 +120,10 @@ class MyListingCard extends Component {
                 <FormattedMessage
                   id={ 'my-listing-card.totalQuantity' }
                   defaultMessage={ 'Total Quantity : {quantity}' }
-                  values={{ quantity: <FormattedNumber value={unitsAvailable} /> }}
+                  values={{ quantity: <FormattedNumber value={unitsRemaining} /> }}
                 />
               </p>*/}
-              {/*<p>Total Remaining: {(unitsAvailable - quantity).toLocaleString()}</p>*/}
+              {/*<p>Total Remaining: {(unitsRemaining - quantity).toLocaleString()}</p>*/}
             </div>
             <div className="d-flex counts">
               {/*<p>{Number(2).toLocaleString()} Pending Transactions</p>*/}

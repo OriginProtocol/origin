@@ -331,7 +331,7 @@ class Web3Provider extends Component {
    * @return {void}
    */
   initAccountsPoll() {
-    if (!this.accountsInterval) {
+    if (!this.accountsInterval && web3.givenProvider) {
       this.accountsInterval = setInterval(this.fetchAccounts, ONE_SECOND)
     }
   }

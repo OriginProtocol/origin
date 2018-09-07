@@ -50,6 +50,10 @@ class Footer extends Component {
     this.setState({ companyWebsiteLanguageCode })
   }
 
+  componentWillUnmount() {
+    $('[data-toggle="tooltip"]').tooltip('dispose')
+  }
+
   render() {
     return (
       <footer className="dark-footer">
