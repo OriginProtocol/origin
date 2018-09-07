@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { injectIntl } from 'react-intl'
 import { Range } from 'rc-slider'
 import { connect } from 'react-redux'
-import $ from 'jquery'
 
 import {
   VALUE_TYPE_FLOAT,
@@ -24,11 +23,6 @@ class PriceFilter extends Component {
   }
 
   handlePriceChange([bottomAmount, topAmount]) {
-    $('#price-amount-from').text(`${bottomAmount}$`)
-    $('#price-amount-to').text(`${topAmount}$`)
-    $('#price-amount-display-from').text(`${bottomAmount}$`)
-    $('#price-amount-display-to').text(`${topAmount}$`)
-
     this.setState({ value: [bottomAmount, topAmount] })
   }
 
@@ -80,10 +74,10 @@ class PriceFilter extends Component {
       >
         <div className="d-flex flex-row price-filter">
           <div id="price-amount-from" className="mr-auto price-slider-amount">
-            {this.defaultMinimum}$
+            &#36;{this.state.value[0]}
           </div>
           <div id="price-amount-to" className="price-slider-amount">
-            {this.defaultMaximum}$
+            &#36;{this.state.value[1]}
           </div>
         </div>
         <Range
@@ -99,16 +93,16 @@ class PriceFilter extends Component {
         <div className="d-flex flex-row justify-content-between mt-4 price-filter">
           <div className="d-flex flex-row">
             <div id="price-amount-display-from" className="price-filter-amount">
-              {this.defaultMinimum}
+              {this.state.value[0]}
             </div>
-            <div className="price-filter-currency">$/night</div>
+            <div className="price-filter-currency">&#36;/night</div>
           </div>
           <div className="price-filter-dash">-</div>
           <div className="d-flex flex-row">
             <div id="price-amount-display-to" className="price-filter-amount">
-              {this.defaultMaximum}
+              {this.state.value[1]}
             </div>
-            <div className="price-filter-currency">$/night</div>
+            <div className="price-filter-currency">&#36;/night</div>
           </div>
         </div>
       </div>
