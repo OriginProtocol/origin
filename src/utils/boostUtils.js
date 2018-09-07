@@ -44,10 +44,6 @@ export function getBoostLevel(value) {
     value = 0
   }
 
-  if (typeof value === 'string') {
-    value = parseFloat(value)
-  }
-
   for (const levelName in boostLevels) {
     const thisLevel = boostLevels[levelName]
     if (value >= thisLevel.min && value <= thisLevel.max) {

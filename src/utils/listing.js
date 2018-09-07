@@ -57,7 +57,7 @@ export function dappFormDataToOriginListing(formData) {
  * @return {object} DApp compatible listing object.
  */
 export function originToDAppListing(originListing) {
-  const commission = originListing.commission ? parseFloat(originListing.commission.amount) : 0.0
+  const commission = originListing.commission ? parseFloat(originListing.commission.amount) : 0
   return {
     id: originListing.id,
     seller: originListing.seller,
