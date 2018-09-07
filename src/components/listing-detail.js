@@ -54,9 +54,8 @@ class ListingsDetail extends Component {
       currentProvider: getCurrentProvider(
         origin && origin.contractService && origin.contractService.web3
       ),
-      // TODO:John - wire up boost level & boost amount to actual data
-      boostLevel: 'Medium',
-      boostAmount: 10
+      boostLevel: null,
+      boostValue: 0
     }
 
     this.intlMessages = defineMessages({
@@ -413,7 +412,7 @@ class ListingsDetail extends Component {
                           <p>{ boostLevel }</p>
                           <p>
                             <img src="images/ogn-icon.svg" role="presentation" />
-                            <span className="font-bold">{ boostAmount }</span>&nbsp;
+                            <span className="font-bold">{ boostValue }</span>&nbsp;
                             <span className="font-blue font-bold">OGN</span>
                             <span className="help-block">1.00 USD</span>
                           </p>
