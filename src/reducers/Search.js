@@ -8,19 +8,23 @@ const initialState = {
 
 export default function Transactions(state = initialState, action = {}) {
   switch (action.type) {
-
   case SearchConstants.SEARCH_QUERY:
-    const { query, listingType, resetSearchFilters, forceIssueOfGeneralSearch } = action
+    const {
+      query,
+      listingType,
+      resetSearchFilters,
+      forceIssueOfGeneralSearch
+    } = action
     const objectToMerge = {}
-    if (resetSearchFilters)
-      objectToMerge.filters = {}
+    if (resetSearchFilters) objectToMerge.filters = {}
 
     return {
       ...state,
       ...objectToMerge,
       query,
       listingType,
-      generalSearchId: state.generalSearchId + (forceIssueOfGeneralSearch ? 1 : 0)
+      generalSearchId:
+          state.generalSearchId + (forceIssueOfGeneralSearch ? 1 : 0)
     }
 
   case SearchConstants.UPDATE_FILTERS:
@@ -30,13 +34,13 @@ export default function Transactions(state = initialState, action = {}) {
 
     return {
       ...state,
-      filters: { ...state.filters, ...objectToMerge1 },
+      filters: { ...state.filters, ...objectToMerge1 }
     }
 
   case SearchConstants.CLEAR_FILTERS:
     return {
       ...state,
-      filters: {},
+      filters: {}
     }
 
   default:

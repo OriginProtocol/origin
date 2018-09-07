@@ -247,7 +247,14 @@ class Profile extends Component {
   render() {
     const { modalsOpen, progress, successMessage } = this.state
 
-    const { changes, lastPublish, profile, provisional, published, wallet } = this.props
+    const {
+      changes,
+      lastPublish,
+      profile,
+      provisional,
+      published,
+      wallet
+    } = this.props
 
     const fullName = `${provisional.firstName} ${provisional.lastName}`.trim()
     const hasChanges = !!changes.length
@@ -621,7 +628,10 @@ class Profile extends Component {
 
 Profile.getDerivedStateFromProps = (nextProps, prevState) => {
   let newState = {}
-  if (nextProps.wallet && !prevState.wallet || nextProps.wallet.address && !prevState.wallet.address) {
+  if (
+    (nextProps.wallet && !prevState.wallet) ||
+    (nextProps.wallet.address && !prevState.wallet.address)
+  ) {
     newState = {
       ...newState,
       provisional: nextProps.published,

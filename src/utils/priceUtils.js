@@ -10,7 +10,7 @@ const fetchRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
   exchangeURL += '-'
   exchangeURL += fiatCurrencyCode.toLowerCase()
 
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     fetch(exchangeURL)
       .then(res => res.json())
       .then(json => {
@@ -45,13 +45,20 @@ const getFiatExchangeRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
   }
 }
 
-export const getFiatPrice = async (priceEth, fiatCurrencyCode, cryptoCurrencyCode) => {
+export const getFiatPrice = async (
+  priceEth,
+  fiatCurrencyCode,
+  cryptoCurrencyCode
+) => {
   if (!priceEth) {
     priceEth = 0
   }
-  const exchangeRate = await getFiatExchangeRate(fiatCurrencyCode, cryptoCurrencyCode)
-  return Number(priceEth * exchangeRate).toLocaleString(
-    undefined,
-    { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+  const exchangeRate = await getFiatExchangeRate(
+    fiatCurrencyCode,
+    cryptoCurrencyCode
   )
+  return Number(priceEth * exchangeRate).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })
 }

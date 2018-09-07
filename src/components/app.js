@@ -50,10 +50,7 @@ const HomePage = () => (
 )
 
 const ListingDetailPage = props => (
-  <ListingDetail
-    listingId={props.match.params.listingId}
-    withReviews={true}
-  />
+  <ListingDetail listingId={props.match.params.listingId} withReviews={true} />
 )
 
 const CreateListingPage = () => (

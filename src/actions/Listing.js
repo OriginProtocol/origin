@@ -8,7 +8,7 @@ export const ListingConstants = keyMirror(
   {
     FETCH_IDS: null,
     FETCH_IDS_SUCCESS: null,
-    FETCH_IDS_ERROR: null,
+    FETCH_IDS_ERROR: null
   },
   'LISTING'
 )
@@ -68,7 +68,9 @@ async function fetchListingIds() {
 
 export function getListingIds() {
   return async function(dispatch) {
-    const fetcher = () => { return origin.marketplace.getListings({ idsOnly: true }) }
+    const fetcher = () => {
+      return origin.marketplace.getListings({ idsOnly: true })
+    }
     await fetchListingIds(dispatch, fetcher)
   }
 }
