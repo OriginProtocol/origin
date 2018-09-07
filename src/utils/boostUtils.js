@@ -1,8 +1,7 @@
-const min = 0
-const max = 1000
-const range = max - min
-
-export const defaultBoostValue = 50
+export const defaultBoostValue = 500
+export const minBoostValue = 0
+export const maxBoostValue = 1000
+const range = maxBoostValue - minBoostValue
 
 export const boostLevels = {
   None: {
@@ -11,7 +10,7 @@ export const boostLevels = {
     desc: 'Your listing will get very low visibility.'
   },
   Low: {
-    min: min + 1,
+    min: minBoostValue + 1,
     max: (range / 4),
     desc: 'Your listing will get below-average visibility.'
   },
@@ -27,7 +26,7 @@ export const boostLevels = {
   },
   Premium: {
     min: (range / 4) * 3 + 1,
-    max: max,
+    max: maxBoostValue,
     desc: 'Your listing will get the best visibility.'
   }
 }

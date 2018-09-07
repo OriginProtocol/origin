@@ -456,7 +456,6 @@ class ListingCreate extends Component {
                     onChange={ this.onBoostSliderChange }
                     ognBalance={ wallet.ognBalance }
                     defaultValue={ (formData && formData.boostValue) || defaultBoostValue }
-                    max={1000}
                   />
                 }
                 <div className="btn-container">

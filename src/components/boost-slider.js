@@ -3,18 +3,18 @@ import Slider from 'rc-slider'
 import $ from 'jquery'
 // TODO:John - pass a third arg of 'OGN' into getFiatPrice() once OGN prices are available in cryptonator API
 import { getFiatPrice } from 'utils/priceUtils'
-import { boostLevels, getBoostLevel } from 'utils/boostUtils'
+import { boostLevels, getBoostLevel, defaultBoostValue, minBoostValue, maxBoostValue } from 'utils/boostUtils'
 
 class BoostSlider extends Component {
   constructor(props) {
     super(props)
-    const { defaultValue, ognBalance } = this.props
+    const { ognBalance } = this.props
 
     this.onChange = this.onChange.bind(this)
 
     this.state = {
-      selectedBoostAmount: defaultValue,
-      boostLevel: getBoostLevel(defaultValue) || 0,
+      selectedBoostAmount: defaultBoostValue,
+      boostLevel: getBoostLevel(defaultBoostValue) || 0,
       selectedBoostAmountUsd: 0
     }
   }
@@ -81,8 +81,8 @@ class BoostSlider extends Component {
           className={ `boost-level-${this.state.boostLevel}` }
           onChange={ this.onChange }
           defaultValue={ this.state.selectedBoostAmount }
-          min={ this.props.min }
-          max={ this.props.max } />
+          min={ minBoostValue }
+          max={ maxBoostValue } />
         <p className="text-italics">{ boostLevels[this.state.boostLevel].desc }</p>
         {this.props.ognBalance === 0 &&
           <div className="info-box">
