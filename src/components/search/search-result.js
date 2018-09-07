@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router'
@@ -169,7 +169,7 @@ class SearchResult extends Component {
 
   render() {
     return (
-      <div>
+      <Fragment>
         <SearchBar />
         <nav id="search-filters-bar" className="navbar search-filters navbar-expand-sm">
           <div className="container d-flex flex-row">
@@ -199,7 +199,7 @@ class SearchResult extends Component {
             searchListingIds={this.state.listingIds}
           />
         </div>
-      </div>
+      </Fragment>
     )
   }
 }
