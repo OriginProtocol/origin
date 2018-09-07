@@ -107,6 +107,7 @@ class SearchBar extends Component {
             </div>
           </div>
 
+          {/*
           <ul className="navbar-nav collapse navbar-collapse">
             <li className="nav-item active">
               <a className="nav-link" href="#">
@@ -127,12 +128,12 @@ class SearchBar extends Component {
             <li className="nav-item">
               <a className="nav-link" href="#">
                 <FormattedMessage
-                  id={ 'searchbar.delasNearMe' }
+                  id={ 'searchbar.dealsNearMe' }
                   defaultMessage={ 'Deals Near Me' }
                 />
               </a>
             </li>
-          </ul>
+          </ul>*/}
         </div>
       </nav>
     )
