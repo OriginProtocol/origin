@@ -245,9 +245,8 @@ contract V00_Marketplace is Ownable {
 
   // @dev Buyer can dispute transaction during finalization window
   function dispute(uint listingID, uint offerID, bytes32 _ipfsHash) public {
-    Listing storage listing = listings[listingID];
     Offer storage offer = offers[listingID][offerID];
-    require(msg.sender == offer.buyer || msg.sender == listing.seller);
+    require(msg.sender == offer.buyer);
     require(offer.status == 2); // Offer must be in 'Accepted' state
     require(now <= offer.finalizes); // Must be before agreed finalization window
     offer.status = 3; // Set status to "Disputed"
