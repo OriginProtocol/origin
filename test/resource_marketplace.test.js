@@ -60,4 +60,15 @@ describe('Marketplace Resource', function() {
       expect(listings).to.include('999-001-1')
     })
   })
+
+  describe('getListing', () => {
+    it('should return details of a listing', async () => {
+      const listings = await marketplace.getListings()
+      expect(listings.length).to.equal(1)
+      const listing = await marketplace.getListing(listings[0])
+      expect(listing.type).to.equal('unit')
+      expect(listing.title).to.equal('my listing')
+      expect(listing.description).to.equal('my description')
+    })
+  })
 })
