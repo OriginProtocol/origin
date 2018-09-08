@@ -81,4 +81,15 @@ describe('Marketplace Resource', function() {
       expect(listings.length).to.equal(2)
     })
   })
+
+  // TODO: either don't return withdrawn listings, or have some property that indicates withdraws status
+  describe.skip('withdrawListing', () => {
+    it('should delete a listing', async () => {
+      let listings = await marketplace.getListings()
+      expect(listings.length).to.equal(1)
+      await marketplace.withdrawListing(listings[0], {})
+      listings = await marketplace.getListings()
+      expect(listings.length).to.equal(0)
+    })
+  })
 })
