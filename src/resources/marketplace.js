@@ -17,15 +17,11 @@ class Marketplace extends Adaptable {
   constructor({
     contractService,
     ipfsService,
-    fetch,
-    indexingServerUrl,
     store
   }) {
     super(...arguments)
     this.contractService = contractService
     this.ipfsService = ipfsService
-    this.indexingServerUrl = indexingServerUrl
-    this.fetch = fetch
     this.listingIpfsStore = new ListingIpfsStore(this.ipfsService)
 
     // initialize notifications

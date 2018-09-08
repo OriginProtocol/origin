@@ -51,8 +51,6 @@ class Origin {
     this.marketplace = new Marketplace({
       contractService: this.contractService,
       ipfsService: this.ipfsService,
-      indexingServerUrl,
-      fetch,
       store
     })
 
