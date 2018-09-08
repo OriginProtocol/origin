@@ -71,4 +71,14 @@ describe('Marketplace Resource', function() {
       expect(listing.description).to.equal('my description')
     })
   })
+
+  describe('createListing', () => {
+    it('should create a listing', async () => {
+      let listings = await marketplace.getListings()
+      expect(listings.length).to.equal(1)
+      await marketplace.createListing(listingValid)
+      listings = await marketplace.getListings()
+      expect(listings.length).to.equal(2)
+    })
+  })
 })
