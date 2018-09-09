@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+import { getDataUri } from 'utils/fileUtils'
+
 class PhotoPicker extends Component {
   constructor(props) {
     super(props)
@@ -37,22 +39,6 @@ class PhotoPicker extends Component {
     this.setState({ helpText })
   }
 
-  async getDataUri(file) {
-    const reader = new FileReader()
-
-    return new Promise((resolve) => {
-      reader.onloadend = () => {
-        const { result } = reader
-        const simicolonIdx = result.indexOf(';') + 1
-        // react-jsonschema-form requires the name in the URI for an unknown reason
-        const uriWithFileName = 
-          `${result.substring(0, simicolonIdx)}name=${file.name};${result.substring(simicolonIdx, result.length)}`
-        resolve(uriWithFileName)
-      }
-      reader.readAsDataURL(file)
-    })
-  }
-
   onChange() {
     return async (event) => {
       const filesObj = event.target.files
@@ -64,7 +50,7 @@ class PhotoPicker extends Component {
       }
 
       const filesAsDataUriArray = filesArr.map(async (fileObj) =>
-        this.getDataUri(fileObj)
+        getDataUri(fileObj)
       )
 
       Promise.all(filesAsDataUriArray).then((dataUriArray) => {
