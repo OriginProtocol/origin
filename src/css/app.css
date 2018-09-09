@@ -636,6 +636,7 @@ a:hover {
   background-color: var(--pale-grey-two);
   text-align: center;
   line-height: 2.5rem;
+  white-space: nowrap;
 }
 
 .search-filters .price-slider-amount {

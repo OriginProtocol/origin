@@ -67,6 +67,10 @@ class PriceFilter extends Component {
   }
 
   render() {
+    const priceUnit = this.props.filter.priceUnit ?
+      this.props.intl.formatMessage(this.props.filter.priceUnit) :
+      `$`
+
     return (
       <div
         className="d-flex flex-column"
@@ -95,14 +99,14 @@ class PriceFilter extends Component {
             <div id="price-amount-display-from" className="price-filter-amount">
               {this.state.value[0]}
             </div>
-            <div className="price-filter-currency">&#36;/night</div>
+            <div className="price-filter-currency">{priceUnit}</div>
           </div>
           <div className="price-filter-dash">-</div>
           <div className="d-flex flex-row">
             <div id="price-amount-display-to" className="price-filter-amount">
               {this.state.value[1]}
             </div>
-            <div className="price-filter-currency">&#36;/night</div>
+            <div className="price-filter-currency">{priceUnit}</div>
           </div>
         </div>
       </div>

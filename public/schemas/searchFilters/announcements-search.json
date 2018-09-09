@@ -11,7 +11,11 @@
       "items": [
         {
           "type": "price",
-          "searchParameterName": "price"
+          "searchParameterName": "price",
+          "priceUnit": {
+            "id": "schema.announcements.dollarPrice",
+            "defaultMessage": "$"
+          }
         }
       ]
     },
