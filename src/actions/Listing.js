@@ -13,8 +13,8 @@ export const ListingConstants = keyMirror(
   'LISTING'
 )
 
-async function fetchListingIds() {
-  return async function(dispatch, fetcher) {
+export function getListingIds() {
+  return async function(dispatch) {
     dispatch({ type: ListingConstants.FETCH_IDS })
 
     // let hideList = []
@@ -49,7 +49,7 @@ async function fetchListingIds() {
       //   }
       // }
 
-      const ids = await fetcher()
+      const ids = await origin.marketplace.getListings({ idsOnly: true })
 
       dispatch({
         type: ListingConstants.FETCH_IDS_SUCCESS,
@@ -63,14 +63,5 @@ async function fetchListingIds() {
         error: error.message
       })
     }
-  }
-}
-
-export function getListingIds() {
-  return async function(dispatch) {
-    const fetcher = () => {
-      return origin.marketplace.getListings({ idsOnly: true })
-    }
-    await fetchListingIds(dispatch, fetcher)
   }
 }
