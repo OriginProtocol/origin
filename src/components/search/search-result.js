@@ -29,7 +29,12 @@ class SearchResult extends Component {
 
     // set default prop values for search_query and listing_type
     const getParams = queryString.parse(this.props.location.search)
-    this.props.generalSearch(getParams.search_query || '', getParams.listing_type || 'all', false, false)
+    this.props.generalSearch(
+      getParams.search_query || '',
+      getParams.listing_type || 'all',
+      false,
+      false
+    )
   }
 
   shouldFetchListingSchema() {
@@ -70,18 +75,23 @@ class SearchResult extends Component {
   handleComponentUpdate(previousProps) {
     this.searchRequest()
 
-    if (previousProps == undefined || this.props.listingType !== previousProps.listingType) {
+    if (
+      previousProps == undefined ||
+      this.props.listingType !== previousProps.listingType
+    ) {
       this.setState({
         listingType: this.props.listingType,
         filterSchema: undefined,
         listingSchema: undefined
       })
 
-      const filterSchemaPath = `schemas/searchFilters/${this.props.listingType}-search.json`
+      const filterSchemaPath = `schemas/searchFilters/${
+        this.props.listingType
+      }-search.json`
 
       fetch(filterSchemaPath)
-        .then((response) => response.json())
-        .then((schemaJson) => {
+        .then(response => response.json())
+        .then(schemaJson => {
           this.validateFilterSchema(schemaJson)
           // if schemas are fetched twice very close together, set schema only
           // when it matches the currently set listingType
@@ -95,8 +105,8 @@ class SearchResult extends Component {
 
       if (this.shouldFetchListingSchema()) {
         fetch(`schemas/${this.props.listingType}.json`)
-          .then((response) => response.json())
-          .then((schemaJson) => {
+          .then(response => response.json())
+          .then(schemaJson => {
             this.setState({ listingSchema: schemaJson })
           })
       }
@@ -105,28 +115,39 @@ class SearchResult extends Component {
 
   // Basic schema validation
   validateFilterSchema(filterSchemaJson) {
-    filterSchemaJson
-      .items
-      .map(filterGroup => {
-        if (filterGroup.type !== 'filterGroup')
-          throw `Only filterGroup objects are allowed inside items array. Malformed object: ${JSON.stringify(filterGroup)}`
-        else if (!filterGroup.hasOwnProperty('title') || !filterGroup.title.hasOwnProperty('id') || !filterGroup.title.hasOwnProperty('defaultMessage'))
-          throw `Each filterGroup object should have a title object which should consist of 'id' and 'defaultMessage' properties. Malformed object: ${JSON.stringify(filterGroup)}`
-        else if (!filterGroup.hasOwnProperty('items'))
-          throw `Each filterGroup object should have an 'items' member whose value is an array. Malformed object: ${JSON.stringify(filterGroup)}`
+    filterSchemaJson.items.map(filterGroup => {
+      if (filterGroup.type !== 'filterGroup')
+        throw `Only filterGroup objects are allowed inside items array. Malformed object: ${JSON.stringify(
+          filterGroup
+        )}`
+      else if (
+        !filterGroup.hasOwnProperty('title') ||
+        !filterGroup.title.hasOwnProperty('id') ||
+        !filterGroup.title.hasOwnProperty('defaultMessage')
+      )
+        throw `Each filterGroup object should have a title object which should consist of 'id' and 'defaultMessage' properties. Malformed object: ${JSON.stringify(
+          filterGroup
+        )}`
+      else if (!filterGroup.hasOwnProperty('items'))
+        throw `Each filterGroup object should have an 'items' member whose value is an array. Malformed object: ${JSON.stringify(
+          filterGroup
+        )}`
 
-        filterGroup
-          .items
-          .map(filter => {
-            if (!filter.hasOwnProperty('type'))
-              throw `Each filter should have a 'type' property. Malformed object: ${JSON.stringify(filter)}`
-            else if (!filter.hasOwnProperty('searchParameterName'))
-              throw `Each filter should have a 'searchParameterName' property. Malformed object: ${JSON.stringify(filter)}`
-            else if (!/^[a-zA-Z]+$/g.test(filter.searchParameterName))
-              throw `'searchParameterName' property should only consist of english letters. Received: ${filter.searchParameterName}`
-          })
-
+      filterGroup.items.map(filter => {
+        if (!filter.hasOwnProperty('type'))
+          throw `Each filter should have a 'type' property. Malformed object: ${JSON.stringify(
+            filter
+          )}`
+        else if (!filter.hasOwnProperty('searchParameterName'))
+          throw `Each filter should have a 'searchParameterName' property. Malformed object: ${JSON.stringify(
+            filter
+          )}`
+        else if (!/^[a-zA-Z]+$/g.test(filter.searchParameterName))
+          throw `'searchParameterName' property should only consist of english letters. Received: ${
+            filter.searchParameterName
+          }`
       })
+    })
   }
 
   formatFiltersToUrl() {
@@ -142,7 +163,9 @@ class SearchResult extends Component {
       const searchResponse = await origin.discovery.search(
         this.props.query,
         this.props.listingType,
-        Object.values(this.props.filters).flatMap(arrayOfFilters => arrayOfFilters)
+        Object.values(this.props.filters).flatMap(
+          arrayOfFilters => arrayOfFilters
+        )
       )
 
       if (searchResponse.status !== 200)
@@ -152,44 +175,47 @@ class SearchResult extends Component {
       this.setState({
         listingIds: json.data.listings.nodes.map(listing => listing.id)
       })
-
     } catch (e) {
       const errorMessage = this.props.intl.formatMessage({
         id: 'searchResult.canNotReachIndexingServer',
-        defaultMessage: 'We are experiencing some problems. Please try again later'
+        defaultMessage:
+          'We are experiencing some problems. Please try again later'
       })
 
       console.error(e)
       this.props.showAlert(errorMessage)
       this.setState({ searchError: errorMessage })
     }
-
   }
 
   render() {
     return (
       <Fragment>
         <SearchBar />
-        <nav id="search-filters-bar" className="navbar search-filters navbar-expand-sm">
+        <nav
+          id="search-filters-bar"
+          className="navbar search-filters navbar-expand-sm"
+        >
           <div className="container d-flex flex-row">
-            {
-              this.state.filterSchema && this.state.listingType && this.state.filterSchema.items.length > 0 &&
-              (this.state.listingSchema || !this.shouldFetchListingSchema()) ?
+            {this.state.filterSchema &&
+            this.state.listingType &&
+            this.state.filterSchema.items.length > 0 &&
+            (this.state.listingSchema || !this.shouldFetchListingSchema()) ? (
                 <ul className="navbar-nav collapse navbar-collapse">
-                  {
-                    this.state.filterSchema
-                      .items
-                      .map((filterGroup, index) => {
-                        return <FilterGroup
-                          filterGroup={filterGroup}
-                          key={index}
-                          listingSchema={this.state.listingSchema}
-                          listingType={this.state.listingType}
-                        />
-                      })
-                  }
+                  {this.state.filterSchema.items.map((filterGroup, index) => {
+                    return (
+                      <FilterGroup
+                        filterGroup={filterGroup}
+                        key={index}
+                        listingSchema={this.state.listingSchema}
+                        listingType={this.state.listingType}
+                      />
+                    )
+                  })}
                 </ul>
-                : ''}
+              ) : (
+                ''
+              )}
           </div>
         </nav>
         <div className="container">
@@ -211,8 +237,24 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  generalSearch: (query, selectedListingType, resetSearchFilters, forceIssueOfGeneralSearch) => dispatch(generalSearch(query, selectedListingType, resetSearchFilters, forceIssueOfGeneralSearch)),
-  showAlert: (error) => dispatch(showAlert(error))
+  generalSearch: (
+    query,
+    selectedListingType,
+    resetSearchFilters,
+    forceIssueOfGeneralSearch
+  ) =>
+    dispatch(
+      generalSearch(
+        query,
+        selectedListingType,
+        resetSearchFilters,
+        forceIssueOfGeneralSearch
+      )
+    ),
+  showAlert: error => dispatch(showAlert(error))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withRouter(SearchResult)))
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(injectIntl(withRouter(SearchResult)))

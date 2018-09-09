@@ -20,7 +20,11 @@ import WalletCard from 'components/wallet-card'
 import { dappFormDataToOriginListing } from 'utils/listing'
 import getCurrentProvider from 'utils/getCurrentProvider'
 import { getFiatPrice } from 'utils/priceUtils'
-import { translateSchema, translateListingCategory } from 'utils/translationUtils'
+import { getBoostLevel, defaultBoostValue } from 'utils/boostUtils'
+import {
+  translateSchema,
+  translateListingCategory
+} from 'utils/translationUtils'
 
 import origin from '../services/origin'
 
@@ -43,23 +47,27 @@ class ListingCreate extends Component {
       SUCCESS: 7,
       ERROR: 8
     }
-    
+
     this.schemaList = listingSchemaMetadata.listingTypes.map(listingType => {
       listingType.name = props.intl.formatMessage(listingType.translationName)
       return listingType
     })
 
     this.state = {
-      // TODO:John - wire up ognBalance and isFirstListing when ready
-      ognBalance: 0,
-      isFirstListing: false,
+      // TODO:John - wire up isFirstListing when ready
+      isFirstListing: true,
       step: this.STEP.PICK_SCHEMA,
       selectedSchemaType: null,
       selectedSchema: null,
       translatedSchema: null,
       schemaExamples: null,
       schemaFetched: false,
-      formListing: { formData: null },
+      formListing: {
+        formData: {
+          boostValue: defaultBoostValue,
+          boostLevel: getBoostLevel(defaultBoostValue)
+        }
+      },
       currentProvider: getCurrentProvider(
         origin && origin.contractService && origin.contractService.web3
       ),
@@ -72,10 +80,14 @@ class ListingCreate extends Component {
     this.onBoostSelected = this.onBoostSelected.bind(this)
     this.toggleBoostBox = this.toggleBoostBox.bind(this)
     this.updateUsdPrice = this.updateUsdPrice.bind(this)
+    this.onBoostSliderChange = this.onBoostSliderChange.bind(this)
   }
 
   async updateUsdPrice() {
-    const usdListingPrice = await getFiatPrice(this.state.formListing.formData.price, 'USD')
+    const usdListingPrice = await getFiatPrice(
+      this.state.formListing.formData.price,
+      'USD'
+    )
     this.setState({
       usdListingPrice
     })
@@ -95,7 +107,7 @@ class ListingCreate extends Component {
             'ui:widget': 'hidden'
           },
           price: {
-            'ui:field': PriceField,
+            'ui:field': PriceField
           },
           description: {
             'ui:widget': 'textarea',
@@ -108,20 +120,18 @@ class ListingCreate extends Component {
           }
         }
 
-        const translatedSchema = translateSchema(
-          schemaJson,
-          selectedSchemaType
-        )
+        const translatedSchema = translateSchema(schemaJson, selectedSchemaType)
 
         this.setState({
           selectedSchemaType,
           selectedSchema: schemaJson,
           schemaFetched: true,
           translatedSchema,
-          schemaExamples: translatedSchema &&
-                          translatedSchema.properties &&
-                          translatedSchema.properties.examples &&
-                          translatedSchema.properties.examples.enumNames
+          schemaExamples:
+            translatedSchema &&
+            translatedSchema.properties &&
+            translatedSchema.properties.examples &&
+            translatedSchema.properties.examples.enumNames
         })
       })
   }
@@ -171,7 +181,14 @@ class ListingCreate extends Component {
       )
     } else {
       this.setState({
-        formListing: formListing,
+        formListing: {
+          ...this.state.formListing,
+          ...formListing,
+          formData: {
+            ...this.state.formListing.formData,
+            ...formListing.formData
+          }
+        },
         step: this.STEP.BOOST
       })
       window.scrollTo(0, 0)
@@ -185,6 +202,19 @@ class ListingCreate extends Component {
     })
     window.scrollTo(0, 0)
     this.updateUsdPrice()
+  }
+
+  onBoostSliderChange(boostValue, boostLevel) {
+    this.setState({
+      formListing: {
+        ...this.state.formListing,
+        formData: {
+          ...this.state.formListing.formData,
+          boostValue,
+          boostLevel
+        }
+      }
+    })
   }
 
   async onSubmitListing(formListing, selectedSchemaType) {
@@ -225,15 +255,29 @@ class ListingCreate extends Component {
 
   render() {
     const { wallet } = this.props
-    const { currentProvider, formListing, isBoostExpanded, isFirstListing, ognBalance, selectedSchema, selectedSchemaType, schemaExamples, step, translatedSchema, usdListingPrice } = this.state
+    const {
+      currentProvider,
+      formListing,
+      isBoostExpanded,
+      isFirstListing,
+      selectedSchema,
+      selectedSchemaType,
+      schemaExamples,
+      step,
+      translatedSchema,
+      usdListingPrice
+    } = this.state
     const { formData } = formListing
-    const translatedFormData = (formData && formData.category && translateListingCategory(formData)) || {}
+    const translatedFormData =
+      (formData && formData.category && translateListingCategory(formData)) ||
+      {}
+    const needsBoostTutorial = isFirstListing && !wallet.ognBalance
 
     return (
       <div className="container listing-form">
         <div className="step-container">
           <div className="row">
-            {step === this.STEP.PICK_SCHEMA &&
+            {step === this.STEP.PICK_SCHEMA && (
               <div className="col-md-5 pick-schema">
                 <label>
                   <FormattedMessage
@@ -253,17 +297,26 @@ class ListingCreate extends Component {
                 <div className="schema-options">
                   {this.schemaList.map(schema => (
                     <div
-                      className={ `schema-selection ${selectedSchemaType === schema.type ? ' selected' : ''}`}
+                      className={`schema-selection ${
+                        selectedSchemaType === schema.type ? ' selected' : ''
+                      }`}
                       key={schema.type}
                       onClick={() => this.handleSchemaSelection(schema.type)}
                     >
                       {schema.name}
-                      <div className={ `schema-examples ${selectedSchemaType === schema.type ? ' selected' : ''}` }>
-                        <p>{ schema.name } listings may include:</p>
+                      <div
+                        className={`schema-examples ${
+                          selectedSchemaType === schema.type ? ' selected' : ''
+                        }`}
+                      >
+                        <p>{schema.name} listings may include:</p>
                         <ul>
-                          {schemaExamples && schemaExamples.map((example) =>
-                            <li key={ `${schema.name}-${example}` }>{ example }</li>
-                          )}
+                          {schemaExamples &&
+                            schemaExamples.map(example => (
+                              <li key={`${schema.name}-${example}`}>
+                                {example}
+                              </li>
+                            ))}
                         </ul>
                       </div>
                     </div>
@@ -281,8 +334,8 @@ class ListingCreate extends Component {
                   </button>
                 </div>
               </div>
-            }
-            {step === this.STEP.DETAILS &&
+            )}
+            {step === this.STEP.DETAILS && (
               <div className="col-md-5 schema-details">
                 <label>
                   <FormattedMessage
@@ -306,7 +359,7 @@ class ListingCreate extends Component {
                       `react-jsonschema-form errors: ${errors.length}`
                     )
                   }
-                  uiSchema={ this.uiSchema }
+                  uiSchema={this.uiSchema}
                 >
                   <div className="btn-container">
                     <button
@@ -333,8 +386,8 @@ class ListingCreate extends Component {
                   </div>
                 </Form>
               </div>
-            }
-            {step === this.STEP.BOOST &&
+            )}
+            {step === this.STEP.BOOST && (
               <div className="col-md-5 select-boost">
                 <label>
                   <FormattedMessage
@@ -344,42 +397,69 @@ class ListingCreate extends Component {
                   />
                 </label>
                 <h2>Boost your listing</h2>
-                {isFirstListing &&
+                {needsBoostTutorial && (
                   <div className="info-box">
                     <img src="images/ogn-icon-horiz.svg" role="presentation" />
-                    <p className="text-bold">You have 0 <a href="#" arget="_blank" rel="noopener noreferrer">OGN</a> in your wallet.</p>
-                    <p>Once you acquire some OGN you will be able to boost your listing.</p>
-                    <p className="expand-btn" onClick={ this.toggleBoostBox }>
-                      What is a boost? <span className={ isBoostExpanded ? 'rotate-up' : '' }>&#x25be;</span>
+                    <p className="text-bold">
+                      You have 0{' '}
+                      <a href="#" arget="_blank" rel="noopener noreferrer">
+                        OGN
+                      </a>{' '}
+                      in your wallet.
                     </p>
-                    {isBoostExpanded &&
+                    <p>
+                      Once you acquire some OGN you will be able to boost your
+                      listing.
+                    </p>
+                    <p className="expand-btn" onClick={this.toggleBoostBox}>
+                      What is a boost?{' '}
+                      <span className={isBoostExpanded ? 'rotate-up' : ''}>
+                        &#x25be;
+                      </span>
+                    </p>
+                    {isBoostExpanded && (
                       <div className="info-box-bottom">
                         <hr />
                         <img src="images/boost-icon.svg" role="presentation" />
-                        <p className="text-bold">Boosting a listing on the Origin DApp</p>
-                        <p>
-                          Selling on the Origin DApp requires you, as the seller, to give a guarantee to the buyer in case there’s a problem with the product or service you’re offering. This is accomplished by giving your listing a “boost”.
+                        <p className="text-bold">
+                          Boosting a listing on the Origin DApp
                         </p>
                         <p>
-                          In addition to this, “boosting” your listing will allow it to have more visibility and appear higher in the list of available listings.
+                          Selling on the Origin DApp requires you, as the
+                          seller, to give a guarantee to the buyer in case
+                          there’s a problem with the product or service you’re
+                          offering. This is accomplished by giving your listing
+                          a “boost”.
                         </p>
                         <p>
-                          Boosting on the Origin DApp is done using <a href="#" arget="_blank" rel="noopener noreferrer">Origin Tokens (OGN).</a>
+                          In addition to this, “boosting” your listing will
+                          allow it to have more visibility and appear higher in
+                          the list of available listings.
+                        </p>
+                        <p>
+                          Boosting on the Origin DApp is done using{' '}
+                          <a href="#" arget="_blank" rel="noopener noreferrer">
+                            Origin Tokens (OGN).
+                          </a>
                         </p>
                       </div>
-                    }
+                    )}
                   </div>
-                }
-                {!isFirstListing &&
-                  <BoostSlider ognBalance={ ognBalance } min={ 0 } max={ 100 } defaultValue={ 50 } />
-                }
+                )}
+                {!needsBoostTutorial && (
+                  <BoostSlider
+                    onChange={this.onBoostSliderChange}
+                    ognBalance={wallet.ognBalance}
+                    defaultValue={
+                      (formData && formData.boostValue) || defaultBoostValue
+                    }
+                  />
+                )}
                 <div className="btn-container">
                   <button
                     type="button"
                     className="btn btn-other"
-                    onClick={() =>
-                      this.setState({ step: this.STEP.DETAILS })
-                    }
+                    onClick={() => this.setState({ step: this.STEP.DETAILS })}
                   >
                     <FormattedMessage
                       id={'backButtonLabel'}
@@ -394,7 +474,7 @@ class ListingCreate extends Component {
                   </button>
                 </div>
               </div>
-            }
+            )}
             {step >= this.STEP.PREVIEW && (
               <div className="col-md-8 listing-preview">
                 <label className="create-step">
@@ -416,7 +496,7 @@ class ListingCreate extends Component {
                       <p className="label">Title</p>
                     </div>
                     <div className="col-md-9">
-                      <p>{ translatedFormData.name }</p>
+                      <p>{translatedFormData.name}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -424,7 +504,7 @@ class ListingCreate extends Component {
                       <p className="label">Category</p>
                     </div>
                     <div className="col-md-9">
-                      <p>{ translatedFormData.category }</p>
+                      <p>{translatedFormData.category}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -432,7 +512,7 @@ class ListingCreate extends Component {
                       <p className="label">Description</p>
                     </div>
                     <div className="col-md-9">
-                      <p>{ translatedFormData.description }</p>
+                      <p>{translatedFormData.description}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -440,7 +520,7 @@ class ListingCreate extends Component {
                       <p className="label">Location</p>
                     </div>
                     <div className="col-md-9">
-                      <p>{ translatedFormData.location }</p>
+                      <p>{translatedFormData.location}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -448,12 +528,10 @@ class ListingCreate extends Component {
                       <p className="label">Photos</p>
                     </div>
                     <div className="col-md-9 photo-row">
-                      {
-                        translatedFormData.pictures &&
-                        translatedFormData.pictures.map((dataUri, idx) => 
-                          <img src={ dataUri } role="presentation" key={ idx } />
-                        )
-                      }
+                      {translatedFormData.pictures &&
+                        translatedFormData.pictures.map((dataUri, idx) => (
+                          <img src={dataUri} role="presentation" key={idx} />
+                        ))}
                     </div>
                   </div>
                   <div className="row">
@@ -462,12 +540,27 @@ class ListingCreate extends Component {
                     </div>
                     <div className="col-md-9">
                       <p>
-                        <img className="eth-icon" src="images/eth-icon.svg" role="presentation" />
-                        <span className="text-bold">{ translatedFormData.price }</span>&nbsp;
-                        <a className="eth-abbrev" href="#" target="_blank" rel="noopener noreferrer">ETH</a>
+                        <img
+                          className="eth-icon"
+                          src="images/eth-icon.svg"
+                          role="presentation"
+                        />
+                        <span className="text-bold">
+                          {translatedFormData.price}
+                        </span>&nbsp;
+                        <a
+                          className="eth-abbrev"
+                          href="#"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          ETH
+                        </a>
                         <span className="help-block">
-                          &nbsp;| { usdListingPrice } USD&nbsp;
-                          <span className="text-uppercase">(Approximate Value)</span>
+                          &nbsp;| {usdListingPrice} USD&nbsp;
+                          <span className="text-uppercase">
+                            (Approximate Value)
+                          </span>
                         </span>
                       </p>
                     </div>
@@ -477,20 +570,44 @@ class ListingCreate extends Component {
                       <p className="label">Boost Level</p>
                     </div>
                     <div className="col-md-9">
-                      <p className="boost-level">Medium</p>
+                      <p className="boost-level">
+                        {translatedFormData.boostLevel}
+                      </p>
                       <p>
-                        <img className="ogn-icon" src="images/ogn-icon.svg" role="presentation" />
-                        <span className="text-bold">20</span>&nbsp;
-                        <a className="ogn-abbrev" href="#" target="_blank" rel="noopener noreferrer">OGN</a>
+                        <img
+                          className="ogn-icon"
+                          src="images/ogn-icon.svg"
+                          role="presentation"
+                        />
+                        <span className="text-bold">
+                          {translatedFormData.boostValue}
+                        </span>&nbsp;
+                        <a
+                          className="ogn-abbrev"
+                          href="#"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          OGN
+                        </a>
+                        {/*
                         <span className="help-block">
-                          &nbsp;| 2.50 USD&nbsp;
+                          &nbsp;| x.xx USD&nbsp;
                           <span className="text-uppercase">(Approximate Value)</span>
                         </span>
+                        */}
                       </p>
                     </div>
                   </div>
                 </div>
-                <a className="bottom-cta" href="#" target="_blank" rel="noopener noreferrer">Preview in browser</a>
+                <a
+                  className="bottom-cta"
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Preview in browser
+                </a>
                 <div className="btn-container">
                   <button
                     className="btn btn-other float-left"
@@ -504,10 +621,7 @@ class ListingCreate extends Component {
                   <button
                     className="btn btn-primary float-right"
                     onClick={() =>
-                      this.onSubmitListing(
-                        formListing,
-                        selectedSchemaType
-                      )
+                      this.onSubmitListing(formListing, selectedSchemaType)
                     }
                   >
                     <FormattedMessage
@@ -518,26 +632,45 @@ class ListingCreate extends Component {
                 </div>
               </div>
             )}
-            <div className={ `col-md-4${step === this.STEP.PREVIEW ? '' : ' offset-md-3'}` }>
+            <div
+              className={`col-md-4${
+                step === this.STEP.PREVIEW ? '' : ' offset-md-3'
+              }`}
+            >
               <WalletCard
                 wallet={wallet}
                 withMenus={true}
                 withProfile={false}
               />
-              {step === this.STEP.PICK_SCHEMA &&
+              {step === this.STEP.PICK_SCHEMA && (
                 <Fragment>
                   <div className="info-box">
                     <h2>Creating a listing on the Origin Protocol DApp</h2>
-                    <p>Lorem ipsum dolor sit amet consectetuer adsplicing nonummy pellentesque curabitur lorem ipsum dolor sit amet.</p>
+                    <p>
+                      Lorem ipsum dolor sit amet consectetuer adsplicing nonummy
+                      pellentesque curabitur lorem ipsum dolor sit amet.
+                    </p>
                   </div>
                   <div className="about-ogn info-box">
                     <div className="image-container text-center">
-                      <img src="images/ogn-icon-horiz.svg" role="presentation" />
+                      <img
+                        src="images/ogn-icon-horiz.svg"
+                        role="presentation"
+                      />
                     </div>
                     <h2>About Origin Tokens</h2>
-                    <p>Lorem ipsum dolor sit amet consectetuer adsplicing nonummy pellentesque curabitur.</p>
+                    <p>
+                      Lorem ipsum dolor sit amet consectetuer adsplicing nonummy
+                      pellentesque curabitur.
+                    </p>
                     <div className="link-container">
-                      <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">Learn more</a>
+                      <a
+                        href="/#/about-tokens"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Learn more
+                      </a>
                     </div>
                   </div>
                   <div className="info-box">
@@ -566,14 +699,19 @@ class ListingCreate extends Component {
                     </div>
                   </div>
                 </Fragment>
-              }
-              {step === this.STEP.DETAILS &&
+              )}
+              {step === this.STEP.DETAILS && (
                 <Fragment>
                   <div className="info-box">
                     <p>
-                      Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.<br />
-                      If you’re listing is only offered in a specific geographic location, please be sure to indicate that.<br />
-                      Finally, adding some photos of your listing will go a long way to helping potential buyers decide if they want to make the purchase.
+                      Be sure to give your listing an appropriate title and
+                      description that will inform others as to what you’re
+                      offering.<br />
+                      If you’re listing is only offered in a specific geographic
+                      location, please be sure to indicate that.<br />
+                      Finally, adding some photos of your listing will go a long
+                      way to helping potential buyers decide if they want to
+                      make the purchase.
                     </p>
                   </div>
                   <div className="info-box">
@@ -622,9 +760,7 @@ class ListingCreate extends Component {
                           id={'listing-create.viewSchemaLinkLabel'}
                           defaultMessage={'View the {schemaName} schema'}
                           values={{
-                            schemaName: (
-                              <code>{selectedSchema.name}</code>
-                            )
+                            schemaName: <code>{selectedSchema.name}</code>
                           }}
                         />
                       </a>
@@ -638,14 +774,17 @@ class ListingCreate extends Component {
                     </div>
                   </div>
                 </Fragment>
-              }
-              {step === this.STEP.BOOST &&
+              )}
+              {step === this.STEP.BOOST && (
                 <div className="info-box">
                   <h2>About Visibility</h2>
-                  <p>Lorem ipsum dolor sit amet consectetuer adsplicing nonummy pellentesque curabitur.</p>
+                  <p>
+                    Lorem ipsum dolor sit amet consectetuer adsplicing nonummy
+                    pellentesque curabitur.
+                  </p>
                 </div>
-              }
-              {step >= this.STEP.PREVIEW &&
+              )}
+              {step >= this.STEP.PREVIEW && (
                 <div className="info-box">
                   <div>
                     <h2>
@@ -684,7 +823,7 @@ class ListingCreate extends Component {
                     />
                   </div>
                 </div>
-              }
+              )}
             </div>
             {step === this.STEP.METAMASK && (
               <Modal backdrop="static" isOpen={true}>
@@ -767,10 +906,7 @@ class ListingCreate extends Component {
                   defaultMessage={'See the console for more details.'}
                 />
                 <div className="button-container">
-                  <a
-                    className="btn btn-clear"
-                    onClick={this.resetToPreview}
-                  >
+                  <a className="btn btn-clear" onClick={this.resetToPreview}>
                     <FormattedMessage
                       id={'listing-create.OK'}
                       defaultMessage={'OK'}

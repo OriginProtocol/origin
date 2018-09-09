@@ -472,6 +472,7 @@ a:hover {
 }
 
 .searchbar .search-input {
+  color: var(--dark);
   height: 40px;
   max-width: 288px;
   text-align: left;
@@ -511,6 +512,10 @@ a:hover {
 
 .searchbar .dropdown-item {
   cursor: pointer;
+}
+
+.searchbar .dropdown-toggle:after {
+  margin-left: 15px;
 }
 
 /* SearchResult / Search Filters */

@@ -1,5 +1,5 @@
 export const FILTER_OPERATOR_EQUALS = 'EQUALS'
-export const FILTER_OPERATOR_CONTAINS = 'CONTAINS' //for array values where at least one must match E.g. list of categories 
+export const FILTER_OPERATOR_CONTAINS = 'CONTAINS' //for array values where at least one must match E.g. list of categories
 export const FILTER_OPERATOR_GREATER = 'GREATER'
 export const FILTER_OPERATOR_GREATER_OR_EQUAL = 'GREATER_OR_EQUAL'
 export const FILTER_OPERATOR_LESSER = 'LESSER'

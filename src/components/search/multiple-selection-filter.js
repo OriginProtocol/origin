@@ -1,12 +1,15 @@
 import React, { Component } from 'react'
 import { injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
-import { FILTER_OPERATOR_CONTAINS, VALUE_TYPE_ARRAY_STRING } from 'components/search/constants'
+import {
+  FILTER_OPERATOR_CONTAINS,
+  VALUE_TYPE_ARRAY_STRING
+} from 'components/search/constants'
 
 import schemaMessages from '../../schemaMessages/index'
 
 class MultipleSelectionFilter extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -31,15 +34,17 @@ class MultipleSelectionFilter extends Component {
         name: this.props.filter.searchParameterName,
         value: Object.keys(this.state.checkboxValue),
         valueType: VALUE_TYPE_ARRAY_STRING,
-        operator: FILTER_OPERATOR_CONTAINS,
-      },
+        operator: FILTER_OPERATOR_CONTAINS
+      }
     ]
   }
 
   componentDidUpdate(previousProps) {
     // When new search is triggered, search filters get reset, so component should reset their state
-    if (Object.keys(previousProps.filters).length !== 0 &&
-      Object.keys(this.props.filters).length === 0)
+    if (
+      Object.keys(previousProps.filters).length !== 0 &&
+      Object.keys(this.props.filters).length === 0
+    )
       this.onClear()
   }
 
@@ -50,15 +55,19 @@ class MultipleSelectionFilter extends Component {
 
   onHandleClick(event) {
     const stateObject = this.state
-    stateObject.checkboxValue[event.target.getAttribute('id')] = true
+    const currentVal = stateObject.checkboxValue[event.target.getAttribute('id')]
+
+    stateObject.checkboxValue[event.target.getAttribute('id')] = !currentVal
 
     this.setState(stateObject)
   }
 
   toCamelCase(string) {
-    return string.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
-      return index == 0 ? letter.toLowerCase() : letter.toUpperCase()
-    }).replace(/-+/g, '')
+    return string
+      .replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
+        return index == 0 ? letter.toLowerCase() : letter.toUpperCase()
+      })
+      .replace(/-+/g, '')
   }
 
   render() {
@@ -79,22 +88,28 @@ class MultipleSelectionFilter extends Component {
 
     return (
       <div className={containerClass} key={this.props.title}>
-        {this.props.multipleSelectionValues.map(multipleSelectionValue =>
+        {this.props.multipleSelectionValues.map(multipleSelectionValue => (
           <div className={itemClass} key={multipleSelectionValue}>
             <input
               type="checkbox"
               className="form-check-input"
               id={multipleSelectionValue}
               onClick={this.onHandleClick}
-              checked={this.state.checkboxValue[multipleSelectionValue] ? this.state.checkboxValue[multipleSelectionValue] : false}
+              checked={
+                this.state.checkboxValue[multipleSelectionValue]
+                  ? this.state.checkboxValue[multipleSelectionValue]
+                  : false
+              }
             />
             <label htmlFor={multipleSelectionValue}>
-              {
-                this.props.intl.formatMessage(schemaMessages[this.toCamelCase(this.props.listingType)][multipleSelectionValue])
-              }
+              {this.props.intl.formatMessage(
+                schemaMessages[this.toCamelCase(this.props.listingType)][
+                  multipleSelectionValue
+                ]
+              )}
             </label>
           </div>
-        )}
+        ))}
       </div>
     )
   }
@@ -104,6 +119,9 @@ const mapStateToProps = state => ({
   filters: state.search.filters
 })
 
-const mapDispatchToProps = () => ({ })
+const mapDispatchToProps = () => ({})
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(MultipleSelectionFilter))
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(injectIntl(MultipleSelectionFilter))

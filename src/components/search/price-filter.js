@@ -2,12 +2,15 @@ import React, { Component } from 'react'
 import { injectIntl } from 'react-intl'
 import { Range } from 'rc-slider'
 import { connect } from 'react-redux'
-import $ from 'jquery'
 
-import { VALUE_TYPE_FLOAT, FILTER_OPERATOR_GREATER_OR_EQUAL, FILTER_OPERATOR_LESSER_OR_EQUAL } from 'components/search/constants'
+import {
+  VALUE_TYPE_FLOAT,
+  FILTER_OPERATOR_GREATER_OR_EQUAL,
+  FILTER_OPERATOR_LESSER_OR_EQUAL
+} from 'components/search/constants'
 
 class PriceFilter extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.defaultMinimum = 0
     this.defaultMaximum = 500
@@ -18,13 +21,8 @@ class PriceFilter extends Component {
 
     this.handlePriceChange = this.handlePriceChange.bind(this)
   }
-  
-  handlePriceChange([bottomAmount, topAmount]) {
-    $('#price-amount-from').text(`${bottomAmount}$`)
-    $('#price-amount-to').text(`${topAmount}$`)
-    $('#price-amount-display-from').text(`${bottomAmount}$`)
-    $('#price-amount-display-to').text(`${topAmount}$`)
 
+  handlePriceChange([bottomAmount, topAmount]) {
     this.setState({ value: [bottomAmount, topAmount] })
   }
 
@@ -56,8 +54,10 @@ class PriceFilter extends Component {
 
   componentDidUpdate(previousProps) {
     // When new search is triggered, search filters get reset, so component should reset their state
-    if (Object.keys(previousProps.filters).length !== 0 &&
-      Object.keys(this.props.filters).length === 0)
+    if (
+      Object.keys(previousProps.filters).length !== 0 &&
+      Object.keys(this.props.filters).length === 0
+    )
       this.onClear()
   }
 
@@ -68,10 +68,17 @@ class PriceFilter extends Component {
 
   render() {
     return (
-      <div className="d-flex flex-column" key={this.props.filter.listingPropertyName}>
+      <div
+        className="d-flex flex-column"
+        key={this.props.filter.listingPropertyName}
+      >
         <div className="d-flex flex-row price-filter">
-          <div id="price-amount-from" className="mr-auto price-slider-amount">{this.defaultMinimum}$</div>
-          <div id="price-amount-to" className="price-slider-amount">{this.defaultMaximum}$</div>
+          <div id="price-amount-from" className="mr-auto price-slider-amount">
+            &#36;{this.state.value[0]}
+          </div>
+          <div id="price-amount-to" className="price-slider-amount">
+            &#36;{this.state.value[1]}
+          </div>
         </div>
         <Range
           value={this.state.value}
@@ -79,19 +86,23 @@ class PriceFilter extends Component {
           max={this.defaultMaximum}
           defaultValue={[this.defaultMinimum, this.defaultMaximum]}
           count={2}
-          pushable={(this.defaultMaximum - this.defaultMinimum)/20}
+          pushable={(this.defaultMaximum - this.defaultMinimum) / 20}
           tipFormatter={value => `${value}$`}
           onChange={this.handlePriceChange}
         />
         <div className="d-flex flex-row justify-content-between mt-4 price-filter">
           <div className="d-flex flex-row">
-            <div id="price-amount-display-from" className="price-filter-amount">{this.defaultMinimum}</div>
-            <div className="price-filter-currency">$/night</div>
+            <div id="price-amount-display-from" className="price-filter-amount">
+              {this.state.value[0]}
+            </div>
+            <div className="price-filter-currency">&#36;/night</div>
           </div>
           <div className="price-filter-dash">-</div>
           <div className="d-flex flex-row">
-            <div id="price-amount-display-to" className="price-filter-amount">{this.defaultMaximum}</div>
-            <div className="price-filter-currency">$/night</div>
+            <div id="price-amount-display-to" className="price-filter-amount">
+              {this.state.value[1]}
+            </div>
+            <div className="price-filter-currency">&#36;/night</div>
           </div>
         </div>
       </div>
@@ -103,6 +114,9 @@ const mapStateToProps = state => ({
   filters: state.search.filters
 })
 
-const mapDispatchToProps = () => ({ })
+const mapDispatchToProps = () => ({})
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(PriceFilter))
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(injectIntl(PriceFilter))

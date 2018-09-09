@@ -2,7 +2,11 @@ import React, { Component } from 'react'
 import { injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import 'react-dates/initialize'
-import { VALUE_TYPE_DATE, FILTER_OPERATOR_GREATER_OR_EQUAL, FILTER_OPERATOR_LESSER_OR_EQUAL } from 'components/search/constants'
+import {
+  VALUE_TYPE_DATE,
+  FILTER_OPERATOR_GREATER_OR_EQUAL,
+  FILTER_OPERATOR_LESSER_OR_EQUAL
+} from 'components/search/constants'
 import { DayPickerRangeController } from 'react-dates'
 import $ from 'jquery'
 
@@ -54,14 +58,16 @@ class DateFilterGroup extends Component {
   onFocusChange(focusedInput) {
     this.setState({
       // Force the focusedInput to always be truthy so that dates are always selectable
-      focusedInput: !focusedInput ? START_DATE : focusedInput,
+      focusedInput: !focusedInput ? START_DATE : focusedInput
     })
   }
 
   componentDidUpdate(previousProps) {
     // When new search is triggered, search filters get reset, so component should reset their state
-    if (Object.keys(previousProps.filters).length !== 0 &&
-      Object.keys(this.props.filters).length === 0)
+    if (
+      Object.keys(previousProps.filters).length !== 0 &&
+      Object.keys(this.props.filters).length === 0
+    )
       this.onClear()
   }
 
@@ -72,13 +78,13 @@ class DateFilterGroup extends Component {
         name: this.props.filter.searchParameterName,
         value: this.state.startDate,
         valueType: VALUE_TYPE_DATE,
-        operator: FILTER_OPERATOR_GREATER_OR_EQUAL,
+        operator: FILTER_OPERATOR_GREATER_OR_EQUAL
       },
       {
         name: this.props.filter.searchParameterName,
         value: this.state.endDate,
         valueType: VALUE_TYPE_DATE,
-        operator: FILTER_OPERATOR_LESSER_OR_EQUAL,
+        operator: FILTER_OPERATOR_LESSER_OR_EQUAL
       }
     ]
   }
@@ -87,20 +93,21 @@ class DateFilterGroup extends Component {
   onClear() {
     this.setState({
       startDate: null,
-      endDate: null,
+      endDate: null
     })
   }
 
-
   render() {
     const { focusedInput, startDate, endDate } = this.state
-    const startDateString = startDate ? startDate.format('l') :
-      this.props.intl.formatMessage({
+    const startDateString = startDate
+      ? startDate.format('l')
+      : this.props.intl.formatMessage({
         id: 'dateFilter.startDate',
         defaultMessage: 'Start Date'
       })
-    const endDateString = endDate ? endDate.format('l') :
-      this.props.intl.formatMessage({
+    const endDateString = endDate
+      ? endDate.format('l')
+      : this.props.intl.formatMessage({
         id: 'dateFilter.endDate',
         defaultMessage: 'End Date'
       })
@@ -108,9 +115,21 @@ class DateFilterGroup extends Component {
     return (
       <div className="dateFilter">
         <div className="mb-2">
-          <input type="text" className="date-readonly-input mr-3" name="start date" value={startDateString} readOnly />
-           - 
-          <input type="text" className="date-readonly-input ml-3" name="end date" value={endDateString} readOnly />
+          <input
+            type="text"
+            className="date-readonly-input mr-3"
+            name="start date"
+            value={startDateString}
+            readOnly
+          />
+          -
+          <input
+            type="text"
+            className="date-readonly-input ml-3"
+            name="end date"
+            value={endDateString}
+            readOnly
+          />
         </div>
 
         <DayPickerRangeController
@@ -131,6 +150,9 @@ const mapStateToProps = state => ({
   filters: state.search.filters
 })
 
-const mapDispatchToProps = () => ({ })
+const mapDispatchToProps = () => ({})
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(DateFilterGroup))
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(injectIntl(DateFilterGroup))

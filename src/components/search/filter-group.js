@@ -25,7 +25,10 @@ class FilterGroup extends Component {
 
   resolveFromListingSchema(path) {
     const properties = Array.isArray(path) ? path : path.split('.')
-    return properties.reduce((prev, curr) => prev && prev[curr], this.props.listingSchema)
+    return properties.reduce(
+      (prev, curr) => prev && prev[curr],
+      this.props.listingSchema
+    )
   }
 
   handleFilterMounted(filter) {
@@ -34,15 +37,15 @@ class FilterGroup extends Component {
 
   handleFilterUnMounted(filter) {
     const index = this.childFilters.indexOf(filter)
-    if (index !== -1)
-      this.childFilters.splice(index, 1)
+    if (index !== -1) this.childFilters.splice(index, 1)
   }
 
   handleApplyClick(event) {
     event.preventDefault()
 
-    const filters = this.childFilters
-      .flatMap(childFilter => childFilter.getFilters())
+    const filters = this.childFilters.flatMap(childFilter =>
+      childFilter.getFilters()
+    )
 
     this.props.updateFilters(this.title, filters)
 
@@ -53,14 +56,14 @@ class FilterGroup extends Component {
   handleClearClick(event) {
     event.preventDefault()
 
-    this.childFilters
-      .forEach(childFilter => childFilter.onClear())
+    this.childFilters.forEach(childFilter => childFilter.onClear())
   }
 
   handleOpenDropdown() {
-    const containsDateFilter = this.props.filterGroup.items.some(filter => filter.type === 'date')
-    if (!containsDateFilter)
-      return
+    const containsDateFilter = this.props.filterGroup.items.some(
+      filter => filter.type === 'date'
+    )
+    if (!containsDateFilter) return
 
     /* Because of a workaround in `react-dates` module we need to message the DateFilter
      * when it gets shown - when dropdown containing date filter is opened
@@ -72,10 +75,12 @@ class FilterGroup extends Component {
 
   renderFilter(filter, title, index) {
     if (filter.type === 'multipleSelectionFilter') {
-      return(
+      return (
         <MultipleSelectionFilter
           filter={filter}
-          multipleSelectionValues={this.resolveFromListingSchema(filter.listingPropertyName)}
+          multipleSelectionValues={this.resolveFromListingSchema(
+            filter.listingPropertyName
+          )}
           listingType={this.props.listingType}
           title={title}
           onChildMounted={this.handleFilterMounted}
@@ -93,7 +98,7 @@ class FilterGroup extends Component {
         />
       )
     } else if (filter.type === 'counter') {
-      return(
+      return (
         <CounterFilter
           filter={filter}
           onChildMounted={this.handleFilterMounted}
@@ -102,7 +107,7 @@ class FilterGroup extends Component {
         />
       )
     } else if (filter.type === 'date') {
-      return(
+      return (
         <DateFilter
           filter={filter}
           onChildMounted={this.handleFilterMounted}
@@ -120,7 +125,8 @@ class FilterGroup extends Component {
 
     return (
       <li className="nav-item">
-        <a onClick={this.handleOpenDropdown}
+        <a
+          onClick={this.handleOpenDropdown}
           className="nav-link"
           data-toggle="dropdown"
           data-parent="#search-filters-bar"
@@ -130,16 +136,24 @@ class FilterGroup extends Component {
         <form className="dropdown-menu" id={formId}>
           <div className="d-flex flex-column">
             <div className="dropdown-form">
-              {this.props.filterGroup.items.map((filter, index) => this.renderFilter(filter, this.title, index))}
+              {this.props.filterGroup.items.map((filter, index) =>
+                this.renderFilter(filter, this.title, index)
+              )}
             </div>
             <div className="d-flex flex-row button-container">
-              <a onClick={this.handleClearClick} className="dropdown-button dropdown-button-left align-middle">
+              <a
+                onClick={this.handleClearClick}
+                className="dropdown-button dropdown-button-left align-middle"
+              >
                 <FormattedMessage
                   id={'SearchResults.filterGroup.searchFiltersClear'}
                   defaultMessage={'Clear'}
                 />
               </a>
-              <a onClick={this.handleApplyClick} className="dropdown-button dropdown-button-right align-middle align-self-center">
+              <a
+                onClick={this.handleApplyClick}
+                className="dropdown-button dropdown-button-right align-middle align-self-center"
+              >
                 <FormattedMessage
                   id={'SearchResults.filterGroup.searchFiltersApply'}
                   defaultMessage={'Apply'}
@@ -156,7 +170,11 @@ class FilterGroup extends Component {
 const mapStateToProps = () => ({})
 
 const mapDispatchToProps = dispatch => ({
-  updateFilters: (filterGroupId, filters) => dispatch(updateFilters(filterGroupId, filters)),
+  updateFilters: (filterGroupId, filters) =>
+    dispatch(updateFilters(filterGroupId, filters))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(FilterGroup))
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(injectIntl(FilterGroup))

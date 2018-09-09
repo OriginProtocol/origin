@@ -394,7 +394,7 @@ class PurchaseDetail extends Component {
       processing,
       purchase,
       reviews,
-      seller,
+      seller
     } = this.state
 
     const isPending = false // will be handled by offer status
@@ -505,27 +505,30 @@ class PurchaseDetail extends Component {
               </div>
               <h1>
                 {listing.name || 'Larry the Chicken'}
-                {isPending &&
+                {isPending && (
                   <span className="pending badge">
                     <FormattedMessage
                       id={'purchase-detail.pending'}
                       defaultMessage={'Pending'}
                     />
                   </span>
-                }
-                {isSold &&
+                )}
+                {isSold && (
                   <span className="sold badge">
                     <FormattedMessage
                       id={'purchase-detail.soldOut'}
                       defaultMessage={'Sold Out'}
                     />
                   </span>
-                }
-                {listing.boostLevel &&
-                  <span className={ `boosted badge boost-${listing.boostLevel}` }>
-                    <img src="images/boost-icon-arrow.svg" role="presentation" />
+                )}
+                {listing.boostLevel && (
+                  <span className={`boosted badge boost-${listing.boostLevel}`}>
+                    <img
+                      src="images/boost-icon-arrow.svg"
+                      role="presentation"
+                    />
                   </span>
-                }
+                )}
               </h1>
             </div>
           </div>
@@ -777,9 +780,7 @@ class PurchaseDetail extends Component {
                     </div>
                   )}
                   <div className="detail-info-box">
-                    <h2 className="category placehold">
-                      {listing.category}
-                    </h2>
+                    <h2 className="category placehold">{listing.category}</h2>
                     <h1 className="title text-truncate placehold">
                       {listing.name}
                     </h1>

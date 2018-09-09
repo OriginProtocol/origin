@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import { injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
-import { VALUE_TYPE_FLOAT, FILTER_OPERATOR_GREATER_OR_EQUAL } from 'components/search/constants'
+import {
+  VALUE_TYPE_FLOAT,
+  FILTER_OPERATOR_GREATER_OR_EQUAL
+} from 'components/search/constants'
 
 class CounterFilter extends Component {
   constructor(props) {
@@ -34,8 +37,10 @@ class CounterFilter extends Component {
 
   componentDidUpdate(previousProps) {
     // When new search is triggered, search filters get reset, so component should reset their state
-    if (Object.keys(previousProps.filters).length !== 0 &&
-      Object.keys(this.props.filters).length === 0)
+    if (
+      Object.keys(previousProps.filters).length !== 0 &&
+      Object.keys(this.props.filters).length === 0
+    )
       this.onClear()
   }
 
@@ -64,20 +69,60 @@ class CounterFilter extends Component {
         <div className="label mr-auto">{title}</div>
         <img
           src="images/search-filter-subtract-icon.svg"
-          onMouseDown={event => event.target.setAttribute('src', 'images/search-filter-subtract-icon.svg')}
-          onMouseUp={event => event.target.setAttribute('src', 'images/search-filter-subtract-icon.svg')}
-          onMouseOver={event => event.target.setAttribute('src', 'images/search-filter-subtract-icon.svg')}
-          onMouseOut={event => event.target.setAttribute('src', 'images/search-filter-subtract-icon.svg')}
+          onMouseDown={event =>
+            event.target.setAttribute(
+              'src',
+              'images/search-filter-subtract-icon.svg'
+            )
+          }
+          onMouseUp={event =>
+            event.target.setAttribute(
+              'src',
+              'images/search-filter-subtract-icon.svg'
+            )
+          }
+          onMouseOver={event =>
+            event.target.setAttribute(
+              'src',
+              'images/search-filter-subtract-icon.svg'
+            )
+          }
+          onMouseOut={event =>
+            event.target.setAttribute(
+              'src',
+              'images/search-filter-subtract-icon.svg'
+            )
+          }
           onClick={this.handleOnClickSubtract}
           className="p-2"
         />
         <div className="label">{this.state.counter}</div>
         <img
           src="images/search-filter-add-icon.svg"
-          onMouseDown={event => event.target.setAttribute('src', 'images/search-filter-add-icon.svg')}
-          onMouseUp={event => event.target.setAttribute('src', 'images/search-filter-add-icon.svg')}
-          onMouseOver={event => event.target.setAttribute('src', 'images/search-filter-add-icon.svg')}
-          onMouseOut={event => event.target.setAttribute('src', 'images/search-filter-add-icon.svg')}
+          onMouseDown={event =>
+            event.target.setAttribute(
+              'src',
+              'images/search-filter-add-icon.svg'
+            )
+          }
+          onMouseUp={event =>
+            event.target.setAttribute(
+              'src',
+              'images/search-filter-add-icon.svg'
+            )
+          }
+          onMouseOver={event =>
+            event.target.setAttribute(
+              'src',
+              'images/search-filter-add-icon.svg'
+            )
+          }
+          onMouseOut={event =>
+            event.target.setAttribute(
+              'src',
+              'images/search-filter-add-icon.svg'
+            )
+          }
           onClick={this.handleOnClickAdd}
           className="p-2"
         />
@@ -90,6 +135,9 @@ const mapStateToProps = state => ({
   filters: state.search.filters
 })
 
-const mapDispatchToProps = () => ({ })
+const mapDispatchToProps = () => ({})
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(CounterFilter))
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(injectIntl(CounterFilter))
