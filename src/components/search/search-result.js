@@ -139,7 +139,7 @@ class SearchResult extends Component {
       this.setState({ searchError: undefined })
       this.formatFiltersToUrl()
 
-      const searchResponse = await origin.marketplace.search(
+      const searchResponse = await origin.discovery.search(
         this.props.query,
         this.props.listingType,
         Object.values(this.props.filters).flatMap(arrayOfFilters => arrayOfFilters)
