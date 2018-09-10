@@ -26,7 +26,9 @@ class ListingCard extends Component {
       })
     } catch (error) {
       console.error(
-        `Error fetching contract or IPFS data for listing ${this.props.listingId}: ${error}`
+        `Error fetching contract or IPFS data for listing ${
+          this.props.listingId
+        }: ${error}`
       )
     }
   }
@@ -66,42 +68,47 @@ class ListingCard extends Component {
         }`}
       >
         <Link to={`/listing/${this.props.listingId}`}>
-          {!!photo &&
+          {!!photo && (
             <div
               className="photo"
               style={{ backgroundImage: `url("${photo}")` }}
             />
-          }
-          {!photo &&
+          )}
+          {!photo && (
             <div className="image-container d-flex justify-content-center">
               <img src="images/default-image.svg" alt="camera icon" />
             </div>
-          }
+          )}
           <div className="category placehold d-flex justify-content-between">
             <div>{category}</div>
-            {!loading && isPending &&
+            {!loading &&
+              isPending && (
               <span className="pending badge">
                 <FormattedMessage
                   id={'listing-card.pending'}
                   defaultMessage={'Pending'}
                 />
               </span>
-            }
-            {!loading && isSold &&
+            )}
+            {!loading &&
+              isSold && (
               <span className="sold badge">
                 <FormattedMessage
                   id={'listing-card.sold'}
                   defaultMessage={'Sold Out'}
                 />
               </span>
-            }
-            {!loading && boostLevelIsPastSomeThreshold &&
+            )}
+            {!loading &&
+              boostLevelIsPastSomeThreshold && (
               <span
                 className="boosted badge"
                 data-toggle="tooltip"
                 title="Tell me <a href='https://originprotocol.com' target='_blank'>More</a> about what this means."
-              ><img src="images/boost-icon-arrow.svg" role="presentation" /></span>
-            }
+              >
+                <img src="images/boost-icon-arrow.svg" role="presentation" />
+              </span>
+            )}
           </div>
           <h2 className="title placehold text-truncate">{name}</h2>
           {price > 0 && (

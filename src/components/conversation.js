@@ -179,10 +179,7 @@ class Conversation extends Component {
     const soldAt = created
       ? created * 1000 /* convert seconds since epoch to ms */
       : null
-    const photo =
-      pictures &&
-      pictures.length > 0 &&
-      pictures[0]
+    const photo = pictures && pictures.length > 0 && pictures[0]
     const canDeliverMessage = origin.messaging.canConverseWith(
       counterparty.address
     )

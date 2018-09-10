@@ -24,41 +24,37 @@ export default class PanelButtons extends Component {
   render() {
     const { displayNextStep, step } = this.props
     const buttons = {
-      'Overview': (
-        <button
-          className="btn btn-primary"
-          onClick={displayNextStep}
-        >
+      Overview: (
+        <button className="btn btn-primary" onClick={displayNextStep}>
           Connect a Wallet
         </button>
       ),
       'Connect Wallet': (
         <div className="d-flex flex-column align-items-center">
-          <button key={'first-btn'}
+          <button
+            key={'first-btn'}
             className="btn btn-primary btn-lg mb-3"
             onClick={this.connectMetaMask}
           >
             Connect Metamask
           </button>
-          <button key={'sec-btn'}
-            className="btn btn-primary btn-lg"
-            disabled
-          >
+          <button key={'sec-btn'} className="btn btn-primary btn-lg" disabled>
             Download Mobile Wallet
           </button>
         </div>
       ),
-      'Connected': (
-        <button
-          className="btn btn-primary"
-          onClick={displayNextStep}
-        >
+      Connected: (
+        <button className="btn btn-primary" onClick={displayNextStep}>
           Learn about Origin Tokens
         </button>
       ),
       'Get Origin Tokens': (
         <div className="col-auto">
-          <Link to="/about-tokens" target="_blank" onClick={this.completeOnboarding}>
+          <Link
+            to="/about-tokens"
+            target="_blank"
+            onClick={this.completeOnboarding}
+          >
             <button key={'first-btn'} className="btn btn-primary">
               Learn more
             </button>

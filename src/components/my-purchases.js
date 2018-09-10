@@ -9,7 +9,6 @@ import { offerStatusToStep } from 'utils/offer'
 
 import origin from '../services/origin'
 
-
 class MyPurchases extends Component {
   constructor(props) {
     super(props)

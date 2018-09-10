@@ -46,7 +46,11 @@ class ListingCardPrices extends Component {
                 />
               )}
               <div className="d-flex">
-                <img src="images/eth-icon.svg" role="presentation" className="eth-icon" />
+                <img
+                  src="images/eth-icon.svg"
+                  role="presentation"
+                  className="eth-icon"
+                />
                 <div className="values">
                   <div className="eth">
                     {`${Number(this.state.price).toLocaleString(undefined, {

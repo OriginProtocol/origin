@@ -29,12 +29,7 @@ class MessageNew extends Component {
     e.preventDefault()
 
     const { content } = this.state
-    const {
-      history,
-      listingId,
-      purchaseId,
-      recipientAddress
-    } = this.props
+    const { history, listingId, purchaseId, recipientAddress } = this.props
     const newMessage = content.trim()
 
     if (!content.length) {

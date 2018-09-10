@@ -49,7 +49,7 @@ class UserDropdown extends Component {
 
 const mapStateToProps = state => {
   return {
-    wallet: state.wallet,
+    wallet: state.wallet
   }
 }
 

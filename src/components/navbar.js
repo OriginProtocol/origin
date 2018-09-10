@@ -39,7 +39,7 @@ class NavBar extends Component {
 
   render() {
     return (
-      <nav className="navbar navbar-expand-lg navbar-dark">
+      <nav className="navbar navigation-bar navbar-expand-lg navbar-dark">
         <div className="container">
           <button
             className="navbar-toggler mr-3"
