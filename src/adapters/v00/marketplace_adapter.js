@@ -62,7 +62,7 @@ class V00_MarkeplaceAdapter {
       finalizes,
       affiliate,
       commission,
-      price,
+      priceWei,
       arbitrator,
       currencyAddr
     } = data
@@ -73,7 +73,7 @@ class V00_MarkeplaceAdapter {
       finalizes || Math.round(+new Date() / 1000) + 60 * 60 * 24, // 24 hrs
       affiliate || emptyAddress,
       commission || '0',
-      price,
+      priceWei,
       currencyAddr || emptyAddress,
       arbitrator || emptyAddress
     ]

@@ -198,7 +198,7 @@ class Marketplace extends Adaptable {
     )
 
     // Record the offer on chain.
-    const transactionData = {buyer, priceWei}
+    const transactionData = { priceWei } // TODO: add commission, affliliate.
     const transactionReceipt = await adapter.makeOffer(
       listingIndex,
       ipfsBytes,
