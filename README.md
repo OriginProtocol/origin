@@ -27,6 +27,8 @@ Origin Box has several intended use cases:
 
 - [Docker](https://docs.docker.com/install/overview/) **version 18 or greater**:
 `docker --version`
+- [Docker Compose](https://docs.docker.com/compose/) **For Mac and Windows docker-compose should be part of desktop Docker installs**:
+`docker-compose --version`
 - [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git):
 `git --version`
 - Unix-based system (OSX or Linux) needed to run the bash scripts
