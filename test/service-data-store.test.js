@@ -2,8 +2,14 @@ import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import sinon from 'sinon'
 
-import { ListingIpfsStore} from '../src/services/listing-service'
+import {
+  ListingIpfsStore ,
+  OfferIpfsStore,
+  ReviewIpfsStore
+} from '../src/services/data-store-service'
 import goodListing from './data/listing-valid'
+import goodOffer from './data/offer-valid'
+import goodReview from './data/review-valid'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -53,7 +59,6 @@ describe('ListingIpfsStore load', () => {
 
     expect(store.load('TestHash')).to.eventually.be.rejectedWith(Error)
   })
-
 })
 
 describe('ListingIpfsStore save', () => {
@@ -121,5 +126,129 @@ describe('ListingIpfsStore save', () => {
     const badListing = {'schemaVersion': '1.0.0', 'title': 'bad listing'}
     expect(store.save(badListing)).to.eventually.be.rejectedWith(Error)
   })
+})
 
+describe('OfferIpfsStore load', () => {
+  let mockIpfsService, store
+
+  before(() => {
+    mockIpfsService = new Object()
+    store = new OfferIpfsStore(mockIpfsService)
+  })
+
+  it(`Should load a valid object`, async () => {
+    mockIpfsService.loadObjFromFile = sinon.stub().resolves(goodOffer)
+    mockIpfsService.rewriteUrl = sinon.stub().returns('http://test-gateway')
+
+    const offer = await store.load('TestHash')
+
+    expect(offer.listingType).to.equal('unit')
+    expect(offer.unitsPurchased).to.equal(1)
+    expect(offer.totalPrice).to.deep.equal({amount:'0.33', currency:'ETH'})
+    expect(offer.ipfs.hash).to.equal('TestHash')
+    expect(offer.ipfs.data).to.deep.equal(goodOffer)
+  })
+
+  it(`Should throw an exception on offer using unsupported schema version`, () => {
+    const offerUnsupportedVersion = Object.assign({}, goodReview, { 'schemaVersion': 'X.Y.Z' })
+    mockIpfsService.loadObjFromFile = sinon.stub().resolves(offerUnsupportedVersion)
+
+    expect(store.load('TestHash')).to.eventually.be.rejectedWith(Error)
+  })
+
+  it(`Should throw an exception on offer data with missing fields`, () => {
+    const badOffer = { 'schemaVersion': '1.0.0', 'title': 'bad offer' }
+    mockIpfsService.loadObjFromFile = sinon.stub().resolves(badOffer)
+
+    expect(store.load('TestHash')).to.eventually.be.rejectedWith(Error)
+  })
+})
+
+describe('OfferIpfsStore save', () => {
+  let mockIpfsService, store
+
+  before(() => {
+    mockIpfsService = new Object()
+    store = new OfferIpfsStore(mockIpfsService)
+  })
+
+  it(`Should save a valid offer`, () => {
+    mockIpfsService.saveObjAsFile = sinon.stub().returns('OfferHash')
+    mockIpfsService.saveDataURIAsFile = sinon.stub().returns('DataHash')
+    mockIpfsService.gatewayUrlForHash = sinon.stub().returns('http://test-gateway')
+
+    expect(store.save(goodOffer)).to.eventually.equal('OfferHash')
+  })
+
+  it(`Should throw an exception on offer using unsupported schema version`, async () => {
+    const offerUnsupportedVersion = Object.assign({}, goodOffer, { 'schemaVersion': 'X.Y.Z' })
+    expect(store.save(offerUnsupportedVersion)).to.eventually.be.rejectedWith(Error)
+  })
+
+  it(`Should throw an exception on invalid offer`, async () => {
+    const badOffer = {'schemaVersion': '1.0.0', 'title': 'bad offer'}
+    expect(store.save(badOffer)).to.eventually.be.rejectedWith(Error)
+  })
+})
+
+describe('ReviewIpfsStore load', () => {
+  let mockIpfsService, store
+
+  before(() => {
+    mockIpfsService = new Object()
+    store = new ReviewIpfsStore(mockIpfsService)
+  })
+
+  it(`Should load a valid object`, async () => {
+    mockIpfsService.loadObjFromFile = sinon.stub().resolves(goodReview)
+    mockIpfsService.rewriteUrl = sinon.stub().returns('http://test-gateway')
+
+    const review = await store.load('TestHash')
+
+    expect(review.rating).to.equal(3)
+    expect(review.text).to.equal('Good stuff')
+    expect(review.ipfs.hash).to.equal('TestHash')
+    expect(review.ipfs.data).to.deep.equal(goodReview)
+  })
+
+  it(`Should throw an exception on review using unsupported schema version`, () => {
+    const reviewUnsupportedVersion = Object.assign({}, goodReview, { 'schemaVersion': 'X.Y.Z' })
+    mockIpfsService.loadObjFromFile = sinon.stub().resolves(reviewUnsupportedVersion)
+
+    expect(store.load('TestHash')).to.eventually.be.rejectedWith(Error)
+  })
+
+  it(`Should throw an exception on review data with missing fields`, () => {
+    const badReview = { 'schemaVersion': '1.0.0', 'title': 'bad review' }
+    mockIpfsService.loadObjFromFile = sinon.stub().resolves(badReview)
+
+    expect(store.load('TestHash')).to.eventually.be.rejectedWith(Error)
+  })
+})
+
+describe('ReviewIpfsStore save', () => {
+  let mockIpfsService, store
+
+  before(() => {
+    mockIpfsService = new Object()
+    store = new ReviewIpfsStore(mockIpfsService)
+  })
+
+  it(`Should save a valid review`, () => {
+    mockIpfsService.saveObjAsFile = sinon.stub().returns('ReviewHash')
+    mockIpfsService.saveDataURIAsFile = sinon.stub().returns('DataHash')
+    mockIpfsService.gatewayUrlForHash = sinon.stub().returns('http://test-gateway')
+
+    expect(store.save(goodReview)).to.eventually.equal('ReviewHash')
+  })
+
+  it(`Should throw an exception on review using unsupported schema version`, async () => {
+    const reviewUnsupportedVersion = Object.assign({}, goodReview, { 'schemaVersion': 'X.Y.Z' })
+    expect(store.save(reviewUnsupportedVersion)).to.eventually.be.rejectedWith(Error)
+  })
+
+  it(`Should throw an exception on invalid review`, async () => {
+    const badReview = {'schemaVersion': '1.0.0', 'title': 'bad review'}
+    expect(store.save(badReview)).to.eventually.be.rejectedWith(Error)
+  })
 })

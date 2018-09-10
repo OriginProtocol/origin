@@ -214,10 +214,11 @@ class V00_MarkeplaceAdapter {
     })
 
     // Loop through the events looking and update the IPFS hash appropriately
-    let ipfsHash, createdAt
+    let buyer, ipfsHash, createdAt
     for (const e of events) {
       const timestamp = await this.contractService.getTimestamp(e)
       if (e.event === 'OfferCreated') {
+        buyer = e.returnValues.party
         ipfsHash = e.returnValues.ipfsHash
         createdAt = timestamp
       }
@@ -235,7 +236,7 @@ class V00_MarkeplaceAdapter {
     }
 
     // Return the raw listing along with events and IPFS hash
-    return Object.assign({}, rawOffer, { ipfsHash, events, createdAt })
+    return Object.assign({}, rawOffer, { buyer, ipfsHash, events, createdAt })
   }
 
   async addData(ipfsBytes, listingIndex, offerIndex, confirmationCallback) {

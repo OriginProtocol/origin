@@ -1,13 +1,17 @@
 {
-  "$id": "review.json",
-  "title": "Review",
-  "required": ["rating", "description"],
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "http://schema.originprotocol.com/review-v1.0.0",
+  "title": "Origin Protocol review schema",
   "properties": {
     "rating": {
       "type": "number"
     },
-    "description": {
+    "text": {
       "type": "string"
     }
-  }
+  },
+  "required": [
+    "rating",
+    "text"
+  ]
 }

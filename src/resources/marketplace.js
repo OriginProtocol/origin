@@ -2,7 +2,9 @@ import { generateListingId, generateOfferId, generateNotificationId } from '../u
 
 import Adaptable from './adaptable'
 import { Listing } from '../models/listing'
-import { ListingIpfsStore } from '../services/listing-service'
+import { Offer } from '../models/offer'
+import { Review } from '../models/review'
+import { ListingIpfsStore, OfferIpfsStore, ReviewIpfsStore } from '../services/data-store-service'
 
 const unreadStatus = 'unread'
 const readStatus = 'read'
@@ -24,6 +26,8 @@ class Marketplace extends Adaptable {
     this.contractService = contractService
     this.ipfsService = ipfsService
     this.listingIpfsStore = new ListingIpfsStore(this.ipfsService)
+    this.offerIpfsStore = new OfferIpfsStore(this.ipfsService)
+    this.reviewIpfsStore = new ReviewIpfsStore(this.ipfsService)
 
     // initialize notifications
     if (!store.get(storeKeys.notificationSubscriptionStart)) {
@@ -111,26 +115,17 @@ class Marketplace extends Adaptable {
       version,
       network
     } = this.parseOfferId(offerId)
-    const offer = await adapter.getOffer(listingIndex, offerIndex)
-
-    const ipfsHash = this.contractService.getIpfsHashFromBytes32(offer.ipfsHash)
-    const ipfsJson = await this.ipfsService.loadObjFromFile(ipfsHash)
     const listingId = generateListingId({ version, network, listingIndex })
 
-    // Use data from IPFS is offer no longer in active blockchain state
-    if (
-      offer.buyer.indexOf('0x00000') === 0 &&
-      ipfsJson.data &&
-      ipfsJson.data.buyer
-    ) {
-      offer.buyer = ipfsJson.data.buyer
-    }
+    // Load chain data.
+    const chainOffer = await adapter.getOffer(listingIndex, offerIndex)
 
-    return Object.assign({}, offer, {
-      id: offerId,
-      ipfsData: ipfsJson || {},
-      listingId
-    })
+    // Load ipfs data.
+    const ipfsHash = this.contractService.getIpfsHashFromBytes32(chainOffer.ipfsHash)
+    const ipfsOffer = await this.offerIpfsStore(ipfsHash)
+
+    // Create an Offer from on-chain and off-chain data.
+    return new Offer(offerId, listingId, chainOffer, ipfsOffer)
   }
 
   /**
@@ -152,7 +147,7 @@ class Marketplace extends Adaptable {
     const version = this.currentVersion
     const network = await this.contractService.web3.eth.net.getId()
     const { listingIndex } = transactionReceipt
-    const listingId = generateOfferId({ network, version, listingIndex })
+    const listingId = generateListingId({ network, version, listingIndex })
 
     return Object.assign({ listingId }, transactionReceipt)
   }
@@ -175,16 +170,17 @@ class Marketplace extends Adaptable {
     const { adapter, listingIndex, version, network } = this.parseListingId(
       listingId
     )
-    const buyer = await this.contractService.currentAccount()
 
+    // Save the offer data in IPFS.
+    const ipfsHash = await this.offerIpfsStore.save(data)
+    const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
+
+    const buyer = await this.contractService.currentAccount()
     data.price = this.contractService.web3.utils.toWei(
       String(data.price),
       'ether'
     )
     data.buyer = buyer
-
-    const ipfsHash = await this.ipfsService.saveObjAsFile({ data })
-    const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     const transactionReceipt = await adapter.makeOffer(
       listingIndex,
@@ -222,7 +218,7 @@ class Marketplace extends Adaptable {
   async finalizeOffer(id, data, confirmationCallback) {
     const { adapter, listingIndex, offerIndex } = this.parseOfferId(id)
 
-    const ipfsHash = await this.ipfsService.saveObjAsFile({ data })
+    const ipfsHash = await this.offerIpfsStore.save(data)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     return await adapter.finalizeOffer(
@@ -240,11 +236,13 @@ class Marketplace extends Adaptable {
   // manageListingDeposit(listingId, data) {}
 
   async addData(listingId, offerId, data, confirmationCallback) {
-    const ipfsHash = await this.ipfsService.saveObjAsFile({ data })
-    const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     if (offerId) {
       const { adapter, listingIndex, offerIndex } = this.parseOfferId(offerId)
+
+      const ipfsHash = await this.offerIpfsStore.save(data)
+      const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
+
       return await adapter.addData(
         ipfsBytes,
         listingIndex,
@@ -253,37 +251,43 @@ class Marketplace extends Adaptable {
       )
     } else if (listingId) {
       const { adapter, listingIndex } = this.parseListingId(listingId)
+
+      const ipfsHash = await this.offerIpfsStore.save(data)
+      const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
       return await adapter.addData(
         ipfsBytes,
         listingIndex,
         null,
         confirmationCallback
       )
+    } else {
+      throw new Error('addData must be called with either a listing or offer id.')
     }
   }
 
   // Convenience methods
 
   async getListingReviews(listingId) {
-    const { adapter, listingIndex } = this.parseListingId(listingId)
+    const { adapter, listingIndex, version, network } = this.parseListingId(listingId)
+
+    // Get all the OfferFinalized events for the listing.
     const listing = await adapter.getListing(listingIndex)
     const reviewEvents = listing.events.filter(
       e => e.event === 'OfferFinalized'
     )
+
     const reviews = []
     for (const event of reviewEvents) {
-      const ipfsHash = this.contractService.getIpfsHashFromBytes32(
-        event.returnValues.ipfsHash
-      )
-      const ipfsJson = await this.ipfsService.loadObjFromFile(ipfsHash)
-      const timestamp = await this.contractService.getTimestamp(event)
-      reviews.push({
-        transactionHash: event.transactionHash,
-        rating: ipfsJson.data.rating,
-        reviewText: ipfsJson.data.reviewText,
-        timestamp,
-        reviewerAddress: event.returnValues.party
-      })
+      // Load review data from IPFS.
+      const ipfsHash = this.contractService.getIpfsHashFromBytes32(event.returnValues.ipfsHash)
+      const ipfsReview = await this.ipfsReviewStore.load(ipfsHash)
+
+      const offerIndex = event.returnValues.offerID
+      const offerId = generateOfferId({ network, version, listingIndex, offerIndex })
+
+      // Create a Review object based on IPFS and event data.
+      const review = new Review(listingId, offerId, event, ipfsReview)
+      reviews.push(review)
     }
     return reviews
   }
