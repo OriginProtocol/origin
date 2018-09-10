@@ -7,7 +7,7 @@ const statusMap = {
 }
 
 /**
- * Convert an offer's status into a step for the UI.
+ * Converts an offer's status into a step for the UI.
  */
 export function offerStatusToStep(status) {
   return statusMap[status] || 0
