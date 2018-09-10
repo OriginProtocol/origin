@@ -19,11 +19,11 @@ const typeDefs = gql`
   ######################
 
   # When querying a set of items, the output is a page.
-  #interface OutputPage {
-    # num: Int!      # Current page number
-    # size: Int!     # Size of pages.
-    # total: Int!    # Total number of pages available.
-  #}
+ # interface OutputPage {
+ #   pageNumber: Int!
+ #   itemsPerPage: Int!
+ #   totalNumberOfPages: Int!
+ # }
 
   type Price {
     currency: String!
@@ -72,9 +72,9 @@ const typeDefs = gql`
   # }
 
   # type ReviewPage implements OutputPage {
-  #   num: Int!
-  #   size: Int!
-  #   total: Int!
+  #   pageNumber: Int!
+  #   itemsPerPage: Int!
+  #   totalNumberOfPages: Int!
   #   reviews: [Review]
   # }
 
@@ -93,9 +93,9 @@ const typeDefs = gql`
   }
 
   type ListingPage { # implements OutputPage
-    # num: Int!
-    # size: Int!
-    # total: Int!
+    # pageNumber: Int!
+    # itemsPerPage: Int!
+    # totalNumberOfPages: Int!
     nodes: [Listing]
   }
 
@@ -113,8 +113,8 @@ const typeDefs = gql`
   }
 
   input Page {
-    num: Int!  # Page number.
-    size: Int! # Number of items per page.
+    pageNumber: Int!  # Page number.
+    itemsPerPage: Int! # Number of items per page.
   }
 
   input inPrice {
@@ -169,23 +169,33 @@ const typeDefs = gql`
     rating: Int
   }
 
-  # TODO:
-  #  - Filtering definition needs more thinking. This is not flexible at all...
-  #  - Add location based filtering.
-  #  - Add fractional usage (e.g. availability) filtering.
+  enum ValueType {
+    STRING
+    FLOAT
+    DATE
+    ARRAY_STRING
+  }
+
+  enum FilterOperator {
+    EQUALS
+    CONTAINS #for array values where at least one must match E.g. list of categories 
+    GREATER
+    GREATER_OR_EQUAL
+    LESSER
+    LESSER_OR_EQUAL
+  }
+
+  # A generic listing filter
   input ListingFilter {
-    priceMin: inPrice
-    priceMax: inPrice
-    category: String
-    subCategory: String
-    locale: String
-    sellerAddress: String
-    buyerAddress: String
+    name: String!
+    value: String!
+    valueType: ValueType!
+    operator: FilterOperator!
   }
 
   # The "Query" type is the root of all GraphQL queries.
   type Query {
-    listings(searchQuery: String): ListingPage, # (page: Page, order: ListingOrder, filter: ListingFilter)
+    listings(searchQuery: String, filters: [ListingFilter!]): ListingPage, #(searchQuery: String, page: Page, order: ListingOrder, filters: [ListingFilter!]): ListingPage,
     listing(id: ID!): Listing,
 
     offers(buyerAddress: ID, listingId: ID): OfferConnection,
@@ -208,9 +218,9 @@ const resolvers = {
       let listings = []
       listings = await search.Listing.search(args.searchQuery)
       return {
-        num: 1,
-        size: listings.length,
-        total: 1,
+        pageNumber: 1,
+        itemsPerPage: listings.length,
+        totalNumberOfPages: 1,
         nodes: listings,
       }
     },
@@ -254,9 +264,9 @@ const resolvers = {
     // reviews(listing, args) {
     //   // TODO: handle pagination (including enforcing MaxResultsPerPage), filters, order.
     //   return {
-    //     num: 1,
-    //     size: 1,
-    //     total: 1,
+    //     pageNumber: 1,
+    //     itemsPerPage: 1,
+    //     totalNumberOfPages: 1,
     //     reviews: [{
     //       ipfsHash: 'IPFS_H', reviewer: {walletAddress: 'R_WADDR'},
     //       text: 'Great product. Great seller.', rating: 5,
