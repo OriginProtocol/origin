@@ -19,7 +19,7 @@ class NavBar extends Component {
     this.state = {
       noWeb3Account: false,
       notWeb3EnabledDesktop: false,
-      notWeb3EnabledMobile: false,
+      notWeb3EnabledMobile: false
     }
   }
 
