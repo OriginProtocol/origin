@@ -13,7 +13,7 @@ export class Review {
     this.id = event.transactionHash
     this.listingId = listingId
     this.offerId = offerId
-    this.reviewer = event.returnValues.party
+    this.reviewer = event.returnValues.party // Either buyer or seller.
     this.timestamp = event.timestamp
     this.rating = ipfsReview.rating
     this.text = ipfsReview.text

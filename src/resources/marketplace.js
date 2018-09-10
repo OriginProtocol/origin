@@ -107,6 +107,11 @@ class Marketplace extends Adaptable {
     }
   }
 
+  /**
+   * Returns an offer based on its id.
+   * @param {string}offerId - Unique offer Id.
+   * @return {Promise<Offer>} - models/Offer object
+   */
   async getOffer(offerId) {
     const {
       adapter,
@@ -131,7 +136,7 @@ class Marketplace extends Adaptable {
   /**
    * Creates a new listing in the system. Data is recorded both on-chain and off-chain in IPFS.
    * @param {object} ipfsData - Listing data to store in IPFS
-   * @param {func(confirmationCount, transactionReceipt)} confirmationCallback - Called upon blocks confirmation.
+   * @param {func(confirmationCount, transactionReceipt)} confirmationCallback
    * @returns {Promise<object>} - Object with listingId and transactionReceipt fields.
    */
   async createListing(ipfsData, confirmationCallback) {
@@ -166,28 +171,42 @@ class Marketplace extends Adaptable {
     )
   }
 
-  async makeOffer(listingId, data, confirmationCallback) {
+  /**
+   * Adds an offer for a listing.
+   * @param {string} listingId
+   * @param {object} offerData - Offer data, expected in V1 schema format.
+   * @param {function(confirmationCount, transactionReceipt)} confirmationCallback
+   * @return {Promise<{listingId, offerId, ...transactionReceipt}>}
+   */
+  async makeOffer(listingId, offerData, confirmationCallback) {
     const { adapter, listingIndex, version, network } = this.parseListingId(
       listingId
     )
 
+    // For V1, we only support quantity of 1.
+    if (offerData.unitsPurchased != 1)
+      throw new Error(`Attempted to purchase ${offerData.unitsPurchased} - only 1 allowed.`)
+
     // Save the offer data in IPFS.
-    const ipfsHash = await this.offerIpfsStore.save(data)
+    const ipfsHash = await this.offerIpfsStore.save(offerData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     const buyer = await this.contractService.currentAccount()
-    data.price = this.contractService.web3.utils.toWei(
-      String(data.price),
+    const priceWei = this.contractService.web3.utils.toWei(
+      offerData.totalPrice.amount,
       'ether'
     )
-    data.buyer = buyer
 
+    // Record the offer on chain.
+    const transactionData = {buyer, priceWei}
     const transactionReceipt = await adapter.makeOffer(
       listingIndex,
       ipfsBytes,
-      data,
+      transactionData,
       confirmationCallback
     )
+
+    // Success. Return listingId, newly created offerId and chain transaction receipt.
     const { offerIndex } = transactionReceipt
     const offerId = generateOfferId({
       network,
@@ -201,10 +220,17 @@ class Marketplace extends Adaptable {
   // updateOffer(listingId, offerId, data) {}
   // withdrawOffer(listingId, offerId, data) {}
 
+  /**
+   * Accepts an offer.
+   * @param {string} id - Offer unique ID.
+   * @param data - Currently nothing !
+   * @param {function(confirmationCount, transactionReceipt)} confirmationCallback
+   * @return {Promise<{timestamp, transactionReceipt}>}
+   */
   async acceptOffer(id, data, confirmationCallback) {
     const { adapter, listingIndex, offerIndex } = this.parseOfferId(id)
 
-    const ipfsHash = await this.ipfsService.saveObjAsFile({ data })
+    const ipfsHash = await this.offerIpfsStore.save(data)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     return await adapter.acceptOffer(
@@ -215,10 +241,17 @@ class Marketplace extends Adaptable {
     )
   }
 
-  async finalizeOffer(id, data, confirmationCallback) {
+  /**
+   * Finalizes an offer. Store review data in IPFS.
+   * @param {string} id - Offer unique ID.
+   * @param {object} reviewData - Buyer's review. Data expected in schema version 1.0 format.
+   * @param {function(confirmationCount, transactionReceipt)} confirmationCallback
+   * @return {Promise<{timestamp, transactionReceipt}>}
+   */
+  async finalizeOffer(id, reviewData, confirmationCallback) {
     const { adapter, listingIndex, offerIndex } = this.parseOfferId(id)
 
-    const ipfsHash = await this.offerIpfsStore.save(data)
+    const ipfsHash = await this.reviewIpfsStore.save(reviewData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     return await adapter.finalizeOffer(
@@ -235,11 +268,22 @@ class Marketplace extends Adaptable {
   // disputeRuling(listingId, offerId, data) {}
   // manageListingDeposit(listingId, data) {}
 
+  /**
+   * Adds data to either a listing or an offer. Use cases:
+   *  - offer: allows seller to add review data.
+   *  - listing: for future use.
+   * @param listingId
+   * @param offerId
+   * @param {object} data
+   * @param {function(confirmationCount, transactionReceipt)} confirmationCallback
+   * @return {Promise<{timestamp, transactionReceipt}>}
+   */
   async addData(listingId, offerId, data, confirmationCallback) {
 
     if (offerId) {
       const { adapter, listingIndex, offerIndex } = this.parseOfferId(offerId)
 
+      // We expect this to be review data from the seller.
       const ipfsHash = await this.offerIpfsStore.save(data)
       const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
@@ -252,8 +296,9 @@ class Marketplace extends Adaptable {
     } else if (listingId) {
       const { adapter, listingIndex } = this.parseListingId(listingId)
 
-      const ipfsHash = await this.offerIpfsStore.save(data)
+      const ipfsHash = await this.listingIpfsStore.save(data)
       const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
+
       return await adapter.addData(
         ipfsBytes,
         listingIndex,
