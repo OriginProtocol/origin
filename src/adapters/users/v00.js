@@ -1,5 +1,4 @@
 import AttestationObject from '../../models/attestation'
-import UserObject from '../../models/user'
 import {
   fromRpcSig,
   ecrecover,
@@ -33,11 +32,9 @@ class V00_UsersAdapter {
     const identityAddress = await this.identityAddress(address)
     if (identityAddress) {
       const userData = await this.getClaims(identityAddress)
-      const obj = Object.assign({}, userData, { address, identityAddress })
-
-      return new UserObject(obj)
+      return Object.assign({}, userData, { address, identityAddress })
     }
-    return new UserObject({ address })
+    return false
   }
 
   async identityAddress(address) {
