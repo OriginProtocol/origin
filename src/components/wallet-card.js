@@ -13,6 +13,7 @@ import MessageNew from 'components/message-new'
 import { getFiatPrice } from 'utils/priceUtils'
 
 import origin from '../services/origin'
+import $ from 'jquery'
 
 class WalletCard extends Component {
   constructor(props) {
@@ -26,7 +27,7 @@ class WalletCard extends Component {
   }
 
   async convertEthToUsd() {
-    const ethToUsdBalance = await getFiatPrice( this.props.wallet.ethBalance, 'USD' )
+    const ethToUsdBalance = await getFiatPrice(this.props.wallet.ethBalance, 'USD')
 
     this.setState({
       ethToUsdBalance
@@ -61,6 +62,32 @@ class WalletCard extends Component {
     const userCanReceiveMessages =
       address !== web3Account && origin.messaging.canReceiveMessages(address)
 
+    $('.ogn-balance').tooltip({
+      html: true,
+      placement: 'left',
+      title: function () {
+        // let ognBalance = document.getElementById('ogn');
+        let content = 
+          `
+            <div class='tooltip-balance'>
+              <p class="tooltip-balance-heading">
+                You have <img class='ogn-icon' src = 'images/ogn-icon.svg' role = 'presentation' />
+                <span class='ogn'>
+                  [BAL] <span class='symbol'>OGN</span>
+                </span>
+              </p>
+              </p>  
+            <p class='tooltip-balance-text'>
+              Having OGN is not required but will allow you
+              to create a listing that will be more visible to buyers.
+            </p>
+            <p><a href='#' class='add-more-btn add-more-text'><img class='add-more-icon' src = 'images/add-icon.svg' role = 'presentation' />Get OGN</a> <span class='recommended'>(recommended)</span></p>
+            <p><a href="/#/about-tokens" target="_blank" class='learn-more'>Learn more <div class="arrow-right"></div></a></p>
+          `
+        return (content);
+      }
+    })
+
     return (
       <div className="wallet">
         <div className="d-flex">
@@ -80,10 +107,10 @@ class WalletCard extends Component {
               {address ? (
                 <EtherscanLink hash={address} />
               ) : (
-                <FormattedMessage
-                  id={'wallet-card.noEthAccountConnected'}
-                  defaultMessage={'No ETH Account Connected'}
-                />
+                  <FormattedMessage
+                    id={'wallet-card.noEthAccountConnected'}
+                    defaultMessage={'No ETH Account Connected'}
+                  />
               )}
             </div>
             {userCanReceiveMessages && (
@@ -143,9 +170,11 @@ class WalletCard extends Component {
                 }
               </div>
               <div className="d-flex align-items-start">
-                <img src="images/ogn-icon.svg" role="presentation" />
+                <a className="ogn-balance">
+                  <img src="images/ogn-icon.svg" role="presentation" />
+                </a>
                 <div className="amounts">
-                  <div className="ogn">
+                  <div id="ogn" className="ogn">
                     {
                       `${Number(ognBalance).toLocaleString(undefined)}`
                       || 0

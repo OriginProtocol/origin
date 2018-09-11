@@ -22,6 +22,8 @@ import { getFiatPrice } from 'utils/priceUtils'
 import { translateSchema, translateListingCategory } from 'utils/translationUtils'
 
 import origin from '../services/origin'
+import $ from 'jquery'
+
 
 class ListingCreate extends Component {
   constructor(props) {
@@ -173,9 +175,9 @@ class ListingCreate extends Component {
           schemaFetched: true,
           translatedSchema,
           schemaExamples: translatedSchema &&
-                          translatedSchema.properties &&
-                          translatedSchema.properties.examples &&
-                          translatedSchema.properties.examples.enumNames
+            translatedSchema.properties &&
+            translatedSchema.properties.examples &&
+            translatedSchema.properties.examples.enumNames
         })
       })
   }
@@ -307,16 +309,16 @@ class ListingCreate extends Component {
                 <div className="schema-options">
                   {this.schemaList.map(schema => (
                     <div
-                      className={ `schema-selection ${selectedSchemaType === schema.type ? ' selected' : ''}`}
+                      className={`schema-selection ${selectedSchemaType === schema.type ? ' selected' : ''}`}
                       key={schema.type}
                       onClick={() => this.handleSchemaSelection(schema.type)}
                     >
                       {schema.name}
-                      <div className={ `schema-examples ${selectedSchemaType === schema.type ? ' selected' : ''}` }>
-                        <p>{ schema.name } listings may include:</p>
+                      <div className={`schema-examples ${selectedSchemaType === schema.type ? ' selected' : ''}`}>
+                        <p>{schema.name} listings may include:</p>
                         <ul>
                           {schemaExamples && schemaExamples.map((example) =>
-                            <li key={ `${schema.name}-${example}` }>{ example }</li>
+                            <li key={`${schema.name}-${example}`}>{example}</li>
                           )}
                         </ul>
                       </div>
@@ -360,7 +362,7 @@ class ListingCreate extends Component {
                       `react-jsonschema-form errors: ${errors.length}`
                     )
                   }
-                  uiSchema={ this.uiSchema }
+                  uiSchema={this.uiSchema}
                 >
                   <div className="btn-container">
                     <button
@@ -403,8 +405,8 @@ class ListingCreate extends Component {
                     <img src="images/ogn-icon-horiz.svg" role="presentation" />
                     <p className="text-bold">You have 0 <a href="#" arget="_blank" rel="noopener noreferrer">OGN</a> in your wallet.</p>
                     <p>Once you acquire some OGN you will be able to boost your listing.</p>
-                    <p className="expand-btn" onClick={ this.toggleBoostBox }>
-                      What is a boost? <span className={ isBoostExpanded ? 'rotate-up' : '' }>&#x25be;</span>
+                    <p className="expand-btn" onClick={this.toggleBoostBox}>
+                      What is a boost? <span className={isBoostExpanded ? 'rotate-up' : ''}>&#x25be;</span>
                     </p>
                     {isBoostExpanded &&
                       <div className="info-box-bottom">
@@ -425,7 +427,7 @@ class ListingCreate extends Component {
                   </div>
                 }
                 {!isFirstListing &&
-                  <BoostSlider ognBalance={ ognBalance } min={ 0 } max={ 100 } defaultValue={ 50 } />
+                  <BoostSlider ognBalance={ognBalance} min={0} max={100} defaultValue={50} />
                 }
                 <div className="btn-container">
                   <button
@@ -470,7 +472,7 @@ class ListingCreate extends Component {
                       <p className="label">Title</p>
                     </div>
                     <div className="col-md-9">
-                      <p>{ translatedFormData.name }</p>
+                      <p>{translatedFormData.name}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -478,7 +480,7 @@ class ListingCreate extends Component {
                       <p className="label">Category</p>
                     </div>
                     <div className="col-md-9">
-                      <p>{ translatedFormData.category }</p>
+                      <p>{translatedFormData.category}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -486,7 +488,7 @@ class ListingCreate extends Component {
                       <p className="label">Description</p>
                     </div>
                     <div className="col-md-9">
-                      <p>{ translatedFormData.description }</p>
+                      <p>{translatedFormData.description}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -494,7 +496,7 @@ class ListingCreate extends Component {
                       <p className="label">Location</p>
                     </div>
                     <div className="col-md-9">
-                      <p>{ translatedFormData.location }</p>
+                      <p>{translatedFormData.location}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -504,8 +506,8 @@ class ListingCreate extends Component {
                     <div className="col-md-9 photo-row">
                       {
                         translatedFormData.pictures &&
-                        translatedFormData.pictures.map((dataUri, idx) => 
-                          <img src={ dataUri } role="presentation" key={ idx } />
+                        translatedFormData.pictures.map((dataUri, idx) =>
+                          <img src={dataUri} role="presentation" key={idx} />
                         )
                       }
                     </div>
@@ -517,10 +519,10 @@ class ListingCreate extends Component {
                     <div className="col-md-9">
                       <p>
                         <img className="eth-icon" src="images/eth-icon.svg" role="presentation" />
-                        <span className="text-bold">{ translatedFormData.price }</span>&nbsp;
+                        <span className="text-bold">{translatedFormData.price}</span>&nbsp;
                         <a className="eth-abbrev" href="#" target="_blank" rel="noopener noreferrer">ETH</a>
                         <span className="help-block">
-                          &nbsp;| { usdListingPrice } USD&nbsp;
+                          &nbsp;| {usdListingPrice} USD&nbsp;
                           <span className="text-uppercase">(Approximate Value)</span>
                         </span>
                       </p>
@@ -572,7 +574,7 @@ class ListingCreate extends Component {
                 </div>
               </div>
             )}
-            <div className={ `col-md-4${step === this.STEP.PREVIEW ? '' : ' offset-md-3'}` }>
+            <div className={`col-md-4${step === this.STEP.PREVIEW ? '' : ' offset-md-3'}`}>
               <WalletCard
                 wallet={wallet}
                 withMenus={true}

@@ -2457,6 +2457,86 @@ select.form-control:not([size]):not([multiple]) {
   font-weight: bold;
 }
 
+/* OGN Balance Tooltip */
+
+.tooltip-balance {
+  text-align: left;
+  font-size: 14px;
+}
+
+.tooltip-balance p.tooltip-balance-heading {
+  font-weight: 800;
+  margin-bottom: -7px;
+}
+
+.ogn-balance {
+  margin-right: 8px;
+}
+
+.tooltip-balance p {
+  font-size: 18px;
+  font-weight: 500;
+  color: white;
+}
+
+.tooltip-inner img.ogn-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.tooltip-balance .ogn {
+  color: var(--clear-blue);
+}
+
+.tooltip-balance .tooltip-balance-text {
+  font-size: 14px;
+}
+
+.tooltip-balance .add-more-btn {
+  border-radius: 15px;
+  background-color: var(--dark-grey-blue);
+  border: solid 1px var(--clear-blue);
+  margin-bottom: 20px;
+  margin-right: 10px;
+  padding-top: 3px;
+  padding-bottom: 7px;
+  padding-right: 5px;
+}
+
+.tooltip-balance a.add-more-text {
+  color: var(--clear-blue);
+  padding-right: 10px;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.tooltip-balance .add-more-icon {
+  width: 23px;
+  height: 23px;
+  margin: 2px 10px 2px 2px;
+}
+
+.tooltip-balance .recommended {
+  font-size: 12px;
+  color: var(--bluey-grey);
+}
+
+.tooltip-balance a.learn-more {
+  float: left;
+  color: var(--clear-blue);
+  font-size: 15px;
+}
+
+.tooltip-balance .arrow-right {
+  width: 0; 
+  height: 0; 
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 5px solid var(--clear-blue);
+  margin-top: 24px;
+  margin-left: 80px;
+}
+
 /* Sales */
 
 .sale.card {
