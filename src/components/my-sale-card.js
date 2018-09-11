@@ -60,7 +60,7 @@ class MySaleCard extends Component {
       return null
     }
 
-    const { name, pictures, price } = { listing }
+    const { name, pictures, price } = listing
     const buyerName =
       (user &&
         user.profile &&
