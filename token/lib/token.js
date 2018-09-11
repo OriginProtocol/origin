@@ -74,7 +74,15 @@ class Token {
     const tokenSupplier = provider.addresses[0]
 
     // Transfer numTokens from the supplier to the target wallet.
-    await contract.methods.transfer(wallet, value).send({from: tokenSupplier})
+    const supplierBalance = await contract.methods.balanceOf(tokenSupplier).call()
+    if (value > supplierBalance) {
+      throw new Error('insufficient funds for token transfer')
+    }
+    const paused = await contract.methods.paused().call()
+    if (paused) {
+      throw new Error('token transfers are paused')
+    }
+    await contract.methods.transfer(wallet, value).send({ from: tokenSupplier, gas: 100000 })
 
     // Return wallet's balance after credit.
     return this.balance(networkId, wallet)
