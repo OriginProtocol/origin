@@ -25,17 +25,14 @@ class Message extends Component {
       user,
       contentOnly
     } = this.props
-    const { content, created, hash } = message
+    const { created, hash } = message
     const { address, fullName, profile } = user
-    const contentWithLineBreak = `${content}\n`
 
-    if (contentOnly) {
-      return (
-        <div className="d-flex compact-message">{contentWithLineBreak}</div>
-      )
-    }
-
-    return (
+    return contentOnly ? (
+      <div className="d-flex compact-message">
+        {this.renderContent()}
+      </div>
+    ) : (
       <div className="d-flex message">
         <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
         <div className="content-container">
@@ -48,7 +45,9 @@ class Message extends Component {
               {moment(created).format('MMM Do h:mm a')}
             </div>
           </div>
-          <div className="message-content">{contentWithLineBreak}</div>
+          <div className="message-content">
+            {this.renderContent()}
+          </div>
           {!messagingEnabled &&
             hash === 'origin-welcome-message' && (
             <div className="button-container">
@@ -66,6 +65,32 @@ class Message extends Component {
         </div>
       </div>
     )
+  }
+
+  renderContent() {
+    const { content } = this.props.message
+    const contentWithLineBreak = `${content}\n`
+    const contentIsData = content.match(/^data:/)
+    const dataIsImage = contentIsData && content.match(/^data:image/)
+
+    if (!contentIsData) {
+      return contentWithLineBreak
+    } else if (!dataIsImage) {
+      return (
+        <FormattedMessage
+          id={'message.unrecognizedData'}
+          defaultMessage={'This data cannot be rendered.'}
+        />
+      )
+    } else {
+      const fileName = content.match(/name=.+;/).slice(5, -1)
+
+      return (
+        <div className="image-container">
+          <img src={content} alt={fileName} />
+        </div>
+      )
+    }
   }
 }
 
