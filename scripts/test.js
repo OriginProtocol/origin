@@ -15,7 +15,9 @@ const start = async () => {
     await testContracts()
     console.log(chalk`\n{bold.hex('#26d198') ⬢  Starting Local Blockchain }\n`)
     await startGanache()
-    console.log(chalk`\n{bold.hex('#1a82ff') ⬢  Testing Smart Contracts using Truffle }\n`)
+    console.log(
+      chalk`\n{bold.hex('#1a82ff') ⬢  Testing Smart Contracts using Truffle }\n`
+    )
     await testTruffle()
     console.log(chalk`\n{bold.hex('#6e3bea') ⬢  Deploying Smart Contracts }\n`)
     await deployContracts()

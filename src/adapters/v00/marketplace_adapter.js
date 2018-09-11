@@ -1,4 +1,11 @@
-const OFFER_STATUS = ['error','created', 'accepted', 'disputed', 'finalized', 'sellerReviewed']
+const OFFER_STATUS = [
+  'error',
+  'created',
+  'accepted',
+  'disputed',
+  'finalized',
+  'sellerReviewed'
+]
 const emptyAddress = '0x0000000000000000000000000000000000000000'
 
 class V00_MarkeplaceAdapter {
@@ -221,6 +228,9 @@ class V00_MarkeplaceAdapter {
         buyer = e.returnValues.party
         ipfsHash = e.returnValues.ipfsHash
         createdAt = timestamp
+      }
+      if (e.event === 'OfferAccepted') {
+        rawOffer.status = '2'
       }
       // Override status if offer was deleted from blockchain state
       if (e.event === 'OfferFinalized') {

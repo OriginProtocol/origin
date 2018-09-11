@@ -30,8 +30,10 @@ class Token extends ResourceBase {
     if (!this.contract) {
       this.contractAddress = await this.getTokenAddress()
       const web3 = this.contractService.web3
-      this.contract =
-        new web3.eth.Contract(OriginTokenContract.abi, this.contractAddress)
+      this.contract = new web3.eth.Contract(
+        OriginTokenContract.abi,
+        this.contractAddress
+      )
       this.decimals = await this.contract.methods.decimals().call()
     }
   }

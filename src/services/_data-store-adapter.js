@@ -7,18 +7,14 @@ import listingSchemaV1 from '../schemas/listing-core.json'
 import offerSchemaV1 from '../schemas/offer.json'
 import reviewSchemaV1 from '../schemas/review.json'
 
-const ajv = new Ajv({allErrors: true})
+const ajv = new Ajv({ allErrors: true })
 // To use the draft-06 JSON schema, we need to explicitly add it to ajv.
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'))
-ajv.addSchema([
-  listingSchemaV1,
-  offerSchemaV1,
-  reviewSchemaV1
-])
+ajv.addSchema([listingSchemaV1, offerSchemaV1, reviewSchemaV1])
 
 class AdapterBase {
   constructor(dataType, schemaId, schemaVersion) {
-    Object.assign(this, {dataType, schemaId, schemaVersion})
+    Object.assign(this, { dataType, schemaId, schemaVersion })
   }
   /**
    * Validates the data is compliant with Origin Protocol schema.
@@ -26,7 +22,11 @@ class AdapterBase {
    */
   validate(data) {
     if (data.schemaVersion !== this.schemaVersion) {
-      throw new Error(`Unexpected schema version: ${data.schemaVersion} != ${this.schemaVersion}`)
+      throw new Error(
+        `Unexpected schema version: ${data.schemaVersion} != ${
+          this.schemaVersion
+        }`
+      )
     }
 
     const validator = ajv.getSchema(this.schemaId)
@@ -58,12 +58,13 @@ class AdapterBase {
    * @param ipfsData
    */
   decode(ipfsData) {
-    throw new Error(`Implement me. Cannot call decode with ${ipfsData} on AdapterBase`)
+    throw new Error(
+      `Implement me. Cannot call decode with ${ipfsData} on AdapterBase`
+    )
   }
 }
 
 class ListingAdapterV1 extends AdapterBase {
-
   /**
    * Rewrites IPFS media URLs to point to the configured IPFS gateway.
    * Applied after loading data from storage and decoding it.
@@ -90,7 +91,9 @@ class ListingAdapterV1 extends AdapterBase {
     listing.media = listing.media.filter(medium => {
       if (medium.url) {
         try {
-          return ['data:', 'dweb:', 'ipfs:'].includes(new URL(medium.url).protocol)
+          return ['data:', 'dweb:', 'ipfs:'].includes(
+            new URL(medium.url).protocol
+          )
         } catch (error) {
           // Invalid URL, filter it out
           return false
@@ -122,23 +125,27 @@ class ListingAdapterV1 extends AdapterBase {
     this.validate(ipfsData)
 
     const listing = {
-      schemaVersion:  ipfsData.schemaVersion,
-      type:           ipfsData.listingType,
-      category:       ipfsData.category,
-      subCategory:    ipfsData.subCategory,
-      language:       ipfsData.language,
-      title:          ipfsData.title,
-      description:    ipfsData.description,
-      media:          ipfsData.media,
-      expiry:         ipfsData.expiry,
+      schemaVersion: ipfsData.schemaVersion,
+      type: ipfsData.listingType,
+      category: ipfsData.category,
+      subCategory: ipfsData.subCategory,
+      language: ipfsData.language,
+      title: ipfsData.title,
+      description: ipfsData.description,
+      media: ipfsData.media,
+      expiry: ipfsData.expiry
     }
 
     // Unit data.
     if (listing.type === 'unit') {
       listing.unitsTotal = ipfsData.unitsTotal
       listing.price = new Money(ipfsData.price)
-      listing.commission = ipfsData.commission ? new Money(ipfsData.commission) : null
-      listing.securityDeposit = ipfsData.securityDeposit ? new Money(ipfsData.securityDeposit) : null
+      listing.commission = ipfsData.commission
+        ? new Money(ipfsData.commission)
+        : null
+      listing.securityDeposit = ipfsData.securityDeposit
+        ? new Money(ipfsData.securityDeposit)
+        : null
     } else if (listing.type === 'fractional') {
       // TODO(franck): fill this in.
     } else {
@@ -162,7 +169,7 @@ class OfferAdapterV1 extends AdapterBase {
 
     const offer = {
       schemaVersion: ipfsData.schemaVersion,
-      listingType: ipfsData.listingType,
+      listingType: ipfsData.listingType
     }
 
     // Unit data.
@@ -191,8 +198,8 @@ class ReviewAdapterV1 extends AdapterBase {
     this.validate(ipfsData)
 
     const review = {
-      rating:  ipfsData.rating,
-      text:    ipfsData.text,
+      rating: ipfsData.rating,
+      text: ipfsData.text
     }
 
     return review
@@ -200,19 +207,19 @@ class ReviewAdapterV1 extends AdapterBase {
 }
 
 const adapterConfig = {
-  'listing': {
+  listing: {
     '1.0.0': {
       schemaId: 'http://schema.originprotocol.com/listing-core-v1.0.0',
       adapter: ListingAdapterV1
     }
   },
-  'offer': {
+  offer: {
     '1.0.0': {
       schemaId: 'http://schema.originprotocol.com/offer-v1.0.0',
       adapter: OfferAdapterV1
     }
   },
-  'review': {
+  review: {
     '1.0.0': {
       schemaId: 'http://schema.originprotocol.com/review-v1.0.0',
       adapter: ReviewAdapterV1
@@ -232,8 +239,10 @@ export function dataAdapterFactory(dataType, schemaVersion) {
     throw new Error(`Unsupported data type: ${dataType}`)
   }
   if (!adapterConfig[dataType][schemaVersion]) {
-    throw new Error(`Unsupported schema version ${schemaVersion} for type ${dataType}`)
+    throw new Error(
+      `Unsupported schema version ${schemaVersion} for type ${dataType}`
+    )
   }
-  const {schemaId, adapter } = adapterConfig[dataType][schemaVersion]
+  const { schemaId, adapter } = adapterConfig[dataType][schemaVersion]
   return new adapter(dataType, schemaId, schemaVersion)
 }

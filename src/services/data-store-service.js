@@ -31,8 +31,7 @@ class IpfsDataStoreBase {
     const data = adapter.decode(ipfsData)
 
     // Apply any post-processing after loading data.
-    if (adapter.postProcessor)
-      adapter.postProcessor(data, this.ipfsService)
+    if (adapter.postProcessor) adapter.postProcessor(data, this.ipfsService)
 
     // Add the IPFS hash and raw data to the object.
     data.ipfs = {
@@ -54,8 +53,7 @@ class IpfsDataStoreBase {
     const adapter = dataAdapterFactory(this.dataType, data.schemaVersion)
 
     // Apply any pre-processing before storing data.
-    if (adapter.preProcessor)
-      await adapter.preProcessor(data, this.ipfsService)
+    if (adapter.preProcessor) await adapter.preProcessor(data, this.ipfsService)
 
     // Validate and encode the input data.
     const ipfsData = adapter.encode(data)
