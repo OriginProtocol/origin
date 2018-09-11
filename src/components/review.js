@@ -28,7 +28,7 @@ class Review extends Component {
 
   componentWillMount() {
     this.props.fetchUser(
-      this.props.review.reviewerAddress,
+      this.props.review.reviewer,
       this.props.intl.formatMessage(this.intlMessages.unnamedUser)
     )
   }
@@ -41,7 +41,7 @@ class Review extends Component {
 
   render() {
     const { review, user } = this.props
-    const { rating, reviewText, timestamp } = review
+    const { rating, text, timestamp } = review
     const { address, fullName, profile } = user
     const createdAt = timestamp * 1000 // convert seconds since epoch to ms
 
@@ -77,7 +77,7 @@ class Review extends Component {
             </div>
           </div>
         </Link>
-        <p className="content">{reviewText}</p>
+        <p className="content">{text}</p>
       </div>
     )
   }
@@ -85,7 +85,7 @@ class Review extends Component {
 
 const mapStateToProps = (state, { review }) => {
   return {
-    user: state.users.find(u => u.address === review.reviewerAddress) || {}
+    user: state.users.find(u => u.address === review.reviewer) || {}
   }
 }
 
