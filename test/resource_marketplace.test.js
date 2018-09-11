@@ -121,9 +121,9 @@ describe('Marketplace Resource', function() {
       const offers = await marketplace.getOffers('999-001-0')
       expect(offers.length).to.equal(2)
       expect(offers[0].status).to.equal('created')
-      expect(offers[0].ipfsHash).to.exist
+      expect(offers[0].unitsPurchased).to.exist
       expect(offers[1].status).to.equal('created')
-      expect(offers[1].ipfsHash).to.exist
+      expect(offers[1].unitsPurchased).to.exist
     })
   })
 
@@ -131,7 +131,7 @@ describe('Marketplace Resource', function() {
     it('should get offer data', async () => {
       const offer = await marketplace.getOffer('999-001-0-0')
       expect(offer.status).to.equal('created')
-      expect(offer.ipfsHash).to.exist
+      expect(offer.unitsPurchased).to.exist
     })
   })
 
@@ -144,8 +144,7 @@ describe('Marketplace Resource', function() {
       )
       await marketplace.makeOffer('999-001-0', anotherOffer)
       const offer = await marketplace.getOffer('999-001-0-1')
-      const expectedPrice = web3.utils.toWei('0.02', 'ether')
-      expect(offer.value).to.equal(expectedPrice)
+      expect(offer.totalPrice.amount).to.equal('0.02')
     })
   })
 
