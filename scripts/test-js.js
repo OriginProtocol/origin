@@ -5,16 +5,9 @@ const startIpfs = require('./helpers/start-ipfs')
 
 const startGanache = require('./helpers/start-ganache')
 
-const runTests = async (watch) => {
+const runTests = async watch => {
   return new Promise((resolve, reject) => {
-    const args = [
-      '-r',
-      'babel-register',
-      '-r',
-      'babel-polyfill',
-      '-t',
-      '10000',
-    ]
+    const args = ['-r', 'babel-register', '-r', 'babel-polyfill', '-t', '10000']
     if (watch) {
       args.push('--watch')
     } else {
@@ -48,7 +41,7 @@ const start = async () => {
   console.log(chalk`\n{bold.hex('#6e3bea') ⬢  Deploying Smart Contracts }\n`)
   await deployContracts()
 
-  const watch = (process.argv[2] && process.argv[2] == '--watch')
+  const watch = process.argv[2] && process.argv[2] == '--watch'
   await runTests(watch)
 }
 

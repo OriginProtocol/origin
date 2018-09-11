@@ -1,5 +1,3 @@
-
-
 class Discovery {
   constructor({ discoveryServer, discoveryServerPort, fetch }) {
     this.discoveryServer = discoveryServer
@@ -22,9 +20,9 @@ class Discovery {
     {
       listings (
         searchQuery: "${searchQuery}"
-        filters: [${filters.map(filter => 
-  {
-    return `
+        filters: [${filters
+    .map(filter => {
+      return `
     {
       name: "${filter.name}"
       value: "${String(filter.value)}"
@@ -32,7 +30,8 @@ class Discovery {
       operator: ${filter.operator}
     }
     `
-  }).join(',')}]
+    })
+    .join(',')}]
       ) {
         nodes {
           id
@@ -43,11 +42,11 @@ class Discovery {
     return this.fetch(`${this.discoveryServer}:${this.discoveryServerPort}`, {
       method: 'POST',
       body: JSON.stringify({
-        query:query
+        query: query
       }),
       headers: {
         'Content-Type': 'application/json'
-      },
+      }
     })
   }
 }

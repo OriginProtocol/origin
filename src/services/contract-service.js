@@ -190,7 +190,9 @@ class ContractService {
   ) {
     const contractDefinition = this.contracts[contractName]
     if (typeof contractDefinition === 'undefined') {
-      throw new Error(`Contract not defined on contract service: ${contractName}`)
+      throw new Error(
+        `Contract not defined on contract service: ${contractName}`
+      )
     }
     // Setup options
     const opts = { from, gas, value }
@@ -203,7 +205,7 @@ class ContractService {
       return await method.call(opts)
     }
     // set gas
-    opts.gas = opts.gas || await method.estimateGas(opts)
+    opts.gas = opts.gas || (await method.estimateGas(opts))
     const transactionReceipt = await new Promise((resolve, reject) => {
       method
         .send(opts)

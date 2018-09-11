@@ -1,15 +1,15 @@
 /* eslint-disable semi,no-unused-vars,no-extra-semi */
-async function assertRevert (promise) {
+async function assertRevert(promise) {
   try {
-    await promise;
+    await promise
   } catch (error) {
-    const revertFound = error.message.search('revert') >= 0;
-    assert(revertFound, `Expected "revert", got ${error} instead`);
-    return;
+    const revertFound = error.message.search('revert') >= 0
+    assert(revertFound, `Expected "revert", got ${error} instead`)
+    return
   }
-  assert.fail('Expected revert not received');
+  assert.fail('Expected revert not received')
 }
 
 module.exports = {
-  assertRevert,
-};
+  assertRevert
+}

@@ -1,4 +1,3 @@
-
 /**
  * Helper class for handling money.
  * TODO(franck):
@@ -6,7 +5,7 @@
  *   2. Implement operations such as mutiply, add, etc...
  */
 class Money {
-  constructor({amount, currency}) {
+  constructor({ amount, currency }) {
     this.currency = currency
     this.amount = amount
   }

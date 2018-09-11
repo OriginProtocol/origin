@@ -1,10 +1,18 @@
-import { generateListingId, generateOfferId, generateNotificationId } from '../utils/id'
+import {
+  generateListingId,
+  generateOfferId,
+  generateNotificationId
+} from '../utils/id'
 
 import Adaptable from './adaptable'
 import { Listing } from '../models/listing'
 import { Offer } from '../models/offer'
 import { Review } from '../models/review'
-import { ListingIpfsStore, OfferIpfsStore, ReviewIpfsStore } from '../services/data-store-service'
+import {
+  ListingIpfsStore,
+  OfferIpfsStore,
+  ReviewIpfsStore
+} from '../services/data-store-service'
 
 const unreadStatus = 'unread'
 const readStatus = 'read'
@@ -16,12 +24,7 @@ const storeKeys = {
 }
 
 class Marketplace extends Adaptable {
-
-  constructor({
-    contractService,
-    ipfsService,
-    store
-  }) {
+  constructor({ contractService, ipfsService, store }) {
     super(...arguments)
     this.contractService = contractService
     this.ipfsService = ipfsService
@@ -80,7 +83,9 @@ class Marketplace extends Adaptable {
     const chainListing = await adapter.getListing(listingIndex)
 
     // Get the off-chain listing data from IPFS.
-    const ipfsHash = this.contractService.getIpfsHashFromBytes32(chainListing.ipfsHash)
+    const ipfsHash = this.contractService.getIpfsHashFromBytes32(
+      chainListing.ipfsHash
+    )
     const ipfsListing = await this.listingIpfsStore.load(ipfsHash)
 
     // Create and return a Listing from on-chain and off-chain data .
@@ -126,7 +131,9 @@ class Marketplace extends Adaptable {
     const chainOffer = await adapter.getOffer(listingIndex, offerIndex)
 
     // Load ipfs data.
-    const ipfsHash = this.contractService.getIpfsHashFromBytes32(chainOffer.ipfsHash)
+    const ipfsHash = this.contractService.getIpfsHashFromBytes32(
+      chainOffer.ipfsHash
+    )
     const ipfsOffer = await this.offerIpfsStore.load(ipfsHash)
 
     // Create an Offer from on-chain and off-chain data.
@@ -185,7 +192,9 @@ class Marketplace extends Adaptable {
 
     // For V1, we only support quantity of 1.
     if (offerData.unitsPurchased != 1)
-      throw new Error(`Attempted to purchase ${offerData.unitsPurchased} - only 1 allowed.`)
+      throw new Error(
+        `Attempted to purchase ${offerData.unitsPurchased} - only 1 allowed.`
+      )
 
     // Save the offer data in IPFS.
     const ipfsHash = await this.offerIpfsStore.save(offerData)
@@ -280,7 +289,6 @@ class Marketplace extends Adaptable {
    * @return {Promise<{timestamp, transactionReceipt}>}
    */
   async addData(listingId, offerId, data, confirmationCallback) {
-
     if (offerId) {
       const { adapter, listingIndex, offerIndex } = this.parseOfferId(offerId)
 
@@ -307,7 +315,9 @@ class Marketplace extends Adaptable {
         confirmationCallback
       )
     } else {
-      throw new Error('addData must be called with either a listing or offer id.')
+      throw new Error(
+        'addData must be called with either a listing or offer id.'
+      )
     }
   }
 
@@ -319,7 +329,9 @@ class Marketplace extends Adaptable {
    * @return {Promise<Array[Review]>}
    */
   async getListingReviews(listingId) {
-    const { adapter, listingIndex, version, network } = this.parseListingId(listingId)
+    const { adapter, listingIndex, version, network } = this.parseListingId(
+      listingId
+    )
 
     // Get all the OfferFinalized events for the listing.
     const listing = await adapter.getListing(listingIndex)
@@ -330,11 +342,18 @@ class Marketplace extends Adaptable {
     const reviews = []
     for (const event of reviewEvents) {
       // Load review data from IPFS.
-      const ipfsHash = this.contractService.getIpfsHashFromBytes32(event.returnValues.ipfsHash)
+      const ipfsHash = this.contractService.getIpfsHashFromBytes32(
+        event.returnValues.ipfsHash
+      )
       const ipfsReview = await this.reviewIpfsStore.load(ipfsHash)
 
       const offerIndex = event.returnValues.offerID
-      const offerId = generateOfferId({ network, version, listingIndex, offerIndex })
+      const offerId = generateOfferId({
+        network,
+        version,
+        listingIndex,
+        offerIndex
+      })
 
       // TODO(franck): Store the review timestamp in IPFS to avoid
       //               a call to the blockchain to get the event's timestamp.
@@ -363,7 +382,9 @@ class Marketplace extends Adaptable {
           version,
           transactionHash: notification.event.transactionHash
         })
-        const timestamp = await this.contractService.getTimestamp(notification.event)
+        const timestamp = await this.contractService.getTimestamp(
+          notification.event
+        )
         const timestampInMilli = timestamp * 1000
         const isWatched =
           timestampInMilli >

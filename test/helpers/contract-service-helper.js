@@ -1,10 +1,8 @@
-import ListingsRegistryContract from '../../contracts/build/contracts/ListingsRegistry.json'
-import ListingsRegistryStorageContract from '../../contracts/build/contracts/ListingsRegistryStorage.json'
 import ContractService from '../../src/services/contract-service'
 import Web3 from 'web3'
 
 /*
-  Returns a contract service instance with a clean listings registry
+  Returns a contract service instance with a clean marketplace contract
 
   This creates a clean environment for testing without side effects.
 */
@@ -13,33 +11,31 @@ export default async function contractServiceHelper(web3) {
   const accounts = await web3.eth.getAccounts()
   const dummyContractService = new ContractService({ web3 })
 
+  const originToken = await dummyContractService.deployed(
+    dummyContractService.contracts['OriginToken']
+  )
+
   // Deploy clean listings registry for testing without side effects
-  const listingsRegistryStorage = await dummyContractService.deploy(
-    ListingsRegistryStorageContract,
-    [],
+  const v00_marketplace = await dummyContractService.deploy(
+    dummyContractService.contracts['V00_Marketplace'],
+    [originToken.options.address],
     { from: accounts[0], gas: 4000000 }
   )
-  const listingsRegistry = await dummyContractService.deploy(
-    ListingsRegistryContract,
-    [ listingsRegistryStorage.contractAddress ],
+
+  const v01_marketplace = await dummyContractService.deploy(
+    dummyContractService.contracts['V01_Marketplace'],
+    [originToken.options.address],
     { from: accounts[0], gas: 4000000 }
-  )
-  await dummyContractService.call(
-    'ListingsRegistryStorage',
-    'setActiveRegistry',
-    [ listingsRegistry.contractAddress ],
-    {
-      from: accounts[0],
-      gas: 4000000,
-      contractAddress: listingsRegistryStorage.contractAddress
-    }
   )
 
   return new ContractService({
     web3,
     contractAddresses: {
-      ListingsRegistry: {
-        999: { address: listingsRegistry.contractAddress }
+      V00_Marketplace: {
+        999: { address: v00_marketplace.contractAddress }
+      },
+      V01_Marketplace: {
+        999: { address: v01_marketplace.contractAddress }
       }
     }
   })

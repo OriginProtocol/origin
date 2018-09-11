@@ -2,7 +2,7 @@ const OriginToken = artifacts.require('OriginToken')
 
 export const StandardTokenMock = {
   new: async function(owner, initialSupply) {
-    return await OriginToken.new(initialSupply, {from: owner})
+    return await OriginToken.new(initialSupply, { from: owner })
   }
 }
 

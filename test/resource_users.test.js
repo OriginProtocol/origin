@@ -145,7 +145,7 @@ describe('User Resource', function() {
       // This is actually 2 claims because profile info is 1 claim
       await users.set({
         profile: { claims: { name: 'Black Widow' } },
-        attestations: [ phoneAttestation ]
+        attestations: [phoneAttestation]
       })
       const user = await users.get()
 
@@ -156,7 +156,7 @@ describe('User Resource', function() {
     it('should be able to deploy new identity with 3 presigned claims', async () => {
       await users.set({
         profile: { claims: { name: 'Black Widow' } },
-        attestations: [ phoneAttestation, emailAttestation ]
+        attestations: [phoneAttestation, emailAttestation]
       })
       const user = await users.get()
 
@@ -167,11 +167,7 @@ describe('User Resource', function() {
     it('should be able to deploy new identity with 4 presigned claims', async () => {
       await users.set({
         profile: { claims: { name: 'Black Widow' } },
-        attestations: [
-          phoneAttestation,
-          emailAttestation,
-          facebookAttestation
-        ]
+        attestations: [phoneAttestation, emailAttestation, facebookAttestation]
       })
       const user = await users.get()
 
