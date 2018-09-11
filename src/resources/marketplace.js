@@ -2,8 +2,6 @@ import { Listing } from '../models/listing'
 import { Offer } from '../models/offer'
 import { Review } from '../models/review'
 import {
-  readStatus,
-  unreadStatus,
   notificationStatuses,
   storeKeys
 } from '../models/notification'
@@ -123,7 +121,7 @@ class Marketplace {
     const ipfsHash = await this.ipfsService.saveObjAsFile({ data: ipfsData })
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
-    return await adapter.withdrawListing(
+    return await this.resolver.withdrawListing(
       listingId,
       ipfsBytes,
       confirmationCallback
