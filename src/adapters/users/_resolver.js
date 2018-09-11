@@ -31,7 +31,14 @@ class UsersResolver {
   }
 
   async identityAddress(wallet) {
-    return this.currentAdapter.identityAddress(wallet)
+    let result = false
+    for (let i = this.versions.length - 1; i >= 0; i--) {
+      if (!result) {
+        const version = this.versions[i]
+        result = await this.adapters[version].identityAddress(wallet)
+      }
+    }
+    return result
   }
 }
 
