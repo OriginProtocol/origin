@@ -1,10 +1,3 @@
-import {
-  generateListingId,
-  generateOfferId,
-  generateNotificationId
-} from '../utils/id'
-
-import Adaptable from './adaptable'
 import { Listing } from '../models/listing'
 import { Offer } from '../models/offer'
 import { Review } from '../models/review'
@@ -13,6 +6,7 @@ import {
   OfferIpfsStore,
   ReviewIpfsStore
 } from '../services/data-store-service'
+import MarketplaceResolver from '../adapters/marketplace/_resolver'
 
 const unreadStatus = 'unread'
 const readStatus = 'read'
@@ -23,14 +17,14 @@ const storeKeys = {
   notificationStatuses: 'notification_statuses'
 }
 
-class Marketplace extends Adaptable {
+class Marketplace {
   constructor({ contractService, ipfsService, store }) {
-    super(...arguments)
     this.contractService = contractService
     this.ipfsService = ipfsService
     this.listingIpfsStore = new ListingIpfsStore(this.ipfsService)
     this.offerIpfsStore = new OfferIpfsStore(this.ipfsService)
     this.reviewIpfsStore = new ReviewIpfsStore(this.ipfsService)
+    this.resolver = new MarketplaceResolver(...arguments)
 
     // initialize notifications
     if (!store.get(storeKeys.notificationSubscriptionStart)) {
@@ -43,25 +37,11 @@ class Marketplace extends Adaptable {
   }
 
   async getListingsCount() {
-    let total = 0
-    for (const version of this.versions) {
-      total += await this.adapters[version].getListingsCount()
-    }
-    return total
+    return await this.resolver.getListingsCount()
   }
 
   async getListings(opts = {}) {
-    const network = await this.contractService.web3.eth.net.getId()
-    const listingIds = []
-
-    for (const version of this.versions) {
-      const listingIndexes = await this.adapters[version].getListings(opts)
-      listingIndexes.forEach(listingIndex => {
-        listingIds.unshift(
-          generateListingId({ version, network, listingIndex })
-        )
-      })
-    }
+    const listingIds = await this.resolver.getListingIds()
 
     if (opts.idsOnly) {
       return listingIds
@@ -79,8 +59,7 @@ class Marketplace extends Adaptable {
    */
   async getListing(listingId) {
     // Get the on-chain listing data.
-    const { adapter, listingIndex } = this.parseListingId(listingId)
-    const chainListing = await adapter.getListing(listingIndex)
+    const chainListing = await this.resolver.getListing(listingId)
 
     // Get the off-chain listing data from IPFS.
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(
@@ -95,12 +74,7 @@ class Marketplace extends Adaptable {
   // async getOffersCount(listingId) {}
 
   async getOffers(listingId, opts = {}) {
-    const network = await this.contractService.web3.eth.net.getId()
-    const { adapter, listingIndex, version } = this.parseListingId(listingId)
-    const offers = await adapter.getOffers(listingIndex, opts)
-    const offerIds = offers.map(offerIndex => {
-      return generateOfferId({ network, version, listingIndex, offerIndex })
-    })
+    const offerIds = await this.resolver.getOfferIds(listingId, opts)
     if (opts.idsOnly) {
       return offerIds
     } else {
@@ -118,17 +92,8 @@ class Marketplace extends Adaptable {
    * @return {Promise<Offer>} - models/Offer object
    */
   async getOffer(offerId) {
-    const {
-      adapter,
-      listingIndex,
-      offerIndex,
-      version,
-      network
-    } = this.parseOfferId(offerId)
-    const listingId = generateListingId({ version, network, listingIndex })
-
     // Load chain data.
-    const chainOffer = await adapter.getOffer(listingIndex, offerIndex)
+    const { chainOffer, listingId } = await this.resolver.getOffer(offerId)
 
     // Load ipfs data.
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(
@@ -151,28 +116,17 @@ class Marketplace extends Adaptable {
     const ipfsHash = await this.listingIpfsStore.save(ipfsData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
-    const transactionReceipt = await this.currentAdapter.createListing(
-      ipfsBytes,
-      ipfsData,
-      confirmationCallback
-    )
-    const version = this.currentVersion
-    const network = await this.contractService.web3.eth.net.getId()
-    const { listingIndex } = transactionReceipt
-    const listingId = generateListingId({ network, version, listingIndex })
-
-    return Object.assign({ listingId }, transactionReceipt)
+    return await this.resolver.createListing(ipfsBytes, ipfsData, confirmationCallback)
   }
 
   // updateListing(listingId, data) {}
 
   async withdrawListing(listingId, ipfsData, confirmationCallback) {
-    const { adapter, listingIndex } = this.parseListingId(listingId)
     const ipfsHash = await this.ipfsService.saveObjAsFile({ data: ipfsData })
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     return await adapter.withdrawListing(
-      listingIndex,
+      listingId,
       ipfsBytes,
       confirmationCallback
     )
@@ -186,10 +140,6 @@ class Marketplace extends Adaptable {
    * @return {Promise<{listingId, offerId, ...transactionReceipt}>}
    */
   async makeOffer(listingId, offerData, confirmationCallback) {
-    const { adapter, listingIndex, version, network } = this.parseListingId(
-      listingId
-    )
-
     // For V1, we only support quantity of 1.
     if (offerData.unitsPurchased != 1)
       throw new Error(
@@ -205,23 +155,7 @@ class Marketplace extends Adaptable {
       offerData.totalPrice.amount,
       'ether'
     )
-    const transactionData = { priceWei } // TODO: add commission, affliliate.
-    const transactionReceipt = await adapter.makeOffer(
-      listingIndex,
-      ipfsBytes,
-      transactionData,
-      confirmationCallback
-    )
-
-    // Success. Return listingId, newly created offerId and chain transaction receipt.
-    const { offerIndex } = transactionReceipt
-    const offerId = generateOfferId({
-      network,
-      version,
-      listingIndex,
-      offerIndex
-    })
-    return Object.assign({ listingId, offerId }, transactionReceipt)
+    return await this.resolver.makeOffer(listingId, ipfsBytes, priceWei, confirmationCallback)
   }
 
   // updateOffer(listingId, offerId, data) {}
@@ -235,16 +169,13 @@ class Marketplace extends Adaptable {
    * @return {Promise<{timestamp, transactionReceipt}>}
    */
   async acceptOffer(id, data, confirmationCallback) {
-    const { adapter, listingIndex, offerIndex } = this.parseOfferId(id)
-
     // FIXME(franck): implement support for empty data.
     //const ipfsHash = await this.offerIpfsStore.save(data)
     //const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
     const ipfsBytes = '0x0000000000000000000000000000000000000000'
 
-    return await adapter.acceptOffer(
-      listingIndex,
-      offerIndex,
+    return await this.resolver.acceptOffer(
+      id,
       ipfsBytes,
       confirmationCallback
     )
@@ -258,14 +189,11 @@ class Marketplace extends Adaptable {
    * @return {Promise<{timestamp, transactionReceipt}>}
    */
   async finalizeOffer(id, reviewData, confirmationCallback) {
-    const { adapter, listingIndex, offerIndex } = this.parseOfferId(id)
-
     const ipfsHash = await this.reviewIpfsStore.save(reviewData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
-    return await adapter.finalizeOffer(
-      listingIndex,
-      offerIndex,
+    return await this.resolver.finalizeOffer(
+      id,
       ipfsBytes,
       confirmationCallback
     )
@@ -289,36 +217,15 @@ class Marketplace extends Adaptable {
    * @return {Promise<{timestamp, transactionReceipt}>}
    */
   async addData(listingId, offerId, data, confirmationCallback) {
-    if (offerId) {
-      const { adapter, listingIndex, offerIndex } = this.parseOfferId(offerId)
+    const ipfsHash = await this.reviewIpfsStore.save(data)
+    const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
-      // We expect this to be review data from the seller.
-      const ipfsHash = await this.reviewIpfsStore.save(data)
-      const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
-
-      return await adapter.addData(
-        ipfsBytes,
-        listingIndex,
-        offerIndex,
-        confirmationCallback
-      )
-    } else if (listingId) {
-      const { adapter, listingIndex } = this.parseListingId(listingId)
-
-      const ipfsHash = await this.listingIpfsStore.save(data)
-      const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
-
-      return await adapter.addData(
-        ipfsBytes,
-        listingIndex,
-        null,
-        confirmationCallback
-      )
-    } else {
-      throw new Error(
-        'addData must be called with either a listing or offer id.'
-      )
-    }
+    return await this.resolver.addData(
+      listingId,
+      offerId,
+      ipfsBytes,
+      confirmationCallback
+    )
   }
 
   // Convenience methods
@@ -329,15 +236,7 @@ class Marketplace extends Adaptable {
    * @return {Promise<Array[Review]>}
    */
   async getListingReviews(listingId) {
-    const { adapter, listingIndex, version, network } = this.parseListingId(
-      listingId
-    )
-
-    // Get all the OfferFinalized events for the listing.
-    const listing = await adapter.getListing(listingIndex)
-    const reviewEvents = listing.events.filter(
-      e => e.event === 'OfferFinalized'
-    )
+    const reviewEvents = await this.resolver.getListingReviews(listingId)
 
     const reviews = []
     for (const event of reviewEvents) {
@@ -347,72 +246,16 @@ class Marketplace extends Adaptable {
       )
       const ipfsReview = await this.reviewIpfsStore.load(ipfsHash)
 
-      const offerIndex = event.returnValues.offerID
-      const offerId = generateOfferId({
-        network,
-        version,
-        listingIndex,
-        offerIndex
-      })
-
-      // TODO(franck): Store the review timestamp in IPFS to avoid
-      //               a call to the blockchain to get the event's timestamp.
-      const timestamp = await this.contractService.getTimestamp(event)
-      event.timestamp = timestamp
-
       // Create a Review object based on IPFS and event data.
-      const review = new Review(listingId, offerId, event, ipfsReview)
+      const review = new Review(listingId, event.offerId, event, ipfsReview)
       reviews.push(review)
     }
     return reviews
   }
 
   async getNotifications() {
-    const network = await this.contractService.web3.eth.net.getId()
     const party = await this.contractService.currentAccount()
-    let notifications = []
-    for (const version of this.versions) {
-      const rawNotifications = await this.adapters[version].getNotifications(
-        party
-      )
-
-      for (const notification of rawNotifications) {
-        notification.id = generateNotificationId({
-          network,
-          version,
-          transactionHash: notification.event.transactionHash
-        })
-        const timestamp = await this.contractService.getTimestamp(
-          notification.event
-        )
-        const timestampInMilli = timestamp * 1000
-        const isWatched =
-          timestampInMilli >
-          this.store.get(storeKeys.notificationSubscriptionStart)
-        const notificationStatuses = this.store.get(
-          storeKeys.notificationStatuses
-        )
-        notification.status =
-          isWatched && notificationStatuses[notification.id] !== readStatus
-            ? unreadStatus
-            : readStatus
-        if (notification.resources.listingId) {
-          notification.resources.listing = await this.getListing(
-            `${network}-${version}-${notification.resources.listingId}`
-          )
-        }
-        if (notification.resources.offerId) {
-          notification.resources.purchase = await this.getOffer(
-            `${network}-${version}-${notification.resources.listingId}-${
-              notification.resources.offerId
-            }`
-          )
-        }
-      }
-
-      notifications = notifications.concat(rawNotifications)
-    }
-    return notifications
+    return await this.resolver.getNotifications(party)
   }
 
   async setNotification({ id, status }) {
@@ -425,7 +268,7 @@ class Marketplace extends Adaptable {
   }
 
   async getTokenAddress() {
-    return await this.currentAdapter.getTokenAddress()
+    return await this.resolver.getTokenAddress()
   }
 }
 
