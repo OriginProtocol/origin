@@ -67,9 +67,9 @@ class PriceFilter extends Component {
   }
 
   render() {
-    const priceUnit = this.props.filter.priceUnit ?
-      this.props.intl.formatMessage(this.props.filter.priceUnit) :
-      `$`
+    const priceUnit = this.props.filter.priceUnit
+      ? this.props.intl.formatMessage(this.props.filter.priceUnit)
+      : `$`
 
     return (
       <div
