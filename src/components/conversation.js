@@ -163,7 +163,7 @@ class Conversation extends Component {
 
     const offers = await origin.marketplace.getOffers(listing.id)
     const flattenedOffers = offers.map(o => {
-      return { ...o, ...o.ipfsData.data }
+      return { ...o, ...o.ipfs.data }
     })
     const involvingCounterparty = flattenedOffers.filter(
       o => o.buyer === counterparty.address || o.buyer === web3Account
