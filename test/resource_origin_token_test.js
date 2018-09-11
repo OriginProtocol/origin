@@ -35,10 +35,10 @@ describe('Origin Token Resource', function() {
     const deployReceipt = await contractService.deploy(
       contractService.contracts['OriginToken'],
       [initialSupply],
-      {from: owner, gas: 4000000}
+      { from: owner, gas: 4000000 }
     )
     const marketplace = new MarketplaceMock(deployReceipt.contractAddress)
-    TokenResource = new Token({ contractService, marketplace})
+    TokenResource = new Token({ contractService, marketplace })
     OriginToken = new web3.eth.Contract(
       OriginTokenContract.abi,
       deployReceipt.contractAddress
@@ -53,7 +53,7 @@ describe('Origin Token Resource', function() {
     const other = accounts[1]
     const amount = 3
     assert.notEqual(owner, other)
-    await OriginToken.methods.transfer(other, amount).send({from: owner})
+    await OriginToken.methods.transfer(other, amount).send({ from: owner })
     assert.equal(await TokenResource.balanceOf(owner), initialSupply - amount)
     assert.equal(await TokenResource.balanceOf(other), amount)
   })
@@ -63,7 +63,7 @@ describe('Origin Token Resource', function() {
   })
 
   it('returns paused when token contract is paused', async function() {
-    await OriginToken.methods.pause().send({from: owner})
+    await OriginToken.methods.pause().send({ from: owner })
     assert.equal(await TokenResource.isPaused(), true)
   })
 })

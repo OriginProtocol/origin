@@ -72,7 +72,9 @@ const populateIpfs = async () => {
       data.media = []
       for (const imagePath of imagePaths) {
         const imageUpload = await ipfs.util.addFromFs(imagePath)
-        const contentType = imagePath.endsWith('jpg') ? 'image/jpeg' : 'image/png'
+        const contentType = imagePath.endsWith('jpg')
+          ? 'image/jpeg'
+          : 'image/png'
         const medium = {
           url: `ipfs://${imageUpload[0]['hash']}`,
           contentType: contentType
@@ -89,7 +91,12 @@ const populateIpfs = async () => {
       // Log some data.
       // TODO(franck): re-use ContractService.getBytes32FromIpfsHash
       const ipfsHash = resp[0].hash
-      const bytes32 = '0x' + bs58.decode(ipfsHash).slice(2).toString('hex')
+      const bytes32 =
+        '0x' +
+        bs58
+          .decode(ipfsHash)
+          .slice(2)
+          .toString('hex')
       console.log(`Uploaded fixture listing ${listingDirectoryName} to IPFS`)
       console.log(`  IPFS Hash=${ipfsHash}`)
       console.log(`  Bytes32  =${bytes32}`)

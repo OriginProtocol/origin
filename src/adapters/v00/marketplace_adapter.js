@@ -1,4 +1,11 @@
-const OFFER_STATUS = ['error','created', 'accepted', 'disputed', 'finalized', 'sellerReviewed']
+const OFFER_STATUS = [
+  'error',
+  'created',
+  'accepted',
+  'disputed',
+  'finalized',
+  'sellerReviewed'
+]
 const emptyAddress = '0x0000000000000000000000000000000000000000'
 
 class V00_MarkeplaceAdapter {

@@ -4,9 +4,7 @@ import { Listing } from '../src/models/listing'
 
 const expect = chai.expect
 
-
 describe('Listing', () => {
-
   it(`unitsRemaining should equal to unitsTotal when no offer`, () => {
     const chainListing = { offers: [] }
     const ipfsListing = { unitsTotal: 10 }
@@ -16,13 +14,15 @@ describe('Listing', () => {
   })
 
   it(`unitsRemaining should be unitsTotal - unitsSold`, () => {
-    const chainListing = { offers: {
-      offerId1: { status: 'created' },
-      offerId2: { status: 'accepted'} } }
+    const chainListing = {
+      offers: {
+        offerId1: { status: 'created' },
+        offerId2: { status: 'accepted' }
+      }
+    }
     const ipfsListing = { unitsTotal: 10 }
     const listing = new Listing('FakeID', chainListing, ipfsListing)
     expect(listing.unitsRemaining).to.equal(9)
     expect(listing.unitsSold).to.equal(1)
   })
-
 })
