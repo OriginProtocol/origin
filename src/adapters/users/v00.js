@@ -1,4 +1,5 @@
 import AttestationObject from '../../models/attestation'
+import UserObject from '../../models/user'
 import {
   fromRpcSig,
   ecrecover,
@@ -10,15 +11,6 @@ import Web3 from 'web3'
 
 const selfAttestationClaimType = 13 // TODO: use the correct number here
 const emptyAddress = '0x0000000000000000000000000000000000000000'
-
-class UserObject {
-  constructor({ address, profile, attestations, identityAddress } = {}) {
-    this.address = address
-    this.profile = profile
-    this.attestations = attestations
-    this.identityAddress = identityAddress
-  }
-}
 
 class V00_UsersAdapter {
   constructor({ contractService, ipfsService }) {
