@@ -23,7 +23,7 @@ import UserCard from 'components/user-card'
 import TransactionEvent from 'pages/purchases/transaction-event'
 
 import { getListing } from 'utils/listing'
-import { offerStatusToStep} from '../utils/offer'
+import { offerStatusToStep } from '../utils/offer'
 
 import origin from '../services/origin'
 
