@@ -49,7 +49,7 @@ class PhotoPicker extends Component {
         }
       }
 
-      const filesAsDataUriArray = filesArr.map(async getDataUri)
+      const filesAsDataUriArray = filesArr.map(async fileObj => getDataUri(fileObj))
 
       Promise.all(filesAsDataUriArray).then(dataUriArray => {
         this.setState(
