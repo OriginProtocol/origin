@@ -132,7 +132,7 @@ class ListingsDetail extends Component {
             listingType: 'unit',
             unitsPurchased: unitsToBuy,
             totalPrice: {
-              currency: "ETH",
+              currency: 'ETH',
               amount: totalPrice.toString()
             }
           },
