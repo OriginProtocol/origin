@@ -125,9 +125,10 @@ class ListingsDetail extends Component {
         this.setState({ step: this.STEP.PROCESSING })
         const offerData = {
           listingId: this.props.listingId,
+          listingType: 'unit',
           schemaVersion: '1.0.0',
           unitsPurchased: 1,
-          price: {
+          totalPrice: {
             amount: this.state.price,
             currency: 'ETH'
           }

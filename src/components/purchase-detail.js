@@ -23,6 +23,7 @@ import UserCard from 'components/user-card'
 import TransactionEvent from 'pages/purchases/transaction-event'
 
 import { getListing } from 'utils/listing'
+import { offerStatusToStep} from '../utils/offer'
 
 import origin from '../services/origin'
 
@@ -120,8 +121,8 @@ class PurchaseDetail extends Component {
      *  - odd-numbered steps are buyer's responsibility
      */
     this.nextSteps = [
+      // Step 0 - We should never be in this state
       {
-        // we should never be in this state
         buyer: {
           prompt: 'Purchase this listing',
           instruction: 'Why is this here if you have not yet purchased it?'
@@ -131,6 +132,7 @@ class PurchaseDetail extends Component {
           instruction: 'Why are you seeing this? There is no buyer.'
         }
       },
+      // Step 1 - Offer created by buyer.
       {
         buyer: {
           prompt: this.props.intl.formatMessage(this.intlMessages.awaitOrder)
@@ -146,6 +148,7 @@ class PurchaseDetail extends Component {
           functionName: 'confirmShipped'
         }
       },
+      // Step 2: Offer Accepted by Seller.
       {
         buyer: {
           prompt: this.props.intl.formatMessage(
@@ -167,6 +170,7 @@ class PurchaseDetail extends Component {
           prompt: this.props.intl.formatMessage(this.intlMessages.waitForBuyer)
         }
       },
+      // Step 3: Offer finalized by Buyer.
       {
         buyer: {
           prompt: this.props.intl.formatMessage(
@@ -276,7 +280,6 @@ class PurchaseDetail extends Component {
           this.props.updateTransaction(confirmationCount, transactionReceipt)
         }
       )
-
       this.props.upsertTransaction({
         ...transactionReceipt,
         offer,
@@ -417,11 +420,12 @@ class PurchaseDetail extends Component {
       perspective = 'seller'
     }
 
+
     const pictures = listing.pictures || []
     const active = listing.status === 'active' // TODO: move to origin.js, take into account listing expiration
     const soldAt = purchase.createdAt * 1000 // convert seconds since epoch to ms
 
-    const paymentEvent = purchase.events.find(l => l.event === 'OfferCreated')
+    const paymentEvent = purchase.event('OfferCreated')
     const fulfillmentEvent = purchase.event('OfferAccepted')
     const receiptEvent = purchase.event('OfferFinalized') // TODO: this is not the equivalent step. Fix later
     const withdrawalEvent = purchase.event('OfferWithdrawn')
@@ -435,7 +439,7 @@ class PurchaseDetail extends Component {
     const counterpartyUser = counterparty === 'buyer' ? buyer : seller
     const status = active ? 'active' : 'inactive'
     const maxStep = perspective === 'seller' ? 4 : 3
-    const step = parseInt(purchase.status)
+    const step = offerStatusToStep(purchase.status)
     const left = progressTriangleOffset(step, maxStep, perspective)
 
     const nextStep = perspective && this.nextSteps[step]

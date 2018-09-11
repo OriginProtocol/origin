@@ -1,9 +1,9 @@
 const statusMap = {
   created: 1,
   accepted: 2,
-  disputed: 3,
-  finalized: 4,
-  buyerReviewed: 5
+  disputed: undefined, // TODO: Set this once dispute/arbitration implemented.
+  finalized: 3,
+  sellerReviewed: undefined // There is no next step on either side once in this state.
 }
 
 /**
