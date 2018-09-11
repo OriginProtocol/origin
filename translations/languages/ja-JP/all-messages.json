@@ -117,6 +117,7 @@
   "MessageNew.send": "送信",
   "MessageNew.encryptionNotice": "あなたのメッセージは暗号化されます。ですので、あなた、受信者、または紛争が起こった場合の仲裁者だけがメッセージを読む事ができます。",
   "message.enable": "メッセージ機能を有効にする",
+  "message.unrecognizedData": "This data cannot be rendered.",
   "messaging-provider.congrats": "おめでとうございます！ Originプラットフォームのエコシステム全体で他のユーザにメッセージを送信できるようになりました。 ぜひ私達のDAppについて感想を聞かせてくださいね。",
   "messaging-provider.unnamedUser": "名前の無いユーザー",
   "messaging-provider.welcome": "Origin Protocol のデモDAppへようこそ！この革新的なメッセージングプラットフォームを使って、安全かつ分散化された方法で他のOriginユーザとコミュニケーションできます。すべてのメッセージは暗号化され、IPFSに保存されます。もし、ユーザー同士の紛争が発生した場合は、暗号によって生成された共有秘密鍵へのアクセスを許可した場合にのみ、暗号化されたメッセージが、あなた、受取人、および必要な場合は第三者の仲裁人にだけ、読むことができるようになります。\nこのメッセージ機能を有効にするには、Ethereumウォレットを使用して2つのステートメントに署名する必要があります。\nこの署名にはEthereum、Originトークン、またはガスなどの費用はかかりません。",
