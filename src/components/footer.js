@@ -161,7 +161,7 @@ class Footer extends Component {
                       >
                         <FormattedMessage
                           id={'footer.dapp'}
-                          defaultMessage={'Demp Dapp'}
+                          defaultMessage={'Demo Dapp'}
                         />
                       </a>
                     </li>
@@ -184,7 +184,7 @@ class Footer extends Component {
                       >
                         <FormattedMessage
                           id={'footer.githubLink'}
-                          defaultMessage={'Github'}
+                          defaultMessage={'GitHub'}
                         />
                       </a>
                     </li>

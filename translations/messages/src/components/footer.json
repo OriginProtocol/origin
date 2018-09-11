@@ -17,7 +17,7 @@
   },
   {
     "id": "footer.dapp",
-    "defaultMessage": "Demp Dapp"
+    "defaultMessage": "Demo Dapp"
   },
   {
     "id": "footer.developers",
@@ -25,7 +25,7 @@
   },
   {
     "id": "footer.githubLink",
-    "defaultMessage": "Github"
+    "defaultMessage": "GitHub"
   },
   {
     "id": "footer.docsLink",
