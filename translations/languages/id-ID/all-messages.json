@@ -117,6 +117,7 @@
   "MessageNew.send": "Kirim",
   "MessageNew.encryptionNotice": "Pesan Anda akan dienkripsi. Ini haya akan terlihat untuk Anda, Penerima, dan seseorang arbiter jika terjadi perselisihan.",
   "message.enable": "Aktifkan Perpesanan",
+  "message.unrecognizedData": "This data cannot be rendered.",
   "messaging-provider.congrats": "Selamat! Anda sekarang dapat mengirim pesan kepada pengguna lain di seluruh ekosistem Origin Platform! Mengapa tidak memulai dengan melihat-lihat dan memberi tahu kami apa yang Anda pikirkan tentang DApp kami?",
   "messaging-provider.unnamedUser": "Pengguna tanpa nama",
   "messaging-provider.welcome": "Selamat datang di Demo Dapp Origin Protocol! Platform perpesanan inovatif kami memungkinkan Anda untuk berkomunikasi dengan pengguna Origin lainnya dengan cara yang aman dan terdesentralisasi. Semua pesan Anda akan dienkripsi dan disimpan di IPFS. Pesan hanya dapat dibaca oleh Anda, penerima, dan berpotensi arbitrator pihak ketiga jika salah satu dari Anda memulai perselisihan dan memberikan akses ke kunci pribadi yang dihasilkan secara kriptografi dan dibagikan.\n\nUntuk mengaktifkan perpesanan, Anda perlu menggunakan dompet Ethereum Anda untuk menandatangani dua pernyataan. Ini tidak akan dikenakan biaya ETH, Origin Token, atau gas.",
