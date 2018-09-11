@@ -117,6 +117,7 @@
   "MessageNew.send": "Enviar",
   "MessageNew.encryptionNotice": "Su mensaje será encriptado Solo será visible para usted, el destinatario y un árbitro en caso de que surja una disputa.",
   "message.enable": "Habilitar mensajería",
+  "message.unrecognizedData": "This data cannot be rendered.",
   "messaging-provider.congrats": "¡Felicidades! ¡Ahora puede enviar mensajes a otros usuarios a través del ecosistema de la plataforma de origen! ¿Por qué no empezar echando un vistazo y contándonos qué opina sobre nuestro DApp?",
   "messaging-provider.unnamedUser": "Usuario sin nombre",
   "messaging-provider.welcome": "Bienvenido a la aplicación de demostración del protocolo de origen. Nuestra innovadora plataforma de mensajería le permite comunicarse con otros usuarios de Origin de una manera segura y descentralizada. Todos sus mensajes serán encriptados y almacenados en IPFS. Los mensajes solo pueden ser leídos por usted, el destinatario y potencialmente un tercero árbitro si alguno de ustedes inicia una disputa y concede acceso a una clave privada compartida y criptográficamente compartida.\n\nPara habilitar la mensajería, deberá usar su billetera Ethereum para firmar dos estados. Esto no le costará ETH, Token de origen o gas.",
