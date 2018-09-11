@@ -35,6 +35,10 @@ describe('Marketplace Resource', function() {
       ipfsGatewayProtocol: 'http'
     })
     const store = new StoreMock()
+    store.set(
+      'notification_subscription_start',
+      new Date('2017-01-01').getTime()
+    )
     marketplace = new Marketplace({
       contractService,
       ipfsService,
@@ -165,6 +169,39 @@ describe('Marketplace Resource', function() {
       expect(reviews.length).to.equal(1)
       expect(reviews[0].rating).to.equal(4)
       expect(reviews[0].reviewText).to.equal('foo bar')
+    })
+  })
+
+  describe('getNotifications', () => {
+    it('should return notifications', async () => {
+      let notifications = await marketplace.getNotifications()
+      expect(notifications.length).to.equal(1)
+      expect(notifications[0].type).to.equal('seller_listing_purchased')
+      expect(notifications[0].status).to.equal('unread')
+
+      await marketplace.acceptOffer('999-001-0-0')
+      notifications = await marketplace.getNotifications()
+      expect(notifications.length).to.equal(1)
+      expect(notifications[0].type).to.equal('buyer_listing_shipped')
+      expect(notifications[0].status).to.equal('unread')
+
+      await marketplace.finalizeOffer('999-001-0-0')
+      notifications = await marketplace.getNotifications()
+      expect(notifications.length).to.equal(1)
+      expect(notifications[0].type).to.equal('seller_review_received')
+      expect(notifications[0].status).to.equal('unread')
+    })
+  })
+
+  describe('setNotification', () => {
+    it('should allow notifications to be marked as read', async () => {
+      let notifications = await marketplace.getNotifications()
+      expect(notifications.length).to.equal(1)
+      expect(notifications[0].status).to.equal('unread')
+      notifications[0].status = 'read'
+      marketplace.setNotification(notifications[0])
+      notifications = await marketplace.getNotifications()
+      expect(notifications[0].status).to.equal('read')
     })
   })
 })
