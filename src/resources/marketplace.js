@@ -191,13 +191,11 @@ class Marketplace extends Adaptable {
     const ipfsHash = await this.offerIpfsStore.save(offerData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
-    const buyer = await this.contractService.currentAccount()
+    // Record the offer on chain.
     const priceWei = this.contractService.web3.utils.toWei(
       offerData.totalPrice.amount,
       'ether'
     )
-
-    // Record the offer on chain.
     const transactionData = { priceWei } // TODO: add commission, affliliate.
     const transactionReceipt = await adapter.makeOffer(
       listingIndex,
