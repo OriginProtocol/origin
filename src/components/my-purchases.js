@@ -22,29 +22,28 @@ class MyPurchases extends Component {
   }
 
   async componentWillMount() {
-    const purchasesFor = await origin.contractService.currentAccount()
-    const listingIds = await origin.marketplace.getListings({ purchasesFor })
-    const listingPromises = listingIds.map(listingId => {
+    const userAddress = await origin.contractService.currentAccount()
+    const offerResp = await origin.discovery.query(`{
+      user(walletAddress:${JSON.stringify(userAddress)}){
+        offers{
+          nodes{
+            id,
+            listing{
+              id
+            }
+          }
+        }
+      }
+    }`)
+    const offerNodes = offerResp.data.user.offers.nodes
+    const purchases = await Promise.all(offerNodes.map((node)=>{
       return new Promise(async resolve => {
-        const listing = await getListing(listingId)
-        resolve({ listingId, listing })
+        const offer = await origin.marketplace.getOffer(node.id)
+        const listing = await getListing(node.listing.id)
+        resolve({ offer, listing })
       })
-    })
-    const withListings = await Promise.all(listingPromises)
-    const offerPromises = await withListings.map(obj => {
-      return new Promise(async resolve => {
-        const offers = await origin.marketplace.getOffers(obj.listingId, {
-          for: purchasesFor
-        })
-        resolve(Object.assign(obj, { offers }))
-      })
-    })
-    const withOffers = await Promise.all(offerPromises)
-    const offersByListing = withOffers.map(obj => {
-      return obj.offers.map(offer => Object.assign({}, obj, { offer }))
-    })
-    const offersFlattened = [].concat(...offersByListing)
-    this.setState({ loading: false, purchases: offersFlattened })
+    }))
+    this.setState({ loading: false, purchases: purchases })
   }
 
   render() {
