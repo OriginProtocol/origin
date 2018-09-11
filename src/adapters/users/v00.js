@@ -25,6 +25,7 @@ class V00_UsersAdapter {
     this.contractService = contractService
     this.ipfsService = ipfsService
     this.web3EthAccounts = this.contractService.web3.eth.accounts
+    this.contractName = 'V00_UserRegistry'
   }
 
   async set({ profile, attestations = [] }) {
@@ -50,7 +51,7 @@ class V00_UsersAdapter {
   async identityAddress(address) {
     const account = await this.contractService.currentAccount()
     const userRegistry = await this.contractService.deployed(
-      this.contractService.contracts.V00_UserRegistry
+      this.contractService.contracts[this.contractName]
     )
     address = address || account
     const result = await userRegistry.methods.users(address).call()
@@ -103,7 +104,7 @@ class V00_UsersAdapter {
   async addAttestations(attestations) {
     const account = await this.contractService.currentAccount()
     const userRegistry = await this.contractService.deployed(
-      this.contractService.contracts.V00_UserRegistry
+      this.contractService.contracts[this.contractName]
     )
     const identityAddress = await this.identityAddress()
     if (attestations.length) {

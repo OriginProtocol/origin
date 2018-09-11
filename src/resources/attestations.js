@@ -1,4 +1,5 @@
 import RLP from 'rlp'
+import UsersResolver from '../adapters/users/_resolver'
 import Web3 from 'web3'
 
 const claimTypeMapping = {
@@ -32,6 +33,7 @@ class Attestations {
     this.serverUrl = serverUrl
     this.contractService = contractService
     this.fetch = fetch
+    this.usersResolver = new UsersResolver({ contractService })
 
     this.responseToAttestation = (resp = {}) => {
       return new AttestationObject({
@@ -45,13 +47,8 @@ class Attestations {
   async getIdentityAddress(wallet) {
     const currentAccount = await this.contractService.currentAccount()
     wallet = wallet || currentAccount
-    const userRegistry = await this.contractService.deployed(
-      this.contractService.contracts.V00_UserRegistry
-    )
-    const identityAddress = await userRegistry.methods.users(wallet).call()
-    const hasRegisteredIdentity =
-      identityAddress !== '0x0000000000000000000000000000000000000000'
-    if (hasRegisteredIdentity) {
+    const identityAddress = await this.usersResolver.identityAddress(wallet)
+    if (identityAddress) {
       return Web3.utils.toChecksumAddress(identityAddress)
     } else {
       return this.predictIdentityAddress(wallet)
