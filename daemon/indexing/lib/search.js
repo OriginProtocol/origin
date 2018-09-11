@@ -100,9 +100,12 @@ class Listing {
     resp.hits.hits.forEach((hit) => {
       const listing = {
         id: hit._id,
-        name: hit._source.name,
+        title: hit._source.title,
+        category: hit._source.category,
+        subCategory: hit._source.subCategory,
         description: hit._source.description,
-        priceEth: hit._source.priceEth,
+        priceAmount: (hit._source.price||{}).amount,
+        priceCurrency: (hit._source.price||{}).currency,
       }
       listings.push(listing)
     })

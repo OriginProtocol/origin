@@ -246,7 +246,7 @@ const resolvers = {
       return { walletAddress: 'S_WADDR' }
     },
     title(listing) {
-      return listing.name
+      return listing.title
     },
     category(listing) {
       return listing.type
@@ -255,7 +255,12 @@ const resolvers = {
       return listing.category
     },
     price(listing) {
-      return {currency: 'ETH', amount: listing.priceEth}
+      if(listing.priceCurrency === undefined
+          || listing.priceAmount === undefined)
+      {
+        return undefined
+      }
+      return {currency: listing.priceCurrency, amount: listing.priceAmount}
     },
     offers(listing, args) {
       const offers = search.Offer.search({listingId:listing.id})
