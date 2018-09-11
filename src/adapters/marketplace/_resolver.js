@@ -189,19 +189,21 @@ class MarketplaceResolver {
     const reviewEvents = listing.events.filter(
       e => e.event === 'OfferFinalized'
     )
-    return Promise.all(reviewEvents.map(async (event) => {
-      const offerIndex = event.returnValues.offerID
-      const offerId = generateOfferId({
-        network,
-        version,
-        listingIndex,
-        offerIndex
+    return Promise.all(
+      reviewEvents.map(async event => {
+        const offerIndex = event.returnValues.offerID
+        const offerId = generateOfferId({
+          network,
+          version,
+          listingIndex,
+          offerIndex
+        })
+        // TODO(franck): Store the review timestamp in IPFS to avoid
+        //               a call to the blockchain to get the event's timestamp.
+        const timestamp = await this.contractService.getTimestamp(event)
+        return Object.assign({ offerId, timestamp }, event)
       })
-      // TODO(franck): Store the review timestamp in IPFS to avoid
-      //               a call to the blockchain to get the event's timestamp.
-      const timestamp = await this.contractService.getTimestamp(event)
-      return Object.assign({ offerId, timestamp }, event)
-    }))
+    )
   }
 
   async getNotifications(party) {
@@ -251,7 +253,6 @@ class MarketplaceResolver {
           return new Notification(rawNotification)
         })
       )
-
     }
     return notifications
   }

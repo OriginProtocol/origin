@@ -1,10 +1,7 @@
 import { Listing } from '../models/listing'
 import { Offer } from '../models/offer'
 import { Review } from '../models/review'
-import {
-  notificationStatuses,
-  storeKeys
-} from '../models/notification'
+import { notificationStatuses, storeKeys } from '../models/notification'
 import {
   ListingIpfsStore,
   OfferIpfsStore,
@@ -42,9 +39,11 @@ class Marketplace {
       return listingIds
     }
 
-    return Promise.all(listingIds.map(async (listingId) => {
-      return await this.getListing(listingId)
-    }))
+    return Promise.all(
+      listingIds.map(async listingId => {
+        return await this.getListing(listingId)
+      })
+    )
   }
 
   /**
@@ -112,7 +111,11 @@ class Marketplace {
     const ipfsHash = await this.listingIpfsStore.save(ipfsData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
-    return await this.resolver.createListing(ipfsBytes, ipfsData, confirmationCallback)
+    return await this.resolver.createListing(
+      ipfsBytes,
+      ipfsData,
+      confirmationCallback
+    )
   }
 
   // updateListing(listingId, data) {}
@@ -151,7 +154,12 @@ class Marketplace {
       offerData.totalPrice.amount,
       'ether'
     )
-    return await this.resolver.makeOffer(listingId, ipfsBytes, priceWei, confirmationCallback)
+    return await this.resolver.makeOffer(
+      listingId,
+      ipfsBytes,
+      priceWei,
+      confirmationCallback
+    )
   }
 
   // updateOffer(listingId, offerId, data) {}
@@ -170,11 +178,7 @@ class Marketplace {
     //const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
     const ipfsBytes = '0x0000000000000000000000000000000000000000'
 
-    return await this.resolver.acceptOffer(
-      id,
-      ipfsBytes,
-      confirmationCallback
-    )
+    return await this.resolver.acceptOffer(id, ipfsBytes, confirmationCallback)
   }
 
   /**
