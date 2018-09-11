@@ -63,7 +63,7 @@ describe('ListingIpfsStore load', () => {
 
 describe('ListingIpfsStore save', () => {
   let mockIpfsService, store
-  
+
   before(() => {
     mockIpfsService = new Object()
     store = new ListingIpfsStore(mockIpfsService)
@@ -144,7 +144,7 @@ describe('OfferIpfsStore load', () => {
 
     expect(offer.listingType).to.equal('unit')
     expect(offer.unitsPurchased).to.equal(1)
-    expect(offer.totalPrice).to.deep.equal({amount:'0.33', currency:'ETH'})
+    expect(offer.totalPrice).to.deep.equal({amount:'0.033', currency:'ETH'})
     expect(offer.ipfs.hash).to.equal('TestHash')
     expect(offer.ipfs.data).to.deep.equal(goodOffer)
   })
