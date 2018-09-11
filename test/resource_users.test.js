@@ -1,10 +1,8 @@
-import Users from '../src/resources/users.js'
-import {
-  Attestations,
-  AttestationObject
-} from '../src/resources/attestations.js'
+import Users from '../src/resources/users'
+import { Attestations } from '../src/resources/attestations'
+import AttestationObject from '../src/models/attestation'
 import ContractService from '../src/services/contract-service'
-import IpfsService from '../src/services/ipfs-service.js'
+import IpfsService from '../src/services/ipfs-service'
 import { expect } from 'chai'
 import Web3 from 'web3'
 

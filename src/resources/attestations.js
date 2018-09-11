@@ -1,27 +1,10 @@
+import AttestationObject from '../models/attestation'
 import RLP from 'rlp'
 import UsersResolver from '../adapters/users/_resolver'
 import Web3 from 'web3'
 
-const claimTypeMapping = {
-  3: 'facebook',
-  4: 'twitter',
-  5: 'airbnb',
-  10: 'phone',
-  11: 'email'
-}
-
 const appendSlash = url => {
   return url.substr(-1) === '/' ? url : url + '/'
-}
-
-class AttestationObject {
-  constructor({ claimType, data, signature }) {
-    claimType = Number(claimType)
-    this.claimType = claimType
-    this.service = claimTypeMapping[claimType]
-    this.data = data
-    this.signature = signature
-  }
 }
 
 const responseToUrl = (resp = {}) => {

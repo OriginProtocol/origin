@@ -1,4 +1,4 @@
-import { AttestationObject } from '../../resources/attestations'
+import AttestationObject from '../../models/attestation'
 import {
   fromRpcSig,
   ecrecover,
