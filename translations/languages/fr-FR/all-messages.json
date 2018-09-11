@@ -117,6 +117,7 @@
   "MessageNew.send": "Envoyer",
   "MessageNew.encryptionNotice": "Votre message sera chiffré. Il sera uniquement visible par vous, le destinataire, et un modérateur dans l'éventualité d'un conflit.",
   "message.enable": "Activer la messagerie",
+  "message.unrecognizedData": "This data cannot be rendered.",
   "messaging-provider.congrats": "Toutes nos félicitations ! Vous pouvez maintenant envoyer un message aux autres utilisateurs de l'écosystème Origin Platform ! Pourquoi ne pas commencer par nous dire ce que vous pensez de notre DApp ?",
   "messaging-provider.unnamedUser": "Utilisateur Inconnu",
   "messaging-provider.welcome": "Bienvenue dans la démo du protocole d'origine DApp ! Notre plate-forme de messagerie innovante vous permet de communiquer avec d'autres utilisateurs Origin de manière sécurisée et décentralisée. Tous vos messages seront cryptés et stockés sur IPFS. Les messages ne peuvent être lus que par vous, le destinataire et éventuellement par un arbitre tiers si l'un d'entre vous initie une dispute et accorde l'accès à une clé privée partagée, générée par cryptographie.\n\nPour activer la messagerie, vous devez utiliser votre portefeuille Ethereum pour signer deux déclarations. Cela ne coûtera aucun ETH, jeton d'origine ou gaz.",
