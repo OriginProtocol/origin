@@ -17,7 +17,6 @@ const defaultIpfsApiPort = '5002'
 const defaultIpfsGatewayPort = '443'
 const defaultIpfsGatewayProtocol = 'https'
 const defaultAttestationServerUrl = `${defaultBridgeServer}/api/attestations`
-// const defaultIndexingServerUrl = `${defaultBridgeServer}/api`
 const VERSION = require('.././package.json').version
 
 class Origin {
@@ -27,7 +26,6 @@ class Origin {
     ipfsGatewayPort = defaultIpfsGatewayPort,
     ipfsGatewayProtocol = defaultIpfsGatewayProtocol,
     attestationServerUrl = defaultAttestationServerUrl,
-    // indexingServerUrl = defaultIndexingServerUrl,
     discoveryServer = defaultDiscoveryServer,
     discoveryServerPort = defaultDiscoveryServerPort,
     contractAddresses,

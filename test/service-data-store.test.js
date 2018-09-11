@@ -29,7 +29,6 @@ describe('ListingIpfsStore load', () => {
   })
 
   it(`Should load a valid object`, async () => {
-    console.log('good listing', Object.assign({}, goodListing))
     mockIpfsService.loadObjFromFile = sinon.stub().resolves(Object.assign({}, goodListing))
     mockIpfsService.rewriteUrl = sinon.stub().returns('http://test-gateway')
 

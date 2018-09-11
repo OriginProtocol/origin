@@ -33,7 +33,6 @@ describe('Marketplace Resource', function() {
   beforeEach(async () => {
     const provider = new Web3.providers.HttpProvider('http://localhost:8545')
     web3 = new Web3(provider)
-    // const accounts = await web3.eth.getAccounts()
     const contractService = await contractServiceHelper(web3)
     const ipfsService = new IpfsService({
       ipfsDomain: '127.0.0.1',
