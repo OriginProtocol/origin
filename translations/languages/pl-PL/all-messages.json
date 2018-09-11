@@ -117,6 +117,7 @@
   "MessageNew.send": "Wysłać",
   "MessageNew.encryptionNotice": "Twoja wiadomość zostanie zaszyfrowana. Będzie widoczny tylko dla ciebie, odbiorcy i arbitra w przypadku powstania sporu.",
   "message.enable": "Włącz przesyłanie wiadomości",
+  "message.unrecognizedData": "This data cannot be rendered.",
   "messaging-provider.congrats": "Gratulacje! Możesz teraz wysyłać wiadomości do innych użytkowników w ekosystemie platformy Origin! Dlaczego nie zacząć od rozejrzenia się i poinformowania nas, co myślisz o naszym DApp?",
   "messaging-provider.unnamedUser": "Nienazwany użytkownik",
   "messaging-provider.welcome": "Witamy w Origin Protocol Demo DApp! Nasza innowacyjna platforma komunikacyjna umożliwia komunikowanie się z innymi użytkownikami Origin w bezpieczny i zdecentralizowany sposób. Wszystkie twoje wiadomości będą szyfrowane i przechowywane na IPFS. Wiadomości mogą być odczytywane tylko przez ciebie, odbiorcę i potencjalnego arbitra strony trzeciej, jeśli któryś z was zainicjuje spór i przyzna dostęp do klucza prywatnego, udostępnionego kryptograficznie.\n\nAby włączyć powiadamianie, będziesz musiał użyć portfela Ethereum, aby podpisać dwie wypowiedzi. Nie będzie to kosztować żadnego ETH, tokenu Origin lub gazu.",
