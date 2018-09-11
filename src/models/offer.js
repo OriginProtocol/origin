@@ -12,7 +12,7 @@ export class Offer {
   constructor(offerId, listingId, chainOffer, ipfsOffer) {
     this.id = offerId
     this.listingId = listingId
-    this.status = chainOffer.status // 'created', 'accepted', 'disputed', 'finalized', 'buyerReviewed'
+    this.status = chainOffer.status // 'created', 'accepted', 'disputed', 'finalized', 'sellerReviewed'
     this.createdAt = chainOffer.createdAt // Time in seconds since epoch.
     this.buyer = chainOffer.buyer
     this.events = chainOffer.events

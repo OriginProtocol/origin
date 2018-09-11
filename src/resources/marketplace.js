@@ -127,7 +127,7 @@ class Marketplace extends Adaptable {
 
     // Load ipfs data.
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(chainOffer.ipfsHash)
-    const ipfsOffer = await this.offerIpfsStore(ipfsHash)
+    const ipfsOffer = await this.offerIpfsStore.load(ipfsHash)
 
     // Create an Offer from on-chain and off-chain data.
     return new Offer(offerId, listingId, chainOffer, ipfsOffer)
@@ -223,15 +223,17 @@ class Marketplace extends Adaptable {
   /**
    * Accepts an offer.
    * @param {string} id - Offer unique ID.
-   * @param data - Currently nothing !
+   * @param data - Empty object. Currently not used.
    * @param {function(confirmationCount, transactionReceipt)} confirmationCallback
    * @return {Promise<{timestamp, transactionReceipt}>}
    */
   async acceptOffer(id, data, confirmationCallback) {
     const { adapter, listingIndex, offerIndex } = this.parseOfferId(id)
 
-    const ipfsHash = await this.offerIpfsStore.save(data)
-    const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
+    // FIXME(franck): implement support for empty data.
+    //const ipfsHash = await this.offerIpfsStore.save(data)
+    //const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
+    const ipfsBytes = '0x0000000000000000000000000000000000000000'
 
     return await adapter.acceptOffer(
       listingIndex,
@@ -269,12 +271,13 @@ class Marketplace extends Adaptable {
   // manageListingDeposit(listingId, data) {}
 
   /**
-   * Adds data to either a listing or an offer. Use cases:
+   * Adds data to either a listing or an offer.
+   * Use cases:
    *  - offer: allows seller to add review data.
    *  - listing: for future use.
    * @param listingId
    * @param offerId
-   * @param {object} data
+   * @param {object} data - In case of an offer, Seller review data in schema 1.0 format.
    * @param {function(confirmationCount, transactionReceipt)} confirmationCallback
    * @return {Promise<{timestamp, transactionReceipt}>}
    */
@@ -284,7 +287,7 @@ class Marketplace extends Adaptable {
       const { adapter, listingIndex, offerIndex } = this.parseOfferId(offerId)
 
       // We expect this to be review data from the seller.
-      const ipfsHash = await this.offerIpfsStore.save(data)
+      const ipfsHash = await this.reviewIpfsStore.save(data)
       const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
       return await adapter.addData(
@@ -312,6 +315,11 @@ class Marketplace extends Adaptable {
 
   // Convenience methods
 
+  /**
+   * Pulls all the Buyer side reviews for a listing.
+   * @param {string} listingId
+   * @return {Promise<Array[Review]>}
+   */
   async getListingReviews(listingId) {
     const { adapter, listingIndex, version, network } = this.parseListingId(listingId)
 
@@ -325,10 +333,15 @@ class Marketplace extends Adaptable {
     for (const event of reviewEvents) {
       // Load review data from IPFS.
       const ipfsHash = this.contractService.getIpfsHashFromBytes32(event.returnValues.ipfsHash)
-      const ipfsReview = await this.ipfsReviewStore.load(ipfsHash)
+      const ipfsReview = await this.reviewIpfsStore.load(ipfsHash)
 
       const offerIndex = event.returnValues.offerID
       const offerId = generateOfferId({ network, version, listingIndex, offerIndex })
+
+      // TODO(franck): Store the review timestamp in IPFS to avoid
+      //               a call to the blockchain to get the event's timestamp.
+      const timestamp = await this.contractService.getTimestamp(event)
+      event.timestamp = timestamp
 
       // Create a Review object based on IPFS and event data.
       const review = new Review(listingId, offerId, event, ipfsReview)
