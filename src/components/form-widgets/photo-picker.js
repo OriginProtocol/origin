@@ -40,7 +40,7 @@ class PhotoPicker extends Component {
   }
 
   onChange() {
-    return async (event) => {
+    return async event => {
       const filesObj = event.target.files
       const filesArr = []
       for (const key in filesObj) {
@@ -49,44 +49,50 @@ class PhotoPicker extends Component {
         }
       }
 
-      const filesAsDataUriArray = filesArr.map(async (fileObj) =>
-        getDataUri(fileObj)
-      )
+      const filesAsDataUriArray = filesArr.map(async getDataUri)
 
-      Promise.all(filesAsDataUriArray).then((dataUriArray) => {
-        this.setState({
-          pictures: dataUriArray
-        }, () => this.props.onChange(dataUriArray))
+      Promise.all(filesAsDataUriArray).then(dataUriArray => {
+        this.setState(
+          {
+            pictures: dataUriArray
+          },
+          () => this.props.onChange(dataUriArray)
+        )
       })
     }
   }
 
   render() {
-    return(
+    return (
       <div className="photo-picker">
         <label className="photo-picker-container" htmlFor="photo-picker-input">
-          <img className="camera-icon" src="images/camera-icon.svg" role="presentation" />
-          <br/>
+          <img
+            className="camera-icon"
+            src="images/camera-icon.svg"
+            role="presentation"
+          />
+          <br />
           <span>{this.props.schema.title}</span>
-          <br/>
+          <br />
         </label>
         <input
           id="photo-picker-input"
           type="file"
           accept="image/jpeg,image/gif,image/png"
           visibility="hidden"
-          onChange={ this.onChange() }
-          required={ this.props.required }
-          multiple />
-        {this.state.helpText &&
-          <p className="help-block">{ this.state.helpText }</p>
-        }
+          onChange={this.onChange()}
+          required={this.props.required}
+          multiple
+        />
+        {this.state.helpText && (
+          <p className="help-block">{this.state.helpText}</p>
+        )}
         <div className="d-flex pictures">
-          {this.state.pictures.map((dataUri, idx) =>
-            <div className="image-container" key={ idx }>
-              <img className="preview-thumbnail" src={ dataUri } />
+          {this.state.pictures.map((dataUri, idx) => (
+            <div className="image-container" key={idx}>
+              <img className="preview-thumbnail" src={dataUri} />
             </div>
-          )}
+          ))}
         </div>
       </div>
     )

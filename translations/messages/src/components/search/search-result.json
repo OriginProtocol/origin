@@ -1,0 +1,10 @@
+[
+  {
+    "id": "SearchResults.searchFiltersClear",
+    "defaultMessage": "Clear"
+  },
+  {
+    "id": "SearchResults.searchFiltersApply",
+    "defaultMessage": "Apply"
+  }
+]

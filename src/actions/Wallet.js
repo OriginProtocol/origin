@@ -11,7 +11,7 @@ export const WalletConstants = keyMirror(
     ETH_BALANCE_SUCCESS: null,
     ETH_BALANCE_ERROR: null,
 
-    OGN_BALANCE_SUCCESS: null,
+    OGN_BALANCE_SUCCESS: null
   },
   'WALLET'
 )
@@ -44,7 +44,7 @@ export function getOgnBalance() {
   return async function(dispatch) {
     const account = await origin.contractService.currentAccount()
     const ognBalance =
-      (await origin.token.balanceOf(account)) / 10**origin.token.decimals
+      (await origin.token.balanceOf(account)) / 10 ** origin.token.decimals
 
     dispatch({
       type: WalletConstants.OGN_BALANCE_SUCCESS,

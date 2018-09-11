@@ -13,11 +13,11 @@ class SplitPanel extends Component {
     const { steps } = this.props
 
     return steps.find(({ complete, subStepComplete }) => {
-      return (!complete || complete && subStepComplete === false)
+      return !complete || (complete && subStepComplete === false)
     })
   }
 
-  displayNextStep(stepsCompleted=false) {
+  displayNextStep(stepsCompleted = false) {
     const { updateSteps, currentStep } = this.props
 
     updateSteps({ incompleteStep: currentStep, stepsCompleted })
@@ -35,13 +35,13 @@ class SplitPanel extends Component {
         role="dialog"
         aria-hidden="true"
       >
-        { isOpen && (
+        {isOpen && (
           <div className="modal-dialog modal-lg">
             <div className="modal-content d-flex">
               <div className="modal-body">
                 <div className="container-fluid">
                   <div className="row">
-                    <LeftPanel firstIncompleteStep={step}/>
+                    <LeftPanel firstIncompleteStep={step} />
                     <RightPanel
                       displayNextStep={this.displayNextStep}
                       step={step}

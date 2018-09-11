@@ -11,17 +11,17 @@ export const boostLevels = {
   },
   Low: {
     min: minBoostValue + 1,
-    max: (range / 4),
+    max: range / 4,
     desc: 'Your listing will get below-average visibility.'
   },
   Medium: {
     min: range / 4 + 1,
-    max: (range / 2),
+    max: range / 2,
     desc: 'Your listing will get average visibility.'
   },
   High: {
     min: range / 2 + 1,
-    max: ((range / 4) * 3),
+    max: (range / 4) * 3,
     desc: 'Your listing will get above-average visibility.'
   },
   Premium: {
