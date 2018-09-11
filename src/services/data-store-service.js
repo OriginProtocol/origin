@@ -85,7 +85,7 @@ export class OfferIpfsStore extends IpfsDataStoreBase {
 }
 
 //
-// Review IpfsStore reads and writes review data from/to IPFS.
+// ReviewIpfsStore reads and writes review data from/to IPFS.
 //
 export class ReviewIpfsStore extends IpfsDataStoreBase {
   constructor(ipfsService) {

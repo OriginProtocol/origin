@@ -12,7 +12,21 @@ export class Offer {
   constructor(offerId, listingId, chainOffer, ipfsOffer) {
     this.id = offerId
     this.listingId = listingId
-    // FIXME: as opposed to assign, pick what specific fields to return.
-    Object.assign(this, ipfsOffer, chainOffer)
+    this.status = chainOffer.status // 'created', 'accepted', 'disputed', 'finalized', 'sellerReviewed'
+    this.createdAt = chainOffer.createdAt // Time in seconds since epoch.
+    this.buyer = chainOffer.buyer
+    this.events = chainOffer.events
+
+    // See src/schemas/offer.json for fields stored in IPFS offer data.
+    Object.assign(this, ipfsOffer)
+  }
+
+  /**
+   * Gets an event based on its name.
+   * @param {string} name - Event name, as emitted by marketplace contract. Ex: 'OfferCreated'.
+   * @return First event object found matching the name or undefined.
+   */
+  event(name) {
+    return this.events.find(l => l.event === name)
   }
 }
