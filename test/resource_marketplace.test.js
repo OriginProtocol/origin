@@ -7,6 +7,11 @@ import listingValid from './fixtures/listing-valid.json'
 import offerValid from './fixtures/offer-valid.json'
 import reviewValid from './fixtures/review-valid.json'
 
+// oddly changing an imported object here can affect other or subsequent tests that import the same file
+const listingData = Object.assign({}, listingValid)
+const offerData = Object.assign({}, offerValid)
+const reviewData = Object.assign({}, reviewValid)
+
 class StoreMock {
   constructor() {
     this.storage = {}
@@ -47,8 +52,8 @@ describe('Marketplace Resource', function() {
       store
     })
 
-    await marketplace.createListing(listingValid)
-    await marketplace.makeOffer('999-001-0', offerValid)
+    await marketplace.createListing(listingData)
+    await marketplace.makeOffer('999-001-0', offerData)
   })
 
   describe('getListingsCount', () => {
@@ -60,7 +65,7 @@ describe('Marketplace Resource', function() {
 
   describe('getListings', () => {
     it('should return all listings', async () => {
-      await marketplace.createListing(listingValid)
+      await marketplace.createListing(listingData)
       const listings = await marketplace.getListings()
       expect(listings.length).to.equal(2)
       expect(listings).to.include('999-001-0')
@@ -83,7 +88,7 @@ describe('Marketplace Resource', function() {
     it('should create a listing', async () => {
       let listings = await marketplace.getListings()
       expect(listings.length).to.equal(1)
-      await marketplace.createListing(listingValid)
+      await marketplace.createListing(listingData)
       listings = await marketplace.getListings()
       expect(listings.length).to.equal(2)
     })
@@ -102,7 +107,7 @@ describe('Marketplace Resource', function() {
 
   describe('getOffers: idsOnly=true', () => {
     it('should get offer ids', async () => {
-      await marketplace.makeOffer('999-001-0', offerValid)
+      await marketplace.makeOffer('999-001-0', offerData)
       const offers = await marketplace.getOffers('999-001-0', { idsOnly: true })
       expect(offers.length).to.equal(2)
       expect(offers[0]).to.equal('999-001-0-0')
@@ -112,7 +117,7 @@ describe('Marketplace Resource', function() {
 
   describe('getOffers', () => {
     it('should get offers with data', async () => {
-      await marketplace.makeOffer('999-001-0', offerValid)
+      await marketplace.makeOffer('999-001-0', offerData)
       const offers = await marketplace.getOffers('999-001-0')
       expect(offers.length).to.equal(2)
       expect(offers[0].status).to.equal('created')
@@ -134,7 +139,7 @@ describe('Marketplace Resource', function() {
     it('should make an offer', async () => {
       const anotherOffer = Object.assign(
         {},
-        offerValid,
+        offerData,
         { totalPrice: { currency: 'ETH', amount: '0.02' } }
       )
       await marketplace.makeOffer('999-001-0', anotherOffer)
@@ -159,7 +164,7 @@ describe('Marketplace Resource', function() {
       let offer = await marketplace.getOffer('999-001-0-0')
       expect(offer.status).to.equal('created')
       await marketplace.acceptOffer('999-001-0-0')
-      await marketplace.finalizeOffer('999-001-0-0', reviewValid)
+      await marketplace.finalizeOffer('999-001-0-0', reviewData)
       offer = await marketplace.getOffer('999-001-0-0')
       expect(offer.status).to.equal('finalized')
     })
@@ -168,7 +173,7 @@ describe('Marketplace Resource', function() {
   describe('getListingReviews', () => {
     it('should get reviews', async () => {
       await marketplace.acceptOffer('999-001-0-0')
-      await marketplace.finalizeOffer('999-001-0-0', reviewValid)
+      await marketplace.finalizeOffer('999-001-0-0', reviewData)
       const reviews = await marketplace.getListingReviews('999-001-0')
       expect(reviews.length).to.equal(1)
       expect(reviews[0].rating).to.equal(3)
@@ -189,7 +194,7 @@ describe('Marketplace Resource', function() {
       expect(notifications[0].type).to.equal('buyer_listing_shipped')
       expect(notifications[0].status).to.equal('unread')
 
-      await marketplace.finalizeOffer('999-001-0-0', reviewValid)
+      await marketplace.finalizeOffer('999-001-0-0', reviewData)
       notifications = await marketplace.getNotifications()
       expect(notifications.length).to.equal(1)
       expect(notifications[0].type).to.equal('seller_review_received')

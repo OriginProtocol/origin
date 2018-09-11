@@ -7,9 +7,14 @@ import {
   OfferIpfsStore,
   ReviewIpfsStore
 } from '../src/services/data-store-service'
-import goodListing from './fixtures/listing-valid'
-import goodOffer from './fixtures/offer-valid'
-import goodReview from './fixtures/review-valid'
+import listingValid from './fixtures/listing-valid.json'
+import offerValid from './fixtures/offer-valid.json'
+import reviewValid from './fixtures/review-valid.json'
+
+// oddly changing an imported object here can affect other or subsequent tests that import the same file
+const goodListing = Object.assign({}, listingValid)
+const goodOffer = Object.assign({}, offerValid)
+const goodReview = Object.assign({}, reviewValid)
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -24,7 +29,8 @@ describe('ListingIpfsStore load', () => {
   })
 
   it(`Should load a valid object`, async () => {
-    mockIpfsService.loadObjFromFile = sinon.stub().resolves(goodListing)
+    console.log('good listing', Object.assign({}, goodListing))
+    mockIpfsService.loadObjFromFile = sinon.stub().resolves(Object.assign({}, goodListing))
     mockIpfsService.rewriteUrl = sinon.stub().returns('http://test-gateway')
 
     const listing = await store.load('TestHash')
