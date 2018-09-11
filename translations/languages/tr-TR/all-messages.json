@@ -117,6 +117,7 @@
   "MessageNew.send": "göndermek",
   "MessageNew.encryptionNotice": "Mesajınız şifrelenecektir. Bir anlaşmazlığın ortaya çıkması durumunda, yalnızca siz, alıcı ve hakem tarafından görülebilir.",
   "message.enable": "Mesajlaşmayı Etkinleştir",
+  "message.unrecognizedData": "This data cannot be rendered.",
   "messaging-provider.congrats": "Tebrikler! Artık Origin Platform ekosisteminde diğer kullanıcılara mesaj gönderebilirsiniz! Neden etrafa bir göz atıp, DApp'imiz hakkında ne düşündüğünüzü bize söyleyerek başlamıyorsunuz?",
   "messaging-provider.unnamedUser": "Adsız Kullanıcı",
   "messaging-provider.welcome": "Origin Protokolü Demo DApp'a Hoş Geldiniz! Yenilikçi mesajlaşma platformumuz, diğer Origin kullanıcılarıyla güvenli ve merkezi olmayan bir şekilde iletişim kurmanızı sağlar. Tüm mesajlarınız IPFS'de şifrelenecek ve saklanacaktır. İletiler yalnızca sizin tarafınızdan, alıcı ve olası bir üçüncü taraf hakem tarafından bir anlaşmazlık başlatır ve kriptografik olarak oluşturulmuş, paylaşımlı, özel bir anahtara erişim izni verirse okunabilir.\n\nMesajlaşmayı etkinleştirmek için, iki ifadeyi imzalamak için Ethereum cüzdanınızı kullanmanız gerekecektir. Bu herhangi bir ETH, Origin Jetonu veya gaza mal olmayacaktır.",
