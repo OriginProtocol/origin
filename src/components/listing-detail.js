@@ -127,7 +127,15 @@ class ListingsDetail extends Component {
         this.setState({ step: this.STEP.PROCESSING })
         const transactionReceipt = await origin.marketplace.makeOffer(
           this.props.listingId,
-          { price: totalPrice },
+          {
+            schemaVersion: '1.0.0',
+            listingType: 'unit',
+            unitsPurchased: unitsToBuy,
+            totalPrice: {
+              currency: "ETH",
+              amount: totalPrice.toString()
+            }
+          },
           (confirmationCount, transactionReceipt) => {
             this.props.updateTransaction(confirmationCount, transactionReceipt)
           }
