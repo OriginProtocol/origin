@@ -117,6 +117,7 @@
   "MessageNew.send": "Enviar",
   "MessageNew.encryptionNotice": "Sua mensagem será criptografada. Só será visível para você, o destinatário e um árbitro no caso de surgir uma disputa.",
   "message.enable": "Ativar mensagens",
+  "message.unrecognizedData": "This data cannot be rendered.",
   "messaging-provider.congrats": "Parabéns! Agora você pode enviar mensagens para outros utilizadores no ecossistema da Plataforma Origin! Por que não começar dando uma vista de olhos e nos dizendo o que você acha do nosso DApp?",
   "messaging-provider.unnamedUser": "Utilizador sem nome",
   "messaging-provider.welcome": "Bem-vindo ao demo do protocolo Origin! Nossa inovadora plataforma de mensagens permite que você se comunique com outros utilizadores do Origin de maneira segura e descentralizada. Todas as suas mensagens serão criptografadas e armazenadas no IPFS. As mensagens só podem ser lidas por você, pelo destinatário e, potencialmente, por um árbitro de terceiros se qualquer um de vocês iniciar uma disputa e conceder acesso a uma chave privada compartilhada gerada por criptografia.\n\nPara ativar as mensagens, você precisará usar sua carteira Ethereum para assinar duas declarações. Isso não custará nenhum ETH, Origin token ou gás.",
