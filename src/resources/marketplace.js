@@ -122,7 +122,7 @@ class Marketplace extends Adaptable {
 
     // Load ipfs data.
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(chainOffer.ipfsHash)
-    const ipfsOffer = await this.offerIpfsStore(ipfsHash)
+    const ipfsOffer = await this.offerIpfsStore.load(ipfsHash)
 
     // Create an Offer from on-chain and off-chain data.
     return new Offer(offerId, listingId, chainOffer, ipfsOffer)
@@ -177,7 +177,7 @@ class Marketplace extends Adaptable {
 
     const buyer = await this.contractService.currentAccount()
     data.price = this.contractService.web3.utils.toWei(
-      String(data.price),
+      String(data.totalPrice.amount),
       'ether'
     )
     data.buyer = buyer
@@ -218,7 +218,7 @@ class Marketplace extends Adaptable {
   async finalizeOffer(id, data, confirmationCallback) {
     const { adapter, listingIndex, offerIndex } = this.parseOfferId(id)
 
-    const ipfsHash = await this.offerIpfsStore.save(data)
+    const ipfsHash = await this.reviewIpfsStore.save(data)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     return await adapter.finalizeOffer(
@@ -280,7 +280,7 @@ class Marketplace extends Adaptable {
     for (const event of reviewEvents) {
       // Load review data from IPFS.
       const ipfsHash = this.contractService.getIpfsHashFromBytes32(event.returnValues.ipfsHash)
-      const ipfsReview = await this.ipfsReviewStore.load(ipfsHash)
+      const ipfsReview = await this.reviewIpfsStore.load(ipfsHash)
 
       const offerIndex = event.returnValues.offerID
       const offerId = generateOfferId({ network, version, listingIndex, offerIndex })
