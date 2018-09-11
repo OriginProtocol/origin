@@ -2,6 +2,7 @@ import ContractService from './services/contract-service'
 import IpfsService from './services/ipfs-service'
 import { Attestations } from './resources/attestations'
 import Marketplace from './resources/marketplace'
+import Discovery from './resources/discovery'
 import Users from './resources/users'
 import Messaging from './resources/messaging'
 import Token from './resources/token'
@@ -10,6 +11,8 @@ import store from 'store'
 
 const defaultBridgeServer = 'https://bridge.originprotocol.com'
 const defaultIpfsDomain = 'gateway.originprotocol.com'
+const defaultDiscoveryServer = 'https://discovery.originprotocol.com'
+const defaultDiscoveryServerPort = '443'
 const defaultIpfsApiPort = '5002'
 const defaultIpfsGatewayPort = '443'
 const defaultIpfsGatewayProtocol = 'https'
@@ -25,6 +28,8 @@ class Origin {
     ipfsGatewayProtocol = defaultIpfsGatewayProtocol,
     attestationServerUrl = defaultAttestationServerUrl,
     // indexingServerUrl = defaultIndexingServerUrl,
+    discoveryServer = defaultDiscoveryServer,
+    discoveryServerPort = defaultDiscoveryServerPort,
     contractAddresses,
     web3,
     ipfsCreator,
@@ -52,6 +57,12 @@ class Origin {
       contractService: this.contractService,
       ipfsService: this.ipfsService,
       store
+    })
+
+    this.discovery = new Discovery({
+      discoveryServer,
+      discoveryServerPort,
+      fetch
     })
 
     this.users = new Users({

@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "1.0.0",
+  "listingType": "unit",
+  "unitsPurchased": 1,
+  "totalPrice": {
+    "currency": "ETH",
+    "amount": "0.33"
+  }
+}

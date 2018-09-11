@@ -1,10 +1,10 @@
 //
-// Listing is the main object exposed by Origin Protocol to access data from a listing.
+// Listing is the main object exposed by Origin Protocol to access listing data.
 //
 export class Listing {
   /**
    * A Listing is constructed based on its on-chain and off-chain data.
-   * #param {string} listingId - Unique listing ID.
+   * @param {string} listingId - Unique listing ID.
    * @param {Object} chainListing - Listing data from the blockchain.
    * @param {Object} ipfsListing - Listing data from IPFS.
    */
