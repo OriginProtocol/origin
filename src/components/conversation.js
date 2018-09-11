@@ -170,14 +170,14 @@ class Conversation extends Component {
     const { id, intl, messages, web3Account } = this.props
     const { counterparty, listing, purchase } = this.state
     const { name, pictures } = listing
-    const { buyer, created, status } = purchase
+    const { buyer, createdAt, status } = purchase
     const perspective = buyer
       ? buyer === web3Account
         ? 'buyer'
         : 'seller'
       : null
-    const soldAt = created
-      ? created * 1000 /* convert seconds since epoch to ms */
+    const soldAt = createdAt
+      ? createdAt * 1000 /* convert seconds since epoch to ms */
       : null
     const photo =
       pictures &&

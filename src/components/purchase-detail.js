@@ -26,6 +26,8 @@ import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
 
+const ARBITRATOR_ETH_ADDRESS = process.env.ARBITRATOR_ACCOUNT
+
 const defaultState = {
   buyer: {},
   form: {
@@ -36,8 +38,7 @@ const defaultState = {
   processing: false,
   purchase: {},
   reviews: [],
-  seller: {},
-  arbitrationKeyShared: false
+  seller: {}
 }
 
 class PurchaseDetail extends Component {
@@ -387,26 +388,18 @@ class PurchaseDetail extends Component {
   }
 
   async initiateDispute() {
-    const arbitratorAddress = '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2'
     const { web3Account } = this.props
     const { listing, purchase } = this.state
     const counterpartyAddress = web3Account === purchase.buyer ? listing.seller : purchase.buyer
     const roomId = origin.messaging.generateRoomId(web3Account, counterpartyAddress)
-    const conv = origin.messaging.convs[roomId]
-    const prompt = confirm(`You want to share conversation key ${conv.keys[0]} with The Arbitrator (${arbitratorAddress})?`)
+    const keys = origin.messaging.getSharedKeys(roomId)
+    const prompt = confirm(`You want to share conversation key ${keys[0]} with The Arbitrator (${ARBITRATOR_ETH_ADDRESS})?`)
 
     if (prompt) {
       try {
-        await origin.messaging.sendConvMessage(arbitratorAddress, {
-          content: `This message should not be shown in the conversation UI. It only serves to share the following key[s] for a conversation between ${web3Account} and ${counterpartyAddress}: ${conv.keys.join(', ')}`,
-          arbitration: {
-            sharedKeys: conv.keys,
-            roomId
-          }
+        await origin.messaging.sendConvMessage(ARBITRATOR_ETH_ADDRESS, {
+          decryption: { keys, roomId }
         })
-
-        // in the future can be detected by the presence of the message containing an arbitration object (the one just sent)
-        this.setState({ arbitrationKeyShared: true })
       } catch(e) {
         console.error(e)
         throw e
@@ -415,8 +408,7 @@ class PurchaseDetail extends Component {
   }
 
   render() {
-    const { web3Account } = this.props
-
+    const { messages, web3Account } = this.props
     const {
       buyer,
       form,
@@ -426,7 +418,6 @@ class PurchaseDetail extends Component {
       reviews,
       seller,
     } = this.state
-
     const isPending = false // will be handled by offer status
     const isSold = !listing.unitsRemaining
     const { rating, reviewText } = form
@@ -499,6 +490,18 @@ class PurchaseDetail extends Component {
         defaultMessage={'Unnamed User'}
       />
     )
+    const roomId = origin.messaging.generateRoomId(web3Account, counterpartyUser.address)
+    const isEligibleForArbitration = ARBITRATOR_ETH_ADDRESS && origin.messaging.hasConversedWith(counterpartyUser.address)
+    const arbitrationRoomId = ARBITRATOR_ETH_ADDRESS ? origin.messaging.generateRoomId(web3Account, ARBITRATOR_ETH_ADDRESS) : null
+    // in the future this will need to account for key expiration and validation
+    const arbitrationKeyShared = messages.find(({ conversationId, decryption }) => {
+      // check for object containing keys and arbitrator identity
+      if (!decryption || conversationId !== arbitrationRoomId) {
+        return null
+      }
+
+      return decryption.roomId === roomId && decryption.keys[0]
+    })
 
     return (
       <div className="purchase-detail">
@@ -785,14 +788,16 @@ class PurchaseDetail extends Component {
                   userAddress={counterpartyUser.address}
                 />
               )}
-              <div className="help-container text-center" style={{ paddingTop: '30px' }}>
-                {!this.state.arbitrationKeyShared &&
-                  <button className="btn btn-danger" onClick={this.initiateDispute}>HELP</button>
-                }
-                {this.state.arbitrationKeyShared &&
-                  <h3>Help is on the way! 🚑</h3>
-                }
-              </div>
+              {hasMessagedCounterparty &&
+                <div className="help-container text-center" style={{ paddingTop: '30px' }}>
+                  {!arbitrationKeyShared &&
+                    <button className="btn btn-danger" onClick={this.initiateDispute}>HELP</button>
+                  }
+                  {arbitrationKeyShared &&
+                    <h3>Help is on the way! 🚑</h3>
+                  }
+                </div>
+              }
             </div>
           </div>
           <div className="row">
@@ -961,6 +966,7 @@ function progressTriangleOffset(step, maxStep, perspective) {
 
 const mapStateToProps = state => {
   return {
+    messages: state.messages,
     web3Account: state.app.web3.account
   }
 }

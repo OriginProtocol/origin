@@ -6,6 +6,7 @@ export default function Messages(state = [], action = {}) {
     const {
       content,
       created,
+      decryption,
       hash,
       index,
       listingId,
@@ -25,10 +26,11 @@ export default function Messages(state = [], action = {}) {
       ...state,
       {
         conversationId: roomId,
-        purchaseId,
-        listingId,
         senderAddress,
+        decryption,
+        purchaseId,
         recipients,
+        listingId,
         content,
         created,
         status,
