@@ -117,6 +117,7 @@
   "MessageNew.send": "Senden",
   "MessageNew.encryptionNotice": "Ihre Nachricht wird verschlüsselt. Es ist nur für Sie, den Empfänger und einen Schiedsrichter sichtbar, falls eine Streitigkeit entsteht.",
   "message.enable": "Aktivieren Sie Nachrichten",
+  "message.unrecognizedData": "This data cannot be rendered.",
   "messaging-provider.congrats": "Herzliche Glückwünsche! Sie können jetzt andere Benutzer über das Origin Platform-Ökosystem informieren! Schauen Sie sich doch einmal um und erzählen Sie uns, was Sie von unserem DApp halten?",
   "messaging-provider.unnamedUser": "Unbenannter Benutzer",
   "messaging-provider.welcome": "Willkommen bei der Origin Protocol Demo DApp! Unsere innovative Messaging-Plattform ermöglicht Ihnen eine sichere und dezentrale Kommunikation mit anderen Origin-Benutzern. Alle Ihre Nachrichten werden verschlüsselt und auf IPFS gespeichert. Nachrichten können nur von Ihnen, dem Empfänger und möglicherweise einem Drittanbieter-Schlichter gelesen werden, wenn einer von Ihnen einen Konflikt auslöst und Zugriff auf einen kryptographisch generierten, freigegebenen privaten Schlüssel gewährt.\n\nUm Nachrichten zu aktivieren, müssen Sie Ihre Ethereum-Geldbörse verwenden, um zwei Anweisungen zu signieren. Dies kostet keine ETH, Origin Token oder Gas.",
