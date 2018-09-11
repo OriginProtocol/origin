@@ -13,9 +13,9 @@ export class Review {
     this.id = event.transactionHash
     this.listingId = listingId
     this.offerId = offerId
-    this.reviewer = event.returnValues.party
-    this.timestamp = event.timestamp
-    this.rating = ipfsReview.rating
+    this.reviewer = event.returnValues.party // Either buyer or seller.
+    this.timestamp = event.timestamp // Time in seconds since Epoch.
+    this.rating = ipfsReview.rating // Number between 1 and 5.
     this.text = ipfsReview.text
   }
 }
