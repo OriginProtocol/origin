@@ -117,6 +117,7 @@
   "MessageNew.send": "Sende",
   "MessageNew.encryptionNotice": "Din besked bliver krypteret. Det vil kun være synligt for dig, modtageren og en voldgiftsmand i tilfælde af at der opstår en tvist.",
   "message.enable": "Aktivér Beskeder",
+  "message.unrecognizedData": "This data cannot be rendered.",
   "messaging-provider.congrats": "Tillykke! Du kan nu sende besked til andre brugere på tværs af origineplatformens økosystem! Hvorfor ikke starte med at kigge rundt og fortælle os, hvad du synes om vores DApp?",
   "messaging-provider.unnamedUser": "Unnamed bruger",
   "messaging-provider.welcome": "Velkommen til Origin Protocol Demo DApp! Vores innovative messaging platform giver dig mulighed for at kommunikere med andre Origin brugere på en sikker og decentral måde. Alle dine meddelelser bliver krypteret og gemt på IPFS. Meddelelser kan kun læses af dig, modtageren og eventuelt en tredjeparts voldgiftsmand, hvis en af ​​jer indleder en tvist og giver adgang til en kryptografisk genereret, delt privat nøgle.\n\nFor at aktivere messaging skal du bruge din Ethereum-tegnebog til at underskrive to udsagn. Dette vil ikke koste nogen ETH, Origin Token eller gas.",
