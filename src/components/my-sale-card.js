@@ -9,8 +9,6 @@ import { fetchUser } from 'actions/User'
 
 import PurchaseProgress from 'components/purchase-progress'
 
-import { translateListingCategory } from 'utils/translationUtils'
-
 class MySaleCard extends Component {
   constructor(props) {
     super(props)
@@ -50,6 +48,10 @@ class MySaleCard extends Component {
     })
   }
 
+  componentWillUnmount() {
+    $('[data-toggle="tooltip"]').tooltip('dispose')
+  }
+
   render() {
     const { listing, purchase, user } = this.props
 
@@ -58,9 +60,7 @@ class MySaleCard extends Component {
       return null
     }
 
-    const { name, pictures, price } = translateListingCategory(
-      listing.ipfsData.data
-    )
+    const { name, pictures, price } = { listing }
     const buyerName =
       (user &&
         user.profile &&
@@ -68,7 +68,7 @@ class MySaleCard extends Component {
       this.props.intl.formatMessage(this.intlMessages.unnamedUser)
     const photo = pictures && pictures.length > 0 && pictures[0]
     const soldAt = Number(purchase.createdAt) * 1000 // convert seconds since epoch to ms
-    const step = Number(purchase.status)
+    const step = parseInt(purchase.status)
 
     return (
       <div className="sale card">
@@ -121,8 +121,8 @@ class MySaleCard extends Component {
             </div>
           </div>
           <PurchaseProgress
+            maxStep={4}
             currentStep={step}
-            purchase={purchase}
             perspective="seller"
             subdued={true}
           />

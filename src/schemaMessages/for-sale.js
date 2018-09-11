@@ -9,6 +9,10 @@ export default defineMessages({
     id: 'schema.forSale.title',
     defaultMessage: 'Title'
   },
+  'schema.forSale.examples': {
+    id: 'schema.forSale.examples',
+    defaultMessage: 'Examples'
+  },
   'schema.forSale.category': {
     id: 'schema.forSale.category',
     defaultMessage: 'Category'

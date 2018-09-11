@@ -292,7 +292,7 @@ export function translateSchema(schemaJson, schemaType) {
 }
 
 export function translateListingCategory(listingObj) {
-  // Copy the schema so we don't modify the original
+  // Copy the listing so we don't modify the original
   const listing = JSON.parse(JSON.stringify(listingObj))
   const category = listing.category
 

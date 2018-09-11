@@ -23,6 +23,7 @@ import Notifications from 'components/notifications'
 import PurchaseDetail from 'components/purchase-detail'
 import ScrollToTop from 'components/scroll-to-top'
 import Web3Provider from 'components/web3-provider'
+import AboutTokens from 'components/about-tokens'
 
 import Profile from 'pages/profile/Profile'
 import User from 'pages/user/User'
@@ -45,7 +46,7 @@ const HomePage = () => (
 
 const ListingDetailPage = props => (
   <ListingDetail
-    listingAddress={props.match.params.listingAddress}
+    listingId={props.match.params.listingId}
     withReviews={true}
   />
 )
@@ -125,7 +126,7 @@ class App extends Component {
                     <Route exact path="/" component={HomePage} />
                     <Route path="/page/:activePage" component={HomePage} />
                     <Route
-                      path="/listing/:listingAddress"
+                      path="/listing/:listingId"
                       component={ListingDetailPage}
                     />
                     <Route path="/create" component={CreateListingPage} />
@@ -143,6 +144,7 @@ class App extends Component {
                     <Route path="/notifications" component={Notifications} />
                     <Route path="/profile" component={Profile} />
                     <Route path="/users/:userAddress" component={UserPage} />
+                    <Route path="/about-tokens" component={AboutTokens} />
                     <Route component={NotFound} />
                   </Switch>
                 </Layout>

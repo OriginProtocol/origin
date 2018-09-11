@@ -8,9 +8,10 @@ export const WalletConstants = keyMirror(
     INIT_SUCCESS: null,
     INIT_ERROR: null,
 
-    BALANCE: null,
-    BALANCE_SUCCESS: null,
-    BALANCE_ERROR: null
+    ETH_BALANCE_SUCCESS: null,
+    ETH_BALANCE_ERROR: null,
+
+    OGN_BALANCE_SUCCESS: null,
   },
   'WALLET'
 )
@@ -26,15 +27,28 @@ export function init() {
   }
 }
 
-export function getBalance() {
+export function getEthBalance() {
   return async function(dispatch) {
     const { web3 } = origin.contractService
     const account = await origin.contractService.currentAccount()
     const balance = await web3.eth.getBalance(account)
 
     dispatch({
-      type: WalletConstants.BALANCE_SUCCESS,
-      balance: web3.utils.fromWei(balance, 'ether')
+      type: WalletConstants.ETH_BALANCE_SUCCESS,
+      ethBalance: web3.utils.fromWei(balance, 'ether')
+    })
+  }
+}
+
+export function getOgnBalance() {
+  return async function(dispatch) {
+    const account = await origin.contractService.currentAccount()
+    const ognBalance =
+      (await origin.token.balanceOf(account)) / 10**origin.token.decimals
+
+    dispatch({
+      type: WalletConstants.OGN_BALANCE_SUCCESS,
+      ognBalance: ognBalance
     })
   }
 }
