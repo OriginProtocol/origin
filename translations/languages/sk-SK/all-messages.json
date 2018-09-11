@@ -117,6 +117,7 @@
   "MessageNew.send": "odoslať",
   "MessageNew.encryptionNotice": "Vaša správa bude šifrovaná. Bude viditeľný iba vám, príjemcovi a rozhodcovi v prípade vzniku sporu.",
   "message.enable": "Povoliť Správy",
+  "message.unrecognizedData": "This data cannot be rendered.",
   "messaging-provider.congrats": "Blahoželáme! Teraz môžete poslať správu ostatným používateľom v ekosystéme Origin Platform! Prečo nezačať sa pozrieť okolo a povedať nám, čo si myslíte o našom DApp?",
   "messaging-provider.unnamedUser": "Nepomenovaný používateľ",
   "messaging-provider.welcome": "Vitajte v Demo protokolu DApp! Naša novátorská platforma pre zasielanie správ umožňuje komunikovať s ostatnými užívateľmi pôvodu bezpečným a decentralizovaným spôsobom. Všetky vaše správy budú šifrované a uložené na IPFS. Správy môžete čítať len vy, príjemca a prípadne aj rozhodca tretej strany, ak ktorýkoľvek z vás iniciuje spor a udelí prístup ku kryptograficky generovanému, zdieľanému súkromnému kľúču.\n\nAk chcete povoliť odosielanie správ, musíte použiť svoju peňaženku Ethereum na podpísanie dvoch vyhlásení. To nebude stáť žiadne ETH, tokenu pôvodu alebo plyn.",
