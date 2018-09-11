@@ -117,6 +117,7 @@
   "MessageNew.send": "Pošlji",
   "MessageNew.encryptionNotice": "Vaše sporočilo bo šifrirano. V primeru, da pride do spora, bo viden le vam, prejemniku in razsodniku.",
   "message.enable": "Omogočanje sporočil",
+  "message.unrecognizedData": "This data cannot be rendered.",
   "messaging-provider.congrats": "Čestitam! Zdaj lahko sporočite drugim uporabnikom v ekosistemu Origin Platforma! Zakaj ne bi začeli z ogledom in nam sporočili, kaj mislite o našem DApp?",
   "messaging-provider.unnamedUser": "Neimenovani uporabnik",
   "messaging-provider.welcome": "Dobrodošli v Origin Protocol Demo DApp! Naša inovativna sporočilna platforma vam omogoča, da komunicirate z drugimi uporabniki izvora na varen in decentraliziran način. Vsa vaša sporočila bodo šifrirana in shranjena na IPFS. Sporočila lahko preberejo samo vi, prejemnik in potencialno tretji stranski razsodnik, če katera koli od vas sproži spor in odobri dostop do kriptografsko generiranega, skupnega, zasebnega ključa.\n\nDa bi omogočili pošiljanje sporočil, boste morali uporabiti svojo denarnico Ethereum za podpis dveh izjav. To ne bo stalo nobenega ETH, Origin Token ali plina.",
