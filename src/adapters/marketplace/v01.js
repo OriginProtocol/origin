@@ -1,4 +1,4 @@
-import V00_MarkeplaceAdapter from '../v00/marketplace_adapter'
+import V00_MarkeplaceAdapter from './v00'
 
 class V01_MarkeplaceAdapter extends V00_MarkeplaceAdapter {
   constructor() {

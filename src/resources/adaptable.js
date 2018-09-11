@@ -1,5 +1,5 @@
-import V00_MarkeplaceAdapter from '../adapters/v00/marketplace_adapter'
-import V01_MarkeplaceAdapter from '../adapters/v01/marketplace_adapter'
+import V00_MarkeplaceAdapter from '../adapters/marketplace/v00'
+import V01_MarkeplaceAdapter from '../adapters/marketplace/v01'
 import { parseListingId, parseOfferId } from '../utils/id'
 
 class Adaptable {
