@@ -537,7 +537,7 @@ class PurchaseDetail extends Component {
                 )}
               </div>
               <h1>
-                {listing.name || 'Larry the Chicken'}
+                {listing.name}
                 {isPending &&
                   <span className="pending badge">
                     <FormattedMessage
@@ -788,7 +788,7 @@ class PurchaseDetail extends Component {
                   userAddress={counterpartyUser.address}
                 />
               )}
-              {hasMessagedCounterparty &&
+              {isEligibleForArbitration &&
                 <div className="help-container text-center" style={{ paddingTop: '30px' }}>
                   {!arbitrationKeyShared &&
                     <button className="btn btn-danger" onClick={this.initiateDispute}>HELP</button>
