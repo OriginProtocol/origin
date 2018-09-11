@@ -117,6 +117,7 @@
   "MessageNew.send": "Invia",
   "MessageNew.encryptionNotice": "Il tuo messaggio verrà crittografato. Sarà visibile solo a te, al destinatario e ad un arbitro, nel caso in cui insorga una controversia.",
   "message.enable": "Abilita messaggistica",
+  "message.unrecognizedData": "This data cannot be rendered.",
   "messaging-provider.congrats": "Congratulazioni! Ora puoi inviare messaggi ad altri utenti attraverso l'ecosistema della piattaforma Origin! Perché non iniziare dando un'occhiata in giro e dicendoci cosa ne pensi del nostro DApp?",
   "messaging-provider.unnamedUser": "Utente senza nome",
   "messaging-provider.welcome": "Benvenuti nel protocollo di origine Demo DApp! La nostra innovativa piattaforma di messaggistica ti consente di comunicare con altri utenti Origin in modo sicuro e decentralizzato. Tutti i tuoi messaggi saranno crittografati e archiviati su IPFS. I messaggi possono essere letti solo da te, dal destinatario e potenzialmente da un arbitro di terze parti se uno di voi avvia una controversia e concede l'accesso a una chiave privata, condivisa e crittografata.\n\nPer abilitare la messaggistica è necessario utilizzare il proprio portafoglio Ethereum per firmare due dichiarazioni. Questo non costerà alcun ETH, Token di origine o gas.",
