@@ -153,4 +153,18 @@ describe('Marketplace Resource', function() {
       expect(offer.status).to.equal('finalized')
     })
   })
+
+  describe('getListingReviews', () => {
+    it('should get reviews', async () => {
+      await marketplace.acceptOffer('999-001-0-0')
+      await marketplace.finalizeOffer('999-001-0-0', {
+        rating: 4,
+        reviewText: 'foo bar'
+      })
+      const reviews = await marketplace.getListingReviews('999-001-0')
+      expect(reviews.length).to.equal(1)
+      expect(reviews[0].rating).to.equal(4)
+      expect(reviews[0].reviewText).to.equal('foo bar')
+    })
+  })
 })
