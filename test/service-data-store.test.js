@@ -7,9 +7,9 @@ import {
   OfferIpfsStore,
   ReviewIpfsStore
 } from '../src/services/data-store-service'
-import goodListing from './data/listing-valid'
-import goodOffer from './data/offer-valid'
-import goodReview from './data/review-valid'
+import goodListing from './fixtures/listing-valid'
+import goodOffer from './fixtures/offer-valid'
+import goodReview from './fixtures/review-valid'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect

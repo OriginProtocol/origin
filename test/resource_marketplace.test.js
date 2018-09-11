@@ -3,9 +3,9 @@ import contractServiceHelper from './helpers/contract-service-helper'
 import IpfsService from '../src/services/ipfs-service.js'
 import { expect } from 'chai'
 import Web3 from 'web3'
-import listingValid from './data/listing-valid.json'
-import offerValid from './data/offer-valid.json'
-import reviewValid from './data/review-valid.json'
+import listingValid from './fixtures/listing-valid.json'
+import offerValid from './fixtures/offer-valid.json'
+import reviewValid from './fixtures/review-valid.json'
 
 class StoreMock {
   constructor() {
