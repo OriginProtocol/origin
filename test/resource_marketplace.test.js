@@ -65,7 +65,7 @@ describe('Marketplace Resource', function() {
   describe('getListings', () => {
     it('should return all listings', async () => {
       await marketplace.createListing(listingData)
-      const listings = await marketplace.getListings()
+      const listings = await marketplace.getListings({ idsOnly: true })
       expect(listings.length).to.equal(2)
       expect(listings).to.include('999-001-0')
       expect(listings).to.include('999-001-1')
@@ -74,7 +74,7 @@ describe('Marketplace Resource', function() {
 
   describe('getListing', () => {
     it('should return details of a listing', async () => {
-      const listings = await marketplace.getListings()
+      const listings = await marketplace.getListings({ idsOnly: true })
       expect(listings.length).to.equal(1)
       const listing = await marketplace.getListing(listings[0])
       expect(listing.type).to.equal('unit')

@@ -47,8 +47,9 @@ class Marketplace {
       return listingIds
     }
 
-    // TODO: return full listings with data
-    return listingIds
+    return Promise.all(listingIds.map(async (listingId) => {
+      return await this.getListing(listingId)
+    }))
   }
 
   /**
