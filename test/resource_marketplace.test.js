@@ -21,11 +21,11 @@ class StoreMock {
 
 describe('Marketplace Resource', function() {
   this.timeout(10000) // default is 2000
-  let marketplace
+  let marketplace, web3
 
   beforeEach(async () => {
     const provider = new Web3.providers.HttpProvider('http://localhost:8545')
-    const web3 = new Web3(provider)
+    web3 = new Web3(provider)
     // const accounts = await web3.eth.getAccounts()
     const contractService = await contractServiceHelper(web3)
     const ipfsService = new IpfsService({
@@ -42,6 +42,7 @@ describe('Marketplace Resource', function() {
     })
 
     await marketplace.createListing(listingValid)
+    await marketplace.makeOffer('999-001-0', { price: 0.1 })
   })
 
   describe('getListingsCount', () => {
@@ -90,6 +91,66 @@ describe('Marketplace Resource', function() {
       await marketplace.withdrawListing(listings[0], {})
       listings = await marketplace.getListings()
       expect(listings.length).to.equal(0)
+    })
+  })
+
+  describe('getOffers: idsOnly=true', () => {
+    it('should get offer ids', async () => {
+      await marketplace.makeOffer('999-001-0', { price: 0.01 })
+      const offers = await marketplace.getOffers('999-001-0', { idsOnly: true })
+      expect(offers.length).to.equal(2)
+      expect(offers[0]).to.equal('999-001-0-0')
+      expect(offers[1]).to.equal('999-001-0-1')
+    })
+  })
+
+  describe('getOffers', () => {
+    it('should get offers with data', async () => {
+      await marketplace.makeOffer('999-001-0', { price: 0.01 })
+      const offers = await marketplace.getOffers('999-001-0')
+      expect(offers.length).to.equal(2)
+      expect(offers[0].status).to.equal('created')
+      expect(offers[0].ipfsHash).to.exist
+      expect(offers[1].status).to.equal('created')
+      expect(offers[1].ipfsHash).to.exist
+    })
+  })
+
+  describe('getOffer', () => {
+    it('should get offer data', async () => {
+      const offer = await marketplace.getOffer('999-001-0-0')
+      expect(offer.status).to.equal('created')
+      expect(offer.ipfsHash).to.exist
+    })
+  })
+
+  describe('makeOffer', () => {
+    it('should make an offer', async () => {
+      await marketplace.makeOffer('999-001-0', { price: 0.02 })
+      const offer = await marketplace.getOffer('999-001-0-1')
+      const expectedPrice = web3.utils.toWei(String(0.02), 'ether')
+      expect(offer.value).to.equal(expectedPrice)
+    })
+  })
+
+  describe('acceptOffer', () => {
+    it('should changed the status to accepted', async () => {
+      let offer = await marketplace.getOffer('999-001-0-0')
+      expect(offer.status).to.equal('created')
+      await marketplace.acceptOffer('999-001-0-0')
+      offer = await marketplace.getOffer('999-001-0-0')
+      expect(offer.status).to.equal('accepted')
+    })
+  })
+
+  describe('finalizeOffer', () => {
+    it('should changed the status to finalized', async () => {
+      let offer = await marketplace.getOffer('999-001-0-0')
+      expect(offer.status).to.equal('created')
+      await marketplace.acceptOffer('999-001-0-0')
+      await marketplace.finalizeOffer('999-001-0-0')
+      offer = await marketplace.getOffer('999-001-0-0')
+      expect(offer.status).to.equal('finalized')
     })
   })
 })
