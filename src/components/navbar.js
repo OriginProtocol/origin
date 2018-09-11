@@ -15,18 +15,12 @@ class NavBar extends Component {
   constructor(props) {
     super(props)
 
-    this.handleChange = this.handleChange.bind(this)
     this.handleLink = this.handleLink.bind(this)
     this.state = {
       noWeb3Account: false,
       notWeb3EnabledDesktop: false,
-      notWeb3EnabledMobile: false,
-      searchQuery: ''
+      notWeb3EnabledMobile: false
     }
-  }
-
-  handleChange(e) {
-    this.setState({ searchQuery: e.target.value })
   }
 
   handleLink(e) {
@@ -65,10 +59,6 @@ class NavBar extends Component {
             className="collapse navbar-collapse order-2 order-lg-1"
             id="navbarSupportedContent"
           >
-            {/* Hidden for current deployment */}
-            {/* <form className="form-inline my-2 my-lg-0">
-              <input className="form-control mr-sm-2" type="search" placeholder="Search Listings" aria-label="Search" onChange={this.handleChange} value={this.state.searchQuery} />
-            </form> */}
             <div className="navbar-nav justify-content-end">
               <Link to="/" className="d-lg-none nav-item nav-link">
                 <FormattedMessage
