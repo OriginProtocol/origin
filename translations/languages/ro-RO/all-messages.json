@@ -117,6 +117,7 @@
   "MessageNew.send": "Trimite",
   "MessageNew.encryptionNotice": "Mesajul dvs. va fi criptat. Acesta va fi vizibil numai pentru dvs., destinatarul și arbitrul în cazul apariției unei litigii.",
   "message.enable": "Activați Mesaje",
+  "message.unrecognizedData": "This data cannot be rendered.",
   "messaging-provider.congrats": "Felicitări! Acum puteți trimite mesaje celorlalți utilizatori din ecosistemul Platforma de Origine! De ce nu începeți să aruncați o privire în jur și să ne spuneți ce credeți despre DApp-ul nostru?",
   "messaging-provider.unnamedUser": "Utilizator anonim",
   "messaging-provider.welcome": "Bine ați venit la DApp! Platforma noastră de mesagerie inovatoare vă permite să comunicați cu alți utilizatori de origine într-un mod securizat și descentralizat. Toate mesajele dvs. vor fi criptate și stocate pe IPFS. Mesajele pot fi citite numai de dvs., de destinatar și, eventual, de un arbitru terț, dacă oricare dintre dvs. inițiază o litigiu și acordă acces la o cheie privată generată de o criptografie.\n\nPentru a permite mesajele, va trebui să utilizați portofelul Ethereum pentru a semna două declarații. Acest lucru nu va costa nici un ETH, Origine Token sau gaz.",
