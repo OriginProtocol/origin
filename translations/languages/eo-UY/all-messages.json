@@ -117,6 +117,7 @@
   "MessageNew.send": "Sendu",
   "MessageNew.encryptionNotice": "Via mesaĝo estos ĉifrita. Ĝi nur estos videbla al vi, la ricevanto kaj arbitranto en la okazo ke kverelo ŝprucas.",
   "message.enable": "Ebligi mesaĝojn",
+  "message.unrecognizedData": "This data cannot be rendered.",
   "messaging-provider.congrats": "Gratulojn! Vi nun povas sendi mesaĝon al aliaj uzantoj tra la ekosistemo de Originala Platformo! Kial ne komencu rigardante nin kaj rakontas al ni, kion vi pensas pri nia DApp?",
   "messaging-provider.unnamedUser": "Nekonata Uzanto",
   "messaging-provider.welcome": "Bonvenon al la Originala Protokolo Demo DApp! Nia pionira platformo de mesaĝoj permesas komuniki vin kun aliaj Originaj uzantoj en sekura kaj malcentralizita maniero. Ĉiuj viaj mesaĝoj estos koditaj kaj konservitaj en IPFS. Mesaĝoj nur povas esti legataj de vi, la ricevanto kaj eble potenca arbitraciisto, se iu el vi komencos disputon kaj donas aliron al kripta generita, dividita privata ŝlosilo.\n\nPor ebligi mesaĝadon vi devos uzi vian Ethereum-monujon por subskribi du deklarojn. Ĉi tio ne kostos neniun ETH, Origin Token aŭ gason.",
