@@ -4,6 +4,8 @@ import IpfsService from '../src/services/ipfs-service.js'
 import { expect } from 'chai'
 import Web3 from 'web3'
 import listingValid from './data/listing-valid.json'
+import offerValid from './data/offer-valid.json'
+import reviewValid from './data/review-valid.json'
 
 class StoreMock {
   constructor() {
@@ -46,7 +48,7 @@ describe('Marketplace Resource', function() {
     })
 
     await marketplace.createListing(listingValid)
-    await marketplace.makeOffer('999-001-0', { price: 0.1 })
+    await marketplace.makeOffer('999-001-0', offerValid)
   })
 
   describe('getListingsCount', () => {
@@ -100,7 +102,7 @@ describe('Marketplace Resource', function() {
 
   describe('getOffers: idsOnly=true', () => {
     it('should get offer ids', async () => {
-      await marketplace.makeOffer('999-001-0', { price: 0.01 })
+      await marketplace.makeOffer('999-001-0', offerValid)
       const offers = await marketplace.getOffers('999-001-0', { idsOnly: true })
       expect(offers.length).to.equal(2)
       expect(offers[0]).to.equal('999-001-0-0')
@@ -110,7 +112,7 @@ describe('Marketplace Resource', function() {
 
   describe('getOffers', () => {
     it('should get offers with data', async () => {
-      await marketplace.makeOffer('999-001-0', { price: 0.01 })
+      await marketplace.makeOffer('999-001-0', offerValid)
       const offers = await marketplace.getOffers('999-001-0')
       expect(offers.length).to.equal(2)
       expect(offers[0].status).to.equal('created')
@@ -130,9 +132,14 @@ describe('Marketplace Resource', function() {
 
   describe('makeOffer', () => {
     it('should make an offer', async () => {
-      await marketplace.makeOffer('999-001-0', { price: 0.02 })
+      const anotherOffer = Object.assign(
+        {},
+        offerValid,
+        { totalPrice: { currency: 'ETH', amount: '0.02' } }
+      )
+      await marketplace.makeOffer('999-001-0', anotherOffer)
       const offer = await marketplace.getOffer('999-001-0-1')
-      const expectedPrice = web3.utils.toWei(String(0.02), 'ether')
+      const expectedPrice = web3.utils.toWei('0.02', 'ether')
       expect(offer.value).to.equal(expectedPrice)
     })
   })
@@ -152,7 +159,7 @@ describe('Marketplace Resource', function() {
       let offer = await marketplace.getOffer('999-001-0-0')
       expect(offer.status).to.equal('created')
       await marketplace.acceptOffer('999-001-0-0')
-      await marketplace.finalizeOffer('999-001-0-0')
+      await marketplace.finalizeOffer('999-001-0-0', reviewValid)
       offer = await marketplace.getOffer('999-001-0-0')
       expect(offer.status).to.equal('finalized')
     })
@@ -161,14 +168,11 @@ describe('Marketplace Resource', function() {
   describe('getListingReviews', () => {
     it('should get reviews', async () => {
       await marketplace.acceptOffer('999-001-0-0')
-      await marketplace.finalizeOffer('999-001-0-0', {
-        rating: 4,
-        reviewText: 'foo bar'
-      })
+      await marketplace.finalizeOffer('999-001-0-0', reviewValid)
       const reviews = await marketplace.getListingReviews('999-001-0')
       expect(reviews.length).to.equal(1)
-      expect(reviews[0].rating).to.equal(4)
-      expect(reviews[0].reviewText).to.equal('foo bar')
+      expect(reviews[0].rating).to.equal(3)
+      expect(reviews[0].text).to.equal('Good stuff')
     })
   })
 
@@ -185,7 +189,7 @@ describe('Marketplace Resource', function() {
       expect(notifications[0].type).to.equal('buyer_listing_shipped')
       expect(notifications[0].status).to.equal('unread')
 
-      await marketplace.finalizeOffer('999-001-0-0')
+      await marketplace.finalizeOffer('999-001-0-0', reviewValid)
       notifications = await marketplace.getNotifications()
       expect(notifications.length).to.equal(1)
       expect(notifications[0].type).to.equal('seller_review_received')
