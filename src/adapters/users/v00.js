@@ -50,7 +50,7 @@ class V00_UsersAdapter {
   async identityAddress(address) {
     const account = await this.contractService.currentAccount()
     const userRegistry = await this.contractService.deployed(
-      this.contractService.contracts.UserRegistry
+      this.contractService.contracts.V00_UserRegistry
     )
     address = address || account
     const result = await userRegistry.methods.users(address).call()
@@ -103,7 +103,7 @@ class V00_UsersAdapter {
   async addAttestations(attestations) {
     const account = await this.contractService.currentAccount()
     const userRegistry = await this.contractService.deployed(
-      this.contractService.contracts.UserRegistry
+      this.contractService.contracts.V00_UserRegistry
     )
     const identityAddress = await this.identityAddress()
     if (attestations.length) {

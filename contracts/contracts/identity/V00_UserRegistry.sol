@@ -6,7 +6,7 @@ import './ClaimHolderPresigned.sol';
 /// @dev Used to keep registry of user identifies
 /// @author Matt Liu <matt@originprotocol.com>, Josh Fraser <josh@originprotocol.com>, Stan James <stan@originprotocol.com>
 
-contract UserRegistry {
+contract V00_UserRegistry {
     /*
     * Events
     */

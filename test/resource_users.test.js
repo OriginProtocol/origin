@@ -58,7 +58,7 @@ describe('User Resource', function() {
     // clear user before each test because blockchain persists between tests
     // sort of a hack to force clean state at beginning of each test
     const userRegistry = await contractService.deployed(
-      contractService.contracts.UserRegistry
+      contractService.contracts.V00_UserRegistry
     )
     await userRegistry.methods.clearUser().send({ from: accounts[0] })
 

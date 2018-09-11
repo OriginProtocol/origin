@@ -4,7 +4,7 @@ var ClaimHolderPresigned = artifacts.require("./ClaimHolderPresigned.sol")
 var ClaimHolderRegistered = artifacts.require("./ClaimHolderRegistered.sol")
 var KeyHolder = artifacts.require("./KeyHolder.sol")
 var KeyHolderLibrary = artifacts.require("./KeyHolderLibrary.sol")
-var UserRegistry = artifacts.require("./UserRegistry.sol")
+var UserRegistry = artifacts.require("./V00_UserRegistry.sol")
 var OriginIdentity = artifacts.require("./OriginIdentity.sol")
 
 module.exports = function(deployer, network) {

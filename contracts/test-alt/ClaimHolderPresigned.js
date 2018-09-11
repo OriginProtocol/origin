@@ -41,7 +41,7 @@ describe('ClaimHolderPresigned', async function() {
       uri: ''
     }
 
-    userRegistry = await deploy('UserRegistry', {
+    userRegistry = await deploy('V00_UserRegistry', {
       from: accounts[3],
       path: `${contractPath}/identity/`
     })
