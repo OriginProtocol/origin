@@ -2,20 +2,17 @@ import { Listing } from '../models/listing'
 import { Offer } from '../models/offer'
 import { Review } from '../models/review'
 import {
+  readStatus,
+  unreadStatus,
+  notificationStatuses,
+  storeKeys
+} from '../models/notification'
+import {
   ListingIpfsStore,
   OfferIpfsStore,
   ReviewIpfsStore
 } from '../services/data-store-service'
 import MarketplaceResolver from '../adapters/marketplace/_resolver'
-
-const unreadStatus = 'unread'
-const readStatus = 'read'
-const notificationStatuses = [unreadStatus, readStatus]
-
-const storeKeys = {
-  notificationSubscriptionStart: 'notification_subscription_start',
-  notificationStatuses: 'notification_statuses'
-}
 
 class Marketplace {
   constructor({ contractService, ipfsService, store }) {

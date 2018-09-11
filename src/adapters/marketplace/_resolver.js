@@ -7,15 +7,13 @@ import {
   generateOfferId,
   generateNotificationId
 } from '../../utils/id'
-
-const unreadStatus = 'unread'
-const readStatus = 'read'
-const notificationStatuses = [unreadStatus, readStatus]
-
-const storeKeys = {
-  notificationSubscriptionStart: 'notification_subscription_start',
-  notificationStatuses: 'notification_statuses'
-}
+import {
+  Notification,
+  readStatus,
+  unreadStatus,
+  notificationStatuses,
+  storeKeys
+} from '../../models/notification'
 
 class MarketplaceResolver {
   constructor({ contractService, ipfsService, store }) {
@@ -248,7 +246,12 @@ class MarketplaceResolver {
         }
       }
 
-      notifications = notifications.concat(rawNotifications)
+      notifications = notifications.concat(
+        rawNotifications.map(rawNotification => {
+          return new Notification(rawNotification)
+        })
+      )
+
     }
     return notifications
   }
