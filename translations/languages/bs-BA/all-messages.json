@@ -117,6 +117,7 @@
   "MessageNew.send": "Pošalji",
   "MessageNew.encryptionNotice": "Vaša poruka će biti šifrovana. To će biti vidljivo samo vama, primaocu i arbitru u slučaju da dođe do spora.",
   "message.enable": "Omogućite razmenu poruka",
+  "message.unrecognizedData": "This data cannot be rendered.",
   "messaging-provider.congrats": "Čestitam! Sada možete prijaviti druge korisnike preko ekosistema Origin Platforma! Zašto ne početi tako što ćete pogledati okolo i reći nam šta mislite o našem DApp-u?",
   "messaging-provider.unnamedUser": "Neimenovani korisnik",
   "messaging-provider.welcome": "Dobrodošli u Origin Protocol Demo DApp! Naša inovativna platforma za razmenu poruka vam omogućava da komunicirate sa drugim izvornim korisnicima na siguran i decentralizovan način. Sve vaše poruke će biti šifrovane i čuvane na IPFS-u. Poruke mogu pročitati samo vi, primaoca i potencijalno arbitražer treće strane, ako bilo koji od vas inicira spor i odobri pristup kriptografski generisanom, dijeljenom, privatnom ključu.\n\nDa biste omogućili razmenu poruka, potrebno je da koristite svoj Ethereum novčanik da biste potpisali dve izjave. To neće koštati bilo koji ETH, Originalni Token ili gas.",
