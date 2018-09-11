@@ -2860,6 +2860,17 @@ form .stars img {
   cursor: pointer;
 }
 
+.purchase-detail .conversation-container {
+  border: 1px solid var(--pale-grey);
+  border-radius: var(--default-radius);
+  margin-top: 1rem;
+  padding: 0 1rem;
+}
+
+.purchase-detail .conversation {
+  height: 400px;
+}
+
 /* Reviews */
 
 .review {
@@ -3070,6 +3081,7 @@ form .stars img {
   height: calc(100vh - 60px);
 }
 
+.conversation-col,
 .no-gutters .conversation-col {
   background-color: white;
   height: calc(100vh - 60px);
@@ -3245,6 +3257,10 @@ form .stars img {
   font-size: 1rem;
   font-weight: bold;
   margin-right: 0.5rem;
+}
+
+.conversation .avatar-container {
+  margin-right: 15px;
 }
 
 .add-message {
@@ -4311,6 +4327,7 @@ a:not([href]):not([tabindex]).span-link {
     flex: 1;
   }
 
+  .conversation-col,
   .no-gutters .conversation-col {
     padding: 0 20px 0;
   }

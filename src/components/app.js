@@ -9,6 +9,7 @@ import { init as initWallet } from 'actions/Wallet'
 
 // Components
 import Alert from 'components/alert'
+import Arbitration from 'components/arbitration'
 import Layout from 'components/layout'
 import ListingCreate from 'components/listing-create'
 import ListingDetail from 'components/listing-detail'
@@ -59,6 +60,10 @@ const CreateListingPage = () => (
 
 const PurchaseDetailPage = props => (
   <PurchaseDetail offerId={props.match.params.offerId} />
+)
+
+const ArbitrationPage = props => (
+  <Arbitration offerId={props.match.params.offerId} />
 )
 
 const UserPage = props => <User userAddress={props.match.params.userAddress} />
@@ -134,6 +139,10 @@ class App extends Component {
                     <Route
                       path="/purchases/:offerId"
                       component={PurchaseDetailPage}
+                    />
+                    <Route
+                      path="/arbitration/:offerId"
+                      component={ArbitrationPage}
                     />
                     <Route path="/my-purchases" component={MyPurchases} />
                     <Route path="/my-sales" component={MySales} />

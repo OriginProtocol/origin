@@ -77,10 +77,13 @@ class Messages extends Component {
                 )
               })}
             </div>
-            <Conversation
-              id={selectedConversationId}
-              messages={filteredAndSorted}
-            />
+            <div className="conversation-col col-12 col-sm-8 col-lg-9 d-flex flex-column">
+              <Conversation
+                id={selectedConversationId}
+                messages={filteredAndSorted}
+                withListingSummary={true}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -91,7 +94,7 @@ class Messages extends Component {
 const mapStateToProps = state => {
   return {
     conversations: groupByArray(state.messages, 'conversationId'),
-    messages: state.messages,
+    messages: state.messages.filter(m => m.content),
     messagingEnabled: state.app.messagingEnabled,
     web3Account: state.app.web3.account
   }

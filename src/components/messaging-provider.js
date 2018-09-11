@@ -79,9 +79,9 @@ class MessagingProvider extends Component {
         const { roomId, sharedKeys } = obj.decryption
 
         origin.messaging.initRoom(roomId, sharedKeys)
-      } else {
-        this.props.addMessage(obj)
       }
+
+      this.props.addMessage(obj)
 
       this.debouncedFetchUser(obj.senderAddress)
     })

@@ -491,7 +491,7 @@ class PurchaseDetail extends Component {
       />
     )
     const roomId = origin.messaging.generateRoomId(web3Account, counterpartyUser.address)
-    const isEligibleForArbitration = ARBITRATOR_ETH_ADDRESS && origin.messaging.hasConversedWith(counterpartyUser.address)
+    const isEligibleForArbitration = ARBITRATOR_ETH_ADDRESS && web3Account !== ARBITRATOR_ETH_ADDRESS && origin.messaging.hasConversedWith(counterpartyUser.address)
     const arbitrationRoomId = ARBITRATOR_ETH_ADDRESS ? origin.messaging.generateRoomId(web3Account, ARBITRATOR_ETH_ADDRESS) : null
     // in the future this will need to account for key expiration and validation
     const arbitrationKeyShared = messages.find(({ conversationId, decryption }) => {
