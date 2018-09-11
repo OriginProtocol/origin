@@ -11,7 +11,6 @@ import {
   Notification,
   readStatus,
   unreadStatus,
-  notificationStatuses,
   storeKeys
 } from '../../models/notification'
 
