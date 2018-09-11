@@ -65,6 +65,7 @@ export function originToDAppListing(originListing) {
     status: originListing.status,
     category: originListing.subCategory,
     name: originListing.title,
+    description: originListing.description,
     pictures: originListing.media
       ? originListing.media.map(medium => medium.url)
       : [],
