@@ -221,6 +221,9 @@ class V00_MarkeplaceAdapter {
         ipfsHash = e.returnValues.ipfsHash
         createdAt = timestamp
       }
+      if (e.event === 'OfferAccepted') {
+        rawOffer.status = '2'
+      }
       // Override status if offer was deleted from blockchain state
       if (e.event === 'OfferFinalized') {
         rawOffer.status = '4'
