@@ -117,6 +117,7 @@
   "MessageNew.send": "Gửi",
   "MessageNew.encryptionNotice": "Tin nhắn của bạn sẽ được mã hóa. Chỉ có bạn, người nhận và trọng tài đọc được tin nhắn trong trường hợp xảy ra tranh chấp.",
   "message.enable": "Bật nhắn tin",
+  "message.unrecognizedData": "This data cannot be rendered.",
   "messaging-provider.congrats": "Xin chúc mừng! Bây giờ bạn có thể nhắn tin cho những người dùng khác trên toàn hệ thống của Origin! Hãy khám phá và để lại suy nghĩ của mình về ứng dụng của chúng tôi?",
   "messaging-provider.unnamedUser": "Người dùng vô danh",
   "messaging-provider.welcome": "Chào mừng đến với ứng dụng Demo của Origin! Nền tảng nhắn tin của chúng tôi cho phép bạn kết nối với những người dùng khác trên Origin một cách an toàn và phi tập trung. Tất cả những tin nhắn của bạn sẽ được mã hóa và lưu trên IPFS. Tin nhắn chỉ được xem bởi bạn, người nhận hoặc bên thứ ba trong trường hợp có tranh chấp và chỉ cấp quyền truy cập cho một mật mã duy nhất được tạo ra.\n\nĐể bật tính năng nhắn tin bạn cần sử dụng ví của Ethereum để kí hai xác nhận. Điều này sẽ không tốn phí.",
