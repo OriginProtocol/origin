@@ -28,6 +28,18 @@ async function run(config) {
     console.log(`Token contract address = ${address}`)
     break
   }
+  case 'pause': {
+    config.verbose = true
+    await token.pause(config.networkId)
+    console.log('Token transfers have been paused.')
+    break
+  }
+  case 'unpause': {
+    config.verbose = true
+    await token.unpause(config.networkId)
+    console.log('Token transfers have been paused.')
+    break
+  }
   default:
     throw `Unsupported action ${config.action}`
   }
@@ -48,6 +60,9 @@ const config = {
 
   // Target wallet for the action.
   wallet: args['--wallet'],
+
+  // Verbose logs.
+  verbose: false,
 }
 
 try {
@@ -59,4 +74,4 @@ try {
 
 run(config)
   .then(() => {process.exit(0)})
-  .catch((err) => {console.log(`Error: ${err}`); process.exit(-1)})
+  .catch((err) => { console.trace(err); process.exit(-1) })
