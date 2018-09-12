@@ -127,7 +127,10 @@ class ListingsDetail extends Component {
         this.setState({ step: this.STEP.PROCESSING })
         const transactionReceipt = await origin.marketplace.makeOffer(
           this.props.listingId,
-          { price: totalPrice },
+          {
+            price: totalPrice,
+            commission: this.state.commission && this.state.commission.toString()
+          },
           (confirmationCount, transactionReceipt) => {
             this.props.updateTransaction(confirmationCount, transactionReceipt)
           }

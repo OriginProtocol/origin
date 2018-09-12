@@ -9,6 +9,7 @@ import {
   update as updateTransaction,
   upsert as upsertTransaction
 } from '../actions/Transaction'
+import { getOgnBalance } from 'actions/Wallet'
 
 import BoostSlider from 'components/boost-slider'
 import PhotoPicker from 'components/form-widgets/photo-picker'
@@ -105,8 +106,6 @@ class ListingCreate extends Component {
     ]
 
     this.state = {
-      // TODO:John - wire up isFirstListing when ready
-      isFirstListing: true,
       step: this.STEP.PICK_SCHEMA,
       selectedSchemaType: null,
       selectedSchema: null,
@@ -123,7 +122,8 @@ class ListingCreate extends Component {
         origin && origin.contractService && origin.contractService.web3
       ),
       isBoostExpanded: false,
-      usdListingPrice: 0
+      usdListingPrice: 0,
+      showBoostTutorial: true
     }
 
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
@@ -131,7 +131,11 @@ class ListingCreate extends Component {
     this.onBoostSelected = this.onBoostSelected.bind(this)
     this.toggleBoostBox = this.toggleBoostBox.bind(this)
     this.updateUsdPrice = this.updateUsdPrice.bind(this)
+    this.checkOgnBalance = this.checkOgnBalance.bind(this)
     this.onBoostSliderChange = this.onBoostSliderChange.bind(this)
+    this.showBoostSlider = this.showBoostSlider.bind(this)
+    this.onSkipBoost = this.onSkipBoost.bind(this)
+    this.resetToPreview = this.resetToPreview.bind(this)
   }
 
   async updateUsdPrice() {
@@ -242,7 +246,26 @@ class ListingCreate extends Component {
         step: this.STEP.BOOST
       })
       window.scrollTo(0, 0)
+      this.checkOgnBalance()
     }
+  }
+
+  checkOgnBalance() {
+    if (this.props.wallet &&
+        this.props.wallet.ognBalance &&
+        parseFloat(this.props.wallet.ognBalance) > 0
+    ) {
+      this.setState({
+        showBoostTutorial: false
+      })
+    }
+  }
+
+  showBoostSlider() {
+    this.setState({
+      showBoostTutorial: false
+    })
+    window.scrollTo(0, 0)
   }
 
   onBoostSelected(amount) {
@@ -265,6 +288,14 @@ class ListingCreate extends Component {
         }
       }
     })
+  }
+
+  onSkipBoost() {
+    this.onBoostSliderChange(0, getBoostLevel(0))
+    this.setState({
+      step: this.STEP.PREVIEW
+    })
+    window.scrollTo(0, 0)
   }
 
   async onSubmitListing(formListing, selectedSchemaType) {
@@ -305,10 +336,9 @@ class ListingCreate extends Component {
 
   render() {
     const { wallet } = this.props
-    const { currentProvider, formListing, isBoostExpanded, isFirstListing, selectedSchema, selectedSchemaType, schemaExamples, step, translatedSchema, usdListingPrice } = this.state
+    const { currentProvider, formListing, isBoostExpanded, selectedSchema, selectedSchemaType, schemaExamples, step, translatedSchema, usdListingPrice, showBoostTutorial } = this.state
     const { formData } = formListing
     const translatedFormData = (formData && formData.category && translateListingCategory(formData)) || {}
-    const needsBoostTutorial = isFirstListing && !wallet.ognBalance
 
     return (
       <div className="container listing-form">
@@ -425,10 +455,10 @@ class ListingCreate extends Component {
                   />
                 </label>
                 <h2>Boost your listing</h2>
-                {needsBoostTutorial &&
+                {showBoostTutorial &&
                   <div className="info-box">
                     <img src="images/ogn-icon-horiz.svg" role="presentation" />
-                    <p className="text-bold">You have 0 <a href="#" arget="_blank" rel="noopener noreferrer">OGN</a> in your wallet.</p>
+                    <p className="text-bold">You have 0 <a href="#" target="_blank" rel="noopener noreferrer">OGN</a> in your wallet.</p>
                     <p>Once you acquire some OGN you will be able to boost your listing.</p>
                     <p className="expand-btn" onClick={ this.toggleBoostBox }>
                       What is a boost? <span className={ isBoostExpanded ? 'rotate-up' : '' }>&#x25be;</span>
@@ -445,17 +475,18 @@ class ListingCreate extends Component {
                           In addition to this, “boosting” your listing will allow it to have more visibility and appear higher in the list of available listings.
                         </p>
                         <p>
-                          Boosting on the Origin DApp is done using <a href="#" arget="_blank" rel="noopener noreferrer">Origin Tokens (OGN).</a>
+                          Boosting on the Origin DApp is done using <a href="#" target="_blank" rel="noopener noreferrer">Origin Tokens (OGN).</a>
                         </p>
                       </div>
                     }
                   </div>
                 }
-                {!needsBoostTutorial &&
+                {!showBoostTutorial &&
                   <BoostSlider
                     onChange={ this.onBoostSliderChange }
+                    getOgnBalance={ this.props.getOgnBalance }
                     ognBalance={ wallet.ognBalance }
-                    defaultValue={ (formData && formData.boostValue) || defaultBoostValue }
+                    defaultValue={ defaultBoostValue }
                   />
                 }
                 <div className="btn-container">
@@ -471,12 +502,28 @@ class ListingCreate extends Component {
                       defaultMessage={'Back'}
                     />
                   </button>
-                  <button
-                    className="float-right btn btn-primary"
-                    onClick={() => this.onBoostSelected()}
+                  {showBoostTutorial &&
+                    <button
+                      className="float-right btn btn-primary"
+                      onClick={this.showBoostSlider}
+                    >
+                      Start Boosting
+                    </button>
+                  }
+                  {!showBoostTutorial &&
+                    <button
+                      className="float-right btn btn-primary"
+                      onClick={this.onBoostSelected}
+                    >
+                      Review
+                    </button>
+                  }
+                  <span
+                    className="skip-boost-btn"
+                    onClick={this.onSkipBoost}
                   >
-                    Review
-                  </button>
+                    Skip this step
+                  </span>
                 </div>
               </div>
             }
@@ -883,7 +930,8 @@ const mapDispatchToProps = dispatch => ({
   showAlert: msg => dispatch(showAlert(msg)),
   updateTransaction: (hash, confirmationCount) =>
     dispatch(updateTransaction(hash, confirmationCount)),
-  upsertTransaction: transaction => dispatch(upsertTransaction(transaction))
+  upsertTransaction: transaction => dispatch(upsertTransaction(transaction)),
+  getOgnBalance: () => dispatch(getOgnBalance())
 })
 
 export default connect(

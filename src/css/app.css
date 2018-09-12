@@ -2233,6 +2233,19 @@ select.form-control:not([size]):not([multiple]) {
   background-color: var(--boost-premium);
 }
 
+.listing-form .select-boost .btn-container {
+  position: relative;
+  padding-bottom: 45px;
+}
+
+.listing-form .select-boost .skip-boost-btn {
+  position: absolute;
+  right: 5px;
+  bottom: 0;
+  font-size: 16px;
+  cursor: pointer;
+}
+
 .boost-Low {
   background: var(--boost-low);
 }
@@ -2345,6 +2358,10 @@ select.form-control:not([size]):not([multiple]) {
   padding: 10px;
   margin-top: 20px;
   margin-bottom: 10px;
+}
+
+.listing-form .select-boost .boost-slider .info-box .btn {
+  margin: 10px 0 5px;
 }
 
 .boost-slider .info-box.warn {
