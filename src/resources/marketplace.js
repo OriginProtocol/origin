@@ -217,7 +217,12 @@ class Marketplace {
    * @return {Promise<{timestamp, transactionReceipt}>}
    */
   async addData(listingId, offerId, data, confirmationCallback) {
-    const ipfsHash = await this.reviewIpfsStore.save(data)
+    let ipfsHash
+    if (offerId) {
+      ipfsHash = await this.reviewIpfsStore.save(data)
+    } else if (listingId) {
+      ipfsHash = await this.listingIpfsStore.save(data)
+    }
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     return await this.resolver.addData(
