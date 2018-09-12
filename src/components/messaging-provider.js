@@ -50,7 +50,16 @@ class MessagingProvider extends Component {
       }
     })
     // ? consider using https://www.npmjs.com/package/redux-debounced
-    this.debouncedFetchUser = scopedDebounce(addr => this.props.fetchUser(addr, this.props.intl.formatMessage(this.intlMessages.unnamedUser)), ONE_SECOND)
+    this.debouncedFetchUser = scopedDebounce(
+      addr =>
+        this.props.fetchUser(
+          addr,
+          this.props.intl.formatMessage(this.intlMessages.unnamedUser)
+        ),
+      ONE_SECOND
+    )
+
+    this.notificationsInterval = null
   }
 
   componentDidMount() {
@@ -75,11 +84,6 @@ class MessagingProvider extends Component {
     origin.messaging.events.on('emsg', obj => {
       console.error('A message has arrived that could not be decrypted:', obj)
     })
-
-    // poll for notifications
-    setInterval(() => {
-      this.props.fetchNotifications()
-    }, 10 * ONE_SECOND)
   }
 
   componentDidUpdate(prevProps) {
@@ -89,6 +93,13 @@ class MessagingProvider extends Component {
       messagingInitialized,
       web3Account
     } = this.props
+
+    if (web3Account && !this.notificationsInterval) {
+      // poll for notifications
+      this.notificationsInterval = setInterval(() => {
+        this.props.fetchNotifications()
+      }, 10 * ONE_SECOND)
+    }
 
     const welcomeAccountEnabled = ETH_ADDRESS && ETH_ADDRESS !== web3Account
 

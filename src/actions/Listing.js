@@ -17,13 +17,13 @@ export function getListingIds() {
   return async function(dispatch) {
     dispatch({ type: ListingConstants.FETCH_IDS })
 
-    let hideList = []
-    const inProductionEnv =
-      window.location.hostname === 'demo.originprotocol.com'
+    // let hideList = []
 
     try {
-      const networkId = await origin.contractService.web3.eth.net.getId()
-      const { allContractsPresent, someContractsPresent } = await origin.contractService.marketplaceContractsFound()
+      const {
+        allContractsPresent,
+        someContractsPresent
+      } = await origin.contractService.marketplaceContractsFound()
 
       if (!someContractsPresent) {
         dispatch({
@@ -39,21 +39,21 @@ export function getListingIds() {
         console.error(message)
       }
 
-      if (inProductionEnv && networkId < 10) {
-        const response = await fetch(
-          `https://raw.githubusercontent.com/OriginProtocol/demo-dapp/hide_list/hidelist_${networkId}.json`
-        )
-        if (response.status === 200) {
-          hideList = await response.json()
-        }
-      }
+      // if (networkId < 10) {
+      //   // Networks > 9 are local development
+      //   const response = await fetch(
+      //     `https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hide_list/hidelist_${networkId}.json`
+      //   )
+      //   if (response.status === 200) {
+      //     hideList = await response.json()
+      //   }
+      // }
 
       const ids = await origin.marketplace.getListings({ idsOnly: true })
 
       dispatch({
         type: ListingConstants.FETCH_IDS_SUCCESS,
-        ids,
-        hideList
+        ids
       })
     } catch (error) {
       dispatch(showAlert(error.message))

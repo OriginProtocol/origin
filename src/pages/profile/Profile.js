@@ -11,14 +11,13 @@ import {
   updateProfile,
   addAttestation
 } from 'actions/Profile'
-import { getBalance } from 'actions/Wallet'
 
 import Avatar from 'components/avatar'
 import Modal from 'components/modal'
+import WalletCard from 'components/wallet-card'
 
-import Services from './_Services'
-import Wallet from './_Wallet'
 import Guidance from './_Guidance'
+import Services from './_Services'
 import Strength from './_Strength'
 
 import EditProfile from './EditProfile'
@@ -60,7 +59,6 @@ class Profile extends Component {
 
     this.state = {
       lastPublish: null,
-      address: props.address,
       userForm: { firstName, lastName, description },
       lastPublishTime: null,
       modalsOpen: {
@@ -83,7 +81,8 @@ class Profile extends Component {
       currentProvider: getCurrentProvider(
         origin && origin.contractService && origin.contractService.web3
       ),
-      successMessage: ''
+      successMessage: '',
+      wallet: null
     }
 
     this.intlMessages = defineMessages({
@@ -124,7 +123,6 @@ class Profile extends Component {
   }
 
   componentDidMount() {
-    this.props.getBalance()
     this.setProgress({
       provisional: this.props.provisionalProgress,
       published: this.props.publishedProgress
@@ -249,7 +247,14 @@ class Profile extends Component {
   render() {
     const { modalsOpen, progress, successMessage } = this.state
 
-    const { changes, provisional, published, profile, lastPublish } = this.props
+    const {
+      changes,
+      lastPublish,
+      profile,
+      provisional,
+      published,
+      wallet
+    } = this.props
 
     const fullName = `${provisional.firstName} ${provisional.lastName}`.trim()
     const hasChanges = !!changes.length
@@ -377,10 +382,11 @@ class Profile extends Component {
               </div>
             </div>
             <div className="col-12 col-lg-4">
-              <Wallet
-                balance={this.props.balance}
-                address={this.props.address}
+              <WalletCard
+                wallet={wallet}
                 identityAddress={this.props.identityAddress}
+                withMenus={true}
+                withProfile={false}
               />
               <Guidance />
             </div>
@@ -419,7 +425,7 @@ class Profile extends Component {
 
         <VerifyEmail
           open={modalsOpen.email}
-          wallet={this.props.address}
+          wallet={wallet.address}
           handleToggle={this.handleToggle}
           onSuccess={data => {
             this.props.addAttestation(data)
@@ -439,7 +445,7 @@ class Profile extends Component {
         <VerifyFacebook
           open={modalsOpen.facebook}
           handleToggle={this.handleToggle}
-          account={this.props.address}
+          account={wallet.address}
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
@@ -622,7 +628,10 @@ class Profile extends Component {
 
 Profile.getDerivedStateFromProps = (nextProps, prevState) => {
   let newState = {}
-  if (nextProps.address && !prevState.address) {
+  if (
+    (nextProps.wallet && !prevState.wallet) ||
+    (nextProps.wallet.address && !prevState.wallet.address)
+  ) {
     newState = {
       ...newState,
       provisional: nextProps.published,
@@ -630,7 +639,8 @@ Profile.getDerivedStateFromProps = (nextProps, prevState) => {
         firstName: nextProps.published.firstName,
         lastName: nextProps.published.lastName,
         description: nextProps.published.description
-      }
+      },
+      wallet: nextProps.wallet
     }
   }
   return newState
@@ -640,7 +650,6 @@ const mapStateToProps = state => {
   return {
     deployResponse: state.profile.deployResponse,
     issuer: state.profile.issuer,
-    address: state.wallet.address,
     published: state.profile.published,
     provisional: state.profile.provisional,
     strength: state.profile.strength,
@@ -649,21 +658,20 @@ const mapStateToProps = state => {
     provisionalProgress: state.profile.provisionalProgress,
     publishedProgress: state.profile.publishedProgress,
     profile: state.profile,
-    balance: state.wallet.balance,
     identityAddress: state.profile.user.identityAddress,
     onMobile: state.app.onMobile,
+    wallet: state.wallet,
     web3Account: state.app.web3.account,
     web3Intent: state.app.web3.intent
   }
 }
 
 const mapDispatchToProps = dispatch => ({
+  addAttestation: data => dispatch(addAttestation(data)),
   deployProfile: opts => dispatch(deployProfile(opts)),
   deployProfileReset: () => dispatch(deployProfileReset()),
-  updateProfile: data => dispatch(updateProfile(data)),
-  addAttestation: data => dispatch(addAttestation(data)),
-  getBalance: () => dispatch(getBalance()),
-  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
+  updateProfile: data => dispatch(updateProfile(data))
 })
 
 export default connect(

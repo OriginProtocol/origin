@@ -1,0 +1,14 @@
+[
+  {
+    "id": "wallet-card.ethAddress",
+    "defaultMessage": "ETH Address:"
+  },
+  {
+    "id": "wallet-card.noEthAccountConnected",
+    "defaultMessage": "No ETH Account Connected"
+  },
+  {
+    "id": "wallet-card.accountBalances",
+    "defaultMessage": "Account Balances"
+  }
+]

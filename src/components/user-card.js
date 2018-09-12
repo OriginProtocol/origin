@@ -41,16 +41,17 @@ class UserCard extends Component {
 
   render() {
     const {
-      listingAddress,
-      purchaseAddress,
+      listingId,
+      purchaseId,
       title,
       user,
       userAddress,
       web3Account
     } = this.props
     const { fullName, profile, attestations } = user
-    const userCanReceiveMessages = userAddress !== web3Account &&
-                                   origin.messaging.canReceiveMessages(userAddress)
+    const userCanReceiveMessages =
+      userAddress !== web3Account &&
+      origin.messaging.canReceiveMessages(userAddress)
 
     return (
       <div className="user-card placehold">
@@ -158,8 +159,8 @@ class UserCard extends Component {
           <MessageNew
             open={this.state.modalOpen}
             recipientAddress={userAddress}
-            listingAddress={listingAddress}
-            purchaseAddress={purchaseAddress}
+            listingId={listingId}
+            purchaseId={purchaseId}
             handleToggle={this.handleToggle}
           />
         )}
