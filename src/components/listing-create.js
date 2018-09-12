@@ -123,7 +123,8 @@ class ListingCreate extends Component {
       ),
       isBoostExpanded: false,
       usdListingPrice: 0,
-      showBoostTutorial: true
+      showBoostTutorial: true,
+      disableNextBtn: false
     }
 
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
@@ -277,8 +278,9 @@ class ListingCreate extends Component {
     this.updateUsdPrice()
   }
 
-  onBoostSliderChange(boostValue, boostLevel) {
+  onBoostSliderChange(boostValue, boostLevel, disableNextBtn) {
     this.setState({
+      disableNextBtn,
       formListing: {
         ...this.state.formListing,
         formData: {
@@ -336,7 +338,7 @@ class ListingCreate extends Component {
 
   render() {
     const { wallet } = this.props
-    const { currentProvider, formListing, isBoostExpanded, selectedSchema, selectedSchemaType, schemaExamples, step, translatedSchema, usdListingPrice, showBoostTutorial } = this.state
+    const { currentProvider, formListing, isBoostExpanded, selectedSchema, selectedSchemaType, schemaExamples, step, translatedSchema, usdListingPrice, showBoostTutorial, disableNextBtn } = this.state
     const { formData } = formListing
     const translatedFormData = (formData && formData.category && translateListingCategory(formData)) || {}
 
@@ -512,7 +514,7 @@ class ListingCreate extends Component {
                   }
                   {!showBoostTutorial &&
                     <button
-                      className="float-right btn btn-primary"
+                      className={ `float-right btn btn-primary${disableNextBtn ? ' disabled' : ''}` }
                       onClick={this.onBoostSelected}
                     >
                       Review

@@ -10,8 +10,6 @@ import origin from '../services/origin'
 class BoostSlider extends Component {
   constructor(props) {
     super(props)
-    
-    this.onChange = this.onChange.bind(this)
 
     this.state = {
       selectedBoostAmount: defaultBoostValue,
@@ -23,6 +21,7 @@ class BoostSlider extends Component {
     this.checkOgnTransferAllowance = this.checkOgnTransferAllowance.bind(this)
     this.approveOgnTransfer = this.approveOgnTransfer.bind(this)
     this.pollOgnBalance = this.pollOgnBalance.bind(this)
+    this.onChange = this.onChange.bind(this)
   }
 
   async componentDidMount() {
@@ -34,10 +33,12 @@ class BoostSlider extends Component {
     $('[data-toggle="tooltip"]').tooltip()
 
     this.checkOgnTransferAllowance()
+    this.onChange(this.state.selectedBoostAmount)
   }
 
   componentWillUnmount() {
     $('[data-toggle="tooltip"]').tooltip('dispose')
+    clearInterval(this.ognBalancePoll)
   }
 
   async checkOgnTransferAllowance() {
@@ -61,7 +62,7 @@ class BoostSlider extends Component {
   }
 
   pollOgnBalance() {
-    setInterval(() => {
+    this.ognBalancePoll = setInterval(() => {
       this.props.getOgnBalance()
     }, 5000)
   }
@@ -72,7 +73,8 @@ class BoostSlider extends Component {
       selectedBoostAmount: value,
       boostLevel
     })
-    this.props.onChange(value, boostLevel)
+    const disableNextBtn = value > this.state.allowanceRemaining || value > this.props.ognBalance
+    this.props.onChange(value, boostLevel, disableNextBtn)
     const selectedBoostAmountUsd = await getFiatPrice(value, 'USD')
     this.setState({
       selectedBoostAmountUsd
