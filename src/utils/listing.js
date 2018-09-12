@@ -2,7 +2,6 @@ import { translateListingCategory } from 'utils/translationUtils'
 import { getBoostLevel } from 'utils/boostUtils'
 import origin from '../services/origin'
 
-
 /**
  * Transforms data from the listing creation form into Origin Protocol core listing schema v1
  * which can then be used for creating a listing in the system.
@@ -12,7 +11,7 @@ import origin from '../services/origin'
  */
 export function dappFormDataToOriginListing(formData) {
   // formData.category data format is "schema.<category>.<subCategory>".
-  const [ category, subCategory ] = formData.category.split('.').slice(1)
+  const [category, subCategory] = formData.category.split('.').slice(1)
 
   const listingData = {
     schemaVersion: '1.0.0',
@@ -57,14 +56,19 @@ export function dappFormDataToOriginListing(formData) {
  * @return {object} DApp compatible listing object.
  */
 export function originToDAppListing(originListing) {
-  const commission = originListing.commission ? parseFloat(originListing.commission.amount) : 0
+  const commission = originListing.commission
+    ? parseFloat(originListing.commission.amount)
+    : 0
   return {
     id: originListing.id,
     seller: originListing.seller,
     status: originListing.status,
     category: originListing.subCategory,
     name: originListing.title,
-    pictures: originListing.media ? originListing.media.map(medium => medium.url) : [],
+    description: originListing.description,
+    pictures: originListing.media
+      ? originListing.media.map(medium => medium.url)
+      : [],
     price: originListing.price.amount,
     boostValue: commission,
     boostLevel: getBoostLevel(commission),
@@ -80,7 +84,7 @@ export function originToDAppListing(originListing) {
  * @param {boolean} translate - Whether to translate the listing category or not.
  * @return {Promise<object>} DApp compatible listing object.
  */
-export async function getListing(id, translate=false) {
+export async function getListing(id, translate = false) {
   const originListing = await origin.marketplace.getListing(id)
   const dappListing = originToDAppListing(originListing)
   return translate ? translateListingCategory(dappListing) : dappListing

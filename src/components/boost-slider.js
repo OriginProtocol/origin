@@ -3,7 +3,13 @@ import Slider from 'rc-slider'
 import $ from 'jquery'
 // TODO:John - pass a third arg of 'OGN' into getFiatPrice() once OGN prices are available in cryptonator API
 import { getFiatPrice } from 'utils/priceUtils'
-import { boostLevels, getBoostLevel, defaultBoostValue, minBoostValue, maxBoostValue } from 'utils/boostUtils'
+import {
+  boostLevels,
+  getBoostLevel,
+  defaultBoostValue,
+  minBoostValue,
+  maxBoostValue
+} from 'utils/boostUtils'
 
 import origin from '../services/origin'
 
@@ -25,7 +31,10 @@ class BoostSlider extends Component {
   }
 
   async componentDidMount() {
-    const selectedBoostAmountUsd = await getFiatPrice( this.state.selectedBoostAmount, 'USD' )
+    const selectedBoostAmountUsd = await getFiatPrice(
+      this.state.selectedBoostAmount,
+      'USD'
+    )
     this.setState({
       selectedBoostAmountUsd
     })
@@ -82,7 +91,7 @@ class BoostSlider extends Component {
   }
 
   render() {
-    return(
+    return (
       <div className="boost-slider">
         {this.props.ognBalance > 0 &&
           <Fragment>
@@ -167,9 +176,13 @@ class BoostSlider extends Component {
         }
         <p className="help-block bottom-explainer">
           Boosts are always calculated and charged in&nbsp;
-          <a href="#" target="_blank" rel="noopener noreferrer">OGN</a>.&nbsp;
-          If there’s a problem with your listing, you forfeit this amount.&nbsp;
-          <a href="#" target="_blank" rel="noopener noreferrer">Learn more &#x25b8;</a>
+          <a href="#" target="_blank" rel="noopener noreferrer">
+            OGN
+          </a>.&nbsp; If there’s a problem with your listing, you forfeit this
+          amount.&nbsp;
+          <a href="#" target="_blank" rel="noopener noreferrer">
+            Learn more &#x25b8;
+          </a>
         </p>
       </div>
     )

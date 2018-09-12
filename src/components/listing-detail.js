@@ -121,16 +121,22 @@ class ListingsDetail extends Component {
 
     if (web3.givenProvider && this.props.web3Account) {
       this.setState({ step: this.STEP.METAMASK })
-      const unitsToBuy = 1
-      const totalPrice = unitsToBuy * this.state.price
       try {
         this.setState({ step: this.STEP.PROCESSING })
+        const offerData = {
+          listingId: this.props.listingId,
+          listingType: 'unit',
+          schemaVersion: '1.0.0',
+          unitsPurchased: 1,
+          totalPrice: {
+            amount: this.state.price,
+            currency: 'ETH'
+          },
+          commission: this.state.commission && this.state.commission.toString()
+        }
         const transactionReceipt = await origin.marketplace.makeOffer(
           this.props.listingId,
-          {
-            price: totalPrice,
-            commission: this.state.commission && this.state.commission.toString()
-          },
+          offerData,
           (confirmationCount, transactionReceipt) => {
             this.props.updateTransaction(confirmationCount, transactionReceipt)
           }
@@ -152,7 +158,21 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    const { boostLevel, category, currentProvider, description, ipfsHash, loading, name, pictures, price, reviews, seller, step, unitsRemaining } = this.state
+    const {
+      boostLevel,
+      category,
+      currentProvider,
+      description,
+      ipfsHash,
+      loading,
+      name,
+      pictures,
+      price,
+      reviews,
+      seller,
+      step,
+      unitsRemaining
+    } = this.state
     const isPending = false // will be handled by offer status
     const isSold = !unitsRemaining
     const isAvailable = !isPending && !isSold
@@ -253,8 +273,7 @@ class ListingsDetail extends Component {
             </div>
           </Modal>
         )}
-        {(loading ||
-          (pictures && !!pictures.length)) && (
+        {(loading || (pictures && !!pictures.length)) && (
           <div className="carousel">
             {pictures.map(pictureUrl => (
               <div className="photo" key={pictureUrl}>
@@ -264,40 +283,43 @@ class ListingsDetail extends Component {
           </div>
         )}
 
-        <div className={`container listing-container${loading ? ' loading' : ''}`}>
+        <div
+          className={`container listing-container${loading ? ' loading' : ''}`}
+        >
           <div className="row">
             <div className="col-12 col-md-8 detail-info-box">
               <div className="category placehold d-flex">
                 <div>{category}</div>
-                {!loading &&
+                {!loading && (
                   <div className="badges">
-                    {isPending &&
+                    {isPending && (
                       <span className="pending badge">
                         <FormattedMessage
                           id={'listing-detail.pending'}
                           defaultMessage={'Pending'}
                         />
                       </span>
-                    }
-                    {isSold &&
+                    )}
+                    {isSold && (
                       <span className="sold badge">
                         <FormattedMessage
                           id={'listing-detail.soldOut'}
                           defaultMessage={'Sold Out'}
                         />
                       </span>
-                    }
-                    {boostLevel &&
-                      <span className={ `boosted badge boost-${boostLevel}` }>
-                        <img src="images/boost-icon-arrow.svg" role="presentation" />
+                    )}
+                    {boostLevel && (
+                      <span className={`boosted badge boost-${boostLevel}`}>
+                        <img
+                          src="images/boost-icon-arrow.svg"
+                          role="presentation"
+                        />
                       </span>
-                    }
+                    )}
                   </div>
-                }
+                )}
               </div>
-              <h1 className="title text-truncate placehold">
-                {name}
-              </h1>
+              <h1 className="title text-truncate placehold">{name}</h1>
               <p className="description placehold">{description}</p>
               {/* Via Stan 5/25/2018: Hide until contracts allow for unitsRemaining > 1 */}
               {/*!!unitsRemaining && unitsRemaining < 5 &&
@@ -352,7 +374,9 @@ class ListingsDetail extends Component {
               </div>
             </div>
             <div className="col-12 col-md-4">
-              {isAvailable && !!price && !!parseFloat(price) &&
+              {isAvailable &&
+                !!price &&
+                !!parseFloat(price) && (
                 <div className="buy-box placehold">
                   <div className="price">
                     <img src="images/eth-icon.svg" role="presentation" />
@@ -381,7 +405,7 @@ class ListingsDetail extends Component {
                       </div>
                     </div>
                   */}
-                  {!loading &&
+                  {!loading && (
                     <div className="btn-container">
                       {!userIsSeller && (
                         <button
@@ -397,11 +421,11 @@ class ListingsDetail extends Component {
                       )}
                       {userIsSeller && (
                         <Link to="/my-listings" className="btn">
-                              My Listings
+                            My Listings
                         </Link>
                       )}
                     </div>
-                  }
+                  )}
                   {/* Via Matt 9/4/2018: Not necessary until we have staking */}
                   {/*
                     <div className="boost-level">
@@ -424,12 +448,12 @@ class ListingsDetail extends Component {
                     </div>
                   */}
                 </div>
-              }
-              {!isAvailable &&
+              )}
+              {!isAvailable && (
                 <div className="buy-box placehold unavailable text-center">
-                  {!loading &&
+                  {!loading && (
                     <div className="reason">
-                      {isPending &&
+                      {isPending && (
                         <FormattedMessage
                           id={'listing-detail.reasonPending'}
                           defaultMessage={'This listing is {pending}'}
@@ -437,8 +461,8 @@ class ListingsDetail extends Component {
                             pending: <strong>Pending</strong>
                           }}
                         />
-                      }
-                      {isSold &&
+                      )}
+                      {isSold && (
                         <FormattedMessage
                           id={'listing-detail.reasonSold'}
                           defaultMessage={'This listing is {soldOut}'}
@@ -446,34 +470,36 @@ class ListingsDetail extends Component {
                             soldOut: <strong>Sold Out</strong>
                           }}
                         />
-                      }
+                      )}
                     </div>
-                  }
-                  {!loading &&
+                  )}
+                  {!loading && (
                     <div className="suggestion">
                       <FormattedMessage
                         id={'listing-detail.suggestion'}
-                        defaultMessage={'Try visiting the listings page and searching for something similar.'}
+                        defaultMessage={
+                          'Try visiting the listings page and searching for something similar.'
+                        }
                       />
                     </div>
-                  }
-                  {!loading &&
+                  )}
+                  {!loading && (
                     <Link to="/">
                       <FormattedMessage
                         id={'listing-detail.allListings'}
                         defaultMessage={'See All Listings'}
                       />
                     </Link>
-                  }
+                  )}
                 </div>
-              }
-              {seller &&
+              )}
+              {seller && (
                 <UserCard
                   title="seller"
                   listingId={this.props.listingId}
                   userAddress={seller}
                 />
-              }
+              )}
             </div>
           </div>
           {this.props.withReviews && (
