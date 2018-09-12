@@ -15,16 +15,15 @@ import {
 } from '../../models/notification'
 
 class MarketplaceResolver {
-  constructor({ contractService, ipfsService, store }) {
+  constructor({ contractService, store }) {
     this.adapters = {
-      '000': new V00_MarkeplaceAdapter({ contractService, ipfsService, store }),
-      '001': new V01_MarkeplaceAdapter({ contractService, ipfsService, store })
+      '000': new V00_MarkeplaceAdapter({ contractService, store }),
+      '001': new V01_MarkeplaceAdapter({ contractService, store })
     }
     this.versions = ['000', '001']
     this.currentVersion = this.versions[this.versions.length - 1]
     this.currentAdapter = this.adapters[this.currentVersion]
     this.contractService = contractService
-    this.ipfsService = ipfsService
     this.store = store
   }
 
