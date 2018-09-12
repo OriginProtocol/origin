@@ -16,7 +16,7 @@ import app from 'reducers/App'
 
 const middlewares = [thunkMiddleware]
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.REDUX_LOGGER) {
   const { logger } = require(`redux-logger`)
   middlewares.push(logger)
 }
