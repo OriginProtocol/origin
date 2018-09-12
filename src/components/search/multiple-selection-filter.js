@@ -11,7 +11,6 @@ import schemaMessages from '../../schemaMessages/index'
 class MultipleSelectionFilter extends Component {
   constructor(props) {
     super(props)
-
     this.state = {
       checkboxValue: {}
     }
@@ -32,7 +31,15 @@ class MultipleSelectionFilter extends Component {
     return [
       {
         name: this.props.filter.searchParameterName,
-        value: Object.keys(this.state.checkboxValue),
+        value: Object
+          .keys(this.state.checkboxValue)
+          //keep only selected values
+          .filter(checkBoxKey => this.state.checkboxValue[checkBoxKey])
+          //issue values to the backend always in English no matter which language is selected
+          .map(untranslatedValue => {
+            return schemaMessages[this.toCamelCase(this.props.listingType)][untranslatedValue]
+              .defaultMessage
+          }),
         valueType: VALUE_TYPE_ARRAY_STRING,
         operator: FILTER_OPERATOR_CONTAINS
       }

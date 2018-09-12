@@ -142,7 +142,7 @@ class SearchResult extends Component {
           throw `Each filter should have a 'searchParameterName' property. Malformed object: ${JSON.stringify(
             filter
           )}`
-        else if (!/^[a-zA-Z]+$/g.test(filter.searchParameterName))
+        else if (!/^[a-zA-Z\.]+$/g.test(filter.searchParameterName))
           throw `'searchParameterName' property should only consist of english letters. Received: ${
             filter.searchParameterName
           }`
@@ -168,13 +168,10 @@ class SearchResult extends Component {
         )
       )
 
-      if (searchResponse.status !== 200)
-        throw 'Unexpected result received from search engine'
-
-      const json = await searchResponse.json()
       this.setState({
-        listingIds: json.data.listings.nodes.map(listing => listing.id)
+        listingIds: searchResponse.data.listings.nodes.map(listing => listing.id)
       })
+
     } catch (e) {
       const errorMessage = this.props.intl.formatMessage({
         id: 'searchResult.canNotReachIndexingServer',
