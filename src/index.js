@@ -11,8 +11,7 @@ import store from 'store'
 
 const defaultBridgeServer = 'https://bridge.originprotocol.com'
 const defaultIpfsDomain = 'gateway.originprotocol.com'
-const defaultDiscoveryServer = 'https://discovery.originprotocol.com'
-const defaultDiscoveryServerPort = '443'
+const defaultDiscoveryServerUrl = 'https://discovery.originprotocol.com'
 const defaultIpfsApiPort = '5002'
 const defaultIpfsGatewayPort = '443'
 const defaultIpfsGatewayProtocol = 'https'
@@ -26,8 +25,7 @@ class Origin {
     ipfsGatewayPort = defaultIpfsGatewayPort,
     ipfsGatewayProtocol = defaultIpfsGatewayProtocol,
     attestationServerUrl = defaultAttestationServerUrl,
-    discoveryServer = defaultDiscoveryServer,
-    discoveryServerPort = defaultDiscoveryServerPort,
+    discoveryServerUrl = defaultDiscoveryServerUrl,
     contractAddresses,
     web3,
     ipfsCreator,
@@ -58,8 +56,7 @@ class Origin {
     })
 
     this.discovery = new Discovery({
-      discoveryServer,
-      discoveryServerPort,
+      discoveryServerUrl,
       fetch
     })
 

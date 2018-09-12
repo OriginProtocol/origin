@@ -1,12 +1,11 @@
 class Discovery {
-  constructor({ discoveryServer, discoveryServerPort, fetch }) {
-    this.discoveryServer = discoveryServer
-    this.discoveryServerPort = discoveryServerPort
+  constructor({ discoveryServerUrl, fetch }) {
+    this.discoveryServerUrl = discoveryServerUrl
     this.fetch = fetch
   }
 
   async query(graphQlQuery){
-    const url = `${this.discoveryServer}:${this.discoveryServerPort}`
+    const url = this.discoveryServerUrl
     const resp = await this.fetch(url, {
       method: 'POST',
       body: JSON.stringify({
