@@ -5,6 +5,23 @@ class Discovery {
     this.fetch = fetch
   }
 
+  async query(graphQlQuery){
+    const url = `${this.discoveryServer}:${this.discoveryServerPort}`
+    const resp = await this.fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({
+        query: graphQlQuery
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    if(resp.status != 200){
+      throw Error('Got non-sucess code from GraphQL server')
+    }
+    return await resp.json()
+  }
+
   /**
    * Issues a search request to the indexing server which returns Listings result as a promise.
    * This way the caller of the function can implement error checks when results is something
@@ -39,15 +56,7 @@ class Discovery {
       }
     }`
 
-    return this.fetch(`${this.discoveryServer}:${this.discoveryServerPort}`, {
-      method: 'POST',
-      body: JSON.stringify({
-        query: query
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
+    return this.query(query)
   }
 }
 
