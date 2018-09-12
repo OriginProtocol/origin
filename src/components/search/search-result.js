@@ -160,20 +160,15 @@ class SearchResult extends Component {
       this.setState({ searchError: undefined })
       this.formatFiltersToUrl()
 
-      const searchResponse = await origin.discovery.search(
+      const searchResp = await origin.discovery.search(
         this.props.query,
         this.props.listingType,
         Object.values(this.props.filters).flatMap(
           arrayOfFilters => arrayOfFilters
         )
       )
-
-      if (searchResponse.status !== 200)
-        throw 'Unexpected result received from search engine'
-
-      const json = await searchResponse.json()
       this.setState({
-        listingIds: json.data.listings.nodes.map(listing => listing.id)
+        listingIds: searchResp.data.listings.nodes.map(listing => listing.id)
       })
     } catch (e) {
       const errorMessage = this.props.intl.formatMessage({
