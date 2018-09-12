@@ -13,7 +13,7 @@ import Arbitration from 'components/arbitration'
 import Layout from 'components/layout'
 import ListingCreate from 'components/listing-create'
 import ListingDetail from 'components/listing-detail'
-import Listings from 'components/listings-grid'
+import ListingsGrid from 'components/listings-grid'
 import Messages from 'components/messages'
 import MessagingProvider from 'components/messaging-provider'
 import MyListings from 'components/my-listings'
@@ -24,10 +24,12 @@ import Notifications from 'components/notifications'
 import PurchaseDetail from 'components/purchase-detail'
 import ScrollToTop from 'components/scroll-to-top'
 import Web3Provider from 'components/web3-provider'
+import SearchResult from 'components/search/search-result'
 import AboutTokens from 'components/about-tokens'
 
 import Profile from 'pages/profile/Profile'
 import User from 'pages/user/User'
+import SearchBar from 'components/search/searchbar'
 
 import 'bootstrap/dist/js/bootstrap'
 
@@ -40,16 +42,16 @@ import '../css/app.css'
 const httpsRequired = process.env.FORCE_HTTPS
 
 const HomePage = () => (
-  <div className="container">
-    <Listings />
+  <div>
+    <SearchBar />
+    <div className="container">
+      <ListingsGrid renderMode="home-page" />
+    </div>
   </div>
 )
 
 const ListingDetailPage = props => (
-  <ListingDetail
-    listingId={props.match.params.listingId}
-    withReviews={true}
-  />
+  <ListingDetail listingId={props.match.params.listingId} withReviews={true} />
 )
 
 const CreateListingPage = () => (
@@ -153,6 +155,7 @@ class App extends Component {
                     <Route path="/notifications" component={Notifications} />
                     <Route path="/profile" component={Profile} />
                     <Route path="/users/:userAddress" component={UserPage} />
+                    <Route path="/search" component={SearchResult} />
                     <Route path="/about-tokens" component={AboutTokens} />
                     <Route component={NotFound} />
                   </Switch>

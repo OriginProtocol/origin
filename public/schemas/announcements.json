@@ -48,7 +48,7 @@
     },
     "price": {
       "type": "number",
-      "title": "schema.announcements.priceInETH",
+      "title": "schema.announcements.price",
       "default": 0,
       "enum": [
         0

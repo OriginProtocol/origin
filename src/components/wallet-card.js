@@ -26,7 +26,10 @@ class WalletCard extends Component {
   }
 
   async convertEthToUsd() {
-    const ethToUsdBalance = await getFiatPrice( this.props.wallet.ethBalance, 'USD' )
+    const ethToUsdBalance = await getFiatPrice(
+      this.props.wallet.ethBalance,
+      'USD'
+    )
 
     this.setState({
       ethToUsdBalance
@@ -106,7 +109,7 @@ class WalletCard extends Component {
             <a href={`https://erc725.originprotocol.com/#/identity/${identityAddress}`} target="_blank">Identity Contract Detail</a>
           </div>
         */}
-        {address === web3Account &&
+        {address === web3Account && (
           <Fragment>
             <hr className="dark sm" />
             <div className="balances">
@@ -118,61 +121,84 @@ class WalletCard extends Component {
                 <img src="images/eth-icon.svg" role="presentation" />
                 <div className="amounts">
                   <div className="eth">
-                    {
-                      `${Number(ethBalance).toLocaleString(undefined, {
-                        minimumFractionDigits: 5,
-                        maximumFractionDigits: 5
-                      })}`
-                      || 0
-                    }&nbsp;
-                    <span className="symbol">ETH</span></div>
+                    {`${Number(ethBalance).toLocaleString(undefined, {
+                      minimumFractionDigits: 5,
+                      maximumFractionDigits: 5
+                    })}` || 0}&nbsp;
+                    <span className="symbol">ETH</span>
+                  </div>
                   <div className="usd">{this.state.ethToUsdBalance} USD</div>
                 </div>
-                {withMenus &&
+                {withMenus && (
                   <div className="dropdown">
-                    <button type="button" id="ethMenuButton" className="d-flex flex-column justify-content-between" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <div className="dot"></div>
-                      <div className="dot"></div>
-                      <div className="dot"></div>
+                    <button
+                      type="button"
+                      id="ethMenuButton"
+                      className="d-flex flex-column justify-content-between"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <div className="dot" />
+                      <div className="dot" />
+                      <div className="dot" />
                     </button>
-                    <div className="dropdown-menu dropdown-menu-right" aria-labelledby="ethMenuButton">
-                      <a className="dropdown-item" href="#">Transaction History</a>
-                      <a className="dropdown-item" href="#">Add Tokens</a>
+                    <div
+                      className="dropdown-menu dropdown-menu-right"
+                      aria-labelledby="ethMenuButton"
+                    >
+                      <a className="dropdown-item" href="#">
+                        Transaction History
+                      </a>
+                      <a className="dropdown-item" href="#">
+                        Add Tokens
+                      </a>
                     </div>
                   </div>
-                }
+                )}
               </div>
               <div className="d-flex align-items-start">
                 <img src="images/ogn-icon.svg" role="presentation" />
                 <div className="amounts">
                   <div className="ogn">
-                    {
-                      `${Number(ognBalance).toLocaleString(undefined)}`
-                      || 0
-                    }&nbsp;
+                    {`${Number(ognBalance).toLocaleString(undefined)}` || 0}&nbsp;
                     <span className="symbol">OGN</span>
                   </div>
                   {/* Via Matt 9/4/2018: Not necessary until we have a liquid conversion rate */}
                   {/* <div className="usd">0.00 USD</div> */}
                 </div>
-                {withMenus &&
+                {withMenus && (
                   <div className="dropdown">
-                    <button type="button" id="ognMenuButton" className="d-flex flex-column justify-content-between" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <div className="dot"></div>
-                      <div className="dot"></div>
-                      <div className="dot"></div>
+                    <button
+                      type="button"
+                      id="ognMenuButton"
+                      className="d-flex flex-column justify-content-between"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <div className="dot" />
+                      <div className="dot" />
+                      <div className="dot" />
                     </button>
-                    <div className="dropdown-menu dropdown-menu-right" aria-labelledby="ognMenuButton">
-                      <a className="dropdown-item" href="#">Transaction History</a>
-                      <a className="dropdown-item" href="#">Add Tokens</a>
+                    <div
+                      className="dropdown-menu dropdown-menu-right"
+                      aria-labelledby="ognMenuButton"
+                    >
+                      <a className="dropdown-item" href="#">
+                        Transaction History
+                      </a>
+                      <a className="dropdown-item" href="#">
+                        Add Tokens
+                      </a>
                     </div>
                   </div>
-                }
+                )}
               </div>
             </div>
           </Fragment>
-        }
-        {withProfile &&
+        )}
+        {withProfile && (
           <Fragment>
             <hr className="dark sm" />
             <div className="d-flex">
@@ -231,7 +257,7 @@ class WalletCard extends Component {
               </div>
             </div>
           </Fragment>
-        }
+        )}
       </div>
     )
   }
@@ -253,4 +279,7 @@ const matchDispatchToProps = dispatch => ({
   getOgnBalance: () => dispatch(getOgnBalance())
 })
 
-export default connect(mapStateToProps, matchDispatchToProps)(WalletCard)
+export default connect(
+  mapStateToProps,
+  matchDispatchToProps
+)(WalletCard)

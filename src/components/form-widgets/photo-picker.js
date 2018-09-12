@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+import { getDataUri } from 'utils/fileUtils'
+
 class PhotoPicker extends Component {
   constructor(props) {
     super(props)
@@ -37,24 +39,8 @@ class PhotoPicker extends Component {
     this.setState({ helpText })
   }
 
-  async getDataUri(file) {
-    const reader = new FileReader()
-
-    return new Promise((resolve) => {
-      reader.onloadend = () => {
-        const { result } = reader
-        const simicolonIdx = result.indexOf(';') + 1
-        // react-jsonschema-form requires the name in the URI for an unknown reason
-        const uriWithFileName = 
-          `${result.substring(0, simicolonIdx)}name=${file.name};${result.substring(simicolonIdx, result.length)}`
-        resolve(uriWithFileName)
-      }
-      reader.readAsDataURL(file)
-    })
-  }
-
   onChange() {
-    return async (event) => {
+    return async event => {
       const filesObj = event.target.files
       const filesArr = []
       for (const key in filesObj) {
@@ -63,44 +49,50 @@ class PhotoPicker extends Component {
         }
       }
 
-      const filesAsDataUriArray = filesArr.map(async (fileObj) =>
-        this.getDataUri(fileObj)
-      )
+      const filesAsDataUriArray = filesArr.map(async fileObj => getDataUri(fileObj))
 
-      Promise.all(filesAsDataUriArray).then((dataUriArray) => {
-        this.setState({
-          pictures: dataUriArray
-        }, () => this.props.onChange(dataUriArray))
+      Promise.all(filesAsDataUriArray).then(dataUriArray => {
+        this.setState(
+          {
+            pictures: dataUriArray
+          },
+          () => this.props.onChange(dataUriArray)
+        )
       })
     }
   }
 
   render() {
-    return(
+    return (
       <div className="photo-picker">
         <label className="photo-picker-container" htmlFor="photo-picker-input">
-          <img className="camera-icon" src="images/camera-icon.svg" role="presentation" />
-          <br/>
+          <img
+            className="camera-icon"
+            src="images/camera-icon.svg"
+            role="presentation"
+          />
+          <br />
           <span>{this.props.schema.title}</span>
-          <br/>
+          <br />
         </label>
         <input
           id="photo-picker-input"
           type="file"
           accept="image/jpeg,image/gif,image/png"
           visibility="hidden"
-          onChange={ this.onChange() }
-          required={ this.props.required }
-          multiple />
-        {this.state.helpText &&
-          <p className="help-block">{ this.state.helpText }</p>
-        }
+          onChange={this.onChange()}
+          required={this.props.required}
+          multiple
+        />
+        {this.state.helpText && (
+          <p className="help-block">{this.state.helpText}</p>
+        )}
         <div className="d-flex pictures">
-          {this.state.pictures.map((dataUri, idx) =>
-            <div className="image-container" key={ idx }>
-              <img className="preview-thumbnail" src={ dataUri } />
+          {this.state.pictures.map((dataUri, idx) => (
+            <div className="image-container" key={idx}>
+              <img className="preview-thumbnail" src={dataUri} />
             </div>
-          )}
+          ))}
         </div>
       </div>
     )

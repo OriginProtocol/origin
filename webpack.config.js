@@ -23,7 +23,8 @@ const env = {
   MESSAGING_ACCOUNT: '',
   MESSAGING_NAMESPACE: '',
   PRODUCTION_DOMAIN: '',
-  PROVIDER_URL: ''
+  PROVIDER_URL: '',
+  REDUX_LOGGER: false
 }
 
 var config = {

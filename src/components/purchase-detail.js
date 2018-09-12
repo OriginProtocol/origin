@@ -23,6 +23,7 @@ import UserCard from 'components/user-card'
 import TransactionEvent from 'pages/purchases/transaction-event'
 
 import { getListing } from 'utils/listing'
+import { offerStatusToStep } from 'utils/offer'
 
 import origin from '../services/origin'
 
@@ -123,8 +124,8 @@ class PurchaseDetail extends Component {
      *  - odd-numbered steps are buyer's responsibility
      */
     this.nextSteps = [
+      // Step 0 - We should never be in this state
       {
-        // we should never be in this state
         buyer: {
           prompt: 'Purchase this listing',
           instruction: 'Why is this here if you have not yet purchased it?'
@@ -134,6 +135,7 @@ class PurchaseDetail extends Component {
           instruction: 'Why are you seeing this? There is no buyer.'
         }
       },
+      // Step 1 - Offer created by buyer.
       {
         buyer: {
           prompt: this.props.intl.formatMessage(this.intlMessages.awaitOrder)
@@ -149,6 +151,7 @@ class PurchaseDetail extends Component {
           functionName: 'confirmShipped'
         }
       },
+      // Step 2: Offer Accepted by Seller.
       {
         buyer: {
           prompt: this.props.intl.formatMessage(
@@ -170,6 +173,7 @@ class PurchaseDetail extends Component {
           prompt: this.props.intl.formatMessage(this.intlMessages.waitForBuyer)
         }
       },
+      // Step 3: Offer finalized by Buyer.
       {
         buyer: {
           prompt: this.props.intl.formatMessage(
@@ -237,7 +241,6 @@ class PurchaseDetail extends Component {
     try {
       const user = await origin.users.get(addr)
       this.setState({ buyer: { ...user, address: addr } })
-      // console.log('Buyer: ', this.state.buyer)
     } catch (error) {
       console.error(`Error loading buyer ${addr}`)
       console.error(error)
@@ -264,12 +267,14 @@ class PurchaseDetail extends Component {
     try {
       this.setState({ processing: true })
 
+      const buyerReview = {
+        schemaVersion: '1.0.0',
+        rating,
+        text: reviewText.trim()
+      }
       const transactionReceipt = await origin.marketplace.finalizeOffer(
         offerId,
-        {
-          rating,
-          reviewText: reviewText.trim()
-        },
+        buyerReview,
         (confirmationCount, transactionReceipt) => {
           // Having a transaction receipt doesn't guarantee that the purchase state will have changed.
           // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
@@ -278,7 +283,6 @@ class PurchaseDetail extends Component {
           this.props.updateTransaction(confirmationCount, transactionReceipt)
         }
       )
-
       this.props.upsertTransaction({
         ...transactionReceipt,
         offer,
@@ -340,13 +344,15 @@ class PurchaseDetail extends Component {
     try {
       this.setState({ processing: true })
 
+      const sellerReview = {
+        schemaVersion: '1.0.0',
+        rating,
+        text: reviewText.trim()
+      }
       const transactionReceipt = await origin.marketplace.addData(
         null,
         offerId,
-        {
-          rating,
-          reviewText: reviewText.trim()
-        },
+        sellerReview,
         (confirmationCount, transactionReceipt) => {
           // Having a transaction receipt doesn't guarantee that the purchase state will have changed.
           // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
@@ -416,14 +422,14 @@ class PurchaseDetail extends Component {
       processing,
       purchase,
       reviews,
-      seller,
+      seller
     } = this.state
     const isPending = false // will be handled by offer status
     const isSold = !listing.unitsRemaining
     const { rating, reviewText } = form
 
     // Data not loaded yet.
-    if (!purchase.ipfsData || !listing.status) {
+    if (!purchase.status || !listing.status) {
       return null
     }
 
@@ -435,33 +441,26 @@ class PurchaseDetail extends Component {
       perspective = 'seller'
     }
 
+
     const pictures = listing.pictures || []
-    const active = listing.status === 'active' // Todo, move to origin.js, take into account listing expiration
+    const active = listing.status === 'active' // TODO: move to origin.js, take into account listing expiration
     const soldAt = purchase.createdAt * 1000 // convert seconds since epoch to ms
 
-    const paymentEvent = purchase.events.find(l => l.event === 'OfferCreated')
-    const fulfillmentEvent = purchase.events.find(
-      l => l.event === 'OfferAccepted'
-    ) // TODO this is not the equivalent step. Fix later
-    const receiptEvent = purchase.events.find(l => l.event === 'OfferFinalized')
-    const withdrawalEvent = purchase.events.find(
-      l => l.event === 'OfferData' && l.returnValues.party === listing.seller
-    ) // TODO assumes OfferData event is seller review
+    const paymentEvent = purchase.event('OfferCreated')
+    const fulfillmentEvent = purchase.event('OfferAccepted')
+    const receiptEvent = purchase.event('OfferFinalized') // TODO: this is not the equivalent step. Fix later
+    const withdrawalEvent = purchase.event('OfferWithdrawn')
 
-    const priceEth = origin.contractService.web3.utils.fromWei(
-      purchase.value || purchase.ipfsData.data.price,
-      'ether'
-    )
-    const price = `${Number(priceEth).toLocaleString(undefined, {
+    const priceEth = `${Number(purchase.totalPrice.amount).toLocaleString(undefined, {
       minimumFractionDigits: 5,
       maximumFractionDigits: 5
-    })} ETH` // change to priceEth
+    })} ETH`
 
     const counterparty = ['buyer', 'seller'].find(str => str !== perspective)
     const counterpartyUser = counterparty === 'buyer' ? buyer : seller
     const status = active ? 'active' : 'inactive'
     const maxStep = perspective === 'seller' ? 4 : 3
-    const step = parseInt(purchase.status)
+    const step = offerStatusToStep(purchase.status)
     const left = progressTriangleOffset(step, maxStep, perspective)
 
     const nextStep = perspective && this.nextSteps[step]
@@ -538,27 +537,30 @@ class PurchaseDetail extends Component {
               </div>
               <h1>
                 {listing.name}
-                {isPending &&
+                {isPending && (
                   <span className="pending badge">
                     <FormattedMessage
                       id={'purchase-detail.pending'}
                       defaultMessage={'Pending'}
                     />
                   </span>
-                }
-                {isSold &&
+                )}
+                {isSold && (
                   <span className="sold badge">
                     <FormattedMessage
                       id={'purchase-detail.soldOut'}
                       defaultMessage={'Sold Out'}
                     />
                   </span>
-                }
-                {listing.boostLevel &&
-                  <span className={ `boosted badge boost-${listing.boostLevel}` }>
-                    <img src="images/boost-icon-arrow.svg" role="presentation" />
+                )}
+                {listing.boostLevel && (
+                  <span className={`boosted badge boost-${listing.boostLevel}`}>
+                    <img
+                      src="images/boost-icon-arrow.svg"
+                      role="presentation"
+                    />
                   </span>
-                }
+                )}
               </h1>
             </div>
           </div>
@@ -820,9 +822,7 @@ class PurchaseDetail extends Component {
                     </div>
                   )}
                   <div className="detail-info-box">
-                    <h2 className="category placehold">
-                      {listing.category}
-                    </h2>
+                    <h2 className="category placehold">{listing.category}</h2>
                     <h1 className="title text-truncate placehold">
                       {listing.name}
                     </h1>
@@ -906,7 +906,7 @@ class PurchaseDetail extends Component {
                         defaultMessage={'Price'}
                       />
                     </div>
-                    <div className="text-right">{price}</div>
+                    <div className="text-right">{priceEth}</div>
                   </div>
                   <hr className="dark sm" />
                   <div className={`status ${status}`}>
