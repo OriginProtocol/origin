@@ -12,7 +12,7 @@ describe('UserRegistry', async function() {
   })
 
   it('should be able to register a user', async function() {
-    userRegistry = await deploy('UserRegistry', {
+    userRegistry = await deploy('V00_UserRegistry', {
       from: accounts[0],
       path: `${contractPath}/identity/`
     })

@@ -2,7 +2,7 @@ import ClaimHolderRegisteredContract from './../../contracts/build/contracts/Cla
 import ClaimHolderPresignedContract from './../../contracts/build/contracts/ClaimHolderPresigned.json'
 import ClaimHolderLibrary from './../../contracts/build/contracts/ClaimHolderLibrary.json'
 import KeyHolderLibrary from './../../contracts/build/contracts/KeyHolderLibrary.json'
-import UserRegistryContract from './../../contracts/build/contracts/UserRegistry.json'
+import V00_UserRegistryContract from './../../contracts/build/contracts/V00_UserRegistry.json'
 import OriginIdentityContract from './../../contracts/build/contracts/OriginIdentity.json'
 import OriginTokenContract from './../../contracts/build/contracts/OriginToken.json'
 
@@ -29,7 +29,7 @@ class ContractService {
 
     const contracts = Object.assign(
       {
-        UserRegistry: UserRegistryContract,
+        V00_UserRegistry: V00_UserRegistryContract,
         ClaimHolderRegistered: ClaimHolderRegisteredContract,
         ClaimHolderPresigned: ClaimHolderPresignedContract,
         OriginIdentity: OriginIdentityContract,

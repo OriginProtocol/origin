@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
 import './ClaimHolder.sol';
-import './UserRegistry.sol';
+import './V00_UserRegistry.sol';
 
 contract ClaimHolderRegistered is ClaimHolder {
 
@@ -10,7 +10,7 @@ contract ClaimHolderRegistered is ClaimHolder {
   )
       public
   {
-      UserRegistry userRegistry = UserRegistry(_userRegistryAddress);
+      V00_UserRegistry userRegistry = V00_UserRegistry(_userRegistryAddress);
       userRegistry.registerUser();
   }
 }
