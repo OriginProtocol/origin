@@ -73,20 +73,23 @@ class DateFilterGroup extends Component {
 
   // Called by filter-group
   async getFilters() {
-    return [
-      {
-        name: this.props.filter.searchParameterName,
-        value: this.state.startDate,
-        valueType: VALUE_TYPE_DATE,
-        operator: FILTER_OPERATOR_GREATER_OR_EQUAL
-      },
-      {
-        name: this.props.filter.searchParameterName,
-        value: this.state.endDate,
-        valueType: VALUE_TYPE_DATE,
-        operator: FILTER_OPERATOR_LESSER_OR_EQUAL
-      }
-    ]
+    if (this.state.startDate !== null && this.state.endDate !== null)
+      return [
+        {
+          name: this.props.filter.searchParameterName,
+          value: this.state.startDate,
+          valueType: VALUE_TYPE_DATE,
+          operator: FILTER_OPERATOR_GREATER_OR_EQUAL
+        },
+        {
+          name: this.props.filter.searchParameterName,
+          value: this.state.endDate,
+          valueType: VALUE_TYPE_DATE,
+          operator: FILTER_OPERATOR_LESSER_OR_EQUAL
+        }
+      ]
+    else
+      return []
   }
 
   // Called by filter-group

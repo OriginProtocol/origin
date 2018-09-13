@@ -47,7 +47,6 @@ class FilterGroup extends Component {
       this.childFilters
         .map(childFilter => childFilter.getFilters())
     ).then(values => {
-      console.log("VALUES MAN", values)
       const filters = values.flatMap(childFilters => childFilters)
       this.props.updateFilters(this.title, filters)
 

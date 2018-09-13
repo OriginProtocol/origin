@@ -28,22 +28,19 @@ class MultipleSelectionFilter extends Component {
 
   // Called by filter-group
   async getFilters() {
-    return [
-      {
-        name: this.props.filter.searchParameterName,
-        value: Object
-          .keys(this.state.checkboxValue)
-          //keep only selected values
-          .filter(checkBoxKey => this.state.checkboxValue[checkBoxKey])
-          //issue values to the backend always in English no matter which language is selected
-          .map(untranslatedValue => {
-            return schemaMessages[this.toCamelCase(this.props.listingType)][untranslatedValue]
-              .defaultMessage
-          }),
-        valueType: VALUE_TYPE_ARRAY_STRING,
-        operator: FILTER_OPERATOR_CONTAINS
-      }
-    ]
+    const values = Object.keys(this.state.checkboxValue)
+      //keep only selected values
+      .filter(checkBoxKey => this.state.checkboxValue[checkBoxKey])
+      //issue values to the backend always in English no matter which language is selected
+      .map(untranslatedValue => {
+        return schemaMessages[this.toCamelCase(this.props.listingType)][untranslatedValue]
+          .defaultMessage
+      })
+
+    if (values.length === 0)
+      return []
+    else
+       ]
   }
 
   componentDidUpdate(previousProps) {
