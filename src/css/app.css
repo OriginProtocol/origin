@@ -2459,82 +2459,75 @@ select.form-control:not([size]):not([multiple]) {
 
 /* OGN Balance Tooltip */
 
-.tooltip-balance {
-  text-align: left;
-  font-size: 14px;
-}
-
-.tooltip-balance p.tooltip-balance-heading {
+.tooltip-balance-heading {
   font-weight: 800;
-  margin-bottom: -7px;
+  font-size: 18px;
+  color: white;
 }
 
 .ogn-balance {
   margin-right: 8px;
+  cursor: pointer;
 }
 
-.tooltip-balance p {
-  font-size: 18px;
+.tooltip-balance-text {
+  font-size: 14px;
   font-weight: 500;
   color: white;
 }
 
-.tooltip-inner img.ogn-icon {
-  width: 15px;
-  height: 15px;
+.tooltip-align-left {
+  text-align: left;
+  margin-bottom: 0.7rem;
 }
 
-.tooltip-balance .ogn {
+.tooltip-inner img.ogn-icon {
+  width: 18px;
+  height: 18px;
+  margin-bottom: 5px;
+  margin-left: 2px;
+}
+
+.ogn {
   color: var(--clear-blue);
 }
 
-.tooltip-balance .tooltip-balance-text {
-  font-size: 14px;
-}
-
-.tooltip-balance .add-more-btn {
+.tooltip .tooltip-inner .add-more-btn {
   border-radius: 15px;
   background-color: var(--dark-grey-blue);
   border: solid 1px var(--clear-blue);
-  margin-bottom: 20px;
   margin-right: 10px;
-  padding-top: 3px;
-  padding-bottom: 7px;
-  padding-right: 5px;
+  padding: 2px 5px 6px 1px;
 }
 
-.tooltip-balance a.add-more-text {
+.tooltip .tooltip-inner .add-more-text,
+.tooltip .tooltip-inner .add-more-text:hover {
   color: var(--clear-blue);
-  padding-right: 10px;
   font-weight: 700;
-  font-size: 15px;
+  font-size: 14px;
 }
 
-.tooltip-balance .add-more-icon {
-  width: 23px;
-  height: 23px;
-  margin: 2px 10px 2px 2px;
+.tooltip .tooltip-inner .add-more-icon {
+  width: 21px;
+  height: 21px;
+  margin: 1px 2px 0px 1px;
 }
 
-.tooltip-balance .recommended {
+.recommended {
   font-size: 12px;
   color: var(--bluey-grey);
 }
 
-.tooltip-balance a.learn-more {
-  float: left;
+.tooltip .tooltip-inner a.learn-more {
   color: var(--clear-blue);
   font-size: 15px;
 }
 
-.tooltip-balance .arrow-right {
-  width: 0; 
-  height: 0; 
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  border-left: 5px solid var(--clear-blue);
-  margin-top: 24px;
-  margin-left: 80px;
+.bs-tooltip-left .arrow::before, .bs-tooltip-auto[x-placement^="left"] .arrow::before {
+    left: 0;
+    border-width: 0.4rem 0 0.4rem 0.4rem;
+    border-left-color: var(--dark-grey-blue);
+    border-top-color: transparent;
 }
 
 /* Sales */

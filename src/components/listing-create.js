@@ -403,7 +403,7 @@ class ListingCreate extends Component {
                 {isFirstListing &&
                   <div className="info-box">
                     <img src="images/ogn-icon-horiz.svg" role="presentation" />
-                    <p className="text-bold">You have 0 <a href="#" arget="_blank" rel="noopener noreferrer">OGN</a> in your wallet.</p>
+                    <p className="text-bold">You have 0 <a href="#" target="_blank" rel="noopener noreferrer">OGN</a> in your wallet.</p>
                     <p>Once you acquire some OGN you will be able to boost your listing.</p>
                     <p className="expand-btn" onClick={this.toggleBoostBox}>
                       What is a boost? <span className={isBoostExpanded ? 'rotate-up' : ''}>&#x25be;</span>
@@ -420,7 +420,7 @@ class ListingCreate extends Component {
                           In addition to this, “boosting” your listing will allow it to have more visibility and appear higher in the list of available listings.
                         </p>
                         <p>
-                          Boosting on the Origin DApp is done using <a href="#" arget="_blank" rel="noopener noreferrer">Origin Tokens (OGN).</a>
+                          Boosting on the Origin DApp is done using <a href="#" target="_blank" rel="noopener noreferrer">Origin Tokens (OGN).</a>
                         </p>
                       </div>
                     }
