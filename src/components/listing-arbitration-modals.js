@@ -41,13 +41,13 @@ export const RejectionModal = ({ isOpen = false }) => (
 
 export const ConfirmationModal = ({ isOpen = false }) => (
   <Modal backdrop="static" className="arbitration-modal confirm" isOpen={isOpen}>
-    <p className="large-text">
+    <p className="heading">
       <FormattedMessage
         id={'listing-arbitration.confirmHeading'}
         defaultMessage={'Is there a problem?'}
       />
     </p>
-    <div className="small-text">
+    <div className="text">
       <span>
         <FormattedMessage
           id={'listing-arbitration.confirmText1'}
@@ -84,7 +84,7 @@ export const ConfirmationModal = ({ isOpen = false }) => (
 
 export const IssueModal = ({ isOpen = false }) => (
   <Modal backdrop="static" className="arbitration-modal issue" isOpen={isOpen}>
-    <p className="large-text">
+    <p className="heading">
       <FormattedMessage
         id={'listing-arbitration.issueHeading'}
         defaultMessage={'Describe your problem below'}

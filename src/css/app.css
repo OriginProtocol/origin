@@ -1808,10 +1808,11 @@ a:hover {
 .arbitration-modal.issue textarea {
   background-color: var(--dark);
   border-radius: 5px;
-  width: 80%;
+  width: 85%;
   resize: none;
   margin-top: 26px;
   margin-bottom: 30px;
+  padding: 12px 16px;
 }
 
 .arbitration-modal .image-container {
@@ -1845,7 +1846,7 @@ a:hover {
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 300;
-  font-size: 1.375rem;
+  font-size: 1.5rem;
   margin-top: 15px;
   margin-bottom: 11px;
 }
