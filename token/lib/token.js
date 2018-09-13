@@ -1,6 +1,13 @@
 const BigNumber = require('bignumber.js')
-const TokenContract = require('../../contracts/build/contracts/OriginToken.json')
 const Web3 = require('web3')
+
+const TokenContract = require('../../contracts/build/contracts/OriginToken.json')
+const IMultiSigWallet = require('../../contracts/build/contracts/IMultiSigWallet.json')
+const { withRetries } = require('../../src/utils/retries.js')
+
+const { isValidTokenOwner } = require('./owner_whitelist.js')
+
+const RETRIES = 7
 
 // Token helper class.
 class Token {
@@ -67,22 +74,22 @@ class Token {
   }
 
   /*
-   * Credits tokens to a wallet.
+   * Credits tokens to a address.
    * @params {string} networkId - Test network Id.
-   * @params {string} wallet - Address of the recipient wallet.
+   * @params {string} address - Address for the recipient.
    * @params {int} value - Value to credit, in natural unit.
    * @throws Throws an error if the operation failed.
-   * @returns {BigNumber} - Token balance of the wallet, in natural unit.
+   * @returns {BigNumber} - Token balance of the address, in natural unit.
    */
-  async credit(networkId, wallet, value) {
+  async credit(networkId, address, value) {
     const contract = this.contract(networkId)
 
     // At token contract deployment, the entire initial supply of tokens is assigned to
-    // the first wallet generated using the mnemonic.
+    // the first address generated using the mnemonic.
     const provider = this.config.providers[networkId]
     const tokenSupplier = provider.addresses[0]
 
-    // Transfer numTokens from the supplier to the target wallet.
+    // Transfer numTokens from the supplier to the target address.
     const supplierBalance = await contract.methods.balanceOf(tokenSupplier).call()
     if (value > supplierBalance) {
       throw new Error('insufficient funds for token transfer')
@@ -91,23 +98,23 @@ class Token {
     if (paused) {
       throw new Error('token transfers are paused')
     }
-    const transaction = contract.methods.transfer(wallet, value)
+    const transaction = contract.methods.transfer(address, value)
     await this.sendTransaction(networkId, transaction, { from: tokenSupplier })
 
-    // Return wallet's balance after credit.
-    return this.balance(networkId, wallet)
+    // Return address's balance after credit.
+    return this.balance(networkId, address)
   }
 
   /*
-   * Returns the token balance for a wallet on the specified network.
+   * Returns the token balance for a address on the specified network.
    * @params {string} networkId - Test network Id.
-   * @params {string} wallet - Address of the recipient wallet.
+   * @params {string} address - Address to query balance of.
    * @throws Throws an error if the operation failed.
-   * @returns {BigNumber} - Token balance of the wallet, in natural unit.
+   * @returns {BigNumber} - Token balance of the address, in natural unit.
    */
-  async balance(networkId, wallet) {
+  async balance(networkId, address) {
     const contract = this.contract(networkId)
-    const balance = await contract.methods.balanceOf(wallet).call()
+    const balance = await contract.methods.balanceOf(address).call()
     return BigNumber(balance)
   }
 
@@ -124,16 +131,19 @@ class Token {
     if (alreadyPaused) {
       throw new Error('Token is already paused')
     }
-    const tokenOwner = await contract.methods.owner().call()
-    if (tokenOwner.toLowerCase() != sender.toLowerCase()) {
-      throw new Error(`Sender ${sender} is not owner of token contract (${tokenOwner})`)
-    }
+    await this.ensureContractOwner(networkId, sender)
 
     const transaction = contract.methods.pause()
     await this.sendTransaction(networkId, transaction, { from: sender })
-    if (await contract.methods.paused().call() !== true) {
-      throw new Error('Token should be paused but is not')
-    }
+
+    await withRetries(RETRIES, async () => {
+      if (
+        !this.config.multisig &&
+        await contract.methods.paused().call() !== true
+      ) {
+        throw new Error('Token should be paused but is not')
+      }
+    })
   }
 
   /**
@@ -149,16 +159,64 @@ class Token {
     if (!paused) {
       throw new Error('Token is already unpaused')
     }
-    const tokenOwner = await contract.methods.owner().call()
-    if (tokenOwner.toLowerCase() != sender.toLowerCase()) {
-      throw new Error(`Sender ${sender} is not owner of token contract (${tokenOwner})`)
-    }
+    await this.ensureContractOwner(networkId, sender)
 
     const transaction = contract.methods.unpause()
     await this.sendTransaction(networkId, transaction, { from: sender })
-    if (await contract.methods.paused().call() !== false) {
-      throw new Error('Token should be unpaused but is not')
+    await withRetries(RETRIES, async () => {
+      if (
+        !this.config.multisig &&
+        await contract.methods.paused().call() !== false
+      ) {
+        throw new Error('Token should be unpaused but is not')
+      }
+    })
+  }
+
+    /**
+   * Changes the owner of the token contract to the given address.
+   * @param {string} networkId - Ethereum network ID.
+   * @param {string} newOwner - Address of the new owner.
+   */
+  async setOwner(networkId, newOwner) {
+    const contract = await this.contract(networkId)
+    const sender = this.defaultAccount(networkId)
+    const newOwnerLower = newOwner.toLowerCase()
+
+    // Pre-contract call validations.
+    if (
+      !this.config.overrideOwnerWhitelist &&
+      !isValidTokenOwner(networkId, newOwner)
+    ) {
+      throw new Error(`${newOwner} is not a valid owner for the token contract`)
     }
+    await this.ensureContractOwner(networkId, sender)
+    const oldOwner = await this.owner(networkId)
+    if (oldOwner.toLowerCase() === newOwnerLower) {
+      throw new Error('old and new owner are the same')
+    }
+
+    const transaction = contract.methods.transferOwnership(newOwner)
+    await this.sendTransaction(networkId, transaction, { from: sender })
+    await withRetries(RETRIES, async () => {
+      const ownerAfterTransaction = (await this.owner(networkId)).toLowerCase()
+      if (
+        !this.config.multisig &&
+        ownerAfterTransaction !== newOwner.toLowerCase()
+      ) {
+        throw new Error(`New owner should be ${newOwner} but is ${ownerAfterTransaction}`)
+      }
+    })
+  }
+
+  /**
+   * Returns the owner of the token contract.
+   * @param {string} networkId - Ethereum network ID.
+   * @param {returns} - Address of the token owner.
+   */
+  async owner(networkId) {
+    const contract = await this.contract(networkId)
+    return await contract.methods.owner().call()
   }
 
   // TODO: refactor into separate base class, to support other contracts such
@@ -171,11 +229,25 @@ class Token {
    * @returns {Object} - Transaction receipt.
    */
   async sendTransaction(networkId, transaction, opts = {}) {
-    // TODO: support multisig wallets
-
     const web3 = this.web3(networkId)
 
-    let transactionHash
+    if (!opts.from) {
+      opts.from = await this.defaultAccount(networkId)
+    }
+
+    if (this.config.multisig) {
+      // For multi-sig transactions, we submit the transaction to the multi-sig
+      // wallet instead of the token contract.
+      const contract = await this.contract(networkId)
+      transaction = await this.multiSigTransaction({
+        networkId,
+        sender: opts.from,
+        multiSigWalletAddress: this.config.multisig,
+        contractAddress: contract._address,
+        transaction
+      })
+    }
+
     if (!opts.gas) {
       opts.gas = await transaction.estimateGas({ from: opts.from })
       this.vlog('estimated gas:', opts.gas)
@@ -183,6 +255,7 @@ class Token {
 
     // Send the transaction and grab the transaction hash when it's available.
     this.vlog('sending transaction')
+    let transactionHash
     transaction.send(opts)
       .on('transactionHash', (hash) => {
         transactionHash = hash
@@ -202,27 +275,105 @@ class Token {
     const maxSleep = 120000
     let totalSleep = 0
     let sleepTime = 1000
-    while (totalSleep <= maxSleep) {
-      this.vlog(`waiting ${sleepTime / 1000}s for transaction receipt`)
-      await sleep(sleepTime)
-
+    await withRetries(RETRIES, async () => {
       if (transactionHash) {
         const receipt = await web3.eth.getTransactionReceipt(transactionHash)
         if (receipt) {
           this.vlog('got transaction receipt', receipt)
-          if (receipt.status) {
-            this.vlog('transaction successful')
-            return receipt
-          } else {
+          if (!receipt.status) {
             throw new Error('transaction failed')
           }
+          if (this.config.multisig) {
+            this.vlog('multi-sig transaction submitted for further signatures')
+          } else {
+            this.vlog('transaction successful')
+          }
+            return receipt
+        } else {
+          console.log('waiting for transaction receipt')
         }
       } else {
         this.vlog('still waiting for transaction hash')
       }
+    })
+  }
 
-      sleepTime *= 2
-      totalSleep += sleepTime
+  /**
+   * Displays status of the token.
+   * @param {string} networkId - Ethereum network ID.
+   */
+  async logStatus(networkId) {
+    const contract = await this.contract(networkId)
+    const name = await contract.methods.name().call()
+    const decimals = await contract.methods.decimals().call()
+    const symbol = await contract.methods.symbol().call()
+    const totalSupply = BigNumber(await contract.methods.totalSupply().call())
+    const totalSupplyTokens = this.toTokenUnit(totalSupply)
+    const paused = await contract.methods.paused().call()
+    const address = await this.contractAddress(networkId)
+    const owner = await this.owner(networkId)
+    console.log(`Token status for network ${networkId}:`)
+    console.log(`contract address:        ${address}`)
+    console.log(`name:                    ${name}`)
+    console.log(`decimals:                ${decimals}`)
+    console.log(`symbol:                  ${symbol}`)
+    console.log(`total supply (natural):  ${totalSupply.toFixed(0)}`)
+    console.log(`total supply (tokens):   ${totalSupplyTokens}`)
+    console.log(`contract owner:          ${owner}`)
+    console.log(`transfers paused:        ${paused ? 'YES' : 'no'}`)
+  }
+
+  // TODO: refactor this into a base class
+  /**
+   * Sends the given transaction to the multi-sig wallet for potentially further
+   * signatures.
+   * @param {string} networkId - Ethereum network ID.
+   * @param {string} sender - Transaction sender address.
+   * @param {string} multiSigWalletAddress - Address of multi-sig wallet.
+   * @param {string} contractAddress - Address of contract for which we're making the contract call.
+   * @param {Object} transaction - Ethereum transaction to be sent to the multi-sig wallet.
+   */
+  async multiSigTransaction({
+    networkId,
+    sender,
+    multiSigWalletAddress,
+    contractAddress,
+    transaction
+  }) {
+    const web3 = this.web3(networkId)
+    const data = await transaction.encodeABI()
+    const wallet = new web3.eth.Contract(IMultiSigWallet.abi, multiSigWalletAddress)
+    this.vlog('transaction data:', data)
+    this.vlog(`using multi-sig wallet ${multiSigWalletAddress} for txn to ${contractAddress}`)
+
+    // Ensure that the sender is a signer/owner for the wallet.
+    const isOwner = await wallet.methods.isOwner(sender).call()
+    if (!isOwner) {
+      throw `${from} is not an owner of the multisig wallet`
+    }
+
+    return wallet.methods.submitTransaction(contractAddress, 0, data)
+  }
+
+  // TODO: extract this into a separate base class
+  /**
+   * Throws an error if 'address' isn't the owner of the contract.
+   * @param {string} networkId - Ethereum network ID.
+   * @param {string} address - Address to check.
+   */
+  async ensureContractOwner(networkId, address) {
+    const owner = (await this.owner(networkId))
+    const multisig = this.config.multisig
+
+    if (multisig) {
+      // Ensure that the multisig wallet is the owner of the contract.
+      if (multisig.toLowerCase() !== owner.toLowerCase()) {
+        throw new Error(`multi-sig wallet ${opts.multisig} isn't contract owner ${owner}`)
+      }
+    } else {
+      if (address.toLowerCase() !== owner.toLowerCase()) {
+        throw new Error(`sender ${address} isn't contract owner ${owner}`)
+      }
     }
   }
 
@@ -243,7 +394,7 @@ class Token {
    */
   defaultAccount(networkId) {
     const provider = this.config.providers[networkId]
-    return provider.addresses[0]
+    return provider.address || provider.addresses[0]
   }
 }
 

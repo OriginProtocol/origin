@@ -1,4 +1,5 @@
 const HDWalletProvider = require('truffle-hdwallet-provider')
+const PrivateKeyProvider = require('truffle-privatekey-provider')
 
 const ROPSTEN_NETWORK_ID = '3'
 const RINKEBY_NETWORK_ID = '4'
@@ -32,37 +33,48 @@ function createProviders(networkIds) {
   for (const networkId of networkIds) {
     let mnemonic
     let providerUrl
+    let privateKey
 
     switch (networkId) {
     case ROPSTEN_NETWORK_ID:
-      if (!process.env.ROPSTEN_MNEMONIC) {
-        throw 'Missing ROPSTEN_MNEMONIC env var'
+      privateKey = process.env.ROPSTEN_PRIVATE_KEY
+      mnemonic = process.env.ROPSTEN_MNEMONIC
+      if (!privateKey && !mnemonic) {
+        throw 'Must have either ROPSTEN_PRIVATE_KEY or ROPSTEN_MNEMONIC env var'
       }
       if (!process.env.INFURA_ACCESS_TOKEN) {
         throw 'Missing INFURA_ACCESS_TOKEN env var'
       }
-      mnemonic = process.env.ROPSTEN_MNEMONIC
       providerUrl = `https://rinkeby.infura.io/${process.env.INFURA_ACCESS_TOKEN}`
       break
     case RINKEBY_NETWORK_ID:
-      if (!process.env.RINKEBY_MNEMONIC) {
-        throw 'Missing RINKEBY_MNEMONIC env var'
+      privateKey = process.env.RINKEBY_PRIVATE_KEY
+      mnemonic = process.env.RINKEBY_MNEMONIC
+      if (!privateKey && !mnemonic) {
+        throw 'Must have either RINKEBY_PRIVATE_KEY or RINKEBY_MNEMONIC env var'
       }
       if (!process.env.INFURA_ACCESS_TOKEN) {
         throw 'Missing INFURA_ACCESS_TOKEN env var'
       }
-      mnemonic = process.env.RINKEBY_MNEMONIC
+
       providerUrl = `https://rinkeby.infura.io/${process.env.INFURA_ACCESS_TOKEN}`
       break
     case LOCAL_NETWORK_ID:
+      privateKey = process.env.LOCAL_PRIVATE_KEY
       mnemonic = process.env.LOCAL_MNEMONIC || DEFAULT_MNEMONIC
       providerUrl = 'http://localhost:8545'
       break
     default:
       throw `Unsupported network id ${networkId}`
     }
-    console.log(`Network=${networkId} Url=${providerUrl} Mnemonic=${mnemonic}`)
-    providers[networkId] = new HDWalletProvider(mnemonic, providerUrl)
+    // Private key takes precedence
+    if (privateKey) {
+      console.log(`Network=${networkId} URL=${providerUrl} Using private key`)
+      providers[networkId] = new PrivateKeyProvider(privateKey, providerUrl)
+    } else {
+      console.log(`Network=${networkId} Url=${providerUrl} Mnemonic=${mnemonic}`)
+      providers[networkId] = new HDWalletProvider(mnemonic, providerUrl)
+    }
   }
   return providers
 }
