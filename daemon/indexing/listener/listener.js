@@ -452,7 +452,7 @@ function buildSignatureToRules() {
 
 async function buildVersionList() {
   const versionList = {}
-  const adapters = o.marketplace.adapters
+  const adapters = o.marketplace.resolver.adapters
   const versionKeys = Object.keys(adapters)
   for (const versionKey of versionKeys) {
     const adapter = adapters[versionKey]
