@@ -1796,6 +1796,56 @@ a:hover {
   vertical-align: super;
 }
 
+.rejection-modal .modal-content {
+  height: 420px;
+  width: 420px;
+}
+
+.rejection-modal .image-container {
+  background-color: var(--white);
+  height: 92px;
+  width: 92px;
+  border-radius: 50%;
+  text-align: center;
+  display: block;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.rejection-modal .image-container .helper {
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.rejection-modal .image-container img {
+  vertical-align: middle;
+  margin: auto;
+  width: 54px;
+  height: 54px;
+}
+
+.rejection-modal .large-text {
+  color: var(--white);
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 22px;
+  margin-top: 15px;
+  margin-bottom: 11px;
+}
+.rejection-modal .small-text {
+  font-family: 'Lato';
+  color: var(--pale-grey);
+}
+
+.rejection-modal p.small-text {
+  font-family: 'Lato';
+  color: var(--pale-grey);
+  margin-bottom: 20px;
+}
+
 /* Tooltip */
 
 .tooltip {
@@ -4585,7 +4635,7 @@ a:not([href]):not([tabindex]).span-link {
     -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
     clip-path: polygon(100% 0, 0 100%, 100% 100%);
   }
- 
+
   .navigation-bar .messages .triangle,
   .navigation-bar .notifications .triangle {
     margin-right: 0;
