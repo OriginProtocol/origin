@@ -40,7 +40,14 @@ class MultipleSelectionFilter extends Component {
     if (values.length === 0)
       return []
     else
-       ]
+      return [
+        {
+          name: this.props.filter.searchParameterName,
+          value: values,
+          valueType: VALUE_TYPE_ARRAY_STRING,
+          operator: FILTER_OPERATOR_CONTAINS
+        }
+      ]
   }
 
   componentDidUpdate(previousProps) {
