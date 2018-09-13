@@ -79,10 +79,10 @@ class PriceFilter extends Component {
       >
         <div className="d-flex flex-row price-filter">
           <div id="price-amount-from" className="mr-auto price-slider-amount">
-            {this.state.value[0]}&#36;
+            {Number(this.state.value[0]).toLocaleString()}&#36;
           </div>
           <div id="price-amount-to" className="price-slider-amount">
-            {this.state.value[1]}&#36;
+            {Number(this.state.value[1]).toLocaleString()}&#36;
           </div>
         </div>
         <Range
@@ -98,14 +98,14 @@ class PriceFilter extends Component {
         <div className="d-flex flex-row justify-content-between mt-4 price-filter">
           <div className="d-flex flex-row">
             <div id="price-amount-display-from" className="price-filter-amount">
-              {this.state.value[0]}
+              {Number(this.state.value[0]).toLocaleString()}
             </div>
             <div className="price-filter-currency">{priceUnit}</div>
           </div>
           <div className="price-filter-dash">-</div>
           <div className="d-flex flex-row">
             <div id="price-amount-display-to" className="price-filter-amount">
-              {this.state.value[1]}
+              {Number(this.state.value[1]).toLocaleString()}
             </div>
             <div className="price-filter-currency">{priceUnit}</div>
           </div>
