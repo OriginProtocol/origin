@@ -4,3 +4,6 @@
 /origin-docs/
 /origin-website/
 ipfs/repo
+
+# MacOS
+.DS_Store

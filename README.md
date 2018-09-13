@@ -72,13 +72,14 @@ Management of the containers is handled by [docker-compose](https://docs.docker.
 - `docker-compose-test.yml` runs tests for the standard stack
 - `docker-compose-web.yml` runs the website stack
 
-To bring up/down the standard stack use 
+To bring up/down the **standard stack** use 
+
 ```
 docker-compose up
 docker-compose down
 ```
 
-To bring up/down the website stack you need to pass the docker-compose file explicitly: 
+To bring up/down the **website stack** you need to pass the docker-compose file explicitly: 
 
 ```
 docker-compose -f docker-compose-web.yml up 
