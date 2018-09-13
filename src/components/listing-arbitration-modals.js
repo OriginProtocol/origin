@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
 import Modal from 'components/modal'
 
-export const RejectionModal = ({ isOpen }) => (
+export const RejectionModal = ({ isOpen = false }) => (
   <Modal backdrop="static" className="arbitration-modal rejection" isOpen={isOpen}>
     <div className="image-container">
       <img src="images/reject-icon.svg" role="presentation" />
@@ -39,7 +39,7 @@ export const RejectionModal = ({ isOpen }) => (
   </Modal>
 )
 
-export const ConfirmationModal = ({ isOpen }) => (
+export const ConfirmationModal = ({ isOpen = false }) => (
   <Modal backdrop="static" className="arbitration-modal confirm" isOpen={isOpen}>
     <p className="large-text">
       <FormattedMessage
@@ -82,7 +82,7 @@ export const ConfirmationModal = ({ isOpen }) => (
   </Modal>
 )
 
-export const IssueModal = ({ isOpen }) => (
+export const IssueModal = ({ isOpen = false }) => (
   <Modal backdrop="static" className="arbitration-modal issue" isOpen={isOpen}>
     <p className="large-text">
       <FormattedMessage
