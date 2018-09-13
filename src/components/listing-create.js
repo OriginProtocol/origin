@@ -71,8 +71,8 @@ class ListingCreate extends Component {
         origin && origin.contractService && origin.contractService.web3
       ),
       isBoostExpanded: false,
-      usdListingPrice: 0,
-      showBoostTutorial: true
+      showBoostTutorial: false,
+      usdListingPrice: 0
     }
 
     this.checkOgnBalance = this.checkOgnBalance.bind(this)
@@ -90,8 +90,25 @@ class ListingCreate extends Component {
     this.props.getOgnBalance()
   }
 
+  componentDidUpdate() {
+    // conditionally show boost tutorial
+    if (!this.state.showBoostTutorial) {
+      this.detectNeedForBoostTutorial()
+    }
+  }
+
   componentWillUnmount() {
     clearInterval(this.ognBalancePoll)
+  }
+
+  detectNeedForBoostTutorial() {
+    // show if 0 OGN and...
+    !this.props.wallet.ognBalance &&
+    // ...tutorial has not been expanded or skipped via "Review"
+    !localStorage.getItem('boostTutorialViewed') &&
+    this.setState({
+      showBoostTutorial: true
+    })
   }
 
   pollOgnBalance() {
@@ -240,6 +257,10 @@ class ListingCreate extends Component {
   onReview() {
     const { ognBalance } = this.props.wallet
 
+    if (!localStorage.getItem('boostTutorialViewed')) {
+      localStorage.setItem('boostTutorialViewed', true)
+    }
+
     if (ognBalance < this.state.formListing.formData.boostValue) {
       this.onBoostSliderChange(ognBalance, getBoostLevel(ognBalance))
     }
@@ -284,6 +305,8 @@ class ListingCreate extends Component {
   }
 
   toggleBoostBox() {
+    localStorage.setItem('boostTutorialViewed', true)
+
     this.setState({
       isBoostExpanded: !this.state.isBoostExpanded
     })
@@ -295,7 +318,6 @@ class ListingCreate extends Component {
       currentProvider,
       formListing,
       isBoostExpanded,
-      isFirstListing,
       selectedSchema,
       selectedSchemaType,
       schemaExamples,
@@ -308,7 +330,6 @@ class ListingCreate extends Component {
     const translatedFormData =
       (formData && formData.category && translateListingCategory(formData)) ||
       {}
-    const needsBoostTutorial = isFirstListing && !wallet.ognBalance
 
     return (
       <div className="container listing-form">
