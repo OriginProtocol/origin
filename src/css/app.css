@@ -1840,7 +1840,7 @@ a:hover {
   height: 54px;
 }
 
-.arbitration-modal .large-text {
+.arbitration-modal .heading {
   color: var(--white);
   font-family: 'Poppins';
   font-style: normal;
@@ -1850,20 +1850,20 @@ a:hover {
   margin-bottom: 11px;
 }
 
-.arbitration-modal.confirm .large-text {
+.arbitration-modal.confirm .heading {
   margin-top: auto;
 }
 
-.arbitration-modal .small-text {
+.arbitration-modal .text {
   font-family: 'Lato';
   color: var(--pale-grey);
 }
 
-.arbitration-modal.confirm .small-text {
+.arbitration-modal.confirm .text {
   margin: 0px;
 }
 
-.arbitration-modal p.small-text {
+.arbitration-modal p.text {
   margin-bottom: 20px;
 }
 
