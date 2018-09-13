@@ -220,28 +220,6 @@ class WalletCard extends Component {
                 <a className="ogn-balance"
                   data-toggle="tooltip"
                   data-title={balanceTooltip} 
-                  // data-title="<p class='tooltip-balance-heading tooltip-align-left'>
-                  //               You have <img class='ogn-icon' src = 'images/ogn-icon.svg' role = 'presentation' />
-                  //               <span class='ogn'>
-                  //                 BAL OGN
-                  //               </span>
-                  //             </p>
-                  //             <p class='tooltip-balance-text tooltip-align-left'>
-                  //               Having OGN is not required but will allow you
-                  //               to create a listing that will be more visible to buyers.
-                  //             </p>
-                  //             <p class='tooltip-align-left'>
-                  //               <a href='#' class='add-more-btn add-more-text'>
-                  //                 <img class='add-more-icon' src='images/add-icon.svg' role='presentation' />
-                  //                 Get OGN
-                  //               </a>
-                  //               <span class='recommended'>(recommended)</span>
-                  //             </p>
-                  //             <p class='tooltip-align-left'>
-                  //               <a href='/#/about-tokens' target='_blank' class='learn-more'>
-                  //                 Learn more ▸
-                  //               </a>
-                  //             </p>"
                 >
                   <img src="images/ogn-icon.svg" role="presentation" />
                 </a>
