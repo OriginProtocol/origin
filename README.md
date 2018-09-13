@@ -35,7 +35,7 @@ Origin Box has several intended use cases:
 
 ## Getting started
 
-1. Clone this repository
+1. Clone this repository via SSH. If you haven't enabled SSH authentication on Github, [here's how to do it.](https://help.github.com/articles/about-ssh/)
 
 2. Run `./install.sh -e origin` for the standard stack, or `./install.sh -e origin-website` for the website stack.
 
