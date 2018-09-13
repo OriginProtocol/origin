@@ -72,7 +72,7 @@ class DateFilterGroup extends Component {
   }
 
   // Called by filter-group
-  getFilters() {
+  async getFilters() {
     return [
       {
         name: this.props.filter.searchParameterName,

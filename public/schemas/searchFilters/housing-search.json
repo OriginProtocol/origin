@@ -11,18 +11,18 @@
       "items": [
         {
           "type": "price",
-          "searchParameterName": "priceEth.amount",
+          "searchParameterName": "price.amount",
           "priceUnit": {
-            "id": "searchFilters.dollarPrice",
-            "defaultMessage": "$"
+            "id": "searchFilters.usd",
+            "defaultMessage": "USD"
           }
         }
       ]
     },
     {
       "title": {
-        "id": "searchFilters.category",
-        "defaultMessage": "Category"
+        "id": "searchFilters.subCategory",
+        "defaultMessage": "Sub Category"
       },
       "type": "filterGroup",
       "items": [

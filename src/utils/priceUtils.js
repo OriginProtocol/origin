@@ -62,3 +62,18 @@ export const getFiatPrice = async (
     maximumFractionDigits: 2
   })
 }
+
+export const getEthPrice = async (
+  priceFiat,
+  fiatCurrencyCode,
+  cryptoCurrencyCode
+) => {
+  if (!priceFiat) {
+    priceFiat = 0
+  }
+  const exchangeRate = await getFiatExchangeRate(
+    fiatCurrencyCode,
+    cryptoCurrencyCode
+  )
+  return Number(priceFiat / exchangeRate)
+}

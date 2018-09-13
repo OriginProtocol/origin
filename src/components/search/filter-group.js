@@ -40,17 +40,26 @@ class FilterGroup extends Component {
     if (index !== -1) this.childFilters.splice(index, 1)
   }
 
-  handleApplyClick(event) {
+  async handleApplyClick(event) {
     event.preventDefault()
 
-    const filters = this.childFilters.flatMap(childFilter =>
-      childFilter.getFilters()
-    )
+    Promise.all(
+      this.childFilters
+        .map(childFilter => childFilter.getFilters())
+    ).then(values => {
+      console.log("VALUES MAN", values)
+      const filters = values.flatMap(childFilters => childFilters)
+      this.props.updateFilters(this.title, filters)
 
-    this.props.updateFilters(this.title, filters)
+      // close the dropdown menu. Handles the css clases and aria-expanded attribute
+      $('body').trigger('click')
+    })
+
+    //const filters = this.childFilters.flatMap(childFilter => childFilter.getFilters())
+    //this.props.updateFilters(this.title, filters)
 
     // close the dropdown menu. Handles the css clases and aria-expanded attribute
-    $('body').trigger('click')
+    //$('body').trigger('click')
   }
 
   handleClearClick(event) {

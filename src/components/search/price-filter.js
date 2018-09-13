@@ -8,12 +8,13 @@ import {
   FILTER_OPERATOR_GREATER_OR_EQUAL,
   FILTER_OPERATOR_LESSER_OR_EQUAL
 } from 'components/search/constants'
+import { getEthPrice } from 'utils/priceUtils'
 
 class PriceFilter extends Component {
   constructor(props) {
     super(props)
     this.defaultMinimum = 0
-    this.defaultMaximum = 500
+    this.defaultMaximum = 10000
 
     this.state = {
       value: [this.defaultMinimum, this.defaultMaximum]
@@ -35,17 +36,17 @@ class PriceFilter extends Component {
   }
 
   // Called by filter-group
-  getFilters() {
+  async getFilters() {
     return [
       {
         name: this.props.filter.searchParameterName,
-        value: this.state.value[0],
+        value: await getEthPrice(this.state.value[0], 'USD', 'ETH'),
         valueType: VALUE_TYPE_FLOAT,
         operator: FILTER_OPERATOR_GREATER_OR_EQUAL
       },
       {
         name: this.props.filter.searchParameterName,
-        value: this.state.value[1],
+        value: await getEthPrice(this.state.value[1], 'USD', 'ETH'),
         valueType: VALUE_TYPE_FLOAT,
         operator: FILTER_OPERATOR_LESSER_OR_EQUAL
       }
@@ -69,7 +70,7 @@ class PriceFilter extends Component {
   render() {
     const priceUnit = this.props.filter.priceUnit ?
       this.props.intl.formatMessage(this.props.filter.priceUnit) :
-      `$`
+      `USD`
 
     return (
       <div
@@ -78,10 +79,10 @@ class PriceFilter extends Component {
       >
         <div className="d-flex flex-row price-filter">
           <div id="price-amount-from" className="mr-auto price-slider-amount">
-            &#36;{this.state.value[0]}
+            {this.state.value[0]}&#36;
           </div>
           <div id="price-amount-to" className="price-slider-amount">
-            &#36;{this.state.value[1]}
+            {this.state.value[1]}&#36;
           </div>
         </div>
         <Range
