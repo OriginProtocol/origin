@@ -126,7 +126,6 @@ class ListingsDetail extends Component {
         const offerData = {
           listingId: this.props.listingId,
           listingType: 'unit',
-          schemaVersion: '1.0.0',
           unitsPurchased: 1,
           totalPrice: {
             amount: this.state.price,
