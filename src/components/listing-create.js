@@ -72,20 +72,32 @@ class ListingCreate extends Component {
       ),
       isBoostExpanded: false,
       usdListingPrice: 0,
-      showBoostTutorial: true,
-      disableNextBtn: false
+      showBoostTutorial: true
     }
 
+    this.checkOgnBalance = this.checkOgnBalance.bind(this)
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
+    this.onBoostSliderChange = this.onBoostSliderChange.bind(this)
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
-    this.onBoostSelected = this.onBoostSelected.bind(this)
+    this.onReview = this.onReview.bind(this)
+    this.pollOgnBalance = this.pollOgnBalance.bind(this)
+    this.resetToPreview = this.resetToPreview.bind(this)
     this.toggleBoostBox = this.toggleBoostBox.bind(this)
     this.updateUsdPrice = this.updateUsdPrice.bind(this)
-    this.checkOgnBalance = this.checkOgnBalance.bind(this)
-    this.onBoostSliderChange = this.onBoostSliderChange.bind(this)
-    this.showBoostSlider = this.showBoostSlider.bind(this)
-    this.onSkipBoost = this.onSkipBoost.bind(this)
-    this.resetToPreview = this.resetToPreview.bind(this)
+  }
+
+  componentDidMount() {
+    this.props.getOgnBalance()
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.ognBalancePoll)
+  }
+
+  pollOgnBalance() {
+    this.ognBalancePoll = setInterval(() => {
+      this.props.getOgnBalance()
+    }, 5000)
   }
 
   async updateUsdPrice() {
@@ -212,25 +224,8 @@ class ListingCreate extends Component {
     }
   }
 
-  showBoostSlider() {
+  onBoostSliderChange(boostValue, boostLevel) {
     this.setState({
-      showBoostTutorial: false
-    })
-    window.scrollTo(0, 0)
-  }
-
-  onBoostSelected(amount) {
-    console.log(amount)
-    this.setState({
-      step: this.STEP.PREVIEW
-    })
-    window.scrollTo(0, 0)
-    this.updateUsdPrice()
-  }
-
-  onBoostSliderChange(boostValue, boostLevel, disableNextBtn) {
-    this.setState({
-      disableNextBtn,
       formListing: {
         ...this.state.formListing,
         formData: {
@@ -242,12 +237,20 @@ class ListingCreate extends Component {
     })
   }
 
-  onSkipBoost() {
-    this.onBoostSliderChange(0, getBoostLevel(0))
+  onReview() {
+    const { ognBalance } = this.props.wallet
+
+    if (ognBalance < this.state.formListing.formData.boostValue) {
+      this.onBoostSliderChange(ognBalance, getBoostLevel(ognBalance))
+    }
+
     this.setState({
       step: this.STEP.PREVIEW
     })
+
     window.scrollTo(0, 0)
+    
+    this.updateUsdPrice()
   }
 
   async onSubmitListing(formListing, selectedSchemaType) {
@@ -300,7 +303,6 @@ class ListingCreate extends Component {
       translatedSchema,
       usdListingPrice,
       showBoostTutorial,
-      disableNextBtn
     } = this.state
     const { formData } = formListing
     const translatedFormData =
@@ -440,12 +442,6 @@ class ListingCreate extends Component {
                     <p className="expand-btn" onClick={ this.toggleBoostBox }>
                       What is a boost? <span className={ isBoostExpanded ? 'rotate-up' : '' }>&#x25be;</span>
                     </p>
-                    <p className="expand-btn" onClick={this.toggleBoostBox}>
-                      What is a boost?{' '}
-                      <span className={isBoostExpanded ? 'rotate-up' : ''}>
-                        &#x25be;
-                      </span>
-                    </p>
                     {isBoostExpanded && (
                       <div className="info-box-bottom">
                         <hr />
@@ -478,7 +474,6 @@ class ListingCreate extends Component {
                 {!showBoostTutorial &&
                   <BoostSlider
                     onChange={ this.onBoostSliderChange }
-                    getOgnBalance={ this.props.getOgnBalance }
                     ognBalance={ wallet.ognBalance }
                     defaultValue={ defaultBoostValue }
                   />
@@ -494,28 +489,12 @@ class ListingCreate extends Component {
                       defaultMessage={'Back'}
                     />
                   </button>
-                  {showBoostTutorial &&
-                    <button
-                      className="float-right btn btn-primary"
-                      onClick={this.showBoostSlider}
-                    >
-                      Start Boosting
-                    </button>
-                  }
-                  {!showBoostTutorial &&
-                    <button
-                      className={ `float-right btn btn-primary${disableNextBtn ? ' disabled' : ''}` }
-                      onClick={this.onBoostSelected}
-                    >
-                      Review
-                    </button>
-                  }
-                  <span
-                    className="skip-boost-btn"
-                    onClick={this.onSkipBoost}
+                  <button
+                    className="float-right btn btn-primary"
+                    onClick={this.onReview}
                   >
-                    Skip this step
-                  </span>
+                    Review
+                  </button>
                 </div>
               </div>
             )}
@@ -644,14 +623,16 @@ class ListingCreate extends Component {
                     </div>
                   </div>
                 </div>
-                <a
-                  className="bottom-cta"
-                  href="#"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Preview in browser
-                </a>
+                {/* Revisit this later
+                  <a
+                    className="bottom-cta"
+                    href="#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Preview in browser
+                  </a>
+                */}
                 <div className="btn-container">
                   <button
                     className="btn btn-other float-left"

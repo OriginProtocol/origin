@@ -26,7 +26,6 @@ class BoostSlider extends Component {
 
     this.checkOgnTransferAllowance = this.checkOgnTransferAllowance.bind(this)
     this.approveOgnTransfer = this.approveOgnTransfer.bind(this)
-    this.pollOgnBalance = this.pollOgnBalance.bind(this)
     this.onChange = this.onChange.bind(this)
   }
 
@@ -47,7 +46,6 @@ class BoostSlider extends Component {
 
   componentWillUnmount() {
     $('[data-toggle="tooltip"]').tooltip('dispose')
-    clearInterval(this.ognBalancePoll)
   }
 
   async checkOgnTransferAllowance() {
@@ -68,12 +66,6 @@ class BoostSlider extends Component {
         this.checkOgnTransferAllowance()
       }
     )
-  }
-
-  pollOgnBalance() {
-    this.ognBalancePoll = setInterval(() => {
-      this.props.getOgnBalance()
-    }, 5000)
   }
 
   async onChange(value) {
