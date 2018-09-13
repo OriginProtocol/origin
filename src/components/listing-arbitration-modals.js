@@ -37,6 +37,13 @@ export const ConfirmationModal = () => (
   </Modal>
 )
 
-export function IssueModal() {
-
-}
+export const IssueModal = () => (
+  <Modal backdrop="static" className="arbitration-modal issue" isOpen={true}>
+    <p className="large-text">Describe your problem below</p>
+    <textarea rows="3"></textarea>
+    <div className="button-container align-self-center">
+      <button className="btn btn-clear">Cancel</button>
+      <button className="btn btn-clear">Submit</button>
+    </div>
+  </Modal>
+)

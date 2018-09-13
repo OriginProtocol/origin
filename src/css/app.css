@@ -1805,6 +1805,15 @@ a:hover {
   width: 450px;
 }
 
+.arbitration-modal.issue textarea {
+  background-color: var(--dark);
+  border-radius: 5px;
+  width: 80%;
+  resize: none;
+  margin-top: 26px;
+  margin-bottom: 30px;
+}
+
 .arbitration-modal .image-container {
   background-color: var(--white);
   height: 92px;
@@ -1858,8 +1867,14 @@ a:hover {
   margin-bottom: 20px;
 }
 
+.arbitration-modal.issue .button-container,
 .arbitration-modal.confirm .button-container {
   display: inline-flex;
+}
+
+.arbitration-modal.issue .button-container {
+  width: 350px;
+  margin-bottom: 0px;
 }
 
 /* Tooltip */
