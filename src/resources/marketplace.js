@@ -3,9 +3,12 @@ import { Offer } from '../models/offer'
 import { Review } from '../models/review'
 import { notificationStatuses, storeKeys } from '../models/notification'
 import {
-  ListingIpfsStore,
-  OfferIpfsStore,
-  ReviewIpfsStore
+  LISTING_DATA_TYPE,
+  LISTING_WITHDRAW_DATA_TYPE,
+  OFFER_DATA_TYPE,
+  OFFER_ACCEPT_DATA_TYPE,
+  REVIEW_DATA_TYPE,
+  IpfsDataStore,
 } from '../services/data-store-service'
 import MarketplaceResolver from '../adapters/marketplace/_resolver'
 
@@ -13,9 +16,7 @@ class Marketplace {
   constructor({ contractService, ipfsService, store }) {
     this.contractService = contractService
     this.ipfsService = ipfsService
-    this.listingIpfsStore = new ListingIpfsStore(this.ipfsService)
-    this.offerIpfsStore = new OfferIpfsStore(this.ipfsService)
-    this.reviewIpfsStore = new ReviewIpfsStore(this.ipfsService)
+    this.ipfsDataStore = new IpfsDataStore(this.ipfsService)
     this.resolver = new MarketplaceResolver(...arguments)
 
     // initialize notifications
@@ -60,7 +61,7 @@ class Marketplace {
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(
       chainListing.ipfsHash
     )
-    const ipfsListing = await this.listingIpfsStore.load(ipfsHash)
+    const ipfsListing = await this.ipfsDataStore.load(LISTING_DATA_TYPE, ipfsHash)
 
     // Create and return a Listing from on-chain and off-chain data .
     return new Listing(listingId, chainListing, ipfsListing)
@@ -94,7 +95,7 @@ class Marketplace {
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(
       chainOffer.ipfsHash
     )
-    const ipfsOffer = await this.offerIpfsStore.load(ipfsHash)
+    const ipfsOffer = await this.ipfsDataStore.load(OFFER_DATA_TYPE, ipfsHash)
 
     // Create an Offer from on-chain and off-chain data.
     return new Offer(offerId, listingId, chainOffer, ipfsOffer)
@@ -102,13 +103,13 @@ class Marketplace {
 
   /**
    * Creates a new listing in the system. Data is recorded both on-chain and off-chain in IPFS.
-   * @param {object} ipfsData - Listing data to store in IPFS
+   * @param {object} data - Listing data to store in IPFS
    * @param {func(confirmationCount, transactionReceipt)} confirmationCallback
-   * @returns {Promise<object>} - Object with listingId and transactionReceipt fields.
+   * @return {Promise<{listingId, ...transactionReceipt}>}
    */
   async createListing(ipfsData, confirmationCallback) {
     // Validate and save the data to IPFS.
-    const ipfsHash = await this.listingIpfsStore.save(ipfsData)
+    const ipfsHash = await this.ipfsDataStore.save(LISTING_DATA_TYPE, ipfsData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     return await this.resolver.createListing(
@@ -120,8 +121,15 @@ class Marketplace {
 
   // updateListing(listingId, data) {}
 
-  async withdrawListing(listingId, ipfsData, confirmationCallback) {
-    const ipfsHash = await this.ipfsService.saveObjAsFile({ data: ipfsData })
+  /**
+   * Closes a listing.
+   * @param listingId
+   * @param ipfsData - Data to store in IPFS. For future use, currently empty.
+   * @param {func(confirmationCount, transactionReceipt)} confirmationCallback
+   * @return {Promise<{timestamp, ...transactionReceipt}>}
+   */
+  async withdrawListing(listingId, ipfsData = {}, confirmationCallback) {
+    const ipfsHash = await this.ipfsDataStore.save(LISTING_WITHDRAW_DATA_TYPE, ipfsData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     return await this.resolver.withdrawListing(
@@ -146,7 +154,7 @@ class Marketplace {
       )
 
     // Save the offer data in IPFS.
-    const ipfsHash = await this.offerIpfsStore.save(offerData)
+    const ipfsHash = await this.ipfsDataStore.save(OFFER_DATA_TYPE, offerData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     // Record the offer on chain.
@@ -168,15 +176,13 @@ class Marketplace {
   /**
    * Accepts an offer.
    * @param {string} id - Offer unique ID.
-   * @param data - Empty object. Currently not used.
+   * @param ipfsData - Data to store in IPFS. For future use, currently empty.
    * @param {function(confirmationCount, transactionReceipt)} confirmationCallback
-   * @return {Promise<{timestamp, transactionReceipt}>}
+   * @return {Promise<{timestamp, ...transactionReceipt}>}
    */
-  async acceptOffer(id, data, confirmationCallback) {
-    // FIXME(franck): implement support for empty data.
-    //const ipfsHash = await this.offerIpfsStore.save(data)
-    //const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
-    const ipfsBytes = '0x0000000000000000000000000000000000000000'
+  async acceptOffer(id, ipfsData = {}, confirmationCallback) {
+    const ipfsHash = await this.ipfsDataStore.save(OFFER_ACCEPT_DATA_TYPE, ipfsData)
+    const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     return await this.resolver.acceptOffer(id, ipfsBytes, confirmationCallback)
   }
@@ -186,10 +192,10 @@ class Marketplace {
    * @param {string} id - Offer unique ID.
    * @param {object} reviewData - Buyer's review. Data expected in schema version 1.0 format.
    * @param {function(confirmationCount, transactionReceipt)} confirmationCallback
-   * @return {Promise<{timestamp, transactionReceipt}>}
+   * @return {Promise<{timestamp, ...transactionReceipt}>}
    */
   async finalizeOffer(id, reviewData, confirmationCallback) {
-    const ipfsHash = await this.reviewIpfsStore.save(reviewData)
+    const ipfsHash = await this.ipfsDataStore.save(REVIEW_DATA_TYPE, reviewData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
     return await this.resolver.finalizeOffer(
@@ -214,14 +220,15 @@ class Marketplace {
    * @param offerId
    * @param {object} data - In case of an offer, Seller review data in schema 1.0 format.
    * @param {function(confirmationCount, transactionReceipt)} confirmationCallback
-   * @return {Promise<{timestamp, transactionReceipt}>}
+   * @return {Promise<{timestamp, ...transactionReceipt}>}
    */
   async addData(listingId, offerId, data, confirmationCallback) {
     let ipfsHash
     if (offerId) {
-      ipfsHash = await this.reviewIpfsStore.save(data)
+      // We expect this to be review data from the seller.
+      ipfsHash = await this.ipfsDataStore.save(REVIEW_DATA_TYPE, data)
     } else if (listingId) {
-      ipfsHash = await this.listingIpfsStore.save(data)
+      throw new Error('Code path not implemented yet')
     }
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
@@ -249,7 +256,7 @@ class Marketplace {
       const ipfsHash = this.contractService.getIpfsHashFromBytes32(
         event.returnValues.ipfsHash
       )
-      const ipfsReview = await this.reviewIpfsStore.load(ipfsHash)
+      const ipfsReview = await this.ipfsDataStore.load(REVIEW_DATA_TYPE, ipfsHash)
 
       // Create a Review object based on IPFS and event data.
       const review = new Review(listingId, event.offerId, event, ipfsReview)

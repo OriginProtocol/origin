@@ -1,8 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
-  "$id": "http://schema.originprotocol.com/review-v1.0.0",
+  "$id": "http://schema.originprotocol.com/review_v1.0.0",
   "title": "Origin Protocol review schema",
+  "type": "object",
   "properties": {
+    "schemaId": {
+      "type": "string"
+    },
     "rating": {
       "type": "number"
     },
@@ -11,6 +15,7 @@
     }
   },
   "required": [
+    "schemaId",
     "rating",
     "text"
   ]

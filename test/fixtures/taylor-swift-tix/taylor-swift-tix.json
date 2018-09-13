@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaId": "http://schema.originprotocol.com/listing_v1.0.0",
   "listingType": "unit",
   "category": "Tickets",
   "subCategory": "Music",

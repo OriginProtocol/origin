@@ -3,39 +3,49 @@ import URL from 'url-parse'
 
 import Money from '../utils/money'
 
-import listingSchemaV1 from '../schemas/listing-core.json'
+import listingSchemaV1 from '../schemas/listing.json'
+import listingWithdrawnSchemaV1 from '../schemas/listing-withdraw.json'
 import offerSchemaV1 from '../schemas/offer.json'
+import offerAcceptedSchemaV1 from '../schemas/offer-accept.json'
 import reviewSchemaV1 from '../schemas/review.json'
 
 const ajv = new Ajv({ allErrors: true })
 // To use the draft-06 JSON schema, we need to explicitly add it to ajv.
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'))
-ajv.addSchema([listingSchemaV1, offerSchemaV1, reviewSchemaV1])
+ajv.addSchema([
+  listingSchemaV1,
+  listingWithdrawnSchemaV1,
+  offerSchemaV1,
+  offerAcceptedSchemaV1,
+  reviewSchemaV1
+])
 
 class AdapterBase {
-  constructor(dataType, schemaId, schemaVersion) {
-    Object.assign(this, { dataType, schemaId, schemaVersion })
+  constructor(schemaId) {
+    this.schemaId = schemaId
   }
+
   /**
    * Validates the data is compliant with Origin Protocol schema.
    * @throws {Error} If validation fails.
    */
   validate(data) {
-    if (data.schemaVersion !== this.schemaVersion) {
+    if (data.schemaId !== this.schemaId) {
       throw new Error(
-        `Unexpected schema version: ${data.schemaVersion} != ${
-          this.schemaVersion
+        `Unexpected schema version: ${data.schemaId} != ${
+          this.schemaId
         }`
       )
     }
 
     const validator = ajv.getSchema(this.schemaId)
+    if (!validator) {
+      throw new Error(`Failed loading schema validator for ${this.schemaId}`)
+    }
     if (!validator(data)) {
       throw new Error(
         `Data failed schema validation.
-        Data type: ${this.dataType}
         Schema id: ${this.schemaId}
-        Schema version: ${this.schemaVersion}
         Data: ${JSON.stringify(data)}.
         Errors: ${JSON.stringify(validator.errors)}`
       )
@@ -54,13 +64,13 @@ class AdapterBase {
   }
 
   /**
-   * Decodes data coming from storage. Must be implemented by derived class.
+   * Decodes data coming from storage.
+   * In most cases derived class should override this default implementation which
+   * only returns an empty object besides the schemaId.
    * @param ipfsData
    */
   decode(ipfsData) {
-    throw new Error(
-      `Implement me. Cannot call decode with ${ipfsData} on AdapterBase`
-    )
+    return { schemaId: ipfsData.schemaId }
   }
 }
 
@@ -125,7 +135,7 @@ class ListingAdapterV1 extends AdapterBase {
     this.validate(ipfsData)
 
     const listing = {
-      schemaVersion: ipfsData.schemaVersion,
+      schemaId: ipfsData.schemaId,
       type: ipfsData.listingType,
       category: ipfsData.category,
       subCategory: ipfsData.subCategory,
@@ -155,6 +165,8 @@ class ListingAdapterV1 extends AdapterBase {
     return listing
   }
 }
+// Note: uses base implementation since currently no data stored in this object.
+class ListingWithdrawAdapterV1 extends AdapterBase {}
 
 class OfferAdapterV1 extends AdapterBase {
   /**
@@ -168,7 +180,7 @@ class OfferAdapterV1 extends AdapterBase {
     this.validate(ipfsData)
 
     const offer = {
-      schemaVersion: ipfsData.schemaVersion,
+      schemaId: ipfsData.schemaId,
       listingType: ipfsData.listingType
     }
 
@@ -186,6 +198,9 @@ class OfferAdapterV1 extends AdapterBase {
   }
 }
 
+// Note: uses base implementation since currently no data stored in this object.
+class OfferAcceptAdapterV1 extends AdapterBase {}
+
 class ReviewAdapterV1 extends AdapterBase {
   /**
    * Populates an IpfsReview object based on review data encoded using V1 schema.
@@ -198,6 +213,7 @@ class ReviewAdapterV1 extends AdapterBase {
     this.validate(ipfsData)
 
     const review = {
+      schemaId: ipfsData.schemaId,
       rating: ipfsData.rating,
       text: ipfsData.text
     }
@@ -206,43 +222,42 @@ class ReviewAdapterV1 extends AdapterBase {
   }
 }
 
+
 const adapterConfig = {
-  listing: {
-    '1.0.0': {
-      schemaId: 'http://schema.originprotocol.com/listing-core-v1.0.0',
-      adapter: ListingAdapterV1
-    }
+  'listing': {
+    '1.0.0': ListingAdapterV1
   },
-  offer: {
-    '1.0.0': {
-      schemaId: 'http://schema.originprotocol.com/offer-v1.0.0',
-      adapter: OfferAdapterV1
-    }
+  'listing-withdraw': {
+    '1.0.0': ListingWithdrawAdapterV1
   },
-  review: {
-    '1.0.0': {
-      schemaId: 'http://schema.originprotocol.com/review-v1.0.0',
-      adapter: ReviewAdapterV1
-    }
+  'offer': {
+    '1.0.0': OfferAdapterV1,
+  },
+  'offer-accept': {
+    '1.0.0': OfferAcceptAdapterV1,
+  },
+  'review': {
+    '1.0.0': ReviewAdapterV1,
   }
 }
 
 /**
  * Returns an adapter based on a data type and version.
- * @param {string} dataType - 'listing', 'offer', 'review'
- * @param {string} schemaVersion
+ * @param {string} schemaId - Unique ID of the schema to use.
+ * @param {string} dataType - 'listing', 'offer', 'review', etc...
+ * @param {string} schemaVersion - version of the schema to use.
  * @returns {SchemaAdapter}
  * @throws {Error}
  */
-export function dataAdapterFactory(dataType, schemaVersion) {
+export function dataAdapterFactory(schemaId, dataType, schemaVersion) {
   if (!adapterConfig[dataType]) {
     throw new Error(`Unsupported data type: ${dataType}`)
   }
   if (!adapterConfig[dataType][schemaVersion]) {
     throw new Error(
-      `Unsupported schema version ${schemaVersion} for type ${dataType}`
+      `Unsupported schema version ${schemaVersion} for data type ${dataType}`
     )
   }
-  const { schemaId, adapter } = adapterConfig[dataType][schemaVersion]
-  return new adapter(dataType, schemaId, schemaVersion)
+  const adapter = adapterConfig[dataType][schemaVersion]
+  return new adapter(schemaId)
 }

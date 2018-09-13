@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
-  "$id": "http://schema.originprotocol.com/listing-core-v1.0.0",
+  "$id": "http://schema.originprotocol.com/listing_v1.0.0",
   "title": "Origin Protocol core listing schema",
   "definitions": {
     "money": {
@@ -119,8 +119,9 @@
       ]
     }
   },
+  "type": "object",
   "properties": {
-    "schemaVersion": {
+    "schemaId": {
       "type": "string"
     },
     "category": {
@@ -170,7 +171,7 @@
     }
   ],
   "required": [
-    "schemaVersion",
+    "schemaId",
     "listingType",
     "category",
     "subCategory",

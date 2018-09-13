@@ -98,7 +98,7 @@ describe('Marketplace Resource', function() {
     it('should delete a listing', async () => {
       let listings = await marketplace.getListings()
       expect(listings.length).to.equal(1)
-      await marketplace.withdrawListing(listings[0], {})
+      await marketplace.withdrawListing(listings[0])
       listings = await marketplace.getListings()
       expect(listings.length).to.equal(0)
     })
