@@ -25,7 +25,7 @@ class MySales extends Component {
 
   async componentWillMount() {
     const listingsFor = await origin.contractService.currentAccount()
-    const listingIds = await origin.marketplace.getListings({ listingsFor })
+    const listingIds = await origin.marketplace.getListings({ idsOnly: true, listingsFor })
     const listingPromises = listingIds.map(listingId => {
       return new Promise(async resolve => {
         const listing = await getListing(listingId)
