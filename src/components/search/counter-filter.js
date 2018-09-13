@@ -57,8 +57,8 @@ class CounterFilter extends Component {
   }
 
   // Called by filter-group
-  onClear() {
-    this.setState({ counter: this.defaultValue })
+  onClear(callback) {
+    this.setState({ counter: this.defaultValue }, callback)
   }
 
   render() {

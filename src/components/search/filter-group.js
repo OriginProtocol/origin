@@ -61,10 +61,12 @@ class FilterGroup extends Component {
     //$('body').trigger('click')
   }
 
-  handleClearClick(event) {
+  async handleClearClick(event) {
     event.preventDefault()
 
-    this.childFilters.forEach(childFilter => childFilter.onClear())
+    this.childFilters
+      // Also trigger the filter state chenge as you would with clicking apply
+      .forEach(childFilter => childFilter.onClear(async () => { await this.handleApplyClick(event) }))
   }
 
   handleOpenDropdown() {

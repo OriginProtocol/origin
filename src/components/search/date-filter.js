@@ -93,11 +93,11 @@ class DateFilterGroup extends Component {
   }
 
   // Called by filter-group
-  onClear() {
+  onClear(callback) {
     this.setState({
       startDate: null,
       endDate: null
-    })
+    }, callback)
   }
 
   render() {

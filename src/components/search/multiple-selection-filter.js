@@ -60,8 +60,8 @@ class MultipleSelectionFilter extends Component {
   }
 
   // Called by filter-group
-  onClear() {
-    this.setState({ checkboxValue: {} })
+  onClear(callback) {
+    this.setState({ checkboxValue: {} }, callback)
   }
 
   onHandleClick(event) {

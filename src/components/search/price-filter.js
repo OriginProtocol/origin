@@ -63,8 +63,8 @@ class PriceFilter extends Component {
   }
 
   // Called by filter-group
-  onClear() {
-    this.handlePriceChange([this.defaultMinimum, this.defaultMaximum])
+  onClear(callback) {
+    this.setState({ value: [bottomAmount, topAmount] }, callback)
   }
 
   render() {
