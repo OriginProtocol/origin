@@ -242,8 +242,8 @@ const resolvers = {
     }
   },
   Listing: {
-    seller(listing) {
-      return { walletAddress: 'S_WADDR' }
+    seller(listing, args, context, info) {
+      return relatedUserResolver(listing.seller, info)
     },
     title(listing) {
       return listing.title
@@ -280,11 +280,11 @@ const resolvers = {
     // },
   },
   Offer: {
-    seller(offer){
-      return {walletAddress: offer.seller}
+    seller(offer, args, context, info){
+      return relatedUserResolver(offer.seller, info)
     },
-    buyer(offer){
-      return {walletAddress: offer.buyer}
+    buyer(offer, args, context, info){
+      return relatedUserResolver(offer.buyer, info)
     },
     price(offer) {
       return {currency: 'ETH', amount: offer.priceEth}
@@ -322,6 +322,24 @@ const resolvers = {
   //     return {}
   //   }
   // },
+}
+
+/**
+ * Gets information on a related user.
+ * Includes short-circut code to skip the user look up
+ * if the walletAddress is the only field required.
+ * @param {string} walletAddress 
+ * @param {object} info 
+ */
+function relatedUserResolver(walletAddress, info){
+  const requestedFields = info.fieldNodes[0].selectionSet.selections
+  const isIdOnly = requestedFields.filter(x => x.name.value !== 'walletAddress')
+    .length === 0
+  if (isIdOnly) {
+    return { walletAddress: walletAddress }
+  } else {
+    return search.User.get(walletAddress)
+  }
 }
 
 // Start ApolloServer by passing type definitions (typeDefs) and the resolvers
