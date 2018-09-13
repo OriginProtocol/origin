@@ -1792,16 +1792,20 @@ a:hover {
 
 .onboarding-modal span,
 .onboarding-modal p {
-  font-size: 14px;
+  font-size: 0.875rem;
   vertical-align: super;
 }
 
-.rejection-modal .modal-content {
+.arbitration-modal.rejection .modal-content {
   height: 420px;
   width: 420px;
 }
 
-.rejection-modal .image-container {
+.arbitration-modal.confirm .modal-content {
+  width: 450px;
+}
+
+.arbitration-modal .image-container {
   background-color: var(--white);
   height: 92px;
   width: 92px;
@@ -1820,31 +1824,42 @@ a:hover {
   vertical-align: middle;
 }
 
-.rejection-modal .image-container img {
+.arbitration-modal .image-container img {
   vertical-align: middle;
   margin: auto;
   width: 54px;
   height: 54px;
 }
 
-.rejection-modal .large-text {
+.arbitration-modal .large-text {
   color: var(--white);
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 300;
-  font-size: 22px;
+  font-size: 1.375rem;
   margin-top: 15px;
   margin-bottom: 11px;
 }
-.rejection-modal .small-text {
+
+.arbitration-modal.confirm .large-text {
+  margin-top: auto;
+}
+
+.arbitration-modal .small-text {
   font-family: 'Lato';
   color: var(--pale-grey);
 }
 
-.rejection-modal p.small-text {
-  font-family: 'Lato';
-  color: var(--pale-grey);
+.arbitration-modal.confirm .small-text {
+  margin: 0px;
+}
+
+.arbitration-modal p.small-text {
   margin-bottom: 20px;
+}
+
+.arbitration-modal.confirm .button-container {
+  display: inline-flex;
 }
 
 /* Tooltip */
