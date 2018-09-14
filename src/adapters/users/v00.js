@@ -8,7 +8,7 @@ import {
 } from 'ethereumjs-util'
 import Web3 from 'web3'
 
-const selfAttestationClaimType = 13 // TODO: use the correct number here
+const selfAttestationTopic = 13 // TODO: use the correct number here
 const emptyAddress = '0x0000000000000000000000000000000000000000'
 
 class V00_UsersAdapter {
@@ -59,7 +59,7 @@ class V00_UsersAdapter {
     // If it's a self-attestation, then no validation is necessary
     // A signature would be an extra UI step, so we don't want to add it if not necessary
     return new AttestationObject({
-      claimType: selfAttestationClaimType,
+      topic: selfAttestationTopic,
       data: asBytes32,
       issuer: emptyAddress,
       signature:
@@ -77,12 +77,12 @@ class V00_UsersAdapter {
     return attestations.filter(attestation => {
       const matchingAttestation = existingAttestations.filter(
         existingAttestation => {
-          const claimTypeMatches =
-            attestation.claimType === existingAttestation.claimType
+          const topicMatches =
+            attestation.topic === existingAttestation.topic
           const dataMatches = attestation.data === existingAttestation.data
           const sigMatches =
             attestation.signature === existingAttestation.signature
-          return claimTypeMatches && dataMatches && sigMatches
+          return topicMatches && dataMatches && sigMatches
         }
       )
       const isNew = matchingAttestation.length === 0
@@ -98,7 +98,7 @@ class V00_UsersAdapter {
     const identityAddress = await this.identityAddress()
     if (attestations.length) {
       // format params for solidity methods to batch add claims
-      const claimTypes = attestations.map(({ claimType }) => claimType)
+      const topics = attestations.map(({ topic }) => topic)
       const issuers = attestations.map(({ issuer }) => issuer || emptyAddress)
       const sigs =
         '0x' +
@@ -121,7 +121,7 @@ class V00_UsersAdapter {
         return await this.contractService.call(
           'ClaimHolderRegistered',
           'addClaims',
-          [claimTypes, issuers, sigs, data, dataOffsets],
+          [topics, issuers, sigs, data, dataOffsets],
           { from: account, gas: 400000, contractAddress: identityAddress }
         )
       } else {
@@ -131,7 +131,7 @@ class V00_UsersAdapter {
           this.contractService.contracts.ClaimHolderPresigned,
           [
             userRegistry.options.address,
-            claimTypes,
+            topics,
             issuers,
             sigs,
             data,
@@ -164,7 +164,7 @@ class V00_UsersAdapter {
     const mapped = claimAddedEvents.map(({ returnValues }) => {
       return {
         claimId: returnValues.claimId,
-        claimType: Number(returnValues.claimType),
+        topic: Number(returnValues.topic),
         data: returnValues.data,
         issuer: returnValues.issuer,
         scheme: Number(returnValues.scheme),
@@ -173,10 +173,10 @@ class V00_UsersAdapter {
       }
     })
     const profileClaims = mapped.filter(
-      ({ claimType }) => claimType === selfAttestationClaimType
+      ({ topic }) => topic === selfAttestationTopic
     )
     const nonProfileClaims = mapped.filter(
-      ({ claimType }) => claimType !== selfAttestationClaimType
+      ({ topic }) => topic !== selfAttestationTopic
     )
     let profile = {}
     if (profileClaims.length) {
@@ -194,11 +194,11 @@ class V00_UsersAdapter {
     return { profile, attestations }
   }
 
-  async isValidAttestation({ claimType, data, signature }, identityAddress) {
+  async isValidAttestation({ topic, data, signature }, identityAddress) {
     const originIdentity = await this.contractService.deployed(
       this.contractService.contracts.OriginIdentity
     )
-    const msg = Web3.utils.soliditySha3(identityAddress, claimType, data)
+    const msg = Web3.utils.soliditySha3(identityAddress, topic, data)
     const prefixedMsg = this.web3EthAccounts.hashMessage(msg)
     const dataBuf = toBuffer(prefixedMsg)
     const sig = fromRpcSig(signature)
