@@ -174,7 +174,12 @@ class SearchResult extends Component {
         listingIds: searchResp.data.listings.nodes.map(listing => listing.id)
       })
 
-      this.setState({ maxPrice: await getFiatPrice(searchResp.data.listings.maxPrice, 'USD', 'ETH', false) })
+      const maxPrice = await getFiatPrice(searchResp.data.listings.maxPrice, 'USD', 'ETH', false)
+
+      /* increase the max price by 5% to prevent a case where conversion rates of a market would be such
+       * that the item that would cost the most would be left out of the price filter range
+       */
+      this.setState({ maxPrice:  maxPrice * 1.05})
     } catch (e) {
       const errorMessage = this.props.intl.formatMessage({
         id: 'searchResult.canNotReachIndexingServer',
