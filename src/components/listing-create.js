@@ -81,6 +81,7 @@ class ListingCreate extends Component {
     this.toggleBoostBox = this.toggleBoostBox.bind(this)
     this.updateUsdPrice = this.updateUsdPrice.bind(this)
     this.onBoostSliderChange = this.onBoostSliderChange.bind(this)
+    this.resetToPreview = this.resetToPreview.bind(this)
   }
 
   async updateUsdPrice() {
