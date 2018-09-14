@@ -1,5 +1,9 @@
 var nodeExternals = require('webpack-node-externals');
 
+/* 
+ * Generate index.js used in `origin` npm package.
+ * This is used by our DApp. 
+*/
 var serverConfig = {
   entry: ["babel-polyfill", './src/index.js'],
   output: {
@@ -34,6 +38,10 @@ var serverConfig = {
   }
 }
 
+/* 
+ * Generate `origin.js` file that may be used standalone in browser 
+ * This is used by our docs, and included in our github release. 
+*/
 var clientConfig = {
   entry: ["babel-polyfill", './src/index.js'],
   output: {
