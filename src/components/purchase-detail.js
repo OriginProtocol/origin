@@ -265,7 +265,6 @@ class PurchaseDetail extends Component {
       this.setState({ processing: true })
 
       const buyerReview = {
-        schemaVersion: '1.0.0',
         rating,
         text: reviewText.trim()
       }
@@ -342,7 +341,6 @@ class PurchaseDetail extends Component {
       this.setState({ processing: true })
 
       const sellerReview = {
-        schemaVersion: '1.0.0',
         rating,
         text: reviewText.trim()
       }
