@@ -160,7 +160,7 @@ class SearchResult extends Component {
       this.setState({ searchError: undefined })
       this.formatFiltersToUrl()
 
-      const searchResponse = await origin.discovery.search(
+      const searchResp = await origin.discovery.search(
         this.props.query,
         this.props.listingType,
         Object.values(this.props.filters).flatMap(
@@ -169,7 +169,7 @@ class SearchResult extends Component {
       )
 
       this.setState({
-        listingIds: searchResponse.data.listings.nodes.map(listing => listing.id)
+        listingIds: searchResp.data.listings.nodes.map(listing => listing.id)
       })
 
     } catch (e) {

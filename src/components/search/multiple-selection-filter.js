@@ -66,7 +66,8 @@ class MultipleSelectionFilter extends Component {
 
   onHandleClick(event) {
     const stateObject = this.state
-    const currentVal = stateObject.checkboxValue[event.target.getAttribute('id')]
+    const currentVal =
+      stateObject.checkboxValue[event.target.getAttribute('id')]
 
     stateObject.checkboxValue[event.target.getAttribute('id')] = !currentVal
 

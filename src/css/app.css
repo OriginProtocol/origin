@@ -3487,6 +3487,16 @@ form .stars img {
   word-wrap: break-word;
 }
 
+.compact-message .image-container,
+.message .image-container {
+  padding-top: 10px;
+}
+
+.compact-message .image-container img,
+.message .image-container img {
+  max-width: 100%;
+}
+
 .messages-wrapper .button-container {
   padding-top: 20px;
 }
@@ -3558,8 +3568,23 @@ form .stars img {
 }
 
 .add-message button {
-  margin: auto 0 auto 10px;
+  margin: auto 0;
   width: auto;
+}
+
+.add-message .add-photo {
+  cursor: pointer;
+  padding: 0 10px;
+}
+
+.add-message .files-container {
+  flex-grow: 1;
+  padding: 10px 0;
+}
+
+.add-message .files-container img {
+  max-height: 100%;
+  max-width: 100%;
 }
 
 .add-message textarea {
