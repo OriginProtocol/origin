@@ -17,6 +17,7 @@ class OnboardingModal extends Component {
     super(props)
 
     this.closeModal = this.closeModal.bind(this)
+    this.state = { gettingStarted: true }
   }
 
   async componentDidMount() {
@@ -33,7 +34,7 @@ class OnboardingModal extends Component {
       onboarding: { splitPanel, stepsCompleted }
     } = nextProps
 
-    if (splitPanel && !stepsCompleted) {
+    if (splitPanel) {
       this.addModalClass()
     } else {
       window.setTimeout(() => {
@@ -50,6 +51,7 @@ class OnboardingModal extends Component {
     return () => {
       if (name === 'toggleSplitPanel')
         document.body.classList.remove('modal-open')
+      this.setState({ gettingStarted: false })
       this.props[name](false)
     }
   }
@@ -70,22 +72,27 @@ class OnboardingModal extends Component {
 
   userProgress() {
     const {
-      onboarding: { progress, learnMore, stepsCompleted },
+      onboarding: { progress, learnMore, stepsCompleted, splitPanel },
       toggleLearnMore,
       toggleSplitPanel,
       wallet
     } = this.props
+    const { gettingStarted } = this.state
 
-    if (wallet.address || stepsCompleted) {
+    const userHasWallet = wallet.address || stepsCompleted
+    const userWithoutWallet = !progress && !learnMore && gettingStarted
+    const userOnboardingInProgress = progress  && !splitPanel && gettingStarted
+
+    if (userHasWallet) {
       if (!learnMore) return
       this.removeModalClasses()
       return toggleLearnMore(false)
     }
 
-    if (!progress && !learnMore) {
+    if (userWithoutWallet) {
       this.removeModalClasses()
       toggleLearnMore(true)
-    } else if (progress) {
+    } else if (userOnboardingInProgress) {
       this.addModalClass()
       return toggleSplitPanel(true)
     }
