@@ -20,26 +20,16 @@ class OnboardingModal extends Component {
     this.state = { gettingStarted: true }
   }
 
-  async componentDidMount() {
+  async componentWillMount() {
     const { fetchSteps } = this.props
     await fetchSteps()
-
-    window.setTimeout(() => {
-      this.userProgress()
-    }, 500)
   }
 
-  componentWillUpdate(nextProps) {
-    const {
-      onboarding: { splitPanel, stepsCompleted }
-    } = nextProps
+  componentDidUpdate() {
+    const { wallet } = this.props
 
-    if (splitPanel) {
-      this.addModalClass()
-    } else {
-      window.setTimeout(() => {
-        this.userProgress()
-      }, 500)
+    if (wallet.initialized) {
+      this.userProgress()
     }
   }
 
@@ -49,8 +39,9 @@ class OnboardingModal extends Component {
 
   closeModal(name = 'toggleSplitPanel') {
     return () => {
-      if (name === 'toggleSplitPanel')
+      if (name === 'toggleSplitPanel') {
         document.body.classList.remove('modal-open')
+      }
       this.setState({ gettingStarted: false })
       this.props[name](false)
     }
@@ -81,7 +72,7 @@ class OnboardingModal extends Component {
 
     const userHasWallet = wallet.address || stepsCompleted
     const userWithoutWallet = !progress && !learnMore && gettingStarted
-    const userOnboardingInProgress = progress  && !splitPanel && gettingStarted
+    const userOnboardingInProgress = progress && gettingStarted
 
     if (userHasWallet) {
       if (!learnMore) return
@@ -89,14 +80,17 @@ class OnboardingModal extends Component {
       return toggleLearnMore(false)
     }
 
-    if (userWithoutWallet) {
+    if (userOnboardingInProgress) {
+      this.addModalClass()
+      if (!splitPanel) {
+        toggleSplitPanel(true)
+      }
+    } else if (userWithoutWallet) {
       this.removeModalClasses()
       toggleLearnMore(true)
-    } else if (userOnboardingInProgress) {
-      this.addModalClass()
-      return toggleSplitPanel(true)
+    } else {
+      this.removeModalClasses()
     }
-    this.removeModalClasses()
   }
 
   render() {
