@@ -50,7 +50,7 @@ class TransactionsDropdown extends Component {
     const { transactions } = this.props
     const { hideList } = this.state
     const transactionsNotHidden = transactions.filter(
-      (t) => !hideList.includes(t.transactionHash)
+      t => !hideList.includes(t.transactionHash)
     )
     const transactionsNotCompleted = transactions.filter(
       t => t.confirmationCount < CONFIRMATION_COMPLETION_COUNT
@@ -152,7 +152,7 @@ class TransactionsDropdown extends Component {
             </header>
             <div className="transactions-list">
               <ul className="list-group">
-                {transactionsNotHidden.map((transaction) => (
+                {transactionsNotHidden.map(transaction => (
                   <Transaction
                     key={transaction.transactionHash}
                     transaction={transaction}

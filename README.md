@@ -57,12 +57,12 @@ A browser will open to http://localhost:3000. If you don't have the MetaMask ext
 - Get Rinkeby ether from the [Rinkeby faucet](https://faucet.rinkeby.io/).
 - Get Ropsten ether from the [Ropsten faucet](https://faucet.metamask.io/).
 
-### 4. Try it!
+### 5. Try it!
 Create a listing and post it to IPFS and Ethereum.
 
 ## Run Demo DApp with local origin-js and local blockchain
 
-If you want hack on origin-js code, or if you just want to use a private local blockchain, follow these instructions.
+If you want to hack on origin-js code, or if you just want to use a private local blockchain, follow these instructions.
 
 ### 1. Set up and run origin-js locally
 
@@ -114,16 +114,16 @@ Browsers with wallets for both desktop and mobile that you can use with the Orig
 | PC | Chrome + Metamask extension | ✅ | Operational |
 | PC | Firefox + Metamask extension | ✅ | Operational |
 | PC | Opera with Metamask | ✅  | Operational |
-| PC | Brave with Metamask | ⚪️  | Not tested |
+| PC | Brave with Metamask | ✅   | Operational |
 |  |  |  |
 | iOS | Trust Wallet | ✅  | Operational |
 | iOS | Toshi  |  🚫  | Main Toshi app does not currently work with test nets |
 | iOS | Toshi Developer  |  🚫  |  [DApp hangs on Toshi client #327](https://github.com/OriginProtocol/origin-dapp/issues/327) |
 | iOS | Cipher  | ⛔️  | Acquired by Coinbase. Not in development. |
 |   |  |  |
-| Android | Trust Wallet | ⚪️ | Not tested |
-| Android | Toshi Developer  |  ⚪️  |  Not tested |
-| Android | Toshi Developer  |  ⚪️  | Not tested
+| Android | Trust Wallet | 🚫 | [Dapp hang + app does not currently work with test nets](https://github.com/OriginProtocol/origin-dapp/issues/331#issuecomment-416364784) |
+| Android | Toshi  |  ✅ |  Operational |
+| Android | Toshi Developer  |  🚫 | Toshi Developer app does not currently work with test nets |
 | Android | Cipher  |  ⛔️  | Not in development |
 
 <sup>Tests for http://demo.originprotocol.com</sup>

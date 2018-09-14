@@ -17,15 +17,15 @@ export function getListingIds() {
   return async function(dispatch) {
     dispatch({ type: ListingConstants.FETCH_IDS })
 
-    let hideList = []
-    const { web3, listingsRegistryContract } = origin.contractService
-    const inProductionEnv =
-      window.location.hostname === 'demo.originprotocol.com'
+    // let hideList = []
 
     try {
-      const networkId = await web3.eth.net.getId()
-      const contractFound = listingsRegistryContract.networks[networkId]
-      if (!contractFound) {
+      const {
+        allContractsPresent,
+        someContractsPresent
+      } = await origin.contractService.marketplaceContractsFound()
+
+      if (!someContractsPresent) {
         dispatch({
           type: ListingConstants.FETCH_IDS_ERROR,
           contractFound: false
@@ -33,26 +33,33 @@ export function getListingIds() {
         return
       }
 
-      if (inProductionEnv && networkId < 10) {
-        const response = await fetch(
-          `https://raw.githubusercontent.com/OriginProtocol/demo-dapp/hide_list/hidelist_${networkId}.json`
-        )
-        if (response.status === 200) {
-          hideList = await response.json()
-        }
+      if (!allContractsPresent) {
+        const message = 'Not all listing contracts were found.'
+        dispatch(showAlert(message))
+        console.error(message)
       }
+
+      // if (networkId < 10) {
+      //   // Networks > 9 are local development
+      //   const response = await fetch(
+      //     `https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hide_list/hidelist_${networkId}.json`
+      //   )
+      //   if (response.status === 200) {
+      //     hideList = await response.json()
+      //   }
+      // }
 
       const ids = await origin.marketplace.getListings({ idsOnly: true })
 
       dispatch({
         type: ListingConstants.FETCH_IDS_SUCCESS,
-        ids,
-        hideList
+        ids
       })
     } catch (error) {
       dispatch(showAlert(error.message))
       dispatch({
         type: ListingConstants.FETCH_IDS_ERROR,
+        // (micah) I don't think we currently handle this property
         error: error.message
       })
     }

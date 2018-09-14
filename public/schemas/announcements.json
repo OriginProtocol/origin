@@ -10,6 +10,15 @@
       "minLength": 3,
       "maxLength": 100
     },
+    "examples": {
+      "type": "string",
+      "title": "schema.announcements.examples",
+      "enum": [
+        "schema.announcements.groups",
+        "schema.announcements.localNews",
+        "schema.announcements.personals"
+      ]
+    },
     "category": {
       "type": "string",
       "title": "schema.announcements.category",
@@ -39,7 +48,7 @@
     },
     "price": {
       "type": "number",
-      "title": "schema.announcements.priceInETH",
+      "title": "schema.announcements.price",
       "default": 0,
       "enum": [
         0

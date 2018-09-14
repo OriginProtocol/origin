@@ -3,11 +3,10 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
+import { updateNotification } from 'actions/Notification'
 import { fetchUser } from 'actions/User'
 
 import NotificationMessage from 'components/notification-message'
-
-import origin from '../services/origin'
 
 class Notification extends Component {
   constructor(props) {
@@ -15,10 +14,9 @@ class Notification extends Component {
 
     const { notification, web3Account } = this.props
     const { listing, purchase } = notification.resources
-    const counterpartyAddress = [
-      listing.sellerAddress,
-      purchase.buyerAddress
-    ].find(addr => addr !== web3Account)
+    const counterpartyAddress = [listing.seller, purchase.buyer].find(
+      addr => addr !== web3Account
+    )
 
     this.intlMessages = defineMessages({
       unnamedUser: {
@@ -54,15 +52,8 @@ class Notification extends Component {
     }
   }
 
-  async handleClick() {
-    try {
-      await origin.notifications.set({
-        id: this.props.notification.id,
-        status: 'read'
-      })
-    } catch (e) {
-      console.error(e)
-    }
+  handleClick() {
+    this.props.updateNotification(this.props.notification.id, 'read')
   }
 
   render() {
@@ -73,22 +64,23 @@ class Notification extends Component {
       listing,
       purchase
     } = this.state
-    const { pictures } = listing
-    const listingImageURL = pictures && pictures.length && pictures[0]
+
+    const listingImageURL =
+      listing.media && listing.media.length && listing.media[0].url
 
     return (
       <li className="list-group-item notification">
         <Link to={`/purchases/${purchase.id}`} onClick={this.handleClick}>
           <div className="d-flex align-items-stretch">
             <div className="image-container d-flex align-items-center justify-content-center">
-              {!listing.address && (
+              {!listing.id && (
                 <img src="images/origin-icon-white.svg" alt="Origin zero" />
               )}
-              {listing.address &&
+              {listing.id &&
                 !listingImageURL && (
                 <img src="images/origin-icon-white.svg" alt="Origin zero" />
               )}
-              {listing.address &&
+              {listing.id &&
                 listingImageURL && (
                 <img
                   src={listingImageURL}
@@ -156,7 +148,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg))
+  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg)),
+  updateNotification: (id, status) => dispatch(updateNotification(id, status))
 })
 
 export default connect(

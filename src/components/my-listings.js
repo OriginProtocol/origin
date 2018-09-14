@@ -6,6 +6,7 @@ import { storeWeb3Intent } from 'actions/App'
 
 import MyListingCard from 'components/my-listing-card'
 import Modal from 'components/modal'
+import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
 
@@ -32,19 +33,17 @@ class MyListings extends Component {
   /*
   * WARNING: These functions don't actually return what they might imply.
   * They use return statements to chain together async calls. Oops.
-  *
-  * For now, we mock a getBySellerAddress request by fetching all
-  * listings individually, filtering each by sellerAddress.
   */
 
   async loadListings() {
     try {
       const ids = await origin.marketplace.getListings({
+        idsOnly: true,
         listingsFor: this.props.web3Account
       })
       const listings = await Promise.all(
         ids.map(id => {
-          return origin.marketplace.getListing(id)
+          return getListing(id)
         })
       )
       this.setState({ listings })
@@ -65,7 +64,7 @@ class MyListings extends Component {
 
   async handleUpdate(id) {
     try {
-      const listing = await origin.marketplace.getListing(id)
+      const listing = await getListing(id)
       const listings = [...this.state.listings]
       const index = listings.findIndex(l => l.id === id)
 

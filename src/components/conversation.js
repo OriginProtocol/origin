@@ -1,10 +1,18 @@
 import React, { Component } from 'react'
-import { FormattedDate, FormattedMessage, defineMessages, injectIntl } from 'react-intl'
+import {
+  FormattedDate,
+  FormattedMessage,
+  defineMessages,
+  injectIntl
+} from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import CompactMessages from 'components/compact-messages'
 import PurchaseProgress from 'components/purchase-progress'
+
+import { getDataUri } from 'utils/fileUtils'
+import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
 
@@ -15,17 +23,24 @@ class Conversation extends Component {
     this.intlMessages = defineMessages({
       newMessagePlaceholder: {
         id: 'Messages.newMessagePlaceholder',
-        defaultMessage: 'Type something...',
-      },
+        defaultMessage: 'Type something...'
+      }
     })
 
+    this.handleClick = this.handleClick.bind(this)
+    this.handleInput = this.handleInput.bind(this)
     this.handleKeyDown = this.handleKeyDown.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.sendMessage = this.sendMessage.bind(this)
+
     this.conversationDiv = React.createRef()
+    this.fileInput = React.createRef()
+    this.form = React.createRef()
     this.textarea = React.createRef()
 
     this.state = {
       counterparty: {},
+      files: [],
       listing: {},
       purchase: {}
     }
@@ -62,6 +77,31 @@ class Conversation extends Component {
     }
   }
 
+  handleClick() {
+    this.fileInput.current.click()
+  }
+
+  async handleInput(event) {
+    const filesObj = event.target.files
+    const filesArr = []
+
+    for (const key in filesObj) {
+      if (filesObj.hasOwnProperty(key)) {
+        filesArr.push(filesObj[key])
+      }
+    }
+
+    const filesAsDataUriArray = filesArr.map(async fileObj =>
+      getDataUri(fileObj)
+    )
+
+    Promise.all(filesAsDataUriArray).then(dataUriArray => {
+      this.setState({
+        files: dataUriArray
+      })
+    })
+  }
+
   handleKeyDown(e) {
     const { key, shiftKey } = e
 
@@ -70,23 +110,21 @@ class Conversation extends Component {
     }
   }
 
-  async handleSubmit(e) {
+  handleSubmit(e) {
     e.preventDefault()
 
-    const { id, web3Account } = this.props
     const el = this.textarea.current
+
+    if (!el) {
+      return this.sendMessage(this.state.files[0])
+    }
+
     const newMessage = el.value
 
     if (!newMessage.length) {
-      return alert('Please add a message to send')
-    }
-
-    try {
-      await originTest.messaging.sendConvMessage(id, newMessage.trim())
-
-      el.value = ''
-    } catch(err) {
-      console.error(err)
+      alert('Please add a message to send')
+    } else {
+      this.sendMessage(newMessage)
     }
   }
 
@@ -102,12 +140,12 @@ class Conversation extends Component {
 
   async loadListing() {
     const { messages } = this.props
-    // find the most recent listing context or set empty value
-    const { listingAddress } = messages.reverse().find(m => m.listingAddress) || {}
-    // get the listing
-    const listing = listingAddress ? (await origin.listings.get(listingAddress)) : {}
-    // if listing does not match state, store and check for a purchase
-    if (listing.address !== this.state.listing.address) {
+    // Find the most recent listing context or set empty value.
+    const { listingId } = [...messages].reverse().find(m => m.listingId) || {}
+
+    // If listingId does not match state, store and check for a purchase.
+    if (listingId && listingId !== this.state.listing.id) {
+      const listing = listingId ? await getListing(listingId, true) : {}
       this.setState({ listing })
       this.loadPurchase()
       this.scrollToBottom()
@@ -117,32 +155,32 @@ class Conversation extends Component {
   async loadPurchase() {
     const { web3Account } = this.props
     const { counterparty, listing, purchase } = this.state
-    const { address, sellerAddress } = listing
 
     // listing may not be found
-    if (!address) {
-      return
+    if (!listing.id) {
+      return this.setState({ purchase: {} })
     }
 
-    const len = await origin.listings.purchasesLength(address)
-    const purchaseAddresses = await Promise.all([...Array(len).keys()].map(async i => {
-      return await origin.listings.purchaseAddressByIndex(address, i)
-    }))
-    const purchases = await Promise.all(purchaseAddresses.map(async addr => {
-      return await origin.purchases.get(addr)
-    }))
-    const involvingCounterparty = purchases.filter(p => p.buyerAddress === counterparty.address || p.buyerAddress === web3Account)
-    const mostRecent = involvingCounterparty.sort((a, b) => a.index > b.index ? -1 : 1)[0]
+    const offers = await origin.marketplace.getOffers(listing.id)
+    const flattenedOffers = offers.map(o => {
+      return { ...o, ...o.ipfs.data }
+    })
+    const involvingCounterparty = flattenedOffers.filter(
+      o => o.buyer === counterparty.address || o.buyer === web3Account
+    )
+    const mostRecent = involvingCounterparty.sort(
+      (a, b) => (a.createdAt > b.createdAt ? -1 : 1)
+    )[0]
     // purchase may not be found
     if (!mostRecent) {
-      return
+      return this.setState({ purchase: {} })
     }
     // compare with existing state
     if (
       // purchase is different
-      mostRecent.address !== purchase.address ||
+      mostRecent.id !== purchase.id ||
       // stage has changed
-      mostRecent.stage !== purchase.stage
+      mostRecent.status !== purchase.status
     ) {
       this.setState({ purchase: mostRecent })
       this.scrollToBottom()
@@ -157,95 +195,164 @@ class Conversation extends Component {
     }
   }
 
+  async sendMessage(content) {
+    try {
+      await origin.messaging.sendConvMessage(
+        this.props.id,
+        content
+      )
+
+      this.form.current.reset()
+
+      if (this.state.files.length) {
+        this.setState({ files: [] })
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   render() {
-    const { activeForm, id, intl, messages, web3Account } = this.props
-    const { counterparty, listing, purchase } = this.state
-    const { address, name, pictures } = listing
-    const { buyerAddress, created } = purchase
-    const perspective = buyerAddress ? (buyerAddress === web3Account ? 'buyer' : 'seller') : null
-    const soldAt = created ? created * 1000 /* convert seconds since epoch to ms */ : null
-    const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
-    const canDeliverMessage = origin.messaging.canConverseWith(counterparty.address)
+    const { id, intl, messages, web3Account } = this.props
+    const { counterparty, files, listing, purchase } = this.state
+    const { name, pictures } = listing
+    const { buyer, created, status } = purchase
+    const perspective = buyer
+      ? buyer === web3Account
+        ? 'buyer'
+        : 'seller'
+      : null
+    const soldAt = created
+      ? created * 1000 /* convert seconds since epoch to ms */
+      : null
+    const photo = pictures && pictures.length > 0 && pictures[0]
+    const canDeliverMessage = origin.messaging.canConverseWith(
+      counterparty.address
+    )
     const shouldEnableForm = canDeliverMessage && id
 
     return (
       <div className="conversation-col col-12 col-sm-8 col-lg-9 d-flex flex-column">
-        {address &&
+        {listing.id && (
           <div className="listing-summary d-flex">
             <div className="aspect-ratio">
-              <div className={`${photo ? '' : 'placeholder '}image-container d-flex justify-content-center`}>
-                <img src={photo || 'images/default-image.svg'} role="presentation" />
+              <div
+                className={`${
+                  photo ? '' : 'placeholder '
+                }image-container d-flex justify-content-center`}
+              >
+                <img
+                  src={photo || 'images/default-image.svg'}
+                  role="presentation"
+                />
               </div>
             </div>
             <div className="content-container d-flex flex-column">
-              {buyerAddress &&
+              {buyer && (
                 <div className="brdcrmb">
-                  {perspective === 'buyer' &&
+                  {perspective === 'buyer' && (
                     <FormattedMessage
-                      id={ 'purchase-summary.purchasedFrom' }
-                      defaultMessage={ 'Purchased from {sellerLink}' }
-                      values={{ sellerLink: <Link to={`/users/${counterparty.address}`}>{counterparty.fullName}</Link> }}
+                      id={'purchase-summary.purchasedFrom'}
+                      defaultMessage={'Purchased from {sellerLink}'}
+                      values={{
+                        sellerLink: (
+                          <Link to={`/users/${counterparty.address}`}>
+                            {counterparty.fullName}
+                          </Link>
+                        )
+                      }}
                     />
-                  }
-                  {perspective === 'seller' &&
+                  )}
+                  {perspective === 'seller' && (
                     <FormattedMessage
-                      id={ 'purchase-summary.soldTo' }
-                      defaultMessage={ 'Sold to {buyerLink}' }
-                      values={{ buyerLink: <Link to={`/users/${counterparty.address}`}>{counterparty.fullName}</Link> }}
+                      id={'purchase-summary.soldTo'}
+                      defaultMessage={'Sold to {buyerLink}'}
+                      values={{
+                        buyerLink: (
+                          <Link to={`/users/${counterparty.address}`}>
+                            {counterparty.fullName}
+                          </Link>
+                        )
+                      }}
                     />
-                  }
+                  )}
                 </div>
-              }
+              )}
               <h1>{name}</h1>
-              {buyerAddress &&
+              {buyer && (
                 <div className="state">
-                  {perspective === 'buyer' &&
+                  {perspective === 'buyer' && (
                     <FormattedMessage
-                      id={ 'purchase-summary.purchasedFromOn' }
-                      defaultMessage={ 'Purchased from {sellerName} on {date}' }
-                      values={{ sellerName: counterparty.fullName, date: <FormattedDate value={soldAt} /> }}
+                      id={'purchase-summary.purchasedFromOn'}
+                      defaultMessage={'Purchased from {sellerName} on {date}'}
+                      values={{
+                        sellerName: counterparty.fullName,
+                        date: <FormattedDate value={soldAt} />
+                      }}
                     />
-                  }
-                  {perspective === 'seller' &&
+                  )}
+                  {perspective === 'seller' && (
                     <FormattedMessage
-                      id={ 'purchase-summary.soldToOn' }
-                      defaultMessage={ 'Sold to {buyerName} on {date}' }
-                      values={{ buyerName: counterparty.fullName, date: <FormattedDate value={soldAt} /> }}
+                      id={'purchase-summary.soldToOn'}
+                      defaultMessage={'Sold to {buyerName} on {date}'}
+                      values={{
+                        buyerName: counterparty.fullName,
+                        date: <FormattedDate value={soldAt} />
+                      }}
                     />
-                  }
+                  )}
                 </div>
-              }
-              {buyerAddress &&
+              )}
+              {buyer && (
                 <PurchaseProgress
                   purchase={purchase}
                   perspective={perspective}
                   subdued={true}
+                  currentStep={parseInt(status)}
+                  maxStep={perspective === 'buyer' ? 3 : 4}
                 />
-              }
+              )}
             </div>
           </div>
-        }
+        )}
         <div ref={this.conversationDiv} className="conversation">
-          <CompactMessages messages={messages}/>
+          <CompactMessages messages={messages} />
         </div>
-        {!shouldEnableForm &&
+        {!shouldEnableForm && (
           <form className="add-message d-flex">
-            <textarea tabIndex="0" disabled></textarea>
-            <button type="submit" className="btn btn-sm btn-primary" disabled>Send</button>
+            <textarea tabIndex="0" disabled />
+            <button type="submit" className="btn btn-sm btn-primary" disabled>
+              Send
+            </button>
           </form>
-        }
-        {shouldEnableForm &&
-          <form className="add-message d-flex" onSubmit={this.handleSubmit}>
-            <textarea
-              ref={this.textarea}
-              placeholder={intl.formatMessage(this.intlMessages.newMessagePlaceholder)}
-              onKeyDown={this.handleKeyDown}
-              tabIndex="0"
-              autoFocus>
-            </textarea>
-            <button type="submit" className="btn btn-sm btn-primary">Send</button>
+        )}
+        {shouldEnableForm && (
+          <form ref={this.form} className="add-message d-flex" onSubmit={this.handleSubmit}>
+            {!files.length &&
+              <textarea
+                ref={this.textarea}
+                placeholder={intl.formatMessage(
+                  this.intlMessages.newMessagePlaceholder
+                )}
+                onKeyDown={this.handleKeyDown}
+                tabIndex="0"
+                autoFocus
+              />
+            }
+            {!!files.length &&
+              <div className="files-container">
+                {files.map((dataUri, i) =>
+                  <img src={dataUri} key={i} className="preview-thumbnail" />
+                )}
+              </div>
+            }
+            <img src="images/add-photo-icon.svg" className="add-photo" role="presentation" onClick={this.handleClick} />
+            <input type="file" ref={this.fileInput} className="d-none" onChange={this.handleInput} />
+            <button type="submit" className="btn btn-sm btn-primary">
+              Send
+            </button>
           </form>
-        }
+        )}
       </div>
     )
   }

@@ -11,12 +11,19 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 const env = {
   CONTRACT_ADDRESSES: '{}',
+  BRIDGE_SERVER_DOMAIN: '',
+  BRIDGE_SERVER_PROTOCOL: 'https',
   FORCE_HTTPS: false,
+  IPFS_API_PORT: '',
+  IPFS_DOMAIN: '',
+  IPFS_GATEWAY_PORT: '',
+  IPFS_GATEWAY_PROTOCOL: 'https',
   IPFS_SWARM: '',
   MESSAGING_ACCOUNT: '',
   MESSAGING_NAMESPACE: '',
   PRODUCTION_DOMAIN: '',
-  PROVIDER_URL: ''
+  PROVIDER_URL: '',
+  REDUX_LOGGER: false
 }
 
 var config = {

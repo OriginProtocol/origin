@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
 
 import TransactionMessage from 'components/transaction-message'
-
+import { getListing } from 'utils/listing'
 import origin from '../services/origin'
 
 class Transaction extends Component {
@@ -20,12 +20,17 @@ class Transaction extends Component {
     try {
       let { offer, listing } = this.props.transaction
       const { offerId, listingId } = this.props.transaction
+
       offer =
         offer || (offerId ? await origin.marketplace.getOffer(offerId) : null)
-      listing =
-        listing ||
-        (listingId ? await origin.marketplace.getListing(listingId) : null)
       const purchase = offer
+
+      if (!listing && listingId) {
+        listing = await getListing(listingId)
+      } else {
+        listing = null
+      }
+
       this.setState({ listing, purchase })
     } catch (e) {
       console.error(e)
