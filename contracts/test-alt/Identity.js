@@ -114,14 +114,14 @@ describe('Identity', async function() {
     })
 
     it('should have 1 claim by type', async function() {
-      const byTypeRes = await UserIdentity.methods.getClaimIdsByType(1).call()
-      assert.equal(byTypeRes.length, 1)
+      const byTopicRes = await UserIdentity.methods.getClaimIdsByTopic(1).call()
+      assert.equal(byTopicRes.length, 1)
     })
 
     it('should respond to getClaim', async function() {
       const claimId = web3.utils.soliditySha3(accounts[0], 1)
       const claim = await UserIdentity.methods.getClaim(claimId).call()
-      assert.equal(claim.claimType, '1')
+      assert.equal(claim.topic, '1')
     })
 
     // it('should respond to isClaimValid', async function() {
@@ -138,7 +138,7 @@ describe('Identity', async function() {
       assert(response.events.ClaimRemoved)
 
       const claim = await UserIdentity.methods.getClaim(claimId).call()
-      assert.equal(claim.claimType, '0')
+      assert.equal(claim.topic, '0')
     })
   })
 

@@ -3,27 +3,27 @@ pragma solidity ^0.4.24;
 import './KeyHolderLibrary.sol';
 
 library ClaimHolderLibrary {
-  event ClaimAdded(bytes32 indexed claimId, uint256 indexed claimType, uint256 scheme, address indexed issuer, bytes signature, bytes data, string uri);
-  event ClaimRemoved(bytes32 indexed claimId, uint256 indexed claimType, uint256 scheme, address indexed issuer, bytes signature, bytes data, string uri);
+  event ClaimAdded(bytes32 indexed claimId, uint256 indexed topic, uint256 scheme, address indexed issuer, bytes signature, bytes data, string uri);
+  event ClaimRemoved(bytes32 indexed claimId, uint256 indexed topic, uint256 scheme, address indexed issuer, bytes signature, bytes data, string uri);
 
   struct Claim {
-      uint256 claimType;
+      uint256 topic;
       uint256 scheme;
       address issuer; // msg.sender
-      bytes signature; // this.address + claimType + data
+      bytes signature; // this.address + topic + data
       bytes data;
       string uri;
   }
 
   struct Claims {
       mapping (bytes32 => Claim) byId;
-      mapping (uint256 => bytes32[]) byType;
+      mapping (uint256 => bytes32[]) byTopic;
   }
 
   function addClaim(
       KeyHolderLibrary.KeyHolderData storage _keyHolderData,
       Claims storage _claims,
-      uint256 _claimType,
+      uint256 _topic,
       uint256 _scheme,
       address _issuer,
       bytes _signature,
@@ -37,13 +37,13 @@ library ClaimHolderLibrary {
         require(KeyHolderLibrary.keyHasPurpose( _keyHolderData, keccak256(abi.encodePacked(msg.sender)), 3), "Sender does not have claim signer key");
       }
 
-      bytes32 claimId = keccak256(abi.encodePacked(_issuer, _claimType));
+      bytes32 claimId = keccak256(abi.encodePacked(_issuer, _topic));
 
       if (_claims.byId[claimId].issuer != _issuer) {
-          _claims.byType[_claimType].push(claimId);
+          _claims.byTopic[_topic].push(claimId);
       }
 
-      _claims.byId[claimId].claimType = _claimType;
+      _claims.byId[claimId].topic = _topic;
       _claims.byId[claimId].scheme = _scheme;
       _claims.byId[claimId].issuer = _issuer;
       _claims.byId[claimId].signature = _signature;
@@ -52,7 +52,7 @@ library ClaimHolderLibrary {
 
       emit ClaimAdded(
           claimId,
-          _claimType,
+          _topic,
           _scheme,
           _issuer,
           _signature,
@@ -66,7 +66,7 @@ library ClaimHolderLibrary {
   function addClaims(
       KeyHolderLibrary.KeyHolderData storage _keyHolderData,
       Claims storage _claims,
-      uint256[] _claimType,
+      uint256[] _topic,
       address[] _issuer,
       bytes _signature,
       bytes _data,
@@ -75,11 +75,11 @@ library ClaimHolderLibrary {
       public
   {
       uint offset = 0;
-      for (uint8 i = 0; i < _claimType.length; i++) {
+      for (uint8 i = 0; i < _topic.length; i++) {
           addClaim(
             _keyHolderData,
             _claims,
-            _claimType[i],
+            _topic[i],
             1,
             _issuer[i],
             getBytes(_signature, (i * 65), 65),
@@ -104,7 +104,7 @@ library ClaimHolderLibrary {
 
       emit ClaimRemoved(
           _claimId,
-          _claims.byId[_claimId].claimType,
+          _claims.byId[_claimId].topic,
           _claims.byId[_claimId].scheme,
           _claims.byId[_claimId].issuer,
           _claims.byId[_claimId].signature,
@@ -120,7 +120,7 @@ library ClaimHolderLibrary {
       public
       constant
       returns(
-          uint256 claimType,
+          uint256 topic,
           uint256 scheme,
           address issuer,
           bytes signature,
@@ -129,7 +129,7 @@ library ClaimHolderLibrary {
       )
   {
       return (
-          _claims.byId[_claimId].claimType,
+          _claims.byId[_claimId].topic,
           _claims.byId[_claimId].scheme,
           _claims.byId[_claimId].issuer,
           _claims.byId[_claimId].signature,

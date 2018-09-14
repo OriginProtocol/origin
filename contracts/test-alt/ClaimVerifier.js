@@ -44,13 +44,13 @@ describe('ClaimVerifier.sol', async function() {
 
   it('should allow identity owner to addClaim', async function() {
     const data = web3.utils.asciiToHex('Verified OK')
-    const claimType = 3
-    const hashed = web3.utils.soliditySha3(UserIdentity._address, claimType, data)
+    const topic = 3
+    const hashed = web3.utils.soliditySha3(UserIdentity._address, topic, data)
     const signed = await web3.eth.accounts.sign(hashed, prvSigner)
 
     const claimRes = await UserIdentity.methods
       .addClaim(
-        claimType,
+        topic,
         2,
         ClaimIssuer._address,
         signed.signature,
