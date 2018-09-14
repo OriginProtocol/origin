@@ -17,26 +17,19 @@ class OnboardingModal extends Component {
     super(props)
 
     this.closeModal = this.closeModal.bind(this)
+    this.state = { gettingStarted: true }
   }
 
   async componentWillMount() {
-    const { fetchSteps, onboarding, wallet } = this.props
+    const { fetchSteps } = this.props
     await fetchSteps()
-
-    if (!onboarding.stepsCompleted && !wallet.address) {
-      this.userProgress()
-    }
   }
 
-  componentWillUpdate(nextProps) {
-    const {
-      onboarding: { splitPanel }
-    } = nextProps
+  componentDidUpdate() {
+    const { wallet } = this.props
 
-    if (splitPanel) {
-      this.addModalClass()
-    } else {
-      this.removeModalClasses()
+    if (wallet.initialized) {
+      this.userProgress()
     }
   }
 
@@ -46,8 +39,10 @@ class OnboardingModal extends Component {
 
   closeModal(name = 'toggleSplitPanel') {
     return () => {
-      if (name === 'toggleSplitPanel')
+      if (name === 'toggleSplitPanel') {
         document.body.classList.remove('modal-open')
+      }
+      this.setState({ gettingStarted: false })
       this.props[name](false)
     }
   }
@@ -60,37 +55,42 @@ class OnboardingModal extends Component {
   }
 
   removeModalClasses() {
-    const { onboarding, wallet } = this.props
+    document.body.classList.remove('modal-open')
 
-    if (!wallet.address) {
-      document.body.classList.remove('modal-open')
-
-      if (!onboarding.splitPanel) {
-        const backdrop = document.getElementsByClassName('modal-backdrop')
-        backdrop.length && backdrop[0].classList.remove('modal-backdrop')
-      }
-    }
+    const backdrop = document.getElementsByClassName('modal-backdrop')
+    backdrop.length && backdrop[0].classList.remove('modal-backdrop')
   }
 
   userProgress() {
     const {
-      onboarding: { progress, stepsCompleted },
+      onboarding: { progress, learnMore, stepsCompleted, splitPanel },
       toggleLearnMore,
       toggleSplitPanel,
       wallet
     } = this.props
+    const { gettingStarted } = this.state
 
-    if (!wallet.address) {
-      if (!progress) {
-        this.removeModalClasses()
-        return toggleLearnMore(true)
-      } else if (!stepsCompleted && progress) {
-        this.addModalClass()
-        return toggleSplitPanel(true)
-      }
+    const userHasWallet = wallet.address || stepsCompleted
+    const userWithoutWallet = !progress && !learnMore && gettingStarted
+    const userOnboardingInProgress = progress && gettingStarted
+
+    if (userHasWallet) {
+      if (!learnMore) return
+      this.removeModalClasses()
+      return toggleLearnMore(false)
     }
-    this.removeModalClasses()
-    this.props.toggleLearnMore(false)
+
+    if (userOnboardingInProgress) {
+      this.addModalClass()
+      if (!splitPanel) {
+        toggleSplitPanel(true)
+      }
+    } else if (userWithoutWallet) {
+      this.removeModalClasses()
+      toggleLearnMore(true)
+    } else {
+      this.removeModalClasses()
+    }
   }
 
   render() {
@@ -132,6 +132,7 @@ class OnboardingModal extends Component {
             className={'getting-started'}
             isOpen={learnMore}
             children={learnMoreContent}
+            backdrop={false}
           />
         )}
         {splitPanel && (
