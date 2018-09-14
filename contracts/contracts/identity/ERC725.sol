@@ -15,7 +15,6 @@ contract ERC725 {
 
     function getKey(bytes32 _key) public constant returns(uint256 purpose, uint256 keyType, bytes32 key);
     function keyHasPurpose(bytes32 _key, uint256 _purpose) public constant returns (bool exists);
-    function getKeyPurpose(bytes32 _key) public constant returns(uint256 purpose);
     function getKeysByPurpose(uint256 _purpose) public constant returns(bytes32[] keys);
     function addKey(bytes32 _key, uint256 _purpose, uint256 _keyType) public returns (bool success);
     function execute(address _to, uint256 _value, bytes _data) public returns (uint256 executionId);
