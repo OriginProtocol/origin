@@ -65,7 +65,7 @@ class ListingsDetail extends Component {
       }
     })
 
-    this.handleBuyClicked = this.handleBuyClicked.bind(this)
+    this.handleMakeOffer = this.handleMakeOffer.bind(this)
   }
 
   async loadListing() {
@@ -116,8 +116,8 @@ class ListingsDetail extends Component {
     })
   }
 
-  async handleBuyClicked() {
-    this.props.storeWeb3Intent('buy this listing')
+  async handleMakeOffer() {
+    this.props.storeWeb3Intent('offer to buy this listing')
 
     if (web3.givenProvider && this.props.web3Account) {
       this.setState({ step: this.STEP.METAMASK })
@@ -408,7 +408,7 @@ class ListingsDetail extends Component {
                       {!userIsSeller && (
                         <button
                           className="btn btn-primary"
-                          onClick={this.handleBuyClicked}
+                          onClick={this.handleMakeOffer}
                           onMouseDown={e => e.preventDefault()}
                         >
                           <FormattedMessage
@@ -419,7 +419,7 @@ class ListingsDetail extends Component {
                       )}
                       {userIsSeller && (
                         <Link to="/my-listings" className="btn">
-                            My Listings
+                          My Listings
                         </Link>
                       )}
                     </div>

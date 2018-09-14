@@ -1,19 +1,19 @@
 [
   {
-    "id": "purchase-detail.awaitOrder",
-    "defaultMessage": "Wait for the seller to send the order"
+    "id": "purchase-detail.awaitApproval",
+    "defaultMessage": "Wait for the seller to approve your offer"
   },
   {
-    "id": "purchase-detail.sendOrder",
-    "defaultMessage": "Send the order to buyer"
+    "id": "purchase-detail.acceptBuyersOffer",
+    "defaultMessage": "Accept the buyer's offer"
   },
   {
-    "id": "purchase-detail.sendOrderInstruction",
-    "defaultMessage": "Click the button below once the order has shipped."
+    "id": "purchase-detail.acceptOfferInstruction",
+    "defaultMessage": "Click the button below to accept the offer."
   },
   {
-    "id": "purchase-detail.markOrderSent",
-    "defaultMessage": "Mark Order as Sent"
+    "id": "purchase-detail.acceptOffer",
+    "defaultMessage": "Accept Offer"
   },
   {
     "id": "purchase-detail.confirmReceiptOfOrder",
@@ -25,7 +25,7 @@
   },
   {
     "id": "purchase-detail.confirmAndReview",
-    "defaultMessage": "Confirm and Review"
+    "defaultMessage": "Confirm and review"
   },
   {
     "id": "purchase-detail.buyerReviewPlaceholder",
@@ -36,20 +36,20 @@
     "defaultMessage": "Wait for the buyer to receive the order"
   },
   {
-    "id": "purchase-detail.awaitSellerWithdrawl",
-    "defaultMessage": "Wait for the seller to withdraw the funds"
+    "id": "purchase-detail.awaitSellerReview",
+    "defaultMessage": "Wait for the seller to leave a review"
   },
   {
-    "id": "purchase-detail.completeByWithdrawing",
-    "defaultMessage": "Complete your transaction by withdrawing funds"
+    "id": "purchase-detail.completeByReviewing",
+    "defaultMessage": "Complete your sale by leaving a review"
   },
   {
-    "id": "purchase-detail.clickToWithdraw",
-    "defaultMessage": "Click the button below to initiate the withdrawal"
+    "id": "purchase-detail.clickToReview",
+    "defaultMessage": "Click the button below to leave a review"
   },
   {
     "id": "purchase-detail.withdrawAndReview",
-    "defaultMessage": "Withdraw and Review"
+    "defaultMessage": "Leave a review"
   },
   {
     "id": "purchase-detail.sellerReviewPlaceholder",

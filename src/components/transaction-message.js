@@ -9,6 +9,10 @@ class TransactionMessage extends Component {
     super(props)
 
     this.intlMessages = defineMessages({
+      acceptOffer: {
+        id: 'transaction.acceptOffer',
+        defaultMessage: 'You accepted an offer.'
+      },
       buyListing: {
         id: 'transaction.buyListing',
         defaultMessage: 'You made a purchase.'
@@ -20,10 +24,6 @@ class TransactionMessage extends Component {
       confirmReceipt: {
         id: 'transaction.confirmReceipt',
         defaultMessage: 'You left a review and confirmed receipt.'
-      },
-      confirmShipped: {
-        id: 'transaction.confirmShipped',
-        defaultMessage: 'You marked a purchase as shipped.'
       },
       createListing: {
         id: 'transaction.createListing',

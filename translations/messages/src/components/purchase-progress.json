@@ -1,23 +1,23 @@
 [
   {
-    "id": "purchase-progress.purchased",
-    "defaultMessage": "Purchased"
+    "id": "purchase-progress.offerMade",
+    "defaultMessage": "Made Offer"
   },
   {
-    "id": "purchase-progress.sentBySeller",
-    "defaultMessage": "Sent by seller"
+    "id": "purchase-progress.offerAccepted",
+    "defaultMessage": "Offer accepted by seller"
   },
   {
     "id": "purchase-progress.receivedByMe",
     "defaultMessage": "Received by me"
   },
   {
-    "id": "purchase-progress.sold",
-    "defaultMessage": "Sold"
+    "id": "purchase-progress.offerReceived",
+    "defaultMessage": "Offer Received"
   },
   {
-    "id": "purchase-progress.orderSent",
-    "defaultMessage": "Order Sent"
+    "id": "purchase-progress.acceptedOffer",
+    "defaultMessage": "Offer Accepted"
   },
   {
     "id": "purchase-progress.receivedByBuyer",

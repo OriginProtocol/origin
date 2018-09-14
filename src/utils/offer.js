@@ -1,7 +1,7 @@
 const statusMap = {
   created: 1,
   accepted: 2,
-  disputed: undefined, // TODO: Set this once dispute/arbitration implemented.
+  // while disputed is an offer status, the UI does not call for it as a step
   finalized: 3,
   sellerReviewed: undefined // There is no next step on either side once in this state.
 }

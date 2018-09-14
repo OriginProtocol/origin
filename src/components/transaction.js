@@ -54,6 +54,10 @@ class Transaction extends Component {
     }
 
     switch (transactionTypeKey) {
+    case 'acceptOffer':
+      toAddress = purchase.buyer
+      fromAddress = listing.seller
+      break
     case 'buyListing':
       fromAddress = purchase.buyer
       toAddress = listing.seller
@@ -64,10 +68,6 @@ class Transaction extends Component {
     case 'confirmReceipt':
       fromAddress = purchase.buyer
       toAddress = listing.seller
-      break
-    case 'confirmShipped':
-      toAddress = purchase.buyer
-      fromAddress = listing.seller
       break
     case 'createListing':
       fromAddress = listing.seller

@@ -1,5 +1,9 @@
 [
   {
+    "id": "transaction.acceptOffer",
+    "defaultMessage": "You accepted an offer."
+  },
+  {
     "id": "transaction.buyListing",
     "defaultMessage": "You made a purchase."
   },
@@ -10,10 +14,6 @@
   {
     "id": "transaction.confirmReceipt",
     "defaultMessage": "You left a review and confirmed receipt."
-  },
-  {
-    "id": "transaction.confirmShipped",
-    "defaultMessage": "You marked a purchase as shipped."
   },
   {
     "id": "transaction.createListing",

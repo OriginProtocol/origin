@@ -120,16 +120,16 @@ class PurchaseProgress extends Component {
             <div className="stage-container">
               <div className="stage">
                 <FormattedMessage
-                  id={'purchase-progress.purchased'}
-                  defaultMessage={'Purchased'}
+                  id={'purchase-progress.offerMade'}
+                  defaultMessage={'Made Offer'}
                 />
               </div>
             </div>
             <div className="stage-container">
               <div className="stage">
                 <FormattedMessage
-                  id={'purchase-progress.sentBySeller'}
-                  defaultMessage={'Sent by seller'}
+                  id={'purchase-progress.offerAccepted'}
+                  defaultMessage={'Offer accepted by seller'}
                 />
               </div>
             </div>
@@ -149,16 +149,16 @@ class PurchaseProgress extends Component {
             <div className="stage-container">
               <div className="stage">
                 <FormattedMessage
-                  id={'purchase-progress.sold'}
-                  defaultMessage={'Sold'}
+                  id={'purchase-progress.offerReceived'}
+                  defaultMessage={'Offer Received'}
                 />
               </div>
             </div>
             <div className="stage-container">
               <div className="stage">
                 <FormattedMessage
-                  id={'purchase-progress.orderSent'}
-                  defaultMessage={'Order Sent'}
+                  id={'purchase-progress.acceptedOffer'}
+                  defaultMessage={'Offer Accepted'}
                 />
               </div>
             </div>

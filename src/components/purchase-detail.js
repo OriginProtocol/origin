@@ -46,31 +46,31 @@ class PurchaseDetail extends Component {
   constructor(props) {
     super(props)
 
+    this.acceptOffer = this.acceptOffer.bind(this)
     this.confirmReceipt = this.confirmReceipt.bind(this)
-    this.confirmShipped = this.confirmShipped.bind(this)
     this.handleRating = this.handleRating.bind(this)
     this.handleReviewText = this.handleReviewText.bind(this)
     this.initiateDispute = this.initiateDispute.bind(this)
+    this.leaveReview = this.leaveReview.bind(this)
     this.loadPurchase = this.loadPurchase.bind(this)
-    this.withdrawFunds = this.withdrawFunds.bind(this)
     this.state = defaultState
 
     this.intlMessages = defineMessages({
-      awaitOrder: {
-        id: 'purchase-detail.awaitOrder',
-        defaultMessage: 'Wait for the seller to send the order'
+      awaitApproval: {
+        id: 'purchase-detail.awaitApproval',
+        defaultMessage: 'Wait for the seller to approve your offer'
       },
-      sendOrder: {
-        id: 'purchase-detail.sendOrder',
-        defaultMessage: 'Send the order to buyer'
+      acceptBuyersOffer: {
+        id: 'purchase-detail.acceptBuyersOffer',
+        defaultMessage: 'Accept the buyer\'s offer'
       },
-      sendOrderInstruction: {
-        id: 'purchase-detail.sendOrderInstruction',
-        defaultMessage: 'Click the button below once the order has shipped.'
+      acceptOfferInstruction: {
+        id: 'purchase-detail.acceptOfferInstruction',
+        defaultMessage: 'Click the button below to accept the offer.'
       },
-      markOrderSent: {
-        id: 'purchase-detail.markOrderSent',
-        defaultMessage: 'Mark Order as Sent'
+      acceptOffer: {
+        id: 'purchase-detail.acceptOffer',
+        defaultMessage: 'Accept Offer'
       },
       confirmReceiptOfOrder: {
         id: 'purchase-detail.confirmReceiptOfOrder',
@@ -83,7 +83,7 @@ class PurchaseDetail extends Component {
       },
       confirmAndReview: {
         id: 'purchase-detail.confirmAndReview',
-        defaultMessage: 'Confirm and Review'
+        defaultMessage: 'Confirm and review'
       },
       buyerReviewPlaceholder: {
         id: 'purchase-detail.buyerReviewPlaceholder',
@@ -94,21 +94,21 @@ class PurchaseDetail extends Component {
         id: 'purchase-detail.waitForBuyer',
         defaultMessage: 'Wait for the buyer to receive the order'
       },
-      awaitSellerWithdrawl: {
-        id: 'purchase-detail.awaitSellerWithdrawl',
-        defaultMessage: 'Wait for the seller to withdraw the funds'
+      awaitSellerReview: {
+        id: 'purchase-detail.awaitSellerReview',
+        defaultMessage: 'Wait for the seller to leave a review'
       },
-      completeByWithdrawing: {
-        id: 'purchase-detail.completeByWithdrawing',
-        defaultMessage: 'Complete your transaction by withdrawing funds'
+      completeByReviewing: {
+        id: 'purchase-detail.completeByReviewing',
+        defaultMessage: 'Complete your sale by leaving a review'
       },
-      clickToWithdraw: {
-        id: 'purchase-detail.clickToWithdraw',
-        defaultMessage: 'Click the button below to initiate the withdrawal'
+      clickToReview: {
+        id: 'purchase-detail.clickToReview',
+        defaultMessage: 'Click the button below to leave a review'
       },
-      withdrawAndReview: {
+      leaveReview: {
         id: 'purchase-detail.withdrawAndReview',
-        defaultMessage: 'Withdraw and Review'
+        defaultMessage: 'Leave a review'
       },
       sellerReviewPlaceholder: {
         id: 'purchase-detail.sellerReviewPlaceholder',
@@ -117,42 +117,23 @@ class PurchaseDetail extends Component {
       }
     })
 
-    /* Transaction stages: no disputes/arbitration
-     *  - step 0 was creating the listing
-     *  - nextSteps[0] equates to step 1, etc
-     *  - even-numbered steps are seller's resposibility
-     *  - odd-numbered steps are buyer's responsibility
-     */
-    this.nextSteps = [
-      // Step 0 - We should never be in this state
-      {
+    this.nextSteps = {
+      created: {
         buyer: {
-          prompt: 'Purchase this listing',
-          instruction: 'Why is this here if you have not yet purchased it?'
+          prompt: this.props.intl.formatMessage(this.intlMessages.awaitApproval)
         },
         seller: {
-          prompt: 'Wait for a purchase',
-          instruction: 'Why are you seeing this? There is no buyer.'
-        }
-      },
-      // Step 1 - Offer created by buyer.
-      {
-        buyer: {
-          prompt: this.props.intl.formatMessage(this.intlMessages.awaitOrder)
-        },
-        seller: {
-          prompt: this.props.intl.formatMessage(this.intlMessages.sendOrder),
+          prompt: this.props.intl.formatMessage(this.intlMessages.acceptBuyersOffer),
           instruction: this.props.intl.formatMessage(
-            this.intlMessages.sendOrderInstruction
+            this.intlMessages.acceptOfferInstruction
           ),
           buttonText: this.props.intl.formatMessage(
-            this.intlMessages.markOrderSent
+            this.intlMessages.acceptOffer
           ),
-          functionName: 'confirmShipped'
+          functionName: 'acceptOffer'
         }
       },
-      // Step 2: Offer Accepted by Seller.
-      {
+      accepted: {
         buyer: {
           prompt: this.props.intl.formatMessage(
             this.intlMessages.confirmReceiptOfOrder
@@ -173,31 +154,30 @@ class PurchaseDetail extends Component {
           prompt: this.props.intl.formatMessage(this.intlMessages.waitForBuyer)
         }
       },
-      // Step 3: Offer finalized by Buyer.
-      {
+      finalized: {
         buyer: {
           prompt: this.props.intl.formatMessage(
-            this.intlMessages.awaitSellerWithdrawl
+            this.intlMessages.awaitSellerReview
           )
         },
         seller: {
           prompt: this.props.intl.formatMessage(
-            this.intlMessages.completeByWithdrawing
+            this.intlMessages.completeByReviewing
           ),
           instruction: this.props.intl.formatMessage(
-            this.intlMessages.clickToWithdraw
+            this.intlMessages.clickToReview
           ),
           buttonText: this.props.intl.formatMessage(
-            this.intlMessages.withdrawAndReview
+            this.intlMessages.leaveReview
           ),
-          functionName: 'withdrawFunds',
+          functionName: 'leaveReview',
           placeholderText: this.props.intl.formatMessage(
             this.intlMessages.sellerReviewPlaceholder
           ),
           reviewable: true
         }
       }
-    ]
+    }
   }
 
   componentWillMount() {
@@ -298,7 +278,7 @@ class PurchaseDetail extends Component {
     }
   }
 
-  async confirmShipped() {
+  async acceptOffer() {
     const { offerId } = this.props
     const { purchase, listing } = this.state
     const offer = purchase
@@ -320,7 +300,7 @@ class PurchaseDetail extends Component {
 
       this.props.upsertTransaction({
         ...transactionReceipt,
-        transactionTypeKey: 'confirmShipped',
+        transactionTypeKey: 'acceptOffer',
         offer,
         listing
       })
@@ -334,7 +314,7 @@ class PurchaseDetail extends Component {
     }
   }
 
-  async withdrawFunds() {
+  async leaveReview() {
     const { offerId } = this.props
     const { rating, reviewText } = this.state.form
     const { purchase, listing } = this.state
@@ -422,8 +402,8 @@ class PurchaseDetail extends Component {
       reviews,
       seller
     } = this.state
-    const isPending = false // will be handled by offer status
-    const isSold = !listing.unitsRemaining
+    const isPending = purchase.status !== 'finalized'
+    const isSold = purchase.status === 'finalized'
     const { rating, reviewText } = form
 
     // Data not loaded yet.
@@ -444,10 +424,10 @@ class PurchaseDetail extends Component {
     const active = listing.status === 'active' // TODO: move to origin.js, take into account listing expiration
     const soldAt = purchase.createdAt * 1000 // convert seconds since epoch to ms
 
-    const paymentEvent = purchase.event('OfferCreated')
-    const fulfillmentEvent = purchase.event('OfferAccepted')
-    const receiptEvent = purchase.event('OfferFinalized') // TODO: this is not the equivalent step. Fix later
-    const withdrawalEvent = purchase.event('OfferWithdrawn')
+    const offerCreated = purchase.event('OfferCreated')
+    const offerAccepted = purchase.event('OfferAccepted')
+    const offerFinalized = purchase.event('OfferFinalized')
+    const offerWithdrawn = purchase.event('OfferWithdrawn')
 
     const priceEth = `${Number(purchase.totalPrice.amount).toLocaleString(undefined, {
       minimumFractionDigits: 5,
@@ -461,7 +441,7 @@ class PurchaseDetail extends Component {
     const step = offerStatusToStep(purchase.status)
     const left = progressTriangleOffset(step, maxStep, perspective)
 
-    const nextStep = perspective && this.nextSteps[step]
+    const nextStep = perspective && this.nextSteps[purchase.status]
     const {
       buttonText,
       functionName,
@@ -752,26 +732,26 @@ class PurchaseDetail extends Component {
                 </thead>
                 <tbody>
                   <TransactionEvent
-                    eventName="Payment received"
-                    transaction={paymentEvent}
+                    eventName="Offer made"
+                    transaction={offerCreated}
                     buyer={buyer}
                     seller={seller}
                   />
                   <TransactionEvent
-                    eventName="Sent by seller"
-                    transaction={fulfillmentEvent}
+                    eventName="Offer accepted"
+                    transaction={offerAccepted}
                     buyer={buyer}
                     seller={seller}
                   />
                   <TransactionEvent
-                    eventName="Received by buyer"
-                    transaction={receiptEvent}
+                    eventName="Offer finalized"
+                    transaction={offerFinalized}
                     buyer={buyer}
                     seller={seller}
                   />
                   <TransactionEvent
-                    eventName="Seller reviewed"
-                    transaction={withdrawalEvent}
+                    eventName="Offer withdrawn"
+                    transaction={offerWithdrawn}
                     buyer={buyer}
                     seller={seller}
                   />
