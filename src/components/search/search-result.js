@@ -144,7 +144,7 @@ class SearchResult extends Component {
           throw `Each filter should have a 'searchParameterName' property. Malformed object: ${JSON.stringify(
             filter
           )}`
-        else if (!/^[a-zA-Z\.]+$/g.test(filter.searchParameterName))
+        else if (!/^[a-zA-Z.]+$/g.test(filter.searchParameterName))
           throw `'searchParameterName' property should only consist of english letters. Received: ${
             filter.searchParameterName
           }`
@@ -179,7 +179,7 @@ class SearchResult extends Component {
       /* increase the max price by 5% to prevent a case where conversion rates of a market would be such
        * that the item that would cost the most would be left out of the price filter range
        */
-      this.setState({ maxPrice:  maxPrice * 1.05})
+      this.setState({ maxPrice: maxPrice * 1.05 })
     } catch (e) {
       const errorMessage = this.props.intl.formatMessage({
         id: 'searchResult.canNotReachIndexingServer',
