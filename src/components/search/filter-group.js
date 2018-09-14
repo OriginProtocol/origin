@@ -53,12 +53,6 @@ class FilterGroup extends Component {
       // close the dropdown menu. Handles the css clases and aria-expanded attribute
       $('body').trigger('click')
     })
-
-    //const filters = this.childFilters.flatMap(childFilter => childFilter.getFilters())
-    //this.props.updateFilters(this.title, filters)
-
-    // close the dropdown menu. Handles the css clases and aria-expanded attribute
-    //$('body').trigger('click')
   }
 
   async handleClearClick(event) {
