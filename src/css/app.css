@@ -1792,8 +1792,90 @@ a:hover {
 
 .onboarding-modal span,
 .onboarding-modal p {
-  font-size: 14px;
+  font-size: 0.875rem;
   vertical-align: super;
+}
+
+.arbitration-modal.rejection .modal-content {
+  height: 420px;
+  width: 420px;
+}
+
+.arbitration-modal.confirm .modal-content {
+  width: 450px;
+}
+
+.arbitration-modal.issue textarea {
+  background-color: var(--dark);
+  border-radius: 5px;
+  width: 85%;
+  resize: none;
+  margin-top: 26px;
+  margin-bottom: 30px;
+  padding: 12px 16px;
+}
+
+.arbitration-modal .image-container {
+  background-color: var(--white);
+  height: 92px;
+  width: 92px;
+  border-radius: 50%;
+  text-align: center;
+  display: block;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.image-container:before {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.arbitration-modal .image-container img {
+  vertical-align: middle;
+  margin: auto;
+  width: 54px;
+  height: 54px;
+}
+
+.arbitration-modal .heading {
+  color: var(--white);
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 1.5rem;
+  margin-top: 15px;
+  margin-bottom: 11px;
+}
+
+.arbitration-modal.confirm .heading {
+  margin-top: auto;
+}
+
+.arbitration-modal .text {
+  font-family: 'Lato';
+  color: var(--pale-grey);
+}
+
+.arbitration-modal.confirm .text {
+  margin: 0px;
+}
+
+.arbitration-modal p.text {
+  margin-bottom: 20px;
+}
+
+.arbitration-modal.issue .button-container,
+.arbitration-modal.confirm .button-container {
+  display: inline-flex;
+}
+
+.arbitration-modal.issue .button-container {
+  width: 350px;
+  margin-bottom: 0px;
 }
 
 /* Tooltip */
@@ -4601,7 +4683,7 @@ a:not([href]):not([tabindex]).span-link {
     -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
     clip-path: polygon(100% 0, 0 100%, 100% 100%);
   }
- 
+
   .navigation-bar .messages .triangle,
   .navigation-bar .notifications .triangle {
     margin-right: 0;
