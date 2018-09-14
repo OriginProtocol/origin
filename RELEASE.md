@@ -1,3 +1,5 @@
+⚠️ NOTE: This doc is dated, now that we have changed our git branch strategy and are moving away from Heroku. See discussion happening around release. 
+
 This file is the template for generating an issue for each release.
 
 ---
