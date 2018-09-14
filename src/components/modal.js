@@ -3,12 +3,10 @@ import $ from 'jquery'
 
 class Modal extends Component {
   componentDidMount() {
+    const { isOpen, backdrop = true } = this.props
     this.$el = $(this.el)
 
-    this.$el.modal({
-      backdrop: this.props.backdrop || true,
-      show: this.props.isOpen
-    })
+    this.$el.modal({backdrop, show: isOpen})
   }
 
   componentDidUpdate(prevProps) {
@@ -24,7 +22,7 @@ class Modal extends Component {
   }
 
   render() {
-    const { children, className } = this.props
+    const { children, className, tabIndex = "-1" } = this.props
 
     return (
       <div
@@ -32,7 +30,7 @@ class Modal extends Component {
         className={`modal fade ${this.props['data-modal']}${
           className ? ` ${className}` : ''
         }`}
-        tabIndex="-1"
+        tabIndex={tabIndex}
         role="dialog"
         aria-hidden="true"
       >
