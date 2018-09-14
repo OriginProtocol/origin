@@ -65,7 +65,7 @@ contract KeyHolder is ERC725 {
     function keyHasPurpose(bytes32 _key, uint256 _purpose)
         public
         view
-        returns(bool result)
+        returns(bool exists)
     {
         return KeyHolderLibrary.keyHasPurpose(keyHolderData, _key, _purpose);
     }
