@@ -19,13 +19,13 @@ class OnboardingModal extends Component {
     this.closeModal = this.closeModal.bind(this)
   }
 
-  async componentWillMount() {
-    const { fetchSteps, onboarding, wallet } = this.props
+  async componentDidMount() {
+    const { fetchSteps } = this.props
     await fetchSteps()
 
-    if (!onboarding.stepsCompleted && !wallet.address) {
+    window.setTimeout(() => {
       this.userProgress()
-    }
+    }, 500)
   }
 
   componentWillUpdate(nextProps) {
@@ -36,7 +36,9 @@ class OnboardingModal extends Component {
     if (splitPanel) {
       this.addModalClass()
     } else {
-      this.removeModalClasses()
+      window.setTimeout(() => {
+        this.userProgress()
+      }, 500)
     }
   }
 
@@ -60,37 +62,34 @@ class OnboardingModal extends Component {
   }
 
   removeModalClasses() {
-    const { onboarding, wallet } = this.props
+    document.body.classList.remove('modal-open')
 
-    if (!wallet.address) {
-      document.body.classList.remove('modal-open')
-
-      if (!onboarding.splitPanel) {
-        const backdrop = document.getElementsByClassName('modal-backdrop')
-        backdrop.length && backdrop[0].classList.remove('modal-backdrop')
-      }
-    }
+    const backdrop = document.getElementsByClassName('modal-backdrop')
+    backdrop.length && backdrop[0].classList.remove('modal-backdrop')
   }
 
   userProgress() {
     const {
-      onboarding: { progress, stepsCompleted },
+      onboarding: { progress, learnMore },
       toggleLearnMore,
       toggleSplitPanel,
       wallet
     } = this.props
 
-    if (!wallet.address) {
-      if (!progress) {
-        this.removeModalClasses()
-        return toggleLearnMore(true)
-      } else if (!stepsCompleted && progress) {
-        this.addModalClass()
-        return toggleSplitPanel(true)
-      }
+    if (wallet.address) {
+      if (!learnMore) return
+      this.removeModalClasses()
+      return toggleLearnMore(false)
+    }
+
+    if (!progress && !learnMore) {
+      this.removeModalClasses()
+      toggleLearnMore(true)
+    } else if (progress) {
+      this.addModalClass()
+      return toggleSplitPanel(true)
     }
     this.removeModalClasses()
-    this.props.toggleLearnMore(false)
   }
 
   render() {
@@ -132,6 +131,8 @@ class OnboardingModal extends Component {
             className={'getting-started'}
             isOpen={learnMore}
             children={learnMoreContent}
+            tabIndex={'false'}
+            backdrop={false}
           />
         )}
         {splitPanel && (

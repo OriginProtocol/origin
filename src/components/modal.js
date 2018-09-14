@@ -6,7 +6,7 @@ class Modal extends Component {
     const { isOpen, backdrop = true } = this.props
     this.$el = $(this.el)
 
-    this.$el.modal({backdrop, show: isOpen})
+    this.$el.modal({ backdrop, show: isOpen })
   }
 
   componentDidUpdate(prevProps) {
@@ -22,7 +22,7 @@ class Modal extends Component {
   }
 
   render() {
-    const { children, className, tabIndex = "-1" } = this.props
+    const { children, className, tabIndex = '-1' } = this.props
 
     return (
       <div
