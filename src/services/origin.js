@@ -17,7 +17,6 @@ const customBridgeUrl = `${bridgeProtocol}://${bridgeDomain}`
 const hasCustomBridge = bridgeProtocol && bridgeDomain
 const bridgeUrl = hasCustomBridge ? customBridgeUrl : defaultBridgeUrl
 const attestationServerUrl = `${bridgeUrl}/api/attestations`
-const discoveryServerUrl = 'http://localhost:4000'
 const ipfsSwarm = process.env.IPFS_SWARM
 const web3 = new Web3(
   // Detect MetaMask using global window object
@@ -71,7 +70,6 @@ const config = {
   discoveryServerUrl: process.env.DISCOVERY_SERVER_URL,
   messagingNamespace: process.env.MESSAGING_NAMESPACE,
   attestationServerUrl,
-  discoveryServerUrl,
   ipfsCreator,
   OrbitDB,
   ecies,
