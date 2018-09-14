@@ -38,6 +38,7 @@ class MyListings extends Component {
   async loadListings() {
     try {
       const ids = await origin.marketplace.getListings({
+        idsOnly: true,
         listingsFor: this.props.web3Account
       })
       const listings = await Promise.all(
