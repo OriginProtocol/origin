@@ -132,7 +132,6 @@ class OnboardingModal extends Component {
             className={'getting-started'}
             isOpen={learnMore}
             children={learnMoreContent}
-            tabIndex={'false'}
             backdrop={false}
           />
         )}

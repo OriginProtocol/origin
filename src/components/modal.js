@@ -22,7 +22,8 @@ class Modal extends Component {
   }
 
   render() {
-    const { children, className, tabIndex = '-1' } = this.props
+    const { children, className, tabIndex } = this.props
+    const setTabIndex = tabIndex && { tabIndex }
 
     return (
       <div
@@ -30,9 +31,9 @@ class Modal extends Component {
         className={`modal fade ${this.props['data-modal']}${
           className ? ` ${className}` : ''
         }`}
-        tabIndex={tabIndex}
         role="dialog"
         aria-hidden="true"
+        { ...(setTabIndex)}
       >
         <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content d-flex">{children}</div>
