@@ -7,6 +7,7 @@ import {
   pubToAddress
 } from 'ethereumjs-util'
 import Web3 from 'web3'
+import { PROFILE_DATA_TYPE, IpfsDataStore } from '../../services/data-store-service'
 
 const selfAttestationClaimType = 13 // TODO: use the correct number here
 const emptyAddress = '0x0000000000000000000000000000000000000000'
@@ -14,7 +15,7 @@ const emptyAddress = '0x0000000000000000000000000000000000000000'
 class V00_UsersAdapter {
   constructor({ contractService, ipfsService }) {
     this.contractService = contractService
-    this.ipfsService = ipfsService
+    this.ipfsDataStore = new IpfsDataStore(ipfsService)
     this.web3EthAccounts = this.contractService.web3.eth.accounts
     this.contractName = 'V00_UserRegistry'
   }
@@ -52,8 +53,8 @@ class V00_UsersAdapter {
   }
 
   async profileAttestation(profile) {
-    // Submit to IPFS
-    const ipfsHash = await this.ipfsService.saveObjAsFile(profile)
+    // Validate the profile data and submits it to IPFS
+    const ipfsHash = await this.ipfsDataStore.save(PROFILE_DATA_TYPE, profile)
     const asBytes32 = this.contractService.getBytes32FromIpfsHash(ipfsHash)
     // For now we'll ignore issuer & signature for self attestations
     // If it's a self-attestation, then no validation is necessary
@@ -182,7 +183,7 @@ class V00_UsersAdapter {
     if (profileClaims.length) {
       const bytes32 = profileClaims[profileClaims.length - 1].data
       const ipfsHash = this.contractService.getIpfsHashFromBytes32(bytes32)
-      profile = await this.ipfsService.loadObjFromFile(ipfsHash)
+      profile = await this.ipfsDataStore.load(PROFILE_DATA_TYPE, ipfsHash)
     }
     const validAttestations = await this.validAttestations(
       identityAddress,

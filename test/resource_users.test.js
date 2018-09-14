@@ -1,10 +1,15 @@
+import chai from 'chai'
+import chaiAsPromised from 'chai-as-promised'
+import Web3 from 'web3'
+
 import Users from '../src/resources/users'
 import { Attestations } from '../src/resources/attestations'
 import AttestationObject from '../src/models/attestation'
 import ContractService from '../src/services/contract-service'
 import IpfsService from '../src/services/ipfs-service'
-import { expect } from 'chai'
-import Web3 from 'web3'
+
+chai.use(chaiAsPromised)
+const expect = chai.expect
 
 const issuerPrivatekey =
   '0000000000000000000000000000000000000000000000000000000000000001'
@@ -96,39 +101,43 @@ describe('User Resource', function() {
   describe('set', () => {
     it('should be able to deploy new identity', async () => {
       await users.set({
-        profile: { claims: { name: 'Wonder Woman' } }
+        profile: { firstName: 'Wonder', lastName: 'Woman' }
       })
       const user = await users.get()
 
       expect(user.attestations.length).to.equal(0)
-      expect(user.profile.claims.name).to.equal('Wonder Woman')
+      expect(user.profile.firstName).to.equal('Wonder')
+      expect(user.profile.lastName).to.equal('Woman')
     })
 
     it('should be able to update profile and claims after creation', async () => {
       await users.set({
-        profile: { claims: { name: 'Iron Man' } }
+        profile: { firstName: 'Iron', lastName: 'Man' }
       })
       let user = await users.get()
 
       expect(user.attestations.length).to.equal(0)
-      expect(user.profile.claims.name).to.equal('Iron Man')
+      expect(user.profile.firstName).to.equal('Iron')
+      expect(user.profile.lastName).to.equal('Man')
 
       await users.set({
-        profile: { claims: { name: 'Black Panther' } },
+        profile: { firstName: 'Black', lastName: 'Panther' },
         attestations: [phoneAttestation]
       })
       user = await users.get()
 
       expect(user.attestations.length).to.equal(1)
-      expect(user.profile.claims.name).to.equal('Black Panther')
+      expect(user.profile.firstName).to.equal('Black')
+      expect(user.profile.lastName).to.equal('Panther')
 
       await users.set({
-        profile: { claims: { name: 'Batman' } }
+        profile: { firstName: 'Bat', lastName: 'Man' },
       })
       user = await users.get()
 
       expect(user.attestations.length).to.equal(1)
-      expect(user.profile.claims.name).to.equal('Batman')
+      expect(user.profile.firstName).to.equal('Bat')
+      expect(user.profile.lastName).to.equal('Man')
 
       await users.set({
         attestations: [phoneAttestation, emailAttestation]
@@ -136,46 +145,50 @@ describe('User Resource', function() {
       user = await users.get()
 
       expect(user.attestations.length).to.equal(2)
-      expect(user.profile.claims.name).to.equal('Batman')
+      expect(user.profile.firstName).to.equal('Bat')
+      expect(user.profile.lastName).to.equal('Man')
     })
 
     it('should be able to deploy new identity with 2 presigned claims', async () => {
       // This is actually 2 claims because profile info is 1 claim
       await users.set({
-        profile: { claims: { name: 'Black Widow' } },
+        profile: { firstName: 'Black', lastName: 'Widow' },
         attestations: [phoneAttestation]
       })
       const user = await users.get()
 
       expect(user.attestations.length).to.equal(1)
-      expect(user.profile.claims.name).to.equal('Black Widow')
+      expect(user.profile.firstName).to.equal('Black')
+      expect(user.profile.lastName).to.equal('Widow')
     })
 
     it('should be able to deploy new identity with 3 presigned claims', async () => {
       await users.set({
-        profile: { claims: { name: 'Black Widow' } },
+        profile: { firstName: 'Black', lastName: 'Widow' },
         attestations: [phoneAttestation, emailAttestation]
       })
       const user = await users.get()
 
       expect(user.attestations.length).to.equal(2)
-      expect(user.profile.claims.name).to.equal('Black Widow')
+      expect(user.profile.firstName).to.equal('Black')
+      expect(user.profile.lastName).to.equal('Widow')
     })
 
     it('should be able to deploy new identity with 4 presigned claims', async () => {
       await users.set({
-        profile: { claims: { name: 'Black Widow' } },
+        profile: { firstName: 'Black', lastName: 'Widow' },
         attestations: [phoneAttestation, emailAttestation, facebookAttestation]
       })
       const user = await users.get()
 
       expect(user.attestations.length).to.equal(3)
-      expect(user.profile.claims.name).to.equal('Black Widow')
+      expect(user.profile.firstName).to.equal('Black')
+      expect(user.profile.lastName).to.equal('Widow')
     })
 
     it('should be able to deploy new identity with 5 presigned claims', async () => {
       await users.set({
-        profile: { claims: { name: 'Black Widow' } },
+        profile: { firstName: 'Black', lastName: 'Widow' },
         attestations: [
           phoneAttestation,
           emailAttestation,
@@ -187,39 +200,56 @@ describe('User Resource', function() {
       const user = await users.get()
 
       expect(user.attestations.length).to.equal(4)
-      expect(user.profile.claims.name).to.equal('Black Widow')
+      expect(user.profile.firstName).to.equal('Black')
+      expect(user.profile.lastName).to.equal('Widow')
     })
 
     it('should ignore invalid claims', async () => {
       await users.set({
-        profile: { claims: { name: 'Deadpool' } },
+        profile: { firstName: 'Dead', lastName: 'Pool' },
         attestations: [phoneAttestation, emailAttestation, invalidAttestation]
       })
       const user = await users.get()
 
       expect(user.attestations.length).to.equal(2)
-      expect(user.profile.claims.name).to.equal('Deadpool')
+      expect(user.profile.firstName).to.equal('Dead')
+      expect(user.profile.lastName).to.equal('Pool')
+    })
+
+    it('should fail setting an invalid profile', async () => {
+      const badProfile = { profile: { bad: 'profile' } }
+      return expect(users.set(badProfile)).to.eventually.be.rejectedWith(Error)
     })
   })
 
   describe('get', () => {
     it('should reflect the current state of the user', async () => {
       await users.set({
-        profile: { claims: { name: 'Groot' } }
+        profile: { firstName: 'Baby', lastName: 'Groot' },
       })
       let user = await users.get()
 
       expect(user.attestations.length).to.equal(0)
-      expect(user.profile.claims.name).to.equal('Groot')
+      expect(user.profile.firstName).to.equal('Baby')
+      expect(user.profile.lastName).to.equal('Groot')
 
       await users.set({
-        profile: { claims: { name: 'Baby Groot' } },
+        profile: {
+          firstName: 'Daddy',
+          lastName: 'Groot',
+          description: 'Grown up',
+          avatar: 'good looking pic'
+        },
         attestations: [phoneAttestation]
       })
       user = await users.get()
 
       expect(user.attestations.length).to.equal(1)
-      expect(user.profile.claims.name).to.equal('Baby Groot')
+      expect(user.profile.firstName).to.equal('Daddy')
+      expect(user.profile.lastName).to.equal('Groot')
+      expect(user.profile.description).to.equal('Grown up')
+      expect(user.profile.avatar).to.equal('good looking pic')
     })
   })
+
 })

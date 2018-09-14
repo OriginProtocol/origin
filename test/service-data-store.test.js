@@ -9,10 +9,12 @@ import {
   LISTING_WITHDRAW_DATA_TYPE,
   OFFER_DATA_TYPE,
   OFFER_ACCEPT_DATA_TYPE,
+  PROFILE_DATA_TYPE,
   REVIEW_DATA_TYPE
 } from '../src/services/data-store-service'
 import validListing from './fixtures/listing-valid.json'
 import validOffer from './fixtures/offer-valid.json'
+import validProfile from './fixtures/profile-valid.json'
 import validReview from './fixtures/review-valid.json'
 
 
@@ -355,4 +357,57 @@ describe('Review IpfsDataStore save', () => {
       REVIEW_DATA_TYPE,
       badReview)).to.eventually.be.rejectedWith(Error)
   })
+})
+
+describe('Profile IpfsDataStore load', () => {
+  let mockIpfsService, store
+
+  before(() => {
+    mockIpfsService = new Object()
+    store = new IpfsDataStore(mockIpfsService)
+  })
+
+  it(`Should load a valid profile`, async () => {
+    mockIpfsService.loadObjFromFile = sinon.stub().resolves(validProfile)
+    const profile = await store.load(PROFILE_DATA_TYPE, 'ProfileHash')
+    expect(profile.firstName).to.equal('originus')
+    expect(profile.lastName).to.equal('protocolus')
+    expect(profile.description).to.equal('Semper Fidelis')
+    expect(profile.avatar).to.equal('data:,Avatar')
+    expect(profile.ipfs.hash).to.equal('ProfileHash')
+    expect(profile.ipfs.data).to.deep.equal(validProfile)
+  })
+
+  it(`Should throw an exception on profile with invalid schema Id`, () => {
+    const profileInvalidSchemaId = Object.assign({}, validProfile, {
+      schemaId: 'badSchemaId'
+    })
+    mockIpfsService.loadObjFromFile = sinon
+      .stub()
+      .resolves(profileInvalidSchemaId)
+    return expect(store.load(PROFILE_DATA_TYPE, 'TestHash')).to.eventually.be.rejectedWith(Error)
+  })
+
+  it(`Should throw an exception on profile data with missing schemaId`, () => {
+    const badProfile = {  }
+    mockIpfsService.loadObjFromFile = sinon.stub().resolves(badProfile)
+    return expect(store.load(PROFILE_DATA_TYPE, 'TestHash')).to.eventually.be.rejectedWith(Error)
+  })
+})
+
+describe('Profile IpfsDataStore save', () => {
+  let mockIpfsService, store
+
+  before(() => {
+    mockIpfsService = new Object()
+    store = new IpfsDataStore(mockIpfsService)
+  })
+
+  it(`Should save a valid profile`, () => {
+    mockIpfsService.saveObjAsFile = sinon.stub().returns('ProfileHash')
+    return expect(
+      store.save(PROFILE_DATA_TYPE, validProfile)).to.eventually.equal('ProfileHash')
+      .then(() => expect(mockIpfsService.saveObjAsFile.firstCall.args[0]).to.have.property('schemaId'))
+  })
+
 })
