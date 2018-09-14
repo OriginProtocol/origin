@@ -52,10 +52,7 @@ class MultipleSelectionFilter extends Component {
 
   componentDidUpdate(previousProps) {
     // When new search is triggered, search filters get reset, so component should reset their state
-    if (
-      Object.keys(previousProps.filters).length !== 0 &&
-      Object.keys(this.props.filters).length === 0
-    )
+    if (this.props.generalSearchId !== previousProps.generalSearchId)
       this.onClear()
   }
 
@@ -128,7 +125,8 @@ class MultipleSelectionFilter extends Component {
 }
 
 const mapStateToProps = state => ({
-  filters: state.search.filters
+  filters: state.search.filters,
+  generalSearchId: state.search.generalSearchId
 })
 
 const mapDispatchToProps = () => ({})

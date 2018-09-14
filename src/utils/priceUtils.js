@@ -48,7 +48,8 @@ const getFiatExchangeRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
 export const getFiatPrice = async (
   priceEth,
   fiatCurrencyCode,
-  cryptoCurrencyCode
+  cryptoCurrencyCode,
+  formatResult = true
 ) => {
   if (!priceEth) {
     priceEth = 0
@@ -57,10 +58,13 @@ export const getFiatPrice = async (
     fiatCurrencyCode,
     cryptoCurrencyCode
   )
-  return Number(priceEth * exchangeRate).toLocaleString(undefined, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  })
+  if (formatResult)
+    return Number(priceEth * exchangeRate).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })
+  else
+    return priceEth * exchangeRate
 }
 
 export const getEthPrice = async (

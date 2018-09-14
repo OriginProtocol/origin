@@ -13,6 +13,7 @@ import SearchBar from 'components/search/searchbar'
 import { generalSearch } from 'actions/Search'
 import origin from '../../services/origin'
 import FilterGroup from 'components/search/filter-group'
+import { getFiatPrice } from 'utils/priceUtils'
 
 class SearchResult extends Component {
   constructor(props) {
@@ -24,7 +25,8 @@ class SearchResult extends Component {
       listingType: undefined,
       listingIds: [],
       searchError: undefined,
-      filters: {}
+      filters: {},
+      maxPrice: 10000
     }
 
     // set default prop values for search_query and listing_type
@@ -172,6 +174,7 @@ class SearchResult extends Component {
         listingIds: searchResp.data.listings.nodes.map(listing => listing.id)
       })
 
+      this.setState({ maxPrice: await getFiatPrice(searchResp.data.listings.maxPrice, 'USD', 'ETH', false) })
     } catch (e) {
       const errorMessage = this.props.intl.formatMessage({
         id: 'searchResult.canNotReachIndexingServer',
@@ -206,6 +209,7 @@ class SearchResult extends Component {
                         key={index}
                         listingSchema={this.state.listingSchema}
                         listingType={this.state.listingType}
+                        maxPrice={this.state.maxPrice}
                       />
                     )
                   })}

@@ -14,10 +14,9 @@ class PriceFilter extends Component {
   constructor(props) {
     super(props)
     this.defaultMinimum = 0
-    this.defaultMaximum = 10000
 
     this.state = {
-      value: [this.defaultMinimum, this.defaultMaximum]
+      value: [this.defaultMinimum, Math.round(parseFloat(props.maxPrice))]
     }
 
     this.handlePriceChange = this.handlePriceChange.bind(this)
@@ -54,17 +53,14 @@ class PriceFilter extends Component {
   }
 
   componentDidUpdate(previousProps) {
-    // When new search is triggered, search filters get reset, so component should reset their state
-    if (
-      Object.keys(previousProps.filters).length !== 0 &&
-      Object.keys(this.props.filters).length === 0
-    )
+    // New max price property... reset filter
+    if (previousProps.maxPrice !== this.props.maxPrice)
       this.onClear()
   }
 
   // Called by filter-group
   onClear(callback) {
-    this.setState({ value: [bottomAmount, topAmount] }, callback)
+    this.setState({ value: [this.defaultMinimum, Math.round(parseFloat(this.props.maxPrice))] }, callback)
   }
 
   render() {
@@ -72,6 +68,7 @@ class PriceFilter extends Component {
       ? this.props.intl.formatMessage(this.props.filter.priceUnit)
       : `USD`
 
+    const maxPrice = Math.round(parseFloat(this.props.maxPrice))
     return (
       <div
         className="d-flex flex-column"
@@ -88,10 +85,10 @@ class PriceFilter extends Component {
         <Range
           value={this.state.value}
           min={this.defaultMinimum}
-          max={this.defaultMaximum}
-          defaultValue={[this.defaultMinimum, this.defaultMaximum]}
+          max={maxPrice}
+          defaultValue={[this.defaultMinimum, maxPrice]}
           count={2}
-          pushable={(this.defaultMaximum - this.defaultMinimum) / 20}
+          pushable={(maxPrice - this.defaultMinimum) / 20}
           tipFormatter={value => `${value}$`}
           onChange={this.handlePriceChange}
         />
