@@ -900,7 +900,7 @@ class PurchaseDetail extends Component {
           </div>
         </div>
         {processing && (
-          <Modal backdrop="static" isOpen={true}>
+          <Modal backdrop="static" isOpen={true} tabIndex="-1">
             <div className="image-container">
               <img src="images/spinner-animation.svg" role="presentation" />
             </div>

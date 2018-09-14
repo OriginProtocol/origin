@@ -63,7 +63,12 @@ class MessageNew extends Component {
     const canDeliverMessage = origin.messaging.canConverseWith(recipientAddress)
 
     return (
-      <Modal isOpen={open} data-modal="message" handleToggle={handleToggle}>
+      <Modal
+        isOpen={open}
+        data-modal="message"
+        handleToggle={handleToggle}
+        tabIndex="-1"
+      >
         <div className="eth-container">
           <Identicon address={recipientAddress} size={80} />
           <h2>
