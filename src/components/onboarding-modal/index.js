@@ -30,10 +30,10 @@ class OnboardingModal extends Component {
 
   componentWillUpdate(nextProps) {
     const {
-      onboarding: { splitPanel }
+      onboarding: { splitPanel, stepsCompleted }
     } = nextProps
 
-    if (splitPanel) {
+    if (splitPanel && !stepsCompleted) {
       this.addModalClass()
     } else {
       window.setTimeout(() => {
@@ -70,13 +70,13 @@ class OnboardingModal extends Component {
 
   userProgress() {
     const {
-      onboarding: { progress, learnMore },
+      onboarding: { progress, learnMore, stepsCompleted },
       toggleLearnMore,
       toggleSplitPanel,
       wallet
     } = this.props
 
-    if (wallet.address) {
+    if (wallet.address || stepsCompleted) {
       if (!learnMore) return
       this.removeModalClasses()
       return toggleLearnMore(false)
