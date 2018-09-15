@@ -49,14 +49,16 @@ describe('Identity', async function() {
   describe('Keys', async function() {
     it('should set a default MANAGEMENT_KEY', async function() {
       const res = await UserIdentity.methods.getKey(acctSha3).call()
-      assert.equal(res.purpose, '1')
+      assert.equal(res.purposes.length, 1)
+      assert.equal(res.purposes[0], '1')
       assert.equal(res.keyType, '1')
       assert.equal(res.key, acctSha3)
     })
 
-    it('should respond to getKeyPurpose', async function() {
-      const res = await UserIdentity.methods.getKeyPurpose(acctSha3).call()
-      assert.equal(res, '1')
+    it('should respond to getKeyPurposes', async function() {
+      const res = await UserIdentity.methods.getKeyPurposes(acctSha3).call()
+      assert.equal(res.length, 1)
+      assert.equal(res[0], '1')
     })
 
     it('should respond to getKeysByPurpose', async function() {
