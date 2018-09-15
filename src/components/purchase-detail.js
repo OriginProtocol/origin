@@ -58,9 +58,9 @@ class PurchaseDetail extends Component {
     this.handleRating = this.handleRating.bind(this)
     this.handleReviewText = this.handleReviewText.bind(this)
     this.initiateDispute = this.initiateDispute.bind(this)
-    this.leaveReview = this.leaveReview.bind(this)
     this.loadPurchase = this.loadPurchase.bind(this)
     this.rejectOffer = this.rejectOffer.bind(this)
+    this.reviewSale = this.reviewSale.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
     this.withdrawOffer = this.withdrawOffer.bind(this)
     this.state = defaultState
@@ -120,8 +120,8 @@ class PurchaseDetail extends Component {
         id: 'purchase-detail.clickToReview',
         defaultMessage: 'Click the button below to leave a review'
       },
-      leaveReview: {
-        id: 'purchase-detail.withdrawAndReview',
+      reviewSale: {
+        id: 'purchase-detail.reviewSale',
         defaultMessage: 'Leave a review'
       },
       rejectOffer: {
@@ -242,9 +242,9 @@ class PurchaseDetail extends Component {
           ),
           buttons: [
             {
-              functionName: 'leaveReview',
+              functionName: 'reviewSale',
               text: this.props.intl.formatMessage(
-                this.intlMessages.leaveReview
+                this.intlMessages.reviewSale
               )
             }
           ],
@@ -397,7 +397,7 @@ class PurchaseDetail extends Component {
     alert('To Do')
   }
 
-  async leaveReview() {
+  async reviewSale() {
     const { offerId } = this.props
     const { rating, reviewText } = this.state.form
     const { purchase, listing } = this.state
@@ -427,7 +427,7 @@ class PurchaseDetail extends Component {
         ...transactionReceipt,
         offer,
         listing,
-        transactionTypeKey: 'getPayout'
+        transactionTypeKey: 'reviewSale'
       })
 
       this.setState({ processing: false })

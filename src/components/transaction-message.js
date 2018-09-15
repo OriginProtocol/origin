@@ -29,9 +29,9 @@ class TransactionMessage extends Component {
         id: 'transaction.createListing',
         defaultMessage: 'You created a listing.'
       },
-      getPayout: {
-        id: 'transaction.getPayout',
-        defaultMessage: 'You left a review and withdrew funds.'
+      reviewSale: {
+        id: 'transaction.reviewSale',
+        defaultMessage: 'You left a review.'
       }
     })
   }

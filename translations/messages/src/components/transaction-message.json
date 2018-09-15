@@ -20,7 +20,7 @@
     "defaultMessage": "You created a listing."
   },
   {
-    "id": "transaction.getPayout",
-    "defaultMessage": "You left a review and withdrew funds."
+    "id": "transaction.reviewSale",
+    "defaultMessage": "You left a review."
   }
 ]

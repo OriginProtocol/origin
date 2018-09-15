@@ -29,8 +29,6 @@ class Transaction extends Component {
 
       if (!listing && listingId) {
         listing = await getListing(listingId)
-      } else {
-        listing = null
       }
 
       this.setState({ listing, purchase })
@@ -67,14 +65,14 @@ class Transaction extends Component {
     case 'closeListing':
       fromAddress = listing.seller
       break
-    case 'completedPurchase':
+    case 'completePurchase':
       fromAddress = purchase.buyer
       toAddress = listing.seller
       break
     case 'createListing':
       fromAddress = listing.seller
       break
-    case 'getPayout':
+    case 'reviewSale':
       toAddress = purchase.buyer
       fromAddress = listing.seller
       break

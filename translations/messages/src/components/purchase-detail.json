@@ -52,7 +52,7 @@
     "defaultMessage": "Click the button below to leave a review"
   },
   {
-    "id": "purchase-detail.withdrawAndReview",
+    "id": "purchase-detail.reviewSale",
     "defaultMessage": "Leave a review"
   },
   {
