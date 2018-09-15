@@ -27,6 +27,8 @@ import {
 } from 'utils/translationUtils'
 
 import origin from '../services/origin'
+import $ from 'jquery'
+
 
 class ListingCreate extends Component {
   constructor(props) {
