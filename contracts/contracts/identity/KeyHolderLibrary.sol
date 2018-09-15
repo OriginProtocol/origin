@@ -9,7 +9,7 @@ library KeyHolderLibrary {
   event Approved(uint256 indexed executionId, bool approved);
 
   struct Key {
-      uint256 purpose; //e.g., MANAGEMENT_KEY = 1, ACTION_KEY = 2, etc.
+      uint256[] purposes; //e.g., MANAGEMENT_KEY = 1, ACTION_KEY = 2, etc.
       uint256 keyType; // e.g. 1 = ECDSA, 2 = RSA, etc.
       bytes32 key;
   }
@@ -34,30 +34,30 @@ library KeyHolderLibrary {
   {
       bytes32 _key = keccak256(abi.encodePacked(msg.sender));
       _keyHolderData.keys[_key].key = _key;
-      _keyHolderData.keys[_key].purpose = 1;
+      _keyHolderData.keys[_key].purposes.push(1);
       _keyHolderData.keys[_key].keyType = 1;
       _keyHolderData.keysByPurpose[1].push(_key);
-      emit KeyAdded(_key, _keyHolderData.keys[_key].purpose, 1);
+      emit KeyAdded(_key, 1, 1);
   }
 
   function getKey(KeyHolderData storage _keyHolderData, bytes32 _key)
       public
       view
-      returns(uint256 purpose, uint256 keyType, bytes32 key)
+      returns(uint256[] purposes, uint256 keyType, bytes32 key)
   {
       return (
-          _keyHolderData.keys[_key].purpose,
+          _keyHolderData.keys[_key].purposes,
           _keyHolderData.keys[_key].keyType,
           _keyHolderData.keys[_key].key
       );
   }
 
-  function getKeyPurpose(KeyHolderData storage _keyHolderData, bytes32 _key)
+  function getKeyPurposes(KeyHolderData storage _keyHolderData, bytes32 _key)
       public
       view
-      returns(uint256 purpose)
+      returns(uint256[] purposes)
   {
-      return (_keyHolderData.keys[_key].purpose);
+      return (_keyHolderData.keys[_key].purposes);
   }
 
   function getKeysByPurpose(KeyHolderData storage _keyHolderData, uint256 _purpose)
@@ -78,7 +78,7 @@ library KeyHolderLibrary {
       }
 
       _keyHolderData.keys[_key].key = _key;
-      _keyHolderData.keys[_key].purpose = _purpose;
+      _keyHolderData.keys[_key].purposes.push(_purpose);
       _keyHolderData.keys[_key].keyType = _type;
 
       _keyHolderData.keysByPurpose[_purpose].push(_key);
@@ -143,14 +143,39 @@ library KeyHolderLibrary {
       return _keyHolderData.executionNonce-1;
   }
 
-  function removeKey(KeyHolderData storage _keyHolderData, bytes32 _key)
+  function removeKey(KeyHolderData storage _keyHolderData, bytes32 _key, uint256 _purpose)
       public
       returns (bool success)
   {
       require(_keyHolderData.keys[_key].key == _key, "No such key");
-      emit KeyRemoved(_keyHolderData.keys[_key].key, _keyHolderData.keys[_key].purpose, _keyHolderData.keys[_key].keyType);
+      emit KeyRemoved(_key, _purpose, _keyHolderData.keys[_key].keyType);
 
-      delete _keyHolderData.keys[_key];
+      // Remove purpose from key
+      uint256[] storage purposes = _keyHolderData.keys[_key].purposes;
+      for (uint i = 0; i < purposes.length; i++) {
+          if (purposes[i] == _purpose) {
+              purposes[i] = purposes[purposes.length - 1];
+              delete purposes[purposes.length - 1];
+              purposes.length--;
+              break;
+          }
+      }
+
+      // If no more purposes, delete key
+      if (purposes.length == 0) {
+        delete _keyHolderData.keys[_key];
+      }
+
+      // Remove key from keysByPurpose
+      bytes32[] storage keys = _keyHolderData.keysByPurpose[_purpose];
+      for (uint j = 0; j < keys.length; j++) {
+          if (keys[j] == _key) {
+              keys[j] = keys[keys.length - 1];
+              delete keys[keys.length - 1];
+              keys.length--;
+              break;
+          }
+      }
 
       return true;
   }
@@ -162,7 +187,14 @@ library KeyHolderLibrary {
   {
       bool isThere;
       if (_keyHolderData.keys[_key].key == 0) return false;
-      isThere = _keyHolderData.keys[_key].purpose <= _purpose;
+
+      uint256[] storage purposes = _keyHolderData.keys[_key].purposes;
+      for (uint i = 0; i < purposes.length; i++) {
+          if (purposes[i] <= _purpose) {
+              isThere = true;
+              break;
+          }
+      }
       return isThere;
   }
 }
