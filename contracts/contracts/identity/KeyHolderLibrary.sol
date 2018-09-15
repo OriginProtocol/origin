@@ -147,6 +147,10 @@ library KeyHolderLibrary {
       public
       returns (bool success)
   {
+      if (msg.sender != address(this)) {
+        require(keyHasPurpose(_keyHolderData, keccak256(abi.encodePacked(msg.sender)), 1), "Sender does not have management key"); // Sender has MANAGEMENT_KEY
+      }
+
       require(_keyHolderData.keys[_key].key == _key, "No such key");
       emit KeyRemoved(_key, _purpose, _keyHolderData.keys[_key].keyType);
 
