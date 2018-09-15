@@ -37,7 +37,7 @@ class PurchaseProgress extends Component {
   }
 
   render() {
-    const { currentStep, maxStep, perspective, subdued } = this.props
+    const { currentStep, maxStep, perspective, purchase, subdued } = this.props
     const { progressCalculated, progressWidth } = this.state
 
     // timestamps not yet available
@@ -115,71 +115,51 @@ class PurchaseProgress extends Component {
           )}
         </div>
         {!subdued &&
-          perspective === 'buyer' && (
           <div className="labels d-flex justify-content-between text-center">
             <div className="stage-container">
               <div className="stage">
                 <FormattedMessage
                   id={'purchase-progress.offerMade'}
-                  defaultMessage={'Made Offer'}
+                  defaultMessage={'Offer Made'}
                 />
               </div>
             </div>
             <div className="stage-container">
               <div className="stage">
-                <FormattedMessage
-                  id={'purchase-progress.offerAccepted'}
-                  defaultMessage={'Offer accepted by seller'}
-                />
+                {purchase.status !== 'withdrawn' &&
+                  <FormattedMessage
+                    id={'purchase-progress.offerAccepted'}
+                    defaultMessage={'Offer Accepted'}
+                  />
+                }
+                {purchase.status === 'withdrawn' &&
+                  <FormattedMessage
+                    id={'purchase-progress.offerWithdrawn'}
+                    defaultMessage={'Offer Withdrawn'}
+                  />
+                }
               </div>
             </div>
             <div className="stage-container">
               <div className="stage">
                 <FormattedMessage
-                  id={'purchase-progress.receivedByMe'}
-                  defaultMessage={'Received by me'}
+                  id={'purchase-progress.saleCompleted'}
+                  defaultMessage={'Sale Completed'}
                 />
               </div>
             </div>
+            {perspective === 'seller' &&
+              <div className="stage-container">
+                <div className="stage">
+                  <FormattedMessage
+                    id={'purchase-progress.saleReviewed'}
+                    defaultMessage={'Sale Reviewed'}
+                  />
+                </div>
+              </div>
+            }
           </div>
-        )}
-        {!subdued &&
-          perspective === 'seller' && (
-          <div className="labels d-flex justify-content-between text-center">
-            <div className="stage-container">
-              <div className="stage">
-                <FormattedMessage
-                  id={'purchase-progress.offerReceived'}
-                  defaultMessage={'Offer Received'}
-                />
-              </div>
-            </div>
-            <div className="stage-container">
-              <div className="stage">
-                <FormattedMessage
-                  id={'purchase-progress.acceptedOffer'}
-                  defaultMessage={'Offer Accepted'}
-                />
-              </div>
-            </div>
-            <div className="stage-container">
-              <div className="stage">
-                <FormattedMessage
-                  id={'purchase-progress.receivedByBuyer'}
-                  defaultMessage={'Received by buyer'}
-                />
-              </div>
-            </div>
-            <div className="stage-container">
-              <div className="stage">
-                <FormattedMessage
-                  id={'purchase-progress.fundsWithdrawn'}
-                  defaultMessage={'Funds Withdrawn'}
-                />
-              </div>
-            </div>
-          </div>
-        )}
+        }
       </div>
     )
   }

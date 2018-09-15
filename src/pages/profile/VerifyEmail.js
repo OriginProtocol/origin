@@ -27,8 +27,8 @@ class VerifyEmail extends Component {
       }
     })
 
-    this.handleSubmit = this.handleSubmit.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   render() {

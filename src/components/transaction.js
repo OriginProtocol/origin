@@ -3,7 +3,9 @@ import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
 
 import TransactionMessage from 'components/transaction-message'
+
 import { getListing } from 'utils/listing'
+
 import origin from '../services/origin'
 
 class Transaction extends Component {
@@ -58,14 +60,14 @@ class Transaction extends Component {
       toAddress = purchase.buyer
       fromAddress = listing.seller
       break
-    case 'buyListing':
+    case 'makeOffer':
       fromAddress = purchase.buyer
       toAddress = listing.seller
       break
     case 'closeListing':
       fromAddress = listing.seller
       break
-    case 'confirmReceipt':
+    case 'completedPurchase':
       fromAddress = purchase.buyer
       toAddress = listing.seller
       break

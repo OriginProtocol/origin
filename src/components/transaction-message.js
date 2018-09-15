@@ -13,21 +13,21 @@ class TransactionMessage extends Component {
         id: 'transaction.acceptOffer',
         defaultMessage: 'You accepted an offer.'
       },
-      buyListing: {
-        id: 'transaction.buyListing',
-        defaultMessage: 'You made a purchase.'
+      makeOffer: {
+        id: 'transaction.makeOffer',
+        defaultMessage: 'You made an offer.'
       },
       closeListing: {
         id: 'transaction.closeListing',
-        defaultMessage: 'You closed a listing'
+        defaultMessage: 'You closed a listing.'
       },
-      confirmReceipt: {
-        id: 'transaction.confirmReceipt',
-        defaultMessage: 'You left a review and confirmed receipt.'
+      completePurchase: {
+        id: 'transaction.completePurchase',
+        defaultMessage: 'You completed a purchase.'
       },
       createListing: {
         id: 'transaction.createListing',
-        defaultMessage: 'You created a listing'
+        defaultMessage: 'You created a listing.'
       },
       getPayout: {
         id: 'transaction.getPayout',

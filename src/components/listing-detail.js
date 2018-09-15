@@ -141,7 +141,7 @@ class ListingsDetail extends Component {
         )
         this.props.upsertTransaction({
           ...transactionReceipt,
-          transactionTypeKey: 'buyListing'
+          transactionTypeKey: 'makeOffer'
         })
         this.setState({ step: this.STEP.PURCHASED })
       } catch (error) {
@@ -516,7 +516,7 @@ class ListingsDetail extends Component {
                     </span>
                   </h2>
                   {reviews.map(r => (
-                    <Review key={r.transactionHash} review={r} />
+                    <Review key={r.id} review={r} />
                   ))}
                   {/* To Do: pagination */}
                   {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}

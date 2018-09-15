@@ -3108,7 +3108,7 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .purchase-detail .progress-container {
-  margin: 0 1rem 1rem;
+  margin: 0 15px 15px;
 }
 
 .guidance {
@@ -3119,6 +3119,18 @@ select.form-control:not([size]):not([multiple]) {
   padding: 2rem;
 }
 
+.guidance .triangles {
+  bottom: 100%;
+  left: 0;
+  padding: 0 23px;
+  position: absolute;
+  width: 100%;
+}
+
+.guidance .triangle-pair.hidden {
+  visibility: hidden;
+}
+
 .guidance .triangle {
   position: absolute;
   border: solid transparent;
@@ -3127,10 +3139,6 @@ select.form-control:not([size]):not([multiple]) {
   height: 0;
   pointer-events: none;
   width: 0;
-
-  /* nice to have this animation follow the purchase progress bar */
-  /* but they tend to not be perfectly in sync */
-  /*transition: left 200ms linear 800ms;*/
 }
 
 .guidance .triangle:first-of-type {
@@ -3158,6 +3166,22 @@ select.form-control:not([size]):not([multiple]) {
 
 .guidance .instruction:not(:last-child) {
   margin-bottom: 1rem;
+}
+
+.guidance button:not(:first-of-type) {
+  margin-left: 10px;
+}
+
+.guidance form {
+  margin-bottom: 1rem;
+}
+
+.guidance .button-container:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+.guidance a {
+  font-size: 0.875rem;
 }
 
 .purchase-detail button {
@@ -3220,7 +3244,7 @@ select.form-control:not([size]):not([multiple]) {
   margin-top: 20px;
 }
 
-.purchase-detail form {
+.purchase-detail .prompt + form {
   padding-top: 1rem;
 }
 

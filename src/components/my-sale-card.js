@@ -9,6 +9,8 @@ import { fetchUser } from 'actions/User'
 
 import PurchaseProgress from 'components/purchase-progress'
 
+import { offerStatusToStep } from 'utils/offer'
+
 class MySaleCard extends Component {
   constructor(props) {
     super(props)
@@ -68,7 +70,7 @@ class MySaleCard extends Component {
       this.props.intl.formatMessage(this.intlMessages.unnamedUser)
     const photo = pictures && pictures.length > 0 && pictures[0]
     const soldAt = Number(purchase.createdAt) * 1000 // convert seconds since epoch to ms
-    const step = parseInt(purchase.status)
+    const step = offerStatusToStep(purchase.status)
 
     return (
       <div className="sale card">

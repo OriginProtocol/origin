@@ -14,6 +14,7 @@ import {
   upsert as upsertTransaction
 } from 'actions/Transaction'
 
+import { ConfirmationModal, IssueModal, RejectionModal } from 'components/arbitration-modals'
 import Avatar from 'components/avatar'
 import Modal from 'components/modal'
 import PurchaseProgress from 'components/purchase-progress'
@@ -36,6 +37,11 @@ const defaultState = {
     reviewText: ''
   },
   listing: {},
+  modalsOpen: {
+    confirmation: false,
+    issue: false,
+    rejection: false
+  },
   processing: false,
   purchase: {},
   reviews: [],
@@ -47,12 +53,16 @@ class PurchaseDetail extends Component {
     super(props)
 
     this.acceptOffer = this.acceptOffer.bind(this)
-    this.confirmReceipt = this.confirmReceipt.bind(this)
+    this.completePurchase = this.completePurchase.bind(this)
+    this.handleProblem = this.handleProblem.bind(this)
     this.handleRating = this.handleRating.bind(this)
     this.handleReviewText = this.handleReviewText.bind(this)
     this.initiateDispute = this.initiateDispute.bind(this)
     this.leaveReview = this.leaveReview.bind(this)
     this.loadPurchase = this.loadPurchase.bind(this)
+    this.rejectOffer = this.rejectOffer.bind(this)
+    this.toggleModal = this.toggleModal.bind(this)
+    this.withdrawOffer = this.withdrawOffer.bind(this)
     this.state = defaultState
 
     this.intlMessages = defineMessages({
@@ -61,29 +71,29 @@ class PurchaseDetail extends Component {
         defaultMessage: 'Wait for the seller to approve your offer'
       },
       acceptBuyersOffer: {
-        id: 'purchase-detail.acceptBuyersOffer',
-        defaultMessage: 'Accept the buyer\'s offer'
+        id: 'purchase-detail.acceptOrRejectOffer',
+        defaultMessage: 'Accept or reject the buyer\'s offer'
       },
       acceptOfferInstruction: {
         id: 'purchase-detail.acceptOfferInstruction',
-        defaultMessage: 'Click the button below to accept the offer.'
+        defaultMessage: 'Click below to cancel or continue this transaction.'
       },
       acceptOffer: {
         id: 'purchase-detail.acceptOffer',
-        defaultMessage: 'Accept Offer'
+        defaultMessage: 'Accept'
       },
-      confirmReceiptOfOrder: {
-        id: 'purchase-detail.confirmReceiptOfOrder',
-        defaultMessage: 'Confirm receipt of the order and leave a review'
+      completePurchase: {
+        id: 'purchase-detail.completePurchase',
+        defaultMessage: 'Complete your purchase and leave a review'
       },
       submitThisForm: {
         id: 'purchase-detail.submitThisForm',
         defaultMessage:
-          'Submit this form once you have reviewed shipment of your order.'
+          'Submit this form once you confirm that you are satisfied with your purchase.'
       },
       confirmAndReview: {
         id: 'purchase-detail.confirmAndReview',
-        defaultMessage: 'Confirm and review'
+        defaultMessage: 'Confirm and Review'
       },
       buyerReviewPlaceholder: {
         id: 'purchase-detail.buyerReviewPlaceholder',
@@ -92,7 +102,11 @@ class PurchaseDetail extends Component {
       },
       waitForBuyer: {
         id: 'purchase-detail.waitForBuyer',
-        defaultMessage: 'Wait for the buyer to receive the order'
+        defaultMessage: 'Wait for the buyer to finalize the transaction'
+      },
+      fulfillObligation: {
+        id: 'purchase-detail.fulfillObligation',
+        defaultMessage: 'Make sure you fulfill the order.'
       },
       awaitSellerReview: {
         id: 'purchase-detail.awaitSellerReview',
@@ -110,55 +124,111 @@ class PurchaseDetail extends Component {
         id: 'purchase-detail.withdrawAndReview',
         defaultMessage: 'Leave a review'
       },
+      rejectOffer: {
+        id: 'purchase-detail.rejectOffer',
+        defaultMessage: 'Reject'
+      },
+      reportProblem: {
+        id: 'purchase-detail.reportProblem',
+        defaultMessage: 'Report a Problem'
+      },
       sellerReviewPlaceholder: {
         id: 'purchase-detail.sellerReviewPlaceholder',
         defaultMessage:
           'Your review should inform others about your experience transacting with this buyer.'
+      },
+      withdrawOffer: {
+        id: 'purchase-detail.withdrawOffer',
+        defaultMessage: 'Withdraw Offer'
       }
     })
 
     this.nextSteps = {
       created: {
         buyer: {
-          prompt: this.props.intl.formatMessage(this.intlMessages.awaitApproval)
+          prompt: this.props.intl.formatMessage(this.intlMessages.awaitApproval),
+          buttons: [],
+          link: {
+            functionName: 'withdrawOffer',
+            text: this.props.intl.formatMessage(
+              this.intlMessages.withdrawOffer
+            )
+          }
         },
         seller: {
           prompt: this.props.intl.formatMessage(this.intlMessages.acceptBuyersOffer),
           instruction: this.props.intl.formatMessage(
             this.intlMessages.acceptOfferInstruction
           ),
-          buttonText: this.props.intl.formatMessage(
-            this.intlMessages.acceptOffer
-          ),
-          functionName: 'acceptOffer'
+          buttons: [
+            {
+              functionName: 'rejectOffer',
+              text: this.props.intl.formatMessage(
+                this.intlMessages.rejectOffer
+              )
+            },
+            {
+              functionName: 'acceptOffer',
+              text: this.props.intl.formatMessage(
+                this.intlMessages.acceptOffer
+              )
+            }
+          ],
+          link: {
+            functionName: 'handleProblem',
+            text: this.props.intl.formatMessage(
+              this.intlMessages.reportProblem
+            )
+          }
         }
       },
       accepted: {
         buyer: {
           prompt: this.props.intl.formatMessage(
-            this.intlMessages.confirmReceiptOfOrder
+            this.intlMessages.completePurchase
           ),
           instruction: this.props.intl.formatMessage(
             this.intlMessages.submitThisForm
           ),
-          buttonText: this.props.intl.formatMessage(
-            this.intlMessages.confirmAndReview
-          ),
-          functionName: 'confirmReceipt',
           placeholderText: this.props.intl.formatMessage(
             this.intlMessages.buyerReviewPlaceholder
           ),
+          buttons: [
+            {
+              functionName: 'completePurchase',
+              text: this.props.intl.formatMessage(
+                this.intlMessages.confirmAndReview
+              )
+            }
+          ],
+          link: {
+            functionName: '',
+            text: this.props.intl.formatMessage(
+              this.intlMessages.reportProblem
+            )
+          },
           reviewable: true
         },
         seller: {
-          prompt: this.props.intl.formatMessage(this.intlMessages.waitForBuyer)
+          prompt: this.props.intl.formatMessage(this.intlMessages.waitForBuyer),
+          instruction: this.props.intl.formatMessage(
+            this.intlMessages.fulfillObligation
+          ),
+          buttons: [],
+          link: {
+            functionName: '',
+            text: this.props.intl.formatMessage(
+              this.intlMessages.reportProblem
+            )
+          }
         }
       },
       finalized: {
         buyer: {
           prompt: this.props.intl.formatMessage(
             this.intlMessages.awaitSellerReview
-          )
+          ),
+          buttons: []
         },
         seller: {
           prompt: this.props.intl.formatMessage(
@@ -167,13 +237,17 @@ class PurchaseDetail extends Component {
           instruction: this.props.intl.formatMessage(
             this.intlMessages.clickToReview
           ),
-          buttonText: this.props.intl.formatMessage(
-            this.intlMessages.leaveReview
-          ),
-          functionName: 'leaveReview',
           placeholderText: this.props.intl.formatMessage(
             this.intlMessages.sellerReviewPlaceholder
           ),
+          buttons: [
+            {
+              functionName: 'leaveReview',
+              text: this.props.intl.formatMessage(
+                this.intlMessages.leaveReview
+              )
+            }
+          ],
           reviewable: true
         }
       }
@@ -238,7 +312,7 @@ class PurchaseDetail extends Component {
     }
   }
 
-  async confirmReceipt() {
+  async completePurchase() {
     const { offerId } = this.props
     const { rating, reviewText } = this.state.form
     const { purchase, listing } = this.state
@@ -266,14 +340,14 @@ class PurchaseDetail extends Component {
         ...transactionReceipt,
         offer,
         listing,
-        transactionTypeKey: 'confirmReceipt'
+        transactionTypeKey: 'completePurchase'
       })
 
       this.setState({ processing: false })
     } catch (error) {
       this.setState({ processing: false })
 
-      console.error('Error marking purchase received by buyer')
+      console.error('Error completing purchase')
       console.error(error)
     }
   }
@@ -309,9 +383,18 @@ class PurchaseDetail extends Component {
     } catch (error) {
       this.setState({ processing: false })
 
-      console.error('Error marking purchase shipped by seller')
+      console.error('Error accepting offer')
       console.error(error)
     }
+  }
+
+  async rejectOffer() {
+    this.toggleModal('rejection')
+    alert('To Do')
+  }
+
+  async withdrawOffer() {
+    alert('To Do')
   }
 
   async leaveReview() {
@@ -356,6 +439,10 @@ class PurchaseDetail extends Component {
     }
   }
 
+  handleProblem() {
+    this.toggleModal('confirmation')
+  }
+
   // rating: 1 <= integer <= 5
   handleRating(rating) {
     this.setState(prevState => {
@@ -391,19 +478,33 @@ class PurchaseDetail extends Component {
     }
   }
 
+  toggleModal(name) {
+    this.setState(prevState => {
+      return {
+        modalsOpen: {
+          ...prevState.modalsOpen,
+          [name]: !prevState.modalsOpen[name]
+        }
+      }
+    })
+  }
+
   render() {
     const { messages, web3Account } = this.props
     const {
       buyer,
+      describingProblem,
       form,
       listing,
+      modalsOpen,
       processing,
       purchase,
       reviews,
       seller
     } = this.state
-    const isPending = purchase.status !== 'finalized'
-    const isSold = purchase.status === 'finalized'
+    const step = offerStatusToStep(purchase.status)
+    const isPending = purchase.status !== 'withdrawn' && step < 3
+    const isSold = step > 2
     const { rating, reviewText } = form
 
     // Data not loaded yet.
@@ -438,18 +539,16 @@ class PurchaseDetail extends Component {
     const counterpartyUser = counterparty === 'buyer' ? buyer : seller
     const status = active ? 'active' : 'inactive'
     const maxStep = perspective === 'seller' ? 4 : 3
-    const step = offerStatusToStep(purchase.status)
-    const left = progressTriangleOffset(step, maxStep, perspective)
 
     const nextStep = perspective && this.nextSteps[purchase.status]
     const {
-      buttonText,
-      functionName,
+      buttons,
       instruction,
+      link,
       placeholderText,
       prompt,
       reviewable
-    } = nextStep ? nextStep[perspective] : {}
+    } = nextStep ? nextStep[perspective] : { buttons: [] }
 
     const buyerName = buyer.profile ? (
       `${buyer.profile.firstName} ${buyer.profile.lastName}`
@@ -485,34 +584,66 @@ class PurchaseDetail extends Component {
         <div className="container">
           <div className="row">
             <div className="col-12">
-              <div className="brdcrmb">
-                {perspective === 'buyer' && (
-                  <FormattedMessage
-                    id={'purchase-detail.purchasedFrom'}
-                    defaultMessage={'Purchased from {sellerLink}'}
-                    values={{
-                      sellerLink: (
-                        <Link to={`/users/${counterpartyUser.address}`}>
-                          {sellerName}
-                        </Link>
-                      )
-                    }}
-                  />
-                )}
-                {perspective === 'seller' && (
-                  <FormattedMessage
-                    id={'purchase-detail.soldTo'}
-                    defaultMessage={'Sold to {buyerLink}'}
-                    values={{
-                      buyerLink: (
-                        <Link to={`/users/${counterpartyUser.address}`}>
-                          {buyerName}
-                        </Link>
-                      )
-                    }}
-                  />
-                )}
-              </div>
+              {offerFinalized &&
+                <div className="brdcrmb">
+                  {perspective === 'buyer' && (
+                    <FormattedMessage
+                      id={'purchase-detail.purchasedFrom'}
+                      defaultMessage={'Purchased from {sellerLink}'}
+                      values={{
+                        sellerLink: (
+                          <Link to={`/users/${counterpartyUser.address}`}>
+                            {sellerName}
+                          </Link>
+                        )
+                      }}
+                    />
+                  )}
+                  {perspective === 'seller' && (
+                    <FormattedMessage
+                      id={'purchase-detail.soldTo'}
+                      defaultMessage={'Sold to {buyerLink}'}
+                      values={{
+                        buyerLink: (
+                          <Link to={`/users/${counterpartyUser.address}`}>
+                            {buyerName}
+                          </Link>
+                        )
+                      }}
+                    />
+                  )}
+                </div>
+              }
+              {!offerFinalized && !offerWithdrawn &&
+                <div className="brdcrmb">
+                  {perspective === 'buyer' && (
+                    <FormattedMessage
+                      id={'purchase-detail.purchasingFrom'}
+                      defaultMessage={'Purchasing from {sellerLink}'}
+                      values={{
+                        sellerLink: (
+                          <Link to={`/users/${counterpartyUser.address}`}>
+                            {sellerName}
+                          </Link>
+                        )
+                      }}
+                    />
+                  )}
+                  {perspective === 'seller' && (
+                    <FormattedMessage
+                      id={'purchase-detail.sellingTo'}
+                      defaultMessage={'Selling to {buyerLink}'}
+                      values={{
+                        buyerLink: (
+                          <Link to={`/users/${counterpartyUser.address}`}>
+                            {buyerName}
+                          </Link>
+                        )
+                      }}
+                    />
+                  )}
+                </div>
+              }
               <h1>
                 {listing.name}
                 {isPending && (
@@ -614,8 +745,23 @@ class PurchaseDetail extends Component {
                 {nextStep && (
                   <div className="col-12">
                     <div className="guidance text-center">
-                      <div className="triangle" style={{ left }} />
-                      <div className="triangle" style={{ left }} />
+                      <div className="triangles d-flex justify-content-between">
+                        {[...Array(maxStep)].map((undef, i) => {
+                          const count = i + 1
+                          const visible = step === count || /* matched */
+                                          (step === 0 && !i) || /* unknown, fallback to beginning */
+                                          (step > maxStep && count === maxStep) /* include end if passed */
+                          return (
+                            <div
+                              key={`triangle-pair-${count}`}
+                              className={`triangle-pair${visible ? '' : ' hidden'}`}
+                            >
+                              <div className="triangle" />
+                              <div className="triangle" />
+                            </div>
+                          )
+                        })}
+                      </div>
                       <div className="prompt">
                         <strong>
                           <FormattedMessage
@@ -625,12 +771,29 @@ class PurchaseDetail extends Component {
                         </strong>
                         &nbsp;{prompt}
                       </div>
+                      {reviewable && instruction &&
+                        <div className="instruction">
+                          {instruction}
+                        </div>
+                      }
+                      {!reviewable &&
+                        <div className="instruction">
+                          {instruction || 
+                            <FormattedMessage
+                              id={'purchase-detail.nothingToDo'}
+                              defaultMessage={
+                                'Nothing for you to do at this time. Check back later'
+                              }
+                            />
+                          }
+                        </div>
+                      }
                       {reviewable && (
                         <form
                           onSubmit={e => {
                             e.preventDefault()
 
-                            this[functionName]()
+                            this[buttons[0].functionName]()
                           }}
                         >
                           <div className="form-group">
@@ -663,34 +826,37 @@ class PurchaseDetail extends Component {
                               onChange={this.handleReviewText}
                             />
                           </div>
-                          <div className="button-container text-right">
+                          <div className="button-container">
                             <button type="submit" className="btn btn-primary">
-                              {buttonText}
+                              {buttons[0].text}
                             </button>
                           </div>
                         </form>
                       )}
-                      {!reviewable &&
-                        buttonText && (
-                        <Fragment>
-                          <div className="instruction">
-                            {instruction || (
-                              <FormattedMessage
-                                id={'purchase-detail.nothingToDo'}
-                                defaultMessage={
-                                  'Nothing for you to do at this time. Check back later'
-                                }
-                              />
-                            )}
-                          </div>
-                          <button
-                            className="btn btn-primary"
-                            onClick={this[functionName]}
-                          >
-                            {buttonText}
-                          </button>
-                        </Fragment>
-                      )}
+                      {!reviewable && !!buttons.length &&
+                        <div className="button-container">
+                          {buttons.map((b, i) => (
+                            <button
+                              key={`next-step-button-${i}`}
+                              className="btn btn-primary"
+                              onClick={this[b.functionName]}
+                            >
+                              {b.text}
+                            </button>
+                          ))}
+                        </div>
+                      }
+                      {link &&
+                        <div className="link-container">
+                          <a href="#" onClick={e => {
+                            e.preventDefault()
+
+                            this[link.functionName]()
+                          }}>
+                            {link.text}
+                          </a>
+                        </div>
+                      }
                     </div>
                   </div>
                 )}
@@ -732,26 +898,26 @@ class PurchaseDetail extends Component {
                 </thead>
                 <tbody>
                   <TransactionEvent
-                    eventName="Offer made"
+                    eventName="Offer Made"
                     transaction={offerCreated}
                     buyer={buyer}
                     seller={seller}
                   />
                   <TransactionEvent
-                    eventName="Offer accepted"
+                    eventName="Offer Withdrawn"
+                    transaction={offerWithdrawn}
+                    buyer={buyer}
+                    seller={seller}
+                  />
+                  <TransactionEvent
+                    eventName="Offer Accepted"
                     transaction={offerAccepted}
                     buyer={buyer}
                     seller={seller}
                   />
                   <TransactionEvent
-                    eventName="Offer finalized"
+                    eventName="Received by Buyer"
                     transaction={offerFinalized}
-                    buyer={buyer}
-                    seller={seller}
-                  />
-                  <TransactionEvent
-                    eventName="Offer withdrawn"
-                    transaction={offerWithdrawn}
                     buyer={buyer}
                     seller={seller}
                   />
@@ -844,9 +1010,9 @@ class PurchaseDetail extends Component {
                     {Number(reviews.length).toLocaleString()}
                   </span>
                 </h2>
-                {reviews.map(r => (
-                  <Review key={r.transactionHash} review={r} />
-                ))}
+                {reviews.map(r =>
+                  <Review key={r.id} review={r} />
+                )}
                 {/* To Do: pagination */}
                 {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
               </div>
@@ -915,31 +1081,30 @@ class PurchaseDetail extends Component {
             />
           </Modal>
         )}
+        <ConfirmationModal
+          isOpen={modalsOpen.confirmation}
+          onCancel={() => this.toggleModal('confirmation')}
+          onSubmit={() => {
+            this.toggleModal('confirmation')
+            this.toggleModal('issue')
+          }}
+        />
+        <IssueModal
+          isOpen={modalsOpen.issue}
+          handleToggle={() => this.toggleModal('issue')}
+          onCancel={() => this.toggleModal('issue')}
+          onSubmit={() => {
+            alert('To Do')
+            this.toggleModal('issue')
+          }}
+        />
+        <RejectionModal
+          isOpen={modalsOpen.rejection}
+          handleToggle={() => this.toggleModal('rejection')}
+        />
       </div>
     )
   }
-}
-
-function progressTriangleOffset(step, maxStep, perspective) {
-  let decimal, left
-
-  if (!step) {
-    left = '28px'
-  } else if (step === 1) {
-    if (perspective === 'buyer') {
-      left = '28px'
-    } else {
-      decimal = step / (maxStep - 1)
-      left = `calc(${decimal * 100}% + ${decimal * 28}px)`
-    }
-  } else if (step >= maxStep - 1) {
-    left = 'calc(100% - 28px)'
-  } else {
-    decimal = (step - 1) / (maxStep - 1)
-    left = `calc(${decimal * 100}% + ${decimal * 28}px)`
-  }
-
-  return left
 }
 
 const mapStateToProps = state => {
