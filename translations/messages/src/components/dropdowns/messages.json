@@ -1,5 +1,9 @@
 [
   {
+    "id": "messagesDropdown.viewYourMessages",
+    "defaultMessage": "view your messages"
+  },
+  {
     "id": "messagesDropdown.messageHeading",
     "defaultMessage": "Unread Message"
   },

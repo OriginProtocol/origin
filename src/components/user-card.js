@@ -20,6 +20,10 @@ class UserCard extends Component {
       unnamedUser: {
         id: 'user-card.unnamedUser',
         defaultMessage: 'Unnamed User'
+      },
+      sendMessages: {
+        id: 'messages-send.sendMessages',
+        defaultMessage: 'send messages'
       }
     })
 
@@ -36,9 +40,11 @@ class UserCard extends Component {
 
   handleToggle(e) {
     e.preventDefault()
-    this.props.storeWeb3Intent('send messages')
+    const { storeWeb3Intent, intl, web3Account } = this.props
+    const intent = intl.formatMessage(this.intlMessages.sendMessages)
+    storeWeb3Intent(intent)
 
-    if (web3.givenProvider && this.props.web3Account) {
+    if (web3.givenProvider && web3Account) {
       this.setState({ modalOpen: !this.state.modalOpen })
     }
   }
