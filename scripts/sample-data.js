@@ -102,7 +102,6 @@ async function createSampleData() {
     )
 
     const newListing = await o.marketplace.createListing({
-      schemaVersion: '1.0.0',
       listingType: 'unit',
       title: listingName,
       category: CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)],
@@ -131,7 +130,6 @@ async function createSampleData() {
       }}`
     )
     await o.marketplace.makeOffer(listing.id, {
-      schemaVersion: '1.0.0',
       listingType: 'unit',
       unitsPurchased: 1,
       totalPrice: listing.price
