@@ -12,7 +12,7 @@ contract ClaimHolderPresigned is ClaimHolderRegistered {
 
     constructor(
         address _userRegistryAddress,
-        uint256[] _claimType,
+        uint256[] _topic,
         address[] _issuer,
         bytes _signature,
         bytes _data,
@@ -24,7 +24,7 @@ contract ClaimHolderPresigned is ClaimHolderRegistered {
         ClaimHolderLibrary.addClaims(
             keyHolderData,
             claims,
-            _claimType,
+            _topic,
             _issuer,
             _signature,
             _data,

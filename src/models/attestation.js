@@ -1,4 +1,4 @@
-const claimTypeMapping = {
+const topicMapping = {
   3: 'facebook',
   4: 'twitter',
   5: 'airbnb',
@@ -7,10 +7,10 @@ const claimTypeMapping = {
 }
 
 export default class Attestation {
-  constructor({ claimType, data, signature }) {
-    claimType = Number(claimType)
-    this.claimType = claimType
-    this.service = claimTypeMapping[claimType]
+  constructor({ topic, data, signature }) {
+    topic = Number(topic)
+    this.topic = topic
+    this.service = topicMapping[topic]
     this.data = data
     this.signature = signature
   }

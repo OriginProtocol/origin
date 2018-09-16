@@ -4,8 +4,8 @@ import './ClaimHolder.sol';
 
 contract ClaimVerifier {
 
-  event ClaimValid(ClaimHolder _identity, uint256 claimType);
-  event ClaimInvalid(ClaimHolder _identity, uint256 claimType);
+  event ClaimValid(ClaimHolder _identity, uint256 topic);
+  event ClaimInvalid(ClaimHolder _identity, uint256 topic);
 
   ClaimHolder public trustedClaimHolder;
 
@@ -13,37 +13,37 @@ contract ClaimVerifier {
     trustedClaimHolder = ClaimHolder(_trustedClaimHolder);
   }
 
-  function checkClaim(ClaimHolder _identity, uint256 claimType)
+  function checkClaim(ClaimHolder _identity, uint256 topic)
     public
     returns (bool claimValid)
   {
-    if (claimIsValid(_identity, claimType)) {
-      emit ClaimValid(_identity, claimType);
+    if (claimIsValid(_identity, topic)) {
+      emit ClaimValid(_identity, topic);
       return true;
     } else {
-      emit ClaimInvalid(_identity, claimType);
+      emit ClaimInvalid(_identity, topic);
       return false;
     }
   }
 
-  function claimIsValid(ClaimHolder _identity, uint256 claimType)
+  function claimIsValid(ClaimHolder _identity, uint256 topic)
     public
     constant
     returns (bool claimValid)
   {
-    uint256 foundClaimType;
+    uint256 foundTopic;
     uint256 scheme;
     address issuer;
     bytes memory sig;
     bytes memory data;
 
     // Construct claimId (identifier + claim type)
-    bytes32 claimId = keccak256(abi.encodePacked(trustedClaimHolder, claimType));
+    bytes32 claimId = keccak256(abi.encodePacked(trustedClaimHolder, topic));
 
     // Fetch claim from user
-    ( foundClaimType, scheme, issuer, sig, data, ) = _identity.getClaim(claimId);
+    ( foundTopic, scheme, issuer, sig, data, ) = _identity.getClaim(claimId);
 
-    bytes32 dataHash = keccak256(abi.encodePacked(_identity, claimType, data));
+    bytes32 dataHash = keccak256(abi.encodePacked(_identity, topic, data));
     bytes32 prefixedHash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", dataHash));
 
     // Recover address of data signer

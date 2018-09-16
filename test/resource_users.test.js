@@ -17,18 +17,18 @@ const issuerPrivatekey =
 const generateAttestation = async ({
   identityAddress,
   web3,
-  claimType,
+  topic,
   data
 }) => {
   data = Web3.utils.soliditySha3(data)
-  const msg = Web3.utils.soliditySha3(identityAddress, claimType, data)
+  const msg = Web3.utils.soliditySha3(identityAddress, topic, data)
   const signing = web3.eth.accounts.sign(msg, issuerPrivatekey)
   const signature = signing.signature
-  return new AttestationObject({ claimType, data, signature })
+  return new AttestationObject({ topic, data, signature })
 }
 
 const invalidAttestation = new AttestationObject({
-  claimType: 123,
+  topic: 123,
   data: Web3.utils.sha3('gibberish'),
   signature:
     '0x4e8feba65cbd88fc246013da8dfb478e880518594d86349f54af9c8d5e2eac2b223222c4c6b93f18bd54fc88f4342f1b02a8ea764a411fc02823a3420574375c1c'
@@ -69,31 +69,31 @@ describe('User Resource', function() {
     phoneAttestation = await generateAttestation({
       identityAddress,
       web3,
-      claimType: 10,
+      topic: 10,
       data: 'phone verified'
     })
     emailAttestation = await generateAttestation({
       identityAddress,
       web3,
-      claimType: 11,
+      topic: 11,
       data: 'email verified'
     })
     facebookAttestation = await generateAttestation({
       identityAddress,
       web3,
-      claimType: 3,
+      topic: 3,
       data: 'facebook verified'
     })
     twitterAttestation = await generateAttestation({
       identityAddress,
       web3,
-      claimType: 4,
+      topic: 4,
       data: 'twitter verified'
     })
     // airbnbAttestation = await generateAttestation({
     //   identityAddress,
     //   web3,
-    //   claimType: 5,
+    //   topic: 5,
     //   data: 'airbnb verified'
     // })
   })

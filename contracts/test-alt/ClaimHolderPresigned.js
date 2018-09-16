@@ -25,7 +25,7 @@ describe('ClaimHolderPresigned', async function() {
     } = await helper(`${__dirname}/..`))
 
     attestation_1 = {
-      claimType: 1,
+      topic: 1,
       scheme: 1,
       issuer: accounts[1],
       signature: signature_1,
@@ -33,7 +33,7 @@ describe('ClaimHolderPresigned', async function() {
       uri: ''
     }
     attestation_2 = {
-      claimType: 2,
+      topic: 2,
       scheme: 1,
       issuer: accounts[2],
       signature: signature_2,
@@ -50,7 +50,7 @@ describe('ClaimHolderPresigned', async function() {
       path: `${contractPath}/identity/`,
       args: [
         userRegistry._address,
-        [attestation_1.claimType, attestation_2.claimType],
+        [attestation_1.topic, attestation_2.topic],
         [attestation_1.issuer, attestation_2.issuer],
         attestation_1.signature + attestation_2.signature.slice(2),
         attestation_1.data + attestation_2.data.slice(2),
@@ -63,19 +63,19 @@ describe('ClaimHolderPresigned', async function() {
     // Check attestation 1
     const claimId_1 = soliditySha3(
       attestation_1.issuer,
-      attestation_1.claimType
+      attestation_1.topic
     )
     const fetchedClaim_1 = await claimHolderPresigned.methods.getClaim(claimId_1).call()
     assert.ok(fetchedClaim_1)
     let {
-      claimType,
+      topic,
       scheme,
       issuer,
       signature,
       data,
       uri
     } = fetchedClaim_1
-    assert.equal(Number(claimType), attestation_1.claimType)
+    assert.equal(Number(topic), attestation_1.topic)
     assert.equal(Number(scheme), attestation_1.scheme)
     assert.equal(issuer, attestation_1.issuer)
     assert.equal(signature, attestation_1.signature)
@@ -85,19 +85,19 @@ describe('ClaimHolderPresigned', async function() {
     // Check attestation 2
     const claimId_2 = soliditySha3(
       attestation_2.issuer,
-      attestation_2.claimType
+      attestation_2.topic
     )
     const fetchedClaim_2 = await claimHolderPresigned.methods.getClaim(claimId_2).call()
     assert.ok(fetchedClaim_2);
     ({
-      claimType,
+      topic,
       scheme,
       issuer,
       signature,
       data,
       uri
     } = fetchedClaim_2)
-    assert.equal(Number(claimType), attestation_2.claimType)
+    assert.equal(Number(topic), attestation_2.topic)
     assert.equal(Number(scheme), attestation_2.scheme)
     assert.equal(issuer, attestation_2.issuer)
     assert.equal(signature, attestation_2.signature)

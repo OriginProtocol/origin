@@ -31,7 +31,7 @@ const expectGetParams = (requestUrl, params) => {
 const expectAttestation = result => {
   expect(result.signature).to.equal(sampleAttestation.signature)
   expect(result.data).to.equal(Web3.utils.soliditySha3(sampleAttestation.data))
-  expect(result.claimType).to.equal(sampleAttestation['claim-type'])
+  expect(result.topic).to.equal(sampleAttestation['claim-type'])
 }
 
 const setup = () => {

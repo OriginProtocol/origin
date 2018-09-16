@@ -49,14 +49,16 @@ describe('Identity', async function() {
   describe('Keys', async function() {
     it('should set a default MANAGEMENT_KEY', async function() {
       const res = await UserIdentity.methods.getKey(acctSha3).call()
-      assert.equal(res.purpose, '1')
+      assert.equal(res.purposes.length, 1)
+      assert.equal(res.purposes[0], '1')
       assert.equal(res.keyType, '1')
       assert.equal(res.key, acctSha3)
     })
 
-    it('should respond to getKeyPurpose', async function() {
-      const res = await UserIdentity.methods.getKeyPurpose(acctSha3).call()
-      assert.equal(res, '1')
+    it('should respond to getKeyPurposes', async function() {
+      const res = await UserIdentity.methods.getKeyPurposes(acctSha3).call()
+      assert.equal(res.length, 1)
+      assert.equal(res[0], '1')
     })
 
     it('should respond to getKeysByPurpose', async function() {
@@ -114,14 +116,14 @@ describe('Identity', async function() {
     })
 
     it('should have 1 claim by type', async function() {
-      const byTypeRes = await UserIdentity.methods.getClaimIdsByType(1).call()
-      assert.equal(byTypeRes.length, 1)
+      const byTopicRes = await UserIdentity.methods.getClaimIdsByTopic(1).call()
+      assert.equal(byTopicRes.length, 1)
     })
 
     it('should respond to getClaim', async function() {
       const claimId = web3.utils.soliditySha3(accounts[0], 1)
       const claim = await UserIdentity.methods.getClaim(claimId).call()
-      assert.equal(claim.claimType, '1')
+      assert.equal(claim.topic, '1')
     })
 
     // it('should respond to isClaimValid', async function() {
@@ -138,7 +140,7 @@ describe('Identity', async function() {
       assert(response.events.ClaimRemoved)
 
       const claim = await UserIdentity.methods.getClaim(claimId).call()
-      assert.equal(claim.claimType, '0')
+      assert.equal(claim.topic, '0')
     })
   })
 

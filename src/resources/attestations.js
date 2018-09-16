@@ -20,7 +20,7 @@ class Attestations {
 
     this.responseToAttestation = (resp = {}) => {
       return new AttestationObject({
-        claimType: resp['claim-type'],
+        topic: resp['claim-type'],
         data: Web3.utils.soliditySha3(resp['data']),
         signature: resp['signature']
       })
