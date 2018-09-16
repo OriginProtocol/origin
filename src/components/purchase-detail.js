@@ -920,7 +920,7 @@ class PurchaseDetail extends Component {
                           ))}
                         </div>
                       }
-                      {link &&
+                      {link && (functionName !== 'handleProblem' || isEligibleForArbitration) &&
                         <div className="link-container">
                           <a href="#" onClick={e => {
                             e.preventDefault()
@@ -1014,16 +1014,6 @@ class PurchaseDetail extends Component {
                   userAddress={counterpartyUser.address}
                 />
               )}
-              {isEligibleForArbitration &&
-                <div className="help-container text-center" style={{ paddingTop: '30px' }}>
-                  {!arbitrationKeyShared &&
-                    <button className="btn btn-danger" onClick={this.initiateDispute}>HELP</button>
-                  }
-                  {arbitrationKeyShared &&
-                    <h3>Help is on the way! 🚑</h3>
-                  }
-                </div>
-              }
             </div>
           </div>
           <div className="row">
