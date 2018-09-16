@@ -93,14 +93,15 @@ describe('Marketplace Resource', function() {
     })
   })
 
-  // TODO: either don't return withdrawn listings, or have some property that indicates withdraws status
-  describe.skip('withdrawListing', () => {
+  describe('withdrawListing', () => {
     it('should delete a listing', async () => {
       let listings = await marketplace.getListings()
       expect(listings.length).to.equal(1)
-      await marketplace.withdrawListing(listings[0])
+      expect(listings[0].status).to.equal('active')
+      await marketplace.withdrawListing(listings[0].id)
       listings = await marketplace.getListings()
-      expect(listings.length).to.equal(0)
+      expect(listings.length).to.equal(1)
+      expect(listings[0].status).to.equal('inactive')
     })
   })
 
@@ -163,6 +164,18 @@ describe('Marketplace Resource', function() {
       await marketplace.finalizeOffer('999-001-0-0', reviewData)
       offer = await marketplace.getOffer('999-001-0-0')
       expect(offer.status).to.equal('finalized')
+    })
+  })
+
+  describe('sellerReview', () => {
+    it('should changed the status to sellerReviewed', async () => {
+      let offer = await marketplace.getOffer('999-001-0-0')
+      expect(offer.status).to.equal('created')
+      await marketplace.acceptOffer('999-001-0-0')
+      await marketplace.finalizeOffer('999-001-0-0', reviewData)
+      await marketplace.addData(0, offer.id, reviewData)
+      offer = await marketplace.getOffer('999-001-0-0')
+      expect(offer.status).to.equal('sellerReviewed')
     })
   })
 

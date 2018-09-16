@@ -4,7 +4,9 @@ const OFFER_STATUS = [
   'accepted',
   'disputed',
   'finalized',
-  'sellerReviewed'
+  'sellerReviewed',
+  'withdrawn',
+  'ruled'
 ]
 const emptyAddress = '0x0000000000000000000000000000000000000000'
 
@@ -125,7 +127,9 @@ class V00_MarkeplaceAdapter {
   async getListing(listingId) {
     await this.getContract()
 
-    // Get the raw listing data from the contract
+    // Get the raw listing data from the contract.
+    // Note: once a listing is withdrawn, it is deleted from the blockchain to save
+    // on gas. In this cases rawListing is returned as an object with all its fields set to zero.
     const rawListing = await this.call('listings', [listingId])
 
     // Find all events related to this listing
@@ -136,9 +140,9 @@ class V00_MarkeplaceAdapter {
     })
 
     const status =
-      rawListing.seller.indexOf('0x00000') === 0 ? 'inactive' : 'active'
+      rawListing.seller === emptyAddress ? 'inactive' : 'active'
 
-    // Loop through the events looking and update the IPFS hash appropriately
+    // Loop through the events looking and update the IPFS hash and offers appropriately.
     let ipfsHash
     const offers = {}
     events.forEach(event => {
@@ -210,6 +214,8 @@ class V00_MarkeplaceAdapter {
     await this.getContract()
 
     // Get the raw listing data from the contract
+    // Note: once an offer is finalized|ruled|withdrawn, it is deleted from the blockchain to save
+    // on gas. In those cases rawOffer is returned as an object with all its fields set to zero.
     const rawOffer = await this.call('offers', [listingIndex, offerIndex])
 
     // Find all events related to this offer
@@ -220,27 +226,33 @@ class V00_MarkeplaceAdapter {
       fromBlock: 0
     })
 
-    // Loop through the events looking and update the IPFS hash appropriately
+    // Scan through the events to retrieve information of interest.
     let buyer, ipfsHash, createdAt
     for (const e of events) {
       const timestamp = await this.contractService.getTimestamp(e)
-      if (e.event === 'OfferCreated') {
+      e.timestamp = timestamp
+
+      switch(e.event) {
+      case 'OfferCreated':
         buyer = e.returnValues.party
         ipfsHash = e.returnValues.ipfsHash
         createdAt = timestamp
+        break
+      // In all cases below, the offer was deleted from the blochain
+      // rawOffer fields are set to zero => populate rawOffer.status based on event history.
+      case 'OfferFinalized':
+        rawOffer.status = 4
+        break
+      case 'OfferData':
+        rawOffer.status = 5
+        break
+      case 'OfferWithdrawn':
+        rawOffer.status = 6
+        break
+      case 'OfferRuling':
+        rawOffer.status = 7
+        break
       }
-      if (e.event === 'OfferAccepted') {
-        rawOffer.status = '2'
-      }
-      // Override status if offer was deleted from blockchain state
-      if (e.event === 'OfferFinalized') {
-        rawOffer.status = '4'
-      }
-      // TODO: Assumes OfferData event is a seller review
-      if (e.event === 'OfferData') {
-        rawOffer.status = '5'
-      }
-      e.timestamp = timestamp
     }
 
     // Translate status number to string
