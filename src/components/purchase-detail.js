@@ -14,7 +14,7 @@ import {
   upsert as upsertTransaction
 } from 'actions/Transaction'
 
-import { ConfirmationModal, IssueModal, RejectionModal } from 'components/arbitration-modals'
+import { ConfirmationModal, IssueModal, PrerequisiteModal, RejectionModal } from 'components/arbitration-modals'
 import Avatar from 'components/avatar'
 import Modal from 'components/modal'
 import PurchaseProgress from 'components/purchase-progress'
@@ -479,7 +479,24 @@ class PurchaseDetail extends Component {
   }
 
   handleProblem() {
-    this.toggleModal('confirmation')
+    const { web3Account } = this.props
+    const { listing, purchase } = this.state
+    let perspective
+    // may potentially be neither buyer nor seller
+    if (web3Account === purchase.buyer) {
+      perspective = 'buyer'
+    } else if (web3Account === listing.seller) {
+      perspective = 'seller'
+    }
+    const counterparty = ['buyer', 'seller'].find(str => str !== perspective)
+    const counterpartyUser = counterparty === 'buyer' ? purchase.buyer : listing.seller
+    const isEligibleForArbitration = origin.messaging.canSendMessages()
+
+    if (isEligibleForArbitration) {
+      this.toggleModal('confirmation')
+    } else {
+      this.toggleModal('prerequisite')
+    }
   }
 
   // rating: 1 <= integer <= 5
@@ -498,29 +515,12 @@ class PurchaseDetail extends Component {
   }
 
   async initiateDispute() {
-    const content = this.state.issue
-    alert(`To Do: send "${content}" to arbitrator as an ecrypted message`)
-    // const { web3Account } = this.props
-    // const { listing, purchase } = this.state
-    // const counterpartyAddress = web3Account === purchase.buyer ? listing.seller : purchase.buyer
-    // const roomId = origin.messaging.generateRoomId(web3Account, counterpartyAddress)
-    // const keys = origin.messaging.getSharedKeys(roomId)
-    // const prompt = confirm(`You want to share conversation key ${keys[0]} with The Arbitrator (${ARBITRATOR_ETH_ADDRESS})?`)
+    const { web3Account } = this.props
+    const { issue, listing, purchase } = this.state
 
-    // if (prompt) {
-    //   try {
-    //     await origin.messaging.sendConvMessage(ARBITRATOR_ETH_ADDRESS, {
-    //       decryption: { keys, roomId }
-    //     })
-    //   } catch(e) {
-    //     console.error(e)
-    //     throw e
-    //   }
-    // }
     try {
       this.setState({ processing: true })
-      
-      const { listing, purchase } = this.state
+
       const offer = purchase
 
       const transactionReceipt = await origin.marketplace.initiateDispute(
@@ -540,6 +540,23 @@ class PurchaseDetail extends Component {
         offer,
         listing,
         transactionTypeKey: 'initiateDispute'
+      })
+
+      const counterpartyAddress = web3Account === purchase.buyer ? listing.seller : purchase.buyer
+      const roomId = origin.messaging.generateRoomId(web3Account, counterpartyAddress)
+
+      // disclose shared decryption key with arbitrator if one exists
+      if (roomId) {
+        const keys = origin.messaging.getSharedKeys(roomId)
+
+        await origin.messaging.sendConvMessage(ARBITRATOR_ETH_ADDRESS, {
+          decryption: { keys, roomId }
+        })
+      }
+
+      // send a message to arbitrator if form is not blank
+      issue.length && origin.messaging.sendConvMessage(ARBITRATOR_ETH_ADDRESS, {
+        content: issue
       })
 
       this.setState({ processing: false })
@@ -576,7 +593,7 @@ class PurchaseDetail extends Component {
     } = this.state
     const step = offerStatusToStep(purchase.status)
     const isPending = purchase.status !== 'withdrawn' && step < 3
-    const disputed = purchase.status = 'disputed'
+    const disputed = purchase.status === 'disputed'
     const isSold = step > 2
     const { rating, reviewText } = form
 
@@ -592,7 +609,6 @@ class PurchaseDetail extends Component {
     } else if (web3Account === listing.seller) {
       perspective = 'seller'
     }
-
 
     const pictures = listing.pictures || []
     const active = listing.status === 'active' // TODO: move to origin.js, take into account listing expiration
@@ -640,18 +656,7 @@ class PurchaseDetail extends Component {
         defaultMessage={'Unnamed User'}
       />
     )
-    const roomId = origin.messaging.generateRoomId(web3Account, counterpartyUser.address)
-    const isEligibleForArbitration = ARBITRATOR_ETH_ADDRESS && web3Account !== ARBITRATOR_ETH_ADDRESS //&& origin.messaging.hasConversedWith(counterpartyUser.address)
-    const arbitrationRoomId = ARBITRATOR_ETH_ADDRESS ? origin.messaging.generateRoomId(web3Account, ARBITRATOR_ETH_ADDRESS) : null
-    // in the future this will need to account for key expiration and validation
-    const arbitrationKeyShared = messages.find(({ conversationId, decryption }) => {
-      // check for object containing keys and arbitrator identity
-      if (!decryption || conversationId !== arbitrationRoomId) {
-        return null
-      }
-
-      return decryption.roomId === roomId && decryption.keys[0]
-    })
+    const arbitrationIsAvailable = ARBITRATOR_ETH_ADDRESS && web3Account !== ARBITRATOR_ETH_ADDRESS
 
     return (
       <div className="purchase-detail">
@@ -920,7 +925,7 @@ class PurchaseDetail extends Component {
                           ))}
                         </div>
                       }
-                      {link && (functionName !== 'handleProblem' || isEligibleForArbitration) &&
+                      {link && (arbitrationIsAvailable || link.functionName !== 'handleProblem') &&
                         <div className="link-container">
                           <a href="#" onClick={e => {
                             e.preventDefault()
@@ -1171,6 +1176,16 @@ class PurchaseDetail extends Component {
           onSubmit={() => {
             this.toggleModal('issue')
             this.initiateDispute()
+          }}
+        />
+        <PrerequisiteModal
+          isOpen={modalsOpen.prerequisite}
+          perspective={perspective}
+          onCancel={() => this.toggleModal('prerequisite')}
+          onSubmit={() => {
+            alert('To Do: enable messaging from here')
+
+            this.toggleModal('prerequisite')
           }}
         />
         <RejectionModal

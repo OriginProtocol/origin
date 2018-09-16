@@ -82,6 +82,42 @@ export const IssueModal = ({ isOpen = false, handleChange, issue, onCancel, onSu
   </Modal>
 )
 
+export const PrerequisiteModal = ({ isOpen = false, perspective, onCancel, onSubmit }) => (
+  <Modal className="arbitration-modal prerequisite" isOpen={isOpen} handleToggle={onCancel}>
+    <p className="heading">
+      <FormattedMessage
+        id={'arbitration.tryReachingOut'}
+        defaultMessage={'Messaging Required'}
+      />
+    </p>
+    <div className="text">
+      <p>
+        <FormattedMessage
+          id={'arbitration.request'}
+          defaultMessage={
+            `In order to report a problem, you must enable Origin messaging. We also recommend that you start by reaching out to the {counterparty} and attempting to resolve the issue directly.`
+          }
+          values={{ counterparty: perspective === 'buyer' ? 'seller' : 'buyer' }}
+        />
+      </p>
+    </div>
+    <div className="button-container">
+      <button className="btn btn-clear" onClick={onCancel}>
+        <FormattedMessage
+          id={'arbitration.prerequisiteCancel'}
+          defaultMessage={'Cancel'}
+        />
+      </button>
+      <button className="btn btn-clear" onClick={onSubmit}>
+        <FormattedMessage
+          id={'arbitration.enableMessaging'}
+          defaultMessage={'Enable Messaging'}
+        />
+      </button>
+    </div>
+  </Modal>
+)
+
 export const RejectionModal = ({ isOpen = false, handleToggle }) => (
   <Modal className="arbitration-modal rejection" isOpen={isOpen} handleToggle={handleToggle}>
     <div className="image-container">

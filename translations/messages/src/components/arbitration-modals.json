@@ -32,6 +32,22 @@
     "defaultMessage": "Submit"
   },
   {
+    "id": "arbitration.tryReachingOut",
+    "defaultMessage": "Messaging Required"
+  },
+  {
+    "id": "arbitration.request",
+    "defaultMessage": "In order to report a problem, you must enable Origin messaging. We also recommend that you start by reaching out to the {counterparty} and attempting to resolve the issue directly."
+  },
+  {
+    "id": "arbitration.prerequisiteCancel",
+    "defaultMessage": "Cancel"
+  },
+  {
+    "id": "arbitration.enableMessaging",
+    "defaultMessage": "Enable Messaging"
+  },
+  {
     "id": "arbitration.rejectionHeading",
     "defaultMessage": "This offer has been rejected"
   },

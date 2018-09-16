@@ -1808,7 +1808,8 @@ a:hover {
   width: 420px;
 }
 
-.arbitration-modal.confirm .modal-content {
+.arbitration-modal.confirm .modal-content,
+.arbitration-modal.prerequisite .modal-content {
   width: 450px;
 }
 
@@ -1858,7 +1859,8 @@ a:hover {
   margin-bottom: 11px;
 }
 
-.arbitration-modal.confirm .heading {
+.arbitration-modal.confirm .heading,
+.arbitration-modal.prerequisite .heading {
   margin-top: auto;
 }
 
@@ -1867,7 +1869,8 @@ a:hover {
   color: var(--pale-grey);
 }
 
-.arbitration-modal.confirm .text {
+.arbitration-modal.confirm .text,
+.arbitration-modal.prerequisite .text {
   margin: 0px;
 }
 
@@ -1875,8 +1878,9 @@ a:hover {
   margin-bottom: 20px;
 }
 
+.arbitration-modal.confirm .button-container,
 .arbitration-modal.issue .button-container,
-.arbitration-modal.confirm .button-container {
+.arbitration-modal.prerequisite .button-container {
   display: inline-flex;
 }
 

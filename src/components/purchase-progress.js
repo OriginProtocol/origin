@@ -45,7 +45,7 @@ class PurchaseProgress extends Component {
     const fulfilledAt = currentStep > 1
     const receivedAt = currentStep > 2
     const withdrawnAt = currentStep > 3
-    const disputed = purchase.status === 'disputed'
+    const disputed = purchase && purchase.status === 'disputed'
 
     return (
       <div
