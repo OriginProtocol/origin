@@ -16,6 +16,10 @@
     "defaultMessage": "Accept"
   },
   {
+    "id": "purchase-detail.waitForContact",
+    "defaultMessage": "Wait to be contacted by an Origin team member"
+  },
+  {
     "id": "purchase-detail.completePurchase",
     "defaultMessage": "Complete your purchase and leave a review"
   },
@@ -137,7 +141,7 @@
   },
   {
     "id": "purchase-detail.nothingToDo",
-    "defaultMessage": "Nothing for you to do at this time. Check back later"
+    "defaultMessage": "Nothing for you to do at this time. Check back later."
   },
   {
     "id": "purchase-detail.reviewLabel",

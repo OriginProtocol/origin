@@ -352,6 +352,13 @@ a:hover {
   background-position: 50%;
 }
 
+.progress-circle.disputed {
+  background-color: var(--orange-red);
+  color: white;
+  font-size: 14px;
+  font-weight: 900;
+}
+
 .progress-container .progress-circle {
   opacity: 0;
 }

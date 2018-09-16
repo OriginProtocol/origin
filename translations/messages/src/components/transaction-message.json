@@ -20,6 +20,10 @@
     "defaultMessage": "You created a listing."
   },
   {
+    "id": "transaction.initiateDispute",
+    "defaultMessage": "You initiated a dispute."
+  },
+  {
     "id": "transaction.reviewSale",
     "defaultMessage": "You left a review."
   }

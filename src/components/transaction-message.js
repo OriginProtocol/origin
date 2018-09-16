@@ -29,6 +29,10 @@ class TransactionMessage extends Component {
         id: 'transaction.createListing',
         defaultMessage: 'You created a listing.'
       },
+      initiateDispute: {
+        id: 'transaction.initiateDispute',
+        defaultMessage: 'You initiated a dispute.'
+      },
       reviewSale: {
         id: 'transaction.reviewSale',
         defaultMessage: 'You left a review.'

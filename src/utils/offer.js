@@ -2,7 +2,7 @@ const statusMap = {
   created: 1,
   accepted: 2,
   withdrawn: 2,
-  // while disputed is an offer status, the UI does not call for it as a step
+  disputed: 2,
   finalized: 3,
   sellerReviewed: 4
 }

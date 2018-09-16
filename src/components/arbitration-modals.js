@@ -46,7 +46,7 @@ export const ConfirmationModal = ({ isOpen = false, onCancel, onSubmit }) => (
   </Modal>
 )
 
-export const IssueModal = ({ isOpen = false, onCancel, onSubmit }) => (
+export const IssueModal = ({ isOpen = false, handleChange, issue, onCancel, onSubmit }) => (
   <Modal className="arbitration-modal issue" isOpen={isOpen} handleToggle={onCancel}>
     <form onSubmit={e => {
       e.preventDefault()
@@ -59,7 +59,7 @@ export const IssueModal = ({ isOpen = false, onCancel, onSubmit }) => (
           defaultMessage={'Describe your problem below'}
         />
       </p>
-      <textarea rows="3"></textarea>
+      <textarea rows="3" value={issue} onChange={handleChange} />
       <div className="button-container align-self-center">
         <a href="#" className="btn btn-clear" onClick={e => {
           e.preventDefault()

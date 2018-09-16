@@ -36,6 +36,7 @@ const defaultState = {
     rating: 5,
     reviewText: ''
   },
+  issue: '',
   listing: {},
   modalsOpen: {
     confirmation: false,
@@ -81,6 +82,10 @@ class PurchaseDetail extends Component {
       acceptOffer: {
         id: 'purchase-detail.acceptOffer',
         defaultMessage: 'Accept'
+      },
+      waitForContact: {
+        id: 'purchase-detail.waitForContact',
+        defaultMessage: 'Wait to be contacted by an Origin team member'
       },
       completePurchase: {
         id: 'purchase-detail.completePurchase',
@@ -166,7 +171,9 @@ class PurchaseDetail extends Component {
     this.nextSteps = {
       created: {
         buyer: {
-          prompt: this.props.intl.formatMessage(this.intlMessages.awaitApproval),
+          prompt: this.props.intl.formatMessage(
+            this.intlMessages.awaitApproval
+          ),
           buttons: [],
           link: {
             functionName: 'withdrawOffer',
@@ -176,7 +183,9 @@ class PurchaseDetail extends Component {
           }
         },
         seller: {
-          prompt: this.props.intl.formatMessage(this.intlMessages.acceptBuyersOffer),
+          prompt: this.props.intl.formatMessage(
+            this.intlMessages.acceptBuyersOffer
+          ),
           instruction: this.props.intl.formatMessage(
             this.intlMessages.acceptOfferInstruction
           ),
@@ -193,13 +202,7 @@ class PurchaseDetail extends Component {
                 this.intlMessages.acceptOffer
               )
             }
-          ],
-          link: {
-            functionName: 'handleProblem',
-            text: this.props.intl.formatMessage(
-              this.intlMessages.reportProblem
-            )
-          }
+          ]
         }
       },
       accepted: {
@@ -222,7 +225,7 @@ class PurchaseDetail extends Component {
             }
           ],
           link: {
-            functionName: '',
+            functionName: 'handleProblem',
             text: this.props.intl.formatMessage(
               this.intlMessages.reportProblem
             )
@@ -230,17 +233,33 @@ class PurchaseDetail extends Component {
           reviewable: true
         },
         seller: {
-          prompt: this.props.intl.formatMessage(this.intlMessages.waitForBuyer),
+          prompt: this.props.intl.formatMessage(
+            this.intlMessages.waitForBuyer
+          ),
           instruction: this.props.intl.formatMessage(
             this.intlMessages.fulfillObligation
           ),
           buttons: [],
           link: {
-            functionName: '',
+            functionName: 'handleProblem',
             text: this.props.intl.formatMessage(
               this.intlMessages.reportProblem
             )
           }
+        }
+      },
+      disputed: {
+        buyer: {
+          prompt: this.props.intl.formatMessage(
+            this.intlMessages.waitForContact
+          ),
+          buttons: []
+        },
+        seller: {
+          prompt: this.props.intl.formatMessage(
+            this.intlMessages.waitForContact
+          ),
+          buttons: []
         }
       },
       finalized: {
@@ -479,22 +498,55 @@ class PurchaseDetail extends Component {
   }
 
   async initiateDispute() {
-    const { web3Account } = this.props
-    const { listing, purchase } = this.state
-    const counterpartyAddress = web3Account === purchase.buyer ? listing.seller : purchase.buyer
-    const roomId = origin.messaging.generateRoomId(web3Account, counterpartyAddress)
-    const keys = origin.messaging.getSharedKeys(roomId)
-    const prompt = confirm(`You want to share conversation key ${keys[0]} with The Arbitrator (${ARBITRATOR_ETH_ADDRESS})?`)
+    const content = this.state.issue
+    alert(`To Do: send "${content}" to arbitrator as an ecrypted message`)
+    // const { web3Account } = this.props
+    // const { listing, purchase } = this.state
+    // const counterpartyAddress = web3Account === purchase.buyer ? listing.seller : purchase.buyer
+    // const roomId = origin.messaging.generateRoomId(web3Account, counterpartyAddress)
+    // const keys = origin.messaging.getSharedKeys(roomId)
+    // const prompt = confirm(`You want to share conversation key ${keys[0]} with The Arbitrator (${ARBITRATOR_ETH_ADDRESS})?`)
 
-    if (prompt) {
-      try {
-        await origin.messaging.sendConvMessage(ARBITRATOR_ETH_ADDRESS, {
-          decryption: { keys, roomId }
-        })
-      } catch(e) {
-        console.error(e)
-        throw e
-      }
+    // if (prompt) {
+    //   try {
+    //     await origin.messaging.sendConvMessage(ARBITRATOR_ETH_ADDRESS, {
+    //       decryption: { keys, roomId }
+    //     })
+    //   } catch(e) {
+    //     console.error(e)
+    //     throw e
+    //   }
+    // }
+    try {
+      this.setState({ processing: true })
+      
+      const { listing, purchase } = this.state
+      const offer = purchase
+
+      const transactionReceipt = await origin.marketplace.initiateDispute(
+        purchase.id,
+        {},
+        (confirmationCount, transactionReceipt) => {
+          // Having a transaction receipt doesn't guarantee that the purchase state will have changed.
+          // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
+          this.loadPurchase()
+
+          this.props.updateTransaction(confirmationCount, transactionReceipt)
+        }
+      )
+
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        offer,
+        listing,
+        transactionTypeKey: 'initiateDispute'
+      })
+
+      this.setState({ processing: false })
+    } catch (error) {
+      this.setState({ processing: false })
+
+      throw error
     }
   }
 
@@ -524,6 +576,7 @@ class PurchaseDetail extends Component {
     } = this.state
     const step = offerStatusToStep(purchase.status)
     const isPending = purchase.status !== 'withdrawn' && step < 3
+    const disputed = purchase.status = 'disputed'
     const isSold = step > 2
     const { rating, reviewText } = form
 
@@ -588,7 +641,7 @@ class PurchaseDetail extends Component {
       />
     )
     const roomId = origin.messaging.generateRoomId(web3Account, counterpartyUser.address)
-    const isEligibleForArbitration = ARBITRATOR_ETH_ADDRESS && web3Account !== ARBITRATOR_ETH_ADDRESS && origin.messaging.hasConversedWith(counterpartyUser.address)
+    const isEligibleForArbitration = ARBITRATOR_ETH_ADDRESS && web3Account !== ARBITRATOR_ETH_ADDRESS //&& origin.messaging.hasConversedWith(counterpartyUser.address)
     const arbitrationRoomId = ARBITRATOR_ETH_ADDRESS ? origin.messaging.generateRoomId(web3Account, ARBITRATOR_ETH_ADDRESS) : null
     // in the future this will need to account for key expiration and validation
     const arbitrationKeyShared = messages.find(({ conversationId, decryption }) => {
@@ -803,7 +856,7 @@ class PurchaseDetail extends Component {
                             <FormattedMessage
                               id={'purchase-detail.nothingToDo'}
                               defaultMessage={
-                                'Nothing for you to do at this time. Check back later'
+                                'Nothing for you to do at this time. Check back later.'
                               }
                             />
                           }
@@ -1118,11 +1171,16 @@ class PurchaseDetail extends Component {
         />
         <IssueModal
           isOpen={modalsOpen.issue}
-          handleToggle={() => this.toggleModal('issue')}
+          issue={this.state.issue}
+          handleChange={e => {
+            e.preventDefault()
+
+            this.setState({ issue: e.target.value })
+          }}
           onCancel={() => this.toggleModal('issue')}
           onSubmit={() => {
-            alert('To Do')
             this.toggleModal('issue')
+            this.initiateDispute()
           }}
         />
         <RejectionModal

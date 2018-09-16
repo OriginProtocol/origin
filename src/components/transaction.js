@@ -55,8 +55,8 @@ class Transaction extends Component {
 
     switch (transactionTypeKey) {
     case 'acceptOffer':
-      toAddress = purchase.buyer
       fromAddress = listing.seller
+      toAddress = purchase.buyer
       break
     case 'makeOffer':
       fromAddress = purchase.buyer
@@ -73,8 +73,12 @@ class Transaction extends Component {
       fromAddress = listing.seller
       break
     case 'reviewSale':
-      toAddress = purchase.buyer
       fromAddress = listing.seller
+      toAddress = purchase.buyer
+      break
+    case 'initiateDispute':
+      fromAddress = transaction.events.OfferDisputed.raw.returnValues.party
+      toAddress = purchase.buyer
       break
     }
 
