@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
 import moment from 'moment'
 
 import TransactionMessage from 'components/transaction-message'
@@ -38,7 +39,7 @@ class Transaction extends Component {
   }
 
   render() {
-    const { confirmationCompletionCount, transaction } = this.props
+    const { confirmationCompletionCount, transaction, web3Account } = this.props
     const { listing, purchase } = this.state
     const {
       confirmationCount,
@@ -53,32 +54,35 @@ class Transaction extends Component {
       return null
     }
 
+    const { buyer } = purchase
+    const { seller } = listing
+
     switch (transactionTypeKey) {
     case 'acceptOffer':
-      fromAddress = listing.seller
-      toAddress = purchase.buyer
+      fromAddress = seller
+      toAddress = buyer
       break
     case 'makeOffer':
-      fromAddress = purchase.buyer
-      toAddress = listing.seller
+      fromAddress = buyer
+      toAddress = seller
       break
     case 'closeListing':
-      fromAddress = listing.seller
+      fromAddress = seller
       break
     case 'completePurchase':
-      fromAddress = purchase.buyer
-      toAddress = listing.seller
+      fromAddress = buyer
+      toAddress = seller
       break
     case 'createListing':
-      fromAddress = listing.seller
+      fromAddress = seller
       break
     case 'reviewSale':
-      fromAddress = listing.seller
-      toAddress = purchase.buyer
+      fromAddress = seller
+      toAddress = buyer
       break
     case 'initiateDispute':
-      fromAddress = transaction.events.OfferDisputed.raw.returnValues.party
-      toAddress = purchase.buyer
+      fromAddress = web3Account
+      toAddress = web3Account === seller ? buyer : seller
       break
     }
 
@@ -190,4 +194,10 @@ class Transaction extends Component {
   }
 }
 
-export default Transaction
+const mapStateToProps = state => {
+  return {
+    web3Account: state.app.web3.account
+  }
+}
+
+export default connect(mapStateToProps)(Transaction)

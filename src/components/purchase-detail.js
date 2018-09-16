@@ -544,11 +544,10 @@ class PurchaseDetail extends Component {
 
       const counterpartyAddress = web3Account === purchase.buyer ? listing.seller : purchase.buyer
       const roomId = origin.messaging.generateRoomId(web3Account, counterpartyAddress)
+      const keys = origin.messaging.getSharedKeys(roomId)
 
       // disclose shared decryption key with arbitrator if one exists
-      if (roomId) {
-        const keys = origin.messaging.getSharedKeys(roomId)
-
+      if (keys.length) {
         await origin.messaging.sendConvMessage(ARBITRATOR_ETH_ADDRESS, {
           decryption: { keys, roomId }
         })
