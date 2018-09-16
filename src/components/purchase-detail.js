@@ -140,6 +140,26 @@ class PurchaseDetail extends Component {
       withdrawOffer: {
         id: 'purchase-detail.withdrawOffer',
         defaultMessage: 'Withdraw Offer'
+      },
+      offerMade: {
+        id: 'purchase-detail.offerMade',
+        defaultMessage: 'Offer Made'
+      },
+      offerWithdrawn: {
+        id: 'purchase-detail.offerWithdrawn',
+        defaultMessage: 'Offer Withdrawn'
+      },
+      offerAccepted: {
+        id: 'purchase-detail.offerAccepted',
+        defaultMessage: 'Offer Accepted'
+      },
+      saleCompleted: {
+        id: 'purchase-detail.saleCompleted',
+        defaultMessage: 'Sale Completed'
+      },
+      saleReviewed: {
+        id: 'purchase-detail.saleReviewed',
+        defaultMessage: 'Sale Reviewed'
       }
     })
 
@@ -526,9 +546,10 @@ class PurchaseDetail extends Component {
     const soldAt = purchase.createdAt * 1000 // convert seconds since epoch to ms
 
     const offerCreated = purchase.event('OfferCreated')
+    const offerWithdrawn = purchase.event('OfferWithdrawn')
     const offerAccepted = purchase.event('OfferAccepted')
     const offerFinalized = purchase.event('OfferFinalized')
-    const offerWithdrawn = purchase.event('OfferWithdrawn')
+    const offerData = purchase.event('OfferData')
 
     const priceEth = `${Number(purchase.totalPrice.amount).toLocaleString(undefined, {
       minimumFractionDigits: 5,
@@ -898,26 +919,32 @@ class PurchaseDetail extends Component {
                 </thead>
                 <tbody>
                   <TransactionEvent
-                    eventName="Offer Made"
+                    eventName={this.props.intl.formatMessage(this.intlMessages.offerMade)}
                     transaction={offerCreated}
                     buyer={buyer}
                     seller={seller}
                   />
                   <TransactionEvent
-                    eventName="Offer Withdrawn"
+                    eventName={this.props.intl.formatMessage(this.intlMessages.offerWithdrawn)}
                     transaction={offerWithdrawn}
                     buyer={buyer}
                     seller={seller}
                   />
                   <TransactionEvent
-                    eventName="Offer Accepted"
+                    eventName={this.props.intl.formatMessage(this.intlMessages.offerAccepted)}
                     transaction={offerAccepted}
                     buyer={buyer}
                     seller={seller}
                   />
                   <TransactionEvent
-                    eventName="Received by Buyer"
+                    eventName={this.props.intl.formatMessage(this.intlMessages.saleCompleted)}
                     transaction={offerFinalized}
+                    buyer={buyer}
+                    seller={seller}
+                  />
+                  <TransactionEvent
+                    eventName={this.props.intl.formatMessage(this.intlMessages.saleReviewed)}
+                    transaction={offerData}
                     buyer={buyer}
                     seller={seller}
                   />

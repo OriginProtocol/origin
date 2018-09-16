@@ -72,6 +72,26 @@
     "defaultMessage": "Withdraw Offer"
   },
   {
+    "id": "purchase-detail.offerMade",
+    "defaultMessage": "Offer Made"
+  },
+  {
+    "id": "purchase-detail.offerWithdrawn",
+    "defaultMessage": "Offer Withdrawn"
+  },
+  {
+    "id": "purchase-detail.offerAccepted",
+    "defaultMessage": "Offer Accepted"
+  },
+  {
+    "id": "purchase-detail.saleCompleted",
+    "defaultMessage": "Sale Completed"
+  },
+  {
+    "id": "purchase-detail.saleReviewed",
+    "defaultMessage": "Sale Reviewed"
+  },
+  {
     "id": "purchase-detail.unnamedUser",
     "defaultMessage": "Unnamed User"
   },
