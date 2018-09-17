@@ -20,7 +20,7 @@ class ListingCard extends Component {
       const listing = await getListing(this.props.listingId, true)
 
       this.setState({
-        boostLevelIsPastSomeThreshold: !!Math.round(Math.random()),
+        boostLevelIsPastSomeThreshold: listing.boostValue > 0,
         ...listing,
         loading: false
       })

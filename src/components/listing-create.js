@@ -77,20 +77,16 @@ class ListingCreate extends Component {
 
     this.checkOgnBalance = this.checkOgnBalance.bind(this)
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
-    this.onBoostSliderChange = this.onBoostSliderChange.bind(this)
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
     this.onReview = this.onReview.bind(this)
     this.pollOgnBalance = this.pollOgnBalance.bind(this)
     this.resetToPreview = this.resetToPreview.bind(this)
+    this.setBoost = this.setBoost.bind(this)
     this.toggleBoostBox = this.toggleBoostBox.bind(this)
     this.updateUsdPrice = this.updateUsdPrice.bind(this)
   }
 
-  componentDidMount() {
-    this.props.getOgnBalance()
-  }
-
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     // conditionally show boost tutorial
     if (!this.state.showBoostTutorial) {
       this.detectNeedForBoostTutorial()
@@ -114,7 +110,7 @@ class ListingCreate extends Component {
   pollOgnBalance() {
     this.ognBalancePoll = setInterval(() => {
       this.props.getOgnBalance()
-    }, 5000)
+    }, 10000)
   }
 
   async updateUsdPrice() {
@@ -241,7 +237,7 @@ class ListingCreate extends Component {
     }
   }
 
-  onBoostSliderChange(boostValue, boostLevel) {
+  setBoost(boostValue, boostLevel) {
     this.setState({
       formListing: {
         ...this.state.formListing,
@@ -262,7 +258,7 @@ class ListingCreate extends Component {
     }
 
     if (ognBalance < this.state.formListing.formData.boostValue) {
-      this.onBoostSliderChange(ognBalance, getBoostLevel(ognBalance))
+      this.setBoost(ognBalance, getBoostLevel(ognBalance))
     }
 
     this.setState({
@@ -494,9 +490,8 @@ class ListingCreate extends Component {
                 }
                 {!showBoostTutorial &&
                   <BoostSlider
-                    onChange={ this.onBoostSliderChange }
+                    onChange={ this.setBoost }
                     ognBalance={ wallet.ognBalance }
-                    defaultValue={ defaultBoostValue }
                   />
                 }
                 <div className="btn-container">
@@ -614,9 +609,6 @@ class ListingCreate extends Component {
                       <p className="label">Boost Level</p>
                     </div>
                     <div className="col-md-9">
-                      <p className="boost-level">
-                        {translatedFormData.boostLevel}
-                      </p>
                       <p>
                         <img
                           className="ogn-icon"
@@ -634,12 +626,9 @@ class ListingCreate extends Component {
                         >
                           OGN
                         </a>
-                        {/*
                         <span className="help-block">
-                          &nbsp;| x.xx USD&nbsp;
-                          <span className="text-uppercase">(Approximate Value)</span>
+                          &nbsp;| {translatedFormData.boostLevel.toUpperCase()}
                         </span>
-                        */}
                       </p>
                     </div>
                   </div>

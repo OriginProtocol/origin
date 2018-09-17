@@ -2501,39 +2501,52 @@ select.form-control:not([size]):not([multiple]) {
   padding: 16px 0 0;
 }
 
-.listing-form .select-boost .rc-slider-rail {
-  height: 15px;
-  border-radius: 10px;
+.listing-form .rc-slider-disabled {
+  background-color: transparent;
+}
+
+.listing-form .rc-slider-disabled .rc-slider-handle {
+  background-color: white;
+  border-color: var(--dusk);
+  opacity: 0.2;
+}
+
+.listing-form .rc-slider-rail {
   background-color: var(--light);
+  border: 1px solid var(--bluey-grey);
+  border-radius: 10px;
+  height: 15px;
   margin-left: -5px;
   margin-right: -5px;
   width: 103%;
 }
- .listing-form .select-boost .rc-slider-handle {
+
+.listing-form .rc-slider-handle {
   margin-top: auto;
   border: 1px solid var(--steel);
   width: 15px;
   height: 15px;
 }
- .listing-form .select-boost .rc-slider-track {
+
+.listing-form .rc-slider-track {
   height: 15px;
   border-radius: 0px;
   background-color: var(--steel);
 }
 
-.listing-form .select-boost .rc-slider.boost-level-Low .rc-slider-track {
+.listing-form .rc-slider.boost-level-Low .rc-slider-track {
   background-color: var(--boost-low);
 }
 
-.listing-form .select-boost .rc-slider.boost-level-Medium .rc-slider-track {
+.listing-form .rc-slider.boost-level-Medium .rc-slider-track {
   background-color: var(--boost-medium);
 }
 
-.listing-form .select-boost .rc-slider.boost-level-High .rc-slider-track {
+.listing-form .rc-slider.boost-level-High .rc-slider-track {
   background-color: var(--boost-high);
 }
 
-.listing-form .select-boost .rc-slider.boost-level-Premium .rc-slider-track {
+.listing-form .rc-slider.boost-level-Premium .rc-slider-track {
   background-color: var(--boost-premium);
 }
 
