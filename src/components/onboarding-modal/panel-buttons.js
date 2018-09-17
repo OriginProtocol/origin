@@ -36,7 +36,7 @@ export default class PanelButtons extends Component {
             className="btn btn-primary btn-lg mb-3"
             onClick={this.connectMetaMask}
           >
-            Connect Metamask
+            Connect MetaMask
           </button>
           <button key={'sec-btn'} className="btn btn-primary btn-lg" disabled>
             Download Mobile Wallet
