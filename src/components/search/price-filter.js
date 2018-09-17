@@ -15,7 +15,7 @@ class PriceFilter extends Component {
     super(props)
 
     this.state = {
-      value: [Math.round(parseFloat(props.minPrice)), Math.round(parseFloat(props.maxPrice))]
+      value: [Math.floor(parseFloat(props.minPrice)), Math.ceil(parseFloat(props.maxPrice))]
     }
 
     this.handlePriceChange = this.handlePriceChange.bind(this)
@@ -60,8 +60,8 @@ class PriceFilter extends Component {
   // Called by filter-group
   onClear(callback) {
     this.setState({ value: [
-      Math.round(parseFloat(this.props.minPrice)),
-      Math.round(parseFloat(this.props.maxPrice))]
+      Math.floor(parseFloat(this.props.minPrice)),
+      Math.ceil(parseFloat(this.props.maxPrice))]
     }, callback)
   }
 
@@ -70,8 +70,8 @@ class PriceFilter extends Component {
       ? this.props.intl.formatMessage(this.props.filter.priceUnit)
       : `USD`
 
-    const minPrice = Math.round(parseFloat(this.props.minPrice))
-    const maxPrice = Math.round(parseFloat(this.props.maxPrice))
+    const minPrice = Math.floor(parseFloat(this.props.minPrice))
+    const maxPrice = Math.ceil(parseFloat(this.props.maxPrice))
     return (
       <div
         className="d-flex flex-column"
