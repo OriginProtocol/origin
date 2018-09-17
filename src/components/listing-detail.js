@@ -130,7 +130,8 @@ class ListingsDetail extends Component {
           totalPrice: {
             amount: this.state.price,
             currency: 'ETH'
-          }
+          },
+          commission: this.state.commission && this.state.commission.toString()
         }
         const transactionReceipt = await origin.marketplace.makeOffer(
           this.props.listingId,
@@ -158,6 +159,7 @@ class ListingsDetail extends Component {
   render() {
     const {
       boostLevel,
+      boostValue,
       category,
       currentProvider,
       description,
@@ -306,7 +308,7 @@ class ListingsDetail extends Component {
                         />
                       </span>
                     )}
-                    {boostLevel && (
+                    {boostValue > 0 && (
                       <span className={`boosted badge boost-${boostLevel}`}>
                         <img
                           src="images/boost-icon-arrow.svg"

@@ -313,13 +313,8 @@ class PurchaseDetail extends Component {
       const listing = await getListing(purchase.listingId, true)
       const reviews = await origin.marketplace.getListingReviews(offerId)
       this.setState({
+        listing,
         purchase,
-        listing: {
-          ...listing,
-          boostAmount: 10,
-          boostLevel: 'Medium',
-          boostLevelIsPastSomeThreshold: !!Math.round(Math.random())
-        },
         reviews
       })
       await this.loadSeller(listing.seller)
@@ -759,7 +754,7 @@ class PurchaseDetail extends Component {
                     />
                   </span>
                 )}
-                {listing.boostLevel && (
+                {listing.boostValue && (
                   <span className={`boosted badge boost-${listing.boostLevel}`}>
                     <img
                       src="images/boost-icon-arrow.svg"
