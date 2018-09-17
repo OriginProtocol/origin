@@ -56,7 +56,12 @@ class EditProfile extends Component {
     const { intl, open, handleToggle } = this.props
 
     return (
-      <Modal isOpen={open} data-modal="profile" handleToggle={handleToggle}>
+      <Modal
+        isOpen={open}
+        data-modal="profile"
+        handleToggle={handleToggle}
+        tabIndex="-1"
+      >
         <h2>
           <FormattedMessage
             id={'EditProfile.editProfileHeading'}

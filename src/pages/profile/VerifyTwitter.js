@@ -29,6 +29,7 @@ class VerifyTwitter extends Component {
         data-modal="twitter"
         className="attestation"
         handleToggle={this.props.handleToggle}
+        tabIndex="-1"
       >
         <div className="image-container d-flex align-items-center">
           <img src="images/twitter-icon-dark.svg" role="presentation" />

@@ -538,7 +538,7 @@ class Profile extends Component {
         />
 
         {this.props.profile.status === 'confirming' && (
-          <Modal backdrop="static" isOpen={true}>
+          <Modal backdrop="static" isOpen={true} tabIndex="-1">
             <div className="image-container">
               <img src="images/spinner-animation.svg" role="presentation" />
             </div>

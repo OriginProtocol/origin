@@ -25,6 +25,7 @@ class VerifyAirbnb extends Component {
         data-modal="airbnb"
         className="attestation"
         handleToggle={this.props.handleToggle}
+        tabIndex="-1"
       >
         <div className="image-container d-flex align-items-center">
           <img src="images/airbnb-icon-dark.svg" role="presentation" />
