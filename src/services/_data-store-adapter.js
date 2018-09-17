@@ -6,6 +6,7 @@ import Money from '../utils/money'
 import listingSchemaV1 from '../schemas/listing.json'
 import listingWithdrawnSchemaV1 from '../schemas/listing-withdraw.json'
 import offerSchemaV1 from '../schemas/offer.json'
+import offerWithdrawnSchemaV1 from '../schemas/offer-withdraw.json'
 import offerAcceptedSchemaV1 from '../schemas/offer-accept.json'
 import profileSchemaV1 from '../schemas/profile.json'
 import reviewSchemaV1 from '../schemas/review.json'
@@ -18,6 +19,7 @@ ajv.addSchema([
   listingSchemaV1,
   listingWithdrawnSchemaV1,
   offerSchemaV1,
+  offerWithdrawnSchemaV1,
   offerAcceptedSchemaV1,
   profileSchemaV1,
   reviewSchemaV1
@@ -204,6 +206,8 @@ class ListingWithdrawAdapterV1 extends AdapterBase {}
 
 class OfferAcceptAdapterV1 extends AdapterBase {}
 
+class OfferWithdrawAdapterV1 extends AdapterBase {}
+
 class ProfileAdapterV1 extends AdapterBase {}
 
 class ReviewAdapterV1 extends AdapterBase {}
@@ -218,6 +222,9 @@ const adapterConfig = {
   },
   'offer': {
     '1.0.0': OfferAdapterV1,
+  },
+  'offer-withdraw': {
+    '1.0.0': OfferWithdrawAdapterV1
   },
   'offer-accept': {
     '1.0.0': OfferAcceptAdapterV1,

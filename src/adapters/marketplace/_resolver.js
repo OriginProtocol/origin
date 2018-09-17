@@ -129,6 +129,17 @@ class MarketplaceResolver {
     return Object.assign({ listingId, offerId }, transactionReceipt)
   }
 
+  async withdrawOffer(id, ipfsBytes, confirmationCallback) {
+    const { adapter, listingIndex, offerIndex } = this.parseOfferId(id)
+
+    return await adapter.withdrawOffer(
+      listingIndex,
+      offerIndex,
+      ipfsBytes,
+      confirmationCallback
+    )
+  }
+
   async acceptOffer(id, ipfsBytes, confirmationCallback) {
     const { adapter, listingIndex, offerIndex } = this.parseOfferId(id)
 

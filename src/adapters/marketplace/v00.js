@@ -101,6 +101,15 @@ class V00_MarkeplaceAdapter {
     return Object.assign({ timestamp, offerIndex }, transactionReceipt)
   }
 
+  async withdrawOffer(listingIndex, offerIndex, ipfsBytes, confirmationCallback) {
+    const { transactionReceipt, timestamp } = await this.call(
+      'withdrawOffer',
+      [listingIndex, offerIndex, ipfsBytes],
+      { confirmationCallback }
+    )
+    return Object.assign({ timestamp }, transactionReceipt)
+  }
+
   async acceptOffer(listingIndex, offerIndex, ipfsBytes, confirmationCallback) {
     const { transactionReceipt, timestamp } = await this.call(
       'acceptOffer',

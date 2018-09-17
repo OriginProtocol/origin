@@ -6,6 +6,7 @@ import {
   LISTING_DATA_TYPE,
   LISTING_WITHDRAW_DATA_TYPE,
   OFFER_DATA_TYPE,
+  OFFER_WITHDRAW_DATA_TYPE,
   OFFER_ACCEPT_DATA_TYPE,
   REVIEW_DATA_TYPE,
   IpfsDataStore,
@@ -171,7 +172,20 @@ class Marketplace {
   }
 
   // updateOffer(listingId, offerId, data) {}
-  // withdrawOffer(listingId, offerId, data) {}
+
+  /**
+   * Withdraws an offer.
+   * @param {string} id - Offer unique ID.
+   * @param ipfsData - Data to store in IPFS. For future use, currently empty.
+   * @param {func(confirmationCount, transactionReceipt)} confirmationCallback
+   * @return {Promise<{timestamp, ...transactionReceipt}>}
+   */
+  async withdrawOffer(id, ipfsData = {}, confirmationCallback) {
+    const ipfsHash = await this.ipfsDataStore.save(OFFER_WITHDRAW_DATA_TYPE, ipfsData)
+    const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
+
+    return await this.resolver.withdrawOffer(id, ipfsBytes, confirmationCallback)
+  }
 
   /**
    * Accepts an offer.
