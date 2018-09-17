@@ -81,23 +81,115 @@ class Listing {
    * @throws Throws an error if the search operation failed.
    * @returns A list of listings (can be empty).
    */
-  static async search(query) {
-    const esQuery = {}
-    if (query !== undefined){
-      esQuery.match = {'description': query}
-    } else {
-      esQuery.match_all = {}
+  static async search(query, filters) {
+    const esQuery = {
+      bool: {
+        must: [],
+        should: [],
+        filter: []
+      }
     }
-    const resp = await client.search({
+
+    if (query !== undefined && query !== ""){
+      // all_text is a field where all searchable fields get copied to
+      esQuery.bool.must.push({ match: { all_text: query } })
+      // give extra score if the search query matches in the title
+      esQuery.bool.should.push({
+        match: {
+          title: {
+            query: query,
+            boost: 2
+          }
+        }
+      })
+    } else {
+      esQuery.bool.must.push({ match_all: {} })
+    }
+
+    /* interestingly JSON.strigify performs pretty well:
+     * https://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-deep-clone-an-object-in-javascript/5344074#5344074
+     */
+    const esQueryWithoutFilters = JSON.parse(JSON.stringify(esQuery))
+
+    filters
+      .forEach(filter => {
+        let innerFilter = {}
+
+        if (filter.operator === 'GREATER_OR_EQUAL'){
+          innerFilter = {
+            range: {
+              [filter.name]: {
+                gte: filter.value
+              }
+            }
+          }
+        } else if (filter.operator === 'LESSER_OR_EQUAL'){
+          innerFilter = {
+            range: {
+              [filter.name]: {
+                lte: filter.value
+              }
+            }
+          }
+        } else if (filter.operator === 'CONTAINS' && filter.valueType === 'ARRAY_STRING'){
+          innerFilter = {
+            bool: {
+              should: filter
+                .value
+                .split(',')
+                .map(singleValue => {
+                  return { term: {[filter.name]: singleValue} }
+                })
+            }
+          }
+        } else if (filter.operator === 'EQUALS'){
+          innerFilter = { term: {[filter.name]: filter.value} }
+        }
+
+
+        esQuery.bool.filter.push(innerFilter)
+      })
+
+    /* When users boost their listing using OGN tokens we boost that listing in elasticSearch.
+     * For more details see document: https://docs.google.com/spreadsheets/d/1bgBlwWvYL7kgAb8aUH4cwDtTHQuFThQ4BCp870O-zEs/edit#gid=0
+     */
+    const boostScoreQuery = {
+      function_score: {
+        query: esQuery,
+        field_value_factor: {
+          field: 'commission.amount',
+          factor: 0.005 // the same as delimited by 200
+        },
+        boost_mode: 'sum'
+      }
+    }
+
+    const searchRequest = client.search({
       index: LISTINGS_INDEX,
       type: LISTINGS_TYPE,
-      // TODO(franck): update query to search against other fields than just description.
       body: {
-        query: esQuery,
+        query: boostScoreQuery,
+        _source: ['title', 'description', 'price']
       }
     })
+
+    const aggregationRequest = client.search({
+      index: LISTINGS_INDEX,
+      type: LISTINGS_TYPE,
+      body: {
+        query: esQueryWithoutFilters,
+        _source: ['_id'],
+        aggs : {
+          'max_price' : { 'max' : { 'field' : 'price.amount' } },
+          'min_price' : { 'min' : { 'field' : 'price.amount' } }
+        }
+      }
+    })
+
+    const [searchResponse, aggregationResponse] = await Promise.all([searchRequest, aggregationRequest])  
+
     const listings = []
-    resp.hits.hits.forEach((hit) => {
+    searchResponse.hits.hits.forEach((hit) => {
       const listing = {
         id: hit._id,
         title: hit._source.title,
@@ -109,7 +201,15 @@ class Listing {
       }
       listings.push(listing)
     })
-    return listings
+
+    const maxPrice = aggregationResponse.aggregations.max_price.value
+    const minPrice = aggregationResponse.aggregations.min_price.value
+
+    return {
+      listings,
+      max_price: maxPrice ? maxPrice : 0,
+      min_price: minPrice ? minPrice : 0
+    }
   }
 }
 

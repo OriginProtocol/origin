@@ -14,9 +14,15 @@ class Discovery {
       headers: {
         'Content-Type': 'application/json'
       }
+    },
+    function(error){
+      if (error !== undefined)
+        throw Error(`An error occured when reaching discovery server: ${error}`)  
     })
-    if(resp.status != 200){
-      throw Error('Got non-sucess code from GraphQL server')
+
+    if(resp.status !== 200){
+      //TODO: also report error message here
+      throw Error(`Discovery server retuned unexpected status code ${resp.status} with error `)
     }
     return await resp.json()
   }
@@ -27,11 +33,10 @@ class Discovery {
    * unexpected. To get JSON result caller should call `await searchResponse.json()` to get the
    * actual JSON.
    * @param searchQuery {string} general search query
-   * @param listingType {string} one of the supported listingTypes
    * @param filters {object} object with properties: name, value, valueType, operator
    * @returns {Promise<HTTP_Response>}
    */
-  async search(searchQuery, listingType, filters = []) {
+  async search(searchQuery, filters = []) {
     const query = `
     {
       listings (
@@ -51,6 +56,10 @@ class Discovery {
       ) {
         nodes {
           id
+        }
+        stats {
+          maxPrice
+          minPrice
         }
       }
     }`

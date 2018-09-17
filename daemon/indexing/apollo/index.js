@@ -92,11 +92,17 @@ const typeDefs = gql`
     # reviews(page: Page, order: ReviewOrder, filter: ReviewFilter): ReviewPage
   }
 
+  type Stats {
+    maxPrice: Float
+    minPrice: Float
+  }
+
   type ListingPage { # implements OutputPage
     # pageNumber: Int!
     # itemsPerPage: Int!
     # totalNumberOfPages: Int!
     nodes: [Listing]
+    stats: Stats
   }
 
   ######################
@@ -195,7 +201,7 @@ const typeDefs = gql`
 
   # The "Query" type is the root of all GraphQL queries.
   type Query {
-    listings(searchQuery: String, filters: [ListingFilter!]): ListingPage, #(searchQuery: String, page: Page, order: ListingOrder, filters: [ListingFilter!]): ListingPage,
+    listings(searchQuery: String, filters: [ListingFilter!]): ListingPage,
     listing(id: ID!): Listing,
 
     offers(buyerAddress: ID, listingId: ID): OfferConnection,
@@ -215,13 +221,16 @@ const resolvers = {
   Query: {
     async listings(root, args, context, info) {
       // TODO: handle pagination (including enforcing MaxResultsPerPage), filters, order.
-      let listings = []
-      listings = await search.Listing.search(args.searchQuery)
+      let response = await search.Listing.search(args.searchQuery, args.filters)
       return {
         pageNumber: 1,
-        itemsPerPage: listings.length,
+        itemsPerPage: response.listings.length,
         totalNumberOfPages: 1,
-        nodes: listings,
+        stats: {
+          maxPrice: response.max_price,
+          minPrice: response.min_price
+        },
+        nodes: response.listings
       }
     },
     async listing(root, args, context, info) {
