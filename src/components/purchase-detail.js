@@ -433,7 +433,39 @@ class PurchaseDetail extends Component {
   }
 
   async withdrawOffer() {
-    alert('To Do')
+    const { offerId } = this.props
+    const { purchase, listing } = this.state
+    const offer = purchase
+
+    try {
+      this.setState({ processing: true })
+
+      const transactionReceipt = await origin.marketplace.withdrawOffer(
+        offerId,
+        {},
+        (confirmationCount, transactionReceipt) => {
+          // Having a transaction receipt doesn't guarantee that the purchase state will have changed.
+          // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
+          this.loadPurchase()
+
+          this.props.updateTransaction(confirmationCount, transactionReceipt)
+        }
+      )
+
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        transactionTypeKey: 'withdrawOffer',
+        offer,
+        listing
+      })
+
+      this.setState({ processing: false })
+    } catch (error) {
+      this.setState({ processing: false })
+
+      console.error('Error accepting offer')
+      console.error(error)
+    }
   }
 
   async reviewSale() {

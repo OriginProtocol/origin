@@ -8,6 +8,10 @@
     "defaultMessage": "You made an offer."
   },
   {
+    "id": "transaction.withdrawOffer",
+    "defaultMessage": "You withdrew an offer."
+  },
+  {
     "id": "transaction.closeListing",
     "defaultMessage": "You closed a listing."
   },

@@ -17,6 +17,10 @@ class TransactionMessage extends Component {
         id: 'transaction.makeOffer',
         defaultMessage: 'You made an offer.'
       },
+      withdrawOffer: {
+        id: 'transaction.withdrawOffer',
+        defaultMessage: 'You withdrew an offer.'
+      },
       closeListing: {
         id: 'transaction.closeListing',
         defaultMessage: 'You closed a listing.'
