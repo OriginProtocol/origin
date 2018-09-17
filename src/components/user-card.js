@@ -96,7 +96,7 @@ class UserCard extends Component {
               {userAddress &&
                 userCanReceiveMessages && (
                 <a href="#" className="contact" onClick={this.handleToggle}>
-                    Contact
+                  Contact
                 </a>
               )}
             </div>

@@ -73,7 +73,7 @@ class MessagesDropdown extends Component {
   }
 
   render() {
-    const { history, messages, messagingEnabled, web3Account } = this.props
+    const { history, messages, messagingEnabled } = this.props
     const conversations = groupByArray(messages, 'conversationId')
 
     return (
