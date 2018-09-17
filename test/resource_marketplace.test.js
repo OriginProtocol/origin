@@ -146,6 +146,16 @@ describe('Marketplace Resource', function() {
     })
   })
 
+  describe('withdrawOffer', () => {
+    it('should delete an offer', async () => {
+      let offer = await marketplace.getOffer('999-001-0-0')
+      expect(offer.status).to.equal('created')
+      await marketplace.withdrawOffer(offer.id)
+      offer = await marketplace.getOffer('999-001-0-0')
+      expect(offer.status).to.equal('withdrawn')
+    })
+  })
+
   describe('acceptOffer', () => {
     it('should changed the status to accepted', async () => {
       let offer = await marketplace.getOffer('999-001-0-0')
