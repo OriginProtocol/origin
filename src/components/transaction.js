@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
 import moment from 'moment'
 
 import TransactionMessage from 'components/transaction-message'
+
 import { getListing } from 'utils/listing'
+
 import origin from '../services/origin'
 
 class Transaction extends Component {
@@ -27,8 +30,6 @@ class Transaction extends Component {
 
       if (!listing && listingId) {
         listing = await getListing(listingId)
-      } else {
-        listing = null
       }
 
       this.setState({ listing, purchase })
@@ -38,7 +39,7 @@ class Transaction extends Component {
   }
 
   render() {
-    const { confirmationCompletionCount, transaction } = this.props
+    const { confirmationCompletionCount, transaction, web3Account } = this.props
     const { listing, purchase } = this.state
     const {
       confirmationCount,
@@ -53,28 +54,35 @@ class Transaction extends Component {
       return null
     }
 
+    const { buyer } = purchase
+    const { seller } = listing
+
     switch (transactionTypeKey) {
-    case 'buyListing':
-      fromAddress = purchase.buyer
-      toAddress = listing.seller
+    case 'acceptOffer':
+      fromAddress = seller
+      toAddress = buyer
+      break
+    case 'makeOffer':
+      fromAddress = buyer
+      toAddress = seller
       break
     case 'closeListing':
-      fromAddress = listing.seller
+      fromAddress = seller
       break
-    case 'confirmReceipt':
-      fromAddress = purchase.buyer
-      toAddress = listing.seller
-      break
-    case 'confirmShipped':
-      toAddress = purchase.buyer
-      fromAddress = listing.seller
+    case 'completePurchase':
+      fromAddress = buyer
+      toAddress = seller
       break
     case 'createListing':
-      fromAddress = listing.seller
+      fromAddress = seller
       break
-    case 'getPayout':
-      toAddress = purchase.buyer
-      fromAddress = listing.seller
+    case 'reviewSale':
+      fromAddress = seller
+      toAddress = buyer
+      break
+    case 'initiateDispute':
+      fromAddress = web3Account
+      toAddress = web3Account === seller ? buyer : seller
       break
     }
 
@@ -186,4 +194,10 @@ class Transaction extends Component {
   }
 }
 
-export default Transaction
+const mapStateToProps = state => {
+  return {
+    web3Account: state.app.web3.account
+  }
+}
+
+export default connect(mapStateToProps)(Transaction)

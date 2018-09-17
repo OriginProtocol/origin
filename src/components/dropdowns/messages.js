@@ -168,8 +168,8 @@ const mapStateToProps = state => {
   return {
     messagingDismissed: state.app.messagingDismissed,
     messagingEnabled: state.app.messagingEnabled,
-    messages: state.messages.filter(({ senderAddress, status }) => {
-      return status === 'unread' && senderAddress !== state.app.web3.account
+    messages: state.messages.filter(({ content, senderAddress, status }) => {
+      return content && status === 'unread' && senderAddress !== state.app.web3.account
     }),
     web3Account: state.app.web3.account
   }

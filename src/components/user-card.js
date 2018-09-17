@@ -8,9 +8,8 @@ import { storeWeb3Intent } from 'actions/App'
 
 import Avatar from 'components/avatar'
 import EtherscanLink from 'components/etherscan-link'
+import Identicon from 'components/identicon'
 import MessageNew from 'components/message-new'
-
-import origin from '../services/origin'
 
 class UserCard extends Component {
   constructor(props) {
@@ -59,9 +58,6 @@ class UserCard extends Component {
       web3Account
     } = this.props
     const { fullName, profile, attestations } = user
-    const userCanReceiveMessages =
-      userAddress !== web3Account &&
-      origin.messaging.canReceiveMessages(userAddress)
 
     return (
       <div className="user-card placehold">
@@ -76,29 +72,27 @@ class UserCard extends Component {
           <div className="d-flex">
             <div className="image-container">
               <Link to={`/users/${userAddress}`}>
-                <img
-                  src="images/identicon.png"
-                  srcSet="images/identicon@2x.png 2x, images/identicon@3x.png 3x"
-                  alt="wallet icon"
-                />
+                <Identicon address={userAddress} size={50} />
               </Link>
             </div>
             <div>
               <div>
                 <FormattedMessage
-                  id={'transaction-progress.ethAddress'}
+                  id={'user-card.ethAddress'}
                   defaultMessage={'ETH Address:'}
                 />
               </div>
               <div className="address">
                 {userAddress && <EtherscanLink hash={userAddress} />}
               </div>
-              {userAddress &&
-                userCanReceiveMessages && (
+              {userAddress && userAddress !== web3Account &&
                 <a href="#" className="contact" onClick={this.handleToggle}>
-                  Contact
+                  <FormattedMessage
+                    id={'user-card.enabledContact'}
+                    defaultMessage={'Contact'}
+                  />
                 </a>
-              )}
+              }
             </div>
           </div>
           <hr className="dark sm" />
@@ -165,15 +159,13 @@ class UserCard extends Component {
             defaultMessage={'View Profile'}
           />
         </Link>
-        {userCanReceiveMessages && (
-          <MessageNew
-            open={this.state.modalOpen}
-            recipientAddress={userAddress}
-            listingId={listingId}
-            purchaseId={purchaseId}
-            handleToggle={this.handleToggle}
-          />
-        )}
+        <MessageNew
+          open={this.state.modalOpen}
+          recipientAddress={userAddress}
+          listingId={listingId}
+          purchaseId={purchaseId}
+          handleToggle={this.handleToggle}
+        />
       </div>
     )
   }

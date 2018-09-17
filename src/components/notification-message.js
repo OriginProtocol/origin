@@ -10,20 +10,20 @@ class NotificationMessage extends Component {
     super(props)
 
     this.intlMessages = defineMessages({
-      shippingPending: {
-        id: 'notification.purchaseCreated',
-        defaultMessage: 'You have a new sale.'
+      offerMade: {
+        id: 'notification.offerMade',
+        defaultMessage: 'You have a new offer.'
       },
-      buyerPending: {
+      offerAccepted: {
         id: 'notification.purchaseSent',
-        defaultMessage: 'Your purchase has been shipped.'
+        defaultMessage: 'Your offer has been accepted.'
       },
-      sellerPending: {
-        id: 'notification.purchaseReceived',
-        defaultMessage: 'You have a new review.'
+      saleConfirmed: {
+        id: 'notification.saleConfirmed',
+        defaultMessage: 'Your sale has been confirmed.'
       },
-      complete: {
-        id: 'notification.purchaseComplete',
+      sellerReviewed: {
+        id: 'notification.sellerReviewed',
         defaultMessage: 'You have a new review.'
       }
     })
@@ -35,17 +35,17 @@ class NotificationMessage extends Component {
 
     switch (type) {
     case 'buyer_review_received':
-      message = this.props.intl.formatMessage(this.intlMessages.complete)
+      message = this.props.intl.formatMessage(this.intlMessages.sellerReviewed)
       break
     case 'seller_review_received':
-      message = this.props.intl.formatMessage(this.intlMessages.sellerPending)
+      message = this.props.intl.formatMessage(this.intlMessages.saleConfirmed)
       break
     case 'buyer_listing_shipped':
-      message = this.props.intl.formatMessage(this.intlMessages.buyerPending)
+      message = this.props.intl.formatMessage(this.intlMessages.offerAccepted)
       break
     case 'seller_listing_purchased':
       message = this.props.intl.formatMessage(
-        this.intlMessages.shippingPending
+        this.intlMessages.offerMade
       )
       break
     default:
