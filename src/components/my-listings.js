@@ -38,6 +38,7 @@ class MyListings extends Component {
   async loadListings() {
     try {
       const ids = await origin.marketplace.getListings({
+        idsOnly: true,
         listingsFor: this.props.web3Account
       })
       const listings = await Promise.all(
@@ -268,7 +269,7 @@ class MyListings extends Component {
           )}
         </div>
         {processing && (
-          <Modal backdrop="static" isOpen={true}>
+          <Modal backdrop="static" isOpen={true} tabIndex="-1">
             <div className="image-container">
               <img src="images/spinner-animation.svg" role="presentation" />
             </div>

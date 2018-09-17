@@ -121,13 +121,20 @@ class ListingsDetail extends Component {
 
     if (web3.givenProvider && this.props.web3Account) {
       this.setState({ step: this.STEP.METAMASK })
-      const unitsToBuy = 1
-      const totalPrice = unitsToBuy * this.state.price
       try {
         this.setState({ step: this.STEP.PROCESSING })
+        const offerData = {
+          listingId: this.props.listingId,
+          listingType: 'unit',
+          unitsPurchased: 1,
+          totalPrice: {
+            amount: this.state.price,
+            currency: 'ETH'
+          }
+        }
         const transactionReceipt = await origin.marketplace.makeOffer(
           this.props.listingId,
-          { price: totalPrice },
+          offerData,
           (confirmationCount, transactionReceipt) => {
             this.props.updateTransaction(confirmationCount, transactionReceipt)
           }
@@ -172,7 +179,7 @@ class ListingsDetail extends Component {
     return (
       <div className="listing-detail">
         {step === this.STEP.METAMASK && (
-          <Modal backdrop="static" isOpen={true}>
+          <Modal backdrop="static" isOpen={true} tabIndex="-1">
             <div className="image-container">
               <img src="images/spinner-animation.svg" role="presentation" />
             </div>

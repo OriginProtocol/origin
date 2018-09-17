@@ -107,6 +107,7 @@ class VerifyPhone extends Component {
         data-modal="phone"
         className="attestation"
         handleToggle={handleToggle}
+        tabIndex="-1"
       >
         <div className="image-container d-flex align-items-center">
           <img src="images/phone-icon-dark.svg" role="presentation" />

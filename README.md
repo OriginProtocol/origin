@@ -106,22 +106,24 @@ Browsers with wallets for both desktop and mobile that you can use with the Orig
 
 | OS | Application | Status | Notes |
 | ---- | -------- | ------ | ------ |
-| Mac | Chrome + Metamask extension | ✅ | Operational |
-| Mac | Firefox + Metamask extension | ✅  | Operational |
-| Mac | Brave with Metamask | ✅ | Operational |
+| Mac | Chrome + MetaMask extension | ✅ | Operational |
+| Mac | Firefox + MetaMask extension | ✅  | Operational |
+| Mac | Opera with MetaMask | ⚪️ | Not tested |
+| Mac | Brave with MetaMask | ✅ | Operational |
 |  | |  |
-| PC | Chrome + Metamask extension | ✅ | Operational |
-| PC | Firefox + Metamask extension | ✅ | Operational |
-| PC | Brave with Metamask | ⚪️  | Not tested |
+| PC | Chrome + MetaMask extension | ✅ | Operational |
+| PC | Firefox + MetaMask extension | ✅ | Operational |
+| PC | Opera with MetaMask | ✅ | Operational |
+| PC | Brave with MetaMask | ✅ | Operational |
 |  |  |  |
 | iOS | Trust Wallet | ✅  | Operational |
 | iOS | Toshi  |  🚫  | Main Toshi app does not currently work with test nets |
 | iOS | Toshi Developer  |  🚫  |  [DApp hangs on Toshi client #327](https://github.com/OriginProtocol/origin-dapp/issues/327) |
 | iOS | Cipher  | ⛔️  | Acquired by Coinbase. Not in development. |
 |   |  |  |
-| Android | Trust Wallet | ⚪️ | Not tested |
-| Android | Toshi Developer  |  ⚪️  |  Not tested |
-| Android | Toshi Developer  |  ⚪️  | Not tested
+| Android | Trust Wallet | 🚫 | [Dapp hang + app does not currently work with test nets](https://github.com/OriginProtocol/origin-dapp/issues/331#issuecomment-416364784) |
+| Android | Toshi  |  ✅ |  Operational |
+| Android | Toshi Developer  |  🚫 | Toshi Developer app does not currently work with test nets |
 | Android | Cipher  |  ⛔️  | Not in development |
 
 <sup>Tests for http://demo.originprotocol.com</sup>

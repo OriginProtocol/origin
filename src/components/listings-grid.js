@@ -16,7 +16,7 @@ class ListingsGrid extends Component {
       listingsPerPage: 12
     }
   }
-  
+
   componentWillMount() {
     if (this.props.renderMode === 'home-page') this.props.getListingIds()
   }
