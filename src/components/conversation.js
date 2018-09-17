@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import {
   FormattedDate,
   FormattedMessage,
@@ -213,27 +213,27 @@ class Conversation extends Component {
   }
 
   render() {
-    const { id, intl, messages, web3Account } = this.props
+    const { id, intl, messages, web3Account, withListingSummary } = this.props
     const { counterparty, files, listing, purchase } = this.state
     const { name, pictures } = listing
-    const { buyer, created, status } = purchase
+    const { buyer, createdAt, status } = purchase
     const perspective = buyer
       ? buyer === web3Account
         ? 'buyer'
         : 'seller'
       : null
-    const soldAt = created
-      ? created * 1000 /* convert seconds since epoch to ms */
+    const soldAt = createdAt
+      ? createdAt * 1000 /* convert seconds since epoch to ms */
       : null
     const photo = pictures && pictures.length > 0 && pictures[0]
     const canDeliverMessage = origin.messaging.canConverseWith(
       counterparty.address
     )
-    const shouldEnableForm = canDeliverMessage && id
+    const shouldEnableForm = origin.messaging.getRecipients(id).includes(web3Account) && canDeliverMessage && id
 
     return (
-      <div className="conversation-col col-12 col-sm-8 col-lg-9 d-flex flex-column">
-        {listing.id && (
+      <Fragment>
+        {withListingSummary && listing.id && (
           <div className="listing-summary d-flex">
             <div className="aspect-ratio">
               <div
@@ -353,7 +353,7 @@ class Conversation extends Component {
             </button>
           </form>
         )}
-      </div>
+      </Fragment>
     )
   }
 }
