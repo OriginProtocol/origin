@@ -23,10 +23,21 @@ const storeKeys = {
 
 const MESSAGE_FORMAT = {
   type: 'object',
-  required: ['created', 'content'],
+  required: ['created'],
   properties: {
     content: { type: 'string' },
-    created: { type: 'number' }
+    created: { type: 'number' },
+    decryption: {
+      type: 'object',
+      required: ['keys', 'roomId'],
+      properties: {
+        keys: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        roomId: { type: 'string' }
+      }
+    }
   }
 }
 const validator = new Ajv()
@@ -234,7 +245,7 @@ class Messaging extends ResourceBase {
         if (eth_address == this.account_key) {
           this.events.emit('pending_conv', message.payload.key)
           const remote_address = message.payload.key
-          this.startConvoRoom(remote_address)
+          this.initRoom(remote_address)
           // this is probably not needed
           // this.getConvo(remote_address)
         }
@@ -506,9 +517,21 @@ class Messaging extends ResourceBase {
     return key.split('-')
   }
 
+  getSharedKeys(room_id) {
+    const room = this.convs[room_id]
+
+    return room ? (room.keys || []) : []
+  }
+
   getConvo(eth_address) {
     const room = this.CONV_INIT_PREFIX + eth_address
     return this.getShareRoom(room, 'kvstore', ['*'])
+  }
+
+  hasConversedWith(eth_address) {
+    const room_id = this.generateRoomId(this.account_key, eth_address)
+
+    return this.convs[room_id]
   }
 
   decryptMsg(iv_str, msg, key) {
@@ -681,9 +704,20 @@ class Messaging extends ResourceBase {
     }
   }
 
-  async startConvoRoom(remote_eth_address) {
-    const writers = [this.account_key, remote_eth_address].sort()
-    const room_id = this.generateRoomId(...writers)
+  async initRoom(room_id_or_address, keys = []) {
+    let room_id, writers
+    // called by an arbitrator who has key(s)
+    if (this.isRoomId(room_id_or_address)) {
+      room_id = room_id_or_address
+      writers = this.getRecipients(room_id_or_address).sort()
+
+      this.convs[room_id_or_address] = { keys }
+    // called by a participant in the conversation
+    } else {
+      writers = [this.account_key, room_id_or_address].sort()
+      room_id = this.generateRoomId(...writers)
+    }
+
     const room = await this.getShareRoom(
       this.CONV,
       'eventlog',
@@ -715,7 +749,7 @@ class Messaging extends ResourceBase {
 
   async loadMyConvs() {
     for (const k of Object.keys(await this.getMyConvs())) {
-      this.startConvoRoom(k)
+      this.initRoom(k)
     }
   }
 
@@ -778,7 +812,7 @@ class Messaging extends ResourceBase {
     remote_init_conv.set(this.account_key, ts)
     self_init_conv.set(remote_eth_address, ts)
 
-    const room = await this.startConvoRoom(remote_eth_address)
+    const room = await this.initRoom(remote_eth_address)
 
     // we haven't put any keys here yet
     if (room.iterator({ limit: 2 }).collect().length < 2) {
@@ -816,7 +850,7 @@ class Messaging extends ResourceBase {
     }
     let room
     if (this.convs[room_id] && this.convs[room_id].keys.length) {
-      room = await this.startConvoRoom(remote_eth_address)
+      room = await this.initRoom(remote_eth_address)
     } else {
       room = await this.startConv(remote_eth_address)
     }

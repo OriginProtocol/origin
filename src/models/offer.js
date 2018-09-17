@@ -16,6 +16,7 @@ export class Offer {
     this.createdAt = chainOffer.createdAt // Time in seconds since epoch.
     this.buyer = chainOffer.buyer
     this.events = chainOffer.events
+    this.refund = chainOffer.refund
 
     // See src/schemas/offer.json for fields stored in IPFS offer data.
     Object.assign(this, ipfsOffer)

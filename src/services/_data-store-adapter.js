@@ -8,6 +8,8 @@ import listingWithdrawnSchemaV1 from '../schemas/listing-withdraw.json'
 import offerSchemaV1 from '../schemas/offer.json'
 import offerWithdrawnSchemaV1 from '../schemas/offer-withdraw.json'
 import offerAcceptedSchemaV1 from '../schemas/offer-accept.json'
+import disputeSchemaV1 from '../schemas/dispute.json'
+import resolutionSchemaV1 from '../schemas/resolution.json'
 import profileSchemaV1 from '../schemas/profile.json'
 import reviewSchemaV1 from '../schemas/review.json'
 
@@ -21,6 +23,8 @@ ajv.addSchema([
   offerSchemaV1,
   offerWithdrawnSchemaV1,
   offerAcceptedSchemaV1,
+  disputeSchemaV1,
+  resolutionSchemaV1,
   profileSchemaV1,
   reviewSchemaV1
 ])
@@ -206,6 +210,10 @@ class ListingWithdrawAdapterV1 extends AdapterBase {}
 
 class OfferAcceptAdapterV1 extends AdapterBase {}
 
+class DisputeAdapterV1 extends AdapterBase {}
+
+class ResolutionAdapterV1 extends AdapterBase {}
+
 class OfferWithdrawAdapterV1 extends AdapterBase {}
 
 class ProfileAdapterV1 extends AdapterBase {}
@@ -228,6 +236,12 @@ const adapterConfig = {
   },
   'offer-accept': {
     '1.0.0': OfferAcceptAdapterV1,
+  },
+  'dispute': {
+    '1.0.0': DisputeAdapterV1,
+  },
+  'resolution': {
+    '1.0.0': ResolutionAdapterV1,
   },
   'profile': {
     '1.0.0': ProfileAdapterV1,

@@ -8,6 +8,8 @@ import {
   OFFER_DATA_TYPE,
   OFFER_WITHDRAW_DATA_TYPE,
   OFFER_ACCEPT_DATA_TYPE,
+  DISPUTE_DATA_TYPE,
+  RESOLUTION_DATA_TYPE,
   REVIEW_DATA_TYPE,
   IpfsDataStore,
 } from '../services/data-store-service'
@@ -147,7 +149,7 @@ class Marketplace {
    * @param {function(confirmationCount, transactionReceipt)} confirmationCallback
    * @return {Promise<{listingId, offerId, ...transactionReceipt}>}
    */
-  async makeOffer(listingId, offerData, confirmationCallback) {
+  async makeOffer(listingId, offerData = {}, confirmationCallback) {
     // For V1, we only support quantity of 1.
     if (offerData.unitsPurchased != 1)
       throw new Error(
@@ -163,10 +165,13 @@ class Marketplace {
       offerData.totalPrice.amount,
       'ether'
     )
+
+    offerData.priceWei = priceWei
+
     return await this.resolver.makeOffer(
       listingId,
       ipfsBytes,
-      priceWei,
+      offerData,
       confirmationCallback
     )
   }
@@ -220,10 +225,50 @@ class Marketplace {
   }
 
   // setOfferRefund(listingId, offerId, data) {}
-
-  // initiateDispute(listingId, offerId) {}
-  // disputeRuling(listingId, offerId, data) {}
   // manageListingDeposit(listingId, data) {}
+
+  /**
+   * Initiate a dispute regarding an offer. Puts the offer into "Disputed" status. 
+   * @param {string} offerId - Offer ID
+   * @param {object} disputeData - Data describing this dispute - stored in IPFS
+   * @param {function(confirmationCount, transactionReceipt)} confirmationCallback
+   * @return {Promise<{timestamp, ...transactionReceipt}>}
+   */
+  async initiateDispute(offerId, disputeData = {}, confirmationCallback) {
+    const ipfsHash = await this.ipfsDataStore.save(DISPUTE_DATA_TYPE, disputeData)
+    const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
+
+    return await this.resolver.initiateDispute(offerId, ipfsBytes, confirmationCallback)
+  }
+
+  /**
+   * Resolve a dispute by executing a ruling - either refund to buyer or payment to seller
+   * @param {string} listingId - Listing ID
+   * @param {string} offerId - Offer ID
+   * @param {object} resolutionData - Data describing this resolution - stored in IPFS
+   * @param {number} ruling - 0: Seller, 1: Buyer, 2: Com + Seller, 3: Com + Buyer
+   * @param {number} refund - Amount (in wei) to be refunded to buyer
+   * @param {function(confirmationCount, transactionReceipt)} confirmationCallback
+   * @return {Promise<{timestamp, ...transactionReceipt}>}
+   */
+  async resolveDispute(
+    offerId,
+    resolutionData = {},
+    ruling,
+    refund,
+    confirmationCallback
+  ) {
+    const ipfsHash = await this.ipfsDataStore.save(RESOLUTION_DATA_TYPE, resolutionData)
+    const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
+
+    return await this.resolver.resolveDispute(
+      offerId,
+      ipfsBytes,
+      ruling,
+      refund,
+      confirmationCallback
+    )
+  }
 
   /**
    * Adds data to either a listing or an offer.
