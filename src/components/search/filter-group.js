@@ -100,6 +100,7 @@ class FilterGroup extends Component {
           onChildUnMounted={this.handleFilterUnMounted}
           key={index}
           maxPrice={this.props.maxPrice}
+          minPrice={this.props.minPrice}
         />
       )
     } else if (filter.type === 'counter') {

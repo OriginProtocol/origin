@@ -13,10 +13,9 @@ import { getEthPrice } from 'utils/priceUtils'
 class PriceFilter extends Component {
   constructor(props) {
     super(props)
-    this.defaultMinimum = 0
 
     this.state = {
-      value: [this.defaultMinimum, Math.round(parseFloat(props.maxPrice))]
+      value: [Math.round(parseFloat(props.minPrice)), Math.round(parseFloat(props.maxPrice))]
     }
 
     this.handlePriceChange = this.handlePriceChange.bind(this)
@@ -60,7 +59,10 @@ class PriceFilter extends Component {
 
   // Called by filter-group
   onClear(callback) {
-    this.setState({ value: [this.defaultMinimum, Math.round(parseFloat(this.props.maxPrice))] }, callback)
+    this.setState({ value: [
+      Math.round(parseFloat(this.props.minPrice)),
+      Math.round(parseFloat(this.props.maxPrice))]
+    }, callback)
   }
 
   render() {
@@ -68,6 +70,7 @@ class PriceFilter extends Component {
       ? this.props.intl.formatMessage(this.props.filter.priceUnit)
       : `USD`
 
+    const minPrice = Math.round(parseFloat(this.props.minPrice))
     const maxPrice = Math.round(parseFloat(this.props.maxPrice))
     return (
       <div
@@ -84,11 +87,11 @@ class PriceFilter extends Component {
         </div>
         <Range
           value={this.state.value}
-          min={this.defaultMinimum}
+          min={minPrice}
           max={maxPrice}
-          defaultValue={[this.defaultMinimum, maxPrice]}
+          defaultValue={[minPrice, maxPrice]}
           count={2}
-          pushable={(maxPrice - this.defaultMinimum) / 20}
+          pushable={(maxPrice - minPrice) / 20}
           tipFormatter={value => `${value}$`}
           onChange={this.handlePriceChange}
         />

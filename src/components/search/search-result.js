@@ -26,7 +26,8 @@ class SearchResult extends Component {
       listingIds: [],
       searchError: undefined,
       filters: {},
-      maxPrice: 10000
+      maxPrice: 10000,
+      minPrice: 0
     }
 
     // set default prop values for search_query and listing_type
@@ -174,12 +175,18 @@ class SearchResult extends Component {
         listingIds: searchResp.data.listings.nodes.map(listing => listing.id)
       })
 
-      const maxPrice = await getFiatPrice(searchResp.data.listings.stats.maxPrice, 'USD', 'ETH', false)
+      const [maxPrice, minPrice] = await Promise.all([
+        getFiatPrice(searchResp.data.listings.stats.maxPrice, 'USD', 'ETH', false),
+        getFiatPrice(searchResp.data.listings.stats.minPrice, 'USD', 'ETH', false)
+      ])
 
-      /* increase the max price by 5% to prevent a case where conversion rates of a market would be such
+      /* increase the max/min price range by 5% to prevent a case where conversion rates of a market would be such
        * that the item that would cost the most would be left out of the price filter range
        */
-      this.setState({ maxPrice: maxPrice * 1.05 })
+      this.setState({
+        maxPrice: maxPrice * 1.05,
+        minPrice: minPrice * 0.95
+      })
     } catch (e) {
       const errorMessage = this.props.intl.formatMessage({
         id: 'searchResult.canNotReachIndexingServer',
@@ -215,6 +222,7 @@ class SearchResult extends Component {
                         listingSchema={this.state.listingSchema}
                         listingType={this.state.listingType}
                         maxPrice={this.state.maxPrice}
+                        minPrice={this.state.minPrice}
                       />
                     )
                   })}
