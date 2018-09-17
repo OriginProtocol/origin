@@ -31,12 +31,12 @@ class User extends Component {
   }
 
   render() {
-    const { user, wallet } = this.props
+    const { user, userAddress } = this.props
     const { attestations, fullName, profile } = user
     const description =
       (profile && profile.description) || 'An Origin user without a description'
     const usersReviews = this.state.reviews.filter(
-      r => r.revieweeAddress === wallet.address
+      r => r.revieweeAddress === userAddress
     )
 
     return (
@@ -44,7 +44,7 @@ class User extends Component {
         <div className="container">
           <div className="row">
             <div className="col-12 col-md-4 col-lg-4 order-md-3">
-              <WalletCard wallet={wallet} withProfile={false} />
+              <WalletCard wallet={{ address: userAddress }} withProfile={false} />
             </div>
             <div className="col-12 col-sm-4 col-md-3 col-lg-2 order-md-1">
               <Avatar
@@ -170,8 +170,7 @@ class User extends Component {
 
 const mapStateToProps = (state, { userAddress }) => {
   return {
-    user: state.users.find(u => u.address === userAddress) || {},
-    wallet: state.wallet
+    user: state.users.find(u => u.address === userAddress) || {}
   }
 }
 

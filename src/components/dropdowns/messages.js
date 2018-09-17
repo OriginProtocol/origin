@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 
 import { dismissMessaging, enableMessaging } from 'actions/App'
+import { storeWeb3Intent } from 'actions/App'
 
 import ConversationListItem from 'components/conversation-list-item'
 
@@ -16,6 +17,18 @@ class MessagesDropdown extends Component {
     super(props)
 
     this.handleClick = this.handleClick.bind(this)
+    this.handleEnable = this.handleEnable.bind(this)
+
+    this.intlMessages = defineMessages({
+      enableMessaging: {
+        id: 'messagesDropdown.enableMessaging',
+        defaultMessage: 'enable messaging'
+      },
+      viewMessages: {
+        id: 'messagesDropdown.viewMessages',
+        defaultMessage: 'view your messages'
+      }
+    })
   }
 
   componentDidMount() {
@@ -40,11 +53,27 @@ class MessagesDropdown extends Component {
   }
 
   handleClick() {
+    const { intl, storeWeb3Intent, web3Account } = this.props
+
+    if (!web3Account) {
+      storeWeb3Intent(intl.formatMessage(this.intlMessages.viewMessages))
+    }
+
     $('#messagesDropdown').dropdown('toggle')
   }
 
+  handleEnable() {
+    const { enableMessaging, intl, storeWeb3Intent, web3Account } = this.props
+
+    if (web3Account) {
+      enableMessaging()
+    } else {
+      storeWeb3Intent(intl.formatMessage(this.intlMessages.enableMessaging))
+    }
+  }
+
   render() {
-    const { enableMessaging, history, messages, messagingEnabled } = this.props
+    const { history, messages, messagingEnabled } = this.props
     const conversations = groupByArray(messages, 'conversationId')
 
     return (
@@ -99,7 +128,7 @@ class MessagesDropdown extends Component {
               {!messagingEnabled && (
                 <button
                   className="btn btn-sm btn-primary d-none d-md-block ml-auto"
-                  onClick={enableMessaging}
+                  onClick={this.handleEnable}
                 >
                   <FormattedMessage
                     id={'messages.enable'}
@@ -141,18 +170,20 @@ const mapStateToProps = state => {
     messagingEnabled: state.app.messagingEnabled,
     messages: state.messages.filter(({ content, senderAddress, status }) => {
       return content && status === 'unread' && senderAddress !== state.app.web3.account
-    })
+    }),
+    web3Account: state.app.web3.account
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   dismissMessaging: () => dispatch(dismissMessaging()),
-  enableMessaging: () => dispatch(enableMessaging())
+  enableMessaging: () => dispatch(enableMessaging()),
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
 })
 
 export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(MessagesDropdown)
+  )(injectIntl(MessagesDropdown))
 )
