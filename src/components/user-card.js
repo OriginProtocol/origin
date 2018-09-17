@@ -4,6 +4,7 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { Link } from 'react-router-dom'
 
 import { fetchUser } from 'actions/User'
+import { storeWeb3Intent } from 'actions/App'
 
 import Avatar from 'components/avatar'
 import EtherscanLink from 'components/etherscan-link'
@@ -19,6 +20,10 @@ class UserCard extends Component {
       unnamedUser: {
         id: 'user-card.unnamedUser',
         defaultMessage: 'Unnamed User'
+      },
+      sendMessages: {
+        id: 'messages-send.sendMessages',
+        defaultMessage: 'send messages'
       }
     })
 
@@ -35,8 +40,13 @@ class UserCard extends Component {
 
   handleToggle(e) {
     e.preventDefault()
+    const { storeWeb3Intent, intl, web3Account } = this.props
+    const intent = intl.formatMessage(this.intlMessages.sendMessages)
+    storeWeb3Intent(intent)
 
-    this.setState({ modalOpen: !this.state.modalOpen })
+    if (web3.givenProvider && web3Account) {
+      this.setState({ modalOpen: !this.state.modalOpen })
+    }
   }
 
   render() {
@@ -86,7 +96,7 @@ class UserCard extends Component {
               {userAddress &&
                 userCanReceiveMessages && (
                 <a href="#" className="contact" onClick={this.handleToggle}>
-                    Contact
+                  Contact
                 </a>
               )}
             </div>
@@ -181,7 +191,8 @@ const mapStateToProps = (state, { userAddress }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg))
+  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg)),
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
 })
 
 export default connect(

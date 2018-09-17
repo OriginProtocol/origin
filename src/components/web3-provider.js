@@ -77,11 +77,6 @@ const NotWeb3EnabledDesktop = props => (
         />
       </a>
     </div>
-    <FormattedMessage
-      id={'web3-provider.notSignedIntoMetaMask'}
-      defaultMessage={'You are not signed in to MetaMask.'}
-    />
-    <br />
   </Modal>
 )
 
