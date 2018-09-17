@@ -17,10 +17,15 @@ class MessagesDropdown extends Component {
     super(props)
 
     this.handleClick = this.handleClick.bind(this)
-    this.storeWeb3Intent = this.storeWeb3Intent.bind(this)
+    this.handleEnable = this.handleEnable.bind(this)
+
     this.intlMessages = defineMessages({
-      viewYourMessages: {
-        id: 'messagesDropdown.viewYourMessages',
+      enableMessaging: {
+        id: 'messagesDropdown.enableMessaging',
+        defaultMessage: 'enable messaging'
+      },
+      viewMessages: {
+        id: 'messagesDropdown.viewMessages',
         defaultMessage: 'view your messages'
       }
     })
@@ -31,7 +36,6 @@ class MessagesDropdown extends Component {
       e.stopPropagation()
     })
 
-    $('.messages.dropdown').on('show.bs.dropdown', this.storeWeb3Intent)
     $('.messages.dropdown').on('hide.bs.dropdown', this.props.dismissMessaging)
   }
 
@@ -49,18 +53,27 @@ class MessagesDropdown extends Component {
   }
 
   handleClick() {
+    const { intl, storeWeb3Intent, web3Account } = this.props
+
+    if (!web3Account) {
+      storeWeb3Intent(intl.formatMessage(this.intlMessages.viewMessages))
+    }
+
     $('#messagesDropdown').dropdown('toggle')
   }
 
-  storeWeb3Intent() {
-    const { storeWeb3Intent, intl } = this.props
-    const intent = intl.formatMessage(this.intlMessages.viewYourMessages)
+  handleEnable() {
+    const { enableMessaging, intl, storeWeb3Intent, web3Account } = this.props
 
-    storeWeb3Intent(intent)
+    if (web3Account) {
+      enableMessaging()
+    } else {
+      storeWeb3Intent(intl.formatMessage(this.intlMessages.enableMessaging))
+    }
   }
 
   render() {
-    const { enableMessaging, history, messages, messagingEnabled, web3Account } = this.props
+    const { history, messages, messagingEnabled, web3Account } = this.props
     const conversations = groupByArray(messages, 'conversationId')
 
     return (
@@ -86,68 +99,66 @@ class MessagesDropdown extends Component {
             alt="Messages"
           />
         </a>
-        {web3.givenProvider && web3Account && (
-          <div
-            className="dropdown-menu dropdown-menu-right"
-            aria-labelledby="messagesDropdown"
-          >
-            <div className="triangle-container d-flex justify-content-end">
-              <div className="triangle" />
-            </div>
-            <div className="actual-menu">
-              <header className="d-flex">
-                <div className="count">
-                  <div className="d-inline-block">{messages.length}</div>
-                </div>
-                <h3>
-                  {messages.length === 1 && (
-                    <FormattedMessage
-                      id={'messagesDropdown.messageHeading'}
-                      defaultMessage={'Unread Message'}
-                    />
-                  )}
-                  {messages.length !== 1 && (
-                    <FormattedMessage
-                      id={'messagesDropdown.messagesHeading'}
-                      defaultMessage={'Unread Messages'}
-                    />
-                  )}
-                </h3>
-                {!messagingEnabled && (
-                  <button
-                    className="btn btn-sm btn-primary d-none d-md-block ml-auto"
-                    onClick={enableMessaging}
-                  >
-                    <FormattedMessage
-                      id={'messages.enable'}
-                      defaultMessage={'Enable Messaging'}
-                    />
-                  </button>
-                )}
-              </header>
-              <div className="messages-list">
-                {conversations.map(c => (
-                  <ConversationListItem
-                    key={c.key}
-                    conversation={c}
-                    active={false}
-                    handleConversationSelect={() =>
-                      history.push(`/messages/${c.key}`)
-                    }
-                  />
-                ))}
-              </div>
-              <Link to="/messages" onClick={this.handleClick}>
-                <footer>
-                  <FormattedMessage
-                    id={'messagesDropdown.viewAll'}
-                    defaultMessage={'View All'}
-                  />
-                </footer>
-              </Link>
-            </div>
+        <div
+          className="dropdown-menu dropdown-menu-right"
+          aria-labelledby="messagesDropdown"
+        >
+          <div className="triangle-container d-flex justify-content-end">
+            <div className="triangle" />
           </div>
-        )}
+          <div className="actual-menu">
+            <header className="d-flex">
+              <div className="count">
+                <div className="d-inline-block">{messages.length}</div>
+              </div>
+              <h3>
+                {messages.length === 1 && (
+                  <FormattedMessage
+                    id={'messagesDropdown.messageHeading'}
+                    defaultMessage={'Unread Message'}
+                  />
+                )}
+                {messages.length !== 1 && (
+                  <FormattedMessage
+                    id={'messagesDropdown.messagesHeading'}
+                    defaultMessage={'Unread Messages'}
+                  />
+                )}
+              </h3>
+              {!messagingEnabled && (
+                <button
+                  className="btn btn-sm btn-primary d-none d-md-block ml-auto"
+                  onClick={this.handleEnable}
+                >
+                  <FormattedMessage
+                    id={'messages.enable'}
+                    defaultMessage={'Enable Messaging'}
+                  />
+                </button>
+              )}
+            </header>
+            <div className="messages-list">
+              {conversations.map(c => (
+                <ConversationListItem
+                  key={c.key}
+                  conversation={c}
+                  active={false}
+                  handleConversationSelect={() =>
+                    history.push(`/messages/${c.key}`)
+                  }
+                />
+              ))}
+            </div>
+            <Link to="/messages" onClick={this.handleClick}>
+              <footer>
+                <FormattedMessage
+                  id={'messagesDropdown.viewAll'}
+                  defaultMessage={'View All'}
+                />
+              </footer>
+            </Link>
+          </div>
+        </div>
       </div>
     )
   }

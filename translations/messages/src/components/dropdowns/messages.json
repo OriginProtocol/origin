@@ -1,6 +1,10 @@
 [
   {
-    "id": "messagesDropdown.viewYourMessages",
+    "id": "messagesDropdown.enableMessaging",
+    "defaultMessage": "enable messaging"
+  },
+  {
+    "id": "messagesDropdown.viewMessages",
     "defaultMessage": "view your messages"
   },
   {
