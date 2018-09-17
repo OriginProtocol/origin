@@ -260,3 +260,20 @@ export async function assertRevert(promise) {
   }
   assert.fail('Expected revert not received')
 }
+
+/**
+ * Asserts that the given promise throws an error with the given message.
+ * @param {message} message - Message we expect to find in the exception.
+ * @param {promise} promise - A promise that we expect to be rejected.
+ */
+export async function assertRevertWithMessage(message, promise) {
+  try {
+    await promise
+  } catch (error) {
+    const revertFound = error.message.search('revert') >= 0
+    assert(revertFound, `Expected "revert", got ${error} instead`)
+    assert(error.message.match(message))
+    return
+  }
+  assert.fail('Expected revert not received')
+}

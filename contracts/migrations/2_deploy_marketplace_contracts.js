@@ -15,4 +15,9 @@ async function deployContracts(deployer) {
 
   await deployer.deploy(V00_Marketplace, OriginToken.address)
   await deployer.deploy(V01_Marketplace, OriginToken.address)
+
+  //register the marketplace as a possible caller upon token approval
+  const token = await OriginToken.deployed()
+  const contractOwner = await token.owner()
+  await token.addCallSpenderWhitelist(V01_Marketplace.address, {from:contractOwner})
 }

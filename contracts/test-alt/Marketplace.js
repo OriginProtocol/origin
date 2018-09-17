@@ -16,6 +16,7 @@ const gasUsed = []
 const trackGas = id => receipt => gasUsed.push([id, receipt.cumulativeGasUsed])
 const gasOrder = `
 Create Listing
+Create Listing via call
 Make Offer
 Make Offer ERC20
 Accept Offer
@@ -38,6 +39,7 @@ describe('Marketplace.sol', async function() {
     // BuyerIdentity,
     Owner,
     Seller,
+    Seller2,
     SellerIdentity,
     Arbitrator,
     MarketArbitrator,
@@ -52,6 +54,7 @@ describe('Marketplace.sol', async function() {
     Seller = accounts[1]
     Buyer = accounts[2]
     ArbitratorAddr = accounts[3]
+    Seller2 = accounts[4]
 
     const gasPrice = await web3.eth.getGasPrice()
     gasEstimate = web3.utils.toBN(gasPrice).mul(web3.utils.toBN('4000000'))
@@ -81,10 +84,10 @@ describe('Marketplace.sol', async function() {
       args: [Arbitrator._address]
     })
 
-    Marketplace = await deploy('V00_Marketplace', {
+    Marketplace = await deploy('V01_Marketplace', {
       from: Owner,
       // path: `${__dirname}/contracts/`,
-      path: `${contractPath}/marketplace/v00`,
+      path: `${contractPath}/marketplace/v01`,
       file: 'Marketplace.sol',
       args: [OriginToken._address]
     })
@@ -100,6 +103,7 @@ describe('Marketplace.sol', async function() {
     // })
 
     await OriginToken.methods.transfer(Seller, 400).send()
+    await OriginToken.methods.transfer(Seller2, 400).send()
     await OriginToken.methods.transfer(SellerIdentity._address, 400).send()
     await DaiStableCoin.methods.transfer(Buyer, 400).send()
 
@@ -511,6 +515,33 @@ describe('Marketplace.sol', async function() {
     //     Number(balanceBefore) + Number(web3.utils.toWei('0.1', 'ether'))
     //   )
     // })
+  })
+
+  describe('Approve and Call', function() {
+    it('should allow a listing to be created', async function() {
+      await OriginToken.methods
+        .addCallSpenderWhitelist(Marketplace._address)
+        .send({ from: Owner })
+
+      const fnSig = web3.eth.abi.encodeFunctionSignature(
+        'createListingWithSender(address,bytes32,uint256,address)'
+      )
+      const params = web3.eth.abi.encodeParameters(
+        ['bytes32', 'uint', 'address'],
+        [IpfsHash, 5, ArbitratorAddr]
+      )
+
+      const balance_pre = await OriginToken.methods.balanceOf(Seller2).call({from:Seller2})
+
+      await OriginToken.methods
+        .approveAndCallWithSender(Marketplace._address, 5, fnSig, params)
+        .send({ from: Seller2 })
+        .once('receipt', trackGas('Create Listing via call'))
+
+      const balance_post = await OriginToken.methods.balanceOf(Seller2).call({from:Seller2})
+      assert.equal(Number(balance_pre), Number(balance_post) + 5)
+
+    })
   })
 
   describe('Ownership', function() {
