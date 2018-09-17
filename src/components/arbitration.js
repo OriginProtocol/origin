@@ -36,6 +36,7 @@ class Arbitration extends Component {
   constructor(props) {
     super(props)
 
+    this.handleRuling = this.handleRuling.bind(this)
     this.loadPurchase = this.loadPurchase.bind(this)
     this.state = defaultState
   }
@@ -46,6 +47,10 @@ class Arbitration extends Component {
 
   componentDidUpdate(prevProps) {
     this.validateUser()
+  }
+
+  async handleRuling() {
+    alert('To Do')
   }
 
   async loadPurchase() {
@@ -125,7 +130,7 @@ class Arbitration extends Component {
     const isSold = !listing.unitsRemaining
 
     // Data not loaded yet.
-    if (!purchase.ipfsData || !listing.status) {
+    if (!purchase.status || !listing.status) {
       return null
     }
 
@@ -142,14 +147,10 @@ class Arbitration extends Component {
       l => l.event === 'OfferData' && l.returnValues.party === listing.seller
     )
 
-    const priceEth = origin.contractService.web3.utils.fromWei(
-      purchase.value || purchase.ipfsData.data.price,
-      'ether'
-    )
-    const price = `${Number(priceEth).toLocaleString(undefined, {
+    const priceEth = `${Number(purchase.totalPrice.amount).toLocaleString(undefined, {
       minimumFractionDigits: 5,
       maximumFractionDigits: 5
-    })} ETH` // change to priceEth
+    })} ETH`
 
     const status = active ? 'active' : 'inactive'
     const step = parseInt(purchase.status)
@@ -328,6 +329,7 @@ class Arbitration extends Component {
                     messages={messages.filter(({ content, conversationId }) => content && conversationId === sellerConversationId).sort((a, b) => (a.index < b.index ? -1 : 1))}
                   />
                 </div>
+                <button className="btn btn-lg btn-info mt-4" onClick={this.handleRuling}>Rule In Favor Of Seller</button>
               </div>
             }
             {buyer.address &&
@@ -344,6 +346,7 @@ class Arbitration extends Component {
                     messages={messages.filter(({ content, conversationId }) => content && conversationId === buyerConversationId).sort((a, b) => (a.index < b.index ? -1 : 1))}
                   />
                 </div>
+                <button className="btn btn-lg btn-info mt-4" onClick={this.handleRuling}>Rule In Favor Of Buyer</button>
               </div>
             }
           </div>
