@@ -511,17 +511,6 @@ class PurchaseDetail extends Component {
   }
 
   handleProblem() {
-    const { web3Account } = this.props
-    const { listing, purchase } = this.state
-    let perspective
-    // may potentially be neither buyer nor seller
-    if (web3Account === purchase.buyer) {
-      perspective = 'buyer'
-    } else if (web3Account === listing.seller) {
-      perspective = 'seller'
-    }
-    const counterparty = ['buyer', 'seller'].find(str => str !== perspective)
-    const counterpartyUser = counterparty === 'buyer' ? purchase.buyer : listing.seller
     const isEligibleForArbitration = origin.messaging.canSendMessages()
 
     if (isEligibleForArbitration) {
@@ -610,10 +599,9 @@ class PurchaseDetail extends Component {
   }
 
   render() {
-    const { messages, web3Account } = this.props
+    const { web3Account } = this.props
     const {
       buyer,
-      describingProblem,
       form,
       listing,
       modalsOpen,
@@ -624,7 +612,6 @@ class PurchaseDetail extends Component {
     } = this.state
     const step = offerStatusToStep(purchase.status)
     const isPending = purchase.status !== 'withdrawn' && step < 3
-    const disputed = purchase.status === 'disputed'
     const isSold = step > 2
     const { rating, reviewText } = form
 
@@ -1230,7 +1217,6 @@ class PurchaseDetail extends Component {
 
 const mapStateToProps = state => {
   return {
-    messages: state.messages,
     web3Account: state.app.web3.account
   }
 }

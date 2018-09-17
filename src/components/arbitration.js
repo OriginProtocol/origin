@@ -3,15 +3,9 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 
-import {
-  update as updateTransaction,
-  upsert as upsertTransaction
-} from 'actions/Transaction'
-
 import Avatar from 'components/avatar'
 import Conversation from 'components/conversation'
 import Modal from 'components/modal'
-import PurchaseProgress from 'components/purchase-progress'
 import Review from 'components/review'
 import UserCard from 'components/user-card'
 
@@ -45,7 +39,7 @@ class Arbitration extends Component {
     this.loadPurchase()
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     this.validateUser()
   }
 
@@ -101,7 +95,7 @@ class Arbitration extends Component {
   }
 
   validateUser() {
-    const { history, web3Account } = this.props
+    const { web3Account } = this.props
 
     if (web3Account && this.props.web3Account.toUpperCase() !== ARBITRATOR_ETH_ADDRESS.toUpperCase()) {
       alert(`⚠️ Warning:\nCurrent account (${this.props.web3Account}) is not equal to the ARBITRATOR_ACCOUNT environment variable (${ARBITRATOR_ETH_ADDRESS})`)
@@ -117,7 +111,6 @@ class Arbitration extends Component {
 
     const {
       buyer,
-      form,
       listing,
       processing,
       purchase,
@@ -133,8 +126,6 @@ class Arbitration extends Component {
     }
 
     const pictures = listing.pictures || []
-    const active = listing.status === 'active'
-    const soldAt = purchase.createdAt * 1000 // convert seconds since epoch to ms
 
     const paymentEvent = purchase.events.find(l => l.event === 'OfferCreated')
     const fulfillmentEvent = purchase.events.find(
@@ -144,14 +135,6 @@ class Arbitration extends Component {
     const withdrawalEvent = purchase.events.find(
       l => l.event === 'OfferData' && l.returnValues.party === listing.seller
     )
-
-    const priceEth = `${Number(purchase.totalPrice.amount).toLocaleString(undefined, {
-      minimumFractionDigits: 5,
-      maximumFractionDigits: 5
-    })} ETH`
-
-    const status = active ? 'active' : 'inactive'
-    const step = parseInt(purchase.status)
 
     const buyerName = buyer.profile ? (
       `${buyer.profile.firstName} ${buyer.profile.lastName}`

@@ -11,8 +11,6 @@ import EtherscanLink from 'components/etherscan-link'
 import Identicon from 'components/identicon'
 import MessageNew from 'components/message-new'
 
-import origin from '../services/origin'
-
 class UserCard extends Component {
   constructor(props) {
     super(props)
