@@ -12,9 +12,11 @@ import V01_MarketplaceContract from './../../contracts/build/contracts/V01_Marke
 import bs58 from 'bs58'
 import Web3 from 'web3'
 
+const emptyAddress = '0x0000000000000000000000000000000000000000'
+
 class ContractService {
-  constructor(options = {}) {
-    const externalWeb3 = options.web3 || window.web3
+  constructor({ web3, contractAddresses, currencies = {} } = {}) {
+    const externalWeb3 = web3 || window.web3
     if (!externalWeb3) {
       throw new Error(
         'web3 is required for Origin.js. Please pass in web3 as a config option.'
@@ -48,12 +50,17 @@ class ContractService {
         this.contracts[name].networks = Object.assign(
           {},
           this.contracts[name].networks,
-          options.contractAddresses[name]
+          contractAddresses[name]
         )
       } catch (e) {
         /* Ignore */
       }
     }
+
+    this.currencies = Object.assign(
+      { ETH: { address: emptyAddress } },
+      currencies
+    )
   }
 
   // Returns an object that describes how many marketplace

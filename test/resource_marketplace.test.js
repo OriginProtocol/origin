@@ -12,6 +12,18 @@ const listingData = Object.assign({}, listingValid)
 const offerData = Object.assign({}, offerValid)
 const reviewData = Object.assign({}, reviewValid)
 
+const originTokenListing = Object.assign({}, listingData, {
+  price: { currency: 'OGN', amount: '1' }
+})
+
+const originTokenOffer = Object.assign({}, offerData, {
+  totalPrice: { currency: 'OGN', amount: '1' }
+})
+
+const invalidPriceOffer = Object.assign({}, offerData, {
+  totalPrice: { currency: 'ETH', amount: '0.032' }
+})
+
 class StoreMock {
   constructor() {
     this.storage = {}
@@ -125,6 +137,14 @@ describe('Marketplace Resource', function() {
       expect(offers[1].status).to.equal('created')
       expect(offers[1].unitsPurchased).to.exist
     })
+
+    it('should exclude invalid offers', async () => {
+      await marketplace.makeOffer('999-001-0', invalidPriceOffer)
+      const offers = await marketplace.getOffers('999-001-0')
+      expect(offers.length).to.equal(1)
+      expect(offers[0].status).to.equal('created')
+      expect(offers[0].unitsPurchased).to.exist
+    })
   })
 
   describe('getOffer', () => {
@@ -133,16 +153,53 @@ describe('Marketplace Resource', function() {
       expect(offer.status).to.equal('created')
       expect(offer.unitsPurchased).to.exist
     })
+
+    it('should throw an error if currency does not match listing', async () => {
+      await marketplace.makeOffer('999-001-0', originTokenOffer)
+      let errorThrown = false
+      let errorMessage
+      try {
+        await marketplace.getOffer('999-001-0-1')
+      } catch(e) {
+        errorThrown = true
+        errorMessage = String(e)
+      }
+      expect(errorThrown).to.be.true
+      expect(errorMessage).to.equal('Error: Invalid offer: currency does not match listing')
+    })
+
+
+    it('should throw an error if price is not sufficient', async () => {
+      await marketplace.makeOffer('999-001-0', invalidPriceOffer)
+      let errorThrown = false
+      let errorMessage
+      try {
+        await marketplace.getOffer('999-001-0-1')
+      } catch(e) {
+        errorThrown = true
+        errorMessage = String(e)
+      }
+      expect(errorThrown).to.be.true
+      expect(errorMessage).to.equal('Error: Invalid offer: insufficient offer amount for listing')
+    })
   })
 
   describe('makeOffer', () => {
     it('should make an offer', async () => {
       const anotherOffer = Object.assign({}, offerData, {
-        totalPrice: { currency: 'ETH', amount: '0.02' }
+        totalPrice: { currency: 'ETH', amount: '0.033' }
       })
       await marketplace.makeOffer('999-001-0', anotherOffer)
       const offer = await marketplace.getOffer('999-001-0-1')
-      expect(offer.totalPrice.amount).to.equal('0.02')
+      expect(offer.totalPrice.amount).to.equal('0.033')
+    })
+
+    it('should make an offer in ERC20', async () => {
+      await marketplace.createListing(originTokenListing)
+      await marketplace.makeOffer('999-001-1', originTokenOffer)
+      const offer = await marketplace.getOffer('999-001-1-0')
+      expect(offer.totalPrice.amount).to.equal('1')
+      expect(offer.totalPrice.currency).to.equal('OGN')
     })
   })
 

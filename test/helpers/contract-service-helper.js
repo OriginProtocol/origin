@@ -28,6 +28,21 @@ export default async function contractServiceHelper(web3) {
     { from: accounts[0], gas: 4000000 }
   )
 
+  const decimals = await dummyContractService.call(
+    'OriginToken',
+    'decimals'
+  )
+
+  // approve usage of tokens by marketplace contract
+  for (let i = 0; i < 10; i++) {
+    await dummyContractService.call(
+      'OriginToken',
+      'approve',
+      [ v01_marketplace.contractAddress, String(100 * 10**decimals) ],
+      { from: accounts[i] }
+    )
+  }
+
   await originToken.methods.addCallSpenderWhitelist(v01_marketplace.contractAddress).send({ from: accounts[0], gas: 4000000 })
 
   return new ContractService({
@@ -39,6 +54,7 @@ export default async function contractServiceHelper(web3) {
       V01_Marketplace: {
         999: { address: v01_marketplace.contractAddress }
       }
-    }
+    },
+    currencies: { OGN: { address: originToken.options.address, decimals } }
   })
 }

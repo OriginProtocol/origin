@@ -77,11 +77,17 @@ class Marketplace {
     if (opts.idsOnly) {
       return offerIds
     } else {
-      return await Promise.all(
-        offerIds.map(offerId => {
-          return this.getOffer(offerId)
+      const allOffers = await Promise.all(
+        offerIds.map(async offerId => {
+          try {
+            return await this.getOffer(offerId)
+          } catch(e) {
+            return null
+          }
         })
       )
+      // filter out invalid offers
+      return allOffers.filter(offer => Boolean(offer))
     }
   }
 
@@ -99,6 +105,35 @@ class Marketplace {
       chainOffer.ipfsHash
     )
     const ipfsOffer = await this.ipfsDataStore.load(OFFER_DATA_TYPE, ipfsHash)
+
+    // validate offers awaiting approval
+    if (chainOffer.status === 'created') {
+      const listing = await this.getListing(listingId)
+
+      const listingCurrency = listing.price && listing.price.currency
+      let listingPrice = listing.price && listing.price.amount
+      if (listingCurrency === 'ETH') {
+        listingPrice = this.contractService.web3.utils.toWei(
+          listingPrice,
+          'ether'
+        )
+      }
+      const listingCommision = listing.commission && listing.commission.amount
+      const currency = this.contractService.currencies[listingCurrency]
+      const currencyAddress = currency && currency.address
+
+      if (currencyAddress !== chainOffer.currency) {
+        throw new Error('Invalid offer: currency does not match listing')
+      }
+
+      if (listingPrice > chainOffer.value) {
+        throw new Error('Invalid offer: insufficient offer amount for listing')
+      }
+
+      if (listingCommision > chainOffer.commission) {
+        throw new Error('Invalid offer: insufficient commission amount for listing')
+      }
+    }
 
     // Create an Offer from on-chain and off-chain data.
     return new Offer(offerId, listingId, chainOffer, ipfsOffer)
@@ -160,18 +195,32 @@ class Marketplace {
     const ipfsHash = await this.ipfsDataStore.save(OFFER_DATA_TYPE, offerData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 
+    // Convert price to correct units for blockchain
+    let price
+    if (offerData.totalPrice.currency === 'ETH') {
+      price = this.contractService.web3.utils.toWei(
+        offerData.totalPrice.amount,
+        'ether'
+      )
+    } else {
+      // handle ERC20
+      const currency = this.contractService.currencies[offerData.totalPrice.currency]
+      // TODO consider using ERCStandardDetailed.decimals() (for tokens that support this) so that we don't have to track decimals ourselves
+      // https://github.com/OpenZeppelin/openzeppelin-solidity/blob/6c4c8989b399510a66d8b98ad75a0979482436d2/contracts/token/ERC20/ERC20Detailed.sol
+      const currencyDecimals = currency && currency.decimals
+      price = String(Number(offerData.totalPrice.amount) * 10**currencyDecimals)
+    }
+
     // Record the offer on chain.
-    const priceWei = this.contractService.web3.utils.toWei(
-      offerData.totalPrice.amount,
-      'ether'
-    )
-
-    offerData.priceWei = priceWei
-
     return await this.resolver.makeOffer(
       listingId,
       ipfsBytes,
-      offerData,
+      {
+        price,
+        currency: offerData.totalPrice.currency,
+        affiliate: offerData.affiliate,
+        arbitrator: offerData.arbitrator
+      },
       confirmationCallback
     )
   }
@@ -228,7 +277,7 @@ class Marketplace {
   // manageListingDeposit(listingId, data) {}
 
   /**
-   * Initiate a dispute regarding an offer. Puts the offer into "Disputed" status. 
+   * Initiate a dispute regarding an offer. Puts the offer into "Disputed" status.
    * @param {string} offerId - Offer ID
    * @param {object} disputeData - Data describing this dispute - stored in IPFS
    * @param {function(confirmationCount, transactionReceipt)} confirmationCallback
