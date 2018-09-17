@@ -270,7 +270,6 @@
   "web3-provider.intentRequiresMetaMask": "In order to {web3Intent}, you must install MetaMask.",
   "web3-provider.getMetaMask": "Get MetaMask",
   "web3-provider.fullInstructions": "Full Instructions",
-  "web3-provider.notSignedIntoMetaMask": "You are not signed in to MetaMask.",
   "web3-provider.intentRequiresEthereumEnabledBrowser": "In order to {web3Intent}, you must use an Ethereum wallet-enabled browser.",
   "web3-provider.popularEthereumWallets": "Popular Ethereum Wallets",
   "web3-provider.trust": "Trust",
