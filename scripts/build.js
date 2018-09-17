@@ -42,7 +42,7 @@ const start = async () => {
   // If the contract build directory does not exist or is empty,
   // copy the compiled contract files from the latest release into it.
   const dstDir = 'contracts/build/contracts'
-  if (fs.pathExists(dstDir) && fs.readdirSync(dstDir).length > 0) {
+  if (fs.pathExistsSync(dstDir) && fs.readdirSync(dstDir).length > 0) {
     console.log(chalk.blue('Contracts build directory already exists and not empty, skipping copy.'))
   } else {
     copyReleaseCompiledContracts(dstDir)
