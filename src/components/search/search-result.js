@@ -14,6 +14,10 @@ import { generalSearch } from 'actions/Search'
 import origin from '../../services/origin'
 import FilterGroup from 'components/search/filter-group'
 import { getFiatPrice } from 'utils/priceUtils'
+import {
+  VALUE_TYPE_STRING,
+  FILTER_OPERATOR_EQUALS
+} from 'components/search/constants'
 
 class SearchResult extends Component {
   constructor(props) {
@@ -163,10 +167,21 @@ class SearchResult extends Component {
       this.setState({ searchError: undefined })
       this.formatFiltersToUrl()
 
+      const filters = this.props.filters
+
+      // when querying all listings no filter should be added
+      if (this.props.listingType !== 'all') {
+        filters.category = {
+          name: 'category',
+          value: this.props.listingType[0].toUpperCase() + this.props.listingType.substring(1),
+          valueType: VALUE_TYPE_STRING,
+          operator: FILTER_OPERATOR_EQUALS
+        }
+      }
+
       const searchResp = await origin.discovery.search(
         this.props.query,
-        this.props.listingType,
-        Object.values(this.props.filters).flatMap(
+        Object.values(filters).flatMap(
           arrayOfFilters => arrayOfFilters
         )
       )
