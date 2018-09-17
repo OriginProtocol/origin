@@ -103,10 +103,8 @@ class Arbitration extends Component {
   validateUser() {
     const { history, web3Account } = this.props
 
-    if (web3Account && this.props.web3Account !== ARBITRATOR_ETH_ADDRESS) {
-      alert('Current account must be equal to the ARBITRATOR_ACCOUNT environment variable')
-
-      history.push('/')
+    if (web3Account && this.props.web3Account.toUpperCase() !== ARBITRATOR_ETH_ADDRESS.toUpperCase()) {
+      alert(`⚠️ Warning:\nCurrent account (${this.props.web3Account}) is not equal to the ARBITRATOR_ACCOUNT environment variable (${ARBITRATOR_ETH_ADDRESS})`)
     }
   }
 
