@@ -3,7 +3,9 @@ FROM node:9
 WORKDIR /app
 
 # Copy package.json and package-lock.json
-COPY ./origin-bridge/package*.json /app/
+COPY ./origin-messaging/package*.json /app/
+COPY ./development/scripts/wait-for.sh /usr/local/bin
+
 ENV NODE_ENV development
 
 RUN npm install --quiet --no-progress

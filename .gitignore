@@ -3,7 +3,8 @@
 /origin-dapp/
 /origin-docs/
 /origin-website/
-ipfs/repo
+/development/.ipfs
+/deployment/kubernetes/values/secret.yaml
 
 # MacOS
 .DS_Store

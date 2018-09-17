@@ -1,0 +1,22 @@
+FROM node:9 as build
+WORKDIR /app
+COPY ./origin-dapp /app
+
+ENV BRIDGE_SERVER_DOMAIN=bridge.prod.originprotocol.com \
+    BRIDGE_SERVER_PROTOCOL=https \
+    IPFS_DOMAIN=ipfs.prod.originprotocol.com \
+    IPFS_GATEWAY_PORT=443 \
+    IPFS_GATEWAY_PROTOCOL=https \
+    IPFS_API_PORT=443 \
+    IPFS_SWARM=/dnsaddr/messaging.prod.originprotocol.com/tcp/443/wss/ipfs/QmW29MGfWVWWuxcAtUGENEv3uaLRJWgxjznRs3kw7ed79N \
+    MESSAGING_ACCOUNT=0xcEB59C583Cb09694606189E9E558D001D308A08B \
+    PROVIDER_URL=https://rinkeby.infura.io/emIXjs9eDuy57IlTYsIP \
+    MESSAGING_NAMESPACE=prod
+
+RUN npm install
+RUN npm run build
+
+# Nginx to service static files
+FROM nginx:1.15.2
+COPY --from=build /app/build /usr/share/nginx/html
+CMD ["nginx", "-g", "daemon off;"]

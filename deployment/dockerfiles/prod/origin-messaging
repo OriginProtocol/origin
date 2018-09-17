@@ -1,0 +1,9 @@
+FROM node:9
+
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY ./origin-messaging /app/
+RUN npm install
+
+CMD ["node_modules/.bin/babel-node", "src/index.js", "--presets", "es2015"]

@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "ethereum.fullname" . }}
+  labels:
+    app: {{ template "ethereum.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  tls:
+    - secretName: eth.{{ .Release.Namespace }}.originprotocol.com
+      hosts:
+        - eth.{{ .Release.Namespace }}.originprotocol.com
+  rules:
+  - host: eth.{{ .Release.Namespace }}.originprotocol.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ template "ethereum.fullname" . }}-ethstats
+          servicePort: 80
+      - path: /rpc
+        backend:
+          serviceName: {{ template "ethereum.fullname" . }}
+          servicePort: 8545
+      # TODO use separate ingress and adjust for websocket
+      - path: /ws
+        backend:
+          serviceName: {{ template "ethereum.fullname" . }}
+          servicePort: 8546

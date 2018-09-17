@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "bridge.fullname" . }}
+  labels:
+    app: {{ template "bridge.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: {{ default 1 .Values.bridgeReplicas }}
+  selector:
+    matchLabels:
+      app: {{ template "bridge.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "bridge.fullname" . }}
+        release: "{{ .Release.Name }}"
+    spec:
+      containers:
+      - name: origin-bridge
+        image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.bridgeImage }}:{{ .Values.bridgeImageTag }}"
+        ports:
+        - containerPort: 5000
+        env:
+        - name: ENVKEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "bridge.fullname" . }}
+              key: ENVKEY

@@ -9,6 +9,4 @@
 PEER_ID=$(awk -F '\"' ' /'PeerID'/ {print $4}' $1)
 PREFIX='/ip4/127.0.0.1/tcp/9012/ws/ipfs/'
 
-IPFS_SWARM="$PREFIX$PEER_ID"
-
-sed -i "s|^IPFS_SWARM.*|IPFS_SWARM=$IPFS_SWARM|g" $2
+export IPFS_SWARM="$PREFIX$PEER_ID"

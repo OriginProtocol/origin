@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "ipfs.fullname" . }}
+  labels:
+    app: {{ template "ipfs.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
+    nginx.ingress.kubernetes.io/proxy-body-size: "2m"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, PUT, POST"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+spec:
+  tls:
+    - secretName: ipfs.{{ .Release.Namespace }}.originprotocol.com
+      hosts:
+        - ipfs.{{ .Release.Namespace }}.originprotocol.com
+  rules:
+    - host: ipfs.{{ .Release.Namespace }}.originprotocol.com
+      http:
+        paths:
+          # Only allow the add API call through to the IPFS API
+          - path: /api/v0/add
+            backend:
+              serviceName: {{ template "ipfs.fullname" . }}
+              servicePort: 5001
+          # IFPS read only gateway
+          - path: /
+            backend:
+              serviceName: {{ template "ipfs.fullname" . }}
+              servicePort: 8080

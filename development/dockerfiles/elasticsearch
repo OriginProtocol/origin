@@ -3,7 +3,7 @@ FROM docker.elastic.co/elasticsearch/elasticsearch:6.3.1
 USER elasticsearch
 
 # Make wait-for.sh available
-COPY ./scripts/wait-for.sh /usr/local/bin
+COPY ./development/scripts/wait-for.sh /usr/local/bin
 
 # Create the "origin" index by starting elasticsearch, sending the index creation command, then taking down elasticsearch.
 RUN elasticsearch -p /tmp/espid & echo 'Waiting for elastic...'; \

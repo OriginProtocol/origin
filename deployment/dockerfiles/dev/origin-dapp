@@ -1,0 +1,32 @@
+FROM node:9 as origin-js-build
+WORKDIR /app
+
+# Clone origin-js from master (development) branch
+RUN git clone https://github.com/OriginProtocol/origin-js.git --branch master /app
+RUN npm install --quiet --no-progress
+RUN npm run build
+
+FROM node:9 as build
+WORKDIR /app
+COPY ./origin-dapp /app
+
+ENV BRIDGE_SERVER_DOMAIN=bridge.dev.originprotocol.com \
+    BRIDGE_SERVER_PROTOCOL=https \
+    IPFS_DOMAIN=ipfs.dev.originprotocol.com \
+    IPFS_GATEWAY_PORT=443 \
+    IPFS_GATEWAY_PROTOCOL=https \
+    IPFS_SWARM=/dnsaddr/messaging.staging.originprotocol.com/tcp/443/wss/ipfs/QmTVmwSe6mEnxXEXpZjinUr44uzaL8ShKYcFAaeqEd2HYd \
+    MESSAGING_ACCOUNT=0xcEB59C583Cb09694606189E9E558D001D308A08B \
+    PROVIDER_URL=https://rinkeby.infura.io/emIXjs9eDuy57IlTYsIP \
+    MESSAGING_NAMESPACE=dev
+
+RUN npm install --quiet --no-progress
+# Overwrite installed origin-js with previously built version from master branch
+COPY --from=origin-js-build /app/dist/ /app/node_modules/origin/dist/
+COPY --from=origin-js-build /app/package.json /app/node_modules/origin/
+RUN NODE_ENV=production node_modules/.bin/webpack --progress --display errors-only
+
+# Nginx to service static files
+FROM nginx:1.15.2
+COPY --from=build /app/build /usr/share/nginx/html
+CMD ["nginx", "-g", "daemon off;"]

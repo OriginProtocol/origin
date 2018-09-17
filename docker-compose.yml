@@ -1,11 +1,10 @@
 version: "3"
 
 networks:
-  origin-develop:
+  default:
 
 volumes:
   origin_js_node_modules:
-  contracts:  # Compiled contracts
   flask_session: # Flask session persistence
   pg_data:
 
@@ -22,14 +21,14 @@ services:
       - POSTGRES_PASSWORD=origin
       - POSTGRES_DB=origin_bridge
     networks:
-      - origin-develop
+      - default
 
   elasticsearch:
     container_name: elasticsearch
     image: elasticsearch
     build:
       context: .
-      dockerfile: dockerfiles/elasticsearch
+      dockerfile: development/dockerfiles/elasticsearch
     ports:
       - "9200:9200"
     environment:
@@ -38,23 +37,20 @@ services:
     ports:
       - "9200:9200"
     networks:
-      - origin-develop
+      - default
 
   origin-js:
     container_name: origin-js
     image: origin-js
     build:
       context: .
-      dockerfile: dockerfiles/origin-js
+      dockerfile: development/dockerfiles/origin-js
     volumes:
       - ./origin-js:/app
       - origin_js_node_modules:/app/node_modules
-      - contracts:/app/contracts/build/contracts
     environment:
       - NODE_ENV=development
     ports:
-      - "5002:5002" # API
-      - "8080:8080" # IPFS gateway
       - "8081:8081" # Tests
       - "8545:8545" # Blockchain
       - "4000:4000" # Apollo server
@@ -64,36 +60,65 @@ services:
       /bin/bash -c "npm install --quiet --no-progress &&
       node scripts/build.js serve"
     networks:
-      - origin-develop
+      - default
 
-  orbit-db:
-    container_name: orbit-db
+  ipfs:
+    container_name: ipfs
+    image: ipfs/go-ipfs:v0.4.17
+    networks:
+      - default
+    ports:
+      - "5002:5002"
+      - "8080:8080"
+
+  origin-messaging-ipfs:
+    container_name: origin-messaging-ipfs
+    image: origin-messaging-ipfs
     build:
       context: .
-      dockerfile: dockerfiles/orbit-db
-    image: orbit-db
-    volumes:
-      - ./origin-bridge/js/messaging:/app/messaging
-      - ./ipfs/repo:/app/ipfsrepo
+      dockerfile: development/dockerfiles/origin-messaging-ipfs
+    networks:
+      - default
     ports:
+      - "5001:5001"
       - "9012:9012"
     environment:
-      - MESSAGING_IPFS_WS_ADDRESS=/ip4/0.0.0.0/tcp/9012/ws
-      - MESSAGING_NAMESPACE=dev
-    command: node_modules/.bin/babel-node messaging/orbit_server.js --presets es2015
+      - IPFS_PATH=/ipfs
+    volumes:
+      - ./development/.ipfs:/ipfs
+    command: "daemon --migrate --enable-pubsub-experiment"
+
+  origin-messaging:
+    container_name: origin-messaging
+    image: origin-messaging
+    build:
+      context: .
+      dockerfile: development/dockerfiles/origin-messaging
+    depends_on:
+      - origin-messaging-ipfs
     networks:
-      - origin-develop
+      - default
+    volumes:
+      - ./origin-messaging/src:/app/src
+    environment:
+      - IPFS_ADDRESS=origin-messaging-ipfs
+      - IPFS_PORT=5001
+      - MESSAGING_NAMESPACE=dev
+    # TODO Add nodemon
+    # Waits for origin-messaging-ipfs to be available before starting
+    command: /bin/bash -c "wait-for.sh -t 0 -q origin-messaging-ipfs:5001 --
+      node_modules/.bin/babel-node src/index.js --presets es2015"
 
   origin-bridge:
     container_name: origin-bridge
+    image: origin-bridge
     build:
       context: .
-      dockerfile: dockerfiles/origin-bridge
-    image: origin-bridge
+      dockerfile: development/dockerfiles/origin-bridge
     volumes:
       - ./origin-bridge:/app
       # Set the envfile from the local envfile
-      - ./envfiles/origin-bridge.env:/app/.env
+      - ./development/envfiles/origin-bridge.env:/app/.env
       - flask_session:/app/flask_session
     depends_on:
       - postgres
@@ -104,43 +129,43 @@ services:
       - FLASK_DEBUG=1
     command: flask run --host=0.0.0.0
     networks:
-      - origin-develop
+      - default
 
   origin-dapp:
     container_name: origin-dapp
+    image: origin-dapp
     build:
       context: .
-      dockerfile: dockerfiles/origin-dapp
+      dockerfile: development/dockerfiles/origin-dapp
     volumes:
       # Mount origin-dapp inside the container
       - ./origin-dapp:/app
       # Set the envfile from the local envfile
-      - ./envfiles/origin-dapp.env:/app/.env
+      - ./development/envfiles/origin-dapp.env:/app/.env
       # Mount compiled origin-js inside node modules
       - ./origin-js:/usr/local/lib/node_modules/origin
       - origin_js_node_modules:/usr/local/lib/node_modules/origin/node_modules
-      - ./ipfs/repo:/app/ipfsrepo
+      - ./development/.ipfs:/ipfs
     depends_on:
-      - orbit-db
+      - origin-js
+      - origin-messaging
       - origin-bridge
     environment:
       - NODE_ENV=development
     ports:
       - "3000:3000"
     command:
-      # Waits for origin-js and orbit-db to start then uses a script to read the
-      # orbit-db container peer id and write the configuration key/pair to the
-      # .env file.
+      # Waits for origin-js and origin-messaging-ipfs to start then uses a
+      # script to read the origin-messaging-ipfs container peer id and write the
+      # configuration key/pair to the .env file.
       #
       # The copying is necessary because the .env file is mounted as a volume
       # and the inode is not allowed to change.
       >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-js:8081 --
-      cp /app/.env /tmp/.env.new &&
-      set-ipfs-swarm.sh /app/ipfsrepo/config /tmp/.env.new &&
-      cp /tmp/.env.new /app/.env &&
+      /bin/bash -c "source set-ipfs-swarm.sh /ipfs/config &&
       npm install --quiet --no-progress &&
       npm link origin &&
+      wait-for.sh -t 0 -q origin-js:8081 --
       node node_modules/webpack-dev-server/bin/webpack-dev-server.js --host 0.0.0.0 --watch-poll 500"
     networks:
-      - origin-develop
+      - default
