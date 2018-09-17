@@ -241,7 +241,7 @@ class Arbitration extends Component {
                 <thead>
                   <tr>
                     <th scope="col" style={{ width: '200px' }}>TxName</th>
-                    <th scope="col">TxHash'}</th>
+                    <th scope="col">TxHash</th>
                     <th scope="col">From</th>
                     <th scope="col">To</th>
                   </tr>
