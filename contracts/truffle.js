@@ -71,6 +71,21 @@ if (process.env.ROPSTEN_MNEMONIC) {
   }
 }
 
+// Origin's own test network
+if (process.env.ORIGIN_MNEMONIC) {
+  truffleSetup.networks.origin = {
+    provider: function() {
+      return new HDWalletProvider(
+        process.env.ORIGIN_MNEMONIC,
+        'https://eth.dev.originprotocol.com/rpc',
+        0,
+        numAddressesToUnlock
+      )
+    },
+    network_id: 2222
+  }
+}
+
 // These are needed to use ES2015+ syntax, such as import. The token tests
 // imported from OpenZeppelin need these.
 require('babel-register')

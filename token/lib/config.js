@@ -4,6 +4,7 @@ const PrivateKeyProvider = require('truffle-privatekey-provider')
 const ROPSTEN_NETWORK_ID = '3'
 const RINKEBY_NETWORK_ID = '4'
 const LOCAL_NETWORK_ID = '999'
+const ORIGIN_NETWORK_ID = '2222'
 
 const DEFAULT_MNEMONIC = 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'
 
@@ -36,36 +37,43 @@ function createProviders(networkIds) {
     let privateKey
 
     switch (networkId) {
-    case ROPSTEN_NETWORK_ID:
-      privateKey = process.env.ROPSTEN_PRIVATE_KEY
-      mnemonic = process.env.ROPSTEN_MNEMONIC
-      if (!privateKey && !mnemonic) {
-        throw 'Must have either ROPSTEN_PRIVATE_KEY or ROPSTEN_MNEMONIC env var'
-      }
-      if (!process.env.INFURA_ACCESS_TOKEN) {
-        throw 'Missing INFURA_ACCESS_TOKEN env var'
-      }
-      providerUrl = `https://rinkeby.infura.io/${process.env.INFURA_ACCESS_TOKEN}`
-      break
-    case RINKEBY_NETWORK_ID:
-      privateKey = process.env.RINKEBY_PRIVATE_KEY
-      mnemonic = process.env.RINKEBY_MNEMONIC
-      if (!privateKey && !mnemonic) {
-        throw 'Must have either RINKEBY_PRIVATE_KEY or RINKEBY_MNEMONIC env var'
-      }
-      if (!process.env.INFURA_ACCESS_TOKEN) {
-        throw 'Missing INFURA_ACCESS_TOKEN env var'
-      }
-
-      providerUrl = `https://rinkeby.infura.io/${process.env.INFURA_ACCESS_TOKEN}`
-      break
-    case LOCAL_NETWORK_ID:
-      privateKey = process.env.LOCAL_PRIVATE_KEY
-      mnemonic = process.env.LOCAL_MNEMONIC || DEFAULT_MNEMONIC
-      providerUrl = 'http://localhost:8545'
-      break
-    default:
-      throw `Unsupported network id ${networkId}`
+      case ROPSTEN_NETWORK_ID:
+        privateKey = process.env.ROPSTEN_PRIVATE_KEY
+        mnemonic = process.env.ROPSTEN_MNEMONIC
+        if (!privateKey && !mnemonic) {
+          throw 'Must have either ROPSTEN_PRIVATE_KEY or ROPSTEN_MNEMONIC env var'
+        }
+        if (!process.env.INFURA_ACCESS_TOKEN) {
+          throw 'Missing INFURA_ACCESS_TOKEN env var'
+        }
+        providerUrl = `https://ropsten.infura.io/${process.env.INFURA_ACCESS_TOKEN}`
+        break
+      case RINKEBY_NETWORK_ID:
+        privateKey = process.env.RINKEBY_PRIVATE_KEY
+        mnemonic = process.env.RINKEBY_MNEMONIC
+        if (!privateKey && !mnemonic) {
+          throw 'Must have either RINKEBY_PRIVATE_KEY or RINKEBY_MNEMONIC env var'
+        }
+        if (!process.env.INFURA_ACCESS_TOKEN) {
+          throw 'Missing INFURA_ACCESS_TOKEN env var'
+        }
+        providerUrl = `https://rinkeby.infura.io/${process.env.INFURA_ACCESS_TOKEN}`
+        break
+      case LOCAL_NETWORK_ID:
+        privateKey = process.env.LOCAL_PRIVATE_KEY
+        mnemonic = process.env.LOCAL_MNEMONIC || DEFAULT_MNEMONIC
+        providerUrl = 'http://localhost:8545'
+        break
+      case ORIGIN_NETWORK_ID:
+        privateKey = process.env.ORIGIN_PRIVATE_KEY
+        mnemonic = process.env.ORIGIN_MNEMONIC
+        if (!privateKey && !mnemonic) {
+          throw 'Must have either ORIGIN_PRIVATE_KEY or ORIGIN_MNEMONIC env var'
+        }
+        providerUrl = 'https://eth.dev.originprotocol.com/rpc'
+        break
+      default:
+        throw `Unsupported network id ${networkId}`
     }
     // Private key takes precedence
     if (privateKey) {
