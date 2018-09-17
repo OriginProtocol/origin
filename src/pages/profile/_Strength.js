@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { Fragment } from 'react'
+import { FormattedMessage } from 'react-intl'
 
 const ProfileStrength = ({ progress, strength }) => (
-  <>
+  <Fragment>
     <div className="d-flex justify-content-between">
-      <h2>Profile Strength</h2>
+      <h2>
+        <FormattedMessage
+          id={'_Strength.profileStrength'}
+          defaultMessage={'Profile Strength'}
+        />
+      </h2>
       <h2>{strength}%</h2>
     </div>
     <div className="progress">
@@ -24,7 +30,7 @@ const ProfileStrength = ({ progress, strength }) => (
         aria-valuemax="100"
       />
     </div>
-  </>
+  </Fragment>
 )
 
 export default ProfileStrength

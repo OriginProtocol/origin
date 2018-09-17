@@ -1,0 +1,14 @@
+[
+  {
+    "id": "notification.unnamedUser",
+    "defaultMessage": "Unnamed User"
+  },
+  {
+    "id": "notification.buyer",
+    "defaultMessage": "Buyer"
+  },
+  {
+    "id": "notification.seller",
+    "defaultMessage": "Seller"
+  }
+]

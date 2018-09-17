@@ -1,4 +1,4 @@
-import { ProfileConstants } from '../actions/Profile'
+import { ProfileConstants } from 'actions/Profile'
 
 const initialState = {
   user: {
@@ -14,7 +14,8 @@ const initialState = {
     email: false,
     facebook: false,
     phone: false,
-    twitter: false
+    twitter: false,
+    airbnb: false
   },
   changes: [],
   lastPublish: null,
@@ -29,14 +30,15 @@ const progressPct = {
   firstName: 15,
   lastName: 15,
   description: 10,
-  email: 20,
-  phone: 20,
+  email: 15,
+  phone: 15,
   facebook: 10,
-  twitter: 10
+  twitter: 10,
+  airbnb: 10
 }
 
 function changes(state) {
-  var provisionalProgress = 0,
+  let provisionalProgress = 0,
     publishedProgress = 0
 
   Object.keys(progressPct).forEach(k => {
@@ -48,11 +50,14 @@ function changes(state) {
     }
   })
 
-  let changes = []
+  const changes = []
 
   Object.keys(state.provisional).forEach(k => {
     if (state.provisional.hasOwnProperty(k)) {
-      if (JSON.stringify(state.provisional[k]) !== JSON.stringify(state.published[k])) {
+      if (
+        JSON.stringify(state.provisional[k]) !==
+        JSON.stringify(state.published[k])
+      ) {
         changes.push(k)
       }
     }
@@ -63,12 +68,12 @@ function changes(state) {
     provisionalProgress,
     publishedProgress,
     strength: provisionalProgress + publishedProgress,
-    changes,
+    changes
   }
 }
 
 function unpackUser(state) {
-  var user = state.user || {},
+  const user = state.user || {},
     profile = user.profile || {},
     attestations = user.attestations || [],
     firstName = profile.firstName,
@@ -91,20 +96,19 @@ function unpackUser(state) {
   attestations.forEach(attestation => {
     if (attestation.service === 'facebook') {
       state.provisional.facebook = state.published.facebook = true
-    }
-    if (attestation.service === 'twitter') {
+    } else if (attestation.service === 'twitter') {
       state.provisional.twitter = state.published.twitter = true
-    }
-    if (attestation.service === 'email') {
+    } else if (attestation.service === 'email') {
       state.provisional.email = state.published.email = true
-    }
-    if (attestation.service === 'phone') {
+    } else if (attestation.service === 'phone') {
       state.provisional.phone = state.published.phone = true
+    } else if (attestation.service === 'airbnb') {
+      state.provisional.airbnb = state.published.airbnb = true
     }
   })
 
   if (firstName && lastName) {
-    var name = `${firstName} ${lastName}`.trim()
+    const name = `${firstName} ${lastName}`.trim()
     if (name) {
       state.name = name
     }
@@ -115,50 +119,52 @@ function unpackUser(state) {
 
 export default function Profile(state = initialState, action = {}) {
   switch (action.type) {
-    case ProfileConstants.FETCH_SUCCESS:
-      return unpackUser({ ...state, user: action.user })
+  case ProfileConstants.FETCH_SUCCESS:
+    return unpackUser({ ...state, user: action.user })
 
-    case ProfileConstants.ADD_ATTESTATION:
-      var toAdd = {}
-      if (action.attestation.claimType === 3) {
-        toAdd.facebook = action.attestation
-      } else if (action.attestation.claimType === 4) {
-        toAdd.twitter = action.attestation
-      } else if (action.attestation.claimType === 11) {
-        toAdd.email = action.attestation
-      } else if (action.attestation.claimType === 10) {
-        toAdd.phone = action.attestation
+  case ProfileConstants.ADD_ATTESTATION:
+    const toAdd = {}
+    if (action.attestation.claimType === 3) {
+      toAdd.facebook = action.attestation
+    } else if (action.attestation.claimType === 4) {
+      toAdd.twitter = action.attestation
+    } else if (action.attestation.claimType === 5) {
+      toAdd.airbnb = action.attestation
+    } else if (action.attestation.claimType === 11) {
+      toAdd.email = action.attestation
+    } else if (action.attestation.claimType === 10) {
+      toAdd.phone = action.attestation
+    }
+    return changes({
+      ...state,
+      provisional: { ...state.provisional, ...toAdd }
+    })
+
+  case ProfileConstants.UPDATE:
+    return changes({
+      ...state,
+      provisional: {
+        ...state.provisional,
+        ...action.data
       }
-      return changes({
-        ...state,
-        provisional: { ...state.provisional, ...toAdd }
-      })
+    })
 
-    case ProfileConstants.UPDATE:
-      return changes({
-        ...state,
-        provisional: {
-          ...state.provisional,
-          ...action.data
-        }
-      })
+  case ProfileConstants.DEPLOY:
+    return { ...state, status: 'confirming' }
 
-    case ProfileConstants.DEPLOY:
-      return { ...state, status: 'confirming' }
+  case ProfileConstants.DEPLOY_ERROR:
+    return { ...state, status: 'error' }
 
-    case ProfileConstants.DEPLOY_ERROR:
-      return { ...state, status: 'error' }
+  case ProfileConstants.DEPLOY_SUCCESS:
+    return changes({
+      ...state,
+      status: 'success',
+      lastPublish: new Date(),
+      published: state.provisional
+    })
 
-    case ProfileConstants.DEPLOY_SUCCESS:
-      return changes({
-        ...state,
-        status: 'success',
-        lastPublish: new Date(),
-        published: state.provisional
-      })
-
-    case ProfileConstants.DEPLOY_RESET:
-      return { ...state, status: null }
+  case ProfileConstants.DEPLOY_RESET:
+    return { ...state, status: null }
   }
 
   return state

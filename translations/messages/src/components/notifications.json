@@ -1,0 +1,22 @@
+[
+  {
+    "id": "notificationsComponent.notificationsHeading",
+    "defaultMessage": "Notifications"
+  },
+  {
+    "id": "notificationsComponent.all",
+    "defaultMessage": "All"
+  },
+  {
+    "id": "notificationsComponent.unread",
+    "defaultMessage": "Unread"
+  },
+  {
+    "id": "notificationsComponent.buying",
+    "defaultMessage": "Buying"
+  },
+  {
+    "id": "notificationsComponent.selling",
+    "defaultMessage": "Selling"
+  }
+]

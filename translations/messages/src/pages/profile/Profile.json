@@ -1,0 +1,90 @@
+[
+  {
+    "id": "Profile.manageYourProfile",
+    "defaultMessage": "manage your profile"
+  },
+  {
+    "id": "Profile.unsavedChangesWarn",
+    "defaultMessage": "If you exit without publishing, you'll lose all your changes."
+  },
+  {
+    "id": "Profile.noDescriptionUser",
+    "defaultMessage": "An Origin user without a description"
+  },
+  {
+    "id": "Profile.phoneVerified",
+    "defaultMessage": "Phone number verified!"
+  },
+  {
+    "id": "Profile.emailVerified",
+    "defaultMessage": "Email address verified!"
+  },
+  {
+    "id": "Profile.facebookVerified",
+    "defaultMessage": "Facebook account verified!"
+  },
+  {
+    "id": "Profile.twitterVerified",
+    "defaultMessage": "Twitter account verified!"
+  },
+  {
+    "id": "Profile.airbnbVerified",
+    "defaultMessage": "Airbnb account verified!"
+  },
+  {
+    "id": "Profile.unnamedUser",
+    "defaultMessage": "Unnamed User"
+  },
+  {
+    "id": "Profile.verifyYourselfHeading",
+    "defaultMessage": "Verify yourself on Origin"
+  },
+  {
+    "id": "Profile.publishNow",
+    "defaultMessage": "Publish Now"
+  },
+  {
+    "id": "Profile.status",
+    "defaultMessage": "Status:"
+  },
+  {
+    "id": "Profile.lastPublished",
+    "defaultMessage": "Last published"
+  },
+  {
+    "id": "Profile.confirmTransaction",
+    "defaultMessage": "Confirm transaction"
+  },
+  {
+    "id": "Profile.pressSubmit",
+    "defaultMessage": "Press \"Submit\" in {currentProvider} window"
+  },
+  {
+    "id": "Profile.deployingIdentity",
+    "defaultMessage": "Deploying your identity"
+  },
+  {
+    "id": "Profile.pleaseStandBy",
+    "defaultMessage": "Please stand by..."
+  },
+  {
+    "id": "Profile.error",
+    "defaultMessage": "Error"
+  },
+  {
+    "id": "Profile.seeConsole",
+    "defaultMessage": "See the console for more details"
+  },
+  {
+    "id": "Profile.ok",
+    "defaultMessage": "OK"
+  },
+  {
+    "id": "Profile.success",
+    "defaultMessage": "Success"
+  },
+  {
+    "id": "Profile.continue",
+    "defaultMessage": "Continue"
+  }
+]

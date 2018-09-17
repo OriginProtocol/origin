@@ -1,53 +1,62 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
-  "description": "Distributed Ticketmaster/Eventbrite",
+  "description": "schema.tickets.schemaDescription",
   "type": "object",
   "required": ["name","category","description","price"],
   "properties": {
     "name": {
       "type": "string",
-      "title": "Title",
+      "title": "schema.tickets.title",
       "minLength": 3,
       "maxLength": 100
     },
+    "examples": {
+      "type": "string",
+      "title": "schema.tickets.examples",
+      "enum": [
+        "schema.tickets.music",
+        "schema.tickets.sports",
+        "schema.tickets.theater"
+      ]
+    },
     "category": {
       "type": "string",
-      "title": "Category",
+      "title": "schema.tickets.category",
       "enum": [
-        "Arts",
-        "Classes & Workshops",
-        "Conference",
-        "Fundraisers",
-        "Music",
-        "Non-profit event",
-        "Other",
-        "Sports",
-        "Theater",
-        "Tradeshow"
+        "schema.tickets.arts",
+        "schema.tickets.classesWorkshops",
+        "schema.tickets.conference",
+        "schema.tickets.fundraisers",
+        "schema.tickets.music",
+        "schema.tickets.nonProfitEvent",
+        "schema.tickets.other",
+        "schema.tickets.sports",
+        "schema.tickets.theater",
+        "schema.tickets.tradeshow"
       ]
     },
     "datetime": {
         "type": "string",
         "format": "date-time",
-        "title": "When"
+        "title": "schema.tickets.when"
     },
     "location": {
       "type": "string",
-      "title": "Where"
+      "title": "schema.tickets.where"
     },
     "description": {
       "type": "string",
-      "title": "Description",
+      "title": "schema.tickets.description",
       "minLength": 10,
       "maxLength": 1024
     },
     "price": {
       "type": "number",
-      "title": "Price in ETH"
+      "title": "schema.tickets.priceInETH"
     },
     "pictures": {
       "type": "array",
-      "title": "Select photos",
+      "title": "schema.tickets.selectPhotos",
       "items": {
         "type": "string",
         "format": "data-url"

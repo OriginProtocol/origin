@@ -1,0 +1,22 @@
+[
+  {
+    "id": "my-purchase-card.received",
+    "defaultMessage": "Received"
+  },
+  {
+    "id": "my-purchase-card.sentBySeller",
+    "defaultMessage": "Sent by Seller"
+  },
+  {
+    "id": "my-purchase-card.purchased",
+    "defaultMessage": "Purchased"
+  },
+  {
+    "id": "my-purchase-card.unknown",
+    "defaultMessage": "Unknown"
+  },
+  {
+    "id": "my-purchase-card.ethereumCurrencyAbbrev",
+    "defaultMessage": "ETH"
+  }
+]

@@ -1,0 +1,10 @@
+[
+  {
+    "id": "user.ethAddress",
+    "defaultMessage": "ETH Address:"
+  },
+  {
+    "id": "user.noEthAccountConnected",
+    "defaultMessage": "No ETH Account Connected"
+  }
+]

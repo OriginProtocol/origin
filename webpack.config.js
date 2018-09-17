@@ -5,18 +5,30 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const prepareMessagesPlugin = require('./translations/scripts/prepareMessagesPlugin')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
 const env = {
   CONTRACT_ADDRESSES: '{}',
+  BRIDGE_SERVER_DOMAIN: '',
+  BRIDGE_SERVER_PROTOCOL: 'https',
+  FORCE_HTTPS: false,
+  IPFS_API_PORT: '',
+  IPFS_DOMAIN: '',
+  IPFS_GATEWAY_PORT: '',
+  IPFS_GATEWAY_PROTOCOL: 'https',
+  IPFS_SWARM: '',
+  MESSAGING_ACCOUNT: '',
+  MESSAGING_NAMESPACE: '',
   PRODUCTION_DOMAIN: '',
   PROVIDER_URL: '',
+  REDUX_LOGGER: false
 }
 
 var config = {
   entry: { app: './src/index.js' },
-  devtool: isProduction ? false : 'cheap-module-source-map',
+  devtool: isProduction ? false : 'inline-cheap-module-source-map',
   output: {
     path: path.resolve(__dirname, 'build'),
     pathinfo: true,
@@ -72,6 +84,17 @@ var config = {
             }
           }
         ]
+      },
+      {
+        test: /\.js$/,
+        use: "source-map-loader",
+        exclude: [
+          // Don't load source maps from anything in node_modules except for the
+          // origin-js directory
+          /node_modules([\\]+|\/)+(?!origin)/,
+          /\origin([\\]+|\/)node_modules/
+        ],
+        enforce: "pre"
       }
     ]
   },
@@ -80,7 +103,18 @@ var config = {
     port: 3000,
     headers: {
       'Access-Control-Allow-Origin': '*'
+    },
+    overlay: {
+      warnings: true,
+      errors: true
     }
+  },
+  watchOptions: {
+    ignored: [
+      // Ignore node_modules in watch except for the origin-js directory
+      /node_modules([\\]+|\/)+(?!origin)/,
+      /\origin([\\]+|\/)node_modules/
+    ]
   },
   mode: isProduction ? 'production' : 'development',
   plugins: [
@@ -95,7 +129,8 @@ var config = {
       { from: 'public/images', to: 'images' },
       { from: 'public/fonts', to: 'fonts' },
       { from: 'public/schemas', to: 'schemas' }
-    ])
+    ]),
+    new prepareMessagesPlugin()
   ]
 }
 

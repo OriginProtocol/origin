@@ -1,71 +1,76 @@
-import React, { Component } from 'react'
-
-const baseCurrencyCode = 'ETH';
+import React, { Component, Fragment } from 'react'
+import { FormattedMessage } from 'react-intl'
+import { getFiatPrice } from 'utils/priceUtils'
 
 class ListingCardPrices extends Component {
-
   constructor(props) {
     super(props)
     this.state = {
       price: props.price,
-      exchangeRate: null,
-      approxPrice: "Loading...",
-      currencyCode: "USD",
-      defaultDecimalPlaces: this.getPrecision(props.price),
-      exchangeBaseURL: 'https://api.cryptonator.com/api/ticker/'
+      fiatPrice: null,
+      approxPrice: 'Loading...',
+      currencyCode: 'USD',
+      defaultDecimalPlaces: this.getPrecision(props.price)
     }
+  }
+
+  async componentDidMount() {
+    const { price, currencyCode } = this.state
+    const fiatPrice = await getFiatPrice(price, currencyCode)
+    this.setState({ fiatPrice })
   }
 
   getPrecision(n) {
-    let asString = n.toString();
-    let scientificMatch = asString.match(/e-(\d+)/);
+    const asString = n.toString()
+    const scientificMatch = asString.match(/e-(\d+)/)
+
     if (scientificMatch && scientificMatch.length > 0) {
-      return scientificMatch[1];
+      return scientificMatch[1]
     } else {
-      return asString.indexOf('.') + 1;
+      return asString.indexOf('.') + 1
     }
-  }
-
-  componentDidMount() {
-    try {
-      this.retrieveConversion()
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  retrieveConversion(currencyCode){
-    let targetCurrencyCode = currencyCode ? currencyCode : this.state.currencyCode
-    let exchangeURL = this.state.exchangeBaseURL;
-    exchangeURL += baseCurrencyCode.toLowerCase();
-    exchangeURL += "-";
-    exchangeURL += this.state.currencyCode.toLowerCase();
-
-    return new Promise((resolve, reject) => {
-      fetch(exchangeURL).then(res => res.json()).then(json => {
-        resolve(this.setState({ exchangeRate: json.ticker.price }));
-      }).catch(console.error)
-    });
-  }
-
-  formatApproxPrice(){
-    return Number(this.state.price * this.state.exchangeRate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
   }
 
   render() {
+    const { currencyCode, fiatPrice } = this.state
+
     return (
       <div>
         <div className="d-flex align-items-center price-container">
-          <div>
+          <Fragment>
             <div className="d-inline-block price placehold">
-              {this.state.exchangeRate == null && "Loading..." }
-              {this.state.exchangeRate != null && this.formatApproxPrice() + " " + this.state.currencyCode }
-              <span className="alternate-price text-muted"> | {`${Number(this.state.price).toLocaleString(undefined, {minimumFractionDigits: 5, maximumFractionDigits: 9})}`} ETH</span>
+              {fiatPrice === null && (
+                <FormattedMessage
+                  id={'listing-card-prices.loadingMessage'}
+                  defaultMessage={'Loading...'}
+                />
+              )}
+              <div className="d-flex">
+                <img
+                  src="images/eth-icon.svg"
+                  role="presentation"
+                  className="eth-icon"
+                />
+                <div className="values">
+                  <div className="eth">
+                    {`${Number(this.state.price).toLocaleString(undefined, {
+                      minimumFractionDigits: 5,
+                      maximumFractionDigits: 5
+                    })}`}&nbsp;
+                    <FormattedMessage
+                      id={'listing-card-prices.ethereumCurrencyAbbrev'}
+                      defaultMessage={'ETH'}
+                    />
+                  </div>
+                  <div className="fiat">
+                    {fiatPrice === null && 'Loading'}
+                    {fiatPrice}
+                    {fiatPrice && ` ${currencyCode}`}
+                  </div>
+                </div>
+              </div>
             </div>
-            {this.props.unitsAvailable === 0 &&
-              <span className="sold-banner">Sold</span>
-            }
-          </div>
+          </Fragment>
         </div>
       </div>
     )

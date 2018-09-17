@@ -5,8 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="favicon.ico">
     <title>Origin Protocol Demo DApp</title>
+    <script>
+      // If URL query string contains "?translator=true", run Crowdin's In Context Translation
+      // https://support.crowdin.com/in-context-localization/
+      // https://crowdin.com/project/originprotocol/settings#in-context
+      if (window.location.href.indexOf('translator=true') > -1) {
+        var _jipt = [];
+        _jipt.push(['project', 'originprotocol']);
+        var crowdinScript = document.createElement('script');
+        crowdinScript.setAttribute('src', '//cdn.crowdin.com/jipt/jipt.js');
+        document.head.appendChild(crowdinScript);
+      }
+    </script>
   </head>
   <body>
-    <div id="root" class="d-flex flex-column">Please wait...</div>
+    <div id="root" class="d-flex flex-column">
+      <div class="loading-clock d-flex justify-content-center align-items-center">
+        &#128337;<!--Unicode Clock-->
+      </div>  
+    </div>
   </body>
 </html>

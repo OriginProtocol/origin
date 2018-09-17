@@ -1,4 +1,4 @@
-import { AlertConstants } from '../actions/Alert'
+import { AlertConstants } from 'actions/Alert'
 
 const initialState = {
   message: ''
@@ -6,14 +6,13 @@ const initialState = {
 
 export default function Alert(state = initialState, action = {}) {
   switch (action.type) {
+  case AlertConstants.SHOW:
+    return { ...state, message: action.message, show: true }
 
-    case AlertConstants.SHOW:
-      return { ...state, message: action.message, show: true }
+  case AlertConstants.HIDE:
+    return { ...state, message: '', show: false }
 
-    case AlertConstants.HIDE:
-      return { ...state, message: '', show: false }
-
-    default:
-      return state
+  default:
+    return state
   }
 }

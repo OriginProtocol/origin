@@ -1,0 +1,22 @@
+[
+  {
+    "id": "Messages.newMessagePlaceholder",
+    "defaultMessage": "Type something..."
+  },
+  {
+    "id": "purchase-summary.purchasedFrom",
+    "defaultMessage": "Purchased from {sellerLink}"
+  },
+  {
+    "id": "purchase-summary.soldTo",
+    "defaultMessage": "Sold to {buyerLink}"
+  },
+  {
+    "id": "purchase-summary.purchasedFromOn",
+    "defaultMessage": "Purchased from {sellerName} on {date}"
+  },
+  {
+    "id": "purchase-summary.soldToOn",
+    "defaultMessage": "Sold to {buyerName} on {date}"
+  }
+]

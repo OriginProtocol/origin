@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-
-import { getListingIds } from '../actions/Listing'
-
+import { FormattedMessage, FormattedNumber } from 'react-intl'
 import Pagination from 'react-js-pagination'
 import { withRouter } from 'react-router'
 
-import ListingCard from './listing-card'
+import { getListingIds } from 'actions/Listing'
+
+import ListingCard from 'components/listing-card'
+import OnboardingModal from 'components/onboarding-modal'
 
 class ListingsGrid extends Component {
   constructor(props) {
@@ -17,17 +18,18 @@ class ListingsGrid extends Component {
   }
 
   componentWillMount() {
-    this.props.getListingIds()
+    if (this.props.renderMode === 'home-page') this.props.getListingIds()
   }
 
   render() {
     const { listingsPerPage } = this.state
+    const { contractFound, listingIds, searchListingIds } = this.props
 
-    const { contractFound, listingIds, hideList } = this.props
-    const pinnedListingIds = [0, 1, 2, 3, 4]
-
+    // const pinnedListingIds = [0, 1, 2, 3, 4]
+    // const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
+    const arrangedListingIds =
+      this.props.renderMode === 'home-page' ? listingIds : searchListingIds
     const activePage = this.props.match.params.activePage || 1
-    const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
     // Calc listings to show for given page
     const showListingsIds = arrangedListingIds.slice(
       listingsPerPage * (activePage - 1),
@@ -39,14 +41,37 @@ class ListingsGrid extends Component {
         {contractFound === false && (
           <div className="listings-grid">
             <div className="alert alert-warning" role="alert">
-              The Origin Contract was not found on this network.<br />
-              You may need to change networks, or deploy the contract.
+              <FormattedMessage
+                id={'listings-grid.originContractNotFound'}
+                defaultMessage={
+                  'No Origin listing contracts were found on this network.'
+                }
+              />
+              <br />
+              <FormattedMessage
+                id={'listings-grid.changeNetworks'}
+                defaultMessage={
+                  'You may need to change networks, or deploy the contract.'
+                }
+              />
             </div>
           </div>
         )}
         {contractFound && (
           <div className="listings-grid">
-            {listingIds.length > 0 && <h1>{listingIds.length} Listings</h1>}
+            {arrangedListingIds.length > 0 && (
+              <h1>
+                <FormattedMessage
+                  id={'listings-grid.listingsCount'}
+                  defaultMessage={'{listingIdsCount} Listings'}
+                  values={{
+                    listingIdsCount: (
+                      <FormattedNumber value={arrangedListingIds.length} />
+                    )
+                  }}
+                />
+              </h1>
+            )}
             <div className="row">
               {showListingsIds.map(listingId => (
                 <ListingCard listingId={listingId} key={listingId} />
@@ -64,13 +89,14 @@ class ListingsGrid extends Component {
             />
           </div>
         )}
+        <OnboardingModal />
       </div>
     )
   }
 }
 
 const mapStateToProps = state => ({
-  listingIds: state.listings.ids,
+  listingIds: state.marketplace.ids,
   contractFound: state.listings.contractFound
 })
 
@@ -78,4 +104,9 @@ const mapDispatchToProps = dispatch => ({
   getListingIds: () => dispatch(getListingIds())
 })
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ListingsGrid))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(ListingsGrid)
+)

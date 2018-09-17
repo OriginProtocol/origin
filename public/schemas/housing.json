@@ -1,51 +1,60 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
-  "description": "Distributed Airbnb",
+  "description": "schema.housing.schemaDescription",
   "type": "object",
   "required": ["name","category","description","price"],
   "properties": {
     "name": {
       "type": "string",
-      "title": "Title",
+      "title": "schema.housing.title",
       "minLength": 3,
       "maxLength": 100
     },
+    "examples": {
+      "type": "string",
+      "title": "schema.housing.examples",
+      "enum": [
+        "schema.housing.aptsHousingForRent",
+        "schema.housing.roomsShares",
+        "schema.housing.vacationRentals"
+      ]
+    },
     "category": {
       "type": "string",
-      "title": "Category",
+      "title": "schema.housing.category",
       "enum": [
-        "Apts Wanted",
-        "Apts/Housing for Rent",
-        "Housing Swap",
-        "Office & Commercial",
-        "Parking & Storage",
-        "Real Estate",
-        "Real Estate Wanted",
-        "Room/Share Wanted",
-        "Rooms & Shares",
-        "Sublet/Temp Wanted",
-        "Sublets & Temporary",
-        "Vacation Rentals"
+        "schema.housing.aptsWanted",
+        "schema.housing.aptsHousingForRent",
+        "schema.housing.housingSwap",
+        "schema.housing.officeCommercial",
+        "schema.housing.parkingStorage",
+        "schema.housing.realEstate",
+        "schema.housing.realEstateWanted",
+        "schema.housing.roomShareWanted",
+        "schema.housing.roomsShares",
+        "schema.housing.subletTempWanted",
+        "schema.housing.subletsTemporary",
+        "schema.housing.vacationRentals"
       ],
-      "default":"Vacation Rentals"
+      "default":"schema.housing.vacationRentals"
     },
     "description": {
       "type": "string",
-      "title": "Description",
+      "title": "schema.housing.description",
       "minLength": 10,
       "maxLength": 1024
     },
     "location": {
       "type": "string",
-      "title": "Location"
+      "title": "schema.housing.location"
     },
     "price": {
       "type": "number",
-      "title": "Price in ETH"
+      "title": "schema.housing.priceInETH"
     },
     "pictures": {
       "type": "array",
-      "title": "Select photos",
+      "title": "schema.housing.selectPhotos",
       "items": {
         "type": "string",
         "format": "data-url"

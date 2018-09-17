@@ -1,45 +1,54 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
-  "description":"Distributed Nextdoor",
+  "description":"schema.announcements.schemaDescription",
   "type": "object",
   "required": ["name","category","description","price"],
   "properties": {
     "name": {
       "type": "string",
-      "title": "Title",
+      "title": "schema.announcements.title",
       "minLength": 3,
       "maxLength": 100
     },
+    "examples": {
+      "type": "string",
+      "title": "schema.announcements.examples",
+      "enum": [
+        "schema.announcements.groups",
+        "schema.announcements.localNews",
+        "schema.announcements.personals"
+      ]
+    },
     "category": {
       "type": "string",
-      "title": "Category",
+      "title": "schema.announcements.category",
       "enum": [
-        "Activities",
-        "Artists",
-        "Childcare",
-        "Classes",
-        "General",
-        "Groups",
-        "Local News",
-        "Lost & Found",
-        "Musicians",
-        "Personals",
-        "Pets",
-        "Politics",
-        "Resumes",
-        "Volunteers"
+        "schema.announcements.activities",
+        "schema.announcements.artists",
+        "schema.announcements.childcare",
+        "schema.announcements.classes",
+        "schema.announcements.general",
+        "schema.announcements.groups",
+        "schema.announcements.localNews",
+        "schema.announcements.lostFound",
+        "schema.announcements.musicians",
+        "schema.announcements.personals",
+        "schema.announcements.pets",
+        "schema.announcements.politics",
+        "schema.announcements.resumes",
+        "schema.announcements.volunteers"
       ],
-      "default": "Local News"
+      "default": "schema.announcements.localNews"
     },
     "description": {
       "type": "string",
-      "title": "Description",
+      "title": "schema.announcements.description",
       "minLength": 10,
       "maxLength": 1024
     },
     "price": {
       "type": "number",
-      "title": "Price in ETH",
+      "title": "schema.announcements.price",
       "default": 0,
       "enum": [
         0
@@ -47,7 +56,7 @@
     },
     "pictures": {
       "type": "array",
-      "title": "Select photos",
+      "title": "schema.announcements.selectPhotos",
       "items": {
         "type": "string",
         "format": "data-url"
