@@ -92,13 +92,21 @@ class Listing {
 
     if (query !== undefined && query !== ""){
       // all_text is a field where all searchable fields get copied to
-      esQuery.bool.must.push({ match: { all_text: query } })
+      esQuery.bool.must.push({
+        match: {
+          all_text: {
+            query,
+            fuzziness: "AUTO"
+          }
+        }
+      })
       // give extra score if the search query matches in the title
       esQuery.bool.should.push({
         match: {
           title: {
             query: query,
-            boost: 2
+            boost: 2,
+            fuzziness: "AUTO"
           }
         }
       })
