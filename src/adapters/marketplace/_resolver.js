@@ -105,7 +105,7 @@ class MarketplaceResolver {
     )
   }
 
-  async makeOffer(listingId, ipfsBytes, transactionData, confirmationCallback) {
+  async makeOffer(listingId, ipfsBytes, offerData, confirmationCallback) {
     const { adapter, listingIndex, version, network } = this.parseListingId(
       listingId
     )
@@ -113,7 +113,7 @@ class MarketplaceResolver {
     const transactionReceipt = await adapter.makeOffer(
       listingIndex,
       ipfsBytes,
-      transactionData,
+      offerData,
       confirmationCallback
     )
 
