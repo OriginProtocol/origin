@@ -72,6 +72,7 @@
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-card.pending": "U tijeku",
   "listing-card.sold": "Prodano",
+  "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
   "listing-create.stepNumberLabel": "KORAK {stepNumber}",
   "listing-create.whatTypeOfListing": "Koju vrstu unosa želite stvoriti?",
   "listing-create.next": "Sljedeći",
