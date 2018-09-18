@@ -243,7 +243,7 @@ class ContractService {
       const currencyDecimals = currency && currency.decimals
       if (currencyDecimals) {
         const scaling = BigNumber(10).exponentiatedBy(currencyDecimals)
-        return String(BigNumber(money.amount).multipliedBy(scaling))
+        return BigNumber(money.amount).multipliedBy(scaling).toString()
       } else {
         return money.amount
       }
