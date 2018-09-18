@@ -77,12 +77,12 @@ class MessageNew extends Component {
             <span className="address">{recipientAddress}</span>
           </h2>
         </div>
-        {/* Just a precaution; no one should get here wihout truthy here. */}
+        {/* Recipient needs to enable messaging. */}
         {!canReceiveMessages && (
           <div className="roadblock">
             <FormattedMessage
               id={'MessageNew.cannotReceiveMessages'}
-              defaultMessage={'This user has not enabled Origin Messaging.'}
+              defaultMessage={'This user has not yet enabled Origin Messaging.'}
             />
             <div className="link-container text-center">
               <a href="#" data-modal="profile" onClick={handleToggle}>

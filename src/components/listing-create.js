@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Prompt } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import Form from 'react-jsonschema-form'
 
 import { showAlert } from 'actions/Alert'
@@ -9,6 +9,7 @@ import {
   update as updateTransaction,
   upsert as upsertTransaction
 } from '../actions/Transaction'
+import { getOgnBalance } from 'actions/Wallet'
 
 import BoostSlider from 'components/boost-slider'
 import PhotoPicker from 'components/form-widgets/photo-picker'
@@ -54,8 +55,6 @@ class ListingCreate extends Component {
     })
 
     this.state = {
-      // TODO:John - wire up isFirstListing when ready
-      isFirstListing: true,
       step: this.STEP.PICK_SCHEMA,
       selectedSchemaType: null,
       selectedSchema: null,
@@ -72,15 +71,53 @@ class ListingCreate extends Component {
         origin && origin.contractService && origin.contractService.web3
       ),
       isBoostExpanded: false,
+      showBoostTutorial: false,
       usdListingPrice: 0
     }
 
+    this.intlMessages = defineMessages({
+      navigationWarning: {
+        id: 'listing-create.navigationWarning',
+        defaultMessage: 'Are you sure you want to leave? If you leave this page your progress will be lost.'
+      }
+    })
+
+    this.checkOgnBalance = this.checkOgnBalance.bind(this)
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
-    this.onBoostSelected = this.onBoostSelected.bind(this)
+    this.onReview = this.onReview.bind(this)
+    this.pollOgnBalance = this.pollOgnBalance.bind(this)
+    this.resetToPreview = this.resetToPreview.bind(this)
+    this.setBoost = this.setBoost.bind(this)
     this.toggleBoostBox = this.toggleBoostBox.bind(this)
     this.updateUsdPrice = this.updateUsdPrice.bind(this)
-    this.onBoostSliderChange = this.onBoostSliderChange.bind(this)
+  }
+
+  componentDidUpdate() {
+    // conditionally show boost tutorial
+    if (!this.state.showBoostTutorial) {
+      this.detectNeedForBoostTutorial()
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.ognBalancePoll)
+  }
+
+  detectNeedForBoostTutorial() {
+    // show if 0 OGN and...
+    !this.props.wallet.ognBalance &&
+    // ...tutorial has not been expanded or skipped via "Review"
+    !localStorage.getItem('boostTutorialViewed') &&
+    this.setState({
+      showBoostTutorial: true
+    })
+  }
+
+  pollOgnBalance() {
+    this.ognBalancePoll = setInterval(() => {
+      this.props.getOgnBalance()
+    }, 10000)
   }
 
   async updateUsdPrice() {
@@ -192,19 +229,22 @@ class ListingCreate extends Component {
         step: this.STEP.BOOST
       })
       window.scrollTo(0, 0)
+      this.checkOgnBalance()
     }
   }
 
-  onBoostSelected(amount) {
-    console.log(amount)
-    this.setState({
-      step: this.STEP.PREVIEW
-    })
-    window.scrollTo(0, 0)
-    this.updateUsdPrice()
+  checkOgnBalance() {
+    if (this.props.wallet &&
+        this.props.wallet.ognBalance &&
+        parseFloat(this.props.wallet.ognBalance) > 0
+    ) {
+      this.setState({
+        showBoostTutorial: false
+      })
+    }
   }
 
-  onBoostSliderChange(boostValue, boostLevel) {
+  setBoost(boostValue, boostLevel) {
     this.setState({
       formListing: {
         ...this.state.formListing,
@@ -215,6 +255,26 @@ class ListingCreate extends Component {
         }
       }
     })
+  }
+
+  onReview() {
+    const { ognBalance } = this.props.wallet
+
+    if (!localStorage.getItem('boostTutorialViewed')) {
+      localStorage.setItem('boostTutorialViewed', true)
+    }
+
+    if (ognBalance < this.state.formListing.formData.boostValue) {
+      this.setBoost(ognBalance, getBoostLevel(ognBalance))
+    }
+
+    this.setState({
+      step: this.STEP.PREVIEW
+    })
+
+    window.scrollTo(0, 0)
+
+    this.updateUsdPrice()
   }
 
   async onSubmitListing(formListing, selectedSchemaType) {
@@ -248,30 +308,32 @@ class ListingCreate extends Component {
   }
 
   toggleBoostBox() {
+    localStorage.setItem('boostTutorialViewed', true)
+
     this.setState({
       isBoostExpanded: !this.state.isBoostExpanded
     })
   }
 
   render() {
-    const { wallet } = this.props
+    const { wallet, intl } = this.props
     const {
       currentProvider,
       formListing,
       isBoostExpanded,
-      isFirstListing,
+      schemaFetched,
       selectedSchema,
       selectedSchemaType,
       schemaExamples,
       step,
       translatedSchema,
-      usdListingPrice
+      usdListingPrice,
+      showBoostTutorial,
     } = this.state
     const { formData } = formListing
     const translatedFormData =
       (formData && formData.category && translateListingCategory(formData)) ||
       {}
-    const needsBoostTutorial = isFirstListing && !wallet.ognBalance
 
     return (
       <div className="container listing-form">
@@ -397,25 +459,13 @@ class ListingCreate extends Component {
                   />
                 </label>
                 <h2>Boost your listing</h2>
-                {needsBoostTutorial && (
+                {showBoostTutorial &&
                   <div className="info-box">
                     <img src="images/ogn-icon-horiz.svg" role="presentation" />
-                    <p className="text-bold">
-                      You have 0{' '}
-                      <a href="#" arget="_blank" rel="noopener noreferrer">
-                        OGN
-                      </a>{' '}
-                      in your wallet.
-                    </p>
-                    <p>
-                      Once you acquire some OGN you will be able to boost your
-                      listing.
-                    </p>
-                    <p className="expand-btn" onClick={this.toggleBoostBox}>
-                      What is a boost?{' '}
-                      <span className={isBoostExpanded ? 'rotate-up' : ''}>
-                        &#x25be;
-                      </span>
+                    <p className="text-bold">You have 0 <a href="#" target="_blank" rel="noopener noreferrer">OGN</a> in your wallet.</p>
+                    <p>Once you acquire some OGN you will be able to boost your listing.</p>
+                    <p className="expand-btn" onClick={ this.toggleBoostBox }>
+                      What is a boost? <span className={ isBoostExpanded ? 'rotate-up' : '' }>&#x25be;</span>
                     </p>
                     {isBoostExpanded && (
                       <div className="info-box-bottom">
@@ -445,16 +495,13 @@ class ListingCreate extends Component {
                       </div>
                     )}
                   </div>
-                )}
-                {!needsBoostTutorial && (
+                }
+                {!showBoostTutorial &&
                   <BoostSlider
-                    onChange={this.onBoostSliderChange}
-                    ognBalance={wallet.ognBalance}
-                    defaultValue={
-                      (formData && formData.boostValue) || defaultBoostValue
-                    }
+                    onChange={ this.setBoost }
+                    ognBalance={ wallet.ognBalance }
                   />
-                )}
+                }
                 <div className="btn-container">
                   <button
                     type="button"
@@ -468,7 +515,7 @@ class ListingCreate extends Component {
                   </button>
                   <button
                     className="float-right btn btn-primary"
-                    onClick={() => this.onBoostSelected()}
+                    onClick={this.onReview}
                   >
                     Review
                   </button>
@@ -570,9 +617,6 @@ class ListingCreate extends Component {
                       <p className="label">Boost Level</p>
                     </div>
                     <div className="col-md-9">
-                      <p className="boost-level">
-                        {translatedFormData.boostLevel}
-                      </p>
                       <p>
                         <img
                           className="ogn-icon"
@@ -590,24 +634,23 @@ class ListingCreate extends Component {
                         >
                           OGN
                         </a>
-                        {/*
                         <span className="help-block">
-                          &nbsp;| x.xx USD&nbsp;
-                          <span className="text-uppercase">(Approximate Value)</span>
+                          &nbsp;| {translatedFormData.boostLevel.toUpperCase()}
                         </span>
-                        */}
                       </p>
                     </div>
                   </div>
                 </div>
-                <a
-                  className="bottom-cta"
-                  href="#"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Preview in browser
-                </a>
+                {/* Revisit this later
+                  <a
+                    className="bottom-cta"
+                    href="#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Preview in browser
+                  </a>
+                */}
                 <div className="btn-container">
                   <button
                     className="btn btn-other float-left"
@@ -917,6 +960,10 @@ class ListingCreate extends Component {
             )}
           </div>
         </div>
+        <Prompt
+          when={schemaFetched}
+          message={intl.formatMessage(this.intlMessages.navigationWarning)}
+        />
       </div>
     )
   }
@@ -932,7 +979,8 @@ const mapDispatchToProps = dispatch => ({
   showAlert: msg => dispatch(showAlert(msg)),
   updateTransaction: (hash, confirmationCount) =>
     dispatch(updateTransaction(hash, confirmationCount)),
-  upsertTransaction: transaction => dispatch(upsertTransaction(transaction))
+  upsertTransaction: transaction => dispatch(upsertTransaction(transaction)),
+  getOgnBalance: () => dispatch(getOgnBalance())
 })
 
 export default connect(

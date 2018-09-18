@@ -65,7 +65,7 @@ class ListingsDetail extends Component {
       }
     })
 
-    this.handleBuyClicked = this.handleBuyClicked.bind(this)
+    this.handleMakeOffer = this.handleMakeOffer.bind(this)
   }
 
   async loadListing() {
@@ -116,8 +116,8 @@ class ListingsDetail extends Component {
     })
   }
 
-  async handleBuyClicked() {
-    this.props.storeWeb3Intent('buy this listing')
+  async handleMakeOffer() {
+    this.props.storeWeb3Intent('offer to buy this listing')
 
     if (web3.givenProvider && this.props.web3Account) {
       this.setState({ step: this.STEP.METAMASK })
@@ -130,6 +130,10 @@ class ListingsDetail extends Component {
           totalPrice: {
             amount: this.state.price,
             currency: 'ETH'
+          },
+          commission: {
+            amount: this.state.boostValue.toString(),
+            currency: 'OGN'
           }
         }
         const transactionReceipt = await origin.marketplace.makeOffer(
@@ -141,7 +145,7 @@ class ListingsDetail extends Component {
         )
         this.props.upsertTransaction({
           ...transactionReceipt,
-          transactionTypeKey: 'buyListing'
+          transactionTypeKey: 'makeOffer'
         })
         this.setState({ step: this.STEP.PURCHASED })
       } catch (error) {
@@ -158,6 +162,7 @@ class ListingsDetail extends Component {
   render() {
     const {
       boostLevel,
+      boostValue,
       category,
       currentProvider,
       description,
@@ -306,7 +311,7 @@ class ListingsDetail extends Component {
                         />
                       </span>
                     )}
-                    {boostLevel && (
+                    {boostValue > 0 && (
                       <span className={`boosted badge boost-${boostLevel}`}>
                         <img
                           src="images/boost-icon-arrow.svg"
@@ -408,7 +413,7 @@ class ListingsDetail extends Component {
                       {!userIsSeller && (
                         <button
                           className="btn btn-primary"
-                          onClick={this.handleBuyClicked}
+                          onClick={this.handleMakeOffer}
                           onMouseDown={e => e.preventDefault()}
                         >
                           <FormattedMessage
@@ -419,7 +424,7 @@ class ListingsDetail extends Component {
                       )}
                       {userIsSeller && (
                         <Link to="/my-listings" className="btn">
-                            My Listings
+                          My Listings
                         </Link>
                       )}
                     </div>
@@ -516,7 +521,7 @@ class ListingsDetail extends Component {
                     </span>
                   </h2>
                   {reviews.map(r => (
-                    <Review key={r.transactionHash} review={r} />
+                    <Review key={r.id} review={r} />
                   ))}
                   {/* To Do: pagination */}
                   {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}

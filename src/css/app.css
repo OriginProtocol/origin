@@ -352,6 +352,13 @@ a:hover {
   background-position: 50%;
 }
 
+.progress-circle.disputed {
+  background-color: var(--orange-red);
+  color: white;
+  font-size: 14px;
+  font-weight: 900;
+}
+
 .progress-container .progress-circle {
   opacity: 0;
 }
@@ -1792,8 +1799,94 @@ a:hover {
 
 .onboarding-modal span,
 .onboarding-modal p {
-  font-size: 14px;
+  font-size: 0.875rem;
   vertical-align: super;
+}
+
+.arbitration-modal.rejection .modal-content {
+  height: 420px;
+  width: 420px;
+}
+
+.arbitration-modal.confirm .modal-content,
+.arbitration-modal.prerequisite .modal-content {
+  width: 450px;
+}
+
+.arbitration-modal.issue textarea {
+  background-color: var(--dark);
+  border-radius: 5px;
+  width: 85%;
+  resize: none;
+  margin-top: 26px;
+  margin-bottom: 30px;
+  padding: 12px 16px;
+}
+
+.arbitration-modal .image-container {
+  background-color: var(--white);
+  height: 92px;
+  width: 92px;
+  border-radius: 50%;
+  text-align: center;
+  display: block;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.image-container:before {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.arbitration-modal .image-container img {
+  vertical-align: middle;
+  margin: auto;
+  width: 54px;
+  height: 54px;
+}
+
+.arbitration-modal .heading {
+  color: var(--white);
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 1.5rem;
+  margin-top: 15px;
+  margin-bottom: 11px;
+}
+
+.arbitration-modal.confirm .heading,
+.arbitration-modal.prerequisite .heading {
+  margin-top: auto;
+}
+
+.arbitration-modal .text {
+  font-family: 'Lato';
+  color: var(--pale-grey);
+}
+
+.arbitration-modal.confirm .text,
+.arbitration-modal.prerequisite .text {
+  margin: 0px;
+}
+
+.arbitration-modal p.text {
+  margin-bottom: 20px;
+}
+
+.arbitration-modal.confirm .button-container,
+.arbitration-modal.issue .button-container,
+.arbitration-modal.prerequisite .button-container {
+  display: inline-flex;
+}
+
+.arbitration-modal.issue .button-container {
+  width: 350px;
+  margin-bottom: 0px;
 }
 
 /* Tooltip */
@@ -2501,40 +2594,66 @@ select.form-control:not([size]):not([multiple]) {
   padding: 16px 0 0;
 }
 
-.listing-form .select-boost .rc-slider-rail {
-  height: 15px;
-  border-radius: 10px;
+.listing-form .rc-slider-disabled {
+  background-color: transparent;
+}
+
+.listing-form .rc-slider-disabled .rc-slider-handle {
+  background-color: white;
+  border-color: var(--dusk);
+  opacity: 0.2;
+}
+
+.listing-form .rc-slider-rail {
   background-color: var(--light);
+  border: 1px solid var(--bluey-grey);
+  border-radius: 10px;
+  height: 15px;
   margin-left: -5px;
   margin-right: -5px;
   width: 103%;
 }
- .listing-form .select-boost .rc-slider-handle {
+
+.listing-form .rc-slider-handle {
   margin-top: auto;
   border: 1px solid var(--steel);
   width: 15px;
   height: 15px;
 }
- .listing-form .select-boost .rc-slider-track {
+
+.listing-form .rc-slider-track {
   height: 15px;
   border-radius: 0px;
   background-color: var(--steel);
 }
 
-.listing-form .select-boost .rc-slider.boost-level-Low .rc-slider-track {
+.listing-form .rc-slider.boost-level-Low .rc-slider-track {
   background-color: var(--boost-low);
 }
 
-.listing-form .select-boost .rc-slider.boost-level-Medium .rc-slider-track {
+.listing-form .rc-slider.boost-level-Medium .rc-slider-track {
   background-color: var(--boost-medium);
 }
 
-.listing-form .select-boost .rc-slider.boost-level-High .rc-slider-track {
+.listing-form .rc-slider.boost-level-High .rc-slider-track {
   background-color: var(--boost-high);
 }
 
-.listing-form .select-boost .rc-slider.boost-level-Premium .rc-slider-track {
+.listing-form .rc-slider.boost-level-Premium .rc-slider-track {
   background-color: var(--boost-premium);
+}
+
+.listing-form .select-boost .btn-container {
+  position: relative;
+  padding-bottom: 45px;
+}
+
+.listing-form .select-boost .skip-boost-btn {
+  position: absolute;
+  right: 5px;
+  bottom: 0;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 .boost-Low {
@@ -2649,6 +2768,10 @@ select.form-control:not([size]):not([multiple]) {
   padding: 10px;
   margin-top: 20px;
   margin-bottom: 10px;
+}
+
+.listing-form .select-boost .boost-slider .info-box .btn {
+  margin: 10px 0 5px;
 }
 
 .boost-slider .info-box.warn {
@@ -3026,7 +3149,7 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .purchase-detail .progress-container {
-  margin: 0 1rem 1rem;
+  margin: 0 15px 15px;
 }
 
 .guidance {
@@ -3037,6 +3160,18 @@ select.form-control:not([size]):not([multiple]) {
   padding: 2rem;
 }
 
+.guidance .triangles {
+  bottom: 100%;
+  left: 0;
+  padding: 0 23px;
+  position: absolute;
+  width: 100%;
+}
+
+.guidance .triangle-pair.hidden {
+  visibility: hidden;
+}
+
 .guidance .triangle {
   position: absolute;
   border: solid transparent;
@@ -3045,10 +3180,6 @@ select.form-control:not([size]):not([multiple]) {
   height: 0;
   pointer-events: none;
   width: 0;
-
-  /* nice to have this animation follow the purchase progress bar */
-  /* but they tend to not be perfectly in sync */
-  /*transition: left 200ms linear 800ms;*/
 }
 
 .guidance .triangle:first-of-type {
@@ -3076,6 +3207,22 @@ select.form-control:not([size]):not([multiple]) {
 
 .guidance .instruction:not(:last-child) {
   margin-bottom: 1rem;
+}
+
+.guidance button:not(:first-of-type) {
+  margin-left: 10px;
+}
+
+.guidance form {
+  margin-bottom: 1rem;
+}
+
+.guidance .button-container:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+.guidance a {
+  font-size: 0.875rem;
 }
 
 .purchase-detail button {
@@ -3138,7 +3285,7 @@ select.form-control:not([size]):not([multiple]) {
   margin-top: 20px;
 }
 
-.purchase-detail form {
+.purchase-detail .prompt + form {
   padding-top: 1rem;
 }
 
@@ -3162,6 +3309,17 @@ form .stars {
 
 form .stars img {
   cursor: pointer;
+}
+
+.purchase-detail .conversation-container {
+  border: 1px solid var(--pale-grey);
+  border-radius: var(--default-radius);
+  margin-top: 1rem;
+  padding: 0 1rem;
+}
+
+.purchase-detail .conversation {
+  height: 400px;
 }
 
 /* Reviews */
@@ -3374,6 +3532,7 @@ form .stars img {
   height: calc(100vh - 60px);
 }
 
+.conversation-col,
 .no-gutters .conversation-col {
   background-color: white;
   height: calc(100vh - 60px);
@@ -3559,6 +3718,10 @@ form .stars img {
   font-size: 1rem;
   font-weight: bold;
   margin-right: 0.5rem;
+}
+
+.conversation .avatar-container {
+  margin-right: 15px;
 }
 
 .add-message {
@@ -4585,7 +4748,7 @@ a:not([href]):not([tabindex]).span-link {
     -webkit-clip-path: polygon(100% 0, 0 100%, 100% 100%);
     clip-path: polygon(100% 0, 0 100%, 100% 100%);
   }
- 
+
   .navigation-bar .messages .triangle,
   .navigation-bar .notifications .triangle {
     margin-right: 0;
@@ -4640,6 +4803,7 @@ a:not([href]):not([tabindex]).span-link {
     flex: 1;
   }
 
+  .conversation-col,
   .no-gutters .conversation-col {
     padding: 0 20px 0;
   }
