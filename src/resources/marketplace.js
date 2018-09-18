@@ -112,7 +112,7 @@ class Marketplace {
 
       const listingCurrency = listing.price && listing.price.currency
       const listingPrice = this.contractService.moneyToUnits(listing.price)
-      const listingCommision = listing.commission && listing.commission.amount
+      const listingCommision = this.contractService.moneyToUnits(listing.commission)
       const currency = this.contractService.currencies[listingCurrency]
       const currencyAddress = currency && currency.address
 
