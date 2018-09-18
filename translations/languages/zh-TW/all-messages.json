@@ -72,6 +72,7 @@
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-card.pending": "等待中",
   "listing-card.sold": "售罄",
+  "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
   "listing-create.stepNumberLabel": "步驟 {stepNumber}",
   "listing-create.whatTypeOfListing": "你想新增什麼類型的發佈?",
   "listing-create.next": "下一步",
