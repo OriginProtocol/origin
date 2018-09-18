@@ -72,6 +72,7 @@
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-card.pending": "W oczekiwaniu",
   "listing-card.sold": "Wyprzedane",
+  "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
   "listing-create.stepNumberLabel": "KROK {stepNumber}",
   "listing-create.whatTypeOfListing": "Jaki typ aukcji chcesz utworzyć?",
   "listing-create.next": "Kolejny",
