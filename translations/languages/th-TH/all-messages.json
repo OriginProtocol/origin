@@ -72,6 +72,7 @@
   "listing-card-prices.ethereumCurrencyAbbrev": "ผลประโยชน์ทับซ้อน",
   "listing-card.pending": "รอดำเนินการ",
   "listing-card.sold": "ขายหมดแล้ว",
+  "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
   "listing-create.stepNumberLabel": "ขั้นตอนที่ {stepNumber}",
   "listing-create.whatTypeOfListing": "คุณต้องการสร้างรายชื่อประเภทใด?",
   "listing-create.next": "ต่อไป",
