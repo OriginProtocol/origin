@@ -72,6 +72,7 @@
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-card.pending": "Nakabinbin",
   "listing-card.sold": "Ubos Na",
+  "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
   "listing-create.stepNumberLabel": "HAKBANG {stepNumber}",
   "listing-create.whatTypeOfListing": "Anong uri ng listahan ang gusto mong gawin?",
   "listing-create.next": "Sunod",
