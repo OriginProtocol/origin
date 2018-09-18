@@ -1,8 +1,8 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import Slider from 'rc-slider'
 import $ from 'jquery'
 // TODO:John - pass a third arg of 'OGN' into getFiatPrice() once OGN prices are available in cryptonator API
-import { getFiatPrice } from 'utils/priceUtils'
+// import { getFiatPrice } from 'utils/priceUtils'
 import {
   boostLevels,
   getBoostLevel,
@@ -10,8 +10,6 @@ import {
   minBoostValue,
   maxBoostValue
 } from 'utils/boostUtils'
-
-import origin from '../services/origin'
 
 class BoostSlider extends Component {
   constructor(props) {
@@ -24,7 +22,6 @@ class BoostSlider extends Component {
       boostLevel: getBoostLevel(defaultBoostValue) || 0,
     }
 
-    this.approveOgnTransfer = this.approveOgnTransfer.bind(this)
     this.onChange = this.onChange.bind(this)
   }
 
@@ -36,17 +33,6 @@ class BoostSlider extends Component {
 
   componentWillUnmount() {
     $('[data-toggle="tooltip"]').tooltip('dispose')
-  }
-
-  async approveOgnTransfer() {
-    const ognAmount = this.state.selectedBoostAmount
-    const weiAmount = (ognAmount * 10 ** 18).toString()
-    const transactionReceipt = await origin.token.approveContract(
-      weiAmount,
-      () => {
-        this.checkOgnTransferAllowance()
-      }
-    )
   }
 
   async onChange(value) {
@@ -123,17 +109,6 @@ class BoostSlider extends Component {
             >
               Get OGN
             </a>
-          </div>
-        }
-        {ognBalance > 0 && this.state.selectedBoostAmount > this.state.allowanceRemaining &&
-          <div className="info-box">
-            <p>You must approve Origin to transfer your OGN.</p>
-            <button
-              className="btn btn-primary"
-              onClick={this.approveOgnTransfer}
-            >
-              Approve
-            </button>
           </div>
         }
         <p className="help-block bottom-explainer">

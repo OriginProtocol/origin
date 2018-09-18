@@ -86,7 +86,7 @@ class ListingCreate extends Component {
     this.updateUsdPrice = this.updateUsdPrice.bind(this)
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     // conditionally show boost tutorial
     if (!this.state.showBoostTutorial) {
       this.detectNeedForBoostTutorial()
