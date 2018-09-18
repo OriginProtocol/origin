@@ -100,7 +100,7 @@ class V00_MarkeplaceAdapter {
   }
 
   async makeOffer(listingId, ipfsBytes, data, confirmationCallback) {
-    const { affiliate, arbitrator, commission = {}, finalizes, totalPrice = {}, unitsPurchased } = data
+    const { affiliate, arbitrator, commission, finalizes, totalPrice = {}, unitsPurchased } = data
     // For V1, we only support quantity of 1.
     if (unitsPurchased != 1)
       throw new Error(
@@ -108,13 +108,14 @@ class V00_MarkeplaceAdapter {
       )
 
     const price = this.contractService.moneyToUnits(totalPrice)
+    const commissionUnits = this.contractService.moneyToUnits(commission)
 
     const args = [
       listingId,
       ipfsBytes,
       finalizes || Math.round(+new Date() / 1000) + 60 * 60 * 24, // 24 hrs
       affiliate || emptyAddress,
-      commission.amount || '0',
+      commissionUnits,
       price,
       this.contractService.currencies[totalPrice.currency].address,
       arbitrator || emptyAddress
