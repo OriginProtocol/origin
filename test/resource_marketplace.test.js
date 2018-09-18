@@ -24,6 +24,9 @@ const originTokenOffer = Object.assign({}, offerData, {
 const invalidPriceOffer = Object.assign({}, offerData, {
   totalPrice: { currency: 'ETH', amount: '0.032' }
 })
+const commissionOffer = Object.assign({}, offerData, {
+  commission: { currency: 'OGN', amount: '2' }
+})
 const invalidCommissionOffer = Object.assign({}, offerData, {
   commission: { currency: 'OGN', amount: '1' }
 })
@@ -219,6 +222,13 @@ describe('Marketplace Resource', function() {
       const offer = await marketplace.getOffer('999-001-1-0')
       expect(offer.totalPrice.amount).to.equal('1')
       expect(offer.totalPrice.currency).to.equal('OGN')
+    })
+
+    it('should make an offer with a commission', async () => {
+      await marketplace.createListing(commissionListing)
+      await marketplace.makeOffer('999-001-1', commissionOffer)
+      const offer = await marketplace.getOffer('999-001-1-0')
+      expect(offer).to.be.ok
     })
   })
 
