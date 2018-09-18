@@ -64,37 +64,37 @@ class DateFilterGroup extends Component {
 
   componentDidUpdate(previousProps) {
     // When new search is triggered, search filters get reset, so component should reset their state
-    if (
-      Object.keys(previousProps.filters).length !== 0 &&
-      Object.keys(this.props.filters).length === 0
-    )
+    if (this.props.generalSearchId !== previousProps.generalSearchId)
       this.onClear()
   }
 
   // Called by filter-group
-  getFilters() {
-    return [
-      {
-        name: this.props.filter.searchParameterName,
-        value: this.state.startDate,
-        valueType: VALUE_TYPE_DATE,
-        operator: FILTER_OPERATOR_GREATER_OR_EQUAL
-      },
-      {
-        name: this.props.filter.searchParameterName,
-        value: this.state.endDate,
-        valueType: VALUE_TYPE_DATE,
-        operator: FILTER_OPERATOR_LESSER_OR_EQUAL
-      }
-    ]
+  async getFilters() {
+    if (this.state.startDate !== null && this.state.endDate !== null)
+      return [
+        {
+          name: this.props.filter.searchParameterName,
+          value: this.state.startDate,
+          valueType: VALUE_TYPE_DATE,
+          operator: FILTER_OPERATOR_GREATER_OR_EQUAL
+        },
+        {
+          name: this.props.filter.searchParameterName,
+          value: this.state.endDate,
+          valueType: VALUE_TYPE_DATE,
+          operator: FILTER_OPERATOR_LESSER_OR_EQUAL
+        }
+      ]
+    else
+      return []
   }
 
   // Called by filter-group
-  onClear() {
+  onClear(callback) {
     this.setState({
       startDate: null,
       endDate: null
-    })
+    }, callback)
   }
 
   render() {
@@ -147,7 +147,8 @@ class DateFilterGroup extends Component {
 }
 
 const mapStateToProps = state => ({
-  filters: state.search.filters
+  filters: state.search.filters,
+  generalSearchId: state.search.generalSearchId
 })
 
 const mapDispatchToProps = () => ({})
