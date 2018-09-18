@@ -72,6 +72,7 @@
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-card.pending": "보류중",
   "listing-card.sold": "매진",
+  "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
   "listing-create.stepNumberLabel": "단계 {stepNumber}",
   "listing-create.whatTypeOfListing": "어떤 종류의 목록을 만들겠습니까?",
   "listing-create.next": "다음",
