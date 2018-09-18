@@ -51,6 +51,8 @@ services:
     environment:
       - NODE_ENV=development
     ports:
+      - "5002:5002"
+      - "8080:8080"
       - "8081:8081" # Tests
       - "8545:8545" # Blockchain
       - "4000:4000" # Apollo server
@@ -61,15 +63,6 @@ services:
       node scripts/build.js serve"
     networks:
       - default
-
-  ipfs:
-    container_name: ipfs
-    image: ipfs/go-ipfs:v0.4.17
-    networks:
-      - default
-    ports:
-      - "5002:5002"
-      - "8080:8080"
 
   origin-messaging-ipfs:
     container_name: origin-messaging-ipfs
