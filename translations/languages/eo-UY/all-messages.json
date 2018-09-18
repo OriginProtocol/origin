@@ -72,6 +72,7 @@
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-card.pending": "Decidota",
   "listing-card.sold": "Elvendita",
+  "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
   "listing-create.stepNumberLabel": "PASO {stepNumber}",
   "listing-create.whatTypeOfListing": "Kian liston vi volas krei?",
   "listing-create.next": "Tuj poste",
