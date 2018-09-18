@@ -18,6 +18,7 @@ import {
   VALUE_TYPE_STRING,
   FILTER_OPERATOR_EQUALS
 } from 'components/search/constants'
+import { LISTINGS_PER_PAGE } from 'components/constants'
 
 class SearchResult extends Component {
   constructor(props) {
@@ -28,10 +29,12 @@ class SearchResult extends Component {
       listingSchema: undefined,
       listingType: undefined,
       listingIds: [],
+      totalNumberOfListings: 0,
       searchError: undefined,
       filters: {},
       maxPrice: 10000,
-      minPrice: 0
+      minPrice: 0,
+      page: 1
     }
 
     // set default prop values for search_query and listing_type
@@ -42,6 +45,13 @@ class SearchResult extends Component {
       false,
       false
     )
+
+    this.handleChangePage = this.handleChangePage.bind(this)
+  }
+
+  handleChangePage(page) {
+    console.log("handleChangePage", page)
+    this.setState({ page: page })
   }
 
   shouldFetchListingSchema() {
@@ -61,7 +71,7 @@ class SearchResult extends Component {
     })
   }
 
-  componentDidUpdate(previousProps) {
+  componentDidUpdate(previousProps, prevState) {
     // exit if query parameters have not changed
     // TODO: also filter states need to be checked here
     if (
@@ -72,7 +82,8 @@ class SearchResult extends Component {
        * this way a new search request is triggered to the backend even
        * if query parameters do not change
        */
-      previousProps.generalSearchId === this.props.generalSearchId
+      previousProps.generalSearchId === this.props.generalSearchId && 
+      prevState.page === this.state.page
     )
       return
 
@@ -180,14 +191,17 @@ class SearchResult extends Component {
       }
 
       const searchResp = await origin.discovery.search(
-        this.props.query,
+        this.props.query || '',
+        LISTINGS_PER_PAGE,
+        this.state.page,
         Object.values(filters).flatMap(
           arrayOfFilters => arrayOfFilters
         )
       )
 
       this.setState({
-        listingIds: searchResp.data.listings.nodes.map(listing => listing.id)
+        listingIds: searchResp.data.listings.nodes.map(listing => listing.id),
+        totalNumberOfListings: searchResp.data.listings.totalNumberOfItems
       })
 
       const [maxPrice, minPrice] = await Promise.all([
@@ -250,7 +264,11 @@ class SearchResult extends Component {
         <div className="container">
           <ListingsGrid
             renderMode="search"
-            searchListingIds={this.state.listingIds}
+            search={{
+              listingIds: this.state.listingIds,
+              listingsLength: this.state.totalNumberOfListings
+            }}
+            handleChangePage={this.handleChangePage}
           />
         </div>
       </Fragment>
