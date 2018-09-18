@@ -1,5 +1,4 @@
 import V00_MarkeplaceAdapter from './v00'
-import V01_MarkeplaceAdapter from './v01'
 import {
   parseListingId,
   parseOfferId,
@@ -17,10 +16,9 @@ import {
 class MarketplaceResolver {
   constructor({ contractService, store }) {
     this.adapters = {
-      '000': new V00_MarkeplaceAdapter({ contractService, store }),
-      '001': new V01_MarkeplaceAdapter({ contractService, store })
+      '000': new V00_MarkeplaceAdapter({ contractService, store })
     }
-    this.versions = ['000', '001']
+    this.versions = ['000']
     this.currentVersion = this.versions[this.versions.length - 1]
     this.currentAdapter = this.adapters[this.currentVersion]
     this.contractService = contractService

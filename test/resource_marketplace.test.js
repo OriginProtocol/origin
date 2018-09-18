@@ -71,7 +71,7 @@ describe('Marketplace Resource', function() {
     })
 
     await marketplace.createListing(listingData)
-    await marketplace.makeOffer('999-001-0', offerData)
+    await marketplace.makeOffer('999-000-0', offerData)
   })
 
   describe('getListingsCount', () => {
@@ -86,8 +86,8 @@ describe('Marketplace Resource', function() {
       await marketplace.createListing(listingData)
       const listings = await marketplace.getListings({ idsOnly: true })
       expect(listings.length).to.equal(2)
-      expect(listings).to.include('999-001-0')
-      expect(listings).to.include('999-001-1')
+      expect(listings).to.include('999-000-0')
+      expect(listings).to.include('999-000-1')
     })
   })
 
@@ -126,18 +126,18 @@ describe('Marketplace Resource', function() {
 
   describe('getOffers: idsOnly=true', () => {
     it('should get offer ids', async () => {
-      await marketplace.makeOffer('999-001-0', offerData)
-      const offers = await marketplace.getOffers('999-001-0', { idsOnly: true })
+      await marketplace.makeOffer('999-000-0', offerData)
+      const offers = await marketplace.getOffers('999-000-0', { idsOnly: true })
       expect(offers.length).to.equal(2)
-      expect(offers[0]).to.equal('999-001-0-0')
-      expect(offers[1]).to.equal('999-001-0-1')
+      expect(offers[0]).to.equal('999-000-0-0')
+      expect(offers[1]).to.equal('999-000-0-1')
     })
   })
 
   describe('getOffers', () => {
     it('should get offers with data', async () => {
-      await marketplace.makeOffer('999-001-0', offerData)
-      const offers = await marketplace.getOffers('999-001-0')
+      await marketplace.makeOffer('999-000-0', offerData)
+      const offers = await marketplace.getOffers('999-000-0')
       expect(offers.length).to.equal(2)
       expect(offers[0].status).to.equal('created')
       expect(offers[0].unitsPurchased).to.exist
@@ -146,8 +146,8 @@ describe('Marketplace Resource', function() {
     })
 
     it('should exclude invalid offers', async () => {
-      await marketplace.makeOffer('999-001-0', invalidPriceOffer)
-      const offers = await marketplace.getOffers('999-001-0')
+      await marketplace.makeOffer('999-000-0', invalidPriceOffer)
+      const offers = await marketplace.getOffers('999-000-0')
       expect(offers.length).to.equal(1)
       expect(offers[0].status).to.equal('created')
       expect(offers[0].unitsPurchased).to.exist
@@ -156,17 +156,17 @@ describe('Marketplace Resource', function() {
 
   describe('getOffer', () => {
     it('should get offer data', async () => {
-      const offer = await marketplace.getOffer('999-001-0-0')
+      const offer = await marketplace.getOffer('999-000-0-0')
       expect(offer.status).to.equal('created')
       expect(offer.unitsPurchased).to.exist
     })
 
     it('should throw an error if currency does not match listing', async () => {
-      await marketplace.makeOffer('999-001-0', originTokenOffer)
+      await marketplace.makeOffer('999-000-0', originTokenOffer)
       let errorThrown = false
       let errorMessage
       try {
-        await marketplace.getOffer('999-001-0-1')
+        await marketplace.getOffer('999-000-0-1')
       } catch(e) {
         errorThrown = true
         errorMessage = String(e)
@@ -177,11 +177,11 @@ describe('Marketplace Resource', function() {
 
 
     it('should throw an error if price is not sufficient', async () => {
-      await marketplace.makeOffer('999-001-0', invalidPriceOffer)
+      await marketplace.makeOffer('999-000-0', invalidPriceOffer)
       let errorThrown = false
       let errorMessage
       try {
-        await marketplace.getOffer('999-001-0-1')
+        await marketplace.getOffer('999-000-0-1')
       } catch(e) {
         errorThrown = true
         errorMessage = String(e)
@@ -192,11 +192,11 @@ describe('Marketplace Resource', function() {
 
     it('should throw an error if commission is not sufficient', async () => {
       await marketplace.createListing(commissionListing)
-      await marketplace.makeOffer('999-001-1', invalidCommissionOffer)
+      await marketplace.makeOffer('999-000-1', invalidCommissionOffer)
       let errorThrown = false
       let errorMessage
       try {
-        await marketplace.getOffer('999-001-1-0')
+        await marketplace.getOffer('999-000-1-0')
       } catch(e) {
         errorThrown = true
         errorMessage = String(e)
@@ -211,75 +211,75 @@ describe('Marketplace Resource', function() {
       const anotherOffer = Object.assign({}, offerData, {
         totalPrice: { currency: 'ETH', amount: '0.033' }
       })
-      await marketplace.makeOffer('999-001-0', anotherOffer)
-      const offer = await marketplace.getOffer('999-001-0-1')
+      await marketplace.makeOffer('999-000-0', anotherOffer)
+      const offer = await marketplace.getOffer('999-000-0-1')
       expect(offer.totalPrice.amount).to.equal('0.033')
     })
 
     it('should make an offer in ERC20', async () => {
       await marketplace.createListing(originTokenListing)
-      await marketplace.makeOffer('999-001-1', originTokenOffer)
-      const offer = await marketplace.getOffer('999-001-1-0')
+      await marketplace.makeOffer('999-000-1', originTokenOffer)
+      const offer = await marketplace.getOffer('999-000-1-0')
       expect(offer.totalPrice.amount).to.equal('1')
       expect(offer.totalPrice.currency).to.equal('OGN')
     })
 
     it('should make an offer with a commission', async () => {
       await marketplace.createListing(commissionListing)
-      await marketplace.makeOffer('999-001-1', commissionOffer)
-      const offer = await marketplace.getOffer('999-001-1-0')
+      await marketplace.makeOffer('999-000-1', commissionOffer)
+      const offer = await marketplace.getOffer('999-000-1-0')
       expect(offer).to.be.ok
     })
   })
 
   describe('withdrawOffer', () => {
     it('should delete an offer', async () => {
-      let offer = await marketplace.getOffer('999-001-0-0')
+      let offer = await marketplace.getOffer('999-000-0-0')
       expect(offer.status).to.equal('created')
       await marketplace.withdrawOffer(offer.id)
-      offer = await marketplace.getOffer('999-001-0-0')
+      offer = await marketplace.getOffer('999-000-0-0')
       expect(offer.status).to.equal('withdrawn')
     })
   })
 
   describe('acceptOffer', () => {
     it('should changed the status to accepted', async () => {
-      let offer = await marketplace.getOffer('999-001-0-0')
+      let offer = await marketplace.getOffer('999-000-0-0')
       expect(offer.status).to.equal('created')
-      await marketplace.acceptOffer('999-001-0-0')
-      offer = await marketplace.getOffer('999-001-0-0')
+      await marketplace.acceptOffer('999-000-0-0')
+      offer = await marketplace.getOffer('999-000-0-0')
       expect(offer.status).to.equal('accepted')
     })
   })
 
   describe('finalizeOffer', () => {
     it('should changed the status to finalized', async () => {
-      let offer = await marketplace.getOffer('999-001-0-0')
+      let offer = await marketplace.getOffer('999-000-0-0')
       expect(offer.status).to.equal('created')
-      await marketplace.acceptOffer('999-001-0-0')
-      await marketplace.finalizeOffer('999-001-0-0', reviewData)
-      offer = await marketplace.getOffer('999-001-0-0')
+      await marketplace.acceptOffer('999-000-0-0')
+      await marketplace.finalizeOffer('999-000-0-0', reviewData)
+      offer = await marketplace.getOffer('999-000-0-0')
       expect(offer.status).to.equal('finalized')
     })
   })
 
   describe('sellerReview', () => {
     it('should changed the status to sellerReviewed', async () => {
-      let offer = await marketplace.getOffer('999-001-0-0')
+      let offer = await marketplace.getOffer('999-000-0-0')
       expect(offer.status).to.equal('created')
-      await marketplace.acceptOffer('999-001-0-0')
-      await marketplace.finalizeOffer('999-001-0-0', reviewData)
+      await marketplace.acceptOffer('999-000-0-0')
+      await marketplace.finalizeOffer('999-000-0-0', reviewData)
       await marketplace.addData(0, offer.id, reviewData)
-      offer = await marketplace.getOffer('999-001-0-0')
+      offer = await marketplace.getOffer('999-000-0-0')
       expect(offer.status).to.equal('sellerReviewed')
     })
   })
 
   describe('getListingReviews', () => {
     it('should get reviews', async () => {
-      await marketplace.acceptOffer('999-001-0-0')
-      await marketplace.finalizeOffer('999-001-0-0', reviewData)
-      const reviews = await marketplace.getListingReviews('999-001-0')
+      await marketplace.acceptOffer('999-000-0-0')
+      await marketplace.finalizeOffer('999-000-0-0', reviewData)
+      const reviews = await marketplace.getListingReviews('999-000-0')
       expect(reviews.length).to.equal(1)
       expect(reviews[0].rating).to.equal(3)
       expect(reviews[0].text).to.equal('Good stuff')
@@ -293,13 +293,13 @@ describe('Marketplace Resource', function() {
       expect(notifications[0].type).to.equal('seller_listing_purchased')
       expect(notifications[0].status).to.equal('unread')
 
-      await marketplace.acceptOffer('999-001-0-0')
+      await marketplace.acceptOffer('999-000-0-0')
       notifications = await marketplace.getNotifications()
       expect(notifications.length).to.equal(1)
       expect(notifications[0].type).to.equal('buyer_listing_shipped')
       expect(notifications[0].status).to.equal('unread')
 
-      await marketplace.finalizeOffer('999-001-0-0', reviewData)
+      await marketplace.finalizeOffer('999-000-0-0', reviewData)
       notifications = await marketplace.getNotifications()
       expect(notifications.length).to.equal(1)
       expect(notifications[0].type).to.equal('seller_review_received')
@@ -321,11 +321,11 @@ describe('Marketplace Resource', function() {
 
   describe('initiateDispute', () => {
     it('should put an offer into "Disputed" state', async () => {
-      await marketplace.acceptOffer('999-001-0-0')
-      let offer = await marketplace.getOffer('999-001-0-0')
+      await marketplace.acceptOffer('999-000-0-0')
+      let offer = await marketplace.getOffer('999-000-0-0')
       expect(offer.status).to.equal('accepted')
-      await marketplace.initiateDispute('999-001-0-0')
-      offer = await marketplace.getOffer('999-001-0-0')
+      await marketplace.initiateDispute('999-000-0-0')
+      offer = await marketplace.getOffer('999-000-0-0')
       expect(offer.status).to.equal('disputed')
     })
   })
@@ -336,21 +336,21 @@ describe('Marketplace Resource', function() {
       const anotherOffer = Object.assign({}, offerData, {
         arbitrator: accounts[0]
       })
-      await marketplace.makeOffer('999-001-0', anotherOffer)
-      let offer = await marketplace.getOffer('999-001-0-1')
+      await marketplace.makeOffer('999-000-0', anotherOffer)
+      let offer = await marketplace.getOffer('999-000-0-1')
       expect(offer.status).to.equal('created')
 
-      await marketplace.acceptOffer('999-001-0-1')
-      offer = await marketplace.getOffer('999-001-0-1')
+      await marketplace.acceptOffer('999-000-0-1')
+      offer = await marketplace.getOffer('999-000-0-1')
       expect(offer.status).to.equal('accepted')
 
-      await marketplace.initiateDispute('999-001-0-1')
-      offer = await marketplace.getOffer('999-001-0-1')
+      await marketplace.initiateDispute('999-000-0-1')
+      offer = await marketplace.getOffer('999-000-0-1')
       expect(offer.status).to.equal('disputed')
 
       const offerPrice = Web3.utils.toWei(offer.totalPrice.amount)
-      await marketplace.resolveDispute('999-001-0-1', {}, 1, offerPrice)
-      offer = await marketplace.getOffer('999-001-0-1')
+      await marketplace.resolveDispute('999-000-0-1', {}, 1, offerPrice)
+      offer = await marketplace.getOffer('999-000-0-1')
       expect(offer.status).to.be.equal('ruled')
     })
   })

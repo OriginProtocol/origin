@@ -73,39 +73,83 @@ contract V00_Marketplace is Ownable {
   }
 
   // @dev Seller creates listing
-  function createListing(
+  function createListing(bytes32 _ipfsHash, uint _deposit, address _arbitrator)
+    public
+  {
+    _createListing(msg.sender, _ipfsHash, _deposit, _arbitrator);
+  }
+
+  // @dev Can only be called by token
+  function createListingWithSender(
+    address _seller,
+    bytes32 _ipfsHash,
+    uint _deposit,
+    address _arbitrator
+  )
+    public returns (bool)
+  {
+    require(msg.sender == address(tokenAddr));
+    _createListing(_seller, _ipfsHash, _deposit, _arbitrator);
+    return true;
+  }
+
+  // Private
+  function _createListing(
+    address _seller,
     bytes32 _ipfsHash,  // IPFS JSON with details, pricing, availability
     uint _deposit,      // Deposit in Origin Token
     address _arbitrator // Address of listing arbitrator
   )
-    public
+    private
   {
     /* require(_deposit > 0); // Listings must deposit some amount of Origin Token */
     require(_arbitrator != 0x0); // Must specify an arbitrator
 
     listings.push(Listing({
-      seller: msg.sender,
+      seller: _seller,
       deposit: _deposit,
       arbitrator: _arbitrator
     }));
 
     if (_deposit > 0) {
-      tokenAddr.transferFrom(msg.sender, this, _deposit); // Transfer Origin Token
+      tokenAddr.transferFrom(_seller, this, _deposit); // Transfer Origin Token
     }
-    emit ListingCreated(msg.sender, listings.length - 1, _ipfsHash);
+    emit ListingCreated(_seller, listings.length - 1, _ipfsHash);
   }
 
   // @dev Seller updates listing
   function updateListing(
     uint listingID,
-    bytes32 _ipfsHash,       // Updated IPFS hash
-    uint _additionalDeposit  // Additional deposit to add
+    bytes32 _ipfsHash,
+    uint _additionalDeposit
   ) public {
+    _updateListing(msg.sender, listingID, _ipfsHash, _additionalDeposit);
+  }
+
+  function updateListingWithSender(
+    address _seller,
+    uint listingID,
+    bytes32 _ipfsHash,
+    uint _additionalDeposit
+  )
+    public returns (bool)
+  {
+    require(msg.sender == address(tokenAddr)); // Only Token contract can call this method
+    _updateListing(_seller, listingID, _ipfsHash, _additionalDeposit);
+    return true;
+  }
+
+  function _updateListing(
+    address _seller,
+    uint listingID,
+    bytes32 _ipfsHash,      // Updated IPFS hash
+    uint _additionalDeposit // Additional deposit to add
+  ) private {
     Listing storage listing = listings[listingID];
-    require(listing.seller == msg.sender);
+    require(listing.seller == _seller);
 
     if (_additionalDeposit > 0) {
-      tokenAddr.transferFrom(msg.sender, this, _additionalDeposit);
+      tokenAddr.transferFrom(_seller, this, _additionalDeposit);
       listing.deposit += _additionalDeposit;
     }
 
@@ -243,9 +287,11 @@ contract V00_Marketplace is Ownable {
     delete offers[listingID][offerID];
   }
 
-  // @dev Buyer can dispute transaction during finalization window
+  // @dev Buyer or seller can dispute transaction during finalization window
   function dispute(uint listingID, uint offerID, bytes32 _ipfsHash) public {
+    Listing storage listing = listings[listingID];
     Offer storage offer = offers[listingID][offerID];
+    require(msg.sender == offer.buyer || msg.sender == listing.seller);
     require(offer.status == 2); // Offer must be in 'Accepted' state
     require(now <= offer.finalizes); // Must be before agreed finalization window
     offer.status = 3; // Set status to "Disputed"
@@ -279,7 +325,7 @@ contract V00_Marketplace is Ownable {
     delete offers[listingID][offerID];
   }
 
-  // @dev Update the refund amount
+  // @dev Sets the amount that a seller wants to refund to a buyer.
   function updateRefund(uint listingID, uint offerID, uint _refund, bytes32 _ipfsHash) public {
     Offer storage offer = offers[listingID][offerID];
     Listing storage listing = listings[listingID];
@@ -290,7 +336,7 @@ contract V00_Marketplace is Ownable {
     emit OfferData(msg.sender, listingID, offerID, _ipfsHash);
   }
 
-  // @dev Refunds buyer in ETH or ERC20
+  // @dev Refunds buyer in ETH or ERC20 - used by 1) executeRuling() and 2) to allow a seller to refund a purchase
   function refundBuyer(uint listingID, uint offerID) private {
     Offer storage offer = offers[listingID][offerID];
     if (address(offer.currency) == 0x0) {

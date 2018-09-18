@@ -80,7 +80,7 @@ const getOfferDetails = async log => {
   return {
     listing: listing,
     offer: offer,
-    seller: seller, 
+    seller: seller,
     buyer: buyer
   }
 }
@@ -102,7 +102,7 @@ const LISTEN_RULES = {
     OfferFinalized: getOfferDetails,
     OfferData: getOfferDetails
   },
-  V01_Marketplace: {
+  V00_Marketplace: {
     ListingCreated: getListingDetails,
     ListingUpdated: getListingDetails,
     ListingWithdrawn: getListingDetails,

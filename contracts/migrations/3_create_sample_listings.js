@@ -1,5 +1,4 @@
 const V00_Marketplace = artifacts.require('./V00_Marketplace.sol')
-const V01_Marketplace = artifacts.require('./V01_Marketplace.sol')
 
 module.exports = function(deployer, network) {
   return deployer.then(() => {
@@ -29,7 +28,7 @@ async function deployContracts(deployer) {
   const Seller = accounts[1]
 
   const marketplace00 = await V00_Marketplace.deployed()
-  const marketplace01 = await V01_Marketplace.deployed()
+
   await createListing(
     marketplace00,
     '0xd3d6c53a86e51aa5c134642a138689c9d5e9c840320aa3c9f40974efed81ac85',
@@ -46,12 +45,12 @@ async function deployContracts(deployer) {
     Seller
   )
   await createListing(
-    marketplace01,
+    marketplace00,
     '0x0c95bc42292714b6e2b017ad7fa379272fdfa15c40c0845beff40a1e5e590d3d',
     Seller
   )
   await createListing(
-    marketplace01,
+    marketplace00,
     '0xf3236837f5c7c940b2218cc36912784a36731a66608b2b0351e906ea175b2bea',
     Seller
   )

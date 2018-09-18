@@ -22,12 +22,6 @@ export default async function contractServiceHelper(web3) {
     { from: accounts[0], gas: 4000000 }
   )
 
-  const v01_marketplace = await dummyContractService.deploy(
-    dummyContractService.contracts['V01_Marketplace'],
-    [originToken.options.address],
-    { from: accounts[0], gas: 4000000 }
-  )
-
   const decimals = await dummyContractService.call(
     'OriginToken',
     'decimals'
@@ -38,21 +32,18 @@ export default async function contractServiceHelper(web3) {
     await dummyContractService.call(
       'OriginToken',
       'approve',
-      [ v01_marketplace.contractAddress, String(100 * 10**decimals) ],
+      [ v00_marketplace.contractAddress, String(100 * 10**decimals) ],
       { from: accounts[i] }
     )
   }
 
-  await originToken.methods.addCallSpenderWhitelist(v01_marketplace.contractAddress).send({ from: accounts[0], gas: 4000000 })
+  await originToken.methods.addCallSpenderWhitelist(v00_marketplace.contractAddress).send({ from: accounts[0], gas: 4000000 })
 
   return new ContractService({
     web3,
     contractAddresses: {
       V00_Marketplace: {
         999: { address: v00_marketplace.contractAddress }
-      },
-      V01_Marketplace: {
-        999: { address: v01_marketplace.contractAddress }
       }
     },
     currencies: { OGN: { address: originToken.options.address, decimals } }

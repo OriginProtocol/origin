@@ -7,7 +7,6 @@ import OriginIdentityContract from './../../contracts/build/contracts/OriginIden
 import OriginTokenContract from './../../contracts/build/contracts/OriginToken.json'
 
 import V00_MarketplaceContract from './../../contracts/build/contracts/V00_Marketplace.json'
-import V01_MarketplaceContract from './../../contracts/build/contracts/V01_Marketplace.json'
 
 import BigNumber from 'bignumber.js'
 import bs58 from 'bs58'
@@ -26,8 +25,7 @@ class ContractService {
     this.web3 = new Web3(externalWeb3.currentProvider)
 
     this.marketplaceContracts = {
-      V00_Marketplace: V00_MarketplaceContract,
-      V01_Marketplace: V01_MarketplaceContract
+      V00_Marketplace: V00_MarketplaceContract
     }
 
     const contracts = Object.assign(
