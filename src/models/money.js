@@ -7,7 +7,7 @@
 class Money {
   constructor({ amount, currency }) {
     this.currency = currency
-    this.amount = amount
+    this.amount = String(amount)
   }
 }
 
