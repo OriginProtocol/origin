@@ -1,7 +1,7 @@
 {
-  "arbitration.confirmHeading": "Is there a problem?",
-  "arbitration.confirmText1": "Are you sure you want to report a problem?",
-  "arbitration.confirmText2": "This will start the conflict resolution process,\n            someone from Origin will be notified and all chat history will be made\n            public to a moderator.",
+  "arbitration.confirmHeading": "ఏదైన నమస్య ఉందా?",
+  "arbitration.confirmText1": "మీరు ఖచ్చితంగా సమస్యను నివేదించాలనుకుంటున్నారా?",
+  "arbitration.confirmText2": "ఈ సంఘర్షణల ప్రక్రియ ప్రారంభమౌతుంది,\n            నివాసస్థానం నుండి ఎవరైనా తెలియజేయబడుతుంది మరియు అన్ని చాట్ చరిత్ర చేయబడుతుంది\n            పరిశీలకునిగా ప్రజా.",
   "arbitration.confirmCancel": "అయ్యో, వేచి లేదు ...",
   "arbitration.confirmSubmit": "Yes, please",
   "arbitration.issueHeading": "Describe your problem below",
