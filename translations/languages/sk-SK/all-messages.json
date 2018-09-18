@@ -72,6 +72,7 @@
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-card.pending": "nevykonaného",
   "listing-card.sold": "Vypredané",
+  "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
   "listing-create.stepNumberLabel": "KROK {stepNumber}",
   "listing-create.whatTypeOfListing": "Aký typ záznamu chcete vytvoriť?",
   "listing-create.next": "Ďalšie",
