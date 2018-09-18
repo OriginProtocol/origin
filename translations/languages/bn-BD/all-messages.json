@@ -72,6 +72,7 @@
   "listing-card-prices.ethereumCurrencyAbbrev": "eth",
   "listing-card.pending": "মুলতুবী",
   "listing-card.sold": "বিক্রি শেষ",
+  "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
   "listing-create.stepNumberLabel": "STEP {stepNumber}",
   "listing-create.whatTypeOfListing": "আপনি কি ধরনের তালিকা তৈরি করতে চান?",
   "listing-create.next": "পরবর্তী",
