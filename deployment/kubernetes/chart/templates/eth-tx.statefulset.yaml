@@ -71,7 +71,6 @@ spec:
             --rpcport 8545
             --rpcvhosts=\"*\"
             --ethstats=${HOSTNAME}:${ETHSTATS_SECRET}@${ETHSTATS_SERVICE}
-            --rinkeby
             --cache 2048
             --syncmode fast"
           {{- end }}
