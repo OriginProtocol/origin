@@ -15,13 +15,17 @@ const reviewData = Object.assign({}, reviewValid)
 const originTokenListing = Object.assign({}, listingData, {
   price: { currency: 'OGN', amount: '1' }
 })
-
+const commissionListing = Object.assign({}, listingData, {
+  commission: { currency: 'OGN', amount: '2' }
+})
 const originTokenOffer = Object.assign({}, offerData, {
   totalPrice: { currency: 'OGN', amount: '1' }
 })
-
 const invalidPriceOffer = Object.assign({}, offerData, {
   totalPrice: { currency: 'ETH', amount: '0.032' }
+})
+const invalidCommissionOffer = Object.assign({}, offerData, {
+  commission: { currency: 'OGN', amount: '1' }
 })
 
 class StoreMock {
@@ -181,6 +185,21 @@ describe('Marketplace Resource', function() {
       }
       expect(errorThrown).to.be.true
       expect(errorMessage).to.equal('Error: Invalid offer: insufficient offer amount for listing')
+    })
+
+    it('should throw an error if commission is not sufficient', async () => {
+      await marketplace.createListing(commissionListing)
+      await marketplace.makeOffer('999-001-1', invalidCommissionOffer)
+      let errorThrown = false
+      let errorMessage
+      try {
+        await marketplace.getOffer('999-001-1-0')
+      } catch(e) {
+        errorThrown = true
+        errorMessage = String(e)
+      }
+      expect(errorThrown).to.be.true
+      expect(errorMessage).to.equal('Error: Invalid offer: insufficient commission amount for listing')
     })
   })
 
