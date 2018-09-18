@@ -72,6 +72,7 @@
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-card.pending": "Σε εκκρεμότητα",
   "listing-card.sold": "Sold Out",
+  "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
   "listing-create.stepNumberLabel": "ΒΉΜΑ {stepNumber}",
   "listing-create.whatTypeOfListing": "Τι είδους καταχώρηση θέλετε να δημιουργήσετε;",
   "listing-create.next": "Επόμενη",
