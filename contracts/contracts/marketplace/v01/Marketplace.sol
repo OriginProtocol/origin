@@ -120,14 +120,36 @@ contract V01_Marketplace is Ownable {
   // @dev Seller updates listing
   function updateListing(
     uint listingID,
-    bytes32 _ipfsHash,       // Updated IPFS hash
-    uint _additionalDeposit  // Additional deposit to add
+    bytes32 _ipfsHash,
+    uint _additionalDeposit
   ) public {
+    _updateListing(msg.sender, listingID, _ipfsHash, _additionalDeposit);
+  }
+
+  function updateListingWithSender(
+    address _seller,
+    uint listingID,
+    bytes32 _ipfsHash,
+    uint _additionalDeposit
+  )
+    public returns (bool)
+  {
+    require(msg.sender == address(tokenAddr)); // Only Token contract can call this method
+    _updateListing(_seller, listingID, _ipfsHash, _additionalDeposit);
+    return true;
+  }
+
+  function _updateListing(
+    address _seller,
+    uint listingID,
+    bytes32 _ipfsHash,      // Updated IPFS hash
+    uint _additionalDeposit // Additional deposit to add
+  ) private {
     Listing storage listing = listings[listingID];
-    require(listing.seller == msg.sender);
+    require(listing.seller == _seller);
 
     if (_additionalDeposit > 0) {
-      tokenAddr.transferFrom(msg.sender, this, _additionalDeposit);
+      tokenAddr.transferFrom(_seller, this, _additionalDeposit);
       listing.deposit += _additionalDeposit;
     }
 

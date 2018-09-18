@@ -45,10 +45,11 @@ describe('Marketplace.sol', async function() {
     MarketArbitrator,
     ArbitratorAddr,
     helpers,
+    decodeEvent,
     gasEstimate
 
   before(async function() {
-    ({ deploy, accounts, web3 } = await helper(`${__dirname}/..`))
+    ({ deploy, accounts, web3, decodeEvent } = await helper(`${__dirname}/..`))
 
     Owner = accounts[0]
     Seller = accounts[1]
@@ -106,6 +107,9 @@ describe('Marketplace.sol', async function() {
     await OriginToken.methods.transfer(Seller2, 400).send()
     await OriginToken.methods.transfer(SellerIdentity._address, 400).send()
     await DaiStableCoin.methods.transfer(Buyer, 400).send()
+    await OriginToken.methods
+      .addCallSpenderWhitelist(Marketplace._address)
+      .send({ from: Owner })
 
     helpers = marketplaceHelpers({
       Marketplace,
@@ -310,7 +314,9 @@ describe('Marketplace.sol', async function() {
       })
 
       it('should allow an offer to be finalized', async function() {
-        const balanceBefore = await DaiStableCoin.methods.balanceOf(Seller).call()
+        const balanceBefore = await DaiStableCoin.methods
+          .balanceOf(Seller)
+          .call()
 
         const result = await Marketplace.methods
           .finalize(listingID, 0, IpfsHash)
@@ -318,7 +324,9 @@ describe('Marketplace.sol', async function() {
           .once('receipt', trackGas('Finalize Offer'))
         assert(result.events.OfferFinalized)
 
-        const balanceAfter = await DaiStableCoin.methods.balanceOf(Seller).call()
+        const balanceAfter = await DaiStableCoin.methods
+          .balanceOf(Seller)
+          .call()
         assert.equal(Number(balanceAfter), Number(balanceBefore) + 10)
       })
     })
@@ -337,7 +345,9 @@ describe('Marketplace.sol', async function() {
       })
 
       it('should allow an offer to be withdrawn', async function() {
-        const balanceBefore = await DaiStableCoin.methods.balanceOf(Buyer).call()
+        const balanceBefore = await DaiStableCoin.methods
+          .balanceOf(Buyer)
+          .call()
 
         const result = await Marketplace.methods
           .withdrawOffer(listingID, 1, IpfsHash)
@@ -376,7 +386,7 @@ describe('Marketplace.sol', async function() {
     // When comparing Eth, take into account gas price
     function assertBN(before, expr, after) {
       const [operator, value, currency] = expr.split(' ')
-      if (operator !== 'add') throw(new Error('Unknown operator'))
+      if (operator !== 'add') throw new Error('Unknown operator')
       const wei = web3.utils.toBN(web3.utils.toWei(value, currency))
       const low = before.add(wei).sub(gasEstimate)
       const high = before.add(wei).add(gasEstimate)
@@ -385,28 +395,66 @@ describe('Marketplace.sol', async function() {
 
     describe('dispute without refund (Eth)', function() {
       it('should resolve in favor of buyer (no commission)', async function() {
-        ({ listingID, offerID, balance: balanceBefore } = await helpers.disputedOffer({}));
-        ({ balance: balanceAfter } = await helpers.giveRuling({ listingID, offerID, ruling: 1 }))
+        ({
+          listingID,
+          offerID,
+          balance: balanceBefore
+        } = await helpers.disputedOffer({}))
+        ;({ balance: balanceAfter } = await helpers.giveRuling({
+          listingID,
+          offerID,
+          ruling: 1
+        }))
         assertBN(balanceBefore.eth, 'add 0.1 ether', balanceAfter.eth)
         assert(balanceAfter.ogn.eq(balanceBefore.ogn))
       })
       it('should resolve in favor of buyer (pay commission)', async function() {
-        ({ listingID, offerID, balance: balanceBefore } = await helpers.disputedOffer({}));
-        ({ balance: balanceAfter } = await helpers.giveRuling({ listingID, offerID, ruling: 3 }))
+        ({
+          listingID,
+          offerID,
+          balance: balanceBefore
+        } = await helpers.disputedOffer({}))
+        ;({ balance: balanceAfter } = await helpers.giveRuling({
+          listingID,
+          offerID,
+          ruling: 3
+        }))
         assertBN(balanceBefore.eth, 'add 0.1 ether', balanceAfter.eth)
-        assert(balanceAfter.ogn.eq(balanceBefore.ogn.add(new web3.utils.BN('2'))))
+        assert(
+          balanceAfter.ogn.eq(balanceBefore.ogn.add(new web3.utils.BN('2')))
+        )
       })
       it('should resolve in favor of seller (no commission)', async function() {
-        ({ listingID, offerID, balance: balanceBefore } = await helpers.disputedOffer({ party: Seller }));
-        ({ balance: balanceAfter } = await helpers.giveRuling({ listingID, offerID, ruling: 0, party: Seller }))
+        ({
+          listingID,
+          offerID,
+          balance: balanceBefore
+        } = await helpers.disputedOffer({ party: Seller }))
+        ;({ balance: balanceAfter } = await helpers.giveRuling({
+          listingID,
+          offerID,
+          ruling: 0,
+          party: Seller
+        }))
         assertBN(balanceBefore.eth, 'add 0.1 ether', balanceAfter.eth)
         assert(balanceAfter.ogn.eq(balanceBefore.ogn))
       })
       it('should resolve in favor of seller (pay commission)', async function() {
-        ({ listingID, offerID, balance: balanceBefore } = await helpers.disputedOffer({ party: Seller }));
-        ({ balance: balanceAfter } = await helpers.giveRuling({ listingID, offerID, ruling: 2, party: Seller }))
+        ({
+          listingID,
+          offerID,
+          balance: balanceBefore
+        } = await helpers.disputedOffer({ party: Seller }))
+        ;({ balance: balanceAfter } = await helpers.giveRuling({
+          listingID,
+          offerID,
+          ruling: 2,
+          party: Seller
+        }))
         assertBN(balanceBefore.eth, 'add 0.1 ether', balanceAfter.eth)
-        assert(balanceAfter.ogn.eq(balanceBefore.ogn.add(new web3.utils.BN('2'))))
+        assert(
+          balanceAfter.ogn.eq(balanceBefore.ogn.add(new web3.utils.BN('2')))
+        )
       })
     })
   })
@@ -518,11 +566,9 @@ describe('Marketplace.sol', async function() {
   })
 
   describe('Approve and Call', function() {
-    it('should allow a listing to be created', async function() {
-      await OriginToken.methods
-        .addCallSpenderWhitelist(Marketplace._address)
-        .send({ from: Owner })
+    let listingID
 
+    it('should allow a listing to be created', async function() {
       const fnSig = web3.eth.abi.encodeFunctionSignature(
         'createListingWithSender(address,bytes32,uint256,address)'
       )
@@ -531,16 +577,44 @@ describe('Marketplace.sol', async function() {
         [IpfsHash, 5, ArbitratorAddr]
       )
 
-      const balance_pre = await OriginToken.methods.balanceOf(Seller2).call({from:Seller2})
+      const balance_pre = await OriginToken.methods
+        .balanceOf(Seller2)
+        .call({ from: Seller2 })
 
-      await OriginToken.methods
+      const res = await OriginToken.methods
         .approveAndCallWithSender(Marketplace._address, 5, fnSig, params)
         .send({ from: Seller2 })
         .once('receipt', trackGas('Create Listing via call'))
 
-      const balance_post = await OriginToken.methods.balanceOf(Seller2).call({from:Seller2})
-      assert.equal(Number(balance_pre), Number(balance_post) + 5)
+      listingID = decodeEvent(res.events['0'].raw, Marketplace).listingID
 
+      const balance_post = await OriginToken.methods
+        .balanceOf(Seller2)
+        .call({ from: Seller2 })
+      assert.equal(Number(balance_pre), Number(balance_post) + 5)
+    })
+
+    it('should allow more deposit to be added to a listing', async function() {
+      const fnSig = web3.eth.abi.encodeFunctionSignature(
+        'updateListingWithSender(address,uint256,bytes32,uint256)'
+      )
+      const params = web3.eth.abi.encodeParameters(
+        ['uint256', 'bytes32', 'uint256'],
+        [listingID, IpfsHash, 5]
+      )
+
+      const balance_pre = await OriginToken.methods
+        .balanceOf(Seller2)
+        .call({ from: Seller2 })
+
+      await OriginToken.methods
+        .approveAndCallWithSender(Marketplace._address, 5, fnSig, params)
+        .send({ from: Seller2 })
+
+      const balance_post = await OriginToken.methods
+        .balanceOf(Seller2)
+        .call({ from: Seller2 })
+      assert.equal(Number(balance_pre), Number(balance_post) + 5)
     })
   })
 
@@ -548,14 +622,13 @@ describe('Marketplace.sol', async function() {
     it('should allow the contract owner to set the token address', async function() {
       try {
         await Marketplace.methods.setTokenAddr(ZERO_ADDRESS).send()
-        assert.equal(
-          await Marketplace.methods.tokenAddr().call(),
-          ZERO_ADDRESS)
+        assert.equal(await Marketplace.methods.tokenAddr().call(), ZERO_ADDRESS)
       } finally {
         await Marketplace.methods.setTokenAddr(OriginToken._address).send()
         assert.equal(
           await Marketplace.methods.tokenAddr().call(),
-          OriginToken._address)
+          OriginToken._address
+        )
       }
     })
 
