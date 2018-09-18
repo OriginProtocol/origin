@@ -5,5 +5,9 @@
   "totalPrice": {
     "currency": "ETH",
     "amount": "0.033"
+  },
+  "commission": {
+    "currency": "OGN",
+    "amount": "0"
   }
 }

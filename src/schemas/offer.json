@@ -45,14 +45,10 @@
       "properties": {
         "unitsPurchased": {
           "type": "integer"
-        },
-        "totalPrice": {
-          "$ref": "#/definitions/money"
         }
       },
       "required": [
-        "unitsPurchased",
-        "totalPrice"
+        "unitsPurchased"
       ]
     },
     "fractionalOffer": {
@@ -63,14 +59,10 @@
           "items": {
             "$ref": "#/definitions/timeSlot"
           }
-        },
-        "totalPrice": {
-          "$ref": "#/definitions/money"
         }
       },
       "required": [
-        "slots",
-        "totalPrice"
+        "slots"
       ]
     }
   },
@@ -85,8 +77,11 @@
         "fractional"
       ]
     },
-    "unitsPurchased": {
-      "type": "number"
+    "totalPrice": {
+      "$ref": "#/definitions/money"
+    },
+    "commission": {
+      "$ref": "#/definitions/money"
     }
   },
   "oneOf": [
@@ -100,6 +95,7 @@
   "required": [
     "schemaId",
     "listingType",
-    "unitsPurchased"
+    "totalPrice",
+    "commission"
   ]
 }

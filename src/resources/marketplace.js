@@ -111,14 +111,8 @@ class Marketplace {
       const listing = await this.getListing(listingId)
 
       const listingCurrency = listing.price && listing.price.currency
-      let listingPrice = listing.price && listing.price.amount
-      if (listingCurrency === 'ETH') {
-        listingPrice = this.contractService.web3.utils.toWei(
-          listingPrice,
-          'ether'
-        )
-      }
-      const listingCommision = listing.commission && listing.commission.amount
+      const listingPrice = this.contractService.moneyToUnits(listing.price)
+      const listingCommision = this.contractService.moneyToUnits(listing.commission)
       const currency = this.contractService.currencies[listingCurrency]
       const currencyAddress = currency && currency.address
 
@@ -185,6 +179,7 @@ class Marketplace {
    * @return {Promise<{listingId, offerId, ...transactionReceipt}>}
    */
   async makeOffer(listingId, offerData = {}, confirmationCallback) {
+    // TODO: nest offerData.affiliate, offerData.arbitrator, offerData.finalizes under an "_untrustworthy" key
     // Validate and save the data to IPFS.
     const ipfsHash = await this.ipfsDataStore.save(OFFER_DATA_TYPE, offerData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)

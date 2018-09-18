@@ -1,6 +1,7 @@
 import { expect } from 'chai'
 import ContractService from '../src/services/contract-service'
 import { ipfsHashes } from './fixtures'
+import Money from '../src/models/money'
 import Web3 from 'web3'
 
 const methodNames = ['getBytes32FromIpfsHash', 'getIpfsHashFromBytes32']
@@ -13,7 +14,13 @@ describe('ContractService', function() {
   before(async () => {
     const provider = new Web3.providers.HttpProvider('http://localhost:8545')
     const web3 = new Web3(provider)
-    contractService = new ContractService({ web3 })
+    contractService = new ContractService({
+      web3,
+      currencies: {
+        FOO: { address: '0x1234', decimals: 3 },
+        BAR: { address: '0x1234' }
+      }
+    })
   })
 
   methodNames.forEach(methodName => {
@@ -37,6 +44,26 @@ describe('ContractService', function() {
         const result = contractService.getIpfsHashFromBytes32(bytes32)
         expect(result).to.equal(ipfsHash)
       })
+    })
+  })
+
+  describe('moneyToUnits', () => {
+    it(`should handle ERC20 token`, () => {
+      const money = new Money({ amount: 123, currency: 'FOO' })
+      const units = contractService.moneyToUnits(money)
+      expect(units).to.equal('123000')
+    })
+
+    it(`should handle ETH`, () => {
+      const money = new Money({ amount: 123, currency: 'ETH' })
+      const units = contractService.moneyToUnits(money)
+      expect(units).to.equal('123000000000000000000')
+    })
+
+    it(`should handle undefined currency decimals`, () => {
+      const money = new Money({ amount: 123, currency: 'BAR' })
+      const units = contractService.moneyToUnits(money)
+      expect(units).to.equal('123')
     })
   })
 

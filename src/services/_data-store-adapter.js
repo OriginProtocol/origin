@@ -1,7 +1,7 @@
 import Ajv from 'ajv'
 import URL from 'url-parse'
 
-import Money from '../utils/money'
+import Money from '../models/money'
 
 import listingSchemaV1 from '../schemas/listing.json'
 import listingWithdrawnSchemaV1 from '../schemas/listing-withdraw.json'
