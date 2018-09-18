@@ -48,11 +48,15 @@
         },
         "totalPrice": {
           "$ref": "#/definitions/money"
+        },
+        "commission": {
+          "$ref": "#/definitions/money"
         }
       },
       "required": [
         "unitsPurchased",
-        "totalPrice"
+        "totalPrice",
+        "commission"
       ]
     },
     "fractionalOffer": {
@@ -66,11 +70,15 @@
         },
         "totalPrice": {
           "$ref": "#/definitions/money"
+        },
+        "commission": {
+          "$ref": "#/definitions/money"
         }
       },
       "required": [
         "slots",
-        "totalPrice"
+        "totalPrice",
+        "commission"
       ]
     }
   },
