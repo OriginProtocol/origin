@@ -72,6 +72,7 @@
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-card.pending": "Tertunda",
   "listing-card.sold": "Terjual habis",
+  "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
   "listing-create.stepNumberLabel": "Langkah {stepNumber}",
   "listing-create.whatTypeOfListing": "Jenis listing apa yang ingin anda buat?",
   "listing-create.next": "Berikutnya",
