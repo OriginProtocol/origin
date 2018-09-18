@@ -9,6 +9,7 @@ import OriginTokenContract from './../../contracts/build/contracts/OriginToken.j
 import V00_MarketplaceContract from './../../contracts/build/contracts/V00_Marketplace.json'
 import V01_MarketplaceContract from './../../contracts/build/contracts/V01_Marketplace.json'
 
+import BigNumber from 'bignumber.js'
 import bs58 from 'bs58'
 import Web3 from 'web3'
 
@@ -227,6 +228,25 @@ class ContractService {
       // return current time in seconds if block is not found
       timestamp: block ? block.timestamp : Math.floor(Date.now() / 1000),
       transactionReceipt
+    }
+  }
+
+  // Convert money object to correct units for blockchain
+  moneyToUnits(money) {
+    if (money.currency === 'ETH') {
+      return Web3.utils.toWei(money.amount, 'ether')
+    } else {
+      const currency = this.currencies[money.currency]
+      // handle ERC20
+      // TODO consider using ERCStandardDetailed.decimals() (for tokens that support this) so that we don't have to track decimals ourselves
+      // https://github.com/OpenZeppelin/openzeppelin-solidity/blob/6c4c8989b399510a66d8b98ad75a0979482436d2/contracts/token/ERC20/ERC20Detailed.sol
+      const currencyDecimals = currency && currency.decimals
+      if (currencyDecimals) {
+        const scaling = BigNumber(10).exponentiatedBy(currencyDecimals)
+        return String(BigNumber(money.amount).multipliedBy(scaling))
+      } else {
+        return money.amount
+      }
     }
   }
 }

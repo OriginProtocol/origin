@@ -107,19 +107,7 @@ class V00_MarkeplaceAdapter {
         `Attempted to purchase ${unitsPurchased} - only 1 allowed.`
       )
 
-    // Convert price to correct units for blockchain
-    let currency, price
-    if (totalPrice.currency === 'ETH') {
-      currency = 'ETH'
-      price = this.contractService.web3.utils.toWei(totalPrice.amount, 'ether')
-    } else {
-      // handle ERC20
-      currency = this.contractService.currencies[totalPrice.currency]
-      // TODO consider using ERCStandardDetailed.decimals() (for tokens that support this) so that we don't have to track decimals ourselves
-      // https://github.com/OpenZeppelin/openzeppelin-solidity/blob/6c4c8989b399510a66d8b98ad75a0979482436d2/contracts/token/ERC20/ERC20Detailed.sol
-      const currencyDecimals = currency && currency.decimals
-      price = String(Number(totalPrice.amount) * 10**currencyDecimals)
-    }
+    const price = this.contractService.moneyToUnits(totalPrice)
 
     const args = [
       listingId,
@@ -134,7 +122,7 @@ class V00_MarkeplaceAdapter {
 
     const opts = { confirmationCallback }
 
-    if (currency === 'ETH') {
+    if (totalPrice.currency === 'ETH') {
       opts.value = price
     }
 
