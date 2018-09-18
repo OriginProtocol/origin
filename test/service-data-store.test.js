@@ -104,7 +104,10 @@ describe('Listing IpfsDataStore save', () => {
       .stub()
       .returns('http://test-gateway')
 
-    return expect(store.save(LISTING_DATA_TYPE, validListing)).to.eventually.equal('ListingHash')
+    // Clone validListing, because IpfsDataStore.save() filters out the test
+    // media URLs, which appear to be invalid.
+    const validListingCopy = JSON.parse(JSON.stringify(validListing))
+    return expect(store.save(LISTING_DATA_TYPE, validListingCopy)).to.eventually.equal('ListingHash')
       .then(() => expect(mockIpfsService.saveDataURIAsFile.callCount).to.equal(0))
       .then(() => expect(mockIpfsService.gatewayUrlForHash.callCount).to.equal(0))
       .then(() => expect(mockIpfsService.saveObjAsFile.firstCall.args[0]).to.have.property('schemaId'))
