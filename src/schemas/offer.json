@@ -77,9 +77,6 @@
         "fractional"
       ]
     },
-    "unitsPurchased": {
-      "type": "number"
-    },
     "totalPrice": {
       "$ref": "#/definitions/money"
     },
@@ -99,7 +96,6 @@
     "schemaId",
     "listingType",
     "totalPrice",
-    "commission",
-    "unitsPurchased"
+    "commission"
   ]
 }
