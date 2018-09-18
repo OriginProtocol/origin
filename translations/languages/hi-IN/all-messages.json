@@ -72,6 +72,7 @@
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-card.pending": "अपूर्ण",
   "listing-card.sold": "बिक गया",
+  "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
   "listing-create.stepNumberLabel": "चरण {stepNumber}",
   "listing-create.whatTypeOfListing": "आप किस प्रकार की लिस्टिंग बनाना चाहते हैं?",
   "listing-create.next": "आगामी",
