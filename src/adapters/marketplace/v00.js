@@ -53,9 +53,7 @@ class V00_MarkeplaceAdapter {
       throw(`${currency} is not a supported deposit currency`)
     }
     if (amount > 0) {
-      deposit = this.contractService.web3.utils.toWei(
-        amount.toString()
-      )
+      deposit = this.contractService.moneyToUnits(commission)
       const {market_address, selector, call_params} = await this._getTokenAndCallWithSenderParams('createListingWithSender', ipfsBytes, deposit, arbitrator || from)
 
       // In order to estimate gas correctly, we need to add the call to a create listing since that's called by the token
