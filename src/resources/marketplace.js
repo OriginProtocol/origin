@@ -111,13 +111,7 @@ class Marketplace {
       const listing = await this.getListing(listingId)
 
       const listingCurrency = listing.price && listing.price.currency
-      let listingPrice = listing.price && listing.price.amount
-      if (listingCurrency === 'ETH') {
-        listingPrice = this.contractService.web3.utils.toWei(
-          listingPrice,
-          'ether'
-        )
-      }
+      const listingPrice = this.contractService.moneyToUnits(listing.price)
       const listingCommision = listing.commission && listing.commission.amount
       const currency = this.contractService.currencies[listingCurrency]
       const currencyAddress = currency && currency.address
