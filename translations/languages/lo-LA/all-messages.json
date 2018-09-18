@@ -72,6 +72,7 @@
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-card.pending": "ລໍຖ້າ",
   "listing-card.sold": "ຂາຍຫມົດ",
+  "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
   "listing-create.stepNumberLabel": "STEP {stepNumber}",
   "listing-create.whatTypeOfListing": "ທ່ານຢາກສ້າງລາຍການແບບໃດ?",
   "listing-create.next": "ຕໍ່ໄປ",
