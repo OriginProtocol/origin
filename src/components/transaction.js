@@ -54,7 +54,7 @@ class Transaction extends Component {
       return null
     }
 
-    const { buyer } = purchase
+    const { buyer } = purchase || {}
     const { seller } = listing
 
     switch (transactionTypeKey) {

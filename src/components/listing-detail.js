@@ -131,7 +131,10 @@ class ListingsDetail extends Component {
             amount: this.state.price,
             currency: 'ETH'
           },
-          commission: this.state.commission && this.state.commission.toString()
+          commission: {
+            amount: this.state.boostValue.toString(),
+            currency: 'OGN'
+          }
         }
         const transactionReceipt = await origin.marketplace.makeOffer(
           this.props.listingId,
