@@ -72,6 +72,7 @@
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-card.pending": "kadar",
   "listing-card.sold": "Satıldı",
+  "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
   "listing-create.stepNumberLabel": "ADIM {stepNumber}",
   "listing-create.whatTypeOfListing": "Ne tür bir liste oluşturmak istiyorsunuz?",
   "listing-create.next": "Sonraki",
