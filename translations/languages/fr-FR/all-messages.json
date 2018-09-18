@@ -72,6 +72,7 @@
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-card.pending": "En attente",
   "listing-card.sold": "Épuisé",
+  "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
   "listing-create.stepNumberLabel": "Étape {stepNumber}",
   "listing-create.whatTypeOfListing": "Quel type d’annonce souhaitez-vous créer ?",
   "listing-create.next": "Suivant",
