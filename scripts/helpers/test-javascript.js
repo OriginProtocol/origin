@@ -6,7 +6,10 @@ const testJavascript = () => {
       '--compilers',
       'js:babel-core/register',
       '--require',
-      'babel-polyfill'
+      'babel-polyfill',
+      '--timeout',
+      '10000',
+      '--exit'
     ])
     mocha.stdout.pipe(process.stdout)
     mocha.stderr.pipe(process.stderr)

@@ -5,7 +5,7 @@ const TokenContract = require('../../contracts/build/contracts/OriginToken.json'
 const IMultiSigWallet = require('../../contracts/build/contracts/IMultiSigWallet.json')
 const { withRetries } = require('../../src/utils/retries.js')
 
-const { isValidTokenOwner } = require('./owner_whitelist.js')
+const { isValidTokenOwner, validTokenOwners } = require('./owner_whitelist.js')
 
 const RETRIES = 7
 
@@ -16,6 +16,7 @@ class Token {
    */
   constructor(config) {
     this.config = config
+    this.validTokenOwners = validTokenOwners
     // TODO(franck): Get this from the token contract ABI.
     this.decimals = 18
     this.scaling = BigNumber(10).exponentiatedBy(this.decimals)
@@ -46,7 +47,7 @@ class Token {
    * @return {string} - Address contract was deployed to.
    */
   contractAddress(networkId) {
-    return TokenContract.networks[networkId].address
+    return this.config.contractAddress || TokenContract.networks[networkId].address
   }
 
   /**
@@ -87,7 +88,7 @@ class Token {
     // At token contract deployment, the entire initial supply of tokens is assigned to
     // the first address generated using the mnemonic.
     const provider = this.config.providers[networkId]
-    const tokenSupplier = provider.addresses[0]
+    const tokenSupplier = await this.defaultAccount(networkId)
 
     // Transfer numTokens from the supplier to the target address.
     const supplierBalance = await contract.methods.balanceOf(tokenSupplier).call()
@@ -124,7 +125,7 @@ class Token {
    */
   async pause(networkId) {
     const contract = this.contract(networkId)
-    const sender = this.defaultAccount(networkId)
+    const sender = await this.defaultAccount(networkId)
 
     // Pre-contract call validations.
     const alreadyPaused = await contract.methods.paused().call()
@@ -143,7 +144,7 @@ class Token {
       ) {
         throw new Error('Token should be paused but is not')
       }
-    })
+    }, this.config.verbose)
   }
 
   /**
@@ -152,7 +153,7 @@ class Token {
    */
   async unpause(networkId) {
     const contract = await this.contract(networkId)
-    const sender = this.defaultAccount(networkId)
+    const sender = await this.defaultAccount(networkId)
 
     // Pre-contract call validations.
     const paused = await contract.methods.paused().call()
@@ -170,7 +171,7 @@ class Token {
       ) {
         throw new Error('Token should be unpaused but is not')
       }
-    })
+    }, this.config.verbose)
   }
 
     /**
@@ -180,13 +181,13 @@ class Token {
    */
   async setOwner(networkId, newOwner) {
     const contract = await this.contract(networkId)
-    const sender = this.defaultAccount(networkId)
+    const sender = await this.defaultAccount(networkId)
     const newOwnerLower = newOwner.toLowerCase()
 
     // Pre-contract call validations.
     if (
       !this.config.overrideOwnerWhitelist &&
-      !isValidTokenOwner(networkId, newOwner)
+      !isValidTokenOwner(networkId, newOwner, this.validTokenOwners)
     ) {
       throw new Error(`${newOwner} is not a valid owner for the token contract`)
     }
@@ -206,7 +207,7 @@ class Token {
       ) {
         throw new Error(`New owner should be ${newOwner} but is ${ownerAfterTransaction}`)
       }
-    })
+    }, this.config.verbose)
   }
 
   /**
@@ -293,7 +294,7 @@ class Token {
           console.log('waiting for transaction receipt')
         }
       } else {
-        this.vlog('still waiting for transaction hash')
+        throw new Error('still waiting for transaction hash')
       }
     })
   }
@@ -368,7 +369,7 @@ class Token {
     if (multisig) {
       // Ensure that the multisig wallet is the owner of the contract.
       if (multisig.toLowerCase() !== owner.toLowerCase()) {
-        throw new Error(`multi-sig wallet ${opts.multisig} isn't contract owner ${owner}`)
+        throw new Error(`multi-sig wallet ${this.config.multisig} isn't contract owner ${owner}`)
       }
     } else {
       if (address.toLowerCase() !== owner.toLowerCase()) {
@@ -392,9 +393,9 @@ class Token {
    * @param {int} networkId - Network ID.
    * @returns {string} - Address of default of first unlocked account.
    */
-  defaultAccount(networkId) {
-    const provider = this.config.providers[networkId]
-    return provider.address || provider.addresses[0]
+  async defaultAccount(networkId) {
+    const accounts = await this.web3(networkId).eth.getAccounts()
+    return accounts[0]
   }
 }
 

@@ -6,7 +6,7 @@ const MAX_RETRY_WAIT_MS = 2 * 60 * 1000
  * @param {function} fn - Async function to retry.
  * @returns - Return value of 'fn' if it succeeded.
  */
-async function withRetries(maxRetries, fn) {
+async function withRetries(maxRetries, fn, verbose) {
   let tryCount = 0
   while (tryCount < maxRetries) {
     try {
@@ -18,8 +18,10 @@ async function withRetries(maxRetries, fn) {
       waitTime = Math.floor(waitTime * (1.2 - Math.random() * 0.4))
       // Max out at two minutes
       waitTime = Math.min(waitTime, MAX_RETRY_WAIT_MS)
-      console.log('retryable error:', e)
-      console.log(`will retry in ${waitTime / 1000} seconds`)
+      if (verbose) {
+        console.log('retryable error:', e)
+        console.log(`will retry in ${waitTime / 1000} seconds`)
+      }
       tryCount += 1
       await new Promise(resolve => setTimeout(resolve, waitTime))
     }

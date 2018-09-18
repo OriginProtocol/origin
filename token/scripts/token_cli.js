@@ -18,17 +18,11 @@ ${command} --action=credit [--network_id=NETWORK_ID] --address=ADDRESS
 Print OGN balance for ADDRESS:
 ${command} --action=balance [--network_id=NETWORK_ID] --address=ADDRESS
 
-Print address of token contract:
-${command} --action=address [--network_id=NETWORK_ID]
-
 Pause all token transfers and approvals:
 ${command} --action=pause [--network_id=NETWORK_ID]
 
 Unpause all token transfers and approvals:
 ${command} --action=unpause [--network_id=NETWORK_ID]
-
-Display owner of token contract:
-${command} --action=owner [--network_id=NETWORK_ID]
 
 Set owner of token contract to ADDRESS:
 ${command} --action=setOwner --address=ADDRESS [--network_id=NETWORK_ID]
@@ -74,12 +68,6 @@ async function run(config) {
     }
     break
   }
-  case 'address': {
-    // Get the address the token contract was deployed to.
-    const address = token.contractAddress(config.networkId)
-    console.log(`Token contract address = ${address}`)
-    break
-  }
   case 'pause': {
     config.verbose = true
     await token.pause(config.networkId)
@@ -102,10 +90,7 @@ async function run(config) {
       errorAndExit('--address=ADDRESS needs to be specified')
     }
     await token.setOwner(config.networkId, config.address)
-    break
-  }
-  case `owner`: {
-    console.log('token owner:', await token.owner(config.networkId))
+    console.log(`Contract owner set to ${config.address}`)
     break
   }
   case `status`: {

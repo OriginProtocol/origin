@@ -32,10 +32,16 @@ const validTokenOwners = {
  * @param {string} networkId - Ethereum network ID.
  * @param {string} newOwner - Address of the new owner.
  */
-const isValidTokenOwner = (networkId, newOwner) => {
+const isValidTokenOwner = (networkId, newOwner, validOwners = validTokenOwners) => {
   const newOwnerLower = newOwner.toLowerCase()
-  const whitelist = validTokenOwners[networkId]
+  const whitelist = validOwners[networkId]
+  if (typeof whitelist === undefined) {
+    throw new Error(`No whitelist defined for network ${networkId}`)
+  }
+  if (whitelist.length === 0) {
+    return true
+  }
   return whitelist.filter(address => address.toLowerCase() === newOwnerLower).length > 0
 }
 
-module.exports = { isValidTokenOwner }
+module.exports = { isValidTokenOwner, validTokenOwners }
