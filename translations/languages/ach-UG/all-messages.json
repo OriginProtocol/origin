@@ -72,6 +72,7 @@
   "listing-card-prices.ethereumCurrencyAbbrev": "crwdns2443:0crwdne2443:0",
   "listing-card.pending": "crwdns3162:0crwdne3162:0",
   "listing-card.sold": "crwdns3163:0crwdne3163:0",
+  "listing-create.navigationWarning": "crwdns3253:0crwdne3253:0",
   "listing-create.stepNumberLabel": "crwdns2454:0{stepNumber}crwdne2454:0",
   "listing-create.whatTypeOfListing": "crwdns2455:0crwdne2455:0",
   "listing-create.next": "crwdns2456:0crwdne2456:0",
