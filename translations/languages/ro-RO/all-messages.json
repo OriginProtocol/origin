@@ -72,6 +72,7 @@
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-card.pending": "În aşteptare",
   "listing-card.sold": "Vândut",
+  "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
   "listing-create.stepNumberLabel": "Pasul {stepNumber}",
   "listing-create.whatTypeOfListing": "Ce tip de anunț doriţi să creaţi?",
   "listing-create.next": "Următorul",
