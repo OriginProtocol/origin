@@ -8,7 +8,7 @@
   "arbitration.issueCancel": "Άκυρο",
   "arbitration.issueSubmit": "Υποβολή",
   "arbitration.tryReachingOut": "Απαιτείται ανταλλαγή μηνυμάτων",
-  "arbitration.request": "In order to report a problem, you must enable Origin messaging. We also recommend that you start by reaching out to the {counterparty} and attempting to resolve the issue directly.",
+  "arbitration.request": "Για να αναφέρετε ένα πρόβλημα, πρέπει να ενεργοποιήσετε την ανταλλαγή μηνυμάτων Origin. Σας συνιστούμε επίσης να ξεκινήσετε επικοινωνώντας με το {counterparty} και προσπαθώντας να επιλύσετε το πρόβλημα άμεσα.",
   "arbitration.prerequisiteCancel": "Άκυρο",
   "arbitration.enableMessaging": "Ενεργοποίηση μηνυμάτων",
   "arbitration.rejectionHeading": "This offer has been rejected",
