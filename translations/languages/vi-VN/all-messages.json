@@ -72,6 +72,7 @@
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-card.pending": "Đang chờ xử lý",
   "listing-card.sold": "Bán ra",
+  "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
   "listing-create.stepNumberLabel": "BƯỚC {stepNumber}",
   "listing-create.whatTypeOfListing": "Bạn muốn tạo loại danh sách nào?",
   "listing-create.next": "Tiếp theo",
