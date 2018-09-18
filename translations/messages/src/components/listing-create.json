@@ -1,5 +1,9 @@
 [
   {
+    "id": "listing-create.navigationWarning",
+    "defaultMessage": "Are you sure you want to leave? If you leave this page your progress will be lost."
+  },
+  {
     "id": "listing-create.stepNumberLabel",
     "defaultMessage": "STEP {stepNumber}"
   },

@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Prompt } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import Form from 'react-jsonschema-form'
 
 import { showAlert } from 'actions/Alert'
@@ -74,6 +74,13 @@ class ListingCreate extends Component {
       showBoostTutorial: false,
       usdListingPrice: 0
     }
+
+    this.intlMessages = defineMessages({
+      navigationWarning: {
+        id: 'listing-create.navigationWarning',
+        defaultMessage: 'Are you sure you want to leave? If you leave this page your progress will be lost.'
+      }
+    })
 
     this.checkOgnBalance = this.checkOgnBalance.bind(this)
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
@@ -266,7 +273,7 @@ class ListingCreate extends Component {
     })
 
     window.scrollTo(0, 0)
-    
+
     this.updateUsdPrice()
   }
 
@@ -309,11 +316,12 @@ class ListingCreate extends Component {
   }
 
   render() {
-    const { wallet } = this.props
+    const { wallet, intl } = this.props
     const {
       currentProvider,
       formListing,
       isBoostExpanded,
+      schemaFetched,
       selectedSchema,
       selectedSchemaType,
       schemaExamples,
@@ -952,6 +960,10 @@ class ListingCreate extends Component {
             )}
           </div>
         </div>
+        <Prompt
+          when={schemaFetched}
+          message={intl.formatMessage(this.intlMessages.navigationWarning)}
+        />
       </div>
     )
   }
