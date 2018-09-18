@@ -1,6 +1,6 @@
 import assert from 'assert'
-import helper, { contractPath } from '../contracts/test-alt/_helper'
-import Token from '../token/lib/token'
+import helper, { contractPath } from './_helper'
+import Token from '../../token/lib/token'
 
 // These tests are for the token library that the token CLI uses. We don't
 // validate the effects of various operations. That is left to the contract
@@ -83,7 +83,7 @@ describe('Token Library', async function() {
     const owners = accounts.slice(0, 3)
     const MultiSigWallet = await deploy('MultiSigWallet', {
       from: owner,
-      path: `${__dirname}/../contracts/test-alt/contracts/`,
+      path: `${__dirname}/contracts/`,
       args: [owners, 2]
     })
 
