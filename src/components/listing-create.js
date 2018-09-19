@@ -522,7 +522,7 @@ class ListingCreate extends Component {
               </div>
             )}
             {step >= this.STEP.PREVIEW && (
-              <div className="col-md-6 col-lg-5 listing-preview">
+              <div className="col-md-7 col-lg-8 listing-preview">
                 <label className="create-step">
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
@@ -674,7 +674,7 @@ class ListingCreate extends Component {
                 </div>
               </div>
             )}
-            <div className="pt-xs-4 pt-sm-4 col-md-5 offset-md-1 col-lg-4 offset-lg-3">
+            <div className={`pt-xs-4 pt-sm-4 col-md-5 col-lg-4${step >= this.STEP.PREVIEW ? '' : ' offset-md-1 offset-lg-3'}`}>
               <WalletCard
                 wallet={wallet}
                 withMenus={true}
