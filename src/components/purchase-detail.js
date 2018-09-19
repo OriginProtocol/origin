@@ -754,7 +754,7 @@ class PurchaseDetail extends Component {
                     />
                   </span>
                 )}
-                {listing.boostValue && (
+                {!!listing.boostValue && (
                   <span className={`boosted badge boost-${listing.boostLevel}`}>
                     <img
                       src="images/boost-icon-arrow.svg"

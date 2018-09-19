@@ -18,14 +18,27 @@ class MySales extends Component {
   }
 
   componentDidMount() {
-    if (!web3.givenProvider || !this.props.web3Account) {
+    if (this.props.web3Account) {
+      this.loadPurchases()
+    } else if (!web3.givenProvider) {
       this.props.storeWeb3Intent('view your sales')
     }
   }
 
-  async componentWillMount() {
-    const listingsFor = await origin.contractService.currentAccount()
-    const listingIds = await origin.marketplace.getListings({ idsOnly: true, listingsFor })
+  componentDidUpdate(prevProps) {
+    const { web3Account } = this.props
+
+    // on account change
+    if (web3Account && web3Account !== prevProps.web3Account) {
+      this.loadPurchases()
+    }
+  }
+
+  async loadPurchases() {
+    const listingIds = await origin.marketplace.getListings({
+      idsOnly: true,
+      listingsFor: this.props.web3Account
+    })
     const listingPromises = listingIds.map(listingId => {
       return new Promise(async resolve => {
         const listing = await getListing(listingId)
@@ -44,6 +57,7 @@ class MySales extends Component {
       return obj.offers.map(offer => Object.assign({}, obj, { offer }))
     })
     const offersFlattened = [].concat(...offersByListing)
+
     this.setState({ loading: false, purchases: offersFlattened })
   }
 

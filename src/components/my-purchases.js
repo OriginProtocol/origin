@@ -16,14 +16,28 @@ class MyPurchases extends Component {
   }
 
   componentDidMount() {
-    if (!web3.givenProvider || !this.props.web3Account) {
+    if (this.props.web3Account) {
+      this.loadPurchases()
+    } else if (!web3.givenProvider) {
       this.props.storeWeb3Intent('view your purchases')
     }
   }
 
-  async componentWillMount() {
-    const purchasesFor = await origin.contractService.currentAccount()
-    const listingIds = await origin.marketplace.getListings({ idsOnly: true, purchasesFor })
+  componentDidUpdate(prevProps) {
+    const { web3Account } = this.props
+
+    // on account change
+    if (web3Account && web3Account !== prevProps.web3Account) {
+      this.loadPurchases()
+    }
+  }
+
+  async loadPurchases() {
+    const { web3Account } = this.props
+    const listingIds = await origin.marketplace.getListings({
+      idsOnly: true,
+      purchasesFor: web3Account
+    })
     const listingPromises = listingIds.map(listingId => {
       return new Promise(async resolve => {
         const listing = await getListing(listingId)
@@ -34,7 +48,7 @@ class MyPurchases extends Component {
     const offerPromises = await withListings.map(obj => {
       return new Promise(async resolve => {
         const offers = await origin.marketplace.getOffers(obj.listingId, {
-          for: purchasesFor
+          for: web3Account
         })
         resolve(Object.assign(obj, { offers }))
       })
@@ -44,6 +58,7 @@ class MyPurchases extends Component {
       return obj.offers.map(offer => Object.assign({}, obj, { offer }))
     })
     const offersFlattened = [].concat(...offersByListing)
+
     this.setState({ loading: false, purchases: offersFlattened })
   }
 
