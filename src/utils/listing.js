@@ -12,7 +12,10 @@ import origin from '../services/origin'
 export function dappFormDataToOriginListing(formData) {
   // formData.category data format is "schema.<category>.<subCategory>".
   const subCategory = formData.category
-  const category = formData.category.split(".").slice(0,2).join('.')
+  const category = formData.category
+    .split('.')
+    .slice(0, 2)
+    .join('.')
 
   const listingData = {
     category: category,
@@ -87,7 +90,7 @@ export function originToDAppListing(originListing) {
 export async function getListing(id, translate = false) {
   const originListing = await origin.marketplace.getListing(id)
   const dappListing = originToDAppListing(originListing)
-  if(translate) {
+  if (translate) {
     dappListing.category = translateListingCategory(dappListing.category)
   }
   return dappListing

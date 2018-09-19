@@ -291,14 +291,14 @@ export function translateSchema(schemaJson, schemaType) {
   return schema
 }
 
-export function translateListingCategory(rawCategory){
+export function translateListingCategory(rawCategory) {
   const match = rawCategory.match(/^schema\.([^.]+)\.([^.]+)$/)
-  if(match === null ){
+  if (match === null) {
     return rawCategory
   }
   const [_, schemaType, category] = match
   const schema = schemaMessages[schemaType]
-  if(schema === null || schema[rawCategory] === undefined){
+  if (schema === null || schema[rawCategory] === undefined) {
     return rawCategory
   }
   return globalIntlProvider.formatMessage(schema[rawCategory])
