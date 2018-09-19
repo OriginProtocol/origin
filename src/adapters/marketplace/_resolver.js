@@ -223,8 +223,9 @@ class MarketplaceResolver {
     // Get all the OfferFinalized events for the listing.
     const listing = await adapter.getListing(listingIndex)
     const reviewEvents = listing.events.filter(
-      e => e.event === 'OfferFinalized'
+      e => e.event === 'OfferFinalized' || e.event === 'OfferData'
     )
+
     return Promise.all(
       reviewEvents.map(async event => {
         const offerIndex = event.returnValues.offerID
