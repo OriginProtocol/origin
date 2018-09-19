@@ -37,7 +37,7 @@ class Marketplace {
   }
 
   async getListings(opts = {}) {
-    const listingIds = await this.resolver.getListingIds()
+    const listingIds = await this.resolver.getListingIds(opts)
 
     if (opts.idsOnly) {
       return listingIds
