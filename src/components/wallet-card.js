@@ -39,8 +39,8 @@ class WalletCard extends Component {
         id: '_wallet-card.getOgn',
         defaultMessage: 'Get OGN'
       },
-      reccommendation: {
-        id: '_wallet-card.reccommendation',
+      recommendation: {
+        id: '_wallet-card.recommendation',
         defaultMessage: '(recommended)'
       },
       learnMore: {
@@ -106,7 +106,7 @@ class WalletCard extends Component {
           ${this.props.intl.formatMessage(this.intlMessages.getOGN)}
         </a>
         <span class='recommended'>
-          ${this.props.intl.formatMessage(this.intlMessages.reccommendation)}
+          ${this.props.intl.formatMessage(this.intlMessages.recommendation)}
         </span>
       </p>
       <p class='tooltip-align-left'>
