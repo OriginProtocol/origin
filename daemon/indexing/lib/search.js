@@ -78,10 +78,13 @@ class Listing {
   /**
    * Searches for listings.
    * @param {string} query - The search query.
+   * @param {array} filters - Array of filter objects
+   * @param {integer} numberOfItems - number of items to display per page
+   * @param {integer} offset - what page to return results from
    * @throws Throws an error if the search operation failed.
    * @returns A list of listings (can be empty).
    */
-  static async search(query, filters) {
+  static async search(query, filters, numberOfItems, offset) {
     const esQuery = {
       bool: {
         must: [],
@@ -176,6 +179,8 @@ class Listing {
       index: LISTINGS_INDEX,
       type: LISTINGS_TYPE,
       body: {
+        from: offset,
+        size: numberOfItems,
         query: boostScoreQuery,
         _source: ['title', 'description', 'price']
       }
@@ -195,7 +200,6 @@ class Listing {
     })
 
     const [searchResponse, aggregationResponse] = await Promise.all([searchRequest, aggregationRequest])  
-
     const listings = []
     searchResponse.hits.hits.forEach((hit) => {
       const listing = {
@@ -212,11 +216,13 @@ class Listing {
 
     const maxPrice = aggregationResponse.aggregations.max_price.value
     const minPrice = aggregationResponse.aggregations.min_price.value
+    const totalNumberOfListings = searchResponse.hits.total
 
     return {
       listings,
-      max_price: maxPrice ? maxPrice : 0,
-      min_price: minPrice ? minPrice : 0
+      totalNumberOfListings,
+      maxPrice: maxPrice ? maxPrice : 0,
+      minPrice: minPrice ? minPrice : 0
     }
   }
 }
