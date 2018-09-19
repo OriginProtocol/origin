@@ -48,7 +48,6 @@ class User extends Component {
 
   render() {
     const { user, userAddress } = this.props
-    const { reviews } = this.state
     const { attestations, fullName, profile } = user
     const description =
       (profile && profile.description) || 'An Origin user without a description'
