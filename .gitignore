@@ -4,7 +4,9 @@
 /origin-docs/
 /origin-website/
 /development/.ipfs
-/deployment/kubernetes/values/secret.yaml
+/deployment/kubernetes/values/secrets-dev.yaml
+/deployment/kubernetes/values/secrets-staging.yaml
+/deployment/kubernetes/values/secrets-prod.yaml
 
 # MacOS
 .DS_Store

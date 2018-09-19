@@ -1,0 +1,28 @@
+# origin-bridge
+bridgeImage: origin-bridge
+bridgeImageTag: latest
+bridgeReplicas: 2
+
+# origin-dapp
+dappImage: origin-dapp
+dappImageTag: '8acb15a'
+dappReplicas: 2
+
+# Origin network configuration
+gethTxReplicas: 1
+gethMinerReplicas: 2
+gethMinerCpuLimit: 0.5
+
+# IPFS server
+ipfsImageTag: ipfs/go-ipfs
+ipfsImageTag: master
+
+faucetImageTag: '28438d2'
+
+# IPFS server for OrbitDB
+messagingIpfsImage: ipfs/go-ipfs
+messagingIpfsImageTag: v0.4.17
+
+# OrbitDB
+messagingImage: origin-messaging
+messagingImageTag: 'latest'

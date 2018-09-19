@@ -1,0 +1,26 @@
+# origin-bridge
+bridgeImage: origin-bridge
+bridgeImageTag: 'b231dbcd'
+bridgeReplicas: 2
+
+# origin-dapp
+dappImage: origin-dapp
+dappImageTag: 'b9c69cb-modified'
+dappReplicas: 2
+
+# Mainnet nodes
+gethTxReplicas: 1
+
+# IPFS server
+ipfsImageTag: ipfs/go-ipfs
+ipfsImageTag: master
+
+faucetImageTag: '28438d2'
+
+# IPFS server for OrbitDB
+messagingIpfsImage: ipfs/go-ipfs
+messagingIpfsImageTag: v0.4.17
+
+# OrbitDB
+messagingImage: origin-messaging
+messagingImageTag: '85b202f'

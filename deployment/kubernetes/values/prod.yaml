@@ -1,6 +1,0 @@
-bridgeImageTag: 'b231dbcd'
-dappImageTag: 'b9c69cb-modified'
-messagingImageTag: '85b202f'
-
-ipfsStorageRequestSize: "500Gi"
-messagingIpfsStorageRequestSize: "50Gi"
