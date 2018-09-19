@@ -192,7 +192,7 @@ class SearchResult extends Component {
       const searchResp = await origin.discovery.search(
         this.props.query || '',
         LISTINGS_PER_PAGE,
-        this.state.page,
+        (this.state.page - 1) * LISTINGS_PER_PAGE,
         Object.values(filters).flatMap(
           arrayOfFilters => arrayOfFilters
         )
