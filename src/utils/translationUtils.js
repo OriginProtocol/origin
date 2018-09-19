@@ -291,22 +291,15 @@ export function translateSchema(schemaJson, schemaType) {
   return schema
 }
 
-export function translateListingCategory(listingObj) {
-  // Copy the listing so we don't modify the original
-  const listing = JSON.parse(JSON.stringify(listingObj))
-  const category = listing.category
-
-  // Check to see if category is a react-intl ID
-  if (/schema\./.test(category)) {
-    // loop over all schemaMessages to find the correct ID
-    for (const schemaType in schemaMessages) {
-      if (schemaMessages[schemaType][category]) {
-        listing.category = globalIntlProvider.formatMessage(
-          schemaMessages[schemaType][category]
-        )
-      }
-    }
+export function translateListingCategory(rawCategory){
+  const match = rawCategory.match(/^schema\.([^.]+)\.([^.]+)$/)
+  if(match === null ){
+    return rawCategory
   }
-
-  return listing
+  const [_, schemaType, category] = match
+  const schema = schemaMessages[schemaType]
+  if(schema === null || schema[rawCategory] === undefined){
+    return rawCategory
+  }
+  return globalIntlProvider.formatMessage(schema[rawCategory])
 }

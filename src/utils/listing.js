@@ -87,5 +87,8 @@ export function originToDAppListing(originListing) {
 export async function getListing(id, translate = false) {
   const originListing = await origin.marketplace.getListing(id)
   const dappListing = originToDAppListing(originListing)
-  return translate ? translateListingCategory(dappListing) : dappListing
+  if(translate) {
+    dappListing.category = translateListingCategory(dappListing.category)
+  }
+  return dappListing
 }
