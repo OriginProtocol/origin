@@ -1,16 +1,14 @@
-import ResourceBase from './_resource-base'
-
 import OriginTokenContract from './../../contracts/build/contracts/OriginToken.json'
 
 // Token is a light wrapper around the OriginToken contract.
-class Token extends ResourceBase {
+class Token {
   /**
    * @constructor
    * @param {ContractService} contractService - Contract service
    * @param {Marketplace} marketplace - Marketplace (to get token address)
    */
   constructor({ contractService, marketplace }) {
-    super({ contractService, undefined })
+    this.contractService = contractService
     // In getContract(), we will retrieve the address of the Origin token
     // contract from the marketplace contract.
     this.getTokenAddress = async function() {

@@ -1,9 +1,7 @@
-import UsersResolver from '../adapters/users/_resolver'
-import ResourceBase from './_resource-base'
+import UsersResolver from '../contractInterface/users/resolver'
 
-class Users extends ResourceBase {
+class Users {
   constructor({ contractService, ipfsService }) {
-    super({ contractService, ipfsService })
     this.resolver = new UsersResolver({ contractService, ipfsService })
   }
 

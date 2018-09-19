@@ -11,7 +11,7 @@ import {
   OFFER_ACCEPT_DATA_TYPE,
   PROFILE_DATA_TYPE,
   REVIEW_DATA_TYPE
-} from '../src/services/data-store-service'
+} from '../src/ipfsInterface/store'
 import validListing from './fixtures/listing-valid.json'
 import validOffer from './fixtures/offer-valid.json'
 import validProfile from './fixtures/profile-valid.json'

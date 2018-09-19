@@ -1,4 +1,4 @@
-import V00_MarkeplaceAdapter from './v00'
+import V00_MarkeplaceAdapter from './v00_adapter'
 import {
   parseListingId,
   parseOfferId,

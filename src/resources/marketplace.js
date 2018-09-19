@@ -14,8 +14,8 @@ import {
   RESOLUTION_DATA_TYPE,
   REVIEW_DATA_TYPE,
   IpfsDataStore,
-} from '../services/data-store-service'
-import MarketplaceResolver from '../adapters/marketplace/_resolver'
+} from '../ipfsInterface/store'
+import MarketplaceResolver from '../contractInterface/marketplace/resolver'
 
 class Marketplace {
   constructor({ contractService, ipfsService, store }) {
