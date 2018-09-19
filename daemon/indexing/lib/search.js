@@ -5,10 +5,9 @@ var elasticsearch = require('elasticsearch')
  */
 
 
-// TODO(franck): dynamically configure client.
 var client = new elasticsearch.Client({
   hosts: [
-    'elasticsearch:9200/'
+    process.env.ELASTICSEARCH_HOST || 'elasticsearch:9200'
   ]
 })
 
@@ -48,7 +47,7 @@ class Listing {
   static async get(id) {
     const resp = await client.get({id: id, index: LISTINGS_INDEX, type: LISTINGS_TYPE})
     if(!resp.found){
-      throw Error("Listing not found")
+      throw Error('Listing not found')
     }
     const listing = resp._source
     listing.id = id
@@ -78,25 +77,32 @@ class Listing {
   /**
    * Searches for listings.
    * @param {string} query - The search query.
+   * @param {array} filters - Array of filter objects
+   * @param {integer} numberOfItems - number of items to display per page
+   * @param {integer} offset - what page to return results from
    * @throws Throws an error if the search operation failed.
    * @returns A list of listings (can be empty).
    */
-  static async search(query, filters) {
+  static async search(query, filters, numberOfItems, offset) {
     const esQuery = {
       bool: {
-        must: [],
+        must: [{
+          match: {
+            status: 'active'
+          }
+        }],
         should: [],
         filter: []
       }
     }
 
-    if (query !== undefined && query !== ""){
+    if (query !== undefined && query !== ''){
       // all_text is a field where all searchable fields get copied to
       esQuery.bool.must.push({
         match: {
           all_text: {
             query,
-            fuzziness: "AUTO"
+            fuzziness: 'AUTO'
           }
         }
       })
@@ -106,7 +112,7 @@ class Listing {
           title: {
             query: query,
             boost: 2,
-            fuzziness: "AUTO"
+            fuzziness: 'AUTO'
           }
         }
       })
@@ -176,6 +182,8 @@ class Listing {
       index: LISTINGS_INDEX,
       type: LISTINGS_TYPE,
       body: {
+        from: offset,
+        size: numberOfItems,
         query: boostScoreQuery,
         _source: ['title', 'description', 'price']
       }
@@ -195,7 +203,6 @@ class Listing {
     })
 
     const [searchResponse, aggregationResponse] = await Promise.all([searchRequest, aggregationRequest])  
-
     const listings = []
     searchResponse.hits.hits.forEach((hit) => {
       const listing = {
@@ -212,11 +219,13 @@ class Listing {
 
     const maxPrice = aggregationResponse.aggregations.max_price.value
     const minPrice = aggregationResponse.aggregations.min_price.value
+    const totalNumberOfListings = searchResponse.hits.total
 
     return {
       listings,
-      max_price: maxPrice ? maxPrice : 0,
-      min_price: minPrice ? minPrice : 0
+      totalNumberOfListings,
+      maxPrice: maxPrice ? maxPrice : 0,
+      minPrice: minPrice ? minPrice : 0
     }
   }
 }
@@ -247,7 +256,7 @@ class Offer {
   static async get(id) {
     const resp = await client.get({id: id, index: OFFER_INDEX, type: OFFER_TYPE})
     if(!resp.found){
-      throw Error("Offer not found")
+      throw Error('Offer not found')
     }
     return resp._source
   }
@@ -303,7 +312,7 @@ class User {
   static async get(walletAddress) {
     const resp = await client.get({id: walletAddress, index: USER_INDEX, type: USER_TYPE})
     if(!resp.found){
-      throw Error("User not found")
+      throw Error('User not found')
     }
     return resp._source
   }

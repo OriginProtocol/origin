@@ -2,6 +2,7 @@ pragma solidity ^0.4.24;
 
 import "../../../node_modules/openzeppelin-solidity/contracts/token/ERC20/BurnableToken.sol";
 import "../../../node_modules/openzeppelin-solidity/contracts/token/ERC20/MintableToken.sol";
+import "../../../node_modules/openzeppelin-solidity/contracts/token/ERC20/DetailedERC20.sol";
 
 import "./WhitelistedPausableToken.sol";
 
@@ -9,20 +10,16 @@ import "./WhitelistedPausableToken.sol";
  * @title Origin token
  * @dev Token that allows minting, burning, and pausing by contract owner
  */
-contract OriginToken is BurnableToken, MintableToken, WhitelistedPausableToken {
-  string public constant name = "OriginToken"; // solium-disable-line uppercase
-  string public constant symbol = "OGN"; // solium-disable-line uppercase
-  uint8 public constant decimals = 18; // solium-disable-line uppercase
-
+contract OriginToken is BurnableToken, MintableToken, WhitelistedPausableToken, DetailedERC20 {
   event AddCallSpenderWhitelist(address enabler, address spender);
   event RemoveCallSpenderWhitelist(address disabler, address spender);
 
   mapping (address => bool) public callSpenderWhitelist;
 
   // @dev Constructor that gives msg.sender all initial tokens.
-  constructor(uint256 initialSupply) public {
+  constructor(uint256 _initialSupply) DetailedERC20("OriginToken", "OGN", 18) public {
     owner = msg.sender;
-    mint(owner, initialSupply);
+    mint(owner, _initialSupply);
   }
 
   //
