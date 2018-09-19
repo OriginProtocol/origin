@@ -16,6 +16,7 @@ class MyListings extends Component {
 
     this.handleProcessing = this.handleProcessing.bind(this)
     this.handleUpdate = this.handleUpdate.bind(this)
+    this.refreshListing = this.refreshListing.bind(this)
     this.state = {
       filter: 'all',
       listings: [],
@@ -74,6 +75,21 @@ class MyListings extends Component {
       this.setState({ listings })
     } catch (error) {
       console.error(`Error handling update for listing: ${id}`)
+    }
+  }
+
+  async refreshListing(id) {
+    try {
+      const listing = await getListing(id)
+
+      this.setState({
+        listings: [
+          ...this.state.listings.filter(l => l.id !== id),
+          listing
+        ]
+      })
+    } catch (error) {
+      console.error(`Error refreshing listing: ${id}`)
     }
   }
 
@@ -260,6 +276,7 @@ class MyListings extends Component {
                           listing={l}
                           handleProcessing={this.handleProcessing}
                           handleUpdate={this.handleUpdate}
+                          onClose={() => this.refreshListing(l.id)}
                         />
                       ))}
                     </div>
