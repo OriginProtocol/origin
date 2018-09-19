@@ -1,6 +1,8 @@
-const fs = require('fs');
+const fs = require('fs')
 const glob = require('glob')
+const supportedLocales = require('../supported-locales.json')
 const translatedMessages = {}
+const unsupportedLocales = []
 
 glob.sync('./translations/languages/**/*.json')
   .map((filePath) => {
@@ -9,15 +11,26 @@ glob.sync('./translations/languages/**/*.json')
     const contents = JSON.parse(file)
     const locale = filePath.substring( filePath.indexOf('/languages/') + 11, filePath.lastIndexOf('/') )
 
-    if(locale && contents) {
-      translatedMessages[locale] = contents
-      console.info(`✔ ${locale}`)
+    if (locale && contents) {
+
+      if (supportedLocales.includes(locale)) {
+        translatedMessages[locale] = contents
+        console.info(`✅  ${locale}`)
+      } else {
+        unsupportedLocales.push(locale)
+      }
+
     } else {
-      console.info(`❌ Error processing translations for ${locale}`)
+      console.info(`❌  Error processing translations for ${locale}`)
     }
     
   })
 
-fs.writeFileSync('./translations/translated-messages.json', JSON.stringify(translatedMessages, null, 2));
+if (unsupportedLocales.length) {
+  console.info(`\nNOTE: translations not processed for these unsupported locales:`)
+  unsupportedLocales.map((locale) => console.info(`❌  ${locale} is not supported`))
+}
 
-console.info('✔ Updated: /translations/translated-messages.json')
+fs.writeFileSync('./translations/translated-messages.json', JSON.stringify(translatedMessages, null, 2))
+
+console.info('\n✅  Updated: /translations/translated-messages.json\n')
