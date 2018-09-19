@@ -109,7 +109,7 @@ class WalletCard extends Component {
             <a href={`https://erc725.originprotocol.com/#/identity/${identityAddress}`} target="_blank">Identity Contract Detail</a>
           </div>
         */}
-        {address === web3Account && (
+        {ethBalance !== undefined && (
           <Fragment>
             <hr className="dark sm" />
             <div className="balances">
