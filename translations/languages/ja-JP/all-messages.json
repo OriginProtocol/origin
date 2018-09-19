@@ -72,7 +72,7 @@
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-card.pending": "保留中",
   "listing-card.sold": "完売",
-  "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
+  "listing-create.navigationWarning": "このままページを離れて良いですか？今このページを離れると、全ての更新内容が失われます。",
   "listing-create.stepNumberLabel": "手順 {stepNumber}",
   "listing-create.whatTypeOfListing": "どのような収載を作成しますか？",
   "listing-create.next": "次へ",
