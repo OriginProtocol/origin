@@ -1,4 +1,3 @@
-import ResourceBase from './_resource-base'
 import secp256k1 from 'secp256k1'
 import CryptoJS from 'crypto-js'
 import cryptoRandomString from 'crypto-random-string'
@@ -123,7 +122,7 @@ class InsertOnlyKeystore {
   }
 }
 
-class Messaging extends ResourceBase {
+class Messaging {
   constructor({
     contractService,
     ipfsCreator,
@@ -131,7 +130,7 @@ class Messaging extends ResourceBase {
     ecies,
     messagingNamespace
   }) {
-    super({ contractService })
+    this.contractService = contractService
     this.web3 = this.contractService.web3
     this.ipfsCreator = ipfsCreator
     this.OrbitDB = OrbitDB

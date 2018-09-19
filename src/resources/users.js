@@ -1,9 +1,7 @@
 import UsersResolver from '../ethereumInterface/users/_resolver'
-import ResourceBase from './_resource-base'
 
-class Users extends ResourceBase {
+class Users {
   constructor({ contractService, ipfsService }) {
-    super({ contractService, ipfsService })
     this.resolver = new UsersResolver({ contractService, ipfsService })
   }
 
