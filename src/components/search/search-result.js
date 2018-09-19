@@ -50,7 +50,6 @@ class SearchResult extends Component {
   }
 
   handleChangePage(page) {
-    console.log('handleChangePage', page)
     this.setState({ page: page })
   }
 
