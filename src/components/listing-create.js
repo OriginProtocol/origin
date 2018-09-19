@@ -340,7 +340,7 @@ class ListingCreate extends Component {
         <div className="step-container">
           <div className="row">
             {step === this.STEP.PICK_SCHEMA && (
-              <div className="col-md-5 pick-schema">
+              <div className="col-md-6 col-lg-5 pick-schema">
                 <label>
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
@@ -398,7 +398,7 @@ class ListingCreate extends Component {
               </div>
             )}
             {step === this.STEP.DETAILS && (
-              <div className="col-md-5 schema-details">
+              <div className="col-md-6 col-lg-5 schema-details">
                 <label>
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
@@ -450,7 +450,7 @@ class ListingCreate extends Component {
               </div>
             )}
             {step === this.STEP.BOOST && (
-              <div className="col-md-5 select-boost">
+              <div className="col-md-6 col-lg-5 select-boost">
                 <label>
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
@@ -523,7 +523,7 @@ class ListingCreate extends Component {
               </div>
             )}
             {step >= this.STEP.PREVIEW && (
-              <div className="col-md-8 listing-preview">
+              <div className="col-md-6 col-lg-5 listing-preview">
                 <label className="create-step">
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
@@ -675,11 +675,7 @@ class ListingCreate extends Component {
                 </div>
               </div>
             )}
-            <div
-              className={`col-md-4${
-                step === this.STEP.PREVIEW ? '' : ' offset-md-3'
-              }`}
-            >
+            <div className="pt-xs-4 pt-sm-4 col-md-5 offset-md-1 col-lg-4 offset-lg-3">
               <WalletCard
                 wallet={wallet}
                 withMenus={true}
@@ -961,7 +957,7 @@ class ListingCreate extends Component {
           </div>
         </div>
         <Prompt
-          when={schemaFetched}
+          when={step !== this.STEP.PICK_SCHEMA && step !== this.STEP.SUCCESS}
           message={intl.formatMessage(this.intlMessages.navigationWarning)}
         />
       </div>
