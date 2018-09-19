@@ -15,7 +15,7 @@ import {
   REVIEW_DATA_TYPE,
   IpfsDataStore,
 } from '../ipfsInterface/store'
-import MarketplaceResolver from '../ethereumInterface/marketplace/_resolver'
+import MarketplaceResolver from '../ethereumInterface/marketplace/resolver'
 
 class Marketplace {
   constructor({ contractService, ipfsService, store }) {
