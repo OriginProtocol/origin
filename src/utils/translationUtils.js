@@ -291,7 +291,7 @@ export function translateSchema(schemaJson, schemaType) {
   return schema
 }
 
-export function translateListingCategory(rawCategory='') {
+export function translateListingCategory(rawCategory = '') {
   const match = rawCategory.match(/^schema\.([^.]+)\.([^.]+)$/)
   if (match === null) {
     return rawCategory
