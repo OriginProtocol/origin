@@ -11,7 +11,8 @@ import origin from '../services/origin'
  */
 export function dappFormDataToOriginListing(formData) {
   // formData.category data format is "schema.<category>.<subCategory>".
-  const [category, subCategory] = formData.category.split('.').slice(1)
+  const subCategory = formData.category
+  const category = formData.category.split('.')[1]
 
   const listingData = {
     category: category,
