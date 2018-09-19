@@ -38,18 +38,18 @@ class PriceField extends Component {
       if (valueNum < 0) {
         return
       }
-      this.setState({
-        price: valueNum
-      })
+      this.setState(
+        {
+          price: valueNum
+        },
+        () => this.props.onChange(valueNum)
+      )
 
       if (!isNan) {
         const priceUsd = await getFiatPrice(valueNum, this.state.currencyCode)
-        this.setState(
-          {
-            priceUsd
-          },
-          () => this.props.onChange(valueNum)
-        )
+        this.setState({
+          priceUsd
+        })
       }
     }
   }
