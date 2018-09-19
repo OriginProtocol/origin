@@ -21,6 +21,7 @@ RUN elasticsearch -p /tmp/espid & echo 'Waiting for elastic...'; \
             "unitsTotal":                 { "type": "integer" },  \
             "language":                   { "type": "keyword" },  \
             "listingType":                { "type": "keyword" },  \
+            "status":                     { "type": "keyword" },  \
             "category":                   { "type": "keyword", "copy_to": "all_text" },  \
             "subCategory":                { "type": "keyword", "copy_to": "all_text" },  \
             "description":                { "type": "text", "copy_to": "all_text" },  \
