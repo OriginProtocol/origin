@@ -1,4 +1,4 @@
-import UsersResolver from '../adapters/users/_resolver'
+import UsersResolver from '../ethereumInterface/users/_resolver'
 import ResourceBase from './_resource-base'
 
 class Users extends ResourceBase {

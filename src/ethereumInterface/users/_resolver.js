@@ -1,4 +1,4 @@
-import V00_UsersAdapter from './v00'
+import V00_UsersAdapter from './v00_adapter'
 import UserObject from '../../models/user'
 
 class UsersResolver {
