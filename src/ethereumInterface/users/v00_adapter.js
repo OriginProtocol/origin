@@ -7,7 +7,7 @@ import {
   pubToAddress
 } from 'ethereumjs-util'
 import Web3 from 'web3'
-import { PROFILE_DATA_TYPE, IpfsDataStore } from '../../services/data-store-service'
+import { PROFILE_DATA_TYPE, IpfsDataStore } from '../../ipfsInterface/store'
 
 const selfAttestationTopic = 13 // TODO: use the correct number here
 const emptyAddress = '0x0000000000000000000000000000000000000000'

@@ -14,7 +14,7 @@ import {
   RESOLUTION_DATA_TYPE,
   REVIEW_DATA_TYPE,
   IpfsDataStore,
-} from '../services/data-store-service'
+} from '../ipfsInterface/store'
 import MarketplaceResolver from '../ethereumInterface/marketplace/_resolver'
 
 class Marketplace {

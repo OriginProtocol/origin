@@ -1,4 +1,4 @@
-import { dataAdapterFactory } from './_data-store-adapter'
+import adapterFactory from './adapters/adapter-factory'
 
 export const LISTING_DATA_TYPE = 'listing'
 export const LISTING_WITHDRAW_DATA_TYPE = 'listing-withdraw'
@@ -88,7 +88,7 @@ export class IpfsDataStore {
     }
 
     // Get an adapter to handle the data.
-    const adapter = dataAdapterFactory(ipfsData.schemaId, dataType, schemaVersion)
+    const adapter = adapterFactory(ipfsData.schemaId, dataType, schemaVersion)
 
     // Decode and validate the data.
     const data = adapter.decode(ipfsData)
@@ -123,7 +123,7 @@ export class IpfsDataStore {
     data.schemaId = schemaId
 
     // Get an adapter to handle the data.
-    const adapter = dataAdapterFactory(schemaId, dataType, schemaVersion)
+    const adapter = adapterFactory(schemaId, dataType, schemaVersion)
 
     // Apply any pre-processing before storing data.
     if (adapter.preProcessor) await adapter.preProcessor(data, this.ipfsService)
