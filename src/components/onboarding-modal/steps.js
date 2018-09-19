@@ -33,18 +33,18 @@ export default [
       <div>
         <p className="step-text">
           You will need a wallet to withdraw/deposit on the Origin DApp. Use a
-          metamask wallet or Origin&#39;s Mobile Wallet App.
+          MetaMask wallet or Origin&#39;s Mobile Wallet App.
         </p>
       </div>
     ),
     subStep: {
       name: 'Connected',
-      heading: <h3>Metamask is connected</h3>,
+      heading: <h3>MetaMask is connected</h3>,
       img: <img src="/images/metamask.svg" alt="eth-tokens" />,
       content: (
         <div className="connected">
           <p className="step-text">
-            We&#39;ve detected a Metamask wallet. <br />
+            We&#39;ve detected a MetaMask wallet. <br />
             You&#39;re one step closer to selling on the Origin DApp. Click the
             button below to learn about Origin Tokens and boosting your
             listings.

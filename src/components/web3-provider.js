@@ -30,7 +30,12 @@ const ONE_MINUTE = ONE_SECOND * 60
 // TODO (micah): potentially add a loading indicator
 
 const NotWeb3EnabledDesktop = props => (
-  <Modal backdrop="static" className="not-web3-enabled" isOpen={true}>
+  <Modal
+    backdrop="static"
+    className="not-web3-enabled"
+    isOpen={true}
+    tabIndex="-1"
+  >
     <div className="image-container">
       <img src="images/metamask.png" role="presentation" />
     </div>
@@ -72,11 +77,6 @@ const NotWeb3EnabledDesktop = props => (
         />
       </a>
     </div>
-    <FormattedMessage
-      id={'web3-provider.notSignedIntoMetaMask'}
-      defaultMessage={'You are not signed in to MetaMask.'}
-    />
-    <br />
   </Modal>
 )
 

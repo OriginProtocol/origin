@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import Modal from 'components/modal'
+
 import CountryOptions from './_countryOptions'
 
 import origin from '../../services/origin'
@@ -32,9 +33,9 @@ class VerifyPhone extends Component {
     })
 
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.onCancel = this.onCancel.bind(this)
     this.setSelectedCountry = this.setSelectedCountry.bind(this)
     this.toggleVerificationMethod = this.toggleVerificationMethod.bind(this)
-    this.onCancel = this.onCancel.bind(this)
   }
 
   async handleSubmit(e) {
@@ -107,6 +108,7 @@ class VerifyPhone extends Component {
         data-modal="phone"
         className="attestation"
         handleToggle={handleToggle}
+        tabIndex="-1"
       >
         <div className="image-container d-flex align-items-center">
           <img src="images/phone-icon-dark.svg" role="presentation" />

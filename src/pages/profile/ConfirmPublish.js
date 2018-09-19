@@ -9,7 +9,12 @@ class ConfirmPublish extends Component {
     const { open, changes, onConfirm, handleToggle } = this.props
 
     return (
-      <Modal isOpen={open} data-modal="publish" handleToggle={handleToggle}>
+      <Modal
+        isOpen={open}
+        data-modal="publish"
+        handleToggle={handleToggle}
+        tabIndex="-1"
+      >
         <div className="image-container">
           <img src="images/public-icon.svg" role="presentation" />
         </div>

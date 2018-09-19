@@ -63,7 +63,12 @@ class MessageNew extends Component {
     const canDeliverMessage = origin.messaging.canConverseWith(recipientAddress)
 
     return (
-      <Modal isOpen={open} data-modal="message" handleToggle={handleToggle}>
+      <Modal
+        isOpen={open}
+        data-modal="message"
+        handleToggle={handleToggle}
+        tabIndex="-1"
+      >
         <div className="eth-container">
           <Identicon address={recipientAddress} size={80} />
           <h2>
@@ -72,12 +77,12 @@ class MessageNew extends Component {
             <span className="address">{recipientAddress}</span>
           </h2>
         </div>
-        {/* Just a precaution; no one should get here wihout truthy here. */}
+        {/* Recipient needs to enable messaging. */}
         {!canReceiveMessages && (
           <div className="roadblock">
             <FormattedMessage
               id={'MessageNew.cannotReceiveMessages'}
-              defaultMessage={'This user has not enabled Origin Messaging.'}
+              defaultMessage={'This user has not yet enabled Origin Messaging.'}
             />
             <div className="link-container text-center">
               <a href="#" data-modal="profile" onClick={handleToggle}>

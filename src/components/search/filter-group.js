@@ -40,23 +40,27 @@ class FilterGroup extends Component {
     if (index !== -1) this.childFilters.splice(index, 1)
   }
 
-  handleApplyClick(event) {
+  async handleApplyClick(event) {
     event.preventDefault()
 
-    const filters = this.childFilters.flatMap(childFilter =>
-      childFilter.getFilters()
-    )
+    Promise.all(
+      this.childFilters
+        .map(childFilter => childFilter.getFilters())
+    ).then(values => {
+      const filters = values.flatMap(childFilters => childFilters)
+      this.props.updateFilters(this.title, filters)
 
-    this.props.updateFilters(this.title, filters)
-
-    // close the dropdown menu. Handles the css clases and aria-expanded attribute
-    $('body').trigger('click')
+      // close the dropdown menu. Handles the css clases and aria-expanded attribute
+      $('body').trigger('click')
+    })
   }
 
-  handleClearClick(event) {
+  async handleClearClick(event) {
     event.preventDefault()
 
-    this.childFilters.forEach(childFilter => childFilter.onClear())
+    this.childFilters
+      // Also trigger the filter state chenge as you would with clicking apply
+      .forEach(childFilter => childFilter.onClear(async () => { await this.handleApplyClick(event) }))
   }
 
   handleOpenDropdown() {
@@ -95,6 +99,8 @@ class FilterGroup extends Component {
           onChildMounted={this.handleFilterMounted}
           onChildUnMounted={this.handleFilterUnMounted}
           key={index}
+          maxPrice={this.props.maxPrice}
+          minPrice={this.props.minPrice}
         />
       )
     } else if (filter.type === 'counter') {

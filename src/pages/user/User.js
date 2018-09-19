@@ -8,6 +8,8 @@ import Avatar from 'components/avatar'
 import Review from 'components/review'
 import WalletCard from 'components/wallet-card'
 
+import origin from '../../services/origin'
+
 class User extends Component {
   constructor(props) {
     super(props)
@@ -22,29 +24,41 @@ class User extends Component {
     })
   }
 
-  async componentWillMount() {
-    this.props.fetchUser(
-      this.props.userAddress,
-      this.props.intl.formatMessage(this.intlMessages.unnamedUser)
-    )
-    // TODO: User reviews
+  async componentDidMount() {
+    const { fetchUser, intl, userAddress } = this.props
+
+    fetchUser(userAddress, intl.formatMessage(this.intlMessages.unnamedUser))
+
+    const listingIdsAsSeller = await origin.marketplace.getListings({
+      idsOnly: true,
+      listingsFor: userAddress
+    })
+    const listingIdsAsBuyer = await origin.marketplace.getListings({
+      idsOnly: true,
+      purchasesFor: userAddress
+    })
+    const arrayOfArrays = await Promise.all([
+      ...listingIdsAsBuyer,
+      ...listingIdsAsSeller
+    ].map(async id => origin.marketplace.getListingReviews(id)))
+    const reviews = [].concat(...arrayOfArrays)
+
+    this.setState({ reviews })
   }
 
   render() {
-    const { user, wallet } = this.props
+    const { user, userAddress } = this.props
     const { attestations, fullName, profile } = user
     const description =
       (profile && profile.description) || 'An Origin user without a description'
-    const usersReviews = this.state.reviews.filter(
-      r => r.revieweeAddress === wallet.address
-    )
+    const userReviews = this.state.reviews.filter(r => r.reviewer !== userAddress)
 
     return (
       <div className="public-user profile-wrapper">
         <div className="container">
           <div className="row">
             <div className="col-12 col-md-4 col-lg-4 order-md-3">
-              <WalletCard wallet={wallet} withProfile={false} />
+              <WalletCard wallet={{ address: userAddress }} withProfile={false} />
             </div>
             <div className="col-12 col-sm-4 col-md-3 col-lg-2 order-md-1">
               <Avatar
@@ -151,12 +165,10 @@ class User extends Component {
                     defaultMessage={'Reviews'}
                   />
                   &nbsp;<span className="review-count">
-                    {Number(usersReviews.length).toLocaleString()}
+                    {Number(userReviews.length).toLocaleString()}
                   </span>
                 </h2>
-                {usersReviews.map(r => (
-                  <Review key={r.transactionHash} review={r} />
-                ))}
+                {userReviews.map(r => <Review key={r.id} review={r} />)}
                 {/* To Do: pagination */}
                 {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
               </div>
@@ -170,8 +182,7 @@ class User extends Component {
 
 const mapStateToProps = (state, { userAddress }) => {
   return {
-    user: state.users.find(u => u.address === userAddress) || {},
-    wallet: state.wallet
+    user: state.users.find(u => u.address === userAddress) || {}
   }
 }
 

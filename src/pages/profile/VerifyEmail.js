@@ -27,8 +27,8 @@ class VerifyEmail extends Component {
       }
     })
 
-    this.handleSubmit = this.handleSubmit.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   render() {
@@ -38,6 +38,7 @@ class VerifyEmail extends Component {
         data-modal="email"
         className="attestation"
         handleToggle={this.props.handleToggle}
+        tabIndex="-1"
       >
         <div className="image-container d-flex align-items-center">
           <img src="images/email-icon-dark.svg" role="presentation" />

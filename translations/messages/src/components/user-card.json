@@ -4,12 +4,20 @@
     "defaultMessage": "Unnamed User"
   },
   {
+    "id": "messages-send.sendMessages",
+    "defaultMessage": "send messages"
+  },
+  {
     "id": "user-card.heading",
     "defaultMessage": "About the {title}"
   },
   {
-    "id": "transaction-progress.ethAddress",
+    "id": "user-card.ethAddress",
     "defaultMessage": "ETH Address:"
+  },
+  {
+    "id": "user-card.enabledContact",
+    "defaultMessage": "Contact"
   },
   {
     "id": "transaction-progress.viewProfile",
