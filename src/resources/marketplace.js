@@ -1,7 +1,9 @@
 import { Listing } from '../models/listing'
 import { Offer } from '../models/offer'
 import { Review } from '../models/review'
+import { Notification } from '../models/notification'
 import { notificationStatuses, storeKeys } from '../models/notification'
+import { generateListingId, generateOfferId } from '../utils/id'
 import {
   LISTING_DATA_TYPE,
   LISTING_WITHDRAW_DATA_TYPE,
@@ -342,7 +344,29 @@ class Marketplace {
 
   async getNotifications() {
     const party = await this.contractService.currentAccount()
-    return await this.resolver.getNotifications(party)
+    const notifications = await this.resolver.getNotifications(party)
+    return await Promise.all(notifications.map(async (notification) => {
+      if (notification.resources.listingId) {
+        notification.resources.listing = await this.getListing(
+          generateListingId({
+            version: notification.version,
+            network: notification.network,
+            listingIndex: notification.resources.listingId
+          })
+        )
+      }
+      if (notification.resources.offerId) {
+        notification.resources.purchase = await this.getOffer(
+          generateOfferId({
+            version: notification.version,
+            network: notification.network,
+            listingIndex: notification.resources.listingId,
+            offerIndex: notification.resources.offerId
+          })
+        )
+      }
+      return new Notification(notification)
+    }))
   }
 
   async setNotification({ id, status }) {
