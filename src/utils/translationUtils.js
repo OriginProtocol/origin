@@ -291,12 +291,12 @@ export function translateSchema(schemaJson, schemaType) {
   return schema
 }
 
-export function translateListingCategory(rawCategory) {
+export function translateListingCategory(rawCategory='') {
   const match = rawCategory.match(/^schema\.([^.]+)\.([^.]+)$/)
   if (match === null) {
     return rawCategory
   }
-  const [_, schemaType, category] = match
+  const schemaType = match[1]
   const schema = schemaMessages[schemaType]
   if (schema === null || schema[rawCategory] === undefined) {
     return rawCategory
