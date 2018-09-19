@@ -1,9 +1,9 @@
 const fs = require('fs')
 const http = require('http')
 const urllib = require('url')
+const Origin = require('origin')
 const Web3 = require('web3')
 
-const Origin = require('../../../dist/index') // FIXME: replace with origin-js package
 const search = require('../lib/search.js')
 const db = require('../lib//db.js')
 

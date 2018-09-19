@@ -5,10 +5,9 @@ var elasticsearch = require('elasticsearch')
  */
 
 
-// TODO(franck): dynamically configure client.
 var client = new elasticsearch.Client({
   hosts: [
-    'elasticsearch:9200/'
+    process.env.ELASTICSEARCH_HOST || 'elasticsearch:9200'
   ]
 })
 

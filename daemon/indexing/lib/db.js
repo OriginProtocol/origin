@@ -4,13 +4,13 @@ const { Pool } = require('pg')
   Module to interface with Postgres database.
  */
 
-// TODO(franck): dynamically configure client.
 const pool = new Pool(
   {
-    host: 'postgres',
-    database: 'origin-indexing',
-    user: 'origin',
-    password: 'origin',
+    host: process.env.DATABASE_HOST || 'postgres',
+    port: process.env.DATABASE_PORT || 5432,
+    database: process.env.DATABASE_NAME || 'origin-indexing',
+    user: process.env.DATABASE_USERNAME || 'origin',
+    password: process.env.DATABASE_PASSWORD || 'origin',
   })
 
 
