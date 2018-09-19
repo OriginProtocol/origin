@@ -40,7 +40,7 @@ class MyPurchases extends Component {
     })
     const listingPromises = listingIds.map(listingId => {
       return new Promise(async resolve => {
-        const listing = await getListing(listingId)
+        const listing = await getListing(listingId, true)
         resolve({ listingId, listing })
       })
     })

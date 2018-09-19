@@ -50,7 +50,7 @@ class MyListings extends Component {
       })
       const listings = await Promise.all(
         ids.map(id => {
-          return getListing(id)
+          return getListing(id, true)
         })
       )
 
