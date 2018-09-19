@@ -2,12 +2,17 @@ const path = require('path')
 
 const Config = require('../lib/config.js')
 const Token = require('../lib/token.js')
+const Marketplace = require('../lib/marketplace.js')
 
 const DEFAULT_NETWORK_ID = '999' // Local blockchain.
 
 const command = `node ${path.basename(__filename)}`
 const usage = `
 syntax: ${command} --action=ACTION ...
+
+-----------------------------------------------------------------------------
+
+Token Actions
 
 Print status of token contract:
 ${command} --action=status [--network_id=NETWORK_ID]
@@ -25,7 +30,27 @@ Unpause all token transfers and approvals:
 ${command} --action=unpause [--network_id=NETWORK_ID]
 
 Set owner of token contract to ADDRESS:
-${command} --action=setOwner --address=ADDRESS [--network_id=NETWORK_ID]
+${command} --action=setTokenOwner --address=ADDRESS [--network_id=NETWORK_ID]
+
+-----------------------------------------------------------------------------
+
+Marketplace Actions
+
+Print status of all marketplace contracts:
+${command} --action=marketplaceStatus [--network_id=NETWORK_ID]
+
+Set owner of marketplace contract to ADDRESS:
+${command} --action=setMarketplaceOwner --contract=CONTRACT_NAME --address=ADDRESS [--network_id=NETWORK_ID]
+
+Set token contract address for marketplace contract:
+${command} --action=setMarketplaceTokenAddress --contract=CONTRACT_NAME--address=ADDRESS [--network_id=NETWORK_ID]
+
+CONTRACT_NAME is the name the contract on which to perform the action. For
+example: --contract=V00_Marketplace
+
+-----------------------------------------------------------------------------
+
+General parameters
 
 --network_id defaults to 999 (local blockchain)
 `
@@ -38,6 +63,7 @@ function errorAndExit(/* all args are logged */) {
 
 async function run(config) {
   const token = new Token(config)
+  const marketplace = new Marketplace(config)
 
   if (!config.networkId) {
     errorAndExit('--network_id=NETWORK_ID must be specified')
@@ -84,7 +110,7 @@ async function run(config) {
     }
     break
   }
-  case 'setOwner': {
+  case 'setTokenOwner': {
     config.verbose = true
     if (!config.address) {
       errorAndExit('--address=ADDRESS needs to be specified')
@@ -95,6 +121,39 @@ async function run(config) {
   }
   case `status`: {
     await token.logStatus(config.networkId)
+    break
+  }
+  // Marketplace actions. These are shoehorned in here due to time constraints.
+  // TODO: move these to a separate marketplace CLI
+  case `marketplaceStatus`: {
+    await marketplace.logStatus(config.networkId)
+    break
+  }
+  case 'setMarketplaceOwner': {
+    config.verbose = true
+    if (!config.address) {
+      errorAndExit('--address=ADDRESS needs to be specified')
+    }
+    if (!config.contractName) {
+      errorAndExit('--contract=CONTRACT_NAME must be specified')
+    }
+    await marketplace.setOwner(config.networkId, config.contractName, config.address)
+    console.log(`${config.contractName} owner set to ${config.address}`)
+    break
+  }
+  case 'setMarketplaceTokenAddress': {
+    config.verbose = true
+    if (!config.address) {
+      errorAndExit('--address=ADDRESS needs to be specified')
+    }
+    if (!config.contractName) {
+      errorAndExit('--contract=CONTRACT_NAME must be specified')
+    }
+    await marketplace.setTokenAddress(
+      config.networkId,
+      config.contractName,
+      config.address
+    )
     break
   }
   case undefined:
@@ -126,6 +185,10 @@ const config = {
   // When the sender of a contract call is a multisig wallet, this contains the
   // address of the multisig wallet.
   multisig: args['--multisig'],
+
+  // Name of contract, to disambiguate when there are multiple active contracts
+  // that serve the same function.
+  contractName: args['--contract'],
 
   // Override owner whitelist. NEVER use this unless you're on a local dev
   // blockchain.

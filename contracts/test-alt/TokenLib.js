@@ -5,7 +5,7 @@ import Token from '../../token/lib/token'
 // These tests are for the token library that the token CLI uses. We don't
 // validate the effects of various operations. That is left to the contract
 // tests.
-describe('Token Library', async function() {
+describe('Token CLI Library', async function() {
   const supply = 1000
   const networkId = '999'
 
@@ -53,16 +53,16 @@ describe('Token Library', async function() {
 
   it('sets the owner of the token', async () => {
     const newOwner = accounts[1]
-    TokenLib.validTokenOwners = {}
-    TokenLib.validTokenOwners[networkId] = [ newOwner ]
+    TokenLib.validOwners = {}
+    TokenLib.validOwners[networkId] = [ newOwner ]
     await TokenLib.setOwner(networkId, newOwner)
     assert.equal(newOwner, await TokenLib.owner(networkId))
   })
 
   it('does not set owner to non-whitelisted address', async () => {
     const invalidOwner = accounts[5]
-    TokenLib.validTokenOwners = {}
-    TokenLib.validTokenOwners[networkId] = [ owner ]
+    TokenLib.validOwners = {}
+    TokenLib.validOwners[networkId] = [ owner ]
     try {
       await TokenLib.setOwner(networkId, invalidOwner)
       assert(false)
@@ -73,8 +73,8 @@ describe('Token Library', async function() {
 
   it('allows owner to be any address with an empty whitelist', async () => {
     const newOwner = accounts[1]
-    TokenLib.validTokenOwners = {}
-    TokenLib.validTokenOwners[networkId] = [ ]
+    TokenLib.validOwners = {}
+    TokenLib.validOwners[networkId] = [ ]
     await TokenLib.setOwner(networkId, newOwner)
     assert.equal(newOwner, await TokenLib.owner(networkId))
   })
@@ -88,8 +88,8 @@ describe('Token Library', async function() {
     })
 
     // Make the multi-sig wallet the contract owner.
-    TokenLib.validTokenOwners = {}
-    TokenLib.validTokenOwners[networkId] = [ MultiSigWallet._address ]
+    TokenLib.validOwners = {}
+    TokenLib.validOwners[networkId] = [ MultiSigWallet._address ]
     await TokenLib.setOwner(networkId, MultiSigWallet._address)
 
     // Send pause contract call with 1 of 3 signatures.

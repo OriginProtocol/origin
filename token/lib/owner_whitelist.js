@@ -1,4 +1,4 @@
-const validTokenOwners = {
+const validOwners = {
   // mainnet
   "1": [
     // Empty list means allow all
@@ -32,7 +32,7 @@ const validTokenOwners = {
  * @param {string} networkId - Ethereum network ID.
  * @param {string} newOwner - Address of the new owner.
  */
-const isValidTokenOwner = (networkId, newOwner, validOwners = validTokenOwners) => {
+const isValidOwner = (networkId, newOwner, validOwners = validOwners) => {
   const newOwnerLower = newOwner.toLowerCase()
   const whitelist = validOwners[networkId]
   if (typeof whitelist === undefined) {
@@ -44,4 +44,4 @@ const isValidTokenOwner = (networkId, newOwner, validOwners = validTokenOwners) 
   return whitelist.filter(address => address.toLowerCase() === newOwnerLower).length > 0
 }
 
-module.exports = { isValidTokenOwner, validTokenOwners }
+module.exports = { isValidOwner, validOwners }
