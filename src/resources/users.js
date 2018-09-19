@@ -1,4 +1,4 @@
-import UsersResolver from '../ethereumInterface/users/resolver'
+import UsersResolver from '../contractInterface/users/resolver'
 
 class Users {
   constructor({ contractService, ipfsService }) {

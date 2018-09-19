@@ -1,6 +1,6 @@
 # Ethereum Interface
 
-The ethereumInterface directory contains logic and provides an interface for interacting with Ethereum smart contracts. This includes handling of multiple contract versions over time and maintaining backwards compatibility.
+The contractInterface directory contains logic and provides an interface for interacting with Ethereum smart contracts. This includes handling of multiple contract versions over time and maintaining backwards compatibility.
 
 ## Resolvers
 

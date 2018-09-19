@@ -1,6 +1,6 @@
 import AttestationObject from '../models/attestation'
 import RLP from 'rlp'
-import UsersResolver from '../ethereumInterface/users/resolver'
+import UsersResolver from '../contractInterface/users/resolver'
 import Web3 from 'web3'
 
 const appendSlash = url => {
