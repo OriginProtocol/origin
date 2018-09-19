@@ -13,6 +13,7 @@ import MessageNew from 'components/message-new'
 import { getFiatPrice } from 'utils/priceUtils'
 
 import origin from '../services/origin'
+
 import $ from 'jquery'
 
 class WalletCard extends Component {
@@ -66,6 +67,7 @@ class WalletCard extends Component {
     this.props.getOgnBalance()
 
     this.convertEthToUsd()
+    this.initiateBootstrapTooltip()
   }
 
   componentDidUpdate(prevProps) {
@@ -82,6 +84,12 @@ class WalletCard extends Component {
     this.setState({ modalOpen: !this.state.modalOpen })
   }
 
+  initiateBootstrapTooltip() {
+    $('body').tooltip({
+      selector: '[data-toggle="tooltip"]'
+    })
+  }
+
   render() {
     const { profile, wallet, web3Account, withMenus, withProfile } = this.props
     const { address, ethBalance, ognBalance } = wallet
@@ -90,53 +98,34 @@ class WalletCard extends Component {
       address !== web3Account && origin.messaging.canReceiveMessages(address)
 
     const balanceTooltip = `
-      <p class='tooltip-balance-heading tooltip-align-left'>
-        ${this.props.intl.formatMessage(this.intlMessages.yourBalance)}
-        <img class='ogn-icon' src = 'images/ogn-icon.svg' role = 'presentation' />
-        <span class='ogn'>
-          # OGN
-        </span>
-      </p>
-      <p class='tooltip-balance-text tooltip-align-left'>
-        ${this.props.intl.formatMessage(this.intlMessages.balanceText)}
-      </p>
-      <p class='tooltip-align-left'>
-        <a href='#' class='add-more-btn add-more-text'>
-          <img class='add-more-icon' src='images/add-icon.svg' role='presentation' />
-          ${this.props.intl.formatMessage(this.intlMessages.getOGN)}
-        </a>
-        <span class='recommended'>
-          ${this.props.intl.formatMessage(this.intlMessages.recommendation)}
-        </span>
-      </p>
-      <p class='tooltip-align-left'>
-        <a href='/#/about-tokens' target='_blank' class='learn-more'>
-          ${this.props.intl.formatMessage(this.intlMessages.learnMore)} ▸
-        </a>
-      </p>
+      <div>
+        <p class='tooltip-balance-heading tooltip-align-left'>
+          ${this.props.intl.formatMessage(this.intlMessages.yourBalance)}
+          <img class='ogn-icon' src = 'images/ogn-icon.svg' role = 'presentation' />
+          <span class='ogn'>
+            # OGN
+          </span>
+        </p>
+        <p class='tooltip-balance-text tooltip-align-left'>
+          ${this.props.intl.formatMessage(this.intlMessages.balanceText)}
+        </p>
+        <p class='tooltip-align-left'>
+          <a href='#' class='add-more-btn add-more-text'>
+            <img class='add-more-icon' src='images/add-icon.svg' role='presentation' />
+            ${this.props.intl.formatMessage(this.intlMessages.getOGN)}
+          </a>
+          <span class='recommended'>
+            ${this.props.intl.formatMessage(this.intlMessages.recommendation)}
+          </span>
+        </p>
+        <p class='tooltip-align-left'>
+          <a href='/#/about-tokens' target='_blank' class='learn-more'>
+            ${this.props.intl.formatMessage(this.intlMessages.learnMore)} ▸
+          </a>
+        </p>
+      </div>
     `
-  $('.ogn-balance').tooltip({
-    trigger: 'manual',
-    html: true,
-    placement: 'left',
-    animation: true
-  })
-    .on('mouseenter', function () {
-      const _this = this;
-      $(this).tooltip('show');
-      $('.tooltip').on('mouseleave', function () {
-        $(_this).tooltip('hide');
-      });
-    })
-    .on('mouseleave', function () {
-      const _this = this;
-      setTimeout(function () {
-        if (!$('.tooltip:hover').length) {
-          $(_this).tooltip('hide');
-        }
-      }, 500);
-    });
-    
+
     return (
       <div className="wallet">
         <div className="d-flex">
@@ -233,7 +222,13 @@ class WalletCard extends Component {
               <div className="d-flex align-items-start">
                 <a className="ogn-balance"
                   data-toggle="tooltip"
+                  data-placement="left"
+                  data-trigger="hover focus"
                   data-title={balanceTooltip}
+                  data-animation={true}
+                  data-html={true}
+                  data-container="body"
+                  data-delay='{"show":"0", "hide":"5000"}'
                 >
                   <img src="images/ogn-icon.svg" role="presentation" />
                 </a>
