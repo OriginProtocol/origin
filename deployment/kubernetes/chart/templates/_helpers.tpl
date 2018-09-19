@@ -16,12 +16,20 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "bridge.fullname" -}}
+{{- printf "%s-%s" .Release.Name "bridge" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
 {{- define "dapp.fullname" -}}
 {{- printf "%s-%s" .Release.Name "dapp" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "bridge.fullname" -}}
-{{- printf "%s-%s" .Release.Name "bridge" | trunc 63 | trimSuffix "-" -}}
+{{- define "ethereum.fullname" -}}
+{{- printf "%s-%s" .Release.Name "ethereum" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "faucet.fullname" -}}
+{{- printf "%s-%s" .Release.Name "faucet" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "ipfs.fullname" -}}
@@ -30,8 +38,4 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 
 {{- define "messaging.fullname" -}}
 {{- printf "%s-%s" .Release.Name "messaging" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{- define "ethereum.fullname" -}}
-{{- printf "%s-%s" .Release.Name "ethereum" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

@@ -1,0 +1,35 @@
+{{ if ne .Release.Namespace "prod" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "faucet.fullname" . }}
+  labels:
+    app: {{ template "faucet.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: {{ default 2 .Values.faucetReplicas }}
+  selector:
+    matchLabels:
+      app: {{ template "faucet.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "faucet.fullname" . }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: "{{ .Release.Name }}"
+    spec:
+      containers:
+      - name: origin-faucet
+        image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.faucetImage }}:{{ .Values.faucetImageTag }}"
+        ports:
+        - containerPort: 5000
+        env:
+          {{- if eq .Release.Namespace "dev" }}
+        - name: ORIGIN_MNEMONIC
+          {{- else if eq .Release.Namespace "staging" }}
+        - name: RINKEBY_MNEMONIC
+          {{- end }}
+          value: {{ .Values.faucetMnemonic }}
+{{ end }}

@@ -1,0 +1,16 @@
+FROM node:9
+WORKDIR /app
+
+# Clone origin-js from staging branch
+RUN git clone https://github.com/OriginProtocol/origin-js.git --branch staging /app
+
+# Build origin-js so contract ABI is available
+RUN npm install --quiet --no-progress
+RUN npm run build
+
+WORKDIR /app/token
+# Install dependencies for origin-faucet
+RUN npm install --quiet --no-progress
+
+# Configure for Rinekby
+CMD ["node", "faucet/app.js", "--network_ids=4"]

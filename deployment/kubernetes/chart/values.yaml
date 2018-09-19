@@ -12,6 +12,10 @@ dappImage: origin-dapp
 dappImageTag: latest
 dappReplicas: 2
 
+# origin-faucet
+faucetImage: origin-faucet
+faucetImageTag: latest
+
 # ipfs
 ipfsImage: ipfs/go-ipfs
 ipfsImageTag: master
