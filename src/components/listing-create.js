@@ -321,7 +321,6 @@ class ListingCreate extends Component {
       currentProvider,
       formListing,
       isBoostExpanded,
-      schemaFetched,
       selectedSchema,
       selectedSchemaType,
       schemaExamples,
