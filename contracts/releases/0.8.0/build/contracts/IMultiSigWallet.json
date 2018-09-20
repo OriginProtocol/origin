@@ -1,0 +1,572 @@
+{
+  "contractName": "IMultiSigWallet",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "isOwner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "required",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "destination",
+          "type": "address"
+        },
+        {
+          "name": "value",
+          "type": "uint256"
+        },
+        {
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "name": "submitTransaction",
+      "outputs": [
+        {
+          "name": "transactionId",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.4.24;\n\n/**\n * @title Interface for interacting with Gnosis MultiSigWallet.\n * @dev Avoids creating an explicit dependency on Gnosis MultiSigWallet, which\n * doesn't have an official npm package. This allows us to just use the ABI\n * to call the contract methods. The contract is deployed through the DApp &\n * desktop app, so we only need to make limited calls to it. Further signatures\n * also happen in the Gnosis apps.\n */\ncontract IMultiSigWallet {\n  mapping (address => bool) public isOwner;\n  uint public required;\n\n  /// @dev Allows an owner to submit and confirm a transaction.\n  /// @param destination Transaction target address.\n  /// @param value Transaction ether value.\n  /// @param data Transaction data payload.\n  /// @return Returns transaction ID.\n  function submitTransaction(address destination, uint value, bytes data)\n    public\n    returns (uint transactionId);\n}\n",
+  "sourcePath": "/Users/stan/Origin/origin-box/origin-js/contracts/contracts/multisig/IMultiSigWallet.sol",
+  "ast": {
+    "absolutePath": "/Users/stan/Origin/origin-box/origin-js/contracts/contracts/multisig/IMultiSigWallet.sol",
+    "exportedSymbols": {
+      "IMultiSigWallet": [
+        3639
+      ]
+    },
+    "id": 3640,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 3621,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".24"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:13"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": "@title Interface for interacting with Gnosis MultiSigWallet.\n@dev Avoids creating an explicit dependency on Gnosis MultiSigWallet, which\ndoesn't have an official npm package. This allows us to just use the ABI\nto call the contract methods. The contract is deployed through the DApp &\ndesktop app, so we only need to make limited calls to it. Further signatures\nalso happen in the Gnosis apps.",
+        "fullyImplemented": false,
+        "id": 3639,
+        "linearizedBaseContracts": [
+          3639
+        ],
+        "name": "IMultiSigWallet",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 3625,
+            "name": "isOwner",
+            "nodeType": "VariableDeclaration",
+            "scope": 3639,
+            "src": "474:40:13",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+              "typeString": "mapping(address => bool)"
+            },
+            "typeName": {
+              "id": 3624,
+              "keyType": {
+                "id": 3622,
+                "name": "address",
+                "nodeType": "ElementaryTypeName",
+                "src": "483:7:13",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "474:25:13",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+                "typeString": "mapping(address => bool)"
+              },
+              "valueType": {
+                "id": 3623,
+                "name": "bool",
+                "nodeType": "ElementaryTypeName",
+                "src": "494:4:13",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 3627,
+            "name": "required",
+            "nodeType": "VariableDeclaration",
+            "scope": 3639,
+            "src": "518:20:13",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 3626,
+              "name": "uint",
+              "nodeType": "ElementaryTypeName",
+              "src": "518:4:13",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Allows an owner to submit and confirm a transaction.\n @param destination Transaction target address.\n @param value Transaction ether value.\n @param data Transaction data payload.\n @return Returns transaction ID.",
+            "id": 3638,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "submitTransaction",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 3634,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3629,
+                  "name": "destination",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3638,
+                  "src": "813:19:13",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 3628,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "813:7:13",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3631,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3638,
+                  "src": "834:10:13",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 3630,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "834:4:13",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3633,
+                  "name": "data",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3638,
+                  "src": "846:10:13",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 3632,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "846:5:13",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "812:45:13"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 3637,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3636,
+                  "name": "transactionId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3638,
+                  "src": "882:18:13",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 3635,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "882:4:13",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "881:20:13"
+            },
+            "scope": 3639,
+            "src": "786:116:13",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 3640,
+        "src": "445:459:13"
+      }
+    ],
+    "src": "0:905:13"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/stan/Origin/origin-box/origin-js/contracts/contracts/multisig/IMultiSigWallet.sol",
+    "exportedSymbols": {
+      "IMultiSigWallet": [
+        3639
+      ]
+    },
+    "id": 3640,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 3621,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".24"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:13"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": "@title Interface for interacting with Gnosis MultiSigWallet.\n@dev Avoids creating an explicit dependency on Gnosis MultiSigWallet, which\ndoesn't have an official npm package. This allows us to just use the ABI\nto call the contract methods. The contract is deployed through the DApp &\ndesktop app, so we only need to make limited calls to it. Further signatures\nalso happen in the Gnosis apps.",
+        "fullyImplemented": false,
+        "id": 3639,
+        "linearizedBaseContracts": [
+          3639
+        ],
+        "name": "IMultiSigWallet",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 3625,
+            "name": "isOwner",
+            "nodeType": "VariableDeclaration",
+            "scope": 3639,
+            "src": "474:40:13",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+              "typeString": "mapping(address => bool)"
+            },
+            "typeName": {
+              "id": 3624,
+              "keyType": {
+                "id": 3622,
+                "name": "address",
+                "nodeType": "ElementaryTypeName",
+                "src": "483:7:13",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "474:25:13",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+                "typeString": "mapping(address => bool)"
+              },
+              "valueType": {
+                "id": 3623,
+                "name": "bool",
+                "nodeType": "ElementaryTypeName",
+                "src": "494:4:13",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 3627,
+            "name": "required",
+            "nodeType": "VariableDeclaration",
+            "scope": 3639,
+            "src": "518:20:13",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 3626,
+              "name": "uint",
+              "nodeType": "ElementaryTypeName",
+              "src": "518:4:13",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Allows an owner to submit and confirm a transaction.\n @param destination Transaction target address.\n @param value Transaction ether value.\n @param data Transaction data payload.\n @return Returns transaction ID.",
+            "id": 3638,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "submitTransaction",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 3634,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3629,
+                  "name": "destination",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3638,
+                  "src": "813:19:13",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 3628,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "813:7:13",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3631,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3638,
+                  "src": "834:10:13",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 3630,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "834:4:13",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3633,
+                  "name": "data",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3638,
+                  "src": "846:10:13",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 3632,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "846:5:13",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "812:45:13"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 3637,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3636,
+                  "name": "transactionId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3638,
+                  "src": "882:18:13",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 3635,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "882:4:13",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "881:20:13"
+            },
+            "scope": 3639,
+            "src": "786:116:13",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 3640,
+        "src": "445:459:13"
+      }
+    ],
+    "src": "0:905:13"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2018-09-20T16:13:54.074Z"
+}
