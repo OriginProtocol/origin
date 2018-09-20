@@ -20,7 +20,7 @@ class ListingCard extends Component {
       const listing = await getListing(this.props.listingId, true)
 
       this.setState({
-        boostLevelIsPastSomeThreshold: listing.boostValue > 0,
+        // boostLevelIsPastSomeThreshold: listing.boostValue > 0,
         ...listing,
         loading: false
       })
@@ -33,15 +33,15 @@ class ListingCard extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    // init tooltip only when necessary
-    if (this.state.boostLevelIsPastSomeThreshold && !prevState.id) {
-      $('[data-toggle="tooltip"]').tooltip({
-        delay: { hide: 1000 },
-        html: true
-      })
-    }
-  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   // init tooltip only when necessary
+  //   if (this.state.boostLevelIsPastSomeThreshold && !prevState.id) {
+  //     $('[data-toggle="tooltip"]').tooltip({
+  //       delay: { hide: 1000 },
+  //       html: true
+  //     })
+  //   }
+  // }
 
   componentWillUnmount() {
     $('[data-toggle="tooltip"]').tooltip('dispose')
@@ -49,7 +49,7 @@ class ListingCard extends Component {
 
   render() {
     const {
-      boostLevelIsPastSomeThreshold,
+      // boostLevelIsPastSomeThreshold,
       category,
       loading,
       name,
@@ -99,7 +99,7 @@ class ListingCard extends Component {
                 />
               </span>
             )}
-            {!loading &&
+            {/*!loading &&
               boostLevelIsPastSomeThreshold && (
               <span
                 className="boosted badge"
@@ -108,7 +108,7 @@ class ListingCard extends Component {
               >
                 <img src="images/boost-icon-arrow.svg" role="presentation" />
               </span>
-            )}
+            )*/}
           </div>
           <h2 className="title placehold text-truncate">{name}</h2>
           {price > 0 && (
