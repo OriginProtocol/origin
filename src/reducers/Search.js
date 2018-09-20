@@ -1,7 +1,8 @@
 import { SearchConstants } from '../actions/Search'
+import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
 
 const initialState = {
-  listingType: 'all',
+  listingType: listingSchemaMetadata.listingTypeAll,
   filters: {},
   generalSearchId: 0 // required for forcefully triggering general search even when search parameters don't change
 }

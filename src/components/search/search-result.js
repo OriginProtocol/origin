@@ -19,6 +19,7 @@ import {
   FILTER_OPERATOR_EQUALS
 } from 'components/search/constants'
 import { LISTINGS_PER_PAGE } from 'components/constants'
+import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
 
 class SearchResult extends Component {
   constructor(props) {
@@ -39,9 +40,10 @@ class SearchResult extends Component {
 
     // set default prop values for search_query and listing_type
     const getParams = queryString.parse(this.props.location.search)
+
     this.props.generalSearch(
       getParams.search_query || '',
-      getParams.listing_type || 'all',
+      this.getListingTypeObject(getParams.listing_type),
       false,
       false
     )
@@ -49,12 +51,17 @@ class SearchResult extends Component {
     this.handleChangePage = this.handleChangePage.bind(this)
   }
 
+  getListingTypeObject(typeString) {
+    return [...listingSchemaMetadata.listingTypes, listingSchemaMetadata.listingTypeAll]
+      .filter(listingType => listingType.type === typeString)[0] || listingSchemaMetadata.listingTypeAll
+  }
+
   handleChangePage(page) {
     this.setState({ page: page })
   }
 
   shouldFetchListingSchema() {
-    return this.props.listingType !== 'all'
+    return this.props.listingType.type !== 'all'
   }
 
   componentDidMount() {
@@ -74,7 +81,7 @@ class SearchResult extends Component {
     // exit if query parameters have not changed
     // TODO: also filter states need to be checked here
     if (
-      previousProps.listingType === this.props.listingType &&
+      previousProps.listingType.type === this.props.listingType.type &&
       previousProps.query === this.props.query &&
       deepEqual(previousProps.filters, this.props.filters) &&
       /* when user clicks on search, the generalSearchId increments by 1
@@ -94,7 +101,7 @@ class SearchResult extends Component {
 
     if (
       previousProps == undefined ||
-      this.props.listingType !== previousProps.listingType
+      this.props.listingType.type !== previousProps.listingType.type
     ) {
       this.setState({
         listingType: this.props.listingType,
@@ -103,7 +110,7 @@ class SearchResult extends Component {
       })
 
       const filterSchemaPath = `schemas/searchFilters/${
-        this.props.listingType
+        this.props.listingType.type
       }-search.json`
 
       fetch(filterSchemaPath)
@@ -112,7 +119,7 @@ class SearchResult extends Component {
           this.validateFilterSchema(schemaJson)
           // if schemas are fetched twice very close together, set schema only
           // when it matches the currently set listingType
-          if (this.state.listingType === schemaJson.listingType)
+          if (this.state.listingType.type === schemaJson.listingType)
             this.setState({ filterSchema: schemaJson })
         })
         .catch(function(e) {
@@ -121,7 +128,7 @@ class SearchResult extends Component {
         })
 
       if (this.shouldFetchListingSchema()) {
-        fetch(`schemas/${this.props.listingType}.json`)
+        fetch(`schemas/${this.props.listingType.type}.json`)
           .then(response => response.json())
           .then(schemaJson => {
             this.setState({ listingSchema: schemaJson })
@@ -180,10 +187,10 @@ class SearchResult extends Component {
       const filters = this.props.filters
 
       // when querying all listings no filter should be added
-      if (this.props.listingType !== 'all') {
+      if (this.props.listingType.type !== 'all') {
         filters.category = {
           name: 'category',
-          value: this.props.listingType[0].toUpperCase() + this.props.listingType.substring(1),
+          value: this.props.listingType.translationName.id,
           valueType: VALUE_TYPE_STRING,
           operator: FILTER_OPERATOR_EQUALS
         }
