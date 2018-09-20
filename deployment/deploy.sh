@@ -77,14 +77,14 @@ function check_secrets() {
     if [ "$answer" != "${answer#[Nn]}" ] ;then
       exit
     else
-      sops --decrypt ${VALUES_PATH}/${SECRETS_FILE_ENC} > ${VALUES_PATH}/${SECRETS_FILE}
+      out=$(sops --decrypt ${VALUES_PATH}/${SECRETS_FILE_ENC}) && [[ -n "$out" ]] && echo "$out" > ${VALUES_PATH}/${SECRETS_FILE}
     fi
   fi
 }
 
 function update_values() {
   echo -e 'Updating chart values with new tag for container'
-  sed -i "s|^${IMAGE_TAG_FIELD}: .*|${IMAGE_TAG_FIELD}: '${GIT_HASH}'|g" ${VALUES_PATH}/${VALUES_FILE}
+  sed -i.old "s|^${IMAGE_TAG_FIELD}: .*|${IMAGE_TAG_FIELD}: '${GIT_HASH}'|g" ${VALUES_PATH}/${VALUES_FILE} && rm ${VALUES_PATH}/${VALUES_FILE}.old
   echo -e "\033[31mUpdated values file at ${VALUES_PATH}/${VALUES_FILE}, this should be committed!\033[0m"
 }
 
