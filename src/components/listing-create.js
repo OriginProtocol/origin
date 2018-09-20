@@ -56,6 +56,7 @@ class ListingCreate extends Component {
 
     this.state = {
       step: this.STEP.PICK_SCHEMA,
+      selectedBoostAmount: props.wallet.ognBalance ? defaultBoostValue : 0,
       selectedSchemaType: null,
       selectedSchema: null,
       translatedSchema: null,
@@ -93,10 +94,19 @@ class ListingCreate extends Component {
     this.updateUsdPrice = this.updateUsdPrice.bind(this)
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     // conditionally show boost tutorial
     if (!this.state.showBoostTutorial) {
       this.detectNeedForBoostTutorial()
+    }
+
+    const { ognBalance } = this.props.wallet
+    // apply OGN detection to slider
+    if (ognBalance !== prevProps.wallet.ognBalance) {
+      // only if prior to boost selection step
+      this.state.step < this.STEP.BOOST && this.setState({
+        selectedBoostAmount: ognBalance ? defaultBoostValue : 0
+      })
     }
   }
 
@@ -253,7 +263,8 @@ class ListingCreate extends Component {
           boostValue,
           boostLevel
         }
-      }
+      },
+      selectedBoostAmount: boostValue
     })
   }
 
@@ -294,6 +305,7 @@ class ListingCreate extends Component {
         ...transactionReceipt,
         transactionTypeKey: 'createListing'
       })
+      this.props.getOgnBalance()
       this.setState({ step: this.STEP.SUCCESS })
     } catch (error) {
       console.error(error)
@@ -321,6 +333,7 @@ class ListingCreate extends Component {
       currentProvider,
       formListing,
       isBoostExpanded,
+      selectedBoostAmount,
       selectedSchema,
       selectedSchemaType,
       schemaExamples,
@@ -497,6 +510,7 @@ class ListingCreate extends Component {
                   <BoostSlider
                     onChange={ this.setBoost }
                     ognBalance={ wallet.ognBalance }
+                    selectedBoostAmount={ selectedBoostAmount }
                   />
                 }
                 <div className="btn-container">

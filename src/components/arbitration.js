@@ -55,13 +55,8 @@ class Arbitration extends Component {
       const listing = await getListing(purchase.listingId, true)
       const reviews = await origin.marketplace.getListingReviews(offerId)
       this.setState({
+        listing,
         purchase,
-        listing: {
-          ...listing,
-          boostAmount: 10,
-          boostLevel: 'Medium',
-          boostLevelIsPastSomeThreshold: !!Math.round(Math.random())
-        },
         reviews
       })
       await this.loadSeller(listing.seller)
@@ -172,11 +167,11 @@ class Arbitration extends Component {
                 {isSold &&
                   <span className="sold badge">Sold Out</span>
                 }
-                {listing.boostLevel &&
+                {/*listing.boostLevel &&
                   <span className={ `boosted badge boost-${listing.boostLevel}` }>
                     <img src="images/boost-icon-arrow.svg" role="presentation" />
                   </span>
-                }
+                */}
               </h1>
             </div>
           </div>
