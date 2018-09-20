@@ -31,11 +31,12 @@ class MultipleSelectionFilter extends Component {
     const values = Object.keys(this.state.checkboxValue)
       //keep only selected values
       .filter(checkBoxKey => this.state.checkboxValue[checkBoxKey])
-      //issue values to the backend always in English no matter which language is selected
-      .map(untranslatedValue => {
-        return schemaMessages[this.toCamelCase(this.props.listingType)][untranslatedValue]
-          .defaultMessage
-      })
+
+      // do not translate anything from the schema
+      // .map(untranslatedValue => {
+      //   return schemaMessages[this.toCamelCase(this.props.listingType)][untranslatedValue]
+      //     .defaultMessage
+      // })
 
     if (values.length === 0)
       return []
@@ -112,7 +113,7 @@ class MultipleSelectionFilter extends Component {
             />
             <label htmlFor={multipleSelectionValue}>
               {this.props.intl.formatMessage(
-                schemaMessages[this.toCamelCase(this.props.listingType)][
+                schemaMessages[this.toCamelCase(this.props.listingType.type)][
                   multipleSelectionValue
                 ]
               )}
