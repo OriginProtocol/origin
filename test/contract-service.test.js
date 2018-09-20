@@ -11,7 +11,7 @@ describe('ContractService', function() {
 
   let contractService
 
-  before(async () => {
+  beforeEach(async () => {
     const provider = new Web3.providers.HttpProvider('http://localhost:8545')
     const web3 = new Web3(provider)
     contractService = new ContractService({
@@ -48,21 +48,28 @@ describe('ContractService', function() {
   })
 
   describe('moneyToUnits', () => {
-    it(`should handle ERC20 token`, () => {
+    beforeEach(async () => {
+      contractService._currencies = {
+        FOO: { address: '0x1234', decimals: 3 },
+        BAR: { address: '0x1234' }
+      }
+    })
+
+    it(`should handle ERC20 token`, async () => {
       const money = new Money({ amount: 123, currency: 'FOO' })
-      const units = contractService.moneyToUnits(money)
+      const units = await contractService.moneyToUnits(money)
       expect(units).to.equal('123000')
     })
 
-    it(`should handle ETH`, () => {
+    it(`should handle ETH`, async () => {
       const money = new Money({ amount: 123, currency: 'ETH' })
-      const units = contractService.moneyToUnits(money)
+      const units = await contractService.moneyToUnits(money)
       expect(units).to.equal('123000000000000000000')
     })
 
-    it(`should handle undefined currency decimals`, () => {
+    it(`should handle undefined currency decimals`, async () => {
       const money = new Money({ amount: 123, currency: 'BAR' })
-      const units = contractService.moneyToUnits(money)
+      const units = await contractService.moneyToUnits(money)
       expect(units).to.equal('123')
     })
   })
@@ -80,6 +87,18 @@ describe('ContractService', function() {
       expect(contSrv.contracts.V00_UserRegistry.networks[4].address).to.equal(
         userAddress
       )
+    })
+  })
+
+  describe('currencies', () => {
+    it('should include OGN', async () => {
+      const currencies = await contractService.currencies()
+      expect(currencies).to.be.an('object')
+      const OGN = currencies.OGN
+      expect(OGN).to.be.an('object')
+      expect(OGN.address).to.be.a('string')
+      expect(OGN.address).to.include('0x')
+      expect(OGN.decimals).to.equal(18)
     })
   })
 })
