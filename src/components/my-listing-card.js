@@ -35,7 +35,7 @@ class MyListingCard extends Component {
   }
 
   async closeListing() {
-    const { intl, listing, handleProcessing, updateTransaction } = this.props
+    const { intl, listing, handleProcessing, onClose, updateTransaction } = this.props
     const { address } = listing
     const prompt = confirm(
       intl.formatMessage(this.intlMessages.confirmCloseListing)
@@ -54,7 +54,13 @@ class MyListingCard extends Component {
       } = await origin.marketplace.withdrawListing(
         this.props.listing.id,
         {},
-        updateTransaction
+        (confirmationCount, transactionReceipt) => {
+          // Having a transaction receipt doesn't guarantee that the listing status will have changed.
+          // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
+          onClose && onClose()
+
+          updateTransaction(confirmationCount, transactionReceipt)
+        }
       )
 
       this.props.upsertTransaction({

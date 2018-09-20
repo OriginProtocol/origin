@@ -423,11 +423,10 @@ class PurchaseDetail extends Component {
   }
 
   async rejectOffer() {
-    this.toggleModal('rejection')
-    alert('To Do')
+    this.withdrawOffer(() => this.toggleModal('rejection'))
   }
 
-  async withdrawOffer() {
+  async withdrawOffer(onSuccess) {
     const { offerId } = this.props
     const { purchase, listing } = this.state
     const offer = purchase
@@ -453,6 +452,8 @@ class PurchaseDetail extends Component {
         offer,
         listing
       })
+
+      onSuccess && onSuccess()
 
       this.setState({ processing: false })
     } catch (error) {

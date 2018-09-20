@@ -7,6 +7,8 @@ import Conversation from 'components/conversation'
 
 import groupByArray from 'utils/groupByArray'
 
+import origin from '../services/origin'
+
 class Messages extends Component {
   constructor(props) {
     super(props)
@@ -91,12 +93,18 @@ class Messages extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ app, messages }) => {
+  const { messagingEnabled, web3 } = app
+  const web3Account = web3.account
+  const filteredMessages = messages.filter(({ content, conversationId }) => {
+    return content && origin.messaging.getRecipients(conversationId).includes(web3Account)
+  })
+
   return {
-    conversations: groupByArray(state.messages, 'conversationId'),
-    messages: state.messages.filter(m => m.content),
-    messagingEnabled: state.app.messagingEnabled,
-    web3Account: state.app.web3.account
+    conversations: groupByArray(filteredMessages, 'conversationId'),
+    messages: filteredMessages,
+    messagingEnabled,
+    web3Account
   }
 }
 
