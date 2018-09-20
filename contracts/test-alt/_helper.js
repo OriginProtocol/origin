@@ -156,7 +156,7 @@ export default async function testHelper(contracts, provider) {
           data,
           from,
           value: 0,
-          gas: solidityCoverage ? 4612388 * 5 : 4612388,
+          gas: solidityCoverage ? 6000000 * 5 : 6000000,
           chainId
         })
         .once('transactionHash', hash => {

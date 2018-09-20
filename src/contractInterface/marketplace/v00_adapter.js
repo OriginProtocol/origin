@@ -204,7 +204,7 @@ class V00_MarkeplaceAdapter {
     // Find all events related to this listing
     const listingTopic = this.padTopic(listingId)
     const events = await this.contract.getPastEvents('allEvents', {
-      topics: [null, null, listingTopic, null],
+      topics: [null, null, listingTopic],
       fromBlock: 0
     })
 
@@ -360,7 +360,7 @@ class V00_MarkeplaceAdapter {
     const partyOfferIds = []
 
     const events = await this.contract.getPastEvents('allEvents', {
-      topics: [null, this.padTopic(party), null, null],
+      topics: [null, this.padTopic(party)],
       fromBlock: 0
     })
 
