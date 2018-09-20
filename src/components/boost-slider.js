@@ -6,7 +6,6 @@ import $ from 'jquery'
 import {
   boostLevels,
   getBoostLevel,
-  defaultBoostValue,
   minBoostValue,
   maxBoostValue
 } from 'utils/boostUtils'
@@ -15,12 +14,7 @@ class BoostSlider extends Component {
   constructor(props) {
     super(props)
 
-    const selectedBoostAmount = props.ognBalance ? defaultBoostValue : 0
-
-    this.state = {
-      selectedBoostAmount,
-      boostLevel: getBoostLevel(defaultBoostValue) || 0,
-    }
+    // this.state = { selectedBoostAmountUsd: 0 }
 
     this.onChange = this.onChange.bind(this)
   }
@@ -28,7 +22,7 @@ class BoostSlider extends Component {
   async componentDidMount() {
     $('[data-toggle="tooltip"]').tooltip()
 
-    this.onChange(this.state.selectedBoostAmount)
+    this.onChange(this.props.selectedBoostAmount)
   }
 
   componentWillUnmount() {
@@ -36,13 +30,8 @@ class BoostSlider extends Component {
   }
 
   async onChange(value) {
-    const boostLevel = getBoostLevel(value)
-    this.setState({
-      selectedBoostAmount: value,
-      boostLevel
-    })
-    const disableNextBtn = value > this.state.allowanceRemaining || value > this.props.ognBalance
-    this.props.onChange(value, boostLevel, disableNextBtn)
+    const disableNextBtn = value > this.props.ognBalance
+    this.props.onChange(value, getBoostLevel(value), disableNextBtn)
     // const selectedBoostAmountUsd = await getFiatPrice(value, 'USD')
     // this.setState({
     //   selectedBoostAmountUsd
@@ -51,6 +40,7 @@ class BoostSlider extends Component {
 
   render() {
     const { ognBalance } = this.props
+    const boostLevel = getBoostLevel(this.props.selectedBoostAmount)
 
     return (
       <div className="boost-slider">
@@ -70,34 +60,34 @@ class BoostSlider extends Component {
             </div>`
           } />
         <div className="level-container">
-          <span className={`boosted badge ${this.state.boostLevel.toLowerCase()}`}>
+          <span className={`boosted badge ${boostLevel.toLowerCase()}`}>
             <img src="images/boost-icon-arrow.svg" role="presentation" />
           </span>
-          { this.state.boostLevel }
-          { this.state.boostLevel.match(/medium/i) && ' (recommended)'}
+          { boostLevel }
+          { boostLevel.match(/medium/i) && ' (recommended)'}
           <div className="amount-container">
             <p>
               <img src="images/ogn-icon.svg" role="presentation" />
-              { this.state.selectedBoostAmount }&nbsp;
+              { this.props.selectedBoostAmount }&nbsp;
               <a href="#" target="_blank" rel="noopener noreferrer">OGN</a>
               {/* <span className="help-block"> | { this.state.selectedBoostAmountUsd } USD</span> */}
             </p>
           </div>
         </div>
         <Slider
-          className={ `boost-level-${this.state.boostLevel}` }
+          className={ `boost-level-${boostLevel}` }
           onChange={ this.onChange }
-          defaultValue={ this.state.selectedBoostAmount }
+          defaultValue={ this.props.selectedBoostAmount }
           min={ minBoostValue }
           disabled={!ognBalance}
           max={ maxBoostValue } />
-        <p className="text-italics">{ boostLevels[this.state.boostLevel].desc }</p>
+        <p className="text-italics">{ boostLevels[boostLevel].desc }</p>
         {ognBalance === 0 &&
           <div className="info-box">
             <p>You have 0 <a href="#" target="_blank" rel="noopener noreferrer">OGN</a> in your wallet and cannot boost.</p>
           </div>
         }
-        {ognBalance > 0 && ognBalance < this.state.selectedBoostAmount &&
+        {ognBalance > 0 && ognBalance < this.props.selectedBoostAmount &&
           <div className="info-box warn">
             <p>You don’t have enough OGN in your wallet.</p>
             <a
