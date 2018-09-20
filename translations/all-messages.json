@@ -516,6 +516,7 @@
   "schema.forSale.shipItem": "Ship the item to the buyer",
   "schema.forSale.messageBuyer": "Message the buyer with an update",
   "schema.forSale.rateBuyer": "Give the buyer a rating",
+  "schema.forSale.sellerSteps": "Fulfillment Checklist",
   "schema.housing.schemaDescription": "Distributed Airbnb",
   "schema.housing.title": "Title",
   "schema.housing.examples": "Examples",
@@ -540,6 +541,7 @@
   "schema.housing.ensureCleanliness": "Ensure that the unit is clean",
   "schema.housing.messageBuyer": "Message the buyer with an update",
   "schema.housing.rateBuyer": "Give the buyer a rating",
+  "schema.housing.sellerSteps": "Fulfillment Checklist",
   "schema.services.schemaDescription": "Distributed Elance/99 Designs/Postmates/Fiver/Handy/Thumbtack",
   "schema.services.title": "Title",
   "schema.services.examples": "Examples",
@@ -568,6 +570,7 @@
   "schema.services.messageBuyer": "Message the buyer with any relevant details",
   "schema.services.provideService": "Provide your service to the buyer",
   "schema.services.rateBuyer": "Give the buyer a rating",
+  "schema.services.sellerSteps": "Fulfillment Checklist",
   "schema.tickets.schemaDescription": "Distributed Ticketmaster/Eventbrite",
   "schema.tickets.title": "Title",
   "schema.tickets.examples": "Examples",
@@ -591,6 +594,7 @@
   "schema.tickets.shipItem": "Ship the tickets to the buyer",
   "schema.tickets.messageBuyer": "Message the buyer with an update",
   "schema.tickets.rateBuyer": "Give the buyer a rating",
+  "schema.tickets.sellerSteps": "Fulfillment Checklist",
   "schema.transportation.schemaDescription": "Distributed Getaround",
   "schema.transportation.title": "Title",
   "schema.transportation.examples": "Examples",
@@ -607,5 +611,6 @@
   "schema.transportation.yachtCharters": "Yacht Charters",
   "schema.transportation.messageBuyer": "Message the buyer with any relevant details",
   "schema.transportation.provideService": "Provide your transportation service to the buyer",
-  "schema.transportation.rateBuyer": "Give the buyer a rating"
+  "schema.transportation.rateBuyer": "Give the buyer a rating",
+  "schema.transportation.sellerSteps": "Fulfillment Checklist"
 }

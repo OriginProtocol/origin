@@ -113,5 +113,9 @@ export default defineMessages({
   'schema.services.rateBuyer': {
     id: 'schema.services.rateBuyer',
     defaultMessage: 'Give the buyer a rating'
+  },
+  'schema.services.sellerSteps': {
+    id: 'schema.services.sellerSteps',
+    defaultMessage: 'Fulfillment Checklist'
   }
 })

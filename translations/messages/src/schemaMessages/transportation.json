@@ -66,5 +66,9 @@
   {
     "id": "schema.transportation.rateBuyer",
     "defaultMessage": "Give the buyer a rating"
+  },
+  {
+    "id": "schema.transportation.sellerSteps",
+    "defaultMessage": "Fulfillment Checklist"
   }
 ]

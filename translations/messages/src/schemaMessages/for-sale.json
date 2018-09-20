@@ -222,5 +222,9 @@
   {
     "id": "schema.forSale.rateBuyer",
     "defaultMessage": "Give the buyer a rating"
+  },
+  {
+    "id": "schema.forSale.sellerSteps",
+    "defaultMessage": "Fulfillment Checklist"
   }
 ]

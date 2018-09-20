@@ -94,5 +94,9 @@
   {
     "id": "schema.housing.rateBuyer",
     "defaultMessage": "Give the buyer a rating"
+  },
+  {
+    "id": "schema.housing.sellerSteps",
+    "defaultMessage": "Fulfillment Checklist"
   }
 ]

@@ -110,5 +110,9 @@
   {
     "id": "schema.services.rateBuyer",
     "defaultMessage": "Give the buyer a rating"
+  },
+  {
+    "id": "schema.services.sellerSteps",
+    "defaultMessage": "Fulfillment Checklist"
   }
 ]

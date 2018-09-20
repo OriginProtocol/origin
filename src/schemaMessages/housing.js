@@ -96,5 +96,9 @@ export default defineMessages({
   'schema.housing.rateBuyer': {
     id: 'schema.housing.rateBuyer',
     defaultMessage: 'Give the buyer a rating'
+  },
+  'schema.housing.sellerSteps': {
+    id: 'schema.housing.sellerSteps',
+    defaultMessage: 'Fulfillment Checklist'
   }
 })

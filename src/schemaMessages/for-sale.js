@@ -224,5 +224,9 @@ export default defineMessages({
   'schema.forSale.rateBuyer': {
     id: 'schema.forSale.rateBuyer',
     defaultMessage: 'Give the buyer a rating'
+  },
+  'schema.forSale.sellerSteps': {
+    id: 'schema.forSale.sellerSteps',
+    defaultMessage: 'Fulfillment Checklist'
   }
 })

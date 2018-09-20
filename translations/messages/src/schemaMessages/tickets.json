@@ -90,5 +90,9 @@
   {
     "id": "schema.tickets.rateBuyer",
     "defaultMessage": "Give the buyer a rating"
+  },
+  {
+    "id": "schema.tickets.sellerSteps",
+    "defaultMessage": "Fulfillment Checklist"
   }
 ]

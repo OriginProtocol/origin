@@ -92,5 +92,9 @@ export default defineMessages({
   'schema.tickets.rateBuyer': {
     id: 'schema.tickets.rateBuyer',
     defaultMessage: 'Give the buyer a rating'
+  },
+  'schema.tickets.sellerSteps': {
+    id: 'schema.tickets.sellerSteps',
+    defaultMessage: 'Fulfillment Checklist'
   }
 })
