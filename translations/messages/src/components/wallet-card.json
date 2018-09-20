@@ -1,7 +1,7 @@
 [
   {
     "id": "_wallet-card.yourBalance",
-    "defaultMessage": "You have"
+    "defaultMessage": "You have <img class=\"ogn-icon\" src=\"images/ogn-icon.svg\" role=\"presentation\" /><span class=\"ogn\">0 OGN</span>"
   },
   {
     "id": "_wallet-card.balanceText",

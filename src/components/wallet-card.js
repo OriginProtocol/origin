@@ -28,7 +28,7 @@ class WalletCard extends Component {
     this.intlMessages = defineMessages({
       yourBalance: {
         id: '_wallet-card.yourBalance',
-        defaultMessage: 'You have'
+        defaultMessage: 'You have <img class="ogn-icon" src="images/ogn-icon.svg" role="presentation" /><span class="ogn">0 OGN</span>'
       },
       balanceText: {
         id: '_wallet-card.balanceText',
@@ -100,10 +100,6 @@ class WalletCard extends Component {
       <div>
         <p class='tooltip-balance-heading tooltip-align-left'>
           ${this.props.intl.formatMessage(this.intlMessages.yourBalance)}
-          <img class='ogn-icon' src = 'images/ogn-icon.svg' role = 'presentation' />
-          <span class='ogn'>
-            # OGN
-          </span>
         </p>
         <p class='tooltip-balance-text tooltip-align-left'>
           ${this.props.intl.formatMessage(this.intlMessages.balanceText)}
