@@ -2,8 +2,8 @@ const V00_Marketplace = artifacts.require('./V00_Marketplace.sol')
 
 module.exports = function(deployer, network) {
   return deployer.then(() => {
-    if (network === 'mainnet') {
-      console.log('Skipping sample listings on mainnet')
+    if (network === 'mainnet' || network === 'rinkeby' || network === 'ropsten') {
+      console.log(`Skipping sample listings creation on ${network}`)
     } else {
       return deployContracts(deployer)
     }
