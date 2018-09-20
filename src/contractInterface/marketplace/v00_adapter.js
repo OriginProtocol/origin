@@ -6,7 +6,7 @@ const OFFER_STATUS = [
   'finalized',
   'sellerReviewed',
   'withdrawn',
-  'ruled'
+  'ruling'
 ]
 const SUPPORTED_DEPOSIT_CURRENCIES = ['OGN']
 const emptyAddress = '0x0000000000000000000000000000000000000000'
@@ -225,7 +225,7 @@ class V00_MarkeplaceAdapter {
       } else if (event.event === 'OfferDisputed') {
         offers[event.returnValues.offerID] = { status: 'disputed', event }
       } else if (event.event === 'OfferRuling') {
-        offers[event.returnValues.offerID] = { status: 'resolved', event }
+        offers[event.returnValues.offerID] = { status: 'ruling', event }
       } else if (event.event === 'OfferFinalized') {
         offers[event.returnValues.offerID] = { status: 'finalized', event }
       } else if (event.event === 'OfferData') {
@@ -315,6 +315,7 @@ class V00_MarkeplaceAdapter {
       case 'OfferFinalized':
         rawOffer.status = 4
         break
+      // TODO: Assumes OfferData event is a seller review
       case 'OfferData':
         rawOffer.status = 5
         break
@@ -326,20 +327,6 @@ class V00_MarkeplaceAdapter {
         break
       }
 
-      if (e.event === 'OfferAccepted') {
-        rawOffer.status = '2'
-      }
-      if (e.event === 'OfferDisputed') {
-        rawOffer.status = '3'
-      }
-      // Override status if offer was deleted from blockchain state
-      if (e.event === 'OfferFinalized') {
-        rawOffer.status = '4'
-      }
-      // TODO: Assumes OfferData event is a seller review
-      if (e.event === 'OfferData') {
-        rawOffer.status = '5'
-      }
       e.timestamp = timestamp
     }
 

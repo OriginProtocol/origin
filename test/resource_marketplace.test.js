@@ -352,7 +352,7 @@ describe('Marketplace Resource', function() {
       const offerPrice = Web3.utils.toWei(offer.totalPrice.amount)
       await marketplace.resolveDispute('999-000-0-1', {}, 1, offerPrice)
       offer = await marketplace.getOffer('999-000-0-1')
-      expect(offer.status).to.be.equal('ruled')
+      expect(offer.status).to.be.equal('ruling')
     })
   })
 })
