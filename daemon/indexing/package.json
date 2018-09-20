@@ -3,7 +3,7 @@
   "description": "Indexing servers.",
   "version": "0.1.0",
   "dependencies": {
-    "apollo-server": "^2.0.2",
+    "apollo-server": "^2.1.0",
     "db-migrate": "^0.11.1",
     "db-migrate-pg": "^0.4.0",
     "elasticsearch": "^15.1.1",
