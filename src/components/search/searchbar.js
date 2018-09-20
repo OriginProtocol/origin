@@ -11,19 +11,11 @@ class SearchBar extends Component {
   constructor(props) {
     super(props)
 
-    this.listingTypes = [
-      {
-        type: 'all',
-        translationName: {
-          id: 'searchbar.all',
-          defaultMessage: 'All'
-        }
-      },
-      ...listingSchemaMetadata.listingTypes
-    ].map(listingType => {
-      listingType.name = props.intl.formatMessage(listingType.translationName)
-      return listingType
-    })
+    this.listingTypes = [ listingSchemaMetadata.listingTypeAll, ...listingSchemaMetadata.listingTypes]
+      .map(listingType => {
+        listingType.name = props.intl.formatMessage(listingType.translationName)
+        return listingType
+      })
 
     const getParams = queryString.parse(this.props.location.search)
 
@@ -68,7 +60,7 @@ class SearchBar extends Component {
     }&listing_type=${this.state.selectedListingType.type}`
     this.props.generalSearch(
       this.state.searchQuery,
-      this.state.selectedListingType.type,
+      this.state.selectedListingType,
       true,
       true
     )
