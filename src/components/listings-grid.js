@@ -8,33 +8,50 @@ import { getListingIds } from 'actions/Listing'
 
 import ListingCard from 'components/listing-card'
 import OnboardingModal from 'components/onboarding-modal'
+import { LISTINGS_PER_PAGE } from 'components/constants'
 
 class ListingsGrid extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      listingsPerPage: 12
     }
+
+    this.handleOnChange = this.handleOnChange.bind(this)
   }
 
   componentWillMount() {
     if (this.props.renderMode === 'home-page') this.props.getListingIds()
   }
 
+  handleOnChange(page) {
+    if (this.props.renderMode === 'home-page')
+      this.props.history.push(`/page/${page}`)
+    else
+      this.props.handleChangePage(page)
+  }
+
   render() {
-    const { listingsPerPage } = this.state
-    const { contractFound, listingIds, searchListingIds } = this.props
+    const { contractFound, listingIds, search } = this.props
 
     // const pinnedListingIds = [0, 1, 2, 3, 4]
     // const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
-    const arrangedListingIds =
-      this.props.renderMode === 'home-page' ? listingIds : searchListingIds
-    const activePage = this.props.match.params.activePage || 1
-    // Calc listings to show for given page
-    const showListingsIds = arrangedListingIds.slice(
-      listingsPerPage * (activePage - 1),
-      listingsPerPage * activePage
-    )
+
+    let allListingsLength, activePage, showListingsIds
+    if (this.props.renderMode === 'home-page'){
+      allListingsLength = listingIds.length
+      activePage = this.props.match.params.activePage || 1 
+
+      // Calc listings to show for given page
+      showListingsIds = listingIds.slice(
+        LISTINGS_PER_PAGE * (activePage - 1),
+        LISTINGS_PER_PAGE * activePage
+      )
+
+    } else if (this.props.renderMode === 'search'){
+      activePage = this.props.searchPage 
+      allListingsLength = search.listingsLength
+      showListingsIds = search.listingIds
+    }
 
     return (
       <div className="listings-wrapper">
@@ -59,14 +76,14 @@ class ListingsGrid extends Component {
         )}
         {contractFound && (
           <div className="listings-grid">
-            {arrangedListingIds.length > 0 && (
+            {allListingsLength > 0 && (
               <h1>
                 <FormattedMessage
                   id={'listings-grid.listingsCount'}
                   defaultMessage={'{listingIdsCount} Listings'}
                   values={{
                     listingIdsCount: (
-                      <FormattedNumber value={arrangedListingIds.length} />
+                      <FormattedNumber value={allListingsLength} />
                     )
                   }}
                 />
@@ -79,10 +96,10 @@ class ListingsGrid extends Component {
             </div>
             <Pagination
               activePage={parseInt(activePage)}
-              itemsCountPerPage={listingsPerPage}
-              totalItemsCount={arrangedListingIds.length}
+              itemsCountPerPage={LISTINGS_PER_PAGE}
+              totalItemsCount={allListingsLength}
               pageRangeDisplayed={5}
-              onChange={page => this.props.history.push(`/page/${page}`)}
+              onChange={this.handleOnChange}
               itemClass="page-item"
               linkClass="page-link"
               hideDisabled="true"

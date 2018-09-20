@@ -13,6 +13,12 @@ import SearchBar from 'components/search/searchbar'
 import { generalSearch } from 'actions/Search'
 import origin from '../../services/origin'
 import FilterGroup from 'components/search/filter-group'
+import { getFiatPrice } from 'utils/priceUtils'
+import {
+  VALUE_TYPE_STRING,
+  FILTER_OPERATOR_EQUALS
+} from 'components/search/constants'
+import { LISTINGS_PER_PAGE } from 'components/constants'
 
 class SearchResult extends Component {
   constructor(props) {
@@ -23,8 +29,12 @@ class SearchResult extends Component {
       listingSchema: undefined,
       listingType: undefined,
       listingIds: [],
+      totalNumberOfListings: 0,
       searchError: undefined,
-      filters: {}
+      filters: {},
+      maxPrice: 10000,
+      minPrice: 0,
+      page: 1
     }
 
     // set default prop values for search_query and listing_type
@@ -35,6 +45,12 @@ class SearchResult extends Component {
       false,
       false
     )
+
+    this.handleChangePage = this.handleChangePage.bind(this)
+  }
+
+  handleChangePage(page) {
+    this.setState({ page: page })
   }
 
   shouldFetchListingSchema() {
@@ -54,7 +70,7 @@ class SearchResult extends Component {
     })
   }
 
-  componentDidUpdate(previousProps) {
+  componentDidUpdate(previousProps, prevState) {
     // exit if query parameters have not changed
     // TODO: also filter states need to be checked here
     if (
@@ -65,15 +81,16 @@ class SearchResult extends Component {
        * this way a new search request is triggered to the backend even
        * if query parameters do not change
        */
-      previousProps.generalSearchId === this.props.generalSearchId
+      previousProps.generalSearchId === this.props.generalSearchId && 
+      prevState.page === this.state.page
     )
       return
 
-    this.handleComponentUpdate(previousProps)
+    this.handleComponentUpdate(previousProps, prevState.page !== this.state.page)
   }
 
-  handleComponentUpdate(previousProps) {
-    this.searchRequest()
+  handleComponentUpdate(previousProps, onlyPageChanged = false) {
+    this.searchRequest(onlyPageChanged)
 
     if (
       previousProps == undefined ||
@@ -142,7 +159,7 @@ class SearchResult extends Component {
           throw `Each filter should have a 'searchParameterName' property. Malformed object: ${JSON.stringify(
             filter
           )}`
-        else if (!/^[a-zA-Z]+$/g.test(filter.searchParameterName))
+        else if (!/^[a-zA-Z.]+$/g.test(filter.searchParameterName))
           throw `'searchParameterName' property should only consist of english letters. Received: ${
             filter.searchParameterName
           }`
@@ -155,20 +172,50 @@ class SearchResult extends Component {
     //document.location.href = `#/search?search_query=${this.state.searchQuery}&listing_type=${this.state.selectedListingType.type}`
   }
 
-  async searchRequest() {
+  async searchRequest(onlyPageChanged) {
     try {
       this.setState({ searchError: undefined })
       this.formatFiltersToUrl()
 
+      const filters = this.props.filters
+
+      // when querying all listings no filter should be added
+      if (this.props.listingType !== 'all') {
+        filters.category = {
+          name: 'category',
+          value: this.props.listingType[0].toUpperCase() + this.props.listingType.substring(1),
+          valueType: VALUE_TYPE_STRING,
+          operator: FILTER_OPERATOR_EQUALS
+        }
+      }
+
       const searchResp = await origin.discovery.search(
-        this.props.query,
-        this.props.listingType,
-        Object.values(this.props.filters).flatMap(
+        this.props.query || '',
+        LISTINGS_PER_PAGE,
+        (this.state.page - 1) * LISTINGS_PER_PAGE,
+        Object.values(filters).flatMap(
           arrayOfFilters => arrayOfFilters
         )
       )
+
       this.setState({
-        listingIds: searchResp.data.listings.nodes.map(listing => listing.id)
+        listingIds: searchResp.data.listings.nodes.map(listing => listing.id),
+        totalNumberOfListings: searchResp.data.listings.totalNumberOfItems,
+        // reset the page whenever a user doesn't click on pagination link
+        page: onlyPageChanged ? this.state.page : 1
+      })
+
+      const [maxPrice, minPrice] = await Promise.all([
+        getFiatPrice(searchResp.data.listings.stats.maxPrice, 'USD', 'ETH', false),
+        getFiatPrice(searchResp.data.listings.stats.minPrice, 'USD', 'ETH', false)
+      ])
+
+      /* increase the max/min price range by 5% to prevent a case where conversion rates of a market would be such
+       * that the item that would cost the most would be left out of the price filter range
+       */
+      this.setState({
+        maxPrice: maxPrice * 1.05,
+        minPrice: minPrice * 0.95
       })
     } catch (e) {
       const errorMessage = this.props.intl.formatMessage({
@@ -204,6 +251,8 @@ class SearchResult extends Component {
                         key={index}
                         listingSchema={this.state.listingSchema}
                         listingType={this.state.listingType}
+                        maxPrice={this.state.maxPrice}
+                        minPrice={this.state.minPrice}
                       />
                     )
                   })}
@@ -216,7 +265,12 @@ class SearchResult extends Component {
         <div className="container">
           <ListingsGrid
             renderMode="search"
-            searchListingIds={this.state.listingIds}
+            search={{
+              listingIds: this.state.listingIds,
+              listingsLength: this.state.totalNumberOfListings
+            }}
+            handleChangePage={this.handleChangePage}
+            searchPage={this.state.page}
           />
         </div>
       </Fragment>

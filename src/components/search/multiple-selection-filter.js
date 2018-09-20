@@ -11,7 +11,6 @@ import schemaMessages from '../../schemaMessages/index'
 class MultipleSelectionFilter extends Component {
   constructor(props) {
     super(props)
-
     this.state = {
       checkboxValue: {}
     }
@@ -28,29 +27,38 @@ class MultipleSelectionFilter extends Component {
   }
 
   // Called by filter-group
-  getFilters() {
-    return [
-      {
-        name: this.props.filter.searchParameterName,
-        value: Object.keys(this.state.checkboxValue),
-        valueType: VALUE_TYPE_ARRAY_STRING,
-        operator: FILTER_OPERATOR_CONTAINS
-      }
-    ]
+  async getFilters() {
+    const values = Object.keys(this.state.checkboxValue)
+      //keep only selected values
+      .filter(checkBoxKey => this.state.checkboxValue[checkBoxKey])
+      //issue values to the backend always in English no matter which language is selected
+      .map(untranslatedValue => {
+        return schemaMessages[this.toCamelCase(this.props.listingType)][untranslatedValue]
+          .defaultMessage
+      })
+
+    if (values.length === 0)
+      return []
+    else
+      return [
+        {
+          name: this.props.filter.searchParameterName,
+          value: values,
+          valueType: VALUE_TYPE_ARRAY_STRING,
+          operator: FILTER_OPERATOR_CONTAINS
+        }
+      ]
   }
 
   componentDidUpdate(previousProps) {
     // When new search is triggered, search filters get reset, so component should reset their state
-    if (
-      Object.keys(previousProps.filters).length !== 0 &&
-      Object.keys(this.props.filters).length === 0
-    )
+    if (this.props.generalSearchId !== previousProps.generalSearchId)
       this.onClear()
   }
 
   // Called by filter-group
-  onClear() {
-    this.setState({ checkboxValue: {} })
+  onClear(callback) {
+    this.setState({ checkboxValue: {} }, callback)
   }
 
   onHandleClick(event) {
@@ -117,7 +125,8 @@ class MultipleSelectionFilter extends Component {
 }
 
 const mapStateToProps = state => ({
-  filters: state.search.filters
+  filters: state.search.filters,
+  generalSearchId: state.search.generalSearchId
 })
 
 const mapDispatchToProps = () => ({})

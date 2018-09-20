@@ -37,15 +37,12 @@ class CounterFilter extends Component {
 
   componentDidUpdate(previousProps) {
     // When new search is triggered, search filters get reset, so component should reset their state
-    if (
-      Object.keys(previousProps.filters).length !== 0 &&
-      Object.keys(this.props.filters).length === 0
-    )
+    if (this.props.generalSearchId !== previousProps.generalSearchId)
       this.onClear()
   }
 
   // Called by filter-group
-  getFilters() {
+  async getFilters() {
     return [
       {
         name: this.props.filter.searchParameterName,
@@ -57,8 +54,8 @@ class CounterFilter extends Component {
   }
 
   // Called by filter-group
-  onClear() {
-    this.setState({ counter: this.defaultValue })
+  onClear(callback) {
+    this.setState({ counter: this.defaultValue }, callback)
   }
 
   render() {
@@ -132,7 +129,8 @@ class CounterFilter extends Component {
 }
 
 const mapStateToProps = state => ({
-  filters: state.search.filters
+  filters: state.search.filters,
+  generalSearchId: state.search.generalSearchId
 })
 
 const mapDispatchToProps = () => ({})
