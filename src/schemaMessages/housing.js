@@ -80,5 +80,21 @@ export default defineMessages({
   'schema.housing.vacationRentals': {
     id: 'schema.housing.vacationRentals',
     defaultMessage: 'Vacation Rentals'
+  },
+  'schema.housing.sendInfo': {
+    id: 'schema.housing.sendInfo',
+    defaultMessage: 'Send the address, access info, etc.'
+  },
+  'schema.housing.ensureCleanliness': {
+    id: 'schema.housing.ensureCleanliness',
+    defaultMessage: 'Ensure that the unit is clean'
+  },
+  'schema.housing.messageBuyer': {
+    id: 'schema.housing.messageBuyer',
+    defaultMessage: 'Message the buyer with an update'
+  },
+  'schema.housing.rateBuyer': {
+    id: 'schema.housing.rateBuyer',
+    defaultMessage: 'Give the buyer a rating'
   }
 })

@@ -101,5 +101,17 @@ export default defineMessages({
   'schema.services.writingTranslationTranscription': {
     id: 'schema.services.writingTranslationTranscription',
     defaultMessage: 'Writing, Translation & Transcription'
+  },
+  'schema.services.messageBuyer': {
+    id: 'schema.services.messageBuyer',
+    defaultMessage: 'Message the buyer with any relevant details'
+  },
+  'schema.services.provideService': {
+    id: 'schema.services.provideService',
+    defaultMessage: 'Provide your service to the buyer'
+  },
+  'schema.services.rateBuyer': {
+    id: 'schema.services.rateBuyer',
+    defaultMessage: 'Give the buyer a rating'
   }
 })

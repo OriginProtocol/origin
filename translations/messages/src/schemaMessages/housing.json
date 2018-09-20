@@ -78,5 +78,21 @@
   {
     "id": "schema.housing.vacationRentals",
     "defaultMessage": "Vacation Rentals"
+  },
+  {
+    "id": "schema.housing.sendInfo",
+    "defaultMessage": "Send the address, access info, etc."
+  },
+  {
+    "id": "schema.housing.ensureCleanliness",
+    "defaultMessage": "Ensure that the unit is clean"
+  },
+  {
+    "id": "schema.housing.messageBuyer",
+    "defaultMessage": "Message the buyer with an update"
+  },
+  {
+    "id": "schema.housing.rateBuyer",
+    "defaultMessage": "Give the buyer a rating"
   }
 ]
