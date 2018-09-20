@@ -110,15 +110,6 @@ class WalletCard extends Component {
           ${this.props.intl.formatMessage(this.intlMessages.balanceText)}
         </p>
         <p class='tooltip-align-left'>
-          <a href='#' class='add-more-btn add-more-text'>
-            <img class='add-more-icon' src='images/add-icon.svg' role='presentation' />
-            ${this.props.intl.formatMessage(this.intlMessages.getOGN)}
-          </a>
-          <span class='recommended'>
-            ${this.props.intl.formatMessage(this.intlMessages.recommendation)}
-          </span>
-        </p>
-        <p class='tooltip-align-left'>
           <a href='/#/about-tokens' target='_blank' class='learn-more'>
             ${this.props.intl.formatMessage(this.intlMessages.learnMore)} ▸
           </a>
