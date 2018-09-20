@@ -71,7 +71,10 @@ contract WhitelistedPausableToken is PausableToken {
   function setWhitelistExpiration(uint256 _expiration) public onlyOwner {
     // allow only if whitelist expiration hasn't yet been set, or if the
     // whitelist expiration hasn't passed yet
-    require(whitelistExpiration == 0 || whitelistActive());
+    require(
+      whitelistExpiration == 0 || whitelistActive(),
+      "an expired whitelist cannot be extended"
+    );
     // prevent possible mistakes in calling this function
     require(_expiration >= block.timestamp + 1 days,
       "whitelist expiration not far enough into the future");
