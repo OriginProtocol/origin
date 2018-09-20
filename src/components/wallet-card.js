@@ -91,7 +91,7 @@ class WalletCard extends Component {
   }
 
   render() {
-    const { profile, wallet, web3Account, withMenus, withProfile } = this.props
+    const { profile, wallet, web3Account, withBalanceTooltip, withMenus, withProfile } = this.props
     const { address, ethBalance, ognBalance } = wallet
     const { user } = profile
     const userCanReceiveMessages =
@@ -220,18 +220,23 @@ class WalletCard extends Component {
                 )}
               </div>
               <div className="d-flex align-items-start">
-                <a className="ogn-balance"
-                  data-toggle="tooltip"
-                  data-placement="left"
-                  data-trigger="hover focus"
-                  data-title={balanceTooltip}
-                  data-animation={true}
-                  data-html={true}
-                  data-container="body"
-                  data-delay='{"show":"0", "hide":"5000"}'
-                >
+                {!withBalanceTooltip &&
                   <img src="images/ogn-icon.svg" role="presentation" />
-                </a>
+                }
+                {withBalanceTooltip &&
+                  <a className="ogn-balance"
+                    data-toggle="tooltip"
+                    data-placement="left"
+                    data-trigger="hover focus"
+                    data-title={balanceTooltip}
+                    data-animation={true}
+                    data-html={true}
+                    data-container="body"
+                    data-delay='{"show":"0", "hide":"5000"}'
+                  >
+                    <img src="images/ogn-icon.svg" role="presentation" />
+                  </a>
+                }
                 <div className="amounts">
                   <div className="ogn">
                     {`${Number(ognBalance).toLocaleString(undefined)}` || 0}&nbsp;
