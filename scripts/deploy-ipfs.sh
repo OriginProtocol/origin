@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Deploy DApp to IPFS
+# May take 10 minutes to fully sync with network nodes.
 # NOTE: This script requires `ipfs daemon` to be running locally
 
 if ! curl --silent --output /dev/null localhost:5001
