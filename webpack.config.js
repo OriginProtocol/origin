@@ -11,9 +11,10 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 const env = {
   ARBITRATOR_ACCOUNT: '',
-  CONTRACT_ADDRESSES: '{}',
   BRIDGE_SERVER_DOMAIN: '',
   BRIDGE_SERVER_PROTOCOL: 'https',
+  CONTRACT_ADDRESSES: '{}',
+  DISCOVERY_SERVER_URL: '',
   FORCE_HTTPS: false,
   IPFS_API_PORT: '',
   IPFS_DOMAIN: '',
