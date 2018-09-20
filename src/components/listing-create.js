@@ -675,6 +675,7 @@ class ListingCreate extends Component {
             <div className={`pt-xs-4 pt-sm-4 col-md-5 col-lg-4${step >= this.STEP.PREVIEW ? '' : ' offset-md-1 offset-lg-3'}`}>
               <WalletCard
                 wallet={wallet}
+                withBalanceTooltip={!this.props.wallet.ognBalance}
                 withMenus={true}
                 withProfile={false}
               />
