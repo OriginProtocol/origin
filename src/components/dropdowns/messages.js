@@ -12,6 +12,8 @@ import ConversationListItem from 'components/conversation-list-item'
 
 import groupByArray from 'utils/groupByArray'
 
+import origin from '../../services/origin'
+
 class MessagesDropdown extends Component {
   constructor(props) {
     super(props)
@@ -164,14 +166,19 @@ class MessagesDropdown extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ app, messages }) => {
+  const { messagingDismissed, messagingEnabled, web3 } = app
+  const web3Account = web3.account
+  const filteredMessages = messages.filter(({ content, conversationId, senderAddress, status }) => {
+    return content && status === 'unread' && senderAddress !== web3Account && origin.messaging.getRecipients(conversationId).includes(web3Account)
+  })
+
   return {
-    messagingDismissed: state.app.messagingDismissed,
-    messagingEnabled: state.app.messagingEnabled,
-    messages: state.messages.filter(({ content, senderAddress, status }) => {
-      return content && status === 'unread' && senderAddress !== state.app.web3.account
-    }),
-    web3Account: state.app.web3.account
+    conversations: groupByArray(filteredMessages, 'conversationId'),
+    messages: filteredMessages,
+    messagingDismissed,
+    messagingEnabled,
+    web3Account
   }
 }
 
