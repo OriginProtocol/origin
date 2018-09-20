@@ -113,9 +113,10 @@ class Marketplace {
       const listing = await this.getListing(listingId)
 
       const listingCurrency = listing.price && listing.price.currency
-      const listingPrice = this.contractService.moneyToUnits(listing.price)
-      const listingCommision = this.contractService.moneyToUnits(listing.commission)
-      const currency = this.contractService.currencies[listingCurrency]
+      const listingPrice = await this.contractService.moneyToUnits(listing.price)
+      const listingCommision = await this.contractService.moneyToUnits(listing.commission)
+      const currencies = await this.contractService.currencies()
+      const currency = currencies[listingCurrency]
       const currencyAddress = currency && currency.address
 
       if (currencyAddress !== chainOffer.currency) {

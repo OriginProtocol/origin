@@ -53,7 +53,7 @@ class V00_MarkeplaceAdapter {
       throw(`${currency} is not a supported deposit currency`)
     }
     if (amount > 0) {
-      deposit = this.contractService.moneyToUnits(commission)
+      deposit = await this.contractService.moneyToUnits(commission)
       const {market_address, selector, call_params} = await this._getTokenAndCallWithSenderParams('createListingWithSender', ipfsBytes, deposit, arbitrator || from)
 
       // In order to estimate gas correctly, we need to add the call to a create listing since that's called by the token
@@ -105,8 +105,9 @@ class V00_MarkeplaceAdapter {
         `Attempted to purchase ${unitsPurchased} - only 1 allowed.`
       )
 
-    const price = this.contractService.moneyToUnits(totalPrice)
-    const commissionUnits = this.contractService.moneyToUnits(commission)
+    const price = await this.contractService.moneyToUnits(totalPrice)
+    const commissionUnits = await this.contractService.moneyToUnits(commission)
+    const currencies = await this.contractService.currencies()
 
     const args = [
       listingId,
@@ -115,7 +116,7 @@ class V00_MarkeplaceAdapter {
       affiliate || emptyAddress,
       commissionUnits,
       price,
-      this.contractService.currencies[totalPrice.currency].address,
+      currencies[totalPrice.currency].address,
       arbitrator || emptyAddress
     ]
 

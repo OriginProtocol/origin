@@ -1,21 +1,24 @@
-import ClaimHolderRegisteredContract from './../../contracts/build/contracts/ClaimHolderRegistered.json'
-import ClaimHolderPresignedContract from './../../contracts/build/contracts/ClaimHolderPresigned.json'
+import ClaimHolderRegistered from './../../contracts/build/contracts/ClaimHolderRegistered.json'
+import ClaimHolderPresigned from './../../contracts/build/contracts/ClaimHolderPresigned.json'
 import ClaimHolderLibrary from './../../contracts/build/contracts/ClaimHolderLibrary.json'
 import KeyHolderLibrary from './../../contracts/build/contracts/KeyHolderLibrary.json'
-import V00_UserRegistryContract from './../../contracts/build/contracts/V00_UserRegistry.json'
-import OriginIdentityContract from './../../contracts/build/contracts/OriginIdentity.json'
-import OriginTokenContract from './../../contracts/build/contracts/OriginToken.json'
+import V00_UserRegistry from './../../contracts/build/contracts/V00_UserRegistry.json'
+import OriginIdentity from './../../contracts/build/contracts/OriginIdentity.json'
+import OriginToken from './../../contracts/build/contracts/OriginToken.json'
 
-import V00_MarketplaceContract from './../../contracts/build/contracts/V00_Marketplace.json'
+import V00_Marketplace from './../../contracts/build/contracts/V00_Marketplace.json'
 
 import BigNumber from 'bignumber.js'
 import bs58 from 'bs58'
 import Web3 from 'web3'
 
 const emptyAddress = '0x0000000000000000000000000000000000000000'
+const SUPPORTED_ERC20 = [
+  { symbol: 'OGN', decimals: 18, contractName: 'OriginToken' }
+]
 
 class ContractService {
-  constructor({ web3, contractAddresses, currencies = {} } = {}) {
+  constructor({ web3, contractAddresses } = {}) {
     const externalWeb3 = web3 || window.web3
     if (!externalWeb3) {
       throw new Error(
@@ -24,17 +27,15 @@ class ContractService {
     }
     this.web3 = new Web3(externalWeb3.currentProvider)
 
-    this.marketplaceContracts = {
-      V00_Marketplace: V00_MarketplaceContract
-    }
+    this.marketplaceContracts = { V00_Marketplace }
 
     const contracts = Object.assign(
       {
-        V00_UserRegistry: V00_UserRegistryContract,
-        ClaimHolderRegistered: ClaimHolderRegisteredContract,
-        ClaimHolderPresigned: ClaimHolderPresignedContract,
-        OriginIdentity: OriginIdentityContract,
-        OriginToken: OriginTokenContract
+        V00_UserRegistry,
+        ClaimHolderRegistered,
+        ClaimHolderPresigned,
+        OriginIdentity,
+        OriginToken
       },
       this.marketplaceContracts
     )
@@ -55,11 +56,30 @@ class ContractService {
         /* Ignore */
       }
     }
+  }
 
-    this.currencies = Object.assign(
-      { ETH: { address: emptyAddress } },
-      currencies
-    )
+  async currencies() {
+    // use cached value if available
+    if (!this._currencies) {
+      const currenciesList = await Promise.all(SUPPORTED_ERC20.map(async (token) => {
+        const deployed = await this.deployed(this.contracts[token.contractName])
+        const address = deployed.options.address
+        const obj = {}
+        obj[token.symbol] = {
+          address,
+          decimals: token.decimals
+        }
+        return obj
+      }))
+      const currenciesObj = currenciesList.reduce((acc, cur) => {
+        return Object.assign(acc, cur)
+      }, {})
+      this._currencies = Object.assign(
+        { ETH: { address: emptyAddress } },
+        currenciesObj
+      )
+    }
+    return this._currencies
   }
 
   // Returns an object that describes how many marketplace
@@ -230,11 +250,12 @@ class ContractService {
   }
 
   // Convert money object to correct units for blockchain
-  moneyToUnits(money) {
+  async moneyToUnits(money) {
     if (money.currency === 'ETH') {
       return Web3.utils.toWei(money.amount, 'ether')
     } else {
-      const currency = this.currencies[money.currency]
+      const currencies = await this.currencies()
+      const currency = currencies[money.currency]
       // handle ERC20
       // TODO consider using ERCStandardDetailed.decimals() (for tokens that support this) so that we don't have to track decimals ourselves
       // https://github.com/OpenZeppelin/openzeppelin-solidity/blob/6c4c8989b399510a66d8b98ad75a0979482436d2/contracts/token/ERC20/ERC20Detailed.sol
