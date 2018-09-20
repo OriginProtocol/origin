@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import $ from 'jquery'
 
 import { getEthBalance, getOgnBalance } from 'actions/Wallet'
 
@@ -13,8 +14,6 @@ import MessageNew from 'components/message-new'
 import { getFiatPrice } from 'utils/priceUtils'
 
 import origin from '../services/origin'
-
-import $ from 'jquery'
 
 class WalletCard extends Component {
   constructor(props) {
