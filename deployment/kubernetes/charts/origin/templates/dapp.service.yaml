@@ -14,4 +14,3 @@ spec:
   ports:
   - name: nginx
     port: 80
-    protocol: TCP

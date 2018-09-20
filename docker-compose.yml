@@ -19,7 +19,7 @@ services:
     environment:
       - POSTGRES_USER=origin
       - POSTGRES_PASSWORD=origin
-      - POSTGRES_DB=origin_bridge
+      - POSTGRES_DB=origin-indexing
     networks:
       - default
 
@@ -34,8 +34,6 @@ services:
     environment:
       network.bind_host: 0
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-    ports:
-      - "9200:9200"
     networks:
       - default
 
@@ -55,12 +53,77 @@ services:
       - "8080:8080"
       - "8081:8081" # Tests
       - "8545:8545" # Blockchain
-      - "4000:4000" # Apollo server
     # Run npm install on every container start to avoid volumes issue
     # https://github.com/docker/compose/issues/4337
     command: >
       /bin/bash -c "npm install --quiet --no-progress &&
       node scripts/build.js serve"
+    networks:
+      - default
+
+  origin-discovery:
+    container_name: origin-discovery
+    image: origin-discovery
+    volumes:
+      - ./origin-js/daemon/indexing:/app
+    build:
+      context: .
+      dockerfile: development/dockerfiles/origin-discovery
+    volumes:
+      - ./origin-js/daemon/indexing:/app
+      # Mount compiled origin-js inside node modules, this is not actually a
+      # dependency of the graphql server, but it is required here because the
+      # event-listener and origin-discovery share the same package.json
+      - ./origin-js:/usr/local/lib/node_modules/origin
+      - origin_js_node_modules:/usr/local/lib/node_modules/origin/node_modules
+    environment:
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=origin
+      - DATABASE_PASSWORD=origin
+      - DATABASE_NAME=origin-indexing
+      - ELASTICSEARCH_HOST=elasticsearch:9200
+    depends_on:
+      - origin-js
+      - postgres
+      - elasticsearch
+    ports:
+      - "4000:4000" # Apollo
+    command: >
+      /bin/bash -c "wait-for.sh -t 0 -q origin-js:8081 --
+      npm install --quiet --no-progress &&
+      node apollo/index.js"
+    networks:
+      - default
+
+  event-listener:
+    container_name: event-listener
+    image: event-listener
+    build:
+      context: .
+      dockerfile: development/dockerfiles/event-listener
+    volumes:
+      - ./origin-js/daemon/indexing:/app
+      # Mount compiled origin-js inside node modules
+      - ./origin-js:/usr/local/lib/node_modules/origin
+      - origin_js_node_modules:/usr/local/lib/node_modules/origin/node_modules
+    depends_on:
+      - origin-js
+      - postgres
+      - elasticsearch
+    environment:
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=origin
+      - DATABASE_PASSWORD=origin
+      - DATABASE_NAME=origin-indexing
+      - ELASTICSEARCH_HOST=elasticsearch:9200
+    command: >
+      /bin/bash -c "npm install --quiet --no-progress &&
+      npm link origin &&
+      wait-for.sh -t 0 -q origin-js:8081 --
+      node node_modules/db-migrate/bin/db-migrate up -e origin-box &&
+      node listener/listener.js --elasticsearch --db --web3-url='http://origin-js:8545'"
     networks:
       - default
 

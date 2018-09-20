@@ -43,7 +43,9 @@ spec:
             value: "5001"
           - name: MESSAGING_NAMESPACE
             value: "{{ .Release.Namespace }}"
-      restartPolicy: Always
+        resources:
+          requests:
+            memory: 1Gi
   volumeClaimTemplates:
   - metadata:
       name: {{ template "messaging.fullname" . }}-data

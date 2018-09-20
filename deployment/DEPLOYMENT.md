@@ -49,9 +49,9 @@ The general steps for updating a service are:
 3. Update the tag of the container in the Origin Helm chart
 4. Sync the Helm release
 
-This process is automated by `deploy.sh` found at the top level of `origin-box`. It can be used to update Helm releases and deploy new containers. It uses the Helm chart found in `deployment/kubernetes/chart` and the values files found in `deployment/kubernetes/values`. The containers it builds are found in `deployment/dockerfiles`.
+This process is automated by `deploy.sh` found at `origin-box/deployment`. It can be used to update Helm releases and deploy new containers. It uses the Helm chart found in `deployment/kubernetes/charts/origin` and the values files found in `deployment/kubernetes/values`. The containers it builds are found in `origin-box/deployment/dockerfiles`.
 
-You can run `deploy.sh` without a `-c` argument  to update the Helm release for a namespace:
+You can run `deploy.sh` without a `-c` argument  to update the Helm release for a namespace (if you modify values for example):
 
 `./deploy.sh -n dev`
 
@@ -59,6 +59,6 @@ Or you can use it to build a new container:
 
 `./deploy.sh -c origin-dapp -n dev`
 
-The container that gets built will use the code from the current state of your `origin-box` repository. If `origin-box/origin-dapp` is not up to date or on the wrong commit you'll get a bad container. **This is just temporary, the dockerfiles will be changed to clone the relevant branch shortly.**
+The container that gets built will use the code in the relevant branch (master, staging or stable) for the namespace.
 
 When you deploy a new container the values file for the deployment will get updated with the tag of the new image in use. Please remember to commit that file after a deployment.

@@ -25,6 +25,12 @@ spec:
       containers:
       - name: geth-miner
         image: {{ .Values.gethImage }}:{{ .Values.gethImageTag }}
+        ports:
+        - name: discovery-udp
+          containerPort: 30303
+          protocol: UDP
+        - name: discovery-tcp
+          containerPort: 30303
         command: ["/bin/sh"]
         args:
         - "-c"
@@ -47,19 +53,14 @@ spec:
             configMapKeyRef:
               name: {{ template "ethereum.fullname" . }}-genesis-config
               key: networkid
-        ports:
-        - name: discovery-udp
-          containerPort: 30303
-          protocol: UDP
-        - name: discovery-tcp
-          containerPort: 30303
-          protocol: TCP
+        resources:
+          requests:
+            memory: 2Gi
+          limits:
+            cpu: {{ .Values.gethMinerCpuLimit | quote }}
         volumeMounts:
           - name: {{ template "ethereum.fullname" . }}-data
             mountPath: /root/.ethereum
-        resources:
-          limits:
-            cpu: {{ .Values.gethMinerCpuLimit | quote }}
       initContainers:
       - name: init-genesis
         image: {{ .Values.gethImage }}:{{ .Values.gethImageTag }}

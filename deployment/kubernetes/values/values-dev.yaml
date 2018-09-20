@@ -17,7 +17,16 @@ gethMinerCpuLimit: 0.5
 ipfsImageTag: ipfs/go-ipfs
 ipfsImageTag: master
 
+faucetImage: origin-faucet
 faucetImageTag: '28438d2'
+
+eventlistenerImage: event-listener
+eventlistenerImageTag: '2b21d78'
+eventlistenerWeb3Url: https://eth.dev.originprotocol.com/rpc
+
+discoveryImage: origin-discovery
+discoveryDbInstance: origin-214503:us-west1:dev
+discoveryImageTag: '2b21d78'
 
 # IPFS server for OrbitDB
 messagingIpfsImage: ipfs/go-ipfs

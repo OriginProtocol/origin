@@ -1,14 +1,19 @@
 FROM node:9
+
 WORKDIR /app
 
-# Clone origin-js from master (dev) branch
-RUN git clone https://github.com/OriginProtocol/origin-js.git --branch master /app
+# Invalidate Docker cache if necessary by adding the hash of the current commit
+# from the remote repository
+ADD https://api.github.com/repos/OriginProtocol/origin-js/git/refs/heads/master /version.json
+# Clone origin-js from master (development) branch
+RUN git clone --depth 1 --branch master https://github.com/OriginProtocol/origin-js.git /app
 
-# Build origin-js so contract ABI is available
+# Build origin-js so contract ABI is available for faucet
 RUN npm install --quiet --no-progress
 RUN npm run build
 
 WORKDIR /app/token
+
 # Install dependencies for origin-faucet
 RUN npm install --quiet --no-progress
 

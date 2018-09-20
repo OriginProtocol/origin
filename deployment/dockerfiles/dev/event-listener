@@ -1,0 +1,37 @@
+# --- Origin.js
+
+FROM node:9 as origin-js-build
+
+WORKDIR /app
+
+# Invalidate Docker cache if necessary by adding the hash of the current commit
+# from the remote repository
+ADD https://api.github.com/repos/OriginProtocol/origin-js/git/refs/heads/master /version.json
+# Clone origin-js from master (development) branch
+RUN git clone --depth 1 --branch master https://github.com/OriginProtocol/origin-js.git /app
+
+RUN npm install --quiet --no-progress
+RUN npm run build
+
+# --- Event listener
+
+FROM node:9 as build
+
+WORKDIR /app
+
+# Invalidate Docker cache if necessary
+COPY --from=origin-js-build /version.json /
+# Copy indexing code out of origin-js
+COPY --from=origin-js-build /app/daemon/indexing/ /app/
+
+# Bug in db-migrate means it does not respect DATABASE_URL environment variable
+# as long as database.json is around
+RUN rm /app/database.json
+
+RUN npm install --quiet --no-progress
+
+# Link previously built Origin.js
+COPY --from=origin-js-build /app/ /usr/local/lib/node_modules/origin
+RUN npm link origin
+
+CMD ["node", "listener/listener.js", "--elasticsearch", "--db"]

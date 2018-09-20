@@ -1,9 +1,15 @@
 FROM node:9 as build
+
 WORKDIR /app
-COPY ./origin-dapp /app
+
+# Invalidate Docker cache if necessary
+ADD https://api.github.com/repos/OriginProtocol/origin-dapp/git/refs/heads/stable /version.json
+# Clone origin-dapp from stable branch
+RUN git clone --depth 1 --branch stable https://github.com/OriginProtocol/origin-dapp.git /app
 
 ENV BRIDGE_SERVER_DOMAIN=bridge.prod.originprotocol.com \
     BRIDGE_SERVER_PROTOCOL=https \
+    DISCOVERY_SERVER_URL=https://discovery.prod.originprotocol.com \
     IPFS_DOMAIN=ipfs.prod.originprotocol.com \
     IPFS_GATEWAY_PORT=443 \
     IPFS_GATEWAY_PROTOCOL=https \
@@ -11,10 +17,10 @@ ENV BRIDGE_SERVER_DOMAIN=bridge.prod.originprotocol.com \
     IPFS_SWARM=/dnsaddr/messaging.prod.originprotocol.com/tcp/443/wss/ipfs/QmW29MGfWVWWuxcAtUGENEv3uaLRJWgxjznRs3kw7ed79N \
     MESSAGING_ACCOUNT=0xcEB59C583Cb09694606189E9E558D001D308A08B \
     PROVIDER_URL=https://rinkeby.infura.io/emIXjs9eDuy57IlTYsIP \
-    MESSAGING_NAMESPACE=prod
+    MESSAGING_NAMESPACE=origin
 
-RUN npm install
-RUN npm run build
+RUN npm install --quiet --no-progress
+RUN NODE_ENV=production node_modules/.bin/webpack --progress --display errors-only
 
 # Nginx to service static files
 FROM nginx:1.15.2

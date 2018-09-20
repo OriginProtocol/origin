@@ -1,16 +1,21 @@
 FROM node:9
+
 WORKDIR /app
 
+# Invalidate Docker cache if necessary by adding the hash of the current commit
+# from the remote repository
+ADD https://api.github.com/repos/OriginProtocol/origin-js/git/refs/heads/staging /version.json
 # Clone origin-js from staging branch
-RUN git clone https://github.com/OriginProtocol/origin-js.git --branch staging /app
+RUN git clone --depth 1 --branch staging https://github.com/OriginProtocol/origin-js.git /app
 
-# Build origin-js so contract ABI is available
+# Build origin-js so contract ABI is available for faucet
 RUN npm install --quiet --no-progress
 RUN npm run build
 
 WORKDIR /app/token
+
 # Install dependencies for origin-faucet
 RUN npm install --quiet --no-progress
 
-# Configure for Rinekby
+# Configure for Rinkeby
 CMD ["node", "faucet/app.js", "--network_ids=4"]

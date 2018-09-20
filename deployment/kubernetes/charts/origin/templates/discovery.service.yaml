@@ -1,18 +1,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-metadata:
-  name: {{ template "bridge.fullname" . }}
+  name: {{ template "discovery.fullname" . }}
   labels:
-    app: {{ template "bridge.fullname" . }}
+    app: {{ template "discovery.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
   type: NodePort
   selector:
-    app: {{ template "bridge.fullname" . }}
+    app: {{ template "discovery.fullname" . }}
   ports:
-  - name: gunicorn
-    port: 5000
-    protocol: TCP
+  - name: apollo
+    port: 4000

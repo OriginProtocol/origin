@@ -32,7 +32,10 @@ spec:
         volumeMounts:
           - mountPath: /data/ipfs
             name: {{ template "ipfs.fullname" . }}-data
-      restartPolicy: Always
+        resources:
+          requests:
+            memory: 1Gi
+            cpu: 500m
   volumeClaimTemplates:
   - metadata:
       name: {{ template "ipfs.fullname" . }}-data

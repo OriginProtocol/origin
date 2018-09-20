@@ -89,6 +89,10 @@ spec:
               name: {{ template "ethereum.fullname" . }}-genesis-config
               key: networkid
         {{ end }}
+        resources:
+          requests:
+            memory: {{ default "2Gi" .Values.gethTxMemoryRequest }}
+            cpu: 500m
         volumeMounts:
           - mountPath: /root/.ethereum
             name: {{ template "ethereum.fullname" . }}-data

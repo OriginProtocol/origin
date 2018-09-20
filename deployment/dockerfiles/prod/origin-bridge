@@ -6,7 +6,13 @@ RUN apt-get install libsecp256k1-dev -y
 RUN pip install gunicorn
 
 WORKDIR /app
-COPY ./origin-bridge /app
+
+# Invalidate Docker cache if necessary by adding the hash of the current commit
+# from the remote repository
+ADD https://api.github.com/repos/OriginProtocol/origin-bridge/git/refs/heads/stable /version.json
+# Clone origin-bridge from stable (production) branch
+RUN git clone --depth 1 --branch stable https://github.com/OriginProtocol/origin-bridge.git /app
+
 RUN pip install -r requirements.txt
 
 EXPOSE 5000

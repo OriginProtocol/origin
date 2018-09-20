@@ -17,7 +17,6 @@ spec:
     metadata:
       labels:
         app: {{ template "faucet.fullname" . }}
-        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
         release: "{{ .Release.Name }}"
     spec:
       containers:
@@ -29,6 +28,8 @@ spec:
           {{- if eq .Release.Namespace "dev" }}
         - name: ORIGIN_MNEMONIC
           {{- else if eq .Release.Namespace "staging" }}
+        - name: INFURA_ACCESS_TOKEN
+          value: {{ .Values.infuraAccessToken }}
         - name: RINKEBY_MNEMONIC
           {{- end }}
           value: {{ .Values.faucetMnemonic }}
