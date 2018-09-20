@@ -234,6 +234,10 @@ class V00_MarkeplaceAdapter {
       }
     })
 
+    if (!ipfsHash) {
+      throw(`ipfsHash not found in events for listing ${listingId}`)
+    }
+
     // Return the raw listing along with events and IPFS hash
     return Object.assign({}, rawListing, { ipfsHash, events, offers, status })
   }
