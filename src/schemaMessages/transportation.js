@@ -9,6 +9,10 @@ export default defineMessages({
     id: 'schema.transportation.title',
     defaultMessage: 'Title'
   },
+  'schema.transportation.examples': {
+    id: 'schema.transportation.examples',
+    defaultMessage: 'Examples'
+  },
   'schema.transportation.category': {
     id: 'schema.transportation.category',
     defaultMessage: 'Category'
@@ -23,7 +27,7 @@ export default defineMessages({
   },
   'schema.transportation.priceInETH': {
     id: 'schema.transportation.priceInETH',
-    defaultMessage: 'Price in ETH',
+    defaultMessage: 'Price in ETH'
   },
   'schema.transportation.selectPhotos': {
     id: 'schema.transportation.selectPhotos',

@@ -9,6 +9,10 @@ export default defineMessages({
     id: 'schema.housing.title',
     defaultMessage: 'Title'
   },
+  'schema.housing.examples': {
+    id: 'schema.housing.examples',
+    defaultMessage: 'Examples'
+  },
   'schema.housing.category': {
     id: 'schema.housing.category',
     defaultMessage: 'Category'
@@ -23,7 +27,7 @@ export default defineMessages({
   },
   'schema.housing.priceInETH': {
     id: 'schema.housing.priceInETH',
-    defaultMessage: 'Price in ETH',
+    defaultMessage: 'Price in ETH'
   },
   'schema.housing.selectPhotos': {
     id: 'schema.housing.selectPhotos',

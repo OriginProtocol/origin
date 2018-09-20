@@ -1,14 +1,20 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { FormattedMessage, FormattedDate, defineMessages, injectIntl } from 'react-intl'
+import {
+  FormattedMessage,
+  FormattedDate,
+  defineMessages,
+  injectIntl
+} from 'react-intl'
 import $ from 'jquery'
 
 import {
   update as updateTransaction,
-  upsert as upsertTransaction,
+  upsert as upsertTransaction
 } from 'actions/Transaction'
 
+import { ConfirmationModal, IssueModal, PrerequisiteModal, RejectionModal } from 'components/arbitration-modals'
 import Avatar from 'components/avatar'
 import Modal from 'components/modal'
 import PurchaseProgress from 'components/purchase-progress'
@@ -17,20 +23,26 @@ import UserCard from 'components/user-card'
 
 import TransactionEvent from 'pages/purchases/transaction-event'
 
-import { translateListingCategory } from 'utils/translationUtils'
+import { getListing } from 'utils/listing'
+import { offerStatusToStep } from 'utils/offer'
 
 import origin from '../services/origin'
 
-const web3 = origin.contractService.web3
+const ARBITRATOR_ETH_ADDRESS = process.env.ARBITRATOR_ACCOUNT
 
 const defaultState = {
   buyer: {},
   form: {
     rating: 5,
-    reviewText: '',
+    reviewText: ''
   },
+  issue: '',
   listing: {},
-  logs: [],
+  modalsOpen: {
+    confirmation: false,
+    issue: false,
+    rejection: false
+  },
   processing: false,
   purchase: {},
   reviews: [],
@@ -38,41 +50,51 @@ const defaultState = {
 }
 
 class PurchaseDetail extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
 
-    this.confirmReceipt = this.confirmReceipt.bind(this)
-    this.confirmShipped = this.confirmShipped.bind(this)
+    this.acceptOffer = this.acceptOffer.bind(this)
+    this.completePurchase = this.completePurchase.bind(this)
+    this.handleProblem = this.handleProblem.bind(this)
     this.handleRating = this.handleRating.bind(this)
     this.handleReviewText = this.handleReviewText.bind(this)
+    this.initiateDispute = this.initiateDispute.bind(this)
     this.loadPurchase = this.loadPurchase.bind(this)
-    this.withdrawFunds = this.withdrawFunds.bind(this)
+    this.rejectOffer = this.rejectOffer.bind(this)
+    this.reviewSale = this.reviewSale.bind(this)
+    this.toggleModal = this.toggleModal.bind(this)
+    this.withdrawOffer = this.withdrawOffer.bind(this)
     this.state = defaultState
 
     this.intlMessages = defineMessages({
-      awaitOrder: {
-        id: 'purchase-detail.awaitOrder',
-        defaultMessage: 'Wait for the seller to send the order'
+      awaitApproval: {
+        id: 'purchase-detail.awaitApproval',
+        defaultMessage: 'Wait for the seller to approve your offer'
       },
-      sendOrder: {
-        id: 'purchase-detail.sendOrder',
-        defaultMessage: 'Send the order to buyer'
+      acceptBuyersOffer: {
+        id: 'purchase-detail.acceptOrRejectOffer',
+        defaultMessage: 'Accept or reject the buyer\'s offer'
       },
-      sendOrderInstruction: {
-        id: 'purchase-detail.sendOrderInstruction',
-        defaultMessage: 'Click the button below once the order has shipped.'
+      acceptOfferInstruction: {
+        id: 'purchase-detail.acceptOfferInstruction',
+        defaultMessage: 'Click below to cancel or continue this transaction.'
       },
-      markOrderSent: {
-        id: 'purchase-detail.markOrderSent',
-        defaultMessage: 'Mark Order as Sent'
+      acceptOffer: {
+        id: 'purchase-detail.acceptOffer',
+        defaultMessage: 'Accept'
       },
-      confirmReceiptOfOrder: {
-        id: 'purchase-detail.confirmReceiptOfOrder',
-        defaultMessage: 'Confirm receipt of the order and leave a review'
+      waitForContact: {
+        id: 'purchase-detail.waitForContact',
+        defaultMessage: 'Wait to be contacted by an Origin team member'
+      },
+      completePurchase: {
+        id: 'purchase-detail.completePurchase',
+        defaultMessage: 'Complete your purchase and leave a review'
       },
       submitThisForm: {
         id: 'purchase-detail.submitThisForm',
-        defaultMessage: 'Submit this form once you have reviewed shipment of your order.'
+        defaultMessage:
+          'Submit this form once you confirm that you are satisfied with your purchase.'
       },
       confirmAndReview: {
         id: 'purchase-detail.confirmAndReview',
@@ -80,90 +102,195 @@ class PurchaseDetail extends Component {
       },
       buyerReviewPlaceholder: {
         id: 'purchase-detail.buyerReviewPlaceholder',
-        defaultMessage: 'Your review should inform others about your experience transacting with this seller, not about the product itself.'
+        defaultMessage:
+          'Your review should inform others about your experience transacting with this seller, not about the product itself.'
       },
       waitForBuyer: {
         id: 'purchase-detail.waitForBuyer',
-        defaultMessage: 'Wait for the buyer to receive the order'
+        defaultMessage: 'Wait for the buyer to finalize the transaction'
       },
-      awaitSellerWithdrawl: {
-        id: 'purchase-detail.awaitSellerWithdrawl',
-        defaultMessage: 'Wait for the seller to withdraw the funds'
+      fulfillObligation: {
+        id: 'purchase-detail.fulfillObligation',
+        defaultMessage: 'Make sure you fulfill the order.'
       },
-      completeByWithdrawing: {
-        id: 'purchase-detail.completeByWithdrawing',
-        defaultMessage: 'Complete your transaction by withdrawing funds'
+      awaitSellerReview: {
+        id: 'purchase-detail.awaitSellerReview',
+        defaultMessage: 'Wait for the seller to leave a review'
       },
-      clickToWithdraw: {
-        id: 'purchase-detail.clickToWithdraw',
-        defaultMessage: 'Click the button below to initiate the withdrawal'
+      completeByReviewing: {
+        id: 'purchase-detail.completeByReviewing',
+        defaultMessage: 'Complete your sale by leaving a review'
       },
-      withdrawAndReview: {
-        id: 'purchase-detail.withdrawAndReview',
-        defaultMessage: 'Withdraw and Review'
+      clickToReview: {
+        id: 'purchase-detail.clickToReview',
+        defaultMessage: 'Click the button below to leave a review'
+      },
+      reviewSale: {
+        id: 'purchase-detail.reviewSale',
+        defaultMessage: 'Leave a review'
+      },
+      rejectOffer: {
+        id: 'purchase-detail.rejectOffer',
+        defaultMessage: 'Reject'
+      },
+      reportProblem: {
+        id: 'purchase-detail.reportProblem',
+        defaultMessage: 'Report a Problem'
       },
       sellerReviewPlaceholder: {
         id: 'purchase-detail.sellerReviewPlaceholder',
-        defaultMessage: 'Your review should inform others about your experience transacting with this buyer.'
+        defaultMessage:
+          'Your review should inform others about your experience transacting with this buyer.'
       },
+      withdrawOffer: {
+        id: 'purchase-detail.withdrawOffer',
+        defaultMessage: 'Withdraw Offer'
+      },
+      offerMade: {
+        id: 'purchase-detail.offerMade',
+        defaultMessage: 'Offer Made'
+      },
+      offerWithdrawn: {
+        id: 'purchase-detail.offerWithdrawn',
+        defaultMessage: 'Offer Withdrawn'
+      },
+      offerAccepted: {
+        id: 'purchase-detail.offerAccepted',
+        defaultMessage: 'Offer Accepted'
+      },
+      saleCompleted: {
+        id: 'purchase-detail.saleCompleted',
+        defaultMessage: 'Sale Completed'
+      },
+      saleReviewed: {
+        id: 'purchase-detail.saleReviewed',
+        defaultMessage: 'Sale Reviewed'
+      }
     })
 
-    /* Transaction stages: no disputes/arbitration
-     *  - step 0 was creating the listing
-     *  - nextSteps[0] equates to step 1, etc
-     *  - even-numbered steps are seller's resposibility
-     *  - odd-numbered steps are buyer's responsibility
-     */
-    this.nextSteps = [
-      {
-        // we should never be in this state
+    this.nextSteps = {
+      created: {
         buyer: {
-          prompt: 'Purchase this listing',
-          instruction: 'Why is this here if you have not yet purchased it?',
+          prompt: this.props.intl.formatMessage(
+            this.intlMessages.awaitApproval
+          ),
+          buttons: [],
+          link: {
+            functionName: 'withdrawOffer',
+            text: this.props.intl.formatMessage(
+              this.intlMessages.withdrawOffer
+            )
+          }
         },
         seller: {
-          prompt: 'Wait for a purchase',
-          instruction: 'Why are you seeing this? There is no buyer.',
-        },
+          prompt: this.props.intl.formatMessage(
+            this.intlMessages.acceptBuyersOffer
+          ),
+          instruction: this.props.intl.formatMessage(
+            this.intlMessages.acceptOfferInstruction
+          ),
+          buttons: [
+            {
+              functionName: 'rejectOffer',
+              text: this.props.intl.formatMessage(
+                this.intlMessages.rejectOffer
+              )
+            },
+            {
+              functionName: 'acceptOffer',
+              text: this.props.intl.formatMessage(
+                this.intlMessages.acceptOffer
+              )
+            }
+          ]
+        }
       },
-      {
+      accepted: {
         buyer: {
-          prompt: this.props.intl.formatMessage(this.intlMessages.awaitOrder),
+          prompt: this.props.intl.formatMessage(
+            this.intlMessages.completePurchase
+          ),
+          instruction: this.props.intl.formatMessage(
+            this.intlMessages.submitThisForm
+          ),
+          placeholderText: this.props.intl.formatMessage(
+            this.intlMessages.buyerReviewPlaceholder
+          ),
+          buttons: [
+            {
+              functionName: 'completePurchase',
+              text: this.props.intl.formatMessage(
+                this.intlMessages.confirmAndReview
+              )
+            }
+          ],
+          link: {
+            functionName: 'handleProblem',
+            text: this.props.intl.formatMessage(
+              this.intlMessages.reportProblem
+            )
+          },
+          reviewable: true
         },
         seller: {
-          prompt: this.props.intl.formatMessage(this.intlMessages.sendOrder),
-          instruction: this.props.intl.formatMessage(this.intlMessages.sendOrderInstruction),
-          buttonText: this.props.intl.formatMessage(this.intlMessages.markOrderSent),
-          functionName: 'confirmShipped',
-        },
+          prompt: this.props.intl.formatMessage(
+            this.intlMessages.waitForBuyer
+          ),
+          instruction: this.props.intl.formatMessage(
+            this.intlMessages.fulfillObligation
+          ),
+          buttons: [],
+          link: {
+            functionName: 'handleProblem',
+            text: this.props.intl.formatMessage(
+              this.intlMessages.reportProblem
+            )
+          }
+        }
       },
-      {
+      disputed: {
         buyer: {
-          prompt: this.props.intl.formatMessage(this.intlMessages.confirmReceiptOfOrder),
-          instruction: this.props.intl.formatMessage(this.intlMessages.submitThisForm),
-          buttonText: this.props.intl.formatMessage(this.intlMessages.confirmAndReview),
-          functionName: 'confirmReceipt',
-          placeholderText: this.props.intl.formatMessage(this.intlMessages.buyerReviewPlaceholder),
-          reviewable: true,
+          prompt: this.props.intl.formatMessage(
+            this.intlMessages.waitForContact
+          ),
+          buttons: []
         },
         seller: {
-          prompt: this.props.intl.formatMessage(this.intlMessages.waitForBuyer),
-        },
+          prompt: this.props.intl.formatMessage(
+            this.intlMessages.waitForContact
+          ),
+          buttons: []
+        }
       },
-      {
+      finalized: {
         buyer: {
-          prompt: this.props.intl.formatMessage(this.intlMessages.awaitSellerWithdrawl),
+          prompt: this.props.intl.formatMessage(
+            this.intlMessages.awaitSellerReview
+          ),
+          buttons: []
         },
         seller: {
-          prompt: this.props.intl.formatMessage(this.intlMessages.completeByWithdrawing),
-          instruction: this.props.intl.formatMessage(this.intlMessages.clickToWithdraw),
-          buttonText: this.props.intl.formatMessage(this.intlMessages.withdrawAndReview),
-          functionName: 'withdrawFunds',
-          placeholderText: this.props.intl.formatMessage(this.intlMessages.sellerReviewPlaceholder),
-          reviewable: true,
-        },
-      },
-    ]
+          prompt: this.props.intl.formatMessage(
+            this.intlMessages.completeByReviewing
+          ),
+          instruction: this.props.intl.formatMessage(
+            this.intlMessages.clickToReview
+          ),
+          placeholderText: this.props.intl.formatMessage(
+            this.intlMessages.sellerReviewPlaceholder
+          ),
+          buttons: [
+            {
+              functionName: 'reviewSale',
+              text: this.props.intl.formatMessage(
+                this.intlMessages.reviewSale
+              )
+            }
+          ],
+          reviewable: true
+        }
+      }
+    }
   }
 
   componentWillMount() {
@@ -174,98 +301,27 @@ class PurchaseDetail extends Component {
     $('[data-toggle="tooltip"]').tooltip()
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { address, buyerAddress, listingAddress } = this.state.purchase
-    const { sellerAddress } = this.state.listing
-
-    if (prevState.purchase.listingAddress !== listingAddress) {
-      this.loadListing(listingAddress)
-      this.loadBuyer(buyerAddress)
-      this.loadReviews(listingAddress)
-    }
-
-    if (prevState.listing.sellerAddress !== sellerAddress) {
-      this.loadSeller(sellerAddress)
-    }
-
-    // detect route param change and reload data
-    if (address && address !== this.props.purchaseAddress) {
-      this.setState(defaultState)
-
-      this.loadPurchase()
-    }
-  }
-
-  async loadListing(addr) {
-    try {
-      const listing = await origin.listings.get(addr)
-      this.setState({ listing })
-      console.log('Listing: ', listing)
-    } catch(error) {
-      console.error(`Error loading listing ${addr}`)
-      console.error(error)
-    }
+  componentWillUnmount() {
+    $('[data-toggle="tooltip"]').tooltip('dispose')
   }
 
   async loadPurchase() {
-    const { purchaseAddress } = this.props
+    const { offerId } = this.props
 
     try {
-      const purchase = await origin.purchases.get(purchaseAddress)
-      console.log(purchase)
-      this.setState({ purchase })
-      console.log('Purchase: ', purchase)
-
-      const logs = await origin.purchases.getLogs(purchaseAddress)
-      this.setState({ logs })
-      console.log('Logs: ', logs)
-
-      return purchase
-    } catch(error) {
-      console.error(`Error loading purchase ${purchaseAddress}`)
+      const purchase = await origin.marketplace.getOffer(offerId)
+      const listing = await getListing(purchase.listingId, true)
+      const reviews = await origin.marketplace.getListingReviews(offerId)
+      this.setState({
+        listing,
+        purchase,
+        reviews
+      })
+      await this.loadSeller(listing.seller)
+      await this.loadBuyer(purchase.buyer)
+    } catch (error) {
+      console.error(`Error loading purchase ${offerId}`)
       console.error(error)
-    }
-  }
-
-  async getPurchaseAddress(addr, i) {
-    try {
-      return await origin.listings.purchaseAddressByIndex(addr, i)
-    } catch(error) {
-      console.error(`Error fetching purchase address at: ${i}`)
-    }
-  }
-
-  async loadPurchases(listingAddress) {
-    try {
-      const length = await origin.listings.purchasesLength(listingAddress)
-      console.log('Purchase count:', length)
-
-      const purchaseAddresses = await Promise.all(
-        [...Array(length).keys()].map(i => this.getPurchaseAddress(listingAddress, i))
-      )
-
-      return await Promise.all(
-        purchaseAddresses.map(addr => origin.purchases.get(addr))
-      )
-    } catch(error) {
-      console.error(`Error fetching purchases for listing: ${listingAddress}`)
-      console.error(error)
-    }
-  }
-
-  async loadReviews(listingAddress) {
-    try {
-      const purchases = await this.loadPurchases(listingAddress)
-      console.log('PURCHASES', purchases)
-      const reviews = await Promise.all(
-        purchases.map(p => origin.reviews.find({ purchaseAddress: p.address }))
-      )
-      const flattened = [].concat(...reviews)
-      console.log('Reviews:', flattened)
-      this.setState({ reviews: flattened })
-    } catch(error) {
-      console.error(error)
-      console.error(`Error fetching reviews`)
     }
   }
 
@@ -273,8 +329,7 @@ class PurchaseDetail extends Component {
     try {
       const user = await origin.users.get(addr)
       this.setState({ buyer: { ...user, address: addr } })
-      console.log('Buyer: ', this.state.buyer)
-    } catch(error) {
+    } catch (error) {
       console.error(`Error loading buyer ${addr}`)
       console.error(error)
     }
@@ -284,55 +339,64 @@ class PurchaseDetail extends Component {
     try {
       const user = await origin.users.get(addr)
       this.setState({ seller: { ...user, address: addr } })
-      console.log('Seller: ', this.state.seller)
-    } catch(error) {
+      // console.log('Seller: ', this.state.seller)
+    } catch (error) {
       console.error(`Error loading seller ${addr}`)
       console.error(error)
     }
   }
 
-  async confirmReceipt() {
-    const { purchaseAddress } = this.props
+  async completePurchase() {
+    const { offerId } = this.props
     const { rating, reviewText } = this.state.form
+    const { purchase, listing } = this.state
+    const offer = purchase
 
     try {
       this.setState({ processing: true })
 
-      const { created, transactionReceipt } = await origin.purchases.buyerConfirmReceipt(purchaseAddress, {
+      const buyerReview = {
         rating,
-        reviewText: reviewText.trim(),
-      }, (confirmationCount, transactionReceipt) => {
-        // Having a transaction receipt doesn't guarantee that the purchase state will have changed.
-        // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
-        this.loadPurchase()
-        this.loadReviews(this.state.listing.address)
+        text: reviewText.trim()
+      }
+      const transactionReceipt = await origin.marketplace.finalizeOffer(
+        offerId,
+        buyerReview,
+        (confirmationCount, transactionReceipt) => {
+          // Having a transaction receipt doesn't guarantee that the purchase state will have changed.
+          // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
+          this.loadPurchase()
 
-        this.props.updateTransaction(confirmationCount, transactionReceipt)
-      })
-
+          this.props.updateTransaction(confirmationCount, transactionReceipt)
+        }
+      )
       this.props.upsertTransaction({
         ...transactionReceipt,
-        created,
-        transactionTypeKey: 'confirmReceipt',
+        offer,
+        listing,
+        transactionTypeKey: 'completePurchase'
       })
 
       this.setState({ processing: false })
-    } catch(error) {
+    } catch (error) {
       this.setState({ processing: false })
-      
-      console.error('Error marking purchase received by buyer')
+
+      console.error('Error completing purchase')
       console.error(error)
     }
   }
 
-  async confirmShipped() {
-    const { purchaseAddress } = this.props
+  async acceptOffer() {
+    const { offerId } = this.props
+    const { purchase, listing } = this.state
+    const offer = purchase
 
     try {
       this.setState({ processing: true })
 
-      const { created, transactionReceipt } = await origin.purchases.sellerConfirmShipped(
-        purchaseAddress,
+      const transactionReceipt = await origin.marketplace.acceptOffer(
+        offerId,
+        {},
         (confirmationCount, transactionReceipt) => {
           // Having a transaction receipt doesn't guarantee that the purchase state will have changed.
           // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
@@ -344,46 +408,97 @@ class PurchaseDetail extends Component {
 
       this.props.upsertTransaction({
         ...transactionReceipt,
-        created,
-        transactionTypeKey: 'confirmShipped',
+        transactionTypeKey: 'acceptOffer',
+        offer,
+        listing
       })
 
       this.setState({ processing: false })
-    } catch(error) {
+    } catch (error) {
       this.setState({ processing: false })
-      
-      console.error('Error marking purchase shipped by seller')
+
+      console.error('Error accepting offer')
       console.error(error)
     }
   }
 
-  async withdrawFunds() {
-    const { purchaseAddress } = this.props
-    const { rating, reviewText } = this.state.form
+  async rejectOffer() {
+    this.withdrawOffer(() => this.toggleModal('rejection'))
+  }
+
+  async withdrawOffer(onSuccess) {
+    const { offerId } = this.props
+    const { purchase, listing } = this.state
+    const offer = purchase
 
     try {
       this.setState({ processing: true })
 
-      const { created, transactionReceipt } = await origin.purchases.sellerGetPayout(purchaseAddress, {
-        rating,
-        reviewText: reviewText.trim(),
-      }, (confirmationCount, transactionReceipt) => {
-        // Having a transaction receipt doesn't guarantee that the purchase state will have changed.
-        // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
-        this.loadPurchase()
-        this.loadReviews(this.state.listing.address)
+      const transactionReceipt = await origin.marketplace.withdrawOffer(
+        offerId,
+        {},
+        (confirmationCount, transactionReceipt) => {
+          // Having a transaction receipt doesn't guarantee that the purchase state will have changed.
+          // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
+          this.loadPurchase()
 
-        this.props.updateTransaction(confirmationCount, transactionReceipt)
-      })
+          this.props.updateTransaction(confirmationCount, transactionReceipt)
+        }
+      )
 
       this.props.upsertTransaction({
         ...transactionReceipt,
-        created,
-        transactionTypeKey: 'getPayout',
+        transactionTypeKey: 'withdrawOffer',
+        offer,
+        listing
+      })
+
+      onSuccess && onSuccess()
+
+      this.setState({ processing: false })
+    } catch (error) {
+      this.setState({ processing: false })
+
+      console.error('Error accepting offer')
+      console.error(error)
+    }
+  }
+
+  async reviewSale() {
+    const { offerId } = this.props
+    const { rating, reviewText } = this.state.form
+    const { purchase, listing } = this.state
+    const offer = purchase
+
+    try {
+      this.setState({ processing: true })
+
+      const sellerReview = {
+        rating,
+        text: reviewText.trim()
+      }
+      const transactionReceipt = await origin.marketplace.addData(
+        null,
+        offerId,
+        sellerReview,
+        (confirmationCount, transactionReceipt) => {
+          // Having a transaction receipt doesn't guarantee that the purchase state will have changed.
+          // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
+          this.loadPurchase()
+
+          this.props.updateTransaction(confirmationCount, transactionReceipt)
+        }
+      )
+
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        offer,
+        listing,
+        transactionTypeKey: 'reviewSale'
       })
 
       this.setState({ processing: false })
-    } catch(error) {
+    } catch (error) {
       this.setState({ processing: false })
 
       console.error('Error withdrawing funds for seller')
@@ -391,15 +506,22 @@ class PurchaseDetail extends Component {
     }
   }
 
-  /*
-  * rating: 1 <= integer <= 5
-  */
+  handleProblem() {
+    const isEligibleForArbitration = origin.messaging.canSendMessages()
+
+    if (isEligibleForArbitration) {
+      this.toggleModal('confirmation')
+    } else {
+      this.toggleModal('prerequisite')
+    }
+  }
+
+  // rating: 1 <= integer <= 5
   handleRating(rating) {
     this.setState(prevState => {
       return { form: { ...prevState.form, rating } }
     })
   }
-
 
   handleReviewText(e) {
     const { value } = e.target
@@ -409,120 +531,247 @@ class PurchaseDetail extends Component {
     })
   }
 
+  async initiateDispute() {
+    const { web3Account } = this.props
+    const { issue, listing, purchase } = this.state
+
+    try {
+      this.setState({ processing: true })
+
+      const offer = purchase
+
+      const transactionReceipt = await origin.marketplace.initiateDispute(
+        purchase.id,
+        {},
+        (confirmationCount, transactionReceipt) => {
+          // Having a transaction receipt doesn't guarantee that the purchase state will have changed.
+          // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
+          this.loadPurchase()
+
+          this.props.updateTransaction(confirmationCount, transactionReceipt)
+        }
+      )
+
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        offer,
+        listing,
+        transactionTypeKey: 'initiateDispute'
+      })
+
+      const counterpartyAddress = web3Account === purchase.buyer ? listing.seller : purchase.buyer
+      const roomId = origin.messaging.generateRoomId(web3Account, counterpartyAddress)
+      const keys = origin.messaging.getSharedKeys(roomId)
+
+      // disclose shared decryption key with arbitrator if one exists
+      if (keys.length) {
+        await origin.messaging.sendConvMessage(ARBITRATOR_ETH_ADDRESS, {
+          decryption: { keys, roomId }
+        })
+      }
+
+      // send a message to arbitrator if form is not blank
+      issue.length && origin.messaging.sendConvMessage(ARBITRATOR_ETH_ADDRESS, {
+        content: issue
+      })
+
+      this.setState({ processing: false })
+    } catch (error) {
+      this.setState({ processing: false })
+
+      throw error
+    }
+  }
+
+  toggleModal(name) {
+    this.setState(prevState => {
+      return {
+        modalsOpen: {
+          ...prevState.modalsOpen,
+          [name]: !prevState.modalsOpen[name]
+        }
+      }
+    })
+  }
+
   render() {
     const { web3Account } = this.props
-
-    const { buyer, form, listing, logs, processing, purchase, reviews, seller } = this.state
-    const translatedListing = translateListingCategory(listing)
+    const {
+      buyer,
+      form,
+      listing,
+      modalsOpen,
+      processing,
+      purchase,
+      reviews,
+      seller
+    } = this.state
+    const step = offerStatusToStep(purchase.status)
+    const isPending = purchase.status !== 'withdrawn' && step < 3
+    const isSold = step > 2
     const { rating, reviewText } = form
-    const buyersReviews = reviews.filter(r => r.revieweeRole === 'SELLER')
 
-    if (!purchase.address || !listing.address ){
+    // Data not loaded yet.
+    if (!purchase.status || !listing.status) {
       return null
     }
 
     let perspective
     // may potentially be neither buyer nor seller
-    if (web3Account === purchase.buyerAddress) {
+    if (web3Account === purchase.buyer) {
       perspective = 'buyer'
-    } else if (web3Account === listing.sellerAddress) {
+    } else if (web3Account === listing.seller) {
       perspective = 'seller'
     }
 
     const pictures = listing.pictures || []
-    const category = translatedListing.category || ""
-    const active = listing.unitsAvailable > 0 // Todo, move to origin.js, take into account listing expiration
-    const soldAt = purchase.created * 1000 // convert seconds since epoch to ms
+    const active = listing.status === 'active' // TODO: move to origin.js, take into account listing expiration
+    const soldAt = purchase.createdAt * 1000 // convert seconds since epoch to ms
 
-    // log events
-    const paymentEvent = logs.find(l => l.stage === 'in_escrow')
-    const paidAt = paymentEvent ? paymentEvent.timestamp * 1000 : null
-    const fulfillmentEvent = logs.find(l => l.stage === 'buyer_pending')
-    const fulfilledAt = fulfillmentEvent ? fulfillmentEvent.timestamp * 1000 : null
-    const receiptEvent = logs.find(l => l.stage === 'seller_pending')
-    const receivedAt = receiptEvent ? receiptEvent.timestamp * 1000 : null
-    const withdrawalEvent = logs.find(l => l.stage === 'complete')
-    const withdrawnAt = withdrawalEvent ? withdrawalEvent.timestamp * 1000 : null
-    const reviewedAt = null
-    const price = `${Number(listing.price).toLocaleString(undefined, {minimumFractionDigits: 3})} ETH` // change to priceEth
+    const offerCreated = purchase.event('OfferCreated')
+    const offerWithdrawn = purchase.event('OfferWithdrawn')
+    const offerAccepted = purchase.event('OfferAccepted')
+    const offerFinalized = purchase.event('OfferFinalized')
+    const offerData = purchase.event('OfferData')
+
+    const priceEth = `${Number(purchase.totalPrice.amount).toLocaleString(undefined, {
+      minimumFractionDigits: 5,
+      maximumFractionDigits: 5
+    })} ETH`
 
     const counterparty = ['buyer', 'seller'].find(str => str !== perspective)
     const counterpartyUser = counterparty === 'buyer' ? buyer : seller
     const status = active ? 'active' : 'inactive'
     const maxStep = perspective === 'seller' ? 4 : 3
-    let decimal, left, step
 
-    if (purchase.stage === 'complete') {
-      step = 4
-    } else if (purchase.stage === 'seller_pending') {
-      step = 3
-    } else if (purchase.stage === 'buyer_pending') {
-      step = 2
-    } else if (purchase.stage === 'in_escrow') {
-      step = 1
-    } else {
-      step = 0
-    }
+    const nextStep = perspective && this.nextSteps[purchase.status]
+    const {
+      buttons,
+      instruction,
+      link,
+      placeholderText,
+      prompt,
+      reviewable
+    } = nextStep ? nextStep[perspective] : { buttons: [] }
 
-    if (!step) {
-      left = '28px'
-    } else if (step === 1) {
-      if (perspective === 'buyer') {
-        left = '28px'
-      } else {
-        decimal = step / (maxStep - 1)
-        left = `calc(${decimal * 100}% + ${decimal * 28}px)`
-      }
-    } else if (step >= maxStep - 1) {
-      left = 'calc(100% - 28px)'
-    } else {
-      decimal = (step - 1) / (maxStep - 1)
-      left = `calc(${decimal * 100}% + ${decimal * 28}px)`
-    }
-
-    const nextStep = perspective && this.nextSteps[step]
-    const { buttonText, functionName, instruction, placeholderText, prompt, reviewable } = nextStep ? nextStep[perspective] : {}
-    const buyerName = (buyer.profile && `${buyer.profile.firstName} ${buyer.profile.lastName}`) ||
-            <FormattedMessage
-              id={ 'purchase-detail.unnamedUser' }
-              defaultMessage={ 'Unnamed User' }
-            />
-    const sellerName = (seller.profile && `${seller.profile.firstName} ${seller.profile.lastName}`) ||
-            <FormattedMessage
-              id={ 'purchase-detail.unnamedUser' }
-              defaultMessage={ 'Unnamed User' }
-            />
+    const buyerName = buyer.profile ? (
+      `${buyer.profile.firstName} ${buyer.profile.lastName}`
+    ) : (
+      <FormattedMessage
+        id={'purchase-detail.unnamedUser'}
+        defaultMessage={'Unnamed User'}
+      />
+    )
+    const sellerName = seller.profile ? (
+      `${seller.profile.firstName} ${seller.profile.lastName}`
+    ) : (
+      <FormattedMessage
+        id={'purchase-detail.unnamedUser'}
+        defaultMessage={'Unnamed User'}
+      />
+    )
+    const arbitrationIsAvailable = ARBITRATOR_ETH_ADDRESS && web3Account !== ARBITRATOR_ETH_ADDRESS
 
     return (
       <div className="purchase-detail">
         <div className="container">
           <div className="row">
             <div className="col-12">
-              <div className="brdcrmb">
-                {perspective === 'buyer' &&
-                  <FormattedMessage
-                    id={ 'purchase-detail.purchasedFrom' }
-                    defaultMessage={ 'Purchased from {sellerLink}' }
-                    values={{ sellerLink: <Link to={`/users/${counterpartyUser.address}`}>{sellerName}</Link> }}
-                  />
-                }
-                {perspective === 'seller' &&
-                  <FormattedMessage
-                    id={ 'purchase-detail.soldTo' }
-                    defaultMessage={ 'Sold to {buyerLink}' }
-                    values={{ buyerLink: <Link to={`/users/${counterpartyUser.address}`}>{buyerName}</Link> }}
-                  />
-                }
-              </div>
-              <h1>{translatedListing.name}</h1>
+              {offerFinalized &&
+                <div className="brdcrmb">
+                  {perspective === 'buyer' && (
+                    <FormattedMessage
+                      id={'purchase-detail.purchasedFrom'}
+                      defaultMessage={'Purchased from {sellerLink}'}
+                      values={{
+                        sellerLink: (
+                          <Link to={`/users/${counterpartyUser.address}`}>
+                            {sellerName}
+                          </Link>
+                        )
+                      }}
+                    />
+                  )}
+                  {perspective === 'seller' && (
+                    <FormattedMessage
+                      id={'purchase-detail.soldTo'}
+                      defaultMessage={'Sold to {buyerLink}'}
+                      values={{
+                        buyerLink: (
+                          <Link to={`/users/${counterpartyUser.address}`}>
+                            {buyerName}
+                          </Link>
+                        )
+                      }}
+                    />
+                  )}
+                </div>
+              }
+              {!offerFinalized && !offerWithdrawn &&
+                <div className="brdcrmb">
+                  {perspective === 'buyer' && (
+                    <FormattedMessage
+                      id={'purchase-detail.purchasingFrom'}
+                      defaultMessage={'Purchasing from {sellerLink}'}
+                      values={{
+                        sellerLink: (
+                          <Link to={`/users/${counterpartyUser.address}`}>
+                            {sellerName}
+                          </Link>
+                        )
+                      }}
+                    />
+                  )}
+                  {perspective === 'seller' && (
+                    <FormattedMessage
+                      id={'purchase-detail.sellingTo'}
+                      defaultMessage={'Selling to {buyerLink}'}
+                      values={{
+                        buyerLink: (
+                          <Link to={`/users/${counterpartyUser.address}`}>
+                            {buyerName}
+                          </Link>
+                        )
+                      }}
+                    />
+                  )}
+                </div>
+              }
+              <h1>
+                {listing.name}
+                {isPending && (
+                  <span className="pending badge">
+                    <FormattedMessage
+                      id={'purchase-detail.pending'}
+                      defaultMessage={'Pending'}
+                    />
+                  </span>
+                )}
+                {isSold && (
+                  <span className="sold badge">
+                    <FormattedMessage
+                      id={'purchase-detail.soldOut'}
+                      defaultMessage={'Sold Out'}
+                    />
+                  </span>
+                )}
+                {!!listing.boostValue && (
+                  <span className={`boosted badge boost-${listing.boostLevel}`}>
+                    <img
+                      src="images/boost-icon-arrow.svg"
+                      role="presentation"
+                    />
+                  </span>
+                )}
+              </h1>
             </div>
           </div>
           <div className="purchase-status row">
             <div className="col-12 col-lg-8">
               <h2>
                 <FormattedMessage
-                  id={ 'purchase-detail.transactionStatusHeading' }
-                  defaultMessage={ 'Transaction Status' }
+                  id={'purchase-detail.transactionStatusHeading'}
+                  defaultMessage={'Transaction Status'}
                 />
               </h2>
               <div className="row">
@@ -531,19 +780,23 @@ class PurchaseDetail extends Component {
                     <div className="d-flex">
                       <Avatar
                         image={seller.profile && seller.profile.avatar}
-                        placeholderStyle={perspective === 'seller' ? 'green' : 'blue'}
+                        placeholderStyle={
+                          perspective === 'seller' ? 'green' : 'blue'
+                        }
                       />
                       <div className="identification d-flex flex-column justify-content-between text-truncate">
                         <div>
                           <span className="badge badge-dark">
                             <FormattedMessage
-                              id={ 'purchase-detail.seller' }
-                              defaultMessage={ 'Seller' }
+                              id={'purchase-detail.seller'}
+                              defaultMessage={'Seller'}
                             />
                           </span>
                         </div>
                         <div className="name">{sellerName}</div>
-                        <div className="address text-muted text-truncate">{seller.address}</div>
+                        <div className="address text-muted text-truncate">
+                          {seller.address}
+                        </div>
                       </div>
                     </div>
                   </Link>
@@ -555,96 +808,156 @@ class PurchaseDetail extends Component {
                         <div>
                           <span className="badge badge-dark">
                             <FormattedMessage
-                              id={ 'purchase-detail.buyer' }
-                              defaultMessage={ 'Buyer' }
+                              id={'purchase-detail.buyer'}
+                              defaultMessage={'Buyer'}
                             />
                           </span>
                         </div>
                         <div className="name">{buyerName}</div>
-                        <div className="address text-muted text-truncate">{buyer.address}</div>
+                        <div className="address text-muted text-truncate">
+                          {buyer.address}
+                        </div>
                       </div>
                       <Avatar
                         image={buyer.profile && buyer.profile.avatar}
-                        placeholderStyle={perspective === 'buyer' ? 'green' : 'blue'}
+                        placeholderStyle={
+                          perspective === 'buyer' ? 'green' : 'blue'
+                        }
                       />
                     </div>
                   </Link>
                 </div>
                 <div className="col-12">
-                  <PurchaseProgress currentStep={step} maxStep={maxStep} purchase={purchase} perspective={perspective} />
+                  <PurchaseProgress
+                    currentStep={step}
+                    maxStep={maxStep}
+                    purchase={purchase}
+                    perspective={perspective}
+                  />
                 </div>
-                {nextStep &&
+                {nextStep && (
                   <div className="col-12">
                     <div className="guidance text-center">
-                      <div className="triangle" style={{ left }}></div>
-                      <div className="triangle" style={{ left }}></div>
+                      <div className="triangles d-flex justify-content-between">
+                        {[...Array(maxStep)].map((undef, i) => {
+                          const count = i + 1
+                          const visible = step === count || /* matched */
+                                          (step === 0 && !i) || /* unknown, fallback to beginning */
+                                          (step > maxStep && count === maxStep) /* include end if passed */
+                          return (
+                            <div
+                              key={`triangle-pair-${count}`}
+                              className={`triangle-pair${visible ? '' : ' hidden'}`}
+                            >
+                              <div className="triangle" />
+                              <div className="triangle" />
+                            </div>
+                          )
+                        })}
+                      </div>
                       <div className="prompt">
                         <strong>
                           <FormattedMessage
-                            id={ 'purchase-detail.nextStep' }
-                            defaultMessage={ 'Next Step:' }
+                            id={'purchase-detail.nextStep'}
+                            defaultMessage={'Next Step:'}
                           />
                         </strong>
                         &nbsp;{prompt}
                       </div>
-                      {reviewable &&
-                        <form onSubmit={e => {
-                          e.preventDefault()
+                      {reviewable && instruction &&
+                        <div className="instruction">
+                          {instruction}
+                        </div>
+                      }
+                      {!reviewable &&
+                        <div className="instruction">
+                          {instruction || 
+                            <FormattedMessage
+                              id={'purchase-detail.nothingToDo'}
+                              defaultMessage={
+                                'Nothing for you to do at this time. Check back later.'
+                              }
+                            />
+                          }
+                        </div>
+                      }
+                      {reviewable && (
+                        <form
+                          onSubmit={e => {
+                            e.preventDefault()
 
-                          this[functionName]()
-                        }}>
+                            this[buttons[0].functionName]()
+                          }}
+                        >
                           <div className="form-group">
                             <label htmlFor="review">
                               <FormattedMessage
-                                id={ 'purchase-detail.reviewLabel' }
-                                defaultMessage={ 'Review' }
+                                id={'purchase-detail.reviewLabel'}
+                                defaultMessage={'Review'}
                               />
                             </label>
-                            <div className="stars">{[...Array(5)].map((undef, i) => {
-                              return (
-                                <img
-                                  key={`rating-star-${i}`}
-                                  src={`/images/star-${rating > i ? 'filled' : 'empty'}.svg`}
-                                  alt="review rating star"
-                                  onClick={() => this.handleRating(i + 1)}
-                                />
-                              )
-                            })}</div>
+                            <div className="stars">
+                              {[...Array(5)].map((undef, i) => {
+                                return (
+                                  <img
+                                    key={`rating-star-${i}`}
+                                    src={`/images/star-${
+                                      rating > i ? 'filled' : 'empty'
+                                    }.svg`}
+                                    alt="review rating star"
+                                    onClick={() => this.handleRating(i + 1)}
+                                  />
+                                )
+                              })}
+                            </div>
                             <textarea
                               rows="4"
                               id="review"
                               className="form-control"
                               value={reviewText}
                               placeholder={placeholderText}
-                              onChange={this.handleReviewText}>
-                            </textarea>
+                              onChange={this.handleReviewText}
+                            />
                           </div>
-                          <div className="button-container text-right">
-                            <button type="submit" className="btn btn-primary">{buttonText}</button>
+                          <div className="button-container">
+                            <button type="submit" className="btn btn-primary">
+                              {buttons[0].text}
+                            </button>
                           </div>
                         </form>
+                      )}
+                      {!reviewable && !!buttons.length &&
+                        <div className="button-container">
+                          {buttons.map((b, i) => (
+                            <button
+                              key={`next-step-button-${i}`}
+                              className="btn btn-primary"
+                              onClick={this[b.functionName]}
+                            >
+                              {b.text}
+                            </button>
+                          ))}
+                        </div>
                       }
-                      {!reviewable && buttonText &&
-                        <Fragment>
-                          <div className="instruction">
-                            {instruction ||
-                              <FormattedMessage
-                                id={ 'purchase-detail.nothingToDo' }
-                                defaultMessage={ 'Nothing for you to do at this time. Check back later' }
-                              />
-                            }
-                          </div>
-                          <button className="btn btn-primary" onClick={this[functionName]}>{buttonText}</button>
-                        </Fragment>
+                      {link && (arbitrationIsAvailable || link.functionName !== 'handleProblem') &&
+                        <div className="link-container">
+                          <a href="#" onClick={e => {
+                            e.preventDefault()
+
+                            this[link.functionName]()
+                          }}>
+                            {link.text}
+                          </a>
+                        </div>
                       }
                     </div>
                   </div>
-                }
+                )}
               </div>
               <h2>
                 <FormattedMessage
-                  id={ 'purchase-detail.transactionHistoryHeading' }
-                  defaultMessage={ 'Transaction History' }
+                  id={'purchase-detail.transactionHistoryHeading'}
+                  defaultMessage={'Transaction History'}
                 />
               </h2>
               <table className="table table-striped">
@@ -652,171 +965,247 @@ class PurchaseDetail extends Component {
                   <tr>
                     <th scope="col" style={{ width: '200px' }}>
                       <FormattedMessage
-                        id={ 'purchase-detail.txName' }
-                        defaultMessage={ 'TxName' }
+                        id={'purchase-detail.txName'}
+                        defaultMessage={'TxName'}
                       />
                     </th>
                     <th scope="col">
                       <FormattedMessage
-                        id={ 'purchase-detail.txHash' }
-                        defaultMessage={ 'TxHash' }
+                        id={'purchase-detail.txHash'}
+                        defaultMessage={'TxHash'}
                       />
                     </th>
                     <th scope="col">
                       <FormattedMessage
-                        id={ 'purchase-detail.from' }
-                        defaultMessage={ 'From' }
+                        id={'purchase-detail.from'}
+                        defaultMessage={'From'}
                       />
                     </th>
                     <th scope="col">
                       <FormattedMessage
-                        id={ 'purchase-detail.to' }
-                        defaultMessage={ 'To' }
+                        id={'purchase-detail.to'}
+                        defaultMessage={'To'}
                       />
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-
-                  {paidAt &&
-                    <TransactionEvent timestamp={paidAt} eventName="Payment received" transaction={paymentEvent} buyer={buyer} seller={seller} />
-                  }
-
-                  {fulfilledAt &&
-                    <TransactionEvent timestamp={fulfilledAt} eventName="Sent by seller" transaction={fulfillmentEvent} buyer={buyer} seller={seller} />
-                  }
-
-                  {receivedAt &&
-                    <TransactionEvent timestamp={receivedAt} eventName="Received by buyer" transaction={receiptEvent} buyer={buyer} seller={seller} />
-                  }
-
-                  {withdrawnAt &&
-                    <TransactionEvent timestamp={withdrawnAt} eventName="Funds withdrawn" transaction={withdrawalEvent} buyer={buyer} seller={seller} />
-                  }
-
+                  <TransactionEvent
+                    eventName={this.props.intl.formatMessage(this.intlMessages.offerMade)}
+                    transaction={offerCreated}
+                    buyer={buyer}
+                    seller={seller}
+                  />
+                  <TransactionEvent
+                    eventName={this.props.intl.formatMessage(this.intlMessages.offerWithdrawn)}
+                    transaction={offerWithdrawn}
+                    buyer={buyer}
+                    seller={seller}
+                  />
+                  <TransactionEvent
+                    eventName={this.props.intl.formatMessage(this.intlMessages.offerAccepted)}
+                    transaction={offerAccepted}
+                    buyer={buyer}
+                    seller={seller}
+                  />
+                  <TransactionEvent
+                    eventName={this.props.intl.formatMessage(this.intlMessages.saleCompleted)}
+                    transaction={offerFinalized}
+                    buyer={buyer}
+                    seller={seller}
+                  />
+                  <TransactionEvent
+                    eventName={this.props.intl.formatMessage(this.intlMessages.saleReviewed)}
+                    transaction={offerData}
+                    buyer={buyer}
+                    seller={seller}
+                  />
                 </tbody>
               </table>
               <hr />
             </div>
             <div className="col-12 col-lg-4">
-              {counterpartyUser.address && <UserCard title={counterparty} listingAddress={listing.address} purchaseAddress={purchase.address} userAddress={counterpartyUser.address} />}
+              {counterpartyUser.address && (
+                <UserCard
+                  title={counterparty}
+                  listingId={listing.id}
+                  purchaseId={purchase.id}
+                  userAddress={counterpartyUser.address}
+                />
+              )}
             </div>
           </div>
           <div className="row">
             <div className="col-12 col-lg-8">
-              {listing.address &&
+              {listing.id && (
                 <Fragment>
                   <h2>
-                     <FormattedMessage
-                      id={ 'purchase-detail.listingDetails' }
-                      defaultMessage={ 'Listing Details' }
+                    <FormattedMessage
+                      id={'purchase-detail.listingDetails'}
+                      defaultMessage={'Listing Details'}
                     />
                   </h2>
-                  {!!pictures.length &&
+                  {!!pictures.length && (
                     <div className="carousel small">
                       {pictures.map(pictureUrl => (
                         <div className="photo" key={pictureUrl}>
-                          <img src={pictureUrl} role='presentation' />
+                          <img src={pictureUrl} role="presentation" />
                         </div>
                       ))}
                     </div>
-                  }
+                  )}
                   <div className="detail-info-box">
-                    <h2 className="category placehold">{translatedListing.category}</h2>
-                    <h1 className="title text-truncate placehold">{translatedListing.name}</h1>
-                    <p className="description placehold">{translatedListing.description}</p>
-                    {/*!!listing.unitsAvailable && listing.unitsAvailable < 5 &&
-                      <div className="units-available text-danger">Just {listing.unitsAvailable.toLocaleString()} left!</div>
+                    <h2 className="category placehold">{listing.category}</h2>
+                    <h1 className="title text-truncate placehold">
+                      {listing.name}
+                    </h1>
+                    <p className="description placehold">
+                      {listing.description}
+                    </p>
+                    {/*!!listing.unitsRemaining && listing.unitsRemaining < 5 &&
+                      <div className="units-remaining text-danger">Just {listing.unitsRemaining.toLocaleString()} left!</div>
                     */}
-                    {listing.ipfsHash &&
+                    {listing.ipfsHash && (
                       <div className="link-container">
-                        <a href={origin.ipfsService.gatewayUrlForHash(listing.ipfsHash)} target="_blank">
+                        <a
+                          href={origin.ipfsService.gatewayUrlForHash(
+                            listing.ipfsHash
+                          )}
+                          target="_blank"
+                        >
                           <FormattedMessage
-                            id={ 'purchase-detail.viewOnIPFS' }
-                            defaultMessage={ 'View on IPFS' }
+                            id={'purchase-detail.viewOnIPFS'}
+                            defaultMessage={'View on IPFS'}
                           />
-                          <img src="images/carat-blue.svg" className="carat" alt="right carat" />
+                          <img
+                            src="images/carat-blue.svg"
+                            className="carat"
+                            alt="right carat"
+                          />
                         </a>
                       </div>
-                    }
+                    )}
                   </div>
                   <hr />
                 </Fragment>
-              }
+              )}
               <div className="reviews">
                 <h2>
                   <FormattedMessage
-                    id={ 'purchase-detail.reviewsHeading' }
-                    defaultMessage={ 'Reviews' }
+                    id={'purchase-detail.reviewsHeading'}
+                    defaultMessage={'Reviews'}
                   />
-                  &nbsp;<span className="review-count">{Number(buyersReviews.length).toLocaleString()}</span>
+                  &nbsp;<span className="review-count">
+                    {Number(reviews.length).toLocaleString()}
+                  </span>
                 </h2>
-                {buyersReviews.map(r => <Review key={r.transactionHash} review={r} />)}
+                {reviews.map(r =>
+                  <Review key={r.id} review={r} />
+                )}
                 {/* To Do: pagination */}
                 {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
               </div>
             </div>
             <div className="col-12 col-lg-4">
-              {soldAt &&
+              {soldAt && (
                 <div className="summary text-center">
-                  {perspective === 'buyer' && <div className="purchased tag"><div>Purchased</div></div>}
-                  {perspective === 'seller' && <div className="sold tag"><div>Sold</div></div>}
                   <div className="recap">
-                    {perspective === 'buyer' &&
+                    {perspective === 'buyer' && (
                       <FormattedMessage
-                        id={ 'purchase-detail.purchasedFromOn' }
-                        defaultMessage={ 'Purchased from {sellerName} on {date}' }
-                        values={{ sellerName, date: <FormattedDate value={soldAt} /> }}
+                        id={'purchase-detail.purchasedFromOn'}
+                        defaultMessage={'Purchased from {sellerName} on {date}'}
+                        values={{
+                          sellerName,
+                          date: <FormattedDate value={soldAt} />
+                        }}
                       />
-                    }
-                    {perspective === 'seller' &&
+                    )}
+                    {perspective === 'seller' && (
                       <FormattedMessage
-                        id={ 'purchase-detail.soldToOn' }
-                        defaultMessage={ 'Sold to {buyerName} on {date}' }
-                        values={{ buyerName, date: <FormattedDate value={soldAt} /> }}
+                        id={'purchase-detail.soldToOn'}
+                        defaultMessage={'Sold to {buyerName} on {date}'}
+                        values={{
+                          buyerName,
+                          date: <FormattedDate value={soldAt} />
+                        }}
                       />
-                    }
+                    )}
                   </div>
                   <hr className="dark sm" />
                   <div className="d-flex">
                     <div className="text-left">
                       <FormattedMessage
-                        id={ 'purchase-detail.price' }
-                        defaultMessage={ 'Price' }
+                        id={'purchase-detail.price'}
+                        defaultMessage={'Price'}
                       />
                     </div>
-                    <div className="text-right">{price}</div>
+                    <div className="text-right">{priceEth}</div>
                   </div>
                   <hr className="dark sm" />
                   <div className={`status ${status}`}>
                     <FormattedMessage
-                      id={ 'purchase-detail.listingStatus' }
-                      defaultMessage={ 'This listing is {status}' }
+                      id={'purchase-detail.listingStatus'}
+                      defaultMessage={'This listing is {status}'}
                       values={{ status }}
                     />
-                    
                   </div>
                 </div>
-              }
+              )}
             </div>
           </div>
         </div>
-        {processing &&
-          <Modal backdrop="static" isOpen={true}>
+        {processing && (
+          <Modal backdrop="static" isOpen={true} tabIndex="-1">
             <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation"/>
+              <img src="images/spinner-animation.svg" role="presentation" />
             </div>
             <FormattedMessage
-              id={ 'purchase-detail.processingUpdate' }
-              defaultMessage={ 'Processing your update' }
+              id={'purchase-detail.processingUpdate'}
+              defaultMessage={'Processing your update'}
             />
             <br />
             <FormattedMessage
-              id={ 'purchase-detail.pleaseStandBy' }
-              defaultMessage={ 'Please stand by...' }
+              id={'purchase-detail.pleaseStandBy'}
+              defaultMessage={'Please stand by...'}
             />
           </Modal>
-        }
+        )}
+        <ConfirmationModal
+          isOpen={modalsOpen.confirmation}
+          onCancel={() => this.toggleModal('confirmation')}
+          onSubmit={() => {
+            this.toggleModal('confirmation')
+            this.toggleModal('issue')
+          }}
+        />
+        <IssueModal
+          isOpen={modalsOpen.issue}
+          issue={this.state.issue}
+          handleChange={e => {
+            e.preventDefault()
+
+            this.setState({ issue: e.target.value })
+          }}
+          onCancel={() => this.toggleModal('issue')}
+          onSubmit={() => {
+            this.toggleModal('issue')
+            this.initiateDispute()
+          }}
+        />
+        <PrerequisiteModal
+          isOpen={modalsOpen.prerequisite}
+          perspective={perspective}
+          onCancel={() => this.toggleModal('prerequisite')}
+          onSubmit={() => {
+            alert('To Do: enable messaging from here')
+
+            this.toggleModal('prerequisite')
+          }}
+        />
+        <RejectionModal
+          isOpen={modalsOpen.rejection}
+          handleToggle={() => this.toggleModal('rejection')}
+        />
       </div>
     )
   }
@@ -824,13 +1213,17 @@ class PurchaseDetail extends Component {
 
 const mapStateToProps = state => {
   return {
-    web3Account: state.app.web3.account,
+    web3Account: state.app.web3.account
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  updateTransaction: (confirmationCount, transactionReceipt) => dispatch(updateTransaction(confirmationCount, transactionReceipt)),
-  upsertTransaction: (transaction) => dispatch(upsertTransaction(transaction)),
+  updateTransaction: (confirmationCount, transactionReceipt) =>
+    dispatch(updateTransaction(confirmationCount, transactionReceipt)),
+  upsertTransaction: transaction => dispatch(upsertTransaction(transaction))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(PurchaseDetail))
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(injectIntl(PurchaseDetail))

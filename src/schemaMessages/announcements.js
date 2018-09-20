@@ -9,6 +9,10 @@ export default defineMessages({
     id: 'schema.announcements.title',
     defaultMessage: 'Title'
   },
+  'schema.announcements.examples': {
+    id: 'schema.announcements.examples',
+    defaultMessage: 'Examples'
+  },
   'schema.announcements.category': {
     id: 'schema.announcements.category',
     defaultMessage: 'Category'
@@ -19,7 +23,7 @@ export default defineMessages({
   },
   'schema.announcements.priceInETH': {
     id: 'schema.announcements.priceInETH',
-    defaultMessage: 'Price in ETH',
+    defaultMessage: 'Price in ETH'
   },
   'schema.announcements.selectPhotos': {
     id: 'schema.announcements.selectPhotos',

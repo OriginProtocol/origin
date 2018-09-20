@@ -8,8 +8,6 @@ import { updateMessage } from 'actions/Message'
 
 import Avatar from 'components/avatar'
 
-import origin from '../services/origin'
-
 class Message extends Component {
   componentDidMount() {
     const { message } = this.props
@@ -20,20 +18,21 @@ class Message extends Component {
   }
 
   render() {
-    const { enableMessaging, message, messagingEnabled, user, contentOnly } = this.props
-    const { content, created, hash } = message
+    const {
+      enableMessaging,
+      message,
+      messagingEnabled,
+      user,
+      contentOnly
+    } = this.props
+    const { created, hash } = message
     const { address, fullName, profile } = user
-    const contentWithLineBreak = `${content}\n`
 
-    if (contentOnly) {
-      return (
-        <div className="d-flex compact-message">
-          {contentWithLineBreak}
-        </div>
-      )
-    }
-
-    return (
+    return contentOnly ? (
+      <div className="d-flex compact-message">
+        {this.renderContent()}
+      </div>
+    ) : (
       <div className="d-flex message">
         <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
         <div className="content-container">
@@ -47,34 +46,68 @@ class Message extends Component {
             </div>
           </div>
           <div className="message-content">
-            {contentWithLineBreak}
+            {this.renderContent()}
           </div>
-          {!messagingEnabled && hash === 'origin-welcome-message' &&
+          {!messagingEnabled &&
+            hash === 'origin-welcome-message' && (
             <div className="button-container">
-              <button className="btn btn-sm btn-primary" onClick={enableMessaging}>
+              <button
+                className="btn btn-sm btn-primary"
+                onClick={enableMessaging}
+              >
                 <FormattedMessage
-                  id={ 'message.enable' }
-                  defaultMessage={ 'Enable Messaging' }
+                  id={'message.enable'}
+                  defaultMessage={'Enable Messaging'}
                 />
               </button>
             </div>
-          }
+          )}
         </div>
       </div>
     )
+  }
+
+  renderContent() {
+    const { content } = this.props.message
+    const contentWithLineBreak = `${content}\n`
+    const contentIsData = content.match(/^data:/)
+    const dataIsImage = contentIsData && content.match(/^data:image/)
+
+    if (!contentIsData) {
+      return contentWithLineBreak
+    } else if (!dataIsImage) {
+      return (
+        <FormattedMessage
+          id={'message.unrecognizedData'}
+          defaultMessage={'This data cannot be rendered.'}
+        />
+      )
+    } else {
+      const fileName = content.match(/name=.+;/).slice(5, -1)
+
+      return (
+        <div className="image-container">
+          <img src={content} alt={fileName} />
+        </div>
+      )
+    }
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
   return {
     messagingEnabled: state.app.messagingEnabled,
-    user: state.users.find(u => u.address === ownProps.message.senderAddress) || {},
+    user:
+      state.users.find(u => u.address === ownProps.message.senderAddress) || {}
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   enableMessaging: () => dispatch(enableMessaging()),
-  updateMessage: (obj) => dispatch(updateMessage(obj)),
+  updateMessage: obj => dispatch(updateMessage(obj))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Message)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Message)

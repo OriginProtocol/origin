@@ -9,6 +9,10 @@ export default defineMessages({
     id: 'schema.forSale.title',
     defaultMessage: 'Title'
   },
+  'schema.forSale.examples': {
+    id: 'schema.forSale.examples',
+    defaultMessage: 'Examples'
+  },
   'schema.forSale.category': {
     id: 'schema.forSale.category',
     defaultMessage: 'Category'
@@ -23,7 +27,7 @@ export default defineMessages({
   },
   'schema.forSale.priceInETH': {
     id: 'schema.forSale.priceInETH',
-    defaultMessage: 'Price in ETH',
+    defaultMessage: 'Price in ETH'
   },
   'schema.forSale.selectPhotos': {
     id: 'schema.forSale.selectPhotos',

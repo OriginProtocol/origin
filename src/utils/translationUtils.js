@@ -42,87 +42,89 @@ import localeCode from 'locale-code'
 let globalIntlProvider
 
 export function addLocales() {
-
   // If browser doesn't support Intl (i.e. Safari), then we manually import
   // the intl polyfill and locale data.
   if (!window.Intl) {
-    require.ensure([
-      'intl',
-      'intl/locale-data/jsonp/ar.js',
-      'intl/locale-data/jsonp/bn.js',
-      'intl/locale-data/jsonp/bs.js',
-      'intl/locale-data/jsonp/cs.js',
-      'intl/locale-data/jsonp/da.js',
-      'intl/locale-data/jsonp/de.js',
-      'intl/locale-data/jsonp/el.js',
-      'intl/locale-data/jsonp/en.js',
-      'intl/locale-data/jsonp/eo.js',
-      'intl/locale-data/jsonp/es.js',
-      'intl/locale-data/jsonp/fil.js',
-      'intl/locale-data/jsonp/fr.js',
-      'intl/locale-data/jsonp/he.js',
-      'intl/locale-data/jsonp/hr.js',
-      'intl/locale-data/jsonp/id.js',
-      'intl/locale-data/jsonp/it.js',
-      'intl/locale-data/jsonp/lo.js',
-      'intl/locale-data/jsonp/ja.js',
-      'intl/locale-data/jsonp/ko.js',
-      'intl/locale-data/jsonp/ms.js',
-      'intl/locale-data/jsonp/nl.js',
-      'intl/locale-data/jsonp/pl.js',
-      'intl/locale-data/jsonp/pt.js',
-      'intl/locale-data/jsonp/ro.js',
-      'intl/locale-data/jsonp/ru.js',
-      'intl/locale-data/jsonp/si.js',
-      'intl/locale-data/jsonp/sr.js',
-      'intl/locale-data/jsonp/sk.js',
-      'intl/locale-data/jsonp/te.js',
-      'intl/locale-data/jsonp/th.js',
-      'intl/locale-data/jsonp/tr.js',
-      'intl/locale-data/jsonp/ug.js',
-      'intl/locale-data/jsonp/uk.js',
-      'intl/locale-data/jsonp/ur.js',
-      'intl/locale-data/jsonp/vi.js',
-      'intl/locale-data/jsonp/zh.js'
-    ], (require) => {
-      require('intl')
-      require('intl/locale-data/jsonp/ar.js')
-      require('intl/locale-data/jsonp/bn.js')
-      require('intl/locale-data/jsonp/bs.js')
-      require('intl/locale-data/jsonp/cs.js')
-      require('intl/locale-data/jsonp/da.js')
-      require('intl/locale-data/jsonp/de.js')
-      require('intl/locale-data/jsonp/el.js')
-      require('intl/locale-data/jsonp/en.js')
-      require('intl/locale-data/jsonp/eo.js')
-      require('intl/locale-data/jsonp/es.js')
-      require('intl/locale-data/jsonp/fil.js')
-      require('intl/locale-data/jsonp/fr.js')
-      require('intl/locale-data/jsonp/he.js')
-      require('intl/locale-data/jsonp/hr.js')
-      require('intl/locale-data/jsonp/id.js')
-      require('intl/locale-data/jsonp/it.js')
-      require('intl/locale-data/jsonp/lo.js')
-      require('intl/locale-data/jsonp/ja.js')
-      require('intl/locale-data/jsonp/ko.js')
-      require('intl/locale-data/jsonp/ms.js')
-      require('intl/locale-data/jsonp/nl.js')
-      require('intl/locale-data/jsonp/pl.js')
-      require('intl/locale-data/jsonp/pt.js')
-      require('intl/locale-data/jsonp/ro.js')
-      require('intl/locale-data/jsonp/ru.js')
-      require('intl/locale-data/jsonp/si.js')
-      require('intl/locale-data/jsonp/sr.js')
-      require('intl/locale-data/jsonp/sk.js')
-      require('intl/locale-data/jsonp/te.js')
-      require('intl/locale-data/jsonp/th.js')
-      require('intl/locale-data/jsonp/tr.js')
-      require('intl/locale-data/jsonp/ug.js')
-      require('intl/locale-data/jsonp/uk.js')
-      require('intl/locale-data/jsonp/ur.js')
-      require('intl/locale-data/jsonp/vi.js')
-      require('intl/locale-data/jsonp/zh.js')
-    })
+    require.ensure(
+      [
+        'intl',
+        'intl/locale-data/jsonp/ar.js',
+        'intl/locale-data/jsonp/bn.js',
+        'intl/locale-data/jsonp/bs.js',
+        'intl/locale-data/jsonp/cs.js',
+        'intl/locale-data/jsonp/da.js',
+        'intl/locale-data/jsonp/de.js',
+        'intl/locale-data/jsonp/el.js',
+        'intl/locale-data/jsonp/en.js',
+        'intl/locale-data/jsonp/eo.js',
+        'intl/locale-data/jsonp/es.js',
+        'intl/locale-data/jsonp/fil.js',
+        'intl/locale-data/jsonp/fr.js',
+        'intl/locale-data/jsonp/he.js',
+        'intl/locale-data/jsonp/hr.js',
+        'intl/locale-data/jsonp/id.js',
+        'intl/locale-data/jsonp/it.js',
+        'intl/locale-data/jsonp/lo.js',
+        'intl/locale-data/jsonp/ja.js',
+        'intl/locale-data/jsonp/ko.js',
+        'intl/locale-data/jsonp/ms.js',
+        'intl/locale-data/jsonp/nl.js',
+        'intl/locale-data/jsonp/pl.js',
+        'intl/locale-data/jsonp/pt.js',
+        'intl/locale-data/jsonp/ro.js',
+        'intl/locale-data/jsonp/ru.js',
+        'intl/locale-data/jsonp/si.js',
+        'intl/locale-data/jsonp/sr.js',
+        'intl/locale-data/jsonp/sk.js',
+        'intl/locale-data/jsonp/te.js',
+        'intl/locale-data/jsonp/th.js',
+        'intl/locale-data/jsonp/tr.js',
+        'intl/locale-data/jsonp/ug.js',
+        'intl/locale-data/jsonp/uk.js',
+        'intl/locale-data/jsonp/ur.js',
+        'intl/locale-data/jsonp/vi.js',
+        'intl/locale-data/jsonp/zh.js'
+      ],
+      require => {
+        require('intl')
+        require('intl/locale-data/jsonp/ar.js')
+        require('intl/locale-data/jsonp/bn.js')
+        require('intl/locale-data/jsonp/bs.js')
+        require('intl/locale-data/jsonp/cs.js')
+        require('intl/locale-data/jsonp/da.js')
+        require('intl/locale-data/jsonp/de.js')
+        require('intl/locale-data/jsonp/el.js')
+        require('intl/locale-data/jsonp/en.js')
+        require('intl/locale-data/jsonp/eo.js')
+        require('intl/locale-data/jsonp/es.js')
+        require('intl/locale-data/jsonp/fil.js')
+        require('intl/locale-data/jsonp/fr.js')
+        require('intl/locale-data/jsonp/he.js')
+        require('intl/locale-data/jsonp/hr.js')
+        require('intl/locale-data/jsonp/id.js')
+        require('intl/locale-data/jsonp/it.js')
+        require('intl/locale-data/jsonp/lo.js')
+        require('intl/locale-data/jsonp/ja.js')
+        require('intl/locale-data/jsonp/ko.js')
+        require('intl/locale-data/jsonp/ms.js')
+        require('intl/locale-data/jsonp/nl.js')
+        require('intl/locale-data/jsonp/pl.js')
+        require('intl/locale-data/jsonp/pt.js')
+        require('intl/locale-data/jsonp/ro.js')
+        require('intl/locale-data/jsonp/ru.js')
+        require('intl/locale-data/jsonp/si.js')
+        require('intl/locale-data/jsonp/sr.js')
+        require('intl/locale-data/jsonp/sk.js')
+        require('intl/locale-data/jsonp/te.js')
+        require('intl/locale-data/jsonp/th.js')
+        require('intl/locale-data/jsonp/tr.js')
+        require('intl/locale-data/jsonp/ug.js')
+        require('intl/locale-data/jsonp/uk.js')
+        require('intl/locale-data/jsonp/ur.js')
+        require('intl/locale-data/jsonp/vi.js')
+        require('intl/locale-data/jsonp/zh.js')
+      }
+    )
   }
 
   addLocaleData([
@@ -161,7 +163,8 @@ export function addLocales() {
     ...uk,
     ...ur,
     ...vi,
-    ...zh])
+    ...zh
+  ])
 }
 
 export function getBestAvailableLanguage(langCode) {
@@ -171,16 +174,17 @@ export function getBestAvailableLanguage(langCode) {
   if (translations && translations[langCode]) {
     toReturn = langCode
   } else {
-    const userBaseLang = langCode.indexOf('-') > -1 ? langCode.substring(0, langCode.indexOf('-')) : langCode
+    const userBaseLang =
+      langCode.indexOf('-') > -1
+        ? langCode.substring(0, langCode.indexOf('-'))
+        : langCode
     const baseLangMatch = translations[userBaseLang]
 
     // If we can't match the exact lang code, try to match the base - for example the "zh" in "zh-AA"
     if (baseLangMatch) {
       toReturn = userBaseLang
     } else {
-
-      for (let locale in translations) {
-
+      for (const locale in translations) {
         let localeToCheck
         if (locale.indexOf('-') > -1) {
           localeToCheck = locale.substring(0, locale.indexOf('-'))
@@ -205,16 +209,13 @@ export function getAvailableLanguages() {
 
   const availableLangs = []
 
-  for (let languageCode in translations) {
-
+  for (const languageCode in translations) {
     // Don't include English b/c we hard-code it in the footer dropdown to make sure it's always available
     if (languageCode !== 'en-US') {
-
       availableLangs.push({
         selectedLanguageCode: languageCode,
         selectedLanguageFull: getLanguageNativeName(languageCode)
       })
-
     }
   }
 
@@ -237,7 +238,10 @@ export function getLanguageNativeName(langCode) {
 }
 
 export function setGlobalIntlProvider(language, messages) {
-  const { intl } = new IntlProvider({ locale: language, messages: messages }, {}).getChildContext()
+  const { intl } = new IntlProvider(
+    { locale: language, messages: messages },
+    {}
+  ).getChildContext()
   globalIntlProvider = intl
 }
 
@@ -252,54 +256,50 @@ export function translateSchema(schemaJson, schemaType) {
   schemaType = schemaType === 'for-sale' ? 'forSale' : schemaType
 
   if (schema.description) {
-
-    schema.description = globalIntlProvider.formatMessage(schemaMessages[schemaType][schema.description])
-
+    schema.description = globalIntlProvider.formatMessage(
+      schemaMessages[schemaType][schema.description]
+    )
   }
 
-  for (let property in properties) {
+  for (const property in properties) {
     const propertyObj = properties[property]
 
     if (propertyObj.title) {
-
-      propertyObj.title = globalIntlProvider.formatMessage(schemaMessages[schemaType][propertyObj.title])
-
+      propertyObj.title = globalIntlProvider.formatMessage(
+        schemaMessages[schemaType][propertyObj.title]
+      )
     }
 
     if (propertyObj.default && typeof propertyObj.default === 'number') {
-
-      propertyObj.default = globalIntlProvider.formatMessage(schemaMessages[schemaType][propertyObj.default])
-
+      propertyObj.default = globalIntlProvider.formatMessage(
+        schemaMessages[schemaType][propertyObj.default]
+      )
     }
 
-
     if (propertyObj.enum && propertyObj.enum.length) {
-
-      propertyObj.enumNames = propertyObj.enum.map((enumStr) => (
-        typeof enumStr === 'string' ? globalIntlProvider.formatMessage(schemaMessages[schemaType][enumStr]) : enumStr
-      ))
-
-    }    
+      propertyObj.enumNames = propertyObj.enum.map(
+        enumStr =>
+          typeof enumStr === 'string'
+            ? globalIntlProvider.formatMessage(
+              schemaMessages[schemaType][enumStr]
+            )
+            : enumStr
+      )
+    }
   }
 
   return schema
 }
 
-export function translateListingCategory(listingObj) {
-  // Copy the schema so we don't modify the original
-  const listing = JSON.parse(JSON.stringify(listingObj))
-  const category = listing.category
-
-  // Check to see if category is a react-intl ID
-  if (/schema\./.test(category)) {
-
-    // loop over all schemaMessages to find the correct ID
-    for (let schemaType in schemaMessages) {
-      if (schemaMessages[schemaType][category]) {
-        listing.category = globalIntlProvider.formatMessage(schemaMessages[schemaType][category])
-      }
-    }
+export function translateListingCategory(rawCategory = '') {
+  const match = rawCategory.match(/^schema\.([^.]+)\.([^.]+)$/)
+  if (match === null) {
+    return rawCategory
   }
-
-  return listing
+  const schemaType = match[1]
+  const schema = schemaMessages[schemaType]
+  if (schema === null || schema[rawCategory] === undefined) {
+    return rawCategory
+  }
+  return globalIntlProvider.formatMessage(schema[rawCategory])
 }

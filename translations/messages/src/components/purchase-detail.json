@@ -1,27 +1,31 @@
 [
   {
-    "id": "purchase-detail.awaitOrder",
-    "defaultMessage": "Wait for the seller to send the order"
+    "id": "purchase-detail.awaitApproval",
+    "defaultMessage": "Wait for the seller to approve your offer"
   },
   {
-    "id": "purchase-detail.sendOrder",
-    "defaultMessage": "Send the order to buyer"
+    "id": "purchase-detail.acceptOrRejectOffer",
+    "defaultMessage": "Accept or reject the buyer's offer"
   },
   {
-    "id": "purchase-detail.sendOrderInstruction",
-    "defaultMessage": "Click the button below once the order has shipped."
+    "id": "purchase-detail.acceptOfferInstruction",
+    "defaultMessage": "Click below to cancel or continue this transaction."
   },
   {
-    "id": "purchase-detail.markOrderSent",
-    "defaultMessage": "Mark Order as Sent"
+    "id": "purchase-detail.acceptOffer",
+    "defaultMessage": "Accept"
   },
   {
-    "id": "purchase-detail.confirmReceiptOfOrder",
-    "defaultMessage": "Confirm receipt of the order and leave a review"
+    "id": "purchase-detail.waitForContact",
+    "defaultMessage": "Wait to be contacted by an Origin team member"
+  },
+  {
+    "id": "purchase-detail.completePurchase",
+    "defaultMessage": "Complete your purchase and leave a review"
   },
   {
     "id": "purchase-detail.submitThisForm",
-    "defaultMessage": "Submit this form once you have reviewed shipment of your order."
+    "defaultMessage": "Submit this form once you confirm that you are satisfied with your purchase."
   },
   {
     "id": "purchase-detail.confirmAndReview",
@@ -33,27 +37,63 @@
   },
   {
     "id": "purchase-detail.waitForBuyer",
-    "defaultMessage": "Wait for the buyer to receive the order"
+    "defaultMessage": "Wait for the buyer to finalize the transaction"
   },
   {
-    "id": "purchase-detail.awaitSellerWithdrawl",
-    "defaultMessage": "Wait for the seller to withdraw the funds"
+    "id": "purchase-detail.fulfillObligation",
+    "defaultMessage": "Make sure you fulfill the order."
   },
   {
-    "id": "purchase-detail.completeByWithdrawing",
-    "defaultMessage": "Complete your transaction by withdrawing funds"
+    "id": "purchase-detail.awaitSellerReview",
+    "defaultMessage": "Wait for the seller to leave a review"
   },
   {
-    "id": "purchase-detail.clickToWithdraw",
-    "defaultMessage": "Click the button below to initiate the withdrawal"
+    "id": "purchase-detail.completeByReviewing",
+    "defaultMessage": "Complete your sale by leaving a review"
   },
   {
-    "id": "purchase-detail.withdrawAndReview",
-    "defaultMessage": "Withdraw and Review"
+    "id": "purchase-detail.clickToReview",
+    "defaultMessage": "Click the button below to leave a review"
+  },
+  {
+    "id": "purchase-detail.reviewSale",
+    "defaultMessage": "Leave a review"
+  },
+  {
+    "id": "purchase-detail.rejectOffer",
+    "defaultMessage": "Reject"
+  },
+  {
+    "id": "purchase-detail.reportProblem",
+    "defaultMessage": "Report a Problem"
   },
   {
     "id": "purchase-detail.sellerReviewPlaceholder",
     "defaultMessage": "Your review should inform others about your experience transacting with this buyer."
+  },
+  {
+    "id": "purchase-detail.withdrawOffer",
+    "defaultMessage": "Withdraw Offer"
+  },
+  {
+    "id": "purchase-detail.offerMade",
+    "defaultMessage": "Offer Made"
+  },
+  {
+    "id": "purchase-detail.offerWithdrawn",
+    "defaultMessage": "Offer Withdrawn"
+  },
+  {
+    "id": "purchase-detail.offerAccepted",
+    "defaultMessage": "Offer Accepted"
+  },
+  {
+    "id": "purchase-detail.saleCompleted",
+    "defaultMessage": "Sale Completed"
+  },
+  {
+    "id": "purchase-detail.saleReviewed",
+    "defaultMessage": "Sale Reviewed"
   },
   {
     "id": "purchase-detail.unnamedUser",
@@ -66,6 +106,22 @@
   {
     "id": "purchase-detail.soldTo",
     "defaultMessage": "Sold to {buyerLink}"
+  },
+  {
+    "id": "purchase-detail.purchasingFrom",
+    "defaultMessage": "Purchasing from {sellerLink}"
+  },
+  {
+    "id": "purchase-detail.sellingTo",
+    "defaultMessage": "Selling to {buyerLink}"
+  },
+  {
+    "id": "purchase-detail.pending",
+    "defaultMessage": "Pending"
+  },
+  {
+    "id": "purchase-detail.soldOut",
+    "defaultMessage": "Sold Out"
   },
   {
     "id": "purchase-detail.transactionStatusHeading",
@@ -84,12 +140,12 @@
     "defaultMessage": "Next Step:"
   },
   {
-    "id": "purchase-detail.reviewLabel",
-    "defaultMessage": "Review"
+    "id": "purchase-detail.nothingToDo",
+    "defaultMessage": "Nothing for you to do at this time. Check back later."
   },
   {
-    "id": "purchase-detail.nothingToDo",
-    "defaultMessage": "Nothing for you to do at this time. Check back later"
+    "id": "purchase-detail.reviewLabel",
+    "defaultMessage": "Review"
   },
   {
     "id": "purchase-detail.transactionHistoryHeading",

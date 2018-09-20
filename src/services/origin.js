@@ -10,22 +10,23 @@ import OrbitDB from 'orbit-db'
  * But Micah couldn't get it to connect ¯\_(ツ)_/¯
  */
 const defaultProviderUrl = process.env.PROVIDER_URL
-const defaultBridgeUrl = "https://bridge.originprotocol.com"
+const defaultBridgeUrl = 'https://bridge.originprotocol.com'
 const bridgeProtocol = process.env.BRIDGE_SERVER_PROTOCOL
 const bridgeDomain = process.env.BRIDGE_SERVER_DOMAIN
 const customBridgeUrl = `${bridgeProtocol}://${bridgeDomain}`
 const hasCustomBridge = bridgeProtocol && bridgeDomain
 const bridgeUrl = hasCustomBridge ? customBridgeUrl : defaultBridgeUrl
 const attestationServerUrl = `${bridgeUrl}/api/attestations`
+const ipfsSwarm = process.env.IPFS_SWARM
 const web3 = new Web3(
   // Detect MetaMask using global window object
-  window.web3 ?
-  // Use MetaMask provider
-  window.web3.currentProvider :
-  // Use wallet-enabled browser provider
-  Web3.givenProvider ||
-  // Create a provider with Infura node
-  new Web3.providers.HttpProvider(defaultProviderUrl, 20000)
+  window.web3
+    ? // Use MetaMask provider
+    window.web3.currentProvider
+    : // Use wallet-enabled browser provider
+    Web3.givenProvider ||
+      // Create a provider with Infura node
+      new Web3.providers.HttpProvider(defaultProviderUrl, 20000)
 )
 
 const ipfsCreator = repo_key => {
@@ -51,12 +52,11 @@ const ipfsCreator = repo_key => {
   const ipfs = new IPFS(ipfsOptions)
 
   if (process.env.IPFS_SWARM) {
-    const ipfs_swarm = process.env.IPFS_SWARM
-    ipfs.on("start", async ()=> {
-      await ipfs.swarm.connect(ipfs_swarm)
+    ipfs.on('start', async () => {
+      await ipfs.swarm.connect(ipfsSwarm)
     })
     ipfs.__reconnect_peers = {}
-    ipfs.__reconnect_peers[process.env.IPFS_SWARM.split('/').pop()] = ipfs_swarm
+    ipfs.__reconnect_peers[ipfsSwarm.split('/').pop()] = ipfsSwarm
   }
 
   return ipfs
@@ -67,6 +67,7 @@ const config = {
   ipfsApiPort: process.env.IPFS_API_PORT,
   ipfsGatewayPort: process.env.IPFS_GATEWAY_PORT,
   ipfsGatewayProtocol: process.env.IPFS_GATEWAY_PROTOCOL,
+  discoveryServerUrl: process.env.DISCOVERY_SERVER_URL,
   messagingNamespace: process.env.MESSAGING_NAMESPACE,
   attestationServerUrl,
   ipfsCreator,

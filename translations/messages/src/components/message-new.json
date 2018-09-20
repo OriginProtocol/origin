@@ -1,7 +1,7 @@
 [
   {
     "id": "MessageNew.cannotReceiveMessages",
-    "defaultMessage": "This user has not enabled Origin Messaging."
+    "defaultMessage": "This user has not yet enabled Origin Messaging."
   },
   {
     "id": "MessageNew.cancel",

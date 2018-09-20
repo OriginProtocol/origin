@@ -6,6 +6,7 @@ import { storeWeb3Intent } from 'actions/App'
 
 import MyListingCard from 'components/my-listing-card'
 import Modal from 'components/modal'
+import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
 
@@ -15,121 +16,128 @@ class MyListings extends Component {
 
     this.handleProcessing = this.handleProcessing.bind(this)
     this.handleUpdate = this.handleUpdate.bind(this)
-    this.loadListing = this.loadListing.bind(this)
+    this.refreshListing = this.refreshListing.bind(this)
     this.state = {
       filter: 'all',
       listings: [],
       loading: true,
-      processing: false,
+      processing: false
     }
   }
 
   componentDidMount() {
-    if(!web3.givenProvider || !this.props.web3Account) {
+    if (this.props.web3Account) {
+      this.loadListings()
+    } else if (!web3.givenProvider) {
       this.props.storeWeb3Intent('view your listings')
     }
   }
 
-  /*
-  * WARNING: These functions don't actually return what they might imply.
-  * They use return statements to chain together async calls. Oops.
-  *
-  * For now, we mock a getBySellerAddress request by fetching all
-  * listings individually, filtering each by sellerAddress.
-  */
+  componentDidUpdate(prevProps) {
+    const { web3Account } = this.props
 
-  async getListingIds() {
+    // on account change
+    if (web3Account && web3Account !== prevProps.web3Account) {
+      this.loadListings()
+    }
+  }
+
+  async loadListings() {
     try {
-      const ids = await origin.listings.allIds()
+      const ids = await origin.marketplace.getListings({
+        idsOnly: true,
+        listingsFor: this.props.web3Account
+      })
+      const listings = await Promise.all(
+        ids.map(id => {
+          return getListing(id, true)
+        })
+      )
 
-      return await Promise.all(ids.map(this.loadListing))
-    } catch(error) {
+      this.setState({ listings, loading: false })
+    } catch (error) {
       console.error('Error fetching listing ids')
     }
-  }
-
-  async loadListing(id) {
-    try {
-      const listing = await origin.listings.getByIndex(id)
-
-      if (listing.sellerAddress === this.props.web3Account) {
-        const listings = [...this.state.listings, listing]
-
-        this.setState({ listings })
-      }
-
-      return listing
-    } catch(error) {
-      console.error(`Error fetching contract or IPFS info for listingId: ${id}`)
-    }
-  }
-
-  async componentWillMount() {
-    await this.getListingIds()
-
-    this.setState({ loading: false })
   }
 
   handleProcessing(processing) {
     this.setState({ processing })
   }
 
-  async handleUpdate(address) {
+  async handleUpdate(id) {
     try {
-      const listing = await origin.listings.get(address)
+      const listing = await getListing(id)
       const listings = [...this.state.listings]
-      const index = listings.findIndex(l => l.address === address)
+      const index = listings.findIndex(l => l.id === id)
 
       listings[index] = listing
 
       this.setState({ listings })
-    } catch(error) {
-      console.error(`Error handling update for listing: ${address}`)
+    } catch (error) {
+      console.error(`Error handling update for listing: ${id}`)
+    }
+  }
+
+  async refreshListing(id) {
+    try {
+      const listing = await getListing(id)
+
+      this.setState({
+        listings: [
+          ...this.state.listings.filter(l => l.id !== id),
+          listing
+        ]
+      })
+    } catch (error) {
+      console.error(`Error refreshing listing: ${id}`)
     }
   }
 
   render() {
     const { filter, listings, loading, processing } = this.state
     const filteredListings = (() => {
-      switch(filter) {
-        case 'active':
-          return listings.filter(l => l.unitsAvailable)
-        case 'inactive':
-          return listings.filter(l => !l.unitsAvailable)
-        default:
-          return listings
+      switch (filter) {
+      case 'active':
+        return listings.filter(l => l.status === 'active')
+      case 'inactive':
+        return listings.filter(l => l.status === 'inactive')
+      default:
+        return listings
       }
     })()
 
     return (
       <div className="my-listings-wrapper">
         <div className="container">
-          {loading &&
+          {loading && (
             <div className="row">
               <div className="col-12 text-center">
                 <h1>
                   <FormattedMessage
-                    id={ 'my-listings.loading' }
-                    defaultMessage={ 'Loading...' }
+                    id={'my-listings.loading'}
+                    defaultMessage={'Loading...'}
                   />
-                </h1> 
+                </h1>
               </div>
             </div>
-          }  
-          {!loading && !listings.length && 
+          )}
+          {!loading &&
+            !listings.length && (
             <div className="row">
               <div className="col-12 text-center">
-                <img src="images/empty-listings-graphic.svg"></img>
+                <img src="images/empty-listings-graphic.svg" />
                 <h1>
                   <FormattedMessage
-                    id={ 'my-listings.no-listings' }
-                    defaultMessage={ 'You don\'t have any listings yet.' }
+                    id={'my-listings.no-listings'}
+                    defaultMessage={"You don't have any listings yet."}
                   />
                 </h1>
                 <p>
                   <FormattedMessage
-                    id={ 'my-listings.no-listings-steps' }
-                    defaultMessage={ 'Follow the steps below to create your first listing!' }
+                    id={'my-listings.no-listings-steps'}
+                    defaultMessage={
+                      'Follow the steps below to create your first listing!'
+                    }
                   />
                 </p>
                 <br />
@@ -139,15 +147,17 @@ class MyListings extends Component {
                     <div className="numberCircle">
                       <h1 className="circle-text">
                         <FormattedMessage
-                          id={ 'my-listings.number-one' }
-                          defaultMessage={ '1' }
+                          id={'my-listings.number-one'}
+                          defaultMessage={'1'}
                         />
                       </h1>
                     </div>
                     <p>
                       <FormattedMessage
-                        id={ 'my-listings.step-one' }
-                        defaultMessage={ 'Choose the right category for your listing.' }
+                        id={'my-listings.step-one'}
+                        defaultMessage={
+                          'Choose the right category for your listing.'
+                        }
                       />
                     </p>
                   </div>
@@ -155,15 +165,17 @@ class MyListings extends Component {
                     <div className="numberCircle">
                       <h1 className="circle-text">
                         <FormattedMessage
-                          id={ 'my-listings.number-two ' }
-                          defaultMessage={ '2' }
+                          id={'my-listings.number-two '}
+                          defaultMessage={'2'}
                         />
                       </h1>
                     </div>
                     <p>
                       <FormattedMessage
-                        id={ 'my-listings.step-two ' }
-                        defaultMessage={ 'Give your listing a name, description, and price.' }
+                        id={'my-listings.step-two '}
+                        defaultMessage={
+                          'Give your listing a name, description, and price.'
+                        }
                       />
                     </p>
                   </div>
@@ -171,15 +183,17 @@ class MyListings extends Component {
                     <div className="numberCircle">
                       <h1 className="circle-text">
                         <FormattedMessage
-                          id={ 'my-listings.number-three ' }
-                          defaultMessage={ '3' }
+                          id={'my-listings.number-three '}
+                          defaultMessage={'3'}
                         />
                       </h1>
                     </div>
                     <p>
                       <FormattedMessage
-                        id={ 'my-listings.step-three ' }
-                        defaultMessage={ 'Preview your listing and publish it to the blockchain.' }
+                        id={'my-listings.step-three '}
+                        defaultMessage={
+                          'Preview your listing and publish it to the blockchain.'
+                        }
                       />
                     </p>
                   </div>
@@ -188,49 +202,68 @@ class MyListings extends Component {
                   <div className="col-12 text-center">
                     <br />
                     <br />
-                    <a href="#/create" className="btn btn-lrg btn-primary btn-auto-width">
+                    <a
+                      href="#/create"
+                      className="btn btn-lrg btn-primary btn-auto-width"
+                    >
                       <FormattedMessage
-                        id={ 'my-listings.create-listing' }
-                        defaultMessage={ 'Create Your First Listing' }
+                        id={'my-listings.create-listing'}
+                        defaultMessage={'Create Your First Listing'}
                       />
                     </a>
                   </div>
                 </div>
               </div>
             </div>
-          }
-          {!loading && !!listings.length &&
+          )}
+          {!loading &&
+            !!listings.length && (
             <div className="row">
               <div className="col-12">
                 <div className="row">
                   <div className="col-12">
                     <h1>
                       <FormattedMessage
-                        id={ 'my-listings.myListingsHeading' }
-                        defaultMessage={ 'My Listings' }
+                        id={'my-listings.myListingsHeading'}
+                        defaultMessage={'My Listings'}
                       />
                     </h1>
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-12 col-md-3"> 
+                  <div className="col-12 col-md-3">
                     <div className="filters list-group flex-row flex-md-column">
-                      <a className={`list-group-item list-group-item-action${filter === 'all' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'all' })}>
+                      <a
+                        className={`list-group-item list-group-item-action${
+                          filter === 'all' ? ' active' : ''
+                        }`}
+                        onClick={() => this.setState({ filter: 'all' })}
+                      >
                         <FormattedMessage
-                          id={ 'my-listings.all' }
-                          defaultMessage={ 'All' }
+                          id={'my-listings.all'}
+                          defaultMessage={'All'}
                         />
                       </a>
-                      <a className={`list-group-item list-group-item-action${filter === 'active' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'active' })}>
+                      <a
+                        className={`list-group-item list-group-item-action${
+                          filter === 'active' ? ' active' : ''
+                        }`}
+                        onClick={() => this.setState({ filter: 'active' })}
+                      >
                         <FormattedMessage
-                          id={ 'my-listings.active' }
-                          defaultMessage={ 'Active' }
+                          id={'my-listings.active'}
+                          defaultMessage={'Active'}
                         />
                       </a>
-                      <a className={`list-group-item list-group-item-action${filter === 'inactive' ? ' active' : ''}`} onClick={() => this.setState({ filter: 'inactive' })}>
+                      <a
+                        className={`list-group-item list-group-item-action${
+                          filter === 'inactive' ? ' active' : ''
+                        }`}
+                        onClick={() => this.setState({ filter: 'inactive' })}
+                      >
                         <FormattedMessage
-                          id={ 'my-listings.inactive' }
-                          defaultMessage={ 'Inactive' }
+                          id={'my-listings.inactive'}
+                          defaultMessage={'Inactive'}
                         />
                       </a>
                     </div>
@@ -239,35 +272,36 @@ class MyListings extends Component {
                     <div className="my-listings-list">
                       {filteredListings.map(l => (
                         <MyListingCard
-                          key={`my-listing-${l.address}`}
+                          key={`my-listing-${l.id}`}
                           listing={l}
                           handleProcessing={this.handleProcessing}
                           handleUpdate={this.handleUpdate}
+                          onClose={() => this.refreshListing(l.id)}
                         />
                       ))}
                     </div>
                   </div>
                 </div>
-              </div>  
-            </div>  
-          } 
+              </div>
+            </div>
+          )}
         </div>
-        {processing &&
-          <Modal backdrop="static" isOpen={true}>
+        {processing && (
+          <Modal backdrop="static" isOpen={true} tabIndex="-1">
             <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation"/>
+              <img src="images/spinner-animation.svg" role="presentation" />
             </div>
             <FormattedMessage
-              id={ 'my-listings.processingUpdate' }
-              defaultMessage={ 'Closing your listing' }
+              id={'my-listings.processingUpdate'}
+              defaultMessage={'Closing your listing'}
             />
             <br />
             <FormattedMessage
-              id={ 'my-listings.pleaseStandBy' }
-              defaultMessage={ 'Please stand by...' }
+              id={'my-listings.pleaseStandBy'}
+              defaultMessage={'Please stand by...'}
             />
           </Modal>
-        }
+        )}
       </div>
     )
   }
@@ -276,12 +310,15 @@ class MyListings extends Component {
 const mapStateToProps = state => {
   return {
     web3Account: state.app.web3.account,
-    web3Intent: state.app.web3.intent,
+    web3Intent: state.app.web3.intent
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyListings)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MyListings)

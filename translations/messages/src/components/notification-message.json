@@ -1,18 +1,18 @@
 [
   {
-    "id": "notification.purchaseCreated",
-    "defaultMessage": "You have a new sale."
+    "id": "notification.offerMade",
+    "defaultMessage": "You have a new offer."
   },
   {
     "id": "notification.purchaseSent",
-    "defaultMessage": "Your purchase has been shipped."
+    "defaultMessage": "Your offer has been accepted."
   },
   {
-    "id": "notification.purchaseReceived",
-    "defaultMessage": "You have a new review."
+    "id": "notification.saleConfirmed",
+    "defaultMessage": "Your sale has been confirmed."
   },
   {
-    "id": "notification.purchaseComplete",
+    "id": "notification.sellerReviewed",
     "defaultMessage": "You have a new review."
   }
 ]

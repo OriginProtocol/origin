@@ -9,10 +9,11 @@ import { init as initWallet } from 'actions/Wallet'
 
 // Components
 import Alert from 'components/alert'
+import Arbitration from 'components/arbitration'
 import Layout from 'components/layout'
 import ListingCreate from 'components/listing-create'
 import ListingDetail from 'components/listing-detail'
-import Listings from 'components/listings-grid'
+import ListingsGrid from 'components/listings-grid'
 import Messages from 'components/messages'
 import MessagingProvider from 'components/messaging-provider'
 import MyListings from 'components/my-listings'
@@ -23,9 +24,12 @@ import Notifications from 'components/notifications'
 import PurchaseDetail from 'components/purchase-detail'
 import ScrollToTop from 'components/scroll-to-top'
 import Web3Provider from 'components/web3-provider'
+import SearchResult from 'components/search/search-result'
+import AboutTokens from 'components/about-tokens'
 
 import Profile from 'pages/profile/Profile'
 import User from 'pages/user/User'
+import SearchBar from 'components/search/searchbar'
 
 import 'bootstrap/dist/js/bootstrap'
 
@@ -35,14 +39,19 @@ import '../css/lato-web.css'
 import '../css/poppins.css'
 import '../css/app.css'
 
+const httpsRequired = process.env.FORCE_HTTPS
+
 const HomePage = () => (
-  <div className="container">
-    <Listings />
+  <div>
+    <SearchBar />
+    <div className="container">
+      <ListingsGrid renderMode="home-page" />
+    </div>
   </div>
 )
 
 const ListingDetailPage = props => (
-  <ListingDetail listingAddress={props.match.params.listingAddress} withReviews={true} />
+  <ListingDetail listingId={props.match.params.listingId} withReviews={true} />
 )
 
 const CreateListingPage = () => (
@@ -52,18 +61,30 @@ const CreateListingPage = () => (
 )
 
 const PurchaseDetailPage = props => (
-  <PurchaseDetail purchaseAddress={props.match.params.purchaseAddress} />
+  <PurchaseDetail offerId={props.match.params.offerId} />
+)
+
+const ArbitrationPage = props => (
+  <Arbitration offerId={props.match.params.offerId} />
 )
 
 const UserPage = props => <User userAddress={props.match.params.userAddress} />
 
 // Top level component
 class App extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
+
+    this.state = {
+      redirect: httpsRequired && !window.location.protocol.match('https')
+    }
   }
 
   componentWillMount() {
+    if (this.state.redirect) {
+      window.location.href = window.location.href.replace(/^http(?!s)/, 'https')
+    }
+
     this.props.localizeApp()
   }
 
@@ -79,7 +100,7 @@ class App extends Component {
    * @return {void}
    */
   detectMobile() {
-    let userAgent = navigator.userAgent || navigator.vendor || window.opera
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera
 
     if (/android/i.test(userAgent)) {
       this.props.setMobile('Android')
@@ -91,12 +112,18 @@ class App extends Component {
   }
 
   render() {
+    // prevent flickering
+    if (this.state.redirect) {
+      return null
+    }
+
     return this.props.selectedLanguageCode ? (
-      <IntlProvider 
+      <IntlProvider
         locale={this.props.selectedLanguageCode}
         defaultLocale="en-US"
         messages={this.props.messages}
-        textComponent={Fragment}>
+        textComponent={Fragment}
+      >
         <Router>
           <ScrollToTop>
             <Web3Provider>
@@ -106,21 +133,30 @@ class App extends Component {
                     <Route exact path="/" component={HomePage} />
                     <Route path="/page/:activePage" component={HomePage} />
                     <Route
-                      path="/listing/:listingAddress"
+                      path="/listing/:listingId"
                       component={ListingDetailPage}
                     />
                     <Route path="/create" component={CreateListingPage} />
                     <Route path="/my-listings" component={MyListings} />
                     <Route
-                      path="/purchases/:purchaseAddress"
+                      path="/purchases/:offerId"
                       component={PurchaseDetailPage}
+                    />
+                    <Route
+                      path="/arbitration/:offerId"
+                      component={ArbitrationPage}
                     />
                     <Route path="/my-purchases" component={MyPurchases} />
                     <Route path="/my-sales" component={MySales} />
-                    <Route path="/messages/:conversationId?" component={Messages} />
+                    <Route
+                      path="/messages/:conversationId?"
+                      component={Messages}
+                    />
                     <Route path="/notifications" component={Notifications} />
                     <Route path="/profile" component={Profile} />
                     <Route path="/users/:userAddress" component={UserPage} />
+                    <Route path="/search" component={SearchResult} />
+                    <Route path="/about-tokens" component={AboutTokens} />
                     <Route component={NotFound} />
                   </Switch>
                 </Layout>
@@ -146,4 +182,7 @@ const mapDispatchToProps = dispatch => ({
   localizeApp: () => dispatch(localizeApp())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App)

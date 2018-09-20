@@ -2,14 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
-import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import {
   update as updateTransaction,
-  upsert as upsertTransaction,
+  upsert as upsertTransaction
 } from 'actions/Transaction'
-
-import { translateListingCategory } from 'utils/translationUtils'
 
 import origin from '../services/origin'
 
@@ -20,7 +18,8 @@ class MyListingCard extends Component {
     this.intlMessages = defineMessages({
       confirmCloseListing: {
         id: 'my-listing-card.confirmCloseListing',
-        defaultMessage: 'Are you sure that you want to permanently close this listing? This cannot be undone.'
+        defaultMessage:
+          'Are you sure that you want to permanently close this listing? This cannot be undone.'
       },
       ETH: {
         id: 'my-listing-card.ethereumCurrencyAbbrev',
@@ -36,9 +35,11 @@ class MyListingCard extends Component {
   }
 
   async closeListing() {
-    const{ intl, listing, handleProcessing, handleUpdate, updateTransaction } = this.props
+    const { intl, listing, handleProcessing, onClose, updateTransaction } = this.props
     const { address } = listing
-    const prompt = confirm(intl.formatMessage(this.intlMessages.confirmCloseListing))
+    const prompt = confirm(
+      intl.formatMessage(this.intlMessages.confirmCloseListing)
+    )
 
     if (!prompt) {
       return null
@@ -47,58 +48,71 @@ class MyListingCard extends Component {
     try {
       handleProcessing(true)
 
-      const { created, transactionReceipt } = await origin.listings.close(address, (confirmationCount, transactionReceipt) => {
-        // Having a transaction receipt doesn't guarantee that the listing state will have changed.
-        // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
-        handleUpdate(address)
+      const {
+        created,
+        transactionReceipt
+      } = await origin.marketplace.withdrawListing(
+        this.props.listing.id,
+        {},
+        (confirmationCount, transactionReceipt) => {
+          // Having a transaction receipt doesn't guarantee that the listing status will have changed.
+          // Let's relentlessly retrieve the data so that we are sure to get it. - Micah
+          onClose && onClose()
 
-        this.props.updateTransaction(confirmationCount, transactionReceipt)
-      })
+          updateTransaction(confirmationCount, transactionReceipt)
+        }
+      )
 
       this.props.upsertTransaction({
         ...transactionReceipt,
         created,
-        transactionTypeKey: 'closeListing',
+        transactionTypeKey: 'closeListing'
       })
 
       handleProcessing(false)
-    } catch(error) {
+    } catch (error) {
       handleProcessing(false)
       console.error(`Error closing listing ${address}`)
       console.error(error)
     }
   }
 
+  componentWillUnmount() {
+    $('[data-toggle="tooltip"]').tooltip('dispose')
+  }
+
   render() {
-    const { address, category, /*createdAt, */name, pictures, price, unitsAvailable } = translateListingCategory(this.props.listing)
-    /*
-     *  Micah 4/23/2018
-     *  ~~~~~~~~~~~~~~~
-     *  origin.listings.close sets unitsAvailable to 0.
-     *  There is no distinction between active/inactive, sold out, or closed.
-     *  These states should be considered as editing is explored.
-     *  There are no denormalized "transaction completed" or "transaction in progress" counts.
-     */
-    const status = parseInt(unitsAvailable) > 0 ? 'active' : 'inactive'
+    const { listing } = this.props
+    const { category, name, pictures } = listing
+    const status = listing.status
     // const timestamp = `Created on ${moment(createdAt).format('MMMM D, YYYY')}`
-    const photo = pictures && pictures.length > 0 && (new URL(pictures[0])).protocol === "data:" && pictures[0]
+    const photo = pictures && pictures.length > 0 && pictures[0]
 
     return (
       <div className="purchase card">
         <div className="card-body d-flex flex-column flex-lg-row">
           <div className="aspect-ratio">
-            <div className={`${photo ? '' : 'placeholder '}image-container d-flex justify-content-center`}>
-              <img src={photo || 'images/default-image.svg'} role="presentation" />
+            <div
+              className={`${
+                photo ? '' : 'placeholder '
+              }image-container d-flex justify-content-center`}
+            >
+              <img
+                src={photo || 'images/default-image.svg'}
+                role="presentation"
+              />
             </div>
           </div>
           <div className="content-container d-flex flex-column">
             <span className={`status ${status}`}>{status}</span>
             <p className="category">{category}</p>
-            <h2 className="title text-truncate"><Link to={`/listing/${address}`}>{name}</Link></h2>
+            <h2 className="title text-truncate">
+              <Link to={`/listing/${listing.id}`}>{name}</Link>
+            </h2>
             {/*<p className="timestamp">{timestamp}</p>*/}
-            <p className="price">
-              {`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 3 })} ETH`}
-              {!parseInt(unitsAvailable) /*<= quantity*/ && 
+            {/*<p className="price">
+              {`${Number(price).toLocaleString(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 5 })} ETH`}
+              {!parseInt(unitsRemaining) &&
                 <span className="badge badge-info">
                   <FormattedMessage
                     id={ 'my-listing-card.soldOut' }
@@ -106,16 +120,16 @@ class MyListingCard extends Component {
                   />
                 </span>
               }
-            </p>
+            </p>*/}
             <div className="d-flex counts">
-              <p>
+              {/*<p>
                 <FormattedMessage
                   id={ 'my-listing-card.totalQuantity' }
                   defaultMessage={ 'Total Quantity : {quantity}' }
-                  values={{ quantity: <FormattedNumber value={unitsAvailable} /> }}
+                  values={{ quantity: <FormattedNumber value={unitsRemaining} /> }}
                 />
-              </p>
-              {/*<p>Total Remaining: {(unitsAvailable - quantity).toLocaleString()}</p>*/}
+              </p>*/}
+              {/*<p>Total Remaining: {(unitsRemaining - quantity).toLocaleString()}</p>*/}
             </div>
             <div className="d-flex counts">
               {/*<p>{Number(2).toLocaleString()} Pending Transactions</p>*/}
@@ -126,14 +140,14 @@ class MyListingCard extends Component {
                 {/*<a onClick={() => alert('To Do')}>Edit</a>*/}
                 {/*!active && <a onClick={() => alert('To Do')}>Enable</a>*/}
                 {/*active && <a onClick={() => alert('To Do')}>Disable</a>*/}
-                {!!parseInt(unitsAvailable) && 
+                {status === 'inactive' ? null : (
                   <a className="warning" onClick={this.closeListing}>
                     <FormattedMessage
-                      id={ 'my-listing-card.closeListing' }
-                      defaultMessage={ 'Close Listing' }
+                      id={'my-listing-card.closeListing'}
+                      defaultMessage={'Close Listing'}
                     />
                   </a>
-                }
+                )}
               </div>
             </div>
           </div>
@@ -144,8 +158,12 @@ class MyListingCard extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  updateTransaction: (confirmationCount, transactionReceipt) => dispatch(updateTransaction(confirmationCount, transactionReceipt)),
-  upsertTransaction: (transaction) => dispatch(upsertTransaction(transaction)),
+  updateTransaction: (confirmationCount, transactionReceipt) =>
+    dispatch(updateTransaction(confirmationCount, transactionReceipt)),
+  upsertTransaction: transaction => dispatch(upsertTransaction(transaction))
 })
 
-export default connect(undefined, mapDispatchToProps)(injectIntl(MyListingCard))
+export default connect(
+  undefined,
+  mapDispatchToProps
+)(injectIntl(MyListingCard))

@@ -5,7 +5,7 @@ import { withRouter } from 'react-router'
 
 import { enableMessaging } from 'actions/App'
 
-import Identicon from 'components/Identicon'
+import Identicon from 'components/identicon'
 import Modal from 'components/modal'
 
 import origin from '../services/origin'
@@ -29,7 +29,7 @@ class MessageNew extends Component {
     e.preventDefault()
 
     const { content } = this.state
-    const { history, listingAddress, purchaseAddress, recipientAddress } = this.props
+    const { history, listingId, purchaseId, recipientAddress } = this.props
     const newMessage = content.trim()
 
     if (!content.length) {
@@ -39,60 +39,68 @@ class MessageNew extends Component {
     try {
       const roomId = await origin.messaging.sendConvMessage(recipientAddress, {
         content: newMessage,
-        ...(listingAddress && { listingAddress }),
-        ...(purchaseAddress && { purchaseAddress }),
+        ...(listingId && { listingId }),
+        ...(purchaseId && { purchaseId })
       })
 
       history.push(`/messages/${roomId}`)
-    } catch(err) {
+    } catch (err) {
       console.error(err)
     }
   }
 
   render() {
-    const { messagingEnabled, open, recipientAddress, handleToggle } = this.props
+    const {
+      messagingEnabled,
+      open,
+      recipientAddress,
+      handleToggle
+    } = this.props
     const { content } = this.state
-    const canReceiveMessages = origin.messaging.canReceiveMessages(recipientAddress)
+    const canReceiveMessages = origin.messaging.canReceiveMessages(
+      recipientAddress
+    )
     const canDeliverMessage = origin.messaging.canConverseWith(recipientAddress)
 
     return (
-      <Modal isOpen={open} data-modal="message" handleToggle={handleToggle}>
+      <Modal
+        isOpen={open}
+        data-modal="message"
+        handleToggle={handleToggle}
+        tabIndex="-1"
+      >
         <div className="eth-container">
           <Identicon address={recipientAddress} size={80} />
           <h2>
-            {'ETH Address:'}<br />
-            <span className="address">
-              {recipientAddress}
-            </span>
+            {'ETH Address:'}
+            <br />
+            <span className="address">{recipientAddress}</span>
           </h2>
         </div>
-        {/* Just a precaution; no one should get here wihout truthy here. */}
-        {!canReceiveMessages &&
+        {/* Recipient needs to enable messaging. */}
+        {!canReceiveMessages && (
           <div className="roadblock">
             <FormattedMessage
-              id={ 'MessageNew.cannotReceiveMessages' }
-              defaultMessage={ 'This user has not enabled Origin Messaging.' }
+              id={'MessageNew.cannotReceiveMessages'}
+              defaultMessage={'This user has not yet enabled Origin Messaging.'}
             />
             <div className="link-container text-center">
-              <a
-                href="#"
-                data-modal="profile"
-                onClick={handleToggle}
-              >
+              <a href="#" data-modal="profile" onClick={handleToggle}>
                 <FormattedMessage
-                  id={ 'MessageNew.cancel' }
-                  defaultMessage={ 'Cancel' }
+                  id={'MessageNew.cancel'}
+                  defaultMessage={'Cancel'}
                 />
               </a>
             </div>
           </div>
-        }
+        )}
         {/* Current user needs to enable messaging. */}
-        {canReceiveMessages && !messagingEnabled &&
+        {canReceiveMessages &&
+          !messagingEnabled && (
           <div className="roadblock">
             <FormattedMessage
-              id={ 'MessageNew.cannotSendMessages' }
-              defaultMessage={ 'You need to enable Origin Messaging.' }
+              id={'MessageNew.cannotSendMessages'}
+              defaultMessage={'You need to enable Origin Messaging.'}
             />
             <div className="button-container">
               <button
@@ -100,27 +108,23 @@ class MessageNew extends Component {
                 onClick={this.props.enableMessaging}
               >
                 <FormattedMessage
-                  id={ 'MessageNew.enable' }
-                  defaultMessage={ 'Start Messaging' }
+                  id={'MessageNew.enable'}
+                  defaultMessage={'Start Messaging'}
                 />
               </button>
             </div>
             <div className="link-container text-center">
-              <a
-                href="#"
-                data-modal="profile"
-                onClick={handleToggle}
-              >
+              <a href="#" data-modal="profile" onClick={handleToggle}>
                 <FormattedMessage
-                  id={ 'MessageNew.cancel' }
-                  defaultMessage={ 'Cancel' }
+                  id={'MessageNew.cancel'}
+                  defaultMessage={'Cancel'}
                 />
               </a>
             </div>
           </div>
-        }
+        )}
         {/* Both users have enabled messaging. */}
-        {canDeliverMessage &&
+        {canDeliverMessage && (
           <form className="new-message" onSubmit={this.handleSubmit}>
             <div className="form-group">
               <textarea
@@ -136,31 +140,29 @@ class MessageNew extends Component {
             <div className="button-container d-flex justify-content-center">
               <button type="submit" className="btn btn-primary">
                 <FormattedMessage
-                  id={ 'MessageNew.send' }
-                  defaultMessage={ 'Send' }
+                  id={'MessageNew.send'}
+                  defaultMessage={'Send'}
                 />
               </button>
             </div>
             <div className="explanation text-center">
               <FormattedMessage
-                id={ 'MessageNew.encryptionNotice' }
-                defaultMessage={ 'Your message will be encrypted. It will only be visible to you, the recipient, and an arbitrator in the event that a dispute arises.' }
+                id={'MessageNew.encryptionNotice'}
+                defaultMessage={
+                  'Your message will be encrypted. It will only be visible to you, the recipient, and an arbitrator in the event that a dispute arises.'
+                }
               />
             </div>
             <div className="link-container text-center">
-              <a
-                href="#"
-                data-modal="profile"
-                onClick={handleToggle}
-              >
+              <a href="#" data-modal="profile" onClick={handleToggle}>
                 <FormattedMessage
-                  id={ 'MessageNew.cancel' }
-                  defaultMessage={ 'Cancel' }
+                  id={'MessageNew.cancel'}
+                  defaultMessage={'Cancel'}
                 />
               </a>
             </div>
           </form>
-        }
+        )}
       </Modal>
     )
   }
@@ -168,12 +170,17 @@ class MessageNew extends Component {
 
 const mapStateToProps = state => {
   return {
-    messagingEnabled: state.app.messagingEnabled,
+    messagingEnabled: state.app.messagingEnabled
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  enableMessaging: () => dispatch(enableMessaging()),
+  enableMessaging: () => dispatch(enableMessaging())
 })
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MessageNew))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(MessageNew)
+)

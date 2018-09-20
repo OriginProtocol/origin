@@ -7,6 +7,8 @@ import Conversation from 'components/conversation'
 
 import groupByArray from 'utils/groupByArray'
 
+import origin from '../services/origin'
+
 class Messages extends Component {
   constructor(props) {
     super(props)
@@ -21,14 +23,16 @@ class Messages extends Component {
     this.detectSelectedConversation()
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { conversations, match, messages } = this.props
+  componentDidUpdate(prevProps) {
+    const { conversations, match } = this.props
     const { selectedConversationId } = this.state
     const { conversationId } = match.params
-    const changedSelectedConversationId = selectedConversationId !== prevState.selectedConversationId
 
     // on route change
-    if (conversationId && conversationId !== prevProps.match.params.conversationId) {
+    if (
+      conversationId &&
+      conversationId !== prevProps.match.params.conversationId
+    ) {
       this.detectSelectedConversation()
     }
 
@@ -39,7 +43,9 @@ class Messages extends Component {
   }
 
   detectSelectedConversation() {
-    const selectedConversationId = this.props.match.params.conversationId || (this.props.conversations[0] || {}).key
+    const selectedConversationId =
+      this.props.match.params.conversationId ||
+      (this.props.conversations[0] || {}).key
 
     selectedConversationId && this.setState({ selectedConversationId })
   }
@@ -52,29 +58,34 @@ class Messages extends Component {
     const { conversations, messages } = this.props
     const { selectedConversationId } = this.state
     const filteredAndSorted = messages
-                              .filter(m => m.conversationId === selectedConversationId)
-                              .sort((a, b) => (a.index < b.index ? -1 : 1))
+      .filter(m => m.conversationId === selectedConversationId)
+      .sort((a, b) => (a.index < b.index ? -1 : 1))
 
     return (
       <div className="d-flex messages-wrapper">
         <div className="container">
           <div className="row no-gutters">
-            <div className="conversations-list-col col-12 col-sm-4 col-lg-3 d-flex flex-sm-column">
+            <div className="conversations-list-col col-12 col-sm-4 col-lg-3 d-flex d-sm-block">
               {conversations.map(c => {
                 return (
                   <ConversationListItem
                     key={c.key}
                     conversation={c}
                     active={selectedConversationId === c.key}
-                    handleConversationSelect={() => this.handleConversationSelect(c.key)}
+                    handleConversationSelect={() =>
+                      this.handleConversationSelect(c.key)
+                    }
                   />
                 )
               })}
             </div>
-            <Conversation
-              id={selectedConversationId}
-              messages={filteredAndSorted}
-            />
+            <div className="conversation-col col-12 col-sm-8 col-lg-9 d-flex flex-column">
+              <Conversation
+                id={selectedConversationId}
+                messages={filteredAndSorted}
+                withListingSummary={true}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -82,12 +93,18 @@ class Messages extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ app, messages }) => {
+  const { messagingEnabled, web3 } = app
+  const web3Account = web3.account
+  const filteredMessages = messages.filter(({ content, conversationId }) => {
+    return content && origin.messaging.getRecipients(conversationId).includes(web3Account)
+  })
+
   return {
-    conversations: groupByArray(state.messages, 'conversationId'),
-    messages: state.messages,
-    messagingEnabled: state.app.messagingEnabled,
-    web3Account: state.app.web3.account
+    conversations: groupByArray(filteredMessages, 'conversationId'),
+    messages: filteredMessages,
+    messagingEnabled,
+    web3Account
   }
 }
 
