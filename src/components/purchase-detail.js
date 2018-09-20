@@ -245,7 +245,8 @@ class PurchaseDetail extends Component {
             text: this.props.intl.formatMessage(
               this.intlMessages.reportProblem
             )
-          }
+          },
+          showSellerSteps: true
         }
       },
       disputed: {
@@ -603,7 +604,8 @@ class PurchaseDetail extends Component {
       processing,
       purchase,
       reviews,
-      seller
+      seller,
+      showSellerSteps
     } = this.state
     const step = offerStatusToStep(purchase.status)
     const isPending = purchase.status !== 'withdrawn' && step < 3
@@ -863,6 +865,36 @@ class PurchaseDetail extends Component {
                         </strong>
                         &nbsp;{prompt}
                       </div>
+                      {showSellerSteps &&
+                        <div className="seller-steps">
+                          <div className="toggle-container">
+                            <p className="toggle-btn">
+                              { this.state.areSellerStepsOpen ?
+                                <FormattedMessage
+                                  id={'purchase-detail.hideSellerSteps'}
+                                  defaultMessage={'Hide Fulfillment Checklist'}
+                                />
+                                :
+                                <FormattedMessage
+                                  id={'purchase-detail.showSellerSteps'}
+                                  defaultMessage={'Show Fulfillment Checklist'}
+                                />
+                              }
+                            </p>
+                          </div>
+                          <div className="list-container">
+                            <p>
+                              <FormattedMessage
+                                id={'purchase-detail.fulfillmentChecklist'}
+                                defaultMessage={'Fulfillment Checklist'}
+                              />
+                            </p>
+                            <ul>
+                              
+                            </ul>
+                          </div>
+                        </div>
+                      }
                       {reviewable && instruction &&
                         <div className="instruction">
                           {instruction}

@@ -143,6 +143,9 @@ class ListingCreate extends Component {
           examples: {
             'ui:widget': 'hidden'
           },
+          sellerSteps: {
+            'ui:widget': 'hidden'
+          },
           price: {
             'ui:field': PriceField
           },

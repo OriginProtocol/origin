@@ -223,7 +223,7 @@ export default defineMessages({
   },
   'schema.forSale.rateBuyer': {
     id: 'schema.forSale.rateBuyer',
-    defaultMessage: 'Give the buyer a rating'
+    defaultMessage: 'Give the buyer a review'
   },
   'schema.forSale.sellerSteps': {
     id: 'schema.forSale.sellerSteps',

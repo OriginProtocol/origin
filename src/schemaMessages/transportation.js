@@ -67,7 +67,7 @@ export default defineMessages({
   },
   'schema.transportation.rateBuyer': {
     id: 'schema.transportation.rateBuyer',
-    defaultMessage: 'Give the buyer a rating'
+    defaultMessage: 'Give the buyer a review'
   },
   'schema.transportation.sellerSteps': {
     id: 'schema.transportation.sellerSteps',

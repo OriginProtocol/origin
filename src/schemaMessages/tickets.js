@@ -91,7 +91,7 @@ export default defineMessages({
   },
   'schema.tickets.rateBuyer': {
     id: 'schema.tickets.rateBuyer',
-    defaultMessage: 'Give the buyer a rating'
+    defaultMessage: 'Give the buyer a review'
   },
   'schema.tickets.sellerSteps': {
     id: 'schema.tickets.sellerSteps',

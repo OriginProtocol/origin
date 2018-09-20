@@ -89,7 +89,7 @@
   },
   {
     "id": "schema.tickets.rateBuyer",
-    "defaultMessage": "Give the buyer a rating"
+    "defaultMessage": "Give the buyer a review"
   },
   {
     "id": "schema.tickets.sellerSteps",
