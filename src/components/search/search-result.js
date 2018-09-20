@@ -50,7 +50,6 @@ class SearchResult extends Component {
   }
 
   handleChangePage(page) {
-    console.log("handleChangePage", page)
     this.setState({ page: page })
   }
 
@@ -87,11 +86,11 @@ class SearchResult extends Component {
     )
       return
 
-    this.handleComponentUpdate(previousProps)
+    this.handleComponentUpdate(previousProps, prevState.page !== this.state.page)
   }
 
-  handleComponentUpdate(previousProps) {
-    this.searchRequest()
+  handleComponentUpdate(previousProps, onlyPageChanged = false) {
+    this.searchRequest(onlyPageChanged)
 
     if (
       previousProps == undefined ||
@@ -173,7 +172,7 @@ class SearchResult extends Component {
     //document.location.href = `#/search?search_query=${this.state.searchQuery}&listing_type=${this.state.selectedListingType.type}`
   }
 
-  async searchRequest() {
+  async searchRequest(onlyPageChanged) {
     try {
       this.setState({ searchError: undefined })
       this.formatFiltersToUrl()
@@ -193,7 +192,7 @@ class SearchResult extends Component {
       const searchResp = await origin.discovery.search(
         this.props.query || '',
         LISTINGS_PER_PAGE,
-        this.state.page,
+        (this.state.page - 1) * LISTINGS_PER_PAGE,
         Object.values(filters).flatMap(
           arrayOfFilters => arrayOfFilters
         )
@@ -201,7 +200,9 @@ class SearchResult extends Component {
 
       this.setState({
         listingIds: searchResp.data.listings.nodes.map(listing => listing.id),
-        totalNumberOfListings: searchResp.data.listings.totalNumberOfItems
+        totalNumberOfListings: searchResp.data.listings.totalNumberOfItems,
+        // reset the page whenever a user doesn't click on pagination link
+        page: onlyPageChanged ? this.state.page : 1
       })
 
       const [maxPrice, minPrice] = await Promise.all([
@@ -269,6 +270,7 @@ class SearchResult extends Component {
               listingsLength: this.state.totalNumberOfListings
             }}
             handleChangePage={this.handleChangePage}
+            searchPage={this.state.page}
           />
         </div>
       </Fragment>

@@ -321,7 +321,6 @@ class ListingCreate extends Component {
       currentProvider,
       formListing,
       isBoostExpanded,
-      schemaFetched,
       selectedSchema,
       selectedSchemaType,
       schemaExamples,
@@ -331,9 +330,7 @@ class ListingCreate extends Component {
       showBoostTutorial,
     } = this.state
     const { formData } = formListing
-    const translatedFormData =
-      (formData && formData.category && translateListingCategory(formData)) ||
-      {}
+    const translatedCategory = translateListingCategory(formData.category)
 
     return (
       <div className="container listing-form">
@@ -543,7 +540,7 @@ class ListingCreate extends Component {
                       <p className="label">Title</p>
                     </div>
                     <div className="col-md-9">
-                      <p>{translatedFormData.name}</p>
+                      <p>{formData.name}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -551,7 +548,7 @@ class ListingCreate extends Component {
                       <p className="label">Category</p>
                     </div>
                     <div className="col-md-9">
-                      <p>{translatedFormData.category}</p>
+                      <p>{translatedCategory}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -559,7 +556,7 @@ class ListingCreate extends Component {
                       <p className="label">Description</p>
                     </div>
                     <div className="col-md-9">
-                      <p>{translatedFormData.description}</p>
+                      <p>{formData.description}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -567,7 +564,7 @@ class ListingCreate extends Component {
                       <p className="label">Location</p>
                     </div>
                     <div className="col-md-9">
-                      <p>{translatedFormData.location}</p>
+                      <p>{formData.location}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -575,8 +572,8 @@ class ListingCreate extends Component {
                       <p className="label">Photos</p>
                     </div>
                     <div className="col-md-9 photo-row">
-                      {translatedFormData.pictures &&
-                        translatedFormData.pictures.map((dataUri, idx) => (
+                      {formData.pictures &&
+                        formData.pictures.map((dataUri, idx) => (
                           <img src={dataUri} role="presentation" key={idx} />
                         ))}
                     </div>
@@ -593,7 +590,7 @@ class ListingCreate extends Component {
                           role="presentation"
                         />
                         <span className="text-bold">
-                          {translatedFormData.price}
+                          {formData.price}
                         </span>&nbsp;
                         <a
                           className="eth-abbrev"
@@ -624,7 +621,7 @@ class ListingCreate extends Component {
                           role="presentation"
                         />
                         <span className="text-bold">
-                          {translatedFormData.boostValue}
+                          {formData.boostValue}
                         </span>&nbsp;
                         <a
                           className="ogn-abbrev"
@@ -635,7 +632,7 @@ class ListingCreate extends Component {
                           OGN
                         </a>
                         <span className="help-block">
-                          &nbsp;| {translatedFormData.boostLevel.toUpperCase()}
+                          &nbsp;| {formData.boostLevel.toUpperCase()}
                         </span>
                       </p>
                     </div>
@@ -678,6 +675,7 @@ class ListingCreate extends Component {
             <div className="pt-xs-4 pt-sm-4 col-md-5 offset-md-1 col-lg-4 offset-lg-3">
               <WalletCard
                 wallet={wallet}
+                withBalanceTooltip={!this.props.wallet.ognBalance}
                 withMenus={true}
                 withProfile={false}
               />

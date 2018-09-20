@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import $ from 'jquery'
 
 import { getEthBalance, getOgnBalance } from 'actions/Wallet'
 
@@ -23,6 +24,30 @@ class WalletCard extends Component {
       modalOpen: false,
       ethToUsdBalance: 0
     }
+
+    this.intlMessages = defineMessages({
+      yourBalance: {
+        id: '_wallet-card.yourBalance',
+        defaultMessage: 'You have <img class="ogn-icon" src="images/ogn-icon.svg" role="presentation" /><span class="ogn">0 OGN</span>'
+      },
+      balanceText: {
+        id: '_wallet-card.balanceText',
+        defaultMessage: 'Having OGN is not required but will allow you \
+        to create a listing that will be more visible to buyers.'
+      },
+      getOGN: {
+        id: '_wallet-card.getOgn',
+        defaultMessage: 'Get OGN'
+      },
+      recommendation: {
+        id: '_wallet-card.recommendation',
+        defaultMessage: '(recommended)'
+      },
+      learnMore: {
+        id: '_wallet-card.learnMore',
+        defaultMessage: 'Learn more'
+      }
+    })
   }
 
   async convertEthToUsd() {
@@ -41,6 +66,7 @@ class WalletCard extends Component {
     this.props.getOgnBalance()
 
     this.convertEthToUsd()
+    this.initiateBootstrapTooltip()
   }
 
   componentDidUpdate(prevProps) {
@@ -57,12 +83,34 @@ class WalletCard extends Component {
     this.setState({ modalOpen: !this.state.modalOpen })
   }
 
+  initiateBootstrapTooltip() {
+    $('body').tooltip({
+      selector: '[data-toggle="tooltip"]'
+    })
+  }
+
   render() {
-    const { profile, wallet, web3Account, withMenus, withProfile } = this.props
+    const { profile, wallet, web3Account, withBalanceTooltip, withMenus, withProfile } = this.props
     const { address, ethBalance, ognBalance } = wallet
     const { user } = profile
     const userCanReceiveMessages =
       address !== web3Account && origin.messaging.canReceiveMessages(address)
+
+    const balanceTooltip = `
+      <div>
+        <p class='tooltip-balance-heading tooltip-align-left'>
+          ${this.props.intl.formatMessage(this.intlMessages.yourBalance)}
+        </p>
+        <p class='tooltip-balance-text tooltip-align-left'>
+          ${this.props.intl.formatMessage(this.intlMessages.balanceText)}
+        </p>
+        <p class='tooltip-align-left'>
+          <a href='/#/about-tokens' target='_blank' class='learn-more'>
+            ${this.props.intl.formatMessage(this.intlMessages.learnMore)} ▸
+          </a>
+        </p>
+      </div>
+    `
 
     return (
       <div className="wallet">
@@ -109,7 +157,7 @@ class WalletCard extends Component {
             <a href={`https://erc725.originprotocol.com/#/identity/${identityAddress}`} target="_blank">Identity Contract Detail</a>
           </div>
         */}
-        {address === web3Account && (
+        {ethBalance !== undefined && (
           <Fragment>
             <hr className="dark sm" />
             <div className="balances">
@@ -158,7 +206,23 @@ class WalletCard extends Component {
                 )}
               </div>
               <div className="d-flex align-items-start">
-                <img src="images/ogn-icon.svg" role="presentation" />
+                {!withBalanceTooltip &&
+                  <img src="images/ogn-icon.svg" role="presentation" />
+                }
+                {withBalanceTooltip &&
+                  <a className="ogn-balance"
+                    data-toggle="tooltip"
+                    data-placement="left"
+                    data-trigger="hover focus"
+                    data-title={balanceTooltip}
+                    data-animation={true}
+                    data-html={true}
+                    data-container="body"
+                    data-delay='{"show":"0", "hide":"5000"}'
+                  >
+                    <img src="images/ogn-icon.svg" role="presentation" />
+                  </a>
+                }
                 <div className="amounts">
                   <div className="ogn">
                     {`${Number(ognBalance).toLocaleString(undefined)}` || 0}&nbsp;
@@ -282,4 +346,4 @@ const matchDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   matchDispatchToProps
-)(WalletCard)
+)(injectIntl(WalletCard))

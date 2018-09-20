@@ -25,15 +25,21 @@ class MyListings extends Component {
   }
 
   componentDidMount() {
-    if (!web3.givenProvider || !this.props.web3Account) {
+    if (this.props.web3Account) {
+      this.loadListings()
+    } else if (!web3.givenProvider) {
       this.props.storeWeb3Intent('view your listings')
     }
   }
 
-  /*
-  * WARNING: These functions don't actually return what they might imply.
-  * They use return statements to chain together async calls. Oops.
-  */
+  componentDidUpdate(prevProps) {
+    const { web3Account } = this.props
+
+    // on account change
+    if (web3Account && web3Account !== prevProps.web3Account) {
+      this.loadListings()
+    }
+  }
 
   async loadListings() {
     try {
@@ -43,19 +49,14 @@ class MyListings extends Component {
       })
       const listings = await Promise.all(
         ids.map(id => {
-          return getListing(id)
+          return getListing(id, true)
         })
       )
-      this.setState({ listings })
+
+      this.setState({ listings, loading: false })
     } catch (error) {
       console.error('Error fetching listing ids')
     }
-  }
-
-  async componentWillMount() {
-    await this.loadListings()
-
-    this.setState({ loading: false })
   }
 
   handleProcessing(processing) {
