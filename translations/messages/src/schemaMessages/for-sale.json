@@ -206,5 +206,25 @@
   {
     "id": "schema.forSale.wanted",
     "defaultMessage": "Wanted"
+  },
+  {
+    "id": "schema.forSale.packageItem",
+    "defaultMessage": "Package the item"
+  },
+  {
+    "id": "schema.forSale.shipItem",
+    "defaultMessage": "Ship the item to the buyer"
+  },
+  {
+    "id": "schema.forSale.messageBuyer",
+    "defaultMessage": "Message the buyer with an update"
+  },
+  {
+    "id": "schema.forSale.rateBuyer",
+    "defaultMessage": "Give the buyer a review"
+  },
+  {
+    "id": "schema.forSale.sellerSteps",
+    "defaultMessage": "Fulfillment Checklist"
   }
 ]

@@ -148,6 +148,18 @@
     "defaultMessage": "Review"
   },
   {
+    "id": "purchase-detail.hideSellerSteps",
+    "defaultMessage": "Hide Fulfillment Checklist"
+  },
+  {
+    "id": "purchase-detail.showSellerSteps",
+    "defaultMessage": "Show Fulfillment Checklist"
+  },
+  {
+    "id": "purchase-detail.fulfillmentChecklist",
+    "defaultMessage": "Fulfillment Checklist"
+  },
+  {
     "id": "purchase-detail.transactionHistoryHeading",
     "defaultMessage": "Transaction History"
   },

@@ -76,9 +76,9 @@ class MessagingProvider extends Component {
     // detect new decrypted messages
     origin.messaging.events.on('msg', obj => {
       if (obj.decryption) {
-        const { roomId, sharedKeys } = obj.decryption
+        const { roomId, keys } = obj.decryption
 
-        origin.messaging.initRoom(roomId, sharedKeys)
+        origin.messaging.initRoom(roomId, keys)
       }
 
       this.props.addMessage(obj)

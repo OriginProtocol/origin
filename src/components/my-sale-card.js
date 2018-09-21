@@ -96,9 +96,8 @@ class MySaleCard extends Component {
                 <p className="price">
                   <FormattedMessage
                     id={'my-sale-card.price'}
-                    defaultMessage={'Price: {price}'}
-                    values={{ price }}
-                  />
+                    defaultMessage={'Price'}
+                  />:&nbsp;{Number(price).toLocaleString(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 5 })}
                 </p>
                 {/* Not Yet Relevant */}
                 {/*<p className="quantity">Quantity: {quantity.toLocaleString()}</p>*/}

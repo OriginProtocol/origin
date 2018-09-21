@@ -161,8 +161,8 @@ class ListingsDetail extends Component {
 
   render() {
     const {
-      boostLevel,
-      boostValue,
+      // boostLevel,
+      // boostValue,
       category,
       currentProvider,
       description,
@@ -311,14 +311,14 @@ class ListingsDetail extends Component {
                         />
                       </span>
                     )}
-                    {boostValue > 0 && (
+                    {/*boostValue > 0 && (
                       <span className={`boosted badge boost-${boostLevel}`}>
                         <img
                           src="images/boost-icon-arrow.svg"
                           role="presentation"
                         />
                       </span>
-                    )}
+                    )*/}
                   </div>
                 )}
               </div>

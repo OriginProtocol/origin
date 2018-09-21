@@ -13,7 +13,7 @@
   },
   {
     "id": "my-sale-card.price",
-    "defaultMessage": "Price: {price}"
+    "defaultMessage": "Price"
   },
   {
     "id": "my-sale-card.nextStep1",

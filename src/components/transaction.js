@@ -58,31 +58,35 @@ class Transaction extends Component {
     const { seller } = listing
 
     switch (transactionTypeKey) {
-    case 'acceptOffer':
+    case 'createListing':
       fromAddress = seller
-      toAddress = buyer
+      break
+    case 'closeListing':
+      fromAddress = seller
       break
     case 'makeOffer':
       fromAddress = buyer
       toAddress = seller
       break
-    case 'closeListing':
-      fromAddress = seller
-      break
-    case 'completePurchase':
-      fromAddress = buyer
-      toAddress = seller
-      break
-    case 'createListing':
-      fromAddress = seller
-      break
-    case 'reviewSale':
+    case 'acceptOffer':
       fromAddress = seller
       toAddress = buyer
       break
     case 'initiateDispute':
       fromAddress = web3Account
       toAddress = web3Account === seller ? buyer : seller
+      break
+    case 'completePurchase':
+      fromAddress = buyer
+      toAddress = seller
+      break
+    case 'withdrawOffer':
+      fromAddress = web3Account
+      toAddress = web3Account === seller ? buyer : seller
+      break
+    case 'reviewSale':
+      fromAddress = seller
+      toAddress = buyer
       break
     }
 

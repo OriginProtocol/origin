@@ -13,9 +13,6 @@ import { LISTINGS_PER_PAGE } from 'components/constants'
 class ListingsGrid extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      listingsPerPage: LISTINGS_PER_PAGE
-    }
 
     this.handleOnChange = this.handleOnChange.bind(this)
   }
@@ -32,29 +29,27 @@ class ListingsGrid extends Component {
   }
 
   render() {
-    const { listingsPerPage } = this.state
     const { contractFound, listingIds, search } = this.props
 
     // const pinnedListingIds = [0, 1, 2, 3, 4]
     // const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
-    
-    const activePage = this.props.match.params.activePage || 1 
-    let allListingsLength, usedListingIds
-    if (this.props.renderMode === 'home-page'){
-      usedListingIds = listingIds
-      allListingsLength = usedListingIds.length
-      // else render mode === search
-    } else {
-      usedListingIds = search.listingIds
-      
-      allListingsLength = search.listingsLength
-    }
 
-    // Calc listings to show for given page
-    const showListingsIds = usedListingIds.slice(
-      listingsPerPage * (activePage - 1),
-      listingsPerPage * activePage
-    )
+    let allListingsLength, activePage, showListingsIds
+    if (this.props.renderMode === 'home-page'){
+      allListingsLength = listingIds.length
+      activePage = this.props.match.params.activePage || 1 
+
+      // Calc listings to show for given page
+      showListingsIds = listingIds.slice(
+        LISTINGS_PER_PAGE * (activePage - 1),
+        LISTINGS_PER_PAGE * activePage
+      )
+
+    } else if (this.props.renderMode === 'search'){
+      activePage = this.props.searchPage 
+      allListingsLength = search.listingsLength
+      showListingsIds = search.listingIds
+    }
 
     return (
       <div className="listings-wrapper">
@@ -99,7 +94,7 @@ class ListingsGrid extends Component {
             </div>
             <Pagination
               activePage={parseInt(activePage)}
-              itemsCountPerPage={listingsPerPage}
+              itemsCountPerPage={LISTINGS_PER_PAGE}
               totalItemsCount={allListingsLength}
               pageRangeDisplayed={5}
               onChange={this.handleOnChange}

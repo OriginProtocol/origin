@@ -56,6 +56,7 @@ class ListingCreate extends Component {
 
     this.state = {
       step: this.STEP.PICK_SCHEMA,
+      selectedBoostAmount: props.wallet.ognBalance ? defaultBoostValue : 0,
       selectedSchemaType: null,
       selectedSchema: null,
       translatedSchema: null,
@@ -93,10 +94,19 @@ class ListingCreate extends Component {
     this.updateUsdPrice = this.updateUsdPrice.bind(this)
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     // conditionally show boost tutorial
     if (!this.state.showBoostTutorial) {
       this.detectNeedForBoostTutorial()
+    }
+
+    const { ognBalance } = this.props.wallet
+    // apply OGN detection to slider
+    if (ognBalance !== prevProps.wallet.ognBalance) {
+      // only if prior to boost selection step
+      this.state.step < this.STEP.BOOST && this.setState({
+        selectedBoostAmount: ognBalance ? defaultBoostValue : 0
+      })
     }
   }
 
@@ -141,6 +151,9 @@ class ListingCreate extends Component {
         }
         this.uiSchema = {
           examples: {
+            'ui:widget': 'hidden'
+          },
+          sellerSteps: {
             'ui:widget': 'hidden'
           },
           price: {
@@ -253,7 +266,8 @@ class ListingCreate extends Component {
           boostValue,
           boostLevel
         }
-      }
+      },
+      selectedBoostAmount: boostValue
     })
   }
 
@@ -294,6 +308,7 @@ class ListingCreate extends Component {
         ...transactionReceipt,
         transactionTypeKey: 'createListing'
       })
+      this.props.getOgnBalance()
       this.setState({ step: this.STEP.SUCCESS })
     } catch (error) {
       console.error(error)
@@ -321,6 +336,7 @@ class ListingCreate extends Component {
       currentProvider,
       formListing,
       isBoostExpanded,
+      selectedBoostAmount,
       selectedSchema,
       selectedSchemaType,
       schemaExamples,
@@ -330,9 +346,7 @@ class ListingCreate extends Component {
       showBoostTutorial,
     } = this.state
     const { formData } = formListing
-    const translatedFormData =
-      (formData && formData.category && translateListingCategory(formData)) ||
-      {}
+    const translatedCategory = translateListingCategory(formData.category)
 
     return (
       <div className="container listing-form">
@@ -385,7 +399,7 @@ class ListingCreate extends Component {
                 </div>
                 <div className="btn-container">
                   <button
-                    className="float-right btn btn-primary"
+                    className="float-right btn btn-primary btn-listing-create"
                     onClick={() => this.goToDetailsStep()}
                   >
                     <FormattedMessage
@@ -425,7 +439,7 @@ class ListingCreate extends Component {
                   <div className="btn-container">
                     <button
                       type="button"
-                      className="btn btn-other"
+                      className="btn btn-other btn-listing-create"
                       onClick={() =>
                         this.setState({ step: this.STEP.PICK_SCHEMA })
                       }
@@ -437,7 +451,7 @@ class ListingCreate extends Component {
                     </button>
                     <button
                       type="submit"
-                      className="float-right btn btn-primary"
+                      className="float-right btn btn-primary btn-listing-create"
                     >
                       <FormattedMessage
                         id={'continueButtonLabel'}
@@ -499,6 +513,7 @@ class ListingCreate extends Component {
                   <BoostSlider
                     onChange={ this.setBoost }
                     ognBalance={ wallet.ognBalance }
+                    selectedBoostAmount={ selectedBoostAmount }
                   />
                 }
                 <div className="btn-container">
@@ -522,7 +537,7 @@ class ListingCreate extends Component {
               </div>
             )}
             {step >= this.STEP.PREVIEW && (
-              <div className="col-md-6 col-lg-5 listing-preview">
+              <div className="col-md-7 col-lg-8 listing-preview">
                 <label className="create-step">
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
@@ -542,7 +557,7 @@ class ListingCreate extends Component {
                       <p className="label">Title</p>
                     </div>
                     <div className="col-md-9">
-                      <p>{translatedFormData.name}</p>
+                      <p>{formData.name}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -550,7 +565,7 @@ class ListingCreate extends Component {
                       <p className="label">Category</p>
                     </div>
                     <div className="col-md-9">
-                      <p>{translatedFormData.category}</p>
+                      <p>{translatedCategory}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -558,7 +573,7 @@ class ListingCreate extends Component {
                       <p className="label">Description</p>
                     </div>
                     <div className="col-md-9">
-                      <p>{translatedFormData.description}</p>
+                      <p>{formData.description}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -566,7 +581,7 @@ class ListingCreate extends Component {
                       <p className="label">Location</p>
                     </div>
                     <div className="col-md-9">
-                      <p>{translatedFormData.location}</p>
+                      <p>{formData.location}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -574,8 +589,8 @@ class ListingCreate extends Component {
                       <p className="label">Photos</p>
                     </div>
                     <div className="col-md-9 photo-row">
-                      {translatedFormData.pictures &&
-                        translatedFormData.pictures.map((dataUri, idx) => (
+                      {formData.pictures &&
+                        formData.pictures.map((dataUri, idx) => (
                           <img src={dataUri} role="presentation" key={idx} />
                         ))}
                     </div>
@@ -592,7 +607,7 @@ class ListingCreate extends Component {
                           role="presentation"
                         />
                         <span className="text-bold">
-                          {translatedFormData.price}
+                          {Number(formData.price).toLocaleString(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 5 })}
                         </span>&nbsp;
                         <a
                           className="eth-abbrev"
@@ -623,7 +638,7 @@ class ListingCreate extends Component {
                           role="presentation"
                         />
                         <span className="text-bold">
-                          {translatedFormData.boostValue}
+                          {formData.boostValue}
                         </span>&nbsp;
                         <a
                           className="ogn-abbrev"
@@ -634,7 +649,7 @@ class ListingCreate extends Component {
                           OGN
                         </a>
                         <span className="help-block">
-                          &nbsp;| {translatedFormData.boostLevel.toUpperCase()}
+                          &nbsp;| {formData.boostLevel.toUpperCase()}
                         </span>
                       </p>
                     </div>
@@ -674,9 +689,10 @@ class ListingCreate extends Component {
                 </div>
               </div>
             )}
-            <div className="pt-xs-4 pt-sm-4 col-md-5 offset-md-1 col-lg-4 offset-lg-3">
+            <div className={`pt-xs-4 pt-sm-4 col-md-5 col-lg-4${step >= this.STEP.PREVIEW ? '' : ' offset-md-1 offset-lg-3'}`}>
               <WalletCard
                 wallet={wallet}
+                withBalanceTooltip={!this.props.wallet.ognBalance}
                 withMenus={true}
                 withProfile={false}
               />
