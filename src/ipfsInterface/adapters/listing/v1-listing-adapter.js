@@ -81,9 +81,6 @@ export default class ListingAdapterV1 extends AdapterBase {
       listing.commission = ipfsData.commission
         ? new Money(ipfsData.commission)
         : null
-      listing.securityDeposit = ipfsData.securityDeposit
-        ? new Money(ipfsData.securityDeposit)
-        : null
     } else if (listing.type === 'fractional') {
       // TODO(franck): fill this in.
     } else {

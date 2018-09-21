@@ -151,9 +151,6 @@
     },
     "commission": {
       "$ref": "#/definitions/money"
-    },
-    "securityDeposit": {
-      "$ref": "#/definitions/money"
     }
   },
   "listingType": {
