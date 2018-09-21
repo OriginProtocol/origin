@@ -175,7 +175,7 @@
   "my-sale-card.ethereumCurrencyAbbrev": "ETH",
   "my-sale-card.unnamedUser": "Adsız Kullanıcı",
   "my-sale-card.buyerNameLink": "{linkToBuyer}satıldı",
-  "my-sale-card.price": "Fiyatı: {price}",
+  "my-sale-card.price": "Fiyat",
   "my-sale-card.nextStep1": "{nextStep} Siparişi alıcıya gönder",
   "my-sale-card.nextStep2": "{nextStep} Alıcının sipariş almasını bekleyin",
   "my-sale-card.nextStep3": "{nextStep} Para çekmek",
