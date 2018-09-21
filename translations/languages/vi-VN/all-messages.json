@@ -175,7 +175,7 @@
   "my-sale-card.ethereumCurrencyAbbrev": "ETH",
   "my-sale-card.unnamedUser": "Người dùng vô danh",
   "my-sale-card.buyerNameLink": "bán cho {linkToBuyer}",
-  "my-sale-card.price": "Giá: {giá}",
+  "my-sale-card.price": "Giá",
   "my-sale-card.nextStep1": "{nextStep} Gửi lệnh cho người mua",
   "my-sale-card.nextStep2": "{nextStep} Chờ người mua nhận được lệnh",
   "my-sale-card.nextStep3": "{nextStep} Rút tiền",
