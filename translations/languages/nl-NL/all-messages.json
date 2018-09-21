@@ -175,7 +175,7 @@
   "my-sale-card.ethereumCurrencyAbbrev": "ETH",
   "my-sale-card.unnamedUser": "Anonieme gebruiker",
   "my-sale-card.buyerNameLink": "verkocht aan {linkToBuyer}",
-  "my-sale-card.price": "Prijs: {price}",
+  "my-sale-card.price": "Prijs",
   "my-sale-card.nextStep1": "{nextStep} Verzend de bestelling naar de koper",
   "my-sale-card.nextStep2": "{nextStep} Wachten op ontvangst koper",
   "my-sale-card.nextStep3": "{nextStep} Geld opnemen",
