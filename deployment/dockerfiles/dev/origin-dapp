@@ -32,6 +32,7 @@ ENV BRIDGE_SERVER_DOMAIN=bridge.dev.originprotocol.com \
     IPFS_GATEWAY_PORT=443 \
     IPFS_GATEWAY_PROTOCOL=https \
     IPFS_SWARM=/dnsaddr/messaging.staging.originprotocol.com/tcp/443/wss/ipfs/QmTVmwSe6mEnxXEXpZjinUr44uzaL8ShKYcFAaeqEd2HYd \
+    ARBITRATOR_ACCOUNT=0xD3EA37cFE79D0c474D7941bA5D8C2bda5A72Deed \
     MESSAGING_ACCOUNT=0xcEB59C583Cb09694606189E9E558D001D308A08B \
     PROVIDER_URL=https://rinkeby.infura.io/emIXjs9eDuy57IlTYsIP \
     MESSAGING_NAMESPACE=origin:dev

@@ -16,6 +16,7 @@ ENV BRIDGE_SERVER_DOMAIN=bridge.prod.originprotocol.com \
     IPFS_API_PORT=443 \
     IPFS_SWARM=/dnsaddr/messaging.prod.originprotocol.com/tcp/443/wss/ipfs/QmW29MGfWVWWuxcAtUGENEv3uaLRJWgxjznRs3kw7ed79N \
     MESSAGING_ACCOUNT=0xcEB59C583Cb09694606189E9E558D001D308A08B \
+    ARBITRATOR_ACCOUNT=WE_SHALL_DEFINE_THIS_BEFORE_MAINNET_LAUNCH \
     PROVIDER_URL=https://rinkeby.infura.io/emIXjs9eDuy57IlTYsIP \
     MESSAGING_NAMESPACE=origin
 
