@@ -175,7 +175,7 @@
   "my-sale-card.ethereumCurrencyAbbrev": "eth",
   "my-sale-card.unnamedUser": "নামহীন ব্যবহারকারী",
   "my-sale-card.buyerNameLink": "বিক্রি {linkToBuyer}",
-  "my-sale-card.price": "মূল্য: {price}",
+  "my-sale-card.price": "মূল্য",
   "my-sale-card.nextStep1": "{nextStep} ক্রেতাকে অর্ডার পাঠান",
   "my-sale-card.nextStep2": "{nextStep} অপেক্ষা করুন ক্রেতা অর্ডার গ্রহণ করার জন্য",
   "my-sale-card.nextStep3": "{nextStep} তহবিল উত্তোলন",
