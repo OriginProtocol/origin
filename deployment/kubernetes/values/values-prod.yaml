@@ -1,7 +1,7 @@
 # origin-bridge
 bridgeImage: origin-bridge
 bridgeImageTag: 'b231dbcd'
-bridgeReplicas: 2
+bridgeReplicas: 1
 
 # origin-dapp
 dappImage: origin-dapp
