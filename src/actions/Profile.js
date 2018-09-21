@@ -82,6 +82,7 @@ export function deployProfile() {
       const user = await origin.users.set(userData)
       dispatch({ type: ProfileConstants.DEPLOY_SUCCESS, user })
     } catch (error) {
+      console.error('Error occurred deploying profile', error)
       dispatch({ type: ProfileConstants.DEPLOY_ERROR, error })
     }
   }
