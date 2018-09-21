@@ -42,7 +42,7 @@ spec:
           - name: IPFS_PORT
             value: "5001"
           - name: MESSAGING_NAMESPACE
-            value: "{{ .Release.Namespace }}"
+            value: "origin:{{ .Release.Namespace }}"
         resources:
           requests:
             memory: 1Gi
