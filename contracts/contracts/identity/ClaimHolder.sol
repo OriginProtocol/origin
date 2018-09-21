@@ -1,8 +1,9 @@
 pragma solidity ^0.4.24;
 
-import './ERC735.sol';
-import './KeyHolder.sol';
+import "./ERC735.sol";
+import "./KeyHolder.sol";
 import "./ClaimHolderLibrary.sol";
+
 
 contract ClaimHolder is KeyHolder, ERC735 {
 
@@ -57,7 +58,7 @@ contract ClaimHolder is KeyHolder, ERC735 {
 
     function getClaim(bytes32 _claimId)
         public
-        constant
+        view
         returns(
             uint256 topic,
             uint256 scheme,
@@ -72,7 +73,7 @@ contract ClaimHolder is KeyHolder, ERC735 {
 
     function getClaimIdsByTopic(uint256 _topic)
         public
-        constant
+        view
         returns(bytes32[] claimIds)
     {
         return claims.byTopic[_topic];

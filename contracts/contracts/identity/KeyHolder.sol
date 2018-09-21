@@ -1,7 +1,8 @@
 pragma solidity ^0.4.24;
 
-import './ERC725.sol';
-import './KeyHolderLibrary.sol';
+import "./ERC725.sol";
+import "./KeyHolderLibrary.sol";
+
 
 contract KeyHolder is ERC725 {
     KeyHolderLibrary.KeyHolderData keyHolderData;
