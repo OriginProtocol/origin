@@ -175,7 +175,7 @@
   "my-sale-card.ethereumCurrencyAbbrev": "ETH",
   "my-sale-card.unnamedUser": "Utilisateur Inconnu",
   "my-sale-card.buyerNameLink": "vendu à {linkToBuyer}",
-  "my-sale-card.price": "Prix : {price}",
+  "my-sale-card.price": "Prix ",
   "my-sale-card.nextStep1": "{nextStep} Envoyer la commande à l’acheteur",
   "my-sale-card.nextStep2": "{nextStep} En attente de réception de la commande par l'acheteur",
   "my-sale-card.nextStep3": "{nextStep} Retirer les fonds",
