@@ -175,7 +175,7 @@
   "my-sale-card.ethereumCurrencyAbbrev": "ETH",
   "my-sale-card.unnamedUser": "Ανώνυμος χρήστης",
   "my-sale-card.buyerNameLink": "πωλήθηκε σε {linkToBuyer}",
-  "my-sale-card.price": "Τιμή: {price}",
+  "my-sale-card.price": "Τιμή",
   "my-sale-card.nextStep1": "{nextStep} Στείλετε την παραγγελία σε αγοραστή",
   "my-sale-card.nextStep2": "{nextStep} Αναμονή για τον αγοραστή να παραλάβει την παραγγελία",
   "my-sale-card.nextStep3": "{nextStep} Ανάληψη κεφαλαίων",
