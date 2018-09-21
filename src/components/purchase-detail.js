@@ -859,7 +859,7 @@ class PurchaseDetail extends Component {
                 </div>
                 {nextStep && (
                   <div className="col-12">
-                    <div className="guidance text-center">
+                    <div className={`guidance text-center${areSellerStepsOpen ? ' with-seller-steps' : ''}`}>
                       <div className="triangles d-flex justify-content-between">
                         {[...Array(maxStep)].map((undef, i) => {
                           const count = i + 1
@@ -900,47 +900,6 @@ class PurchaseDetail extends Component {
                                 'Nothing for you to do at this time. Check back later.'
                               }
                             />
-                          }
-                        </div>
-                      }
-                      {showSellerSteps &&
-                        <div className="seller-steps">
-                          <div className="toggle-container">
-                            <p
-                              className="toggle-btn"
-                              onClick={() => this.setState({ areSellerStepsOpen: !areSellerStepsOpen })}>
-                              {areSellerStepsOpen ?
-                                <FormattedMessage
-                                  id={'purchase-detail.hideSellerSteps'}
-                                  defaultMessage={'Hide Fulfillment Checklist'}
-                                />
-                                :
-                                <FormattedMessage
-                                  id={'purchase-detail.showSellerSteps'}
-                                  defaultMessage={'Show Fulfillment Checklist'}
-                                />
-                              }
-                            </p>
-                          </div>
-                          {areSellerStepsOpen &&
-                            <div className="list-container">
-                              <p>
-                                <FormattedMessage
-                                  id={'purchase-detail.fulfillmentChecklist'}
-                                  defaultMessage={'Fulfillment Checklist'}
-                                />
-                              </p>
-                              <ol>
-                                { translatedSchema &&
-                                  translatedSchema.properties &&
-                                  translatedSchema.properties.sellerSteps &&
-                                  translatedSchema.properties.sellerSteps.enumNames &&
-                                  translatedSchema.properties.sellerSteps.enumNames.map(step =>
-                                    <li key={step}>{step}</li>
-                                  )
-                                }
-                              </ol>
-                            </div>
                           }
                         </div>
                       }
@@ -1000,6 +959,47 @@ class PurchaseDetail extends Component {
                               {b.text}
                             </button>
                           ))}
+                        </div>
+                      }
+                      {showSellerSteps &&
+                        <div className="seller-steps">
+                          <div className="toggle-container">
+                            <p
+                              className="toggle-btn"
+                              onClick={() => this.setState({ areSellerStepsOpen: !areSellerStepsOpen })}>
+                              {areSellerStepsOpen ?
+                                <FormattedMessage
+                                  id={'purchase-detail.hideSellerSteps'}
+                                  defaultMessage={'Hide Fulfillment Checklist'}
+                                />
+                                :
+                                <FormattedMessage
+                                  id={'purchase-detail.showSellerSteps'}
+                                  defaultMessage={'Show Fulfillment Checklist'}
+                                />
+                              }
+                            </p>
+                          </div>
+                          {areSellerStepsOpen &&
+                            <div className="list-container text-left">
+                              <p className="text-center">
+                                <FormattedMessage
+                                  id={'purchase-detail.fulfillmentChecklist'}
+                                  defaultMessage={'Fulfillment Checklist'}
+                                />
+                              </p>
+                              <ol>
+                                { translatedSchema &&
+                                  translatedSchema.properties &&
+                                  translatedSchema.properties.sellerSteps &&
+                                  translatedSchema.properties.sellerSteps.enumNames &&
+                                  translatedSchema.properties.sellerSteps.enumNames.map(step =>
+                                    <li key={step}>{step}</li>
+                                  )
+                                }
+                              </ol>
+                            </div>
+                          }
                         </div>
                       }
                       {link && (arbitrationIsAvailable || link.functionName !== 'handleProblem') &&

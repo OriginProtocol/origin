@@ -144,6 +144,10 @@
     "defaultMessage": "Nothing for you to do at this time. Check back later."
   },
   {
+    "id": "purchase-detail.reviewLabel",
+    "defaultMessage": "Review"
+  },
+  {
     "id": "purchase-detail.hideSellerSteps",
     "defaultMessage": "Hide Fulfillment Checklist"
   },
@@ -154,10 +158,6 @@
   {
     "id": "purchase-detail.fulfillmentChecklist",
     "defaultMessage": "Fulfillment Checklist"
-  },
-  {
-    "id": "purchase-detail.reviewLabel",
-    "defaultMessage": "Review"
   },
   {
     "id": "purchase-detail.transactionHistoryHeading",
