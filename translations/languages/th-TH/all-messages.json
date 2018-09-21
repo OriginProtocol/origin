@@ -175,7 +175,7 @@
   "my-sale-card.ethereumCurrencyAbbrev": "ผลประโยชน์ทับซ้อน",
   "my-sale-card.unnamedUser": "ผู้ใช้ที่ไม่มีชื่อ",
   "my-sale-card.buyerNameLink": "ขายให้กับ {linkToBuyer}",
-  "my-sale-card.price": "ราคา: {price}",
+  "my-sale-card.price": "ราคา",
   "my-sale-card.nextStep1": "{nextStep} ส่งคำสั่งซื้อไปยังผู้ซื้อ",
   "my-sale-card.nextStep2": "{nextStep} รอให้ผู้ซื้อได้รับคำสั่งซื้อ",
   "my-sale-card.nextStep3": "{nextStep} ถอนเงิน",
