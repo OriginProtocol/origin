@@ -175,7 +175,7 @@
   "my-sale-card.ethereumCurrencyAbbrev": "ETH",
   "my-sale-card.unnamedUser": "名前の無いユーザー",
   "my-sale-card.buyerNameLink": "{linkToBuyer} さんが購入しました",
-  "my-sale-card.price": "価格： {price}",
+  "my-sale-card.price": "価格：",
   "my-sale-card.nextStep1": "{nextStep} 買い手に商品を発送",
   "my-sale-card.nextStep2": "{nextStep} 商品が買い手に届くまでお待ちください",
   "my-sale-card.nextStep3": "{nextStep} 代金を出金してください",
