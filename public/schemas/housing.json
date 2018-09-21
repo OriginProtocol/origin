@@ -59,6 +59,16 @@
         "type": "string",
         "format": "data-url"
       }
+    },
+    "sellerSteps": {
+      "type": "string",
+      "title": "schema.housing.sellerSteps",
+      "enum": [
+        "schema.housing.sendInfo",
+        "schema.housing.ensureCleanliness",
+        "schema.housing.messageBuyer",
+        "schema.housing.rateBuyer"
+      ]
     }
   }
 }

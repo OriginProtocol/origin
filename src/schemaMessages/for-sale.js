@@ -208,5 +208,25 @@ export default defineMessages({
   'schema.forSale.wanted': {
     id: 'schema.forSale.wanted',
     defaultMessage: 'Wanted'
+  },
+  'schema.forSale.packageItem': {
+    id: 'schema.forSale.packageItem',
+    defaultMessage: 'Package the item'
+  },
+  'schema.forSale.shipItem': {
+    id: 'schema.forSale.shipItem',
+    defaultMessage: 'Ship the item to the buyer'
+  },
+  'schema.forSale.messageBuyer': {
+    id: 'schema.forSale.messageBuyer',
+    defaultMessage: 'Message the buyer with an update'
+  },
+  'schema.forSale.rateBuyer': {
+    id: 'schema.forSale.rateBuyer',
+    defaultMessage: 'Give the buyer a review'
+  },
+  'schema.forSale.sellerSteps': {
+    id: 'schema.forSale.sellerSteps',
+    defaultMessage: 'Fulfillment Checklist'
   }
 })

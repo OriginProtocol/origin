@@ -153,6 +153,9 @@ class ListingCreate extends Component {
           examples: {
             'ui:widget': 'hidden'
           },
+          sellerSteps: {
+            'ui:widget': 'hidden'
+          },
           price: {
             'ui:field': PriceField
           },
@@ -396,7 +399,7 @@ class ListingCreate extends Component {
                 </div>
                 <div className="btn-container">
                   <button
-                    className="float-right btn btn-primary"
+                    className="float-right btn btn-primary btn-listing-create"
                     onClick={() => this.goToDetailsStep()}
                   >
                     <FormattedMessage
@@ -436,7 +439,7 @@ class ListingCreate extends Component {
                   <div className="btn-container">
                     <button
                       type="button"
-                      className="btn btn-other"
+                      className="btn btn-other btn-listing-create"
                       onClick={() =>
                         this.setState({ step: this.STEP.PICK_SCHEMA })
                       }
@@ -448,7 +451,7 @@ class ListingCreate extends Component {
                     </button>
                     <button
                       type="submit"
-                      className="float-right btn btn-primary"
+                      className="float-right btn btn-primary btn-listing-create"
                     >
                       <FormattedMessage
                         id={'continueButtonLabel'}
@@ -604,7 +607,7 @@ class ListingCreate extends Component {
                           role="presentation"
                         />
                         <span className="text-bold">
-                          {formData.price}
+                          {Number(formData.price).toLocaleString(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 5 })}
                         </span>&nbsp;
                         <a
                           className="eth-abbrev"

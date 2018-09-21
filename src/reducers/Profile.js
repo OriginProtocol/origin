@@ -124,15 +124,15 @@ export default function Profile(state = initialState, action = {}) {
 
   case ProfileConstants.ADD_ATTESTATION:
     const toAdd = {}
-    if (action.attestation.claimType === 3) {
+    if (action.attestation.topic === 3) {
       toAdd.facebook = action.attestation
-    } else if (action.attestation.claimType === 4) {
+    } else if (action.attestation.topic === 4) {
       toAdd.twitter = action.attestation
-    } else if (action.attestation.claimType === 5) {
+    } else if (action.attestation.topic === 5) {
       toAdd.airbnb = action.attestation
-    } else if (action.attestation.claimType === 11) {
+    } else if (action.attestation.topic === 11) {
       toAdd.email = action.attestation
-    } else if (action.attestation.claimType === 10) {
+    } else if (action.attestation.topic === 10) {
       toAdd.phone = action.attestation
     }
     return changes({

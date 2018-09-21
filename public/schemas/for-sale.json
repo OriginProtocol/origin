@@ -92,6 +92,16 @@
         "type": "string",
         "format": "data-url"
       }
+    },
+    "sellerSteps": {
+      "type": "string",
+      "title": "schema.forSale.sellerSteps",
+      "enum": [
+        "schema.forSale.packageItem",
+        "schema.forSale.shipItem",
+        "schema.forSale.messageBuyer",
+        "schema.forSale.rateBuyer"
+      ]
     }
   }
 }

@@ -61,6 +61,16 @@
         "type": "string",
         "format": "data-url"
       }
+    },
+    "sellerSteps": {
+      "type": "string",
+      "title": "schema.tickets.sellerSteps",
+      "enum": [
+        "schema.tickets.packageItem",
+        "schema.tickets.shipItem",
+        "schema.tickets.messageBuyer",
+        "schema.tickets.rateBuyer"
+      ]
     }
   }
 }

@@ -1393,6 +1393,7 @@ a:hover {
 
 .btn-container {
   padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .btn {
@@ -2884,6 +2885,11 @@ select.form-control:not([size]):not([multiple]) {
   font-weight: bold;
 }
 
+.btn-listing-create {
+  width: 156px;
+  margin-bottom: 1rem;
+}
+
 /* OGN Balance Tooltip */
 .tooltip-balance-heading {
   font-weight: 800;
@@ -3392,6 +3398,57 @@ form .stars img {
 
 .purchase-detail .conversation {
   height: 400px;
+}
+
+.guidance.with-seller-steps {
+  padding-bottom: 0;
+}
+
+.guidance.with-seller-steps .link-container {
+  background-color: var(--pale-grey-eight);
+  border-radius: 0 0 var(--default-radius) var(--default-radius);
+  margin: 0 -2rem;
+  padding: 0 0 2rem;
+}
+
+.seller-steps .toggle-btn {
+  color: var(--clear-blue);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.seller-steps .list-container {
+  background: var(--pale-grey-eight);
+  padding: 2rem;
+  margin: 0 -2rem;
+}
+
+.seller-steps .list-container p {
+  font-weight: bold;
+}
+
+.seller-steps .list-container ol {
+  counter-reset: aure-number;
+  display: inline-block;
+  list-style: none;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.seller-steps .list-container li {
+  counter-increment: aure-number;
+  margin-top: 1rem;
+  padding-left: 0.5rem;
+}
+
+.seller-steps .list-container li:before {
+  background-color: var(--dark);
+  border-radius: 50%;
+  color: white;
+  content: counter(aure-number);
+  font-weight: bold;
+  margin-right: 10px;
+  padding: 0.1875rem 0.5rem;
 }
 
 /* Reviews */
@@ -4780,12 +4837,15 @@ a:not([href]):not([tabindex]).span-link {
   .onboarding .modal-dialog {
     margin: 1rem;
   }
+
   .onboarding-modal .row {
     margin-left: -4px;
   }
+
   .onboarding-modal .step-text {
     margin: auto 20px;
   }
+  
   .modal.getting-started {
     left: -17px;
     right: -14px;
@@ -4884,6 +4944,10 @@ a:not([href]):not([tabindex]).span-link {
     height: auto;
     overflow-y: scroll;
   }
+
+  .seller-steps .list-container ol {
+    padding-left: 5%;
+  }
 }
 
 /* md + */
@@ -4954,34 +5018,45 @@ a:not([href]):not([tabindex]).span-link {
     margin-bottom: -40px;
     top: -40px;
   }
+
   .error-content-section .images-container .mask {
     top: 20px;
   }
+
   .error-content-section .images-container {
     height: 50vw;
   }
+
   .error-content-section .images-container .mask {
     left: 0%;
     top: 10px;
     width: 100%;
   }
+
   .error-content-section .images-container .code {
     right: 5%;
     width: 40%;
   }
+
   .error-content-section .images-container .blocks-1 {
     left: 50%;
     width: 30%;
   }
+
   .error-content-section .images-container .blocks-2 {
     right: 60%;
     top: 50%;
     width: 30%;
   }
+
   .error-content-section .images-container .dude {
     left: 39%;
     top: 36%;
     width: 8%;
+  }
+
+  .seller-steps .list-container ol {
+    padding-left: 10%;
   }
 }
 
@@ -5149,6 +5224,10 @@ a:not([href]):not([tabindex]).span-link {
   .sale .card-body .image-container {
     margin: 0;
   }
+
+  .seller-steps .list-container ol {
+    padding-left: 15%;
+  }
 }
 
 /* xl + */
@@ -5175,5 +5254,9 @@ a:not([href]):not([tabindex]).span-link {
 
   .navigation-bar .transactions .dropdown-menu {
     right: calc(((100% - 1140px) / 2) + 60px + 60px + 60px + 15px);
+  }
+
+  .seller-steps .list-container ol {
+    padding-left: 20%;
   }
 }
