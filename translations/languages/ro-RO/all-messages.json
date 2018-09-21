@@ -175,7 +175,7 @@
   "my-sale-card.ethereumCurrencyAbbrev": "ETH",
   "my-sale-card.unnamedUser": "Utilizator anonim",
   "my-sale-card.buyerNameLink": "vândute la {linkToBuyer}",
-  "my-sale-card.price": "Preț: {price}",
+  "my-sale-card.price": "Preț",
   "my-sale-card.nextStep1": "{nextStep} Trimite comanda la cumpărător",
   "my-sale-card.nextStep2": "{nextStep} În așteptarea primirii comenzii de către cumpărător",
   "my-sale-card.nextStep3": "{nextStep} Retragere fonduri",
