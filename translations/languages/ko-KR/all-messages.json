@@ -175,7 +175,7 @@
   "my-sale-card.ethereumCurrencyAbbrev": "ETH",
   "my-sale-card.unnamedUser": "익명 사용자",
   "my-sale-card.buyerNameLink": "{linkToBuyer} 로 판매",
-  "my-sale-card.price": "가격: {price}",
+  "my-sale-card.price": "가격",
   "my-sale-card.nextStep1": "{nextStep} 구매자에게 주문 보내기",
   "my-sale-card.nextStep2": "{nextStep} 구매자가 주문을 받는 것을 기다림",
   "my-sale-card.nextStep3": "{nextStep} 자금 인출",
