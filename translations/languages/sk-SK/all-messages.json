@@ -175,7 +175,7 @@
   "my-sale-card.ethereumCurrencyAbbrev": "ETH",
   "my-sale-card.unnamedUser": "Nepomenovaný používateľ",
   "my-sale-card.buyerNameLink": "predané na {linkToBuyer}",
-  "my-sale-card.price": "Cena: {price}",
+  "my-sale-card.price": "cena",
   "my-sale-card.nextStep1": "{nextStep} Odoslať objednávku kupujúcemu",
   "my-sale-card.nextStep2": "{nextStep} Počkajte na to, aby kupujúci dostal objednávku",
   "my-sale-card.nextStep3": "{nextStep} Stiahnite si finančné prostriedky",
