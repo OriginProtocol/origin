@@ -13,8 +13,6 @@ import { LISTINGS_PER_PAGE } from 'components/constants'
 class ListingsGrid extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-    }
 
     this.handleOnChange = this.handleOnChange.bind(this)
   }
