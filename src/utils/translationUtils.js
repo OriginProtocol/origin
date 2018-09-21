@@ -38,6 +38,7 @@ import vi from 'react-intl/locale-data/vi'
 import zh from 'react-intl/locale-data/zh'
 import schemaMessages from '../schemaMessages/index'
 import localeCode from 'locale-code'
+import { dashToCamelCase } from 'utils/listing'
 
 let globalIntlProvider
 
@@ -253,7 +254,7 @@ export function translateSchema(schemaJson, schemaType) {
   // Copy the schema so we don't modify the original
   const schema = JSON.parse(JSON.stringify(schemaJson))
   const properties = schema.properties
-  schemaType = schemaType === 'for-sale' ? 'forSale' : schemaType
+  schemaType = dashToCamelCase(schemaType)
 
   if (schema.description) {
     schema.description = globalIntlProvider.formatMessage(
