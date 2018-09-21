@@ -56,7 +56,7 @@ class BoostSlider extends Component {
           title={
             `<div class="boost-tooltip">
               <p>A boost increases the visibility of your listing and also works as a guarantee in case something goes wrong.</p>
-              <a href="#" target="_blank" rel="noopener noreferrer">Learn More</a>
+              <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">Learn More</a>
             </div>`
           } />
         <div className="level-container">
@@ -69,7 +69,7 @@ class BoostSlider extends Component {
             <p>
               <img src="images/ogn-icon.svg" role="presentation" />
               { this.props.selectedBoostAmount }&nbsp;
-              <a href="#" target="_blank" rel="noopener noreferrer">OGN</a>
+              <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">OGN</a>
               {/* <span className="help-block"> | { this.state.selectedBoostAmountUsd } USD</span> */}
             </p>
           </div>
@@ -84,7 +84,7 @@ class BoostSlider extends Component {
         <p className="text-italics">{ boostLevels[boostLevel].desc }</p>
         {ognBalance === 0 &&
           <div className="info-box">
-            <p>You have 0 <a href="#" target="_blank" rel="noopener noreferrer">OGN</a> in your wallet and cannot boost.</p>
+          <p>You have 0 <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">OGN</a> in your wallet and cannot boost.</p>
           </div>
         }
         {ognBalance > 0 && ognBalance < this.props.selectedBoostAmount &&
@@ -103,10 +103,10 @@ class BoostSlider extends Component {
         }
         <p className="help-block bottom-explainer">
           Boosts are always calculated and charged in&nbsp;
-          <a href="#" target="_blank" rel="noopener noreferrer">
+          <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">
             OGN
           </a>.&nbsp;
-          <a href="#" target="_blank" rel="noopener noreferrer">
+          <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">
             Learn more &#x25b8;
           </a>
         </p>
