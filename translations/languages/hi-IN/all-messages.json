@@ -175,7 +175,7 @@
   "my-sale-card.ethereumCurrencyAbbrev": "ETH",
   "my-sale-card.unnamedUser": "अनाम उपयोगकर्ता",
   "my-sale-card.buyerNameLink": "{linkToBuyer}को बेचा गया",
-  "my-sale-card.price": "मूल्य: {price}",
+  "my-sale-card.price": "मूल्य",
   "my-sale-card.nextStep1": "{nextStep} खरीदार को आदेश भेजें",
   "my-sale-card.nextStep2": "{nextStep} खरीदार के आदेश प्राप्त करने के लिए प्रतीक्षा करें",
   "my-sale-card.nextStep3": "{nextStep} धन वापस लेना",
