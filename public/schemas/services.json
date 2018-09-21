@@ -64,6 +64,15 @@
         "type": "string",
         "format": "data-url"
       }
+    },
+    "sellerSteps": {
+      "type": "string",
+      "title": "schema.services.sellerSteps",
+      "enum": [
+        "schema.services.messageBuyer",
+        "schema.services.provideService",
+        "schema.services.rateBuyer"
+      ]
     }
   }
 }
