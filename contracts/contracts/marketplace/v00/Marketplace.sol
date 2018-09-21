@@ -90,7 +90,7 @@ contract V00_Marketplace is Ownable {
     )
         public returns (bool)
     {
-        require(msg.sender == address(tokenAddr), "token must call");
+        require(msg.sender == address(tokenAddr), "Token must call");
         _createListing(_seller, _ipfsHash, _deposit, _arbitrator);
         return true;
     }
@@ -105,7 +105,7 @@ contract V00_Marketplace is Ownable {
         private
     {
         /* require(_deposit > 0); // Listings must deposit some amount of Origin Token */
-        require(_arbitrator != 0x0, "must specify arbitrator");
+        require(_arbitrator != 0x0, "Must specify arbitrator");
 
         listings.push(Listing({
             seller: _seller,
@@ -136,7 +136,7 @@ contract V00_Marketplace is Ownable {
     )
         public returns (bool)
     {
-        require(msg.sender == address(tokenAddr), "token must call");
+        require(msg.sender == address(tokenAddr), "Token must call");
         _updateListing(_seller, listingID, _ipfsHash, _additionalDeposit);
         return true;
     }
@@ -148,7 +148,7 @@ contract V00_Marketplace is Ownable {
         uint _additionalDeposit // Additional deposit to add
     ) private {
         Listing storage listing = listings[listingID];
-        require(listing.seller == _seller, "seller must call");
+        require(listing.seller == _seller, "Seller must call");
 
         if (_additionalDeposit > 0) {
             tokenAddr.transferFrom(_seller, this, _additionalDeposit);
@@ -161,8 +161,8 @@ contract V00_Marketplace is Ownable {
     // @dev Listing arbitrator withdraws listing. IPFS hash contains reason for withdrawl.
     function withdrawListing(uint listingID, address _target, bytes32 _ipfsHash) public {
         Listing storage listing = listings[listingID];
-        require(msg.sender == listing.arbitrator, "arbitrator required");
-        require(_target != 0x0, "no target");
+        require(msg.sender == listing.arbitrator, "Arbitrator required");
+        require(_target != 0x0, "No target");
         tokenAddr.transfer(_target, listing.deposit); // Send deposit to target
         delete listings[listingID]; // Remove data to get some gas back
         emit ListingWithdrawn(_target, listingID, _ipfsHash);
@@ -230,8 +230,8 @@ contract V00_Marketplace is Ownable {
     function acceptOffer(uint listingID, uint offerID, bytes32 _ipfsHash) public {
         Listing storage listing = listings[listingID];
         Offer storage offer = offers[listingID][offerID];
-        require(msg.sender == listing.seller, "seller must accept");
-        require(offer.status == 1, "state != created");
+        require(msg.sender == listing.seller, "Seller must accept");
+        require(offer.status == 1, "status != created");
         require(
             listing.deposit >= offer.commission,
             "deposit must cover commission"
@@ -250,18 +250,18 @@ contract V00_Marketplace is Ownable {
         Offer storage offer = offers[listingID][offerID];
         require(
             msg.sender == offer.buyer || msg.sender == listing.seller,
-            "restricted to buyer or seller"
+            "Restricted to buyer or seller"
         );
         if (listing.seller == 0x0) { // If listing was withdrawn
             require(
                 offer.status == 1 || offer.status == 2,
-                "state not created or accepted"
+                "status not created or accepted"
             );
             if (offer.status == 2) { // Pay out commission if seller accepted offer then withdrew listing
                 payCommission(listingID, offerID);
             }
         } else {
-            require(offer.status == 1, "state != created");
+            require(offer.status == 1, "status != created");
         }
         refundBuyer(listingID, offerID);
         emit OfferWithdrawn(msg.sender, listingID, offerID, _ipfsHash);
@@ -271,8 +271,8 @@ contract V00_Marketplace is Ownable {
     // @dev Buyer adds extra funds to an accepted offer.
     function addFunds(uint listingID, uint offerID, bytes32 _ipfsHash, uint _value) public payable {
         Offer storage offer = offers[listingID][offerID];
-        require(msg.sender == offer.buyer, "buyer must call");
-        require(offer.status == 2, "state != accepted");
+        require(msg.sender == offer.buyer, "Buyer must call");
+        require(offer.status == 2, "status != accepted");
         if (address(offer.currency) == 0x0) { // Listing is in ETH
             require(
                 msg.value == _value,
@@ -296,15 +296,15 @@ contract V00_Marketplace is Ownable {
         if (now <= offer.finalizes) { // Only buyer can finalize before finalization window
             require(
                 msg.sender == offer.buyer,
-                "only buyer can finalize"
+                "Only buyer can finalize"
             );
         } else { // Allow both seller and buyer to finalize if finalization window has passed
             require(
                 msg.sender == offer.buyer || msg.sender == listing.seller,
-                "seller or buyer must finalize"
+                "Seller or buyer must finalize"
             );
         }
-        require(offer.status == 2, "state != accepted");
+        require(offer.status == 2, "status != accepted");
         paySeller(listingID, offerID); // Pay seller
         if (msg.sender == offer.buyer) { // Only pay commission if buyer is finalizing
             payCommission(listingID, offerID);
@@ -319,10 +319,10 @@ contract V00_Marketplace is Ownable {
         Offer storage offer = offers[listingID][offerID];
         require(
             msg.sender == offer.buyer || msg.sender == listing.seller,
-            "must be seller or buyer"
+            "Must be seller or buyer"
         );
-        require(offer.status == 2, "state != accepted");
-        require(now <= offer.finalizes, "already finalized");
+        require(offer.status == 2, "status != accepted");
+        require(now <= offer.finalizes, "Already finalized");
         offer.status = 3; // Set status to "Disputed"
         emit OfferDisputed(msg.sender, listingID, offerID, _ipfsHash);
     }
@@ -336,8 +336,8 @@ contract V00_Marketplace is Ownable {
         uint _refund
     ) public {
         Offer storage offer = offers[listingID][offerID];
-        require(msg.sender == offer.arbitrator, "must be arbitrator");
-        require(offer.status == 3, "state != disputed");
+        require(msg.sender == offer.arbitrator, "Must be arbitrator");
+        require(offer.status == 3, "status != disputed");
         require(_refund <= offer.value, "refund too high");
         offer.refund = _refund;
         if (_ruling & 1 == 1) {
@@ -358,9 +358,9 @@ contract V00_Marketplace is Ownable {
     function updateRefund(uint listingID, uint offerID, uint _refund, bytes32 _ipfsHash) public {
         Offer storage offer = offers[listingID][offerID];
         Listing storage listing = listings[listingID];
-        require(msg.sender == listing.seller, "seller must call");
-        require(offer.status == 2, "state != accepted");
-        require(_refund <= offer.value, "excessive refund");
+        require(msg.sender == listing.seller, "Seller must call");
+        require(offer.status == 2, "status != accepted");
+        require(_refund <= offer.value, "Excessive refund");
         offer.refund = _refund;
         emit OfferData(msg.sender, listingID, offerID, _ipfsHash);
     }
@@ -373,7 +373,7 @@ contract V00_Marketplace is Ownable {
         } else {
             require(
                 offer.currency.transfer(offer.buyer, offer.value),
-                "refund failed"
+                "Refund failed"
             );
         }
     }
@@ -390,11 +390,11 @@ contract V00_Marketplace is Ownable {
         } else {
             require(
                 offer.currency.transfer(offer.buyer, offer.refund),
-                "refund failed"
+                "Refund failed"
             );
             require(
                 offer.currency.transfer(listing.seller, value),
-                "transfer failed"
+                "Transfer failed"
             );
         }
     }
@@ -405,7 +405,7 @@ contract V00_Marketplace is Ownable {
         if (offer.affiliate != 0x0) {
             require(
                 tokenAddr.transfer(offer.affiliate, offer.commission),
-                "commission transfer failed"
+                "Commission transfer failed"
             );
         }
     }
@@ -426,10 +426,10 @@ contract V00_Marketplace is Ownable {
     // @dev Allow listing arbitrator to send deposit
     function sendDeposit(uint listingID, address target, uint value, bytes32 ipfsHash) public {
         Listing storage listing = listings[listingID];
-        require(listing.arbitrator == msg.sender, "arbitrator must call");
-        require(listing.deposit >= value, "value too high");
+        require(listing.arbitrator == msg.sender, "Arbitrator must call");
+        require(listing.deposit >= value, "Value too high");
         listing.deposit -= value;
-        require(tokenAddr.transfer(target, value), "transfer failed");
+        require(tokenAddr.transfer(target, value), "Transfer failed");
         emit ListingArbitrated(target, listingID, ipfsHash);
     }
 
