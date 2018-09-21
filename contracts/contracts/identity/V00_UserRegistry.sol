@@ -1,10 +1,11 @@
 pragma solidity ^0.4.24;
 
-import './ClaimHolderPresigned.sol';
+import "./ClaimHolderPresigned.sol";
 
 /// @title UserRegistry
 /// @dev Used to keep registry of user identifies
 /// @author Matt Liu <matt@originprotocol.com>, Josh Fraser <josh@originprotocol.com>, Stan James <stan@originprotocol.com>
+
 
 contract V00_UserRegistry {
     /*
@@ -26,7 +27,7 @@ contract V00_UserRegistry {
 
     /// @dev registerUser(): Add a user to the registry
     function registerUser()
-      public
+        public
     {
         users[tx.origin] = msg.sender;
         emit NewUser(tx.origin, msg.sender);
@@ -34,7 +35,7 @@ contract V00_UserRegistry {
 
     /// @dev clearUser(): Remove user from the registry
     function clearUser()
-      public
+        public
     {
         users[msg.sender] = 0;
     }

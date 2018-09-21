@@ -1,6 +1,6 @@
 const { spawn } = require('child_process')
 
-const testFormat = () => {
+const testJSFormat = () => {
   return new Promise((resolve, reject) => {
     const eslint = spawn('./node_modules/.bin/eslint', [
       'src/**/*.js',
@@ -9,15 +9,15 @@ const testFormat = () => {
       'scripts/**/*.js'
     ])
     eslint.stdout.on('data', data => {
-      reject(`Code formatter inspection failed:\n${String(data)}`)
+      reject(`JS formatter inspection failed:\n${String(data)}`)
     })
     eslint.on('exit', code => {
       if (code === 0) {
-        console.log('Code formatter inspection passed.')
+        console.log('JS formatter inspection passed.')
       }
       resolve()
     })
   })
 }
 
-module.exports = testFormat
+module.exports = testJSFormat

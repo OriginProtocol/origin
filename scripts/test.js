@@ -5,12 +5,15 @@ const deployContracts = require('./helpers/deploy-contracts')
 const testTruffle = require('./helpers/test-truffle')
 const startIpfs = require('./helpers/start-ipfs')
 const testJavascript = require('./helpers/test-javascript')
-const testFormat = require('./helpers/test-format')
+const testJSFormat = require('./helpers/test-js-format')
+const testSolidityFormat = require('./helpers/test-solidity-format')
 
 const start = async () => {
   try {
-    console.log(chalk`\n{bold.hex('#6e3bea') ⬢  Testing Formatting }\n`)
-    await testFormat()
+    console.log(chalk`\n{bold.hex('#6e3bea') ⬢  Testing JS Formatting }\n`)
+    await testJSFormat()
+    console.log(chalk`\n{bold.hex('#c63197') ⬢  Testing Solidity Formatting }\n`)
+    await testSolidityFormat()
     console.log(chalk`\n{bold.hex('#1a82ff') ⬢  Testing Smart Contracts }\n`)
     await testContracts()
     console.log(chalk`\n{bold.hex('#26d198') ⬢  Starting Local Blockchain }\n`)

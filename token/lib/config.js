@@ -1,6 +1,7 @@
 const HDWalletProvider = require('truffle-hdwallet-provider')
 const PrivateKeyProvider = require('truffle-privatekey-provider')
 
+const MAINNET_NETWORK_ID = '1'
 const ROPSTEN_NETWORK_ID = '3'
 const RINKEBY_NETWORK_ID = '4'
 const LOCAL_NETWORK_ID = '999'
@@ -37,6 +38,17 @@ function createProviders(networkIds) {
     let privateKey
 
     switch (networkId) {
+      case MAINNET_NETWORK_ID:
+        privateKey = process.env.MAINNET_PRIVATE_KEY
+        mnemonic = process.env.MAINNET_MNEMONIC
+        if (!privateKey && !mnemonic) {
+          throw 'Must have either MAINNET_PRIVATE_KEY or MAINNET_MNEMONIC env var'
+        }
+        if (!process.env.INFURA_ACCESS_TOKEN) {
+          throw 'Missing INFURA_ACCESS_TOKEN env var'
+        }
+        providerUrl = `https://mainnet.infura.io/${process.env.INFURA_ACCESS_TOKEN}`
+        break
       case ROPSTEN_NETWORK_ID:
         privateKey = process.env.ROPSTEN_PRIVATE_KEY
         mnemonic = process.env.ROPSTEN_MNEMONIC
@@ -80,7 +92,8 @@ function createProviders(networkIds) {
       console.log(`Network=${networkId} URL=${providerUrl} Using private key`)
       providers[networkId] = new PrivateKeyProvider(privateKey, providerUrl)
     } else {
-      console.log(`Network=${networkId} Url=${providerUrl} Mnemonic=${mnemonic}`)
+      const displayMnemonic = (networkId === LOCAL_NETWORK_ID) ? mnemonic : '[redacted]'
+      console.log(`Network=${networkId} Url=${providerUrl} Mnemonic=${displayMnemonic}`)
       providers[networkId] = new HDWalletProvider(mnemonic, providerUrl)
     }
   }

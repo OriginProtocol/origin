@@ -51,8 +51,8 @@ describe('Listing IpfsDataStore load', () => {
     const listing = await store.load(LISTING_DATA_TYPE, 'TestHash')
 
     expect(listing.type).to.equal('unit')
-    expect(listing.category).to.equal('ForSale')
-    expect(listing.subCategory).to.equal('Mushrooms')
+    expect(listing.category).to.equal('schema.forSale')
+    expect(listing.subCategory).to.equal('schema.forSale.mushrooms')
     expect(listing.language).to.equal('en-US')
     expect(listing.title).to.equal('my listing')
     expect(listing.description).to.equal('my description')

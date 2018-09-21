@@ -42,7 +42,10 @@ class Token extends ContractHelper {
    * @return {string} - Address contract was deployed to.
    */
   contractAddress(networkId) {
-    return this.config.contractAddress || TokenContract.networks[networkId].address
+    return (
+      this.config.contractAddress ||
+      (TokenContract.networks[networkId] && TokenContract.networks[networkId].address)
+    )
   }
 
   /*
@@ -56,6 +59,10 @@ class Token extends ContractHelper {
 
     // Create a token contract objects based on its ABI and address on the network.
     const contractAddress = this.contractAddress(networkId)
+    if (!contractAddress) {
+      console.error('ERROR: Could not get address of OriginToken contract!')
+      process.exit(1)
+    }
     return new web3.eth.Contract(TokenContract.abi, contractAddress)
   }
 
@@ -122,14 +129,14 @@ class Token extends ContractHelper {
     const transaction = contract.methods.pause()
     await this.sendTransaction(networkId, transaction, { from: sender })
 
-    await withRetries(this.retries, async () => {
+    await withRetries({ verbose: this.config.verbose }, async () => {
       if (
         !this.config.multisig &&
         await contract.methods.paused().call() !== true
       ) {
-        throw new Error('Token should be paused but is not')
+        throw new Error('Still waiting for token to be paused')
       }
-    }, this.config.verbose)
+    })
   }
 
   /**
@@ -149,14 +156,14 @@ class Token extends ContractHelper {
 
     const transaction = contract.methods.unpause()
     await this.sendTransaction(networkId, transaction, { from: sender })
-    await withRetries(this.retries, async () => {
+    await withRetries({ verbose: this.config.verbose }, async () => {
       if (
         !this.config.multisig &&
         await contract.methods.paused().call() !== false
       ) {
-        throw new Error('Token should be unpaused but is not')
+        throw new Error('Still waiting for token to be unpaused')
       }
-    }, this.config.verbose)
+    })
   }
 
   /**
