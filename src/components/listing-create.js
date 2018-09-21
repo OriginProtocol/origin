@@ -604,7 +604,7 @@ class ListingCreate extends Component {
                           role="presentation"
                         />
                         <span className="text-bold">
-                          {formData.price}
+                          {Number(formData.price).toLocaleString(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 5 })}
                         </span>&nbsp;
                         <a
                           className="eth-abbrev"
