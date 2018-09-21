@@ -1,9 +1,16 @@
 const listingSchemaMetadata = {
+  listingTypeAll: {
+    type: 'all',
+    translationName: {
+      id: 'searchbar.all',
+      defaultMessage: 'All'
+    }
+  },
   listingTypes: [
     {
       type: 'for-sale',
       translationName: {
-        id: 'listing-create.forSaleLabel',
+        id: 'schema.forSale',
         defaultMessage: 'For Sale'
       },
       img: 'for-sale.jpg'
@@ -11,7 +18,7 @@ const listingSchemaMetadata = {
     {
       type: 'housing',
       translationName: {
-        id: 'listing-create.housingLabel',
+        id: 'schema.housing',
         defaultMessage: 'Housing'
       },
       img: 'housing.jpg'
@@ -19,7 +26,7 @@ const listingSchemaMetadata = {
     {
       type: 'transportation',
       translationName: {
-        id: 'listing-create.transportation',
+        id: 'schema.transportation',
         defaultMessage: 'Transportation'
       },
       img: 'transportation.jpg'
@@ -27,7 +34,7 @@ const listingSchemaMetadata = {
     {
       type: 'tickets',
       translationName: {
-        id: 'listing-create.tickets',
+        id: 'schema.tickets',
         defaultMessage: 'Tickets'
       },
       img: 'tickets.jpg'
@@ -35,7 +42,7 @@ const listingSchemaMetadata = {
     {
       type: 'services',
       translationName: {
-        id: 'listing-create.services',
+        id: 'schema.services',
         defaultMessage: 'Services'
       },
       img: 'services.jpg'
@@ -43,7 +50,7 @@ const listingSchemaMetadata = {
     {
       type: 'announcements',
       translationName: {
-        id: 'listing-create.announcements',
+        id: 'schema.announcements',
         defaultMessage: 'Announcements'
       },
       img: 'announcements.jpg'

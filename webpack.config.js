@@ -4,16 +4,17 @@ const Dotenv = require('dotenv-webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const prepareMessagesPlugin = require('./translations/scripts/prepareMessagesPlugin')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
 const env = {
   ARBITRATOR_ACCOUNT: '',
-  CONTRACT_ADDRESSES: '{}',
   BRIDGE_SERVER_DOMAIN: '',
   BRIDGE_SERVER_PROTOCOL: 'https',
+  CONTRACT_ADDRESSES: '{}',
+  DISCOVERY_SERVER_URL: '',
   FORCE_HTTPS: false,
   IPFS_API_PORT: '',
   IPFS_DOMAIN: '',
@@ -46,23 +47,13 @@ var config = {
       },
       {
         test: /\.css$/,
-        use: isProduction
-          ? ExtractTextPlugin.extract({
-              fallback: 'style-loader',
-              use: [
-                {
-                  loader: 'css-loader',
-                  options: { minimize: true, sourceMap: false, url: false }
-                }
-              ]
-            })
-          : [
-              'style-loader',
-              {
-                loader: 'css-loader',
-                options: { url: false }
-              }
-            ]
+        use: [
+          isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
+          {
+            loader: 'css-loader',
+            options: { url: false }
+          }
+        ],
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
@@ -136,7 +127,10 @@ var config = {
 }
 
 if (isProduction) {
-  config.plugins.push(new ExtractTextPlugin('[name].[hash:8].css'))
+  config.plugins.push(new MiniCssExtractPlugin({
+    filename: '[name].[hash].css',
+    chunkFilename: '[id].[hash].css'
+  }))
 }
 
 module.exports = config

@@ -1393,6 +1393,7 @@ a:hover {
 
 .btn-container {
   padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .btn {
@@ -2882,6 +2883,83 @@ select.form-control:not([size]):not([multiple]) {
 
 .text-bold {
   font-weight: bold;
+}
+
+.btn-listing-create {
+  width: 156px;
+  margin-bottom: 1rem;
+}
+
+/* OGN Balance Tooltip */
+.tooltip-balance-heading {
+  font-weight: 800;
+  font-size: 18px;
+  color: white;
+}
+
+.ogn-balance {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.tooltip-balance-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+}
+
+.tooltip-align-left {
+  text-align: left;
+  margin-bottom: 0.7rem;
+}
+
+.tooltip-inner img.ogn-icon {
+  width: 18px;
+  height: 18px;
+  margin-bottom: 5px;
+  margin-left: 2px;
+}
+
+.ogn {
+  color: var(--clear-blue);
+}
+
+.tooltip .tooltip-inner .add-more-btn {
+  border-radius: 15px;
+  background-color: var(--dark-grey-blue);
+  border: solid 1px var(--clear-blue);
+  margin-right: 10px;
+  padding: 2px 5px 6px 1px;
+}
+
+.tooltip .tooltip-inner .add-more-text,
+.tooltip .tooltip-inner .add-more-text:hover {
+  color: var(--clear-blue);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.tooltip .tooltip-inner .add-more-icon {
+  width: 21px;
+  height: 21px;
+  margin: 1px 2px 0px 1px;
+}
+
+.recommended {
+  font-size: 12px;
+  color: var(--bluey-grey);
+}
+
+.tooltip .tooltip-inner a.learn-more {
+  color: var(--clear-blue);
+  font-size: 15px;
+}
+
+.bs-tooltip-left .arrow::before, .bs-tooltip-auto[x-placement^="left"] .arrow::before {
+    left: 0;
+    border-width: 0.4rem 0 0.4rem 0.4rem;
+    border-left-color: var(--dark-grey-blue);
+    border-top-color: transparent;
 }
 
 /* Sales */

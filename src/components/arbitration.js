@@ -55,13 +55,8 @@ class Arbitration extends Component {
       const listing = await getListing(purchase.listingId, true)
       const reviews = await origin.marketplace.getListingReviews(offerId)
       this.setState({
+        listing,
         purchase,
-        listing: {
-          ...listing,
-          boostAmount: 10,
-          boostLevel: 'Medium',
-          boostLevelIsPastSomeThreshold: !!Math.round(Math.random())
-        },
         reviews
       })
       await this.loadSeller(listing.seller)
@@ -95,10 +90,12 @@ class Arbitration extends Component {
   }
 
   validateUser() {
-    const { web3Account } = this.props
+    const { history, offerId, web3Account } = this.props
 
     if (web3Account && this.props.web3Account.toUpperCase() !== ARBITRATOR_ETH_ADDRESS.toUpperCase()) {
       alert(`⚠️ Warning:\nCurrent account (${this.props.web3Account}) is not equal to the ARBITRATOR_ACCOUNT environment variable (${ARBITRATOR_ETH_ADDRESS})`)
+
+      history.push(`/purchases/${offerId}`)
     }
   }
 
@@ -145,6 +142,8 @@ class Arbitration extends Component {
 
     const buyerConversationId = buyer.address && origin.messaging.generateRoomId(web3Account, buyer.address)
     const sellerConversationId = seller.address && origin.messaging.generateRoomId(web3Account, seller.address)
+    const participantsConversationId = buyer.address && seller.address && origin.messaging.generateRoomId(buyer.address, seller.address)
+    const participantsMessages = participantsConversationId ? messages.filter(({ content, conversationId }) => content && conversationId === participantsConversationId).sort((a, b) => (a.index < b.index ? -1 : 1)) : []
 
     return (
       <div className="purchase-detail">
@@ -168,11 +167,11 @@ class Arbitration extends Component {
                 {isSold &&
                   <span className="sold badge">Sold Out</span>
                 }
-                {listing.boostLevel &&
+                {/*listing.boostLevel &&
                   <span className={ `boosted badge boost-${listing.boostLevel}` }>
                     <img src="images/boost-icon-arrow.svg" role="presentation" />
                   </span>
-                }
+                */}
               </h1>
             </div>
           </div>
@@ -260,7 +259,7 @@ class Arbitration extends Component {
             </div>
           </div>
           <div className="row">
-            <div className="col-12 col-lg-8">
+            <div className="col-12 col-lg-6">
               {listing.id && (
                 <Fragment>
                   <h2>Listing Details</h2>
@@ -294,43 +293,63 @@ class Arbitration extends Component {
                 ))}
               </div>
             </div>
-          </div>
-          <div className="row">
-            {seller.address &&
-              <div className="col-12 col-md-6">
-                <UserCard
-                  title="Seller"
-                  listingId={listing.id}
-                  purchaseId={purchase.id}
-                  userAddress={seller.address}
-                />
+            <div className="col-12 col-lg-6">
+              <h2>Conversation</h2>
+              {!!participantsMessages.length &&
                 <div className="conversation-container">
                   <Conversation
-                    id={sellerConversationId}
-                    messages={messages.filter(({ content, conversationId }) => content && conversationId === sellerConversationId).sort((a, b) => (a.index < b.index ? -1 : 1))}
+                    id={participantsConversationId}
+                    messages={participantsMessages}
                   />
                 </div>
-                <button className="btn btn-lg btn-info mt-4" onClick={this.handleRuling}>Rule In Favor Of Seller</button>
-              </div>
-            }
-            {buyer.address &&
-              <div className="col-12 col-md-6">
-                <UserCard
-                  title="Buyer"
-                  listingId={listing.id}
-                  purchaseId={purchase.id}
-                  userAddress={buyer.address}
-                />
-                <div className="conversation-container">
-                  <Conversation
-                    id={origin.messaging.generateRoomId(web3Account, buyer.address)}
-                    messages={messages.filter(({ content, conversationId }) => content && conversationId === buyerConversationId).sort((a, b) => (a.index < b.index ? -1 : 1))}
-                  />
-                </div>
-                <button className="btn btn-lg btn-info mt-4" onClick={this.handleRuling}>Rule In Favor Of Buyer</button>
-              </div>
-            }
+              }
+              {!participantsMessages.length &&
+                <p>None exists between these two parties 🤐</p>
+              }
+            </div>
           </div>
+          <hr />
+          {purchase.status !== 'disputed' &&
+            <h2>This transaction is not in disputed status.</h2>
+          }
+          {purchase.status === 'disputed' &&
+            <div className="row">
+              {seller.address &&
+                <div className="col-12 col-md-6">
+                  <UserCard
+                    title="Seller"
+                    listingId={listing.id}
+                    purchaseId={purchase.id}
+                    userAddress={seller.address}
+                  />
+                  <div className="conversation-container">
+                    <Conversation
+                      id={sellerConversationId}
+                      messages={messages.filter(({ content, conversationId }) => content && conversationId === sellerConversationId).sort((a, b) => (a.index < b.index ? -1 : 1))}
+                    />
+                  </div>
+                  <button className="btn btn-lg btn-info mt-4" onClick={this.handleRuling}>Rule In Favor Of Seller</button>
+                </div>
+              }
+              {buyer.address &&
+                <div className="col-12 col-md-6">
+                  <UserCard
+                    title="Buyer"
+                    listingId={listing.id}
+                    purchaseId={purchase.id}
+                    userAddress={buyer.address}
+                  />
+                  <div className="conversation-container">
+                    <Conversation
+                      id={origin.messaging.generateRoomId(web3Account, buyer.address)}
+                      messages={messages.filter(({ content, conversationId }) => content && conversationId === buyerConversationId).sort((a, b) => (a.index < b.index ? -1 : 1))}
+                    />
+                  </div>
+                  <button className="btn btn-lg btn-info mt-4" onClick={this.handleRuling}>Rule In Favor Of Buyer</button>
+                </div>
+              }
+            </div>
+          }
         </div>
         {processing && (
           <Modal backdrop="static" isOpen={true}>

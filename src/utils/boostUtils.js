@@ -1,6 +1,6 @@
-export const defaultBoostValue = 500
+export const defaultBoostValue = 50
 export const minBoostValue = 0
-export const maxBoostValue = 1000
+export const maxBoostValue = 100
 const range = maxBoostValue - minBoostValue
 
 export const boostLevels = {

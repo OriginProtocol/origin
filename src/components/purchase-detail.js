@@ -443,11 +443,10 @@ class PurchaseDetail extends Component {
   }
 
   async rejectOffer() {
-    this.toggleModal('rejection')
-    alert('To Do')
+    this.withdrawOffer(() => this.toggleModal('rejection'))
   }
 
-  async withdrawOffer() {
+  async withdrawOffer(onSuccess) {
     const { offerId } = this.props
     const { purchase, listing } = this.state
     const offer = purchase
@@ -473,6 +472,8 @@ class PurchaseDetail extends Component {
         offer,
         listing
       })
+
+      onSuccess && onSuccess()
 
       this.setState({ processing: false })
     } catch (error) {
@@ -777,14 +778,14 @@ class PurchaseDetail extends Component {
                     />
                   </span>
                 )}
-                {!!listing.boostValue && (
+                {/*!!listing.boostValue && (
                   <span className={`boosted badge boost-${listing.boostLevel}`}>
                     <img
                       src="images/boost-icon-arrow.svg"
                       role="presentation"
                     />
                   </span>
-                )}
+                )*/}
               </h1>
             </div>
           </div>
