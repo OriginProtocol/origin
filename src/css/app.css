@@ -3322,6 +3322,32 @@ form .stars img {
   height: 400px;
 }
 
+.purchase-detail .seller-steps .toggle-btn {
+  color: var(--clear-blue);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.purchase-detail .seller-steps .list-container {
+  background: var(--pale-grey-eight);
+  padding: 2rem;
+  margin: 0 -2rem -2rem;
+}
+
+.purchase-detail .seller-steps .list-container p {
+  font-weight: bold;
+}
+
+.purchase-detail .seller-steps .list-container ol {
+  text-align: left;
+  display: inline-block;
+}
+
+.purchase-detail .seller-steps .list-container li {
+  margin-top: 1rem;
+  padding-left: 0.5rem;
+}
+
 /* Reviews */
 
 .review {

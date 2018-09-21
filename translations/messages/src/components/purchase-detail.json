@@ -140,6 +140,10 @@
     "defaultMessage": "Next Step:"
   },
   {
+    "id": "purchase-detail.nothingToDo",
+    "defaultMessage": "Nothing for you to do at this time. Check back later."
+  },
+  {
     "id": "purchase-detail.hideSellerSteps",
     "defaultMessage": "Hide Fulfillment Checklist"
   },
@@ -150,10 +154,6 @@
   {
     "id": "purchase-detail.fulfillmentChecklist",
     "defaultMessage": "Fulfillment Checklist"
-  },
-  {
-    "id": "purchase-detail.nothingToDo",
-    "defaultMessage": "Nothing for you to do at this time. Check back later."
   },
   {
     "id": "purchase-detail.reviewLabel",
