@@ -381,7 +381,7 @@ class ListingsDetail extends Component {
                 !!price &&
                 !!parseFloat(price) && (
                 <div className="buy-box placehold">
-                  <div className="price">
+                  <div className="price text-nowrap">
                     <img src="images/eth-icon.svg" role="presentation" />
                     {Number(price).toLocaleString(undefined, {
                       maximumFractionDigits: 5,
