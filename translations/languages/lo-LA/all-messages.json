@@ -175,7 +175,7 @@
   "my-sale-card.ethereumCurrencyAbbrev": "ETH",
   "my-sale-card.unnamedUser": "ຜູ້ໃຊ້ນາມແຝງ",
   "my-sale-card.buyerNameLink": "ຂາຍໄປ {linkToBuyer}",
-  "my-sale-card.price": "ລາຄາ: {price}",
+  "my-sale-card.price": "ລາຄາ",
   "my-sale-card.nextStep1": "{nextStep} ສົ່ງຄໍາສັ່ງໃຫ້ຜູ້ຊື້",
   "my-sale-card.nextStep2": "{nextStep} ລໍຖ້າຜູ້ຊື້ເພື່ອຮັບຄໍາສັ່ງ",
   "my-sale-card.nextStep3": "{nextStep} ຖອນເງິນ",
