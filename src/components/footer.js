@@ -171,7 +171,7 @@ class Footer extends Component {
                     </li>
                     <li>
                       <a
-                        href="https://originprotocol.com/developers"
+                        href="https://www.originprotocol.com/developers"
                         target="_blank"
                       >
                         <FormattedMessage
