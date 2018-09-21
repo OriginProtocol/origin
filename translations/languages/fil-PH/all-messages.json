@@ -175,7 +175,7 @@
   "my-sale-card.ethereumCurrencyAbbrev": "ETH",
   "my-sale-card.unnamedUser": "Walang pangalang user",
   "my-sale-card.buyerNameLink": "nabenta kay {linkToBuyer}",
-  "my-sale-card.price": "Presyo: {price}",
+  "my-sale-card.price": "Presyo",
   "my-sale-card.nextStep1": "{nextStep} ipadala ang order sa bumibili",
   "my-sale-card.nextStep2": "{nextStep} antayin ang bumibili na matanggap ang order",
   "my-sale-card.nextStep3": "{nextStep} mag-withdraw ng pondo",
