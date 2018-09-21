@@ -175,7 +175,7 @@
   "my-sale-card.ethereumCurrencyAbbrev": "ETH",
   "my-sale-card.unnamedUser": "Pengguna tanpa nama",
   "my-sale-card.buyerNameLink": "terjual untuk {linkToBuyer}",
-  "my-sale-card.price": "Harga: {price}",
+  "my-sale-card.price": "Harga",
   "my-sale-card.nextStep1": "{nextStep} Kirim pesanan kepada pembeli",
   "my-sale-card.nextStep2": "{nextStep} Tunggu penjual untuk menerima pesanan",
   "my-sale-card.nextStep3": "{nextStep} Tarik dana",
