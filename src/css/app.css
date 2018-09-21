@@ -1393,6 +1393,7 @@ a:hover {
 
 .btn-container {
   padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .btn {
@@ -2882,6 +2883,11 @@ select.form-control:not([size]):not([multiple]) {
 
 .text-bold {
   font-weight: bold;
+}
+
+.btn-listing-create {
+  width: 156px;
+  margin-bottom: 1rem;
 }
 
 /* OGN Balance Tooltip */

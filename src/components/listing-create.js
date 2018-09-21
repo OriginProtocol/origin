@@ -396,7 +396,7 @@ class ListingCreate extends Component {
                 </div>
                 <div className="btn-container">
                   <button
-                    className="float-right btn btn-primary"
+                    className="float-right btn btn-primary btn-listing-create"
                     onClick={() => this.goToDetailsStep()}
                   >
                     <FormattedMessage
@@ -436,7 +436,7 @@ class ListingCreate extends Component {
                   <div className="btn-container">
                     <button
                       type="button"
-                      className="btn btn-other"
+                      className="btn btn-other btn-listing-create"
                       onClick={() =>
                         this.setState({ step: this.STEP.PICK_SCHEMA })
                       }
@@ -448,7 +448,7 @@ class ListingCreate extends Component {
                     </button>
                     <button
                       type="submit"
-                      className="float-right btn btn-primary"
+                      className="float-right btn btn-primary btn-listing-create"
                     >
                       <FormattedMessage
                         id={'continueButtonLabel'}
