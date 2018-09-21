@@ -23,8 +23,9 @@ import UserCard from 'components/user-card'
 
 import TransactionEvent from 'pages/purchases/transaction-event'
 
-import { getListing } from 'utils/listing'
+import { getListing, camelCaseToDash } from 'utils/listing'
 import { offerStatusToStep } from 'utils/offer'
+import { translateSchema } from 'utils/translationUtils'
 
 import origin from '../services/origin'
 
@@ -46,7 +47,8 @@ const defaultState = {
   processing: false,
   purchase: {},
   reviews: [],
-  seller: {}
+  seller: {},
+  areSellerStepsOpen: true
 }
 
 class PurchaseDetail extends Component {
@@ -64,6 +66,7 @@ class PurchaseDetail extends Component {
     this.reviewSale = this.reviewSale.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
     this.withdrawOffer = this.withdrawOffer.bind(this)
+    this.getListingSchema = this.getListingSchema.bind(this)
     this.state = defaultState
 
     this.intlMessages = defineMessages({
@@ -245,7 +248,8 @@ class PurchaseDetail extends Component {
             text: this.props.intl.formatMessage(
               this.intlMessages.reportProblem
             )
-          }
+          },
+          showSellerSteps: true
         }
       },
       disputed: {
@@ -317,12 +321,28 @@ class PurchaseDetail extends Component {
         purchase,
         reviews
       })
+      if (listing) {
+        this.getListingSchema()
+      }
       await this.loadSeller(listing.seller)
       await this.loadBuyer(purchase.buyer)
     } catch (error) {
       console.error(`Error loading purchase ${offerId}`)
       console.error(error)
     }
+  }
+
+  getListingSchema() {
+    const schemaType = camelCaseToDash(this.state.listing.schemaType.replace('schema.', ''))
+
+    fetch(`schemas/${schemaType}.json`)
+      .then(response => response.json())
+      .then(schemaJson => {
+        const translatedSchema = translateSchema(schemaJson, schemaType)
+        this.setState({
+          translatedSchema
+        })
+      })
   }
 
   async loadBuyer(addr) {
@@ -604,7 +624,9 @@ class PurchaseDetail extends Component {
       processing,
       purchase,
       reviews,
-      seller
+      seller,
+      translatedSchema,
+      areSellerStepsOpen
     } = this.state
     const step = offerStatusToStep(purchase.status)
     const isPending = purchase.status !== 'withdrawn' && step < 3
@@ -651,7 +673,8 @@ class PurchaseDetail extends Component {
       link,
       placeholderText,
       prompt,
-      reviewable
+      reviewable,
+      showSellerSteps
     } = nextStep ? nextStep[perspective] : { buttons: [] }
 
     const buyerName = buyer.profile ? (
@@ -837,7 +860,7 @@ class PurchaseDetail extends Component {
                 </div>
                 {nextStep && (
                   <div className="col-12">
-                    <div className="guidance text-center">
+                    <div className={`guidance text-center${areSellerStepsOpen ? ' with-seller-steps' : ''}`}>
                       <div className="triangles d-flex justify-content-between">
                         {[...Array(maxStep)].map((undef, i) => {
                           const count = i + 1
@@ -937,6 +960,47 @@ class PurchaseDetail extends Component {
                               {b.text}
                             </button>
                           ))}
+                        </div>
+                      }
+                      {showSellerSteps &&
+                        <div className="seller-steps">
+                          <div className="toggle-container">
+                            <p
+                              className="toggle-btn"
+                              onClick={() => this.setState({ areSellerStepsOpen: !areSellerStepsOpen })}>
+                              {areSellerStepsOpen ?
+                                <FormattedMessage
+                                  id={'purchase-detail.hideSellerSteps'}
+                                  defaultMessage={'Hide Fulfillment Checklist'}
+                                />
+                                :
+                                <FormattedMessage
+                                  id={'purchase-detail.showSellerSteps'}
+                                  defaultMessage={'Show Fulfillment Checklist'}
+                                />
+                              }
+                            </p>
+                          </div>
+                          {areSellerStepsOpen &&
+                            <div className="list-container text-left">
+                              <p className="text-center">
+                                <FormattedMessage
+                                  id={'purchase-detail.fulfillmentChecklist'}
+                                  defaultMessage={'Fulfillment Checklist'}
+                                />
+                              </p>
+                              <ol>
+                                { translatedSchema &&
+                                  translatedSchema.properties &&
+                                  translatedSchema.properties.sellerSteps &&
+                                  translatedSchema.properties.sellerSteps.enumNames &&
+                                  translatedSchema.properties.sellerSteps.enumNames.map(step =>
+                                    <li key={step}>{step}</li>
+                                  )
+                                }
+                              </ol>
+                            </div>
+                          }
                         </div>
                       }
                       {link && (arbitrationIsAvailable || link.functionName !== 'handleProblem') &&
