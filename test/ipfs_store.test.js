@@ -62,10 +62,6 @@ describe('Listing IpfsDataStore load', () => {
     expect(listing.unitsTotal).to.equal(1)
     expect(listing.price).to.deep.equal({ amount: '0.033', currency: 'ETH' })
     expect(listing.commission).to.deep.equal({ amount: '0', currency: 'OGN' })
-    expect(listing.securityDeposit).to.deep.equal({
-      amount: '100',
-      currency: 'ETH'
-    })
     expect(listing.ipfs.hash).to.equal('TestHash')
     expect(listing.ipfs.data).to.deep.equal(validListing)
   })

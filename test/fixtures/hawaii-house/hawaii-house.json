@@ -14,9 +14,5 @@
   "commission": {
     "currency": "OGN",
     "amount": "10"
-  },
-  "securityDeposit": {
-    "currency": "ETH",
-    "amount": "10"
   }
 }

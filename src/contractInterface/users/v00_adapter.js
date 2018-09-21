@@ -156,12 +156,9 @@ class V00_UsersAdapter {
       this.contractService.contracts.ClaimHolderRegistered,
       identityAddress
     )
-    const allEvents = await identity.getPastEvents('allEvents', {
+    const claimAddedEvents = await identity.getPastEvents('ClaimAdded', {
       fromBlock: 0
     })
-    const claimAddedEvents = allEvents.filter(
-      ({ event }) => event === 'ClaimAdded'
-    )
     const mapped = claimAddedEvents.map(({ returnValues }) => {
       return {
         claimId: returnValues.claimId,
