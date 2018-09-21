@@ -29,3 +29,7 @@ spec:
             secretKeyRef:
               name: {{ template "bridge.fullname" . }}
               key: ENVKEY
+        - name: HOST
+          value: "bridge.{{ .Release.Namespace }}.originprotocol.com"
+        - name: HTTPS
+          value: "true"
