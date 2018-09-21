@@ -34,6 +34,10 @@ class Marketplace extends ContractHelper{
         )
       }
     })
+    if (Object.keys(contractObjs).length === 0) {
+      console.error('ERROR: Could not find any deployed marketplace contracts!')
+      process.exit(1)
+    }
     return contractObjs
   }
 

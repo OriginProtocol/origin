@@ -2,11 +2,14 @@ const MAX_RETRY_WAIT_MS = 2 * 60 * 1000
 
 /**
  * Retries up to maxRetries times.
- * @param {int} maxRetries - Number of times to try.
+ * @param {object} opts - Options (maxRetries, verbose)
  * @param {function} fn - Async function to retry.
  * @returns - Return value of 'fn' if it succeeded.
  */
-async function withRetries(maxRetries, fn, verbose) {
+async function withRetries(opts, fn) {
+  const maxRetries = opts.maxRetries || 7
+  const verbose = opts.verbose || false
+
   let tryCount = 0
   while (tryCount < maxRetries) {
     try {
@@ -19,7 +22,7 @@ async function withRetries(maxRetries, fn, verbose) {
       // Max out at two minutes
       waitTime = Math.min(waitTime, MAX_RETRY_WAIT_MS)
       if (verbose) {
-        console.log('retryable error:', e)
+        console.log('retryable error:', e.message)
         console.log(`will retry in ${waitTime / 1000} seconds`)
       }
       tryCount += 1

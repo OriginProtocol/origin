@@ -189,6 +189,7 @@ following environment variables:
 | ropsten       | ROPSTEN_PRIVATE_KEY | ROPSTEN_MNEMONIC       |
 | rinkeby       | RINKEBY_PRIVATE_KEY | RINKEBY_MNEMONIC       |
 | origin        | ORIGIN_PRIVATE_KEY  | ORIGIN_MNEMONIC        |
+| mainnet       | MAINNET_PRIVATE_KEY | MAINNET_MNEMONIC       |
 
 For example, to run against Rinkeby, we could run the following:
 

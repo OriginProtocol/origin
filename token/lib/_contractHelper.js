@@ -46,7 +46,7 @@ class ContractHelper {
 
     const transaction = contract.methods.transferOwnership(newOwner)
     await this.sendTransaction(networkId, transaction, { from: sender })
-    await withRetries(this.retries, async () => {
+    await withRetries({ verbose: this.config.verbose }, async () => {
       const ownerAfterTransaction =
         (await contract.methods.owner().call()).toLowerCase()
       if (
@@ -55,7 +55,7 @@ class ContractHelper {
       ) {
         throw new Error(`New owner should be ${newOwner} but is ${ownerAfterTransaction}`)
       }
-    }, this.config.verbose)
+    })
   }
 
   /**
@@ -94,10 +94,11 @@ class ContractHelper {
     this.vlog('sending transaction')
     let transactionHash
     transaction.send(opts)
-      .on('transactionHash', (hash) => {
+      .once('transactionHash', (hash) => {
         transactionHash = hash
         this.vlog('transaction hash:', transactionHash)
       })
+    this.vlog('waiting for transaction receipt')
 
     // Poll for the transaction receipt, with an exponential backoff. This works
     // around some strange interactions between web3.js and some web3 providers.
@@ -109,7 +110,8 @@ class ContractHelper {
 
     // Blocks are mined every ~15 seconds, but it sometimes takes ~40-60 seconds
     // to get a transaction receipt from rinkeby.infura.io.
-    await withRetries(this.retries, async () => {
+    const retryOpts = { maxRetries: 10, verbose: this.config.verbose }
+    await withRetries(retryOpts, async () => {
       if (transactionHash) {
         const receipt = await web3.eth.getTransactionReceipt(transactionHash)
         if (receipt) {
@@ -118,13 +120,13 @@ class ContractHelper {
             throw new Error('transaction failed')
           }
           if (this.config.multisig) {
-            this.vlog('multi-sig transaction submitted for further signatures')
+            this.vlog('multi-sig transaction submitted: it may require more signatures')
           } else {
             this.vlog('transaction successful')
           }
             return receipt
         } else {
-          console.log('waiting for transaction receipt')
+          throw new Error('still waiting for transaction receipt')
         }
       } else {
         throw new Error('still waiting for transaction hash')
