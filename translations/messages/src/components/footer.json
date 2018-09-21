@@ -16,8 +16,16 @@
     "defaultMessage": "Whitepaper"
   },
   {
+    "id": "footer.dapp",
+    "defaultMessage": "Demo Dapp"
+  },
+  {
+    "id": "footer.developers",
+    "defaultMessage": "Developers"
+  },
+  {
     "id": "footer.githubLink",
-    "defaultMessage": "Github"
+    "defaultMessage": "GitHub"
   },
   {
     "id": "footer.docsLink",
@@ -36,16 +44,20 @@
     "defaultMessage": "Discord"
   },
   {
-    "id": "footer.mediumLink",
-    "defaultMessage": "Medium"
-  },
-  {
     "id": "footer.redditLink",
     "defaultMessage": "Reddit"
   },
   {
     "id": "footer.wechatLink",
     "defaultMessage": "WeChat"
+  },
+  {
+    "id": "footer.weiboLink",
+    "defaultMessage": "Weibo"
+  },
+  {
+    "id": "footer.kakaoLink",
+    "defaultMessage": "Kakao Talk"
   },
   {
     "id": "footer.socialHeading",
@@ -62,6 +74,10 @@
   {
     "id": "footer.facebookLink",
     "defaultMessage": "Facebook"
+  },
+  {
+    "id": "footer.mediumLink",
+    "defaultMessage": "Medium"
   },
   {
     "id": "footer.youtubeLink",
@@ -82,6 +98,10 @@
   {
     "id": "footer.partnersLink",
     "defaultMessage": "Partners"
+  },
+  {
+    "id": "footer.meetupsLink",
+    "defaultMessage": "Meetups"
   },
   {
     "id": "footer.hiringLink",
