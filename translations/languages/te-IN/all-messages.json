@@ -175,7 +175,7 @@
   "my-sale-card.ethereumCurrencyAbbrev": "ETH",
   "my-sale-card.unnamedUser": "పేరులేని వాడుకరి",
   "my-sale-card.buyerNameLink": "అమ్మబడింది {linkToBuyer}",
-  "my-sale-card.price": "ధర: {price}",
+  "my-sale-card.price": "ధర",
   "my-sale-card.nextStep1": "{nextStep} కొనుగోలుదారుకు ఆర్డర్ పంపండి",
   "my-sale-card.nextStep2": "{nextStep} కొనుగోలుదారునికి ఆర్డర్ పొందడానికి వేచి ఉండండి",
   "my-sale-card.nextStep3": "{nextStep} నిధులను వెనక్కి తెచ్చుకోండి",
