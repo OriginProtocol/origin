@@ -175,7 +175,7 @@
   "my-sale-card.ethereumCurrencyAbbrev": "ETH",
   "my-sale-card.unnamedUser": "Nekonata Uzanto",
   "my-sale-card.buyerNameLink": "vendita al {linkToBuyer}",
-  "my-sale-card.price": "Prezo: {price}",
+  "my-sale-card.price": "Prezo",
   "my-sale-card.nextStep1": "{nextStep} Sendu la ordonon al aĉetanto",
   "my-sale-card.nextStep2": "{nextStep} Atendu aĉetanton ricevi ordon",
   "my-sale-card.nextStep3": "{nextStep} Forĵeti financojn",
