@@ -475,7 +475,7 @@ class ListingCreate extends Component {
                 {showBoostTutorial &&
                   <div className="info-box">
                     <img src="images/ogn-icon-horiz.svg" role="presentation" />
-                    <p className="text-bold">You have 0 <a href="#" target="_blank" rel="noopener noreferrer">OGN</a> in your wallet.</p>
+                  <p className="text-bold">You have 0 <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">OGN</a> in your wallet.</p>
                     <p>Once you acquire some OGN you will be able to boost your listing.</p>
                     <p className="expand-btn" onClick={ this.toggleBoostBox }>
                       What is a boost? <span className={ isBoostExpanded ? 'rotate-up' : '' }>&#x25be;</span>
@@ -501,7 +501,7 @@ class ListingCreate extends Component {
                         </p>
                         <p>
                           Boosting on the Origin DApp is done using{' '}
-                          <a href="#" arget="_blank" rel="noopener noreferrer">
+                          <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">
                             Origin Tokens (OGN).
                           </a>
                         </p>
@@ -642,7 +642,7 @@ class ListingCreate extends Component {
                         </span>&nbsp;
                         <a
                           className="ogn-abbrev"
-                          href="#"
+                          href="/#/about-tokens"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
