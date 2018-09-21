@@ -44,6 +44,8 @@ spec:
           value: {{ .Values.eventlistenerWeb3Url | quote }}
         - name: IPFS_URL
           value: "https://ipfs.{{ .Release.Namespace }}.originprotocol.com"
+        - name: CONTINUE_BLOCK
+          value: {{ default "0" .Values.eventlistenerContinueBlock | quote }}
         command: ["/bin/sh"]
         args:
         - "-c"

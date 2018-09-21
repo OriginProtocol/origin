@@ -22,6 +22,7 @@ faucetImageTag: '1cfc84d'
 eventlistenerImage: event-listener
 eventlistenerImageTag: '5e79eb4'
 eventlistenerWeb3Url: https://rinkeby.infura.io/emIXjs9eDuy57IlTYsIP
+eventlistenerContinueBlock: 3000000
 
 discoveryImage: origin-discovery
 discoveryDbInstance: origin-214503:us-west1:staging
