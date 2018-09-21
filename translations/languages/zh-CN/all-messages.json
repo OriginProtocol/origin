@@ -175,7 +175,7 @@
   "my-sale-card.ethereumCurrencyAbbrev": "ETH",
   "my-sale-card.unnamedUser": "未命名用户",
   "my-sale-card.buyerNameLink": "卖给{linkToBuyer}",
-  "my-sale-card.price": "价格: {price}",
+  "my-sale-card.price": "价格",
   "my-sale-card.nextStep1": "{nextStep} 向买方发送订单",
   "my-sale-card.nextStep2": "{nextStep} 等待买方接收订单",
   "my-sale-card.nextStep3": "{nextStep} 提取资金",
