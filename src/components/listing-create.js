@@ -8,7 +8,7 @@ import { showAlert } from 'actions/Alert'
 import {
   update as updateTransaction,
   upsert as upsertTransaction
-} from '../actions/Transaction'
+} from 'actions/Transaction'
 import { getOgnBalance } from 'actions/Wallet'
 
 import BoostSlider from 'components/boost-slider'

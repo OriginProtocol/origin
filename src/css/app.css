@@ -1475,6 +1475,10 @@ a:hover {
 
 /* Modal */
 
+.modal-open {
+  overflow: auto;
+}
+
 .modal-backdrop {
   background-color: rgba(235, 240, 243, 0.6);
 }
@@ -1640,6 +1644,13 @@ a:hover {
   padding-top: 20px;
 }
 
+.onboarding .split-container {
+  height: 100%;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
 .onboarding .btn {
   width: auto;
   height: 50px;
@@ -1650,8 +1661,11 @@ a:hover {
 }
 
 .onboarding-modal {
-  position: absolute;
-  top: 75px;
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  bottom: auto;
 }
 
 .onboarding-modal .modal-lg {

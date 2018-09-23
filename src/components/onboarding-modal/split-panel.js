@@ -30,7 +30,7 @@ class SplitPanel extends Component {
 
     return (
       <div
-        className={`modal fade onboarding-modal ${isOpen ? ' show' : ''}`}
+        className={`modal fade onboarding-modal${isOpen ? ' show' : ''}`}
         tabIndex="-1"
         role="dialog"
         aria-hidden="true"
