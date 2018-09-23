@@ -26,6 +26,7 @@ import ScrollToTop from 'components/scroll-to-top'
 import Web3Provider from 'components/web3-provider'
 import SearchResult from 'components/search/search-result'
 import AboutTokens from 'components/about-tokens'
+import DappInfo from 'components/dapp-info'
 
 import Profile from 'pages/profile/Profile'
 import User from 'pages/user/User'
@@ -157,6 +158,7 @@ class App extends Component {
                     <Route path="/users/:userAddress" component={UserPage} />
                     <Route path="/search" component={SearchResult} />
                     <Route path="/about-tokens" component={AboutTokens} />
+                    <Route path="/dapp-info" component={DappInfo} />
                     <Route component={NotFound} />
                   </Switch>
                 </Layout>
