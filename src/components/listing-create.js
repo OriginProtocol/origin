@@ -62,6 +62,7 @@ class ListingCreate extends Component {
       translatedSchema: null,
       schemaExamples: null,
       schemaFetched: false,
+      showNoSchemaSelectedError: false,
       formListing: {
         formData: {
           boostValue: defaultBoostValue,
@@ -176,6 +177,7 @@ class ListingCreate extends Component {
           selectedSchemaType,
           selectedSchema: schemaJson,
           schemaFetched: true,
+          showNoSchemaSelectedError: false,
           translatedSchema,
           schemaExamples:
             translatedSchema &&
@@ -193,7 +195,9 @@ class ListingCreate extends Component {
       })
       window.scrollTo(0, 0)
     } else {
-      console.error('Error fetching schema JSON')
+      this.setState({
+        showNoSchemaSelectedError: true
+      })
     }
   }
 
@@ -340,6 +344,7 @@ class ListingCreate extends Component {
       selectedSchema,
       selectedSchemaType,
       schemaExamples,
+      showNoSchemaSelectedError,
       step,
       translatedSchema,
       usdListingPrice,
@@ -396,6 +401,16 @@ class ListingCreate extends Component {
                       </div>
                     </div>
                   ))}
+                  {showNoSchemaSelectedError &&
+                    <div className="info-box warn">
+                      <p>
+                        <FormattedMessage
+                          id={'listing-create.noSchemaSelectedError'}
+                          defaultMessage={'You must first select a listing type'}
+                        />
+                      </p>
+                    </div>
+                  }
                 </div>
                 <div className="btn-container">
                   <button
