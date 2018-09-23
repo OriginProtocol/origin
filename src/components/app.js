@@ -5,9 +5,14 @@ import { IntlProvider } from 'react-intl'
 
 import { localizeApp, setMobile } from 'actions/App'
 import { fetchProfile } from 'actions/Profile'
-import { init as initWallet } from 'actions/Wallet'
+import {
+  getEthBalance,
+  getOgnBalance,
+  init as initWallet
+} from 'actions/Wallet'
 
 // Components
+import AboutTokens from 'components/about-tokens'
 import Alert from 'components/alert'
 import Arbitration from 'components/arbitration'
 import Layout from 'components/layout'
@@ -21,11 +26,11 @@ import MyPurchases from 'components/my-purchases'
 import MySales from 'components/my-sales'
 import NotFound from 'components/not-found'
 import Notifications from 'components/notifications'
+import OnboardingModal from 'components/onboarding-modal'
 import PurchaseDetail from 'components/purchase-detail'
 import ScrollToTop from 'components/scroll-to-top'
-import Web3Provider from 'components/web3-provider'
 import SearchResult from 'components/search/search-result'
-import AboutTokens from 'components/about-tokens'
+import Web3Provider from 'components/web3-provider'
 
 import Profile from 'pages/profile/Profile'
 import User from 'pages/user/User'
@@ -91,6 +96,8 @@ class App extends Component {
   componentDidMount() {
     this.props.fetchProfile()
     this.props.initWallet()
+    this.props.getEthBalance()
+    this.props.getOgnBalance()
 
     this.detectMobile()
   }
@@ -161,6 +168,7 @@ class App extends Component {
                   </Switch>
                 </Layout>
                 <Alert />
+                <OnboardingModal />
               </MessagingProvider>
             </Web3Provider>
           </ScrollToTop>
@@ -177,6 +185,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchProfile: () => dispatch(fetchProfile()),
+  getEthBalance: () => dispatch(getEthBalance()),
+  getOgnBalance: () => dispatch(getOgnBalance()),
   initWallet: () => dispatch(initWallet()),
   setMobile: device => dispatch(setMobile(device)),
   localizeApp: () => dispatch(localizeApp())

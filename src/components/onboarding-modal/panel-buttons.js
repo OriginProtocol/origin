@@ -25,8 +25,8 @@ export default class PanelButtons extends Component {
     const { displayNextStep, step } = this.props
     const buttons = {
       Overview: (
-        <button className="btn btn-primary" onClick={displayNextStep}>
-          Connect a Wallet
+        <button className="btn btn-primary" onClick={() => displayNextStep()}>
+          Next
         </button>
       ),
       'Connect Wallet': (
@@ -34,17 +34,19 @@ export default class PanelButtons extends Component {
           <button
             key={'first-btn'}
             className="btn btn-primary btn-lg mb-3"
-            onClick={this.connectMetaMask}
+            onClick={() => displayNextStep()}
           >
-            Connect MetaMask
+            Next
           </button>
+          {/*
           <button key={'sec-btn'} className="btn btn-primary btn-lg" disabled>
             Download Mobile Wallet
           </button>
+          */}
         </div>
       ),
       Connected: (
-        <button className="btn btn-primary" onClick={displayNextStep}>
+        <button className="btn btn-primary" onClick={() => displayNextStep()}>
           Learn about Origin Tokens
         </button>
       ),

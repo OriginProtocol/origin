@@ -8,29 +8,59 @@ import {
   toggleSplitPanel,
   toggleLearnMore
 } from 'actions/Onboarding'
-import SplitPanel from './split-panel'
+import { getOgnBalance } from 'actions/Wallet'
+
 import Modal from 'components/modal'
+
+import { getListing } from 'utils/listing'
+
+import SplitPanel from './split-panel'
 import steps from './steps'
+
+import origin from '../../services/origin'
 
 class OnboardingModal extends Component {
   constructor(props) {
     super(props)
 
     this.closeModal = this.closeModal.bind(this)
-    this.state = { gettingStarted: true }
-  }
-
-  async componentWillMount() {
-    const { fetchSteps } = this.props
-    await fetchSteps()
-  }
-
-  componentDidUpdate() {
-    const { wallet } = this.props
-
-    if (wallet.initialized) {
-      this.userProgress()
+    this.state = {
+      dismissed: false,
+      gettingStarted: true,
+      listings: [],
+      listingsDetected: false,
+      stepsFetched: false
     }
+  }
+
+  async componentDidUpdate(prevProps) {
+    const { fetchSteps, wallet } = this.props
+
+    // wait for wallet to be loaded
+    if (!wallet.initialized) {
+      return
+    }
+
+    // check for listings before doing anything else
+    if (!this.state.listingsDetected) {
+      const listings = await this.loadListings()
+
+      return this.setState({
+        listingsDetected: true,
+        listings
+      })
+    }
+
+    // only get the steps once
+    if (!this.state.stepsFetched) {
+      this.setState({ stepsFetched: true })
+
+      await fetchSteps()
+
+      return
+    }
+
+    this.userProgress()
   }
 
   componentWillUnmount() {
@@ -42,7 +72,7 @@ class OnboardingModal extends Component {
       if (name === 'toggleSplitPanel') {
         document.body.classList.remove('modal-open')
       }
-      this.setState({ gettingStarted: false })
+      this.setState({ dismissed: true, gettingStarted: false })
       this.props[name](false)
     }
   }
@@ -52,6 +82,30 @@ class OnboardingModal extends Component {
     window.setTimeout(() => {
       document.body.classList.add('modal-open')
     }, 500)
+  }
+
+  async loadListings() {
+    try {
+      const { address } = this.props.wallet
+
+      if (!address) {
+        return []
+      }
+
+      const ids = await origin.marketplace.getListings({
+        idsOnly: true,
+        listingsFor: address
+      })
+      const listings = await Promise.all(
+        ids.map(id => {
+          return getListing(id, true)
+        })
+      )
+
+      return listings
+    } catch (error) {
+      console.error('Error fetching listing ids')
+    }
   }
 
   removeModalClasses() {
@@ -66,30 +120,25 @@ class OnboardingModal extends Component {
       onboarding: { progress, learnMore, stepsCompleted, splitPanel },
       toggleLearnMore,
       toggleSplitPanel,
-      wallet
+      wallet: { ognBalance }
     } = this.props
-    const { gettingStarted } = this.state
+    const { dismissed, gettingStarted, listings } = this.state
 
-    const userHasWallet = wallet.address || stepsCompleted
-    const userWithoutWallet = !progress && !learnMore && gettingStarted
-    const userOnboardingInProgress = progress && gettingStarted
-
-    if (userHasWallet) {
-      if (!learnMore) return
-      this.removeModalClasses()
-      return toggleLearnMore(false)
+    // show nothing if user has OGN, listings, or completed onboarding
+    if (!!Number(ognBalance) || listings.length || stepsCompleted) {
+      learnMore && toggleLearnMore(false)
+      splitPanel && toggleSplitPanel(false)
+      return this.removeModalClasses()
     }
 
-    if (userOnboardingInProgress) {
+    const onboardingInProgress = progress && gettingStarted
+
+    if (onboardingInProgress) {
       this.addModalClass()
-      if (!splitPanel) {
-        toggleSplitPanel(true)
-      }
-    } else if (userWithoutWallet) {
-      this.removeModalClasses()
-      toggleLearnMore(true)
-    } else {
-      this.removeModalClasses()
+      
+      !splitPanel && toggleSplitPanel(true)
+    } else if (!progress && !dismissed) {
+      !learnMore && toggleLearnMore(true)
     }
   }
 
@@ -100,7 +149,7 @@ class OnboardingModal extends Component {
     } = this.props
 
     const learnMoreContent = (
-      <div>
+      <Fragment>
         <div className="text-right">
           <span
             className="close-icon"
@@ -122,31 +171,31 @@ class OnboardingModal extends Component {
             Learn more
           </button>
         </div>
-      </div>
+      </Fragment>
     )
 
     return (
       <div className="onboarding">
-        {learnMore && (
+        {learnMore &&
           <Modal
             className={'getting-started'}
-            isOpen={learnMore}
+            isOpen={true}
             children={learnMoreContent}
             backdrop={false}
           />
-        )}
-        {splitPanel && (
-          <Fragment>
+        }
+        {splitPanel &&
+          <div className="split-container d-flex align-items-center justify-content-center">
             <SplitPanel
-              isOpen={splitPanel}
+              isOpen={true}
               currentStep={currentStep}
               steps={steps}
               updateSteps={updateSteps}
               closeModal={this.closeModal('toggleSplitPanel')}
             />
-            <div className={'modal-backdrop fade show'} role="presentation" />
-          </Fragment>
-        )}
+            <div className="modal-backdrop fade show" role="presentation" />
+          </div>
+        }
       </div>
     )
   }
@@ -155,11 +204,12 @@ class OnboardingModal extends Component {
 const mapStateToProps = ({ onboarding, wallet }) => ({ onboarding, wallet })
 
 const mapDispatchToProps = dispatch => ({
-  updateSteps: ({ incompleteStep, stepsCompleted }) =>
-    dispatch(updateSteps({ incompleteStep, stepsCompleted })),
   fetchSteps: () => dispatch(fetchSteps()),
+  getOgnBalance: () => dispatch(getOgnBalance()),
   toggleSplitPanel: show => dispatch(toggleSplitPanel(show)),
-  toggleLearnMore: show => dispatch(toggleLearnMore(show))
+  toggleLearnMore: show => dispatch(toggleLearnMore(show)),
+  updateSteps: ({ incompleteStep, stepsCompleted }) =>
+    dispatch(updateSteps({ incompleteStep, stepsCompleted }))
 })
 
 export default withRouter(
