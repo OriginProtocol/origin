@@ -96,10 +96,6 @@
     "defaultMessage": "Sale Reviewed"
   },
   {
-    "id": "purchase-detail.unnamedUser",
-    "defaultMessage": "Unnamed User"
-  },
-  {
     "id": "purchase-detail.purchasedFrom",
     "defaultMessage": "Purchased from {sellerLink}"
   },

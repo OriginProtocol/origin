@@ -4,10 +4,6 @@
     "defaultMessage": "ETH"
   },
   {
-    "id": "my-sale-card.unnamedUser",
-    "defaultMessage": "Unnamed User"
-  },
-  {
     "id": "my-sale-card.buyerNameLink",
     "defaultMessage": "sold to {linkToBuyer}"
   },

@@ -8,6 +8,7 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { fetchUser } from 'actions/User'
 
 import PurchaseProgress from 'components/purchase-progress'
+import UnnamedUser from 'components/unnamed-user'
 
 import { offerStatusToStep } from 'utils/offer'
 
@@ -25,19 +26,12 @@ class MySaleCard extends Component {
       ETH: {
         id: 'my-sale-card.ethereumCurrencyAbbrev',
         defaultMessage: 'ETH'
-      },
-      unnamedUser: {
-        id: 'my-sale-card.unnamedUser',
-        defaultMessage: 'Unnamed User'
       }
     })
   }
 
   componentWillMount() {
-    this.props.fetchUser(
-      this.props.purchase.buyer,
-      this.props.intl.formatMessage(this.intlMessages.unnamedUser)
-    )
+    this.props.fetchUser(this.props.purchase.buyer)
   }
 
   componentDidMount() {
@@ -67,7 +61,7 @@ class MySaleCard extends Component {
       (user &&
         user.profile &&
         `${user.profile.firstName} ${user.profile.lastName}`) ||
-      this.props.intl.formatMessage(this.intlMessages.unnamedUser)
+      <UnnamedUser />
     const photo = pictures && pictures.length > 0 && pictures[0]
     const soldAt = Number(purchase.createdAt) * 1000 // convert seconds since epoch to ms
     const step = offerStatusToStep(purchase.status)

@@ -1,3 +1,5 @@
+import { fetchUser } from 'actions/User'
+
 import keyMirror from 'utils/keyMirror'
 
 import origin from '../services/origin'
@@ -45,7 +47,8 @@ export function deployProfile() {
     dispatch({ type: ProfileConstants.DEPLOY })
 
     const {
-      profile: { provisional, published }
+      profile: { provisional, published },
+      wallet: { address }
     } = getState()
 
     const userData = {
@@ -79,8 +82,10 @@ export function deployProfile() {
     }
 
     try {
-      const user = await origin.users.set(userData)
-      dispatch({ type: ProfileConstants.DEPLOY_SUCCESS, user })
+      await origin.users.set(userData)
+
+      dispatch({ type: ProfileConstants.DEPLOY_SUCCESS })
+      dispatch(fetchUser(address))
     } catch (error) {
       console.error('Error occurred deploying profile', error)
       dispatch({ type: ProfileConstants.DEPLOY_ERROR, error })

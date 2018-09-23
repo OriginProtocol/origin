@@ -14,6 +14,7 @@ import {
 
 import Avatar from 'components/avatar'
 import Modal from 'components/modal'
+import UnnamedUser from 'components/unnamed-user'
 import WalletCard from 'components/wallet-card'
 
 import Guidance from './_Guidance'
@@ -296,14 +297,7 @@ class Profile extends Component {
                 <div className="col-8 col-md-9">
                   <div className="name d-flex">
                     <h1>
-                      {fullName.length ? (
-                        fullName
-                      ) : (
-                        <FormattedMessage
-                          id={'Profile.unnamedUser'}
-                          defaultMessage={'Unnamed User'}
-                        />
-                      )}
+                      {fullName || <UnnamedUser />}
                     </h1>
                     <div className="icon-container">
                       <button
@@ -386,7 +380,7 @@ class Profile extends Component {
                 wallet={wallet}
                 identityAddress={this.props.identityAddress}
                 withMenus={true}
-                withProfile={false}
+                withProfile={true}
               />
               <Guidance />
             </div>

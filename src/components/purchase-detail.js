@@ -19,6 +19,7 @@ import Avatar from 'components/avatar'
 import Modal from 'components/modal'
 import PurchaseProgress from 'components/purchase-progress'
 import Review from 'components/review'
+import UnnamedUser from 'components/unnamed-user'
 import UserCard from 'components/user-card'
 
 import TransactionEvent from 'pages/purchases/transaction-event'
@@ -679,20 +680,10 @@ class PurchaseDetail extends Component {
 
     const buyerName = buyer.profile ? (
       `${buyer.profile.firstName} ${buyer.profile.lastName}`
-    ) : (
-      <FormattedMessage
-        id={'purchase-detail.unnamedUser'}
-        defaultMessage={'Unnamed User'}
-      />
-    )
+    ) : <UnnamedUser />
     const sellerName = seller.profile ? (
       `${seller.profile.firstName} ${seller.profile.lastName}`
-    ) : (
-      <FormattedMessage
-        id={'purchase-detail.unnamedUser'}
-        defaultMessage={'Unnamed User'}
-      />
-    )
+    ) : <UnnamedUser />
     const arbitrationIsAvailable = ARBITRATOR_ACCOUNT && web3Account !== ARBITRATOR_ACCOUNT
 
     return (
