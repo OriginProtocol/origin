@@ -33,7 +33,7 @@ class OnboardingModal extends Component {
     }
   }
 
-  async componentDidUpdate(prevProps) {
+  async componentDidUpdate() {
     const { fetchSteps, wallet } = this.props
 
     // wait for wallet to be loaded
