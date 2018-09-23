@@ -8,7 +8,7 @@ import { showAlert } from 'actions/Alert'
 import {
   update as updateTransaction,
   upsert as upsertTransaction
-} from '../actions/Transaction'
+} from 'actions/Transaction'
 import { getOgnBalance } from 'actions/Wallet'
 
 import BoostSlider from 'components/boost-slider'
@@ -534,7 +534,7 @@ class ListingCreate extends Component {
                 <div className="btn-container">
                   <button
                     type="button"
-                    className="btn btn-other"
+                    className="btn btn-other btn-listing-create"
                     onClick={() => this.setState({ step: this.STEP.DETAILS })}
                   >
                     <FormattedMessage
@@ -543,7 +543,7 @@ class ListingCreate extends Component {
                     />
                   </button>
                   <button
-                    className="float-right btn btn-primary"
+                    className="float-right btn btn-primary btn-listing-create"
                     onClick={this.onReview}
                   >
                     Review
@@ -682,7 +682,7 @@ class ListingCreate extends Component {
                 */}
                 <div className="btn-container">
                   <button
-                    className="btn btn-other float-left"
+                    className="btn btn-other float-left btn-listing-create"
                     onClick={() => this.setState({ step: this.STEP.BOOST })}
                   >
                     <FormattedMessage
@@ -691,7 +691,7 @@ class ListingCreate extends Component {
                     />
                   </button>
                   <button
-                    className="btn btn-primary float-right"
+                    className="btn btn-primary float-right btn-listing-create"
                     onClick={() =>
                       this.onSubmitListing(formListing, selectedSchemaType)
                     }

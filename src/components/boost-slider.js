@@ -84,7 +84,7 @@ class BoostSlider extends Component {
         <p className="text-italics">{ boostLevels[boostLevel].desc }</p>
         {ognBalance === 0 &&
           <div className="info-box">
-          <p>You have 0 <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">OGN</a> in your wallet and cannot boost.</p>
+            <p>You have 0 <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">OGN</a> in your wallet and cannot boost.</p>
           </div>
         }
         {ognBalance > 0 && ognBalance < this.props.selectedBoostAmount &&

@@ -7,7 +7,6 @@ import { withRouter } from 'react-router'
 import { getListingIds } from 'actions/Listing'
 
 import ListingCard from 'components/listing-card'
-import OnboardingModal from 'components/onboarding-modal'
 import { LISTINGS_PER_PAGE } from 'components/constants'
 
 class ListingsGrid extends Component {
@@ -104,7 +103,6 @@ class ListingsGrid extends Component {
             />
           </div>
         )}
-        <OnboardingModal />
       </div>
     )
   }

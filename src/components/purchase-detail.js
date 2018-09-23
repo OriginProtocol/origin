@@ -29,7 +29,7 @@ import { translateSchema } from 'utils/translationUtils'
 
 import origin from '../services/origin'
 
-const ARBITRATOR_ETH_ADDRESS = process.env.ARBITRATOR_ACCOUNT
+const ARBITRATOR_ACCOUNT = process.env.ARBITRATOR_ACCOUNT
 
 const defaultState = {
   buyer: {},
@@ -585,13 +585,13 @@ class PurchaseDetail extends Component {
 
       // disclose shared decryption key with arbitrator if one exists
       if (keys.length) {
-        await origin.messaging.sendConvMessage(ARBITRATOR_ETH_ADDRESS, {
+        await origin.messaging.sendConvMessage(ARBITRATOR_ACCOUNT, {
           decryption: { keys, roomId }
         })
       }
 
       // send a message to arbitrator if form is not blank
-      issue.length && origin.messaging.sendConvMessage(ARBITRATOR_ETH_ADDRESS, {
+      issue.length && origin.messaging.sendConvMessage(ARBITRATOR_ACCOUNT, {
         content: issue
       })
 
@@ -693,7 +693,7 @@ class PurchaseDetail extends Component {
         defaultMessage={'Unnamed User'}
       />
     )
-    const arbitrationIsAvailable = ARBITRATOR_ETH_ADDRESS && web3Account !== ARBITRATOR_ETH_ADDRESS
+    const arbitrationIsAvailable = ARBITRATOR_ACCOUNT && web3Account !== ARBITRATOR_ACCOUNT
 
     return (
       <div className="purchase-detail">
@@ -860,7 +860,7 @@ class PurchaseDetail extends Component {
                 </div>
                 {nextStep && (
                   <div className="col-12">
-                    <div className={`guidance text-center${areSellerStepsOpen ? ' with-seller-steps' : ''}`}>
+                    <div className={`guidance text-center${(showSellerSteps && areSellerStepsOpen) ? ' with-seller-steps' : ''}`}>
                       <div className="triangles d-flex justify-content-between">
                         {[...Array(maxStep)].map((undef, i) => {
                           const count = i + 1
@@ -894,7 +894,7 @@ class PurchaseDetail extends Component {
                       }
                       {!reviewable &&
                         <div className="instruction">
-                          {instruction || 
+                          {instruction ||
                             <FormattedMessage
                               id={'purchase-detail.nothingToDo'}
                               defaultMessage={
