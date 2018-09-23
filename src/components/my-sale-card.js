@@ -130,28 +130,46 @@ class MySaleCard extends Component {
           <div className="d-flex justify-content-between actions">
             {step === 1 && (
               <p>
+                <strong>
+                  <FormattedMessage
+                    id={'my-sale-card.nextStep'}
+                    defaultMessage={'Next Step'}
+                  />
+                  :&nbsp;
+                </strong>
                 <FormattedMessage
                   id={'my-sale-card.nextStep1'}
-                  defaultMessage={'{nextStep} Send the order to buyer'}
-                  values={{ nextStep: <strong>Next Step:</strong> }}
+                  defaultMessage={'Send the order to buyer'}
                 />
               </p>
             )}
             {step === 2 && (
               <p>
+                <strong>
+                  <FormattedMessage
+                    id={'my-sale-card.nextStep'}
+                    defaultMessage={'Next Step'}
+                  />
+                  :&nbsp;
+                </strong>
                 <FormattedMessage
                   id={'my-sale-card.nextStep2'}
-                  defaultMessage={'{nextStep} Wait for buyer to receive order'}
-                  values={{ nextStep: <strong>Next Step:</strong> }}
+                  defaultMessage={'Wait for buyer to receive order'}
                 />
               </p>
             )}
             {step === 3 && (
               <p>
+                <strong>
+                  <FormattedMessage
+                    id={'my-sale-card.nextStep'}
+                    defaultMessage={'Next Step'}
+                  />
+                  :&nbsp;
+                </strong>
                 <FormattedMessage
                   id={'my-sale-card.nextStep3'}
-                  defaultMessage={'{nextStep} Withdraw funds'}
-                  values={{ nextStep: <strong>Next Step:</strong> }}
+                  defaultMessage={'Withdraw funds'}
                 />
               </p>
             )}

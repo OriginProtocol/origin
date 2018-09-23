@@ -16,16 +16,20 @@
     "defaultMessage": "Price"
   },
   {
+    "id": "my-sale-card.nextStep",
+    "defaultMessage": "Next Step"
+  },
+  {
     "id": "my-sale-card.nextStep1",
-    "defaultMessage": "{nextStep} Send the order to buyer"
+    "defaultMessage": "Send the order to buyer"
   },
   {
     "id": "my-sale-card.nextStep2",
-    "defaultMessage": "{nextStep} Wait for buyer to receive order"
+    "defaultMessage": "Wait for buyer to receive order"
   },
   {
     "id": "my-sale-card.nextStep3",
-    "defaultMessage": "{nextStep} Withdraw funds"
+    "defaultMessage": "Withdraw funds"
   },
   {
     "id": "my-sale-card.orderComplete",
