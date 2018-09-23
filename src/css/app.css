@@ -20,11 +20,6 @@ body {
   line-height: 1.5;
 }
 
-.loading-clock {
-  height: 100vh;
-  width: 100vw;
-}
-
 /* sticky footer sibling */
 main {
   flex: 1 0 auto;

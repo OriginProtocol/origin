@@ -186,7 +186,7 @@ class ListingsDetail extends Component {
         {step === this.STEP.METAMASK && (
           <Modal backdrop="static" isOpen={true} tabIndex="-1">
             <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
+              <img src="images/spinner-animation-light.svg" role="presentation" />
             </div>
             <FormattedMessage
               id={'listing-detail.confirmTransaction'}
@@ -206,7 +206,7 @@ class ListingsDetail extends Component {
         {step === this.STEP.PROCESSING && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
+              <img src="images/spinner-animation-light.svg" role="presentation" />
             </div>
             <FormattedMessage
               id={'listing-detail.processingPurchase'}
