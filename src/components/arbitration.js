@@ -15,7 +15,7 @@ import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
 
-const ARBITRATOR_ETH_ADDRESS = process.env.ARBITRATOR_ACCOUNT
+const ARBITRATOR_ACCOUNT = process.env.ARBITRATOR_ACCOUNT
 
 const defaultState = {
   buyer: {},
@@ -92,8 +92,8 @@ class Arbitration extends Component {
   validateUser() {
     const { history, offerId, web3Account } = this.props
 
-    if (web3Account && this.props.web3Account.toUpperCase() !== ARBITRATOR_ETH_ADDRESS.toUpperCase()) {
-      alert(`⚠️ Warning:\nCurrent account (${this.props.web3Account}) is not equal to the ARBITRATOR_ACCOUNT environment variable (${ARBITRATOR_ETH_ADDRESS})`)
+    if (web3Account && this.props.web3Account.toUpperCase() !== ARBITRATOR_ACCOUNT.toUpperCase()) {
+      alert(`⚠️ Warning:\nCurrent account (${this.props.web3Account}) is not equal to the ARBITRATOR_ACCOUNT environment variable (${ARBITRATOR_ACCOUNT})`)
 
       history.push(`/purchases/${offerId}`)
     }

@@ -15,6 +15,7 @@ import {
 import AboutTokens from 'components/about-tokens'
 import Alert from 'components/alert'
 import Arbitration from 'components/arbitration'
+import DappInfo from 'components/dapp-info'
 import Layout from 'components/layout'
 import ListingCreate from 'components/listing-create'
 import ListingDetail from 'components/listing-detail'
@@ -164,6 +165,7 @@ class App extends Component {
                     <Route path="/users/:userAddress" component={UserPage} />
                     <Route path="/search" component={SearchResult} />
                     <Route path="/about-tokens" component={AboutTokens} />
+                    <Route path="/dapp-info" component={DappInfo} />
                     <Route component={NotFound} />
                   </Switch>
                 </Layout>
