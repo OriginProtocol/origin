@@ -10,9 +10,9 @@ const DappInfo = () => {
             <h1>DApp Info</h1>
             <h3 className="lead">Developer information about this build</h3>
             <table border="1" width="100%">
-              <tr><th colspan="2">origin.js</th></tr>
+              <tr><th colSpan="2">origin.js</th></tr>
               <tr><td>Version</td><td>{ origin.version }</td></tr>
-              <tr><th colspan="2">Environment Variables</th></tr>
+              <tr><th colSpan="2">Environment Variables</th></tr>
               <tr><td>BRIDGE_SERVER_DOMAIN</td><td>{ process.env.BRIDGE_SERVER_DOMAIN }</td></tr>
               <tr><td>BRIDGE_SERVER_PROTOCOL</td><td>{ process.env.BRIDGE_SERVER_PROTOCOL }</td></tr>
               <tr><td>DISCOVERY_SERVER_URL</td><td>{ process.env.DISCOVERY_SERVER_URL }</td></tr>
