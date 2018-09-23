@@ -84,7 +84,7 @@ function check_secrets() {
 
 function update_values() {
   echo -e 'Updating chart values with new tag for container'
-  sed -i.old "s|^${IMAGE_TAG_FIELD}: .*|${IMAGE_TAG_FIELD}: '${GIT_HASH}'|g" ${VALUES_PATH}/${VALUES_FILE} && rm ${VALUES_PATH}/${VALUES_FILE}.old
+  sed -i.old "s|^${IMAGE_TAG_FIELD}: .*|${IMAGE_TAG_FIELD}: '${DEPLOY_TAG}'|g" ${VALUES_PATH}/${VALUES_FILE} && rm ${VALUES_PATH}/${VALUES_FILE}.old
   echo -e "\033[31mUpdated values file at ${VALUES_PATH}/${VALUES_FILE}, this should be committed!\033[0m"
 }
 
