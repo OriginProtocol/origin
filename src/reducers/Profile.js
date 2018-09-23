@@ -51,7 +51,7 @@ function changes(state) {
   })
 
   const changes = []
-
+  state.name = state.provisional['firstName']+ ' ' +state.provisional['lastName'];
   Object.keys(state.provisional).forEach(k => {
     if (state.provisional.hasOwnProperty(k)) {
       if (
