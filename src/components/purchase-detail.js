@@ -860,7 +860,7 @@ class PurchaseDetail extends Component {
                 </div>
                 {nextStep && (
                   <div className="col-12">
-                    <div className={`guidance text-center${areSellerStepsOpen ? ' with-seller-steps' : ''}`}>
+                    <div className={`guidance text-center${(showSellerSteps && areSellerStepsOpen) ? ' with-seller-steps' : ''}`}>
                       <div className="triangles d-flex justify-content-between">
                         {[...Array(maxStep)].map((undef, i) => {
                           const count = i + 1

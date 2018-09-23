@@ -11,7 +11,7 @@ const initialState = {
 export default function Wallet(state = initialState, action = {}) {
   switch (action.type) {
   case WalletConstants.INIT_SUCCESS:
-    return { ...state, address: action.wallet, initialized: true }
+    return { ...state, address: action.address, initialized: true }
 
   case WalletConstants.ETH_BALANCE_SUCCESS:
     return { ...state, ethBalance: action.ethBalance }
