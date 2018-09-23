@@ -236,7 +236,7 @@
   "purchase-detail.unnamedUser": "Utilisateur Inconnu",
   "purchase-detail.purchasedFrom": "Acheté à {sellerLink}",
   "purchase-detail.soldTo": "Vendu à {buyerLink}",
-  "purchase-detail.purchasingFrom": "Achat à partir de {sellerLink}",
+  "purchase-detail.purchasingFrom": "Acheté à {sellerLink}",
   "purchase-detail.sellingTo": "Vendre à {buyerLink}",
   "purchase-detail.pending": "En attente",
   "purchase-detail.soldOut": "Épuisé",
