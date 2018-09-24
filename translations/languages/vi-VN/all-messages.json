@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "Cung cấp thực hiện",
   "purchase-detail.offerWithdrawn": "Đề nghị thu hồi",
   "purchase-detail.offerAccepted": "Đề nghị được chấp nhận",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "Đã hoàn thành giao dịch",
   "purchase-detail.saleReviewed": "Mặc hàng đã được đánh giá",
   "purchase-detail.unnamedUser": "Người dùng vô danh",
