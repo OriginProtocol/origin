@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "Offre faite",
   "purchase-detail.offerWithdrawn": "Offre retirée",
   "purchase-detail.offerAccepted": "Offre acceptée",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "Vente terminée",
   "purchase-detail.saleReviewed": "Vente Revue",
   "purchase-detail.unnamedUser": "Utilisateur Inconnu",
