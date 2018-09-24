@@ -101,20 +101,6 @@ const LISTEN_RULES = {
     OfferRuling: getOfferDetails,
     OfferFinalized: getOfferDetails,
     OfferData: getOfferDetails
-  },
-  V00_Marketplace: {
-    ListingCreated: getListingDetails,
-    ListingUpdated: getListingDetails,
-    ListingWithdrawn: getListingDetails,
-    ListingData: getListingDetails,
-    ListingArbitrated: getListingDetails,
-    OfferCreated: getOfferDetails,
-    OfferWithdrawn: getOfferDetails,
-    OfferAccepted: getOfferDetails,
-    OfferDisputed: getOfferDetails,
-    OfferRuling: getOfferDetails,
-    OfferFinalized: getOfferDetails,
-    OfferData: getOfferDetails
   }
 }
 
