@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "Ponuda je napravljena",
   "purchase-detail.offerWithdrawn": "Ponuda povučena",
   "purchase-detail.offerAccepted": "Ponuda prihvaćena",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "Prodaja završena",
   "purchase-detail.saleReviewed": "Sale Reviewed",
   "purchase-detail.unnamedUser": "Neimenovani korisnik",
