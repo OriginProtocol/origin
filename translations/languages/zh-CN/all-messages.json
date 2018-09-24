@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "优惠",
   "purchase-detail.offerWithdrawn": "优惠撤回",
   "purchase-detail.offerAccepted": "优惠已接受",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "销售完成",
   "purchase-detail.saleReviewed": "销售评论",
   "purchase-detail.unnamedUser": "未命名用户",
