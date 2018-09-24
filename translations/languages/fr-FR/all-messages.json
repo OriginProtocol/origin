@@ -75,7 +75,7 @@
   "listing-create.navigationWarning": "Êtes-vous sûr de vouloir quitter? Si vous quittez cette page, vos progrès seront perdus.",
   "listing-create.stepNumberLabel": "Étape {stepNumber}",
   "listing-create.whatTypeOfListing": "Quel type d’annonce souhaitez-vous créer ?",
-  "listing-create.noSchemaSelectedError": "You must first select a listing type",
+  "listing-create.noSchemaSelectedError": "Vous devez d’abord sélectionner un type d’annonce",
   "listing-create.next": "Suivant",
   "listing-create.createListingHeading": "Créez votre annonce",
   "backButtonLabel": "Retour",
