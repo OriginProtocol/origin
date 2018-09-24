@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "crwdns3230:0crwdne3230:0",
   "purchase-detail.offerWithdrawn": "crwdns3231:0crwdne3231:0",
   "purchase-detail.offerAccepted": "crwdns3232:0crwdne3232:0",
+  "purchase-detail.offerDisputed": "crwdns3323:0crwdne3323:0",
+  "purchase-detail.offerRuling": "crwdns3325:0crwdne3325:0",
   "purchase-detail.saleCompleted": "crwdns3233:0crwdne3233:0",
   "purchase-detail.saleReviewed": "crwdns3234:0crwdne3234:0",
   "purchase-detail.unnamedUser": "crwdns2599:0crwdne2599:0",
