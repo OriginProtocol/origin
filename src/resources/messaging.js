@@ -388,7 +388,7 @@ class Messaging {
     if (key == message.payload.key || key == eth_address) {
       // only one of the two conversers can set this parameter
       const entry = await this.getRegisteredKey(key)
-      if (entry.address == verify_address) {
+      if (entry && entry.address == verify_address) {
         return true
       }
     }
