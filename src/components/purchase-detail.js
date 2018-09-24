@@ -13,6 +13,7 @@ import {
   update as updateTransaction,
   upsert as upsertTransaction
 } from 'actions/Transaction'
+import { enableMessaging, storeWeb3Intent } from 'actions/App'
 
 import { ConfirmationModal, IssueModal, PrerequisiteModal, RejectionModal } from 'components/arbitration-modals'
 import Avatar from 'components/avatar'
@@ -68,6 +69,8 @@ class PurchaseDetail extends Component {
     this.toggleModal = this.toggleModal.bind(this)
     this.withdrawOffer = this.withdrawOffer.bind(this)
     this.getListingSchema = this.getListingSchema.bind(this)
+    this.handleEnableMessaging = this.handleEnableMessaging.bind(this)
+    this.handleCancelPrerequisite = this.handleCancelPrerequisite.bind(this)
     this.state = defaultState
 
     this.intlMessages = defineMessages({
@@ -528,9 +531,7 @@ class PurchaseDetail extends Component {
   }
 
   handleProblem() {
-    const isEligibleForArbitration = origin.messaging.canSendMessages()
-
-    if (isEligibleForArbitration) {
+    if (this.props.messagingEnabled) {
       this.toggleModal('confirmation')
     } else {
       this.toggleModal('prerequisite')
@@ -613,6 +614,33 @@ class PurchaseDetail extends Component {
         }
       }
     })
+  }
+
+  handleEnableMessaging() {
+    const { enableMessaging, intl, storeWeb3Intent, web3Account } = this.props
+
+    if (web3Account) {
+      enableMessaging()
+    } else {
+      storeWeb3Intent(intl.formatMessage(this.intlMessages.enableMessaging))
+    }
+
+    // TODO:John - if possible, modify startConversing() method to accept a confirmation callback
+    // or returna promise so we don't have to do this janky interval
+    this.enableMessagingInterval = setInterval(() => {
+      if (origin.messaging.canSendMessages()) {
+        this.toggleModal('prerequisite')
+        this.toggleModal('confirmation')
+        clearInterval(this.enableMessagingInterval)
+      }
+    }, 1000)
+  }
+
+  handleCancelPrerequisite() {
+    this.toggleModal('prerequisite')
+    if (this.enableMessagingInterval) {
+      clearInterval(this.enableMessagingInterval)
+    }
   }
 
   render() {
@@ -1250,12 +1278,8 @@ class PurchaseDetail extends Component {
         <PrerequisiteModal
           isOpen={modalsOpen.prerequisite}
           perspective={perspective}
-          onCancel={() => this.toggleModal('prerequisite')}
-          onSubmit={() => {
-            alert('To Do: enable messaging from here')
-
-            this.toggleModal('prerequisite')
-          }}
+          onCancel={this.handleCancelPrerequisite}
+          onSubmit={this.handleEnableMessaging}
         />
         <RejectionModal
           isOpen={modalsOpen.rejection}
@@ -1266,16 +1290,21 @@ class PurchaseDetail extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ app }) => {
+  const { messagingEnabled, web3 } = app
+  const web3Account = web3.account
   return {
-    web3Account: state.app.web3.account
+    web3Account: web3Account,
+    messagingEnabled
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   updateTransaction: (confirmationCount, transactionReceipt) =>
     dispatch(updateTransaction(confirmationCount, transactionReceipt)),
-  upsertTransaction: transaction => dispatch(upsertTransaction(transaction))
+  upsertTransaction: transaction => dispatch(upsertTransaction(transaction)),
+  enableMessaging: () => dispatch(enableMessaging()),
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
 })
 
 export default connect(
