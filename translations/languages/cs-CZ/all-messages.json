@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "Nabídka byla provedena",
   "purchase-detail.offerWithdrawn": "Nabídka byla zrušena",
   "purchase-detail.offerAccepted": "Nabídka byla přijata",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "Prodej dokončen",
   "purchase-detail.saleReviewed": "Prodej byl zhodnocen",
   "purchase-detail.unnamedUser": "Nepojmenovaný uživatel",
