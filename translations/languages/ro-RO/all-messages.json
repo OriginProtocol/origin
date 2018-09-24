@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "Oferta făcută",
   "purchase-detail.offerWithdrawn": "Ofertă retrasă",
   "purchase-detail.offerAccepted": "Ofertă acceptată",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "Vanzare Finalizata",
   "purchase-detail.saleReviewed": "Vanzare Revizuit",
   "purchase-detail.unnamedUser": "Utilizator anonim",
