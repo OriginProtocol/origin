@@ -380,7 +380,7 @@ class Profile extends Component {
                 wallet={wallet}
                 identityAddress={this.props.identityAddress}
                 withMenus={true}
-                withProfile={true}
+                withProfile={false}
               />
               <Guidance />
             </div>

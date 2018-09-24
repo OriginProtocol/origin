@@ -102,8 +102,8 @@ class WalletCard extends Component {
 
   render() {
     const { users, wallet, web3Account, withBalanceTooltip, withMenus, withProfile } = this.props
-    const user = users.find(u => u.address === wallet.address) || { attestations: [], profile: {} }
-    const { attestations, fullName, profile } = user
+    const user = users.find(u => u.address === wallet.address) || {}
+    const { attestations = [], fullName, profile = {} } = user
     const { address, ethBalance, ognBalance } = wallet
     const userCanReceiveMessages =
       address !== web3Account && origin.messaging.canReceiveMessages(address)
