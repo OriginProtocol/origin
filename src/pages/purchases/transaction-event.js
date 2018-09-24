@@ -20,10 +20,10 @@ class TransactionEvent extends Component {
           {transaction && <EtherscanLink hash={transaction.transactionHash} />}
         </td>
         <td className="text-truncate">
-          {buyer.address && <EtherscanLink hash={buyer.address} />}
+          {buyer && buyer.address && <EtherscanLink hash={buyer.address} />}
         </td>
         <td className="text-truncate">
-          {seller.address && <EtherscanLink hash={seller.address} />}
+          {seller && seller.address && <EtherscanLink hash={seller.address} />}
         </td>
       </tr>
     )

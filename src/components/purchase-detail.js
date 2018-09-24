@@ -165,6 +165,14 @@ class PurchaseDetail extends Component {
         id: 'purchase-detail.offerAccepted',
         defaultMessage: 'Offer Accepted'
       },
+      offerDisputed: {
+        id: 'purchase-detail.offerDisputed',
+        defaultMessage: 'Dispute Started'
+      },
+      offerRuling: {
+        id: 'purchase-detail.offerRuling',
+        defaultMessage: 'Ruling Complete'
+      },
       saleCompleted: {
         id: 'purchase-detail.saleCompleted',
         defaultMessage: 'Sale Completed'
@@ -682,6 +690,8 @@ class PurchaseDetail extends Component {
     const offerCreated = purchase.event('OfferCreated')
     const offerWithdrawn = purchase.event('OfferWithdrawn')
     const offerAccepted = purchase.event('OfferAccepted')
+    const offerDisputed = purchase.event('OfferDisputed')
+    const offerRuling = purchase.event('OfferRuling')
     const offerFinalized = purchase.event('OfferFinalized')
     const offerData = purchase.event('OfferData')
 
@@ -1090,6 +1100,14 @@ class PurchaseDetail extends Component {
                     transaction={offerAccepted}
                     buyer={buyer}
                     seller={seller}
+                  />
+                  <TransactionEvent
+                    eventName={this.props.intl.formatMessage(this.intlMessages.offerDisputed)}
+                    transaction={offerDisputed}
+                  />
+                  <TransactionEvent
+                    eventName={this.props.intl.formatMessage(this.intlMessages.offerRuling)}
+                    transaction={offerRuling}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.saleCompleted)}

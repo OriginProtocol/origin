@@ -88,6 +88,14 @@
     "defaultMessage": "Offer Accepted"
   },
   {
+    "id": "purchase-detail.offerDisputed",
+    "defaultMessage": "Dispute Started"
+  },
+  {
+    "id": "purchase-detail.offerRuling",
+    "defaultMessage": "Ruling Complete"
+  },
+  {
     "id": "purchase-detail.saleCompleted",
     "defaultMessage": "Sale Completed"
   },
