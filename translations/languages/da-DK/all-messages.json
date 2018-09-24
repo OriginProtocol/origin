@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "Tilbud lavet",
   "purchase-detail.offerWithdrawn": "Udbudt tilbagetrukket",
   "purchase-detail.offerAccepted": "Tilbud accepteret",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "Salg Afsluttet",
   "purchase-detail.saleReviewed": "Salg Anmeldt",
   "purchase-detail.unnamedUser": "Unnamed bruger",
