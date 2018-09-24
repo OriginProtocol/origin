@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "オファーする",
   "purchase-detail.offerWithdrawn": "オファーを撤回する",
   "purchase-detail.offerAccepted": "オファーが承認されました",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "販売完了",
   "purchase-detail.saleReviewed": "販売にレビューが記載されました",
   "purchase-detail.unnamedUser": "名前の無いユーザー",
