@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "Η προσφορά έγινε",
   "purchase-detail.offerWithdrawn": "Η προσφορά αποσύρεται",
   "purchase-detail.offerAccepted": "Η προσφορά έγινε αποδεκτή",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "Η πώληση ολοκληρώθηκε",
   "purchase-detail.saleReviewed": "Η πώληση αξιολογήθηκε",
   "purchase-detail.unnamedUser": "Ανώνυμος χρήστης",
