@@ -5,8 +5,7 @@ import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 
-import { dismissMessaging, enableMessaging } from 'actions/App'
-import { storeWeb3Intent } from 'actions/App'
+import { dismissMessaging, enableMessaging, storeWeb3Intent } from 'actions/App'
 
 import ConversationListItem from 'components/conversation-list-item'
 
