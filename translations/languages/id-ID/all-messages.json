@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "Penawaran dibuat",
   "purchase-detail.offerWithdrawn": "Penawaran Ditarik",
   "purchase-detail.offerAccepted": "Penawaran Diterima",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "Dijual Selesai",
   "purchase-detail.saleReviewed": "Sale Diulas",
   "purchase-detail.unnamedUser": "Pengguna tanpa nama",
