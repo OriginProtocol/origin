@@ -68,7 +68,6 @@ class MySaleCard extends Component {
     const completed = ['finalized', 'sellerReviewed'].includes(status)
     const pending = !voided && !completed
     const step = offerStatusToStep(status)
-    const timestamp = ''
 
     return (
       <div className="sale card">
