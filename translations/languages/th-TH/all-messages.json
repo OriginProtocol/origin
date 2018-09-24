@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "ข้อเสนอพิเศษทำ",
   "purchase-detail.offerWithdrawn": "ข้อเสนอยกเลิก",
   "purchase-detail.offerAccepted": "ยอมรับข้อเสนอพิเศษแล้ว",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "การขายเสร็จสมบูรณ์แล้ว",
   "purchase-detail.saleReviewed": "ขายแล้ว",
   "purchase-detail.unnamedUser": "ผู้ใช้ที่ไม่มีชื่อ",
