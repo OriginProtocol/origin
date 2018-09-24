@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "ఆఫర్ చెసింది",
   "purchase-detail.offerWithdrawn": "ఆఫర్ తీసివేయబడింది",
   "purchase-detail.offerAccepted": "ఆఫర్ అంగీకరించబడింది",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "అమ్మకానికి పూర్తయింది",
   "purchase-detail.saleReviewed": "అమ్మకానికి సమీక్షించబడింది",
   "purchase-detail.unnamedUser": "పేరులేని వాడుకరి",
