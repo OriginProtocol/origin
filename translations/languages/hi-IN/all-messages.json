@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "प्रस्ताव बनाया गया",
   "purchase-detail.offerWithdrawn": "प्रस्ताव वापस ले लिया",
   "purchase-detail.offerAccepted": "प्रस्ताव स्वीकृत है",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "बिक्री पूर्ण",
   "purchase-detail.saleReviewed": "बिक्री की समीक्षा की",
   "purchase-detail.unnamedUser": "अनाम उपयोगकर्ता",
