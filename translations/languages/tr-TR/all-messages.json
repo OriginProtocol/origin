@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "Teklif Yapıldı",
   "purchase-detail.offerWithdrawn": "Teklif Çekildi",
   "purchase-detail.offerAccepted": "Teklif kabul edildi",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "Satış Tamamlandı",
   "purchase-detail.saleReviewed": "Satılık yorum yapıldı",
   "purchase-detail.unnamedUser": "Adsız Kullanıcı",
