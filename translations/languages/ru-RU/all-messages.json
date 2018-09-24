@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "Предложение сделано",
   "purchase-detail.offerWithdrawn": "Предложение снято",
   "purchase-detail.offerAccepted": "Предложение принято",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "Продажа завершена",
   "purchase-detail.saleReviewed": "Продажа",
   "purchase-detail.unnamedUser": "Безымянный пользователь",
