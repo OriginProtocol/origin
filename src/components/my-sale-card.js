@@ -104,7 +104,7 @@ class MySaleCard extends Component {
               </h2>
               <p className="address text-muted">{user.address}</p>
               <div className="d-flex">
-                <p className="price" data-createdAt={ createdAt }>
+                <p className="price">
                   <FormattedMessage
                     id={'my-sale-card.price'}
                     defaultMessage={'Price'}
@@ -116,7 +116,7 @@ class MySaleCard extends Component {
             </div>
             <div className="timestamp-container order-2 text-muted text-right">
               <p className="timestamp">
-                {timestamp}
+                {moment(createdAt * 1000).fromNow()}
               </p>
             </div>
             <div className="aspect-ratio order-1 order-lg-3">
