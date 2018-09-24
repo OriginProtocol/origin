@@ -64,12 +64,14 @@ class MyPurchases extends Component {
 
   render() {
     const { filter, loading, purchases } = this.state
-    const filteredPurchases = purchases.filter(obj => {
-      const step = offerStatusToStep(obj.offer.status)
+    const completedStates = ['withdrawn', 'finalized', 'sellerReviewed']
+    const filteredPurchases = purchases.filter(({ offer }) => {
+      const completed = completedStates.includes(offer.status)
+
       if (filter === 'pending') {
-        return step < 4
+        return !completed
       } else if (filter === 'complete') {
-        return step >= 4
+        return completed
       } else {
         return true
       }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import { defineMessages, injectIntl } from 'react-intl'
@@ -14,17 +14,33 @@ class MyPurchaseCard extends Component {
     this.state = { listing: {}, loading: false }
 
     this.intlMessages = defineMessages({
-      received: {
-        id: 'my-purchase-card.received',
-        defaultMessage: 'Received'
+      created: {
+        id: 'my-purchase-card.created',
+        defaultMessage: 'Offer made'
       },
-      sentBySeller: {
-        id: 'my-purchase-card.sentBySeller',
-        defaultMessage: 'Sent by Seller'
+      accepted: {
+        id: 'my-purchase-card.accepted',
+        defaultMessage: 'Offer accepted'
       },
-      purchased: {
-        id: 'my-purchase-card.purchased',
-        defaultMessage: 'Purchased'
+      withdrawn: {
+        id: 'my-purchase-card.withdrawn',
+        defaultMessage: 'Offer withdrawn'
+      },
+      rejected: {
+        id: 'my-purchase-card.rejected',
+        defaultMessage: 'Offer rejected'
+      },
+      disputed: {
+        id: 'my-purchase-card.disputed',
+        defaultMessage: 'Sale disputed'
+      },
+      finalized: {
+        id: 'my-purchase-card.finalized',
+        defaultMessage: 'Sale confirmed'
+      },
+      reviewed: {
+        id: 'my-purchase-card.reviewed',
+        defaultMessage: 'Sale reviewed'
       },
       unknown: {
         id: 'my-purchase-card.unknown',
@@ -50,21 +66,35 @@ class MyPurchaseCard extends Component {
     const created = Number(offer.createdAt)
     const soldAt = created * 1000 // convert seconds since epoch to ms
     const { category, name, pictures, price } = listing
+    const voided = ['rejected', 'withdrawn'].includes(offer.status)
     const step = offerStatusToStep(offer.status)
 
     let verb
-    switch (step) {
-    case 3:
-      verb = this.props.intl.formatMessage(this.intlMessages.received)
-      break
-    case 2:
-      verb = this.props.intl.formatMessage(this.intlMessages.sentBySeller)
-      break
-    case 1:
-      verb = this.props.intl.formatMessage(this.intlMessages.purchased)
-      break
-    default:
-      verb = this.props.intl.formatMessage(this.intlMessages.unknown)
+    switch (offer.status) {
+      case 'created':
+        verb = this.props.intl.formatMessage(this.intlMessages.created)
+        break
+      case 'accepted':
+        verb = this.props.intl.formatMessage(this.intlMessages.accepted)
+        break
+      case 'withdrawn':
+        const actor = offer.events.find(({ event }) => event === 'OfferWithdrawn').returnValues[0]
+
+        verb = actor === offer.buyer ?
+               this.props.intl.formatMessage(this.intlMessages.withdrawn) :
+               this.props.intl.formatMessage(this.intlMessages.rejected)
+        break
+      case 'disputed':
+        verb = this.props.intl.formatMessage(this.intlMessages.disputed)
+        break
+      case 'finalized':
+        verb = this.props.intl.formatMessage(this.intlMessages.finalized)
+        break
+      case 'sellerReviewed':
+        verb = this.props.intl.formatMessage(this.intlMessages.reviewed)
+        break
+      default:
+        verb = this.props.intl.formatMessage(this.intlMessages.unknown)
     }
 
     const timestamp = `${verb} on ${this.props.intl.formatDate(soldAt)}`
@@ -94,20 +124,24 @@ class MyPurchaseCard extends Component {
                 <Link to={`/purchases/${offerId}`}>{name}</Link>
               </h2>
               <p className="timestamp">{timestamp}</p>
-              <div className="d-flex">
-                <p className="price">{`${Number(price).toLocaleString(
-                  undefined,
-                  { minimumFractionDigits: 5, maximumFractionDigits: 5 }
-                )} ${this.props.intl.formatMessage(this.intlMessages.ETH)}`}</p>
-                {/* Not Yet Relevant */}
-                {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
-              </div>
-              <PurchaseProgress
-                currentStep={step}
-                maxStep={3}
-                perspective="buyer"
-                subdued={true}
-              />
+              {!voided &&
+                <Fragment>
+                  <div className="d-flex">
+                    <p className="price">{`${Number(price).toLocaleString(
+                      undefined,
+                      { minimumFractionDigits: 5, maximumFractionDigits: 5 }
+                    )} ${this.props.intl.formatMessage(this.intlMessages.ETH)}`}</p>
+                    {/* Not Yet Relevant */}
+                    {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
+                  </div>
+                  <PurchaseProgress
+                    currentStep={step}
+                    maxStep={3}
+                    perspective="buyer"
+                    subdued={true}
+                  />
+                </Fragment>
+              }
               <div className="actions d-flex">
                 <div className="links-container">
                   {/*<a onClick={() => alert('To Do')}>Open a Dispute</a>*/}
