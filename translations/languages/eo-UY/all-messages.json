@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "Proponita Farita",
   "purchase-detail.offerWithdrawn": "Proponita Retiriĝita",
   "purchase-detail.offerAccepted": "Proponita Akceptita",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "Vendo Kompletigita",
   "purchase-detail.saleReviewed": "Vendo Reviziis",
   "purchase-detail.unnamedUser": "Nekonata Uzanto",
