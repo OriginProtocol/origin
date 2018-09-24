@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "Oferta Made",
   "purchase-detail.offerWithdrawn": "Oferta wycofana",
   "purchase-detail.offerAccepted": "Oferta zaakceptowana",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "Sprzedaż zakończona",
   "purchase-detail.saleReviewed": "Sprzedaż recenzja",
   "purchase-detail.unnamedUser": "Nienazwany użytkownik",
