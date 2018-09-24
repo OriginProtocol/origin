@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "제공되는 제품",
   "purchase-detail.offerWithdrawn": "철회 된 쿠폰",
   "purchase-detail.offerAccepted": "제안 제안",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "판매 완료 됨",
   "purchase-detail.saleReviewed": "판매 검토",
   "purchase-detail.unnamedUser": "익명 사용자",
