@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "Ponuka bola vykonaná",
   "purchase-detail.offerWithdrawn": "Ponuka bola stiahnutá",
   "purchase-detail.offerAccepted": "Ponuka bola prijatá",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "Predaj sa dokončil",
   "purchase-detail.saleReviewed": "Predaj preskúmaný",
   "purchase-detail.unnamedUser": "Nepomenovaný používateľ",
