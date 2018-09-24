@@ -19,10 +19,11 @@
     </script>
   </head>
   <body>
-    <div id="root" class="d-flex flex-column">
-      <div class="loading-clock d-flex justify-content-center align-items-center">
-        &#128337;<!--Unicode Clock-->
-      </div>  
+    <div id="root">
+      <!-- will render before src/css styles and be replaced by ReactDOM -->
+      <div style="display: flex; align-items: center; justify-content: center; height: 100vh; width: 100vw;">
+        <img src="images/spinner-animation-dark.svg" role="presentation" />
+      </div>
     </div>
   </body>
 </html>

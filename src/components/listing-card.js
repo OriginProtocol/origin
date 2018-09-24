@@ -7,15 +7,37 @@ import ListingCardPrices from 'components/listing-card-prices'
 
 import { getListing } from 'utils/listing'
 
+import origin from '../services/origin'
+
 class ListingCard extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: true
+      loading: true,
+      offers: []
     }
   }
 
-  async componentDidMount() {
+  async componentWillMount() {
+    await this.loadListing()
+    await this.loadOffers()
+  }
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   // init tooltip only when necessary
+  //   if (this.state.boostLevelIsPastSomeThreshold && !prevState.id) {
+  //     $('[data-toggle="tooltip"]').tooltip({
+  //       delay: { hide: 1000 },
+  //       html: true
+  //     })
+  //   }
+  // }
+
+  componentWillUnmount() {
+    $('[data-toggle="tooltip"]').tooltip('dispose')
+  }
+
+  async loadListing() {
     try {
       const listing = await getListing(this.props.listingId, true)
 
@@ -33,18 +55,18 @@ class ListingCard extends Component {
     }
   }
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   // init tooltip only when necessary
-  //   if (this.state.boostLevelIsPastSomeThreshold && !prevState.id) {
-  //     $('[data-toggle="tooltip"]').tooltip({
-  //       delay: { hide: 1000 },
-  //       html: true
-  //     })
-  //   }
-  // }
-
-  componentWillUnmount() {
-    $('[data-toggle="tooltip"]').tooltip('dispose')
+  async loadOffers() {
+    try {
+      const offers = await origin.marketplace.getOffers(this.props.listingId)
+      this.setState({ offers })
+    } catch (error) {
+      console.error(
+        `Error fetching offers for listing: ${
+          this.props.listingId
+        }`
+      )
+      console.error(error)
+    }
   }
 
   render() {
@@ -53,13 +75,16 @@ class ListingCard extends Component {
       category,
       loading,
       name,
+      offers,
       pictures,
       price,
       unitsRemaining
     } = this.state
     const photo = pictures && pictures.length && pictures[0]
-    const isPending = false // will be handled by offer status
-    const isSold = !unitsRemaining
+    const pendingStates = ['created', 'accepted', 'disputed']
+    const isPending = offers.find(o => pendingStates.includes(o.status))
+    const soldStates = ['finalized', 'sellerReviewed']
+    const isSold = offers.find(o => soldStates.includes(o.status))
 
     return (
       <div

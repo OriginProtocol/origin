@@ -289,7 +289,7 @@ class MyListings extends Component {
         {processing && (
           <Modal backdrop="static" isOpen={true} tabIndex="-1">
             <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
+              <img src="images/spinner-animation-light.svg" role="presentation" />
             </div>
             <FormattedMessage
               id={'my-listings.processingUpdate'}

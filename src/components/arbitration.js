@@ -354,7 +354,7 @@ class Arbitration extends Component {
         {processing && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
+              <img src="images/spinner-animation-light.svg" role="presentation" />
             </div>
             Processing your update
             <br />

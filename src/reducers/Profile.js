@@ -5,7 +5,7 @@ const initialState = {
     profile: {},
     attestations: []
   },
-  name: 'Unnamed User',
+  name: '',
   published: {
     firstName: '',
     lastName: '',
