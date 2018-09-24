@@ -17,7 +17,7 @@ ipfsImageTag: ipfs/go-ipfs
 ipfsImageTag: master
 
 faucetImage: origin-faucet
-faucetImageTag: '1cfc84d'
+faucetImageTag: '55ef75b'
 
 eventlistenerImage: event-listener
 eventlistenerImageTag: '55ef75b'
