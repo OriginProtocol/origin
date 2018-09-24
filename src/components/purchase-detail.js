@@ -13,6 +13,7 @@ import {
   update as updateTransaction,
   upsert as upsertTransaction
 } from 'actions/Transaction'
+import { enableMessaging, storeWeb3Intent } from 'actions/App'
 
 import { ConfirmationModal, IssueModal, PrerequisiteModal, RejectionModal } from 'components/arbitration-modals'
 import Avatar from 'components/avatar'
@@ -29,7 +30,7 @@ import { translateSchema } from 'utils/translationUtils'
 
 import origin from '../services/origin'
 
-const ARBITRATOR_ETH_ADDRESS = process.env.ARBITRATOR_ACCOUNT
+const ARBITRATOR_ACCOUNT = process.env.ARBITRATOR_ACCOUNT
 
 const defaultState = {
   buyer: {},
@@ -67,6 +68,8 @@ class PurchaseDetail extends Component {
     this.toggleModal = this.toggleModal.bind(this)
     this.withdrawOffer = this.withdrawOffer.bind(this)
     this.getListingSchema = this.getListingSchema.bind(this)
+    this.handleEnableMessaging = this.handleEnableMessaging.bind(this)
+    this.handleCancelPrerequisite = this.handleCancelPrerequisite.bind(this)
     this.state = defaultState
 
     this.intlMessages = defineMessages({
@@ -527,9 +530,7 @@ class PurchaseDetail extends Component {
   }
 
   handleProblem() {
-    const isEligibleForArbitration = origin.messaging.canSendMessages()
-
-    if (isEligibleForArbitration) {
+    if (this.props.messagingEnabled) {
       this.toggleModal('confirmation')
     } else {
       this.toggleModal('prerequisite')
@@ -585,13 +586,13 @@ class PurchaseDetail extends Component {
 
       // disclose shared decryption key with arbitrator if one exists
       if (keys.length) {
-        await origin.messaging.sendConvMessage(ARBITRATOR_ETH_ADDRESS, {
+        await origin.messaging.sendConvMessage(ARBITRATOR_ACCOUNT, {
           decryption: { keys, roomId }
         })
       }
 
       // send a message to arbitrator if form is not blank
-      issue.length && origin.messaging.sendConvMessage(ARBITRATOR_ETH_ADDRESS, {
+      issue.length && origin.messaging.sendConvMessage(ARBITRATOR_ACCOUNT, {
         content: issue
       })
 
@@ -612,6 +613,33 @@ class PurchaseDetail extends Component {
         }
       }
     })
+  }
+
+  handleEnableMessaging() {
+    const { enableMessaging, intl, storeWeb3Intent, web3Account } = this.props
+
+    if (web3Account) {
+      enableMessaging()
+    } else {
+      storeWeb3Intent(intl.formatMessage(this.intlMessages.enableMessaging))
+    }
+
+    // TODO:John - if possible, modify startConversing() method to accept a confirmation callback
+    // or returna promise so we don't have to do this janky interval
+    this.enableMessagingInterval = setInterval(() => {
+      if (origin.messaging.canSendMessages()) {
+        this.toggleModal('prerequisite')
+        this.toggleModal('confirmation')
+        clearInterval(this.enableMessagingInterval)
+      }
+    }, 1000)
+  }
+
+  handleCancelPrerequisite() {
+    this.toggleModal('prerequisite')
+    if (this.enableMessagingInterval) {
+      clearInterval(this.enableMessagingInterval)
+    }
   }
 
   render() {
@@ -693,7 +721,7 @@ class PurchaseDetail extends Component {
         defaultMessage={'Unnamed User'}
       />
     )
-    const arbitrationIsAvailable = ARBITRATOR_ETH_ADDRESS && web3Account !== ARBITRATOR_ETH_ADDRESS
+    const arbitrationIsAvailable = ARBITRATOR_ACCOUNT && web3Account !== ARBITRATOR_ACCOUNT
 
     return (
       <div className="purchase-detail">
@@ -860,7 +888,7 @@ class PurchaseDetail extends Component {
                 </div>
                 {nextStep && (
                   <div className="col-12">
-                    <div className={`guidance text-center${areSellerStepsOpen ? ' with-seller-steps' : ''}`}>
+                    <div className={`guidance text-center${(showSellerSteps && areSellerStepsOpen) ? ' with-seller-steps' : ''}`}>
                       <div className="triangles d-flex justify-content-between">
                         {[...Array(maxStep)].map((undef, i) => {
                           const count = i + 1
@@ -894,7 +922,7 @@ class PurchaseDetail extends Component {
                       }
                       {!reviewable &&
                         <div className="instruction">
-                          {instruction || 
+                          {instruction ||
                             <FormattedMessage
                               id={'purchase-detail.nothingToDo'}
                               defaultMessage={
@@ -1259,12 +1287,8 @@ class PurchaseDetail extends Component {
         <PrerequisiteModal
           isOpen={modalsOpen.prerequisite}
           perspective={perspective}
-          onCancel={() => this.toggleModal('prerequisite')}
-          onSubmit={() => {
-            alert('To Do: enable messaging from here')
-
-            this.toggleModal('prerequisite')
-          }}
+          onCancel={this.handleCancelPrerequisite}
+          onSubmit={this.handleEnableMessaging}
         />
         <RejectionModal
           isOpen={modalsOpen.rejection}
@@ -1275,16 +1299,21 @@ class PurchaseDetail extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ app }) => {
+  const { messagingEnabled, web3 } = app
+  const web3Account = web3.account
   return {
-    web3Account: state.app.web3.account
+    web3Account: web3Account,
+    messagingEnabled
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   updateTransaction: (confirmationCount, transactionReceipt) =>
     dispatch(updateTransaction(confirmationCount, transactionReceipt)),
-  upsertTransaction: transaction => dispatch(upsertTransaction(transaction))
+  upsertTransaction: transaction => dispatch(upsertTransaction(transaction)),
+  enableMessaging: () => dispatch(enableMessaging()),
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
 })
 
 export default connect(

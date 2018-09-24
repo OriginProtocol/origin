@@ -1475,6 +1475,10 @@ a:hover {
 
 /* Modal */
 
+.modal-open {
+  overflow: auto;
+}
+
 .modal-backdrop {
   background-color: rgba(235, 240, 243, 0.6);
 }
@@ -1640,6 +1644,13 @@ a:hover {
   padding-top: 20px;
 }
 
+.onboarding .split-container {
+  height: 100%;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
 .onboarding .btn {
   width: auto;
   height: 50px;
@@ -1650,8 +1661,11 @@ a:hover {
 }
 
 .onboarding-modal {
-  position: absolute;
-  top: 75px;
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  bottom: auto;
 }
 
 .onboarding-modal .modal-lg {
@@ -2765,7 +2779,8 @@ select.form-control:not([size]):not([multiple]) {
   padding: 15px;
 }
 
-.listing-form .select-boost .boost-slider .info-box {
+.listing-form .select-boost .boost-slider .info-box,
+.listing-form .schema-options .info-box {
   padding: 10px;
   margin-top: 20px;
   margin-bottom: 10px;
@@ -2775,13 +2790,17 @@ select.form-control:not([size]):not([multiple]) {
   margin: 10px 0 5px;
 }
 
-.boost-slider .info-box.warn {
+.listing-form .info-box.warn {
   background-color: var(--orange-red-light);
   border: 1px solid var(--orange-red);
 }
 
-.boost-slider .info-box.warn p {
+.listing-form .info-box.warn p {
   color: var(--orange-red);
+}
+
+.listing-form .schema-options .info-box p {
+  margin-bottom: 0;
 }
 
 .boost-tooltip {

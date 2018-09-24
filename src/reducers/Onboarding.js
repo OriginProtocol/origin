@@ -76,7 +76,7 @@ const initialState = {
   currentStep: steps[0],
   steps,
   progress: false,
-  learnMore: false,
+  learnMore: null,
   splitPanel: false,
   stepsCompleted: false
 }
