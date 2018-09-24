@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "প্রস্তাব করা",
   "purchase-detail.offerWithdrawn": "প্রস্তাব প্রত্যাহার",
   "purchase-detail.offerAccepted": "প্রস্তাব গৃহীত",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "বিক্রয় সম্পন্ন",
   "purchase-detail.saleReviewed": "বিক্রয় পর্যালোচনা",
   "purchase-detail.unnamedUser": "নামহীন ব্যবহারকারী",
