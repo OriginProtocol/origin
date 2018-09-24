@@ -20,6 +20,7 @@ import Avatar from 'components/avatar'
 import Modal from 'components/modal'
 import PurchaseProgress from 'components/purchase-progress'
 import Review from 'components/review'
+import UnnamedUser from 'components/unnamed-user'
 import UserCard from 'components/user-card'
 
 import TransactionEvent from 'pages/purchases/transaction-event'
@@ -163,6 +164,14 @@ class PurchaseDetail extends Component {
       offerAccepted: {
         id: 'purchase-detail.offerAccepted',
         defaultMessage: 'Offer Accepted'
+      },
+      offerDisputed: {
+        id: 'purchase-detail.offerDisputed',
+        defaultMessage: 'Dispute Started'
+      },
+      offerRuling: {
+        id: 'purchase-detail.offerRuling',
+        defaultMessage: 'Ruling Complete'
       },
       saleCompleted: {
         id: 'purchase-detail.saleCompleted',
@@ -681,6 +690,8 @@ class PurchaseDetail extends Component {
     const offerCreated = purchase.event('OfferCreated')
     const offerWithdrawn = purchase.event('OfferWithdrawn')
     const offerAccepted = purchase.event('OfferAccepted')
+    const offerDisputed = purchase.event('OfferDisputed')
+    const offerRuling = purchase.event('OfferRuling')
     const offerFinalized = purchase.event('OfferFinalized')
     const offerData = purchase.event('OfferData')
 
@@ -707,20 +718,10 @@ class PurchaseDetail extends Component {
 
     const buyerName = buyer.profile ? (
       `${buyer.profile.firstName} ${buyer.profile.lastName}`
-    ) : (
-      <FormattedMessage
-        id={'purchase-detail.unnamedUser'}
-        defaultMessage={'Unnamed User'}
-      />
-    )
+    ) : <UnnamedUser />
     const sellerName = seller.profile ? (
       `${seller.profile.firstName} ${seller.profile.lastName}`
-    ) : (
-      <FormattedMessage
-        id={'purchase-detail.unnamedUser'}
-        defaultMessage={'Unnamed User'}
-      />
-    )
+    ) : <UnnamedUser />
     const arbitrationIsAvailable = ARBITRATOR_ACCOUNT && web3Account !== ARBITRATOR_ACCOUNT
 
     return (
@@ -1101,6 +1102,14 @@ class PurchaseDetail extends Component {
                     seller={seller}
                   />
                   <TransactionEvent
+                    eventName={this.props.intl.formatMessage(this.intlMessages.offerDisputed)}
+                    transaction={offerDisputed}
+                  />
+                  <TransactionEvent
+                    eventName={this.props.intl.formatMessage(this.intlMessages.offerRuling)}
+                    transaction={offerRuling}
+                  />
+                  <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.saleCompleted)}
                     transaction={offerFinalized}
                     buyer={buyer}
@@ -1249,7 +1258,7 @@ class PurchaseDetail extends Component {
         {processing && (
           <Modal backdrop="static" isOpen={true} tabIndex="-1">
             <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
+              <img src="images/spinner-animation-light.svg" role="presentation" />
             </div>
             <FormattedMessage
               id={'purchase-detail.processingUpdate'}

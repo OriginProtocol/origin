@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 
 import { fetchUser } from 'actions/User'
 
 import Avatar from 'components/avatar'
 import Review from 'components/review'
+import UnnamedUser from 'components/unnamed-user'
 import WalletCard from 'components/wallet-card'
 
 import origin from '../../services/origin'
@@ -15,19 +16,12 @@ class User extends Component {
     super(props)
 
     this.state = { reviews: [] }
-
-    this.intlMessages = defineMessages({
-      unnamedUser: {
-        id: 'user.unnamedUser',
-        defaultMessage: 'Unnamed User'
-      }
-    })
   }
 
   async componentDidMount() {
-    const { fetchUser, intl, userAddress } = this.props
+    const { fetchUser, userAddress } = this.props
 
-    fetchUser(userAddress, intl.formatMessage(this.intlMessages.unnamedUser))
+    fetchUser(userAddress)
 
     const listingIdsAsSeller = await origin.marketplace.getListings({
       idsOnly: true,
@@ -69,7 +63,7 @@ class User extends Component {
             </div>
             <div className="col-12 col-sm-8 col-md-5 col-lg-6 order-md-2">
               <div className="name d-flex">
-                <h1>{fullName}</h1>
+                <h1>{fullName || <UnnamedUser />}</h1>
               </div>
               <p>{description}</p>
             </div>
@@ -193,4 +187,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(injectIntl(User))
+)(User)
