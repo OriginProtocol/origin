@@ -189,8 +189,8 @@ class ListingsDetail extends Component {
       price,
       reviews,
       seller,
-      step,
-      unitsRemaining
+      step
+      // unitsRemaining
     } = this.state
     const pendingStates = ['created', 'accepted', 'disputed']
     const isPending = offers.find(o => pendingStates.includes(o.status))

@@ -70,38 +70,38 @@ class MyPurchaseCard extends Component {
 
     let event, verb
     switch (status) {
-      case 'created':
-        event = events.find(({ event }) => event === 'OfferCreated')
-        verb = this.props.intl.formatMessage(this.intlMessages.created)
-        break
-      case 'accepted':
-        event = events.find(({ event }) => event === 'OfferAccepted')
-        verb = this.props.intl.formatMessage(this.intlMessages.accepted)
-        break
-      case 'withdrawn':
-        event = events.find(({ event }) => event === 'OfferWithdrawn')
+    case 'created':
+      event = events.find(({ event }) => event === 'OfferCreated')
+      verb = this.props.intl.formatMessage(this.intlMessages.created)
+      break
+    case 'accepted':
+      event = events.find(({ event }) => event === 'OfferAccepted')
+      verb = this.props.intl.formatMessage(this.intlMessages.accepted)
+      break
+    case 'withdrawn':
+      event = events.find(({ event }) => event === 'OfferWithdrawn')
 
-        const actor = event ? event.returnValues[0] : null
+      const actor = event ? event.returnValues[0] : null
 
-        verb = actor === buyer ?
-               this.props.intl.formatMessage(this.intlMessages.withdrawn) :
-               this.props.intl.formatMessage(this.intlMessages.rejected)
-        break
-      case 'disputed':
-        event = events.find(({ event }) => event === 'OfferDisputed')
-        verb = this.props.intl.formatMessage(this.intlMessages.disputed)
-        break
-      case 'finalized':
-        event = events.find(({ event }) => event === 'OfferFinalized')
-        verb = this.props.intl.formatMessage(this.intlMessages.finalized)
-        break
-      case 'sellerReviewed':
-        event = events.find(({ event }) => event === 'OfferData')
-        verb = this.props.intl.formatMessage(this.intlMessages.reviewed)
-        break
-      default:
-        event = { timestamp: Date.now() / 1000 }
-        verb = this.props.intl.formatMessage(this.intlMessages.unknown)
+      verb = (actor === buyer) ?
+        this.props.intl.formatMessage(this.intlMessages.withdrawn) :
+        this.props.intl.formatMessage(this.intlMessages.rejected)
+      break
+    case 'disputed':
+      event = events.find(({ event }) => event === 'OfferDisputed')
+      verb = this.props.intl.formatMessage(this.intlMessages.disputed)
+      break
+    case 'finalized':
+      event = events.find(({ event }) => event === 'OfferFinalized')
+      verb = this.props.intl.formatMessage(this.intlMessages.finalized)
+      break
+    case 'sellerReviewed':
+      event = events.find(({ event }) => event === 'OfferData')
+      verb = this.props.intl.formatMessage(this.intlMessages.reviewed)
+      break
+    default:
+      event = { timestamp: Date.now() / 1000 }
+      verb = this.props.intl.formatMessage(this.intlMessages.unknown)
     }
 
     const timestamp = `${verb} on ${this.props.intl.formatDate(

@@ -104,7 +104,7 @@ class MySaleCard extends Component {
               </h2>
               <p className="address text-muted">{user.address}</p>
               <div className="d-flex">
-                <p className="price">
+                <p className="price" data-createdAt={ createdAt }>
                   <FormattedMessage
                     id={'my-sale-card.price'}
                     defaultMessage={'Price'}
