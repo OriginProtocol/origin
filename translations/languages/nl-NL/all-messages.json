@@ -233,6 +233,8 @@
   "purchase-detail.offerMade": "Aanbieding gemaakt",
   "purchase-detail.offerWithdrawn": "Aanbieding ingetrokken",
   "purchase-detail.offerAccepted": "Aanbod geaccepteerd",
+  "purchase-detail.offerDisputed": "Dispute Started",
+  "purchase-detail.offerRuling": "Ruling Complete",
   "purchase-detail.saleCompleted": "Verkoop voltooid",
   "purchase-detail.saleReviewed": "Te koop beoordeeld",
   "purchase-detail.unnamedUser": "Anonieme gebruiker",
