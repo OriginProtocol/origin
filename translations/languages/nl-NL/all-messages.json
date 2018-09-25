@@ -259,7 +259,6 @@
   "purchase-detail.txName": "TxName",
   "purchase-detail.txHash": "TxHash",
   "purchase-detail.from": "Van",
-  "purchase-detail.to": "Naar",
   "purchase-detail.listingDetails": "Advertentie details",
   "purchase-detail.viewOnIPFS": "Bekijk op IPFS",
   "purchase-detail.reviewsHeading": "Beoordelingen",
