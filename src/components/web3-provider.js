@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 
-import { storeWeb3Account, storeWeb3Intent } from 'actions/App'
+import { storeWeb3Account, storeWeb3Intent, storeNetwork } from 'actions/App'
 
 import Modal from 'components/modal'
 
@@ -401,6 +401,7 @@ class Web3Provider extends Component {
           })
         } else {
           if (networkId !== this.state.networkId) {
+            this.props.storeNetwork(networkId)
             this.setState({
               networkError: null,
               networkId
@@ -506,7 +507,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   storeWeb3Account: addr => dispatch(storeWeb3Account(addr)),
-  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
+  storeNetwork: networkId => dispatch(storeNetwork(networkId))
 })
 
 export default withRouter(

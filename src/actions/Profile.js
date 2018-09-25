@@ -13,6 +13,7 @@ export const ProfileConstants = keyMirror(
 
     DEPLOY: null,
     DEPLOY_SUCCESS: null,
+    DEPLOY_IN_PROGRESS: null,
     DEPLOY_ERROR: null,
     DEPLOY_RESET: null,
 
@@ -58,7 +59,13 @@ export function deployProfile() {
         description: provisional.description,
         avatar: provisional.pic
       },
-      attestations: []
+      attestations: [],
+      transactionHashCallback: (hash) => {
+        dispatch({
+          type: ProfileConstants.DEPLOY_IN_PROGRESS,
+          hash
+        })
+      }
     }
 
     if (!published.facebook && provisional.facebook) {

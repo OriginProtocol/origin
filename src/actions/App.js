@@ -25,7 +25,8 @@ export const AppConstants = keyMirror(
     ON_MOBILE: null,
     WEB3_ACCOUNT: null,
     WEB3_INTENT: null,
-    TRANSLATIONS: null
+    TRANSLATIONS: null,
+    WEB3_NETWORK: null,
   },
   'APP'
 )
@@ -70,6 +71,10 @@ export function setMessagingInitialized(messagingInitialized) {
 
 export function setMobile(device) {
   return { type: AppConstants.ON_MOBILE, device }
+}
+
+export function storeNetwork(networkId) {
+  return { type: AppConstants.WEB3_NETWORK, networkId }
 }
 
 export function storeWeb3Account(address) {

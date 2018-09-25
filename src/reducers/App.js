@@ -12,7 +12,8 @@ const initialState = {
   onMobile: null,
   web3: {
     account: null,
-    intent: null
+    intent: null,
+    networkId: null
   },
   translations: {
     selectedLanguageCode: null,
@@ -44,6 +45,9 @@ export default function App(state = initialState, action = {}) {
 
   case AppConstants.WEB3_INTENT:
     return { ...state, web3: { ...state.web3, intent: action.intent } }
+
+  case AppConstants.WEB3_NETWORK:
+    return { ...state, web3: { ...state.web3, networkId: action.networkId } }
 
   case AppConstants.TRANSLATIONS:
     return {

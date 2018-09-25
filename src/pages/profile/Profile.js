@@ -35,6 +35,14 @@ import getCurrentProvider from 'utils/getCurrentProvider'
 
 import origin from '../../services/origin'
 
+const etherscanNetworkUrls = {
+  1: '',
+  3: 'ropsten.',
+  4: 'rinkeby.',
+  42: 'kovan.',
+  999: 'localhost.'
+}
+
 class Profile extends Component {
   constructor(props) {
     super(props)
@@ -154,7 +162,7 @@ class Profile extends Component {
   // conditionally close modal identified by data attribute
   handleToggle(e) {
     e.preventDefault()
-
+    console.log("HANDLE TOGGLE")
     this.props.storeWeb3Intent(
       this.props.intl.formatMessage(this.intlMessages.manageYourProfile)
     )
@@ -498,6 +506,7 @@ class Profile extends Component {
           changes={changes}
           handleToggle={this.handleToggle}
           onConfirm={() => {
+            console.log("CONFIRM PUBLISH on confirm")
             this.setState({
               modalsOpen: { ...modalsOpen, publish: false },
               step: 'metamask'
@@ -591,17 +600,34 @@ class Profile extends Component {
           </Modal>
         )}
 
-        {this.props.profile.status === 'success' && (
+        {this.props.profile.status === 'inProgress' && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img src="images/circular-check-button.svg" role="presentation" />
             </div>
             <h2>
               <FormattedMessage
-                id={'Profile.success'}
-                defaultMessage={'Success'}
+                id={'Profile.inProgress'}
+                defaultMessage={'In Progress'}
               />
             </h2>
+            <div>
+              <FormattedMessage
+                id={'Profile.transactionBeingProcessed'}
+                defaultMessage={`Profile changes can be seen once the transaction is processed.`}
+              />
+            </div>
+            <div>
+              <a 
+                href={`https://${etherscanNetworkUrls[this.props.networkId]}etherscan.io/tx/${this.props.profile.lastDeployProfileHash}`}
+                target="_blank"
+              >
+                <FormattedMessage
+                  id={'Profile.viewTransaction'}
+                  defaultMessage={'View Transaction'}
+                />
+              </a>
+            </div>
             <div className="button-container">
               <button
                 className="btn btn-clear"
@@ -656,7 +682,8 @@ const mapStateToProps = state => {
     onMobile: state.app.onMobile,
     wallet: state.wallet,
     web3Account: state.app.web3.account,
-    web3Intent: state.app.web3.intent
+    web3Intent: state.app.web3.intent,
+    networkId: state.app.web3.networkId
   }
 }
 
