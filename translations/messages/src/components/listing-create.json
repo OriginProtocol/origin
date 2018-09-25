@@ -88,22 +88,6 @@
     "defaultMessage": "Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left."
   },
   {
-    "id": "listing-create.confirmTransaction",
-    "defaultMessage": "Confirm transaction"
-  },
-  {
-    "id": "listing-create.pressSubmitInMetaMask",
-    "defaultMessage": "Press {submit} in {currentProvider} window"
-  },
-  {
-    "id": "listing-create.uploadingYourListing",
-    "defaultMessage": "Uploading your listing"
-  },
-  {
-    "id": "listing-create.pleaseStandBy",
-    "defaultMessage": "Please stand by..."
-  },
-  {
     "id": "listing-create.successMessage",
     "defaultMessage": "Success!"
   },

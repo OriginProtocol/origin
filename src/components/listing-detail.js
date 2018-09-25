@@ -110,10 +110,6 @@ class ListingsDetail extends Component {
           offerData,
           (confirmationCount, transactionReceipt) => {
             this.props.updateTransaction(confirmationCount, transactionReceipt)
-
-            if (!transactionReceipt && this.state.step !== this.STEP.PROCESSING) {
-              this.setState({ step: this.STEP.PROCESSING })
-            }
           }
         )
         this.props.upsertTransaction({

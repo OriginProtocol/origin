@@ -22,6 +22,9 @@ export const MetamaskModal = ({ currentProvider }) => (
   </Modal>
 )
 
+// TODO:John - this modal isn't used for now, but the workflow step "PROCESSING"
+// exists in several workflows. We can use this modal once we are able to 
+// listen to the .on('transactionHash') event
 export const ProcessingModal = () => (
   <Modal backdrop="static" isOpen={true}>
     <div className="image-container">
