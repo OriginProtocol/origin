@@ -15,7 +15,12 @@ import {
 } from 'actions/Transaction'
 import { enableMessaging, storeWeb3Intent } from 'actions/App'
 
-import { ConfirmationModal, IssueModal, PrerequisiteModal, RejectionModal } from 'components/arbitration-modals'
+import {
+  ConfirmationModal,
+  IssueModal,
+  PrerequisiteModal,
+  RejectionModal
+} from 'components/modals/arbitration-modals'
 import Avatar from 'components/avatar'
 import Modal from 'components/modal'
 import PurchaseProgress from 'components/purchase-progress'

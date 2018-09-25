@@ -18,6 +18,7 @@ import {
 import Modal from 'components/modal'
 import Review from 'components/review'
 import UserCard from 'components/user-card'
+import { MetamaskModal, ProcessingModal } from 'components/modals/wait-modals'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
 import { getListing } from 'utils/listing'
@@ -91,7 +92,6 @@ class ListingsDetail extends Component {
     if (web3.givenProvider && this.props.web3Account) {
       this.setState({ step: this.STEP.METAMASK })
       try {
-        this.setState({ step: this.STEP.PROCESSING })
         const offerData = {
           listingId: this.props.listingId,
           listingType: 'unit',
@@ -110,6 +110,10 @@ class ListingsDetail extends Component {
           offerData,
           (confirmationCount, transactionReceipt) => {
             this.props.updateTransaction(confirmationCount, transactionReceipt)
+
+            if (!transactionReceipt && this.state.step !== this.STEP.PROCESSING) {
+              this.setState({ step: this.STEP.PROCESSING })
+            }
           }
         )
         this.props.upsertTransaction({
@@ -202,40 +206,10 @@ class ListingsDetail extends Component {
     return (
       <div className="listing-detail">
         {step === this.STEP.METAMASK && (
-          <Modal backdrop="static" isOpen={true} tabIndex="-1">
-            <div className="image-container">
-              <img src="images/spinner-animation-light.svg" role="presentation" />
-            </div>
-            <FormattedMessage
-              id={'listing-detail.confirmTransaction'}
-              defaultMessage={'Confirm transaction'}
-            />
-            <br />
-            <FormattedMessage
-              id={'listing-detail.pressSubmitInMetaMask'}
-              defaultMessage={'Press {submit} in {currentProvider} window'}
-              values={{
-                currentProvider,
-                submit: <span>&ldquo;Submit&rdquo;</span>
-              }}
-            />
-          </Modal>
+          <MetamaskModal currentProvider={currentProvider} />
         )}
         {step === this.STEP.PROCESSING && (
-          <Modal backdrop="static" isOpen={true}>
-            <div className="image-container">
-              <img src="images/spinner-animation-light.svg" role="presentation" />
-            </div>
-            <FormattedMessage
-              id={'listing-detail.processingPurchase'}
-              defaultMessage={'Processing your purchase'}
-            />
-            <br />
-            <FormattedMessage
-              id={'listing-detail.pleaseStandBy'}
-              defaultMessage={'Please stand by...'}
-            />
-          </Modal>
+          <ProcessingModal />
         )}
         {step === this.STEP.PURCHASED && (
           <Modal backdrop="static" isOpen={true}>

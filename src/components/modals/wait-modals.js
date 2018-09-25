@@ -1,0 +1,40 @@
+import React from 'react'
+import { FormattedMessage } from 'react-intl'
+import Modal from 'components/modal'
+
+export const MetamaskModal = ({ currentProvider }) => (
+  <Modal backdrop="static" isOpen={true}>
+    <div className="image-container">
+      <img src="images/spinner-animation-light.svg" role="presentation" />
+    </div>
+    <FormattedMessage
+      id={'listing-detail.confirmTransaction'}
+      defaultMessage={'Confirm transaction'}
+    />
+    <br />
+    <FormattedMessage
+      id={'listing-detail.pressSubmitInMetaMask'}
+      defaultMessage={'Press "Confirm" in {currentProvider} window'}
+      values={{
+        currentProvider
+      }}
+    />
+  </Modal>
+)
+
+export const ProcessingModal = () => (
+  <Modal backdrop="static" isOpen={true}>
+    <div className="image-container">
+      <img src="images/spinner-animation-light.svg" role="presentation" />
+    </div>
+    <FormattedMessage
+      id={'listing-detail.processingPurchase'}
+      defaultMessage={'Processing your purchase'}
+    />
+    <br />
+    <FormattedMessage
+      id={'listing-detail.pleaseStandBy'}
+      defaultMessage={'Please stand by...'}
+    />
+  </Modal>
+)
