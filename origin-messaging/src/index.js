@@ -249,7 +249,7 @@ const main = async () => {
     logger.debug(`Creating IPFS server`)
 
     const ipfs = new IPFS({
-      repo: "./ipfs",
+      repo: config.IPFS_REPO_PATH,
       EXPERIMENTAL: {
         pubsub: true,
       },
