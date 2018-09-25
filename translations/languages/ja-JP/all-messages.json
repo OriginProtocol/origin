@@ -259,7 +259,6 @@
   "purchase-detail.txName": "トランザクション名",
   "purchase-detail.txHash": "トランザクションハッシュ",
   "purchase-detail.from": "送り元",
-  "purchase-detail.to": "送り先",
   "purchase-detail.listingDetails": "掲載の詳細",
   "purchase-detail.viewOnIPFS": "IPFSでの表示",
   "purchase-detail.reviewsHeading": "レビュー",
