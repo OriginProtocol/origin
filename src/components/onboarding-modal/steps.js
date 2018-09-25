@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormattedMessage, FormattedNumber } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 export default [
   {
