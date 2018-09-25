@@ -200,6 +200,15 @@ class Token extends ContractHelper {
     const paused = await contract.methods.paused().call()
     const address = await this.contractAddress(networkId)
     const owner = await this.owner(networkId)
+    let whitelistStatus
+    if (await contract.methods.whitelistActive().call()) {
+      const expiration = await contract.methods.whitelistExpiration().call()
+      const expirationDate = new Date(expiration * 1000)
+      whitelistStatus = `active until ${expirationDate}`
+    } else {
+      whitelistStatus = 'not active'
+    }
+
     console.log(`Token status for network ${networkId}:`)
     console.log(`contract address:        ${address}`)
     console.log(`name:                    ${name}`)
@@ -209,6 +218,7 @@ class Token extends ContractHelper {
     console.log(`total supply (tokens):   ${totalSupplyTokens}`)
     console.log(`contract owner:          ${owner}`)
     console.log(`transfers paused:        ${paused ? 'YES' : 'no'}`)
+    console.log(`transactor whitelist:    ${whitelistStatus}`)
   }
 }
 
