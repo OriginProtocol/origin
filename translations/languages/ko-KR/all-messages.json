@@ -259,7 +259,6 @@
   "purchase-detail.txName": "TxName",
   "purchase-detail.txHash": "TxHash",
   "purchase-detail.from": "보낸 사람",
-  "purchase-detail.to": "받는 사람",
   "purchase-detail.listingDetails": "목록 상세",
   "purchase-detail.viewOnIPFS": "IPFS에서 보기",
   "purchase-detail.reviewsHeading": "리뷰",
