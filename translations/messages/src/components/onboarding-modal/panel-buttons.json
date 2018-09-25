@@ -1,0 +1,18 @@
+[
+  {
+    "id": "onboarding-buttons.overview",
+    "defaultMessage": "Next"
+  },
+  {
+    "id": "onboarding-buttons.connectWalletOne",
+    "defaultMessage": "Next"
+  },
+  {
+    "id": "onboarding-buttons.connected",
+    "defaultMessage": "Learn about Origin Tokens"
+  },
+  {
+    "id": "onboarding-buttons.getOriginTokens",
+    "defaultMessage": "Learn more"
+  }
+]

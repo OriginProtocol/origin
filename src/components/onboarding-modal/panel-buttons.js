@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import { FormattedMessage } from 'react-intl'
 
 export default class PanelButtons extends Component {
   constructor(props) {
@@ -26,7 +27,10 @@ export default class PanelButtons extends Component {
     const buttons = {
       'Overview': (
         <button className="btn btn-primary" onClick={() => displayNextStep()}>
-          Next
+          <FormattedMessage
+            id={'onboarding-buttons.overview'}
+            defaultMessage={'Next'}
+          />
         </button>
       ),
       'Connect Wallet': (
@@ -36,18 +40,27 @@ export default class PanelButtons extends Component {
             className="btn btn-primary btn-lg mb-3"
             onClick={() => displayNextStep()}
           >
-            Next
+            <FormattedMessage
+              id={'onboarding-buttons.connectWalletOne'}
+              defaultMessage={'Next'}
+            />
           </button>
           {/*
           <button key={'sec-btn'} className="btn btn-primary btn-lg" disabled>
-            Download Mobile Wallet
+            <FormattedMessage
+              id={'onboarding-buttons.connectWalletTwo'}
+              defaultMessage={'Download Mobile Wallet'}
+            />
           </button>
           */}
         </div>
       ),
       'Connected': (
         <button className="btn btn-primary" onClick={() => displayNextStep()}>
-          Learn about Origin Tokens
+          <FormattedMessage
+            id={'onboarding-buttons.connected'}
+            defaultMessage={'Learn about Origin Tokens'}
+          />
         </button>
       ),
       'Get Origin Tokens': (
@@ -58,7 +71,10 @@ export default class PanelButtons extends Component {
             onClick={this.completeOnboarding}
           >
             <button key={'first-btn'} className="btn btn-primary">
-              Learn more
+              <FormattedMessage
+                id={'onboarding-buttons.getOriginTokens'}
+                defaultMessage={'Learn more'}
+              />
             </button>
           </Link>
         </div>
