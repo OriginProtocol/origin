@@ -162,7 +162,7 @@ class Profile extends Component {
   // conditionally close modal identified by data attribute
   handleToggle(e) {
     e.preventDefault()
-    console.log("HANDLE TOGGLE")
+
     this.props.storeWeb3Intent(
       this.props.intl.formatMessage(this.intlMessages.manageYourProfile)
     )
@@ -506,7 +506,6 @@ class Profile extends Component {
           changes={changes}
           handleToggle={this.handleToggle}
           onConfirm={() => {
-            console.log("CONFIRM PUBLISH on confirm")
             this.setState({
               modalsOpen: { ...modalsOpen, publish: false },
               step: 'metamask'
@@ -618,7 +617,7 @@ class Profile extends Component {
               />
             </div>
             <div>
-              <a 
+              <a
                 href={`https://${etherscanNetworkUrls[this.props.networkId]}etherscan.io/tx/${this.props.profile.lastDeployProfileHash}`}
                 target="_blank"
               >
