@@ -259,7 +259,6 @@
   "purchase-detail.txName": "TxName",
   "purchase-detail.txHash": "TxHash",
   "purchase-detail.from": "จาก",
-  "purchase-detail.to": "ไปยัง",
   "purchase-detail.listingDetails": "รายละเอียดของรายชื่อ",
   "purchase-detail.viewOnIPFS": "ดูใน IPFS",
   "purchase-detail.reviewsHeading": "ความคิดเห็น",
