@@ -4,20 +4,19 @@ import EtherscanLink from 'components/etherscan-link'
 import origin from '../../services/origin'
 
 class TransactionEvent extends Component {
-  async componentDidMount(){
-    const {event} = this.props
-    
+  async componentDidMount() {
+    const { event } = this.props
+
     if (!event) {
       return null
     }
 
-    // If no from address is passed in, we load the origin address from 
+    // If no from address is passed in, we load the origin address from
     // transaction the event was fired from
-    if(this.props.from === undefined){
+    if (this.props.from === undefined) {
       const txHash = event.transactionHash
       const transaction = await origin.contractService.getTransaction(txHash)
-      this.setState({transactionFrom: {address: transaction.from}})
-      console.log("MAOSN", transaction)
+      this.setState({ transactionFrom: { address: transaction.from } })
     }
   }
 
