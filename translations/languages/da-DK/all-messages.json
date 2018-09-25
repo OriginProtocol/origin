@@ -259,7 +259,6 @@
   "purchase-detail.txName": "TxName",
   "purchase-detail.txHash": "TxHash",
   "purchase-detail.from": "Fra",
-  "purchase-detail.to": "Til",
   "purchase-detail.listingDetails": "Oplysninger om opførelse",
   "purchase-detail.viewOnIPFS": "Vis på IPFS",
   "purchase-detail.reviewsHeading": "Anmeldelser",
