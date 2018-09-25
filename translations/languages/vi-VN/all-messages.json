@@ -259,7 +259,6 @@
   "purchase-detail.txName": "Tên giao dịch",
   "purchase-detail.txHash": "Mã giao dịch",
   "purchase-detail.from": "Từ",
-  "purchase-detail.to": "Đến",
   "purchase-detail.listingDetails": "Danh mục chi tiết",
   "purchase-detail.viewOnIPFS": "Xem trên IPFS",
   "purchase-detail.reviewsHeading": "Đánh giá",
