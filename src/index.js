@@ -26,6 +26,8 @@ class Origin {
     ipfsGatewayProtocol = defaultIpfsGatewayProtocol,
     attestationServerUrl = defaultAttestationServerUrl,
     discoveryServerUrl = defaultDiscoveryServerUrl,
+    affiliate,
+    arbitrator,
     contractAddresses,
     web3,
     ipfsCreator,
@@ -52,6 +54,8 @@ class Origin {
     this.marketplace = new Marketplace({
       contractService: this.contractService,
       ipfsService: this.ipfsService,
+      affiliate,
+      arbitrator,
       store
     })
 
