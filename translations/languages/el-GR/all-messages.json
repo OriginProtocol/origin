@@ -259,7 +259,6 @@
   "purchase-detail.txName": "TxName",
   "purchase-detail.txHash": "TxHash",
   "purchase-detail.from": "Από",
-  "purchase-detail.to": "Προς",
   "purchase-detail.listingDetails": "Λεπτομέρειες καταχώρησης",
   "purchase-detail.viewOnIPFS": "Προβολή στο IPFS",
   "purchase-detail.reviewsHeading": "Κριτικές",
