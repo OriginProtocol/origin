@@ -13,12 +13,14 @@ import {
   update as updateTransaction,
   upsert as upsertTransaction
 } from 'actions/Transaction'
+import { enableMessaging, storeWeb3Intent } from 'actions/App'
 
 import { ConfirmationModal, IssueModal, PrerequisiteModal, RejectionModal } from 'components/arbitration-modals'
 import Avatar from 'components/avatar'
 import Modal from 'components/modal'
 import PurchaseProgress from 'components/purchase-progress'
 import Review from 'components/review'
+import UnnamedUser from 'components/unnamed-user'
 import UserCard from 'components/user-card'
 
 import TransactionEvent from 'pages/purchases/transaction-event'
@@ -67,6 +69,8 @@ class PurchaseDetail extends Component {
     this.toggleModal = this.toggleModal.bind(this)
     this.withdrawOffer = this.withdrawOffer.bind(this)
     this.getListingSchema = this.getListingSchema.bind(this)
+    this.handleEnableMessaging = this.handleEnableMessaging.bind(this)
+    this.handleCancelPrerequisite = this.handleCancelPrerequisite.bind(this)
     this.state = defaultState
 
     this.intlMessages = defineMessages({
@@ -160,6 +164,14 @@ class PurchaseDetail extends Component {
       offerAccepted: {
         id: 'purchase-detail.offerAccepted',
         defaultMessage: 'Offer Accepted'
+      },
+      offerDisputed: {
+        id: 'purchase-detail.offerDisputed',
+        defaultMessage: 'Dispute Started'
+      },
+      offerRuling: {
+        id: 'purchase-detail.offerRuling',
+        defaultMessage: 'Ruling Complete'
       },
       saleCompleted: {
         id: 'purchase-detail.saleCompleted',
@@ -527,9 +539,7 @@ class PurchaseDetail extends Component {
   }
 
   handleProblem() {
-    const isEligibleForArbitration = origin.messaging.canSendMessages()
-
-    if (isEligibleForArbitration) {
+    if (this.props.messagingEnabled) {
       this.toggleModal('confirmation')
     } else {
       this.toggleModal('prerequisite')
@@ -614,6 +624,33 @@ class PurchaseDetail extends Component {
     })
   }
 
+  handleEnableMessaging() {
+    const { enableMessaging, intl, storeWeb3Intent, web3Account } = this.props
+
+    if (web3Account) {
+      enableMessaging()
+    } else {
+      storeWeb3Intent(intl.formatMessage(this.intlMessages.enableMessaging))
+    }
+
+    // TODO:John - if possible, modify startConversing() method to accept a confirmation callback
+    // or returna promise so we don't have to do this janky interval
+    this.enableMessagingInterval = setInterval(() => {
+      if (origin.messaging.canSendMessages()) {
+        this.toggleModal('prerequisite')
+        this.toggleModal('confirmation')
+        clearInterval(this.enableMessagingInterval)
+      }
+    }, 1000)
+  }
+
+  handleCancelPrerequisite() {
+    this.toggleModal('prerequisite')
+    if (this.enableMessagingInterval) {
+      clearInterval(this.enableMessagingInterval)
+    }
+  }
+
   render() {
     const { web3Account } = this.props
     const {
@@ -653,6 +690,8 @@ class PurchaseDetail extends Component {
     const offerCreated = purchase.event('OfferCreated')
     const offerWithdrawn = purchase.event('OfferWithdrawn')
     const offerAccepted = purchase.event('OfferAccepted')
+    const offerDisputed = purchase.event('OfferDisputed')
+    const offerRuling = purchase.event('OfferRuling')
     const offerFinalized = purchase.event('OfferFinalized')
     const offerData = purchase.event('OfferData')
 
@@ -679,20 +718,10 @@ class PurchaseDetail extends Component {
 
     const buyerName = buyer.profile ? (
       `${buyer.profile.firstName} ${buyer.profile.lastName}`
-    ) : (
-      <FormattedMessage
-        id={'purchase-detail.unnamedUser'}
-        defaultMessage={'Unnamed User'}
-      />
-    )
+    ) : <UnnamedUser />
     const sellerName = seller.profile ? (
       `${seller.profile.firstName} ${seller.profile.lastName}`
-    ) : (
-      <FormattedMessage
-        id={'purchase-detail.unnamedUser'}
-        defaultMessage={'Unnamed User'}
-      />
-    )
+    ) : <UnnamedUser />
     const arbitrationIsAvailable = ARBITRATOR_ACCOUNT && web3Account !== ARBITRATOR_ACCOUNT
 
     return (
@@ -1045,44 +1074,39 @@ class PurchaseDetail extends Component {
                         defaultMessage={'From'}
                       />
                     </th>
-                    <th scope="col">
-                      <FormattedMessage
-                        id={'purchase-detail.to'}
-                        defaultMessage={'To'}
-                      />
-                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.offerMade)}
-                    transaction={offerCreated}
-                    buyer={buyer}
-                    seller={seller}
+                    event={offerCreated}
+                    from={buyer}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.offerWithdrawn)}
-                    transaction={offerWithdrawn}
-                    buyer={buyer}
-                    seller={seller}
+                    event={offerWithdrawn}
+                    from={buyer}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.offerAccepted)}
-                    transaction={offerAccepted}
-                    buyer={buyer}
-                    seller={seller}
+                    event={offerAccepted}
+                    from={seller}
+                  />
+                  <TransactionEvent
+                    eventName={this.props.intl.formatMessage(this.intlMessages.offerDisputed)}
+                    event={offerDisputed}
+                  />
+                  <TransactionEvent
+                    eventName={this.props.intl.formatMessage(this.intlMessages.offerRuling)}
+                    event={offerRuling}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.saleCompleted)}
-                    transaction={offerFinalized}
-                    buyer={buyer}
-                    seller={seller}
+                    event={offerFinalized}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.saleReviewed)}
-                    transaction={offerData}
-                    buyer={buyer}
-                    seller={seller}
+                    event={offerData}
                   />
                 </tbody>
               </table>
@@ -1221,7 +1245,7 @@ class PurchaseDetail extends Component {
         {processing && (
           <Modal backdrop="static" isOpen={true} tabIndex="-1">
             <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
+              <img src="images/spinner-animation-light.svg" role="presentation" />
             </div>
             <FormattedMessage
               id={'purchase-detail.processingUpdate'}
@@ -1259,12 +1283,8 @@ class PurchaseDetail extends Component {
         <PrerequisiteModal
           isOpen={modalsOpen.prerequisite}
           perspective={perspective}
-          onCancel={() => this.toggleModal('prerequisite')}
-          onSubmit={() => {
-            alert('To Do: enable messaging from here')
-
-            this.toggleModal('prerequisite')
-          }}
+          onCancel={this.handleCancelPrerequisite}
+          onSubmit={this.handleEnableMessaging}
         />
         <RejectionModal
           isOpen={modalsOpen.rejection}
@@ -1275,16 +1295,21 @@ class PurchaseDetail extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ app }) => {
+  const { messagingEnabled, web3 } = app
+  const web3Account = web3.account
   return {
-    web3Account: state.app.web3.account
+    web3Account: web3Account,
+    messagingEnabled
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   updateTransaction: (confirmationCount, transactionReceipt) =>
     dispatch(updateTransaction(confirmationCount, transactionReceipt)),
-  upsertTransaction: transaction => dispatch(upsertTransaction(transaction))
+  upsertTransaction: transaction => dispatch(upsertTransaction(transaction)),
+  enableMessaging: () => dispatch(enableMessaging()),
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
 })
 
 export default connect(

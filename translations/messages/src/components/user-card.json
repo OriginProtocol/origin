@@ -1,9 +1,5 @@
 [
   {
-    "id": "user-card.unnamedUser",
-    "defaultMessage": "Unnamed User"
-  },
-  {
     "id": "messages-send.sendMessages",
     "defaultMessage": "send messages"
   },

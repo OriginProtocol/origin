@@ -88,16 +88,20 @@
     "defaultMessage": "Offer Accepted"
   },
   {
+    "id": "purchase-detail.offerDisputed",
+    "defaultMessage": "Dispute Started"
+  },
+  {
+    "id": "purchase-detail.offerRuling",
+    "defaultMessage": "Ruling Complete"
+  },
+  {
     "id": "purchase-detail.saleCompleted",
     "defaultMessage": "Sale Completed"
   },
   {
     "id": "purchase-detail.saleReviewed",
     "defaultMessage": "Sale Reviewed"
-  },
-  {
-    "id": "purchase-detail.unnamedUser",
-    "defaultMessage": "Unnamed User"
   },
   {
     "id": "purchase-detail.purchasedFrom",
@@ -174,10 +178,6 @@
   {
     "id": "purchase-detail.from",
     "defaultMessage": "From"
-  },
-  {
-    "id": "purchase-detail.to",
-    "defaultMessage": "To"
   },
   {
     "id": "purchase-detail.listingDetails",

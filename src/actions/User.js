@@ -11,15 +11,14 @@ export const UserConstants = keyMirror(
   'USER'
 )
 
-export function fetchUser(address, unnamedUserMessage) {
+export function fetchUser(address) {
   return async function(dispatch) {
     try {
       const user = await origin.users.get(address)
 
       dispatch({
         type: UserConstants.FETCH_SUCCESS,
-        user,
-        unnamedUserMessage
+        user
       })
     } catch (error) {
       dispatch({ type: UserConstants.FETCH_ERROR, error })

@@ -47,9 +47,9 @@ class ListingsDetail extends Component {
     this.state = {
       etherscanDomain: null,
       loading: true,
+      offers: [],
       pictures: [],
       reviews: [],
-      purchases: [],
       step: this.STEP.VIEW,
       currentProvider: getCurrentProvider(
         origin && origin.contractService && origin.contractService.web3
@@ -68,42 +68,11 @@ class ListingsDetail extends Component {
     this.handleMakeOffer = this.handleMakeOffer.bind(this)
   }
 
-  async loadListing() {
-    try {
-      const listing = await getListing(this.props.listingId, true)
-      this.setState({
-        ...listing,
-        loading: false
-      })
-    } catch (error) {
-      this.props.showAlert(
-        this.props.formatMessage(this.intlMessages.loadingError)
-      )
-      console.error(
-        `Error fetching contract or IPFS info for listing: ${
-          this.props.listingId
-        }`
-      )
-      console.error(error)
-    }
-  }
-
-  async loadReviews() {
-    try {
-      const reviews = await origin.marketplace.getListingReviews(
-        this.props.listingId
-      )
-      this.setState({ reviews })
-    } catch (error) {
-      console.error(error)
-      console.error(`Error fetching reviews`)
-    }
-  }
-
   async componentWillMount() {
     if (this.props.listingId) {
       // Load from IPFS
       await this.loadListing()
+      await this.loadOffers()
       await this.loadReviews()
     } else if (this.props.listingJson) {
       const obj = Object.assign({}, this.props.listingJson, { loading: false })
@@ -155,6 +124,52 @@ class ListingsDetail extends Component {
     }
   }
 
+  async loadListing() {
+    try {
+      const listing = await getListing(this.props.listingId, true)
+      this.setState({
+        ...listing,
+        loading: false
+      })
+    } catch (error) {
+      this.props.showAlert(
+        this.props.formatMessage(this.intlMessages.loadingError)
+      )
+      console.error(
+        `Error fetching contract or IPFS info for listing: ${
+          this.props.listingId
+        }`
+      )
+      console.error(error)
+    }
+  }
+
+  async loadOffers() {
+    try {
+      const offers = await origin.marketplace.getOffers(this.props.listingId)
+      this.setState({ offers })
+    } catch (error) {
+      console.error(
+        `Error fetching offers for listing: ${
+          this.props.listingId
+        }`
+      )
+      console.error(error)
+    }
+  }
+
+  async loadReviews() {
+    try {
+      const reviews = await origin.marketplace.getListingReviews(
+        this.props.listingId
+      )
+      this.setState({ reviews })
+    } catch (error) {
+      console.error(error)
+      console.error(`Error fetching reviews`)
+    }
+  }
+
   resetToStepOne() {
     this.setState({ step: this.STEP.VIEW })
   }
@@ -169,15 +184,18 @@ class ListingsDetail extends Component {
       ipfsHash,
       loading,
       name,
+      offers,
       pictures,
       price,
       reviews,
       seller,
-      step,
-      unitsRemaining
+      step
+      // unitsRemaining
     } = this.state
-    const isPending = false // will be handled by offer status
-    const isSold = !unitsRemaining
+    const pendingStates = ['created', 'accepted', 'disputed']
+    const isPending = offers.find(o => pendingStates.includes(o.status))
+    const soldStates = ['finalized', 'sellerReviewed']
+    const isSold = offers.find(o => soldStates.includes(o.status))
     const isAvailable = !isPending && !isSold
     const userIsSeller = seller === this.props.web3Account
 
@@ -186,7 +204,7 @@ class ListingsDetail extends Component {
         {step === this.STEP.METAMASK && (
           <Modal backdrop="static" isOpen={true} tabIndex="-1">
             <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
+              <img src="images/spinner-animation-light.svg" role="presentation" />
             </div>
             <FormattedMessage
               id={'listing-detail.confirmTransaction'}
@@ -206,7 +224,7 @@ class ListingsDetail extends Component {
         {step === this.STEP.PROCESSING && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
+              <img src="images/spinner-animation-light.svg" role="presentation" />
             </div>
             <FormattedMessage
               id={'listing-detail.processingPurchase'}
