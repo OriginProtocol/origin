@@ -259,7 +259,6 @@
   "purchase-detail.txName": "TxName",
   "purchase-detail.txHash": "TxHash",
   "purchase-detail.from": "De",
-  "purchase-detail.to": "Para",
   "purchase-detail.listingDetails": "Detalles del Listado",
   "purchase-detail.viewOnIPFS": "Ver in IPFS",
   "purchase-detail.reviewsHeading": "Reseñas",
