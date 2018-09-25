@@ -259,7 +259,6 @@
   "purchase-detail.txName": "Тип транзакции",
   "purchase-detail.txHash": "Хеш транзакции",
   "purchase-detail.from": "Из",
-  "purchase-detail.to": "Кому",
   "purchase-detail.listingDetails": "Детали объявления",
   "purchase-detail.viewOnIPFS": "Показать на IPFS",
   "purchase-detail.reviewsHeading": "Отзывы",
