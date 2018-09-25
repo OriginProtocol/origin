@@ -14,6 +14,7 @@ const env = {
   BRIDGE_SERVER_DOMAIN: '',
   BRIDGE_SERVER_PROTOCOL: 'https',
   CONTRACT_ADDRESSES: '{}',
+  DEPLOY_TAG: false,
   DISCOVERY_SERVER_URL: '',
   FORCE_HTTPS: false,
   IPFS_API_PORT: '',

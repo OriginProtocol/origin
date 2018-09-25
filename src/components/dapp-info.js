@@ -25,6 +25,7 @@ const DappInfo = () => {
               <tr><td>MESSAGING_ACCOUNT</td><td>{ process.env.MESSAGING_ACCOUNT }</td></tr>
               <tr><td>PROVIDER_URL</td><td>{ process.env.PROVIDER_URL }</td></tr>
               <tr><td>MESSAGING_NAMESPACE</td><td>{ process.env.MESSAGING_NAMESPACE }</td></tr>
+              <tr><td>DEPLOY_TAG</td><td>{ process.env.DEPLOY_TAG }</td></tr>
             </table>
           </div>
         </div>
