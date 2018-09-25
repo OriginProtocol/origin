@@ -123,7 +123,7 @@ class OnboardingModal extends Component {
       toggleSplitPanel,
       wallet: { ognBalance }
     } = this.props
-    const { dismissed, gettingStarted, listings } = this.state
+    const { dismissed, gettingStarted, listings = [] } = this.state
 
     // show nothing if user has OGN, listings, or completed onboarding
     if (!!Number(ognBalance) || listings.length || stepsCompleted) {

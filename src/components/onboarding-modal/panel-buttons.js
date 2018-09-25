@@ -24,7 +24,7 @@ export default class PanelButtons extends Component {
   render() {
     const { displayNextStep, step } = this.props
     const buttons = {
-      Overview: (
+      'Overview': (
         <button className="btn btn-primary" onClick={() => displayNextStep()}>
           Next
         </button>
@@ -45,7 +45,7 @@ export default class PanelButtons extends Component {
           */}
         </div>
       ),
-      Connected: (
+      'Connected': (
         <button className="btn btn-primary" onClick={() => displayNextStep()}>
           Learn about Origin Tokens
         </button>
@@ -64,7 +64,8 @@ export default class PanelButtons extends Component {
         </div>
       )
     }
+    const { name: { props: { defaultMessage }}} = step
 
-    return <div className="panel-buttons"> {buttons[step.name]} </div>
+    return <div className="panel-buttons"> {buttons[defaultMessage]} </div>
   }
 }
