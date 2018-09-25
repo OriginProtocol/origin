@@ -259,7 +259,6 @@
   "purchase-detail.txName": "TxName",
   "purchase-detail.txHash": "TxHash",
   "purchase-detail.from": "Dari",
-  "purchase-detail.to": "Untuk",
   "purchase-detail.listingDetails": "Rincian Listing",
   "purchase-detail.viewOnIPFS": "Lihat melalui IPFS",
   "purchase-detail.reviewsHeading": "Ulasan",
