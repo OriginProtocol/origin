@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
 
 import {
   updateSteps,
@@ -160,15 +161,28 @@ class OnboardingModal extends Component {
           </span>
         </div>
         <img src="/images/eth-tokens.svg" alt="eth-tokens" />
-        <p className="title">Get Started Selling on Origin!</p>
-        <p className="content">Learn how to sell on our DApp today.</p>
+        <p className="title">
+          <FormattedMessage
+            id={'getting-started.title'}
+            defaultMessage={'Get Started Selling on Origin!'}
+          />
+        </p>
+        <p className="content">
+          <FormattedMessage
+            id={'getting-started.content'}
+            defaultMessage={'Learn how to sell on our DApp today.'}
+          />
+        </p>
 
         <div className="col-auto">
           <button
             className="btn btn-primary btn-lg"
             onClick={() => this.props.toggleSplitPanel(true)}
           >
-            Learn more
+            <FormattedMessage
+              id={'getting-started.button'}
+              defaultMessage={'Learn more'}
+            />
           </button>
         </div>
       </Fragment>
