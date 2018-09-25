@@ -20,11 +20,6 @@ body {
   line-height: 1.5;
 }
 
-.loading-clock {
-  height: 100vh;
-  width: 100vw;
-}
-
 /* sticky footer sibling */
 main {
   flex: 1 0 auto;
@@ -221,7 +216,7 @@ a:hover {
   padding: 0 0.75rem;
 }
 
-.navigation-bar .identification {
+.wallet .identification {
   height: auto;
   padding: 0;
 }
@@ -1249,7 +1244,7 @@ a:hover {
   font-weight: normal;
 }
 
-.identity .wallet .avatar-container {
+.wallet .avatar-container {
   height: 50px;
   margin: 0 10px 0 0;
   width: 50px;
@@ -1264,7 +1259,7 @@ a:hover {
   width: 50px;
 }
 
-.identity .wallet .identification img {
+.wallet .identification img {
   height: 20px;
   margin-right: 5px;
   width: 20px;

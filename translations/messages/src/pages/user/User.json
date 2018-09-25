@@ -1,9 +1,5 @@
 [
   {
-    "id": "user.unnamedUser",
-    "defaultMessage": "Unnamed User"
-  },
-  {
     "id": "User.verifiedInto",
     "defaultMessage": "Verified Info"
   },
