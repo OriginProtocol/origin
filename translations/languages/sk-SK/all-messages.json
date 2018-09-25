@@ -259,7 +259,6 @@
   "purchase-detail.txName": "TxName",
   "purchase-detail.txHash": "TxHash",
   "purchase-detail.from": "z",
-  "purchase-detail.to": "na",
   "purchase-detail.listingDetails": "Podrobnosti o zozname",
   "purchase-detail.viewOnIPFS": "Zobraziť na IPFS",
   "purchase-detail.reviewsHeading": "recenzia",
