@@ -80,7 +80,7 @@ export default class PanelButtons extends Component {
         </div>
       )
     }
-    const { name: { props: { defaultMessage }}} = step
+    const { name: { props: { defaultMessage } } } = step
 
     return <div className="panel-buttons"> {buttons[defaultMessage]} </div>
   }

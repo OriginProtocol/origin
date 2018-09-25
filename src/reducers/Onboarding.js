@@ -20,7 +20,7 @@ function saveStorageItem(name, item, defaultValue) {
 
 const getStoredStep = steps => {
   const currentStep = getStorageItem('.currentStep', {})
-  const { name: { props: { defaultMessage }}} = currentStep
+  const { name: { props: { defaultMessage } } } = currentStep
 
   return steps.find(
     step => (step && step.name.props.defaultMessage) === (currentStep && defaultMessage)
