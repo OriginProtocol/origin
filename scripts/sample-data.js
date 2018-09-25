@@ -13,7 +13,7 @@ const Origin = require('../dist/index.js')
 
 // Local Usage:
 // scripts/sampleData.js <number of listings> <number of offers>
-// docker exec -ti origin-js node scripts/sampleData.js 42 17
+// docker exec -ti origin-js node scripts/sample-data.js 42 17
 
 const NUMBER_OF_LISTINGS = parseInt(process.argv[2] || '30')
 const NUMBER_OF_OFFERS = parseInt(process.argv[3] || NUMBER_OF_LISTINGS / 2)
@@ -30,10 +30,31 @@ const NAMES = [
   '계룡/鷄龍',
   'Urist'
 ]
-const CATEGORIES = ['Housing', 'Collectibles', 'For Sale', 'Services']
+const CATEGORIES = {
+  'schema.forSale': [
+    'schema.forSale.artsCrafts',
+    'schema.forSale.farmGarden',
+    'schema.forSale.heavyEquipment',
+    'schema.forSale.tickets'
+  ],
+  'schema.housing': [
+    'schema.housing.aptsHousingForRent',
+    'schema.housing.realEstate',
+    'schema.housing.vacationRentals'
+  ],
+  'schema.services': [
+    'schema.services.dogWalking',
+    'schema.services.handyman',
+    'schema.services.softwareDevelopement'
+  ]
+}
+
+function randomPick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)]
+}
 
 function randomWord() {
-  return WORDLIST[Math.floor(Math.random() * WORDLIST.length)]
+  return randomPick(WORDLIST)
 }
 
 function randomTitleWord() {
@@ -95,18 +116,19 @@ async function createSampleData() {
     const userFirst = NAMES[user_i]
     o.contractService.web3.eth.defaultAccount = user.address
     const price = Math.floor(Math.pow(Math.random() * 10, 3.0)) / 100.0
-    const commission = Math.floor(Math.random() * 1000)
+    const commission = Math.floor(Math.random() * 20)
     const description = `${randomTitleWord()} is ${randomWord()}, ${randomWord()} ${randomWord()}.`
+    const category = randomPick(Object.keys(CATEGORIES))
+    const subCategory = randomPick(CATEGORIES[category])
     console.log(
       chalk` ⬢  Creating listing {bold.hex('#d408f4') ${listingName}} from {bold.hex('#09f4a6') ${userFirst}}`
     )
-
-    try{
+    try {
       const newListing = await o.marketplace.createListing({
         listingType: 'unit',
         title: listingName,
-        category: CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)],
-        subCategory: CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)],
+        category: category,
+        subCategory: subCategory,
         language: 'en-US',
         description: description,
         price: { currency: 'ETH', amount: price.toString() },
@@ -114,7 +136,7 @@ async function createSampleData() {
         unitsTotal: 1
       })
       listings.push(await o.marketplace.getListing(newListing.listingId))
-    } catch (e){
+    } catch (e) {
       console.log('Error creating a listing: ', e)
     }
   }
@@ -126,7 +148,7 @@ async function createSampleData() {
     const user_i = Math.floor(Math.random() * users.length)
     const user = users[user_i]
     const userFirst = NAMES[user_i]
-    const listing = listings[Math.floor(Math.random() * listings.length)]
+    const listing = randomPick(listings)
     o.contractService.web3.eth.defaultAccount = user.address
     console.log(
       chalk`⬢  Creating offer from {bold.hex('#09f4a6') ${userFirst}} for {bold.hex('#d408f4') ${
@@ -136,7 +158,8 @@ async function createSampleData() {
     await o.marketplace.makeOffer(listing.id, {
       listingType: 'unit',
       unitsPurchased: 1,
-      totalPrice: listing.price
+      totalPrice: listing.price,
+      commission: listing.commission
     })
   }
 
