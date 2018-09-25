@@ -259,7 +259,6 @@
   "purchase-detail.txName": "TxName",
   "purchase-detail.txHash": "TxHash",
   "purchase-detail.from": "Od",
-  "purchase-detail.to": "To",
   "purchase-detail.listingDetails": "Detalji o prijavi",
   "purchase-detail.viewOnIPFS": "Pogled na IPFS",
   "purchase-detail.reviewsHeading": "Recenzije",
