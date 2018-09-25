@@ -259,7 +259,6 @@
   "purchase-detail.txName": "TxName",
   "purchase-detail.txHash": "TxHash",
   "purchase-detail.from": "从",
-  "purchase-detail.to": "到",
   "purchase-detail.listingDetails": "列出详细信息",
   "purchase-detail.viewOnIPFS": "关于IPFS的观点",
   "purchase-detail.reviewsHeading": "回顾",
