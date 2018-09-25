@@ -259,7 +259,6 @@
   "purchase-detail.txName": "TxName",
   "purchase-detail.txHash": "TxHash",
   "purchase-detail.from": "Від",
-  "purchase-detail.to": "Кому",
   "purchase-detail.listingDetails": "Деталі оголошення",
   "purchase-detail.viewOnIPFS": "Переглянути на IPFS",
   "purchase-detail.reviewsHeading": "Відгуки",
