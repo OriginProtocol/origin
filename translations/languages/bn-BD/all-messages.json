@@ -259,7 +259,6 @@
   "purchase-detail.txName": "TxName",
   "purchase-detail.txHash": "TxHash",
   "purchase-detail.from": "প্রেরক",
-  "purchase-detail.to": "প্রতি",
   "purchase-detail.listingDetails": "তালিকা বিশদ বিবরণ",
   "purchase-detail.viewOnIPFS": "আইপিএফএস দেখুন",
   "purchase-detail.reviewsHeading": "পর্যালোচনা",
