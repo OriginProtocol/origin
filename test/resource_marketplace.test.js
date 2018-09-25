@@ -1,16 +1,20 @@
 import Marketplace from '../src/resources/marketplace.js'
 import contractServiceHelper from './helpers/contract-service-helper'
+import asAccount from './helpers/as-account'
 import IpfsService from '../src/services/ipfs-service.js'
 import { expect } from 'chai'
 import Web3 from 'web3'
 import listingValid from './fixtures/listing-valid.json'
 import offerValid from './fixtures/offer-valid.json'
 import reviewValid from './fixtures/review-valid.json'
+import { OFFER_DATA_TYPE } from '../src/ipfsInterface/store'
 
 // oddly changing an imported object here can affect other or subsequent tests that import the same file
 const listingData = Object.assign({}, listingValid)
 const offerData = Object.assign({}, offerValid)
 const reviewData = Object.assign({}, reviewValid)
+
+const emptyAddress = '0x0000000000000000000000000000000000000000'
 
 const originTokenListing = Object.assign({}, listingData, {
   price: { currency: 'OGN', amount: '1' }
@@ -48,12 +52,17 @@ class StoreMock {
 describe('Marketplace Resource', function() {
   // TODO speed up the notifications test so that this timeout can be reduced
   this.timeout(15000) // default is 2000
-  let marketplace, web3
+  let marketplace, web3, contractService, validArbitrator, validAffiliate,
+    evilAddress, makeMaliciousOffer
 
   beforeEach(async () => {
     const provider = new Web3.providers.HttpProvider('http://localhost:8545')
     web3 = new Web3(provider)
-    const contractService = await contractServiceHelper(web3)
+    const accounts = await web3.eth.getAccounts()
+    validAffiliate = accounts[3]
+    validArbitrator = accounts[4]
+    evilAddress = accounts[5]
+    contractService = await contractServiceHelper(web3)
     const ipfsService = new IpfsService({
       ipfsDomain: '127.0.0.1',
       ipfsApiPort: '5002',
@@ -68,11 +77,35 @@ describe('Marketplace Resource', function() {
     marketplace = new Marketplace({
       contractService,
       ipfsService,
+      affiliate: validAffiliate,
+      arbitrator: validArbitrator,
       store
     })
 
     await marketplace.createListing(listingData)
     await marketplace.makeOffer('999-000-0', offerData)
+
+    makeMaliciousOffer = async ({ affiliate = validAffiliate, arbitrator = validArbitrator }) => {
+      const ipfsHash = await marketplace.ipfsDataStore.save(OFFER_DATA_TYPE, offerData)
+      const ipfsBytes = contractService.getBytes32FromIpfsHash(ipfsHash)
+      const price = await contractService.moneyToUnits(listingData.price)
+      const expiry = Math.round(+new Date() / 1000) + 60 * 60 * 24 // 24 hrs
+      await contractService.call(
+        'V00_Marketplace',
+        'makeOffer',
+        [
+          0,
+          ipfsBytes,
+          expiry,
+          affiliate,
+          0,
+          price,
+          emptyAddress,
+          arbitrator
+        ],
+        { value: price }
+      )
+    }
   })
 
   describe('getListingsCount', () => {
@@ -205,6 +238,38 @@ describe('Marketplace Resource', function() {
       expect(errorThrown).to.be.true
       expect(errorMessage).to.equal('Error: Invalid offer: insufficient commission amount for listing')
     })
+
+    it('should throw an error if arbitrator is invalid', async () => {
+      // Create malicious offer by interacting directly with contract
+      await makeMaliciousOffer({ arbitrator: evilAddress })
+
+      let errorThrown = false
+      let errorMessage
+      try {
+        await marketplace.getOffer('999-000-0-1')
+      } catch(e) {
+        errorThrown = true
+        errorMessage = String(e)
+      }
+      expect(errorThrown).to.be.true
+      expect(errorMessage).to.equal('Error: Invalid offer: arbitrator is invalid')
+    })
+
+    it('should throw an error if affiliate is invalid', async () => {
+      // Create malicious offer by interacting directly with contract
+      await makeMaliciousOffer({ affiliate: evilAddress })
+
+      let errorThrown = false
+      let errorMessage
+      try {
+        await marketplace.getOffer('999-000-0-1')
+      } catch(e) {
+        errorThrown = true
+        errorMessage = String(e)
+      }
+      expect(errorThrown).to.be.true
+      expect(errorMessage).to.equal('Error: Invalid offer: affiliate is invalid')
+    })
   })
 
   describe('makeOffer', () => {
@@ -333,11 +398,7 @@ describe('Marketplace Resource', function() {
 
   describe('resolveDispute', () => {
     it('should resolve a disputed offer with a ruling', async () => {
-      const accounts = await web3.eth.getAccounts()
-      const anotherOffer = Object.assign({}, offerData, {
-        arbitrator: accounts[0]
-      })
-      await marketplace.makeOffer('999-000-0', anotherOffer)
+      await marketplace.makeOffer('999-000-0', offerData)
       let offer = await marketplace.getOffer('999-000-0-1')
       expect(offer.status).to.equal('created')
 
@@ -350,7 +411,10 @@ describe('Marketplace Resource', function() {
       expect(offer.status).to.equal('disputed')
 
       const offerPrice = Web3.utils.toWei(offer.totalPrice.amount)
-      await marketplace.resolveDispute('999-000-0-1', {}, 1, offerPrice)
+
+      await asAccount(contractService.web3, validArbitrator, async () => {
+        await marketplace.resolveDispute('999-000-0-1', {}, 1, offerPrice)
+      })
       offer = await marketplace.getOffer('999-000-0-1')
       expect(offer.status).to.be.equal('ruling')
     })

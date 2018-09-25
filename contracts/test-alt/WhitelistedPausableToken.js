@@ -3,40 +3,29 @@ import helper, { assertRevert, contractPath } from './_helper'
 
 describe('WhitelistedPausableToken.sol', async function() {
   const initialSupply = 100
+  const transferAmount = 1
+  const senderBalance = transferAmount * 10
   const minWhitelistExpirationSecs = 86415 // a little more than day for coverage builds
 
   let accounts, deploy, web3, blockTimestamp, evmIncreaseTime
-  let owner, account1, account2
+  let owner, sender, recipient
   let OriginToken
 
   // Helpers to reduce tedium of web3 calls
   async function balanceOf(address) {
     return await OriginToken.methods.balanceOf(address).call()
   }
-  async function addAllowedSender(address) {
-    const res = await OriginToken.methods.addAllowedSender(address).send()
-    assert(res.events.AllowedSenderAdded)
+  async function addAllowedTransactor(address) {
+    const res = await OriginToken.methods.addAllowedTransactor(address).send()
+    assert(res.events.AllowedTransactorAdded)
     return res
   }
-  async function isAllowedSender(address) {
-    return await OriginToken.methods.allowedSenders(address).call()
+  async function isAllowedTransactor(address) {
+    return await OriginToken.methods.allowedTransactors(address).call()
   }
-  async function removeAllowedSender(address) {
-    const res = await OriginToken.methods.removeAllowedSender(address).send()
-    assert(res.events.AllowedSenderRemoved)
-    return res
-  }
-  async function addAllowedRecipient(address) {
-    const res = await OriginToken.methods.addAllowedRecipient(address).send()
-    assert(res.events.AllowedRecipientAdded)
-    return res
-  }
-  async function isAllowedRecipient(address) {
-    return await OriginToken.methods.allowedRecipients(address).call()
-  }
-  async function removeAllowedRecipient(address) {
-    const res = await OriginToken.methods.removeAllowedRecipient(address).send()
-    assert(res.events.AllowedRecipientRemoved)
+  async function removeAllowedTransactor(address) {
+    const res = await OriginToken.methods.removeAllowedTransactor(address).send()
+    assert(res.events.AllowedTransactorRemoved)
     return res
   }
   async function whitelistExpiration() {
@@ -58,14 +47,15 @@ describe('WhitelistedPausableToken.sol', async function() {
       evmIncreaseTime,
     } = await helper(`${__dirname}/..`))
     owner = accounts[1]
-    account1 = accounts[2]
-    account2 = accounts[3]
+    sender = accounts[2]
+    recipient = accounts[3]
 
     OriginToken = await deploy('OriginToken', {
       from: owner,
       path: `${contractPath}/token/`,
       args: [initialSupply]
     })
+    await OriginToken.methods.transfer(sender, senderBalance).send({ from: owner })
   })
 
   it('starts with an inactive whitelist', async function() {
@@ -73,12 +63,9 @@ describe('WhitelistedPausableToken.sol', async function() {
   })
 
   it('allows transfers before activating whitelist', async function() {
-    const transferAmount = 1
-    await OriginToken.methods.transfer(account1, transferAmount).send({from: owner})
-    await OriginToken.methods.transfer(account2, transferAmount).send({from: account1})
-    assert.equal(await balanceOf(owner), initialSupply - transferAmount)
-    assert.equal(await balanceOf(account1), 0)
-    assert.equal(await balanceOf(account2), transferAmount)
+    await OriginToken.methods.transfer(recipient, transferAmount).send({from: sender})
+    assert.equal(await balanceOf(sender), senderBalance - transferAmount)
+    assert.equal(await balanceOf(recipient), transferAmount)
   })
 
   it('disallows setting an unreasonably short whitelist expiration', async function() {
@@ -113,7 +100,6 @@ describe('WhitelistedPausableToken.sol', async function() {
   })
 
   describe('with an active whitelist', async function() {
-    const transferAmount = 2
     beforeEach(async function() {
       const expiration = await blockTimestamp() + minWhitelistExpirationSecs
       await setWhitelistExpiration(expiration)
@@ -122,47 +108,47 @@ describe('WhitelistedPausableToken.sol', async function() {
 
     it('disallows transfers with an empty whitelist', async function() {
       await assertRevert(
-        OriginToken.methods.transfer(account1, 1).send({from: owner})
+        OriginToken.methods.transfer(recipient, 1).send({from: sender})
       )
-      assert.equal(await balanceOf(owner), initialSupply)
+      assert.equal(await balanceOf(sender), senderBalance)
     })
 
     it('lets a whitelisted sender to transfer tokens', async function() {
-      await addAllowedSender(owner)
-      assert.equal(await isAllowedSender(owner), true)
-      assert.equal(await isAllowedRecipient(account1), false)
-      await OriginToken.methods.transfer(account1, transferAmount).send({from: owner})
-      assert.equal(await balanceOf(owner), initialSupply - transferAmount)
-      assert.equal(await balanceOf(account1), transferAmount)
+      await addAllowedTransactor(sender)
+      assert.equal(await isAllowedTransactor(sender), true)
+      assert.equal(await isAllowedTransactor(recipient), false)
+      await OriginToken.methods.transfer(recipient, transferAmount).send({from: sender})
+      assert.equal(await balanceOf(sender), senderBalance - transferAmount)
+      assert.equal(await balanceOf(recipient), transferAmount)
     })
 
     it('does not let a removed sender transfer tokens', async function() {
-      await addAllowedSender(owner)
-      assert.equal(await isAllowedSender(owner), true)
-      await removeAllowedSender(owner)
-      assert.equal(await isAllowedSender(owner), false)
+      await addAllowedTransactor(sender)
+      assert.equal(await isAllowedTransactor(sender), true)
+      await removeAllowedTransactor(sender)
+      assert.equal(await isAllowedTransactor(sender), false)
       assertRevert(
-        OriginToken.methods.transfer(account1, transferAmount).send({from: owner})
+        OriginToken.methods.transfer(recipient, transferAmount).send({from: sender})
       )
     })
 
     it('lets any sender send to an allowed recipient', async function() {
-      await addAllowedRecipient(account1)
-      assert.equal(await isAllowedSender(owner), false)
-      assert.equal(await isAllowedRecipient(account1), true)
-      await OriginToken.methods.transfer(account1, transferAmount).send({from: owner})
-      assert.equal(await balanceOf(owner), initialSupply - transferAmount)
-      assert.equal(await balanceOf(account1), transferAmount)
+      await addAllowedTransactor(recipient)
+      assert.equal(await isAllowedTransactor(sender), false)
+      assert.equal(await isAllowedTransactor(recipient), true)
+      await OriginToken.methods.transfer(recipient, transferAmount).send({from: sender})
+      assert.equal(await balanceOf(sender), senderBalance - transferAmount)
+      assert.equal(await balanceOf(recipient), transferAmount)
     })
 
     it('does not let a removed recipient receive tokens', async function() {
-      await addAllowedRecipient(account1)
-      assert.equal(await isAllowedSender(owner), false)
-      assert.equal(await isAllowedRecipient(account1), true)
-      await removeAllowedRecipient(account1)
-      assert.equal(await isAllowedRecipient(account1), false)
+      await addAllowedTransactor(recipient)
+      assert.equal(await isAllowedTransactor(sender), false)
+      assert.equal(await isAllowedTransactor(recipient), true)
+      await removeAllowedTransactor(recipient)
+      assert.equal(await isAllowedTransactor(recipient), false)
       assertRevert(
-        OriginToken.methods.transfer(account1, transferAmount).send({from: owner})
+        OriginToken.methods.transfer(recipient, transferAmount).send({from: sender})
       )
     })
 
@@ -175,23 +161,20 @@ describe('WhitelistedPausableToken.sol', async function() {
 
       it('allows any account to send or receive after whitelist expires', async function() {
         // Verify we have an empty, active whitelist
-        assert.equal(await isAllowedSender(owner), false)
-        assert.equal(await isAllowedSender(account1), false)
-        assert.equal(await isAllowedSender(account2), false)
-        assert.equal(await isAllowedRecipient(owner), false)
-        assert.equal(await isAllowedRecipient(account1), false)
-        assert.equal(await isAllowedRecipient(account2), false)
+        assert.equal(await isAllowedTransactor(owner), false)
+        assert.equal(await isAllowedTransactor(sender), false)
+        assert.equal(await isAllowedTransactor(recipient), false)
         assert.equal(await OriginToken.methods.whitelistActive().call(), true)
         await assertRevert(
-          OriginToken.methods.transfer(account1, transferAmount).send({from: owner})
+          OriginToken.methods.transfer(recipient, transferAmount).send({from: sender})
         )
 
         // Expire the whitelist
         await evmIncreaseTime(minWhitelistExpirationSecs)
 
-        await OriginToken.methods.transfer(account1, transferAmount).send({from: owner})
-        assert.equal(await balanceOf(owner), initialSupply - transferAmount)
-        assert.equal(await balanceOf(account1), transferAmount)
+        await OriginToken.methods.transfer(recipient, transferAmount).send({from: sender})
+        assert.equal(await balanceOf(sender), senderBalance - transferAmount)
+        assert.equal(await balanceOf(recipient), transferAmount)
       })
     })
   })

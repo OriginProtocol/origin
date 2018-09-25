@@ -50,10 +50,13 @@ class Marketplace extends ContractHelper{
     for (const [name, contract] of Object.entries(contractObjs)) {
       const owner = await contract.methods.owner().call()
       const listingCount = await contract.methods.totalListings().call()
+      const tokenAddress = await contract.methods.tokenAddr().call()
       console.log(`name:          ${name}`)
       console.log(`address:       ${contract._address}`)
       console.log(`owner:         ${owner}`)
-      console.log(`# of listings: ${listingCount}\n`)
+      console.log(`# of listings: ${listingCount}`)
+      console.log(`token address: ${tokenAddress}`)
+      console.log('')
     }
   }
 

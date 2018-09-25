@@ -43,6 +43,7 @@
     "openzeppelin-solidity": "1.10.0",
     "rlp": "^2.0.0",
     "store": "^2.0.12",
+    "truffle-privatekey-provider": "^0.1.0",
     "url-parse": "^1.4.0",
     "web3": "^1.0.0-beta.34"
   },

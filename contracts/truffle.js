@@ -1,7 +1,10 @@
 const HDWalletProvider = require("truffle-hdwallet-provider")
+const PrivateKeyProvider = require('truffle-privatekey-provider')
+
 
 // How many addresses in wallet should we unlock?
 // (For deploying test data, we use other addresses as buyers and sellers)
+// Note: This is not used for Mainnet - only for Testnet and local deployment.
 const numAddressesToUnlock = 4
 
 // Local setup
@@ -31,20 +34,28 @@ truffleSetup = {
   solc: { optimizer: { enabled: true, runs: 200 } }
 }
 
-// For global test networks and mainnet, set your wallet mnemonic in env
-// variable. Assumes we're using first address for that mnemonic.
+// When a mnemonic is set, the first address for that mnemonic is used to do the deployment.
 // In future we might consider prompting for mnemonics:
 // https://www.npmjs.com/package/prompt
 //
-if (process.env.MAINNET_MNEMONIC) {
-  truffleSetup.networks.mainnet = {
-    provider: function() {
-      return new HDWalletProvider(
-        process.env.MAINNET_MNEMONIC,
-        `https://mainnet.infura.io/${process.env.INFURA_ACCESS_TOKEN}`,
-        0, numAddressesToUnlock)
-    },
-    network_id: 1
+if (process.env.MAINNET_PRIVATE_KEY || process.env.MAINNET_MNEMONIC) {
+  const privateKey = process.env.MAINNET_PRIVATE_KEY
+  const mnemonic = process.env.MAINNET_MNEMONIC
+  const providerUrl = `https://mainnet.infura.io/${process.env.INFURA_ACCESS_TOKEN}`
+
+  // Private key takes precedence over mnemonic.
+  if (privateKey) {
+    truffleSetup.networks.mainnet = {
+      provider: function() { return new PrivateKeyProvider(privateKey, providerUrl) },
+      network_id: 1
+    }
+    console.log('Configured truffle to use PrivateKey provider for Mainnet.')
+  } else {
+    truffleSetup.networks.mainnet = {
+      provider: function() { return new HDWalletProvider(mnemonic, providerUrl) },
+      network_id: 1
+    }
+    console.log('Configured truffle to use Mnemonic provider for Mainnet.')
   }
 }
 if (process.env.RINKEBY_MNEMONIC) {

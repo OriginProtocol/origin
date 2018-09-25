@@ -4,11 +4,11 @@ import "../../../node_modules/openzeppelin-solidity/contracts/token/ERC20/Pausab
 
 
 /**
- * @title Contract for enforcing allowed token sender and recipients
+ * @title Contract for enforcing a list of addresses allowed to send or receive tokens
  * @dev Until the whitelist expiration expires, this contract only permits
- * token transfers that involve an allowed sender or allowed recipient. Once the
- * whitelist expiration passes, it becomes impossible to re-enable the
- * whitelist.
+ * token transfers in which an allowed transactor is either the sender or
+ * recipient. Once the whitelist expiration passes, it becomes impossible to
+ * re-enable the whitelist.
  *
  * This contract inherits from PausableToken to enforce both pausing and
  * whitelists for transfer calls.
@@ -16,23 +16,26 @@ import "../../../node_modules/openzeppelin-solidity/contracts/token/ERC20/Pausab
 contract WhitelistedPausableToken is PausableToken {
     // UNIX timestamp (in seconds) after which this whitelist no longer applies
     uint256 public whitelistExpiration;
-    // May send tokens to any recipient
-    mapping (address => bool) public allowedSenders;
-    // May receive tokens from any sender
-    mapping (address => bool) public allowedRecipients;
+    // While the whitelist is active, either the sender or recipient must be
+    // in allowedTransactors.
+    mapping (address => bool) public allowedTransactors;
 
     event SetWhitelistExpiration(uint256 expiration);
-    event AllowedSenderAdded(address sender);
-    event AllowedSenderRemoved(address sender);
-    event AllowedRecipientAdded(address recipient);
-    event AllowedRecipientRemoved(address recipient);
+    event AllowedTransactorAdded(address sender);
+    event AllowedTransactorRemoved(address sender);
 
     //
     // Functions for maintaining whitelist
     //
 
     modifier allowedTransfer(address _from, address _to) {
-        require(!whitelistActive() || allowedSenders[_from] || allowedRecipients[_to], "neither sender nor recipient are allowed");
+        require(
+            // solium-disable-next-line operator-whitespace
+            !whitelistActive() ||
+            allowedTransactors[_from] ||
+            allowedTransactors[_to],
+            "neither sender nor recipient are allowed"
+        );
         _;
     }
 
@@ -40,24 +43,14 @@ contract WhitelistedPausableToken is PausableToken {
         return block.timestamp < whitelistExpiration;
     }
 
-    function addAllowedSender(address _sender) public onlyOwner {
-        emit AllowedSenderAdded(_sender);
-        allowedSenders[_sender] = true;
+    function addAllowedTransactor(address _transactor) public onlyOwner {
+        emit AllowedTransactorAdded(_transactor);
+        allowedTransactors[_transactor] = true;
     }
 
-    function removeAllowedSender(address _sender) public onlyOwner {
-        emit AllowedSenderRemoved(_sender);
-        delete allowedSenders[_sender];
-    }
-
-    function addAllowedRecipient(address _recipient) public onlyOwner {
-        emit AllowedRecipientAdded(_recipient);
-        allowedRecipients[_recipient] = true;
-    }
-
-    function removeAllowedRecipient(address _recipient) public onlyOwner {
-        emit AllowedRecipientRemoved(_recipient);
-        delete allowedRecipients[_recipient];
+    function removeAllowedTransactor(address _transactor) public onlyOwner {
+        emit AllowedTransactorRemoved(_transactor);
+        delete allowedTransactors[_transactor];
     }
 
     /**

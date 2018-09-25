@@ -18,9 +18,11 @@ import {
 import MarketplaceResolver from '../contractInterface/marketplace/resolver'
 
 class Marketplace {
-  constructor({ contractService, ipfsService, store }) {
+  constructor({ contractService, ipfsService, store, affiliate, arbitrator }) {
     this.contractService = contractService
     this.ipfsService = ipfsService
+    this.affiliate = affiliate
+    this.arbitrator = arbitrator
     this.ipfsDataStore = new IpfsDataStore(this.ipfsService)
     this.resolver = new MarketplaceResolver(...arguments)
 
@@ -130,6 +132,14 @@ class Marketplace {
       if (listingCommision > chainOffer.commission) {
         throw new Error('Invalid offer: insufficient commission amount for listing')
       }
+
+      if (chainOffer.arbitrator !== this.arbitrator) {
+        throw new Error('Invalid offer: arbitrator is invalid')
+      }
+
+      if (chainOffer.affiliate !== this.affiliate) {
+        throw new Error('Invalid offer: affiliate is invalid')
+      }
     }
 
     // Create an Offer from on-chain and off-chain data.
@@ -186,11 +196,13 @@ class Marketplace {
     // Validate and save the data to IPFS.
     const ipfsHash = await this.ipfsDataStore.save(OFFER_DATA_TYPE, offerData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
+    const affiliate = this.affiliate
+    const arbitrator = this.arbitrator
 
     return await this.resolver.makeOffer(
       listingId,
       ipfsBytes,
-      offerData,
+      Object.assign({ affiliate, arbitrator }, offerData),
       confirmationCallback
     )
   }
