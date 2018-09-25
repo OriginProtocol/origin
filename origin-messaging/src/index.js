@@ -187,7 +187,7 @@ const startOrbitDbServer = async (ipfs) => {
   // with the same peer
   const orbitGlobal = new OrbitDB(
     ipfs,
-    'odb/Main',
+    config.ORBIT_DB_PATH,
     { keystore: new InsertOnlyKeystore() }
   )
 
