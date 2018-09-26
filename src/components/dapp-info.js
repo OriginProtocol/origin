@@ -9,9 +9,11 @@ const DappInfo = () => {
           <div className="col-md-6">
             <h1>DApp Info</h1>
             <h3 className="lead">Developer information about this build</h3>
-            <table border="1" width="100%">
+            <table width="100%">
+
               <tr><th colSpan="2">origin.js</th></tr>
               <tr><td>Version</td><td>{ origin.version }</td></tr>
+
               <tr><th colSpan="2">Environment Variables</th></tr>
               <tr><td>BRIDGE_SERVER_DOMAIN</td><td>{ process.env.BRIDGE_SERVER_DOMAIN }</td></tr>
               <tr><td>BRIDGE_SERVER_PROTOCOL</td><td>{ process.env.BRIDGE_SERVER_PROTOCOL }</td></tr>
@@ -25,6 +27,7 @@ const DappInfo = () => {
               <tr><td>MESSAGING_ACCOUNT</td><td>{ process.env.MESSAGING_ACCOUNT }</td></tr>
               <tr><td>PROVIDER_URL</td><td>{ process.env.PROVIDER_URL }</td></tr>
               <tr><td>MESSAGING_NAMESPACE</td><td>{ process.env.MESSAGING_NAMESPACE }</td></tr>
+              <tr><td>DEPLOY_TAG</td><td>{ process.env.DEPLOY_TAG }</td></tr>
             </table>
           </div>
         </div>
