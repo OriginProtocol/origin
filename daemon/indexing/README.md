@@ -1,10 +1,15 @@
-This directory contains code for indexing servers:
+![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
+
+# Origin Indexing Servers
+
+This directory contains code for Origin Indexing Servers:
  - listener: Server that listens to events emitted by Origin contracts and indexes them.
  - apollo: GraphQL server for indexed data
  - lib: library for indexing data in various backend. Currently Postgres and Elasticsearch are supported.
 
-To start the listener:
-======================
+_⚠️ Note that this is a standalone npm package apart from origin-js, and is not included in the distributed origin-js package. Once we move to a monorepo, it will be in a separate directory alongside origin-js._
+
+## To start the listener
 
 Use origin-box to start an origin-js container.
 
@@ -29,8 +34,7 @@ Start the listener in the the origin-js container. Use --elasticsearch and/or --
 You should see messages in the console indicating events are being indexed.
 
 
-To start the Apollo GraphQL server:
-===================================
+## To start the Apollo GraphQL server
 
 You will need to update the origin-box:docker-compose.yml. For the image origin-js, proxy port 4000 to 4000 for the Apollo server. [TODO: update origin-box config]
 
