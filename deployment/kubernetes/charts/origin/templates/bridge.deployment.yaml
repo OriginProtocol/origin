@@ -21,6 +21,7 @@ spec:
       containers:
       - name: origin-bridge
         image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.bridgeImage }}:{{ .Values.bridgeImageTag }}"
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
         env:
@@ -30,6 +31,6 @@ spec:
               name: {{ template "bridge.fullname" . }}
               key: ENVKEY
         - name: HOST
-          value: "bridge.{{ .Release.Namespace }}.originprotocol.com"
+          value: {{ template "bridge.host" . }}
         - name: HTTPS
           value: "true"

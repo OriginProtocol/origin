@@ -4,9 +4,9 @@ metadata:
   name: {{ template "ethereum.fullname" . }}-tx-node
   labels:
     app: {{ template "ethereum.fullname" . }}-tx-node
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
 spec:
   replicas: {{ .Values.gethTxReplicas }}
   serviceName: {{ template "ethereum.fullname" . }}-tx-node
@@ -82,13 +82,13 @@ spec:
             secretKeyRef:
               name: {{ template "ethereum.fullname" . }}-ethstats
               key: WS_SECRET
-        {{ if eq .Release.Namespace "dev" }}
+        {{- if eq .Release.Namespace "dev" }}
         - name: NETWORK_ID
           valueFrom:
             configMapKeyRef:
               name: {{ template "ethereum.fullname" . }}-genesis-config
               key: networkid
-        {{ end }}
+        {{- end }}
         resources:
           requests:
             memory: {{ default "2Gi" .Values.gethTxMemoryRequest }}

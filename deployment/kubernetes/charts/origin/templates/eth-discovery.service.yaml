@@ -1,8 +1,7 @@
 # Enable discovery of Ethereum nodes
 # This is only desirable for real Ethereum testnets or mainnet, we don't want
 # our private network to be discoverable
-
-{{ if ne ".Release.Namespace" "dev" }}
+{{- if ne ".Release.Namespace" "dev" }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -20,4 +19,4 @@ spec:
   - name: discovery-udp
     port: 30303
     protocol: UDP
-{{ end }}
+{{- end }}

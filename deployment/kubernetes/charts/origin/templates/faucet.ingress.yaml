@@ -15,24 +15,15 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   tls:
-    - secretName: faucet.{{ .Release.Namespace }}.originprotocol.com
+    - secretName: {{ template "faucet.host" . }}
       hosts:
-        - faucet.{{ .Release.Namespace }}.originprotocol.com
-    {{- if eq .Release.Namespace "staging" }}
-    - secretName: faucet.originprotocol.com
-      hosts:
-        - faucet.originprotocol.com
-    {{- end }}
+        - {{ template "faucet.host" . }}
   rules:
-  - host: faucet.{{ .Release.Namespace }}.originprotocol.com
-    http: &http_rules
+  - host: {{ template "faucet.host" . }}
+    http:
       paths:
         - path: /
           backend:
             serviceName: {{ template "faucet.fullname" . }}
             servicePort: 5000
-  {{- if eq .Release.Namespace "staging" }}
-  - host: faucet.originprotocol.com
-    http: *http_rules
-  {{- end  }}
 {{ end }}

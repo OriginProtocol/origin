@@ -22,5 +22,6 @@ spec:
       containers:
       - name: origin-dapp
         image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.dappImage }}:{{ .Values.dappImageTag }}"
+        imagePullPolicy: Always
         ports:
         - containerPort: 80

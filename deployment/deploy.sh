@@ -57,6 +57,7 @@ function build_and_push_container() {
 
   docker build ../ \
     -f dockerfiles/${NAMESPACE}/${CONTAINER} \
+    --build-arg DEPLOY_TAG=${DEPLOY_TAG} \
     -t ${GCLOUD_REGISTRY}/${GCLOUD_PROJECT}/${NAMESPACE}/${CONTAINER}:${DEPLOY_TAG} \
     -t ${GCLOUD_REGISTRY}/${GCLOUD_PROJECT}/${NAMESPACE}/${CONTAINER}:latest \
 

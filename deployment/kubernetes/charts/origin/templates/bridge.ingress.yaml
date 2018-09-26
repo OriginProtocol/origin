@@ -16,14 +16,14 @@ metadata:
     # the nginx configuration that this will overwrite
     # nginx.ingress.kubernetes.io/enable-cors: "true"
     # nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST"
-    # nginx.ingress.kubernetes.io/cors-allow-origin: "https://demo.{{.Release.Namespace }}.originprotocol.com"
+    # nginx.ingress.kubernetes.io/cors-allow-origin: {{ template "dapp.host" . }}
 spec:
   tls:
-    - secretName: bridge.{{ .Release.Namespace }}.originprotocol.com
+    - secretName: {{ template "bridge.host" . }}
       hosts:
-        - bridge.{{ .Release.Namespace }}.originprotocol.com
+        - {{ template "bridge.host" . }}
   rules:
-  - host: bridge.{{ .Release.Namespace }}.originprotocol.com
+  - host: {{ template "bridge.host" . }}
     http:
       paths:
       - path: /

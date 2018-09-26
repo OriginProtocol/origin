@@ -14,11 +14,11 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   tls:
-    - secretName: discovery.{{ .Release.Namespace }}.originprotocol.com
+    - secretName: {{ template "discovery.host" . }}
       hosts:
-        - discovery.{{ .Release.Namespace }}.originprotocol.com
+        - {{ template "discovery.host" . }}
   rules:
-  - host: discovery.{{ .Release.Namespace }}.originprotocol.com
+  - host: {{ template "discovery.host" . }}
     http:
       paths:
         - path: /

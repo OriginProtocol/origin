@@ -5,7 +5,7 @@ bridgeReplicas: 1
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '8acb15a'
+dappImageTag: '843e5fe'
 dappReplicas: 2
 
 # Origin network configuration

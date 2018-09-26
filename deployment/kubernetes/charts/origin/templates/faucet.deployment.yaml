@@ -22,6 +22,7 @@ spec:
       containers:
       - name: origin-faucet
         image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.faucetImage }}:{{ .Values.faucetImageTag }}"
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
         env:

@@ -65,8 +65,6 @@ services:
   origin-discovery:
     container_name: origin-discovery
     image: origin-discovery
-    volumes:
-      - ./origin-js/daemon/indexing:/app
     build:
       context: .
       dockerfile: development/dockerfiles/origin-discovery
@@ -92,6 +90,7 @@ services:
       - "4000:4000" # Apollo
     command: >
       /bin/bash -c "wait-for.sh -t 0 -q origin-js:8081 --
+      npm link origin &&
       npm install --quiet --no-progress &&
       npm link origin &&
       node apollo/index.js"
@@ -121,8 +120,8 @@ services:
       - DATABASE_NAME=origin-indexing
       - ELASTICSEARCH_HOST=elasticsearch:9200
     command: >
-      /bin/bash -c "npm install --quiet --no-progress &&
-      npm link origin &&
+      /bin/bash -c "npm link origin &&
+      npm install --quiet --no-progress &&
       wait-for.sh -t 0 -q origin-js:8081 --
       node node_modules/db-migrate/bin/db-migrate up -e origin-box &&
       node listener/listener.js --elasticsearch --db --web3-url='http://origin-js:8545'"

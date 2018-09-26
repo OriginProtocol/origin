@@ -22,6 +22,7 @@ spec:
       containers:
       - name: origin-discovery
         image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.discoveryImage }}:{{ .Values.discoveryImageTag }}"
+        imagePullPolicy: Always
         ports:
           - containerPort: 4000
         env:

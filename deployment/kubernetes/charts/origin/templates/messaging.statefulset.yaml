@@ -21,6 +21,7 @@ spec:
       containers:
       - name: origin-messaging
         image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.messagingImage }}:{{ .Values.messagingImageTag }}"
+        imagePullPolicy: Always
         env:
           - name: MESSAGING_NAMESPACE
             {{- if ne .Release.Namespace "prod" }}

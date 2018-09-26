@@ -16,13 +16,16 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "86400"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "86400"
     nginx.ingress.kubernetes.io/proxy-body-size: "2m"
+    nginx.ingress.kubernetes.io/server-snippet: |
+      large_client_header_buffers 8 32k;
+      proxy_buffers 8 32k;
 spec:
   tls:
-    - secretName: messaging.{{ .Release.Namespace }}.originprotocol.com
+    - secretName: {{ template "messaging.host" . }}
       hosts:
-        - messaging.{{ .Release.Namespace }}.originprotocol.com
+        - {{ template "messaging.host" . }}
   rules:
-    - host: messaging.{{ .Release.Namespace }}.originprotocol.com
+    - host: {{ template "messaging.host" . }}
       http:
         paths:
           - path: /

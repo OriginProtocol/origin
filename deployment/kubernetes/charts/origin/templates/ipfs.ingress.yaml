@@ -18,11 +18,11 @@ metadata:
     nginx.ingress.kubernetes.io/cors-allow-origin: "*"
 spec:
   tls:
-    - secretName: ipfs.{{ .Release.Namespace }}.originprotocol.com
+    - secretName: {{ template "ipfs.host" . }}
       hosts:
-        - ipfs.{{ .Release.Namespace }}.originprotocol.com
+        - {{ template "ipfs.host" . }}
   rules:
-    - host: ipfs.{{ .Release.Namespace }}.originprotocol.com
+    - host: {{ template "ipfs.host" . }}
       http:
         paths:
           # Only allow the add API call through to the IPFS API

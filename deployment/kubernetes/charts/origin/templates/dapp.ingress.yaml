@@ -14,16 +14,17 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   tls:
-    - secretName: demo.{{ .Release.Namespace }}.originprotocol.com
+    - secretName: {{ template "dapp.host" . }}
       hosts:
-        - demo.{{ .Release.Namespace }}.originprotocol.com
+        - {{ template "dapp.host" . }}
+    # Additional URL for staging environment
     {{- if eq .Release.Namespace "staging" }}
     - secretName: demo.originprotocol.com
       hosts:
         - demo.originprotocol.com
     {{- end }}
   rules:
-  - host: demo.{{ .Release.Namespace }}.originprotocol.com
+  - host: {{ template "dapp.host" . }}
     http: &http_rules
       paths:
         - path: /
