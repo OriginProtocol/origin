@@ -1,0 +1,66 @@
+[
+  {
+    "id": "arbitrationModals.confirmHeading",
+    "defaultMessage": "Is there a problem?"
+  },
+  {
+    "id": "arbitrationModals.confirmText1",
+    "defaultMessage": "Are you sure you want to report a problem?"
+  },
+  {
+    "id": "arbitrationModals.confirmText2",
+    "defaultMessage": "This will start the conflict resolution process,\n            someone from Origin will be notified and all chat history will be made\n            public to a moderator."
+  },
+  {
+    "id": "arbitrationModals.confirmCancel",
+    "defaultMessage": "Oops, no wait..."
+  },
+  {
+    "id": "arbitrationModals.confirmSubmit",
+    "defaultMessage": "Yes, please"
+  },
+  {
+    "id": "arbitrationModals.issueHeading",
+    "defaultMessage": "Describe your problem below"
+  },
+  {
+    "id": "arbitrationModals.issueCancel",
+    "defaultMessage": "Cancel"
+  },
+  {
+    "id": "arbitrationModals.issueSubmit",
+    "defaultMessage": "Submit"
+  },
+  {
+    "id": "arbitrationModals.tryReachingOut",
+    "defaultMessage": "Messaging Required"
+  },
+  {
+    "id": "arbitrationModals.request",
+    "defaultMessage": "In order to report a problem, you must enable Origin messaging. We also recommend that you start by reaching out to the {counterparty} and attempting to resolve the issue directly."
+  },
+  {
+    "id": "arbitrationModals.prerequisiteCancel",
+    "defaultMessage": "Cancel"
+  },
+  {
+    "id": "arbitrationModals.enableMessaging",
+    "defaultMessage": "Enable Messaging"
+  },
+  {
+    "id": "arbitrationModals.rejectionHeading",
+    "defaultMessage": "This offer has been rejected"
+  },
+  {
+    "id": "arbitrationModals.rejectionText1",
+    "defaultMessage": "You've rejected this buyer's offer,"
+  },
+  {
+    "id": "arbitrationModals.rejectionText2",
+    "defaultMessage": "click below to go back to your listings."
+  },
+  {
+    "id": "arbitrationModals.rejectionListings",
+    "defaultMessage": "Back to your listings"
+  }
+]
