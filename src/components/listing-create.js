@@ -386,7 +386,13 @@ class ListingCreate extends Component {
                           selectedSchemaType === schema.type ? ' selected' : ''
                         }`}
                       >
-                        <p>{schema.name} listings may include:</p>
+                        <p>
+                          <FormattedMessage
+                            id={'listing-create.listingsMayInclude'}
+                            defaultMessage={'{schemaName} listings may include:'}
+                            values={{ schemaName: schema.name }}
+                          />
+                        </p>
                         <ul>
                           {schemaExamples &&
                             schemaExamples.map(example => (
