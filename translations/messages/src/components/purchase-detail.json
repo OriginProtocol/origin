@@ -206,13 +206,5 @@
   {
     "id": "purchase-detail.listingStatus",
     "defaultMessage": "This listing is {status}"
-  },
-  {
-    "id": "purchase-detail.processingUpdate",
-    "defaultMessage": "Processing your update"
-  },
-  {
-    "id": "purchase-detail.pleaseStandBy",
-    "defaultMessage": "Please stand by..."
   }
 ]

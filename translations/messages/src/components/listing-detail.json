@@ -4,22 +4,6 @@
     "defaultMessage": "There was an error loading this listing."
   },
   {
-    "id": "listing-detail.confirmTransaction",
-    "defaultMessage": "Confirm transaction"
-  },
-  {
-    "id": "listing-detail.pressSubmitInMetaMask",
-    "defaultMessage": "Press {submit} in {currentProvider} window"
-  },
-  {
-    "id": "listing-detail.processingPurchase",
-    "defaultMessage": "Processing your purchase"
-  },
-  {
-    "id": "listing-detail.pleaseStandBy",
-    "defaultMessage": "Please stand by..."
-  },
-  {
     "id": "listing-detail.purchaseSuccessful",
     "defaultMessage": "Success!"
   },
