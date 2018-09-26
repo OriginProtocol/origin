@@ -56,7 +56,7 @@ class DappInfo extends Component {
 
   async loadMultiSigData() {
     const data = [ ]
-    data.push(<tr><th colSpan="2">For signing/verifiying multi-sig transactions</th></tr>)
+    data.push(<tr><th colSpan="2">For signing/verifying multi-sig transactions</th></tr>)
     for (const [name, contract] of Object.entries(origin.contractService.marketplaceContracts)) {
       const contractObj = await origin.contractService.deployed(contract)
       data.push(<tr><td>{name} address</td><td>{contractObj._address}</td></tr>)
