@@ -206,12 +206,16 @@ class WalletCard extends Component {
                       className="dropdown-menu dropdown-menu-right"
                       aria-labelledby="ethMenuButton"
                     >
-                      <a className="dropdown-item" href="#">
-                        Transaction History
-                      </a>
-                      <a className="dropdown-item" href="#">
-                        Add Tokens
-                      </a>
+                      {address &&
+                        <EtherscanLink hash={address} className="dropdown-item">
+                          Transaction History
+                        </EtherscanLink>
+                      }
+                      {/*
+                        <a className="dropdown-item" href="#">
+                          Add Tokens
+                        </a>
+                      */}
                     </div>
                   </div>
                 )}
@@ -260,12 +264,16 @@ class WalletCard extends Component {
                       className="dropdown-menu dropdown-menu-right"
                       aria-labelledby="ognMenuButton"
                     >
-                      <a className="dropdown-item" href="#">
-                        Transaction History
-                      </a>
-                      <a className="dropdown-item" href="#">
-                        Add Tokens
-                      </a>
+                      {address &&
+                        <EtherscanLink hash={address} tokenAddress={origin.token.contractAddress} className="dropdown-item">
+                          Transaction History
+                        </EtherscanLink>
+                      }
+                      {/*
+                        <a className="dropdown-item" href="#">
+                          Add Tokens
+                        </a>
+                      */}
                     </div>
                   </div>
                 )}
