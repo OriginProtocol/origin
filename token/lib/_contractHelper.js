@@ -111,7 +111,7 @@ class ContractHelper {
     // Blocks are mined every ~15 seconds, but it sometimes takes ~40-60 seconds
     // to get a transaction receipt from rinkeby.infura.io.
     const retryOpts = { maxRetries: 10, verbose: this.config.verbose }
-    await withRetries(retryOpts, async () => {
+    return await withRetries(retryOpts, async () => {
       if (transactionHash) {
         const receipt = await web3.eth.getTransactionReceipt(transactionHash)
         if (receipt) {
@@ -124,7 +124,7 @@ class ContractHelper {
           } else {
             this.vlog('transaction successful')
           }
-            return receipt
+          return receipt
         } else {
           throw new Error('still waiting for transaction receipt')
         }
