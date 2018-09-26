@@ -291,9 +291,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.24;\n\n\ncontract ERC725 {\n\n    uint256 constant MANAGEMENT_KEY = 1;\n    uint256 constant ACTION_KEY = 2;\n    uint256 constant CLAIM_SIGNER_KEY = 3;\n    uint256 constant ENCRYPTION_KEY = 4;\n\n    event KeyAdded(bytes32 indexed key, uint256 indexed purpose, uint256 indexed keyType);\n    event KeyRemoved(bytes32 indexed key, uint256 indexed purpose, uint256 indexed keyType);\n    event ExecutionRequested(uint256 indexed executionId, address indexed to, uint256 indexed value, bytes data);\n    event Executed(uint256 indexed executionId, address indexed to, uint256 indexed value, bytes data);\n    event Approved(uint256 indexed executionId, bool approved);\n\n    function getKey(bytes32 _key) public view returns(uint256[] purposes, uint256 keyType, bytes32 key);\n    function keyHasPurpose(bytes32 _key, uint256 _purpose) public view returns (bool exists);\n    function getKeysByPurpose(uint256 _purpose) public view returns(bytes32[] keys);\n    function addKey(bytes32 _key, uint256 _purpose, uint256 _keyType) public returns (bool success);\n    function removeKey(bytes32 _key, uint256 _purpose) public returns (bool success);\n    function execute(address _to, uint256 _value, bytes _data) public returns (uint256 executionId);\n    function approve(uint256 _id, bool _approve) public returns (bool success);\n}\n",
-  "sourcePath": "/Users/stan/Origin/origin-box/origin-js/contracts/contracts/identity/ERC725.sol",
+  "sourcePath": "/app/contracts/contracts/identity/ERC725.sol",
   "ast": {
-    "absolutePath": "/Users/stan/Origin/origin-box/origin-js/contracts/contracts/identity/ERC725.sol",
+    "absolutePath": "/app/contracts/contracts/identity/ERC725.sol",
     "exportedSymbols": {
       "ERC725": [
         1022
@@ -1848,7 +1848,7 @@
     "src": "0:1330:6"
   },
   "legacyAST": {
-    "absolutePath": "/Users/stan/Origin/origin-box/origin-js/contracts/contracts/identity/ERC725.sol",
+    "absolutePath": "/app/contracts/contracts/identity/ERC725.sol",
     "exportedSymbols": {
       "ERC725": [
         1022
@@ -3408,5 +3408,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-09-21T21:35:13.249Z"
+  "updatedAt": "2018-09-26T00:12:44.236Z"
 }

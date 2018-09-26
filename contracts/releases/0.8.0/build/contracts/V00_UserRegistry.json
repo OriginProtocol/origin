@@ -56,24 +56,24 @@
       "type": "function"
     }
   ],
-  "bytecode": "0x608060405234801561001057600080fd5b506101c6806100206000396000f3006080604052600436106100565763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416634d3820eb811461005b57806376b1658814610072578063a87430ba14610087575b600080fd5b34801561006757600080fd5b506100706100de565b005b34801561007e57600080fd5b50610070610146565b34801561009357600080fd5b506100b573ffffffffffffffffffffffffffffffffffffffff60043516610172565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b3260008181526020818152604091829020805473ffffffffffffffffffffffffffffffffffffffff19163390811790915582519384529083015280517fff3eabe1067b08ba8af3e8d3191eebeae9b35de7a7aeee40f2ad1ceb6a8876079281900390910190a1565b336000908152602081905260409020805473ffffffffffffffffffffffffffffffffffffffff19169055565b60006020819052908152604090205473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820432b9091d38b64b3d149d82e56b43c428bed00974f9408868d0832d5943e6dc80029",
-  "deployedBytecode": "0x6080604052600436106100565763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416634d3820eb811461005b57806376b1658814610072578063a87430ba14610087575b600080fd5b34801561006757600080fd5b506100706100de565b005b34801561007e57600080fd5b50610070610146565b34801561009357600080fd5b506100b573ffffffffffffffffffffffffffffffffffffffff60043516610172565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b3260008181526020818152604091829020805473ffffffffffffffffffffffffffffffffffffffff19163390811790915582519384529083015280517fff3eabe1067b08ba8af3e8d3191eebeae9b35de7a7aeee40f2ad1ceb6a8876079281900390910190a1565b336000908152602081905260409020805473ffffffffffffffffffffffffffffffffffffffff19169055565b60006020819052908152604090205473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820432b9091d38b64b3d149d82e56b43c428bed00974f9408868d0832d5943e6dc80029",
+  "bytecode": "0x608060405234801561001057600080fd5b506101c6806100206000396000f3006080604052600436106100565763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416634d3820eb811461005b57806376b1658814610072578063a87430ba14610087575b600080fd5b34801561006757600080fd5b506100706100de565b005b34801561007e57600080fd5b50610070610146565b34801561009357600080fd5b506100b573ffffffffffffffffffffffffffffffffffffffff60043516610172565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b3260008181526020818152604091829020805473ffffffffffffffffffffffffffffffffffffffff19163390811790915582519384529083015280517fff3eabe1067b08ba8af3e8d3191eebeae9b35de7a7aeee40f2ad1ceb6a8876079281900390910190a1565b336000908152602081905260409020805473ffffffffffffffffffffffffffffffffffffffff19169055565b60006020819052908152604090205473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820bd09f6a673292da71dc1b7016f1602fd54bcd4af0230159154403e81bafc94310029",
+  "deployedBytecode": "0x6080604052600436106100565763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416634d3820eb811461005b57806376b1658814610072578063a87430ba14610087575b600080fd5b34801561006757600080fd5b506100706100de565b005b34801561007e57600080fd5b50610070610146565b34801561009357600080fd5b506100b573ffffffffffffffffffffffffffffffffffffffff60043516610172565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b3260008181526020818152604091829020805473ffffffffffffffffffffffffffffffffffffffff19163390811790915582519384529083015280517fff3eabe1067b08ba8af3e8d3191eebeae9b35de7a7aeee40f2ad1ceb6a8876079281900390910190a1565b336000908152602081905260409020805473ffffffffffffffffffffffffffffffffffffffff19169055565b60006020819052908152604090205473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820bd09f6a673292da71dc1b7016f1602fd54bcd4af0230159154403e81bafc94310029",
   "sourceMap": "264:618:11:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;264:618:11;;;;;;;",
   "deployedSourceMap": "264:618:11:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;606:134;;8:9:-1;5:2;;;30:1;27;20:12;5:2;606:134:11;;;;;;802:78;;8:9:-1;5:2;;;30:1;27;20:12;5:2;802:78:11;;;;465:40;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;465:40:11;;;;;;;;;;;;;;;;;;;;;;;;;;606:134;665:9;659:5;:16;;;;;;;;;;;;:29;;-1:-1:-1;;659:29:11;678:10;659:29;;;;;;703:30;;;;;;;;;;;;;;;;;;;;;606:134::o;802:78::-;858:10;872:1;852:17;;;;;;;;;;:21;;-1:-1:-1;;852:21:11;;;802:78::o;465:40::-;;;;;;;;;;;;;;;;:::o",
   "source": "pragma solidity ^0.4.24;\n\nimport \"./ClaimHolderPresigned.sol\";\n\n/// @title UserRegistry\n/// @dev Used to keep registry of user identifies\n/// @author Matt Liu <matt@originprotocol.com>, Josh Fraser <josh@originprotocol.com>, Stan James <stan@originprotocol.com>\n\n\ncontract V00_UserRegistry {\n    /*\n    * Events\n    */\n\n    event NewUser(address _address, address _identity);\n\n    /*\n    * Storage\n    */\n\n    // Mapping from ethereum wallet to ERC725 identity\n    mapping(address => address) public users;\n\n    /*\n    * Public functions\n    */\n\n    /// @dev registerUser(): Add a user to the registry\n    function registerUser()\n        public\n    {\n        users[tx.origin] = msg.sender;\n        emit NewUser(tx.origin, msg.sender);\n    }\n\n    /// @dev clearUser(): Remove user from the registry\n    function clearUser()\n        public\n    {\n        users[msg.sender] = 0;\n    }\n}\n",
-  "sourcePath": "/Users/stan/Origin/origin-box/origin-js/contracts/contracts/identity/V00_UserRegistry.sol",
+  "sourcePath": "/app/contracts/contracts/identity/V00_UserRegistry.sol",
   "ast": {
-    "absolutePath": "/Users/stan/Origin/origin-box/origin-js/contracts/contracts/identity/V00_UserRegistry.sol",
+    "absolutePath": "/app/contracts/contracts/identity/V00_UserRegistry.sol",
     "exportedSymbols": {
       "V00_UserRegistry": [
-        2168
+        2152
       ]
     },
-    "id": 2169,
+    "id": 2153,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 2126,
+        "id": 2110,
         "literals": [
           "solidity",
           "^",
@@ -84,11 +84,11 @@
         "src": "0:24:11"
       },
       {
-        "absolutePath": "/Users/stan/Origin/origin-box/origin-js/contracts/contracts/identity/ClaimHolderPresigned.sol",
+        "absolutePath": "/app/contracts/contracts/identity/ClaimHolderPresigned.sol",
         "file": "./ClaimHolderPresigned.sol",
-        "id": 2127,
+        "id": 2111,
         "nodeType": "ImportDirective",
-        "scope": 2169,
+        "scope": 2153,
         "sourceUnit": 672,
         "src": "26:36:11",
         "symbolAliases": [],
@@ -100,9 +100,9 @@
         "contractKind": "contract",
         "documentation": "@title UserRegistry\n @dev Used to keep registry of user identifies\n @author Matt Liu <matt@originprotocol.com>, Josh Fraser <josh@originprotocol.com>, Stan James <stan@originprotocol.com>",
         "fullyImplemented": true,
-        "id": 2168,
+        "id": 2152,
         "linearizedBaseContracts": [
-          2168
+          2152
         ],
         "name": "V00_UserRegistry",
         "nodeType": "ContractDefinition",
@@ -110,20 +110,20 @@
           {
             "anonymous": false,
             "documentation": null,
-            "id": 2133,
+            "id": 2117,
             "name": "NewUser",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 2132,
+              "id": 2116,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2129,
+                  "id": 2113,
                   "indexed": false,
                   "name": "_address",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2133,
+                  "scope": 2117,
                   "src": "338:16:11",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -132,7 +132,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2128,
+                    "id": 2112,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "338:7:11",
@@ -146,11 +146,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2131,
+                  "id": 2115,
                   "indexed": false,
                   "name": "_identity",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2133,
+                  "scope": 2117,
                   "src": "356:17:11",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -159,7 +159,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2130,
+                    "id": 2114,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "356:7:11",
@@ -178,10 +178,10 @@
           },
           {
             "constant": false,
-            "id": 2137,
+            "id": 2121,
             "name": "users",
             "nodeType": "VariableDeclaration",
-            "scope": 2168,
+            "scope": 2152,
             "src": "465:40:11",
             "stateVariable": true,
             "storageLocation": "default",
@@ -190,9 +190,9 @@
               "typeString": "mapping(address => address)"
             },
             "typeName": {
-              "id": 2136,
+              "id": 2120,
               "keyType": {
-                "id": 2134,
+                "id": 2118,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "473:7:11",
@@ -208,7 +208,7 @@
                 "typeString": "mapping(address => address)"
               },
               "valueType": {
-                "id": 2135,
+                "id": 2119,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "484:7:11",
@@ -223,14 +223,14 @@
           },
           {
             "body": {
-              "id": 2155,
+              "id": 2139,
               "nodeType": "Block",
               "src": "649:91:11",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 2146,
+                    "id": 2130,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -239,34 +239,34 @@
                       "argumentTypes": null,
                       "baseExpression": {
                         "argumentTypes": null,
-                        "id": 2140,
+                        "id": 2124,
                         "name": "users",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2137,
+                        "referencedDeclaration": 2121,
                         "src": "659:5:11",
                         "typeDescriptions": {
                           "typeIdentifier": "t_mapping$_t_address_$_t_address_$",
                           "typeString": "mapping(address => address)"
                         }
                       },
-                      "id": 2143,
+                      "id": 2127,
                       "indexExpression": {
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 2141,
+                          "id": 2125,
                           "name": "tx",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 5263,
+                          "referencedDeclaration": 5200,
                           "src": "665:2:11",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_transaction",
                             "typeString": "tx"
                           }
                         },
-                        "id": 2142,
+                        "id": 2126,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -297,18 +297,18 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 2144,
+                        "id": 2128,
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5251,
+                        "referencedDeclaration": 5188,
                         "src": "678:3:11",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
                           "typeString": "msg"
                         }
                       },
-                      "id": 2145,
+                      "id": 2129,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -328,7 +328,7 @@
                       "typeString": "address"
                     }
                   },
-                  "id": 2147,
+                  "id": 2131,
                   "nodeType": "ExpressionStatement",
                   "src": "659:29:11"
                 },
@@ -340,18 +340,18 @@
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 2149,
+                          "id": 2133,
                           "name": "tx",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 5263,
+                          "referencedDeclaration": 5200,
                           "src": "711:2:11",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_transaction",
                             "typeString": "tx"
                           }
                         },
-                        "id": 2150,
+                        "id": 2134,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -369,18 +369,18 @@
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 2151,
+                          "id": 2135,
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 5251,
+                          "referencedDeclaration": 5188,
                           "src": "722:3:11",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
                             "typeString": "msg"
                           }
                         },
-                        "id": 2152,
+                        "id": 2136,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -406,18 +406,18 @@
                           "typeString": "address"
                         }
                       ],
-                      "id": 2148,
+                      "id": 2132,
                       "name": "NewUser",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 2133,
+                      "referencedDeclaration": 2117,
                       "src": "703:7:11",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_address_$returns$__$",
                         "typeString": "function (address,address)"
                       }
                     },
-                    "id": 2153,
+                    "id": 2137,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -431,14 +431,14 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 2154,
+                  "id": 2138,
                   "nodeType": "EmitStatement",
                   "src": "698:35:11"
                 }
               ]
             },
             "documentation": "@dev registerUser(): Add a user to the registry",
-            "id": 2156,
+            "id": 2140,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -446,19 +446,19 @@
             "name": "registerUser",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2138,
+              "id": 2122,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "627:2:11"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2139,
+              "id": 2123,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "649:0:11"
             },
-            "scope": 2168,
+            "scope": 2152,
             "src": "606:134:11",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -466,14 +466,14 @@
           },
           {
             "body": {
-              "id": 2166,
+              "id": 2150,
               "nodeType": "Block",
               "src": "842:38:11",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 2164,
+                    "id": 2148,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -482,34 +482,34 @@
                       "argumentTypes": null,
                       "baseExpression": {
                         "argumentTypes": null,
-                        "id": 2159,
+                        "id": 2143,
                         "name": "users",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2137,
+                        "referencedDeclaration": 2121,
                         "src": "852:5:11",
                         "typeDescriptions": {
                           "typeIdentifier": "t_mapping$_t_address_$_t_address_$",
                           "typeString": "mapping(address => address)"
                         }
                       },
-                      "id": 2162,
+                      "id": 2146,
                       "indexExpression": {
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 2160,
+                          "id": 2144,
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 5251,
+                          "referencedDeclaration": 5188,
                           "src": "858:3:11",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
                             "typeString": "msg"
                           }
                         },
-                        "id": 2161,
+                        "id": 2145,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -539,7 +539,7 @@
                     "rightHandSide": {
                       "argumentTypes": null,
                       "hexValue": "30",
-                      "id": 2163,
+                      "id": 2147,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -560,14 +560,14 @@
                       "typeString": "address"
                     }
                   },
-                  "id": 2165,
+                  "id": 2149,
                   "nodeType": "ExpressionStatement",
                   "src": "852:21:11"
                 }
               ]
             },
             "documentation": "@dev clearUser(): Remove user from the registry",
-            "id": 2167,
+            "id": 2151,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -575,43 +575,43 @@
             "name": "clearUser",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2157,
+              "id": 2141,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "820:2:11"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2158,
+              "id": 2142,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "842:0:11"
             },
-            "scope": 2168,
+            "scope": 2152,
             "src": "802:78:11",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 2169,
+        "scope": 2153,
         "src": "264:618:11"
       }
     ],
     "src": "0:883:11"
   },
   "legacyAST": {
-    "absolutePath": "/Users/stan/Origin/origin-box/origin-js/contracts/contracts/identity/V00_UserRegistry.sol",
+    "absolutePath": "/app/contracts/contracts/identity/V00_UserRegistry.sol",
     "exportedSymbols": {
       "V00_UserRegistry": [
-        2168
+        2152
       ]
     },
-    "id": 2169,
+    "id": 2153,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 2126,
+        "id": 2110,
         "literals": [
           "solidity",
           "^",
@@ -622,11 +622,11 @@
         "src": "0:24:11"
       },
       {
-        "absolutePath": "/Users/stan/Origin/origin-box/origin-js/contracts/contracts/identity/ClaimHolderPresigned.sol",
+        "absolutePath": "/app/contracts/contracts/identity/ClaimHolderPresigned.sol",
         "file": "./ClaimHolderPresigned.sol",
-        "id": 2127,
+        "id": 2111,
         "nodeType": "ImportDirective",
-        "scope": 2169,
+        "scope": 2153,
         "sourceUnit": 672,
         "src": "26:36:11",
         "symbolAliases": [],
@@ -638,9 +638,9 @@
         "contractKind": "contract",
         "documentation": "@title UserRegistry\n @dev Used to keep registry of user identifies\n @author Matt Liu <matt@originprotocol.com>, Josh Fraser <josh@originprotocol.com>, Stan James <stan@originprotocol.com>",
         "fullyImplemented": true,
-        "id": 2168,
+        "id": 2152,
         "linearizedBaseContracts": [
-          2168
+          2152
         ],
         "name": "V00_UserRegistry",
         "nodeType": "ContractDefinition",
@@ -648,20 +648,20 @@
           {
             "anonymous": false,
             "documentation": null,
-            "id": 2133,
+            "id": 2117,
             "name": "NewUser",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 2132,
+              "id": 2116,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2129,
+                  "id": 2113,
                   "indexed": false,
                   "name": "_address",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2133,
+                  "scope": 2117,
                   "src": "338:16:11",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -670,7 +670,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2128,
+                    "id": 2112,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "338:7:11",
@@ -684,11 +684,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2131,
+                  "id": 2115,
                   "indexed": false,
                   "name": "_identity",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2133,
+                  "scope": 2117,
                   "src": "356:17:11",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -697,7 +697,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2130,
+                    "id": 2114,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "356:7:11",
@@ -716,10 +716,10 @@
           },
           {
             "constant": false,
-            "id": 2137,
+            "id": 2121,
             "name": "users",
             "nodeType": "VariableDeclaration",
-            "scope": 2168,
+            "scope": 2152,
             "src": "465:40:11",
             "stateVariable": true,
             "storageLocation": "default",
@@ -728,9 +728,9 @@
               "typeString": "mapping(address => address)"
             },
             "typeName": {
-              "id": 2136,
+              "id": 2120,
               "keyType": {
-                "id": 2134,
+                "id": 2118,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "473:7:11",
@@ -746,7 +746,7 @@
                 "typeString": "mapping(address => address)"
               },
               "valueType": {
-                "id": 2135,
+                "id": 2119,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "484:7:11",
@@ -761,14 +761,14 @@
           },
           {
             "body": {
-              "id": 2155,
+              "id": 2139,
               "nodeType": "Block",
               "src": "649:91:11",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 2146,
+                    "id": 2130,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -777,34 +777,34 @@
                       "argumentTypes": null,
                       "baseExpression": {
                         "argumentTypes": null,
-                        "id": 2140,
+                        "id": 2124,
                         "name": "users",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2137,
+                        "referencedDeclaration": 2121,
                         "src": "659:5:11",
                         "typeDescriptions": {
                           "typeIdentifier": "t_mapping$_t_address_$_t_address_$",
                           "typeString": "mapping(address => address)"
                         }
                       },
-                      "id": 2143,
+                      "id": 2127,
                       "indexExpression": {
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 2141,
+                          "id": 2125,
                           "name": "tx",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 5263,
+                          "referencedDeclaration": 5200,
                           "src": "665:2:11",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_transaction",
                             "typeString": "tx"
                           }
                         },
-                        "id": 2142,
+                        "id": 2126,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -835,18 +835,18 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 2144,
+                        "id": 2128,
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5251,
+                        "referencedDeclaration": 5188,
                         "src": "678:3:11",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
                           "typeString": "msg"
                         }
                       },
-                      "id": 2145,
+                      "id": 2129,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -866,7 +866,7 @@
                       "typeString": "address"
                     }
                   },
-                  "id": 2147,
+                  "id": 2131,
                   "nodeType": "ExpressionStatement",
                   "src": "659:29:11"
                 },
@@ -878,18 +878,18 @@
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 2149,
+                          "id": 2133,
                           "name": "tx",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 5263,
+                          "referencedDeclaration": 5200,
                           "src": "711:2:11",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_transaction",
                             "typeString": "tx"
                           }
                         },
-                        "id": 2150,
+                        "id": 2134,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -907,18 +907,18 @@
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 2151,
+                          "id": 2135,
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 5251,
+                          "referencedDeclaration": 5188,
                           "src": "722:3:11",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
                             "typeString": "msg"
                           }
                         },
-                        "id": 2152,
+                        "id": 2136,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -944,18 +944,18 @@
                           "typeString": "address"
                         }
                       ],
-                      "id": 2148,
+                      "id": 2132,
                       "name": "NewUser",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 2133,
+                      "referencedDeclaration": 2117,
                       "src": "703:7:11",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_address_$returns$__$",
                         "typeString": "function (address,address)"
                       }
                     },
-                    "id": 2153,
+                    "id": 2137,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -969,14 +969,14 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 2154,
+                  "id": 2138,
                   "nodeType": "EmitStatement",
                   "src": "698:35:11"
                 }
               ]
             },
             "documentation": "@dev registerUser(): Add a user to the registry",
-            "id": 2156,
+            "id": 2140,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -984,19 +984,19 @@
             "name": "registerUser",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2138,
+              "id": 2122,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "627:2:11"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2139,
+              "id": 2123,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "649:0:11"
             },
-            "scope": 2168,
+            "scope": 2152,
             "src": "606:134:11",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -1004,14 +1004,14 @@
           },
           {
             "body": {
-              "id": 2166,
+              "id": 2150,
               "nodeType": "Block",
               "src": "842:38:11",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 2164,
+                    "id": 2148,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1020,34 +1020,34 @@
                       "argumentTypes": null,
                       "baseExpression": {
                         "argumentTypes": null,
-                        "id": 2159,
+                        "id": 2143,
                         "name": "users",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2137,
+                        "referencedDeclaration": 2121,
                         "src": "852:5:11",
                         "typeDescriptions": {
                           "typeIdentifier": "t_mapping$_t_address_$_t_address_$",
                           "typeString": "mapping(address => address)"
                         }
                       },
-                      "id": 2162,
+                      "id": 2146,
                       "indexExpression": {
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 2160,
+                          "id": 2144,
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 5251,
+                          "referencedDeclaration": 5188,
                           "src": "858:3:11",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
                             "typeString": "msg"
                           }
                         },
-                        "id": 2161,
+                        "id": 2145,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -1077,7 +1077,7 @@
                     "rightHandSide": {
                       "argumentTypes": null,
                       "hexValue": "30",
-                      "id": 2163,
+                      "id": 2147,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -1098,14 +1098,14 @@
                       "typeString": "address"
                     }
                   },
-                  "id": 2165,
+                  "id": 2149,
                   "nodeType": "ExpressionStatement",
                   "src": "852:21:11"
                 }
               ]
             },
             "documentation": "@dev clearUser(): Remove user from the registry",
-            "id": 2167,
+            "id": 2151,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -1113,26 +1113,26 @@
             "name": "clearUser",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2157,
+              "id": 2141,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "820:2:11"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2158,
+              "id": 2142,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "842:0:11"
             },
-            "scope": 2168,
+            "scope": 2152,
             "src": "802:78:11",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 2169,
+        "scope": 2153,
         "src": "264:618:11"
       }
     ],
@@ -1143,6 +1143,12 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {
+    "1": {
+      "events": {},
+      "links": {},
+      "address": "0x485bb413c9b480345f96d6052475fd68e41628db",
+      "transactionHash": "0xa53d5b649bf9a5db84e907170d4fde6e9ae80e0cbce0424cc6edf9f9dbcb3c83"
+    },
     "4": {
       "events": {},
       "links": {},
@@ -1153,9 +1159,9 @@
       "events": {},
       "links": {},
       "address": "0x30753e4a8aad7f8597332e813735def5dd395028",
-      "transactionHash": "0x004938423557d5f773cfea863e14c71edef763ab894343a868a7013a9a9bef96"
+      "transactionHash": "0x696d916d6aa14b62030b463d37037dfeccd7c55deb0cd1e84c68d400565d85ba"
     }
   },
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-09-21T21:38:51.645Z"
+  "updatedAt": "2018-09-26T00:18:03.457Z"
 }

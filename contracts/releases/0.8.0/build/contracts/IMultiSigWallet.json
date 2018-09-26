@@ -67,19 +67,19 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.24;\n\n\n/**\n * @title Interface for interacting with Gnosis MultiSigWallet.\n * @dev Avoids creating an explicit dependency on Gnosis MultiSigWallet, which\n * doesn't have an official npm package. This allows us to just use the ABI\n * to call the contract methods. The contract is deployed through the DApp &\n * desktop app, so we only need to make limited calls to it. Further signatures\n * also happen in the Gnosis apps.\n */\ncontract IMultiSigWallet {\n    mapping (address => bool) public isOwner;\n    uint public required;\n\n    /// @dev Allows an owner to submit and confirm a transaction.\n    /// @param destination Transaction target address.\n    /// @param value Transaction ether value.\n    /// @param data Transaction data payload.\n    /// @return Returns transaction ID.\n    function submitTransaction(address destination, uint value, bytes data)\n        public\n        returns (uint transactionId);\n}\n",
-  "sourcePath": "/Users/stan/Origin/origin-box/origin-js/contracts/contracts/multisig/IMultiSigWallet.sol",
+  "sourcePath": "/app/contracts/contracts/multisig/IMultiSigWallet.sol",
   "ast": {
-    "absolutePath": "/Users/stan/Origin/origin-box/origin-js/contracts/contracts/multisig/IMultiSigWallet.sol",
+    "absolutePath": "/app/contracts/contracts/multisig/IMultiSigWallet.sol",
     "exportedSymbols": {
       "IMultiSigWallet": [
-        3682
+        3666
       ]
     },
-    "id": 3683,
+    "id": 3667,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3664,
+        "id": 3648,
         "literals": [
           "solidity",
           "^",
@@ -95,19 +95,19 @@
         "contractKind": "contract",
         "documentation": "@title Interface for interacting with Gnosis MultiSigWallet.\n@dev Avoids creating an explicit dependency on Gnosis MultiSigWallet, which\ndoesn't have an official npm package. This allows us to just use the ABI\nto call the contract methods. The contract is deployed through the DApp &\ndesktop app, so we only need to make limited calls to it. Further signatures\nalso happen in the Gnosis apps.",
         "fullyImplemented": false,
-        "id": 3682,
+        "id": 3666,
         "linearizedBaseContracts": [
-          3682
+          3666
         ],
         "name": "IMultiSigWallet",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 3668,
+            "id": 3652,
             "name": "isOwner",
             "nodeType": "VariableDeclaration",
-            "scope": 3682,
+            "scope": 3666,
             "src": "477:40:13",
             "stateVariable": true,
             "storageLocation": "default",
@@ -116,9 +116,9 @@
               "typeString": "mapping(address => bool)"
             },
             "typeName": {
-              "id": 3667,
+              "id": 3651,
               "keyType": {
-                "id": 3665,
+                "id": 3649,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "486:7:13",
@@ -134,7 +134,7 @@
                 "typeString": "mapping(address => bool)"
               },
               "valueType": {
-                "id": 3666,
+                "id": 3650,
                 "name": "bool",
                 "nodeType": "ElementaryTypeName",
                 "src": "497:4:13",
@@ -149,10 +149,10 @@
           },
           {
             "constant": false,
-            "id": 3670,
+            "id": 3654,
             "name": "required",
             "nodeType": "VariableDeclaration",
-            "scope": 3682,
+            "scope": 3666,
             "src": "523:20:13",
             "stateVariable": true,
             "storageLocation": "default",
@@ -161,7 +161,7 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 3669,
+              "id": 3653,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
               "src": "523:4:13",
@@ -176,7 +176,7 @@
           {
             "body": null,
             "documentation": "@dev Allows an owner to submit and confirm a transaction.\n @param destination Transaction target address.\n @param value Transaction ether value.\n @param data Transaction data payload.\n @return Returns transaction ID.",
-            "id": 3681,
+            "id": 3665,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -184,15 +184,15 @@
             "name": "submitTransaction",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3677,
+              "id": 3661,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3672,
+                  "id": 3656,
                   "name": "destination",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3681,
+                  "scope": 3665,
                   "src": "830:19:13",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -201,7 +201,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3671,
+                    "id": 3655,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "830:7:13",
@@ -215,10 +215,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 3674,
+                  "id": 3658,
                   "name": "value",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3681,
+                  "scope": 3665,
                   "src": "851:10:13",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -227,7 +227,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3673,
+                    "id": 3657,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "851:4:13",
@@ -241,10 +241,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 3676,
+                  "id": 3660,
                   "name": "data",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3681,
+                  "scope": 3665,
                   "src": "863:10:13",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -253,7 +253,7 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 3675,
+                    "id": 3659,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
                     "src": "863:5:13",
@@ -270,15 +270,15 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 3680,
+              "id": 3664,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3679,
+                  "id": 3663,
                   "name": "transactionId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3681,
+                  "scope": 3665,
                   "src": "907:18:13",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -287,7 +287,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3678,
+                    "id": 3662,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "907:4:13",
@@ -302,31 +302,31 @@
               ],
               "src": "906:20:13"
             },
-            "scope": 3682,
+            "scope": 3666,
             "src": "803:124:13",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 3683,
+        "scope": 3667,
         "src": "446:483:13"
       }
     ],
     "src": "0:930:13"
   },
   "legacyAST": {
-    "absolutePath": "/Users/stan/Origin/origin-box/origin-js/contracts/contracts/multisig/IMultiSigWallet.sol",
+    "absolutePath": "/app/contracts/contracts/multisig/IMultiSigWallet.sol",
     "exportedSymbols": {
       "IMultiSigWallet": [
-        3682
+        3666
       ]
     },
-    "id": 3683,
+    "id": 3667,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3664,
+        "id": 3648,
         "literals": [
           "solidity",
           "^",
@@ -342,19 +342,19 @@
         "contractKind": "contract",
         "documentation": "@title Interface for interacting with Gnosis MultiSigWallet.\n@dev Avoids creating an explicit dependency on Gnosis MultiSigWallet, which\ndoesn't have an official npm package. This allows us to just use the ABI\nto call the contract methods. The contract is deployed through the DApp &\ndesktop app, so we only need to make limited calls to it. Further signatures\nalso happen in the Gnosis apps.",
         "fullyImplemented": false,
-        "id": 3682,
+        "id": 3666,
         "linearizedBaseContracts": [
-          3682
+          3666
         ],
         "name": "IMultiSigWallet",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 3668,
+            "id": 3652,
             "name": "isOwner",
             "nodeType": "VariableDeclaration",
-            "scope": 3682,
+            "scope": 3666,
             "src": "477:40:13",
             "stateVariable": true,
             "storageLocation": "default",
@@ -363,9 +363,9 @@
               "typeString": "mapping(address => bool)"
             },
             "typeName": {
-              "id": 3667,
+              "id": 3651,
               "keyType": {
-                "id": 3665,
+                "id": 3649,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "486:7:13",
@@ -381,7 +381,7 @@
                 "typeString": "mapping(address => bool)"
               },
               "valueType": {
-                "id": 3666,
+                "id": 3650,
                 "name": "bool",
                 "nodeType": "ElementaryTypeName",
                 "src": "497:4:13",
@@ -396,10 +396,10 @@
           },
           {
             "constant": false,
-            "id": 3670,
+            "id": 3654,
             "name": "required",
             "nodeType": "VariableDeclaration",
-            "scope": 3682,
+            "scope": 3666,
             "src": "523:20:13",
             "stateVariable": true,
             "storageLocation": "default",
@@ -408,7 +408,7 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 3669,
+              "id": 3653,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
               "src": "523:4:13",
@@ -423,7 +423,7 @@
           {
             "body": null,
             "documentation": "@dev Allows an owner to submit and confirm a transaction.\n @param destination Transaction target address.\n @param value Transaction ether value.\n @param data Transaction data payload.\n @return Returns transaction ID.",
-            "id": 3681,
+            "id": 3665,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -431,15 +431,15 @@
             "name": "submitTransaction",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3677,
+              "id": 3661,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3672,
+                  "id": 3656,
                   "name": "destination",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3681,
+                  "scope": 3665,
                   "src": "830:19:13",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -448,7 +448,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3671,
+                    "id": 3655,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "830:7:13",
@@ -462,10 +462,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 3674,
+                  "id": 3658,
                   "name": "value",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3681,
+                  "scope": 3665,
                   "src": "851:10:13",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -474,7 +474,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3673,
+                    "id": 3657,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "851:4:13",
@@ -488,10 +488,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 3676,
+                  "id": 3660,
                   "name": "data",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3681,
+                  "scope": 3665,
                   "src": "863:10:13",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -500,7 +500,7 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 3675,
+                    "id": 3659,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
                     "src": "863:5:13",
@@ -517,15 +517,15 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 3680,
+              "id": 3664,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3679,
+                  "id": 3663,
                   "name": "transactionId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3681,
+                  "scope": 3665,
                   "src": "907:18:13",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -534,7 +534,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3678,
+                    "id": 3662,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "907:4:13",
@@ -549,14 +549,14 @@
               ],
               "src": "906:20:13"
             },
-            "scope": 3682,
+            "scope": 3666,
             "src": "803:124:13",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 3683,
+        "scope": 3667,
         "src": "446:483:13"
       }
     ],
@@ -568,5 +568,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-09-21T21:35:13.232Z"
+  "updatedAt": "2018-09-26T00:12:44.247Z"
 }
