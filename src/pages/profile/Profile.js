@@ -16,6 +16,7 @@ import Avatar from 'components/avatar'
 import Modal from 'components/modal'
 import UnnamedUser from 'components/unnamed-user'
 import WalletCard from 'components/wallet-card'
+import { MetamaskModal, ProcessingModal } from 'components/modals/wait-modals'
 
 import Guidance from './_Guidance'
 import Services from './_Services'
@@ -30,10 +31,6 @@ import VerifyAirbnb from './VerifyAirbnb'
 import ConfirmPublish from './ConfirmPublish'
 import ConfirmUnload from './ConfirmUnload'
 import AttestationSuccess from './AttestationSuccess'
-
-import getCurrentProvider from 'utils/getCurrentProvider'
-
-import origin from '../../services/origin'
 
 class Profile extends Component {
   constructor(props) {
@@ -79,9 +76,6 @@ class Profile extends Component {
         published: 0
       },
       provisional: props.provisional,
-      currentProvider: getCurrentProvider(
-        origin && origin.contractService && origin.contractService.web3
-      ),
       successMessage: '',
       wallet: null
     }
@@ -531,40 +525,13 @@ class Profile extends Component {
           handleToggle={this.handleToggle}
         />
 
-        {this.props.profile.status === 'confirming' && (
-          <Modal backdrop="static" isOpen={true} tabIndex="-1">
-            <div className="image-container">
-              <img src="images/spinner-animation-light.svg" role="presentation" />
-            </div>
-            <FormattedMessage
-              id={'Profile.confirmTransaction'}
-              defaultMessage={'Confirm transaction'}
-            />
-            <br />
-            <FormattedMessage
-              id={'Profile.pressSubmit'}
-              defaultMessage={'Press "Submit" in {currentProvider} window'}
-              values={{ currentProvider: this.state.currentProvider }}
-            />
-          </Modal>
-        )}
+        {this.props.profile.status === 'confirming' &&
+          <MetamaskModal />
+        }
 
-        {this.props.profile.status === 'processing' && (
-          <Modal backdrop="static" isOpen={true}>
-            <div className="image-container">
-              <img src="images/spinner-animation-light.svg" role="presentation" />
-            </div>
-            <FormattedMessage
-              id={'Profile.deployingIdentity'}
-              defaultMessage={'Deploying your identity'}
-            />
-            <br />
-            <FormattedMessage
-              id={'Profile.pleaseStandBy'}
-              defaultMessage={'Please stand by...'}
-            />
-          </Modal>
-        )}
+        {this.props.profile.status === 'processing' &&
+          <ProcessingModal />
+        }
 
         {this.props.profile.status === 'error' && (
           <Modal backdrop="static" isOpen={true}>
