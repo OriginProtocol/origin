@@ -15,9 +15,14 @@ import {
 } from 'actions/Transaction'
 import { enableMessaging, storeWeb3Intent } from 'actions/App'
 
-import { ConfirmationModal, IssueModal, PrerequisiteModal, RejectionModal } from 'components/arbitration-modals'
+import {
+  ConfirmationModal,
+  IssueModal,
+  PrerequisiteModal,
+  RejectionModal
+} from 'components/modals/arbitration-modals'
+import { MetamaskModal } from 'components/modals/wait-modals'
 import Avatar from 'components/avatar'
-import Modal from 'components/modal'
 import PurchaseProgress from 'components/purchase-progress'
 import Review from 'components/review'
 import UnnamedUser from 'components/unnamed-user'
@@ -1074,52 +1079,39 @@ class PurchaseDetail extends Component {
                         defaultMessage={'From'}
                       />
                     </th>
-                    <th scope="col">
-                      <FormattedMessage
-                        id={'purchase-detail.to'}
-                        defaultMessage={'To'}
-                      />
-                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.offerMade)}
-                    transaction={offerCreated}
-                    buyer={buyer}
-                    seller={seller}
+                    event={offerCreated}
+                    from={buyer}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.offerWithdrawn)}
-                    transaction={offerWithdrawn}
-                    buyer={buyer}
-                    seller={seller}
+                    event={offerWithdrawn}
+                    from={buyer}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.offerAccepted)}
-                    transaction={offerAccepted}
-                    buyer={buyer}
-                    seller={seller}
+                    event={offerAccepted}
+                    from={seller}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.offerDisputed)}
-                    transaction={offerDisputed}
+                    event={offerDisputed}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.offerRuling)}
-                    transaction={offerRuling}
+                    event={offerRuling}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.saleCompleted)}
-                    transaction={offerFinalized}
-                    buyer={buyer}
-                    seller={seller}
+                    event={offerFinalized}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.saleReviewed)}
-                    transaction={offerData}
-                    buyer={buyer}
-                    seller={seller}
+                    event={offerData}
                   />
                 </tbody>
               </table>
@@ -1256,20 +1248,7 @@ class PurchaseDetail extends Component {
           </div>
         </div>
         {processing && (
-          <Modal backdrop="static" isOpen={true} tabIndex="-1">
-            <div className="image-container">
-              <img src="images/spinner-animation-light.svg" role="presentation" />
-            </div>
-            <FormattedMessage
-              id={'purchase-detail.processingUpdate'}
-              defaultMessage={'Processing your update'}
-            />
-            <br />
-            <FormattedMessage
-              id={'purchase-detail.pleaseStandBy'}
-              defaultMessage={'Please stand by...'}
-            />
-          </Modal>
+          <MetamaskModal />
         )}
         <ConfirmationModal
           isOpen={modalsOpen.confirmation}
