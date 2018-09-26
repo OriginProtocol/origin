@@ -19,30 +19,25 @@ spec:
         app: {{ template "messaging.fullname" . }}
     spec:
       containers:
-      - name: origin-messaging-ipfs
-        image: "{{ .Values.messagingIpfsImage }}:{{ .Values.messagingIpfsImageTag }}"
-        command: ["/bin/sh"]
-        args:
-        - "-c"
-        - |-
-{{ .Files.Get "scripts/start-messaging-ipfs.sh" | indent 10 }}
-        ports:
-        - name: api
-          containerPort: 5001
-        - name: websocket
-          containerPort: 9012
-        volumeMounts:
-          - mountPath: /data/ipfs
-            name: {{ template "messaging.fullname" . }}-data
       - name: origin-messaging
         image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.messagingImage }}:{{ .Values.messagingImageTag }}"
         env:
-          - name: IPFS_ADDRESS
-            value: {{ template "messaging.fullname" . }}.{{ .Release.Namespace }}
-          - name: IPFS_PORT
-            value: "5001"
           - name: MESSAGING_NAMESPACE
+            {{- if ne .Release.Namespace "prod" }}
             value: "origin:{{ .Release.Namespace }}"
+            {{- else }}
+            value: "origin"
+            {{- end }}
+          - name: IPFS_REPO_PATH
+            value: "/data/ipfs"
+          - name: ORBIT_DB_PATH
+            value: "/data/odb"
+        port:
+          - name: websocket
+            containerPort: 9012
+        volumeMounts:
+          - mountPath: /data/ipfs
+            name: {{ template "messaging.fullname" . }}-data
         resources:
           requests:
             memory: 1Gi
@@ -55,8 +50,6 @@ spec:
       accessModes:
         - ReadWriteOnce  # Read-write for a single node only
       storageClassName: "standard"
-      accessModes:
-        - ReadWriteOnce
       resources:
         requests:
           storage: {{ default "8Gi" .Values.messagingIpfsStorageRequestSize }}

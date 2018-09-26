@@ -92,6 +92,7 @@ services:
     command: >
       /bin/bash -c "wait-for.sh -t 0 -q origin-js:8081 --
       npm install --quiet --no-progress &&
+      npm link origin &&
       node apollo/index.js"
     networks:
       - default
@@ -127,43 +128,24 @@ services:
     networks:
       - default
 
-  origin-messaging-ipfs:
-    container_name: origin-messaging-ipfs
-    image: origin-messaging-ipfs
-    build:
-      context: .
-      dockerfile: development/dockerfiles/origin-messaging-ipfs
-    networks:
-      - default
-    ports:
-      - "5001:5001"
-      - "9012:9012"
-    environment:
-      - IPFS_PATH=/ipfs
-    volumes:
-      - ./development/.ipfs:/ipfs
-    command: "daemon --migrate --enable-pubsub-experiment"
-
   origin-messaging:
     container_name: origin-messaging
     image: origin-messaging
     build:
       context: .
       dockerfile: development/dockerfiles/origin-messaging
-    depends_on:
-      - origin-messaging-ipfs
-    networks:
-      - default
+    ports:
+      - "9012:9012"
     volumes:
       - ./origin-messaging/src:/app/src
+      - ./development/.ipfs:/ipfs
     environment:
-      - IPFS_ADDRESS=origin-messaging-ipfs
-      - IPFS_PORT=5001
       - MESSAGING_NAMESPACE=dev
+    networks:
+      - default
     # TODO Add nodemon
     # Waits for origin-messaging-ipfs to be available before starting
-    command: /bin/bash -c "wait-for.sh -t 0 -q origin-messaging-ipfs:5001 --
-      node_modules/.bin/babel-node src/index.js --presets es2015"
+    command: node_modules/.bin/babel-node src/index.js --presets es2015
 
   origin-bridge:
     container_name: origin-bridge
@@ -211,14 +193,15 @@ services:
     ports:
       - "3000:3000"
     command:
-      # Waits for origin-js and origin-messaging-ipfs to start then uses a
-      # script to read the origin-messaging-ipfs container peer id and write the
-      # configuration key/pair to the .env file.
+      # Waits for origin-messaging to start then uses a script to read the
+      # origin-messaging IPFS peer id and write the configuration key/pair to
+      # the .env file.
       #
       # The copying is necessary because the .env file is mounted as a volume
       # and the inode is not allowed to change.
       >
-      /bin/bash -c "source set-ipfs-swarm.sh /ipfs/config &&
+      /bin/bash -c "wait-for.sh -t 0 -q origin-messaging:9012 --
+      source set-ipfs-swarm.sh /ipfs/config &&
       npm install --quiet --no-progress &&
       npm link origin &&
       wait-for.sh -t 0 -q origin-js:8081 --

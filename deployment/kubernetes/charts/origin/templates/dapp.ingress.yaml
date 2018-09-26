@@ -17,7 +17,7 @@ spec:
     - secretName: demo.{{ .Release.Namespace }}.originprotocol.com
       hosts:
         - demo.{{ .Release.Namespace }}.originprotocol.com
-    {{- if eq .Release.Namespace "staging" . }}
+    {{- if eq .Release.Namespace "staging" }}
     - secretName: demo.originprotocol.com
       hosts:
         - demo.originprotocol.com
@@ -30,7 +30,7 @@ spec:
           backend:
             serviceName: {{ template "dapp.fullname" . }}
             servicePort: 80
-  {{- if eq .Release.Namespace "staging" . }}
+  {{- if eq .Release.Namespace "staging" }}
   - host: demo.originprotocol.com
     http: *http_rules
   {{- end  }}

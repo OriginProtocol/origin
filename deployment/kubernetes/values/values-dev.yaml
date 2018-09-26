@@ -34,4 +34,4 @@ messagingIpfsImageTag: v0.4.17
 
 # OrbitDB
 messagingImage: origin-messaging
-messagingImageTag: 'latest'
+messagingImageTag: 'a444ac1'

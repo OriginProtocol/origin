@@ -18,7 +18,7 @@ spec:
     - secretName: faucet.{{ .Release.Namespace }}.originprotocol.com
       hosts:
         - faucet.{{ .Release.Namespace }}.originprotocol.com
-    {{- if eq .Release.Namespace "staging" . }}
+    {{- if eq .Release.Namespace "staging" }}
     - secretName: faucet.originprotocol.com
       hosts:
         - faucet.originprotocol.com
@@ -31,7 +31,7 @@ spec:
           backend:
             serviceName: {{ template "faucet.fullname" . }}
             servicePort: 5000
-  {{- if eq .Release.Namespace "staging" . }}
+  {{- if eq .Release.Namespace "staging" }}
   - host: faucet.originprotocol.com
     http: *http_rules
   {{- end  }}

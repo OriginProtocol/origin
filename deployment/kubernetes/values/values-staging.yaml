@@ -5,7 +5,7 @@ bridgeReplicas: 1
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '5498d6d'
+dappImageTag: '5498d6d-1537914971'
 dappReplicas: 2
 
 # Rinkeby network configuration
@@ -34,4 +34,4 @@ messagingIpfsImageTag: v0.4.17
 
 # OrbitDB
 messagingImage: origin-messaging
-messagingImageTag: 'c3f2e57'
+messagingImageTag: 'a444ac1'

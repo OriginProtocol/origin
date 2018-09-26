@@ -32,8 +32,13 @@ function build_and_push_container() {
 
   echo -e "Deployed container tag is \033[94m${DEPLOYED_TAG}\033[0m"
 
+  # TODO origin-box does not yet have staging branches configured
+  if [ "$REPO" = "origin-box" ]; then
+    BRANCH="master"
+  fi
+
   # Get short git hash from remote repo
-  GIT_HASH=$(git ls-remote git@github.com:OriginProtocol/$REPO.git ${BRANCH} | cut -c1-7)
+  GIT_HASH=$(git ls-remote -h git@github.com:OriginProtocol/$REPO.git ${BRANCH} | cut -c1-7)
   DEPLOY_TAG=${GIT_HASH}
 
   if [ "$DEPLOYED_TAG" == "$GIT_HASH" ]; then
