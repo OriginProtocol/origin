@@ -84,8 +84,8 @@
     "defaultMessage": "Profile changes can be seen once the transaction is processed."
   },
   {
-    "id": "Profile.viewTransaction",
-    "defaultMessage": "View Transaction"
+    "id": "Profile.transactionProgressDropdown",
+    "defaultMessage": "See transaction progress from the dropdown in navigation bar."
   },
   {
     "id": "Profile.continue",

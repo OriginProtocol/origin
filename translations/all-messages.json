@@ -412,7 +412,7 @@
   "Profile.ok": "OK",
   "Profile.inProgress": "In Progress",
   "Profile.transactionBeingProcessed": "Profile changes can be seen once the transaction is processed.",
-  "Profile.viewTransaction": "View Transaction",
+  "Profile.transactionProgressDropdown": "See transaction progress from the dropdown in navigation bar.",
   "Profile.continue": "Continue",
   "VerifyAirbnb.averifyAirbnbAccount": "Verify your Airbnb account",
   "VerifyAirbnb.enterAirbnbProfileUrl": "Enter Airbnb profile Url below",

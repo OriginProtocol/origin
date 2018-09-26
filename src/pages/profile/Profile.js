@@ -616,7 +616,14 @@ class Profile extends Component {
                 defaultMessage={`Profile changes can be seen once the transaction is processed.`}
               />
             </div>
-            <div>
+            <div className="explanation">
+              <FormattedMessage
+                id={'Profile.transactionProgressDropdown'}
+                defaultMessage={`See transaction progress from the dropdown in navigation bar.`}
+              />
+            </div>
+            {// in case we want to show transaction in etherscan at any time
+            /*<div>
               <a
                 href={`https://${etherscanNetworkUrls[this.props.networkId]}etherscan.io/tx/${this.props.profile.lastDeployProfileHash}`}
                 target="_blank"
@@ -626,7 +633,7 @@ class Profile extends Component {
                   defaultMessage={'View Transaction'}
                 />
               </a>
-            </div>
+            </div>*/}
             <div className="button-container">
               <button
                 className="btn btn-clear"
