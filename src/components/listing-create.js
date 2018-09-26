@@ -81,6 +81,10 @@ class ListingCreate extends Component {
       navigationWarning: {
         id: 'listing-create.navigationWarning',
         defaultMessage: 'Are you sure you want to leave? If you leave this page your progress will be lost.'
+      },
+      sizeWarning: {
+        id: 'listing-create.sizeWarning',
+        defaultMessage: 'Your listing is too large. Consider using fewer or smaller photos.'
       }
     })
 
@@ -231,7 +235,7 @@ class ListingCreate extends Component {
     }
     if (roughSizeOfObject(formListing.formData) > this.MAX_UPLOAD_BYTES) {
       this.props.showAlert(
-        'Your listing is too large. Consider using fewer or smaller photos.'
+        this.props.intl.formatMessage(this.intlMessages.sizeWarning)
       )
     } else {
       this.setState({
