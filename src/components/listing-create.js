@@ -770,14 +770,20 @@ class ListingCreate extends Component {
                 <Fragment>
                   <div className="info-box">
                     <p>
-                      Be sure to give your listing an appropriate title and
-                      description that will inform others as to what you’re
-                      offering.<br />
-                      If you’re listing is only offered in a specific geographic
-                      location, please be sure to indicate that.<br />
-                      Finally, adding some photos of your listing will go a long
-                      way to helping potential buyers decide if they want to
-                      make the purchase.
+                        <FormattedMessage
+                          id={'listing-create.form-help'}
+                          defaultMessage={`
+                            Be sure to give your listing an appropriate title and
+                            description that will inform others as to what you’re
+                            offering. {br}
+                            If you’re listing is only offered in a specific geographic
+                            location, please be sure to indicate that. {br}
+                            Finally, adding some photos of your listing will go a long
+                            way to helping potential buyers decide if they want to
+                            make the purchase.
+                          `}
+                          values={{br: <br />}}
+                        />
                     </p>
                   </div>
                   <div className="info-box">
