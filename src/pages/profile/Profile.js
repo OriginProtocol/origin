@@ -35,13 +35,14 @@ import getCurrentProvider from 'utils/getCurrentProvider'
 
 import origin from '../../services/origin'
 
+/*
 const etherscanNetworkUrls = {
   1: '',
   3: 'ropsten.',
   4: 'rinkeby.',
   42: 'kovan.',
   999: 'localhost.'
-}
+}*/
 
 class Profile extends Component {
   constructor(props) {
