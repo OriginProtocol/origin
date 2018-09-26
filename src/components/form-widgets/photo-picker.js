@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { getDataUri } from 'utils/fileUtils'
 
 class PhotoPicker extends Component {
@@ -9,7 +9,31 @@ class PhotoPicker extends Component {
       pictures: []
     }
 
+    this.intlMessages = defineMessages({
+      macHelpText: {
+        id: 'photo-picker.macHelpText',
+        defaultMessage: 'Hold down "command" (⌘) to select multiple images'
+      },
+      iosHelpText: {
+        id: 'photo-picker.iosHelpText',
+        defaultMessage: 'Select multiple images to upload them all at once'
+      },
+      windowsHelpText: {
+        id: 'photo-picker.windowsHelpText',
+        defaultMessage: 'Hold down "Ctrl" to select multiple images'
+      },
+      androidHelpText: {
+        id: 'photo-picker.androidHelpText',
+        defaultMessage: 'Select multiple images to upload them all at once'
+      },
+      linuxHelpText: {
+        id: 'photo-picker.linuxHelpText',
+        defaultMessage: 'Hold down "Ctrl" to select multiple images'
+      }
+    })
+
     this.onChange = this.onChange.bind(this)
+    this.setHelpText = this.setHelpText.bind(this)
   }
 
   componentDidMount() {
@@ -17,6 +41,7 @@ class PhotoPicker extends Component {
   }
 
   setHelpText() {
+    const { intl } = this.props
     const userAgent = window.navigator.userAgent
     const platform = window.navigator.platform
     const macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K']
@@ -25,15 +50,15 @@ class PhotoPicker extends Component {
     let helpText = ''
 
     if (macosPlatforms.indexOf(platform) !== -1) {
-      helpText = 'Hold down "command" (⌘) to select multiple images'
+      helpText = intl.formatMessage(this.intlMessages.macHelpText)
     } else if (iosPlatforms.indexOf(platform) !== -1) {
-      helpText = 'Select multiple images to upload them all at once'
+      helpText = intl.formatMessage(this.intlMessages.iosHelpText)
     } else if (windowsPlatforms.indexOf(platform) !== -1) {
-      helpText = 'Hold down "Ctrl" to select multiple images'
+      helpText = intl.formatMessage(this.intlMessages.windowsHelpText)
     } else if (/Android/.test(userAgent)) {
-      helpText = 'Select multiple images to upload them all at once'
+      helpText = intl.formatMessage(this.intlMessages.androidHelpText)
     } else if (!helpText && /Linux/.test(platform)) {
-      helpText = 'Hold down "Ctrl" to select multiple images'
+      helpText = intl.formatMessage(this.intlMessages.linuxHelpText)
     }
 
     this.setState({ helpText })
@@ -87,6 +112,14 @@ class PhotoPicker extends Component {
         {this.state.helpText && (
           <p className="help-block">{this.state.helpText}</p>
         )}
+        <p className="help-block">
+          <FormattedMessage
+            id={'photo-picker.listingSize'}
+            defaultMessage={
+              'Total listing size may not exceed 2MB'
+            }
+          />
+        </p>
         <div className="d-flex pictures">
           {this.state.pictures.map((dataUri, idx) => (
             <div className="image-container" key={idx}>
@@ -99,4 +132,4 @@ class PhotoPicker extends Component {
   }
 }
 
-export default PhotoPicker
+export default injectIntl(PhotoPicker)
