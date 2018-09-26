@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { getFiatPrice } from 'utils/priceUtils'
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class PriceField extends Component {
   constructor(props) {
