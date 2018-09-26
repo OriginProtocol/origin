@@ -1079,52 +1079,39 @@ class PurchaseDetail extends Component {
                         defaultMessage={'From'}
                       />
                     </th>
-                    <th scope="col">
-                      <FormattedMessage
-                        id={'purchase-detail.to'}
-                        defaultMessage={'To'}
-                      />
-                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.offerMade)}
-                    transaction={offerCreated}
-                    buyer={buyer}
-                    seller={seller}
+                    event={offerCreated}
+                    from={buyer}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.offerWithdrawn)}
-                    transaction={offerWithdrawn}
-                    buyer={buyer}
-                    seller={seller}
+                    event={offerWithdrawn}
+                    from={buyer}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.offerAccepted)}
-                    transaction={offerAccepted}
-                    buyer={buyer}
-                    seller={seller}
+                    event={offerAccepted}
+                    from={seller}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.offerDisputed)}
-                    transaction={offerDisputed}
+                    event={offerDisputed}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.offerRuling)}
-                    transaction={offerRuling}
+                    event={offerRuling}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.saleCompleted)}
-                    transaction={offerFinalized}
-                    buyer={buyer}
-                    seller={seller}
+                    event={offerFinalized}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.saleReviewed)}
-                    transaction={offerData}
-                    buyer={buyer}
-                    seller={seller}
+                    event={offerData}
                   />
                 </tbody>
               </table>

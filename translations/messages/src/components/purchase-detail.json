@@ -180,10 +180,6 @@
     "defaultMessage": "From"
   },
   {
-    "id": "purchase-detail.to",
-    "defaultMessage": "To"
-  },
-  {
     "id": "purchase-detail.listingDetails",
     "defaultMessage": "Listing Details"
   },

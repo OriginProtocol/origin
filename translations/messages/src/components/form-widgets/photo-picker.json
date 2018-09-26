@@ -1,0 +1,26 @@
+[
+  {
+    "id": "photo-picker.macHelpText",
+    "defaultMessage": "Hold down \"command\" (⌘) to select multiple images"
+  },
+  {
+    "id": "photo-picker.iosHelpText",
+    "defaultMessage": "Select multiple images to upload them all at once"
+  },
+  {
+    "id": "photo-picker.windowsHelpText",
+    "defaultMessage": "Hold down \"Ctrl\" to select multiple images"
+  },
+  {
+    "id": "photo-picker.androidHelpText",
+    "defaultMessage": "Select multiple images to upload them all at once"
+  },
+  {
+    "id": "photo-picker.linuxHelpText",
+    "defaultMessage": "Hold down \"Ctrl\" to select multiple images"
+  },
+  {
+    "id": "photo-picker.listingSize",
+    "defaultMessage": "Total listing size may not exceed 2MB"
+  }
+]
