@@ -17,9 +17,9 @@ import PriceField from 'components/form-widgets/price-field'
 import Modal from 'components/modal'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
 import WalletCard from 'components/wallet-card'
+import { MetamaskModal, ProcessingModal } from 'components/modals/wait-modals'
 
 import { dappFormDataToOriginListing } from 'utils/listing'
-import getCurrentProvider from 'utils/getCurrentProvider'
 import { getFiatPrice } from 'utils/priceUtils'
 import { getBoostLevel, defaultBoostValue } from 'utils/boostUtils'
 import {
@@ -69,9 +69,6 @@ class ListingCreate extends Component {
           boostLevel: getBoostLevel(defaultBoostValue)
         }
       },
-      currentProvider: getCurrentProvider(
-        origin && origin.contractService && origin.contractService.web3
-      ),
       isBoostExpanded: false,
       showBoostTutorial: false,
       usdListingPrice: 0
@@ -295,12 +292,9 @@ class ListingCreate extends Component {
     this.updateUsdPrice()
   }
 
-  async onSubmitListing(formListing, selectedSchemaType) {
+  async onSubmitListing(formListing) {
     try {
       this.setState({ step: this.STEP.METAMASK })
-      console.log(formListing)
-      this.setState({ step: this.STEP.PROCESSING })
-      console.log(formListing.formData, selectedSchemaType)
       const listing = dappFormDataToOriginListing(formListing.formData)
       const transactionReceipt = await origin.marketplace.createListing(
         listing,
@@ -337,7 +331,6 @@ class ListingCreate extends Component {
   render() {
     const { wallet, intl } = this.props
     const {
-      currentProvider,
       formListing,
       isBoostExpanded,
       selectedBoostAmount,
@@ -693,7 +686,7 @@ class ListingCreate extends Component {
                   <button
                     className="btn btn-primary float-right btn-listing-create"
                     onClick={() =>
-                      this.onSubmitListing(formListing, selectedSchemaType)
+                      this.onSubmitListing(formListing)
                     }
                   >
                     <FormattedMessage
@@ -895,40 +888,10 @@ class ListingCreate extends Component {
               )}
             </div>
             {step === this.STEP.METAMASK && (
-              <Modal backdrop="static" isOpen={true} tabIndex="-1">
-                <div className="image-container">
-                  <img src="images/spinner-animation-light.svg" role="presentation" />
-                </div>
-                <FormattedMessage
-                  id={'listing-create.confirmTransaction'}
-                  defaultMessage={'Confirm transaction'}
-                />
-                <br />
-                <FormattedMessage
-                  id={'listing-create.pressSubmitInMetaMask'}
-                  defaultMessage={'Press {submit} in {currentProvider} window'}
-                  values={{
-                    currentProvider,
-                    submit: <span>&ldquo;Submit&rdquo;</span>
-                  }}
-                />
-              </Modal>
+              <MetamaskModal />
             )}
             {step === this.STEP.PROCESSING && (
-              <Modal backdrop="static" isOpen={true}>
-                <div className="image-container">
-                  <img src="images/spinner-animation-light.svg" role="presentation" />
-                </div>
-                <FormattedMessage
-                  id={'listing-create.uploadingYourListing'}
-                  defaultMessage={'Uploading your listing'}
-                />
-                <br />
-                <FormattedMessage
-                  id={'listing-create.pleaseStandBy'}
-                  defaultMessage={'Please stand by...'}
-                />
-              </Modal>
+              <ProcessingModal />
             )}
             {step === this.STEP.SUCCESS && (
               <Modal backdrop="static" isOpen={true}>
