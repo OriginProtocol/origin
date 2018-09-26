@@ -78,6 +78,10 @@ class ListingCreate extends Component {
       navigationWarning: {
         id: 'listing-create.navigationWarning',
         defaultMessage: 'Are you sure you want to leave? If you leave this page your progress will be lost.'
+      },
+      sizeWarning: {
+        id: 'listing-create.sizeWarning',
+        defaultMessage: 'Your listing is too large. Consider using fewer or smaller photos.'
       }
     })
 
@@ -228,7 +232,7 @@ class ListingCreate extends Component {
     }
     if (roughSizeOfObject(formListing.formData) > this.MAX_UPLOAD_BYTES) {
       this.props.showAlert(
-        'Your listing is too large. Consider using fewer or smaller photos.'
+        this.props.intl.formatMessage(this.intlMessages.sizeWarning)
       )
     } else {
       this.setState({
@@ -382,7 +386,13 @@ class ListingCreate extends Component {
                           selectedSchemaType === schema.type ? ' selected' : ''
                         }`}
                       >
-                        <p>{schema.name} listings may include:</p>
+                        <p>
+                          <FormattedMessage
+                            id={'listing-create.listingsMayInclude'}
+                            defaultMessage={'{schemaName} listings may include:'}
+                            values={{ schemaName: schema.name }}
+                          />
+                        </p>
                         <ul>
                           {schemaExamples &&
                             schemaExamples.map(example => (
@@ -766,14 +776,20 @@ class ListingCreate extends Component {
                 <Fragment>
                   <div className="info-box">
                     <p>
-                      Be sure to give your listing an appropriate title and
-                      description that will inform others as to what you’re
-                      offering.<br />
-                      If you’re listing is only offered in a specific geographic
-                      location, please be sure to indicate that.<br />
-                      Finally, adding some photos of your listing will go a long
-                      way to helping potential buyers decide if they want to
-                      make the purchase.
+                      <FormattedMessage
+                        id={'listing-create.form-help'}
+                        defaultMessage={`
+                          Be sure to give your listing an appropriate title and
+                          description that will inform others as to what you’re
+                          offering. {br}
+                          If you’re listing is only offered in a specific geographic
+                          location, please be sure to indicate that. {br}
+                          Finally, adding some photos of your listing will go a long
+                          way to helping potential buyers decide if they want to
+                          make the purchase.
+                        `}
+                        values={{ br: <br /> }}
+                      />
                     </p>
                   </div>
                   <div className="info-box">
