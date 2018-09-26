@@ -257,18 +257,16 @@ describe('Marketplace Resource', function() {
 
     it('should throw an error if affiliate is invalid', async () => {
       // Create malicious offer by interacting directly with contract
-      await makeMaliciousOffer({ affiliate: evilAddress })
-
       let errorThrown = false
       let errorMessage
       try {
-        await marketplace.getOffer('999-000-0-1')
+        await makeMaliciousOffer({ affiliate: evilAddress })
       } catch(e) {
         errorThrown = true
         errorMessage = String(e)
       }
       expect(errorThrown).to.be.true
-      expect(errorMessage).to.equal('Error: Invalid offer: affiliate is invalid')
+      expect(errorMessage).to.contain('revert Affiliate not allowed')
     })
   })
 

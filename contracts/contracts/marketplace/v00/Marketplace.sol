@@ -21,20 +21,22 @@ contract V00_Marketplace is Ownable {
     /**
     * @notice All events have the same indexed signature offsets for easy filtering
     */
+    event MarketplaceData  (address indexed party, bytes32 ipfsHash);
+    event AffiliateAdded   (address indexed party, bytes32 ipfsHash);
+    event AffiliateRemoved (address indexed party, bytes32 ipfsHash);
     event ListingCreated   (address indexed party, uint indexed listingID, bytes32 ipfsHash);
     event ListingUpdated   (address indexed party, uint indexed listingID, bytes32 ipfsHash);
     event ListingWithdrawn (address indexed party, uint indexed listingID, bytes32 ipfsHash);
-    event ListingData      (address indexed party, uint indexed listingID, bytes32 ipfsHash);
     event ListingArbitrated(address indexed party, uint indexed listingID, bytes32 ipfsHash);
+    event ListingData      (address indexed party, uint indexed listingID, bytes32 ipfsHash);
     event OfferCreated     (address indexed party, uint indexed listingID, uint indexed offerID, bytes32 ipfsHash);
-    event OfferWithdrawn   (address indexed party, uint indexed listingID, uint indexed offerID, bytes32 ipfsHash);
     event OfferAccepted    (address indexed party, uint indexed listingID, uint indexed offerID, bytes32 ipfsHash);
+    event OfferFinalized   (address indexed party, uint indexed listingID, uint indexed offerID, bytes32 ipfsHash);
+    event OfferWithdrawn   (address indexed party, uint indexed listingID, uint indexed offerID, bytes32 ipfsHash);
     event OfferFundsAdded  (address indexed party, uint indexed listingID, uint indexed offerID, bytes32 ipfsHash);
     event OfferDisputed    (address indexed party, uint indexed listingID, uint indexed offerID, bytes32 ipfsHash);
     event OfferRuling      (address indexed party, uint indexed listingID, uint indexed offerID, bytes32 ipfsHash, uint ruling);
-    event OfferFinalized   (address indexed party, uint indexed listingID, uint indexed offerID, bytes32 ipfsHash);
     event OfferData        (address indexed party, uint indexed listingID, uint indexed offerID, bytes32 ipfsHash);
-    event MarketplaceData  (address indexed party, bytes32 ipfsHash);
 
     struct Listing {
         address seller;     // Seller wallet / identity contract / other contract
@@ -43,8 +45,8 @@ contract V00_Marketplace is Ownable {
     }
 
     struct Offer {
-        uint value;         // Amount in Eth or token buyer is offering
-        uint commission;    // Amount of commission earned if offer is accepted
+        uint value;         // Amount in Eth or ERC20 buyer is offering
+        uint commission;    // Amount of commission earned if offer is finalized
         uint refund;        // Amount to refund buyer upon finalization
         ERC20 currency;     // Currency of listing. Copied incase seller deleted listing
         address buyer;      // Buyer wallet / identity contract / other contract
@@ -56,12 +58,14 @@ contract V00_Marketplace is Ownable {
 
     Listing[] public listings;
     mapping(uint => Offer[]) public offers; // listingID => Offers
+    mapping(address => bool) public allowedAffiliates;
 
     ERC20 public tokenAddr; // Origin Token address
 
     constructor(address _tokenAddr) public {
         owner = msg.sender;
         setTokenAddr(_tokenAddr); // Origin Token contract
+        allowedAffiliates[0x0] = true; // Allow null affiliate by default
     }
 
     // @dev Return the total number of listings
@@ -182,6 +186,17 @@ contract V00_Marketplace is Ownable {
         public
         payable
     {
+        bool affiliateWhitelistDisabled = allowedAffiliates[address(this)];
+        require(
+            affiliateWhitelistDisabled || allowedAffiliates[_affiliate],
+            "Affiliate not allowed"
+        );
+
+        if (_affiliate == 0x0) {
+            // Avoid commission tokens being trapped in marketplace contract.
+            require(_commission == 0, "commission requires affiliate");
+        }
+
         offers[listingID].push(Offer({
             status: 1,
             buyer: msg.sender,
@@ -410,10 +425,12 @@ contract V00_Marketplace is Ownable {
         }
     }
 
+    // @dev Associate ipfs data with the marketplace
     function addData(bytes32 ipfsHash) public {
         emit MarketplaceData(msg.sender, ipfsHash);
     }
 
+    // @dev Associate ipfs data with a listing
     function addData(uint listingID, bytes32 ipfsHash) public {
         emit ListingData(msg.sender, listingID, ipfsHash);
     }
@@ -436,5 +453,17 @@ contract V00_Marketplace is Ownable {
     // @dev Set the address of the Origin token contract
     function setTokenAddr(address _tokenAddr) public onlyOwner {
         tokenAddr = ERC20(_tokenAddr);
+    }
+
+    // @dev Add affiliate to whitelist. Set to address(this) to disable.
+    function addAffiliate(address _affiliate, bytes32 ipfsHash) public onlyOwner {
+        allowedAffiliates[_affiliate] = true;
+        emit AffiliateAdded(_affiliate, ipfsHash);
+    }
+
+    // @dev Remove affiliate from whitelist.
+    function removeAffiliate(address _affiliate, bytes32 ipfsHash) public onlyOwner {
+        delete allowedAffiliates[_affiliate];
+        emit AffiliateRemoved(_affiliate, ipfsHash);
     }
 }

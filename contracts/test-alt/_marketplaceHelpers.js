@@ -1,10 +1,12 @@
 export const IpfsHash = '0x12345678901234567890123456789012'
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export default function({
   web3,
   Marketplace,
   Buyer,
   Seller,
+  Affiliate,
   OriginToken,
   MarketArbitrator,
   ArbitratorAddr,
@@ -47,7 +49,12 @@ export default function({
     }
   }
 
-  async function makeOffer({ withdraw, listingID = 0 }) {
+  async function makeOffer({
+    withdraw,
+    listingID = 0,
+    affiliate = Affiliate,
+    commission = 2
+  }) {
     const blockNumber = await web3.eth.getBlockNumber()
     const block = await web3.eth.getBlock(blockNumber)
     const value = web3.utils.toWei('0.1', 'ether')
@@ -56,8 +63,8 @@ export default function({
       listingID,
       IpfsHash,
       block.timestamp + 60 * 120,
-      Buyer, // Affiliate
-      2, // Commission
+      affiliate,
+      commission,
       value,
       '0x0000000000000000000000000000000000000000',
       ArbitratorAddr
@@ -90,12 +97,16 @@ export default function({
       .once('receipt', trackGas('Dispute Offer'))
 
     const eth = await web3.eth.getBalance(party)
-    const ogn = await OriginToken.methods.balanceOf(Buyer).call()
+    const ogn = await OriginToken.methods.balanceOf(Affiliate).call()
 
-    return { listingID, offerID, balance: {
-      eth: new web3.utils.BN(eth),
-      ogn: new web3.utils.BN(ogn)
-    } }
+    return {
+      listingID,
+      offerID,
+      balance: {
+        eth: new web3.utils.BN(eth),
+        ogn: new web3.utils.BN(ogn)
+      }
+    }
   }
 
   async function acceptOffer({ listingID, offerID }) {
@@ -105,18 +116,31 @@ export default function({
       .once('receipt', trackGas('Accept Offer'))
   }
 
-  async function giveRuling({ listingID, offerID, ruling, refund = 0, party = Buyer }) {
+  async function giveRuling({
+    listingID,
+    offerID,
+    ruling,
+    refund = 0,
+    party = Buyer
+  }) {
     await Marketplace.methods
       .executeRuling(listingID, offerID, IpfsHash, ruling, refund)
       .send({ from: ArbitratorAddr })
 
     const eth = await web3.eth.getBalance(party)
-    const ogn = await OriginToken.methods.balanceOf(Buyer).call()
+    const ogn = await OriginToken.methods.balanceOf(Affiliate).call()
 
-    return { balance: { eth: new web3.utils.BN(eth), ogn: new web3.utils.BN(ogn) } }
+    return {
+      balance: { eth: new web3.utils.BN(eth), ogn: new web3.utils.BN(ogn) }
+    }
   }
 
-  async function makeERC20Offer({ Token, withdraw, listingID = 0 }) {
+  async function makeERC20Offer({
+    Token,
+    withdraw,
+    listingID = 0,
+    affiliate = Affiliate
+  }) {
     const blockNumber = await web3.eth.getBlockNumber()
     const block = await web3.eth.getBlock(blockNumber)
 
@@ -124,7 +148,7 @@ export default function({
       listingID,
       IpfsHash,
       block.timestamp + 60 * 120,
-      Buyer,
+      affiliate,
       2,
       10,
       Token._address,
