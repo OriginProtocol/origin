@@ -99,9 +99,20 @@ const mapStateToProps = ({ app, messages }) => {
   const filteredMessages = messages.filter(({ content, conversationId }) => {
     return content && origin.messaging.getRecipients(conversationId).includes(web3Account)
   })
+  const conversations = groupByArray(filteredMessages, 'conversationId')
+  const sortedConversations = conversations.sort((a, b) => {
+    const lastMessageA = a.values.sort(
+      (c, d) => (c.created < d.created ? -1 : 1)
+    )[a.values.length - 1]
+    const lastMessageB = b.values.sort(
+      (c, d) => (c.created < d.created ? -1 : 1)
+    )[b.values.length - 1]
+
+    return lastMessageA.created > lastMessageB.created ? -1 : 1
+  })
 
   return {
-    conversations: groupByArray(filteredMessages, 'conversationId'),
+    conversations: sortedConversations,
     messages: filteredMessages,
     messagingEnabled,
     web3Account
