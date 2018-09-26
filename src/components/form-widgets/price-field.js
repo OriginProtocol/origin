@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { getFiatPrice } from 'utils/priceUtils'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 class PriceField extends Component {
   constructor(props) {
@@ -90,14 +91,19 @@ class PriceField extends Component {
             </div>
           </div>
           <p className="help-block">
-            The cost to buy this listing. Price is always in{' '}
-            <a
-              href="https://en.wikipedia.org/wiki/Ethereum"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              ETH
-            </a>, <span className="text-bold">USD is an estimate.</span>
+            <FormattedMessage
+              id={'price-field.price-help'}
+              defaultMessage={'The cost to buy this listing. Price is always in {currency}. '}
+              values={{
+                currency: <a href="https://en.wikipedia.org/wiki/Ethereum" target="_blank" rel="noopener noreferrer">ETH</a>
+              }}
+            />
+            <span className="text-bold">
+              <FormattedMessage
+                id={'price-field.price-usd-disclaimer'}
+                defaultMessage={'USD is an estimate.'}
+              />
+            </span>
           </p>
         </div>
       )

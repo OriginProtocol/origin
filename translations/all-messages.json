@@ -74,6 +74,8 @@
   "photo-picker.androidHelpText": "Select multiple images to upload them all at once",
   "photo-picker.linuxHelpText": "Hold down \"Ctrl\" to select multiple images",
   "photo-picker.listingSize": "Total listing size may not exceed 2MB",
+  "price-field.price-help": "The cost to buy this listing. Price is always in {currency}.",
+  "price-field.price-usd-disclaimer": "USD is an estimate.",
   "listing-card-prices.loadingMessage": "Loading...",
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-card.pending": "Pending",
