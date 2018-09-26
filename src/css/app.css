@@ -4754,6 +4754,26 @@ a:not([href]):not([tabindex]).span-link {
   cursor: pointer;
 }
 
+/* DApp Info */
+
+.dapp-info-wrapper td {
+  font-size: 14px;
+  font-weight: 700;
+  overflow: scroll;
+  padding: 2px;
+  border-top: 1px solid var(--bluey-grey);
+}
+
+.dapp-info-wrapper td:nth-child(2)
+ {
+  font-weight: normal;
+}
+
+.dapp-info-wrapper th {
+  background-color: var(--pale-grey);
+  padding: 6px 2px 2px 2px;
+}
+
 /* Error Page */
 
 .error-page-header {
@@ -4859,7 +4879,7 @@ a:not([href]):not([tabindex]).span-link {
   .onboarding-modal .step-text {
     margin: auto 20px;
   }
-  
+
   .modal.getting-started {
     left: -17px;
     right: -14px;
