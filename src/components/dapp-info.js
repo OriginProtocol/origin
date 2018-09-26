@@ -120,6 +120,7 @@ class DappInfo extends Component {
                   </td>
                 </tr>
                 <tr><th colSpan='2'>Environment Variables</th></tr>
+                <tr><td>AFFILIATE_ACCOUNT</td><td>{ process.env.AFFILIATE_ACCOUNT }</td></tr>
                 <tr><td>ARBITRATOR_ACCOUNT</td><td>{ process.env.ARBITRATOR_ACCOUNT }</td></tr>
                 <tr><td>BRIDGE_SERVER_DOMAIN</td><td>{ process.env.BRIDGE_SERVER_DOMAIN }</td></tr>
                 <tr><td>BRIDGE_SERVER_PROTOCOL</td><td>{ process.env.BRIDGE_SERVER_PROTOCOL }</td></tr>
