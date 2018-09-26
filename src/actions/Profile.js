@@ -50,6 +50,7 @@ export function addAttestation(attestation) {
 export function deployProfile() {
   return async function(dispatch, getState) {
     dispatch({ type: ProfileConstants.DEPLOY })
+    let confirmationReceived = false
 
     const {
       profile: { provisional, published },
@@ -74,8 +75,10 @@ export function deployProfile() {
         },
         confirmationCallback: (confirmationCount, transactionReceipt) => {
           dispatch(updateTransaction(confirmationCount, transactionReceipt))
+
           // only dispatch profile events on the first confirmation
-          if (confirmationCount === 0) {
+          if (!confirmationReceived) {
+            confirmationReceived = true
             dispatch({ type: ProfileConstants.DEPLOY_SUCCESS })
             dispatch(fetchUser(address))
           }
