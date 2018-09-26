@@ -93,7 +93,11 @@ Spawn a shell (command line) in a container:
 	docker exec -ti <container_name> /bin/bash
 	docker exec -ti origin-dapp /bin/bash
 	docker exec -ti origin-js /bin/bash
-	
+
+Follow log output for all containers: 
+
+	docker-compose logs -f
+
 Restart DApp (needed after changing branches). In a new terminal window:
 
 	docker-compose restart origin-dapp
