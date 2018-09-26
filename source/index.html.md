@@ -21,7 +21,7 @@ includes:
   - resources/notifications
   - resources/reviews
   - resources/users
-  - listing_schemas
+  - protocol_schemas
   - getting_help
   - contributing
 
