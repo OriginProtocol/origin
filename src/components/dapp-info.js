@@ -56,18 +56,28 @@ class DappInfo extends Component {
 
   async loadMultiSigData() {
     const data = [ ]
+    const bigStyle = {
+      'height': '100px',
+      'width': '500px',
+      'font-family': 'monospace',
+      'display': 'table-caption',
+      'font-size': '10px',
+      'overflow-y': 'scroll'
+    }
     data.push(<tr><th colSpan="2">For signing/verifying multi-sig transactions</th></tr>)
     for (const [name, contract] of Object.entries(origin.contractService.marketplaceContracts)) {
       const contractObj = await origin.contractService.deployed(contract)
       data.push(<tr><td>{name} address</td><td>{contractObj._address}</td></tr>)
-      data.push(<tr><td>{name} ABI </td><td>{JSON.stringify(contract.abi)}</td></tr>)
+      data.push(<tr><td>{name} ABI</td>
+        <td><div style={bigStyle}>{JSON.stringify(contract.abi)}</div></td></tr>)
     }
 
     const tokenContractName = 'OriginToken'
     const tokenContract = origin.contractService.contracts[tokenContractName]
     const token = await origin.contractService.deployed(tokenContract)
     data.push(<tr><td>{tokenContractName} address </td><td>{token._address}</td></tr>)
-    data.push(<tr><td>{tokenContractName} ABI </td><td>{JSON.stringify(tokenContract.abi)}</td></tr>)
+    data.push(<tr><td>{tokenContractName} ABI</td>
+      <td><div style={bigStyle}>{JSON.stringify(tokenContract.abi)}</div></td></tr>)
     return data
   }
 
@@ -100,22 +110,34 @@ class DappInfo extends Component {
               <table width="100%">
 
                 <tr><th colSpan="2">origin.js</th></tr>
-                <tr><td>Version</td><td>{ origin.version }</td></tr>
-
+                <tr><td>Version</td><td>{ origin.version } </td></tr>
+                <tr>
+                  <td>Latest npm version</td>
+                  <td>
+                    <a href="https://www.npmjs.com/package/origin" target="_blank">
+                      <img src="https://img.shields.io/npm/v/origin.svg?style=flat-square&colorA=111d28&colorB=1a82ff"/>
+                    </a>
+                  </td>
+                </tr>
                 <tr><th colSpan="2">Environment Variables</th></tr>
+                <tr><td>ARBITRATOR_ACCOUNT</td><td>{ process.env.ARBITRATOR_ACCOUNT }</td></tr>
                 <tr><td>BRIDGE_SERVER_DOMAIN</td><td>{ process.env.BRIDGE_SERVER_DOMAIN }</td></tr>
                 <tr><td>BRIDGE_SERVER_PROTOCOL</td><td>{ process.env.BRIDGE_SERVER_PROTOCOL }</td></tr>
+                <tr><td>CONTRACT_ADDRESSES</td><td>{ process.env.CONTRACT_ADDRESSES }</td></tr>
+                <tr><td>DEPLOY_TAG</td><td>{ process.env.DEPLOY_TAG }</td></tr>
                 <tr><td>DISCOVERY_SERVER_URL</td><td>{ process.env.DISCOVERY_SERVER_URL }</td></tr>
+                <tr><td>FORCE_HTTPS</td><td>{ process.env.FORCE_HTTPS }</td></tr>
+                <tr><td>IPFS_API_PORT</td><td>{ process.env.IPFS_API_PORT }</td></tr>
                 <tr><td>IPFS_DOMAIN</td><td>{ process.env.IPFS_DOMAIN }</td></tr>
                 <tr><td>IPFS_GATEWAY_PORT</td><td>{ process.env.IPFS_GATEWAY_PORT }</td></tr>
                 <tr><td>IPFS_GATEWAY_PROTOCOL</td><td>{ process.env.IPFS_GATEWAY_PROTOCOL }</td></tr>
-                <tr><td>IPFS_API_PORT</td><td>{ process.env.IPFS_API_PORT }</td></tr>
                 <tr><td>IPFS_SWARM</td><td>{ process.env.IPFS_SWARM }</td></tr>
-                <tr><td>ARBITRATOR_ACCOUNT</td><td>{ process.env.ARBITRATOR_ACCOUNT }</td></tr>
                 <tr><td>MESSAGING_ACCOUNT</td><td>{ process.env.MESSAGING_ACCOUNT }</td></tr>
-                <tr><td>PROVIDER_URL</td><td>{ process.env.PROVIDER_URL }</td></tr>
                 <tr><td>MESSAGING_NAMESPACE</td><td>{ process.env.MESSAGING_NAMESPACE }</td></tr>
-                <tr><td>DEPLOY_TAG</td><td>{ process.env.DEPLOY_TAG }</td></tr>
+                <tr><td>NODE_ENV</td><td>{ process.env.NODE_ENV }</td></tr>
+                <tr><td>PRODUCTION_DOMAIN</td><td>{ process.env.PRODUCTION_DOMAIN }</td></tr>
+                <tr><td>PROVIDER_URL</td><td>{ process.env.PROVIDER_URL }</td></tr>
+                <tr><td>REDUX_LOGGER</td><td>{ process.env.REDUX_LOGGER }</td></tr>
 
                 {this.state.marketplaceData}
 
@@ -123,6 +145,7 @@ class DappInfo extends Component {
 
                 {this.state.multiSigData}
               </table>
+              &nbsp;
             </div>
           </div>
         </div>
