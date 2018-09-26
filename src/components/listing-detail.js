@@ -20,7 +20,6 @@ import Review from 'components/review'
 import UserCard from 'components/user-card'
 import { MetamaskModal, ProcessingModal } from 'components/modals/wait-modals'
 
-import getCurrentProvider from 'utils/getCurrentProvider'
 import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
@@ -52,9 +51,6 @@ class ListingsDetail extends Component {
       pictures: [],
       reviews: [],
       step: this.STEP.VIEW,
-      currentProvider: getCurrentProvider(
-        origin && origin.contractService && origin.contractService.web3
-      ),
       boostLevel: null,
       boostValue: 0
     }
@@ -179,7 +175,6 @@ class ListingsDetail extends Component {
       // boostLevel,
       // boostValue,
       category,
-      currentProvider,
       description,
       ipfsHash,
       loading,
@@ -202,7 +197,7 @@ class ListingsDetail extends Component {
     return (
       <div className="listing-detail">
         {step === this.STEP.METAMASK && (
-          <MetamaskModal currentProvider={currentProvider} />
+          <MetamaskModal />
         )}
         {step === this.STEP.PROCESSING && (
           <ProcessingModal />

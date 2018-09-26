@@ -20,7 +20,6 @@ import WalletCard from 'components/wallet-card'
 import { MetamaskModal, ProcessingModal } from 'components/modals/wait-modals'
 
 import { dappFormDataToOriginListing } from 'utils/listing'
-import getCurrentProvider from 'utils/getCurrentProvider'
 import { getFiatPrice } from 'utils/priceUtils'
 import { getBoostLevel, defaultBoostValue } from 'utils/boostUtils'
 import {
@@ -70,9 +69,6 @@ class ListingCreate extends Component {
           boostLevel: getBoostLevel(defaultBoostValue)
         }
       },
-      currentProvider: getCurrentProvider(
-        origin && origin.contractService && origin.contractService.web3
-      ),
       isBoostExpanded: false,
       showBoostTutorial: false,
       usdListingPrice: 0
@@ -335,7 +331,6 @@ class ListingCreate extends Component {
   render() {
     const { wallet, intl } = this.props
     const {
-      currentProvider,
       formListing,
       isBoostExpanded,
       selectedBoostAmount,
@@ -893,7 +888,7 @@ class ListingCreate extends Component {
               )}
             </div>
             {step === this.STEP.METAMASK && (
-              <MetamaskModal currentProvider={currentProvider} />
+              <MetamaskModal />
             )}
             {step === this.STEP.PROCESSING && (
               <ProcessingModal />

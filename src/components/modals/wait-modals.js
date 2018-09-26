@@ -1,8 +1,14 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import Modal from 'components/modal'
+import origin from '../../services/origin'
+import getCurrentProvider from 'utils/getCurrentProvider'
 
-export const MetamaskModal = ({ currentProvider }) => (
+const currentProvider = getCurrentProvider(
+  origin && origin.contractService && origin.contractService.web3
+)
+
+export const MetamaskModal = () => (
   <Modal backdrop="static" isOpen={true}>
     <div className="image-container">
       <img src="images/spinner-animation-light.svg" role="presentation" />

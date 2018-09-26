@@ -21,8 +21,8 @@ import {
   PrerequisiteModal,
   RejectionModal
 } from 'components/modals/arbitration-modals'
+import { MetamaskModal } from 'components/modals/wait-modals'
 import Avatar from 'components/avatar'
-import Modal from 'components/modal'
 import PurchaseProgress from 'components/purchase-progress'
 import Review from 'components/review'
 import UnnamedUser from 'components/unnamed-user'
@@ -1261,20 +1261,7 @@ class PurchaseDetail extends Component {
           </div>
         </div>
         {processing && (
-          <Modal backdrop="static" isOpen={true} tabIndex="-1">
-            <div className="image-container">
-              <img src="images/spinner-animation-light.svg" role="presentation" />
-            </div>
-            <FormattedMessage
-              id={'purchase-detail.processingUpdate'}
-              defaultMessage={'Processing your update'}
-            />
-            <br />
-            <FormattedMessage
-              id={'purchase-detail.pleaseStandBy'}
-              defaultMessage={'Please stand by...'}
-            />
-          </Modal>
+          <MetamaskModal />
         )}
         <ConfirmationModal
           isOpen={modalsOpen.confirmation}
