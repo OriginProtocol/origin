@@ -590,7 +590,7 @@
   "schema.services.writingTranslationTranscription": "Pisanje, prevajanje in prepisovanje",
   "schema.services.messageBuyer": "Message the buyer with any relevant details",
   "schema.services.provideService": "Provide your service to the buyer",
-  "schema.services.rateBuyer": "Give the buyer a review",
+  "schema.services.rateBuyer": "Daj kupcu oceno",
   "schema.services.sellerSteps": "Fulfillment Checklist",
   "schema.tickets.schemaDescription": "Distributed Ticketmaster / Eventbrite",
   "schema.tickets.title": "Naslov",
@@ -632,6 +632,6 @@
   "schema.transportation.yachtCharters": "Jadrnice",
   "schema.transportation.messageBuyer": "Message the buyer with any relevant details",
   "schema.transportation.provideService": "Provide your transportation service to the buyer",
-  "schema.transportation.rateBuyer": "Give the buyer a review",
+  "schema.transportation.rateBuyer": "Daj kupcu oceno",
   "schema.transportation.sellerSteps": "Fulfillment Checklist"
 }
