@@ -13,7 +13,7 @@ class DappInfo extends Component {
       const contractObj = await origin.contractService.deployed(contract)
       const owner = await contractObj.methods.owner().call()
       const tokenAddr = await contractObj.methods.tokenAddr().call()
-      contracts.push(<tr><th colSpan="2">Marketplace Contract: {name}</th></tr>)
+      contracts.push(<tr><th colSpan='2'>Marketplace Contract: {name}</th></tr>)
       contracts.push(<tr><td>Contract Address</td><td>{contractObj._address}</td></tr>)
       contracts.push(<tr><td>Owner</td><td>{owner}</td></tr>)
       contracts.push(<tr><td>Token Address</td><td>{tokenAddr}</td></tr>)
@@ -41,7 +41,7 @@ class DappInfo extends Component {
 
     return (
       <React.Fragment>
-        <tr><th colSpan="2">Token Contract</th></tr>
+        <tr><th colSpan='2'>Token Contract</th></tr>
         <tr><td>Contract Address</td><td>{token._address}</td></tr>
         <tr><td>Name</td><td>{name}</td></tr>
         <tr><td>Symbol</td><td>{symbol}</td></tr>
@@ -58,18 +58,18 @@ class DappInfo extends Component {
     const data = [ ]
     const bigStyle = {
       'height': '100px',
-      'width': '500px',
+      'width': '100%',
       'font-family': 'monospace',
       'display': 'table-caption',
       'font-size': '10px',
-      'overflow-y': 'scroll'
+      'overflow-y': 'scroll',
     }
-    data.push(<tr><th colSpan="2">For signing/verifying multi-sig transactions</th></tr>)
+    data.push(<tr><th colSpan='2'>For signing/verifying multi-sig transactions</th></tr>)
     for (const [name, contract] of Object.entries(origin.contractService.marketplaceContracts)) {
       const contractObj = await origin.contractService.deployed(contract)
       data.push(<tr><td>{name} address</td><td>{contractObj._address}</td></tr>)
       data.push(<tr><td>{name} ABI</td>
-        <td><div style={bigStyle}>{JSON.stringify(contract.abi)}</div></td></tr>)
+        <td><textarea style={bigStyle} readOnly onFocus={e => e.target.select()}>{JSON.stringify(contract.abi)}</textarea></td></tr>)
     }
 
     const tokenContractName = 'OriginToken'
@@ -77,7 +77,7 @@ class DappInfo extends Component {
     const token = await origin.contractService.deployed(tokenContract)
     data.push(<tr><td>{tokenContractName} address </td><td>{token._address}</td></tr>)
     data.push(<tr><td>{tokenContractName} ABI</td>
-      <td><div style={bigStyle}>{JSON.stringify(tokenContract.abi)}</div></td></tr>)
+      <td><textarea style={bigStyle} readOnly onFocus={e => e.target.select()}>{JSON.stringify(tokenContract.abi)}</textarea></td></tr>)
     return data
   }
 
@@ -101,25 +101,25 @@ class DappInfo extends Component {
 
   render() {
     return (
-      <div className="dapp-info-wrapper">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-6">
+      <div className='dapp-info-wrapper'>
+        <div className='container'>
+          <div className='row'>
+            <div className='col-md-6'>
               <h1>DApp Info</h1>
-              <h3 className="lead">Developer information about this build</h3>
-              <table width="100%">
+              <h3 className='lead'>Developer information about this build</h3>
+              <table width='100%'>
 
-                <tr><th colSpan="2">origin.js</th></tr>
+                <tr><th colSpan='2'>origin.js</th></tr>
                 <tr><td>Version</td><td>{ origin.version } </td></tr>
                 <tr>
                   <td>Latest npm version</td>
                   <td>
-                    <a href="https://www.npmjs.com/package/origin" target="_blank">
-                      <img src="https://img.shields.io/npm/v/origin.svg?style=flat-square&colorA=111d28&colorB=1a82ff"/>
+                    <a href='https://www.npmjs.com/package/origin' target='_blank'>
+                      <img src='https://img.shields.io/npm/v/origin.svg?style=flat-square&colorA=111d28&colorB=1a82ff'/>
                     </a>
                   </td>
                 </tr>
-                <tr><th colSpan="2">Environment Variables</th></tr>
+                <tr><th colSpan='2'>Environment Variables</th></tr>
                 <tr><td>ARBITRATOR_ACCOUNT</td><td>{ process.env.ARBITRATOR_ACCOUNT }</td></tr>
                 <tr><td>BRIDGE_SERVER_DOMAIN</td><td>{ process.env.BRIDGE_SERVER_DOMAIN }</td></tr>
                 <tr><td>BRIDGE_SERVER_PROTOCOL</td><td>{ process.env.BRIDGE_SERVER_PROTOCOL }</td></tr>
