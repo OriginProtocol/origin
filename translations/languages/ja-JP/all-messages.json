@@ -365,7 +365,7 @@
   "web3-provider.toshi": "トシ",
   "web3-provider.intentRequiresSignIn": "{web3Intent} を行うためには{currentProvider} にサインインしてください。",
   "web3-provider.connecting": "ネットワークに接続中です...",
-  "web3-provider.shouldBeOnRinkeby": "{currentProvider} は、Rinkeby テスト ネットワーク上に存在しなければなりません。",
+  "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "{currentNetworkName} に接続中です。",
   "web3-provider.pleaseInstallMetaMask": "このサイトにアクセスするためにはMetaMaskをインストールしてください。",
   "web3-provider.fullInstructionsForDemo": "デモの為完全な説明",
