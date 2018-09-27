@@ -3,7 +3,8 @@ import steps from 'components/onboarding-modal/steps'
 
 function getStorageItem(name, defaultValue) {
   try {
-    return JSON.parse(localStorage.getItem(`onboarding${name}`))
+    const item = localStorage.getItem(`onboarding${name}`)
+    return item ? JSON.parse(item) : defaultValue
   } catch (e) {
     return defaultValue
   }
@@ -19,10 +20,12 @@ function saveStorageItem(name, item, defaultValue) {
 }
 
 const getStoredStep = steps => {
-  const currentStep = getStorageItem('.currentStep', {})
+  const defaultValue = {name: {props: {}}}
+  const currentStep = getStorageItem('.currentStep', defaultValue)
+  const { name: { props: { defaultMessage } } } = currentStep
 
   return steps.find(
-    step => (step && step.name) === (currentStep && currentStep.name)
+    step => (step && step.name.props.defaultMessage) === (currentStep && defaultMessage)
   )
 }
 
