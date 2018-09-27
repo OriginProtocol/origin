@@ -30,6 +30,7 @@ RUN git clone --depth 1 --branch master https://github.com/OriginProtocol/origin
 ENV BRIDGE_SERVER_DOMAIN=bridge.dev.originprotocol.com \
     BRIDGE_SERVER_PROTOCOL=https \
     DISCOVERY_SERVER_URL=https://discovery.dev.originprotocol.com \
+    ETH_NETWORK_ID=2222 \
     IPFS_DOMAIN=ipfs.dev.originprotocol.com \
     IPFS_GATEWAY_PORT=443 \
     IPFS_GATEWAY_PROTOCOL=https \
