@@ -195,7 +195,7 @@ class PhotoPicker extends Component {
                 <FormattedMessage
                   id={'photo-picker.maxImgCountMsg'}
                   defaultMessage={
-                    'No more than {maxImageCount} images may be uploaded.'
+                    'No more than {maxImageCount} images may be uploaded. The extra images have been removed.'
                   }
                   values={{
                     maxImageCount: MAX_IMAGE_COUNT

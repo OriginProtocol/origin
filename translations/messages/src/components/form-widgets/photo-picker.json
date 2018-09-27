@@ -29,7 +29,7 @@
   },
   {
     "id": "photo-picker.maxImgCountMsg",
-    "defaultMessage": "No more than {maxImageCount} images may be uploaded."
+    "defaultMessage": "No more than {maxImageCount} images may be uploaded. The extra images have been removed."
   },
   {
     "id": "photo-picker.oversizeImages",
