@@ -17,7 +17,7 @@ class DappInfo extends Component {
       const tokenAddr = await contractObj.methods.tokenAddr().call()
       contracts.push(
         <tr>
-          <th colSpan="2">Marketplace Contract: {name}</th>
+          <th>{name}</th><td></td>
         </tr>
       )
       contracts.push(
@@ -64,9 +64,6 @@ class DappInfo extends Component {
     return (
       <React.Fragment>
         <tr>
-          <th colSpan="2">Token Contract</th>
-        </tr>
-        <tr>
           <td>Contract Address</td>
           <td>{token._address}</td>
         </tr>
@@ -112,11 +109,6 @@ class DappInfo extends Component {
       'font-size': '10px',
       'overflow-y': 'scroll'
     }
-    data.push(
-      <tr>
-        <th colSpan="2">For signing/verifying multi-sig transactions</th>
-      </tr>
-    )
     for (const [name, contract] of Object.entries(
       origin.contractService.marketplaceContracts
     )) {
@@ -173,7 +165,7 @@ class DappInfo extends Component {
       .catch(e =>
         this.setState(
           Object.assign(this.state, {
-            marketplaceData: `error fetching marketplace data: ${e.message}`
+            marketplaceData: <tr><td colSpan="2">Error fetching marketplace data: {e.message}</td></tr>
           })
         )
       )
@@ -182,7 +174,7 @@ class DappInfo extends Component {
       .catch(e =>
         this.setState(
           Object.assign(this.state, {
-            tokenData: `error fetching token data: ${e.message}`
+            tokenData: <tr><td colSpan="2">Error fetching token data: {e.message}</td></tr>
           })
         )
       )
@@ -193,7 +185,7 @@ class DappInfo extends Component {
       .catch(e =>
         this.setState(
           Object.assign(this.state, {
-            multiSigData: `error fetching multi-sig data: ${e.message}`
+            multiSigData: <tr><td colSpan="2">Error fetching multi-sig data: {e.message}</td></tr>
           })
         )
       )
