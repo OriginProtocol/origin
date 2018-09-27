@@ -25,7 +25,11 @@
   },
   {
     "id": "photo-picker.listingSize",
-    "defaultMessage": "Images may not exceed {maxImageMB}MB each"
+    "defaultMessage": "Images may not exceed {maxImageMB}MB each. Maximum {maxImageCount} images."
+  },
+  {
+    "id": "photo-picker.maxImgCountMsg",
+    "defaultMessage": "No more than {maxImageCount} images may be uploaded."
   },
   {
     "id": "photo-picker.oversizeImages",

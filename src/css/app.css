@@ -2447,7 +2447,8 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .photo-picker .info-box.warn {
-  margin-top: 25px;
+  margin-top: 8px;
+  margin-bottom: 8px;
   position: relative;
 }
 

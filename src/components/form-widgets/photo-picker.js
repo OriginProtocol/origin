@@ -4,13 +4,15 @@ import { getDataUri } from 'utils/fileUtils'
 
 const MAX_IMAGE_BYTES = 2000000 // 2MB
 const MAX_IMAGE_MB = MAX_IMAGE_BYTES / 1000000
+const MAX_IMAGE_COUNT = 10
 
 class PhotoPicker extends Component {
   constructor(props) {
     super(props)
     this.state = {
       pictures: [],
-      oversizeImages: []
+      oversizeImages: [],
+      showMaxImageCountMsg: false
     }
 
     this.intlMessages = defineMessages({
@@ -75,7 +77,7 @@ class PhotoPicker extends Component {
   onChange() {
     return async event => {
       const filesObj = event.target.files
-      const filesArr = []
+      let filesArr = []
       for (const key in filesObj) {
         if (filesObj.hasOwnProperty(key)) {
           filesArr.push(filesObj[key])
@@ -96,6 +98,16 @@ class PhotoPicker extends Component {
           oversizeImages
         })
       }
+
+      let showMaxImageCountMsg = false
+      if (filesArr.length > MAX_IMAGE_COUNT) {
+        filesArr = filesArr.slice(0, MAX_IMAGE_COUNT)
+        showMaxImageCountMsg = true
+      }
+
+      this.setState({
+        showMaxImageCountMsg
+      })
 
       const filesAsDataUriArray = filesArr.map(async fileObj => getDataUri(fileObj))
 
@@ -119,15 +131,21 @@ class PhotoPicker extends Component {
     }
   }
 
-  removeWarning(indexToRemove) {
+  removeImgSizeWarning(indexToRemove) {
     this.setState({
       oversizeImages: this.state.oversizeImages.filter((warning, idx) => idx !== indexToRemove)
     })
   }
 
+  removeMaxImgCountWarning() {
+    this.setState({
+      showMaxImageCountMsg: false
+    })
+  }
+
   render() {
     const { schema, required } = this.props
-    const { helpText, oversizeImages, pictures } = this.state
+    const { helpText, oversizeImages, pictures, showMaxImageCountMsg } = this.state
 
     return (
       <div className="photo-picker">
@@ -157,15 +175,44 @@ class PhotoPicker extends Component {
           <FormattedMessage
             id={'photo-picker.listingSize'}
             defaultMessage={
-              'Images may not exceed {maxImageMB}MB each'
+              'Images may not exceed {maxImageMB}MB each. Maximum {maxImageCount} images.'
             }
-            values={{ maxImageMB: MAX_IMAGE_MB }}
+            values={{
+              maxImageMB: MAX_IMAGE_MB,
+              maxImageCount: MAX_IMAGE_COUNT
+            }}
           />
         </p>
         <div className="d-flex pictures">
+          {showMaxImageCountMsg &&
+            <div className="info-box warn">
+              <img
+                className="close-btn"
+                src="images/close-icon.svg"
+                onClick={() => this.removeMaxImgCountWarning()}
+              />
+              <p>
+                <FormattedMessage
+                  id={'photo-picker.maxImgCountMsg'}
+                  defaultMessage={
+                    'No more than {maxImageCount} images may be uploaded.'
+                  }
+                  values={{
+                    maxImageCount: MAX_IMAGE_COUNT
+                  }}
+                />
+              </p>
+            </div>
+          }
+        </div>
+        <div className="d-flex pictures">
           {oversizeImages.map((imgObj, idx) => (
             <div className="info-box warn" key={imgObj.name}>
-              <img className="close-btn" src="images/close-icon.svg" onClick={() => this.removeWarning(idx)} />
+              <img
+                className="close-btn"
+                src="images/close-icon.svg"
+                onClick={() => this.removeImgSizeWarning(idx)}
+              />
               <p>
                 <FormattedMessage
                   id={'photo-picker.oversizeImages'}
