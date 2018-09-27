@@ -365,7 +365,7 @@
   "web3-provider.toshi": "都市",
   "web3-provider.intentRequiresSignIn": "为了 {web3Intent}, 您必须登录到 {currentProvider}。",
   "web3-provider.connecting": "正在连接到网络..",
-  "web3-provider.shouldBeOnRinkeby": "{currentProvider} 应在 Rinkeby 测试网络上",
+  "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "当前在 {currentNetworkName} 上。",
   "web3-provider.pleaseInstallMetaMask": "请安装 MetaMask 插件以访问此站点。",
   "web3-provider.fullInstructionsForDemo": "演示的完整说明",
