@@ -365,7 +365,7 @@
   "web3-provider.toshi": "Toshi",
   "web3-provider.intentRequiresSignIn": "Para ma- {web3Intent}, kailangan mong mag-sign in sa {currentProvider}.",
   "web3-provider.connecting": "Kasalukuyang kumokonekta sa network...",
-  "web3-provider.shouldBeOnRinkeby": "Ang {currentProvider} ay dapat nasa Rinkeby Test Network",
+  "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "Kasalukuyang nasa {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "Mangyaring mag-instala ng MetaMask extension upang ma-access ang mga site na ito.",
   "web3-provider.fullInstructionsForDemo": "Buong instruksyon para sa Demo",
