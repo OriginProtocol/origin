@@ -20,6 +20,10 @@
     "defaultMessage": "Hold down \"Ctrl\" to select multiple images"
   },
   {
+    "id": "photo-picker.confirmRemoveImage",
+    "defaultMessage": "Are you sure you want to de-select this photo?"
+  },
+  {
     "id": "photo-picker.listingSize",
     "defaultMessage": "Images may not exceed {maxImageMB}MB each"
   },

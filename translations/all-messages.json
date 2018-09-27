@@ -73,6 +73,7 @@
   "photo-picker.windowsHelpText": "Hold down \"Ctrl\" to select multiple images",
   "photo-picker.androidHelpText": "Select multiple images to upload them all at once",
   "photo-picker.linuxHelpText": "Hold down \"Ctrl\" to select multiple images",
+  "photo-picker.confirmRemoveImage": "Are you sure you want to de-select this photo?",
   "photo-picker.listingSize": "Images may not exceed {maxImageMB}MB each",
   "photo-picker.oversizeImages": "Your selected image, {imageName}, is too large. Max allowed size is {maxImageMB}MB",
   "price-field.price-help": "The cost to buy this listing. Price is always in {currency}.",

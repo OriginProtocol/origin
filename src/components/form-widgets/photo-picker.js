@@ -33,6 +33,10 @@ class PhotoPicker extends Component {
       linuxHelpText: {
         id: 'photo-picker.linuxHelpText',
         defaultMessage: 'Hold down "Ctrl" to select multiple images'
+      },
+      confirmRemoveImage: {
+        id: 'photo-picker.confirmRemoveImage',
+        defaultMessage: 'Are you sure you want to de-select this photo?'
       }
     })
 
@@ -106,6 +110,21 @@ class PhotoPicker extends Component {
     }
   }
 
+  removePhoto(indexToRemove) {
+    const confirmation = window.confirm(this.props.intl.formatMessage(this.intlMessages.confirmRemoveImage))
+    if (confirmation) {
+      this.setState({
+        pictures: this.state.pictures.filter((picture, idx) => idx !== indexToRemove)
+      })
+    }
+  }
+
+  removeWarning(indexToRemove) {
+    this.setState({
+      oversizeImages: this.state.oversizeImages.filter((warning, idx) => idx !== indexToRemove)
+    })
+  }
+
   render() {
     const { schema, required } = this.props
     const { helpText, oversizeImages, pictures } = this.state
@@ -144,8 +163,9 @@ class PhotoPicker extends Component {
           />
         </p>
         <div className="d-flex pictures">
-          {oversizeImages.map((imgObj) => (
+          {oversizeImages.map((imgObj, idx) => (
             <div className="info-box warn" key={imgObj.name}>
+              <img className="close-btn" src="images/close-icon.svg" onClick={() => this.removeWarning(idx)} />
               <p>
                 <FormattedMessage
                   id={'photo-picker.oversizeImages'}
@@ -164,6 +184,7 @@ class PhotoPicker extends Component {
         <div className="d-flex pictures">
           {pictures.map((dataUri, idx) => (
             <div className="image-container" key={idx}>
+              <img className="close-btn" src="images/close-icon.svg" onClick={() => this.removePhoto(idx)} />
               <img className="preview-thumbnail" src={dataUri} />
             </div>
           ))}
