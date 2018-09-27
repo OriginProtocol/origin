@@ -365,7 +365,7 @@
   "web3-provider.toshi": "Toshi",
   "web3-provider.intentRequiresSignIn": "หากต้องการ {web3Intent}คุณต้องลงชื่อเข้าใช้ {currentProvider}",
   "web3-provider.connecting": "กำลังเชื่อมต่อกับเครือข่าย ...",
-  "web3-provider.shouldBeOnRinkeby": "{currentProvider} ควรอยู่ใน Rinkeby Test Network",
+  "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "ปัจจุบันเมื่อวันที่ {currentNetworkName}",
   "web3-provider.pleaseInstallMetaMask": "โปรดติดตั้งส่วนขยาย MetaMask เพื่อเข้าถึงไซต์นี้",
   "web3-provider.fullInstructionsForDemo": "คำแนะนำสำหรับการสาธิต",
