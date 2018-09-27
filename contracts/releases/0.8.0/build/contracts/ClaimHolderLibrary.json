@@ -1006,7 +1006,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5188,
+                        "referencedDeclaration": 5280,
                         "src": "1057:3:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -1038,7 +1038,7 @@
                           "name": "this",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 5211,
+                          "referencedDeclaration": 5303,
                           "src": "1079:4:2",
                           "typeDescriptions": {
                             "typeIdentifier": "t_contract$_ClaimHolderLibrary_$631",
@@ -1129,7 +1129,7 @@
                                             "name": "msg",
                                             "nodeType": "Identifier",
                                             "overloadedDeclarations": [],
-                                            "referencedDeclaration": 5188,
+                                            "referencedDeclaration": 5280,
                                             "src": "1182:3:2",
                                             "typeDescriptions": {
                                               "typeIdentifier": "t_magic_message",
@@ -1164,7 +1164,7 @@
                                           "name": "abi",
                                           "nodeType": "Identifier",
                                           "overloadedDeclarations": [],
-                                          "referencedDeclaration": 5175,
+                                          "referencedDeclaration": 5267,
                                           "src": "1165:3:2",
                                           "typeDescriptions": {
                                             "typeIdentifier": "t_magic_abi",
@@ -1211,7 +1211,7 @@
                                     "name": "keccak256",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 5182,
+                                    "referencedDeclaration": 5274,
                                     "src": "1155:9:2",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_function_sha3_pure$__$returns$_t_bytes32_$",
@@ -1341,10 +1341,10 @@
                             "name": "require",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [
-                              5191,
-                              5192
+                              5283,
+                              5284
                             ],
-                            "referencedDeclaration": 5192,
+                            "referencedDeclaration": 5284,
                             "src": "1100:7:2",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -1455,7 +1455,7 @@
                             "name": "abi",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 5175,
+                            "referencedDeclaration": 5267,
                             "src": "1289:3:2",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_abi",
@@ -1502,7 +1502,7 @@
                       "name": "keccak256",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 5182,
+                      "referencedDeclaration": 5274,
                       "src": "1279:9:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_sha3_pure$__$returns$_t_bytes32_$",
@@ -3859,7 +3859,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5188,
+                        "referencedDeclaration": 5280,
                         "src": "2848:3:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -3891,7 +3891,7 @@
                           "name": "this",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 5211,
+                          "referencedDeclaration": 5303,
                           "src": "2870:4:2",
                           "typeDescriptions": {
                             "typeIdentifier": "t_contract$_ClaimHolderLibrary_$631",
@@ -3982,7 +3982,7 @@
                                             "name": "msg",
                                             "nodeType": "Identifier",
                                             "overloadedDeclarations": [],
-                                            "referencedDeclaration": 5188,
+                                            "referencedDeclaration": 5280,
                                             "src": "2973:3:2",
                                             "typeDescriptions": {
                                               "typeIdentifier": "t_magic_message",
@@ -4017,7 +4017,7 @@
                                           "name": "abi",
                                           "nodeType": "Identifier",
                                           "overloadedDeclarations": [],
-                                          "referencedDeclaration": 5175,
+                                          "referencedDeclaration": 5267,
                                           "src": "2956:3:2",
                                           "typeDescriptions": {
                                             "typeIdentifier": "t_magic_abi",
@@ -4064,7 +4064,7 @@
                                     "name": "keccak256",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 5182,
+                                    "referencedDeclaration": 5274,
                                     "src": "2946:9:2",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_function_sha3_pure$__$returns$_t_bytes32_$",
@@ -4194,10 +4194,10 @@
                             "name": "require",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [
-                              5191,
-                              5192
+                              5283,
+                              5284
                             ],
-                            "referencedDeclaration": 5192,
+                            "referencedDeclaration": 5284,
                             "src": "2891:7:2",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -7059,7 +7059,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5188,
+                        "referencedDeclaration": 5280,
                         "src": "1057:3:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -7091,7 +7091,7 @@
                           "name": "this",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 5211,
+                          "referencedDeclaration": 5303,
                           "src": "1079:4:2",
                           "typeDescriptions": {
                             "typeIdentifier": "t_contract$_ClaimHolderLibrary_$631",
@@ -7182,7 +7182,7 @@
                                             "name": "msg",
                                             "nodeType": "Identifier",
                                             "overloadedDeclarations": [],
-                                            "referencedDeclaration": 5188,
+                                            "referencedDeclaration": 5280,
                                             "src": "1182:3:2",
                                             "typeDescriptions": {
                                               "typeIdentifier": "t_magic_message",
@@ -7217,7 +7217,7 @@
                                           "name": "abi",
                                           "nodeType": "Identifier",
                                           "overloadedDeclarations": [],
-                                          "referencedDeclaration": 5175,
+                                          "referencedDeclaration": 5267,
                                           "src": "1165:3:2",
                                           "typeDescriptions": {
                                             "typeIdentifier": "t_magic_abi",
@@ -7264,7 +7264,7 @@
                                     "name": "keccak256",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 5182,
+                                    "referencedDeclaration": 5274,
                                     "src": "1155:9:2",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_function_sha3_pure$__$returns$_t_bytes32_$",
@@ -7394,10 +7394,10 @@
                             "name": "require",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [
-                              5191,
-                              5192
+                              5283,
+                              5284
                             ],
-                            "referencedDeclaration": 5192,
+                            "referencedDeclaration": 5284,
                             "src": "1100:7:2",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -7508,7 +7508,7 @@
                             "name": "abi",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 5175,
+                            "referencedDeclaration": 5267,
                             "src": "1289:3:2",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_abi",
@@ -7555,7 +7555,7 @@
                       "name": "keccak256",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 5182,
+                      "referencedDeclaration": 5274,
                       "src": "1279:9:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_sha3_pure$__$returns$_t_bytes32_$",
@@ -9912,7 +9912,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5188,
+                        "referencedDeclaration": 5280,
                         "src": "2848:3:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -9944,7 +9944,7 @@
                           "name": "this",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 5211,
+                          "referencedDeclaration": 5303,
                           "src": "2870:4:2",
                           "typeDescriptions": {
                             "typeIdentifier": "t_contract$_ClaimHolderLibrary_$631",
@@ -10035,7 +10035,7 @@
                                             "name": "msg",
                                             "nodeType": "Identifier",
                                             "overloadedDeclarations": [],
-                                            "referencedDeclaration": 5188,
+                                            "referencedDeclaration": 5280,
                                             "src": "2973:3:2",
                                             "typeDescriptions": {
                                               "typeIdentifier": "t_magic_message",
@@ -10070,7 +10070,7 @@
                                           "name": "abi",
                                           "nodeType": "Identifier",
                                           "overloadedDeclarations": [],
-                                          "referencedDeclaration": 5175,
+                                          "referencedDeclaration": 5267,
                                           "src": "2956:3:2",
                                           "typeDescriptions": {
                                             "typeIdentifier": "t_magic_abi",
@@ -10117,7 +10117,7 @@
                                     "name": "keccak256",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 5182,
+                                    "referencedDeclaration": 5274,
                                     "src": "2946:9:2",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_function_sha3_pure$__$returns$_t_bytes32_$",
@@ -10247,10 +10247,10 @@
                             "name": "require",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [
-                              5191,
-                              5192
+                              5283,
+                              5284
                             ],
-                            "referencedDeclaration": 5192,
+                            "referencedDeclaration": 5284,
                             "src": "2891:7:2",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -12358,476 +12358,6 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {
-    "1": {
-      "events": {
-        "0x480000bb1edad8ca1470381cc334b1917fbd51c6531f3a623ea8e0ec7e38a6e9": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "key",
-              "type": "bytes32"
-            },
-            {
-              "indexed": true,
-              "name": "purpose",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "keyType",
-              "type": "uint256"
-            }
-          ],
-          "name": "KeyAdded",
-          "type": "event"
-        },
-        "0x585a4aef50f8267a92b32412b331b20f7f8b96f2245b253b9cc50dcc621d3397": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "key",
-              "type": "bytes32"
-            },
-            {
-              "indexed": true,
-              "name": "purpose",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "keyType",
-              "type": "uint256"
-            }
-          ],
-          "name": "KeyRemoved",
-          "type": "event"
-        },
-        "0x8afcfabcb00e47a53a8fc3e9f23ff47ee1926194bb1350dd007c50b412a6cee8": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "executionId",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "to",
-              "type": "address"
-            },
-            {
-              "indexed": true,
-              "name": "value",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "name": "data",
-              "type": "bytes"
-            }
-          ],
-          "name": "ExecutionRequested",
-          "type": "event"
-        },
-        "0xe10c49d9f7c71da23262367013434763cfdb2332267641728d25cd712c5c6a68": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "executionId",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "to",
-              "type": "address"
-            },
-            {
-              "indexed": true,
-              "name": "value",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "name": "data",
-              "type": "bytes"
-            }
-          ],
-          "name": "ExecutionFailed",
-          "type": "event"
-        },
-        "0x1f920dbda597d7bf95035464170fa58d0a4b57f13a1c315ace6793b9f63688b8": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "executionId",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "to",
-              "type": "address"
-            },
-            {
-              "indexed": true,
-              "name": "value",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "name": "data",
-              "type": "bytes"
-            }
-          ],
-          "name": "Executed",
-          "type": "event"
-        },
-        "0xb3932da477fe5d6c8ff2eafef050c0f3a1af18fc07121001482600f36f3715d8": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "executionId",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "name": "approved",
-              "type": "bool"
-            }
-          ],
-          "name": "Approved",
-          "type": "event"
-        },
-        "0x46149b18aa084502c3f12bc75e19eda8bda8d102b82cce8474677a6d0d5f43c5": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "claimId",
-              "type": "bytes32"
-            },
-            {
-              "indexed": true,
-              "name": "topic",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "name": "scheme",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "issuer",
-              "type": "address"
-            },
-            {
-              "indexed": false,
-              "name": "signature",
-              "type": "bytes"
-            },
-            {
-              "indexed": false,
-              "name": "data",
-              "type": "bytes"
-            },
-            {
-              "indexed": false,
-              "name": "uri",
-              "type": "string"
-            }
-          ],
-          "name": "ClaimAdded",
-          "type": "event"
-        },
-        "0x3cf57863a89432c61c4a27073c6ee39e8a764bff5a05aebfbcdcdc80b2e6130a": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "claimId",
-              "type": "bytes32"
-            },
-            {
-              "indexed": true,
-              "name": "topic",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "name": "scheme",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "issuer",
-              "type": "address"
-            },
-            {
-              "indexed": false,
-              "name": "signature",
-              "type": "bytes"
-            },
-            {
-              "indexed": false,
-              "name": "data",
-              "type": "bytes"
-            },
-            {
-              "indexed": false,
-              "name": "uri",
-              "type": "string"
-            }
-          ],
-          "name": "ClaimRemoved",
-          "type": "event"
-        }
-      },
-      "links": {
-        "KeyHolderLibrary": "0x18ca757e2c2f2ebe87f871997eee9ea280a598a9"
-      },
-      "address": "0xc27e00af539303f59ce5ff486e33c25298154a01",
-      "transactionHash": "0x61127bce90562d834e0b5969ea39ee6e9a37d509474a3a17f92a92a7f6663ecd"
-    },
-    "3": {
-      "events": {
-        "0x480000bb1edad8ca1470381cc334b1917fbd51c6531f3a623ea8e0ec7e38a6e9": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "key",
-              "type": "bytes32"
-            },
-            {
-              "indexed": true,
-              "name": "purpose",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "keyType",
-              "type": "uint256"
-            }
-          ],
-          "name": "KeyAdded",
-          "type": "event"
-        },
-        "0x585a4aef50f8267a92b32412b331b20f7f8b96f2245b253b9cc50dcc621d3397": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "key",
-              "type": "bytes32"
-            },
-            {
-              "indexed": true,
-              "name": "purpose",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "keyType",
-              "type": "uint256"
-            }
-          ],
-          "name": "KeyRemoved",
-          "type": "event"
-        },
-        "0x8afcfabcb00e47a53a8fc3e9f23ff47ee1926194bb1350dd007c50b412a6cee8": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "executionId",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "to",
-              "type": "address"
-            },
-            {
-              "indexed": true,
-              "name": "value",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "name": "data",
-              "type": "bytes"
-            }
-          ],
-          "name": "ExecutionRequested",
-          "type": "event"
-        },
-        "0xe10c49d9f7c71da23262367013434763cfdb2332267641728d25cd712c5c6a68": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "executionId",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "to",
-              "type": "address"
-            },
-            {
-              "indexed": true,
-              "name": "value",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "name": "data",
-              "type": "bytes"
-            }
-          ],
-          "name": "ExecutionFailed",
-          "type": "event"
-        },
-        "0x1f920dbda597d7bf95035464170fa58d0a4b57f13a1c315ace6793b9f63688b8": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "executionId",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "to",
-              "type": "address"
-            },
-            {
-              "indexed": true,
-              "name": "value",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "name": "data",
-              "type": "bytes"
-            }
-          ],
-          "name": "Executed",
-          "type": "event"
-        },
-        "0xb3932da477fe5d6c8ff2eafef050c0f3a1af18fc07121001482600f36f3715d8": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "executionId",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "name": "approved",
-              "type": "bool"
-            }
-          ],
-          "name": "Approved",
-          "type": "event"
-        },
-        "0x46149b18aa084502c3f12bc75e19eda8bda8d102b82cce8474677a6d0d5f43c5": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "claimId",
-              "type": "bytes32"
-            },
-            {
-              "indexed": true,
-              "name": "claimType",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "name": "scheme",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "issuer",
-              "type": "address"
-            },
-            {
-              "indexed": false,
-              "name": "signature",
-              "type": "bytes"
-            },
-            {
-              "indexed": false,
-              "name": "data",
-              "type": "bytes"
-            },
-            {
-              "indexed": false,
-              "name": "uri",
-              "type": "string"
-            }
-          ],
-          "name": "ClaimAdded",
-          "type": "event"
-        },
-        "0x3cf57863a89432c61c4a27073c6ee39e8a764bff5a05aebfbcdcdc80b2e6130a": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "claimId",
-              "type": "bytes32"
-            },
-            {
-              "indexed": true,
-              "name": "claimType",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "name": "scheme",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "issuer",
-              "type": "address"
-            },
-            {
-              "indexed": false,
-              "name": "signature",
-              "type": "bytes"
-            },
-            {
-              "indexed": false,
-              "name": "data",
-              "type": "bytes"
-            },
-            {
-              "indexed": false,
-              "name": "uri",
-              "type": "string"
-            }
-          ],
-          "name": "ClaimRemoved",
-          "type": "event"
-        }
-      },
-      "links": {
-        "KeyHolderLibrary": "0x4a80ed225115cb80dbeff1bba38d09c43b06c9c0"
-      },
-      "address": "0x369836ffab631d5fd1cca20b6746743e9b6459fd",
-      "transactionHash": "0xe8cb70e99c4b1b09d821397b0aad314e885f132abdc5c984b5052bc224da1590"
-    },
     "4": {
       "events": {
         "0x480000bb1edad8ca1470381cc334b1917fbd51c6531f3a623ea8e0ec7e38a6e9": {
@@ -13058,247 +12588,12 @@
         }
       },
       "links": {
-        "KeyHolderLibrary": "0x7b0de7253db9f868e2aaf84b357ec084e2374fb7"
+        "KeyHolderLibrary": "0x8067f312f684ef7a9691ab2554f305342d763072"
       },
-      "address": "0xf7f5282dd0eb5757c44379d2b8dc824713137fb4",
-      "transactionHash": "0xa7bba7ce4ab37c873a69ecbc3278c73bfd3d3de7e6994f28f26e1f0d7e05413e"
-    },
-    "999": {
-      "events": {
-        "0x480000bb1edad8ca1470381cc334b1917fbd51c6531f3a623ea8e0ec7e38a6e9": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "key",
-              "type": "bytes32"
-            },
-            {
-              "indexed": true,
-              "name": "purpose",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "keyType",
-              "type": "uint256"
-            }
-          ],
-          "name": "KeyAdded",
-          "type": "event"
-        },
-        "0x585a4aef50f8267a92b32412b331b20f7f8b96f2245b253b9cc50dcc621d3397": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "key",
-              "type": "bytes32"
-            },
-            {
-              "indexed": true,
-              "name": "purpose",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "keyType",
-              "type": "uint256"
-            }
-          ],
-          "name": "KeyRemoved",
-          "type": "event"
-        },
-        "0x8afcfabcb00e47a53a8fc3e9f23ff47ee1926194bb1350dd007c50b412a6cee8": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "executionId",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "to",
-              "type": "address"
-            },
-            {
-              "indexed": true,
-              "name": "value",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "name": "data",
-              "type": "bytes"
-            }
-          ],
-          "name": "ExecutionRequested",
-          "type": "event"
-        },
-        "0xe10c49d9f7c71da23262367013434763cfdb2332267641728d25cd712c5c6a68": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "executionId",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "to",
-              "type": "address"
-            },
-            {
-              "indexed": true,
-              "name": "value",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "name": "data",
-              "type": "bytes"
-            }
-          ],
-          "name": "ExecutionFailed",
-          "type": "event"
-        },
-        "0x1f920dbda597d7bf95035464170fa58d0a4b57f13a1c315ace6793b9f63688b8": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "executionId",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "to",
-              "type": "address"
-            },
-            {
-              "indexed": true,
-              "name": "value",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "name": "data",
-              "type": "bytes"
-            }
-          ],
-          "name": "Executed",
-          "type": "event"
-        },
-        "0xb3932da477fe5d6c8ff2eafef050c0f3a1af18fc07121001482600f36f3715d8": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "executionId",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "name": "approved",
-              "type": "bool"
-            }
-          ],
-          "name": "Approved",
-          "type": "event"
-        },
-        "0x46149b18aa084502c3f12bc75e19eda8bda8d102b82cce8474677a6d0d5f43c5": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "claimId",
-              "type": "bytes32"
-            },
-            {
-              "indexed": true,
-              "name": "topic",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "name": "scheme",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "issuer",
-              "type": "address"
-            },
-            {
-              "indexed": false,
-              "name": "signature",
-              "type": "bytes"
-            },
-            {
-              "indexed": false,
-              "name": "data",
-              "type": "bytes"
-            },
-            {
-              "indexed": false,
-              "name": "uri",
-              "type": "string"
-            }
-          ],
-          "name": "ClaimAdded",
-          "type": "event"
-        },
-        "0x3cf57863a89432c61c4a27073c6ee39e8a764bff5a05aebfbcdcdc80b2e6130a": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "claimId",
-              "type": "bytes32"
-            },
-            {
-              "indexed": true,
-              "name": "topic",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "name": "scheme",
-              "type": "uint256"
-            },
-            {
-              "indexed": true,
-              "name": "issuer",
-              "type": "address"
-            },
-            {
-              "indexed": false,
-              "name": "signature",
-              "type": "bytes"
-            },
-            {
-              "indexed": false,
-              "name": "data",
-              "type": "bytes"
-            },
-            {
-              "indexed": false,
-              "name": "uri",
-              "type": "string"
-            }
-          ],
-          "name": "ClaimRemoved",
-          "type": "event"
-        }
-      },
-      "links": {
-        "KeyHolderLibrary": "0xfb88de099e13c3ed21f80a7a1e49f8caecf10df6"
-      },
-      "address": "0xaa588d3737b611bafd7bd713445b314bd453a5c8",
-      "transactionHash": "0x18e8c171cd0d62614fedd129290c7cfecd22d29dde3f2000e6586bcd7489a3a5"
+      "address": "0x9c5b5bc1f290f95607b53b9f5f4c6973660c2ce6",
+      "transactionHash": "0xc12b0ebe02ae8f22acd7497332f184a60c098ce29e93cfc47e93b2ad2fe6bdd9"
     }
   },
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-09-26T00:18:03.464Z"
+  "updatedAt": "2018-09-27T22:16:01.978Z"
 }

@@ -259,7 +259,7 @@
                           "name": "tx",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 5200,
+                          "referencedDeclaration": 5292,
                           "src": "665:2:11",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_transaction",
@@ -301,7 +301,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5188,
+                        "referencedDeclaration": 5280,
                         "src": "678:3:11",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -344,7 +344,7 @@
                           "name": "tx",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 5200,
+                          "referencedDeclaration": 5292,
                           "src": "711:2:11",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_transaction",
@@ -373,7 +373,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 5188,
+                          "referencedDeclaration": 5280,
                           "src": "722:3:11",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -502,7 +502,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 5188,
+                          "referencedDeclaration": 5280,
                           "src": "858:3:11",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -797,7 +797,7 @@
                           "name": "tx",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 5200,
+                          "referencedDeclaration": 5292,
                           "src": "665:2:11",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_transaction",
@@ -839,7 +839,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 5188,
+                        "referencedDeclaration": 5280,
                         "src": "678:3:11",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -882,7 +882,7 @@
                           "name": "tx",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 5200,
+                          "referencedDeclaration": 5292,
                           "src": "711:2:11",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_transaction",
@@ -911,7 +911,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 5188,
+                          "referencedDeclaration": 5280,
                           "src": "722:3:11",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -1040,7 +1040,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 5188,
+                          "referencedDeclaration": 5280,
                           "src": "858:3:11",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -1143,25 +1143,13 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {
-    "1": {
-      "events": {},
-      "links": {},
-      "address": "0x485bb413c9b480345f96d6052475fd68e41628db",
-      "transactionHash": "0xa53d5b649bf9a5db84e907170d4fde6e9ae80e0cbce0424cc6edf9f9dbcb3c83"
-    },
     "4": {
       "events": {},
       "links": {},
-      "address": "0x65f528a6771315a3e11e663ce9803439b3af91a3",
-      "transactionHash": "0x5c8b98f46d62bbb0b1f5c3c26cf58a97676565b2e78da2eb52d853eb0e7b5fcc"
-    },
-    "999": {
-      "events": {},
-      "links": {},
-      "address": "0x30753e4a8aad7f8597332e813735def5dd395028",
-      "transactionHash": "0x696d916d6aa14b62030b463d37037dfeccd7c55deb0cd1e84c68d400565d85ba"
+      "address": "0x3a2eb0cb40512c4de2241f5eecc0fca375c84fc6",
+      "transactionHash": "0xc14a14c24ad31c73df191ef0cdc6dd8a6dc1465a8dffca41a63af9bbeb7d688d"
     }
   },
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-09-26T00:18:03.457Z"
+  "updatedAt": "2018-09-27T22:16:01.983Z"
 }
