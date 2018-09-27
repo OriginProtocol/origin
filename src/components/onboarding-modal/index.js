@@ -136,7 +136,7 @@ class OnboardingModal extends Component {
 
     if (onboardingInProgress) {
       this.addModalClass()
-      
+
       !splitPanel && toggleSplitPanel(true)
     } else if (!progress && !dismissed) {
       !learnMore && toggleLearnMore(true)
@@ -190,15 +190,15 @@ class OnboardingModal extends Component {
 
     return (
       <div className="onboarding">
-        {learnMore &&
+        {learnMore && (
           <Modal
             className={'getting-started'}
             isOpen={true}
             children={learnMoreContent}
             backdrop={false}
           />
-        }
-        {splitPanel &&
+        )}
+        {splitPanel && (
           <div className="split-container d-flex align-items-center justify-content-center">
             <SplitPanel
               isOpen={true}
@@ -209,7 +209,7 @@ class OnboardingModal extends Component {
             />
             <div className="modal-backdrop fade show" role="presentation" />
           </div>
-        }
+        )}
       </div>
     )
   }

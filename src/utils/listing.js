@@ -102,10 +102,10 @@ export async function getListing(id, translate = false) {
  * e.g. for-sale becomes forSale
  * @param {string} string - a string with a hyphen
  * @return {string} the string as camel case
-*/
+ */
 
 export function dashToCamelCase(string) {
-  return string.replace(/-([a-z])/g, (g) => g[1].toUpperCase())
+  return string.replace(/-([a-z])/g, g => g[1].toUpperCase())
 }
 
 /**
@@ -113,8 +113,8 @@ export function dashToCamelCase(string) {
  * e.g. forSale becomes for-sale
  * @param {string} string - a camel case string
  * @return {string} the string with hyphen(s)
-*/
+ */
 
 export function camelCaseToDash(string) {
-  return string.replace(/([a-z][A-Z])/g, (g) => g[0] + '-' + g[1].toLowerCase() )
+  return string.replace(/([a-z][A-Z])/g, g => g[0] + '-' + g[1].toLowerCase())
 }

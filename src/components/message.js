@@ -29,9 +29,7 @@ class Message extends Component {
     const { address, fullName, profile } = user
 
     return contentOnly ? (
-      <div className="d-flex compact-message">
-        {this.renderContent()}
-      </div>
+      <div className="d-flex compact-message">{this.renderContent()}</div>
     ) : (
       <div className="d-flex message">
         <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
@@ -45,9 +43,7 @@ class Message extends Component {
               {moment(created).format('MMM Do h:mm a')}
             </div>
           </div>
-          <div className="message-content">
-            {this.renderContent()}
-          </div>
+          <div className="message-content">{this.renderContent()}</div>
           {!messagingEnabled &&
             hash === 'origin-welcome-message' && (
             <div className="button-container">

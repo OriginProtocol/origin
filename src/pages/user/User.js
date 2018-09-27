@@ -31,10 +31,11 @@ class User extends Component {
       idsOnly: true,
       purchasesFor: userAddress
     })
-    const arrayOfArrays = await Promise.all([
-      ...listingIdsAsBuyer,
-      ...listingIdsAsSeller
-    ].map(async id => origin.marketplace.getListingReviews(id)))
+    const arrayOfArrays = await Promise.all(
+      [...listingIdsAsBuyer, ...listingIdsAsSeller].map(async id =>
+        origin.marketplace.getListingReviews(id)
+      )
+    )
     const reviews = [].concat(...arrayOfArrays)
 
     this.setState({ reviews })
@@ -45,14 +46,19 @@ class User extends Component {
     const { attestations, fullName, profile } = user
     const description =
       (profile && profile.description) || 'An Origin user without a description'
-    const userReviews = this.state.reviews.filter(r => r.reviewer !== userAddress)
+    const userReviews = this.state.reviews.filter(
+      r => r.reviewer !== userAddress
+    )
 
     return (
       <div className="public-user profile-wrapper">
         <div className="container">
           <div className="row">
             <div className="col-12 col-md-4 col-lg-4 order-md-3">
-              <WalletCard wallet={{ address: userAddress }} withProfile={false} />
+              <WalletCard
+                wallet={{ address: userAddress }}
+                withProfile={false}
+              />
             </div>
             <div className="col-12 col-sm-4 col-md-3 col-lg-2 order-md-1">
               <Avatar
