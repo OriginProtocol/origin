@@ -30,11 +30,13 @@ class WalletCard extends Component {
     this.intlMessages = defineMessages({
       yourBalance: {
         id: '_wallet-card.yourBalance',
-        defaultMessage: 'You have <img class="ogn-icon" src="images/ogn-icon.svg" role="presentation" /><span class="ogn">0 OGN</span>'
+        defaultMessage:
+          'You have <img class="ogn-icon" src="images/ogn-icon.svg" role="presentation" /><span class="ogn">0 OGN</span>'
       },
       balanceText: {
         id: '_wallet-card.balanceText',
-        defaultMessage: 'Having OGN is not required but will allow you \
+        defaultMessage:
+          'Having OGN is not required but will allow you \
         to create a listing that will be more visible to buyers.'
       },
       getOGN: {
@@ -64,7 +66,12 @@ class WalletCard extends Component {
   }
 
   componentDidMount() {
-    const { fetchUser, getEthBalance, getOgnBalance, wallet: { address } } = this.props
+    const {
+      fetchUser,
+      getEthBalance,
+      getOgnBalance,
+      wallet: { address }
+    } = this.props
 
     getEthBalance()
     getOgnBalance()
@@ -101,7 +108,14 @@ class WalletCard extends Component {
   }
 
   render() {
-    const { users, wallet, web3Account, withBalanceTooltip, withMenus, withProfile } = this.props
+    const {
+      users,
+      wallet,
+      web3Account,
+      withBalanceTooltip,
+      withMenus,
+      withProfile
+    } = this.props
     const user = users.find(u => u.address === wallet.address) || {}
     const { attestations = [], fullName, profile = {} } = user
     const { address, ethBalance, ognBalance } = wallet
@@ -217,11 +231,12 @@ class WalletCard extends Component {
                 )}
               </div>
               <div className="d-flex align-items-start">
-                {!withBalanceTooltip &&
+                {!withBalanceTooltip && (
                   <img src="images/ogn-icon.svg" role="presentation" />
-                }
-                {withBalanceTooltip &&
-                  <a className="ogn-balance"
+                )}
+                {withBalanceTooltip && (
+                  <a
+                    className="ogn-balance"
                     data-toggle="tooltip"
                     data-placement="left"
                     data-trigger="hover focus"
@@ -229,11 +244,11 @@ class WalletCard extends Component {
                     data-animation={true}
                     data-html={true}
                     data-container="body"
-                    data-delay='{"show":"0", "hide":"5000"}'
+                    data-delay="{&quot;show&quot;:&quot;0&quot;, &quot;hide&quot;:&quot;5000&quot;}"
                   >
                     <img src="images/ogn-icon.svg" role="presentation" />
                   </a>
-                }
+                )}
                 <div className="amounts">
                   <div className="ogn">
                     {`${Number(ognBalance).toLocaleString(undefined)}` || 0}&nbsp;
@@ -278,18 +293,13 @@ class WalletCard extends Component {
             <hr className="dark sm" />
             <div className="d-flex">
               <Link to="/profile">
-                <Avatar
-                  image={profile.avatar}
-                  placeholderStyle="blue"
-                />
+                <Avatar image={profile.avatar} placeholderStyle="blue" />
               </Link>
               <div className="identification d-flex flex-column justify-content-between">
                 <div>
-                  <Link to="/profile">
-                    {fullName || <UnnamedUser />}
-                  </Link>
+                  <Link to="/profile">{fullName || <UnnamedUser />}</Link>
                 </div>
-                {!!attestations.length &&
+                {!!attestations.length && (
                   <div className="attestations">
                     {attestations.find(a => a.service === 'phone') && (
                       <Link to="/profile">
@@ -332,7 +342,7 @@ class WalletCard extends Component {
                       </Link>
                     )}
                   </div>
-                }
+                )}
               </div>
             </div>
           </Fragment>

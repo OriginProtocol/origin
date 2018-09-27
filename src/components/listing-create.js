@@ -73,7 +73,8 @@ class ListingCreate extends Component {
     this.intlMessages = defineMessages({
       navigationWarning: {
         id: 'listing-create.navigationWarning',
-        defaultMessage: 'Are you sure you want to leave? If you leave this page your progress will be lost.'
+        defaultMessage:
+          'Are you sure you want to leave? If you leave this page your progress will be lost.'
       }
     })
 
@@ -98,9 +99,10 @@ class ListingCreate extends Component {
     // apply OGN detection to slider
     if (ognBalance !== prevProps.wallet.ognBalance) {
       // only if prior to boost selection step
-      this.state.step < this.STEP.BOOST && this.setState({
-        selectedBoostAmount: ognBalance ? defaultBoostValue : 0
-      })
+      this.state.step < this.STEP.BOOST &&
+        this.setState({
+          selectedBoostAmount: ognBalance ? defaultBoostValue : 0
+        })
     }
   }
 
@@ -111,11 +113,11 @@ class ListingCreate extends Component {
   detectNeedForBoostTutorial() {
     // show if 0 OGN and...
     !this.props.wallet.ognBalance &&
-    // ...tutorial has not been expanded or skipped via "Review"
-    !localStorage.getItem('boostTutorialViewed') &&
-    this.setState({
-      showBoostTutorial: true
-    })
+      // ...tutorial has not been expanded or skipped via "Review"
+      !localStorage.getItem('boostTutorialViewed') &&
+      this.setState({
+        showBoostTutorial: true
+      })
   }
 
   pollOgnBalance() {
@@ -211,9 +213,10 @@ class ListingCreate extends Component {
   }
 
   checkOgnBalance() {
-    if (this.props.wallet &&
-        this.props.wallet.ognBalance &&
-        parseFloat(this.props.wallet.ognBalance) > 0
+    if (
+      this.props.wallet &&
+      this.props.wallet.ognBalance &&
+      parseFloat(this.props.wallet.ognBalance) > 0
     ) {
       this.setState({
         showBoostTutorial: false
@@ -304,7 +307,7 @@ class ListingCreate extends Component {
       step,
       translatedSchema,
       usdListingPrice,
-      showBoostTutorial,
+      showBoostTutorial
     } = this.state
     const { formData } = formListing
     const translatedCategory = translateListingCategory(formData.category)
@@ -348,7 +351,9 @@ class ListingCreate extends Component {
                         <p>
                           <FormattedMessage
                             id={'listing-create.listingsMayInclude'}
-                            defaultMessage={'{schemaName} listings may include:'}
+                            defaultMessage={
+                              '{schemaName} listings may include:'
+                            }
                             values={{ schemaName: schema.name }}
                           />
                         </p>
@@ -363,16 +368,18 @@ class ListingCreate extends Component {
                       </div>
                     </div>
                   ))}
-                  {showNoSchemaSelectedError &&
+                  {showNoSchemaSelectedError && (
                     <div className="info-box warn">
                       <p>
                         <FormattedMessage
                           id={'listing-create.noSchemaSelectedError'}
-                          defaultMessage={'You must first select a listing type'}
+                          defaultMessage={
+                            'You must first select a listing type'
+                          }
                         />
                       </p>
                     </div>
-                  }
+                  )}
                 </div>
                 <div className="btn-container">
                   <button
@@ -449,13 +456,29 @@ class ListingCreate extends Component {
                   />
                 </label>
                 <h2>Boost your listing</h2>
-                {showBoostTutorial &&
+                {showBoostTutorial && (
                   <div className="info-box">
                     <img src="images/ogn-icon-horiz.svg" role="presentation" />
-                    <p className="text-bold">You have 0 <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">OGN</a> in your wallet.</p>
-                    <p>Once you acquire some OGN you will be able to boost your listing.</p>
-                    <p className="expand-btn" onClick={ this.toggleBoostBox }>
-                      What is a boost? <span className={ isBoostExpanded ? 'rotate-up' : '' }>&#x25be;</span>
+                    <p className="text-bold">
+                      You have 0{' '}
+                      <a
+                        href="/#/about-tokens"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        OGN
+                      </a>{' '}
+                      in your wallet.
+                    </p>
+                    <p>
+                      Once you acquire some OGN you will be able to boost your
+                      listing.
+                    </p>
+                    <p className="expand-btn" onClick={this.toggleBoostBox}>
+                      What is a boost?{' '}
+                      <span className={isBoostExpanded ? 'rotate-up' : ''}>
+                        &#x25be;
+                      </span>
                     </p>
                     {isBoostExpanded && (
                       <div className="info-box-bottom">
@@ -478,21 +501,25 @@ class ListingCreate extends Component {
                         </p>
                         <p>
                           Boosting on the Origin DApp is done using{' '}
-                          <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">
+                          <a
+                            href="/#/about-tokens"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             Origin Tokens (OGN).
                           </a>
                         </p>
                       </div>
                     )}
                   </div>
-                }
-                {!showBoostTutorial &&
+                )}
+                {!showBoostTutorial && (
                   <BoostSlider
-                    onChange={ this.setBoost }
-                    ognBalance={ wallet.ognBalance }
-                    selectedBoostAmount={ selectedBoostAmount }
+                    onChange={this.setBoost}
+                    ognBalance={wallet.ognBalance}
+                    selectedBoostAmount={selectedBoostAmount}
                   />
-                }
+                )}
                 <div className="btn-container">
                   <button
                     type="button"
@@ -584,7 +611,10 @@ class ListingCreate extends Component {
                           role="presentation"
                         />
                         <span className="text-bold">
-                          {Number(formData.price).toLocaleString(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 5 })}
+                          {Number(formData.price).toLocaleString(undefined, {
+                            minimumFractionDigits: 5,
+                            maximumFractionDigits: 5
+                          })}
                         </span>&nbsp;
                         <a
                           className="eth-abbrev"
@@ -614,9 +644,7 @@ class ListingCreate extends Component {
                           src="images/ogn-icon.svg"
                           role="presentation"
                         />
-                        <span className="text-bold">
-                          {formData.boostValue}
-                        </span>&nbsp;
+                        <span className="text-bold">{formData.boostValue}</span>&nbsp;
                         <a
                           className="ogn-abbrev"
                           href="/#/about-tokens"
@@ -654,9 +682,7 @@ class ListingCreate extends Component {
                   </button>
                   <button
                     className="btn btn-primary float-right btn-listing-create"
-                    onClick={() =>
-                      this.onSubmitListing(formListing)
-                    }
+                    onClick={() => this.onSubmitListing(formListing)}
                   >
                     <FormattedMessage
                       id={'listing-create.doneButtonLabel'}
@@ -666,7 +692,11 @@ class ListingCreate extends Component {
                 </div>
               </div>
             )}
-            <div className={`pt-xs-4 pt-sm-4 col-md-5 col-lg-4${step >= this.STEP.PREVIEW ? '' : ' offset-md-1 offset-lg-3'}`}>
+            <div
+              className={`pt-xs-4 pt-sm-4 col-md-5 col-lg-4${
+                step >= this.STEP.PREVIEW ? '' : ' offset-md-1 offset-lg-3'
+              }`}
+            >
               <WalletCard
                 wallet={wallet}
                 withBalanceTooltip={!this.props.wallet.ognBalance}
@@ -862,12 +892,8 @@ class ListingCreate extends Component {
                 </div>
               )}
             </div>
-            {step === this.STEP.METAMASK && (
-              <MetamaskModal />
-            )}
-            {step === this.STEP.PROCESSING && (
-              <ProcessingModal />
-            )}
+            {step === this.STEP.METAMASK && <MetamaskModal />}
+            {step === this.STEP.PROCESSING && <ProcessingModal />}
             {step === this.STEP.SUCCESS && (
               <Modal backdrop="static" isOpen={true}>
                 <div className="image-container">

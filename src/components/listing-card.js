@@ -61,9 +61,7 @@ class ListingCard extends Component {
       this.setState({ offers })
     } catch (error) {
       console.error(
-        `Error fetching offers for listing: ${
-          this.props.listingId
-        }`
+        `Error fetching offers for listing: ${this.props.listingId}`
       )
       console.error(error)
     }
