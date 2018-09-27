@@ -13,6 +13,7 @@ import bs58 from 'bs58'
 import Web3 from 'web3'
 
 const emptyAddress = '0x0000000000000000000000000000000000000000'
+const NUMBER_CONFIRMATIONS_TO_REPORT = 20
 const SUPPORTED_ERC20 = [
   { symbol: 'OGN', decimals: 18, contractName: 'OriginToken' }
 ]
@@ -192,7 +193,7 @@ class ContractService {
     return withLibraryAddresses
   }
 
-  async deploy(contract, args, options) {
+  async deploy(contract, args, options, { confirmationCallback, transactionHashCallback } = {} ) {
     const bytecode = await this.getBytecode(contract)
     const deployed = await this.deployed(contract)
     const txReceipt = await new Promise((resolve, reject) => {
@@ -205,16 +206,53 @@ class ContractService {
         .on('receipt', receipt => {
           resolve(receipt)
         })
+        //.on('confirmation', confirmationCallback)
+        //.on('transactionHash', transactionHashCallback)
+        // Workaround for "confirmationCallback" not being triggered with web3 version:1.0.0-beta.34
+        .on('transactionHash', (hash) => {
+          if (transactionHashCallback)
+            transactionHashCallback(hash)
+          if (confirmationCallback)
+            this.checkForDeploymentCompletion(hash, confirmationCallback)
+        })
         .on('error', err => reject(err))
     })
     return txReceipt
+  }
+
+  /* confirmation callback does not get triggered in current version of web3 version:1.0.0-beta.34
+   * so this function perpetually (until 20 confirmations) checks for presence of deployed contract.
+   *
+   * This could also be a problem in Ethereum node: https://github.com/ethereum/web3.js/issues/1255
+   */
+  async checkForDeploymentCompletion(hash, confirmationCallback) {
+    const transactionInfo = await this.web3.eth.getTransaction(hash)
+
+    // transaction not mined
+    if (transactionInfo.blockNumber === null){
+      setTimeout(() => {
+        this.checkForDeploymentCompletion(hash, confirmationCallback)
+      }, 1500)
+    } else {
+      const currentBlockNumber = await this.web3.eth.getBlockNumber()
+      const confirmations = currentBlockNumber - transactionInfo.blockNumber
+      confirmationCallback(confirmations, {
+        transactionHash: transactionInfo.hash
+      })
+      // do checks until NUMBER_CONFIRMATIONS_TO_REPORT block confirmations
+      if (confirmations < NUMBER_CONFIRMATIONS_TO_REPORT) {
+        setTimeout(() => {
+          this.checkForDeploymentCompletion(hash, confirmationCallback)
+        }, 1500)
+      }
+    }
   }
 
   async call(
     contractName,
     functionName,
     args = [],
-    { contractAddress, from, gas, value, confirmationCallback, additionalGas = 0 } = {}
+    { contractAddress, from, gas, value, confirmationCallback, transactionHashCallback, additionalGas = 0 } = {}
   ) {
     const contractDefinition = this.contracts[contractName]
     if (typeof contractDefinition === 'undefined') {
@@ -239,6 +277,7 @@ class ContractService {
         .send(opts)
         .on('receipt', resolve)
         .on('confirmation', confirmationCallback)
+        .on('transactionHash', transactionHashCallback)
         .on('error', reject)
     })
     const block = await this.web3.eth.getBlock(transactionReceipt.blockNumber)
