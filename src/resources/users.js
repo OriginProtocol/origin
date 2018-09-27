@@ -5,8 +5,12 @@ class Users {
     this.resolver = new UsersResolver({ contractService, ipfsService })
   }
 
-  async set({ profile, attestations = [] }) {
-    return this.resolver.set({ profile, attestations })
+  /* possible options values: 
+   * - confirmationCallback(confirmationCount, transactionReceipt) -> called repeatedly after a transaction is mined
+   * - transactionHashCallback(hash) -> called immediately when the transaction hash is received
+   */
+  async set({ profile, attestations = [], options = {}}) {
+    return this.resolver.set({ profile, attestations, options })
   }
 
   async get(address) {
