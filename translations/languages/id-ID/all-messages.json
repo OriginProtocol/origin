@@ -365,7 +365,7 @@
   "web3-provider.toshi": "Toshi",
   "web3-provider.intentRequiresSignIn": "Untuk {web3Intent}, anda harus masuk ke {currentProvider}.",
   "web3-provider.connecting": "Menyambungkan ke jaringan...",
-  "web3-provider.shouldBeOnRinkeby": "{currentProvider} harus di Tes Jaringan Rinkeby",
+  "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "Saat ini di {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "Silakan instal sambungan MetaMask untuk mengakses situs ini.",
   "web3-provider.fullInstructionsForDemo": "Petunjuk lengkap untuk Demo",
