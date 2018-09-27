@@ -365,7 +365,7 @@
   "web3-provider.toshi": "Toshi",
   "web3-provider.intentRequiresSignIn": "ເພື່ອໃຫ້ {web3Intent}, ທ່ານຕ້ອງເຂົ້າສູ່ລະບົບ {currentProvider}.",
   "web3-provider.connecting": "ເຊື່ອມຕໍ່ກັບເຄືອຂ່າຍ ...",
-  "web3-provider.shouldBeOnRinkeby": "{currentProvider} ຄວນຈະຢູ່ໃນ Rinkeby Test Network",
+  "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "Currently on {currentNetworkName}",
   "web3-provider.pleaseInstallMetaMask": "ກະລຸນາຕິດຕັ້ງໂປແກຼມ MetaMask ເພື່ອເຂົ້າໃຊ້ເວັບໄຊທ໌ນີ້.",
   "web3-provider.fullInstructionsForDemo": "Full Instructions for Demo",
