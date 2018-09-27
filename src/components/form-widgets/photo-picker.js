@@ -2,11 +2,15 @@ import React, { Component } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { getDataUri } from 'utils/fileUtils'
 
+const MAX_IMAGE_BYTES = 2000000 // 2MB
+const MAX_IMAGE_MB = MAX_IMAGE_BYTES / 1000000
+
 class PhotoPicker extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      pictures: []
+      pictures: [],
+      oversizeImages: []
     }
 
     this.intlMessages = defineMessages({
@@ -74,6 +78,21 @@ class PhotoPicker extends Component {
         }
       }
 
+      const oversizeImages = []
+      for (let i = filesArr.length - 1; i >= 0; --i) {
+        const thisImage = filesArr[i]
+        if (thisImage.size > MAX_IMAGE_BYTES) {
+          oversizeImages.push(thisImage)
+          filesArr.splice(i, 1)
+        }
+      }
+
+      if (oversizeImages.length) {
+        this.setState({
+          oversizeImages
+        })
+      }
+
       const filesAsDataUriArray = filesArr.map(async fileObj => getDataUri(fileObj))
 
       Promise.all(filesAsDataUriArray).then(dataUriArray => {
@@ -88,6 +107,9 @@ class PhotoPicker extends Component {
   }
 
   render() {
+    const { schema, required } = this.props
+    const { helpText, oversizeImages, pictures } = this.state
+
     return (
       <div className="photo-picker">
         <label className="photo-picker-container" htmlFor="photo-picker-input">
@@ -97,7 +119,7 @@ class PhotoPicker extends Component {
             role="presentation"
           />
           <br />
-          <span>{this.props.schema.title}</span>
+          <span>{schema.title}</span>
           <br />
         </label>
         <input
@@ -106,22 +128,41 @@ class PhotoPicker extends Component {
           accept="image/jpeg,image/gif,image/png"
           visibility="hidden"
           onChange={this.onChange()}
-          required={this.props.required}
+          required={required}
           multiple
         />
-        {this.state.helpText && (
-          <p className="help-block">{this.state.helpText}</p>
+        {helpText && (
+          <p className="help-block">{helpText}</p>
         )}
         <p className="help-block">
           <FormattedMessage
             id={'photo-picker.listingSize'}
             defaultMessage={
-              'Total listing size may not exceed 2MB'
+              'Images may not exceed {maxImageMB}MB each'
             }
+            values={{ maxImageMB: MAX_IMAGE_MB }}
           />
         </p>
         <div className="d-flex pictures">
-          {this.state.pictures.map((dataUri, idx) => (
+          {oversizeImages.map((imgObj) => (
+            <div className="info-box warn" key={imgObj.name}>
+              <p>
+                <FormattedMessage
+                  id={'photo-picker.oversizeImages'}
+                  defaultMessage={
+                    'Your selected image, {imageName}, is too large. Max allowed size is {maxImageMB}MB'
+                  }
+                  values={{
+                    imageName: <strong>{imgObj.name}</strong>,
+                    maxImageMB: MAX_IMAGE_MB
+                  }}
+                />
+              </p>
+            </div>
+          ))}
+        </div>
+        <div className="d-flex pictures">
+          {pictures.map((dataUri, idx) => (
             <div className="image-container" key={idx}>
               <img className="preview-thumbnail" src={dataUri} />
             </div>

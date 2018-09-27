@@ -21,6 +21,10 @@
   },
   {
     "id": "photo-picker.listingSize",
-    "defaultMessage": "Total listing size may not exceed 2MB"
+    "defaultMessage": "Images may not exceed {maxImageMB}MB each"
+  },
+  {
+    "id": "photo-picker.oversizeImages",
+    "defaultMessage": "Your selected image, {imageName}, is too large. Max allowed size is {maxImageMB}MB"
   }
 ]

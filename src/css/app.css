@@ -2794,7 +2794,8 @@ select.form-control:not([size]):not([multiple]) {
   color: var(--orange-red);
 }
 
-.listing-form .schema-options .info-box p {
+.listing-form .schema-options .info-box p,
+.listing-form .photo-picker .info-box p {
   margin-bottom: 0;
 }
 
