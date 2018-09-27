@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
 
 import {
   updateSteps,
@@ -122,7 +123,7 @@ class OnboardingModal extends Component {
       toggleSplitPanel,
       wallet: { ognBalance }
     } = this.props
-    const { dismissed, gettingStarted, listings } = this.state
+    const { dismissed, gettingStarted, listings = [] } = this.state
 
     // show nothing if user has OGN, listings, or completed onboarding
     if (!!Number(ognBalance) || listings.length || stepsCompleted) {
@@ -135,7 +136,7 @@ class OnboardingModal extends Component {
 
     if (onboardingInProgress) {
       this.addModalClass()
-      
+
       !splitPanel && toggleSplitPanel(true)
     } else if (!progress && !dismissed) {
       !learnMore && toggleLearnMore(true)
@@ -160,15 +161,28 @@ class OnboardingModal extends Component {
           </span>
         </div>
         <img src="/images/eth-tokens.svg" alt="eth-tokens" />
-        <p className="title">Get Started Selling on Origin!</p>
-        <p className="content">Learn how to sell on our DApp today.</p>
+        <p className="title">
+          <FormattedMessage
+            id={'getting-started.title'}
+            defaultMessage={'Get started selling on Origin!'}
+          />
+        </p>
+        <p className="content">
+          <FormattedMessage
+            id={'getting-started.content'}
+            defaultMessage={'Learn how to sell on our DApp today.'}
+          />
+        </p>
 
         <div className="col-auto">
           <button
             className="btn btn-primary btn-lg"
             onClick={() => this.props.toggleSplitPanel(true)}
           >
-            Learn more
+            <FormattedMessage
+              id={'getting-started.button'}
+              defaultMessage={'Learn More'}
+            />
           </button>
         </div>
       </Fragment>
@@ -176,15 +190,15 @@ class OnboardingModal extends Component {
 
     return (
       <div className="onboarding">
-        {learnMore &&
+        {learnMore && (
           <Modal
             className={'getting-started'}
             isOpen={true}
             children={learnMoreContent}
             backdrop={false}
           />
-        }
-        {splitPanel &&
+        )}
+        {splitPanel && (
           <div className="split-container d-flex align-items-center justify-content-center">
             <SplitPanel
               isOpen={true}
@@ -195,7 +209,7 @@ class OnboardingModal extends Component {
             />
             <div className="modal-backdrop fade show" role="presentation" />
           </div>
-        }
+        )}
       </div>
     )
   }

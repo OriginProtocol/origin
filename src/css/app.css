@@ -1236,7 +1236,7 @@ a:hover {
 }
 
 .identity .dropdown-menu .wallet .d-flex div:last-of-type {
-  overflow: auto;
+  overflow: hidden;
 }
 
 .identity .dropdown-menu .wallet p {
@@ -1644,11 +1644,11 @@ a:hover {
   position: fixed;
   top: 0;
   width: 100%;
+  z-index: 1000;
 }
 
 .onboarding .btn {
   width: auto;
-  height: 50px;
 }
 
 .onboarding .close-icon {
@@ -1771,22 +1771,24 @@ a:hover {
   transform: rotate(45deg);
 }
 
+.onboarding-modal a:not(.btn) {
+  font-size: 0.825rem;
+  padding-top: 1rem;
+}
+
+.onboarding-modal .content-container {
+  flex-grow: 1;
+  /* height of the close icon */
+  margin-bottom: 36px;
+}
+
+.onboarding-modal .content-container img {
+  height: 125px;
+}
 
 .onboarding-modal .selected,
 .onboarding-modal .right-panel {
   background-color: var(--dark-grey-blue);
-}
-
-.onboarding-modal .right-panel .content {
-  padding-bottom: 2rem;
-}
-
-.onboarding-modal .right-panel .content .connected {
-  padding-bottom: 15px;
-}
-
-.onboarding-modal .right-panel .panel-buttons {
-  padding-bottom: 3rem;
 }
 
 .onboarding-modal .right-panel .btn-lg {
@@ -2427,7 +2429,15 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .schema-details .pictures .image-container {
-  padding: 0 10px 10px 0;
+  padding: 25px 0 10px;
+  position: relative;
+}
+
+.schema-details .pictures .image-container .close-btn {
+  position: absolute;
+  top: 7px;
+  right: -16px;
+  cursor: pointer;
 }
 
 .schema-details .preview-thumbnail {
@@ -2436,6 +2446,19 @@ select.form-control:not([size]):not([multiple]) {
 
 .photo-picker input {
   display: none;
+}
+
+.photo-picker .info-box.warn {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.photo-picker .info-box.warn .close-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  cursor: pointer;
 }
 
 .file-info {
@@ -2794,7 +2817,8 @@ select.form-control:not([size]):not([multiple]) {
   color: var(--orange-red);
 }
 
-.listing-form .schema-options .info-box p {
+.listing-form .schema-options .info-box p,
+.listing-form .photo-picker .info-box p {
   margin-bottom: 0;
 }
 

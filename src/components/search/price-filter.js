@@ -15,7 +15,10 @@ class PriceFilter extends Component {
     super(props)
 
     this.state = {
-      value: [Math.floor(parseFloat(props.minPrice)), Math.ceil(parseFloat(props.maxPrice))]
+      value: [
+        Math.floor(parseFloat(props.minPrice)),
+        Math.ceil(parseFloat(props.maxPrice))
+      ]
     }
 
     this.handlePriceChange = this.handlePriceChange.bind(this)
@@ -53,16 +56,20 @@ class PriceFilter extends Component {
 
   componentDidUpdate(previousProps) {
     // New max price property... reset filter
-    if (previousProps.maxPrice !== this.props.maxPrice)
-      this.onClear()
+    if (previousProps.maxPrice !== this.props.maxPrice) this.onClear()
   }
 
   // Called by filter-group
   onClear(callback) {
-    this.setState({ value: [
-      Math.floor(parseFloat(this.props.minPrice)),
-      Math.ceil(parseFloat(this.props.maxPrice))]
-    }, callback)
+    this.setState(
+      {
+        value: [
+          Math.floor(parseFloat(this.props.minPrice)),
+          Math.ceil(parseFloat(this.props.maxPrice))
+        ]
+      },
+      callback
+    )
   }
 
   render() {

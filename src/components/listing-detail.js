@@ -146,9 +146,7 @@ class ListingsDetail extends Component {
       this.setState({ offers })
     } catch (error) {
       console.error(
-        `Error fetching offers for listing: ${
-          this.props.listingId
-        }`
+        `Error fetching offers for listing: ${this.props.listingId}`
       )
       console.error(error)
     }
@@ -196,12 +194,8 @@ class ListingsDetail extends Component {
 
     return (
       <div className="listing-detail">
-        {step === this.STEP.METAMASK && (
-          <MetamaskModal />
-        )}
-        {step === this.STEP.PROCESSING && (
-          <ProcessingModal />
-        )}
+        {step === this.STEP.METAMASK && <MetamaskModal />}
+        {step === this.STEP.PROCESSING && <ProcessingModal />}
         {step === this.STEP.PURCHASED && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
@@ -407,7 +401,7 @@ class ListingsDetail extends Component {
                       )}
                       {userIsSeller && (
                         <Link to="/my-listings" className="btn">
-                          My Listings
+                            My Listings
                         </Link>
                       )}
                     </div>
@@ -503,9 +497,7 @@ class ListingsDetail extends Component {
                       <FormattedNumber value={reviews.length} />
                     </span>
                   </h2>
-                  {reviews.map(r => (
-                    <Review key={r.id} review={r} />
-                  ))}
+                  {reviews.map(r => <Review key={r.id} review={r} />)}
                   {/* To Do: pagination */}
                   {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
                 </div>
