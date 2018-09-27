@@ -43,7 +43,12 @@ class EtherscanLink extends Component {
 
     // render optional children or the hash
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+      >
         {children || hash}
       </a>
     )

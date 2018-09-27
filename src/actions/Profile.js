@@ -66,7 +66,7 @@ export function deployProfile() {
       },
       attestations: [],
       options: {
-        transactionHashCallback: (hash) => {
+        transactionHashCallback: hash => {
           dispatch(upsertTransaction({ transactionHash: hash }))
           dispatch({
             type: ProfileConstants.DEPLOY_IN_PROGRESS,

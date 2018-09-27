@@ -26,7 +26,7 @@ export const AppConstants = keyMirror(
     WEB3_ACCOUNT: null,
     WEB3_INTENT: null,
     TRANSLATIONS: null,
-    WEB3_NETWORK: null,
+    WEB3_NETWORK: null
   },
   'APP'
 )
