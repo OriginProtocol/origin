@@ -365,7 +365,7 @@
   "web3-provider.toshi": "తోషి",
   "web3-provider.intentRequiresSignIn": "{web3Intent} చేయడానికి, మీరు {currentProvider} గా సైన్ ఇన్ చేయాలి.",
   "web3-provider.connecting": "నెట్వర్క్కు కనెక్ట్ చేస్తోంది ...",
-  "web3-provider.shouldBeOnRinkeby": "{currentProvider} రింకిబే టెస్ట్ నెట్వర్క్లో ఉండాలి",
+  "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "ప్రస్తుతం {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "దయచేసి ఈ సైట్ను ఆక్సెస్ చెయ్యడానికి MetaMask ను ఇన్స్టాల్ చేయండి.",
   "web3-provider.fullInstructionsForDemo": "డెమో కోసం పూర్తి సూచనలు",
