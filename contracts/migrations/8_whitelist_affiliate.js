@@ -19,12 +19,12 @@ async function whitelistAffiliate(_, network) {
   const marketplace = await V00_Marketplace.deployed()
   const from = await marketplace.owner()
 
+  // These need to remain synced with the dockerfiles in origin-box.
   const affiliates = {
-    rinkeby: accounts[0],
-    ropsten: accounts[0],
-    origin: accounts[0],
-    development: accounts[0]
-    // TODO: add affiliate address for mainnet
+    rinkeby: '0xc1a33cda27c68e47e370ff31cdad7d6522ea93d5',
+    origin: '0xc1a33cda27c68e47e370ff31cdad7d6522ea93d5',
+    development: '0x627306090abab3a6e1400e9345bc60c78a8bef57',
+    mainnet: '0x7aD0fa0E2380a5e0208B25AC69216Bd7Ff206bF8'
   }
   const affiliate = affiliates[network]
   if (affiliate) {
