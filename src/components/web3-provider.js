@@ -12,9 +12,6 @@ import getCurrentProvider from 'utils/getCurrentProvider'
 import origin from '../services/origin'
 
 const web3 = origin.contractService.web3
-const productionHostname =
-  process.env.PRODUCTION_DOMAIN || 'demo.originprotocol.com'
-
 const networkNames = {
   1: 'Main Ethereum Network',
   2: 'Morden Test Network',
@@ -23,7 +20,7 @@ const networkNames = {
   42: 'Kovan Test Network',
   999: 'Localhost'
 }
-const supportedNetworkIds = [3, 4]
+const supportedNetworkId = process.env.ETH_NETWORK_ID || 1 // Default to mainnet
 const ONE_SECOND = 1000
 const ONE_MINUTE = ONE_SECOND * 60
 
@@ -200,8 +197,11 @@ const UnsupportedNetwork = props => (
     <p>
       <FormattedMessage
         id={'web3-provider.shouldBeOnRinkeby'}
-        defaultMessage={'{currentProvider} should be on Rinkeby Test Network'}
-        values={{ currentProvider: props.currentProvider }}
+        defaultMessage={'{currentProvider} should be on {supportedNetworkName}'}
+        values={{
+          currentProvider: props.currentProvider,
+          supportedNetworkName: networkNames[supportedNetworkId]
+        }}
       />
     </p>
     <FormattedMessage
@@ -438,8 +438,8 @@ class Web3Provider extends Component {
     const currentNetworkName = networkNames[networkId]
       ? networkNames[networkId]
       : networkId
-    const inProductionEnv = window.location.hostname === productionHostname
-    const networkNotSupported = supportedNetworkIds.indexOf(networkId) < 0
+    const isProduction = process.env.NODE_ENV === 'production'
+    const networkNotSupported = supportedNetworkId != networkId
 
     return (
       <Fragment>
@@ -452,7 +452,7 @@ class Web3Provider extends Component {
         {/* production  */
           currentProvider &&
           networkId &&
-          inProductionEnv &&
+          isProduction &&
           networkNotSupported && (
             <UnsupportedNetwork
               currentNetworkName={currentNetworkName}

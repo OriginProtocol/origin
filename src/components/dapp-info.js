@@ -259,6 +259,10 @@ class DappInfo extends Component {
                   <td>{process.env.DISCOVERY_SERVER_URL}</td>
                 </tr>
                 <tr>
+                  <td>ETH_NETWORK_ID</td>
+                  <td>{ process.env.ETH_NETWORK_ID }</td>
+                </tr>
+                <tr>
                   <td>FORCE_HTTPS</td>
                   <td>{process.env.FORCE_HTTPS}</td>
                 </tr>
@@ -295,10 +299,6 @@ class DappInfo extends Component {
                   <td>{process.env.NODE_ENV}</td>
                 </tr>
                 <tr>
-                  <td>PRODUCTION_DOMAIN</td>
-                  <td>{process.env.PRODUCTION_DOMAIN}</td>
-                </tr>
-                <tr>
                   <td>PROVIDER_URL</td>
                   <td>{process.env.PROVIDER_URL}</td>
                 </tr>
@@ -306,7 +306,7 @@ class DappInfo extends Component {
                   <td>REDUX_LOGGER</td>
                   <td>{process.env.REDUX_LOGGER}</td>
                 </tr>
-
+      
                 <tr><th colSpan="2">Marketplace Contracts</th></tr>
                 {this.state.marketplaceData}
 
