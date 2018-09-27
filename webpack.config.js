@@ -10,24 +10,24 @@ const prepareMessagesPlugin = require('./translations/scripts/prepareMessagesPlu
 const isProduction = process.env.NODE_ENV === 'production'
 
 const env = {
-  ARBITRATOR_ACCOUNT: '',
-  AFFILIATE_ACCOUNT: '',
-  BRIDGE_SERVER_DOMAIN: '',
+  ARBITRATOR_ACCOUNT: null,
+  AFFILIATE_ACCOUNT: null,
+  BRIDGE_SERVER_DOMAIN: null,
   BRIDGE_SERVER_PROTOCOL: 'https',
   CONTRACT_ADDRESSES: '{}',
   DEPLOY_TAG: false,
-  DISCOVERY_SERVER_URL: '',
+  DISCOVERY_SERVER_URL: null,
   ETH_NETWORK_ID: null,
   FORCE_HTTPS: false,
-  IPFS_API_PORT: '',
-  IPFS_DOMAIN: '',
-  IPFS_GATEWAY_PORT: '',
+  IPFS_API_PORT: null,
+  IPFS_DOMAIN: null,
+  IPFS_GATEWAY_PORT: null,
   IPFS_GATEWAY_PROTOCOL: 'https',
-  IPFS_SWARM: '',
-  MESSAGING_ACCOUNT: '',
-  MESSAGING_NAMESPACE: '',
-  PRODUCTION_DOMAIN: '',
-  PROVIDER_URL: '',
+  IPFS_SWARM: null,
+  MESSAGING_ACCOUNT: null,
+  MESSAGING_NAMESPACE: null,
+  PRODUCTION_DOMAIN: null,
+  PROVIDER_URL: null,
   REDUX_LOGGER: false
 }
 
