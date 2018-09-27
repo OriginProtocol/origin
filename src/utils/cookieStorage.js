@@ -6,7 +6,7 @@ export default class cookieStorage {
   constructor({ path, expireSeconds = DEFAULT_SECONDS_TIMEOUT }) {
     this.path = path
     this.expireSeconds = expireSeconds
-    const cookies = document && document.cookie.match(/\=/g)
+    const cookies = document && document.cookie.match(/=/g)
     this.length = cookies ? cookies.length : 0
   }
 
@@ -18,7 +18,7 @@ export default class cookieStorage {
       document.cookie.replace(
         new RegExp(
           '(?:^|.*;\\s*)' +
-            escape(sKey).replace(/[\-\.\+\*]/g, '\\$&') +
+            escape(sKey).replace(/[-.+*]/g, '\\$&') +
             '\\s*\\=\\s*((?:[^;](?!;))*[^;]?).*'
         ),
         '$1'
@@ -29,8 +29,8 @@ export default class cookieStorage {
   key(nKeyId) {
     return unescape(
       document.cookie
-        .replace(/\s*\=(?:.(?!;))*$/, '')
-        .split(/\s*\=(?:[^;](?!;))*[^;]?;\s*/)[nKeyId]
+        .replace(/\s*=(?:.(?!;))*$/, '')
+        .split(/\s*=(?:[^;](?!;))*[^;]?;\s*/)[nKeyId]
     )
   }
 
@@ -48,7 +48,7 @@ export default class cookieStorage {
       expires.toGMTString() +
       '; path=' +
       this.path
-    this.length = document.cookie.match(/\=/g).length
+    this.length = document.cookie.match(/=/g).length
   }
 
   removeItem(sKey) {
@@ -62,7 +62,7 @@ export default class cookieStorage {
 
   hasOwnProperty(sKey) {
     return new RegExp(
-      '(?:^|;\\s*)' + escape(sKey).replace(/[\-\.\+\*]/g, '\\$&') + '\\s*\\='
+      '(?:^|;\\s*)' + escape(sKey).replace(/[-.+*]/g, '\\$&') + '\\s*\\='
     ).test(document.cookie)
   }
 }
