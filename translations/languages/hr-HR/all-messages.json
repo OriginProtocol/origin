@@ -365,7 +365,7 @@
   "web3-provider.toshi": "Toshi",
   "web3-provider.intentRequiresSignIn": "Da biste se prijavili na {web3Intent}, morate se prijaviti na {currentProvider}.",
   "web3-provider.connecting": "Povezivanje s mrežom ...",
-  "web3-provider.shouldBeOnRinkeby": "{currentProvider} bi trebao biti na Rinkeby Test Network",
+  "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "Trenutno na {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "Instalirajte proširenje MetaMask da biste pristupili toj web-lokaciji.",
   "web3-provider.fullInstructionsForDemo": "Potpune upute za demonstraciju",
