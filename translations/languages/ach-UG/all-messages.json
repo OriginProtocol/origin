@@ -365,7 +365,7 @@
   "web3-provider.toshi": "crwdns2658:0crwdne2658:0",
   "web3-provider.intentRequiresSignIn": "crwdns2659:0{web3Intent}crwdnd2659:0{currentProvider}crwdne2659:0",
   "web3-provider.connecting": "crwdns2660:0crwdne2660:0",
-  "web3-provider.shouldBeOnRinkeby": "crwdns2661:0{currentProvider}crwdne2661:0",
+  "web3-provider.shouldBeOnRinkeby": "crwdns3465:0{currentProvider}crwdnd3465:0{supportedNetworkName}crwdne3465:0",
   "web3-provider.currentlyOnNetwork": "crwdns2662:0{currentNetworkName}crwdne2662:0",
   "web3-provider.pleaseInstallMetaMask": "crwdns2663:0crwdne2663:0",
   "web3-provider.fullInstructionsForDemo": "crwdns2664:0crwdne2664:0",
