@@ -85,16 +85,18 @@ class DateFilterGroup extends Component {
           operator: FILTER_OPERATOR_LESSER_OR_EQUAL
         }
       ]
-    else
-      return []
+    else return []
   }
 
   // Called by filter-group
   onClear(callback) {
-    this.setState({
-      startDate: null,
-      endDate: null
-    }, callback)
+    this.setState(
+      {
+        startDate: null,
+        endDate: null
+      },
+      callback
+    )
   }
 
   render() {
