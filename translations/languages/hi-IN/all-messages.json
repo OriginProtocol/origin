@@ -365,7 +365,7 @@
   "web3-provider.toshi": "तोशी",
   "web3-provider.intentRequiresSignIn": "{web3Intent}, आपको {currentProvider}में साइन इन करना होगा।",
   "web3-provider.connecting": "नेटवर्क से जुड़ रहा है ...",
-  "web3-provider.shouldBeOnRinkeby": "{currentProvider} रिंकबे टेस्ट नेटवर्क पर होना चाहिए",
+  "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "वर्तमान में {currentNetworkName}पर।",
   "web3-provider.pleaseInstallMetaMask": "कृपया इस साइट तक पहुंचने के लिए मेटामास्क एक्सटेंशन इंस्टॉल करें।",
   "web3-provider.fullInstructionsForDemo": "डेमो के लिए पूर्ण निर्देश",
