@@ -13,7 +13,7 @@ class DappInfo extends Component {
       const contractObj = await origin.contractService.deployed(contract)
       const owner = await contractObj.methods.owner().call()
       const tokenAddr = await contractObj.methods.tokenAddr().call()
-      contracts.push(<tr><th colSpan="2">Marketplace Contract: {name}</th></tr>)
+      contracts.push(<tr><th>{name}</th><td></td></tr>)
       contracts.push(<tr><td>Contract Address</td><td>{contractObj._address}</td></tr>)
       contracts.push(<tr><td>Owner</td><td>{owner}</td></tr>)
       contracts.push(<tr><td>Token Address</td><td>{tokenAddr}</td></tr>)
@@ -41,7 +41,6 @@ class DappInfo extends Component {
 
     return (
       <React.Fragment>
-        <tr><th colSpan="2">Token Contract</th></tr>
         <tr><td>Contract Address</td><td>{token._address}</td></tr>
         <tr><td>Name</td><td>{name}</td></tr>
         <tr><td>Symbol</td><td>{symbol}</td></tr>
@@ -64,7 +63,6 @@ class DappInfo extends Component {
       'font-size': '10px',
       'overflow-y': 'scroll',
     }
-    data.push(<tr><th colSpan="2">For signing/verifying multi-sig transactions</th></tr>)
     for (const [name, contract] of Object.entries(origin.contractService.marketplaceContracts)) {
       const contractObj = await origin.contractService.deployed(contract)
       data.push(<tr><td>{name} address</td><td>{contractObj._address}</td></tr>)
@@ -85,17 +83,17 @@ class DappInfo extends Component {
     this.loadMarketplaceData()
       .then(res => this.setState(Object.assign(this.state, { marketplaceData: res })))
       .catch(e => this.setState(Object.assign(this.state, {
-        marketplaceData: `error fetching marketplace data: ${e.message}`
+        marketplaceData: <tr><td colSpan="2">Error fetching marketplace data: { e.message }</td></tr>
       })))
     this.loadTokenData()
       .then(res => this.setState(Object.assign(this.state, { tokenData: res })))
       .catch(e => this.setState(Object.assign(this.state, {
-        tokenData: `error fetching token data: ${e.message}`
+        tokenData: <tr><td colSpan="2">Error fetching token data: { e.message }</td></tr>
       })))
     this.loadMultiSigData()
       .then(res => this.setState(Object.assign(this.state, { multiSigData: res })))
       .catch(e => this.setState(Object.assign(this.state, {
-        multiSigData: `error fetching multi-sig data: ${e.message}`
+        multiSigData: <tr><td colSpan="2">Error fetching multi-sig data: { e.message }</td></tr>
       })))
   }
 
@@ -140,10 +138,13 @@ class DappInfo extends Component {
                 <tr><td>PROVIDER_URL</td><td>{ process.env.PROVIDER_URL }</td></tr>
                 <tr><td>REDUX_LOGGER</td><td>{ process.env.REDUX_LOGGER }</td></tr>
 
+                <tr><th colSpan="2">Marketplace Contracts</th></tr>
                 {this.state.marketplaceData}
 
+                <tr><th colSpan="2">Token Contract</th></tr>
                 {this.state.tokenData}
 
+                <tr><th colSpan="2">ABIs</th></tr>
                 {this.state.multiSigData}
               </table>
               &nbsp;
