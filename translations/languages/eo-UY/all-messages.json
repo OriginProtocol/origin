@@ -365,7 +365,7 @@
   "web3-provider.toshi": "Toshi",
   "web3-provider.intentRequiresSignIn": "Por {web3Intent}, vi devas ensaluti al {currentProvider}.",
   "web3-provider.connecting": "Konektante al reto ...",
-  "web3-provider.shouldBeOnRinkeby": "{currentProvider} devus esti sur Rinkeby Test Network",
+  "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "Nuntempe je {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "Bonvolu instali la MetaMask-etendon por aliri ĉi tiun retejon.",
   "web3-provider.fullInstructionsForDemo": "Plena Instrukcioj por Demo",
