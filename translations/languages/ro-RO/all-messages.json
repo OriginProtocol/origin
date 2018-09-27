@@ -365,7 +365,7 @@
   "web3-provider.toshi": "Toshi",
   "web3-provider.intentRequiresSignIn": "Pentru a putea să {web3Intent}, trebuie să vă conectaţi la {currentProvider}.",
   "web3-provider.connecting": "Conectare la reţea...",
-  "web3-provider.shouldBeOnRinkeby": "{currentProvider} trebuie să fie pe reţeaua de testare Rinkeby",
+  "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "În prezent pe {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "Vă rugăm să instalaţi extensia MetaMask pentru a accesa acest site.",
   "web3-provider.fullInstructionsForDemo": "Instrucţiuni complete pentru Demo",
