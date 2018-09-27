@@ -29,9 +29,9 @@ const getFiatExchangeRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
   if (typeof Storage !== 'undefined') {
     const cachedRate = localStorage.getItem('origin.exchangeRate')
     if (cachedRate) {
-      const HALF_HOUR = 30 * 60 * 1000
+      const CACHE_TIME = 2 * 60 * 1000 // 2 minutes
       const cachedTime = new Date(JSON.parse(cachedRate).timestamp)
-      if (new Date() - cachedTime < HALF_HOUR) {
+      if (new Date() - cachedTime < CACHE_TIME) {
         return parseFloat(JSON.parse(cachedRate).value)
       } else {
         localStorage.removeItem('origin.exchangeRate')
