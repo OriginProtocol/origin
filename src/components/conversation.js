@@ -144,7 +144,7 @@ class Conversation extends Component {
     const { listingId } = [...messages].reverse().find(m => m.listingId) || {}
 
     // If listingId does not match state, store and check for a purchase.
-    if (listingId && listingId !== this.state.listing.id) {
+    if (listingId !== this.state.listing.id) {
       const listing = listingId ? await getListing(listingId, true) : {}
       this.setState({ listing })
       this.loadPurchase()

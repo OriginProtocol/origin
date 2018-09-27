@@ -225,33 +225,24 @@ class Arbitration extends Component {
                     <th scope="col" style={{ width: '200px' }}>TxName</th>
                     <th scope="col">TxHash</th>
                     <th scope="col">From</th>
-                    <th scope="col">To</th>
                   </tr>
                 </thead>
                 <tbody>
                   <TransactionEvent
                     eventName="Payment received"
-                    transaction={paymentEvent}
-                    buyer={buyer}
-                    seller={seller}
+                    event={paymentEvent}
                   />
                   <TransactionEvent
                     eventName="Sent by seller"
-                    transaction={fulfillmentEvent}
-                    buyer={buyer}
-                    seller={seller}
+                    event={fulfillmentEvent}
                   />
                   <TransactionEvent
                     eventName="Received by buyer"
-                    transaction={receiptEvent}
-                    buyer={buyer}
-                    seller={seller}
+                    event={receiptEvent}
                   />
                   <TransactionEvent
                     eventName="Seller reviewed"
-                    transaction={withdrawalEvent}
-                    buyer={buyer}
-                    seller={seller}
+                    event={withdrawalEvent}
                   />
                 </tbody>
               </table>
@@ -354,7 +345,7 @@ class Arbitration extends Component {
         {processing && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
+              <img src="images/spinner-animation-light.svg" role="presentation" />
             </div>
             Processing your update
             <br />

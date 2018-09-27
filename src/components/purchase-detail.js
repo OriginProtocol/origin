@@ -15,11 +15,17 @@ import {
 } from 'actions/Transaction'
 import { enableMessaging, storeWeb3Intent } from 'actions/App'
 
-import { ConfirmationModal, IssueModal, PrerequisiteModal, RejectionModal } from 'components/arbitration-modals'
+import {
+  ConfirmationModal,
+  IssueModal,
+  PrerequisiteModal,
+  RejectionModal
+} from 'components/modals/arbitration-modals'
+import { MetamaskModal } from 'components/modals/wait-modals'
 import Avatar from 'components/avatar'
-import Modal from 'components/modal'
 import PurchaseProgress from 'components/purchase-progress'
 import Review from 'components/review'
+import UnnamedUser from 'components/unnamed-user'
 import UserCard from 'components/user-card'
 
 import TransactionEvent from 'pages/purchases/transaction-event'
@@ -163,6 +169,14 @@ class PurchaseDetail extends Component {
       offerAccepted: {
         id: 'purchase-detail.offerAccepted',
         defaultMessage: 'Offer Accepted'
+      },
+      offerDisputed: {
+        id: 'purchase-detail.offerDisputed',
+        defaultMessage: 'Dispute Started'
+      },
+      offerRuling: {
+        id: 'purchase-detail.offerRuling',
+        defaultMessage: 'Ruling Complete'
       },
       saleCompleted: {
         id: 'purchase-detail.saleCompleted',
@@ -681,6 +695,8 @@ class PurchaseDetail extends Component {
     const offerCreated = purchase.event('OfferCreated')
     const offerWithdrawn = purchase.event('OfferWithdrawn')
     const offerAccepted = purchase.event('OfferAccepted')
+    const offerDisputed = purchase.event('OfferDisputed')
+    const offerRuling = purchase.event('OfferRuling')
     const offerFinalized = purchase.event('OfferFinalized')
     const offerData = purchase.event('OfferData')
 
@@ -707,20 +723,10 @@ class PurchaseDetail extends Component {
 
     const buyerName = buyer.profile ? (
       `${buyer.profile.firstName} ${buyer.profile.lastName}`
-    ) : (
-      <FormattedMessage
-        id={'purchase-detail.unnamedUser'}
-        defaultMessage={'Unnamed User'}
-      />
-    )
+    ) : <UnnamedUser />
     const sellerName = seller.profile ? (
       `${seller.profile.firstName} ${seller.profile.lastName}`
-    ) : (
-      <FormattedMessage
-        id={'purchase-detail.unnamedUser'}
-        defaultMessage={'Unnamed User'}
-      />
-    )
+    ) : <UnnamedUser />
     const arbitrationIsAvailable = ARBITRATOR_ACCOUNT && web3Account !== ARBITRATOR_ACCOUNT
 
     return (
@@ -1073,44 +1079,39 @@ class PurchaseDetail extends Component {
                         defaultMessage={'From'}
                       />
                     </th>
-                    <th scope="col">
-                      <FormattedMessage
-                        id={'purchase-detail.to'}
-                        defaultMessage={'To'}
-                      />
-                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.offerMade)}
-                    transaction={offerCreated}
-                    buyer={buyer}
-                    seller={seller}
+                    event={offerCreated}
+                    from={buyer}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.offerWithdrawn)}
-                    transaction={offerWithdrawn}
-                    buyer={buyer}
-                    seller={seller}
+                    event={offerWithdrawn}
+                    from={buyer}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.offerAccepted)}
-                    transaction={offerAccepted}
-                    buyer={buyer}
-                    seller={seller}
+                    event={offerAccepted}
+                    from={seller}
+                  />
+                  <TransactionEvent
+                    eventName={this.props.intl.formatMessage(this.intlMessages.offerDisputed)}
+                    event={offerDisputed}
+                  />
+                  <TransactionEvent
+                    eventName={this.props.intl.formatMessage(this.intlMessages.offerRuling)}
+                    event={offerRuling}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.saleCompleted)}
-                    transaction={offerFinalized}
-                    buyer={buyer}
-                    seller={seller}
+                    event={offerFinalized}
                   />
                   <TransactionEvent
                     eventName={this.props.intl.formatMessage(this.intlMessages.saleReviewed)}
-                    transaction={offerData}
-                    buyer={buyer}
-                    seller={seller}
+                    event={offerData}
                   />
                 </tbody>
               </table>
@@ -1247,20 +1248,7 @@ class PurchaseDetail extends Component {
           </div>
         </div>
         {processing && (
-          <Modal backdrop="static" isOpen={true} tabIndex="-1">
-            <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
-            </div>
-            <FormattedMessage
-              id={'purchase-detail.processingUpdate'}
-              defaultMessage={'Processing your update'}
-            />
-            <br />
-            <FormattedMessage
-              id={'purchase-detail.pleaseStandBy'}
-              defaultMessage={'Please stand by...'}
-            />
-          </Modal>
+          <MetamaskModal />
         )}
         <ConfirmationModal
           isOpen={modalsOpen.confirmation}

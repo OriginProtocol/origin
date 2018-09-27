@@ -1,30 +1,16 @@
 import React, { Component } from 'react'
 import moment from 'moment'
-import { defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import { fetchUser } from 'actions/User'
 
 import Avatar from 'components/avatar'
+import UnnamedUser from 'components/unnamed-user'
 
 class Review extends Component {
-  constructor(props) {
-    super(props)
-
-    this.intlMessages = defineMessages({
-      unnamedUser: {
-        id: 'review.unnamedUser',
-        defaultMessage: 'Unnamed User'
-      }
-    })
-  }
-
   componentWillMount() {
-    this.props.fetchUser(
-      this.props.review.reviewer,
-      this.props.intl.formatMessage(this.intlMessages.unnamedUser)
-    )
+    this.props.fetchUser(this.props.review.reviewer)
   }
 
   render() {
@@ -42,7 +28,7 @@ class Review extends Component {
               placeholderStyle="purple"
             />
             <div className="identification d-flex flex-column justify-content-center text-truncate">
-              <div className="name">{fullName}</div>
+              <div className="name">{fullName || <UnnamedUser />}</div>
               <div className="address text-muted text-truncate">{address}</div>
             </div>
             <div className="rating d-flex flex-column justify-content-center text-right">
@@ -84,4 +70,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(injectIntl(Review))
+)(Review)

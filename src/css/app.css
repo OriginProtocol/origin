@@ -20,11 +20,6 @@ body {
   line-height: 1.5;
 }
 
-.loading-clock {
-  height: 100vh;
-  width: 100vw;
-}
-
 /* sticky footer sibling */
 main {
   flex: 1 0 auto;
@@ -221,7 +216,7 @@ a:hover {
   padding: 0 0.75rem;
 }
 
-.navigation-bar .identification {
+.wallet .identification {
   height: auto;
   padding: 0;
 }
@@ -1241,7 +1236,7 @@ a:hover {
 }
 
 .identity .dropdown-menu .wallet .d-flex div:last-of-type {
-  overflow: auto;
+  overflow: hidden;
 }
 
 .identity .dropdown-menu .wallet p {
@@ -1249,7 +1244,7 @@ a:hover {
   font-weight: normal;
 }
 
-.identity .wallet .avatar-container {
+.wallet .avatar-container {
   height: 50px;
   margin: 0 10px 0 0;
   width: 50px;
@@ -1264,7 +1259,7 @@ a:hover {
   width: 50px;
 }
 
-.identity .wallet .identification img {
+.wallet .identification img {
   height: 20px;
   margin-right: 5px;
   width: 20px;
@@ -2434,7 +2429,15 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .schema-details .pictures .image-container {
-  padding: 0 10px 10px 0;
+  padding: 25px 0 10px;
+  position: relative;
+}
+
+.schema-details .pictures .image-container .close-btn {
+  position: absolute;
+  top: 7px;
+  right: -16px;
+  cursor: pointer;
 }
 
 .schema-details .preview-thumbnail {
@@ -2443,6 +2446,19 @@ select.form-control:not([size]):not([multiple]) {
 
 .photo-picker input {
   display: none;
+}
+
+.photo-picker .info-box.warn {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.photo-picker .info-box.warn .close-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  cursor: pointer;
 }
 
 .file-info {
@@ -2801,7 +2817,8 @@ select.form-control:not([size]):not([multiple]) {
   color: var(--orange-red);
 }
 
-.listing-form .schema-options .info-box p {
+.listing-form .schema-options .info-box p,
+.listing-form .photo-picker .info-box p {
   margin-bottom: 0;
 }
 
@@ -4761,6 +4778,26 @@ a:not([href]):not([tabindex]).span-link {
   cursor: pointer;
 }
 
+/* DApp Info */
+
+.dapp-info-wrapper td {
+  font-size: 14px;
+  font-weight: 700;
+  overflow: scroll;
+  padding: 2px;
+  border-top: 1px solid var(--bluey-grey);
+}
+
+.dapp-info-wrapper td:nth-child(2)
+ {
+  font-weight: normal;
+}
+
+.dapp-info-wrapper th {
+  background-color: var(--pale-grey);
+  padding: 6px 2px 2px 2px;
+}
+
 /* Error Page */
 
 .error-page-header {
@@ -4866,7 +4903,7 @@ a:not([href]):not([tabindex]).span-link {
   .onboarding-modal .step-text {
     margin: auto 20px;
   }
-  
+
   .modal.getting-started {
     left: -17px;
     right: -14px;

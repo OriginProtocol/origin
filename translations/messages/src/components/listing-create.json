@@ -12,6 +12,10 @@
     "defaultMessage": "What type of listing do you want to create?"
   },
   {
+    "id": "listing-create.listingsMayInclude",
+    "defaultMessage": "{schemaName} listings may include:"
+  },
+  {
     "id": "listing-create.noSchemaSelectedError",
     "defaultMessage": "You must first select a listing type"
   },
@@ -52,6 +56,10 @@
     "defaultMessage": "Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services."
   },
   {
+    "id": "listing-create.form-help",
+    "defaultMessage": "Be sure to give your listing an appropriate title and\n                          description that will inform others as to what you’re\n                          offering. {br}\n                          If you’re listing is only offered in a specific geographic\n                          location, please be sure to indicate that. {br}\n                          Finally, adding some photos of your listing will go a long\n                          way to helping potential buyers decide if they want to\n                          make the purchase."
+  },
+  {
     "id": "listing-create.howItWorksHeading",
     "defaultMessage": "How it works"
   },
@@ -86,22 +94,6 @@
   {
     "id": "listing-create.whatHappensNextContent2",
     "defaultMessage": "Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left."
-  },
-  {
-    "id": "listing-create.confirmTransaction",
-    "defaultMessage": "Confirm transaction"
-  },
-  {
-    "id": "listing-create.pressSubmitInMetaMask",
-    "defaultMessage": "Press {submit} in {currentProvider} window"
-  },
-  {
-    "id": "listing-create.uploadingYourListing",
-    "defaultMessage": "Uploading your listing"
-  },
-  {
-    "id": "listing-create.pleaseStandBy",
-    "defaultMessage": "Please stand by..."
   },
   {
     "id": "listing-create.successMessage",

@@ -1,12 +1,30 @@
 import React, { Component } from 'react'
 
 import EtherscanLink from 'components/etherscan-link'
+import origin from '../../services/origin'
 
 class TransactionEvent extends Component {
-  render() {
-    const { eventName, transaction, buyer, seller } = this.props
+  async componentDidMount() {
+    const { event } = this.props
 
-    if (!transaction) {
+    if (!event) {
+      return null
+    }
+
+    // If no from address is passed in, we load the origin address from
+    // transaction the event was fired from
+    if (this.props.from === undefined) {
+      const txHash = event.transactionHash
+      const transaction = await origin.contractService.getTransaction(txHash)
+      this.setState({ transactionFrom: { address: transaction.from } })
+    }
+  }
+
+  render() {
+    const { eventName, event } = this.props
+    const from = this.props.from || (this.state && this.state.transactionFrom)
+
+    if (!event) {
       return null
     }
 
@@ -17,13 +35,10 @@ class TransactionEvent extends Component {
           {eventName}
         </td>
         <td className="text-truncate">
-          {transaction && <EtherscanLink hash={transaction.transactionHash} />}
+          {event && <EtherscanLink hash={event.transactionHash} />}
         </td>
         <td className="text-truncate">
-          {buyer.address && <EtherscanLink hash={buyer.address} />}
-        </td>
-        <td className="text-truncate">
-          {seller.address && <EtherscanLink hash={seller.address} />}
+          {from && from.address && <EtherscanLink hash={from.address} />}
         </td>
       </tr>
     )

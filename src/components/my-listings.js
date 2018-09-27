@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl'
 import { storeWeb3Intent } from 'actions/App'
 
 import MyListingCard from 'components/my-listing-card'
-import Modal from 'components/modal'
+import { MetamaskModal } from 'components/modals/wait-modals'
 import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
@@ -287,20 +287,7 @@ class MyListings extends Component {
           )}
         </div>
         {processing && (
-          <Modal backdrop="static" isOpen={true} tabIndex="-1">
-            <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
-            </div>
-            <FormattedMessage
-              id={'my-listings.processingUpdate'}
-              defaultMessage={'Closing your listing'}
-            />
-            <br />
-            <FormattedMessage
-              id={'my-listings.pleaseStandBy'}
-              defaultMessage={'Please stand by...'}
-            />
-          </Modal>
+          <MetamaskModal />
         )}
       </div>
     )

@@ -17,9 +17,9 @@ import PriceField from 'components/form-widgets/price-field'
 import Modal from 'components/modal'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
 import WalletCard from 'components/wallet-card'
+import { MetamaskModal, ProcessingModal } from 'components/modals/wait-modals'
 
 import { dappFormDataToOriginListing } from 'utils/listing'
-import getCurrentProvider from 'utils/getCurrentProvider'
 import { getFiatPrice } from 'utils/priceUtils'
 import { getBoostLevel, defaultBoostValue } from 'utils/boostUtils'
 import {
@@ -32,10 +32,6 @@ import origin from '../services/origin'
 class ListingCreate extends Component {
   constructor(props) {
     super(props)
-
-    // This is non-ideal fix until IPFS can correctly return 443 errors
-    // Server limit is 2MB, with 100K safety buffer
-    this.MAX_UPLOAD_BYTES = 2e6 - 1e5
 
     // Enum of our states
     this.STEP = {
@@ -69,9 +65,6 @@ class ListingCreate extends Component {
           boostLevel: getBoostLevel(defaultBoostValue)
         }
       },
-      currentProvider: getCurrentProvider(
-        origin && origin.contractService && origin.contractService.web3
-      ),
       isBoostExpanded: false,
       showBoostTutorial: false,
       usdListingPrice: 0
@@ -202,52 +195,19 @@ class ListingCreate extends Component {
   }
 
   onDetailsEntered(formListing) {
-    // Helper function to approximate size of object in bytes
-    function roughSizeOfObject(object) {
-      const objectList = []
-      const stack = [object]
-      let bytes = 0
-      while (stack.length) {
-        const value = stack.pop()
-        if (typeof value === 'boolean') {
-          bytes += 4
-        } else if (typeof value === 'string') {
-          bytes += value.length * 2
-        } else if (typeof value === 'number') {
-          bytes += 8
-        } else if (
-          typeof value === 'object' &&
-          objectList.indexOf(value) === -1
-        ) {
-          objectList.push(value)
-          for (const i in value) {
-            if (value.hasOwnProperty(i)) {
-              stack.push(value[i])
-            }
-          }
+    this.setState({
+      formListing: {
+        ...this.state.formListing,
+        ...formListing,
+        formData: {
+          ...this.state.formListing.formData,
+          ...formListing.formData
         }
-      }
-      return bytes
-    }
-    if (roughSizeOfObject(formListing.formData) > this.MAX_UPLOAD_BYTES) {
-      this.props.showAlert(
-        'Your listing is too large. Consider using fewer or smaller photos.'
-      )
-    } else {
-      this.setState({
-        formListing: {
-          ...this.state.formListing,
-          ...formListing,
-          formData: {
-            ...this.state.formListing.formData,
-            ...formListing.formData
-          }
-        },
-        step: this.STEP.BOOST
-      })
-      window.scrollTo(0, 0)
-      this.checkOgnBalance()
-    }
+      },
+      step: this.STEP.BOOST
+    })
+    window.scrollTo(0, 0)
+    this.checkOgnBalance()
   }
 
   checkOgnBalance() {
@@ -295,12 +255,9 @@ class ListingCreate extends Component {
     this.updateUsdPrice()
   }
 
-  async onSubmitListing(formListing, selectedSchemaType) {
+  async onSubmitListing(formListing) {
     try {
       this.setState({ step: this.STEP.METAMASK })
-      console.log(formListing)
-      this.setState({ step: this.STEP.PROCESSING })
-      console.log(formListing.formData, selectedSchemaType)
       const listing = dappFormDataToOriginListing(formListing.formData)
       const transactionReceipt = await origin.marketplace.createListing(
         listing,
@@ -337,7 +294,6 @@ class ListingCreate extends Component {
   render() {
     const { wallet, intl } = this.props
     const {
-      currentProvider,
       formListing,
       isBoostExpanded,
       selectedBoostAmount,
@@ -389,7 +345,13 @@ class ListingCreate extends Component {
                           selectedSchemaType === schema.type ? ' selected' : ''
                         }`}
                       >
-                        <p>{schema.name} listings may include:</p>
+                        <p>
+                          <FormattedMessage
+                            id={'listing-create.listingsMayInclude'}
+                            defaultMessage={'{schemaName} listings may include:'}
+                            values={{ schemaName: schema.name }}
+                          />
+                        </p>
                         <ul>
                           {schemaExamples &&
                             schemaExamples.map(example => (
@@ -693,7 +655,7 @@ class ListingCreate extends Component {
                   <button
                     className="btn btn-primary float-right btn-listing-create"
                     onClick={() =>
-                      this.onSubmitListing(formListing, selectedSchemaType)
+                      this.onSubmitListing(formListing)
                     }
                   >
                     <FormattedMessage
@@ -773,14 +735,20 @@ class ListingCreate extends Component {
                 <Fragment>
                   <div className="info-box">
                     <p>
-                      Be sure to give your listing an appropriate title and
-                      description that will inform others as to what you’re
-                      offering.<br />
-                      If you’re listing is only offered in a specific geographic
-                      location, please be sure to indicate that.<br />
-                      Finally, adding some photos of your listing will go a long
-                      way to helping potential buyers decide if they want to
-                      make the purchase.
+                      <FormattedMessage
+                        id={'listing-create.form-help'}
+                        defaultMessage={`
+                          Be sure to give your listing an appropriate title and
+                          description that will inform others as to what you’re
+                          offering. {br}
+                          If you’re listing is only offered in a specific geographic
+                          location, please be sure to indicate that. {br}
+                          Finally, adding some photos of your listing will go a long
+                          way to helping potential buyers decide if they want to
+                          make the purchase.
+                        `}
+                        values={{ br: <br /> }}
+                      />
                     </p>
                   </div>
                   <div className="info-box">
@@ -895,40 +863,10 @@ class ListingCreate extends Component {
               )}
             </div>
             {step === this.STEP.METAMASK && (
-              <Modal backdrop="static" isOpen={true} tabIndex="-1">
-                <div className="image-container">
-                  <img src="images/spinner-animation.svg" role="presentation" />
-                </div>
-                <FormattedMessage
-                  id={'listing-create.confirmTransaction'}
-                  defaultMessage={'Confirm transaction'}
-                />
-                <br />
-                <FormattedMessage
-                  id={'listing-create.pressSubmitInMetaMask'}
-                  defaultMessage={'Press {submit} in {currentProvider} window'}
-                  values={{
-                    currentProvider,
-                    submit: <span>&ldquo;Submit&rdquo;</span>
-                  }}
-                />
-              </Modal>
+              <MetamaskModal />
             )}
             {step === this.STEP.PROCESSING && (
-              <Modal backdrop="static" isOpen={true}>
-                <div className="image-container">
-                  <img src="images/spinner-animation.svg" role="presentation" />
-                </div>
-                <FormattedMessage
-                  id={'listing-create.uploadingYourListing'}
-                  defaultMessage={'Uploading your listing'}
-                />
-                <br />
-                <FormattedMessage
-                  id={'listing-create.pleaseStandBy'}
-                  defaultMessage={'Please stand by...'}
-                />
-              </Modal>
+              <ProcessingModal />
             )}
             {step === this.STEP.SUCCESS && (
               <Modal backdrop="static" isOpen={true}>
