@@ -60,8 +60,16 @@
     "defaultMessage": "OK"
   },
   {
-    "id": "Profile.success",
-    "defaultMessage": "Success"
+    "id": "Profile.inProgress",
+    "defaultMessage": "In Progress"
+  },
+  {
+    "id": "Profile.transactionBeingProcessed",
+    "defaultMessage": "Profile changes can be seen once the transaction is processed."
+  },
+  {
+    "id": "Profile.transactionProgressDropdown",
+    "defaultMessage": "See transaction progress from the dropdown in navigation bar."
   },
   {
     "id": "Profile.continue",

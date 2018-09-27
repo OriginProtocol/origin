@@ -260,7 +260,7 @@ class DappInfo extends Component {
                 </tr>
                 <tr>
                   <td>ETH_NETWORK_ID</td>
-                  <td>{ process.env.ETH_NETWORK_ID }</td>
+                  <td>{process.env.ETH_NETWORK_ID}</td>
                 </tr>
                 <tr>
                   <td>FORCE_HTTPS</td>
@@ -306,14 +306,20 @@ class DappInfo extends Component {
                   <td>REDUX_LOGGER</td>
                   <td>{process.env.REDUX_LOGGER}</td>
                 </tr>
-      
-                <tr><th colSpan="2">Marketplace Contracts</th></tr>
+
+                <tr>
+                  <th colSpan="2">Marketplace Contracts</th>
+                </tr>
                 {this.state.marketplaceData}
 
-                <tr><th colSpan="2">Token Contract</th></tr>
+                <tr>
+                  <th colSpan="2">Token Contract</th>
+                </tr>
                 {this.state.tokenData}
 
-                <tr><th colSpan="2">ABIs</th></tr>
+                <tr>
+                  <th colSpan="2">ABIs</th>
+                </tr>
                 {this.state.multiSigData}
               </table>
               &nbsp;

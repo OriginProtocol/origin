@@ -32,6 +32,14 @@ import ConfirmPublish from './ConfirmPublish'
 import ConfirmUnload from './ConfirmUnload'
 import AttestationSuccess from './AttestationSuccess'
 
+/*
+const etherscanNetworkUrls = {
+  1: '',
+  3: 'ropsten.',
+  4: 'rinkeby.',
+  42: 'kovan.',
+  999: 'localhost.'
+}*/
 class Profile extends Component {
   constructor(props) {
     super(props)
@@ -552,17 +560,43 @@ class Profile extends Component {
           </Modal>
         )}
 
-        {this.props.profile.status === 'success' && (
+        {this.props.profile.status === 'inProgress' && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img src="images/circular-check-button.svg" role="presentation" />
             </div>
             <h2>
               <FormattedMessage
-                id={'Profile.success'}
-                defaultMessage={'Success'}
+                id={'Profile.inProgress'}
+                defaultMessage={'In Progress'}
               />
             </h2>
+            <div>
+              <FormattedMessage
+                id={'Profile.transactionBeingProcessed'}
+                defaultMessage={`Profile changes can be seen once the transaction is processed.`}
+              />
+            </div>
+            <div className="explanation">
+              <FormattedMessage
+                id={'Profile.transactionProgressDropdown'}
+                defaultMessage={`See transaction progress from the dropdown in navigation bar.`}
+              />
+            </div>
+            {
+              // in case we want to show transaction in etherscan at any time
+              /*<div>
+              <a
+                href={`https://${etherscanNetworkUrls[this.props.networkId]}etherscan.io/tx/${this.props.profile.lastDeployProfileHash}`}
+                target="_blank"
+              >
+                <FormattedMessage
+                  id={'Profile.viewTransaction'}
+                  defaultMessage={'View Transaction'}
+                />
+              </a>
+            </div>*/
+            }
             <div className="button-container">
               <button
                 className="btn btn-clear"
@@ -617,7 +651,8 @@ const mapStateToProps = state => {
     onMobile: state.app.onMobile,
     wallet: state.wallet,
     web3Account: state.app.web3.account,
-    web3Intent: state.app.web3.intent
+    web3Intent: state.app.web3.intent,
+    networkId: state.app.web3.networkId
   }
 }
 
