@@ -5,7 +5,7 @@ import EventEmitter from 'events'
 import Ajv from 'ajv'
 import cookieStorage from '../utils/cookieStorage'
 
-const PROMPT_MESSAGE = 'I wish to start messaging on origin protocol.'
+const PROMPT_MESSAGE = 'I am ready to start messaging on Origin.'
 const PROMPT_PUB_KEY = 'My public messaging key is: '
 const MESSAGING_KEY = 'MK_'
 const PUB_MESSAGING_SIG = 'PMS_'
@@ -255,8 +255,8 @@ class Messaging {
           this.events.emit('pending_conv', message.payload.key)
           const remote_address = message.payload.key
           this.initRoom(remote_address)
-          // this is probably not needed
-          // this.getConvo(remote_address)
+          // may be overkill but may help prevent https://github.com/OriginProtocol/origin-js/issues/559
+          this.getConvo(remote_address)
         }
       }
     )
