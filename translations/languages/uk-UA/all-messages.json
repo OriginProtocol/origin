@@ -365,7 +365,7 @@
   "web3-provider.toshi": "Toshi",
   "web3-provider.intentRequiresSignIn": "Щоб {web3Intent}, слід увійти до {currentProvider}.",
   "web3-provider.connecting": "Підключення до мережі...",
-  "web3-provider.shouldBeOnRinkeby": "{currentProvider} має бути на тестовій мережі Rinkeby",
+  "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "В даний час на {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "Будь ласка, встановіть розширення MetaMask, щоб отримати доступ до цього сайту.",
   "web3-provider.fullInstructionsForDemo": "Повна інструкція для Демо",
