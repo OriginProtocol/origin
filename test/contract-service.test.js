@@ -1,6 +1,7 @@
 import { expect } from 'chai'
 import ContractService from '../src/services/contract-service'
 import { ipfsHashes } from './fixtures'
+import Money from '../src/models/money'
 import Web3 from 'web3'
 
 const methodNames = ['getBytes32FromIpfsHash', 'getIpfsHashFromBytes32']
@@ -10,10 +11,16 @@ describe('ContractService', function() {
 
   let contractService
 
-  before(async () => {
+  beforeEach(async () => {
     const provider = new Web3.providers.HttpProvider('http://localhost:8545')
     const web3 = new Web3(provider)
-    contractService = new ContractService({ web3 })
+    contractService = new ContractService({
+      web3,
+      currencies: {
+        FOO: { address: '0x1234', decimals: 3 },
+        BAR: { address: '0x1234' }
+      }
+    })
   })
 
   methodNames.forEach(methodName => {
@@ -40,24 +47,58 @@ describe('ContractService', function() {
     })
   })
 
+  describe('moneyToUnits', () => {
+    beforeEach(async () => {
+      contractService._currencies = {
+        FOO: { address: '0x1234', decimals: 3 },
+        BAR: { address: '0x1234' }
+      }
+    })
+
+    it(`should handle ERC20 token`, async () => {
+      const money = new Money({ amount: 123, currency: 'FOO' })
+      const units = await contractService.moneyToUnits(money)
+      expect(units).to.equal('123000')
+    })
+
+    it(`should handle ETH`, async () => {
+      const money = new Money({ amount: 123, currency: 'ETH' })
+      const units = await contractService.moneyToUnits(money)
+      expect(units).to.equal('123000000000000000000')
+    })
+
+    it(`should handle undefined currency decimals`, async () => {
+      const money = new Money({ amount: 123, currency: 'BAR' })
+      const units = await contractService.moneyToUnits(money)
+      expect(units).to.equal('123')
+    })
+  })
+
   describe('passing in contract addresses', () => {
     it('should allow contract addresses to be overridden', () => {
       const web3 = new Web3()
       const userAddress = '0x1234567890123456789012345678901234567890'
-      const registryAddress = '0x9876543210987654321098765432109876543210'
       const contractAddresses = {
-        userRegistryContract: { 4: { address: userAddress } },
-        listingsRegistryContract: { 4: { address: registryAddress } }
+        V00_UserRegistry: { 4: { address: userAddress } }
       }
 
       const contSrv = new ContractService({ web3, contractAddresses })
 
-      expect(contSrv.userRegistryContract.networks[4].address).to.equal(
+      expect(contSrv.contracts.V00_UserRegistry.networks[4].address).to.equal(
         userAddress
       )
-      expect(contSrv.listingsRegistryContract.networks[4].address).to.equal(
-        registryAddress
-      )
+    })
+  })
+
+  describe('currencies', () => {
+    it('should include OGN', async () => {
+      const currencies = await contractService.currencies()
+      expect(currencies).to.be.an('object')
+      const OGN = currencies.OGN
+      expect(OGN).to.be.an('object')
+      expect(OGN.address).to.be.a('string')
+      expect(OGN.address).to.include('0x')
+      expect(OGN.decimals).to.equal(18)
     })
   })
 })

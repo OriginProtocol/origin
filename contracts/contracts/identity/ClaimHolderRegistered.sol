@@ -1,16 +1,17 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 
-import './ClaimHolder.sol';
-import '../UserRegistry.sol';
+import "./ClaimHolder.sol";
+import "./V00_UserRegistry.sol";
+
 
 contract ClaimHolderRegistered is ClaimHolder {
 
-  constructor (
-    address _userRegistryAddress
-  )
-      public
-  {
-      UserRegistry userRegistry = UserRegistry(_userRegistryAddress);
-      userRegistry.registerUser();
-  }
+    constructor (
+        address _userRegistryAddress
+    )
+        public
+    {
+        V00_UserRegistry userRegistry = V00_UserRegistry(_userRegistryAddress);
+        userRegistry.registerUser();
+    }
 }

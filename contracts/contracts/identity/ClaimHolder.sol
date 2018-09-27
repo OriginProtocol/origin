@@ -1,15 +1,16 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 
-import './ERC735.sol';
-import './KeyHolder.sol';
+import "./ERC735.sol";
+import "./KeyHolder.sol";
 import "./ClaimHolderLibrary.sol";
+
 
 contract ClaimHolder is KeyHolder, ERC735 {
 
     ClaimHolderLibrary.Claims claims;
 
     function addClaim(
-        uint256 _claimType,
+        uint256 _topic,
         uint256 _scheme,
         address _issuer,
         bytes _signature,
@@ -22,7 +23,7 @@ contract ClaimHolder is KeyHolder, ERC735 {
         return ClaimHolderLibrary.addClaim(
             keyHolderData,
             claims,
-            _claimType,
+            _topic,
             _scheme,
             _issuer,
             _signature,
@@ -32,7 +33,7 @@ contract ClaimHolder is KeyHolder, ERC735 {
     }
 
     function addClaims(
-        uint256[] _claimType,
+        uint256[] _topic,
         address[] _issuer,
         bytes _signature,
         bytes _data,
@@ -43,7 +44,7 @@ contract ClaimHolder is KeyHolder, ERC735 {
         ClaimHolderLibrary.addClaims(
             keyHolderData,
             claims,
-            _claimType,
+            _topic,
             _issuer,
             _signature,
             _data,
@@ -57,9 +58,9 @@ contract ClaimHolder is KeyHolder, ERC735 {
 
     function getClaim(bytes32 _claimId)
         public
-        constant
+        view
         returns(
-            uint256 claimType,
+            uint256 topic,
             uint256 scheme,
             address issuer,
             bytes signature,
@@ -70,11 +71,11 @@ contract ClaimHolder is KeyHolder, ERC735 {
         return ClaimHolderLibrary.getClaim(claims, _claimId);
     }
 
-    function getClaimIdsByType(uint256 _claimType)
+    function getClaimIdsByTopic(uint256 _topic)
         public
-        constant
+        view
         returns(bytes32[] claimIds)
     {
-        return claims.byType[_claimType];
+        return claims.byTopic[_topic];
     }
 }

@@ -1,26 +1,10 @@
+import AttestationObject from '../models/attestation'
 import RLP from 'rlp'
+import UsersResolver from '../contractInterface/users/resolver'
 import Web3 from 'web3'
-
-const claimTypeMapping = {
-  3: 'facebook',
-  4: 'twitter',
-  5: 'airbnb',
-  10: 'phone',
-  11: 'email'
-}
 
 const appendSlash = url => {
   return url.substr(-1) === '/' ? url : url + '/'
-}
-
-class AttestationObject {
-  constructor({ claimType, data, signature }) {
-    claimType = Number(claimType)
-    this.claimType = claimType
-    this.service = claimTypeMapping[claimType]
-    this.data = data
-    this.signature = signature
-  }
 }
 
 const responseToUrl = (resp = {}) => {
@@ -32,10 +16,11 @@ class Attestations {
     this.serverUrl = serverUrl
     this.contractService = contractService
     this.fetch = fetch
+    this.usersResolver = new UsersResolver({ contractService })
 
     this.responseToAttestation = (resp = {}) => {
       return new AttestationObject({
-        claimType: resp['claim-type'],
+        topic: resp['claim-type'],
         data: Web3.utils.soliditySha3(resp['data']),
         signature: resp['signature']
       })
@@ -45,13 +30,8 @@ class Attestations {
   async getIdentityAddress(wallet) {
     const currentAccount = await this.contractService.currentAccount()
     wallet = wallet || currentAccount
-    const userRegistry = await this.contractService.deployed(
-      this.contractService.userRegistryContract
-    )
-    const identityAddress = await userRegistry.methods.users(wallet).call()
-    const hasRegisteredIdentity =
-      identityAddress !== '0x0000000000000000000000000000000000000000'
-    if (hasRegisteredIdentity) {
+    const identityAddress = await this.usersResolver.identityAddress(wallet)
+    if (identityAddress) {
       return Web3.utils.toChecksumAddress(identityAddress)
     } else {
       return this.predictIdentityAddress(wallet)

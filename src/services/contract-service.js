@@ -1,22 +1,25 @@
-import ClaimHolderRegisteredContract from './../../contracts/build/contracts/ClaimHolderRegistered.json'
-import ClaimHolderPresignedContract from './../../contracts/build/contracts/ClaimHolderPresigned.json'
+import ClaimHolderRegistered from './../../contracts/build/contracts/ClaimHolderRegistered.json'
+import ClaimHolderPresigned from './../../contracts/build/contracts/ClaimHolderPresigned.json'
 import ClaimHolderLibrary from './../../contracts/build/contracts/ClaimHolderLibrary.json'
 import KeyHolderLibrary from './../../contracts/build/contracts/KeyHolderLibrary.json'
-import PurchaseLibrary from './../../contracts/build/contracts/PurchaseLibrary.json'
-import ListingsRegistryContract from './../../contracts/build/contracts/ListingsRegistry.json'
-import ListingsRegistryStorageContract from './../../contracts/build/contracts/ListingsRegistryStorage.json'
-import ListingContract from './../../contracts/build/contracts/Listing.json'
-import UnitListingContract from './../../contracts/build/contracts/UnitListing.json'
-import FractionalListingContract from './../../contracts/build/contracts/FractionalListing.json'
-import PurchaseContract from './../../contracts/build/contracts/Purchase.json'
-import UserRegistryContract from './../../contracts/build/contracts/UserRegistry.json'
-import OriginIdentityContract from './../../contracts/build/contracts/OriginIdentity.json'
+import V00_UserRegistry from './../../contracts/build/contracts/V00_UserRegistry.json'
+import OriginIdentity from './../../contracts/build/contracts/OriginIdentity.json'
+import OriginToken from './../../contracts/build/contracts/OriginToken.json'
+
+import V00_Marketplace from './../../contracts/build/contracts/V00_Marketplace.json'
+
+import BigNumber from 'bignumber.js'
 import bs58 from 'bs58'
 import Web3 from 'web3'
 
+const emptyAddress = '0x0000000000000000000000000000000000000000'
+const SUPPORTED_ERC20 = [
+  { symbol: 'OGN', decimals: 18, contractName: 'OriginToken' }
+]
+
 class ContractService {
-  constructor(options = {}) {
-    const externalWeb3 = options.web3 || window.web3
+  constructor({ web3, contractAddresses } = {}) {
+    const externalWeb3 = web3 || window.web3
     if (!externalWeb3) {
       throw new Error(
         'web3 is required for Origin.js. Please pass in web3 as a config option.'
@@ -24,33 +27,75 @@ class ContractService {
     }
     this.web3 = new Web3(externalWeb3.currentProvider)
 
-    const contracts = {
-      listingContract: ListingContract,
-      listingsRegistryContract: ListingsRegistryContract,
-      listingsRegistryStorageContract: ListingsRegistryStorageContract,
-      unitListingContract: UnitListingContract,
-      fractionalListingContract: FractionalListingContract,
-      purchaseContract: PurchaseContract,
-      userRegistryContract: UserRegistryContract,
-      claimHolderRegisteredContract: ClaimHolderRegisteredContract,
-      claimHolderPresignedContract: ClaimHolderPresignedContract,
-      originIdentityContract: OriginIdentityContract
-    }
+    this.marketplaceContracts = { V00_Marketplace }
+
+    const contracts = Object.assign(
+      {
+        V00_UserRegistry,
+        ClaimHolderRegistered,
+        ClaimHolderPresigned,
+        OriginIdentity,
+        OriginToken
+      },
+      this.marketplaceContracts
+    )
+
     this.libraries = {}
     this.libraries.ClaimHolderLibrary = ClaimHolderLibrary
     this.libraries.KeyHolderLibrary = KeyHolderLibrary
-    this.libraries.PurchaseLibrary = PurchaseLibrary
+    this.contracts = {}
     for (const name in contracts) {
-      this[name] = contracts[name]
+      this.contracts[name] = contracts[name]
       try {
-        this[name].networks = Object.assign(
+        this.contracts[name].networks = Object.assign(
           {},
-          this[name].networks,
-          options.contractAddresses[name]
+          this.contracts[name].networks,
+          contractAddresses[name]
         )
       } catch (e) {
         /* Ignore */
       }
+    }
+  }
+
+  async currencies() {
+    // use cached value if available
+    if (!this._currencies) {
+      const currenciesList = await Promise.all(SUPPORTED_ERC20.map(async (token) => {
+        const deployed = await this.deployed(this.contracts[token.contractName])
+        const address = deployed.options.address
+        const obj = {}
+        obj[token.symbol] = {
+          address,
+          decimals: token.decimals
+        }
+        return obj
+      }))
+      const currenciesObj = currenciesList.reduce((acc, cur) => {
+        return Object.assign(acc, cur)
+      }, {})
+      this._currencies = Object.assign(
+        { ETH: { address: emptyAddress } },
+        currenciesObj
+      )
+    }
+    return this._currencies
+  }
+
+  // Returns an object that describes how many marketplace
+  // contracts are available.
+  async marketplaceContractsFound() {
+    const networkId = await web3.eth.net.getId()
+
+    const contractCount = Object.keys(this.marketplaceContracts).length
+    const contractsFound = Object.keys(this.marketplaceContracts).filter(
+      contractName =>
+        this.marketplaceContracts[contractName].networks[networkId]
+    ).length
+
+    return {
+      allContractsPresent: contractCount === contractsFound,
+      someContractsPresent: contractsFound > 0
     }
   }
 
@@ -85,9 +130,13 @@ class ContractService {
   // Returns the first account listed, unless a default account has been set
   // explicitly
   async currentAccount() {
-    const accounts = await this.web3.eth.getAccounts()
     const defaultAccount = this.web3.eth.defaultAccount
-    return defaultAccount || accounts[0]
+    if (defaultAccount) {
+      return defaultAccount
+    } else {
+      const accounts = await this.web3.eth.getAccounts()
+      return accounts[0]
+    }
   }
 
   // async convenience method for getting block details
@@ -101,6 +150,11 @@ class ContractService {
         }
       })
     })
+  }
+
+  async getTimestamp(event) {
+    const { timestamp } = await this.getBlock(event.blockHash)
+    return timestamp
   }
 
   // async convenience method for getting transaction details
@@ -156,43 +210,30 @@ class ContractService {
     return txReceipt
   }
 
-  /**
-   * Runs a call or transaction on a this resource's smart contract.
-   *
-   * This handles getting the contract, using the correct account,
-   * and building our own response for origin transactions.
-   *
-   * If doing a blockchain call, this returns the data returned by
-   * the contract function.
-   *
-   * If running a transaction, this returns an object containing the block timestamp and the transaction receipt.
-   *
-   * @param {object} contractDefinition - JSON representation of the contract
-   * @param {string} address - address of the contract
-   * @param {string} functionName - contract function to be run
-   * @param {*[]} args - args for the transaction or call.
-   * @param {{gas: number, value:(number | BigNumber)}} options - transaction options for w3
-   * @param {function} confirmationCallback - an optional function that will be called on each block confirmation
-   */
-  async contractFn(
-    contractDefinition,
-    address,
+  async call(
+    contractName,
     functionName,
     args = [],
-    options = {},
-    confirmationCallback
+    { contractAddress, from, gas, value, confirmationCallback, additionalGas = 0 } = {}
   ) {
+    const contractDefinition = this.contracts[contractName]
+    if (typeof contractDefinition === 'undefined') {
+      throw new Error(
+        `Contract not defined on contract service: ${contractName}`
+      )
+    }
     // Setup options
-    const opts = Object.assign(options, {}) // clone options
+    const opts = { from, gas, value }
     opts.from = opts.from || (await this.currentAccount())
-    opts.gas = options.gas || 50000 // Default gas
     // Get contract and run trasaction
     const contract = await this.deployed(contractDefinition)
-    contract.options.address = address || contract.options.address
+    contract.options.address = contractAddress || contract.options.address
     const method = contract.methods[functionName].apply(contract, args)
     if (method._method.constant) {
       return await method.call(opts)
     }
+    // set gas
+    opts.gas = (opts.gas || (await method.estimateGas(opts))) + additionalGas
     const transactionReceipt = await new Promise((resolve, reject) => {
       method
         .send(opts)
@@ -203,8 +244,28 @@ class ContractService {
     const block = await this.web3.eth.getBlock(transactionReceipt.blockNumber)
     return {
       // return current time in seconds if block is not found
-      created: block ? block.timestamp : Math.floor(Date.now() / 1000),
+      timestamp: block ? block.timestamp : Math.floor(Date.now() / 1000),
       transactionReceipt
+    }
+  }
+
+  // Convert money object to correct units for blockchain
+  async moneyToUnits(money) {
+    if (money.currency === 'ETH') {
+      return Web3.utils.toWei(money.amount, 'ether')
+    } else {
+      const currencies = await this.currencies()
+      const currency = currencies[money.currency]
+      // handle ERC20
+      // TODO consider using ERCStandardDetailed.decimals() (for tokens that support this) so that we don't have to track decimals ourselves
+      // https://github.com/OpenZeppelin/openzeppelin-solidity/blob/6c4c8989b399510a66d8b98ad75a0979482436d2/contracts/token/ERC20/ERC20Detailed.sol
+      const currencyDecimals = currency && currency.decimals
+      if (currencyDecimals) {
+        const scaling = BigNumber(10).exponentiatedBy(currencyDecimals)
+        return BigNumber(money.amount).multipliedBy(scaling).toString()
+      } else {
+        return money.amount
+      }
     }
   }
 }

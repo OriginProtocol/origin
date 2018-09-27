@@ -38,7 +38,7 @@ yarn add origin
 
 A browser-compatible plain javascript file `origin.js` is available in the [Releases section](https://github.com/OriginProtocol/origin-js/releases). A hosted version can be directly included in your html as:
 ```html
-<script src="https://code.originprotocol.com/origin-js/origin-v0.7.0.js"></script>
+<script src="https://code.originprotocol.com/origin-js/origin-v0.7.1.js"></script>
 ```
 
 `npm build` will generate this file and save it to `dist/origin.js`.
@@ -75,7 +75,21 @@ npm run test
 
  Note: you should *not* have the server running at this time, as these tests start their own local blockchain instance.
 
- ### Command Line (Only Solidity Tests)
+### Command Line (Non-Solidity Tests)
+
+To run non-contract tests (`test/**.js`):
+
+```
+npm run test:js
+```
+
+To run non-contract tests and automatically re-run when files change:
+```
+npm run test:jsw
+```
+
+
+### Command Line (Only Solidity Tests)
 
 Our Solidity tests (which use [Truffle](http://truffleframework.com/docs/getting_started/javascript-tests)) are located at `contracts/test`.
 
@@ -84,6 +98,18 @@ Our Solidity tests (which use [Truffle](http://truffleframework.com/docs/getting
  ```
 
 Note: you should *not* have the server running at this time, as these tests start their own local blockchain instance.
+
+To run contract tests and automatically re-run when files change:
+
+```
+npm run test:contractsw
+```
+
+To run contract tests and measure test coverage of Solidity code:
+
+```
+npm run test:contracts-coverage
+```
 
 ### Browser Tests
 

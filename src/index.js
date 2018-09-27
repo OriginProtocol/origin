@@ -1,22 +1,22 @@
 import ContractService from './services/contract-service'
 import IpfsService from './services/ipfs-service'
 import { Attestations } from './resources/attestations'
-import Listings from './resources/listings'
-import Notifications from './resources/notifications'
-import Purchases from './resources/purchases'
-import Reviews from './resources/reviews'
+import Marketplace from './resources/marketplace'
+import Discovery from './resources/discovery'
 import Users from './resources/users'
 import Messaging from './resources/messaging'
+import Token from './resources/token'
 import fetch from 'cross-fetch'
 import store from 'store'
 
 const defaultBridgeServer = 'https://bridge.originprotocol.com'
 const defaultIpfsDomain = 'gateway.originprotocol.com'
+const defaultDiscoveryServerUrl = 'https://discovery.originprotocol.com'
 const defaultIpfsApiPort = '5002'
 const defaultIpfsGatewayPort = '443'
 const defaultIpfsGatewayProtocol = 'https'
 const defaultAttestationServerUrl = `${defaultBridgeServer}/api/attestations`
-const defaultIndexingServerUrl = `${defaultBridgeServer}/api`
+const VERSION = require('.././package.json').version
 
 class Origin {
   constructor({
@@ -25,7 +25,9 @@ class Origin {
     ipfsGatewayPort = defaultIpfsGatewayPort,
     ipfsGatewayProtocol = defaultIpfsGatewayProtocol,
     attestationServerUrl = defaultAttestationServerUrl,
-    indexingServerUrl = defaultIndexingServerUrl,
+    discoveryServerUrl = defaultDiscoveryServerUrl,
+    affiliate,
+    arbitrator,
     contractAddresses,
     web3,
     ipfsCreator,
@@ -33,6 +35,8 @@ class Origin {
     ecies,
     messagingNamespace
   } = {}) {
+    this.version = VERSION
+
     this.contractService = new ContractService({ contractAddresses, web3 })
     this.ipfsService = new IpfsService({
       ipfsDomain,
@@ -47,31 +51,17 @@ class Origin {
       fetch
     })
 
-    this.purchases = new Purchases({
+    this.marketplace = new Marketplace({
       contractService: this.contractService,
       ipfsService: this.ipfsService,
-      indexingServerUrl,
-      fetch
-    })
-
-    this.listings = new Listings({
-      purchases: this.purchases,
-      contractService: this.contractService,
-      ipfsService: this.ipfsService,
-      indexingServerUrl,
-      fetch
-    })
-
-    this.notifications = new Notifications({
-      listings: this.listings,
-      purchases: this.purchases,
-      contractService: this.contractService,
+      affiliate,
+      arbitrator,
       store
     })
 
-    this.reviews = new Reviews({
-      contractService: this.contractService,
-      ipfsService: this.ipfsService
+    this.discovery = new Discovery({
+      discoveryServerUrl,
+      fetch
     })
 
     this.users = new Users({
@@ -85,6 +75,12 @@ class Origin {
       OrbitDB,
       ecies,
       messagingNamespace
+    })
+
+    this.token = new Token({
+      contractService: this.contractService,
+      ipfsService: this.ipfsService,
+      marketplace: this.marketplace
     })
   }
 }

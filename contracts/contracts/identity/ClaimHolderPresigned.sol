@@ -1,6 +1,6 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 
-import './ClaimHolderRegistered.sol';
+import "./ClaimHolderRegistered.sol";
 
 /**
  * NOTE: This contract exists as a convenience for deploying an identity with
@@ -8,11 +8,12 @@ import './ClaimHolderRegistered.sol';
  * instead.
  */
 
+
 contract ClaimHolderPresigned is ClaimHolderRegistered {
 
     constructor(
         address _userRegistryAddress,
-        uint256[] _claimType,
+        uint256[] _topic,
         address[] _issuer,
         bytes _signature,
         bytes _data,
@@ -24,7 +25,7 @@ contract ClaimHolderPresigned is ClaimHolderRegistered {
         ClaimHolderLibrary.addClaims(
             keyHolderData,
             claims,
-            _claimType,
+            _topic,
             _issuer,
             _signature,
             _data,

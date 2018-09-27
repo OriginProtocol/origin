@@ -1,4 +1,5 @@
 const chalk = require('chalk')
+const fs = require('fs-extra')
 const startGanache = require('./helpers/start-ganache')
 const buildContracts = require('./helpers/build-contracts')
 const deployContracts = require('./helpers/deploy-contracts')
@@ -12,9 +13,40 @@ const args = process.argv.slice(2)
 const shouldWatch = args.length && args[0] === 'serve'
 const noGanache = args.length && args[1] === 'no-ganache'
 
+/**
+ * Copies compiled contracts from the latest release to
+ * the contracts build directory.
+ */
+const copyReleaseCompiledContracts = (dstDir) => {
+  // Get list of release directories.
+  let dirs = fs.readdirSync('contracts/releases')
+  dirs = dirs.filter(dir => (/^\d+\.\d+\.\d+$/.test(dir)))
+
+  // Get latest release directory.
+  const latestVersion = dirs.sort().reverse()[0]
+
+  // Create build directory if it does not exist.
+  if (!fs.pathExists(dstDir)) {
+    fs.mkdirpSync(dstDir)
+  }
+
+  // Copy compiled contract files from latest release to the build directory.
+  const srcDir = `contracts/releases/${latestVersion}/build/contracts`
+  fs.copySync(srcDir, dstDir)
+  console.log(chalk.green(`Copied compiled contracts from ${srcDir} to ${dstDir}`))
+}
+
 const start = async () => {
   const compiler = webpack(webpackConfig)
 
+  // If the contract build directory does not exist or is empty,
+  // copy the compiled contract files from the latest release into it.
+  const dstDir = 'contracts/build/contracts'
+  if (fs.pathExistsSync(dstDir) && fs.readdirSync(dstDir).length > 0) {
+    console.log(chalk.blue('Contracts build directory already exists and not empty, skipping copy.'))
+  } else {
+    copyReleaseCompiledContracts(dstDir)
+  }
   if (shouldWatch) {
     if (!noGanache) {
       console.log(
