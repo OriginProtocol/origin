@@ -164,7 +164,7 @@ class OnboardingModal extends Component {
         <p className="title">
           <FormattedMessage
             id={'getting-started.title'}
-            defaultMessage={'Get Started Selling on Origin!'}
+            defaultMessage={'Get started selling on Origin!'}
           />
         </p>
         <p className="content">
@@ -181,7 +181,7 @@ class OnboardingModal extends Component {
           >
             <FormattedMessage
               id={'getting-started.button'}
-              defaultMessage={'Learn more'}
+              defaultMessage={'Learn More'}
             />
           </button>
         </div>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
 
@@ -24,46 +24,53 @@ export default class PanelButtons extends Component {
 
   render() {
     const { displayNextStep, step } = this.props
+    const hasWallet = true
     const buttons = {
-      'Overview': (
+      'Overview': hasWallet ? (
         <button className="btn btn-primary" onClick={() => displayNextStep()}>
           <FormattedMessage
-            id={'onboarding-buttons.overview'}
+            id={'onboarding-buttons.next'}
             defaultMessage={'Next'}
           />
         </button>
+      ) : (
+        <Fragment>
+          <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+            <FormattedMessage
+              id={'onboarding-buttons.installMetaMask'}
+              defaultMessage={'Install MetaMask'}
+            />
+          </a>
+          <a href="#" className="d-block" onClick={() => displayNextStep()}>
+            <FormattedMessage
+              id={'onboarding-buttons.skip'}
+              defaultMessage={'Skip'}
+            />
+          </a>
+        </Fragment>
       ),
-      'Connect Wallet': (
+      'Identity': (
         <div className="d-flex flex-column align-items-center">
-          <button
-            key={'first-btn'}
-            className="btn btn-primary btn-lg mb-3"
-            onClick={() => displayNextStep()}
+          <Link
+            to="/profile"
+            target="_blank"
           >
+            <button key={'first-btn'} className="btn btn-primary">
+              <FormattedMessage
+                id={'onboarding-buttons.verify'}
+                defaultMessage={'Verify'}
+              />
+            </button>
+          </Link>
+          <a href="#" onClick={() => displayNextStep()}>
             <FormattedMessage
-              id={'onboarding-buttons.connectWalletOne'}
-              defaultMessage={'Next'}
+              id={'onboarding-buttons.skip'}
+              defaultMessage={'Skip'}
             />
-          </button>
-          {/*
-          <button key={'sec-btn'} className="btn btn-primary btn-lg" disabled>
-            <FormattedMessage
-              id={'onboarding-buttons.connectWalletTwo'}
-              defaultMessage={'Download Mobile Wallet'}
-            />
-          </button>
-          */}
+          </a>
         </div>
       ),
-      'Connected': (
-        <button className="btn btn-primary" onClick={() => displayNextStep()}>
-          <FormattedMessage
-            id={'onboarding-buttons.connected'}
-            defaultMessage={'Learn about Origin Tokens'}
-          />
-        </button>
-      ),
-      'Get Origin Tokens': (
+      'Origin Tokens': (
         <div className="col-auto">
           <Link
             to="/about-tokens"

@@ -1,7 +1,7 @@
 [
   {
     "id": "getting-started.title",
-    "defaultMessage": "Get Started Selling on Origin!"
+    "defaultMessage": "Get started selling on Origin!"
   },
   {
     "id": "getting-started.content",
@@ -9,6 +9,6 @@
   },
   {
     "id": "getting-started.button",
-    "defaultMessage": "Learn more"
+    "defaultMessage": "Learn More"
   }
 ]

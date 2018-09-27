@@ -1654,7 +1654,6 @@ a:hover {
 
 .onboarding .btn {
   width: auto;
-  height: 50px;
 }
 
 .onboarding .close-icon {
@@ -1777,22 +1776,24 @@ a:hover {
   transform: rotate(45deg);
 }
 
+.onboarding-modal a:not(.btn) {
+  font-size: 0.825rem;
+  padding-top: 1rem;
+}
+
+.onboarding-modal .content-container {
+  flex-grow: 1;
+  /* height of the close icon */
+  margin-bottom: 36px;
+}
+
+.onboarding-modal .content-container img {
+  height: 125px;
+}
 
 .onboarding-modal .selected,
 .onboarding-modal .right-panel {
   background-color: var(--dark-grey-blue);
-}
-
-.onboarding-modal .right-panel .content {
-  padding-bottom: 2rem;
-}
-
-.onboarding-modal .right-panel .content .connected {
-  padding-bottom: 15px;
-}
-
-.onboarding-modal .right-panel .panel-buttons {
-  padding-bottom: 3rem;
 }
 
 .onboarding-modal .right-panel .btn-lg {

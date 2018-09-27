@@ -5,58 +5,58 @@
   },
   {
     "id": "onboarding-steps.stepOneDescription",
-    "defaultMessage": "How to start selling on the Origin DApp"
+    "defaultMessage": "Get started selling on the Origin DApp."
   },
   {
     "id": "onboarding-steps.stepOneHeading",
-    "defaultMessage": "Selling on the Origin DApp"
+    "defaultMessage": "Get started selling on Origin."
   },
   {
-    "id": "onboarding-steps.stepOneContentPartOne",
-    "defaultMessage": "In order to sell on the Origin DApp, you will need to connect a wallet in order to accept payment in"
+    "id": "onboarding-steps.stepOneContentPartOneWithWallet",
+    "defaultMessage": "You will use your Ethereum wallet to create listings and accept payment."
+  },
+  {
+    "id": "onboarding-steps.stepOneContentPartOneWithoutWallet",
+    "defaultMessage": "You will need an Ethereum wallet to create listings and accept payment."
   },
   {
     "id": "onboarding-steps.stepOneContentPartTwo",
-    "defaultMessage": "Payment for goods and services on the Origin DApp is always made using"
+    "defaultMessage": "Transactions on the Origin DApp are always made using {ethMark}."
   },
   {
     "id": "onboarding-steps.stepTwoName",
-    "defaultMessage": "Connect Wallet"
+    "defaultMessage": "Identity"
   },
   {
     "id": "onboarding-steps.stepTwoDescription",
-    "defaultMessage": "Connect your wallet to start selling"
+    "defaultMessage": "Increase trust and gain reputation with buyers."
   },
   {
     "id": "onboarding-steps.stepTwoHeading",
-    "defaultMessage": "Connect Your Wallet"
+    "defaultMessage": "Get verified on Origin."
   },
   {
     "id": "onboarding-steps.stepTwoContent",
-    "defaultMessage": "You will need a wallet to withdraw/deposit on the Origin DApp. We recommend using"
+    "defaultMessage": "Verifying your profile allows other users to know that you are a real person and increases the chances of successful transactions on Origin."
   },
   {
     "id": "onboarding-steps.stepThreeName",
-    "defaultMessage": "Get Origin Tokens"
-  },
-  {
-    "id": "onboarding-steps.stepThreeDescription",
-    "defaultMessage": "Increase the likelihood of successfully selling"
-  },
-  {
-    "id": "onboarding-steps.stepThreeHeading",
-    "defaultMessage": "Origin Tokens and Boosting"
-  },
-  {
-    "id": "onboarding-steps.stepThreeContentPartOne",
     "defaultMessage": "Origin Tokens"
   },
   {
-    "id": "onboarding-steps.stepThreeContentPartTwo",
-    "defaultMessage": "are used on the Origin DApp to boost your listings."
+    "id": "onboarding-steps.stepThreeDescription",
+    "defaultMessage": "Improve the chances of selling your good or service."
   },
   {
-    "id": "onboarding-steps.stepThreeContentPartThree",
-    "defaultMessage": "Boosting will give your listing more visibility."
+    "id": "onboarding-steps.stepThreeHeading",
+    "defaultMessage": "Boost your listings with Origin Tokens"
+  },
+  {
+    "id": "onboarding-steps.stepThreeContentPartOne",
+    "defaultMessage": "Origin Tokens (Symbol: {ognMark}) are used on the Origin DApp to boost your listings."
+  },
+  {
+    "id": "onboarding-steps.stepThreeContentPartTwo",
+    "defaultMessage": "Boosting will give your listing more visibility and increase the likelihood of successfully selling."
   }
 ]

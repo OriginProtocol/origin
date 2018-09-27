@@ -1,15 +1,19 @@
 [
   {
-    "id": "onboarding-buttons.overview",
+    "id": "onboarding-buttons.next",
     "defaultMessage": "Next"
   },
   {
-    "id": "onboarding-buttons.connectWalletOne",
-    "defaultMessage": "Next"
+    "id": "onboarding-buttons.installMetaMask",
+    "defaultMessage": "Install MetaMask"
   },
   {
-    "id": "onboarding-buttons.connected",
-    "defaultMessage": "Learn about Origin Tokens"
+    "id": "onboarding-buttons.skip",
+    "defaultMessage": "Skip"
+  },
+  {
+    "id": "onboarding-buttons.verify",
+    "defaultMessage": "Verify"
   },
   {
     "id": "onboarding-buttons.getOriginTokens",
