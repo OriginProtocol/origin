@@ -74,10 +74,6 @@ class ListingCreate extends Component {
       navigationWarning: {
         id: 'listing-create.navigationWarning',
         defaultMessage: 'Are you sure you want to leave? If you leave this page your progress will be lost.'
-      },
-      sizeWarning: {
-        id: 'listing-create.sizeWarning',
-        defaultMessage: 'Your listing is too large. Consider using fewer or smaller photos.'
       }
     })
 
