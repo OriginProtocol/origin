@@ -8,7 +8,7 @@ const Token = require('../lib/token.js')
 const DEFAULT_SERVER_PORT = 5000
 const DEFAULT_NETWORK_ID = '999' // Local blockchain.
 
-// Credit 100 token units per request.
+// Credit 100 tokens per request.
 const NUM_TOKENS = 100
 
 
@@ -17,24 +17,28 @@ function runApp(config) {
   const app = express()
   const token = new Token(config)
 
-  // Configure rate limiting. Allow at most 1 request per IP every 5 sec.
+  // Configure rate limiting. Allow at most 1 request per IP every 60 sec.
   const opts = {
-    points: 90,   // Point budget.
-    duration: 5, // Reset points consumption every 5 sec.
+    points: 1,   // Point budget.
+    duration: 60, // Reset points consumption every 60 sec.
   }
   const rateLimiter = new RateLimiterMemory(opts)
   const rateLimiterMiddleware = (req, res, next) => {
-    rateLimiter.consume(req.connection.remoteAddress)
-      .then(() => {
-        // Allow request and consume 1 point.
-        console.log(`allow request from ${req.connection.remoteAddress}`)
-        next()
-      })
-      .catch((err) => {
-        // Not enough points. Block the request.
-        console.log('BLOCKING')
-        res.status(429).send('<h2>Too Many Requests</h2>')
-      })
+    // Rate limiting only applies to the /tokens route.
+    if (req.url.startsWith('/tokens')) {
+      rateLimiter.consume(req.connection.remoteAddress)
+        .then(() => {
+          // Allow request and consume 1 point.
+          next()
+        })
+        .catch((err) => {
+          // Not enough points. Block the request.
+          console.log(`Rejecting request due to rate limiting.`)
+          res.status(429).send('<h2>Too Many Requests</h2>')
+        })
+    } else {
+      next()
+    }
   }
   // Note: register rate limiting middleware *before* all routes
   // so that it gets executed first.
@@ -58,14 +62,13 @@ function runApp(config) {
       // Transfer NUM_TOKENS to specified wallet.
       const value = token.toNaturalUnit(NUM_TOKENS)
       const contractAddress = token.contractAddress(networkId)
-      const balanceUnit = await token.credit(networkId, wallet, value)
-      const balanceToken = token.toTokenUnit(balanceUnit)
-      console.log(`${NUM_TOKENS} OGN -> ${wallet} (${balanceUnit})`)
+      const receipt = await token.credit(networkId, wallet, value)
+      const txHash = receipt.transactionHash
+      console.log(`${NUM_TOKENS} OGN -> ${wallet} TxHash=${txHash}`)
 
       // Send response back to client.
-      const resp = `Credited ${NUM_TOKENS} OGN tokens to wallet<br>` +
-                  `New balance (natural unit) = ${balanceUnit}<br>` +
-                  `New balance (token unit) = ${balanceToken}<br>` +
+      const resp = `Credited ${NUM_TOKENS} OGN tokens to wallet ${wallet}<br>` +
+                  `TxHash = ${txHash}<br>` +
                   `OGN token contract address = ${contractAddress}`
       res.send(resp)
     } catch (err) {

@@ -87,10 +87,9 @@ async function run(config) {
     if (!config.address) {
       errorAndExit('--address=ADDRESS must be specified')
     }
-    const newBalance = await token.credit(config.networkId, config.address, token.toNaturalUnit(100))
-    const newBalanceDisplay = newBalance.toFixed()
+    const receipt = await token.credit(config.networkId, config.address, token.toNaturalUnit(100))
     if (!config.multisig) {
-      console.log(`Credited 100 OGN tokens to wallet. New balance (natural unit) = ${newBalanceDisplay}`)
+      console.log(`Credited 100 OGN tokens to wallet. Txn receipt = ${receipt}`)
     }
     break
   }

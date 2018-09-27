@@ -60,26 +60,24 @@ class Token extends ContractHelper {
     // Create a token contract objects based on its ABI and address on the network.
     const contractAddress = this.contractAddress(networkId)
     if (!contractAddress) {
-      console.error('ERROR: Could not get address of OriginToken contract!')
-      process.exit(1)
+      throw new Error(`Could not get address of OriginToken contract for networkId ${networkId}`)
     }
     return new web3.eth.Contract(TokenContract.abi, contractAddress)
   }
 
   /*
-   * Credits tokens to a address.
+   * Credits tokens to an address.
    * @params {string} networkId - Test network Id.
    * @params {string} address - Address for the recipient.
    * @params {int} value - Value to credit, in natural unit.
    * @throws Throws an error if the operation failed.
-   * @returns {BigNumber} - Token balance of the address, in natural unit.
+   * @returns {Object} - Transaction receipt
    */
   async credit(networkId, address, value) {
     const contract = this.contract(networkId)
 
     // At token contract deployment, the entire initial supply of tokens is assigned to
     // the first address generated using the mnemonic.
-    const provider = this.config.providers[networkId]
     const tokenSupplier = await this.defaultAccount(networkId)
 
     // Transfer numTokens from the supplier to the target address.
@@ -92,10 +90,7 @@ class Token extends ContractHelper {
       throw new Error('token transfers are paused')
     }
     const transaction = contract.methods.transfer(address, value)
-    await this.sendTransaction(networkId, transaction, { from: tokenSupplier })
-
-    // Return address's balance after credit.
-    return this.balance(networkId, address)
+    return await this.sendTransaction(networkId, transaction, { from: tokenSupplier })
   }
 
   /*

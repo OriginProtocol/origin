@@ -133,11 +133,11 @@ class Marketplace {
         throw new Error('Invalid offer: insufficient commission amount for listing')
       }
 
-      if (chainOffer.arbitrator !== this.arbitrator) {
+      if (chainOffer.arbitrator.toLowerCase() !== this.arbitrator.toLowerCase()) {
         throw new Error('Invalid offer: arbitrator is invalid')
       }
 
-      if (chainOffer.affiliate !== this.affiliate) {
+      if (chainOffer.affiliate.toLowerCase() !== this.affiliate.toLowerCase()) {
         throw new Error('Invalid offer: affiliate is invalid')
       }
     }
