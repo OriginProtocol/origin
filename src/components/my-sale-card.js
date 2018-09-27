@@ -58,11 +58,9 @@ class MySaleCard extends Component {
     }
 
     const { name, pictures, price } = listing
-    const buyerName =
-      (user &&
-        user.profile &&
-        `${user.profile.firstName} ${user.profile.lastName}`) ||
-      <UnnamedUser />
+    const buyerName = (user &&
+      user.profile &&
+      `${user.profile.firstName} ${user.profile.lastName}`) || <UnnamedUser />
     const photo = pictures && pictures.length > 0 && pictures[0]
     const voided = ['rejected', 'withdrawn'].includes(status)
     const completed = ['finalized', 'sellerReviewed'].includes(status)
@@ -78,7 +76,7 @@ class MySaleCard extends Component {
                 <Link to={`/purchases/${purchaseId}`}>{name}</Link>
               </h2>
               <h2 className="title">
-                {pending &&
+                {pending && (
                   <FormattedMessage
                     id={'my-sale-card.pendingBuyerNameLink'}
                     defaultMessage={'selling to {linkToBuyer}'}
@@ -88,8 +86,8 @@ class MySaleCard extends Component {
                       )
                     }}
                   />
-                }
-                {completed &&
+                )}
+                {completed && (
                   <FormattedMessage
                     id={'my-sale-card.completedBuyerNameLink'}
                     defaultMessage={'sold to {linkToBuyer}'}
@@ -99,7 +97,7 @@ class MySaleCard extends Component {
                       )
                     }}
                   />
-                }
+                )}
               </h2>
               <p className="address text-muted">{user.address}</p>
               <div className="d-flex">
@@ -107,16 +105,17 @@ class MySaleCard extends Component {
                   <FormattedMessage
                     id={'my-sale-card.price'}
                     defaultMessage={'Price'}
-                  />:&nbsp;{Number(price).toLocaleString(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 5 })}
+                  />:&nbsp;{Number(price).toLocaleString(undefined, {
+                    minimumFractionDigits: 5,
+                    maximumFractionDigits: 5
+                  })}
                 </p>
                 {/* Not Yet Relevant */}
                 {/*<p className="quantity">Quantity: {quantity.toLocaleString()}</p>*/}
               </div>
             </div>
             <div className="timestamp-container order-2 text-muted text-right">
-              <p className="timestamp">
-                {moment(createdAt * 1000).fromNow()}
-              </p>
+              <p className="timestamp">{moment(createdAt * 1000).fromNow()}</p>
             </div>
             <div className="aspect-ratio order-1 order-lg-3">
               <div
@@ -131,17 +130,17 @@ class MySaleCard extends Component {
               </div>
             </div>
           </div>
-          {!voided &&
+          {!voided && (
             <PurchaseProgress
               maxStep={4}
               currentStep={step}
               perspective="seller"
               subdued={true}
             />
-          }
+          )}
           <div className="d-flex justify-content-between actions">
             <p>
-              {!voided &&
+              {!voided && (
                 <strong>
                   <FormattedMessage
                     id={'my-sale-card.nextStep'}
@@ -149,7 +148,7 @@ class MySaleCard extends Component {
                   />
                   :&nbsp;
                 </strong>
-              }
+              )}
               {status === 'created' && (
                 <FormattedMessage
                   id={'my-sale-card.accept'}

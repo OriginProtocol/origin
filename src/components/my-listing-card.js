@@ -35,7 +35,13 @@ class MyListingCard extends Component {
   }
 
   async closeListing() {
-    const { intl, listing, handleProcessing, onClose, updateTransaction } = this.props
+    const {
+      intl,
+      listing,
+      handleProcessing,
+      onClose,
+      updateTransaction
+    } = this.props
     const { address } = listing
     const prompt = confirm(
       intl.formatMessage(this.intlMessages.confirmCloseListing)

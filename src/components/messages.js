@@ -97,7 +97,10 @@ const mapStateToProps = ({ app, messages }) => {
   const { messagingEnabled, web3 } = app
   const web3Account = web3.account
   const filteredMessages = messages.filter(({ content, conversationId }) => {
-    return content && origin.messaging.getRecipients(conversationId).includes(web3Account)
+    return (
+      content &&
+      origin.messaging.getRecipients(conversationId).includes(web3Account)
+    )
   })
   const conversations = groupByArray(filteredMessages, 'conversationId')
   const sortedConversations = conversations.sort((a, b) => {

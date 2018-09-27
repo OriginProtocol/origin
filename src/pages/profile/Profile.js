@@ -298,9 +298,7 @@ class Profile extends Component {
                 </div>
                 <div className="col-8 col-md-9">
                   <div className="name d-flex">
-                    <h1>
-                      {fullName || <UnnamedUser />}
-                    </h1>
+                    <h1>{fullName || <UnnamedUser />}</h1>
                     <div className="icon-container">
                       <button
                         className="edit-profile"
@@ -533,13 +531,9 @@ class Profile extends Component {
           handleToggle={this.handleToggle}
         />
 
-        {this.props.profile.status === 'confirming' &&
-          <MetamaskModal />
-        }
+        {this.props.profile.status === 'confirming' && <MetamaskModal />}
 
-        {this.props.profile.status === 'processing' &&
-          <ProcessingModal />
-        }
+        {this.props.profile.status === 'processing' && <ProcessingModal />}
 
         {this.props.profile.status === 'error' && (
           <Modal backdrop="static" isOpen={true}>

@@ -93,9 +93,19 @@ class PriceField extends Component {
           <p className="help-block">
             <FormattedMessage
               id={'price-field.price-help'}
-              defaultMessage={'The cost to buy this listing. Price is always in {currency}. '}
+              defaultMessage={
+                'The cost to buy this listing. Price is always in {currency}. '
+              }
               values={{
-                currency: <a href="https://en.wikipedia.org/wiki/Ethereum" target="_blank" rel="noopener noreferrer">ETH</a>
+                currency: (
+                  <a
+                    href="https://en.wikipedia.org/wiki/Ethereum"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    ETH
+                  </a>
+                )
               }}
             />
             <span className="text-bold">

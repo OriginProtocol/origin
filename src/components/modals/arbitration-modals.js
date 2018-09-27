@@ -4,7 +4,11 @@ import { FormattedMessage } from 'react-intl'
 import Modal from 'components/modal'
 
 export const ConfirmationModal = ({ isOpen = false, onCancel, onSubmit }) => (
-  <Modal className="arbitration-modal confirm" isOpen={isOpen} handleToggle={onCancel}>
+  <Modal
+    className="arbitration-modal confirm"
+    isOpen={isOpen}
+    handleToggle={onCancel}
+  >
     <p className="heading">
       <FormattedMessage
         id={'arbitrationModals.confirmHeading'}
@@ -21,11 +25,9 @@ export const ConfirmationModal = ({ isOpen = false, onCancel, onSubmit }) => (
       <p>
         <FormattedMessage
           id={'arbitrationModals.confirmText2'}
-          defaultMessage={
-            `This will start the conflict resolution process,
+          defaultMessage={`This will start the conflict resolution process,
             someone from Origin will be notified and all chat history will be made
-            public to a moderator.`
-          }
+            public to a moderator.`}
         />
       </p>
     </div>
@@ -46,13 +48,25 @@ export const ConfirmationModal = ({ isOpen = false, onCancel, onSubmit }) => (
   </Modal>
 )
 
-export const IssueModal = ({ isOpen = false, handleChange, issue, onCancel, onSubmit }) => (
-  <Modal className="arbitration-modal issue" isOpen={isOpen} handleToggle={onCancel}>
-    <form onSubmit={e => {
-      e.preventDefault()
+export const IssueModal = ({
+  isOpen = false,
+  handleChange,
+  issue,
+  onCancel,
+  onSubmit
+}) => (
+  <Modal
+    className="arbitration-modal issue"
+    isOpen={isOpen}
+    handleToggle={onCancel}
+  >
+    <form
+      onSubmit={e => {
+        e.preventDefault()
 
-      onSubmit(e)
-    }}>
+        onSubmit(e)
+      }}
+    >
       <p className="heading">
         <FormattedMessage
           id={'arbitrationModals.issueHeading'}
@@ -61,11 +75,15 @@ export const IssueModal = ({ isOpen = false, handleChange, issue, onCancel, onSu
       </p>
       <textarea rows="3" value={issue} onChange={handleChange} />
       <div className="button-container align-self-center">
-        <a href="#" className="btn btn-clear" onClick={e => {
-          e.preventDefault()
+        <a
+          href="#"
+          className="btn btn-clear"
+          onClick={e => {
+            e.preventDefault()
 
-          onCancel()
-        }}>
+            onCancel()
+          }}
+        >
           <FormattedMessage
             id={'arbitrationModals.issueCancel'}
             defaultMessage={'Cancel'}
@@ -82,8 +100,17 @@ export const IssueModal = ({ isOpen = false, handleChange, issue, onCancel, onSu
   </Modal>
 )
 
-export const PrerequisiteModal = ({ isOpen = false, perspective, onCancel, onSubmit }) => (
-  <Modal className="arbitration-modal prerequisite" isOpen={isOpen} handleToggle={onCancel}>
+export const PrerequisiteModal = ({
+  isOpen = false,
+  perspective,
+  onCancel,
+  onSubmit
+}) => (
+  <Modal
+    className="arbitration-modal prerequisite"
+    isOpen={isOpen}
+    handleToggle={onCancel}
+  >
     <p className="heading">
       <FormattedMessage
         id={'arbitrationModals.tryReachingOut'}
@@ -94,10 +121,10 @@ export const PrerequisiteModal = ({ isOpen = false, perspective, onCancel, onSub
       <p>
         <FormattedMessage
           id={'arbitrationModals.request'}
-          defaultMessage={
-            `In order to report a problem, you must enable Origin messaging. We also recommend that you start by reaching out to the {counterparty} and attempting to resolve the issue directly.`
-          }
-          values={{ counterparty: perspective === 'buyer' ? 'seller' : 'buyer' }}
+          defaultMessage={`In order to report a problem, you must enable Origin messaging. We also recommend that you start by reaching out to the {counterparty} and attempting to resolve the issue directly.`}
+          values={{
+            counterparty: perspective === 'buyer' ? 'seller' : 'buyer'
+          }}
         />
       </p>
     </div>
@@ -119,7 +146,11 @@ export const PrerequisiteModal = ({ isOpen = false, perspective, onCancel, onSub
 )
 
 export const RejectionModal = ({ isOpen = false, handleToggle }) => (
-  <Modal className="arbitration-modal rejection" isOpen={isOpen} handleToggle={handleToggle}>
+  <Modal
+    className="arbitration-modal rejection"
+    isOpen={isOpen}
+    handleToggle={handleToggle}
+  >
     <div className="image-container">
       <img src="images/reject-icon.svg" role="presentation" />
     </div>
@@ -132,7 +163,7 @@ export const RejectionModal = ({ isOpen = false, handleToggle }) => (
     <span className="text">
       <FormattedMessage
         id={'arbitrationModals.rejectionText1'}
-        defaultMessage={'You\'ve rejected this buyer\'s offer,'}
+        defaultMessage={"You've rejected this buyer's offer,"}
       />
     </span>
     <p className="text">

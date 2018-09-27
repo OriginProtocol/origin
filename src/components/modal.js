@@ -33,7 +33,7 @@ class Modal extends Component {
         }`}
         role="dialog"
         aria-hidden="true"
-        { ...(setTabIndex)}
+        {...setTabIndex}
       >
         <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content d-flex">{children}</div>
