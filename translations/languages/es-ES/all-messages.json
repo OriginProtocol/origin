@@ -365,7 +365,7 @@
   "web3-provider.toshi": "Toshi",
   "web3-provider.intentRequiresSignIn": "Para poder {web3Intent}, debe iniciar sesión en {currentProvider}.",
   "web3-provider.connecting": "Conectándose a la red...",
-  "web3-provider.shouldBeOnRinkeby": "{currentProvider} debe estar en la red de pruebas Rinkeby",
+  "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "Actualmente en {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "Por favor instale la extensión MetaMask para acceder a este sitio.",
   "web3-provider.fullInstructionsForDemo": "Instrucciones Completas para la Demo",
