@@ -3,6 +3,7 @@ import CryptoJS from 'crypto-js'
 import cryptoRandomString from 'crypto-random-string'
 import EventEmitter from 'events'
 import Ajv from 'ajv'
+import cookieStorage from '../utils/cookieStorage'
 
 const PROMPT_MESSAGE = 'I wish to start messaging on origin protocol.'
 const PROMPT_PUB_KEY = 'My public messaging key is: '
@@ -141,6 +142,7 @@ class Messaging {
     this.GLOBAL_KEYS = messagingNamespace + PRE_GLOBAL_KEYS
     this.CONV = messagingNamespace + PRE_CONV
     this.CONV_INIT_PREFIX = messagingNamespace + PRE_CONV_INIT_PREFIX
+    this.cookieStorage = new cookieStorage({ path: (location && location.pathname) ? location.pathname : '/' })
   }
 
   onAccount(account_key) {
@@ -149,8 +151,16 @@ class Messaging {
     }
   }
 
+  setKeyItem(key, value) {
+    this.cookieStorage.setItem(key, value)
+  }
+
+  getKeyItem(key) {
+    return this.cookieStorage.getItem(key)
+  }
+
   getMessagingKey() {
-    return localStorage.getItem(`${MESSAGING_KEY}:${this.account_key}`)
+    return this.getKeyItem(`${MESSAGING_KEY}:${this.account_key}`)
   }
 
   initKeys() {
@@ -177,10 +187,10 @@ class Messaging {
     this.events.emit('new', this.account_key)
     // just start it up here
     if (await this.initRemote()) {
-      this.pub_sig = localStorage.getItem(
+      this.pub_sig = this.getKeyItem(
         `${PUB_MESSAGING_SIG}:${this.account_key}`
       )
-      this.pub_msg = localStorage.getItem(
+      this.pub_msg = this.getKeyItem(
         `${PUB_MESSAGING}:${this.account_key}`
       )
 
@@ -440,7 +450,7 @@ class Messaging {
         .toString('hex')
     // send it to local storage
     const scopedMessagingKeyName = `${MESSAGING_KEY}:${this.account_key}`
-    localStorage.setItem(scopedMessagingKeyName, key_str)
+    this.setKeyItem(scopedMessagingKeyName, key_str)
     this.initMessaging()
   }
 
@@ -463,9 +473,9 @@ class Messaging {
       this.account_key
     )
     const scopedPubSigKeyName = `${PUB_MESSAGING_SIG}:${this.account_key}`
-    localStorage.setItem(scopedPubSigKeyName, this.pub_sig)
+    this.setKeyItem(scopedPubSigKeyName, this.pub_sig)
     const scopedPubMessagingKeyName = `${PUB_MESSAGING}:${this.account_key}`
-    localStorage.setItem(scopedPubMessagingKeyName, this.pub_msg)
+    this.setKeyItem(scopedPubMessagingKeyName, this.pub_msg)
     this.setRemoteMessagingSig()
   }
 
