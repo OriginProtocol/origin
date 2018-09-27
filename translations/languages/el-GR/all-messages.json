@@ -365,7 +365,7 @@
   "web3-provider.toshi": "Toshi",
   "web3-provider.intentRequiresSignIn": "Προκειμένου να {web3Intent}, πρέπει να εισαχθείτε στο {currentProvider}.",
   "web3-provider.connecting": "Σύνδεση σε δίκτυο...",
-  "web3-provider.shouldBeOnRinkeby": "Ο {currentProvider} θα πρέπει να βρίσκεται στο Rinkeby Test Network",
+  "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "Επί του παρόντος στο {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "Παρακαλώ εγκαταστήστε την επέκταση MetaMask για να αποκτήσετε πρόσβαση σε αυτό το site.",
   "web3-provider.fullInstructionsForDemo": "Πλήρεις οδηγίες για το Demo",
