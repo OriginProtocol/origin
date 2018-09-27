@@ -365,7 +365,7 @@
   "web3-provider.toshi": "Toshi",
   "web3-provider.intentRequiresSignIn": "Để {web3Intent}, bạn phải đăng nhập vào {currentProvider}.",
   "web3-provider.connecting": "Kết nối với mạng...",
-  "web3-provider.shouldBeOnRinkeby": "{currentProvider} phải ở trên Bản thử nghiệm Rinkeby",
+  "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "Hiện tại trên {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "Vui lòng cài đặt MetaMask để truy cập trang web này.",
   "web3-provider.fullInstructionsForDemo": "Hướng dẫn đầy đủ cho bản Demo",
