@@ -1,8 +1,8 @@
 const validOwners = {
   // mainnet
   "1": [
-    // Empty list means allow all
-    // TODO: fill this in
+    '0xe011fa2a6df98c69383457d87a056ed0103aa352',
+    '0x8a1a4f77f9f0eb35fb9930696038be6220986c1b'
   ],
 
   // Ropsten

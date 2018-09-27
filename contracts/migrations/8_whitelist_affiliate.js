@@ -26,6 +26,11 @@ async function whitelistAffiliate(_, network) {
     development: '0x627306090abab3a6e1400e9345bc60c78a8bef57',
     mainnet: '0x7aD0fa0E2380a5e0208B25AC69216Bd7Ff206bF8'
   }
+
+  if (process.env['SIMULATE_MAINNET']) {
+    console.log('simulating mainnet')
+    network = 'mainnet'
+  }
   const affiliate = affiliates[network]
   if (affiliate) {
     console.log(`whitelisting affiliate ${affiliate}`)

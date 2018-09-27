@@ -5,23 +5,12 @@ const V00_Marketplace = artifacts.require('./V00_Marketplace.sol')
 const whitelistExpiration = Date.parse('28 Feb 2019 00:00:00 PST') / 1000
 
 module.exports = function(deployer, network) {
-  return deployer.then(() => {
-    switch(network) {
-      case "rinkeby":
-      case "ropsten":
-        return createTokenWhitelistForTestnets(network)
-
-      case "mainnet":
-        console.error('\n\n*** WHITELIST MIGRATION NOT YET IMPLEMENTED FOR MAINNET ***\n\n')
-        return
-
-      default:
-        console.log(`Skipping whitelist creation for network ${network}`)
-    }
-  })
+  if (network !== 'development' || process.env['SIMULATE_MAINNET']) {
+    return createTokenWhitelist(network)
+  }
 }
 
-async function createTokenWhitelistForTestnets() {
+async function createTokenWhitelist(network) {
   const token = await OriginToken.deployed()
   const tokenOwner = await token.owner()
 
@@ -35,6 +24,17 @@ async function createTokenWhitelistForTestnets() {
   const marketplace = await V00_Marketplace.deployed()
   await token.addAllowedTransactor(marketplace.address, { from: tokenOwner })
   console.log(`Added marketplace ${marketplace.address} to whitelist`)
+
+  if (network === 'mainnet' || process.env['SIMULATE_MAINNET']) {
+    const addresses = [
+      '0x7aD0fa0E2380a5e0208B25AC69216Bd7Ff206bF8', // affiliate
+      '0xe011fa2a6df98c69383457d87a056ed0103aa352', // ERC20 multi-sig
+    ]
+    for (const address of addresses) {
+      await token.addAllowedTransactor(address, { from: tokenOwner })
+      console.log(`Added address ${address} to whitelist`)
+    }
+  }
 
   // Activate the whitelist.
   await token.setWhitelistExpiration(whitelistExpiration, { from: tokenOwner })
