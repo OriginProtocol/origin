@@ -63,8 +63,7 @@ export const getFiatPrice = async (
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     })
-  else
-    return priceEth * exchangeRate
+  else return priceEth * exchangeRate
 }
 
 export const getEthPrice = async (

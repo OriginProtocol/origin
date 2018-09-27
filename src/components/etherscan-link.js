@@ -12,7 +12,7 @@ class EtherscanLink extends Component {
   }
 
   render() {
-    const { hash } = this.props
+    const { children, className, hash, tokenAddress = '' } = this.props
     const { networkName } = this.state
     let href, path
 
@@ -20,8 +20,10 @@ class EtherscanLink extends Component {
       throw new Error('EtherscanLink: hash must exist')
     }
 
-    // detect transaction hashes
-    if (hash.length === 66) {
+    if (tokenAddress.length === 42) {
+      path = `token/${tokenAddress}?a=${hash}`
+      // detect transaction hashes
+    } else if (hash.length === 66) {
       path = `tx/${hash}`
       // detect address hashes
     } else if (hash.length === 42) {
@@ -35,11 +37,19 @@ class EtherscanLink extends Component {
       href = `https://etherscan.io/${path}`
     } else if (networkName !== 'private') {
       href = `https://${networkName}.etherscan.io/${path}`
+    } else {
+      href = '/'
     }
 
+    // render optional children or the hash
     return (
-      <a target="_blank" href={href}>
-        {hash}
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+      >
+        {children || hash}
       </a>
     )
   }

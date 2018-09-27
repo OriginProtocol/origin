@@ -41,7 +41,7 @@
   },
   {
     "id": "web3-provider.shouldBeOnRinkeby",
-    "defaultMessage": "{currentProvider} should be on Rinkeby Test Network"
+    "defaultMessage": "{currentProvider} should be on {supportedNetworkName}"
   },
   {
     "id": "web3-provider.currentlyOnNetwork",

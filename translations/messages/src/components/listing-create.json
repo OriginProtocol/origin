@@ -4,10 +4,6 @@
     "defaultMessage": "Are you sure you want to leave? If you leave this page your progress will be lost."
   },
   {
-    "id": "listing-create.sizeWarning",
-    "defaultMessage": "Your listing is too large. Consider using fewer or smaller photos."
-  },
-  {
     "id": "listing-create.stepNumberLabel",
     "defaultMessage": "STEP {stepNumber}"
   },

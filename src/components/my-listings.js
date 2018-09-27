@@ -83,10 +83,7 @@ class MyListings extends Component {
       const listing = await getListing(id)
 
       this.setState({
-        listings: [
-          ...this.state.listings.filter(l => l.id !== id),
-          listing
-        ]
+        listings: [...this.state.listings.filter(l => l.id !== id), listing]
       })
     } catch (error) {
       console.error(`Error refreshing listing: ${id}`)
@@ -286,9 +283,7 @@ class MyListings extends Component {
             </div>
           )}
         </div>
-        {processing && (
-          <MetamaskModal />
-        )}
+        {processing && <MetamaskModal />}
       </div>
     )
   }
