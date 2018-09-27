@@ -17,6 +17,7 @@ const env = {
   CONTRACT_ADDRESSES: '{}',
   DEPLOY_TAG: false,
   DISCOVERY_SERVER_URL: '',
+  ETH_NETWORK_ID: null,
   FORCE_HTTPS: false,
   IPFS_API_PORT: '',
   IPFS_DOMAIN: '',
