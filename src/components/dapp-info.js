@@ -127,6 +127,7 @@ class DappInfo extends Component {
                 <tr><td>CONTRACT_ADDRESSES</td><td>{ process.env.CONTRACT_ADDRESSES }</td></tr>
                 <tr><td>DEPLOY_TAG</td><td>{ process.env.DEPLOY_TAG }</td></tr>
                 <tr><td>DISCOVERY_SERVER_URL</td><td>{ process.env.DISCOVERY_SERVER_URL }</td></tr>
+                <tr><td>ETH_NETWORK_ID</td><td>{ process.env.ETH_NETWORK_ID }</td></tr>
                 <tr><td>FORCE_HTTPS</td><td>{ process.env.FORCE_HTTPS }</td></tr>
                 <tr><td>IPFS_API_PORT</td><td>{ process.env.IPFS_API_PORT }</td></tr>
                 <tr><td>IPFS_DOMAIN</td><td>{ process.env.IPFS_DOMAIN }</td></tr>
@@ -136,7 +137,6 @@ class DappInfo extends Component {
                 <tr><td>MESSAGING_ACCOUNT</td><td>{ process.env.MESSAGING_ACCOUNT }</td></tr>
                 <tr><td>MESSAGING_NAMESPACE</td><td>{ process.env.MESSAGING_NAMESPACE }</td></tr>
                 <tr><td>NODE_ENV</td><td>{ process.env.NODE_ENV }</td></tr>
-                <tr><td>PRODUCTION_DOMAIN</td><td>{ process.env.PRODUCTION_DOMAIN }</td></tr>
                 <tr><td>PROVIDER_URL</td><td>{ process.env.PROVIDER_URL }</td></tr>
                 <tr><td>REDUX_LOGGER</td><td>{ process.env.REDUX_LOGGER }</td></tr>
 
