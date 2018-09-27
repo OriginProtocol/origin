@@ -307,10 +307,13 @@ class DappInfo extends Component {
                   <td>{process.env.REDUX_LOGGER}</td>
                 </tr>
 
+                <tr><th colSpan="2">Marketplace Contracts</th></tr>
                 {this.state.marketplaceData}
 
+                <tr><th colSpan="2">Token Contract</th></tr>
                 {this.state.tokenData}
 
+                <tr><th colSpan="2">ABIs</th></tr>
                 {this.state.multiSigData}
               </table>
               &nbsp;
