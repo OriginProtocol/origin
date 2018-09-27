@@ -79,7 +79,7 @@ export default [
         <p className="step-text">
           <FormattedMessage
             id={'onboarding-steps.stepTwoContent'}
-            defaultMessage={'You will need a wallet to withdraw/deposit on the Origin DApp. We recommend using'}
+            defaultMessage={'You will need a wallet to withdraw/deposit on the Origin DApp. We recommend using '}
           />
           <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">MetaMask</a>.
         </p>
@@ -130,9 +130,9 @@ export default [
         <p className="step-text">
           <FormattedMessage
             id={'onboarding-steps.stepThreeContentPartOne'}
-            defaultMessage={'Origin Tokens'}
+            defaultMessage={'Origin Tokens '}
           />
-          &nbsp;(Symbol: <mark className="ogn">OGN</mark>)&nbsp;
+          (Symbol: <mark className="ogn">OGN</mark>)&nbsp;
           <FormattedMessage
             id={'onboarding-steps.stepThreeContentPartTwo'}
             defaultMessage={'are used on the Origin DApp to boost your listings.'}
