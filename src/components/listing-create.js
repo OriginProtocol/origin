@@ -33,10 +33,6 @@ class ListingCreate extends Component {
   constructor(props) {
     super(props)
 
-    // This is non-ideal fix until IPFS can correctly return 443 errors
-    // Server limit is 2MB, with 100K safety buffer
-    this.MAX_UPLOAD_BYTES = 2e6 - 1e5
-
     // Enum of our states
     this.STEP = {
       PICK_SCHEMA: 1,
@@ -203,52 +199,19 @@ class ListingCreate extends Component {
   }
 
   onDetailsEntered(formListing) {
-    // Helper function to approximate size of object in bytes
-    function roughSizeOfObject(object) {
-      const objectList = []
-      const stack = [object]
-      let bytes = 0
-      while (stack.length) {
-        const value = stack.pop()
-        if (typeof value === 'boolean') {
-          bytes += 4
-        } else if (typeof value === 'string') {
-          bytes += value.length * 2
-        } else if (typeof value === 'number') {
-          bytes += 8
-        } else if (
-          typeof value === 'object' &&
-          objectList.indexOf(value) === -1
-        ) {
-          objectList.push(value)
-          for (const i in value) {
-            if (value.hasOwnProperty(i)) {
-              stack.push(value[i])
-            }
-          }
+    this.setState({
+      formListing: {
+        ...this.state.formListing,
+        ...formListing,
+        formData: {
+          ...this.state.formListing.formData,
+          ...formListing.formData
         }
-      }
-      return bytes
-    }
-    if (roughSizeOfObject(formListing.formData) > this.MAX_UPLOAD_BYTES) {
-      this.props.showAlert(
-        this.props.intl.formatMessage(this.intlMessages.sizeWarning)
-      )
-    } else {
-      this.setState({
-        formListing: {
-          ...this.state.formListing,
-          ...formListing,
-          formData: {
-            ...this.state.formListing.formData,
-            ...formListing.formData
-          }
-        },
-        step: this.STEP.BOOST
-      })
-      window.scrollTo(0, 0)
-      this.checkOgnBalance()
-    }
+      },
+      step: this.STEP.BOOST
+    })
+    window.scrollTo(0, 0)
+    this.checkOgnBalance()
   }
 
   checkOgnBalance() {
