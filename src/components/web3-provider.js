@@ -447,7 +447,7 @@ class Web3Provider extends Component {
     if (currentProvider && networkId && isProduction && networkNotSupported) {
       const url = new URL(window.location)
       if (networkId==1) {
-        window.location.href = rinkebyBaseUrl + url.pathname + url.hash
+        window.location.href = mainnetBaseUrl + url.pathname + url.hash
       }
       else if (networkId==4) {
         window.location.href = rinkebyBaseUrl + url.pathname + url.hash
