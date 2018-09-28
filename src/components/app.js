@@ -22,6 +22,7 @@ import ListingDetail from 'components/listing-detail'
 import ListingsGrid from 'components/listings-grid'
 import Messages from 'components/messages'
 import MessagingProvider from 'components/messaging-provider'
+import BetaModal from 'components/modals/beta-modal'
 import MyListings from 'components/my-listings'
 import MyPurchases from 'components/my-purchases'
 import MySales from 'components/my-sales'
@@ -172,6 +173,7 @@ class App extends Component {
                   </Switch>
                 </Layout>
                 <Alert />
+                <BetaModal />
                 <OnboardingModal />
               </MessagingProvider>
             </Web3Provider>
