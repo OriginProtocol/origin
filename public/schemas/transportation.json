@@ -38,10 +38,6 @@
       "minLength": 10,
       "maxLength": 1024
     },
-    "location": {
-      "type": "string",
-      "title": "schema.transportation.location"
-    },
     "price": {
       "type": "number",
       "title": "schema.transportation.priceInETH"

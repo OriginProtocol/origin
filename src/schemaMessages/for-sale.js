@@ -21,10 +21,6 @@ export default defineMessages({
     id: 'schema.forSale.description',
     defaultMessage: 'Description'
   },
-  'schema.forSale.location': {
-    id: 'schema.forSale.location',
-    defaultMessage: 'Location'
-  },
   'schema.forSale.priceInETH': {
     id: 'schema.forSale.priceInETH',
     defaultMessage: 'Price in ETH'
