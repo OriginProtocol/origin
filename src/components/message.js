@@ -70,7 +70,7 @@ class Message extends Component {
     const contentWithLineBreak = `${content}\n`
     const contentIsData = content.match(/^data:/)
     const dataIsImage = contentIsData && content.match(/^data:image/)
-    const dataSize = content.length
+    const dataTooBig = (content.length > imageMaxSize)
 
     if (!contentIsData) {
       return contentWithLineBreak
@@ -83,7 +83,7 @@ class Message extends Component {
           />
         </div>
       )
-    } else if (dataSize > imageMaxSize) {
+    } else if (dataTooBig) {
       return (
         <div className="system-message">
           <FormattedMessage
