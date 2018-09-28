@@ -3601,11 +3601,14 @@ form .stars img {
 .transaction .text-container {
   flex-grow: 1;
   font-weight: normal;
+  /* hard-code the width of the spinning graphic for some reason */
+  max-width: calc(100% - 32px - 1rem);
 }
 
 .transaction .addresses {
   color: var(--steel);
   font-size: 0.75rem;
+  max-width: 66%;
 }
 
 .transaction .timelapse,
@@ -3684,11 +3687,6 @@ form .stars img {
   left: 2px;
   animation: 2.5s rotate infinite;
   animation-timing-function: linear;
-}
-
-.transaction .addresses img {
-  margin: 0 0.2rem 0 0.4rem;
-  vertical-align: baseline;
 }
 
 /* Messages */

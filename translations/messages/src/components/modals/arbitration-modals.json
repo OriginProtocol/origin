@@ -8,8 +8,16 @@
     "defaultMessage": "Are you sure you want to report a problem?"
   },
   {
+    "id": "arbitrationModals.confirmText0",
+    "defaultMessage": "Would you like to report a problem?"
+  },
+  {
     "id": "arbitrationModals.confirmText2",
     "defaultMessage": "This will start the conflict resolution process,\n            someone from Origin will be notified and all chat history will be made\n            public to a moderator."
+  },
+  {
+    "id": "arbitrationModals.inferredCancel",
+    "defaultMessage": "No, thanks"
   },
   {
     "id": "arbitrationModals.confirmCancel",
