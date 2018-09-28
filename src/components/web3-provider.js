@@ -21,8 +21,8 @@ const networkNames = {
   999: 'Localhost'
 }
 const supportedNetworkId = process.env.ETH_NETWORK_ID || 1 // Default to mainnet
-const mainnetDomain = process.env.MAINNET_DOMAIN || 'dapp.originprotocol.com'
-const rinkebyDomain = process.env.RINKEBY_DOMAIN || 'demo.originprotocol.com'
+const mainnetBaseUrl = process.env.MAINNET_BASEURL || 'https://dapp.originprotocol.com'
+const rinkebyBaseUrl = process.env.RINKEBY_BASEURL || 'https://demo.originprotocol.com'
 const ONE_SECOND = 1000
 const ONE_MINUTE = ONE_SECOND * 60
 
@@ -445,11 +445,12 @@ class Web3Provider extends Component {
 
     // Redirect if we know a DApp instalation that supports their network.
     if (currentProvider && networkId && isProduction && networkNotSupported) {
+      const url = new URL(window.location)
       if (networkId==1) {
-        window.location.href = 'https://' + mainnetDomain
+        window.location.href = rinkebyBaseUrl + url.pathname + url.hash
       }
       else if (networkId==4) {
-        window.location.href = 'https://' + rinkebyDomain
+        window.location.href = rinkebyBaseUrl + url.pathname + url.hash
       }
     }
 
