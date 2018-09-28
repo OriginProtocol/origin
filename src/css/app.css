@@ -4889,6 +4889,23 @@ a:not([href]):not([tabindex]).span-link {
   width: 1rem;
 }
 
+/* Warning */
+
+.warning {
+  font-weight: normal;
+  position: relative;
+  top: 30px;
+}
+
+.warning .alert {
+  border: 1px solid var(--golden-rod);
+  margin-bottom: 0;
+}
+
+.warning p {
+  margin: 0 0 0 1.25rem;
+}
+
 /* Media queries */
 /* xs */
 @media (max-width: 576px) {

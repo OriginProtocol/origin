@@ -313,7 +313,7 @@ class ListingCreate extends Component {
     const translatedCategory = translateListingCategory(formData.category)
 
     return (
-      <div className="container listing-form">
+      <div className="listing-form">
         <div className="step-container">
           <div className="row">
             {step === this.STEP.PICK_SCHEMA && (

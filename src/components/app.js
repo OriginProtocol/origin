@@ -31,6 +31,7 @@ import OnboardingModal from 'components/onboarding-modal'
 import PurchaseDetail from 'components/purchase-detail'
 import ScrollToTop from 'components/scroll-to-top'
 import SearchResult from 'components/search/search-result'
+import Warning from 'components/warning'
 import Web3Provider from 'components/web3-provider'
 
 import Profile from 'pages/profile/Profile'
@@ -50,6 +51,7 @@ const httpsRequired = process.env.FORCE_HTTPS
 const HomePage = () => (
   <div>
     <SearchBar />
+    <Warning />
     <div className="container">
       <ListingsGrid renderMode="home-page" />
     </div>

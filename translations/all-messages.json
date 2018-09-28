@@ -355,6 +355,8 @@
   "wallet-card.ethAddress": "ETH Address:",
   "wallet-card.noEthAccountConnected": "No ETH Account Connected",
   "wallet-card.accountBalances": "Account Balances",
+  "warning.badge": "Beta",
+  "warning.message": "You’re currently using the Origin Mainnet Beta. Found a bug? Open an issue on {github} or report it in our #bug-reports channel on {discord}.",
   "web3-provider.intentRequiresMetaMask": "In order to {web3Intent}, you must install MetaMask.",
   "web3-provider.getMetaMask": "Get MetaMask",
   "web3-provider.fullInstructions": "Full Instructions",
