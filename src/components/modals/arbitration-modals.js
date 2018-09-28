@@ -3,7 +3,12 @@ import { Link } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
 import Modal from 'components/modal'
 
-export const ConfirmationModal = ({ isOpen = false, onCancel, onSubmit }) => (
+export const ConfirmationModal = ({
+  isOpen = false,
+  inferred = false,
+  onCancel,
+  onSubmit
+}) => (
   <Modal
     className="arbitration-modal confirm"
     isOpen={isOpen}
@@ -17,10 +22,18 @@ export const ConfirmationModal = ({ isOpen = false, onCancel, onSubmit }) => (
     </p>
     <div className="text">
       <span>
-        <FormattedMessage
-          id={'arbitrationModals.confirmText1'}
-          defaultMessage={'Are you sure you want to report a problem?'}
-        />
+        {!inferred && (
+          <FormattedMessage
+            id={'arbitrationModals.confirmText1'}
+            defaultMessage={'Are you sure you want to report a problem?'}
+          />
+        )}
+        {inferred && (
+          <FormattedMessage
+            id={'arbitrationModals.confirmText0'}
+            defaultMessage={'Would you like to report a problem?'}
+          />
+        )}
       </span>
       <p>
         <FormattedMessage
@@ -33,10 +46,18 @@ export const ConfirmationModal = ({ isOpen = false, onCancel, onSubmit }) => (
     </div>
     <div className="button-container">
       <button className="btn btn-clear" onClick={onCancel}>
-        <FormattedMessage
-          id={'arbitrationModals.confirmCancel'}
-          defaultMessage={'Oops, no wait...'}
-        />
+        {inferred && (
+          <FormattedMessage
+            id={'arbitrationModals.inferredCancel'}
+            defaultMessage={'No, thanks'}
+          />
+        )}
+        {!inferred && (
+          <FormattedMessage
+            id={'arbitrationModals.confirmCancel'}
+            defaultMessage={'Oops, no wait...'}
+          />
+        )}
       </button>
       <button className="btn btn-clear" onClick={onSubmit}>
         <FormattedMessage

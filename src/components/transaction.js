@@ -1,46 +1,39 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { connect } from 'react-redux'
 import moment from 'moment'
 
 import TransactionMessage from 'components/transaction-message'
 
 import { getListing } from 'utils/listing'
 
-import origin from '../services/origin'
-
 class Transaction extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      listing: null,
-      purchase: null
+      listing: null
     }
   }
 
   async componentDidMount() {
     try {
-      let { offer, listing } = this.props.transaction
-      const { offerId, listingId } = this.props.transaction
-
-      offer =
-        offer || (offerId ? await origin.marketplace.getOffer(offerId) : null)
-      const purchase = offer
+      const { transaction } = this.props
+      let { listing } = transaction
+      const { listingId } = transaction
 
       if (!listing && listingId) {
         listing = await getListing(listingId)
       }
 
-      this.setState({ listing, purchase })
+      this.setState({ listing })
     } catch (e) {
       console.error(e)
     }
   }
 
   render() {
-    const { confirmationCompletionCount, transaction, web3Account } = this.props
-    const { listing, purchase } = this.state
+    const { confirmationCompletionCount, transaction } = this.props
+    const { listing } = this.state
     const {
       confirmationCount,
       timestamp,
@@ -48,54 +41,10 @@ class Transaction extends Component {
       transactionTypeKey
     } = transaction
     const created = timestamp
-    let fromAddress, toAddress
 
     if (!listing) {
       return null
     }
-
-    const { buyer } = purchase || {}
-    const { seller } = listing
-
-    switch (transactionTypeKey) {
-    case 'createListing':
-      fromAddress = seller
-      break
-    case 'closeListing':
-      fromAddress = seller
-      break
-    case 'makeOffer':
-      fromAddress = buyer
-      toAddress = seller
-      break
-    case 'acceptOffer':
-      fromAddress = seller
-      toAddress = buyer
-      break
-    case 'initiateDispute':
-      fromAddress = web3Account
-      toAddress = web3Account === seller ? buyer : seller
-      break
-    case 'completePurchase':
-      fromAddress = buyer
-      toAddress = seller
-      break
-    case 'withdrawOffer':
-      fromAddress = web3Account
-      toAddress = web3Account === seller ? buyer : seller
-      break
-    case 'reviewSale':
-      fromAddress = seller
-      toAddress = buyer
-      break
-    }
-
-    const truncatedFrom = fromAddress
-      ? `${fromAddress.slice(0, 4)}...${fromAddress.slice(38)}`
-      : null
-    const truncatedTo = toAddress
-      ? `${toAddress.slice(0, 4)}...${toAddress.slice(38)}`
-      : null
 
     const completed = confirmationCount >= confirmationCompletionCount
     const decimal = confirmationCount / confirmationCompletionCount
@@ -122,35 +71,7 @@ class Transaction extends Component {
             </div>
           </div>
           <div className="d-flex">
-            {!toAddress && (
-              <div className="addresses">
-                <FormattedMessage
-                  id={'transactions.from'}
-                  defaultMessage={'From'}
-                />
-                &nbsp;
-                {truncatedFrom}
-              </div>
-            )}
-            {toAddress && (
-              <div className="addresses">
-                <FormattedMessage
-                  id={'transactions.from'}
-                  defaultMessage={'From'}
-                />
-                &nbsp;
-                {truncatedFrom}
-                &nbsp;
-                <img src="images/arrow-dark.svg" />
-                &nbsp;
-                <FormattedMessage
-                  id={'transactions.to'}
-                  defaultMessage={'To'}
-                />
-                &nbsp;
-                {truncatedTo}
-              </div>
-            )}
+            <div className="addresses text-truncate">{transactionHash}</div>
             <div className="confirmations-count ml-auto">
               {percentage}% &nbsp;
               <FormattedMessage
@@ -198,10 +119,4 @@ class Transaction extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    web3Account: state.app.web3.account
-  }
-}
-
-export default connect(mapStateToProps)(Transaction)
+export default Transaction
