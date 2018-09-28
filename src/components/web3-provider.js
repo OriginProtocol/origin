@@ -446,10 +446,10 @@ class Web3Provider extends Component {
     // Redirect if we know a DApp instalation that supports their network.
     if (currentProvider && networkId && isProduction && networkNotSupported) {
       const url = new URL(window.location)
-      if (networkId==1 && mainnetBaseUrl) {
+      if (networkId === 1 && mainnetBaseUrl) {
         window.location.href = mainnetBaseUrl + url.pathname + url.hash
       }
-      else if (networkId==4 && rinkebyBaseUrl) {
+      else if (networkId === 4 && rinkebyBaseUrl) {
         window.location.href = rinkebyBaseUrl + url.pathname + url.hash
       }
     }
