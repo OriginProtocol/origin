@@ -22,7 +22,7 @@ const networkNames = {
 }
 const supportedNetworkId = process.env.ETH_NETWORK_ID || 1 // Default to mainnet
 const mainnetBaseUrl = process.env.MAINNET_BASEURL || 'https://dapp.originprotocol.com'
-const rinkebyBaseUrl = process.env.RINKEBY_BASEURL || 'https://demo.originprotocol.com'
+const rinkebyBaseUrl = process.env.RINKEBY_BASEURL || 'https://demo.staging.originprotocol.com'
 const ONE_SECOND = 1000
 const ONE_MINUTE = ONE_SECOND * 60
 
