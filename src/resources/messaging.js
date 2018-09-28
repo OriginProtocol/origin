@@ -142,7 +142,7 @@ class Messaging {
     this.GLOBAL_KEYS = messagingNamespace + PRE_GLOBAL_KEYS
     this.CONV = messagingNamespace + PRE_CONV
     this.CONV_INIT_PREFIX = messagingNamespace + PRE_CONV_INIT_PREFIX
-    this.cookieStorage = new cookieStorage({ path: (location && location.pathname) ? location.pathname : '/' })
+    this.cookieStorage = new cookieStorage({ path: (typeof location === 'object' && location.pathname) ? location.pathname : '/' })
   }
 
   onAccount(account_key) {
