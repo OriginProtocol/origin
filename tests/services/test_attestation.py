@@ -7,8 +7,12 @@ from marshmallow.exceptions import ValidationError
 import responses
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from logic.attestation_service import (VerificationService,
-                                       VerificationServiceResponse)
+from database.models import AttestationTypes
+from database.models import Attestation
+from logic.attestation_service import (
+    VerificationService,
+    VerificationServiceResponse
+)
 from logic.attestation_service import CLAIM_TYPES
 from logic.service_utils import (
     AirbnbVerificationError,
@@ -61,6 +65,10 @@ def test_send_phone_verification_invalid_number():
 
     assert(validation_err.value.messages[0]) == 'Phone number is invalid.'
     assert(validation_err.value.field_names[0]) == 'phone'
+
+    # Verify attestation not stored
+    attestations = Attestation.query.all()
+    assert(len(attestations)) == 0
 
 
 @responses.activate
@@ -130,6 +138,11 @@ def test_verify_phone_valid_code():
     assert len(response.data['signature']) == SIGNATURE_LENGTH
     assert response.data['claim_type'] == CLAIM_TYPES['phone']
     assert response.data['data'] == 'phone verified'
+
+    attestations = Attestation.query.all()
+    assert(len(attestations)) == 1
+    assert(attestations[0].method) == AttestationTypes.PHONE
+    assert(attestations[0].value) == "1 12341234"
 
 
 @responses.activate
@@ -240,6 +253,12 @@ def test_verify_email_valid_code(mock_session):
     assert response.data['claim_type'] == CLAIM_TYPES['email']
     assert response.data['data'] == 'email verified'
 
+    # Verify attestation stored in database
+    attestations = Attestation.query.all()
+    assert(len(attestations)) == 1
+    assert(attestations[0].method) == AttestationTypes.EMAIL
+    assert(attestations[0].value) == "origin@protocol.foo"
+
 
 def test_verify_email_expired_code():
     # Mock a session object with an expiry time in the past
@@ -264,6 +283,10 @@ def test_verify_email_expired_code():
     assert(validation_err.value.messages[0]
            ) == 'Verification code has expired.'
     assert(validation_err.value.field_names[0]) == 'code'
+
+    # Verify attestation not stored
+    attestations = Attestation.query.all()
+    assert(len(attestations)) == 0
 
 
 @mock.patch('logic.attestation_service.session')
@@ -290,6 +313,10 @@ def test_verify_email_invalid_code(mock_session):
            ) == 'Verification code is incorrect.'
     assert(validation_err.value.field_names[0]) == 'code'
 
+    # Verify attestation not stored
+    attestations = Attestation.query.all()
+    assert(len(attestations)) == 0
+
 
 def test_verify_email_no_verification_sent():
     args = {
@@ -304,6 +331,10 @@ def test_verify_email_no_verification_sent():
 
     assert(verification_err.value.message) == \
         'No verification code was found.'
+
+    # Verify attestation not stored
+    attestations = Attestation.query.all()
+    assert(len(attestations)) == 0
 
 
 def test_verify_email_invalid_email():
@@ -327,6 +358,10 @@ def test_verify_email_invalid_email():
 
     assert(verification_err.value.message) == \
         'No verification code was found for that email.'
+
+    # Verify attestation not stored
+    attestations = Attestation.query.all()
+    assert(len(attestations)) == 0
 
 
 def test_facebook_auth_url():
@@ -361,6 +396,11 @@ def test_verify_facebook_valid_code(MockHttpConnection):
     assert resp_data['claim_type'] == CLAIM_TYPES['facebook']
     assert resp_data['data'] == 'facebook verified'
 
+    # Verify attestation stored in database
+    attestations = Attestation.query.all()
+    assert(len(attestations)) == 1
+    assert(attestations[0].method) == AttestationTypes.FACEBOOK
+
 
 @mock.patch('http.client.HTTPSConnection')
 def test_verify_facebook_invalid_code(MockHttpConnection):
@@ -382,6 +422,10 @@ def test_verify_facebook_invalid_code(MockHttpConnection):
         '&client_secret=facebook-client-secret&' +
         'redirect_uri=https://testhost.com/redirects/facebook/&code=bananas')
     assert str(service_err.value) == 'The code you provided is invalid.'
+
+    # Verify attestation not stored
+    attestations = Attestation.query.all()
+    assert(len(attestations)) == 0
 
 
 @mock.patch('logic.attestation_service.requests')
@@ -414,6 +458,11 @@ def test_verify_twitter_valid_code(mock_session, mock_requests):
     assert resp_data['claim_type'] == CLAIM_TYPES['twitter']
     assert resp_data['data'] == 'twitter verified'
 
+    # Verify attestation stored in database
+    attestations = Attestation.query.all()
+    assert(len(attestations)) == 1
+    assert(attestations[0].method) == AttestationTypes.TWITTER
+
 
 @mock.patch('logic.attestation_service.requests')
 @mock.patch('logic.attestation_service.session')
@@ -430,6 +479,10 @@ def test_verify_twitter_invalid_verifier(mock_session, mock_requests):
 
     assert str(service_err.value) == 'The verifier you provided is invalid.'
 
+    # Verify attestation not stored
+    attestations = Attestation.query.all()
+    assert(len(attestations)) == 0
+
 
 @mock.patch('logic.attestation_service.requests')
 @mock.patch('logic.attestation_service.session')
@@ -443,6 +496,10 @@ def test_verify_twitter_invalid_session(mock_session, mock_requests):
         VerificationService.verify_twitter(**args)
 
     assert str(service_err.value) == 'Session not found.'
+
+    # Verify attestation not stored
+    attestations = Attestation.query.all()
+    assert(len(attestations)) == 0
 
 
 def test_generate_airbnb_verification_code():
@@ -486,6 +543,12 @@ def test_verify_airbnb(mock_urllib_request):
     assert resp_data['claim_type'] == CLAIM_TYPES['airbnb']
     assert resp_data['data'] == 'airbnbUserId:' + airbnbUserId
 
+    # Verify attestation stored in database
+    attestations = Attestation.query.all()
+    assert(len(attestations)) == 1
+    assert(attestations[0].method) == AttestationTypes.AIRBNB
+    assert(attestations[0].value) == "123456"
+
 
 @mock.patch('logic.attestation_service.urlopen')
 def test_verify_airbnb_verification_code_missing(mock_urllib_request):
@@ -502,6 +565,10 @@ def test_verify_airbnb_verification_code_missing(mock_urllib_request):
 
     assert str(service_err.value) == "Origin verification code: art brick aspect " \
         + "accident brass betray antenna has not been found in user's Airbnb profile."
+
+    # Verify attestation not stored
+    attestations = Attestation.query.all()
+    assert(len(attestations)) == 0
 
 
 @mock.patch('logic.attestation_service.urlopen')
@@ -522,6 +589,10 @@ def test_verify_airbnb_verification_code_incorrect(mock_urllib_request):
     assert str(service_err.value) == "Origin verification code: art brick aspect " \
         + "accident brass betray antenna has not been found in user's Airbnb profile."
 
+    # Verify attestation not stored
+    attestations = Attestation.query.all()
+    assert(len(attestations)) == 0
+
 
 @mock.patch('logic.attestation_service.urlopen')
 def test_verify_airbnb_verification_code_incorrect_user_id_format(
@@ -541,6 +612,10 @@ def test_verify_airbnb_verification_code_incorrect_user_id_format(
 
     assert str(validation_error.value) == 'AirbnbUserId should be a number.'
 
+    # Verify attestation not stored
+    attestations = Attestation.query.all()
+    assert(len(attestations)) == 0
+
 
 @mock.patch('logic.attestation_service.urlopen', side_effect=HTTPError(
     'https://www.airbnb.com/users/show/99999999999999999',
@@ -559,6 +634,10 @@ def test_verify_airbnb_verification_code_non_existing_user(
 
     assert str(
         service_err.value) == 'Airbnb user id: 99999999999999999 not found.'
+
+    # Verify attestation not stored
+    attestations = Attestation.query.all()
+    assert(len(attestations)) == 0
 
 
 @mock.patch('logic.attestation_service.urlopen', side_effect=HTTPError(

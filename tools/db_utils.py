@@ -1,11 +1,8 @@
 from app import app
 from app import app_config
 from database import db
-from database import db_models
 from util import patches
 
-# Silence pyflakes
-assert db_models
 assert patches
 
 app_config.init_prod_app(app)

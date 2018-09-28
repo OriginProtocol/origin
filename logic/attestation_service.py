@@ -13,6 +13,9 @@ from sendgrid.helpers.mail import Email, Content, Mail
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from config import settings
+from database import db
+from database.models import Attestation
+from database.models import AttestationTypes
 from flask import session
 from logic.service_utils import (
     AirbnbVerificationError,
@@ -150,14 +153,26 @@ class VerificationService:
                     'Could not verify code. Please try again shortly.'
                 )
 
+        # This may be unnecessary because the response has a 200 status code
+        # but it a good precaution to handle any inconsistency between the
+        # success field and the status code
         if response.json()['success'] is True:
-            # This may be unnecessary because the response has a 200 status code
-            # but it a good precaution to handle any inconsistency between the
-            # success field and the status code
+            # TODO: determine what the text should be
             data = 'phone verified'
             # TODO: determine claim type integer code for phone verification
             signature = attestations.generate_signature(
-                signing_key, eth_address, CLAIM_TYPES['phone'], data)
+                signing_key, eth_address, CLAIM_TYPES['phone'], data
+            )
+
+            attestation = Attestation(
+                method=AttestationTypes.PHONE,
+                eth_address=eth_address,
+                value="{} {}".format(country_calling_code, phone),
+                signature=signature
+            )
+            db.session.add(attestation)
+            db.session.commit()
+
             return VerificationServiceResponse({
                 'signature': signature,
                 'claim_type': CLAIM_TYPES['phone'],
@@ -247,7 +262,18 @@ class VerificationService:
         data = 'email verified'
         # TODO: determine claim type integer code for email verification
         signature = attestations.generate_signature(
-            signing_key, eth_address, CLAIM_TYPES['email'], data)
+            signing_key, eth_address, CLAIM_TYPES['email'], data
+        )
+
+        attestation = Attestation(
+            method=AttestationTypes.EMAIL,
+            eth_address=eth_address,
+            value=email,
+            signature=signature
+        )
+        db.session.add(attestation)
+        db.session.commit()
+
         return VerificationServiceResponse({
             'signature': signature,
             'claim_type': CLAIM_TYPES['email'],
@@ -277,11 +303,22 @@ class VerificationService:
         if not has_access_token or 'error' in response:
             raise FacebookVerificationError(
                 'The code you provided is invalid.')
+
         # TODO: determine what the text should be
         data = 'facebook verified'
         # TODO: determine claim type integer code for phone verification
         signature = attestations.generate_signature(
-            signing_key, eth_address, CLAIM_TYPES['facebook'], data)
+            signing_key, eth_address, CLAIM_TYPES['facebook'], data
+        )
+
+        attestation = Attestation(
+            method=AttestationTypes.FACEBOOK,
+            eth_address=eth_address,
+            signature=signature
+        )
+        db.session.add(attestation)
+        db.session.commit()
+
         return VerificationServiceResponse({
             'signature': signature,
             'claim_type': CLAIM_TYPES['facebook'],
@@ -324,12 +361,20 @@ class VerificationService:
             raise TwitterVerificationError(
                 'The verifier you provided is invalid.')
 
-        # Create attestation
         # TODO: determine what the text should be
         data = 'twitter verified'
         # TODO: determine claim type integer code for phone verification
         signature = attestations.generate_signature(
             signing_key, eth_address, CLAIM_TYPES['twitter'], data)
+
+        attestation = Attestation(
+            method=AttestationTypes.TWITTER,
+            eth_address=eth_address,
+            signature=signature
+        )
+        db.session.add(attestation)
+        db.session.commit()
+
         return VerificationServiceResponse({
             'signature': signature,
             'claim_type': CLAIM_TYPES['twitter'],
@@ -377,7 +422,17 @@ class VerificationService:
         # TODO: determine the schema for claim data
         data = 'airbnbUserId:' + airbnbUserId
         signature = attestations.generate_signature(
-            signing_key, eth_address, CLAIM_TYPES['airbnb'], data)
+            signing_key, eth_address, CLAIM_TYPES['airbnb'], data
+        )
+
+        attestation = Attestation(
+            method=AttestationTypes.AIRBNB,
+            eth_address=eth_address,
+            value=airbnbUserId,
+            signature=signature
+        )
+        db.session.add(attestation)
+        db.session.commit()
 
         return VerificationServiceResponse({
             'signature': signature,
