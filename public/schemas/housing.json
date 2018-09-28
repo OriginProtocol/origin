@@ -44,10 +44,6 @@
       "minLength": 10,
       "maxLength": 1024
     },
-    "location": {
-      "type": "string",
-      "title": "schema.housing.location"
-    },
     "price": {
       "type": "number",
       "title": "schema.housing.priceInETH"

@@ -21,10 +21,6 @@ export default defineMessages({
     id: 'schema.transportation.description',
     defaultMessage: 'Description'
   },
-  'schema.transportation.location': {
-    id: 'schema.transportation.location',
-    defaultMessage: 'Location'
-  },
   'schema.transportation.priceInETH': {
     id: 'schema.transportation.priceInETH',
     defaultMessage: 'Price in ETH'
