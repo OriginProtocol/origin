@@ -20,10 +20,6 @@
     "defaultMessage": "Description"
   },
   {
-    "id": "schema.housing.location",
-    "defaultMessage": "Location"
-  },
-  {
     "id": "schema.housing.priceInETH",
     "defaultMessage": "Price in ETH"
   },

@@ -40,10 +40,6 @@
         "format": "date-time",
         "title": "schema.tickets.when"
     },
-    "location": {
-      "type": "string",
-      "title": "schema.tickets.where"
-    },
     "description": {
       "type": "string",
       "title": "schema.tickets.description",

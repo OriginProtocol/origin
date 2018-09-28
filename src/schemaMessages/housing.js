@@ -21,10 +21,6 @@ export default defineMessages({
     id: 'schema.housing.description',
     defaultMessage: 'Description'
   },
-  'schema.housing.location': {
-    id: 'schema.housing.location',
-    defaultMessage: 'Location'
-  },
   'schema.housing.priceInETH': {
     id: 'schema.housing.priceInETH',
     defaultMessage: 'Price in ETH'

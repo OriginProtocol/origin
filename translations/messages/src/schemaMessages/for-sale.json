@@ -20,10 +20,6 @@
     "defaultMessage": "Description"
   },
   {
-    "id": "schema.forSale.location",
-    "defaultMessage": "Location"
-  },
-  {
     "id": "schema.forSale.priceInETH",
     "defaultMessage": "Price in ETH"
   },
