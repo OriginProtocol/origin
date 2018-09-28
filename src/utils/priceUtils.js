@@ -3,10 +3,8 @@ import { setExchangeRate } from 'actions/ExchangeRates'
 
 const DEFAULT_FIAT = 'USD'
 const DEFAULT_CRYPTO = 'ETH'
-// const EXCHANGE_RATE_CACHE_TTL = 2 * 60 * 1000 // 2 minutes
-const EXCHANGE_RATE_CACHE_TTL = 1 * 30 * 1000
-// const EXCHANGE_RATE_POLL_INTERVAL = 2 * 60 * 1000 // 2 minutes
-const EXCHANGE_RATE_POLL_INTERVAL = 10000
+const EXCHANGE_RATE_CACHE_TTL = 2 * 60 * 1000 // 2 minutes
+const EXCHANGE_RATE_POLL_INTERVAL = 2 * 60 * 1000 // 2 minutes
 
 const fetchRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
   const cryptoParam = cryptoCurrencyCode.toLowerCase()
@@ -41,20 +39,15 @@ const getFiatExchangeRate = async (fiatCurrencyCode, cryptoCurrencyCode, exchang
   const cachedExchangeRate = exchangeRates && exchangeRates[currencyPair]
 
   if (cachedExchangeRate) {
-    console.log('======================================== new Date() - cachedExchangeRate.timestamp: ', new Date() - cachedExchangeRate.timestamp)
-    console.log('======================================== EXCHANGE_RATE_CACHE_TTL', EXCHANGE_RATE_CACHE_TTL)
     if (new Date().getTime() - cachedExchangeRate.timestamp.getTime() < EXCHANGE_RATE_CACHE_TTL) {
-      console.log('=========================== using cached rate: ', parseFloat(cachedExchangeRate.rate))
       return {
         rate: parseFloat(cachedExchangeRate.rate),
         cacheHit: true
       }
     } else {
-      console.log('============================ cache expired - fetching new rate')
       return await fetchRate(fiatCurrencyCode, cryptoCurrencyCode)
     }
   } else {
-    console.log('============================ no cache found - fetching new rate')
     return await fetchRate(fiatCurrencyCode, cryptoCurrencyCode)
   }
 }
