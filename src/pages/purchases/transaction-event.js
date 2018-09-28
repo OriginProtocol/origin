@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 
 import EtherscanLink from 'components/etherscan-link'
-import origin from '../../services/origin'
 
 class TransactionEvent extends Component {
   render() {

@@ -1,46 +1,39 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { connect } from 'react-redux'
 import moment from 'moment'
 
 import TransactionMessage from 'components/transaction-message'
 
 import { getListing } from 'utils/listing'
 
-import origin from '../services/origin'
-
 class Transaction extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      listing: null,
-      purchase: null
+      listing: null
     }
   }
 
   async componentDidMount() {
     try {
-      let { offer, listing } = this.props.transaction
-      const { offerId, listingId } = this.props.transaction
-
-      offer =
-        offer || (offerId ? await origin.marketplace.getOffer(offerId) : null)
-      const purchase = offer
+      const { transaction } = this.props
+      let { listing } = transaction
+      const { listingId } = transaction
 
       if (!listing && listingId) {
         listing = await getListing(listingId)
       }
 
-      this.setState({ listing, purchase })
+      this.setState({ listing })
     } catch (e) {
       console.error(e)
     }
   }
 
   render() {
-    const { confirmationCompletionCount, transaction, web3Account } = this.props
-    const { listing, purchase } = this.state
+    const { confirmationCompletionCount, transaction } = this.props
+    const { listing } = this.state
     const {
       confirmationCount,
       timestamp,
@@ -53,8 +46,6 @@ class Transaction extends Component {
       return null
     }
 
-    const { buyer } = purchase || {}
-    const { seller } = listing
     const completed = confirmationCount >= confirmationCompletionCount
     const decimal = confirmationCount / confirmationCompletionCount
     const percentage = Math.min(100, (decimal * 100).toFixed())
@@ -128,10 +119,4 @@ class Transaction extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    web3Account: state.app.web3.account
-  }
-}
-
-export default connect(mapStateToProps)(Transaction)
+export default Transaction
