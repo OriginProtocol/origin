@@ -176,10 +176,6 @@
     "defaultMessage": "TxHash"
   },
   {
-    "id": "purchase-detail.from",
-    "defaultMessage": "From"
-  },
-  {
     "id": "purchase-detail.listingDetails",
     "defaultMessage": "Listing Details"
   },

@@ -51,6 +51,7 @@ const defaultState = {
     issue: false,
     rejection: false
   },
+  problemInferred: false,
   processing: false,
   purchase: {},
   reviews: [],
@@ -532,11 +533,14 @@ class PurchaseDetail extends Component {
   }
 
   handleProblem() {
-    if (this.props.messagingEnabled) {
-      this.toggleModal('confirmation')
-    } else {
-      this.toggleModal('prerequisite')
+    // undo inference if it exists
+    if (this.state.problemInferred) {
+      this.setState({
+        problemInferred: false
+      })
     }
+
+    this.toggleModal('confirmation')
   }
 
   // rating: 1 <= integer <= 5
@@ -544,6 +548,13 @@ class PurchaseDetail extends Component {
     this.setState(prevState => {
       return { form: { ...prevState.form, rating } }
     })
+
+    // anticipate the need for a dispute per Josh
+    if (rating < 3) {
+      this.setState({ problemInferred: true })
+
+      this.toggleModal('confirmation')
+    }
   }
 
   handleReviewText(e) {
@@ -636,7 +647,8 @@ class PurchaseDetail extends Component {
     this.enableMessagingInterval = setInterval(() => {
       if (origin.messaging.canSendMessages()) {
         this.toggleModal('prerequisite')
-        this.toggleModal('confirmation')
+        this.toggleModal('issue')
+
         clearInterval(this.enableMessagingInterval)
       }
     }, 1000)
@@ -650,12 +662,13 @@ class PurchaseDetail extends Component {
   }
 
   render() {
-    const { web3Account } = this.props
+    const { messagingEnabled, web3Account } = this.props
     const {
       buyer,
       form,
       listing,
       modalsOpen,
+      problemInferred,
       processing,
       purchase,
       reviews,
@@ -1096,12 +1109,6 @@ class PurchaseDetail extends Component {
                         defaultMessage={'TxHash'}
                       />
                     </th>
-                    <th scope="col">
-                      <FormattedMessage
-                        id={'purchase-detail.from'}
-                        defaultMessage={'From'}
-                      />
-                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1285,10 +1292,16 @@ class PurchaseDetail extends Component {
         {processing && <MetamaskModal />}
         <ConfirmationModal
           isOpen={modalsOpen.confirmation}
+          inferred={problemInferred}
           onCancel={() => this.toggleModal('confirmation')}
           onSubmit={() => {
             this.toggleModal('confirmation')
-            this.toggleModal('issue')
+
+            if (messagingEnabled) {
+              this.toggleModal('issue')
+            } else {
+              this.toggleModal('prerequisite')
+            }
           }}
         />
         <IssueModal
