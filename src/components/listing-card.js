@@ -126,12 +126,12 @@ class ListingCard extends Component {
             )}
             {!loading &&
               this.props.featured && (
-                <span className="featured badge">
-                  <FormattedMessage
-                    id={'listing-card.featured'}
-                    defaultMessage={'Featured'}
-                  />
-                </span>
+              <span className="featured badge">
+                <FormattedMessage
+                  id={'listing-card.featured'}
+                  defaultMessage={'Featured'}
+                />
+              </span>
             )}
             {/*!loading &&
               boostLevelIsPastSomeThreshold && (
