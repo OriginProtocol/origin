@@ -48,7 +48,6 @@ class Transaction extends Component {
       transactionTypeKey
     } = transaction
     const created = timestamp
-    let fromAddress, toAddress
 
     if (!listing) {
       return null
@@ -56,47 +55,6 @@ class Transaction extends Component {
 
     const { buyer } = purchase || {}
     const { seller } = listing
-
-    switch (transactionTypeKey) {
-    case 'createListing':
-      fromAddress = seller
-      break
-    case 'closeListing':
-      fromAddress = seller
-      break
-    case 'makeOffer':
-      fromAddress = buyer
-      toAddress = seller
-      break
-    case 'acceptOffer':
-      fromAddress = seller
-      toAddress = buyer
-      break
-    case 'initiateDispute':
-      fromAddress = web3Account
-      toAddress = web3Account === seller ? buyer : seller
-      break
-    case 'completePurchase':
-      fromAddress = buyer
-      toAddress = seller
-      break
-    case 'withdrawOffer':
-      fromAddress = web3Account
-      toAddress = web3Account === seller ? buyer : seller
-      break
-    case 'reviewSale':
-      fromAddress = seller
-      toAddress = buyer
-      break
-    }
-
-    const truncatedFrom = fromAddress
-      ? `${fromAddress.slice(0, 4)}...${fromAddress.slice(38)}`
-      : null
-    const truncatedTo = toAddress
-      ? `${toAddress.slice(0, 4)}...${toAddress.slice(38)}`
-      : null
-
     const completed = confirmationCount >= confirmationCompletionCount
     const decimal = confirmationCount / confirmationCompletionCount
     const percentage = Math.min(100, (decimal * 100).toFixed())
@@ -122,35 +80,7 @@ class Transaction extends Component {
             </div>
           </div>
           <div className="d-flex">
-            {!toAddress && (
-              <div className="addresses">
-                <FormattedMessage
-                  id={'transactions.from'}
-                  defaultMessage={'From'}
-                />
-                &nbsp;
-                {truncatedFrom}
-              </div>
-            )}
-            {toAddress && (
-              <div className="addresses">
-                <FormattedMessage
-                  id={'transactions.from'}
-                  defaultMessage={'From'}
-                />
-                &nbsp;
-                {truncatedFrom}
-                &nbsp;
-                <img src="images/arrow-dark.svg" />
-                &nbsp;
-                <FormattedMessage
-                  id={'transactions.to'}
-                  defaultMessage={'To'}
-                />
-                &nbsp;
-                {truncatedTo}
-              </div>
-            )}
+            <div className="addresses text-truncate">{transactionHash}</div>
             <div className="confirmations-count ml-auto">
               {percentage}% &nbsp;
               <FormattedMessage
