@@ -1,26 +1,15 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
+
+import { dismissBetaModal } from 'actions/App'
+
 import Modal from 'components/modal'
 
 class BetaModal extends Component {
-  constructor(props) {
-    super(props)
-
-    this.handleToggle = this.handleToggle.bind(this)
-    this.state = {
-      isOpen: !JSON.parse(localStorage.getItem('betaModal.dismissed'))
-    }
-  }
-
-  handleToggle() {
-    this.setState({ isOpen: false })
-
-    localStorage.setItem('betaModal.dismissed', true)
-  }
-
   render() {
     return (
-      <Modal backdrop="static" isOpen={this.state.isOpen} data-modal="beta">
+      <Modal backdrop="static" isOpen={this.props.showModal} data-modal="beta">
         <div className="image-container">
           <img src="images/beta.svg" role="presentation" />
         </div>
@@ -71,7 +60,7 @@ class BetaModal extends Component {
           </p>
         </div>
         <div className="button-container">
-          <button className="btn btn-clear" onClick={this.handleToggle}>
+          <button className="btn btn-clear" onClick={this.props.dismiss}>
             <FormattedMessage
               id={'beta-modal.proceed'}
               defaultMessage={'Proceed'}
@@ -83,4 +72,15 @@ class BetaModal extends Component {
   }
 }
 
-export default BetaModal
+const mapStateToProps = state => ({
+  showModal: !state.app.betaModalDismissed
+})
+
+const mapDispatchToProps = dispatch => ({
+  dismiss: () => dispatch(dismissBetaModal())
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BetaModal)

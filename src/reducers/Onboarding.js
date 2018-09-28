@@ -82,6 +82,7 @@ const updateCurrentStep = (incompleteStep, steps) => {
 }
 
 const initialState = {
+  blocked: !JSON.parse(localStorage.getItem('betaModal.dismissed')),
   currentStep: steps[0],
   steps,
   progress: false,
@@ -92,6 +93,12 @@ const initialState = {
 
 export default function Onboarding(state = initialState, action = {}) {
   switch (action.type) {
+  case OnboardingConstants.UNBLOCK:
+    return {
+      ...state,
+      blocked: false
+    }
+
   case OnboardingConstants.UPDATE_STEPS:
     const updatedSteps = updateAllSteps(action.incompleteStep, state.steps)
     saveStorageItem('.steps', updatedSteps)
