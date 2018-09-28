@@ -1,0 +1,210 @@
+[
+  {
+    "id": "purchase-detail.awaitApproval",
+    "defaultMessage": "Wait for the seller to approve your offer"
+  },
+  {
+    "id": "purchase-detail.acceptOrRejectOffer",
+    "defaultMessage": "Accept or reject the buyer's offer"
+  },
+  {
+    "id": "purchase-detail.acceptOfferInstruction",
+    "defaultMessage": "Click below to cancel or continue this transaction."
+  },
+  {
+    "id": "purchase-detail.acceptOffer",
+    "defaultMessage": "Accept"
+  },
+  {
+    "id": "purchase-detail.waitForContact",
+    "defaultMessage": "Wait to be contacted by an Origin team member"
+  },
+  {
+    "id": "purchase-detail.completePurchase",
+    "defaultMessage": "Complete your purchase and leave a review"
+  },
+  {
+    "id": "purchase-detail.submitThisForm",
+    "defaultMessage": "Submit this form once you confirm that you are satisfied with your purchase."
+  },
+  {
+    "id": "purchase-detail.confirmAndReview",
+    "defaultMessage": "Confirm and Review"
+  },
+  {
+    "id": "purchase-detail.buyerReviewPlaceholder",
+    "defaultMessage": "Your review should inform others about your experience transacting with this seller, not about the product itself."
+  },
+  {
+    "id": "purchase-detail.waitForBuyer",
+    "defaultMessage": "Wait for the buyer to finalize the transaction"
+  },
+  {
+    "id": "purchase-detail.fulfillObligation",
+    "defaultMessage": "Make sure you fulfill the order."
+  },
+  {
+    "id": "purchase-detail.awaitSellerReview",
+    "defaultMessage": "Wait for the seller to leave a review"
+  },
+  {
+    "id": "purchase-detail.completeByReviewing",
+    "defaultMessage": "Complete your sale by leaving a review"
+  },
+  {
+    "id": "purchase-detail.clickToReview",
+    "defaultMessage": "Click the button below to leave a review"
+  },
+  {
+    "id": "purchase-detail.reviewSale",
+    "defaultMessage": "Leave a review"
+  },
+  {
+    "id": "purchase-detail.rejectOffer",
+    "defaultMessage": "Reject"
+  },
+  {
+    "id": "purchase-detail.reportProblem",
+    "defaultMessage": "Report a Problem"
+  },
+  {
+    "id": "purchase-detail.sellerReviewPlaceholder",
+    "defaultMessage": "Your review should inform others about your experience transacting with this buyer."
+  },
+  {
+    "id": "purchase-detail.withdrawOffer",
+    "defaultMessage": "Withdraw Offer"
+  },
+  {
+    "id": "purchase-detail.offerMade",
+    "defaultMessage": "Offer Made"
+  },
+  {
+    "id": "purchase-detail.offerWithdrawn",
+    "defaultMessage": "Offer Withdrawn"
+  },
+  {
+    "id": "purchase-detail.offerAccepted",
+    "defaultMessage": "Offer Accepted"
+  },
+  {
+    "id": "purchase-detail.offerDisputed",
+    "defaultMessage": "Dispute Started"
+  },
+  {
+    "id": "purchase-detail.offerRuling",
+    "defaultMessage": "Ruling Complete"
+  },
+  {
+    "id": "purchase-detail.saleCompleted",
+    "defaultMessage": "Sale Completed"
+  },
+  {
+    "id": "purchase-detail.saleReviewed",
+    "defaultMessage": "Sale Reviewed"
+  },
+  {
+    "id": "purchase-detail.purchasedFrom",
+    "defaultMessage": "Purchased from {sellerLink}"
+  },
+  {
+    "id": "purchase-detail.soldTo",
+    "defaultMessage": "Sold to {buyerLink}"
+  },
+  {
+    "id": "purchase-detail.purchasingFrom",
+    "defaultMessage": "Purchasing from {sellerLink}"
+  },
+  {
+    "id": "purchase-detail.sellingTo",
+    "defaultMessage": "Selling to {buyerLink}"
+  },
+  {
+    "id": "purchase-detail.pending",
+    "defaultMessage": "Pending"
+  },
+  {
+    "id": "purchase-detail.soldOut",
+    "defaultMessage": "Sold Out"
+  },
+  {
+    "id": "purchase-detail.transactionStatusHeading",
+    "defaultMessage": "Transaction Status"
+  },
+  {
+    "id": "purchase-detail.seller",
+    "defaultMessage": "Seller"
+  },
+  {
+    "id": "purchase-detail.buyer",
+    "defaultMessage": "Buyer"
+  },
+  {
+    "id": "purchase-detail.nextStep",
+    "defaultMessage": "Next Step:"
+  },
+  {
+    "id": "purchase-detail.nothingToDo",
+    "defaultMessage": "Nothing for you to do at this time. Check back later."
+  },
+  {
+    "id": "purchase-detail.reviewLabel",
+    "defaultMessage": "Review"
+  },
+  {
+    "id": "purchase-detail.hideSellerSteps",
+    "defaultMessage": "Hide Fulfillment Checklist"
+  },
+  {
+    "id": "purchase-detail.showSellerSteps",
+    "defaultMessage": "Show Fulfillment Checklist"
+  },
+  {
+    "id": "purchase-detail.fulfillmentChecklist",
+    "defaultMessage": "Fulfillment Checklist"
+  },
+  {
+    "id": "purchase-detail.transactionHistoryHeading",
+    "defaultMessage": "Transaction History"
+  },
+  {
+    "id": "purchase-detail.txName",
+    "defaultMessage": "TxName"
+  },
+  {
+    "id": "purchase-detail.txHash",
+    "defaultMessage": "TxHash"
+  },
+  {
+    "id": "purchase-detail.from",
+    "defaultMessage": "From"
+  },
+  {
+    "id": "purchase-detail.listingDetails",
+    "defaultMessage": "Listing Details"
+  },
+  {
+    "id": "purchase-detail.viewOnIPFS",
+    "defaultMessage": "View on IPFS"
+  },
+  {
+    "id": "purchase-detail.reviewsHeading",
+    "defaultMessage": "Reviews"
+  },
+  {
+    "id": "purchase-detail.purchasedFromOn",
+    "defaultMessage": "Purchased from {sellerName} on {date}"
+  },
+  {
+    "id": "purchase-detail.soldToOn",
+    "defaultMessage": "Sold to {buyerName} on {date}"
+  },
+  {
+    "id": "purchase-detail.price",
+    "defaultMessage": "Price"
+  },
+  {
+    "id": "purchase-detail.listingStatus",
+    "defaultMessage": "This listing is {status}"
+  }
+]

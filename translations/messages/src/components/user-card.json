@@ -1,0 +1,22 @@
+[
+  {
+    "id": "messages-send.sendMessages",
+    "defaultMessage": "send messages"
+  },
+  {
+    "id": "user-card.heading",
+    "defaultMessage": "About the {title}"
+  },
+  {
+    "id": "user-card.ethAddress",
+    "defaultMessage": "ETH Address:"
+  },
+  {
+    "id": "user-card.enabledContact",
+    "defaultMessage": "Contact"
+  },
+  {
+    "id": "transaction-progress.viewProfile",
+    "defaultMessage": "View Profile"
+  }
+]

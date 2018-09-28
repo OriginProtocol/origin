@@ -3,12 +3,10 @@ import $ from 'jquery'
 
 class Modal extends Component {
   componentDidMount() {
+    const { isOpen, backdrop = true } = this.props
     this.$el = $(this.el)
 
-    this.$el.modal({
-      backdrop: this.props.backdrop || true,
-      show: this.props.isOpen,
-    })
+    this.$el.modal({ backdrop, show: isOpen })
   }
 
   componentDidUpdate(prevProps) {
@@ -24,20 +22,21 @@ class Modal extends Component {
   }
 
   render() {
-    const { children, className } = this.props
+    const { children, className, tabIndex } = this.props
+    const setTabIndex = tabIndex && { tabIndex }
 
     return (
       <div
-        ref={el => this.el = el}
-        className={`modal fade ${this.props['data-modal']}${className ? ` ${className}` : ''}`}
-        tabIndex="-1"
+        ref={el => (this.el = el)}
+        className={`modal fade ${this.props['data-modal']}${
+          className ? ` ${className}` : ''
+        }`}
         role="dialog"
         aria-hidden="true"
+        {...setTabIndex}
       >
         <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content d-flex">
-            {children}
-          </div>
+          <div className="modal-content d-flex">{children}</div>
         </div>
       </div>
     )

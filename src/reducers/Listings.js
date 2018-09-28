@@ -1,4 +1,4 @@
-import { ListingConstants } from '../actions/Listing'
+import { ListingConstants } from 'actions/Listing'
 
 const initialState = {
   ids: [],
@@ -6,16 +6,14 @@ const initialState = {
 }
 
 export default function Listings(state = initialState, action = {}) {
-    switch (action.type) {
+  switch (action.type) {
+  case ListingConstants.FETCH_IDS_ERROR:
+    return { ...state, ids: [], contractFound: action.contractFound }
 
-      case ListingConstants.FETCH_IDS_ERROR:
-        return { ...state, ids: [], contractFound: action.contractFound }
+  case ListingConstants.FETCH_IDS_SUCCESS:
+    return { ...state, ids: action.ids }
 
-      case ListingConstants.FETCH_IDS_SUCCESS:
-        return { ...state, ids: action.ids }
-
-      default:
-        return state
-    }
-
+  default:
+    return state
+  }
 }

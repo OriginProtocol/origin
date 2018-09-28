@@ -1,0 +1,38 @@
+[
+  {
+    "id": "my-purchase-card.created",
+    "defaultMessage": "Offer made"
+  },
+  {
+    "id": "my-purchase-card.accepted",
+    "defaultMessage": "Offer accepted"
+  },
+  {
+    "id": "my-purchase-card.withdrawn",
+    "defaultMessage": "Offer withdrawn"
+  },
+  {
+    "id": "my-purchase-card.rejected",
+    "defaultMessage": "Offer rejected"
+  },
+  {
+    "id": "my-purchase-card.disputed",
+    "defaultMessage": "Sale disputed"
+  },
+  {
+    "id": "my-purchase-card.finalized",
+    "defaultMessage": "Sale confirmed"
+  },
+  {
+    "id": "my-purchase-card.reviewed",
+    "defaultMessage": "Sale reviewed"
+  },
+  {
+    "id": "my-purchase-card.unknown",
+    "defaultMessage": "Unknown"
+  },
+  {
+    "id": "my-purchase-card.ethereumCurrencyAbbrev",
+    "defaultMessage": "ETH"
+  }
+]

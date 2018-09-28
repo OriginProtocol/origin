@@ -1,0 +1,22 @@
+[
+  {
+    "id": "purchase-progress.offerMade",
+    "defaultMessage": "Offer Made"
+  },
+  {
+    "id": "purchase-progress.offerAccepted",
+    "defaultMessage": "Offer Accepted"
+  },
+  {
+    "id": "purchase-progress.offerWithdrawn",
+    "defaultMessage": "Offer Withdrawn"
+  },
+  {
+    "id": "purchase-progress.saleCompleted",
+    "defaultMessage": "Sale Completed"
+  },
+  {
+    "id": "purchase-progress.saleReviewed",
+    "defaultMessage": "Sale Reviewed"
+  }
+]

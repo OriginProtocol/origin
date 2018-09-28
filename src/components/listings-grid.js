@@ -1,52 +1,89 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-
-import { getListingIds } from '../actions/Listing'
-
+import { FormattedMessage, FormattedNumber } from 'react-intl'
 import Pagination from 'react-js-pagination'
 import { withRouter } from 'react-router'
 
-import ListingCard from './listing-card'
+import { getListingIds } from 'actions/Listing'
+
+import ListingCard from 'components/listing-card'
+import { LISTINGS_PER_PAGE } from 'components/constants'
 
 class ListingsGrid extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      listingsPerPage: 12
-    }
+
+    this.handleOnChange = this.handleOnChange.bind(this)
   }
 
   componentWillMount() {
-    this.props.getListingIds()
+    if (this.props.renderMode === 'home-page') this.props.getListingIds()
+  }
+
+  handleOnChange(page) {
+    if (this.props.renderMode === 'home-page')
+      this.props.history.push(`/page/${page}`)
+    else this.props.handleChangePage(page)
   }
 
   render() {
-    const { listingsPerPage } = this.state
+    const { contractFound, listingIds, search } = this.props
 
-    const { contractFound, listingIds, hideList } = this.props
-    const pinnedListingIds = [0, 1, 2, 3, 4]
+    // const pinnedListingIds = [0, 1, 2, 3, 4]
+    // const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
 
-    const activePage = this.props.match.params.activePage || 1
-    const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
-    // Calc listings to show for given page
-    const showListingsIds = arrangedListingIds.slice(
-      listingsPerPage * (activePage - 1),
-      listingsPerPage * activePage
-    )
+    let allListingsLength, activePage, showListingsIds
+    if (this.props.renderMode === 'home-page') {
+      allListingsLength = listingIds.length
+      activePage = this.props.match.params.activePage || 1
+
+      // Calc listings to show for given page
+      showListingsIds = listingIds.slice(
+        LISTINGS_PER_PAGE * (activePage - 1),
+        LISTINGS_PER_PAGE * activePage
+      )
+    } else if (this.props.renderMode === 'search') {
+      activePage = this.props.searchPage
+      allListingsLength = search.listingsLength
+      showListingsIds = search.listingIds
+    }
 
     return (
       <div className="listings-wrapper">
         {contractFound === false && (
           <div className="listings-grid">
             <div className="alert alert-warning" role="alert">
-              The Origin Contract was not found on this network.<br />
-              You may need to change networks, or deploy the contract.
+              <FormattedMessage
+                id={'listings-grid.originContractNotFound'}
+                defaultMessage={
+                  'No Origin listing contracts were found on this network.'
+                }
+              />
+              <br />
+              <FormattedMessage
+                id={'listings-grid.changeNetworks'}
+                defaultMessage={
+                  'You may need to change networks, or deploy the contract.'
+                }
+              />
             </div>
           </div>
         )}
         {contractFound && (
           <div className="listings-grid">
-            {listingIds.length > 0 && <h1>{listingIds.length} Listings</h1>}
+            {allListingsLength > 0 && (
+              <h1>
+                <FormattedMessage
+                  id={'listings-grid.listingsCount'}
+                  defaultMessage={'{listingIdsCount} Listings'}
+                  values={{
+                    listingIdsCount: (
+                      <FormattedNumber value={allListingsLength} />
+                    )
+                  }}
+                />
+              </h1>
+            )}
             <div className="row">
               {showListingsIds.map(listingId => (
                 <ListingCard listingId={listingId} key={listingId} />
@@ -54,10 +91,10 @@ class ListingsGrid extends Component {
             </div>
             <Pagination
               activePage={parseInt(activePage)}
-              itemsCountPerPage={listingsPerPage}
-              totalItemsCount={arrangedListingIds.length}
+              itemsCountPerPage={LISTINGS_PER_PAGE}
+              totalItemsCount={allListingsLength}
               pageRangeDisplayed={5}
-              onChange={page => this.props.history.push(`/page/${page}`)}
+              onChange={this.handleOnChange}
               itemClass="page-item"
               linkClass="page-link"
               hideDisabled="true"
@@ -70,7 +107,7 @@ class ListingsGrid extends Component {
 }
 
 const mapStateToProps = state => ({
-  listingIds: state.listings.ids,
+  listingIds: state.marketplace.ids,
   contractFound: state.listings.contractFound
 })
 
@@ -78,4 +115,9 @@ const mapDispatchToProps = dispatch => ({
   getListingIds: () => dispatch(getListingIds())
 })
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ListingsGrid))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(ListingsGrid)
+)

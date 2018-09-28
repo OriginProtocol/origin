@@ -1,22 +1,21 @@
 import React, { Component } from 'react'
+import moment from 'moment'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+
 import { fetchUser } from 'actions/User'
-import Avatar from './avatar'
-import Timelapse from './timelapse'
+
+import Avatar from 'components/avatar'
+import UnnamedUser from 'components/unnamed-user'
 
 class Review extends Component {
-  constructor(props) {
-    super(props)
-  }
-
   componentWillMount() {
-    this.props.fetchUser(this.props.review.reviewerAddress)
+    this.props.fetchUser(this.props.review.reviewer)
   }
 
   render() {
     const { review, user } = this.props
-    const { rating, reviewText, timestamp } = review
+    const { rating, text, timestamp } = review
     const { address, fullName, profile } = user
     const createdAt = timestamp * 1000 // convert seconds since epoch to ms
 
@@ -24,26 +23,35 @@ class Review extends Component {
       <div className="review">
         <Link to={`/users/${address}`}>
           <div className="d-flex">
-            <Avatar image={profile && profile.avatar} placeholderStyle="purple" />
+            <Avatar
+              image={profile && profile.avatar}
+              placeholderStyle="purple"
+            />
             <div className="identification d-flex flex-column justify-content-center text-truncate">
-              <div className="name">{fullName}</div>
+              <div className="name">{fullName || <UnnamedUser />}</div>
               <div className="address text-muted text-truncate">{address}</div>
             </div>
             <div className="rating d-flex flex-column justify-content-center text-right">
-              <div className="stars">{[...Array(5)].map((undef, i) => {
-                return (
-                  <img
-                    key={`rating-star-${i}`}
-                    src={`/images/star-${rating > i ? 'filled' : 'empty'}.svg`}
-                    alt="review rating star"
-                  />
-                )
-              })}</div>
-              <div className="age text-muted"><Timelapse reactive={false} reference={new Date(createdAt)} /></div>
+              <div className="stars">
+                {[...Array(5)].map((undef, i) => {
+                  return (
+                    <img
+                      key={`rating-star-${i}`}
+                      src={`/images/star-${
+                        rating > i ? 'filled' : 'empty'
+                      }.svg`}
+                      alt="review rating star"
+                    />
+                  )
+                })}
+              </div>
+              <div className="age text-muted">
+                {moment(createdAt).fromNow()}
+              </div>
             </div>
           </div>
         </Link>
-        <p className="content">{reviewText}</p>
+        <p className="content">{text}</p>
       </div>
     )
   }
@@ -51,12 +59,15 @@ class Review extends Component {
 
 const mapStateToProps = (state, { review }) => {
   return {
-    user: state.users.find(u => u.address === review.reviewerAddress) || {},
+    user: state.users.find(u => u.address === review.reviewer) || {}
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: address => dispatch(fetchUser(address))
+  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Review)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Review)

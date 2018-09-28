@@ -1,21 +1,26 @@
-import { WalletConstants } from '../actions/Wallet'
-import { ProfileConstants } from '../actions/Profile'
+import { ProfileConstants } from 'actions/Profile'
+import { WalletConstants } from 'actions/Wallet'
 
 const initialState = {
   address: undefined,
-  balance: '0',
+  ethBalance: '0',
+  ognBalance: '0',
+  initialized: false
 }
 
 export default function Wallet(state = initialState, action = {}) {
   switch (action.type) {
-    case WalletConstants.INIT_SUCCESS:
-      return { ...state, address: action.wallet }
+  case WalletConstants.INIT_SUCCESS:
+    return { ...state, address: action.address, initialized: true }
 
-    case WalletConstants.BALANCE_SUCCESS:
-      return { ...state, balance: action.balance }
+  case WalletConstants.ETH_BALANCE_SUCCESS:
+    return { ...state, ethBalance: action.ethBalance }
 
-    case ProfileConstants.FETCH_SUCCESS:
-      return { ...state, address: action.wallet }
+  case WalletConstants.OGN_BALANCE_SUCCESS:
+    return { ...state, ognBalance: action.ognBalance }
+
+  case ProfileConstants.FETCH_SUCCESS:
+    return { ...state, address: action.wallet }
   }
 
   return state

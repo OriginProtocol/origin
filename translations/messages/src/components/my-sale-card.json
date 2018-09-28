@@ -1,0 +1,46 @@
+[
+  {
+    "id": "my-sale-card.ethereumCurrencyAbbrev",
+    "defaultMessage": "ETH"
+  },
+  {
+    "id": "my-sale-card.pendingBuyerNameLink",
+    "defaultMessage": "selling to {linkToBuyer}"
+  },
+  {
+    "id": "my-sale-card.completedBuyerNameLink",
+    "defaultMessage": "sold to {linkToBuyer}"
+  },
+  {
+    "id": "my-sale-card.price",
+    "defaultMessage": "Price"
+  },
+  {
+    "id": "my-sale-card.nextStep",
+    "defaultMessage": "Next Step"
+  },
+  {
+    "id": "my-sale-card.accept",
+    "defaultMessage": "Accept the offer"
+  },
+  {
+    "id": "my-sale-card.awaitConfirmation",
+    "defaultMessage": "Wait for the buyer to confirm the sale"
+  },
+  {
+    "id": "my-sale-card.awaitContact",
+    "defaultMessage": "Wait to be contacted"
+  },
+  {
+    "id": "my-sale-card.reviewSale",
+    "defaultMessage": "Review the sale"
+  },
+  {
+    "id": "my-sale-card.saleComplete",
+    "defaultMessage": "This sale is complete"
+  },
+  {
+    "id": "my-sale-card.viewDetails",
+    "defaultMessage": "View Details"
+  }
+]

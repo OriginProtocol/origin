@@ -1,0 +1,10 @@
+[
+  {
+    "id": "message.enable",
+    "defaultMessage": "Enable Messaging"
+  },
+  {
+    "id": "message.unrecognizedData",
+    "defaultMessage": "This data cannot be rendered."
+  }
+]

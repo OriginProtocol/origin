@@ -1,0 +1,18 @@
+[
+  {
+    "id": "notification.offerMade",
+    "defaultMessage": "You have a new offer."
+  },
+  {
+    "id": "notification.purchaseSent",
+    "defaultMessage": "Your offer has been accepted."
+  },
+  {
+    "id": "notification.saleConfirmed",
+    "defaultMessage": "Your sale has been confirmed."
+  },
+  {
+    "id": "notification.sellerReviewed",
+    "defaultMessage": "You have a new review."
+  }
+]

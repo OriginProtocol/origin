@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { FormattedMessage } from 'react-intl'
 
 class Guidance extends Component {
   render() {
@@ -8,9 +9,22 @@ class Guidance extends Component {
           <img src="images/identity.svg" alt="identity icon" />
         </div>
         <p>
-          <strong>Verifying your profile</strong> allows other users to know
-          that you are a real person and increases the chances of successful transactions
-          on Origin.
+          <FormattedMessage
+            id={'_Guidance.content'}
+            defaultMessage={
+              '{verifyingYourProfile} allows other users to know that you are a real person and increases the chances of successful transactions on Origin.'
+            }
+            values={{
+              verifyingYourProfile: (
+                <strong>
+                  <FormattedMessage
+                    id={'_Guidance.verifyingYourProfile'}
+                    defaultMessage={'Verifying your profile'}
+                  />
+                </strong>
+              )
+            }}
+          />
         </p>
       </div>
     )

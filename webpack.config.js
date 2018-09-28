@@ -4,19 +4,36 @@ const Dotenv = require('dotenv-webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const prepareMessagesPlugin = require('./translations/scripts/prepareMessagesPlugin')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
 const env = {
+  ARBITRATOR_ACCOUNT: '',
+  AFFILIATE_ACCOUNT: '',
+  BRIDGE_SERVER_DOMAIN: '',
+  BRIDGE_SERVER_PROTOCOL: 'https',
   CONTRACT_ADDRESSES: '{}',
+  DEPLOY_TAG: false,
+  DISCOVERY_SERVER_URL: '',
+  ETH_NETWORK_ID: null,
+  FORCE_HTTPS: false,
+  IPFS_API_PORT: '',
+  IPFS_DOMAIN: '',
+  IPFS_GATEWAY_PORT: '',
+  IPFS_GATEWAY_PROTOCOL: 'https',
+  IPFS_SWARM: '',
+  MESSAGING_ACCOUNT: '',
+  MESSAGING_NAMESPACE: '',
   PRODUCTION_DOMAIN: '',
   PROVIDER_URL: '',
+  REDUX_LOGGER: false
 }
 
 var config = {
   entry: { app: './src/index.js' },
-  devtool: isProduction ? false : 'cheap-module-source-map',
+  devtool: isProduction ? false : 'inline-cheap-module-source-map',
   output: {
     path: path.resolve(__dirname, 'build'),
     pathinfo: true,
@@ -33,23 +50,13 @@ var config = {
       },
       {
         test: /\.css$/,
-        use: isProduction
-          ? ExtractTextPlugin.extract({
-              fallback: 'style-loader',
-              use: [
-                {
-                  loader: 'css-loader',
-                  options: { minimize: true, sourceMap: false, url: false }
-                }
-              ]
-            })
-          : [
-              'style-loader',
-              {
-                loader: 'css-loader',
-                options: { url: false }
-              }
-            ]
+        use: [
+          isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
+          {
+            loader: 'css-loader',
+            options: { url: false }
+          }
+        ],
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
@@ -72,6 +79,17 @@ var config = {
             }
           }
         ]
+      },
+      {
+        test: /\.js$/,
+        use: "source-map-loader",
+        exclude: [
+          // Don't load source maps from anything in node_modules except for the
+          // origin-js directory
+          /node_modules([\\]+|\/)+(?!origin)/,
+          /\origin([\\]+|\/)node_modules/
+        ],
+        enforce: "pre"
       }
     ]
   },
@@ -80,7 +98,18 @@ var config = {
     port: 3000,
     headers: {
       'Access-Control-Allow-Origin': '*'
+    },
+    overlay: {
+      warnings: true,
+      errors: true
     }
+  },
+  watchOptions: {
+    ignored: [
+      // Ignore node_modules in watch except for the origin-js directory
+      /node_modules([\\]+|\/)+(?!origin)/,
+      /\origin([\\]+|\/)node_modules/
+    ]
   },
   mode: isProduction ? 'production' : 'development',
   plugins: [
@@ -95,12 +124,16 @@ var config = {
       { from: 'public/images', to: 'images' },
       { from: 'public/fonts', to: 'fonts' },
       { from: 'public/schemas', to: 'schemas' }
-    ])
+    ]),
+    new prepareMessagesPlugin()
   ]
 }
 
 if (isProduction) {
-  config.plugins.push(new ExtractTextPlugin('[name].[hash:8].css'))
+  config.plugins.push(new MiniCssExtractPlugin({
+    filename: '[name].[hash].css',
+    chunkFilename: '[id].[hash].css'
+  }))
 }
 
 module.exports = config
