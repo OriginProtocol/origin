@@ -85,6 +85,7 @@ class ListingCard extends Component {
     const isPending = offers.find(o => pendingStates.includes(o.status))
     const soldStates = ['finalized', 'sellerReviewed']
     const isSold = offers.find(o => soldStates.includes(o.status))
+    const showFeaturedBadge = this.props.featured && !isSold && !isPending
 
     return (
       <div
@@ -92,7 +93,7 @@ class ListingCard extends Component {
           loading ? ' loading' : ''
         }`}
       >
-        <Link to={`/listing/${this.props.listingId}`} featured={this.props.featured}>
+        <Link to={`/listing/${this.props.listingId}`}>
           {!!photo && (
             <div
               className="photo"
@@ -125,7 +126,7 @@ class ListingCard extends Component {
               </span>
             )}
             {!loading &&
-              this.props.featured && (
+              showFeaturedBadge && (
               <span className="featured badge">
                 <FormattedMessage
                   id={'listing-card.featured'}

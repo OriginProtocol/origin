@@ -36,6 +36,10 @@
     "defaultMessage": "Sold Out"
   },
   {
+    "id": "listing-detail.featured",
+    "defaultMessage": "Featured"
+  },
+  {
     "id": "listing-detail.viewOnIpfs",
     "defaultMessage": "View on IPFS"
   },

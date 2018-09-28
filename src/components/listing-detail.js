@@ -52,7 +52,8 @@ class ListingsDetail extends Component {
       reviews: [],
       step: this.STEP.VIEW,
       boostLevel: null,
-      boostValue: 0
+      boostValue: 0,
+      displayType: 'normal'
     }
 
     this.intlMessages = defineMessages({
@@ -138,6 +139,14 @@ class ListingsDetail extends Component {
       )
       console.error(error)
     }
+
+    // query discovery server in separate try-catch so when not available it doesn't break functionality
+    try {
+      const discoveryListingResult = await origin.discovery.getListing(this.props.listingId)
+      this.setState({ displayType: discoveryListingResult.data.listing.displayType })
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   async loadOffers() {
@@ -193,6 +202,7 @@ class ListingsDetail extends Component {
     const isSold = offers.find(o => soldStates.includes(o.status))
     const isAvailable = !isPending && !isSold
     const userIsSeller = seller === this.props.web3Account
+    const showFeaturedBadge = !isSold && !isPending && this.state.displayType === 'featured'
 
     return (
       <div className="listing-detail">
@@ -291,6 +301,14 @@ class ListingsDetail extends Component {
                         <FormattedMessage
                           id={'listing-detail.soldOut'}
                           defaultMessage={'Sold Out'}
+                        />
+                      </span>
+                    )}
+                    {showFeaturedBadge && (
+                      <span className={`featured badge`}>
+                        <FormattedMessage
+                          id={'listing-detail.featured'}
+                          defaultMessage={'Featured'}
                         />
                       </span>
                     )}
