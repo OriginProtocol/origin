@@ -90,6 +90,10 @@ a:hover {
   text-decoration: none;
 }
 
+textarea:-moz-ui-invalid {
+  box-shadow: none;
+}
+
 .line {
   display: inline-block;
 }
