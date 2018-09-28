@@ -30,6 +30,7 @@ class SearchResult extends Component {
       listingSchema: undefined,
       listingType: undefined,
       listingIds: [],
+      featuredListingIds: [],
       totalNumberOfListings: 0,
       searchError: undefined,
       filters: {},
@@ -207,6 +208,9 @@ class SearchResult extends Component {
 
       this.setState({
         listingIds: searchResp.data.listings.nodes.map(listing => listing.id),
+        featuredListingIds: searchResp.data.listings.nodes
+          .filter(listing => listing.displayType === 'featured')
+          .map(listing => listing.id),
         totalNumberOfListings: searchResp.data.listings.totalNumberOfItems,
         // reset the page whenever a user doesn't click on pagination link
         page: onlyPageChanged ? this.state.page : 1
@@ -276,6 +280,7 @@ class SearchResult extends Component {
               listingIds: this.state.listingIds,
               listingsLength: this.state.totalNumberOfListings
             }}
+            featuredListingIds={this.state.featuredListingIds}
             handleChangePage={this.handleChangePage}
             searchPage={this.state.page}
           />

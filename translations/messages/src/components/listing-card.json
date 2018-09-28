@@ -6,5 +6,9 @@
   {
     "id": "listing-card.sold",
     "defaultMessage": "Sold Out"
+  },
+  {
+    "id": "listing-card.featured",
+    "defaultMessage": "Featured"
   }
 ]

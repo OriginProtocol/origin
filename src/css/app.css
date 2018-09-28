@@ -2086,14 +2086,16 @@ a:hover {
   margin-bottom: auto;
 }
 
-.boosted.badge {
+.boosted.badge,
+.featured.badge {
   background-color: var(--golden-rod);
   color: white;
   margin: 0 0 auto 10px;
   text-transform: uppercase;
 }
 
-.boosted.badge span {
+.boosted.badge span,
+.featured.badge span {
   padding-right: 5px;
 }
 
@@ -2107,7 +2109,8 @@ a:hover {
   margin-left: auto;
 }
 
-.listing-detail .boosted {
+.listing-detail .boosted,
+.listing-detail .featured {
   margin-left: 5px;
 }
 

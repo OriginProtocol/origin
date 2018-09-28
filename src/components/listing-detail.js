@@ -294,14 +294,14 @@ class ListingsDetail extends Component {
                         />
                       </span>
                     )}
-                    {/*boostValue > 0 && (
+                    {this.props.featured && (
                       <span className={`boosted badge boost-${boostLevel}`}>
                         <img
                           src="images/boost-icon-arrow.svg"
                           role="presentation"
                         />
                       </span>
-                    )*/}
+                    )}
                   </div>
                 )}
               </div>

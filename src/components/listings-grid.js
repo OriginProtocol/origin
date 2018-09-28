@@ -49,6 +49,7 @@ class ListingsGrid extends Component {
       allListingsLength = search.listingsLength
       showListingsIds = search.listingIds
     }
+    const featuredListingIds = this.props.featuredListingIds || []
 
     return (
       <div className="listings-wrapper">
@@ -88,7 +89,11 @@ class ListingsGrid extends Component {
             )}
             <div className="row">
               {showListingsIds.map(listingId => (
-                <ListingCard listingId={listingId} key={listingId} />
+                <ListingCard
+                  listingId={listingId}
+                  key={listingId}
+                  featured={featuredListingIds.includes(listingId)}
+                />
               ))}
             </div>
             <Pagination

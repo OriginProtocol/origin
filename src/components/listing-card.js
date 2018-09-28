@@ -23,15 +23,15 @@ class ListingCard extends Component {
     await this.loadOffers()
   }
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   // init tooltip only when necessary
-  //   if (this.state.boostLevelIsPastSomeThreshold && !prevState.id) {
-  //     $('[data-toggle="tooltip"]').tooltip({
-  //       delay: { hide: 1000 },
-  //       html: true
-  //     })
-  //   }
-  // }
+  componentDidUpdate(prevProps, prevState) {
+    // init tooltip only when necessary
+    if (this.state.boostLevelIsPastSomeThreshold && !prevState.id) {
+      $('[data-toggle="tooltip"]').tooltip({
+        delay: { hide: 1000 },
+        html: true
+      })
+    }
+  }
 
   componentWillUnmount() {
     $('[data-toggle="tooltip"]').tooltip('dispose')
@@ -92,7 +92,7 @@ class ListingCard extends Component {
           loading ? ' loading' : ''
         }`}
       >
-        <Link to={`/listing/${this.props.listingId}`}>
+        <Link to={`/listing/${this.props.listingId}`} featured={this.props.featured}>
           {!!photo && (
             <div
               className="photo"
@@ -123,6 +123,15 @@ class ListingCard extends Component {
                   defaultMessage={'Sold Out'}
                 />
               </span>
+            )}
+            {!loading &&
+              this.props.featured && (
+                <span className="featured badge">
+                  <FormattedMessage
+                    id={'listing-card.featured'}
+                    defaultMessage={'Featured'}
+                  />
+                </span>
             )}
             {/*!loading &&
               boostLevelIsPastSomeThreshold && (
