@@ -1,0 +1,26 @@
+[
+  {
+    "id": "beta-modal.message1",
+    "defaultMessage": "Thanks for checking out Origin's Mainnet Beta."
+  },
+  {
+    "id": "beta-modal.message2",
+    "defaultMessage": "We're still actively developing the product. Please bear with us as we add new features and fix bugs."
+  },
+  {
+    "id": "beta-modal.message3",
+    "defaultMessage": "All transactions will use real Ether. Please take all offers to buy and sell seriously."
+  },
+  {
+    "id": "beta-modal.message4",
+    "defaultMessage": "Use caution when transacting with unknown buyers and sellers. Don't forget to verify your own identity."
+  },
+  {
+    "id": "beta-modal.message5",
+    "defaultMessage": "Any disputes will be resolved by Origin's arbitration team. No insurance is offered on any listings."
+  },
+  {
+    "id": "beta-modal.proceed",
+    "defaultMessage": "Proceed"
+  }
+]

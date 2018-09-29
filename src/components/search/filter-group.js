@@ -44,8 +44,7 @@ class FilterGroup extends Component {
     event.preventDefault()
 
     Promise.all(
-      this.childFilters
-        .map(childFilter => childFilter.getFilters())
+      this.childFilters.map(childFilter => childFilter.getFilters())
     ).then(values => {
       const filters = values.flatMap(childFilters => childFilters)
       this.props.updateFilters(this.title, filters)
@@ -60,7 +59,11 @@ class FilterGroup extends Component {
 
     this.childFilters
       // Also trigger the filter state chenge as you would with clicking apply
-      .forEach(childFilter => childFilter.onClear(async () => { await this.handleApplyClick(event) }))
+      .forEach(childFilter =>
+        childFilter.onClear(async () => {
+          await this.handleApplyClick(event)
+        })
+      )
   }
 
   handleOpenDropdown() {

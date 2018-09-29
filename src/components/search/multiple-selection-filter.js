@@ -32,14 +32,13 @@ class MultipleSelectionFilter extends Component {
       //keep only selected values
       .filter(checkBoxKey => this.state.checkboxValue[checkBoxKey])
 
-      // do not translate anything from the schema
-      // .map(untranslatedValue => {
-      //   return schemaMessages[this.toCamelCase(this.props.listingType)][untranslatedValue]
-      //     .defaultMessage
-      // })
+    // do not translate anything from the schema
+    // .map(untranslatedValue => {
+    //   return schemaMessages[this.toCamelCase(this.props.listingType)][untranslatedValue]
+    //     .defaultMessage
+    // })
 
-    if (values.length === 0)
-      return []
+    if (values.length === 0) return []
     else
       return [
         {

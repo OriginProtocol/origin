@@ -53,8 +53,13 @@ class SearchResult extends Component {
   }
 
   getListingTypeObject(typeString) {
-    return [...listingSchemaMetadata.listingTypes, listingSchemaMetadata.listingTypeAll]
-      .filter(listingType => listingType.type === typeString)[0] || listingSchemaMetadata.listingTypeAll
+    return (
+      [
+        ...listingSchemaMetadata.listingTypes,
+        listingSchemaMetadata.listingTypeAll
+      ].filter(listingType => listingType.type === typeString)[0] ||
+      listingSchemaMetadata.listingTypeAll
+    )
   }
 
   handleChangePage(page) {
@@ -89,12 +94,15 @@ class SearchResult extends Component {
        * this way a new search request is triggered to the backend even
        * if query parameters do not change
        */
-      previousProps.generalSearchId === this.props.generalSearchId && 
+      previousProps.generalSearchId === this.props.generalSearchId &&
       prevState.page === this.state.page
     )
       return
 
-    this.handleComponentUpdate(previousProps, prevState.page !== this.state.page)
+    this.handleComponentUpdate(
+      previousProps,
+      prevState.page !== this.state.page
+    )
   }
 
   handleComponentUpdate(previousProps, onlyPageChanged = false) {
@@ -201,9 +209,7 @@ class SearchResult extends Component {
         this.props.query || '',
         LISTINGS_PER_PAGE,
         (this.state.page - 1) * LISTINGS_PER_PAGE,
-        Object.values(filters).flatMap(
-          arrayOfFilters => arrayOfFilters
-        )
+        Object.values(filters).flatMap(arrayOfFilters => arrayOfFilters)
       )
 
       this.setState({
@@ -217,8 +223,18 @@ class SearchResult extends Component {
       })
 
       const [maxPrice, minPrice] = await Promise.all([
-        getFiatPrice(searchResp.data.listings.stats.maxPrice, 'USD', 'ETH', false),
-        getFiatPrice(searchResp.data.listings.stats.minPrice, 'USD', 'ETH', false)
+        getFiatPrice(
+          searchResp.data.listings.stats.maxPrice,
+          'USD',
+          'ETH',
+          false
+        ),
+        getFiatPrice(
+          searchResp.data.listings.stats.minPrice,
+          'USD',
+          'ETH',
+          false
+        )
       ])
 
       /* increase the max/min price range by 5% to prevent a case where conversion rates of a market would be such

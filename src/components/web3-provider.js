@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 
-import { storeWeb3Account, storeWeb3Intent } from 'actions/App'
+import { storeWeb3Account, storeWeb3Intent, storeNetwork } from 'actions/App'
 
 import Modal from 'components/modal'
 
@@ -12,9 +12,6 @@ import getCurrentProvider from 'utils/getCurrentProvider'
 import origin from '../services/origin'
 
 const web3 = origin.contractService.web3
-const productionHostname =
-  process.env.PRODUCTION_DOMAIN || 'demo.originprotocol.com'
-
 const networkNames = {
   1: 'Main Ethereum Network',
   2: 'Morden Test Network',
@@ -23,7 +20,11 @@ const networkNames = {
   42: 'Kovan Test Network',
   999: 'Localhost'
 }
-const supportedNetworkIds = [3, 4]
+const supportedNetworkId = process.env.ETH_NETWORK_ID || 1 // Default to mainnet
+const mainnetDappBaseUrl =
+  process.env.MAINNET_DAPP_BASEURL || 'https://dapp.originprotocol.com'
+const rinkebyDappBaseUrl =
+  process.env.RINKEBY_DAPP_BASEURL || 'https://demo.staging.originprotocol.com'
 const ONE_SECOND = 1000
 const ONE_MINUTE = ONE_SECOND * 60
 
@@ -200,8 +201,11 @@ const UnsupportedNetwork = props => (
     <p>
       <FormattedMessage
         id={'web3-provider.shouldBeOnRinkeby'}
-        defaultMessage={'{currentProvider} should be on Rinkeby Test Network'}
-        values={{ currentProvider: props.currentProvider }}
+        defaultMessage={'{currentProvider} should be on {supportedNetworkName}'}
+        values={{
+          currentProvider: props.currentProvider,
+          supportedNetworkName: networkNames[supportedNetworkId]
+        }}
       />
     </p>
     <FormattedMessage
@@ -401,6 +405,7 @@ class Web3Provider extends Component {
           })
         } else {
           if (networkId !== this.state.networkId) {
+            this.props.storeNetwork(networkId)
             this.setState({
               networkError: null,
               networkId
@@ -437,8 +442,18 @@ class Web3Provider extends Component {
     const currentNetworkName = networkNames[networkId]
       ? networkNames[networkId]
       : networkId
-    const inProductionEnv = window.location.hostname === productionHostname
-    const networkNotSupported = supportedNetworkIds.indexOf(networkId) < 0
+    const isProduction = process.env.NODE_ENV === 'production'
+    const networkNotSupported = supportedNetworkId != networkId
+
+    // Redirect if we know a DApp instalation that supports their network.
+    if (currentProvider && networkId && isProduction && networkNotSupported) {
+      const url = new URL(window.location)
+      if (networkId === 1 && mainnetDappBaseUrl) {
+        window.location.href = mainnetDappBaseUrl + url.pathname + url.hash
+      } else if (networkId === 4 && rinkebyDappBaseUrl) {
+        window.location.href = rinkebyDappBaseUrl + url.pathname + url.hash
+      }
+    }
 
     return (
       <Fragment>
@@ -451,7 +466,7 @@ class Web3Provider extends Component {
         {/* production  */
           currentProvider &&
           networkId &&
-          inProductionEnv &&
+          isProduction &&
           networkNotSupported && (
             <UnsupportedNetwork
               currentNetworkName={currentNetworkName}
@@ -506,7 +521,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   storeWeb3Account: addr => dispatch(storeWeb3Account(addr)),
-  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
+  storeNetwork: networkId => dispatch(storeNetwork(networkId))
 })
 
 export default withRouter(

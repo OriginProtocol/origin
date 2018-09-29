@@ -11,11 +11,13 @@ class SearchBar extends Component {
   constructor(props) {
     super(props)
 
-    this.listingTypes = [ listingSchemaMetadata.listingTypeAll, ...listingSchemaMetadata.listingTypes]
-      .map(listingType => {
-        listingType.name = props.intl.formatMessage(listingType.translationName)
-        return listingType
-      })
+    this.listingTypes = [
+      listingSchemaMetadata.listingTypeAll,
+      ...listingSchemaMetadata.listingTypes
+    ].map(listingType => {
+      listingType.name = props.intl.formatMessage(listingType.translationName)
+      return listingType
+    })
 
     const getParams = queryString.parse(this.props.location.search)
 

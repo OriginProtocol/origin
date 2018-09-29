@@ -47,8 +47,7 @@ class MessagingProvider extends Component {
     })
     // ? consider using https://www.npmjs.com/package/redux-debounced
     this.debouncedFetchUser = scopedDebounce(
-      addr =>
-        this.props.fetchUser(addr),
+      addr => this.props.fetchUser(addr),
       ONE_SECOND
     )
 

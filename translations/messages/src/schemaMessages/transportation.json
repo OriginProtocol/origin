@@ -20,10 +20,6 @@
     "defaultMessage": "Description"
   },
   {
-    "id": "schema.transportation.location",
-    "defaultMessage": "Location"
-  },
-  {
     "id": "schema.transportation.priceInETH",
     "defaultMessage": "Price in ETH"
   },
@@ -65,7 +61,7 @@
   },
   {
     "id": "schema.transportation.rateBuyer",
-    "defaultMessage": "Give the buyer a review"
+    "defaultMessage": "Leave a review of the buyer"
   },
   {
     "id": "schema.transportation.sellerSteps",

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Link, Prompt } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
@@ -50,11 +50,10 @@ class ListingCreate extends Component {
       return listingType
     })
 
-    this.state = {
+    this.defaultState = {
       step: this.STEP.PICK_SCHEMA,
       selectedBoostAmount: props.wallet.ognBalance ? defaultBoostValue : 0,
       selectedSchemaType: null,
-      selectedSchema: null,
       translatedSchema: null,
       schemaExamples: null,
       schemaFetched: false,
@@ -65,15 +64,17 @@ class ListingCreate extends Component {
           boostLevel: getBoostLevel(defaultBoostValue)
         }
       },
-      isBoostExpanded: false,
       showBoostTutorial: false,
       usdListingPrice: 0
     }
 
+    this.state = { ...this.defaultState }
+
     this.intlMessages = defineMessages({
       navigationWarning: {
         id: 'listing-create.navigationWarning',
-        defaultMessage: 'Are you sure you want to leave? If you leave this page your progress will be lost.'
+        defaultMessage:
+          'Are you sure you want to leave? If you leave this page your progress will be lost.'
       }
     })
 
@@ -82,9 +83,9 @@ class ListingCreate extends Component {
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
     this.onReview = this.onReview.bind(this)
     this.pollOgnBalance = this.pollOgnBalance.bind(this)
+    this.resetForm = this.resetForm.bind(this)
     this.resetToPreview = this.resetToPreview.bind(this)
     this.setBoost = this.setBoost.bind(this)
-    this.toggleBoostBox = this.toggleBoostBox.bind(this)
     this.updateUsdPrice = this.updateUsdPrice.bind(this)
   }
 
@@ -98,9 +99,10 @@ class ListingCreate extends Component {
     // apply OGN detection to slider
     if (ognBalance !== prevProps.wallet.ognBalance) {
       // only if prior to boost selection step
-      this.state.step < this.STEP.BOOST && this.setState({
-        selectedBoostAmount: ognBalance ? defaultBoostValue : 0
-      })
+      this.state.step < this.STEP.BOOST &&
+        this.setState({
+          selectedBoostAmount: ognBalance ? defaultBoostValue : 0
+        })
     }
   }
 
@@ -111,11 +113,11 @@ class ListingCreate extends Component {
   detectNeedForBoostTutorial() {
     // show if 0 OGN and...
     !this.props.wallet.ognBalance &&
-    // ...tutorial has not been expanded or skipped via "Review"
-    !localStorage.getItem('boostTutorialViewed') &&
-    this.setState({
-      showBoostTutorial: true
-    })
+      // ...tutorial has not been expanded or skipped via "Review"
+      // !JSON.parse(localStorage.getItem('boostTutorialViewed')) &&
+      this.setState({
+        showBoostTutorial: true
+      })
   }
 
   pollOgnBalance() {
@@ -168,7 +170,6 @@ class ListingCreate extends Component {
 
         this.setState({
           selectedSchemaType,
-          selectedSchema: schemaJson,
           schemaFetched: true,
           showNoSchemaSelectedError: false,
           translatedSchema,
@@ -211,9 +212,10 @@ class ListingCreate extends Component {
   }
 
   checkOgnBalance() {
-    if (this.props.wallet &&
-        this.props.wallet.ognBalance &&
-        parseFloat(this.props.wallet.ognBalance) > 0
+    if (
+      this.props.wallet &&
+      this.props.wallet.ognBalance &&
+      parseFloat(this.props.wallet.ognBalance) > 0
     ) {
       this.setState({
         showBoostTutorial: false
@@ -277,40 +279,34 @@ class ListingCreate extends Component {
     }
   }
 
+  resetForm() {
+    this.setState(this.defaultState)
+  }
+
   resetToPreview(e) {
     e.preventDefault()
 
     this.setState({ step: this.STEP.PREVIEW })
   }
 
-  toggleBoostBox() {
-    localStorage.setItem('boostTutorialViewed', true)
-
-    this.setState({
-      isBoostExpanded: !this.state.isBoostExpanded
-    })
-  }
-
   render() {
     const { wallet, intl } = this.props
     const {
       formListing,
-      isBoostExpanded,
       selectedBoostAmount,
-      selectedSchema,
       selectedSchemaType,
       schemaExamples,
       showNoSchemaSelectedError,
       step,
       translatedSchema,
       usdListingPrice,
-      showBoostTutorial,
+      showBoostTutorial
     } = this.state
     const { formData } = formListing
     const translatedCategory = translateListingCategory(formData.category)
 
     return (
-      <div className="container listing-form">
+      <div className="listing-form">
         <div className="step-container">
           <div className="row">
             {step === this.STEP.PICK_SCHEMA && (
@@ -333,7 +329,7 @@ class ListingCreate extends Component {
                 <div className="schema-options">
                   {this.schemaList.map(schema => (
                     <div
-                      className={`schema-selection ${
+                      className={`schema-selection${
                         selectedSchemaType === schema.type ? ' selected' : ''
                       }`}
                       key={schema.type}
@@ -341,14 +337,16 @@ class ListingCreate extends Component {
                     >
                       {schema.name}
                       <div
-                        className={`schema-examples ${
+                        className={`schema-examples${
                           selectedSchemaType === schema.type ? ' selected' : ''
                         }`}
                       >
                         <p>
                           <FormattedMessage
                             id={'listing-create.listingsMayInclude'}
-                            defaultMessage={'{schemaName} listings may include:'}
+                            defaultMessage={
+                              '{schemaName} listings may include:'
+                            }
                             values={{ schemaName: schema.name }}
                           />
                         </p>
@@ -363,16 +361,18 @@ class ListingCreate extends Component {
                       </div>
                     </div>
                   ))}
-                  {showNoSchemaSelectedError &&
+                  {showNoSchemaSelectedError && (
                     <div className="info-box warn">
                       <p>
                         <FormattedMessage
                           id={'listing-create.noSchemaSelectedError'}
-                          defaultMessage={'You must first select a listing type'}
+                          defaultMessage={
+                            'You must first select a listing type'
+                          }
                         />
                       </p>
                     </div>
-                  }
+                  )}
                 </div>
                 <div className="btn-container">
                   <button
@@ -449,50 +449,47 @@ class ListingCreate extends Component {
                   />
                 </label>
                 <h2>Boost your listing</h2>
-                {showBoostTutorial &&
+                <p className="help-block">
+                  You can boost your listing to get higher visibility in the
+                  Origin DApp. More buyers will see your listing, which
+                  increases the chances of a fast and successful sale.
+                </p>
+                {showBoostTutorial && (
                   <div className="info-box">
                     <img src="images/ogn-icon-horiz.svg" role="presentation" />
-                    <p className="text-bold">You have 0 <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">OGN</a> in your wallet.</p>
-                    <p>Once you acquire some OGN you will be able to boost your listing.</p>
-                    <p className="expand-btn" onClick={ this.toggleBoostBox }>
-                      What is a boost? <span className={ isBoostExpanded ? 'rotate-up' : '' }>&#x25be;</span>
+                    <p className="text-bold">
+                      You have 0{' '}
+                      <a
+                        href="/#/about-tokens"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        OGN
+                      </a>{' '}
+                      in your wallet.
                     </p>
-                    {isBoostExpanded && (
-                      <div className="info-box-bottom">
-                        <hr />
-                        <img src="images/boost-icon.svg" role="presentation" />
-                        <p className="text-bold">
-                          Boosting a listing on the Origin DApp
-                        </p>
-                        <p>
-                          Selling on the Origin DApp requires you, as the
-                          seller, to give a guarantee to the buyer in case
-                          there’s a problem with the product or service you’re
-                          offering. This is accomplished by giving your listing
-                          a “boost”.
-                        </p>
-                        <p>
-                          In addition to this, “boosting” your listing will
-                          allow it to have more visibility and appear higher in
-                          the list of available listings.
-                        </p>
-                        <p>
-                          Boosting on the Origin DApp is done using{' '}
-                          <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">
-                            Origin Tokens (OGN).
-                          </a>
-                        </p>
-                      </div>
-                    )}
+                    <p>
+                      Once you acquire some OGN you will be able to boost your
+                      listing.
+                    </p>
+                    <div className="link-container">
+                      <a
+                        href="/#/about-tokens"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Learn More
+                      </a>
+                    </div>
                   </div>
-                }
-                {!showBoostTutorial &&
+                )}
+                {!showBoostTutorial && (
                   <BoostSlider
-                    onChange={ this.setBoost }
-                    ognBalance={ wallet.ognBalance }
-                    selectedBoostAmount={ selectedBoostAmount }
+                    onChange={this.setBoost}
+                    ognBalance={wallet.ognBalance}
+                    selectedBoostAmount={selectedBoostAmount}
                   />
-                }
+                )}
                 <div className="btn-container">
                   <button
                     type="button"
@@ -555,14 +552,6 @@ class ListingCreate extends Component {
                   </div>
                   <div className="row">
                     <div className="col-md-3">
-                      <p className="label">Location</p>
-                    </div>
-                    <div className="col-md-9">
-                      <p>{formData.location}</p>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-md-3">
                       <p className="label">Photos</p>
                     </div>
                     <div className="col-md-9 photo-row">
@@ -584,7 +573,10 @@ class ListingCreate extends Component {
                           role="presentation"
                         />
                         <span className="text-bold">
-                          {Number(formData.price).toLocaleString(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 5 })}
+                          {Number(formData.price).toLocaleString(undefined, {
+                            minimumFractionDigits: 5,
+                            maximumFractionDigits: 5
+                          })}
                         </span>&nbsp;
                         <a
                           className="eth-abbrev"
@@ -614,9 +606,7 @@ class ListingCreate extends Component {
                           src="images/ogn-icon.svg"
                           role="presentation"
                         />
-                        <span className="text-bold">
-                          {formData.boostValue}
-                        </span>&nbsp;
+                        <span className="text-bold">{formData.boostValue}</span>&nbsp;
                         <a
                           className="ogn-abbrev"
                           href="/#/about-tokens"
@@ -654,9 +644,7 @@ class ListingCreate extends Component {
                   </button>
                   <button
                     className="btn btn-primary float-right btn-listing-create"
-                    onClick={() =>
-                      this.onSubmitListing(formListing)
-                    }
+                    onClick={() => this.onSubmitListing(formListing)}
                   >
                     <FormattedMessage
                       id={'listing-create.doneButtonLabel'}
@@ -666,7 +654,11 @@ class ListingCreate extends Component {
                 </div>
               </div>
             )}
-            <div className={`pt-xs-4 pt-sm-4 col-md-5 col-lg-4${step >= this.STEP.PREVIEW ? '' : ' offset-md-1 offset-lg-3'}`}>
+            <div
+              className={`pt-xs-4 pt-sm-4 col-md-5 col-lg-4${
+                step >= this.STEP.PREVIEW ? '' : ' offset-md-1 offset-lg-3'
+              }`}
+            >
               <WalletCard
                 wallet={wallet}
                 withBalanceTooltip={!this.props.wallet.ognBalance}
@@ -674,151 +666,52 @@ class ListingCreate extends Component {
                 withProfile={false}
               />
               {step === this.STEP.PICK_SCHEMA && (
-                <Fragment>
-                  <div className="info-box">
-                    <h2>Creating a listing on the Origin Protocol DApp</h2>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetuer adsplicing nonummy
-                      pellentesque curabitur lorem ipsum dolor sit amet.
-                    </p>
-                  </div>
-                  <div className="about-ogn info-box">
-                    <div className="image-container text-center">
-                      <img
-                        src="images/ogn-icon-horiz.svg"
-                        role="presentation"
-                      />
-                    </div>
-                    <h2>About Origin Tokens</h2>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetuer adsplicing nonummy
-                      pellentesque curabitur.
-                    </p>
-                    <div className="link-container">
-                      <a
-                        href="/#/about-tokens"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Learn more
-                      </a>
-                    </div>
-                  </div>
-                  <div className="info-box">
-                    <h2>
-                      <FormattedMessage
-                        id={'listing-create.chooseSchema'}
-                        defaultMessage={
-                          'Choose a schema for your product or service'
-                        }
-                      />
-                    </h2>
-                    <p>
-                      <FormattedMessage
-                        id={'listing-create.schemaExplainer'}
-                        defaultMessage={
-                          'Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services.'
-                        }
-                      />
-                    </p>
-                    <div className="info-box-image">
-                      <img
-                        className="d-none d-md-block"
-                        src="images/features-graphic.svg"
-                        role="presentation"
-                      />
-                    </div>
-                  </div>
-                </Fragment>
+                <div className="info-box">
+                  <h2>Create A Listing On Origin</h2>
+                  <p>
+                    Get started by selecting the type of listing you want to
+                    create. You will then be able to set a price and listing
+                    details.
+                  </p>
+                </div>
               )}
               {step === this.STEP.DETAILS && (
-                <Fragment>
-                  <div className="info-box">
-                    <p>
-                      <FormattedMessage
-                        id={'listing-create.form-help'}
-                        defaultMessage={`
-                          Be sure to give your listing an appropriate title and
-                          description that will inform others as to what you’re
-                          offering. {br}
-                          If you’re listing is only offered in a specific geographic
-                          location, please be sure to indicate that. {br}
-                          Finally, adding some photos of your listing will go a long
-                          way to helping potential buyers decide if they want to
-                          make the purchase.
-                        `}
-                        values={{ br: <br /> }}
-                      />
-                    </p>
-                  </div>
-                  <div className="info-box">
-                    <div>
-                      <h2>
-                        <FormattedMessage
-                          id={'listing-create.howItWorksHeading'}
-                          defaultMessage={'How it works'}
-                        />
-                      </h2>
-                      <FormattedMessage
-                        id={'listing-create.howItWorksContentPart1'}
-                        defaultMessage={
-                          'Origin uses a Mozilla project called {jsonSchemaLink}  to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer.'
-                        }
-                        values={{
-                          jsonSchemaLink: (
-                            <FormattedMessage
-                              id={'listing-create.jsonSchema'}
-                              defaultMessage={'JSONSchema'}
-                            />
-                          )
-                        }}
-                      />
-                      <br />
-                      <br />
-                      <FormattedMessage
-                        id={'listing-create.howItWorksContentPart2'}
-                        defaultMessage={
-                          'Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering.'
-                        }
-                        values={{
-                          jsonSchemaLink: (
-                            <FormattedMessage
-                              id={'listing-create.jsonSchema'}
-                              defaultMessage={'JSONSchema'}
-                            />
-                          )
-                        }}
-                      />
-                      <a
-                        href={`schemas/${selectedSchemaType}.json`}
-                        target="_blank"
-                      >
-                        <FormattedMessage
-                          id={'listing-create.viewSchemaLinkLabel'}
-                          defaultMessage={'View the {schemaName} schema'}
-                          values={{
-                            schemaName: <code>{selectedSchema.name}</code>
-                          }}
-                        />
-                      </a>
-                    </div>
-                    <div className="info-box-image">
-                      <img
-                        className="d-none d-md-block"
-                        src="images/features-graphic.svg"
-                        role="presentation"
-                      />
-                    </div>
-                  </div>
-                </Fragment>
+                <div className="info-box">
+                  <h2>Add Listing Details</h2>
+                  <p>
+                    <FormattedMessage
+                      id={'listing-create.form-help'}
+                      defaultMessage={
+                        "Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos of your listing will help potential buyers decide if the want to buy your listing."
+                      }
+                    />
+                  </p>
+                </div>
               )}
               {step === this.STEP.BOOST && (
                 <div className="info-box">
                   <h2>About Visibility</h2>
                   <p>
-                    Lorem ipsum dolor sit amet consectetuer adsplicing nonummy
-                    pellentesque curabitur.
+                    Origin sorts and displays listings based on relevance,
+                    recency, and boost level. Higher-visibility listings are
+                    shown to buyers more often.
                   </p>
+                  <h2>Origin Tokens</h2>
+                  <p>
+                    OGN is an ERC-20 token used for incentives and governance on
+                    the Origin platform. Future intended uses of OGN might
+                    include referral rewards, reputation incentives, spam
+                    prevention, developer rewards, and platform governance.
+                  </p>
+                  <div className="link-container">
+                    <a
+                      href="/#/about-tokens"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Learn More
+                    </a>
+                  </div>
                 </div>
               )}
               {step >= this.STEP.PREVIEW && (
@@ -833,22 +726,8 @@ class ListingCreate extends Component {
                     <FormattedMessage
                       id={'listing-create.whatHappensNextContent1'}
                       defaultMessage={
-                        'When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network.'
+                        'When you submit this listing, you will be asked to confirm your transaction in MetaMask. Buyers will then be able to see your listing and make offers on it.'
                       }
-                      values={{
-                        ipfsLink: (
-                          <a
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            href="https://ipfs.io"
-                          >
-                            <FormattedMessage
-                              id={'listing-create.IPFS'}
-                              defaultMessage={'IPFS'}
-                            />
-                          </a>
-                        )
-                      }}
                     />
                     <br />
                     <br />
@@ -862,12 +741,8 @@ class ListingCreate extends Component {
                 </div>
               )}
             </div>
-            {step === this.STEP.METAMASK && (
-              <MetamaskModal />
-            )}
-            {step === this.STEP.PROCESSING && (
-              <ProcessingModal />
-            )}
+            {step === this.STEP.METAMASK && <MetamaskModal />}
+            {step === this.STEP.PROCESSING && <ProcessingModal />}
             {step === this.STEP.SUCCESS && (
               <Modal backdrop="static" isOpen={true}>
                 <div className="image-container">
@@ -878,17 +753,40 @@ class ListingCreate extends Component {
                 </div>
                 <FormattedMessage
                   id={'listing-create.successMessage'}
-                  defaultMessage={'Success!'}
+                  defaultMessage={'Your listing has been created!'}
                 />
                 <div className="disclaimer">
                   <FormattedMessage
                     id={'listing-create.successDisclaimer'}
                     defaultMessage={
-                      'Your listing will be visible within a few seconds.'
+                      "Your listing will be visible within a few seconds. Here's what happens next:"
                     }
                   />
+                  <ul>
+                    <li>
+                      Buyers will now see your listing on the marketplace.
+                    </li>
+                    <li>
+                      When a buyer makes an offer on your listing, you can
+                      choose to accept or reject it.
+                    </li>
+                    <li>
+                      Once the offer is accepted, you will be expected to
+                      fulfill the order.
+                    </li>
+                    <li>
+                      You will receive payment once the buyer confirms that the
+                      order has been fulfilled.
+                    </li>
+                  </ul>
                 </div>
                 <div className="button-container">
+                  <button className="btn btn-clear" onClick={this.resetForm}>
+                    <FormattedMessage
+                      id={'listing-create.createAnother'}
+                      defaultMessage={'Create Another Listing'}
+                    />
+                  </button>
                   <Link to="/" className="btn btn-clear">
                     <FormattedMessage
                       id={'listing-create.seeAllListings'}

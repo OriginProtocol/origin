@@ -79,14 +79,15 @@ class UserCard extends Component {
               <div className="address">
                 {userAddress && <EtherscanLink hash={userAddress} />}
               </div>
-              {userAddress && userAddress !== web3Account &&
+              {userAddress &&
+                userAddress !== web3Account && (
                 <a href="#" className="contact" onClick={this.handleToggle}>
                   <FormattedMessage
                     id={'user-card.enabledContact'}
                     defaultMessage={'Contact'}
                   />
                 </a>
-              }
+              )}
             </div>
           </div>
           <hr className="dark sm" />

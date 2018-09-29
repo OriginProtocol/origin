@@ -9,24 +9,24 @@ import {
 } from 'react-intl'
 import $ from 'jquery'
 
+import { enableMessaging, storeWeb3Intent } from 'actions/App'
 import {
   update as updateTransaction,
   upsert as upsertTransaction
 } from 'actions/Transaction'
-import { enableMessaging, storeWeb3Intent } from 'actions/App'
 
 import {
   ConfirmationModal,
   IssueModal,
-  PrerequisiteModal,
-  RejectionModal
+  PrerequisiteModal
 } from 'components/modals/arbitration-modals'
-import { MetamaskModal } from 'components/modals/wait-modals'
 import Avatar from 'components/avatar'
+import { RejectionModal, WithdrawModal } from 'components/modals/offer-modals'
 import PurchaseProgress from 'components/purchase-progress'
 import Review from 'components/review'
 import UnnamedUser from 'components/unnamed-user'
 import UserCard from 'components/user-card'
+import { MetamaskModal } from 'components/modals/wait-modals'
 
 import TransactionEvent from 'pages/purchases/transaction-event'
 
@@ -41,7 +41,8 @@ const ARBITRATOR_ACCOUNT = process.env.ARBITRATOR_ACCOUNT
 const defaultState = {
   buyer: {},
   form: {
-    rating: 5,
+    invalid: false,
+    rating: 0,
     reviewText: ''
   },
   issue: '',
@@ -49,8 +50,10 @@ const defaultState = {
   modalsOpen: {
     confirmation: false,
     issue: false,
-    rejection: false
+    rejection: false,
+    withdraw: false
   },
+  problemInferred: false,
   processing: false,
   purchase: {},
   reviews: [],
@@ -67,6 +70,7 @@ class PurchaseDetail extends Component {
     this.handleProblem = this.handleProblem.bind(this)
     this.handleRating = this.handleRating.bind(this)
     this.handleReviewText = this.handleReviewText.bind(this)
+    this.handleWithdraw = this.handleWithdraw.bind(this)
     this.initiateDispute = this.initiateDispute.bind(this)
     this.loadPurchase = this.loadPurchase.bind(this)
     this.rejectOffer = this.rejectOffer.bind(this)
@@ -81,15 +85,21 @@ class PurchaseDetail extends Component {
     this.intlMessages = defineMessages({
       awaitApproval: {
         id: 'purchase-detail.awaitApproval',
-        defaultMessage: 'Wait for the seller to approve your offer'
+        defaultMessage: 'Wait for the seller to approve or reject your offer'
+      },
+      awaitApprovalInstruction: {
+        id: 'purchase-detail.awaitApprovalInstruction',
+        defaultMessage:
+          'Your payment is currently in escrow. There is nothing for you to do at this time. Check back later.'
       },
       acceptBuyersOffer: {
         id: 'purchase-detail.acceptOrRejectOffer',
-        defaultMessage: 'Accept or reject the buyer\'s offer'
+        defaultMessage: "Accept or reject the buyer's offer"
       },
       acceptOfferInstruction: {
         id: 'purchase-detail.acceptOfferInstruction',
-        defaultMessage: 'Click below to cancel or continue this transaction.'
+        defaultMessage:
+          'Your listing has a pending offer. Other buyers cannot make offers until you accept or reject this one.'
       },
       acceptOffer: {
         id: 'purchase-detail.acceptOffer',
@@ -101,29 +111,30 @@ class PurchaseDetail extends Component {
       },
       completePurchase: {
         id: 'purchase-detail.completePurchase',
-        defaultMessage: 'Complete your purchase and leave a review'
+        defaultMessage: 'Complete sale and leave a review.'
       },
       submitThisForm: {
         id: 'purchase-detail.submitThisForm',
-        defaultMessage:
-          'Submit this form once you confirm that you are satisfied with your purchase.'
+        defaultMessage: `Release funds and review the seller once you confirm that the sale is complete. Your escrowed payment will be sent to the seller. If you're unhappy, please report a problem instead.`
       },
       confirmAndReview: {
         id: 'purchase-detail.confirmAndReview',
-        defaultMessage: 'Confirm and Review'
+        defaultMessage: 'Complete Sale'
       },
       buyerReviewPlaceholder: {
         id: 'purchase-detail.buyerReviewPlaceholder',
         defaultMessage:
-          'Your review should inform others about your experience transacting with this seller, not about the product itself.'
+          'Your review should let others know about your experience transacting with this seller.'
       },
       waitForBuyer: {
         id: 'purchase-detail.waitForBuyer',
-        defaultMessage: 'Wait for the buyer to finalize the transaction'
+        defaultMessage:
+          'Fulfill this order and wait for the buyer to complete the sale'
       },
       fulfillObligation: {
         id: 'purchase-detail.fulfillObligation',
-        defaultMessage: 'Make sure you fulfill the order.'
+        defaultMessage:
+          'The buyer is waiting for you to fulfill this order. You will get paid when the buyer completes the sale.'
       },
       awaitSellerReview: {
         id: 'purchase-detail.awaitSellerReview',
@@ -131,15 +142,16 @@ class PurchaseDetail extends Component {
       },
       completeByReviewing: {
         id: 'purchase-detail.completeByReviewing',
-        defaultMessage: 'Complete your sale by leaving a review'
+        defaultMessage: 'Leave a review of the buyer'
       },
       clickToReview: {
         id: 'purchase-detail.clickToReview',
-        defaultMessage: 'Click the button below to leave a review'
+        defaultMessage:
+          'Leaving a review lets other sellers know about your experience with this buyer.'
       },
       reviewSale: {
         id: 'purchase-detail.reviewSale',
-        defaultMessage: 'Leave a review'
+        defaultMessage: 'Leave A Review'
       },
       rejectOffer: {
         id: 'purchase-detail.rejectOffer',
@@ -147,7 +159,7 @@ class PurchaseDetail extends Component {
       },
       reportProblem: {
         id: 'purchase-detail.reportProblem',
-        defaultMessage: 'Report a Problem'
+        defaultMessage: 'Report A Problem'
       },
       sellerReviewPlaceholder: {
         id: 'purchase-detail.sellerReviewPlaceholder',
@@ -194,12 +206,13 @@ class PurchaseDetail extends Component {
           prompt: this.props.intl.formatMessage(
             this.intlMessages.awaitApproval
           ),
+          instruction: this.props.intl.formatMessage(
+            this.intlMessages.awaitApprovalInstruction
+          ),
           buttons: [],
           link: {
-            functionName: 'withdrawOffer',
-            text: this.props.intl.formatMessage(
-              this.intlMessages.withdrawOffer
-            )
+            functionName: 'handleWithdraw',
+            text: this.props.intl.formatMessage(this.intlMessages.withdrawOffer)
           }
         },
         seller: {
@@ -211,18 +224,14 @@ class PurchaseDetail extends Component {
           ),
           buttons: [
             {
-              functionName: 'rejectOffer',
-              text: this.props.intl.formatMessage(
-                this.intlMessages.rejectOffer
-              )
-            },
-            {
               functionName: 'acceptOffer',
-              text: this.props.intl.formatMessage(
-                this.intlMessages.acceptOffer
-              )
+              text: this.props.intl.formatMessage(this.intlMessages.acceptOffer)
             }
-          ]
+          ],
+          link: {
+            functionName: 'rejectOffer',
+            text: this.props.intl.formatMessage(this.intlMessages.rejectOffer)
+          }
         }
       },
       accepted: {
@@ -246,25 +255,19 @@ class PurchaseDetail extends Component {
           ],
           link: {
             functionName: 'handleProblem',
-            text: this.props.intl.formatMessage(
-              this.intlMessages.reportProblem
-            )
+            text: this.props.intl.formatMessage(this.intlMessages.reportProblem)
           },
           reviewable: true
         },
         seller: {
-          prompt: this.props.intl.formatMessage(
-            this.intlMessages.waitForBuyer
-          ),
+          prompt: this.props.intl.formatMessage(this.intlMessages.waitForBuyer),
           instruction: this.props.intl.formatMessage(
             this.intlMessages.fulfillObligation
           ),
           buttons: [],
           link: {
             functionName: 'handleProblem',
-            text: this.props.intl.formatMessage(
-              this.intlMessages.reportProblem
-            )
+            text: this.props.intl.formatMessage(this.intlMessages.reportProblem)
           },
           showSellerSteps: true
         }
@@ -303,9 +306,7 @@ class PurchaseDetail extends Component {
           buttons: [
             {
               functionName: 'reviewSale',
-              text: this.props.intl.formatMessage(
-                this.intlMessages.reviewSale
-              )
+              text: this.props.intl.formatMessage(this.intlMessages.reviewSale)
             }
           ],
           reviewable: true
@@ -350,7 +351,9 @@ class PurchaseDetail extends Component {
   }
 
   getListingSchema() {
-    const schemaType = camelCaseToDash(this.state.listing.schemaType.replace('schema.', ''))
+    const schemaType = camelCaseToDash(
+      this.state.listing.schemaType.replace('schema.', '')
+    )
 
     fetch(`schemas/${schemaType}.json`)
       .then(response => response.json())
@@ -388,6 +391,12 @@ class PurchaseDetail extends Component {
     const { rating, reviewText } = this.state.form
     const { purchase, listing } = this.state
     const offer = purchase
+
+    if (rating < 1) {
+      return this.setState(prevState => {
+        return { form: { ...prevState.form, invalid: true } }
+      })
+    }
 
     try {
       this.setState({ processing: true })
@@ -461,6 +470,10 @@ class PurchaseDetail extends Component {
 
   async rejectOffer() {
     this.withdrawOffer(() => this.toggleModal('rejection'))
+  }
+
+  handleWithdraw() {
+    this.toggleModal('withdraw')
   }
 
   async withdrawOffer(onSuccess) {
@@ -544,18 +557,28 @@ class PurchaseDetail extends Component {
   }
 
   handleProblem() {
-    if (this.props.messagingEnabled) {
-      this.toggleModal('confirmation')
-    } else {
-      this.toggleModal('prerequisite')
+    // undo inference if it exists
+    if (this.state.problemInferred) {
+      this.setState({
+        problemInferred: false
+      })
     }
+
+    this.toggleModal('confirmation')
   }
 
   // rating: 1 <= integer <= 5
   handleRating(rating) {
     this.setState(prevState => {
-      return { form: { ...prevState.form, rating } }
+      return { form: { ...prevState.form, invalid: false, rating } }
     })
+
+    // anticipate the need for a dispute per Josh
+    if (rating < 3) {
+      this.setState({ problemInferred: true })
+
+      this.toggleModal('confirmation')
+    }
   }
 
   handleReviewText(e) {
@@ -594,8 +617,12 @@ class PurchaseDetail extends Component {
         transactionTypeKey: 'initiateDispute'
       })
 
-      const counterpartyAddress = web3Account === purchase.buyer ? listing.seller : purchase.buyer
-      const roomId = origin.messaging.generateRoomId(web3Account, counterpartyAddress)
+      const counterpartyAddress =
+        web3Account === purchase.buyer ? listing.seller : purchase.buyer
+      const roomId = origin.messaging.generateRoomId(
+        web3Account,
+        counterpartyAddress
+      )
       const keys = origin.messaging.getSharedKeys(roomId)
 
       // disclose shared decryption key with arbitrator if one exists
@@ -606,9 +633,10 @@ class PurchaseDetail extends Component {
       }
 
       // send a message to arbitrator if form is not blank
-      issue.length && origin.messaging.sendConvMessage(ARBITRATOR_ACCOUNT, {
-        content: issue
-      })
+      issue.length &&
+        origin.messaging.sendConvMessage(ARBITRATOR_ACCOUNT, {
+          content: issue
+        })
 
       this.setState({ processing: false })
     } catch (error) {
@@ -643,7 +671,8 @@ class PurchaseDetail extends Component {
     this.enableMessagingInterval = setInterval(() => {
       if (origin.messaging.canSendMessages()) {
         this.toggleModal('prerequisite')
-        this.toggleModal('confirmation')
+        this.toggleModal('issue')
+
         clearInterval(this.enableMessagingInterval)
       }
     }, 1000)
@@ -657,12 +686,13 @@ class PurchaseDetail extends Component {
   }
 
   render() {
-    const { web3Account } = this.props
+    const { messagingEnabled, web3Account } = this.props
     const {
       buyer,
       form,
       listing,
       modalsOpen,
+      problemInferred,
       processing,
       purchase,
       reviews,
@@ -673,7 +703,7 @@ class PurchaseDetail extends Component {
     const step = offerStatusToStep(purchase.status)
     const isPending = purchase.status !== 'withdrawn' && step < 3
     const isSold = step > 2
-    const { rating, reviewText } = form
+    const { invalid, rating, reviewText } = form
 
     // Data not loaded yet.
     if (!purchase.status || !listing.status) {
@@ -700,10 +730,13 @@ class PurchaseDetail extends Component {
     const offerFinalized = purchase.event('OfferFinalized')
     const offerData = purchase.event('OfferData')
 
-    const priceEth = `${Number(purchase.totalPrice.amount).toLocaleString(undefined, {
-      minimumFractionDigits: 5,
-      maximumFractionDigits: 5
-    })} ETH`
+    const priceEth = `${Number(purchase.totalPrice.amount).toLocaleString(
+      undefined,
+      {
+        minimumFractionDigits: 5,
+        maximumFractionDigits: 5
+      }
+    )} ETH`
 
     const counterparty = ['buyer', 'seller'].find(str => str !== perspective)
     const counterpartyUser = counterparty === 'buyer' ? buyer : seller
@@ -723,18 +756,23 @@ class PurchaseDetail extends Component {
 
     const buyerName = buyer.profile ? (
       `${buyer.profile.firstName} ${buyer.profile.lastName}`
-    ) : <UnnamedUser />
+    ) : (
+      <UnnamedUser />
+    )
     const sellerName = seller.profile ? (
       `${seller.profile.firstName} ${seller.profile.lastName}`
-    ) : <UnnamedUser />
-    const arbitrationIsAvailable = ARBITRATOR_ACCOUNT && web3Account !== ARBITRATOR_ACCOUNT
+    ) : (
+      <UnnamedUser />
+    )
+    const arbitrationIsAvailable =
+      ARBITRATOR_ACCOUNT && web3Account !== ARBITRATOR_ACCOUNT
 
     return (
       <div className="purchase-detail">
         <div className="container">
           <div className="row">
             <div className="col-12">
-              {offerFinalized &&
+              {offerFinalized && (
                 <div className="brdcrmb">
                   {perspective === 'buyer' && (
                     <FormattedMessage
@@ -763,8 +801,9 @@ class PurchaseDetail extends Component {
                     />
                   )}
                 </div>
-              }
-              {!offerFinalized && !offerWithdrawn &&
+              )}
+              {!offerFinalized &&
+                !offerWithdrawn && (
                 <div className="brdcrmb">
                   {perspective === 'buyer' && (
                     <FormattedMessage
@@ -793,7 +832,7 @@ class PurchaseDetail extends Component {
                     />
                   )}
                 </div>
-              }
+              )}
               <h1>
                 {listing.name}
                 {isPending && (
@@ -894,17 +933,28 @@ class PurchaseDetail extends Component {
                 </div>
                 {nextStep && (
                   <div className="col-12">
-                    <div className={`guidance text-center${(showSellerSteps && areSellerStepsOpen) ? ' with-seller-steps' : ''}`}>
+                    <div
+                      className={`guidance text-center${
+                        showSellerSteps && areSellerStepsOpen
+                          ? ' with-seller-steps'
+                          : ''
+                      }`}
+                    >
                       <div className="triangles d-flex justify-content-between">
                         {[...Array(maxStep)].map((undef, i) => {
                           const count = i + 1
-                          const visible = step === count || /* matched */
-                                          (step === 0 && !i) || /* unknown, fallback to beginning */
-                                          (step > maxStep && count === maxStep) /* include end if passed */
+                          const visible =
+                            step === count /* matched */ ||
+                            (step === 0 &&
+                              !i) /* unknown, fallback to beginning */ ||
+                            (step > maxStep &&
+                              count === maxStep) /* include end if passed */
                           return (
                             <div
                               key={`triangle-pair-${count}`}
-                              className={`triangle-pair${visible ? '' : ' hidden'}`}
+                              className={`triangle-pair${
+                                visible ? '' : ' hidden'
+                              }`}
                             >
                               <div className="triangle" />
                               <div className="triangle" />
@@ -921,23 +971,22 @@ class PurchaseDetail extends Component {
                         </strong>
                         &nbsp;{prompt}
                       </div>
-                      {reviewable && instruction &&
+                      {reviewable &&
+                        instruction && (
+                        <div className="instruction">{instruction}</div>
+                      )}
+                      {!reviewable && (
                         <div className="instruction">
-                          {instruction}
-                        </div>
-                      }
-                      {!reviewable &&
-                        <div className="instruction">
-                          {instruction ||
+                          {instruction || (
                             <FormattedMessage
                               id={'purchase-detail.nothingToDo'}
                               defaultMessage={
                                 'Nothing for you to do at this time. Check back later.'
                               }
                             />
-                          }
+                          )}
                         </div>
-                      }
+                      )}
                       {reviewable && (
                         <form
                           onSubmit={e => {
@@ -953,6 +1002,16 @@ class PurchaseDetail extends Component {
                                 defaultMessage={'Review'}
                               />
                             </label>
+                            {invalid && (
+                              <div className="invalid-feedback d-block">
+                                <FormattedMessage
+                                  id={'purchase-detail.reviewError'}
+                                  defaultMessage={
+                                    'Select a rating of 1-5 stars.'
+                                  }
+                                />
+                              </div>
+                            )}
                             <div className="stars">
                               {[...Array(5)].map((undef, i) => {
                                 return (
@@ -983,7 +1042,8 @@ class PurchaseDetail extends Component {
                           </div>
                         </form>
                       )}
-                      {!reviewable && !!buttons.length &&
+                      {!reviewable &&
+                        !!buttons.length && (
                         <div className="button-container">
                           {buttons.map((b, i) => (
                             <button
@@ -995,27 +1055,32 @@ class PurchaseDetail extends Component {
                             </button>
                           ))}
                         </div>
-                      }
-                      {showSellerSteps &&
+                      )}
+                      {showSellerSteps && (
                         <div className="seller-steps">
                           <div className="toggle-container">
                             <p
                               className="toggle-btn"
-                              onClick={() => this.setState({ areSellerStepsOpen: !areSellerStepsOpen })}>
-                              {areSellerStepsOpen ?
+                              onClick={() =>
+                                this.setState({
+                                  areSellerStepsOpen: !areSellerStepsOpen
+                                })
+                              }
+                            >
+                              {areSellerStepsOpen ? (
                                 <FormattedMessage
                                   id={'purchase-detail.hideSellerSteps'}
                                   defaultMessage={'Hide Fulfillment Checklist'}
                                 />
-                                :
+                              ) : (
                                 <FormattedMessage
                                   id={'purchase-detail.showSellerSteps'}
                                   defaultMessage={'Show Fulfillment Checklist'}
                                 />
-                              }
+                              )}
                             </p>
                           </div>
-                          {areSellerStepsOpen &&
+                          {areSellerStepsOpen && (
                             <div className="list-container text-left">
                               <p className="text-center">
                                 <FormattedMessage
@@ -1024,30 +1089,35 @@ class PurchaseDetail extends Component {
                                 />
                               </p>
                               <ol>
-                                { translatedSchema &&
+                                {translatedSchema &&
                                   translatedSchema.properties &&
                                   translatedSchema.properties.sellerSteps &&
-                                  translatedSchema.properties.sellerSteps.enumNames &&
-                                  translatedSchema.properties.sellerSteps.enumNames.map(step =>
-                                    <li key={step}>{step}</li>
-                                  )
-                                }
+                                  translatedSchema.properties.sellerSteps
+                                    .enumNames &&
+                                  translatedSchema.properties.sellerSteps.enumNames.map(
+                                    step => <li key={step}>{step}</li>
+                                  )}
                               </ol>
                             </div>
-                          }
+                          )}
                         </div>
-                      }
-                      {link && (arbitrationIsAvailable || link.functionName !== 'handleProblem') &&
+                      )}
+                      {link &&
+                        (arbitrationIsAvailable ||
+                          link.functionName !== 'handleProblem') && (
                         <div className="link-container">
-                          <a href="#" onClick={e => {
-                            e.preventDefault()
+                          <a
+                            href="#"
+                            onClick={e => {
+                              e.preventDefault()
 
-                            this[link.functionName]()
-                          }}>
+                              this[link.functionName]()
+                            }}
+                          >
                             {link.text}
                           </a>
                         </div>
-                      }
+                      )}
                     </div>
                   </div>
                 )}
@@ -1073,44 +1143,52 @@ class PurchaseDetail extends Component {
                         defaultMessage={'TxHash'}
                       />
                     </th>
-                    <th scope="col">
-                      <FormattedMessage
-                        id={'purchase-detail.from'}
-                        defaultMessage={'From'}
-                      />
-                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   <TransactionEvent
-                    eventName={this.props.intl.formatMessage(this.intlMessages.offerMade)}
+                    eventName={this.props.intl.formatMessage(
+                      this.intlMessages.offerMade
+                    )}
                     event={offerCreated}
                     from={buyer}
                   />
                   <TransactionEvent
-                    eventName={this.props.intl.formatMessage(this.intlMessages.offerWithdrawn)}
+                    eventName={this.props.intl.formatMessage(
+                      this.intlMessages.offerWithdrawn
+                    )}
                     event={offerWithdrawn}
                     from={buyer}
                   />
                   <TransactionEvent
-                    eventName={this.props.intl.formatMessage(this.intlMessages.offerAccepted)}
+                    eventName={this.props.intl.formatMessage(
+                      this.intlMessages.offerAccepted
+                    )}
                     event={offerAccepted}
                     from={seller}
                   />
                   <TransactionEvent
-                    eventName={this.props.intl.formatMessage(this.intlMessages.offerDisputed)}
+                    eventName={this.props.intl.formatMessage(
+                      this.intlMessages.offerDisputed
+                    )}
                     event={offerDisputed}
                   />
                   <TransactionEvent
-                    eventName={this.props.intl.formatMessage(this.intlMessages.offerRuling)}
+                    eventName={this.props.intl.formatMessage(
+                      this.intlMessages.offerRuling
+                    )}
                     event={offerRuling}
                   />
                   <TransactionEvent
-                    eventName={this.props.intl.formatMessage(this.intlMessages.saleCompleted)}
+                    eventName={this.props.intl.formatMessage(
+                      this.intlMessages.saleCompleted
+                    )}
                     event={offerFinalized}
                   />
                   <TransactionEvent
-                    eventName={this.props.intl.formatMessage(this.intlMessages.saleReviewed)}
+                    eventName={this.props.intl.formatMessage(
+                      this.intlMessages.saleReviewed
+                    )}
                     event={offerData}
                   />
                 </tbody>
@@ -1192,9 +1270,7 @@ class PurchaseDetail extends Component {
                     {Number(reviews.length).toLocaleString()}
                   </span>
                 </h2>
-                {reviews.map(r =>
-                  <Review key={r.id} review={r} />
-                )}
+                {reviews.map(r => <Review key={r.id} review={r} />)}
                 {/* To Do: pagination */}
                 {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
               </div>
@@ -1247,15 +1323,19 @@ class PurchaseDetail extends Component {
             </div>
           </div>
         </div>
-        {processing && (
-          <MetamaskModal />
-        )}
+        {processing && <MetamaskModal />}
         <ConfirmationModal
           isOpen={modalsOpen.confirmation}
+          inferred={problemInferred}
           onCancel={() => this.toggleModal('confirmation')}
           onSubmit={() => {
             this.toggleModal('confirmation')
-            this.toggleModal('issue')
+
+            if (messagingEnabled) {
+              this.toggleModal('issue')
+            } else {
+              this.toggleModal('prerequisite')
+            }
           }}
         />
         <IssueModal
@@ -1281,6 +1361,14 @@ class PurchaseDetail extends Component {
         <RejectionModal
           isOpen={modalsOpen.rejection}
           handleToggle={() => this.toggleModal('rejection')}
+        />
+        <WithdrawModal
+          isOpen={modalsOpen.withdraw}
+          onCancel={() => this.toggleModal('withdraw')}
+          onSubmit={() => {
+            this.toggleModal('withdraw')
+            this.withdrawOffer()
+          }}
         />
       </div>
     )

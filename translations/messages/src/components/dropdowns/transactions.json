@@ -4,6 +4,10 @@
     "defaultMessage": "Pending Blockchain Transactions"
   },
   {
+    "id": "transactions.pendingBlockchainTransactionHeading",
+    "defaultMessage": "Pending Blockchain Transaction"
+  },
+  {
     "id": "transactions.blockchainTransactionsHeading",
     "defaultMessage": "Blockchain Transactions"
   },

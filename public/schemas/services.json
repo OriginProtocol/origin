@@ -49,10 +49,6 @@
       "minLength": 10,
       "maxLength": 1024
     },
-    "location": {
-      "type": "string",
-      "title": "schema.services.location"
-    },
     "price": {
       "type": "number",
       "title": "schema.services.priceInETH"
