@@ -332,6 +332,7 @@
   "transaction.createListing": "आपने एक सूची बनाई है।",
   "transaction.initiateDispute": "आपने विवाद शुरू किया",
   "transaction.reviewSale": "आपने एक समीक्षा छोड़ी",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "खरीदी",
   "transaction-progress.sentBySeller": "विक्रेता द्वारा भेजा गया",
   "transaction-progress.receivedByMe": "मेरे द्वारा प्राप्त",
