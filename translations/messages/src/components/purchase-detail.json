@@ -13,7 +13,7 @@
   },
   {
     "id": "purchase-detail.acceptOfferInstruction",
-    "defaultMessage": "Click below to cancel or continue this transaction."
+    "defaultMessage": "Your listing has a pending offer. Other buyers cannot make offers until you accept or reject this one."
   },
   {
     "id": "purchase-detail.acceptOffer",

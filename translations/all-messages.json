@@ -268,7 +268,7 @@
   "purchase-detail.awaitApproval": "Wait for the seller to approve or reject your offer",
   "purchase-detail.awaitApprovalInstruction": "Your payment is currently in escrow. There is nothing for you to do at this time. Check back later.",
   "purchase-detail.acceptOrRejectOffer": "Accept or reject the buyer's offer",
-  "purchase-detail.acceptOfferInstruction": "Click below to cancel or continue this transaction.",
+  "purchase-detail.acceptOfferInstruction": "Your listing has a pending offer. Other buyers cannot make offers until you accept or reject this one.",
   "purchase-detail.acceptOffer": "Accept",
   "purchase-detail.waitForContact": "Wait to be contacted by an Origin team member",
   "purchase-detail.completePurchase": "Complete sale and leave a review.",

@@ -96,7 +96,7 @@ class PurchaseDetail extends Component {
       },
       acceptOfferInstruction: {
         id: 'purchase-detail.acceptOfferInstruction',
-        defaultMessage: 'Click below to cancel or continue this transaction.'
+        defaultMessage: 'Your listing has a pending offer. Other buyers cannot make offers until you accept or reject this one.'
       },
       acceptOffer: {
         id: 'purchase-detail.acceptOffer',
@@ -219,14 +219,14 @@ class PurchaseDetail extends Component {
           ),
           buttons: [
             {
-              functionName: 'rejectOffer',
-              text: this.props.intl.formatMessage(this.intlMessages.rejectOffer)
-            },
-            {
               functionName: 'acceptOffer',
               text: this.props.intl.formatMessage(this.intlMessages.acceptOffer)
             }
-          ]
+          ],
+          link: {
+            functionName: 'rejectOffer',
+            text: this.props.intl.formatMessage(this.intlMessages.rejectOffer)
+          }
         }
       },
       accepted: {
