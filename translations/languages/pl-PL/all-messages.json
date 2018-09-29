@@ -332,6 +332,7 @@
   "transaction.createListing": "Stworzyłeś aukcję.",
   "transaction.initiateDispute": "Zainicjowałeś spór.",
   "transaction.reviewSale": "Opuściłeś recenzję.",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "Zakupione",
   "transaction-progress.sentBySeller": "Wysłane przez sprzedającego",
   "transaction-progress.receivedByMe": "Otrzymane przeze mnie",
