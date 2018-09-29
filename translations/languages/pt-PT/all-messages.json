@@ -332,6 +332,7 @@
   "transaction.createListing": "Você criou uma listagem.",
   "transaction.initiateDispute": "Você iniciou uma disputa.",
   "transaction.reviewSale": "Você deixou um comentário.",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "Comprado",
   "transaction-progress.sentBySeller": "Enviado pelo vendedor",
   "transaction-progress.receivedByMe": "Recebido por mim",
