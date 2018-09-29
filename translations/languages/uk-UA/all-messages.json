@@ -332,6 +332,7 @@
   "transaction.createListing": "Ви створили лістинг.",
   "transaction.initiateDispute": "Ви ініціювали суперечку.",
   "transaction.reviewSale": "Ви залишили огляд.",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "Придбано",
   "transaction-progress.sentBySeller": "Відправлено продавцем",
   "transaction-progress.receivedByMe": "Отримані мною",
