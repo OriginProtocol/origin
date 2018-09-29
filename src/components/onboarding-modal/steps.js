@@ -31,22 +31,22 @@ export default [
     content: (
       <div>
         <p className="step-text">
-          {hasWallet &&
+          {hasWallet && (
             <FormattedMessage
               id={'onboarding-steps.stepOneContentPartOneWithWallet'}
               defaultMessage={
                 'You will use your Ethereum wallet to create listings and accept payment.'
               }
             />
-          }
-          {!hasWallet &&
+          )}
+          {!hasWallet && (
             <FormattedMessage
               id={'onboarding-steps.stepOneContentPartOneWithoutWallet'}
               defaultMessage={
                 'You will need an Ethereum wallet to create listings and accept payment.'
               }
             />
-          }
+          )}
         </p>
         <p className="step-text">
           <FormattedMessage
@@ -55,9 +55,7 @@ export default [
               'Transactions on the Origin DApp are always made using {ethMark}.'
             }
             values={{
-              ethMark: (
-                <mark className="eth">ETH</mark>
-              )
+              ethMark: <mark className="eth">ETH</mark>
             }}
           />
         </p>
@@ -93,7 +91,9 @@ export default [
         <p className="step-text">
           <FormattedMessage
             id={'onboarding-steps.stepTwoContent'}
-            defaultMessage={'Verifying your profile allows other users to know that you are a real person and increases the chances of successful transactions on Origin.'}
+            defaultMessage={
+              'Verifying your profile allows other users to know that you are a real person and increases the chances of successful transactions on Origin.'
+            }
           />
         </p>
       </div>
@@ -128,18 +128,20 @@ export default [
         <p className="step-text">
           <FormattedMessage
             id={'onboarding-steps.stepThreeContentPartOne'}
-            defaultMessage={'Origin Tokens (Symbol: {ognMark}) are used on the Origin DApp to boost your listings.'}
+            defaultMessage={
+              'Origin Tokens (Symbol: {ognMark}) are used on the Origin DApp to boost your listings.'
+            }
             values={{
-              ognMark: (
-                <mark className="ogn">OGN</mark>
-              )
+              ognMark: <mark className="ogn">OGN</mark>
             }}
           />
         </p>
         <p className="step-text">
           <FormattedMessage
             id={'onboarding-steps.stepThreeContentPartTwo'}
-            defaultMessage={'Boosting will give your listing more visibility and increase the likelihood of successfully selling.'}
+            defaultMessage={
+              'Boosting will give your listing more visibility and increase the likelihood of successfully selling.'
+            }
           />
         </p>
       </div>

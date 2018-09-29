@@ -17,6 +17,7 @@ const env = {
   CONTRACT_ADDRESSES: '{}',
   DEPLOY_TAG: false,
   DISCOVERY_SERVER_URL: '',
+  ETH_NETWORK_ID: null,
   FORCE_HTTPS: false,
   IPFS_API_PORT: '',
   IPFS_DOMAIN: '',
@@ -25,6 +26,8 @@ const env = {
   IPFS_SWARM: '',
   MESSAGING_ACCOUNT: '',
   MESSAGING_NAMESPACE: '',
+  MAINNET_DAPP_BASEURL: null,
+  RINKEBY_DAPP_BASEURL: null,
   PRODUCTION_DOMAIN: '',
   PROVIDER_URL: '',
   REDUX_LOGGER: false

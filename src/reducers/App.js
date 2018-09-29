@@ -1,6 +1,7 @@
 import { AppConstants } from 'actions/App'
 
 const initialState = {
+  betaModalDismissed: false,
   // a timestamp for when the messages dropdown was last closed
   messagingDismissed: null,
   // whether or not a public key has been added to the global registry
@@ -12,7 +13,8 @@ const initialState = {
   onMobile: null,
   web3: {
     account: null,
-    intent: null
+    intent: null,
+    networkId: null
   },
   translations: {
     selectedLanguageCode: null,
@@ -24,6 +26,9 @@ const initialState = {
 
 export default function App(state = initialState, action = {}) {
   switch (action.type) {
+  case AppConstants.BETA_MODAL_DISMISSED:
+    return { ...state, betaModalDismissed: action.closedAt }
+
   case AppConstants.MESSAGING_DISMISSED:
     return { ...state, messagingDismissed: action.closedAt }
 
@@ -44,6 +49,9 @@ export default function App(state = initialState, action = {}) {
 
   case AppConstants.WEB3_INTENT:
     return { ...state, web3: { ...state.web3, intent: action.intent } }
+
+  case AppConstants.WEB3_NETWORK:
+    return { ...state, web3: { ...state.web3, networkId: action.networkId } }
 
   case AppConstants.TRANSLATIONS:
     return {

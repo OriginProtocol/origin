@@ -117,13 +117,14 @@ export const getFiatPrice = (
 
   const { rate } = getCachedCurrencyPair(fiatCurrencyCode, cryptoCurrencyCode)
 
-  if (formatResult)
+  if (formatResult) {
     return Number(priceEth * (rate || 0)).toLocaleString(undefined, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     })
-  else
+  } else {
     return priceEth * (rate || 0)
+  }
 }
 
 /**

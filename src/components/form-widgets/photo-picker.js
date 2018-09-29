@@ -109,7 +109,9 @@ class PhotoPicker extends Component {
         showMaxImageCountMsg
       })
 
-      const filesAsDataUriArray = filesArr.map(async fileObj => getDataUri(fileObj))
+      const filesAsDataUriArray = filesArr.map(async fileObj =>
+        getDataUri(fileObj)
+      )
 
       Promise.all(filesAsDataUriArray).then(dataUriArray => {
         this.setState(
@@ -123,17 +125,23 @@ class PhotoPicker extends Component {
   }
 
   removePhoto(indexToRemove) {
-    const confirmation = window.confirm(this.props.intl.formatMessage(this.intlMessages.confirmRemoveImage))
+    const confirmation = window.confirm(
+      this.props.intl.formatMessage(this.intlMessages.confirmRemoveImage)
+    )
     if (confirmation) {
       this.setState({
-        pictures: this.state.pictures.filter((picture, idx) => idx !== indexToRemove)
+        pictures: this.state.pictures.filter(
+          (picture, idx) => idx !== indexToRemove
+        )
       })
     }
   }
 
   removeImgSizeWarning(indexToRemove) {
     this.setState({
-      oversizeImages: this.state.oversizeImages.filter((warning, idx) => idx !== indexToRemove)
+      oversizeImages: this.state.oversizeImages.filter(
+        (warning, idx) => idx !== indexToRemove
+      )
     })
   }
 
@@ -145,7 +153,12 @@ class PhotoPicker extends Component {
 
   render() {
     const { schema, required } = this.props
-    const { helpText, oversizeImages, pictures, showMaxImageCountMsg } = this.state
+    const {
+      helpText,
+      oversizeImages,
+      pictures,
+      showMaxImageCountMsg
+    } = this.state
 
     return (
       <div className="photo-picker">
@@ -168,9 +181,7 @@ class PhotoPicker extends Component {
           required={required}
           multiple
         />
-        {helpText && (
-          <p className="help-block">{helpText}</p>
-        )}
+        {helpText && <p className="help-block">{helpText}</p>}
         <p className="help-block">
           <FormattedMessage
             id={'photo-picker.listingSize'}
@@ -184,7 +195,7 @@ class PhotoPicker extends Component {
           />
         </p>
         <div className="d-flex pictures">
-          {showMaxImageCountMsg &&
+          {showMaxImageCountMsg && (
             <div className="info-box warn">
               <img
                 className="close-btn"
@@ -203,7 +214,7 @@ class PhotoPicker extends Component {
                 />
               </p>
             </div>
-          }
+          )}
         </div>
         <div className="d-flex pictures">
           {oversizeImages.map((imgObj, idx) => (
@@ -231,7 +242,11 @@ class PhotoPicker extends Component {
         <div className="d-flex pictures">
           {pictures.map((dataUri, idx) => (
             <div className="image-container" key={idx}>
-              <img className="close-btn" src="images/close-icon.svg" onClick={() => this.removePhoto(idx)} />
+              <img
+                className="close-btn"
+                src="images/close-icon.svg"
+                onClick={() => this.removePhoto(idx)}
+              />
               <img className="preview-thumbnail" src={dataUri} />
             </div>
           ))}

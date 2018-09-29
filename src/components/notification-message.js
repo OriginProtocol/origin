@@ -35,7 +35,9 @@ class NotificationMessage extends Component {
 
     switch (type) {
     case 'buyer_review_received':
-      message = this.props.intl.formatMessage(this.intlMessages.sellerReviewed)
+      message = this.props.intl.formatMessage(
+        this.intlMessages.sellerReviewed
+      )
       break
     case 'seller_review_received':
       message = this.props.intl.formatMessage(this.intlMessages.saleConfirmed)
@@ -44,9 +46,7 @@ class NotificationMessage extends Component {
       message = this.props.intl.formatMessage(this.intlMessages.offerAccepted)
       break
     case 'seller_listing_purchased':
-      message = this.props.intl.formatMessage(
-        this.intlMessages.offerMade
-      )
+      message = this.props.intl.formatMessage(this.intlMessages.offerMade)
       break
     default:
       return <p className={className || ''}>{NON_PURCHASE_RELATED_MESSAGE}</p>

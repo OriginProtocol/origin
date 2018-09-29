@@ -83,9 +83,10 @@ class MyPurchaseCard extends Component {
 
       const actor = event ? event.returnValues[0] : null
 
-      verb = (actor === buyer) ?
-        this.props.intl.formatMessage(this.intlMessages.withdrawn) :
-        this.props.intl.formatMessage(this.intlMessages.rejected)
+      verb =
+          actor === buyer
+            ? this.props.intl.formatMessage(this.intlMessages.withdrawn)
+            : this.props.intl.formatMessage(this.intlMessages.rejected)
       break
     case 'disputed':
       event = events.find(({ event }) => event === 'OfferDisputed')
@@ -133,13 +134,15 @@ class MyPurchaseCard extends Component {
                 <Link to={`/purchases/${offerId}`}>{name}</Link>
               </h2>
               <p className="timestamp">{timestamp}</p>
-              {!voided &&
+              {!voided && (
                 <Fragment>
                   <div className="d-flex">
                     <p className="price">{`${Number(price).toLocaleString(
                       undefined,
                       { minimumFractionDigits: 5, maximumFractionDigits: 5 }
-                    )} ${this.props.intl.formatMessage(this.intlMessages.ETH)}`}</p>
+                    )} ${this.props.intl.formatMessage(
+                      this.intlMessages.ETH
+                    )}`}</p>
                     {/* Not Yet Relevant */}
                     {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
                   </div>
@@ -150,7 +153,7 @@ class MyPurchaseCard extends Component {
                     subdued={true}
                   />
                 </Fragment>
-              }
+              )}
               <div className="actions d-flex">
                 <div className="links-container">
                   {/*<a onClick={() => alert('To Do')}>Open a Dispute</a>*/}

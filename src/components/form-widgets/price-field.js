@@ -59,6 +59,7 @@ class PriceField extends Component {
                 <input
                   type="number"
                   id="root_price"
+                  step="0.00001"
                   className="price-field form-control"
                   value={price}
                   onChange={this.onChange()}
@@ -83,9 +84,19 @@ class PriceField extends Component {
           <p className="help-block">
             <FormattedMessage
               id={'price-field.price-help'}
-              defaultMessage={'The cost to buy this listing. Price is always in {currency}. '}
+              defaultMessage={
+                'The cost to buy this listing. Price is always in {currency}. '
+              }
               values={{
-                currency: <a href="https://en.wikipedia.org/wiki/Ethereum" target="_blank" rel="noopener noreferrer">ETH</a>
+                currency: (
+                  <a
+                    href="https://en.wikipedia.org/wiki/Ethereum"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    ETH
+                  </a>
+                )
               }}
             />
             <span className="text-bold">

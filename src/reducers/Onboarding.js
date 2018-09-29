@@ -20,12 +20,18 @@ function saveStorageItem(name, item, defaultValue) {
 }
 
 const getStoredStep = steps => {
-  const defaultValue = {name: {props: {}}}
+  const defaultValue = { name: { props: {} } }
   const currentStep = getStorageItem('.currentStep', defaultValue)
-  const { name: { props: { defaultMessage } } } = currentStep
+  const {
+    name: {
+      props: { defaultMessage }
+    }
+  } = currentStep
 
   return steps.find(
-    step => (step && step.name.props.defaultMessage) === (currentStep && defaultMessage)
+    step =>
+      (step && step.name.props.defaultMessage) ===
+      (currentStep && defaultMessage)
   )
 }
 
@@ -76,6 +82,11 @@ const updateCurrentStep = (incompleteStep, steps) => {
 }
 
 const initialState = {
+  /*
+   * This is currently a redundant inverse of state.app.betaModalDismissed
+   * but may depend on other variables in the future.
+   */
+  blocked: true,
   currentStep: steps[0],
   steps,
   progress: false,
@@ -86,6 +97,12 @@ const initialState = {
 
 export default function Onboarding(state = initialState, action = {}) {
   switch (action.type) {
+  case OnboardingConstants.UNBLOCK:
+    return {
+      ...state,
+      blocked: false
+    }
+
   case OnboardingConstants.UPDATE_STEPS:
     const updatedSteps = updateAllSteps(action.incompleteStep, state.steps)
     saveStorageItem('.steps', updatedSteps)

@@ -45,7 +45,6 @@ class BoostSlider extends Component {
     return (
       <div className="boost-slider">
         <p>Boost Level</p>
-        <p className="help-block">Increase the chances of a fast and successful sale.</p>
         <img
           className="info-icon"
           src="images/info-icon-inactive.svg"
@@ -53,41 +52,58 @@ class BoostSlider extends Component {
           data-toggle="tooltip"
           data-html="true"
           data-trigger="click"
-          title={
-            `<div class="boost-tooltip">
+          title={`<div class="boost-tooltip">
               <p>A boost increases the visibility of your listing and also works as a guarantee in case something goes wrong.</p>
               <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">Learn More</a>
-            </div>`
-          } />
+            </div>`}
+        />
         <div className="level-container">
           <span className={`boosted badge ${boostLevel.toLowerCase()}`}>
             <img src="images/boost-icon-arrow.svg" role="presentation" />
           </span>
-          { boostLevel }
-          { boostLevel.match(/medium/i) && ' (recommended)'}
+          {boostLevel}
+          {boostLevel.match(/medium/i) && ' (recommended)'}
           <div className="amount-container">
             <p>
               <img src="images/ogn-icon.svg" role="presentation" />
-              { this.props.selectedBoostAmount }&nbsp;
-              <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">OGN</a>
+              {this.props.selectedBoostAmount}&nbsp;
+              <a
+                href="/#/about-tokens"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                OGN
+              </a>
               {/* <span className="help-block"> | { this.state.selectedBoostAmountUsd } USD</span> */}
             </p>
           </div>
         </div>
         <Slider
-          className={ `boost-level-${boostLevel}` }
-          onChange={ this.onChange }
-          defaultValue={ this.props.selectedBoostAmount }
-          min={ minBoostValue }
+          className={`boost-level-${boostLevel}`}
+          onChange={this.onChange}
+          defaultValue={this.props.selectedBoostAmount}
+          min={minBoostValue}
           disabled={!ognBalance}
-          max={ maxBoostValue } />
-        <p className="text-italics">{ boostLevels[boostLevel].desc }</p>
-        {ognBalance === 0 &&
+          max={maxBoostValue}
+        />
+        <p className="text-italics">{boostLevels[boostLevel].desc}</p>
+        {ognBalance === 0 && (
           <div className="info-box">
-            <p>You have 0 <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">OGN</a> in your wallet and cannot boost.</p>
+            <p>
+              You have 0{' '}
+              <a
+                href="/#/about-tokens"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                OGN
+              </a>{' '}
+              in your wallet and cannot boost.
+            </p>
           </div>
-        }
-        {ognBalance > 0 && ognBalance < this.props.selectedBoostAmount &&
+        )}
+        {ognBalance > 0 &&
+          ognBalance < this.props.selectedBoostAmount && (
           <div className="info-box warn">
             <p>You don’t have enough OGN in your wallet.</p>
             <a
@@ -95,17 +111,14 @@ class BoostSlider extends Component {
               href="http://localhost:5000/"
               target="_blank"
               rel="noopener noreferrer"
-              onClick={ this.pollOgnBalance }
+              onClick={this.pollOgnBalance}
             >
-              Get OGN
+                Get OGN
             </a>
           </div>
-        }
+        )}
         <p className="help-block bottom-explainer">
-          Boosts are always calculated and charged in&nbsp;
-          <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">
-            OGN
-          </a>.&nbsp;
+          Boosts are always calculated and charged in OGN.&nbsp;
           <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">
             Learn more &#x25b8;
           </a>

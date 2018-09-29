@@ -1,5 +1,5 @@
 ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
-![origin_travis_banner](https://travis-ci.org/OriginProtocol/origin-dapp.svg?branch=master)
+![origin_travis_banner](https://img.shields.io/travis/OriginProtocol/origin-dapp/master.svg?style=flat-square&colorA=111d28)
 
 Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
 

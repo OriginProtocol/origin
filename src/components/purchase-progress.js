@@ -86,7 +86,9 @@ class PurchaseProgress extends Component {
               title={
                 null /*`Sent by seller on<br /><strong>${moment(fulfilledAt).format('MMM D, YYYY')}</strong>`*/
               }
-            >{disputed && '!'}</span>
+            >
+              {disputed && '!'}
+            </span>
           )}
           {!receivedAt && <span className="progress-circle" />}
           {receivedAt && (
@@ -115,7 +117,7 @@ class PurchaseProgress extends Component {
             />
           )}
         </div>
-        {!subdued &&
+        {!subdued && (
           <div className="labels d-flex justify-content-between text-center">
             <div className="stage-container">
               <div className="stage">
@@ -127,18 +129,18 @@ class PurchaseProgress extends Component {
             </div>
             <div className="stage-container">
               <div className="stage">
-                {purchase.status !== 'withdrawn' &&
+                {purchase.status !== 'withdrawn' && (
                   <FormattedMessage
                     id={'purchase-progress.offerAccepted'}
                     defaultMessage={'Offer Accepted'}
                   />
-                }
-                {purchase.status === 'withdrawn' &&
+                )}
+                {purchase.status === 'withdrawn' && (
                   <FormattedMessage
                     id={'purchase-progress.offerWithdrawn'}
                     defaultMessage={'Offer Withdrawn'}
                   />
-                }
+                )}
               </div>
             </div>
             <div className="stage-container">
@@ -149,7 +151,7 @@ class PurchaseProgress extends Component {
                 />
               </div>
             </div>
-            {perspective === 'seller' &&
+            {perspective === 'seller' && (
               <div className="stage-container">
                 <div className="stage">
                   <FormattedMessage
@@ -158,9 +160,9 @@ class PurchaseProgress extends Component {
                   />
                 </div>
               </div>
-            }
+            )}
           </div>
-        }
+        )}
       </div>
     )
   }
