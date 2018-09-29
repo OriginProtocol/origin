@@ -4920,6 +4920,7 @@ a:not([href]):not([tabindex]).span-link {
 }
 
 .beta .disclaimer img {
+  flex-shrink: 0;
   margin-right: 15px;
 }
 
