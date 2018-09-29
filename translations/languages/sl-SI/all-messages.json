@@ -332,6 +332,7 @@
   "transaction.createListing": "Ustvarili ste seznam.",
   "transaction.initiateDispute": "Sprožili ste spor.",
   "transaction.reviewSale": "Predložili ste oceno.",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "Kupljeno",
   "transaction-progress.sentBySeller": "Poslal prodajalec",
   "transaction-progress.receivedByMe": "Prejel sem ga",
