@@ -42,6 +42,7 @@ class PurchaseProgress extends Component {
     const { progressCalculated, progressWidth } = this.state
 
     const offerCreated = purchase && purchase.event('OfferCreated')
+    const offerWithdrawn = purchase && purchase.event('OfferWithdrawn')
     const offerAccepted = purchase && purchase.event('OfferAccepted')
     const offerDisputed = purchase && purchase.event('OfferDisputed')
     const offerRuling = purchase && purchase.event('OfferRuling')
@@ -77,7 +78,7 @@ class PurchaseProgress extends Component {
               ).format('MMM D, YYYY')}</strong>`}
             />
           )}
-          {!offerAccepted && <span className="progress-circle" />}
+          {!offerAccepted && !offerWithdrawn && <span className="progress-circle" />}
           {offerAccepted && (
             <span
               className="progress-circle checked"
@@ -86,6 +87,17 @@ class PurchaseProgress extends Component {
               data-html="true"
               title={`Offer accepted on<br /><strong>${moment(
                 offerAccepted.timestamp * 1000
+              ).format('MMM D, YYYY')}</strong>`}
+            />
+          )}
+          {offerWithdrawn && (
+            <span
+              className="progress-circle checked"
+              data-toggle="tooltip"
+              data-placement="top"
+              data-html="true"
+              title={`Offer accepted on<br /><strong>${moment(
+                offerWithdrawn.timestamp * 1000
               ).format('MMM D, YYYY')}</strong>`}
             />
           )}
