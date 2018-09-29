@@ -332,6 +332,7 @@
   "transaction.createListing": "Δημιουργήσατε μια λίστα.",
   "transaction.initiateDispute": "Ξεκινήσατε μια διαφωνία.",
   "transaction.reviewSale": "Αφήσατε μια κριτική.",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "Αγορασμένα",
   "transaction-progress.sentBySeller": "Απεσταλμένα από πωλητή",
   "transaction-progress.receivedByMe": "Ληφθέντα από εμένα",
