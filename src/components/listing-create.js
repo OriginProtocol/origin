@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Link, Prompt } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
@@ -54,7 +54,6 @@ class ListingCreate extends Component {
       step: this.STEP.PICK_SCHEMA,
       selectedBoostAmount: props.wallet.ognBalance ? defaultBoostValue : 0,
       selectedSchemaType: null,
-      selectedSchema: null,
       translatedSchema: null,
       schemaExamples: null,
       schemaFetched: false,
@@ -168,7 +167,6 @@ class ListingCreate extends Component {
 
         this.setState({
           selectedSchemaType,
-          selectedSchema: schemaJson,
           schemaFetched: true,
           showNoSchemaSelectedError: false,
           translatedSchema,
@@ -289,7 +287,6 @@ class ListingCreate extends Component {
     const {
       formListing,
       selectedBoostAmount,
-      selectedSchema,
       selectedSchemaType,
       schemaExamples,
       showNoSchemaSelectedError,
