@@ -332,6 +332,7 @@
   "transaction.createListing": "Bạn đã tạo một danh sách.",
   "transaction.initiateDispute": "Bạn đã khởi xướng một tranh chấp.",
   "transaction.reviewSale": "Bạn đã để lại một đánh giá.",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "Đã mua",
   "transaction-progress.sentBySeller": "Được gửi bởi người bán",
   "transaction-progress.receivedByMe": "Được nhận bởi tôi",
