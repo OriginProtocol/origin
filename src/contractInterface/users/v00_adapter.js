@@ -20,13 +20,13 @@ class V00_UsersAdapter {
     this.contractName = 'V00_UserRegistry'
   }
 
-  async set({ profile, attestations = [] }) {
+  async set({ profile, attestations = [], options = {}}) {
     if (profile) {
       const selfAttestation = await this.profileAttestation(profile)
       attestations.push(selfAttestation)
     }
     const newAttestations = await this.newAttestations(attestations)
-    return await this.addAttestations(newAttestations)
+    return await this.addAttestations(newAttestations, options)
   }
 
   async get(address) {
@@ -91,7 +91,7 @@ class V00_UsersAdapter {
     })
   }
 
-  async addAttestations(attestations) {
+  async addAttestations(attestations, options) {
     const account = await this.contractService.currentAccount()
     const userRegistry = await this.contractService.deployed(
       this.contractService.contracts[this.contractName]
@@ -123,7 +123,7 @@ class V00_UsersAdapter {
           'ClaimHolderRegistered',
           'addClaims',
           [topics, issuers, sigs, data, dataOffsets],
-          { from: account, gas: 400000, contractAddress: identityAddress }
+          { ...options, from: account, gas: 400000, contractAddress: identityAddress }
         )
       } else {
         // create identity with presigned claims
@@ -138,7 +138,8 @@ class V00_UsersAdapter {
             data,
             dataOffsets
           ],
-          { from: account, gas }
+          { from: account, gas },
+          options
         )
       }
     } else if (!identityAddress) {

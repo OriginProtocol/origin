@@ -159,7 +159,7 @@ class ContractHelper {
     // Ensure that the sender is a signer/owner for the wallet.
     const isOwner = await wallet.methods.isOwner(sender).call()
     if (!isOwner) {
-      throw `${from} is not an owner of the multisig wallet`
+      throw `${sender} is not an owner of the multisig wallet`
     }
 
     return wallet.methods.submitTransaction(contractAddress, 0, data)

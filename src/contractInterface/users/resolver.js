@@ -11,8 +11,8 @@ class UsersResolver {
     this.currentAdapter = this.adapters[this.currentVersion]
   }
 
-  async set({ profile, attestations = [] }) {
-    return this.currentAdapter.set({ profile, attestations })
+  async set({ profile, attestations = [], options = {} }) {
+    return this.currentAdapter.set({ profile, attestations, options })
   }
 
   async get(address) {

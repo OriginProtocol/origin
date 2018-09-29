@@ -3,10 +3,12 @@ import CryptoJS from 'crypto-js'
 import cryptoRandomString from 'crypto-random-string'
 import EventEmitter from 'events'
 import Ajv from 'ajv'
+import cookieStorage from '../utils/cookieStorage'
 
-const PROMPT_MESSAGE = 'I wish to start messaging on origin protocol.'
+const PROMPT_MESSAGE = 'I am ready to start messaging on Origin.'
 const PROMPT_PUB_KEY = 'My public messaging key is: '
 const MESSAGING_KEY = 'MK_'
+const MESSAGING_PHRASE = 'MP_'
 const PUB_MESSAGING_SIG = 'PMS_'
 const PUB_MESSAGING = 'KEY_'
 const PRE_GLOBAL_KEYS = ':global'
@@ -141,6 +143,7 @@ class Messaging {
     this.GLOBAL_KEYS = messagingNamespace + PRE_GLOBAL_KEYS
     this.CONV = messagingNamespace + PRE_CONV
     this.CONV_INIT_PREFIX = messagingNamespace + PRE_CONV_INIT_PREFIX
+    this.cookieStorage = new cookieStorage({ path: (typeof location === 'object' && location.pathname) ? location.pathname : '/' })
   }
 
   onAccount(account_key) {
@@ -149,13 +152,27 @@ class Messaging {
     }
   }
 
+  setKeyItem(key, value) {
+    this.cookieStorage.setItem(key, value)
+  }
+
+  getKeyItem(key) {
+    return this.cookieStorage.getItem(key)
+  }
+
   getMessagingKey() {
-    return localStorage.getItem(`${MESSAGING_KEY}:${this.account_key}`)
+    return this.getKeyItem(`${MESSAGING_KEY}:${this.account_key}`)
+  }
+
+  getMessagingPhrase() {
+    return this.getKeyItem(`${MESSAGING_PHRASE}:${this.account_key}`)
   }
 
   initKeys() {
     const sig_key = this.getMessagingKey()
-    if (sig_key) {
+    const sig_phrase = this.getMessagingPhrase()
+    // lock in the message to the hardcoded one
+    if (sig_key && sig_phrase == PROMPT_MESSAGE) {
       this.setAccount(sig_key)
     } else {
       this.promptInit()
@@ -177,10 +194,10 @@ class Messaging {
     this.events.emit('new', this.account_key)
     // just start it up here
     if (await this.initRemote()) {
-      this.pub_sig = localStorage.getItem(
+      this.pub_sig = this.getKeyItem(
         `${PUB_MESSAGING_SIG}:${this.account_key}`
       )
-      this.pub_msg = localStorage.getItem(
+      this.pub_msg = this.getKeyItem(
         `${PUB_MESSAGING}:${this.account_key}`
       )
 
@@ -245,8 +262,8 @@ class Messaging {
           this.events.emit('pending_conv', message.payload.key)
           const remote_address = message.payload.key
           this.initRoom(remote_address)
-          // this is probably not needed
-          // this.getConvo(remote_address)
+          // may be overkill but may help prevent https://github.com/OriginProtocol/origin-js/issues/559
+          this.getConvo(remote_address)
         }
       }
     )
@@ -397,15 +414,16 @@ class Messaging {
 
   async initMessaging() {
     const entry = this.getRemoteMessagingSig()
+    const account_match = entry && entry.address == this.account.address
 
     if (!(this.pub_sig && this.pub_msg)) {
-      if (entry) {
+      if (account_match) {
         this.pub_sig = entry.sig
         this.pub_msg = entry.msg
       } else {
         await this.promptForSignature()
       }
-    } else if (!entry) {
+    } else if (!account_match) {
       this.setRemoteMessagingSig()
     }
     this.events.emit('ready', this.account_key)
@@ -420,7 +438,7 @@ class Messaging {
   }
 
   setRemoteMessagingSig() {
-    const msg = PROMPT_MESSAGE
+    const msg = this.getMessagingPhrase()
     this.global_keys.set(this.account_key, {
       address: this.account.address,
       msg: this.pub_msg,
@@ -440,7 +458,7 @@ class Messaging {
         .toString('hex')
     // send it to local storage
     const scopedMessagingKeyName = `${MESSAGING_KEY}:${this.account_key}`
-    localStorage.setItem(scopedMessagingKeyName, key_str)
+    this.setKeyItem(scopedMessagingKeyName, key_str)
     this.initMessaging()
   }
 
@@ -452,7 +470,9 @@ class Messaging {
 
     // 32 bytes in hex + 0x
     const sig_key = signature.substring(0, 66)
-
+    //set phrase in the cookie
+    const scopedMessagingPhraseName = `${MESSAGING_PHRASE}:${this.account_key}`
+    this.setKeyItem(scopedMessagingPhraseName, PROMPT_MESSAGE)
     this.setAccount(sig_key)
   }
 
@@ -463,9 +483,9 @@ class Messaging {
       this.account_key
     )
     const scopedPubSigKeyName = `${PUB_MESSAGING_SIG}:${this.account_key}`
-    localStorage.setItem(scopedPubSigKeyName, this.pub_sig)
+    this.setKeyItem(scopedPubSigKeyName, this.pub_sig)
     const scopedPubMessagingKeyName = `${PUB_MESSAGING}:${this.account_key}`
-    localStorage.setItem(scopedPubMessagingKeyName, this.pub_msg)
+    this.setKeyItem(scopedPubMessagingKeyName, this.pub_msg)
     this.setRemoteMessagingSig()
   }
 
@@ -821,11 +841,13 @@ class Messaging {
         {
           type: 'key',
           ekey: this.ec_encrypt(encrypt_key),
+          maddress: this.account.address,
           address: this.account_key
         },
         {
           type: 'key',
           ekey: this.ec_encrypt(encrypt_key, entry.pub_key),
+          maddress: entry.address,
           address: remote_eth_address
         }
       ])

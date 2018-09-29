@@ -19,9 +19,9 @@ If you want to index data in Postgres:
 
     docker-compose up postgres  # start the postgres container.
 
-    # create the postgres DB schema:
-    docker exec -ti -w /app/daemon/indexing origin-js node node_modules/db-migrate/bin/db-migrate -e origin-box-genesis db:create origin-indexing
-    docker exec -ti -w /app/daemon/indexing origin-js node node_modules/db-migrate/bin/db-migrate up
+Run the database migrations:
+
+    docker exec -ti -e DATABASE_URL=postgres://origin:origin@postgres/origin -w /app/daemon/indexing origin-js node node_modules/db-migrate/bin/db-migrate up
 
 If you want to index data in Elasticsearch, start the elasticsearch container.
 
