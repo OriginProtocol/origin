@@ -144,7 +144,7 @@ class Conversation extends Component {
     const { listingId } = [...messages].reverse().find(m => m.listingId) || {}
 
     // If listingId does not match state, store and check for a purchase.
-    if (listingId && listingId !== this.state.listing.id) {
+    if (listingId !== this.state.listing.id) {
       const listing = listingId ? await getListing(listingId, true) : {}
       this.setState({ listing })
       this.loadPurchase()
@@ -197,10 +197,7 @@ class Conversation extends Component {
 
   async sendMessage(content) {
     try {
-      await origin.messaging.sendConvMessage(
-        this.props.id,
-        content
-      )
+      await origin.messaging.sendConvMessage(this.props.id, content)
 
       this.form.current.reset()
 
@@ -229,11 +226,15 @@ class Conversation extends Component {
     const canDeliverMessage = origin.messaging.canConverseWith(
       counterparty.address
     )
-    const shouldEnableForm = origin.messaging.getRecipients(id).includes(web3Account) && canDeliverMessage && id
+    const shouldEnableForm =
+      origin.messaging.getRecipients(id).includes(web3Account) &&
+      canDeliverMessage &&
+      id
 
     return (
       <Fragment>
-        {withListingSummary && listing.id && (
+        {withListingSummary &&
+          listing.id && (
           <div className="listing-summary d-flex">
             <div className="aspect-ratio">
               <div
@@ -327,8 +328,12 @@ class Conversation extends Component {
           </form>
         )}
         {shouldEnableForm && (
-          <form ref={this.form} className="add-message d-flex" onSubmit={this.handleSubmit}>
-            {!files.length &&
+          <form
+            ref={this.form}
+            className="add-message d-flex"
+            onSubmit={this.handleSubmit}
+          >
+            {!files.length && (
               <textarea
                 ref={this.textarea}
                 placeholder={intl.formatMessage(
@@ -338,16 +343,26 @@ class Conversation extends Component {
                 tabIndex="0"
                 autoFocus
               />
-            }
-            {!!files.length &&
+            )}
+            {!!files.length && (
               <div className="files-container">
-                {files.map((dataUri, i) =>
+                {files.map((dataUri, i) => (
                   <img src={dataUri} key={i} className="preview-thumbnail" />
-                )}
+                ))}
               </div>
-            }
-            <img src="images/add-photo-icon.svg" className="add-photo" role="presentation" onClick={this.handleClick} />
-            <input type="file" ref={this.fileInput} className="d-none" onChange={this.handleInput} />
+            )}
+            <img
+              src="images/add-photo-icon.svg"
+              className="add-photo"
+              role="presentation"
+              onClick={this.handleClick}
+            />
+            <input
+              type="file"
+              ref={this.fileInput}
+              className="d-none"
+              onChange={this.handleInput}
+            />
             <button type="submit" className="btn btn-sm btn-primary">
               Send
             </button>

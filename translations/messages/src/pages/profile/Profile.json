@@ -32,10 +32,6 @@
     "defaultMessage": "Airbnb account verified!"
   },
   {
-    "id": "Profile.unnamedUser",
-    "defaultMessage": "Unnamed User"
-  },
-  {
     "id": "Profile.verifyYourselfHeading",
     "defaultMessage": "Verify yourself on Origin"
   },
@@ -52,22 +48,6 @@
     "defaultMessage": "Last published"
   },
   {
-    "id": "Profile.confirmTransaction",
-    "defaultMessage": "Confirm transaction"
-  },
-  {
-    "id": "Profile.pressSubmit",
-    "defaultMessage": "Press \"Submit\" in {currentProvider} window"
-  },
-  {
-    "id": "Profile.deployingIdentity",
-    "defaultMessage": "Deploying your identity"
-  },
-  {
-    "id": "Profile.pleaseStandBy",
-    "defaultMessage": "Please stand by..."
-  },
-  {
     "id": "Profile.error",
     "defaultMessage": "Error"
   },
@@ -80,8 +60,16 @@
     "defaultMessage": "OK"
   },
   {
-    "id": "Profile.success",
-    "defaultMessage": "Success"
+    "id": "Profile.inProgress",
+    "defaultMessage": "In Progress"
+  },
+  {
+    "id": "Profile.transactionBeingProcessed",
+    "defaultMessage": "Profile changes can be seen once the transaction is processed."
+  },
+  {
+    "id": "Profile.transactionProgressDropdown",
+    "defaultMessage": "See transaction progress from the dropdown in navigation bar."
   },
   {
     "id": "Profile.continue",

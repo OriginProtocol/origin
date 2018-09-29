@@ -66,6 +66,7 @@ export function originToDAppListing(originListing) {
     id: originListing.id,
     seller: originListing.seller,
     status: originListing.status,
+    schemaType: originListing.category,
     category: originListing.subCategory,
     name: originListing.title,
     description: originListing.description,
@@ -94,4 +95,26 @@ export async function getListing(id, translate = false) {
     dappListing.category = translateListingCategory(dappListing.category)
   }
   return dappListing
+}
+
+/**
+ * Takes a string with a hyphen in it and returns a camel case version of the string
+ * e.g. for-sale becomes forSale
+ * @param {string} string - a string with a hyphen
+ * @return {string} the string as camel case
+ */
+
+export function dashToCamelCase(string) {
+  return string.replace(/-([a-z])/g, g => g[1].toUpperCase())
+}
+
+/**
+ * Takes camel case string and converts it to a string with hyphen(s)
+ * e.g. forSale becomes for-sale
+ * @param {string} string - a camel case string
+ * @return {string} the string with hyphen(s)
+ */
+
+export function camelCaseToDash(string) {
+  return string.replace(/([a-z][A-Z])/g, g => g[0] + '-' + g[1].toLowerCase())
 }

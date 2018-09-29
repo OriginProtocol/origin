@@ -76,5 +76,21 @@ export default defineMessages({
   'schema.tickets.tradeshow': {
     id: 'schema.tickets.tradeshow',
     defaultMessage: 'Tradeshow'
+  },
+  'schema.tickets.shipItem': {
+    id: 'schema.tickets.shipItem',
+    defaultMessage: 'Arrange for delivery or pickup'
+  },
+  'schema.tickets.messageBuyer': {
+    id: 'schema.tickets.messageBuyer',
+    defaultMessage: 'Message the buyer with an update'
+  },
+  'schema.tickets.rateBuyer': {
+    id: 'schema.tickets.rateBuyer',
+    defaultMessage: 'Leave a review of the buyer'
+  },
+  'schema.tickets.sellerSteps': {
+    id: 'schema.tickets.sellerSteps',
+    defaultMessage: 'Fulfillment Checklist'
   }
 })

@@ -4,9 +4,9 @@ import EtherscanLink from 'components/etherscan-link'
 
 class TransactionEvent extends Component {
   render() {
-    const { eventName, transaction, buyer, seller } = this.props
+    const { eventName, event } = this.props
 
-    if (!transaction) {
+    if (!event) {
       return null
     }
 
@@ -17,13 +17,7 @@ class TransactionEvent extends Component {
           {eventName}
         </td>
         <td className="text-truncate">
-          {transaction && <EtherscanLink hash={transaction.transactionHash} />}
-        </td>
-        <td className="text-truncate">
-          {buyer.address && <EtherscanLink hash={buyer.address} />}
-        </td>
-        <td className="text-truncate">
-          {seller.address && <EtherscanLink hash={seller.address} />}
+          {event && <EtherscanLink hash={event.transactionHash} />}
         </td>
       </tr>
     )

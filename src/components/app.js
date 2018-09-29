@@ -5,27 +5,34 @@ import { IntlProvider } from 'react-intl'
 
 import { localizeApp, setMobile } from 'actions/App'
 import { fetchProfile } from 'actions/Profile'
-import { init as initWallet } from 'actions/Wallet'
+import {
+  getEthBalance,
+  getOgnBalance,
+  init as initWallet
+} from 'actions/Wallet'
 
 // Components
+import AboutTokens from 'components/about-tokens'
 import Alert from 'components/alert'
 import Arbitration from 'components/arbitration'
+import DappInfo from 'components/dapp-info'
 import Layout from 'components/layout'
 import ListingCreate from 'components/listing-create'
 import ListingDetail from 'components/listing-detail'
 import ListingsGrid from 'components/listings-grid'
 import Messages from 'components/messages'
 import MessagingProvider from 'components/messaging-provider'
+import BetaModal from 'components/modals/beta-modal'
 import MyListings from 'components/my-listings'
 import MyPurchases from 'components/my-purchases'
 import MySales from 'components/my-sales'
 import NotFound from 'components/not-found'
 import Notifications from 'components/notifications'
+import OnboardingModal from 'components/onboarding-modal'
 import PurchaseDetail from 'components/purchase-detail'
 import ScrollToTop from 'components/scroll-to-top'
-import Web3Provider from 'components/web3-provider'
 import SearchResult from 'components/search/search-result'
-import AboutTokens from 'components/about-tokens'
+import Web3Provider from 'components/web3-provider'
 
 import Profile from 'pages/profile/Profile'
 import User from 'pages/user/User'
@@ -91,6 +98,8 @@ class App extends Component {
   componentDidMount() {
     this.props.fetchProfile()
     this.props.initWallet()
+    this.props.getEthBalance()
+    this.props.getOgnBalance()
 
     this.detectMobile()
   }
@@ -157,10 +166,13 @@ class App extends Component {
                     <Route path="/users/:userAddress" component={UserPage} />
                     <Route path="/search" component={SearchResult} />
                     <Route path="/about-tokens" component={AboutTokens} />
+                    <Route path="/dapp-info" component={DappInfo} />
                     <Route component={NotFound} />
                   </Switch>
                 </Layout>
                 <Alert />
+                <BetaModal />
+                <OnboardingModal />
               </MessagingProvider>
             </Web3Provider>
           </ScrollToTop>
@@ -177,6 +189,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchProfile: () => dispatch(fetchProfile()),
+  getEthBalance: () => dispatch(getEthBalance()),
+  getOgnBalance: () => dispatch(getOgnBalance()),
   initWallet: () => dispatch(initWallet()),
   setMobile: device => dispatch(setMobile(device)),
   localizeApp: () => dispatch(localizeApp())

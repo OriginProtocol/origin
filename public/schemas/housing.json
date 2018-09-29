@@ -44,10 +44,6 @@
       "minLength": 10,
       "maxLength": 1024
     },
-    "location": {
-      "type": "string",
-      "title": "schema.housing.location"
-    },
     "price": {
       "type": "number",
       "title": "schema.housing.priceInETH"
@@ -59,6 +55,15 @@
         "type": "string",
         "format": "data-url"
       }
+    },
+    "sellerSteps": {
+      "type": "string",
+      "title": "schema.housing.sellerSteps",
+      "enum": [
+        "schema.housing.messageBuyer",
+        "schema.housing.prepareProperty",
+        "schema.housing.rateBuyer"
+      ]
     }
   }
 }

@@ -20,10 +20,6 @@
     "defaultMessage": "Description"
   },
   {
-    "id": "schema.services.location",
-    "defaultMessage": "Location"
-  },
-  {
     "id": "schema.services.priceInETH",
     "defaultMessage": "Price in ETH"
   },
@@ -98,5 +94,21 @@
   {
     "id": "schema.services.writingTranslationTranscription",
     "defaultMessage": "Writing, Translation & Transcription"
+  },
+  {
+    "id": "schema.services.messageBuyer",
+    "defaultMessage": "Message the buyer with any relevant details"
+  },
+  {
+    "id": "schema.services.provideService",
+    "defaultMessage": "Provide your service to the buyer"
+  },
+  {
+    "id": "schema.services.rateBuyer",
+    "defaultMessage": "Leave a review of the buyer"
+  },
+  {
+    "id": "schema.services.sellerSteps",
+    "defaultMessage": "Fulfillment Checklist"
   }
 ]

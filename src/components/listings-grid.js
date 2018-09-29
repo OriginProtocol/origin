@@ -6,9 +6,8 @@ import { withRouter } from 'react-router'
 
 import { getListingIds } from 'actions/Listing'
 
-import ListingCard from 'components/listing-card'
-import OnboardingModal from 'components/onboarding-modal'
 import { LISTINGS_PER_PAGE } from 'components/constants'
+import ListingCard from 'components/listing-card'
 
 class ListingsGrid extends Component {
   constructor(props) {
@@ -24,8 +23,7 @@ class ListingsGrid extends Component {
   handleOnChange(page) {
     if (this.props.renderMode === 'home-page')
       this.props.history.push(`/page/${page}`)
-    else
-      this.props.handleChangePage(page)
+    else this.props.handleChangePage(page)
   }
 
   render() {
@@ -35,18 +33,17 @@ class ListingsGrid extends Component {
     // const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
 
     let allListingsLength, activePage, showListingsIds
-    if (this.props.renderMode === 'home-page'){
+    if (this.props.renderMode === 'home-page') {
       allListingsLength = listingIds.length
-      activePage = this.props.match.params.activePage || 1 
+      activePage = this.props.match.params.activePage || 1
 
       // Calc listings to show for given page
       showListingsIds = listingIds.slice(
         LISTINGS_PER_PAGE * (activePage - 1),
         LISTINGS_PER_PAGE * activePage
       )
-
-    } else if (this.props.renderMode === 'search'){
-      activePage = this.props.searchPage 
+    } else if (this.props.renderMode === 'search') {
+      activePage = this.props.searchPage
       allListingsLength = search.listingsLength
       showListingsIds = search.listingIds
     }
@@ -104,7 +101,6 @@ class ListingsGrid extends Component {
             />
           </div>
         )}
-        <OnboardingModal />
       </div>
     )
   }

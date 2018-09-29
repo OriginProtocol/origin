@@ -14,7 +14,9 @@ import {
 
 import Avatar from 'components/avatar'
 import Modal from 'components/modal'
+import UnnamedUser from 'components/unnamed-user'
 import WalletCard from 'components/wallet-card'
+import { MetamaskModal, ProcessingModal } from 'components/modals/wait-modals'
 
 import Guidance from './_Guidance'
 import Services from './_Services'
@@ -30,10 +32,14 @@ import ConfirmPublish from './ConfirmPublish'
 import ConfirmUnload from './ConfirmUnload'
 import AttestationSuccess from './AttestationSuccess'
 
-import getCurrentProvider from 'utils/getCurrentProvider'
-
-import origin from '../../services/origin'
-
+/*
+const etherscanNetworkUrls = {
+  1: '',
+  3: 'ropsten.',
+  4: 'rinkeby.',
+  42: 'kovan.',
+  999: 'localhost.'
+}*/
 class Profile extends Component {
   constructor(props) {
     super(props)
@@ -78,9 +84,6 @@ class Profile extends Component {
         published: 0
       },
       provisional: props.provisional,
-      currentProvider: getCurrentProvider(
-        origin && origin.contractService && origin.contractService.web3
-      ),
       successMessage: '',
       wallet: null
     }
@@ -295,16 +298,7 @@ class Profile extends Component {
                 </div>
                 <div className="col-8 col-md-9">
                   <div className="name d-flex">
-                    <h1>
-                      {fullName.length ? (
-                        fullName
-                      ) : (
-                        <FormattedMessage
-                          id={'Profile.unnamedUser'}
-                          defaultMessage={'Unnamed User'}
-                        />
-                      )}
-                    </h1>
+                    <h1>{fullName || <UnnamedUser />}</h1>
                     <div className="icon-container">
                       <button
                         className="edit-profile"
@@ -537,40 +531,9 @@ class Profile extends Component {
           handleToggle={this.handleToggle}
         />
 
-        {this.props.profile.status === 'confirming' && (
-          <Modal backdrop="static" isOpen={true} tabIndex="-1">
-            <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
-            </div>
-            <FormattedMessage
-              id={'Profile.confirmTransaction'}
-              defaultMessage={'Confirm transaction'}
-            />
-            <br />
-            <FormattedMessage
-              id={'Profile.pressSubmit'}
-              defaultMessage={'Press "Submit" in {currentProvider} window'}
-              values={{ currentProvider: this.state.currentProvider }}
-            />
-          </Modal>
-        )}
+        {this.props.profile.status === 'confirming' && <MetamaskModal />}
 
-        {this.props.profile.status === 'processing' && (
-          <Modal backdrop="static" isOpen={true}>
-            <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
-            </div>
-            <FormattedMessage
-              id={'Profile.deployingIdentity'}
-              defaultMessage={'Deploying your identity'}
-            />
-            <br />
-            <FormattedMessage
-              id={'Profile.pleaseStandBy'}
-              defaultMessage={'Please stand by...'}
-            />
-          </Modal>
-        )}
+        {this.props.profile.status === 'processing' && <ProcessingModal />}
 
         {this.props.profile.status === 'error' && (
           <Modal backdrop="static" isOpen={true}>
@@ -597,17 +560,43 @@ class Profile extends Component {
           </Modal>
         )}
 
-        {this.props.profile.status === 'success' && (
+        {this.props.profile.status === 'inProgress' && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img src="images/circular-check-button.svg" role="presentation" />
             </div>
             <h2>
               <FormattedMessage
-                id={'Profile.success'}
-                defaultMessage={'Success'}
+                id={'Profile.inProgress'}
+                defaultMessage={'In Progress'}
               />
             </h2>
+            <div>
+              <FormattedMessage
+                id={'Profile.transactionBeingProcessed'}
+                defaultMessage={`Profile changes can be seen once the transaction is processed.`}
+              />
+            </div>
+            <div className="explanation">
+              <FormattedMessage
+                id={'Profile.transactionProgressDropdown'}
+                defaultMessage={`See transaction progress from the dropdown in navigation bar.`}
+              />
+            </div>
+            {
+              // in case we want to show transaction in etherscan at any time
+              /*<div>
+              <a
+                href={`https://${etherscanNetworkUrls[this.props.networkId]}etherscan.io/tx/${this.props.profile.lastDeployProfileHash}`}
+                target="_blank"
+              >
+                <FormattedMessage
+                  id={'Profile.viewTransaction'}
+                  defaultMessage={'View Transaction'}
+                />
+              </a>
+            </div>*/
+            }
             <div className="button-container">
               <button
                 className="btn btn-clear"
@@ -662,7 +651,8 @@ const mapStateToProps = state => {
     onMobile: state.app.onMobile,
     wallet: state.wallet,
     web3Account: state.app.web3.account,
-    web3Intent: state.app.web3.intent
+    web3Intent: state.app.web3.intent,
+    networkId: state.app.web3.networkId
   }
 }
 

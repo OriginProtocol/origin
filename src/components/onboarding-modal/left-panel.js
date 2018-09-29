@@ -13,9 +13,9 @@ function LeftPanel({ steps, firstIncompleteStep }) {
   return (
     <div className="d-none d-sm-block d-sm-flex flex-column col-4 text-left left-panel">
       {steps &&
-        steps.map(({ name, description, complete, subStep }) => (
+        steps.map(({ name, description, complete, subStep }, index) => (
           <div
-            key={name}
+            key={index}
             className={`content d-flex ${selected(name, subStep)}`}
           >
             <div className={`${completed(complete)} rounded-circle col`} />

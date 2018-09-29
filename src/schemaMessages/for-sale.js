@@ -21,10 +21,6 @@ export default defineMessages({
     id: 'schema.forSale.description',
     defaultMessage: 'Description'
   },
-  'schema.forSale.location': {
-    id: 'schema.forSale.location',
-    defaultMessage: 'Location'
-  },
   'schema.forSale.priceInETH': {
     id: 'schema.forSale.priceInETH',
     defaultMessage: 'Price in ETH'
@@ -208,5 +204,21 @@ export default defineMessages({
   'schema.forSale.wanted': {
     id: 'schema.forSale.wanted',
     defaultMessage: 'Wanted'
+  },
+  'schema.forSale.deliverProduct': {
+    id: 'schema.forSale.deliverProduct',
+    defaultMessage: 'Arrange for delivery or pickup'
+  },
+  'schema.forSale.messageBuyer': {
+    id: 'schema.forSale.messageBuyer',
+    defaultMessage: 'Message the buyer with an update'
+  },
+  'schema.forSale.rateBuyer': {
+    id: 'schema.forSale.rateBuyer',
+    defaultMessage: 'Leave a review of the buyer'
+  },
+  'schema.forSale.sellerSteps': {
+    id: 'schema.forSale.sellerSteps',
+    defaultMessage: 'Fulfillment Checklist'
   }
 })

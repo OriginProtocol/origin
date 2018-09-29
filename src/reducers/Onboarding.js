@@ -3,7 +3,8 @@ import steps from 'components/onboarding-modal/steps'
 
 function getStorageItem(name, defaultValue) {
   try {
-    return JSON.parse(localStorage.getItem(`onboarding${name}`))
+    const item = localStorage.getItem(`onboarding${name}`)
+    return item ? JSON.parse(item) : defaultValue
   } catch (e) {
     return defaultValue
   }
@@ -19,10 +20,18 @@ function saveStorageItem(name, item, defaultValue) {
 }
 
 const getStoredStep = steps => {
-  const currentStep = getStorageItem('.currentStep', {})
+  const defaultValue = { name: { props: {} } }
+  const currentStep = getStorageItem('.currentStep', defaultValue)
+  const {
+    name: {
+      props: { defaultMessage }
+    }
+  } = currentStep
 
   return steps.find(
-    step => (step && step.name) === (currentStep && currentStep.name)
+    step =>
+      (step && step.name.props.defaultMessage) ===
+      (currentStep && defaultMessage)
   )
 }
 
@@ -73,16 +82,27 @@ const updateCurrentStep = (incompleteStep, steps) => {
 }
 
 const initialState = {
+  /*
+   * This is currently a redundant inverse of state.app.betaModalDismissed
+   * but may depend on other variables in the future.
+   */
+  blocked: true,
   currentStep: steps[0],
   steps,
   progress: false,
-  learnMore: false,
+  learnMore: null,
   splitPanel: false,
   stepsCompleted: false
 }
 
 export default function Onboarding(state = initialState, action = {}) {
   switch (action.type) {
+  case OnboardingConstants.UNBLOCK:
+    return {
+      ...state,
+      blocked: false
+    }
+
   case OnboardingConstants.UPDATE_STEPS:
     const updatedSteps = updateAllSteps(action.incompleteStep, state.steps)
     saveStorageItem('.steps', updatedSteps)

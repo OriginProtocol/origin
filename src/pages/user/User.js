@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 
 import { fetchUser } from 'actions/User'
 
 import Avatar from 'components/avatar'
 import Review from 'components/review'
+import UnnamedUser from 'components/unnamed-user'
 import WalletCard from 'components/wallet-card'
 
 import origin from '../../services/origin'
@@ -15,19 +16,12 @@ class User extends Component {
     super(props)
 
     this.state = { reviews: [] }
-
-    this.intlMessages = defineMessages({
-      unnamedUser: {
-        id: 'user.unnamedUser',
-        defaultMessage: 'Unnamed User'
-      }
-    })
   }
 
   async componentDidMount() {
-    const { fetchUser, intl, userAddress } = this.props
+    const { fetchUser, userAddress } = this.props
 
-    fetchUser(userAddress, intl.formatMessage(this.intlMessages.unnamedUser))
+    fetchUser(userAddress)
 
     const listingIdsAsSeller = await origin.marketplace.getListings({
       idsOnly: true,
@@ -37,10 +31,11 @@ class User extends Component {
       idsOnly: true,
       purchasesFor: userAddress
     })
-    const arrayOfArrays = await Promise.all([
-      ...listingIdsAsBuyer,
-      ...listingIdsAsSeller
-    ].map(async id => origin.marketplace.getListingReviews(id)))
+    const arrayOfArrays = await Promise.all(
+      [...listingIdsAsBuyer, ...listingIdsAsSeller].map(async id =>
+        origin.marketplace.getListingReviews(id)
+      )
+    )
     const reviews = [].concat(...arrayOfArrays)
 
     this.setState({ reviews })
@@ -51,14 +46,19 @@ class User extends Component {
     const { attestations, fullName, profile } = user
     const description =
       (profile && profile.description) || 'An Origin user without a description'
-    const userReviews = this.state.reviews.filter(r => r.reviewer !== userAddress)
+    const userReviews = this.state.reviews.filter(
+      r => r.reviewer !== userAddress
+    )
 
     return (
       <div className="public-user profile-wrapper">
         <div className="container">
           <div className="row">
             <div className="col-12 col-md-4 col-lg-4 order-md-3">
-              <WalletCard wallet={{ address: userAddress }} withProfile={false} />
+              <WalletCard
+                wallet={{ address: userAddress }}
+                withProfile={false}
+              />
             </div>
             <div className="col-12 col-sm-4 col-md-3 col-lg-2 order-md-1">
               <Avatar
@@ -69,7 +69,7 @@ class User extends Component {
             </div>
             <div className="col-12 col-sm-8 col-md-5 col-lg-6 order-md-2">
               <div className="name d-flex">
-                <h1>{fullName}</h1>
+                <h1>{fullName || <UnnamedUser />}</h1>
               </div>
               <p>{description}</p>
             </div>
@@ -193,4 +193,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(injectIntl(User))
+)(User)

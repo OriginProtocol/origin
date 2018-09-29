@@ -18,8 +18,8 @@ import {
 import Modal from 'components/modal'
 import Review from 'components/review'
 import UserCard from 'components/user-card'
+import { MetamaskModal, ProcessingModal } from 'components/modals/wait-modals'
 
-import getCurrentProvider from 'utils/getCurrentProvider'
 import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
@@ -47,13 +47,10 @@ class ListingsDetail extends Component {
     this.state = {
       etherscanDomain: null,
       loading: true,
+      offers: [],
       pictures: [],
       reviews: [],
-      purchases: [],
       step: this.STEP.VIEW,
-      currentProvider: getCurrentProvider(
-        origin && origin.contractService && origin.contractService.web3
-      ),
       boostLevel: null,
       boostValue: 0
     }
@@ -68,42 +65,11 @@ class ListingsDetail extends Component {
     this.handleMakeOffer = this.handleMakeOffer.bind(this)
   }
 
-  async loadListing() {
-    try {
-      const listing = await getListing(this.props.listingId, true)
-      this.setState({
-        ...listing,
-        loading: false
-      })
-    } catch (error) {
-      this.props.showAlert(
-        this.props.formatMessage(this.intlMessages.loadingError)
-      )
-      console.error(
-        `Error fetching contract or IPFS info for listing: ${
-          this.props.listingId
-        }`
-      )
-      console.error(error)
-    }
-  }
-
-  async loadReviews() {
-    try {
-      const reviews = await origin.marketplace.getListingReviews(
-        this.props.listingId
-      )
-      this.setState({ reviews })
-    } catch (error) {
-      console.error(error)
-      console.error(`Error fetching reviews`)
-    }
-  }
-
   async componentWillMount() {
     if (this.props.listingId) {
       // Load from IPFS
       await this.loadListing()
+      await this.loadOffers()
       await this.loadReviews()
     } else if (this.props.listingJson) {
       const obj = Object.assign({}, this.props.listingJson, { loading: false })
@@ -122,7 +88,6 @@ class ListingsDetail extends Component {
     if (web3.givenProvider && this.props.web3Account) {
       this.setState({ step: this.STEP.METAMASK })
       try {
-        this.setState({ step: this.STEP.PROCESSING })
         const offerData = {
           listingId: this.props.listingId,
           listingType: 'unit',
@@ -155,6 +120,50 @@ class ListingsDetail extends Component {
     }
   }
 
+  async loadListing() {
+    try {
+      const listing = await getListing(this.props.listingId, true)
+      this.setState({
+        ...listing,
+        loading: false
+      })
+    } catch (error) {
+      this.props.showAlert(
+        this.props.formatMessage(this.intlMessages.loadingError)
+      )
+      console.error(
+        `Error fetching contract or IPFS info for listing: ${
+          this.props.listingId
+        }`
+      )
+      console.error(error)
+    }
+  }
+
+  async loadOffers() {
+    try {
+      const offers = await origin.marketplace.getOffers(this.props.listingId)
+      this.setState({ offers })
+    } catch (error) {
+      console.error(
+        `Error fetching offers for listing: ${this.props.listingId}`
+      )
+      console.error(error)
+    }
+  }
+
+  async loadReviews() {
+    try {
+      const reviews = await origin.marketplace.getListingReviews(
+        this.props.listingId
+      )
+      this.setState({ reviews })
+    } catch (error) {
+      console.error(error)
+      console.error(`Error fetching reviews`)
+    }
+  }
+
   resetToStepOne() {
     this.setState({ step: this.STEP.VIEW })
   }
@@ -164,61 +173,29 @@ class ListingsDetail extends Component {
       // boostLevel,
       // boostValue,
       category,
-      currentProvider,
       description,
       ipfsHash,
       loading,
       name,
+      offers,
       pictures,
       price,
       reviews,
       seller,
-      step,
-      unitsRemaining
+      step
+      // unitsRemaining
     } = this.state
-    const isPending = false // will be handled by offer status
-    const isSold = !unitsRemaining
+    const pendingStates = ['created', 'accepted', 'disputed']
+    const isPending = offers.find(o => pendingStates.includes(o.status))
+    const soldStates = ['finalized', 'sellerReviewed']
+    const isSold = offers.find(o => soldStates.includes(o.status))
     const isAvailable = !isPending && !isSold
     const userIsSeller = seller === this.props.web3Account
 
     return (
       <div className="listing-detail">
-        {step === this.STEP.METAMASK && (
-          <Modal backdrop="static" isOpen={true} tabIndex="-1">
-            <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
-            </div>
-            <FormattedMessage
-              id={'listing-detail.confirmTransaction'}
-              defaultMessage={'Confirm transaction'}
-            />
-            <br />
-            <FormattedMessage
-              id={'listing-detail.pressSubmitInMetaMask'}
-              defaultMessage={'Press {submit} in {currentProvider} window'}
-              values={{
-                currentProvider,
-                submit: <span>&ldquo;Submit&rdquo;</span>
-              }}
-            />
-          </Modal>
-        )}
-        {step === this.STEP.PROCESSING && (
-          <Modal backdrop="static" isOpen={true}>
-            <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
-            </div>
-            <FormattedMessage
-              id={'listing-detail.processingPurchase'}
-              defaultMessage={'Processing your purchase'}
-            />
-            <br />
-            <FormattedMessage
-              id={'listing-detail.pleaseStandBy'}
-              defaultMessage={'Please stand by...'}
-            />
-          </Modal>
-        )}
+        {step === this.STEP.METAMASK && <MetamaskModal />}
+        {step === this.STEP.PROCESSING && <ProcessingModal />}
         {step === this.STEP.PURCHASED && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
@@ -232,9 +209,21 @@ class ListingsDetail extends Component {
               <FormattedMessage
                 id={'listing-detail.successDisclaimer'}
                 defaultMessage={
-                  'Your purchase will be visible within a few seconds.'
+                  "You have made an offer on this listing. Your offer will be visible within a few seconds. Your {ETH} payment has been transferred to an escrow contract. Here's what happens next:"
                 }
               />
+              <ul>
+                <li>The seller can choose to accept or reject your offer.</li>
+                <li>
+                  If the offer is accepted and fulfilled, you will be able to
+                  confirm that the sale is complete. Your escrowed payment will
+                  be sent to the seller.
+                </li>
+                <li>
+                  If the offer is rejected, the escrowed payment will be
+                  immediately returned to your wallet.
+                </li>
+              </ul>
             </div>
             <div className="button-container">
               <Link to="/my-purchases" className="btn btn-clear">
@@ -381,7 +370,7 @@ class ListingsDetail extends Component {
                 !!price &&
                 !!parseFloat(price) && (
                 <div className="buy-box placehold">
-                  <div className="price">
+                  <div className="price text-nowrap">
                     <img src="images/eth-icon.svg" role="presentation" />
                     {Number(price).toLocaleString(undefined, {
                       maximumFractionDigits: 5,
@@ -424,7 +413,7 @@ class ListingsDetail extends Component {
                       )}
                       {userIsSeller && (
                         <Link to="/my-listings" className="btn">
-                          My Listings
+                            My Listings
                         </Link>
                       )}
                     </div>
@@ -520,9 +509,7 @@ class ListingsDetail extends Component {
                       <FormattedNumber value={reviews.length} />
                     </span>
                   </h2>
-                  {reviews.map(r => (
-                    <Review key={r.id} review={r} />
-                  ))}
+                  {reviews.map(r => <Review key={r.id} review={r} />)}
                   {/* To Do: pagination */}
                   {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
                 </div>

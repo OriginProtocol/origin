@@ -40,10 +40,6 @@
         "format": "date-time",
         "title": "schema.tickets.when"
     },
-    "location": {
-      "type": "string",
-      "title": "schema.tickets.where"
-    },
     "description": {
       "type": "string",
       "title": "schema.tickets.description",
@@ -61,6 +57,15 @@
         "type": "string",
         "format": "data-url"
       }
+    },
+    "sellerSteps": {
+      "type": "string",
+      "title": "schema.tickets.sellerSteps",
+      "enum": [
+        "schema.tickets.shipItem",
+        "schema.tickets.messageBuyer",
+        "schema.tickets.rateBuyer"
+      ]
     }
   }
 }

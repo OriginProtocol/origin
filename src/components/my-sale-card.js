@@ -8,6 +8,7 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { fetchUser } from 'actions/User'
 
 import PurchaseProgress from 'components/purchase-progress'
+import UnnamedUser from 'components/unnamed-user'
 
 import { offerStatusToStep } from 'utils/offer'
 
@@ -25,19 +26,12 @@ class MySaleCard extends Component {
       ETH: {
         id: 'my-sale-card.ethereumCurrencyAbbrev',
         defaultMessage: 'ETH'
-      },
-      unnamedUser: {
-        id: 'my-sale-card.unnamedUser',
-        defaultMessage: 'Unnamed User'
       }
     })
   }
 
   componentWillMount() {
-    this.props.fetchUser(
-      this.props.purchase.buyer,
-      this.props.intl.formatMessage(this.intlMessages.unnamedUser)
-    )
+    this.props.fetchUser(this.props.purchase.buyer)
   }
 
   componentDidMount() {
@@ -56,21 +50,22 @@ class MySaleCard extends Component {
 
   render() {
     const { listing, purchase, user } = this.props
+    const { id: purchaseId, createdAt, status } = purchase
 
     if (!listing) {
-      console.error(`Listing not found for purchase ${purchase.id}`)
+      console.error(`Listing not found for purchase ${purchaseId}`)
       return null
     }
 
     const { name, pictures, price } = listing
-    const buyerName =
-      (user &&
-        user.profile &&
-        `${user.profile.firstName} ${user.profile.lastName}`) ||
-      this.props.intl.formatMessage(this.intlMessages.unnamedUser)
+    const buyerName = (user &&
+      user.profile &&
+      `${user.profile.firstName} ${user.profile.lastName}`) || <UnnamedUser />
     const photo = pictures && pictures.length > 0 && pictures[0]
-    const soldAt = Number(purchase.createdAt) * 1000 // convert seconds since epoch to ms
-    const step = offerStatusToStep(purchase.status)
+    const voided = ['rejected', 'withdrawn'].includes(status)
+    const completed = ['finalized', 'sellerReviewed'].includes(status)
+    const pending = !voided && !completed
+    const step = offerStatusToStep(status)
 
     return (
       <div className="sale card">
@@ -78,18 +73,31 @@ class MySaleCard extends Component {
           <div className="d-flex flex-column flex-lg-row">
             <div className="purchase order-3 order-lg-1">
               <h2 className="title">
-                <Link to={`/purchases/${purchase.id}`}>{name}</Link>
+                <Link to={`/purchases/${purchaseId}`}>{name}</Link>
               </h2>
               <h2 className="title">
-                <FormattedMessage
-                  id={'my-sale-card.buyerNameLink'}
-                  defaultMessage={'sold to {linkToBuyer}'}
-                  values={{
-                    linkToBuyer: (
-                      <Link to={`/users/${user.address}`}>{buyerName}</Link>
-                    )
-                  }}
-                />
+                {pending && (
+                  <FormattedMessage
+                    id={'my-sale-card.pendingBuyerNameLink'}
+                    defaultMessage={'selling to {linkToBuyer}'}
+                    values={{
+                      linkToBuyer: (
+                        <Link to={`/users/${user.address}`}>{buyerName}</Link>
+                      )
+                    }}
+                  />
+                )}
+                {completed && (
+                  <FormattedMessage
+                    id={'my-sale-card.completedBuyerNameLink'}
+                    defaultMessage={'sold to {linkToBuyer}'}
+                    values={{
+                      linkToBuyer: (
+                        <Link to={`/users/${user.address}`}>{buyerName}</Link>
+                      )
+                    }}
+                  />
+                )}
               </h2>
               <p className="address text-muted">{user.address}</p>
               <div className="d-flex">
@@ -97,16 +105,17 @@ class MySaleCard extends Component {
                   <FormattedMessage
                     id={'my-sale-card.price'}
                     defaultMessage={'Price'}
-                  />:&nbsp;{Number(price).toLocaleString(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 5 })}
+                  />:&nbsp;{Number(price).toLocaleString(undefined, {
+                    minimumFractionDigits: 5,
+                    maximumFractionDigits: 5
+                  })}
                 </p>
                 {/* Not Yet Relevant */}
                 {/*<p className="quantity">Quantity: {quantity.toLocaleString()}</p>*/}
               </div>
             </div>
             <div className="timestamp-container order-2 text-muted text-right">
-              <p className="timestamp">
-                {this.state.soldAtTime || this.setSoldAtTime(soldAt)}
-              </p>
+              <p className="timestamp">{moment(createdAt * 1000).fromNow()}</p>
             </div>
             <div className="aspect-ratio order-1 order-lg-3">
               <div
@@ -121,50 +130,58 @@ class MySaleCard extends Component {
               </div>
             </div>
           </div>
-          <PurchaseProgress
-            maxStep={4}
-            currentStep={step}
-            perspective="seller"
-            subdued={true}
-          />
+          {!voided && (
+            <PurchaseProgress
+              maxStep={4}
+              currentStep={step}
+              perspective="seller"
+              subdued={true}
+            />
+          )}
           <div className="d-flex justify-content-between actions">
-            {step === 1 && (
-              <p>
+            <p>
+              {!voided && (
+                <strong>
+                  <FormattedMessage
+                    id={'my-sale-card.nextStep'}
+                    defaultMessage={'Next Step'}
+                  />
+                  :&nbsp;
+                </strong>
+              )}
+              {status === 'created' && (
                 <FormattedMessage
-                  id={'my-sale-card.nextStep1'}
-                  defaultMessage={'{nextStep} Send the order to buyer'}
-                  values={{ nextStep: <strong>Next Step:</strong> }}
+                  id={'my-sale-card.accept'}
+                  defaultMessage={'Accept the offer'}
                 />
-              </p>
-            )}
-            {step === 2 && (
-              <p>
+              )}
+              {status === 'accepted' && (
                 <FormattedMessage
-                  id={'my-sale-card.nextStep2'}
-                  defaultMessage={'{nextStep} Wait for buyer to receive order'}
-                  values={{ nextStep: <strong>Next Step:</strong> }}
+                  id={'my-sale-card.awaitConfirmation'}
+                  defaultMessage={'Wait for the buyer to confirm the sale'}
                 />
-              </p>
-            )}
-            {step === 3 && (
-              <p>
+              )}
+              {status === 'disputed' && (
                 <FormattedMessage
-                  id={'my-sale-card.nextStep3'}
-                  defaultMessage={'{nextStep} Withdraw funds'}
-                  values={{ nextStep: <strong>Next Step:</strong> }}
+                  id={'my-sale-card.awaitContact'}
+                  defaultMessage={'Wait to be contacted'}
                 />
-              </p>
-            )}
-            {step === 4 && (
-              <p>
+              )}
+              {status === 'finalized' && (
                 <FormattedMessage
-                  id={'my-sale-card.orderComplete'}
-                  defaultMessage={'This order is complete'}
+                  id={'my-sale-card.reviewSale'}
+                  defaultMessage={'Review the sale'}
                 />
-              </p>
-            )}
+              )}
+              {status === 'sellerReviewed' && (
+                <FormattedMessage
+                  id={'my-sale-card.saleComplete'}
+                  defaultMessage={'This sale is complete'}
+                />
+              )}
+            </p>
             <p className="link-container">
-              <Link to={`/purchases/${purchase.id}`}>
+              <Link to={`/purchases/${purchaseId}`}>
                 <FormattedMessage
                   id={'my-sale-card.viewDetails'}
                   defaultMessage={'View Details'}

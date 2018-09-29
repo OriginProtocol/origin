@@ -21,10 +21,6 @@ export default defineMessages({
     id: 'schema.housing.description',
     defaultMessage: 'Description'
   },
-  'schema.housing.location': {
-    id: 'schema.housing.location',
-    defaultMessage: 'Location'
-  },
   'schema.housing.priceInETH': {
     id: 'schema.housing.priceInETH',
     defaultMessage: 'Price in ETH'
@@ -80,5 +76,21 @@ export default defineMessages({
   'schema.housing.vacationRentals': {
     id: 'schema.housing.vacationRentals',
     defaultMessage: 'Vacation Rentals'
+  },
+  'schema.housing.messageBuyer': {
+    id: 'schema.housing.messageBuyer',
+    defaultMessage: 'Message the buyer with any relevant details'
+  },
+  'schema.housing.prepareProperty': {
+    id: 'schema.housing.prepareProperty',
+    defaultMessage: 'Make sure the property is clean and ready'
+  },
+  'schema.housing.rateBuyer': {
+    id: 'schema.housing.rateBuyer',
+    defaultMessage: 'Leave a review of the buyer'
+  },
+  'schema.housing.sellerSteps': {
+    id: 'schema.housing.sellerSteps',
+    defaultMessage: 'Fulfillment Checklist'
   }
 })

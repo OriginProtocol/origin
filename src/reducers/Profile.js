@@ -5,7 +5,7 @@ const initialState = {
     profile: {},
     attestations: []
   },
-  name: 'Unnamed User',
+  name: '',
   published: {
     firstName: '',
     lastName: '',
@@ -22,7 +22,8 @@ const initialState = {
   provisionalProgress: 0,
   publishedProgress: 0,
   strength: 0,
-  status: null
+  status: null,
+  lastDeployProfileHash: null
 }
 initialState.provisional = { ...initialState.published }
 
@@ -124,15 +125,15 @@ export default function Profile(state = initialState, action = {}) {
 
   case ProfileConstants.ADD_ATTESTATION:
     const toAdd = {}
-    if (action.attestation.claimType === 3) {
+    if (action.attestation.topic === 3) {
       toAdd.facebook = action.attestation
-    } else if (action.attestation.claimType === 4) {
+    } else if (action.attestation.topic === 4) {
       toAdd.twitter = action.attestation
-    } else if (action.attestation.claimType === 5) {
+    } else if (action.attestation.topic === 5) {
       toAdd.airbnb = action.attestation
-    } else if (action.attestation.claimType === 11) {
+    } else if (action.attestation.topic === 11) {
       toAdd.email = action.attestation
-    } else if (action.attestation.claimType === 10) {
+    } else if (action.attestation.topic === 10) {
       toAdd.phone = action.attestation
     }
     return changes({
@@ -155,10 +156,16 @@ export default function Profile(state = initialState, action = {}) {
   case ProfileConstants.DEPLOY_ERROR:
     return { ...state, status: 'error' }
 
+  case ProfileConstants.DEPLOY_IN_PROGRESS:
+    return changes({
+      ...state,
+      status: 'inProgress',
+      lastDeployProfileHash: action.hash
+    })
+
   case ProfileConstants.DEPLOY_SUCCESS:
     return changes({
       ...state,
-      status: 'success',
       lastPublish: new Date(),
       published: state.provisional
     })

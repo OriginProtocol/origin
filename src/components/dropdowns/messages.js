@@ -5,8 +5,7 @@ import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 
-import { dismissMessaging, enableMessaging } from 'actions/App'
-import { storeWeb3Intent } from 'actions/App'
+import { dismissMessaging, enableMessaging, storeWeb3Intent } from 'actions/App'
 
 import ConversationListItem from 'components/conversation-list-item'
 
@@ -75,8 +74,7 @@ class MessagesDropdown extends Component {
   }
 
   render() {
-    const { history, messages, messagingEnabled } = this.props
-    const conversations = groupByArray(messages, 'conversationId')
+    const { conversations, history, messages, messagingEnabled } = this.props
 
     return (
       <div className="nav-item messages dropdown">
@@ -169,12 +167,30 @@ class MessagesDropdown extends Component {
 const mapStateToProps = ({ app, messages }) => {
   const { messagingDismissed, messagingEnabled, web3 } = app
   const web3Account = web3.account
-  const filteredMessages = messages.filter(({ content, conversationId, senderAddress, status }) => {
-    return content && status === 'unread' && senderAddress !== web3Account && origin.messaging.getRecipients(conversationId).includes(web3Account)
+  const filteredMessages = messages.filter(
+    ({ content, conversationId, senderAddress, status }) => {
+      return (
+        content &&
+        status === 'unread' &&
+        senderAddress !== web3Account &&
+        origin.messaging.getRecipients(conversationId).includes(web3Account)
+      )
+    }
+  )
+  const conversations = groupByArray(filteredMessages, 'conversationId')
+  const sortedConversations = conversations.sort((a, b) => {
+    const lastMessageA = a.values.sort(
+      (c, d) => (c.created < d.created ? -1 : 1)
+    )[a.values.length - 1]
+    const lastMessageB = b.values.sort(
+      (c, d) => (c.created < d.created ? -1 : 1)
+    )[b.values.length - 1]
+
+    return lastMessageA.created > lastMessageB.created ? -1 : 1
   })
 
   return {
-    conversations: groupByArray(filteredMessages, 'conversationId'),
+    conversations: sortedConversations,
     messages: filteredMessages,
     messagingDismissed,
     messagingEnabled,

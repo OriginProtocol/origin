@@ -21,10 +21,6 @@ export default defineMessages({
     id: 'schema.transportation.description',
     defaultMessage: 'Description'
   },
-  'schema.transportation.location': {
-    id: 'schema.transportation.location',
-    defaultMessage: 'Location'
-  },
   'schema.transportation.priceInETH': {
     id: 'schema.transportation.priceInETH',
     defaultMessage: 'Price in ETH'
@@ -56,5 +52,21 @@ export default defineMessages({
   'schema.transportation.yachtCharters': {
     id: 'schema.transportation.yachtCharters',
     defaultMessage: 'Yacht Charters'
+  },
+  'schema.transportation.messageBuyer': {
+    id: 'schema.transportation.messageBuyer',
+    defaultMessage: 'Message the buyer with any relevant details'
+  },
+  'schema.transportation.provideService': {
+    id: 'schema.transportation.provideService',
+    defaultMessage: 'Provide your transportation service to the buyer'
+  },
+  'schema.transportation.rateBuyer': {
+    id: 'schema.transportation.rateBuyer',
+    defaultMessage: 'Leave a review of the buyer'
+  },
+  'schema.transportation.sellerSteps': {
+    id: 'schema.transportation.sellerSteps',
+    defaultMessage: 'Fulfillment Checklist'
   }
 })

@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
+import { FormattedMessage } from 'react-intl'
 
 export default class PanelButtons extends Component {
   constructor(props) {
@@ -23,32 +24,55 @@ export default class PanelButtons extends Component {
 
   render() {
     const { displayNextStep, step } = this.props
+    const hasWallet = true
     const buttons = {
-      Overview: (
-        <button className="btn btn-primary" onClick={displayNextStep}>
-          Connect a Wallet
+      Overview: hasWallet ? (
+        <button className="btn btn-primary" onClick={() => displayNextStep()}>
+          <FormattedMessage
+            id={'onboarding-buttons.next'}
+            defaultMessage={'Next'}
+          />
         </button>
-      ),
-      'Connect Wallet': (
-        <div className="d-flex flex-column align-items-center">
-          <button
-            key={'first-btn'}
-            className="btn btn-primary btn-lg mb-3"
-            onClick={this.connectMetaMask}
+      ) : (
+        <Fragment>
+          <a
+            href="https://metamask.io/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-primary"
           >
-            Connect MetaMask
-          </button>
-          <button key={'sec-btn'} className="btn btn-primary btn-lg" disabled>
-            Download Mobile Wallet
-          </button>
+            <FormattedMessage
+              id={'onboarding-buttons.installMetaMask'}
+              defaultMessage={'Install MetaMask'}
+            />
+          </a>
+          <a href="#" className="d-block" onClick={() => displayNextStep()}>
+            <FormattedMessage
+              id={'onboarding-buttons.skip'}
+              defaultMessage={'Skip'}
+            />
+          </a>
+        </Fragment>
+      ),
+      Identity: (
+        <div className="d-flex flex-column align-items-center">
+          <Link to="/profile" target="_blank">
+            <button key={'first-btn'} className="btn btn-primary">
+              <FormattedMessage
+                id={'onboarding-buttons.verify'}
+                defaultMessage={'Verify'}
+              />
+            </button>
+          </Link>
+          <a href="#" onClick={() => displayNextStep()}>
+            <FormattedMessage
+              id={'onboarding-buttons.skip'}
+              defaultMessage={'Skip'}
+            />
+          </a>
         </div>
       ),
-      Connected: (
-        <button className="btn btn-primary" onClick={displayNextStep}>
-          Learn about Origin Tokens
-        </button>
-      ),
-      'Get Origin Tokens': (
+      'Origin Tokens': (
         <div className="col-auto">
           <Link
             to="/about-tokens"
@@ -56,13 +80,21 @@ export default class PanelButtons extends Component {
             onClick={this.completeOnboarding}
           >
             <button key={'first-btn'} className="btn btn-primary">
-              Learn more
+              <FormattedMessage
+                id={'onboarding-buttons.getOriginTokens'}
+                defaultMessage={'Learn more'}
+              />
             </button>
           </Link>
         </div>
       )
     }
+    const {
+      name: {
+        props: { defaultMessage }
+      }
+    } = step
 
-    return <div className="panel-buttons"> {buttons[step.name]} </div>
+    return <div className="panel-buttons"> {buttons[defaultMessage]} </div>
   }
 }

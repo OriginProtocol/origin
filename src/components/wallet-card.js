@@ -4,12 +4,14 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 
+import { fetchUser } from 'actions/User'
 import { getEthBalance, getOgnBalance } from 'actions/Wallet'
 
 import Avatar from 'components/avatar'
 import EtherscanLink from 'components/etherscan-link'
 import Identicon from 'components/identicon'
 import MessageNew from 'components/message-new'
+import UnnamedUser from 'components/unnamed-user'
 
 import { getFiatPrice } from 'utils/priceUtils'
 
@@ -21,18 +23,20 @@ class WalletCard extends Component {
 
     this.handleToggle = this.handleToggle.bind(this)
     this.state = {
-      modalOpen: false,
-      ethToUsdBalance: 0
+      ethToUsdBalance: 0,
+      modalOpen: false
     }
 
     this.intlMessages = defineMessages({
       yourBalance: {
         id: '_wallet-card.yourBalance',
-        defaultMessage: 'You have <img class="ogn-icon" src="images/ogn-icon.svg" role="presentation" /><span class="ogn">0 OGN</span>'
+        defaultMessage:
+          'You have <img class="ogn-icon" src="images/ogn-icon.svg" role="presentation" /><span class="ogn">0 OGN</span>'
       },
       balanceText: {
         id: '_wallet-card.balanceText',
-        defaultMessage: 'Having OGN is not required but will allow you \
+        defaultMessage:
+          'Having OGN is not required but will allow you \
         to create a listing that will be more visible to buyers.'
       },
       getOGN: {
@@ -62,15 +66,29 @@ class WalletCard extends Component {
   }
 
   componentDidMount() {
-    this.props.getEthBalance()
-    this.props.getOgnBalance()
+    const {
+      fetchUser,
+      getEthBalance,
+      getOgnBalance,
+      wallet: { address }
+    } = this.props
+
+    getEthBalance()
+    getOgnBalance()
+
+    address && fetchUser(address)
 
     this.convertEthToUsd()
     this.initiateBootstrapTooltip()
   }
 
   componentDidUpdate(prevProps) {
-    const { ethBalance } = this.props.wallet
+    const { fetchUser, wallet } = this.props
+    const { address, ethBalance } = wallet
+
+    if (address !== prevProps.wallet.address) {
+      fetchUser(address)
+    }
 
     if (ethBalance !== prevProps.wallet.ethBalance) {
       this.convertEthToUsd()
@@ -90,12 +108,19 @@ class WalletCard extends Component {
   }
 
   render() {
-    const { profile, wallet, web3Account, withBalanceTooltip, withMenus, withProfile } = this.props
+    const {
+      users,
+      wallet,
+      web3Account,
+      withBalanceTooltip,
+      withMenus,
+      withProfile
+    } = this.props
+    const user = users.find(u => u.address === wallet.address) || {}
+    const { attestations = [], fullName, profile = {} } = user
     const { address, ethBalance, ognBalance } = wallet
-    const { user } = profile
     const userCanReceiveMessages =
       address !== web3Account && origin.messaging.canReceiveMessages(address)
-
     const balanceTooltip = `
       <div>
         <p class='tooltip-balance-heading tooltip-align-left'>
@@ -195,22 +220,27 @@ class WalletCard extends Component {
                       className="dropdown-menu dropdown-menu-right"
                       aria-labelledby="ethMenuButton"
                     >
-                      <a className="dropdown-item" href="#">
-                        Transaction History
-                      </a>
-                      <a className="dropdown-item" href="#">
-                        Add Tokens
-                      </a>
+                      {address && (
+                        <EtherscanLink hash={address} className="dropdown-item">
+                          Transaction History
+                        </EtherscanLink>
+                      )}
+                      {/*
+                        <a className="dropdown-item" href="#">
+                          Add Tokens
+                        </a>
+                      */}
                     </div>
                   </div>
                 )}
               </div>
               <div className="d-flex align-items-start">
-                {!withBalanceTooltip &&
+                {!withBalanceTooltip && (
                   <img src="images/ogn-icon.svg" role="presentation" />
-                }
-                {withBalanceTooltip &&
-                  <a className="ogn-balance"
+                )}
+                {withBalanceTooltip && (
+                  <a
+                    className="ogn-balance"
                     data-toggle="tooltip"
                     data-placement="left"
                     data-trigger="hover focus"
@@ -218,11 +248,11 @@ class WalletCard extends Component {
                     data-animation={true}
                     data-html={true}
                     data-container="body"
-                    data-delay='{"show":"0", "hide":"5000"}'
+                    data-delay="{&quot;show&quot;:&quot;0&quot;, &quot;hide&quot;:&quot;5000&quot;}"
                   >
                     <img src="images/ogn-icon.svg" role="presentation" />
                   </a>
-                }
+                )}
                 <div className="amounts">
                   <div className="ogn">
                     {`${Number(ognBalance).toLocaleString(undefined)}` || 0}&nbsp;
@@ -249,12 +279,20 @@ class WalletCard extends Component {
                       className="dropdown-menu dropdown-menu-right"
                       aria-labelledby="ognMenuButton"
                     >
-                      <a className="dropdown-item" href="#">
-                        Transaction History
-                      </a>
-                      <a className="dropdown-item" href="#">
-                        Add Tokens
-                      </a>
+                      {address && (
+                        <EtherscanLink
+                          hash={address}
+                          tokenAddress={origin.token.contractAddress}
+                          className="dropdown-item"
+                        >
+                          Transaction History
+                        </EtherscanLink>
+                      )}
+                      {/*
+                        <a className="dropdown-item" href="#">
+                          Add Tokens
+                        </a>
+                      */}
                     </div>
                   </div>
                 )}
@@ -267,57 +305,56 @@ class WalletCard extends Component {
             <hr className="dark sm" />
             <div className="d-flex">
               <Link to="/profile">
-                <Avatar
-                  image={user && user.profile && user.profile.avatar}
-                  placeholderStyle="blue"
-                />
+                <Avatar image={profile.avatar} placeholderStyle="blue" />
               </Link>
               <div className="identification d-flex flex-column justify-content-between">
                 <div>
-                  <Link to="/profile">{profile.name}</Link>
+                  <Link to="/profile">{fullName || <UnnamedUser />}</Link>
                 </div>
-                <div>
-                  {profile.published.phone && (
-                    <Link to="/profile">
-                      <img
-                        src="images/phone-icon-verified.svg"
-                        alt="phone verified icon"
-                      />
-                    </Link>
-                  )}
-                  {profile.published.email && (
-                    <Link to="/profile">
-                      <img
-                        src="images/email-icon-verified.svg"
-                        alt="email verified icon"
-                      />
-                    </Link>
-                  )}
-                  {profile.published.facebook && (
-                    <Link to="/profile">
-                      <img
-                        src="images/facebook-icon-verified.svg"
-                        alt="Facebook verified icon"
-                      />
-                    </Link>
-                  )}
-                  {profile.published.twitter && (
-                    <Link to="/profile">
-                      <img
-                        src="images/twitter-icon-verified.svg"
-                        alt="Twitter verified icon"
-                      />
-                    </Link>
-                  )}
-                  {profile.published.airbnb && (
-                    <Link to="/profile">
-                      <img
-                        src="images/airbnb-icon-verified.svg"
-                        alt="Airbnb verified icon"
-                      />
-                    </Link>
-                  )}
-                </div>
+                {!!attestations.length && (
+                  <div className="attestations">
+                    {attestations.find(a => a.service === 'phone') && (
+                      <Link to="/profile">
+                        <img
+                          src="images/phone-icon-verified.svg"
+                          alt="phone verified icon"
+                        />
+                      </Link>
+                    )}
+                    {attestations.find(a => a.service === 'email') && (
+                      <Link to="/profile">
+                        <img
+                          src="images/email-icon-verified.svg"
+                          alt="email verified icon"
+                        />
+                      </Link>
+                    )}
+                    {attestations.find(a => a.service === 'facebook') && (
+                      <Link to="/profile">
+                        <img
+                          src="images/facebook-icon-verified.svg"
+                          alt="Facebook verified icon"
+                        />
+                      </Link>
+                    )}
+                    {attestations.find(a => a.service === 'twitter') && (
+                      <Link to="/profile">
+                        <img
+                          src="images/twitter-icon-verified.svg"
+                          alt="Twitter verified icon"
+                        />
+                      </Link>
+                    )}
+                    {attestations.find(a => a.service === 'airbnb') && (
+                      <Link to="/profile">
+                        <img
+                          src="images/airbnb-icon-verified.svg"
+                          alt="Airbnb verified icon"
+                        />
+                      </Link>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </Fragment>
@@ -333,12 +370,13 @@ const mapStateToProps = state => {
     messagingEnabled: state.app.messagingEnabled,
     // for reactivity
     messagingInitialized: state.app.messagingInitialized,
-    profile: state.profile,
+    users: state.users,
     web3Account: state.app.web3.account
   }
 }
 
 const matchDispatchToProps = dispatch => ({
+  fetchUser: address => dispatch(fetchUser(address)),
   getEthBalance: () => dispatch(getEthBalance()),
   getOgnBalance: () => dispatch(getOgnBalance())
 })

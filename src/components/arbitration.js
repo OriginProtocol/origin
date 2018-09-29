@@ -15,7 +15,7 @@ import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
 
-const ARBITRATOR_ETH_ADDRESS = process.env.ARBITRATOR_ACCOUNT
+const ARBITRATOR_ACCOUNT = process.env.ARBITRATOR_ACCOUNT
 
 const defaultState = {
   buyer: {},
@@ -92,8 +92,15 @@ class Arbitration extends Component {
   validateUser() {
     const { history, offerId, web3Account } = this.props
 
-    if (web3Account && this.props.web3Account.toUpperCase() !== ARBITRATOR_ETH_ADDRESS.toUpperCase()) {
-      alert(`⚠️ Warning:\nCurrent account (${this.props.web3Account}) is not equal to the ARBITRATOR_ACCOUNT environment variable (${ARBITRATOR_ETH_ADDRESS})`)
+    if (
+      web3Account &&
+      this.props.web3Account.toUpperCase() !== ARBITRATOR_ACCOUNT.toUpperCase()
+    ) {
+      alert(
+        `⚠️ Warning:\nCurrent account (${
+          this.props.web3Account
+        }) is not equal to the ARBITRATOR_ACCOUNT environment variable (${ARBITRATOR_ACCOUNT})`
+      )
 
       history.push(`/purchases/${offerId}`)
     }
@@ -106,14 +113,7 @@ class Arbitration extends Component {
       return null
     }
 
-    const {
-      buyer,
-      listing,
-      processing,
-      purchase,
-      reviews,
-      seller,
-    } = this.state
+    const { buyer, listing, processing, purchase, reviews, seller } = this.state
     const isPending = false // will be handled by offer status
     const isSold = !listing.unitsRemaining
 
@@ -133,17 +133,31 @@ class Arbitration extends Component {
       l => l.event === 'OfferData' && l.returnValues.party === listing.seller
     )
 
-    const buyerName = buyer.profile ? (
-      `${buyer.profile.firstName} ${buyer.profile.lastName}`
-    ) : 'Unnamed User'
-    const sellerName = seller.profile ? (
-      `${seller.profile.firstName} ${seller.profile.lastName}`
-    ) : 'Unnamed User'
+    const buyerName = buyer.profile
+      ? `${buyer.profile.firstName} ${buyer.profile.lastName}`
+      : 'Unnamed User'
+    const sellerName = seller.profile
+      ? `${seller.profile.firstName} ${seller.profile.lastName}`
+      : 'Unnamed User'
 
-    const buyerConversationId = buyer.address && origin.messaging.generateRoomId(web3Account, buyer.address)
-    const sellerConversationId = seller.address && origin.messaging.generateRoomId(web3Account, seller.address)
-    const participantsConversationId = buyer.address && seller.address && origin.messaging.generateRoomId(buyer.address, seller.address)
-    const participantsMessages = participantsConversationId ? messages.filter(({ content, conversationId }) => content && conversationId === participantsConversationId).sort((a, b) => (a.index < b.index ? -1 : 1)) : []
+    const buyerConversationId =
+      buyer.address &&
+      origin.messaging.generateRoomId(web3Account, buyer.address)
+    const sellerConversationId =
+      seller.address &&
+      origin.messaging.generateRoomId(web3Account, seller.address)
+    const participantsConversationId =
+      buyer.address &&
+      seller.address &&
+      origin.messaging.generateRoomId(buyer.address, seller.address)
+    const participantsMessages = participantsConversationId
+      ? messages
+        .filter(
+          ({ content, conversationId }) =>
+            content && conversationId === participantsConversationId
+        )
+        .sort((a, b) => (a.index < b.index ? -1 : 1))
+      : []
 
     return (
       <div className="purchase-detail">
@@ -151,22 +165,14 @@ class Arbitration extends Component {
           <div className="row">
             <div className="col-12">
               <div className="brdcrmb">
-                <Link to={`/users/${seller.address}`}>
-                  {sellerName}
-                </Link>
+                <Link to={`/users/${seller.address}`}>{sellerName}</Link>
                 {' sold to '}
-                <Link to={`/users/${buyer.address}`}>
-                  {buyerName}
-                </Link>
+                <Link to={`/users/${buyer.address}`}>{buyerName}</Link>
               </div>
               <h1>
                 {listing.name}
-                {isPending &&
-                  <span className="pending badge">Pending</span>
-                }
-                {isSold &&
-                  <span className="sold badge">Sold Out</span>
-                }
+                {isPending && <span className="pending badge">Pending</span>}
+                {isSold && <span className="sold badge">Sold Out</span>}
                 {/*listing.boostLevel &&
                   <span className={ `boosted badge boost-${listing.boostLevel}` }>
                     <img src="images/boost-icon-arrow.svg" role="presentation" />
@@ -222,36 +228,29 @@ class Arbitration extends Component {
               <table className="table table-striped">
                 <thead>
                   <tr>
-                    <th scope="col" style={{ width: '200px' }}>TxName</th>
+                    <th scope="col" style={{ width: '200px' }}>
+                      TxName
+                    </th>
                     <th scope="col">TxHash</th>
                     <th scope="col">From</th>
-                    <th scope="col">To</th>
                   </tr>
                 </thead>
                 <tbody>
                   <TransactionEvent
                     eventName="Payment received"
-                    transaction={paymentEvent}
-                    buyer={buyer}
-                    seller={seller}
+                    event={paymentEvent}
                   />
                   <TransactionEvent
                     eventName="Sent by seller"
-                    transaction={fulfillmentEvent}
-                    buyer={buyer}
-                    seller={seller}
+                    event={fulfillmentEvent}
                   />
                   <TransactionEvent
                     eventName="Received by buyer"
-                    transaction={receiptEvent}
-                    buyer={buyer}
-                    seller={seller}
+                    event={receiptEvent}
                   />
                   <TransactionEvent
                     eventName="Seller reviewed"
-                    transaction={withdrawalEvent}
-                    buyer={buyer}
-                    seller={seller}
+                    event={withdrawalEvent}
                   />
                 </tbody>
               </table>
@@ -273,9 +272,7 @@ class Arbitration extends Component {
                     </div>
                   )}
                   <div className="detail-info-box">
-                    <h2 className="category placehold">
-                      {listing.category}
-                    </h2>
+                    <h2 className="category placehold">{listing.category}</h2>
                     <h1 className="title text-truncate placehold">
                       {listing.name}
                     </h1>
@@ -287,7 +284,11 @@ class Arbitration extends Component {
                 </Fragment>
               )}
               <div className="reviews">
-                <h2>Reviews&nbsp;<span className="review-count">{Number(reviews.length).toLocaleString()}</span></h2>
+                <h2>
+                  Reviews&nbsp;<span className="review-count">
+                    {Number(reviews.length).toLocaleString()}
+                  </span>
+                </h2>
                 {reviews.map(r => (
                   <Review key={r.transactionHash} review={r} />
                 ))}
@@ -295,26 +296,26 @@ class Arbitration extends Component {
             </div>
             <div className="col-12 col-lg-6">
               <h2>Conversation</h2>
-              {!!participantsMessages.length &&
+              {!!participantsMessages.length && (
                 <div className="conversation-container">
                   <Conversation
                     id={participantsConversationId}
                     messages={participantsMessages}
                   />
                 </div>
-              }
-              {!participantsMessages.length &&
+              )}
+              {!participantsMessages.length && (
                 <p>None exists between these two parties 🤐</p>
-              }
+              )}
             </div>
           </div>
           <hr />
-          {purchase.status !== 'disputed' &&
+          {purchase.status !== 'disputed' && (
             <h2>This transaction is not in disputed status.</h2>
-          }
-          {purchase.status === 'disputed' &&
+          )}
+          {purchase.status === 'disputed' && (
             <div className="row">
-              {seller.address &&
+              {seller.address && (
                 <div className="col-12 col-md-6">
                   <UserCard
                     title="Seller"
@@ -325,13 +326,23 @@ class Arbitration extends Component {
                   <div className="conversation-container">
                     <Conversation
                       id={sellerConversationId}
-                      messages={messages.filter(({ content, conversationId }) => content && conversationId === sellerConversationId).sort((a, b) => (a.index < b.index ? -1 : 1))}
+                      messages={messages
+                        .filter(
+                          ({ content, conversationId }) =>
+                            content && conversationId === sellerConversationId
+                        )
+                        .sort((a, b) => (a.index < b.index ? -1 : 1))}
                     />
                   </div>
-                  <button className="btn btn-lg btn-info mt-4" onClick={this.handleRuling}>Rule In Favor Of Seller</button>
+                  <button
+                    className="btn btn-lg btn-info mt-4"
+                    onClick={this.handleRuling}
+                  >
+                    Rule In Favor Of Seller
+                  </button>
                 </div>
-              }
-              {buyer.address &&
+              )}
+              {buyer.address && (
                 <div className="col-12 col-md-6">
                   <UserCard
                     title="Buyer"
@@ -341,20 +352,36 @@ class Arbitration extends Component {
                   />
                   <div className="conversation-container">
                     <Conversation
-                      id={origin.messaging.generateRoomId(web3Account, buyer.address)}
-                      messages={messages.filter(({ content, conversationId }) => content && conversationId === buyerConversationId).sort((a, b) => (a.index < b.index ? -1 : 1))}
+                      id={origin.messaging.generateRoomId(
+                        web3Account,
+                        buyer.address
+                      )}
+                      messages={messages
+                        .filter(
+                          ({ content, conversationId }) =>
+                            content && conversationId === buyerConversationId
+                        )
+                        .sort((a, b) => (a.index < b.index ? -1 : 1))}
                     />
                   </div>
-                  <button className="btn btn-lg btn-info mt-4" onClick={this.handleRuling}>Rule In Favor Of Buyer</button>
+                  <button
+                    className="btn btn-lg btn-info mt-4"
+                    onClick={this.handleRuling}
+                  >
+                    Rule In Favor Of Buyer
+                  </button>
                 </div>
-              }
+              )}
             </div>
-          }
+          )}
         </div>
         {processing && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
+              <img
+                src="images/spinner-animation-light.svg"
+                role="presentation"
+              />
             </div>
             Processing your update
             <br />

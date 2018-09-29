@@ -30,10 +30,6 @@ class MessagingProvider extends Component {
           'Congratulations! You can now message other users across the Origin Platform ecosystem! ' +
           'Why not start by taking a look around and telling us what you think about our DApp?'
       },
-      unnamedUser: {
-        id: 'messaging-provider.unnamedUser',
-        defaultMessage: 'Unnamed User'
-      },
       welcomeMessage: {
         id: 'messaging-provider.welcome',
         defaultMessage:
@@ -51,11 +47,7 @@ class MessagingProvider extends Component {
     })
     // ? consider using https://www.npmjs.com/package/redux-debounced
     this.debouncedFetchUser = scopedDebounce(
-      addr =>
-        this.props.fetchUser(
-          addr,
-          this.props.intl.formatMessage(this.intlMessages.unnamedUser)
-        ),
+      addr => this.props.fetchUser(addr),
       ONE_SECOND
     )
 

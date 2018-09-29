@@ -49,10 +49,6 @@
       "minLength": 10,
       "maxLength": 1024
     },
-    "location": {
-      "type": "string",
-      "title": "schema.services.location"
-    },
     "price": {
       "type": "number",
       "title": "schema.services.priceInETH"
@@ -64,6 +60,15 @@
         "type": "string",
         "format": "data-url"
       }
+    },
+    "sellerSteps": {
+      "type": "string",
+      "title": "schema.services.sellerSteps",
+      "enum": [
+        "schema.services.messageBuyer",
+        "schema.services.provideService",
+        "schema.services.rateBuyer"
+      ]
     }
   }
 }

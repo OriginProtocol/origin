@@ -10,16 +10,13 @@ import Avatar from 'components/avatar'
 import EtherscanLink from 'components/etherscan-link'
 import Identicon from 'components/identicon'
 import MessageNew from 'components/message-new'
+import UnnamedUser from 'components/unnamed-user'
 
 class UserCard extends Component {
   constructor(props) {
     super(props)
 
     this.intlMessages = defineMessages({
-      unnamedUser: {
-        id: 'user-card.unnamedUser',
-        defaultMessage: 'Unnamed User'
-      },
       sendMessages: {
         id: 'messages-send.sendMessages',
         defaultMessage: 'send messages'
@@ -31,10 +28,7 @@ class UserCard extends Component {
   }
 
   componentWillMount() {
-    this.props.fetchUser(
-      this.props.userAddress,
-      this.props.intl.formatMessage(this.intlMessages.unnamedUser)
-    )
+    this.props.fetchUser(this.props.userAddress)
   }
 
   handleToggle(e) {
@@ -85,14 +79,15 @@ class UserCard extends Component {
               <div className="address">
                 {userAddress && <EtherscanLink hash={userAddress} />}
               </div>
-              {userAddress && userAddress !== web3Account &&
+              {userAddress &&
+                userAddress !== web3Account && (
                 <a href="#" className="contact" onClick={this.handleToggle}>
                   <FormattedMessage
                     id={'user-card.enabledContact'}
                     defaultMessage={'Contact'}
                   />
                 </a>
-              }
+              )}
             </div>
           </div>
           <hr className="dark sm" />
@@ -100,7 +95,9 @@ class UserCard extends Component {
             <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
             <div className="identification d-flex flex-column justify-content-between">
               <div>
-                <Link to={`/users/${userAddress}`}>{fullName}</Link>
+                <Link to={`/users/${userAddress}`}>
+                  {fullName || <UnnamedUser />}
+                </Link>
               </div>
               {attestations &&
                 !!attestations.length && (

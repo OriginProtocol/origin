@@ -6,16 +6,13 @@ export default function Users(state = [], action = {}) {
     return state
 
   case UserConstants.FETCH_SUCCESS: {
-    const { user, unnamedUserMessage } = action
+    const { user } = action
     const users = [...state]
     const i = users.findIndex(u => u.address === user.address)
     const { firstName, lastName } = user.profile || {}
     const userWithName = {
       ...user,
-      fullName:
-          firstName || lastName
-            ? `${firstName} ${lastName}`.trim()
-            : unnamedUserMessage
+      fullName: [firstName, lastName].join(' ').trim()
     }
 
     return i === -1
