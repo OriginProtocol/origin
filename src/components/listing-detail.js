@@ -214,9 +214,16 @@ class ListingsDetail extends Component {
               />
               <ul>
                 <li>The seller can choose to accept or reject your offer.</li>
-                <li>If the offer is accepted and fulfilled, you will be able to confirm that the sale is complete. Your escrowed payment will be sent to the seller.</li>
-                <li></li>
-                <li>If the offer is rejected, the escrowed payment will be immediately returned to your wallet.</li>
+                <li>
+                  If the offer is accepted and fulfilled, you will be able to
+                  confirm that the sale is complete. Your escrowed payment will
+                  be sent to the seller.
+                </li>
+                <li />
+                <li>
+                  If the offer is rejected, the escrowed payment will be
+                  immediately returned to your wallet.
+                </li>
               </ul>
             </div>
             <div className="button-container">

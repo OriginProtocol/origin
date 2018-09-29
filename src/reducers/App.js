@@ -28,7 +28,7 @@ export default function App(state = initialState, action = {}) {
   switch (action.type) {
   case AppConstants.BETA_MODAL_DISMISSED:
     return { ...state, betaModalDismissed: action.closedAt }
-    
+
   case AppConstants.MESSAGING_DISMISSED:
     return { ...state, messagingDismissed: action.closedAt }
 

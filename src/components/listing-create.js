@@ -442,7 +442,11 @@ class ListingCreate extends Component {
                   />
                 </label>
                 <h2>Boost your listing</h2>
-                <p className="help-block">You can boost your listing to get higher visibility in the Origin DApp. More buyers will see your listing, which increases the chances of a fast and successful sale.</p>
+                <p className="help-block">
+                  You can boost your listing to get higher visibility in the
+                  Origin DApp. More buyers will see your listing, which
+                  increases the chances of a fast and successful sale.
+                </p>
                 {showBoostTutorial && (
                   <div className="info-box">
                     <img src="images/ogn-icon-horiz.svg" role="presentation" />
@@ -658,7 +662,9 @@ class ListingCreate extends Component {
                 <div className="info-box">
                   <h2>Create A Listing On Origin</h2>
                   <p>
-                    Get started by selecting the type of listing you want to create. You will then be able to set a price and listing details.
+                    Get started by selecting the type of listing you want to
+                    create. You will then be able to set a price and listing
+                    details.
                   </p>
                 </div>
               )}
@@ -668,7 +674,9 @@ class ListingCreate extends Component {
                   <p>
                     <FormattedMessage
                       id={'listing-create.form-help'}
-                      defaultMessage={"Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos of your listing will help potential buyers decide if the want to buy your listing."}
+                      defaultMessage={
+                        "Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos of your listing will help potential buyers decide if the want to buy your listing."
+                      }
                     />
                   </p>
                 </div>
@@ -677,11 +685,16 @@ class ListingCreate extends Component {
                 <div className="info-box">
                   <h2>About Visibility</h2>
                   <p>
-                    Origin sorts and displays listings based on relevance, recency, and boost level. Higher-visibility listings are shown to buyers more often.
+                    Origin sorts and displays listings based on relevance,
+                    recency, and boost level. Higher-visibility listings are
+                    shown to buyers more often.
                   </p>
                   <h2>Origin Tokens</h2>
                   <p>
-                    OGN is an ERC-20 token used for incentives and governance on the Origin platform. Future intended uses of OGN might include referral rewards, reputation incentives, spam prevention, developer rewards, and platform governance.
+                    OGN is an ERC-20 token used for incentives and governance on
+                    the Origin platform. Future intended uses of OGN might
+                    include referral rewards, reputation incentives, spam
+                    prevention, developer rewards, and platform governance.
                   </p>
                   <div className="link-container">
                     <a
@@ -743,10 +756,21 @@ class ListingCreate extends Component {
                     }
                   />
                   <ul>
-                    <li>Buyers will now see your listing on the marketplace.</li>
-                    <li>When a buyer makes an offer on your listing, you can choose to accept or reject it.</li>
-                    <li>Once the offer is accepted, you will be expected to fulfill the order.</li>
-                    <li>You will receive payment once the buyer confirms that the order has been fulfilled.</li>
+                    <li>
+                      Buyers will now see your listing on the marketplace.
+                    </li>
+                    <li>
+                      When a buyer makes an offer on your listing, you can
+                      choose to accept or reject it.
+                    </li>
+                    <li>
+                      Once the offer is accepted, you will be expected to
+                      fulfill the order.
+                    </li>
+                    <li>
+                      You will receive payment once the buyer confirms that the
+                      order has been fulfilled.
+                    </li>
                   </ul>
                 </div>
                 <div className="button-container">

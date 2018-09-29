@@ -106,8 +106,7 @@ class PurchaseDetail extends Component {
       },
       submitThisForm: {
         id: 'purchase-detail.submitThisForm',
-        defaultMessage:
-          `Release funds and review the seller once you confirm that the sale is complete. Your escrowed payment will be sent to the seller. If you're unhappy, please report a problem instead.`
+        defaultMessage: `Release funds and review the seller once you confirm that the sale is complete. Your escrowed payment will be sent to the seller. If you're unhappy, please report a problem instead.`
       },
       confirmAndReview: {
         id: 'purchase-detail.confirmAndReview',
@@ -136,7 +135,8 @@ class PurchaseDetail extends Component {
       },
       clickToReview: {
         id: 'purchase-detail.clickToReview',
-        defaultMessage: 'Leaving a review lets other sellers know about your experience with this buyer.'
+        defaultMessage:
+          'Leaving a review lets other sellers know about your experience with this buyer.'
       },
       reviewSale: {
         id: 'purchase-detail.reviewSale',

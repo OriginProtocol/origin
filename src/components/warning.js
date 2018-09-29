@@ -27,9 +27,7 @@ class Warning extends Component {
                   <p>
                     <FormattedMessage
                       id={'warning.invitation'}
-                      defaultMessage={
-                        `Found a bug? Open an issue on {github} or report it in our #bug-reports channel on {discord}.`
-                      }
+                      defaultMessage={`Found a bug? Open an issue on {github} or report it in our #bug-reports channel on {discord}.`}
                       values={{
                         discord: (
                           <a

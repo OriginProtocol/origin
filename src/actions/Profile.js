@@ -67,12 +67,14 @@ export function deployProfile() {
       attestations: [],
       options: {
         transactionHashCallback: hash => {
-          dispatch(upsertTransaction({
-            transactionHash: hash,
-            transactionTypeKey: 'updateProfile',
-            timestamp: Date.now() / 1000,
-            confirmationCount: 0
-          }))
+          dispatch(
+            upsertTransaction({
+              transactionHash: hash,
+              transactionTypeKey: 'updateProfile',
+              timestamp: Date.now() / 1000,
+              confirmationCount: 0
+            })
+          )
           dispatch({
             type: ProfileConstants.DEPLOY_IN_PROGRESS,
             hash
