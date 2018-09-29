@@ -332,6 +332,7 @@
   "transaction.createListing": "আপনি একটি তালিকা তৈরি করেছেন।",
   "transaction.initiateDispute": "আপনি একটি বিতর্ক শুরু।",
   "transaction.reviewSale": "আপনি একটি পর্যালোচনা বাকি।",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "ক্রীত",
   "transaction-progress.sentBySeller": "বিক্রেতার দ্বারা প্রেরিত",
   "transaction-progress.receivedByMe": "আমার দ্বারা প্রাপ্ত",
