@@ -219,7 +219,6 @@ class ListingsDetail extends Component {
                   confirm that the sale is complete. Your escrowed payment will
                   be sent to the seller.
                 </li>
-                <li />
                 <li>
                   If the offer is rejected, the escrowed payment will be
                   immediately returned to your wallet.

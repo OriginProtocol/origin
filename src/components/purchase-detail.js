@@ -82,7 +82,11 @@ class PurchaseDetail extends Component {
     this.intlMessages = defineMessages({
       awaitApproval: {
         id: 'purchase-detail.awaitApproval',
-        defaultMessage: 'Wait for the seller to approve your offer'
+        defaultMessage: 'Wait for the seller to approve or reject your offer'
+      },
+      awaitApprovalInstruction: {
+        id: 'purchase-detail.awaitApprovalInstruction',
+        defaultMessage: 'Your payment is currently in escrow. There is nothing for you to do at this time. Check back later.'
       },
       acceptBuyersOffer: {
         id: 'purchase-detail.acceptOrRejectOffer',
@@ -194,6 +198,9 @@ class PurchaseDetail extends Component {
         buyer: {
           prompt: this.props.intl.formatMessage(
             this.intlMessages.awaitApproval
+          ),
+          instruction: this.props.intl.formatMessage(
+            this.intlMessages.awaitApprovalInstruction
           ),
           buttons: [],
           link: {
