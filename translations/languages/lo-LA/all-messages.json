@@ -332,6 +332,7 @@
   "transaction.createListing": "ທ່ານສ້າງລາຍການ.",
   "transaction.initiateDispute": "ທ່ານໄດ້ເລີ່ມຕົ້ນຂໍ້ຂັດແຍ້ງ.",
   "transaction.reviewSale": "ທ່ານໄດ້ອອກຈາກການທົບທວນຄືນ.",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "ຊື້ແລ້ວ",
   "transaction-progress.sentBySeller": "ສົ່ງໂດຍຜູ້ຂາຍ",
   "transaction-progress.receivedByMe": "ໄດ້ຮັບໂດຍຂ້າພະເຈົ້າ",
