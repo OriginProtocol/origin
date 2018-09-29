@@ -57,28 +57,22 @@ export const RejectionModal = ({ isOpen = false, handleToggle }) => (
     </div>
     <p className="heading">
       <FormattedMessage
-        id={'arbitrationModals.rejectionHeading'}
-        defaultMessage={'This offer has been rejected'}
+        id={'offerModals.rejectionHeading'}
+        defaultMessage={'This offer has been rejected.'}
       />
     </p>
     <span className="text">
       <FormattedMessage
-        id={'arbitrationModals.rejectionText1'}
-        defaultMessage={"You've rejected this buyer's offer,"}
+        id={'offerModals.rejectionText'}
+        defaultMessage={'Your listing is now available for other buyers to purchase.'}
       />
     </span>
-    <p className="text">
-      <FormattedMessage
-        id={'arbitrationModals.rejectionText2'}
-        defaultMessage={'click below to go back to your listings.'}
-      />
-    </p>
     <div className="button-container">
       <Link to="/my-listings">
         <button className="btn btn-clear">
           <FormattedMessage
             id={'arbitrationModals.rejectionListings'}
-            defaultMessage={'Back to your listings'}
+            defaultMessage={'View Listings'}
           />
         </button>
       </Link>

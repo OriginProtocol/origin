@@ -125,11 +125,11 @@ class PurchaseDetail extends Component {
       },
       waitForBuyer: {
         id: 'purchase-detail.waitForBuyer',
-        defaultMessage: 'Wait for the buyer to finalize the transaction'
+        defaultMessage: 'Fulfill this order and wait for the buyer to complete the sale'
       },
       fulfillObligation: {
         id: 'purchase-detail.fulfillObligation',
-        defaultMessage: 'Make sure you fulfill the order.'
+        defaultMessage: 'The buyer is waiting for you to fulfill this order. You will get paid when the buyer completes the sale.'
       },
       awaitSellerReview: {
         id: 'purchase-detail.awaitSellerReview',

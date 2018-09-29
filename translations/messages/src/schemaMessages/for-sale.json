@@ -204,12 +204,8 @@
     "defaultMessage": "Wanted"
   },
   {
-    "id": "schema.forSale.packageItem",
-    "defaultMessage": "Package the item"
-  },
-  {
     "id": "schema.forSale.shipItem",
-    "defaultMessage": "Ship the item to the buyer"
+    "defaultMessage": "Arrange for delivery or pickup"
   },
   {
     "id": "schema.forSale.messageBuyer",
