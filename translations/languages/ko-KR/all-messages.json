@@ -332,6 +332,7 @@
   "transaction.createListing": "당신은 명부 작성을 창조했다.",
   "transaction.initiateDispute": "당신은 분쟁을 시작했습니다.",
   "transaction.reviewSale": "너는 리뷰를 남겼다.",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "구매됨",
   "transaction-progress.sentBySeller": "판매자가 보냄",
   "transaction-progress.receivedByMe": "받음",
