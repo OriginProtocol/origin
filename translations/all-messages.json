@@ -41,6 +41,7 @@
   "notificationsDropdown.notificationsHeading": "Unread Notifications",
   "notificationsDropdown.viewAll": "View All",
   "transactions.pendingBlockchainTransactionsHeading": "Pending Blockchain Transactions",
+  "transactions.pendingBlockchainTransactionHeading": "Pending Blockchain Transaction",
   "transactions.blockchainTransactionsHeading": "Blockchain Transactions",
   "transactions.transactionsHeading": "Transactions",
   "transactions.clear": "Clear",
