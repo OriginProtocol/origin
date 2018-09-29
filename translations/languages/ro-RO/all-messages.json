@@ -332,6 +332,7 @@
   "transaction.createListing": "Ați creat o înregistrare.",
   "transaction.initiateDispute": "Ai inițiat o dispută.",
   "transaction.reviewSale": "Ai lăsat o recenzie.",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "Achiziţionat",
   "transaction-progress.sentBySeller": "Trimis de vânzător",
   "transaction-progress.receivedByMe": "Primit de mine",
