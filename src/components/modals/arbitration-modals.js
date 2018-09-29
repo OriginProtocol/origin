@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
+
 import Modal from 'components/modal'
 
 export const ConfirmationModal = ({
@@ -162,46 +163,6 @@ export const PrerequisiteModal = ({
           defaultMessage={'Enable Messaging'}
         />
       </button>
-    </div>
-  </Modal>
-)
-
-export const RejectionModal = ({ isOpen = false, handleToggle }) => (
-  <Modal
-    className="arbitration-modal rejection"
-    isOpen={isOpen}
-    handleToggle={handleToggle}
-  >
-    <div className="image-container">
-      <img src="images/reject-icon.svg" role="presentation" />
-    </div>
-    <p className="heading">
-      <FormattedMessage
-        id={'arbitrationModals.rejectionHeading'}
-        defaultMessage={'This offer has been rejected'}
-      />
-    </p>
-    <span className="text">
-      <FormattedMessage
-        id={'arbitrationModals.rejectionText1'}
-        defaultMessage={"You've rejected this buyer's offer,"}
-      />
-    </span>
-    <p className="text">
-      <FormattedMessage
-        id={'arbitrationModals.rejectionText2'}
-        defaultMessage={'click below to go back to your listings.'}
-      />
-    </p>
-    <div className="button-container">
-      <Link to="/my-listings">
-        <button className="btn btn-clear">
-          <FormattedMessage
-            id={'arbitrationModals.rejectionListings'}
-            defaultMessage={'Back to your listings'}
-          />
-        </button>
-      </Link>
     </div>
   </Modal>
 )

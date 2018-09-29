@@ -9,24 +9,24 @@ import {
 } from 'react-intl'
 import $ from 'jquery'
 
+import { enableMessaging, storeWeb3Intent } from 'actions/App'
 import {
   update as updateTransaction,
   upsert as upsertTransaction
 } from 'actions/Transaction'
-import { enableMessaging, storeWeb3Intent } from 'actions/App'
 
 import {
   ConfirmationModal,
   IssueModal,
-  PrerequisiteModal,
-  RejectionModal
+  PrerequisiteModal
 } from 'components/modals/arbitration-modals'
-import { MetamaskModal } from 'components/modals/wait-modals'
 import Avatar from 'components/avatar'
+import { RejectionModal, WithdrawModal } from 'components/modals/offer-modals'
 import PurchaseProgress from 'components/purchase-progress'
 import Review from 'components/review'
 import UnnamedUser from 'components/unnamed-user'
 import UserCard from 'components/user-card'
+import { MetamaskModal } from 'components/modals/wait-modals'
 
 import TransactionEvent from 'pages/purchases/transaction-event'
 
@@ -49,7 +49,8 @@ const defaultState = {
   modalsOpen: {
     confirmation: false,
     issue: false,
-    rejection: false
+    rejection: false,
+    withdraw: false
   },
   problemInferred: false,
   processing: false,
@@ -68,6 +69,7 @@ class PurchaseDetail extends Component {
     this.handleProblem = this.handleProblem.bind(this)
     this.handleRating = this.handleRating.bind(this)
     this.handleReviewText = this.handleReviewText.bind(this)
+    this.handleWithdraw = this.handleWithdraw.bind(this)
     this.initiateDispute = this.initiateDispute.bind(this)
     this.loadPurchase = this.loadPurchase.bind(this)
     this.rejectOffer = this.rejectOffer.bind(this)
@@ -204,7 +206,7 @@ class PurchaseDetail extends Component {
           ),
           buttons: [],
           link: {
-            functionName: 'withdrawOffer',
+            functionName: 'handleWithdraw',
             text: this.props.intl.formatMessage(this.intlMessages.withdrawOffer)
           }
         },
@@ -457,6 +459,10 @@ class PurchaseDetail extends Component {
 
   async rejectOffer() {
     this.withdrawOffer(() => this.toggleModal('rejection'))
+  }
+
+  handleWithdraw() {
+    this.toggleModal('withdraw')
   }
 
   async withdrawOffer(onSuccess) {
@@ -1334,6 +1340,14 @@ class PurchaseDetail extends Component {
         <RejectionModal
           isOpen={modalsOpen.rejection}
           handleToggle={() => this.toggleModal('rejection')}
+        />
+        <WithdrawModal
+          isOpen={modalsOpen.withdraw}
+          onCancel={() => this.toggleModal('withdraw')}
+          onSubmit={() => {
+            this.toggleModal('withdraw')
+            this.withdrawOffer()
+          }}
         />
       </div>
     )
