@@ -2,14 +2,14 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
+import { FormattedMessage } from 'react-intl'
 
 import Avatar from 'components/avatar'
 import Conversation from 'components/conversation'
 import Modal from 'components/modal'
 import Review from 'components/review'
+import TransactionHistory from 'components/transaction-history'
 import UserCard from 'components/user-card'
-
-import TransactionEvent from 'pages/purchases/transaction-event'
 
 import { getListing } from 'utils/listing'
 
@@ -124,15 +124,6 @@ class Arbitration extends Component {
 
     const pictures = listing.pictures || []
 
-    const paymentEvent = purchase.events.find(l => l.event === 'OfferCreated')
-    const fulfillmentEvent = purchase.events.find(
-      l => l.event === 'OfferAccepted'
-    )
-    const receiptEvent = purchase.events.find(l => l.event === 'OfferFinalized')
-    const withdrawalEvent = purchase.events.find(
-      l => l.event === 'OfferData' && l.returnValues.party === listing.seller
-    )
-
     const buyerName = buyer.profile
       ? `${buyer.profile.firstName} ${buyer.profile.lastName}`
       : 'Unnamed User'
@@ -224,36 +215,13 @@ class Arbitration extends Component {
                   </Link>
                 </div>
               </div>
-              <h2>Transaction History</h2>
-              <table className="table table-striped">
-                <thead>
-                  <tr>
-                    <th scope="col" style={{ width: '200px' }}>
-                      TxName
-                    </th>
-                    <th scope="col">TxHash</th>
-                    <th scope="col">From</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <TransactionEvent
-                    eventName="Payment received"
-                    event={paymentEvent}
-                  />
-                  <TransactionEvent
-                    eventName="Sent by seller"
-                    event={fulfillmentEvent}
-                  />
-                  <TransactionEvent
-                    eventName="Received by buyer"
-                    event={receiptEvent}
-                  />
-                  <TransactionEvent
-                    eventName="Seller reviewed"
-                    event={withdrawalEvent}
-                  />
-                </tbody>
-              </table>
+              <h2>
+                <FormattedMessage
+                  id={'arbitration.transactionHistoryHeading'}
+                  defaultMessage={'Transaction History'}
+                />
+              </h2>
+              <TransactionHistory purchase={purchase} />
               <hr />
             </div>
           </div>

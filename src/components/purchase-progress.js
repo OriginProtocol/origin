@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { FormattedMessage } from 'react-intl'
+import moment from 'moment'
 
 class PurchaseProgress extends Component {
   constructor(props) {
@@ -40,12 +41,12 @@ class PurchaseProgress extends Component {
     const { currentStep, maxStep, perspective, purchase, subdued } = this.props
     const { progressCalculated, progressWidth } = this.state
 
-    // timestamps not yet available
-    const soldAt = !!currentStep
-    const fulfilledAt = currentStep > 1
-    const receivedAt = currentStep > 2
-    const withdrawnAt = currentStep > 3
-    const disputed = purchase && purchase.status === 'disputed'
+    const offerCreated = purchase && purchase.event('OfferCreated')
+    const offerAccepted = purchase && purchase.event('OfferAccepted')
+    const offerDisputed = purchase && purchase.event('OfferDisputed')
+    const offerRuling = purchase && purchase.event('OfferRuling')
+    const offerFinalized = purchase && purchase.event('OfferFinalized')
+    const offerData = purchase && purchase.event('OfferData')
 
     return (
       <div
@@ -64,57 +65,96 @@ class PurchaseProgress extends Component {
           />
         </div>
         <div className="circles d-flex justify-content-between">
-          {!soldAt && <span className="progress-circle" />}
-          {soldAt && (
+          {!offerCreated && <span className="progress-circle" />}
+          {offerCreated && (
             <span
               className="progress-circle checked"
               data-toggle="tooltip"
               data-placement="top"
               data-html="true"
-              title={
-                null /*`Sold on<br /><strong>${moment(soldAt).format('MMM D, YYYY')}</strong>`*/
-              }
+              title={`Offer made on<br /><strong>${moment(
+                offerCreated.timestamp * 1000
+              ).format('MMM D, YYYY')}</strong>`}
             />
           )}
-          {!fulfilledAt && <span className="progress-circle" />}
-          {fulfilledAt && (
-            <span
-              className={`progress-circle ${disputed ? 'disputed' : 'checked'}`}
-              data-toggle="tooltip"
-              data-placement="top"
-              data-html="true"
-              title={
-                null /*`Sent by seller on<br /><strong>${moment(fulfilledAt).format('MMM D, YYYY')}</strong>`*/
-              }
-            >
-              {disputed && '!'}
-            </span>
-          )}
-          {!receivedAt && <span className="progress-circle" />}
-          {receivedAt && (
+          {!offerAccepted && <span className="progress-circle" />}
+          {offerAccepted && (
             <span
               className="progress-circle checked"
               data-toggle="tooltip"
               data-placement="top"
               data-html="true"
-              title={
-                null /*`Received by buyer on<br /><strong>${moment(receivedAt).format('MMM D, YYYY')}</strong>`*/
-              }
+              title={`Offer accepted on<br /><strong>${moment(
+                offerAccepted.timestamp * 1000
+              ).format('MMM D, YYYY')}</strong>`}
+            />
+          )}
+          {!offerFinalized &&
+            !offerDisputed && <span className="progress-circle" />}
+          {offerFinalized && (
+            <span
+              className="progress-circle checked"
+              data-toggle="tooltip"
+              data-placement="top"
+              data-html="true"
+              title={`Sale completed on<br /><strong>${moment(
+                offerFinalized.timestamp * 1000
+              ).format('MMM D, YYYY')}</strong>`}
             />
           )}
           {perspective === 'seller' &&
-            !withdrawnAt && <span className="progress-circle" />}
+            !offerDisputed &&
+            !offerData && <span className="progress-circle" />}
           {perspective === 'seller' &&
-            withdrawnAt && (
+            offerData && (
             <span
               className="progress-circle checked"
               data-toggle="tooltip"
               data-placement="top"
               data-html="true"
-              title={
-                null /*`Funds withdrawn on<br /><strong>${moment(withdrawnAt).format('MMM D, YYYY')}</strong>`*/
-              }
+              title={`Sale reviewed on<br /><strong>${moment(
+                offerData.timestamp * 1000
+              ).format('MMM D, YYYY')}</strong>`}
             />
+          )}
+          {offerDisputed &&
+            !offerRuling && (
+            <Fragment>
+              <span
+                className="progress-circle exclaimed"
+                data-toggle="tooltip"
+                data-placement="top"
+                data-html="true"
+                title={`Dispute started on<br /><strong>${moment(
+                  offerDisputed.timestamp * 1000
+                ).format('MMM D, YYYY')}</strong>`}
+              >
+                {!subdued && '!'}
+              </span>
+              <span className="progress-circle" />
+            </Fragment>
+          )}
+          {offerRuling && (
+            <Fragment>
+              <span
+                className="progress-circle checked"
+                data-toggle="tooltip"
+                data-placement="top"
+                data-html="true"
+                title={`Dispute started on<br /><strong>${moment(
+                  offerDisputed.timestamp * 1000
+                ).format('MMM D, YYYY')}</strong>`}
+              />
+              <span
+                className="progress-circle checked"
+                data-toggle="tooltip"
+                data-placement="top"
+                data-html="true"
+                title={`Ruling made on<br /><strong>${moment(
+                  offerRuling.timestamp * 1000
+                ).format('MMM D, YYYY')}</strong>`}
+              />
+            </Fragment>
           )}
         </div>
         {!subdued && (
@@ -143,15 +183,18 @@ class PurchaseProgress extends Component {
                 )}
               </div>
             </div>
-            <div className="stage-container">
-              <div className="stage">
-                <FormattedMessage
-                  id={'purchase-progress.saleCompleted'}
-                  defaultMessage={'Sale Completed'}
-                />
+            {!offerDisputed && (
+              <div className="stage-container">
+                <div className="stage">
+                  <FormattedMessage
+                    id={'purchase-progress.saleCompleted'}
+                    defaultMessage={'Sale Completed'}
+                  />
+                </div>
               </div>
-            </div>
-            {perspective === 'seller' && (
+            )}
+            {!offerDisputed &&
+              perspective === 'seller' && (
               <div className="stage-container">
                 <div className="stage">
                   <FormattedMessage
@@ -160,6 +203,26 @@ class PurchaseProgress extends Component {
                   />
                 </div>
               </div>
+            )}
+            {offerDisputed && (
+              <Fragment>
+                <div className="stage-container">
+                  <div className="stage">
+                    <FormattedMessage
+                      id={'purchase-progress.disputedStarted'}
+                      defaultMessage={'Dispute Started'}
+                    />
+                  </div>
+                </div>
+                <div className="stage-container">
+                  <div className="stage">
+                    <FormattedMessage
+                      id={'purchase-progress.rulingMade'}
+                      defaultMessage={'Ruling Made'}
+                    />
+                  </div>
+                </div>
+              </Fragment>
             )}
           </div>
         )}
