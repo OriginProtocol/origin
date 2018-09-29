@@ -40,6 +40,10 @@ class TransactionMessage extends Component {
       reviewSale: {
         id: 'transaction.reviewSale',
         defaultMessage: 'You left a review.'
+      },
+      updateProfile: {
+        id: 'transaction.updateProfile',
+        defaultMessage: 'You updated your profile.'
       }
     })
   }
