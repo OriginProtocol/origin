@@ -50,7 +50,7 @@ class ListingCreate extends Component {
       return listingType
     })
 
-    this.state = {
+    this.defaultState = {
       step: this.STEP.PICK_SCHEMA,
       selectedBoostAmount: props.wallet.ognBalance ? defaultBoostValue : 0,
       selectedSchemaType: null,
@@ -68,6 +68,8 @@ class ListingCreate extends Component {
       usdListingPrice: 0
     }
 
+    this.state = { ...this.defaultState }
+
     this.intlMessages = defineMessages({
       navigationWarning: {
         id: 'listing-create.navigationWarning',
@@ -81,6 +83,7 @@ class ListingCreate extends Component {
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
     this.onReview = this.onReview.bind(this)
     this.pollOgnBalance = this.pollOgnBalance.bind(this)
+    this.resetForm = this.resetForm.bind(this)
     this.resetToPreview = this.resetToPreview.bind(this)
     this.setBoost = this.setBoost.bind(this)
     this.updateUsdPrice = this.updateUsdPrice.bind(this)
@@ -274,6 +277,10 @@ class ListingCreate extends Component {
       console.error(error)
       this.setState({ step: this.STEP.ERROR })
     }
+  }
+
+  resetForm() {
+    this.setState(this.defaultState)
   }
 
   resetToPreview(e) {
@@ -774,12 +781,12 @@ class ListingCreate extends Component {
                   </ul>
                 </div>
                 <div className="button-container">
-                  <Link to="/" className="btn btn-clear">
+                  <button className="btn btn-clear" onClick={this.resetForm}>
                     <FormattedMessage
                       id={'listing-create.createAnother'}
                       defaultMessage={'Create Another Listing'}
                     />
-                  </Link>
+                  </button>
                   <Link to="/" className="btn btn-clear">
                     <FormattedMessage
                       id={'listing-create.seeAllListings'}
