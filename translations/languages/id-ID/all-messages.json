@@ -332,6 +332,7 @@
   "transaction.createListing": "Anda membuat daftar.",
   "transaction.initiateDispute": "Anda memulai perselisihan.",
   "transaction.reviewSale": "Anda meninggalkan ulasan.",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "Dibeli",
   "transaction-progress.sentBySeller": "Dikirim oleh penjual",
   "transaction-progress.receivedByMe": "Diterima oleh saya",
