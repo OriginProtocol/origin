@@ -22,3 +22,7 @@
 .text-muted {
   color: #6f8294 !important;
 }
+
+.alert-warning {
+  background-color: #fff8de;
+}
