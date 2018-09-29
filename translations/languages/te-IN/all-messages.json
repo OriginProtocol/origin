@@ -332,6 +332,7 @@
   "transaction.createListing": "మీరు జాబితాను సృష్టించారు.",
   "transaction.initiateDispute": "మీరు వివాదాన్ని ప్రారంభించారు.",
   "transaction.reviewSale": "మీరు సమీక్షను వ్రాశారు.",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "కొనుగోలు",
   "transaction-progress.sentBySeller": "విక్రేత పంపినది",
   "transaction-progress.receivedByMe": "నాకు స్వీకరించింది",
