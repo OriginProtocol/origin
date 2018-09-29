@@ -332,6 +332,7 @@
   "transaction.createListing": "Du har oprettet en fortegnelse.",
   "transaction.initiateDispute": "Du indledte en tvist.",
   "transaction.reviewSale": "Du forlod en anmeldelse.",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "købt",
   "transaction-progress.sentBySeller": "Sendt af sælger",
   "transaction-progress.receivedByMe": "Modtaget af mig",
