@@ -89,7 +89,8 @@ class PurchaseDetail extends Component {
       },
       awaitApprovalInstruction: {
         id: 'purchase-detail.awaitApprovalInstruction',
-        defaultMessage: 'Your payment is currently in escrow. There is nothing for you to do at this time. Check back later.'
+        defaultMessage:
+          'Your payment is currently in escrow. There is nothing for you to do at this time. Check back later.'
       },
       acceptBuyersOffer: {
         id: 'purchase-detail.acceptOrRejectOffer',
@@ -97,7 +98,8 @@ class PurchaseDetail extends Component {
       },
       acceptOfferInstruction: {
         id: 'purchase-detail.acceptOfferInstruction',
-        defaultMessage: 'Your listing has a pending offer. Other buyers cannot make offers until you accept or reject this one.'
+        defaultMessage:
+          'Your listing has a pending offer. Other buyers cannot make offers until you accept or reject this one.'
       },
       acceptOffer: {
         id: 'purchase-detail.acceptOffer',
@@ -126,11 +128,13 @@ class PurchaseDetail extends Component {
       },
       waitForBuyer: {
         id: 'purchase-detail.waitForBuyer',
-        defaultMessage: 'Fulfill this order and wait for the buyer to complete the sale'
+        defaultMessage:
+          'Fulfill this order and wait for the buyer to complete the sale'
       },
       fulfillObligation: {
         id: 'purchase-detail.fulfillObligation',
-        defaultMessage: 'The buyer is waiting for you to fulfill this order. You will get paid when the buyer completes the sale.'
+        defaultMessage:
+          'The buyer is waiting for you to fulfill this order. You will get paid when the buyer completes the sale.'
       },
       awaitSellerReview: {
         id: 'purchase-detail.awaitSellerReview',
@@ -1002,7 +1006,9 @@ class PurchaseDetail extends Component {
                               <div className="invalid-feedback d-block">
                                 <FormattedMessage
                                   id={'purchase-detail.reviewError'}
-                                  defaultMessage={'Select a rating of 1-5 stars.'}
+                                  defaultMessage={
+                                    'Select a rating of 1-5 stars.'
+                                  }
                                 />
                               </div>
                             )}

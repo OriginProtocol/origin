@@ -4,12 +4,7 @@ import { FormattedMessage } from 'react-intl'
 
 import Modal from 'components/modal'
 
-export const WithdrawModal = ({
-  isOpen = false,
-  inferred = false,
-  onCancel,
-  onSubmit
-}) => (
+export const WithdrawModal = ({ isOpen = false, onCancel, onSubmit }) => (
   <Modal
     className="offer-modal withdraw"
     isOpen={isOpen}
@@ -25,7 +20,9 @@ export const WithdrawModal = ({
       <span>
         <FormattedMessage
           id={'offerModals.withdrawText'}
-          defaultMessage={'Are you sure you want to withdraw your offer? Your escrowed payment wil be returned to your wallet.'}
+          defaultMessage={
+            'Are you sure you want to withdraw your offer? Your escrowed payment wil be returned to your wallet.'
+          }
         />
       </span>
     </div>
@@ -64,7 +61,9 @@ export const RejectionModal = ({ isOpen = false, handleToggle }) => (
     <span className="text">
       <FormattedMessage
         id={'offerModals.rejectionText'}
-        defaultMessage={'Your listing is now available for other buyers to purchase.'}
+        defaultMessage={
+          'Your listing is now available for other buyers to purchase.'
+        }
       />
     </span>
     <div className="button-container">
