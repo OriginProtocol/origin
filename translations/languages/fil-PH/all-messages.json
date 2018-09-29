@@ -332,6 +332,7 @@
   "transaction.createListing": "Lumikha ka ng isang listahan.",
   "transaction.initiateDispute": "Pinasimulan mo ang isang pagtatalo.",
   "transaction.reviewSale": "Nag-iwan ka ng isang pagsusuri.",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "Binili",
   "transaction-progress.sentBySeller": "Pinadala ng nagbebenta",
   "transaction-progress.receivedByMe": "Natanggap ko",
