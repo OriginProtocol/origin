@@ -332,6 +332,7 @@
   "transaction.createListing": "Bir giriş oluşturdunuz.",
   "transaction.initiateDispute": "Bir anlaşmazlık başlattın.",
   "transaction.reviewSale": "Yorum bıraktın.",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "satın alındı",
   "transaction-progress.sentBySeller": "Satıcı tarafından gönderildi",
   "transaction-progress.receivedByMe": "Benim tarafımdan alındı",
