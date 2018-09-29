@@ -41,7 +41,8 @@ const ARBITRATOR_ACCOUNT = process.env.ARBITRATOR_ACCOUNT
 const defaultState = {
   buyer: {},
   form: {
-    rating: 5,
+    invalid: false,
+    rating: 0,
     reviewText: ''
   },
   issue: '',
@@ -387,6 +388,12 @@ class PurchaseDetail extends Component {
     const { purchase, listing } = this.state
     const offer = purchase
 
+    if (rating < 1) {
+      return this.setState(prevState => {
+        return { form: { ...prevState.form, invalid: true } }
+      })
+    }
+
     try {
       this.setState({ processing: true })
 
@@ -559,7 +566,7 @@ class PurchaseDetail extends Component {
   // rating: 1 <= integer <= 5
   handleRating(rating) {
     this.setState(prevState => {
-      return { form: { ...prevState.form, rating } }
+      return { form: { ...prevState.form, invalid: false, rating } }
     })
 
     // anticipate the need for a dispute per Josh
@@ -692,7 +699,7 @@ class PurchaseDetail extends Component {
     const step = offerStatusToStep(purchase.status)
     const isPending = purchase.status !== 'withdrawn' && step < 3
     const isSold = step > 2
-    const { rating, reviewText } = form
+    const { invalid, rating, reviewText } = form
 
     // Data not loaded yet.
     if (!purchase.status || !listing.status) {
@@ -991,6 +998,14 @@ class PurchaseDetail extends Component {
                                 defaultMessage={'Review'}
                               />
                             </label>
+                            {invalid && (
+                              <div className="invalid-feedback d-block">
+                                <FormattedMessage
+                                  id={'purchase-detail.reviewError'}
+                                  defaultMessage={'Select a rating of 1-5 stars.'}
+                                />
+                              </div>
+                            )}
                             <div className="stars">
                               {[...Array(5)].map((undef, i) => {
                                 return (
