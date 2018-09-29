@@ -1819,8 +1819,7 @@ textarea:-moz-ui-invalid {
   vertical-align: super;
 }
 
-.arbitration-modal.rejection .modal-content {
-  height: 420px;
+.offer-modal .modal-content {
   width: 420px;
 }
 
@@ -4921,6 +4920,7 @@ a:not([href]):not([tabindex]).span-link {
 }
 
 .beta .disclaimer img {
+  flex-shrink: 0;
   margin-right: 15px;
 }
 
