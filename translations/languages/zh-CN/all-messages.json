@@ -332,6 +332,7 @@
   "transaction.createListing": "您创建了一个列表。",
   "transaction.initiateDispute": "你发起了争执。",
   "transaction.reviewSale": "你留下了评论。",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "已购买",
   "transaction-progress.sentBySeller": "由卖方发送",
   "transaction-progress.receivedByMe": "我所收到的",
