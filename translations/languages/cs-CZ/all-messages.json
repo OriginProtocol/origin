@@ -332,6 +332,7 @@
   "transaction.createListing": "Vytvořili jste záznam.",
   "transaction.initiateDispute": "Spustili jste spor.",
   "transaction.reviewSale": "Zanechali jste recenzi.",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "Zakoupeno",
   "transaction-progress.sentBySeller": "Zasláno prodávajícím",
   "transaction-progress.receivedByMe": "Přijal mě",
