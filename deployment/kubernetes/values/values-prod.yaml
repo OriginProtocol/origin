@@ -1,3 +1,5 @@
+databaseInstance: origin-214503:us-west1:prod
+
 # origin-bridge
 bridgeImage: origin-bridge
 bridgeImageTag: 'b231dbcd'
@@ -23,7 +25,6 @@ eventlistenerImageTag: 'latest'
 eventlistenerWeb3Url: https://rinkeby.infura.io/emIXjs9eDuy57IlTYsIP
 
 discoveryImage: origin-discovery
-discoveryDbInstance: origin-214503:us-west1:prod
 discoveryImageTag: 'latest'
 
 # IPFS server for OrbitDB

@@ -110,16 +110,6 @@ Connect to redis:
 
 	docker exec -ti redis /bin/bash -c "redis-cli"
 
-### Performing database migrations
-
-Database migrations are not run automatically. To create a migration:
-
-	docker exec -ti origin-bridge /bin/bash -c "flask db migrate"
-
-and to upgrade versions:
-
-	docker exec -ti origin-bridge /bin/bash -c "flask db upgrade"
-
 ### Package management
 
 Packages are installed during the Docker build process. If you modify the packages for a project (i.e. anything that results in a change to package.json or requirements.txt) you may need to add any missing packages to the container. The best way to do this is to rebuild the container.

@@ -10,10 +10,6 @@ RUN git clone --depth 1 --branch stable https://github.com/OriginProtocol/origin
 
 WORKDIR /app/daemon/indexing
 
-# Bug in db-migrate means it does not respect DATABASE_URL environment variable
-# as long as database.json is around
-RUN rm database.json
-
 RUN npm install --quiet --no-progress
 
 CMD ["node", "listener/listener.js", "--elasticsearch", "--db"]

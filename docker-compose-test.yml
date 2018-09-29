@@ -3,18 +3,22 @@ version: "3"
 volumes:
   origin_js_node_modules:
 
-networks:
-  origin-test:
-
 services:
+  postgres-test:
+    container_name: postgres-test
+    restart: always
+    image: postgres:10.0
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=test
+
   origin-js-test:
     container_name: origin-js-test
     image: origin-js
     volumes:
       - ./origin-js:/app
       - origin_js_node_modules:/app/node_modules
-    networks:
-      - origin-test
     command: >
       /bin/bash -c "npm install && npm run test"
 
@@ -23,8 +27,8 @@ services:
     image: origin-bridge
     volumes:
       - ./origin-bridge:/app
-    networks:
-      - origin-test
+    depends_on:
+      - postgres-test
     environment:
       - TEST_DATABASE_URL=postgresql://test:test@postgres-test/test
     command: pytest --flakes --codestyle -x

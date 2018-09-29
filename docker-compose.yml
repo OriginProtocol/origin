@@ -6,20 +6,16 @@ networks:
 volumes:
   origin_js_node_modules:
   flask_session: # Flask session persistence
-  pg_data:
 
 services:
   postgres:
     container_name: postgres
     restart: always
     image: postgres:10.0
-    # Data persistence, comment out the following two lines to disable
-    volumes:
-      - pg_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=origin
       - POSTGRES_PASSWORD=origin
-      - POSTGRES_DB=origin-indexing
+      - POSTGRES_DB=origin
     networks:
       - default
 
@@ -80,7 +76,7 @@ services:
       - DATABASE_PORT=5432
       - DATABASE_USERNAME=origin
       - DATABASE_PASSWORD=origin
-      - DATABASE_NAME=origin-indexing
+      - DATABASE_NAME=origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
     depends_on:
       - origin-js
@@ -116,13 +112,14 @@ services:
       - DATABASE_PORT=5432
       - DATABASE_USERNAME=origin
       - DATABASE_PASSWORD=origin
-      - DATABASE_NAME=origin-indexing
+      - DATABASE_NAME=origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
     command: >
       /bin/bash -c "wait-for.sh -t 0 -q origin-js:8081 --
       npm link origin &&
       npm install --quiet --no-progress &&
-      node node_modules/db-migrate/bin/db-migrate up -e origin-box &&
+      node node_modules/db-migrate/bin/db-migrate up &&
       node listener/listener.js --elasticsearch --db --web3-url='http://origin-js:8545'"
     networks:
       - default
@@ -164,7 +161,8 @@ services:
     environment:
       - FLASK_APP=/app/main.py
       - FLASK_DEBUG=1
-    command: flask run --host=0.0.0.0
+      - DATABASE_URL=postgresql://origin:origin@postgres/origin
+    command: /bin/bash -c "flask db upgrade && flask run --host=0.0.0.0"
     networks:
       - default
 

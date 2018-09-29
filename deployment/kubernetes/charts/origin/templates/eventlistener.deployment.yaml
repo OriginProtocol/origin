@@ -38,7 +38,7 @@ spec:
               name: {{ template "discovery.fullname" . }}
               key: DATABASE_PASSWORD
         - name: DATABASE_NAME
-          value: "discovery"
+          value: "origin"
         - name: ELASTICSEARCH_HOST
           value: "elasticsearch-elasticsearch-svc:9200"
         - name: WEB3_URL
