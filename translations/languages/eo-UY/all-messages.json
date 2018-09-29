@@ -332,6 +332,7 @@
   "transaction.createListing": "Vi kreis liston.",
   "transaction.initiateDispute": "Vi komencis disputon.",
   "transaction.reviewSale": "Vi lasis recenzon.",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "Aĉetita",
   "transaction-progress.sentBySeller": "Ĵetita de vendisto",
   "transaction-progress.receivedByMe": "Ricevita de mi",
