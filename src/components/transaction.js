@@ -43,7 +43,10 @@ class Transaction extends Component {
     } = transaction
     const created = timestamp
 
-    if (!listing && !transactionTypeKeysWithoutListing.includes(transactionTypeKey)) {
+    if (
+      !listing &&
+      !transactionTypeKeysWithoutListing.includes(transactionTypeKey)
+    ) {
       return null
     }
 

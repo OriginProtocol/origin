@@ -21,8 +21,10 @@ const networkNames = {
   999: 'Localhost'
 }
 const supportedNetworkId = process.env.ETH_NETWORK_ID || 1 // Default to mainnet
-const mainnetDappBaseUrl = process.env.MAINNET_DAPP_BASEURL || 'https://dapp.originprotocol.com'
-const rinkebyDappBaseUrl = process.env.RINKEBY_DAPP_BASEURL || 'https://demo.staging.originprotocol.com'
+const mainnetDappBaseUrl =
+  process.env.MAINNET_DAPP_BASEURL || 'https://dapp.originprotocol.com'
+const rinkebyDappBaseUrl =
+  process.env.RINKEBY_DAPP_BASEURL || 'https://demo.staging.originprotocol.com'
 const ONE_SECOND = 1000
 const ONE_MINUTE = ONE_SECOND * 60
 
@@ -448,8 +450,7 @@ class Web3Provider extends Component {
       const url = new URL(window.location)
       if (networkId === 1 && mainnetDappBaseUrl) {
         window.location.href = mainnetDappBaseUrl + url.pathname + url.hash
-      }
-      else if (networkId === 4 && rinkebyDappBaseUrl) {
+      } else if (networkId === 4 && rinkebyDappBaseUrl) {
         window.location.href = rinkebyDappBaseUrl + url.pathname + url.hash
       }
     }

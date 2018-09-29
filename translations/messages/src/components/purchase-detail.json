@@ -1,7 +1,11 @@
 [
   {
     "id": "purchase-detail.awaitApproval",
-    "defaultMessage": "Wait for the seller to approve your offer"
+    "defaultMessage": "Wait for the seller to approve or reject your offer"
+  },
+  {
+    "id": "purchase-detail.awaitApprovalInstruction",
+    "defaultMessage": "Your payment is currently in escrow. There is nothing for you to do at this time. Check back later."
   },
   {
     "id": "purchase-detail.acceptOrRejectOffer",
@@ -21,19 +25,19 @@
   },
   {
     "id": "purchase-detail.completePurchase",
-    "defaultMessage": "Complete your purchase and leave a review"
+    "defaultMessage": "Complete sale and leave a review."
   },
   {
     "id": "purchase-detail.submitThisForm",
-    "defaultMessage": "Submit this form once you confirm that you are satisfied with your purchase."
+    "defaultMessage": "Release funds and review the seller once you confirm that the sale is complete. Your escrowed payment will be sent to the seller. If you're unhappy, please report a problem instead."
   },
   {
     "id": "purchase-detail.confirmAndReview",
-    "defaultMessage": "Confirm and Review"
+    "defaultMessage": "Complete Sale"
   },
   {
     "id": "purchase-detail.buyerReviewPlaceholder",
-    "defaultMessage": "Your review should inform others about your experience transacting with this seller, not about the product itself."
+    "defaultMessage": "Your review should let others know about your experience transacting with this seller."
   },
   {
     "id": "purchase-detail.waitForBuyer",
@@ -49,15 +53,15 @@
   },
   {
     "id": "purchase-detail.completeByReviewing",
-    "defaultMessage": "Complete your sale by leaving a review"
+    "defaultMessage": "Leave a review of the buyer"
   },
   {
     "id": "purchase-detail.clickToReview",
-    "defaultMessage": "Click the button below to leave a review"
+    "defaultMessage": "Leaving a review lets other sellers know about your experience with this buyer."
   },
   {
     "id": "purchase-detail.reviewSale",
-    "defaultMessage": "Leave a review"
+    "defaultMessage": "Leave A Review"
   },
   {
     "id": "purchase-detail.rejectOffer",
@@ -65,7 +69,7 @@
   },
   {
     "id": "purchase-detail.reportProblem",
-    "defaultMessage": "Report a Problem"
+    "defaultMessage": "Report A Problem"
   },
   {
     "id": "purchase-detail.sellerReviewPlaceholder",
