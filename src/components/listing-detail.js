@@ -209,9 +209,15 @@ class ListingsDetail extends Component {
               <FormattedMessage
                 id={'listing-detail.successDisclaimer'}
                 defaultMessage={
-                  'Your purchase will be visible within a few seconds.'
+                  "You have made an offer on this listing. Your offer will be visible within a few seconds. Your {ETH} payment has been transferred to an escrow contract. Here's what happens next:"
                 }
               />
+              <ul>
+                <li>The seller can choose to accept or reject your offer.</li>
+                <li>If the offer is accepted and fulfilled, you will be able to confirm that the sale is complete. Your escrowed payment will be sent to the seller.</li>
+                <li></li>
+                <li>If the offer is rejected, the escrowed payment will be immediately returned to your wallet.</li>
+              </ul>
             </div>
             <div className="button-container">
               <Link to="/my-purchases" className="btn btn-clear">

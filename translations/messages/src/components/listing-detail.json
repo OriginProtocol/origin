@@ -9,7 +9,7 @@
   },
   {
     "id": "listing-detail.successDisclaimer",
-    "defaultMessage": "Your purchase will be visible within a few seconds."
+    "defaultMessage": "You have made an offer on this listing. Your offer will be visible within a few seconds. Your {ETH} payment has been transferred to an escrow contract. Here's what happens next:"
   },
   {
     "id": "listing-detail.goToPurchases",

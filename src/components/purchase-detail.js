@@ -102,21 +102,21 @@ class PurchaseDetail extends Component {
       },
       completePurchase: {
         id: 'purchase-detail.completePurchase',
-        defaultMessage: 'Complete your purchase and leave a review'
+        defaultMessage: 'Complete sale and leave a review.'
       },
       submitThisForm: {
         id: 'purchase-detail.submitThisForm',
         defaultMessage:
-          'Submit this form once you confirm that you are satisfied with your purchase.'
+          `Release funds and review the seller once you confirm that the sale is complete. Your escrowed payment will be sent to the seller. If you're unhappy, please report a problem instead.`
       },
       confirmAndReview: {
         id: 'purchase-detail.confirmAndReview',
-        defaultMessage: 'Confirm and Review'
+        defaultMessage: 'Complete Sale'
       },
       buyerReviewPlaceholder: {
         id: 'purchase-detail.buyerReviewPlaceholder',
         defaultMessage:
-          'Your review should inform others about your experience transacting with this seller, not about the product itself.'
+          'Your review should let others know about your experience transacting with this seller.'
       },
       waitForBuyer: {
         id: 'purchase-detail.waitForBuyer',
@@ -132,15 +132,15 @@ class PurchaseDetail extends Component {
       },
       completeByReviewing: {
         id: 'purchase-detail.completeByReviewing',
-        defaultMessage: 'Complete your sale by leaving a review'
+        defaultMessage: 'Leave a review of the buyer'
       },
       clickToReview: {
         id: 'purchase-detail.clickToReview',
-        defaultMessage: 'Click the button below to leave a review'
+        defaultMessage: 'Leaving a review lets other sellers know about your experience with this buyer.'
       },
       reviewSale: {
         id: 'purchase-detail.reviewSale',
-        defaultMessage: 'Leave a review'
+        defaultMessage: 'Leave A Review'
       },
       rejectOffer: {
         id: 'purchase-detail.rejectOffer',
@@ -148,7 +148,7 @@ class PurchaseDetail extends Component {
       },
       reportProblem: {
         id: 'purchase-detail.reportProblem',
-        defaultMessage: 'Report a Problem'
+        defaultMessage: 'Report A Problem'
       },
       sellerReviewPlaceholder: {
         id: 'purchase-detail.sellerReviewPlaceholder',

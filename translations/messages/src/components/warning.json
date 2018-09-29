@@ -5,6 +5,10 @@
   },
   {
     "id": "warning.message",
-    "defaultMessage": "You’re currently using the Origin Mainnet Beta. Found a bug? Open an issue on {github} or report it in our #bug-reports channel on {discord}."
+    "defaultMessage": "You're currently using the Origin Mainnet Beta."
+  },
+  {
+    "id": "warning.invitation",
+    "defaultMessage": "Found a bug? Open an issue on {github} or report it in our #bug-reports channel on {discord}."
   }
 ]
