@@ -1,9 +1,14 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
+
 import Modal from 'components/modal'
 
-export const ConfirmationModal = ({ isOpen = false, onCancel, onSubmit }) => (
+export const ConfirmationModal = ({
+  isOpen = false,
+  inferred = false,
+  onCancel,
+  onSubmit
+}) => (
   <Modal
     className="arbitration-modal confirm"
     isOpen={isOpen}
@@ -17,10 +22,18 @@ export const ConfirmationModal = ({ isOpen = false, onCancel, onSubmit }) => (
     </p>
     <div className="text">
       <span>
-        <FormattedMessage
-          id={'arbitrationModals.confirmText1'}
-          defaultMessage={'Are you sure you want to report a problem?'}
-        />
+        {!inferred && (
+          <FormattedMessage
+            id={'arbitrationModals.confirmText1'}
+            defaultMessage={'Are you sure you want to report a problem?'}
+          />
+        )}
+        {inferred && (
+          <FormattedMessage
+            id={'arbitrationModals.confirmText0'}
+            defaultMessage={'Would you like to report a problem?'}
+          />
+        )}
       </span>
       <p>
         <FormattedMessage
@@ -33,10 +46,18 @@ export const ConfirmationModal = ({ isOpen = false, onCancel, onSubmit }) => (
     </div>
     <div className="button-container">
       <button className="btn btn-clear" onClick={onCancel}>
-        <FormattedMessage
-          id={'arbitrationModals.confirmCancel'}
-          defaultMessage={'Oops, no wait...'}
-        />
+        {inferred && (
+          <FormattedMessage
+            id={'arbitrationModals.inferredCancel'}
+            defaultMessage={'No, thanks'}
+          />
+        )}
+        {!inferred && (
+          <FormattedMessage
+            id={'arbitrationModals.confirmCancel'}
+            defaultMessage={'Oops, no wait...'}
+          />
+        )}
       </button>
       <button className="btn btn-clear" onClick={onSubmit}>
         <FormattedMessage
@@ -141,46 +162,6 @@ export const PrerequisiteModal = ({
           defaultMessage={'Enable Messaging'}
         />
       </button>
-    </div>
-  </Modal>
-)
-
-export const RejectionModal = ({ isOpen = false, handleToggle }) => (
-  <Modal
-    className="arbitration-modal rejection"
-    isOpen={isOpen}
-    handleToggle={handleToggle}
-  >
-    <div className="image-container">
-      <img src="images/reject-icon.svg" role="presentation" />
-    </div>
-    <p className="heading">
-      <FormattedMessage
-        id={'arbitrationModals.rejectionHeading'}
-        defaultMessage={'This offer has been rejected'}
-      />
-    </p>
-    <span className="text">
-      <FormattedMessage
-        id={'arbitrationModals.rejectionText1'}
-        defaultMessage={"You've rejected this buyer's offer,"}
-      />
-    </span>
-    <p className="text">
-      <FormattedMessage
-        id={'arbitrationModals.rejectionText2'}
-        defaultMessage={'click below to go back to your listings.'}
-      />
-    </p>
-    <div className="button-container">
-      <Link to="/my-listings">
-        <button className="btn btn-clear">
-          <FormattedMessage
-            id={'arbitrationModals.rejectionListings'}
-            defaultMessage={'Back to your listings'}
-          />
-        </button>
-      </Link>
     </div>
   </Modal>
 )

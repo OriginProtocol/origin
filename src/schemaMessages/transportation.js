@@ -21,10 +21,6 @@ export default defineMessages({
     id: 'schema.transportation.description',
     defaultMessage: 'Description'
   },
-  'schema.transportation.location': {
-    id: 'schema.transportation.location',
-    defaultMessage: 'Location'
-  },
   'schema.transportation.priceInETH': {
     id: 'schema.transportation.priceInETH',
     defaultMessage: 'Price in ETH'
@@ -67,7 +63,7 @@ export default defineMessages({
   },
   'schema.transportation.rateBuyer': {
     id: 'schema.transportation.rateBuyer',
-    defaultMessage: 'Give the buyer a review'
+    defaultMessage: 'Leave a review of the buyer'
   },
   'schema.transportation.sellerSteps': {
     id: 'schema.transportation.sellerSteps',
