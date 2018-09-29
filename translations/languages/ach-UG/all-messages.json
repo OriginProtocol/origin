@@ -332,6 +332,7 @@
   "transaction.createListing": "crwdns3248:0crwdne3248:0",
   "transaction.initiateDispute": "crwdns3249:0crwdne3249:0",
   "transaction.reviewSale": "crwdns3250:0crwdne3250:0",
+  "transaction.updateProfile": "crwdns3477:0crwdne3477:0",
   "transaction-progress.purchased": "crwdns2636:0crwdne2636:0",
   "transaction-progress.sentBySeller": "crwdns2637:0crwdne2637:0",
   "transaction-progress.receivedByMe": "crwdns2638:0crwdne2638:0",
