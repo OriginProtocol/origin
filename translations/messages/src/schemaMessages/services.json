@@ -20,10 +20,6 @@
     "defaultMessage": "Description"
   },
   {
-    "id": "schema.services.location",
-    "defaultMessage": "Location"
-  },
-  {
     "id": "schema.services.priceInETH",
     "defaultMessage": "Price in ETH"
   },
@@ -109,7 +105,7 @@
   },
   {
     "id": "schema.services.rateBuyer",
-    "defaultMessage": "Give the buyer a review"
+    "defaultMessage": "Leave a review of the buyer"
   },
   {
     "id": "schema.services.sellerSteps",

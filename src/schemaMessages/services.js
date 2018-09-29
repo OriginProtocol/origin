@@ -22,10 +22,6 @@ export default defineMessages({
     id: 'schema.services.description',
     defaultMessage: 'Description'
   },
-  'schema.services.location': {
-    id: 'schema.services.location',
-    defaultMessage: 'Location'
-  },
   'schema.services.priceInETH': {
     id: 'schema.services.priceInETH',
     defaultMessage: 'Price in ETH'
@@ -112,7 +108,7 @@ export default defineMessages({
   },
   'schema.services.rateBuyer': {
     id: 'schema.services.rateBuyer',
-    defaultMessage: 'Give the buyer a review'
+    defaultMessage: 'Leave a review of the buyer'
   },
   'schema.services.sellerSteps': {
     id: 'schema.services.sellerSteps',

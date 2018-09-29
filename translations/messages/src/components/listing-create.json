@@ -48,36 +48,8 @@
     "defaultMessage": "Done"
   },
   {
-    "id": "listing-create.chooseSchema",
-    "defaultMessage": "Choose a schema for your product or service"
-  },
-  {
-    "id": "listing-create.schemaExplainer",
-    "defaultMessage": "Your product or service will use a schema to describe its attributes like name, description, and price. Origin already has multiple schemas that map to well-known categories of listings like housing, auto, and services."
-  },
-  {
     "id": "listing-create.form-help",
-    "defaultMessage": "Be sure to give your listing an appropriate title and\n                          description that will inform others as to what you’re\n                          offering. {br}\n                          If you’re listing is only offered in a specific geographic\n                          location, please be sure to indicate that. {br}\n                          Finally, adding some photos of your listing will go a long\n                          way to helping potential buyers decide if they want to\n                          make the purchase."
-  },
-  {
-    "id": "listing-create.howItWorksHeading",
-    "defaultMessage": "How it works"
-  },
-  {
-    "id": "listing-create.howItWorksContentPart1",
-    "defaultMessage": "Origin uses a Mozilla project called {jsonSchemaLink}  to validate your listing according to standard rules. This standardization is key to allowing unaffiliated entities to read and write to the same data layer."
-  },
-  {
-    "id": "listing-create.jsonSchema",
-    "defaultMessage": "JSONSchema"
-  },
-  {
-    "id": "listing-create.howItWorksContentPart2",
-    "defaultMessage": "Be sure to give your listing an appropriate title and description that will inform others as to what you’re offering."
-  },
-  {
-    "id": "listing-create.viewSchemaLinkLabel",
-    "defaultMessage": "View the {schemaName} schema"
+    "defaultMessage": "Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos of your listing will help potential buyers decide if the want to buy your listing."
   },
   {
     "id": "listing-create.whatHappensNextHeading",
@@ -85,11 +57,7 @@
   },
   {
     "id": "listing-create.whatHappensNextContent1",
-    "defaultMessage": "When you hit submit, a JSON object representing your listing will be published to {ipfsLink}  and the content hash will be published to a listing smart contract running on the Ethereum network."
-  },
-  {
-    "id": "listing-create.IPFS",
-    "defaultMessage": "IPFS"
+    "defaultMessage": "When you submit this listing, you will be asked to confirm your transaction in MetaMask. Buyers will then be able to see your listing and make offers on it."
   },
   {
     "id": "listing-create.whatHappensNextContent2",
@@ -97,11 +65,15 @@
   },
   {
     "id": "listing-create.successMessage",
-    "defaultMessage": "Success!"
+    "defaultMessage": "Your listing has been created!"
   },
   {
     "id": "listing-create.successDisclaimer",
-    "defaultMessage": "Your listing will be visible within a few seconds."
+    "defaultMessage": "Your listing will be visible within a few seconds. Here's what happens next:"
+  },
+  {
+    "id": "listing-create.createAnother",
+    "defaultMessage": "Create Another Listing"
   },
   {
     "id": "listing-create.seeAllListings",

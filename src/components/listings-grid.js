@@ -6,8 +6,8 @@ import { withRouter } from 'react-router'
 
 import { getListingIds } from 'actions/Listing'
 
-import ListingCard from 'components/listing-card'
 import { LISTINGS_PER_PAGE } from 'components/constants'
+import ListingCard from 'components/listing-card'
 
 class ListingsGrid extends Component {
   constructor(props) {
