@@ -332,6 +332,7 @@
   "transaction.createListing": "U hebt een vermelding gemaakt.",
   "transaction.initiateDispute": "U heeft een geschil geïnitieerd.",
   "transaction.reviewSale": "Je hebt een beoordeling achtergelaten.",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "Gekocht",
   "transaction-progress.sentBySeller": "Verzonden door verkoper",
   "transaction-progress.receivedByMe": "Ontvangen door mij",
