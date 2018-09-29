@@ -7,7 +7,7 @@ bridgeReplicas: 1
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '710be97'
+dappImageTag: 'f5e2a0d'
 dappReplicas: 2
 
 # Rinkeby network configuration
@@ -22,7 +22,7 @@ faucetImage: origin-faucet
 faucetImageTag: '0510c5f'
 
 eventlistenerImage: event-listener
-eventlistenerImageTag: '0510c5f'
+eventlistenerImageTag: '9952b97'
 eventlistenerWeb3Url: https://rinkeby.infura.io/emIXjs9eDuy57IlTYsIP
 eventlistenerContinueBlock: 3000000
 
