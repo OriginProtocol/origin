@@ -20,10 +20,6 @@
     "defaultMessage": "Description"
   },
   {
-    "id": "schema.transportation.location",
-    "defaultMessage": "Location"
-  },
-  {
     "id": "schema.transportation.priceInETH",
     "defaultMessage": "Price in ETH"
   },

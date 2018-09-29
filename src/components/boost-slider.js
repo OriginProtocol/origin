@@ -45,9 +45,6 @@ class BoostSlider extends Component {
     return (
       <div className="boost-slider">
         <p>Boost Level</p>
-        <p className="help-block">
-          Increase the chances of a fast and successful sale.
-        </p>
         <img
           className="info-icon"
           src="images/info-icon-inactive.svg"
@@ -121,10 +118,7 @@ class BoostSlider extends Component {
           </div>
         )}
         <p className="help-block bottom-explainer">
-          Boosts are always calculated and charged in&nbsp;
-          <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">
-            OGN
-          </a>.&nbsp;
+          Boosts are always calculated and charged in OGN.&nbsp;
           <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">
             Learn more &#x25b8;
           </a>

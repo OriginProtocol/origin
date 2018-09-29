@@ -82,6 +82,11 @@ const updateCurrentStep = (incompleteStep, steps) => {
 }
 
 const initialState = {
+  /*
+   * This is currently a redundant inverse of state.app.betaModalDismissed
+   * but may depend on other variables in the future.
+   */
+  blocked: true,
   currentStep: steps[0],
   steps,
   progress: false,
@@ -92,6 +97,12 @@ const initialState = {
 
 export default function Onboarding(state = initialState, action = {}) {
   switch (action.type) {
+  case OnboardingConstants.UNBLOCK:
+    return {
+      ...state,
+      blocked: false
+    }
+
   case OnboardingConstants.UPDATE_STEPS:
     const updatedSteps = updateAllSteps(action.incompleteStep, state.steps)
     saveStorageItem('.steps', updatedSteps)

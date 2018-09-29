@@ -146,7 +146,7 @@ class OnboardingModal extends Component {
   render() {
     const {
       updateSteps,
-      onboarding: { currentStep, learnMore, splitPanel }
+      onboarding: { blocked, currentStep, learnMore, splitPanel }
     } = this.props
 
     const learnMoreContent = (
@@ -188,7 +188,7 @@ class OnboardingModal extends Component {
       </Fragment>
     )
 
-    return (
+    return blocked ? null : (
       <div className="onboarding">
         {learnMore && (
           <Modal

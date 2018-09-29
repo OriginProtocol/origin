@@ -69,6 +69,7 @@ class PriceField extends Component {
                 <input
                   type="number"
                   id="root_price"
+                  step="0.00001"
                   className="price-field form-control"
                   value={this.state.price}
                   onChange={this.onChange()}
