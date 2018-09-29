@@ -35,8 +35,6 @@ export const AppConstants = keyMirror(
 
 export function dismissBetaModal() {
   return async function(dispatch) {
-    localStorage.setItem('betaModal.dismissed', true)
-
     dispatch({
       type: AppConstants.BETA_MODAL_DISMISSED,
       closedAt: new Date()

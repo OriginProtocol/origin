@@ -1,7 +1,7 @@
 import { AppConstants } from 'actions/App'
 
 const initialState = {
-  betaModalDismissed: !!JSON.parse(localStorage.getItem('betaModal.dismissed')),
+  betaModalDismissed: false,
   // a timestamp for when the messages dropdown was last closed
   messagingDismissed: null,
   // whether or not a public key has been added to the global registry

@@ -82,7 +82,11 @@ const updateCurrentStep = (incompleteStep, steps) => {
 }
 
 const initialState = {
-  blocked: !JSON.parse(localStorage.getItem('betaModal.dismissed')),
+  /*
+   * This is currently a redundant inverse of state.app.betaModalDismissed
+   * but may depend on other variables in the future.
+   */
+  blocked: true,
   currentStep: steps[0],
   steps,
   progress: false,
