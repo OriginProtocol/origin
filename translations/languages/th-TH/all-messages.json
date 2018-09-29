@@ -332,6 +332,7 @@
   "transaction.createListing": "คุณสร้างรายชื่อแล้ว",
   "transaction.initiateDispute": "คุณเป็นผู้คัดค้าน",
   "transaction.reviewSale": "คุณทิ้งรีวิวแล้ว",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "สั่งซื้อ",
   "transaction-progress.sentBySeller": "ส่งโดยผู้ขาย",
   "transaction-progress.receivedByMe": "ได้รับจากฉัน",
