@@ -332,6 +332,7 @@
   "transaction.createListing": "情報を掲載しました。",
   "transaction.initiateDispute": "紛争を開始しました。",
   "transaction.reviewSale": "レビューを記載しました。",
+  "transaction.updateProfile": "You updated your profile.",
   "transaction-progress.purchased": "購入済み",
   "transaction-progress.sentBySeller": "売り手により送付",
   "transaction-progress.receivedByMe": "受け取り済み",
