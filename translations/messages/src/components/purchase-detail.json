@@ -156,6 +156,10 @@
     "defaultMessage": "Review"
   },
   {
+    "id": "purchase-detail.reviewError",
+    "defaultMessage": "Select a rating of 1-5 stars."
+  },
+  {
     "id": "purchase-detail.hideSellerSteps",
     "defaultMessage": "Hide Fulfillment Checklist"
   },

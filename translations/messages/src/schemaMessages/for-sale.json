@@ -204,7 +204,7 @@
     "defaultMessage": "Wanted"
   },
   {
-    "id": "schema.forSale.shipItem",
+    "id": "schema.forSale.deliverProduct",
     "defaultMessage": "Arrange for delivery or pickup"
   },
   {
@@ -213,7 +213,7 @@
   },
   {
     "id": "schema.forSale.rateBuyer",
-    "defaultMessage": "Give the buyer a review"
+    "defaultMessage": "Leave a review of the buyer"
   },
   {
     "id": "schema.forSale.sellerSteps",
