@@ -24,57 +24,58 @@ const fetchRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
   })
 }
 
-const getFiatExchangeRate = async (fiatCurrencyCode, cryptoCurrencyCode, exchangeRates) => {
-  if (!fiatCurrencyCode) {
-    fiatCurrencyCode = DEFAULT_FIAT
-  }
-  if (!cryptoCurrencyCode) {
-    cryptoCurrencyCode = DEFAULT_CRYPTO
-  }
-  if (!exchangeRates) {
-    exchangeRates = store.getState().exchangeRates
-  }
+const getFiatExchangeRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
+  const { fiatCode, cryptoCode } = setDefaults(fiatCurrencyCode, cryptoCurrencyCode)
+  const { rate, timestamp } = getCachedCurrencyPair(fiatCurrencyCode, cryptoCurrencyCode)
 
-  const currencyPair = `${fiatCurrencyCode.toUpperCase()}/${cryptoCurrencyCode.toUpperCase()}`
-  const cachedExchangeRate = exchangeRates && exchangeRates[currencyPair]
-
-  if (cachedExchangeRate) {
-    if (new Date().getTime() - cachedExchangeRate.timestamp.getTime() < EXCHANGE_RATE_CACHE_TTL) {
+  if (rate) {
+    if (new Date().getTime() - timestamp.getTime() < EXCHANGE_RATE_CACHE_TTL) {
       return {
-        rate: parseFloat(cachedExchangeRate.rate),
+        rate: parseFloat(rate),
         cacheHit: true
       }
     } else {
-      return await fetchRate(fiatCurrencyCode, cryptoCurrencyCode)
+      return await fetchRate(fiatCode, cryptoCode)
     }
   } else {
-    return await fetchRate(fiatCurrencyCode, cryptoCurrencyCode)
+    return await fetchRate(fiatCode, cryptoCode)
   }
 }
 
+const setDefaults = (fiatCode, cryptoCode, exchangeRates) => {
+  return {
+    fiatCode: fiatCode || DEFAULT_FIAT,
+    cryptoCode: cryptoCode || DEFAULT_CRYPTO,
+    exchangeRates: exchangeRates || store.getState().exchangeRates
+  }
+}
 
-export const getFiatPrice = async (
+const getCachedCurrencyPair = (fiatCurrencyCode, cryptoCurrencyCode) => {
+  const { fiatCode, cryptoCode, exchangeRates } = setDefaults(fiatCurrencyCode, cryptoCurrencyCode)
+  const currencyPair = `${fiatCode.toUpperCase()}/${cryptoCode.toUpperCase()}`
+
+  return (exchangeRates && exchangeRates[currencyPair]) || {}
+}
+
+export const getFiatPrice = (
   priceEth,
   fiatCurrencyCode,
   cryptoCurrencyCode,
-  exchangeRates,
   formatResult = true
 ) => {
   if (!priceEth) {
     priceEth = 0
   }
-  const exchangeRate = await getFiatExchangeRate(
-    fiatCurrencyCode,
-    cryptoCurrencyCode,
-    exchangeRates
-  )
+
+  const { rate } = getCachedCurrencyPair(fiatCurrencyCode, cryptoCurrencyCode)
+
   if (formatResult)
-    return Number(priceEth * exchangeRate.rate).toLocaleString(undefined, {
+    return Number(priceEth * (rate || 0)).toLocaleString(undefined, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     })
   else
-    return priceEth * exchangeRate.rate
+    return priceEth * (rate || 0)
 }
 
 export const getEthPrice = async (
@@ -85,11 +86,9 @@ export const getEthPrice = async (
   if (!priceFiat) {
     priceFiat = 0
   }
-  const exchangeRate = await getFiatExchangeRate(
-    fiatCurrencyCode,
-    cryptoCurrencyCode
-  )
-  return Number(priceFiat / exchangeRate.rate)
+  const { rate } = getCachedCurrencyPair(fiatCurrencyCode, cryptoCurrencyCode)
+
+  return Number(priceFiat / rate)
 }
 
 const updateExchangeRate = async () => {

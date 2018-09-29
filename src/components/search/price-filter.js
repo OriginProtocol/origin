@@ -38,13 +38,13 @@ class PriceFilter extends Component {
     return [
       {
         name: this.props.filter.searchParameterName,
-        value: await getEthPrice(this.state.value[0], 'USD', 'ETH'),
+        value: getEthPrice(this.state.value[0], 'USD', 'ETH'),
         valueType: VALUE_TYPE_FLOAT,
         operator: FILTER_OPERATOR_GREATER_OR_EQUAL
       },
       {
         name: this.props.filter.searchParameterName,
-        value: await getEthPrice(this.state.value[1], 'USD', 'ETH'),
+        value: getEthPrice(this.state.value[1], 'USD', 'ETH'),
         valueType: VALUE_TYPE_FLOAT,
         operator: FILTER_OPERATOR_LESSER_OR_EQUAL
       }
@@ -116,7 +116,8 @@ class PriceFilter extends Component {
 }
 
 const mapStateToProps = state => ({
-  filters: state.search.filters
+  filters: state.search.filters,
+  exchangeRates: state.exchangeRates
 })
 
 const mapDispatchToProps = () => ({})

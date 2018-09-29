@@ -8,23 +8,11 @@ class ListingCardPrices extends Component {
     super(props)
     this.state = {
       price: props.price,
-      fiatPrice: null,
       approxPrice: 'Loading...',
       fiatCurrencyCode: 'USD',
       cryptoCurrencyCode: 'ETH',
       defaultDecimalPlaces: this.getPrecision(props.price)
     }
-  }
-
-  async componentDidMount() {
-    const { price, fiatCurrencyCode, cryptoCurrencyCode } = this.state
-    const fiatPrice = await getFiatPrice(
-      price,
-      fiatCurrencyCode,
-      cryptoCurrencyCode,
-      this.props.exchangeRates
-    )
-    this.setState({ fiatPrice })
   }
 
   getPrecision(n) {
@@ -39,7 +27,12 @@ class ListingCardPrices extends Component {
   }
 
   render() {
-    const { fiatCurrencyCode, fiatPrice } = this.state
+    const { price, fiatCurrencyCode, cryptoCurrencyCode } = this.state
+    const fiatPrice = getFiatPrice(
+      price,
+      fiatCurrencyCode,
+      cryptoCurrencyCode
+    )
 
     return (
       <div>
