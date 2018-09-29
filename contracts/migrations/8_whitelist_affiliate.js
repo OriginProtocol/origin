@@ -23,7 +23,7 @@ async function whitelistAffiliate(_, network) {
   const affiliates = {
     rinkeby: '0xc1a33cda27c68e47e370ff31cdad7d6522ea93d5',
     origin: '0xc1a33cda27c68e47e370ff31cdad7d6522ea93d5',
-    development: '0x627306090abab3a6e1400e9345bc60c78a8bef57',
+    development: '0x821aea9a577a9b44299b9c15c88cf3087f3b5544',
     mainnet: '0x7aD0fa0E2380a5e0208B25AC69216Bd7Ff206bF8'
   }
 

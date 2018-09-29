@@ -8,6 +8,7 @@ import cookieStorage from '../utils/cookieStorage'
 const PROMPT_MESSAGE = 'I am ready to start messaging on Origin.'
 const PROMPT_PUB_KEY = 'My public messaging key is: '
 const MESSAGING_KEY = 'MK_'
+const MESSAGING_PHRASE = 'MP_'
 const PUB_MESSAGING_SIG = 'PMS_'
 const PUB_MESSAGING = 'KEY_'
 const PRE_GLOBAL_KEYS = ':global'
@@ -142,7 +143,7 @@ class Messaging {
     this.GLOBAL_KEYS = messagingNamespace + PRE_GLOBAL_KEYS
     this.CONV = messagingNamespace + PRE_CONV
     this.CONV_INIT_PREFIX = messagingNamespace + PRE_CONV_INIT_PREFIX
-    this.cookieStorage = new cookieStorage({ path: (location && location.pathname) ? location.pathname : '/' })
+    this.cookieStorage = new cookieStorage({ path: (typeof location === 'object' && location.pathname) ? location.pathname : '/' })
   }
 
   onAccount(account_key) {
@@ -163,9 +164,15 @@ class Messaging {
     return this.getKeyItem(`${MESSAGING_KEY}:${this.account_key}`)
   }
 
+  getMessagingPhrase() {
+    return this.getKeyItem(`${MESSAGING_PHRASE}:${this.account_key}`)
+  }
+
   initKeys() {
     const sig_key = this.getMessagingKey()
-    if (sig_key) {
+    const sig_phrase = this.getMessagingPhrase()
+    // lock in the message to the hardcoded one
+    if (sig_key && sig_phrase == PROMPT_MESSAGE) {
       this.setAccount(sig_key)
     } else {
       this.promptInit()
@@ -407,15 +414,16 @@ class Messaging {
 
   async initMessaging() {
     const entry = this.getRemoteMessagingSig()
+    const account_match = entry && entry.address == this.account.address
 
     if (!(this.pub_sig && this.pub_msg)) {
-      if (entry) {
+      if (account_match) {
         this.pub_sig = entry.sig
         this.pub_msg = entry.msg
       } else {
         await this.promptForSignature()
       }
-    } else if (!entry) {
+    } else if (!account_match) {
       this.setRemoteMessagingSig()
     }
     this.events.emit('ready', this.account_key)
@@ -430,7 +438,7 @@ class Messaging {
   }
 
   setRemoteMessagingSig() {
-    const msg = PROMPT_MESSAGE
+    const msg = this.getMessagingPhrase()
     this.global_keys.set(this.account_key, {
       address: this.account.address,
       msg: this.pub_msg,
@@ -462,7 +470,9 @@ class Messaging {
 
     // 32 bytes in hex + 0x
     const sig_key = signature.substring(0, 66)
-
+    //set phrase in the cookie
+    const scopedMessagingPhraseName = `${MESSAGING_PHRASE}:${this.account_key}`
+    this.setKeyItem(scopedMessagingPhraseName, PROMPT_MESSAGE)
     this.setAccount(sig_key)
   }
 
@@ -831,11 +841,13 @@ class Messaging {
         {
           type: 'key',
           ekey: this.ec_encrypt(encrypt_key),
+          maddress: this.account.address,
           address: this.account_key
         },
         {
           type: 'key',
           ekey: this.ec_encrypt(encrypt_key, entry.pub_key),
+          maddress: entry.address,
           address: remote_eth_address
         }
       ])
