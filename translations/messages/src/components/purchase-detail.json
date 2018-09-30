@@ -100,14 +100,6 @@
     "defaultMessage": "Transaction Status"
   },
   {
-    "id": "purchase-detail.seller",
-    "defaultMessage": "Seller"
-  },
-  {
-    "id": "purchase-detail.buyer",
-    "defaultMessage": "Buyer"
-  },
-  {
     "id": "purchase-detail.nextStep",
     "defaultMessage": "Next Step:"
   },

@@ -14,6 +14,7 @@ import origin from '../services/origin'
 class ListingCard extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       loading: true,
       offers: []

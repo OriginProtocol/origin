@@ -5,7 +5,12 @@ import { Link } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
 
 import Avatar from 'components/avatar'
-import { PendingBadge, SoldBadge } from 'components/badges'
+import {
+  BuyerBadge,
+  PendingBadge,
+  SellerBadge,
+  SoldBadge
+} from 'components/badges'
 import Conversation from 'components/conversation'
 import Modal from 'components/modal'
 import Review from 'components/review'
@@ -186,7 +191,7 @@ class Arbitration extends Component {
                       />
                       <div className="identification d-flex flex-column justify-content-between text-truncate">
                         <div>
-                          <span className="badge badge-dark">Seller</span>
+                          <SellerBadge />
                         </div>
                         <div className="name">{sellerName}</div>
                         <div className="address text-muted text-truncate">
@@ -201,7 +206,7 @@ class Arbitration extends Component {
                     <div className="d-flex justify-content-end">
                       <div className="identification d-flex flex-column text-right justify-content-between text-truncate">
                         <div>
-                          <span className="badge badge-dark">Buyer</span>
+                          <BuyerBadge />
                         </div>
                         <div className="name">{buyerName}</div>
                         <div className="address text-muted text-truncate">
