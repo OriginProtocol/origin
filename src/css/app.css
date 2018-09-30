@@ -351,7 +351,7 @@ textarea:-moz-ui-invalid {
   background-position: 50%;
 }
 
-.progress-circle.disputed {
+.progress-circle.exclaimed {
   background-color: var(--orange-red);
   color: white;
   font-size: 14px;
@@ -1819,8 +1819,7 @@ textarea:-moz-ui-invalid {
   vertical-align: super;
 }
 
-.arbitration-modal.rejection .modal-content {
-  height: 420px;
+.offer-modal .modal-content {
   width: 420px;
 }
 
@@ -3268,6 +3267,10 @@ select.form-control:not([size]):not([multiple]) {
   width: 60px;
 }
 
+.purchase-detail .identification .address {
+  font-size: 0.75rem;
+}
+
 .purchase-detail .progress-container {
   margin: 0 15px 15px;
 }
@@ -3352,17 +3355,13 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .purchase-detail .summary {
+  background-color: var(--dark-grey-blue);
   border: 1px solid var(--light);
   border-radius: var(--default-radius);
+  color: white;
   margin-bottom: 30px;
   margin-top: 20px;
   padding: 20px;
-}
-
-.purchase-detail .summary p {
-  color: white;
-  font-size: 1.125rem;
-  margin: 0;
 }
 
 .purchase-detail .summary .d-flex div {
@@ -3377,7 +3376,6 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .purchase-detail .summary .recap,
-.purchase-detail .summary .status,
 .purchase-detail .summary .value {
   font-weight: bold;
   margin: 0;
@@ -3386,6 +3384,7 @@ select.form-control:not([size]):not([multiple]) {
 .purchase-detail .summary .recap {
   font-size: 1.125rem;
   font-weight: bold;
+  max-width: 14rem;
 }
 
 .purchase-detail .summary .status.active {
@@ -4921,6 +4920,7 @@ a:not([href]):not([tabindex]).span-link {
 }
 
 .beta .disclaimer img {
+  flex-shrink: 0;
   margin-right: 15px;
 }
 
