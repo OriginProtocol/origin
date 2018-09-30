@@ -104,6 +104,10 @@
     "defaultMessage": "View Offer"
   },
   {
+    "id": "listing-detail.viewSale",
+    "defaultMessage": "View Sale"
+  },
+  {
     "id": "listing-detail.reviews",
     "defaultMessage": "Reviews"
   }

@@ -138,6 +138,7 @@
   "listing-detail.suggestionSellerDisputed": "You've accepted an offer on this listing. View the offer to check the status.",
   "listing-detail.sellerSold": "You've sold this listing.",
   "listing-detail.viewOffer": "View Offer",
+  "listing-detail.viewSale": "View Sale",
   "listing-detail.reviews": "Reviews",
   "listings-grid.originContractNotFound": "No Origin listing contracts were found on this network.",
   "listings-grid.changeNetworks": "You may need to change networks, or deploy the contract.",

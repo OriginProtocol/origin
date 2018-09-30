@@ -557,10 +557,18 @@ class ListingsDetail extends Component {
                   {!loading &&
                     (userIsBuyer || userIsSeller) && (
                     <Link to={`/purchases/${currentOffer.id}`}>
-                      <FormattedMessage
-                        id={'listing-detail.viewOffer'}
-                        defaultMessage={'View Offer'}
-                      />
+                      {isPending && (
+                        <FormattedMessage
+                          id={'listing-detail.viewOffer'}
+                          defaultMessage={'View Offer'}
+                        />
+                      )}
+                      {isSold && (
+                        <FormattedMessage
+                          id={'listing-detail.viewSale'}
+                          defaultMessage={'View Sale'}
+                        />
+                      )}
                     </Link>
                   )}
                 </div>
