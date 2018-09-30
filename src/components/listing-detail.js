@@ -40,10 +40,11 @@ class ListingsDetail extends Component {
 
     this.STEP = {
       VIEW: 1,
-      METAMASK: 2,
-      PROCESSING: 3,
-      PURCHASED: 4,
-      ERROR: 5
+      ONBOARDING: 2,
+      METAMASK: 3,
+      PROCESSING: 4,
+      PURCHASED: 5,
+      ERROR: 6
     }
 
     this.state = {
@@ -51,10 +52,12 @@ class ListingsDetail extends Component {
       loading: true,
       offers: [],
       pictures: [],
+      purchases: [],
       reviews: [],
       step: this.STEP.VIEW,
       boostLevel: null,
-      boostValue: 0
+      boostValue: 0,
+      onboardingCompleted: false
     }
 
     this.intlMessages = defineMessages({
@@ -65,6 +68,7 @@ class ListingsDetail extends Component {
     })
 
     this.handleMakeOffer = this.handleMakeOffer.bind(this)
+    this.handleSkipOnboarding = this.handleSkipOnboarding.bind(this)
   }
 
   async componentWillMount() {
@@ -84,11 +88,32 @@ class ListingsDetail extends Component {
     })
   }
 
-  async handleMakeOffer() {
+  componentDidUpdate(prevProps) {
+    // on account found
+    if (this.props.web3Account && !prevProps.web3Account) {
+      this.loadBuyerPurchases()
+    }
+  }
+
+  async handleMakeOffer(skip) {
+    // onboard if no identity, purchases, and not already completed
+    const shouldOnboard =
+      !this.props.profile.strength &&
+      !this.state.purchases.length &&
+      !this.state.onboardingCompleted
+
     this.props.storeWeb3Intent('offer to buy this listing')
 
     if (web3.givenProvider && this.props.web3Account) {
+      if (!skip && shouldOnboard) {
+        return this.setState({
+          onboardingCompleted: true,
+          step: this.STEP.ONBOARDING
+        })
+      }
+
       this.setState({ step: this.STEP.METAMASK })
+
       try {
         const offerData = {
           listingId: this.props.listingId,
@@ -119,6 +144,46 @@ class ListingsDetail extends Component {
         console.error(error)
         this.setState({ step: this.STEP.ERROR })
       }
+    }
+  }
+
+  handleSkipOnboarding(e) {
+    e.preventDefault()
+
+    this.handleMakeOffer(true)
+  }
+
+  async loadBuyerPurchases() {
+    try {
+      const { web3Account } = this.props
+      const listingIds = await origin.marketplace.getListings({
+        idsOnly: true,
+        purchasesFor: web3Account
+      })
+      const listingPromises = listingIds.map(listingId => {
+        return new Promise(async resolve => {
+          const listing = await getListing(listingId, true)
+          resolve({ listingId, listing })
+        })
+      })
+      const withListings = await Promise.all(listingPromises)
+      const offerPromises = await withListings.map(obj => {
+        return new Promise(async resolve => {
+          const offers = await origin.marketplace.getOffers(obj.listingId, {
+            for: web3Account
+          })
+          resolve(Object.assign(obj, { offers }))
+        })
+      })
+      const withOffers = await Promise.all(offerPromises)
+      const offersByListing = withOffers.map(obj => {
+        return obj.offers.map(offer => Object.assign({}, obj, { offer }))
+      })
+      const offersFlattened = [].concat(...offersByListing)
+
+      this.setState({ purchases: offersFlattened })
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -203,6 +268,50 @@ class ListingsDetail extends Component {
 
     return (
       <div className="listing-detail">
+        {step === this.STEP.ONBOARDING && (
+          <Modal backdrop="static" isOpen={true}>
+            <div className="image-container">
+              <img src="images/identity.svg" role="presentation" />
+            </div>
+            <p>
+              <FormattedMessage
+                id={'listing-detail.firstPurchaseHeading'}
+                defaultMessage={`You're about to make your first purchase on Origin.`}
+              />
+            </p>
+            <div className="disclaimer">
+              <p>
+                <FormattedMessage
+                  id={'listing-detail.identityDisclaimer'}
+                  defaultMessage={
+                    'We recommend verifying your identity first. Sellers are more likely to accept your purchase offer if they know a little bit about you.'
+                  }
+                />
+              </p>
+            </div>
+            <div className="button-container">
+              <a
+                href="/#/profile"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-clear"
+                onClick={() => this.setState({ step: this.STEP.VIEW })}
+              >
+                <FormattedMessage
+                  id={'listing-detail.verifyIdentity'}
+                  defaultMessage={'Verify Identity'}
+                />
+              </a>
+            </div>
+            <a
+              href="#"
+              className="skip-identity"
+              onClick={this.handleSkipOnboarding}
+            >
+              Skip
+            </a>
+          </Modal>
+        )}
         {step === this.STEP.METAMASK && <MetamaskModal />}
         {step === this.STEP.PROCESSING && <ProcessingModal />}
         {step === this.STEP.PURCHASED && (
@@ -397,7 +506,7 @@ class ListingsDetail extends Component {
                       {!userIsSeller && (
                         <button
                           className="btn btn-primary"
-                          onClick={this.handleMakeOffer}
+                          onClick={() => this.handleMakeOffer()}
                           onMouseDown={e => e.preventDefault()}
                         >
                           <FormattedMessage
@@ -610,11 +719,12 @@ class ListingsDetail extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ app, profile }) => {
   return {
-    onMobile: state.app.onMobile,
-    web3Account: state.app.web3.account,
-    web3Intent: state.app.web3.intent
+    profile,
+    onMobile: app.onMobile,
+    web3Account: app.web3.account,
+    web3Intent: app.web3.intent
   }
 }
 

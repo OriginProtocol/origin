@@ -2130,6 +2130,11 @@ textarea:-moz-ui-invalid {
   margin-left: 5px;
 }
 
+.listing-detail .skip-identity {
+  font-size: 0.875rem;
+  padding-top: 1.125rem;
+}
+
 .buy-box {
   color: white;
   font-weight: normal;

@@ -4,6 +4,18 @@
     "defaultMessage": "There was an error loading this listing."
   },
   {
+    "id": "listing-detail.firstPurchaseHeading",
+    "defaultMessage": "You're about to make your first purchase on Origin."
+  },
+  {
+    "id": "listing-detail.identityDisclaimer",
+    "defaultMessage": "We recommend verifying your identity first. Sellers are more likely to accept your purchase offer if they know a little bit about you."
+  },
+  {
+    "id": "listing-detail.verifyIdentity",
+    "defaultMessage": "Verify Identity"
+  },
+  {
     "id": "listing-detail.purchaseSuccessful",
     "defaultMessage": "Success!"
   },
