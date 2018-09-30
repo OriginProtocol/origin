@@ -34,6 +34,7 @@
   "dependencies": {
     "ajv": "^6.5.0",
     "babel-polyfill": "^6.26.0",
+    "bignumber.js": "^7.2.1",
     "bs58": "^4.0.1",
     "cross-fetch": "^2.1.1",
     "crypto-js": "^3.1.9-1",
@@ -57,7 +58,6 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
-    "bignumber.js": "^7.2.1",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "chai-bignumber": "^2.0.2",
