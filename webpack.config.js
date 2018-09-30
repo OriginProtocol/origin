@@ -9,7 +9,7 @@ const prepareMessagesPlugin = require('./translations/scripts/prepareMessagesPlu
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-// Only env vars that are keys in this object will get passed through to 
+// Only env vars that are keys in this object will get passed through to
 // the DApp when webpack runs. If no env var is present, the value here
 // will be used as the default. See /#/dapp-info page on running Dapp
 // to see all env vars.
@@ -23,6 +23,7 @@ const env = {
   DISCOVERY_SERVER_URL: '',
   ETH_NETWORK_ID: null,
   FORCE_HTTPS: false,
+  INSTRUCTIONS_URL: null,
   IPFS_API_PORT: '',
   IPFS_DOMAIN: '',
   IPFS_GATEWAY_PORT: '',

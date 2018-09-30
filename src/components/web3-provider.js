@@ -25,6 +25,8 @@ const mainnetDappBaseUrl =
   process.env.MAINNET_DAPP_BASEURL || 'https://dapp.originprotocol.com'
 const rinkebyDappBaseUrl =
   process.env.RINKEBY_DAPP_BASEURL || 'https://demo.staging.originprotocol.com'
+const instructionsUrl =
+  process.env.INSTRUCTIONS_URL || 'https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58'
 const ONE_SECOND = 1000
 const ONE_MINUTE = ONE_SECOND * 60
 
@@ -67,7 +69,7 @@ const NotWeb3EnabledDesktop = props => (
         />
       </a>
       <a
-        href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58"
+        href={instructionsUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="btn btn-clear"
@@ -244,11 +246,11 @@ const Web3Unavailable = props => (
         <a
           target="_blank"
           rel="noopener noreferrer"
-          href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58"
+          href={instructionsUrl}
         >
           <FormattedMessage
-            id={'web3-provider.fullInstructionsForDemo'}
-            defaultMessage={'Full Instructions for Demo'}
+            id={'web3-provider.fullInstructions'}
+            defaultMessage={'Full Instructions'}
           />
         </a>
       </div>
