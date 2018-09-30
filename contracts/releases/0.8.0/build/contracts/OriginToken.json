@@ -5603,6 +5603,208 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {
+    "1": {
+      "events": {
+        "0x1ba6e2be05698ce865c32566beec57943dafda4497692900d3d5b3c15fecfbb3": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "enabler",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "spender",
+              "type": "address"
+            }
+          ],
+          "name": "AddCallSpenderWhitelist",
+          "type": "event"
+        },
+        "0xe840dc5b604bdf9f0bb0eafea84c8542625377dd1fe6116b6b63323e4855a85a": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "disabler",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "spender",
+              "type": "address"
+            }
+          ],
+          "name": "RemoveCallSpenderWhitelist",
+          "type": "event"
+        },
+        "0x425185790737a8bc9659e0a4633a6b6b0428202b2e51b787b431d5fa68242f58": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "expiration",
+              "type": "uint256"
+            }
+          ],
+          "name": "SetWhitelistExpiration",
+          "type": "event"
+        },
+        "0xe504b838e935ead8d5abd80b50f40c979d04e5a09fb1a3ffad89d2652a458a31": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "sender",
+              "type": "address"
+            }
+          ],
+          "name": "AllowedTransactorAdded",
+          "type": "event"
+        },
+        "0xfd1d27a7b372eaafdb0f7bb6231d45a1557a67d539850354457c36e54b65b479": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "sender",
+              "type": "address"
+            }
+          ],
+          "name": "AllowedTransactorRemoved",
+          "type": "event"
+        },
+        "0x6985a02210a168e66602d3235cb6db0e70f92b3ba4d376a33c0f3d9434bff625": {
+          "anonymous": false,
+          "inputs": [],
+          "name": "Pause",
+          "type": "event"
+        },
+        "0x7805862f689e2f13df9f062ff482ad3ad112aca9e0847911ed832e158c525b33": {
+          "anonymous": false,
+          "inputs": [],
+          "name": "Unpause",
+          "type": "event"
+        },
+        "0x0f6798a560793a54c3bcfe86a93cde1e73087d944c0ea20544137d4121396885": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "Mint",
+          "type": "event"
+        },
+        "0xae5184fba832cb2b1f702aca6117b8d265eaf03ad33eb133f19dde0f5920fa08": {
+          "anonymous": false,
+          "inputs": [],
+          "name": "MintFinished",
+          "type": "event"
+        },
+        "0xf8df31144d9c2f0f6b59d69b8b98abd5459d07f2742c4df920b25aae33c64820": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "previousOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipRenounced",
+          "type": "event"
+        },
+        "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        "0xcc16f5dbb4873280815c1ee09dbd06736cffcc184412cf7a71a0fdb75d397ca5": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "burner",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "value",
+              "type": "uint256"
+            }
+          ],
+          "name": "Burn",
+          "type": "event"
+        },
+        "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "spender",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "value",
+              "type": "uint256"
+            }
+          ],
+          "name": "Approval",
+          "type": "event"
+        },
+        "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "value",
+              "type": "uint256"
+            }
+          ],
+          "name": "Transfer",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x980cb2cbeb59ca1fcd52be5e51770133abf0dee4",
+      "transactionHash": "0xef0ed82932246d9971678709f3d0c52a00e27ab08b31f8716c48e9ea8db060bc"
+    },
     "4": {
       "events": {
         "0x1ba6e2be05698ce865c32566beec57943dafda4497692900d3d5b3c15fecfbb3": {
@@ -5807,5 +6009,5 @@
     }
   },
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-09-27T22:18:01.561Z"
+  "updatedAt": "2018-09-30T04:48:40.068Z"
 }
