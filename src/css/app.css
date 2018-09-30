@@ -1234,6 +1234,19 @@ textarea:-moz-ui-invalid {
   border-radius: var(--default-radius) 0 var(--default-radius) var(--default-radius);
 }
 
+.actual-menu .edit-profile {
+  background-color: var(--dark-grey-blue);
+  border-radius: 0 0 var(--default-radius) var(--default-radius);
+  color: white;
+  font-size: 1.125rem;
+  padding: 0.75rem;
+  width: 100%;
+}
+
+.actual-menu .edit-profile:hover {
+  background-color: #202e3e;
+}
+
 .identity .dropdown-menu .wallet {
   margin: 0;
   top: unset;

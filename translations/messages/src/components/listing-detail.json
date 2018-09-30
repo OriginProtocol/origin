@@ -44,8 +44,8 @@
     "defaultMessage": "ETH"
   },
   {
-    "id": "listing-detail.buyNow",
-    "defaultMessage": "Buy Now"
+    "id": "listing-detail.purchase",
+    "defaultMessage": "Purchase"
   },
   {
     "id": "listing-detail.reasonPending",

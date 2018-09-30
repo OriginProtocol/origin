@@ -401,8 +401,8 @@ class ListingsDetail extends Component {
                           onMouseDown={e => e.preventDefault()}
                         >
                           <FormattedMessage
-                            id={'listing-detail.buyNow'}
-                            defaultMessage={'Buy Now'}
+                            id={'listing-detail.purchase'}
+                            defaultMessage={'Purchase'}
                           />
                         </button>
                       )}
