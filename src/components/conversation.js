@@ -16,6 +16,8 @@ import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
 
+const imageMaxSize = process.env.IMAGE_MAX_SIZE || (2 * 1024 * 1024) // 2 MiB
+
 class Conversation extends Component {
   constructor(props) {
     super(props)
@@ -116,12 +118,20 @@ class Conversation extends Component {
     const el = this.textarea.current
 
     if (!el) {
+      // It's an image
+      if (this.state.files[0].length > imageMaxSize) {
+        // TODO: wrap text for l10n
+        alert('The image is too large to send')
+        this.setState({ files: [] })
+        return
+      }
       return this.sendMessage(this.state.files[0])
     }
 
     const newMessage = el.value
 
     if (!newMessage.length) {
+      // TODO: wrap text for l10n
       alert('Please add a message to send')
     } else {
       this.sendMessage(newMessage)
