@@ -96,14 +96,6 @@
     "defaultMessage": "Selling to {buyerLink}"
   },
   {
-    "id": "purchase-detail.pending",
-    "defaultMessage": "Pending"
-  },
-  {
-    "id": "purchase-detail.soldOut",
-    "defaultMessage": "Sold Out"
-  },
-  {
     "id": "purchase-detail.transactionStatusHeading",
     "defaultMessage": "Transaction Status"
   },

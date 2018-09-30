@@ -28,14 +28,6 @@
     "defaultMessage": "OK"
   },
   {
-    "id": "listing-detail.pending",
-    "defaultMessage": "Pending"
-  },
-  {
-    "id": "listing-detail.soldOut",
-    "defaultMessage": "Sold Out"
-  },
-  {
     "id": "listing-detail.viewOnIpfs",
     "defaultMessage": "View on IPFS"
   },
@@ -61,15 +53,27 @@
   },
   {
     "id": "listing-detail.reasonSold",
-    "defaultMessage": "This listing is {soldOut}"
+    "defaultMessage": "This listing is {sold}"
   },
   {
-    "id": "listing-detail.suggestion",
-    "defaultMessage": "Try visiting the listings page and searching for something similar."
+    "id": "listing-detail.suggestionPublic",
+    "defaultMessage": "Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar."
   },
   {
-    "id": "listing-detail.allListings",
-    "defaultMessage": "See All Listings"
+    "id": "listing-detail.viewListings",
+    "defaultMessage": "View Listings"
+  },
+  {
+    "id": "listing-detail.suggestionBuyer",
+    "defaultMessage": "You’ve made an offer on this listing. Please wait for the seller to accept or reject your offer."
+  },
+  {
+    "id": "listing-detail.suggestionSeller",
+    "defaultMessage": "A buyer is waiting for you to accept or reject their offer."
+  },
+  {
+    "id": "listing-detail.viewOffer",
+    "defaultMessage": "View Offer"
   },
   {
     "id": "listing-detail.reviews",

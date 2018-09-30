@@ -16,6 +16,7 @@ import {
   PrerequisiteModal
 } from 'components/modals/arbitration-modals'
 import Avatar from 'components/avatar'
+import { PendingBadge, SoldBadge } from 'components/badges'
 import { RejectionModal, WithdrawModal } from 'components/modals/offer-modals'
 import { MetamaskModal } from 'components/modals/wait-modals'
 import OfferStatusEvent from 'components/offer-status-event'
@@ -800,22 +801,8 @@ class PurchaseDetail extends Component {
               )}
               <h1>
                 {listing.name}
-                {isPending && (
-                  <span className="pending badge">
-                    <FormattedMessage
-                      id={'purchase-detail.pending'}
-                      defaultMessage={'Pending'}
-                    />
-                  </span>
-                )}
-                {isSold && (
-                  <span className="sold badge">
-                    <FormattedMessage
-                      id={'purchase-detail.soldOut'}
-                      defaultMessage={'Sold Out'}
-                    />
-                  </span>
-                )}
+                {isPending && <PendingBadge />}
+                {isSold && <SoldBadge />}
                 {/*!!listing.boostValue && (
                   <span className={`boosted badge boost-${listing.boostLevel}`}>
                     <img

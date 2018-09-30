@@ -1,0 +1,10 @@
+[
+  {
+    "id": "badges.pending",
+    "defaultMessage": "Pending"
+  },
+  {
+    "id": "badges.sold",
+    "defaultMessage": "Sold"
+  }
+]

@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
 
 import Avatar from 'components/avatar'
+import { PendingBadge, SoldBadge } from 'components/badges'
 import Conversation from 'components/conversation'
 import Modal from 'components/modal'
 import Review from 'components/review'
@@ -162,8 +163,8 @@ class Arbitration extends Component {
               </div>
               <h1>
                 {listing.name}
-                {isPending && <span className="pending badge">Pending</span>}
-                {isSold && <span className="sold badge">Sold Out</span>}
+                {isPending && <Pending />}
+                {isPending && <Sold />}
                 {/*listing.boostLevel &&
                   <span className={ `boosted badge boost-${listing.boostLevel}` }>
                     <img src="images/boost-icon-arrow.svg" role="presentation" />

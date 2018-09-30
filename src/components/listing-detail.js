@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import {
@@ -15,6 +15,7 @@ import {
   upsert as upsertTransaction
 } from 'actions/Transaction'
 
+import { PendingBadge, SoldBadge } from 'components/badges'
 import Modal from 'components/modal'
 import Review from 'components/review'
 import UserCard from 'components/user-card'
@@ -170,6 +171,7 @@ class ListingsDetail extends Component {
   }
 
   render() {
+    const { web3Account } = this.props
     const {
       // boostLevel,
       // boostValue,
@@ -186,14 +188,17 @@ class ListingsDetail extends Component {
       step
       // unitsRemaining
     } = this.state
-    const isPending = offers.find(
-      o => offerStatusToListingAvailability(o.status) === 'pending'
-    )
-    const isSold = offers.find(
-      o => offerStatusToListingAvailability(o.status) === 'sold'
-    )
+    const currentOffer = offers.find(o => {
+      const availability = offerStatusToListingAvailability(o.status)
+
+      return ['pending', 'sold'].includes(availability)
+    })
+    const currentOfferAvailability = currentOffer && offerStatusToListingAvailability(currentOffer.status)
+    const isPending = currentOfferAvailability === 'pending'
+    const isSold = currentOfferAvailability === 'sold'
     const isAvailable = !isPending && !isSold
-    const userIsSeller = seller === this.props.web3Account
+    const userIsBuyer = currentOffer && web3Account === currentOffer.buyer
+    const userIsSeller = web3Account === seller
 
     return (
       <div className="listing-detail">
@@ -287,22 +292,8 @@ class ListingsDetail extends Component {
                 <div>{category}</div>
                 {!loading && (
                   <div className="badges">
-                    {isPending && (
-                      <span className="pending badge">
-                        <FormattedMessage
-                          id={'listing-detail.pending'}
-                          defaultMessage={'Pending'}
-                        />
-                      </span>
-                    )}
-                    {isSold && (
-                      <span className="sold badge">
-                        <FormattedMessage
-                          id={'listing-detail.soldOut'}
-                          defaultMessage={'Sold Out'}
-                        />
-                      </span>
-                    )}
+                    {isPending && <PendingBadge />}
+                    {isSold && <SoldBadge />}
                     {/*boostValue > 0 && (
                       <span className={`boosted badge boost-${boostLevel}`}>
                         <img
@@ -460,32 +451,60 @@ class ListingsDetail extends Component {
                       {isSold && (
                         <FormattedMessage
                           id={'listing-detail.reasonSold'}
-                          defaultMessage={'This listing is {soldOut}'}
+                          defaultMessage={'This listing is {sold}'}
                           values={{
-                            soldOut: <strong>Sold Out</strong>
+                            sold: <strong>Sold</strong>
                           }}
                         />
                       )}
                     </div>
                   )}
-                  {!loading && (
+                  {!loading && !userIsBuyer && !userIsSeller &&
+                    <Fragment>
+                      <div className="suggestion">
+                        <FormattedMessage
+                          id={'listing-detail.suggestionPublic'}
+                          defaultMessage={
+                            'Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar.'
+                          }
+                        />
+                      </div>
+                      <Link to="/">
+                        <FormattedMessage
+                          id={'listing-detail.viewListings'}
+                          defaultMessage={'View Listings'}
+                        />
+                      </Link>
+                    </Fragment>
+                  }
+                  {!loading && userIsBuyer &&
                     <div className="suggestion">
                       <FormattedMessage
-                        id={'listing-detail.suggestion'}
+                        id={'listing-detail.suggestionBuyer'}
                         defaultMessage={
-                          'Try visiting the listings page and searching for something similar.'
+                          `You’ve made an offer on this listing. Please wait for the seller to accept or reject your offer.`
                         }
                       />
                     </div>
-                  )}
-                  {!loading && (
-                    <Link to="/">
+                  }
+                  {!loading && userIsSeller &&
+                    <div className="suggestion">
                       <FormattedMessage
-                        id={'listing-detail.allListings'}
-                        defaultMessage={'See All Listings'}
+                        id={'listing-detail.suggestionSeller'}
+                        defaultMessage={
+                          `A buyer is waiting for you to accept or reject their offer.`
+                        }
+                      />
+                    </div>
+                  }
+                  {!loading && (userIsBuyer || userIsSeller) &&
+                    <Link to={`/purchases/${currentOffer.id}`}>
+                      <FormattedMessage
+                        id={'listing-detail.viewOffer'}
+                        defaultMessage={'View Offer'}
                       />
                     </Link>
-                  )}
+                  }
                 </div>
               )}
               {seller && (
