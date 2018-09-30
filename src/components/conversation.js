@@ -89,7 +89,12 @@ class Conversation extends Component {
 
     for (const key in filesObj) {
       if (filesObj.hasOwnProperty(key)) {
-        filesArr.push(filesObj[key])
+        if (filesObj[key].size > imageMaxSize) {
+          // TODO: wrap text for l10n
+          alert('The image is too large')
+        } else {
+          filesArr.push(filesObj[key])
+        }
       }
     }
 
@@ -121,7 +126,8 @@ class Conversation extends Component {
       // It's an image
       if (this.state.files[0].length > imageMaxSize) {
         // TODO: wrap text for l10n
-        alert('The image is too large to send')
+        alert('The image is too large')
+        this.form.current.reset()
         this.setState({ files: [] })
         return
       }
