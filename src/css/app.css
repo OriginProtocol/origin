@@ -1528,8 +1528,8 @@ textarea:-moz-ui-invalid {
 
 .modal-content ul {
   list-style: none;
-  margin-bottom: 1rem;
-  padding: 0;
+  margin-bottom: 0;
+  padding: 1rem 2rem;
   text-align: left;
   width: fit-content;
 }
@@ -1539,7 +1539,8 @@ textarea:-moz-ui-invalid {
 }
 
 .modal-content li:before {
-  content: '✓';
+  color: var(--greenblue);
+  content: '•';
   margin-right: 0.5rem;
 }
 

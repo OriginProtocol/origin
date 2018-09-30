@@ -42,10 +42,7 @@ class UserDropdown extends Component {
           </div>
           <div className="actual-menu">
             <WalletCard wallet={wallet} withMenus={false} withProfile={true} />
-            <Link
-              to="/profile"
-              className="btn edit-profile placehold"
-            >
+            <Link to="/profile" className="btn edit-profile placehold">
               <FormattedMessage
                 id={'user-dropdown.EditProfile'}
                 defaultMessage={'Edit Profile'}
