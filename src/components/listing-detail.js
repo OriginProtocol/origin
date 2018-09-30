@@ -193,7 +193,8 @@ class ListingsDetail extends Component {
 
       return ['pending', 'sold'].includes(availability)
     })
-    const currentOfferAvailability = currentOffer && offerStatusToListingAvailability(currentOffer.status)
+    const currentOfferAvailability =
+      currentOffer && offerStatusToListingAvailability(currentOffer.status)
     const isPending = currentOfferAvailability === 'pending'
     const isSold = currentOfferAvailability === 'sold'
     const isAvailable = !isPending && !isSold
@@ -459,15 +460,27 @@ class ListingsDetail extends Component {
                       )}
                     </div>
                   )}
-                  {!loading && !userIsBuyer && !userIsSeller &&
+                  {!loading &&
+                    !userIsBuyer &&
+                    !userIsSeller && (
                     <Fragment>
                       <div className="suggestion">
-                        <FormattedMessage
-                          id={'listing-detail.suggestionPublic'}
-                          defaultMessage={
-                            'Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar.'
-                          }
-                        />
+                        {isPending && (
+                          <FormattedMessage
+                            id={'listing-detail.suggestionPublicPending'}
+                            defaultMessage={
+                              'Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar.'
+                            }
+                          />
+                        )}
+                        {isSold && (
+                          <FormattedMessage
+                            id={'listing-detail.suggestionPublicSold'}
+                            defaultMessage={
+                              'Another buyer has already purchased this listing. Try visiting the listings page and searching for something similar.'
+                            }
+                          />
+                        )}
                       </div>
                       <Link to="/">
                         <FormattedMessage
@@ -476,35 +489,80 @@ class ListingsDetail extends Component {
                         />
                       </Link>
                     </Fragment>
-                  }
-                  {!loading && userIsBuyer &&
+                  )}
+                  {!loading &&
+                    userIsBuyer && (
                     <div className="suggestion">
-                      <FormattedMessage
-                        id={'listing-detail.suggestionBuyer'}
-                        defaultMessage={
-                          `You’ve made an offer on this listing. Please wait for the seller to accept or reject your offer.`
-                        }
-                      />
+                      {isPending &&
+                          currentOffer.status === 'created' && (
+                        <FormattedMessage
+                          id={'listing-detail.suggestionBuyerCreated'}
+                          defaultMessage={`You've made an offer on this listing. Please wait for the seller to accept or reject your offer.`}
+                        />
+                      )}
+                      {isPending &&
+                          currentOffer.status === 'accepted' && (
+                        <FormattedMessage
+                          id={'listing-detail.suggestionBuyerAccepted'}
+                          defaultMessage={`You've made an offer on this listing. View the offer to complete the sale.`}
+                        />
+                      )}
+                      {isPending &&
+                          currentOffer.status === 'disputed' && (
+                        <FormattedMessage
+                          id={'listing-detail.suggestionBuyerDisputed'}
+                          defaultMessage={`You've made an offer on this listing. View the offer to check the status.`}
+                        />
+                      )}
+                      {isSold && (
+                        <FormattedMessage
+                          id={'listing-detail.buyerPurchased'}
+                          defaultMessage={`You've purchased this listing.`}
+                        />
+                      )}
                     </div>
-                  }
-                  {!loading && userIsSeller &&
+                  )}
+                  {!loading &&
+                    userIsSeller && (
                     <div className="suggestion">
-                      <FormattedMessage
-                        id={'listing-detail.suggestionSeller'}
-                        defaultMessage={
-                          `A buyer is waiting for you to accept or reject their offer.`
-                        }
-                      />
+                      {isPending &&
+                          currentOffer.status === 'created' && (
+                        <FormattedMessage
+                          id={'listing-detail.suggestionSellerCreated'}
+                          defaultMessage={`A buyer is waiting for you to accept or reject their offer.`}
+                        />
+                      )}
+                      {isPending &&
+                          currentOffer.status === 'accepted' && (
+                        <FormattedMessage
+                          id={'listing-detail.suggestionSellerAccepted'}
+                          defaultMessage={`You've accepted an offer for this listing. Please wait for the buyer to complete the sale.`}
+                        />
+                      )}
+                      {isPending &&
+                          currentOffer.status === 'disputed' && (
+                        <FormattedMessage
+                          id={'listing-detail.suggestionSellerDisputed'}
+                          defaultMessage={`You've accepted an offer on this listing. View the offer to check the status.`}
+                        />
+                      )}
+                      {isSold && (
+                        <FormattedMessage
+                          id={'listing-detail.sellerSold'}
+                          defaultMessage={`You've sold this listing.`}
+                        />
+                      )}
                     </div>
-                  }
-                  {!loading && (userIsBuyer || userIsSeller) &&
+                  )}
+                  {!loading &&
+                    (userIsBuyer || userIsSeller) && (
                     <Link to={`/purchases/${currentOffer.id}`}>
                       <FormattedMessage
                         id={'listing-detail.viewOffer'}
                         defaultMessage={'View Offer'}
                       />
                     </Link>
-                  }
+                  )}
                 </div>
               )}
               {seller && (

@@ -56,20 +56,48 @@
     "defaultMessage": "This listing is {sold}"
   },
   {
-    "id": "listing-detail.suggestionPublic",
+    "id": "listing-detail.suggestionPublicPending",
     "defaultMessage": "Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar."
+  },
+  {
+    "id": "listing-detail.suggestionPublicSold",
+    "defaultMessage": "Another buyer has already purchased this listing. Try visiting the listings page and searching for something similar."
   },
   {
     "id": "listing-detail.viewListings",
     "defaultMessage": "View Listings"
   },
   {
-    "id": "listing-detail.suggestionBuyer",
-    "defaultMessage": "You’ve made an offer on this listing. Please wait for the seller to accept or reject your offer."
+    "id": "listing-detail.suggestionBuyerCreated",
+    "defaultMessage": "You've made an offer on this listing. Please wait for the seller to accept or reject your offer."
   },
   {
-    "id": "listing-detail.suggestionSeller",
+    "id": "listing-detail.suggestionBuyerAccepted",
+    "defaultMessage": "You've made an offer on this listing. View the offer to complete the sale."
+  },
+  {
+    "id": "listing-detail.suggestionBuyerDisputed",
+    "defaultMessage": "You've made an offer on this listing. View the offer to check the status."
+  },
+  {
+    "id": "listing-detail.buyerPurchased",
+    "defaultMessage": "You've purchased this listing."
+  },
+  {
+    "id": "listing-detail.suggestionSellerCreated",
     "defaultMessage": "A buyer is waiting for you to accept or reject their offer."
+  },
+  {
+    "id": "listing-detail.suggestionSellerAccepted",
+    "defaultMessage": "You've accepted an offer for this listing. Please wait for the buyer to complete the sale."
+  },
+  {
+    "id": "listing-detail.suggestionSellerDisputed",
+    "defaultMessage": "You've accepted an offer on this listing. View the offer to check the status."
+  },
+  {
+    "id": "listing-detail.sellerSold",
+    "defaultMessage": "You've sold this listing."
   },
   {
     "id": "listing-detail.viewOffer",
