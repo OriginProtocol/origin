@@ -108,7 +108,7 @@ export default defineMessages({
   },
   'schema.services.rateBuyer': {
     id: 'schema.services.rateBuyer',
-    defaultMessage: 'Give the buyer a review'
+    defaultMessage: 'Leave a review of the buyer'
   },
   'schema.services.sellerSteps': {
     id: 'schema.services.sellerSteps',

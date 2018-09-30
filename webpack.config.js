@@ -9,6 +9,10 @@ const prepareMessagesPlugin = require('./translations/scripts/prepareMessagesPlu
 
 const isProduction = process.env.NODE_ENV === 'production'
 
+// Only env vars that are keys in this object will get passed through to 
+// the DApp when webpack runs. If no env var is present, the value here
+// will be used as the default. See /#/dapp-info page on running Dapp
+// to see all env vars.
 const env = {
   ARBITRATOR_ACCOUNT: '',
   AFFILIATE_ACCOUNT: '',
@@ -27,6 +31,8 @@ const env = {
   IPFS_SWARM: '',
   MESSAGING_ACCOUNT: '',
   MESSAGING_NAMESPACE: '',
+  MAINNET_DAPP_BASEURL: null,
+  RINKEBY_DAPP_BASEURL: null,
   PRODUCTION_DOMAIN: '',
   PROVIDER_URL: '',
   REDUX_LOGGER: false

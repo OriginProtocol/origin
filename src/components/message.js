@@ -70,7 +70,7 @@ class Message extends Component {
     const contentWithLineBreak = `${content}\n`
     const contentIsData = content.match(/^data:/)
     const dataIsImage = contentIsData && content.match(/^data:image/)
-    const imageTooLarge = (content.length > imageMaxSize)
+    const imageTooLarge = content.length > imageMaxSize
 
     if (!contentIsData) {
       return contentWithLineBreak

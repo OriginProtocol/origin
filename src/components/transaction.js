@@ -32,6 +32,7 @@ class Transaction extends Component {
   }
 
   render() {
+    const transactionTypeKeysWithoutListing = ['updateProfile']
     const { confirmationCompletionCount, transaction } = this.props
     const { listing } = this.state
     const {
@@ -42,7 +43,10 @@ class Transaction extends Component {
     } = transaction
     const created = timestamp
 
-    if (!listing) {
+    if (
+      !listing &&
+      !transactionTypeKeysWithoutListing.includes(transactionTypeKey)
+    ) {
       return null
     }
 

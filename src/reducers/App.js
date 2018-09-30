@@ -1,6 +1,7 @@
 import { AppConstants } from 'actions/App'
 
 const initialState = {
+  betaModalDismissed: false,
   // a timestamp for when the messages dropdown was last closed
   messagingDismissed: null,
   // whether or not a public key has been added to the global registry
@@ -25,6 +26,9 @@ const initialState = {
 
 export default function App(state = initialState, action = {}) {
   switch (action.type) {
+  case AppConstants.BETA_MODAL_DISMISSED:
+    return { ...state, betaModalDismissed: action.closedAt }
+
   case AppConstants.MESSAGING_DISMISSED:
     return { ...state, messagingDismissed: action.closedAt }
 

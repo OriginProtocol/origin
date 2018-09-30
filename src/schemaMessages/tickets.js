@@ -77,13 +77,9 @@ export default defineMessages({
     id: 'schema.tickets.tradeshow',
     defaultMessage: 'Tradeshow'
   },
-  'schema.tickets.packageItem': {
-    id: 'schema.tickets.packageItem',
-    defaultMessage: 'Package the tickets'
-  },
   'schema.tickets.shipItem': {
     id: 'schema.tickets.shipItem',
-    defaultMessage: 'Ship the tickets to the buyer'
+    defaultMessage: 'Arrange for delivery or pickup'
   },
   'schema.tickets.messageBuyer': {
     id: 'schema.tickets.messageBuyer',
@@ -91,7 +87,7 @@ export default defineMessages({
   },
   'schema.tickets.rateBuyer': {
     id: 'schema.tickets.rateBuyer',
-    defaultMessage: 'Give the buyer a review'
+    defaultMessage: 'Leave a review of the buyer'
   },
   'schema.tickets.sellerSteps': {
     id: 'schema.tickets.sellerSteps',

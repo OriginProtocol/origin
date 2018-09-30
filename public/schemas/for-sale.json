@@ -93,8 +93,7 @@
       "type": "string",
       "title": "schema.forSale.sellerSteps",
       "enum": [
-        "schema.forSale.packageItem",
-        "schema.forSale.shipItem",
+        "schema.forSale.deliverProduct",
         "schema.forSale.messageBuyer",
         "schema.forSale.rateBuyer"
       ]
