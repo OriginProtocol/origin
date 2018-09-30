@@ -2590,6 +2590,10 @@ select.form-control:not([size]):not([multiple]) {
   margin-bottom: 15px;
 }
 
+.listing-form .photo-row .photo {
+  border: 1px solid var(--light);
+}
+
 .listing-form .preview img {
   display: inline-block;
   margin-right: 15px;
