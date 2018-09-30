@@ -24,7 +24,7 @@ class Conversation extends Component {
 
     this.intlMessages = defineMessages({
       newMessagePlaceholder: {
-        id: 'Messages.newMessagePlaceholder',
+        id: 'conversation.newMessagePlaceholder',
         defaultMessage: 'Type something...'
       }
     })
@@ -44,7 +44,8 @@ class Conversation extends Component {
       counterparty: {},
       files: [],
       listing: {},
-      purchase: {}
+      purchase: {},
+      invalidFileSelected: false
     }
   }
 
@@ -90,9 +91,10 @@ class Conversation extends Component {
     for (const key in filesObj) {
       if (filesObj.hasOwnProperty(key)) {
         if (filesObj[key].size > imageMaxSize) {
-          // TODO: wrap text for l10n
-          alert('The image is too large')
+          this.setState({ invalidFileSelected: true })
         } else {
+          this.setState({ invalidFileSelected: false })
+
           filesArr.push(filesObj[key])
         }
       }
@@ -227,7 +229,7 @@ class Conversation extends Component {
 
   render() {
     const { id, intl, messages, web3Account, withListingSummary } = this.props
-    const { counterparty, files, listing, purchase } = this.state
+    const { counterparty, files, invalidFileSelected, listing, purchase } = this.state
     const { name, pictures } = listing
     const { buyer, createdAt, status } = purchase
     const perspective = buyer
@@ -349,7 +351,7 @@ class Conversation extends Component {
             className="add-message d-flex"
             onSubmit={this.handleSubmit}
           >
-            {!files.length && (
+            {!files.length && !invalidFileSelected && (
               <textarea
                 ref={this.textarea}
                 placeholder={intl.formatMessage(
@@ -359,6 +361,16 @@ class Conversation extends Component {
                 tabIndex="0"
                 autoFocus
               />
+            )}
+            {invalidFileSelected && (
+              <div className="files-container">
+                <p className="text-danger" onClick={() => this.setState({ invalidFileSelected: false })}>
+                  <FormattedMessage
+                    id={'conversation.invalidFileSelected'}
+                    defaultMessage={'File sizes must be less than 2MB. Please select a smaller image.'}
+                  />
+                </p>
+              </div>
             )}
             {!!files.length && (
               <div className="files-container">
