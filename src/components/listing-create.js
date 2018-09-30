@@ -64,8 +64,7 @@ class ListingCreate extends Component {
           boostLevel: getBoostLevel(defaultBoostValue)
         }
       },
-      showBoostTutorial: false,
-      usdListingPrice: 0
+      showBoostTutorial: false
     }
 
     this.state = { ...this.defaultState }
@@ -86,7 +85,6 @@ class ListingCreate extends Component {
     this.resetForm = this.resetForm.bind(this)
     this.resetToPreview = this.resetToPreview.bind(this)
     this.setBoost = this.setBoost.bind(this)
-    this.updateUsdPrice = this.updateUsdPrice.bind(this)
   }
 
   componentDidUpdate(prevProps) {
@@ -124,16 +122,6 @@ class ListingCreate extends Component {
     this.ognBalancePoll = setInterval(() => {
       this.props.getOgnBalance()
     }, 10000)
-  }
-
-  async updateUsdPrice() {
-    const usdListingPrice = await getFiatPrice(
-      this.state.formListing.formData.price,
-      'USD'
-    )
-    this.setState({
-      usdListingPrice
-    })
   }
 
   handleSchemaSelection(selectedSchemaType) {
@@ -253,8 +241,6 @@ class ListingCreate extends Component {
     })
 
     window.scrollTo(0, 0)
-
-    this.updateUsdPrice()
   }
 
   async onSubmitListing(formListing) {
@@ -299,11 +285,14 @@ class ListingCreate extends Component {
       showNoSchemaSelectedError,
       step,
       translatedSchema,
-      usdListingPrice,
       showBoostTutorial
     } = this.state
     const { formData } = formListing
     const translatedCategory = translateListingCategory(formData.category)
+    const usdListingPrice = getFiatPrice(
+      formListing.formData.price,
+      'USD'
+    )
 
     return (
       <div className="listing-form">
@@ -833,7 +822,8 @@ class ListingCreate extends Component {
 
 const mapStateToProps = state => {
   return {
-    wallet: state.wallet
+    wallet: state.wallet,
+    exchangeRates: state.exchangeRates
   }
 }
 

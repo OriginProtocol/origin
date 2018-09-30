@@ -23,7 +23,6 @@ class WalletCard extends Component {
 
     this.handleToggle = this.handleToggle.bind(this)
     this.state = {
-      ethToUsdBalance: 0,
       modalOpen: false
     }
 
@@ -54,17 +53,6 @@ class WalletCard extends Component {
     })
   }
 
-  async convertEthToUsd() {
-    const ethToUsdBalance = await getFiatPrice(
-      this.props.wallet.ethBalance,
-      'USD'
-    )
-
-    this.setState({
-      ethToUsdBalance
-    })
-  }
-
   componentDidMount() {
     const {
       fetchUser,
@@ -78,20 +66,15 @@ class WalletCard extends Component {
 
     address && fetchUser(address)
 
-    this.convertEthToUsd()
     this.initiateBootstrapTooltip()
   }
 
   componentDidUpdate(prevProps) {
     const { fetchUser, wallet } = this.props
-    const { address, ethBalance } = wallet
+    const { address } = wallet
 
     if (address !== prevProps.wallet.address) {
       fetchUser(address)
-    }
-
-    if (ethBalance !== prevProps.wallet.ethBalance) {
-      this.convertEthToUsd()
     }
   }
 
@@ -119,6 +102,10 @@ class WalletCard extends Component {
     const user = users.find(u => u.address === wallet.address) || {}
     const { attestations = [], fullName, profile = {} } = user
     const { address, ethBalance, ognBalance } = wallet
+    const ethToUsdBalance = getFiatPrice(
+      wallet.ethBalance,
+      'USD'
+    )
     const userCanReceiveMessages =
       address !== web3Account && origin.messaging.canReceiveMessages(address)
     const balanceTooltip = `
@@ -200,7 +187,7 @@ class WalletCard extends Component {
                     })}` || 0}&nbsp;
                     <span className="symbol">ETH</span>
                   </div>
-                  <div className="usd">{this.state.ethToUsdBalance} USD</div>
+                  <div className="usd">{ethToUsdBalance} USD</div>
                 </div>
                 {withMenus && (
                   <div className="dropdown">
@@ -371,7 +358,8 @@ const mapStateToProps = state => {
     // for reactivity
     messagingInitialized: state.app.messagingInitialized,
     users: state.users,
-    web3Account: state.app.web3.account
+    web3Account: state.app.web3.account,
+    exchangeRates: state.exchangeRates
   }
 }
 
