@@ -4,7 +4,7 @@ import EtherscanLink from 'components/etherscan-link'
 
 class TransactionEvent extends Component {
   render() {
-    const { eventName, event } = this.props
+    const { danger, eventName, event } = this.props
 
     if (!event) {
       return null
@@ -13,7 +13,8 @@ class TransactionEvent extends Component {
     return (
       <tr>
         <td>
-          <span className="progress-circle checked" />
+          {!danger && <span className="progress-circle checked" />}
+          {danger && <span className="progress-circle exclaimed">!</span>}
           {eventName}
         </td>
         <td className="text-truncate">

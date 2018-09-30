@@ -21,6 +21,7 @@ import UserCard from 'components/user-card'
 import { MetamaskModal, ProcessingModal } from 'components/modals/wait-modals'
 
 import { getListing } from 'utils/listing'
+import { offerStatusToListingAvailability } from 'utils/offer'
 
 import origin from '../services/origin'
 
@@ -185,10 +186,12 @@ class ListingsDetail extends Component {
       step
       // unitsRemaining
     } = this.state
-    const pendingStates = ['created', 'accepted', 'disputed']
-    const isPending = offers.find(o => pendingStates.includes(o.status))
-    const soldStates = ['finalized', 'sellerReviewed']
-    const isSold = offers.find(o => soldStates.includes(o.status))
+    const isPending = offers.find(
+      o => offerStatusToListingAvailability(o.status) === 'pending'
+    )
+    const isSold = offers.find(
+      o => offerStatusToListingAvailability(o.status) === 'sold'
+    )
     const isAvailable = !isPending && !isSold
     const userIsSeller = seller === this.props.web3Account
 
