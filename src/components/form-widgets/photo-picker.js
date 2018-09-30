@@ -197,13 +197,11 @@ class PhotoPicker extends Component {
         <div className="d-flex pictures">
           {showMaxImageCountMsg && (
             <div className="info-box warn">
-              <a
+              <img
                 className="close-btn"
-                aria-label="Close"
-                onClick={this.removeMaxImgCountWarning}
-              >
-                <span aria-hidden="true">&times;</span>
-              </a>
+                src="images/close-icon.svg"
+                onClick={() => this.removeMaxImgCountWarning()}
+              />
               <p>
                 <FormattedMessage
                   id={'photo-picker.maxImgCountMsg'}
@@ -221,13 +219,11 @@ class PhotoPicker extends Component {
         <div className="d-flex pictures">
           {oversizeImages.map((imgObj, idx) => (
             <div className="info-box warn" key={imgObj.name}>
-              <a
+              <img
                 className="close-btn"
-                aria-label="Close"
+                src="images/close-icon.svg"
                 onClick={() => this.removeImgSizeWarning(idx)}
-              >
-                <span aria-hidden="true">&times;</span>
-              </a>
+              />
               <p>
                 <FormattedMessage
                   id={'photo-picker.oversizeImages'}
@@ -245,18 +241,13 @@ class PhotoPicker extends Component {
         </div>
         <div className="d-flex pictures">
           {pictures.map((dataUri, idx) => (
-            <div key={idx} className="image-container">
-              <div
-                className="photo"
-                style={{ backgroundImage: `url("${dataUri}")` }}
-              />
-              <a
+            <div className="image-container" key={idx}>
+              <img
                 className="close-btn"
-                aria-label="Close"
+                src="images/close-icon.svg"
                 onClick={() => this.removePhoto(idx)}
-              >
-                <span aria-hidden="true">&times;</span>
-              </a>
+              />
+              <img className="preview-thumbnail" src={dataUri} />
             </div>
           ))}
         </div>
