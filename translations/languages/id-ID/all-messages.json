@@ -389,7 +389,6 @@
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "Saat ini di {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "Silakan instal sambungan MetaMask untuk mengakses situs ini.",
-  "web3-provider.fullInstructionsForDemo": "Petunjuk lengkap untuk Demo",
   "web3-provider.useWalletEnabledBrowser": "Silakan akses situs ini melalui dompet-browser yang diaktifkan:",
   "web3-provider.trustWallet": "Trust Wallet",
   "_countryOptions.unitedStates": "Amerika Serikat",
