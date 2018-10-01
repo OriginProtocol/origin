@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "You must first select a listing type",
   "listing-create.next": "Naslednji",
   "listing-create.createListingHeading": "Ustvarite svoj seznam",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "Nazaj",
   "continueButtonLabel": "Nadaljuj",
   "listing-create.reviewListingHeading": "Preglejte svoj oglas",
