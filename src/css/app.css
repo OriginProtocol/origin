@@ -787,21 +787,6 @@ textarea:-moz-ui-invalid {
   right: 12px;
 }
 
-.navigation-bar .disabled-indicator {
-  background-color: red;
-  border: 2px solid var(--dusk);
-  border-radius: 50%;
-  height: 12px;
-  position: absolute;
-  right: 17px;
-  top: 2px;
-  width: 12px;
-}
-
-.navigation-bar .messages .disabled-indicator {
-  right: 12px;
-}
-
 .navigation-bar .conversation-list-item {
   background-color: #f6f7f8;
   border-top: 1px solid #98a7b4;
@@ -853,10 +838,6 @@ textarea:-moz-ui-invalid {
 }
 
 .dropdown.show .unread-indicator {
-  border-color: white;
-}
-
-.dropdown.show .disabled-indicator {
   border-color: white;
 }
 
@@ -1479,6 +1460,14 @@ textarea:-moz-ui-invalid {
 
 .connectivity .connection:not(:last-of-type) {
   margin-bottom: 10px;
+}
+
+.connectivity .connection > div:nth-of-type(2) {
+  flex-shrink: 0;
+}
+
+.connectivity .connection > div:last-of-type {
+  word-break: break-all;
 }
 
 .connectivity .name {
@@ -2106,14 +2095,16 @@ textarea:-moz-ui-invalid {
   margin-bottom: auto;
 }
 
-.boosted.badge {
+.boosted.badge,
+.featured.badge {
   background-color: var(--golden-rod);
   color: white;
   margin: 0 0 auto 10px;
   text-transform: uppercase;
 }
 
-.boosted.badge span {
+.boosted.badge span,
+.featured.badge span {
   padding-right: 5px;
 }
 
@@ -2127,7 +2118,8 @@ textarea:-moz-ui-invalid {
   margin-left: auto;
 }
 
-.listing-detail .boosted {
+.listing-detail .boosted,
+.listing-detail .featured {
   margin-left: 5px;
 }
 
