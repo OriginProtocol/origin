@@ -1102,13 +1102,13 @@
         }
       },
       "links": {
-        "ClaimHolderLibrary": "0x9c5b5bc1f290f95607b53b9f5f4c6973660c2ce6",
-        "KeyHolderLibrary": "0x8067f312f684ef7a9691ab2554f305342d763072"
+        "ClaimHolderLibrary": "0x6b022e55864bb884d1bddc87ae741b7266153169",
+        "KeyHolderLibrary": "0x10d49d64b983ad887aa783ad10de75d42abab2e9"
       },
-      "address": "0x109105154af22cb87b64bb0548d06266c9d184ca",
-      "transactionHash": "0x00140102dad257dfab006e29c9c943cdd30a6a08c1450799cba416e228b85a11"
+      "address": "0x8a294aaece85ca472f09ab6c09d75448bf3b25c1",
+      "transactionHash": "0x08865d88ef7a2b3372892961bce9309578fc68260ed4e1be1d766cb0bd35dd97"
     }
   },
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-09-27T22:16:31.819Z"
+  "updatedAt": "2018-10-01T19:25:45.091Z"
 }
