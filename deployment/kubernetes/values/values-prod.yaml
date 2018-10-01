@@ -2,7 +2,7 @@ databaseInstance: origin-214503:us-west1:prod
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: 'b231dbcd'
+bridgeImageTag: '49fd7d4'
 bridgeReplicas: 1
 
 # origin-dapp
@@ -23,6 +23,7 @@ faucetImageTag: '28438d2'
 eventlistenerImage: event-listener
 eventlistenerImageTag: 'dd9294d'
 eventlistenerWeb3Url: https://rinkeby.infura.io/emIXjs9eDuy57IlTYsIP
+eventlistenerContinueBlock: 6425000
 
 discoveryImage: origin-discovery
 discoveryImageTag: 'dd9294d'
