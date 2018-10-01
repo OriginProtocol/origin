@@ -389,7 +389,6 @@
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "Hiện tại trên {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "Vui lòng cài đặt MetaMask để truy cập trang web này.",
-  "web3-provider.fullInstructionsForDemo": "Hướng dẫn đầy đủ cho bản Demo",
   "web3-provider.useWalletEnabledBrowser": "Vui lòng truy cập trang web này thông qua trình duyệt có hỗ trợ ví:",
   "web3-provider.trustWallet": "Ví tin cậy",
   "_countryOptions.unitedStates": "Hoa Kỳ",
