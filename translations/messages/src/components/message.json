@@ -5,6 +5,10 @@
   },
   {
     "id": "message.unrecognizedData",
-    "defaultMessage": "This data cannot be rendered."
+    "defaultMessage": "Message data cannot be rendered."
+  },
+  {
+    "id": "message.imageTooLarge",
+    "defaultMessage": "Message image is too large to display."
   }
 ]

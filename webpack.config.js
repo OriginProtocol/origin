@@ -23,6 +23,7 @@ const env = {
   DISCOVERY_SERVER_URL: '',
   ETH_NETWORK_ID: null,
   FORCE_HTTPS: false,
+  IMAGE_MAX_SIZE: null,
   INSTRUCTIONS_URL: null,
   IPFS_API_PORT: '',
   IPFS_DOMAIN: '',

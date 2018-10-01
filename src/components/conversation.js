@@ -16,13 +16,15 @@ import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
 
+const imageMaxSize = process.env.IMAGE_MAX_SIZE || (2 * 1024 * 1024) // 2 MiB
+
 class Conversation extends Component {
   constructor(props) {
     super(props)
 
     this.intlMessages = defineMessages({
       newMessagePlaceholder: {
-        id: 'Messages.newMessagePlaceholder',
+        id: 'conversation.newMessagePlaceholder',
         defaultMessage: 'Type something...'
       }
     })
@@ -42,7 +44,8 @@ class Conversation extends Component {
       counterparty: {},
       files: [],
       listing: {},
-      purchase: {}
+      purchase: {},
+      invalidFileSelected: false
     }
   }
 
@@ -87,7 +90,14 @@ class Conversation extends Component {
 
     for (const key in filesObj) {
       if (filesObj.hasOwnProperty(key)) {
-        filesArr.push(filesObj[key])
+        // Base64 encoding will inflate size to roughly 4/3 of original
+        if ((filesObj[key].size / 3 * 4) > imageMaxSize) {
+          this.setState({ invalidFileSelected: true })
+        } else {
+          this.setState({ invalidFileSelected: false })
+
+          filesArr.push(filesObj[key])
+        }
       }
     }
 
@@ -116,12 +126,21 @@ class Conversation extends Component {
     const el = this.textarea.current
 
     if (!el) {
+      // It's an image
+      if (this.state.files[0].length > imageMaxSize) {
+        // TODO: wrap text for l10n
+        alert('The image is too large')
+        this.form.current.reset()
+        this.setState({ files: [] })
+        return
+      }
       return this.sendMessage(this.state.files[0])
     }
 
     const newMessage = el.value
 
     if (!newMessage.length) {
+      // TODO: wrap text for l10n
       alert('Please add a message to send')
     } else {
       this.sendMessage(newMessage)
@@ -211,7 +230,7 @@ class Conversation extends Component {
 
   render() {
     const { id, intl, messages, web3Account, withListingSummary } = this.props
-    const { counterparty, files, listing, purchase } = this.state
+    const { counterparty, files, invalidFileSelected, listing, purchase } = this.state
     const { name, pictures } = listing
     const { buyer, createdAt, status } = purchase
     const perspective = buyer
@@ -333,7 +352,7 @@ class Conversation extends Component {
             className="add-message d-flex"
             onSubmit={this.handleSubmit}
           >
-            {!files.length && (
+            {!files.length && !invalidFileSelected && (
               <textarea
                 ref={this.textarea}
                 placeholder={intl.formatMessage(
@@ -343,6 +362,16 @@ class Conversation extends Component {
                 tabIndex="0"
                 autoFocus
               />
+            )}
+            {invalidFileSelected && (
+              <div className="files-container">
+                <p className="text-danger" onClick={() => this.setState({ invalidFileSelected: false })}>
+                  <FormattedMessage
+                    id={'conversation.invalidFileSelected'}
+                    defaultMessage={'File sizes must be less than 1.5 MB. Please select a smaller image.'}
+                  />
+                </p>
+              </div>
             )}
             {!!files.length && (
               <div className="files-container">

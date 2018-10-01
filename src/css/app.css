@@ -3906,6 +3906,11 @@ form .stars img {
   margin-top: 20px;
 }
 
+.conversation .system-message {
+  font-style: italic;
+  color: #dd0a0a;
+}
+
 .conversation .avatar-container {
   height: 60px;
   width: 60px;
