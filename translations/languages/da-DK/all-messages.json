@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "You must first select a listing type",
   "listing-create.next": "Næste",
   "listing-create.createListingHeading": "Opret din fortegnelse",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "Tilbage",
   "continueButtonLabel": "Blive ved",
   "listing-create.reviewListingHeading": "Gennemgå din fortegnelse",
