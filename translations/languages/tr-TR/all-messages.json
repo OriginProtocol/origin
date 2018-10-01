@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "You must first select a listing type",
   "listing-create.next": "Sonraki",
   "listing-create.createListingHeading": "Girişinizi oluşturun",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "Geri",
   "continueButtonLabel": "Devam et",
   "listing-create.reviewListingHeading": "Listelemeni gözden geçir",
