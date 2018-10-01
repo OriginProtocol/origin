@@ -86,6 +86,8 @@ class App extends Component {
     this.state = {
       redirect: httpsRequired && !window.location.protocol.match('https')
     }
+
+    this.featuredhiddenListingsFetched = false
   }
 
   componentWillMount() {
@@ -101,9 +103,15 @@ class App extends Component {
     this.props.initWallet()
     this.props.getEthBalance()
     this.props.getOgnBalance()
-    this.props.fetchFeaturedHiddenListings()
 
     this.detectMobile()
+  }
+
+  componentDidUpdate() {
+    if (this.props.networkId !== undefined && !featuredhiddenListingsFetched) {
+      featuredhiddenListingsFetched = true
+      this.props.fetchFeaturedHiddenListings(this.props.networkId)
+    }
   }
 
   /**
@@ -186,7 +194,8 @@ class App extends Component {
 
 const mapStateToProps = state => ({
   messages: state.app.translations.messages,
-  selectedLanguageCode: state.app.translations.selectedLanguageCode
+  selectedLanguageCode: state.app.translations.selectedLanguageCode,
+  networkId: state.app.web3.networkId
 })
 
 const mapDispatchToProps = dispatch => ({

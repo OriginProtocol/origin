@@ -14,7 +14,7 @@ export const ListingConstants = keyMirror(
   'LISTING'
 )
 
-export function fetchFeaturedHiddenListings() {
+export function fetchFeaturedHiddenListings(networkId) {
   const readListingsFromGist = async (gitstUrl) => {
     const response = await fetch(gitstUrl)
     return (await response.text())
@@ -31,8 +31,8 @@ export function fetchFeaturedHiddenListings() {
 
 
       // the ?cache= part is for cache bust (so that previous results are not kept in cache)
-      const featuredListings = await readListingsFromGist(`${process.env.FEATURED_LISTINGS_GIST}?cache=${Math.floor(Math.random() * 1000)}`)
-      const hiddenListings = await readListingsFromGist(`${process.env.HIDDEN_LISTINGS_GIST}?cache=${Math.floor(Math.random() * 1000)}`)
+      const featuredListings = await readListingsFromGist(`https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hide_list/hidelist_${networkId}.json`)
+      const hiddenListings = await readListingsFromGist(`https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hide_list/featurelist_${networkId}.json`)
       dispatch({
         type: ListingConstants.FETCH_FEATURED_HIDDEN,
         hidden: hiddenListings,
