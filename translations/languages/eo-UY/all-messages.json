@@ -389,7 +389,6 @@
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "Nuntempe je {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "Bonvolu instali la MetaMask-etendon por aliri ĉi tiun retejon.",
-  "web3-provider.fullInstructionsForDemo": "Plena Instrukcioj por Demo",
   "web3-provider.useWalletEnabledBrowser": "Bonvolu aliri ĉi tiun retejon per biletujo-ebligita retumilo:",
   "web3-provider.trustWallet": "Fidinda Monujo",
   "_countryOptions.unitedStates": "Usono",
