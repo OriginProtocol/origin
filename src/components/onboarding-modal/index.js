@@ -108,6 +108,7 @@ class OnboardingModal extends Component {
     if (!!Number(ognBalance) || listings.length || stepsCompleted) {
       learnMore && toggleLearnMore(false)
       splitPanel && toggleSplitPanel(false)
+      return
     }
 
     const onboardingInProgress = progress && gettingStarted
