@@ -4,9 +4,6 @@ import keyMirror from 'utils/keyMirror'
 
 import origin from '../services/origin'
 
-const featuredListingsGist = 'https://rawgit.com/sparrowDom/23f8b219567811221cba660039c7e438/raw/5610030ef20ba79245dbdb10af18d9d10c8fb98d/gistfile1.txt'
-const hiddenListingsGist = 'https://rawgit.com/sparrowDom/7c9631b1891063e6d72d0b66098a58bd/raw/5e8ef7cb1596b4da2f4627b71497d74583380274/gistfile1.txt'
-
 export const ListingConstants = keyMirror(
   {
     FETCH_IDS: null,
@@ -27,8 +24,15 @@ export function fetchFeaturedHiddenListings() {
 
   return async function(dispatch) {
     try{
-      const featuredListings = await readListingsFromGist(featuredListingsGist)
-      const hiddenListings = await readListingsFromGist(hiddenListingsGist)
+      if (process.env.FEATURED_LISTINGS_GIST === undefined || process.env.HIDDEN_LISTINGS_GIST === undefined){
+        console.error('Add environmental variables "FEATURED_LISTINGS_GIST" & "HIDDEN_LISTINGS_GIST" to enable hidden/featured listings functionality')
+        return
+      }
+
+
+      // the ?cache= part is for cache bust (so that previous results are not kept in cache)
+      const featuredListings = await readListingsFromGist(`${process.env.FEATURED_LISTINGS_GIST}?cache=${Math.floor(Math.random() * 1000)}`)
+      const hiddenListings = await readListingsFromGist(`${process.env.HIDDEN_LISTINGS_GIST}?cache=${Math.floor(Math.random() * 1000)}`)
       dispatch({
         type: ListingConstants.FETCH_FEATURED_HIDDEN,
         hidden: hiddenListings,
