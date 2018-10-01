@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "You must first select a listing type",
   "listing-create.next": "Volgende",
   "listing-create.createListingHeading": "Maak je advertentie",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "Terug",
   "continueButtonLabel": "Doorgaan",
   "listing-create.reviewListingHeading": "Controleer uw vermelding",
