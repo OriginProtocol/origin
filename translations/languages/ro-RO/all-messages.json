@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "You must first select a listing type",
   "listing-create.next": "Următorul",
   "listing-create.createListingHeading": "Creați un anunț",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "Înapoi",
   "continueButtonLabel": "Continuare",
   "listing-create.reviewListingHeading": "Previzualizați anunțul",
