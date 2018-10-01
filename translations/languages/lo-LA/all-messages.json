@@ -389,7 +389,6 @@
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "Currently on {currentNetworkName}",
   "web3-provider.pleaseInstallMetaMask": "ກະລຸນາຕິດຕັ້ງໂປແກຼມ MetaMask ເພື່ອເຂົ້າໃຊ້ເວັບໄຊທ໌ນີ້.",
-  "web3-provider.fullInstructionsForDemo": "Full Instructions for Demo",
   "web3-provider.useWalletEnabledBrowser": "ກະລຸນາເຂົ້າເບິ່ງເວັບໄຊທ໌ນີ້ໂດຍຜ່ານຕົວທ່ອງເວັບຂອງປ່ອງທີ່ຖືກເປີດໃຊ້:",
   "web3-provider.trustWallet": "Trust Wallet",
   "_countryOptions.unitedStates": "ສະ​ຫະ​ລັດ",
