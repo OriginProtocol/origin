@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "You must first select a listing type",
   "listing-create.next": "ต่อไป",
   "listing-create.createListingHeading": "สร้างรายชื่อของคุณ",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "กลับ",
   "continueButtonLabel": "ต่อ",
   "listing-create.reviewListingHeading": "ตรวจสอบรายชื่อของคุณ",
