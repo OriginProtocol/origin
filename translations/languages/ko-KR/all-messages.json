@@ -389,7 +389,6 @@
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "현재 {currentNetworkName} 에 있음",
   "web3-provider.pleaseInstallMetaMask": "이 사이트에 액세스 하려면 MetaMask 확장판을 설치하십시오.",
-  "web3-provider.fullInstructionsForDemo": "데모를 위한 전체 지침",
   "web3-provider.useWalletEnabledBrowser": "지갑 사용 가능한 브라우저를 통해 이 사이트에 액세스하십시오.",
   "web3-provider.trustWallet": "신뢰 지갑",
   "_countryOptions.unitedStates": "미국",
