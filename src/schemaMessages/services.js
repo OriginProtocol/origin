@@ -1,11 +1,6 @@
 import { defineMessages } from 'react-intl'
 
 export default defineMessages({
-  'schema.services.schemaDescription': {
-    id: 'schema.services.schemaDescription',
-    defaultMessage:
-      'Distributed Elance/99 Designs/Postmates/Fiver/Handy/Thumbtack'
-  },
   'schema.services.title': {
     id: 'schema.services.title',
     defaultMessage: 'Title'

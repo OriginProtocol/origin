@@ -1,9 +1,5 @@
 [
   {
-    "id": "schema.tickets.schemaDescription",
-    "defaultMessage": "Distributed Ticketmaster/Eventbrite"
-  },
-  {
     "id": "schema.tickets.title",
     "defaultMessage": "Title"
   },

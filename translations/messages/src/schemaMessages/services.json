@@ -1,9 +1,5 @@
 [
   {
-    "id": "schema.services.schemaDescription",
-    "defaultMessage": "Distributed Elance/99 Designs/Postmates/Fiver/Handy/Thumbtack"
-  },
-  {
     "id": "schema.services.title",
     "defaultMessage": "Title"
   },
