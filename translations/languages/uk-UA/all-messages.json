@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "You must first select a listing type",
   "listing-create.next": "Далі",
   "listing-create.createListingHeading": "Створити оголошення",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "Назад",
   "continueButtonLabel": "Продовжити",
   "listing-create.reviewListingHeading": "Перегляньте свою компанію",
