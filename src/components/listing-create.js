@@ -289,10 +289,7 @@ class ListingCreate extends Component {
     } = this.state
     const { formData } = formListing
     const translatedCategory = translateListingCategory(formData.category)
-    const usdListingPrice = getFiatPrice(
-      formListing.formData.price,
-      'USD'
-    )
+    const usdListingPrice = getFiatPrice(formListing.formData.price, 'USD')
 
     return (
       <div className="listing-form">
@@ -546,7 +543,12 @@ class ListingCreate extends Component {
                     <div className="col-md-9 photo-row">
                       {formData.pictures &&
                         formData.pictures.map((dataUri, idx) => (
-                          <img src={dataUri} role="presentation" key={idx} />
+                          <div
+                            key={idx}
+                            className="photo"
+                            role="presentation"
+                            style={{ backgroundImage: `url("${dataUri}")` }}
+                          />
                         ))}
                     </div>
                   </div>
@@ -740,17 +742,21 @@ class ListingCreate extends Component {
                     role="presentation"
                   />
                 </div>
-                <FormattedMessage
-                  id={'listing-create.successMessage'}
-                  defaultMessage={'Your listing has been created!'}
-                />
-                <div className="disclaimer">
+                <h3>
                   <FormattedMessage
-                    id={'listing-create.successDisclaimer'}
-                    defaultMessage={
-                      "Your listing will be visible within a few seconds. Here's what happens next:"
-                    }
+                    id={'listing-create.successMessage'}
+                    defaultMessage={'Your listing has been created!'}
                   />
+                </h3>
+                <div className="disclaimer">
+                  <p>
+                    <FormattedMessage
+                      id={'listing-create.successDisclaimer'}
+                      defaultMessage={
+                        "Your listing will be visible within a few seconds. Here's what happens next:"
+                      }
+                    />
+                  </p>
                   <ul>
                     <li>
                       Buyers will now see your listing on the marketplace.

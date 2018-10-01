@@ -16,6 +16,12 @@ import {
   PrerequisiteModal
 } from 'components/modals/arbitration-modals'
 import Avatar from 'components/avatar'
+import {
+  BuyerBadge,
+  PendingBadge,
+  SellerBadge,
+  SoldBadge
+} from 'components/badges'
 import { RejectionModal, WithdrawModal } from 'components/modals/offer-modals'
 import { MetamaskModal } from 'components/modals/wait-modals'
 import OfferStatusEvent from 'components/offer-status-event'
@@ -800,22 +806,8 @@ class PurchaseDetail extends Component {
               )}
               <h1>
                 {listing.name}
-                {isPending && (
-                  <span className="pending badge">
-                    <FormattedMessage
-                      id={'purchase-detail.pending'}
-                      defaultMessage={'Pending'}
-                    />
-                  </span>
-                )}
-                {isSold && (
-                  <span className="sold badge">
-                    <FormattedMessage
-                      id={'purchase-detail.soldOut'}
-                      defaultMessage={'Sold Out'}
-                    />
-                  </span>
-                )}
+                {isPending && <PendingBadge />}
+                {isSold && <SoldBadge />}
                 {/*!!listing.boostValue && (
                   <span className={`boosted badge boost-${listing.boostLevel}`}>
                     <img
@@ -847,12 +839,7 @@ class PurchaseDetail extends Component {
                       />
                       <div className="identification d-flex flex-column justify-content-between text-truncate">
                         <div>
-                          <span className="badge badge-dark">
-                            <FormattedMessage
-                              id={'purchase-detail.seller'}
-                              defaultMessage={'Seller'}
-                            />
-                          </span>
+                          <SellerBadge />
                         </div>
                         <div className="name">{sellerName}</div>
                         <div className="address text-muted text-truncate">
@@ -867,12 +854,7 @@ class PurchaseDetail extends Component {
                     <div className="d-flex justify-content-end">
                       <div className="identification d-flex flex-column text-right justify-content-between text-truncate">
                         <div>
-                          <span className="badge badge-dark">
-                            <FormattedMessage
-                              id={'purchase-detail.buyer'}
-                              defaultMessage={'Buyer'}
-                            />
-                          </span>
+                          <BuyerBadge />
                         </div>
                         <div className="name">{buyerName}</div>
                         <div className="address text-muted text-truncate">

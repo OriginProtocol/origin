@@ -1,10 +1,6 @@
 [
   {
-    "id": "user.ethAddress",
-    "defaultMessage": "ETH Address:"
-  },
-  {
-    "id": "user.noEthAccountConnected",
-    "defaultMessage": "No ETH Account Connected"
+    "id": "user-dropdown.EditProfile",
+    "defaultMessage": "Edit Profile"
   }
 ]

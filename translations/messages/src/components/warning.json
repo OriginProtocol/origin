@@ -1,9 +1,5 @@
 [
   {
-    "id": "warning.badge",
-    "defaultMessage": "Beta"
-  },
-  {
     "id": "warning.message",
     "defaultMessage": "You're currently using the Origin Mainnet Beta."
   },

@@ -1234,6 +1234,19 @@ textarea:-moz-ui-invalid {
   border-radius: var(--default-radius) 0 var(--default-radius) var(--default-radius);
 }
 
+.actual-menu .edit-profile {
+  background-color: var(--dark-grey-blue);
+  border-radius: 0 0 var(--default-radius) var(--default-radius);
+  color: white;
+  font-size: 1.125rem;
+  padding: 0.75rem;
+  width: 100%;
+}
+
+.actual-menu .edit-profile:hover {
+  background-color: #202e3e;
+}
+
 .identity .dropdown-menu .wallet {
   margin: 0;
   top: unset;
@@ -1515,8 +1528,8 @@ textarea:-moz-ui-invalid {
 
 .modal-content ul {
   list-style: none;
-  margin-bottom: 1rem;
-  padding: 0;
+  margin-bottom: 0;
+  padding: 1rem 2rem;
   text-align: left;
   width: fit-content;
 }
@@ -1526,7 +1539,8 @@ textarea:-moz-ui-invalid {
 }
 
 .modal-content li:before {
-  content: '✓';
+  color: var(--greenblue);
+  content: '•';
   margin-right: 0.5rem;
 }
 
@@ -2044,7 +2058,8 @@ textarea:-moz-ui-invalid {
   width: 50%;
 }
 
-.listing-card .photo {
+.listing-card .photo,
+.listing-form .photo {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   background-size: cover;
@@ -2114,6 +2129,11 @@ textarea:-moz-ui-invalid {
 
 .listing-detail .boosted {
   margin-left: 5px;
+}
+
+.listing-detail .skip-identity {
+  font-size: 0.875rem;
+  padding-top: 1.125rem;
 }
 
 .buy-box {
@@ -2432,15 +2452,39 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .schema-details .pictures .image-container {
-  padding: 25px 0 10px;
+  border: 1px solid var(--light);
+  border-radius: 0.25rem;
   position: relative;
+  padding: 0;
+  height: 240px;
+  margin-bottom: 10px;
+  width: 100%;
 }
 
 .schema-details .pictures .image-container .close-btn {
   position: absolute;
-  top: 7px;
-  right: -16px;
+  top: 0;
+  right: 0;
   cursor: pointer;
+  padding: 0.75rem;
+  line-height: 0.5;
+  background-color: white;
+  font-weight: bold;
+  border-bottom: 1px solid var(--light);
+  border-left: 1px solid var(--light);
+  border-radius: 0 0.25rem;
+  opacity: 0.5;
+}
+
+.schema-details .pictures .photo {
+  border-radius: 0.25rem;
+  height: 100%;
+  position: absolute;
+  top: 0;
+}
+
+.schema-details .pictures .image-container .close-btn:hover {
+  opacity: 1;
 }
 
 .schema-details .preview-thumbnail {
@@ -2452,16 +2496,19 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .photo-picker .info-box.warn {
-  margin-top: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   position: relative;
 }
 
 .photo-picker .info-box.warn .close-btn {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: 0;
+  right: 0;
+  color: var(--orange-red);
   cursor: pointer;
+  font-weight: bold;
+  padding: 0.75rem;
+  line-height: 0.5;
 }
 
 .file-info {
@@ -2541,6 +2588,10 @@ select.form-control:not([size]):not([multiple]) {
   max-width: 100%;
   white-space: nowrap;
   margin-bottom: 15px;
+}
+
+.listing-form .photo-row .photo {
+  border: 1px solid var(--light);
 }
 
 .listing-form .preview img {
