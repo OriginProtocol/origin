@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "You must first select a listing type",
   "listing-create.next": "Berikutnya",
   "listing-create.createListingHeading": "Buat listing anda",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "Kembali",
   "continueButtonLabel": "Lanjutkan",
   "listing-create.reviewListingHeading": "Tinjau daftar Anda",
