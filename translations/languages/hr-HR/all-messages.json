@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "You must first select a listing type",
   "listing-create.next": "Sljedeći",
   "listing-create.createListingHeading": "Izradite svoj unos",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "leđa",
   "continueButtonLabel": "Nastaviti",
   "listing-create.reviewListingHeading": "Pregledajte svoj unos",
