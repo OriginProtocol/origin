@@ -76,9 +76,9 @@ class PriceFilter extends Component {
     const priceUnit = this.props.filter.priceUnit
       ? this.props.intl.formatMessage(this.props.filter.priceUnit)
       : `USD`
-
     const minPrice = Math.floor(parseFloat(this.props.minPrice))
     const maxPrice = Math.ceil(parseFloat(this.props.maxPrice))
+    
     return (
       <div
         className="d-flex flex-column"

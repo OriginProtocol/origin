@@ -39,6 +39,7 @@
   "connectivity.connecting": "Connecting...",
   "connectivity.ipfsGateway": "IPFS Gateway:",
   "connectivity.bridgeServer": "Bridge Server:",
+  "connectivity.messaging": "Messaging Server:",
   "messagesDropdown.enableMessaging": "enable messaging",
   "messagesDropdown.viewMessages": "view your messages",
   "messagesDropdown.messageHeading": "Unread Message",

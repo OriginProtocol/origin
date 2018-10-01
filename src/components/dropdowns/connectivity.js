@@ -7,6 +7,9 @@ import origin from '../../services/origin'
 const ipfsGateway = process.env.IPFS_DOMAIN || 'gateway.originprotocol.com'
 const bridgeServerDomain =
   process.env.BRIDGE_SERVER_DOMAIN || 'bridge.originprotocol.com'
+const messagingAddress = process.env.IPFS_SWARM || 'None'
+const r = new RegExp(/\/\w+\/[\w.]+\/\w+\/\d+\/\w+\/\w+\//)
+const peer = messagingAddress.match(r) ? messagingAddress.split(r) : messagingAddress
 const web3 = origin.contractService.web3
 const ONE_SECOND = 1000
 
@@ -18,7 +21,8 @@ class ConnectivityDropdown extends Component {
       connectedStatus: {
         network: false,
         ipfsGateway: false,
-        bridgeServer: false
+        bridgeServer: false,
+        messaging: false
       },
       networkName: null
     }
@@ -101,6 +105,12 @@ class ConnectivityDropdown extends Component {
           connectedStatus: { ...this.state.connectedStatus, bridgeServer: true }
         })
       }, 3 * ONE_SECOND)
+
+      setTimeout(() => {
+        this.setState({
+          connectedStatus: { ...this.state.connectedStatus, messaging: true }
+        })
+      }, 4 * ONE_SECOND)
     } catch (error) {
       console.error(error)
     }
@@ -131,8 +141,13 @@ class ConnectivityDropdown extends Component {
               }`}
             />
             <span
-              className={`server indicator mr-auto${
+              className={`server indicator mr-1${
                 connectedStatus.bridgeServer ? ' connected' : ''
+              }`}
+            />
+            <span
+              className={`server indicator mr-auto${
+                connectedStatus.messaging ? ' connected' : ''
               }`}
             />
           </div>
@@ -147,7 +162,7 @@ class ConnectivityDropdown extends Component {
           <div className="actual-menu">
             <div className="connectivity-list">
               <ul className="list-group">
-                <li className="connection d-flex flex-wrap">
+                <li className="connection d-flex">
                   <div
                     className={`indicator${
                       connectedStatus.network ? ' connected' : ''
@@ -161,7 +176,7 @@ class ConnectivityDropdown extends Component {
                       />
                     </strong>
                   </div>
-                  <div className="ml-auto">
+                  <div className="ml-auto text-right">
                     {connectedStatus.network ? (
                       networkName
                     ) : (
@@ -172,7 +187,7 @@ class ConnectivityDropdown extends Component {
                     )}
                   </div>
                 </li>
-                <li className="connection d-flex flex-wrap">
+                <li className="connection d-flex">
                   <div
                     className={`indicator${
                       connectedStatus.ipfsGateway ? ' connected' : ''
@@ -186,7 +201,7 @@ class ConnectivityDropdown extends Component {
                       />
                     </strong>
                   </div>
-                  <div className="ml-auto">
+                  <div className="ml-auto text-right">
                     {connectedStatus.ipfsGateway ? (
                       ipfsGateway
                     ) : (
@@ -197,7 +212,7 @@ class ConnectivityDropdown extends Component {
                     )}
                   </div>
                 </li>
-                <li className="connection d-flex flex-wrap">
+                <li className="connection d-flex">
                   <div
                     className={`indicator${
                       connectedStatus.bridgeServer ? ' connected' : ''
@@ -211,9 +226,34 @@ class ConnectivityDropdown extends Component {
                       />
                     </strong>
                   </div>
-                  <div className="ml-auto">
+                  <div className="ml-auto text-right">
                     {connectedStatus.bridgeServer ? (
                       bridgeServerDomain
+                    ) : (
+                      <FormattedMessage
+                        id={'connectivity.connecting'}
+                        defaultMessage={'Connecting...'}
+                      />
+                    )}
+                  </div>
+                </li>
+                <li className="connection d-flex">
+                  <div
+                    className={`indicator${
+                      connectedStatus.messaging ? ' connected' : ''
+                    }`}
+                  />
+                  <div className="name">
+                    <strong>
+                      <FormattedMessage
+                        id={'connectivity.messaging'}
+                        defaultMessage={'Messaging Server:'}
+                      />
+                    </strong>
+                  </div>
+                  <div className="ml-auto text-right">
+                    {connectedStatus.messaging ? (
+                      peer
                     ) : (
                       <FormattedMessage
                         id={'connectivity.connecting'}
