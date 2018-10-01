@@ -26,7 +26,7 @@ const mainnetDappBaseUrl =
 const rinkebyDappBaseUrl =
   process.env.RINKEBY_DAPP_BASEURL || 'https://demo.staging.originprotocol.com'
 const instructionsUrl =
-  process.env.INSTRUCTIONS_URL || 'https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58'
+  process.env.INSTRUCTIONS_URL || 'https://www.originprotocol.com/'
 const ONE_SECOND = 1000
 const ONE_MINUTE = ONE_SECOND * 60
 
