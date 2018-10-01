@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 
+import { BetaBadge } from 'components/badges'
+
 class Warning extends Component {
   render() {
     return (
@@ -9,12 +11,7 @@ class Warning extends Component {
           <div className="row">
             <div className="col">
               <div className="d-flex align-items-center">
-                <span className="badge badge-primary">
-                  <FormattedMessage
-                    id={'warning.badge'}
-                    defaultMessage={'Beta'}
-                  />
-                </span>
+                <BetaBadge />
                 <div className="text-container">
                   <p>
                     <strong>

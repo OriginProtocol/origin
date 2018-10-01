@@ -82,7 +82,7 @@ class MessageNew extends Component {
           <div className="roadblock">
             <FormattedMessage
               id={'MessageNew.cannotReceiveMessages'}
-              defaultMessage={'This user has not yet enabled Origin Messaging.'}
+              defaultMessage={'This user has not yet enabled Origin Messaging. Unfortunately, you will not be able to contact them until they do.'}
             />
             <div className="link-container text-center">
               <a href="#" data-modal="profile" onClick={handleToggle}>
@@ -100,7 +100,7 @@ class MessageNew extends Component {
           <div className="roadblock">
             <FormattedMessage
               id={'MessageNew.cannotSendMessages'}
-              defaultMessage={'You need to enable Origin Messaging.'}
+              defaultMessage={'Before you can contact this user, you need to enable messaging.'}
             />
             <div className="button-container">
               <button
