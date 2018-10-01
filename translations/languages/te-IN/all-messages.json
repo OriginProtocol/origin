@@ -389,7 +389,6 @@
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "ప్రస్తుతం {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "దయచేసి ఈ సైట్ను ఆక్సెస్ చెయ్యడానికి MetaMask ను ఇన్స్టాల్ చేయండి.",
-  "web3-provider.fullInstructionsForDemo": "డెమో కోసం పూర్తి సూచనలు",
   "web3-provider.useWalletEnabledBrowser": "దయచేసి ఒక వాలెట్-ఎనేబుల్ బ్రౌజర్ ద్వారా ఈ సైట్ను ఆక్సెస్ చెయ్యండి:",
   "web3-provider.trustWallet": "ట్రస్ట్ వాలెట్",
   "_countryOptions.unitedStates": "సంయుక్త రాష్ట్రాలు",
