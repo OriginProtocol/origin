@@ -389,7 +389,6 @@
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "I øjeblikket på {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "Installer MetaMask-udvidelsen for at få adgang til dette websted.",
-  "web3-provider.fullInstructionsForDemo": "Fuldstændige instruktioner for demo",
   "web3-provider.useWalletEnabledBrowser": "Få adgang til dette websted via en pung-aktiveret browser:",
   "web3-provider.trustWallet": "Trust Wallet",
   "_countryOptions.unitedStates": "Forenede Stater",
