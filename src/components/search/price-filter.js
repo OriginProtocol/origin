@@ -86,10 +86,10 @@ class PriceFilter extends Component {
       >
         <div className="d-flex flex-row price-filter">
           <div id="price-amount-from" className="mr-auto price-slider-amount">
-            {Number(this.state.value[0]).toLocaleString()}&#36;
+            &#36;{Number(this.state.value[0]).toLocaleString()}
           </div>
           <div id="price-amount-to" className="price-slider-amount">
-            {Number(this.state.value[1]).toLocaleString()}&#36;
+            &#36;{Number(this.state.value[1]).toLocaleString()}
           </div>
         </div>
         <Range
