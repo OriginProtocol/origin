@@ -23,15 +23,15 @@ class ListingCard extends Component {
     await this.loadOffers()
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    // init tooltip only when necessary
-    if (this.state.boostLevelIsPastSomeThreshold && !prevState.id) {
-      $('[data-toggle="tooltip"]').tooltip({
-        delay: { hide: 1000 },
-        html: true
-      })
-    }
-  }
+//  componentDidUpdate(prevProps, prevState) {
+//    // init tooltip only when necessary
+//    if (this.state.boostLevelIsPastSomeThreshold && !prevState.id) {
+//      $('[data-toggle="tooltip"]').tooltip({
+//        delay: { hide: 1000 },
+//        html: true
+//      })
+//    }
+//  }
 
   componentWillUnmount() {
     $('[data-toggle="tooltip"]').tooltip('dispose')
