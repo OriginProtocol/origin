@@ -389,7 +389,6 @@
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "В даний час на {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "Будь ласка, встановіть розширення MetaMask, щоб отримати доступ до цього сайту.",
-  "web3-provider.fullInstructionsForDemo": "Повна інструкція для Демо",
   "web3-provider.useWalletEnabledBrowser": "Будь ласка, зайдіть на сайт з використанням браузера, що підтримує гаманці:",
   "web3-provider.trustWallet": "Довіренний гаманець",
   "_countryOptions.unitedStates": "Сполучені Штати",
