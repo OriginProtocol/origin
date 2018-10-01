@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "You must first select a listing type",
   "listing-create.next": "Kolejny",
   "listing-create.createListingHeading": "Utwórz swój wpis",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "Plecy",
   "continueButtonLabel": "dalej",
   "listing-create.reviewListingHeading": "Przejrzyj swój wpis",
