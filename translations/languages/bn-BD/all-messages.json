@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "প্রথমে একটি তালিকা টাইপ নির্বাচন করতে হবে",
   "listing-create.next": "পরবর্তী",
   "listing-create.createListingHeading": "আপনার তালিকা তৈরি করুন",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "পিছনে",
   "continueButtonLabel": "চালিয়ে",
   "listing-create.reviewListingHeading": "আপনার তালিকা পর্যালোচনা করুন",
