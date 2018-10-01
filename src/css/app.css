@@ -2420,6 +2420,11 @@ textarea:-moz-ui-invalid {
   margin-top: 0;
 }
 
+/* hide form error summary in react-jsonschema-forms */
+.rjsf .errors {
+  display: none;
+}
+
 .form-control,
 select.form-control:not([size]):not([multiple]) {
   height: 46px;
@@ -2872,7 +2877,8 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .listing-form .schema-options .info-box p,
-.listing-form .photo-picker .info-box p {
+.listing-form .photo-picker .info-box p,
+.listing-form .schema-details .info-box p {
   margin-bottom: 0;
 }
 
