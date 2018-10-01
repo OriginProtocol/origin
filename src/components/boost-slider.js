@@ -58,7 +58,7 @@ class BoostSlider extends Component {
           data-toggle="tooltip"
           data-html="true"
           data-trigger="click"
-          title={`<div class="boost-tooltip"><p>Your boost is a bit like a commission. It’s not required, but we recommend a boost level of 50 OGN for listings like yours.</p><a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">Learn More</a></div>`}
+          title={`<div class="boost-tooltip"><p>Your boost is a bit like a commission. It’s not required, but we recommend a boost level of 50 OGN for listings like yours.</p></div>`}
         />
         <div className="level-container">
           <span className={`boosted badge ${boostLevel.toLowerCase()}`}>

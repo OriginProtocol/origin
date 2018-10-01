@@ -2645,10 +2645,6 @@ select.form-control:not([size]):not([multiple]) {
   padding: 30px 30px 15px;
 }
 
-.listing-form .select-boost h2 {
-  margin-bottom: 30px;
-}
-
 .listing-form .select-boost .info-box img {
   position: initial;
   margin-bottom: 15px;
@@ -2765,6 +2761,7 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .boost-slider {
+  padding-top: 15px;
   position: relative;
 }
 
