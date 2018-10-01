@@ -50,27 +50,42 @@ class V00_MarkeplaceAdapter {
     const { amount, currency } = commission
 
     if (currency && !SUPPORTED_DEPOSIT_CURRENCIES.includes(currency)) {
-      throw(`${currency} is not a supported deposit currency`)
+      throw `${currency} is not a supported deposit currency`
     }
     if (amount > 0) {
       deposit = await this.contractService.moneyToUnits(commission)
-      const {market_address, selector, call_params} = await this._getTokenAndCallWithSenderParams('createListingWithSender', ipfsBytes, deposit, arbitrator || from)
+      const {
+        market_address,
+        selector,
+        call_params
+      } = await this._getTokenAndCallWithSenderParams(
+        'createListingWithSender',
+        ipfsBytes,
+        deposit,
+        arbitrator || from
+      )
 
       // In order to estimate gas correctly, we need to add the call to a create listing since that's called by the token
-      const extra_estimated_gas = await this.contract.methods['createListing'](ipfsBytes, 0, arbitrator || from).estimateGas({from})
+      const extra_estimated_gas = await this.contract.methods['createListing'](
+        ipfsBytes,
+        0,
+        arbitrator || from
+      ).estimateGas({ from })
 
       const { transactionReceipt, timestamp } = await this.contractService.call(
-        this.tokenContractName, 'approveAndCallWithSender',
+        this.tokenContractName,
+        'approveAndCallWithSender',
         [market_address, deposit, selector, call_params],
-        { from, confirmationCallback, additionalGas:extra_estimated_gas} )
-      const events = await this.contract.getPastEvents('ListingCreated', {fromBlock:transactionReceipt.blockNumber, toBlock:transactionReceipt.blockNumber})
+        { from, confirmationCallback, additionalGas: extra_estimated_gas }
+      )
+      const events = await this.contract.getPastEvents('ListingCreated', {
+        fromBlock: transactionReceipt.blockNumber,
+        toBlock: transactionReceipt.blockNumber
+      })
 
-      for (const e of events)
-      {
-        if (e.transactionHash == transactionReceipt.transactionHash)
-        {
-          const listingIndex =
-            e.returnValues.listingID
+      for (const e of events) {
+        if (e.transactionHash == transactionReceipt.transactionHash) {
+          const listingIndex = e.returnValues.listingID
           return Object.assign({ timestamp, listingIndex }, transactionReceipt)
         }
       }
@@ -83,7 +98,6 @@ class V00_MarkeplaceAdapter {
       const listingIndex =
         transactionReceipt.events['ListingCreated'].returnValues.listingID
       return Object.assign({ timestamp, listingIndex }, transactionReceipt)
-
     }
   }
 
@@ -98,7 +112,14 @@ class V00_MarkeplaceAdapter {
   }
 
   async makeOffer(listingId, ipfsBytes, data, confirmationCallback) {
-    const { affiliate, arbitrator, commission, finalizes, totalPrice = {}, unitsPurchased } = data
+    const {
+      affiliate,
+      arbitrator,
+      commission,
+      finalizes,
+      totalPrice = {},
+      unitsPurchased
+    } = data
     // For V1, we only support quantity of 1.
     if (unitsPurchased != 1)
       throw new Error(
@@ -131,12 +152,18 @@ class V00_MarkeplaceAdapter {
       args,
       opts
     )
-    const offerIndex = transactionReceipt.events['OfferCreated'].returnValues.offerID
+    const offerIndex =
+      transactionReceipt.events['OfferCreated'].returnValues.offerID
 
     return Object.assign({ timestamp, offerIndex }, transactionReceipt)
   }
 
-  async withdrawOffer(listingIndex, offerIndex, ipfsBytes, confirmationCallback) {
+  async withdrawOffer(
+    listingIndex,
+    offerIndex,
+    ipfsBytes,
+    confirmationCallback
+  ) {
     const { transactionReceipt, timestamp } = await this.call(
       'withdrawOffer',
       [listingIndex, offerIndex, ipfsBytes],
@@ -168,7 +195,12 @@ class V00_MarkeplaceAdapter {
     return Object.assign({ timestamp }, transactionReceipt)
   }
 
-  async initiateDispute(listingIndex, offerIndex, ipfsBytes, confirmationCallback) {
+  async initiateDispute(
+    listingIndex,
+    offerIndex,
+    ipfsBytes,
+    confirmationCallback
+  ) {
     const { transactionReceipt, timestamp } = await this.call(
       'dispute',
       [listingIndex, offerIndex, ipfsBytes],
@@ -208,8 +240,7 @@ class V00_MarkeplaceAdapter {
       fromBlock: 0
     })
 
-    const status =
-      rawListing.seller === emptyAddress ? 'inactive' : 'active'
+    let status = 'active'
 
     // Loop through the events looking and update the IPFS hash and offers appropriately.
     let ipfsHash
@@ -219,6 +250,8 @@ class V00_MarkeplaceAdapter {
         ipfsHash = event.returnValues.ipfsHash
       } else if (event.event === 'ListingUpdated') {
         ipfsHash = event.returnValues.ipfsHash
+      } else if (event.event === 'ListingWithdrawn') {
+        status = 'inactive'
       } else if (event.event === 'OfferCreated') {
         offers[event.returnValues.offerID] = { status: 'created', event }
       } else if (event.event === 'OfferAccepted') {
@@ -305,18 +338,18 @@ class V00_MarkeplaceAdapter {
       const timestamp = await this.contractService.getTimestamp(e)
       e.timestamp = timestamp
 
-      switch(e.event) {
+      switch (e.event) {
       case 'OfferCreated':
         buyer = e.returnValues.party
         ipfsHash = e.returnValues.ipfsHash
         createdAt = timestamp
         break
-      // In all cases below, the offer was deleted from the blochain
-      // rawOffer fields are set to zero => populate rawOffer.status based on event history.
+        // In all cases below, the offer was deleted from the blochain
+        // rawOffer fields are set to zero => populate rawOffer.status based on event history.
       case 'OfferFinalized':
         rawOffer.status = 4
         break
-      // TODO: Assumes OfferData event is a seller review
+        // TODO: Assumes OfferData event is a seller review
       case 'OfferData':
         rawOffer.status = 5
         break
@@ -421,19 +454,26 @@ class V00_MarkeplaceAdapter {
   async _getTokenAndCallWithSenderParams(call_name, ...args) {
     await this.getContract()
     for (const call of this.contract.options.jsonInterface) {
-      if (call.name === call_name && call.type === 'function' && call.signature) {
+      if (
+        call.name === call_name &&
+        call.type === 'function' &&
+        call.signature
+      ) {
         const market_address = this.contract.options.address
         // take out the first parameter which is hopefully the seller address
         const input_types = call.inputs.slice(1).map(e => e.type)
-        if (input_types.length != args.length){
-          throw('The number of parameters passed does not match the contract parameters')
+        if (input_types.length != args.length) {
+          throw 'The number of parameters passed does not match the contract parameters'
         }
-        const call_params = this.web3.eth.abi.encodeParameters(input_types, args)
+        const call_params = this.web3.eth.abi.encodeParameters(
+          input_types,
+          args
+        )
         const selector = call.signature
-        return {market_address, selector, call_params}
+        return { market_address, selector, call_params }
       }
     }
-    throw('Invalid Marketplace contract for getting create parameters')
+    throw 'Invalid Marketplace contract for getting create parameters'
   }
 }
 
