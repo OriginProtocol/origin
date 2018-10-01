@@ -389,7 +389,6 @@
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "Επί του παρόντος στο {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "Παρακαλώ εγκαταστήστε την επέκταση MetaMask για να αποκτήσετε πρόσβαση σε αυτό το site.",
-  "web3-provider.fullInstructionsForDemo": "Πλήρεις οδηγίες για το Demo",
   "web3-provider.useWalletEnabledBrowser": "Παρακαλούμε αποκτήσετε πρόσβαση σε αυτή την ιστοσελίδα μέσω ενός προγράμματος περιήγησης που υποστηρίζει wallet:",
   "web3-provider.trustWallet": "Εμπιστέψου αυτό το πορτοφόλι",
   "_countryOptions.unitedStates": "Ηνωμένες Πολιτείες",
