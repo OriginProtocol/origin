@@ -28,6 +28,10 @@
     "defaultMessage": "Create your listing"
   },
   {
+    "id": "listing-create.showDetailsFormErrorMsg",
+    "defaultMessage": "Please fix errors before continuing."
+  },
+  {
     "id": "backButtonLabel",
     "defaultMessage": "Back"
   },

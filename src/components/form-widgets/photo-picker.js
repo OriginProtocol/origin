@@ -197,11 +197,13 @@ class PhotoPicker extends Component {
         <div className="d-flex pictures">
           {showMaxImageCountMsg && (
             <div className="info-box warn">
-              <img
+              <a
                 className="close-btn"
-                src="images/close-icon.svg"
-                onClick={() => this.removeMaxImgCountWarning()}
-              />
+                aria-label="Close"
+                onClick={this.removeMaxImgCountWarning}
+              >
+                <span aria-hidden="true">&times;</span>
+              </a>
               <p>
                 <FormattedMessage
                   id={'photo-picker.maxImgCountMsg'}
@@ -219,11 +221,13 @@ class PhotoPicker extends Component {
         <div className="d-flex pictures">
           {oversizeImages.map((imgObj, idx) => (
             <div className="info-box warn" key={imgObj.name}>
-              <img
+              <a
                 className="close-btn"
-                src="images/close-icon.svg"
+                aria-label="Close"
                 onClick={() => this.removeImgSizeWarning(idx)}
-              />
+              >
+                <span aria-hidden="true">&times;</span>
+              </a>
               <p>
                 <FormattedMessage
                   id={'photo-picker.oversizeImages'}
@@ -241,13 +245,18 @@ class PhotoPicker extends Component {
         </div>
         <div className="d-flex pictures">
           {pictures.map((dataUri, idx) => (
-            <div className="image-container" key={idx}>
-              <img
-                className="close-btn"
-                src="images/close-icon.svg"
-                onClick={() => this.removePhoto(idx)}
+            <div key={idx} className="image-container">
+              <div
+                className="photo"
+                style={{ backgroundImage: `url("${dataUri}")` }}
               />
-              <img className="preview-thumbnail" src={dataUri} />
+              <a
+                className="close-btn"
+                aria-label="Close"
+                onClick={() => this.removePhoto(idx)}
+              >
+                <span aria-hidden="true">&times;</span>
+              </a>
             </div>
           ))}
         </div>

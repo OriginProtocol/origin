@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
+import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import $ from 'jquery'
 
 import Identicon from 'components/identicon'
@@ -40,6 +42,12 @@ class UserDropdown extends Component {
           </div>
           <div className="actual-menu">
             <WalletCard wallet={wallet} withMenus={false} withProfile={true} />
+            <Link to="/profile" className="btn edit-profile placehold">
+              <FormattedMessage
+                id={'user-dropdown.EditProfile'}
+                defaultMessage={'Edit Profile'}
+              />
+            </Link>
           </div>
         </div>
       </div>

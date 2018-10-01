@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import {
@@ -15,6 +15,7 @@ import {
   upsert as upsertTransaction
 } from 'actions/Transaction'
 
+import { PendingBadge, SoldBadge } from 'components/badges'
 import Modal from 'components/modal'
 import Review from 'components/review'
 import UserCard from 'components/user-card'
@@ -39,10 +40,11 @@ class ListingsDetail extends Component {
 
     this.STEP = {
       VIEW: 1,
-      METAMASK: 2,
-      PROCESSING: 3,
-      PURCHASED: 4,
-      ERROR: 5
+      ONBOARDING: 2,
+      METAMASK: 3,
+      PROCESSING: 4,
+      PURCHASED: 5,
+      ERROR: 6
     }
 
     this.state = {
@@ -50,10 +52,12 @@ class ListingsDetail extends Component {
       loading: true,
       offers: [],
       pictures: [],
+      purchases: [],
       reviews: [],
       step: this.STEP.VIEW,
       boostLevel: null,
-      boostValue: 0
+      boostValue: 0,
+      onboardingCompleted: false
     }
 
     this.intlMessages = defineMessages({
@@ -64,6 +68,7 @@ class ListingsDetail extends Component {
     })
 
     this.handleMakeOffer = this.handleMakeOffer.bind(this)
+    this.handleSkipOnboarding = this.handleSkipOnboarding.bind(this)
   }
 
   async componentWillMount() {
@@ -83,11 +88,32 @@ class ListingsDetail extends Component {
     })
   }
 
-  async handleMakeOffer() {
+  componentDidUpdate(prevProps) {
+    // on account found
+    if (this.props.web3Account && !prevProps.web3Account) {
+      this.loadBuyerPurchases()
+    }
+  }
+
+  async handleMakeOffer(skip) {
+    // onboard if no identity, purchases, and not already completed
+    const shouldOnboard =
+      !this.props.profile.strength &&
+      !this.state.purchases.length &&
+      !this.state.onboardingCompleted
+
     this.props.storeWeb3Intent('offer to buy this listing')
 
     if (web3.givenProvider && this.props.web3Account) {
+      if (!skip && shouldOnboard) {
+        return this.setState({
+          onboardingCompleted: true,
+          step: this.STEP.ONBOARDING
+        })
+      }
+
       this.setState({ step: this.STEP.METAMASK })
+
       try {
         const offerData = {
           listingId: this.props.listingId,
@@ -118,6 +144,46 @@ class ListingsDetail extends Component {
         console.error(error)
         this.setState({ step: this.STEP.ERROR })
       }
+    }
+  }
+
+  handleSkipOnboarding(e) {
+    e.preventDefault()
+
+    this.handleMakeOffer(true)
+  }
+
+  async loadBuyerPurchases() {
+    try {
+      const { web3Account } = this.props
+      const listingIds = await origin.marketplace.getListings({
+        idsOnly: true,
+        purchasesFor: web3Account
+      })
+      const listingPromises = listingIds.map(listingId => {
+        return new Promise(async resolve => {
+          const listing = await getListing(listingId, true)
+          resolve({ listingId, listing })
+        })
+      })
+      const withListings = await Promise.all(listingPromises)
+      const offerPromises = await withListings.map(obj => {
+        return new Promise(async resolve => {
+          const offers = await origin.marketplace.getOffers(obj.listingId, {
+            for: web3Account
+          })
+          resolve(Object.assign(obj, { offers }))
+        })
+      })
+      const withOffers = await Promise.all(offerPromises)
+      const offersByListing = withOffers.map(obj => {
+        return obj.offers.map(offer => Object.assign({}, obj, { offer }))
+      })
+      const offersFlattened = [].concat(...offersByListing)
+
+      this.setState({ purchases: offersFlattened })
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -170,6 +236,7 @@ class ListingsDetail extends Component {
   }
 
   render() {
+    const { web3Account } = this.props
     const {
       // boostLevel,
       // boostValue,
@@ -186,17 +253,65 @@ class ListingsDetail extends Component {
       step
       // unitsRemaining
     } = this.state
-    const isPending = offers.find(
-      o => offerStatusToListingAvailability(o.status) === 'pending'
-    )
-    const isSold = offers.find(
-      o => offerStatusToListingAvailability(o.status) === 'sold'
-    )
+    const currentOffer = offers.find(o => {
+      const availability = offerStatusToListingAvailability(o.status)
+
+      return ['pending', 'sold'].includes(availability)
+    })
+    const currentOfferAvailability =
+      currentOffer && offerStatusToListingAvailability(currentOffer.status)
+    const isPending = currentOfferAvailability === 'pending'
+    const isSold = currentOfferAvailability === 'sold'
     const isAvailable = !isPending && !isSold
-    const userIsSeller = seller === this.props.web3Account
+    const userIsBuyer = currentOffer && web3Account === currentOffer.buyer
+    const userIsSeller = web3Account === seller
 
     return (
       <div className="listing-detail">
+        {step === this.STEP.ONBOARDING && (
+          <Modal backdrop="static" isOpen={true}>
+            <div className="image-container">
+              <img src="images/identity.svg" role="presentation" />
+            </div>
+            <p>
+              <FormattedMessage
+                id={'listing-detail.firstPurchaseHeading'}
+                defaultMessage={`You're about to make your first purchase on Origin.`}
+              />
+            </p>
+            <div className="disclaimer">
+              <p>
+                <FormattedMessage
+                  id={'listing-detail.identityDisclaimer'}
+                  defaultMessage={
+                    'We recommend verifying your identity first. Sellers are more likely to accept your purchase offer if they know a little bit about you.'
+                  }
+                />
+              </p>
+            </div>
+            <div className="button-container">
+              <a
+                href="/#/profile"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-clear"
+                onClick={() => this.setState({ step: this.STEP.VIEW })}
+              >
+                <FormattedMessage
+                  id={'listing-detail.verifyIdentity'}
+                  defaultMessage={'Verify Identity'}
+                />
+              </a>
+            </div>
+            <a
+              href="#"
+              className="skip-identity"
+              onClick={this.handleSkipOnboarding}
+            >
+              Skip
+            </a>
+          </Modal>
+        )}
         {step === this.STEP.METAMASK && <MetamaskModal />}
         {step === this.STEP.PROCESSING && <ProcessingModal />}
         {step === this.STEP.PURCHASED && (
@@ -287,22 +402,8 @@ class ListingsDetail extends Component {
                 <div>{category}</div>
                 {!loading && (
                   <div className="badges">
-                    {isPending && (
-                      <span className="pending badge">
-                        <FormattedMessage
-                          id={'listing-detail.pending'}
-                          defaultMessage={'Pending'}
-                        />
-                      </span>
-                    )}
-                    {isSold && (
-                      <span className="sold badge">
-                        <FormattedMessage
-                          id={'listing-detail.soldOut'}
-                          defaultMessage={'Sold Out'}
-                        />
-                      </span>
-                    )}
+                    {isPending && <PendingBadge />}
+                    {isSold && <SoldBadge />}
                     {/*boostValue > 0 && (
                       <span className={`boosted badge boost-${boostLevel}`}>
                         <img
@@ -405,12 +506,12 @@ class ListingsDetail extends Component {
                       {!userIsSeller && (
                         <button
                           className="btn btn-primary"
-                          onClick={this.handleMakeOffer}
+                          onClick={() => this.handleMakeOffer()}
                           onMouseDown={e => e.preventDefault()}
                         >
                           <FormattedMessage
-                            id={'listing-detail.buyNow'}
-                            defaultMessage={'Buy Now'}
+                            id={'listing-detail.purchase'}
+                            defaultMessage={'Purchase'}
                           />
                         </button>
                       )}
@@ -460,30 +561,123 @@ class ListingsDetail extends Component {
                       {isSold && (
                         <FormattedMessage
                           id={'listing-detail.reasonSold'}
-                          defaultMessage={'This listing is {soldOut}'}
+                          defaultMessage={'This listing is {sold}'}
                           values={{
-                            soldOut: <strong>Sold Out</strong>
+                            sold: <strong>Sold</strong>
                           }}
                         />
                       )}
                     </div>
                   )}
-                  {!loading && (
+                  {!loading &&
+                    !userIsBuyer &&
+                    !userIsSeller && (
+                    <Fragment>
+                      <div className="suggestion">
+                        {isPending && (
+                          <FormattedMessage
+                            id={'listing-detail.suggestionPublicPending'}
+                            defaultMessage={
+                              'Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar.'
+                            }
+                          />
+                        )}
+                        {isSold && (
+                          <FormattedMessage
+                            id={'listing-detail.suggestionPublicSold'}
+                            defaultMessage={
+                              'Another buyer has already purchased this listing. Try visiting the listings page and searching for something similar.'
+                            }
+                          />
+                        )}
+                      </div>
+                      <Link to="/">
+                        <FormattedMessage
+                          id={'listing-detail.viewListings'}
+                          defaultMessage={'View Listings'}
+                        />
+                      </Link>
+                    </Fragment>
+                  )}
+                  {!loading &&
+                    userIsBuyer && (
                     <div className="suggestion">
-                      <FormattedMessage
-                        id={'listing-detail.suggestion'}
-                        defaultMessage={
-                          'Try visiting the listings page and searching for something similar.'
-                        }
-                      />
+                      {isPending &&
+                          currentOffer.status === 'created' && (
+                        <FormattedMessage
+                          id={'listing-detail.suggestionBuyerCreated'}
+                          defaultMessage={`You've made an offer on this listing. Please wait for the seller to accept or reject your offer.`}
+                        />
+                      )}
+                      {isPending &&
+                          currentOffer.status === 'accepted' && (
+                        <FormattedMessage
+                          id={'listing-detail.suggestionBuyerAccepted'}
+                          defaultMessage={`You've made an offer on this listing. View the offer to complete the sale.`}
+                        />
+                      )}
+                      {isPending &&
+                          currentOffer.status === 'disputed' && (
+                        <FormattedMessage
+                          id={'listing-detail.suggestionBuyerDisputed'}
+                          defaultMessage={`You've made an offer on this listing. View the offer to check the status.`}
+                        />
+                      )}
+                      {isSold && (
+                        <FormattedMessage
+                          id={'listing-detail.buyerPurchased'}
+                          defaultMessage={`You've purchased this listing.`}
+                        />
+                      )}
                     </div>
                   )}
-                  {!loading && (
-                    <Link to="/">
-                      <FormattedMessage
-                        id={'listing-detail.allListings'}
-                        defaultMessage={'See All Listings'}
-                      />
+                  {!loading &&
+                    userIsSeller && (
+                    <div className="suggestion">
+                      {isPending &&
+                          currentOffer.status === 'created' && (
+                        <FormattedMessage
+                          id={'listing-detail.suggestionSellerCreated'}
+                          defaultMessage={`A buyer is waiting for you to accept or reject their offer.`}
+                        />
+                      )}
+                      {isPending &&
+                          currentOffer.status === 'accepted' && (
+                        <FormattedMessage
+                          id={'listing-detail.suggestionSellerAccepted'}
+                          defaultMessage={`You've accepted an offer for this listing. Please wait for the buyer to complete the sale.`}
+                        />
+                      )}
+                      {isPending &&
+                          currentOffer.status === 'disputed' && (
+                        <FormattedMessage
+                          id={'listing-detail.suggestionSellerDisputed'}
+                          defaultMessage={`You've accepted an offer on this listing. View the offer to check the status.`}
+                        />
+                      )}
+                      {isSold && (
+                        <FormattedMessage
+                          id={'listing-detail.sellerSold'}
+                          defaultMessage={`You've sold this listing.`}
+                        />
+                      )}
+                    </div>
+                  )}
+                  {!loading &&
+                    (userIsBuyer || userIsSeller) && (
+                    <Link to={`/purchases/${currentOffer.id}`}>
+                      {isPending && (
+                        <FormattedMessage
+                          id={'listing-detail.viewOffer'}
+                          defaultMessage={'View Offer'}
+                        />
+                      )}
+                      {isSold && (
+                        <FormattedMessage
+                          id={'listing-detail.viewSale'}
+                          defaultMessage={'View Sale'}
+                        />
+                      )}
                     </Link>
                   )}
                 </div>
@@ -525,11 +719,12 @@ class ListingsDetail extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ app, profile }) => {
   return {
-    onMobile: state.app.onMobile,
-    web3Account: state.app.web3.account,
-    web3Intent: state.app.web3.intent
+    profile,
+    onMobile: app.onMobile,
+    web3Account: app.web3.account,
+    web3Intent: app.web3.intent
   }
 }
 

@@ -64,6 +64,7 @@ class ListingCreate extends Component {
           boostLevel: getBoostLevel(defaultBoostValue)
         }
       },
+      showDetailsFormErrorMsg: false,
       showBoostTutorial: false
     }
 
@@ -193,7 +194,8 @@ class ListingCreate extends Component {
           ...formListing.formData
         }
       },
-      step: this.STEP.BOOST
+      step: this.STEP.BOOST,
+      showDetailsFormErrorMsg: false
     })
     window.scrollTo(0, 0)
     this.checkOgnBalance()
@@ -285,14 +287,12 @@ class ListingCreate extends Component {
       showNoSchemaSelectedError,
       step,
       translatedSchema,
+      showDetailsFormErrorMsg,
       showBoostTutorial
     } = this.state
     const { formData } = formListing
     const translatedCategory = translateListingCategory(formData.category)
-    const usdListingPrice = getFiatPrice(
-      formListing.formData.price,
-      'USD'
-    )
+    const usdListingPrice = getFiatPrice(formListing.formData.price, 'USD')
 
     return (
       <div className="listing-form">
@@ -395,13 +395,19 @@ class ListingCreate extends Component {
                   schema={translatedSchema}
                   onSubmit={this.onDetailsEntered}
                   formData={formListing.formData}
-                  onError={errors =>
-                    console.log(
-                      `react-jsonschema-form errors: ${errors.length}`
-                    )
-                  }
+                  onError={() => this.setState({ showDetailsFormErrorMsg: true })}
                   uiSchema={this.uiSchema}
                 >
+                  {showDetailsFormErrorMsg &&
+                    <div className="info-box warn">
+                      <p>
+                        <FormattedMessage
+                          id={'listing-create.showDetailsFormErrorMsg'}
+                          defaultMessage={'Please fix errors before continuing.'}
+                        />
+                      </p>
+                    </div>
+                  }
                   <div className="btn-container">
                     <button
                       type="button"
@@ -546,7 +552,12 @@ class ListingCreate extends Component {
                     <div className="col-md-9 photo-row">
                       {formData.pictures &&
                         formData.pictures.map((dataUri, idx) => (
-                          <img src={dataUri} role="presentation" key={idx} />
+                          <div
+                            key={idx}
+                            className="photo"
+                            role="presentation"
+                            style={{ backgroundImage: `url("${dataUri}")` }}
+                          />
                         ))}
                     </div>
                   </div>
@@ -740,17 +751,21 @@ class ListingCreate extends Component {
                     role="presentation"
                   />
                 </div>
-                <FormattedMessage
-                  id={'listing-create.successMessage'}
-                  defaultMessage={'Your listing has been created!'}
-                />
-                <div className="disclaimer">
+                <h3>
                   <FormattedMessage
-                    id={'listing-create.successDisclaimer'}
-                    defaultMessage={
-                      "Your listing will be visible within a few seconds. Here's what happens next:"
-                    }
+                    id={'listing-create.successMessage'}
+                    defaultMessage={'Your listing has been created!'}
                   />
+                </h3>
+                <div className="disclaimer">
+                  <p>
+                    <FormattedMessage
+                      id={'listing-create.successDisclaimer'}
+                      defaultMessage={
+                        "Your listing will be visible within a few seconds. Here's what happens next:"
+                      }
+                    />
+                  </p>
                   <ul>
                     <li>
                       Buyers will now see your listing on the marketplace.
