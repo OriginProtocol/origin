@@ -166,12 +166,23 @@ export default function({
       .once('receipt', trackGas('Make Offer ERC20'))
   }
 
+  async function getBalance(party) {
+    const eth = await web3.eth.getBalance(party)
+    const ogn = await OriginToken.methods.balanceOf(party).call()
+
+    return {
+      eth: new web3.utils.BN(eth),
+      ogn: new web3.utils.BN(ogn)
+    }
+  }
+
   return {
     makeOffer,
     makeERC20Offer,
     createListing,
     listingWithAcceptedOffer,
     disputedOffer,
-    giveRuling
+    giveRuling,
+    getBalance
   }
 }

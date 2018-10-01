@@ -48,7 +48,7 @@ contract V00_Marketplace is Ownable {
         uint value;         // Amount in Eth or ERC20 buyer is offering
         uint commission;    // Amount of commission earned if offer is finalized
         uint refund;        // Amount to refund buyer upon finalization
-        ERC20 currency;     // Currency of listing. Copied incase seller deleted listing
+        ERC20 currency;     // Currency of listing
         address buyer;      // Buyer wallet / identity contract / other contract
         address affiliate;  // Address to send any commission
         address arbitrator; // Address that settles disputes
@@ -168,7 +168,6 @@ contract V00_Marketplace is Ownable {
         require(msg.sender == listing.depositManager, "Must be depositManager");
         require(_target != 0x0, "No target");
         tokenAddr.transfer(_target, listing.deposit); // Send deposit to target
-        delete listings[listingID]; // Remove data to get some gas back
         emit ListingWithdrawn(_target, listingID, _ipfsHash);
     }
 
@@ -267,17 +266,7 @@ contract V00_Marketplace is Ownable {
             msg.sender == offer.buyer || msg.sender == listing.seller,
             "Restricted to buyer or seller"
         );
-        if (listing.seller == 0x0) { // If listing was withdrawn
-            require(
-                offer.status == 1 || offer.status == 2,
-                "status not created or accepted"
-            );
-            if (offer.status == 2) { // Pay out commission if seller accepted offer then withdrew listing
-                payCommission(listingID, offerID);
-            }
-        } else {
-            require(offer.status == 1, "status != created");
-        }
+        require(offer.status == 1, "status != created");
         refundBuyer(listingID, offerID);
         emit OfferWithdrawn(msg.sender, listingID, offerID, _ipfsHash);
         delete offers[listingID][offerID];

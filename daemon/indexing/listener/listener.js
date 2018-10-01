@@ -1,5 +1,6 @@
 const fs = require('fs')
 const http = require('http')
+const https = require('https')
 const urllib = require('url')
 const Origin = require('origin')
 const Web3 = require('web3')
@@ -373,15 +374,16 @@ async function postToWebhook(urlString, json) {
     }
   }
   return new Promise((resolve, reject) => {
-    const req = http.request(postOptions, res => {
+    const client = url.protocol === 'https:' ? https : http
+    const req = client.request(postOptions, res => {
       if (res.statusCode === 200) {
         resolve()
       } else {
         reject()
       }
     })
-    req.on('error', () => {
-      reject()
+    req.on('error', (err) => {
+      reject(err)
     })
     req.write(json)
     req.end()
