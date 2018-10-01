@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "You must first select a listing type",
   "listing-create.next": "다음",
   "listing-create.createListingHeading": "목록 만들기",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "뒤로",
   "continueButtonLabel": "계속",
   "listing-create.reviewListingHeading": "업체 정보 검토",
