@@ -389,7 +389,6 @@
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "Şu anda {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "Bu siteye erişmek için lütfen MetaMask uzantısını yükleyin.",
-  "web3-provider.fullInstructionsForDemo": "Demo için Tam Talimatlar",
   "web3-provider.useWalletEnabledBrowser": "Lütfen bu siteye cüzdan etkin bir tarayıcı üzerinden erişin:",
   "web3-provider.trustWallet": "Güven Cüzdanı",
   "_countryOptions.unitedStates": "Amerika Birleşik Devletleri",
