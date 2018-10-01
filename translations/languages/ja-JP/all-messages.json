@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "最初に掲載情報のタイプを選択してください。",
   "listing-create.next": "次へ",
   "listing-create.createListingHeading": "掲載情報を作成",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "戻る",
   "continueButtonLabel": "続ける",
   "listing-create.reviewListingHeading": "掲載情報を見る",
