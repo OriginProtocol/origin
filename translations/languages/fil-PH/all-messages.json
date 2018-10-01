@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "You must first select a listing type",
   "listing-create.next": "Sunod",
   "listing-create.createListingHeading": "Lumikha ng iyong listahan",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "Bumalik",
   "continueButtonLabel": "Ipagpatuloy",
   "listing-create.reviewListingHeading": "Suriin ang iyong listahan",
