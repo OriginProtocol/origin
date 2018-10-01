@@ -389,7 +389,6 @@
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "当前在 {currentNetworkName} 上。",
   "web3-provider.pleaseInstallMetaMask": "请安装 MetaMask 插件以访问此站点。",
-  "web3-provider.fullInstructionsForDemo": "演示的完整说明",
   "web3-provider.useWalletEnabledBrowser": "请通过启用了钱包的浏览器访问此网站:",
   "web3-provider.trustWallet": "信任钱包",
   "_countryOptions.unitedStates": "美国",
