@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "You must first select a listing type",
   "listing-create.next": "Следующий",
   "listing-create.createListingHeading": "Создайте Ваше объявление",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "Назад",
   "continueButtonLabel": "Продолжить",
   "listing-create.reviewListingHeading": "Просмотрите свою информацию",
