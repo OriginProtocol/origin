@@ -45,3 +45,12 @@ export const SoldBadge = () => (
     />
   </span>
 )
+
+export const FeaturedBadge = () => (
+  <span className="featured badge">
+    <FormattedMessage
+      id={'badges.featured'}
+      defaultMessage={'Featured'}
+    />
+  </span>
+)

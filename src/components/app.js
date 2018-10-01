@@ -10,6 +10,7 @@ import {
   getOgnBalance,
   init as initWallet
 } from 'actions/Wallet'
+import { fetchFeaturedHiddenListings } from 'actions/Listing'
 
 // Components
 import AboutTokens from 'components/about-tokens'
@@ -100,6 +101,7 @@ class App extends Component {
     this.props.initWallet()
     this.props.getEthBalance()
     this.props.getOgnBalance()
+    this.props.fetchFeaturedHiddenListings()
 
     this.detectMobile()
   }
@@ -193,7 +195,8 @@ const mapDispatchToProps = dispatch => ({
   getOgnBalance: () => dispatch(getOgnBalance()),
   initWallet: () => dispatch(initWallet()),
   setMobile: device => dispatch(setMobile(device)),
-  localizeApp: () => dispatch(localizeApp())
+  localizeApp: () => dispatch(localizeApp()),
+  fetchFeaturedHiddenListings: () => dispatch(fetchFeaturedHiddenListings())
 })
 
 export default connect(
