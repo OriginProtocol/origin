@@ -389,7 +389,6 @@
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "বর্তমানে {currentNetworkName}",
   "web3-provider.pleaseInstallMetaMask": "এই সাইটের অ্যাক্সেস করতে দয়া করে মেটামাস্ক এক্সটেনশন ইনস্টল করুন।",
-  "web3-provider.fullInstructionsForDemo": "ডেমো জন্য সম্পূর্ণ নির্দেশাবলী",
   "web3-provider.useWalletEnabledBrowser": "একটি ওয়ালেট-সক্ষম ব্রাউজার মাধ্যমে এই সাইট অ্যাক্সেস দয়া করে:",
   "web3-provider.trustWallet": "ট্রাস্ট ওয়ালেট",
   "_countryOptions.unitedStates": "যুক্তরাষ্ট্র",
