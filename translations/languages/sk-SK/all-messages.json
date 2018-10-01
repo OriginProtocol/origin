@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "You must first select a listing type",
   "listing-create.next": "Ďalšie",
   "listing-create.createListingHeading": "Vytvorte si svoj záznam",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "späť",
   "continueButtonLabel": "ďalej",
   "listing-create.reviewListingHeading": "Skontrolujte svoj zápis",
