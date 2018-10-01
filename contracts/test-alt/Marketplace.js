@@ -50,6 +50,16 @@ describe('Marketplace.sol', async function() {
     decodeEvent,
     gasEstimate
 
+  // When comparing Eth, take into account gas price
+  function assertBN(before, expr, after) {
+    const [operator, value, currency] = expr.split(' ')
+    if (operator !== 'add') throw new Error('Unknown operator')
+    const wei = web3.utils.toBN(web3.utils.toWei(value, currency))
+    const low = before.add(wei).sub(gasEstimate)
+    const high = before.add(wei).add(gasEstimate)
+    assert(after.gt(low) && after.lt(high))
+  }
+
   before(async function() {
     ({ deploy, accounts, web3, decodeEvent } = await helper(`${__dirname}/..`))
 
@@ -275,6 +285,24 @@ describe('Marketplace.sol', async function() {
           .once('receipt', trackGas('Withdraw Listing'))
         assert(result.events.ListingWithdrawn)
       })
+
+      it('should allow seller to get paid on withdrawn listing', async function() {
+        const balanceBefore = await helpers.getBalance(Seller)
+
+        const { listingID, offerID } = await helpers.listingWithAcceptedOffer()
+        let result = await Marketplace.methods
+          .withdrawListing(listingID, Seller, IpfsHash)
+          .send({ from: Seller })
+
+        assert(result.events.ListingWithdrawn)
+
+        result = await Marketplace.methods
+          .finalize(listingID, offerID, IpfsHash)
+          .send({ from: Buyer })
+
+        const balanceAfter = await helpers.getBalance(Seller)
+        assertBN(balanceBefore.eth, 'add 0.1 ether', balanceAfter.eth)
+      })
     })
   })
 
@@ -386,16 +414,6 @@ describe('Marketplace.sol', async function() {
 
   describe('Arbitration', function() {
     let listingID, offerID, balanceBefore, balanceAfter
-
-    // When comparing Eth, take into account gas price
-    function assertBN(before, expr, after) {
-      const [operator, value, currency] = expr.split(' ')
-      if (operator !== 'add') throw new Error('Unknown operator')
-      const wei = web3.utils.toBN(web3.utils.toWei(value, currency))
-      const low = before.add(wei).sub(gasEstimate)
-      const high = before.add(wei).add(gasEstimate)
-      assert(after.gt(low) && after.lt(high))
-    }
 
     describe('dispute without refund (Eth)', function() {
       it('should resolve in favor of buyer (no commission)', async function() {
