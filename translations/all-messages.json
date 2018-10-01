@@ -27,7 +27,7 @@
   "purchase-summary.soldTo": "Sold to {buyerLink}",
   "purchase-summary.purchasedFromOn": "Purchased from {sellerName} on {date}",
   "purchase-summary.soldToOn": "Sold to {buyerName} on {date}",
-  "conversation.invalidFileSelected": "File sizes must be less than 2MB. Please select a smaller image.",
+  "conversation.invalidFileSelected": "File sizes must be less than 1.5 MB. Please select a smaller image.",
   "connectivity.mainEthereumNetwork": "Main Ethereum Network",
   "connectivity.mordenTestNetwork": "Morden Test Network",
   "connectivity.ropstenTestNetwork": "Ropsten Test Network",

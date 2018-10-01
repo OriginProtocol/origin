@@ -90,7 +90,8 @@ class Conversation extends Component {
 
     for (const key in filesObj) {
       if (filesObj.hasOwnProperty(key)) {
-        if (filesObj[key].size > imageMaxSize) {
+        // Base64 encoding will inflate size to roughly 4/3 of original
+        if ((filesObj[key].size / 3 * 4) > imageMaxSize) {
           this.setState({ invalidFileSelected: true })
         } else {
           this.setState({ invalidFileSelected: false })
@@ -367,7 +368,7 @@ class Conversation extends Component {
                 <p className="text-danger" onClick={() => this.setState({ invalidFileSelected: false })}>
                   <FormattedMessage
                     id={'conversation.invalidFileSelected'}
-                    defaultMessage={'File sizes must be less than 2MB. Please select a smaller image.'}
+                    defaultMessage={'File sizes must be less than 1.5 MB. Please select a smaller image.'}
                   />
                 </p>
               </div>
