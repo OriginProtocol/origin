@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "Trước tiên, bạn phải chọn loại danh sách",
   "listing-create.next": "Tiếp theo",
   "listing-create.createListingHeading": "Tạo danh sách của bạn",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "Quay lại",
   "continueButtonLabel": "Tiếp tục",
   "listing-create.reviewListingHeading": "Xem trước danh sách của bạn",
