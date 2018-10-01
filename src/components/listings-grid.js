@@ -27,26 +27,36 @@ class ListingsGrid extends Component {
   }
 
   render() {
-    const { contractFound, listingIds, search } = this.props
+    const { contractFound, listingIds, search, featured, hidden } = this.props
 
     // const pinnedListingIds = [0, 1, 2, 3, 4]
     // const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
 
     let allListingsLength, activePage, showListingsIds
+    let featuredListings = []
     if (this.props.renderMode === 'home-page') {
       allListingsLength = listingIds.length
-      activePage = this.props.match.params.activePage || 1
+      activePage = parseInt(this.props.match.params.activePage) || 1
 
       // Calc listings to show for given page
       showListingsIds = listingIds.slice(
         LISTINGS_PER_PAGE * (activePage - 1),
         LISTINGS_PER_PAGE * activePage
       )
+
+      if (activePage === 1)
+        featuredListings = featured
+
+      // remove featured listings so they are not shown twice
+      showListingsIds = showListingsIds.filter(listingId => !featured.includes(listingId))
+
     } else if (this.props.renderMode === 'search') {
       activePage = this.props.searchPage
       allListingsLength = search.listingsLength
       showListingsIds = search.listingIds
     }
+    // remove hidden listings
+    showListingsIds = showListingsIds.filter(listingId => !hidden.includes(listingId))
 
     return (
       <div className="listings-wrapper">
@@ -85,8 +95,12 @@ class ListingsGrid extends Component {
               </h1>
             )}
             <div className="row">
-              {showListingsIds.map(listingId => (
-                <ListingCard listingId={listingId} key={listingId} />
+              {featuredListings.concat(showListingsIds).map(listingId => (
+                <ListingCard
+                  listingId={listingId}
+                  key={listingId}
+                  featured={featuredListings.includes(listingId)}
+                />
               ))}
             </div>
             <Pagination
@@ -108,7 +122,9 @@ class ListingsGrid extends Component {
 
 const mapStateToProps = state => ({
   listingIds: state.marketplace.ids,
-  contractFound: state.listings.contractFound
+  contractFound: state.listings.contractFound,
+  hidden: state.listings.hidden,
+  featured: state.listings.featured
 })
 
 const mapDispatchToProps = dispatch => ({

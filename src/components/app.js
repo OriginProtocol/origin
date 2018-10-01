@@ -10,6 +10,7 @@ import {
   getOgnBalance,
   init as initWallet
 } from 'actions/Wallet'
+import { fetchFeaturedHiddenListings } from 'actions/Listing'
 
 // Components
 import AboutTokens from 'components/about-tokens'
@@ -85,6 +86,8 @@ class App extends Component {
     this.state = {
       redirect: httpsRequired && !window.location.protocol.match('https')
     }
+
+    this.featuredhiddenListingsFetched = false
   }
 
   componentWillMount() {
@@ -102,6 +105,13 @@ class App extends Component {
     this.props.getOgnBalance()
 
     this.detectMobile()
+  }
+
+  componentDidUpdate() {
+    if (this.props.networkId !== null && !this.featuredhiddenListingsFetched) {
+      this.featuredhiddenListingsFetched = true
+      this.props.fetchFeaturedHiddenListings(this.props.networkId)
+    }
   }
 
   /**
@@ -184,7 +194,8 @@ class App extends Component {
 
 const mapStateToProps = state => ({
   messages: state.app.translations.messages,
-  selectedLanguageCode: state.app.translations.selectedLanguageCode
+  selectedLanguageCode: state.app.translations.selectedLanguageCode,
+  networkId: state.app.web3.networkId
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -193,7 +204,8 @@ const mapDispatchToProps = dispatch => ({
   getOgnBalance: () => dispatch(getOgnBalance()),
   initWallet: () => dispatch(initWallet()),
   setMobile: device => dispatch(setMobile(device)),
-  localizeApp: () => dispatch(localizeApp())
+  localizeApp: () => dispatch(localizeApp()),
+  fetchFeaturedHiddenListings: (networkId) => dispatch(fetchFeaturedHiddenListings(networkId))
 })
 
 export default connect(

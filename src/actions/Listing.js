@@ -8,10 +8,34 @@ export const ListingConstants = keyMirror(
   {
     FETCH_IDS: null,
     FETCH_IDS_SUCCESS: null,
-    FETCH_IDS_ERROR: null
+    FETCH_IDS_ERROR: null,
+    FETCH_FEATURED_HIDDEN: null
   },
   'LISTING'
 )
+
+export function fetchFeaturedHiddenListings(networkId) {
+  const readListingsFromUrl = async (gitstUrl) => {
+    const response = await fetch(gitstUrl)
+    return (await response.text())
+      .split(',')
+      .map(listing => listing.trim())
+  }
+
+  return async function(dispatch) {
+    try{
+      const featuredListings = await readListingsFromUrl(`https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hidefeature_list/featurelist_${networkId}.txt`)
+      const hiddenListings = await readListingsFromUrl(`https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hidefeature_list/hidelist_${networkId}.txt`)
+      dispatch({
+        type: ListingConstants.FETCH_FEATURED_HIDDEN,
+        hidden: hiddenListings,
+        featured: featuredListings
+      })
+    } catch(e) {
+      console.error('Could not fetch hidden/featured listings ', e)
+    }
+  }
+}
 
 export function getListingIds() {
   return async function(dispatch) {
