@@ -244,7 +244,13 @@ class DappInfo extends Component {
                 </tr>
                 <tr>
                   <td>DEPLOY_TAG</td>
-                  <td>{process.env.DEPLOY_TAG}</td>
+                  <td>
+                    <a
+                      href={`https://github.com/OriginProtocol/origin-dapp/commit/${process.env.DEPLOY_TAG}`}
+                    >
+                      {process.env.DEPLOY_TAG}
+                    </a>
+                  </td>
                 </tr>
                 <tr>
                   <td>DISCOVERY_SERVER_URL</td>
@@ -257,6 +263,14 @@ class DappInfo extends Component {
                 <tr>
                   <td>FORCE_HTTPS</td>
                   <td>{process.env.FORCE_HTTPS}</td>
+                </tr>
+                <tr>
+                  <td>IMAGE_MAX_SIZE</td>
+                  <td>{process.env.IMAGE_MAX_SIZE}</td>
+                </tr>
+                <tr>
+                  <td>INSTRUCTIONS_URL</td>
+                  <td>{process.env.INSTRUCTIONS_URL}</td>
                 </tr>
                 <tr>
                   <td>IPFS_API_PORT</td>
