@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "आपको पहले किसी सूची प्रकार का चयन करना होगा",
   "listing-create.next": "आगामी",
   "listing-create.createListingHeading": "अपनी लिस्टिंग बनाएं",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "वापस",
   "continueButtonLabel": "जारी रहना",
   "listing-create.reviewListingHeading": "अपने सूचीकरण का पुनरीक्षण करें",
