@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "You must first select a listing type",
   "listing-create.next": "下一步，下一个",
   "listing-create.createListingHeading": "创建您的列表",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "返回",
   "continueButtonLabel": "继续",
   "listing-create.reviewListingHeading": "查看您的商家信息",
