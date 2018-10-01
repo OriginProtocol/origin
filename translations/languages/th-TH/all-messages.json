@@ -389,7 +389,6 @@
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "ปัจจุบันเมื่อวันที่ {currentNetworkName}",
   "web3-provider.pleaseInstallMetaMask": "โปรดติดตั้งส่วนขยาย MetaMask เพื่อเข้าถึงไซต์นี้",
-  "web3-provider.fullInstructionsForDemo": "คำแนะนำสำหรับการสาธิต",
   "web3-provider.useWalletEnabledBrowser": "โปรดเข้าถึงไซต์นี้ผ่านเบราว์เซอร์ที่เปิดใช้งานกระเป๋าสตางค์:",
   "web3-provider.trustWallet": "Trust Wallet",
   "_countryOptions.unitedStates": "สหรัฐ",
