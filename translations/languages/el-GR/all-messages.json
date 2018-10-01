@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "You must first select a listing type",
   "listing-create.next": "Επόμενη",
   "listing-create.createListingHeading": "Δημιουργήστε την καταχώρησή σας",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "Πίσω",
   "continueButtonLabel": "Συνέχεια",
   "listing-create.reviewListingHeading": "Αναθεώρηση της καταχώρησής σας",
