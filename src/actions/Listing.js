@@ -31,8 +31,8 @@ export function fetchFeaturedHiddenListings(networkId) {
 
 
       // the ?cache= part is for cache bust (so that previous results are not kept in cache)
-      const featuredListings = await readListingsFromGist(`https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hide_list/hidelist_${networkId}.json`)
-      const hiddenListings = await readListingsFromGist(`https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hide_list/featurelist_${networkId}.json`)
+      const featuredListings = await readListingsFromGist(`https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hidefeature_list/hidelist_${networkId}.json`)
+      const hiddenListings = await readListingsFromGist(`https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hidefeature_list/featurelist_${networkId}.json`)
       dispatch({
         type: ListingConstants.FETCH_FEATURED_HIDDEN,
         hidden: hiddenListings,
