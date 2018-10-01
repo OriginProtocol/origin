@@ -1,10 +1,6 @@
 import { defineMessages } from 'react-intl'
 
 export default defineMessages({
-  'schema.transportation.schemaDescription': {
-    id: 'schema.transportation.schemaDescription',
-    defaultMessage: 'Distributed Getaround'
-  },
   'schema.transportation.title': {
     id: 'schema.transportation.title',
     defaultMessage: 'Title'
