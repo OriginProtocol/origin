@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "You must first select a listing type",
   "listing-create.next": "ຕໍ່ໄປ",
   "listing-create.createListingHeading": "ສ້າງລາຍຊື່ຂອງທ່ານ",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "ກັບຄືນໄປບ່ອນ",
   "continueButtonLabel": "ສືບຕໍ່",
   "listing-create.reviewListingHeading": "Review your listing",
