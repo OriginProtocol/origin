@@ -102,7 +102,7 @@
   "listing-create.whatHappensNextContent1": "When you submit this listing, you will be asked to confirm your transaction in MetaMask. Buyers will then be able to see your listing and make offers on it.",
   "listing-create.whatHappensNextContent2": "提出する前、掲載情報を復習してください。左側のウィンドウのようにあなたの掲載情報が他の人に表示されます。",
   "listing-create.successMessage": "掲載情報が作成されました！",
-  "listing-create.successDisclaimer": "Your listing will be visible within a few seconds. Here's what happens next:",
+  "listing-create.successDisclaimer": "掲載情報は数秒程度経ってから表示されます。次の手順は以下の通りです：",
   "listing-create.createAnother": "Create Another Listing",
   "listing-create.seeAllListings": "すべての掲載情報を表示",
   "listing-create.error1": "この掲載情報を作成中際に問題が発生しました。",
