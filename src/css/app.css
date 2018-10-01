@@ -4892,10 +4892,6 @@ a:not([href]):not([tabindex]).span-link {
 
 /* Beta Modal */
 
-.beta .modal-content {
-  max-height: calc(100vh - 1rem);
-}
-
 .beta h2 {
   font-weight: normal;
   margin: 0 auto 1.25rem;
@@ -4909,9 +4905,7 @@ a:not([href]):not([tabindex]).span-link {
 }
 
 .beta .disclaimer {
-  flex-shrink: 1;
   max-width: 30rem;
-  overflow-y: scroll;
   padding-top: 15px;
 }
 
@@ -5064,10 +5058,6 @@ a:not([href]):not([tabindex]).span-link {
 
   .seller-steps .list-container ol {
     padding-left: 5%;
-  }
-
-  .beta .modal-content {
-    max-height: calc(100vh - 3.5rem);
   }
 }
 
