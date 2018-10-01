@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "మీరు మొదట లిస్టింగ్ రకాన్ని ఎంచుకోవాలి",
   "listing-create.next": "తరువాత",
   "listing-create.createListingHeading": "మీ జాబితాను సృష్టించండి",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "తిరిగి వెనకకు",
   "continueButtonLabel": "కొనసాగించు",
   "listing-create.reviewListingHeading": "మీ జాబితాను సమీక్షించండి",
