@@ -64,6 +64,7 @@ class ListingCreate extends Component {
           boostLevel: getBoostLevel(defaultBoostValue)
         }
       },
+      showDetailsFormErrorMsg: false,
       showBoostTutorial: false
     }
 
@@ -193,7 +194,8 @@ class ListingCreate extends Component {
           ...formListing.formData
         }
       },
-      step: this.STEP.BOOST
+      step: this.STEP.BOOST,
+      showDetailsFormErrorMsg: false
     })
     window.scrollTo(0, 0)
     this.checkOgnBalance()
@@ -285,6 +287,7 @@ class ListingCreate extends Component {
       showNoSchemaSelectedError,
       step,
       translatedSchema,
+      showDetailsFormErrorMsg,
       showBoostTutorial
     } = this.state
     const { formData } = formListing
@@ -392,13 +395,19 @@ class ListingCreate extends Component {
                   schema={translatedSchema}
                   onSubmit={this.onDetailsEntered}
                   formData={formListing.formData}
-                  onError={errors =>
-                    console.log(
-                      `react-jsonschema-form errors: ${errors.length}`
-                    )
-                  }
+                  onError={() => this.setState({ showDetailsFormErrorMsg: true })}
                   uiSchema={this.uiSchema}
                 >
+                  {showDetailsFormErrorMsg &&
+                    <div className="info-box warn">
+                      <p>
+                        <FormattedMessage
+                          id={'listing-create.showDetailsFormErrorMsg'}
+                          defaultMessage={'Please fix errors before continuing.'}
+                        />
+                      </p>
+                    </div>
+                  }
                   <div className="btn-container">
                     <button
                       type="button"
