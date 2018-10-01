@@ -389,7 +389,6 @@
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "În prezent pe {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "Vă rugăm să instalaţi extensia MetaMask pentru a accesa acest site.",
-  "web3-provider.fullInstructionsForDemo": "Instrucţiuni complete pentru Demo",
   "web3-provider.useWalletEnabledBrowser": "Va rugam sa accesati acest site prin intermediul unui browser care suporta portofel:",
   "web3-provider.trustWallet": "Portofel Trust",
   "_countryOptions.unitedStates": "Statele Unite",
