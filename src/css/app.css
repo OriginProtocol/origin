@@ -4923,12 +4923,8 @@ a:not([href]):not([tabindex]).span-link {
 
 /* About Tokens Page */
 
-.video-placeholder {
-  width: auto;
-  height: 225px;
-  background-color: #dfe6ea;
-  background-color: var(--pale-grey-two);
-  margin-top: 100px;
+.video-placeholder img {
+  width: 100%;
 }
 
 .lead-text {
@@ -5125,6 +5121,10 @@ a:not([href]):not([tabindex]).span-link {
 
 /* md + */
 @media (min-width: 768px) {
+  .video-placeholder {
+    padding-top: 100px;
+  }
+
   .modal-content {
     padding: 40px;
   }
