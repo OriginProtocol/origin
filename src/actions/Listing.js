@@ -24,12 +24,6 @@ export function fetchFeaturedHiddenListings(networkId) {
 
   return async function(dispatch) {
     try{
-      if (process.env.FEATURED_LISTINGS_GIST === undefined || process.env.HIDDEN_LISTINGS_GIST === undefined){
-        console.error('Add environmental variables "FEATURED_LISTINGS_GIST" & "HIDDEN_LISTINGS_GIST" to enable hidden/featured listings functionality')
-        return
-      }
-
-
       // the ?cache= part is for cache bust (so that previous results are not kept in cache)
       const featuredListings = await readListingsFromGist(`https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hidefeature_list/hidelist_${networkId}.json`)
       const hiddenListings = await readListingsFromGist(`https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hidefeature_list/featurelist_${networkId}.json`)
