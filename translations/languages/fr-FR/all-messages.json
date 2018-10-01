@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "Vous devez d’abord sélectionner un type d’annonce",
   "listing-create.next": "Suivant",
   "listing-create.createListingHeading": "Créez votre annonce",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "Retour",
   "continueButtonLabel": "Continuer",
   "listing-create.reviewListingHeading": "Vérifiez votre annonce",
