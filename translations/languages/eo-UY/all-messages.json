@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "You must first select a listing type",
   "listing-create.next": "Tuj poste",
   "listing-create.createListingHeading": "Kreu vian liston",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "Reen",
   "continueButtonLabel": "Daŭrigu",
   "listing-create.reviewListingHeading": "Revizii vian liston",
