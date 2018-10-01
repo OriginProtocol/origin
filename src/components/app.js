@@ -108,8 +108,8 @@ class App extends Component {
   }
 
   componentDidUpdate() {
-    if (this.props.networkId !== undefined && !featuredhiddenListingsFetched) {
-      featuredhiddenListingsFetched = true
+    if (this.props.networkId !== null && !this.featuredhiddenListingsFetched) {
+      this.featuredhiddenListingsFetched = true
       this.props.fetchFeaturedHiddenListings(this.props.networkId)
     }
   }
@@ -205,7 +205,7 @@ const mapDispatchToProps = dispatch => ({
   initWallet: () => dispatch(initWallet()),
   setMobile: device => dispatch(setMobile(device)),
   localizeApp: () => dispatch(localizeApp()),
-  fetchFeaturedHiddenListings: () => dispatch(fetchFeaturedHiddenListings())
+  fetchFeaturedHiddenListings: (networkId) => dispatch(fetchFeaturedHiddenListings(networkId))
 })
 
 export default connect(

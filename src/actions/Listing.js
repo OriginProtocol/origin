@@ -15,7 +15,7 @@ export const ListingConstants = keyMirror(
 )
 
 export function fetchFeaturedHiddenListings(networkId) {
-  const readListingsFromGist = async (gitstUrl) => {
+  const readListingsFromUrl = async (gitstUrl) => {
     const response = await fetch(gitstUrl)
     return (await response.text())
       .split(',')
@@ -24,9 +24,8 @@ export function fetchFeaturedHiddenListings(networkId) {
 
   return async function(dispatch) {
     try{
-      // the ?cache= part is for cache bust (so that previous results are not kept in cache)
-      const featuredListings = await readListingsFromGist(`https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hidefeature_list/hidelist_${networkId}.json`)
-      const hiddenListings = await readListingsFromGist(`https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hidefeature_list/featurelist_${networkId}.json`)
+      const featuredListings = await readListingsFromUrl(`https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hidefeature_list/featurelist_${networkId}.txt`)
+      const hiddenListings = await readListingsFromUrl(`https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hidefeature_list/hidelist_${networkId}.txt`)
       dispatch({
         type: ListingConstants.FETCH_FEATURED_HIDDEN,
         hidden: hiddenListings,
