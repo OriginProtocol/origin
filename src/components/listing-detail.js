@@ -15,7 +15,7 @@ import {
   upsert as upsertTransaction
 } from 'actions/Transaction'
 
-import { PendingBadge, SoldBadge } from 'components/badges'
+import { PendingBadge, SoldBadge, FeaturedBadge } from 'components/badges'
 import Modal from 'components/modal'
 import Review from 'components/review'
 import UserCard from 'components/user-card'
@@ -236,7 +236,7 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    const { web3Account } = this.props
+    const { web3Account, featured } = this.props
     const {
       // boostLevel,
       // boostValue,
@@ -265,6 +265,7 @@ class ListingsDetail extends Component {
     const isAvailable = !isPending && !isSold
     const userIsBuyer = currentOffer && web3Account === currentOffer.buyer
     const userIsSeller = web3Account === seller
+    const showFeaturedBadge = !isSold && !isPending && featured.includes(this.props.listingId)
 
     return (
       <div className="listing-detail">
@@ -404,6 +405,7 @@ class ListingsDetail extends Component {
                   <div className="badges">
                     {isPending && <PendingBadge />}
                     {isSold && <SoldBadge />}
+                    {showFeaturedBadge && <FeaturedBadge />}
                     {/*boostValue > 0 && (
                       <span className={`boosted badge boost-${boostLevel}`}>
                         <img
@@ -719,12 +721,13 @@ class ListingsDetail extends Component {
   }
 }
 
-const mapStateToProps = ({ app, profile }) => {
+const mapStateToProps = ({ app, profile, listings }) => {
   return {
     profile,
     onMobile: app.onMobile,
     web3Account: app.web3.account,
-    web3Intent: app.web3.intent
+    web3Intent: app.web3.intent,
+    featured: listings.featured
   }
 }
 
