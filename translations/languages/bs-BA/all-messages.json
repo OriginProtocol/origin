@@ -389,7 +389,6 @@
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "Trenutno je na {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "Molimo da instalirate MetaMask ekstenziju za pristup ovoj web lokaciji.",
-  "web3-provider.fullInstructionsForDemo": "Puna uputstva za demo",
   "web3-provider.useWalletEnabledBrowser": "Molimo vas da pristupite ovoj stranici pomoću pregledača sa novčanikom:",
   "web3-provider.trustWallet": "Trust Wallet",
   "_countryOptions.unitedStates": "Sjedinjene Države",
