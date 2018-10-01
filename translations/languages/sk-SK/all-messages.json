@@ -389,7 +389,6 @@
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "Momentálne je {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "Na prístup na túto stránku prosím nainštalujte rozšírenie MetaMask.",
-  "web3-provider.fullInstructionsForDemo": "Úplné pokyny pre demo",
   "web3-provider.useWalletEnabledBrowser": "Prejdite na túto stránku prostredníctvom prehliadača s povolenou peňaženkou:",
   "web3-provider.trustWallet": "Trust Wallet",
   "_countryOptions.unitedStates": "Spojené štáty",
