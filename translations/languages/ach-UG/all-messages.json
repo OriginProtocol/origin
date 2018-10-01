@@ -389,7 +389,6 @@
   "web3-provider.shouldBeOnRinkeby": "crwdns3465:0{currentProvider}crwdnd3465:0{supportedNetworkName}crwdne3465:0",
   "web3-provider.currentlyOnNetwork": "crwdns2662:0{currentNetworkName}crwdne2662:0",
   "web3-provider.pleaseInstallMetaMask": "crwdns2663:0crwdne2663:0",
-  "web3-provider.fullInstructionsForDemo": "crwdns2664:0crwdne2664:0",
   "web3-provider.useWalletEnabledBrowser": "crwdns2665:0crwdne2665:0",
   "web3-provider.trustWallet": "crwdns2666:0crwdne2666:0",
   "_countryOptions.unitedStates": "crwdns2667:0crwdne2667:0",
