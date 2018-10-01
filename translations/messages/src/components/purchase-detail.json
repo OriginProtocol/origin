@@ -80,34 +80,6 @@
     "defaultMessage": "Withdraw Offer"
   },
   {
-    "id": "purchase-detail.offerMade",
-    "defaultMessage": "Offer Made"
-  },
-  {
-    "id": "purchase-detail.offerWithdrawn",
-    "defaultMessage": "Offer Withdrawn"
-  },
-  {
-    "id": "purchase-detail.offerAccepted",
-    "defaultMessage": "Offer Accepted"
-  },
-  {
-    "id": "purchase-detail.offerDisputed",
-    "defaultMessage": "Dispute Started"
-  },
-  {
-    "id": "purchase-detail.offerRuling",
-    "defaultMessage": "Ruling Complete"
-  },
-  {
-    "id": "purchase-detail.saleCompleted",
-    "defaultMessage": "Sale Completed"
-  },
-  {
-    "id": "purchase-detail.saleReviewed",
-    "defaultMessage": "Sale Reviewed"
-  },
-  {
     "id": "purchase-detail.purchasedFrom",
     "defaultMessage": "Purchased from {sellerLink}"
   },
@@ -124,24 +96,8 @@
     "defaultMessage": "Selling to {buyerLink}"
   },
   {
-    "id": "purchase-detail.pending",
-    "defaultMessage": "Pending"
-  },
-  {
-    "id": "purchase-detail.soldOut",
-    "defaultMessage": "Sold Out"
-  },
-  {
     "id": "purchase-detail.transactionStatusHeading",
     "defaultMessage": "Transaction Status"
-  },
-  {
-    "id": "purchase-detail.seller",
-    "defaultMessage": "Seller"
-  },
-  {
-    "id": "purchase-detail.buyer",
-    "defaultMessage": "Buyer"
   },
   {
     "id": "purchase-detail.nextStep",
@@ -149,7 +105,7 @@
   },
   {
     "id": "purchase-detail.nothingToDo",
-    "defaultMessage": "Nothing for you to do at this time. Check back later."
+    "defaultMessage": "There is nothing for you to do at this time. Check back later."
   },
   {
     "id": "purchase-detail.reviewLabel",
@@ -176,14 +132,6 @@
     "defaultMessage": "Transaction History"
   },
   {
-    "id": "purchase-detail.txName",
-    "defaultMessage": "TxName"
-  },
-  {
-    "id": "purchase-detail.txHash",
-    "defaultMessage": "TxHash"
-  },
-  {
     "id": "purchase-detail.listingDetails",
     "defaultMessage": "Listing Details"
   },
@@ -196,19 +144,15 @@
     "defaultMessage": "Reviews"
   },
   {
-    "id": "purchase-detail.purchasedFromOn",
-    "defaultMessage": "Purchased from {sellerName} on {date}"
+    "id": "purchase-detail.summaryPending",
+    "defaultMessage": "Pending"
   },
   {
-    "id": "purchase-detail.soldToOn",
-    "defaultMessage": "Sold to {buyerName} on {date}"
+    "id": "purchase-detail.summarySold",
+    "defaultMessage": "Sold"
   },
   {
     "id": "purchase-detail.price",
     "defaultMessage": "Price"
-  },
-  {
-    "id": "purchase-detail.listingStatus",
-    "defaultMessage": "This listing is {status}"
   }
 ]

@@ -1,12 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import {
-  FormattedMessage,
-  FormattedDate,
-  defineMessages,
-  injectIntl
-} from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import $ from 'jquery'
 
 import { enableMessaging, storeWeb3Intent } from 'actions/App'
@@ -21,17 +16,26 @@ import {
   PrerequisiteModal
 } from 'components/modals/arbitration-modals'
 import Avatar from 'components/avatar'
+import {
+  BuyerBadge,
+  PendingBadge,
+  SellerBadge,
+  SoldBadge
+} from 'components/badges'
 import { RejectionModal, WithdrawModal } from 'components/modals/offer-modals'
+import { MetamaskModal } from 'components/modals/wait-modals'
+import OfferStatusEvent from 'components/offer-status-event'
 import PurchaseProgress from 'components/purchase-progress'
 import Review from 'components/review'
+import TransactionHistory from 'components/transaction-history'
 import UnnamedUser from 'components/unnamed-user'
 import UserCard from 'components/user-card'
-import { MetamaskModal } from 'components/modals/wait-modals'
-
-import TransactionEvent from 'pages/purchases/transaction-event'
 
 import { getListing, camelCaseToDash } from 'utils/listing'
-import { offerStatusToStep } from 'utils/offer'
+import {
+  offerStatusToListingAvailability,
+  offerStatusToStep
+} from 'utils/offer'
 import { translateSchema } from 'utils/translationUtils'
 
 import origin from '../services/origin'
@@ -94,7 +98,7 @@ class PurchaseDetail extends Component {
       },
       acceptBuyersOffer: {
         id: 'purchase-detail.acceptOrRejectOffer',
-        defaultMessage: "Accept or reject the buyer's offer"
+        defaultMessage: `Accept or reject the buyer's offer`
       },
       acceptOfferInstruction: {
         id: 'purchase-detail.acceptOfferInstruction',
@@ -169,34 +173,6 @@ class PurchaseDetail extends Component {
       withdrawOffer: {
         id: 'purchase-detail.withdrawOffer',
         defaultMessage: 'Withdraw Offer'
-      },
-      offerMade: {
-        id: 'purchase-detail.offerMade',
-        defaultMessage: 'Offer Made'
-      },
-      offerWithdrawn: {
-        id: 'purchase-detail.offerWithdrawn',
-        defaultMessage: 'Offer Withdrawn'
-      },
-      offerAccepted: {
-        id: 'purchase-detail.offerAccepted',
-        defaultMessage: 'Offer Accepted'
-      },
-      offerDisputed: {
-        id: 'purchase-detail.offerDisputed',
-        defaultMessage: 'Dispute Started'
-      },
-      offerRuling: {
-        id: 'purchase-detail.offerRuling',
-        defaultMessage: 'Ruling Complete'
-      },
-      saleCompleted: {
-        id: 'purchase-detail.saleCompleted',
-        defaultMessage: 'Sale Completed'
-      },
-      saleReviewed: {
-        id: 'purchase-detail.saleReviewed',
-        defaultMessage: 'Sale Reviewed'
       }
     })
 
@@ -700,9 +676,9 @@ class PurchaseDetail extends Component {
       translatedSchema,
       areSellerStepsOpen
     } = this.state
-    const step = offerStatusToStep(purchase.status)
-    const isPending = purchase.status !== 'withdrawn' && step < 3
-    const isSold = step > 2
+    const availability = offerStatusToListingAvailability(purchase.status)
+    const isPending = availability === 'pending'
+    const isSold = availability === 'sold'
     const { invalid, rating, reviewText } = form
 
     // Data not loaded yet.
@@ -719,16 +695,11 @@ class PurchaseDetail extends Component {
     }
 
     const pictures = listing.pictures || []
-    const active = listing.status === 'active' // TODO: move to origin.js, take into account listing expiration
-    const soldAt = purchase.createdAt * 1000 // convert seconds since epoch to ms
+    const created = purchase.createdAt * 1000 // convert seconds since epoch to ms
 
-    const offerCreated = purchase.event('OfferCreated')
     const offerWithdrawn = purchase.event('OfferWithdrawn')
-    const offerAccepted = purchase.event('OfferAccepted')
     const offerDisputed = purchase.event('OfferDisputed')
-    const offerRuling = purchase.event('OfferRuling')
     const offerFinalized = purchase.event('OfferFinalized')
-    const offerData = purchase.event('OfferData')
 
     const priceEth = `${Number(purchase.totalPrice.amount).toLocaleString(
       undefined,
@@ -740,8 +711,8 @@ class PurchaseDetail extends Component {
 
     const counterparty = ['buyer', 'seller'].find(str => str !== perspective)
     const counterpartyUser = counterparty === 'buyer' ? buyer : seller
-    const status = active ? 'active' : 'inactive'
-    const maxStep = perspective === 'seller' ? 4 : 3
+    const step = offerStatusToStep(purchase.status)
+    const maxStep = perspective === 'seller' || offerDisputed ? 4 : 3
 
     const nextStep = perspective && this.nextSteps[purchase.status]
     const {
@@ -835,22 +806,8 @@ class PurchaseDetail extends Component {
               )}
               <h1>
                 {listing.name}
-                {isPending && (
-                  <span className="pending badge">
-                    <FormattedMessage
-                      id={'purchase-detail.pending'}
-                      defaultMessage={'Pending'}
-                    />
-                  </span>
-                )}
-                {isSold && (
-                  <span className="sold badge">
-                    <FormattedMessage
-                      id={'purchase-detail.soldOut'}
-                      defaultMessage={'Sold Out'}
-                    />
-                  </span>
-                )}
+                {isPending && <PendingBadge />}
+                {isSold && <SoldBadge />}
                 {/*!!listing.boostValue && (
                   <span className={`boosted badge boost-${listing.boostLevel}`}>
                     <img
@@ -882,12 +839,7 @@ class PurchaseDetail extends Component {
                       />
                       <div className="identification d-flex flex-column justify-content-between text-truncate">
                         <div>
-                          <span className="badge badge-dark">
-                            <FormattedMessage
-                              id={'purchase-detail.seller'}
-                              defaultMessage={'Seller'}
-                            />
-                          </span>
+                          <SellerBadge />
                         </div>
                         <div className="name">{sellerName}</div>
                         <div className="address text-muted text-truncate">
@@ -902,12 +854,7 @@ class PurchaseDetail extends Component {
                     <div className="d-flex justify-content-end">
                       <div className="identification d-flex flex-column text-right justify-content-between text-truncate">
                         <div>
-                          <span className="badge badge-dark">
-                            <FormattedMessage
-                              id={'purchase-detail.buyer'}
-                              defaultMessage={'Buyer'}
-                            />
-                          </span>
+                          <BuyerBadge />
                         </div>
                         <div className="name">{buyerName}</div>
                         <div className="address text-muted text-truncate">
@@ -981,7 +928,7 @@ class PurchaseDetail extends Component {
                             <FormattedMessage
                               id={'purchase-detail.nothingToDo'}
                               defaultMessage={
-                                'Nothing for you to do at this time. Check back later.'
+                                'There is nothing for you to do at this time. Check back later.'
                               }
                             />
                           )}
@@ -1128,71 +1075,7 @@ class PurchaseDetail extends Component {
                   defaultMessage={'Transaction History'}
                 />
               </h2>
-              <table className="table table-striped">
-                <thead>
-                  <tr>
-                    <th scope="col" style={{ width: '200px' }}>
-                      <FormattedMessage
-                        id={'purchase-detail.txName'}
-                        defaultMessage={'TxName'}
-                      />
-                    </th>
-                    <th scope="col">
-                      <FormattedMessage
-                        id={'purchase-detail.txHash'}
-                        defaultMessage={'TxHash'}
-                      />
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <TransactionEvent
-                    eventName={this.props.intl.formatMessage(
-                      this.intlMessages.offerMade
-                    )}
-                    event={offerCreated}
-                    from={buyer}
-                  />
-                  <TransactionEvent
-                    eventName={this.props.intl.formatMessage(
-                      this.intlMessages.offerWithdrawn
-                    )}
-                    event={offerWithdrawn}
-                    from={buyer}
-                  />
-                  <TransactionEvent
-                    eventName={this.props.intl.formatMessage(
-                      this.intlMessages.offerAccepted
-                    )}
-                    event={offerAccepted}
-                    from={seller}
-                  />
-                  <TransactionEvent
-                    eventName={this.props.intl.formatMessage(
-                      this.intlMessages.offerDisputed
-                    )}
-                    event={offerDisputed}
-                  />
-                  <TransactionEvent
-                    eventName={this.props.intl.formatMessage(
-                      this.intlMessages.offerRuling
-                    )}
-                    event={offerRuling}
-                  />
-                  <TransactionEvent
-                    eventName={this.props.intl.formatMessage(
-                      this.intlMessages.saleCompleted
-                    )}
-                    event={offerFinalized}
-                  />
-                  <TransactionEvent
-                    eventName={this.props.intl.formatMessage(
-                      this.intlMessages.saleReviewed
-                    )}
-                    event={offerData}
-                  />
-                </tbody>
-              </table>
+              <TransactionHistory purchase={purchase} />
               <hr />
             </div>
             <div className="col-12 col-lg-4">
@@ -1276,29 +1159,24 @@ class PurchaseDetail extends Component {
               </div>
             </div>
             <div className="col-12 col-lg-4">
-              {soldAt && (
+              {created && (
                 <div className="summary text-center">
-                  <div className="recap">
-                    {perspective === 'buyer' && (
+                  <h2>
+                    {isPending && (
                       <FormattedMessage
-                        id={'purchase-detail.purchasedFromOn'}
-                        defaultMessage={'Purchased from {sellerName} on {date}'}
-                        values={{
-                          sellerName,
-                          date: <FormattedDate value={soldAt} />
-                        }}
+                        id={'purchase-detail.summaryPending'}
+                        defaultMessage={'Pending'}
                       />
                     )}
-                    {perspective === 'seller' && (
+                    {isSold && (
                       <FormattedMessage
-                        id={'purchase-detail.soldToOn'}
-                        defaultMessage={'Sold to {buyerName} on {date}'}
-                        values={{
-                          buyerName,
-                          date: <FormattedDate value={soldAt} />
-                        }}
+                        id={'purchase-detail.summarySold'}
+                        defaultMessage={'Sold'}
                       />
                     )}
+                  </h2>
+                  <div className="recap m-auto">
+                    <OfferStatusEvent offer={purchase} />
                   </div>
                   <hr className="dark sm" />
                   <div className="d-flex">
@@ -1309,14 +1187,6 @@ class PurchaseDetail extends Component {
                       />
                     </div>
                     <div className="text-right">{priceEth}</div>
-                  </div>
-                  <hr className="dark sm" />
-                  <div className={`status ${status}`}>
-                    <FormattedMessage
-                      id={'purchase-detail.listingStatus'}
-                      defaultMessage={'This listing is {status}'}
-                      values={{ status }}
-                    />
                   </div>
                 </div>
               )}

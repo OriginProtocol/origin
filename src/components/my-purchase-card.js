@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import { defineMessages, injectIntl } from 'react-intl'
 
+import OfferStatusEvent from 'components/offer-status-event'
 import PurchaseProgress from 'components/purchase-progress'
 
 import { offerStatusToStep } from 'utils/offer'
@@ -14,38 +15,6 @@ class MyPurchaseCard extends Component {
     this.state = { listing: {}, loading: false }
 
     this.intlMessages = defineMessages({
-      created: {
-        id: 'my-purchase-card.created',
-        defaultMessage: 'Offer made'
-      },
-      accepted: {
-        id: 'my-purchase-card.accepted',
-        defaultMessage: 'Offer accepted'
-      },
-      withdrawn: {
-        id: 'my-purchase-card.withdrawn',
-        defaultMessage: 'Offer withdrawn'
-      },
-      rejected: {
-        id: 'my-purchase-card.rejected',
-        defaultMessage: 'Offer rejected'
-      },
-      disputed: {
-        id: 'my-purchase-card.disputed',
-        defaultMessage: 'Sale disputed'
-      },
-      finalized: {
-        id: 'my-purchase-card.finalized',
-        defaultMessage: 'Sale confirmed'
-      },
-      reviewed: {
-        id: 'my-purchase-card.reviewed',
-        defaultMessage: 'Sale reviewed'
-      },
-      unknown: {
-        id: 'my-purchase-card.unknown',
-        defaultMessage: 'Unknown'
-      },
       ETH: {
         id: 'my-purchase-card.ethereumCurrencyAbbrev',
         defaultMessage: 'ETH'
@@ -64,50 +33,10 @@ class MyPurchaseCard extends Component {
   render() {
     const { listing, offer, offerId } = this.props
     const { category, name, pictures, price } = listing
-    const { buyer, events, status } = offer
+    const { status } = offer
     const voided = ['rejected', 'withdrawn'].includes(status)
+    const maxStep = ['disputed', 'ruling'].includes(status) ? 4 : 3
     const step = offerStatusToStep(status)
-
-    let event, verb
-    switch (status) {
-    case 'created':
-      event = events.find(({ event }) => event === 'OfferCreated')
-      verb = this.props.intl.formatMessage(this.intlMessages.created)
-      break
-    case 'accepted':
-      event = events.find(({ event }) => event === 'OfferAccepted')
-      verb = this.props.intl.formatMessage(this.intlMessages.accepted)
-      break
-    case 'withdrawn':
-      event = events.find(({ event }) => event === 'OfferWithdrawn')
-
-      const actor = event ? event.returnValues[0] : null
-
-      verb =
-          actor === buyer
-            ? this.props.intl.formatMessage(this.intlMessages.withdrawn)
-            : this.props.intl.formatMessage(this.intlMessages.rejected)
-      break
-    case 'disputed':
-      event = events.find(({ event }) => event === 'OfferDisputed')
-      verb = this.props.intl.formatMessage(this.intlMessages.disputed)
-      break
-    case 'finalized':
-      event = events.find(({ event }) => event === 'OfferFinalized')
-      verb = this.props.intl.formatMessage(this.intlMessages.finalized)
-      break
-    case 'sellerReviewed':
-      event = events.find(({ event }) => event === 'OfferData')
-      verb = this.props.intl.formatMessage(this.intlMessages.reviewed)
-      break
-    default:
-      event = { timestamp: Date.now() / 1000 }
-      verb = this.props.intl.formatMessage(this.intlMessages.unknown)
-    }
-
-    const timestamp = `${verb} on ${this.props.intl.formatDate(
-      event.timestamp * 1000
-    )}`
     const photo = pictures && pictures.length > 0 && pictures[0]
 
     return (
@@ -133,7 +62,9 @@ class MyPurchaseCard extends Component {
               <h2 className="title text-truncate">
                 <Link to={`/purchases/${offerId}`}>{name}</Link>
               </h2>
-              <p className="timestamp">{timestamp}</p>
+              <p className="timestamp">
+                <OfferStatusEvent offer={offer} />
+              </p>
               {!voided && (
                 <Fragment>
                   <div className="d-flex">
@@ -148,8 +79,9 @@ class MyPurchaseCard extends Component {
                   </div>
                   <PurchaseProgress
                     currentStep={step}
-                    maxStep={3}
+                    maxStep={maxStep}
                     perspective="buyer"
+                    purchase={offer}
                     subdued={true}
                   />
                 </Fragment>

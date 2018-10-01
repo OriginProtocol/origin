@@ -8,7 +8,7 @@ import {
   FILTER_OPERATOR_GREATER_OR_EQUAL,
   FILTER_OPERATOR_LESSER_OR_EQUAL
 } from 'components/search/constants'
-import { getEthPrice } from 'utils/priceUtils'
+import { getCryptoPrice } from 'utils/priceUtils'
 
 class PriceFilter extends Component {
   constructor(props) {
@@ -41,13 +41,13 @@ class PriceFilter extends Component {
     return [
       {
         name: this.props.filter.searchParameterName,
-        value: await getEthPrice(this.state.value[0], 'USD', 'ETH'),
+        value: getCryptoPrice(this.state.value[0], 'USD', 'ETH'),
         valueType: VALUE_TYPE_FLOAT,
         operator: FILTER_OPERATOR_GREATER_OR_EQUAL
       },
       {
         name: this.props.filter.searchParameterName,
-        value: await getEthPrice(this.state.value[1], 'USD', 'ETH'),
+        value: getCryptoPrice(this.state.value[1], 'USD', 'ETH'),
         valueType: VALUE_TYPE_FLOAT,
         operator: FILTER_OPERATOR_LESSER_OR_EQUAL
       }
@@ -123,7 +123,8 @@ class PriceFilter extends Component {
 }
 
 const mapStateToProps = state => ({
-  filters: state.search.filters
+  filters: state.search.filters,
+  exchangeRates: state.exchangeRates
 })
 
 const mapDispatchToProps = () => ({})

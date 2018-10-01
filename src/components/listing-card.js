@@ -1,17 +1,19 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { FormattedMessage } from 'react-intl'
 import $ from 'jquery'
 
+import { PendingBadge, SoldBadge } from 'components/badges'
 import ListingCardPrices from 'components/listing-card-prices'
 
 import { getListing } from 'utils/listing'
+import { offerStatusToListingAvailability } from 'utils/offer'
 
 import origin from '../services/origin'
 
 class ListingCard extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       loading: true,
       offers: []
@@ -79,10 +81,12 @@ class ListingCard extends Component {
       unitsRemaining
     } = this.state
     const photo = pictures && pictures.length && pictures[0]
-    const pendingStates = ['created', 'accepted', 'disputed']
-    const isPending = offers.find(o => pendingStates.includes(o.status))
-    const soldStates = ['finalized', 'sellerReviewed']
-    const isSold = offers.find(o => soldStates.includes(o.status))
+    const isPending = offers.find(
+      o => offerStatusToListingAvailability(o.status) === 'pending'
+    )
+    const isSold = offers.find(
+      o => offerStatusToListingAvailability(o.status) === 'sold'
+    )
 
     return (
       <div
@@ -104,24 +108,8 @@ class ListingCard extends Component {
           )}
           <div className="category placehold d-flex justify-content-between">
             <div>{category}</div>
-            {!loading &&
-              isPending && (
-              <span className="pending badge">
-                <FormattedMessage
-                  id={'listing-card.pending'}
-                  defaultMessage={'Pending'}
-                />
-              </span>
-            )}
-            {!loading &&
-              isSold && (
-              <span className="sold badge">
-                <FormattedMessage
-                  id={'listing-card.sold'}
-                  defaultMessage={'Sold Out'}
-                />
-              </span>
-            )}
+            {!loading && isPending && <PendingBadge />}
+            {!loading && isSold && <SoldBadge />}
             {/*!loading &&
               boostLevelIsPastSomeThreshold && (
               <span
