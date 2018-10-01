@@ -389,7 +389,6 @@
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be on {supportedNetworkName}",
   "web3-provider.currentlyOnNetwork": "Momenteel op {currentNetworkName}.",
   "web3-provider.pleaseInstallMetaMask": "Installeer de Metamask extensie om toegang te krijgen tot deze website.",
-  "web3-provider.fullInstructionsForDemo": "Uitgebreide instructies voor de Demo",
   "web3-provider.useWalletEnabledBrowser": "Maak gebruik van een browser met wallet plug-in om de site te bereiken:",
   "web3-provider.trustWallet": "Trust Wallet",
   "_countryOptions.unitedStates": "Verenigde Staten",
