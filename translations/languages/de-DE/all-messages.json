@@ -95,6 +95,7 @@
   "listing-create.noSchemaSelectedError": "You must first select a listing type",
   "listing-create.next": "Weiter",
   "listing-create.createListingHeading": "Erstelle das Angebot",
+  "listing-create.showDetailsFormErrorMsg": "Please fix errors before continuing.",
   "backButtonLabel": "Zurück",
   "continueButtonLabel": "Weiter",
   "listing-create.reviewListingHeading": "Überprüfen Sie Ihren Eintrag",
