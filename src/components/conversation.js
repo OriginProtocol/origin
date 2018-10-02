@@ -380,7 +380,16 @@ class Conversation extends Component {
             {!!files.length && (
               <div className="files-container">
                 {files.map((dataUri, i) => (
-                  <img src={dataUri} key={i} className="preview-thumbnail" />
+                  <div key={i} className="image-container">
+                    <img src={dataUri} className="preview-thumbnail" />
+                    <a
+                      className="close-btn cancel-image"
+                      aria-label="Close"
+                      onClick={() => this.setState({ files: [] })}
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </a>
+                  </div>
                 ))}
               </div>
             )}
