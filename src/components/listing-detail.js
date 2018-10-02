@@ -126,7 +126,10 @@ class ListingsDetail extends Component {
           commission: {
             amount: this.state.boostValue.toString(),
             currency: 'OGN'
-          }
+          },
+          // Set the finalization time to ~1 year after the offer is accepted.
+          // This is the window during which the buyer may file a dispute.
+          finalizes: 365 * 24 * 60 * 60
         }
         const transactionReceipt = await origin.marketplace.makeOffer(
           this.props.listingId,
