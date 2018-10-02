@@ -4939,14 +4939,9 @@ a:not([href]):not([tabindex]).span-link {
 
 /* Beta Modal */
 
-.beta h2 {
-  font-weight: normal;
-  margin: 0 auto 1.25rem;
-  max-width: 18rem;
-}
 
 .beta h3 {
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: normal;
   margin: 0 auto 1.25rem;
 }

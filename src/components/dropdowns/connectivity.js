@@ -9,7 +9,9 @@ const bridgeServerDomain =
   process.env.BRIDGE_SERVER_DOMAIN || 'bridge.originprotocol.com'
 const messagingAddress = process.env.IPFS_SWARM || 'None'
 const r = new RegExp(/\/\w+\/[\w.]+\/\w+\/\d+\/\w+\/\w+\//)
-const peer = messagingAddress.match(r) ? messagingAddress.split(r) : messagingAddress
+const peer = messagingAddress.match(r)
+  ? messagingAddress.split(r)
+  : messagingAddress
 const web3 = origin.contractService.web3
 const ONE_SECOND = 1000
 

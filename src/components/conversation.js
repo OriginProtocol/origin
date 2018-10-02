@@ -8,6 +8,8 @@ import {
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
+import { fetchUser } from 'actions/User'
+
 import CompactMessages from 'components/compact-messages'
 import PurchaseProgress from 'components/purchase-progress'
 
@@ -148,10 +150,12 @@ class Conversation extends Component {
   }
 
   identifyCounterparty() {
-    const { id, users, web3Account } = this.props
+    const { fetchUser, id, users, web3Account } = this.props
     const recipients = origin.messaging.getRecipients(id)
     const address = recipients.find(addr => addr !== web3Account)
-    const counterparty = users.find(u => u.address === address) || {}
+    const counterparty = users.find(u => u.address === address) || { address }
+
+    !counterparty.address && fetchUser(address)
 
     this.setState({ counterparty })
     this.loadPurchase()
@@ -242,7 +246,7 @@ class Conversation extends Component {
       ? createdAt * 1000 /* convert seconds since epoch to ms */
       : null
     const photo = pictures && pictures.length > 0 && pictures[0]
-    const canDeliverMessage = origin.messaging.canConverseWith(
+    const canDeliverMessage = counterparty.address && origin.messaging.canConverseWith(
       counterparty.address
     )
     const shouldEnableForm =
@@ -409,4 +413,8 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(injectIntl(Conversation))
+const mapDispatchToProps = dispatch => ({
+  fetchUser: addr => dispatch(fetchUser(addr))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Conversation))
