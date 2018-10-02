@@ -7,7 +7,7 @@ bridgeReplicas: 1
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '52b237e-1538457372'
+dappImageTag: '504b830'
 dappReplicas: 2
 
 # Rinkeby network configuration
@@ -19,15 +19,15 @@ ipfsImageTag: ipfs/go-ipfs
 ipfsImageTag: master
 
 faucetImage: origin-faucet
-faucetImageTag: '3fd3c78'
+faucetImageTag: '90ecb10'
 
 eventlistenerImage: event-listener
-eventlistenerImageTag: '3fd3c78'
+eventlistenerImageTag: '90ecb10'
 eventlistenerWeb3Url: https://rinkeby.infura.io/emIXjs9eDuy57IlTYsIP
 eventlistenerContinueBlock: 3000000
 
 discoveryImage: origin-discovery
-discoveryImageTag: '3fd3c78'
+discoveryImageTag: '90ecb10'
 
 # IPFS server for OrbitDB
 messagingIpfsImage: ipfs/go-ipfs
@@ -35,4 +35,4 @@ messagingIpfsImageTag: v0.4.17
 
 # OrbitDB
 messagingImage: origin-messaging
-messagingImageTag: 'bd6cb94'
+messagingImageTag: '4327155'
