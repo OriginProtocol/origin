@@ -72,14 +72,14 @@
     "absolutePath": "/app/contracts/contracts/multisig/IMultiSigWallet.sol",
     "exportedSymbols": {
       "IMultiSigWallet": [
-        3758
+        3722
       ]
     },
-    "id": 3759,
+    "id": 3723,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3740,
+        "id": 3704,
         "literals": [
           "solidity",
           "^",
@@ -95,19 +95,19 @@
         "contractKind": "contract",
         "documentation": "@title Interface for interacting with Gnosis MultiSigWallet.\n@dev Avoids creating an explicit dependency on Gnosis MultiSigWallet, which\ndoesn't have an official npm package. This allows us to just use the ABI\nto call the contract methods. The contract is deployed through the DApp &\ndesktop app, so we only need to make limited calls to it. Further signatures\nalso happen in the Gnosis apps.",
         "fullyImplemented": false,
-        "id": 3758,
+        "id": 3722,
         "linearizedBaseContracts": [
-          3758
+          3722
         ],
         "name": "IMultiSigWallet",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 3744,
+            "id": 3708,
             "name": "isOwner",
             "nodeType": "VariableDeclaration",
-            "scope": 3758,
+            "scope": 3722,
             "src": "477:40:13",
             "stateVariable": true,
             "storageLocation": "default",
@@ -116,9 +116,9 @@
               "typeString": "mapping(address => bool)"
             },
             "typeName": {
-              "id": 3743,
+              "id": 3707,
               "keyType": {
-                "id": 3741,
+                "id": 3705,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "486:7:13",
@@ -134,7 +134,7 @@
                 "typeString": "mapping(address => bool)"
               },
               "valueType": {
-                "id": 3742,
+                "id": 3706,
                 "name": "bool",
                 "nodeType": "ElementaryTypeName",
                 "src": "497:4:13",
@@ -149,10 +149,10 @@
           },
           {
             "constant": false,
-            "id": 3746,
+            "id": 3710,
             "name": "required",
             "nodeType": "VariableDeclaration",
-            "scope": 3758,
+            "scope": 3722,
             "src": "523:20:13",
             "stateVariable": true,
             "storageLocation": "default",
@@ -161,7 +161,7 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 3745,
+              "id": 3709,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
               "src": "523:4:13",
@@ -176,7 +176,7 @@
           {
             "body": null,
             "documentation": "@dev Allows an owner to submit and confirm a transaction.\n @param destination Transaction target address.\n @param value Transaction ether value.\n @param data Transaction data payload.\n @return Returns transaction ID.",
-            "id": 3757,
+            "id": 3721,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -184,15 +184,15 @@
             "name": "submitTransaction",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3753,
+              "id": 3717,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3748,
+                  "id": 3712,
                   "name": "destination",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3757,
+                  "scope": 3721,
                   "src": "830:19:13",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -201,7 +201,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3747,
+                    "id": 3711,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "830:7:13",
@@ -215,10 +215,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 3750,
+                  "id": 3714,
                   "name": "value",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3757,
+                  "scope": 3721,
                   "src": "851:10:13",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -227,7 +227,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3749,
+                    "id": 3713,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "851:4:13",
@@ -241,10 +241,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 3752,
+                  "id": 3716,
                   "name": "data",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3757,
+                  "scope": 3721,
                   "src": "863:10:13",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -253,7 +253,7 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 3751,
+                    "id": 3715,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
                     "src": "863:5:13",
@@ -270,15 +270,15 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 3756,
+              "id": 3720,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3755,
+                  "id": 3719,
                   "name": "transactionId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3757,
+                  "scope": 3721,
                   "src": "907:18:13",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -287,7 +287,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3754,
+                    "id": 3718,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "907:4:13",
@@ -302,14 +302,14 @@
               ],
               "src": "906:20:13"
             },
-            "scope": 3758,
+            "scope": 3722,
             "src": "803:124:13",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 3759,
+        "scope": 3723,
         "src": "446:483:13"
       }
     ],
@@ -319,14 +319,14 @@
     "absolutePath": "/app/contracts/contracts/multisig/IMultiSigWallet.sol",
     "exportedSymbols": {
       "IMultiSigWallet": [
-        3758
+        3722
       ]
     },
-    "id": 3759,
+    "id": 3723,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3740,
+        "id": 3704,
         "literals": [
           "solidity",
           "^",
@@ -342,19 +342,19 @@
         "contractKind": "contract",
         "documentation": "@title Interface for interacting with Gnosis MultiSigWallet.\n@dev Avoids creating an explicit dependency on Gnosis MultiSigWallet, which\ndoesn't have an official npm package. This allows us to just use the ABI\nto call the contract methods. The contract is deployed through the DApp &\ndesktop app, so we only need to make limited calls to it. Further signatures\nalso happen in the Gnosis apps.",
         "fullyImplemented": false,
-        "id": 3758,
+        "id": 3722,
         "linearizedBaseContracts": [
-          3758
+          3722
         ],
         "name": "IMultiSigWallet",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 3744,
+            "id": 3708,
             "name": "isOwner",
             "nodeType": "VariableDeclaration",
-            "scope": 3758,
+            "scope": 3722,
             "src": "477:40:13",
             "stateVariable": true,
             "storageLocation": "default",
@@ -363,9 +363,9 @@
               "typeString": "mapping(address => bool)"
             },
             "typeName": {
-              "id": 3743,
+              "id": 3707,
               "keyType": {
-                "id": 3741,
+                "id": 3705,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "486:7:13",
@@ -381,7 +381,7 @@
                 "typeString": "mapping(address => bool)"
               },
               "valueType": {
-                "id": 3742,
+                "id": 3706,
                 "name": "bool",
                 "nodeType": "ElementaryTypeName",
                 "src": "497:4:13",
@@ -396,10 +396,10 @@
           },
           {
             "constant": false,
-            "id": 3746,
+            "id": 3710,
             "name": "required",
             "nodeType": "VariableDeclaration",
-            "scope": 3758,
+            "scope": 3722,
             "src": "523:20:13",
             "stateVariable": true,
             "storageLocation": "default",
@@ -408,7 +408,7 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 3745,
+              "id": 3709,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
               "src": "523:4:13",
@@ -423,7 +423,7 @@
           {
             "body": null,
             "documentation": "@dev Allows an owner to submit and confirm a transaction.\n @param destination Transaction target address.\n @param value Transaction ether value.\n @param data Transaction data payload.\n @return Returns transaction ID.",
-            "id": 3757,
+            "id": 3721,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -431,15 +431,15 @@
             "name": "submitTransaction",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3753,
+              "id": 3717,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3748,
+                  "id": 3712,
                   "name": "destination",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3757,
+                  "scope": 3721,
                   "src": "830:19:13",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -448,7 +448,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3747,
+                    "id": 3711,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "830:7:13",
@@ -462,10 +462,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 3750,
+                  "id": 3714,
                   "name": "value",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3757,
+                  "scope": 3721,
                   "src": "851:10:13",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -474,7 +474,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3749,
+                    "id": 3713,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "851:4:13",
@@ -488,10 +488,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 3752,
+                  "id": 3716,
                   "name": "data",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3757,
+                  "scope": 3721,
                   "src": "863:10:13",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -500,7 +500,7 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 3751,
+                    "id": 3715,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
                     "src": "863:5:13",
@@ -517,15 +517,15 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 3756,
+              "id": 3720,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3755,
+                  "id": 3719,
                   "name": "transactionId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3757,
+                  "scope": 3721,
                   "src": "907:18:13",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -534,7 +534,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3754,
+                    "id": 3718,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "907:4:13",
@@ -549,14 +549,14 @@
               ],
               "src": "906:20:13"
             },
-            "scope": 3758,
+            "scope": 3722,
             "src": "803:124:13",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 3759,
+        "scope": 3723,
         "src": "446:483:13"
       }
     ],
@@ -568,5 +568,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-09-27T21:49:22.548Z"
+  "updatedAt": "2018-10-01T19:22:10.825Z"
 }
