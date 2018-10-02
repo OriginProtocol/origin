@@ -10,14 +10,14 @@ class Analytics extends Component {
 
   trackHashChange({ location, history }) {
     const gaTrackingId = process.env.GA_TRACKING_ID || 'UA-106384880-2'
-    const gtag = window.gtag
+    const gtag = window.gtag || function() {}
     const path = this.props.location.pathname
 
     if (location.pathname === path) {
       return
     }
 
-    if (history.action === 'PUSH' && typeof(gtag) === 'function') {
+    if (history.action === 'PUSH') {
       gtag('config', gaTrackingId, {
         'page_title': this.getPageTitle(path),
         'page_path': path,
