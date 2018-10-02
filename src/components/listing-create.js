@@ -582,7 +582,7 @@ class ListingCreate extends Component {
                       </p>
                     </div>
                     <div className="col-md-9">
-                      <p>{formData.description}</p>
+                      <p className="ws-aware">{formData.description}</p>
                     </div>
                   </div>
                   <div className="row">

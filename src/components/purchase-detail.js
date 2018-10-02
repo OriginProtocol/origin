@@ -1113,7 +1113,7 @@ class PurchaseDetail extends Component {
                     <h1 className="title text-truncate placehold">
                       {listing.name}
                     </h1>
-                    <p className="description placehold">
+                    <p className="ws-aware description placehold">
                       {listing.description}
                     </p>
                     {/*!!listing.unitsRemaining && listing.unitsRemaining < 5 &&
