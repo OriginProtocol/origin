@@ -133,7 +133,7 @@ class V00_MarkeplaceAdapter {
     const args = [
       listingId,
       ipfsBytes,
-      finalizes || Math.round(+new Date() / 1000) + 60 * 60 * 24, // 24 hrs
+      finalizes || 30 * 24 * 60 * 60, // 30 days from offer acceptance
       affiliate || emptyAddress,
       commissionUnits,
       price,
