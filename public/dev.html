@@ -9,11 +9,12 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-106384880-2%22%3E"></script>
     <script>
       /*eslint-disable */
-      // Only run analytics on dapp.originprotocol.com
-      if (window.location.hostname.indexOf('dapp') > -1) {
+      var hostname = window.location.hostname
+      if (hostname !== 'localhost' && hostname !== '0.0.0.0') {
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
+
         gtag('config', 'UA-106384880-2');
       }
       /*eslint-enable */
