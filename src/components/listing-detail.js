@@ -268,7 +268,8 @@ class ListingsDetail extends Component {
     const isAvailable = !isPending && !isSold
     const userIsBuyer = currentOffer && web3Account === currentOffer.buyer
     const userIsSeller = web3Account === seller
-    const showFeaturedBadge = !isSold && !isPending && featured.includes(this.props.listingId)
+    const showFeaturedBadge =
+      !isSold && !isPending && featured.includes(this.props.listingId)
 
     return (
       <div className="listing-detail">
@@ -422,9 +423,15 @@ class ListingsDetail extends Component {
               </div>
               <h1 className="title text-truncate placehold">{name}</h1>
               <p className="description placehold">
-                {description && description.split('\n').map((item, key) => {
-                  return <Fragment key={key}>{item}<br/></Fragment>
-                })}
+                {description &&
+                  description.split('\n').map((item, key) => {
+                    return (
+                      <Fragment key={key}>
+                        {item}
+                        <br />
+                      </Fragment>
+                    )
+                  })}
               </p>
               {/* Via Stan 5/25/2018: Hide until contracts allow for unitsRemaining > 1 */}
               {/*!!unitsRemaining && unitsRemaining < 5 &&
