@@ -85,6 +85,8 @@ class MessagesDropdown extends Component {
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
+          ga-category="top_nav"
+          ga-label="messaging"
         >
           {!!conversations.length && <div className="unread-indicator" />}
           <img
@@ -128,6 +130,8 @@ class MessagesDropdown extends Component {
                 <button
                   className="btn btn-sm btn-primary d-none d-md-block ml-auto"
                   onClick={this.handleEnable}
+                  ga-category="messaging"
+                  ga-label="messaging_dropdown_enable"
                 >
                   <FormattedMessage
                     id={'messages.enable'}
@@ -148,7 +152,12 @@ class MessagesDropdown extends Component {
                 />
               ))}
             </div>
-            <Link to="/messages" onClick={this.handleClick}>
+            <Link
+              to="/messages"
+              onClick={this.handleClick}
+              ga-category="messaging"
+              ga-label="messaging_dropdown_view_all"
+            >
               <footer>
                 <FormattedMessage
                   id={'messagesDropdown.viewAll'}

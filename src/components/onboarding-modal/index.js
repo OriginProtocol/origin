@@ -159,6 +159,8 @@ class OnboardingModal extends Component {
           <button
             className="btn btn-primary btn-lg"
             onClick={() => this.props.toggleSplitPanel(true)}
+            ga-category="seller_onboarding"
+            ga-label="learn_more_cta"
           >
             <FormattedMessage
               id={'getting-started.button'}

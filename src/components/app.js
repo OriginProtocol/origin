@@ -42,6 +42,8 @@ import SearchBar from 'components/search/searchbar'
 
 import 'bootstrap/dist/js/bootstrap'
 
+import { setClickEventHandler } from 'utils/analytics'
+
 // CSS
 import 'bootstrap/dist/css/bootstrap.css'
 import '../css/lato-web.css'
@@ -97,6 +99,7 @@ class App extends Component {
     }
 
     this.props.localizeApp()
+    setClickEventHandler()
   }
 
   componentDidMount() {
