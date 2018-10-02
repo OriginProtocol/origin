@@ -422,16 +422,8 @@ class ListingsDetail extends Component {
                 )}
               </div>
               <h1 className="title text-truncate placehold">{name}</h1>
-              <p className="description placehold">
-                {description &&
-                  description.split('\n').map((item, key) => {
-                    return (
-                      <Fragment key={key}>
-                        {item}
-                        <br />
-                      </Fragment>
-                    )
-                  })}
+              <p className="ws-aware description placehold">
+                {description}
               </p>
               {/* Via Stan 5/25/2018: Hide until contracts allow for unitsRemaining > 1 */}
               {/*!!unitsRemaining && unitsRemaining < 5 &&

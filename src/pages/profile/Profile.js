@@ -309,7 +309,7 @@ class Profile extends Component {
                       </button>
                     </div>
                   </div>
-                  <p>{description}</p>
+                  <p className="ws-aware">{description}</p>
                 </div>
               </div>
 

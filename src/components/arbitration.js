@@ -250,7 +250,7 @@ class Arbitration extends Component {
                     <h1 className="title text-truncate placehold">
                       {listing.name}
                     </h1>
-                    <p className="description placehold">
+                    <p className="ws-aware description placehold">
                       {listing.description}
                     </p>
                   </div>
