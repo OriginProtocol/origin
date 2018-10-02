@@ -32,6 +32,7 @@ class OnboardingModal extends Component {
       listingsDetected: false,
       stepsFetched: false
     }
+    this.loadingListings = false
   }
 
   async componentDidUpdate() {
@@ -43,7 +44,8 @@ class OnboardingModal extends Component {
     }
 
     // check for listings before doing anything else
-    if (!this.state.listingsDetected) {
+    if (!this.state.listingsDetected && !this.loadingListings) {
+      this.loadingListings = true
       const listings = await this.loadListings()
 
       return this.setState({
@@ -84,7 +86,7 @@ class OnboardingModal extends Component {
         listingsFor: address
       })
       const listings = await Promise.all(
-        ids.map(id => {
+        ids.map(async id => {
           return getListing(id, true)
         })
       )
