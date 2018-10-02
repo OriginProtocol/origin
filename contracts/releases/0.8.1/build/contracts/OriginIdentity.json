@@ -1102,11 +1102,11 @@
         }
       },
       "links": {
-        "ClaimHolderLibrary": "0x9d09d9353bd7d76d4bf116a83d54a3f81f74df1d",
-        "KeyHolderLibrary": "0x4a0cb29bed18a9fdcd296ef1bbf0a9e908452b94"
+        "ClaimHolderLibrary": "0x1fe0b698b02bbc7fc7029ee1fc15885389b53067",
+        "KeyHolderLibrary": "0x7d26ae0838c4e15a87e9d3b26b03a0256c7554d8"
       },
-      "address": "0x2e648e88d13694c2b8f0de909f66342096282561",
-      "transactionHash": "0xe50af899a715565d6b6b4e53ce21b1a74e6cbff858b8b9a2e0f3261418de8b3f"
+      "address": "0x1af44feeb5737736b6beb42fe8e5e6b7bb7391cd",
+      "transactionHash": "0x92d55cba67d6084d0490f44a843fe3155f22ac54ad67c8bd71ac84200a5b6b3d"
     },
     "4": {
       "events": {
@@ -1430,5 +1430,5 @@
     }
   },
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-09-30T04:40:56.262Z"
+  "updatedAt": "2018-10-01T23:13:23.137Z"
 }

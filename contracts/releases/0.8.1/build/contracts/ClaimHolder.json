@@ -4030,8 +4030,8 @@
         }
       },
       "links": {
-        "ClaimHolderLibrary": "0x9d09d9353bd7d76d4bf116a83d54a3f81f74df1d",
-        "KeyHolderLibrary": "0x4a0cb29bed18a9fdcd296ef1bbf0a9e908452b94"
+        "ClaimHolderLibrary": "0x1fe0b698b02bbc7fc7029ee1fc15885389b53067",
+        "KeyHolderLibrary": "0x7d26ae0838c4e15a87e9d3b26b03a0256c7554d8"
       }
     },
     "4": {
@@ -4270,5 +4270,5 @@
     }
   },
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-09-30T04:39:40.591Z"
+  "updatedAt": "2018-10-01T23:11:59.900Z"
 }
