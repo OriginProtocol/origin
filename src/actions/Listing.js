@@ -17,7 +17,7 @@ export const ListingConstants = keyMirror(
 export function fetchFeaturedHiddenListings(networkId) {
   const readListingsFromUrl = async (gitstUrl) => {
     const response = await fetch(gitstUrl)
-    var idRegex = /^\d+\-\d+\-\d+$/
+    const idRegex = /^\d+-\d+-\d+$/
     return (await response.text())
       .split(',')
       .map(listing => listing.trim())
