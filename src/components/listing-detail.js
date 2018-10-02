@@ -406,7 +406,7 @@ class ListingsDetail extends Component {
                   </div>
                 )}
               </div>
-              <h1 className="title text-truncate placehold">{name}</h1>
+              <h1 className="title placehold">{name}</h1>
               <p className="ws-aware description placehold">
                 {description}
               </p>

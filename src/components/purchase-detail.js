@@ -1106,7 +1106,7 @@ class PurchaseDetail extends Component {
                   )}
                   <div className="detail-info-box">
                     <h2 className="category placehold">{listing.category}</h2>
-                    <h1 className="title text-truncate placehold">
+                    <h1 className="title placehold">
                       {listing.name}
                     </h1>
                     <p className="ws-aware description placehold">
