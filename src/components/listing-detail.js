@@ -227,7 +227,9 @@ class ListingsDetail extends Component {
       const reviews = await origin.marketplace.getListingReviews(
         this.props.listingId
       )
-      this.setState({ reviews })
+      this.setState({
+        reviews: reviews.filter(r => r.reviewer !== this.state.seller)
+      })
     } catch (error) {
       console.error(error)
       console.error(`Error fetching reviews`)
