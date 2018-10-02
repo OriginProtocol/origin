@@ -2458,7 +2458,7 @@ select.form-control:not([size]):not([multiple]) {
   width: 100%;
 }
 
-.schema-details .pictures .image-container .close-btn {
+.cancel-image {
   position: absolute;
   top: 0;
   right: 0;
@@ -3964,6 +3964,12 @@ form .stars img {
   padding: 10px 0;
 }
 
+.add-message .files-container .image-container {
+  display: inline-block;
+  height: 100%;
+  position: relative;
+}
+
 .add-message .files-container img {
   max-height: 100%;
   max-width: 100%;
@@ -4939,14 +4945,9 @@ a:not([href]):not([tabindex]).span-link {
 
 /* Beta Modal */
 
-.beta h2 {
-  font-weight: normal;
-  margin: 0 auto 1.25rem;
-  max-width: 18rem;
-}
 
 .beta h3 {
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: normal;
   margin: 0 auto 1.25rem;
 }

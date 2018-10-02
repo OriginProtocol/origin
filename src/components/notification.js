@@ -139,7 +139,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg)),
+  fetchUser: addr => dispatch(fetchUser(addr)),
   updateNotification: (id, status) => dispatch(updateNotification(id, status))
 })
 
