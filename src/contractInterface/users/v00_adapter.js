@@ -13,11 +13,12 @@ const selfAttestationTopic = 13 // TODO: use the correct number here
 const emptyAddress = '0x0000000000000000000000000000000000000000'
 
 class V00_UsersAdapter {
-  constructor({ contractService, ipfsService }) {
+  constructor({ contractService, ipfsService, blockEpoch }) {
     this.contractService = contractService
     this.ipfsDataStore = new IpfsDataStore(ipfsService)
     this.web3EthAccounts = this.contractService.web3.eth.accounts
     this.contractName = 'V00_UserRegistry'
+    this.blockEpoch = blockEpoch || 0
   }
 
   async set({ profile, attestations = [], options = {}}) {
@@ -158,7 +159,7 @@ class V00_UsersAdapter {
       identityAddress
     )
     const claimAddedEvents = await identity.getPastEvents('ClaimAdded', {
-      fromBlock: 0
+      fromBlock: this.blockEpoch
     })
     const mapped = claimAddedEvents.map(({ returnValues }) => {
       return {

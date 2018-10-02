@@ -12,11 +12,11 @@ const responseToUrl = (resp = {}) => {
 }
 
 class Attestations {
-  constructor({ serverUrl, contractService, fetch }) {
+  constructor({ serverUrl, contractService, fetch, blockEpoch }) {
     this.serverUrl = serverUrl
     this.contractService = contractService
     this.fetch = fetch
-    this.usersResolver = new UsersResolver({ contractService })
+    this.usersResolver = new UsersResolver({ contractService, blockEpoch })
 
     this.responseToAttestation = (resp = {}) => {
       return new AttestationObject({

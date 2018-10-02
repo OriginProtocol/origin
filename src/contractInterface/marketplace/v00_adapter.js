@@ -12,11 +12,12 @@ const SUPPORTED_DEPOSIT_CURRENCIES = ['OGN']
 const emptyAddress = '0x0000000000000000000000000000000000000000'
 
 class V00_MarkeplaceAdapter {
-  constructor({ contractService }) {
+  constructor({ contractService, blockEpoch }) {
     this.web3 = contractService.web3
     this.contractService = contractService
     this.contractName = 'V00_Marketplace'
     this.tokenContractName = 'OriginToken'
+    this.blockEpoch = blockEpoch || 0
   }
 
   async getContract() {
@@ -237,7 +238,7 @@ class V00_MarkeplaceAdapter {
     const listingTopic = this.padTopic(listingId)
     const events = await this.contract.getPastEvents('allEvents', {
       topics: [null, null, listingTopic],
-      fromBlock: 0
+      fromBlock: this.blockEpoch
     })
 
     let status = 'active'
@@ -281,7 +282,7 @@ class V00_MarkeplaceAdapter {
     if (opts.purchasesFor) {
       const events = await this.contract.getPastEvents('OfferCreated', {
         filter: { party: opts.purchasesFor },
-        fromBlock: 0
+        fromBlock: this.blockEpoch
       })
       const listingIds = []
       events.forEach(e => {
@@ -294,7 +295,7 @@ class V00_MarkeplaceAdapter {
     } else if (opts.listingsFor) {
       const events = await this.contract.getPastEvents('ListingCreated', {
         filter: { party: opts.listingsFor },
-        fromBlock: 0
+        fromBlock: this.blockEpoch
       })
       return events.map(e => Number(e.returnValues.listingID))
     } else {
@@ -315,7 +316,7 @@ class V00_MarkeplaceAdapter {
     }
     const events = await this.contract.getPastEvents('OfferCreated', {
       filter,
-      fromBlock: 0
+      fromBlock: this.blockEpoch
     })
     return events.map(e => Number(e.returnValues.offerID))
   }
@@ -333,7 +334,7 @@ class V00_MarkeplaceAdapter {
     const offerTopic = this.padTopic(offerIndex)
     const events = await this.contract.getPastEvents('allEvents', {
       topics: [null, null, listingTopic, offerTopic],
-      fromBlock: 0
+      fromBlock: this.blockEpoch
     })
 
     // Scan through the events to retrieve information of interest.
@@ -394,7 +395,7 @@ class V00_MarkeplaceAdapter {
 
     const events = await this.contract.getPastEvents('allEvents', {
       topics: [null, this.padTopic(party)],
-      fromBlock: 0
+      fromBlock: this.blockEpoch
     })
 
     for (const event of events) {

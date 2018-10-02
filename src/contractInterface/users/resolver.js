@@ -2,9 +2,9 @@ import V00_UsersAdapter from './v00_adapter'
 import UserObject from '../../models/user'
 
 class UsersResolver {
-  constructor({ contractService, ipfsService }) {
+  constructor({ contractService, ipfsService, blockEpoch }) {
     this.adapters = {
-      '000': new V00_UsersAdapter({ contractService, ipfsService })
+      '000': new V00_UsersAdapter({ contractService, ipfsService, blockEpoch })
     }
     this.versions = ['000']
     this.currentVersion = this.versions[this.versions.length - 1]
