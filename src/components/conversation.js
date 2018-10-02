@@ -8,6 +8,8 @@ import {
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
+import { fetchUser } from 'actions/User'
+
 import CompactMessages from 'components/compact-messages'
 import PurchaseProgress from 'components/purchase-progress'
 
@@ -16,7 +18,7 @@ import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
 
-const imageMaxSize = process.env.IMAGE_MAX_SIZE || (2 * 1024 * 1024) // 2 MiB
+const imageMaxSize = process.env.IMAGE_MAX_SIZE || 2 * 1024 * 1024 // 2 MiB
 
 class Conversation extends Component {
   constructor(props) {
@@ -91,7 +93,7 @@ class Conversation extends Component {
     for (const key in filesObj) {
       if (filesObj.hasOwnProperty(key)) {
         // Base64 encoding will inflate size to roughly 4/3 of original
-        if ((filesObj[key].size / 3 * 4) > imageMaxSize) {
+        if ((filesObj[key].size / 3) * 4 > imageMaxSize) {
           this.setState({ invalidFileSelected: true })
         } else {
           this.setState({ invalidFileSelected: false })
@@ -148,10 +150,12 @@ class Conversation extends Component {
   }
 
   identifyCounterparty() {
-    const { id, users, web3Account } = this.props
+    const { fetchUser, id, users, web3Account } = this.props
     const recipients = origin.messaging.getRecipients(id)
     const address = recipients.find(addr => addr !== web3Account)
-    const counterparty = users.find(u => u.address === address) || {}
+    const counterparty = users.find(u => u.address === address) || { address }
+
+    !counterparty.address && fetchUser(address)
 
     this.setState({ counterparty })
     this.loadPurchase()
@@ -230,7 +234,13 @@ class Conversation extends Component {
 
   render() {
     const { id, intl, messages, web3Account, withListingSummary } = this.props
-    const { counterparty, files, invalidFileSelected, listing, purchase } = this.state
+    const {
+      counterparty,
+      files,
+      invalidFileSelected,
+      listing,
+      purchase
+    } = this.state
     const { name, pictures } = listing
     const { buyer, createdAt, status } = purchase
     const perspective = buyer
@@ -242,9 +252,9 @@ class Conversation extends Component {
       ? createdAt * 1000 /* convert seconds since epoch to ms */
       : null
     const photo = pictures && pictures.length > 0 && pictures[0]
-    const canDeliverMessage = origin.messaging.canConverseWith(
-      counterparty.address
-    )
+    const canDeliverMessage =
+      counterparty.address &&
+      origin.messaging.canConverseWith(counterparty.address)
     const shouldEnableForm =
       origin.messaging.getRecipients(id).includes(web3Account) &&
       canDeliverMessage &&
@@ -352,7 +362,8 @@ class Conversation extends Component {
             className="add-message d-flex"
             onSubmit={this.handleSubmit}
           >
-            {!files.length && !invalidFileSelected && (
+            {!files.length &&
+              !invalidFileSelected && (
               <textarea
                 ref={this.textarea}
                 placeholder={intl.formatMessage(
@@ -365,10 +376,15 @@ class Conversation extends Component {
             )}
             {invalidFileSelected && (
               <div className="files-container">
-                <p className="text-danger" onClick={() => this.setState({ invalidFileSelected: false })}>
+                <p
+                  className="text-danger"
+                  onClick={() => this.setState({ invalidFileSelected: false })}
+                >
                   <FormattedMessage
                     id={'conversation.invalidFileSelected'}
-                    defaultMessage={'File sizes must be less than 1.5 MB. Please select a smaller image.'}
+                    defaultMessage={
+                      'File sizes must be less than 1.5 MB. Please select a smaller image.'
+                    }
                   />
                 </p>
               </div>
@@ -376,7 +392,16 @@ class Conversation extends Component {
             {!!files.length && (
               <div className="files-container">
                 {files.map((dataUri, i) => (
-                  <img src={dataUri} key={i} className="preview-thumbnail" />
+                  <div key={i} className="image-container">
+                    <img src={dataUri} className="preview-thumbnail" />
+                    <a
+                      className="close-btn cancel-image"
+                      aria-label="Close"
+                      onClick={() => this.setState({ files: [] })}
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </a>
+                  </div>
                 ))}
               </div>
             )}
@@ -409,4 +434,11 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(injectIntl(Conversation))
+const mapDispatchToProps = dispatch => ({
+  fetchUser: addr => dispatch(fetchUser(addr))
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(injectIntl(Conversation))
