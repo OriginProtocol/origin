@@ -40,7 +40,8 @@ ENV BRIDGE_SERVER_DOMAIN=bridge.dev.originprotocol.com \
     MESSAGING_ACCOUNT=0xa9f10e485dd35d38f962bf2a3cb7d6b58585d591 \
     PROVIDER_URL=https://rinkeby.infura.io/emIXjs9eDuy57IlTYsIP \
     MESSAGING_NAMESPACE=origin:dev \
-    DEPLOY_TAG=$DEPLOY_TAG
+    DEPLOY_TAG=$DEPLOY_TAG \
+    BLOCK_EPOCH=0
 
 RUN npm install --quiet --no-progress
 

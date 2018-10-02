@@ -23,7 +23,8 @@ ENV BRIDGE_SERVER_DOMAIN=bridge.originprotocol.com \
     MESSAGING_ACCOUNT=0xbfdd843382b36ffbacd00b190de6cb85ff840118 \
     PROVIDER_URL=https://mainnet.infura.io/emIXjs9eDuy57IlTYsIP \
     MESSAGING_NAMESPACE=origin \
-    DEPLOY_TAG=$DEPLOY_TAG
+    DEPLOY_TAG=$DEPLOY_TAG \
+    BLOCK_EPOCH=6400000
 
 RUN npm install --quiet --no-progress
 RUN NODE_ENV=production node_modules/.bin/webpack --progress --display errors-only
