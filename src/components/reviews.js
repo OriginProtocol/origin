@@ -42,7 +42,7 @@ class Reviews extends Component {
     return (
       <div className="reviews">
         <h2>
-          <FormattedMessage id={'User.reviews'} defaultMessage={'Reviews'} />
+          <FormattedMessage id={'reviews.heading'} defaultMessage={'Reviews'} />
           &nbsp;<span className="review-count">
             {Number(userReviews.length).toLocaleString()}
           </span>
