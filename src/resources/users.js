@@ -1,11 +1,11 @@
 import UsersResolver from '../contractInterface/users/resolver'
 
 class Users {
-  constructor({ contractService, ipfsService }) {
-    this.resolver = new UsersResolver({ contractService, ipfsService })
+  constructor({ contractService, ipfsService, blockEpoch }) {
+    this.resolver = new UsersResolver({ contractService, ipfsService, blockEpoch })
   }
 
-  /* possible options values: 
+  /* possible options values:
    * - confirmationCallback(confirmationCount, transactionReceipt) -> called repeatedly after a transaction is mined
    * - transactionHashCallback(hash) -> called immediately when the transaction hash is received
    */
