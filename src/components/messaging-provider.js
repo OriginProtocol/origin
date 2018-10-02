@@ -27,22 +27,21 @@ class MessagingProvider extends Component {
       congratsMessage: {
         id: 'messaging-provider.congrats',
         defaultMessage:
-          'Congratulations! You can now message other users across the Origin Platform ecosystem! ' +
+          'Congratulations! You can now message other users on Origin. ' +
           'Why not start by taking a look around and telling us what you think about our DApp?'
       },
       welcomeMessage: {
         id: 'messaging-provider.welcome',
         defaultMessage:
-          'Welcome to the Origin Protocol Demo DApp! ' +
-          'Our innovative messaging platform allows you to communicate ' +
-          'with other Origin users in a secure and decentralized way. ' +
-          'All of your messages will be encrypted and stored on IPFS. ' +
-          'Messages can only be read by you, the recipient, ' +
-          'and potentially a third-party arbitrator if either of you initiates a dispute ' +
-          'and grants access to a cryptographically-generated, shared, private key.\n' +
+          'You can use Origin Messaging to chat with other users. ' +
+          'Origin Messaging allows you to communicate with other users in a secure and decentralized way. ' +
+          'Messages are private and, usually, can only be read by you or the recipient. ' +
+          'In the case that either of you opens a dispute, messages can also be read by a third party arbitrator.\n' +
           '\n' +
-          'In order to enable messaging you will need to use your Ethereum wallet to sign two statements. ' +
-          'This will not cost any ETH, Origin Token, or gas.'
+          'Get started with messaging in two steps. ' +
+          'First, you will use your Ethereum wallet to enable Origin Messaging. ' +
+          'Then you will sign your public messaging key so that other users can find and chat with you. ' +
+          'Using Origin Messaging is free and will not cost you any ETH or Origin Token.'
       }
     })
     // ? consider using https://www.npmjs.com/package/redux-debounced
@@ -142,7 +141,7 @@ class MessagingProvider extends Component {
         roomId,
         senderAddress: ETH_ADDRESS
       }
-      message.status = origin.messaging.getStatus(message, web3Account)
+      message.status = origin.messaging.getStatus(message)
       this.props.addMessage(message)
     }
     // on messaging enabled
@@ -175,7 +174,7 @@ class MessagingProvider extends Component {
         roomId,
         senderAddress: ETH_ADDRESS
       }
-      message.status = origin.messaging.getStatus(message, web3Account)
+      message.status = origin.messaging.getStatus(message)
       this.props.addMessage(message)
     }
   }
@@ -195,7 +194,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   addMessage: obj => dispatch(addMessage(obj)),
   fetchNotifications: () => dispatch(fetchNotifications()),
-  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg)),
+  fetchUser: addr => dispatch(fetchUser(addr)),
   setMessagingEnabled: bool => dispatch(setMessagingEnabled(bool)),
   setMessagingInitialized: bool => dispatch(setMessagingInitialized(bool))
 })

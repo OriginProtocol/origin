@@ -1,10 +1,6 @@
 import { defineMessages } from 'react-intl'
 
 export default defineMessages({
-  'schema.transportation.schemaDescription': {
-    id: 'schema.transportation.schemaDescription',
-    defaultMessage: 'Distributed Getaround'
-  },
   'schema.transportation.title': {
     id: 'schema.transportation.title',
     defaultMessage: 'Title'
@@ -63,7 +59,7 @@ export default defineMessages({
   },
   'schema.transportation.rateBuyer': {
     id: 'schema.transportation.rateBuyer',
-    defaultMessage: 'Give the buyer a review'
+    defaultMessage: 'Leave a review of the buyer'
   },
   'schema.transportation.sellerSteps': {
     id: 'schema.transportation.sellerSteps',

@@ -8,7 +8,7 @@ import {
   FILTER_OPERATOR_GREATER_OR_EQUAL,
   FILTER_OPERATOR_LESSER_OR_EQUAL
 } from 'components/search/constants'
-import { getEthPrice } from 'utils/priceUtils'
+import { getCryptoPrice } from 'utils/priceUtils'
 
 class PriceFilter extends Component {
   constructor(props) {
@@ -41,13 +41,13 @@ class PriceFilter extends Component {
     return [
       {
         name: this.props.filter.searchParameterName,
-        value: await getEthPrice(this.state.value[0], 'USD', 'ETH'),
+        value: getCryptoPrice(this.state.value[0], 'USD', 'ETH'),
         valueType: VALUE_TYPE_FLOAT,
         operator: FILTER_OPERATOR_GREATER_OR_EQUAL
       },
       {
         name: this.props.filter.searchParameterName,
-        value: await getEthPrice(this.state.value[1], 'USD', 'ETH'),
+        value: getCryptoPrice(this.state.value[1], 'USD', 'ETH'),
         valueType: VALUE_TYPE_FLOAT,
         operator: FILTER_OPERATOR_LESSER_OR_EQUAL
       }
@@ -76,9 +76,9 @@ class PriceFilter extends Component {
     const priceUnit = this.props.filter.priceUnit
       ? this.props.intl.formatMessage(this.props.filter.priceUnit)
       : `USD`
-
     const minPrice = Math.floor(parseFloat(this.props.minPrice))
     const maxPrice = Math.ceil(parseFloat(this.props.maxPrice))
+    
     return (
       <div
         className="d-flex flex-column"
@@ -86,10 +86,10 @@ class PriceFilter extends Component {
       >
         <div className="d-flex flex-row price-filter">
           <div id="price-amount-from" className="mr-auto price-slider-amount">
-            {Number(this.state.value[0]).toLocaleString()}&#36;
+            &#36;{Number(this.state.value[0]).toLocaleString()}
           </div>
           <div id="price-amount-to" className="price-slider-amount">
-            {Number(this.state.value[1]).toLocaleString()}&#36;
+            &#36;{Number(this.state.value[1]).toLocaleString()}
           </div>
         </div>
         <Range
@@ -123,7 +123,8 @@ class PriceFilter extends Component {
 }
 
 const mapStateToProps = state => ({
-  filters: state.search.filters
+  filters: state.search.filters,
+  exchangeRates: state.exchangeRates
 })
 
 const mapDispatchToProps = () => ({})

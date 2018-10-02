@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react'
+import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { getFiatPrice } from 'utils/priceUtils'
 
@@ -7,17 +8,11 @@ class ListingCardPrices extends Component {
     super(props)
     this.state = {
       price: props.price,
-      fiatPrice: null,
       approxPrice: 'Loading...',
-      currencyCode: 'USD',
+      fiatCurrencyCode: 'USD',
+      cryptoCurrencyCode: 'ETH',
       defaultDecimalPlaces: this.getPrecision(props.price)
     }
-  }
-
-  async componentDidMount() {
-    const { price, currencyCode } = this.state
-    const fiatPrice = await getFiatPrice(price, currencyCode)
-    this.setState({ fiatPrice })
   }
 
   getPrecision(n) {
@@ -32,7 +27,12 @@ class ListingCardPrices extends Component {
   }
 
   render() {
-    const { currencyCode, fiatPrice } = this.state
+    const { price, fiatCurrencyCode, cryptoCurrencyCode } = this.state
+    const fiatPrice = getFiatPrice(
+      price,
+      fiatCurrencyCode,
+      cryptoCurrencyCode
+    )
 
     return (
       <div>
@@ -65,7 +65,7 @@ class ListingCardPrices extends Component {
                   <div className="fiat">
                     {fiatPrice === null && 'Loading'}
                     {fiatPrice}
-                    {fiatPrice && ` ${currencyCode}`}
+                    {fiatPrice && ` ${fiatCurrencyCode}`}
                   </div>
                 </div>
               </div>
@@ -77,4 +77,10 @@ class ListingCardPrices extends Component {
   }
 }
 
-export default ListingCardPrices
+const mapStateToProps = ({ exchangeRates }) => ({
+  exchangeRates
+})
+
+export default connect(
+  mapStateToProps
+)(ListingCardPrices)

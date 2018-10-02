@@ -1,6 +1,5 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
-  "description": "schema.tickets.schemaDescription",
   "type": "object",
   "required": ["name","category","description","price"],
   "properties": {
@@ -62,7 +61,6 @@
       "type": "string",
       "title": "schema.tickets.sellerSteps",
       "enum": [
-        "schema.tickets.packageItem",
         "schema.tickets.shipItem",
         "schema.tickets.messageBuyer",
         "schema.tickets.rateBuyer"

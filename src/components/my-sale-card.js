@@ -63,7 +63,7 @@ class MySaleCard extends Component {
       `${user.profile.firstName} ${user.profile.lastName}`) || <UnnamedUser />
     const photo = pictures && pictures.length > 0 && pictures[0]
     const voided = ['rejected', 'withdrawn'].includes(status)
-    const completed = ['finalized', 'sellerReviewed'].includes(status)
+    const completed = ['finalized', 'ruling', 'sellerReviewed'].includes(status)
     const pending = !voided && !completed
     const step = offerStatusToStep(status)
 
@@ -135,48 +135,46 @@ class MySaleCard extends Component {
               maxStep={4}
               currentStep={step}
               perspective="seller"
+              purchase={purchase}
               subdued={true}
             />
           )}
           <div className="d-flex justify-content-between actions">
             <p>
-              {!voided && (
-                <strong>
-                  <FormattedMessage
-                    id={'my-sale-card.nextStep'}
-                    defaultMessage={'Next Step'}
-                  />
-                  :&nbsp;
-                </strong>
-              )}
+              {!completed ||
+                (status === 'finalized' && (
+                  <strong>
+                    <FormattedMessage
+                      id={'my-sale-card.nextStep'}
+                      defaultMessage={'Next Step'}
+                    />
+                    :&nbsp;
+                  </strong>
+                ))}
               {status === 'created' && (
                 <FormattedMessage
                   id={'my-sale-card.accept'}
-                  defaultMessage={'Accept the offer'}
+                  defaultMessage={`Accept or reject the buyer's offer`}
                 />
               )}
               {status === 'accepted' && (
                 <FormattedMessage
                   id={'my-sale-card.awaitConfirmation'}
-                  defaultMessage={'Wait for the buyer to confirm the sale'}
+                  defaultMessage={'Wait for the buyer to complete the sale'}
                 />
               )}
               {status === 'disputed' && (
                 <FormattedMessage
                   id={'my-sale-card.awaitContact'}
-                  defaultMessage={'Wait to be contacted'}
+                  defaultMessage={
+                    'Wait to be contacted by an Origin team member'
+                  }
                 />
               )}
               {status === 'finalized' && (
                 <FormattedMessage
                   id={'my-sale-card.reviewSale'}
-                  defaultMessage={'Review the sale'}
-                />
-              )}
-              {status === 'sellerReviewed' && (
-                <FormattedMessage
-                  id={'my-sale-card.saleComplete'}
-                  defaultMessage={'This sale is complete'}
+                  defaultMessage={'Leave a review of the buyer'}
                 />
               )}
             </p>
@@ -207,7 +205,7 @@ const mapStateToProps = (state, { purchase }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg))
+  fetchUser: addr => dispatch(fetchUser(addr))
 })
 
 export default connect(

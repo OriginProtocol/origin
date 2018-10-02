@@ -1,9 +1,5 @@
 [
   {
-    "id": "schema.forSale.schemaDescription",
-    "defaultMessage": "Distributed Craigslist/Ebay/Amazon"
-  },
-  {
     "id": "schema.forSale.title",
     "defaultMessage": "Title"
   },
@@ -204,12 +200,8 @@
     "defaultMessage": "Wanted"
   },
   {
-    "id": "schema.forSale.packageItem",
-    "defaultMessage": "Package the item"
-  },
-  {
-    "id": "schema.forSale.shipItem",
-    "defaultMessage": "Ship the item to the buyer"
+    "id": "schema.forSale.deliverProduct",
+    "defaultMessage": "Arrange for delivery or pickup"
   },
   {
     "id": "schema.forSale.messageBuyer",
@@ -217,7 +209,7 @@
   },
   {
     "id": "schema.forSale.rateBuyer",
-    "defaultMessage": "Give the buyer a review"
+    "defaultMessage": "Leave a review of the buyer"
   },
   {
     "id": "schema.forSale.sellerSteps",

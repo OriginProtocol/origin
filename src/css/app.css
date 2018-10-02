@@ -351,7 +351,7 @@ textarea:-moz-ui-invalid {
   background-position: 50%;
 }
 
-.progress-circle.disputed {
+.progress-circle.exclaimed {
   background-color: var(--orange-red);
   color: white;
   font-size: 14px;
@@ -787,21 +787,6 @@ textarea:-moz-ui-invalid {
   right: 12px;
 }
 
-.navigation-bar .disabled-indicator {
-  background-color: red;
-  border: 2px solid var(--dusk);
-  border-radius: 50%;
-  height: 12px;
-  position: absolute;
-  right: 17px;
-  top: 2px;
-  width: 12px;
-}
-
-.navigation-bar .messages .disabled-indicator {
-  right: 12px;
-}
-
 .navigation-bar .conversation-list-item {
   background-color: #f6f7f8;
   border-top: 1px solid #98a7b4;
@@ -853,10 +838,6 @@ textarea:-moz-ui-invalid {
 }
 
 .dropdown.show .unread-indicator {
-  border-color: white;
-}
-
-.dropdown.show .disabled-indicator {
   border-color: white;
 }
 
@@ -1234,6 +1215,19 @@ textarea:-moz-ui-invalid {
   border-radius: var(--default-radius) 0 var(--default-radius) var(--default-radius);
 }
 
+.actual-menu .edit-profile {
+  background-color: var(--dark-grey-blue);
+  border-radius: 0 0 var(--default-radius) var(--default-radius);
+  color: white;
+  font-size: 1.125rem;
+  padding: 0.75rem;
+  width: 100%;
+}
+
+.actual-menu .edit-profile:hover {
+  background-color: #202e3e;
+}
+
 .identity .dropdown-menu .wallet {
   margin: 0;
   top: unset;
@@ -1468,6 +1462,14 @@ textarea:-moz-ui-invalid {
   margin-bottom: 10px;
 }
 
+.connectivity .connection > div:nth-of-type(2) {
+  flex-shrink: 0;
+}
+
+.connectivity .connection > div:last-of-type {
+  word-break: break-all;
+}
+
 .connectivity .name {
   margin-right: 10px;
 }
@@ -1515,8 +1517,8 @@ textarea:-moz-ui-invalid {
 
 .modal-content ul {
   list-style: none;
-  margin-bottom: 1rem;
-  padding: 0;
+  margin-bottom: 0;
+  padding: 1rem 2rem;
   text-align: left;
   width: fit-content;
 }
@@ -1526,7 +1528,8 @@ textarea:-moz-ui-invalid {
 }
 
 .modal-content li:before {
-  content: '✓';
+  color: var(--greenblue);
+  content: '•';
   margin-right: 0.5rem;
 }
 
@@ -1819,8 +1822,7 @@ textarea:-moz-ui-invalid {
   vertical-align: super;
 }
 
-.arbitration-modal.rejection .modal-content {
-  height: 420px;
+.offer-modal .modal-content {
   width: 420px;
 }
 
@@ -2045,7 +2047,8 @@ textarea:-moz-ui-invalid {
   width: 50%;
 }
 
-.listing-card .photo {
+.listing-card .photo,
+.listing-form .photo {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   background-size: cover;
@@ -2092,14 +2095,16 @@ textarea:-moz-ui-invalid {
   margin-bottom: auto;
 }
 
-.boosted.badge {
+.boosted.badge,
+.featured.badge {
   background-color: var(--golden-rod);
   color: white;
   margin: 0 0 auto 10px;
   text-transform: uppercase;
 }
 
-.boosted.badge span {
+.boosted.badge span,
+.featured.badge span {
   padding-right: 5px;
 }
 
@@ -2113,8 +2118,14 @@ textarea:-moz-ui-invalid {
   margin-left: auto;
 }
 
-.listing-detail .boosted {
+.listing-detail .boosted,
+.listing-detail .featured {
   margin-left: 5px;
+}
+
+.listing-detail .skip-identity {
+  font-size: 0.875rem;
+  padding-top: 1.125rem;
 }
 
 .buy-box {
@@ -2401,6 +2412,11 @@ textarea:-moz-ui-invalid {
   margin-top: 0;
 }
 
+/* hide form error summary in react-jsonschema-forms */
+.rjsf .errors {
+  display: none;
+}
+
 .form-control,
 select.form-control:not([size]):not([multiple]) {
   height: 46px;
@@ -2433,15 +2449,39 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .schema-details .pictures .image-container {
-  padding: 25px 0 10px;
+  border: 1px solid var(--light);
+  border-radius: 0.25rem;
   position: relative;
+  padding: 0;
+  height: 240px;
+  margin-bottom: 10px;
+  width: 100%;
 }
 
-.schema-details .pictures .image-container .close-btn {
+.cancel-image {
   position: absolute;
-  top: 7px;
-  right: -16px;
+  top: 0;
+  right: 0;
   cursor: pointer;
+  padding: 0.75rem;
+  line-height: 0.5;
+  background-color: white;
+  font-weight: bold;
+  border-bottom: 1px solid var(--light);
+  border-left: 1px solid var(--light);
+  border-radius: 0 0.25rem;
+  opacity: 0.5;
+}
+
+.schema-details .pictures .photo {
+  border-radius: 0.25rem;
+  height: 100%;
+  position: absolute;
+  top: 0;
+}
+
+.schema-details .pictures .image-container .close-btn:hover {
+  opacity: 1;
 }
 
 .schema-details .preview-thumbnail {
@@ -2453,16 +2493,19 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .photo-picker .info-box.warn {
-  margin-top: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   position: relative;
 }
 
 .photo-picker .info-box.warn .close-btn {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: 0;
+  right: 0;
+  color: var(--orange-red);
   cursor: pointer;
+  font-weight: bold;
+  padding: 0.75rem;
+  line-height: 0.5;
 }
 
 .file-info {
@@ -2544,6 +2587,10 @@ select.form-control:not([size]):not([multiple]) {
   margin-bottom: 15px;
 }
 
+.listing-form .photo-row .photo {
+  border: 1px solid var(--light);
+}
+
 .listing-form .preview img {
   display: inline-block;
   margin-right: 15px;
@@ -2588,10 +2635,6 @@ select.form-control:not([size]):not([multiple]) {
   border: 1px solid var(--golden-rod);
   text-align: center;
   padding: 30px 30px 15px;
-}
-
-.listing-form .select-boost h2 {
-  margin-bottom: 30px;
 }
 
 .listing-form .select-boost .info-box img {
@@ -2710,6 +2753,7 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .boost-slider {
+  padding-top: 15px;
   position: relative;
 }
 
@@ -2822,7 +2866,8 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .listing-form .schema-options .info-box p,
-.listing-form .photo-picker .info-box p {
+.listing-form .photo-picker .info-box p,
+.listing-form .schema-details .info-box p {
   margin-bottom: 0;
 }
 
@@ -3268,6 +3313,10 @@ select.form-control:not([size]):not([multiple]) {
   width: 60px;
 }
 
+.purchase-detail .identification .address {
+  font-size: 0.75rem;
+}
+
 .purchase-detail .progress-container {
   margin: 0 15px 15px;
 }
@@ -3352,17 +3401,13 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .purchase-detail .summary {
+  background-color: var(--dark-grey-blue);
   border: 1px solid var(--light);
   border-radius: var(--default-radius);
+  color: white;
   margin-bottom: 30px;
   margin-top: 20px;
   padding: 20px;
-}
-
-.purchase-detail .summary p {
-  color: white;
-  font-size: 1.125rem;
-  margin: 0;
 }
 
 .purchase-detail .summary .d-flex div {
@@ -3377,7 +3422,6 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .purchase-detail .summary .recap,
-.purchase-detail .summary .status,
 .purchase-detail .summary .value {
   font-weight: bold;
   margin: 0;
@@ -3386,6 +3430,7 @@ select.form-control:not([size]):not([multiple]) {
 .purchase-detail .summary .recap {
   font-size: 1.125rem;
   font-weight: bold;
+  max-width: 14rem;
 }
 
 .purchase-detail .summary .status.active {
@@ -3850,6 +3895,11 @@ form .stars img {
   margin-top: 20px;
 }
 
+.conversation .system-message {
+  font-style: italic;
+  color: #dd0a0a;
+}
+
 .conversation .avatar-container {
   height: 60px;
   width: 60px;
@@ -3912,6 +3962,12 @@ form .stars img {
 .add-message .files-container {
   flex-grow: 1;
   padding: 10px 0;
+}
+
+.add-message .files-container .image-container {
+  display: inline-block;
+  height: 100%;
+  position: relative;
 }
 
 .add-message .files-container img {
@@ -4862,12 +4918,8 @@ a:not([href]):not([tabindex]).span-link {
 
 /* About Tokens Page */
 
-.video-placeholder {
-  width: auto;
-  height: 225px;
-  background-color: #dfe6ea;
-  background-color: var(--pale-grey-two);
-  margin-top: 100px;
+.video-placeholder img {
+  width: 100%;
 }
 
 .lead-text {
@@ -4893,26 +4945,15 @@ a:not([href]):not([tabindex]).span-link {
 
 /* Beta Modal */
 
-.beta .modal-content {
-  max-height: calc(100vh - 1rem);
-}
-
-.beta h2 {
-  font-weight: normal;
-  margin: 0 auto 1.25rem;
-  max-width: 18rem;
-}
 
 .beta h3 {
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: normal;
   margin: 0 auto 1.25rem;
 }
 
 .beta .disclaimer {
-  flex-shrink: 1;
   max-width: 30rem;
-  overflow-y: scroll;
   padding-top: 15px;
 }
 
@@ -4921,6 +4962,7 @@ a:not([href]):not([tabindex]).span-link {
 }
 
 .beta .disclaimer img {
+  flex-shrink: 0;
   margin-right: 15px;
 }
 
@@ -5065,14 +5107,14 @@ a:not([href]):not([tabindex]).span-link {
   .seller-steps .list-container ol {
     padding-left: 5%;
   }
-
-  .beta .modal-content {
-    max-height: calc(100vh - 3.5rem);
-  }
 }
 
 /* md + */
 @media (min-width: 768px) {
+  .video-placeholder {
+    padding-top: 100px;
+  }
+
   .modal-content {
     padding: 40px;
   }

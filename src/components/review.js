@@ -64,7 +64,7 @@ const mapStateToProps = (state, { review }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg))
+  fetchUser: addr => dispatch(fetchUser(addr))
 })
 
 export default connect(

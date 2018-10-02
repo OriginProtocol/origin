@@ -109,10 +109,18 @@ class TransactionsDropdown extends Component {
               </div>
               <h3 className="mr-auto">
                 <span className="d-none d-md-inline">
-                  <FormattedMessage
-                    id={'transactions.pendingBlockchainTransactionsHeading'}
-                    defaultMessage={'Pending Blockchain Transactions'}
-                  />
+                  {transactionsNotCompleted.length !== 1 && (
+                    <FormattedMessage
+                      id={'transactions.pendingBlockchainTransactionsHeading'}
+                      defaultMessage={'Pending Blockchain Transactions'}
+                    />
+                  )}
+                  {transactionsNotCompleted.length === 1 && (
+                    <FormattedMessage
+                      id={'transactions.pendingBlockchainTransactionHeading'}
+                      defaultMessage={'Pending Blockchain Transaction'}
+                    />
+                  )}
                 </span>
                 <span className="d-none d-sm-inline d-md-none">
                   <FormattedMessage

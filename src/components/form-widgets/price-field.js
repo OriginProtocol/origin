@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { getFiatPrice } from 'utils/priceUtils'
 import { FormattedMessage } from 'react-intl'
 
@@ -7,7 +8,6 @@ class PriceField extends Component {
     super(props)
     this.state = {
       price: props.formData || '',
-      priceUsd: '0.00',
       currencyCode: props.currencyCode || 'USD'
     }
 
@@ -19,16 +19,6 @@ class PriceField extends Component {
       enumeratedPrice &&
       enumeratedPrice.length === 1 &&
       enumeratedPrice[0] === 0
-  }
-
-  async componentDidMount() {
-    const { price, currencyCode } = this.state
-    if (this.props.formData) {
-      const priceUsd = await getFiatPrice(price, currencyCode)
-      this.setState({
-        priceUsd
-      })
-    }
   }
 
   onChange() {
@@ -45,17 +35,13 @@ class PriceField extends Component {
         },
         () => this.props.onChange(valueNum)
       )
-
-      if (!isNan) {
-        const priceUsd = await getFiatPrice(valueNum, this.state.currencyCode)
-        this.setState({
-          priceUsd
-        })
-      }
     }
   }
 
   render() {
+    const { price, currencyCode } = this.state
+    const priceUsd = getFiatPrice(price, currencyCode, 'ETH')
+
     return (
       !this.priceHidden && (
         <div className="price-field">
@@ -71,7 +57,7 @@ class PriceField extends Component {
                   id="root_price"
                   step="0.00001"
                   className="price-field form-control"
-                  value={this.state.price}
+                  value={price}
                   onChange={this.onChange()}
                   required={this.props.required}
                 />
@@ -83,10 +69,10 @@ class PriceField extends Component {
             </div>
             <div className="col-sm-6 no-left-padding">
               <div className="price-field-fiat">
-                {this.state.priceUsd}&nbsp;
+                {priceUsd}&nbsp;
                 <span className="currency-badge text-grey">
                   <img src="images/usd-icon.svg" role="presentation" />
-                  {this.state.currencyCode}
+                  {currencyCode}
                 </span>
               </div>
             </div>
@@ -94,9 +80,7 @@ class PriceField extends Component {
           <p className="help-block">
             <FormattedMessage
               id={'price-field.price-help'}
-              defaultMessage={
-                'The cost to buy this listing. Price is always in {currency}. '
-              }
+              defaultMessage={'The price is always in {currency}. '}
               values={{
                 currency: (
                   <a
@@ -122,4 +106,8 @@ class PriceField extends Component {
   }
 }
 
-export default PriceField
+const mapStateToProps = ({ exchangeRates }) => ({
+  exchangeRates
+})
+
+export default connect(mapStateToProps)(PriceField)

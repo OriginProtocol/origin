@@ -63,7 +63,12 @@ class MyPurchases extends Component {
 
   render() {
     const { filter, loading, purchases } = this.state
-    const completedStates = ['withdrawn', 'finalized', 'sellerReviewed']
+    const completedStates = [
+      'withdrawn',
+      'finalized',
+      'sellerReviewed',
+      'ruling'
+    ]
     const filteredPurchases = purchases.filter(({ offer }) => {
       const completed = completedStates.includes(offer.status)
 

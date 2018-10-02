@@ -87,7 +87,6 @@ class MessagesDropdown extends Component {
           aria-expanded="false"
         >
           {!!conversations.length && <div className="unread-indicator" />}
-          {!messagingEnabled && <div className="disabled-indicator" />}
           <img
             src="images/messages-icon.svg"
             className="messages"

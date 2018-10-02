@@ -1,10 +1,6 @@
 import { defineMessages } from 'react-intl'
 
 export default defineMessages({
-  'schema.forSale.schemaDescription': {
-    id: 'schema.forSale.schemaDescription',
-    defaultMessage: 'Distributed Craigslist/Ebay/Amazon'
-  },
   'schema.forSale.title': {
     id: 'schema.forSale.title',
     defaultMessage: 'Title'
@@ -205,13 +201,9 @@ export default defineMessages({
     id: 'schema.forSale.wanted',
     defaultMessage: 'Wanted'
   },
-  'schema.forSale.packageItem': {
-    id: 'schema.forSale.packageItem',
-    defaultMessage: 'Package the item'
-  },
-  'schema.forSale.shipItem': {
-    id: 'schema.forSale.shipItem',
-    defaultMessage: 'Ship the item to the buyer'
+  'schema.forSale.deliverProduct': {
+    id: 'schema.forSale.deliverProduct',
+    defaultMessage: 'Arrange for delivery or pickup'
   },
   'schema.forSale.messageBuyer': {
     id: 'schema.forSale.messageBuyer',
@@ -219,7 +211,7 @@ export default defineMessages({
   },
   'schema.forSale.rateBuyer': {
     id: 'schema.forSale.rateBuyer',
-    defaultMessage: 'Give the buyer a review'
+    defaultMessage: 'Leave a review of the buyer'
   },
   'schema.forSale.sellerSteps': {
     id: 'schema.forSale.sellerSteps',

@@ -1,9 +1,5 @@
 [
   {
-    "id": "schema.services.schemaDescription",
-    "defaultMessage": "Distributed Elance/99 Designs/Postmates/Fiver/Handy/Thumbtack"
-  },
-  {
     "id": "schema.services.title",
     "defaultMessage": "Title"
   },
@@ -105,7 +101,7 @@
   },
   {
     "id": "schema.services.rateBuyer",
-    "defaultMessage": "Give the buyer a review"
+    "defaultMessage": "Leave a review of the buyer"
   },
   {
     "id": "schema.services.sellerSteps",

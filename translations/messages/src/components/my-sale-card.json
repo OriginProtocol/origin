@@ -21,23 +21,19 @@
   },
   {
     "id": "my-sale-card.accept",
-    "defaultMessage": "Accept the offer"
+    "defaultMessage": "Accept or reject the buyer's offer"
   },
   {
     "id": "my-sale-card.awaitConfirmation",
-    "defaultMessage": "Wait for the buyer to confirm the sale"
+    "defaultMessage": "Wait for the buyer to complete the sale"
   },
   {
     "id": "my-sale-card.awaitContact",
-    "defaultMessage": "Wait to be contacted"
+    "defaultMessage": "Wait to be contacted by an Origin team member"
   },
   {
     "id": "my-sale-card.reviewSale",
-    "defaultMessage": "Review the sale"
-  },
-  {
-    "id": "my-sale-card.saleComplete",
-    "defaultMessage": "This sale is complete"
+    "defaultMessage": "Leave a review of the buyer"
   },
   {
     "id": "my-sale-card.viewDetails",

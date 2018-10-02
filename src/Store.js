@@ -2,6 +2,7 @@ import thunkMiddleware from 'redux-thunk'
 import { createStore, applyMiddleware, combineReducers } from 'redux'
 
 import notifications from 'reducers/Notifications'
+import exchangeRates from 'reducers/ExchangeRates'
 import transactions from 'reducers/Transactions'
 import marketplace from 'reducers/Marketplace'
 import onboarding from 'reducers/Onboarding'
@@ -24,6 +25,7 @@ if (process.env.REDUX_LOGGER) {
 const store = createStore(
   combineReducers({
     notifications,
+    exchangeRates,
     transactions,
     marketplace,
     onboarding,

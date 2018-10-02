@@ -64,25 +64,11 @@ class OnboardingModal extends Component {
     this.userProgress()
   }
 
-  componentWillUnmount() {
-    this.removeModalClasses()
-  }
-
   closeModal(name = 'toggleSplitPanel') {
     return () => {
-      if (name === 'toggleSplitPanel') {
-        document.body.classList.remove('modal-open')
-      }
       this.setState({ dismissed: true, gettingStarted: false })
       this.props[name](false)
     }
-  }
-
-  addModalClass() {
-    window.scrollTo(0, 0)
-    window.setTimeout(() => {
-      document.body.classList.add('modal-open')
-    }, 500)
   }
 
   async loadListings() {
@@ -109,13 +95,6 @@ class OnboardingModal extends Component {
     }
   }
 
-  removeModalClasses() {
-    document.body.classList.remove('modal-open')
-
-    const backdrop = document.getElementsByClassName('modal-backdrop')
-    backdrop.length && backdrop[0].classList.remove('modal-backdrop')
-  }
-
   userProgress() {
     const {
       onboarding: { progress, learnMore, stepsCompleted, splitPanel },
@@ -129,13 +108,13 @@ class OnboardingModal extends Component {
     if (!!Number(ognBalance) || listings.length || stepsCompleted) {
       learnMore && toggleLearnMore(false)
       splitPanel && toggleSplitPanel(false)
-      return this.removeModalClasses()
+      return
     }
 
     const onboardingInProgress = progress && gettingStarted
 
     if (onboardingInProgress) {
-      this.addModalClass()
+      window.scrollTo(0, 0)
 
       !splitPanel && toggleSplitPanel(true)
     } else if (!progress && !dismissed) {

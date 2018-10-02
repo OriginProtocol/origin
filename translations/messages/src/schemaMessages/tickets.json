@@ -1,9 +1,5 @@
 [
   {
-    "id": "schema.tickets.schemaDescription",
-    "defaultMessage": "Distributed Ticketmaster/Eventbrite"
-  },
-  {
     "id": "schema.tickets.title",
     "defaultMessage": "Title"
   },
@@ -76,12 +72,8 @@
     "defaultMessage": "Tradeshow"
   },
   {
-    "id": "schema.tickets.packageItem",
-    "defaultMessage": "Package the tickets"
-  },
-  {
     "id": "schema.tickets.shipItem",
-    "defaultMessage": "Ship the tickets to the buyer"
+    "defaultMessage": "Arrange for delivery or pickup"
   },
   {
     "id": "schema.tickets.messageBuyer",
@@ -89,7 +81,7 @@
   },
   {
     "id": "schema.tickets.rateBuyer",
-    "defaultMessage": "Give the buyer a review"
+    "defaultMessage": "Leave a review of the buyer"
   },
   {
     "id": "schema.tickets.sellerSteps",

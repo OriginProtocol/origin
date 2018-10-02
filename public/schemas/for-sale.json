@@ -1,6 +1,5 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
-  "description":"schema.forSale.schemaDescription",
   "type": "object",
   "required": ["name","category","description","price"],
   "properties": {
@@ -93,8 +92,7 @@
       "type": "string",
       "title": "schema.forSale.sellerSteps",
       "enum": [
-        "schema.forSale.packageItem",
-        "schema.forSale.shipItem",
+        "schema.forSale.deliverProduct",
         "schema.forSale.messageBuyer",
         "schema.forSale.rateBuyer"
       ]

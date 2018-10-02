@@ -1,51 +1,111 @@
+import store from '../Store'
+import { setExchangeRate } from 'actions/ExchangeRates'
+
+const DEFAULT_FIAT = 'USD'
+const DEFAULT_CRYPTO = 'ETH'
+const EXCHANGE_RATE_CACHE_TTL = 2 * 60 * 1000 // 2 minutes
+const EXCHANGE_RATE_POLL_INTERVAL = 2 * 60 * 1000 // 2 minutes
+
+/**
+ * @function fetchRate
+ * @description fetches exchange rate from data provider's API
+ *
+ * @param {string} fiatCurrencyCode - e.g. "USD"
+ * @param {string} cryptoCurrencyCode - e.g. "ETH"
+ * @return {object} exchange rate number and cache hit boolean to indicate if a valid cache was found
+ */
+
 const fetchRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
-  if (!fiatCurrencyCode) {
-    fiatCurrencyCode = 'USD'
-  }
-  if (!cryptoCurrencyCode) {
-    cryptoCurrencyCode = 'ETH'
-  }
-  let exchangeURL = 'https://api.cryptonator.com/api/ticker/'
-  exchangeURL += cryptoCurrencyCode.toLowerCase()
-  exchangeURL += '-'
-  exchangeURL += fiatCurrencyCode.toLowerCase()
+  const cryptoParam = cryptoCurrencyCode.toLowerCase()
+  const fiatParam = fiatCurrencyCode.toLowerCase()
+  const exchangeURL = `https://api.cryptonator.com/api/ticker/${cryptoParam}-${fiatParam}`
 
   return new Promise(resolve => {
     fetch(exchangeURL)
       .then(res => res.json())
       .then(json => {
-        const exchangeRateFromAPI = parseFloat(json.ticker.price)
-        if (typeof Storage !== 'undefined') {
-          const object = { value: exchangeRateFromAPI, timestamp: new Date() }
-          localStorage.setItem('origin.exchangeRate', JSON.stringify(object))
-        }
-        resolve(exchangeRateFromAPI)
+        resolve({
+          rate: parseFloat(json.ticker.price),
+          cacheHit: false
+        })
       })
       .catch(console.error)
   })
 }
 
+/**
+ * @function getFiatExchangeRate
+ * @description determines if cache is valid. If not, calls fetchRate()
+ *
+ * @param {string} fiatCurrencyCode - e.g. "USD"
+ * @param {string} cryptoCurrencyCode - e.g. "ETH"
+ * @return {object} exchange rate number and cache hit boolean to indicate if a valid cache was found
+ */
+
 const getFiatExchangeRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
-  if (typeof Storage !== 'undefined') {
-    const cachedRate = localStorage.getItem('origin.exchangeRate')
-    if (cachedRate) {
-      const HALF_HOUR = 30 * 60 * 1000
-      const cachedTime = new Date(JSON.parse(cachedRate).timestamp)
-      if (new Date() - cachedTime < HALF_HOUR) {
-        return parseFloat(JSON.parse(cachedRate).value)
-      } else {
-        localStorage.removeItem('origin.exchangeRate')
-        return await fetchRate(fiatCurrencyCode, cryptoCurrencyCode) // cache is invalid
+  const { fiatCode, cryptoCode } = setDefaults(fiatCurrencyCode, cryptoCurrencyCode)
+  const { rate, timestamp } = getCachedCurrencyPair(fiatCurrencyCode, cryptoCurrencyCode)
+
+  if (rate) {
+    if (new Date().getTime() - timestamp.getTime() < EXCHANGE_RATE_CACHE_TTL) {
+      return {
+        rate: parseFloat(rate),
+        cacheHit: true
       }
     } else {
-      return await fetchRate(fiatCurrencyCode, cryptoCurrencyCode) // isn't cached to begin with
+      return await fetchRate(fiatCode, cryptoCode)
     }
   } else {
-    return await fetchRate(fiatCurrencyCode, cryptoCurrencyCode) // localStorage not available
+    return await fetchRate(fiatCode, cryptoCode)
   }
 }
 
-export const getFiatPrice = async (
+/**
+ * @function setDefaults
+ * @description sets default values that can be overridden if needed
+ *
+ * @param {string} fiatCode - e.g. "USD"
+ * @param {string} cryptoCode - e.g. "ETH"
+ * @param {object} exchangeRates - the exchange rates object containing currency pairs as stored in redux
+ * @return {object} fiatCode, cryptoCode, exchangeRates
+ */
+
+const setDefaults = (fiatCode, cryptoCode, exchangeRates) => {
+  return {
+    fiatCode: fiatCode || DEFAULT_FIAT,
+    cryptoCode: cryptoCode || DEFAULT_CRYPTO,
+    exchangeRates: exchangeRates || store.getState().exchangeRates
+  }
+}
+
+/**
+ * @function getCachedCurrencyPair
+ * @description gets a currency pair object from redux cache
+ *
+ * @param {string} fiatCurrencyCode - e.g. "USD"
+ * @param {string} cryptoCurrencyCode - e.g. "ETH"
+ * @return {object} exchange rate number and timestamp date object
+ */
+
+const getCachedCurrencyPair = (fiatCurrencyCode, cryptoCurrencyCode) => {
+  const { fiatCode, cryptoCode, exchangeRates } = setDefaults(fiatCurrencyCode, cryptoCurrencyCode)
+  const currencyPair = `${fiatCode.toUpperCase()}/${cryptoCode.toUpperCase()}`
+
+  return (exchangeRates && exchangeRates[currencyPair]) || {}
+}
+
+/**
+ * @function getFiatPrice
+ * @description takes a cryptocurrency price and returns the corresponding fiat price
+ *
+ * @param {number} priceEth - the price in ETH that is being converted to fiat
+ * @param {string} fiatCurrencyCode - defaults to "USD"
+ * @param {string} cryptoCurrencyCode - defaults to "ETH"
+ * @param {boolean} formatResult - defaults to true - returns the value as a string with 2 decimal places
+ * @return {string|number} fiat price as formatted string (default) or raw number
+ */
+
+export const getFiatPrice = (
   priceEth,
   fiatCurrencyCode,
   cryptoCurrencyCode,
@@ -54,19 +114,30 @@ export const getFiatPrice = async (
   if (!priceEth) {
     priceEth = 0
   }
-  const exchangeRate = await getFiatExchangeRate(
-    fiatCurrencyCode,
-    cryptoCurrencyCode
-  )
-  if (formatResult)
-    return Number(priceEth * exchangeRate).toLocaleString(undefined, {
+
+  const { rate } = getCachedCurrencyPair(fiatCurrencyCode, cryptoCurrencyCode)
+
+  if (formatResult) {
+    return Number(priceEth * (rate || 0)).toLocaleString(undefined, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     })
-  else return priceEth * exchangeRate
+  } else {
+    return priceEth * (rate || 0)
+  }
 }
 
-export const getEthPrice = async (
+/**
+ * @function getCryptoPrice
+ * @description takes a fiat price and returns the corresponding cryptocurrency price
+ *
+ * @param {number} priceFiat - the price in fiat that is being converted to crypto
+ * @param {string} fiatCurrencyCode - defaults to "USD"
+ * @param {string} cryptoCurrencyCode - defaults to "ETH"
+ * @return {number} crypto price
+ */
+
+export const getCryptoPrice = async (
   priceFiat,
   fiatCurrencyCode,
   cryptoCurrencyCode
@@ -74,9 +145,27 @@ export const getEthPrice = async (
   if (!priceFiat) {
     priceFiat = 0
   }
-  const exchangeRate = await getFiatExchangeRate(
-    fiatCurrencyCode,
-    cryptoCurrencyCode
-  )
-  return Number(priceFiat / exchangeRate)
+  const { rate } = getCachedCurrencyPair(fiatCurrencyCode, cryptoCurrencyCode)
+
+  return Number(priceFiat / rate)
 }
+
+/**
+ *
+ * @function updateExchangeRate
+ * @description sets the USD/ETH exchange rate object in redux
+ *
+ */
+
+const updateExchangeRate = async () => {
+  const exchangeRate = await getFiatExchangeRate()
+  if (!exchangeRate.cacheHit) {
+    store.dispatch(setExchangeRate(DEFAULT_FIAT, DEFAULT_CRYPTO, exchangeRate.rate))
+  }
+}
+
+updateExchangeRate()
+
+setInterval(async () => {
+  updateExchangeRate()
+}, EXCHANGE_RATE_POLL_INTERVAL)

@@ -52,10 +52,6 @@
     "defaultMessage": "Please install the MetaMask extension to access this site."
   },
   {
-    "id": "web3-provider.fullInstructionsForDemo",
-    "defaultMessage": "Full Instructions for Demo"
-  },
-  {
     "id": "web3-provider.useWalletEnabledBrowser",
     "defaultMessage": "Please access this site through a wallet-enabled browser:"
   },

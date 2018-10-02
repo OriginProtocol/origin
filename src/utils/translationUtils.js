@@ -256,12 +256,6 @@ export function translateSchema(schemaJson, schemaType) {
   const properties = schema.properties
   schemaType = dashToCamelCase(schemaType)
 
-  if (schema.description) {
-    schema.description = globalIntlProvider.formatMessage(
-      schemaMessages[schemaType][schema.description]
-    )
-  }
-
   for (const property in properties) {
     const propertyObj = properties[property]
 

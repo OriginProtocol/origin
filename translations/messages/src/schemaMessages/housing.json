@@ -1,9 +1,5 @@
 [
   {
-    "id": "schema.housing.schemaDescription",
-    "defaultMessage": "Distributed Airbnb"
-  },
-  {
     "id": "schema.housing.title",
     "defaultMessage": "Title"
   },
@@ -76,20 +72,16 @@
     "defaultMessage": "Vacation Rentals"
   },
   {
-    "id": "schema.housing.sendInfo",
-    "defaultMessage": "Send the address, access info, etc."
-  },
-  {
-    "id": "schema.housing.ensureCleanliness",
-    "defaultMessage": "Ensure that the unit is clean"
-  },
-  {
     "id": "schema.housing.messageBuyer",
-    "defaultMessage": "Message the buyer with an update"
+    "defaultMessage": "Message the buyer with any relevant details"
+  },
+  {
+    "id": "schema.housing.prepareProperty",
+    "defaultMessage": "Make sure the property is clean and ready"
   },
   {
     "id": "schema.housing.rateBuyer",
-    "defaultMessage": "Give the buyer a review"
+    "defaultMessage": "Leave a review of the buyer"
   },
   {
     "id": "schema.housing.sellerSteps",
