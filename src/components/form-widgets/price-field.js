@@ -40,11 +40,7 @@ class PriceField extends Component {
 
   render() {
     const { price, currencyCode } = this.state
-    const priceUsd = getFiatPrice(
-      price,
-      currencyCode,
-      'ETH'
-    )
+    const priceUsd = getFiatPrice(price, currencyCode, 'ETH')
 
     return (
       !this.priceHidden && (
@@ -84,9 +80,7 @@ class PriceField extends Component {
           <p className="help-block">
             <FormattedMessage
               id={'price-field.price-help'}
-              defaultMessage={
-                'The cost to buy this listing. Price is always in {currency}. '
-              }
+              defaultMessage={'The price is always in {currency}. '}
               values={{
                 currency: (
                   <a
@@ -116,6 +110,4 @@ const mapStateToProps = ({ exchangeRates }) => ({
   exchangeRates
 })
 
-export default connect(
-  mapStateToProps
-)(PriceField)
+export default connect(mapStateToProps)(PriceField)

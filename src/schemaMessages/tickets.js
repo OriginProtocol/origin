@@ -1,10 +1,6 @@
 import { defineMessages } from 'react-intl'
 
 export default defineMessages({
-  'schema.tickets.schemaDescription': {
-    id: 'schema.tickets.schemaDescription',
-    defaultMessage: 'Distributed Ticketmaster/Eventbrite'
-  },
   'schema.tickets.title': {
     id: 'schema.tickets.title',
     defaultMessage: 'Title'

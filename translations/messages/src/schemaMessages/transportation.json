@@ -1,9 +1,5 @@
 [
   {
-    "id": "schema.transportation.schemaDescription",
-    "defaultMessage": "Distributed Getaround"
-  },
-  {
     "id": "schema.transportation.title",
     "defaultMessage": "Title"
   },

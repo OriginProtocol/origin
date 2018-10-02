@@ -38,5 +38,9 @@
   {
     "id": "connectivity.bridgeServer",
     "defaultMessage": "Bridge Server:"
+  },
+  {
+    "id": "connectivity.messaging",
+    "defaultMessage": "Messaging Server:"
   }
 ]

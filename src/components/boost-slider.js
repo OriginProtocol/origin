@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { FormattedMessage } from 'react-intl'
 import Slider from 'rc-slider'
 import $ from 'jquery'
 // TODO:John - pass a third arg of 'OGN' into getFiatPrice() once OGN prices are available in cryptonator API
@@ -44,7 +45,12 @@ class BoostSlider extends Component {
 
     return (
       <div className="boost-slider">
-        <p>Boost Level</p>
+        <p>
+          <FormattedMessage
+            id={'boost-slider.boost-level'}
+            defaultMessage={'Boost Level'}
+          />
+        </p>
         <img
           className="info-icon"
           src="images/info-icon-inactive.svg"
@@ -52,10 +58,7 @@ class BoostSlider extends Component {
           data-toggle="tooltip"
           data-html="true"
           data-trigger="click"
-          title={`<div class="boost-tooltip">
-              <p>A boost increases the visibility of your listing and also works as a guarantee in case something goes wrong.</p>
-              <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">Learn More</a>
-            </div>`}
+          title={`<div class="boost-tooltip"><p>Your boost is a bit like a commission. It’s not required, but we recommend a boost level of 50 OGN for listings like yours.</p></div>`}
         />
         <div className="level-container">
           <span className={`boosted badge ${boostLevel.toLowerCase()}`}>
@@ -90,37 +93,37 @@ class BoostSlider extends Component {
         {ognBalance === 0 && (
           <div className="info-box">
             <p>
-              You have 0{' '}
-              <a
-                href="/#/about-tokens"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                OGN
-              </a>{' '}
-              in your wallet and cannot boost.
+              <FormattedMessage
+                id={'boost-slider.no-ogn'}
+                defaultMessage={
+                  'You have 0 OGN in your wallet and cannot boost.'
+                }
+              />
             </p>
           </div>
         )}
         {ognBalance > 0 &&
           ognBalance < this.props.selectedBoostAmount && (
           <div className="info-box warn">
-            <p>You don’t have enough OGN in your wallet.</p>
-            <a
-              className="btn btn-primary"
-              href="http://localhost:5000/"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={this.pollOgnBalance}
-            >
-                Get OGN
-            </a>
+            <p>
+              <FormattedMessage
+                id={'boost-slider.insufficient-ogn'}
+                defaultMessage={`You don't have enough OGN in your wallet.`}
+              />
+            </p>
           </div>
         )}
         <p className="help-block bottom-explainer">
-          Boosts are always calculated and charged in OGN.&nbsp;
+          <FormattedMessage
+            id={'boost-slider.denomination'}
+            defaultMessage={'Boosts are always calculated and charged in OGN.'}
+          />
+          &nbsp;
           <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">
-            Learn more &#x25b8;
+            <FormattedMessage
+              id={'boost-slider.learn-more'}
+              defaultMessage={'Learn More'}
+            />&#x25b8;
           </a>
         </p>
       </div>

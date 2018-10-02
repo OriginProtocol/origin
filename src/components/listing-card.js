@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 
-import { PendingBadge, SoldBadge } from 'components/badges'
+import { PendingBadge, SoldBadge, FeaturedBadge } from 'components/badges'
 import ListingCardPrices from 'components/listing-card-prices'
 
 import { getListing } from 'utils/listing'
@@ -87,6 +87,7 @@ class ListingCard extends Component {
     const isSold = offers.find(
       o => offerStatusToListingAvailability(o.status) === 'sold'
     )
+    const showFeaturedBadge = this.props.featured && !isSold && !isPending
 
     return (
       <div
@@ -110,6 +111,7 @@ class ListingCard extends Component {
             <div>{category}</div>
             {!loading && isPending && <PendingBadge />}
             {!loading && isSold && <SoldBadge />}
+            {!loading && showFeaturedBadge && <FeaturedBadge />}
             {/*!loading &&
               boostLevelIsPastSomeThreshold && (
               <span
