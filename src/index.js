@@ -33,7 +33,8 @@ class Origin {
     ipfsCreator,
     OrbitDB,
     ecies,
-    messagingNamespace
+    messagingNamespace,
+    blockEpoch
   } = {}) {
     this.version = VERSION
 
@@ -48,7 +49,8 @@ class Origin {
     this.attestations = new Attestations({
       serverUrl: attestationServerUrl,
       contractService: this.contractService,
-      fetch
+      fetch,
+      blockEpoch
     })
 
     this.marketplace = new Marketplace({
@@ -56,7 +58,8 @@ class Origin {
       ipfsService: this.ipfsService,
       affiliate,
       arbitrator,
-      store
+      store,
+      blockEpoch
     })
 
     this.discovery = new Discovery({
@@ -66,7 +69,8 @@ class Origin {
 
     this.users = new Users({
       contractService: this.contractService,
-      ipfsService: this.ipfsService
+      ipfsService: this.ipfsService,
+      blockEpoch
     })
 
     this.messaging = new Messaging({

@@ -13,9 +13,9 @@ import {
 } from '../../models/notification'
 
 class MarketplaceResolver {
-  constructor({ contractService, store }) {
+  constructor({ contractService, store, blockEpoch }) {
     this.adapters = {
-      '000': new V00_MarkeplaceAdapter({ contractService, store })
+      '000': new V00_MarkeplaceAdapter({ contractService, store, blockEpoch })
     }
     this.versions = ['000']
     this.currentVersion = this.versions[this.versions.length - 1]
