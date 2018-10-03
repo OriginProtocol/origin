@@ -56,6 +56,11 @@ class Conversation extends Component {
   componentDidMount() {
     // try to detect the user before rendering
     this.identifyCounterparty()
+
+    // why does the page jump ?????
+    setTimeout(() => {
+      window.scrollTo(0, 0)
+    }, 400)
   }
 
   componentDidUpdate(prevProps) {
