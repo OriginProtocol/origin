@@ -1,14 +1,12 @@
 import React, { Component, Fragment } from 'react'
-import {
-  FormattedDate,
-  FormattedMessage,
-  defineMessages,
-  injectIntl
-} from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
+import { fetchUser } from 'actions/User'
+
 import CompactMessages from 'components/compact-messages'
+import OfferStatusEvent from 'components/offer-status-event'
 import PurchaseProgress from 'components/purchase-progress'
 
 import { getDataUri } from 'utils/fileUtils'
@@ -16,13 +14,15 @@ import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
 
+const imageMaxSize = process.env.IMAGE_MAX_SIZE || 2 * 1024 * 1024 // 2 MiB
+
 class Conversation extends Component {
   constructor(props) {
     super(props)
 
     this.intlMessages = defineMessages({
       newMessagePlaceholder: {
-        id: 'Messages.newMessagePlaceholder',
+        id: 'conversation.newMessagePlaceholder',
         defaultMessage: 'Type something...'
       }
     })
@@ -42,13 +42,23 @@ class Conversation extends Component {
       counterparty: {},
       files: [],
       listing: {},
-      purchase: {}
+      purchase: {},
+      invalidFileSelected: false,
+      invalidTextInput: false
     }
   }
 
   componentDidMount() {
     // try to detect the user before rendering
     this.identifyCounterparty()
+
+    // why does the page jump ?????
+    // regardless, need to scroll past the banner for now anyway
+    setTimeout(() => {
+      const banner = document.getElementsByClassName('warning').item(0)
+
+      window.scrollTo(0, banner ? banner.offsetHeight : 0)
+    }, 400)
   }
 
   componentDidUpdate(prevProps) {
@@ -56,6 +66,10 @@ class Conversation extends Component {
 
     // on conversation change
     if (id !== prevProps.id) {
+      // immediately clear the listing/purchase context
+      if (this.state.listing.id) {
+        this.setState({ listing: {}, purchase: {} })
+      }
       // textarea is an uncontrolled component and might maintain internal state
       (this.textarea.current || {}).value = ''
       // refresh the counterparty
@@ -87,7 +101,14 @@ class Conversation extends Component {
 
     for (const key in filesObj) {
       if (filesObj.hasOwnProperty(key)) {
-        filesArr.push(filesObj[key])
+        // Base64 encoding will inflate size to roughly 4/3 of original
+        if ((filesObj[key].size / 3) * 4 > imageMaxSize) {
+          this.setState({ invalidFileSelected: true })
+        } else {
+          this.setState({ invalidFileSelected: false })
+
+          filesArr.push(filesObj[key])
+        }
       }
     }
 
@@ -116,23 +137,31 @@ class Conversation extends Component {
     const el = this.textarea.current
 
     if (!el) {
+      // It's an image
+      if (this.state.files[0].length > imageMaxSize) {
+        this.form.current.reset()
+        this.setState({ files: [] })
+        return
+      }
       return this.sendMessage(this.state.files[0])
     }
 
     const newMessage = el.value
 
     if (!newMessage.length) {
-      alert('Please add a message to send')
+      this.setState({ invalidTextInput: true })
     } else {
       this.sendMessage(newMessage)
     }
   }
 
   identifyCounterparty() {
-    const { id, users, web3Account } = this.props
+    const { fetchUser, id, users, web3Account } = this.props
     const recipients = origin.messaging.getRecipients(id)
     const address = recipients.find(addr => addr !== web3Account)
-    const counterparty = users.find(u => u.address === address) || {}
+    const counterparty = users.find(u => u.address === address) || { address }
+
+    !counterparty.address && fetchUser(address)
 
     this.setState({ counterparty })
     this.loadPurchase()
@@ -148,7 +177,6 @@ class Conversation extends Component {
       const listing = listingId ? await getListing(listingId, true) : {}
       this.setState({ listing })
       this.loadPurchase()
-      this.scrollToBottom()
     }
   }
 
@@ -162,15 +190,13 @@ class Conversation extends Component {
     }
 
     const offers = await origin.marketplace.getOffers(listing.id)
-    const flattenedOffers = offers.map(o => {
-      return { ...o, ...o.ipfs.data }
-    })
-    const involvingCounterparty = flattenedOffers.filter(
+    const involvingCounterparty = offers.filter(
       o => o.buyer === counterparty.address || o.buyer === web3Account
     )
     const mostRecent = involvingCounterparty.sort(
       (a, b) => (a.createdAt > b.createdAt ? -1 : 1)
     )[0]
+
     // purchase may not be found
     if (!mostRecent) {
       return this.setState({ purchase: {} })
@@ -211,21 +237,25 @@ class Conversation extends Component {
 
   render() {
     const { id, intl, messages, web3Account, withListingSummary } = this.props
-    const { counterparty, files, listing, purchase } = this.state
+    const {
+      counterparty,
+      files,
+      invalidFileSelected,
+      invalidTextInput,
+      listing,
+      purchase
+    } = this.state
     const { name, pictures } = listing
-    const { buyer, createdAt, status } = purchase
+    const { buyer, status } = purchase
     const perspective = buyer
       ? buyer === web3Account
         ? 'buyer'
         : 'seller'
       : null
-    const soldAt = createdAt
-      ? createdAt * 1000 /* convert seconds since epoch to ms */
-      : null
     const photo = pictures && pictures.length > 0 && pictures[0]
-    const canDeliverMessage = origin.messaging.canConverseWith(
-      counterparty.address
-    )
+    const canDeliverMessage =
+      counterparty.address &&
+      origin.messaging.canConverseWith(counterparty.address)
     const shouldEnableForm =
       origin.messaging.getRecipients(id).includes(web3Account) &&
       canDeliverMessage &&
@@ -235,86 +265,40 @@ class Conversation extends Component {
       <Fragment>
         {withListingSummary &&
           listing.id && (
-          <div className="listing-summary d-flex">
-            <div className="aspect-ratio">
-              <div
-                className={`${
-                  photo ? '' : 'placeholder '
-                }image-container d-flex justify-content-center`}
-              >
-                <img
-                  src={photo || 'images/default-image.svg'}
-                  role="presentation"
-                />
+          <Link to={`/listing/${listing.id}`}>
+            <div className="listing-summary d-flex">
+              <div className="aspect-ratio">
+                <div
+                  className={`${
+                    photo ? '' : 'placeholder '
+                  }image-container d-flex justify-content-center`}
+                >
+                  <img
+                    src={photo || 'images/default-image.svg'}
+                    role="presentation"
+                  />
+                </div>
+              </div>
+              <div className="content-container d-flex flex-column">
+                <h1 className="text-truncate">{name}</h1>
+                {purchase.id && (
+                  <div className="state">
+                    <OfferStatusEvent offer={purchase} />
+                  </div>
+                )}
+                {buyer &&
+                    purchase.id && (
+                  <PurchaseProgress
+                    purchase={purchase}
+                    perspective={perspective}
+                    subdued={true}
+                    currentStep={parseInt(status)}
+                    maxStep={perspective === 'buyer' ? 3 : 4}
+                  />
+                )}
               </div>
             </div>
-            <div className="content-container d-flex flex-column">
-              {buyer && (
-                <div className="brdcrmb">
-                  {perspective === 'buyer' && (
-                    <FormattedMessage
-                      id={'purchase-summary.purchasedFrom'}
-                      defaultMessage={'Purchased from {sellerLink}'}
-                      values={{
-                        sellerLink: (
-                          <Link to={`/users/${counterparty.address}`}>
-                            {counterparty.fullName}
-                          </Link>
-                        )
-                      }}
-                    />
-                  )}
-                  {perspective === 'seller' && (
-                    <FormattedMessage
-                      id={'purchase-summary.soldTo'}
-                      defaultMessage={'Sold to {buyerLink}'}
-                      values={{
-                        buyerLink: (
-                          <Link to={`/users/${counterparty.address}`}>
-                            {counterparty.fullName}
-                          </Link>
-                        )
-                      }}
-                    />
-                  )}
-                </div>
-              )}
-              <h1>{name}</h1>
-              {buyer && (
-                <div className="state">
-                  {perspective === 'buyer' && (
-                    <FormattedMessage
-                      id={'purchase-summary.purchasedFromOn'}
-                      defaultMessage={'Purchased from {sellerName} on {date}'}
-                      values={{
-                        sellerName: counterparty.fullName,
-                        date: <FormattedDate value={soldAt} />
-                      }}
-                    />
-                  )}
-                  {perspective === 'seller' && (
-                    <FormattedMessage
-                      id={'purchase-summary.soldToOn'}
-                      defaultMessage={'Sold to {buyerName} on {date}'}
-                      values={{
-                        buyerName: counterparty.fullName,
-                        date: <FormattedDate value={soldAt} />
-                      }}
-                    />
-                  )}
-                </div>
-              )}
-              {buyer && (
-                <PurchaseProgress
-                  purchase={purchase}
-                  perspective={perspective}
-                  subdued={true}
-                  currentStep={parseInt(status)}
-                  maxStep={perspective === 'buyer' ? 3 : 4}
-                />
-              )}
-            </div>
-          </div>
+          </Link>
         )}
         <div ref={this.conversationDiv} className="conversation">
           <CompactMessages messages={messages} />
@@ -333,7 +317,9 @@ class Conversation extends Component {
             className="add-message d-flex"
             onSubmit={this.handleSubmit}
           >
-            {!files.length && (
+            {!files.length &&
+              !invalidFileSelected &&
+              !invalidTextInput && (
               <textarea
                 ref={this.textarea}
                 placeholder={intl.formatMessage(
@@ -344,10 +330,47 @@ class Conversation extends Component {
                 autoFocus
               />
             )}
+            {(invalidFileSelected || invalidTextInput) && (
+              <div className="files-container">
+                <p
+                  className="text-danger"
+                  onClick={() =>
+                    this.setState({
+                      invalidFileSelected: false,
+                      invalidTextInput: false
+                    })
+                  }
+                >
+                  {invalidFileSelected && (
+                    <FormattedMessage
+                      id={'conversation.invalidFileSelected'}
+                      defaultMessage={
+                        'File sizes must be less than 1.5 MB. Please select a smaller image.'
+                      }
+                    />
+                  )}
+                  {invalidTextInput && (
+                    <FormattedMessage
+                      id={'conversation.invalidTextInput'}
+                      defaultMessage={'Please add a message to send.'}
+                    />
+                  )}
+                </p>
+              </div>
+            )}
             {!!files.length && (
               <div className="files-container">
                 {files.map((dataUri, i) => (
-                  <img src={dataUri} key={i} className="preview-thumbnail" />
+                  <div key={i} className="image-container">
+                    <img src={dataUri} className="preview-thumbnail" />
+                    <a
+                      className="close-btn cancel-image"
+                      aria-label="Close"
+                      onClick={() => this.setState({ files: [] })}
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </a>
+                  </div>
                 ))}
               </div>
             )}
@@ -380,4 +403,11 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(injectIntl(Conversation))
+const mapDispatchToProps = dispatch => ({
+  fetchUser: addr => dispatch(fetchUser(addr))
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(injectIntl(Conversation))

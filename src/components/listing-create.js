@@ -17,7 +17,7 @@ import PriceField from 'components/form-widgets/price-field'
 import Modal from 'components/modal'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
 import WalletCard from 'components/wallet-card'
-import { MetamaskModal, ProcessingModal } from 'components/modals/wait-modals'
+import { ProviderModal, ProcessingModal } from 'components/modals/wait-modals'
 
 import { dappFormDataToOriginListing } from 'utils/listing'
 import { getFiatPrice } from 'utils/priceUtils'
@@ -81,6 +81,7 @@ class ListingCreate extends Component {
     this.checkOgnBalance = this.checkOgnBalance.bind(this)
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
+    this.onFormDataChange = this.onFormDataChange.bind(this)
     this.onReview = this.onReview.bind(this)
     this.pollOgnBalance = this.pollOgnBalance.bind(this)
     this.resetForm = this.resetForm.bind(this)
@@ -199,6 +200,18 @@ class ListingCreate extends Component {
     })
     window.scrollTo(0, 0)
     this.checkOgnBalance()
+  }
+
+  onFormDataChange({ formData }) {
+    this.setState({
+      formListing: {
+        ...this.state.formListing,
+        formData: {
+          ...this.state.formListing.formData,
+          ...formData
+        }
+      }
+    })
   }
 
   checkOgnBalance() {
@@ -323,6 +336,8 @@ class ListingCreate extends Component {
                       }`}
                       key={schema.type}
                       onClick={() => this.handleSchemaSelection(schema.type)}
+                      ga-category="create_listing"
+                      ga-label={ `select_schema_${schema.type}`}
                     >
                       {schema.name}
                       <div
@@ -367,6 +382,8 @@ class ListingCreate extends Component {
                   <button
                     className="float-right btn btn-primary btn-listing-create"
                     onClick={() => this.goToDetailsStep()}
+                    ga-category="create_listing"
+                    ga-label="select_schema_step_continue"
                   >
                     <FormattedMessage
                       id={'listing-create.next'}
@@ -388,26 +405,31 @@ class ListingCreate extends Component {
                 <h2>
                   <FormattedMessage
                     id={'listing-create.createListingHeading'}
-                    defaultMessage={'Create your listing'}
+                    defaultMessage={'Create Your Listing'}
                   />
                 </h2>
                 <Form
                   schema={translatedSchema}
                   onSubmit={this.onDetailsEntered}
                   formData={formListing.formData}
-                  onError={() => this.setState({ showDetailsFormErrorMsg: true })}
+                  onError={() =>
+                    this.setState({ showDetailsFormErrorMsg: true })
+                  }
+                  onChange={this.onFormDataChange}
                   uiSchema={this.uiSchema}
                 >
-                  {showDetailsFormErrorMsg &&
+                  {showDetailsFormErrorMsg && (
                     <div className="info-box warn">
                       <p>
                         <FormattedMessage
                           id={'listing-create.showDetailsFormErrorMsg'}
-                          defaultMessage={'Please fix errors before continuing.'}
+                          defaultMessage={
+                            'Please fix errors before continuing.'
+                          }
                         />
                       </p>
                     </div>
-                  }
+                  )}
                   <div className="btn-container">
                     <button
                       type="button"
@@ -415,6 +437,8 @@ class ListingCreate extends Component {
                       onClick={() =>
                         this.setState({ step: this.STEP.PICK_SCHEMA })
                       }
+                      ga-category="create_listing"
+                      ga-label="details_step_back"
                     >
                       <FormattedMessage
                         id={'backButtonLabel'}
@@ -424,6 +448,8 @@ class ListingCreate extends Component {
                     <button
                       type="submit"
                       className="float-right btn btn-primary btn-listing-create"
+                      ga-category="create_listing"
+                      ga-label="details_step_continue"
                     >
                       <FormattedMessage
                         id={'continueButtonLabel'}
@@ -443,35 +469,57 @@ class ListingCreate extends Component {
                     values={{ stepNumber: Number(step) }}
                   />
                 </label>
-                <h2>Boost your listing</h2>
+                <h2>
+                  <FormattedMessage
+                    id={'listing-create.boost-your-listing'}
+                    defaultMessage={'Boost Your Listing'}
+                  />
+                </h2>
                 <p className="help-block">
-                  You can boost your listing to get higher visibility in the
-                  Origin DApp. More buyers will see your listing, which
-                  increases the chances of a fast and successful sale.
+                  <FormattedMessage
+                    id={'listing-create.form-help-boost'}
+                    defaultMessage={
+                      'You can boost your listing to get higher visibility in the Origin DApp. More buyers will see your listing, which increases the chances of a fast and successful sale.'
+                    }
+                  />
                 </p>
                 {showBoostTutorial && (
                   <div className="info-box">
                     <img src="images/ogn-icon-horiz.svg" role="presentation" />
                     <p className="text-bold">
-                      You have 0{' '}
-                      <a
-                        href="/#/about-tokens"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        OGN
-                      </a>{' '}
-                      in your wallet.
+                      <FormattedMessage
+                        id={'listing-create.no-ogn'}
+                        defaultMessage={'You have 0 {ogn} in your wallet.'}
+                        values={{
+                          ogn: (
+                            <a
+                              href="/#/about-tokens"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              ga-category="create_listing"
+                              ga-label="boost_listing_step_ogn"
+                            >
+                              OGN
+                            </a>
+                          )
+                        }}
+                      />
                     </p>
                     <p>
-                      Once you acquire some OGN you will be able to boost your
-                      listing.
+                      <FormattedMessage
+                        id={'listing-create.post-acquisition'}
+                        defaultMessage={
+                          'Once you acquire some OGN you will be able to boost your listing.'
+                        }
+                      />
                     </p>
                     <div className="link-container">
                       <a
                         href="/#/about-tokens"
                         target="_blank"
                         rel="noopener noreferrer"
+                        ga-category="create_listing"
+                        ga-label="boost_listing_step_learn_more"
                       >
                         Learn More
                       </a>
@@ -490,6 +538,8 @@ class ListingCreate extends Component {
                     type="button"
                     className="btn btn-other btn-listing-create"
                     onClick={() => this.setState({ step: this.STEP.DETAILS })}
+                    ga-category="create_listing"
+                    ga-label="boost_listing_step_back"
                   >
                     <FormattedMessage
                       id={'backButtonLabel'}
@@ -499,8 +549,13 @@ class ListingCreate extends Component {
                   <button
                     className="float-right btn btn-primary btn-listing-create"
                     onClick={this.onReview}
+                    ga-category="create_listing"
+                    ga-label="boost_listing_step_continue"
                   >
-                    Review
+                    <FormattedMessage
+                      id={'listing-create.review'}
+                      defaultMessage={'Review'}
+                    />
                   </button>
                 </div>
               </div>
@@ -523,7 +578,12 @@ class ListingCreate extends Component {
                 <div className="preview">
                   <div className="row">
                     <div className="col-md-3">
-                      <p className="label">Title</p>
+                      <p className="label">
+                        <FormattedMessage
+                          id={'listing-create.title'}
+                          defaultMessage={'Title'}
+                        />
+                      </p>
                     </div>
                     <div className="col-md-9">
                       <p>{formData.name}</p>
@@ -531,7 +591,12 @@ class ListingCreate extends Component {
                   </div>
                   <div className="row">
                     <div className="col-md-3">
-                      <p className="label">Category</p>
+                      <p className="label">
+                        <FormattedMessage
+                          id={'listing-create.category'}
+                          defaultMessage={'Category'}
+                        />
+                      </p>
                     </div>
                     <div className="col-md-9">
                       <p>{translatedCategory}</p>
@@ -539,10 +604,15 @@ class ListingCreate extends Component {
                   </div>
                   <div className="row">
                     <div className="col-md-3">
-                      <p className="label">Description</p>
+                      <p className="label">
+                        <FormattedMessage
+                          id={'listing-create.description'}
+                          defaultMessage={'Description'}
+                        />
+                      </p>
                     </div>
                     <div className="col-md-9">
-                      <p>{formData.description}</p>
+                      <p className="ws-aware">{formData.description}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -563,7 +633,12 @@ class ListingCreate extends Component {
                   </div>
                   <div className="row">
                     <div className="col-md-3">
-                      <p className="label">Listing Price</p>
+                      <p className="label">
+                        <FormattedMessage
+                          id={'listing-create.listing-price'}
+                          defaultMessage={'Listing Price'}
+                        />
+                      </p>
                     </div>
                     <div className="col-md-9">
                       <p>
@@ -589,7 +664,12 @@ class ListingCreate extends Component {
                         <span className="help-block">
                           &nbsp;| {usdListingPrice} USD&nbsp;
                           <span className="text-uppercase">
-                            (Approximate Value)
+                            {'('}
+                            <FormattedMessage
+                              id={'listing-create.appropriate-value'}
+                              defaultMessage={'Approximate Value'}
+                            />
+                            {')'}
                           </span>
                         </span>
                       </p>
@@ -597,7 +677,12 @@ class ListingCreate extends Component {
                   </div>
                   <div className="row">
                     <div className="col-md-3">
-                      <p className="label">Boost Level</p>
+                      <p className="label">
+                        <FormattedMessage
+                          id={'listing-create.boost-level'}
+                          defaultMessage={'Boost Level'}
+                        />
+                      </p>
                     </div>
                     <div className="col-md-9">
                       <p>
@@ -636,6 +721,8 @@ class ListingCreate extends Component {
                   <button
                     className="btn btn-other float-left btn-listing-create"
                     onClick={() => this.setState({ step: this.STEP.BOOST })}
+                    ga-category="create_listing"
+                    ga-label="review_step_back"
                   >
                     <FormattedMessage
                       id={'listing-create.backButtonLabel'}
@@ -645,6 +732,8 @@ class ListingCreate extends Component {
                   <button
                     className="btn btn-primary float-right btn-listing-create"
                     onClick={() => this.onSubmitListing(formListing)}
+                    ga-category="create_listing"
+                    ga-label="review_step_done"
                   >
                     <FormattedMessage
                       id={'listing-create.doneButtonLabel'}
@@ -667,41 +756,61 @@ class ListingCreate extends Component {
               />
               {step === this.STEP.PICK_SCHEMA && (
                 <div className="info-box">
-                  <h2>Create A Listing On Origin</h2>
+                  <h2>
+                    <FormattedMessage
+                      id={'listing-create.create-a-listing'}
+                      defaultMessage={'Create A Listing On The Origin DApp'}
+                    />
+                  </h2>
                   <p>
-                    Get started by selecting the type of listing you want to
-                    create. You will then be able to set a price and listing
-                    details.
+                    <FormattedMessage
+                      id={'listing-create.form-help-schema'}
+                      defaultMessage={`Get started by selecting the type of listing you want to create. You will then be able to set a price and listing details.`}
+                    />
                   </p>
                 </div>
               )}
               {step === this.STEP.DETAILS && (
                 <div className="info-box">
-                  <h2>Add Listing Details</h2>
+                  <h2>
+                    <FormattedMessage
+                      id={'listing-create.add-details'}
+                      defaultMessage={'Add Listing Details'}
+                    />
+                  </h2>
                   <p>
                     <FormattedMessage
-                      id={'listing-create.form-help'}
-                      defaultMessage={
-                        "Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos of your listing will help potential buyers decide if the want to buy your listing."
-                      }
+                      id={'listing-create.form-help-details'}
+                      defaultMessage={`Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos of your listing will help potential buyers decide if the want to buy your listing.`}
                     />
                   </p>
                 </div>
               )}
               {step === this.STEP.BOOST && (
                 <div className="info-box">
-                  <h2>About Visibility</h2>
+                  <h2>
+                    <FormattedMessage
+                      id={'listing-create.about-visibility'}
+                      defaultMessage={'About Visibility'}
+                    />
+                  </h2>
                   <p>
-                    Origin sorts and displays listings based on relevance,
-                    recency, and boost level. Higher-visibility listings are
-                    shown to buyers more often.
+                    <FormattedMessage
+                      id={'listing-create.form-help-visibility'}
+                      defaultMessage={`Origin sorts and displays listings based on relevance, recency, and boost level. Higher-visibility listings are shown to buyers more often.`}
+                    />
                   </p>
-                  <h2>Origin Tokens</h2>
+                  <h2>
+                    <FormattedMessage
+                      id={'listing-create.origin-tokens'}
+                      defaultMessage={'Origin Tokens'}
+                    />
+                  </h2>
                   <p>
-                    OGN is an ERC-20 token used for incentives and governance on
-                    the Origin platform. Future intended uses of OGN might
-                    include referral rewards, reputation incentives, spam
-                    prevention, developer rewards, and platform governance.
+                    <FormattedMessage
+                      id={'listing-create.form-help-ogn'}
+                      defaultMessage={`OGN is an ERC-20 token used for incentives and governance on the Origin platform. Future intended uses of OGN might include referral rewards, reputation incentives, spam prevention, developer rewards, and platform governance.`}
+                    />
                   </p>
                   <div className="link-container">
                     <a
@@ -709,7 +818,10 @@ class ListingCreate extends Component {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      Learn More
+                      <FormattedMessage
+                        id={'listing-create.learn-more'}
+                        defaultMessage={'Learn More'}
+                      />
                     </a>
                   </div>
                 </div>
@@ -729,19 +841,24 @@ class ListingCreate extends Component {
                         'When you submit this listing, you will be asked to confirm your transaction in MetaMask. Buyers will then be able to see your listing and make offers on it.'
                       }
                     />
-                    <br />
-                    <br />
-                    <FormattedMessage
-                      id={'listing-create.whatHappensNextContent2'}
-                      defaultMessage={
-                        'Please review your listing before submitting. Your listing will appear to others just as it looks on the window to the left.'
-                      }
-                    />
+                    {selectedBoostAmount && (
+                      <div className="boost-reminder">
+                        <FormattedMessage
+                          id={'listing-create.whatHappensNextContent2'}
+                          defaultMessage={
+                            '{selectedBoostAmount} OGN will be transferred for boosting. If you close your listing before accepting an offer, the OGN will be refunded to you.'
+                          }
+                          values={{
+                            selectedBoostAmount
+                          }}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
             </div>
-            {step === this.STEP.METAMASK && <MetamaskModal />}
+            {step === this.STEP.METAMASK && <ProviderModal />}
             {step === this.STEP.PROCESSING && <ProcessingModal />}
             {step === this.STEP.SUCCESS && (
               <Modal backdrop="static" isOpen={true}>
@@ -768,30 +885,57 @@ class ListingCreate extends Component {
                   </p>
                   <ul>
                     <li>
-                      Buyers will now see your listing on the marketplace.
+                      <FormattedMessage
+                        id={'listing-create.success-1'}
+                        defaultMessage={
+                          'Buyers will now see your listing on the marketplace.'
+                        }
+                      />
                     </li>
                     <li>
-                      When a buyer makes an offer on your listing, you can
-                      choose to accept or reject it.
+                      <FormattedMessage
+                        id={'listing-create.success-2'}
+                        defaultMessage={
+                          'When a buyer makes an offer on your listing, you can choose to accept or reject it.'
+                        }
+                      />
                     </li>
                     <li>
-                      Once the offer is accepted, you will be expected to
-                      fulfill the order.
+                      <FormattedMessage
+                        id={'listing-create.success-3'}
+                        defaultMessage={
+                          'Once the offer is accepted, you will be expected to fulfill the order.'
+                        }
+                      />
                     </li>
                     <li>
-                      You will receive payment once the buyer confirms that the
-                      order has been fulfilled.
+                      <FormattedMessage
+                        id={'listing-create.success-4'}
+                        defaultMessage={
+                          'You will receive payment once the buyer confirms that the order has been fulfilled.'
+                        }
+                      />
                     </li>
                   </ul>
                 </div>
                 <div className="button-container">
-                  <button className="btn btn-clear" onClick={this.resetForm}>
+                  <button
+                    className="btn btn-clear"
+                    onClick={this.resetForm}
+                    ga-category="create_listing"
+                    ga-label="create_another_listing"
+                  >
                     <FormattedMessage
                       id={'listing-create.createAnother'}
                       defaultMessage={'Create Another Listing'}
                     />
                   </button>
-                  <Link to="/" className="btn btn-clear">
+                  <Link
+                    to="/"
+                    className="btn btn-clear"
+                    ga-category="create_listing"
+                    ga-label="see_all_listings"
+                  >
                     <FormattedMessage
                       id={'listing-create.seeAllListings'}
                       defaultMessage={'See All Listings'}
@@ -815,7 +959,12 @@ class ListingCreate extends Component {
                   defaultMessage={'See the console for more details.'}
                 />
                 <div className="button-container">
-                  <a className="btn btn-clear" onClick={this.resetToPreview}>
+                  <a
+                    className="btn btn-clear"
+                    onClick={this.resetToPreview}
+                    ga-category="create_listing"
+                    ga-label="error_dismiss"
+                  >
                     <FormattedMessage
                       id={'listing-create.OK'}
                       defaultMessage={'OK'}

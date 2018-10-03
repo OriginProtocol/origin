@@ -40,13 +40,21 @@ export default class PanelButtons extends Component {
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-primary"
+            ga-category="seller_onboarding"
+            ga-label="step_1_install_metamask"
           >
             <FormattedMessage
               id={'onboarding-buttons.installMetaMask'}
               defaultMessage={'Install MetaMask'}
             />
           </a>
-          <a href="#" className="d-block" onClick={() => displayNextStep()}>
+          <a
+            href="#"
+            className="d-block"
+            onClick={() => displayNextStep()}
+            ga-category="seller_onboarding"
+            ga-label="step_1_skip"
+          >
             <FormattedMessage
               id={'onboarding-buttons.skip'}
               defaultMessage={'Skip'}
@@ -56,7 +64,12 @@ export default class PanelButtons extends Component {
       ),
       Identity: (
         <div className="d-flex flex-column align-items-center">
-          <Link to="/profile" target="_blank">
+          <Link
+            to="/profile"
+            target="_blank"
+            ga-category="seller_onboarding"
+            ga-label="step_2_verify"
+          >
             <button key={'first-btn'} className="btn btn-primary">
               <FormattedMessage
                 id={'onboarding-buttons.verify'}
@@ -64,7 +77,12 @@ export default class PanelButtons extends Component {
               />
             </button>
           </Link>
-          <a href="#" onClick={() => displayNextStep()}>
+          <a
+            href="#"
+            onClick={() => displayNextStep()}
+            ga-category="seller_onboarding"
+            ga-label="step_2_skip"
+          >
             <FormattedMessage
               id={'onboarding-buttons.skip'}
               defaultMessage={'Skip'}
@@ -78,6 +96,8 @@ export default class PanelButtons extends Component {
             to="/about-tokens"
             target="_blank"
             onClick={this.completeOnboarding}
+            ga-category="seller_onboarding"
+            ga-label="step_3_learn_more"
           >
             <button key={'first-btn'} className="btn btn-primary">
               <FormattedMessage

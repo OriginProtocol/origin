@@ -8,6 +8,8 @@ import { updateMessage } from 'actions/Message'
 
 import Avatar from 'components/avatar'
 
+const imageMaxSize = process.env.IMAGE_MAX_SIZE || (2 * 1024 * 1024) // 2 MiB
+
 class Message extends Component {
   componentDidMount() {
     const { message } = this.props
@@ -50,6 +52,8 @@ class Message extends Component {
               <button
                 className="btn btn-sm btn-primary"
                 onClick={enableMessaging}
+                ga-category="messaging"
+                ga-label="message_component_enable"
               >
                 <FormattedMessage
                   id={'message.enable'}
@@ -68,19 +72,30 @@ class Message extends Component {
     const contentWithLineBreak = `${content}\n`
     const contentIsData = content.match(/^data:/)
     const dataIsImage = contentIsData && content.match(/^data:image/)
+    const imageTooLarge = content.length > imageMaxSize
 
     if (!contentIsData) {
       return contentWithLineBreak
     } else if (!dataIsImage) {
       return (
-        <FormattedMessage
-          id={'message.unrecognizedData'}
-          defaultMessage={'This data cannot be rendered.'}
-        />
+        <div className="system-message">
+          <FormattedMessage
+            id={'message.unrecognizedData'}
+            defaultMessage={'Message data cannot be rendered.'}
+          />
+        </div>
+      )
+    } else if (imageTooLarge) {
+      return (
+        <div className="system-message">
+          <FormattedMessage
+            id={'message.imageTooLarge'}
+            defaultMessage={'Message image is too large to display.'}
+          />
+        </div>
       )
     } else {
       const fileName = content.match(/name=.+;/).slice(5, -1)
-
       return (
         <div className="image-container">
           <img src={content} alt={fileName} />

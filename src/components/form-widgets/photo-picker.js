@@ -35,10 +35,6 @@ class PhotoPicker extends Component {
       linuxHelpText: {
         id: 'photo-picker.linuxHelpText',
         defaultMessage: 'Hold down "Ctrl" to select multiple images'
-      },
-      confirmRemoveImage: {
-        id: 'photo-picker.confirmRemoveImage',
-        defaultMessage: 'Are you sure you want to de-select this photo?'
       }
     })
 
@@ -125,16 +121,11 @@ class PhotoPicker extends Component {
   }
 
   removePhoto(indexToRemove) {
-    const confirmation = window.confirm(
-      this.props.intl.formatMessage(this.intlMessages.confirmRemoveImage)
-    )
-    if (confirmation) {
-      this.setState({
-        pictures: this.state.pictures.filter(
-          (picture, idx) => idx !== indexToRemove
-        )
-      })
-    }
+    this.setState({
+      pictures: this.state.pictures.filter(
+        (picture, idx) => idx !== indexToRemove
+      )
+    })
   }
 
   removeImgSizeWarning(indexToRemove) {
@@ -251,7 +242,7 @@ class PhotoPicker extends Component {
                 style={{ backgroundImage: `url("${dataUri}")` }}
               />
               <a
-                className="close-btn"
+                className="cancel-image"
                 aria-label="Close"
                 onClick={() => this.removePhoto(idx)}
               >

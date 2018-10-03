@@ -1,9 +1,5 @@
 [
   {
-    "id": "schema.announcements.schemaDescription",
-    "defaultMessage": "Distributed Nextdoor"
-  },
-  {
     "id": "schema.announcements.title",
     "defaultMessage": "Title"
   },

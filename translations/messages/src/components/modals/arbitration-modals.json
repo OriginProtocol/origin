@@ -13,7 +13,7 @@
   },
   {
     "id": "arbitrationModals.confirmText2",
-    "defaultMessage": "This will start the conflict resolution process,\n            someone from Origin will be notified and all chat history will be made\n            public to a moderator."
+    "defaultMessage": "This will start the conflict resolution process. Someone from Origin will be notified, and your chat history will be made public to an arbitrator."
   },
   {
     "id": "arbitrationModals.inferredCancel",

@@ -16,6 +16,10 @@
     "defaultMessage": "Verify Identity"
   },
   {
+    "id": "listing-detail.providerInstruction",
+    "defaultMessage": "To make an offer on this listing, please confirm the transaction in {provider}."
+  },
+  {
     "id": "listing-detail.purchaseSuccessful",
     "defaultMessage": "Success!"
   },
@@ -24,8 +28,20 @@
     "defaultMessage": "You have made an offer on this listing. Your offer will be visible within a few seconds. Your {ETH} payment has been transferred to an escrow contract. Here's what happens next:"
   },
   {
-    "id": "listing-detail.goToPurchases",
-    "defaultMessage": "Go To Purchases"
+    "id": "listing-detail.successItem1",
+    "defaultMessage": "The seller can choose to accept or reject your offer."
+  },
+  {
+    "id": "listing-detail.successItem2",
+    "defaultMessage": "If the offer is accepted and fulfilled, you will be able to confirm that the sale is complete. Your escrowed payment will be sent to the seller."
+  },
+  {
+    "id": "listing-detail.successItem3",
+    "defaultMessage": "If the offer is rejected, the escrowed payment will be immediately returned to your wallet."
+  },
+  {
+    "id": "listing-detail.viewPurchases",
+    "defaultMessage": "View Purchases"
   },
   {
     "id": "listing-detail.errorPurchasingListing",
@@ -118,9 +134,5 @@
   {
     "id": "listing-detail.viewSale",
     "defaultMessage": "View Sale"
-  },
-  {
-    "id": "listing-detail.reviews",
-    "defaultMessage": "Reviews"
   }
 ]

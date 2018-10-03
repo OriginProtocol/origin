@@ -1,10 +1,6 @@
 import { defineMessages } from 'react-intl'
 
 export default defineMessages({
-  'schema.housing.schemaDescription': {
-    id: 'schema.housing.schemaDescription',
-    defaultMessage: 'Distributed Airbnb'
-  },
   'schema.housing.title': {
     id: 'schema.housing.title',
     defaultMessage: 'Title'

@@ -13,7 +13,7 @@ import {
 } from 'components/badges'
 import Conversation from 'components/conversation'
 import Modal from 'components/modal'
-import Review from 'components/review'
+import Reviews from 'components/reviews'
 import TransactionHistory from 'components/transaction-history'
 import UserCard from 'components/user-card'
 
@@ -28,7 +28,6 @@ const defaultState = {
   listing: {},
   processing: false,
   purchase: {},
-  reviews: [],
   seller: {}
 }
 
@@ -59,11 +58,9 @@ class Arbitration extends Component {
     try {
       const purchase = await origin.marketplace.getOffer(offerId)
       const listing = await getListing(purchase.listingId, true)
-      const reviews = await origin.marketplace.getListingReviews(offerId)
       this.setState({
         listing,
-        purchase,
-        reviews
+        purchase
       })
       await this.loadSeller(listing.seller)
       await this.loadBuyer(purchase.buyer)
@@ -119,7 +116,7 @@ class Arbitration extends Component {
       return null
     }
 
-    const { buyer, listing, processing, purchase, reviews, seller } = this.state
+    const { buyer, listing, processing, purchase, seller } = this.state
     const isPending = false // will be handled by offer status
     const isSold = !listing.unitsRemaining
 
@@ -247,26 +244,17 @@ class Arbitration extends Component {
                   )}
                   <div className="detail-info-box">
                     <h2 className="category placehold">{listing.category}</h2>
-                    <h1 className="title text-truncate placehold">
+                    <h1 className="title placehold">
                       {listing.name}
                     </h1>
-                    <p className="description placehold">
+                    <p className="ws-aware description placehold">
                       {listing.description}
                     </p>
                   </div>
                   <hr />
+                  <Reviews userAddress={listing.seller} />
                 </Fragment>
               )}
-              <div className="reviews">
-                <h2>
-                  Reviews&nbsp;<span className="review-count">
-                    {Number(reviews.length).toLocaleString()}
-                  </span>
-                </h2>
-                {reviews.map(r => (
-                  <Review key={r.transactionHash} review={r} />
-                ))}
-              </div>
             </div>
             <div className="col-12 col-lg-6">
               <h2>Conversation</h2>

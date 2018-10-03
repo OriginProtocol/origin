@@ -18,5 +18,9 @@
   {
     "id": "badges.sold",
     "defaultMessage": "Sold"
+  },
+  {
+    "id": "badges.featured",
+    "defaultMessage": "Featured"
   }
 ]

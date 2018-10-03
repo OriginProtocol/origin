@@ -16,6 +16,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 const env = {
   ARBITRATOR_ACCOUNT: '',
   AFFILIATE_ACCOUNT: '',
+  BLOCK_EPOCH: 0,
   BRIDGE_SERVER_DOMAIN: '',
   BRIDGE_SERVER_PROTOCOL: 'https',
   CONTRACT_ADDRESSES: '{}',
@@ -23,6 +24,7 @@ const env = {
   DISCOVERY_SERVER_URL: '',
   ETH_NETWORK_ID: null,
   FORCE_HTTPS: false,
+  IMAGE_MAX_SIZE: null,
   INSTRUCTIONS_URL: null,
   IPFS_API_PORT: '',
   IPFS_DOMAIN: '',
@@ -33,9 +35,9 @@ const env = {
   MESSAGING_NAMESPACE: '',
   MAINNET_DAPP_BASEURL: null,
   RINKEBY_DAPP_BASEURL: null,
-  PRODUCTION_DOMAIN: '',
   PROVIDER_URL: '',
-  REDUX_LOGGER: false
+  REDUX_LOGGER: false,
+  GA_TRACKING_ID: '' // must also be hard-coded in dev.html - this is used in components/analytics.js
 }
 
 var config = {

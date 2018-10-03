@@ -194,7 +194,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   addMessage: obj => dispatch(addMessage(obj)),
   fetchNotifications: () => dispatch(fetchNotifications()),
-  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg)),
+  fetchUser: addr => dispatch(fetchUser(addr)),
   setMessagingEnabled: bool => dispatch(setMessagingEnabled(bool)),
   setMessagingInitialized: bool => dispatch(setMessagingInitialized(bool))
 })

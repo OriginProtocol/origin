@@ -57,11 +57,18 @@ class UserCard extends Component {
       <div className="user-card placehold">
         <div className="identity">
           <h3>
-            <FormattedMessage
-              id={'user-card.heading'}
-              defaultMessage={'About the {title}'}
-              values={{ title }}
-            />
+            {title.toLowerCase() === 'buyer' && (
+              <FormattedMessage
+                id={'user-card.headingBuyer'}
+                defaultMessage={'About the Buyer'}
+              />
+            )}
+            {title.toLowerCase() === 'seller' && (
+              <FormattedMessage
+                id={'user-card.headingSeller'}
+                defaultMessage={'About the Seller'}
+              />
+            )}
           </h3>
           <div className="d-flex">
             <div className="image-container">
@@ -180,7 +187,7 @@ const mapStateToProps = (state, { userAddress }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg)),
+  fetchUser: addr => dispatch(fetchUser(addr)),
   storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
 })
 

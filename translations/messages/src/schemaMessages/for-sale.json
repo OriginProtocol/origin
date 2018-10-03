@@ -1,9 +1,5 @@
 [
   {
-    "id": "schema.forSale.schemaDescription",
-    "defaultMessage": "Distributed Craigslist/Ebay/Amazon"
-  },
-  {
     "id": "schema.forSale.title",
     "defaultMessage": "Title"
   },

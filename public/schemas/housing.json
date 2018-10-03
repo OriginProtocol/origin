@@ -1,6 +1,5 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
-  "description": "schema.housing.schemaDescription",
   "type": "object",
   "required": ["name","category","description","price"],
   "properties": {

@@ -1,10 +1,6 @@
 import { defineMessages } from 'react-intl'
 
 export default defineMessages({
-  'schema.forSale.schemaDescription': {
-    id: 'schema.forSale.schemaDescription',
-    defaultMessage: 'Distributed Craigslist/Ebay/Amazon'
-  },
   'schema.forSale.title': {
     id: 'schema.forSale.title',
     defaultMessage: 'Title'
