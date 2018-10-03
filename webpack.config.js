@@ -36,7 +36,8 @@ const env = {
   MAINNET_DAPP_BASEURL: null,
   RINKEBY_DAPP_BASEURL: null,
   PROVIDER_URL: '',
-  REDUX_LOGGER: false
+  REDUX_LOGGER: false,
+  GA_TRACKING_ID: '' // must also be hard-coded in dev.html - this is used in components/analytics.js
 }
 
 var config = {

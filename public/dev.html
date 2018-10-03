@@ -5,7 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="favicon.ico">
     <title>Origin Protocol Demo DApp</title>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-106384880-2%22%3E"></script>
     <script>
+      /*eslint-disable */
+      var hostname = window.location.hostname
+      if (hostname !== 'localhost' && hostname !== '0.0.0.0') {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-106384880-2');
+      }
+      /*eslint-enable */
+    </script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
+    <!-- End Google Analytics -->
+    <!-- Crowdin -->
+    <script>
+      /*eslint-disable */
       // If URL query string contains "?translator=true", run Crowdin's In Context Translation
       // https://support.crowdin.com/in-context-localization/
       // https://crowdin.com/project/originprotocol/settings#in-context
@@ -16,7 +34,9 @@
         crowdinScript.setAttribute('src', '//cdn.crowdin.com/jipt/jipt.js');
         document.head.appendChild(crowdinScript);
       }
+      /*eslint-enable */
     </script>
+    <!-- End Crowdin -->
   </head>
   <body>
     <div id="root">
