@@ -4775,50 +4775,58 @@ sup {
 
 /* Footer */
 
-.dark-footer {
-  background-color: var(--dark-grey-blue);
-  padding: 78px 0 258px;
-  min-height: 522px;
+.light-footer {
+  background-color: #f4f6f7;
+  padding: 67px 0 0;
+  min-height: 352px;
 }
 
 footer .logo-container {
-  margin: 40px auto;
+  display: flex;
+}
+
+footer .origin-logo {
+  align-self: flex-start;
+}
+
+.vl {
+  margin-left: 40px;
+  width: 1px;
+  height: 99px;
+  border: solid 0.5px #98a7b4;
+  border: solid 0.5px var(--bluey-grey);
 }
 
 footer .company-mission {
   max-width: 360px;
-  margin-left: 0;
+  margin-left: 40px;
 }
 
 footer p {
-  color: white;
+  color: var(--dark-grey-blue);
   font-size: 0.75rem;
 }
 
-footer .footer-header {
-  margin: 40px auto 15px auto;
-  color: white;
-  font-weight: 400;
+footer .footer-links-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+footer .footer-link  {
+  margin-left: 40px;
   font-size: 0.875rem;
-}
-
-footer .footer-links {
-  list-style-type: none;
-  padding-left: 0;
-}
-
-footer .footer-links li {
-  margin: 15px auto;
-  font-size: 0.875rem;
-}
-
-footer .footer-links li a {
-  color: white;
+  color: var(--dark-grey-blue);
 }
 
 footer .dropdown {
-  color: white;
+  color: var(--dark-grey-blue);
+  font-size: 0.875rem;
   cursor: pointer;
+  display: flex;
+}
+
+footer .dropdown-toggle::after {
+  border-top: 0.3em solid #6f8294;
 }
 
 footer .dropdown-menu {
@@ -4826,7 +4834,7 @@ footer .dropdown-menu {
 }
 
 footer .dropdown-menu li:hover {
-  color: var(--clear-blue);
+  color: #6f8294;
 }
 
 .container.listing-wait-confirmation {
@@ -5176,7 +5184,7 @@ a:not([href]):not([tabindex]).span-link {
   }
 
   footer .logo-container {
-    margin: 40px auto 20px auto;
+    /* margin: 40px auto 20px auto; */
   }
 
   .error-content-section {
