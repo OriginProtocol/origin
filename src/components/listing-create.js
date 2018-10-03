@@ -17,7 +17,7 @@ import PriceField from 'components/form-widgets/price-field'
 import Modal from 'components/modal'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
 import WalletCard from 'components/wallet-card'
-import { MetamaskModal, ProcessingModal } from 'components/modals/wait-modals'
+import { ProviderModal, ProcessingModal } from 'components/modals/wait-modals'
 
 import { dappFormDataToOriginListing } from 'utils/listing'
 import { getFiatPrice } from 'utils/priceUtils'
@@ -323,6 +323,8 @@ class ListingCreate extends Component {
                       }`}
                       key={schema.type}
                       onClick={() => this.handleSchemaSelection(schema.type)}
+                      ga-category="create_listing"
+                      ga-label={ `select_schema_${schema.type}`}
                     >
                       {schema.name}
                       <div
@@ -367,6 +369,8 @@ class ListingCreate extends Component {
                   <button
                     className="float-right btn btn-primary btn-listing-create"
                     onClick={() => this.goToDetailsStep()}
+                    ga-category="create_listing"
+                    ga-label="select_schema_step_continue"
                   >
                     <FormattedMessage
                       id={'listing-create.next'}
@@ -419,6 +423,8 @@ class ListingCreate extends Component {
                       onClick={() =>
                         this.setState({ step: this.STEP.PICK_SCHEMA })
                       }
+                      ga-category="create_listing"
+                      ga-label="details_step_back"
                     >
                       <FormattedMessage
                         id={'backButtonLabel'}
@@ -428,6 +434,8 @@ class ListingCreate extends Component {
                     <button
                       type="submit"
                       className="float-right btn btn-primary btn-listing-create"
+                      ga-category="create_listing"
+                      ga-label="details_step_continue"
                     >
                       <FormattedMessage
                         id={'continueButtonLabel'}
@@ -474,6 +482,8 @@ class ListingCreate extends Component {
                               href="/#/about-tokens"
                               target="_blank"
                               rel="noopener noreferrer"
+                              ga-category="create_listing"
+                              ga-label="boost_listing_step_ogn"
                             >
                               OGN
                             </a>
@@ -494,6 +504,8 @@ class ListingCreate extends Component {
                         href="/#/about-tokens"
                         target="_blank"
                         rel="noopener noreferrer"
+                        ga-category="create_listing"
+                        ga-label="boost_listing_step_learn_more"
                       >
                         Learn More
                       </a>
@@ -512,6 +524,8 @@ class ListingCreate extends Component {
                     type="button"
                     className="btn btn-other btn-listing-create"
                     onClick={() => this.setState({ step: this.STEP.DETAILS })}
+                    ga-category="create_listing"
+                    ga-label="boost_listing_step_back"
                   >
                     <FormattedMessage
                       id={'backButtonLabel'}
@@ -521,6 +535,8 @@ class ListingCreate extends Component {
                   <button
                     className="float-right btn btn-primary btn-listing-create"
                     onClick={this.onReview}
+                    ga-category="create_listing"
+                    ga-label="boost_listing_step_continue"
                   >
                     <FormattedMessage
                       id={'listing-create.review'}
@@ -582,7 +598,7 @@ class ListingCreate extends Component {
                       </p>
                     </div>
                     <div className="col-md-9">
-                      <p>{formData.description}</p>
+                      <p className="ws-aware">{formData.description}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -691,6 +707,8 @@ class ListingCreate extends Component {
                   <button
                     className="btn btn-other float-left btn-listing-create"
                     onClick={() => this.setState({ step: this.STEP.BOOST })}
+                    ga-category="create_listing"
+                    ga-label="review_step_back"
                   >
                     <FormattedMessage
                       id={'listing-create.backButtonLabel'}
@@ -700,6 +718,8 @@ class ListingCreate extends Component {
                   <button
                     className="btn btn-primary float-right btn-listing-create"
                     onClick={() => this.onSubmitListing(formListing)}
+                    ga-category="create_listing"
+                    ga-label="review_step_done"
                   >
                     <FormattedMessage
                       id={'listing-create.doneButtonLabel'}
@@ -824,7 +844,7 @@ class ListingCreate extends Component {
                 </div>
               )}
             </div>
-            {step === this.STEP.METAMASK && <MetamaskModal />}
+            {step === this.STEP.METAMASK && <ProviderModal />}
             {step === this.STEP.PROCESSING && <ProcessingModal />}
             {step === this.STEP.SUCCESS && (
               <Modal backdrop="static" isOpen={true}>
@@ -885,13 +905,23 @@ class ListingCreate extends Component {
                   </ul>
                 </div>
                 <div className="button-container">
-                  <button className="btn btn-clear" onClick={this.resetForm}>
+                  <button
+                    className="btn btn-clear"
+                    onClick={this.resetForm}
+                    ga-category="create_listing"
+                    ga-label="create_another_listing"
+                  >
                     <FormattedMessage
                       id={'listing-create.createAnother'}
                       defaultMessage={'Create Another Listing'}
                     />
                   </button>
-                  <Link to="/" className="btn btn-clear">
+                  <Link
+                    to="/"
+                    className="btn btn-clear"
+                    ga-category="create_listing"
+                    ga-label="see_all_listings"
+                  >
                     <FormattedMessage
                       id={'listing-create.seeAllListings'}
                       defaultMessage={'See All Listings'}
@@ -915,7 +945,12 @@ class ListingCreate extends Component {
                   defaultMessage={'See the console for more details.'}
                 />
                 <div className="button-container">
-                  <a className="btn btn-clear" onClick={this.resetToPreview}>
+                  <a
+                    className="btn btn-clear"
+                    onClick={this.resetToPreview}
+                    ga-category="create_listing"
+                    ga-label="error_dismiss"
+                  >
                     <FormattedMessage
                       id={'listing-create.OK'}
                       defaultMessage={'OK'}

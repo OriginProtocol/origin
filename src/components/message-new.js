@@ -106,6 +106,8 @@ class MessageNew extends Component {
               <button
                 className="btn btn-sm btn-primary"
                 onClick={this.props.enableMessaging}
+                ga-category="messaging"
+                ga-label="message_new_component_enable"
               >
                 <FormattedMessage
                   id={'MessageNew.enable'}
@@ -114,7 +116,13 @@ class MessageNew extends Component {
               </button>
             </div>
             <div className="link-container text-center">
-              <a href="#" data-modal="profile" onClick={handleToggle}>
+              <a
+                href="#"
+                data-modal="profile"
+                onClick={handleToggle}
+                ga-category="messaging"
+                ga-label="message_new_component_cancel"
+              >
                 <FormattedMessage
                   id={'MessageNew.cancel'}
                   defaultMessage={'Cancel'}
@@ -138,7 +146,12 @@ class MessageNew extends Component {
               />
             </div>
             <div className="button-container d-flex justify-content-center">
-              <button type="submit" className="btn btn-primary">
+              <button
+                type="submit"
+                className="btn btn-primary"
+                ga-category="messaging"
+                ga-label="send_message"
+              >
                 <FormattedMessage
                   id={'MessageNew.send'}
                   defaultMessage={'Send'}
@@ -154,7 +167,13 @@ class MessageNew extends Component {
               />
             </div>
             <div className="link-container text-center">
-              <a href="#" data-modal="profile" onClick={handleToggle}>
+              <a
+                href="#"
+                data-modal="profile"
+                onClick={handleToggle}
+                ga-category="messaging"
+                ga-label="cancel_message"
+              >
                 <FormattedMessage
                   id={'MessageNew.cancel'}
                   defaultMessage={'Cancel'}

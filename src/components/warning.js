@@ -31,6 +31,8 @@ class Warning extends Component {
                             href="https://discord.gg/jyxpUSe"
                             target="_blank"
                             rel="noopener noreferrer"
+                            ga-category="beta"
+                            ga-label="banner_discord_report_bug"
                           >
                             Discord
                           </a>
@@ -40,6 +42,8 @@ class Warning extends Component {
                             href="https://github.com/OriginProtocol/origin-dapp/issues/new"
                             target="_blank"
                             rel="noopener noreferrer"
+                            ga-category="beta"
+                            ga-label="banner_github_report_bug"
                           >
                             GitHub
                           </a>

@@ -68,6 +68,8 @@ class TransactionsDropdown extends Component {
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
+          ga-category="top_nav"
+          ga-label="transactions"
         >
           <img
             src="images/arrows-light.svg"

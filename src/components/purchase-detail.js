@@ -23,10 +23,10 @@ import {
   SoldBadge
 } from 'components/badges'
 import { RejectionModal, WithdrawModal } from 'components/modals/offer-modals'
-import { MetamaskModal } from 'components/modals/wait-modals'
+import { ProviderModal } from 'components/modals/wait-modals'
 import OfferStatusEvent from 'components/offer-status-event'
 import PurchaseProgress from 'components/purchase-progress'
-import Review from 'components/review'
+import Reviews from 'components/reviews'
 import TransactionHistory from 'components/transaction-history'
 import UnnamedUser from 'components/unnamed-user'
 import UserCard from 'components/user-card'
@@ -60,7 +60,6 @@ const defaultState = {
   problemInferred: false,
   processing: false,
   purchase: {},
-  reviews: [],
   seller: {},
   areSellerStepsOpen: true
 }
@@ -309,11 +308,9 @@ class PurchaseDetail extends Component {
     try {
       const purchase = await origin.marketplace.getOffer(offerId)
       const listing = await getListing(purchase.listingId, true)
-      const reviews = await origin.marketplace.getListingReviews(offerId)
       this.setState({
         listing,
-        purchase,
-        reviews
+        purchase
       })
       if (listing) {
         this.getListingSchema()
@@ -671,7 +668,6 @@ class PurchaseDetail extends Component {
       problemInferred,
       processing,
       purchase,
-      reviews,
       seller,
       translatedSchema,
       areSellerStepsOpen
@@ -1110,10 +1106,10 @@ class PurchaseDetail extends Component {
                   )}
                   <div className="detail-info-box">
                     <h2 className="category placehold">{listing.category}</h2>
-                    <h1 className="title text-truncate placehold">
+                    <h1 className="title placehold">
                       {listing.name}
                     </h1>
-                    <p className="description placehold">
+                    <p className="ws-aware description placehold">
                       {listing.description}
                     </p>
                     {/*!!listing.unitsRemaining && listing.unitsRemaining < 5 &&
@@ -1141,22 +1137,9 @@ class PurchaseDetail extends Component {
                     )}
                   </div>
                   <hr />
+                  <Reviews userAddress={listing.seller} />
                 </Fragment>
               )}
-              <div className="reviews">
-                <h2>
-                  <FormattedMessage
-                    id={'purchase-detail.reviewsHeading'}
-                    defaultMessage={'Reviews'}
-                  />
-                  &nbsp;<span className="review-count">
-                    {Number(reviews.length).toLocaleString()}
-                  </span>
-                </h2>
-                {reviews.map(r => <Review key={r.id} review={r} />)}
-                {/* To Do: pagination */}
-                {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
-              </div>
             </div>
             <div className="col-12 col-lg-4">
               {created && (
@@ -1193,7 +1176,7 @@ class PurchaseDetail extends Component {
             </div>
           </div>
         </div>
-        {processing && <MetamaskModal />}
+        {processing && <ProviderModal />}
         <ConfirmationModal
           isOpen={modalsOpen.confirmation}
           inferred={problemInferred}

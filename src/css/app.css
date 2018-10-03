@@ -124,6 +124,10 @@ textarea:-moz-ui-invalid {
   color: var(--dark-two);
 }
 
+.ws-aware {
+  white-space: pre-line;
+}
+
 .table {
   font-size: 0.875rem;
   margin-bottom: 0;
@@ -3746,6 +3750,11 @@ form .stars img {
   height: calc(100vh - 60px);
 }
 
+.conversation-col .content-container {
+  flex-grow: 1;
+  overflow: hidden;
+}
+
 .conversation-col,
 .no-gutters .conversation-col {
   background-color: white;
@@ -3819,13 +3828,6 @@ form .stars img {
   border-bottom: 1px solid #c2cbd3;
   min-height: 140px;
   padding: 20px 0;
-}
-
-.messages-wrapper .brdcrmb {
-  color: var(--dusk);
-  font-size: 0.875rem;
-  font-weight: normal;
-  text-transform: uppercase;
 }
 
 .messages-wrapper .listing-summary h1 {

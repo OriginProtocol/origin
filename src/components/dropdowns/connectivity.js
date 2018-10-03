@@ -130,6 +130,8 @@ class ConnectivityDropdown extends Component {
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
+          ga-category="top_nav"
+          ga-label="connectivity"
         >
           <div className="d-flex indicators align-items-center">
             <span
