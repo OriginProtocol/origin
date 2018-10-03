@@ -17,7 +17,7 @@ import PriceField from 'components/form-widgets/price-field'
 import Modal from 'components/modal'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
 import WalletCard from 'components/wallet-card'
-import { MetamaskModal, ProcessingModal } from 'components/modals/wait-modals'
+import { ProviderModal, ProcessingModal } from 'components/modals/wait-modals'
 
 import { dappFormDataToOriginListing } from 'utils/listing'
 import { getFiatPrice } from 'utils/priceUtils'
@@ -858,7 +858,7 @@ class ListingCreate extends Component {
                 </div>
               )}
             </div>
-            {step === this.STEP.METAMASK && <MetamaskModal />}
+            {step === this.STEP.METAMASK && <ProviderModal />}
             {step === this.STEP.PROCESSING && <ProcessingModal />}
             {step === this.STEP.SUCCESS && (
               <Modal backdrop="static" isOpen={true}>
