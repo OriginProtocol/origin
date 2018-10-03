@@ -3830,13 +3830,6 @@ form .stars img {
   padding: 20px 0;
 }
 
-.messages-wrapper .brdcrmb {
-  color: var(--dusk);
-  font-size: 0.875rem;
-  font-weight: normal;
-  text-transform: uppercase;
-}
-
 .messages-wrapper .listing-summary h1 {
   color: var(--dark);
   font-size: 1.5rem;
