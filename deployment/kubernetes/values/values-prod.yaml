@@ -7,7 +7,7 @@ bridgeReplicas: 1
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '7abe944'
+dappImageTag: 'ad91bda'
 dappReplicas: 2
 
 # Mainnet nodes
@@ -21,12 +21,12 @@ faucetImage: origin-faucet
 faucetImageTag: '28438d2'
 
 eventlistenerImage: event-listener
-eventlistenerImageTag: '7c3786c'
-eventlistenerWeb3Url: https://rinkeby.infura.io/emIXjs9eDuy57IlTYsIP
+eventlistenerImageTag: '6e22b35-1538544696'
+eventlistenerWeb3Url: https://mainnet.infura.io/emIXjs9eDuy57IlTYsIP
 eventlistenerContinueBlock: 6425000
 
 discoveryImage: origin-discovery
-discoveryImageTag: '7c3786c'
+discoveryImageTag: '6e22b35'
 
 # IPFS server for OrbitDB
 messagingIpfsImage: ipfs/go-ipfs
@@ -34,4 +34,4 @@ messagingIpfsImageTag: v0.4.17
 
 # OrbitDB
 messagingImage: origin-messaging
-messagingImageTag: 'bd6cb94'
+messagingImageTag: '3104d23'
