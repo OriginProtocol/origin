@@ -229,7 +229,7 @@ class ContractService {
     const transactionInfo = await this.web3.eth.getTransaction(hash)
 
     // transaction not mined
-    if (transactionInfo.blockNumber === null){
+    if (transactionInfo === null || transactionInfo.blockNumber === null){
       setTimeout(() => {
         this.checkForDeploymentCompletion(hash, confirmationCallback)
       }, 1500)
