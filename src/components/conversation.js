@@ -53,8 +53,11 @@ class Conversation extends Component {
     this.identifyCounterparty()
 
     // why does the page jump ?????
+    // regardless, need to scroll past the banner for now anyway
     setTimeout(() => {
-      window.scrollTo(0, 0)
+      const banner = document.getElementsByClassName('warning').item(0)
+
+      window.scrollTo(0, banner ? banner.offsetHeight : 0)
     }, 400)
   }
 
