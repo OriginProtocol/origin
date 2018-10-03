@@ -3750,6 +3750,11 @@ form .stars img {
   height: calc(100vh - 60px);
 }
 
+.conversation-col .content-container {
+  flex-grow: 1;
+  overflow: hidden;
+}
+
 .conversation-col,
 .no-gutters .conversation-col {
   background-color: white;

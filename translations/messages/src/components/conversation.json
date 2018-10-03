@@ -4,23 +4,11 @@
     "defaultMessage": "Type something..."
   },
   {
-    "id": "purchase-summary.purchasedFrom",
-    "defaultMessage": "Purchased from {sellerLink}"
-  },
-  {
-    "id": "purchase-summary.soldTo",
-    "defaultMessage": "Sold to {buyerLink}"
-  },
-  {
-    "id": "purchase-summary.purchasedFromOn",
-    "defaultMessage": "Purchased from {sellerName} on {date}"
-  },
-  {
-    "id": "purchase-summary.soldToOn",
-    "defaultMessage": "Sold to {buyerName} on {date}"
-  },
-  {
     "id": "conversation.invalidFileSelected",
     "defaultMessage": "File sizes must be less than 1.5 MB. Please select a smaller image."
+  },
+  {
+    "id": "conversation.invalidTextInput",
+    "defaultMessage": "Please add a message to send."
   }
 ]
