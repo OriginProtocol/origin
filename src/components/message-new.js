@@ -162,7 +162,7 @@ class MessageNew extends Component {
               <FormattedMessage
                 id={'MessageNew.encryptionNotice'}
                 defaultMessage={
-                  'Your message will be encrypted. It will only be visible to you, the recipient, and an arbitrator in the event that a dispute arises.'
+                  'Your message will be private to you and the recipient. An arbitrator will see your messages if either of you opens a dispute.'
                 }
               />
             </div>
