@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl'
 import { storeWeb3Intent } from 'actions/App'
 
 import MyListingCard from 'components/my-listing-card'
-import { MetamaskModal } from 'components/modals/wait-modals'
+import { ProviderModal } from 'components/modals/wait-modals'
 import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
@@ -283,7 +283,7 @@ class MyListings extends Component {
             </div>
           )}
         </div>
-        {processing && <MetamaskModal />}
+        {processing && <ProviderModal />}
       </div>
     )
   }

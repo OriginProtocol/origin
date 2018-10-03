@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import { fetchUser } from 'actions/User'
 
@@ -52,8 +53,11 @@ class Conversation extends Component {
     this.identifyCounterparty()
 
     // why does the page jump ?????
+    // regardless, need to scroll past the banner for now anyway
     setTimeout(() => {
-      window.scrollTo(0, 0)
+      const banner = document.getElementsByClassName('warning').item(0)
+
+      window.scrollTo(0, banner ? banner.offsetHeight : 0)
     }, 400)
   }
 
@@ -261,38 +265,40 @@ class Conversation extends Component {
       <Fragment>
         {withListingSummary &&
           listing.id && (
-          <div className="listing-summary d-flex">
-            <div className="aspect-ratio">
-              <div
-                className={`${
-                  photo ? '' : 'placeholder '
-                }image-container d-flex justify-content-center`}
-              >
-                <img
-                  src={photo || 'images/default-image.svg'}
-                  role="presentation"
-                />
+          <Link to={`/listing/${listing.id}`}>
+            <div className="listing-summary d-flex">
+              <div className="aspect-ratio">
+                <div
+                  className={`${
+                    photo ? '' : 'placeholder '
+                  }image-container d-flex justify-content-center`}
+                >
+                  <img
+                    src={photo || 'images/default-image.svg'}
+                    role="presentation"
+                  />
+                </div>
+              </div>
+              <div className="content-container d-flex flex-column">
+                <h1 className="text-truncate">{name}</h1>
+                {purchase.id && (
+                  <div className="state">
+                    <OfferStatusEvent offer={purchase} />
+                  </div>
+                )}
+                {buyer &&
+                    purchase.id && (
+                  <PurchaseProgress
+                    purchase={purchase}
+                    perspective={perspective}
+                    subdued={true}
+                    currentStep={parseInt(status)}
+                    maxStep={perspective === 'buyer' ? 3 : 4}
+                  />
+                )}
               </div>
             </div>
-            <div className="content-container d-flex flex-column">
-              <h1 className="text-truncate">{name}</h1>
-              {purchase.id && (
-                <div className="state">
-                  <OfferStatusEvent offer={purchase} />
-                </div>
-              )}
-              {buyer &&
-                  purchase.id && (
-                <PurchaseProgress
-                  purchase={purchase}
-                  perspective={perspective}
-                  subdued={true}
-                  currentStep={parseInt(status)}
-                  maxStep={perspective === 'buyer' ? 3 : 4}
-                />
-              )}
-            </div>
-          </div>
+          </Link>
         )}
         <div ref={this.conversationDiv} className="conversation">
           <CompactMessages messages={messages} />

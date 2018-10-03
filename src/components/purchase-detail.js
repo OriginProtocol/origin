@@ -23,7 +23,7 @@ import {
   SoldBadge
 } from 'components/badges'
 import { RejectionModal, WithdrawModal } from 'components/modals/offer-modals'
-import { MetamaskModal } from 'components/modals/wait-modals'
+import { ProviderModal } from 'components/modals/wait-modals'
 import OfferStatusEvent from 'components/offer-status-event'
 import PurchaseProgress from 'components/purchase-progress'
 import Reviews from 'components/reviews'
@@ -1176,7 +1176,7 @@ class PurchaseDetail extends Component {
             </div>
           </div>
         </div>
-        {processing && <MetamaskModal />}
+        {processing && <ProviderModal />}
         <ConfirmationModal
           isOpen={modalsOpen.confirmation}
           inferred={problemInferred}

@@ -19,8 +19,9 @@ import { PendingBadge, SoldBadge, FeaturedBadge } from 'components/badges'
 import Modal from 'components/modal'
 import Reviews from 'components/reviews'
 import UserCard from 'components/user-card'
-import { MetamaskModal, ProcessingModal } from 'components/modals/wait-modals'
+import { ProcessingModal, ProviderModal } from 'components/modals/wait-modals'
 
+import getCurrentProvider from 'utils/getCurrentProvider'
 import { getListing } from 'utils/listing'
 import { offerStatusToListingAvailability } from 'utils/offer'
 
@@ -306,7 +307,25 @@ class ListingsDetail extends Component {
             </a>
           </Modal>
         )}
-        {step === this.STEP.METAMASK && <MetamaskModal />}
+        {step === this.STEP.METAMASK && (
+          <ProviderModal
+            message={
+              <FormattedMessage
+                id={'listing-detail.providerInstruction'}
+                defaultMessage={
+                  'To make an offer on this listing, please confirm the transaction in {provider}.'
+                }
+                values={{
+                  provider: getCurrentProvider(
+                    origin &&
+                      origin.contractService &&
+                      origin.contractService.web3
+                  )
+                }}
+              />
+            }
+          />
+        )}
         {step === this.STEP.PROCESSING && <ProcessingModal />}
         {step === this.STEP.PURCHASED && (
           <Modal backdrop="static" isOpen={true}>
@@ -325,15 +344,29 @@ class ListingsDetail extends Component {
                 }
               />
               <ul>
-                <li>The seller can choose to accept or reject your offer.</li>
                 <li>
-                  If the offer is accepted and fulfilled, you will be able to
-                  confirm that the sale is complete. Your escrowed payment will
-                  be sent to the seller.
+                  <FormattedMessage
+                    id={'listing-detail.successItem1'}
+                    defaultMessage={
+                      'The seller can choose to accept or reject your offer.'
+                    }
+                  />
                 </li>
                 <li>
-                  If the offer is rejected, the escrowed payment will be
-                  immediately returned to your wallet.
+                  <FormattedMessage
+                    id={'listing-detail.successItem2'}
+                    defaultMessage={
+                      'If the offer is accepted and fulfilled, you will be able to confirm that the sale is complete. Your escrowed payment will be sent to the seller.'
+                    }
+                  />
+                </li>
+                <li>
+                  <FormattedMessage
+                    id={'listing-detail.successItem3'}
+                    defaultMessage={
+                      'If the offer is rejected, the escrowed payment will be immediately returned to your wallet.'
+                    }
+                  />
                 </li>
               </ul>
             </div>
@@ -345,8 +378,8 @@ class ListingsDetail extends Component {
                 ga-label="my_purchases"
               >
                 <FormattedMessage
-                  id={'listing-detail.goToPurchases'}
-                  defaultMessage={'Go To Purchases'}
+                  id={'listing-detail.viewPurchases'}
+                  defaultMessage={'View Purchases'}
                 />
               </Link>
             </div>
