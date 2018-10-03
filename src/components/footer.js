@@ -61,7 +61,9 @@ class Footer extends Component {
           <div className="row">
             <div className="col-12 col-md-5 col-lg-6">
               <div className="logo-container">
-                <a href="https://www.originprotocol.com">
+                <a href="https://www.originprotocol.com"
+                  target="_blank"
+                  rel="noopener noreferrer">
                   <img
                     src="images/origin-logo-footer.svg"
                     className="origin-logo"
