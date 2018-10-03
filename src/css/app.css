@@ -124,6 +124,10 @@ textarea:-moz-ui-invalid {
   color: var(--dark-two);
 }
 
+.ws-aware {
+  white-space: pre-line;
+}
+
 .table {
   font-size: 0.875rem;
   margin-bottom: 0;

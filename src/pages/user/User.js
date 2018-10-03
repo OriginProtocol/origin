@@ -71,7 +71,7 @@ class User extends Component {
               <div className="name d-flex">
                 <h1>{fullName || <UnnamedUser />}</h1>
               </div>
-              <p>{description}</p>
+              <p className="ws-aware">{description}</p>
             </div>
             <div className="col-12 col-sm-4 col-md-3 col-lg-2 order-md-4">
               {attestations &&
