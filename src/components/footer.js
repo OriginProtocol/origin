@@ -59,7 +59,7 @@ class Footer extends Component {
       <footer className="light-footer">
         <div className="container">
           <div className="row">
-            <div className="col-12 col-md-5 col-lg-6">
+            <div className="col-12 col-md-6 col-lg-6">
               <div className="logo-container">
                 <a href="https://www.originprotocol.com"
                   target="_blank"
@@ -84,7 +84,7 @@ class Footer extends Component {
                 </div>
               </div> 
             </div>
-            <div className="col-12 col-md-7 col-lg-6">
+            <div className="col-12 col-md-6 col-lg-6">
               <div className="footer-links-container">
                 <div className="dropdown">
                   <a

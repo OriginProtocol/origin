@@ -5231,6 +5231,10 @@ a:not([href]):not([tabindex]).span-link {
   .beta .modal-dialog {
     max-width: 50%;
   }
+
+  footer .footer-link  {
+    margin-left: 30px;
+  }
 }
 
 /* lg + */
@@ -5400,6 +5404,10 @@ a:not([href]):not([tabindex]).span-link {
 
   .seller-steps .list-container ol {
     padding-left: 15%;
+  }
+
+  footer .footer-link  {
+    margin-left: 40px;
   }
 }
 
