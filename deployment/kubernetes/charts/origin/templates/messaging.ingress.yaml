@@ -16,9 +16,10 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "86400"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "86400"
     nginx.ingress.kubernetes.io/proxy-body-size: "2m"
+    nginx.ingress.kubernetes.io/proxy-buffering: "on"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "64k"
     nginx.ingress.kubernetes.io/server-snippet: |
       large_client_header_buffers 8 32k;
-      proxy_buffers 8 32k;
 spec:
   tls:
     - secretName: {{ template "messaging.host" . }}
