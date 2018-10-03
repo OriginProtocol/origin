@@ -263,7 +263,7 @@ class ListingCreate extends Component {
       let isFirstConfirmation = true
       this.setState({ step: this.STEP.METAMASK })
       const listing = dappFormDataToOriginListing(formListing.formData)
-      const transactionReceipt = await origin.marketplace.createListing(
+      await origin.marketplace.createListing(
         listing,
         (confirmationCount, transactionReceipt) => {
           if (isFirstConfirmation) {
