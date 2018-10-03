@@ -20,23 +20,21 @@ function saveStorageItem(name, item, defaultValue) {
 }
 
 const updateCurrentStep = (steps, { selectedStep, incompleteStep }) => {
-  const { complete, subStep } = incompleteStep || selectedStep
-
-  if (selectedStep) return {...selectedStep, selected: true}
+  if (selectedStep) return { ...selectedStep, selected: true }
   return steps.find(step => step.position === incompleteStep.position + 1)
 }
 
-const updateStep = (steps, { selectedStep, incompleteStep }) => (step, i) => {
+const updateStep = (steps, { selectedStep, incompleteStep }) => (step) => {
   const completedStep = { ...step, complete: true }
   const matchingName = step.name == ((incompleteStep && incompleteStep.name) || selectedStep && selectedStep.name)
   if (matchingName) {
     if (!selectedStep) {
       return step.complete ? step : completedStep
     }
-    return {...step, selected: true}
+    return { ...step, selected: true }
   }
 
-  return {...step, selected: false}
+  return { ...step, selected: false }
 }
 
 const updateAllSteps = (steps, action) => {
