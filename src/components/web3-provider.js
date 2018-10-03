@@ -431,6 +431,11 @@ class Web3Provider extends Component {
     if (curr !== prev) {
       // start over if changed
       prev !== null && window.location.reload()
+
+      // set user_id to wallet address in Google Analytics
+      const gtag = window.gtag || function(){}
+      gtag('set', { 'user_id': curr })
+      
       // update global state
       this.props.storeWeb3Account(curr)
       // trigger messaging service

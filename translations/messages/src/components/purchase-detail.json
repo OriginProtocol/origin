@@ -140,10 +140,6 @@
     "defaultMessage": "View on IPFS"
   },
   {
-    "id": "purchase-detail.reviewsHeading",
-    "defaultMessage": "Reviews"
-  },
-  {
     "id": "purchase-detail.summaryPending",
     "defaultMessage": "Pending"
   },

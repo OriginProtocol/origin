@@ -64,6 +64,8 @@ class NotificationsDropdown extends Component {
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
+          ga-category="top_nav"
+          ga-label="notifications"
         >
           {!!notifications.length && <div className="unread-indicator" />}
           <img

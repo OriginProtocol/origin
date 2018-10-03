@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import {
   FormattedMessage,
-  FormattedNumber,
+  // FormattedNumber,
   defineMessages,
   injectIntl
 } from 'react-intl'
@@ -17,7 +17,7 @@ import {
 
 import { PendingBadge, SoldBadge, FeaturedBadge } from 'components/badges'
 import Modal from 'components/modal'
-import Review from 'components/review'
+import Reviews from 'components/reviews'
 import UserCard from 'components/user-card'
 import { MetamaskModal, ProcessingModal } from 'components/modals/wait-modals'
 
@@ -53,7 +53,6 @@ class ListingsDetail extends Component {
       offers: [],
       pictures: [],
       purchases: [],
-      reviews: [],
       step: this.STEP.VIEW,
       boostLevel: null,
       boostValue: 0,
@@ -76,7 +75,6 @@ class ListingsDetail extends Component {
       // Load from IPFS
       await this.loadListing()
       await this.loadOffers()
-      await this.loadReviews()
     } else if (this.props.listingJson) {
       const obj = Object.assign({}, this.props.listingJson, { loading: false })
       // Listing json passed in directly
@@ -120,7 +118,7 @@ class ListingsDetail extends Component {
           listingType: 'unit',
           unitsPurchased: 1,
           totalPrice: {
-            amount: this.state.price,
+            amount: '1',
             currency: 'ETH'
           },
           commission: {
@@ -222,18 +220,6 @@ class ListingsDetail extends Component {
     }
   }
 
-  async loadReviews() {
-    try {
-      const reviews = await origin.marketplace.getListingReviews(
-        this.props.listingId
-      )
-      this.setState({ reviews })
-    } catch (error) {
-      console.error(error)
-      console.error(`Error fetching reviews`)
-    }
-  }
-
   resetToStepOne() {
     this.setState({ step: this.STEP.VIEW })
   }
@@ -251,7 +237,6 @@ class ListingsDetail extends Component {
       offers,
       pictures,
       price,
-      reviews,
       seller,
       step
       // unitsRemaining
@@ -301,6 +286,8 @@ class ListingsDetail extends Component {
                 rel="noopener noreferrer"
                 className="btn btn-clear"
                 onClick={() => this.setState({ step: this.STEP.VIEW })}
+                ga-category="buyer_onboarding"
+                ga-label="verify_identity"
               >
                 <FormattedMessage
                   id={'listing-detail.verifyIdentity'}
@@ -312,6 +299,8 @@ class ListingsDetail extends Component {
               href="#"
               className="skip-identity"
               onClick={this.handleSkipOnboarding}
+              ga-category="buyer_onboarding"
+              ga-label="skip"
             >
               Skip
             </a>
@@ -349,7 +338,12 @@ class ListingsDetail extends Component {
               </ul>
             </div>
             <div className="button-container">
-              <Link to="/my-purchases" className="btn btn-clear">
+              <Link
+                to="/my-purchases"
+                className="btn btn-clear"
+                ga-category="listing"
+                ga-label="my_purchases"
+              >
                 <FormattedMessage
                   id={'listing-detail.goToPurchases'}
                   defaultMessage={'Go To Purchases'}
@@ -421,7 +415,7 @@ class ListingsDetail extends Component {
                   </div>
                 )}
               </div>
-              <h1 className="title text-truncate placehold">{name}</h1>
+              <h1 className="title placehold">{name}</h1>
               <p className="ws-aware description placehold">
                 {description}
               </p>
@@ -440,6 +434,8 @@ class ListingsDetail extends Component {
                   <a
                     href={origin.ipfsService.gatewayUrlForHash(ipfsHash)}
                     target="_blank"
+                    ga-category="listing"
+                    ga-label="view_on_ipfs"
                   >
                     <FormattedMessage
                       id={'listing-detail.viewOnIpfs'}
@@ -516,6 +512,8 @@ class ListingsDetail extends Component {
                           className="btn btn-primary"
                           onClick={() => this.handleMakeOffer()}
                           onMouseDown={e => e.preventDefault()}
+                          ga-category="listing"
+                          ga-label="purchase"
                         >
                           <FormattedMessage
                             id={'listing-detail.purchase'}
@@ -524,7 +522,12 @@ class ListingsDetail extends Component {
                         </button>
                       )}
                       {userIsSeller && (
-                        <Link to="/my-listings" className="btn">
+                        <Link
+                          to="/my-listings"
+                          className="btn"
+                          ga-category="listing"
+                          ga-label="my_listings"
+                        >
                             My Listings
                         </Link>
                       )}
@@ -599,7 +602,7 @@ class ListingsDetail extends Component {
                           />
                         )}
                       </div>
-                      <Link to="/">
+                      <Link to="/" ga-category="listing" ga-label="view_listings">
                         <FormattedMessage
                           id={'listing-detail.viewListings'}
                           defaultMessage={'View Listings'}
@@ -673,7 +676,11 @@ class ListingsDetail extends Component {
                   )}
                   {!loading &&
                     (userIsBuyer || userIsSeller) && (
-                    <Link to={`/purchases/${currentOffer.id}`}>
+                    <Link
+                      to={`/purchases/${currentOffer.id}`}
+                      ga-category="listing"
+                      ga-label="view_offer_or_sale"
+                    >
                       {isPending && (
                         <FormattedMessage
                           id={'listing-detail.viewOffer'}
@@ -703,21 +710,9 @@ class ListingsDetail extends Component {
             <div className="row">
               <div className="col-12 col-md-8">
                 <hr />
-                <div className="reviews">
-                  <h2>
-                    <FormattedMessage
-                      id={'listing-detail.reviews'}
-                      defaultMessage={'Reviews'}
-                    />
-                    &nbsp;
-                    <span className="review-count">
-                      <FormattedNumber value={reviews.length} />
-                    </span>
-                  </h2>
-                  {reviews.map(r => <Review key={r.id} review={r} />)}
-                  {/* To Do: pagination */}
-                  {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
-                </div>
+                {this.state.seller && (
+                  <Reviews userAddress={this.state.seller} />
+                )}
               </div>
             </div>
           )}
