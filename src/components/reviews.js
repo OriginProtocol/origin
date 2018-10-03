@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, FormattedNumber } from 'react-intl'
 
 import Review from 'components/review'
 
@@ -44,7 +44,7 @@ class Reviews extends Component {
         <h2>
           <FormattedMessage id={'reviews.heading'} defaultMessage={'Reviews'} />
           &nbsp;<span className="review-count">
-            {Number(userReviews.length).toLocaleString()}
+            <FormattedNumber value={userReviews.length} />
           </span>
         </h2>
 

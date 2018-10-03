@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import {
   FormattedMessage,
-  FormattedNumber,
+  // FormattedNumber,
   defineMessages,
   injectIntl
 } from 'react-intl'
@@ -118,7 +118,7 @@ class ListingsDetail extends Component {
           listingType: 'unit',
           unitsPurchased: 1,
           totalPrice: {
-            amount: this.state.price,
+            amount: '1',
             currency: 'ETH'
           },
           commission: {

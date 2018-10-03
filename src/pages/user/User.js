@@ -9,8 +9,6 @@ import Reviews from 'components/reviews'
 import UnnamedUser from 'components/unnamed-user'
 import WalletCard from 'components/wallet-card'
 
-import origin from '../../services/origin'
-
 class User extends Component {
   async componentDidMount() {
     fetchUser(this.props.userAddress)
