@@ -61,11 +61,13 @@ class Footer extends Component {
           <div className="row">
             <div className="col-12 col-md-5 col-lg-6">
               <div className="logo-container">
-                <img
-                  src="images/origin-logo-footer.svg"
-                  className="origin-logo"
-                  alt="Origin Protocol"
-                />
+                <a href="https://www.originprotocol.com">
+                  <img
+                    src="images/origin-logo-footer.svg"
+                    className="origin-logo"
+                    alt="Origin Protocol"
+                  />
+                </a>
                 <div className="vl"></div>
                 <div className="company-mission">
                   <p>

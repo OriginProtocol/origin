@@ -4826,7 +4826,7 @@ footer .dropdown {
 }
 
 footer .dropdown-toggle::after {
-  border-top: 0.3em solid #6f8294;
+  border-top: 0.3em solid var(--steel);
 }
 
 footer .dropdown-menu {
@@ -4834,7 +4834,7 @@ footer .dropdown-menu {
 }
 
 footer .dropdown-menu li:hover {
-  color: #6f8294;
+  color: var(--steel);
 }
 
 .container.listing-wait-confirmation {
@@ -5181,10 +5181,6 @@ a:not([href]):not([tabindex]).span-link {
 
   .listing-container .seller {
     margin-bottom: 0;
-  }
-
-  footer .logo-container {
-    /* margin: 40px auto 20px auto; */
   }
 
   .error-content-section {
