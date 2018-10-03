@@ -40,8 +40,8 @@
     "defaultMessage": "If the offer is rejected, the escrowed payment will be immediately returned to your wallet."
   },
   {
-    "id": "listing-detail.goToPurchases",
-    "defaultMessage": "Go To Purchases"
+    "id": "listing-detail.viewPurchases",
+    "defaultMessage": "View Purchases"
   },
   {
     "id": "listing-detail.errorPurchasingListing",

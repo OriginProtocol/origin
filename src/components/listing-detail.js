@@ -378,8 +378,8 @@ class ListingsDetail extends Component {
                 ga-label="my_purchases"
               >
                 <FormattedMessage
-                  id={'listing-detail.goToPurchases'}
-                  defaultMessage={'Go To Purchases'}
+                  id={'listing-detail.viewPurchases'}
+                  defaultMessage={'View Purchases'}
                 />
               </Link>
             </div>
