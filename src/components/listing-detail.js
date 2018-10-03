@@ -119,7 +119,7 @@ class ListingsDetail extends Component {
           listingType: 'unit',
           unitsPurchased: 1,
           totalPrice: {
-            amount: '1',
+            amount: this.state.price,
             currency: 'ETH'
           },
           commission: {

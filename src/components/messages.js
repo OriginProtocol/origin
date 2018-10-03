@@ -59,7 +59,7 @@ class Messages extends Component {
     const { selectedConversationId } = this.state
     const filteredAndSorted = messages
       .filter(m => m.conversationId === selectedConversationId)
-      .sort((a, b) => (a.index < b.index ? -1 : 1))
+      .sort((a, b) => (a.created < b.created ? -1 : 1))
 
     return (
       <div className="d-flex messages-wrapper">
