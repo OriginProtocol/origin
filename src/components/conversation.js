@@ -1,16 +1,11 @@
 import React, { Component, Fragment } from 'react'
-import {
-  FormattedDate,
-  FormattedMessage,
-  defineMessages,
-  injectIntl
-} from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 
 import { fetchUser } from 'actions/User'
 
 import CompactMessages from 'components/compact-messages'
+import OfferStatusEvent from 'components/offer-status-event'
 import PurchaseProgress from 'components/purchase-progress'
 
 import { getDataUri } from 'utils/fileUtils'
@@ -47,13 +42,19 @@ class Conversation extends Component {
       files: [],
       listing: {},
       purchase: {},
-      invalidFileSelected: false
+      invalidFileSelected: false,
+      invalidTextInput: false
     }
   }
 
   componentDidMount() {
     // try to detect the user before rendering
     this.identifyCounterparty()
+
+    // why does the page jump ?????
+    setTimeout(() => {
+      window.scrollTo(0, 0)
+    }, 400)
   }
 
   componentDidUpdate(prevProps) {
@@ -61,6 +62,10 @@ class Conversation extends Component {
 
     // on conversation change
     if (id !== prevProps.id) {
+      // immediately clear the listing/purchase context
+      if (this.state.listing.id) {
+        this.setState({ listing: {}, purchase: {} })
+      }
       // textarea is an uncontrolled component and might maintain internal state
       (this.textarea.current || {}).value = ''
       // refresh the counterparty
@@ -130,8 +135,6 @@ class Conversation extends Component {
     if (!el) {
       // It's an image
       if (this.state.files[0].length > imageMaxSize) {
-        // TODO: wrap text for l10n
-        alert('The image is too large')
         this.form.current.reset()
         this.setState({ files: [] })
         return
@@ -142,8 +145,7 @@ class Conversation extends Component {
     const newMessage = el.value
 
     if (!newMessage.length) {
-      // TODO: wrap text for l10n
-      alert('Please add a message to send')
+      this.setState({ invalidTextInput: true })
     } else {
       this.sendMessage(newMessage)
     }
@@ -171,7 +173,6 @@ class Conversation extends Component {
       const listing = listingId ? await getListing(listingId, true) : {}
       this.setState({ listing })
       this.loadPurchase()
-      this.scrollToBottom()
     }
   }
 
@@ -185,15 +186,13 @@ class Conversation extends Component {
     }
 
     const offers = await origin.marketplace.getOffers(listing.id)
-    const flattenedOffers = offers.map(o => {
-      return { ...o, ...o.ipfs.data }
-    })
-    const involvingCounterparty = flattenedOffers.filter(
+    const involvingCounterparty = offers.filter(
       o => o.buyer === counterparty.address || o.buyer === web3Account
     )
     const mostRecent = involvingCounterparty.sort(
       (a, b) => (a.createdAt > b.createdAt ? -1 : 1)
     )[0]
+
     // purchase may not be found
     if (!mostRecent) {
       return this.setState({ purchase: {} })
@@ -238,18 +237,16 @@ class Conversation extends Component {
       counterparty,
       files,
       invalidFileSelected,
+      invalidTextInput,
       listing,
       purchase
     } = this.state
     const { name, pictures } = listing
-    const { buyer, createdAt, status } = purchase
+    const { buyer, status } = purchase
     const perspective = buyer
       ? buyer === web3Account
         ? 'buyer'
         : 'seller'
-      : null
-    const soldAt = createdAt
-      ? createdAt * 1000 /* convert seconds since epoch to ms */
       : null
     const photo = pictures && pictures.length > 0 && pictures[0]
     const canDeliverMessage =
@@ -278,62 +275,14 @@ class Conversation extends Component {
               </div>
             </div>
             <div className="content-container d-flex flex-column">
-              {buyer && (
-                <div className="brdcrmb">
-                  {perspective === 'buyer' && (
-                    <FormattedMessage
-                      id={'purchase-summary.purchasedFrom'}
-                      defaultMessage={'Purchased from {sellerLink}'}
-                      values={{
-                        sellerLink: (
-                          <Link to={`/users/${counterparty.address}`}>
-                            {counterparty.fullName}
-                          </Link>
-                        )
-                      }}
-                    />
-                  )}
-                  {perspective === 'seller' && (
-                    <FormattedMessage
-                      id={'purchase-summary.soldTo'}
-                      defaultMessage={'Sold to {buyerLink}'}
-                      values={{
-                        buyerLink: (
-                          <Link to={`/users/${counterparty.address}`}>
-                            {counterparty.fullName}
-                          </Link>
-                        )
-                      }}
-                    />
-                  )}
-                </div>
-              )}
-              <h1>{name}</h1>
-              {buyer && (
+              <h1 className="text-truncate">{name}</h1>
+              {purchase.id && (
                 <div className="state">
-                  {perspective === 'buyer' && (
-                    <FormattedMessage
-                      id={'purchase-summary.purchasedFromOn'}
-                      defaultMessage={'Purchased from {sellerName} on {date}'}
-                      values={{
-                        sellerName: counterparty.fullName,
-                        date: <FormattedDate value={soldAt} />
-                      }}
-                    />
-                  )}
-                  {perspective === 'seller' && (
-                    <FormattedMessage
-                      id={'purchase-summary.soldToOn'}
-                      defaultMessage={'Sold to {buyerName} on {date}'}
-                      values={{
-                        buyerName: counterparty.fullName,
-                        date: <FormattedDate value={soldAt} />
-                      }}
-                    />
-                  )}
+                  <OfferStatusEvent offer={purchase} />
                 </div>
               )}
-              {buyer && (
+              {buyer &&
+                  purchase.id && (
                 <PurchaseProgress
                   purchase={purchase}
                   perspective={perspective}
@@ -363,7 +312,8 @@ class Conversation extends Component {
             onSubmit={this.handleSubmit}
           >
             {!files.length &&
-              !invalidFileSelected && (
+              !invalidFileSelected &&
+              !invalidTextInput && (
               <textarea
                 ref={this.textarea}
                 placeholder={intl.formatMessage(
@@ -374,18 +324,31 @@ class Conversation extends Component {
                 autoFocus
               />
             )}
-            {invalidFileSelected && (
+            {(invalidFileSelected || invalidTextInput) && (
               <div className="files-container">
                 <p
                   className="text-danger"
-                  onClick={() => this.setState({ invalidFileSelected: false })}
+                  onClick={() =>
+                    this.setState({
+                      invalidFileSelected: false,
+                      invalidTextInput: false
+                    })
+                  }
                 >
-                  <FormattedMessage
-                    id={'conversation.invalidFileSelected'}
-                    defaultMessage={
-                      'File sizes must be less than 1.5 MB. Please select a smaller image.'
-                    }
-                  />
+                  {invalidFileSelected && (
+                    <FormattedMessage
+                      id={'conversation.invalidFileSelected'}
+                      defaultMessage={
+                        'File sizes must be less than 1.5 MB. Please select a smaller image.'
+                      }
+                    />
+                  )}
+                  {invalidTextInput && (
+                    <FormattedMessage
+                      id={'conversation.invalidTextInput'}
+                      defaultMessage={'Please add a message to send.'}
+                    />
+                  )}
                 </p>
               </div>
             )}
