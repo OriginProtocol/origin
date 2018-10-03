@@ -32,7 +32,7 @@ class Transaction extends Component {
   }
 
   render() {
-    const transactionTypeKeysWithoutListing = ['updateProfile']
+    const transactionTypeKeysWithoutListing = ['updateProfile', 'createListing']
     const { confirmationCompletionCount, transaction } = this.props
     const { listing } = this.state
     const {

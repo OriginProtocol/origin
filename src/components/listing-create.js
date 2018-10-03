@@ -260,20 +260,28 @@ class ListingCreate extends Component {
 
   async onSubmitListing(formListing) {
     try {
+      let isFirstConfirmation = true
       this.setState({ step: this.STEP.METAMASK })
       const listing = dappFormDataToOriginListing(formListing.formData)
       const transactionReceipt = await origin.marketplace.createListing(
         listing,
         (confirmationCount, transactionReceipt) => {
-          this.props.updateTransaction(confirmationCount, transactionReceipt)
+          if (isFirstConfirmation) {
+            this.props.upsertTransaction({
+              transactionHash: transactionReceipt.transactionHash,
+              timestamp: Date.now() / 1000,
+              confirmationCount: 0,
+              transactionTypeKey: 'createListing'
+            })
+            this.props.getOgnBalance()
+            this.setState({ step: this.STEP.SUCCESS })
+          } else {
+            this.props.updateTransaction(confirmationCount, transactionReceipt)
+          }
+
+          isFirstConfirmation = false
         }
       )
-      this.props.upsertTransaction({
-        ...transactionReceipt,
-        transactionTypeKey: 'createListing'
-      })
-      this.props.getOgnBalance()
-      this.setState({ step: this.STEP.SUCCESS })
     } catch (error) {
       console.error(error)
       this.setState({ step: this.STEP.ERROR })
