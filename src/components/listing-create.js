@@ -81,6 +81,7 @@ class ListingCreate extends Component {
     this.checkOgnBalance = this.checkOgnBalance.bind(this)
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
+    this.onFormDataChange = this.onFormDataChange.bind(this)
     this.onReview = this.onReview.bind(this)
     this.pollOgnBalance = this.pollOgnBalance.bind(this)
     this.resetForm = this.resetForm.bind(this)
@@ -199,6 +200,18 @@ class ListingCreate extends Component {
     })
     window.scrollTo(0, 0)
     this.checkOgnBalance()
+  }
+
+  onFormDataChange({ formData }) {
+    this.setState({
+      formListing: {
+        ...this.state.formListing,
+        formData: {
+          ...this.state.formListing.formData,
+          ...formData
+        }
+      }
+    })
   }
 
   checkOgnBalance() {
@@ -402,6 +415,7 @@ class ListingCreate extends Component {
                   onError={() =>
                     this.setState({ showDetailsFormErrorMsg: true })
                   }
+                  onChange={this.onFormDataChange}
                   uiSchema={this.uiSchema}
                 >
                   {showDetailsFormErrorMsg && (
