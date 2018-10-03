@@ -195,18 +195,24 @@ class V00_UsersAdapter {
   }
 
   async isValidAttestation({ topic, data, signature }, identityAddress) {
-    const originIdentity = await this.contractService.deployed(
-      this.contractService.contracts.OriginIdentity
-    )
-    const msg = Web3.utils.soliditySha3(identityAddress, topic, data)
-    const prefixedMsg = this.web3EthAccounts.hashMessage(msg)
-    const dataBuf = toBuffer(prefixedMsg)
-    const sig = fromRpcSig(signature)
-    const recovered = ecrecover(dataBuf, sig.v, sig.r, sig.s)
-    const recoveredBuf = pubToAddress(recovered)
-    const recoveredHex = bufferToHex(recoveredBuf)
-    const hashedRecovered = Web3.utils.soliditySha3(recoveredHex)
-    return await originIdentity.methods.keyHasPurpose(hashedRecovered, 3).call()
+    try {
+      const originIdentity = await this.contractService.deployed(
+        this.contractService.contracts.OriginIdentity
+      )
+      const msg = Web3.utils.soliditySha3(identityAddress, topic, data)
+      const prefixedMsg = this.web3EthAccounts.hashMessage(msg)
+      const dataBuf = toBuffer(prefixedMsg)
+      const sig = fromRpcSig(signature)
+      const recovered = ecrecover(dataBuf, sig.v, sig.r, sig.s)
+      const recoveredBuf = pubToAddress(recovered)
+      const recoveredHex = bufferToHex(recoveredBuf)
+      const hashedRecovered = Web3.utils.soliditySha3(recoveredHex)
+      return await originIdentity.methods.keyHasPurpose(hashedRecovered, 3).call()
+    } catch(e) {
+      // validation should simply fail if there is an error
+      console.error('Error during attestation validation:', e)
+      return false
+    }
   }
 
   async validAttestations(identityAddress, attestations) {

@@ -36,6 +36,13 @@ const invalidAttestation = new AttestationObject({
     '0x4e8feba65cbd88fc246013da8dfb478e880518594d86349f54af9c8d5e2eac2b223222c4c6b93f18bd54fc88f4342f1b02a8ea764a411fc02823a3420574375c1c'
 })
 
+const invalidSignatureAttestation = new AttestationObject({
+  topic: 5,
+  data: Web3.utils.sha3('airbnb verified'),
+  signature:
+    '0xabcdeba65cbd88fc246013da8dfb478e880518594d86349f54af9c8d5e2eac2b223222c4c6b93f18bd54fc88f4342f1b02a8ea764a411fc02823a3420574375c1a'
+})
+
 describe('User Resource', function() {
   this.timeout(10000) // default is 2000
   let users
@@ -210,6 +217,18 @@ describe('User Resource', function() {
       await users.set({
         profile: { firstName: 'Dead', lastName: 'Pool' },
         attestations: [phoneAttestation, emailAttestation, invalidAttestation]
+      })
+      const user = await users.get()
+
+      expect(user.attestations.length).to.equal(2)
+      expect(user.profile.firstName).to.equal('Dead')
+      expect(user.profile.lastName).to.equal('Pool')
+    })
+
+    it('should ignore claims with invalid signatures', async () => {
+      await users.set({
+        profile: { firstName: 'Dead', lastName: 'Pool' },
+        attestations: [phoneAttestation, emailAttestation, invalidSignatureAttestation]
       })
       const user = await users.get()
 
