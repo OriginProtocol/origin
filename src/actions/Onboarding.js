@@ -6,7 +6,8 @@ export const OnboardingConstants = keyMirror(
     LEARN_MORE: false,
     SPLIT_PANEL: false,
     UNBLOCK: null,
-    UPDATE_STEPS: null
+    UPDATE_STEPS: null,
+    SELECT_STEP: null
   },
   'ONBOARDING'
 )
@@ -32,5 +33,12 @@ export function updateSteps({ incompleteStep, stepsCompleted = false }) {
     type: OnboardingConstants.UPDATE_STEPS,
     incompleteStep,
     stepsCompleted
+  }
+}
+
+export function selectStep({ selectedStep }) {
+  return {
+    type: OnboardingConstants.SELECT_STEP,
+    selectedStep
   }
 }

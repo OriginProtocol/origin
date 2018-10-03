@@ -19,26 +19,28 @@ function saveStorageItem(name, item, defaultValue) {
   return item
 }
 
-const updateStep = (steps, incompleteStep) => (step, i) => {
-  const completedStep = { ...step, complete: true }
+const updateCurrentStep = (steps, { selectedStep, incompleteStep }) => {
+  const { complete, subStep } = incompleteStep || selectedStep
 
-  if (step.name == incompleteStep.name) {
-    if (step.complete) return step
-    return completedStep
-  }
-
-  if (i < steps.indexOf(incompleteStep)) return completedStep
-
-  return step
-}
-
-const updateCurrentStep = (steps, incompleteStep) => {
-  const { complete, subStep } = incompleteStep
+  if (selectedStep) return {...selectedStep, selected: true}
   return steps.find(step => step.position === incompleteStep.position + 1)
 }
 
-const updateAllSteps = (steps, incompleteStep) => {
-  return steps && steps.map(updateStep(steps, incompleteStep))
+const updateStep = (steps, { selectedStep, incompleteStep }) => (step, i) => {
+  const completedStep = { ...step, complete: true }
+  const matchingName = step.name == ((incompleteStep && incompleteStep.name) || selectedStep && selectedStep.name)
+  if (matchingName) {
+    if (!selectedStep) {
+      return step.complete ? step : completedStep
+    }
+    return {...step, selected: true}
+  }
+
+  return {...step, selected: false}
+}
+
+const updateAllSteps = (steps, action) => {
+  return steps && steps.map(updateStep(steps, action))
 }
 
 const initialState = {
@@ -62,14 +64,21 @@ export default function Onboarding(state = initialState, action = {}) {
       ...state,
       blocked: false
     }
+  case OnboardingConstants.SELECT_STEP:
+    const steps = updateAllSteps(state.steps, action.selectedStep)
 
+    return {
+      ...state,
+      steps,
+      currentStep: updateCurrentStep(steps, action)
+    }
   case OnboardingConstants.UPDATE_STEPS:
     const updatedSteps = updateAllSteps(state.steps, action.incompleteStep)
 
     return {
       ...state,
-      currentStep: updateCurrentStep(updatedSteps, action.incompleteStep),
-      steps: updatedSteps,
+      currentStep: updateCurrentStep(updatedSteps, action),
+      steps: updateAllSteps(state.steps, action),
       progress: true,
       stepsCompleted: saveStorageItem(
         '.stepsCompleted',
@@ -86,6 +95,7 @@ export default function Onboarding(state = initialState, action = {}) {
   case OnboardingConstants.LEARN_MORE:
     return { ...state, learnMore: action.show, splitPanel: false }
   case OnboardingConstants.FETCH_STEPS:
+    return { ...state, stepsCompleted: getStorageItem('.stepsCompleted', state.stepsCompleted) }
   default:
     return state
   }
