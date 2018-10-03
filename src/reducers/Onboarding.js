@@ -63,20 +63,17 @@ export default function Onboarding(state = initialState, action = {}) {
       blocked: false
     }
   case OnboardingConstants.SELECT_STEP:
-    const steps = updateAllSteps(state.steps, action.selectedStep)
-
     return {
       ...state,
-      steps,
-      currentStep: updateCurrentStep(steps, action)
+      currentStep: updateCurrentStep(updatedSteps, action)
     }
   case OnboardingConstants.UPDATE_STEPS:
-    const updatedSteps = updateAllSteps(state.steps, action.incompleteStep)
+    const updatedSteps = updateAllSteps(state.steps, action)
 
     return {
       ...state,
       currentStep: updateCurrentStep(updatedSteps, action),
-      steps: updateAllSteps(state.steps, action),
+      steps: updatedSteps,
       progress: true,
       stepsCompleted: saveStorageItem(
         '.stepsCompleted',
