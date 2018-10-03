@@ -1,12 +1,6 @@
 import React, { Component, Fragment } from 'react'
-import {
-  FormattedDate,
-  FormattedMessage,
-  defineMessages,
-  injectIntl
-} from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 
 import { fetchUser } from 'actions/User'
 
@@ -248,14 +242,11 @@ class Conversation extends Component {
       purchase
     } = this.state
     const { name, pictures } = listing
-    const { buyer, createdAt, status } = purchase
+    const { buyer, status } = purchase
     const perspective = buyer
       ? buyer === web3Account
         ? 'buyer'
         : 'seller'
-      : null
-    const soldAt = createdAt
-      ? createdAt * 1000 /* convert seconds since epoch to ms */
       : null
     const photo = pictures && pictures.length > 0 && pictures[0]
     const canDeliverMessage =
@@ -290,7 +281,8 @@ class Conversation extends Component {
                   <OfferStatusEvent offer={purchase} />
                 </div>
               )}
-              {buyer && purchase.id && (
+              {buyer &&
+                  purchase.id && (
                 <PurchaseProgress
                   purchase={purchase}
                   perspective={perspective}
@@ -320,7 +312,8 @@ class Conversation extends Component {
             onSubmit={this.handleSubmit}
           >
             {!files.length &&
-              !invalidFileSelected && !invalidTextInput && (
+              !invalidFileSelected &&
+              !invalidTextInput && (
               <textarea
                 ref={this.textarea}
                 placeholder={intl.formatMessage(
@@ -335,10 +328,12 @@ class Conversation extends Component {
               <div className="files-container">
                 <p
                   className="text-danger"
-                  onClick={() => this.setState({
-                    invalidFileSelected: false,
-                    invalidTextInput: false
-                  })}
+                  onClick={() =>
+                    this.setState({
+                      invalidFileSelected: false,
+                      invalidTextInput: false
+                    })
+                  }
                 >
                   {invalidFileSelected && (
                     <FormattedMessage
@@ -351,9 +346,7 @@ class Conversation extends Component {
                   {invalidTextInput && (
                     <FormattedMessage
                       id={'conversation.invalidTextInput'}
-                      defaultMessage={
-                        'Please add a message to send.'
-                      }
+                      defaultMessage={'Please add a message to send.'}
                     />
                   )}
                 </p>
