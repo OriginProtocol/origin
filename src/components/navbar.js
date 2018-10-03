@@ -46,7 +46,12 @@ class NavBar extends Component {
           >
             <img src="images/origin-icon-white.svg" alt="Origin menu" />
           </button>
-          <Link to="/" className="navbar-brand mr-auto mr-lg-3">
+          <Link
+            to="/"
+            className="navbar-brand mr-auto mr-lg-3"
+            ga-category="top_nav"
+            ga-label="logo"
+          >
             <div className="d-none d-lg-block logo-container">
               <img
                 src="images/origin-logo.svg"
@@ -60,13 +65,23 @@ class NavBar extends Component {
             id="navbarSupportedContent"
           >
             <div className="navbar-nav justify-content-end">
-              <Link to="/" className="d-lg-none nav-item nav-link">
+              <Link
+                to="/"
+                className="d-lg-none nav-item nav-link"
+                ga-category="top_nav"
+                ga-label="listings"
+              >
                 <FormattedMessage
                   id={'navbar.listings'}
                   defaultMessage={'Listings'}
                 />
               </Link>
-              <Link to="/my-purchases" className="nav-item nav-link">
+              <Link
+                to="/my-purchases"
+                className="nav-item nav-link"
+                ga-category="top_nav"
+                ga-label="buying"
+              >
                 <FormattedMessage
                   id={'navbar.buying'}
                   defaultMessage={'Buying'}
@@ -80,6 +95,8 @@ class NavBar extends Component {
                   data-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false"
+                  ga-category="top_nav"
+                  ga-label="sell_dropdown"
                 >
                   <FormattedMessage
                     id={'navbar.selling'}
@@ -94,13 +111,23 @@ class NavBar extends Component {
                     <div className="triangle" />
                   </div>
                   <div className="actual-menu">
-                    <Link to="/my-listings" className="dropdown-item">
+                    <Link
+                      to="/my-listings"
+                      className="dropdown-item"
+                      ga-category="top_nav"
+                      ga-label="sell_dropdown_my_listings"
+                    >
                       <FormattedMessage
                         id={'navbar.myListings'}
                         defaultMessage={'My Listings'}
                       />
                     </Link>
-                    <Link to="/my-sales" className="dropdown-item">
+                    <Link
+                      to="/my-sales"
+                      className="dropdown-item"
+                      ga-category="top_nav"
+                      ga-label="sell_dropdown_my_sales"
+                    >
                       <FormattedMessage
                         id={'navbar.mySales'}
                         defaultMessage={'My Sales'}
@@ -110,6 +137,8 @@ class NavBar extends Component {
                       to="/create"
                       className="dropdown-item d-none d-lg-block"
                       onClick={this.handleLink}
+                      ga-category="top_nav"
+                      ga-label="sell_dropdown_add_listing"
                     >
                       <FormattedMessage
                         id={'navbar.addListing'}
@@ -123,6 +152,8 @@ class NavBar extends Component {
                 to="/create"
                 className="nav-item nav-link"
                 onClick={this.handleLink}
+                ga-category="top_nav"
+                ga-label="add_listing"
               >
                 <img
                   src="images/add-listing-icon.svg"

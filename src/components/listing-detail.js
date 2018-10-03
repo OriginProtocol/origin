@@ -301,6 +301,8 @@ class ListingsDetail extends Component {
                 rel="noopener noreferrer"
                 className="btn btn-clear"
                 onClick={() => this.setState({ step: this.STEP.VIEW })}
+                ga-category="buyer_onboarding"
+                ga-label="verify_identity"
               >
                 <FormattedMessage
                   id={'listing-detail.verifyIdentity'}
@@ -312,6 +314,8 @@ class ListingsDetail extends Component {
               href="#"
               className="skip-identity"
               onClick={this.handleSkipOnboarding}
+              ga-category="buyer_onboarding"
+              ga-label="skip"
             >
               Skip
             </a>
@@ -349,7 +353,12 @@ class ListingsDetail extends Component {
               </ul>
             </div>
             <div className="button-container">
-              <Link to="/my-purchases" className="btn btn-clear">
+              <Link
+                to="/my-purchases"
+                className="btn btn-clear"
+                ga-category="listing"
+                ga-label="my_purchases"
+              >
                 <FormattedMessage
                   id={'listing-detail.goToPurchases'}
                   defaultMessage={'Go To Purchases'}
@@ -440,6 +449,8 @@ class ListingsDetail extends Component {
                   <a
                     href={origin.ipfsService.gatewayUrlForHash(ipfsHash)}
                     target="_blank"
+                    ga-category="listing"
+                    ga-label="view_on_ipfs"
                   >
                     <FormattedMessage
                       id={'listing-detail.viewOnIpfs'}
@@ -516,6 +527,8 @@ class ListingsDetail extends Component {
                           className="btn btn-primary"
                           onClick={() => this.handleMakeOffer()}
                           onMouseDown={e => e.preventDefault()}
+                          ga-category="listing"
+                          ga-label="purchase"
                         >
                           <FormattedMessage
                             id={'listing-detail.purchase'}
@@ -524,7 +537,12 @@ class ListingsDetail extends Component {
                         </button>
                       )}
                       {userIsSeller && (
-                        <Link to="/my-listings" className="btn">
+                        <Link
+                          to="/my-listings"
+                          className="btn"
+                          ga-category="listing"
+                          ga-label="my_listings"
+                        >
                             My Listings
                         </Link>
                       )}
@@ -599,7 +617,7 @@ class ListingsDetail extends Component {
                           />
                         )}
                       </div>
-                      <Link to="/">
+                      <Link to="/" ga-category="listing" ga-label="view_listings">
                         <FormattedMessage
                           id={'listing-detail.viewListings'}
                           defaultMessage={'View Listings'}
@@ -673,7 +691,11 @@ class ListingsDetail extends Component {
                   )}
                   {!loading &&
                     (userIsBuyer || userIsSeller) && (
-                    <Link to={`/purchases/${currentOffer.id}`}>
+                    <Link
+                      to={`/purchases/${currentOffer.id}`}
+                      ga-category="listing"
+                      ga-label="view_offer_or_sale"
+                    >
                       {isPending && (
                         <FormattedMessage
                           id={'listing-detail.viewOffer'}

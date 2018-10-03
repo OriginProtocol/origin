@@ -14,6 +14,8 @@ export default class RightPanel extends Component {
             src="/images/close-icon.svg"
             alt="close-icon"
             onClick={closeModal}
+            ga-category="seller_onboarding"
+            ga-label="dismiss_modal"
           />
         </div>
         <div className="content-container d-flex flex-column justify-content-around">

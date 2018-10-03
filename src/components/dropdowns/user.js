@@ -30,6 +30,8 @@ class UserDropdown extends Component {
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
+          ga-category="top_nav"
+          ga-label="user"
         >
           <Identicon address={wallet.address} />
         </a>

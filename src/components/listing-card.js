@@ -95,7 +95,7 @@ class ListingCard extends Component {
           loading ? ' loading' : ''
         }`}
       >
-        <Link to={`/listing/${this.props.listingId}`}>
+        <Link to={`/listing/${this.props.listingId}`} ga-category="listing" ga-label="listing_card">
           {!!photo && (
             <div
               className="photo"
