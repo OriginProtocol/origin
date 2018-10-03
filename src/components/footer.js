@@ -59,7 +59,7 @@ class Footer extends Component {
       <footer className="light-footer">
         <div className="container">
           <div className="row">
-            <div className="col-12 col-md-6 col-lg-6">
+            <div className="col-12 col-lg-6">
               <div className="logo-container">
                 <a href="https://www.originprotocol.com"
                   target="_blank"
@@ -84,9 +84,9 @@ class Footer extends Component {
                 </div>
               </div> 
             </div>
-            <div className="col-12 col-md-6 col-lg-6">
-              <div className="footer-links-container">
-                <div className="dropdown">
+            <div className="col-12 col-lg-6">
+              <div className="d-lg-flex footer-links-container justify-content-between">
+                <div className="d-flex dropdown">
                   <a
                     className="dropdown-toggle"
                     id="languageDropdown"
@@ -134,40 +134,47 @@ class Footer extends Component {
                     </div>
                   </div>
                 </div>
-                <a
-                  href="https://www.originprotocol.com"
-                  className="footer-link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FormattedMessage
-                    id={'footer.websiteLink'}
-                    defaultMessage={'Visit our Website'}
-                  />
-                </a>
-                <a
-                  href="https://github.com/OriginProtocol"
-                  className="footer-link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FormattedMessage
-                    id={'footer.githubLink'}
-                    defaultMessage={'Visit our Github'}
-                  />
-                </a>
+                <div className="d-lg-inline-block link-container">
+                  <a
+                    href="https://www.originprotocol.com"
+                    className="footer-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FormattedMessage
+                      id={'footer.websiteLink'}
+                      defaultMessage={'Visit our Website'}
+                    />
+                  </a>
+                </div>
+                <div className="d-lg-inline-block link-container">
+                  <a
+                    href="https://github.com/OriginProtocol"
+                    className="footer-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FormattedMessage
+                      id={'footer.githubLink'}
+                      defaultMessage={'Visit our Github'}
+                    />
+                  </a>
+                </div>
                 {/* For when the FAQ page is ready
-                <a
-                  href="/FAQ"
-                  className="footer-link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FormattedMessage
-                    id={'footer.faqLink'}
-                    defaultMessage={'View FAQs'}
-                  />
-                </a> */}
+                  <div className="d-lg-inline-block link-container">
+                    <a
+                      href="/FAQ"
+                      className="footer-link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <FormattedMessage
+                        id={'footer.faqLink'}
+                        defaultMessage={'View FAQs'}
+                      />
+                    </a>
+                  </div>
+                */}
               </div>
             </div>
           </div>
