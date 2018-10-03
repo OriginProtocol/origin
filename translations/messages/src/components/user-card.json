@@ -4,8 +4,12 @@
     "defaultMessage": "send messages"
   },
   {
-    "id": "user-card.heading",
-    "defaultMessage": "About the {title}"
+    "id": "user-card.headingBuyer",
+    "defaultMessage": "About the Buyer"
+  },
+  {
+    "id": "user-card.headingSeller",
+    "defaultMessage": "About the Seller"
   },
   {
     "id": "user-card.ethAddress",
