@@ -33,8 +33,8 @@ const updateStep = (steps, { selectedStep, incompleteStep }) => (step) => {
 }
 
 const updateAllSteps = (steps = [], action) => steps.map(updateStep(steps, action))
-
-const stepsIncomplete = (steps = []) => steps.find((step) => !step.complete)
+const findIncompleteStep = (steps = []) => steps.find((step) => !step.complete)
+const findNextStep = (incompleteStep) => (step) => step.position === incompleteStep.position + 1
 
 const updateCurrentStep = (state, action, stepsCompleted = false) => {
   const { steps, currentStep } = state
@@ -44,8 +44,8 @@ const updateCurrentStep = (state, action, stepsCompleted = false) => {
   const updatedSteps = updateAllSteps(steps, action)
 
   if (selectedStep) return { ...selectedStep, selected: true }
-  const nextStep = updatedSteps.find(step => step.position === incompleteStep.position + 1)
-  return nextStep ? nextStep : updatedSteps.find(step => !step.complete)
+  const nextStep = updatedSteps.find(findNextStep(incompleteStep))
+  return nextStep ? nextStep : findIncompleteStep(updatedSteps)
 }
 
 const initialState = {
@@ -76,17 +76,14 @@ export default function Onboarding(state = initialState, action = {}) {
     }
   case OnboardingConstants.UPDATE_STEPS:
     const updatedSteps = updateAllSteps(state.steps, action)
-    const stepsCompleted = !stepsIncomplete(updatedSteps)
+    const stepsCompleted = !findIncompleteStep(updatedSteps)
 
     return {
       ...state,
       currentStep: updateCurrentStep(state, action, stepsCompleted),
       progress: true,
       steps: updatedSteps,
-      stepsCompleted: saveStorageItem(
-        '.stepsCompleted',
-        stepsCompleted
-      )
+      stepsCompleted: saveStorageItem('.stepsCompleted', stepsCompleted)
     }
   case OnboardingConstants.SPLIT_PANEL:
     return {
