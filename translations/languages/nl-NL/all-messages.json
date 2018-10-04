@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "ETH adres:",
   "wallet-card.noEthAccountConnected": "Geen ETH account verbonden",
   "wallet-card.accountBalances": "Saldi",
+  "wallet-card.transactionHistory": "Transactiegeschiedenis",
   "warning.message": "U gebruikt momenteel de Origin Mainnet-bèta.",
   "warning.invitation": "Een bug gevonden? Open een probleem op {github} of meld het in ons # bug-reports kanaal op {discord}.",
   "web3-provider.intentRequiresMetaMask": "Om te {web3Intent} moet u MetaMask installeren.",
