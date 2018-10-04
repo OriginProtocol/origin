@@ -19,11 +19,6 @@ function saveStorageItem(name, item, defaultValue) {
   return item
 }
 
-const updateCurrentStep = (steps, { selectedStep, incompleteStep }) => {
-  if (selectedStep) return { ...selectedStep, selected: true }
-  return steps.find(step => step.position === incompleteStep.position + 1)
-}
-
 const updateStep = (steps, { selectedStep, incompleteStep }) => (step) => {
   const completedStep = { ...step, complete: true }
   const matchingName = step.name == ((incompleteStep && incompleteStep.name) || selectedStep && selectedStep.name)
@@ -37,8 +32,20 @@ const updateStep = (steps, { selectedStep, incompleteStep }) => (step) => {
   return { ...step, selected: false }
 }
 
-const updateAllSteps = (steps, action) => {
-  return steps && steps.map(updateStep(steps, action))
+const updateAllSteps = (steps = [], action) => steps.map(updateStep(steps, action))
+
+const stepsIncomplete = (steps = []) => steps.find((step) => !step.complete)
+
+const updateCurrentStep = (state, action, stepsCompleted = false) => {
+  const { steps, currentStep } = state
+  if (stepsCompleted) return { ...currentStep, complete: true, selected: true }
+
+  const { selectedStep, incompleteStep } = action
+  const updatedSteps = updateAllSteps(steps, action)
+
+  if (selectedStep) return { ...selectedStep, selected: true }
+  const nextStep = updatedSteps.find(step => step.position === incompleteStep.position + 1)
+  return nextStep ? nextStep : updatedSteps.find(step => !step.complete)
 }
 
 const initialState = {
@@ -65,19 +72,20 @@ export default function Onboarding(state = initialState, action = {}) {
   case OnboardingConstants.SELECT_STEP:
     return {
       ...state,
-      currentStep: updateCurrentStep(updatedSteps, action)
+      currentStep: updateCurrentStep(state, action)
     }
   case OnboardingConstants.UPDATE_STEPS:
     const updatedSteps = updateAllSteps(state.steps, action)
+    const stepsCompleted = !stepsIncomplete(updatedSteps)
 
     return {
       ...state,
-      currentStep: updateCurrentStep(updatedSteps, action),
-      steps: updatedSteps,
+      currentStep: updateCurrentStep(state, action, stepsCompleted),
       progress: true,
+      steps: updatedSteps,
       stepsCompleted: saveStorageItem(
         '.stepsCompleted',
-        action.stepsCompleted
+        stepsCompleted
       )
     }
   case OnboardingConstants.SPLIT_PANEL:

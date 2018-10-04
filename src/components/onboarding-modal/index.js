@@ -208,8 +208,8 @@ const mapDispatchToProps = dispatch => ({
   getOgnBalance: () => dispatch(getOgnBalance()),
   toggleSplitPanel: show => dispatch(toggleSplitPanel(show)),
   toggleLearnMore: show => dispatch(toggleLearnMore(show)),
-  updateSteps: ({ incompleteStep, stepsCompleted, selected }) =>
-    dispatch(updateSteps({ incompleteStep, stepsCompleted, selected })),
+  updateSteps: ({ incompleteStep }) =>
+    dispatch(updateSteps({ incompleteStep })),
   selectStep: ({ selectedStep }) => dispatch(selectStep({ selectedStep }))
 })
 

@@ -17,10 +17,10 @@ class SplitPanel extends Component {
     })
   }
 
-  displayNextStep(stepsCompleted = false) {
+  displayNextStep() {
     const { updateSteps, currentStep } = this.props
 
-    updateSteps({ incompleteStep: currentStep, stepsCompleted })
+    updateSteps({ incompleteStep: currentStep })
   }
 
   render() {

@@ -28,11 +28,10 @@ export function unblock() {
   return { type: OnboardingConstants.UNBLOCK }
 }
 
-export function updateSteps({ incompleteStep, stepsCompleted = false }) {
+export function updateSteps({ incompleteStep }) {
   return {
     type: OnboardingConstants.UPDATE_STEPS,
-    incompleteStep,
-    stepsCompleted
+    incompleteStep
   }
 }
 

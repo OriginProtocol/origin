@@ -7,19 +7,10 @@ export default class PanelButtons extends Component {
     super(props)
 
     this.connectMetaMask = this.connectMetaMask.bind(this)
-    this.completeOnboarding = this.completeOnboarding.bind(this)
   }
 
   connectMetaMask() {
     this.props.displayNextStep()
-  }
-
-  completeOnboarding() {
-    const { displayNextStep, closeModal } = this.props
-    const stepsCompleted = true
-
-    displayNextStep(stepsCompleted)
-    closeModal()
   }
 
   render() {
@@ -95,7 +86,7 @@ export default class PanelButtons extends Component {
           <Link
             to="/about-tokens"
             target="_blank"
-            onClick={this.completeOnboarding}
+            onClick={() => displayNextStep()}
             ga-category="seller_onboarding"
             ga-label="step_3_learn_more"
           >
