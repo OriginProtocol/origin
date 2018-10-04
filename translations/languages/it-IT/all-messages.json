@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "Indirizzo ETH:",
   "wallet-card.noEthAccountConnected": "Nessun Account ETH Connesso",
   "wallet-card.accountBalances": "Saldi del conto",
+  "wallet-card.transactionHistory": "Cronologia delle transazioni",
   "warning.message": "Attualmente stai utilizzando Origin Mainnet Beta.",
   "warning.invitation": "Trovato un bug? Apri un problema su {github} o segnalalo nel nostro canale #bug-reports su {discord}.",
   "web3-provider.intentRequiresMetaMask": "Per {web3Intent}, è necessario installare MetaMask.",
