@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "Adresa ETH:",
   "wallet-card.noEthAccountConnected": "Nie je pripojený účet ETH",
   "wallet-card.accountBalances": "Zostatky na účtoch",
+  "wallet-card.transactionHistory": "história transakcií",
   "warning.message": "Momentálne používate pôvodnú hlavnú sieť Beta.",
   "warning.invitation": "Bola nájdená chyba? Otvorte problém na {github} alebo nahláste ho v našom # kanáloch hlásení chýb na {discord}.",
   "web3-provider.intentRequiresMetaMask": "Ak chcete {web3Intent}, musíte nainštalovať MetaMask.",
