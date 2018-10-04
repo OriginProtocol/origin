@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "Alamat ETH:",
   "wallet-card.noEthAccountConnected": "Tidak ada akun ETH terhubung",
   "wallet-card.accountBalances": "Saldo akun",
+  "wallet-card.transactionHistory": "Riwayat transaksi",
   "warning.message": "Anda saat ini menggunakan Origin Mainnet Beta.",
   "warning.invitation": "Menemukan bug? Buka masalah pada {github} atau laporkan di # saluran bug-laporan kami di {discord}.",
   "web3-provider.intentRequiresMetaMask": "Untuk {web3Intent}, Anda harus menginstal MetaMask.",
