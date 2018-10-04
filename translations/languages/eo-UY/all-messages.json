@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "ETH Adreso:",
   "wallet-card.noEthAccountConnected": "Ne ETH Konto Konektita",
   "wallet-card.accountBalances": "Kontroli ekvilibrojn",
+  "wallet-card.transactionHistory": "Transakcio-Historio",
   "warning.message": "Vi nun uzas la Origin-maŝinon Beta.",
   "warning.invitation": "Trovis cimon? Malfermu aferon sur {github} aŭ informu ĝin en nia nuna #memora? O kanalo sur {discord}.",
   "web3-provider.intentRequiresMetaMask": "Por {web3Intent}, vi devas instali MetaMask.",
