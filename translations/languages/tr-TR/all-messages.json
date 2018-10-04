@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "ETH Adresi:",
   "wallet-card.noEthAccountConnected": "ETH Hesabı Bağlandı",
   "wallet-card.accountBalances": "Hesap Bakiyeleri",
+  "wallet-card.transactionHistory": "işlem geçmişi",
   "warning.message": "Şu anda Origin Mainnet Beta kullanıyorsunuz.",
   "warning.invitation": "Bir hata mı buldun? Bir sorunu {github} açın veya {discord}numaralı hata raporları kanalımızda raporlayın.",
   "web3-provider.intentRequiresMetaMask": "Amacıyla {web3Intent}, sen MetaMask yüklemeniz gerekir.",
