@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "ETH地址:",
   "wallet-card.noEthAccountConnected": "未連接ETH帳戶",
   "wallet-card.accountBalances": "帳戶餘額",
+  "wallet-card.transactionHistory": "交易紀錄",
   "warning.message": "您目前正在使用Origin Mainnet Beta。",
   "warning.invitation": "發現了一個bug？在 {github} 上打開一個問題或在我們的#bug-reports通道上報告 {discord}。",
   "web3-provider.intentRequiresMetaMask": "為了{web3Intent}，你必須安裝MetaMask。",
