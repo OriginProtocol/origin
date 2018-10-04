@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "Địa chỉ ETH:",
   "wallet-card.noEthAccountConnected": "Không có tài khoản ETH được kết nối",
   "wallet-card.accountBalances": "Số dư tài khoản",
+  "wallet-card.transactionHistory": "Lịch sử giao dịch",
   "warning.message": "Bạn hiện đang sử dụng bản phát hành Mainnet gốc.",
   "warning.invitation": "Tìm thấy một lỗi? Mở một sự cố trên {github} hoặc báo cáo sự cố trong # kênh báo cáo lỗi của chúng tôi trên {discord}.",
   "web3-provider.intentRequiresMetaMask": "Để {web3Intent}, bạn phải cài đặt Metamask.",
