@@ -86,11 +86,14 @@ export default class PanelButtons extends Component {
           <Link
             to="/about-tokens"
             target="_blank"
-            onClick={() => displayNextStep()}
             ga-category="seller_onboarding"
             ga-label="step_3_learn_more"
           >
-            <button key={'first-btn'} className="btn btn-primary">
+            <button
+              key={'first-btn'}
+              className="btn btn-primary"
+              onClick={() => displayNextStep()}
+            >
               <FormattedMessage
                 id={'onboarding-buttons.getOriginTokens'}
                 defaultMessage={'Learn more'}
