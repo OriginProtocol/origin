@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 function LeftPanel({ steps, firstIncompleteStep, selectStep }) {
   const selected = ({ name, selected }) => {
     if (selected) return 'selected'
-    return (firstIncompleteStep.name == name) && 'selected'
+    return firstIncompleteStep.name === name && 'selected'
   }
   const completed = complete => (complete ? 'complete' : 'incomplete')
 

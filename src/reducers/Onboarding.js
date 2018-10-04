@@ -21,7 +21,7 @@ function saveStorageItem(name, item, defaultValue) {
 
 const updateStep = (steps, { selectedStep, incompleteStep }) => (step) => {
   const completedStep = { ...step, complete: true }
-  const matchingName = step.name == (
+  const matchingName = step.name === (
     (incompleteStep && incompleteStep.name) || selectedStep && selectedStep.name
   )
 

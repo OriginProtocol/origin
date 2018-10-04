@@ -176,7 +176,7 @@ class VerifyAirbnb extends Component {
             id="airbnb-generated-code"
             readOnly="readOnly"
             value={
-              this.state.confirmationCode == ''
+              this.state.confirmationCode === ''
                 ? this.props.intl.formatMessage({
                   id: 'VerifyAirbnb.loadingConfirmationCode',
                   defaultMessage: 'Loading...'

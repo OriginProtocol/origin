@@ -60,6 +60,7 @@ export default class PanelButtons extends Component {
             target="_blank"
             ga-category="seller_onboarding"
             ga-label="step_2_verify"
+            onClick={() => displayNextStep()}
           >
             <button key={'first-btn'} className="btn btn-primary">
               <FormattedMessage
