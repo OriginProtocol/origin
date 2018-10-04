@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "Adres ETH:",
   "wallet-card.noEthAccountConnected": "Brak połączenia z kontem ETH",
   "wallet-card.accountBalances": "Salda kont",
+  "wallet-card.transactionHistory": "Historia transakcji",
   "warning.message": "Aktualnie używasz wersji Mainnet Beta.",
   "warning.invitation": "Znalazłeś błąd? Otwórz numer na {github} lub zgłoś go w naszym # raporcie o błędach na kanale {discord}.",
   "web3-provider.intentRequiresMetaMask": "Aby uzyskać {web3Intent}, musisz zainstalować MetaMask.",
