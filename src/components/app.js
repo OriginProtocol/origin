@@ -23,8 +23,7 @@ import ListingCreate from 'components/listing-create'
 import ListingDetail from 'components/listing-detail'
 import ListingsGrid from 'components/listings-grid'
 import Messages from 'components/messages'
-import MessagingProvider from 'components/messaging-provider'
-import BetaModal from 'components/modals/beta-modal'
+import Onboarding from 'components/onboarding'
 import MyListings from 'components/my-listings'
 import MyPurchases from 'components/my-purchases'
 import MySales from 'components/my-sales'
@@ -53,12 +52,12 @@ import '../css/app.css'
 const httpsRequired = process.env.FORCE_HTTPS
 
 const HomePage = () => (
-  <div>
+  <Fragment>
     <SearchBar />
     <div className="container">
       <ListingsGrid renderMode="home-page" />
     </div>
-  </div>
+  </Fragment>
 )
 
 const ListingDetailPage = props => (
@@ -150,7 +149,7 @@ class App extends Component {
         <Router>
           <ScrollToTop>
             <Web3Provider>
-              <MessagingProvider>
+              <Onboarding>
                 <Analytics>
                   <Layout>
                     <Switch>
@@ -187,9 +186,7 @@ class App extends Component {
                   </Layout>
                 </Analytics>
                 <Alert />
-                <BetaModal />
-                <OnboardingModal />
-              </MessagingProvider>
+              </Onboarding>
             </Web3Provider>
           </ScrollToTop>
         </Router>
