@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "ETH Address:",
   "wallet-card.noEthAccountConnected": "Walang ETH Account na nakakonek",
   "wallet-card.accountBalances": "Mga Balanse ng Account",
+  "wallet-card.transactionHistory": "Kasaysayan ng Transaksyon",
   "warning.message": "Kasalukuyan mong ginagamit ang Pinagmulan Mainnet Beta.",
   "warning.invitation": "Nakatagpo ng bug? Magbukas ng isang isyu sa {github} o iulat ito sa aming # mga ulat ng bug-ulat sa {discord}.",
   "web3-provider.intentRequiresMetaMask": "Para ma- {web3Intent}, dapat mong i-install ang MetaMask.",
