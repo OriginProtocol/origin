@@ -162,14 +162,14 @@ class MyListings extends Component {
                     <div className="numberCircle">
                       <h1 className="circle-text">
                         <FormattedMessage
-                          id={'my-listings.number-two '}
+                          id={'my-listings.number-two'}
                           defaultMessage={'2'}
                         />
                       </h1>
                     </div>
                     <p>
                       <FormattedMessage
-                        id={'my-listings.step-two '}
+                        id={'my-listings.step-two'}
                         defaultMessage={
                           'Give your listing a name, description, and price.'
                         }
@@ -180,14 +180,14 @@ class MyListings extends Component {
                     <div className="numberCircle">
                       <h1 className="circle-text">
                         <FormattedMessage
-                          id={'my-listings.number-three '}
+                          id={'my-listings.number-three'}
                           defaultMessage={'3'}
                         />
                       </h1>
                     </div>
                     <p>
                       <FormattedMessage
-                        id={'my-listings.step-three '}
+                        id={'my-listings.step-three'}
                         defaultMessage={
                           'Preview your listing and publish it to the blockchain.'
                         }

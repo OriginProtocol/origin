@@ -209,12 +209,18 @@ class WalletCard extends Component {
                     >
                       {address && (
                         <EtherscanLink hash={address} className="dropdown-item">
-                          Transaction History
+                          <FormattedMessage
+                            id={'wallet-card.transactionHistory'}
+                            defaultMessage={'Transaction History'}
+                          />
                         </EtherscanLink>
                       )}
                       {/*
                         <a className="dropdown-item" href="#">
-                          Add Tokens
+                          <FormattedMessage
+                            id={'wallet-card.addTokens'}
+                            defaultMessage={'Add Tokens'}
+                          />
                         </a>
                       */}
                     </div>
