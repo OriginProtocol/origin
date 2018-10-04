@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "ETH адреса:",
   "wallet-card.noEthAccountConnected": "Немає зв'язаного облікового запису ETH",
   "wallet-card.accountBalances": "Сальдо рахунку",
+  "wallet-card.transactionHistory": "Історія транзакцій",
   "warning.message": "Наразі ви використовуєте початкову бета-версію Mainnet.",
   "warning.invitation": "Виявлено помилку? Відкрийте проблему на {github} або повідомте про це в нашому каналі # bug-reports на {discord}.",
   "web3-provider.intentRequiresMetaMask": "Щоб {web3Intent}, необхідно встановити MetaMask.",
