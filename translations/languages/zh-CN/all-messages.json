@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "以太坊地址:",
   "wallet-card.noEthAccountConnected": "没有连接到以太坊账户",
   "wallet-card.accountBalances": "帐户余额",
+  "wallet-card.transactionHistory": "交易记录",
   "warning.message": "您目前正在使用Origin Mainnet Beta。",
   "warning.invitation": "发现了一个bug？在 {github} 上打开一个问题或在我们的#bug-reports通道上报告 {discord}。",
   "web3-provider.intentRequiresMetaMask": "为了 {web3Intent}, 必须安装 MetaMask。",
