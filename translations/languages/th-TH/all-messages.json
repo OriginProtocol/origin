@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "ETH ที่อยู่:",
   "wallet-card.noEthAccountConnected": "ไม่มีบัญชี ETH ที่เชื่อมต่อ",
   "wallet-card.accountBalances": "ยอดคงเหลือในบัญชี",
+  "wallet-card.transactionHistory": "ประวัติการทำรายการ",
   "warning.message": "ขณะนี้คุณใช้ Origin First Beta Beta",
   "warning.invitation": "พบข้อผิดพลาดหรือไม่? เปิดประเด็นเกี่ยวกับ {github} หรือรายงานในช่อง # รายงานข้อบกพร่องของเราในวันที่ {discord}",
   "web3-provider.intentRequiresMetaMask": "หากต้องการ {web3Intent}คุณต้องติดตั้ง MetaMask",
