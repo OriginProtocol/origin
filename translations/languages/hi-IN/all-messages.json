@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "ईटीएच पता:",
   "wallet-card.noEthAccountConnected": "कोई ईटीएच खाता कनेक्ट नहीं हुआ",
   "wallet-card.accountBalances": "खाते में शेष राशि",
+  "wallet-card.transactionHistory": "लेनदेन का इतिहास",
   "warning.message": "आप वर्तमान में उत्पत्ति मेननेट बीटा का उपयोग कर रहे हैं।",
   "warning.invitation": "एक बग मिला? {github} पर कोई समस्या खोलें या इसे हमारे # बग-रिपोर्ट चैनल में {discord} पर रिपोर्ट करें।",
   "web3-provider.intentRequiresMetaMask": "{web3Intent}, आपको मेटामास्क इंस्टॉल करना होगा।",
