@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "ETH ঠিকানা:",
   "wallet-card.noEthAccountConnected": "কোনও ETH অ্যাকাউন্ট সংযুক্ত নেই",
   "wallet-card.accountBalances": "আ্যকাউন্ট ব্যালেন্স",
+  "wallet-card.transactionHistory": "আপনি কি আমার সাথে কি করতে চান",
   "warning.message": "আপনি বর্তমানে মূল মুখ্য বিটা ব্যবহার করছেন।",
   "warning.invitation": "একটি বাগ পাওয়া গেছে? {github} একটি সমস্যা খুলুন বা আমাদের # বাগ-রিপোর্ট চ্যানেলে {discord}টিতে প্রতিবেদন করুন।",
   "web3-provider.intentRequiresMetaMask": "{web3Intent}করার জন্য, আপনাকে মেটামাস্ক ইনস্টল করতে হবে।",
