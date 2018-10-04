@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "ETH アドレス:",
   "wallet-card.noEthAccountConnected": "ETHアカウントが接続されていません",
   "wallet-card.accountBalances": "残高：",
+  "wallet-card.transactionHistory": "トランザクション履歴",
   "warning.message": "現在、Origin Mainnet Betaを使用しています。",
   "warning.invitation": "バグを発見しましたか？ {github} で問題を提示するか、 {discord}＃bug-reportsチャネルで報告してください。",
   "web3-provider.intentRequiresMetaMask": "{web3Intent} を行うためにはMetaMaskをインストールしてください。",
