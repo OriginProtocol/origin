@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "crwdns3181:0crwdne3181:0",
   "wallet-card.noEthAccountConnected": "crwdns3182:0crwdne3182:0",
   "wallet-card.accountBalances": "crwdns3183:0crwdne3183:0",
+  "wallet-card.transactionHistory": "crwdns3754:0crwdne3754:0",
   "warning.message": "crwdns3525:0crwdne3525:0",
   "warning.invitation": "crwdns3527:0{github}crwdnd3527:0{discord}crwdne3527:0",
   "web3-provider.intentRequiresMetaMask": "crwdns2650:0{web3Intent}crwdne2650:0",
