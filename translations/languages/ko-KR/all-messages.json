@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "ETH 주소:",
   "wallet-card.noEthAccountConnected": "연결된 ETH 계정 없음",
   "wallet-card.accountBalances": "계정 잔액",
+  "wallet-card.transactionHistory": "거래 내역",
   "warning.message": "현재 Origin Mainnet Beta를 사용 중입니다.",
   "warning.invitation": "버그를 찾았나요? {github} 의 문제를 열거 나 {discord}의 # 버그 신고 채널에서 신고하십시오.",
   "web3-provider.intentRequiresMetaMask": "{web3Intent} 하기 위해서는, MetaMask를 설치해야 합니다.",
