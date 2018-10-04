@@ -29,13 +29,13 @@ class Onboarding extends Component {
 
     this.intlMessages = defineMessages({
       congratsMessage: {
-        id: 'messaging-provider.congrats',
+        id: 'onboarding.congrats',
         defaultMessage:
           'Congratulations! You can now message other users on Origin. ' +
           'Why not start by taking a look around and telling us what you think about our DApp?'
       },
       welcomeMessage: {
-        id: 'messaging-provider.welcome',
+        id: 'onboarding.welcome',
         defaultMessage:
           'You can use Origin Messaging to chat with other users. ' +
           'Origin Messaging allows you to communicate with other users in a secure and decentralized way. ' +
