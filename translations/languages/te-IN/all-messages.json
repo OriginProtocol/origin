@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "ETH చిరునామా:",
   "wallet-card.noEthAccountConnected": "ETH ఖాతా ఏదీ కనెక్ట్ కాలేదు",
   "wallet-card.accountBalances": "ఖాతా నిల్వలు",
+  "wallet-card.transactionHistory": "లావాదేవీ చరిత్ర",
   "warning.message": "మీరు ప్రస్తుతం ఆరిజిన్ మెయిన్నెట్ బీటాని ఉపయోగిస్తున్నారు.",
   "warning.invitation": "ఒక బగ్ కనుగొనబడిందా? ఒక సమస్యను {github} తెరువు లేదా మా # బగ్-రిపోర్టు ఛానల్లో {discord} న నివేదించండి.",
   "web3-provider.intentRequiresMetaMask": "{web3Intent}, మీరు మెటామాస్ ను ఇన్స్టాల్ చేయాలి.",
