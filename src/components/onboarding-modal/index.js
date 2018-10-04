@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl'
 
 import {
   updateSteps,
+  selectStep,
   fetchSteps,
   toggleSplitPanel,
   toggleLearnMore
@@ -127,6 +128,7 @@ class OnboardingModal extends Component {
   render() {
     const {
       updateSteps,
+      selectStep,
       onboarding: { blocked, currentStep, learnMore, splitPanel }
     } = this.props
 
@@ -189,6 +191,7 @@ class OnboardingModal extends Component {
               steps={steps}
               updateSteps={updateSteps}
               closeModal={this.closeModal('toggleSplitPanel')}
+              selectStep={selectStep}
             />
             <div className="modal-backdrop fade show" role="presentation" />
           </div>
@@ -205,8 +208,9 @@ const mapDispatchToProps = dispatch => ({
   getOgnBalance: () => dispatch(getOgnBalance()),
   toggleSplitPanel: show => dispatch(toggleSplitPanel(show)),
   toggleLearnMore: show => dispatch(toggleLearnMore(show)),
-  updateSteps: ({ incompleteStep, stepsCompleted }) =>
-    dispatch(updateSteps({ incompleteStep, stepsCompleted }))
+  updateSteps: ({ incompleteStep }) =>
+    dispatch(updateSteps({ incompleteStep })),
+  selectStep: ({ selectedStep }) => dispatch(selectStep({ selectedStep }))
 })
 
 export default withRouter(

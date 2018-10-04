@@ -108,7 +108,7 @@ class SearchResult extends Component {
     this.searchRequest(onlyPageChanged)
 
     if (
-      previousProps == undefined ||
+      previousProps === undefined ||
       this.props.listingType.type !== previousProps.listingType.type
     ) {
       this.setState({

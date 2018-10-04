@@ -7,19 +7,10 @@ export default class PanelButtons extends Component {
     super(props)
 
     this.connectMetaMask = this.connectMetaMask.bind(this)
-    this.completeOnboarding = this.completeOnboarding.bind(this)
   }
 
   connectMetaMask() {
     this.props.displayNextStep()
-  }
-
-  completeOnboarding() {
-    const { displayNextStep, closeModal } = this.props
-    const stepsCompleted = true
-
-    displayNextStep(stepsCompleted)
-    closeModal()
   }
 
   render() {
@@ -69,6 +60,7 @@ export default class PanelButtons extends Component {
             target="_blank"
             ga-category="seller_onboarding"
             ga-label="step_2_verify"
+            onClick={() => displayNextStep()}
           >
             <button key={'first-btn'} className="btn btn-primary">
               <FormattedMessage
@@ -95,11 +87,14 @@ export default class PanelButtons extends Component {
           <Link
             to="/about-tokens"
             target="_blank"
-            onClick={this.completeOnboarding}
             ga-category="seller_onboarding"
             ga-label="step_3_learn_more"
           >
-            <button key={'first-btn'} className="btn btn-primary">
+            <button
+              key={'first-btn'}
+              className="btn btn-primary"
+              onClick={() => displayNextStep()}
+            >
               <FormattedMessage
                 id={'onboarding-buttons.getOriginTokens'}
                 defaultMessage={'Learn more'}
