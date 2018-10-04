@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "Διεύθυνση ETH:",
   "wallet-card.noEthAccountConnected": "Χωρίς συνδεδεμένο λογαριασμό ETH",
   "wallet-card.accountBalances": "Το υπόλοιπο του λογαριασμού",
+  "wallet-card.transactionHistory": "Ιστορικό Συναλλαγών",
   "warning.message": "Αυτήν τη στιγμή χρησιμοποιείτε το Beta προέλευσης Mainnet Beta.",
   "warning.invitation": "Βρήκατε ένα σφάλμα; Ανοίξτε ένα πρόβλημα στο {github} ή αναφέρετε το στο κανάλι # bug-reports στο {discord}.",
   "web3-provider.intentRequiresMetaMask": "Προκειμένου να {web3Intent}, πρέπει να εγκαταστήσετε το MetaMask.",
