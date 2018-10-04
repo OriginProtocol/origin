@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "ETH naslov:",
   "wallet-card.noEthAccountConnected": "ETH račun ni vklopljen",
   "wallet-card.accountBalances": "Stanje računa",
+  "wallet-card.transactionHistory": "Zgodovina transakcij",
   "warning.message": "Trenutno uporabljate Origin Mainnet Beta.",
   "warning.invitation": "Našli ste napako? Odprite težavo na {github} ali jo prijavite v našem # bug-poročevalskem kanalu na {discord}.",
   "web3-provider.intentRequiresMetaMask": "Če želite {web3Intent}, morate namestiti MetaMask.",
