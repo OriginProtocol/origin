@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "Adresa ETH:",
   "wallet-card.noEthAccountConnected": "Nici un cont ETH conectat",
   "wallet-card.accountBalances": "Balanța contului",
+  "wallet-card.transactionHistory": "Istoricul tranzacţiilor",
   "warning.message": "În prezent, folosiți Beta de origine Mainnet Beta.",
   "warning.invitation": "Ați găsit un bug? Deschideți o problemă la {github} sau raportați-o în canalul # # bug-reports pe {discord}.",
   "web3-provider.intentRequiresMetaMask": "Pentru a putea să {web3Intent}, trebuie să instalaţi MetaMask.",
