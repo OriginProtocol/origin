@@ -1122,6 +1122,7 @@ class PurchaseDetail extends Component {
                             listing.ipfsHash
                           )}
                           target="_blank"
+                          rel="noopener noreferrer"
                         >
                           <FormattedMessage
                             id={'purchase-detail.viewOnIPFS'}
