@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "ETH adresa:",
   "wallet-card.noEthAccountConnected": "Nije povezan račun ETH",
   "wallet-card.accountBalances": "Bilance računa",
+  "wallet-card.transactionHistory": "Povijest transakcija",
   "warning.message": "Trenutačno upotrebljavate Beta izvornog mrežnog sustava.",
   "warning.invitation": "Pronašli ste bug? Otvorite poteškoću na {github} ili ga prijavite u našem # bug-reports channelu na {discord}.",
   "web3-provider.intentRequiresMetaMask": "Da biste mogli {web3Intent}, morate instalirati MetaMask.",
