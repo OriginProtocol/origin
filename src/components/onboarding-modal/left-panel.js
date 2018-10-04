@@ -2,13 +2,10 @@ import React from 'react'
 import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 
-
 function LeftPanel({ steps, firstIncompleteStep, selectStep }) {
-  const selected = ({ name, subStep, selected }) => {
+  const selected = ({ name, selected }) => {
     if (selected) return 'selected'
-    const matchingStep = firstIncompleteStep.name == name
-    const matchingSubStep = subStep && firstIncompleteStep.name == subStep.name
-    return (matchingStep || matchingSubStep) && 'selected'
+    return (firstIncompleteStep.name == name) && 'selected'
   }
   const completed = complete => (complete ? 'complete' : 'incomplete')
 
