@@ -419,6 +419,7 @@
   "wallet-card.ethAddress": "ETH ທີ່ຢູ່:",
   "wallet-card.noEthAccountConnected": "ບໍ່ມີບັນຊີ ETH ເຊື່ອມຕໍ່",
   "wallet-card.accountBalances": "ບັນຊີຍອດເງິນ",
+  "wallet-card.transactionHistory": "ປະວັດການເຮັດທຸລະກໍາ",
   "warning.message": "ທ່ານກໍາລັງໃຊ້ Origin Origin Beta.",
   "warning.invitation": "ພົບ bug? ເປີດບັນຫາກ່ຽວກັບ {github} ຫຼືລາຍງານມັນຢູ່ໃນຊ່ອງຂໍ້ຜິດພາດ # 1 ຂອງພວກເຮົາໃນ {discord}.",
   "web3-provider.intentRequiresMetaMask": "ເພື່ອໃຫ້ {web3Intent}, ທ່ານຕ້ອງຕິດຕັ້ງ MetaMask.",
