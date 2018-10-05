@@ -78,6 +78,7 @@ class ListingCard extends Component {
       offers,
       pictures,
       price,
+      status,
       unitsRemaining
     } = this.state
     const photo = pictures && pictures.length && pictures[0]
@@ -87,6 +88,7 @@ class ListingCard extends Component {
     const isSold = offers.find(
       o => offerStatusToListingAvailability(o.status) === 'sold'
     )
+    const isWithdrawn = status === 'inactive'
     const showFeaturedBadge = this.props.featured && !isSold && !isPending
 
     return (
@@ -95,7 +97,11 @@ class ListingCard extends Component {
           loading ? ' loading' : ''
         }`}
       >
-        <Link to={`/listing/${this.props.listingId}`} ga-category="listing" ga-label="listing_card">
+        <Link
+          to={`/listing/${this.props.listingId}`}
+          ga-category="listing"
+          ga-label="listing_card"
+        >
           {!!photo && (
             <div
               className="photo"
@@ -109,8 +115,8 @@ class ListingCard extends Component {
           )}
           <div className="category placehold d-flex justify-content-between">
             <div>{category}</div>
-            {!loading && isPending && <PendingBadge />}
-            {!loading && isSold && <SoldBadge />}
+            {!loading && isPending && !isWithdrawn && <PendingBadge />}
+            {!loading && (isSold || isWithdrawn) && <SoldBadge />}
             {!loading && showFeaturedBadge && <FeaturedBadge />}
             {/*!loading &&
               boostLevelIsPastSomeThreshold && (
