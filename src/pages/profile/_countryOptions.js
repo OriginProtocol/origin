@@ -2038,7 +2038,14 @@ class CountryOptions extends Component {
         name: this.props.intl.formatMessage(this.intlMessages.zimbabwe),
         prefix: '263'
       }
-    ]
+    ].sort((a, b) => {
+      if (a.name < b.name) {
+        return -1
+      } else if (a.name > b.name) {
+        return 1
+      }
+      return 0
+    })
   }
 
   render() {
