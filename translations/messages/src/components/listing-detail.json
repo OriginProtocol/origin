@@ -92,6 +92,10 @@
     "defaultMessage": "Another buyer has already purchased this listing. Try visiting the listings page and searching for something similar."
   },
   {
+    "id": "listing-detail.suggestionPublicWithdrawn",
+    "defaultMessage": "This listing is no longer available. Try visiting the listings page and searching for something similar."
+  },
+  {
     "id": "listing-detail.viewListings",
     "defaultMessage": "View Listings"
   },
@@ -128,11 +132,19 @@
     "defaultMessage": "You've sold this listing."
   },
   {
+    "id": "listing-detail.sellerWithdrawn",
+    "defaultMessage": "You've withdrawn this listing."
+  },
+  {
     "id": "listing-detail.viewOffer",
     "defaultMessage": "View Offer"
   },
   {
     "id": "listing-detail.viewSale",
     "defaultMessage": "View Sale"
+  },
+  {
+    "id": "listing-detail.createListing",
+    "defaultMessage": "Create A Listing"
   }
 ]
