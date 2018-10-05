@@ -33,11 +33,19 @@ class MessagesDropdown extends Component {
   }
 
   componentDidMount() {
-    $(document).on('click', '.messages .dropdown-menu', e => {
-      e.stopPropagation()
+    // control hiding of dropdown menu
+    $('.messages.dropdown').on('hide.bs.dropdown', function({ clickEvent }) {
+      // if triggered by data-toggle
+      if (!clickEvent) {
+        return true
+      }
+      // otherwise only if triggered by self or another dropdown
+      const el = $(clickEvent.target)
+
+      return el.hasClass('dropdown') && el.hasClass('nav-item')
     })
 
-    $('.messages.dropdown').on('hide.bs.dropdown', this.props.dismissMessaging)
+    $('.messages.dropdown').on('hidden.bs.dropdown', this.props.dismissMessaging)
   }
 
   componentDidUpdate() {
@@ -146,9 +154,11 @@ class MessagesDropdown extends Component {
                   key={c.key}
                   conversation={c}
                   active={false}
-                  handleConversationSelect={() =>
+                  handleConversationSelect={() => {
                     history.push(`/messages/${c.key}`)
-                  }
+
+                    $('#messagesDropdown').dropdown('toggle')
+                  }}
                 />
               ))}
             </div>
