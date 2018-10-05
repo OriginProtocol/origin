@@ -154,9 +154,11 @@ class MessagesDropdown extends Component {
                   key={c.key}
                   conversation={c}
                   active={false}
-                  handleConversationSelect={() =>
+                  handleConversationSelect={() => {
                     history.push(`/messages/${c.key}`)
-                  }
+
+                    $('#messagesDropdown').dropdown('toggle')
+                  }}
                 />
               ))}
             </div>

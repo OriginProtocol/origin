@@ -130,6 +130,10 @@ class Profile extends Component {
       provisional: this.props.provisionalProgress,
       published: this.props.publishedProgress
     })
+
+    if ($('.identity.dropdown').hasClass('show')) {
+      $('#identityDropdown').dropdown('toggle')
+    }
   }
 
   componentDidUpdate(prevProps) {

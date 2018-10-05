@@ -22,6 +22,10 @@ class UserDropdown extends Component {
     })
   }
 
+  handleClick() {
+    $('#identityDropdown').dropdown('toggle')
+  }
+
   render() {
     const { wallet } = this.props
 
@@ -48,7 +52,7 @@ class UserDropdown extends Component {
           </div>
           <div className="actual-menu">
             <WalletCard wallet={wallet} withMenus={false} withProfile={true} />
-            <Link to="/profile" className="btn edit-profile placehold">
+            <Link to="/profile" className="btn edit-profile placehold" onClick={this.handleClick}>
               <FormattedMessage
                 id={'user-dropdown.EditProfile'}
                 defaultMessage={'Edit Profile'}
