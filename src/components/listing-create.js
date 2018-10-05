@@ -923,7 +923,7 @@ class ListingCreate extends Component {
                     className="btn btn-clear"
                     onClick={this.resetForm}
                     ga-category="create_listing"
-                    ga-label="create_another_listing"
+                    ga-label="listing_creation_confirmation_modal_create_another_listing_cta"
                   >
                     <FormattedMessage
                       id={'listing-create.createAnother'}
@@ -934,7 +934,7 @@ class ListingCreate extends Component {
                     to="/"
                     className="btn btn-clear"
                     ga-category="create_listing"
-                    ga-label="see_all_listings"
+                    ga-label="listing_creation_confirmation_modal_see_all_listings"
                   >
                     <FormattedMessage
                       id={'listing-create.seeAllListings'}
