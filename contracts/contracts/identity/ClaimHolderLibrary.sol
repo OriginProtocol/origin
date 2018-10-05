@@ -76,7 +76,7 @@ library ClaimHolderLibrary {
         public
     {
         uint offset = 0;
-        for (uint8 i = 0; i < _topic.length; i++) {
+        for (uint16 i = 0; i < _topic.length; i++) {
             addClaim(
                 _keyHolderData,
                 _claims,

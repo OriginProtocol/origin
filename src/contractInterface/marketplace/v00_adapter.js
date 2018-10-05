@@ -276,6 +276,86 @@ class V00_MarkeplaceAdapter {
     return Object.assign({}, rawListing, { ipfsHash, events, offers, status })
   }
 
+  // Logs a listing and its associated events and offers to the browser's JS
+  // console. This is meant for live debugging of listings and should not be
+  // used from other functions.
+  async logListing(listingId) {
+    if (!window || !window.originTest) {
+      throw new Error('This can only be called from a browser JS console')
+    }
+    await this.getContract()
+
+    // Dump Listing struct from marketplace contract
+    const rawListing = await this.call('listings', [listingId])
+    const filteredListing = {
+      seller: rawListing.seller,
+      deposit: rawListing.deposit,
+      depositManager: rawListing.depositManager
+    }
+    console.log('Listing:')
+    console.table(filteredListing)
+
+    // Find all events related to this listing
+    const listingTopic = this.padTopic(listingId)
+    const events = await this.contract.getPastEvents('allEvents', {
+      topics: [null, null, listingTopic],
+      fromBlock: this.blockEpoch
+    })
+    console.log('Events:')
+
+    // Objects returned from web3 often have redundant entries with numeric
+    // keys, so we filter those out.
+    const filterObject = (obj) => {
+      const filteredObj = {}
+      for (const [key, value] of Object.entries(obj)) {
+        if (isNaN(parseInt(key[0], 10))) {
+          filteredObj[key] = value
+        }
+      }
+      return filteredObj
+    }
+
+    // Log each event and its corresponding IPFS object, if available.
+    let eventIndex = 0
+    for (const event of events) {
+      const filteredEvent = Object.assign(
+        { eventIndex, name: event.event },
+        filterObject(event.returnValues)
+      )
+      // Only keep keys that don't start with a digit. The filtered keys are
+      // redundant.
+      for (const [key, value] of Object.entries(event.returnValues)) {
+        if (isNaN(parseInt(key[0], 10))) {
+          filteredEvent[key] = value
+        }
+      }
+
+      // Load the associated IPFS object.
+      const ipfsService = window.originTest.marketplace.ipfsService
+      try {
+        const ipfsHash = this.contractService.getIpfsHashFromBytes32(
+          event.returnValues.ipfsHash
+        )
+        if (ipfsHash && ipfsService) {
+          const ipfsObj = await ipfsService.loadObjFromFile(ipfsHash)
+          filteredEvent.ipfsData = ipfsObj
+        }
+      } catch(e) {
+        filteredEvent.ipfsData = 'Could not load from IPFS'
+      }
+
+      // Load the associated offer, if applicable.
+      if (filteredEvent.offerID !== undefined) {
+        filteredEvent.offer = filterObject(
+          await this.call('offers', [listingId, filteredEvent.offerID])
+        )
+      }
+
+      console.log(filteredEvent)
+      eventIndex++
+    }
+  }
+
   async getListings(opts) {
     await this.getContract()
 
