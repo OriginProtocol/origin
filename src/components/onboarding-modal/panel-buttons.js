@@ -18,7 +18,7 @@ export default class PanelButtons extends Component {
     const hasWallet = true
     const buttons = {
       Overview: hasWallet ? (
-        <button className="btn btn-primary" onClick={() => displayNextStep()}>
+        <button className="btn btn-primary" onClick={displayNextStep}>
           <FormattedMessage
             id={'onboarding-buttons.next'}
             defaultMessage={'Next'}
@@ -42,7 +42,7 @@ export default class PanelButtons extends Component {
           <a
             href="#"
             className="d-block"
-            onClick={() => displayNextStep()}
+            onClick={displayNextStep}
             ga-category="seller_onboarding"
             ga-label="skip_install_metamask"
           >
@@ -55,23 +55,23 @@ export default class PanelButtons extends Component {
       ),
       Identity: (
         <div className="d-flex flex-column align-items-center">
-          <Link
-            to="/profile"
+          {/* [micah] can't get this work with <Link> */}
+          <a
+            href="/#/profile?skip-onboarding=true"
             target="_blank"
             ga-category="seller_onboarding"
             ga-label="verify_profile"
-            onClick={() => displayNextStep()}
+            className="btn btn-primary"
+            onClick={displayNextStep}
           >
-            <button key={'first-btn'} className="btn btn-primary">
-              <FormattedMessage
-                id={'onboarding-buttons.verify'}
-                defaultMessage={'Verify'}
-              />
-            </button>
-          </Link>
+            <FormattedMessage
+              id={'onboarding-buttons.verify'}
+              defaultMessage={'Verify'}
+            />
+          </a>
           <a
             href="#"
-            onClick={() => displayNextStep()}
+            onClick={displayNextStep}
             ga-category="seller_onboarding"
             ga-label="skip_verify_profile"
           >
@@ -89,17 +89,13 @@ export default class PanelButtons extends Component {
             target="_blank"
             ga-category="seller_onboarding"
             ga-label="learn_more_cta"
+            className="btn btn-primary"
+            onClick={displayNextStep}
           >
-            <button
-              key={'first-btn'}
-              className="btn btn-primary"
-              onClick={() => displayNextStep()}
-            >
-              <FormattedMessage
-                id={'onboarding-buttons.getOriginTokens'}
-                defaultMessage={'Learn more'}
-              />
-            </button>
+            <FormattedMessage
+              id={'onboarding-buttons.getOriginTokens'}
+              defaultMessage={'Learn more'}
+            />
           </Link>
         </div>
       )

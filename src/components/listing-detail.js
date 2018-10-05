@@ -281,8 +281,8 @@ class ListingsDetail extends Component {
               </p>
             </div>
             <div className="button-container">
-              <a
-                href="/#/profile"
+              <Link
+                to="/profile"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-clear"
@@ -294,7 +294,7 @@ class ListingsDetail extends Component {
                   id={'listing-detail.verifyIdentity'}
                   defaultMessage={'Verify Identity'}
                 />
-              </a>
+              </Link>
             </div>
             <a
               href="#"
@@ -467,6 +467,7 @@ class ListingsDetail extends Component {
                   <a
                     href={origin.ipfsService.gatewayUrlForHash(ipfsHash)}
                     target="_blank"
+                    rel="noopener noreferrer"
                     ga-category="listing"
                     ga-label="view_on_ipfs"
                   >
@@ -573,7 +574,7 @@ class ListingsDetail extends Component {
                       <div className="row">
                         <div className="col-sm-6">
                           <p>Boost Level</p>
-                          <a href="#" target="_blank" rel="noopener noreferrer">What is this?</a>
+                          <Link to="/" target="_blank" rel="noopener noreferrer">What is this?</Link>
                         </div>
                         <div className="col-sm-6 text-right">
                           <p>{ boostLevel }</p>

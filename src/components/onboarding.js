@@ -1,12 +1,16 @@
-import { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
+import queryString from 'query-string'
 
 import { setMessagingEnabled, setMessagingInitialized } from 'actions/App'
 import { addMessage } from 'actions/Message'
 import { fetchNotifications } from 'actions/Notification'
 import { fetchUser } from 'actions/User'
+
+import BetaModal from 'components/modals/beta-modal'
+import SellingModal from 'components/onboarding-modal'
 
 import scopedDebounce from 'utils/scopedDebounce'
 
@@ -19,19 +23,19 @@ const storeKeys = {
   messageWelcomeTimestamp: 'message_welcome_timestamp'
 }
 
-class MessagingProvider extends Component {
+class Onboarding extends Component {
   constructor(props) {
     super(props)
 
     this.intlMessages = defineMessages({
       congratsMessage: {
-        id: 'messaging-provider.congrats',
+        id: 'onboarding.congrats',
         defaultMessage:
           'Congratulations! You can now message other users on Origin. ' +
           'Why not start by taking a look around and telling us what you think about our DApp?'
       },
       welcomeMessage: {
-        id: 'messaging-provider.welcome',
+        id: 'onboarding.welcome',
         defaultMessage:
           'You can use Origin Messaging to chat with other users. ' +
           'Origin Messaging allows you to communicate with other users in a secure and decentralized way. ' +
@@ -180,7 +184,20 @@ class MessagingProvider extends Component {
   }
 
   render() {
-    return this.props.children
+    const { children, location } = this.props
+    const query = queryString.parse(location.search)
+
+    return (
+      <Fragment>
+        {children}
+        {!query['skip-onboarding'] && (
+          <Fragment>
+            <BetaModal />
+            <SellingModal />
+          </Fragment>
+        )}
+      </Fragment>
+    )
   }
 }
 
@@ -203,5 +220,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(injectIntl(MessagingProvider))
+  )(injectIntl(Onboarding))
 )
