@@ -1650,12 +1650,16 @@ textarea:-moz-ui-invalid {
   padding-top: 20px;
 }
 
+.onboarding .modal-backdrop {
+  z-index: 1000;
+}
+
 .onboarding .split-container {
   height: 100%;
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 1000;
+  z-index: 1001;
 }
 
 .onboarding .btn {
@@ -1969,6 +1973,7 @@ textarea:-moz-ui-invalid {
   top: auto;
   left: auto;
   right: 20px;
+  z-index: 997;
 }
 
 .getting-started img {
