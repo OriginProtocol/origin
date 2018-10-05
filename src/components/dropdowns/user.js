@@ -8,14 +8,22 @@ import Identicon from 'components/identicon'
 import WalletCard from 'components/wallet-card'
 
 class UserDropdown extends Component {
-  constructor(props) {
-    super(props)
+  componentDidMount() {
+    // control hiding of dropdown menu
+    $('.identity.dropdown').on('hide.bs.dropdown', function({ clickEvent }) {
+      // if triggered by data-toggle
+      if (!clickEvent) {
+        return true
+      }
+      // otherwise only if triggered by self or another dropdown
+      const el = $(clickEvent.target)
+
+      return el.hasClass('dropdown') && el.hasClass('nav-item')
+    })
   }
 
-  componentDidMount() {
-    $(document).on('click', '.identity .dropdown-menu', e => {
-      e.stopPropagation()
-    })
+  handleClick() {
+    $('#identityDropdown').dropdown('toggle')
   }
 
   render() {
@@ -44,7 +52,7 @@ class UserDropdown extends Component {
           </div>
           <div className="actual-menu">
             <WalletCard wallet={wallet} withMenus={false} withProfile={true} />
-            <Link to="/profile" className="btn edit-profile placehold">
+            <Link to="/profile" className="btn edit-profile placehold" onClick={this.handleClick}>
               <FormattedMessage
                 id={'user-dropdown.EditProfile'}
                 defaultMessage={'Edit Profile'}
