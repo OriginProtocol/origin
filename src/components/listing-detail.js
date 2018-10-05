@@ -287,7 +287,7 @@ class ListingsDetail extends Component {
                 rel="noopener noreferrer"
                 className="btn btn-clear"
                 onClick={() => this.setState({ step: this.STEP.VIEW })}
-                ga-category="buyer_onboarding"
+                ga-category="buyer_onboarding_modal"
                 ga-label="verify_identity"
               >
                 <FormattedMessage
@@ -300,7 +300,7 @@ class ListingsDetail extends Component {
               href="#"
               className="skip-identity"
               onClick={this.handleSkipOnboarding}
-              ga-category="buyer_onboarding"
+              ga-category="buyer_onboarding_modal"
               ga-label="skip"
             >
               Skip
@@ -375,7 +375,7 @@ class ListingsDetail extends Component {
                 to="/my-purchases"
                 className="btn btn-clear"
                 ga-category="listing"
-                ga-label="my_purchases"
+                ga-label="purchase_confirmation_modal_view_my_purchases"
               >
                 <FormattedMessage
                   id={'listing-detail.viewPurchases'}
@@ -559,7 +559,7 @@ class ListingsDetail extends Component {
                           to="/my-listings"
                           className="btn"
                           ga-category="listing"
-                          ga-label="my_listings"
+                          ga-label="sellers_own_listing_my_listings_cta"
                         >
                             My Listings
                         </Link>
@@ -712,7 +712,7 @@ class ListingsDetail extends Component {
                     <Link
                       to={`/purchases/${currentOffer.id}`}
                       ga-category="listing"
-                      ga-label="view_offer_or_sale"
+                      ga-label={ `view_${isPending ? 'offer' : 'sale'}` }
                     >
                       {isPending && (
                         <FormattedMessage

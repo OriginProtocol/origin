@@ -32,7 +32,7 @@ export default class PanelButtons extends Component {
             rel="noopener noreferrer"
             className="btn btn-primary"
             ga-category="seller_onboarding"
-            ga-label="step_1_install_metamask"
+            ga-label="install_metamask_cta"
           >
             <FormattedMessage
               id={'onboarding-buttons.installMetaMask'}
@@ -44,7 +44,7 @@ export default class PanelButtons extends Component {
             className="d-block"
             onClick={() => displayNextStep()}
             ga-category="seller_onboarding"
-            ga-label="step_1_skip"
+            ga-label="skip_install_metamask"
           >
             <FormattedMessage
               id={'onboarding-buttons.skip'}
@@ -59,7 +59,7 @@ export default class PanelButtons extends Component {
             to="/profile"
             target="_blank"
             ga-category="seller_onboarding"
-            ga-label="step_2_verify"
+            ga-label="verify_profile"
             onClick={() => displayNextStep()}
           >
             <button key={'first-btn'} className="btn btn-primary">
@@ -73,7 +73,7 @@ export default class PanelButtons extends Component {
             href="#"
             onClick={() => displayNextStep()}
             ga-category="seller_onboarding"
-            ga-label="step_2_skip"
+            ga-label="skip_verify_profile"
           >
             <FormattedMessage
               id={'onboarding-buttons.skip'}
@@ -88,7 +88,7 @@ export default class PanelButtons extends Component {
             to="/about-tokens"
             target="_blank"
             ga-category="seller_onboarding"
-            ga-label="step_3_learn_more"
+            ga-label="learn_more_cta"
           >
             <button
               key={'first-btn'}
