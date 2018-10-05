@@ -358,7 +358,8 @@ class Marketplace {
   async getNotifications() {
     const party = await this.contractService.currentAccount()
     const notifications = await this.resolver.getNotifications(party)
-    return await Promise.all(notifications.map(async (notification) => {
+    let isValid = true
+    const withResources = await Promise.all(notifications.map(async (notification) => {
       if (notification.resources.listingId) {
         notification.resources.listing = await this.getListing(
           generateListingId({
@@ -369,17 +370,24 @@ class Marketplace {
         )
       }
       if (notification.resources.offerId) {
-        notification.resources.purchase = await this.getOffer(
-          generateOfferId({
-            version: notification.version,
-            network: notification.network,
-            listingIndex: notification.resources.listingId,
-            offerIndex: notification.resources.offerId
-          })
-        )
+        let offer
+        try {
+          offer = await this.getOffer(
+            generateOfferId({
+              version: notification.version,
+              network: notification.network,
+              listingIndex: notification.resources.listingId,
+              offerIndex: notification.resources.offerId
+            })
+          )
+        } catch(e) {
+          isValid = false
+        }
+        notification.resources.purchase = offer
       }
-      return new Notification(notification)
+      return isValid ? new Notification(notification) : null
     }))
+    return withResources.filter(notification => notification !== null)
   }
 
   async setNotification({ id, status }) {

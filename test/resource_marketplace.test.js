@@ -369,6 +369,13 @@ describe('Marketplace Resource', function() {
       expect(notifications[0].type).to.equal('seller_review_received')
       expect(notifications[0].status).to.equal('unread')
     })
+
+    it('should exclude notifications for invalid offers', async () => {
+      await marketplace.makeOffer('999-000-0', invalidPriceOffer)
+
+      const notifications = await marketplace.getNotifications()
+      expect(notifications.length).to.equal(1)
+    })
   })
 
   describe('setNotification', () => {
