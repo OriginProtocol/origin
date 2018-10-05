@@ -450,7 +450,7 @@ class Web3Provider extends Component {
       ? networkNames[networkId]
       : networkId
     const isProduction = process.env.NODE_ENV === 'production'
-    const networkNotSupported = supportedNetworkId != networkId
+    const networkNotSupported = supportedNetworkId !== networkId
 
     // Redirect if we know a DApp instalation that supports their network.
     if (currentProvider && networkId && isProduction && networkNotSupported) {

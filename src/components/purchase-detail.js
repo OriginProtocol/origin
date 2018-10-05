@@ -187,7 +187,8 @@ class PurchaseDetail extends Component {
           buttons: [],
           link: {
             functionName: 'handleWithdraw',
-            text: this.props.intl.formatMessage(this.intlMessages.withdrawOffer)
+            text: this.props.intl.formatMessage(this.intlMessages.withdrawOffer),
+            analyticsLabel: 'buyer_withdraw_offer'
           }
         },
         seller: {
@@ -200,12 +201,14 @@ class PurchaseDetail extends Component {
           buttons: [
             {
               functionName: 'acceptOffer',
-              text: this.props.intl.formatMessage(this.intlMessages.acceptOffer)
+              text: this.props.intl.formatMessage(this.intlMessages.acceptOffer),
+              analyticsLabel: 'seller_accept_offer'
             }
           ],
           link: {
             functionName: 'rejectOffer',
-            text: this.props.intl.formatMessage(this.intlMessages.rejectOffer)
+            text: this.props.intl.formatMessage(this.intlMessages.rejectOffer),
+            analyticsLabel: 'seller_reject_offer'
           }
         }
       },
@@ -225,12 +228,14 @@ class PurchaseDetail extends Component {
               functionName: 'completePurchase',
               text: this.props.intl.formatMessage(
                 this.intlMessages.confirmAndReview
-              )
+              ),
+              analyticsLabel: 'buyer_complete_purchase'
             }
           ],
           link: {
             functionName: 'handleProblem',
-            text: this.props.intl.formatMessage(this.intlMessages.reportProblem)
+            text: this.props.intl.formatMessage(this.intlMessages.reportProblem),
+            analyticsLabel: 'buyer_report_problem'
           },
           reviewable: true
         },
@@ -242,7 +247,8 @@ class PurchaseDetail extends Component {
           buttons: [],
           link: {
             functionName: 'handleProblem',
-            text: this.props.intl.formatMessage(this.intlMessages.reportProblem)
+            text: this.props.intl.formatMessage(this.intlMessages.reportProblem),
+            analyticsLabel: 'seller_report_problem'
           },
           showSellerSteps: true
         }
@@ -281,7 +287,8 @@ class PurchaseDetail extends Component {
           buttons: [
             {
               functionName: 'reviewSale',
-              text: this.props.intl.formatMessage(this.intlMessages.reviewSale)
+              text: this.props.intl.formatMessage(this.intlMessages.reviewSale),
+              analyticsLabel: 'seller_review_sale'
             }
           ],
           reviewable: true
@@ -747,7 +754,11 @@ class PurchaseDetail extends Component {
                       defaultMessage={'Purchased from {sellerLink}'}
                       values={{
                         sellerLink: (
-                          <Link to={`/users/${counterpartyUser.address}`}>
+                          <Link
+                            to={`/users/${counterpartyUser.address}`}
+                            ga-category="transaction_flow"
+                            ga-label="buyer_purchased_from_seller_profile"
+                          >
                             {sellerName}
                           </Link>
                         )
@@ -760,7 +771,11 @@ class PurchaseDetail extends Component {
                       defaultMessage={'Sold to {buyerLink}'}
                       values={{
                         buyerLink: (
-                          <Link to={`/users/${counterpartyUser.address}`}>
+                          <Link
+                            to={`/users/${counterpartyUser.address}`}
+                            ga-category="transaction_flow"
+                            ga-label="seller_sold_to_buyer_profile"
+                          >
                             {buyerName}
                           </Link>
                         )
@@ -778,7 +793,11 @@ class PurchaseDetail extends Component {
                       defaultMessage={'Purchasing from {sellerLink}'}
                       values={{
                         sellerLink: (
-                          <Link to={`/users/${counterpartyUser.address}`}>
+                          <Link
+                            to={`/users/${counterpartyUser.address}`}
+                            ga-category="transaction_flow"
+                            ga-label="buyer_purchasing_from_seller_profile"
+                          >
                             {sellerName}
                           </Link>
                         )
@@ -791,7 +810,11 @@ class PurchaseDetail extends Component {
                       defaultMessage={'Selling to {buyerLink}'}
                       values={{
                         buyerLink: (
-                          <Link to={`/users/${counterpartyUser.address}`}>
+                          <Link
+                            to={`/users/${counterpartyUser.address}`}
+                            ga-category="transaction_flow"
+                            ga-label="seller_selling_to_buyer_profile"
+                          >
                             {buyerName}
                           </Link>
                         )
@@ -825,7 +848,11 @@ class PurchaseDetail extends Component {
               </h2>
               <div className="row">
                 <div className="col-6">
-                  <Link to={`/users/${seller.address}`}>
+                  <Link
+                    to={`/users/${seller.address}`}
+                    ga-category="transaction_flow"
+                    ga-label="seller_card_view_seller_profile"
+                  >
                     <div className="d-flex">
                       <Avatar
                         image={seller.profile && seller.profile.avatar}
@@ -846,7 +873,11 @@ class PurchaseDetail extends Component {
                   </Link>
                 </div>
                 <div className="col-6">
-                  <Link to={`/users/${buyer.address}`}>
+                  <Link
+                    to={`/users/${buyer.address}`}
+                    ga-category="transaction_flow"
+                    ga-label="buyer_card_view_buyer_profile"
+                  >
                     <div className="d-flex justify-content-end">
                       <div className="identification d-flex flex-column text-right justify-content-between text-truncate">
                         <div>
@@ -979,7 +1010,12 @@ class PurchaseDetail extends Component {
                             />
                           </div>
                           <div className="button-container">
-                            <button type="submit" className="btn btn-primary">
+                            <button
+                              type="submit"
+                              className="btn btn-primary"
+                              ga-category="transaction_flow"
+                              ga-label={ `${buttons[0].analyticsLabel}` }
+                            >
                               {buttons[0].text}
                             </button>
                           </div>
@@ -993,6 +1029,8 @@ class PurchaseDetail extends Component {
                               key={`next-step-button-${i}`}
                               className="btn btn-primary"
                               onClick={this[b.functionName]}
+                              ga-category="transaction_flow"
+                              ga-label={ `${b.analyticsLabel}` }
                             >
                               {b.text}
                             </button>
@@ -1056,6 +1094,8 @@ class PurchaseDetail extends Component {
 
                               this[link.functionName]()
                             }}
+                            ga-category="transaction_flow"
+                            ga-label={ `${link.analyticsLabel}` }
                           >
                             {link.text}
                           </a>
@@ -1122,6 +1162,7 @@ class PurchaseDetail extends Component {
                             listing.ipfsHash
                           )}
                           target="_blank"
+                          rel="noopener noreferrer"
                         >
                           <FormattedMessage
                             id={'purchase-detail.viewOnIPFS'}

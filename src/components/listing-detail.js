@@ -281,26 +281,26 @@ class ListingsDetail extends Component {
               </p>
             </div>
             <div className="button-container">
-              <a
-                href="/#/profile"
+              <Link
+                to="/profile"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-clear"
                 onClick={() => this.setState({ step: this.STEP.VIEW })}
-                ga-category="buyer_onboarding"
+                ga-category="buyer_onboarding_modal"
                 ga-label="verify_identity"
               >
                 <FormattedMessage
                   id={'listing-detail.verifyIdentity'}
                   defaultMessage={'Verify Identity'}
                 />
-              </a>
+              </Link>
             </div>
             <a
               href="#"
               className="skip-identity"
               onClick={this.handleSkipOnboarding}
-              ga-category="buyer_onboarding"
+              ga-category="buyer_onboarding_modal"
               ga-label="skip"
             >
               Skip
@@ -375,7 +375,7 @@ class ListingsDetail extends Component {
                 to="/my-purchases"
                 className="btn btn-clear"
                 ga-category="listing"
-                ga-label="my_purchases"
+                ga-label="purchase_confirmation_modal_view_my_purchases"
               >
                 <FormattedMessage
                   id={'listing-detail.viewPurchases'}
@@ -467,6 +467,7 @@ class ListingsDetail extends Component {
                   <a
                     href={origin.ipfsService.gatewayUrlForHash(ipfsHash)}
                     target="_blank"
+                    rel="noopener noreferrer"
                     ga-category="listing"
                     ga-label="view_on_ipfs"
                   >
@@ -559,7 +560,7 @@ class ListingsDetail extends Component {
                           to="/my-listings"
                           className="btn"
                           ga-category="listing"
-                          ga-label="my_listings"
+                          ga-label="sellers_own_listing_my_listings_cta"
                         >
                             My Listings
                         </Link>
@@ -573,7 +574,7 @@ class ListingsDetail extends Component {
                       <div className="row">
                         <div className="col-sm-6">
                           <p>Boost Level</p>
-                          <a href="#" target="_blank" rel="noopener noreferrer">What is this?</a>
+                          <Link to="/" target="_blank" rel="noopener noreferrer">What is this?</Link>
                         </div>
                         <div className="col-sm-6 text-right">
                           <p>{ boostLevel }</p>
@@ -712,7 +713,7 @@ class ListingsDetail extends Component {
                     <Link
                       to={`/purchases/${currentOffer.id}`}
                       ga-category="listing"
-                      ga-label="view_offer_or_sale"
+                      ga-label={ `view_${isPending ? 'offer' : 'sale'}` }
                     >
                       {isPending && (
                         <FormattedMessage

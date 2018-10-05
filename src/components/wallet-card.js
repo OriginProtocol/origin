@@ -117,7 +117,7 @@ class WalletCard extends Component {
           ${this.props.intl.formatMessage(this.intlMessages.balanceText)}
         </p>
         <p class='tooltip-align-left'>
-          <a href='/#/about-tokens' target='_blank' class='learn-more'>
+          <a href='/#/about-tokens' target='_blank' rel="noopener noreferrer" class='learn-more'>
             ${this.props.intl.formatMessage(this.intlMessages.learnMore)} ▸
           </a>
         </p>
@@ -163,12 +163,6 @@ class WalletCard extends Component {
             handleToggle={this.handleToggle}
           />
         )}
-        {/* Hidden for current deployment */}
-        {/* identityAddress &&
-          <div>
-            <a href={`https://erc725.originprotocol.com/#/identity/${identityAddress}`} target="_blank">Identity Contract Detail</a>
-          </div>
-        */}
         {ethBalance !== undefined && (
           <Fragment>
             <hr className="dark sm" />
@@ -209,12 +203,18 @@ class WalletCard extends Component {
                     >
                       {address && (
                         <EtherscanLink hash={address} className="dropdown-item">
-                          Transaction History
+                          <FormattedMessage
+                            id={'wallet-card.transactionHistory'}
+                            defaultMessage={'Transaction History'}
+                          />
                         </EtherscanLink>
                       )}
                       {/*
                         <a className="dropdown-item" href="#">
-                          Add Tokens
+                          <FormattedMessage
+                            id={'wallet-card.addTokens'}
+                            defaultMessage={'Add Tokens'}
+                          />
                         </a>
                       */}
                     </div>

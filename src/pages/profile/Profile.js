@@ -589,6 +589,7 @@ class Profile extends Component {
               <a
                 href={`https://${etherscanNetworkUrls[this.props.networkId]}etherscan.io/tx/${this.props.profile.lastDeployProfileHash}`}
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 <FormattedMessage
                   id={'Profile.viewTransaction'}
