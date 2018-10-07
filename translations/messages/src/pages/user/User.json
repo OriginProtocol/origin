@@ -22,9 +22,5 @@
   {
     "id": "User.airbnb",
     "defaultMessage": "Airbnb"
-  },
-  {
-    "id": "User.reviews",
-    "defaultMessage": "Reviews"
   }
 ]

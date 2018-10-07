@@ -20,7 +20,12 @@ const networkNames = {
   42: 'Kovan Test Network',
   999: 'Localhost'
 }
-const supportedNetworkId = process.env.ETH_NETWORK_ID || 1 // Default to mainnet
+/*
+ * The optional environment variable will naturally be a string.
+ * We parse it and fall back to Mainnet if falsy.
+ */
+const envNetworkId = parseInt(process.env.ETH_NETWORK_ID)
+const supportedNetworkId = envNetworkId || 1
 const mainnetDappBaseUrl =
   process.env.MAINNET_DAPP_BASEURL || 'https://dapp.originprotocol.com'
 const rinkebyDappBaseUrl =
@@ -431,6 +436,11 @@ class Web3Provider extends Component {
     if (curr !== prev) {
       // start over if changed
       prev !== null && window.location.reload()
+
+      // set user_id to wallet address in Google Analytics
+      const gtag = window.gtag || function(){}
+      gtag('set', { 'user_id': curr })
+      
       // update global state
       this.props.storeWeb3Account(curr)
       // trigger messaging service
@@ -445,7 +455,7 @@ class Web3Provider extends Component {
       ? networkNames[networkId]
       : networkId
     const isProduction = process.env.NODE_ENV === 'production'
-    const networkNotSupported = supportedNetworkId != networkId
+    const networkNotSupported = supportedNetworkId !== networkId
 
     // Redirect if we know a DApp instalation that supports their network.
     if (currentProvider && networkId && isProduction && networkNotSupported) {

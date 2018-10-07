@@ -16,7 +16,7 @@ import Avatar from 'components/avatar'
 import Modal from 'components/modal'
 import UnnamedUser from 'components/unnamed-user'
 import WalletCard from 'components/wallet-card'
-import { MetamaskModal, ProcessingModal } from 'components/modals/wait-modals'
+import { ProviderModal, ProcessingModal } from 'components/modals/wait-modals'
 
 import Guidance from './_Guidance'
 import Services from './_Services'
@@ -130,6 +130,10 @@ class Profile extends Component {
       provisional: this.props.provisionalProgress,
       published: this.props.publishedProgress
     })
+
+    if ($('.identity.dropdown').hasClass('show')) {
+      $('#identityDropdown').dropdown('toggle')
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -309,7 +313,7 @@ class Profile extends Component {
                       </button>
                     </div>
                   </div>
-                  <p>{description}</p>
+                  <p className="ws-aware">{description}</p>
                 </div>
               </div>
 
@@ -531,7 +535,7 @@ class Profile extends Component {
           handleToggle={this.handleToggle}
         />
 
-        {this.props.profile.status === 'confirming' && <MetamaskModal />}
+        {this.props.profile.status === 'confirming' && <ProviderModal />}
 
         {this.props.profile.status === 'processing' && <ProcessingModal />}
 
@@ -589,6 +593,7 @@ class Profile extends Component {
               <a
                 href={`https://${etherscanNetworkUrls[this.props.networkId]}etherscan.io/tx/${this.props.profile.lastDeployProfileHash}`}
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 <FormattedMessage
                   id={'Profile.viewTransaction'}

@@ -67,8 +67,16 @@ class ConnectivityDropdown extends Component {
   }
 
   async componentDidMount() {
-    $(document).on('click', '.connectivity .dropdown-menu', e => {
-      e.stopPropagation()
+    // control hiding of dropdown menu
+    $('.connectivity.dropdown').on('hide.bs.dropdown', function({ clickEvent }) {
+      // if triggered by data-toggle
+      if (!clickEvent) {
+        return true
+      }
+      // otherwise only if triggered by self or another dropdown
+      const el = $(clickEvent.target)
+
+      return el.hasClass('dropdown') && el.hasClass('nav-item')
     })
 
     !web3.givenProvider &&
@@ -130,6 +138,8 @@ class ConnectivityDropdown extends Component {
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
+          ga-category="top_nav"
+          ga-label="connectivity"
         >
           <div className="d-flex indicators align-items-center">
             <span

@@ -5,40 +5,13 @@ import { connect } from 'react-redux'
 import { fetchUser } from 'actions/User'
 
 import Avatar from 'components/avatar'
-import Review from 'components/review'
+import Reviews from 'components/reviews'
 import UnnamedUser from 'components/unnamed-user'
 import WalletCard from 'components/wallet-card'
 
-import origin from '../../services/origin'
-
 class User extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = { reviews: [] }
-  }
-
   async componentDidMount() {
-    const { fetchUser, userAddress } = this.props
-
-    fetchUser(userAddress)
-
-    const listingIdsAsSeller = await origin.marketplace.getListings({
-      idsOnly: true,
-      listingsFor: userAddress
-    })
-    const listingIdsAsBuyer = await origin.marketplace.getListings({
-      idsOnly: true,
-      purchasesFor: userAddress
-    })
-    const arrayOfArrays = await Promise.all(
-      [...listingIdsAsBuyer, ...listingIdsAsSeller].map(async id =>
-        origin.marketplace.getListingReviews(id)
-      )
-    )
-    const reviews = [].concat(...arrayOfArrays)
-
-    this.setState({ reviews })
+    fetchUser(this.props.userAddress)
   }
 
   render() {
@@ -46,9 +19,6 @@ class User extends Component {
     const { attestations, fullName, profile } = user
     const description =
       (profile && profile.description) || 'An Origin user without a description'
-    const userReviews = this.state.reviews.filter(
-      r => r.reviewer !== userAddress
-    )
 
     return (
       <div className="public-user profile-wrapper">
@@ -71,7 +41,7 @@ class User extends Component {
               <div className="name d-flex">
                 <h1>{fullName || <UnnamedUser />}</h1>
               </div>
-              <p>{description}</p>
+              <p className="ws-aware">{description}</p>
             </div>
             <div className="col-12 col-sm-4 col-md-3 col-lg-2 order-md-4">
               {attestations &&
@@ -158,20 +128,7 @@ class User extends Component {
               )}
             </div>
             <div className="col-12 col-sm-8 col-md-9 col-lg-10 order-md-5">
-              <div className="reviews">
-                <h2>
-                  <FormattedMessage
-                    id={'User.reviews'}
-                    defaultMessage={'Reviews'}
-                  />
-                  &nbsp;<span className="review-count">
-                    {Number(userReviews.length).toLocaleString()}
-                  </span>
-                </h2>
-                {userReviews.map(r => <Review key={r.id} review={r} />)}
-                {/* To Do: pagination */}
-                {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
-              </div>
+              <Reviews userAddress={userAddress} />
             </div>
           </div>
         </div>

@@ -33,11 +33,19 @@ class MessagesDropdown extends Component {
   }
 
   componentDidMount() {
-    $(document).on('click', '.messages .dropdown-menu', e => {
-      e.stopPropagation()
+    // control hiding of dropdown menu
+    $('.messages.dropdown').on('hide.bs.dropdown', function({ clickEvent }) {
+      // if triggered by data-toggle
+      if (!clickEvent) {
+        return true
+      }
+      // otherwise only if triggered by self or another dropdown
+      const el = $(clickEvent.target)
+
+      return el.hasClass('dropdown') && el.hasClass('nav-item')
     })
 
-    $('.messages.dropdown').on('hide.bs.dropdown', this.props.dismissMessaging)
+    $('.messages.dropdown').on('hidden.bs.dropdown', this.props.dismissMessaging)
   }
 
   componentDidUpdate() {
@@ -85,6 +93,8 @@ class MessagesDropdown extends Component {
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
+          ga-category="top_nav"
+          ga-label="messaging"
         >
           {!!conversations.length && <div className="unread-indicator" />}
           <img
@@ -128,6 +138,8 @@ class MessagesDropdown extends Component {
                 <button
                   className="btn btn-sm btn-primary d-none d-md-block ml-auto"
                   onClick={this.handleEnable}
+                  ga-category="messaging"
+                  ga-label="messaging_dropdown_enable"
                 >
                   <FormattedMessage
                     id={'messages.enable'}
@@ -142,13 +154,20 @@ class MessagesDropdown extends Component {
                   key={c.key}
                   conversation={c}
                   active={false}
-                  handleConversationSelect={() =>
+                  handleConversationSelect={() => {
                     history.push(`/messages/${c.key}`)
-                  }
+
+                    $('#messagesDropdown').dropdown('toggle')
+                  }}
                 />
               ))}
             </div>
-            <Link to="/messages" onClick={this.handleClick}>
+            <Link
+              to="/messages"
+              onClick={this.handleClick}
+              ga-category="messaging"
+              ga-label="messaging_dropdown_view_all"
+            >
               <footer>
                 <FormattedMessage
                   id={'messagesDropdown.viewAll'}

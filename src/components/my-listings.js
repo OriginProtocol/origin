@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl'
 import { storeWeb3Intent } from 'actions/App'
 
 import MyListingCard from 'components/my-listing-card'
-import { MetamaskModal } from 'components/modals/wait-modals'
+import { ProviderModal } from 'components/modals/wait-modals'
 import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
@@ -162,14 +162,14 @@ class MyListings extends Component {
                     <div className="numberCircle">
                       <h1 className="circle-text">
                         <FormattedMessage
-                          id={'my-listings.number-two '}
+                          id={'my-listings.number-two'}
                           defaultMessage={'2'}
                         />
                       </h1>
                     </div>
                     <p>
                       <FormattedMessage
-                        id={'my-listings.step-two '}
+                        id={'my-listings.step-two'}
                         defaultMessage={
                           'Give your listing a name, description, and price.'
                         }
@@ -180,14 +180,14 @@ class MyListings extends Component {
                     <div className="numberCircle">
                       <h1 className="circle-text">
                         <FormattedMessage
-                          id={'my-listings.number-three '}
+                          id={'my-listings.number-three'}
                           defaultMessage={'3'}
                         />
                       </h1>
                     </div>
                     <p>
                       <FormattedMessage
-                        id={'my-listings.step-three '}
+                        id={'my-listings.step-three'}
                         defaultMessage={
                           'Preview your listing and publish it to the blockchain.'
                         }
@@ -283,7 +283,7 @@ class MyListings extends Component {
             </div>
           )}
         </div>
-        {processing && <MetamaskModal />}
+        {processing && <ProviderModal />}
       </div>
     )
   }

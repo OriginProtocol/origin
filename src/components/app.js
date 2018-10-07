@@ -15,6 +15,7 @@ import { fetchFeaturedHiddenListings } from 'actions/Listing'
 // Components
 import AboutTokens from 'components/about-tokens'
 import Alert from 'components/alert'
+import Analytics from 'components/analytics'
 import Arbitration from 'components/arbitration'
 import DappInfo from 'components/dapp-info'
 import Layout from 'components/layout'
@@ -22,14 +23,12 @@ import ListingCreate from 'components/listing-create'
 import ListingDetail from 'components/listing-detail'
 import ListingsGrid from 'components/listings-grid'
 import Messages from 'components/messages'
-import MessagingProvider from 'components/messaging-provider'
-import BetaModal from 'components/modals/beta-modal'
+import Onboarding from 'components/onboarding'
 import MyListings from 'components/my-listings'
 import MyPurchases from 'components/my-purchases'
 import MySales from 'components/my-sales'
 import NotFound from 'components/not-found'
 import Notifications from 'components/notifications'
-import OnboardingModal from 'components/onboarding-modal'
 import PurchaseDetail from 'components/purchase-detail'
 import ScrollToTop from 'components/scroll-to-top'
 import SearchResult from 'components/search/search-result'
@@ -41,6 +40,8 @@ import SearchBar from 'components/search/searchbar'
 
 import 'bootstrap/dist/js/bootstrap'
 
+import { setClickEventHandler } from 'utils/analytics'
+
 // CSS
 import 'bootstrap/dist/css/bootstrap.css'
 import '../css/lato-web.css'
@@ -50,12 +51,12 @@ import '../css/app.css'
 const httpsRequired = process.env.FORCE_HTTPS
 
 const HomePage = () => (
-  <div>
+  <Fragment>
     <SearchBar />
     <div className="container">
       <ListingsGrid renderMode="home-page" />
     </div>
-  </div>
+  </Fragment>
 )
 
 const ListingDetailPage = props => (
@@ -96,6 +97,7 @@ class App extends Component {
     }
 
     this.props.localizeApp()
+    setClickEventHandler()
   }
 
   componentDidMount() {
@@ -146,44 +148,44 @@ class App extends Component {
         <Router>
           <ScrollToTop>
             <Web3Provider>
-              <MessagingProvider>
-                <Layout>
-                  <Switch>
-                    <Route exact path="/" component={HomePage} />
-                    <Route path="/page/:activePage" component={HomePage} />
-                    <Route
-                      path="/listing/:listingId"
-                      component={ListingDetailPage}
-                    />
-                    <Route path="/create" component={CreateListingPage} />
-                    <Route path="/my-listings" component={MyListings} />
-                    <Route
-                      path="/purchases/:offerId"
-                      component={PurchaseDetailPage}
-                    />
-                    <Route
-                      path="/arbitration/:offerId"
-                      component={ArbitrationPage}
-                    />
-                    <Route path="/my-purchases" component={MyPurchases} />
-                    <Route path="/my-sales" component={MySales} />
-                    <Route
-                      path="/messages/:conversationId?"
-                      component={Messages}
-                    />
-                    <Route path="/notifications" component={Notifications} />
-                    <Route path="/profile" component={Profile} />
-                    <Route path="/users/:userAddress" component={UserPage} />
-                    <Route path="/search" component={SearchResult} />
-                    <Route path="/about-tokens" component={AboutTokens} />
-                    <Route path="/dapp-info" component={DappInfo} />
-                    <Route component={NotFound} />
-                  </Switch>
-                </Layout>
+              <Onboarding>
+                <Analytics>
+                  <Layout>
+                    <Switch>
+                      <Route exact path="/" component={HomePage} />
+                      <Route path="/page/:activePage" component={HomePage} />
+                      <Route
+                        path="/listing/:listingId"
+                        component={ListingDetailPage}
+                      />
+                      <Route path="/create" component={CreateListingPage} />
+                      <Route path="/my-listings" component={MyListings} />
+                      <Route
+                        path="/purchases/:offerId"
+                        component={PurchaseDetailPage}
+                      />
+                      <Route
+                        path="/arbitration/:offerId"
+                        component={ArbitrationPage}
+                      />
+                      <Route path="/my-purchases" component={MyPurchases} />
+                      <Route path="/my-sales" component={MySales} />
+                      <Route
+                        path="/messages/:conversationId?"
+                        component={Messages}
+                      />
+                      <Route path="/notifications" component={Notifications} />
+                      <Route path="/profile" component={Profile} />
+                      <Route path="/users/:userAddress" component={UserPage} />
+                      <Route path="/search" component={SearchResult} />
+                      <Route path="/about-tokens" component={AboutTokens} />
+                      <Route path="/dapp-info" component={DappInfo} />
+                      <Route component={NotFound} />
+                    </Switch>
+                  </Layout>
+                </Analytics>
                 <Alert />
-                <BetaModal />
-                <OnboardingModal />
-              </MessagingProvider>
+              </Onboarding>
             </Web3Provider>
           </ScrollToTop>
         </Router>

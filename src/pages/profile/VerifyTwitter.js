@@ -91,7 +91,7 @@ class VerifyTwitter extends Component {
 
   async catchPossibleErrors(callback, event) {
     try {
-      if (event == undefined) await callback()
+      if (event === undefined) await callback()
       else await callback(event)
     } catch (exception) {
       const errorsJson = JSON.parse(exception).errors

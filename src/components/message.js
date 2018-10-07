@@ -52,6 +52,8 @@ class Message extends Component {
               <button
                 className="btn btn-sm btn-primary"
                 onClick={enableMessaging}
+                ga-category="messaging"
+                ga-label="message_component_enable"
               >
                 <FormattedMessage
                   id={'message.enable'}

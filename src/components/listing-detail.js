@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import {
   FormattedMessage,
-  FormattedNumber,
+  // FormattedNumber,
   defineMessages,
   injectIntl
 } from 'react-intl'
@@ -17,10 +17,11 @@ import {
 
 import { PendingBadge, SoldBadge, FeaturedBadge } from 'components/badges'
 import Modal from 'components/modal'
-import Review from 'components/review'
+import Reviews from 'components/reviews'
 import UserCard from 'components/user-card'
-import { MetamaskModal, ProcessingModal } from 'components/modals/wait-modals'
+import { ProcessingModal, ProviderModal } from 'components/modals/wait-modals'
 
+import getCurrentProvider from 'utils/getCurrentProvider'
 import { getListing } from 'utils/listing'
 import { offerStatusToListingAvailability } from 'utils/offer'
 
@@ -53,7 +54,6 @@ class ListingsDetail extends Component {
       offers: [],
       pictures: [],
       purchases: [],
-      reviews: [],
       step: this.STEP.VIEW,
       boostLevel: null,
       boostValue: 0,
@@ -76,7 +76,6 @@ class ListingsDetail extends Component {
       // Load from IPFS
       await this.loadListing()
       await this.loadOffers()
-      await this.loadReviews()
     } else if (this.props.listingJson) {
       const obj = Object.assign({}, this.props.listingJson, { loading: false })
       // Listing json passed in directly
@@ -222,18 +221,6 @@ class ListingsDetail extends Component {
     }
   }
 
-  async loadReviews() {
-    try {
-      const reviews = await origin.marketplace.getListingReviews(
-        this.props.listingId
-      )
-      this.setState({ reviews })
-    } catch (error) {
-      console.error(error)
-      console.error(`Error fetching reviews`)
-    }
-  }
-
   resetToStepOne() {
     this.setState({ step: this.STEP.VIEW })
   }
@@ -251,8 +238,8 @@ class ListingsDetail extends Component {
       offers,
       pictures,
       price,
-      reviews,
       seller,
+      status,
       step
       // unitsRemaining
     } = this.state
@@ -263,12 +250,14 @@ class ListingsDetail extends Component {
     })
     const currentOfferAvailability =
       currentOffer && offerStatusToListingAvailability(currentOffer.status)
+    const isWithdrawn = status === 'inactive'
     const isPending = currentOfferAvailability === 'pending'
     const isSold = currentOfferAvailability === 'sold'
-    const isAvailable = !isPending && !isSold
+    const isAvailable = !isPending && !isSold && !isWithdrawn
     const userIsBuyer = currentOffer && web3Account === currentOffer.buyer
     const userIsSeller = web3Account === seller
-    const showFeaturedBadge = !isSold && !isPending && featured.includes(this.props.listingId)
+    const showFeaturedBadge =
+      isAvailable && featured.includes(this.props.listingId)
 
     return (
       <div className="listing-detail">
@@ -294,29 +283,51 @@ class ListingsDetail extends Component {
               </p>
             </div>
             <div className="button-container">
-              <a
-                href="/#/profile"
+              <Link
+                to="/profile"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-clear"
                 onClick={() => this.setState({ step: this.STEP.VIEW })}
+                ga-category="buyer_onboarding_modal"
+                ga-label="verify_identity"
               >
                 <FormattedMessage
                   id={'listing-detail.verifyIdentity'}
                   defaultMessage={'Verify Identity'}
                 />
-              </a>
+              </Link>
             </div>
             <a
               href="#"
               className="skip-identity"
               onClick={this.handleSkipOnboarding}
+              ga-category="buyer_onboarding_modal"
+              ga-label="skip"
             >
               Skip
             </a>
           </Modal>
         )}
-        {step === this.STEP.METAMASK && <MetamaskModal />}
+        {step === this.STEP.METAMASK && (
+          <ProviderModal
+            message={
+              <FormattedMessage
+                id={'listing-detail.providerInstruction'}
+                defaultMessage={
+                  'To make an offer on this listing, please confirm the transaction in {provider}.'
+                }
+                values={{
+                  provider: getCurrentProvider(
+                    origin &&
+                      origin.contractService &&
+                      origin.contractService.web3
+                  )
+                }}
+              />
+            }
+          />
+        )}
         {step === this.STEP.PROCESSING && <ProcessingModal />}
         {step === this.STEP.PURCHASED && (
           <Modal backdrop="static" isOpen={true}>
@@ -335,23 +346,42 @@ class ListingsDetail extends Component {
                 }
               />
               <ul>
-                <li>The seller can choose to accept or reject your offer.</li>
                 <li>
-                  If the offer is accepted and fulfilled, you will be able to
-                  confirm that the sale is complete. Your escrowed payment will
-                  be sent to the seller.
+                  <FormattedMessage
+                    id={'listing-detail.successItem1'}
+                    defaultMessage={
+                      'The seller can choose to accept or reject your offer.'
+                    }
+                  />
                 </li>
                 <li>
-                  If the offer is rejected, the escrowed payment will be
-                  immediately returned to your wallet.
+                  <FormattedMessage
+                    id={'listing-detail.successItem2'}
+                    defaultMessage={
+                      'If the offer is accepted and fulfilled, you will be able to confirm that the sale is complete. Your escrowed payment will be sent to the seller.'
+                    }
+                  />
+                </li>
+                <li>
+                  <FormattedMessage
+                    id={'listing-detail.successItem3'}
+                    defaultMessage={
+                      'If the offer is rejected, the escrowed payment will be immediately returned to your wallet.'
+                    }
+                  />
                 </li>
               </ul>
             </div>
             <div className="button-container">
-              <Link to="/my-purchases" className="btn btn-clear">
+              <Link
+                to="/my-purchases"
+                className="btn btn-clear"
+                ga-category="listing"
+                ga-label="purchase_confirmation_modal_view_my_purchases"
+              >
                 <FormattedMessage
-                  id={'listing-detail.goToPurchases'}
-                  defaultMessage={'Go To Purchases'}
+                  id={'listing-detail.viewPurchases'}
+                  defaultMessage={'View Purchases'}
                 />
               </Link>
             </div>
@@ -420,8 +450,8 @@ class ListingsDetail extends Component {
                   </div>
                 )}
               </div>
-              <h1 className="title text-truncate placehold">{name}</h1>
-              <p className="description placehold">{description}</p>
+              <h1 className="title placehold">{name}</h1>
+              <p className="ws-aware description placehold">{description}</p>
               {/* Via Stan 5/25/2018: Hide until contracts allow for unitsRemaining > 1 */}
               {/*!!unitsRemaining && unitsRemaining < 5 &&
                 <div className="units-remaining text-danger">
@@ -437,6 +467,9 @@ class ListingsDetail extends Component {
                   <a
                     href={origin.ipfsService.gatewayUrlForHash(ipfsHash)}
                     target="_blank"
+                    rel="noopener noreferrer"
+                    ga-category="listing"
+                    ga-label="view_on_ipfs"
                   >
                     <FormattedMessage
                       id={'listing-detail.viewOnIpfs'}
@@ -513,6 +546,8 @@ class ListingsDetail extends Component {
                           className="btn btn-primary"
                           onClick={() => this.handleMakeOffer()}
                           onMouseDown={e => e.preventDefault()}
+                          ga-category="listing"
+                          ga-label="purchase"
                         >
                           <FormattedMessage
                             id={'listing-detail.purchase'}
@@ -521,7 +556,12 @@ class ListingsDetail extends Component {
                         </button>
                       )}
                       {userIsSeller && (
-                        <Link to="/my-listings" className="btn">
+                        <Link
+                          to="/my-listings"
+                          className="btn"
+                          ga-category="listing"
+                          ga-label="sellers_own_listing_my_listings_cta"
+                        >
                             My Listings
                         </Link>
                       )}
@@ -534,7 +574,7 @@ class ListingsDetail extends Component {
                       <div className="row">
                         <div className="col-sm-6">
                           <p>Boost Level</p>
-                          <a href="#" target="_blank" rel="noopener noreferrer">What is this?</a>
+                          <Link to="/" target="_blank" rel="noopener noreferrer">What is this?</Link>
                         </div>
                         <div className="col-sm-6 text-right">
                           <p>{ boostLevel }</p>
@@ -554,7 +594,8 @@ class ListingsDetail extends Component {
                 <div className="buy-box placehold unavailable text-center">
                   {!loading && (
                     <div className="reason">
-                      {isPending && (
+                      {!isWithdrawn &&
+                        isPending && (
                         <FormattedMessage
                           id={'listing-detail.reasonPending'}
                           defaultMessage={'This listing is {pending}'}
@@ -579,7 +620,8 @@ class ListingsDetail extends Component {
                     !userIsSeller && (
                     <Fragment>
                       <div className="suggestion">
-                        {isPending && (
+                        {!isWithdrawn &&
+                            isPending && (
                           <FormattedMessage
                             id={'listing-detail.suggestionPublicPending'}
                             defaultMessage={
@@ -595,8 +637,22 @@ class ListingsDetail extends Component {
                             }
                           />
                         )}
+                        {/* consider the possibility of a withdrawn listing despite a valid offer */}
+                        {!isSold &&
+                            isWithdrawn && (
+                          <FormattedMessage
+                            id={'listing-detail.suggestionPublicWithdrawn'}
+                            defaultMessage={
+                              'This listing is no longer available. Try visiting the listings page and searching for something similar.'
+                            }
+                          />
+                        )}
                       </div>
-                      <Link to="/">
+                      <Link
+                        to="/"
+                        ga-category="listing"
+                        ga-label="view_listings"
+                      >
                         <FormattedMessage
                           id={'listing-detail.viewListings'}
                           defaultMessage={'View Listings'}
@@ -666,11 +722,25 @@ class ListingsDetail extends Component {
                           defaultMessage={`You've sold this listing.`}
                         />
                       )}
+                      {/* consider the possibility of a withdrawn listing despite a valid offer */}
+                      {!isPending &&
+                          !isSold &&
+                          isWithdrawn && (
+                        <FormattedMessage
+                          id={'listing-detail.sellerWithdrawn'}
+                          defaultMessage={`You've withdrawn this listing.`}
+                        />
+                      )}
                     </div>
                   )}
                   {!loading &&
-                    (userIsBuyer || userIsSeller) && (
-                    <Link to={`/purchases/${currentOffer.id}`}>
+                    (userIsBuyer || userIsSeller) &&
+                    currentOffer && (
+                    <Link
+                      to={`/purchases/${currentOffer.id}`}
+                      ga-category="listing"
+                      ga-label={ `view_${isPending ? 'offer' : 'sale'}` }
+                    >
                       {isPending && (
                         <FormattedMessage
                           id={'listing-detail.viewOffer'}
@@ -683,6 +753,20 @@ class ListingsDetail extends Component {
                           defaultMessage={'View Sale'}
                         />
                       )}
+                    </Link>
+                  )}
+                  {!loading &&
+                    userIsSeller &&
+                    isWithdrawn && (
+                    <Link
+                      to={`/listings/create`}
+                      ga-category="listing"
+                      ga-label="create_listing_from_withdrawn"
+                    >
+                      <FormattedMessage
+                        id={'listing-detail.createListing'}
+                        defaultMessage={'Create A Listing'}
+                      />
                     </Link>
                   )}
                 </div>
@@ -700,21 +784,9 @@ class ListingsDetail extends Component {
             <div className="row">
               <div className="col-12 col-md-8">
                 <hr />
-                <div className="reviews">
-                  <h2>
-                    <FormattedMessage
-                      id={'listing-detail.reviews'}
-                      defaultMessage={'Reviews'}
-                    />
-                    &nbsp;
-                    <span className="review-count">
-                      <FormattedNumber value={reviews.length} />
-                    </span>
-                  </h2>
-                  {reviews.map(r => <Review key={r.id} review={r} />)}
-                  {/* To Do: pagination */}
-                  {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
-                </div>
+                {this.state.seller && (
+                  <Reviews userAddress={this.state.seller} />
+                )}
               </div>
             </div>
           )}

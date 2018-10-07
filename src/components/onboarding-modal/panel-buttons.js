@@ -7,19 +7,10 @@ export default class PanelButtons extends Component {
     super(props)
 
     this.connectMetaMask = this.connectMetaMask.bind(this)
-    this.completeOnboarding = this.completeOnboarding.bind(this)
   }
 
   connectMetaMask() {
     this.props.displayNextStep()
-  }
-
-  completeOnboarding() {
-    const { displayNextStep, closeModal } = this.props
-    const stepsCompleted = true
-
-    displayNextStep(stepsCompleted)
-    closeModal()
   }
 
   render() {
@@ -27,7 +18,7 @@ export default class PanelButtons extends Component {
     const hasWallet = true
     const buttons = {
       Overview: hasWallet ? (
-        <button className="btn btn-primary" onClick={() => displayNextStep()}>
+        <button className="btn btn-primary" onClick={displayNextStep}>
           <FormattedMessage
             id={'onboarding-buttons.next'}
             defaultMessage={'Next'}
@@ -40,13 +31,21 @@ export default class PanelButtons extends Component {
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-primary"
+            ga-category="seller_onboarding"
+            ga-label="install_metamask_cta"
           >
             <FormattedMessage
               id={'onboarding-buttons.installMetaMask'}
               defaultMessage={'Install MetaMask'}
             />
           </a>
-          <a href="#" className="d-block" onClick={() => displayNextStep()}>
+          <a
+            href="#"
+            className="d-block"
+            onClick={displayNextStep}
+            ga-category="seller_onboarding"
+            ga-label="skip_install_metamask"
+          >
             <FormattedMessage
               id={'onboarding-buttons.skip'}
               defaultMessage={'Skip'}
@@ -56,15 +55,26 @@ export default class PanelButtons extends Component {
       ),
       Identity: (
         <div className="d-flex flex-column align-items-center">
-          <Link to="/profile" target="_blank">
-            <button key={'first-btn'} className="btn btn-primary">
-              <FormattedMessage
-                id={'onboarding-buttons.verify'}
-                defaultMessage={'Verify'}
-              />
-            </button>
-          </Link>
-          <a href="#" onClick={() => displayNextStep()}>
+          {/* [micah] can't get this work with <Link> */}
+          <a
+            href="/#/profile?skip-onboarding=true"
+            target="_blank"
+            ga-category="seller_onboarding"
+            ga-label="verify_profile"
+            className="btn btn-primary"
+            onClick={displayNextStep}
+          >
+            <FormattedMessage
+              id={'onboarding-buttons.verify'}
+              defaultMessage={'Verify'}
+            />
+          </a>
+          <a
+            href="#"
+            onClick={displayNextStep}
+            ga-category="seller_onboarding"
+            ga-label="skip_verify_profile"
+          >
             <FormattedMessage
               id={'onboarding-buttons.skip'}
               defaultMessage={'Skip'}
@@ -77,14 +87,15 @@ export default class PanelButtons extends Component {
           <Link
             to="/about-tokens"
             target="_blank"
-            onClick={this.completeOnboarding}
+            ga-category="seller_onboarding"
+            ga-label="learn_more_cta"
+            className="btn btn-primary"
+            onClick={displayNextStep}
           >
-            <button key={'first-btn'} className="btn btn-primary">
-              <FormattedMessage
-                id={'onboarding-buttons.getOriginTokens'}
-                defaultMessage={'Learn more'}
-              />
-            </button>
+            <FormattedMessage
+              id={'onboarding-buttons.getOriginTokens'}
+              defaultMessage={'Learn more'}
+            />
           </Link>
         </div>
       )

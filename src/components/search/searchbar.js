@@ -22,7 +22,7 @@ class SearchBar extends Component {
     const getParams = queryString.parse(this.props.location.search)
 
     let listingType = this.listingTypes[0]
-    if (getParams.listing_type != undefined) {
+    if (getParams.listing_type !== undefined) {
       listingType =
         this.listingTypes.find(
           listingTypeItem => listingTypeItem.type === getParams.listing_type
@@ -80,6 +80,8 @@ class SearchBar extends Component {
                 data-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false"
+                ga-category="search"
+                ga-label="category_dropdown"
               >
                 {this.state.selectedListingType.name}
               </button>
@@ -91,6 +93,8 @@ class SearchBar extends Component {
                     onClick={() =>
                       this.setState({ selectedListingType: listingType })
                     }
+                    ga-category="top_nav"
+                    ga-label={ `dropdown_item_${listingType}` }
                   >
                     {listingType.name}
                   </a>
@@ -113,6 +117,8 @@ class SearchBar extends Component {
                 className="search-bar-append"
                 type="button"
                 onClick={this.handleOnSearch}
+                ga-category="top_nav"
+                ga-label="search_submit"
               >
                 <img
                   src="images/searchbar/magnifying-glass.svg"

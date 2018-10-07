@@ -38,9 +38,7 @@ export const ConfirmationModal = ({
       <p>
         <FormattedMessage
           id={'arbitrationModals.confirmText2'}
-          defaultMessage={`This will start the conflict resolution process,
-            someone from Origin will be notified and all chat history will be made
-            public to a moderator.`}
+          defaultMessage={`This will start the conflict resolution process. Someone from Origin will be notified, and your chat history will be made public to an arbitrator.`}
         />
       </p>
     </div>

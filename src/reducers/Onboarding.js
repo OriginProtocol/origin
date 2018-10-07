@@ -19,66 +19,36 @@ function saveStorageItem(name, item, defaultValue) {
   return item
 }
 
-const getStoredStep = steps => {
-  const defaultValue = { name: { props: {} } }
-  const currentStep = getStorageItem('.currentStep', defaultValue)
-  const {
-    name: {
-      props: { defaultMessage }
-    }
-  } = currentStep
-
-  return steps.find(
-    step =>
-      (step && step.name.props.defaultMessage) ===
-      (currentStep && defaultMessage)
-  )
-}
-
-const updateStep = (incompleteStep, steps, fetch = false) => (step, i) => {
+const updateStep = (steps, { selectedStep, incompleteStep }) => (step) => {
   const completedStep = { ...step, complete: true }
-  if (step.name == incompleteStep.name && !fetch) {
-    if (step.complete) return { ...step, subStepComplete: true }
-    return completedStep
-  }
-
-  if (i < steps.indexOf(incompleteStep)) {
-    if (step.subStep) {
-      return { ...completedStep, subStepComplete: true }
-    }
-    return completedStep
-  }
-
-  const incompleteIndex = steps.indexOf(incompleteStep)
-  if (i === incompleteIndex) {
-    if (step.subStep && steps[incompleteIndex].complete) {
-      return completedStep
-    }
-    return step
-  }
-
-  return step
-}
-
-const updateAllSteps = (incompleteStep, steps, fetch) => {
-  return steps && steps.map(updateStep(incompleteStep, steps, fetch))
-}
-
-const updateCurrentStep = (incompleteStep, steps) => {
-  const { complete, subStep } = incompleteStep
-  const nextStep = steps.find(
-    step => step.position === incompleteStep.position + 1
+  const matchingName = step.name === (
+    (incompleteStep && incompleteStep.name) || selectedStep && selectedStep.name
   )
 
-  if (!nextStep)
-    saveStorageItem('.currentStep', { ...incompleteStep, complete: true })
-  if (!complete && subStep) {
-    return saveStorageItem('.currentStep', {
-      ...incompleteStep,
-      complete: true
-    })
+  if (matchingName) {
+    if (!selectedStep) {
+      return step.complete ? step : completedStep
+    }
+    return { ...step, selected: true }
   }
-  return saveStorageItem('.currentStep', nextStep)
+
+  return { ...step, selected: false }
+}
+
+const updateAllSteps = (steps = [], action) => steps.map(updateStep(steps, action))
+const findIncompleteStep = (steps = []) => steps.find((step) => !step.complete)
+const findNextStep = (incompleteStep) => (step) => step.position === incompleteStep.position + 1
+
+const updateCurrentStep = (state, action, stepsCompleted = false) => {
+  const { steps, currentStep } = state
+  if (stepsCompleted) return { ...currentStep, complete: true, selected: true }
+
+  const { selectedStep, incompleteStep } = action
+  const updatedSteps = updateAllSteps(steps, action)
+
+  if (selectedStep) return { ...selectedStep, selected: true }
+  const nextStep = updatedSteps.find(findNextStep(incompleteStep))
+  return nextStep ? nextStep : findIncompleteStep(updatedSteps)
 }
 
 const initialState = {
@@ -102,32 +72,21 @@ export default function Onboarding(state = initialState, action = {}) {
       ...state,
       blocked: false
     }
-
-  case OnboardingConstants.UPDATE_STEPS:
-    const updatedSteps = updateAllSteps(action.incompleteStep, state.steps)
-    saveStorageItem('.steps', updatedSteps)
-
+  case OnboardingConstants.SELECT_STEP:
     return {
       ...state,
-      currentStep: updateCurrentStep(action.incompleteStep, updatedSteps),
-      steps: updatedSteps,
-      progress: true,
-      stepsCompleted: saveStorageItem(
-        '.stepsCompleted',
-        action.stepsCompleted
-      )
+      currentStep: updateCurrentStep(state, action)
     }
-  case OnboardingConstants.FETCH_STEPS:
-    const fetchedStep = getStoredStep(state.steps) || steps[0]
-    const progress = fetchedStep !== steps[0]
-    const newSteps = updateAllSteps(fetchedStep, state.steps, true)
+  case OnboardingConstants.UPDATE_STEPS:
+    const updatedSteps = updateAllSteps(state.steps, action)
+    const stepsCompleted = !findIncompleteStep(updatedSteps)
 
     return {
       ...state,
-      steps: updateAllSteps(fetchedStep, state.steps, true),
-      currentStep: newSteps.find(step => step.name === fetchedStep.name),
-      progress,
-      stepsCompleted: getStorageItem('.stepsCompleted', false)
+      currentStep: updateCurrentStep(state, action, stepsCompleted),
+      progress: true,
+      steps: updatedSteps,
+      stepsCompleted: saveStorageItem('.stepsCompleted', stepsCompleted)
     }
   case OnboardingConstants.SPLIT_PANEL:
     return {
@@ -138,6 +97,8 @@ export default function Onboarding(state = initialState, action = {}) {
     }
   case OnboardingConstants.LEARN_MORE:
     return { ...state, learnMore: action.show, splitPanel: false }
+  case OnboardingConstants.FETCH_STEPS:
+    return { ...state, stepsCompleted: getStorageItem('.stepsCompleted', state.stepsCompleted) }
   default:
     return state
   }

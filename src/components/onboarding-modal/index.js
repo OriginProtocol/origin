@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl'
 
 import {
   updateSteps,
+  selectStep,
   fetchSteps,
   toggleSplitPanel,
   toggleLearnMore
@@ -32,6 +33,7 @@ class OnboardingModal extends Component {
       listingsDetected: false,
       stepsFetched: false
     }
+    this.loadingListings = false
   }
 
   async componentDidUpdate() {
@@ -43,7 +45,8 @@ class OnboardingModal extends Component {
     }
 
     // check for listings before doing anything else
-    if (!this.state.listingsDetected) {
+    if (!this.state.listingsDetected && !this.loadingListings) {
+      this.loadingListings = true
       const listings = await this.loadListings()
 
       return this.setState({
@@ -84,7 +87,7 @@ class OnboardingModal extends Component {
         listingsFor: address
       })
       const listings = await Promise.all(
-        ids.map(id => {
+        ids.map(async id => {
           return getListing(id, true)
         })
       )
@@ -125,6 +128,7 @@ class OnboardingModal extends Component {
   render() {
     const {
       updateSteps,
+      selectStep,
       onboarding: { blocked, currentStep, learnMore, splitPanel }
     } = this.props
 
@@ -157,6 +161,8 @@ class OnboardingModal extends Component {
           <button
             className="btn btn-primary btn-lg"
             onClick={() => this.props.toggleSplitPanel(true)}
+            ga-category="seller_onboarding"
+            ga-label="learn_more_cta"
           >
             <FormattedMessage
               id={'getting-started.button'}
@@ -185,6 +191,7 @@ class OnboardingModal extends Component {
               steps={steps}
               updateSteps={updateSteps}
               closeModal={this.closeModal('toggleSplitPanel')}
+              selectStep={selectStep}
             />
             <div className="modal-backdrop fade show" role="presentation" />
           </div>
@@ -201,8 +208,9 @@ const mapDispatchToProps = dispatch => ({
   getOgnBalance: () => dispatch(getOgnBalance()),
   toggleSplitPanel: show => dispatch(toggleSplitPanel(show)),
   toggleLearnMore: show => dispatch(toggleLearnMore(show)),
-  updateSteps: ({ incompleteStep, stepsCompleted }) =>
-    dispatch(updateSteps({ incompleteStep, stepsCompleted }))
+  updateSteps: ({ incompleteStep }) =>
+    dispatch(updateSteps({ incompleteStep })),
+  selectStep: ({ selectedStep }) => dispatch(selectStep({ selectedStep }))
 })
 
 export default withRouter(
