@@ -70,7 +70,7 @@
   "transactions.transactionsHeading": "Transactions",
   "transactions.clear": "Clear",
   "user-dropdown.EditProfile": "Edit Profile",
-  "footer.mission": "The Origin Decentralized App runs on Ethereum Mainnet and uses real ETH. Use caution with counterparties you don't know. Please verify your own identity.",
+  "footer.description": "The Origin decentralized app allows buyers and sellers to transact without rent-seeking middlemen using the Ethereum blockchain and IPFS.",
   "footer.websiteLink": "Visit our Website",
   "footer.githubLink": "Visit our Github",
   "photo-picker.macHelpText": "Hold down \"command\" (⌘) to select multiple images",

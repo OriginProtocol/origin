@@ -71,12 +71,12 @@ class Footer extends Component {
                   />
                 </a>
                 <div className="vl"></div>
-                <div className="company-mission">
+                <div className="description">
                   <p>
                     <FormattedMessage
-                      id={'footer.mission'}
+                      id={'footer.description'}
                       defaultMessage={
-                        'The Origin Decentralized App runs on Ethereum Mainnet and uses real ETH. Use caution with counterparties you don\'t know. Please verify your own identity.'
+                        'The Origin decentralized app allows buyers and sellers to transact without rent-seeking middlemen using the Ethereum blockchain and IPFS.'
                       }
                     />
                   </p>
