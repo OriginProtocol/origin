@@ -1,0 +1,10 @@
+[
+  {
+    "id": "photo-picker.continue",
+    "defaultMessage": "Continue"
+  },
+  {
+    "id": "photo-picker.cancel",
+    "defaultMessage": "Cancel"
+  }
+]
