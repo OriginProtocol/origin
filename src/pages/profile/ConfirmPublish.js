@@ -28,7 +28,7 @@ class ConfirmPublish extends Component {
           <FormattedMessage
             id={'ConfirmPublish.afterYouPublishNotice'}
             defaultMessage={
-              'After you publish your changes to the blockchain, other users will be able to see that you have verified the following:'
+              'After you publish your changes to the blockchain, other users will be able to see that you have verified the following, but they will not be able to see your actual data:'
             }
           />
         </p>
