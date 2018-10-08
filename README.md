@@ -13,3 +13,39 @@ E.g.
 ```
 
 See: https://github.com/OriginProtocol/origin-dapp/pull/645
+
+# Instructions for updating the Feature & Hide lists
+ - Checkout the origin-dapp repo:
+
+```git clone https://github.com/OriginProtocol/origin-dapp.git```
+
+ - Checkout the hidefeature_list branch
+
+`git checkout hidefeature_list`
+
+ - Create a local branch for your changes
+
+`git checkout -b <your_name>/<branch_name> origin/hidefeature_list`
+
+For example:
+
+`git checkout -b franck/list_updates origin/hidefeature_list`
+
+ - Edit the desired file(s)
+
+ - Commit and push the changes to github.com
+
+```
+git commit -am "<commit_message>"
+git push origin <branch_name>
+```
+
+For example:
+```
+git commit -am "Added partners listings to feature list"
+git push origin franck/list_update
+```
+
+ - Go to the [github origin-dapp page](https://github.com/OriginProtocol/origin-dapp) and create a PR.
+ Make sure to use as a base branch ***hidefeature_list***.
+
