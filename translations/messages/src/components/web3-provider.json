@@ -48,6 +48,10 @@
     "defaultMessage": "Currently on {currentNetworkName}."
   },
   {
+    "id": "web3-provider.redirectInfoButton",
+    "defaultMessage": "Go to {website}"
+  },
+  {
     "id": "web3-provider.pleaseInstallMetaMask",
     "defaultMessage": "Please install the MetaMask extension to access this site."
   },

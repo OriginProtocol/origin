@@ -236,7 +236,12 @@ const UnsupportedNetwork = props => {
         <button
           className="btn btn-outline align-self-center mt-4"
           onClick={goToNetwork(redirectInfo.url)}>
-          Go to {redirectInfo.label}
+
+          <FormattedMessage
+            id={'web3-provider.redirectInfoButton'}
+            defaultMessage={'Go to {website}'}
+            values={{ website: redirectInfo.label }}
+          />
         </button>
       )}
     </Modal>
