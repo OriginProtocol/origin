@@ -63,7 +63,7 @@ class BetaModal extends Component {
             className="btn btn-clear"
             onClick={this.props.dismiss}
             ga-category="beta"
-            ga-label="dismiss_modal"
+            ga-label="dismiss_beta_page_load_modal"
           >
             <FormattedMessage
               id={'beta-modal.proceed'}

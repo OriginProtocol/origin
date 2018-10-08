@@ -130,6 +130,10 @@ class Profile extends Component {
       provisional: this.props.provisionalProgress,
       published: this.props.publishedProgress
     })
+
+    if ($('.identity.dropdown').hasClass('show')) {
+      $('#identityDropdown').dropdown('toggle')
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -589,6 +593,7 @@ class Profile extends Component {
               <a
                 href={`https://${etherscanNetworkUrls[this.props.networkId]}etherscan.io/tx/${this.props.profile.lastDeployProfileHash}`}
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 <FormattedMessage
                   id={'Profile.viewTransaction'}

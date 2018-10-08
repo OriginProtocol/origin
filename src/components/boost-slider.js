@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
+import { Link } from 'react-router-dom'
 import Slider from 'rc-slider'
 import $ from 'jquery'
 // TODO:John - pass a third arg of 'OGN' into getFiatPrice() once OGN prices are available in cryptonator API
@@ -70,13 +71,13 @@ class BoostSlider extends Component {
             <p>
               <img src="images/ogn-icon.svg" role="presentation" />
               {this.props.selectedBoostAmount}&nbsp;
-              <a
-                href="/#/about-tokens"
+              <Link
+                to="/about-tokens"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 OGN
-              </a>
+              </Link>
               {/* <span className="help-block"> | { this.state.selectedBoostAmountUsd } USD</span> */}
             </p>
           </div>
@@ -119,12 +120,12 @@ class BoostSlider extends Component {
             defaultMessage={'Boosts are always calculated and charged in OGN.'}
           />
           &nbsp;
-          <a href="/#/about-tokens" target="_blank" rel="noopener noreferrer">
+          <Link to="/about-tokens" target="_blank" rel="noopener noreferrer">
             <FormattedMessage
               id={'boost-slider.learn-more'}
               defaultMessage={'Learn More'}
-            />&#x25b8;
-          </a>
+            />&nbsp;&#x25b8;
+          </Link>
         </p>
       </div>
     )

@@ -22,7 +22,7 @@ class SearchBar extends Component {
     const getParams = queryString.parse(this.props.location.search)
 
     let listingType = this.listingTypes[0]
-    if (getParams.listing_type != undefined) {
+    if (getParams.listing_type !== undefined) {
       listingType =
         this.listingTypes.find(
           listingTypeItem => listingTypeItem.type === getParams.listing_type

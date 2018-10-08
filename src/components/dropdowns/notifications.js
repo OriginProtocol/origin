@@ -17,8 +17,16 @@ class NotificationsDropdown extends Component {
   }
 
   componentDidMount() {
-    $(document).on('click', '.notifications .dropdown-menu', e => {
-      e.stopPropagation()
+    // control hiding of dropdown menu
+    $('.notifications.dropdown').on('hide.bs.dropdown', function({ clickEvent }) {
+      // if triggered by data-toggle
+      if (!clickEvent) {
+        return true
+      }
+      // otherwise only if triggered by self or another dropdown
+      const el = $(clickEvent.target)
+
+      return el.hasClass('dropdown') && el.hasClass('nav-item')
     })
 
     $('.notifications.dropdown').on('hide.bs.dropdown', () => {

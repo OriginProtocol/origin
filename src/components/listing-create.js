@@ -492,15 +492,15 @@ class ListingCreate extends Component {
                         defaultMessage={'You have 0 {ogn} in your wallet.'}
                         values={{
                           ogn: (
-                            <a
-                              href="/#/about-tokens"
+                            <Link
+                              to="/about-tokens"
                               target="_blank"
                               rel="noopener noreferrer"
                               ga-category="create_listing"
                               ga-label="boost_listing_step_ogn"
                             >
                               OGN
-                            </a>
+                            </Link>
                           )
                         }}
                       />
@@ -514,15 +514,15 @@ class ListingCreate extends Component {
                       />
                     </p>
                     <div className="link-container">
-                      <a
-                        href="/#/about-tokens"
+                      <Link
+                        to="/about-tokens"
                         target="_blank"
                         rel="noopener noreferrer"
                         ga-category="create_listing"
                         ga-label="boost_listing_step_learn_more"
                       >
                         Learn More
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 )}
@@ -655,7 +655,7 @@ class ListingCreate extends Component {
                         </span>&nbsp;
                         <a
                           className="eth-abbrev"
-                          href="#"
+                          href="https://en.wikipedia.org/wiki/Ethereum"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -692,14 +692,14 @@ class ListingCreate extends Component {
                           role="presentation"
                         />
                         <span className="text-bold">{formData.boostValue}</span>&nbsp;
-                        <a
+                        <Link
                           className="ogn-abbrev"
-                          href="/#/about-tokens"
+                          to="/about-tokens"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
                           OGN
-                        </a>
+                        </Link>
                         <span className="help-block">
                           &nbsp;| {formData.boostLevel.toUpperCase()}
                         </span>
@@ -708,14 +708,14 @@ class ListingCreate extends Component {
                   </div>
                 </div>
                 {/* Revisit this later
-                  <a
+                  <Link
                     className="bottom-cta"
-                    href="#"
+                    to="#"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     Preview in browser
-                  </a>
+                  </Link>
                 */}
                 <div className="btn-container">
                   <button
@@ -813,8 +813,8 @@ class ListingCreate extends Component {
                     />
                   </p>
                   <div className="link-container">
-                    <a
-                      href="/#/about-tokens"
+                    <Link
+                      to="/about-tokens"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -822,7 +822,7 @@ class ListingCreate extends Component {
                         id={'listing-create.learn-more'}
                         defaultMessage={'Learn More'}
                       />
-                    </a>
+                    </Link>
                   </div>
                 </div>
               )}
@@ -923,7 +923,7 @@ class ListingCreate extends Component {
                     className="btn btn-clear"
                     onClick={this.resetForm}
                     ga-category="create_listing"
-                    ga-label="create_another_listing"
+                    ga-label="listing_creation_confirmation_modal_create_another_listing_cta"
                   >
                     <FormattedMessage
                       id={'listing-create.createAnother'}
@@ -934,7 +934,7 @@ class ListingCreate extends Component {
                     to="/"
                     className="btn btn-clear"
                     ga-category="create_listing"
-                    ga-label="see_all_listings"
+                    ga-label="listing_creation_confirmation_modal_see_all_listings"
                   >
                     <FormattedMessage
                       id={'listing-create.seeAllListings'}

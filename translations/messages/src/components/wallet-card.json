@@ -30,5 +30,9 @@
   {
     "id": "wallet-card.accountBalances",
     "defaultMessage": "Account Balances"
+  },
+  {
+    "id": "wallet-card.transactionHistory",
+    "defaultMessage": "Transaction History"
   }
 ]
