@@ -114,11 +114,7 @@ class ImageCropper extends Component {
   }
 
   render() {
-    const {
-      isOpen,
-      imageSrc,
-      crop
-    } = this.state
+    const { isOpen, imageSrc, crop } = this.state
 
     return (
       <Fragment>
@@ -132,7 +128,6 @@ class ImageCropper extends Component {
             <ReactCrop
               src={imageSrc}
               crop={crop}
-              onImageLoaded={this.onImageLoaded}
               onChange={this.onCropChange}
             />
           }
@@ -143,7 +138,7 @@ class ImageCropper extends Component {
               onClick={this.onCropComplete}
             >
               <FormattedMessage
-                id={'photo-picker.continue'}
+                id={'image-cropper.continue'}
                 defaultMessage={'Continue'}
               />
             </button>
@@ -151,7 +146,7 @@ class ImageCropper extends Component {
           <div className="link-container text-center">
             <a onClick={() => this.props.onCropCancel()}>
               <FormattedMessage
-                id={'photo-picker.cancel'}
+                id={'image-cropper.cancel'}
                 defaultMessage={'Cancel'}
               />
             </a>

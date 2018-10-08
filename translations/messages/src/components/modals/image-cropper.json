@@ -1,10 +1,10 @@
 [
   {
-    "id": "photo-picker.continue",
+    "id": "image-cropper.continue",
     "defaultMessage": "Continue"
   },
   {
-    "id": "photo-picker.cancel",
+    "id": "image-cropper.cancel",
     "defaultMessage": "Cancel"
   }
 ]
