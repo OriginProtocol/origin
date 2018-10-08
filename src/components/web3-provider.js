@@ -200,28 +200,48 @@ const UnconnectedNetwork = () => (
   </Modal>
 )
 
-const UnsupportedNetwork = props => (
-  <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
-    <div className="image-container">
-      <img src="images/flat_cross_icon.svg" role="presentation" />
-    </div>
-    <p>
+const UnsupportedNetwork = props => {
+  const { currentProvider, networkId, currentNetworkName } = props
+  const url = new URL(window.location)
+  const path = url.pathname + url.hash
+  const goToNetwork = (url) => () => window.location.href = url + path
+  const supportedNetworkName = networkNames[supportedNetworkId]
+  const getRedirectInfo = () => {
+    if (networkId === 1 && mainnetDappBaseUrl) {
+      return { url: mainnetDappBaseUrl, label: 'MainNet Dapp' }
+    } else if (networkId === 4 && rinkebyDappBaseUrl) {
+      return { url: rinkebyDappBaseUrl, label: 'Rinkeby Test Dapp' }
+    }
+  }
+  const redirectInfo = getRedirectInfo()
+
+  return (
+    <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
+      <div className="image-container">
+        <img src="images/flat_cross_icon.svg" role="presentation" />
+      </div>
+      <p>
+        <FormattedMessage
+          id={'web3-provider.shouldBeOnRinkeby'}
+          defaultMessage={'{currentProvider} should be on {supportedNetworkName}'}
+          values={{ currentProvider, supportedNetworkName }}
+        />
+      </p>
       <FormattedMessage
-        id={'web3-provider.shouldBeOnRinkeby'}
-        defaultMessage={'{currentProvider} should be on {supportedNetworkName}'}
-        values={{
-          currentProvider: props.currentProvider,
-          supportedNetworkName: networkNames[supportedNetworkId]
-        }}
+        id={'web3-provider.currentlyOnNetwork'}
+        defaultMessage={'Currently on {currentNetworkName}.'}
+        values={{ currentNetworkName }}
       />
-    </p>
-    <FormattedMessage
-      id={'web3-provider.currentlyOnNetwork'}
-      defaultMessage={'Currently on {currentNetworkName}.'}
-      values={{ currentNetworkName: props.currentNetworkName }}
-    />
-  </Modal>
-)
+      { redirectInfo && (
+        <button
+          className="btn btn-outline align-self-center mt-4"
+          onClick={goToNetwork(redirectInfo.url)}>
+          Go to {redirectInfo.label}
+        </button>
+      )}
+    </Modal>
+  )
+}
 
 const Web3Unavailable = props => (
   <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
@@ -440,7 +460,7 @@ class Web3Provider extends Component {
       // set user_id to wallet address in Google Analytics
       const gtag = window.gtag || function(){}
       gtag('set', { 'user_id': curr })
-      
+
       // update global state
       this.props.storeWeb3Account(curr)
       // trigger messaging service
@@ -456,16 +476,6 @@ class Web3Provider extends Component {
       : networkId
     const isProduction = process.env.NODE_ENV === 'production'
     const networkNotSupported = supportedNetworkId !== networkId
-
-    // Redirect if we know a DApp instalation that supports their network.
-    if (currentProvider && networkId && isProduction && networkNotSupported) {
-      const url = new URL(window.location)
-      if (networkId === 1 && mainnetDappBaseUrl) {
-        window.location.href = mainnetDappBaseUrl + url.pathname + url.hash
-      } else if (networkId === 4 && rinkebyDappBaseUrl) {
-        window.location.href = rinkebyDappBaseUrl + url.pathname + url.hash
-      }
-    }
 
     return (
       <Fragment>
@@ -483,6 +493,7 @@ class Web3Provider extends Component {
             <UnsupportedNetwork
               currentNetworkName={currentNetworkName}
               currentProvider={currentProvider}
+              networkId={networkId}
             />
           )}
 
