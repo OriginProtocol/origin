@@ -1,9 +1,9 @@
 from flask import Flask
 from flask_cors import CORS
+from util.encoder import JSONEncoder
+from werkzeug.contrib.fixers import ProxyFix
 
 from config import settings
-
-from util.encoder import JSONEncoder
 
 
 class MyFlask(Flask):
@@ -32,6 +32,7 @@ app = MyFlask(__name__,
               template_folder=settings.TEMPLATE_ROOT,
               static_folder=settings.STATIC_ROOT)
 app.json_encoder = JSONEncoder
+app.wsgi_app = ProxyFix(app.wsgi_app)
 
 cors = CORS(app,
             resources={r"/api/*": {"origins": "*"}},

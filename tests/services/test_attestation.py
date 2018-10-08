@@ -14,6 +14,8 @@ from logic.attestation_service import (
     VerificationServiceResponse
 )
 from logic.attestation_service import CLAIM_TYPES
+from logic.attestation_service import twitter_access_token_url
+from logic.attestation_service import twitter_request_token_url
 from logic.service_utils import (
     AirbnbVerificationError,
     EmailVerificationError,
@@ -116,7 +118,7 @@ def test_send_phone_verification_twilio_error():
 
 
 @responses.activate
-def test_verify_phone_valid_code():
+def test_verify_phone_valid_code(app):
     responses.add(
         responses.GET,
         'https://api.authy.com/protected/json/phones/verification/check',
@@ -132,7 +134,8 @@ def test_verify_phone_valid_code():
         'phone': '12341234',
         'code': '123456'
     }
-    response = VerificationService.verify_phone(**args)
+    with app.test_request_context():
+        response = VerificationService.verify_phone(**args)
     assert isinstance(response, VerificationServiceResponse)
 
     assert len(response.data['signature']) == SIGNATURE_LENGTH
@@ -229,7 +232,7 @@ def test_send_email_verification_sendgrid_error(
 
 
 @mock.patch('logic.attestation_service.session')
-def test_verify_email_valid_code(mock_session):
+def test_verify_email_valid_code(mock_session, app):
     session_dict = {
         'email_attestation': {
             'email': generate_password_hash('origin@protocol.foo'),
@@ -245,7 +248,8 @@ def test_verify_email_valid_code(mock_session):
     }
 
     with mock.patch('logic.attestation_service.session', session_dict):
-        response = VerificationService.verify_email(**args)
+        with app.test_request_context():
+            response = VerificationService.verify_email(**args)
 
     assert isinstance(response, VerificationServiceResponse)
 
@@ -370,57 +374,75 @@ def test_facebook_auth_url():
     assert resp_data['url'] == (
         'https://www.facebook.com/v2.12/dialog/oauth?client_id'
         '=facebook-client-id&redirect_uri'
-        '=https://testhost.com/redirects/facebook/')
+        '=https://testhost.com/redirects/facebook/'
+    )
 
 
-@mock.patch('http.client.HTTPSConnection')
-def test_verify_facebook_valid_code(MockHttpConnection):
-    mock_http_conn = mock.Mock()
-    mock_get_response = mock.Mock()
-    mock_get_response.read.return_value = '{"access_token": "foo"}'
-    mock_http_conn.getresponse.return_value = mock_get_response
-    MockHttpConnection.return_value = mock_http_conn
+@responses.activate
+def test_verify_facebook_valid_code(app):
+    auth_url = 'https://graph.facebook.com/v2.12/oauth/access_token' + \
+        '?client_id=facebook-client-id' + \
+        '&client_secret=facebook-client-secret' + \
+        '&redirect_uri=https%3A%2F%2Ftesthost.com%2Fredirects%2Ffacebook%2F' + \
+        '&code=abcde12345'
+    verify_url = 'https://graph.facebook.com/me?access_token=12345'
+
+    responses.add(
+        responses.GET,
+        auth_url,
+        json={'access_token': 12345},
+        status=200
+    )
+
+    responses.add(
+        responses.GET,
+        verify_url,
+        json={'name': 'Origin Protocol'},
+        status=200
+    )
+
     args = {
         'eth_address': '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
         'code': 'abcde12345'
     }
-    resp = VerificationService.verify_facebook(**args)
-    assert isinstance(resp, VerificationServiceResponse)
-    resp_data = resp.data
-    mock_http_conn.request.assert_called_once_with(
-        'GET',
-        '/v2.12/oauth/access_token?client_id=facebook-client-id&' +
-        'client_secret=facebook-client-secret&redirect_uri=' +
-        'https://testhost.com/redirects/facebook/&code=abcde12345')
-    assert len(resp_data['signature']) == SIGNATURE_LENGTH
-    assert resp_data['claim_type'] == CLAIM_TYPES['facebook']
-    assert resp_data['data'] == 'facebook verified'
+
+    with app.test_request_context():
+        verification_response = VerificationService.verify_facebook(**args)
+    assert isinstance(verification_response, VerificationServiceResponse)
+    assert len(verification_response.data['signature']) == SIGNATURE_LENGTH
+    assert verification_response.data['claim_type'] == CLAIM_TYPES['facebook']
+    assert verification_response.data['data'] == 'facebook verified'
 
     # Verify attestation stored in database
     attestations = Attestation.query.all()
     assert(len(attestations)) == 1
     assert(attestations[0].method) == AttestationTypes.FACEBOOK
+    assert(attestations[0].value) == 'Origin Protocol'
 
 
-@mock.patch('http.client.HTTPSConnection')
-def test_verify_facebook_invalid_code(MockHttpConnection):
-    mock_http_conn = mock.Mock()
-    mock_get_response = mock.Mock()
-    mock_get_response.read.return_value = '{"error": "bar"}'
-    mock_http_conn.getresponse.return_value = mock_get_response
-    MockHttpConnection.return_value = mock_http_conn
+@responses.activate
+def test_verify_facebook_invalid_code():
+    auth_url = 'https://graph.facebook.com/v2.12/oauth/access_token' + \
+        '?client_id=facebook-client-id' + \
+        '&client_secret=facebook-client-secret' + \
+        '&redirect_uri=https%3A%2F%2Ftesthost.com%2Fredirects%2Ffacebook%2F' + \
+        '&code=bananas'
+
+    responses.add(
+        responses.GET,
+        auth_url,
+        json={'error': 'invalid'},
+        status=403
+    )
+
     args = {
         'eth_address': '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
         'code': 'bananas'
     }
+
     with pytest.raises(FacebookVerificationError) as service_err:
         VerificationService.verify_facebook(**args)
 
-    mock_http_conn.request.assert_called_once_with(
-        'GET',
-        '/v2.12/oauth/access_token?client_id=facebook-client-id' +
-        '&client_secret=facebook-client-secret&' +
-        'redirect_uri=https://testhost.com/redirects/facebook/&code=bananas')
     assert str(service_err.value) == 'The code you provided is invalid.'
 
     # Verify attestation not stored
@@ -428,54 +450,89 @@ def test_verify_facebook_invalid_code(MockHttpConnection):
     assert(len(attestations)) == 0
 
 
-@mock.patch('logic.attestation_service.requests')
-@mock.patch('logic.attestation_service.session')
-def test_twitter_auth_url(mock_session, mock_requests):
+@responses.activate
+def test_twitter_auth_url(app):
     response_content = b'oauth_token=peaches&oauth_token_secret=pears'
-    mock_requests.post().content = response_content
-    mock_requests.post().status_code = 200
-    resp = VerificationService.twitter_auth_url()
-    resp_data = resp.data
-    assert isinstance(resp, VerificationServiceResponse)
-    assert resp_data['url'] == ('https://api.twitter.com/oauth/authenticate?'
-                                'oauth_token=peaches')
+
+    responses.add(
+        responses.POST,
+        twitter_request_token_url,
+        body=response_content,
+        status=200
+    )
+
+    with app.test_request_context():
+        verification_response = VerificationService.twitter_auth_url()
+    assert isinstance(verification_response, VerificationServiceResponse)
+    assert verification_response.data['url'] == (
+        'https://api.twitter.com/oauth/authenticate?oauth_token=peaches'
+    )
 
 
-@mock.patch('logic.attestation_service.requests')
 @mock.patch('logic.attestation_service.session')
-def test_verify_twitter_valid_code(mock_session, mock_requests):
-    dict = {'request_token': 'bar'}
-    mock_session.__contains__.side_effect = dict.__contains__
-    mock_requests.post().status_code = 200
+@responses.activate
+def test_verify_twitter_valid_code(mock_session, app):
+    responses.add(
+        responses.POST,
+        twitter_access_token_url,
+        body=b'screen_name=originprotocol',
+        status=200
+    )
+
     args = {
         'eth_address': '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
         'oauth_verifier': 'blueberries'
     }
-    resp = VerificationService.verify_twitter(**args)
-    resp_data = resp.data
-    assert isinstance(resp, VerificationServiceResponse)
-    assert len(resp_data['signature']) == SIGNATURE_LENGTH
-    assert resp_data['claim_type'] == CLAIM_TYPES['twitter']
-    assert resp_data['data'] == 'twitter verified'
+
+    session_dict = {
+        'request_token': {
+            'oauth_token': '1234',
+            'oauth_token_secret': '5678'
+        }
+    }
+
+    with mock.patch('logic.attestation_service.session', session_dict):
+        with app.test_request_context():
+            verification_response = VerificationService.verify_twitter(**args)
+
+    assert isinstance(verification_response, VerificationServiceResponse)
+
+    assert len(verification_response.data['signature']) == SIGNATURE_LENGTH
+    assert verification_response.data['claim_type'] == CLAIM_TYPES['twitter']
+    assert verification_response.data['data'] == 'twitter verified'
 
     # Verify attestation stored in database
     attestations = Attestation.query.all()
     assert(len(attestations)) == 1
     assert(attestations[0].method) == AttestationTypes.TWITTER
+    assert(attestations[0].value) == 'originprotocol'
 
 
-@mock.patch('logic.attestation_service.requests')
 @mock.patch('logic.attestation_service.session')
-def test_verify_twitter_invalid_verifier(mock_session, mock_requests):
-    dict = {'request_token': 'bar'}
-    mock_session.__contains__.side_effect = dict.__contains__
-    mock_requests.post().status_code = 401
+@responses.activate
+def test_verify_twitter_invalid_verifier(mock_session, app):
+    responses.add(
+        responses.POST,
+        twitter_access_token_url,
+        status=401
+    )
+
     args = {
         'eth_address': '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
         'oauth_verifier': 'pineapples'
     }
-    with pytest.raises(TwitterVerificationError) as service_err:
-        VerificationService.verify_twitter(**args)
+
+    session_dict = {
+        'request_token': {
+            'oauth_token': '1234',
+            'oauth_token_secret': '5678'
+        }
+    }
+
+    with mock.patch('logic.attestation_service.session', session_dict):
+        with pytest.raises(TwitterVerificationError) as service_err:
+            with app.test_request_context():
+                VerificationService.verify_twitter(**args)
 
     assert str(service_err.value) == 'The verifier you provided is invalid.'
 
@@ -523,7 +580,7 @@ def test_generate_airbnb_verification_code_incorrect_user_id_format():
 
 
 @mock.patch('logic.attestation_service.urlopen')
-def test_verify_airbnb(mock_urllib_request):
+def test_verify_airbnb(mock_urllib_request, app):
     mock_urllib_request.return_value.read.return_value = """
         <html><div>
             Airbnb profile description
@@ -532,16 +589,16 @@ def test_verify_airbnb(mock_urllib_request):
         </div></html>""".encode('utf-8')
     airbnbUserId = "123456"
 
-    resp = VerificationService.verify_airbnb(
-        '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
-        airbnbUserId
-    )
-    assert isinstance(resp, VerificationServiceResponse)
+    with app.test_request_context():
+        verification_response = VerificationService.verify_airbnb(
+            '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
+            airbnbUserId
+        )
+    assert isinstance(verification_response, VerificationServiceResponse)
 
-    resp_data = resp.data
-    assert len(resp_data['signature']) == SIGNATURE_LENGTH
-    assert resp_data['claim_type'] == CLAIM_TYPES['airbnb']
-    assert resp_data['data'] == 'airbnbUserId:' + airbnbUserId
+    assert len(verification_response.data['signature']) == SIGNATURE_LENGTH
+    assert verification_response.data['claim_type'] == CLAIM_TYPES['airbnb']
+    assert verification_response.data['data'] == 'airbnbUserId:' + airbnbUserId
 
     # Verify attestation stored in database
     attestations = Attestation.query.all()

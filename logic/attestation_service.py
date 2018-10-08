@@ -1,11 +1,10 @@
-import cgi
 import datetime
-import http.client
-import json
+import logging
 import requests
 import sendgrid
 import re
 from random import randint
+import urllib
 
 from marshmallow.exceptions import ValidationError
 from urllib.request import Request, urlopen, HTTPError, URLError
@@ -16,6 +15,7 @@ from config import settings
 from database import db
 from database.models import Attestation
 from database.models import AttestationTypes
+from flask import request
 from flask import session
 from logic.service_utils import (
     AirbnbVerificationError,
@@ -41,6 +41,8 @@ CLAIM_TYPES = {
     'twitter': 4,
     'airbnb': 5
 }
+
+logger = logging.getLogger(__name__)
 
 
 class VerificationServiceResponse():
@@ -89,6 +91,7 @@ class VerificationService:
         try:
             response.raise_for_status()
         except requests.exceptions.HTTPError as exc:
+            logger.exception(exc)
             if response.json()['error_code'] == "60033":
                 raise ValidationError('Phone number is invalid.',
                                       field_names=['phone'])
@@ -140,6 +143,7 @@ class VerificationService:
         try:
             response.raise_for_status()
         except requests.exceptions.HTTPError as exc:
+            logger.exception(exc)
             if response.json()['error_code'] == '60023':
                 # This error code could also mean that no phone verification was ever
                 # created for that country calling code and phone number
@@ -168,7 +172,8 @@ class VerificationService:
                 method=AttestationTypes.PHONE,
                 eth_address=eth_address,
                 value="{} {}".format(country_calling_code, phone),
-                signature=signature
+                signature=signature,
+                remote_ip_address=request.remote_addr
             )
             db.session.add(attestation)
             db.session.commit()
@@ -218,6 +223,7 @@ class VerificationService:
         try:
             _send_email_using_sendgrid(mail)
         except Exception as exc:
+            logger.exception(exc)
             # SendGrid does not have its own error types but might in the future
             # See https://github.com/sendgrid/sendgrid-python/issues/315
             raise EmailVerificationError(
@@ -269,7 +275,8 @@ class VerificationService:
             method=AttestationTypes.EMAIL,
             eth_address=eth_address,
             value=email,
-            signature=signature
+            signature=signature,
+            remote_ip_address=request.remote_addr
         )
         db.session.add(attestation)
         db.session.commit()
@@ -288,21 +295,29 @@ class VerificationService:
         return VerificationServiceResponse({'url': url})
 
     def verify_facebook(code, eth_address):
-        base_url = 'graph.facebook.com'
-        client_id = settings.FACEBOOK_CLIENT_ID
-        client_secret = settings.FACEBOOK_CLIENT_SECRET
-        redirect_uri = urls.absurl("/redirects/facebook/")
-        code = code
-        path = ('/v2.12/oauth/access_token?client_id={}'
-                '&client_secret={}&redirect_uri={}&code={}').format(
-                    client_id, client_secret, redirect_uri, code)
-        conn = http.client.HTTPSConnection(base_url)
-        conn.request('GET', path)
-        response = json.loads(conn.getresponse().read())
-        has_access_token = ('access_token' in response)
-        if not has_access_token or 'error' in response:
-            raise FacebookVerificationError(
-                'The code you provided is invalid.')
+        base_url = "https://graph.facebook.com"
+
+        response = requests.get(
+            "{}/v2.12/oauth/access_token".format(base_url),
+            params={
+                "client_id": settings.FACEBOOK_CLIENT_ID,
+                "client_secret": settings.FACEBOOK_CLIENT_SECRET,
+                "redirect_uri": urls.absurl("/redirects/facebook/"),
+                "code": code
+            }
+        )
+
+        if "access_token" not in response.json() or "error" in response.json():
+            if "error" in response.json():
+                logger.error(response.json()["error"])
+            raise FacebookVerificationError("The code you provided is invalid.")
+
+        access_token = response.json()["access_token"]
+
+        response = requests.get(
+            "{}/me".format(base_url),
+            params={"access_token": access_token}
+        )
 
         # TODO: determine what the text should be
         data = 'facebook verified'
@@ -314,7 +329,9 @@ class VerificationService:
         attestation = Attestation(
             method=AttestationTypes.FACEBOOK,
             eth_address=eth_address,
-            signature=signature
+            value=response.json()['name'],
+            signature=signature,
+            remote_ip_address=request.remote_addr
         )
         db.session.add(attestation)
         db.session.commit()
@@ -327,50 +344,76 @@ class VerificationService:
 
     def twitter_auth_url():
         callback_uri = urls.absurl("/redirects/twitter/")
+
         oauth = OAuth1(
             settings.TWITTER_CONSUMER_KEY,
             settings.TWITTER_CONSUMER_SECRET,
-            callback_uri=callback_uri)
-        r = requests.post(url=twitter_request_token_url, auth=oauth)
-        if r.status_code != 200:
+            callback_uri=callback_uri
+        )
+
+        response = requests.post(url=twitter_request_token_url, auth=oauth)
+
+        try:
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as exc:
+            logger.exception(exc)
             raise TwitterVerificationError('Invalid response from Twitter.')
-        as_bytes = dict(cgi.parse_qsl(r.content))
-        token_b = as_bytes[b'oauth_token']
-        token_secret_b = as_bytes[b'oauth_token_secret']
+
+        as_bytes = urllib.parse.parse_qs(response.content)
+        token_bytes = as_bytes[b'oauth_token'][0]
+        token_secret_bytes = as_bytes[b'oauth_token_secret'][0]
         request_token = {}
-        request_token['oauth_token'] = token_b.decode('utf-8')
-        request_token['oauth_token_secret'] = token_secret_b.decode('utf-8')
+        request_token['oauth_token'] = token_bytes.decode('utf-8')
+        request_token['oauth_token_secret'] = token_secret_bytes.decode('utf-8')
         session['request_token'] = request_token
+
         url = '{}?oauth_token={}'.format(
             twitter_authenticate_url,
-            request_token['oauth_token'])
+            request_token['oauth_token']
+        )
+
         return VerificationServiceResponse({'url': url})
 
     def verify_twitter(oauth_verifier, eth_address):
         # Verify authenticity of user
+
         if 'request_token' not in session:
             raise TwitterVerificationError('Session not found.')
+
         oauth = OAuth1(
             settings.TWITTER_CONSUMER_KEY,
             settings.TWITTER_CONSUMER_SECRET,
             session['request_token']['oauth_token'],
             session['request_token']['oauth_token_secret'],
-            verifier=oauth_verifier)
-        r = requests.post(url=twitter_access_token_url, auth=oauth)
-        if r.status_code != 200:
+            verifier=oauth_verifier
+        )
+
+        response = requests.post(url=twitter_access_token_url, auth=oauth)
+
+        try:
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as exc:
+            logger.exception(exc)
             raise TwitterVerificationError(
-                'The verifier you provided is invalid.')
+                'The verifier you provided is invalid.'
+            )
 
         # TODO: determine what the text should be
         data = 'twitter verified'
         # TODO: determine claim type integer code for phone verification
         signature = attestations.generate_signature(
-            signing_key, eth_address, CLAIM_TYPES['twitter'], data)
+            signing_key, eth_address, CLAIM_TYPES['twitter'], data
+        )
+
+        query_string = urllib.parse.parse_qs(response.content)
+        screen_name = query_string[b'screen_name'][0].decode('utf-8')
 
         attestation = Attestation(
             method=AttestationTypes.TWITTER,
             eth_address=eth_address,
-            signature=signature
+            value=screen_name,
+            signature=signature,
+            remote_ip_address=request.remote_addr
         )
         db.session.add(attestation)
         db.session.commit()
@@ -393,15 +436,13 @@ class VerificationService:
 
         code = get_airbnb_verification_code(eth_address, airbnbUserId)
 
-        # TODO: determine if this user agent is acceptable.
-        # We need to set an user agent otherwise Airbnb returns 403
-        request = Request(
-            url='https://www.airbnb.com/users/show/' + airbnbUserId,
-            headers={'User-Agent': 'Origin Protocol client-0.1.0'}
-        )
-
         try:
-            response = urlopen(request)
+            # TODO: determine if this user agent is acceptable.
+            # We need to set an user agent otherwise Airbnb returns 403
+            response = urlopen(Request(
+                url='https://www.airbnb.com/users/show/' + airbnbUserId,
+                headers={'User-Agent': 'Origin Protocol client-0.1.0'}
+            ))
         except HTTPError as e:
             if e.code == 404:
                 raise AirbnbVerificationError(
@@ -429,7 +470,8 @@ class VerificationService:
             method=AttestationTypes.AIRBNB,
             eth_address=eth_address,
             value=airbnbUserId,
-            signature=signature
+            signature=signature,
+            remote_ip_address=request.remote_addr
         )
         db.session.add(attestation)
         db.session.commit()

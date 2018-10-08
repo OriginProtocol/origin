@@ -4,6 +4,8 @@ import responses
 
 from flask import session
 
+from logic.attestation_service import twitter_access_token_url
+from logic.attestation_service import twitter_request_token_url
 from tests.helpers.rest_utils import post_json, json_of_response
 from tests.helpers.eth_utils import sample_eth_address, str_eth
 
@@ -85,48 +87,81 @@ def test_email_verify(mock_send_email_using_sendgrid, client):
     assert response_json['data'] == 'email verified'
 
 
-@mock.patch("http.client.HTTPSConnection")
-def test_facebook_verify(MockHttpConnection, client):
-    mock_http_conn = mock.Mock()
-    mock_get_response = mock.Mock()
-    mock_get_response.read.return_value = '{"access_token": "foo"}'
-    mock_http_conn.getresponse.return_value = mock_get_response
-    MockHttpConnection.return_value = mock_http_conn
+def test_facebook_verify(client):
+    response = client.get("/api/attestations/facebook/auth-url")
+    expected_url = (
+        "?client_id=facebook-client-id&redirect_uri"
+        "=https://testhost.com/redirects/facebook/"
+    )
+    assert response.status_code == 200
+    assert expected_url in json_of_response(response)['url']
 
-    resp = client.get(
-        "/api/attestations/facebook/auth-url")
-    expected_url = ("?client_id=facebook-client-id&redirect_uri"
-                    "=https://testhost.com/redirects/facebook/")
-    assert resp.status_code == 200
-    assert expected_url in json_of_response(resp)['url']
+    with responses.RequestsMock() as rsps:
+        auth_url = 'https://graph.facebook.com/v2.12/oauth/access_token' + \
+            '?client_id=facebook-client-id' + \
+            '&client_secret=facebook-client-secret' + \
+            '&redirect_uri=https%3A%2F%2Ftesthost.com%2Fredirects%2Ffacebook%2F' + \
+            '&code=abcde12345'
+        verify_url = 'https://graph.facebook.com/me?access_token=12345'
 
-    resp = post_json(client,
-                     "/api/attestations/facebook/verify",
-                     {"identity": str_eth(sample_eth_address),
-                      "code": "abcde12345"})
-    resp_json = json_of_response(resp)
-    assert resp.status_code == 200
-    assert len(resp_json['signature']) == 132
-    assert resp_json['data'] == 'facebook verified'
+        rsps.add(
+            responses.GET,
+            auth_url,
+            json={'access_token': '1234abc'},
+        )
+
+        rsps.add(
+            responses.GET,
+            verify_url,
+            json={'name': 'Origin Protocol'},
+            status=200
+        )
+
+        response = post_json(
+            client,
+            "/api/attestations/facebook/verify",
+            {
+                "identity": str_eth(sample_eth_address),
+                "code": "abcde12345"
+            }
+        )
+        response_json = json_of_response(response)
+        assert response.status_code == 200
+        assert len(response_json['signature']) == 132
+        assert response_json['data'] == 'facebook verified'
 
 
-@mock.patch('logic.attestation_service.requests')
-def test_twitter_verify(mock_requests, client):
+def test_twitter_verify(client):
     response_content = b'oauth_token=peaches&oauth_token_secret=pears'
-    mock_requests.post().content = response_content
-    mock_requests.post().status_code = 200
 
-    resp = client.get(
-        "/api/attestations/twitter/auth-url")
-    expected_url = "oauth_token=peaches"
-    assert resp.status_code == 200
-    assert expected_url in json_of_response(resp)['url']
+    with responses.RequestsMock() as rsps:
+        rsps.add(
+            responses.POST,
+            twitter_request_token_url,
+            body=response_content,
+            status=200
+        )
 
-    resp = post_json(client,
-                     "/api/attestations/twitter/verify",
-                     {"identity": str_eth(sample_eth_address),
-                      "oauth-verifier": "abcde12345"})
-    resp_json = json_of_response(resp)
-    assert resp.status_code == 200
-    assert len(resp_json['signature']) == 132
-    assert resp_json['data'] == 'twitter verified'
+        rsps.add(
+            responses.POST,
+            twitter_access_token_url,
+            body=b'screen_name=originprotocol',
+            status=200
+        )
+
+        response = client.get("/api/attestations/twitter/auth-url")
+        assert response.status_code == 200
+        assert "oauth_token=peaches" in json_of_response(response)['url']
+
+        response = post_json(
+            client,
+            "/api/attestations/twitter/verify",
+            {
+                "identity": str_eth(sample_eth_address),
+                "oauth-verifier": "abcde12345"
+            }
+        )
+        response_json = json_of_response(response)
+        assert response.status_code == 200
+        assert len(response_json['signature']) == 132
+        assert response_json['data'] == 'twitter verified'

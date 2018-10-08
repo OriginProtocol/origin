@@ -1,6 +1,7 @@
 from database import db
 from datetime import datetime
 from enum import Enum
+from sqlalchemy.dialects import postgresql
 
 
 class AttestationTypes(Enum):
@@ -17,4 +18,5 @@ class Attestation(db.Model):
     eth_address = db.Column(db.String)
     value = db.Column(db.String)
     signature = db.Column(db.String)
+    remote_ip_address = db.Column(postgresql.INET)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
