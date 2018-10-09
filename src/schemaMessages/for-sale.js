@@ -165,6 +165,10 @@ export default defineMessages({
     id: 'schema.forSale.musicalInstruments',
     defaultMessage: 'Musical Instruments'
   },
+  'schema.forSale.other': {
+    id: 'schema.forSale.other',
+    defaultMessage: 'Other'
+  },
   'schema.forSale.photoVideo': {
     id: 'schema.forSale.photoVideo',
     defaultMessage: 'Photo & Video'

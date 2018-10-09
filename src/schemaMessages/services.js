@@ -41,9 +41,17 @@ export default defineMessages({
     id: 'schema.services.dogWalking',
     defaultMessage: 'Dog Walking'
   },
+  'schema.services.educationServices': {
+    id: 'schema.services.educationServices',
+    defaultMessage: 'Education Services'
+  },
   'schema.services.electrical': {
     id: 'schema.services.electrical',
     defaultMessage: 'Electrical'
+  },
+  'schema.services.generalContractors': {
+    id: 'schema.services.generalContractors',
+    defaultMessage: 'General Contractors'
   },
   'schema.services.graphicDesign': {
     id: 'schema.services.graphicDesign',
@@ -57,6 +65,10 @@ export default defineMessages({
     id: 'schema.services.homeCleaning',
     defaultMessage: 'Home Cleaning'
   },
+  'schema.services.homeServices': {
+    id: 'schema.services.homeServices',
+    defaultMessage: 'Home Services'
+  },
   'schema.services.legal': {
     id: 'schema.services.legal',
     defaultMessage: 'Legal'
@@ -64,6 +76,14 @@ export default defineMessages({
   'schema.services.movingHelp': {
     id: 'schema.services.movingHelp',
     defaultMessage: 'Moving Help'
+  },
+  'schema.services.musicLessons': {
+    id: 'schema.services.musicLessons',
+    defaultMessage: 'Music Lessons'
+  },
+  'schema.services.other': {
+    id: 'schema.services.other',
+    defaultMessage: 'Other'
   },
   'schema.services.painting': {
     id: 'schema.services.painting',
@@ -84,6 +104,14 @@ export default defineMessages({
   'schema.services.softwareDevelopement': {
     id: 'schema.services.softwareDevelopement',
     defaultMessage: 'Software Developement'
+  },
+  'schema.services.salonServices': {
+    id: 'schema.services.salonServices',
+    defaultMessage: 'Salon Services'
+  },
+  'schema.services.spaServices': {
+    id: 'schema.services.spaServices',
+    defaultMessage: 'Spa Services'
   },
   'schema.services.webDesign': {
     id: 'schema.services.webDesign',

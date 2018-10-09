@@ -61,6 +61,10 @@ export default defineMessages({
     id: 'schema.announcements.musicians',
     defaultMessage: 'Musicians'
   },
+  'schema.announcements.other': {
+    id: 'schema.announcements.other',
+    defaultMessage: 'Other'
+  },
   'schema.announcements.personals': {
     id: 'schema.announcements.personals',
     defaultMessage: 'Personals'
