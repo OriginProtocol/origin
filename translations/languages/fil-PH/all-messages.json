@@ -487,6 +487,7 @@
   "EditProfile.continue": "Magpatuloy",
   "EditProfile.cancel": "Kanselahin",
   "Profile.manageYourProfile": "pamahalaan ang iyong profile",
+  "Profile.profileUpdated": "Profile edited!",
   "Profile.unsavedChangesWarn": "Kapag lumabas ka nang hindi nagpa-publish, mawawala lahat ng mga binago mo.",
   "Profile.noDescriptionUser": "Isang user ng Origin na walang deskripsyon",
   "Profile.phoneVerified": "Na-verify na ang number ng telepono!",
