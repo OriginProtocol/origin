@@ -41,6 +41,14 @@ export default defineMessages({
     id: 'schema.transportation.carRentals',
     defaultMessage: 'Car Rentals'
   },
+  'schema.transportation.other': {
+    id: 'schema.transportation.other',
+    defaultMessage: 'Other'
+  },
+  'schema.transportation.scooterRentals': {
+    id: 'schema.transportation.scooterRentals',
+    defaultMessage: 'Scooter Rentals'
+  },
   'schema.transportation.taxiService': {
     id: 'schema.transportation.taxiService',
     defaultMessage: 'Taxi Service'
