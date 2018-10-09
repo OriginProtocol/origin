@@ -49,7 +49,7 @@
   },
   {
     "id": "web3-provider.redirectMessage",
-    "defaultMessage": "If you are looking for {website}, visit"
+    "defaultMessage": "If you are looking for {label}, visit {url}."
   },
   {
     "id": "web3-provider.redirectInfoButton",

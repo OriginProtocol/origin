@@ -420,7 +420,7 @@
   "web3-provider.connecting": "Connecting to network...",
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} should be set to {supportedNetworkName}.",
   "web3-provider.currentlyOnNetwork": "It is currently on {currentNetworkName}.",
-  "web3-provider.redirectMessage": "If you are looking for {website}, visit",
+  "web3-provider.redirectMessage": "If you are looking for {label}, visit {url}.",
   "web3-provider.redirectInfoButton": "Go to {website}",
   "web3-provider.pleaseInstallMetaMask": "Please install the MetaMask extension to access this site.",
   "web3-provider.useWalletEnabledBrowser": "Please access this site through a wallet-enabled browser:",

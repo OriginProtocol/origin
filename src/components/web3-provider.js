@@ -242,11 +242,10 @@ const UnsupportedNetwork = props => {
           <p className="redirect-message">
             <FormattedMessage
               id={'web3-provider.redirectMessage'}
-              defaultMessage={'If you are looking for {website}, visit'}
-              values={{ website: redirectInfo.label }}
+              defaultMessage={'If you are looking for {label}, visit {url}.'}
+              values={{ label: redirectInfo.label, url: redirectInfo.url }}
             />
           </p>
-          <a href={ redirectInfo.url }>{ redirectInfo.url }</a>
           <button
             className="btn btn-outline align-self-center redirect-btn"
             onClick={goToUrl(redirectInfo.url)}>
