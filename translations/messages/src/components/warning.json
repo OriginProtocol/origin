@@ -1,7 +1,7 @@
 [
   {
     "id": "warning.message",
-    "defaultMessage": "You're currently using the Origin Mainnet Beta."
+    "defaultMessage": "You're currently using the Origin {currentNetwork} Beta."
   },
   {
     "id": "warning.invitation",

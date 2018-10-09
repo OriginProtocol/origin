@@ -406,7 +406,7 @@
   "wallet-card.noEthAccountConnected": "No ETH Account Connected",
   "wallet-card.accountBalances": "Account Balances",
   "wallet-card.transactionHistory": "Transaction History",
-  "warning.message": "You're currently using the Origin Mainnet Beta.",
+  "warning.message": "You're currently using the Origin {currentNetwork} Beta.",
   "warning.invitation": "Found a bug? Open an issue on {github} or report it in our #bug-reports channel on {discord}.",
   "web3-provider.intentRequiresMetaMask": "In order to {web3Intent}, you must install MetaMask.",
   "web3-provider.getMetaMask": "Get MetaMask",

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 
 import { BetaBadge } from 'components/badges'
+import currentNetwork from 'utils/currentNetwork'
 
 class Warning extends Component {
   render() {
@@ -17,7 +18,8 @@ class Warning extends Component {
                     <strong>
                       <FormattedMessage
                         id={'warning.message'}
-                        defaultMessage={`You're currently using the Origin Mainnet Beta.`}
+                        defaultMessage={`You're currently using the Origin {currentNetwork} Beta.`}
+                        values={{ currentNetwork }}
                       />
                     </strong>
                   </p>
