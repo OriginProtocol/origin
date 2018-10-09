@@ -487,6 +487,7 @@
   "EditProfile.continue": "Blive ved",
   "EditProfile.cancel": "Afbestille",
   "Profile.manageYourProfile": "Administrer din profil",
+  "Profile.profileUpdated": "Profile edited!",
   "Profile.unsavedChangesWarn": "Hvis du afslutter uden at offentliggøre, vil du miste alle dine ændringer.",
   "Profile.noDescriptionUser": "En Oprindelig bruger uden beskrivelse",
   "Profile.phoneVerified": "Telefonnummer verificeret!",
