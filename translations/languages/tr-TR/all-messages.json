@@ -487,6 +487,7 @@
   "EditProfile.continue": "Devam et",
   "EditProfile.cancel": "İptal etmek",
   "Profile.manageYourProfile": "profilini yönet",
+  "Profile.profileUpdated": "Profile edited!",
   "Profile.unsavedChangesWarn": "Yayınlamadan çıkarsanız tüm değişikliklerinizi kaybedersiniz.",
   "Profile.noDescriptionUser": "Açıklama içermeyen bir Origin kullanıcısı",
   "Profile.phoneVerified": "Telefon numarası doğrulandı!",
