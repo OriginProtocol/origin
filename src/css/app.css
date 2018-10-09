@@ -4696,6 +4696,8 @@ sup {
 .phone.modal .dropdown .dropdown-menu {
   background-color: var(--dark);
   margin: 0;
+  max-height: 50vh;
+  overflow-y: scroll;
   padding: 7px 0;
   top: 10px !important;
 }
