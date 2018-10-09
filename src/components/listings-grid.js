@@ -27,13 +27,13 @@ class ListingsGrid extends Component {
   }
 
   render() {
-    const { contractFound, listingIds, search, featured, hidden } = this.props
+    const { contractFound, listingIds, search, featuredListings, hidden } = this.props
 
     // const pinnedListingIds = [0, 1, 2, 3, 4]
     // const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
 
     let allListingsLength, activePage, showListingsIds
-    let featuredListings = []
+    let shownFeaturedListings = []
     if (this.props.renderMode === 'home-page') {
       allListingsLength = listingIds.length
       activePage = parseInt(this.props.match.params.activePage) || 1
@@ -45,10 +45,10 @@ class ListingsGrid extends Component {
       )
 
       if (activePage === 1)
-        featuredListings = featured
+        shownFeaturedListings = featuredListings
 
       // remove featured listings so they are not shown twice
-      showListingsIds = showListingsIds.filter(listingId => !featured.includes(listingId))
+      showListingsIds = showListingsIds.filter(listingId => !featuredListings.includes(listingId))
 
     } else if (this.props.renderMode === 'search') {
       activePage = this.props.searchPage
@@ -95,7 +95,7 @@ class ListingsGrid extends Component {
               </h1>
             )}
             <div className="row">
-              {featuredListings.concat(showListingsIds).map(listingId => (
+              {shownFeaturedListings.concat(showListingsIds).map(listingId => (
                 <ListingCard
                   listingId={listingId}
                   key={listingId}
@@ -124,7 +124,7 @@ const mapStateToProps = state => ({
   listingIds: state.marketplace.ids,
   contractFound: state.listings.contractFound,
   hidden: state.listings.hidden,
-  featured: state.listings.featured
+  featuredListings: state.listings.featured
 })
 
 const mapDispatchToProps = dispatch => ({
