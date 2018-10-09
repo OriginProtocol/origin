@@ -204,45 +204,60 @@ const UnsupportedNetwork = props => {
   const { currentProvider, networkId, currentNetworkName } = props
   const url = new URL(window.location)
   const path = url.pathname + url.hash
-  const goToNetwork = (url) => () => window.location.href = url + path
+  const goToUrl = (url) => () => window.location.href = url + path
   const supportedNetworkName = networkNames[supportedNetworkId]
   const getRedirectInfo = () => {
     if (networkId === 1 && mainnetDappBaseUrl) {
-      return { url: mainnetDappBaseUrl, label: 'MainNet Dapp' }
+      return { url: mainnetDappBaseUrl, label: 'MainNet Beta' }
     } else if (networkId === 4 && rinkebyDappBaseUrl) {
-      return { url: rinkebyDappBaseUrl, label: 'Rinkeby Test Dapp' }
+      return { url: rinkebyDappBaseUrl, label: 'Testnet Beta' }
     }
   }
   const redirectInfo = getRedirectInfo()
 
   return (
-    <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
+    <Modal
+      backdrop="static"
+      className="unsupported-provider"
+      data-modal="web3-unavailable"
+      isOpen={true}>
+
       <div className="image-container">
         <img src="images/flat_cross_icon.svg" role="presentation" />
       </div>
       <p>
         <FormattedMessage
           id={'web3-provider.shouldBeOnRinkeby'}
-          defaultMessage={'{currentProvider} should be on {supportedNetworkName}'}
+          defaultMessage={'{currentProvider} should be set to {supportedNetworkName}.'}
           values={{ currentProvider, supportedNetworkName }}
         />
       </p>
       <FormattedMessage
         id={'web3-provider.currentlyOnNetwork'}
-        defaultMessage={'Currently on {currentNetworkName}.'}
+        defaultMessage={'It is currently on {currentNetworkName}.'}
         values={{ currentNetworkName }}
       />
       { redirectInfo && (
-        <button
-          className="btn btn-outline align-self-center mt-4"
-          onClick={goToNetwork(redirectInfo.url)}>
+        <Fragment>
+          <p className="redirect-message">
+            <FormattedMessage
+              id={'web3-provider.redirectMessage'}
+              defaultMessage={'If you are looking for {website}, visit'}
+              values={{ website: redirectInfo.label }}
+            />
+          </p>
+          <a href={ redirectInfo.url }>{ redirectInfo.url }</a>
+          <button
+            className="btn btn-outline align-self-center redirect-btn"
+            onClick={goToUrl(redirectInfo.url)}>
 
-          <FormattedMessage
-            id={'web3-provider.redirectInfoButton'}
-            defaultMessage={'Go to {website}'}
-            values={{ website: redirectInfo.label }}
-          />
-        </button>
+            <FormattedMessage
+              id={'web3-provider.redirectInfoButton'}
+              defaultMessage={'Go to {website}'}
+              values={{ website: redirectInfo.label }}
+            />
+          </button>
+        </Fragment>
       )}
     </Modal>
   )

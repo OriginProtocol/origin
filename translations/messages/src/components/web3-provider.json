@@ -41,11 +41,15 @@
   },
   {
     "id": "web3-provider.shouldBeOnRinkeby",
-    "defaultMessage": "{currentProvider} should be on {supportedNetworkName}"
+    "defaultMessage": "{currentProvider} should be set to {supportedNetworkName}."
   },
   {
     "id": "web3-provider.currentlyOnNetwork",
-    "defaultMessage": "Currently on {currentNetworkName}."
+    "defaultMessage": "It is currently on {currentNetworkName}."
+  },
+  {
+    "id": "web3-provider.redirectMessage",
+    "defaultMessage": "If you are looking for {website}, visit"
   },
   {
     "id": "web3-provider.redirectInfoButton",
