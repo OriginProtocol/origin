@@ -20,16 +20,12 @@
     "defaultMessage": "Popular Ethereum Wallets"
   },
   {
+    "id": "web3-provider.coinbase",
+    "defaultMessage": "Coinbase Wallet"
+  },
+  {
     "id": "web3-provider.trust",
-    "defaultMessage": "Trust"
-  },
-  {
-    "id": "web3-provider.cipher",
-    "defaultMessage": "Cipher"
-  },
-  {
-    "id": "web3-provider.toshi",
-    "defaultMessage": "Toshi"
+    "defaultMessage": "Trust Wallet"
   },
   {
     "id": "web3-provider.intentRequiresSignIn",

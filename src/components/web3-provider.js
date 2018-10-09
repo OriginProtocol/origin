@@ -108,35 +108,22 @@ const NotWeb3EnabledMobile = props => (
     </div>
     <div className="button-container">
       <a
+        href="https://wallet.coinbase.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="btn btn-clear"
+      >
+        <FormattedMessage id={'web3-provider.coinbase'} defaultMessage={'Coinbase Wallet'} />
+      </a>
+    </div>
+    <div className="button-container">
+      <a
         href="https://trustwalletapp.com/"
         target="_blank"
         rel="noopener noreferrer"
         className="btn btn-clear"
       >
-        <FormattedMessage id={'web3-provider.trust'} defaultMessage={'Trust'} />
-      </a>
-    </div>
-    <div className="button-container">
-      <a
-        href="https://www.cipherbrowser.com/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="btn btn-clear"
-      >
-        <FormattedMessage
-          id={'web3-provider.cipher'}
-          defaultMessage={'Cipher'}
-        />
-      </a>
-    </div>
-    <div className="button-container">
-      <a
-        href="https://www.toshi.org/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="btn btn-clear"
-      >
-        <FormattedMessage id={'web3-provider.toshi'} defaultMessage={'Toshi'} />
+        <FormattedMessage id={'web3-provider.trust'} defaultMessage={'Trust Wallet'} />
       </a>
     </div>
   </Modal>
@@ -299,21 +286,11 @@ const Web3Unavailable = props => (
         <a
           target="_blank"
           rel="noopener noreferrer"
-          href="https://itunes.apple.com/us/app/toshi-ethereum/id1278383455"
+          href="https://itunes.apple.com/app/coinbase-wallet/id1278383455"
         >
           <FormattedMessage
-            id={'web3-provider.toshi'}
-            defaultMessage={'Toshi'}
-          />
-        </a>&nbsp;&nbsp;|&nbsp;
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://itunes.apple.com/us/app/cipher-browser-ethereum/id1294572970"
-        >
-          <FormattedMessage
-            id={'web3-provider.cipher'}
-            defaultMessage={'Cipher'}
+            id={'web3-provider.coinbase'}
+            defaultMessage={'Coinbase Wallet'}
           />
         </a>&nbsp;&nbsp;|&nbsp;
         <a
@@ -547,7 +524,7 @@ const mapStateToProps = state => {
   return {
     web3Account: state.app.web3.account,
     web3Intent: state.app.web3.intent,
-    onMobile: state.app.onMobile
+    onMobile: true || state.app.onMobile
   }
 }
 
