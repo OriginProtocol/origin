@@ -4,6 +4,10 @@
     "defaultMessage": "manage your profile"
   },
   {
+    "id": "Profile.profileUpdated",
+    "defaultMessage": "Profile edited!"
+  },
+  {
     "id": "Profile.unsavedChangesWarn",
     "defaultMessage": "If you exit without publishing, you'll lose all your changes."
   },
