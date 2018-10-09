@@ -487,6 +487,7 @@
   "EditProfile.continue": "繼續",
   "EditProfile.cancel": "取消",
   "Profile.manageYourProfile": "管理你的個人資料",
+  "Profile.profileUpdated": "Profile edited!",
   "Profile.unsavedChangesWarn": "如果你在沒有發佈下離開，你將會損失所有更改。",
   "Profile.noDescriptionUser": "沒有簡介的Origin用戶",
   "Profile.phoneVerified": "已驗證電話號碼!",
