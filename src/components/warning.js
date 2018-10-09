@@ -9,6 +9,7 @@ class Warning extends Component {
   render() {
     const { web3NetworkId } = this.props
     const currentNetwork = getCurrentNetwork(web3NetworkId)
+    const networkType = currentNetwork && currentNetwork.type
 
     return (
       <div className="warning alert alert-warning">
@@ -22,8 +23,8 @@ class Warning extends Component {
                     <strong>
                       <FormattedMessage
                         id={'warning.message'}
-                        defaultMessage={`You're currently using the Origin {currentNetwork} Beta.`}
-                        values={{ currentNetwork }}
+                        defaultMessage={`You're currently using the Origin {networkType}.`}
+                        values={{ networkType }}
                       />
                     </strong>
                   </p>

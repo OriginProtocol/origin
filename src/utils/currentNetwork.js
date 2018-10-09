@@ -1,11 +1,11 @@
-const networkNames = {
-  1: 'Main Ethereum Network',
-  2: 'Morden Test Network',
-  3: 'Ropsten Test Network',
-  4: 'Rinkeby Test Network',
-  42: 'Kovan Test Network',
-  999: 'Localhost'
-}
+const networks = [
+  { id: 1, name: 'Main Ethereum Network', type: 'Mainnet Beta' },
+  { id: 2, name: 'Morden Test Network', type: 'Testnet Beta' },
+  { id: 3, name: 'Ropsten Test Network', type: 'Testnet Beta' },
+  { id: 4, name: 'Rinkeby Test Network', type: 'Testnet Beta' },
+  { id: 42, name: 'Kovan Test Network', type: 'Testnet Beta' },
+  { id: 999, name: 'Localhost', type: 'Beta on Localhost' }
+]
 
 /*
  * The optional environment variable will naturally be a string.
@@ -13,8 +13,7 @@ const networkNames = {
  */
 const envNetworkId = parseInt(process.env.ETH_NETWORK_ID)
 export const supportedNetworkId = envNetworkId || 1
+export const supportedNetwork = networks.find((network) => network.id === supportedNetworkId)
 
-export const supportedNetwork = networkNames[supportedNetworkId]
-const getCurrentNetwork = (networkId) => networkNames[networkId]
-
+const getCurrentNetwork = (networkId) => networks.find((network) => network.id === networkId)
 export default getCurrentNetwork

@@ -199,7 +199,7 @@ const UnsupportedNetwork = props => (
         defaultMessage={'{currentProvider} should be on {supportedNetworkName}'}
         values={{
           currentProvider: props.currentProvider,
-          supportedNetworkName: supportedNetwork
+          supportedNetworkName: props.supportedNetworkName
         }}
       />
     </p>
@@ -441,10 +441,11 @@ class Web3Provider extends Component {
     const { networkConnected, networkId, currentProvider } = this.state
     const currentNetwork = getCurrentNetwork(networkId)
     const currentNetworkName = currentNetwork
-      ? currentNetwork
+      ? currentNetwork.name
       : networkId
     const isProduction = process.env.NODE_ENV === 'production'
     const networkNotSupported = supportedNetworkId !== networkId
+    const supportedNetworkName = supportedNetwork && supportedNetwork.name
 
     // Redirect if we know a DApp instalation that supports their network.
     if (currentProvider && networkId && isProduction && networkNotSupported) {
@@ -472,6 +473,7 @@ class Web3Provider extends Component {
             <UnsupportedNetwork
               currentNetworkName={currentNetworkName}
               currentProvider={currentProvider}
+              supportedNetworkName={supportedNetworkName}
             />
           )}
 
