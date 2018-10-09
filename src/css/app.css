@@ -1236,7 +1236,8 @@ textarea:-moz-ui-invalid {
   background-color: #202e3e;
 }
 
-.identity .dropdown-menu .wallet {
+.identity .dropdown-menu .wallet,
+.identity .dropdown-menu .wallet-container {
   margin: 0;
   top: unset;
 }
@@ -4543,12 +4544,7 @@ sup {
   text-transform: uppercase;
 }
 
-.wallet {
-  margin-bottom: 20px;
-}
-
 .wallet.appended {
-  margin-bottom: 0;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
