@@ -26,6 +26,7 @@
         "schema.housing.aptsHousingForRent",
         "schema.housing.housingSwap",
         "schema.housing.officeCommercial",
+        "schema.housing.other",
         "schema.housing.parkingStorage",
         "schema.housing.realEstate",
         "schema.housing.realEstateWanted",

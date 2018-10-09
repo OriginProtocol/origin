@@ -60,6 +60,10 @@
     "defaultMessage": "Musicians"
   },
   {
+    "id": "schema.announcements.other",
+    "defaultMessage": "Other"
+  },
+  {
     "id": "schema.announcements.personals",
     "defaultMessage": "Personals"
   },

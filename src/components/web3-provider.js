@@ -8,24 +8,12 @@ import { storeWeb3Account, storeWeb3Intent, storeNetwork } from 'actions/App'
 import Modal from 'components/modal'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
+import getCurrentNetwork, { supportedNetworkId, supportedNetwork } from 'utils/currentNetwork'
 
 import origin from '../services/origin'
 
 const web3 = origin.contractService.web3
-const networkNames = {
-  1: 'Main Ethereum Network',
-  2: 'Morden Test Network',
-  3: 'Ropsten Test Network',
-  4: 'Rinkeby Test Network',
-  42: 'Kovan Test Network',
-  999: 'Localhost'
-}
-/*
- * The optional environment variable will naturally be a string.
- * We parse it and fall back to Mainnet if falsy.
- */
-const envNetworkId = parseInt(process.env.ETH_NETWORK_ID)
-const supportedNetworkId = envNetworkId || 1
+
 const mainnetDappBaseUrl =
   process.env.MAINNET_DAPP_BASEURL || 'https://dapp.originprotocol.com'
 const rinkebyDappBaseUrl =
@@ -201,11 +189,10 @@ const UnconnectedNetwork = () => (
 )
 
 const UnsupportedNetwork = props => {
-  const { currentProvider, networkId, currentNetworkName } = props
+  const { currentProvider, networkId, currentNetworkName, supportedNetworkName } = props
   const url = new URL(window.location)
   const path = url.pathname + url.hash
   const goToUrl = (url) => () => window.location.href = url + path
-  const supportedNetworkName = networkNames[supportedNetworkId]
   const getRedirectInfo = () => {
     if (networkId === 1 && mainnetDappBaseUrl) {
       return { url: mainnetDappBaseUrl, label: 'Mainnet Beta' }
@@ -490,11 +477,13 @@ class Web3Provider extends Component {
   render() {
     const { onMobile, web3Account, web3Intent, storeWeb3Intent } = this.props
     const { networkConnected, networkId, currentProvider } = this.state
-    const currentNetworkName = networkNames[networkId]
-      ? networkNames[networkId]
+    const currentNetwork = getCurrentNetwork(networkId)
+    const currentNetworkName = currentNetwork
+      ? currentNetwork.name
       : networkId
     const isProduction = process.env.NODE_ENV === 'production'
     const networkNotSupported = supportedNetworkId !== networkId
+    const supportedNetworkName = supportedNetwork && supportedNetwork.name
 
     return (
       <Fragment>
@@ -513,6 +502,7 @@ class Web3Provider extends Component {
               currentNetworkName={currentNetworkName}
               currentProvider={currentProvider}
               networkId={networkId}
+              supportedNetworkName={supportedNetworkName}
             />
           )}
 

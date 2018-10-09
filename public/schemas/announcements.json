@@ -31,6 +31,7 @@
         "schema.announcements.localNews",
         "schema.announcements.lostFound",
         "schema.announcements.musicians",
+        "schema.announcements.other",
         "schema.announcements.personals",
         "schema.announcements.pets",
         "schema.announcements.politics",

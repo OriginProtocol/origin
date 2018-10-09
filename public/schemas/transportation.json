@@ -26,6 +26,8 @@
         "schema.transportation.bikeRentals",
         "schema.transportation.boatRentals",
         "schema.transportation.carRentals",
+        "schema.transportation.other",
+        "schema.transportation.scooterRentals",
         "schema.transportation.taxiService",
         "schema.transportation.yachtCharters"
       ],
