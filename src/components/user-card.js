@@ -86,15 +86,6 @@ class UserCard extends Component {
               <div className="address">
                 {userAddress && <EtherscanLink hash={userAddress} />}
               </div>
-              {userAddress &&
-                userAddress !== web3Account && (
-                <a href="#" className="contact" onClick={this.handleToggle}>
-                  <FormattedMessage
-                    id={'user-card.enabledContact'}
-                    defaultMessage={'Contact'}
-                  />
-                </a>
-              )}
             </div>
           </div>
           <hr className="dark sm" />
@@ -154,6 +145,27 @@ class UserCard extends Component {
             </div>
           </div>
         </div>
+        {userAddress &&
+          userAddress !== web3Account && (
+          <a
+            href="#"
+            onClick={this.handleToggle}
+            className="btn view-profile placehold top-btn"
+          >
+            {title.toLowerCase() === 'buyer' &&
+              <FormattedMessage
+                id={'user-card.enabledContactBuyer'}
+                defaultMessage={'Contact Buyer'}
+              />
+            }
+            {title.toLowerCase() === 'seller' &&
+              <FormattedMessage
+                id={'user-card.enabledContactSeller'}
+                defaultMessage={'Contact Seller'}
+              />
+            }
+          </a>
+        )}
         <Link
           to={`/users/${userAddress}`}
           className="btn view-profile placehold"

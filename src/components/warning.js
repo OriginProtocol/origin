@@ -1,10 +1,16 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 
 import { BetaBadge } from 'components/badges'
+import getCurrentNetwork from 'utils/currentNetwork'
 
 class Warning extends Component {
   render() {
+    const { web3NetworkId } = this.props
+    const currentNetwork = getCurrentNetwork(web3NetworkId)
+    const networkType = currentNetwork && currentNetwork.type
+
     return (
       <div className="warning alert alert-warning">
         <div className="container">
@@ -17,7 +23,8 @@ class Warning extends Component {
                     <strong>
                       <FormattedMessage
                         id={'warning.message'}
-                        defaultMessage={`You're currently using the Origin Mainnet Beta.`}
+                        defaultMessage={`You're currently using the Origin {networkType}.`}
+                        values={{ networkType }}
                       />
                     </strong>
                   </p>
@@ -61,4 +68,10 @@ class Warning extends Component {
   }
 }
 
-export default Warning
+const mapStateToProps = state => {
+  return {
+    web3NetworkId: state.app.web3.networkId
+  }
+}
+
+export default connect(mapStateToProps)(Warning)

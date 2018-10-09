@@ -8,24 +8,12 @@ import { storeWeb3Account, storeWeb3Intent, storeNetwork } from 'actions/App'
 import Modal from 'components/modal'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
+import getCurrentNetwork, { supportedNetworkId, supportedNetwork } from 'utils/currentNetwork'
 
 import origin from '../services/origin'
 
 const web3 = origin.contractService.web3
-const networkNames = {
-  1: 'Main Ethereum Network',
-  2: 'Morden Test Network',
-  3: 'Ropsten Test Network',
-  4: 'Rinkeby Test Network',
-  42: 'Kovan Test Network',
-  999: 'Localhost'
-}
-/*
- * The optional environment variable will naturally be a string.
- * We parse it and fall back to Mainnet if falsy.
- */
-const envNetworkId = parseInt(process.env.ETH_NETWORK_ID)
-const supportedNetworkId = envNetworkId || 1
+
 const mainnetDappBaseUrl =
   process.env.MAINNET_DAPP_BASEURL || 'https://dapp.originprotocol.com'
 const rinkebyDappBaseUrl =
@@ -211,7 +199,7 @@ const UnsupportedNetwork = props => (
         defaultMessage={'{currentProvider} should be on {supportedNetworkName}'}
         values={{
           currentProvider: props.currentProvider,
-          supportedNetworkName: networkNames[supportedNetworkId]
+          supportedNetworkName: props.supportedNetworkName
         }}
       />
     </p>
@@ -440,7 +428,7 @@ class Web3Provider extends Component {
       // set user_id to wallet address in Google Analytics
       const gtag = window.gtag || function(){}
       gtag('set', { 'user_id': curr })
-      
+
       // update global state
       this.props.storeWeb3Account(curr)
       // trigger messaging service
@@ -451,11 +439,13 @@ class Web3Provider extends Component {
   render() {
     const { onMobile, web3Account, web3Intent, storeWeb3Intent } = this.props
     const { networkConnected, networkId, currentProvider } = this.state
-    const currentNetworkName = networkNames[networkId]
-      ? networkNames[networkId]
+    const currentNetwork = getCurrentNetwork(networkId)
+    const currentNetworkName = currentNetwork
+      ? currentNetwork.name
       : networkId
     const isProduction = process.env.NODE_ENV === 'production'
     const networkNotSupported = supportedNetworkId !== networkId
+    const supportedNetworkName = supportedNetwork && supportedNetwork.name
 
     // Redirect if we know a DApp instalation that supports their network.
     if (currentProvider && networkId && isProduction && networkNotSupported) {
@@ -483,6 +473,7 @@ class Web3Provider extends Component {
             <UnsupportedNetwork
               currentNetworkName={currentNetworkName}
               currentProvider={currentProvider}
+              supportedNetworkName={supportedNetworkName}
             />
           )}
 
