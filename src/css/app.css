@@ -1993,11 +1993,13 @@ textarea:-moz-ui-invalid {
   font-weight: bold;
   font-size: 1.25rem;
   margin-bottom: 5px;
+  white-space: pre-wrap;
 }
 
 .getting-started .content {
   font-size: 1rem;
   margin-bottom: 25px;
+  white-space: pre-wrap;
 }
 
 .getting-started .modal-dialog {
@@ -2009,7 +2011,6 @@ textarea:-moz-ui-invalid {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.4);
   color: var(--dark);
   padding: 30px;
-  max-width: 370px;
 }
 
 .getting-started .text-right span {
@@ -4721,6 +4722,8 @@ sup {
 .phone.modal .dropdown .dropdown-menu {
   background-color: var(--dark);
   margin: 0;
+  max-height: 50vh;
+  overflow-y: scroll;
   padding: 7px 0;
   top: 10px !important;
 }
