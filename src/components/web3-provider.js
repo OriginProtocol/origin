@@ -208,7 +208,7 @@ const UnsupportedNetwork = props => {
   const supportedNetworkName = networkNames[supportedNetworkId]
   const getRedirectInfo = () => {
     if (networkId === 1 && mainnetDappBaseUrl) {
-      return { url: mainnetDappBaseUrl, label: 'MainNet Beta' }
+      return { url: mainnetDappBaseUrl, label: 'Mainnet Beta' }
     } else if (networkId === 4 && rinkebyDappBaseUrl) {
       return { url: rinkebyDappBaseUrl, label: 'Testnet Beta' }
     }
@@ -494,7 +494,7 @@ class Web3Provider extends Component {
     const currentNetworkName = networkNames[networkId]
       ? networkNames[networkId]
       : networkId
-    const isProduction = process.env.NODE_ENV === 'production'
+    const isProduction = true || process.env.NODE_ENV === 'production'
     const networkNotSupported = supportedNetworkId !== networkId
 
     return (
