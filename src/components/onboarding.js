@@ -13,6 +13,7 @@ import BetaModal from 'components/modals/beta-modal'
 import SellingModal from 'components/onboarding-modal'
 
 import scopedDebounce from 'utils/scopedDebounce'
+import { supportedNetwork } from 'utils/currentNetwork'
 
 import origin from '../services/origin'
 
@@ -192,7 +193,7 @@ class Onboarding extends Component {
         {children}
         {!query['skip-onboarding'] && (
           <Fragment>
-            <BetaModal />
+            { supportedNetwork === 'Mainnet' && <BetaModal /> }
             <SellingModal />
           </Fragment>
         )}

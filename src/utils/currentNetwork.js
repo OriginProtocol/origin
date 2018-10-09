@@ -7,7 +7,14 @@ const networkNames = {
   999: 'Localhost'
 }
 
+/*
+ * The optional environment variable will naturally be a string.
+ * We parse it and fall back to Mainnet if falsy.
+ */
 const envNetworkId = parseInt(process.env.ETH_NETWORK_ID)
 export const supportedNetworkId = envNetworkId || 1
 
-export default networkNames[supportedNetworkId]
+export const supportedNetwork = networkNames[supportedNetworkId]
+const getCurrentNetwork = (networkId) => networkNames[networkId]
+
+export default getCurrentNetwork

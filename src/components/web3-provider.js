@@ -8,17 +8,12 @@ import { storeWeb3Account, storeWeb3Intent, storeNetwork } from 'actions/App'
 import Modal from 'components/modal'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
-import currentNetwork, { supportedNetworkId } from 'utils/currentNetwork'
+import getCurrentNetwork, { supportedNetworkId, supportedNetwork } from 'utils/currentNetwork'
 
 import origin from '../services/origin'
 
 const web3 = origin.contractService.web3
 
-/*
- * The optional environment variable will naturally be a string.
- * We parse it and fall back to Mainnet if falsy.
- */
-const envNetworkId = parseInt(process.env.ETH_NETWORK_ID)
 const mainnetDappBaseUrl =
   process.env.MAINNET_DAPP_BASEURL || 'https://dapp.originprotocol.com'
 const rinkebyDappBaseUrl =
@@ -204,7 +199,7 @@ const UnsupportedNetwork = props => (
         defaultMessage={'{currentProvider} should be on {supportedNetworkName}'}
         values={{
           currentProvider: props.currentProvider,
-          supportedNetworkName
+          supportedNetworkName: supportedNetwork
         }}
       />
     </p>
@@ -444,6 +439,7 @@ class Web3Provider extends Component {
   render() {
     const { onMobile, web3Account, web3Intent, storeWeb3Intent } = this.props
     const { networkConnected, networkId, currentProvider } = this.state
+    const currentNetwork = getCurrentNetwork(networkId)
     const currentNetworkName = currentNetwork
       ? currentNetwork
       : networkId
