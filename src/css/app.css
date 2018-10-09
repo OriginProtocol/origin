@@ -4546,6 +4546,12 @@ sup {
   margin-bottom: 20px;
 }
 
+.wallet.appended {
+  margin-bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
 .wallet img.identicon {
   margin-right: 10px;
 }
@@ -4564,6 +4570,22 @@ sup {
 
 .wallet .progress {
   margin: 0.875rem 0;
+}
+
+.wallet-container {
+  margin-bottom: 20px;
+}
+
+.wallet-container .contact-user {
+  background-color: var(--dark-grey-blue);
+  border-radius: 0 0 var(--default-radius) var(--default-radius);
+  color: white;
+  padding: 0.75rem;
+  width: 100%;
+}
+
+.wallet-container .contact-user:hover {
+  background-color: #202e3e;
 }
 
 .profile.modal {
