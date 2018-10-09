@@ -487,6 +487,7 @@
   "EditProfile.continue": "Continuar",
   "EditProfile.cancel": "Cancelar",
   "Profile.manageYourProfile": "Información de perfil",
+  "Profile.profileUpdated": "Profile edited!",
   "Profile.unsavedChangesWarn": "Si sale antes de salvar, perderá todos los cambios.",
   "Profile.noDescriptionUser": "Usuario de Origin sin descripción",
   "Profile.phoneVerified": "¡Número de teléfono verificado!",
