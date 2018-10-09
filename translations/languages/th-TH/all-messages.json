@@ -487,6 +487,7 @@
   "EditProfile.continue": "ต่อ",
   "EditProfile.cancel": "ยกเลิก",
   "Profile.manageYourProfile": "จัดการโปรไฟล์ของคุณ",
+  "Profile.profileUpdated": "Profile edited!",
   "Profile.unsavedChangesWarn": "หากออกโดยไม่ได้เผยแพร่คุณจะสูญเสียการเปลี่ยนแปลงทั้งหมด",
   "Profile.noDescriptionUser": "ผู้ใช้แหล่งที่มาโดยไม่มีคำอธิบาย",
   "Profile.phoneVerified": "ยืนยันหมายเลขโทรศัพท์แล้ว!",
