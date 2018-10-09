@@ -487,6 +487,7 @@
   "EditProfile.continue": "Продолжить",
   "EditProfile.cancel": "Отмена",
   "Profile.manageYourProfile": "управление профилем",
+  "Profile.profileUpdated": "Profile edited!",
   "Profile.unsavedChangesWarn": "Если Вы выйдете без публикации объявления, Вы потеряете все сделанные изменения.",
   "Profile.noDescriptionUser": "Пользователь Origin без описания",
   "Profile.phoneVerified": "Телефонный номер подтвержден!",
