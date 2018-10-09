@@ -487,6 +487,7 @@
   "EditProfile.continue": "চালিয়ে",
   "EditProfile.cancel": "বাতিল",
   "Profile.manageYourProfile": "আপনার প্রোফাইল পরিচালনা",
+  "Profile.profileUpdated": "Profile edited!",
   "Profile.unsavedChangesWarn": "যদি আপনি প্রকাশ না করেই প্রস্থান করেন, তাহলে আপনি আপনার সমস্ত পরিবর্তন হারাবেন।",
   "Profile.noDescriptionUser": "একটি বিবরণ ছাড়া একটি মূলের ব্যবহারকারী",
   "Profile.phoneVerified": "ফোন নম্বর যাচাই!",
