@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 
-import { storeWeb3Account, storeWeb3Intent } from 'actions/App'
+import { storeWeb3Account, storeWeb3Intent, storeNetwork } from 'actions/App'
 
 import Modal from 'components/modal'
 
@@ -12,9 +12,6 @@ import getCurrentProvider from 'utils/getCurrentProvider'
 import origin from '../services/origin'
 
 const web3 = origin.contractService.web3
-const productionHostname =
-  process.env.PRODUCTION_DOMAIN || 'demo.originprotocol.com'
-
 const networkNames = {
   1: 'Main Ethereum Network',
   2: 'Morden Test Network',
@@ -23,14 +20,30 @@ const networkNames = {
   42: 'Kovan Test Network',
   999: 'Localhost'
 }
-const supportedNetworkIds = [3, 4]
+/*
+ * The optional environment variable will naturally be a string.
+ * We parse it and fall back to Mainnet if falsy.
+ */
+const envNetworkId = parseInt(process.env.ETH_NETWORK_ID)
+const supportedNetworkId = envNetworkId || 1
+const mainnetDappBaseUrl =
+  process.env.MAINNET_DAPP_BASEURL || 'https://dapp.originprotocol.com'
+const rinkebyDappBaseUrl =
+  process.env.RINKEBY_DAPP_BASEURL || 'https://demo.staging.originprotocol.com'
+const instructionsUrl =
+  process.env.INSTRUCTIONS_URL || 'https://www.originprotocol.com/'
 const ONE_SECOND = 1000
 const ONE_MINUTE = ONE_SECOND * 60
 
 // TODO (micah): potentially add a loading indicator
 
 const NotWeb3EnabledDesktop = props => (
-  <Modal backdrop="static" className="not-web3-enabled" isOpen={true}>
+  <Modal
+    backdrop="static"
+    className="not-web3-enabled"
+    isOpen={true}
+    tabIndex="-1"
+  >
     <div className="image-container">
       <img src="images/metamask.png" role="presentation" />
     </div>
@@ -61,7 +74,7 @@ const NotWeb3EnabledDesktop = props => (
         />
       </a>
       <a
-        href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58"
+        href={instructionsUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="btn btn-clear"
@@ -72,11 +85,6 @@ const NotWeb3EnabledDesktop = props => (
         />
       </a>
     </div>
-    <FormattedMessage
-      id={'web3-provider.notSignedIntoMetaMask'}
-      defaultMessage={'You are not signed in to MetaMask.'}
-    />
-    <br />
   </Modal>
 )
 
@@ -200,8 +208,11 @@ const UnsupportedNetwork = props => (
     <p>
       <FormattedMessage
         id={'web3-provider.shouldBeOnRinkeby'}
-        defaultMessage={'{currentProvider} should be on Rinkeby Test Network'}
-        values={{ currentProvider: props.currentProvider }}
+        defaultMessage={'{currentProvider} should be on {supportedNetworkName}'}
+        values={{
+          currentProvider: props.currentProvider,
+          supportedNetworkName: networkNames[supportedNetworkId]
+        }}
       />
     </p>
     <FormattedMessage
@@ -240,11 +251,11 @@ const Web3Unavailable = props => (
         <a
           target="_blank"
           rel="noopener noreferrer"
-          href="https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58"
+          href={instructionsUrl}
         >
           <FormattedMessage
-            id={'web3-provider.fullInstructionsForDemo'}
-            defaultMessage={'Full Instructions for Demo'}
+            id={'web3-provider.fullInstructions'}
+            defaultMessage={'Full Instructions'}
           />
         </a>
       </div>
@@ -331,7 +342,7 @@ class Web3Provider extends Component {
    * @return {void}
    */
   initAccountsPoll() {
-    if (!this.accountsInterval) {
+    if (!this.accountsInterval && web3.givenProvider) {
       this.accountsInterval = setInterval(this.fetchAccounts, ONE_SECOND)
     }
   }
@@ -401,6 +412,7 @@ class Web3Provider extends Component {
           })
         } else {
           if (networkId !== this.state.networkId) {
+            this.props.storeNetwork(networkId)
             this.setState({
               networkError: null,
               networkId
@@ -424,6 +436,11 @@ class Web3Provider extends Component {
     if (curr !== prev) {
       // start over if changed
       prev !== null && window.location.reload()
+
+      // set user_id to wallet address in Google Analytics
+      const gtag = window.gtag || function(){}
+      gtag('set', { 'user_id': curr })
+      
       // update global state
       this.props.storeWeb3Account(curr)
       // trigger messaging service
@@ -437,8 +454,18 @@ class Web3Provider extends Component {
     const currentNetworkName = networkNames[networkId]
       ? networkNames[networkId]
       : networkId
-    const inProductionEnv = window.location.hostname === productionHostname
-    const networkNotSupported = supportedNetworkIds.indexOf(networkId) < 0
+    const isProduction = process.env.NODE_ENV === 'production'
+    const networkNotSupported = supportedNetworkId !== networkId
+
+    // Redirect if we know a DApp instalation that supports their network.
+    if (currentProvider && networkId && isProduction && networkNotSupported) {
+      const url = new URL(window.location)
+      if (networkId === 1 && mainnetDappBaseUrl) {
+        window.location.href = mainnetDappBaseUrl + url.pathname + url.hash
+      } else if (networkId === 4 && rinkebyDappBaseUrl) {
+        window.location.href = rinkebyDappBaseUrl + url.pathname + url.hash
+      }
+    }
 
     return (
       <Fragment>
@@ -451,7 +478,7 @@ class Web3Provider extends Component {
         {/* production  */
           currentProvider &&
           networkId &&
-          inProductionEnv &&
+          isProduction &&
           networkNotSupported && (
             <UnsupportedNetwork
               currentNetworkName={currentNetworkName}
@@ -506,7 +533,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   storeWeb3Account: addr => dispatch(storeWeb3Account(addr)),
-  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
+  storeNetwork: networkId => dispatch(storeNetwork(networkId))
 })
 
 export default withRouter(

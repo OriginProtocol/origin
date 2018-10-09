@@ -9,9 +9,17 @@ class TransactionMessage extends Component {
     super(props)
 
     this.intlMessages = defineMessages({
-      buyListing: {
-        id: 'transaction.buyListing',
-        defaultMessage: 'You made a purchase.'
+      acceptOffer: {
+        id: 'transaction.acceptOffer',
+        defaultMessage: 'You accepted an offer.'
+      },
+      makeOffer: {
+        id: 'transaction.makeOffer',
+        defaultMessage: 'You made an offer.'
+      },
+      withdrawOffer: {
+        id: 'transaction.withdrawOffer',
+        defaultMessage: 'You withdrew an offer.'
       },
       reserveListing: {
         id: 'transaction.reserveListing',
@@ -19,23 +27,27 @@ class TransactionMessage extends Component {
       },
       closeListing: {
         id: 'transaction.closeListing',
-        defaultMessage: 'You closed a listing'
+        defaultMessage: 'You closed a listing.'
       },
-      confirmReceipt: {
-        id: 'transaction.confirmReceipt',
-        defaultMessage: 'You left a review and confirmed receipt.'
-      },
-      confirmShipped: {
-        id: 'transaction.confirmShipped',
-        defaultMessage: 'You marked a purchase as shipped.'
+      completePurchase: {
+        id: 'transaction.completePurchase',
+        defaultMessage: 'You completed a purchase.'
       },
       createListing: {
         id: 'transaction.createListing',
-        defaultMessage: 'You created a listing'
+        defaultMessage: 'You created a listing.'
       },
-      getPayout: {
-        id: 'transaction.getPayout',
-        defaultMessage: 'You left a review and withdrew funds.'
+      initiateDispute: {
+        id: 'transaction.initiateDispute',
+        defaultMessage: 'You initiated a dispute.'
+      },
+      reviewSale: {
+        id: 'transaction.reviewSale',
+        defaultMessage: 'You left a review.'
+      },
+      updateProfile: {
+        id: 'transaction.updateProfile',
+        defaultMessage: 'You updated your profile.'
       }
     })
   }

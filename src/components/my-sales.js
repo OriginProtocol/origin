@@ -6,6 +6,8 @@ import { storeWeb3Intent } from 'actions/App'
 
 import MySaleCard from 'components/my-sale-card'
 
+import { getListing } from 'utils/listing'
+
 import origin from '../services/origin'
 
 class MySales extends Component {
@@ -15,17 +17,30 @@ class MySales extends Component {
   }
 
   componentDidMount() {
-    if (!web3.givenProvider || !this.props.web3Account) {
+    if (this.props.web3Account) {
+      this.loadPurchases()
+    } else if (!web3.givenProvider) {
       this.props.storeWeb3Intent('view your sales')
     }
   }
 
-  async componentWillMount() {
-    const listingsFor = await origin.contractService.currentAccount()
-    const listingIds = await origin.marketplace.getListings({ listingsFor })
+  componentDidUpdate(prevProps) {
+    const { web3Account } = this.props
+
+    // on account change
+    if (web3Account && web3Account !== prevProps.web3Account) {
+      this.loadPurchases()
+    }
+  }
+
+  async loadPurchases() {
+    const listingIds = await origin.marketplace.getListings({
+      idsOnly: true,
+      listingsFor: this.props.web3Account
+    })
     const listingPromises = listingIds.map(listingId => {
       return new Promise(async resolve => {
-        const listing = await origin.marketplace.getListing(listingId)
+        const listing = await getListing(listingId)
         resolve({ listingId, listing })
       })
     })
@@ -41,17 +56,25 @@ class MySales extends Component {
       return obj.offers.map(offer => Object.assign({}, obj, { offer }))
     })
     const offersFlattened = [].concat(...offersByListing)
+
     this.setState({ loading: false, purchases: offersFlattened })
   }
 
   render() {
     const { filter, loading, purchases } = this.state
-    const filteredPurchases = purchases.filter(obj => {
-      const step = Number(obj.offer.status)
+    const completedStates = [
+      'withdrawn',
+      'finalized',
+      'sellerReviewed',
+      'ruling'
+    ]
+    const filteredPurchases = purchases.filter(({ offer }) => {
+      const completed = completedStates.includes(offer.status)
+
       if (filter === 'pending') {
-        return step < 4
+        return !completed
       } else if (filter === 'complete') {
-        return step >= 4
+        return completed
       } else {
         return true
       }

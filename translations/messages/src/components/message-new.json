@@ -1,7 +1,7 @@
 [
   {
     "id": "MessageNew.cannotReceiveMessages",
-    "defaultMessage": "This user has not enabled Origin Messaging."
+    "defaultMessage": "This user has not yet enabled Origin Messaging. Unfortunately, you will not be able to contact them until they do."
   },
   {
     "id": "MessageNew.cancel",
@@ -9,7 +9,7 @@
   },
   {
     "id": "MessageNew.cannotSendMessages",
-    "defaultMessage": "You need to enable Origin Messaging."
+    "defaultMessage": "Before you can contact this user, you need to enable messaging."
   },
   {
     "id": "MessageNew.enable",
@@ -21,6 +21,6 @@
   },
   {
     "id": "MessageNew.encryptionNotice",
-    "defaultMessage": "Your message will be encrypted. It will only be visible to you, the recipient, and an arbitrator in the event that a dispute arises."
+    "defaultMessage": "Your message will be private to you and the recipient. An arbitrator will see your messages if either of you opens a dispute."
   }
 ]

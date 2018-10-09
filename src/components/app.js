@@ -5,16 +5,25 @@ import { IntlProvider } from 'react-intl'
 
 import { localizeApp, setMobile } from 'actions/App'
 import { fetchProfile } from 'actions/Profile'
-import { init as initWallet } from 'actions/Wallet'
+import {
+  getEthBalance,
+  getOgnBalance,
+  init as initWallet
+} from 'actions/Wallet'
+import { fetchFeaturedHiddenListings } from 'actions/Listing'
 
 // Components
+import AboutTokens from 'components/about-tokens'
 import Alert from 'components/alert'
+import Analytics from 'components/analytics'
+import Arbitration from 'components/arbitration'
+import DappInfo from 'components/dapp-info'
 import Layout from 'components/layout'
 import ListingCreate from 'components/listing-create'
 import ListingDetail from 'components/listing-detail'
-import Listings from 'components/listings-grid'
+import ListingsGrid from 'components/listings-grid'
 import Messages from 'components/messages'
-import MessagingProvider from 'components/messaging-provider'
+import Onboarding from 'components/onboarding'
 import MyListings from 'components/my-listings'
 import MyPurchases from 'components/my-purchases'
 import MySales from 'components/my-sales'
@@ -22,12 +31,16 @@ import NotFound from 'components/not-found'
 import Notifications from 'components/notifications'
 import PurchaseDetail from 'components/purchase-detail'
 import ScrollToTop from 'components/scroll-to-top'
+import SearchResult from 'components/search/search-result'
 import Web3Provider from 'components/web3-provider'
 
 import Profile from 'pages/profile/Profile'
 import User from 'pages/user/User'
+import SearchBar from 'components/search/searchbar'
 
 import 'bootstrap/dist/js/bootstrap'
+
+import { setClickEventHandler } from 'utils/analytics'
 
 // CSS
 import 'bootstrap/dist/css/bootstrap.css'
@@ -38,16 +51,16 @@ import '../css/app.css'
 const httpsRequired = process.env.FORCE_HTTPS
 
 const HomePage = () => (
-  <div className="container">
-    <Listings />
-  </div>
+  <Fragment>
+    <SearchBar />
+    <div className="container">
+      <ListingsGrid renderMode="home-page" />
+    </div>
+  </Fragment>
 )
 
 const ListingDetailPage = props => (
-  <ListingDetail
-    listingAddress={props.match.params.listingAddress}
-    withReviews={true}
-  />
+  <ListingDetail listingId={props.match.params.listingId} withReviews={true} />
 )
 
 const CreateListingPage = props => (
@@ -60,6 +73,10 @@ const PurchaseDetailPage = props => (
   <PurchaseDetail offerId={props.match.params.offerId} />
 )
 
+const ArbitrationPage = props => (
+  <Arbitration offerId={props.match.params.offerId} />
+)
+
 const UserPage = props => <User userAddress={props.match.params.userAddress} />
 
 // Top level component
@@ -70,6 +87,8 @@ class App extends Component {
     this.state = {
       redirect: httpsRequired && !window.location.protocol.match('https')
     }
+
+    this.featuredhiddenListingsFetched = false
   }
 
   componentWillMount() {
@@ -78,13 +97,23 @@ class App extends Component {
     }
 
     this.props.localizeApp()
+    setClickEventHandler()
   }
 
   componentDidMount() {
     this.props.fetchProfile()
     this.props.initWallet()
+    this.props.getEthBalance()
+    this.props.getOgnBalance()
 
     this.detectMobile()
+  }
+
+  componentDidUpdate() {
+    if (this.props.networkId !== null && !this.featuredhiddenListingsFetched) {
+      this.featuredhiddenListingsFetched = true
+      this.props.fetchFeaturedHiddenListings(this.props.networkId)
+    }
   }
 
   /**
@@ -119,36 +148,45 @@ class App extends Component {
         <Router>
           <ScrollToTop>
             <Web3Provider>
-              <MessagingProvider>
-                <Layout>
-                  <Switch>
-                    <Route exact path="/" component={HomePage} />
-                    <Route path="/page/:activePage" component={HomePage} />
-                    <Route
-                      path="/listing/:listingAddress"
-                      component={ListingDetailPage}
-                    />
-                    <Route path="/create" component={CreateListingPage} />
-                    <Route path="/update/:listingAddress" component={CreateListingPage} />
-                    <Route path="/my-listings" component={MyListings} />
-                    <Route
-                      path="/purchases/:offerId"
-                      component={PurchaseDetailPage}
-                    />
-                    <Route path="/my-purchases" component={MyPurchases} />
-                    <Route path="/my-sales" component={MySales} />
-                    <Route
-                      path="/messages/:conversationId?"
-                      component={Messages}
-                    />
-                    <Route path="/notifications" component={Notifications} />
-                    <Route path="/profile" component={Profile} />
-                    <Route path="/users/:userAddress" component={UserPage} />
-                    <Route component={NotFound} />
-                  </Switch>
-                </Layout>
+              <Onboarding>
+                <Analytics>
+                  <Layout>
+                    <Switch>
+                      <Route exact path="/" component={HomePage} />
+                      <Route path="/page/:activePage" component={HomePage} />
+                      <Route
+                        path="/listing/:listingId"
+                        component={ListingDetailPage}
+                      />
+                      <Route path="/create" component={CreateListingPage} />
+                      <Route path="/update/:listingAddress" component={CreateListingPage} />
+                      <Route path="/my-listings" component={MyListings} />
+                      <Route
+                        path="/purchases/:offerId"
+                        component={PurchaseDetailPage}
+                      />
+                      <Route
+                        path="/arbitration/:offerId"
+                        component={ArbitrationPage}
+                      />
+                      <Route path="/my-purchases" component={MyPurchases} />
+                      <Route path="/my-sales" component={MySales} />
+                      <Route
+                        path="/messages/:conversationId?"
+                        component={Messages}
+                      />
+                      <Route path="/notifications" component={Notifications} />
+                      <Route path="/profile" component={Profile} />
+                      <Route path="/users/:userAddress" component={UserPage} />
+                      <Route path="/search" component={SearchResult} />
+                      <Route path="/about-tokens" component={AboutTokens} />
+                      <Route path="/dapp-info" component={DappInfo} />
+                      <Route component={NotFound} />
+                    </Switch>
+                  </Layout>
+                </Analytics>
                 <Alert />
-              </MessagingProvider>
+              </Onboarding>
             </Web3Provider>
           </ScrollToTop>
         </Router>
@@ -159,14 +197,18 @@ class App extends Component {
 
 const mapStateToProps = state => ({
   messages: state.app.translations.messages,
-  selectedLanguageCode: state.app.translations.selectedLanguageCode
+  selectedLanguageCode: state.app.translations.selectedLanguageCode,
+  networkId: state.app.web3.networkId
 })
 
 const mapDispatchToProps = dispatch => ({
   fetchProfile: () => dispatch(fetchProfile()),
+  getEthBalance: () => dispatch(getEthBalance()),
+  getOgnBalance: () => dispatch(getOgnBalance()),
   initWallet: () => dispatch(initWallet()),
   setMobile: device => dispatch(setMobile(device)),
-  localizeApp: () => dispatch(localizeApp())
+  localizeApp: () => dispatch(localizeApp()),
+  fetchFeaturedHiddenListings: (networkId) => dispatch(fetchFeaturedHiddenListings(networkId))
 })
 
 export default connect(

@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import {
   FormattedMessage,
-  FormattedNumber,
+  // FormattedNumber,
   defineMessages,
   injectIntl
 } from 'react-intl'
@@ -15,13 +15,16 @@ import {
   upsert as upsertTransaction
 } from 'actions/Transaction'
 
+import { PendingBadge, SoldBadge, FeaturedBadge } from 'components/badges'
 import Modal from 'components/modal'
-import Review from 'components/review'
+import Reviews from 'components/reviews'
 import UserCard from 'components/user-card'
 import Calendar from './calendar'
+import { ProcessingModal, ProviderModal } from 'components/modals/wait-modals'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
-import { translateListingCategory } from 'utils/translationUtils'
+import { getListing } from 'utils/listing'
+import { offerStatusToListingAvailability } from 'utils/offer'
 
 import origin from '../services/origin'
 
@@ -39,22 +42,23 @@ class ListingsDetail extends Component {
 
     this.STEP = {
       VIEW: 1,
-      METAMASK: 2,
-      PROCESSING: 3,
-      PURCHASED: 4,
-      ERROR: 5
+      ONBOARDING: 2,
+      METAMASK: 3,
+      PROCESSING: 4,
+      PURCHASED: 5,
+      ERROR: 6
     }
 
     this.state = {
       etherscanDomain: null,
       loading: true,
+      offers: [],
       pictures: [],
-      reviews: [],
       purchases: [],
       step: this.STEP.VIEW,
-      currentProvider: getCurrentProvider(
-        origin && origin.contractService && origin.contractService.web3
-      )
+      boostLevel: null,
+      boostValue: 0,
+      onboardingCompleted: false
     }
 
     this.intlMessages = defineMessages({
@@ -69,108 +73,159 @@ class ListingsDetail extends Component {
     this.loadListing = this.loadListing.bind(this)
   }
 
+  async handleBuyClicked() {
+    this.props.storeWeb3Intent('buy this listing')
+    this.handleMakeOffer = this.handleMakeOffer.bind(this)
+    this.handleSkipOnboarding = this.handleSkipOnboarding.bind(this)
+  }
+
   async componentWillMount() {
-    if (this.props.listingAddress) {
+    if (this.props.listingId) {
       // Load from IPFS
       await this.loadListing()
-      await this.loadPurchases()
-      this.loadReviews()
-    }
-    else if (this.props.listingJson) {
+      await this.loadOffers()
+    } else if (this.props.listingJson) {
       const obj = Object.assign({}, this.props.listingJson, { loading: false })
       // Listing json passed in directly
       this.setState(obj)
     }
     const networkId = await web3.eth.net.getId()
     this.setState({
-      etherscanDomain: etherscanDomains[networkId],
+      etherscanDomain: etherscanDomains[networkId]
     })
   }
 
-  async loadListing() {
-    try {
-      const rawListing = await origin.marketplace.getListing(
-        this.props.listingAddress
-      )
-      const listing = rawListing.ipfsData.data
-      const translatedListing = translateListingCategory(listing)
-      const obj = Object.assign({}, translatedListing, {
-        loading: false,
-        status: rawListing.status
-      })
-      this.setState(obj)
-    } catch (error) {
-      this.props.showAlert(
-        this.props.intl.formatMessage(this.intlMessages.loadingError)
-      )
-      console.error(
-        `Error fetching contract or IPFS info for listing: ${
-          this.props.listingAddress
-        }`
-      )
-      console.error(error)
+  componentDidUpdate(prevProps) {
+    // on account found
+    if (this.props.web3Account && !prevProps.web3Account) {
+      this.loadBuyerPurchases()
     }
   }
 
-  async loadPurchases() {
-    // TODO:jordajm - convert this logic to work with the new origin.js API
-    // const { listingAddress } = this.props
+  async handleMakeOffer(skip) {
+    // onboard if no identity, purchases, and not already completed
+    const shouldOnboard =
+      !this.props.profile.strength &&
+      !this.state.purchases.length &&
+      !this.state.onboardingCompleted
 
-    // try {
-    //   const length = await origin.listings.purchasesLength(listingAddress)
-    //   console.log('Purchase count:', length)
-
-    //   for (let i = 0; i < length; i++) {
-    //     const purchaseAddress = await origin.listings.purchaseAddressByIndex(listingAddress, i)
-    //     const purchase = await origin.purchases.get(purchaseAddress)
-
-    //     this.setState((prevState) => {
-    //       return { purchases: [...prevState.purchases, purchase] }
-    //     })
-    //   }
-    // } catch(error) {
-    //   console.error(`Error fetching purchases for listing: ${listingAddress}`)
-    //   console.error(error)
-    // }
-  }
-
-  async loadReviews() {
-    try {
-      const reviews = await origin.marketplace.getListingReviews(
-        this.props.listingAddress
-      )
-      this.setState({ reviews })
-    } catch (error) {
-      console.error(error)
-      console.error(`Error fetching reviews`)
-    }
-  }
-
-  async handleBuyClicked() {
-    this.props.storeWeb3Intent('buy this listing')
+    this.props.storeWeb3Intent('offer to buy this listing')
 
     if (web3.givenProvider && this.props.web3Account) {
+      if (!skip && shouldOnboard) {
+        return this.setState({
+          onboardingCompleted: true,
+          step: this.STEP.ONBOARDING
+        })
+      }
+
       this.setState({ step: this.STEP.METAMASK })
-      const unitsToBuy = 1
-      const totalPrice = unitsToBuy * this.state.price
+
       try {
-        this.setState({ step: this.STEP.PROCESSING })
+        const offerData = {
+          listingId: this.props.listingId,
+          listingType: 'unit',
+          unitsPurchased: 1,
+          totalPrice: {
+            amount: this.state.price,
+            currency: 'ETH'
+          },
+          commission: {
+            amount: this.state.boostValue.toString(),
+            currency: 'OGN'
+          },
+          // Set the finalization time to ~1 year after the offer is accepted.
+          // This is the window during which the buyer may file a dispute.
+          finalizes: 365 * 24 * 60 * 60
+        }
         const transactionReceipt = await origin.marketplace.makeOffer(
-          this.props.listingAddress,
-          { price: totalPrice },
+          this.props.listingId,
+          offerData,
           (confirmationCount, transactionReceipt) => {
             this.props.updateTransaction(confirmationCount, transactionReceipt)
           }
         )
         this.props.upsertTransaction({
           ...transactionReceipt,
-          transactionTypeKey: 'buyListing'
+          transactionTypeKey: 'makeOffer'
         })
         this.setState({ step: this.STEP.PURCHASED })
       } catch (error) {
         console.error(error)
         this.setState({ step: this.STEP.ERROR })
       }
+    }
+  }
+
+  handleSkipOnboarding(e) {
+    e.preventDefault()
+
+    this.handleMakeOffer(true)
+  }
+
+  async loadBuyerPurchases() {
+    try {
+      const { web3Account } = this.props
+      const listingIds = await origin.marketplace.getListings({
+        idsOnly: true,
+        purchasesFor: web3Account
+      })
+      const listingPromises = listingIds.map(listingId => {
+        return new Promise(async resolve => {
+          const listing = await getListing(listingId, true)
+          resolve({ listingId, listing })
+        })
+      })
+      const withListings = await Promise.all(listingPromises)
+      const offerPromises = await withListings.map(obj => {
+        return new Promise(async resolve => {
+          const offers = await origin.marketplace.getOffers(obj.listingId, {
+            for: web3Account
+          })
+          resolve(Object.assign(obj, { offers }))
+        })
+      })
+      const withOffers = await Promise.all(offerPromises)
+      const offersByListing = withOffers.map(obj => {
+        return obj.offers.map(offer => Object.assign({}, obj, { offer }))
+      })
+      const offersFlattened = [].concat(...offersByListing)
+
+      this.setState({ purchases: offersFlattened })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async loadListing() {
+    try {
+      const listing = await getListing(this.props.listingId, true)
+      this.setState({
+        ...listing,
+        loading: false
+      })
+    } catch (error) {
+      this.props.showAlert(
+        this.props.formatMessage(this.intlMessages.loadingError)
+      )
+      console.error(
+        `Error fetching contract or IPFS info for listing: ${
+          this.props.listingId
+        }`
+      )
+      console.error(error)
+    }
+  }
+
+  async loadOffers() {
+    try {
+      const offers = await origin.marketplace.getOffers(this.props.listingId)
+      this.setState({ offers })
+    } catch (error) {
+      console.error(
+        `Error fetching offers for listing: ${this.props.listingId}`
+      )
+      console.error(error)
     }
   }
 
@@ -203,49 +258,110 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    const isActive = this.state.status === 'active'
-    const buyersReviews = this.state.reviews
-    const userIsSeller = this.state.sellerAddress === this.props.web3Account
+    const { web3Account, featured } = this.props
+    const {
+      // boostLevel,
+      // boostValue,
+      category,
+      description,
+      ipfsHash,
+      loading,
+      name,
+      offers,
+      pictures,
+      price,
+      seller,
+      status,
+      step
+      // unitsRemaining
+    } = this.state
+    const currentOffer = offers.find(o => {
+      const availability = offerStatusToListingAvailability(o.status)
+
+      return ['pending', 'sold'].includes(availability)
+    })
+    const currentOfferAvailability =
+      currentOffer && offerStatusToListingAvailability(currentOffer.status)
+    const isWithdrawn = status === 'inactive'
+    const isPending = currentOfferAvailability === 'pending'
+    const isSold = currentOfferAvailability === 'sold'
+    const isAvailable = !isPending && !isSold && !isWithdrawn
+    const userIsBuyer = currentOffer && web3Account === currentOffer.buyer
+    const userIsSeller = web3Account === seller
+    const showFeaturedBadge =
+      isAvailable && featured.includes(this.props.listingId)
 
     return (
       <div className="listing-detail">
-        {this.state.step === this.STEP.METAMASK && (
+        {step === this.STEP.ONBOARDING && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
+              <img src="images/identity.svg" role="presentation" />
             </div>
-            <FormattedMessage
-              id={'listing-detail.confirmTransaction'}
-              defaultMessage={'Confirm transaction'}
-            />
-            <br />
-            <FormattedMessage
-              id={'listing-detail.pressSubmitInMetaMask'}
-              defaultMessage={'Press {submit} in {currentProvider} window'}
-              values={{
-                currentProvider: this.state.currentProvider,
-                submit: <span>&ldquo;Submit&rdquo;</span>
-              }}
-            />
+            <p>
+              <FormattedMessage
+                id={'listing-detail.firstPurchaseHeading'}
+                defaultMessage={`You're about to make your first purchase on Origin.`}
+              />
+            </p>
+            <div className="disclaimer">
+              <p>
+                <FormattedMessage
+                  id={'listing-detail.identityDisclaimer'}
+                  defaultMessage={
+                    'We recommend verifying your identity first. Sellers are more likely to accept your purchase offer if they know a little bit about you.'
+                  }
+                />
+              </p>
+            </div>
+            <div className="button-container">
+              <Link
+                to="/profile"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-clear"
+                onClick={() => this.setState({ step: this.STEP.VIEW })}
+                ga-category="buyer_onboarding_modal"
+                ga-label="verify_identity"
+              >
+                <FormattedMessage
+                  id={'listing-detail.verifyIdentity'}
+                  defaultMessage={'Verify Identity'}
+                />
+              </Link>
+            </div>
+            <a
+              href="#"
+              className="skip-identity"
+              onClick={this.handleSkipOnboarding}
+              ga-category="buyer_onboarding_modal"
+              ga-label="skip"
+            >
+              Skip
+            </a>
           </Modal>
         )}
-        {this.state.step === this.STEP.PROCESSING && (
-          <Modal backdrop="static" isOpen={true}>
-            <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
-            </div>
-            <FormattedMessage
-              id={'listing-detail.processingPurchase'}
-              defaultMessage={'Processing your purchase'}
-            />
-            <br />
-            <FormattedMessage
-              id={'listing-detail.pleaseStandBy'}
-              defaultMessage={'Please stand by...'}
-            />
-          </Modal>
+        {step === this.STEP.METAMASK && (
+          <ProviderModal
+            message={
+              <FormattedMessage
+                id={'listing-detail.providerInstruction'}
+                defaultMessage={
+                  'To make an offer on this listing, please confirm the transaction in {provider}.'
+                }
+                values={{
+                  provider: getCurrentProvider(
+                    origin &&
+                      origin.contractService &&
+                      origin.contractService.web3
+                  )
+                }}
+              />
+            }
+          />
         )}
-        {this.state.step === this.STEP.PURCHASED && (
+        {step === this.STEP.PROCESSING && <ProcessingModal />}
+        {step === this.STEP.PURCHASED && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img src="images/circular-check-button.svg" role="presentation" />
@@ -258,21 +374,52 @@ class ListingsDetail extends Component {
               <FormattedMessage
                 id={'listing-detail.successDisclaimer'}
                 defaultMessage={
-                  'Your purchase will be visible within a few seconds.'
+                  "You have made an offer on this listing. Your offer will be visible within a few seconds. Your {ETH} payment has been transferred to an escrow contract. Here's what happens next:"
                 }
               />
+              <ul>
+                <li>
+                  <FormattedMessage
+                    id={'listing-detail.successItem1'}
+                    defaultMessage={
+                      'The seller can choose to accept or reject your offer.'
+                    }
+                  />
+                </li>
+                <li>
+                  <FormattedMessage
+                    id={'listing-detail.successItem2'}
+                    defaultMessage={
+                      'If the offer is accepted and fulfilled, you will be able to confirm that the sale is complete. Your escrowed payment will be sent to the seller.'
+                    }
+                  />
+                </li>
+                <li>
+                  <FormattedMessage
+                    id={'listing-detail.successItem3'}
+                    defaultMessage={
+                      'If the offer is rejected, the escrowed payment will be immediately returned to your wallet.'
+                    }
+                  />
+                </li>
+              </ul>
             </div>
             <div className="button-container">
-              <Link to="/my-purchases" className="btn btn-clear">
+              <Link
+                to="/my-purchases"
+                className="btn btn-clear"
+                ga-category="listing"
+                ga-label="purchase_confirmation_modal_view_my_purchases"
+              >
                 <FormattedMessage
-                  id={'listing-detail.goToPurchases'}
-                  defaultMessage={'Go To Purchases'}
+                  id={'listing-detail.viewPurchases'}
+                  defaultMessage={'View Purchases'}
                 />
               </Link>
             </div>
           </Modal>
         )}
-        {this.state.step === this.STEP.ERROR && (
+        {step === this.STEP.ERROR && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img src="images/flat_cross_icon.svg" role="presentation" />
@@ -302,10 +449,9 @@ class ListingsDetail extends Component {
             </div>
           </Modal>
         )}
-        {(this.state.loading ||
-          (this.state.pictures && !!this.state.pictures.length)) && (
+        {(loading || (pictures && !!pictures.length)) && (
           <div className="carousel">
-            {this.state.pictures.map(pictureUrl => (
+            {pictures.map(pictureUrl => (
               <div className="photo" key={pictureUrl}>
                 <img src={pictureUrl} role="presentation" />
               </div>
@@ -314,34 +460,48 @@ class ListingsDetail extends Component {
         )}
 
         <div
-          className={`container listing-container${
-            this.state.loading ? ' loading' : ''
-          }`}
+          className={`container listing-container${loading ? ' loading' : ''}`}
         >
           <div className="row">
             <div className="col-12 col-md-8 detail-info-box">
-              <div className="category placehold">{this.state.category}</div>
-              <h1 className="title text-truncate placehold">
-                {this.state.name}
-              </h1>
-              <p className="description placehold">{this.state.description}</p>
-              {/* Via Stan 5/25/2018: Hide until contracts allow for unitsAvailable > 1 */}
-              {/*!!unitsAvailable && unitsAvailable < 5 &&
-                <div className="units-available text-danger">
+              <div className="category placehold d-flex">
+                <div>{category}</div>
+                {!loading && (
+                  <div className="badges">
+                    {isPending && <PendingBadge />}
+                    {isSold && <SoldBadge />}
+                    {showFeaturedBadge && <FeaturedBadge />}
+                    {/*boostValue > 0 && (
+                      <span className={`boosted badge boost-${boostLevel}`}>
+                        <img
+                          src="images/boost-icon-arrow.svg"
+                          role="presentation"
+                        />
+                      </span>
+                    )*/}
+                  </div>
+                )}
+              </div>
+              <h1 className="title placehold">{name}</h1>
+              <p className="ws-aware description placehold">{description}</p>
+              {/* Via Stan 5/25/2018: Hide until contracts allow for unitsRemaining > 1 */}
+              {/*!!unitsRemaining && unitsRemaining < 5 &&
+                <div className="units-remaining text-danger">
                   <FormattedMessage
-                    id={ 'listing-detail.unitsAvailable' }
-                    defaultMessage={ 'Just {unitsAvailable} left!' }
-                    values={{ unitsAvailable: <FormattedNumber value={ this.state.unitsAvailable } /> }}
+                    id={ 'listing-detail.unitsRemaining' }
+                    defaultMessage={ 'Just {unitsRemaining} left!' }
+                    values={{ unitsRemaining: <FormattedNumber value={ unitsRemaining } /> }}
                   />
                 </div>
               */}
-              {this.state.ipfsHash && (
+              {ipfsHash && (
                 <div className="ipfs link-container">
                   <a
-                    href={origin.ipfsService.gatewayUrlForHash(
-                      this.state.ipfsHash
-                    )}
+                    href={origin.ipfsService.gatewayUrlForHash(ipfsHash)}
                     target="_blank"
+                    rel="noopener noreferrer"
+                    ga-category="listing"
+                    ga-label="view_on_ipfs"
                   >
                     <FormattedMessage
                       id={'listing-detail.viewOnIpfs'}
@@ -355,145 +515,299 @@ class ListingsDetail extends Component {
                   </a>
                 </div>
               )}
-              {userIsSeller &&
-                <div className="link-container">
-                  <Link to={`/update/${this.props.listingAddress}`}>Edit</Link>
-                </div>
-              }
-              {/* Remove per Matt 5/28/2018 */}
-              {/* this.state.address && this.state.etherscanDomain &&
-                <div className="etherscan link-container">
-                  <a href={`https://${(this.state.etherscanDomain)}/address/${(this.state.address)}#internaltx`} target="_blank">
-                    View on Etherscan<img src="images/carat-blue.svg" className="carat" alt="right carat" />
-                  </a>
-                </div>
-              */}
               <div className="debug">
                 <li>
                   <FormattedMessage
                     id={'listing-detail.IPFS'}
                     defaultMessage={'IPFS: {ipfsHash}'}
-                    values={{ ipfsHash: this.state.ipfsHash }}
+                    values={{ ipfsHash }}
                   />
                 </li>
                 <li>
                   <FormattedMessage
                     id={'listing-detail.seller'}
                     defaultMessage={'Seller: {sellerAddress}'}
-                    values={{ sellerAddress: this.state.sellerAddress }}
+                    values={{ sellerAddress: seller }}
                   />
                 </li>
                 <li>
                   <FormattedMessage
                     id={'listing-detail.IPFS'}
                     defaultMessage={'IPFS: {ipfsHash}'}
-                    values={{ ipfsHash: this.state.ipfsHash }}
+                    values={{ ipfsHash }}
                   />
                 </li>
               </div>
-              {/* Hidden for current deployment */}
-              {/*!this.state.loading && this.state.purchases.length > 0 &&
-                <Fragment>
-                  <hr />
-                  <h2>Purchases</h2>
-                  <table className="table table-striped">
-                    <thead>
-                      <tr>
-                        <th scope="col" style={{ width: '200px' }}>Status</th>
-                        <th scope="col">TxHash</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {this.state.purchases.map(({ address, stage }) =>
-                        <tr key={address}>
-                          <td>{stage.replace("_"," ")}</td>
-                          <td className="text-truncate"><Link to={`/purchases/${address}`}>{address}</Link></td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </Fragment>
-              */}
             </div>
             <div className="col-12 col-md-4">
-              {!!this.state.price &&
-                !!parseFloat(this.state.price) && (
+              {isAvailable &&
+                !!price &&
+                !!parseFloat(price) && (
                 <div className="buy-box placehold">
-                  <div className="price d-flex justify-content-between">
-                    <div>
-                      <FormattedMessage
-                        id={'listing-detail.price'}
-                        defaultMessage={'Price'}
-                      />
-                    </div>
-                    <div className="text-right">
-                      {Number(this.state.price).toLocaleString(undefined, {
-                        maximumFractionDigits: 5,
-                        minimumFractionDigits: 5
-                      })}
+                  <div className="price text-nowrap">
+                    <img src="images/eth-icon.svg" role="presentation" />
+                    {Number(price).toLocaleString(undefined, {
+                      maximumFractionDigits: 5,
+                      minimumFractionDigits: 5
+                    })}
                       &nbsp;
-                      <FormattedMessage
-                        id={'listing-detail.ethereumCurrencyAbbrev'}
-                        defaultMessage={'ETH'}
-                      />
-                    </div>
+                    <FormattedMessage
+                      id={'listing-detail.ethereumCurrencyAbbrev'}
+                      defaultMessage={'ETH'}
+                    />
                   </div>
                   {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
-                  {/* <div className="quantity d-flex justify-content-between">
-                                    <div>Quantity</div>
-                                    <div className="text-right">
-                                      {Number(1).toLocaleString()}
-                                    </div>
-                                  </div>
-                                  <div className="total-price d-flex justify-content-between">
-                                    <div>Total Price</div>
-                                    <div className="price text-right">
-                                      {Number(price).toLocaleString(undefined, {minimumFractionDigits: 5, maximumFractionDigits: 5})} ETH
-                                    </div>
-                                  </div> */}
-                  {!this.state.loading && (
+                  {/*
+                    <div className="quantity d-flex justify-content-between">
+                      <div>Quantity</div>
+                      <div className="text-right">
+                        {Number(1).toLocaleString()}
+                      </div>
+                    </div>
+                    <div className="total-price d-flex justify-content-between">
+                      <div>Total Price</div>
+                      <div className="price text-right">
+                        {Number(price).toLocaleString(undefined, {minimumFractionDigits: 5, maximumFractionDigits: 5})} ETH
+                      </div>
+                    </div>
+                  */}
+                  {!loading && (
                     <div className="btn-container">
-                      {isActive &&
-                          !userIsSeller && (
+                      {!userIsSeller && (
                         <button
                           className="btn btn-primary"
-                          onClick={this.handleBuyClicked}
-                          // disabled={!this.state.address}
+                          onClick={() => this.handleMakeOffer()}
                           onMouseDown={e => e.preventDefault()}
+                          ga-category="listing"
+                          ga-label="purchase"
                         >
                           <FormattedMessage
-                            id={'listing-detail.buyNow'}
-                            defaultMessage={'Buy Now'}
+                            id={'listing-detail.purchase'}
+                            defaultMessage={'Purchase'}
                           />
                         </button>
                       )}
-                      {isActive &&
-                          userIsSeller && (
-                        <Link to="/my-listings" className="btn">
-                              My Listings
+                      {userIsSeller && (
+                        <Link
+                          to="/my-listings"
+                          className="btn"
+                          ga-category="listing"
+                          ga-label="sellers_own_listing_my_listings_cta"
+                        >
+                            My Listings
                         </Link>
-                      )}
-                      {!isActive && (
-                        <div className="sold-banner">
-                          <img
-                            src="images/sold-tag.svg"
-                            role="presentation"
-                          />
-                          <FormattedMessage
-                            id={'listing-detail.soldOut'}
-                            defaultMessage={'Sold Out'}
-                          />
-                        </div>
                       )}
                     </div>
                   )}
+                  {/* Via Matt 9/4/2018: Not necessary until we have staking */}
+                  {/*
+                    <div className="boost-level">
+                      <hr/>
+                      <div className="row">
+                        <div className="col-sm-6">
+                          <p>Boost Level</p>
+                          <Link to="/" target="_blank" rel="noopener noreferrer">What is this?</Link>
+                        </div>
+                        <div className="col-sm-6 text-right">
+                          <p>{ boostLevel }</p>
+                          <p>
+                            <img src="images/ogn-icon.svg" role="presentation" />
+                            <span className="font-bold">{ boostValue }</span>&nbsp;
+                            <span className="font-blue font-bold">OGN</span>
+                            <span className="help-block">1.00 USD</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  */}
                 </div>
               )}
-              {this.state.sellerAddress && (
+              {!isAvailable && (
+                <div className="buy-box placehold unavailable text-center">
+                  {!loading && (
+                    <div className="reason">
+                      {!isWithdrawn &&
+                        isPending && (
+                        <FormattedMessage
+                          id={'listing-detail.reasonPending'}
+                          defaultMessage={'This listing is {pending}'}
+                          values={{
+                            pending: <strong>Pending</strong>
+                          }}
+                        />
+                      )}
+                      {isSold && (
+                        <FormattedMessage
+                          id={'listing-detail.reasonSold'}
+                          defaultMessage={'This listing is {sold}'}
+                          values={{
+                            sold: <strong>Sold</strong>
+                          }}
+                        />
+                      )}
+                    </div>
+                  )}
+                  {!loading &&
+                    !userIsBuyer &&
+                    !userIsSeller && (
+                    <Fragment>
+                      <div className="suggestion">
+                        {!isWithdrawn &&
+                            isPending && (
+                          <FormattedMessage
+                            id={'listing-detail.suggestionPublicPending'}
+                            defaultMessage={
+                              'Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar.'
+                            }
+                          />
+                        )}
+                        {isSold && (
+                          <FormattedMessage
+                            id={'listing-detail.suggestionPublicSold'}
+                            defaultMessage={
+                              'Another buyer has already purchased this listing. Try visiting the listings page and searching for something similar.'
+                            }
+                          />
+                        )}
+                        {/* consider the possibility of a withdrawn listing despite a valid offer */}
+                        {!isSold &&
+                            isWithdrawn && (
+                          <FormattedMessage
+                            id={'listing-detail.suggestionPublicWithdrawn'}
+                            defaultMessage={
+                              'This listing is no longer available. Try visiting the listings page and searching for something similar.'
+                            }
+                          />
+                        )}
+                      </div>
+                      <Link
+                        to="/"
+                        ga-category="listing"
+                        ga-label="view_listings"
+                      >
+                        <FormattedMessage
+                          id={'listing-detail.viewListings'}
+                          defaultMessage={'View Listings'}
+                        />
+                      </Link>
+                    </Fragment>
+                  )}
+                  {!loading &&
+                    userIsBuyer && (
+                    <div className="suggestion">
+                      {isPending &&
+                          currentOffer.status === 'created' && (
+                        <FormattedMessage
+                          id={'listing-detail.suggestionBuyerCreated'}
+                          defaultMessage={`You've made an offer on this listing. Please wait for the seller to accept or reject your offer.`}
+                        />
+                      )}
+                      {isPending &&
+                          currentOffer.status === 'accepted' && (
+                        <FormattedMessage
+                          id={'listing-detail.suggestionBuyerAccepted'}
+                          defaultMessage={`You've made an offer on this listing. View the offer to complete the sale.`}
+                        />
+                      )}
+                      {isPending &&
+                          currentOffer.status === 'disputed' && (
+                        <FormattedMessage
+                          id={'listing-detail.suggestionBuyerDisputed'}
+                          defaultMessage={`You've made an offer on this listing. View the offer to check the status.`}
+                        />
+                      )}
+                      {isSold && (
+                        <FormattedMessage
+                          id={'listing-detail.buyerPurchased'}
+                          defaultMessage={`You've purchased this listing.`}
+                        />
+                      )}
+                    </div>
+                  )}
+                  {!loading &&
+                    userIsSeller && (
+                    <div className="suggestion">
+                      {isPending &&
+                          currentOffer.status === 'created' && (
+                        <FormattedMessage
+                          id={'listing-detail.suggestionSellerCreated'}
+                          defaultMessage={`A buyer is waiting for you to accept or reject their offer.`}
+                        />
+                      )}
+                      {isPending &&
+                          currentOffer.status === 'accepted' && (
+                        <FormattedMessage
+                          id={'listing-detail.suggestionSellerAccepted'}
+                          defaultMessage={`You've accepted an offer for this listing. Please wait for the buyer to complete the sale.`}
+                        />
+                      )}
+                      {isPending &&
+                          currentOffer.status === 'disputed' && (
+                        <FormattedMessage
+                          id={'listing-detail.suggestionSellerDisputed'}
+                          defaultMessage={`You've accepted an offer on this listing. View the offer to check the status.`}
+                        />
+                      )}
+                      {isSold && (
+                        <FormattedMessage
+                          id={'listing-detail.sellerSold'}
+                          defaultMessage={`You've sold this listing.`}
+                        />
+                      )}
+                      {/* consider the possibility of a withdrawn listing despite a valid offer */}
+                      {!isPending &&
+                          !isSold &&
+                          isWithdrawn && (
+                        <FormattedMessage
+                          id={'listing-detail.sellerWithdrawn'}
+                          defaultMessage={`You've withdrawn this listing.`}
+                        />
+                      )}
+                    </div>
+                  )}
+                  {!loading &&
+                    (userIsBuyer || userIsSeller) &&
+                    currentOffer && (
+                    <Link
+                      to={`/purchases/${currentOffer.id}`}
+                      ga-category="listing"
+                      ga-label={ `view_${isPending ? 'offer' : 'sale'}` }
+                    >
+                      {isPending && (
+                        <FormattedMessage
+                          id={'listing-detail.viewOffer'}
+                          defaultMessage={'View Offer'}
+                        />
+                      )}
+                      {isSold && (
+                        <FormattedMessage
+                          id={'listing-detail.viewSale'}
+                          defaultMessage={'View Sale'}
+                        />
+                      )}
+                    </Link>
+                  )}
+                  {!loading &&
+                    userIsSeller &&
+                    isWithdrawn && (
+                    <Link
+                      to={`/listings/create`}
+                      ga-category="listing"
+                      ga-label="create_listing_from_withdrawn"
+                    >
+                      <FormattedMessage
+                        id={'listing-detail.createListing'}
+                        defaultMessage={'Create A Listing'}
+                      />
+                    </Link>
+                  )}
+                </div>
+              )}
+              {seller && (
                 <UserCard
                   title="seller"
-                  listingAddress={this.props.listingAddress}
-                  userAddress={this.state.sellerAddress}
+                  listingId={this.props.listingId}
+                  userAddress={seller}
                 />
               )}
             </div>
@@ -514,23 +828,9 @@ class ListingsDetail extends Component {
             <div className="row">
               <div className="col-12 col-md-8">
                 <hr />
-                <div className="reviews">
-                  <h2>
-                    <FormattedMessage
-                      id={'listing-detail.reviews'}
-                      defaultMessage={'Reviews'}
-                    />
-                    &nbsp;
-                    <span className="review-count">
-                      <FormattedNumber value={buyersReviews.length} />
-                    </span>
-                  </h2>
-                  {buyersReviews.map(r => (
-                    <Review key={r.transactionHash} review={r} />
-                  ))}
-                  {/* To Do: pagination */}
-                  {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
-                </div>
+                {this.state.seller && (
+                  <Reviews userAddress={this.state.seller} />
+                )}
               </div>
             </div>
           )}
@@ -540,11 +840,13 @@ class ListingsDetail extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ app, profile, listings }) => {
   return {
-    onMobile: state.app.onMobile,
-    web3Account: state.app.web3.account,
-    web3Intent: state.app.web3.intent
+    profile,
+    onMobile: app.onMobile,
+    web3Account: app.web3.account,
+    web3Intent: app.web3.intent,
+    featured: listings.featured
   }
 }
 

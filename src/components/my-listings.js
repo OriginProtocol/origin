@@ -5,7 +5,8 @@ import { FormattedMessage } from 'react-intl'
 import { storeWeb3Intent } from 'actions/App'
 
 import MyListingCard from 'components/my-listing-card'
-import Modal from 'components/modal'
+import { ProviderModal } from 'components/modals/wait-modals'
+import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
 
@@ -15,6 +16,7 @@ class MyListings extends Component {
 
     this.handleProcessing = this.handleProcessing.bind(this)
     this.handleUpdate = this.handleUpdate.bind(this)
+    this.refreshListing = this.refreshListing.bind(this)
     this.state = {
       filter: 'all',
       listings: [],
@@ -24,39 +26,38 @@ class MyListings extends Component {
   }
 
   componentDidMount() {
-    if (!web3.givenProvider || !this.props.web3Account) {
+    if (this.props.web3Account) {
+      this.loadListings()
+    } else if (!web3.givenProvider) {
       this.props.storeWeb3Intent('view your listings')
     }
   }
 
-  /*
-  * WARNING: These functions don't actually return what they might imply.
-  * They use return statements to chain together async calls. Oops.
-  *
-  * For now, we mock a getBySellerAddress request by fetching all
-  * listings individually, filtering each by sellerAddress.
-  */
+  componentDidUpdate(prevProps) {
+    const { web3Account } = this.props
+
+    // on account change
+    if (web3Account && web3Account !== prevProps.web3Account) {
+      this.loadListings()
+    }
+  }
 
   async loadListings() {
     try {
       const ids = await origin.marketplace.getListings({
+        idsOnly: true,
         listingsFor: this.props.web3Account
       })
       const listings = await Promise.all(
         ids.map(id => {
-          return origin.marketplace.getListing(id)
+          return getListing(id, true)
         })
       )
-      this.setState({ listings })
+
+      this.setState({ listings, loading: false })
     } catch (error) {
       console.error('Error fetching listing ids')
     }
-  }
-
-  async componentWillMount() {
-    await this.loadListings()
-
-    this.setState({ loading: false })
   }
 
   handleProcessing(processing) {
@@ -65,7 +66,7 @@ class MyListings extends Component {
 
   async handleUpdate(id) {
     try {
-      const listing = await origin.marketplace.getListing(id)
+      const listing = await getListing(id)
       const listings = [...this.state.listings]
       const index = listings.findIndex(l => l.id === id)
 
@@ -74,6 +75,18 @@ class MyListings extends Component {
       this.setState({ listings })
     } catch (error) {
       console.error(`Error handling update for listing: ${id}`)
+    }
+  }
+
+  async refreshListing(id) {
+    try {
+      const listing = await getListing(id)
+
+      this.setState({
+        listings: [...this.state.listings.filter(l => l.id !== id), listing]
+      })
+    } catch (error) {
+      console.error(`Error refreshing listing: ${id}`)
     }
   }
 
@@ -149,14 +162,14 @@ class MyListings extends Component {
                     <div className="numberCircle">
                       <h1 className="circle-text">
                         <FormattedMessage
-                          id={'my-listings.number-two '}
+                          id={'my-listings.number-two'}
                           defaultMessage={'2'}
                         />
                       </h1>
                     </div>
                     <p>
                       <FormattedMessage
-                        id={'my-listings.step-two '}
+                        id={'my-listings.step-two'}
                         defaultMessage={
                           'Give your listing a name, description, and price.'
                         }
@@ -167,14 +180,14 @@ class MyListings extends Component {
                     <div className="numberCircle">
                       <h1 className="circle-text">
                         <FormattedMessage
-                          id={'my-listings.number-three '}
+                          id={'my-listings.number-three'}
                           defaultMessage={'3'}
                         />
                       </h1>
                     </div>
                     <p>
                       <FormattedMessage
-                        id={'my-listings.step-three '}
+                        id={'my-listings.step-three'}
                         defaultMessage={
                           'Preview your listing and publish it to the blockchain.'
                         }
@@ -260,6 +273,7 @@ class MyListings extends Component {
                           listing={l}
                           handleProcessing={this.handleProcessing}
                           handleUpdate={this.handleUpdate}
+                          onClose={() => this.refreshListing(l.id)}
                         />
                       ))}
                     </div>
@@ -269,22 +283,7 @@ class MyListings extends Component {
             </div>
           )}
         </div>
-        {processing && (
-          <Modal backdrop="static" isOpen={true}>
-            <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
-            </div>
-            <FormattedMessage
-              id={'my-listings.processingUpdate'}
-              defaultMessage={'Closing your listing'}
-            />
-            <br />
-            <FormattedMessage
-              id={'my-listings.pleaseStandBy'}
-              defaultMessage={'Please stand by...'}
-            />
-          </Modal>
-        )}
+        {processing && <ProviderModal />}
       </div>
     )
   }

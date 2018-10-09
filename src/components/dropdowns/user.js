@@ -4,23 +4,30 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 
-import Avatar from 'components/avatar'
-import Identicon from 'components/Identicon'
+import Identicon from 'components/identicon'
+import WalletCard from 'components/wallet-card'
 
 class UserDropdown extends Component {
-  constructor(props) {
-    super(props)
-  }
-
   componentDidMount() {
-    $(document).on('click', '.identity .dropdown-menu', e => {
-      e.stopPropagation()
+    // control hiding of dropdown menu
+    $('.identity.dropdown').on('hide.bs.dropdown', function({ clickEvent }) {
+      // if triggered by data-toggle
+      if (!clickEvent) {
+        return true
+      }
+      // otherwise only if triggered by self or another dropdown
+      const el = $(clickEvent.target)
+
+      return el.hasClass('dropdown') && el.hasClass('nav-item')
     })
   }
 
+  handleClick() {
+    $('#identityDropdown').dropdown('toggle')
+  }
+
   render() {
-    const { profile, wallet } = this.props
-    const { user } = profile
+    const { wallet } = this.props
 
     return (
       <div className="nav-item identity dropdown">
@@ -31,6 +38,8 @@ class UserDropdown extends Component {
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
+          ga-category="top_nav"
+          ga-label="user_profile_dropdown"
         >
           <Identicon address={wallet.address} />
         </a>
@@ -42,91 +51,13 @@ class UserDropdown extends Component {
             <div className="triangle" />
           </div>
           <div className="actual-menu">
-            <div className="wallet">
-              <div className="d-flex">
-                <div className="image-container">
-                  <Link to="/profile">
-                    <Identicon address={wallet.address} size={50} />
-                  </Link>
-                </div>
-                <div className="eth d-flex flex-column justify-content-between">
-                  {wallet.address && (
-                    <div>
-                      <FormattedMessage
-                        id={'user.ethAddress'}
-                        defaultMessage={'ETH Address:'}
-                      />
-                    </div>
-                  )}
-                  <Link to="/profile">
-                    <strong>
-                      {wallet.address || (
-                        <FormattedMessage
-                          id={'user.noEthAccountConnected'}
-                          defaultMessage={'No ETH Account Connected'}
-                        />
-                      )}
-                    </strong>
-                  </Link>
-                </div>
-              </div>
-              <hr className="dark sm" />
-              <div className="d-flex">
-                <Link to="/profile">
-                  <Avatar
-                    image={user && user.profile && user.profile.avatar}
-                    placeholderStyle="blue"
-                  />
-                </Link>
-                <div className="identification d-flex flex-column justify-content-between">
-                  <div>
-                    <Link to="/profile">{profile.name}</Link>
-                  </div>
-                  <div>
-                    {profile.published.phone && (
-                      <Link to="/profile">
-                        <img
-                          src="images/phone-icon-verified.svg"
-                          alt="phone verified icon"
-                        />
-                      </Link>
-                    )}
-                    {profile.published.email && (
-                      <Link to="/profile">
-                        <img
-                          src="images/email-icon-verified.svg"
-                          alt="email verified icon"
-                        />
-                      </Link>
-                    )}
-                    {profile.published.facebook && (
-                      <Link to="/profile">
-                        <img
-                          src="images/facebook-icon-verified.svg"
-                          alt="Facebook verified icon"
-                        />
-                      </Link>
-                    )}
-                    {profile.published.twitter && (
-                      <Link to="/profile">
-                        <img
-                          src="images/twitter-icon-verified.svg"
-                          alt="Twitter verified icon"
-                        />
-                      </Link>
-                    )}
-                    {profile.published.airbnb && (
-                      <Link to="/profile">
-                        <img
-                          src="images/airbnb-icon-verified.svg"
-                          alt="Airbnb verified icon"
-                        />
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <WalletCard wallet={wallet} withMenus={false} withProfile={true} />
+            <Link to="/profile" className="btn edit-profile placehold" onClick={this.handleClick}>
+              <FormattedMessage
+                id={'user-dropdown.EditProfile'}
+                defaultMessage={'Edit Profile'}
+              />
+            </Link>
           </div>
         </div>
       </div>
@@ -136,8 +67,7 @@ class UserDropdown extends Component {
 
 const mapStateToProps = state => {
   return {
-    wallet: state.wallet,
-    profile: state.profile
+    wallet: state.wallet
   }
 }
 

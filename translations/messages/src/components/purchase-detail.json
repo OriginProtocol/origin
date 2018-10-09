@@ -1,63 +1,83 @@
 [
   {
-    "id": "purchase-detail.awaitOrder",
-    "defaultMessage": "Wait for the seller to send the order"
+    "id": "purchase-detail.awaitApproval",
+    "defaultMessage": "Wait for the seller to approve or reject your offer"
   },
   {
-    "id": "purchase-detail.sendOrder",
-    "defaultMessage": "Send the order to buyer"
+    "id": "purchase-detail.awaitApprovalInstruction",
+    "defaultMessage": "Your payment is currently in escrow. There is nothing for you to do at this time. Check back later."
   },
   {
-    "id": "purchase-detail.sendOrderInstruction",
-    "defaultMessage": "Click the button below once the order has shipped."
+    "id": "purchase-detail.acceptOrRejectOffer",
+    "defaultMessage": "Accept or reject the buyer's offer"
   },
   {
-    "id": "purchase-detail.markOrderSent",
-    "defaultMessage": "Mark Order as Sent"
+    "id": "purchase-detail.acceptOfferInstruction",
+    "defaultMessage": "Your listing has a pending offer. Other buyers cannot make offers until you accept or reject this one."
   },
   {
-    "id": "purchase-detail.confirmReceiptOfOrder",
-    "defaultMessage": "Confirm receipt of the order and leave a review"
+    "id": "purchase-detail.acceptOffer",
+    "defaultMessage": "Accept"
+  },
+  {
+    "id": "purchase-detail.waitForContact",
+    "defaultMessage": "Wait to be contacted by an Origin team member"
+  },
+  {
+    "id": "purchase-detail.completePurchase",
+    "defaultMessage": "Complete sale and leave a review."
   },
   {
     "id": "purchase-detail.submitThisForm",
-    "defaultMessage": "Submit this form once you have reviewed shipment of your order."
+    "defaultMessage": "Release funds and review the seller once you confirm that the sale is complete. Your escrowed payment will be sent to the seller. If you're unhappy, please report a problem instead."
   },
   {
     "id": "purchase-detail.confirmAndReview",
-    "defaultMessage": "Confirm and Review"
+    "defaultMessage": "Complete Sale"
   },
   {
     "id": "purchase-detail.buyerReviewPlaceholder",
-    "defaultMessage": "Your review should inform others about your experience transacting with this seller, not about the product itself."
+    "defaultMessage": "Your review should let others know about your experience transacting with this seller."
   },
   {
     "id": "purchase-detail.waitForBuyer",
-    "defaultMessage": "Wait for the buyer to receive the order"
+    "defaultMessage": "Fulfill this order and wait for the buyer to complete the sale"
   },
   {
-    "id": "purchase-detail.awaitSellerWithdrawl",
-    "defaultMessage": "Wait for the seller to withdraw the funds"
+    "id": "purchase-detail.fulfillObligation",
+    "defaultMessage": "The buyer is waiting for you to fulfill this order. You will get paid when the buyer completes the sale."
   },
   {
-    "id": "purchase-detail.completeByWithdrawing",
-    "defaultMessage": "Complete your transaction by withdrawing funds"
+    "id": "purchase-detail.awaitSellerReview",
+    "defaultMessage": "Wait for the seller to leave a review"
   },
   {
-    "id": "purchase-detail.clickToWithdraw",
-    "defaultMessage": "Click the button below to initiate the withdrawal"
+    "id": "purchase-detail.completeByReviewing",
+    "defaultMessage": "Leave a review of the buyer"
   },
   {
-    "id": "purchase-detail.withdrawAndReview",
-    "defaultMessage": "Withdraw and Review"
+    "id": "purchase-detail.clickToReview",
+    "defaultMessage": "Leaving a review lets other sellers know about your experience with this buyer."
+  },
+  {
+    "id": "purchase-detail.reviewSale",
+    "defaultMessage": "Leave A Review"
+  },
+  {
+    "id": "purchase-detail.rejectOffer",
+    "defaultMessage": "Reject"
+  },
+  {
+    "id": "purchase-detail.reportProblem",
+    "defaultMessage": "Report A Problem"
   },
   {
     "id": "purchase-detail.sellerReviewPlaceholder",
     "defaultMessage": "Your review should inform others about your experience transacting with this buyer."
   },
   {
-    "id": "purchase-detail.unnamedUser",
-    "defaultMessage": "Unnamed User"
+    "id": "purchase-detail.withdrawOffer",
+    "defaultMessage": "Withdraw Offer"
   },
   {
     "id": "purchase-detail.purchasedFrom",
@@ -68,48 +88,48 @@
     "defaultMessage": "Sold to {buyerLink}"
   },
   {
+    "id": "purchase-detail.purchasingFrom",
+    "defaultMessage": "Purchasing from {sellerLink}"
+  },
+  {
+    "id": "purchase-detail.sellingTo",
+    "defaultMessage": "Selling to {buyerLink}"
+  },
+  {
     "id": "purchase-detail.transactionStatusHeading",
     "defaultMessage": "Transaction Status"
-  },
-  {
-    "id": "purchase-detail.seller",
-    "defaultMessage": "Seller"
-  },
-  {
-    "id": "purchase-detail.buyer",
-    "defaultMessage": "Buyer"
   },
   {
     "id": "purchase-detail.nextStep",
     "defaultMessage": "Next Step:"
   },
   {
+    "id": "purchase-detail.nothingToDo",
+    "defaultMessage": "There is nothing for you to do at this time. Check back later."
+  },
+  {
     "id": "purchase-detail.reviewLabel",
     "defaultMessage": "Review"
   },
   {
-    "id": "purchase-detail.nothingToDo",
-    "defaultMessage": "Nothing for you to do at this time. Check back later"
+    "id": "purchase-detail.reviewError",
+    "defaultMessage": "Select a rating of 1-5 stars."
+  },
+  {
+    "id": "purchase-detail.hideSellerSteps",
+    "defaultMessage": "Hide Fulfillment Checklist"
+  },
+  {
+    "id": "purchase-detail.showSellerSteps",
+    "defaultMessage": "Show Fulfillment Checklist"
+  },
+  {
+    "id": "purchase-detail.fulfillmentChecklist",
+    "defaultMessage": "Fulfillment Checklist"
   },
   {
     "id": "purchase-detail.transactionHistoryHeading",
     "defaultMessage": "Transaction History"
-  },
-  {
-    "id": "purchase-detail.txName",
-    "defaultMessage": "TxName"
-  },
-  {
-    "id": "purchase-detail.txHash",
-    "defaultMessage": "TxHash"
-  },
-  {
-    "id": "purchase-detail.from",
-    "defaultMessage": "From"
-  },
-  {
-    "id": "purchase-detail.to",
-    "defaultMessage": "To"
   },
   {
     "id": "purchase-detail.listingDetails",
@@ -120,31 +140,15 @@
     "defaultMessage": "View on IPFS"
   },
   {
-    "id": "purchase-detail.reviewsHeading",
-    "defaultMessage": "Reviews"
+    "id": "purchase-detail.summaryPending",
+    "defaultMessage": "Pending"
   },
   {
-    "id": "purchase-detail.purchasedFromOn",
-    "defaultMessage": "Purchased from {sellerName} on {date}"
-  },
-  {
-    "id": "purchase-detail.soldToOn",
-    "defaultMessage": "Sold to {buyerName} on {date}"
+    "id": "purchase-detail.summarySold",
+    "defaultMessage": "Sold"
   },
   {
     "id": "purchase-detail.price",
     "defaultMessage": "Price"
-  },
-  {
-    "id": "purchase-detail.listingStatus",
-    "defaultMessage": "This listing is {status}"
-  },
-  {
-    "id": "purchase-detail.processingUpdate",
-    "defaultMessage": "Processing your update"
-  },
-  {
-    "id": "purchase-detail.pleaseStandBy",
-    "defaultMessage": "Please stand by..."
   }
 ]

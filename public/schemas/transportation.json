@@ -1,6 +1,5 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
-  "description": "schema.transportation.schemaDescription",
   "type": "object",
   "required": ["name","category","description","priceWei"],
   "properties": {
@@ -9,6 +8,15 @@
       "title": "schema.transportation.title",
       "minLength": 3,
       "maxLength": 100
+    },
+    "examples": {
+      "type": "string",
+      "title": "schema.transportation.examples",
+      "enum": [
+        "schema.transportation.bikeRentals",
+        "schema.transportation.carRentals",
+        "schema.transportation.taxiService"
+      ]
     },
     "category": {
       "type": "string",
@@ -29,11 +37,7 @@
       "minLength": 10,
       "maxLength": 1024
     },
-    "location": {
-      "type": "string",
-      "title": "schema.transportation.location"
-    },
-    "priceWei": {
+    "price": {
       "type": "number",
       "title": "schema.transportation.priceInETH"
     },
@@ -44,6 +48,15 @@
         "type": "string",
         "format": "data-url"
       }
+    },
+    "sellerSteps": {
+      "type": "string",
+      "title": "schema.transportation.sellerSteps",
+      "enum": [
+        "schema.transportation.messageBuyer",
+        "schema.transportation.provideService",
+        "schema.transportation.rateBuyer"
+      ]
     }
   }
 }

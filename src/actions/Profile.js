@@ -1,6 +1,12 @@
+import { fetchUser } from 'actions/User'
+
 import keyMirror from 'utils/keyMirror'
 
 import origin from '../services/origin'
+import {
+  upsert as upsertTransaction,
+  update as updateTransaction
+} from 'actions/Transaction'
 
 export const ProfileConstants = keyMirror(
   {
@@ -11,6 +17,7 @@ export const ProfileConstants = keyMirror(
 
     DEPLOY: null,
     DEPLOY_SUCCESS: null,
+    DEPLOY_IN_PROGRESS: null,
     DEPLOY_ERROR: null,
     DEPLOY_RESET: null,
 
@@ -43,9 +50,11 @@ export function addAttestation(attestation) {
 export function deployProfile() {
   return async function(dispatch, getState) {
     dispatch({ type: ProfileConstants.DEPLOY })
+    let confirmationReceived = false
 
     const {
-      profile: { provisional, published }
+      profile: { provisional, published },
+      wallet: { address }
     } = getState()
 
     const userData = {
@@ -55,7 +64,33 @@ export function deployProfile() {
         description: provisional.description,
         avatar: provisional.pic
       },
-      attestations: []
+      attestations: [],
+      options: {
+        transactionHashCallback: hash => {
+          dispatch(
+            upsertTransaction({
+              transactionHash: hash,
+              transactionTypeKey: 'updateProfile',
+              timestamp: Date.now() / 1000,
+              confirmationCount: 0
+            })
+          )
+          dispatch({
+            type: ProfileConstants.DEPLOY_IN_PROGRESS,
+            hash
+          })
+        },
+        confirmationCallback: (confirmationCount, transactionReceipt) => {
+          dispatch(updateTransaction(confirmationCount, transactionReceipt))
+
+          // only dispatch profile events on the first confirmation
+          if (!confirmationReceived) {
+            confirmationReceived = true
+            dispatch({ type: ProfileConstants.DEPLOY_SUCCESS })
+            dispatch(fetchUser(address))
+          }
+        }
+      }
     }
 
     if (!published.facebook && provisional.facebook) {
@@ -79,9 +114,9 @@ export function deployProfile() {
     }
 
     try {
-      const user = await origin.users.set(userData)
-      dispatch({ type: ProfileConstants.DEPLOY_SUCCESS, user })
+      await origin.users.set(userData)
     } catch (error) {
+      console.error('Error occurred deploying profile', error)
       dispatch({ type: ProfileConstants.DEPLOY_ERROR, error })
     }
   }

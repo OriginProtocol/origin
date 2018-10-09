@@ -1,11 +1,11 @@
 [
   {
-    "id": "schema.forSale.schemaDescription",
-    "defaultMessage": "Distributed Craigslist/Ebay/Amazon"
-  },
-  {
     "id": "schema.forSale.title",
     "defaultMessage": "Title"
+  },
+  {
+    "id": "schema.forSale.examples",
+    "defaultMessage": "Examples"
   },
   {
     "id": "schema.forSale.category",
@@ -14,10 +14,6 @@
   {
     "id": "schema.forSale.description",
     "defaultMessage": "Description"
-  },
-  {
-    "id": "schema.forSale.location",
-    "defaultMessage": "Location"
   },
   {
     "id": "schema.forSale.priceInETH",
@@ -202,5 +198,21 @@
   {
     "id": "schema.forSale.wanted",
     "defaultMessage": "Wanted"
+  },
+  {
+    "id": "schema.forSale.deliverProduct",
+    "defaultMessage": "Arrange for delivery or pickup"
+  },
+  {
+    "id": "schema.forSale.messageBuyer",
+    "defaultMessage": "Message the buyer with an update"
+  },
+  {
+    "id": "schema.forSale.rateBuyer",
+    "defaultMessage": "Leave a review of the buyer"
+  },
+  {
+    "id": "schema.forSale.sellerSteps",
+    "defaultMessage": "Fulfillment Checklist"
   }
 ]

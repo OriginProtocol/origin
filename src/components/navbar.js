@@ -15,18 +15,12 @@ class NavBar extends Component {
   constructor(props) {
     super(props)
 
-    this.handleChange = this.handleChange.bind(this)
     this.handleLink = this.handleLink.bind(this)
     this.state = {
       noWeb3Account: false,
       notWeb3EnabledDesktop: false,
-      notWeb3EnabledMobile: false,
-      searchQuery: ''
+      notWeb3EnabledMobile: false
     }
-  }
-
-  handleChange(e) {
-    this.setState({ searchQuery: e.target.value })
   }
 
   handleLink(e) {
@@ -39,7 +33,7 @@ class NavBar extends Component {
 
   render() {
     return (
-      <nav className="navbar navbar-expand-lg navbar-dark">
+      <nav className="navbar navigation-bar navbar-expand-lg navbar-dark">
         <div className="container">
           <button
             className="navbar-toggler mr-3"
@@ -52,7 +46,12 @@ class NavBar extends Component {
           >
             <img src="images/origin-icon-white.svg" alt="Origin menu" />
           </button>
-          <Link to="/" className="navbar-brand mr-auto mr-lg-3">
+          <Link
+            to="/"
+            className="navbar-brand mr-auto mr-lg-3"
+            ga-category="top_nav"
+            ga-label="logo"
+          >
             <div className="d-none d-lg-block logo-container">
               <img
                 src="images/origin-logo.svg"
@@ -65,18 +64,24 @@ class NavBar extends Component {
             className="collapse navbar-collapse order-2 order-lg-1"
             id="navbarSupportedContent"
           >
-            {/* Hidden for current deployment */}
-            {/* <form className="form-inline my-2 my-lg-0">
-              <input className="form-control mr-sm-2" type="search" placeholder="Search Listings" aria-label="Search" onChange={this.handleChange} value={this.state.searchQuery} />
-            </form> */}
             <div className="navbar-nav justify-content-end">
-              <Link to="/" className="d-lg-none nav-item nav-link">
+              <Link
+                to="/"
+                className="d-lg-none nav-item nav-link"
+                ga-category="top_nav"
+                ga-label="listings"
+              >
                 <FormattedMessage
                   id={'navbar.listings'}
                   defaultMessage={'Listings'}
                 />
               </Link>
-              <Link to="/my-purchases" className="nav-item nav-link">
+              <Link
+                to="/my-purchases"
+                className="nav-item nav-link"
+                ga-category="top_nav"
+                ga-label="buying"
+              >
                 <FormattedMessage
                   id={'navbar.buying'}
                   defaultMessage={'Buying'}
@@ -90,6 +95,8 @@ class NavBar extends Component {
                   data-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false"
+                  ga-category="top_nav"
+                  ga-label="sell_dropdown"
                 >
                   <FormattedMessage
                     id={'navbar.selling'}
@@ -104,13 +111,23 @@ class NavBar extends Component {
                     <div className="triangle" />
                   </div>
                   <div className="actual-menu">
-                    <Link to="/my-listings" className="dropdown-item">
+                    <Link
+                      to="/my-listings"
+                      className="dropdown-item"
+                      ga-category="top_nav"
+                      ga-label="sell_dropdown_my_listings"
+                    >
                       <FormattedMessage
                         id={'navbar.myListings'}
                         defaultMessage={'My Listings'}
                       />
                     </Link>
-                    <Link to="/my-sales" className="dropdown-item">
+                    <Link
+                      to="/my-sales"
+                      className="dropdown-item"
+                      ga-category="top_nav"
+                      ga-label="sell_dropdown_my_sales"
+                    >
                       <FormattedMessage
                         id={'navbar.mySales'}
                         defaultMessage={'My Sales'}
@@ -120,6 +137,8 @@ class NavBar extends Component {
                       to="/create"
                       className="dropdown-item d-none d-lg-block"
                       onClick={this.handleLink}
+                      ga-category="top_nav"
+                      ga-label="sell_dropdown_add_listing"
                     >
                       <FormattedMessage
                         id={'navbar.addListing'}
@@ -133,6 +152,8 @@ class NavBar extends Component {
                 to="/create"
                 className="nav-item nav-link"
                 onClick={this.handleLink}
+                ga-category="top_nav"
+                ga-label="add_listing"
               >
                 <img
                   src="images/add-listing-icon.svg"

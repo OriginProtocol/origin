@@ -38,6 +38,7 @@ import vi from 'react-intl/locale-data/vi'
 import zh from 'react-intl/locale-data/zh'
 import schemaMessages from '../schemaMessages/index'
 import localeCode from 'locale-code'
+import { dashToCamelCase } from 'utils/listing'
 
 let globalIntlProvider
 
@@ -257,13 +258,7 @@ export function translateSchema(schemaJson, schemaType) {
   // Copy the schema so we don't modify the original
   const schema = JSON.parse(JSON.stringify(schemaJson))
   const properties = schema.properties
-  schemaType = schemaType === 'for-sale' ? 'forSale' : schemaType
-
-  if (schema.description) {
-    schema.description = globalIntlProvider.formatMessage(
-      schemaMessages[schemaType][schema.description]
-    )
-  }
+  schemaType = dashToCamelCase(schemaType)
 
   for (const property in properties) {
     const propertyObj = properties[property]
@@ -295,22 +290,15 @@ export function translateSchema(schemaJson, schemaType) {
   return schema
 }
 
-export function translateListingCategory(listingObj) {
-  // Copy the schema so we don't modify the original
-  const listing = JSON.parse(JSON.stringify(listingObj))
-  const category = listing.category
-
-  // Check to see if category is a react-intl ID
-  if (/schema\./.test(category)) {
-    // loop over all schemaMessages to find the correct ID
-    for (const schemaType in schemaMessages) {
-      if (schemaMessages[schemaType][category]) {
-        listing.category = globalIntlProvider.formatMessage(
-          schemaMessages[schemaType][category]
-        )
-      }
-    }
+export function translateListingCategory(rawCategory = '') {
+  const match = rawCategory.match(/^schema\.([^.]+)\.([^.]+)$/)
+  if (match === null) {
+    return rawCategory
   }
-
-  return listing
+  const schemaType = match[1]
+  const schema = schemaMessages[schemaType]
+  if (schema === null || schema[rawCategory] === undefined) {
+    return rawCategory
+  }
+  return globalIntlProvider.formatMessage(schema[rawCategory])
 }

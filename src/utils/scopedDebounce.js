@@ -1,9 +1,10 @@
 const scopedDebounce = (callback, wait = 250, immediate) => {
-  // without an argument in the callback function, scope will be undefined
-  let timeouts = { undefined }
+  // provides a default scope for callbacks without an argument
+  const timeouts = { unscoped: undefined }
 
   return function() {
-    const context = this, args = arguments
+    const context = this,
+      args = arguments
     const scope = args[0] || 'unscoped'
     const later = function() {
       timeouts[scope] = null

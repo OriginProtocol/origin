@@ -1,58 +1,95 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { FormattedMessage } from 'react-intl'
+import $ from 'jquery'
 
+import { PendingBadge, SoldBadge, FeaturedBadge } from 'components/badges'
 import ListingCardPrices from 'components/listing-card-prices'
 
-import { translateListingCategory } from 'utils/translationUtils'
+import { getListing } from 'utils/listing'
+import { offerStatusToListingAvailability } from 'utils/offer'
 
 import origin from '../services/origin'
 
 class ListingCard extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       loading: true,
-      shouldRender: true
+      offers: []
     }
   }
 
-  async componentDidMount() {
-    try {
-      const rawListing = await origin.marketplace.getListing(
-        this.props.listingId
-      )
-      const listing = rawListing.ipfsData.data
-      const translatedListing = translateListingCategory(listing)
-      if (!this.props.hideList.includes(this.props.listingId)) {
-        const obj = Object.assign({}, translatedListing, { loading: false })
+  async componentWillMount() {
+    await this.loadListing()
+    await this.loadOffers()
+  }
 
-        this.setState(obj)
-      } else {
-        this.setState({ shouldRender: false })
-      }
+  // componentDidUpdate(prevProps, prevState) {
+  //   // init tooltip only when necessary
+  //   if (this.state.boostLevelIsPastSomeThreshold && !prevState.id) {
+  //     $('[data-toggle="tooltip"]').tooltip({
+  //       delay: { hide: 1000 },
+  //       html: true
+  //     })
+  //   }
+  // }
+
+  componentWillUnmount() {
+    $('[data-toggle="tooltip"]').tooltip('dispose')
+  }
+
+  async loadListing() {
+    try {
+      const listing = await getListing(this.props.listingId, true)
+
+      this.setState({
+        // boostLevelIsPastSomeThreshold: listing.boostValue > 0,
+        ...listing,
+        loading: false
+      })
     } catch (error) {
       console.error(
-        `Error fetching contract or IPFS info for listingId: ${
+        `Error fetching contract or IPFS data for listing ${
           this.props.listingId
-        }`
+        }: ${error}`
       )
+    }
+  }
+
+  async loadOffers() {
+    try {
+      const offers = await origin.marketplace.getOffers(this.props.listingId)
+      this.setState({ offers })
+    } catch (error) {
+      console.error(
+        `Error fetching offers for listing: ${this.props.listingId}`
+      )
+      console.error(error)
     }
   }
 
   render() {
     const {
+      // boostLevelIsPastSomeThreshold,
       category,
       loading,
       name,
+      offers,
       pictures,
       price,
-      unitsAvailable,
-      shouldRender
+      status,
+      unitsRemaining
     } = this.state
     const photo = pictures && pictures.length && pictures[0]
-
-    if (!shouldRender) return false
+    const isPending = offers.find(
+      o => offerStatusToListingAvailability(o.status) === 'pending'
+    )
+    const isSold = offers.find(
+      o => offerStatusToListingAvailability(o.status) === 'sold'
+    )
+    const isWithdrawn = status === 'inactive'
+    const showFeaturedBadge = this.props.featured && !isSold && !isPending
 
     return (
       <div
@@ -60,7 +97,11 @@ class ListingCard extends Component {
           loading ? ' loading' : ''
         }`}
       >
-        <Link to={`/listing/${this.props.listingId}`}>
+        <Link
+          to={`/listing/${this.props.listingId}`}
+          ga-category="listing"
+          ga-label="listing_card"
+        >
           {!!photo && (
             <div
               className="photo"
@@ -74,22 +115,23 @@ class ListingCard extends Component {
           )}
           <div className="category placehold d-flex justify-content-between">
             <div>{category}</div>
-            {!loading && (
-              <div>
-                {this.props.listingId < 5 && (
-                  <span className="featured badge">
-                    <FormattedMessage
-                      id={'listing-card.featured'}
-                      defaultMessage={'Featured'}
-                    />
-                  </span>
-                )}
-              </div>
-            )}
+            {!loading && isPending && !isWithdrawn && <PendingBadge />}
+            {!loading && (isSold || isWithdrawn) && <SoldBadge />}
+            {!loading && showFeaturedBadge && <FeaturedBadge />}
+            {/*!loading &&
+              boostLevelIsPastSomeThreshold && (
+              <span
+                className="boosted badge"
+                data-toggle="tooltip"
+                title="Tell me <a href='https://originprotocol.com' target='_blank'>More</a> about what this means."
+              >
+                <img src="images/boost-icon-arrow.svg" role="presentation" />
+              </span>
+            )*/}
           </div>
           <h2 className="title placehold text-truncate">{name}</h2>
           {price > 0 && (
-            <ListingCardPrices price={price} unitsAvailable={unitsAvailable} />
+            <ListingCardPrices price={price} unitsRemaining={unitsRemaining} />
           )}
         </Link>
       </div>

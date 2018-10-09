@@ -1,6 +1,5 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
-  "description":"schema.announcements.schemaDescription",
   "type": "object",
   "required": ["name","category","description","priceWei"],
   "properties": {
@@ -9,6 +8,15 @@
       "title": "schema.announcements.title",
       "minLength": 3,
       "maxLength": 100
+    },
+    "examples": {
+      "type": "string",
+      "title": "schema.announcements.examples",
+      "enum": [
+        "schema.announcements.groups",
+        "schema.announcements.localNews",
+        "schema.announcements.personals"
+      ]
     },
     "category": {
       "type": "string",

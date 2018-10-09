@@ -8,22 +8,48 @@ export const ListingConstants = keyMirror(
   {
     FETCH_IDS: null,
     FETCH_IDS_SUCCESS: null,
-    FETCH_IDS_ERROR: null
+    FETCH_IDS_ERROR: null,
+    FETCH_FEATURED_HIDDEN: null
   },
   'LISTING'
 )
+
+export function fetchFeaturedHiddenListings(networkId) {
+  const readListingsFromUrl = async (gitstUrl) => {
+    const response = await fetch(gitstUrl)
+    const idRegex = /^\d+-\d+-\d+$/
+    return (await response.text())
+      .split(',')
+      .map(listing => listing.trim())
+      .filter(listingId => listingId.match(idRegex) !== null)
+  }
+
+  return async function(dispatch) {
+    try{
+      const featuredListings = await readListingsFromUrl(`https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hidefeature_list/featurelist_${networkId}.txt`)
+      const hiddenListings = await readListingsFromUrl(`https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hidefeature_list/hidelist_${networkId}.txt`)
+      dispatch({
+        type: ListingConstants.FETCH_FEATURED_HIDDEN,
+        hidden: hiddenListings,
+        featured: featuredListings
+      })
+    } catch(e) {
+      console.error('Could not fetch hidden/featured listings ', e)
+    }
+  }
+}
 
 export function getListingIds() {
   return async function(dispatch) {
     dispatch({ type: ListingConstants.FETCH_IDS })
 
-    let hideList = []
-    const inProductionEnv =
-      window.location.hostname === 'demo.originprotocol.com'
+    // let hideList = []
 
     try {
-      const networkId = await origin.contractService.web3.eth.net.getId()
-      const { allContractsPresent, someContractsPresent } = await origin.contractService.marketplaceContractsFound()
+      const {
+        allContractsPresent,
+        someContractsPresent
+      } = await origin.contractService.marketplaceContractsFound()
 
       if (!someContractsPresent) {
         dispatch({
@@ -39,21 +65,21 @@ export function getListingIds() {
         console.error(message)
       }
 
-      if (inProductionEnv && networkId < 10) {
-        const response = await fetch(
-          `https://raw.githubusercontent.com/OriginProtocol/demo-dapp/hide_list/hidelist_${networkId}.json`
-        )
-        if (response.status === 200) {
-          hideList = await response.json()
-        }
-      }
+      // if (networkId < 10) {
+      //   // Networks > 9 are local development
+      //   const response = await fetch(
+      //     `https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hide_list/hidelist_${networkId}.json`
+      //   )
+      //   if (response.status === 200) {
+      //     hideList = await response.json()
+      //   }
+      // }
 
       const ids = await origin.marketplace.getListings({ idsOnly: true })
 
       dispatch({
         type: ListingConstants.FETCH_IDS_SUCCESS,
-        ids,
-        hideList
+        ids
       })
     } catch (error) {
       dispatch(showAlert(error.message))

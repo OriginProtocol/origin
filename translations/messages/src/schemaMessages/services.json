@@ -1,11 +1,11 @@
 [
   {
-    "id": "schema.services.schemaDescription",
-    "defaultMessage": "Distributed Elance/99 Designs/Postmates/Fiver/Handy/Thumbtack"
-  },
-  {
     "id": "schema.services.title",
     "defaultMessage": "Title"
+  },
+  {
+    "id": "schema.services.examples",
+    "defaultMessage": "Examples"
   },
   {
     "id": "schema.services.category",
@@ -14,10 +14,6 @@
   {
     "id": "schema.services.description",
     "defaultMessage": "Description"
-  },
-  {
-    "id": "schema.services.location",
-    "defaultMessage": "Location"
   },
   {
     "id": "schema.services.priceInETH",
@@ -96,11 +92,19 @@
     "defaultMessage": "Writing, Translation & Transcription"
   },
   {
-    "id": "schema.services.30",
-    "defaultMessage": "30"
+    "id": "schema.services.messageBuyer",
+    "defaultMessage": "Message the buyer with any relevant details"
   },
   {
-    "id": "schema.services.60",
-    "defaultMessage": "60"
+    "id": "schema.services.provideService",
+    "defaultMessage": "Provide your service to the buyer"
+  },
+  {
+    "id": "schema.services.rateBuyer",
+    "defaultMessage": "Leave a review of the buyer"
+  },
+  {
+    "id": "schema.services.sellerSteps",
+    "defaultMessage": "Fulfillment Checklist"
   }
 ]

@@ -1,14 +1,13 @@
 import { defineMessages } from 'react-intl'
 
 export default defineMessages({
-  'schema.services.schemaDescription': {
-    id: 'schema.services.schemaDescription',
-    defaultMessage:
-      'Distributed Elance/99 Designs/Postmates/Fiver/Handy/Thumbtack'
-  },
   'schema.services.title': {
     id: 'schema.services.title',
     defaultMessage: 'Title'
+  },
+  'schema.services.examples': {
+    id: 'schema.services.examples',
+    defaultMessage: 'Examples'
   },
   'schema.services.category': {
     id: 'schema.services.category',
@@ -17,10 +16,6 @@ export default defineMessages({
   'schema.services.description': {
     id: 'schema.services.description',
     defaultMessage: 'Description'
-  },
-  'schema.services.location': {
-    id: 'schema.services.location',
-    defaultMessage: 'Location'
   },
   'schema.services.priceInETH': {
     id: 'schema.services.priceInETH',
@@ -98,12 +93,20 @@ export default defineMessages({
     id: 'schema.services.writingTranslationTranscription',
     defaultMessage: 'Writing, Translation & Transcription'
   },
-  'schema.services.30': {
-    id: 'schema.services.30',
-    defaultMessage: '30'
+  'schema.services.messageBuyer': {
+    id: 'schema.services.messageBuyer',
+    defaultMessage: 'Message the buyer with any relevant details'
   },
-  'schema.services.60': {
-    id: 'schema.services.60',
-    defaultMessage: '60'
+  'schema.services.provideService': {
+    id: 'schema.services.provideService',
+    defaultMessage: 'Provide your service to the buyer'
+  },
+  'schema.services.rateBuyer': {
+    id: 'schema.services.rateBuyer',
+    defaultMessage: 'Leave a review of the buyer'
+  },
+  'schema.services.sellerSteps': {
+    id: 'schema.services.sellerSteps',
+    defaultMessage: 'Fulfillment Checklist'
   }
 })

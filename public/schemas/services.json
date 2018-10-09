@@ -1,6 +1,5 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
-  "description": "schema.services.schemaDescription",
   "type": "object",
   "required": ["name","category","description"],
   "properties": {
@@ -9,6 +8,15 @@
       "title": "schema.services.title",
       "minLength": 3,
       "maxLength": 100
+    },
+    "examples": {
+      "type": "string",
+      "title": "schema.services.examples",
+      "enum": [
+        "schema.services.deliveryService",
+        "schema.services.dogWalking",
+        "schema.services.homeCleaning"
+      ]
     },
     "category": {
       "type": "string",
@@ -40,9 +48,9 @@
       "minLength": 10,
       "maxLength": 1024
     },
-    "location": {
-      "type": "string",
-      "title": "schema.services.location"
+    "price": {
+      "type": "number",
+      "title": "schema.services.priceInETH"
     },
     "pictures": {
       "type": "array",
@@ -51,6 +59,15 @@
         "type": "string",
         "format": "data-url"
       }
+    },
+    "sellerSteps": {
+      "type": "string",
+      "title": "schema.services.sellerSteps",
+      "enum": [
+        "schema.services.messageBuyer",
+        "schema.services.provideService",
+        "schema.services.rateBuyer"
+      ]
     }
   }
 }

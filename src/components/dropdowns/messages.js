@@ -1,29 +1,51 @@
 import React, { Component } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 
-import { dismissMessaging, enableMessaging } from 'actions/App'
+import { dismissMessaging, enableMessaging, storeWeb3Intent } from 'actions/App'
 
 import ConversationListItem from 'components/conversation-list-item'
 
 import groupByArray from 'utils/groupByArray'
+
+import origin from '../../services/origin'
 
 class MessagesDropdown extends Component {
   constructor(props) {
     super(props)
 
     this.handleClick = this.handleClick.bind(this)
+    this.handleEnable = this.handleEnable.bind(this)
+
+    this.intlMessages = defineMessages({
+      enableMessaging: {
+        id: 'messagesDropdown.enableMessaging',
+        defaultMessage: 'enable messaging'
+      },
+      viewMessages: {
+        id: 'messagesDropdown.viewMessages',
+        defaultMessage: 'view your messages'
+      }
+    })
   }
 
   componentDidMount() {
-    $(document).on('click', '.messages .dropdown-menu', e => {
-      e.stopPropagation()
+    // control hiding of dropdown menu
+    $('.messages.dropdown').on('hide.bs.dropdown', function({ clickEvent }) {
+      // if triggered by data-toggle
+      if (!clickEvent) {
+        return true
+      }
+      // otherwise only if triggered by self or another dropdown
+      const el = $(clickEvent.target)
+
+      return el.hasClass('dropdown') && el.hasClass('nav-item')
     })
 
-    $('.messages.dropdown').on('hide.bs.dropdown', this.props.dismissMessaging)
+    $('.messages.dropdown').on('hidden.bs.dropdown', this.props.dismissMessaging)
   }
 
   componentDidUpdate() {
@@ -39,13 +61,28 @@ class MessagesDropdown extends Component {
     }
   }
 
-  handleClick(e) {
+  handleClick() {
+    const { intl, storeWeb3Intent, web3Account } = this.props
+
+    if (!web3Account) {
+      storeWeb3Intent(intl.formatMessage(this.intlMessages.viewMessages))
+    }
+
     $('#messagesDropdown').dropdown('toggle')
   }
 
+  handleEnable() {
+    const { enableMessaging, intl, storeWeb3Intent, web3Account } = this.props
+
+    if (web3Account) {
+      enableMessaging()
+    } else {
+      storeWeb3Intent(intl.formatMessage(this.intlMessages.enableMessaging))
+    }
+  }
+
   render() {
-    const { enableMessaging, history, messages, messagingEnabled } = this.props
-    const conversations = groupByArray(messages, 'conversationId')
+    const { conversations, history, messages, messagingEnabled } = this.props
 
     return (
       <div className="nav-item messages dropdown">
@@ -56,9 +93,10 @@ class MessagesDropdown extends Component {
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
+          ga-category="top_nav"
+          ga-label="messaging"
         >
           {!!conversations.length && <div className="unread-indicator" />}
-          {!messagingEnabled && <div className="disabled-indicator" />}
           <img
             src="images/messages-icon.svg"
             className="messages"
@@ -99,7 +137,9 @@ class MessagesDropdown extends Component {
               {!messagingEnabled && (
                 <button
                   className="btn btn-sm btn-primary d-none d-md-block ml-auto"
-                  onClick={enableMessaging}
+                  onClick={this.handleEnable}
+                  ga-category="messaging"
+                  ga-label="messaging_dropdown_enable"
                 >
                   <FormattedMessage
                     id={'messages.enable'}
@@ -114,13 +154,20 @@ class MessagesDropdown extends Component {
                   key={c.key}
                   conversation={c}
                   active={false}
-                  handleConversationSelect={() =>
+                  handleConversationSelect={() => {
                     history.push(`/messages/${c.key}`)
-                  }
+
+                    $('#messagesDropdown').dropdown('toggle')
+                  }}
                 />
               ))}
             </div>
-            <Link to="/messages" onClick={this.handleClick}>
+            <Link
+              to="/messages"
+              onClick={this.handleClick}
+              ga-category="messaging"
+              ga-label="messaging_dropdown_view_all"
+            >
               <footer>
                 <FormattedMessage
                   id={'messagesDropdown.viewAll'}
@@ -135,24 +182,49 @@ class MessagesDropdown extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ app, messages }) => {
+  const { messagingDismissed, messagingEnabled, web3 } = app
+  const web3Account = web3.account
+  const filteredMessages = messages.filter(
+    ({ content, conversationId, senderAddress, status }) => {
+      return (
+        content &&
+        status === 'unread' &&
+        senderAddress !== web3Account &&
+        origin.messaging.getRecipients(conversationId).includes(web3Account)
+      )
+    }
+  )
+  const conversations = groupByArray(filteredMessages, 'conversationId')
+  const sortedConversations = conversations.sort((a, b) => {
+    const lastMessageA = a.values.sort(
+      (c, d) => (c.created < d.created ? -1 : 1)
+    )[a.values.length - 1]
+    const lastMessageB = b.values.sort(
+      (c, d) => (c.created < d.created ? -1 : 1)
+    )[b.values.length - 1]
+
+    return lastMessageA.created > lastMessageB.created ? -1 : 1
+  })
+
   return {
-    messagingDismissed: state.app.messagingDismissed,
-    messagingEnabled: state.app.messagingEnabled,
-    messages: state.messages.filter(({ senderAddress, status }) => {
-      return status === 'unread' && senderAddress !== state.app.web3.account
-    })
+    conversations: sortedConversations,
+    messages: filteredMessages,
+    messagingDismissed,
+    messagingEnabled,
+    web3Account
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   dismissMessaging: () => dispatch(dismissMessaging()),
-  enableMessaging: () => dispatch(enableMessaging())
+  enableMessaging: () => dispatch(enableMessaging()),
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
 })
 
 export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(MessagesDropdown)
+  )(injectIntl(MessagesDropdown))
 )

@@ -1,13 +1,13 @@
 import { defineMessages } from 'react-intl'
 
 export default defineMessages({
-  'schema.housing.schemaDescription': {
-    id: 'schema.housing.schemaDescription',
-    defaultMessage: 'Distributed Airbnb'
-  },
   'schema.housing.title': {
     id: 'schema.housing.title',
     defaultMessage: 'Title'
+  },
+  'schema.housing.examples': {
+    id: 'schema.housing.examples',
+    defaultMessage: 'Examples'
   },
   'schema.housing.category': {
     id: 'schema.housing.category',
@@ -16,10 +16,6 @@ export default defineMessages({
   'schema.housing.description': {
     id: 'schema.housing.description',
     defaultMessage: 'Description'
-  },
-  'schema.housing.location': {
-    id: 'schema.housing.location',
-    defaultMessage: 'Location'
   },
   'schema.housing.priceInETH': {
     id: 'schema.housing.priceInETH',
@@ -76,5 +72,21 @@ export default defineMessages({
   'schema.housing.vacationRentals': {
     id: 'schema.housing.vacationRentals',
     defaultMessage: 'Vacation Rentals'
+  },
+  'schema.housing.messageBuyer': {
+    id: 'schema.housing.messageBuyer',
+    defaultMessage: 'Message the buyer with any relevant details'
+  },
+  'schema.housing.prepareProperty': {
+    id: 'schema.housing.prepareProperty',
+    defaultMessage: 'Make sure the property is clean and ready'
+  },
+  'schema.housing.rateBuyer': {
+    id: 'schema.housing.rateBuyer',
+    defaultMessage: 'Leave a review of the buyer'
+  },
+  'schema.housing.sellerSteps': {
+    id: 'schema.housing.sellerSteps',
+    defaultMessage: 'Fulfillment Checklist'
   }
 })

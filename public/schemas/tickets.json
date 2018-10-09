@@ -1,6 +1,5 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
-  "description": "schema.tickets.schemaDescription",
   "type": "object",
   "required": ["name","category","description","pricWei"],
   "properties": {
@@ -9,6 +8,15 @@
       "title": "schema.tickets.title",
       "minLength": 3,
       "maxLength": 100
+    },
+    "examples": {
+      "type": "string",
+      "title": "schema.tickets.examples",
+      "enum": [
+        "schema.tickets.music",
+        "schema.tickets.sports",
+        "schema.tickets.theater"
+      ]
     },
     "category": {
       "type": "string",
@@ -31,10 +39,6 @@
         "format": "date-time",
         "title": "schema.tickets.when"
     },
-    "location": {
-      "type": "string",
-      "title": "schema.tickets.where"
-    },
     "description": {
       "type": "string",
       "title": "schema.tickets.description",
@@ -52,6 +56,15 @@
         "type": "string",
         "format": "data-url"
       }
+    },
+    "sellerSteps": {
+      "type": "string",
+      "title": "schema.tickets.sellerSteps",
+      "enum": [
+        "schema.tickets.shipItem",
+        "schema.tickets.messageBuyer",
+        "schema.tickets.rateBuyer"
+      ]
     }
   }
 }

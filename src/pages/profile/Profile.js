@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Prompt } from 'react-router-dom'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import moment from 'moment'
@@ -11,14 +12,15 @@ import {
   updateProfile,
   addAttestation
 } from 'actions/Profile'
-import { getBalance } from 'actions/Wallet'
 
 import Avatar from 'components/avatar'
 import Modal from 'components/modal'
+import UnnamedUser from 'components/unnamed-user'
+import WalletCard from 'components/wallet-card'
+import { ProviderModal, ProcessingModal } from 'components/modals/wait-modals'
 
-import Services from './_Services'
-import Wallet from './_Wallet'
 import Guidance from './_Guidance'
+import Services from './_Services'
 import Strength from './_Strength'
 
 import EditProfile from './EditProfile'
@@ -31,10 +33,14 @@ import ConfirmPublish from './ConfirmPublish'
 import ConfirmUnload from './ConfirmUnload'
 import AttestationSuccess from './AttestationSuccess'
 
-import getCurrentProvider from 'utils/getCurrentProvider'
-
-import origin from '../../services/origin'
-
+/*
+const etherscanNetworkUrls = {
+  1: '',
+  3: 'ropsten.',
+  4: 'rinkeby.',
+  42: 'kovan.',
+  999: 'localhost.'
+}*/
 class Profile extends Component {
   constructor(props) {
     super(props)
@@ -60,7 +66,6 @@ class Profile extends Component {
 
     this.state = {
       lastPublish: null,
-      address: props.address,
       userForm: { firstName, lastName, description },
       lastPublishTime: null,
       modalsOpen: {
@@ -80,16 +85,18 @@ class Profile extends Component {
         published: 0
       },
       provisional: props.provisional,
-      currentProvider: getCurrentProvider(
-        origin && origin.contractService && origin.contractService.web3
-      ),
-      successMessage: ''
+      successMessage: '',
+      wallet: null
     }
 
     this.intlMessages = defineMessages({
       manageYourProfile: {
         id: 'Profile.manageYourProfile',
         defaultMessage: 'manage your profile'
+      },
+      profileUpdated: {
+        id: 'Profile.profileUpdated',
+        defaultMessage: 'Profile edited!'
       },
       unsavedChangesWarn: {
         id: 'Profile.unsavedChangesWarn',
@@ -124,11 +131,14 @@ class Profile extends Component {
   }
 
   componentDidMount() {
-    this.props.getBalance()
     this.setProgress({
       provisional: this.props.provisionalProgress,
       published: this.props.publishedProgress
     })
+
+    if ($('.identity.dropdown').hasClass('show')) {
+      $('#identityDropdown').dropdown('toggle')
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -249,7 +259,15 @@ class Profile extends Component {
   render() {
     const { modalsOpen, progress, successMessage } = this.state
 
-    const { changes, provisional, published, profile, lastPublish } = this.props
+    const {
+      changes,
+      lastPublish,
+      profile,
+      provisional,
+      published,
+      wallet,
+      intl
+    } = this.props
 
     const fullName = `${provisional.firstName} ${provisional.lastName}`.trim()
     const hasChanges = !!changes.length
@@ -290,16 +308,7 @@ class Profile extends Component {
                 </div>
                 <div className="col-8 col-md-9">
                   <div className="name d-flex">
-                    <h1>
-                      {fullName.length ? (
-                        fullName
-                      ) : (
-                        <FormattedMessage
-                          id={'Profile.unnamedUser'}
-                          defaultMessage={'Unnamed User'}
-                        />
-                      )}
-                    </h1>
+                    <h1>{fullName || <UnnamedUser />}</h1>
                     <div className="icon-container">
                       <button
                         className="edit-profile"
@@ -310,7 +319,7 @@ class Profile extends Component {
                       </button>
                     </div>
                   </div>
-                  <p>{description}</p>
+                  <p className="ws-aware">{description}</p>
                 </div>
               </div>
 
@@ -377,10 +386,11 @@ class Profile extends Component {
               </div>
             </div>
             <div className="col-12 col-lg-4">
-              <Wallet
-                balance={this.props.balance}
-                address={this.props.address}
+              <WalletCard
+                wallet={wallet}
                 identityAddress={this.props.identityAddress}
+                withMenus={true}
+                withProfile={false}
               />
               <Guidance />
             </div>
@@ -393,7 +403,14 @@ class Profile extends Component {
           handleSubmit={data => {
             this.props.updateProfile(data)
             this.setState({
-              modalsOpen: { ...modalsOpen, profile: false }
+              successMessage: this.props.intl.formatMessage(
+                this.intlMessages.profileUpdated
+              ),
+              modalsOpen: {
+                ...modalsOpen,
+                profile: false,
+                attestationSuccess: true
+              }
             })
           }}
           data={profile.provisional}
@@ -419,7 +436,7 @@ class Profile extends Component {
 
         <VerifyEmail
           open={modalsOpen.email}
-          wallet={this.props.address}
+          wallet={wallet.address}
           handleToggle={this.handleToggle}
           onSuccess={data => {
             this.props.addAttestation(data)
@@ -439,7 +456,7 @@ class Profile extends Component {
         <VerifyFacebook
           open={modalsOpen.facebook}
           handleToggle={this.handleToggle}
-          account={this.props.address}
+          account={wallet.address}
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
@@ -531,40 +548,9 @@ class Profile extends Component {
           handleToggle={this.handleToggle}
         />
 
-        {this.props.profile.status === 'confirming' && (
-          <Modal backdrop="static" isOpen={true}>
-            <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
-            </div>
-            <FormattedMessage
-              id={'Profile.confirmTransaction'}
-              defaultMessage={'Confirm transaction'}
-            />
-            <br />
-            <FormattedMessage
-              id={'Profile.pressSubmit'}
-              defaultMessage={'Press "Submit" in {currentProvider} window'}
-              values={{ currentProvider: this.state.currentProvider }}
-            />
-          </Modal>
-        )}
+        {this.props.profile.status === 'confirming' && <ProviderModal />}
 
-        {this.props.profile.status === 'processing' && (
-          <Modal backdrop="static" isOpen={true}>
-            <div className="image-container">
-              <img src="images/spinner-animation.svg" role="presentation" />
-            </div>
-            <FormattedMessage
-              id={'Profile.deployingIdentity'}
-              defaultMessage={'Deploying your identity'}
-            />
-            <br />
-            <FormattedMessage
-              id={'Profile.pleaseStandBy'}
-              defaultMessage={'Please stand by...'}
-            />
-          </Modal>
-        )}
+        {this.props.profile.status === 'processing' && <ProcessingModal />}
 
         {this.props.profile.status === 'error' && (
           <Modal backdrop="static" isOpen={true}>
@@ -591,17 +577,44 @@ class Profile extends Component {
           </Modal>
         )}
 
-        {this.props.profile.status === 'success' && (
+        {this.props.profile.status === 'inProgress' && (
           <Modal backdrop="static" isOpen={true}>
             <div className="image-container">
               <img src="images/circular-check-button.svg" role="presentation" />
             </div>
             <h2>
               <FormattedMessage
-                id={'Profile.success'}
-                defaultMessage={'Success'}
+                id={'Profile.inProgress'}
+                defaultMessage={'In Progress'}
               />
             </h2>
+            <div>
+              <FormattedMessage
+                id={'Profile.transactionBeingProcessed'}
+                defaultMessage={`Profile changes can be seen once the transaction is processed.`}
+              />
+            </div>
+            <div className="explanation">
+              <FormattedMessage
+                id={'Profile.transactionProgressDropdown'}
+                defaultMessage={`See transaction progress from the dropdown in navigation bar.`}
+              />
+            </div>
+            {
+              // in case we want to show transaction in etherscan at any time
+              /*<div>
+              <a
+                href={`https://${etherscanNetworkUrls[this.props.networkId]}etherscan.io/tx/${this.props.profile.lastDeployProfileHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FormattedMessage
+                  id={'Profile.viewTransaction'}
+                  defaultMessage={'View Transaction'}
+                />
+              </a>
+            </div>*/
+            }
             <div className="button-container">
               <button
                 className="btn btn-clear"
@@ -615,6 +628,10 @@ class Profile extends Component {
             </div>
           </Modal>
         )}
+        <Prompt
+          when={!!this.props.changes.length}
+          message={intl.formatMessage(this.intlMessages.unsavedChangesWarn)}
+        />
       </div>
     )
   }
@@ -622,7 +639,10 @@ class Profile extends Component {
 
 Profile.getDerivedStateFromProps = (nextProps, prevState) => {
   let newState = {}
-  if (nextProps.address && !prevState.address) {
+  if (
+    (nextProps.wallet && !prevState.wallet) ||
+    (nextProps.wallet.address && !prevState.wallet.address)
+  ) {
     newState = {
       ...newState,
       provisional: nextProps.published,
@@ -630,7 +650,8 @@ Profile.getDerivedStateFromProps = (nextProps, prevState) => {
         firstName: nextProps.published.firstName,
         lastName: nextProps.published.lastName,
         description: nextProps.published.description
-      }
+      },
+      wallet: nextProps.wallet
     }
   }
   return newState
@@ -640,7 +661,6 @@ const mapStateToProps = state => {
   return {
     deployResponse: state.profile.deployResponse,
     issuer: state.profile.issuer,
-    address: state.wallet.address,
     published: state.profile.published,
     provisional: state.profile.provisional,
     strength: state.profile.strength,
@@ -649,21 +669,21 @@ const mapStateToProps = state => {
     provisionalProgress: state.profile.provisionalProgress,
     publishedProgress: state.profile.publishedProgress,
     profile: state.profile,
-    balance: state.wallet.balance,
     identityAddress: state.profile.user.identityAddress,
     onMobile: state.app.onMobile,
+    wallet: state.wallet,
     web3Account: state.app.web3.account,
-    web3Intent: state.app.web3.intent
+    web3Intent: state.app.web3.intent,
+    networkId: state.app.web3.networkId
   }
 }
 
 const mapDispatchToProps = dispatch => ({
+  addAttestation: data => dispatch(addAttestation(data)),
   deployProfile: opts => dispatch(deployProfile(opts)),
   deployProfileReset: () => dispatch(deployProfileReset()),
-  updateProfile: data => dispatch(updateProfile(data)),
-  addAttestation: data => dispatch(addAttestation(data)),
-  getBalance: () => dispatch(getBalance()),
-  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
+  updateProfile: data => dispatch(updateProfile(data))
 })
 
 export default connect(

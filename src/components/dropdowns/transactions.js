@@ -19,8 +19,16 @@ class TransactionsDropdown extends Component {
   }
 
   componentDidMount() {
-    $(document).on('click', '.transactions .dropdown-menu', e => {
-      e.stopPropagation()
+    // control hiding of dropdown menu
+    $('.transactions.dropdown').on('hide.bs.dropdown', function({ clickEvent }) {
+      // if triggered by data-toggle
+      if (!clickEvent) {
+        return true
+      }
+      // otherwise only if triggered by self or another dropdown
+      const el = $(clickEvent.target)
+
+      return el.hasClass('dropdown') && el.hasClass('nav-item')
     })
   }
 
@@ -50,7 +58,7 @@ class TransactionsDropdown extends Component {
     const { transactions } = this.props
     const { hideList } = this.state
     const transactionsNotHidden = transactions.filter(
-      (t) => !hideList.includes(t.transactionHash)
+      t => !hideList.includes(t.transactionHash)
     )
     const transactionsNotCompleted = transactions.filter(
       t => t.confirmationCount < CONFIRMATION_COMPLETION_COUNT
@@ -68,6 +76,8 @@ class TransactionsDropdown extends Component {
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
+          ga-category="top_nav"
+          ga-label="transactions"
         >
           <img
             src="images/arrows-light.svg"
@@ -109,10 +119,18 @@ class TransactionsDropdown extends Component {
               </div>
               <h3 className="mr-auto">
                 <span className="d-none d-md-inline">
-                  <FormattedMessage
-                    id={'transactions.pendingBlockchainTransactionsHeading'}
-                    defaultMessage={'Pending Blockchain Transactions'}
-                  />
+                  {transactionsNotCompleted.length !== 1 && (
+                    <FormattedMessage
+                      id={'transactions.pendingBlockchainTransactionsHeading'}
+                      defaultMessage={'Pending Blockchain Transactions'}
+                    />
+                  )}
+                  {transactionsNotCompleted.length === 1 && (
+                    <FormattedMessage
+                      id={'transactions.pendingBlockchainTransactionHeading'}
+                      defaultMessage={'Pending Blockchain Transaction'}
+                    />
+                  )}
                 </span>
                 <span className="d-none d-sm-inline d-md-none">
                   <FormattedMessage
@@ -152,7 +170,7 @@ class TransactionsDropdown extends Component {
             </header>
             <div className="transactions-list">
               <ul className="list-group">
-                {transactionsNotHidden.map((transaction) => (
+                {transactionsNotHidden.map(transaction => (
                   <Transaction
                     key={transaction.transactionHash}
                     transaction={transaction}

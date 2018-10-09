@@ -1,9 +1,5 @@
 [
   {
-    "id": "user.unnamedUser",
-    "defaultMessage": "Unnamed User"
-  },
-  {
     "id": "User.verifiedInto",
     "defaultMessage": "Verified Info"
   },
@@ -26,9 +22,5 @@
   {
     "id": "User.airbnb",
     "defaultMessage": "Airbnb"
-  },
-  {
-    "id": "User.reviews",
-    "defaultMessage": "Reviews"
   }
 ]

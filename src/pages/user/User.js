@@ -1,50 +1,34 @@
 import React, { Component } from 'react'
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 
 import { fetchUser } from 'actions/User'
 
 import Avatar from 'components/avatar'
-import Review from 'components/review'
-
-import Wallet from 'pages/profile/_Wallet'
+import Reviews from 'components/reviews'
+import UnnamedUser from 'components/unnamed-user'
+import WalletCard from 'components/wallet-card'
 
 class User extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = { reviews: [] }
-
-    this.intlMessages = defineMessages({
-      unnamedUser: {
-        id: 'user.unnamedUser',
-        defaultMessage: 'Unnamed User'
-      }
-    })
-  }
-
-  async componentWillMount() {
-    this.props.fetchUser(
-      this.props.userAddress,
-      this.props.intl.formatMessage(this.intlMessages.unnamedUser)
-    )
-    // TODO: User reviews
+  async componentDidMount() {
+    fetchUser(this.props.userAddress)
   }
 
   render() {
-    const { address, fullName, profile, attestations } = this.props.user
+    const { user, userAddress } = this.props
+    const { attestations, fullName, profile } = user
     const description =
       (profile && profile.description) || 'An Origin user without a description'
-    const usersReviews = this.state.reviews.filter(
-      r => r.revieweeAddress === address
-    )
 
     return (
       <div className="public-user profile-wrapper">
         <div className="container">
           <div className="row">
             <div className="col-12 col-md-4 col-lg-4 order-md-3">
-              <Wallet address={address} />
+              <WalletCard
+                wallet={{ address: userAddress }}
+                withProfile={false}
+              />
             </div>
             <div className="col-12 col-sm-4 col-md-3 col-lg-2 order-md-1">
               <Avatar
@@ -55,9 +39,9 @@ class User extends Component {
             </div>
             <div className="col-12 col-sm-8 col-md-5 col-lg-6 order-md-2">
               <div className="name d-flex">
-                <h1>{fullName}</h1>
+                <h1>{fullName || <UnnamedUser />}</h1>
               </div>
-              <p>{description}</p>
+              <p className="ws-aware">{description}</p>
             </div>
             <div className="col-12 col-sm-4 col-md-3 col-lg-2 order-md-4">
               {attestations &&
@@ -144,22 +128,7 @@ class User extends Component {
               )}
             </div>
             <div className="col-12 col-sm-8 col-md-9 col-lg-10 order-md-5">
-              <div className="reviews">
-                <h2>
-                  <FormattedMessage
-                    id={'User.reviews'}
-                    defaultMessage={'Reviews'}
-                  />
-                  &nbsp;<span className="review-count">
-                    {Number(usersReviews.length).toLocaleString()}
-                  </span>
-                </h2>
-                {usersReviews.map(r => (
-                  <Review key={r.transactionHash} review={r} />
-                ))}
-                {/* To Do: pagination */}
-                {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
-              </div>
+              <Reviews userAddress={userAddress} />
             </div>
           </div>
         </div>
@@ -175,10 +144,10 @@ const mapStateToProps = (state, { userAddress }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg))
+  fetchUser: addr => dispatch(fetchUser(addr))
 })
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(injectIntl(User))
+)(User)

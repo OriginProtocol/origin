@@ -9,7 +9,12 @@ class ConfirmPublish extends Component {
     const { open, changes, onConfirm, handleToggle } = this.props
 
     return (
-      <Modal isOpen={open} data-modal="publish" handleToggle={handleToggle}>
+      <Modal
+        isOpen={open}
+        data-modal="publish"
+        handleToggle={handleToggle}
+        tabIndex="-1"
+      >
         <div className="image-container">
           <img src="images/public-icon.svg" role="presentation" />
         </div>
@@ -23,7 +28,7 @@ class ConfirmPublish extends Component {
           <FormattedMessage
             id={'ConfirmPublish.afterYouPublishNotice'}
             defaultMessage={
-              'After you publish your changes to the blockchain, other users will be able to see that you have verified the following:'
+              'After you publish your changes to the blockchain, other users will be able to see that you have verified the following, but they will not be able to see your actual data:'
             }
           />
         </p>

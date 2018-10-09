@@ -1,13 +1,13 @@
 import { defineMessages } from 'react-intl'
 
 export default defineMessages({
-  'schema.announcements.schemaDescription': {
-    id: 'schema.announcements.schemaDescription',
-    defaultMessage: 'Distributed Nextdoor'
-  },
   'schema.announcements.title': {
     id: 'schema.announcements.title',
     defaultMessage: 'Title'
+  },
+  'schema.announcements.examples': {
+    id: 'schema.announcements.examples',
+    defaultMessage: 'Examples'
   },
   'schema.announcements.category': {
     id: 'schema.announcements.category',

@@ -1,6 +1,7 @@
 import moment from 'moment'
 import store from 'store'
 
+import { unblock } from 'actions/Onboarding'
 import { showAlert } from 'actions/Alert'
 
 import keyMirror from 'utils/keyMirror'
@@ -18,6 +19,7 @@ import translations from '../../translations/translated-messages.json'
 
 export const AppConstants = keyMirror(
   {
+    BETA_MODAL_DISMISSED: null,
     MESSAGING_DISMISSED: null,
     MESSAGING_ENABLED: null,
     MESSAGING_INITIALIZED: null,
@@ -25,10 +27,28 @@ export const AppConstants = keyMirror(
     ON_MOBILE: null,
     WEB3_ACCOUNT: null,
     WEB3_INTENT: null,
-    TRANSLATIONS: null
+    TRANSLATIONS: null,
+    WEB3_NETWORK: null
   },
   'APP'
 )
+
+export function dismissBetaModal() {
+  return async function(dispatch) {
+    dispatch({
+      type: AppConstants.BETA_MODAL_DISMISSED,
+      closedAt: new Date()
+    })
+
+    /*
+     * this delay should be moved to the onboarding modal animation
+     * and not depend on a prerequisite beta modal
+    */
+    setTimeout(() => {
+      dispatch(unblock())
+    }, 4000)
+  }
+}
 
 export function dismissMessaging() {
   return {
@@ -70,6 +90,10 @@ export function setMessagingInitialized(messagingInitialized) {
 
 export function setMobile(device) {
   return { type: AppConstants.ON_MOBILE, device }
+}
+
+export function storeNetwork(networkId) {
+  return { type: AppConstants.WEB3_NETWORK, networkId }
 }
 
 export function storeWeb3Account(address) {

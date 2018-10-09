@@ -4,37 +4,37 @@ import moment from 'moment'
 
 import TransactionMessage from 'components/transaction-message'
 
-import origin from '../services/origin'
+import { getListing } from 'utils/listing'
 
 class Transaction extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      listing: null,
-      purchase: null
+      listing: null
     }
   }
 
   async componentDidMount() {
     try {
-      let { offer, listing } = this.props.transaction
-      const { offerId, listingId } = this.props.transaction
-      offer =
-        offer || (offerId ? await origin.marketplace.getOffer(offerId) : null)
-      listing =
-        listing ||
-        (listingId ? await origin.marketplace.getListing(listingId) : null)
-      const purchase = offer
-      this.setState({ listing, purchase })
+      const { transaction } = this.props
+      let { listing } = transaction
+      const { listingId } = transaction
+
+      if (!listing && listingId) {
+        listing = await getListing(listingId)
+      }
+
+      this.setState({ listing })
     } catch (e) {
       console.error(e)
     }
   }
 
   render() {
+    const transactionTypeKeysWithoutListing = ['updateProfile']
     const { confirmationCompletionCount, transaction } = this.props
-    const { listing, purchase } = this.state
+    const { listing } = this.state
     const {
       confirmationCount,
       timestamp,
@@ -42,47 +42,13 @@ class Transaction extends Component {
       transactionTypeKey
     } = transaction
     const created = timestamp
-    let fromAddress, toAddress
 
-    if (!listing) {
+    if (
+      !listing &&
+      !transactionTypeKeysWithoutListing.includes(transactionTypeKey)
+    ) {
       return null
     }
-
-    switch (transactionTypeKey) {
-    case 'buyListing':
-      fromAddress = purchase.buyer
-      toAddress = listing.seller
-      break
-    case 'reserveListing':
-      fromAddress = purchase.buyerAddress
-      toAddress = listing.sellerAddress
-      break
-    case 'closeListing':
-      fromAddress = listing.seller
-      break
-    case 'confirmReceipt':
-      fromAddress = purchase.buyer
-      toAddress = listing.seller
-      break
-    case 'confirmShipped':
-      toAddress = purchase.buyer
-      fromAddress = listing.seller
-      break
-    case 'createListing':
-      fromAddress = listing.seller
-      break
-    case 'getPayout':
-      toAddress = purchase.buyer
-      fromAddress = listing.seller
-      break
-    }
-
-    const truncatedFrom = fromAddress
-      ? `${fromAddress.slice(0, 4)}...${fromAddress.slice(38)}`
-      : null
-    const truncatedTo = toAddress
-      ? `${toAddress.slice(0, 4)}...${toAddress.slice(38)}`
-      : null
 
     const completed = confirmationCount >= confirmationCompletionCount
     const decimal = confirmationCount / confirmationCompletionCount
@@ -109,35 +75,7 @@ class Transaction extends Component {
             </div>
           </div>
           <div className="d-flex">
-            {!toAddress && (
-              <div className="addresses">
-                <FormattedMessage
-                  id={'transactions.from'}
-                  defaultMessage={'From'}
-                />
-                &nbsp;
-                {truncatedFrom}
-              </div>
-            )}
-            {toAddress && (
-              <div className="addresses">
-                <FormattedMessage
-                  id={'transactions.from'}
-                  defaultMessage={'From'}
-                />
-                &nbsp;
-                {truncatedFrom}
-                &nbsp;
-                <img src="images/arrow-dark.svg" />
-                &nbsp;
-                <FormattedMessage
-                  id={'transactions.to'}
-                  defaultMessage={'To'}
-                />
-                &nbsp;
-                {truncatedTo}
-              </div>
-            )}
+            <div className="addresses text-truncate">{transactionHash}</div>
             <div className="confirmations-count ml-auto">
               {percentage}% &nbsp;
               <FormattedMessage

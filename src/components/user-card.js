@@ -4,21 +4,22 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { Link } from 'react-router-dom'
 
 import { fetchUser } from 'actions/User'
+import { storeWeb3Intent } from 'actions/App'
 
 import Avatar from 'components/avatar'
 import EtherscanLink from 'components/etherscan-link'
+import Identicon from 'components/identicon'
 import MessageNew from 'components/message-new'
-
-import origin from '../services/origin'
+import UnnamedUser from 'components/unnamed-user'
 
 class UserCard extends Component {
   constructor(props) {
     super(props)
 
     this.intlMessages = defineMessages({
-      unnamedUser: {
-        id: 'user-card.unnamedUser',
-        defaultMessage: 'Unnamed User'
+      sendMessages: {
+        id: 'messages-send.sendMessages',
+        defaultMessage: 'send messages'
       }
     })
 
@@ -27,67 +28,64 @@ class UserCard extends Component {
   }
 
   componentWillMount() {
-    this.props.fetchUser(
-      this.props.userAddress,
-      this.props.intl.formatMessage(this.intlMessages.unnamedUser)
-    )
+    this.props.fetchUser(this.props.userAddress)
   }
 
   handleToggle(e) {
     e.preventDefault()
+    const { storeWeb3Intent, intl, web3Account } = this.props
+    const intent = intl.formatMessage(this.intlMessages.sendMessages)
+    storeWeb3Intent(intent)
 
-    this.setState({ modalOpen: !this.state.modalOpen })
+    if (web3.givenProvider && web3Account) {
+      this.setState({ modalOpen: !this.state.modalOpen })
+    }
   }
 
   render() {
     const {
-      listingAddress,
-      purchaseAddress,
+      listingId,
+      purchaseId,
       title,
       user,
       userAddress,
       web3Account
     } = this.props
     const { fullName, profile, attestations } = user
-    const userCanReceiveMessages = userAddress !== web3Account &&
-                                   origin.messaging.canReceiveMessages(userAddress)
 
     return (
       <div className="user-card placehold">
         <div className="identity">
           <h3>
-            <FormattedMessage
-              id={'user-card.heading'}
-              defaultMessage={'About the {title}'}
-              values={{ title }}
-            />
+            {title.toLowerCase() === 'buyer' && (
+              <FormattedMessage
+                id={'user-card.headingBuyer'}
+                defaultMessage={'About the Buyer'}
+              />
+            )}
+            {title.toLowerCase() === 'seller' && (
+              <FormattedMessage
+                id={'user-card.headingSeller'}
+                defaultMessage={'About the Seller'}
+              />
+            )}
           </h3>
           <div className="d-flex">
             <div className="image-container">
               <Link to={`/users/${userAddress}`}>
-                <img
-                  src="images/identicon.png"
-                  srcSet="images/identicon@2x.png 2x, images/identicon@3x.png 3x"
-                  alt="wallet icon"
-                />
+                <Identicon address={userAddress} size={50} />
               </Link>
             </div>
             <div>
               <div>
                 <FormattedMessage
-                  id={'transaction-progress.ethAddress'}
+                  id={'user-card.ethAddress'}
                   defaultMessage={'ETH Address:'}
                 />
               </div>
               <div className="address">
                 {userAddress && <EtherscanLink hash={userAddress} />}
               </div>
-              {userAddress &&
-                userCanReceiveMessages && (
-                <a href="#" className="contact" onClick={this.handleToggle}>
-                    Contact
-                </a>
-              )}
             </div>
           </div>
           <hr className="dark sm" />
@@ -95,7 +93,9 @@ class UserCard extends Component {
             <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
             <div className="identification d-flex flex-column justify-content-between">
               <div>
-                <Link to={`/users/${userAddress}`}>{fullName}</Link>
+                <Link to={`/users/${userAddress}`}>
+                  {fullName || <UnnamedUser />}
+                </Link>
               </div>
               {attestations &&
                 !!attestations.length && (
@@ -145,6 +145,27 @@ class UserCard extends Component {
             </div>
           </div>
         </div>
+        {userAddress &&
+          userAddress !== web3Account && (
+          <a
+            href="#"
+            onClick={this.handleToggle}
+            className="btn view-profile placehold top-btn"
+          >
+            {title.toLowerCase() === 'buyer' &&
+              <FormattedMessage
+                id={'user-card.enabledContactBuyer'}
+                defaultMessage={'Contact Buyer'}
+              />
+            }
+            {title.toLowerCase() === 'seller' &&
+              <FormattedMessage
+                id={'user-card.enabledContactSeller'}
+                defaultMessage={'Contact Seller'}
+              />
+            }
+          </a>
+        )}
         <Link
           to={`/users/${userAddress}`}
           className="btn view-profile placehold"
@@ -154,15 +175,13 @@ class UserCard extends Component {
             defaultMessage={'View Profile'}
           />
         </Link>
-        {userCanReceiveMessages && (
-          <MessageNew
-            open={this.state.modalOpen}
-            recipientAddress={userAddress}
-            listingAddress={listingAddress}
-            purchaseAddress={purchaseAddress}
-            handleToggle={this.handleToggle}
-          />
-        )}
+        <MessageNew
+          open={this.state.modalOpen}
+          recipientAddress={userAddress}
+          listingId={listingId}
+          purchaseId={purchaseId}
+          handleToggle={this.handleToggle}
+        />
       </div>
     )
   }
@@ -180,7 +199,8 @@ const mapStateToProps = (state, { userAddress }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: (addr, msg) => dispatch(fetchUser(addr, msg))
+  fetchUser: addr => dispatch(fetchUser(addr)),
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
 })
 
 export default connect(

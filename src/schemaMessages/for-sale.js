@@ -1,13 +1,13 @@
 import { defineMessages } from 'react-intl'
 
 export default defineMessages({
-  'schema.forSale.schemaDescription': {
-    id: 'schema.forSale.schemaDescription',
-    defaultMessage: 'Distributed Craigslist/Ebay/Amazon'
-  },
   'schema.forSale.title': {
     id: 'schema.forSale.title',
     defaultMessage: 'Title'
+  },
+  'schema.forSale.examples': {
+    id: 'schema.forSale.examples',
+    defaultMessage: 'Examples'
   },
   'schema.forSale.category': {
     id: 'schema.forSale.category',
@@ -16,10 +16,6 @@ export default defineMessages({
   'schema.forSale.description': {
     id: 'schema.forSale.description',
     defaultMessage: 'Description'
-  },
-  'schema.forSale.location': {
-    id: 'schema.forSale.location',
-    defaultMessage: 'Location'
   },
   'schema.forSale.priceInETH': {
     id: 'schema.forSale.priceInETH',
@@ -204,5 +200,21 @@ export default defineMessages({
   'schema.forSale.wanted': {
     id: 'schema.forSale.wanted',
     defaultMessage: 'Wanted'
+  },
+  'schema.forSale.deliverProduct': {
+    id: 'schema.forSale.deliverProduct',
+    defaultMessage: 'Arrange for delivery or pickup'
+  },
+  'schema.forSale.messageBuyer': {
+    id: 'schema.forSale.messageBuyer',
+    defaultMessage: 'Message the buyer with an update'
+  },
+  'schema.forSale.rateBuyer': {
+    id: 'schema.forSale.rateBuyer',
+    defaultMessage: 'Leave a review of the buyer'
+  },
+  'schema.forSale.sellerSteps': {
+    id: 'schema.forSale.sellerSteps',
+    defaultMessage: 'Fulfillment Checklist'
   }
 })

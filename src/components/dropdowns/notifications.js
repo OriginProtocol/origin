@@ -17,8 +17,16 @@ class NotificationsDropdown extends Component {
   }
 
   componentDidMount() {
-    $(document).on('click', '.notifications .dropdown-menu', e => {
-      e.stopPropagation()
+    // control hiding of dropdown menu
+    $('.notifications.dropdown').on('hide.bs.dropdown', function({ clickEvent }) {
+      // if triggered by data-toggle
+      if (!clickEvent) {
+        return true
+      }
+      // otherwise only if triggered by self or another dropdown
+      const el = $(clickEvent.target)
+
+      return el.hasClass('dropdown') && el.hasClass('nav-item')
     })
 
     $('.notifications.dropdown').on('hide.bs.dropdown', () => {
@@ -43,7 +51,7 @@ class NotificationsDropdown extends Component {
     }
   }
 
-  handleClick(e) {
+  handleClick() {
     $('#notificationsDropdown').dropdown('toggle')
   }
 
@@ -64,6 +72,8 @@ class NotificationsDropdown extends Component {
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
+          ga-category="top_nav"
+          ga-label="notifications"
         >
           {!!notifications.length && <div className="unread-indicator" />}
           <img
@@ -134,11 +144,11 @@ const mapStateToProps = ({ app, notifications }) => {
     // add perspective and filter
     notifications: notifications
       .map(n => {
-        const { sellerAddress } = n.resources.listing
+        const { seller } = n.resources.listing
 
         return {
           ...n,
-          perspective: app.web3.account === sellerAddress ? 'seller' : 'buyer'
+          perspective: app.web3.account === seller ? 'seller' : 'buyer'
         }
       })
       .filter(n => n.status === 'unread'),

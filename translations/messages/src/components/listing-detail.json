@@ -4,20 +4,20 @@
     "defaultMessage": "There was an error loading this listing."
   },
   {
-    "id": "listing-detail.confirmTransaction",
-    "defaultMessage": "Confirm transaction"
+    "id": "listing-detail.firstPurchaseHeading",
+    "defaultMessage": "You're about to make your first purchase on Origin."
   },
   {
-    "id": "listing-detail.pressSubmitInMetaMask",
-    "defaultMessage": "Press {submit} in {currentProvider} window"
+    "id": "listing-detail.identityDisclaimer",
+    "defaultMessage": "We recommend verifying your identity first. Sellers are more likely to accept your purchase offer if they know a little bit about you."
   },
   {
-    "id": "listing-detail.processingPurchase",
-    "defaultMessage": "Processing your purchase"
+    "id": "listing-detail.verifyIdentity",
+    "defaultMessage": "Verify Identity"
   },
   {
-    "id": "listing-detail.pleaseStandBy",
-    "defaultMessage": "Please stand by..."
+    "id": "listing-detail.providerInstruction",
+    "defaultMessage": "To make an offer on this listing, please confirm the transaction in {provider}."
   },
   {
     "id": "listing-detail.purchaseSuccessful",
@@ -25,11 +25,23 @@
   },
   {
     "id": "listing-detail.successDisclaimer",
-    "defaultMessage": "Your purchase will be visible within a few seconds."
+    "defaultMessage": "You have made an offer on this listing. Your offer will be visible within a few seconds. Your {ETH} payment has been transferred to an escrow contract. Here's what happens next:"
   },
   {
-    "id": "listing-detail.goToPurchases",
-    "defaultMessage": "Go To Purchases"
+    "id": "listing-detail.successItem1",
+    "defaultMessage": "The seller can choose to accept or reject your offer."
+  },
+  {
+    "id": "listing-detail.successItem2",
+    "defaultMessage": "If the offer is accepted and fulfilled, you will be able to confirm that the sale is complete. Your escrowed payment will be sent to the seller."
+  },
+  {
+    "id": "listing-detail.successItem3",
+    "defaultMessage": "If the offer is rejected, the escrowed payment will be immediately returned to your wallet."
+  },
+  {
+    "id": "listing-detail.viewPurchases",
+    "defaultMessage": "View Purchases"
   },
   {
     "id": "listing-detail.errorPurchasingListing",
@@ -56,23 +68,83 @@
     "defaultMessage": "Seller: {sellerAddress}"
   },
   {
-    "id": "listing-detail.price",
-    "defaultMessage": "Price"
-  },
-  {
     "id": "listing-detail.ethereumCurrencyAbbrev",
     "defaultMessage": "ETH"
   },
   {
-    "id": "listing-detail.buyNow",
-    "defaultMessage": "Buy Now"
+    "id": "listing-detail.purchase",
+    "defaultMessage": "Purchase"
   },
   {
-    "id": "listing-detail.soldOut",
-    "defaultMessage": "Sold Out"
+    "id": "listing-detail.reasonPending",
+    "defaultMessage": "This listing is {pending}"
   },
   {
-    "id": "listing-detail.reviews",
-    "defaultMessage": "Reviews"
+    "id": "listing-detail.reasonSold",
+    "defaultMessage": "This listing is {sold}"
+  },
+  {
+    "id": "listing-detail.suggestionPublicPending",
+    "defaultMessage": "Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar."
+  },
+  {
+    "id": "listing-detail.suggestionPublicSold",
+    "defaultMessage": "Another buyer has already purchased this listing. Try visiting the listings page and searching for something similar."
+  },
+  {
+    "id": "listing-detail.suggestionPublicWithdrawn",
+    "defaultMessage": "This listing is no longer available. Try visiting the listings page and searching for something similar."
+  },
+  {
+    "id": "listing-detail.viewListings",
+    "defaultMessage": "View Listings"
+  },
+  {
+    "id": "listing-detail.suggestionBuyerCreated",
+    "defaultMessage": "You've made an offer on this listing. Please wait for the seller to accept or reject your offer."
+  },
+  {
+    "id": "listing-detail.suggestionBuyerAccepted",
+    "defaultMessage": "You've made an offer on this listing. View the offer to complete the sale."
+  },
+  {
+    "id": "listing-detail.suggestionBuyerDisputed",
+    "defaultMessage": "You've made an offer on this listing. View the offer to check the status."
+  },
+  {
+    "id": "listing-detail.buyerPurchased",
+    "defaultMessage": "You've purchased this listing."
+  },
+  {
+    "id": "listing-detail.suggestionSellerCreated",
+    "defaultMessage": "A buyer is waiting for you to accept or reject their offer."
+  },
+  {
+    "id": "listing-detail.suggestionSellerAccepted",
+    "defaultMessage": "You've accepted an offer for this listing. Please wait for the buyer to complete the sale."
+  },
+  {
+    "id": "listing-detail.suggestionSellerDisputed",
+    "defaultMessage": "You've accepted an offer on this listing. View the offer to check the status."
+  },
+  {
+    "id": "listing-detail.sellerSold",
+    "defaultMessage": "You've sold this listing."
+  },
+  {
+    "id": "listing-detail.sellerWithdrawn",
+    "defaultMessage": "You've withdrawn this listing."
+  },
+  {
+    "id": "listing-detail.viewOffer",
+    "defaultMessage": "View Offer"
+  },
+  {
+    "id": "listing-detail.viewSale",
+    "defaultMessage": "View Sale"
+  },
+  {
+    "id": "listing-detail.createListing",
+    "defaultMessage": "Create A Listing"
   }
 ]

@@ -9,7 +9,12 @@ class ConfirmUnload extends Component {
     const { open, changes, onConfirm, handleToggle } = this.props
 
     return (
-      <Modal isOpen={open} data-modal="unload" handleToggle={handleToggle}>
+      <Modal
+        isOpen={open}
+        data-modal="unload"
+        handleToggle={handleToggle}
+        tabIndex="-1"
+      >
         <div className="image-container">
           <img src="images/public-icon.svg" role="presentation" />
         </div>
@@ -31,7 +36,7 @@ class ConfirmUnload extends Component {
           <FormattedMessage
             id={'ConfirmUpload.readyToGoPublic'}
             defaultMessage={
-              'Ready to go public? After you publish your changes to the blockchain, other users will be able to see that you have verified the following:'
+              'Ready to go public? After you publish your changes to the blockchain, other users will be able to see that you have verified the following, but they will not be able to see your actual data:'
             }
           />
         </p>

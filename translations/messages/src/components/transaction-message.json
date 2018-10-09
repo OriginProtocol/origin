@@ -1,7 +1,15 @@
 [
   {
-    "id": "transaction.buyListing",
-    "defaultMessage": "You made a purchase."
+    "id": "transaction.acceptOffer",
+    "defaultMessage": "You accepted an offer."
+  },
+  {
+    "id": "transaction.makeOffer",
+    "defaultMessage": "You made an offer."
+  },
+  {
+    "id": "transaction.withdrawOffer",
+    "defaultMessage": "You withdrew an offer."
   },
   {
     "id": "transaction.reserveListing",
@@ -9,22 +17,26 @@
   },
   {
     "id": "transaction.closeListing",
-    "defaultMessage": "You closed a listing"
+    "defaultMessage": "You closed a listing."
   },
   {
-    "id": "transaction.confirmReceipt",
-    "defaultMessage": "You left a review and confirmed receipt."
-  },
-  {
-    "id": "transaction.confirmShipped",
-    "defaultMessage": "You marked a purchase as shipped."
+    "id": "transaction.completePurchase",
+    "defaultMessage": "You completed a purchase."
   },
   {
     "id": "transaction.createListing",
-    "defaultMessage": "You created a listing"
+    "defaultMessage": "You created a listing."
   },
   {
-    "id": "transaction.getPayout",
-    "defaultMessage": "You left a review and withdrew funds."
+    "id": "transaction.initiateDispute",
+    "defaultMessage": "You initiated a dispute."
+  },
+  {
+    "id": "transaction.reviewSale",
+    "defaultMessage": "You left a review."
+  },
+  {
+    "id": "transaction.updateProfile",
+    "defaultMessage": "You updated your profile."
   }
 ]

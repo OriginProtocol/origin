@@ -1,12 +1,13 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import moment from 'moment'
 import { defineMessages, injectIntl } from 'react-intl'
 
+import OfferStatusEvent from 'components/offer-status-event'
 import PurchaseProgress from 'components/purchase-progress'
 
-import { translateListingCategory } from 'utils/translationUtils'
+import { offerStatusToStep } from 'utils/offer'
 
 class MyPurchaseCard extends Component {
   constructor(props) {
@@ -19,22 +20,6 @@ class MyPurchaseCard extends Component {
     }
 
     this.intlMessages = defineMessages({
-      received: {
-        id: 'my-purchase-card.received',
-        defaultMessage: 'Received'
-      },
-      sentBySeller: {
-        id: 'my-purchase-card.sentBySeller',
-        defaultMessage: 'Sent by Seller'
-      },
-      purchased: {
-        id: 'my-purchase-card.purchased',
-        defaultMessage: 'Purchased'
-      },
-      unknown: {
-        id: 'my-purchase-card.unknown',
-        defaultMessage: 'Unknown'
-      },
       ETH: {
         id: 'my-purchase-card.ethereumCurrencyAbbrev',
         defaultMessage: 'ETH'
@@ -68,31 +53,17 @@ class MyPurchaseCard extends Component {
     return moment(purchasedSlots[index][whichDate]).format(timeFormat)
   }
 
+  componentWillUnmount() {
+    $('[data-toggle="tooltip"]').tooltip('dispose')
+  }
+
   render() {
     const { listing, offer, offerId } = this.props
-    const created = Number(offer.createdAt)
-    const soldAt = created * 1000 // convert seconds since epoch to ms
-    const { category, name, pictures } = translateListingCategory(
-      listing.ipfsData.data
-    )
-    const step = Number(offer.status)
-    let verb
-
-    switch (step) {
-    case 3:
-      verb = this.props.intl.formatMessage(this.intlMessages.received)
-      break
-    case 2:
-      verb = this.props.intl.formatMessage(this.intlMessages.sentBySeller)
-      break
-    case 1:
-      verb = this.props.intl.formatMessage(this.intlMessages.purchased)
-      break
-    default:
-      verb = this.props.intl.formatMessage(this.intlMessages.unknown)
-    }
-
-    const timestamp = `${verb} on ${this.props.intl.formatDate(soldAt)}`
+    const { category, name, pictures, price } = listing
+    const { status } = offer
+    const voided = ['rejected', 'withdrawn'].includes(status)
+    const maxStep = ['disputed', 'ruling'].includes(status) ? 4 : 3
+    const step = offerStatusToStep(status)
     const photo = pictures && pictures.length > 0 && pictures[0]
 
     return (
@@ -118,6 +89,7 @@ class MyPurchaseCard extends Component {
               <h2 className="title text-truncate">
                 <Link to={`/purchases/${offerId}`}>{name}</Link>
               </h2>
+{/* TODO:John - leaving this merge conflict commented out here b/c I think it needs to be merged into the JSX below
               <p className="timestamp">{timestamp}</p>
               {this.state.listing.listingType === 'fractional' &&
                 <div className="d-flex">
@@ -129,14 +101,37 @@ class MyPurchaseCard extends Component {
                   undefined,
                   { minimumFractionDigits: 5, maximumFractionDigits: 5 }
                 )} ${this.props.intl.formatMessage(this.intlMessages.ETH)}`}</p>
-                {/* Not Yet Relevant */}
-                {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
               </div>
               <PurchaseProgress
                 currentStep={step}
                 perspective="buyer"
                 subdued={true}
               />
+*/}
+              <p className="timestamp">
+                <OfferStatusEvent offer={offer} />
+              </p>
+              {!voided && (
+                <Fragment>
+                  <div className="d-flex">
+                    <p className="price">{`${Number(price).toLocaleString(
+                      undefined,
+                      { minimumFractionDigits: 5, maximumFractionDigits: 5 }
+                    )} ${this.props.intl.formatMessage(
+                      this.intlMessages.ETH
+                    )}`}</p>
+                    {/* Not Yet Relevant */}
+                    {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
+                  </div>
+                  <PurchaseProgress
+                    currentStep={step}
+                    maxStep={maxStep}
+                    perspective="buyer"
+                    purchase={offer}
+                    subdued={true}
+                  />
+                </Fragment>
+              )}
               <div className="actions d-flex">
                 <div className="links-container">
                   {/*<a onClick={() => alert('To Do')}>Open a Dispute</a>*/}

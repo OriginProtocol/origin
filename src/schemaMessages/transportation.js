@@ -1,13 +1,13 @@
 import { defineMessages } from 'react-intl'
 
 export default defineMessages({
-  'schema.transportation.schemaDescription': {
-    id: 'schema.transportation.schemaDescription',
-    defaultMessage: 'Distributed Getaround'
-  },
   'schema.transportation.title': {
     id: 'schema.transportation.title',
     defaultMessage: 'Title'
+  },
+  'schema.transportation.examples': {
+    id: 'schema.transportation.examples',
+    defaultMessage: 'Examples'
   },
   'schema.transportation.category': {
     id: 'schema.transportation.category',
@@ -16,10 +16,6 @@ export default defineMessages({
   'schema.transportation.description': {
     id: 'schema.transportation.description',
     defaultMessage: 'Description'
-  },
-  'schema.transportation.location': {
-    id: 'schema.transportation.location',
-    defaultMessage: 'Location'
   },
   'schema.transportation.priceInETH': {
     id: 'schema.transportation.priceInETH',
@@ -52,5 +48,21 @@ export default defineMessages({
   'schema.transportation.yachtCharters': {
     id: 'schema.transportation.yachtCharters',
     defaultMessage: 'Yacht Charters'
+  },
+  'schema.transportation.messageBuyer': {
+    id: 'schema.transportation.messageBuyer',
+    defaultMessage: 'Message the buyer with any relevant details'
+  },
+  'schema.transportation.provideService': {
+    id: 'schema.transportation.provideService',
+    defaultMessage: 'Provide your transportation service to the buyer'
+  },
+  'schema.transportation.rateBuyer': {
+    id: 'schema.transportation.rateBuyer',
+    defaultMessage: 'Leave a review of the buyer'
+  },
+  'schema.transportation.sellerSteps': {
+    id: 'schema.transportation.sellerSteps',
+    defaultMessage: 'Fulfillment Checklist'
   }
 })

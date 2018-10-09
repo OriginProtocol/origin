@@ -6,32 +6,57 @@ import { withRouter } from 'react-router'
 
 import { getListingIds } from 'actions/Listing'
 
+import { LISTINGS_PER_PAGE } from 'components/constants'
 import ListingCard from 'components/listing-card'
 
 class ListingsGrid extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      listingsPerPage: 12
-    }
+
+    this.handleOnChange = this.handleOnChange.bind(this)
   }
 
   componentWillMount() {
-    this.props.getListingIds()
+    if (this.props.renderMode === 'home-page') this.props.getListingIds()
+  }
+
+  handleOnChange(page) {
+    if (this.props.renderMode === 'home-page')
+      this.props.history.push(`/page/${page}`)
+    else this.props.handleChangePage(page)
   }
 
   render() {
-    const { listingsPerPage } = this.state
-    const { contractFound, listingIds, hideList } = this.props
+    const { contractFound, listingIds, search, featured, hidden } = this.props
+
     // const pinnedListingIds = [0, 1, 2, 3, 4]
     // const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
-    const arrangedListingIds = listingIds
-    const activePage = this.props.match.params.activePage || 1
-    // Calc listings to show for given page
-    const showListingsIds = arrangedListingIds.slice(
-      listingsPerPage * (activePage - 1),
-      listingsPerPage * activePage
-    )
+
+    let allListingsLength, activePage, showListingsIds
+    let featuredListings = []
+    if (this.props.renderMode === 'home-page') {
+      allListingsLength = listingIds.length
+      activePage = parseInt(this.props.match.params.activePage) || 1
+
+      // Calc listings to show for given page
+      showListingsIds = listingIds.slice(
+        LISTINGS_PER_PAGE * (activePage - 1),
+        LISTINGS_PER_PAGE * activePage
+      )
+
+      if (activePage === 1)
+        featuredListings = featured
+
+      // remove featured listings so they are not shown twice
+      showListingsIds = showListingsIds.filter(listingId => !featured.includes(listingId))
+
+    } else if (this.props.renderMode === 'search') {
+      activePage = this.props.searchPage
+      allListingsLength = search.listingsLength
+      showListingsIds = search.listingIds
+    }
+    // remove hidden listings
+    showListingsIds = showListingsIds.filter(listingId => !hidden.includes(listingId))
 
     return (
       <div className="listings-wrapper">
@@ -56,34 +81,34 @@ class ListingsGrid extends Component {
         )}
         {contractFound && (
           <div className="listings-grid">
-            {listingIds.length > 0 && (
+            {allListingsLength > 0 && (
               <h1>
                 <FormattedMessage
                   id={'listings-grid.listingsCount'}
                   defaultMessage={'{listingIdsCount} Listings'}
                   values={{
                     listingIdsCount: (
-                      <FormattedNumber value={listingIds.length} />
+                      <FormattedNumber value={allListingsLength} />
                     )
                   }}
                 />
               </h1>
             )}
             <div className="row">
-              {showListingsIds.map(listingId => (
+              {featuredListings.concat(showListingsIds).map(listingId => (
                 <ListingCard
                   listingId={listingId}
                   key={listingId}
-                  hideList={hideList}
+                  featured={featuredListings.includes(listingId)}
                 />
               ))}
             </div>
             <Pagination
               activePage={parseInt(activePage)}
-              itemsCountPerPage={listingsPerPage}
-              totalItemsCount={arrangedListingIds.length}
+              itemsCountPerPage={LISTINGS_PER_PAGE}
+              totalItemsCount={allListingsLength}
               pageRangeDisplayed={5}
-              onChange={page => this.props.history.push(`/page/${page}`)}
+              onChange={this.handleOnChange}
               itemClass="page-item"
               linkClass="page-link"
               hideDisabled="true"
@@ -97,8 +122,9 @@ class ListingsGrid extends Component {
 
 const mapStateToProps = state => ({
   listingIds: state.marketplace.ids,
-  hideList: state.listings.hideList,
-  contractFound: state.listings.contractFound
+  contractFound: state.listings.contractFound,
+  hidden: state.listings.hidden,
+  featured: state.listings.featured
 })
 
 const mapDispatchToProps = dispatch => ({

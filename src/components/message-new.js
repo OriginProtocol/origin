@@ -5,7 +5,7 @@ import { withRouter } from 'react-router'
 
 import { enableMessaging } from 'actions/App'
 
-import Identicon from 'components/Identicon'
+import Identicon from 'components/identicon'
 import Modal from 'components/modal'
 
 import origin from '../services/origin'
@@ -29,12 +29,7 @@ class MessageNew extends Component {
     e.preventDefault()
 
     const { content } = this.state
-    const {
-      history,
-      listingAddress,
-      purchaseAddress,
-      recipientAddress
-    } = this.props
+    const { history, listingId, purchaseId, recipientAddress } = this.props
     const newMessage = content.trim()
 
     if (!content.length) {
@@ -44,8 +39,8 @@ class MessageNew extends Component {
     try {
       const roomId = await origin.messaging.sendConvMessage(recipientAddress, {
         content: newMessage,
-        ...(listingAddress && { listingAddress }),
-        ...(purchaseAddress && { purchaseAddress })
+        ...(listingId && { listingId }),
+        ...(purchaseId && { purchaseId })
       })
 
       history.push(`/messages/${roomId}`)
@@ -68,7 +63,12 @@ class MessageNew extends Component {
     const canDeliverMessage = origin.messaging.canConverseWith(recipientAddress)
 
     return (
-      <Modal isOpen={open} data-modal="message" handleToggle={handleToggle}>
+      <Modal
+        isOpen={open}
+        data-modal="message"
+        handleToggle={handleToggle}
+        tabIndex="-1"
+      >
         <div className="eth-container">
           <Identicon address={recipientAddress} size={80} />
           <h2>
@@ -77,12 +77,12 @@ class MessageNew extends Component {
             <span className="address">{recipientAddress}</span>
           </h2>
         </div>
-        {/* Just a precaution; no one should get here wihout truthy here. */}
+        {/* Recipient needs to enable messaging. */}
         {!canReceiveMessages && (
           <div className="roadblock">
             <FormattedMessage
               id={'MessageNew.cannotReceiveMessages'}
-              defaultMessage={'This user has not enabled Origin Messaging.'}
+              defaultMessage={'This user has not yet enabled Origin Messaging. Unfortunately, you will not be able to contact them until they do.'}
             />
             <div className="link-container text-center">
               <a href="#" data-modal="profile" onClick={handleToggle}>
@@ -100,12 +100,14 @@ class MessageNew extends Component {
           <div className="roadblock">
             <FormattedMessage
               id={'MessageNew.cannotSendMessages'}
-              defaultMessage={'You need to enable Origin Messaging.'}
+              defaultMessage={'Before you can contact this user, you need to enable messaging.'}
             />
             <div className="button-container">
               <button
                 className="btn btn-sm btn-primary"
                 onClick={this.props.enableMessaging}
+                ga-category="messaging"
+                ga-label="message_new_component_enable"
               >
                 <FormattedMessage
                   id={'MessageNew.enable'}
@@ -114,7 +116,13 @@ class MessageNew extends Component {
               </button>
             </div>
             <div className="link-container text-center">
-              <a href="#" data-modal="profile" onClick={handleToggle}>
+              <a
+                href="#"
+                data-modal="profile"
+                onClick={handleToggle}
+                ga-category="messaging"
+                ga-label="message_new_component_cancel"
+              >
                 <FormattedMessage
                   id={'MessageNew.cancel'}
                   defaultMessage={'Cancel'}
@@ -138,7 +146,12 @@ class MessageNew extends Component {
               />
             </div>
             <div className="button-container d-flex justify-content-center">
-              <button type="submit" className="btn btn-primary">
+              <button
+                type="submit"
+                className="btn btn-primary"
+                ga-category="messaging"
+                ga-label="send_message"
+              >
                 <FormattedMessage
                   id={'MessageNew.send'}
                   defaultMessage={'Send'}
@@ -149,12 +162,18 @@ class MessageNew extends Component {
               <FormattedMessage
                 id={'MessageNew.encryptionNotice'}
                 defaultMessage={
-                  'Your message will be encrypted. It will only be visible to you, the recipient, and an arbitrator in the event that a dispute arises.'
+                  'Your message will be private to you and the recipient. An arbitrator will see your messages if either of you opens a dispute.'
                 }
               />
             </div>
             <div className="link-container text-center">
-              <a href="#" data-modal="profile" onClick={handleToggle}>
+              <a
+                href="#"
+                data-modal="profile"
+                onClick={handleToggle}
+                ga-category="messaging"
+                ga-label="cancel_message"
+              >
                 <FormattedMessage
                   id={'MessageNew.cancel'}
                   defaultMessage={'Cancel'}
