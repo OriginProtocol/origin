@@ -418,6 +418,10 @@ textarea:-moz-ui-invalid {
   background-color: #202e3e;
 }
 
+.user-card .view-profile.top-btn {
+  border-bottom: 1px solid var(--dark);
+}
+
 .user-card .identity {
   padding: 1rem;
 }
