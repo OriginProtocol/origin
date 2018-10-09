@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Prompt } from 'react-router-dom'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import moment from 'moment'
@@ -260,7 +261,8 @@ class Profile extends Component {
       profile,
       provisional,
       published,
-      wallet
+      wallet,
+      intl
     } = this.props
 
     const fullName = `${provisional.firstName} ${provisional.lastName}`.trim()
@@ -615,6 +617,10 @@ class Profile extends Component {
             </div>
           </Modal>
         )}
+        <Prompt
+          when={!!this.props.changes.length}
+          message={intl.formatMessage(this.intlMessages.unsavedChangesWarn)}
+        />
       </div>
     )
   }
