@@ -40,6 +40,10 @@
     "defaultMessage": "Office & Commercial"
   },
   {
+    "id": "schema.housing.other",
+    "defaultMessage": "Other"
+  },
+  {
     "id": "schema.housing.parkingStorage",
     "defaultMessage": "Parking & Storage"
   },

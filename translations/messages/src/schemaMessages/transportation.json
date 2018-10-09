@@ -40,6 +40,14 @@
     "defaultMessage": "Car Rentals"
   },
   {
+    "id": "schema.transportation.other",
+    "defaultMessage": "Other"
+  },
+  {
+    "id": "schema.transportation.scooterRentals",
+    "defaultMessage": "Scooter Rentals"
+  },
+  {
     "id": "schema.transportation.taxiService",
     "defaultMessage": "Taxi Service"
   },

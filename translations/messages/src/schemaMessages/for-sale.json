@@ -164,6 +164,10 @@
     "defaultMessage": "Musical Instruments"
   },
   {
+    "id": "schema.forSale.other",
+    "defaultMessage": "Other"
+  },
+  {
     "id": "schema.forSale.photoVideo",
     "defaultMessage": "Photo & Video"
   },

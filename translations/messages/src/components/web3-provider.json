@@ -20,16 +20,12 @@
     "defaultMessage": "Popular Ethereum Wallets"
   },
   {
+    "id": "web3-provider.coinbase",
+    "defaultMessage": "Coinbase Wallet"
+  },
+  {
     "id": "web3-provider.trust",
-    "defaultMessage": "Trust"
-  },
-  {
-    "id": "web3-provider.cipher",
-    "defaultMessage": "Cipher"
-  },
-  {
-    "id": "web3-provider.toshi",
-    "defaultMessage": "Toshi"
+    "defaultMessage": "Trust Wallet"
   },
   {
     "id": "web3-provider.intentRequiresSignIn",
@@ -41,11 +37,19 @@
   },
   {
     "id": "web3-provider.shouldBeOnRinkeby",
-    "defaultMessage": "{currentProvider} should be on {supportedNetworkName}"
+    "defaultMessage": "{currentProvider} should be set to {supportedNetworkName}."
   },
   {
     "id": "web3-provider.currentlyOnNetwork",
-    "defaultMessage": "Currently on {currentNetworkName}."
+    "defaultMessage": "It is currently on {currentNetworkName}."
+  },
+  {
+    "id": "web3-provider.redirectMessage",
+    "defaultMessage": "If you are looking for {label}, visit {url}."
+  },
+  {
+    "id": "web3-provider.redirectInfoButton",
+    "defaultMessage": "Go to {website}"
   },
   {
     "id": "web3-provider.pleaseInstallMetaMask",

@@ -13,6 +13,7 @@ import BetaModal from 'components/modals/beta-modal'
 import SellingModal from 'components/onboarding-modal'
 
 import scopedDebounce from 'utils/scopedDebounce'
+import getCurrentNetwork from 'utils/currentNetwork'
 
 import origin from '../services/origin'
 
@@ -184,15 +185,17 @@ class Onboarding extends Component {
   }
 
   render() {
-    const { children, location } = this.props
+    const { children, location, networkId } = this.props
     const query = queryString.parse(location.search)
+    const currentNetwork = getCurrentNetwork(networkId)
+    const networkType = currentNetwork && currentNetwork.type
 
     return (
       <Fragment>
         {children}
         {!query['skip-onboarding'] && (
           <Fragment>
-            <BetaModal />
+            { networkType === 'Mainnet Beta' && <BetaModal /> }
             <SellingModal />
           </Fragment>
         )}
@@ -205,7 +208,8 @@ const mapStateToProps = state => ({
   messages: state.messages,
   messagingEnabled: state.app.messagingEnabled,
   messagingInitialized: state.app.messagingInitialized,
-  web3Account: state.app.web3.account
+  web3Account: state.app.web3.account,
+  networkId: state.app.web3.networkId
 })
 
 const mapDispatchToProps = dispatch => ({

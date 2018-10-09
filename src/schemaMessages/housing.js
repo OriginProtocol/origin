@@ -41,6 +41,10 @@ export default defineMessages({
     id: 'schema.housing.officeCommercial',
     defaultMessage: 'Office & Commercial'
   },
+  'schema.housing.other': {
+    id: 'schema.housing.other',
+    defaultMessage: 'Other'
+  },
   'schema.housing.parkingStorage': {
     id: 'schema.housing.parkingStorage',
     defaultMessage: 'Parking & Storage'
