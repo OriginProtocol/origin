@@ -487,6 +487,7 @@
   "EditProfile.continue": "続く",
   "EditProfile.cancel": "キャンセル",
   "Profile.manageYourProfile": "プロフィールを管理する",
+  "Profile.profileUpdated": "Profile edited!",
   "Profile.unsavedChangesWarn": "公開せずに終了すると、更新した内容は全て失われます。",
   "Profile.noDescriptionUser": "Originユーザー（備考の記載なし）",
   "Profile.phoneVerified": "電話番号が認証されました。",
