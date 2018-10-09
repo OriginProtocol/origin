@@ -5034,6 +5034,16 @@ a:not([href]):not([tabindex]).span-link {
   margin-bottom: 0;
 }
 
+/* Web3 Provider */
+.unsupported-provider .redirect-btn {
+  width: 70%;
+  margin-top: 24px;
+}
+
+.unsupported-provider .redirect-message {
+  margin: 0;
+}
+
 /* Media queries */
 /* xs */
 @media (max-width: 576px) {
