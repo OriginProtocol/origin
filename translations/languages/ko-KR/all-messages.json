@@ -487,6 +487,7 @@
   "EditProfile.continue": "계속",
   "EditProfile.cancel": "취소",
   "Profile.manageYourProfile": "프로필 관리",
+  "Profile.profileUpdated": "Profile edited!",
   "Profile.unsavedChangesWarn": "게시하지 않고 종료하게 되면 모든 변경 내용을 잃게 됩니다.",
   "Profile.noDescriptionUser": "상세내용이 없는 Origin 사용자",
   "Profile.phoneVerified": "전화번호 확인됨!",
