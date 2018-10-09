@@ -94,6 +94,10 @@ class Profile extends Component {
         id: 'Profile.manageYourProfile',
         defaultMessage: 'manage your profile'
       },
+      profileUpdated: {
+        id: 'Profile.profileUpdated',
+        defaultMessage: 'Profile edited!'
+      },
       unsavedChangesWarn: {
         id: 'Profile.unsavedChangesWarn',
         defaultMessage:
@@ -399,7 +403,14 @@ class Profile extends Component {
           handleSubmit={data => {
             this.props.updateProfile(data)
             this.setState({
-              modalsOpen: { ...modalsOpen, profile: false }
+              successMessage: this.props.intl.formatMessage(
+                this.intlMessages.profileUpdated
+              ),
+              modalsOpen: {
+                ...modalsOpen,
+                profile: false,
+                attestationSuccess: true
+              }
             })
           }}
           data={profile.provisional}
